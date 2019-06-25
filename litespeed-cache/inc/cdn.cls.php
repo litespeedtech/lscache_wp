@@ -592,7 +592,7 @@ class LiteSpeed_Cache_CDN
 			$v = preg_replace( '|[^\d\.]|', '', $v ) ;
 		}
 
-		$src = $this->_cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
+		$src = $this->_cfg_cdn_remote_jquery == LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
 		LiteSpeed_Cache_Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
 

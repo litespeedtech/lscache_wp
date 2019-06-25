@@ -35,8 +35,7 @@
 					if ( $mobile_agents !== $this->__options[ $id ] ) {
 						echo '<div class="litespeed-callout-danger">'
 								. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
-								. ' ' . __( 'Please re-enter the mobile view setting.', 'litespeed-cache' )
-								. ' ' . sprintf( __( 'List in WordPress database is: %s', 'litespeed-cache' ), '<b>' . $this->__options[ $id ] . '</b>' )
+								. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
 							. '</div>' ;
 					}
 				}

@@ -828,7 +828,7 @@ class LiteSpeed_Cache_Admin_Display
 		$id_attr = 'input_radio_' . preg_replace( '|\W|', '', $id ) . '_' . $val ;
 
 		if ( ! $txt ) {
-			if ( $val === LiteSpeed_Cache_Config::VAL_ON ) {
+			if ( $val ) {
 				$txt = __( 'ON', 'litespeed-cache' ) ;
 			}
 			else {

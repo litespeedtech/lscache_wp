@@ -1,7 +1,7 @@
 <?php
 if (!defined('WPINC')) die;
 
-$readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
+$readonly = LiteSpeed_Cache_Admin_Rules::get_instance()->writable() ? '' : 'readonly';
 
 $content = null ;
 try {

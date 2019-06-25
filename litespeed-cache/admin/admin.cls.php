@@ -144,13 +144,13 @@ class LiteSpeed_Cache_Admin
 				break ;
 
 			case LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS :
-				LiteSpeed_Cache_Admin_Settings::get_instance()->save() ;
+				LiteSpeed_Cache_Admin_Settings::get_instance()->save( $_POST ) ;
 				break ;
 
 
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;
+				LiteSpeed_Cache_Admin_Settings::get_instance()->network_save( $_POST ) ;
 				break ;
 
 			default:

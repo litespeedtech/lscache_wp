@@ -13,11 +13,13 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
+class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 {
 	private static $_instance ;
 
 	const ENROLL = '_settings-enroll' ;
+
+	private $__cfg ;// cfg instance
 
 	/**
 	 * Init
@@ -27,6 +29,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	 */
 	private function __construct()
 	{
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 	}
 
 	/**
@@ -35,11 +38,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save()
+	public function save( $raw_data )
 	{
 		LiteSpeed_Cache_Log::debug( '[Settings] saving' ) ;
 
-		if ( empty( $_POST[ self::ENROLL ] ) ) {
+		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' ) ;
 		}
 
@@ -47,11 +50,12 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 		// Sanitize the fields to save
 		$_fields = array() ;
-		foreach ( $_POST[ self::ENROLL ] as $v ) {
+		foreach ( $raw_data[ self::ENROLL ] as $v ) {
 			// Drop array format
 			if ( strpos( $v, '[' ) !== false ) {
 
 				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 ) { // Separate handler for CDN child settings
+					// todo: Need to be compatible with xx[0] way from CLI
 					$v = substr( $v, 0, -2 ) ;// Drop ending []
 				}
 				elseif ( strpos( $v, self::O_CRWL_COOKIES ) === 0 ) { // Separate handler for Cookie Crawler settings
@@ -63,7 +67,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			}
 
 			// Append current field to setting save
-			if ( $v && ! in_array( $v, $_fields ) ) {
+			if ( $v && ! in_array( $v, $_fields ) && $v != self::_VERSION ) { // Not allow to set core version
 				if ( array_key_exists( $v, $this->_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
 					$_fields[] = $v ;
 				}
@@ -74,11 +78,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		$cdn_cloudflare_changed = false ;
 
 		foreach ( $_fields as $id ) {
-			// Not allow to set core version
-			if ( $id == self::_VERSION ) {
-				continue ;
-			}
-
 			$data = '' ;
 
 			/**
@@ -103,8 +102,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 				}
 
 				$id = self::O_CDN_MAPPING ;
-				if ( ! empty( $_POST[ $id ][ $child ] ) ) {
-					$data = $_POST[ $id ][ $child ] ; // []=xxx
+				if ( ! empty( $raw_data[ $id ][ $child ] ) ) {
+					$data = $raw_data[ $id ][ $child ] ; // []=xxx
 				}
 			}
 			elseif ( strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // Cookie Crawler data
@@ -125,12 +124,12 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 				}
 
 				$id = self::O_CRWL_COOKIES ;
-				if ( ! empty( $_POST[ $id ][ $child ] ) ) {
-					$data = $_POST[ $id ][ $child ] ; // []=xxx
+				if ( ! empty( $raw_data[ $id ][ $child ] ) ) {
+					$data = $raw_data[ $id ][ $child ] ; // []=xxx
 				}
 			}
-			elseif ( ! empty( $_POST[ $id ] ) ) {
-				$data = $_POST[ $id ] ;
+			elseif ( ! empty( $raw_data[ $id ] ) ) {
+				$data = $raw_data[ $id ] ;
 			}
 
 			// Sanitize the value
@@ -185,7 +184,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 				 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 				 */
 				case self::O_CDN_MAPPING :
-					$data2 = $this->option( $id ) ;
+					$data2 = $this->__cfg->option( $id ) ;
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
@@ -205,7 +204,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 				 * empty line for `vals` use literal `_null`
 				 */
 				case self::O_CRWL_COOKIES :
-					$data2 = $this->option( $id ) ;
+					$data2 = $this->__cfg->option( $id ) ;
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
@@ -223,7 +222,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 				case self::O_CDN_CLOUDFLARE_EMAIL :
 				case self::O_CDN_CLOUDFLARE_KEY :
 				case self::O_CDN_CLOUDFLARE_NAME :
-					if ( $this->option( $id ) != $data ) {
+					if ( $this->__cfg->option( $id ) != $data ) {
 						$cdn_cloudflare_changed = true ;
 					}
 					break ;
@@ -242,27 +241,27 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			}
 
 			// id validation will be inside
-			$this->update( $id, $data ) ;
+			$this->__cfg->update( $id, $data ) ;
 		}
 
 		// Update cache setting `_CACHE`
-		$this->define_cache() ;
+		$this->__cfg->define_cache() ;
 
 		/**
 		 * CDN related actions - Cloudflare
 		 * If cloudflare API is on, refresh the zone
 		 */
-		if ( $cdn_cloudflare_changed && $this->option( self::O_CDN_CLOUDFLARE ) ) {
+		if ( $cdn_cloudflare_changed && $this->__cfg->option( self::O_CDN_CLOUDFLARE ) ) {
 			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone() ;
 			if ( $zone ) {
-				$this->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
+				$this->__cfg->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
 
-				$this->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
+				$this->__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
 
 				LiteSpeed_Cache_Log::debug( "[Settings] Get zone successfully \t\t[ID] $zone[id]" ) ;
 			}
 			else {
-				$this->update( self::O_CDN_CLOUDFLARE_ZONE, '' ) ;
+				$this->__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, '' ) ;
 				LiteSpeed_Cache_Log::debug( '[Settings] ❌ Get zone failed, clean zone' ) ;
 			}
 		}
@@ -272,7 +271,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		 * Check if need to send cfg to CDN or not
 		 * @since 2.3
 		 */
-		if ( $this->option( self::O_CDN_QUIC ) ) {
+		if ( $this->__cfg->option( self::O_CDN_QUIC ) ) {
 			// Send to Quic CDN
 			LiteSpeed_Cache_CDN_Quic::sync_config() ;
 		}
@@ -287,11 +286,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	 * @since 3.0
 	 * @access public
 	 */
-	public function network_save()
+	public function network_save( $raw_data )
 	{
 		LiteSpeed_Cache_Log::debug( '[Settings] network saving' ) ;
 
-		if ( empty( $_POST[ self::ENROLL ] ) ) {
+		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' ) ;
 		}
 
@@ -299,9 +298,9 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 		// Sanitize the fields to save
 		$_fields = array() ;
-		foreach ( $_POST[ self::ENROLL ] as $v ) {
+		foreach ( $raw_data[ self::ENROLL ] as $v ) {
 			// Append current field to setting save
-			if ( $v && ! in_array( $v, $_fields ) ) {
+			if ( $v && ! in_array( $v, $_fields ) && $v != self::_VERSION ) { // Not allow to set core version
 				if ( array_key_exists( $v, $this->_default_site_options ) ) {
 					$_fields[] = $v ;
 				}
@@ -309,23 +308,18 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		}
 
 		foreach ( $_fields as $id ) {
-			// Not allow to set core version
-			if ( $id == self::_VERSION ) {
-				continue ;
-			}
-
 			$data = '' ;
 
-			if ( ! empty( $_POST[ $id ] ) ) {
-				$data = $_POST[ $id ] ;
+			if ( ! empty( $raw_data[ $id ] ) ) {
+				$data = $raw_data[ $id ] ;
 			}
 
 			// id validation will be inside
-			$this->network_update( $id, $data ) ;
+			$this->__cfg->network_update( $id, $data ) ;
 		}
 
 		// Update cache setting `_CACHE`
-		$this->define_cache() ;
+		$this->__cfg->define_cache() ;
 
 		// Update related files
 		LiteSpeed_Cache_Activation::get_instance()->update_files() ;

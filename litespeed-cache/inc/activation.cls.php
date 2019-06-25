@@ -292,7 +292,7 @@ class LiteSpeed_Cache_Activation
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ self::_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ LiteSpeed_Cache_Const::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
 			if ( defined( 'LITESPEED_CLI' ) ) {
 				// to be done
@@ -303,13 +303,13 @@ class LiteSpeed_Cache_Activation
 
 		/* 2) adv-cache.php; */
 
-		if ( $options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
+		if ( $options[ LiteSpeed_Cache_Const::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
 		}
 
 		/* 3) object-cache.php; */
 
-		if ( $options[ self::O_OBJECT ] && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+		if ( $options[ LiteSpeed_Cache_Const::O_OBJECT ] && ( ! $options[ LiteSpeed_Cache_Const::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			LiteSpeed_Cache_Object::get_instance()->update_file( $options ) ;
 		}
 		else {

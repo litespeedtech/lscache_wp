@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.1.0
 	 * @return string
 	 */
-	private function _writable( $kind = 'frontend' )
+	public function writable( $kind = 'frontend' )
 	{
 		if( $kind === 'frontend' ) {
 			return $this->frontend_htaccess_writable ;
@@ -255,7 +255,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if( ! $path || ! file_exists( $path ) ) {
 			return "\n" ;
 		}
-		if ( ! $this->_readable( $kind ) || ! $this->_writable( $kind ) ) {
+		if ( ! $this->_readable( $kind ) || ! $this->writable( $kind ) ) {
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_RW ) ) ;
 		}
 
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Admin_Rules
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ) ;
 		}
 
-		if ( ! $this->_writable($kind) ) {
+		if ( ! $this->writable($kind) ) {
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ) ) ;
 		}
 

@@ -591,7 +591,7 @@ class LiteSpeed_Cache_ESI
 			return $instance ;
 		}
 
-		$esi_private = $options[ self::WIDGET_O_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
+		$esi_private = $options[ self::WIDGET_O_ESIENABLE ] == LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
 
 		$params = array(
 			self::PARAM_NAME => $name,
@@ -652,7 +652,7 @@ class LiteSpeed_Cache_ESI
 		else {
 			LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
 
-			if ( $option[ self::WIDGET_O_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ) {
+			if ( $option[ self::WIDGET_O_ESIENABLE ] == LiteSpeed_Cache_Config::VAL_ON2 ) {
 				LiteSpeed_Cache_Control::set_private() ;
 			}
 			LiteSpeed_Cache_Control::set_no_vary() ;

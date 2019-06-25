@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 		// If is not activated on network, it will not have site options
 		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
-			if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 ) { // Default to cache on
+			if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 ) { // Default to cache on
 				$this->_options[ self::_CACHE ] = true ;
 			}
 			return false ;
@@ -305,7 +305,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Init global const cache on setting
 		$this->_options[ self::_CACHE ] = false ;
-		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
+		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 
@@ -317,7 +317,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// If use network setting
-		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
+		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 
@@ -369,15 +369,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
-
-		return NULL ;
-	}
-
-	public function site_option( $id )
-	{
-		if ( isset( $this->_site_options[ $id ] ) ) {
-			return $this->_site_options[ $id ] ;
-		}
 
 		return NULL ;
 	}
