@@ -953,7 +953,7 @@ class LiteSpeed_Cache_Purge
 			}
 		}
 
-		if ( $config->option(LiteSpeed_Cache_Config::O_CACHE_TTL_FEED) > 0 ) {
+		if ( $config->option( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_FEED ;
 		}
 
