@@ -10,7 +10,7 @@
 defined( 'WPINC' ) || exit ;
 
 
-class LiteSpeed_Cache_Lang extends LiteSpeed_Cache_Const
+class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 {
 	/**
 	 * Get the title of id

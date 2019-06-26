@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function title( $id )
 	{
-		echo LiteSpeed_Cache_Lang::title( $id ) ;
+		echo LiteSpeed_Lang::title( $id ) ;
 	}
 
 	/**
@@ -323,53 +323,6 @@ class LiteSpeed_Cache_Admin_Display
 	public static function build_notice($color, $str)
 	{
 		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>' ;
-	}
-
-	/**
-	 * Get the error description
-	 *
-	 * @since 1.1.0
-	 * @param  init $err_code
-	 * @param  mixed $args
-	 * @return mixed String or false
-	 */
-	public static function get_error($err_code, $args = null)
-	{
-		$error = LiteSpeed_Cache_Admin_Error::get_instance()->convert_code_to_error($err_code) ;
-		if ( empty($error) ) {
-			return false ;
-		}
-		$error = 'ERROR ' . $err_code . ': ' . $error ;
-		if ( ! is_null($args) ) {
-			if ( is_array($args) ) {
-				$error = vsprintf($error, $args) ;
-			}
-			else {
-				$error = sprintf($error, $args) ;
-			}
-		}
-		return $error ;
-	}
-
-	/**
-	 * Adds an error to the admin notice system.
-	 *
-	 * This function will get the error message by error code and arguments
-	 * and append it to the list of outgoing errors.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param int $err_code The error code to retrieve.
-	 * @param mixed $args Null if no arguments, an array if multiple arguments,
-	 * else a single argument.
-	 */
-	public static function add_error($err_code, $args = null)
-	{
-		$error = self::get_error($err_code, $args) ;
-		if( ! $error ) {
-			return false ;
-		}
-		self::add_notice(self::NOTICE_RED, $error) ;
 	}
 
 	/**

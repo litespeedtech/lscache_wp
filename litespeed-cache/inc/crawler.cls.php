@@ -190,13 +190,14 @@ class LiteSpeed_Cache_Crawler
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
 
-			throw new Exception( LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ) ;
+			throw new Exception( 'Failed to remote read' ) ;
 		}
 
 		$xml_object = simplexml_load_string( $response[ 'body' ] ) ;
 		if ( ! $xml_object ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ) ;
+			throw new Exception( 'Failed to parse xml' ) ;
 		}
+
 		if ( ! $return_detail ) {
 			return true ;
 		}
@@ -209,13 +210,9 @@ class LiteSpeed_Cache_Crawler
 				$xml_array['sitemap'] = (array)$xml_array['sitemap'] ;
 			}
 			if ( !empty($xml_array['sitemap']['loc']) ) {// is single sitemap
-				try {
-					$urls = $this->parse_custom_sitemap( $xml_array[ 'sitemap' ][ 'loc' ] ) ;
-					if ( is_array( $urls ) && ! empty( $urls ) ) {
-						$_urls = array_merge($_urls, $urls) ;
-					}
-				} catch( \Exception $e ) {
-					LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+				$urls = $this->parse_custom_sitemap( $xml_array[ 'sitemap' ][ 'loc' ] ) ;
+				if ( is_array( $urls ) && ! empty( $urls ) ) {
+					$_urls = array_merge($_urls, $urls) ;
 				}
 			}
 			else {
@@ -223,13 +220,9 @@ class LiteSpeed_Cache_Crawler
 				foreach ($xml_array['sitemap'] as $val) {
 					$val = (array)$val ;
 					if ( !empty($val['loc']) ) {
-						try {
-							$urls = $this->parse_custom_sitemap( $val[ 'loc' ] ) ;// recursive parse sitemap
-							if ( is_array( $urls ) && ! empty( $urls ) ) {
-								$_urls = array_merge( $_urls, $urls ) ;
-							}
-						} catch( \Exception $e ) {
-							LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+						$urls = $this->parse_custom_sitemap( $val[ 'loc' ] ) ;// recursive parse sitemap
+						if ( is_array( $urls ) && ! empty( $urls ) ) {
+							$_urls = array_merge( $_urls, $urls ) ;
 						}
 					}
 				}

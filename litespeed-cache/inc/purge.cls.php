@@ -488,12 +488,12 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val cat invalid" ) ;
 			return ;
 		}
 		$cat = get_category_by_slug( $val ) ;
 		if ( $cat == false ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val cat not existed/published" ) ;
 			return ;
 		}
 
@@ -517,11 +517,11 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 		if ( ! is_numeric( $val ) ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val pid not numeric" ) ;
 			return ;
 		}
 		elseif ( get_post_status( $val ) !== 'publish' ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val pid not published" ) ;
 			return ;
 		}
 		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge Post ID %s', 'litespeed-cache' ), $val ) ) ;
@@ -544,12 +544,12 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_INV ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val tag invalid" ) ;
 			return ;
 		}
 		$term = get_term_by( 'slug', $val, 'post_tag' ) ;
 		if ( $term == 0 ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, $val ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val tag not exist" ) ;
 			return ;
 		}
 
@@ -574,7 +574,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		if ( strpos( $val, '<' ) !== false ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_BAD ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val url contains <" ) ;
 			return ;
 		}
 
@@ -583,7 +583,7 @@ class LiteSpeed_Cache_Purge
 		$hash = LiteSpeed_Cache_Tag::get_uri_tag( $val ) ;
 
 		if ( $hash === false ) {
-			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_INV, $val ) ;
+			LiteSpeed_Cache_Log::debug( "[Purge] $val url invalid" ) ;
 			return ;
 		}
 
@@ -603,13 +603,11 @@ class LiteSpeed_Cache_Purge
 	public function purge_list()
 	{
 		if ( ! isset($_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT]) || ! isset($_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGE_FORM) ;
 			return ;
 		}
 		$sel = $_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT] ;
 		$list_buf = $_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST] ;
 		if ( empty($list_buf) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY) ;
 			return ;
 		}
 		$list_buf = str_replace(",", "\n", $list_buf) ;// for cli
@@ -627,8 +625,8 @@ class LiteSpeed_Cache_Purge
 			case LiteSpeed_Cache_Admin_Display::PURGEBY_URL:
 				$cb = 'purgeby_url_cb' ;
 				break ;
+
 			default:
-				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD) ;
 				return ;
 		}
 		array_walk( $list, array( $this, $cb ) ) ;

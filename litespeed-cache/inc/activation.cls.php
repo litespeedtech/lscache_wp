@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Activation
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
+					LiteSpeed_Htaccess::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Activation
 	public static function uninstall_litespeed_cache()
 	{
 		LiteSpeed_Cache_Task::clear() ;
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
+		LiteSpeed_Htaccess::get_instance()->clear_rules() ;
 		delete_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
 		if ( is_multisite() ) {
 			delete_site_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Activation
 			if ( ! self::is_deactivate_last() ) {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
+					LiteSpeed_Htaccess::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}
@@ -264,7 +264,7 @@ class LiteSpeed_Cache_Activation
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 		}
 
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
+		LiteSpeed_Htaccess::get_instance()->clear_rules() ;
 
 		// delete in case it's not deleted prior to deactivation.
 		self::dismiss_whm() ;
@@ -318,7 +318,8 @@ class LiteSpeed_Cache_Activation
 
 		/* 4) .htaccess; */
 
-		LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
+		$res = LiteSpeed_Htaccess::get_instance()->update( $options ) ;
+		var_dump($res);exit;
 	}
 
 	/**

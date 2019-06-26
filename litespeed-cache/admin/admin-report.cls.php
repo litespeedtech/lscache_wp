@@ -113,8 +113,8 @@ class LiteSpeed_Cache_Admin_Report
 	public function generate_environment_report($options = null)
 	{
 		global $wp_version, $_SERVER ;
-		$frontend_htaccess = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
-		$backend_htaccess = LiteSpeed_Cache_Admin_Rules::get_backend_htaccess() ;
+		$frontend_htaccess = LiteSpeed_Htaccess::get_frontend_htaccess() ;
+		$backend_htaccess = LiteSpeed_Htaccess::get_backend_htaccess() ;
 		$paths = array($frontend_htaccess) ;
 		if ( $frontend_htaccess != $backend_htaccess ) {
 			$paths[] = $backend_htaccess ;

@@ -125,13 +125,11 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 
 		//Check minimum PHP requirements, which is 5.3 at the moment.
 		if ( version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
-			error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_PHP_VER ) ) ;
 			$version_supported = false ;
 		}
 
 		//Check minimum WP requirements, which is 4.0 at the moment.
 		if ( version_compare( $GLOBALS['wp_version'], '4.0', '<' ) ) {
-			error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_WP_VER ) ) ;
 			$version_supported = false ;
 		}
 

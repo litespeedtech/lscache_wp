@@ -31,7 +31,12 @@
 				// if enabled, check the setting in file
 				if ( defined( 'LITESPEED_ON' ) ) {
 
-					$mobile_agents = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_mobile_agents() ;
+					try {
+						$mobile_agents = LiteSpeed_Htaccess::get_instance()->current_mobile_agents() ;
+					} catch( \Exception $e ) {
+						echo '<div class="litespeed-callout-danger">' . $e->getMessage() . '</div>' ;
+					}
+
 					if ( $mobile_agents !== $this->__options[ $id ] ) {
 						echo '<div class="litespeed-callout-danger">'
 								. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )

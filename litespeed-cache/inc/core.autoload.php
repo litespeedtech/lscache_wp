@@ -19,7 +19,10 @@ if ( !function_exists('_litespeed_autoload') ) {
 		$class2fileArr = array(
 			'LiteSpeed'							=> 'lib/litespeed/litespeed.cls.php',
 			'Litespeed_Crawler'					=> 'lib/litespeed/litespeed-crawler.cls.php',
+			'LiteSpeed_Error'					=> 'inc/error.cls.php',
 			'Litespeed_File'					=> 'lib/litespeed/litespeed-file.cls.php',
+			'LiteSpeed_Htaccess'				=> 'inc/htaccess.cls.php',
+			'LiteSpeed_Lang'					=> 'inc/lang.cls.php',
 			'Litespeed_String'					=> 'lib/litespeed/litespeed-string.cls.php',
 
 			'LiteSpeed_Cache'					=> 'inc/core.cls.php',
@@ -41,7 +44,6 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_GUI'				=> 'inc/gui.cls.php',
 			'LiteSpeed_Cache_Import'			=> 'inc/import.cls.php',
 			'LiteSpeed_Cache_Img_Optm'			=> 'inc/img_optm.cls.php',
-			'LiteSpeed_Cache_Lang'				=> 'inc/lang.cls.php',
 			'LiteSpeed_Cache_Log'				=> 'inc/log.cls.php',
 			'LiteSpeed_Cache_Media'				=> 'inc/media.cls.php',
 			'LiteSpeed_Cache_Object'			=> 'inc/object.cls.php',
@@ -59,9 +61,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Admin'				=> 'admin/admin.cls.php',
 			'LiteSpeed_Cache_Admin_API'			=> 'admin/admin-api.cls.php',
 			'LiteSpeed_Cache_Admin_Display'		=> 'admin/admin-display.cls.php',
-			'LiteSpeed_Cache_Admin_Error'		=> 'admin/admin-error.cls.php',
 			'LiteSpeed_Cache_Admin_Report'		=> 'admin/admin-report.cls.php',
-			'LiteSpeed_Cache_Admin_Rules'		=> 'admin/admin-rules.cls.php',
 			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/admin-settings.cls.php',
 
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/cli-admin.cls.php',

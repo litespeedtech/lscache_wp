@@ -326,17 +326,12 @@ class Litespeed_File
 	}
 
 	/**
-	 * Inserts an array of strings into a file (.htaccess ), placing it between
-	 * BEGIN and END markers.
+	 * Inserts an array of strings into a file (.htaccess ), placing it between BEGIN and END markers.
 	 *
-	 * Replaces existing marked info. Retains surrounding
-	 * data. Creates file if none exists.
+	 * Replaces existing marked info. Retains surrounding data. Creates file if none exists.
 	 *
-	 * @param string       $filename  Filename to alter.
-	 * @param string       $marker    The marker to alter.
-	 * @param array|string $insertion The new content to insert.
-	 * @param bool 	       $prepend Prepend insertion if not exist.
-	 * @return bool True on write success, false on failure.
+	 * @since 3.0-
+	 * @access private
 	 */
 	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)
 	{

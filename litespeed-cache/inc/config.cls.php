@@ -308,7 +308,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
-
+// var_dump($this->_options);exit;
 		// Check network
 		if ( ! $this->_if_need_site_options() ) {
 			// Set cache on

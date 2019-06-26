@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Admin
 			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
 				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 				if ( $add_var !== true ) {
-					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;
+					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;xx
 				}
 			}
 
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Admin
 
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
-				LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_editor_save() ;
+				LiteSpeed_Htaccess::get_instance()->htaccess_editor_save() ;
 				break ;
 
 			case LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS :

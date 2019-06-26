@@ -1,16 +1,16 @@
 <?php
 /**
- * The admin-panel specific functionality of the plugin.
+ * The htaccess rewrite rule operation class
  *
  *
  * @since      1.0.0
  * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @subpackage LiteSpeed_Cache/inc
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Admin_Rules
+class LiteSpeed_Htaccess
 {
 	private static $_instance ;
 
@@ -239,14 +239,12 @@ class LiteSpeed_Cache_Admin_Rules
 
 	/**
 	 * Get the content of the rules file.
-	 * If can't read, will add error msg to dashboard
-	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly
+	 *
+	 * NOTE: will throw error if failed
 	 *
 	 * @since 1.0.4
 	 * @since  2.9 Used exception for failed reading
 	 * @access public
-	 * @param string $path The path to get the content from.
-	 * @return boolean True if succeeded, false otherwise.
 	 */
 	public function htaccess_read( $kind = 'frontend' )
 	{
@@ -255,64 +253,50 @@ class LiteSpeed_Cache_Admin_Rules
 		if( ! $path || ! file_exists( $path ) ) {
 			return "\n" ;
 		}
-		if ( ! $this->_readable( $kind ) || ! $this->writable( $kind ) ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_RW ) ) ;
+
+		if ( ! $this->_readable( $kind ) ) {
+			LiteSpeed_Error::t( 'HTA_R' ) ;
 		}
 
-		$content = file_get_contents($path) ;
+		$content = Litespeed_File::read( $path ) ;
 		if ( $content === false ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_GET ) ) ;
+			LiteSpeed_Error::t( 'HTA_GET' ) ;
 		}
 
 		// Remove ^M characters.
-		$content = str_ireplace("\x0D", "", $content) ;
+		$content = str_ireplace( "\x0D", "", $content ) ;
 		return $content ;
 	}
 
 	/**
-	 * Try to save the rules file changes.
+	 * Save the rules file changes.
 	 *
-	 * This function is used by both the edit .htaccess admin page and
-	 * the common rewrite rule configuration options.
-	 *
-	 * This function will create a backup with _lscachebak appended to the file name
-	 * prior to making any changese. If creating the backup fails, an error is returned.
+	 * NOTE: will throw error if failed
 	 *
 	 * @since 1.0.4
-	 * @since 1.0.12 - Introduce $backup parameter and make function public
 	 * @access public
-	 * @param string $content The new content to put into the rules file.
-	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @param boolean $backup Whether to create backups or not.
-	 * @return boolean true on success, else false.
 	 */
-	public function htaccess_save($content, $kind = 'frontend', $backup = true)
+	public function htaccess_save( $content, $kind = 'frontend' )
 	{
-		$path = $this->htaccess_path($kind) ;
+		$path = $this->htaccess_path( $kind ) ;
 
-		if ( ! $this->_readable($kind) ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ) ;
+		if ( ! $this->writable( $kind ) ) {
+			LiteSpeed_Error::t( 'HTA_W' ) ;
 		}
 
-		if ( ! $this->writable($kind) ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ) ) ;
-		}
-
-		//failed to backup, not good.
-		if ( $backup && $this->_htaccess_backup($kind) === false ) {
-			 throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_BU ) ) ;
-		}
+		$this->_htaccess_backup( $kind ) ;
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
-		$ret = file_put_contents($path, $content, LOCK_EX) ;
-		if ( $ret === false ) {
-			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_SAVE ) ) ;
+		$res = Litespeed_File::save( $path, $content, false, false, false ) ;
+		if ( $res !== true ) {
+			throw new Exception( $res ) ;
 		}
 	}
 
 	/**
 	 * Try to backup the .htaccess file if we didn't save one before.
-	 * This function will attempt to create a .htaccess_lscachebak_orig firs
+	 *
+	 * NOTE: will throw error if failed
 	 *
 	 * @since 1.0.10
 	 * @access private
@@ -329,91 +313,106 @@ class LiteSpeed_Cache_Admin_Rules
 			return ;
 		}
 
-		copy( $path, $path . '.bk' ) ;
+		$res = copy( $path, $path . '.bk' ) ;
+
+		// Failed to backup, abort
+		if ( ! $res ) {
+			LiteSpeed_Error::t( 'HTA_BK' ) ;
+		}
 	}
 
 	/**
 	 * Get mobile view rule from htaccess file
 	 *
+	 * NOTE: will throw error if failed
+	 *
 	 * @since 1.1.0
-	 * @return string Mobile Agents value
 	 */
-	public function get_rewrite_rule_mobile_agents()
+	public function current_mobile_agents()
 	{
-		$rules = $this->_get_rule_by(self::MARKER_MOBILE) ;
-		if( ! isset($rules[0]) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE) ;
-			return false ;
+		$rules = $this->_get_rule_by( self::MARKER_MOBILE ) ;
+		if( ! isset( $rules[ 0 ] ) ) {
+			LiteSpeed_Error::t( 'HTA_DNF', self::MARKER_MOBILE ) ;
 		}
-		$rule = trim($rules[0]) ;
-		$pattern = '/RewriteCond\s%{HTTP_USER_AGENT}\s+([^[\n]*)\s+[[]*/' ;
-		$matches = array() ;
-		$num_matches = preg_match($pattern, $rule, $matches) ;
-		if ( $num_matches === false ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match') ;
-			return false ;
+
+		$rule = trim( $rules[ 0 ] ) ;
+		// 'RewriteCond %{HTTP_USER_AGENT} ' . LiteSpeed_Cache_Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
+		$match = substr( $rule, strlen( 'RewriteCond %{HTTP_USER_AGENT} ' ), -strlen( ' [NC]' ) ) ;
+
+		if ( ! $match ) {
+			LiteSpeed_Error::t( 'HTA_DNF', __( 'Mobile Agent Rules', 'litespeed-cache' ) ) ;
 		}
-		$match = trim($matches[1]) ;
+
 		return $match ;
 	}
 
 	/**
 	 * Parse rewrites rule from the .htaccess file.
 	 *
+	 * NOTE: will throw error if failed
+	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @param string $kind The kind of htaccess to search in
-	 * @return array
 	 */
-	public function get_rewrite_rule_login_cookie($kind = 'frontend')
+	public function current_login_cookie( $kind = 'frontend' )
 	{
-		$rule = $this->_get_rule_by(self::MARKER_LOGIN_COOKIE, $kind) ;
-		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ) {//todo: use regex
-			return false ;
+		$rule = $this->_get_rule_by( self::MARKER_LOGIN_COOKIE, $kind ) ;
+
+		if( ! $rule ) {
+			LiteSpeed_Error::t( 'HTA_DNF', self::MARKER_LOGIN_COOKIE ) ;
+		}
+
+		if( strpos( $rule, 'RewriteRule .? - [E=' ) !== 0 ) {
+			LiteSpeed_Error::t( 'HTA_LOGIN_COOKIE_INVALID' ) ;
 		}
 
 		$rule_cookie = substr( $rule, strlen( 'RewriteRule .? - [E=' ), -1 ) ;
 
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-			return trim( $rule_cookie, '"' ) ;
+			$rule_cookie = trim( $rule_cookie, '"' ) ;
 		}
+
+		// Drop `Cache-Vary:`
+		$rule_cookie = substr( $rule_cookie, strlen( 'Cache-Vary:' ) ) ;
 
 		return $rule_cookie ;
 	}
 
 	/**
-	 * Get rewrite rules based on tags
-	 * @param  string $cond The tag to be used
-	 * @param  string $kind Frontend or backend .htaccess file
-	 * @return mixed       Rules
+	 * Get rewrite rules based on the marker
+	 *
+	 * @since  2.0
+	 * @access private
 	 */
-	private function _get_rule_by($cond, $kind = 'frontend')
+	private function _get_rule_by( $cond, $kind = 'frontend' )
 	{
 		clearstatcache() ;
-		$path = $this->htaccess_path($kind) ;
-		if ( ! $this->_readable($kind) ) {
+		$path = $this->htaccess_path( $kind ) ;
+		if ( ! $this->_readable( $kind ) ) {
 			return false ;
 		}
 
-		$rules = Litespeed_File::extract_from_markers($path, self::MARKER) ;
-		if( ! in_array($cond . self::MARKER_START, $rules) || ! in_array($cond . self::MARKER_END, $rules) ) {
+		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
+		if( ! in_array( $cond . self::MARKER_START, $rules ) || ! in_array( $cond . self::MARKER_END, $rules ) ) {
 			return false ;
 		}
 
-		$key_start = array_search($cond . self::MARKER_START, $rules) ;
-		$key_end = array_search($cond . self::MARKER_END, $rules) ;
+		$key_start = array_search( $cond . self::MARKER_START, $rules ) ;
+		$key_end = array_search( $cond . self::MARKER_END, $rules ) ;
 		if( $key_start === false || $key_end === false ) {
 			return false ;
 		}
 
-		$results = array_slice($rules, $key_start+1, $key_end-$key_start-1) ;
+		$results = array_slice( $rules, $key_start + 1, $key_end - $key_start - 1 ) ;
 		if( ! $results ) {
 			return false ;
 		}
-		if( count($results) == 1 ) {
-			return trim($results[0]) ;
+
+		if( count( $results ) == 1 ) {
+			return trim( $results[ 0 ] ) ;
 		}
-		return array_filter($results) ;
+
+		return array_filter( $results ) ;
 	}
 
 	/**
@@ -726,14 +725,14 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Write to htaccess with rules
 	 *
+	 * NOTE: will throw error if failed
+	 *
 	 * @since  1.1.0
 	 * @access private
-	 * @param  array $rules
-	 * @param  string $kind  which htaccess
 	 */
 	private function _insert_wrapper( $rules = array(), $kind = false, $marker = false )
 	{
-		if ( $kind === false ) {
+		if ( $kind != 'backend' ) {
 			$kind = 'frontend' ;
 		}
 
@@ -742,32 +741,21 @@ class LiteSpeed_Cache_Admin_Rules
 			$marker = self::MARKER ;
 		}
 
-		$res = $this->_htaccess_backup( $kind ) ;
-		if ( ! $res ) {
-			return false ;
-		}
+		$this->_htaccess_backup( $kind ) ;
 
-		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->_wrap_do_no_edit( $rules ), $marker, true ) ;
+		Litespeed_File::insert_with_markers( $this->htaccess_path( $kind ), $this->_wrap_do_no_edit( $rules ), $marker, true ) ;
 	}
 
 	/**
 	 * Update rewrite rules based on setting
+	 *
+	 * NOTE: will throw error if failed
 	 *
 	 * @since 1.3
 	 * @access public
 	 */
 	public function update( $cfg )
 	{
-		if ( ! $this->_readable() ) {
-			return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
-		}
-
-		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			if ( ! $this->_readable( 'backend' ) ) {
-				return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
-			}
-		}
-
 		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
 
 		// Check frontend content
@@ -827,17 +815,18 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Get existing rewrite rules
 	 *
+	 * NOTE: will throw error if failed
+	 *
 	 * @since  1.3
 	 * @access private
 	 * @param  string $kind Frontend or backend .htaccess file
-	 * @return bool|array       False if failed to read, rules array otherwise
 	 */
 	private function _extract_rules( $kind = 'frontend' )
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path( $kind ) ;
 		if ( ! $this->_readable( $kind ) ) {
-			return false ;
+			LiteSpeed_Error::t( 'E_HTA_R' ) ;
 		}
 
 		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
