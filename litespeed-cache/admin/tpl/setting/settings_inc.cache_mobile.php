@@ -33,16 +33,16 @@
 
 					try {
 						$mobile_agents = LiteSpeed_Htaccess::get_instance()->current_mobile_agents() ;
+						if ( $mobile_agents !== $this->__options[ $id ] ) {
+							echo '<div class="litespeed-callout-danger">'
+									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
+									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
+								. '</div>' ;
+						}
 					} catch( \Exception $e ) {
 						echo '<div class="litespeed-callout-danger">' . $e->getMessage() . '</div>' ;
 					}
 
-					if ( $mobile_agents !== $this->__options[ $id ] ) {
-						echo '<div class="litespeed-callout-danger">'
-								. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
-								. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
-							. '</div>' ;
-					}
 				}
 			}
 

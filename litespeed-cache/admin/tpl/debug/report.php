@@ -1,5 +1,5 @@
 <?php
-if (!defined('WPINC')) die;
+defined( 'WPINC' ) || exit ;
 
 $_report = LiteSpeed_Cache_Admin_Report::get_instance() ;
 $report = $_report->generate_environment_report();

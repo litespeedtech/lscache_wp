@@ -222,7 +222,7 @@ class Litespeed_File
 			$insertion = array() ;
 		}
 
-		return self::_insert_with_markers($filename, $marker, $insertion, $prepend) ;
+		return self::_insert_with_markers($filename, $marker, $insertion, $prepend) ;//todo: capture exceptions
 	}
 
 	/**
@@ -330,38 +330,41 @@ class Litespeed_File
 	 *
 	 * Replaces existing marked info. Retains surrounding data. Creates file if none exists.
 	 *
+	 * NOTE: will throw error if failed
+	 *
 	 * @since 3.0-
+	 * @since  3.0 Throw errors if failed
 	 * @access private
 	 */
 	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)
 	{
-		if ( ! file_exists($filename) ) {
-			if ( ! is_writable( dirname($filename) ) ) {
-				return false ;
+		if ( ! file_exists( $filename ) ) {
+			if ( ! is_writable( dirname( $filename ) ) ) {
+				LiteSpeed_Error::t( 'W', dirname( $filename ) ) ;
 			}
+
 			set_error_handler("litespeed_exception_handler") ;
 			try {
-				touch($filename) ;
-			}
-			catch ( ErrorException $ex ){
-				return false ;
+				touch( $filename ) ;
+			} catch ( ErrorException $ex ) {
+				LiteSpeed_Error::t( 'W', $filename ) ;
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable($filename) ) {
-			return false ;
+		elseif ( ! is_writeable( $filename ) ) {
+			LiteSpeed_Error::t( 'W', $filename ) ;
 		}
 
-		if ( ! is_array($insertion) ) {
+		if ( ! is_array( $insertion ) ) {
 			$insertion = explode( "\n", $insertion ) ;
 		}
 
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 
-		$fp = fopen($filename, 'r+' ) ;
+		$fp = fopen( $filename, 'r+' ) ;
 		if ( ! $fp ) {
-			return false ;
+			LiteSpeed_Error::t( 'W', $filename ) ;
 		}
 
 		// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.

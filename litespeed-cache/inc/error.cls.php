@@ -28,7 +28,14 @@ class LiteSpeed_Error
 	public static function t( $code, $args = null )
 	{
 		switch ( $code ) {
+			case 'W' :
+				$error = __( '%s file not writable.', 'litespeed-cache' ) ;
+				break;
+
 			case 'HTA_DNF' :
+				if ( ! is_array( $args ) ) {
+					$args = array( '<code>' . $args . '</code>' ) ;
+				}
 				$args[] = '.htaccess' ;
 				$error = __( 'Could not find %1$s in %2$s.', 'litespeed-cache' ) ;
 				break;

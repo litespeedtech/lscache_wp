@@ -696,7 +696,7 @@ class LiteSpeed_Htaccess
 	public function insert_ls_wrapper()
 	{
 		$rules = $this->_wrap_ls_module() ;
-		return $this->_insert_wrapper( $rules ) ;
+		return $this->_insert_wrapper( $rules ) ;//todo:capture exceptions
 	}
 
 	/**
@@ -757,7 +757,7 @@ class LiteSpeed_Htaccess
 	public function update( $cfg )
 	{
 		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
-
+// var_dump( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls );exit;
 		// Check frontend content
 		list( $rules, $rules_nonls ) = $this->_extract_rules() ;
 
@@ -765,10 +765,12 @@ class LiteSpeed_Htaccess
 		if ( $this->_wrap_do_no_edit( $frontend_rules_nonls ) != $rules_nonls ) {
 			LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls frontend rules' ) ;
 			// Need to update frontend htaccess
-			if ( ! $this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ) {
+			try {
+				$this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ;
+			} catch ( \Exception $e ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				throw new Exception( $manual_guide_codes ) ;
 			}
 		}
 
@@ -776,10 +778,12 @@ class LiteSpeed_Htaccess
 		if ( $this->_wrap_do_no_edit( $frontend_rules ) != $rules ) {
 			LiteSpeed_Cache_Log::debug( '[Rules] Update frontend rules' ) ;
 			// Need to update frontend htaccess
-			if ( ! $this->_insert_wrapper( $frontend_rules ) ) {
+			try {
+				$this->_insert_wrapper( $frontend_rules ) ;
+			} catch ( \Exception $e ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				throw new Exception( $manual_guide_codes ) ;
 			}
 		}
 
@@ -790,10 +794,12 @@ class LiteSpeed_Htaccess
 			if ( $this->_wrap_do_no_edit( $backend_rules_nonls ) != $rules_nonls ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls backend rules' ) ;
 				// Need to update frontend htaccess
-				if ( ! $this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ) {
+				try {
+					$this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ;
+				} catch ( \Exception $e ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					throw new Exception( $manual_guide_codes ) ;
 				}
 			}
 
@@ -801,10 +807,12 @@ class LiteSpeed_Htaccess
 			if ( $this->_wrap_do_no_edit( $backend_rules ) != $rules ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update backend rules' ) ;
 				// Need to update backend htaccess
-				if ( ! $this->_insert_wrapper( $backend_rules, 'backend' ) ) {
+				try {
+					$this->_insert_wrapper( $backend_rules, 'backend' ) ;
+				} catch ( \Exception $e ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					throw new Exception( $manual_guide_codes ) ;
 				}
 			}
 		}
@@ -887,7 +895,7 @@ class LiteSpeed_Htaccess
 	{
 		$this->_insert_wrapper( false ) ;// Use false to avoid do-not-edit msg
 		// Clear non ls rules
-		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;
+		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;//todo:capture exceptions
 
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
 			$this->_insert_wrapper( false, 'backend' ) ;

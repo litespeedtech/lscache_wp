@@ -318,8 +318,11 @@ class LiteSpeed_Cache_Activation
 
 		/* 4) .htaccess; */
 
-		$res = LiteSpeed_Htaccess::get_instance()->update( $options ) ;
-		var_dump($res);exit;
+		try {
+			LiteSpeed_Htaccess::get_instance()->update( $options ) ;
+		} catch ( \Exception $ex ) {
+			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+		}
 	}
 
 	/**

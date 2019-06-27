@@ -139,35 +139,34 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function register_admin_menu()
 	{
-		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
+		$is_network_admin = is_network_admin() ;
+		$capability = $is_network_admin ? 'manage_network_options' : 'manage_options' ;
 		if ( current_user_can( $capability ) ) {
+
 			// root menu
 			add_menu_page( 'LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed' ) ;
 
 			// sub menus
 			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' ) ;
 
-			$this->_add_submenu( __( 'Settings', 'litespeed-cache' ), 'lscache-settings', 'show_menu_settings' ) ;
+			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'lscache-cache', 'show_menu_cache' ) ;
 
-			$this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'lscache-cdn', 'show_menu_cdn' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'lscache-cdn', 'show_menu_cdn' ) ;
 
-			$this->_add_submenu( __( 'Manage', 'litespeed-cache' ), 'lscache-manage', 'show_menu_manage' ) ;
-
-			if ( ! is_multisite() || is_network_admin() ) {
-				$this->_add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
+			if ( ! is_multisite() || $is_network_admin ) {
+				$this->_add_submenu(__( 'Edit .htaccess', 'litespeed-cache' ), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess' ) ;
 			}
 
-			if ( ! is_network_admin() ) {
-				$this->_add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
-				$this->_add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
-				$this->_add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
-				$this->_add_submenu(__('Import / Export', 'litespeed-cache'), 'lscache-import', 'show_import_export') ;
-			}
+			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'HTML Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'lscache-db_optm', 'show_db_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'lscache-crawler', 'show_crawler' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Import / Export', 'litespeed-cache' ), 'lscache-import', 'show_import_export' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'lscache-debug', 'show_debug' ) ;
 
-			defined( 'LSCWP_LOG' ) && $this->_add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_settings')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_dash')) ;
 		}
 	}
 
@@ -478,23 +477,12 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Displays the cache management page.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function show_menu_manage()
-	{
-		require_once LSCWP_DIR . 'admin/tpl/manage.php' ;
-	}
-
-	/**
 	 * Outputs the LiteSpeed Cache settings page.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function show_menu_settings()
+	public function show_menu_cache()
 	{
 		if ( is_network_admin() ) {
 			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
@@ -519,17 +507,6 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_menu_edit_htaccess()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
-	}
-
-	/**
-	 * Outputs the html for the Environment Report page.
-	 *
-	 * @since 1.0.12
-	 * @access public
-	 */
-	public function show_report()
-	{
-		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
 	}
 
 	/**
@@ -566,14 +543,14 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Outputs the debug log.
+	 * Outputs the debug tabs.
 	 *
 	 * @since 1.1.5
 	 * @access public
 	 */
-	public function show_debug_log()
+	public function show_debug()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/debug_log.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/debug.php' ;
 	}
 
 	/**

@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Admin
 			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
 				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 				if ( $add_var !== true ) {
-					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;xx
+					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;//xx
 				}
 			}
 
