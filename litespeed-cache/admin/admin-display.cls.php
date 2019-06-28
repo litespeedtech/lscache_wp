@@ -158,10 +158,15 @@ class LiteSpeed_Cache_Admin_Display
 			}
 
 			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
+
 			! $is_network_admin && $this->_add_submenu( __( 'HTML Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
+
 			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'lscache-db_optm', 'show_db_optm' ) ;
+
 			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'lscache-crawler', 'show_crawler' ) ;
+
 			! $is_network_admin && $this->_add_submenu( __( 'Import / Export', 'litespeed-cache' ), 'lscache-import', 'show_import_export' ) ;
+
 			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'lscache-debug', 'show_debug' ) ;
 
 

@@ -39,10 +39,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
-		// Check if debug is on
-		if ( $this->_options[ self::O_DEBUG ] == self::VAL_ON || $this->_options[ self::O_DEBUG ] == self::VAL_ON2 ) {
-			LiteSpeed_Cache_Log::init() ;
-		}
 
 		/**
 		 * Detect if has quic.cloud set

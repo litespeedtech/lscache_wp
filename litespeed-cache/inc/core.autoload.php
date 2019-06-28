@@ -50,6 +50,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Optimize'			=> 'inc/optimize.cls.php',
 			'LiteSpeed_Cache_Optimizer'			=> 'inc/optimizer.cls.php',
 			'LiteSpeed_Cache_Purge'				=> 'inc/purge.cls.php',
+			'LiteSpeed_Cache_Report'			=> 'inc/report.cls.php',
 			'LiteSpeed_Cache_REST'				=> 'inc/rest.cls.php',
 			'LiteSpeed_Cache_Router'			=> 'inc/router.cls.php',
 			'LiteSpeed_Cache_Tag'				=> 'inc/tag.cls.php',
@@ -61,7 +62,6 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Admin'				=> 'admin/admin.cls.php',
 			'LiteSpeed_Cache_Admin_API'			=> 'admin/admin-api.cls.php',
 			'LiteSpeed_Cache_Admin_Display'		=> 'admin/admin-display.cls.php',
-			'LiteSpeed_Cache_Admin_Report'		=> 'admin/admin-report.cls.php',
 			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/admin-settings.cls.php',
 
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/cli-admin.cls.php',

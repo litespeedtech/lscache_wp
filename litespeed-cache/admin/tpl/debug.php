@@ -1,10 +1,18 @@
 <?php
 defined( 'WPINC' ) || exit ;
+
+$menu_list = array(
+	'log_viewer' 		=> __( 'Log View', 'litespeed-cache' ),
+	'beta_test'			=> __( 'Beta Test', 'litespeed-cache' ),
+	'settings-debug' 	=> __( 'Settings', 'litespeed-cache' ),
+	'report' 			=> __( 'Report', 'litespeed-cache' ),
+) ;
+
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache Debug Log Viewer', 'litespeed-cache' ) ; ?>
+		<?php echo __( 'LiteSpeed Cache Debug', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
@@ -12,33 +20,29 @@ defined( 'WPINC' ) || exit ;
 	<hr class="wp-header-end">
 </div>
 
-<div class="wrap">
-	<form method="post" action="admin.php?page=lscache-debug">
-		<?php $this->form_action( LiteSpeed_Cache::ACTION_LOG, LiteSpeed_Cache_Log::TYPE_BETA_TEST ) ; ?>
+<div class="litespeed-wrap">
+	<h2 class="litespeed-header">
+	<?php
+		$i = 1 ;
+		foreach ($menu_list as $tab => $val){
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
+		}
+	?>
+	</h2>
 
-		<h3 class="litespeed-title"><?php echo __( 'Try GitHub Version', 'litespeed-cache' ) ; ?></h3>
-
-		<input type="text" name="<?php echo LiteSpeed_Cache_Log::BETA_TEST_URL; ?>" class="litespeed-input-long">
-
-		<div class="litespeed-desc">Example: https://github.com/litespeedtech/lscache_wp/commit/253715525b1708c25f73460635f7eaf152448821</div>
-
-		<button type="submit" class="litespeed-btn-primary"><?php echo __('Upgrade', 'litespeed-cache'); ?></button>
-	</form>
-
+	<div class="litespeed-body">
 	<?php
 
-		$file = LSCWP_CONTENT_DIR . '/debug.log' ;
-		$lines = Litespeed_File::count_lines( $file ) ;
-		$start = $lines > 1000 ? $lines - 1000 : 0 ;
-		$logs = Litespeed_File::read( $file, $start ) ;
-		$logs = implode( "\n", $logs ) ;
-
-		echo nl2br( htmlspecialchars( $logs ) ) ;
+		// include all tpl for faster UE
+		foreach ($menu_list as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>" ;
+			require LSCWP_DIR . "admin/tpl/debug/$tab.php" ;
+			echo "</div>" ;
+		}
 
 	?>
-
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_LOG, LiteSpeed_Cache_Log::TYPE_CLEAR_LOG ) ; ?>" class="litespeed-btn-success">
-		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
-	</a>
+	</div>
 
 </div>

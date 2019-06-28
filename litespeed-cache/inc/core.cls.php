@@ -90,6 +90,11 @@ class LiteSpeed_Cache
 	{
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
+		// Check if debug is on
+		if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) == LiteSpeed_Cache_Config::VAL_ON || $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) == LiteSpeed_Cache_Config::VAL_ON2 ) {
+			LiteSpeed_Cache_Log::init() ;
+		}
+
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
@@ -358,7 +363,7 @@ class LiteSpeed_Cache
 				break ;
 
 			case LiteSpeed_Cache::ACTION_REPORT:
-				$msg = LiteSpeed_Cache_Admin_Report::handler() ;
+				$msg = LiteSpeed_Cache_Report::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_IMPORT:

@@ -5,7 +5,7 @@
  *
  * @since      1.1.0
  * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @subpackage LiteSpeed_Cache/inc
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-class LiteSpeed_Cache_Admin_Report
+class LiteSpeed_Cache_Report
 {
 	private static $_instance ;
 
@@ -176,16 +176,6 @@ class LiteSpeed_Cache_Admin_Report
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
 			}
 		}
-
-		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ; xx
-		foreach ( $item_options as $v ) {
-			// bypass main conf
-			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {
-				continue ;
-			}
-			$options[ $v ] = get_option( $v ) ;
-		}
-
 
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
 		return $report ;

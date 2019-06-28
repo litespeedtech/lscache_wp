@@ -1,10 +1,12 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
+$this->form_action() ;
 ?>
 
+
 <h3 class="litespeed-title-short">
-	<?php echo __('Developer Testing', 'litespeed-cache'); ?>
+	<?php echo __('Debug Settings', 'litespeed-cache'); ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
@@ -174,3 +176,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 </tbody></table>
+
+<?php
+	echo "<div class='litespeed-top20'></div>" ;
+
+	submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ;
+?>
+
+<a href="admin.php?page=lscache-import" class="litespeed-btn-danger litespeed-float-resetbtn"><?php echo __( 'Reset All Settings', 'litespeed-cache' ) ; ?></a>
+
+</form>
