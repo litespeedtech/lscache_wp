@@ -1,6 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
-
 
 $_panels = array(
 	array(

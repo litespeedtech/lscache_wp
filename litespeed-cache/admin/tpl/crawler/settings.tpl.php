@@ -1,6 +1,7 @@
 <?php
 if ( !defined('WPINC') ) die;
 
+$this->form_action() ;
 ?>
 
 <h3 class="litespeed-title-short">
@@ -309,3 +310,6 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 </tbody></table>
+
+<?php
+$this->form_end() ;

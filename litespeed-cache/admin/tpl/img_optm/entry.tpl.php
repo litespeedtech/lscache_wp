@@ -2,7 +2,7 @@
 if ( ! defined( 'WPINC' ) ) die ;
 
 // Update table data for upgrading
-LiteSpeed_Cache_Data::get_instance() ;xx
+LiteSpeed_Cache_Data::get_instance() ;//xx
 
 $img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
 
@@ -19,27 +19,53 @@ else {
 	$finished_percentage = 0 ;
 }
 
+$menu_list = array(
+) ;
+
+if ( ! $optm_summary ) {
+	$menu_list[ 'initialize' ] = __( 'Image Optimization Summary', 'litespeed-cache' ) ;
+}
+else {
+	$menu_list[ 'summary' ] = __( 'Image Optimization Summary', 'litespeed-cache' ) ;
+}
+
+$menu_list[ 'summary' ] = __( 'Image Optimization Settings', 'litespeed-cache' ) ;
+
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __('LiteSpeed Cache Image Optimization', 'litespeed-cache') ; ?>
+		<?php echo __( 'LiteSpeed Cache Image Optimization', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 	</span>
 	<hr class="wp-header-end">
 </div>
 
 <div class="litespeed-wrap">
+	<h2 class="litespeed-header">
+	<?php
+		$i = 1 ;
+		foreach ($menu_list as $tab => $val){
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
+		}
+	?>
+	</h2>
+
 	<div class="litespeed-body">
-		<div class="litespeed-flex-container">
-			<?php if ( ! $optm_summary ) : ?>
-				<?php include_once LSCWP_DIR . "admin/tpl/img_optm/initialize.php" ; ?>
-			<?php else : ?>
-				<?php include_once LSCWP_DIR . "admin/tpl/img_optm/summary.php" ; ?>
-			<?php endif ; ?>
-		</div>
+	<?php
+
+		// include all tpl for faster UE
+		foreach ($menu_list as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>" ;
+			require LSCWP_DIR . "admin/tpl/img_optm/$tab.tpl.php" ;
+			echo "</div>" ;
+		}
+
+	?>
 	</div>
 
 </div>

@@ -14,8 +14,8 @@
 
 	<?php
 		if ( ! is_multisite() ) :
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php' ;
+			require LSCWP_DIR . 'admin/tpl/cache/settings_inc.check_adv_file.tpl.php' ;
+			require LSCWP_DIR . 'admin/tpl/cache/settings_inc.login_cookie.tpl.php' ;
 		endif ;
 	?>
 

@@ -178,11 +178,13 @@ $this->form_action() ;
 </tbody></table>
 
 <?php
-	echo "<div class='litespeed-top20'></div>" ;
 
-	submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success litespeed-duplicate-float', 'litespeed-submit') ;
-?>
+$this->form_end() ;
 
-<a href="admin.php?page=lscache-import" class="litespeed-btn-danger litespeed-float-resetbtn"><?php echo __( 'Reset All Settings', 'litespeed-cache' ) ; ?></a>
 
-</form>
+
+
+
+
+
+

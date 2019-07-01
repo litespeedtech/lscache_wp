@@ -108,10 +108,10 @@
 	<?php
 		if ( ! is_multisite() ) :
 			// Cookie
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
+			require LSCWP_DIR . 'admin/tpl/cache/settings_inc.exclude_cookies.tpl.php' ;
 
 			// User Agent
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
+			require LSCWP_DIR . 'admin/tpl/cache/settings_inc.exclude_useragent.tpl.php' ;
 
 		endif ;
 	?>

@@ -22,7 +22,7 @@ if ( ! defined( 'WPINC' ) ) {
 				<?php echo __( 'Notes', 'litespeed-cache' ) ; ?>:
 			</h2>
 
-			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/communicate_notify.php" ; ?>
+			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/communicate_notify.tpl.php" ; ?>
 
 			<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
 
@@ -34,5 +34,5 @@ if ( ! defined( 'WPINC' ) ) {
 	</div>
 
 	<div class="litespeed-width-3-10 litespeed-column-java">
-		<?php include_once LSCWP_DIR . "admin/tpl/img_optm/percentage_summary.php" ; ?>
+		<?php include_once LSCWP_DIR . "admin/tpl/img_optm/percentage_summary.tpl.php" ; ?>
 	</div>

@@ -155,13 +155,13 @@ class LiteSpeed_Cache_Admin_Display
 
 			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'lscache-page_optm', 'show_page_optm' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'lscache-db_optm', 'show_db_optm' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'lscache-crawler', 'show_crawler' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'lscache-import', 'show_tools' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'lscache-tools', 'show_tools' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'lscache-debug', 'show_debug' ) ;
 
@@ -478,6 +478,17 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Displays the CDN page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_menu_cdn()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/cdn/entry.tpl.php' ;
+	}
+
+	/**
 	 * Outputs the LiteSpeed Cache settings page.
 	 *
 	 * @since 1.0.0
@@ -521,9 +532,31 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.6
 	 * @access public
 	 */
-	public function show_optimization()
+	public function show_img_optm()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/img_optm/entry.tpl.php' ;
+	}
+
+	/**
+	 * Page optm page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_page_optm()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/page_optm/entry.tpl.php' ;
+	}
+
+	/**
+	 * DB optm page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_db_optm()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/db_optm/entry.tpl.php' ;
 	}
 
 	/**
@@ -585,6 +618,22 @@ class LiteSpeed_Cache_Admin_Display
 			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
 		}
 		wp_nonce_field( $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
+	}
+
+	/**
+	 * Output litespeed form info END
+	 *
+	 * @since    3.0
+	 * @access public
+	 */
+	public function form_end()
+	{
+		echo "<div class='litespeed-top20'></div>" ;
+		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'litespeed-btn-success litespeed-duplicate-float', 'litespeed-submit' ) ;
+		echo '<a href="admin.php?page=lscache-import" class="litespeed-btn-danger litespeed-float-resetbtn">' ;
+		echo __( 'Reset All Settings', 'litespeed-cache' ) ;
+		echo '</a>' ;
+		echo '</form>' ;
 	}
 
 	/**

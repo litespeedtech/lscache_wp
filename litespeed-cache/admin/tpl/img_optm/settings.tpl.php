@@ -1,5 +1,7 @@
 <?php
 defined( 'WPINC' ) || exit ;
+
+$this->form_action() ;
 ?>
 
 
@@ -150,3 +152,10 @@ defined( 'WPINC' ) || exit ;
 	</tr>
 
 </tbody></table>
+
+<?php
+
+$this->form_end() ;
+
+
+

@@ -1,31 +1,48 @@
 <?php defined( 'WPINC' ) || exit ; ?>
+<?php
+
+$menu_list = array(
+	'summary'		=> __( 'Summary', 'litespeed-cache' ),
+	'settings'		=> __( 'Crawler Settings', 'litespeed-cache' ),
+) ;
+
+?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?>
+		<?php echo __( 'LiteSpeed Cache Crawler', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 	</span>
 	<hr class="wp-header-end">
-
 </div>
 
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">
-		<a class='litespeed-tab' href='#general' data-litespeed-tab='general' litespeed-accesskey='1'>General</a>
-		<a class='litespeed-tab' href='#settings' data-litespeed-tab='settings' litespeed-accesskey='2'>Settings</a>
+	<?php
+		$i = 1 ;
+		foreach ($menu_list as $tab => $val){
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
+		}
+	?>
 	</h2>
+
 	<div class="litespeed-body">
-		<div data-litespeed-layout='general'>
-			<?php require LSCWP_DIR . "admin/tpl/crawler/crawler_general.inc.php" ; ?>
-		</div>
+	<?php
 
-		<div data-litespeed-layout='settings'>
-			<?php require LSCWP_DIR . "admin/tpl/crawler/crawler_settings.inc.php" ; ?>
-		</div>
+		// include all tpl for faster UE
+		foreach ($menu_list as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>" ;
+			require LSCWP_DIR . "admin/tpl/crawler/$tab.tpl.php" ;
+			echo "</div>" ;
+		}
 
+	?>
 	</div>
+
 </div>
 
 <iframe name="litespeedHiddenIframe" src="" width="0" height="0" frameborder="0"></iframe>

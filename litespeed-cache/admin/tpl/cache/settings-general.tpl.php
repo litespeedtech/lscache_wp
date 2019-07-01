@@ -44,7 +44,7 @@
 	</tr>
 
 	<?php if ( ! is_multisite() ) : ?>
-		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php'; ?>
+		<?php require LSCWP_DIR . 'admin/tpl/cache/settings_inc.auto_upgrade.tpl.php'; ?>
 	<?php endif ; ?>
 
 </tbody></table>

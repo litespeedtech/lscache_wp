@@ -39,7 +39,7 @@ $break_arr = array(
 <table><tbody>
 
 	<?php if ( ! is_multisite() ) : ?>
-		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.purge_on_upgrade.php' ; ?>
+		<?php require LSCWP_DIR . 'admin/tpl/cache/settings_inc.purge_on_upgrade.tpl.php' ; ?>
 	<?php endif; ?>
 
 	<tr>

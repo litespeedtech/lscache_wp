@@ -1,27 +1,19 @@
 <?php
-if (!defined('WPINC')) die;
+defined( 'WPINC' ) || exit ;
 
 $menu_list = array(
-	'purge' => __('Purge', 'litespeed-cache'),
-	'db' => __('DB Optimizer', 'litespeed-cache'),
+	'settings_css' 				=> __( 'CSS Settings', 'litespeed-cache' ),
+	'settings_js'				=> __( 'JS Settings', 'litespeed-cache' ),
+	'settings_html' 			=> __( 'HTML Settings', 'litespeed-cache' ),
+	'settings_media' 			=> __( 'Media Settings', 'litespeed-cache' ),
+	'settings_tuning' 			=> __( 'Tuning Settings', 'litespeed-cache' ),
 ) ;
-
-if ( ! is_network_admin() ) {
-	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
-}
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php
-			if ( is_network_admin() ) {
-				echo __('LiteSpeed Cache Network Management', 'litespeed-cache');
-			}
-			else {
-				echo __('LiteSpeed Cache Management', 'litespeed-cache');
-			}
-		?>
+		<?php echo __( 'LiteSpeed Cache Page Optimization', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
@@ -43,14 +35,18 @@ if ( ! is_network_admin() ) {
 
 	<div class="litespeed-body">
 	<?php
+		$this->form_action() ;
 
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php" ;
+			require LSCWP_DIR . "admin/tpl/page_optm/$tab.tpl.php" ;
 			echo "</div>" ;
 		}
 
+		$this->form_end() ;
+
 	?>
 	</div>
+
 </div>
