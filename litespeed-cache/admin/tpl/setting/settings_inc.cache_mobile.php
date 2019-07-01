@@ -33,7 +33,7 @@
 
 					try {
 						$mobile_agents = LiteSpeed_Htaccess::get_instance()->current_mobile_agents() ;
-						if ( $mobile_agents !== $this->__options[ $id ] ) {
+						if ( $mobile_agents !== LiteSpeed_Cache_Utility::arr2regex( $this->__options[ $id ], true ) ) {
 							echo '<div class="litespeed-callout-danger">'
 									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
 									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )

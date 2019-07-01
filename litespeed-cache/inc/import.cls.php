@@ -1,4 +1,5 @@
 <?php
+defined( 'WPINC' ) || exit ;
 /**
  * The import/export class.
  *
@@ -8,22 +9,16 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
-
 class LiteSpeed_Cache_Import
 {
 	private static $_instance ;
 
-	private $_cfg_items ;
 	private $__cfg ;
+	private $_log_name ;
 
 	const TYPE_IMPORT = 'import' ;
 	const TYPE_EXPORT = 'export' ;
 	const TYPE_RESET = 'reset' ;
-
-	const DB_IMPORT_LOG = 'litespeed_import_log' ;
 
 	/**
 	 * Init
@@ -36,8 +31,7 @@ class LiteSpeed_Cache_Import
 		LiteSpeed_Cache_Log::debug( 'Import init' ) ;
 
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-
-		$this->_cfg_items = $this->__cfg->stored_items() ;xx
+		$this->_log_name = LiteSpeed_Cache_Const::conf_name( 'import', 'log' ) ;
 	}
 
 	/**
@@ -73,6 +67,19 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
+	 * Show summary of history
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function summary()
+	{
+		$log = get_option( $this->_log_name, array() ) ;
+
+		return $log ;
+	}
+
+	/**
 	 * Export settings
 	 *
 	 * @since  2.4.1
@@ -92,10 +99,7 @@ class LiteSpeed_Cache_Import
 	private function _export( $only_data_return = false )
 	{
 
-		$data = array() ;
-		foreach ( $this->_cfg_items as $v ) {
-			$data[ $v ] = get_option( $v ) ;
-		}
+		$data = $this->__cfg->get_options() ;
 
 		$data = base64_encode( json_encode( $data ) ) ;
 
@@ -106,14 +110,14 @@ class LiteSpeed_Cache_Import
 		$filename = $this->_generate_filename() ;
 
 		// Update log
-		$log = get_option( self::DB_IMPORT_LOG, array() ) ;
+		$log = $this->summary() ;
 		if ( empty( $log[ 'export' ] ) ) {
 			$log[ 'export' ] = array() ;
 		}
 		$log[ 'export' ][ 'file' ] = $filename ;
 		$log[ 'export' ][ 'time' ] = time() ;
 
-		update_option( self::DB_IMPORT_LOG, $log ) ;
+		update_option( $this->_log_name, $log ) ;
 
 		LiteSpeed_Cache_Log::debug( 'Import: Saved to ' . $filename ) ;
 
@@ -152,14 +156,14 @@ class LiteSpeed_Cache_Import
 			}
 
 			// Update log
-			$log = get_option( self::DB_IMPORT_LOG, array() ) ;
+			$log = $this->summary() ;
 			if ( empty( $log[ 'import' ] ) ) {
 				$log[ 'import' ] = array() ;
 			}
 			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
 			$log[ 'import' ][ 'time' ] = time() ;
 
-			update_option( self::DB_IMPORT_LOG, $log ) ;
+			update_option( $this->_log_name, $log ) ;
 
 			$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
 		}
@@ -179,20 +183,10 @@ class LiteSpeed_Cache_Import
 			return false ;
 		}
 
-		$options = $data[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
-		foreach ( $this->_cfg_items as $v ) {
-			$options[ $v ] = $data[ $v ] ;
-		}
-
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
-
-		global $wp_settings_errors ;
-		if ( ! empty( $wp_settings_errors ) ) {
-			foreach ( $wp_settings_errors as $err ) {
-				LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
-				LiteSpeed_Cache_Log::debug( '[Import] err ' . $err[ 'message' ] ) ;
+		foreach ( $this->__cfg->get_options() as $k => $v ) {
+			if ( isset( $data[ $k ] ) ) {
+				// todo: how to save
 			}
-			return false ;
 		}
 
 		if ( ! $file ) {
@@ -230,12 +224,8 @@ class LiteSpeed_Cache_Import
 	private function _reset()
 	{
 		$options = $this->__cfg->get_default_options() ;
-		// Get items
-		foreach ( $this->_cfg_items as $v ) {
-			$options[ $v ] = $this->__cfg->default_item( $v ) ;xx
-		}
 
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
+		// todo: how to save
 
 		$ret = $this->__cfg->update_options( $output ) ;
 

@@ -1,7 +1,4 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">

@@ -8,22 +8,6 @@
 <?php $this->cache_disabled_warning() ; ?>
 
 <table><tbody>
-	<tr>
-		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache' ) ; ?>
-				<?php $this->_uri_usage_example() ; ?>
-				<br /><?php echo __( 'To define a custom TTL for a URI, add a space followed by the TTL value to the end of the URI.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'For example, %1$s defines a TTL of %2$s seconds for %3$s.', 'litespeed-cache' ), '<code>/mypath/mypage 300</code>', 300, '<code>/mypath/mypage</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-			</div>
-		</td>
-	</tr>
 
 	<tr>
 		<th>

@@ -153,10 +153,6 @@ class LiteSpeed_Cache_Admin_Display
 
 			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'lscache-cdn', 'show_menu_cdn' ) ;
 
-			if ( ! is_multisite() || $is_network_admin ) {
-				$this->_add_submenu(__( 'Edit .htaccess', 'litespeed-cache' ), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess' ) ;
-			}
-
 			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
@@ -165,7 +161,7 @@ class LiteSpeed_Cache_Admin_Display
 
 			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'lscache-crawler', 'show_crawler' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Import / Export', 'litespeed-cache' ), 'lscache-import', 'show_import_export' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'lscache-import', 'show_tools' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'lscache-debug', 'show_debug' ) ;
 
@@ -498,28 +494,14 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Displays the edit_htaccess admin page.
+	 * Tools page
 	 *
-	 * This function will try to load the .htaccess file contents.
-	 * If it fails, it will echo the error message.
-	 *
-	 * @since 1.0.4
+	 * @since 3.0
 	 * @access public
 	 */
-	public function show_menu_edit_htaccess()
+	public function show_tools()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
-	}
-
-	/**
-	 * Outputs the html for the Import/Export page.
-	 *
-	 * @since 1.8.2
-	 * @access public
-	 */
-	public function show_import_export()
-	{
-		require_once LSCWP_DIR . 'admin/tpl/import_export.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/tools/entry.tpl.php' ;
 	}
 
 	/**

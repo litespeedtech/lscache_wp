@@ -9,8 +9,8 @@ $menu_list = array(
 	'purge' 	=> __( 'Purge', 'litespeed-cache' ),
 	'excludes' 	=> __( 'Excludes', 'litespeed-cache' ),
 	'esi' 		=> __( 'ESI', 'litespeed-cache' ),
-	'object' 	=> __( 'Object Cache', 'litespeed-cache' ),
-	'browser' 	=> __( 'Browser Cache', 'litespeed-cache' ),
+	'object' 	=> __( 'Object', 'litespeed-cache' ),
+	'browser' 	=> __( 'Browser', 'litespeed-cache' ),
 	'advanced' 	=> __( 'Advanced', 'litespeed-cache' ),
 ) ;
 
