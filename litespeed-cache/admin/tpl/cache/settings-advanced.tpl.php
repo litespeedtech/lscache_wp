@@ -14,29 +14,10 @@
 
 	<?php
 		if ( ! is_multisite() ) :
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
-
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php' ;
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php' ;
 		endif ;
 	?>
-
-	<tr>
-		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id, 50 ) ; ?>
-			<?php $this->recommended( $id, true ) ; ?>
-
-			<div class="litespeed-desc">
-				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all' ) ; ?>
-			</div>
-		</td>
-	</tr>
 
 	<tr>
 		<th>

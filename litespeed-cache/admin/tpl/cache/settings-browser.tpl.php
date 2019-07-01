@@ -1,6 +1,14 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 
-	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
+
+<h3 class="litespeed-title-short">
+	<?php echo __( 'Browser Cache Settings', 'litespeed-cache' ) ; ?>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:browser', false, 'litespeed-learn-more' ) ; ?>
+</h3>
+
+<table><tbody>
+
+	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
@@ -15,8 +23,8 @@
 		</td>
 	</tr>
 
-	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
-		<th class="litespeed-padding-left">
+	<tr>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -30,3 +38,4 @@
 		</td>
 	</tr>
 
+</tbody></table>

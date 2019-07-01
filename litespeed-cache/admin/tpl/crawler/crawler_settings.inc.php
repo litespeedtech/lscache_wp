@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 	echo "<div class='litespeed-top20'></div>" ;
 
-	submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ;
+	submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success litespeed-duplicate-float', 'litespeed-submit') ;
 
 ?>
 

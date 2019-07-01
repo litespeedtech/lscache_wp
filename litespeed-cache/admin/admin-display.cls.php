@@ -159,7 +159,7 @@ class LiteSpeed_Cache_Admin_Display
 
 			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'HTML Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'lscache-html_optm', 'show_html_optm' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'lscache-db_optm', 'show_db_optm' ) ;
 
@@ -478,7 +478,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_dash()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/dash.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/dash/entry.tpl.php' ;
 	}
 
 	/**
@@ -493,10 +493,7 @@ class LiteSpeed_Cache_Admin_Display
 			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
 		}
 		else {
-			if ( $_GET['page'] != 'litespeedcache' ) {// ls settings msg need to display manually
-				settings_errors() ;
-			}
-			require_once LSCWP_DIR . 'admin/tpl/settings.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/cache/entry.tpl.php' ;
 		}
 	}
 
@@ -533,7 +530,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_crawler()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/crawler.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/crawler/entry.tpl.php' ;
 	}
 
 	/**
@@ -544,7 +541,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_optimization()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/img_optm/entry.tpl.php' ;
 	}
 
 	/**
@@ -555,7 +552,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_debug()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/debug.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/debug/entry.tpl.php' ;
 	}
 
 	/**

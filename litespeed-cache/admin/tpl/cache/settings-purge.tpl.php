@@ -99,5 +99,23 @@ $break_arr = array(
 			</div>
 		</td>
 	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id, 50 ) ; ?>
+			<?php $this->recommended( $id, true ) ; ?>
+
+			<div class="litespeed-desc">
+				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ) ; ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+
 </tbody></table>
 

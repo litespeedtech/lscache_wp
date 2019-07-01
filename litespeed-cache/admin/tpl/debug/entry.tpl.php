@@ -38,7 +38,7 @@ $menu_list = array(
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "admin/tpl/debug/$tab.php" ;
+			require LSCWP_DIR . "admin/tpl/debug/$tab.tpl.php" ;
 			echo "</div>" ;
 		}
 

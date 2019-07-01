@@ -126,8 +126,8 @@ var _litespeed_dots ;
 
 		/** Lets copy one more submit button **/
 		if ( $( 'input[name="LSCWP_CTRL"]' ).length > 0 ) {
-			var form = $( 'input[name="LSCWP_CTRL"]' ).parent( 'form' ) ;
-			form.find( ' [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( form ) ;
+			var btn = $( 'input.litespeed-duplicate-float' ) ;
+			btn.clone().addClass( 'litespeed-float-submit' ).insertAfter( btn ) ;
 		}
 
 		/** Promo banner **/

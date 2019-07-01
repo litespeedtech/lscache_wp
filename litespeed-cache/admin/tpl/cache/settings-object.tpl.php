@@ -1,5 +1,6 @@
+<?php defined( 'WPINC' ) || exit ; ?>
+
 <?php
-defined( 'WPINC' ) || exit ;
 
 $lang_enabled = '<font class="litespeed-success">' . __( 'Enabled', 'litespeed-cache' ) . '</font>' ;
 $lang_disabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed-cache' ) . '</font>' ;
@@ -24,7 +25,14 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 ?>
 
 
-	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
+<h3 class="litespeed-title-short">
+	<?php echo __( 'Object Cache Settings', 'litespeed-cache' ) ; ?>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:object', false, 'litespeed-learn-more' ) ; ?>
+</h3>
+
+<table><tbody>
+
+	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_OBJECT ; ?>
 			<?php $this->title( $id ) ; ?>
@@ -158,3 +166,5 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 			</div>
 		</td>
 	</tr>
+
+</tbody></table>
