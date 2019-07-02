@@ -1,8 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
-
-// Update table data for upgrading
-LiteSpeed_Cache_Data::get_instance() ;//xx
 
 $img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
 
@@ -19,17 +16,12 @@ else {
 	$finished_percentage = 0 ;
 }
 
+$optm_summary_file = ! $optm_summary ? 'initialize' : 'summary' ;
+
 $menu_list = array(
+	$optm_summary_file	=> __( 'Image Optimization Summary', 'litespeed-cache' ),
+	'settings'			=> __( 'Image Optimization Settings', 'litespeed-cache' ),
 ) ;
-
-if ( ! $optm_summary ) {
-	$menu_list[ 'initialize' ] = __( 'Image Optimization Summary', 'litespeed-cache' ) ;
-}
-else {
-	$menu_list[ 'summary' ] = __( 'Image Optimization Summary', 'litespeed-cache' ) ;
-}
-
-$menu_list[ 'summary' ] = __( 'Image Optimization Settings', 'litespeed-cache' ) ;
 
 ?>
 

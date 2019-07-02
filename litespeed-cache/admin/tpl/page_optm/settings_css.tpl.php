@@ -1,4 +1,9 @@
 <?php defined( 'WPINC' ) || exit ; ?>
+<?php
+
+$last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
+
+?>
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'CSS Settings', 'litespeed-cache' ) ; ?>

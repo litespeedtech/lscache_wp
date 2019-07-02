@@ -13,23 +13,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-class LiteSpeed_Cache_Db_Optm
+class LiteSpeed_Cache_DB_Optm
 {
 	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
-
-	/**
-	 * Generate operation URL
-	 *
-	 * @since  1.2.1
-	 * @access public
-	 * @param  string $type The type to proceed
-	 * @return  string The final URL
-	 */
-	public static function generate_url( $type )
-	{
-		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type ) ;
-		return $url ;
-	}
 
 	/**
 	 * Run DB Cleaner

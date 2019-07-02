@@ -8,6 +8,8 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
 $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 
+
+$this->form_action() ;
 ?>
 
 <h3 class="litespeed-title-short">
@@ -138,7 +140,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-				<br /><?php $this->_one_per_line() ; ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -299,3 +301,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 	</tr>
 
 </tbody></table>
+
+<?php
+$this->form_end() ;
+

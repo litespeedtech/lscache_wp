@@ -3,14 +3,14 @@
 
 $menu_list = array(
 	'manage'			=> __( 'Manage', 'litespeed-cache' ),
-	'settings'			=> __( 'DB Optimization Settings', 'litespeed-cache' ),
+	'settings'			=> __( 'CDN Settings', 'litespeed-cache' ),
 ) ;
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache DataBase Optimization', 'litespeed-cache' ) ; ?>
+		<?php echo __( 'LiteSpeed Cache CDN', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
@@ -36,7 +36,7 @@ $menu_list = array(
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "admin/tpl/db_optm/$tab.tpl.php" ;
+			require LSCWP_DIR . "admin/tpl/cdn/$tab.tpl.php" ;
 			echo "</div>" ;
 		}
 

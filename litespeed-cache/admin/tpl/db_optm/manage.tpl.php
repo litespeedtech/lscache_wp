@@ -53,12 +53,12 @@ $_panels = array(
 $total = 0 ;
 foreach ( $_panels as $tag => $v ) {
 	if ( $tag != 'all' ) {
-		$_panels[ $tag ][ 'count' ] = LiteSpeed_Cache_Admin_Optimize::db_count( $tag ) ;
+		$_panels[ $tag ][ 'count' ] = LiteSpeed_Cache_DB_Optm::db_count( $tag ) ;
 		if ( ! in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
 			$total += $_panels[ $tag ][ 'count' ] ;
 		}
 	}
-	$_panels[ $tag ][ 'link' ] = LiteSpeed_Cache_Admin_Optimize::generate_url( $tag ) ;
+	$_panels[ $tag ][ 'link' ] = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $tag ) ;
 }
 
 $_panels[ 'all' ][ 'count' ] = $total ;

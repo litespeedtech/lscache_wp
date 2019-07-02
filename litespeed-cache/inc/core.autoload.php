@@ -38,7 +38,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'inc/crawler-sitemap.cls.php',
 			'LiteSpeed_Cache_CSS'				=> 'inc/css.cls.php',
 			'LiteSpeed_Cache_Data'				=> 'inc/data.cls.php',
-			'LiteSpeed_Cache_Db_Optm'			=> 'inc/db_optm.cls.php',
+			'LiteSpeed_Cache_DB_Optm'			=> 'inc/db_optm.cls.php',
 			'LiteSpeed_Cache_Doc'				=> 'inc/doc.cls.php',
 			'LiteSpeed_Cache_ESI'				=> 'inc/esi.cls.php',
 			'LiteSpeed_Cache_GUI'				=> 'inc/gui.cls.php',

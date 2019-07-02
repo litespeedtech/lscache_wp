@@ -1,11 +1,9 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 ?>
-
+<div>
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-small"></div>
 
@@ -43,7 +41,7 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 				<?php echo __( 'Current Stage Status', 'litespeed-cache' ) ; ?>
 			</h2>
 			<div class="litespeed-empty-space-medium"></div>
-			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/level_info.php" ; ?>
+			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/level_info.tpl.php" ; ?>
 
 			<hr class="litespeed-hr-dotted">
 
@@ -237,7 +235,7 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 
 	<div class="litespeed-width-3-10 litespeed-column-java litespeed-contrast" style="display: flex; flex-direction: column;">
 		<div class="litespeed-hr">
-			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/percentage_summary.php" ; ?>
+			<?php include_once LSCWP_DIR . "admin/tpl/img_optm/percentage_summary.tpl.php" ; ?>
 		</div>
 
 		<div class="litespeed-hr">
@@ -310,3 +308,6 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 
 
 		</div>
+	</div>
+</div>
+
