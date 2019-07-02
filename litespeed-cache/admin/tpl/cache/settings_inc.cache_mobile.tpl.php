@@ -26,14 +26,14 @@
 		<td>
 		<?php
 			// if set, use value as input value
-			if ( $this->__options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
+			if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) ) {
 
 				// if enabled, check the setting in file
 				if ( defined( 'LITESPEED_ON' ) ) {
 
 					try {
 						$mobile_agents = LiteSpeed_Htaccess::get_instance()->current_mobile_agents() ;
-						if ( $mobile_agents !== LiteSpeed_Cache_Utility::arr2regex( $this->__options[ $id ], true ) ) {
+						if ( $mobile_agents !== LiteSpeed_Cache_Utility::arr2regex( $this->__cfg->option( $id ), true ) ) {
 							echo '<div class="litespeed-callout-danger">'
 									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
 									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )

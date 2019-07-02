@@ -145,19 +145,21 @@ $this->form_action() ;
 		<th><?php echo __('Cookie Simulation', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CRWL_COOKIES ; ?>
+			<?php $this->enroll( $id . '[name][]' ) ; ?>
+			<?php $this->enroll( $id . '[vals][]' ) ; ?>
 			<div id="cookie_crawler">
 				<div class="litespeed-block" v-for="( item, key ) in items">
 					<div class='litespeed-col-auto'>
 						<h4><?php echo __( 'Cookie Name', 'litespeed-cache' ) ; ?></h4>
 					</div>
 					<div class='litespeed-col-auto'>
-						<input type="text" v-model="item.name" name="litespeed-cache-conf[<?php echo $id ; ?>][name][]" class="litespeed-regular-text" style="margin-top:1.33em;" >
+						<input type="text" v-model="item.name" name="<?php echo $id ; ?>[name][]" class="litespeed-regular-text" style="margin-top:1.33em;" >
 					</div>
 					<div class='litespeed-col-auto'>
 						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ) ; ?></h4>
 					</div>
 					<div class='litespeed-col-auto'>
-						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="litespeed-cache-conf[<?php echo $id ; ?>][vals][]" placeholder="<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>"></textarea>
+						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id ; ?>[vals][]" placeholder="<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
 						<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
@@ -176,13 +178,21 @@ $this->form_action() ;
 						items : [
 							<?php
 								// Build the cookie crawler Vue data
-								$cookies = $this->__cfg->option( $id ) ;
 								/**
-								 * Data Src Structure: [ nameA => vals, nameB => vals ]
+								 * Data Src Structure:
+								 * @since  3.0
+								 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+								 * 	 	crawler-cookie[ 0 ][ vals ] = 'xxx'
+								 *
+								 * @deprecated 3.0 [ nameA => vals, nameB => vals ]
 								 */
 								$list = array() ;
-								foreach ( $cookies as $k => $v ) {
-									$list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
+								foreach ( $this->__cfg->option( $id ) as $v ) {
+									if ( empty( $v[ 'name' ] ) ) {
+										continue ;
+									}
+
+									$list[] = "{ name: '$v[name]', vals: `" . implode( "\n", $v[ 'vals' ] ) . "` }" ;// $v contains line break
 								}
 								echo implode( ',', $list ) ;
 							?>

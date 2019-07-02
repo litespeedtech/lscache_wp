@@ -32,11 +32,11 @@
 				. '</p>'
 			;
 
-			if ( preg_match( '#[^\w\-]#', $this->__options[ $id ] ) ) {
+			if ( preg_match( '#[^\w\-]#', $this->__cfg->option( $id ) ) ) {
 				echo '<div class="litespeed-callout-danger">❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</div>' ;
 			}
 
-			if ( defined( 'LITESPEED_ON' ) && $this->__options[ $id ] ) {
+			if ( defined( 'LITESPEED_ON' ) && $this->__cfg->option( $id ) ) {
 
 				try {
 					$cookie_rule = LiteSpeed_Htaccess::get_instance()->current_login_cookie() ;
@@ -45,7 +45,7 @@
 				}
 
 				$cookie_arr = explode( ',', $cookie_rule ) ;
-				if ( ! in_array( $this->__options[ $id ], $cookie_arr ) ) {
+				if ( ! in_array( $this->__cfg->option( $id ), $cookie_arr ) ) {
 					echo '<div class="litespeed-callout-warning">'
 							. __( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' )
 						. '</div>'

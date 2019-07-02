@@ -212,7 +212,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 						}
 						$data2[ $k ][ $child ] = $v ;
 					}
-					$data = $data2 ;var_dump($data);exit;
+					$data = $data2 ;
 					break ;
 
 				/**

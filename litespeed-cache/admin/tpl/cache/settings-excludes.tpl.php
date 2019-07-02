@@ -47,8 +47,8 @@
 		<td>
 			<?php
 				$excludes_buf = '' ;
-				if ( $this->__options[ $id ] ) {
-					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $this->__options[ $id ] ) ) ;
+				if ( $this->__cfg->option( $id ) ) {
+					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $this->__cfg->option( $id ) ) ) ;
 				}
 				$this->build_textarea( $id, false, $excludes_buf ) ;
 			?>
@@ -77,9 +77,9 @@
 		<td>
 			<?php
 				$excludes_buf = '';
-				if ( $this->__options[ $id ] ) {
+				if ( $this->__cfg->option( $id ) ) {
 					$tag_names = array() ;
-					foreach ( array_map( 'get_tag', $this->__options[ $id ] ) as $tag ) {
+					foreach ( array_map( 'get_tag', $this->__cfg->option( $id ) ) as $tag ) {
 						$tag_names[] = $tag->name ;
 					}
 					if ( ! empty( $tag_names ) ) {

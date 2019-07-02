@@ -36,7 +36,6 @@ class LiteSpeed_Cache_Admin_Display
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
 	private $__cfg ;
-	private $__options ;
 	private $messages = array() ;
 	private $default_settings = array() ;
 
@@ -93,7 +92,6 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-		$this->__options = $this->__cfg->get_options() ;
 	}
 
 	/**
@@ -656,7 +654,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function build_textarea( $id, $cols = false, $val = null )
 	{
 		if ( $val === null ) {
-			$val = $this->__options[ $id ] ;
+			$val = $this->__cfg->option( $id ) ;
 
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
@@ -685,7 +683,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function build_input( $id, $cls = null, $val = null, $type = 'text' )
 	{
 		if ( $val === null ) {
-			$val = $this->__options[ $id ] ;
+			$val = $this->__cfg->option( $id ) ;
 		}
 
 		$label_id = preg_replace( '|\W|', '', $id ) ;
@@ -710,7 +708,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
-		if ( $checked == null && ! empty( $this->__options[ $id ] ) ) {
+		if ( $checked == null && $this->__cfg->option( $id ) ) {
 			$checked = true ;
 		}
 		$checked = $checked ? ' checked ' : '' ;
@@ -736,7 +734,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
 	{
-		if ( $checked === null && $this->__options[ $id ] ) {
+		if ( $checked === null && $this->__cfg->option( $id ) ) {
 			$checked = true ;
 		}
 
@@ -799,7 +797,7 @@ class LiteSpeed_Cache_Admin_Display
 			}
 		}
 
-		$checked = isset( $this->__options[ $id ] ) && $this->__options[ $id ] == $val ? ' checked ' : '' ;
+		$checked = $this->__cfg->option( $id ) == $val ? ' checked ' : '' ;
 
 		$this->enroll( $id ) ;
 
@@ -841,7 +839,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_syntax( $id )
 	{
-		$val = $this->__options[ $id ] ;
+		$val = $this->__cfg->option( $id ) ;
 
 		if ( ! $val ) {
 			return ;
@@ -865,7 +863,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_ttl( $id, $min = false, $max = false )
 	{
-		$val = $this->__options[ $id ] ;
+		$val = $this->__cfg->option( $id ) ;
 		$tip = array() ;
 		if ( $min && $val < $min ) {
 			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
@@ -886,7 +884,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_ip( $id )
 	{
-		$val = $this->__options[ $id ] ;
+		$val = $this->__cfg->option( $id ) ;
 		if ( ! $val ) {
 			return ;
 		}

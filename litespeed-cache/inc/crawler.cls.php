@@ -548,9 +548,8 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Get roles set
-		$roles = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_ROLES ) ;
 		// List all roles
-		foreach ( $roles as $v ) {
+		foreach ( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_ROLES ] as $v ) {
 			$role_title = '' ;
 			$udata = get_userdata( $v ) ;
 			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
@@ -565,14 +564,17 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Cookie crawler
-		foreach ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) as $k => $v ) {
+		foreach ( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_COOKIES ] as $v ) {
+			if ( empty( $v[ 'name' ] ) ) {
+				continue ;
+			}
 
-			$this_cookie_key = 'cookie:' . $k ;
+			$this_cookie_key = 'cookie:' . $v[ 'name' ] ;
 
 			$crawler_factors[ $this_cookie_key ] = array() ;
 
-			foreach ( $v as $v2 ) {
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = "<font title='Cookie'>🍪</font>$k=$v2" ;
+			foreach ( $v[ 'vals' ] as $v2 ) {
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font title="Cookie">🍪</font>' . $v[ 'name' ] . '=' . $v2 ;
 			}
 		}
 

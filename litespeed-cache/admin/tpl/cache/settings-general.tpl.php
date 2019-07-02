@@ -14,14 +14,6 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php
-				//IF multisite: Add 'Use Network Admin' option,
-				//ELSE: Change 'Enable LiteSpeed Cache' selection to 'Enabled' if the 'Use Network Admin' option was previously selected.
-				//		Selection will not actually be changed unless settings are saved.
-				if ( ! is_multisite() && intval( $this->__options[ $id ] ) === LiteSpeed_Cache_Config::VAL_ON2 ) {
-					$this->__options[ $id ] = LiteSpeed_Cache_Config::VAL_ON ;
-				}
-			?>
 			<div class="litespeed-switch">
 				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ; ?>
 				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ; ?>
