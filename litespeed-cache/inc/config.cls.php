@@ -375,12 +375,44 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since  3.0
 	 * @access public
 	 */
+	public function update_confs( $the_matrix )
+	{
+		foreach ( $the_matrix as $id => $val ) {
+			$this->update( $id, $val ) ;
+		}
+
+		// Update related files
+		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
+
+		/**
+		 * CDN related actions - Cloudflare
+		 */
+		LiteSpeed_Cache_CDN_Cloudflare::get_instance()->try_refresh_zone() ;
+
+		/**
+		 * CDN related actions - QUIC.cloud
+		 * @since 2.3
+		 */
+		LiteSpeed_Cache_CDN_Quic::try_sync_config() ;
+
+	}
+
+	/**
+	 * Save option
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
 	public function update( $id, $val )
 	{
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
 		// 	return ;
 		// }
+
+		if ( $id == self::_VERSION ) {
+			return ;
+		}
 
 		if ( ! array_key_exists( $id, $this->_default_options ) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;

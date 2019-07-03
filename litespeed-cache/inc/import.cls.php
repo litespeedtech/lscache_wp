@@ -35,38 +35,6 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Handle all request actions from main cls
-	 *
-	 * @since  1.8.2
-	 * @access public
-	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
-
-		$type = LiteSpeed_Cache_Router::verify_type() ;
-
-		switch ( $type ) {
-			case self::TYPE_IMPORT :
-				$instance->_import() ;
-				break ;
-
-			case self::TYPE_EXPORT :
-				$instance->_export() ;
-				break ;
-
-			case self::TYPE_RESET :
-				$instance->_reset() ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		LiteSpeed_Cache_Admin::redirect() ;
-	}
-
-	/**
 	 * Show summary of history
 	 *
 	 * @since  3.0
@@ -183,11 +151,8 @@ class LiteSpeed_Cache_Import
 			return false ;
 		}
 
-		foreach ( $this->__cfg->get_options() as $k => $v ) {
-			if ( isset( $data[ $k ] ) ) {
-				// todo: how to save
-			}
-		}
+		$this->__cfg->update_confs( $data ) ;
+
 
 		if ( ! $file ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
@@ -199,20 +164,8 @@ class LiteSpeed_Cache_Import
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $file ) ;
 		}
 
-		$ret = $this->__cfg->update_options( $output ) ;
-
 		return true ;
 
-	}
-
-	/**
-	 * Reset all settings
-	 *
-	 * @since  2.6.3
-	 */
-	public function reset()
-	{
-		return $this->_reset() ;
 	}
 
 	/**
@@ -223,18 +176,15 @@ class LiteSpeed_Cache_Import
 	 */
 	private function _reset()
 	{
-		$options = $this->__cfg->get_default_options() ;
+		$options = $this->__cfg->default_vals() ;
 
-		// todo: how to save
-
-		$ret = $this->__cfg->update_options( $output ) ;
+		$this->__cfg->update_confs( $options ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Import] Reset successfully.' ) ;
 
 		$msg = __( 'Reset successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
-		return true ;
 	}
 
 	/**
@@ -261,6 +211,38 @@ class LiteSpeed_Cache_Import
 		$filename .= '-' . date( 'Ymd_His' ) . '.data' ;
 
 		return $filename ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.8.2
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_IMPORT :
+				$instance->_import() ;
+				break ;
+
+			case self::TYPE_EXPORT :
+				$instance->_export() ;
+				break ;
+
+			case self::TYPE_RESET :
+				$instance->_reset() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**

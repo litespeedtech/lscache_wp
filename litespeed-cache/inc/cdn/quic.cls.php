@@ -22,9 +22,13 @@ class LiteSpeed_Cache_CDN_Quic
 	 *
 	 * @access public
 	 */
-	public static function sync_config()
+	public static function try_sync_config()
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+
+		if ( ! $options[ LiteSpeed_Cache_Config::O_CDN_QUIC ] ) {
+			return false ;
+		}
 
 		if ( empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ] ) ) {
 			return false ;

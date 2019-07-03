@@ -608,9 +608,12 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since    3.0
 	 * @access public
 	 */
-	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false )
+	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false, $has_upload = false )
 	{
-		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative">' ;
+		$has_upload = $has_upload ? 'enctype="multipart/form-data"' : '' ;
+
+		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>' ;
+
 		echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::ACTION_KEY . '" value="' . $action . '" />' ;
 		if ( $type ) {
 			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;

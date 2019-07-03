@@ -286,6 +286,9 @@ class LiteSpeed_Cache_Activation
 	 */
 	public function update_files()
 	{
+		// Update cache setting `_CACHE`
+		LiteSpeed_Cache_Config::get_instance()->define_cache() ;
+
 		// Site options applied already
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 

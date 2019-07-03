@@ -22,8 +22,7 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <h3 class="litespeed-title"><?php echo __('Import Settings', 'litespeed-cache') ; ?></h3>
 
-<form method="post" action="admin.php?page=lscache-import" id="litespeed_form_import" enctype="multipart/form-data" class="">
-	<?php $this->form_action( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT ) ; ?>
+<?php $this->form_action( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT, true ) ; ?>
 
 	<div class="litespeed-div litespeed-left20">
 		<input type="file" name="ls_file" class="litespeed-input" />

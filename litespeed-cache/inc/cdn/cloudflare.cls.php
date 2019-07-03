@@ -21,36 +21,32 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	const ITEM_STATUS = 'status' ;
 
 	/**
-	 * Handle all request actions from main cls
+	 * Update zone&name based on latest settings
 	 *
-	 * @since  1.7.2
+	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler()
+	public static function try_refresh_zone()
 	{
-		$instance = self::get_instance() ;
+		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
-
-		switch ( $type ) {
-			case self::TYPE_PURGE_ALL :
-				$instance->_purge_all() ;
-				break ;
-
-			case self::TYPE_GET_DEVMODE :
-				$instance->_get_devmode() ;
-				break ;
-
-			case self::TYPE_SET_DEVMODE_ON :
-			case self::TYPE_SET_DEVMODE_OFF :
-				$instance->_set_devmode( $type ) ;
-				break ;
-
-			default:
-				break ;
+		if ( ! $__cfg->option( LiteSpeed_Cache_Const::O_CDN_CLOUDFLARE ) ) {
+			return ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		$zone = self::get_instance()->_fetch_zone() ;
+		if ( $zone ) {
+			$__cfg->update( LiteSpeed_Cache_Const::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
+
+			$__cfg->update( LiteSpeed_Cache_Const::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
+
+			LiteSpeed_Cache_Log::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" ) ;
+		}
+		else {
+			$__cfg->update( LiteSpeed_Cache_Const::O_CDN_CLOUDFLARE_ZONE, '' ) ;
+			LiteSpeed_Cache_Log::debug( '[Cloudflare] ❌ Get zone failed, clean zone' ) ;
+		}
+
 	}
 
 	/**
@@ -173,9 +169,9 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Get Cloudflare zone settings
 	 *
 	 * @since  1.7.2
-	 * @access public
+	 * @access private
 	 */
-	public function fetch_zone()
+	private function _fetch_zone()
 	{
 		$kw = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME ) ;
 
@@ -263,6 +259,39 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		}
 
 		return false ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_PURGE_ALL :
+				$instance->_purge_all() ;
+				break ;
+
+			case self::TYPE_GET_DEVMODE :
+				$instance->_get_devmode() ;
+				break ;
+
+			case self::TYPE_SET_DEVMODE_ON :
+			case self::TYPE_SET_DEVMODE_OFF :
+				$instance->_set_devmode( $type ) ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**

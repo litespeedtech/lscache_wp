@@ -35,6 +35,10 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	/**
 	 * Save settings
 	 *
+	 * Both $_POST and CLI can use this way
+	 *
+	 * Import will directly call conf.cls
+	 *
 	 * @since  3.0
 	 * @access public
 	 */
@@ -67,16 +71,15 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 			}
 
 			// Append current field to setting save
-			if ( $v && ! in_array( $v, $_fields ) && $v != self::_VERSION ) { // Not allow to set core version
+			if ( $v && ! in_array( $v, $_fields ) ) { // Not allow to set core version
 				if ( array_key_exists( $v, $this->_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
 					$_fields[] = $v ;
 				}
 			}
 		}
 
-		// Check if Cloudflare setting is changed or not
-		$cdn_cloudflare_changed = false ;
-
+		// Convert data to config format
+		$the_matrix = array() ;
 		foreach ( $_fields as $id ) {
 			$data = '' ;
 
@@ -215,18 +218,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 					$data = $data2 ;
 					break ;
 
-				/**
-				 * Handle Cloudflare API
-				 */
-				case self::O_CDN_CLOUDFLARE :
-				case self::O_CDN_CLOUDFLARE_EMAIL :
-				case self::O_CDN_CLOUDFLARE_KEY :
-				case self::O_CDN_CLOUDFLARE_NAME :
-					if ( $this->__cfg->option( $id ) != $data ) {
-						$cdn_cloudflare_changed = true ;
-					}
-					break ;
-
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRWL_EXC_CPT :
 					if ( $data ) {
@@ -240,44 +231,13 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 					break ;
 			}
 
-			// id validation will be inside
-			$this->__cfg->update( $id, $data ) ;
+			$the_matrix[ $id ] = $data ;
+
 		}
 
-		// Update cache setting `_CACHE`
-		$this->__cfg->define_cache() ;
+		// id validation will be inside
+		$this->__cfg->update_confs( $the_matrix ) ;
 
-		/**
-		 * CDN related actions - Cloudflare
-		 * If cloudflare API is on, refresh the zone
-		 */
-		if ( $cdn_cloudflare_changed && $this->__cfg->option( self::O_CDN_CLOUDFLARE ) ) {
-			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone() ;
-			if ( $zone ) {
-				$this->__cfg->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
-
-				$this->__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
-
-				LiteSpeed_Cache_Log::debug( "[Settings] Get zone successfully \t\t[ID] $zone[id]" ) ;
-			}
-			else {
-				$this->__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, '' ) ;
-				LiteSpeed_Cache_Log::debug( '[Settings] ❌ Get zone failed, clean zone' ) ;
-			}
-		}
-
-		/**
-		 * CDN related actions - QUIC.cloud
-		 * Check if need to send cfg to CDN or not
-		 * @since 2.3
-		 */
-		if ( $this->__cfg->option( self::O_CDN_QUIC ) ) {
-			// Send to Quic CDN
-			LiteSpeed_Cache_CDN_Quic::sync_config() ;
-		}
-
-		// Update related files
-		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
 	}
 
 	/**
@@ -317,9 +277,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 			// id validation will be inside
 			$this->__cfg->network_update( $id, $data ) ;
 		}
-
-		// Update cache setting `_CACHE`
-		$this->__cfg->define_cache() ;
 
 		// Update related files
 		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
