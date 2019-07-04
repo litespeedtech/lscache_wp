@@ -1,4 +1,5 @@
 <?php
+defined( 'WPINC' ) || exit ;
 /**
  * The admin settings handler of the plugin.
  *
@@ -8,10 +9,6 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 {

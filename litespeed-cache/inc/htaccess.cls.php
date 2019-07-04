@@ -696,7 +696,7 @@ class LiteSpeed_Htaccess
 	public function insert_ls_wrapper()
 	{
 		$rules = $this->_wrap_ls_module() ;
-		return $this->_insert_wrapper( $rules ) ;//todo:capture exceptions
+		$this->_insert_wrapper( $rules ) ;
 	}
 
 	/**
@@ -895,7 +895,7 @@ class LiteSpeed_Htaccess
 	{
 		$this->_insert_wrapper( false ) ;// Use false to avoid do-not-edit msg
 		// Clear non ls rules
-		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;//todo:capture exceptions
+		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;
 
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
 			$this->_insert_wrapper( false, 'backend' ) ;

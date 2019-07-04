@@ -375,10 +375,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since  3.0
 	 * @access public
 	 */
-	public function update_confs( $the_matrix )
+	public function update_confs( $the_matrix = false )
 	{
-		foreach ( $the_matrix as $id => $val ) {
-			$this->update( $id, $val ) ;
+		if ( $the_matrix ) {
+			foreach ( $the_matrix as $id => $val ) {
+				$this->update( $id, $val ) ;
+			}
 		}
 
 		// Update related files
