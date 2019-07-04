@@ -86,7 +86,6 @@ class LiteSpeed_Cache_Activation
 	public static function uninstall_litespeed_cache()
 	{
 		LiteSpeed_Cache_Task::clear() ;
-		LiteSpeed_Htaccess::get_instance()->clear_rules() ;
 
 		// Delete options
 		foreach ( LiteSpeed_Cache_Config::get_instance()->default_vals() as $k => $v ) {
@@ -236,7 +235,7 @@ class LiteSpeed_Cache_Activation
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( false ) ;
+			self::get_instance()->_manage_wp_cache_const( false ) ;
 		} catch ( \Exception $ex ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 
@@ -349,14 +348,9 @@ class LiteSpeed_Cache_Activation
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Activation] Copying advanced_cache file' ) ;
 
-		copy( LSCWP_DIR . 'advanced-cache.php', $adv_cache_path ) ;
+		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path ) ;
 
 		include $adv_cache_path ;
-
-		// Try to enable `LITESPEED_ON`
-		LiteSpeed_Cache_Config::get_instance()->define_cache_on() ;
-
-		return defined( 'LSCACHE_ADV_CACHE' ) ;
 	}
 
 	/**

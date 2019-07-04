@@ -172,10 +172,6 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
 
-		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) ) {
-		// 	return ;
-		// }
-
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
 			return ;
