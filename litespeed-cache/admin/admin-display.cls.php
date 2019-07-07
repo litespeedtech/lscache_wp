@@ -871,7 +871,7 @@ class LiteSpeed_Cache_Admin_Display
 		if ( $min && $val < $min ) {
 			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
 		}
-		if ( $max && $val > $min ) {
+		if ( $max && $val > $max ) {
 			$tip[] = __( 'Maximum value', 'litespeed-cache' ) . ': <code>' . $max . '</code>.' ;
 		}
 

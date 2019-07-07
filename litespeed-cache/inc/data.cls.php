@@ -86,8 +86,8 @@ class LiteSpeed_Cache_Data
 		}
 
 		// Update version to latest
-		delete_option( self::conf_name( self::_VERSION ) ) ;
-		add_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		delete_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
+		add_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
@@ -117,8 +117,8 @@ class LiteSpeed_Cache_Data
 			}
 		}
 
-		delete_site_option( self::conf_name( self::_VERSION ) ) ;
-		add_site_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		delete_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
+		add_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Data] Updated site_version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 

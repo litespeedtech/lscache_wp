@@ -71,6 +71,12 @@ class LiteSpeed_Cache_Media
 
 		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 
+		/**
+		 * JPG quality control
+		 * @since  3.0
+		 */
+		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) ) ;
+
 		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
 		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
@@ -79,6 +85,23 @@ class LiteSpeed_Cache_Media
 			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
 		}
 
+	}
+
+	/**
+	 * Adjust WP default JPG quality
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function adjust_jpg_quality( $quality )
+	{
+		$v = LiteSpeed_Cache_Config::option( LiteSpeed_Cache_Config::O_IMG_OPTM_JPG_QUALITY ) ;
+
+		if ( $v ) {
+			return $v ;
+		}
+
+		return $quality ;
 	}
 
 	/**

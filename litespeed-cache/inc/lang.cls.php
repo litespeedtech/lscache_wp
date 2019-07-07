@@ -99,6 +99,7 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_IMG_OPTM_EXIF				=> __( 'Preserve EXIF/XMP data', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_ATTR			=> __( 'WebP Attribute To Replace', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET	=> __( 'WebP For Extra srcset', 'litespeed-cache' ),
+			self::O_IMG_OPTM_JPG_QUALITY		=> __( 'WordPress Image Quality Control', 'litespeed-cache' ),
 			self::O_ESI							=> __( 'Enable ESI', 'litespeed-cache' ),
 			self::O_ESI_CACHE_ADMBAR			=> __( 'Cache Admin Bar', 'litespeed-cache' ),
 			self::O_ESI_CACHE_COMMFORM			=> __( 'Cache Comment Form', 'litespeed-cache' ),

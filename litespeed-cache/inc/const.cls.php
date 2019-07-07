@@ -183,6 +183,7 @@ class LiteSpeed_Cache_Const
 	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm-webp_replace' ;
 	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm-webp_attr' ;
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset' ;
+	const O_IMG_OPTM_JPG_QUALITY 		= 'img_optm-jpg_quality' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
@@ -409,6 +410,7 @@ class LiteSpeed_Cache_Const
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 		self::O_IMG_OPTM_WEBP_ATTR		=> array(),
 		self::O_IMG_OPTM_WEBP_REPLACE_SRCSET 	=> false,
+		self::O_IMG_OPTM_JPG_QUALITY 	=> 0,
 
 		// Crawler
 		self::O_CRWL 					=> false,
