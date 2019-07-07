@@ -207,7 +207,6 @@ class LiteSpeed_Cache_Optimize
 		$headers[ 'Content-Length' ] = strlen( $content ) ;
 		$this->_output_header( $headers ) ;
 
-		LiteSpeed_Cache_Control::set_cacheable() ;
 		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;
 		LiteSpeed_Cache_Control::set_no_vary() ;
 		LiteSpeed_Cache_Control::set_custom_ttl( $this->cfg_ttl ) ;

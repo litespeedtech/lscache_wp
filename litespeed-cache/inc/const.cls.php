@@ -40,6 +40,7 @@ class LiteSpeed_Cache_Const
 	const O_CACHE_EXC_CAT 			= 'cache-exc_cat' ;
 	const O_CACHE_EXC_TAG 			= 'cache-exc_tag' ;
 	const O_CACHE_FORCE_URI 		= 'cache-force_uri' ;
+	const O_CACHE_FORCE_PUB_URI		= 'cache-force_pub_uri' ;
 	const O_CACHE_PRIV_URI 			= 'cache-priv_uri' ;
 	const O_CACHE_EXC 				= 'cache-exc' ;
 	const O_CACHE_EXC_ROLES 		= 'cache-exc_roles' ;
@@ -281,6 +282,7 @@ class LiteSpeed_Cache_Const
 		self::O_CACHE_EXC_CAT 			=> array(),
 		self::O_CACHE_EXC_TAG 			=> array(),
 		self::O_CACHE_FORCE_URI			=> array(),
+		self::O_CACHE_FORCE_PUB_URI		=> array(),
 		self::O_CACHE_PRIV_URI			=> array(),
 		self::O_CACHE_EXC 				=> array(),
 		self::O_CACHE_EXC_ROLES 		=> array(),
@@ -684,6 +686,7 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_PRIV_URI		=> 'relative',
 			self::O_PURGE_TIMED_URLS	=> 'relative',
 			self::O_CACHE_FORCE_URI		=> 'relative',
+			self::O_CACHE_FORCE_PUB_URI	=> 'relative',
 			self::O_CACHE_EXC			=> 'relative',
 			self::O_OPTM_CSS_EXC		=> 'uri',
 			self::O_OPTM_JS_EXC			=> 'uri',
@@ -714,6 +717,7 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_PRIV_URI,
 			self::O_PURGE_TIMED_URLS,
 			self::O_CACHE_FORCE_URI,
+			self::O_CACHE_FORCE_PUB_URI,
 			self::O_CACHE_EXC,
 		) ;
 

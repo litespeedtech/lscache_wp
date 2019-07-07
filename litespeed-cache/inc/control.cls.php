@@ -254,7 +254,6 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.7.1
-	 * @param string $reason The reason to no cache
 	 */
 	public static function set_public_forced( $reason = false )
 	{
@@ -412,6 +411,11 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function is_cacheable()
 	{
+		// If its forced public cacheable
+		if ( self::is_public_forced() ) {
+			return true ;
+		}
+
 		// If its forced cacheable
 		if ( self::is_forced_cacheable() ) {
 			return true ;
@@ -566,6 +570,23 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function finalize()
 	{
+		// Check if URI is forced public cache
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_FORCE_PUB_URI ) ;
+		if ( ! empty( $excludes ) ) {
+			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			if ( $result ) {
+				self::set_public_forced( 'Setting: ' . $result ) ;
+				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
+				if ( $this_ttl ) {
+					self::set_custom_ttl( $this_ttl ) ;
+				}
+			}
+		}
+
+		if ( self::is_public_forced() ) {
+			return ;
+		}
+
 		// Check if URI is forced cache
 		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ;
 		if ( ! empty( $excludes ) ) {

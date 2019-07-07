@@ -42,6 +42,7 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_PURGE_TIMED_URLS			=> __( 'Scheduled Purge URLs', 'litespeed-cache' ),
 			self::O_PURGE_TIMED_URLS_TIME		=> __( 'Scheduled Purge Time', 'litespeed-cache' ),
 			self::O_CACHE_FORCE_URI				=> __( 'Force Cache URIs', 'litespeed-cache' ),
+			self::O_CACHE_FORCE_PUB_URI			=> __( 'Force Public Cache URIs', 'litespeed-cache' ),
 			self::O_CACHE_EXC					=> __( 'Do Not Cache URIs', 'litespeed-cache' ),
 			self::O_CACHE_EXC_QS				=> __( 'Do Not Cache Query Strings', 'litespeed-cache' ),
 			self::O_CACHE_EXC_CAT				=> __( 'Do Not Cache Categories', 'litespeed-cache' ),
