@@ -235,6 +235,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 		// id validation will be inside
 		$this->__cfg->update_confs( $the_matrix ) ;
 
+		$msg = __( 'Options saved.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**

@@ -133,13 +133,6 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_REST::get_instance() ;
 
 		/**
-		 * Added hook before init
-		 * @since  1.6.6
-		 * @deprecated 2.9.7.2 This can't be used by any plugin due to unpredictable plugin loading priority.
-		 */
-		do_action( 'litespeed_before_init' ) ;
-
-		/**
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
 		 */

@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function admin_init()
 	{
-		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/lang/') ;
+		load_plugin_textdomain( LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/lang/' ) ;
 
 		$this->_proceed_admin_action() ;
 
@@ -96,29 +96,6 @@ class LiteSpeed_Cache_Admin
 		}
 
 		do_action( 'litspeed_after_admin_init' ) ;
-
-		// If setting is set to on, try to activate cache func
-		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {
-			// check if WP_CACHE is defined and true in the wp-config.php file.
-			// This is not required by our cache func, so leave it to trigger by admin
-			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
-				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
-				if ( $add_var !== true ) {
-					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;//xx
-				}
-			}
-
-			// check management action
-			if ( defined('WP_CACHE') && WP_CACHE ) {
-				$this->check_advanced_cache() ;
-			}
-
-			// step out if adv_cache can't write
-			if ( ! defined( 'LITESPEED_ON' ) ) {
-				return ;
-			}
-
-		}
 
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
@@ -157,46 +134,6 @@ class LiteSpeed_Cache_Admin
 				break ;
 		}
 
-	}
-
-	/**
-	 * Check to make sure that the advanced-cache.php file is ours.
-	 * If it doesn't exist, try to make it ours.
-	 *
-	 * If it is not ours and the config is set to check, output an error.
-	 *
-	 * @since 1.0.11
-	 * @access private
-	 */
-	private function check_advanced_cache()
-	{
-		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
-		if ( defined( 'LSCACHE_ADV_CACHE' ) || ! current_user_can( $capability ) ) {
-			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ) ) {
-				// If it exists because I added it at runtime, try to create the file anyway.
-				// Result does not matter.
-				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter
-			}
-			return ;
-		}
-
-		if ( LiteSpeed_Cache_Activation::try_copy_advanced_cache() ) {
-			return ;
-		}
-
-		if ( is_multisite() && ( ! is_network_admin() || ! current_user_can('manage_network_options')) ) {
-			$third = __('If this is the case, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
-		}else {
-			$third = __('If this is the case, please uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
-		}
-		$msg = __('LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache') . ' '
-			. __('LiteSpeed Cache does work with other optimization plugins, but only if functionality is not duplicated. Only one full-page cache may be activated.', 'litespeed-cache') . ' '
-			. $third
-			. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank">'
-				. __( 'Learn More', 'litespeed-cache' )
-			. '</a>' ;
-
-		$this->display->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg) ;
 	}
 
 	/**

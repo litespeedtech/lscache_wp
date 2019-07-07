@@ -301,10 +301,7 @@ class LiteSpeed_Cache_Activation
 		try {
 			$this->_manage_wp_cache_const( $options[ LiteSpeed_Cache_Const::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
-			if ( defined( 'LITESPEED_CLI' ) ) {
-				// to be done
-			}
-			// Add msg to admin page
+			// Add msg to admin page or CLI
 			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
 		}
 
@@ -312,6 +309,16 @@ class LiteSpeed_Cache_Activation
 
 		if ( $options[ LiteSpeed_Cache_Const::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
+
+			if ( ! defined( 'LSCACHE_ADV_CACHE' ) ) {
+				$msg = __( 'LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache' )
+					. ' ' . __('LiteSpeed Cache does work with other optimization plugins, but only if functionality is not duplicated. Only one full-page cache may be activated.', 'litespeed-cache')
+					. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank">'
+						. __( 'Learn More', 'litespeed-cache' )
+					. '</a>' ;
+
+				LiteSpeed_Cache_Admin_Display::note( $msg ) ;
+			}
 		}
 
 		/* 3) object-cache.php; */

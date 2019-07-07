@@ -1,12 +1,16 @@
 <?php
+defined( 'WPINC' ) || exit ;
 
 /**
  * LiteSpeed Cache Admin Interface
  */
 class LiteSpeed_Cache_Cli_Admin
 {
+	private $__cfg ;
+
 	public function __construct()
 	{
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 	}
 
 	/**
@@ -23,20 +27,16 @@ class LiteSpeed_Cache_Cli_Admin
 	 * ## EXAMPLES
 	 *
 	 *     # Set to not cache the login page
-	 *     $ wp lscache-admin set_option cache-private false
+	 *     $ wp lscache-admin set_option cache-priv false
 	 *
 	 */
 	public function set_option($args, $assoc_args)
 	{
 		/**
-		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in default.ini
+		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in `const.default.ini`
 		 */
 		$key = $args[0] ;
 		$val = $args[1] ;
-
-		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
-
-		$options = $__cfg->get_options() ;xx
 
 		/**
 		 * For CDN mapping, allow:
@@ -44,6 +44,12 @@ class LiteSpeed_Cache_Cli_Admin
 		 * 		`set_option cdn-mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
+var_dump($key);exit;
+		// Build raw data
+		$raw_data = array(
+			LiteSpeed_Cache_Admin_Settings::ENROLL	=> array( $key ),
+			$key 	=> $val,
+		) ;
 		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
