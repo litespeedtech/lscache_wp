@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Admin_API
 	{
 		$ip = gethostbyname( 'wp.api.litespeedtech.com' ) ;
 		if ( $ip != LiteSpeed_Cache_Router::get_ip() ) {
-			exit( 'wrong ip' ) ;
+			exit( 'wrong ip ' . $ip . '!=' . LiteSpeed_Cache_Router::get_ip() ) ;
 		}
 	}
 

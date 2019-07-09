@@ -262,6 +262,25 @@ class LiteSpeed_Cache_Const
 	const IMG_OPTM_BM_LOSSLESS 	= 4 ;
 	const IMG_OPTM_BM_EXIF 		= 8 ;
 
+	/* Site related options (Will not overwrite other sites' config) */
+	const SINGLE_SITE_OPTIONS = array(
+		self::O_CRWL,
+		self::O_CDN,
+		self::O_CDN_ORI,
+		self::O_CDN_ORI_DIR,
+		self::O_CDN_EXC,
+		self::O_CDN_REMOTE_JQ,
+		self::O_CDN_QUIC,
+		self::O_CDN_QUIC_EMAIL,
+		self::O_CDN_QUIC_KEY,
+		self::O_CDN_CLOUDFLARE,
+		self::O_CDN_CLOUDFLARE_EMAIL,
+		self::O_CDN_CLOUDFLARE_KEY,
+		self::O_CDN_CLOUDFLARE_NAME,
+		self::O_CDN_CLOUDFLARE_ZONE,
+		self::O_CDN_MAPPING,
+	) ;
+
 	protected $_default_options = array(
 		self::_VERSION 			=> '',
 		self::HASH				=> '',

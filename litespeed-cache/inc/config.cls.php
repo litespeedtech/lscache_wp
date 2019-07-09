@@ -113,11 +113,16 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 
-		if ( ! $dry_run ) {
-			$this->_options = $options ;
+		if ( $dry_run ) {
+			return $options ;
 		}
 
-		return $options ;
+		// Bypass site special settings
+		if ( $blog_id !== null ) {
+			$options = array_diff_key( $options, array_flip( self::SINGLE_SITE_OPTIONS ) ) ;
+		}
+
+		$this->_options = $options ;
 	}
 
 	/**
@@ -139,16 +144,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// If network set to use primary setting
 		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-
-			// save temparary cron setting as cron settings are per site
-			$CRWL_CRON_ACTIVE = $this->_options[ self::O_CRWL ] ;
-
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->load_options( BLOG_ID_CURRENT_SITE ) ;
-
-			// crawler cron activation is separated
-			$this->_options[ self::O_CRWL ] = $CRWL_CRON_ACTIVE ;
 		}
 
 		// Overwrite single blog options with site options
