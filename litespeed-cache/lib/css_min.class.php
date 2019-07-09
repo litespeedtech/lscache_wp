@@ -511,6 +511,8 @@ class Minifier
 
         while (($blockStartPos = strpos($css, '{', $searchOffset)) !== false) {
             $blockEndPos = strpos($css, '}', $blockStartPos);
+            if ( ! $blockEndPos ) throw new \Exception( 'CSS parse error' ) ;
+
             $nextBlockStartPos = strpos($css, '{', $blockStartPos + 1);
             $ret .= substr($css, $substrOffset, $blockStartPos - $substrOffset);
 
