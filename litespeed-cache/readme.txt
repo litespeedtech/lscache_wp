@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.1
-Stable tag: 2.9.8.2
+Stable tag: 2.9.8.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -288,6 +288,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.3 - Jul 9 2019 =
+* <strong>CSS</strong>: Enhanced the CSS Minify compatibility for CSS with missing closing bracket syntax errors. (@fa508210020)
+* 🕷️: Crawler now supports both cookie and no-cookie cases. (@tabare)
+* <strong>CCSS</strong>: Enhanced compatibility with requested pages where meta info size exceeds 8k. (@Joe B)
+* <strong>CCSS</strong>: No longer processing "font" or "import" directives as they are not considered critical. (@Ankit @Joe B)
+* <strong>IAPI</strong>: Removed IPv6 from all servers to avoid invalid firewall whitelist.
 
 = 2.9.8.2 - Jun 17 2019 =
 * 🔥🐞 <strong>3rd</strong>: Fixed PHP 5.3 compatibility issue with Facetwp.
