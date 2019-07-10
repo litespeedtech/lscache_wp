@@ -8,10 +8,7 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
 class LiteSpeed_Cache_Media
 {
@@ -19,18 +16,10 @@ class LiteSpeed_Cache_Media
 
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js' ;
 
-	const TYPE_GENERATE_PLACEHOLDER = 'generate_placeholder' ;
-	const DB_PLACEHOLDER_SUMMARY = 'litespeed-media-placeholder-summary' ;
-
 	private $content ;
 	private $wp_upload_dir ;
 
 	private $_cfg_img_webp ;
-	private $_cfg_placeholder_resp ;
-	private $_cfg_placeholder_resp_color ;
-	private $_cfg_placeholder_resp_async ;
-	private $_placeholder_resp_dict = array() ;
-	private $_ph_queue = array() ;
 
 	/**
 	 * Init
@@ -40,7 +29,7 @@ class LiteSpeed_Cache_Media
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'Media init' ) ;
+		LiteSpeed_Cache_Log::debug2( '[Media] init' ) ;
 
 		$this->wp_upload_dir = wp_upload_dir() ;
 
@@ -76,15 +65,6 @@ class LiteSpeed_Cache_Media
 		 * @since  3.0
 		 */
 		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) ) ;
-
-		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
-		// Encode the color
-		if ( $this->_cfg_placeholder_resp_color ) {
-			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
-		}
-
 	}
 
 	/**
@@ -458,25 +438,13 @@ eot;
 		// image lazy load
 		if ( $cfg_lazy ) {
 
-			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+			$__placeholder = LiteSpeed_Cache_Placeholder::get_instance() ;
 
 			foreach ( $html_list as $k => $v ) {
 				$size = $placeholder_list[ $k ] ;
-				// Check if need to enable responsive placeholder or not
-				$this_placeholder = $this->_placeholder( $size ) ?: $default_placeholder ;
+				$src = $src_list[ $k ] ;
 
-				$additional_attr = '' ;
-				if ( $this_placeholder != $default_placeholder ) {
-					LiteSpeed_Cache_Log::debug2( '[Media] Use resp placeholder [size] ' . $size ) ;
-					$additional_attr = ' data-placeholder-resp="' . $size . '"' ;
-				}
-
-				$snippet = '<noscript>' . $v . '</noscript>' ;
-				$v = str_replace( array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $v ) ;
-				$v = str_replace( '<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $v ) ;
-				$snippet = $v . $snippet ;
-
-				$html_list[ $k ] = $snippet ;
+				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size ) ;
 			}
 		}
 
@@ -514,80 +482,6 @@ eot;
 		}
 	}
 
-	/**
-	 * Generate responsive placeholder
-	 *
-	 * @since  2.5.1
-	 * @access private
-	 */
-	private function _placeholder( $size )
-	{
-		if ( ! $size ) {
-			return false ;
-		}
-
-		if ( ! $this->_cfg_placeholder_resp ) {
-			return false ;
-		}
-
-		// Check if its already in dict or not
-		if ( ! empty( $this->_placeholder_resp_dict[ $size ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in dict [size] ' . $size ) ;
-
-			return $this->_placeholder_resp_dict[ $size ] ;
-		}
-
-		// Need to generate the responsive placeholder
-		$placeholder_realpath = $this->_placeholder_realpath( $size ) ;
-		if ( file_exists( $placeholder_realpath ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file exists [size] ' . $size ) ;
-			$this->_placeholder_resp_dict[ $size ] = Litespeed_File::read( $placeholder_realpath ) ;
-
-			return $this->_placeholder_resp_dict[ $size ] ;
-		}
-
-		// Add to cron queue
-
-		// Prevent repeated requests
-		if ( in_array( $size, $this->_ph_queue ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to in queue [size] ' . $size ) ;
-			return false ;
-		}
-		$this->_ph_queue[] = $size ;
-
-		$req_summary = self::get_summary() ;
-
-		// Send request to generate placeholder
-		if ( ! $this->_cfg_placeholder_resp_async ) {
-			// If requested recently, bypass
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-				LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to interval limit [size] ' . $size ) ;
-				return false ;
-			}
-			// Generate immediately
-			$this->_placeholder_resp_dict[ $size ] = $this->_generate_placeholder( $size ) ;
-
-			return $this->_placeholder_resp_dict[ $size ] ;
-		}
-
-		// Store it to prepare for cron
-		if ( empty( $req_summary[ 'queue' ] ) ) {
-			$req_summary[ 'queue' ] = array() ;
-		}
-		if ( in_array( $size, $req_summary[ 'queue' ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in queue [size] ' . $size ) ;
-
-			return false ;
-		}
-
-		$req_summary[ 'queue' ][] = $size ;
-
-		LiteSpeed_Cache_Log::debug( '[Media] Added placeholder queue [size] ' . $size ) ;
-
-		$this->_save_summary( $req_summary ) ;
-		return false ;
-
-	}
 
 	/**
 	 * Parse img src
@@ -902,190 +796,6 @@ eot;
 		LiteSpeed_Cache_Log::debug2( '[Media] - replaced to: ' . $url ) ;
 
 		return $url ;
-	}
-
-	/**
-	 * Check if there is a queue for cron or not
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function has_queue()
-	{
-		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
-			return true ;
-		}
-
-		return false ;
-	}
-
-	/**
-	 * Check if there is a placeholder cache folder
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function has_placehoder_cache()
-	{
-		return is_dir( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ;
-	}
-
-	/**
-	 * Save image placeholder summary
-	 *
-	 * @since  2.5.1
-	 * @access private
-	 */
-	private function _save_summary( $data )
-	{
-		update_option( self::DB_PLACEHOLDER_SUMMARY, $data ) ;
-	}
-
-	/**
-	 * Read last time generated info
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function get_summary()
-	{
-		return get_option( self::DB_PLACEHOLDER_SUMMARY, array() ) ;
-	}
-
-	/**
-	 * Generate realpath of placeholder file
-	 *
-	 * @since  2.5.1
-	 * @access private
-	 */
-	private function _placeholder_realpath( $size )
-	{
-		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_cfg_placeholder_resp_color ) ;
-	}
-
-	/**
-	 * Delete file-based cache folder
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public function rm_cache_folder()
-	{
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ;
-		}
-
-		// Clear placeholder in queue too
-		$this->_save_summary( array() ) ;
-
-		LiteSpeed_Cache_Log::debug2( '[Media] Cleared placeholder queue' ) ;
-	}
-
-	/**
-	 * Cron placeholder generation
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function cron_placeholder( $continue = false )
-	{
-		$req_summary = self::get_summary() ;
-		if ( empty( $req_summary[ 'queue' ] ) ) {
-			return ;
-		}
-
-		// For cron, need to check request interval too
-		if ( ! $continue ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-				return ;
-			}
-		}
-
-		foreach ( $req_summary[ 'queue' ] as $v ) {
-			LiteSpeed_Cache_Log::debug( '[Media] cron job [size] ' . $v ) ;
-
-			self::get_instance()->_generate_placeholder( $v ) ;
-
-			// only request first one
-			if ( ! $continue ) {
-				return ;
-			}
-		}
-	}
-
-	/**
-	 * Send to LiteSpeed API to generate placeholder
-	 *
-	 * @since  2.5.1
-	 * @access private
-	 */
-	private function _generate_placeholder( $size )
-	{
-		$req_summary = self::get_summary() ;
-
-		$file = $this->_placeholder_realpath( $size ) ;
-
-		// Update request status
-		$req_summary[ 'curr_request' ] = time() ;
-		$this->_save_summary( $req_summary ) ;
-
-		// Generate placeholder
-		$req_data = array(
-			'size'	=> $size,
-			'color'	=> $this->_cfg_placeholder_resp_color,
-		) ;
-		$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
-
-		LiteSpeed_Cache_Log::debug( '[Media] _generate_placeholder ' ) ;
-
-		if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
-			LiteSpeed_Cache_Log::debug( '[Media] failed to decode response: ' . $data ) ;
-			return false ;
-		}
-
-		// Write to file
-		Litespeed_File::save( $file, $data, true ) ;
-
-		// Save summary data
-		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'curr_request' ] = 0 ;
-		if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $size, $req_summary[ 'queue' ] ) ) {
-			unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
-		}
-
-		$this->_save_summary( $req_summary ) ;
-
-		LiteSpeed_Cache_Log::debug( '[Media] saved placeholder ' . $file ) ;
-
-		LiteSpeed_Cache_Log::debug2( '[Media] placeholder con: ' . $data ) ;
-
-		return $data ;
-	}
-
-	/**
-	 * Handle all request actions from main cls
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
-
-		$type = LiteSpeed_Cache_Router::verify_type() ;
-
-		switch ( $type ) {
-			case self::TYPE_GENERATE_PLACEHOLDER :
-				self::cron_placeholder( true ) ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**

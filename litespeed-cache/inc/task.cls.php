@@ -63,10 +63,10 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register image placeholder generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Media::has_queue() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Placeholder::has_queue() ) {
 			self::schedule_filter_placeholder() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Media::cron_placeholder' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Placeholder::cron_placeholder' ) ;
 		}
 	}
 

@@ -75,7 +75,7 @@ if ( LiteSpeed_Cache_CSS::has_ccss_cache() ) {
 	) ;
 }
 
-if ( LiteSpeed_Cache_Media::has_placehoder_cache() ) {
+if ( LiteSpeed_Cache_Placeholder::has_placehoder_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated image placeholder files', 'litespeed-cache' ),

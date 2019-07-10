@@ -212,7 +212,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	private function _purge_all_placeholder( $silence = false )
 	{
-		LiteSpeed_Cache_Media::get_instance()->rm_cache_folder() ;
+		LiteSpeed_Cache_Placeholder::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all placeholder files.', 'litespeed-cache' ) ;

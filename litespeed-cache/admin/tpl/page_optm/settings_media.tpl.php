@@ -1,7 +1,7 @@
 <?php
 defined( 'WPINC' ) || exit ;
 
-$last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
+$last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summary() ;
 
 ?>
 
@@ -140,7 +140,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 							<?php echo implode( ' ', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
 						</p>
 					</p>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_GENERATE_PLACEHOLDER ) ; ?>" class="litespeed-btn-success">
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_PLACEHOLDER, LiteSpeed_Cache_Placeholder::TYPE_GENERATE ) ; ?>" class="litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
 					</a>
 				<?php endif ; ?>

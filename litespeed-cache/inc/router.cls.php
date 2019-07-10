@@ -7,10 +7,7 @@
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
 class LiteSpeed_Cache_Router
 {
@@ -21,6 +18,7 @@ class LiteSpeed_Cache_Router
 
 
 	const ACTION_DB = 'db' ;
+	const ACTION_PLACEHOLDER = 'placeholder' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 
 	const TYPE = 'litespeed_type' ;
@@ -512,7 +510,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 			case LiteSpeed_Cache::ACTION_PURGE:
-			case LiteSpeed_Cache::ACTION_MEDIA:
+			case self::ACTION_PLACEHOLDER:
 			case LiteSpeed_Cache::ACTION_IMG_OPTM:
 			case LiteSpeed_Cache::ACTION_IAPI:
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:

@@ -49,6 +49,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Object'			=> 'inc/object.cls.php',
 			'LiteSpeed_Cache_Optimize'			=> 'inc/optimize.cls.php',
 			'LiteSpeed_Cache_Optimizer'			=> 'inc/optimizer.cls.php',
+			'LiteSpeed_Cache_Placeholder'		=> 'inc/placeholder.cls.php',
 			'LiteSpeed_Cache_Purge'				=> 'inc/purge.cls.php',
 			'LiteSpeed_Cache_Report'			=> 'inc/report.cls.php',
 			'LiteSpeed_Cache_REST'				=> 'inc/rest.cls.php',

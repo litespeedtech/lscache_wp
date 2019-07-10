@@ -56,7 +56,6 @@ class LiteSpeed_Cache
 
 	const ACTION_IMPORT = 'import' ;
 	const ACTION_PURGE = 'purge' ;
-	const ACTION_MEDIA = 'media' ;
 	const ACTION_IMG_OPTM = 'img_optm' ;
 	const ACTION_IAPI = 'iapi' ;
 	const ACTION_CDN = 'cdn' ;
@@ -330,8 +329,8 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Admin_API::sapi_aggressive_callback() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_MEDIA:
-				$msg = LiteSpeed_Cache_Media::handler() ;
+			case LiteSpeed_Cache_Router::ACTION_PLACEHOLDER:
+				LiteSpeed_Cache_Placeholder::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_IMG_OPTM:

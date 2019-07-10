@@ -585,7 +585,7 @@ class LiteSpeed_Cache_GUI
 			) );
 		}
 
-		if ( LiteSpeed_Cache_Media::has_placehoder_cache() ) {
+		if ( LiteSpeed_Cache_Placeholder::has_placehoder_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
