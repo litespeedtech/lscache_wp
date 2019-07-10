@@ -17,8 +17,11 @@ class LiteSpeed_Cache_Router
 	private static $_instance ;
 
 	const NONCE_NAME = 'LSCWP_NONCE' ;
-	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_KEY = 'LSCWP_CTRL' ;
+
+
+	const ACTION_DB = 'db' ;
+	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 
 	const TYPE = 'litespeed_type' ;
 
@@ -480,7 +483,7 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
+			case self::ACTION_DB:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}

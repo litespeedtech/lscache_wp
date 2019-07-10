@@ -15,37 +15,10 @@ if ( ! defined( 'WPINC' ) ) {
 
 class LiteSpeed_Cache_DB_Optm
 {
-	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
+	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
+	const TYPE_CONV_TB = 'conv_innodb' ;
 
-	/**
-	 * Run DB Cleaner
-	 *
-	 * @since  1.2.1
-	 * @access public
-	 */
-	public static function run_db_clean()
-	{
-		if( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
-			return ;
-		}
-
-		$res = '' ;
-
-		if ( is_multisite() && is_network_admin() ) {
-			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
-			foreach ( $blogs as $blog_id ) {
-				switch_to_blog( $blog_id ) ;
-				$res = self::db_clean( $type ) ;
-				restore_current_blog() ;
-			}
-		}
-		else {
-			$res = self::db_clean( $type ) ;
-		}
-
-		return $res ;
-
-	}
+	private static $_instance ;
 
 	/**
 	 * Clean/Optimize WP tables
@@ -60,8 +33,8 @@ class LiteSpeed_Cache_DB_Optm
 	{
 		if ( $type === 'all' ) {
 			$num = 0 ;
-			foreach ( self::$_types as $val ) {
-				$num += self::db_count( $val ) ;
+			foreach ( self::TYPES as $v ) {
+				$num += self::db_count( $v ) ;
 			}
 			return $num ;
 		}
@@ -107,7 +80,7 @@ class LiteSpeed_Cache_DB_Optm
 				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" ) ;
 
 			case 'optimize_tables':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ) ;
 
 			case 'all_cssjs' :
 				return $wpdb->get_var( "SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::get_optm_table() . "`" ) ;
@@ -120,14 +93,14 @@ class LiteSpeed_Cache_DB_Optm
 	 * Clean/Optimize WP tables
 	 *
 	 * @since  1.2.1
-	 * @access public
-	 * @param  string $type The type to clean
+	 * @since 3.0 changed to private
+	 * @access private
 	 */
-	public static function db_clean( $type )
+	private function _db_clean( $type )
 	{
 		if ( $type === 'all' ) {
-			foreach ( self::$_types as $val ) {
-				self::db_clean( $val ) ;
+			foreach ( self::TYPES as $v ) {
+				$this->_db_clean( $v ) ;
 			}
 			return __( 'Clean all successfully.', 'litespeed-cache' ) ;
 		}
@@ -167,7 +140,7 @@ class LiteSpeed_Cache_DB_Optm
 				return __( 'Clean all transients successfully.', 'litespeed-cache' ) ;
 
 			case 'optimize_tables':
-				$sql = "SELECT table_name, data_free FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0" ;
+				$sql = "SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ;
 				$result = $wpdb->get_results( $sql ) ;
 				if ( $result ) {
 					foreach ( $result as $row ) {
@@ -184,4 +157,114 @@ class LiteSpeed_Cache_DB_Optm
 		}
 
 	}
+
+	/**
+	 * Get all myisam tables
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function list_myisam()
+	{
+		global $wpdb ;
+		$q = "SELECT * FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'" ;
+		return $wpdb->get_results( $q ) ;
+	}
+
+	/**
+	 * Convert tables to InnoDB
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _conv_innodb()
+	{
+		global $wpdb ;
+
+		if ( empty( $_GET[ 'tb' ] ) ) {
+			LiteSpeed_Cache_Admin_Display::error( 'No table to convert' ) ;
+			return ;
+		}
+
+		$tb = false ;
+
+		$list = $this->list_myisam() ;
+		foreach ( $list as $v ) {
+			if ( $v->TABLE_NAME == $_GET[ 'tb' ] ) {
+				$tb = $v->TABLE_NAME ;
+				break ;
+			}
+		}
+
+		if ( ! $tb ) {
+			LiteSpeed_Cache_Admin_Display::error( 'No existing table' ) ;
+			return ;
+		}
+
+		$q = 'ALTER TABLE ' . DB_NAME . '.' . $tb . ' ENGINE = InnoDB' ;
+		$wpdb->query( $q ) ;
+
+		LiteSpeed_Cache_Log::debug( "[DB] Converted $tb to InnoDB" ) ;
+
+		$msg = __( 'Converted to InnoDB successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case in_array( $type, self::TYPES ) :
+				if ( is_multisite() && is_network_admin() ) {
+					$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+					foreach ( $blogs as $blog_id ) {
+						switch_to_blog( $blog_id ) ;
+						$msg = $instance->_db_clean( $type ) ;
+						restore_current_blog() ;
+					}
+				}
+				else {
+					$msg = $instance->_db_clean( $type ) ;
+				}
+				LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+				break ;
+
+			case self::TYPE_CONV_TB :
+				$instance->_conv_innodb() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
+
+		return self::$_instance ;
+	}
+
 }
+

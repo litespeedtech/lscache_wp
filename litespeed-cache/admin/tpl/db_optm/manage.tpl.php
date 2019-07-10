@@ -58,7 +58,7 @@ foreach ( $_panels as $tag => $v ) {
 			$total += $_panels[ $tag ][ 'count' ] ;
 		}
 	}
-	$_panels[ $tag ][ 'link' ] = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $tag ) ;
+	$_panels[ $tag ][ 'link' ] = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_DB, $tag ) ;
 }
 
 $_panels[ 'all' ][ 'count' ] = $total ;
@@ -91,3 +91,45 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 <?php endforeach; ?>
 
 </div>
+
+<h3 class="litespeed-title"><?php echo __( 'Database Table Engine Converter', 'litespeed-cache' ) ; ?></h3>
+
+<div class="litespeed-panel-wrapper">
+
+	<table class="litespeed-table">
+		<thead><tr >
+			<th scope="col">#</th>
+			<th scope="col"><?php echo __( 'Table', 'litespeed-cache' ) ; ?></th>
+			<th scope="col"><?php echo __( 'Engine', 'litespeed-cache' ) ; ?></th>
+			<th scope="col"><?php echo __( 'Tool', 'litespeed-cache' ) ; ?></th>
+		</tr></thead>
+		<tbody>
+		<?php
+			$list = LiteSpeed_Cache_DB_Optm::get_instance()->list_myisam() ;
+			if ( $list ) :
+				foreach ( $list as $k => $v ) :
+		?>
+				<tr>
+					<td><?php echo $k + 1 ; ?></td>
+					<td><?php echo $v->TABLE_NAME ; ?></td>
+					<td><?php echo $v->ENGINE ; ?></td>
+					<td>
+						<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_DB, LiteSpeed_Cache_DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ) ; ?>">
+							<?php echo __( 'Convert to InnoDB', 'litespeed-cache' ) ; ?>
+						</a>
+					</td>
+				</tr>
+		<?php endforeach ; ?>
+		<?php else : ?>
+			<tr>
+				<td colspan="4" class="litespeed-success litespeed-text-center">
+					<?php echo __( 'We are good. No table uses MyISAM engine.', 'litespeed-cache' ) ; ?>
+				</td>
+			</tr>
+		<?php endif ; ?>
+		</tbody>
+	</table>
+
+</div>
+
+

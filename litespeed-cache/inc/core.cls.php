@@ -52,7 +52,6 @@ class LiteSpeed_Cache
 	const ACTION_ACTIVATION = 'activate' ;
 	const ACTION_UTIL = 'util' ;
 
-	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 	const ACTION_LOG = 'log' ;
 
 	const ACTION_IMPORT = 'import' ;
@@ -319,8 +318,8 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_GUI::dismiss() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
-				$msg = LiteSpeed_Cache_Admin_Optimize::run_db_clean() ;
+			case LiteSpeed_Cache_Router::ACTION_DB:
+				LiteSpeed_Cache_DB_Optm::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK:
