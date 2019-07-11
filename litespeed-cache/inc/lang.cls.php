@@ -128,7 +128,8 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_CDN_REMOTE_JQ				=> __( 'Load JQuery Remotely', 'litespeed-cache' ),
 			self::O_CDN_QUIC					=> __( 'Quic Cloud API', 'litespeed-cache' ),
 			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
-			// self::				=> ,
+
+			self::O_CRWL_TIMEOUT				=> __( 'Timeout', 'litespeed-cache' ),
 			// self::				=> ,
 		) ;
 

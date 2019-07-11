@@ -14,6 +14,7 @@ class Litespeed_Crawler
 	private $_http2 = true ;
 	private $_run_delay = 500 ;//microseconds
 	private $_run_duration = 200 ;//seconds
+	private $_run_timeout = 30 ;//seconds
 	private $_threads_limit = 3 ;
 	private $_load_limit = 1 ;
 	private $_domain_ip = '' ;
@@ -125,6 +126,17 @@ class Litespeed_Crawler
 	public function set_run_delay($val)
 	{
 		$this->_run_delay = $val ;
+	}
+
+	/**
+	 * Set timeout
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function set_timeout( $val )
+	{
+		$this->_run_timeout = $val ;
 	}
 
 	/**
@@ -567,7 +579,7 @@ class Litespeed_Crawler
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
-			CURLOPT_TIMEOUT => 10,
+			CURLOPT_TIMEOUT => $this->_run_timeout,
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,

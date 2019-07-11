@@ -86,6 +86,21 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CRWL_TIMEOUT ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the timeout while crawling each URL.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+				<?php $this->_validate_ttl( $id, 10, 300 ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Server Load Limit', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT ; ?>

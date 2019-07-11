@@ -417,6 +417,11 @@ class LiteSpeed_Cache_Crawler
 		}
 		$crawler->set_run_delay( $usleep ) ;
 		$crawler->set_threads_limit( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_THREADS ] ) ;
+		/**
+		 * Set timeout to avoid incorrect blacklist addition #900171
+		 * @since  3.0
+		 */
+		$crawler->set_timeout( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_TIMEOUT ] ) ;
 
 		$server_load_limit = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT ] ;
 		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {

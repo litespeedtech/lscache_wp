@@ -200,6 +200,7 @@ class LiteSpeed_Cache_Const
 	const O_CRWL_RUN_INTERVAL 	= 'crawler-run_interval' ;
 	const O_CRWL_CRAWL_INTERVAL = 'crawler-crawl_interval' ;
 	const O_CRWL_THREADS 		= 'crawler-threads' ;
+	const O_CRWL_TIMEOUT 		= 'crawler-timeout' ;
 	const O_CRWL_LOAD_LIMIT 	= 'crawler-load_limit' ;
 	const O_CRWL_DOMAIN_IP 		= 'crawler-domain_ip' ;
 	const O_CRWL_CUSTOM_SITEMAP = 'crawler-custom_sitemap' ;
@@ -444,6 +445,7 @@ class LiteSpeed_Cache_Const
 		self::O_CRWL_RUN_INTERVAL 		=> 0,
 		self::O_CRWL_CRAWL_INTERVAL 	=> 0,
 		self::O_CRWL_THREADS 			=> 0,
+		self::O_CRWL_TIMEOUT 			=> 0,
 		self::O_CRWL_LOAD_LIMIT 		=> 0,
 		self::O_CRWL_DOMAIN_IP 			=> '',
 		self::O_CRWL_CUSTOM_SITEMAP 	=> '',
