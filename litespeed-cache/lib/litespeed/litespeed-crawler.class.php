@@ -565,7 +565,7 @@ class Litespeed_Crawler
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
-			CURLOPT_TIMEOUT => 10,
+			CURLOPT_TIMEOUT => 30, // Larger timeout to avoid incorrect blacklist addition #900171
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
