@@ -81,7 +81,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left">
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -95,7 +95,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left">
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -109,7 +109,41 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left">
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<div class="litespeed-switch">
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'LOCAL', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'ONLINE', 'litespeed-cache' ) ) ; ?>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the generator used for base64 image.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify a SVG to be used as a placeholder when generate locally.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'It will be converted to a base64 placeholder on-the-fly.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the corresponding image properties.', 'litespeed-cache' ), '<code>{width} {height}</code>' ) ; ?>
+				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the configured background color.', 'litespeed-cache' ), '<code>{color}</code>' ) ; ?>
+				<br /><?php $this->recommended( $id ) ; ?>
+				<br /><?php echo __( 'Online SVG generator tool', 'litespeed-cache' ) ; ?>: <a href="https://www.svgator.com/" target="_blank">https://www.svgator.com/</a>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

@@ -47,7 +47,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 			exit( 'No fields' ) ;
 		}
 
-		// LiteSpeed_Cache_Admin::cleanup_text( $input ) ; todo: check if need to call this
+		$raw_data = LiteSpeed_Cache_Admin::cleanup_text( $raw_data ) ;
 
 		// Sanitize the fields to save
 		$_fields = array() ;
@@ -253,7 +253,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 			exit( 'No fields' ) ;
 		}
 
-		// LiteSpeed_Cache_Admin::cleanup_text( $input ) ; todo: check if need to call this
+		$raw_data = LiteSpeed_Cache_Admin::cleanup_text( $raw_data ) ;
 
 		// Sanitize the fields to save
 		$_fields = array() ;

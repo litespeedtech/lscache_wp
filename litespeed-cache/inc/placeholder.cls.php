@@ -16,9 +16,11 @@ class LiteSpeed_Cache_Placeholder
 	const TYPE_GENERATE = 'generate' ;
 	const DB_SUMMARY = 'placeholder' ;
 
-	private $_cfg_placeholder_resp ;
-	private $_cfg_placeholder_resp_color ;
-	private $_cfg_placeholder_resp_async ;
+	private $_conf_placeholder_resp ;
+	private $_conf_placeholder_resp_generator ;
+	private $_conf_placeholder_resp_svg ;
+	private $_conf_placeholder_resp_color ;
+	private $_conf_placeholder_resp_async ;
 	private $_placeholder_resp_dict = array() ;
 	private $_ph_queue = array() ;
 
@@ -32,14 +34,12 @@ class LiteSpeed_Cache_Placeholder
 	{
 		LiteSpeed_Cache_Log::debug2( '[Placeholder] init' ) ;
 
-		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_conf_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_conf_placeholder_resp_generator = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
+		$this->_conf_placeholder_resp_svg 	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
+		$this->_conf_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_conf_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		$this->_conf_ph_default = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
-		// Encode the color
-		if ( $this->_cfg_placeholder_resp_color ) {
-			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
-		}
 	}
 
 	/**
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_Placeholder
 	public function replace( $html, $src, $size )
 	{
 		// Check if need to enable responsive placeholder or not
-		$this_placeholder = $this->_placeholder( $size ) ?: $this->_conf_ph_default ;
+		$this_placeholder = $this->_placeholder( $src, $size ) ?: $this->_conf_ph_default ;
 
 		$additional_attr = '' ;
 		if ( $this_placeholder != $this->_conf_ph_default ) {
@@ -73,13 +73,14 @@ class LiteSpeed_Cache_Placeholder
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _placeholder( $size )
+	private function _placeholder( $src, $size )
 	{
+		// Low Quality Image Placeholders
 		if ( ! $size ) {
 			return false ;
 		}
 
-		if ( ! $this->_cfg_placeholder_resp ) {
+		if ( ! $this->_conf_placeholder_resp ) {
 			return false ;
 		}
 
@@ -111,7 +112,7 @@ class LiteSpeed_Cache_Placeholder
 		$req_summary = self::get_summary() ;
 
 		// Send request to generate placeholder
-		if ( ! $this->_cfg_placeholder_resp_async ) {
+		if ( ! $this->_conf_placeholder_resp_async ) {
 			// If requested recently, bypass
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				LiteSpeed_Cache_Log::debug2( '[Placeholder] Resp placeholder file bypass generating due to interval limit [size] ' . $size ) ;
@@ -199,7 +200,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	private function _placeholder_realpath( $size )
 	{
-		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_cfg_placeholder_resp_color ) ;
+		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_conf_placeholder_resp_color ) ;
 	}
 
 	/**
@@ -264,22 +265,32 @@ class LiteSpeed_Cache_Placeholder
 
 		$file = $this->_placeholder_realpath( $size ) ;
 
-		// Update request status
-		$req_summary[ 'curr_request' ] = time() ;
-		$this->_save_summary( $req_summary ) ;
+		// Local generate SVG to serve
+		if ( ! $this->_conf_placeholder_resp_generator ) {
+			$size = explode( 'x', $size ) ;
+			$svg = str_replace( array( '{width}', '{height}', '{color}' ), array( $size[ 0 ], $size[ 1 ], $this->_conf_placeholder_resp_color ), $this->_conf_placeholder_resp_svg ) ;
+			LiteSpeed_Cache_Log::debug2( '[Placeholder] _generate_placeholder local ' . $svg ) ;
+			$data = 'data:image/svg+xml;base64,' . base64_encode( $svg ) ;
+		}
+		else {
 
-		// Generate placeholder
-		$req_data = array(
-			'size'	=> $size,
-			'color'	=> $this->_cfg_placeholder_resp_color,
-		) ;
-		$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
+			// Update request status
+			$req_summary[ 'curr_request' ] = time() ;
+			$this->_save_summary( $req_summary ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Placeholder] _generate_placeholder ' ) ;
+			// Generate placeholder
+			$req_data = array(
+				'size'	=> $size,
+				'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
+			) ;
+			$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
 
-		if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
-			LiteSpeed_Cache_Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
-			return false ;
+			LiteSpeed_Cache_Log::debug( '[Placeholder] _generate_placeholder ' ) ;
+
+			if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
+				LiteSpeed_Cache_Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
+				return false ;
+			}
 		}
 
 		// Write to file

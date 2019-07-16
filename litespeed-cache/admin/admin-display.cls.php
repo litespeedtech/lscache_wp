@@ -829,6 +829,7 @@ class LiteSpeed_Cache_Admin_Display
 				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
+				$val = esc_textarea( $val ) ;
 				$val = "<code>$val</code>" ;
 			}
 			echo __( 'Recommended value', 'litespeed-cache' ) . ': ' . $val ;

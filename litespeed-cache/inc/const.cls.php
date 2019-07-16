@@ -166,6 +166,8 @@ class LiteSpeed_Cache_Const
 	const O_MEDIA_LAZY_PLACEHOLDER 			= 'media-lazy_placeholder' ;
 	const O_MEDIA_PLACEHOLDER_RESP 			= 'media-placeholder_resp' ;
 	const O_MEDIA_PLACEHOLDER_RESP_COLOR	= 'media-placeholder_resp_color' ;
+	const O_MEDIA_PLACEHOLDER_RESP_GENERATOR	= 'media-placeholder_resp_generator' ;
+	const O_MEDIA_PLACEHOLDER_RESP_SVG		= 'media-placeholder_resp_svg' ;
 	const O_MEDIA_PLACEHOLDER_RESP_ASYNC	= 'media-placeholder_resp_async' ;
 	const O_MEDIA_IFRAME_LAZY 				= 'media-iframe_lazy' ;
 	const O_MEDIA_LAZYJS_INLINE 			= 'media-lazyjs_inline' ;
@@ -414,8 +416,10 @@ class LiteSpeed_Cache_Const
 		self::O_MEDIA_LAZY_CLS_EXC 		=> array(),
 		self::O_MEDIA_LAZY_PLACEHOLDER 	=> '',
 		self::O_MEDIA_PLACEHOLDER_RESP	=> false,
-		self::O_MEDIA_PLACEHOLDER_RESP_COLOR	=> '#cfd4db',
-		self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> false,
+		self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '',
+		self::O_MEDIA_PLACEHOLDER_RESP_GENERATOR	=> false,
+		self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> '',
+		self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> false,
 		self::O_MEDIA_IFRAME_LAZY 		=> false,
 		self::O_MEDIA_LAZYJS_INLINE 	=> false,
 
