@@ -599,6 +599,11 @@ eot;
 				continue ;
 			}
 
+			if ( apply_filters( 'litespeed_iframe_lazyload_exc', false, $attrs[ 'src' ] ) ) {
+				LiteSpeed_Cache_Log::debug2( '[Media] bypassed by filter' ) ;
+				continue ;
+			}
+
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue ;
