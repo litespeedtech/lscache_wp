@@ -565,6 +565,13 @@ class LiteSpeed_Cache_Optimize
 		 */
 		$this->_async_ggfonts() ;
 
+		/**
+		 * Inline script manipulated until document is ready
+		 * No need to do this for css_async lib as it won't cause error even manipulated before document is ready
+		 * @since  3.0
+		 */
+		$this->_js_inline_defer() ;
+
 		// Replace html head part
 		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head ) ;
 		if ( $this->html_head ) {
@@ -591,6 +598,70 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
 		}
+
+	}
+
+	/**
+	 * Inline JS defer
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function _js_inline_defer()
+	{
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_DEFER ) ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Optm] Inline JS defer' ) ;
+
+		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER ) ;
+
+		$script_ori = array() ;
+		$script_deferred = array() ;
+
+		foreach ( $matches as $match ) {
+
+			if ( ! empty( $match[ 1 ] ) ) {
+				$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
+
+				if ( ! empty( $attrs[ 'src' ] ) ) {
+					continue ;
+				}
+
+				if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+					continue ;
+				}
+
+				if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
+					continue ;
+				}
+			}
+
+			$con = trim( $match[ 2 ] ) ;
+			if ( ! $con ) {
+				continue ;
+			}
+
+			// Prevent var scope issue
+			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
+				continue ;
+			}
+
+			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
+				continue ;
+			}
+
+			// $con = str_replace( 'var ', 'window.', $con ) ;
+
+			$script_ori[] = $match[ 0 ] ;
+
+			$deferred = "document.addEventListener('DOMContentLoaded',function(){" . $con . '});' ;
+
+			$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>' ;
+		}
+
+		$this->content = str_replace( $script_ori, $script_deferred, $this->content ) ;
 
 	}
 

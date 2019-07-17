@@ -63,6 +63,20 @@
 
 	<tr>
 		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_DEFER ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Load inline JS after dom is fully loaded.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo __( 'This can increase JS compatibility and reduce JS error when turned on the above JS optimization features.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_OPTM_EXC_JQ ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

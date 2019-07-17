@@ -127,6 +127,7 @@ class LiteSpeed_Cache_Const
 	const O_OPTM_CCSS_ASYNC 		= 'optm-ccss_async' ;
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline' ;
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer' ;
+	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer' ;
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm' ;
 	const O_OPTM_EXC_JQ 			= 'optm-exc_jq' ;
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async' ;
@@ -382,6 +383,7 @@ class LiteSpeed_Cache_Const
 		self::O_OPTM_CCSS_ASYNC 		=> false,
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
+		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_EXC_JQ 			=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
