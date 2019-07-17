@@ -329,7 +329,7 @@ class LiteSpeed_Cache_Const
 				return "users\nuserlogins\nusermeta\nuser_meta\nsite-transient\nsite-options\nsite-lookup\nblog-lookup\nblog-details\nrss\nglobal-posts\nblog-id-cache" ;
 
 			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS :
-				return "comment\ncounts\nplugins" ;
+				return "comment\ncounts\nplugins\nwc_session_id" ;
 
 			case self::ITEM_ADV_PURGE_ALL_HOOKS :
 				return "switch_theme\nwp_create_nav_menu\nwp_update_nav_menu\nwp_delete_nav_menu\ncreate_term\nedit_terms\ndelete_term\nadd_link\nedit_link\ndelete_link" ;
