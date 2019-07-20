@@ -800,7 +800,7 @@ class LiteSpeed_Cache_Admin_Display
 			}
 		}
 
-		$checked = $this->__cfg->option( $id ) == $val ? ' checked ' : '' ;
+		$checked = (int) $this->__cfg->option( $id ) == (int) $val ? ' checked ' : '' ;
 
 		$this->enroll( $id ) ;
 

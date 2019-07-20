@@ -171,4 +171,23 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_CSS_FONT_DISPLAY ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<div class="litespeed-switch">
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'Block', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 2, __( 'Swap', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 3, __( 'Fallback', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 4, __( 'Optional', 'litespeed-cache' ) ) ; ?>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Set this to append %1$s to all %2$s rules before caching CSS to specify the font display style.', 'litespeed-cache' ), '<code>font-display</code>', '<code>@font-face</code>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

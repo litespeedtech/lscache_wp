@@ -115,8 +115,8 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'LOCAL', 'litespeed-cache' ) ) ; ?>
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'ONLINE', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'Local', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'Online', 'litespeed-cache' ) ) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the generator used for base64 image.', 'litespeed-cache' ) ; ?>

@@ -64,6 +64,7 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_OPTM_CCSS_SEP_POSTTYPE		=> __( 'Separate CCSS Cache Post Types', 'litespeed-cache' ),
 			self::O_OPTM_CCSS_SEP_URI			=> __( 'Separate CCSS Cache URIs', 'litespeed-cache' ),
 			self::O_OPTM_CSS_ASYNC_INLINE		=> __( 'Inline CSS Async Lib', 'litespeed-cache' ),
+			self::O_OPTM_CSS_FONT_DISPLAY		=> __( 'Font Display Optimization', 'litespeed-cache' ),
 			self::O_OPTM_JS_DEFER				=> __( 'Load JS Deferred', 'litespeed-cache' ),
 			self::O_OPTM_JS_INLINE_DEFER		=> __( 'Load Inline JS Deferred', 'litespeed-cache' ),
 			self::O_OPTM_EXC_JQ					=> __( 'Exclude JQuery', 'litespeed-cache' ),

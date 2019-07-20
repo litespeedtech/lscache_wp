@@ -16,6 +16,8 @@ class LiteSpeed_Cache_Optimizer
 {
 	private static $_instance ;
 
+	private $_conf_css_font_display ;
+
 	/**
 	 * Init optimizer
 	 *
@@ -24,8 +26,29 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function __construct()
 	{
-		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN ) ;
-		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN ) ;
+		$this->_conf_css_font_display = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_FONT_DISPLAY ) ;
+		if ( $this->_conf_css_font_display ) {
+			switch ( $this->_conf_css_font_display ) {
+				case 1:
+					$this->_conf_css_font_display = 'block' ;
+					break;
+
+				case 2:
+					$this->_conf_css_font_display = 'swap' ;
+					break;
+
+				case 3:
+					$this->_conf_css_font_display = 'fallback' ;
+					break;
+
+				case 4:
+					$this->_conf_css_font_display = 'optional' ;
+					break;
+
+				default:
+					break;
+			}
+		}
 	}
 
 	/**
@@ -37,11 +60,11 @@ class LiteSpeed_Cache_Optimizer
 	public function html_min( $content )
 	{
 		$options = array() ;
-		if ( $this->cfg_css_inline_minify ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN ) ) {
 			$options[ 'cssMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_css' ;
 		}
 
-		if ( $this->cfg_js_inline_minify ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN ) ) {
 			$options[ 'jsMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_js' ;
 		}
 
@@ -152,6 +175,11 @@ class LiteSpeed_Cache_Optimizer
 		foreach ( $files as $real_path ) {
 			LiteSpeed_Cache_Log::debug2( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = Litespeed_File::read( $real_path ) ;
+
+			// Font optimize
+			if ( $this->_conf_css_font_display ) {
+				$data = preg_replace( '|(@font-face\s*{)|isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $data ) ;
+			}
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 

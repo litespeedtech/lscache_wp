@@ -421,8 +421,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Validate type
 		if ( is_bool( $this->_default_options[ $id ] ) ) {
-			if ( $this->_conf_triple_switch( $id ) && $val > 1 ) {
-				$val = self::VAL_ON2 ;
+			$max = $this->_conf_multi_switch( $id ) ;
+			if ( $max && $val > 1 ) {
+				$val %= $max + 1 ;
 			}
 			else {
 				$val = (bool) $val ;
@@ -494,8 +495,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Validate type
 		if ( is_bool( $this->_default_site_options[ $id ] ) ) {
-			if ( $this->_conf_triple_switch( $id ) && $val > 1 ) {
-				$val = self::VAL_ON2 ;
+			$max = $this->_conf_multi_switch( $id ) ;
+			if ( $max && $val > 1 ) {
+				$val %= $max + 1 ;
 			}
 			else {
 				$val = (bool) $val ;

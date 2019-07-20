@@ -126,6 +126,7 @@ class LiteSpeed_Cache_Const
 	const O_OPTM_CCSS_GEN 			= 'optm-ccss_gen' ;
 	const O_OPTM_CCSS_ASYNC 		= 'optm-ccss_async' ;
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline' ;
+	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display' ;
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer' ;
 	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer' ;
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm' ;
@@ -382,6 +383,7 @@ class LiteSpeed_Cache_Const
 		self::O_OPTM_CCSS_GEN 			=> false,
 		self::O_OPTM_CCSS_ASYNC 		=> false,
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
+		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
 		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
@@ -531,8 +533,9 @@ class LiteSpeed_Cache_Const
 				$ini_v = $default_ini_cfg[ $k ] ;
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
-					if ( $this->_conf_triple_switch( $k ) && $ini_v > 1 ) {
-						$ini_v = self::VAL_ON2 ;
+					$max = $this->_conf_multi_switch( $k ) ;
+					if ( $max && $ini_v > 1 ) {
+						$ini_v %= $max + 1 ;
 					}
 					else {
 						$ini_v = (bool) $ini_v ;
@@ -580,8 +583,9 @@ class LiteSpeed_Cache_Const
 				$ini_v = $default_ini_cfg[ $k ] ;
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
-					if ( $this->_conf_triple_switch( $k ) && $ini_v > 1 ) {
-						$ini_v = self::VAL_ON2 ;
+					$max = $this->_conf_multi_switch( $k ) ;
+					if ( $max && $ini_v > 1 ) {
+						$ini_v %= $max + 1 ;
 					}
 					else {
 						$ini_v = (bool) $ini_v ;
@@ -688,16 +692,16 @@ class LiteSpeed_Cache_Const
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_triple_switch( $id )
+	protected function _conf_multi_switch( $id )
 	{
 		$list = array(
-			self::O_CDN_REMOTE_JQ,
-			self::O_DEBUG,
-			// self::,
+			self::O_CDN_REMOTE_JQ 	=> 2,
+			self::O_DEBUG 			=> 2,
+			self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
 		) ;
 
-		if ( in_array( $id, $list ) ) {
-			return true ;
+		if ( ! empty( $list[ $id ] ) ) {
+			return $list[ $id ] ;
 		}
 
 		return false ;
