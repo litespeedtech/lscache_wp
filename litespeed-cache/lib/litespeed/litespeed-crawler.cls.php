@@ -469,6 +469,15 @@ class Litespeed_Crawler
 	 */
 	protected function _adjust_current_threads()
 	{
+		/**
+		 * If server is windows, exit
+		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
+		 */
+		if ( ! function_exists( 'sys_getloadavg' ) ) {
+			$this->_cur_threads = 0 ;
+			return ;
+		}
+
 		$load = sys_getloadavg() ;
 		$curload = 1 ;
 

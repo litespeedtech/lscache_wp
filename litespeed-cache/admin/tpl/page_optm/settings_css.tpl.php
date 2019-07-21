@@ -179,7 +179,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'Block', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 1, __( 'Block', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Swap', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 3, __( 'Fallback', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 4, __( 'Optional', 'litespeed-cache' ) ) ; ?>
