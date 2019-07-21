@@ -27,27 +27,8 @@ class LiteSpeed_Cache_Optimizer
 	private function __construct()
 	{
 		$this->_conf_css_font_display = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_FONT_DISPLAY ) ;
-		if ( $this->_conf_css_font_display ) {
-			switch ( $this->_conf_css_font_display ) {
-				case 1:
-					$this->_conf_css_font_display = 'block' ;
-					break;
-
-				case 2:
-					$this->_conf_css_font_display = 'swap' ;
-					break;
-
-				case 3:
-					$this->_conf_css_font_display = 'fallback' ;
-					break;
-
-				case 4:
-					$this->_conf_css_font_display = 'optional' ;
-					break;
-
-				default:
-					break;
-			}
+		if ( ! empty( LiteSpeed_Cache_Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = LiteSpeed_Cache_Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
 		}
 	}
 

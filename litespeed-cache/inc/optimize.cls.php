@@ -38,6 +38,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_qs_rm ;
 	private $cfg_exc_jquery ;
 	private $cfg_ggfonts_async ;
+	private $_conf_css_font_display ;
 	private $cfg_optm_max_size ;
 	private $cfg_ttl ;
 	private $cfg_ggfonts_rm ;
@@ -328,6 +329,11 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMB ) ;
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQ ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ) ;
+		$this->_conf_css_font_display = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_FONT_DISPLAY ) ;
+		if ( ! empty( LiteSpeed_Cache_Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = LiteSpeed_Cache_Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
+		}
+
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
 		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE ) * 1000000 ;
 		$this->cfg_ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM ) ;
@@ -340,7 +346,7 @@ class LiteSpeed_Cache_Optimize
 		do_action( 'litespeed_optm' ) ;
 
 		// Parse css from content
-		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			list( $src_list, $html_list ) = $this->_handle_css() ;
 		}
 
@@ -566,6 +572,12 @@ class LiteSpeed_Cache_Optimize
 		$this->_async_ggfonts() ;
 
 		/**
+		 * Font display optm
+		 * @since  3.0
+		 */
+		$this->_font_optm() ;
+
+		/**
 		 * Inline script manipulated until document is ready
 		 * No need to do this for css_async lib as it won't cause error even manipulated before document is ready
 		 * @since  3.0
@@ -707,6 +719,10 @@ class LiteSpeed_Cache_Optimize
 
 			$subset = empty( $qs[ 'subset' ] ) ? '' : ':' . $qs[ 'subset' ] ;
 
+			if ( $this->_conf_css_font_display ) {
+				$subset .= '&display=' . $this->_conf_css_font_display ; // https://github.com/typekit/webfontloader/issues/409
+			}
+
 			foreach ( array_filter( explode( '|', $qs[ 'family' ] ) ) as $v2 ) {
 				$families[] = $v2 . $subset ;
 			}
@@ -725,7 +741,30 @@ class LiteSpeed_Cache_Optimize
 
 		// Put this in the very beginning for preconnect
 		$this->html_head = $html . $this->html_head ;
+	}
 
+	/**
+	 * Font optm
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _font_optm()
+	{
+		if ( ! $this->_conf_css_font_display || ! $this->_ggfonts_urls ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug2( '[Optm] google fonts optm ', $this->_ggfonts_urls ) ;
+
+		foreach ( $this->_ggfonts_urls as $v ) {
+			if ( strpos( $v, 'display=' ) ) {
+				continue ;
+			}
+			$this->html_head = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->html_head ) ;
+			$this->html_foot = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->html_foot ) ;
+			$this->content = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->content ) ;
+		}
 	}
 
 	/**
@@ -1113,18 +1152,19 @@ class LiteSpeed_Cache_Optimize
 			}
 
 			// Check Google fonts hit
-			if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
-				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+			if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+				/**
+				 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
+				 * @since  2.7.3
+				 * @since  3.0 For fotn display optm, need to parse google fonts URL too
+				 */
+				if ( ! in_array( $attrs[ 'href' ], $this->_ggfonts_urls ) ) {
+					$this->_ggfonts_urls[] = $attrs[ 'href' ] ;
+				}
+
+				if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
 					LiteSpeed_Cache_Log::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] ) ;
 					$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
-
-					/**
-					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
-					 * @since  2.7.3
-					 */
-					if ( $this->cfg_ggfonts_async ) {
-						$this->_ggfonts_urls[] = $attrs[ 'href' ] ;
-					}
 
 					continue ;
 				}

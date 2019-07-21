@@ -286,6 +286,13 @@ class LiteSpeed_Cache_Const
 		self::O_CDN_MAPPING,
 	) ;
 
+	const CSS_FONT_DISPLAY_SET = array(
+		1 => 'block',
+		2 => 'swap',
+		3 => 'fallback',
+		4 => 'optional',
+	) ;
+
 	protected $_default_options = array(
 		self::_VERSION 			=> '',
 		self::HASH				=> '',

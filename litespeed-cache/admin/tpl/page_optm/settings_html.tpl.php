@@ -104,4 +104,68 @@
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_QS_RM ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Remove query strings from static resources.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+				<br /><font class="litespeed-warning">
+					⚠️
+					<?php echo __( 'Google reCAPTCHA will be bypassed automatically.', 'litespeed-cache' ) ; ?>
+				</font>
+				<br /><font class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
+					<?php echo sprintf( __( 'Append query string %s to the resources to bypass this action.', 'litespeed-cache' ), '<code>&_litespeed_rm_qs=0</code>' ) ; ?>
+				</font>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Use Web Font Loader library to load Google Fonts asynchronously while leave other CSS intact.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will also add a preconnect to Google for faster Google Fonts downloading.', 'litespeed-cache' ) ; ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning:google-fonts' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent google fonts from loading on all your pages.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_EMOJI_RM ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Stop loading wordpress.org emoji. Browser default emoji will be displayed instead.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
