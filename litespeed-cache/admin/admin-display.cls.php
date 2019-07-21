@@ -808,6 +808,18 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Display seconds text and readable layout
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function readable_seconds()
+	{
+		echo __( 'seconds', 'litespeed-cache' ) ;
+		echo ' <span data-litespeed-readable=""></span>' ;
+	}
+
+	/**
 	 * Display default value
 	 *
 	 * @since  1.1.1

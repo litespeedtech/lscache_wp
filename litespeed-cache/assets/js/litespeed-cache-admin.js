@@ -203,9 +203,59 @@ var _litespeed_dots ;
 			});
 		}
 
+		/**
+		 * Human readable time conversation
+		 * @since  3.0
+		 */
+		if ( $( '[data-litespeed-readable]' ).length > 0 ) {
+			$( '[data-litespeed-readable]' ).each(function(index, el) {
+				var that = this ;
+				var $input = $( this ).siblings( 'input[type="text"]' ) ;
+
+				var txt = litespeed_readable_time( $input.val() ) ;
+				$( that ).html( txt ? '= ' + txt : '' ) ;
+
+				$input.keyup(function(event) {
+					var txt = litespeed_readable_time( $( this ).val() ) ;
+					$( that ).html( txt ? '= ' + txt : '' ) ;
+				});
+			});
+		}
+
 
 	}) ;
 })(jQuery) ;
+
+/**
+ * Plural handler
+ */
+function litespeed_plural( $num, $txt )
+{
+	if ( $num > 1 ) return $num + ' ' + $txt + 's' ;
+
+	return $num + ' ' + $txt ;
+}
+
+/**
+ * Convert seconds to readable time
+ */
+function litespeed_readable_time( seconds )
+{
+	var second = Math.floor( seconds % 60 ) ;
+	var minute = Math.floor( ( seconds / 60 ) % 60 ) ;
+	var hour = Math.floor( ( seconds / 3600 ) % 24 ) ;
+	var day = Math.floor( ( seconds / 3600 / 24 ) % 7 ) ;
+	var week = Math.floor( seconds / 3600 / 24 / 7 ) ;
+
+	var str = '' ;
+	if ( week ) str += ' ' + litespeed_plural( week, 'week' ) ;
+	if ( day ) str += ' ' + litespeed_plural( day, 'day' ) ;
+	if ( hour ) str += ' ' + litespeed_plural( hour, 'hour' ) ;
+	if ( minute ) str += ' ' + litespeed_plural( minute, 'minute' ) ;
+	if ( second ) str += ' ' + litespeed_plural( second, 'second' ) ;
+
+	return str ;
+}
 
 /**
  * Trigger a click event on an element

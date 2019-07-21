@@ -14,7 +14,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, public pages are cached.', 'litespeed-cache'); ?>
 				<?php $this->recommended( $id ) ; ?>
@@ -29,7 +29,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, private pages are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
@@ -44,7 +44,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, the front page is cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
@@ -59,7 +59,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, feeds are cached.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache' ) ; ?>

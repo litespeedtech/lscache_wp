@@ -26,7 +26,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, CSS/JS files are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>

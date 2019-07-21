@@ -29,7 +29,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'The amount of time, in seconds, that files will be stored in browser cache before expiring.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
