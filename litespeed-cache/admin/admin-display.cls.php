@@ -838,7 +838,7 @@ class LiteSpeed_Cache_Admin_Display
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
 				$val = esc_textarea( $val ) ;
-				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
+				$val = "<textarea readonly rows='5' cols='30' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
 				$val = esc_textarea( $val ) ;
