@@ -86,6 +86,7 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_MEDIA_LAZY					=> __( 'Lazy Load Images', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_EXC				=> __( 'Lazy Load Image Excludes', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_CLS_EXC			=> __( 'Lazy Load Image Class Name Excludes', 'litespeed-cache' ),
+			self::O_MEDIA_LAZY_PARENT_CLS_EXC	=> __( 'Lazy Load Image Parent Class Name Excludes', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_PLACEHOLDER		=> __( 'Lazy Load Image Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP		=> __( 'Responsive Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> __( 'Responsive Placeholder Background Color', 'litespeed-cache' ),

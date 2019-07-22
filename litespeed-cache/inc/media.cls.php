@@ -506,6 +506,18 @@ eot;
 		$placeholder_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
+		/**
+		 * Exclude parent classes
+		 * @since  3.0
+		 */
+		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
+		if ( $parent_cls_exc ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
+			foreach ( $parent_cls_exc as $v ) {
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
+			}
+		}
+
 		preg_match_all( '#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
 		foreach ( $matches as $match ) {
 			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;

@@ -474,6 +474,7 @@ class Litespeed_Crawler
 		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
 		 */
 		if ( ! function_exists( 'sys_getloadavg' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Crawler] set threads=0 due to func sys_getloadavg not exist!' ) ;
 			$this->_cur_threads = 0 ;
 			return ;
 		}

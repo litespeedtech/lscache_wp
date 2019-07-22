@@ -159,7 +159,7 @@ class LiteSpeed_Cache_Optimizer
 
 			// Font optimize
 			if ( $this->_conf_css_font_display ) {
-				$data = preg_replace( '|(@font-face\s*{)|isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $data ) ;
+				$data = preg_replace( '#(@font\-face\s*\{)#isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $data ) ;
 			}
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
