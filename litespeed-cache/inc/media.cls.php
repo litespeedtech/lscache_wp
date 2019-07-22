@@ -593,9 +593,24 @@ eot;
 	 */
 	private function _parse_iframe()
 	{
+		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
+
 		$html_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
+
+		/**
+		 * Exclude parent classes
+		 * @since  3.0
+		 */
+		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
+		if ( $parent_cls_exc ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
+			foreach ( $parent_cls_exc as $v ) {
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
+			}
+		}
+
 		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER ) ;
 		foreach ( $matches as $match ) {
 			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
@@ -608,6 +623,11 @@ eot;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
+				continue ;
+			}
+
+			if ( ! empty( $attrs[ 'class' ] ) && $hit = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
+				LiteSpeed_Cache_Log::debug2( '[Media] iframe lazyload cls excludes [hit] ' . $hit ) ;
 				continue ;
 			}
 

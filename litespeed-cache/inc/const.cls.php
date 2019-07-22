@@ -162,18 +162,20 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	## --------------		 Media 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MEDIA_LAZY 						= 'media-lazy' ;
-	const O_MEDIA_LAZY_EXC 					= 'media-lazy_exc' ;
-	const O_MEDIA_LAZY_CLS_EXC 				= 'media-lazy_cls_exc' ;
-	const O_MEDIA_LAZY_PARENT_CLS_EXC 		= 'media-lazy_parent_cls_exc' ;
-	const O_MEDIA_LAZY_PLACEHOLDER 			= 'media-lazy_placeholder' ;
-	const O_MEDIA_PLACEHOLDER_RESP 			= 'media-placeholder_resp' ;
-	const O_MEDIA_PLACEHOLDER_RESP_COLOR	= 'media-placeholder_resp_color' ;
+	const O_MEDIA_LAZY 							= 'media-lazy' ;
+	const O_MEDIA_LAZY_PLACEHOLDER 				= 'media-lazy_placeholder' ;
+	const O_MEDIA_PLACEHOLDER_RESP 				= 'media-placeholder_resp' ;
+	const O_MEDIA_PLACEHOLDER_RESP_COLOR		= 'media-placeholder_resp_color' ;
 	const O_MEDIA_PLACEHOLDER_RESP_GENERATOR	= 'media-placeholder_resp_generator' ;
-	const O_MEDIA_PLACEHOLDER_RESP_SVG		= 'media-placeholder_resp_svg' ;
-	const O_MEDIA_PLACEHOLDER_RESP_ASYNC	= 'media-placeholder_resp_async' ;
-	const O_MEDIA_IFRAME_LAZY 				= 'media-iframe_lazy' ;
-	const O_MEDIA_LAZYJS_INLINE 			= 'media-lazyjs_inline' ;
+	const O_MEDIA_PLACEHOLDER_RESP_SVG			= 'media-placeholder_resp_svg' ;
+	const O_MEDIA_PLACEHOLDER_RESP_ASYNC		= 'media-placeholder_resp_async' ;
+	const O_MEDIA_IFRAME_LAZY 					= 'media-iframe_lazy' ;
+	const O_MEDIA_LAZYJS_INLINE 				= 'media-lazyjs_inline' ;
+	const O_MEDIA_LAZY_EXC 						= 'media-lazy_exc' ;
+	const O_MEDIA_LAZY_CLS_EXC 					= 'media-lazy_cls_exc' ;
+	const O_MEDIA_LAZY_PARENT_CLS_EXC 			= 'media-lazy_parent_cls_exc' ;
+	const O_MEDIA_IFRAME_LAZY_CLS_EXC 			= 'media-iframe_lazy_cls_exc' ;
+	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc' ;
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -423,18 +425,20 @@ class LiteSpeed_Cache_Const
 		self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
 
 		// Media
-		self::O_MEDIA_LAZY 					=> false,
-		self::O_MEDIA_LAZY_EXC 				=> array(),
-		self::O_MEDIA_LAZY_CLS_EXC 			=> array(),
-		self::O_MEDIA_LAZY_PARENT_CLS_EXC 	=> array(),
-		self::O_MEDIA_LAZY_PLACEHOLDER 		=> '',
-		self::O_MEDIA_PLACEHOLDER_RESP		=> false,
+		self::O_MEDIA_LAZY 							=> false,
+		self::O_MEDIA_LAZY_PLACEHOLDER 				=> '',
+		self::O_MEDIA_PLACEHOLDER_RESP				=> false,
 		self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '',
 		self::O_MEDIA_PLACEHOLDER_RESP_GENERATOR	=> false,
 		self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> '',
 		self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> false,
-		self::O_MEDIA_IFRAME_LAZY 			=> false,
-		self::O_MEDIA_LAZYJS_INLINE 		=> false,
+		self::O_MEDIA_IFRAME_LAZY 					=> false,
+		self::O_MEDIA_LAZYJS_INLINE 				=> false,
+		self::O_MEDIA_LAZY_EXC 						=> array(),
+		self::O_MEDIA_LAZY_CLS_EXC 					=> array(),
+		self::O_MEDIA_LAZY_PARENT_CLS_EXC 			=> array(),
+		self::O_MEDIA_IFRAME_LAZY_CLS_EXC 			=> array(),
+		self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	=> array(),
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO 			=> false,

@@ -31,55 +31,6 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-				<br /><font class="litespeed-success">
-					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
-					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_media_lazy_img_excludes</code>' ) ; ?>
-					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ) ; ?>
-				</font>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_PARENT_CLS_EXC ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Images having these parent class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

@@ -6,6 +6,7 @@ $menu_list = array(
 	'settings_js'				=> __( 'JS Settings', 'litespeed-cache' ),
 	'settings_html' 			=> __( 'HTML Settings', 'litespeed-cache' ),
 	'settings_media' 			=> __( 'Media Settings', 'litespeed-cache' ),
+	'settings_media_exc'		=> __( 'Media Excludes', 'litespeed-cache' ),
 	'settings_tuning' 			=> __( 'Tuning Settings', 'litespeed-cache' ),
 ) ;
 
