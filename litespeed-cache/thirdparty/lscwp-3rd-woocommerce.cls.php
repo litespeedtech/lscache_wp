@@ -12,6 +12,7 @@ if ( ! defined('ABSPATH') ) {
 	die() ;
 }
 LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_WooCommerce') ;
+LiteSpeed_Cache_API::hook_init( 'LiteSpeed_Cache_ThirdParty_WooCommerce::pre_load' ) ;
 
 class LiteSpeed_Cache_ThirdParty_WooCommerce
 {
@@ -960,5 +961,44 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		return self::$_instance ;
 	}
-}
 
+	public static function pre_load()
+	{
+		// Auto purge for WooCommerce Advanced Bulk Edit plugin
+		// Bulk edit hook need to add to preload as it will die before detect
+		add_action( 'wp_ajax_wpmelon_adv_bulk_edit', 'LiteSpeed_Cache_ThirdParty_WooCommerce::bulk_edit_purge', 1 ) ;
+	}
+
+	public static function bulk_edit_purge()
+	{
+		$type = $_POST[ 'type' ] ;
+
+		if ( $type !== 'saveproducts' && empty( $_POST[ 'data' ] ) ) return ;
+
+		/*
+		* admin-ajax data structure
+		* data[_regular_price]: 464$###0$###1#^#463$###0$###3#^#462$###0$###5#^#456$###0$###6#^#311$###0$###4
+		* data[_sale_price]: 464$###0$###2#^#463$###0$###4#^#462$###0$###4
+		*/
+		$stock_string_data = $_POST[ 'data' ] ;
+		$stock_string_arr = array() ;
+		foreach ( $stock_string_data as $stock_key => $stock_value ) {
+			$stock_string_arr = array_merge( $stock_string_arr, explode( '#^#', $stock_value ) ) ;
+		}
+
+		$lscwp_3rd_woocommerce = new LiteSpeed_Cache_ThirdParty_WooCommerce ;
+
+		if ( sizeof( $stock_string_arr ) < 1 ) return ;
+		foreach ( $stock_string_arr as $edited_stock ) {
+			$product_id = strtok( $edited_stock, '$' );
+			$product = wc_get_product( $product_id ) ;
+
+			if ( empty( $product ) ) {
+				LiteSpeed_Cache_API::debug( '3rd woo purge: ' . $product_id . ' not found.' ) ;
+				continue ;
+			}
+
+			$lscwp_3rd_woocommerce->purge_product( $product );
+		}
+	}
+}
