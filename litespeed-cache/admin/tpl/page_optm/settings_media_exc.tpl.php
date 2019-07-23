@@ -87,4 +87,18 @@ defined( 'WPINC' ) || exit ;
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_URI_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent any lazy load of listed pages.', 'litespeed-cache' ) ; ?>
+				<?php $this->_uri_usage_example() ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

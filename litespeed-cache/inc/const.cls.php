@@ -176,6 +176,7 @@ class LiteSpeed_Cache_Const
 	const O_MEDIA_LAZY_PARENT_CLS_EXC 			= 'media-lazy_parent_cls_exc' ;
 	const O_MEDIA_IFRAME_LAZY_CLS_EXC 			= 'media-iframe_lazy_cls_exc' ;
 	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc' ;
+	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc' ;
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -439,6 +440,7 @@ class LiteSpeed_Cache_Const
 		self::O_MEDIA_LAZY_PARENT_CLS_EXC 			=> array(),
 		self::O_MEDIA_IFRAME_LAZY_CLS_EXC 			=> array(),
 		self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	=> array(),
+		self::O_MEDIA_LAZY_URI_EXC 					=> array(),
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO 			=> false,
@@ -729,6 +731,7 @@ class LiteSpeed_Cache_Const
 	{
 		$filters = array(
 			self::O_MEDIA_LAZY_EXC		=> 'uri',
+			self::O_MEDIA_LAZY_URI_EXC	=> 'relative',
 			self::O_CACHE_PRIV_URI		=> 'relative',
 			self::O_PURGE_TIMED_URLS	=> 'relative',
 			self::O_CACHE_FORCE_URI		=> 'relative',
@@ -759,6 +762,7 @@ class LiteSpeed_Cache_Const
 	protected function _conf_purge( $id )
 	{
 		$check_ids = array(
+			self::O_MEDIA_LAZY_URI_EXC,
 			self::O_OPTM_EXC,
 			self::O_CACHE_PRIV_URI,
 			self::O_PURGE_TIMED_URLS,

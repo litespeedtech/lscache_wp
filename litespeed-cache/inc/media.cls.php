@@ -427,6 +427,19 @@ eot;
 			$this->_replace_buffer_img_webp() ;
 		}
 
+		/**
+		 * Check if URI is excluded
+		 * @since  3.0
+		 */
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_URI_EXC ) ;
+		if ( $excludes ) {
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			if ( $result ) {
+				LiteSpeed_Cache_Log::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result ) ;
+				return ;
+			}
+		}
+
 		$cfg_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY ) ;
 		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ) ;
 
