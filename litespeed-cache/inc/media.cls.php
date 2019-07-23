@@ -118,13 +118,11 @@ class LiteSpeed_Cache_Media
 	 */
 	public function after_admin_init()
 	{
-		if ( get_option( LiteSpeed_Cache_Config::conf_name( LiteSpeed_Cache_Img_Optm::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ) {
-			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
-			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
+		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
 
-			// Hook to attachment delete action
-			add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
-		}
+		// Hook to attachment delete action
+		add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
 	}
 
 	/**
