@@ -138,7 +138,20 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
 
 			self::O_CRWL_TIMEOUT				=> __( 'Timeout', 'litespeed-cache' ),
-			// self::				=> ,
+
+			self::O_DEBUG_DISABLE_ALL			=> __( 'Disable All Features', 'litespeed-cache' ),
+			self::O_DEBUG						=> __( 'Debug Log', 'litespeed-cache' ),
+			self::O_DEBUG_IPS					=> __( 'Admin IPs', 'litespeed-cache' ),
+			self::O_DEBUG_LEVEL					=> __( 'Debug Level', 'litespeed-cache' ),
+			self::O_DEBUG_FILESIZE				=> __( 'Log File Size Limit', 'litespeed-cache' ),
+			self::O_DEBUG_COOKIE				=> __( 'Log Cookies', 'litespeed-cache' ),
+			self::O_DEBUG_COLLAPS_QS			=> __( 'Collapse Query Strings', 'litespeed-cache' ),
+			self::O_DEBUG_INC					=> __( 'Debug URI Includes', 'litespeed-cache' ),
+			self::O_DEBUG_EXC					=> __( 'Debug URI Excludes', 'litespeed-cache' ),
+			self::O_DEBUG_LOG_FILTERS			=> __( 'Log Filters', 'litespeed-cache' ),
+			self::O_DEBUG_LOG_NO_FILTERS		=> __( 'Exclude Filters', 'litespeed-cache' ),
+			self::O_DEBUG_LOG_NO_PART_FILTERS	=> __( 'Exclude Part Filters', 'litespeed-cache' ),
+			// self::O_DEBUG_DISABLE_ALL			=> ,
 		) ;
 
 		if ( array_key_exists( $id, $_lang_list ) ) {

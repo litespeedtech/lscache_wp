@@ -159,6 +159,27 @@ class LiteSpeed_Cache_Log
 			}
 		}
 
+		/**
+		 * Check if hit URI includes/excludes
+		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
+		 * @since  3.0
+		 */
+		$list = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_INC ) ;
+		if ( $list ) {
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
+			if ( ! $result ) {
+				return ;
+			}
+		}
+
+		$list = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_EXC ) ;
+		if ( $list ) {
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
+			if ( $result ) {
+				return ;
+			}
+		}
+
 		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
 			self::get_instance()->_init_request() ;
 			define( 'LSCWP_LOG', true ) ;

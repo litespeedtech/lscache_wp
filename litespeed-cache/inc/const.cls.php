@@ -99,6 +99,8 @@ class LiteSpeed_Cache_Const
 	const O_DEBUG_FILESIZE 				= 'debug-filesize' ;
 	const O_DEBUG_COOKIE 				= 'debug-cookie' ;
 	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs' ;
+	const O_DEBUG_INC 					= 'debug-inc' ;
+	const O_DEBUG_EXC 					= 'debug-exc' ;
 	const O_DEBUG_LOG_FILTERS 			= 'debug-log_filters' ;
 	const O_DEBUG_LOG_NO_FILTERS 		= 'debug-log_no_filters' ;
 	const O_DEBUG_LOG_NO_PART_FILTERS 	= 'debug-log_no_part_filters' ;
@@ -369,6 +371,8 @@ class LiteSpeed_Cache_Const
 		self::O_DEBUG_FILESIZE 			=> 0,
 		self::O_DEBUG_COOKIE 			=> false,
 		self::O_DEBUG_COLLAPS_QS 		=> false,
+		self::O_DEBUG_INC 				=> array(),
+		self::O_DEBUG_EXC 				=> array(),
 		self::O_DEBUG_LOG_FILTERS 		=> false,
 		self::O_DEBUG_LOG_NO_FILTERS 	=> array(),
 		self::O_DEBUG_LOG_NO_PART_FILTERS => array(),
@@ -731,6 +735,8 @@ class LiteSpeed_Cache_Const
 	{
 		$filters = array(
 			self::O_MEDIA_LAZY_EXC		=> 'uri',
+			self::O_DEBUG_INC			=> 'relative',
+			self::O_DEBUG_EXC			=> 'relative',
 			self::O_MEDIA_LAZY_URI_EXC	=> 'relative',
 			self::O_CACHE_PRIV_URI		=> 'relative',
 			self::O_PURGE_TIMED_URLS	=> 'relative',

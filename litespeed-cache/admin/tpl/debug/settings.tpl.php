@@ -12,9 +12,12 @@ $this->form_action() ;
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Disable All Features', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'This will disable LSCache and all optimization features for debug purpose.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -22,23 +25,26 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Debug Log', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio(
-					LiteSpeed_Cache_Config::O_DEBUG,
+					$id,
 					LiteSpeed_Cache_Config::VAL_OFF,
 					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
-					LiteSpeed_Cache_Config::O_DEBUG,
+					$id,
 					LiteSpeed_Cache_Config::VAL_ON,
 					__( 'ON', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
-					LiteSpeed_Cache_Config::O_DEBUG,
+					$id,
 					LiteSpeed_Cache_Config::VAL_ON2,
 					__( 'Admin IP only', 'litespeed-cache' )
 				) ; ?>
@@ -53,9 +59,11 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Admin IPs', 'litespeed-cache' ) ; ?></th>
-		<td>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_IPS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_textarea( $id, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?>
@@ -71,17 +79,20 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Debug Level', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_LEVEL ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio(
-					LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
+					$id,
 					LiteSpeed_Cache_Config::VAL_OFF,
 					__( 'Basic', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
-					LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
+					$id,
 					LiteSpeed_Cache_Config::VAL_ON,
 					__( 'Advanced', 'litespeed-cache' )
 				) ; ?>
@@ -93,9 +104,11 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Log File Size Limit', 'litespeed-cache' ) ; ?></th>
-		<td>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the maximum size of the log file.', 'litespeed-cache' ) ; ?>
@@ -120,9 +133,12 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Log Cookies', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_COOKIE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_DEBUG_COOKIE ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Log request cookie values.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -130,9 +146,12 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Collapse Query Strings', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Shorten query strings in the debug log to improve readability.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -140,9 +159,40 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Log Filters', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_INC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Only log listed pages.', 'litespeed-cache' ) ; ?>
+				<?php $this->_uri_usage_example() ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent any debug log of listed pages.', 'litespeed-cache' ) ; ?>
+				<?php $this->_uri_usage_example() ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Log all WordPress filter hooks.', 'litespeed-cache' ) ; ?>
 				<font class="litespeed-warning">
@@ -154,9 +204,12 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Exclude Filters', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS, 30 ) ; ?>
+			<?php $this->build_textarea( $id, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed filters (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_filters', __( 'Recommended default value', 'litespeed-cache' ) ) ; ?>
@@ -165,9 +218,12 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Exclude Part Filters', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS, 30 ) ; ?>
+			<?php $this->build_textarea( $id, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Filters containing these strings (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_part_filters', __( 'Recommended default value', 'litespeed-cache' ) ) ; ?>

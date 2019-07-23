@@ -89,7 +89,7 @@ class LiteSpeed_Cache
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
 		// Check if debug is on
-		if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) == LiteSpeed_Cache_Config::VAL_ON || $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) == LiteSpeed_Cache_Config::VAL_ON2 ) {
+		if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) ) {
 			LiteSpeed_Cache_Log::init() ;
 		}
 
