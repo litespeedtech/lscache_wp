@@ -534,7 +534,12 @@ class LiteSpeed_Cache_Object
 
 		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] delete ' . $key ) ;
 
-		$res = $this->_conn->delete( $key ) ;
+		if ( $this->_oc_driver == 'Redis' ) {
+			$res = $this->_conn->del( $key ) ;
+		}
+		else {
+			$res = $this->_conn->delete( $key ) ;
+		}
 
 		return $res ;
 	}
