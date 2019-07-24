@@ -214,11 +214,15 @@ class LiteSpeed_Cache_DB_Optm
 	 * @since  3.0
 	 * @access public
 	 */
-	public function count_autoload()
+	public function autoload_summary()
 	{
 		global $wpdb ;
 
-		return $wpdb->get_var( "SELECT SUM(LENGTH(option_value)) AS autoload_size FROM `$wpdb->options` WHERE autoload = 'yes'" ) ;
+		$summary = $wpdb->get_row( "SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload='yes'" ) ;
+
+		$summary->autoload_toplist = $wpdb->get_results( "SELECT option_name, LENGTH(option_value) AS option_value_length FROM `$wpdb->options` WHERE autoload='yes' ORDER BY option_value_length DESC LIMIT 20" ) ;
+
+		return $summary ;
 	}
 
 	/**
