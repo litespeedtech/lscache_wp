@@ -295,8 +295,6 @@ class LiteSpeed_Cache_Const
 		self::O_CDN_CLOUDFLARE_NAME,
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
-		self::O_MISC_HTACCESS_FRONT,
-		self::O_MISC_HTACCESS_BACK,
 	) ;
 
 	const CSS_FONT_DISPLAY_SET = array(
@@ -543,6 +541,10 @@ class LiteSpeed_Cache_Const
 		self::O_UTIL_CHECK_ADVCACHE 	=> false,
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
+
+		self::O_MISC_HTACCESS_FRONT 	=> '',
+		self::O_MISC_HTACCESS_BACK		=> '',
+
 	) ;
 
 	private function __construct()
