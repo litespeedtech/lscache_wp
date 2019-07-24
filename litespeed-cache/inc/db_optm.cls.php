@@ -209,6 +209,19 @@ class LiteSpeed_Cache_DB_Optm
 	}
 
 	/**
+	 * Count all autoload size
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function count_autoload()
+	{
+		global $wpdb ;
+
+		return $wpdb->get_var( "SELECT SUM(LENGTH(option_value)) AS autoload_size FROM `$wpdb->options` WHERE autoload = 'yes'" ) ;
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  3.0

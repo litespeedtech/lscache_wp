@@ -133,3 +133,14 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 </div>
 
 
+<h3 class="litespeed-title"><?php echo __( 'Database Summary', 'litespeed-cache' ) ; ?></h3>
+
+<div class="litespeed-panel-wrapper">
+	<h4 class="litespeed-left50">Autoload size: <?php echo LiteSpeed_Cache_Utility::real_size( LiteSpeed_Cache_DB_Optm::get_instance()->count_autoload() ) ; ?></h4>
+</div>
+
+
+
+
+
+
