@@ -2,8 +2,10 @@
 <?php
 
 $menu_list = array(
-	'summary'		=> __( 'Summary', 'litespeed-cache' ),
-	'settings'		=> __( 'Crawler Settings', 'litespeed-cache' ),
+	'summary'				=> __( 'Summary', 'litespeed-cache' ),
+	'settings-general'		=> __( 'General Settings', 'litespeed-cache' ),
+	'settings-simulation'	=> __( 'Simulation Settings', 'litespeed-cache' ),
+	'settings-sitemap'		=> __( 'Sitemap Settings', 'litespeed-cache' ),
 ) ;
 
 ?>
