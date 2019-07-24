@@ -46,6 +46,51 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	</p>
 </div>
 
+<?php
+$this->form_action() ;
+?>
+
+<h3 class="litespeed-title-short">
+	<?php echo __( '.htaccess Path Settings', 'litespeed-cache' ) ; ?>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:tool', false, 'litespeed-learn-more' ) ; ?>
+</h3>
+
+<table><tbody>
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the frontend .httaccess path.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Htaccess::get_frontend_htaccess( true ) ; ?></code>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MISC_HTACCESS_BACK ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the backend .httaccess path.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Htaccess::get_backend_htaccess( true ) ; ?></code>
+			</div>
+		</td>
+	</tr>
+</tbody></table>
+
+<?php
+
+$this->form_end() ;
+
+?>
+
 <?php if ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT ) : ?>
 <div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>
 

@@ -124,6 +124,9 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_CACHE_LOGIN_COOKIE			=> __( 'Login Cookie', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_REPLACE		=> __( 'Image WebP Replacement', 'litespeed-cache' ),
 
+			self::O_MISC_HTACCESS_FRONT			=> __( 'Frontend .htaccess Path', 'litespeed-cache' ),
+			self::O_MISC_HTACCESS_BACK			=> __( 'Backend .htaccess Path', 'litespeed-cache' ),
+
 			self::O_CDN 						=> __( 'Use CDN Mapping', 'litespeed-cache' ),
 			self::CDN_MAPPING_URL				=> __( 'CDN URL', 'litespeed-cache' ),
 			self::CDN_MAPPING_INC_IMG			=> __( 'Include Images', 'litespeed-cache' ),

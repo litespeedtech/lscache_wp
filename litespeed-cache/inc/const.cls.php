@@ -218,6 +218,12 @@ class LiteSpeed_Cache_Const
 	const O_CRWL_COOKIES 		= 'crawler-cookies' ;
 
 	## -------------------------------------------------- ##
+	## --------------		 Misc 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_MISC_HTACCESS_FRONT 		= 'misc-htaccess_front' ;
+	const O_MISC_HTACCESS_BACK 			= 'misc-htaccess_back' ;
+
+	## -------------------------------------------------- ##
 	## --------------		 CDN 		----------------- ##
 	## -------------------------------------------------- ##
 	const O_CDN 				= 'cdn' ;
@@ -234,7 +240,6 @@ class LiteSpeed_Cache_Const
 	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name' ;
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone' ;
 	const O_CDN_MAPPING 		= 'cdn-mapping' ;
-
 
 	const NETWORK_O_ENABLED = 'network_enabled' ;
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
@@ -290,6 +295,8 @@ class LiteSpeed_Cache_Const
 		self::O_CDN_CLOUDFLARE_NAME,
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
+		self::O_MISC_HTACCESS_FRONT,
+		self::O_MISC_HTACCESS_BACK,
 	) ;
 
 	const CSS_FONT_DISPLAY_SET = array(
@@ -478,6 +485,10 @@ class LiteSpeed_Cache_Const
 		self::O_CRWL_CUSTOM_SITEMAP 	=> '',
 		self::O_CRWL_ROLES				=> array(),
 		self::O_CRWL_COOKIES 			=> array(),
+
+		// Misc
+		self::O_MISC_HTACCESS_FRONT 	=> '',
+		self::O_MISC_HTACCESS_BACK 		=> '',
 
 		// CDN
 		self::O_CDN 				=> false,

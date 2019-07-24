@@ -17,7 +17,9 @@ class LiteSpeed_Htaccess
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor' ;
 
 	private $frontend_htaccess = null ;
+	private $_default_frontend_htaccess = null ;
 	private $backend_htaccess = null ;
+	private $_default_backend_htaccess = null ;
 	private $theme_htaccess = null ;// Not used yet
 	private $frontend_htaccess_readable = false ;
 	private $frontend_htaccess_writable = false ;
@@ -60,6 +62,11 @@ class LiteSpeed_Htaccess
 	private function __construct()
 	{
 		$this->_path_set() ;
+		$this->_default_frontend_htaccess = $this->frontend_htaccess ;
+		$this->_default_backend_htaccess = $this->backend_htaccess ;
+		$this->frontend_htaccess = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
+		$this->backend_htaccess = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
+
 		// Filter for frontend&backend htaccess path
 		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;
 		$this->backend_htaccess = apply_filters( 'litespeed_backend_htaccess', $this->backend_htaccess ) ;
@@ -136,8 +143,11 @@ class LiteSpeed_Htaccess
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function get_frontend_htaccess()
+	public static function get_frontend_htaccess( $show_default = false )
 	{
+		if ( $show_default ) {
+			return self::get_instance()->_default_frontend_htaccess ;
+		}
 		return self::get_instance()->frontend_htaccess ;
 	}
 
@@ -147,8 +157,11 @@ class LiteSpeed_Htaccess
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function get_backend_htaccess()
+	public static function get_backend_htaccess( $show_default = false )
 	{
+		if ( $show_default ) {
+			return self::get_instance()->_default_backend_htaccess ;
+		}
 		return self::get_instance()->backend_htaccess ;
 	}
 

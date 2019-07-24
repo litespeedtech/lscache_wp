@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function adjust_jpg_quality( $quality )
 	{
-		$v = LiteSpeed_Cache_Config::option( LiteSpeed_Cache_Config::O_IMG_OPTM_JPG_QUALITY ) ;
+		$v = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_JPG_QUALITY ) ;
 
 		if ( $v ) {
 			return $v ;
