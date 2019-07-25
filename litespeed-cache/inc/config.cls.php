@@ -72,6 +72,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			// Try upgrade first (network will upgrade inside too)
 			LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
 		}
+		else {
+			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
+		}
 
 		/**
 		 * Upgrade conf
@@ -82,6 +85,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
 		}
 
+		/**
+		 * Sync latest new options
+		 */
 		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
 			// Load default values
 			$this->_default_options = $this->default_vals() ;

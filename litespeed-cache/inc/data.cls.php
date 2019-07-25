@@ -93,6 +93,8 @@ class LiteSpeed_Cache_Data
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
+
+		LiteSpeed_Cache_Utility::version_check( 'upgrade' ) ;
 	}
 
 	/**
@@ -143,10 +145,13 @@ class LiteSpeed_Cache_Data
 
 		$ver = $previous_options[ 'version' ] ;
 
+		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
+
 		LiteSpeed_Cache_Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' ) ;
 
 		require_once LSCWP_DIR . 'inc/data.upgrade.func.php' ;
 
+		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
@@ -154,10 +159,14 @@ class LiteSpeed_Cache_Data
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 
+
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0' ;
 		if ( LiteSpeed_Cache::PLUGIN_VERSION != $ver ) {
 			$this->conf_upgrade( $ver ) ;
+		}
+		else {
+			LiteSpeed_Cache_Utility::version_check( 'upgrade' ) ;
 		}
 	}
 

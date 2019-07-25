@@ -113,7 +113,7 @@ class LiteSpeed_Cache_Utility
 	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&src=' . $src ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&v2=' . ( LSCWP_CUR_V ?: '' ) . '&src=' . $src ;
 
 		if ( defined( 'LITESPEED_ERR' ) ) {
 			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
