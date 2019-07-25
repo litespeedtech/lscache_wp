@@ -32,6 +32,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Combine CSS/JS
 * Automatically generate Critical CSS
 * Lazyload images/iframes
+* Responsive image placeholders
 * Multiple CDN support
 * Load CSS/JS Asynchronously
 * Browser Cache
