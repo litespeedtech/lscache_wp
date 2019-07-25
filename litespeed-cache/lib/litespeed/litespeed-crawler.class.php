@@ -554,7 +554,7 @@ class Litespeed_Crawler
 	private function _get_curl_options()
 	{
 		$referer = null ;
-		if ( isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI']) ) {
+		if ( isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])   ) {
 			$referer = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ;
 		}
 
