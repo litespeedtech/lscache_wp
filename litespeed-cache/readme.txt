@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.2.1
-Stable tag: 2.9.8.3
+Tested up to: 5.2.2
+Stable tag: 2.9.8.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -32,7 +32,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Combine CSS/JS
 * Automatically generate Critical CSS
 * Lazyload images/iframes
-* Responsive image placeholders
+* Responsive Image Placeholders
 * Multiple CDN support
 * Load CSS/JS Asynchronously
 * Browser Cache
@@ -289,6 +289,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.4 - Jul 25 2019 =
+* <strong>Object</strong>: Increased compatibility with phpredis 5.0.
+* <strong>Object</strong>: Appended `wc_session_id` to default Do Not Cache Groups setting to avoid issue where WooCommerce cart items were missing when Object Cache is used. NOTE: Existing users must add `wc_session_id` manually! (#895333)
+* <strong>CSS</strong>: Added null onload handler for CSS async loading. (@joejordanbrown)
+* 🕷️: Increased crawler timeout to avoid wrongly adding a URL to the blacklist.
+* <strong>3rd</strong>: WooCommerce Advanced Bulk Edit can now purge cache automatically.
 
 = 2.9.8.3 - Jul 9 2019 =
 * <strong>CSS</strong>: Enhanced the CSS Minify compatibility for CSS with missing closing bracket syntax errors. (@fa508210020)
