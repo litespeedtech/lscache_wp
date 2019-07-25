@@ -977,9 +977,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 	public static function bulk_edit_purge()
 	{
-		$type = $_POST[ 'type' ] ;
+		$stock_string_data = $_POST[ 'data' ] ;
 
-		if ( $type !== 'saveproducts' && empty( $_POST[ 'data' ] ) ) return ;
+		if ( $_POST[ 'type' ] !== 'saveproducts' || empty( $stock_string_data ) ) return ;
 
 		/*
 		* admin-ajax form-data structure
@@ -991,15 +991,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		*		)
 		*	)
 		*/
-		$stock_string_data = $_POST[ 'data' ] ;
 		$stock_string_arr = array() ;
-		foreach ( $stock_string_data as $stock_key => $stock_value ) {
+		foreach ( $stock_string_data as $stock_value ) {
 			$stock_string_arr = array_merge( $stock_string_arr, explode( '#^#', $stock_value ) ) ;
 		}
 
 		$lscwp_3rd_woocommerce = new LiteSpeed_Cache_ThirdParty_WooCommerce ;
 
-		if ( sizeof( $stock_string_arr ) < 1 ) return ;
+		if ( count( $stock_string_arr ) < 1 ) return ;
 		foreach ( $stock_string_arr as $edited_stock ) {
 			$product_id = strtok( $edited_stock, '$' );
 			$product = wc_get_product( $product_id ) ;
