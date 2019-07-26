@@ -46,9 +46,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	</p>
 </div>
 
-<?php
-$this->form_action() ;
-?>
+<?php $this->form_action() ; ?>
 
 <h3 class="litespeed-title-short">
 	<?php echo __( '.htaccess Path Settings', 'litespeed-cache' ) ; ?>
@@ -85,11 +83,7 @@ $this->form_action() ;
 	</tr>
 </tbody></table>
 
-<?php
-
-$this->form_end() ;
-
-?>
+<?php $this->form_end() ; ?>
 
 <?php if ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT ) : ?>
 <div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>

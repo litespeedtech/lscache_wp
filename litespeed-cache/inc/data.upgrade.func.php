@@ -188,7 +188,8 @@ function litespeed_update_3_0( $ver )
 		'esi_cached_admbar'			=> 'esi-cache_admbar',
 		'esi_cached_commform'		=> 'esi-cache_commform',
 
-		'heartbeat'					=> 'util-heartbeat',
+		'heartbeat'					=> 'misc-heartbeat_front',
+
 		'cache_browser'				=> 'util-browser_cache',
 		'cache_browser_ttl'			=> 'util-browser_cache_ttl',
 		'instant_click'				=> 'util-instant_click',
@@ -335,6 +336,20 @@ function litespeed_update_3_0( $ver )
 				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
 		}
+
+		// Special handler for heartbeat
+		if ( $v == 'misc-heartbeat_front' ) {
+			if ( ! $previous_options[ $k ] ) {
+				add_option( 'litespeed.conf.misc-heartbeat_front', true ) ;
+				add_option( 'litespeed.conf.misc-heartbeat_back', true ) ;
+				add_option( 'litespeed.conf.misc-heartbeat_editor', true ) ;
+				add_option( 'litespeed.conf.misc-heartbeat_front_ttl', 0 ) ;
+				add_option( 'litespeed.conf.misc-heartbeat_back_ttl', 0 ) ;
+				add_option( 'litespeed.conf.misc-heartbeat_editor_ttl', 0 ) ;
+			}
+			continue ;
+		}
+
 		add_option( 'litespeed.conf.' . $v, $previous_options[ $k ] ) ;
 	}
 	// Conv purge_by_post

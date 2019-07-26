@@ -126,6 +126,12 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 
 			self::O_MISC_HTACCESS_FRONT			=> __( 'Frontend .htaccess Path', 'litespeed-cache' ),
 			self::O_MISC_HTACCESS_BACK			=> __( 'Backend .htaccess Path', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_FRONT		=> __( 'Frontend Heartbeat Control', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_FRONT_TTL	=> __( 'Frontend Heartbeat TTL', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_BACK			=> __( 'Backend Heartbeat Control', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_BACK_TTL		=> __( 'Backend Heartbeat TTL', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_EDITOR		=> __( 'Editor Heartbeat', 'litespeed-cache' ),
+			self::O_MISC_HEARTBEAT_EDITOR_TTL	=> __( 'Editor Heartbeat TTL', 'litespeed-cache' ),
 
 			self::O_CDN 						=> __( 'Use CDN Mapping', 'litespeed-cache' ),
 			self::CDN_MAPPING_URL				=> __( 'CDN URL', 'litespeed-cache' ),

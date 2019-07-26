@@ -10,6 +10,8 @@ if ( ! is_multisite() || $is_network_admin ) {
 	$menu_list[ 'edit_htaccess' ] = __( 'Edit .htaccess', 'litespeed-cache' ) ;
 }
 
+$menu_list[ 'heartbeat' ] = __( 'Heartbeat', 'litespeed-cache' ) ;
+
 ?>
 
 <div class="wrap">

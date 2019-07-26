@@ -82,7 +82,6 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	## --------------     Utilities	    ----------------- ##
 	## -------------------------------------------------- ##
-	const O_UTIL_HEARTBEAT 			= 'util-heartbeat' ;
 	const O_UTIL_BROWSER_CACHE 		= 'util-browser_cache' ;
 	const O_UTIL_BROWSER_CACHE_TTL 	= 'util-browser_cache_ttl' ;
 	const O_UTIL_INSTANT_CLICK 		= 'util-instant_click' ;
@@ -222,6 +221,12 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	const O_MISC_HTACCESS_FRONT 		= 'misc-htaccess_front' ;
 	const O_MISC_HTACCESS_BACK 			= 'misc-htaccess_back' ;
+	const O_MISC_HEARTBEAT_FRONT		= 'misc-heartbeat_front' ;
+	const O_MISC_HEARTBEAT_FRONT_TTL	= 'misc-heartbeat_front_ttl' ;
+	const O_MISC_HEARTBEAT_BACK			= 'misc-heartbeat_back' ;
+	const O_MISC_HEARTBEAT_BACK_TTL		= 'misc-heartbeat_back_ttl' ;
+	const O_MISC_HEARTBEAT_EDITOR		= 'misc-heartbeat_editor' ;
+	const O_MISC_HEARTBEAT_EDITOR_TTL	= 'misc-heartbeat_editor_ttl' ;
 
 	## -------------------------------------------------- ##
 	## --------------		 CDN 		----------------- ##
@@ -361,7 +366,6 @@ class LiteSpeed_Cache_Const
 		self::O_ESI_CACHE_COMMFORM 	 	=> false,
 
 		// Util
-		self::O_UTIL_HEARTBEAT 			=> false,
 		self::O_UTIL_BROWSER_CACHE 		=> false,
 		self::O_UTIL_BROWSER_CACHE_TTL 	=> 0,
 		self::O_UTIL_INSTANT_CLICK 		=> false,
@@ -485,8 +489,14 @@ class LiteSpeed_Cache_Const
 		self::O_CRWL_COOKIES 			=> array(),
 
 		// Misc
-		self::O_MISC_HTACCESS_FRONT 	=> '',
-		self::O_MISC_HTACCESS_BACK 		=> '',
+		self::O_MISC_HTACCESS_FRONT 		=> '',
+		self::O_MISC_HTACCESS_BACK 			=> '',
+		self::O_MISC_HEARTBEAT_FRONT 		=> false,
+		self::O_MISC_HEARTBEAT_FRONT_TTL 	=> 0,
+		self::O_MISC_HEARTBEAT_BACK 		=> false,
+		self::O_MISC_HEARTBEAT_BACK_TTL 	=> 0,
+		self::O_MISC_HEARTBEAT_EDITOR 		=> false,
+		self::O_MISC_HEARTBEAT_EDITOR_TTL 	=> 0,
 
 		// CDN
 		self::O_CDN 				=> false,

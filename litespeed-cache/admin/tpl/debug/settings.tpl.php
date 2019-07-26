@@ -119,20 +119,6 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Heartbeat', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_HEARTBEAT ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Disable WordPress heartbeat to prevent AJAX calls from breaking debug logging.', 'litespeed-cache' ) ; ?>
-				<font class="litespeed-warning">
-					🚨
-					<?php echo __( 'Disabling this may cause WordPress tasks triggered by AJAX to stop working.', 'litespeed-cache' ) ; ?>
-				</font>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_COOKIE ; ?>
 			<?php $this->title( $id ) ; ?>

@@ -241,6 +241,10 @@ function litespeed_plural( $num, $txt )
  */
 function litespeed_readable_time( seconds )
 {
+	if ( seconds < 60 ) {
+		return '' ;
+	}
+
 	var second = Math.floor( seconds % 60 ) ;
 	var minute = Math.floor( ( seconds / 60 ) % 60 ) ;
 	var hour = Math.floor( ( seconds / 3600 ) % 24 ) ;

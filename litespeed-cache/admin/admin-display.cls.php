@@ -877,9 +877,14 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_ttl( $id, $min = false, $max = false )
+	private function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false )
 	{
 		$val = $this->__cfg->option( $id ) ;
+
+		if ( $allow_zero && ! $val ) {
+			return ;
+		}
+
 		$tip = array() ;
 		if ( $min && $val < $min ) {
 			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
