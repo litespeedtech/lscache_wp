@@ -740,6 +740,7 @@ class LiteSpeed_Cache_Const
 			self::O_CDN_REMOTE_JQ 	=> 2,
 			self::O_DEBUG 			=> 2,
 			self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
+			self::O_OPTM_JS_INLINE_DEFER 	=> 2,
 		) ;
 
 		if ( ! empty( $list[ $id ] ) ) {

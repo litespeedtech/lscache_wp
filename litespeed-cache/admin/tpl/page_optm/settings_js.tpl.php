@@ -67,7 +67,11 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-switch">
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 1, __( 'After Dom Ready', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 2, __( 'Deferred', 'litespeed-cache' ) ) ; ?>
+			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load inline JS after dom is fully loaded.', 'litespeed-cache' ) ; ?>
 				<br /><?php echo __( 'This can increase JS compatibility and reduce JS error when turned on the above JS optimization features.', 'litespeed-cache' ) ; ?>

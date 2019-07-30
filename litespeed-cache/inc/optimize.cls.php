@@ -621,7 +621,8 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _js_inline_defer()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_DEFER ) ) {
+		$optm_js_inline = (int) LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_DEFER ) ;
+		if ( ! $optm_js_inline ) {
 			return ;
 		}
 
@@ -655,22 +656,29 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
-			// Prevent var scope issue
-			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
-				continue ;
+			if ( $optm_js_inline === 2 ) {
+				$script_ori[] = $match[ 0 ] ;
+				$script_deferred[] = '<script src="data:text/javascript;base64, ' . base64_encode( $con ) . '" defer ' . $match[ 1 ] . '></script>' ;
+			}
+			else {
+				// Prevent var scope issue
+				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
+					continue ;
+				}
+
+				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
+					continue ;
+				}
+
+				// $con = str_replace( 'var ', 'window.', $con ) ;
+
+				$script_ori[] = $match[ 0 ] ;
+
+				$deferred = "document.addEventListener('DOMContentLoaded',function(){" . $con . '});' ;
+
+				$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>' ;
 			}
 
-			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
-				continue ;
-			}
-
-			// $con = str_replace( 'var ', 'window.', $con ) ;
-
-			$script_ori[] = $match[ 0 ] ;
-
-			$deferred = "document.addEventListener('DOMContentLoaded',function(){" . $con . '});' ;
-
-			$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>' ;
 		}
 
 		$this->content = str_replace( $script_ori, $script_deferred, $this->content ) ;

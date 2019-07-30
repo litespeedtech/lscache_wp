@@ -66,7 +66,7 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_OPTM_CSS_ASYNC_INLINE		=> __( 'Inline CSS Async Lib', 'litespeed-cache' ),
 			self::O_OPTM_CSS_FONT_DISPLAY		=> __( 'Font Display Optimization', 'litespeed-cache' ),
 			self::O_OPTM_JS_DEFER				=> __( 'Load JS Deferred', 'litespeed-cache' ),
-			self::O_OPTM_JS_INLINE_DEFER		=> __( 'Load Inline JS Deferred', 'litespeed-cache' ),
+			self::O_OPTM_JS_INLINE_DEFER		=> __( 'Load Inline JS', 'litespeed-cache' ),
 			self::O_OPTM_EXC_JQ					=> __( 'Exclude JQuery', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH			=> __( 'DNS Prefetch', 'litespeed-cache' ),
 			self::O_OPTM_RM_COMMENT				=> __( 'Remove Comments', 'litespeed-cache' ),
