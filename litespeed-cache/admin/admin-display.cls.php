@@ -711,7 +711,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
-		if ( $checked == null && $this->__cfg->option( $id ) ) {
+		if ( $checked === null && $this->__cfg->option( $id ) ) {
 			$checked = true ;
 		}
 		$checked = $checked ? ' checked ' : '' ;
