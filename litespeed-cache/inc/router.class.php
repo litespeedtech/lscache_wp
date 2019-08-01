@@ -125,6 +125,18 @@ class LiteSpeed_Cache_Router
 			$can = false ;
 		}
 
+		/**
+		 * Bypass post/page link setting
+		 * @since 2.9.8.5
+		 */
+		if (
+			strpos( $_SERVER[ 'REQUEST_URI' ], 'wp-json/wp/v2/media' ) !== false
+			&& strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
+		) {
+			LiteSpeed_Cache_Log::debug( '[Router] CDN bypassed: wp-json on admin page' ) ;
+			$can = false ;
+		}
+
 		$can_final = apply_filters( 'litespeed_can_cdn', $can ) ;
 
 		if ( $can_final != $can ) {
