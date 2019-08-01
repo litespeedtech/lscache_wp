@@ -56,6 +56,12 @@ class LiteSpeed_Cache_Media
 					// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ; // disabled to avoid wp-admin display
 				}
 			}
+
+			/**
+			 * Replace gravatar
+			 * @since  3.0
+			 */
+			LiteSpeed_Cache_Avatar::get_instance() ;
 		}
 
 		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;

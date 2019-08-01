@@ -333,6 +333,10 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Placeholder::handler() ;
 				break ;
 
+			case LiteSpeed_Cache_Router::ACTION_AVATAR:
+				LiteSpeed_Cache_Avatar::handler() ;
+				break ;
+
 			case LiteSpeed_Cache::ACTION_IMG_OPTM:
 				$msg = LiteSpeed_Cache_Img_Optm::handler() ;
 				break ;

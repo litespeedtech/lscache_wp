@@ -32,6 +32,8 @@ class LiteSpeed_Cache_Task
 	{
 		LiteSpeed_Cache_Log::debug2( 'Task init' ) ;
 
+		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+
 		// Register crawler cron
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL ) && LiteSpeed_Cache_Router::can_crawl() ) {
 			// keep cron intval filter
@@ -126,8 +128,6 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function schedule_filter_imgoptm_auto_request()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
-
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
@@ -143,8 +143,6 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function schedule_filter_imgoptm()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
-
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optimization cron hook register......' ) ;
@@ -160,8 +158,6 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function schedule_filter_ccss()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
-
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CCSS ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
@@ -177,8 +173,6 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function schedule_filter_placeholder()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
-
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
@@ -215,7 +209,7 @@ class LiteSpeed_Cache_Task
 		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
 			$schedules[ self::CRON_FITLER ] = array(
 				'interval' => 60,
-				'display'  => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
+				'display'  => __( 'Every Minute', 'litespeed-cache' ),
 			) ;
 		}
 		return $schedules ;

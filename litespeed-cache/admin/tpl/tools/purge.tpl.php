@@ -84,6 +84,15 @@ if ( LiteSpeed_Cache_Placeholder::has_placehoder_cache() ) {
 	) ;
 }
 
+if ( LiteSpeed_Cache_Avatar::has_cache() ) {
+	$_panels[] = array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all cached gravatar files', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_AVATAR,
+	) ;
+}
+
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),

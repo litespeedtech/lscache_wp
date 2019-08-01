@@ -31,10 +31,12 @@ class LiteSpeed_Cache_Data
 
 	const TB_OPTIMIZER = 'litespeed_optimizer' ;
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
+	const TB_AVATAR = 'litespeed_avatar' ;
 
 	private $_charset_collate ;
 	private $_tb_optm ;
 	private $_tb_img_optm ;
+	private $_tb_avatar ;
 
 	/**
 	 * Init
@@ -51,6 +53,7 @@ class LiteSpeed_Cache_Data
 
 		$this->_tb_optm = $wpdb->prefix . self::TB_OPTIMIZER ;
 		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
+		$this->_tb_avatar = $wpdb->prefix . self::TB_AVATAR ;
 
 		$this->_create_tb_img_optm() ;
 		$this->_create_tb_html_optm() ;
@@ -222,7 +225,7 @@ class LiteSpeed_Cache_Data
 	 * Drop table img_optm
 	 *
 	 * @since  2.0
-	 * @access private
+	 * @access public
 	 */
 	public function delete_tb_img_optm()
 	{
@@ -249,7 +252,7 @@ class LiteSpeed_Cache_Data
 	private function _create_tb_img_optm()
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
-			return ;
+			return $this->_tb_img_optm ;
 		}
 		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 
@@ -260,7 +263,7 @@ class LiteSpeed_Cache_Data
 		// Check if table exists first
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
-			return ;
+			return $this->_tb_img_optm ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
@@ -280,6 +283,8 @@ class LiteSpeed_Cache_Data
 		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 			LiteSpeed_Cache_Object::get_instance()->flush() ;
 		}
+
+		return $this->_tb_img_optm ;
 
 	}
 
@@ -319,6 +324,66 @@ class LiteSpeed_Cache_Data
 			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating html_optm table failed!' ) ;
 		}
 
+	}
+
+	/**
+	 * Create avatar table
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function create_tb_avatar()
+	{
+		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
+			return $this->_tb_avatar ;
+		}
+		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
+
+		global $wpdb ;
+
+		LiteSpeed_Cache_Log::debug2( '[Data] Checking avatar table' ) ;
+
+		// Check if table exists first
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_avatar'" ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			return $this->_tb_avatar ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Data] Creating avatar table' ) ;
+
+		$sql = sprintf(
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'avatar' ) . ') %2$s;',
+			$this->_tb_avatar,
+			$this->_charset_collate
+		) ;
+
+		$res = $wpdb->query( $sql ) ;
+		if ( $res !== true ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating avatar table failed!' ) ;
+			return false ;
+		}
+
+		return $this->_tb_avatar ;
+	}
+
+	/**
+	 * Drop table avatar
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function del_tb_avatar()
+	{
+		global $wpdb ;
+
+		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_avatar'" ) ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Data] Deleting avatar table' ) ;
+
+		$q = "DROP TABLE IF EXISTS $this->_tb_avatar" ;
+		$wpdb->query( $q ) ;
 	}
 
 	/**

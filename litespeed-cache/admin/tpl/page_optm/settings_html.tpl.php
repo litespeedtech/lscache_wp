@@ -19,7 +19,6 @@
 
 <table><tbody>
 
-
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_OPTM_TTL ; ?>

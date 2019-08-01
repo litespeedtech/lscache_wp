@@ -99,6 +99,9 @@ class LiteSpeed_Cache_Activation
 			}
 		}
 
+		// Delete avatar table
+		LiteSpeed_Cache_Avatar::get_instance()->rm_cache_folder( true ) ;
+
 		LiteSpeed_Cache_Utility::version_check( 'uninstall' ) ;
 
 		// Files has been deleted when deactivated

@@ -28,6 +28,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache'					=> 'inc/core.cls.php',
 			'LiteSpeed_Cache_Activation'		=> 'inc/activation.cls.php',
 			'LiteSpeed_Cache_API'				=> 'inc/api.cls.php',
+			'LiteSpeed_Cache_Avatar'			=> 'inc/avatar.cls.php',
 			'LiteSpeed_Cache_CDN'				=> 'inc/cdn.cls.php',
 			'LiteSpeed_Cache_CDN_Cloudflare'	=> 'inc/cdn/cloudflare.cls.php',
 			'LiteSpeed_Cache_CDN_Quic'			=> 'inc/cdn/quic.cls.php',

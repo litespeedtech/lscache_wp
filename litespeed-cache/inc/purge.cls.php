@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Purge
 	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs' ;
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss' ;
 	const TYPE_PURGE_ALL_PLACEHOLDER = 'purge_all_placeholder' ;
+	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar' ;
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object' ;
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache' ;
 
@@ -91,6 +92,10 @@ class LiteSpeed_Cache_Purge
 
 			case self::TYPE_PURGE_ALL_PLACEHOLDER :
 				$instance->_purge_all_placeholder() ;
+				break ;
+
+			case self::TYPE_PURGE_ALL_AVATAR :
+				$instance->_purge_all_avatar() ;
 				break ;
 
 			case self::TYPE_PURGE_ALL_OBJECT :
@@ -216,6 +221,22 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all placeholder files.', 'litespeed-cache' ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+	}
+
+	/**
+	 * Delete all avatar images
+	 *
+	 * @since    3.0
+	 * @access   private
+	 */
+	private function _purge_all_avatar( $silence = false )
+	{
+		LiteSpeed_Cache_Avatar::get_instance()->rm_cache_folder() ;
+
+		if ( ! $silence ) {
+			$msg = __( 'Cleaned all gravatar files.', 'litespeed-cache' ) ;
 			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 	}

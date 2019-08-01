@@ -83,6 +83,11 @@ class LiteSpeed_Lang extends LiteSpeed_Cache_Const
 			self::O_OPTM_EMOJI_RM				=> __( 'Remove WordPress Emoji', 'litespeed-cache' ),
 			self::O_OPTM_EXC					=> __( 'URI Excludes', 'litespeed-cache' ),
 			self::O_OPTM_EXC_ROLES				=> __( 'Role Excludes', 'litespeed-cache' ),
+
+			self::O_DISCUSS_AVATAR_CACHE		=> __( 'Gravatar Cache', 'litespeed-cache' ),
+			self::O_DISCUSS_AVATAR_CRON			=> __( 'Gravatar Cache Cron', 'litespeed-cache' ),
+			self::O_DISCUSS_AVATAR_CACHE_TTL	=> __( 'Gravatar Cache TTL', 'litespeed-cache' ),
+
 			self::O_MEDIA_LAZY					=> __( 'Lazy Load Images', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_EXC				=> __( 'Lazy Load Image Excludes', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_CLS_EXC			=> __( 'Lazy Load Image Class Name Excludes', 'litespeed-cache' ),

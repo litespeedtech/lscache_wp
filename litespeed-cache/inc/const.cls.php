@@ -161,6 +161,13 @@ class LiteSpeed_Cache_Const
 	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups' ;
 
 	## -------------------------------------------------- ##
+	## --------------	Discussion		----------------- ##
+	## -------------------------------------------------- ##
+	const O_DISCUSS_AVATAR_CACHE		= 'discuss-avatar_cache' ;
+	const O_DISCUSS_AVATAR_CRON			= 'discuss-avatar_cron' ;
+	const O_DISCUSS_AVATAR_CACHE_TTL	= 'discuss-avatar_cache_ttl' ;
+
+	## -------------------------------------------------- ##
 	## --------------		 Media 		----------------- ##
 	## -------------------------------------------------- ##
 	const O_MEDIA_LAZY 							= 'media-lazy' ;
@@ -437,6 +444,11 @@ class LiteSpeed_Cache_Const
 		self::O_OBJECT_PSWD 			=> '',
 		self::O_OBJECT_GLOBAL_GROUPS	=> array(),
 		self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
+
+		// Discuss
+		self::O_DISCUSS_AVATAR_CACHE		=> false,
+		self::O_DISCUSS_AVATAR_CRON			=> false,
+		self::O_DISCUSS_AVATAR_CACHE_TTL	=> 0,
 
 		// Media
 		self::O_MEDIA_LAZY 							=> false,
