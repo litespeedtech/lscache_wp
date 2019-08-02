@@ -44,7 +44,7 @@ class LiteSpeed_Cache_GUI
 	private function __construct()
 	{
 		if ( ! is_admin() ) {
-			LiteSpeed_Cache_Log::debug( 'GUI init' ) ;
+			LiteSpeed_Cache_Log::debug2( '[GUI] init' ) ;
 			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
 				add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;

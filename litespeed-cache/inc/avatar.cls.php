@@ -177,8 +177,10 @@ class LiteSpeed_Cache_Avatar
 
 		$summary = get_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 
-		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline < " . ( time() - $instance->_conf_cache_ttl ) ;
+		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;
+
+		return $summary ;
 	}
 
 	/**
@@ -228,37 +230,37 @@ class LiteSpeed_Cache_Avatar
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function cron( $continue = false )
+	public static function cron( $force = false )
 	{
 		global $wpdb ;
 
 		$req_summary = self::get_summary() ;
 		if ( ! $req_summary[ 'queue_count' ] ) {
+			LiteSpeed_Cache_Log::debug( '[Avatar] no queue' ) ;
 			return ;
 		}
 
 		// For cron, need to check request interval too
-		if ( ! $continue ) {
+		if ( ! $force ) {
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+				LiteSpeed_Cache_Log::debug( '[Avatar] curr_request too close' ) ;
 				return ;
 			}
 		}
 
-		$q = "SELECT * FROM $this->_tb WHERE dateline<%d LIMIT %d" ;
-		$q = $wpdb->prepare( $q, array( time() - $this->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
+		$instance = self::get_instance() ;
+
+		$q = "SELECT url FROM $instance->_tb WHERE dateline<%d ORDER BY id DESC LIMIT %d" ;
+		$q = $wpdb->prepare( $q, array( time() - $instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
 
 		$list = $wpdb->get_results( $q ) ;
+		LiteSpeed_Cache_Log::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
 
 		foreach ( $list as $v ) {
-			$url = $v[ 'url' ] ;
-			LiteSpeed_Cache_Log::debug( '[Avatar] cron job [url] ' . $url ) ;
+			LiteSpeed_Cache_Log::debug( '[Avatar] cron job [url] ' . $v->url ) ;
 
-			self::get_instance()->_generate( $url ) ;
+			self::get_instance()->_generate( $v->url ) ;
 
-			// only request first one
-			if ( ! $continue ) {
-				return ;
-			}
 		}
 	}
 
