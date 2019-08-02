@@ -34,7 +34,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Update Gravatar cache in cron.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Refresh Gravatar cache by cron.', 'litespeed-cache' ) ; ?>
 			</div>
 
 			<?php if ( $last_generated ) : ?>

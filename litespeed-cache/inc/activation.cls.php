@@ -100,8 +100,11 @@ class LiteSpeed_Cache_Activation
 		}
 
 		// Delete avatar table
-		LiteSpeed_Cache_Avatar::get_instance()->rm_cache_folder() ;
 		LiteSpeed_Cache_Data::get_instance()->del_tb_avatar() ;
+
+		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR ) ;
+		}
 
 		LiteSpeed_Cache_Utility::version_check( 'uninstall' ) ;
 

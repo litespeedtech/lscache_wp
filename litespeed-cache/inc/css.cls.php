@@ -49,7 +49,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	public static function has_ccss_cache()
 	{
-		return is_dir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ;
+		return is_dir( LITESPEED_STATIC_DIR . '/ccss' ) ;
 	}
 
 	/**
@@ -82,7 +82,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _ccss_realpath( $ccss_type )
 	{
-		return LSCWP_CONTENT_DIR . "/cache/ccss/$ccss_type.css" ;
+		return LITESPEED_STATIC_DIR . "/ccss/$ccss_type.css" ;
 	}
 
 	/**
@@ -93,8 +93,8 @@ class LiteSpeed_Cache_CSS
 	 */
 	public function rm_cache_folder()
 	{
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/ccss' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ;
+		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' ) ;
 		}
 
 		// Clear CCSS in queue too

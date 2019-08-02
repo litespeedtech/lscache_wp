@@ -267,7 +267,7 @@ class LiteSpeed_Cache_Router
 	 * @access public
 	 * @return boolean
 	 */
-	public static function frontend_path()
+	public static function frontend_path()//todo: move to htaccess.cls ?
 	{
 		if ( ! isset( self::$_frontend_path ) ) {
 			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
@@ -677,6 +677,39 @@ class LiteSpeed_Cache_Router
 	public static function opcache_enabled()
 	{
 		return function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ;
+	}
+
+	/**
+	 * Handle static files
+	 *
+	 * @since  3.0
+	 */
+	public static function serve_static()
+	{
+		if ( strpos( $_SERVER[ 'REQUEST_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
+			return ;
+		}
+
+		$path = substr( $_SERVER[ 'REQUEST_URI' ], strlen( LITESPEED_STATIC_URL . '/' ) ) ;
+		$path = explode( '/', $path, 2 ) ;
+
+		if ( empty( $path[ 0 ] ) || empty( $path[ 1 ] ) ) {
+			return ;
+		}
+
+		switch ( $path[ 0 ] ) {
+			case 'avatar' :
+				LiteSpeed_Cache_Avatar::get_instance()->serve_satic( $path[ 1 ] ) ;
+				break ;
+
+			case 'cssjs' :
+				LiteSpeed_Cache_Optimize::get_instance()->serve_satic( $path[ 1 ] ) ;
+				break ;
+
+			default :
+				break ;
+		}
+
 	}
 
 	/**

@@ -223,14 +223,11 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_Tool::heartbeat() ;
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			/**
-			 * Check lazy lib request in the very beginning
-			 * @since 1.4
-			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
-			 */
+			// Check missing static files
+			LiteSpeed_Cache_Router::serve_static() ;
+
 			LiteSpeed_Cache_Media::get_instance() ;
 
-			// Check minify file request in the very beginning
 			LiteSpeed_Cache_Optimize::get_instance() ;
 
 			// Hook cdn for attachements

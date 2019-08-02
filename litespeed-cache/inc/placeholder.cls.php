@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	public static function has_placehoder_cache()
 	{
-		return is_dir( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ;
+		return is_dir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
 	}
 
 	/**
@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	private function _placeholder_realpath( $size )
 	{
-		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_conf_placeholder_resp_color ) ;
+		return LITESPEED_STATIC_DIR . "/placeholder/$size." . md5( $this->_conf_placeholder_resp_color ) ;
 	}
 
 	/**
@@ -195,8 +195,8 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	public function rm_cache_folder()
 	{
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/placeholder' ) ;
+		if ( file_exists( LITESPEED_STATIC_DIR . '/placeholder' ) ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
 		}
 
 		// Clear placeholder in queue too

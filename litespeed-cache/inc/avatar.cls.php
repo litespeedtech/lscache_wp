@@ -43,8 +43,6 @@ class LiteSpeed_Cache_Avatar
 
 		LiteSpeed_Cache_Log::debug2( '[Avatar] init' ) ;
 
-		$this->_serve_avatar() ;
-
 		$this->_conf_cache_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) ) ;
@@ -54,19 +52,13 @@ class LiteSpeed_Cache_Avatar
 	 * Get gravatar URL from DB and regenarate
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access public
 	 */
-	private function _serve_avatar()
+	public function serve_satic( $md5 )
 	{
 		global $wpdb ;
 
-		if ( strpos( $_SERVER[ 'REQUEST_URI' ], '/cache/avatar/' ) === false ) {
-			return ;
-		}
-
 		LiteSpeed_Cache_Log::debug( '[Avatar] is avatar request' ) ;
-
-		$md5 = substr( $_SERVER[ 'REQUEST_URI' ], strrpos( $_SERVER[ 'REQUEST_URI' ], '/' ) + 1 ) ;
 
 		if ( strlen( $md5 ) !== 32 ) {
 			LiteSpeed_Cache_Log::debug( '[Avatar] wrong md5 ' . $md5 ) ;
@@ -138,7 +130,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	public static function has_cache()
 	{
-		return is_dir( LSCWP_CONTENT_DIR . '/cache/avatar' ) ;
+		return is_dir( LITESPEED_STATIC_DIR . '/avatar' ) ;
 	}
 
 	/**
@@ -149,7 +141,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	private function _mkdir()
 	{
-		mkdir( LSCWP_CONTENT_DIR . '/cache/avatar', 0755, true ) ;
+		mkdir( LITESPEED_STATIC_DIR . '/avatar', 0755, true ) ;
 	}
 
 	/**
@@ -192,7 +184,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	private function _rewrite( $url )
 	{
-		return WP_CONTENT_URL . '/cache/avatar/' . md5( $url ) ;
+		return LITESPEED_STATIC_URL . '/avatar/' . md5( $url ) ;
 	}
 
 	/**
@@ -203,7 +195,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	private function _realpath( $url )
 	{
-		return LSCWP_CONTENT_DIR . '/cache/avatar/' . md5( $url ) ;
+		return LITESPEED_STATIC_DIR . '/avatar/' . md5( $url ) ;
 	}
 
 	/**
@@ -214,8 +206,8 @@ class LiteSpeed_Cache_Avatar
 	 */
 	public function rm_cache_folder()
 	{
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/avatar' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/avatar' ) ;
+		if ( file_exists( LITESPEED_STATIC_DIR . '/avatar' ) ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' ) ;
 		}
 
 		// Clear avatar summary

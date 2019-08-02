@@ -59,6 +59,13 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 ! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
 ! defined( 'LSWCP_PLUGIN_URL' ) && define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
+/**
+ * Static cache files consts
+ * @since  3.0
+ */
+! defined( 'LITESPEED_STATIC_URL' ) && define( 'LITESPEED_STATIC_URL', WP_CONTENT_URL . '/litespeed' ) ;// Full static cache folder URL '//example.com/wp-content/litespeed'
+! defined( 'LITESPEED_STATIC_DIR' ) && define( 'LITESPEED_STATIC_DIR', LSCWP_CONTENT_DIR . '/litespeed' ) ;// Full static cache folder path '/usr/local/lsws/***/wp-content/litespeed'
+
 ! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
 // Placeholder for lazyload img

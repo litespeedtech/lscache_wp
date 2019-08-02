@@ -705,7 +705,7 @@ class LiteSpeed_Cache_Const
 
 		// Load default vals containing variables
 		if ( ! $this->_default_options[ self::O_CDN_ORI_DIR ] ) {
-			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes" ;
 			$this->_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
 			$this->_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
 		}

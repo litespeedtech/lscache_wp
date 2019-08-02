@@ -17,7 +17,6 @@ class LiteSpeed_Cache_Optimize
 {
 	private static $_instance ;
 
-	const DIR_MIN = '/min' ;
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js' ;
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js' ;
 
@@ -60,8 +59,6 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_QS_RM ) ;
-
-		$this->_static_request_check() ;
 
 		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			return ;
@@ -145,10 +142,10 @@ class LiteSpeed_Cache_Optimize
 	 * Check if the request is for static file
 	 *
 	 * @since  1.2.2
-	 * @access private
-	 * @return  string The static file content
+	 * @since  3.0 Renamed func. Changed access to public
+	 * @access public
 	 */
-	private function _static_request_check()
+	public function serve_satic( $uri )
 	{
 		$this->cfg_css_min = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MIN ) ;
 		$this->cfg_css_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB ) ;
@@ -161,37 +158,25 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
-		if ( empty( $_SERVER[ 'REQUEST_URI' ] ) || strpos( $_SERVER[ 'REQUEST_URI' ], self::DIR_MIN . '/' ) === false ) {
+		// try to match `xx.css`
+		if ( ! preg_match( '#^(\w+)\.(css|js)#U', $uri, $match ) ) {
 			return ;
 		}
 
-		// try to match `http://home_url/min/xx.css
-		if ( ! preg_match( '#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER[ 'REQUEST_URI' ], $match ) ) {
-			return ;
-		}
-
-		LiteSpeed_Cache_Log::debug2( '[Optm] start minifying file' ) ;
+		LiteSpeed_Cache_Log::debug( '[Optm] start minifying file' ) ;
 
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
 		$file_type = $match[ 2 ] ;
 
-		$static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ] ;
-
-		$headers = array() ;
-		if ( $file_type === 'css' ) {
-			$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
-		}
-		else {
-			$headers[ 'Content-Type' ] = 'application/x-javascript' ;
-		}
+		$static_file = LITESPEED_STATIC_DIR . '/cssjs/' . $match[ 0 ] ;
 
 		// Even if hit PHP, still check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min ) ;
 
-			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
+			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 0 ], $concat_only ) ;
 
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
@@ -201,35 +186,14 @@ class LiteSpeed_Cache_Optimize
 		else {
 			// Load file from file based cache if not expired
 			LiteSpeed_Cache_Log::debug2( '[Optm] Static file available' ) ;
-			$content = Litespeed_File::read( $static_file ) ;
 		}
 
-		// Output header first
-		$headers[ 'Content-Length' ] = strlen( $content ) ;
-		$this->_output_header( $headers ) ;
+		$url = LITESPEED_STATIC_URL . '/cssjs/' . $match[ 0 ] ;
 
-		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;
-		LiteSpeed_Cache_Control::set_no_vary() ;
-		LiteSpeed_Cache_Control::set_custom_ttl( $this->cfg_ttl ) ;
-		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
+		LiteSpeed_Cache_Log::debug( '[Optm] Redirect to ' . $url ) ;
 
-		echo $content ;
+		wp_redirect( $url ) ;
 		exit ;
-	}
-
-	/**
-	 * Output header info
-	 *
-	 * @since  2.1.2
-	 * @access public
-	 */
-	private function _output_header( $headers )
-	{
-		foreach ( $headers as $k => $v ) {
-			header( $k . ': ' . $v ) ;
-			LiteSpeed_Cache_Log::debug( '[Optm] HEADER ' . $k . ': ' . $v ) ;
-		}
-
 	}
 
 	/**
@@ -240,12 +204,8 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function rm_cache_folder()
 	{
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/css' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/css' ) ;
-		}
-
-		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/js' ) ) {
-			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/js' ) ;
+		if ( file_exists( LITESPEED_STATIC_DIR . '/cssjs' ) ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/cssjs' ) ;
 		}
 	}
 
@@ -1023,7 +983,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Generate static files
-		$static_file = LSCWP_CONTENT_DIR . "/cache/$file_type/$filename.$file_type" ;
+		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename.$file_type" ;
 		// Check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min ) ;
@@ -1037,9 +997,7 @@ class LiteSpeed_Cache_Optimize
 
 		}
 
-		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
-
-		return LiteSpeed_Cache_Utility::get_permalink_url( $file_to_save ) ;
+		return LITESPEED_STATIC_URL . '/cssjs/' . $filename . '.' . $file_type ;
 	}
 
 	/**

@@ -86,7 +86,6 @@ class LiteSpeed_Htaccess
 			self::REWRITE_ON,
 			"CacheLookup on",
 			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
-			"RewriteRule ^min/\w+\.(css|js) - [E=cache-control:no-vary]",
 		) ;
 
 		// backend .htaccess privilege
@@ -484,26 +483,6 @@ class LiteSpeed_Htaccess
 	}
 
 	/**
-	 * Generate minify rules
-	 *
-	 * @since  2.1.2
-	 * @access private
-	 * @return array Rules set
-	 */
-	private function _minify_rules()
-	{
-		$rules = array(
-			self::LS_MODULE_REWRITE_START,
-				self::REWRITE_ON,
-				'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} ^(.*)/min/(\w+)\.(css|js)$',
-				'RewriteCond %1/' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 -f',
-				'RewriteRule min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
-			self::LS_MODULE_END,
-		) ;
-		return $rules ;
-	}
-
-	/**
 	 * Generate CORS rules for fonts
 	 *
 	 * @since  1.5
@@ -663,13 +642,6 @@ class LiteSpeed_Htaccess
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
 			$new_rules_nonls[] = '' ;
 		}
-
-		// CSS/JS static file rewrite
-		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_START ;
-		$new_rules_nonls = array_merge( $new_rules_nonls, $this->_minify_rules() ) ;
-		$new_rules_backend_nonls = array_merge( $new_rules_backend_nonls, $this->_minify_rules() ) ;
-		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_END ;
-		$new_rules_nonls[] = '' ;
 
 		// Add module wrapper for LiteSpeed rules
 		if ( $new_rules || $disable_lscache_detail_rules ) {
