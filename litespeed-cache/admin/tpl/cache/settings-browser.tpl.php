@@ -6,6 +6,14 @@
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:browser', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
+<?php if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) : ?>
+<div class="litespeed-callout-danger">
+	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
+	<?php echo __( 'OpenLiteSpeed users please check this', 'litespeed-cache' ) ; ?>:
+	<?php $this->learn_more( 'https://openlitespeed.org/kb/how-to-set-up-custom-headers/', 'Setting Up Custom Headers' ) ; ?>
+</div>
+<?php endif ; ?>
+
 <table><tbody>
 
 	<tr>

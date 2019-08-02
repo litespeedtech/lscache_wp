@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Avatar
 	 * @since  3.0
 	 * @access public
 	 */
-	public function rm_cache_folder( $clear_db = false )
+	public function rm_cache_folder()
 	{
 		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/avatar' ) ) {
 			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/avatar' ) ;
@@ -232,11 +232,6 @@ class LiteSpeed_Cache_Avatar
 
 		// Clear avatar summary
 		$this->_save_summary( array() ) ;
-
-		// Clear DB
-		if ( $clear_db ) {
-			LiteSpeed_Cache_Data::get_instance()->del_tb_avatar() ;
-		}
 
 		LiteSpeed_Cache_Log::debug2( '[Avatar] Cleared avatar queue' ) ;
 	}
