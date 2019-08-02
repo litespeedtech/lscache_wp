@@ -185,13 +185,15 @@ class LiteSpeed_Cache_Avatar
 	 * @since  3.0
 	 * @access public
 	 */
-	public function get_summary()
+	public static function get_summary()
 	{
 		global $wpdb ;
 
+		$instance = self::get_instance() ;
+
 		$summary = get_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 
-		$q = "SELECT count(*) FROM $this->_tb WHERE dateline < " . ( time() - $this->_conf_cache_ttl ) ;
+		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline < " . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;
 	}
 

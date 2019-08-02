@@ -1,7 +1,7 @@
 <?php
 defined( 'WPINC' ) || exit ;
 
-$last_generated = LiteSpeed_Cache_Avatar::get_instance()->get_summary() ;
+$last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 
 ?>
 

@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Task
 	private static $_instance ;
 
 	const CRON_ACTION_HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
+	const CRON_ACTION_HOOK_AVATAR = 'litespeed_avatar_trigger' ;
 	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
 	const CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
 	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
@@ -69,6 +70,13 @@ class LiteSpeed_Cache_Task
 			self::schedule_filter_placeholder() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Placeholder::cron_placeholder' ) ;
+		}
+
+		// Register avatar warm up
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CRON ) ) {
+			self::schedule_filter_avatar() ;
+
+			add_action( self::CRON_ACTION_HOOK_AVATAR, 'LiteSpeed_Cache_Avatar::cron' ) ;
 		}
 	}
 
@@ -177,6 +185,21 @@ class LiteSpeed_Cache_Task
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ;
+		}
+	}
+
+	/**
+	 * Schedule cron avatar
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function schedule_filter_avatar()
+	{
+		// Schedule event here to see if it can lost again or not
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_AVATAR ) ) {
+			LiteSpeed_Cache_Log::debug( 'Cron log: ......avatar cron hook register......' ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_AVATAR ) ;
 		}
 	}
 

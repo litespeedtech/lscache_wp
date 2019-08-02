@@ -4,5 +4,4 @@
   `dateline` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `md5` (`md5`),
-  KEY `url` (`url`),
   KEY `dateline` (`dateline`)
