@@ -144,22 +144,6 @@ class LiteSpeed_Cache_Placeholder
 	}
 
 	/**
-	 * Check if there is a queue for cron or not
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function has_queue()
-	{
-		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
-			return true ;
-		}
-
-		return false ;
-	}
-
-	/**
 	 * Check if there is a placeholder cache folder
 	 *
 	 * @since  2.5.1
@@ -227,7 +211,7 @@ class LiteSpeed_Cache_Placeholder
 	 * @since  2.5.1
 	 * @access public
 	 */
-	public static function cron_placeholder( $continue = false )
+	public static function cron( $continue = false )
 	{
 		$req_summary = self::get_summary() ;
 		if ( empty( $req_summary[ 'queue' ] ) ) {
@@ -327,7 +311,7 @@ class LiteSpeed_Cache_Placeholder
 
 		switch ( $type ) {
 			case self::TYPE_GENERATE :
-				self::cron_placeholder( true ) ;
+				self::cron( true ) ;
 				break ;
 
 			default:

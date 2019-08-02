@@ -42,22 +42,6 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Check if there is a queue for cron or not
-	 *
-	 * @since  2.3
-	 * @access public
-	 */
-	public static function has_queue()
-	{
-		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
-			return true ;
-		}
-
-		return false ;
-	}
-
-	/**
 	 * Check if there is a ccss cache folder
 	 *
 	 * @since  2.3

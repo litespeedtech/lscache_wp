@@ -131,22 +131,6 @@ class LiteSpeed_Cache_Avatar
 	}
 
 	/**
-	 * Check if there is a queue for cron or not
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function has_queue()
-	{
-		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
-			return true ;
-		}
-
-		return false ;
-	}
-
-	/**
 	 * Check if there is a cache folder
 	 *
 	 * @since  3.0

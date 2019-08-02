@@ -59,17 +59,17 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register ccss generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) && LiteSpeed_Cache_CSS::has_queue() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) ) {
 			self::schedule_filter_ccss() ;
 
 			add_action( self::CRON_ACTION_HOOK_CCSS, 'LiteSpeed_Cache_CSS::cron_ccss' ) ;
 		}
 
 		// Register image placeholder generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Placeholder::has_queue() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
 			self::schedule_filter_placeholder() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Placeholder::cron_placeholder' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Placeholder::cron' ) ;
 		}
 
 		// Register avatar warm up
