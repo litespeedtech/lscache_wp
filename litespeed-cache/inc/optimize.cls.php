@@ -537,13 +537,6 @@ class LiteSpeed_Cache_Optimize
 		 */
 		$this->_font_optm() ;
 
-		/**
-		 * Inline script manipulated until document is ready
-		 * No need to do this for css_async lib as it won't cause error even manipulated before document is ready
-		 * @since  3.0
-		 */
-		$this->_js_inline_defer() ;
-
 		// Replace html head part
 		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head ) ;
 		if ( $this->html_head ) {
@@ -566,6 +559,13 @@ class LiteSpeed_Cache_Optimize
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_HTML_MIN ) ) {
 			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
+
+		/**
+		 * Inline script manipulated until document is ready
+		 *
+		 * @since  3.0
+		 */
+		$this->_js_inline_defer() ;
 
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
