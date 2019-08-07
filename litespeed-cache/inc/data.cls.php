@@ -246,6 +246,21 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
+	 * Check if avatar table existed or not
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function tb_avatar_exist()
+	{
+		global $wpdb ;
+
+		$instance = self::get_instance() ;
+
+		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_avatar'" ) ;
+	}
+
+	/**
 	 * Get data structure of one table
 	 *
 	 * @since  2.0
@@ -379,7 +394,7 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug2( '[Data] Checking avatar table' ) ;
 
 		// Check if table exists first
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_avatar'" ) ) {
+		if ( self::tb_avatar_exist() ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
@@ -409,7 +424,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 
-		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_avatar'" ) ) {
+		if ( ! self::tb_avatar_exist() ) {
 			return ;
 		}
 

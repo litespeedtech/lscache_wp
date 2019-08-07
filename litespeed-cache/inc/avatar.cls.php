@@ -44,6 +44,20 @@ class LiteSpeed_Cache_Avatar
 	}
 
 	/**
+	 * Check if need db table or not
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function need_db()
+	{
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+	/**
 	 * Get gravatar URL from DB and regenarate
 	 *
 	 * @since  3.0
