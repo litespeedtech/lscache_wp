@@ -5,7 +5,7 @@
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<?php if ( ! LiteSpeed_Cache_Data::optm_available() ) : ?>
+<?php if ( LiteSpeed_Cache_Optimize::need_db() && ! LiteSpeed_Cache_Data::tb_cssjs_exist() ) : ?>
 <div class="litespeed-callout-danger">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p><?php echo sprintf( __( 'Failed to create Optimizer table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>

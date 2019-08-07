@@ -33,15 +33,10 @@ class LiteSpeed_Cache_Avatar
 			return ;
 		}
 
-		// Create table
-		$this->_tb = LiteSpeed_Cache_Data::get_instance()->create_tb_avatar() ;
-
-		if ( ! $this->_tb ) {
-			LiteSpeed_Cache_Log::debug( '[Avatar] No table existed!' ) ;
-			return ;
-		}
-
 		LiteSpeed_Cache_Log::debug2( '[Avatar] init' ) ;
+
+		// Create table
+		$this->_tb = LiteSpeed_Cache_Data::tb_avatar() ;
 
 		$this->_conf_cache_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 

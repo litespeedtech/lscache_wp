@@ -29,12 +29,12 @@ class LiteSpeed_Cache_Data
 
 	private static $_instance ;
 
-	const TB_OPTIMIZER = 'litespeed_optimizer' ;
+	const TB_CSSJS = 'litespeed_optimizer' ;
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
 	const TB_AVATAR = 'litespeed_avatar' ;
 
 	private $_charset_collate ;
-	private $_tb_optm ;
+	private $_tb_cssjs ;
 	private $_tb_img_optm ;
 	private $_tb_avatar ;
 
@@ -51,14 +51,35 @@ class LiteSpeed_Cache_Data
 
 		$this->_charset_collate = $wpdb->get_charset_collate() ;
 
-		$this->_tb_optm = $wpdb->prefix . self::TB_OPTIMIZER ;
+		$this->_tb_cssjs = $wpdb->prefix . self::TB_CSSJS ;
 		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
-		$this->_tb_avatar = $wpdb->prefix . self::TB_AVATAR ;
-
-		$this->_create_tb_img_optm() ;
-		$this->_create_tb_html_optm() ;
+		$this->_tb_avatar = self::tb_avatar() ;
 	}
 
+	/**
+	 * Correct table existance
+	 *
+	 * Call when activate -> upadte_confs()
+	 * Call when upadte_confs()
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function correct_tb_existance()
+	{
+		// CSS JS optm
+		if ( LiteSpeed_Cache_Optimize::need_db() ) {
+			$this->_create_tb_cssjs() ;
+		}
+
+		// Gravatar
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ) ) {
+			$this->_create_tb_avatar() ;
+		}
+
+		// Image optm
+		$this->_create_tb_img_optm() ;
+	}
 
 	/**
 	 * Upgrade conf to latest format version from previous versions
@@ -191,10 +212,22 @@ class LiteSpeed_Cache_Data
 	 * @since  1.4
 	 * @access public
 	 */
-	public static function get_optm_table()
+	public static function tb_cssjs()
 	{
 		global $wpdb ;
-		return $wpdb->prefix . self::TB_OPTIMIZER ;
+		return $wpdb->prefix . self::TB_CSSJS ;
+	}
+
+	/**
+	 * Get avatar table
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function tb_avatar()
+	{
+		global $wpdb ;
+		return $wpdb->prefix . self::TB_AVATAR ;
 	}
 
 	/**
@@ -203,11 +236,13 @@ class LiteSpeed_Cache_Data
 	 * @since  1.3.1.1
 	 * @access public
 	 */
-	public static function optm_available()
+	public static function tb_cssjs_exist()
 	{
 		global $wpdb ;
+
 		$instance = self::get_instance() ;
-		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_optm'" ) ;
+
+		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_cssjs'" ) ;
 	}
 
 	/**
@@ -216,7 +251,7 @@ class LiteSpeed_Cache_Data
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _get_data_structure( $tb )
+	private function _tb_structure( $tb )
 	{
 		return Litespeed_File::read( LSCWP_DIR . 'inc/data_structure/' . $tb . '.sql' ) ;
 	}
@@ -269,7 +304,7 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'img_optm' ) . ') %2$s;',
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'img_optm' ) . ') %2$s;',
 			$this->_tb_img_optm,
 			$this->_charset_collate // 'DEFAULT CHARSET=utf8'
 		) ;
@@ -289,12 +324,12 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Create optimizer table
+	 * Create table cssjs
 	 *
 	 * @since  1.3.1
 	 * @access private
 	 */
-	private function _create_tb_html_optm()
+	private function _create_tb_cssjs()
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
 			return ;
@@ -306,7 +341,7 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug2( '[Data] Checking html optm table' ) ;
 
 		// Check if table exists first
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_optm'" ) ) {
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_cssjs'" ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
@@ -314,8 +349,8 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug( '[Data] Creating html optm table' ) ;
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'optm' ) . ') %2$s;',
-			$this->_tb_optm,
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'optm' ) . ') %2$s;',
+			$this->_tb_cssjs,
 			$this->_charset_collate
 		) ;
 
@@ -330,12 +365,12 @@ class LiteSpeed_Cache_Data
 	 * Create avatar table
 	 *
 	 * @since  3.0
-	 * @access public
+	 * @access private
 	 */
-	public function create_tb_avatar()
+	private function _create_tb_avatar()
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
-			return $this->_tb_avatar ;
+			return ;
 		}
 		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 
@@ -346,13 +381,13 @@ class LiteSpeed_Cache_Data
 		// Check if table exists first
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_avatar'" ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
-			return $this->_tb_avatar ;
+			return ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Data] Creating avatar table' ) ;
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'avatar' ) . ') %2$s;',
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'avatar' ) . ') %2$s;',
 			$this->_tb_avatar,
 			$this->_charset_collate
 		) ;
@@ -360,10 +395,8 @@ class LiteSpeed_Cache_Data
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
 			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating avatar table failed!' ) ;
-			return false ;
 		}
 
-		return $this->_tb_avatar ;
 	}
 
 	/**
@@ -409,7 +442,7 @@ class LiteSpeed_Cache_Data
 			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
 		) ;
 
-		$res = $wpdb->replace( $this->_tb_optm, $f ) ;
+		$res = $wpdb->replace( $this->_tb_cssjs, $f ) ;
 
 		return $res ;
 	}
@@ -429,8 +462,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 
-		$sql = $wpdb->prepare( 'SELECT src FROM `' . $this->_tb_optm . '` WHERE `hash_name` = %s', $filename ) ;
-		$res = $wpdb->get_var( $sql ) ;
+		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->_tb_cssjs . '` WHERE `hash_name`=%s', $filename ) ) ;
 
 		LiteSpeed_Cache_Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 

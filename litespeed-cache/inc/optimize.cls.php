@@ -229,6 +229,33 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
+	 * Check if need db table or not
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function need_db()
+	{
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MIN ) ) {
+			return true ;
+		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB ) ) {
+			return true ;
+		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MIN ) ) {
+			return true ;
+		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMB ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
 	 * Run optimize process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *

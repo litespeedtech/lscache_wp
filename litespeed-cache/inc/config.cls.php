@@ -34,11 +34,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Conf may be stale, upgrade later
 		$this->_conf_db_init() ;
 
-		// Load options first, network sites can override this later
-		$this->load_options() ;
+		// Only load options when DB records are ready
+		if ( ! defined( 'LITESPEED_TMP_CONF' ) ) {
+			// Load options first, network sites can override this later
+			$this->load_options() ;
 
-		// Override conf if is network subsites and chose `Use Primary Config`
-		$this->_try_load_site_options() ;
+			// Override conf if is network subsites and chose `Use Primary Config`
+			$this->_try_load_site_options() ;
+		}
 
 		/**
 		 * Detect if has quic.cloud set
@@ -64,6 +67,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	private function _conf_db_init()
 	{
 		$ver = get_option( self::conf_name( self::_VERSION ) ) ;
+
+		/**
+		 * Don't upgrade or run new installations other than from backend visit
+		 * In this case, just use default conf
+		 */
+		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
+				$this->_options = $this->_default_options = $this->default_vals() ;
+				define( 'LITESPEED_TMP_CONF', true ) ;
+				return ;
+			}
+		}
 
 		/**
 		 * Version is less than v3.0, or, is a new installation
@@ -386,6 +401,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				$this->update( $id, $val ) ;
 			}
 		}
+
+		// Update related tables
+		LiteSpeed_Cache_Data::get_instance()->correct_tb_existance() ;
 
 		// Update related files
 		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
