@@ -9,7 +9,7 @@ $this->form_action() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 	<tr>
 		<th><?php echo __('Delay', 'litespeed-cache'); ?></th>
 		<td>

@@ -6,7 +6,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 ?>
 
 <?php if ( LiteSpeed_Cache_Avatar::need_db() && ! LiteSpeed_Cache_Data::tb_avatar_exist() ) : ?>
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
 </div>
@@ -17,7 +17,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:discussion', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ; ?>

@@ -7,7 +7,7 @@
 
 <?php $this->cache_disabled_warning() ; ?>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 
 	<tr>
 		<th>

@@ -6,7 +6,7 @@
 </h3>
 
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 
 	<tr>
 		<th>

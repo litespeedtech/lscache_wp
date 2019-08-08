@@ -10,7 +10,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:css', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 
 	<tr>
 		<th>

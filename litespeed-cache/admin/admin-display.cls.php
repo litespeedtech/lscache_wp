@@ -630,8 +630,8 @@ class LiteSpeed_Cache_Admin_Display
 	public function form_end()
 	{
 		echo "<div class='litespeed-top20'></div>" ;
-		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'litespeed-btn-success litespeed-duplicate-float', 'litespeed-submit' ) ;
-		echo '<a href="admin.php?page=lscache-import" class="litespeed-btn-danger litespeed-float-resetbtn">' ;
+		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' ) ;
+		echo '<a href="admin.php?page=lscache-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
 		echo __( 'Reset All Settings', 'litespeed-cache' ) ;
 		echo '</a>' ;
 		echo '</form>' ;
@@ -692,7 +692,7 @@ class LiteSpeed_Cache_Admin_Display
 		$label_id = preg_replace( '|\W|', '', $id ) ;
 
 		if ( $type == 'text' ) {
-			$cls = "litespeed-regular-text $cls" ;
+			$cls = "regular-text $cls" ;
 		}
 
 		$this->enroll( $id ) ;

@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache_Router::NONCE_NAME ) ; ?>
 
 	<?php if ( ! empty( $data[ '_err' ] ) ) : ?>
-	<div class="litespeed-callout-danger">
+	<div class="litespeed-callout notice notice-error inline">
 		<h4><?php echo __( 'ERROR', 'litespeed-cache' ) ; ?>:</h4>
 		<ol>
 			<li><?php echo $data[ '_err' ] ; ?></li>
@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 	<div class="litespeed-row">
 		<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?>:</h4>
-		<input type="password" name="pswd" class="litespeed-regular-text" required />
+		<input type="password" name="pswd" class="regular-text" required />
 	</div>
 
 	<input type="checkbox" class="form-check-input" id="exampleCheck1" required />

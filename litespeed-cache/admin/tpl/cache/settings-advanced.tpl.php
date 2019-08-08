@@ -5,12 +5,12 @@
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
-	<?php echo __( 'These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache' ) ; ?>
+	<p><?php echo __( 'These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache' ) ; ?></p>
 </div>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 
 	<?php
 		if ( ! is_multisite() ) :

@@ -38,7 +38,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
 </h3>
 
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-error inline">
 	<h4>🚨 <?php echo __('This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
 	<p>
 		<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
@@ -53,7 +53,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:tool', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ; ?>

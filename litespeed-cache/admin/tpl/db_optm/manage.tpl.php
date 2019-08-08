@@ -69,11 +69,11 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 
 <h3 class="litespeed-title"><?php echo __('Database Optimizer', 'litespeed-cache'); ?></h3>
 
-<div class="litespeed-panel-wrapper">
+<div class="litespeed-panel-wrapper litespeed-cards-wrapper">
 
 <?php foreach ( $_panels as $tag => $v ): ?>
 
-	<a href="<?php echo $v[ 'link' ] ; ?>" class="litespeed-panel">
+	<a href="<?php echo $v[ 'link' ] ; ?>" class="litespeed-panel postbox">
 		<section class="litespeed-panel-wrapper-icon">
 			<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
 		</section>

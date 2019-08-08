@@ -835,7 +835,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$update_intval_html .= '</div>' ;
 
 		$content = "<h3 class='litespeed-title'>{$_title}</h3>
-					<table><tbody>
+					<table class='wp-list-table widefat striped'><tbody>
 						<tr>
 							<th>" . __('Product Update Interval', 'litespeed-cache') . "</th>
 							<td>

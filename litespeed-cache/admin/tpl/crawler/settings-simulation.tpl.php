@@ -9,7 +9,7 @@ $this->form_action() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table widefat striped"><tbody>
 	<tr>
 		<th><?php echo __('Role Simulation', 'litespeed-cache'); ?></th>
 		<td>
@@ -35,7 +35,7 @@ $this->form_action() ;
 						<h4><?php echo __( 'Cookie Name', 'litespeed-cache' ) ; ?></h4>
 					</div>
 					<div class='litespeed-col-auto'>
-						<input type="text" v-model="item.name" name="<?php echo $id ; ?>[name][]" class="litespeed-regular-text" style="margin-top:1.33em;" >
+						<input type="text" v-model="item.name" name="<?php echo $id ; ?>[name][]" class="regular-text" style="margin-top:1.33em;" >
 					</div>
 					<div class='litespeed-col-auto'>
 						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ) ; ?></h4>
