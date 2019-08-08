@@ -180,6 +180,8 @@ class LiteSpeed_Cache_Data
 		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver ) ;
 
+		$this->correct_tb_existance() ;
+
 		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
