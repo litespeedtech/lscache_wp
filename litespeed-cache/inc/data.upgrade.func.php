@@ -103,6 +103,7 @@ function litespeed_update_2_0( $ver )
  */
 function litespeed_update_3_0( $ver )
 {
+	global $wpdb ;
 	// Upgrade v2.0- to v2.0 first
 	if ( version_compare( $ver, '2.0', '<' ) ) {
 		litespeed_update_2_0( $ver ) ;
@@ -491,6 +492,11 @@ function litespeed_update_3_0( $ver )
 		}
 
 	}
+
+	// delete tables
+	$q = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'litespeed_optimizer' ;
+	$wpdb->query( $q ) ;
+
 
 	add_option( 'litespeed.conf._version', '3.0' ) ;
 

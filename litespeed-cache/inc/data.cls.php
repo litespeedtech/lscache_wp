@@ -29,7 +29,7 @@ class LiteSpeed_Cache_Data
 
 	private static $_instance ;
 
-	const TB_CSSJS = 'litespeed_optimizer' ;
+	const TB_CSSJS = 'litespeed_cssjs' ;
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
 	const TB_AVATAR = 'litespeed_avatar' ;
 
@@ -108,6 +108,8 @@ class LiteSpeed_Cache_Data
 				}
 			}
 		}
+
+		$this->correct_tb_existance() ;
 
 		// Update version to latest
 		delete_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
