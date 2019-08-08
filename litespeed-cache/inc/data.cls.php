@@ -77,8 +77,10 @@ class LiteSpeed_Cache_Data
 			$this->_create_tb_avatar() ;
 		}
 
-		// Image optm
-		$this->_create_tb_img_optm() ;
+		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
+		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ) {
+		// 	$this->create_tb_img_optm() ;
+		// }
 	}
 
 	/**
@@ -204,7 +206,7 @@ class LiteSpeed_Cache_Data
 	 * @since  2.0
 	 * @access public
 	 */
-	public static function get_tb_img_optm()
+	public static function tb_img_optm()
 	{
 		global $wpdb ;
 		return $wpdb->prefix . self::TB_IMG_OPTM ;
@@ -250,6 +252,21 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
+	 * Check if image optm table existed or not
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function tb_img_optm_exist()
+	{
+		global $wpdb ;
+
+		$instance = self::get_instance() ;
+
+		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_img_optm'" ) ;
+	}
+
+	/**
 	 * Check if avatar table existed or not
 	 *
 	 * @since  3.0
@@ -276,37 +293,15 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Drop table img_optm
+	 * Create img optm table and sync data from wp_postmeta
 	 *
 	 * @since  2.0
 	 * @access public
 	 */
-	public function delete_tb_img_optm()
-	{
-		global $wpdb ;
-
-		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
-			return ;
-		}
-
-		LiteSpeed_Cache_Log::debug( '[Data] Deleting img_optm table' ) ;
-
-		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
-		$wpdb->query( $q ) ;
-
-		delete_option( $this->_tb_img_optm ) ;
-	}
-
-	/**
-	 * Create img optm table and sync data from wp_postmeta
-	 *
-	 * @since  2.0
-	 * @access private
-	 */
-	private function _create_tb_img_optm()
+	public function create_tb_img_optm()
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
-			return $this->_tb_img_optm ;
+			return ;
 		}
 		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 
@@ -315,9 +310,9 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug2( '[Data] Checking img_optm table' ) ;
 
 		// Check if table exists first
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
+		if ( self::tb_img_optm_exist() ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
-			return $this->_tb_img_optm ;
+			return ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
@@ -337,9 +332,6 @@ class LiteSpeed_Cache_Data
 		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 			LiteSpeed_Cache_Object::get_instance()->flush() ;
 		}
-
-		return $this->_tb_img_optm ;
-
 	}
 
 	/**
@@ -360,7 +352,7 @@ class LiteSpeed_Cache_Data
 		LiteSpeed_Cache_Log::debug2( '[Data] Checking html optm table' ) ;
 
 		// Check if table exists first
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_cssjs'" ) ) {
+		if ( self::tb_cssjs_exist() ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
@@ -419,23 +411,54 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Drop table avatar
+	 * Drop table img_optm
+	 *
+	 * @since  2.0
+	 * @access public
+	 */
+	public function del_table_img_optm()
+	{
+		global $wpdb ;
+
+		if ( ! self::tb_img_optm_exist() ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Data] Deleting img_optm table' ) ;
+
+		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
+		$wpdb->query( $q ) ;
+
+		delete_option( $this->_tb_img_optm ) ;
+	}
+
+	/**
+	 * Drop generated tables
 	 *
 	 * @since  3.0
 	 * @access public
 	 */
-	public function del_tb_avatar()
+	public function del_tables()
 	{
 		global $wpdb ;
 
-		if ( ! self::tb_avatar_exist() ) {
-			return ;
+		if ( self::tb_cssjs_exist() ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Deleting cssjs table' ) ;
+
+			$q = "DROP TABLE IF EXISTS $this->_tb_cssjs" ;
+			$wpdb->query( $q ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Deleting avatar table' ) ;
+		// Deleting only can be done when destroy all optm images
+		// $this->del_table_img_optm() ;
 
-		$q = "DROP TABLE IF EXISTS $this->_tb_avatar" ;
-		$wpdb->query( $q ) ;
+		if ( self::tb_avatar_exist() ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Deleting avatar table' ) ;
+
+			$q = "DROP TABLE IF EXISTS $this->_tb_avatar" ;
+			$wpdb->query( $q ) ;
+		}
+
 	}
 
 	/**

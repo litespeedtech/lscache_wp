@@ -2,9 +2,9 @@
 defined( 'WPINC' ) || exit ;
 
 $menu_list = array(
+	'settings' 			=> __( 'Debug Settings', 'litespeed-cache' ),
 	'log_viewer' 		=> __( 'Log View', 'litespeed-cache' ),
 	'beta_test'			=> __( 'Beta Test', 'litespeed-cache' ),
-	'settings' 			=> __( 'Debug Settings', 'litespeed-cache' ),
 	'report' 			=> __( 'Report', 'litespeed-cache' ),
 ) ;
 

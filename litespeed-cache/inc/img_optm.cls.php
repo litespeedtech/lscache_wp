@@ -77,7 +77,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		$this->wp_upload_dir = wp_upload_dir() ;
 		$this->__media = LiteSpeed_Cache_Media::get_instance() ;
-		$this->_table_img_optm = LiteSpeed_Cache_Data::get_tb_img_optm() ;
+		$this->_table_img_optm = LiteSpeed_Cache_Data::tb_img_optm() ;
 	}
 
 	/**
@@ -147,6 +147,7 @@ class LiteSpeed_Cache_Img_Optm
 		$_credit = (int) $this->summary_info( 'credit' ) ;
 		$credit_recovered = (int) $this->summary_info( 'credit_recovered' ) ;
 
+		LiteSpeed_Cache_Data::get_instance()->create_tb_img_optm() ;
 
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] preparing images to push' ) ;
 
@@ -1440,7 +1441,7 @@ class LiteSpeed_Cache_Img_Optm
 		$wpdb->query( $q ) ;
 
 		// Delete img_optm table
-		LiteSpeed_Cache_Data::get_instance()->delete_tb_img_optm() ;
+		LiteSpeed_Cache_Data::get_instance()->del_table_img_optm() ;
 
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;

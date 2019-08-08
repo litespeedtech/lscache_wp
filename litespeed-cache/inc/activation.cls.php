@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		// Delete avatar table
-		LiteSpeed_Cache_Data::get_instance()->del_tb_avatar() ;
+		LiteSpeed_Cache_Data::get_instance()->del_tables() ;
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
 			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR ) ;
