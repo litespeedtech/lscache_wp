@@ -178,6 +178,11 @@ class LiteSpeed_Cache_Optimize
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 0 ], $concat_only ) ;
 
+			if ( ! $content ) {
+				LiteSpeed_Cache_Log::debug( '[Optm] Static file generation bypassed due to empty' ) ;
+				return ;
+			}
+
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
 			LiteSpeed_Cache_Log::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
