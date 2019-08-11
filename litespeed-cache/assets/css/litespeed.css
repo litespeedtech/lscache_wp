@@ -13,9 +13,7 @@
 }
 
 .litespeed-row {
-	display: block;
 	margin-top: 5px;
-	margin-left: 5px;
 }
 
 .litespeed-reset{
@@ -300,6 +298,12 @@ h3 .litespeed-learn-more {
 	
 }
 
+.litespeed-title .button{
+	margin-left: 1rem;
+    margin-bottom: 5px;
+    vertical-align: middle;
+}
+
 .litespeed-title a,
 .litespeed-title-short a {
 	text-decoration: none;
@@ -436,31 +440,36 @@ h3 .litespeed-learn-more {
 }
 
 /********************************* btn *******************************/
+.litespeed .button{
+	background:#fff;
+}
 .litespeed [class*="litespeed-btn-"],
 .litespeed-wrap [class*="litespeed-btn-"],
 [class*="litespeed-btn-"] {
-	padding: 5px 10px;
+	background: #fff;
+	
+	/* padding: 5px 10px;
 	font-size: 14px !important;
 	font-weight:400;
 	border-radius: 3px;
 	margin: 15px 5px;
 	text-align: center;
-	background: #fff;
+	
 	cursor: pointer;
 	text-decoration: none;
 	display: inline-block;
-	height: initial;
+	height: initial; */
 }
 
 .litespeed [class*="litespeed-btn-"]:hover,
 .litespeed-wrap [class*="litespeed-btn-"]:hover,
 [class*="litespeed-btn-"]:hover {
-	font-weight: 400;
+	/* font-weight: 400;
 	color: #fff;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
-	box-shadow: none;
-}
+	box-shadow: none; */
+} 
 
 .litespeed .litespeed-btn-danger,
 .litespeed-wrap .litespeed-btn-danger,
@@ -475,7 +484,9 @@ h3 .litespeed-learn-more {
 .litespeed .litespeed-btn-danger:hover,
 .litespeed-wrap .litespeed-btn-danger:hover,
 .litespeed-btn-danger:hover {
+	border-color:#ab244e;
 	background: #cc3d6a;
+	color:#fff;
 }
 
 .litespeed .litespeed-btn-warning,
@@ -491,7 +502,9 @@ h3 .litespeed-learn-more {
 .litespeed .litespeed-btn-warning:hover,
 .litespeed-wrap .litespeed-btn-warning:hover,
 .litespeed-btn-warning:hover {
+	border-color:#e59544;
 	background: #e59544;
+	color:#fff;
 }
 
 .litespeed .litespeed-btn-success,
@@ -507,7 +520,9 @@ h3 .litespeed-learn-more {
 .litespeed .litespeed-btn-success:hover,
 .litespeed-wrap .litespeed-btn-success:hover,
 .litespeed-btn-success:hover {
+	border-color:#36b0b0;
 	background: #36b0b0;
+	color:#fff;
 }
 
 .litespeed .litespeed-btn-primary,
@@ -525,6 +540,7 @@ h3 .litespeed-learn-more {
 .litespeed-btn-primary:hover {
 	background: #538ac6;
 	border-color: #538ac6;
+	color:#fff;
 }
 
 .litespeed .litespeed-btn-default,
@@ -566,23 +582,27 @@ h3 .litespeed-learn-more {
 	min-width: 100px;
 }
 
-.litespeed .litespeed-btn-tiny,
-.litespeed-wrap .litespeed-btn-tiny,
-.litespeed-btn-tiny {
-	padding: 1px 8px;
-	font-size: 13px;
-	line-height: 1.5;
-	border-radius: 2px;
-	min-width: 14px ;
+.litespeed-wrap .litespeed-btn-tiny {
+	padding: 2px 8px;
+    line-height: 1.5;
+    height: auto;
 }
 
 .litespeed-wrap .litespeed-btn-mini {
-	padding: 2px 5px !important;
-	font-size: 12px !important;
-	font-weight: 600 !important;
-	margin: 5px !important;
+	padding: 0 8px 1px;
+    font-size: 12px;
+	font-weight: 600;
+	margin:5px 0;
 }
 
+.litespeed-wrap .litespeed-btn-mini .dashicons.dashicons-image-rotate {
+	padding-top:3px;
+	font-size:18px;
+}
+
+.litespeed-wrap .litespeed-btn-mini .dashicons {
+    padding-top: 2px;
+}
 
 /********************************* switch *******************************/
 .litespeed-switch {
@@ -595,7 +615,6 @@ h3 .litespeed-learn-more {
 	font-weight: 600;
 	margin: 0 0 0 ;
 	background-color: #fff;
-	padding: -1px;
 	display: inline-block;
 	position: relative;
 }
@@ -621,6 +640,14 @@ h3 .litespeed-learn-more {
 	position: relative;
 }
 
+.litespeed-switch label:last-child{
+	border-top-right-radius: 2px;
+}
+
+.litespeed-switch label:first-of-type{
+	border-top-left-radius: 2px;
+}
+
 .litespeed-switch input:hover + label,
 .litespeed-switch input:focus + label {
 	background-color: #f9fafc;
@@ -640,6 +667,7 @@ h3 .litespeed-learn-more {
 	display: inline-block;
 	position: absolute;
 	z-index: -1;
+	margin:0;
 }
 
 .litespeed-cache-purgeby-text {
@@ -747,6 +775,8 @@ h3 .litespeed-learn-more {
 }
 
 /********************************* label *******************************/
+
+/* @todo - to be deleted (?) - seems not used anywhere */
 [class*="litespeed-label-"] {
 	display: inline;
 	padding: .2em .6em .3em;
@@ -951,41 +981,78 @@ ul.litespeed-shell-body {
 
 /********************************* inline table *******************************/
 
-.litespeed-body table thead tr th{
+/* .litespeed-body table thead tr th{
 	color: #264d73;
 	padding-left: 10px;
+} */
+
+.litespeed-table-auto-width{
+	width:auto;
 }
 
 .litespeed-table {
-	border: 1px solid #538ac6;
-	border-radius: 3px;
+	/* border: 1px solid #538ac6;
+	border-radius: 3px; */
+}
+
+.litespeed-body tbody > tr > th{
+	padding-left: 20px;
+}
+
+.litespeed-body tbody th {
+	vertical-align: top;
+	text-align: left;
+	padding: 18px 10px 20px 0;
+	width: 200px;
+	font-weight: 600;
+}
+
+.litespeed-body td {
+	/* margin-bottom: 9px; */
+	padding: 15px 10px;
+	line-height: 1.3;
+	vertical-align: middle;
+	/* font-weight: 400; */
+	/* font-size: 14px;
+	color: #264d73;
+	border-radius: 3px; */
+}
+
+/* Adjust inside table */
+.litespeed-body .widefat td input+p {
+    margin-top: .8em;
+}
+
+.litespeed-body .striped>tbody>:nth-child(even) .notice {
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+    
+}
+
+.litespeed-body .striped>tbody>:nth-child(even) .notice:first-child{
+    margin-top:0;
 }
 
 /********************************* small table *******************************/
 .litespeed-body .litespeed-vary-table {
-	margin-top: -15px;
-	padding-left: 0;
-	width: 250px;
+	margin-top: -5px;
+    width: 250px;
+    margin-bottom: 20px;
 }
 
-.litespeed-body .litespeed-vary-table tr {
-	width: 200px;
+.litespeed-body .litespeed-vary-table td{
+	width:50%;
 }
 
-.litespeed-body .litespeed-vary-table tr:first-child td {
-/*    border-top: 1px solid #cccccc; */
-}
-.litespeed-body .litespeed-vary-table .litespeed-vary-title {
-	width: 50%;
-/*    border-bottom: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;*/
-}
-.litespeed-body .litespeed-vary-table .litespeed-vary-val {
-/*    border-bottom: 1px solid #cccccc;*/
-}
 
 
 /********************************* tick checkbox *******************************/
+.litespeed-tick-wrapper{
+	margin-left:-5px;
+}
 .litespeed-tick {
 	display: inline-block;
 	min-width: 125px;
@@ -1554,7 +1621,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 .litespeed-toggle-btn-primary {
 	color: #fff;
 	background-color: #36b0b0;
-	border-color: #6699cc;
+	border-color: #36b0b0;
 }
 
 .litespeed-toggle-btn-default {
@@ -1716,9 +1783,7 @@ input.litespeed-input[type="file"]{
 	width: 60% ;
 }
 
-.litespeed-body tbody > tr > th{
-	padding-left: 20px;
-}
+
 
 /* .litespeed-body tbody > tr:nth-of-type(odd){
 	background-color: #f9f9f9;
@@ -1726,34 +1791,17 @@ input.litespeed-input[type="file"]{
 } */
 
 .litespeed-body input[type=radio] {/* todo: to be deleted */
-	margin-top: 0px;
+/* 	margin-top: 0px;
 	margin-right: 4px;
-	float: none;
+	float: none; */
 }
 
-.litespeed-body th {
-	vertical-align: top;
-	text-align: left;
-	padding: 18px 10px 20px 0;
-	width: 200px;
-	font-weight: 600;
-}
 
-.litespeed-body td {
-	/* margin-bottom: 9px; */
-	padding: 15px 10px;
-	line-height: 1.3;
-	vertical-align: middle;
-	/* font-weight: 400; */
-	/* font-size: 14px;
-	color: #264d73;
-	border-radius: 3px; */
-}
 
 .litespeed-wrap .litespeed-float-submit {
 	position: absolute;
-	right: 10px;
-	top: -20px;
+	right: 0;
+	top: -5px;
 	margin-top: 0;
 }
 
@@ -1764,7 +1812,7 @@ input.litespeed-input[type="file"]{
 
 .litespeed-wrap .litespeed-float-resetbtn {
 	position: absolute;
-	right: 10px;
+	right: 0;
 	bottom: 20px;
 }
 
@@ -1900,7 +1948,7 @@ input.litespeed-input-warning {
 	border-radius: 52px;
 
 }
-
+/* 
 .litespeed-wrap .litespeed-btn-success, .litespeed-btn-success {
 	color: #36b0b0;
 	border: 1px solid #36b0b0;
@@ -1909,7 +1957,7 @@ input.litespeed-input-warning {
 	box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
 }
 
-
+ */
 
 .litespeed-empty-space-xlarge {
 	margin-top: 8em;
@@ -2203,7 +2251,6 @@ input.litespeed-input-warning {
 .litespeed-banner-desciption-content {
 	margin: 0px;
 	line-height: 1.25em;
-	padding: 0px !important;
 }
 
 .litespeed-row-flex {

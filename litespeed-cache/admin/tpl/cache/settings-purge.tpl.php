@@ -45,25 +45,27 @@ $break_arr = array(
 	<tr>
 		<th><?php echo __( 'Auto Purge Rules For Publish/Update', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<div class="litespeed-callout-warning">
-				<h4><?php echo __( 'Note', 'litespeed-cache' ) ; ?></h4>:
-				<i>
+			<div class="litespeed-callout notice notice-warning inline">
+				<h4><?php echo __( 'Note', 'litespeed-cache' ) ; ?></h4>
+				<p>
 					<?php echo __( 'Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache' ) ; ?><br />
 					<?php echo __( 'Other checkboxes will be ignored.', 'litespeed-cache' ) ; ?><br />
 					<?php echo __( 'Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache' ) ; ?>
-				</i>
+				</p>
 			</div>
 			<div class="litespeed-top20">
-			<?php
-				foreach ( $option_list as $id => $title ) {
+				<div class="litespeed-tick-wrapper">
+					<?php
+						foreach ( $option_list as $id => $title ) {
 
-					$this->build_checkbox( $id, $title ) ;
+							$this->build_checkbox( $id, $title ) ;
 
-					if ( in_array( $id, $break_arr ) ) {
-						echo '</div><div class="litespeed-top20">';
-					}
-				}
-			?>
+							if ( in_array( $id, $break_arr ) ) {
+								echo '</div><div class="litespeed-top20">';
+							}
+						}
+					?>
+				</div>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache' ) ; ?>

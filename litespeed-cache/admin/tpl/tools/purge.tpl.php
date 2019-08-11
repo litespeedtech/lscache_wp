@@ -236,7 +236,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		</p>
 
 		<p>
-			<button type="submit" class="litespeed-btn-success"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
+			<button type="submit" class="button button-primary"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
 		</p>
 	</form>
 <?php endif; ?>

@@ -42,7 +42,7 @@ $this->form_action() ;
 					<h4>
 						<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_URL ; ?>
 						<?php $this->title( $id ) ; ?>
-						<button type="button" class="litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
+						<button type="button" class="button litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
 					</h4>
 
 					<?php
@@ -96,7 +96,7 @@ $this->form_action() ;
 
 		<?php endforeach ; ?>
 
-			<p><button type="button" class="litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</button></p>
+			<p><button type="button" class="button litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</button></p>
 
 			<div class="litespeed-warning">
 				<?php echo __('NOTE', 'litespeed-cache'); ?>:

@@ -46,7 +46,7 @@
 				}
 			}
 
-			$this->build_textarea( $id ) ;
+			$this->build_textarea( $id, 40 ) ;
 			$this->recommended( $id, true ) ;
 		?>
 

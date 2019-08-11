@@ -143,11 +143,11 @@ ksort( $roles ) ;
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-				<br /><font class="litespeed-success">
+				<br /><span class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
-				</font>
+				</span>
 			</div>
 		</td>
 	</tr>
@@ -172,9 +172,11 @@ ksort( $roles ) ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( $id . '[]', $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
-			<?php endforeach; ?>
+			<div class="litespeed-tick-wrapper">
+				<?php foreach ( $roles as $role => $title ): ?>
+					<?php $this->build_checkbox( $id . '[]', $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
+				<?php endforeach; ?>
+			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from all optimizations.', 'litespeed-cache' ) ; ?>
 			</div>

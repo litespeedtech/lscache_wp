@@ -44,20 +44,20 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 			</div>
 
 			<?php if ( $last_generated ) : ?>
-			<div class="litespeed-desc litespeed-left20">
+			<div class="litespeed-desc">
 				<?php if ( ! empty( $last_generated[ 'last_request' ] ) ) : ?>
 					<p>
 						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_generated[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
 				<?php endif ; ?>
 				<?php if ( $last_generated[ 'queue_count' ] ) : ?>
-					<div class="litespeed-callout-warning">
+					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo __( 'Avatar list in queue waiting for update','litespeed-cache' ) ; ?>:
 							<?php echo $last_generated[ 'queue_count' ] ; ?>
 						</h4>
-					</p>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_AVATAR, LiteSpeed_Cache_Avatar::TYPE_GENERATE ) ; ?>" class="litespeed-btn-success">
+					</div>
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_AVATAR, LiteSpeed_Cache_Avatar::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
 					</a>
 				<?php endif ; ?>

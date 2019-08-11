@@ -98,7 +98,7 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 
 <div class="litespeed-panel-wrapper">
 
-	<table class="litespeed-table">
+	<table class="wp-list-table widefat striped">
 		<thead><tr >
 			<th scope="col">#</th>
 			<th scope="col"><?php echo __( 'Table', 'litespeed-cache' ) ; ?></th>
@@ -137,28 +137,25 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 
 <h3 class="litespeed-title"><?php echo __( 'Database Summary', 'litespeed-cache' ) ; ?></h3>
 
-<div class="litespeed-panel-wrapper">
-	<h4 class="litespeed-left50">Autoload size: <?php echo LiteSpeed_Cache_Utility::real_size( $autoload_summary->autoload_size ) ; ?></h4>
-	<h4 class="litespeed-left50">Autoload entries: <?php echo $autoload_summary->autload_entries ; ?></h4>
-	<h4 class="litespeed-left50">Autoload top list:
-		<table class="litespeed-table">
-			<thead><tr >
-				<th scope="col">#</th>
-				<th scope="col"><?php echo __('Option Name', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Size', 'litespeed-cache') ; ?></th>
-			</tr></thead>
-			<tbody>
-				<?php foreach ( $autoload_summary->autoload_toplist as $k => $v ) : ?>
-				<tr>
-					<td><?php echo $k + 1 ; ?></td>
-					<td><?php echo $v->option_name ; ?></td>
-					<td><?php echo $v->option_value_length ; ?></td>
-				</tr>
-				<?php endforeach ; ?>
-			</tbody>
-		</table>
-
-</div>
+<h4>Autoload size: <?php echo LiteSpeed_Cache_Utility::real_size( $autoload_summary->autoload_size ) ; ?></h4>
+<h4>Autoload entries: <?php echo $autoload_summary->autload_entries ; ?></h4>
+<h4>Autoload top list:</h4>
+<table class="wp-list-table widefat striped litespeed-table-auto-width">
+	<thead><tr >
+		<th scope="col">#</th>
+		<th scope="col"><?php echo __('Option Name', 'litespeed-cache') ; ?></th>
+		<th scope="col"><?php echo __('Size', 'litespeed-cache') ; ?></th>
+	</tr></thead>
+	<tbody>
+		<?php foreach ( $autoload_summary->autoload_toplist as $k => $v ) : ?>
+		<tr>
+			<td><?php echo $k + 1 ; ?></td>
+			<td><?php echo $v->option_name ; ?></td>
+			<td><?php echo $v->option_value_length ; ?></td>
+		</tr>
+		<?php endforeach ; ?>
+	</tbody>
+</table>
 
 
 

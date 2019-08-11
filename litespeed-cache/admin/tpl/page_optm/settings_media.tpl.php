@@ -126,20 +126,20 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 			</div>
 
 			<?php if ( $last_responsive_placeholder_generated ) : ?>
-			<div class="litespeed-desc litespeed-left20">
+			<div class="litespeed-desc">
 				<?php if ( ! empty( $last_responsive_placeholder_generated[ 'last_request' ] ) ) : ?>
 					<p>
 						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_responsive_placeholder_generated[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
 				<?php endif ; ?>
 				<?php if ( ! empty( $last_responsive_placeholder_generated[ 'queue' ] ) ) : ?>
-					<div class="litespeed-callout-warning">
+					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
 							<?php echo implode( ' ', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
 						</p>
-					</p>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_PLACEHOLDER, LiteSpeed_Cache_Placeholder::TYPE_GENERATE ) ; ?>" class="litespeed-btn-success">
+					</div>
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_PLACEHOLDER, LiteSpeed_Cache_Placeholder::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
 					</a>
 				<?php endif ; ?>

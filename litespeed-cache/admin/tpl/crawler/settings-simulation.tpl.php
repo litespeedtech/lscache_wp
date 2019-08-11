@@ -44,11 +44,11 @@ $this->form_action() ;
 						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id ; ?>[vals][]" placeholder="<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
-						<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
+						<button type="button" class="button litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
 					</div>
 				</div>
 
-				<button type="button" @click='add_row' class="litespeed-btn-success litespeed-btn-tiny">+</button>
+				<button type="button" @click='add_row' class="button litespeed-btn-success litespeed-btn-tiny">+</button>
 			</div>
 
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>

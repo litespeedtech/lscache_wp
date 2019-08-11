@@ -1,9 +1,5 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 
-<h3 class="litespeed-title-short">
-	<?php echo __( 'Heartbeat Control', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:heartbeat', false, 'litespeed-learn-more' ) ; ?>
-</h3>
 
 <div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
@@ -15,6 +11,12 @@
 </div>
 
 <?php $this->form_action() ; ?>
+
+<h3 class="litespeed-title-short">
+	<?php echo __( 'Heartbeat Control', 'litespeed-cache' ) ; ?>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:heartbeat', false, 'litespeed-learn-more' ) ; ?>
+</h3>
+
 
 <table class="wp-list-table widefat striped"><tbody>
 

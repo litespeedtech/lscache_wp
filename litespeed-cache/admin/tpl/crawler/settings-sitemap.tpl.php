@@ -67,7 +67,7 @@ $this->form_action() ;
 				</div>
 
 				<div class='litespeed-col-auto'>
-					<div class="litespeed-callout-warning">
+					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
 						<p>
 							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>

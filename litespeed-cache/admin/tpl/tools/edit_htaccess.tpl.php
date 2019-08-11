@@ -93,17 +93,16 @@ if ( defined( 'LITESPEED_ON' ) ) {
 <form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
 	<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>
 
-	<div class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></div>
+	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 
 	<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Htaccess::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
 
 	<h4><?php echo $htaccess_path ; ?></h4>
 
-	<textarea name="<?php echo LiteSpeed_Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="litespeed-input-long"
-		<?php echo $readonly; ?>
-	><?php echo esc_textarea($content); ?></textarea>
-
-	<button type="submit" class="litespeed-btn-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
+	<textarea name="<?php echo LiteSpeed_Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
+			<?php echo $readonly; ?>
+		><?php echo esc_textarea($content); ?></textarea>
+	<button type="submit" class="button button-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 </form>
 
 <?php endif; ?>
