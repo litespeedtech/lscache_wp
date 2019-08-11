@@ -6,7 +6,7 @@ if (!defined('WPINC')) die;
 
 <p><?php echo __('These configuration are only available network wide.', 'litespeed-cache'); ?></p>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 	<tr>
 		<th><?php echo __('Network Enable Cache', 'litespeed-cache'); ?></th>
 		<td>

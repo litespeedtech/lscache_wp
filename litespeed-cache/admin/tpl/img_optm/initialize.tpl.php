@@ -4,7 +4,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
-
+<div class="litespeed-flex-container">
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-large"></div>
 			<div class="litespeed-text-center">
@@ -36,3 +36,4 @@ if ( ! defined( 'WPINC' ) ) {
 	<div class="litespeed-width-3-10 litespeed-column-java">
 		<?php include_once LSCWP_DIR . "admin/tpl/img_optm/percentage_summary.tpl.php" ; ?>
 	</div>
+</div>

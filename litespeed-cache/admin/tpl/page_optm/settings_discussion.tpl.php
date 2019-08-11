@@ -17,7 +17,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:discussion', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ; ?>

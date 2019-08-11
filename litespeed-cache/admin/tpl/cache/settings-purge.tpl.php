@@ -36,7 +36,7 @@ $break_arr = array(
 
 ?>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 
 	<?php if ( ! is_multisite() ) : ?>
 		<?php require LSCWP_DIR . 'admin/tpl/cache/settings_inc.purge_on_upgrade.tpl.php' ; ?>

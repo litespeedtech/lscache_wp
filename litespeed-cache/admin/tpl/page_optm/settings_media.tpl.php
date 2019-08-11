@@ -10,7 +10,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY ; ?>

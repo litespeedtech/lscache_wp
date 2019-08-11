@@ -240,17 +240,31 @@ h3 .litespeed-learn-more {
 }
 
 /********************************* layout *******************************/
+/* full body background */
 .litespeed-body{
-	/* background: none repeat scroll 0 0 #f1f1f1; */
-	/* border: 1px solid #6699cc;
-	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
-	font-size: 14px; */
-	/*line-height: 2em;*/
-	/* margin: 0px 0px 20px 0;
-	overflow: auto;
-	padding: 10px 15px 15px 15px;
-	position: relative; */
-	/* color: #264d73; */
+	background:  #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 1px 20px;
+}
+
+.litespeed-wrap .nav-tab-active{
+	background:#fff;
+	border-bottom-color:#fff;
+}
+
+.litespeed-wrap .nav-tab:focus:not(.nav-tab-active), .litespeed-wrap .nav-tab:hover:not(.nav-tab-active) {
+    background-color: #f1f1f1;
+    color: #444;
+}
+
+.litespeed-body table{
+	border-collapse: collapse;
+	width: 100%;
+} 
+
+.litespeed-body .litespeed-width-auto{
+	width:auto;
 }
 
 .litespeed-header + .litespeed-body {
@@ -352,11 +366,12 @@ h3 .litespeed-learn-more {
 	margin: 15px 5px 15px 15px;
 	min-height: 75px;
 	box-sizing: border-box;
+	background:#f9fafc;
+	transition:.25s;
 }
 
 .litespeed-panel:hover {
-	border: 1px solid #00a3cc;
-	background: #fff;
+	border: 1px solid #6699cc;
 	box-shadow: none;
 }
 
@@ -957,6 +972,11 @@ ul.litespeed-shell-body {
 /********************************* callout / NOTICE  *******************************/
 .litespeed-callout {
 	margin:1.5rem 0;
+
+	border-right: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    background: #f9f9f9;
 }
 .litespeed-callout h4:not(:last-child){
 	margin-bottom:0.5rem;
@@ -985,10 +1005,6 @@ ul.litespeed-shell-body {
 	color: #264d73;
 	padding-left: 10px;
 } */
-
-.litespeed-table-auto-width{
-	width:auto;
-}
 
 .litespeed-table {
 	/* border: 1px solid #538ac6;
@@ -1735,7 +1751,14 @@ g.litespeed-pie_info .litespeed-pie-done {
 input.litespeed-input[type="file"]{
 	padding: 9px ;
 	min-width: 500px ;
+	border: 1px solid #ddd;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+    background-color: #fff;
+    color: #32373c;
+    outline: 0;
+    transition: 50ms border-color ease-in-out;
 }
+
 
 /********************************* guidance *******************************/
 .litespeed-guide {

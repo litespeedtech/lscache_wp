@@ -24,7 +24,7 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <?php $this->form_action( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT, true ) ; ?>
 
-	<div class="litespeed-div litespeed-left20">
+	<div class="litespeed-div">
 		<input type="file" name="ls_file" class="litespeed-input" />
 	</div>
 	<div class="litespeed-div">
@@ -49,7 +49,7 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 </a>
 
 <div class="litespeed-desc">
-	🚨
-	<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?>
+<p>🚨
+	<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?></p>
 </div>
 

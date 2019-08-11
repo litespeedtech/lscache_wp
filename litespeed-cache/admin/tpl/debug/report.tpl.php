@@ -9,21 +9,19 @@ $env_ref = $_report->get_env_ref() ;
 ?>
 
 <h3 class="litespeed-title"><?php echo __('LiteSpeed Report Number', 'litespeed-cache') ; ?></h3>
-<div class="postbox">
-	<div class="inside">
-	<p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'num' ] ; ?></b></p>
-	<p><?php echo __('Report date', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'dateline' ] ; ?></b></p>
 
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Report::TYPE_SEND_REPORT ) ; ?>" class="button litespeed-btn-warning">
-		<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
-	</a>
-	<p class="litespeed-desc">
-		<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
-	</p>
+<p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'num' ] ; ?></b></p>
+<p><?php echo __('Report date', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'dateline' ] ; ?></b></p>
 
-	<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
-	</div>
-</div>
+<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Report::TYPE_SEND_REPORT ) ; ?>" class="button litespeed-btn-warning">
+	<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
+</a>
+<p class="litespeed-desc">
+	<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
+</p>
+
+<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
+
 <h3 class="litespeed-title"><?php echo __('Report Summary', 'litespeed-cache') ; ?></h3>
 <div class="litespeed-description">
 	<?php echo __('The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache'); ?>

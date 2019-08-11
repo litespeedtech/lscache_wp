@@ -35,7 +35,7 @@
 	</div>
 <?php endif; ?>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_ESI ; ?>
@@ -81,7 +81,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<table class="litespeed-vary-table wp-list-table striped form-table"><tbody>
+			<table class="litespeed-vary-table wp-list-table striped form-table form-table"><tbody>
 			<?php foreach ( $roles as $role => $title ): ?>
 				<tr>
 					<td class='litespeed-vary-title'><?php echo $title ; ?></td>

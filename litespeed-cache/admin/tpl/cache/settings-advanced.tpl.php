@@ -10,7 +10,7 @@
 	<p><?php echo __( 'These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache' ) ; ?></p>
 </div>
 
-<table class="wp-list-table widefat striped"><tbody>
+<table class="wp-list-table striped form-table"><tbody>
 
 	<?php
 		if ( ! is_multisite() ) :

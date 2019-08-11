@@ -140,7 +140,7 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 <h4>Autoload size: <?php echo LiteSpeed_Cache_Utility::real_size( $autoload_summary->autoload_size ) ; ?></h4>
 <h4>Autoload entries: <?php echo $autoload_summary->autload_entries ; ?></h4>
 <h4>Autoload top list:</h4>
-<table class="wp-list-table widefat striped litespeed-table-auto-width">
+<table class="wp-list-table widefat striped litespeed-width-auto">
 	<thead><tr >
 		<th scope="col">#</th>
 		<th scope="col"><?php echo __('Option Name', 'litespeed-cache') ; ?></th>
