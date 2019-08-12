@@ -1,0 +1,58 @@
+.litespeed-wrap h2.nav-tab-wrapper, .litespeed-wrap h3.nav-tab-wrapper{
+	margin-bottom:0;
+}
+
+.litespeed-wrap h2 .nav-tab{
+	font-size:14px;
+}
+
+
+.litespeed-wrap .striped > tbody > :nth-child(odd),
+.litespeed-wrap ul.striped > :nth-child(odd),
+.litespeed-wrap .alternate {
+	background-color: #f9f9f9;
+}
+
+
+
+.litespeed-wrap .notice,
+.litespeed-wrap div.updated,
+.litespeed-wrap div.error {
+	border-left: 4px solid #fff;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+	padding: 1px 12px;
+}
+
+.litespeed-wrap .notice-success,
+.litespeed-wrap div.updated {
+	border-left-color: #46b450;
+}
+
+.litespeed-wrap .notice-success.notice-alt {
+	background-color: #ecf7ed;
+}
+
+.litespeed-wrap .notice-warning {
+	border-left-color: #ffb900;
+}
+
+.litespeed-wrap .notice-warning.notice-alt {
+	background-color: #fff8e5;
+}
+
+.litespeed-wrap .notice-error,
+.litespeed-wrap div.error {
+	border-left-color: #dc3232;
+}
+
+.litespeed-wrap .notice-error.notice-alt {
+	background-color: #fbeaea;
+}
+
+.litespeed-wrap .notice-info {
+	border-left-color: #00a0d2;
+}
+
+.litespeed-wrap .notice-info.notice-alt {
+	background-color: #e5f5fa;
+}
