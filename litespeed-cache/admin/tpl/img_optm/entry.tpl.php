@@ -36,12 +36,12 @@ $menu_list = array(
 </div>
 
 <div class="litespeed-wrap">
-	<h2 class="litespeed-header">
+	<h2 class="litespeed-header nav-tab-wrapper">
 	<?php
 		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
 	?>

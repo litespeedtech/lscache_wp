@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache_Router::NONCE_NAME ) ; ?>
 
 	<?php if ( ! empty( $data[ '_err' ] ) ) : ?>
-	<div class="litespeed-callout-danger">
+	<div class="litespeed-callout notice notice-error inline">
 		<h4><?php echo __( 'ERROR', 'litespeed-cache' ) ; ?>:</h4>
 		<ol>
 			<li><?php echo $data[ '_err' ] ; ?></li>
@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 	<div class="litespeed-row">
 		<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?> <?php echo __( 'Or', 'litespeed-cache' ) ; ?> <?php echo __( 'User API Key', 'litespeed-cache' ) ; ?> :</h4>
-		<input type="password" name="pswd_or_key" class="litespeed-regular-text" value="<?php echo LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ) ; ?>" />
+		<input type="password" name="pswd_or_key" class="regular-text" value="<?php echo LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ) ; ?>" />
 	</div>
 
 	<input type="submit" class="button litespeed-btn-success" value="<?php echo __( 'Login', 'litespeed-cache' ) ; ?>" />

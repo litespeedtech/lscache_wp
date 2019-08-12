@@ -7,7 +7,7 @@
 
 <?php $this->cache_disabled_warning() ; ?>
 
-<div class="litespeed-desc">
+<div class="litespeed-description">
 	<p><?php echo __( 'With ESI (Edge Side Includes), pages may be served from cache for logged-in users.', 'litespeed-cache' ) ; ?></p>
 	<p><?php echo __( 'ESI allows you to designate parts of your dynamic page as separate fragments that are then assembled together to make the whole page. In other words, ESI lets you “punch holes” in a page, and then fill those holes with content that may be cached privately, cached publicly with its own TTL, or not cached at all.', 'litespeed-cache' ) ; ?>
 		<?php $this->learn_more( 'https://blog.litespeedtech.com/2017/08/30/wpw-private-cache-vs-public-cache/', __( 'WpW: Private Cache vs. Public Cache', 'litespeed-cache' ) ) ; ?>
@@ -35,7 +35,7 @@
 	</div>
 <?php endif; ?>
 
-<table><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_ESI ; ?>
@@ -81,7 +81,7 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<table class="litespeed-vary-table"><tbody>
+			<table class="litespeed-vary-table wp-list-table striped litespeed-table form-table"><tbody>
 			<?php foreach ( $roles as $role => $title ): ?>
 				<tr>
 					<td class='litespeed-vary-title'><?php echo $title ; ?></td>

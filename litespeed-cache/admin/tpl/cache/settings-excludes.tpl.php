@@ -7,7 +7,7 @@
 
 <?php $this->cache_disabled_warning() ; ?>
 
-<table><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 
 	<tr>
 		<th>
@@ -57,7 +57,7 @@
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'categories', 'litespeed-cache') ) ; ?>
 				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
-			<div class="litespeed-callout-warning">
+			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:</h4>
 				<ol>
 					<li><?php echo __( 'If the category slug is not found, the category will be removed from the list on save.', 'litespeed-cache' ) ; ?></li>
@@ -93,7 +93,7 @@
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'tags', 'litespeed-cache') ) ; ?>
 				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
-			<div class="litespeed-callout-warning">
+			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:</h4>
 				<ol>
 					<li><?php echo __( 'If the tag slug is not found, the tag will be removed from the list on save.', 'litespeed-cache' ) ; ?></li>
@@ -122,9 +122,11 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( $id . '[]', $title, LiteSpeed_Cache_Control::get_instance()->in_cache_exc_roles( $role ), $role ) ; ?>
-			<?php endforeach; ?>
+			<div class="litespeed-tick-wrapper">
+				<?php foreach ( $roles as $role => $title ): ?>
+					<?php $this->build_checkbox( $id . '[]', $title, LiteSpeed_Cache_Control::get_instance()->in_cache_exc_roles( $role ), $role ) ; ?>
+				<?php endforeach; ?>
+			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ) ; ?>
 			</div>

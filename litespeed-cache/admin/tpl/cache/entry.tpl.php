@@ -41,7 +41,7 @@ ksort( $roles ) ;
 	<hr class="wp-header-end">
 </div>
 <div class="litespeed-wrap">
-	<h2 class="litespeed-header">
+	<h2 class="litespeed-header nav-tab-wrapper">
 	<?php
 		$i = 1 ;
 		$accesskey_set = array() ;
@@ -58,7 +58,7 @@ ksort( $roles ) ;
 				}
 			}
 
-			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
 		do_action( 'litespeed_settings_tab' ) ;

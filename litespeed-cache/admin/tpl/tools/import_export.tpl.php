@@ -6,7 +6,7 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <h3 class="litespeed-title"><?php echo __('Export Settings', 'litespeed-cache') ; ?></h3>
 
-<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT ) ; ?>" class="litespeed-btn-success">
+<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT ) ; ?>" class="button button-primary">
 	<?php echo __( 'Export', 'litespeed-cache' ) ; ?>
 </a>
 
@@ -24,11 +24,11 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <?php $this->form_action( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT, true ) ; ?>
 
-	<div class="litespeed-div litespeed-left20">
+	<div class="litespeed-div">
 		<input type="file" name="ls_file" class="litespeed-input" />
 	</div>
 	<div class="litespeed-div">
-		<?php submit_button(__('Import', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ; ?>
+		<?php submit_button(__('Import', 'litespeed-cache'), 'button button-primary', 'litespeed-submit') ; ?>
 	</div>
 </form>
 
@@ -44,12 +44,12 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <h3 class="litespeed-title"><?php echo __('Reset All Settings', 'litespeed-cache') ; ?></h3>
 
-<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
 	<?php echo __( 'Reset', 'litespeed-cache' ) ; ?>
 </a>
 
 <div class="litespeed-desc">
-	🚨
-	<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?>
+<p>🚨
+	<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?></p>
 </div>
 

@@ -123,7 +123,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <h3 class="litespeed-title"><?php echo __('Purge', 'litespeed-cache'); ?></h3>
 
-<div class="litespeed-panel-wrapper">
+<div class="litespeed-panel-wrapper litespeed-cards-wrapper">
 
 <?php foreach ( $_panels as $v ): ?>
 <?php $tag = ! empty( $v[ 'tag' ] ) ? $v[ 'tag' ] : LiteSpeed_Cache::ACTION_PURGE ; ?>
@@ -133,7 +133,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		<div class='litespeed-col-br'></div>
 	<?php endif; ?>
 
-	<a 	class="litespeed-panel"
+	<a 	class="litespeed-panel postbox"
 		href="<?php echo LiteSpeed_Cache_Utility::build_url( $tag, $append_url ) ; ?>"
 		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
 	>
@@ -154,11 +154,11 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <?php if (!is_multisite() || !is_network_admin()): ?>
 
-	<div class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></div>
-	<div class="litespeed-desc">
+	<h3 class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></h3>
+	<p class="litespeed-description">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
 		<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
-	</div>
+	</p>
 
 	<?php
 		$purgeby_option = false;
@@ -236,7 +236,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		</p>
 
 		<p>
-			<button type="submit" class="litespeed-btn-success"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
+			<button type="submit" class="button button-primary"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
 		</p>
 	</form>
 <?php endif; ?>

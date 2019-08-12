@@ -835,7 +835,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$update_intval_html .= '</div>' ;
 
 		$content = "<h3 class='litespeed-title'>{$_title}</h3>
-					<table><tbody>
+					<table class='wp-list-table striped litespeed-table'><tbody>
 						<tr>
 							<th>" . __('Product Update Interval', 'litespeed-cache') . "</th>
 							<td>
@@ -860,7 +860,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 							</td>
 						</tr>
 					</tbody></table>
-					<div class='litespeed-callout-warning'>
+					<div class='litespeed-callout notice notice-warning inline'>
 						<h4>" . __('Note', 'litespeed-cache') . ":</h4>
 						<i>
 							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "

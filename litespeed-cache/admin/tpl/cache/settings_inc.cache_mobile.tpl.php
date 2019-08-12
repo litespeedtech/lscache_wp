@@ -34,19 +34,19 @@
 					try {
 						$mobile_agents = LiteSpeed_Htaccess::get_instance()->current_mobile_agents() ;
 						if ( $mobile_agents !== LiteSpeed_Cache_Utility::arr2regex( $this->__cfg->option( $id ), true ) ) {
-							echo '<div class="litespeed-callout-danger">'
+							echo '<div class="litespeed-callout notice notice-error inline"><p>'
 									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
 									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
-								. '</div>' ;
+								. '</p></div>' ;
 						}
 					} catch( \Exception $e ) {
-						echo '<div class="litespeed-callout-danger">' . $e->getMessage() . '</div>' ;
+						echo '<div class="litespeed-callout notice notice-error inline"><p>' . $e->getMessage() . '</p></div>' ;
 					}
 
 				}
 			}
 
-			$this->build_textarea( $id ) ;
+			$this->build_textarea( $id, 40 ) ;
 			$this->recommended( $id, true ) ;
 		?>
 

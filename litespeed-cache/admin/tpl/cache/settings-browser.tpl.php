@@ -7,14 +7,14 @@
 </h3>
 
 <?php if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) : ?>
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
-	<?php echo __( 'OpenLiteSpeed users please check this', 'litespeed-cache' ) ; ?>:
-	<?php $this->learn_more( 'https://openlitespeed.org/kb/how-to-set-up-custom-headers/', 'Setting Up Custom Headers' ) ; ?>
+	<p><?php echo __( 'OpenLiteSpeed users please check this', 'litespeed-cache' ) ; ?>:
+	<?php $this->learn_more( 'https://openlitespeed.org/kb/how-to-set-up-custom-headers/', 'Setting Up Custom Headers' ) ; ?></p>
 </div>
 <?php endif ; ?>
 
-<table><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 
 	<tr>
 		<th>

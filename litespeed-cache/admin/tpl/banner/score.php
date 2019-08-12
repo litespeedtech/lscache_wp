@@ -157,13 +157,13 @@ else {
 			<div class="litespeed-banner-description-padding-right-15">
 
 				<a href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank" style="text-decoration: none;">
-					<button class="litespeed-btn-success litespeed-btn-mini">
+					<button class="button litespeed-btn-success litespeed-btn-mini">
 						<?php echo __( 'Sure I\'d love to review!', 'litespeed-cache' ) ; ?>
 						⭐⭐⭐⭐⭐
 					</button>
 				</a>
-				<button type="button" class="litespeed-btn-primary litespeed-btn-mini" id="litespeed-promo-done"> <?php echo __( 'I\'ve already left a review', 'litespeed-cache' ) ; ?></button>
-				<button type="button" class="litespeed-btn-warning litespeed-btn-mini" id="litespeed-promo-later"> <?php echo __( 'Maybe later', 'litespeed-cache' ) ; ?></button>
+				<button type="button" class="button litespeed-btn-primary litespeed-btn-mini" id="litespeed-promo-done"> <?php echo __( 'I\'ve already left a review', 'litespeed-cache' ) ; ?></button>
+				<button type="button" class="button litespeed-btn-warning litespeed-btn-mini" id="litespeed-promo-later"> <?php echo __( 'Maybe later', 'litespeed-cache' ) ; ?></button>
 			</div>
 			<div>
 				<p class="litespeed-text-small">

@@ -21,15 +21,17 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 ?>
 
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn-success">
-			<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
-		</a>
+		<p>
+			<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="button button-primary litespeed-right10">
+				<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
+			</a>
 
-		<?php
-			if ( $sitemap_time ) {
-				echo sprintf(__('Generated at %s', 'litespeed-cache'), $sitemap_time) ;
-			}
-		 ?>
+			<?php
+				if ( $sitemap_time ) {
+					echo sprintf(__('Generated at %s', 'litespeed-cache'), $sitemap_time) ;
+				}
+			?>
+		</p>
 		<div class="litespeed-desc">
 			<?php echo sprintf(__('On click, this will create a crawler sitemap file in plugin directory %s.', 'litespeed-cache'), '`./var`') ; ?>
 		</div>
@@ -74,7 +76,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			</span>
 		</h3>
 		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
-			<div class="litespeed-callout-danger">
+			<div class="litespeed-callout notice notice-error inline">
 				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
 				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed information.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
@@ -137,14 +139,16 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		</p>
 		<?php endif ; ?>
 
-		<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+		<p>
+			<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='button litespeed-btn-warning'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
 
-		$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
-		echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
-		?>
+			$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
+			echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='button litespeed-btn-success' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+			?>
+		</p>
 
 
-		<table class="litespeed-table">
+		<table class="wp-list-table widefat striped">
 			<thead><tr >
 				<th scope="col">#</th>
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
@@ -198,7 +202,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			if ( $ajaxUrl ):
 		?>
 
-		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn-primary" data-url="<?php echo $ajaxUrl ; ?>" />
+		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="button button-primary" data-url="<?php echo $ajaxUrl ; ?>" />
 
 		<div class="litespeed-shell litespeed-hide">
 			<div class="litespeed-shell-header-bar"></div>
@@ -230,7 +234,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			</p>
 
 			<p>
-				<button type="submit" class="litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
+				<button type="submit" class="button button-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 			</p>
 		</form>
 		<div class="litespeed-desc">

@@ -6,9 +6,11 @@
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-		<?php
-			$this->build_checkbox( $id, __( 'Include advanced-cache.php', 'litespeed-cache' ) ) ;
-		?>
+			<div class="litespeed-tick-wrapper">
+				<?php
+					$this->build_checkbox( $id, __( 'Include advanced-cache.php', 'litespeed-cache' ) ) ;
+				?>
+			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'The advanced-cache.php file is used by many caching plugins to signal that a cache is active.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'When this option is checked and this file is detected as belonging to another plugin, LiteSpeed\'s caching functionality will not work.', 'litespeed-cache' ) ; ?>

@@ -10,5 +10,5 @@ defined( 'WPINC' ) || exit ;
 
 	<div class="litespeed-desc">Example: https://github.com/litespeedtech/lscache_wp/commit/253715525b1708c25f73460635f7eaf152448821</div>
 
-	<button type="submit" class="litespeed-btn-primary"><?php echo __('Upgrade', 'litespeed-cache'); ?></button>
+	<button type="submit" class="button button-primary"><?php echo __('Upgrade', 'litespeed-cache'); ?></button>
 </form>

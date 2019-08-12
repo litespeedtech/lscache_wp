@@ -63,7 +63,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 	<?php
 		$id = LiteSpeed_Cache_ESI::WIDGET_O_TTL ;
 		$name = $widget->get_field_name( $id ) ;
-		echo "<input type='text' class='litespeed-regular-text litespeed-reset' name='$name' value='$ttl' size='7' />" ;
+		echo "<input type='text' class='regular-text litespeed-reset' name='$name' value='$ttl' size='7' />" ;
 	?>
 	<?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 

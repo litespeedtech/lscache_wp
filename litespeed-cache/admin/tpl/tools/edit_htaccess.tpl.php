@@ -38,7 +38,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
 </h3>
 
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-error inline">
 	<h4>🚨 <?php echo __('This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
 	<p>
 		<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
@@ -53,7 +53,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:tool', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ; ?>
@@ -93,17 +93,16 @@ if ( defined( 'LITESPEED_ON' ) ) {
 <form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
 	<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>
 
-	<div class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></div>
+	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 
 	<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Htaccess::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
 
 	<h4><?php echo $htaccess_path ; ?></h4>
 
-	<textarea name="<?php echo LiteSpeed_Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="litespeed-input-long"
-		<?php echo $readonly; ?>
-	><?php echo esc_textarea($content); ?></textarea>
-
-	<button type="submit" class="litespeed-btn-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
+	<textarea name="<?php echo LiteSpeed_Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
+			<?php echo $readonly; ?>
+		><?php echo esc_textarea($content); ?></textarea>
+	<button type="submit" class="button button-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 </form>
 
 <?php endif; ?>

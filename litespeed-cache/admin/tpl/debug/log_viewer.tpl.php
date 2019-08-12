@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 <h3 class="litespeed-title">
 	<?php echo __('Debug Log', 'litespeed-cache'); ?>
 
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_LOG, LiteSpeed_Cache_Log::TYPE_CLEAR_LOG ) ; ?>" class="litespeed-btn-success">
+	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_LOG, LiteSpeed_Cache_Log::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary">
 		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
 	</a>
 </h3>

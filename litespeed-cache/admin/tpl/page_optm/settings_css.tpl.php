@@ -10,7 +10,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:css', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 
 	<tr>
 		<th>
@@ -109,7 +109,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 					</p>
 				<?php endif ; ?>
 				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
-					<div class="litespeed-callout-warning">
+					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
 						<?php foreach ( $last_critical_css_generated[ 'queue' ] as $k => $v ) : ?>
