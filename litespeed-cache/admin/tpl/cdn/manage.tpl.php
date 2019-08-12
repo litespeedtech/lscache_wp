@@ -64,7 +64,7 @@ $curr_status = get_option( LiteSpeed_Cache_Config::conf_name( LiteSpeed_Cache_CD
 <p>
 	<b><?php echo __( 'Cloudflare Cache', 'litespeed-cache' ) ; ?>:</b>
 	<?php if ( ! $cf_on ) : ?>
-		<a href="#" class="button litespeed-btn-default disabled">
+		<a href="#" class="button button-secondary disabled">
 	<?php else : ?>
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="button litespeed-btn-danger">
 	<?php endif ; ?>
