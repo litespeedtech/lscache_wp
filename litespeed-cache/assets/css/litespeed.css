@@ -10,6 +10,7 @@
 }
 
 #adminmenu #toplevel_page_lscache-settings .menu-icon-generic div.wp-menu-image:before,
+#adminmenu #toplevel_page_litespeed .menu-icon-generic div.wp-menu-image:before,
 .litespeed-top-toolbar .ab-icon::before{
 	content: "\e900";
 	font-family: 'litespeedfont' !important;
