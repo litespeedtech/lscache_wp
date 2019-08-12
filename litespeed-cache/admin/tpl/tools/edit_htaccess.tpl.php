@@ -53,7 +53,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:tool', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<table class="wp-list-table striped form-table"><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ; ?>

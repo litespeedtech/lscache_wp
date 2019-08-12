@@ -245,7 +245,7 @@ h3 .litespeed-learn-more {
 	background:  #fff;
     border: 1px solid #e5e5e5;
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
-    padding: 1px 20px;
+    padding: 1px 20px 20px 20px;
 }
 
 .litespeed-wrap .nav-tab-active{
@@ -294,6 +294,10 @@ h3 .litespeed-learn-more {
 
 .litespeed-body p {
 	margin: 1em 0;
+}
+
+.litespeed-body p.submit {
+    margin-bottom: 0;
 }
 
 .litespeed-desc p {
@@ -1007,6 +1011,7 @@ ul.litespeed-shell-body {
 } */
 
 .litespeed-table {
+	font-size:14px;
 	/* border: 1px solid #538ac6;
 	border-radius: 3px; */
 }
@@ -1859,7 +1864,6 @@ input.litespeed-input[type="file"]{
 
 .litespeed-input-short {
 	width: 45px;
-	padding: 1px 6px;
 }
 
 input.litespeed-input-success {

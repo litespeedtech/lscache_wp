@@ -14,7 +14,7 @@
 </div>
 <?php endif ; ?>
 
-<table class="wp-list-table striped form-table"><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 
 	<tr>
 		<th>

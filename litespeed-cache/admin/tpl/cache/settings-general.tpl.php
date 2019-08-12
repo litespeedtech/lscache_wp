@@ -7,7 +7,7 @@
 
 <?php $this->cache_disabled_warning() ; ?>
 
-<table class="wp-list-table striped form-table"><tbody>
+<table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE ; ?>

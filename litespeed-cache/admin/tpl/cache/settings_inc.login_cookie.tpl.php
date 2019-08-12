@@ -11,18 +11,18 @@
 
 			$this->_validate_syntax( $id ) ;
 
-			echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
+			echo '<p class="litespeed-desc">' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
 				. ' ' . __('No spaces and case sensitive.', 'litespeed-cache')
 				. ' ' . __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
 				. '</p>'
-				. '<p>'
+				. '<p class="litespeed-desc">'
 					. sprintf(__('The default login cookie is %s.', 'litespeed-cache'), '<code>_lscache_vary</code>')
 					. ' ' . __('The server will determine if the user is logged in based on the existance of this cookie.', 'litespeed-cache')
 					. ' ' . __('This setting is useful for those that have multiple web applications for the same domain.', 'litespeed-cache')
 					. ' ' . __('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache')
 					. ' ' . __('The cookie set here will be used for this WordPress installation.', 'litespeed-cache')
 				. '</p>'
-				. '<p>'
+				. '<p class="litespeed-desc">'
 					. __('Example use case:', 'litespeed-cache')
 					. '<br />'
 					. sprintf(__('There is a WordPress installed for %s.', 'litespeed-cache'), '<u>www.example.com</u>')
