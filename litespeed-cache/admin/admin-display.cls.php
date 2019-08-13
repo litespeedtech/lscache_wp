@@ -893,9 +893,29 @@ class LiteSpeed_Cache_Admin_Display
 			$tip[] = __( 'Maximum value', 'litespeed-cache' ) . ': <code>' . $max . '</code>.' ;
 		}
 
+		echo '<br />' ;
+
 		if ( $tip ) {
-			echo '<br /><font class="litespeed-warning"> ❌ ' . implode( ' ', $tip ) . '</font>' ;
+			echo '<font class="litespeed-warning"> ❌ ' . implode( ' ', $tip ) . '</font>' ;
 		}
+
+		$range = '' ;
+
+		if ( $allow_zero ) {
+			$range .= __( 'Zero, or', 'litespeed-cache' ) . ' ' ;
+		}
+
+		if ( $min && $max ) {
+			$range .= $min . ' - ' . $max ;
+		}
+		elseif ( $min ) {
+			$range .= __( 'Larger than', 'litespeed-cache' ) . ' ' . $min ;
+		}
+		elseif ( $max ) {
+			$range .= __( 'Smaller than', 'litespeed-cache' ) . ' ' . $max ;
+		}
+
+		echo __( 'Value range', 'litespeed-cache' ) . ': <code>' . $range . '</code>' ;
 	}
 
 	/**
