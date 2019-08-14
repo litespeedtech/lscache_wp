@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Media
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js' ;
 
 	private $content ;
-	private $wp_upload_dir ;
+	private $_wp_upload_dir ;
 
 	private $_cfg_img_webp ;
 
@@ -31,7 +31,7 @@ class LiteSpeed_Cache_Media
 	{
 		LiteSpeed_Cache_Log::debug2( '[Media] init' ) ;
 
-		$this->wp_upload_dir = wp_upload_dir() ;
+		$this->_wp_upload_dir = wp_upload_dir() ;
 
 		if ( $this->can_media() ) {
 			$this->_cfg_img_webp = self::webp_enabled() ;
@@ -153,11 +153,11 @@ class LiteSpeed_Cache_Media
 	 */
 	public function info( $short_file_path, $post_id )
 	{
-		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
 
 		if ( file_exists( $real_file ) ) {
 			return array(
-				'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $short_file_path,
+				'url'	=> $this->_wp_upload_dir[ 'baseurl' ] . '/' . $short_file_path,
 				'md5'	=> md5_file( $real_file ),
 				'size'	=> filesize( $real_file ),
 			) ;
@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function del( $short_file_path, $post_id )
 	{
-		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
 
 		if ( file_exists( $real_file ) ) {
 			unlink( $real_file ) ;
@@ -202,8 +202,8 @@ class LiteSpeed_Cache_Media
 	 */
 	public function rename( $short_file_path, $short_file_path_new, $post_id )
 	{
-		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
-		$real_file_new = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new ;
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+		$real_file_new = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new ;
 
 		if ( file_exists( $real_file ) ) {
 			rename( $real_file, $real_file_new ) ;
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		$local_file = get_attached_file( $post_id ) ;
-		$local_file = substr( $local_file, strlen( $this->wp_upload_dir[ 'basedir' ] ) ) ;
+		$local_file = substr( $local_file, strlen( $this->_wp_upload_dir[ 'basedir' ] ) ) ;
 
 		$size_meta = get_post_meta( $post_id, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
