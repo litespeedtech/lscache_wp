@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Media
 
 		if ( file_exists( $real_file ) ) {
 			unlink( $real_file ) ;
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] deleted ' . $real_file ) ;
+			LiteSpeed_Cache_Log::debug( '[Media] deleted ' . $real_file ) ;
 		}
 
 		do_action( 'litespeed_media_del', $short_file_path, $post_id ) ;
@@ -207,7 +207,7 @@ class LiteSpeed_Cache_Media
 
 		if ( file_exists( $real_file ) ) {
 			rename( $real_file, $real_file_new ) ;
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] renamed ' . $real_file . ' to ' . $real_file_new ) ;
+			LiteSpeed_Cache_Log::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new ) ;
 		}
 
 		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id ) ;
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		$local_file = get_attached_file( $post_id ) ;
-		$local_file = substr( $local_file, strlen( $this->_wp_upload_dir[ 'basedir' ] ) ) ;
+		$local_file = substr( $local_file, strlen( $this->_wp_upload_dir[ 'basedir' ] ) + 1 ) ;
 
 		$size_meta = get_post_meta( $post_id, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
