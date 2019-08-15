@@ -25,7 +25,6 @@ class LiteSpeed_Cache_Placeholder
 	private $_conf_placeholder_resp_async ;
 	private $_placeholder_resp_dict = array() ;
 	private $_ph_queue = array() ;
-	private $_wp_upload_dir ;
 
 	/**
 	 * Init
@@ -45,8 +44,6 @@ class LiteSpeed_Cache_Placeholder
 		$this->_conf_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
 		$this->_conf_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		$this->_conf_ph_default = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
-
-		$this->_wp_upload_dir = wp_upload_dir() ;
 	}
 
 	/**
@@ -176,6 +173,17 @@ class LiteSpeed_Cache_Placeholder
 	}
 
 	/**
+	 * Check if there is a LQIP cache folder
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function has_lqip_cache()
+	{
+		return is_dir( LITESPEED_STATIC_DIR . '/lqip' ) ;
+	}
+
+	/**
 	 * Save image placeholder summary
 	 *
 	 * @since  2.5.1
@@ -221,12 +229,9 @@ class LiteSpeed_Cache_Placeholder
 		}
 
 		// Drop domain
-		$local_file = LiteSpeed_Cache_Utility::url2uri( $src ) ; // full path, equals get_attached_file( $post_id ) ;
+		$short_path = LiteSpeed_Cache_Utility::att_short_path( $src ) ;
 
-		$local_file = substr( $local_file, strlen( $this->_wp_upload_dir[ 'basedir' ] ) ) ;
-LiteSpeed_Cache_Log::debug( '[Placeholder] local file path:' . $local_file ) ;
-
-		return LITESPEED_STATIC_DIR . '/lqip/' . $local_file . '/' . $size ;
+		return LITESPEED_STATIC_DIR . '/lqip/' . $short_path . '/' . $size ;
 
 	}
 
@@ -238,7 +243,7 @@ LiteSpeed_Cache_Log::debug( '[Placeholder] local file path:' . $local_file ) ;
 	 */
 	public function rm_cache_folder()
 	{
-		if ( file_exists( LITESPEED_STATIC_DIR . '/placeholder' ) ) {
+		if ( self::has_placehoder_cache() ) {
 			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
 		}
 
@@ -246,6 +251,24 @@ LiteSpeed_Cache_Log::debug( '[Placeholder] local file path:' . $local_file ) ;
 		$this->_save_summary( array() ) ;
 
 		LiteSpeed_Cache_Log::debug2( '[Placeholder] Cleared placeholder queue' ) ;
+	}
+
+	/**
+	 * Delete file-based cache folder for LQIP
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function rm_lqip_cache_folder()
+	{
+		if ( self::has_lqip_cache() ) {
+			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/lqip' ) ;
+		}
+
+		// Clear LQIP in queue too
+		$this->_save_summary( array() ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Placeholder] Cleared LQIP queue' ) ;
 	}
 
 	/**
@@ -328,12 +351,22 @@ LiteSpeed_Cache_Log::debug( '[Placeholder] local file path:' . $local_file ) ;
 
 			// Generate LQIP
 			if ( $this->_conf_placeholder_lqip ) {
+				list( $width, $height ) = explode( 'x', $size ) ;
 				$req_data = array(
-					'size'		=> $size,
-					'src'		=> base64_encode( $src ),
+					'_domain'	=> home_url(),
+					'width'		=> $width,
+					'height'	=> $height,
+					'url'		=> $src,
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
-				$data = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
+				$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
+
+				if ( empty( $json[ 'data' ] ) ) {
+					LiteSpeed_Cache_Log::debug( '[Placeholder] wrong response format', $json ) ;
+					return false ;
+				}
+
+				$data = $json[ 'data' ] ;
 
 				LiteSpeed_Cache_Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
 

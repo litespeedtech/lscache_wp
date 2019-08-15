@@ -480,6 +480,31 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Get attachment relative path to upload folder
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @param  string 	`https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
+	 * @return string 	`2018/08/test.jpg`
+	 */
+	public static function att_short_path( $url )
+	{
+		if ( ! defined( 'LITESPEED_UPLOAD_PATH' ) ) {
+			$_wp_upload_dir = wp_upload_dir() ;
+
+			$upload_path = self::url2uri( $_wp_upload_dir[ 'baseurl' ] ) ;
+
+			define( 'LITESPEED_UPLOAD_PATH', $upload_path ) ;
+		}
+
+		$local_file = self::url2uri( $url ) ;
+
+		$short_path = substr( $local_file, strlen( LITESPEED_UPLOAD_PATH ) + 1 ) ;
+
+		return $short_path ;
+	}
+
+	/**
 	 * Make URL to be relative
 	 *
 	 * NOTE: for subfolder home_url, will keep subfolder part (strip nothing but scheme and host)

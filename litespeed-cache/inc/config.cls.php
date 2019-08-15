@@ -30,18 +30,19 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function __construct()
 	{
+	}
+
+	/**
+	 * Specify init logic to avoid infinite loop when calling conf.cls instance
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function init()
+	{
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
 		// Conf may be stale, upgrade later
 		$this->_conf_db_init() ;
-
-		// Only load options when DB records are ready
-		if ( ! defined( 'LITESPEED_TMP_CONF' ) ) {
-			// Load options first, network sites can override this later
-			$this->load_options() ;
-
-			// Override conf if is network subsites and chose `Use Primary Config`
-			$this->_try_load_site_options() ;
-		}
 
 		/**
 		 * Detect if has quic.cloud set
@@ -66,7 +67,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_db_init()
 	{
-		$ver = get_option( self::conf_name( self::_VERSION ) ) ;
+		/**
+		 * Try to load options first, network sites can override this later
+		 *
+		 * NOTE: Load before run `conf_upgrade()` to avoid infinite loop when getting conf in `conf_upgrade()`
+		 */
+		$this->load_options() ;
+
+		$ver = $this->option( self::_VERSION ) ;
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -75,7 +83,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
 				$this->_options = $this->_default_options = $this->default_vals() ;
-				define( 'LITESPEED_TMP_CONF', true ) ;
 				return ;
 			}
 		}
@@ -114,6 +121,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				add_option( self::conf_name( $k ), $v ) ;
 			}
 		}
+
+		/**
+		 * Network sites only
+		 *
+		 * Override conf if is network subsites and chose `Use Primary Config`
+		 */
+		$this->_try_load_site_options() ;
+
 	}
 
 	/**
@@ -160,8 +175,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		$this->_conf_site_db_init() ;
-
-		$this->load_site_options() ;
 
 		// If network set to use primary setting
 		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
@@ -220,7 +233,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_site_db_init()
 	{
-		$ver = get_site_option( self::conf_name( self::_VERSION ) ) ;
+		$this->load_site_options() ;
+
+		$ver = $this->_site_options[ self::_VERSION ] ;
 
 		/**
 		 * Upgrade conf
@@ -582,42 +597,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		return in_array( $role, $this->option( self::O_OPTM_EXC_ROLES ) ) ? $role : false ;
-	}
-
-	/**
-	 * Get the difference between the current options and the default options.
-	 *
-	 * @since 1.0.11
-	 * @access public
-	 * @param array $default_options The default options.
-	 * @param array $options The current options.
-	 * @return array New options.
-	 */
-	public static function option_diff($default_options, $options)
-	{
-		$dkeys = array_keys($default_options) ;
-		$keys = array_keys($options) ;
-		$newkeys = array_diff($dkeys, $keys) ;
-		if ( ! empty($newkeys) ) {
-			foreach ( $newkeys as $newkey ) {
-				$options[$newkey] = $default_options[$newkey]  ;
-
-				$log = '[Added] ' . $newkey . ' = ' . $default_options[$newkey]  ;
-				LiteSpeed_Cache_Log::debug( "[Conf] option_diff $log" ) ;
-			}
-		}
-		$retiredkeys = array_diff($keys, $dkeys)  ;
-		if ( ! empty($retiredkeys) ) {
-			foreach ( $retiredkeys as $retired ) {
-				unset($options[$retired])  ;
-
-				$log = '[Removed] ' . $retired  ;
-				LiteSpeed_Cache_Log::debug( "[Conf] option_diff $log" ) ;
-			}
-		}
-		$options[self::_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
-
-		return $options ;
 	}
 
 	/**

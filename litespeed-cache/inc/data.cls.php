@@ -111,6 +111,9 @@ class LiteSpeed_Cache_Data
 			}
 		}
 
+		// Reload options
+		LiteSpeed_Cache_Config::get_instance()->load_options() ;
+
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
@@ -147,6 +150,9 @@ class LiteSpeed_Cache_Data
 			}
 		}
 
+		// Reload options
+		LiteSpeed_Cache_Config::get_instance()->load_site_options() ;
+
 		delete_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
 		add_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
@@ -182,13 +188,7 @@ class LiteSpeed_Cache_Data
 		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver ) ;
 
-		$this->correct_tb_existance() ;
-
 		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
-
-		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
-
 
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0' ;
@@ -196,6 +196,14 @@ class LiteSpeed_Cache_Data
 			$this->conf_upgrade( $ver ) ;
 		}
 		else {
+			// Reload options
+			LiteSpeed_Cache_Config::get_instance()->load_options() ;
+
+			$this->correct_tb_existance() ;
+
+			! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+			LiteSpeed_Cache_Purge::purge_all() ;
+
 			LiteSpeed_Cache_Utility::version_check( 'upgrade' ) ;
 		}
 	}

@@ -26,7 +26,7 @@ class LiteSpeed_Cache
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
-	const PLUGIN_VERSION = '3.0.0.0.0.0' ;
+	const PLUGIN_VERSION = '3.0' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -87,6 +87,7 @@ class LiteSpeed_Cache
 	private function __construct()
 	{
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg->init() ;
 
 		// Check if debug is on
 		if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) ) {

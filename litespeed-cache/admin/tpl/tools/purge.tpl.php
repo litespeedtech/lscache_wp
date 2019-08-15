@@ -79,8 +79,17 @@ if ( LiteSpeed_Cache_Placeholder::has_placehoder_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated image placeholder files', 'litespeed-cache' ),
-		'icon'	=> 'purge-cssjs',
+		'icon'	=> 'purge-placeholder',
 		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_PLACEHOLDER,
+	) ;
+}
+
+if ( LiteSpeed_Cache_Placeholder::has_lqip_cache() ) {
+	$_panels[] = array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all generated image LQIP placeholder files', 'litespeed-cache' ),
+		'icon'	=> 'purge-placeholder',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LQIP,
 	) ;
 }
 
