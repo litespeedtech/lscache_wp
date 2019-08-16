@@ -417,6 +417,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 
+		do_action( 'litespeed_update_confs', $the_matrix ) ;
+
 		// Update related tables
 		LiteSpeed_Cache_Data::get_instance()->correct_tb_existance() ;
 
