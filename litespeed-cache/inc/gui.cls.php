@@ -254,13 +254,13 @@ class LiteSpeed_Cache_GUI
 	{
 		if ( ! empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
 			array(
-				'lscache-settings',
-				'lscache-dash',
+				'litespeed-settings',
+				'litespeed-dash',
 				LiteSpeed_Cache::PAGE_EDIT_HTACCESS,
-				'lscache-optimization',
-				'lscache-crawler',
-				'lscache-import',
-				'lscache-report',
+				'litespeed-optimization',
+				'litespeed-crawler',
+				'litespeed-import',
+				'litespeed-report',
 			) )
 		) {
 			return true ;
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_GUI
 		$wp_admin_bar->add_menu( array(
 			'id'	=> 'litespeed-menu',
 			'title'	=> '<span class="ab-icon"></span>',
-			'href'	=> get_admin_url( null, 'admin.php?page=lscache-settings' ),
+			'href'	=> get_admin_url( null, 'admin.php?page=litespeed' ),
 			'meta'	=> array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 		) ) ;
 
@@ -463,7 +463,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-more',
 			'title'		=> __( 'More settings', 'litespeed-cache' ),
-			'href'		=> get_admin_url( null, 'admin.php?page=lscache-settings#excludes' ),
+			'href'		=> get_admin_url( null, 'admin.php?page=litespeed-cache' ),
 		) );
 	}
 
@@ -499,7 +499,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-bar-manage',
 			'title'		=> __( 'Manage', 'litespeed-cache' ),
-			'href'		=> 'admin.php?page=lscache-dash',
+			'href'		=> 'admin.php?page=litespeed',
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -507,7 +507,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-bar-setting',
 			'title'		=> __( 'Settings', 'litespeed-cache' ),
-			'href'		=> 'admin.php?page=lscache-settings',
+			'href'		=> 'admin.php?page=litespeed-cache',
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -516,7 +516,7 @@ class LiteSpeed_Cache_GUI
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-bar-imgoptm',
 				'title'		=> __( 'Image Optimization', 'litespeed-cache' ),
-				'href'		=> 'admin.php?page=lscache-optimization',
+				'href'		=> 'admin.php?page=litespeed-img_optm',
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -531,7 +531,7 @@ class LiteSpeed_Cache_GUI
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
-			'id'		=> 'litespeed-lscache-purge-all',
+			'id'		=> 'litespeed-purge-all',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
 			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'		=> array( 'tabindex' => '0' ),

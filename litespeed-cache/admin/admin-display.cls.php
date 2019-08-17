@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function __construct()
 	{
 		// load assets
-		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'lscache-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
+		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'litespeed-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) ) ;
 		}
 
@@ -147,25 +147,25 @@ class LiteSpeed_Cache_Admin_Display
 			// sub menus
 			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' ) ;
 
-			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'lscache-cache', 'show_menu_cache' ) ;
+			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'lscache-cdn', 'show_menu_cdn' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'lscache-img_optm', 'show_img_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'lscache-page_optm', 'show_page_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'lscache-db_optm', 'show_db_optm' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'DB Optimization', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'lscache-crawler', 'show_crawler' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'lscache-tools', 'show_tools' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'lscache-debug', 'show_debug' ) ;
+			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' ) ;
 
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'lscache-cache', array($this, 'show_menu_cache')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache', array($this, 'show_menu_cache')) ;
 		}
 	}
 
@@ -244,8 +244,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_plugin_links($links)
 	{
-		// $links[] = '<a href="' . admin_url('options-general.php?page=lscache-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
-		$links[] = '<a href="' . admin_url('admin.php?page=lscache-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
+		// $links[] = '<a href="' . admin_url('options-general.php?page=litespeed-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
+		$links[] = '<a href="' . admin_url('admin.php?page=litespeed-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
 
 		return $links ;
 	}
@@ -637,7 +637,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		echo "<div class='litespeed-top20'></div>" ;
 		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' ) ;
-		echo '<a href="admin.php?page=lscache-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
+		echo '<a href="admin.php?page=litespeed-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
 		echo __( 'Reset All Settings', 'litespeed-cache' ) ;
 		echo '</a>' ;
 		echo '</form>' ;

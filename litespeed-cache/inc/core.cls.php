@@ -28,7 +28,7 @@ class LiteSpeed_Cache
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
 	const PLUGIN_VERSION = '3.0' ;
 
-	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
+	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess' ;
 
 	const ACTION_DISMISS = 'dismiss' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;

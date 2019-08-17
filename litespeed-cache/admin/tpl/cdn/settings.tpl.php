@@ -261,7 +261,7 @@ $this->form_action() ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ) ; ?>
-				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
+				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'CDN', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'Manage', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=litespeed-cdn#manage"' ) ; ?>
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
