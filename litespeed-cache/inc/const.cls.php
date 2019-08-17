@@ -20,7 +20,8 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	const _VERSION 	= '_version' ; // Not set-able
 	const HASH 		= 'hash' ; // Not set-able
-	const O_AUTO_UPGRADE = 'auto_upgrade' ;
+	const O_AUTO_UPGRADE 	= 'auto_upgrade' ;
+	const O_SERVER_IP 		= 'server_ip' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
@@ -220,7 +221,6 @@ class LiteSpeed_Cache_Const
 	const O_CRWL_THREADS 		= 'crawler-threads' ;
 	const O_CRWL_TIMEOUT 		= 'crawler-timeout' ;
 	const O_CRWL_LOAD_LIMIT 	= 'crawler-load_limit' ;
-	const O_CRWL_DOMAIN_IP 		= 'crawler-domain_ip' ;
 	const O_CRWL_CUSTOM_SITEMAP = 'crawler-custom_sitemap' ;
 	const O_CRWL_ROLES 			= 'crawler-roles' ;
 	const O_CRWL_COOKIES 		= 'crawler-cookies' ;
@@ -322,6 +322,7 @@ class LiteSpeed_Cache_Const
 		self::_VERSION 			=> '',
 		self::HASH				=> '',
 		self::O_AUTO_UPGRADE 	=> false,
+		self::O_SERVER_IP 		=> '',
 
 		// Cache
 		self::O_CACHE 					=> false,
@@ -499,7 +500,6 @@ class LiteSpeed_Cache_Const
 		self::O_CRWL_THREADS 			=> 0,
 		self::O_CRWL_TIMEOUT 			=> 0,
 		self::O_CRWL_LOAD_LIMIT 		=> 0,
-		self::O_CRWL_DOMAIN_IP 			=> '',
 		self::O_CRWL_CUSTOM_SITEMAP 	=> '',
 		self::O_CRWL_ROLES				=> array(),
 		self::O_CRWL_COOKIES 			=> array(),

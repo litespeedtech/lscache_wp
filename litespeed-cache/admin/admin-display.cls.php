@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function __construct()
 	{
 		// load assets
-		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'lscache-' ) === 0 || $_GET[ 'page' ] == 'litespeedcache' ) ) {
+		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'lscache-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) ) ;
 		}
 
@@ -165,7 +165,7 @@ class LiteSpeed_Cache_Admin_Display
 
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_dash')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'lscache-cache', array($this, 'show_menu_cache')) ;
 		}
 	}
 
@@ -221,6 +221,12 @@ class LiteSpeed_Cache_Admin_Display
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
+		// If on Dashboard `General Settings` page, append getIP link
+		global $pagenow;
+		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed' ) {
+			$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/' ;
+		}
+
 		if ( $localize_data ) {
 			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', $localize_data ) ;
 		}
@@ -238,8 +244,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_plugin_links($links)
 	{
-		//$links[] = '<a href="' . admin_url('admin.php?page=litespeedcache') .'">Settings</a>';
-		$links[] = '<a href="' . admin_url('options-general.php?page=litespeedcache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
+		// $links[] = '<a href="' . admin_url('options-general.php?page=lscache-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
+		$links[] = '<a href="' . admin_url('admin.php?page=lscache-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>' ;
 
 		return $links ;
 	}

@@ -431,8 +431,8 @@ class LiteSpeed_Cache_Crawler
 			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ;
 		}
 		$crawler->set_load_limit( $server_load_limit ) ;
-		if ( $this->_options[LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP] ) {
-			$crawler->set_domain_ip($this->_options[LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP]) ;
+		if ( $this->_options[LiteSpeed_Cache_Config::O_SERVER_IP] ) {
+			$crawler->set_domain_ip($this->_options[LiteSpeed_Cache_Config::O_SERVER_IP]) ;
 		}
 
 		// Get current crawler

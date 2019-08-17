@@ -37,6 +37,29 @@ class LiteSpeed_Cache_Tool
 	}
 
 	/**
+	 * Get public IP
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function check_ip()
+	{
+		LiteSpeed_Cache_Log::debug( '[Tool] ✅ check_ip' ) ;
+
+		$response = wp_remote_get( 'https://ifconfig.co/ip' ) ;
+
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'remote_get_fail', 'Failed to fetch from ifconfig.co', array( 'status' => 404 ) ) ;
+		}
+
+		$data = $response[ 'body' ] ;
+
+		LiteSpeed_Cache_Log::debug( '[Tool] result [ip] ' . $data ) ;
+
+		return $data ;
+	}
+
+	/**
 	 * Heartbeat Control
 	 *
 	 * NOTE: since WP4.9, there could be a core bug that sometimes the hook is not working.

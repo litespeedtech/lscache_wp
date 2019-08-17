@@ -227,8 +227,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
 		<h3 class="litespeed-title"><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache') ; ?></h3>
 
-		<form method="post" action="admin.php?page=lscache-crawler">
-			<?php $this->form_action(LiteSpeed_Cache::ACTION_BLACKLIST_SAVE); ?>
+		<?php $this->form_action( LiteSpeed_Cache::ACTION_BLACKLIST_SAVE ) ; ?>
 			<p>
 				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo $_crawler_instance->get_blacklist(); ?></textarea>
 			</p>

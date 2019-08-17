@@ -222,6 +222,22 @@ var _litespeed_dots ;
 			});
 		}
 
+		/**
+		 * Get server IP
+		 * @since  3.0
+		 */
+		$( '#litespeed_get_ip' ).click( function( e ) {
+			$.ajax( {
+				url: litespeed_data.ajax_url_getIP,
+				dataType: 'json',
+				beforeSend: function ( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce ) ;
+				},
+				success: function( data ) {
+					$( '#litespeed_server_ip' ).html( data ) ;
+				}
+			} ) ;
+		} ) ;
 
 	}) ;
 })(jQuery) ;

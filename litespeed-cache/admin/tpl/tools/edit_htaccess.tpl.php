@@ -90,8 +90,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 <?php elseif( $content !== null ) : ?>
 
-<form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
-	<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>
+<?php $this->form_action( LiteSpeed_Cache::ACTION_SAVE_HTACCESS ) ; ?>
 
 	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 

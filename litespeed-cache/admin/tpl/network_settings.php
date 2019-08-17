@@ -37,9 +37,8 @@ $_options = LiteSpeed_Cache_Config::get_instance()->load_site_options();
 	?>
 	</h2>
 	<div class="litespeed-body">
-	<form method="post" action="admin.php?page=lscache-settings" id="litespeed_form_options" class="litespeed-relative">
 	<?php
-		$this->form_action(LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK);
+		$this->form_action( LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK ) ;
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

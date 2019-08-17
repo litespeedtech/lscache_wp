@@ -1,13 +1,16 @@
 <?php
-if (!defined('WPINC')) die;
+defined( 'WPINC' ) || exit ;
+
+$menu_list = array(
+	'dashboard' 				=> __( 'Dashboard', 'litespeed-cache' ),
+	'settings'					=> __( 'General Settings', 'litespeed-cache' ),
+) ;
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php
-			echo __( 'LiteSpeed Cache Dashboard', 'litespeed-cache' ) ;
-		?>
+		<?php echo __( 'LiteSpeed Cache Dashboard', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
@@ -16,8 +19,26 @@ if (!defined('WPINC')) die;
 </div>
 
 <div class="litespeed-wrap">
+	<h2 class="litespeed-header nav-tab-wrapper">
+	<?php
+		$i = 1 ;
+		foreach ($menu_list as $tab => $val){
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
+		}
+	?>
+	</h2>
 
 	<div class="litespeed-body">
-		Here will show dashboard info
+	<?php
+		// include all tpl for faster UE
+		foreach ($menu_list as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>" ;
+			require LSCWP_DIR . "admin/tpl/dash/$tab.tpl.php" ;
+			echo "</div>" ;
+		}
+	?>
 	</div>
+
 </div>

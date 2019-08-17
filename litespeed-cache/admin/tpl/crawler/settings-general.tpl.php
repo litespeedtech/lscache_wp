@@ -130,19 +130,6 @@ $this->form_action() ;
 		</td>
 	</tr>
 
-	<tr>
-		<th><?php echo __('Site IP', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP ; ?>
-			<?php $this->build_input($id); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Enter this site\'s IP address to crawl by IP instead of domain name. This eliminates the overhead of DNS and CDN lookups. (optional)', 'litespeed-cache'); ?>
-
-				<?php $this->_validate_ip( $id ) ; ?>
-			</div>
-		</td>
-	</tr>
-
 </tbody></table>
 
 <?php

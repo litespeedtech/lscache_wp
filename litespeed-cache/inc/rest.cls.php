@@ -24,6 +24,25 @@ class LiteSpeed_Cache_REST
 		add_filter( 'rest_request_before_callbacks', array( $this, 'set_internal_rest_on' ) ) ;
 		add_filter( 'rest_request_after_callbacks', array( $this, 'set_internal_rest_off' ) ) ;
 
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) ) ;
+	}
+
+	/**
+	 * Register REST hooks
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function rest_api_init()
+	{
+		register_rest_route( 'litespeed/v1', '/tool/check_ip', array(
+			'methods' => 'GET',
+			'callback' => array( LiteSpeed_Cache_Tool::get_instance(), 'check_ip' ),
+			'permission_callback'	=> function() {
+				return current_user_can( 'manage_network_options' ) || current_user_can( 'manage_options' ) ;
+			}
+		) );
+
 	}
 
 	/**

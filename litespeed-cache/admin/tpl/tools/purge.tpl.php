@@ -185,8 +185,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		}
 	?>
 
-	<form method="post" action="admin.php?page=lscache-dash">
-		<?php $this->form_action(LiteSpeed_Cache::ACTION_PURGE_BY); ?>
+	<?php $this->form_action( LiteSpeed_Cache::ACTION_PURGE_BY ) ; ?>
 		<div class="litespeed-row">
 			<div class="litespeed-switch litespeed-mini">
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT;?>

@@ -3,7 +3,6 @@
 <?php
 
 $menu_list = array(
-	'general' 	=> __( 'General', 'litespeed-cache' ),
 	'cache' 	=> __( 'Cache', 'litespeed-cache' ),
 	'ttl' 		=> __( 'TTL', 'litespeed-cache' ),
 	'purge' 	=> __( 'Purge', 'litespeed-cache' ),

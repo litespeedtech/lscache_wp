@@ -184,6 +184,7 @@ function litespeed_update_3_0( $ver )
 		'radio_select'				=> 'cache',
 		'hash'						=> 'hash',
 		'auto_upgrade'				=> 'auto_upgrade',
+		'crawler_domain_ip' 		=> 'server_ip',
 
 		'esi_enabled'				=> 'esi',
 		'esi_cached_admbar'			=> 'esi-cache_admbar',
@@ -241,7 +242,6 @@ function litespeed_update_3_0( $ver )
 		'crawler_crawl_interval' 	=> 'crawler-crawl_interval',
 		'crawler_threads' 			=> 'crawler-threads',
 		'crawler_load_limit' 		=> 'crawler-load_limit',
-		'crawler_domain_ip' 		=> 'crawler-domain_ip',
 		'crawler_custom_sitemap' 	=> 'crawler-custom_sitemap',
 
 		'cache_object'				=> 'object',

@@ -2,8 +2,8 @@
 <?php
 
 $menu_list = array(
-	'manage'			=> __( 'Manage', 'litespeed-cache' ),
 	'settings'			=> __( 'CDN Settings', 'litespeed-cache' ),
+	'manage'			=> __( 'Manage', 'litespeed-cache' ),
 ) ;
 
 ?>
