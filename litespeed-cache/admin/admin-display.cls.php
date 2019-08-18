@@ -165,7 +165,7 @@ class LiteSpeed_Cache_Admin_Display
 
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache', array($this, 'show_menu_cache')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache-options', array($this, 'show_menu_cache')) ;
 		}
 	}
 

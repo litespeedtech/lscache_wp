@@ -70,6 +70,7 @@ ksort( $roles ) ;
 	$this->form_action() ;
 
 	require LSCWP_DIR . "admin/tpl/inc/check_if_network_disable_all.php" ;
+	require LSCWP_DIR . "admin/tpl/cache/more_settings_tip.tpl.php" ;
 
 	// include all tpl for faster UE
 	foreach ( $menu_list as $tab => $val ) {
