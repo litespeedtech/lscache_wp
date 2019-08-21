@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Utility
 		}
 		elseif ( $wp_query->is_tax ) {
 			$page_type = 'tax' ;
-			$page_type = get_queried_object()->taxonomy ;
+			// $page_type = get_queried_object()->taxonomy ;
 		}
 		elseif ( $wp_query->is_archive ) {
 			if ( $wp_query->is_day ) {
