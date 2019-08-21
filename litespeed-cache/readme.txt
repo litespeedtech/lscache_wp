@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.8.4
+Stable tag: 2.9.8.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -289,6 +289,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.5 - Aug 21 2019 =
+* <strong>CCSS</strong>: Removed potential PHP notice when getting post_type. (@amcgiffert)
+* <strong>CDN</strong>: Bypassed CDN replacement on admin page when adding media to page/post. (@martin_bailey)
+* 🐞<strong>Media</strong>: Fixed inability to update or destroy postmeta data for child images. (#167713)
 
 = 2.9.8.4 - Jul 25 2019 =
 * <strong>Object</strong>: Increased compatibility with phpredis 5.0.
