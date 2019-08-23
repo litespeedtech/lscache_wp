@@ -80,7 +80,7 @@ class LiteSpeed_Cache_DB_Optm
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ) ;
 
 			case 'all_cssjs' :
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) ;
+				return LiteSpeed_Cache_Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) : 0 ;
 		}
 
 		return '-' ;
@@ -147,8 +147,10 @@ class LiteSpeed_Cache_DB_Optm
 				return __( 'Optimized all tables.', 'litespeed-cache' ) ;
 
 			case 'all_cssjs' :
-				LiteSpeed_Cache_Purge::purge_all() ;
-				$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) ;
+				if ( LiteSpeed_Cache_Data::tb_cssjs_exist() ) {
+					LiteSpeed_Cache_Purge::purge_all() ;
+					$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) ;
+				}
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
 
 		}
