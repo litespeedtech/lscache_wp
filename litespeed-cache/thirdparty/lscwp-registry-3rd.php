@@ -34,6 +34,7 @@ $thirdparty_list = array(
 	'wpml',
 	'wpdiscuz',
 	'facetwp',
+	'amp-bypass',
 ) ;
 
 foreach ($thirdparty_list as $val) {
