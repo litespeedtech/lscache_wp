@@ -13,7 +13,6 @@ if ( ! defined('ABSPATH') ) {
 }
 
 LiteSpeed_Cache_API::hook_init( 'LiteSpeed_Cache_ThirdParty_AMP_Bypass::pre_load' ) ;
-LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_AMP_Bypass' ) ;
 
 class LiteSpeed_Cache_ThirdParty_AMP_Bypass
 {
