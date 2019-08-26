@@ -2,14 +2,14 @@
 defined( 'WPINC' ) || exit ;
 
 $menu_list = array(
-	'dashboard' 				=> __( 'Dashboard', 'litespeed-cache' ),
+	'settings'					=> __( 'General Settings', 'litespeed-cache' ),
 ) ;
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache Dashboard', 'litespeed-cache' ) ; ?>
+		<?php echo __( 'LiteSpeed Cache General Settings', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
@@ -34,7 +34,7 @@ $menu_list = array(
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "admin/tpl/dash/$tab.tpl.php" ;
+			require LSCWP_DIR . "admin/tpl/general/$tab.tpl.php" ;
 			echo "</div>" ;
 		}
 	?>

@@ -147,6 +147,8 @@ class LiteSpeed_Cache_Admin_Display
 			// sub menus
 			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' ) ;
 
+			$this->_add_submenu( __( 'General', 'litespeed-cache' ), 'litespeed-general', 'show_menu_general' ) ;
+
 			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' ) ;
 
 			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' ) ;
@@ -479,6 +481,17 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_menu_dash()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/dash/entry.tpl.php' ;
+	}
+
+	/**
+	 * Displays the General page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_menu_general()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/general/entry.tpl.php' ;
 	}
 
 	/**

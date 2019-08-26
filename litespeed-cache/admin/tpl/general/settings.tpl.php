@@ -14,7 +14,7 @@ $this->form_action() ;
 
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<?php if ( ! is_multisite() ) : ?>
-		<?php require LSCWP_DIR . 'admin/tpl/cache/settings_inc.auto_upgrade.tpl.php'; ?>
+		<?php require LSCWP_DIR . 'admin/tpl/general/settings_inc.auto_upgrade.tpl.php'; ?>
 	<?php endif ; ?>
 
 	<tr>
