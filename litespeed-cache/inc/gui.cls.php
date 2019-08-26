@@ -625,7 +625,7 @@ class LiteSpeed_Cache_GUI
 	public static function img_optm_clean_up_unfinished()
 	{
 		return sprintf(
-			'<a href="%1$s" class="litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
+			'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
 			LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
 			__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
 			__( 'Clean Up Unfinished Data', 'litespeed-cache' )
