@@ -6,9 +6,9 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <h3 class="litespeed-title"><?php echo __('Export Settings', 'litespeed-cache') ; ?></h3>
 
-<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT ) ; ?>" class="button button-primary">
+<div><a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT ) ; ?>" class="button button-primary">
 	<?php echo __( 'Export', 'litespeed-cache' ) ; ?>
-</a>
+</a></div>
 
 <?php if ( ! empty( $log[ 'export' ] ) ) : ?>
 <div class="litespeed-desc">
@@ -44,9 +44,9 @@ $log = LiteSpeed_Cache_Import::get_instance()->summary() ;
 
 <h3 class="litespeed-title"><?php echo __('Reset All Settings', 'litespeed-cache') ; ?></h3>
 
-<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
+<div><a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
 	<?php echo __( 'Reset', 'litespeed-cache' ) ; ?>
-</a>
+</a></div>
 
 <div class="litespeed-desc">
 <p>🚨
