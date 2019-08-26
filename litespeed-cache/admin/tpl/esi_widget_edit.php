@@ -49,7 +49,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 				list( $v, $txt ) = $v ;
 				$id_attr = $widget->get_field_id( $id ) . '_' . $v ;
 				$checked = $esi === $v ? 'checked' : '' ;
-				echo "<input type='radio' name='$name' id='$id_attr' value='$v' $checked /> <label for='$id_attr'>$txt</label>" ;
+				echo "<input type='radio' autocomplete='off' name='$name' id='$id_attr' value='$v' $checked /> <label for='$id_attr'>$txt</label>" ;
 			}
 		?>
 

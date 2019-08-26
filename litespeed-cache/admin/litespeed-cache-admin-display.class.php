@@ -911,7 +911,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$checked = $checked ? ' checked ' : '' ;
 
-		return "<input type='radio' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		return "<input type='radio' autocomplete='off' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**
