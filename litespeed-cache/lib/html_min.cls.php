@@ -1,10 +1,5 @@
 <?php
 /**
- * Class Minify_HTML
- * @package Minify
- */
-
-/**
  * Compress HTML
  *
  * This is a heavy regex-based removal of whitespace, unnecessary comments and
@@ -16,8 +11,9 @@
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
  */
+namespace LiteSpeed\Lib ;
 
-namespace LiteSpeed_3rd_Lib ;
+defined( 'WPINC' ) || exit ;
 
 class Minify_HTML
 {

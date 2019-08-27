@@ -239,7 +239,7 @@ class Optimizer
 		}
 
 		try {
-			$data = Lib\js_min\JSMin::minify( $data ) ;
+			$data = Lib\JSMin::minify( $data ) ;
 			return $data ;
 		} catch ( Exception $e ) {
 			Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;

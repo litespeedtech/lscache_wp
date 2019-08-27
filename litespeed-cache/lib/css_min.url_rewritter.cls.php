@@ -11,7 +11,9 @@
  * @author Stephen Clay <steve@mrclay.org>
  */
 
-namespace LiteSpeed_3rd_Lib\css_min ;
+namespace LiteSpeed\Lib\css_min ;
+
+defined( 'WPINC' ) || exit ;
 
 class UriRewriter
 {

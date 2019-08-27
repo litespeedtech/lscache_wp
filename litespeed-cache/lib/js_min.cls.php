@@ -1,5 +1,4 @@
 <?php
-
 /**
  * JSMin.php - modified PHP implementation of Douglas Crockford's JSMin.
  *
@@ -54,8 +53,9 @@
  * @license http://opensource.org/licenses/mit-license.php MIT License
  * @link http://code.google.com/p/jsmin-php/
  */
+namespace LiteSpeed\Lib ;
 
-namespace LiteSpeed_3rd_Lib\js_min ;
+defined( 'WPINC' ) || exit ;
 
 class JSMin
 {

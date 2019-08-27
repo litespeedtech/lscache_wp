@@ -1,6 +1,7 @@
 <?php
+namespace LiteSpeed\Lib\css_min ;
 
-namespace LiteSpeed_3rd_Lib\css_min ;
+defined( 'WPINC' ) || exit ;
 
 class Colors
 {

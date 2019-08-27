@@ -1,5 +1,4 @@
 <?php
-
 /*!
  * CssMin
  * Author: Tubal Martin - http://tubalmartin.me/
@@ -19,8 +18,9 @@
  * The copyrights embodied in the content of this file are licensed
  * by Yahoo! Inc. under the BSD (revised) open source license.
  */
+namespace LiteSpeed\Lib\css_min ;
 
-namespace LiteSpeed_3rd_Lib\css_min ;
+defined( 'WPINC' ) || exit ;
 
 class Minifier
 {
