@@ -5,12 +5,11 @@
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Tag
+class Tag
 {
 	private static $_instance ;
 
@@ -47,7 +46,7 @@ class LiteSpeed_Cache_Tag
 	private function __construct()
 	{
 		// register recent posts widget tag before theme renders it to make it work
-		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
+		add_filter( 'widget_posts_args', array( $this, 'add_widget_recent_posts' ) ) ;
 
 	}
 
@@ -62,19 +61,19 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function check_login_cacheable()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ) ) {
+		if ( ! Core::config( Const::O_CACHE_PAGE_LOGIN ) ) {
 			return ;
 		}
-		if ( LiteSpeed_Cache_Control::isset_notcacheable() ) {
+		if ( Control::isset_notcacheable() ) {
 			return ;
 		}
 
 		if ( ! empty( $_GET ) ) {
-			LiteSpeed_Cache_Control::set_nocache( 'has GET request' ) ;
+			Control::set_nocache( 'has GET request' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Control::set_cacheable() ;
+		Control::set_cacheable() ;
 
 		self::add( self::TYPE_LOGIN ) ;
 
@@ -99,7 +98,7 @@ class LiteSpeed_Cache_Tag
 	 * @access   public
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
-	public static function add_widget_recent_posts( $params )
+	public function add_widget_recent_posts( $params )
 	{
 		self::add( self::TYPE_PAGES_WITH_RECENT_POSTS ) ;
 		return $params ;
@@ -199,7 +198,7 @@ class LiteSpeed_Cache_Tag
 	{
 		$tags = array() ;
 
-		$tags[] = LiteSpeed_Cache_Utility::page_type() ;
+		$tags[] = Utility::page_type() ;
 
 		$tags[] = self::build_uri_tag() ;
 
@@ -252,7 +251,7 @@ class LiteSpeed_Cache_Tag
 		}
 
 		// Check REST API
-		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() ) {
+		if ( REST::get_instance()->is_rest() ) {
 			$tags[] = self::TYPE_REST ;
 
 			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
@@ -288,7 +287,7 @@ class LiteSpeed_Cache_Tag
 	private static function _finalize()
 	{
 		// run 3rdparty hooks to tag
-		do_action( 'litespeed_cache_api_tag' ) ;
+		do_action( 'litespeed_api_tag' ) ;
 		// generate wp tags
 		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
 			$type_tags = self::_build_type_tags() ;
@@ -320,7 +319,7 @@ class LiteSpeed_Cache_Tag
 		$prefix = LSWCP_TAG_PREFIX . ( is_multisite() ? get_current_blog_id() : '' ) . '_' ;
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags
-		if ( LiteSpeed_Cache_Control::is_private() ) {
+		if ( Control::is_private() ) {
 			foreach ( self::$_tags_priv as $priv_tag ) {
 				$prefix_tags[] = $prefix . $priv_tag ;
 			}

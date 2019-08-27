@@ -4,13 +4,15 @@
  *
  *
  * @since      1.2.1
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_DB_Optm
+class DB_Optm
 {
 	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
 	const TYPE_CONV_TB = 'conv_innodb' ;
@@ -39,7 +41,7 @@ class LiteSpeed_Cache_DB_Optm
 		if ( ! $ignore_multisite ) {
 			if ( is_multisite() && is_network_admin() ) {
 				$num = 0 ;
-				$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+				$blogs = Activation::get_network_ids() ;
 				foreach ( $blogs as $blog_id ) {
 					switch_to_blog( $blog_id ) ;
 					$num += self::db_count( $type, true ) ;
@@ -80,7 +82,7 @@ class LiteSpeed_Cache_DB_Optm
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ) ;
 
 			case 'all_cssjs' :
-				return LiteSpeed_Cache_Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) : 0 ;
+				return Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::tb_cssjs() . "`" ) : 0 ;
 		}
 
 		return '-' ;
@@ -147,9 +149,9 @@ class LiteSpeed_Cache_DB_Optm
 				return __( 'Optimized all tables.', 'litespeed-cache' ) ;
 
 			case 'all_cssjs' :
-				if ( LiteSpeed_Cache_Data::tb_cssjs_exist() ) {
-					LiteSpeed_Cache_Purge::purge_all() ;
-					$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::tb_cssjs() . "`" ) ;
+				if ( Data::tb_cssjs_exist() ) {
+					Purge::purge_all() ;
+					$wpdb->query( "TRUNCATE `" . Data::tb_cssjs() . "`" ) ;
 				}
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
 
@@ -181,7 +183,7 @@ class LiteSpeed_Cache_DB_Optm
 		global $wpdb ;
 
 		if ( empty( $_GET[ 'tb' ] ) ) {
-			LiteSpeed_Cache_Admin_Display::error( 'No table to convert' ) ;
+			Admin_Display::error( 'No table to convert' ) ;
 			return ;
 		}
 
@@ -196,17 +198,17 @@ class LiteSpeed_Cache_DB_Optm
 		}
 
 		if ( ! $tb ) {
-			LiteSpeed_Cache_Admin_Display::error( 'No existing table' ) ;
+			Admin_Display::error( 'No existing table' ) ;
 			return ;
 		}
 
 		$q = 'ALTER TABLE ' . DB_NAME . '.' . $tb . ' ENGINE = InnoDB' ;
 		$wpdb->query( $q ) ;
 
-		LiteSpeed_Cache_Log::debug( "[DB] Converted $tb to InnoDB" ) ;
+		Log::debug( "[DB] Converted $tb to InnoDB" ) ;
 
 		$msg = __( 'Converted to InnoDB successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 	}
 
@@ -237,12 +239,12 @@ class LiteSpeed_Cache_DB_Optm
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case in_array( $type, self::TYPES ) :
 				if ( is_multisite() && is_network_admin() ) {
-					$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+					$blogs = Activation::get_network_ids() ;
 					foreach ( $blogs as $blog_id ) {
 						switch_to_blog( $blog_id ) ;
 						$msg = $instance->_db_clean( $type ) ;
@@ -252,7 +254,7 @@ class LiteSpeed_Cache_DB_Optm
 				else {
 					$msg = $instance->_db_clean( $type ) ;
 				}
-				LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+				Admin_Display::succeed( $msg ) ;
 				break ;
 
 			case self::TYPE_CONV_TB :
@@ -263,7 +265,7 @@ class LiteSpeed_Cache_DB_Optm
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

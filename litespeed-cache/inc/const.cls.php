@@ -3,11 +3,15 @@
  * The core consts for config
  *
  * @since      	2.4
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Const
+namespace LiteSpeed ;
+
+defined( 'WPINC' ) || exit ;
+
+class Const
 {
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`
@@ -616,7 +620,7 @@ class LiteSpeed_Cache_Const
 			}
 		}
 
-		$this->_default_site_options[ self::_VERSION ] = LiteSpeed_Cache::PLUGIN_VERSION ;
+		$this->_default_site_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
 
 		return $this->_default_site_options ;
 	}
@@ -680,7 +684,7 @@ class LiteSpeed_Cache_Const
 							foreach ( $mapping_fields as $v3 ) {
 								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
 								if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
-									$this_v = $this_v ? LiteSpeed_Cache_Utility::sanitize_lines( $this_v ) : array() ;
+									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array() ;
 								}
 								$this_row[ $v3 ] = $this_v ;
 							}
@@ -691,7 +695,7 @@ class LiteSpeed_Cache_Const
 					 * Default multiple lines to array
 					 */
 					else {
-						$ini_v = LiteSpeed_Cache_Utility::sanitize_lines( $ini_v ) ;
+						$ini_v = Utility::sanitize_lines( $ini_v ) ;
 					}
 				}
 
@@ -716,10 +720,10 @@ class LiteSpeed_Cache_Const
 
 		// Set security key if not initialized yet
 		if ( ! $this->_default_options[ self::HASH ] ) {
-			$this->_default_options[ self::HASH ] = Litespeed_String::rrand( 32 ) ;
+			$this->_default_options[ self::HASH ] = String::rrand( 32 ) ;
 		}
 
-		$this->_default_options[ self::_VERSION ] = LiteSpeed_Cache::PLUGIN_VERSION ;
+		$this->_default_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
 
 		return $this->_default_options ;
 	}
@@ -854,7 +858,7 @@ class LiteSpeed_Cache_Const
 	protected function _conf_purge_tag( $id )
 	{
 		$check_ids = array(
-			self::O_CACHE_PAGE_LOGIN	=> LiteSpeed_Cache_Tag::TYPE_LOGIN,
+			self::O_CACHE_PAGE_LOGIN	=> Tag::TYPE_LOGIN,
 		) ;
 
 		if ( ! empty( $check_ids[ $id ] ) ) {

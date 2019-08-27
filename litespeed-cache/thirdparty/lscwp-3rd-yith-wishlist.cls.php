@@ -12,7 +12,7 @@ if ( ! defined('ABSPATH') ) {
     die() ;
 }
 
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Yith_Wishlist') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_Yith_Wishlist') ;
 
 class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 {
@@ -31,9 +31,9 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		if ( ! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL') ) {
 			return ;
 		}
-		if ( LiteSpeed_Cache_API::esi_enabled() ) {
-			LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_Yith_Wishlist::is_not_esi') ;
-			LiteSpeed_Cache_API::hook_tpl_esi('yith-wcwl-add', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist') ;
+		if ( LiteSpeed_API::esi_enabled() ) {
+			LiteSpeed_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_Yith_Wishlist::is_not_esi') ;
+			LiteSpeed_API::hook_tpl_esi('yith-wcwl-add', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist') ;
 
 			// hook to add/delete wishlist
 			add_action( 'yith_wcwl_added_to_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge' ) ;
@@ -49,11 +49,11 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 */
 	public static function purge()
 	{
-		LiteSpeed_Cache_API::purge( LiteSpeed_Cache_Tag::TYPE_ESI . 'yith-wcwl-add' ) ;
+		LiteSpeed_API::purge( LiteSpeed_Cache_Tag::TYPE_ESI . 'yith-wcwl-add' ) ;
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * Hooked to the litespeed_is_not_esi_template action.
 	 *
 	 * If the request is not an ESI request, hook to the add to wishlist button
 	 * filter to replace it as an esi block.
@@ -86,11 +86,11 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		$params = array(
 			self::ESI_PARAM_POSTID => $post->ID
 		) ;
-		return LiteSpeed_Cache_API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
+		return LiteSpeed_API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_load_esi_block-yith-wcwl-add action.
+	 * Hooked to the litespeed_load_esi_block-yith-wcwl-add action.
 	 *
 	 * This will load the add to wishlist button html for output.
 	 *
@@ -105,8 +105,8 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		$post = get_post($params[self::ESI_PARAM_POSTID]) ;
 		$wp_query->setup_postdata($post) ;
 		echo YITH_WCWL_Shortcode::add_to_wishlist(/*$params[self::ESI_PARAM_ATTS]*/array()) ;
-		LiteSpeed_Cache_API::set_cache_private();
-		LiteSpeed_Cache_API::set_cache_no_vary();
+		LiteSpeed_API::set_cache_private();
+		LiteSpeed_API::set_cache_no_vary();
 	}
 
 }

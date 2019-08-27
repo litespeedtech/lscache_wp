@@ -4,16 +4,15 @@
  *
  * @since      	1.3
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_GUI
+class GUI
 {
 	private static $_instance ;
 
@@ -44,7 +43,7 @@ class LiteSpeed_Cache_GUI
 	private function __construct()
 	{
 		if ( ! is_admin() ) {
-			LiteSpeed_Cache_Log::debug2( '[GUI] init' ) ;
+			Log::debug2( '[GUI] init' ) ;
 			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
 				add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
@@ -54,12 +53,12 @@ class LiteSpeed_Cache_GUI
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK ) ) {
+			if ( Core::config( Const::O_UTIL_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
 
-		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ADV_FAVICON ) ) {
+		// if ( Core::config( Const::O_ADV_FAVICON ) ) {
 		// 	if ( is_admin() ) {
 		// 		add_action( 'admin_head', array( $this, 'favicon' ) ) ;
 		// 	}
@@ -76,7 +75,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	// public function favicon()
 	// {
-	// 	$current_favicon = get_option( LiteSpeed_Cache_Config::O_FAVICON, array() ) ;
+	// 	$current_favicon = get_option( Const::O_FAVICON, array() ) ;
 	// 	if ( is_admin() ) {
 	// 		if ( ! empty( $current_favicon[ 'backend' ] ) ) {
 	// 			echo "<link rel='icon' href='$current_favicon[backend]' />" ;
@@ -167,13 +166,13 @@ class LiteSpeed_Cache_GUI
 	public static function dismiss()
 	{
 		$_instance = self::get_instance() ;
-		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+		switch ( Router::verify_type() ) {
 			case self::TYPE_DISMISS_WHM :
-				LiteSpeed_Cache_Activation::dismiss_whm() ;
+				Activation::dismiss_whm() ;
 				break ;
 
 			case self::TYPE_DISMISS_EXPIRESDEFAULT :
-				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+				update_option( Admin_Display::DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED ) ;
 				break ;
 
 			case self::TYPE_DISMISS_PROMO :
@@ -189,7 +188,7 @@ class LiteSpeed_Cache_GUI
 
 				$summary = $_instance->get_summary() ;
 
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
+				defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
 				// Forever dismiss
 				if ( ! empty( $_GET[ 'done' ] ) ) {
@@ -212,13 +211,13 @@ class LiteSpeed_Cache_GUI
 				break ;
 		}
 
-		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+		if ( Router::is_ajax() ) {
 			// All dismiss actions are considered as ajax call, so just exit
 			exit( json_encode( array( 'success' => 1 ) ) ) ;
 		}
 
 		// Plain click link, redirect to referral url
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**
@@ -230,7 +229,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function has_msg_ruleconflict()
 	{
-		return get_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG ) == LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ;
+		return get_option( Admin_Display::DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON ;
 	}
 
 	/**
@@ -242,7 +241,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function has_whm_msg()
 	{
-		return get_option( LiteSpeed_Cache::WHM_MSG ) == LiteSpeed_Cache::WHM_MSG_VAL ;
+		return get_option( Core::WHM_MSG ) == Core::WHM_MSG_VAL ;
 	}
 
 	/**
@@ -256,7 +255,7 @@ class LiteSpeed_Cache_GUI
 			array(
 				'litespeed-settings',
 				'litespeed-dash',
-				LiteSpeed_Cache::PAGE_EDIT_HTACCESS,
+				Core::PAGE_EDIT_HTACCESS,
 				'litespeed-optimization',
 				'litespeed-crawler',
 				'litespeed-import',
@@ -289,7 +288,7 @@ class LiteSpeed_Cache_GUI
 		}
 
 		if ( file_exists( ABSPATH . '.litespeed_no_banner' ) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Bypass banners due to silence file' ) ;
+			defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Bypass banners due to silence file' ) ;
 			return false ;
 		}
 
@@ -335,7 +334,7 @@ class LiteSpeed_Cache_GUI
 				return $promo_tag ;
 			}
 
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
+			defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
 
 			// Only contain one
 			break ;
@@ -369,7 +368,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public function frontend_enqueue_style_public()
 	{
-		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, true ) ;
+		wp_enqueue_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), Core::PLUGIN_VERSION, true ) ;
 	}
 
 	/**
@@ -380,7 +379,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public function frontend_enqueue_style()
 	{
-		wp_enqueue_style( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all' ) ;
+		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::PLUGIN_VERSION, 'all' ) ;
 	}
 
 	/**
@@ -404,7 +403,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
 			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_FRONT, false, true ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_FRONT, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -416,47 +415,47 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Const::TYPE_SET . '[' . Const::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-forced_cache',
 			'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Const::TYPE_SET . '[' . Const::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-noncache',
 			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Const::TYPE_SET . '[' . Const::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-private',
 			'title'		=> __( 'Private cache', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Const::TYPE_SET . '[' . Const::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-nonoptimize',
 			'title'		=> __( 'No optimization', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$wp_admin_bar->add_menu( array(
@@ -483,7 +482,7 @@ class LiteSpeed_Cache_GUI
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'litespeed-menu',
 				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 			) ) ;
 		}
@@ -525,7 +524,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -533,7 +532,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -541,16 +540,16 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-cssjs',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CSSJS ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) ) {
+		if ( Core::config( Const::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Cloudflare', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ),
+				'href'		=> Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -560,57 +559,57 @@ class LiteSpeed_Cache_GUI
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-object',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OBJECT ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
 
-		if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
+		if ( Router::opcache_enabled() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-opcache',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OPCACHE ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
 
-		if ( LiteSpeed_Cache_CSS::has_ccss_cache() ) {
+		if ( CSS::has_ccss_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CCSS ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
 
-		if ( LiteSpeed_Cache_Placeholder::has_placehoder_cache() ) {
+		if ( Placeholder::has_placehoder_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_PLACEHOLDER ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_PLACEHOLDER ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
 
-		if ( LiteSpeed_Cache_Placeholder::has_lqip_cache() ) {
+		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LQIP ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
 
-		if ( LiteSpeed_Cache_Avatar::has_cache() ) {
+		if ( Avatar::has_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_AVATAR ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -626,7 +625,7 @@ class LiteSpeed_Cache_GUI
 	{
 		return sprintf(
 			'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
-			LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
+			Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
 			__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
 			__( 'Clean Up Unfinished Data', 'litespeed-cache' )
 		) ;
@@ -705,18 +704,18 @@ class LiteSpeed_Cache_GUI
 	private function _clean_wrapper( $buffer )
 	{
 		if ( self::$_clean_counter < 1 ) {
-			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;
+			Log::debug2( "GUI bypassed by no counter" ) ;
 			return $buffer ;
 		}
 
-		LiteSpeed_Cache_Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
+		Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
 
 		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
 			// If miss beginning
 			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
 			if ( $start === false ) {
 				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer ) ;
-				LiteSpeed_Cache_Log::debug2( "GUI lost beginning wrapper $i" ) ;
+				Log::debug2( "GUI lost beginning wrapper $i" ) ;
 				continue;
 			}
 
@@ -725,13 +724,13 @@ class LiteSpeed_Cache_GUI
 			$end = strpos( $buffer, $end_wrapper ) ;
 			if ( $end === false ) {
 				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer ) ;
-				LiteSpeed_Cache_Log::debug2( "GUI lost ending wrapper $i" ) ;
+				Log::debug2( "GUI lost ending wrapper $i" ) ;
 				continue;
 			}
 
 			// Now replace wrapped content
 			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) ) ;
-			LiteSpeed_Cache_Log::debug2( "GUI cleaned wrapper $i" ) ;
+			Log::debug2( "GUI cleaned wrapper $i" ) ;
 		}
 
 		return $buffer ;
@@ -748,7 +747,7 @@ class LiteSpeed_Cache_GUI
 		if ( $counter === false ) {
 			self::$_clean_counter ++ ;
 			$counter = self::$_clean_counter ;
-			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter begin" ) ;
+			Log::debug( "GUI clean wrapper $counter begin" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
 	}
@@ -763,7 +762,7 @@ class LiteSpeed_Cache_GUI
 	{
 		if ( $counter === false ) {
 			$counter = self::$_clean_counter ;
-			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter end" ) ;
+			Log::debug( "GUI clean wrapper $counter end" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
 	}

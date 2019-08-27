@@ -10,7 +10,7 @@
 if ( ! defined('ABSPATH') ) {
 	die() ;
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Theme_My_Login') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_Theme_My_Login') ;
 
 class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 {
@@ -24,7 +24,7 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 	public static function detect()
 	{
 		if ( defined('THEME_MY_LOGIN_PATH') ) {
-			LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_Theme_My_Login::set_control') ;
+			LiteSpeed_API::hook_control('LiteSpeed_Cache_ThirdParty_Theme_My_Login::set_control') ;
 		}
 	}
 
@@ -36,13 +36,13 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 	 */
 	public static function set_control()
 	{
-		if ( LiteSpeed_Cache_API::not_cacheable() ) {
+		if ( LiteSpeed_API::not_cacheable() ) {
 			return ;
 		}
 
 		// check if this page is TML page or not
 		if ( class_exists('Theme_My_Login') && Theme_My_Login::is_tml_page() ) {
-			LiteSpeed_Cache_API::set_nocache() ;
+			LiteSpeed_API::set_nocache() ;
 		}
 	}
 

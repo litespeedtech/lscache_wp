@@ -10,7 +10,7 @@ if ( get_current_blog_id() === BLOG_ID_CURRENT_SITE ) {
 }
 
 $site_options = $this->__cfg->load_site_options() ;
-if ( empty( $site_options[ LiteSpeed_Cache_Config::NETWORK_O_USE_PRIMARY ] ) ) {
+if ( empty( $site_options[ LiteSpeed_Config::NETWORK_O_USE_PRIMARY ] ) ) {
 	return ;
 }
 ?>

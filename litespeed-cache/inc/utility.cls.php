@@ -5,12 +5,11 @@
  * @since      	1.1.5
  * @since  		1.5 Moved into /inc
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Utility
+class Utility
 {
 	private static $_instance ;
 	private static $_internal_domains ;
@@ -35,7 +34,7 @@ class LiteSpeed_Cache_Utility
 		try {
 			preg_match( self::arr2regex( $rules ), null ) ;
 		}
-		catch ( ErrorException $e ) {
+		catch ( \ErrorException $e ) {
 			$success = false ;
 		}
 
@@ -88,18 +87,18 @@ class LiteSpeed_Cache_Utility
 	 */
 	private function _score_check()
 	{
-		$_gui = LiteSpeed_Cache_GUI::get_instance() ;
+		$_gui = GUI::get_instance() ;
 
 		$_summary = $_gui->get_summary() ;
 
 		$_summary[ 'score.last_check' ] = time() ;
 		$_gui->save_summary( $_summary ) ;
 
-		$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600 ) ;
+		$score = Admin_API::post( Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600 ) ;
 		$_summary[ 'score.data' ] = $score ;
 		$_gui->save_summary( $_summary ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Util] Saved page score ', $score ) ;
+		Log::debug( '[Util] Saved page score ', $score ) ;
 
 		exit() ;
 	}
@@ -113,7 +112,7 @@ class LiteSpeed_Cache_Utility
 	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&v2=' . ( LSCWP_CUR_V ?: '' ) . '&src=' . $src ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::PLUGIN_VERSION . '&v2=' . ( LSCWP_CUR_V ?: '' ) . '&src=' . $src ;
 
 		if ( defined( 'LITESPEED_ERR' ) ) {
 			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
@@ -230,7 +229,7 @@ class LiteSpeed_Cache_Utility
 			$status = floor( $status ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( "[Util] ping [Domain] $domain \t[Speed] $status" ) ;
+		Log::debug( "[Util] ping [Domain] $domain \t[Speed] $status" ) ;
 
 		return $status ;
 	}
@@ -373,7 +372,7 @@ class LiteSpeed_Cache_Utility
 		 * @see  https://github.com/litespeedtech/lscache_wp/pull/131/commits/45fc03af308c7d6b5583d1664fad68f75fb6d017
 		 */
 		if ( ! is_array( $haystack ) ) {
-			LiteSpeed_Cache_Log::debug( "[Util] ❌ bad param in str_hit_array()!" ) ;
+			Log::debug( "[Util] ❌ bad param in str_hit_array()!" ) ;
 
 			return false ;
 		}
@@ -590,15 +589,15 @@ class LiteSpeed_Cache_Utility
 		$arr = array_map( 'trim', $arr ) ;
 		$changed = false ;
 		if ( $type === 'uri' ) {
-			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;
+			$arr = array_map( '\LiteSpeed\Utility::url2uri', $arr ) ;
 			$changed = true ;
 		}
 		if ( $type === 'relative' ) {
-			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+			$arr = array_map( '\LiteSpeed\Utility::make_relative', $arr ) ;// Remove domain
 			$changed = true ;
 		}
 		if ( $type === 'domain' ) {
-			$arr = array_map( 'LiteSpeed_Cache_Utility::parse_domain', $arr ) ;// Only keep domain
+			$arr = array_map( '\LiteSpeed\Utility::parse_domain', $arr ) ;// Only keep domain
 			$changed = true ;
 		}
 
@@ -642,7 +641,7 @@ class LiteSpeed_Cache_Utility
 						$prefix = '&' ;
 					}
 				}
-				$combined = $page . $prefix . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
+				$combined = $page . $prefix . Router::ACTION_KEY . '=' . $action ;
 			}
 			else {
 				// Current page rebuild URL
@@ -660,11 +659,11 @@ class LiteSpeed_Cache_Utility
 					}
 				}
 				global $pagenow ;
-				$combined = $pagenow . $prefix . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
+				$combined = $pagenow . $prefix . Router::ACTION_KEY . '=' . $action ;
 			}
 		}
 		else {
-			$combined = 'admin-ajax.php?action=litespeed_ajax&' . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
+			$combined = 'admin-ajax.php?action=litespeed_ajax&' . Router::ACTION_KEY . '=' . $action ;
 		}
 
 		if ( is_network_admin() ) {
@@ -673,14 +672,14 @@ class LiteSpeed_Cache_Utility
 		else {
 			$prenonce = admin_url( $combined ) ;
 		}
-		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
+		$url = wp_nonce_url( $prenonce, $action, Router::NONCE_NAME ) ;
 
 		if ( $type ) {
 			// Remove potential param `type` from url
 			$url = parse_url( htmlspecialchars_decode( $url ) ) ;
 			parse_str( $url[ 'query' ], $query ) ;
 
-			$built_arr = array_merge( $query, array( LiteSpeed_Cache_Router::TYPE => $type ) ) ;
+			$built_arr = array_merge( $query, array( Router::TYPE => $type ) ) ;
 			if ( $append_arr ) {
 				$built_arr = array_merge( $built_arr, $append_arr ) ;
 			}
@@ -744,8 +743,8 @@ class LiteSpeed_Cache_Utility
 		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
 			// Check if is cdn path
 			// Do this to avoid user hardcoded src in tpl
-			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
-				LiteSpeed_Cache_Log::debug2( '[Util] external' ) ;
+			if ( ! CDN::internal( $url_parsed[ 'host' ] ) ) {
+				Log::debug2( '[Util] external' ) ;
 				return false ;
 			}
 		}
@@ -787,7 +786,7 @@ class LiteSpeed_Cache_Utility
 			}
 		}
 		else {
-			$file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
+			$file_path_ori = Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
 		}
 
 		/**
@@ -807,7 +806,7 @@ class LiteSpeed_Cache_Utility
 
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
+			Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
 			return false ;
 		}
 
@@ -841,7 +840,7 @@ class LiteSpeed_Cache_Utility
 
 				$urls_final[ $k2 ] = str_replace( $url, $url2, $url_info ) ;
 
-				LiteSpeed_Cache_Log::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
+				Log::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
 			}
 
 			if ( ! $changed ) {
@@ -857,7 +856,7 @@ class LiteSpeed_Cache_Utility
 
 		if ( $srcset_ori ) {
 			$content = str_replace( $srcset_ori, $srcset_final, $content ) ;
-			LiteSpeed_Cache_Log::debug2( '[Util] - srcset replaced' ) ;
+			Log::debug2( '[Util] - srcset replaced' ) ;
 		}
 
 		return $content ;
@@ -877,7 +876,7 @@ class LiteSpeed_Cache_Utility
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_SCORE_CHK :
@@ -888,7 +887,7 @@ class LiteSpeed_Cache_Utility
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

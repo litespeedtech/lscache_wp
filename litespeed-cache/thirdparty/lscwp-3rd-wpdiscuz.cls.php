@@ -11,7 +11,7 @@ if ( ! defined('ABSPATH') ) {
 	die() ;
 }
 
-LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_Wpdiscuz' ) ;
+LiteSpeed_API::register( 'LiteSpeed_Cache_ThirdParty_Wpdiscuz' ) ;
 
 class LiteSpeed_Cache_ThirdParty_Wpdiscuz
 {

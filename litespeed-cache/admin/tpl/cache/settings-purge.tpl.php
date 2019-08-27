@@ -9,29 +9,29 @@
 
 <?php
 $option_list = array(
-	LiteSpeed_Cache_Config::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_FRONTPAGE => __( 'Front page', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_HOMEPAGE => __( 'Home page', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_PAGES => __( 'Pages', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_FRONTPAGE => __( 'Front page', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_HOMEPAGE => __( 'Home page', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_PAGES => __( 'Pages', 'litespeed-cache' ),
 
-	LiteSpeed_Cache_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS => __( 'All pages with Recent Posts Widget', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS => __( 'All pages with Recent Posts Widget', 'litespeed-cache' ),
 
-	LiteSpeed_Cache_Config::O_PURGE_POST_AUTHOR => __( 'Author archive', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_POSTTYPE => __( 'Post type archive', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_AUTHOR => __( 'Author archive', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_POSTTYPE => __( 'Post type archive', 'litespeed-cache' ),
 
-	LiteSpeed_Cache_Config::O_PURGE_POST_YEAR => __( 'Yearly archive', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_MONTH => __( 'Monthly archive', 'litespeed-cache' ),
-	LiteSpeed_Cache_Config::O_PURGE_POST_DATE => __( 'Daily archive', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_YEAR => __( 'Yearly archive', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_MONTH => __( 'Monthly archive', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_DATE => __( 'Daily archive', 'litespeed-cache' ),
 
-	LiteSpeed_Cache_Config::O_PURGE_POST_TERM => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
+	LiteSpeed_Config::O_PURGE_POST_TERM => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
 ) ;
 
 // break line at these ids
 $break_arr = array(
-	LiteSpeed_Cache_Config::O_PURGE_POST_PAGES,
-	LiteSpeed_Cache_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS,
-	LiteSpeed_Cache_Config::O_PURGE_POST_POSTTYPE,
-	LiteSpeed_Cache_Config::O_PURGE_POST_DATE,
+	LiteSpeed_Config::O_PURGE_POST_PAGES,
+	LiteSpeed_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS,
+	LiteSpeed_Config::O_PURGE_POST_POSTTYPE,
+	LiteSpeed_Config::O_PURGE_POST_DATE,
 ) ;
 
 ?>
@@ -75,7 +75,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ; ?>
+			<?php $id = LiteSpeed_Config::O_PURGE_TIMED_URLS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -83,14 +83,14 @@ $break_arr = array(
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'The URLs here (one per line) will be purged automatically at the time set in the option "%s".', 'litespeed-cache' ), __( 'Scheduled Purge Time', 'litespeed-cache' ) ) ; ?><br />
 				<?php echo sprintf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<code>http://www.example.com/path/url.php</code>', '<code>/path/url.php</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ; ?>
+			<?php $id = LiteSpeed_Config::O_PURGE_TIMED_URLS_TIME ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -104,7 +104,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
+			<?php $id = LiteSpeed_Config::O_PURGE_HOOK_ALL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

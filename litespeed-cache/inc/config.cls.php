@@ -6,14 +6,16 @@
  *
  * @since      	1.0.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
 
-class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
+class Config extends Const
 {
 	private static $_instance ;
 
@@ -80,7 +82,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * Don't upgrade or run new installations other than from backend visit
 		 * In this case, just use default conf
 		 */
-		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
 				$this->_options = $this->_default_options = $this->default_vals() ;
 				return ;
@@ -92,7 +94,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 */
 		if ( ! $ver ) {
 			// Try upgrade first (network will upgrade inside too)
-			LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
+			Data::get_instance()->try_upgrade_conf_3_0() ;
 		}
 		else {
 			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
@@ -101,16 +103,16 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		/**
 		 * Upgrade conf
 		 */
-		if ( $ver && $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+		if ( $ver && $ver != Core::PLUGIN_VERSION ) {
 			// Plugin version will be set inside
 			// Site plugin upgrade & version change will do in load_site_conf
-			LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
+			Data::get_instance()->conf_upgrade( $ver ) ;
 		}
 
 		/**
 		 * Sync latest new options
 		 */
-		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			// Load default values
 			$this->_default_options = $this->default_vals() ;
 
@@ -215,7 +217,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
 		}
 		// If is not activated on network, it will not have site options
-		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
+		if ( ! is_plugin_active_for_network( Core::PLUGIN_FILE ) ) {
 			if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 ) { // Default to cache on
 				$this->_options[ self::_CACHE ] = true ;
 			}
@@ -240,15 +242,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		/**
 		 * Upgrade conf
 		 */
-		if ( $ver && $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+		if ( $ver && $ver != Core::PLUGIN_VERSION ) {
 			// Site plugin versin will change inside
-			LiteSpeed_Cache_Data::get_instance()->conf_site_upgrade( $ver ) ;
+			Data::get_instance()->conf_site_upgrade( $ver ) ;
 		}
 
 		/**
 		 * Is a new installation
 		 */
-		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			// Load default values
 			$this->_default_site_options = $this->default_site_vals() ;
 
@@ -299,7 +301,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
+			Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
 			$this->_options[ $k ] = $new_v ;
 		}
 	}
@@ -316,7 +318,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
+		Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
 		$this->_options[ $k ] = $v ;
 	}
 
@@ -398,7 +400,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return $this->_options[ $id ] ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
 
 		return NULL ;
 	}
@@ -420,21 +422,21 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		do_action( 'litespeed_update_confs', $the_matrix ) ;
 
 		// Update related tables
-		LiteSpeed_Cache_Data::get_instance()->correct_tb_existance() ;
+		Data::get_instance()->correct_tb_existance() ;
 
 		// Update related files
-		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
+		Activation::get_instance()->update_files() ;
 
 		/**
 		 * CDN related actions - Cloudflare
 		 */
-		LiteSpeed_Cache_CDN_Cloudflare::get_instance()->try_refresh_zone() ;
+		CDN\Cloudflare::get_instance()->try_refresh_zone() ;
 
 		/**
 		 * CDN related actions - QUIC.cloud
 		 * @since 2.3
 		 */
-		LiteSpeed_Cache_CDN_Quic::try_sync_config() ;
+		CDN\Quic::try_sync_config() ;
 
 	}
 
@@ -456,7 +458,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		if ( ! array_key_exists( $id, $this->_default_options ) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
 			return ;
 		}
 
@@ -473,7 +475,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		elseif ( is_array( $this->_default_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
-				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
+				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
 			}
 		}
 		elseif ( ! is_string( $this->_default_options[ $id ] ) ) {
@@ -499,18 +501,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				foreach ( $diff as $v ) {
 					$v = ltrim( $v, '^' ) ;
 					$v = rtrim( $v, '$' ) ;
-					LiteSpeed_Cache_Purge::get_instance()->purgeby_url_cb( $v ) ;
+					Purge::get_instance()->purgeby_url_cb( $v ) ;
 				}
 			}
 
 			// Check if need to do a purge all or not
 			if ( $this->_conf_purge_all( $id ) ) {
-				LiteSpeed_Cache_Purge::purge_all( 'conf changed [id] ' . $id ) ;
+				Purge::purge_all( 'conf changed [id] ' . $id ) ;
 			}
 
 			// Check if need to purge a tag
 			if ( $tag = $this->_conf_purge_tag( $id ) ) {
-				LiteSpeed_Cache_Purge::add( $tag ) ;
+				Purge::add( $tag ) ;
 			}
 		}
 
@@ -530,7 +532,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 
 		if ( ! array_key_exists( $id, $this->_default_site_options ) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid network option ID ' . $id ) ;
+			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid network option ID ' . $id ) ;
 			return ;
 		}
 
@@ -547,7 +549,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		elseif ( is_array( $this->_default_site_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
-				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
+				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
 			}
 		}
 		elseif ( ! is_string( $this->_default_site_options[ $id ] ) ) {
@@ -565,7 +567,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $this->_site_options[ $id ] != $val ) {
 			// Check if need to do a purge all or not
 			if ( $this->_conf_purge_all( $id ) ) {
-				LiteSpeed_Cache_Purge::purge_all( '[Conf] Network conf changed [id] ' . $id ) ;
+				Purge::purge_all( '[Conf] Network conf changed [id] ' . $id ) ;
 			}
 		}
 
@@ -591,7 +593,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 		// Get user role
 		if ( $role === null ) {
-			$role = LiteSpeed_Cache_Router::get_role() ;
+			$role = Router::get_role() ;
 		}
 
 		if ( ! $role ) {
@@ -635,7 +637,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 				$options[ $k ] = array_merge( $options[ $k ], $v ) ;
 
-				LiteSpeed_Cache_Log::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
+				Log::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
 			}
 
 			// Chnage for single option
@@ -644,7 +646,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 				$options[ $k ] = $v ;
 
-				LiteSpeed_Cache_Log::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
+				Log::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
 			}
 
 		}
@@ -653,14 +655,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
+		$output = Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
 		// Save settings now (options & items)
 		foreach ( $output as $k => $v ) {
 			update_option( self::conf_name( $k ), $v ) ;
 		}
 
 		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		// Redirect if changed frontend URL
 		if ( ! empty( $_GET[ 'redirect' ] ) ) {
@@ -679,7 +681,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_SET :
@@ -690,7 +692,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

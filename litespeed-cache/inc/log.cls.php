@@ -6,16 +6,15 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Log
+class Log
 {
 	private static $_instance ;
 	private static $log_path ;
@@ -40,13 +39,13 @@ class LiteSpeed_Cache_Log
 	private function __construct()
 	{
 		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log' ;
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT ) === 0 ) {
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) === 0 ) {
 			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log' ;
 		}
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LEVEL ) ) {
+		if ( Core::config( Const::O_DEBUG_LEVEL ) ) {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true ) ;
 		}
 
@@ -69,11 +68,11 @@ class LiteSpeed_Cache_Log
 		$zip = $this->_package_zip( $commit ) ;
 
 		if ( ! $zip ) {
-			LiteSpeed_Cache_Log::debug( '[Log] ❌  No ZIP file' ) ;
+			Log::debug( '[Log] ❌  No ZIP file' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Log] ZIP file ' . $zip ) ;
+		Log::debug( '[Log] ZIP file ' . $zip ) ;
 
 		$update_plugins = get_site_transient( 'update_plugins' ) ;
 		if ( ! is_object( $update_plugins ) ) {
@@ -81,18 +80,18 @@ class LiteSpeed_Cache_Log
 		}
 
 		$plugin_info = new \stdClass() ;
-		$plugin_info->new_version = LiteSpeed_Cache::PLUGIN_VERSION . '.0.0' ;
-		$plugin_info->slug = LiteSpeed_Cache::PLUGIN_NAME ;
-		$plugin_info->plugin = LiteSpeed_Cache::PLUGIN_FILE ;
+		$plugin_info->new_version = Core::PLUGIN_VERSION . '.0.0' ;
+		$plugin_info->slug = Core::PLUGIN_NAME ;
+		$plugin_info->plugin = Core::PLUGIN_FILE ;
 		$plugin_info->package = $zip ;
 		$plugin_info->url = 'https://wordpress.org/plugins/litespeed-cache/' ;
 
-		$update_plugins->response[ LiteSpeed_Cache::PLUGIN_FILE ] = $plugin_info ;
+		$update_plugins->response[ Core::PLUGIN_FILE ] = $plugin_info ;
 
 		set_site_transient( 'update_plugins', $update_plugins ) ;
 
 		// Run upgrade
-		LiteSpeed_Cache_Activation::get_instance()->upgrade() ;
+		Activation::get_instance()->upgrade() ;
 	}
 
 	/**
@@ -139,7 +138,7 @@ class LiteSpeed_Cache_Log
 
 		$msg = $purge_header . self::_backtrace_info( 6 ) ;
 
-		Litespeed_File::append( $purge_file, self::format_message( $msg ) ) ;
+		File::append( $purge_file, self::format_message( $msg ) ) ;
 
 	}
 
@@ -151,9 +150,9 @@ class LiteSpeed_Cache_Log
 	 */
 	public static function init()
 	{
-		$debug = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG ) ;
-		if ( $debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
-			if ( ! LiteSpeed_Cache_Router::is_admin_ip() ) {
+		$debug = Core::config( Const::O_DEBUG ) ;
+		if ( $debug == Const::VAL_ON2 ) {
+			if ( ! Router::is_admin_ip() ) {
 				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true ) ;
 				return ;
 			}
@@ -164,17 +163,17 @@ class LiteSpeed_Cache_Log
 		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
 		 * @since  3.0
 		 */
-		$list = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_INC ) ;
+		$list = Core::config( Const::O_DEBUG_INC ) ;
 		if ( $list ) {
-			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
 			if ( ! $result ) {
 				return ;
 			}
 		}
 
-		$list = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_EXC ) ;
+		$list = Core::config( Const::O_DEBUG_EXC ) ;
 		if ( $list ) {
-			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
 			if ( $result ) {
 				return ;
 			}
@@ -187,11 +186,11 @@ class LiteSpeed_Cache_Log
 		}
 
 		// Check if hook filters
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS ) ) {
-			self::$_ignore_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS ) ;
-			self::$_ignore_part_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS ) ;
+		if ( Core::config( Const::O_DEBUG_LOG_FILTERS ) ) {
+			self::$_ignore_filters = Core::config( Const::O_DEBUG_LOG_NO_FILTERS ) ;
+			self::$_ignore_part_filters = Core::config( Const::O_DEBUG_LOG_NO_PART_FILTERS ) ;
 
-			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
+			add_action( 'all', '\LiteSpeed\Log::log_filters' ) ;
 		}
 	}
 
@@ -208,14 +207,14 @@ class LiteSpeed_Cache_Log
 		}
 
 		// Check log file size
-		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ) ;
+		$log_file_size = Core::config( Const::O_DEBUG_FILESIZE ) ;
 		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
-			Litespeed_File::save( $log_file, '' ) ;
+			File::save( $log_file, '' ) ;
 		}
 
 		// For more than 2s's requests, add more break
 		if ( file_exists( $log_file ) && time() - filemtime( $log_file ) > 2 ) {
-			Litespeed_File::append( $log_file, "\n\n\n\n" ) ;
+			File::append( $log_file, "\n\n\n\n" ) ;
 		}
 
 		if ( PHP_SAPI == 'cli' ) {
@@ -243,7 +242,7 @@ class LiteSpeed_Cache_Log
 		$param = sprintf( '💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS ) ) {
+		if ( Core::config( Const::O_DEBUG_COLLAPS_QS ) ) {
 			if ( strlen( $qs ) > 53 ) {
 				$qs = substr( $qs, 0, 53 ) . '...' ;
 			}
@@ -266,7 +265,7 @@ class LiteSpeed_Cache_Log
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
 		}
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_COOKIE ) ) {
+		if ( Core::config( Const::O_DEBUG_COOKIE ) ) {
 			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
 		}
 		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
@@ -287,7 +286,7 @@ class LiteSpeed_Cache_Log
 
 		$request = array_map( 'self::format_message', $params ) ;
 
-		Litespeed_File::append( $log_file, $request ) ;
+		File::append( $log_file, $request ) ;
 	}
 
 	/**
@@ -346,7 +345,7 @@ class LiteSpeed_Cache_Log
 			}
 
 			// Generate a unique string per request
-			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand( 3 ) ) ;
+			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, String::rrand( 3 ) ) ;
 		}
 		list( $usec, $sec ) = explode(' ', microtime() ) ;
 		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;
@@ -412,7 +411,7 @@ class LiteSpeed_Cache_Log
 			$msg .= self::_backtrace_info( $backtrace_limit ) ;
 		}
 
-		Litespeed_File::append( self::$log_path, self::format_message( $msg ) ) ;
+		File::append( self::$log_path, self::format_message( $msg ) ) ;
 	}
 
 	/**
@@ -433,11 +432,11 @@ class LiteSpeed_Cache_Log
 				$log = "\n" . $trace[ $i ][ 'file' ] ;
 			}
 			else {
-				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
+				if ( $trace[$i]['class'] == 'Log' ) {
 					continue ;
 				}
 
-				$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
 			}
 			if ( ! empty( $trace[$i-1]['line'] ) ) {
 				$log .= '@' . $trace[$i-1]['line'] ;
@@ -456,8 +455,8 @@ class LiteSpeed_Cache_Log
 	 */
 	private function _clear_log()
 	{
-		Litespeed_File::save( self::$log_path, '' ) ;
-		Litespeed_File::save( LSCWP_CONTENT_DIR . '/debug.purge.log', '' ) ;
+		File::save( self::$log_path, '' ) ;
+		File::save( LSCWP_CONTENT_DIR . '/debug.purge.log', '' ) ;
 	}
 
 	/**
@@ -470,7 +469,7 @@ class LiteSpeed_Cache_Log
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_CLEAR_LOG :
@@ -485,7 +484,7 @@ class LiteSpeed_Cache_Log
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

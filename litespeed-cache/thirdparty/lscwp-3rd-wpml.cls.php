@@ -9,7 +9,7 @@
  */
 defined( 'WPINC' ) || exit ;
 
-LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_WPML' ) ;
+LiteSpeed_API::register( 'LiteSpeed_Cache_ThirdParty_WPML' ) ;
 
 
 class LiteSpeed_Cache_ThirdParty_WPML

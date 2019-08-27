@@ -3,13 +3,15 @@
  * The PlaceHolder class
  *
  * @since 		3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Placeholder
+class Placeholder
 {
 	private static $_instance ;
 
@@ -34,16 +36,16 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( '[Placeholder] init' ) ;
+		Log::debug2( '[Placeholder] init' ) ;
 
-		$this->_conf_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_conf_placeholder_resp_generator = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
-		$this->_conf_placeholder_resp_svg 	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
-		$this->_conf_placeholder_lqip 		= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_LQIP ) ;
-		$this->_conf_placeholder_lqip_qual	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
-		$this->_conf_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_conf_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
-		$this->_conf_ph_default = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+		$this->_conf_placeholder_resp = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_conf_placeholder_resp_generator = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
+		$this->_conf_placeholder_resp_svg 	= Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
+		$this->_conf_placeholder_lqip 		= Core::config( Const::O_MEDIA_PLACEHOLDER_LQIP ) ;
+		$this->_conf_placeholder_lqip_qual	= Core::config( Const::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
+		$this->_conf_placeholder_resp_async = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_conf_placeholder_resp_color = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_conf_ph_default = Core::config( Const::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 	}
 
 	/**
@@ -59,7 +61,7 @@ class LiteSpeed_Cache_Placeholder
 
 		$additional_attr = '' ;
 		if ( $this->_conf_placeholder_resp_generator && $this_placeholder != $this->_conf_ph_default ) {
-			LiteSpeed_Cache_Log::debug2( '[Placeholder] Use resp placeholder [size] ' . $size ) ;
+			Log::debug2( '[Placeholder] Use resp placeholder [size] ' . $size ) ;
 			$additional_attr = ' data-placeholder-resp="' . $size . '"' ;
 		}
 
@@ -93,14 +95,14 @@ class LiteSpeed_Cache_Placeholder
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug2( '[Placeholder] Resp placeholder process [src] ' . $src . ' [size] ' . $size ) ;
+		Log::debug2( '[Placeholder] Resp placeholder process [src] ' . $src . ' [size] ' . $size ) ;
 
 		// Only LQIP needs $src
 		$arr_key = $this->_conf_placeholder_lqip ? $size . ' ' . $src : $size ;
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_placeholder_resp_dict[ $arr_key ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Placeholder] already in dict' ) ;
+			Log::debug2( '[Placeholder] already in dict' ) ;
 
 			return $this->_placeholder_resp_dict[ $arr_key ] ;
 		}
@@ -108,8 +110,8 @@ class LiteSpeed_Cache_Placeholder
 		// Need to generate the responsive placeholder
 		$placeholder_realpath = $this->_placeholder_realpath( $src, $size ) ; // todo: give offload API
 		if ( file_exists( $placeholder_realpath ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Placeholder] file exists' ) ;
-			$this->_placeholder_resp_dict[ $arr_key ] = Litespeed_File::read( $placeholder_realpath ) ;
+			Log::debug2( '[Placeholder] file exists' ) ;
+			$this->_placeholder_resp_dict[ $arr_key ] = File::read( $placeholder_realpath ) ;
 
 			return $this->_placeholder_resp_dict[ $arr_key ] ;
 		}
@@ -118,7 +120,7 @@ class LiteSpeed_Cache_Placeholder
 
 		// Prevent repeated requests
 		if ( in_array( $arr_key, $this->_ph_queue ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Placeholder] file bypass generating due to in queue' ) ;
+			Log::debug2( '[Placeholder] file bypass generating due to in queue' ) ;
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
@@ -130,7 +132,7 @@ class LiteSpeed_Cache_Placeholder
 		if ( ! $this->_conf_placeholder_resp_async ) {
 			// If requested recently, bypass
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-				LiteSpeed_Cache_Log::debug2( '[Placeholder] file bypass generating due to interval limit' ) ;
+				Log::debug2( '[Placeholder] file bypass generating due to interval limit' ) ;
 				return false ;
 			}
 			// Generate immediately
@@ -147,14 +149,14 @@ class LiteSpeed_Cache_Placeholder
 			$req_summary[ 'queue' ] = array() ;
 		}
 		if ( in_array( $arr_key, $req_summary[ 'queue' ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Placeholder] already in queue' ) ;
+			Log::debug2( '[Placeholder] already in queue' ) ;
 
 			return $tmp_placeholder ;
 		}
 
 		$req_summary[ 'queue' ][] = $arr_key ;
 
-		LiteSpeed_Cache_Log::debug( '[Placeholder] Added placeholder queue' ) ;
+		Log::debug( '[Placeholder] Added placeholder queue' ) ;
 
 		$this->_save_summary( $req_summary ) ;
 		return $tmp_placeholder ;
@@ -191,7 +193,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		update_option( Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
 	}
 
 	/**
@@ -202,7 +204,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	public static function get_summary()
 	{
-		return get_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		return get_option( Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 	}
 
 	/**
@@ -222,14 +224,14 @@ class LiteSpeed_Cache_Placeholder
 
 		// External images will use cache folder directly
 		$domain = parse_url( $src, PHP_URL_HOST ) ;
-		if ( $domain && ! LiteSpeed_Cache_Utility::internal( $domain ) ) { // todo: need to improve `util:internal()` to include `CDN::internal()`
+		if ( $domain && ! Utility::internal( $domain ) ) { // todo: need to improve `util:internal()` to include `CDN::internal()`
 			$md5 = md5( $src ) ;
 
 			return LITESPEED_STATIC_DIR . '/lqip/remote/' . substr( $md5, 0, 1 ) . '/' . substr( $md5, 1, 1 ) . '/' . $md5 . '.' . $size ;
 		}
 
 		// Drop domain
-		$short_path = LiteSpeed_Cache_Utility::att_short_path( $src ) ;
+		$short_path = Utility::att_short_path( $src ) ;
 
 		return LITESPEED_STATIC_DIR . '/lqip/' . $short_path . '/' . $size ;
 
@@ -244,13 +246,13 @@ class LiteSpeed_Cache_Placeholder
 	public function rm_cache_folder()
 	{
 		if ( self::has_placehoder_cache() ) {
-			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
 		}
 
 		// Clear placeholder in queue too
 		$this->_save_summary( array() ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[Placeholder] Cleared placeholder queue' ) ;
+		Log::debug2( '[Placeholder] Cleared placeholder queue' ) ;
 	}
 
 	/**
@@ -262,13 +264,13 @@ class LiteSpeed_Cache_Placeholder
 	public function rm_lqip_cache_folder()
 	{
 		if ( self::has_lqip_cache() ) {
-			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/lqip' ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR . '/lqip' ) ;
 		}
 
 		// Clear LQIP in queue too
 		$this->_save_summary( array() ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Placeholder] Cleared LQIP queue' ) ;
+		Log::debug( '[Placeholder] Cleared LQIP queue' ) ;
 	}
 
 	/**
@@ -292,7 +294,7 @@ class LiteSpeed_Cache_Placeholder
 		}
 
 		foreach ( $req_summary[ 'queue' ] as $v ) {
-			LiteSpeed_Cache_Log::debug( '[Placeholder] cron job [size] ' . $v ) ;
+			Log::debug( '[Placeholder] cron job [size] ' . $v ) ;
 
 			self::get_instance()->_generate_placeholder( $v ) ;
 
@@ -311,7 +313,7 @@ class LiteSpeed_Cache_Placeholder
 	 */
 	private function _generate_placeholder_locally( $size )
 	{
-		LiteSpeed_Cache_Log::debug2( '[Placeholder] _generate_placeholder local [size] ' . $size ) ;
+		Log::debug2( '[Placeholder] _generate_placeholder local [size] ' . $size ) ;
 
 		$size = explode( 'x', $size ) ;
 
@@ -359,19 +361,19 @@ class LiteSpeed_Cache_Placeholder
 					'url'		=> $src,
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
-				$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
+				$json = Admin_API::post( Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
 
 				if ( empty( $json[ 'data' ] ) ) {
-					LiteSpeed_Cache_Log::debug( '[Placeholder] wrong response format', $json ) ;
+					Log::debug( '[Placeholder] wrong response format', $json ) ;
 					return false ;
 				}
 
 				$data = $json[ 'data' ] ;
 
-				LiteSpeed_Cache_Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
+				Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
 
 				if ( strpos( $data, 'data:image/svg+xml' ) !== 0 ) {
-					LiteSpeed_Cache_Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
+					Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
 					return false ;
 				}
 			}
@@ -381,19 +383,19 @@ class LiteSpeed_Cache_Placeholder
 					'size'	=> $size,
 					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
 				) ;
-				$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
+				$data = Admin_API::get( Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
 
-				LiteSpeed_Cache_Log::debug( '[Placeholder] _generate_placeholder ' ) ;
+				Log::debug( '[Placeholder] _generate_placeholder ' ) ;
 
 				if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
-					LiteSpeed_Cache_Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
+					Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
 					return false ;
 				}
 			}
 		}
 
 		// Write to file
-		Litespeed_File::save( $file, $data, true ) ;
+		File::save( $file, $data, true ) ;
 
 		// Save summary data
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
@@ -405,9 +407,9 @@ class LiteSpeed_Cache_Placeholder
 
 		$this->_save_summary( $req_summary ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
+		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[Placeholder] placeholder con: ' . $data ) ;
+		Log::debug2( '[Placeholder] placeholder con: ' . $data ) ;
 
 		return $data ;
 	}
@@ -422,7 +424,7 @@ class LiteSpeed_Cache_Placeholder
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_GENERATE :
@@ -433,7 +435,7 @@ class LiteSpeed_Cache_Placeholder
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

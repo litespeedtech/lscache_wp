@@ -4,9 +4,11 @@
  *
  * @since      	2.9.4
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_REST
+class REST
 {
 	private static $_instance ;
 
@@ -37,7 +39,7 @@ class LiteSpeed_Cache_REST
 	{
 		register_rest_route( 'litespeed/v1', '/tool/check_ip', array(
 			'methods' => 'GET',
-			'callback' => array( LiteSpeed_Cache_Tool::get_instance(), 'check_ip' ),
+			'callback' => array( Tool::get_instance(), 'check_ip' ),
 			'permission_callback'	=> function() {
 				return current_user_can( 'manage_network_options' ) || current_user_can( 'manage_options' ) ;
 			}
@@ -54,7 +56,7 @@ class LiteSpeed_Cache_REST
 	public function set_internal_rest_on( $not_used = null )
 	{
 		$this->_internal_rest_status = true ;
-		LiteSpeed_Cache_Log::debug2( '[REST] ✅ Internal REST ON [filter] rest_request_before_callbacks' ) ;
+		Log::debug2( '[REST] ✅ Internal REST ON [filter] rest_request_before_callbacks' ) ;
 
 		return $not_used ;
 	}
@@ -68,7 +70,7 @@ class LiteSpeed_Cache_REST
 	public function set_internal_rest_off( $not_used = null )
 	{
 		$this->_internal_rest_status = false ;
-		LiteSpeed_Cache_Log::debug2( '[REST] ❎ Internal REST OFF [filter] rest_request_after_callbacks' ) ;
+		Log::debug2( '[REST] ❎ Internal REST OFF [filter] rest_request_after_callbacks' ) ;
 
 		return $not_used ;
 	}
@@ -88,7 +90,7 @@ class LiteSpeed_Cache_REST
 	 * Check if an URL or current page is REST req or not
 	 *
 	 * @since  2.9.3
-	 * @since  2.9.4 Moved here from LiteSpeed_Cache_Utility, dropped static
+	 * @since  2.9.4 Moved here from Utility, dropped static
 	 * @access public
 	 */
 	public function is_rest( $url = false )
@@ -117,9 +119,9 @@ class LiteSpeed_Cache_REST
 		// Case #3: URL Path begins with wp-json/ (REST prefix) Safe for subfolder installation
 		$rest_url = wp_parse_url( site_url( $prefix ) ) ;
 		$current_url = wp_parse_url( $url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [base] ', $rest_url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [curr] ', $current_url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
+		// Log::debug( '[Util] is_rest check [base] ', $rest_url ) ;
+		// Log::debug( '[Util] is_rest check [curr] ', $current_url ) ;
+		// Log::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
 		return strpos( $current_url[ 'path' ], $rest_url[ 'path' ] ) === 0 ;
 	}
 

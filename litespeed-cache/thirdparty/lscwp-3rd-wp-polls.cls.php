@@ -18,7 +18,7 @@ class LiteSpeed_Cache_ThirdParty_Wp_Polls
 {
 	public static function set_control()
 	{
-		LiteSpeed_Cache_API::set_nocache() ;
+		LiteSpeed_API::set_nocache() ;
 	}
 }
 

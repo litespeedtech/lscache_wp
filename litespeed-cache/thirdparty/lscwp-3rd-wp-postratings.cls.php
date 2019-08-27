@@ -11,7 +11,7 @@
 if ( ! defined('ABSPATH') ) {
 	die() ;
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_WP_PostRatings') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_WP_PostRatings') ;
 
 class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 {
@@ -37,7 +37,7 @@ class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 	 */
 	public static function flush($uid, $post_id, $post_ratings_score)
 	{
-		LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $post_id) ;
+		LiteSpeed_API::purge(LiteSpeed_API::TYPE_POST . $post_id) ;
 	}
 
 }

@@ -10,16 +10,15 @@
  *
  * @since      	1.0.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache
+class Core
 {
 	private static $_instance ;
 
@@ -86,12 +85,12 @@ class LiteSpeed_Cache
 	 */
 	private function __construct()
 	{
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 		$this->__cfg->init() ;
 
 		// Check if debug is on
-		if ( $this->__cfg->option( LiteSpeed_Cache_Config::O_DEBUG ) ) {
-			LiteSpeed_Cache_Log::init() ;
+		if ( $this->__cfg->option( Const::O_DEBUG ) ) {
+			Log::init() ;
 		}
 
 		if ( defined( 'LITESPEED_ON' ) ) {
@@ -99,7 +98,7 @@ class LiteSpeed_Cache
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
-		if ( self::config( LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ) ) {
+		if ( self::config( Const::O_DEBUG_DISABLE_ALL ) ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
@@ -111,31 +110,31 @@ class LiteSpeed_Cache
 		 */
 		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
-		register_activation_hook( $plugin_file, array( 'LiteSpeed_Cache_Activation', 'register_activation' ) ) ;
-		register_deactivation_hook( $plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ) ) ;
-		register_uninstall_hook( $plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache' ) ;
+		register_activation_hook( $plugin_file, array( '\LiteSpeed\Activation', 'register_activation' ) ) ;
+		register_deactivation_hook( $plugin_file, array('\LiteSpeed\Activation', 'register_deactivation' ) ) ;
+		register_uninstall_hook( $plugin_file, '\LiteSpeed\Activation::uninstall_litespeed_cache' ) ;
 		// }
 
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 
 		// Check if there is a purge request in queue
-		if ( $purge_queue = get_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ) {
+		if ( $purge_queue = get_option( Purge::PURGE_QUEUE ) ) {
 			@header( $purge_queue ) ;
-			LiteSpeed_Cache_Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
-			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
+			Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
+			delete_option( Purge::PURGE_QUEUE ) ;
 		}
 
 		/**
 		 * Hook internal REST
 		 * @since  2.9.4
 		 */
-		LiteSpeed_Cache_REST::get_instance() ;
+		REST::get_instance() ;
 
 		/**
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
 		 */
-		LiteSpeed_Cache_ESI::get_instance() ;
+		ESI::get_instance() ;
 	}
 
 	/**
@@ -153,19 +152,19 @@ class LiteSpeed_Cache
 		/**
 		 * Added hook before init
 		 * @since  1.6.6
-		 * @since  2.6 	Added filter to all config values in LiteSpeed_Cache_Config
+		 * @since  2.6 	Added filter to all config values in Config
 		 */
 		do_action( 'litespeed_init' ) ;
 
 		// in `after_setup_theme`, before `init` hook
-		LiteSpeed_Cache_Activation::auto_update() ;
+		Activation::auto_update() ;
 
 		if( is_admin() ) {
-			LiteSpeed_Cache_Admin::get_instance() ;
+			Admin::get_instance() ;
 		}
 
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
-			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
+			Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
 			return ;
 		}
 
@@ -173,13 +172,13 @@ class LiteSpeed_Cache
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
-		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
+		add_action( 'wp_footer', array( $this, 'footer_hook' ) ) ;
 
 		/**
 		 * Check if is non optm simulator
 		 * @since  2.9
 		 */
-		if ( ! empty( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] == 'before_optm' ) {
+		if ( ! empty( $_GET[ Router::ACTION_KEY ] ) && $_GET[ Router::ACTION_KEY ] == 'before_optm' ) {
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 
@@ -187,16 +186,16 @@ class LiteSpeed_Cache
 		 * Register vary filter
 		 * @since  1.6.2
 		 */
-		LiteSpeed_Cache_Control::get_instance() ;
+		Control::get_instance() ;
 
 		// 1. Init vary
 		// 2. Init cacheable status
-		LiteSpeed_Cache_Vary::get_instance() ;
+		Vary::get_instance() ;
 
 		// Init Purge hooks
-		LiteSpeed_Cache_Purge::get_instance() ;
+		Purge::get_instance() ;
 
-		LiteSpeed_Cache_Tag::get_instance() ;
+		Tag::get_instance() ;
 
 		// Load hooks that may be related to users
 		add_action( 'init', array( $this, 'after_user_init' ) ) ;
@@ -213,38 +212,38 @@ class LiteSpeed_Cache
 	 */
 	public function after_user_init()
 	{
-		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
+		Router::get_instance()->is_crawler_role_simulation() ;
 
 		if ( $result = $this->__cfg->in_optm_exc_roles() ) {
-			LiteSpeed_Cache_Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result ) ;
+			Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result ) ;
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 
 		// Heartbeat control
-		LiteSpeed_Cache_Tool::heartbeat() ;
+		Tool::heartbeat() ;
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Check missing static files
-			LiteSpeed_Cache_Router::serve_static() ;
+			Router::serve_static() ;
 
-			LiteSpeed_Cache_Media::get_instance() ;
+			Media::get_instance() ;
 
-			LiteSpeed_Cache_Optimize::get_instance() ;
+			Optimize::get_instance() ;
 
 			// Hook cdn for attachements
-			LiteSpeed_Cache_CDN::get_instance() ;
+			CDN::get_instance() ;
 
 			// load cron tasks
-			LiteSpeed_Cache_Task::get_instance() ;
+			Task::get_instance() ;
 		}
 
 		// load litespeed actions
-		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
+		if ( $action = Router::get_action() ) {
 			$this->proceed_action( $action ) ;
 		}
 
 		// Load frontend GUI
-		LiteSpeed_Cache_GUI::get_instance() ;
+		GUI::get_instance() ;
 
 	}
 
@@ -259,140 +258,140 @@ class LiteSpeed_Cache
 		$msg = false ;
 		// handle actions
 		switch ( $action ) {
-			case LiteSpeed_Cache::ACTION_QS_PURGE:
-				LiteSpeed_Cache_Purge::set_purge_related() ;
+			case self::ACTION_QS_PURGE:
+				Purge::set_purge_related() ;
 				break;
 
 			case self::ACTION_QS_SHOW_HEADERS:
 				self::$_debug_show_header = true ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE:
-				LiteSpeed_Cache_Purge::set_purge_single() ;
+			case self::ACTION_QS_PURGE_SINGLE:
+				Purge::set_purge_single() ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
-				LiteSpeed_Cache_Crawler::get_instance()->generate_sitemap() ;
-				LiteSpeed_Cache_Admin::redirect() ;
+			case self::ACTION_CRAWLER_GENERATE_FILE:
+				Crawler::get_instance()->generate_sitemap() ;
+				Admin::redirect() ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
-				LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
-				LiteSpeed_Cache_Admin::redirect() ;
+			case self::ACTION_CRAWLER_RESET_POS:
+				Crawler::get_instance()->reset_pos() ;
+				Admin::redirect() ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
-				LiteSpeed_Cache_Task::enable() ;
+			case self::ACTION_CRAWLER_CRON_ENABLE:
+				Task::enable() ;
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin
-			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				LiteSpeed_Cache_Crawler::crawl_data( true ) ;
+			case self::ACTION_DO_CRAWL:
+				Crawler::crawl_data( true ) ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
-				LiteSpeed_Cache_Crawler::get_instance()->save_blacklist() ;
+			case self::ACTION_BLACKLIST_SAVE:
+				Crawler::get_instance()->save_blacklist() ;
 				$msg = __( 'Crawler blacklist is saved.', 'litespeed-cache' ) ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
-				LiteSpeed_Cache_Purge::purge_all() ;
+			case self::ACTION_QS_PURGE_ALL:
+				Purge::purge_all() ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
-			case LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE:
+			case self::ACTION_PURGE_EMPTYCACHE:
+			case self::ACTION_QS_PURGE_EMPTYCACHE:
 				define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-				LiteSpeed_Cache_Purge::purge_all() ;
+				Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_PURGE_BY:
-				LiteSpeed_Cache_Purge::get_instance()->purge_list() ;
+			case self::ACTION_PURGE_BY:
+				Purge::get_instance()->purge_list() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache' ) ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_DISMISS:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
-				LiteSpeed_Cache_GUI::dismiss() ;
+			case self::ACTION_DISMISS:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
+				GUI::dismiss() ;
 				break ;
 
-			case LiteSpeed_Cache_Router::ACTION_DB:
-				LiteSpeed_Cache_DB_Optm::handler() ;
+			case Router::ACTION_DB:
+				DB_Optm::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK:
-				LiteSpeed_Cache_Admin_API::sapi_passive_callback() ;
+			case self::ACTION_SAPI_PASSIVE_CALLBACK:
+				Admin_API::sapi_passive_callback() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK:
-				LiteSpeed_Cache_Admin_API::sapi_aggressive_callback() ;
+			case self::ACTION_SAPI_AGGRESSIVE_CALLBACK:
+				Admin_API::sapi_aggressive_callback() ;
 				break ;
 
-			case LiteSpeed_Cache_Router::ACTION_PLACEHOLDER:
-				LiteSpeed_Cache_Placeholder::handler() ;
+			case Router::ACTION_PLACEHOLDER:
+				Placeholder::handler() ;
 				break ;
 
-			case LiteSpeed_Cache_Router::ACTION_AVATAR:
-				LiteSpeed_Cache_Avatar::handler() ;
+			case Router::ACTION_AVATAR:
+				Avatar::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_IMG_OPTM:
-				$msg = LiteSpeed_Cache_Img_Optm::handler() ;
+			case self::ACTION_IMG_OPTM:
+				$msg = Img_Optm::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_PURGE:
-				$msg = LiteSpeed_Cache_Purge::handler() ;
+			case self::ACTION_PURGE:
+				$msg = Purge::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_IAPI:
-				$msg = LiteSpeed_Cache_Admin_API::handler() ;
+			case self::ACTION_IAPI:
+				$msg = Admin_API::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_LOG:
-				$msg = LiteSpeed_Cache_Log::handler() ;
+			case self::ACTION_LOG:
+				$msg = Log::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_REPORT:
-				$msg = LiteSpeed_Cache_Report::handler() ;
+			case self::ACTION_REPORT:
+				$msg = Report::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_IMPORT:
-				$msg = LiteSpeed_Cache_Import::handler() ;
+			case self::ACTION_IMPORT:
+				$msg = Import::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CSS:
-				$msg = LiteSpeed_Cache_CSS::handler() ;
+			case self::ACTION_CSS:
+				$msg = CSS::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
-				$msg = LiteSpeed_Cache_CDN_Cloudflare::handler() ;
+			case self::ACTION_CDN_CLOUDFLARE:
+				$msg = CDN\Cloudflare::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CDN_QUIC:
-				$msg = LiteSpeed_Cache_CDN_Quic::handler() ;
+			case self::ACTION_CDN_QUIC:
+				$msg = CDN\Quic::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CONF :
-				$msg = LiteSpeed_Cache_Config::handler() ;
+			case self::ACTION_CONF :
+				$msg = Config::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_ACTIVATION :
-				$msg = LiteSpeed_Cache_Activation::handler() ;
+			case self::ACTION_ACTIVATION :
+				$msg = Activation::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_UTIL :
-				$msg = LiteSpeed_Cache_Utility::handler() ;
+			case self::ACTION_UTIL :
+				$msg = Utility::handler() ;
 				break ;
 
 			default:
 				break ;
 		}
-		if ( $msg && ! LiteSpeed_Cache_Router::is_ajax() ) {
-			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
-			LiteSpeed_Cache_Admin::redirect() ;
+		if ( $msg && ! Router::is_ajax() ) {
+			Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
+			Admin::redirect() ;
 			return ;
 		}
 
-		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+		if ( Router::is_ajax() ) {
 			exit ;
 		}
 	}
@@ -407,11 +406,11 @@ class LiteSpeed_Cache
 	 */
 	public function load_thirdparty()
 	{
-		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
+		do_action( 'litespeed_api_load_thirdparty' ) ;
 	}
 
 	/**
-	 * A shortcut to get the LiteSpeed_Cache_Config config value
+	 * A shortcut to get the Config config value
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -420,7 +419,7 @@ class LiteSpeed_Cache
 	 */
 	public static function config( $opt_id )
 	{
-		return LiteSpeed_Cache_Config::get_instance()->option( $opt_id ) ;
+		return Config::get_instance()->option( $opt_id ) ;
 	}
 
 	/**
@@ -429,9 +428,9 @@ class LiteSpeed_Cache
 	 * @since 1.3
 	 * @access public
 	 */
-	public static function footer_hook()
+	public function footer_hook()
 	{
-		LiteSpeed_Cache_Log::debug( '[Core] Footer hook called' ) ;
+		Log::debug( '[Core] Footer hook called' ) ;
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			define( 'LITESPEED_FOOTER_CALLED', true ) ;
 		}
@@ -446,22 +445,22 @@ class LiteSpeed_Cache
 	private function _check_is_html( $buffer = null )
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
+			Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_AJAX' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing ajax' ) ;
+			Log::debug2( '[Core] CHK html bypass: doing ajax' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_CRON' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing cron' ) ;
+			Log::debug2( '[Core] CHK html bypass: doing cron' ) ;
 			return ;
 		}
 
 		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
+			Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
 			return ;
 		}
 
@@ -478,16 +477,16 @@ class LiteSpeed_Cache
 		}
 		$buffer = trim( $buffer ) ;
 
-		$buffer = Litespeed_File::remove_zero_space( $buffer ) ;
+		$buffer = File::remove_zero_space( $buffer ) ;
 
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
 		if ( ! $is_html ) {
-			LiteSpeed_Cache_Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
+			Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Core] Footer check passed' ) ;
+		Log::debug( '[Core] Footer check passed' ) ;
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true ) ;
@@ -509,11 +508,11 @@ class LiteSpeed_Cache
 		$this->_check_is_html( $buffer ) ;
 
 		// Replace ESI preserved list
-		$buffer = LiteSpeed_Cache_ESI::finalize( $buffer ) ;
+		$buffer = ESI::finalize( $buffer ) ;
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Image lazy load check
-			$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
+			$buffer = Media::finalize( $buffer ) ;
 		}
 
 		/**
@@ -521,12 +520,12 @@ class LiteSpeed_Cache
 		 * NOTE: this needs to be before optimizer to avoid wrapper being removed
 		 * @since 1.4
 		 */
-		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
+		$buffer = GUI::finalize( $buffer ) ;
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			$buffer = LiteSpeed_Cache_Optimize::finalize( $buffer ) ;
+			$buffer = Optimize::finalize( $buffer ) ;
 
-			$buffer = LiteSpeed_Cache_CDN::finalize( $buffer ) ;
+			$buffer = CDN::finalize( $buffer ) ;
 		}
 
 		$this->send_headers( true ) ;
@@ -541,28 +540,28 @@ class LiteSpeed_Cache
 		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			LiteSpeed_Cache_Log::debug( '[Core] ESI Start 👇' ) ;
+			Log::debug( '[Core] ESI Start 👇' ) ;
 			if ( strlen( $buffer ) > 100 ) {
-				LiteSpeed_Cache_Log::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' ) ;
+				Log::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' ) ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug( $buffer ) ;
+				Log::debug( $buffer ) ;
 			}
-			LiteSpeed_Cache_Log::debug( '[Core] ESI End 👆' ) ;
+			Log::debug( '[Core] ESI End 👆' ) ;
 		}
 
 		if ( apply_filters( 'litespeed_is_json', false ) ) {
 			if ( json_decode( $buffer, true ) == NULL ) {
-				LiteSpeed_Cache_Log::debug( '[Core] Buffer converting to JSON' ) ;
+				Log::debug( '[Core] Buffer converting to JSON' ) ;
 				$buffer = json_encode( $buffer ) ;
 				$buffer = trim( $buffer, '"' ) ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug( '[Core] JSON Buffer' ) ;
+				Log::debug( '[Core] JSON Buffer' ) ;
 			}
 		}
 
-		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
+		Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
 
 		return $buffer ;
 	}
@@ -588,36 +587,36 @@ class LiteSpeed_Cache
 
 		$this->_check_is_html() ;
 
-		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
-		LiteSpeed_Cache_Control::finalize() ;
+		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_api_control`.
+		Control::finalize() ;
 
-		$vary_header = LiteSpeed_Cache_Vary::finalize() ;
+		$vary_header = Vary::finalize() ;
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
-		$tag_header = LiteSpeed_Cache_Tag::output() ;
-		if ( LiteSpeed_Cache_Control::is_cacheable() && ! $tag_header ) {
-			LiteSpeed_Cache_Control::set_nocache( 'empty tag header' ) ;
+		$tag_header = Tag::output() ;
+		if ( Control::is_cacheable() && ! $tag_header ) {
+			Control::set_nocache( 'empty tag header' ) ;
 		}
 
 		// NOTE: `purge` output needs to be after `tag` output as Admin QS may need to send `tag` header
-		$purge_header = LiteSpeed_Cache_Purge::output() ;
+		$purge_header = Purge::output() ;
 
 		// generate `control` header in the end in case control status is changed by other headers.
-		$control_header = LiteSpeed_Cache_Control::output() ;
+		$control_header = Control::output() ;
 
 		// Init comment info
 		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
-			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
+			Log::debug( '[Core] ESI silence' ) ;
 		}
 		/**
 		 * Silence comment for json req
 		 * @since 2.9.3
 		 */
-		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() || LiteSpeed_Cache_Router::is_ajax() ) {
+		if ( REST::get_instance()->is_rest() || Router::is_ajax() ) {
 			$running_info_showing = false ;
-			LiteSpeed_Cache_Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
+			Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
 		}
 
 		$running_info_showing = apply_filters( 'litespeed_comment', $running_info_showing ) ;
@@ -630,7 +629,7 @@ class LiteSpeed_Cache
 
 			$cache_support = 'supported' ;
 			if ( defined( 'LITESPEED_ON' ) ) {
-				$cache_support = LiteSpeed_Cache_Control::is_cacheable() ? 'generated' : 'uncached' ;
+				$cache_support = Control::is_cacheable() ? 'generated' : 'uncached' ;
 			}
 
 			$this->footer_comment .= sprintf(
@@ -646,7 +645,7 @@ class LiteSpeed_Cache
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			@header( $control_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
-				LiteSpeed_Cache_Log::debug( $control_header ) ;
+				Log::debug( $control_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $control_header . " -->" ;
 				}
@@ -655,10 +654,10 @@ class LiteSpeed_Cache
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
 			@header( $purge_header ) ;
-			LiteSpeed_Cache_Log::log_purge( $purge_header ) ;
+			Log::log_purge( $purge_header ) ;
 
 			if ( defined( 'LSCWP_LOG' ) ) {
-				LiteSpeed_Cache_Log::debug( $purge_header ) ;
+				Log::debug( $purge_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $purge_header . " -->" ;
 				}
@@ -668,7 +667,7 @@ class LiteSpeed_Cache
 		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
 			@header( $vary_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
-				LiteSpeed_Cache_Log::debug( $vary_header ) ;
+				Log::debug( $vary_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $vary_header . " -->" ;
 				}
@@ -691,14 +690,14 @@ class LiteSpeed_Cache
 				$debug_header .= $vary_header . '; ' ;
 			}
 			@header( $debug_header ) ;
-			LiteSpeed_Cache_Log::debug( $debug_header ) ;
+			Log::debug( $debug_header ) ;
 		}
 		else {
 			// Control header
-			if ( defined( 'LITESPEED_ON' ) && LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
+			if ( defined( 'LITESPEED_ON' ) && Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header ) ;
 				if ( defined( 'LSCWP_LOG' ) ) {
-					LiteSpeed_Cache_Log::debug( $tag_header ) ;
+					Log::debug( $tag_header ) ;
 					if ( $running_info_showing ) {
 						$this->footer_comment .= "\n<!-- " . $tag_header . " -->" ;
 					}
@@ -712,7 +711,7 @@ class LiteSpeed_Cache
 		}
 
 		if ( $is_forced ) {
-			LiteSpeed_Cache_Log::debug( '--forced--' ) ;
+			Log::debug( '--forced--' ) ;
 		}
 
 	}
@@ -730,7 +729,7 @@ class LiteSpeed_Cache
 	 */
 	public function purge_all()
 	{
-		LiteSpeed_Cache_API::purge_all() ;
+		API::purge_all() ;
 	}
 
 	/**

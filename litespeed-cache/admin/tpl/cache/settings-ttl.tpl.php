@@ -10,7 +10,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_TTL_PUB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -25,7 +25,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_TTL_PRIV ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -40,7 +40,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_TTL_FRONTPAGE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -55,7 +55,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_TTL_FEED ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -70,7 +70,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_TTL_STATUS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

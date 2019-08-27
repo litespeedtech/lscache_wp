@@ -7,12 +7,11 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Doc
+class Doc
 {
 	// private static $_instance ;
 

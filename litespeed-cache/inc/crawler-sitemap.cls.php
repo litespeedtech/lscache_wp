@@ -5,16 +5,15 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache_Crawler_Sitemap
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Crawler_Sitemap
+class Crawler_Sitemap
 {
 	private static $_instance ;
 	private $home_url ;// Used to simplify urls
@@ -47,15 +46,15 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	{
 		global $wpdb ;
 
-		$optionOrderBy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS ) ;
+		$optionOrderBy = Core::config( Const::O_CRWL_ORDER_LINKS ) ;
 
-		$show_pages = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_PAGES ) ;
+		$show_pages = Core::config( Const::O_CRWL_PAGES ) ;
 
-		$show_posts = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_POSTS ) ;
+		$show_posts = Core::config( Const::O_CRWL_POSTS ) ;
 
-		$show_cats = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CATS ) ;
+		$show_cats = Core::config( Const::O_CRWL_CATS ) ;
 
-		$show_tags = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_TAGS ) ;
+		$show_tags = Core::config( Const::O_CRWL_TAGS ) ;
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
@@ -85,7 +84,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$post_type_array[] = 'post' ;
 		}
 
-		if ( $excludeCptArr = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ) ) {
+		if ( $excludeCptArr = Core::config( Const::O_CRWL_EXC_CPT ) ) {
 			$cptArr = get_post_types() ;
 			$cptArr = array_diff($cptArr, array('post', 'page')) ;
 			$cptArr = array_diff($cptArr, $excludeCptArr) ;
@@ -93,7 +92,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 		}
 
 		if ( ! empty($post_type_array) ) {
-			LiteSpeed_Cache_Log::debug( 'Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) ) ;
+			Log::debug( 'Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) ) ;
 
 			$q = "SELECT ID, post_date FROM $wpdb->posts where post_type IN (" . implode( ',', array_fill( 0, count( $post_type_array ), '%s' ) ) . ") AND post_status='publish' $orderBy" ;
 			$results = $wpdb->get_results( $wpdb->prepare( $q, $post_type_array ) ) ;

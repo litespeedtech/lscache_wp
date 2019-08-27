@@ -11,7 +11,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -19,14 +19,14 @@
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_QS ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_EXC_QS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -34,14 +34,14 @@
 			<div class="litespeed-desc">
 				<?php echo __( 'Query string containing these parameters will not be cached.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_EXC_CAT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -55,7 +55,7 @@
 			<div class="litespeed-desc">
 				<b><?php echo __( 'All categories are cached by default.', 'litespeed-cache' ) ; ?></b>
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'categories', 'litespeed-cache') ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:</h4>
@@ -71,7 +71,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_EXC_TAG ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -91,7 +91,7 @@
 			<div class="litespeed-desc">
 				<b><?php echo __( 'All tags are cached by default.', 'litespeed-cache' ) ; ?></b>
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'tags', 'litespeed-cache') ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:</h4>
@@ -118,7 +118,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_EXC_ROLES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

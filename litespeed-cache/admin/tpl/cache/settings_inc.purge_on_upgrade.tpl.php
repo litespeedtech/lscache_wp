@@ -3,7 +3,7 @@
 	<!-- build_setting_purge_on_upgrade -->
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ; ?>
+			<?php $id = LiteSpeed_Config::O_PURGE_ON_UPGRADE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

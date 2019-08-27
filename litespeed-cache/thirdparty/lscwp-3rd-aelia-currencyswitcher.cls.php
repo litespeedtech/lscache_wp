@@ -13,7 +13,7 @@ if ( ! defined('ABSPATH') ) {
 	die() ;
 }
 
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher') ;
 
 class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 {
@@ -35,7 +35,7 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	{
 		if ( defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher']) ) {
 			// Not all pages need to add vary, so need to use this API to set conditions
-			LiteSpeed_Cache_API::hook_vary_add( 'LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies' ) ;
+			LiteSpeed_API::hook_vary_add( 'LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies' ) ;
 		}
 	}
 
@@ -48,7 +48,7 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	 */
 	public static function check_cookies()
 	{
-		if ( LiteSpeed_Cache_API::not_cacheable() ) {
+		if ( LiteSpeed_API::not_cacheable() ) {
 			return ;
 		}
 
@@ -57,6 +57,6 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 			return ;
 		}
 
-		LiteSpeed_Cache_API::vary_add( self::$_cookies ) ;
+		LiteSpeed_API::vary_add( self::$_cookies ) ;
 	}
 }

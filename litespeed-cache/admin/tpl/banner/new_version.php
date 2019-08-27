@@ -8,7 +8,7 @@ if ( is_multisite() ) {
 	return ;
 }
 
-if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_AUTO_UPGRADE ) ) {
+if ( LiteSpeed_Cache::config( LiteSpeed_Config::O_AUTO_UPGRADE ) ) {
 	return ;
 }
 
@@ -36,7 +36,7 @@ if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
 }
 
 // Check if current version is newer than auto_v or not
-if ( LiteSpeed_Cache_API::v( $_summary[ 'new_version.v' ] ) ) {
+if ( LiteSpeed_API::v( $_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 
@@ -62,7 +62,7 @@ if ( $check_only ) {
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
 				<div class="litespeed-banner-description-padding-right-15">
-					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_Activation::TYPE_UPGRADE ) ; ?>
+					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Activation::TYPE_UPGRADE ) ; ?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-success litespeed-btn-mini">
 						<i class="dashicons dashicons-image-rotate">&nbsp;</i>
 						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
@@ -70,8 +70,8 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
+						$cfg = array( LiteSpeed_Config::TYPE_SET . '[' . LiteSpeed_Config::O_AUTO_UPGRADE . ']' => 1 ) ;
+						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, LiteSpeed_Config::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>

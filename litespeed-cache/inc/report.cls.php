@@ -4,16 +4,15 @@
  *
  *
  * @since      1.1.0
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/inc
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed/inc
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Report
+class Report
 {
 	private static $_instance ;
 
@@ -31,7 +30,7 @@ class LiteSpeed_Cache_Report
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 
@@ -43,7 +42,7 @@ class LiteSpeed_Cache_Report
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**
@@ -59,12 +58,12 @@ class LiteSpeed_Cache_Report
 			'env' => $report_con,
 		) ;
 
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ), false, true ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_ENV_REPORT, Utility::arr2str( $data ), false, true ) ;
 
 		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
+			Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
 			$msg = __( 'Failed to push to LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			Admin_Display::error( $msg ) ;
 			return ;
 		}
 
@@ -73,7 +72,7 @@ class LiteSpeed_Cache_Report
 			'dateline'	=> time(),
 		) ;
 
-		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_REF, 'env' ), $data ) ;
+		update_option( Const::conf_name( self::ITEM_REF, 'env' ), $data ) ;
 
 	}
 
@@ -86,7 +85,7 @@ class LiteSpeed_Cache_Report
 	 */
 	public function get_env_ref()
 	{
-		$info = get_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_REF, 'env' ) ) ;
+		$info = get_option( Const::conf_name( self::ITEM_REF, 'env' ) ) ;
 
 		if ( ! is_array( $info ) ) {
 			return array(
@@ -113,8 +112,8 @@ class LiteSpeed_Cache_Report
 	public function generate_environment_report($options = null)
 	{
 		global $wp_version, $_SERVER ;
-		$frontend_htaccess = LiteSpeed_Htaccess::get_frontend_htaccess() ;
-		$backend_htaccess = LiteSpeed_Htaccess::get_backend_htaccess() ;
+		$frontend_htaccess = Htaccess::get_frontend_htaccess() ;
+		$backend_htaccess = Htaccess::get_backend_htaccess() ;
 		$paths = array($frontend_htaccess) ;
 		if ( $frontend_htaccess != $backend_htaccess ) {
 			$paths[] = $backend_htaccess ;
@@ -150,16 +149,16 @@ class LiteSpeed_Cache_Report
 		$extras[ 'active plugins' ] = $active_plugins ;
 
 		if ( is_null($options) ) {
-			$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+			$options = Config::get_instance()->get_options() ;
 		}
 
 		if ( ! is_null($options) && is_multisite() ) {
-			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+			$blogs = Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = LiteSpeed_Cache_Config::get_instance()->load_options( $blog_id, true ) ;
-					if ( isset($opts[ LiteSpeed_Cache_Config::O_CACHE ]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[ LiteSpeed_Cache_Config::O_CACHE ] ;
+					$opts = Config::get_instance()->load_options( $blog_id, true ) ;
+					if ( isset($opts[ Const::O_CACHE ]) ) {
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ Const::O_CACHE ] ;
 					}
 				}
 			}
@@ -167,9 +166,9 @@ class LiteSpeed_Cache_Report
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			LiteSpeed_Cache_Config::O_CDN_QUIC_KEY,
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY,
-			LiteSpeed_Cache_Config::O_OBJECT_PSWD,
+			Const::O_CDN_QUIC_KEY,
+			Const::O_CDN_CLOUDFLARE_KEY,
+			Const::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
@@ -202,7 +201,7 @@ class LiteSpeed_Cache_Report
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
-		$server_vars = array_merge( $server_vars, LiteSpeed_Cache_Config::get_instance()->server_vars() ) ;
+		$server_vars = array_merge( $server_vars, Config::get_instance()->server_vars() ) ;
 
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 

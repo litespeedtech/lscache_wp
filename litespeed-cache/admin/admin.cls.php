@@ -8,12 +8,11 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Admin
+class Admin
 {
 	private static $_instance ;
 	private $__cfg ;// cfg instance
@@ -34,9 +33,9 @@ class LiteSpeed_Cache_Admin
 
 		// Additional litespeed assets on admin display
 		// Also register menu
-		$this->display = LiteSpeed_Cache_Admin_Display::get_instance() ;
+		$this->display = Admin_Display::get_instance() ;
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 
 		// initialize admin actions
 		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
@@ -45,10 +44,10 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = Core::config( Const::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ) ) {
+			if ( Core::config( Const::O_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}
@@ -57,9 +56,9 @@ class LiteSpeed_Cache_Admin
 				if ( in_array( $event, array( 'update_option' ) ) ) {
 					continue ;
 				}
-				add_action( $event, 'LiteSpeed_Cache_Purge::purge_all' ) ;
+				add_action( $event, 'Purge::purge_all' ) ;
 			}
-			// add_filter( 'upgrader_pre_download', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
+			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' ) ;
 		}
 	}
 
@@ -71,7 +70,7 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function admin_init()
 	{
-		load_plugin_textdomain( LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/lang/' ) ;
+		load_plugin_textdomain( Core::PLUGIN_NAME, false, 'litespeed-cache/lang/' ) ;
 
 		$this->_proceed_admin_action() ;
 
@@ -92,16 +91,16 @@ class LiteSpeed_Cache_Admin
 		// Add privacy policy
 		// @since 2.2.6
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			wp_add_privacy_policy_content( LiteSpeed_Cache::PLUGIN_NAME, LiteSpeed_Cache_Doc::privacy_policy() ) ;
+			wp_add_privacy_policy_content( Core::PLUGIN_NAME, Doc::privacy_policy() ) ;
 		}
 
 		do_action( 'litspeed_after_admin_init' ) ;
 
-		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
+		Control::set_nocache( 'Admin page' ) ;
 
-		if ( LiteSpeed_Cache_Router::esi_enabled() ) {
+		if ( Router::esi_enabled() ) {
 			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
-			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
+			add_filter( 'widget_update_callback', 'Admin_Settings::validate_widget_save', 10, 4 ) ;
 		}
 	}
 
@@ -113,21 +112,21 @@ class LiteSpeed_Cache_Admin
 	private function _proceed_admin_action()
 	{
 		// handle actions
-		switch (LiteSpeed_Cache_Router::get_action()) {
+		switch (Router::get_action()) {
 
 			// Save htaccess
-			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
-				LiteSpeed_Htaccess::get_instance()->htaccess_editor_save() ;
+			case Core::ACTION_SAVE_HTACCESS:
+				Htaccess::get_instance()->htaccess_editor_save() ;
 				break ;
 
-			case LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS :
-				LiteSpeed_Cache_Admin_Settings::get_instance()->save( $_POST ) ;
+			case Router::ACTION_SAVE_SETTINGS :
+				Admin_Settings::get_instance()->save( $_POST ) ;
 				break ;
 
 
 			// Save network settings
-			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->network_save( $_POST ) ;
+			case Core::ACTION_SAVE_SETTINGS_NETWORK:
+				Admin_Settings::get_instance()->network_save( $_POST ) ;
 				break ;
 
 			default:
@@ -147,7 +146,7 @@ class LiteSpeed_Cache_Admin
 	public static function cleanup_text( $input )
 	{
 		if ( is_array( $input ) ) {
-			return array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $input ) ;
+			return array_map( 'Admin::cleanup_text', $input ) ;
 		}
 
 		return stripslashes( trim( $input ) ) ;
@@ -167,11 +166,11 @@ class LiteSpeed_Cache_Admin
 		$qs = '' ;
 		if ( ! $url ) {
 			if ( ! empty( $_GET ) ) {
-				if ( isset( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ) {
-					unset( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ;
+				if ( isset( $_GET[ Router::ACTION_KEY ] ) ) {
+					unset( $_GET[ Router::ACTION_KEY ] ) ;
 				}
-				if ( isset( $_GET[ LiteSpeed_Cache_Router::NONCE_NAME ] ) ) {
-					unset( $_GET[ LiteSpeed_Cache_Router::NONCE_NAME ] ) ;
+				if ( isset( $_GET[ Router::NONCE_NAME ] ) ) {
+					unset( $_GET[ Router::NONCE_NAME ] ) ;
 				}
 				if ( ! empty( $_GET ) ) {
 					$qs = '?' . http_build_query( $_GET ) ;

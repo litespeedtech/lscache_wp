@@ -2,14 +2,14 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE ; ?>
+			<?php $id = LiteSpeed_Config::O_IMG_OPTM_WEBP_REPLACE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Significantly improve load time by replacing images with their optimized %s versions.', 'litespeed-cache' ), '.webp' ) ; ?>
-				<br /><?php LiteSpeed_Cache_Doc::notice_htaccess() ; ?>
+				<br /><?php LiteSpeed_Doc::notice_htaccess() ; ?>
 			</div>
 		</td>
 	</tr>

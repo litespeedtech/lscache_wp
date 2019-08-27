@@ -4,16 +4,15 @@
  *
  *
  * @since      1.0.0
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Admin_Display
+class Admin_Display
 {
 	private static $_instance ;
 
@@ -67,7 +66,7 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can( $manage ) ) {
-			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
+			add_action( 'wp_before_admin_bar_render', array( GUI::get_instance(), 'backend_shortcut' ) ) ;
 
 			// `admin_notices` is after `admin_enqueue_scripts`
 			// @see wp-admin/admin-header.php
@@ -91,7 +90,7 @@ class LiteSpeed_Cache_Admin_Display
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) ) ;
 		}
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 	}
 
 	/**
@@ -126,7 +125,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function title( $id )
 	{
-		echo LiteSpeed_Lang::title( $id ) ;
+		echo Lang::title( $id ) ;
 	}
 
 	/**
@@ -193,7 +192,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::PLUGIN_VERSION, 'all') ;
 	}
 
 	/**
@@ -204,22 +203,22 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
+		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::PLUGIN_VERSION, false ) ;
 
 		$localize_data = array() ;
-		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
-			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_WHM, true ) ;
+		if ( GUI::has_whm_msg() ) {
+			$ajax_url_dismiss_whm = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_WHM, true ) ;
 			$localize_data[ 'ajax_url_dismiss_whm' ] = $ajax_url_dismiss_whm ;
 		}
 
-		if ( LiteSpeed_Cache_GUI::has_msg_ruleconflict() ) {
-			$ajax_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_EXPIRESDEFAULT, true ) ;
+		if ( GUI::has_msg_ruleconflict() ) {
+			$ajax_url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_EXPIRESDEFAULT, true ) ;
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		$promo_tag = LiteSpeed_Cache_GUI::get_instance()->show_promo( true ) ;
+		$promo_tag = GUI::get_instance()->show_promo( true ) ;
 		if ( $promo_tag ) {
-			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
+			$ajax_url_promo = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
@@ -230,10 +229,10 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $localize_data ) {
-			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', $localize_data ) ;
+			wp_localize_script(Core::PLUGIN_NAME, 'litespeed_data', $localize_data ) ;
 		}
 
-		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME ) ;
+		wp_enqueue_script( Core::PLUGIN_NAME ) ;
 	}
 
 	/**
@@ -395,10 +394,10 @@ class LiteSpeed_Cache_Admin_Display
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$msg = strip_tags( $msg ) ;
 				if ( $color == self::NOTICE_RED ) {
-					WP_CLI::error( $msg ) ;
+					\WP_CLI::error( $msg ) ;
 				}
 				else {
-					WP_CLI::success( $msg ) ;
+					\WP_CLI::success( $msg ) ;
 				}
 			}
 			return ;
@@ -427,7 +426,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function display_messages()
 	{
-		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
+		if ( GUI::has_whm_msg() ) {
 			$this->show_display_installed() ;
 		}
 
@@ -452,7 +451,7 @@ class LiteSpeed_Cache_Admin_Display
 		 * Check promo msg first
 		 * @since 2.9
 		 */
-		LiteSpeed_Cache_GUI::get_instance()->show_promo() ;
+		GUI::get_instance()->show_promo() ;
 
 	}
 
@@ -627,17 +626,17 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since    3.0
 	 * @access public
 	 */
-	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false, $has_upload = false )
+	public function form_action( $action = Router::ACTION_SAVE_SETTINGS, $type = false, $has_upload = false )
 	{
 		$has_upload = $has_upload ? 'enctype="multipart/form-data"' : '' ;
 
 		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>' ;
 
-		echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::ACTION_KEY . '" value="' . $action . '" />' ;
+		echo '<input type="hidden" name="' . Router::ACTION_KEY . '" value="' . $action . '" />' ;
 		if ( $type ) {
-			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
+			echo '<input type="hidden" name="' . Router::TYPE . '" value="' . $type . '" />' ;
 		}
-		wp_nonce_field( $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
+		wp_nonce_field( $action, Router::NONCE_NAME ) ;
 	}
 
 	/**
@@ -664,7 +663,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enroll( $id )
 	{
-		echo '<input type="hidden" name="' . LiteSpeed_Cache_Admin_Settings::ENROLL . '[]" value="' . $id . '" />' ;
+		echo '<input type="hidden" name="' . Admin_Settings::ENROLL . '[]" value="' . $id . '" />' ;
 	}
 
 	/**
@@ -791,8 +790,8 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		echo '<div class="litespeed-switch">' ;
 
-		$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ;
-		$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ;
+		$this->build_radio( $id, Const::VAL_OFF ) ;
+		$this->build_radio( $id, Const::VAL_ON ) ;
 
 		echo '</div>' ;
 	}
@@ -885,7 +884,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		foreach ( $val as $v ) {
-			if ( ! LiteSpeed_Cache_Utility::syntax_checker( $v ) ) {
+			if ( ! Utility::syntax_checker( $v ) ) {
 				echo '<br /><font class="litespeed-warning"> ❌ ' . __( 'Invalid rewrite rule', 'litespeed-cache' ) . ': <code>' . $v . '</code></font>' ;
 			}
 		}
@@ -959,7 +958,7 @@ class LiteSpeed_Cache_Admin_Display
 				continue ;
 			}
 
-			if ( ! WP_Http::is_ip_address( $v ) ) {
+			if ( ! \WP_Http::is_ip_address( $v ) ) {
 				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . $v . '</code>.' ;
 			}
 		}

@@ -4,16 +4,15 @@
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Control
+class Control
 {
 	private static $_instance ;
 
@@ -49,10 +48,10 @@ class LiteSpeed_Cache_Control
 		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
 
 		// 301 redirect hook
-		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;
+		add_filter( 'wp_redirect', array( $this, 'check_redirect' ), 10, 2 ) ;
 
 		// Load response header conf
-		$this->_response_header_ttls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ) ;
+		$this->_response_header_ttls = Core::config( Const::O_CACHE_TTL_STATUS ) ;
 		foreach ( $this->_response_header_ttls as $k => $v ) {
 			$v = explode( ' ', $v ) ;
 			if ( empty( $v[ 0 ] ) || empty( $v[ 1 ] ) ) {
@@ -90,14 +89,14 @@ class LiteSpeed_Cache_Control
 	{
 		// Get user role
 		if ( $role === null ) {
-			$role = LiteSpeed_Cache_Router::get_role() ;
+			$role = Router::get_role() ;
 		}
 
 		if ( ! $role ) {
 			return false ;
 		}
 
-		return in_array( $role, LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES ) ) ? $role : false ;
+		return in_array( $role, Core::config( Const::O_CACHE_EXC_ROLES ) ) ? $role : false ;
 	}
 
 	/**
@@ -111,21 +110,21 @@ class LiteSpeed_Cache_Control
 	{
 		// Hook `wp` to mark default cacheable status
 		// NOTE: Any process that does NOT run into `wp` hook will not get cacheable by default
-		add_action( 'wp', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+		add_action( 'wp', '\LiteSpeed\Control::set_cacheable', 5 ) ;
 
 		// Hook WP REST to be cacheable
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_REST ) ) {
-			add_action( 'rest_api_init', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+		if ( Core::config( Const::O_CACHE_REST ) ) {
+			add_action( 'rest_api_init', '\LiteSpeed\Control::set_cacheable', 5 ) ;
 		}
 
 		// Cache resources
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_RES ) ;
+		$cache_res = Core::config( Const::O_CACHE_RES ) ;
 		if ( $cache_res ) {
 			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
-			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Htaccess::RW_PATTERN_RES . '!' ;
+			$pattern = '!' . LSCWP_CONTENT_FOLDER . Htaccess::RW_PATTERN_RES . '!' ;
 			if ( preg_match( $pattern, $uri ) ) {
-				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+				add_action( 'wp_loaded', '\LiteSpeed\Control::set_cacheable', 5 ) ;
 			}
 		}
 
@@ -146,8 +145,8 @@ class LiteSpeed_Cache_Control
 	public function check_error_codes( $status_header, $code )
 	{
 		if ( array_key_exists( $code, $this->_response_header_ttls ) ) {
-			if ( LiteSpeed_Cache_Control::is_cacheable() && ! $this->_response_header_ttls[ $code ] ) {
-				LiteSpeed_Cache_Control::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code ) ;
+			if ( self::is_cacheable() && ! $this->_response_header_ttls[ $code ] ) {
+				self::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code ) ;
 			}
 
 			// Set TTL
@@ -155,7 +154,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Set cache tag
-		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ERROR . $code ) ;
+		Tag::add( Tag::TYPE_ERROR . $code ) ;
 
 		// Give the default status_header back
 		return $status_header ;
@@ -173,7 +172,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_NO_VARY ;
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
+		Log::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
 	}
 
 	/**
@@ -199,7 +198,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_STALE ;
-		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control -> stale') ;
+		Log::debug('[Ctrl] X Cache_control -> stale') ;
 	}
 
 	/**
@@ -235,7 +234,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
+		Log::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
 	}
 
 	/**
@@ -269,7 +268,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
+		Log::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
 	}
 
 	/**
@@ -304,7 +303,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
+		Log::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
 	}
 
 	/**
@@ -335,7 +334,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
+		Log::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
 	}
 
 	/**
@@ -355,7 +354,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable' . $reason ) ;
+		Log::debug( '[Ctrl] Forced cacheable' . $reason ) ;
 	}
 
 	/**
@@ -376,7 +375,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
+		Log::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
 	}
 
 	/**
@@ -435,7 +434,7 @@ class LiteSpeed_Cache_Control
 	{
 		if ( is_numeric($ttl) ) {
 			self::$_custom_ttl = $ttl ;
-			LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
+			Log::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
 		}
 	}
 
@@ -453,10 +452,10 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ) ;
-		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ) ;
+		$timed_urls = Core::config( Const::O_PURGE_TIMED_URLS ) ;
+		$timed_urls_time = Core::config( Const::O_PURGE_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
-			$current_url = LiteSpeed_Cache_Tag::build_uri_tag( true ) ;
+			$current_url = Tag::build_uri_tag( true ) ;
 			if ( in_array( $current_url, $timed_urls ) ) {
 				// Use time limit ttl
 				$scheduled_time = strtotime( $timed_urls_time ) ;
@@ -464,26 +463,26 @@ class LiteSpeed_Cache_Control
 				if ( $ttl < 0 ) {
 					$ttl += 86400 ;// add one day
 				}
-				LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
+				Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
 				return $ttl ;
 			}
 		}
 
 		// Private cache uses private ttl setting
 		if ( self::is_private() ) {
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV ) ;
+			return Core::config( Const::O_CACHE_TTL_PRIV ) ;
 		}
 
 		if ( is_front_page() ){
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE ) ;
+			return Core::config( Const::O_CACHE_TTL_FRONTPAGE ) ;
 		}
 
-		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) ;
+		$feed_ttl = Core::config( Const::O_CACHE_TTL_FEED ) ;
 		if ( is_feed() && $feed_ttl > 0 ) {
 			return $feed_ttl ;
 		}
 
-		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ) ;
+		return Core::config( Const::O_CACHE_TTL_PUB ) ;
 	}
 
 	/**
@@ -492,11 +491,11 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function check_redirect( $location, $status )
+	public function check_redirect( $location, $status )
 	{
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
-			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 to $location" ) ;
+			Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
+			Log::debug( "[Ctrl] 301 to $location" ) ;
 
 			$to_check = array(
 				PHP_URL_SCHEME,
@@ -509,7 +508,7 @@ class LiteSpeed_Cache_Control
 			foreach ( $to_check as $v ) {
 				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
 					$is_same_redirect = false ;
-					LiteSpeed_Cache_Log::debug( "[Ctrl] 301 different redirection" ) ;
+					Log::debug( "[Ctrl] 301 different redirection" ) ;
 					break ;
 				}
 			}
@@ -533,7 +532,7 @@ class LiteSpeed_Cache_Control
 	{
 		$esi_hdr = '' ;
 		// Fix cli `uninstall --deactivate` fatal err
-		if ( LSWCP_ESI_SUPPORT && class_exists( 'LiteSpeed_Cache_ESI' ) && LiteSpeed_Cache_ESI::has_esi() ) {
+		if ( LSWCP_ESI_SUPPORT && class_exists( '\LiteSpeed\ESI' ) && ESI::has_esi() ) {
 			$esi_hdr = ',esi=on' ;
 		}
 
@@ -571,12 +570,12 @@ class LiteSpeed_Cache_Control
 	public static function finalize()
 	{
 		// Check if URI is forced public cache
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_FORCE_PUB_URI ) ;
+		$excludes = Core::config( Const::O_CACHE_FORCE_PUB_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::set_public_forced( 'Setting: ' . $result ) ;
-				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
+				Log::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
 				if ( $this_ttl ) {
 					self::set_custom_ttl( $this_ttl ) ;
 				}
@@ -588,12 +587,12 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check if URI is forced cache
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ;
+		$excludes = Core::config( Const::O_CACHE_FORCE_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
-				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
+				Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
 				if ( $this_ttl ) {
 					self::set_custom_ttl( $this_ttl ) ;
 				}
@@ -603,7 +602,7 @@ class LiteSpeed_Cache_Control
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
-			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
+			Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
 			return ;
 		}
 
@@ -616,11 +615,11 @@ class LiteSpeed_Cache_Control
 
 		// Apply 3rd party filter
 		// NOTE: Hook always needs to run asap because some 3rd party set is_mobile in this hook
-		do_action('litespeed_cache_api_control', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ) ; // Pass ESI block id
+		do_action('litespeed_api_control', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ) ; // Pass ESI block id
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
-			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable after api_control' ) ;
+			Log::debug( '[Ctrl] not cacheable after api_control' ) ;
 			return ;
 		}
 
@@ -644,7 +643,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		// The following check to the end is ONLY for mobile
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_MOBILE) ) {
+		if ( ! Core::config(Const::O_CACHE_MOBILE) ) {
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
@@ -675,7 +674,7 @@ class LiteSpeed_Cache_Control
 	{
 		// logged_in users already excluded, no hook added
 
-		if( ! empty( $_REQUEST[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ) {
+		if( ! empty( $_REQUEST[ Router::ACTION_KEY ] ) ) {
 			return $this->_no_cache_for( 'Query String Action' ) ;
 		}
 
@@ -683,7 +682,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
 		}
 
-		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) == 0 ) {
+		if ( is_feed() && Core::config( Const::O_CACHE_TTL_FEED ) == 0 ) {
 			return $this->_no_cache_for('feed') ;
 		}
 
@@ -700,9 +699,9 @@ class LiteSpeed_Cache_Control
 //		}
 
 		// Check private cache URI setting
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ;
+		$excludes = Core::config( Const::O_CACHE_PRIV_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
 			}
@@ -711,31 +710,31 @@ class LiteSpeed_Cache_Control
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC ) ;
 			if ( ! empty( $excludes ) ) {
-				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+				$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
 					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
 				}
 			}
 
 			// Check QS excluded setting
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_QS ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC_QS ) ;
 			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC_CAT ) ;
 			if ( ! empty( $excludes ) && has_category( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured Category Do not cache.' ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC_TAG ) ;
 			if ( ! empty( $excludes ) && has_tag( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured Tag Do not cache.' ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC_COOKIES ) ;
 			if ( ! empty( $excludes ) && ! empty( $_COOKIE ) ) {
 				$cookie_hit = array_intersect( array_keys( $_COOKIE ), $excludes ) ;
 				if ( $cookie_hit ) {
@@ -743,9 +742,9 @@ class LiteSpeed_Cache_Control
 				}
 			}
 
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
+			$excludes = Core::config( Const::O_CACHE_EXC_USERAGENTS ) ;
 			if ( ! empty( $excludes ) && isset( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-				$nummatches = preg_match( LiteSpeed_Cache_Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
+				$nummatches = preg_match( Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 				if ( $nummatches ) {
 						return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
 				}
@@ -770,7 +769,7 @@ class LiteSpeed_Cache_Control
 	 */
 	private function _no_cache_for( $reason )
 	{
-		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
+		Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
 		return false ;
 	}
 

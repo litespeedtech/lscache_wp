@@ -13,7 +13,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_LAZY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -31,7 +31,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_LAZY_PLACEHOLDER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -47,7 +47,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -61,7 +61,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -79,7 +79,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -93,13 +93,13 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF, __( 'Local', 'litespeed-cache' ) ) ; ?>
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON, __( 'Cloud', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_OFF, __( 'Local', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_ON, __( 'Cloud', 'litespeed-cache' ) ) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the generator used for base64 image.', 'litespeed-cache' ) ; ?>
@@ -109,7 +109,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_LQIP ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_LQIP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -124,7 +124,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_LQIP_QUAL ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_LQIP_QUAL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -140,7 +140,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -150,7 +150,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 				<?php echo sprintf(
 					__( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
 					'<code>' . __('ON', 'litespeed-cache') . '</code>',
-					'<code>' . LiteSpeed_Lang::title( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ) . '</code>'
+					'<code>' . LiteSpeed_Lang::title( LiteSpeed_Config::O_MEDIA_PLACEHOLDER_RESP_SVG ) . '</code>'
 				) ; ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder' ) ; ?>
@@ -181,7 +181,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_IFRAME_LAZY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -195,7 +195,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Placeholder::get_summar
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE ; ?>
+			<?php $id = LiteSpeed_Config::O_MEDIA_LAZYJS_INLINE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

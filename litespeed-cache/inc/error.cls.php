@@ -3,14 +3,15 @@
  * The error class.
  *
  * @since      	3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-
-class LiteSpeed_Error
+class Error
 {
 
 	const HTA_LOGIN_COOKIE_INVALID = 4300 ; // .htaccess did not find.
@@ -73,6 +74,6 @@ class LiteSpeed_Error
 			$error = 'ERROR ' . constant( 'self::' . $code ) . ': ' . $error ;
 		}
 
-		throw new Exception( $error ) ;
+		throw new \Exception( $error ) ;
 	}
 }

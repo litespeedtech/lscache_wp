@@ -60,7 +60,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 		$gallery = $image->get_gallery() ;
 		if ( $gallery && $gallery->pageid ) {
-			LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gallery->pageid) ;
+			LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $gallery->pageid) ;
 		}
 	}
 
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	public static function update_image()
 	{
 		if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
-			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
+			LiteSpeed_API::purge( self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
 			return ;
 		}
 
@@ -82,7 +82,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			$task_list = json_decode( $task_list, true ) ;
 
 			if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
-				LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
+				LiteSpeed_API::purge( self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
 				return ;
 			}
 		}
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 		$image = C_Image_Mapper::get_instance()->find($id) ;
 		if ( $image ) {
-			LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $image->galleryid) ;
+			LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $image->galleryid) ;
 		}
 	}
 
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	public static function delete_image()
 	{
 		if ( isset($_GET['gid']) ) {
-			LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $_GET['gid']) ;
+			LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $_GET['gid']) ;
 		}
 	}
 
@@ -131,9 +131,9 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	public static function move_image($images, $old_gallery_ids, $new_gallery_id)
 	{
 		foreach ($old_gallery_ids as $gid) {
-			LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gid) ;
+			LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $gid) ;
 		}
-		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $new_gallery_id) ;
+		LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $new_gallery_id) ;
 	}
 
 	/**
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
 	{
-		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $new_gallery_id) ;
+		LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $new_gallery_id) ;
 	}
 
 	/**
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function gen_image($image)
 	{
-		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $image->galleryid) ;
+		LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $image->galleryid) ;
 	}
 
 	/**
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			$gid = $gid->gid ;
 		}
 
-		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gid) ;
+		LiteSpeed_API::purge(self::CACHETAG_GALLERIES . $gid) ;
 	}
 
 	/**
@@ -185,7 +185,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_album($aid)
 	{
-		LiteSpeed_Cache_API::purge(self::CACHETAG_ALBUMS . $aid) ;
+		LiteSpeed_API::purge(self::CACHETAG_ALBUMS . $aid) ;
 	}
 
 	/**
@@ -221,7 +221,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 
 		foreach ($container_ids as $id) {
-			LiteSpeed_Cache_API::tag_add($tag . $id) ;
+			LiteSpeed_API::tag_add($tag . $id) ;
 		}
 
 		return $render_parms ;

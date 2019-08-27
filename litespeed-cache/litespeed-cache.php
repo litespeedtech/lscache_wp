@@ -171,7 +171,7 @@ if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
 	{
-		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
 }
 

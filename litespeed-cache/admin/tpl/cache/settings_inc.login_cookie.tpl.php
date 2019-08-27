@@ -2,7 +2,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_LOGIN_COOKIE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

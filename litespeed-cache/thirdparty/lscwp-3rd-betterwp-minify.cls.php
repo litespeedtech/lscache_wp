@@ -10,7 +10,7 @@
 if ( ! defined('ABSPATH') ) {
     die() ;
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Better_WP_Minify') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_Better_WP_Minify') ;
 
 class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 {
@@ -53,7 +53,7 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 */
 	public static function flush()
 	{
-		LiteSpeed_Cache_API::purge_all() ;
+		LiteSpeed_API::purge_all() ;
 		self::clear_flush() ;
 	}
 

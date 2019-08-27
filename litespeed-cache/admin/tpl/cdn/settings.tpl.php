@@ -6,7 +6,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
+$cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Config::O_CDN_MAPPING ) ;
 
 
 $this->form_action() ;
@@ -20,7 +20,7 @@ $this->form_action() ;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CDN ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -40,13 +40,13 @@ $this->form_action() ;
 			<div class="litespeed-block" data-litespeed-cdn-mapping="1">
 				<div class='litespeed-cdn-mapping-col1'>
 					<h4>
-						<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_URL ; ?>
+						<?php $id = LiteSpeed_Config::CDN_MAPPING_URL ; ?>
 						<?php $this->title( $id ) ; ?>
 						<button type="button" class="button litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
 					</h4>
 
 					<?php
-						$this->build_input( LiteSpeed_Cache_Config::O_CDN_MAPPING . "[$id][]", 'litespeed-input-long', $v[ $id ] ) ;
+						$this->build_input( LiteSpeed_Config::O_CDN_MAPPING . "[$id][]", 'litespeed-input-long', $v[ $id ] ) ;
 					?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
@@ -56,29 +56,29 @@ $this->form_action() ;
 				<div class='litespeed-cdn-mapping-col2'>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc">
-							<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ; ?>
+							<?php $id = LiteSpeed_Config::CDN_MAPPING_INC_IMG ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+						$this->build_toggle( LiteSpeed_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc">
-							<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ; ?>
+							<?php $id = LiteSpeed_Config::CDN_MAPPING_INC_CSS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+						$this->build_toggle( LiteSpeed_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc">
-							<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ; ?>
+							<?php $id = LiteSpeed_Config::CDN_MAPPING_INC_JS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+						$this->build_toggle( LiteSpeed_Config::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 				</div>
@@ -86,10 +86,10 @@ $this->form_action() ;
 				<div class='litespeed-cdn-mapping-col3'>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-col3-title">
-							<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ; ?>
+							<?php $id = LiteSpeed_Config::CDN_MAPPING_FILETYPE ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
-						<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CDN_MAPPING . "[$id][]", 17, $v[ $id ] ) ; ?>
+						<?php $this->build_textarea( LiteSpeed_Config::O_CDN_MAPPING . "[$id][]", 17, $v[ $id ] ) ; ?>
 					</div>
 				</div>
 			</div>
@@ -104,21 +104,21 @@ $this->form_action() ;
 			</div>
 
 			<div class="litespeed-desc">
-				<b><?php $this->title( LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ; ?></b>:
+				<b><?php $this->title( LiteSpeed_Config::CDN_MAPPING_INC_IMG ) ; ?></b>:
 				<?php echo sprintf( __( 'Serve all image files through the CDN. This will affect all attachments, HTML %s tags, and CSS %s attributes.', 'litespeed-cache' ), '<code>&lt;img</code>', '<code>url()</code>' ) ; ?>
 
 				<br />
-				<b><?php $this->title( LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ) ; ?></b>:
+				<b><?php $this->title( LiteSpeed_Config::CDN_MAPPING_INC_CSS ) ; ?></b>:
 				<?php echo __( 'Serve all CSS files through the CDN. This will affect all enqueued WP CSS files.', 'litespeed-cache' ) ; ?>
 
 				<br />
-				<b><?php $this->title( LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ) ; ?></b>:
+				<b><?php $this->title( LiteSpeed_Config::CDN_MAPPING_INC_JS ) ; ?></b>:
 				<?php echo __( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ) ; ?>
 
 				<br />
-				<b><?php $this->title( LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ) ; ?></b>:
+				<b><?php $this->title( LiteSpeed_Config::CDN_MAPPING_FILETYPE ) ; ?></b>:
 				<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 				<?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#include_file_types', __( 'Default value', 'litespeed-cache' ) ) ; ?>
 
@@ -132,7 +132,7 @@ $this->form_action() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_ORI ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_ORI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -140,14 +140,14 @@ $this->form_action() ;
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_ORI_DIR ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_ORI_DIR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -155,47 +155,47 @@ $this->form_action() ;
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_EXC ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_REMOTE_JQ ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Cache_Config::VAL_OFF,
+					LiteSpeed_Config::VAL_OFF,
 					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Cache_Config::VAL_ON,
+					LiteSpeed_Config::VAL_ON,
 					'Google'
 				) ; ?>
 
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Cache_Config::VAL_ON2,
+					LiteSpeed_Config::VAL_ON2,
 					'Cdnjs'
 				) ; ?>
 			</div>
@@ -207,7 +207,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_QUIC ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_QUIC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -232,7 +232,7 @@ $this->form_action() ;
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL ) ; ?>
+					<?php $this->build_input( LiteSpeed_Config::O_CDN_QUIC_EMAIL ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
 					</div>
@@ -241,7 +241,7 @@ $this->form_action() ;
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'User API Key', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ) ; ?>
+					<?php $this->build_input( LiteSpeed_Config::O_CDN_QUIC_KEY ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key is used to access %s APIs.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
 						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://my.quic.cloud/dashboard" target="_blank"', 'QUIC.cloud' ) ; ?>
@@ -254,7 +254,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ; ?>
+			<?php $id = LiteSpeed_Config::O_CDN_CLOUDFLARE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -267,7 +267,7 @@ $this->form_action() ;
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_EMAIL ) ; ?>
+					<?php $this->build_input( LiteSpeed_Config::O_CDN_CLOUDFLARE_EMAIL ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ) ; ?>
 					</div>
@@ -276,7 +276,7 @@ $this->form_action() ;
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY ) ; ?>
+					<?php $this->build_input( LiteSpeed_Config::O_CDN_CLOUDFLARE_KEY ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ) ; ?>
 						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://www.cloudflare.com/a/profile" target="_blank"', 'Cloudflare' ) ; ?>
@@ -287,9 +287,9 @@ $this->form_action() ;
 					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
 
 				<?php
-					$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_ZONE ) ;
+					$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Config::O_CDN_CLOUDFLARE_ZONE ) ;
 					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
-					$this->build_input( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME, $cls ) ;
+					$this->build_input( LiteSpeed_Config::O_CDN_CLOUDFLARE_NAME, $cls ) ;
 				?>
 					<div class="litespeed-desc">
 						<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ) ; ?>

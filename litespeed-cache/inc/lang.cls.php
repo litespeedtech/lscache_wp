@@ -7,10 +7,11 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-
-class LiteSpeed_Lang extends LiteSpeed_Cache_Const
+class Lang extends Const
 {
 	/**
 	 * Get the title of id

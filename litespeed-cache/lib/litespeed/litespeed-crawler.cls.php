@@ -640,7 +640,7 @@ class Litespeed_Crawler
 		 * @since  1.9.1
 		 */
 		$hash = Litespeed_String::rrand( 6 ) ;
-		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
+		update_option( LiteSpeed_Config::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
 		$this->_cookies[ 'litespeed_hash' ] = $hash ;
 
 		$cookies = array() ;

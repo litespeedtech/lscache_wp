@@ -11,7 +11,7 @@ if ( ! defined('ABSPATH') ) {
     die() ;
 }
 
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_WpTouch') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_WpTouch') ;
 
 class LiteSpeed_Cache_ThirdParty_WpTouch
 {
@@ -25,7 +25,7 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	{
 		global $wptouch_pro ;
 		if ( isset($wptouch_pro) ) {
-			LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_WpTouch::set_control') ;
+			LiteSpeed_API::hook_control('LiteSpeed_Cache_ThirdParty_WpTouch::set_control') ;
 		}
 	}
 
@@ -39,7 +39,7 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	{
 		global $wptouch_pro ;
 		if ( $wptouch_pro->is_mobile_device ) {
-			LiteSpeed_Cache_API::set_mobile() ;
+			LiteSpeed_API::set_mobile() ;
 		}
 	}
 

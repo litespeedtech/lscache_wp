@@ -5,12 +5,11 @@
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Task
+class Task
 {
 	private static $_instance ;
 
@@ -31,52 +30,52 @@ class LiteSpeed_Cache_Task
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'Task init' ) ;
+		Log::debug2( 'Task init' ) ;
 
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
 
 		// Register crawler cron
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL ) && LiteSpeed_Cache_Router::can_crawl() ) {
+		if ( Core::config( Const::O_CRWL ) && Router::can_crawl() ) {
 			// keep cron intval filter
-			self::schedule_filter_crawler() ;
+			$this->_schedule_filter_crawler() ;
 
 			// cron hook
-			add_action( self::CRON_ACTION_HOOK_CRAWLER, 'LiteSpeed_Cache_Crawler::crawl_data' ) ;
+			add_action( self::CRON_ACTION_HOOK_CRAWLER, '\LiteSpeed\Crawler::crawl_data' ) ;
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_CRON ) ) {
+		if ( Core::config( Const::O_IMG_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::cron_pull_optimized_img' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMGOPTM, '\LiteSpeed\Img_Optm::cron_pull_optimized_img' ) ;
 		}
 
 		// Image optm auto request
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ) {
+		if ( Core::config( Const::O_IMG_OPTM_AUTO ) ) {
 			self::schedule_filter_imgoptm_auto_request() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, 'LiteSpeed_Cache_Img_Optm::cron_auto_request' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, '\LiteSpeed\Img_Optm::cron_auto_request' ) ;
 		}
 
 		// Register ccss generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) ) {
+		if ( Core::config( Const::O_OPTM_CCSS_ASYNC ) ) {
 			self::schedule_filter_ccss() ;
 
-			add_action( self::CRON_ACTION_HOOK_CCSS, 'LiteSpeed_Cache_CSS::cron_ccss' ) ;
+			add_action( self::CRON_ACTION_HOOK_CCSS, '\LiteSpeed\CSS::cron_ccss' ) ;
 		}
 
 		// Register image placeholder generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
+		if ( Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
 			self::schedule_filter_placeholder() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Placeholder::cron' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, '\LiteSpeed\Placeholder::cron' ) ;
 		}
 
 		// Register avatar warm up
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CRON ) ) {
+		if ( Core::config( Const::O_DISCUSS_AVATAR_CRON ) ) {
 			self::schedule_filter_avatar() ;
 
-			add_action( self::CRON_ACTION_HOOK_AVATAR, 'LiteSpeed_Cache_Avatar::cron' ) ;
+			add_action( self::CRON_ACTION_HOOK_AVATAR, 'LiteSpeed_Avatar::cron' ) ;
 		}
 	}
 
@@ -88,16 +87,16 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function enable()
 	{
-		$id = LiteSpeed_Cache_Config::O_CRWL ;
+		$id = Const::O_CRWL ;
 
 		// get new setting
-		$is_enabled = ! LiteSpeed_Cache::config( $id ) ;
+		$is_enabled = ! Core::config( $id ) ;
 
 		// log
-		LiteSpeed_Cache_Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
+		Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
 
 		// update config
-		LiteSpeed_Cache_Config::get_instance()->update_options( array( $id => $is_enabled ) ) ;
+		Config::get_instance()->update_options( array( $id => $is_enabled ) ) ;
 
 		self::update() ;
 
@@ -114,12 +113,12 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function update( $options = false )
 	{
-		$id = LiteSpeed_Cache_Config::O_CRWL ;
+		$id = Const::O_CRWL ;
 		if ( $options && isset( $options[ $id ] ) ) {
 			$is_active = $options[$id] ;
 		}
 		else {
-			$is_active = LiteSpeed_Cache::config( $id ) ;
+			$is_active = Core::config( $id ) ;
 		}
 
 		if ( ! $is_active ) {
@@ -138,7 +137,7 @@ class LiteSpeed_Cache_Task
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ) {
-			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
+			Log::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ;
 		}
 	}
@@ -153,7 +152,7 @@ class LiteSpeed_Cache_Task
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM ) ) {
-			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optimization cron hook register......' ) ;
+			Log::debug( 'Cron log: ......img optimization cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM ) ;
 		}
 	}
@@ -168,7 +167,7 @@ class LiteSpeed_Cache_Task
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CCSS ) ) {
-			LiteSpeed_Cache_Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
+			Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_CCSS ) ;
 		}
 	}
@@ -183,7 +182,7 @@ class LiteSpeed_Cache_Task
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ) {
-			LiteSpeed_Cache_Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
+			Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ;
 		}
 	}
@@ -198,7 +197,7 @@ class LiteSpeed_Cache_Task
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_AVATAR ) ) {
-			LiteSpeed_Cache_Log::debug( 'Cron log: ......avatar cron hook register......' ) ;
+			Log::debug( 'Cron log: ......avatar cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_AVATAR ) ;
 		}
 	}
@@ -207,15 +206,15 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron crawler
 	 *
 	 * @since 1.1.0
-	 * @access public
+	 * @access private
 	 */
-	public static function schedule_filter_crawler()
+	private function _schedule_filter_crawler()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter_crawler' ) ;
+		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) ) ;
 
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CRAWLER ) ) {
-			LiteSpeed_Cache_Log::debug( 'Crawler cron log: ......cron hook register......' ) ;
+			Log::debug( 'Crawler cron log: ......cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER_CRAWLER, self::CRON_ACTION_HOOK_CRAWLER ) ;
 		}
 	}
@@ -227,7 +226,7 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $schedules WP Hook
 	 */
-	public static function lscache_cron_filter( $schedules )
+	public function lscache_cron_filter( $schedules )
 	{
 		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
 			$schedules[ self::CRON_FITLER ] = array(
@@ -245,12 +244,12 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $schedules WP Hook
 	 */
-	public static function lscache_cron_filter_crawler( $schedules )
+	public function lscache_cron_filter_crawler( $schedules )
 	{
-		$interval = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL ) ;
+		$interval = Core::config( Const::O_CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::CRON_FITLER_CRAWLER, $schedules ) ) {
-			// 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
+			// 	Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
 			$schedules[ self::CRON_FITLER_CRAWLER ] = array(
 				'interval' => $interval,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
@@ -267,7 +266,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function clear()
 	{
-		LiteSpeed_Cache_Log::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
+		Log::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
 		wp_clear_scheduled_hook( self::CRON_ACTION_HOOK_CRAWLER ) ;
 	}
 

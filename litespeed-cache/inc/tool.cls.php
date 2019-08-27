@@ -3,13 +3,15 @@
  * The tools
  *
  * @since      	3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Tool
+class Tool
 {
 	private static $_instance ;
 
@@ -28,12 +30,12 @@ class LiteSpeed_Cache_Tool
 	 */
 	private function __construct()
 	{
-		$this->_conf_heartbeat_front 		= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_FRONT ) ;
-		$this->_conf_heartbeat_front_ttl 	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_FRONT_TTL ) ;
-		$this->_conf_heartbeat_back 		= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_BACK ) ;
-		$this->_conf_heartbeat_back_ttl 	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_BACK_TTL ) ;
-		$this->_conf_heartbeat_editor 		= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_EDITOR ) ;
-		$this->_conf_heartbeat_editor_ttl 	= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
+		$this->_conf_heartbeat_front 		= Core::config( Const::O_MISC_HEARTBEAT_FRONT ) ;
+		$this->_conf_heartbeat_front_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_FRONT_TTL ) ;
+		$this->_conf_heartbeat_back 		= Core::config( Const::O_MISC_HEARTBEAT_BACK ) ;
+		$this->_conf_heartbeat_back_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_BACK_TTL ) ;
+		$this->_conf_heartbeat_editor 		= Core::config( Const::O_MISC_HEARTBEAT_EDITOR ) ;
+		$this->_conf_heartbeat_editor_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
 	}
 
 	/**
@@ -44,17 +46,17 @@ class LiteSpeed_Cache_Tool
 	 */
 	public function check_ip()
 	{
-		LiteSpeed_Cache_Log::debug( '[Tool] ✅ check_ip' ) ;
+		Log::debug( '[Tool] ✅ check_ip' ) ;
 
 		$response = wp_remote_get( 'https://ifconfig.co/ip' ) ;
 
 		if ( is_wp_error( $response ) ) {
-			return new WP_Error( 'remote_get_fail', 'Failed to fetch from ifconfig.co', array( 'status' => 404 ) ) ;
+			return new \WP_Error( 'remote_get_fail', 'Failed to fetch from ifconfig.co', array( 'status' => 404 ) ) ;
 		}
 
 		$data = $response[ 'body' ] ;
 
-		LiteSpeed_Cache_Log::debug( '[Tool] result [ip] ' . $data ) ;
+		Log::debug( '[Tool] result [ip] ' . $data ) ;
 
 		return $data ;
 	}
@@ -90,7 +92,7 @@ class LiteSpeed_Cache_Tool
 
 		if ( ! $this->_conf_heartbeat_front_ttl ) {
 			wp_deregister_script( 'heartbeat' ) ;
-			LiteSpeed_Cache_Log::debug( '[Tool] Deregistered frontend heartbeat' ) ;
+			Log::debug( '[Tool] Deregistered frontend heartbeat' ) ;
 		}
 	}
 
@@ -109,7 +111,7 @@ class LiteSpeed_Cache_Tool
 
 			if ( ! $this->_conf_heartbeat_editor_ttl ) {
 				wp_deregister_script( 'heartbeat' ) ;
-				LiteSpeed_Cache_Log::debug( '[Tool] Deregistered editor heartbeat' ) ;
+				Log::debug( '[Tool] Deregistered editor heartbeat' ) ;
 			}
 		}
 		else {
@@ -119,7 +121,7 @@ class LiteSpeed_Cache_Tool
 
 			if ( ! $this->_conf_heartbeat_back_ttl ) {
 				wp_deregister_script( 'heartbeat' ) ;
-				LiteSpeed_Cache_Log::debug( '[Tool] Deregistered backend heartbeat' ) ;
+				Log::debug( '[Tool] Deregistered backend heartbeat' ) ;
 			}
 		}
 
@@ -137,19 +139,19 @@ class LiteSpeed_Cache_Tool
 		if ( $this->_is_editor() ) {
 			if ( $this->_conf_heartbeat_editor ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_editor_ttl ;
-				LiteSpeed_Cache_Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_editor_ttl ) ;
+				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_editor_ttl ) ;
 			}
 		}
 		elseif ( ! is_admin() ) {
 			if ( $this->_conf_heartbeat_front ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_front_ttl ;
-				LiteSpeed_Cache_Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_front_ttl ) ;
+				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_front_ttl ) ;
 			}
 		}
 		else {
 			if ( $this->_conf_heartbeat_back ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_back_ttl ;
-				LiteSpeed_Cache_Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_back_ttl ) ;
+				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_back_ttl ) ;
 			}
 		}
 		return $settings ;
@@ -163,7 +165,7 @@ class LiteSpeed_Cache_Tool
 	 */
 	private function _is_editor()
 	{
-		$res = is_admin() && LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], array( 'post.php', 'post-new.php' ) ) ;
+		$res = is_admin() && Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], array( 'post.php', 'post-new.php' ) ) ;
 
 		return apply_filters( 'litespeed_is_editor', $res ) ;
 	}

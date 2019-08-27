@@ -4,13 +4,15 @@
  *
  *
  * @since      1.0.0
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/inc
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed/inc
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Htaccess
+class Htaccess
 {
 	private static $_instance ;
 
@@ -64,8 +66,8 @@ class LiteSpeed_Htaccess
 		$this->_path_set() ;
 		$this->_default_frontend_htaccess = $this->frontend_htaccess ;
 		$this->_default_backend_htaccess = $this->backend_htaccess ;
-		$this->frontend_htaccess = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
-		$this->backend_htaccess = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
+		$this->frontend_htaccess = Core::config( Const::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
+		$this->backend_htaccess = Core::config( Const::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
 
 		// Filter for frontend&backend htaccess path
 		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;
@@ -199,7 +201,7 @@ class LiteSpeed_Htaccess
 	 */
 	private function _path_set()
 	{
-		$frontend = LiteSpeed_Cache_Router::frontend_path() ;
+		$frontend = Router::frontend_path() ;
 		$frontend_htaccess_search = $this->_htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
 		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
 
@@ -267,12 +269,12 @@ class LiteSpeed_Htaccess
 		}
 
 		if ( ! $this->_readable( $kind ) ) {
-			LiteSpeed_Error::t( 'HTA_R' ) ;
+			Error::t( 'HTA_R' ) ;
 		}
 
-		$content = Litespeed_File::read( $path ) ;
+		$content = File::read( $path ) ;
 		if ( $content === false ) {
-			LiteSpeed_Error::t( 'HTA_GET' ) ;
+			Error::t( 'HTA_GET' ) ;
 		}
 
 		// Remove ^M characters.
@@ -293,15 +295,15 @@ class LiteSpeed_Htaccess
 		$path = $this->htaccess_path( $kind ) ;
 
 		if ( ! $this->writable( $kind ) ) {
-			LiteSpeed_Error::t( 'HTA_W' ) ;
+			Error::t( 'HTA_W' ) ;
 		}
 
 		$this->_htaccess_backup( $kind ) ;
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
-		$res = Litespeed_File::save( $path, $content, false, false, false ) ;
+		$res = File::save( $path, $content, false, false, false ) ;
 		if ( $res !== true ) {
-			throw new Exception( $res ) ;
+			throw new \Exception( $res ) ;
 		}
 	}
 
@@ -329,7 +331,7 @@ class LiteSpeed_Htaccess
 
 		// Failed to backup, abort
 		if ( ! $res ) {
-			LiteSpeed_Error::t( 'HTA_BK' ) ;
+			Error::t( 'HTA_BK' ) ;
 		}
 	}
 
@@ -344,15 +346,15 @@ class LiteSpeed_Htaccess
 	{
 		$rules = $this->_get_rule_by( self::MARKER_MOBILE ) ;
 		if( ! isset( $rules[ 0 ] ) ) {
-			LiteSpeed_Error::t( 'HTA_DNF', self::MARKER_MOBILE ) ;
+			Error::t( 'HTA_DNF', self::MARKER_MOBILE ) ;
 		}
 
 		$rule = trim( $rules[ 0 ] ) ;
-		// 'RewriteCond %{HTTP_USER_AGENT} ' . LiteSpeed_Cache_Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
+		// 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
 		$match = substr( $rule, strlen( 'RewriteCond %{HTTP_USER_AGENT} ' ), -strlen( ' [NC]' ) ) ;
 
 		if ( ! $match ) {
-			LiteSpeed_Error::t( 'HTA_DNF', __( 'Mobile Agent Rules', 'litespeed-cache' ) ) ;
+			Error::t( 'HTA_DNF', __( 'Mobile Agent Rules', 'litespeed-cache' ) ) ;
 		}
 
 		return $match ;
@@ -371,11 +373,11 @@ class LiteSpeed_Htaccess
 		$rule = $this->_get_rule_by( self::MARKER_LOGIN_COOKIE, $kind ) ;
 
 		if( ! $rule ) {
-			LiteSpeed_Error::t( 'HTA_DNF', self::MARKER_LOGIN_COOKIE ) ;
+			Error::t( 'HTA_DNF', self::MARKER_LOGIN_COOKIE ) ;
 		}
 
 		if( strpos( $rule, 'RewriteRule .? - [E=' ) !== 0 ) {
-			LiteSpeed_Error::t( 'HTA_LOGIN_COOKIE_INVALID' ) ;
+			Error::t( 'HTA_LOGIN_COOKIE_INVALID' ) ;
 		}
 
 		$rule_cookie = substr( $rule, strlen( 'RewriteRule .? - [E=' ), -1 ) ;
@@ -404,7 +406,7 @@ class LiteSpeed_Htaccess
 			return false ;
 		}
 
-		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
+		$rules = File::extract_from_markers( $path, self::MARKER ) ;
 		if( ! in_array( $cond . self::MARKER_START, $rules ) || ! in_array( $cond . self::MARKER_END, $rules ) ) {
 			return false ;
 		}
@@ -440,7 +442,7 @@ class LiteSpeed_Htaccess
 		 * Add ttl setting
 		 * @since 1.6.3
 		 */
-		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ;
+		$id = Const::O_UTIL_BROWSER_CACHE_TTL ;
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			self::EXPIRES_MODULE_START,
@@ -515,41 +517,41 @@ class LiteSpeed_Htaccess
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
 
-		$disable_lscache_detail_rules = ! $cfg[ LiteSpeed_Cache_Config::_CACHE ] ;
+		$disable_lscache_detail_rules = ! $cfg[ Const::_CACHE ] ;
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
-			$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
-			if ( ! empty( $cfg[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
+			$id = Const::O_CACHE_MOBILE_RULES ;
+			if ( ! empty( $cfg[ Const::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . LiteSpeed_Cache_Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
 				$new_rules[] = '' ;
 			}
 
 			// nocache cookie
-			$id = LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES ;
+			$id = Const::O_CACHE_EXC_COOKIES ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' .  LiteSpeed_Cache_Utility::arr2regex( $cfg[ $id ], true ) ;
+				$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' .  Utility::arr2regex( $cfg[ $id ], true ) ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
 				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
 				$new_rules[] = '' ;
 			}
 
 			// nocache user agents
-			$id = LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ;
+			$id = Const::O_CACHE_EXC_USERAGENTS ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . LiteSpeed_Cache_Utility::arr2regex( $cfg[ $id ], true ) ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
 				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
 				$new_rules[] = '' ;
 			}
 
 			// caching php resource
-			$id = LiteSpeed_Cache_Config::O_CACHE_RES ;
+			$id = Const::O_CACHE_RES ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
 				$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
@@ -558,7 +560,7 @@ class LiteSpeed_Htaccess
 			}
 
 			// check login cookie
-			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
+			$id = Const::O_CACHE_LOGIN_COOKIE ;
 
 			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
@@ -570,7 +572,7 @@ class LiteSpeed_Htaccess
 				}
 			}
 
-			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+			$tp_cookies = apply_filters( 'litespeed_api_vary', array() ) ;
 			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
 				if ( ! empty( $cfg[ $id ] ) ) {
 					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
@@ -593,7 +595,7 @@ class LiteSpeed_Htaccess
 
 			// favicon
 			// frontend and backend
-			$id = LiteSpeed_Cache_Config::O_CACHE_FAVICON ;
+			$id = Const::O_CACHE_FAVICON ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
 				$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
@@ -602,7 +604,7 @@ class LiteSpeed_Htaccess
 			}
 
 			// CORS font rules
-			$id = LiteSpeed_Cache_Config::O_CDN ;
+			$id = Const::O_CDN ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
 				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
@@ -611,7 +613,7 @@ class LiteSpeed_Htaccess
 			}
 
 			// webp support
-			$id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE ;
+			$id = Const::O_IMG_OPTM_WEBP_REPLACE ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]' ;
@@ -622,7 +624,7 @@ class LiteSpeed_Htaccess
 			}
 
 			// drop qs support
-			$id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ;
+			$id = Const::O_CACHE_DROP_QS ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
 				foreach ( $cfg[ $id ] as $v ) {
@@ -634,7 +636,7 @@ class LiteSpeed_Htaccess
 		}
 
 		// Browser cache
-		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE ;
+		$id = Const::O_UTIL_BROWSER_CACHE ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
 			$new_rules_nonls = array_merge( $new_rules_nonls, $this->_browser_cache_rules( $cfg ) ) ;
@@ -728,7 +730,7 @@ class LiteSpeed_Htaccess
 
 		$this->_htaccess_backup( $kind ) ;
 
-		Litespeed_File::insert_with_markers( $this->htaccess_path( $kind ), $this->_wrap_do_no_edit( $rules ), $marker, true ) ;
+		File::insert_with_markers( $this->htaccess_path( $kind ), $this->_wrap_do_no_edit( $rules ), $marker, true ) ;
 	}
 
 	/**
@@ -748,27 +750,27 @@ class LiteSpeed_Htaccess
 
 		// Check Non-LiteSpeed rules
 		if ( $this->_wrap_do_no_edit( $frontend_rules_nonls ) != $rules_nonls ) {
-			LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls frontend rules' ) ;
+			Log::debug( '[Rules] Update non-ls frontend rules' ) ;
 			// Need to update frontend htaccess
 			try {
 				$this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ;
 			} catch ( \Exception $e ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
-				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
-				throw new Exception( $manual_guide_codes ) ;
+				Log::debug( '[Rules] Update Failed' ) ;
+				throw new \Exception( $manual_guide_codes ) ;
 			}
 		}
 
 		// Check LiteSpeed rules
 		if ( $this->_wrap_do_no_edit( $frontend_rules ) != $rules ) {
-			LiteSpeed_Cache_Log::debug( '[Rules] Update frontend rules' ) ;
+			Log::debug( '[Rules] Update frontend rules' ) ;
 			// Need to update frontend htaccess
 			try {
 				$this->_insert_wrapper( $frontend_rules ) ;
 			} catch ( \Exception $e ) {
-				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+				Log::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
-				throw new Exception( $manual_guide_codes ) ;
+				throw new \Exception( $manual_guide_codes ) ;
 			}
 		}
 
@@ -777,27 +779,27 @@ class LiteSpeed_Htaccess
 
 			// Check Non-LiteSpeed rules for backend
 			if ( $this->_wrap_do_no_edit( $backend_rules_nonls ) != $rules_nonls ) {
-				LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls backend rules' ) ;
+				Log::debug( '[Rules] Update non-ls backend rules' ) ;
 				// Need to update frontend htaccess
 				try {
 					$this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ;
 				} catch ( \Exception $e ) {
-					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+					Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
-					throw new Exception( $manual_guide_codes ) ;
+					throw new \Exception( $manual_guide_codes ) ;
 				}
 			}
 
 			// Check backend content
 			if ( $this->_wrap_do_no_edit( $backend_rules ) != $rules ) {
-				LiteSpeed_Cache_Log::debug( '[Rules] Update backend rules' ) ;
+				Log::debug( '[Rules] Update backend rules' ) ;
 				// Need to update backend htaccess
 				try {
 					$this->_insert_wrapper( $backend_rules, 'backend' ) ;
 				} catch ( \Exception $e ) {
-					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+					Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
-					throw new Exception( $manual_guide_codes ) ;
+					throw new \Exception( $manual_guide_codes ) ;
 				}
 			}
 		}
@@ -819,11 +821,11 @@ class LiteSpeed_Htaccess
 		clearstatcache() ;
 		$path = $this->htaccess_path( $kind ) ;
 		if ( ! $this->_readable( $kind ) ) {
-			LiteSpeed_Error::t( 'E_HTA_R' ) ;
+			Error::t( 'E_HTA_R' ) ;
 		}
 
-		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
-		$rules_nonls = Litespeed_File::extract_from_markers( $path, self::MARKER_NONLS ) ;
+		$rules = File::extract_from_markers( $path, self::MARKER ) ;
+		$rules_nonls = File::extract_from_markers( $path, self::MARKER_NONLS ) ;
 
 		return array( $rules, $rules_nonls ) ;
 	}
@@ -902,16 +904,16 @@ class LiteSpeed_Htaccess
 			return ;
 		}
 
-		$content = LiteSpeed_Cache_Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]) ;
+		$content = Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]) ;
 
 		try {
 			$this->htaccess_save($content) ;
 		} catch( \Exception $e ) {
-			LiteSpeed_Cache_Admin_Display::error( $e->getMessage() ) ;
+			Admin_Display::error( $e->getMessage() ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) ) ;
+		Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) ) ;
 
 	}
 

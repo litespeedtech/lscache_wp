@@ -1,16 +1,20 @@
 <?php
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
+
+
 /**
  * The admin settings handler of the plugin.
  *
  *
  * @since      1.1.0
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
+class Admin_Settings extends Const
 {
 	private static $_instance ;
 
@@ -26,7 +30,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	 */
 	private function __construct()
 	{
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 	}
 
 	/**
@@ -41,13 +45,13 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	 */
 	public function save( $raw_data )
 	{
-		LiteSpeed_Cache_Log::debug( '[Settings] saving' ) ;
+		Log::debug( '[Settings] saving' ) ;
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' ) ;
 		}
 
-		$raw_data = LiteSpeed_Cache_Admin::cleanup_text( $raw_data ) ;
+		$raw_data = Admin::cleanup_text( $raw_data ) ;
 
 		// Sanitize the fields to save
 		$_fields = array() ;
@@ -137,7 +141,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 				// Cache exclude cat
 				case self::O_CACHE_EXC_CAT :
 					$data2 = array() ;
-					$data = LiteSpeed_Cache_Utility::sanitize_lines( $data ) ;
+					$data = Utility::sanitize_lines( $data ) ;
 					foreach ( $data as $v ) {
 						$cat_id = get_cat_ID( $v ) ;
 						if ( ! $cat_id ) {
@@ -152,7 +156,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 				// Cache exclude tag
 				case self::O_CACHE_EXC_TAG :
 					$data2 = array() ;
-					$data = LiteSpeed_Cache_Utility::sanitize_lines( $data ) ;
+					$data = Utility::sanitize_lines( $data ) ;
 					foreach ( $data as $v ) {
 						$term = get_term_by( 'name', $v, 'post_tag' ) ;
 						if ( ! $term ) {
@@ -167,7 +171,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 
 				// `Original URLs`
 				case self::O_CDN_ORI :
-					$data = LiteSpeed_Cache_Utility::sanitize_lines( $data ) ;
+					$data = Utility::sanitize_lines( $data ) ;
 					// Trip scheme
 					foreach ( $data as $k => $v ) {
 						$tmp = parse_url( trim( $v ) ) ;
@@ -188,7 +192,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
-							$v = LiteSpeed_Cache_Utility::sanitize_lines( $v ) ;
+							$v = Utility::sanitize_lines( $v ) ;
 						}
 						$data2[ $k ][ $child ] = $v ;
 					}
@@ -208,7 +212,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
-							$v = LiteSpeed_Cache_Utility::sanitize_lines( $v ) ;
+							$v = Utility::sanitize_lines( $v ) ;
 						}
 						$data2[ $k ][ $child ] = $v ;
 					}
@@ -218,7 +222,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRWL_EXC_CPT :
 					if ( $data ) {
-						$data = LiteSpeed_Cache_Utility::sanitize_lines( $data ) ;
+						$data = Utility::sanitize_lines( $data ) ;
 						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
 						$data = array_intersect( $data, $ori ) ;
 					}
@@ -236,7 +240,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 		$this->__cfg->update_confs( $the_matrix ) ;
 
 		$msg = __( 'Options saved.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -247,13 +251,13 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	 */
 	public function network_save( $raw_data )
 	{
-		LiteSpeed_Cache_Log::debug( '[Settings] network saving' ) ;
+		Log::debug( '[Settings] network saving' ) ;
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' ) ;
 		}
 
-		$raw_data = LiteSpeed_Cache_Admin::cleanup_text( $raw_data ) ;
+		$raw_data = Admin::cleanup_text( $raw_data ) ;
 
 		// Sanitize the fields to save
 		$_fields = array() ;
@@ -278,7 +282,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 		}
 
 		// Update related files
-		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
+		Activation::get_instance()->update_files() ;
 	}
 
 	/**
@@ -313,17 +317,17 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 			return $instance ;
 		}
 
-		if ( ! isset( $new_instance[ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] ) ) {
+		if ( ! isset( $new_instance[ ESI::WIDGET_O_ESIENABLE ] ) ) {
 			return $instance ;
 		}
-		if ( ! isset( $new_instance[ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] ) ) {
+		if ( ! isset( $new_instance[ ESI::WIDGET_O_TTL ] ) ) {
 			return $instance ;
 		}
-		$esistr = $new_instance[ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] ;
-		$ttlstr = $new_instance[ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] ;
+		$esistr = $new_instance[ ESI::WIDGET_O_ESIENABLE ] ;
+		$ttlstr = $new_instance[ ESI::WIDGET_O_TTL ] ;
 
 		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
-			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
+			add_filter( 'wp_redirect', 'Admin_Settings::widget_save_err' ) ;
 			return false ;
 		}
 
@@ -331,25 +335,25 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 		$ttl = intval( $ttlstr ) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
-			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
+			add_filter( 'wp_redirect', 'Admin_Settings::widget_save_err' ) ;
 			return false ; // invalid ttl.
 		}
 
-		if ( empty( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {// todo: to be removed
-			$instance[ LiteSpeed_Cache_Config::OPTION_NAME ] = array() ;
+		if ( empty( $instance[ Config::OPTION_NAME ] ) ) {// todo: to be removed
+			$instance[ Config::OPTION_NAME ] = array() ;
 		}
-		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] = $esi ;
-		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] = $ttl ;
+		$instance[ Config::OPTION_NAME ][ ESI::WIDGET_O_ESIENABLE ] = $esi ;
+		$instance[ Config::OPTION_NAME ][ ESI::WIDGET_O_TTL ] = $ttl ;
 
-		$current = ! empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
-		if ( ! $current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] ) {
-			LiteSpeed_Cache_Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
+		$current = ! empty( $old_instance[ Config::OPTION_NAME ] ) ? $old_instance[ Config::OPTION_NAME ] : false ;
+		if ( ! $current || $esi != $current[ ESI::WIDGET_O_ESIENABLE ] ) {
+			Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}
-		elseif ( $ttl != 0 && $ttl != $current[ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] ) {
-			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_WIDGET . $widget->id ) ;
+		elseif ( $ttl != 0 && $ttl != $current[ ESI::WIDGET_O_TTL ] ) {
+			Purge::add( Tag::TYPE_WIDGET . $widget->id ) ;
 		}
 
-		LiteSpeed_Cache_Purge::purge_all( 'Wdiget saved' ) ;
+		Purge::purge_all( 'Wdiget saved' ) ;
 		return $instance ;
 	}
 
@@ -379,7 +383,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	{
 		$val = intval( $val ) ;
 
-		if( $val === LiteSpeed_Cache_Config::VAL_ON ) {
+		if( $val === Config::VAL_ON ) {
 			return true ;
 		}
 
@@ -398,15 +402,15 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Const
 	{
 		$val = intval( $val ) ;
 
-		if( $val === LiteSpeed_Cache_Config::VAL_ON ) {
-			return LiteSpeed_Cache_Config::VAL_ON ;
+		if( $val === Config::VAL_ON ) {
+			return Config::VAL_ON ;
 		}
 
-		if( $val === LiteSpeed_Cache_Config::VAL_ON2 ) {
-			return LiteSpeed_Cache_Config::VAL_ON2 ;
+		if( $val === Config::VAL_ON2 ) {
+			return Config::VAL_ON2 ;
 		}
 
-		return LiteSpeed_Cache_Config::VAL_OFF ;
+		return Config::VAL_OFF ;
 	}
 
 	/**

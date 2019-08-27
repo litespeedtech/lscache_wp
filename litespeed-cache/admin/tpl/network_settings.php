@@ -11,7 +11,7 @@ $menuArr = array(
 );
 
 global $_options;
-$_options = LiteSpeed_Cache_Config::get_instance()->load_site_options();
+$_options = LiteSpeed_Config::get_instance()->load_site_options();
 
 ?>
 

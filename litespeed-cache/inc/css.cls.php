@@ -3,16 +3,15 @@
  * The optimize css class.
  *
  * @since      	2.3
- * @package  	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package  	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_CSS
+class CSS
 {
 	private static $_instance ;
 
@@ -34,7 +33,7 @@ class LiteSpeed_Cache_CSS
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ) ;
+		$rules .= Core::config( Const::O_OPTM_CCSS_CON ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
@@ -94,7 +93,7 @@ class LiteSpeed_Cache_CSS
 	public function rm_cache_folder()
 	{
 		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
-			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' ) ;
 		}
 
 		// Clear CCSS in queue too
@@ -103,7 +102,7 @@ class LiteSpeed_Cache_CSS
 		$req_summary[ 'curr_request' ] = 0 ;
 		$this->_save_summary( $req_summary ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[CSS] Cleared ccss queue' ) ;
+		Log::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
 
 	/**
@@ -115,8 +114,8 @@ class LiteSpeed_Cache_CSS
 	private function _ccss()
 	{
 		// If don't need to generate CCSS, bypass
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_GEN ) ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] bypassed ccss due to setting' ) ;
+		if ( ! Core::config( Const::O_OPTM_CCSS_GEN ) ) {
+			Log::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
 
@@ -124,8 +123,8 @@ class LiteSpeed_Cache_CSS
 		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		if ( file_exists( $ccss_file ) ) {
-			LiteSpeed_Cache_Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
-			return Litespeed_File::read( $ccss_file ) ;
+			Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
+			return File::read( $ccss_file ) ;
 		}
 
 		// Check if is already in a request, bypass current one
@@ -138,7 +137,7 @@ class LiteSpeed_Cache_CSS
 		$request_url = home_url( $wp->request ) ;
 
 		// If generate in backend, log it and bypass
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) ) {
+		if ( Core::config( Const::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
 			if ( empty( $req_summary[ 'queue' ] ) ) {
 				$req_summary[ 'queue' ] = array() ;
@@ -148,7 +147,7 @@ class LiteSpeed_Cache_CSS
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
 			) ;// Current UA will be used to request
-			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
+			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			$this->_save_summary( $req_summary ) ;
 			return '' ;
@@ -166,7 +165,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _separate_mobile_ccss()
 	{
-		return wp_is_mobile() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) ;
+		return wp_is_mobile() && Core::config( Const::O_CACHE_MOBILE ) ;
 	}
 
 	/**
@@ -191,11 +190,11 @@ class LiteSpeed_Cache_CSS
 
 		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
 			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
-				LiteSpeed_Cache_Log::debug( '[CSS] previous v2.6.4- data' ) ;
+				Log::debug( '[CSS] previous v2.6.4- data' ) ;
 				return ;
 			}
 
-			LiteSpeed_Cache_Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
+			Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
 
 			self::get_instance()->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
 
@@ -231,12 +230,12 @@ class LiteSpeed_Cache_CSS
 			'is_mobile'	=> $is_mobile ? 1 : 0,
 		) ;
 
-		LiteSpeed_Cache_Log::debug( '[CSS] Generating: ', $data ) ;
+		Log::debug( '[CSS] Generating: ', $data ) ;
 
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_CCSS, $data, true, false, 60 ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_CCSS, $data, true, false, 60 ) ;
 
 		if ( empty( $json[ 'ccss' ] ) ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] empty ccss ' ) ;
+			Log::debug( '[CSS] empty ccss ' ) ;
 			return false ;
 		}
 
@@ -244,7 +243,7 @@ class LiteSpeed_Cache_CSS
 		$ccss = apply_filters( 'litespeed_ccss', $json[ 'ccss' ], $ccss_type ) ;
 
 		// Write to file
-		Litespeed_File::save( $ccss_file, $ccss, true ) ;
+		File::save( $ccss_file, $ccss, true ) ;
 
 		// Save summary data
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
@@ -258,9 +257,9 @@ class LiteSpeed_Cache_CSS
 
 		$this->_save_summary( $req_summary ) ;
 
-		LiteSpeed_Cache_Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
+		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
+		Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
 
 		return $ccss ;
 	}
@@ -273,22 +272,22 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _which_css()
 	{
-		$css = LiteSpeed_Cache_Utility::page_type() ;
+		$css = Utility::page_type() ;
 
 		$unique = false ;
 
 		// Check if in separate css type option
-		$separate_posttypes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ;
+		$separate_posttypes = Core::config( Const::O_OPTM_CCSS_SEP_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
+			Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
-		$separate_uri = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ;
+		$separate_uri = Core::config( Const::O_OPTM_CCSS_SEP_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
-			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
+			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {
-				LiteSpeed_Cache_Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
+				Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
 				$unique = true ;
 			}
 		}
@@ -314,7 +313,7 @@ class LiteSpeed_Cache_CSS
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_GENERATE_CRITICAL :
@@ -325,7 +324,7 @@ class LiteSpeed_Cache_CSS
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

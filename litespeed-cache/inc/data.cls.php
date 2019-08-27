@@ -4,14 +4,15 @@
  *
  * @since      	1.3.1
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-
-class LiteSpeed_Cache_Data
+class Data
 {
 	private $_db_updater = array(
 		// Example
@@ -46,7 +47,7 @@ class LiteSpeed_Cache_Data
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'Data init' ) ;
+		Log::debug2( 'Data init' ) ;
 		global $wpdb ;
 
 		$this->_charset_collate = $wpdb->get_charset_collate() ;
@@ -68,17 +69,17 @@ class LiteSpeed_Cache_Data
 	public function correct_tb_existance()
 	{
 		// CSS JS optm
-		if ( LiteSpeed_Cache_Optimize::need_db() ) {
+		if ( Optimize::need_db() ) {
 			$this->_create_tb_cssjs() ;
 		}
 
 		// Gravatar
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Core::config( Const::O_DISCUSS_AVATAR_CACHE ) ) {
 			$this->_create_tb_avatar() ;
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
-		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ) {
+		// if ( Core::config( Const::O_IMG_OPTM_AUTO ) ) {
 		// 	$this->create_tb_img_optm() ;
 		// }
 	}
@@ -105,27 +106,27 @@ class LiteSpeed_Cache_Data
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					LiteSpeed_Cache_Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
+					Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
 					call_user_func( $v2 ) ;
 				}
 			}
 		}
 
 		// Reload options
-		LiteSpeed_Cache_Config::get_instance()->load_options() ;
+		Config::get_instance()->load_options() ;
 
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
-		delete_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
-		add_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		delete_option( Const::conf_name( Const::_VERSION ) ) ;
+		add_option( Const::conf_name( Const::_VERSION ), Core::PLUGIN_VERSION ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		Log::debug( '[Data] Updated version to ' . Core::PLUGIN_VERSION ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
+		Purge::purge_all() ;
 
-		LiteSpeed_Cache_Utility::version_check( 'upgrade' ) ;
+		Utility::version_check( 'upgrade' ) ;
 	}
 
 	/**
@@ -144,22 +145,22 @@ class LiteSpeed_Cache_Data
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					LiteSpeed_Cache_Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
+					Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
 					call_user_func( $v2 ) ;
 				}
 			}
 		}
 
 		// Reload options
-		LiteSpeed_Cache_Config::get_instance()->load_site_options() ;
+		Config::get_instance()->load_site_options() ;
 
-		delete_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ) ) ;
-		add_site_option( LiteSpeed_Cache_Const::conf_name( LiteSpeed_Cache_Const::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		delete_site_option( Const::conf_name( Const::_VERSION ) ) ;
+		add_site_option( Const::conf_name( Const::_VERSION ), Core::PLUGIN_VERSION ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Data] Updated site_version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		Log::debug( '[Data] Updated site_version to ' . Core::PLUGIN_VERSION ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
+		Purge::purge_all() ;
 	}
 
 	/**
@@ -181,30 +182,30 @@ class LiteSpeed_Cache_Data
 
 		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' ) ;
+		Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' ) ;
 
 		require_once LSCWP_DIR . 'inc/data.upgrade.func.php' ;
 
 		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
+		Log::debug( '[Data] Upgraded to v3.0' ) ;
 
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0' ;
-		if ( LiteSpeed_Cache::PLUGIN_VERSION != $ver ) {
+		if ( Core::PLUGIN_VERSION != $ver ) {
 			$this->conf_upgrade( $ver ) ;
 		}
 		else {
 			// Reload options
-			LiteSpeed_Cache_Config::get_instance()->load_options() ;
+			Config::get_instance()->load_options() ;
 
 			$this->correct_tb_existance() ;
 
 			! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-			LiteSpeed_Cache_Purge::purge_all() ;
+			Purge::purge_all() ;
 
-			LiteSpeed_Cache_Utility::version_check( 'upgrade' ) ;
+			Utility::version_check( 'upgrade' ) ;
 		}
 	}
 
@@ -315,15 +316,15 @@ class LiteSpeed_Cache_Data
 
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug2( '[Data] Checking img_optm table' ) ;
+		Log::debug2( '[Data] Checking img_optm table' ) ;
 
 		// Check if table exists first
 		if ( self::tb_img_optm_exist() ) {
-			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
+		Log::debug( '[Data] Creating img_optm table' ) ;
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'img_optm' ) . ') %2$s;',
@@ -333,12 +334,12 @@ class LiteSpeed_Cache_Data
 
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
+			Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
 		}
 
 		// Clear OC to avoid get `_tb_img_optm` from option failed
 		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-			LiteSpeed_Cache_Object::get_instance()->flush() ;
+			Object::get_instance()->flush() ;
 		}
 	}
 
@@ -357,15 +358,15 @@ class LiteSpeed_Cache_Data
 
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug2( '[Data] Checking html optm table' ) ;
+		Log::debug2( '[Data] Checking html optm table' ) ;
 
 		// Check if table exists first
 		if ( self::tb_cssjs_exist() ) {
-			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Creating html optm table' ) ;
+		Log::debug( '[Data] Creating html optm table' ) ;
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'optm' ) . ') %2$s;',
@@ -375,7 +376,7 @@ class LiteSpeed_Cache_Data
 
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating html_optm table failed!' ) ;
+			Log::debug( '[Data] Warning: Creating html_optm table failed!' ) ;
 		}
 
 	}
@@ -395,15 +396,15 @@ class LiteSpeed_Cache_Data
 
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug2( '[Data] Checking avatar table' ) ;
+		Log::debug2( '[Data] Checking avatar table' ) ;
 
 		// Check if table exists first
 		if ( self::tb_avatar_exist() ) {
-			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Creating avatar table' ) ;
+		Log::debug( '[Data] Creating avatar table' ) ;
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'avatar' ) . ') %2$s;',
@@ -413,7 +414,7 @@ class LiteSpeed_Cache_Data
 
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating avatar table failed!' ) ;
+			Log::debug( '[Data] Warning: Creating avatar table failed!' ) ;
 		}
 
 	}
@@ -432,7 +433,7 @@ class LiteSpeed_Cache_Data
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Deleting img_optm table' ) ;
+		Log::debug( '[Data] Deleting img_optm table' ) ;
 
 		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
 		$wpdb->query( $q ) ;
@@ -451,7 +452,7 @@ class LiteSpeed_Cache_Data
 		global $wpdb ;
 
 		if ( self::tb_cssjs_exist() ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Deleting cssjs table' ) ;
+			Log::debug( '[Data] Deleting cssjs table' ) ;
 
 			$q = "DROP TABLE IF EXISTS $this->_tb_cssjs" ;
 			$wpdb->query( $q ) ;
@@ -461,7 +462,7 @@ class LiteSpeed_Cache_Data
 		// $this->del_table_img_optm() ;
 
 		if ( self::tb_avatar_exist() ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Deleting avatar table' ) ;
+			Log::debug( '[Data] Deleting avatar table' ) ;
 
 			$q = "DROP TABLE IF EXISTS $this->_tb_avatar" ;
 			$wpdb->query( $q ) ;
@@ -514,7 +515,7 @@ class LiteSpeed_Cache_Data
 
 		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->_tb_cssjs . '` WHERE `hash_name`=%s', $filename ) ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
+		Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 
 		$res = json_decode( $res, true ) ;
 

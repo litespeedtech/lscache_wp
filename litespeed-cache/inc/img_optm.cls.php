@@ -3,16 +3,15 @@
  * The class to optimize image.
  *
  * @since 		2.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Img_Optm
+class Img_Optm
 {
 	private static $_instance ;
 
@@ -73,11 +72,11 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'ImgOptm init' ) ;
+		Log::debug2( 'ImgOptm init' ) ;
 
 		$this->wp_upload_dir = wp_upload_dir() ;
-		$this->__media = LiteSpeed_Cache_Media::get_instance() ;
-		$this->_table_img_optm = LiteSpeed_Cache_Data::tb_img_optm() ;
+		$this->__media = Media::get_instance() ;
+		$this->_table_img_optm = Data::tb_img_optm() ;
 	}
 
 	/**
@@ -99,7 +98,7 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _sync_data( $try_level_up = false )
 	{
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA, false, true ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA, false, true ) ;
 
 		if ( ! is_array( $json ) ) {
 			return ;
@@ -111,15 +110,15 @@ class LiteSpeed_Cache_Img_Optm
 
 		// If this is for level up try, return data directly
 		if ( $try_level_up ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Try Level Up ~ !' ) ;
+			Log::debug( '[Img_Optm] Try Level Up ~ !' ) ;
 			return $json ;
 		}
 
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
-			LiteSpeed_Cache_Admin::redirect() ;
+			Admin::redirect() ;
 		}
 	}
 
@@ -147,9 +146,9 @@ class LiteSpeed_Cache_Img_Optm
 		$_credit = (int) $this->summary_info( 'credit' ) ;
 		$credit_recovered = (int) $this->summary_info( 'credit_recovered' ) ;
 
-		LiteSpeed_Cache_Data::get_instance()->create_tb_img_optm() ;
+		Data::get_instance()->create_tb_img_optm() ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] preparing images to push' ) ;
+		Log::debug( '[Img_Optm] preparing images to push' ) ;
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
@@ -170,13 +169,13 @@ class LiteSpeed_Cache_Img_Optm
 		$list = $wpdb->get_results( $q ) ;
 		if ( ! $list ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			Admin_Display::succeed( $msg ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: no image found' ) ;
+			Log::debug( '[Img_Optm] optimize bypass: no image found' ) ;
 			return $msg ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] found images: ' . count( $list ) ) ;
+		Log::debug( '[Img_Optm] found images: ' . count( $list ) ) ;
 
 		foreach ( $list as $v ) {
 
@@ -198,9 +197,9 @@ class LiteSpeed_Cache_Img_Optm
 			if ( $this->_img_total + $num_will_incease > $_credit ) {
 				if ( ! $this->_img_total ) {
 					$msg = sprintf( __( 'Number of images in one image group (%s) exceeds the credit (%s)', 'litespeed-cache' ), $num_will_incease, $_credit ) ;
-					LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+					Admin_Display::error( $msg ) ;
 				}
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
+				Log::debug( '[Img_Optm] img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
 				break ;
 			}
 			/**
@@ -208,7 +207,7 @@ class LiteSpeed_Cache_Img_Optm
 			 * @since 1.6.6.1
 			 */
 			if ( $this->_img_total && ! $credit_recovered ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] test run only allow 1 group ' ) ;
+				Log::debug( '[Img_Optm] test run only allow 1 group ' ) ;
 				break ;
 			}
 
@@ -226,9 +225,9 @@ class LiteSpeed_Cache_Img_Optm
 
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'Requested successfully.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			Admin_Display::succeed( $msg ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
+			Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
 			return array( 'ok' => $msg ) ;
 		}
 
@@ -246,12 +245,12 @@ class LiteSpeed_Cache_Img_Optm
 
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'Optimized successfully.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			Admin_Display::succeed( $msg ) ;
 			return array( 'ok' => $msg ) ;
 		}
 
 		$total_groups = count( $this->_img_in_queue ) ;
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
+		Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
 		// Push to LiteSpeed IAPI server
 		$json = $this->_push_img_in_queue_to_iapi() ;
@@ -300,10 +299,10 @@ class LiteSpeed_Cache_Img_Optm
 		$accepted_groups = count( $pids ) ;
 		$accepted_imgs = $json[ 'total' ] ;
 
-		$placeholder1 = LiteSpeed_Cache_Admin_Display::print_plural( $total_groups ) . ' (' . LiteSpeed_Cache_Admin_Display::print_plural( $this->_img_total, 'image' ) . ')' ;
-		$placeholder2 = LiteSpeed_Cache_Admin_Display::print_plural( $accepted_groups ) . ' (' . LiteSpeed_Cache_Admin_Display::print_plural( $accepted_imgs, 'image' ) . ')' ;
+		$placeholder1 = Admin_Display::print_plural( $total_groups ) . ' (' . Admin_Display::print_plural( $this->_img_total, 'image' ) . ')' ;
+		$placeholder2 = Admin_Display::print_plural( $accepted_groups ) . ' (' . Admin_Display::print_plural( $accepted_imgs, 'image' ) . ')' ;
 		$msg = sprintf( __( 'Pushed %1$s to LiteSpeed optimization server, accepted %2$s.', 'litespeed-cache' ), $placeholder1, $placeholder2 ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		// Update credit info
 		if ( isset( $json[ 'credit' ] ) ) {
@@ -383,7 +382,7 @@ class LiteSpeed_Cache_Img_Optm
 			self::DB_IMG_OPTIMIZE_STATUS_XMETA,
 		) ;
 		$this->_insert_img_optm( $data, 'post_id, optm_status' ) ;
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid ) ;
+		Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid ) ;
 	}
 
 	/**
@@ -426,7 +425,7 @@ class LiteSpeed_Cache_Img_Optm
 						$size_to_store[ $pid ] = $existing_info[ 'pid' ] ;
 					}
 
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Existing pulled [pid] ' . $pid . " \t\t\t[status] " . $existing_info[ 'status' ] . " \t\t\t[src] " . $v[ 'src' ] ) ;
+					Log::debug( '[Img_Optm] Existing pulled [pid] ' . $pid . " \t\t\t[status] " . $existing_info[ 'status' ] . " \t\t\t[src] " . $v[ 'src' ] ) ;
 
 					$changed = true ;
 				}
@@ -452,7 +451,7 @@ class LiteSpeed_Cache_Img_Optm
 			// Get current data
 			$pids = array_unique( $size_to_store ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Existing size info root pids', $pids ) ;
+			Log::debug( '[Img_Optm] Existing size info root pids', $pids ) ;
 
 			// NOTE: Separate this query while not using LEFT JOIN in SELECT * FROM $this->_table_img_optm in previous query to lower db load
 			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . " )" ;
@@ -474,7 +473,7 @@ class LiteSpeed_Cache_Img_Optm
 				// Update existing data ( Replaced with existing size info wholly )
 				$wpdb->query( $wpdb->prepare( $q_to_update, array( $existing_sizes[ $from_pid ], $v->meta_id ) ) ) ;
 
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Updated optm_size info [pid] ' . $v->post_id . " \t\t\t[from_pid] " . $from_pid ) ;
+				Log::debug( '[Img_Optm] Updated optm_size info [pid] ' . $v->post_id . " \t\t\t[from_pid] " . $from_pid ) ;
 			}
 
 			// Insert new size info
@@ -493,7 +492,7 @@ class LiteSpeed_Cache_Img_Optm
 			// Store data
 			$wpdb->query( $wpdb->prepare( $q, $data ) ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Inserted optm_size info [total] ' . count( $size_to_insert_pids ) ) ;
+			Log::debug( '[Img_Optm] Inserted optm_size info [total] ' . count( $size_to_insert_pids ) ) ;
 
 		}
 
@@ -536,7 +535,7 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		if ( $this->_img_duplicated_in_queue ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Found duplicated src [total_img_duplicated] ' . $total_img_duplicated . ' [total_pid_unset] ' . $total_pid_unset ) ;
+			Log::debug( '[Img_Optm] Found duplicated src [total_img_duplicated] ' . $total_img_duplicated . ' [total_pid_unset] ' . $total_pid_unset ) ;
 		}
 	}
 
@@ -567,7 +566,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( ! $this->_missed_img_in_queue ) {
 			return ;
 		}
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_missed_img_in_queue ) ) ;
+		Log::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_missed_img_in_queue ) ) ;
 
 		$data_to_add = array() ;
 		foreach ( $this->_missed_img_in_queue as $src_data ) {
@@ -588,7 +587,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _img_queue( $meta_value, $ori_file = false )
 	{
 		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value ) ;
+			Log::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value ) ;
 			return ;
 		}
 
@@ -607,11 +606,11 @@ class LiteSpeed_Cache_Img_Optm
 				'src'	=> $short_file_path,
 				'srcpath_md5'	=> md5( $short_file_path ),
 			) ;
-			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path ) ;
+			Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid ) ;
+		Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid ) ;
 
 		/**
 		 * Filter `litespeed_img_optm_options_per_image`
@@ -623,22 +622,22 @@ class LiteSpeed_Cache_Img_Optm
 		 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $optm_options, $file ){
 		 * 			// To add optimize original image
 		 * 			if ( Your conditions ) {
-		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_ORI ;
+		 * 				$optm_options |= API::IMG_OPTM_BM_ORI ;
 		 * 			}
 		 *
 		 * 			// To add optimize webp image
 		 * 			if ( Your conditions ) {
-		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_WEBP ;
+		 * 				$optm_options |= API::IMG_OPTM_BM_WEBP ;
 		 * 			}
 		 *
 		 * 			// To turn on lossless optimize for this image e.g. if filename contains `magzine`
 		 * 			if ( strpos( $file, 'magzine' ) !== false ) {
-		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_LOSSLESS ;
+		 * 				$optm_options |= API::IMG_OPTM_BM_LOSSLESS ;
 		 * 			}
 		 *
 		 * 			// To set keep exif info for this image
 		 * 			if ( Your conditions ) {
-		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_EXIF ;
+		 * 				$optm_options |= API::IMG_OPTM_BM_EXIF ;
 		 * 			}
 		 *
 		 *			return $optm_options ;
@@ -678,14 +677,14 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		$data = array(
 			'list' 			=> $this->_img_in_queue,
-			'optm_ori'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> Core::config( Const::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> Core::config( Const::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> Core::config( Const::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> Core::config( Const::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ), true, false ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, Utility::arr2str( $data ), true, false ) ;
 
 		// admin_api will handle common err
 		if ( ! is_array( $json ) ) {
@@ -694,13 +693,13 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Check data format
 		if ( empty( $json[ 'pids' ] ) || ! is_array( $json[ 'pids' ] ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ] ) ;
+			Log::debug( '[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ] ) ;
 			$msg = sprintf( __( 'Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache' ), var_export( $json[ 'pids' ], true ) ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			Admin_Display::error( $msg ) ;
 			return $json ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Returned data from LiteSpeed IAPI server count: ' . count( $json[ 'pids' ] ) ) ;
+		Log::debug( '[Img_Optm] Returned data from LiteSpeed IAPI server count: ' . count( $json[ 'pids' ] ) ) ;
 
 		return $json ;
 
@@ -812,7 +811,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			// write log
 			$pid_log = $last_log_pid == $v->post_id ? '.' : $v->post_id ;
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify_img [status] ' . $status . " \t\t[pid] " . $pid_log . " \t\t[id] " . $v->id ) ;
+			Log::debug( '[Img_Optm] notify_img [status] ' . $status . " \t\t[pid] " . $pid_log . " \t\t[id] " . $v->id ) ;
 			$last_log_pid = $v->post_id ;
 
 			// set need_pull tag
@@ -835,7 +834,7 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( $optm_info, $optm_arr[ 'meta_id' ] ) ) ) ;
 				}
 				else {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] New size info [pid] ' . $post_id ) ;
+					Log::debug( '[Img_Optm] New size info [pid] ' . $post_id ) ;
 					$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )" ;
 					$wpdb->query( $wpdb->prepare( $q, array( $post_id, self::DB_IMG_OPTIMIZE_SIZE, $optm_info ) ) ) ;
 				}
@@ -844,7 +843,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Update child postmeta data based on root_id
 		if ( $child_postmeta_info ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Proceed child images [total] ' . count( $child_postmeta_info ) ) ;
+			Log::debug( '[Img_Optm] Proceed child images [total] ' . count( $child_postmeta_info ) ) ;
 
 			$root_id_list = array_keys( $child_postmeta_info ) ;
 
@@ -873,7 +872,7 @@ class LiteSpeed_Cache_Img_Optm
 			// Update these size_info
 			if ( $pids_to_update ) {
 				$pids_to_update = array_unique( $pids_to_update ) ;
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
+				Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
 
 				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . " )" ;
 				$wpdb->query( $wpdb->prepare( $q, array_merge( array( $optm_info, self::DB_IMG_OPTIMIZE_SIZE ), $pids_to_update ) ) ) ;
@@ -881,7 +880,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			// Insert these size_info
 			if ( $pids_data_to_insert ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Insert child group size_info [total] ' . ( count( $pids_data_to_insert ) / 3 ) ) ;
+				Log::debug( '[Img_Optm] Insert child group size_info [total] ' . ( count( $pids_data_to_insert ) / 3 ) ) ;
 
 				$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
 				// Add placeholder
@@ -893,7 +892,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Mark need_pull tag for cron
 		if ( $need_pull ) {
-			update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
+			update_option( Const::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 		}
 
 		// redo count err
@@ -913,12 +912,12 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		$notified_data = json_decode( base64_decode( $_POST[ 'data' ] ), true ) ;
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
+			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
 			exit( json_encode( 'no notified data' ) ) ;
 		}
 
 		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -21 ) !== 'api.litespeedtech.com' ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify exit: no/wrong server' ) ;
+			Log::debug( '[Img_Optm] notify exit: no/wrong server' ) ;
 			exit( json_encode( 'no/wrong server' ) ) ;
 		}
 
@@ -928,7 +927,7 @@ class LiteSpeed_Cache_Img_Optm
 		) ;
 
 		if ( empty( $_POST[ 'status' ] ) || ( ! in_array( $_POST[ 'status' ], $_allowed_status ) && substr( $_POST[ 'status' ], 0, 3 ) != self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
+			Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
 			exit( json_encode( 'no/wrong status' ) ) ;
 		}
 
@@ -947,13 +946,13 @@ class LiteSpeed_Cache_Img_Optm
 			return ;
 		}
 
-		$tag = get_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
+		$tag = get_option( Const::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
 
 		if ( ! $tag || $tag !== self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Cron pull_optimized_img started' ) ;
+		Log::debug( '[Img_Optm] Cron pull_optimized_img started' ) ;
 
 		self::get_instance()->_pull_optimized_img() ;
 	}
@@ -983,7 +982,7 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		if ( $this->cron_running() ) {
 			$msg = '[Img_Optm] fetch cron is running' ;
-			LiteSpeed_Cache_Log::debug( $msg ) ;
+			Log::debug( $msg ) ;
 			return $msg ;
 		}
 
@@ -992,9 +991,9 @@ class LiteSpeed_Cache_Img_Optm
 		$q = "SELECT * FROM $this->_table_img_optm FORCE INDEX ( optm_status ) WHERE root_id = 0 AND optm_status = %s ORDER BY id LIMIT 1" ;
 		$_q = $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 
-		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ;
-		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ) ;
-		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ;
+		$optm_ori = Core::config( Const::O_IMG_OPTM_ORI ) ;
+		$rm_ori_bkup = Core::config( Const::O_IMG_OPTM_RM_BKUP ) ;
+		$optm_webp = Core::config( Const::O_IMG_OPTM_WEBP ) ;
 
 		// pull 1 min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;
@@ -1026,17 +1025,17 @@ class LiteSpeed_Cache_Img_Optm
 			 */
 			$server_info = json_decode( $row_img->server_info, true ) ;
 			if ( empty( $server_info[ 'server' ] ) ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to decode server_info.' ) ;
+				Log::debug( '[Img_Optm] Failed to decode server_info.' ) ;
 
 				$msg = sprintf(
 					__( 'LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend the pull notification this one time only. After that, the process will be automated.', 'litespeed-cache' ),
 					'v2.9.6',
-					LiteSpeed_Cache_GUI::img_optm_clean_up_unfinished()
+					GUI::img_optm_clean_up_unfinished()
 				) ;
 
-				$msg .= LiteSpeed_Cache_Doc::learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade' ) ;
+				$msg .= Doc::learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade' ) ;
 
-				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				Admin_Display::error( $msg ) ;
 
 				return ;
 			}
@@ -1055,14 +1054,14 @@ class LiteSpeed_Cache_Img_Optm
 				$response = wp_remote_get( $server_info[ 'ori' ], array( 'timeout' => 15 ) ) ;
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
-					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
+					Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
 					return ;
 				}
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] ) ;
 
 				if ( ! file_exists( $local_file . '.tmp' ) || ! filesize( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] ) ;
+					Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] ) ;
 
 					// update status to failed
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
@@ -1085,7 +1084,7 @@ class LiteSpeed_Cache_Img_Optm
 				// Replace ori img
 				rename( $local_file . '.tmp', $local_file ) ;
 
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
+				Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
 
 				/**
 				 * API Hook
@@ -1107,14 +1106,14 @@ class LiteSpeed_Cache_Img_Optm
 				$response = wp_remote_get( $server_info[ 'webp' ], array( 'timeout' => 15 ) ) ;
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
-					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull webp image: ' . $error_message ) ;
+					Log::debug( 'IAPI failed to pull webp image: ' . $error_message ) ;
 					return ;
 				}
 
 				file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
 
 				if ( ! file_exists( $local_file . '.webp' ) || ! filesize( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] ) ;
+					Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] ) ;
 
 					// update status to failed
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
@@ -1126,7 +1125,7 @@ class LiteSpeed_Cache_Img_Optm
 					return 'WebP md5 dismatch' ; // exit from running pull process
 				}
 
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
+				Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
 
 				/**
 				 * API for WebP
@@ -1140,7 +1139,7 @@ class LiteSpeed_Cache_Img_Optm
 				$total_pulled_webp ++ ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id ) ;
+			Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id ) ;
 
 			// Update pulled status
 			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE id = %d " ;
@@ -1161,7 +1160,7 @@ class LiteSpeed_Cache_Img_Optm
 		// Notify IAPI images taken
 		$json = false ;
 		foreach ( $server_list as $server => $img_list ) {
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_IMG_TAKEN, $img_list, $server, true ) ;
+			$json = Admin_API::post( Admin_API::IAPI_ACTION_IMG_TAKEN, $img_list, $server, true ) ;
 		}
 
 		// use latest credit from last server response
@@ -1177,13 +1176,13 @@ class LiteSpeed_Cache_Img_Optm
 		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id = 0 AND optm_status = %s LIMIT 1" ;
 		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 		if ( $tmp ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Task in queue, to be continued...' ) ;
+			Log::debug( '[Img_Optm] Task in queue, to be continued...' ) ;
 			return array( 'ok' => 'to_be_continued' ) ;
 		}
 
 		// If all pulled, update tag to done
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Marked pull status to all pulled' ) ;
-		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ;
+		Log::debug( '[Img_Optm] Marked pull status to all pulled' ) ;
+		update_option( Const::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ;
 
 		$time_cost = time() - $beginning ;
 		if ( $tried_level_up ) {
@@ -1229,7 +1228,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		$pid = $_POST[ 'data' ] ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] Check image [ID] ' . $pid ) ;
+		Log::debug( '[Img_Optm] Check image [ID] ' . $pid ) ;
 
 		$data = array() ;
 
@@ -1270,18 +1269,18 @@ class LiteSpeed_Cache_Img_Optm
 	private function _parse_wp_meta_value( $v )
 	{
 		if ( ! $v->meta_value ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
+			Log::debug( '[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
 			return false ;
 		}
 
 		$meta_value = @maybe_unserialize( $v->meta_value ) ;
 		if ( ! is_array( $meta_value ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
+			Log::debug( '[Img_Optm] bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
 			return false ;
 		}
 
 		if ( empty( $meta_value[ 'file' ] ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to no ori file: pid ' . $v->post_id ) ;
+			Log::debug( '[Img_Optm] bypassed parsing meta due to no ori file: pid ' . $v->post_id ) ;
 			return false ;
 		}
 
@@ -1311,14 +1310,14 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
+		Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
 
 		// Push to LiteSpeed IAPI server and recover credit
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED, false, true ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED, false, true ) ;
 
 		// confirm link will be displayed by Admin_API automatically
 		if ( is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] cmd result', $json ) ;
+			Log::debug( '[Img_Optm] cmd result', $json ) ;
 		}
 
 		// If failed to run request to IAPI
@@ -1326,9 +1325,9 @@ class LiteSpeed_Cache_Img_Optm
 
 			// For other errors that Admin_API didn't take
 			if ( ! is_array( $json ) ) {
-				LiteSpeed_Cache_Admin_Display::error( $json ) ;
+				Admin_Display::error( $json ) ;
 
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] err ', $json ) ;
+				Log::debug( '[Img_Optm] err ', $json ) ;
 
 				return $json ;
 			}
@@ -1349,7 +1348,7 @@ class LiteSpeed_Cache_Img_Optm
 		$this->_sync_data( true ) ;
 
 		$msg = __( 'Destroy unfinished data successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		return $msg ;
 
@@ -1363,17 +1362,17 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _img_optimize_destroy()
 	{
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] sending DESTROY cmd to LiteSpeed IAPI' ) ;
+		Log::debug( '[Img_Optm] sending DESTROY cmd to LiteSpeed IAPI' ) ;
 
 		// Mark request time to avoid duplicated request
 		update_option( self::DB_IMG_OPTIMIZE_DESTROY, time() ) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY, false, true ) ;
+		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_DESTROY, false, true ) ;
 
 		// confirm link will be displayed by Admin_API automatically
 		if ( is_array( $json ) && $json ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] cmd result', $json ) ;
+			Log::debug( '[Img_Optm] cmd result', $json ) ;
 		}
 
 	}
@@ -1387,11 +1386,11 @@ class LiteSpeed_Cache_Img_Optm
 	public function img_optimize_destroy_callback()
 	{
 		global $wpdb ;
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] excuting DESTROY process' ) ;
+		Log::debug( '[Img_Optm] excuting DESTROY process' ) ;
 
 		$request_time = get_option( self::DB_IMG_OPTIMIZE_DESTROY ) ;
 		if ( time() - $request_time > 300 ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
+			Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
 			exit( 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
 		}
 
@@ -1431,7 +1430,7 @@ class LiteSpeed_Cache_Img_Optm
 			// Return continue signal
 			update_option( self::DB_IMG_OPTIMIZE_DESTROY, time() ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] To be continued 🚦' ) ;
+			Log::debug( '[Img_Optm] To be continued 🚦' ) ;
 
 			exit( 'to_be_continued' ) ;
 		}
@@ -1441,11 +1440,11 @@ class LiteSpeed_Cache_Img_Optm
 		$wpdb->query( $q ) ;
 
 		// Delete img_optm table
-		LiteSpeed_Cache_Data::get_instance()->del_table_img_optm() ;
+		Data::get_instance()->del_table_img_optm() ;
 
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
-		delete_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
+		delete_option( Const::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
 
 		exit( 'ok' ) ;
 	}
@@ -1458,7 +1457,7 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _img_optimize_rescan()
 	{return;
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] resend requested images' ) ;
+		Log::debug( '[Img_Optm] resend requested images' ) ;
 
 		$_credit = (int) $this->summary_info( 'credit' ) ;
 
@@ -1476,9 +1475,9 @@ class LiteSpeed_Cache_Img_Optm
 		$limit_rows = apply_filters( 'litespeed_img_optm_resend_rows', 300 ) ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_DATA, $limit_rows ) ) ) ;
 		if ( ! $list ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] resend request bypassed: no image found' ) ;
+			Log::debug( '[Img_Optm] resend request bypassed: no image found' ) ;
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			Admin_Display::error( $msg ) ;
 			return ;
 		}
 
@@ -1531,7 +1530,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			$num_will_incease = count( $img_queue ) ;
 			if ( $this->_img_total + $num_will_incease > $_credit ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] resend img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
+				Log::debug( '[Img_Optm] resend img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
 				break ;
 			}
 
@@ -1543,12 +1542,12 @@ class LiteSpeed_Cache_Img_Optm
 		// push to LiteSpeed IAPI server
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			Admin_Display::succeed( $msg ) ;
 			return ;
 		}
 
 		$total_groups = count( $this->_img_in_queue ) ;
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
+		Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
 		// Push to LiteSpeed IAPI server
 		$json = $this->_push_img_in_queue_to_iapi() ;
@@ -1581,7 +1580,7 @@ class LiteSpeed_Cache_Img_Optm
 		$accepted_imgs = $json[ 'total' ] ;
 
 		$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		// Update credit info
 		if ( isset( $json[ 'credit' ] ) ) {
@@ -1620,11 +1619,11 @@ class LiteSpeed_Cache_Img_Optm
 		$json = $this->_sync_data( true ) ;
 		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
 			$msg = "Upgraded to level $json[level] !" ;
-			LiteSpeed_Cache_Log::debug( "[Img_Optm] $msg" ) ;
+			Log::debug( "[Img_Optm] $msg" ) ;
 			return $msg ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgrade failed [old level data] " . var_export( $optm_summary, true ), $json ) ;
+			Log::debug( "[Img_Optm] Upgrade failed [old level data] " . var_export( $optm_summary, true ), $json ) ;
 		}
 	}
 
@@ -1647,7 +1646,7 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		$old = $summary[ 'credit' ] ?: '-' ;
-		LiteSpeed_Cache_Log::debug( "[Img_Optm] Credit updated \t\t[Old] $old \t\t[New] $credit" ) ;
+		Log::debug( "[Img_Optm] Credit updated \t\t[Old] $old \t\t[New] $credit" ) ;
 
 		// Mark credit recovered
 		if ( $credit > $summary[ 'credit' ] ) {
@@ -1698,7 +1697,7 @@ class LiteSpeed_Cache_Img_Optm
 		) ;
 		update_option( self::DB_IMG_OPTM_BK_SUMMARY, $data ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] _calc_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+		Log::debug( '[Img_Optm] _calc_bkup total: ' . $i . ' [size] ' . $total_size ) ;
 
 	}
 
@@ -1751,10 +1750,10 @@ class LiteSpeed_Cache_Img_Optm
 		) ;
 		update_option( self::DB_IMG_OPTM_RMBK_SUMMARY, $data ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] _rm_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+		Log::debug( '[Img_Optm] _rm_bkup total: ' . $i . ' [size] ' . $total_size ) ;
 
-		$msg = sprintf( __( 'Removed %1$s images and saved %2$s successfully.', 'litespeed-cache' ), $i, LiteSpeed_Cache_Utility::real_size( $total_size ) ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		$msg = sprintf( __( 'Removed %1$s images and saved %2$s successfully.', 'litespeed-cache' ), $i, Utility::real_size( $total_size ) ) ;
+		Admin_Display::succeed( $msg ) ;
 
 		return $msg ;
 	}
@@ -1945,9 +1944,9 @@ class LiteSpeed_Cache_Img_Optm
 			}
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] batch switched images total: ' . $i ) ;
+		Log::debug( '[Img_Optm] batch switched images total: ' . $i ) ;
 		$msg = __( 'Switched images successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
 
 	}
 
@@ -1973,13 +1972,13 @@ class LiteSpeed_Cache_Img_Optm
 			if ( $switch_type === 'webp' ) {
 				if ( $this->__media->info( $v->src . '.webp', $v->post_id ) ) {
 					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp', $v->post_id ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src ) ;
+					Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src ) ;
 
 					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
 				}
 				elseif ( $this->__media->info( $v->src . '.optm.webp', $v->post_id ) ) {
 					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp', $v->post_id ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Enable WebP: ' . $v->src ) ;
+					Log::debug( '[Img_Optm] Enable WebP: ' . $v->src ) ;
 
 					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
 				}
@@ -1995,14 +1994,14 @@ class LiteSpeed_Cache_Img_Optm
 				if ( $this->__media->info( $bk_file, $v->post_id ) ) {
 					$this->__media->rename( $v->src, $bk_optm_file, $v->post_id ) ;
 					$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Restore original img: ' . $bk_file ) ;
+					Log::debug( '[Img_Optm] Restore original img: ' . $bk_file ) ;
 
 					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
 				}
 				elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
 					$this->__media->rename( $v->src, $bk_file, $v->post_id ) ;
 					$this->__media->rename( $bk_optm_file, $v->src, $v->post_id ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src ) ;
+					Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src ) ;
 
 					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
 				}
@@ -2010,7 +2009,7 @@ class LiteSpeed_Cache_Img_Optm
 			}
 		}
 
-		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
 	}
 
 	/**
@@ -2031,7 +2030,7 @@ class LiteSpeed_Cache_Img_Optm
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
+		Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
 
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE post_id = %d" ;
@@ -2047,12 +2046,12 @@ class LiteSpeed_Cache_Img_Optm
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 			if ( $this->__media->info( $bk_file, $v->post_id ) ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
+				Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
 				$this->__media->del( $v->src, $v->post_id ) ;
 				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 			}
 			elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
+				Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
 				$this->__media->del( $bk_optm_file, $v->post_id ) ;
 			}
 		}
@@ -2064,7 +2063,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' ) ;
 
-		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
 	}
 
 	/**
@@ -2077,7 +2076,7 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_RESET_ROW :
@@ -2113,20 +2112,20 @@ class LiteSpeed_Cache_Img_Optm
 				break ;
 
 			case self::TYPE_IMG_PULL :
-				LiteSpeed_Cache_Log::debug( 'ImgOptm: Manually running Cron pull_optimized_img' ) ;
+				Log::debug( 'ImgOptm: Manually running Cron pull_optimized_img' ) ;
 				$result = $instance->_pull_optimized_img( true ) ;
 				// Manually running needs to roll back timestamp for next running
 				$instance->_update_cron_running( true ) ;
 
 				// Check if need to self redirect
 				if ( is_array( $result ) && $result[ 'ok' ] === 'to_be_continued' ) {
-					$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ;
+					$link = Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ;
 					// Add i to avoid browser too many redirected warning
 					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
 					$i ++ ;
 					$url = html_entity_decode( $link ) . '&i=' . $i ;
 					exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
-					// LiteSpeed_Cache_Admin::redirect( $url ) ;
+					// Admin::redirect( $url ) ;
 				}
 				break ;
 
@@ -2148,7 +2147,7 @@ class LiteSpeed_Cache_Img_Optm
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

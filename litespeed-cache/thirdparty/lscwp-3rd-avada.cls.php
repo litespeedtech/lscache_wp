@@ -11,7 +11,7 @@
 if (!defined('ABSPATH')) {
 	die();
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Avada') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_Avada') ;
 
 class LiteSpeed_Cache_ThirdParty_Avada
 {
@@ -39,7 +39,7 @@ class LiteSpeed_Cache_ThirdParty_Avada
 	 */
 	public static function flush()
 	{
-		LiteSpeed_Cache_API::purge_all() ;
+		LiteSpeed_API::purge_all() ;
 	}
 
 }

@@ -21,7 +21,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_TTL ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -36,7 +36,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_HTML_MIN ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_HTML_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -49,7 +49,7 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_CSS_INLINE_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -62,7 +62,7 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_JS_INLINE_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -75,7 +75,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_DNS_PREFETCH ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -83,7 +83,7 @@
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch' ) ; ?>
 			</div>
 		</td>
@@ -91,7 +91,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_RM_COMMENT ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_RM_COMMENT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -105,7 +105,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_QS_RM ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_QS_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -127,7 +127,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_GGFONTS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -142,7 +142,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_GGFONTS_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -155,7 +155,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTM_EMOJI_RM ; ?>
+			<?php $id = LiteSpeed_Config::O_OPTM_EMOJI_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

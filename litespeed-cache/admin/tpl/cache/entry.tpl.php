@@ -19,7 +19,7 @@ $menu_list = array(
  */
 global $wp_roles ;
 if ( !isset( $wp_roles ) ) {
-	$wp_roles = new WP_Roles() ;
+	$wp_roles = new \WP_Roles() ;
 }
 
 $roles = array() ;

@@ -1,5 +1,4 @@
 <?php
-defined( 'WPINC' ) || exit ;
 /**
  * The import/export class.
  *
@@ -8,8 +7,11 @@ defined( 'WPINC' ) || exit ;
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-class LiteSpeed_Cache_Import
+defined( 'WPINC' ) || exit ;
+
+class Import
 {
 	private static $_instance ;
 
@@ -28,10 +30,10 @@ class LiteSpeed_Cache_Import
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug( 'Import init' ) ;
+		Log::debug( 'Import init' ) ;
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-		$this->_log_name = LiteSpeed_Cache_Const::conf_name( 'import', 'log' ) ;
+		$this->__cfg = Config::get_instance() ;
+		$this->_log_name = Const::conf_name( 'import', 'log' ) ;
 	}
 
 	/**
@@ -87,7 +89,7 @@ class LiteSpeed_Cache_Import
 
 		update_option( $this->_log_name, $log ) ;
 
-		LiteSpeed_Cache_Log::debug( 'Import: Saved to ' . $filename ) ;
+		Log::debug( 'Import: Saved to ' . $filename ) ;
 
 		@header( 'Content-Disposition: attachment; filename=' . $filename ) ;
 		echo $data ;
@@ -115,10 +117,10 @@ class LiteSpeed_Cache_Import
 	{
 		if ( ! $file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
-				LiteSpeed_Cache_Log::debug( 'Import: Failed to import, wront ls_file' ) ;
+				Log::debug( 'Import: Failed to import, wront ls_file' ) ;
 
 				$msg = __( 'Import failed due to file error.', 'litespeed-cache' ) ;
-				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				Admin_Display::error( $msg ) ;
 
 				return false ;
 			}
@@ -142,12 +144,12 @@ class LiteSpeed_Cache_Import
 		try {
 			$data = json_decode( base64_decode( $data ), true ) ;
 		} catch ( \Exception $ex ) {
-			LiteSpeed_Cache_Log::debug( 'Import: Failed to parse serialized data' ) ;
+			Log::debug( 'Import: Failed to parse serialized data' ) ;
 			return false ;
 		}
 
 		if ( ! $data ) {
-			LiteSpeed_Cache_Log::debug( 'Import: Failed to import, no data' ) ;
+			Log::debug( 'Import: Failed to import, no data' ) ;
 			return false ;
 		}
 
@@ -155,13 +157,13 @@ class LiteSpeed_Cache_Import
 
 
 		if ( ! $file ) {
-			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
+			Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
 			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			Admin_Display::succeed( $msg ) ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $file ) ;
+			Log::debug( 'Import: Imported ' . $file ) ;
 		}
 
 		return true ;
@@ -180,10 +182,10 @@ class LiteSpeed_Cache_Import
 
 		$this->__cfg->update_confs( $options ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Import] Reset successfully.' ) ;
+		Log::debug( '[Import] Reset successfully.' ) ;
 
 		$msg = __( 'Reset successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		Admin_Display::succeed( $msg ) ;
 
 	}
 
@@ -223,7 +225,7 @@ class LiteSpeed_Cache_Import
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_IMPORT :
@@ -242,7 +244,7 @@ class LiteSpeed_Cache_Import
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

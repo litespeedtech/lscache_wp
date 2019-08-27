@@ -20,7 +20,7 @@ $this->form_action() ;
 	<tr>
 		<th><?php echo __('Server IP', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_SERVER_IP ; ?>
+			<?php $id = LiteSpeed_Config::O_SERVER_IP ; ?>
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ) ; ?>

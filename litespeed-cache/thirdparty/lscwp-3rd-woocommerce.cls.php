@@ -11,7 +11,7 @@
 if ( ! defined('ABSPATH') ) {
 	die() ;
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_WooCommerce') ;
+LiteSpeed_API::register('LiteSpeed_Cache_ThirdParty_WooCommerce') ;
 
 class LiteSpeed_Cache_ThirdParty_WooCommerce
 {
@@ -60,31 +60,31 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function add_hooks()
 	{
-		$this->cache_cart = LiteSpeed_Cache_API::config( self::O_WOO_CACHE_CART ) ;
-		$this->esi_eanbled = LiteSpeed_Cache_API::esi_enabled() ;
+		$this->cache_cart = LiteSpeed_API::config( self::O_WOO_CACHE_CART ) ;
+		$this->esi_eanbled = LiteSpeed_API::esi_enabled() ;
 
-		LiteSpeed_Cache_API::hook_control( array( $this, 'set_control' ) ) ;
-		LiteSpeed_Cache_API::hook_tag( array( $this, 'set_tag' ) ) ;
+		LiteSpeed_API::hook_control( array( $this, 'set_control' ) ) ;
+		LiteSpeed_API::hook_tag( array( $this, 'set_tag' ) ) ;
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
 		add_action( 'woocommerce_product_set_stock', array( $this, 'purge_product' ) ) ;
 		add_action( 'woocommerce_variation_set_stock', array( $this, 'purge_product' ) ) ; // #984479 Update variations stock
 
-		LiteSpeed_Cache_API::hook_get_options( array( $this, 'get_config' ) ) ;
+		LiteSpeed_API::hook_get_options( array( $this, 'get_config' ) ) ;
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
 
 		if ( $this->esi_eanbled ) {
 			if ( function_exists( 'is_shop' ) && ! is_shop() ) {
-				LiteSpeed_Cache_API::hook_tpl_not_esi( array( $this, 'set_block_template' ) ) ;
+				LiteSpeed_API::hook_tpl_not_esi( array( $this, 'set_block_template' ) ) ;
 				// No need for add-to-cart button
-				// LiteSpeed_Cache_API::hook_tpl_esi( 'wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
+				// LiteSpeed_API::hook_tpl_esi( 'wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
 
-				LiteSpeed_Cache_API::hook_tpl_esi( 'storefront-cart-header', array( $this, 'load_cart_header' ) ) ;
-				LiteSpeed_Cache_API::hook_tpl_esi( 'widget', array( $this, 'register_post_view' ) ) ;
+				LiteSpeed_API::hook_tpl_esi( 'storefront-cart-header', array( $this, 'load_cart_header' ) ) ;
+				LiteSpeed_API::hook_tpl_esi( 'widget', array( $this, 'register_post_view' ) ) ;
 			}
 
 			if ( function_exists( 'is_product' ) && is_product() ) {
-				LiteSpeed_Cache_API::hook_esi_param( 'widget', array( $this, 'add_post_id' ) ) ;
+				LiteSpeed_API::hook_esi_param( 'widget', array( $this, 'add_post_id' ) ) ;
 			}
 
 			/**
@@ -93,16 +93,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			 * @since  1.7.2
 			 */
 			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
-			LiteSpeed_Cache_API::hook_vary_finalize( array( $this, 'vary_maintain' ) ) ;
+			LiteSpeed_API::hook_vary_finalize( array( $this, 'vary_maintain' ) ) ;
 
 		}
 
 		if ( is_admin() ) {
-			LiteSpeed_Cache_API::hook_purge_post( array( $this, 'backend_purge' ) ) ;
+			LiteSpeed_API::hook_purge_post( array( $this, 'backend_purge' ) ) ;
 			add_action( 'delete_term_relationships', array( $this, 'delete_rel' ), 10, 2 ) ;
-			LiteSpeed_Cache_API::hook_setting_tab( array( $this, 'add_config' ), 10, 3 ) ;
-			LiteSpeed_Cache_API::hook_setting_save( array( $this, 'save_config' ), 10, 2 ) ;
-			LiteSpeed_Cache_API::hook_widget_default_options( array( $this, 'wc_widget_default' ), 10, 2 ) ;
+			LiteSpeed_API::hook_setting_tab( array( $this, 'add_config' ), 10, 3 ) ;
+			LiteSpeed_API::hook_setting_save( array( $this, 'save_config' ), 10, 2 ) ;
+			LiteSpeed_API::hook_widget_default_options( array( $this, 'wc_widget_default' ), 10, 2 ) ;
 		}
 
 		// Purge cart if is ESI / Purge private if not enabled ESI
@@ -120,7 +120,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 					add_action( $v, array( $this, 'purge_esi' ) ) ;
 				}
 				else {
-					add_action( $v, 'LiteSpeed_Cache_API::purge_private_all' ) ;
+					add_action( $v, 'LiteSpeed_API::purge_private_all' ) ;
 				}
 			}
 		}
@@ -135,8 +135,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function purge_esi()
 	{
-		LiteSpeed_Cache_API::debug( '3rd woo purge ESI in action: ' . current_filter() ) ;
-		LiteSpeed_Cache_API::purge_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
+		LiteSpeed_API::debug( '3rd woo purge ESI in action: ' . current_filter() ) ;
+		LiteSpeed_API::purge_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
 
 	}
 
@@ -149,8 +149,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	public function check_if_need_esi( $template )
 	{
 		if (  $this->vary_needed() ) {
-			LiteSpeed_Cache_API::debug( 'API: 3rd woo added ESI' ) ;
-			LiteSpeed_Cache_API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
+			LiteSpeed_API::debug( 'API: 3rd woo added ESI' ) ;
+			LiteSpeed_API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
 		}
 
 		return $template ;
@@ -166,7 +166,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	public function vary_maintain( $vary )
 	{
 		if ( $this->vary_needed() ) {
-			LiteSpeed_Cache_API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;
+			LiteSpeed_API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;
 			$vary[ 'woo_cart' ] = 1 ;
 		}
 		return $vary ;
@@ -196,7 +196,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * Hooked to the litespeed_is_not_esi_template action.
 	 * If the request is not an esi request, I want to set my own hook
 	 * in woocommerce_before_template_part to see if it's something I can ESI.
 	 *
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * Hooked to the litespeed_is_not_esi_template action.
 	 * If the request is not an esi request, I want to set my own hook
 	 * in storefront_header to see if it's something I can ESI.
 	 *
@@ -266,8 +266,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		) ;
 		add_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ) ) ;
 		add_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999) ;
-		echo LiteSpeed_Cache_API::esi_url('wc-add-to-cart-form', 'WC_CART_FORM', $params) ;
-		echo LiteSpeed_Cache_API::clean_wrapper_begin() ;
+		echo LiteSpeed_API::esi_url('wc-add-to-cart-form', 'WC_CART_FORM', $params) ;
+		echo LiteSpeed_API::clean_wrapper_begin() ;
 	}
 
 	/**
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( ! empty($template_name) && strpos($template_name, 'add-to-cart') === false ) {
 			return ;
 		}
-		echo LiteSpeed_Cache_API::clean_wrapper_end() ;
+		echo LiteSpeed_API::clean_wrapper_end() ;
 		remove_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ) ) ;
 		remove_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999) ;
 	}
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$related_posts = $args['post__in'] ;
 		foreach ( $related_posts as $related ) {
-			LiteSpeed_Cache_API::tag_add(LiteSpeed_Cache_API::TYPE_POST . $related) ;
+			LiteSpeed_API::tag_add(LiteSpeed_API::TYPE_POST . $related) ;
 		}
 		return $args ;
 	}
@@ -339,11 +339,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function esi_cart_header()
 	{
-		echo LiteSpeed_Cache_API::esi_url( 'storefront-cart-header', 'STOREFRONT_CART_HEADER' ) ;
+		echo LiteSpeed_API::esi_url( 'storefront-cart-header', 'STOREFRONT_CART_HEADER' ) ;
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_load_esi_block-storefront-cart-header action.
+	 * Hooked to the litespeed_load_esi_block-storefront-cart-header action.
 	 * Generates the cart header for esi display.
 	 *
 	 * @since 1.1.0
@@ -356,7 +356,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_load_esi_block-wc-add-to-cart-form action.
+	 * Hooked to the litespeed_load_esi_block-wc-add-to-cart-form action.
 	 * Parses the esi input parameters and generates the add to cart form
 	 * for esi display.
 	 *
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function register_post_view($params)
 	{
-		if ( $params[LiteSpeed_Cache_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+		if ( $params[LiteSpeed_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
 			return ;
 		}
 		if ( ! isset($params[self::ESI_PARAM_POSTID]) ) {
@@ -420,7 +420,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function add_post_id($params)
 	{
-		if ( ! isset($params) || ! isset($params[LiteSpeed_Cache_API::PARAM_NAME]) || $params[LiteSpeed_Cache_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+		if ( ! isset($params) || ! isset($params[LiteSpeed_API::PARAM_NAME]) || $params[LiteSpeed_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
 			return $params ;
 		}
 		$params[self::ESI_PARAM_POSTID] = get_the_ID() ;
@@ -428,7 +428,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_widget_default_options filter.
+	 * Hooked to the litespeed_widget_default_options filter.
 	 *
 	 * The recently viewed widget must be esi to function properly.
 	 * This function will set it to enable and no cache by default.
@@ -447,12 +447,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$widget_name = get_class($widget) ;
 		if ( $widget_name === 'WC_Widget_Recently_Viewed' ) {
-			$options[LiteSpeed_Cache_API::WIDGET_O_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON2 ;
-			$options[LiteSpeed_Cache_API::WIDGET_O_TTL] = 0 ;
+			$options[LiteSpeed_API::WIDGET_O_ESIENABLE] = LiteSpeed_API::VAL_ON2 ;
+			$options[LiteSpeed_API::WIDGET_O_TTL] = 0 ;
 		}
 		elseif ( $widget_name === 'WC_Widget_Recent_Reviews' ) {
-			$options[LiteSpeed_Cache_API::WIDGET_O_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON ;
-			$options[LiteSpeed_Cache_API::WIDGET_O_TTL] = 86400 ;
+			$options[LiteSpeed_API::WIDGET_O_ESIENABLE] = LiteSpeed_API::VAL_ON ;
+			$options[LiteSpeed_API::WIDGET_O_TTL] = 86400 ;
 		}
 		return $options ;
 	}
@@ -467,8 +467,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	private function set_ttl()
 	{
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			if ( LiteSpeed_Cache_API::config( self::O_SHOP_FRONT_TTL ) ) {
-				LiteSpeed_Cache_API::set_use_frontpage_ttl() ;
+			if ( LiteSpeed_API::config( self::O_SHOP_FRONT_TTL ) ) {
+				LiteSpeed_API::set_use_frontpage_ttl() ;
 			}
 		}
 	}
@@ -498,13 +498,13 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		elseif ( $sale_to && $now < $sale_to ) {
 			$ttl = $sale_to - $now ;
 		}
-		if ( $ttl && $ttl < LiteSpeed_Cache_API::get_ttl() ) {
-			LiteSpeed_Cache_API::debug( "WooCommerce set scheduled TTL to $ttl" ) ;
-			LiteSpeed_Cache_API::set_ttl( $ttl ) ;
+		if ( $ttl && $ttl < LiteSpeed_API::get_ttl() ) {
+			LiteSpeed_API::debug( "WooCommerce set scheduled TTL to $ttl" ) ;
+			LiteSpeed_API::set_ttl( $ttl ) ;
 		}
 
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			LiteSpeed_Cache_API::tag_add(self::CACHETAG_SHOP) ;
+			LiteSpeed_API::tag_add(self::CACHETAG_SHOP) ;
 		}
 		if ( function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
 			return ;
@@ -523,7 +523,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 		while ( isset($term) ) {
-			LiteSpeed_Cache_API::tag_add(self::CACHETAG_TERM . $term->term_id) ;
+			LiteSpeed_API::tag_add(self::CACHETAG_TERM . $term->term_id) ;
 			if ( $term->parent == 0 ) {
 				break ;
 			}
@@ -542,7 +542,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function set_control($esi_id)
 	{
-		if ( LiteSpeed_Cache_API::not_cacheable() ) {
+		if ( LiteSpeed_API::not_cacheable() ) {
 			return ;
 		}
 
@@ -564,8 +564,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		// No need to check uri/qs.
 		if ( version_compare($woocom->version, '1.4.2', '>=') ) {
 			if ( version_compare( $woocom->version, '3.2.0', '<' ) && defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
-				LiteSpeed_Cache_API::debug('3rd party woocommerce not cache by constant') ;
-				LiteSpeed_Cache_API::set_nocache() ;
+				LiteSpeed_API::debug('3rd party woocommerce not cache by constant') ;
+				LiteSpeed_API::set_nocache() ;
 				return ;
 			}
 			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
@@ -587,13 +587,13 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				}
 				elseif ( ! $this->esi_eanbled && $woocom->cart->get_cart_contents_count() !== 0 ) {
 					if ( $this->cache_cart ) {
-						LiteSpeed_Cache_API::set_cache_private() ;
+						LiteSpeed_API::set_cache_private() ;
 						/**
 						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary
 						 * @since 1.6.6.1
 						 */
-						// LiteSpeed_Cache_API::set_cache_no_vary() ;
-						LiteSpeed_Cache_API::add_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
+						// LiteSpeed_API::set_cache_no_vary() ;
+						LiteSpeed_API::add_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
 					else {
 						$err = 'cart is not empty' ;
@@ -601,9 +601,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				}
 				elseif ( $esi_id === 'storefront-cart-header' ) {
 					if ( $this->cache_cart ) {
-						LiteSpeed_Cache_API::set_cache_private() ;
-						LiteSpeed_Cache_API::set_cache_no_vary() ;
-						LiteSpeed_Cache_API::add_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
+						LiteSpeed_API::set_cache_private() ;
+						LiteSpeed_API::set_cache_no_vary() ;
+						LiteSpeed_API::add_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
 					else {
 						$err = 'ESI cart should be nocache' ;
@@ -614,8 +614,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				}
 
 				if ( $err ) {
-					LiteSpeed_Cache_API::debug('3rd party woocommerce not cache due to ' . $err) ;
-					LiteSpeed_Cache_API::set_nocache() ;
+					LiteSpeed_API::debug('3rd party woocommerce not cache due to ' . $err) ;
+					LiteSpeed_API::set_nocache() ;
 					return ;
 				}
 			}
@@ -629,14 +629,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) {
-			LiteSpeed_Cache_API::set_nocache() ;
+			LiteSpeed_API::set_nocache() ;
 			return ;
 		}
 
 		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]) ;
 		$qs_len = strlen($qs) ;
 		if ( ! empty($qs) && $qs_len >= 12 && strpos( $qs, 'add-to-cart=' ) === 0 ) {
-			LiteSpeed_Cache_API::set_nocache() ;
+			LiteSpeed_API::set_nocache() ;
 			return ;
 		}
 	}
@@ -651,7 +651,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function purge_product($product)
 	{
-		$config = LiteSpeed_Cache_API::config(self::O_UPDATE_INTERVAL) ;
+		$config = LiteSpeed_API::config(self::O_UPDATE_INTERVAL) ;
 		if ( is_null($config) ) {
 			$config = self::O_PQS_CS ;
 		}
@@ -666,11 +666,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			$this->backend_purge($product->get_id()) ;
 		}
 
-		LiteSpeed_Cache_API::purge( LiteSpeed_Cache_API::TYPE_POST . $product->get_id() ) ;
+		LiteSpeed_API::purge( LiteSpeed_API::TYPE_POST . $product->get_id() ) ;
 
 		// Check if is variation, purge stock too #984479
 		if ( $product->is_type( 'variation' ) ) {
-			LiteSpeed_Cache_API::purge( LiteSpeed_Cache_API::TYPE_POST . $product->get_parent_id() ) ;
+			LiteSpeed_API::purge( LiteSpeed_API::TYPE_POST . $product->get_parent_id() ) ;
 		}
 	}
 
@@ -695,7 +695,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 		foreach ( $term_ids as $term_id ) {
-			LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $term_id) ;
+			LiteSpeed_API::purge(self::CACHETAG_TERM . $term_id) ;
 		}
 	}
 
@@ -720,7 +720,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$cats = $this->get_cats($post_id) ;
 		if ( ! empty($cats) ) {
 			foreach ( $cats as $cat ) {
-				LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $cat) ;
+				LiteSpeed_API::purge(self::CACHETAG_TERM . $cat) ;
 			}
 		}
 
@@ -731,7 +731,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids')) ;
 		if ( ! empty($tags) ) {
 			foreach ( $tags as $tag ) {
-				LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $tag) ;
+				LiteSpeed_API::purge(self::CACHETAG_TERM . $tag) ;
 			}
 		}
 	}
@@ -759,12 +759,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		global $wp_widget_factory ;
 		$recent_reviews = $wp_widget_factory->widgets['WC_Widget_Recent_Reviews'] ;
 		if ( ! is_null($recent_reviews) ) {
-			LiteSpeed_Cache_API::tag_add(LiteSpeed_Cache_API::TYPE_WIDGET . $recent_reviews->id) ;
+			LiteSpeed_API::tag_add(LiteSpeed_API::TYPE_WIDGET . $recent_reviews->id) ;
 		}
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_get_options filter.
+	 * Hooked to the litespeed_get_options filter.
 	 * This will return the option names needed as well as the default options.
 	 *
 	 * @since 1.6.3 Removed static
@@ -784,7 +784,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_add_config_tab filter.
+	 * Hooked to the litespeed_add_config_tab filter.
 	 * Adds the integration configuration options (currently, to determine
 	 * purge rules)
 	 *
@@ -846,14 +846,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						<tr>
 							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch(self::O_SHOP_FRONT_TTL, null, true) . "
+								" . LiteSpeed_API::build_switch(self::O_SHOP_FRONT_TTL, null, true) . "
 								<div class='litespeed-desc'>$ttl_desc</div>
 							</td>
 						</tr>
 						<tr>
 							<th>" . __('Privately Cache Cart', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch( self::O_WOO_CACHE_CART, null, true ) . "
+								" . LiteSpeed_API::build_switch( self::O_WOO_CACHE_CART, null, true ) . "
 								<div class='litespeed-desc'>"
 								 	. __( 'Privately cache cart when not empty.', 'litespeed-cache' ) . "
 								 </div>
@@ -882,7 +882,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_cache_save_options filter.
+	 * Hooked to the litespeed_save_options filter.
 	 * Parses the input for this integration's options and updates
 	 * the options array accordingly.
 	 *
@@ -911,8 +911,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		$options[ self::O_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff( $input, self::O_SHOP_FRONT_TTL ) ;
-		$options[ self::O_WOO_CACHE_CART ] = LiteSpeed_Cache_API::parse_onoff( $input, self::O_WOO_CACHE_CART ) ;
+		$options[ self::O_SHOP_FRONT_TTL ] = LiteSpeed_API::parse_onoff( $input, self::O_SHOP_FRONT_TTL ) ;
+		$options[ self::O_WOO_CACHE_CART ] = LiteSpeed_API::parse_onoff( $input, self::O_WOO_CACHE_CART ) ;
 
 		return $options ;
 	}

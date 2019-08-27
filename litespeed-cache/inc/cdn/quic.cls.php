@@ -3,11 +3,21 @@
  * The quic.cloud class.
  *
  * @since      	2.4.1
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_CDN_Quic
+namespace LiteSpeed\CDN ;
+
+use LiteSpeed\Config ;
+use LiteSpeed\Log ;
+use LiteSpeed\Router ;
+use LiteSpeed\String ;
+use LiteSpeed\Admin ;
+
+defined( 'WPINC' ) || exit ;
+
+class Quic
 {
 	private static $_instance ;
 
@@ -24,20 +34,20 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function try_sync_config()
 	{
-		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$options = Config::get_instance()->get_options() ;
 
-		if ( ! $options[ LiteSpeed_Cache_Config::O_CDN_QUIC ] ) {
+		if ( ! $options[ Const::O_CDN_QUIC ] ) {
 			return false ;
 		}
 
-		if ( empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ] ) ) {
+		if ( empty( $options[ Const::O_CDN_QUIC_EMAIL ] ) || empty( $options[ Const::O_CDN_QUIC_KEY ] ) ) {
 			return false ;
 		}
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY,
-			LiteSpeed_Cache_Config::O_OBJECT_PSWD,
+			Const::O_CDN_CLOUDFLARE_KEY,
+			Const::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
@@ -51,14 +61,14 @@ class LiteSpeed_Cache_CDN_Quic
 		$options[ '_domain' ] = home_url() ;
 
 		// Add server env vars
-		$options[ '_server' ] = LiteSpeed_Cache_Config::get_instance()->server_vars() ;
+		$options[ '_server' ] = Config::get_instance()->server_vars() ;
 
 		// Append hooks
-		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() ) ;
 
 		$res = $instance->_api( '/sync_config', $options ) ;
 		if ( $res != 'ok' ) {
-			LiteSpeed_Cache_Log::debug( '[QUIC] sync config failed [err] ' . $res ) ;
+			Log::debug( '[QUIC] sync config failed [err] ' . $res ) ;
 		}
 		return $res ;
 	}
@@ -97,7 +107,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
 		if ( empty( $response[ 'result' ] ) ) {
 
-			LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
+			Log::debug( '[QUIC] Query email failed' ) ;
 
 			exit( "QUIC: Query email failed" ) ;
 		}
@@ -129,7 +139,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$response = $this->_api( '/u/register', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
 
-			LiteSpeed_Cache_Log::debug( '[QUIC] Register failed' ) ;
+			Log::debug( '[QUIC] Register failed' ) ;
 
 			exit( "QUIC: Register failed" ) ;
 		}
@@ -156,7 +166,7 @@ class LiteSpeed_Cache_CDN_Quic
 		// for login failed, redirect back to login page
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
 
-			LiteSpeed_Cache_Log::debug( '[QUIC] Login failed' ) ;
+			Log::debug( '[QUIC] Login failed' ) ;
 
 			$data[ '_err' ] = $response[ 'result' ] ;
 
@@ -179,11 +189,11 @@ class LiteSpeed_Cache_CDN_Quic
 
 	private function _api( $uri, $data = false, $method = 'POST', $no_hash = false )
 	{
-		LiteSpeed_Cache_Log::debug( '[QUIC] _api call' ) ;
+		Log::debug( '[QUIC] _api call' ) ;
 
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
-			$hash = Litespeed_String::rrand( 16 ) ;
+			$hash = String::rrand( 16 ) ;
 			// store hash
 			update_option( self::DB_API_HASH, $hash ) ;
 		}
@@ -191,7 +201,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$url = 'https://api.quic.cloud' . $uri ;
 
 		$param = array(
-			'_v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
+			'_v'	=> Const::PLUGIN_VERSION,
 			'_hash'	=> $hash,
 			'_data' => $data,
 		) ;
@@ -201,10 +211,10 @@ class LiteSpeed_Cache_CDN_Quic
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( '[QUIC] failed to post: ' . $error_message ) ;
+			Log::debug( '[QUIC] failed to post: ' . $error_message ) ;
 			return $error_message ;
 		}
-		LiteSpeed_Cache_Log::debug( '[QUIC] _api call response: ' . $response[ 'body' ] ) ;
+		Log::debug( '[QUIC] _api call response: ' . $response[ 'body' ] ) ;
 
 		$json = json_decode( $response[ 'body' ], true ) ;
 
@@ -220,10 +230,10 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function handler()
 	{
-		LiteSpeed_Cache_Log::debug( '[QUIC] init' ) ;
+		Log::debug( '[QUIC] init' ) ;
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 
@@ -232,7 +242,7 @@ class LiteSpeed_Cache_CDN_Quic
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

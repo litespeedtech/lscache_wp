@@ -3,13 +3,15 @@
  * The avatar cache class
  *
  * @since 		3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Avatar
+class Avatar
 {
 	private static $_instance ;
 
@@ -29,16 +31,16 @@ class LiteSpeed_Cache_Avatar
 	 */
 	private function __construct()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( ! Core::config( Config::O_DISCUSS_AVATAR_CACHE ) ) {
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug2( '[Avatar] init' ) ;
+		Log::debug2( '[Avatar] init' ) ;
 
 		// Create table
-		$this->_tb = LiteSpeed_Cache_Data::tb_avatar() ;
+		$this->_tb = Data::tb_avatar() ;
 
-		$this->_conf_cache_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE_TTL ) ;
+		$this->_conf_cache_ttl = Core::config( Config::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) ) ;
 	}
@@ -51,7 +53,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	public static function need_db()
 	{
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Core::config( Config::O_DISCUSS_AVATAR_CACHE ) ) {
 			return true ;
 		}
 
@@ -67,10 +69,10 @@ class LiteSpeed_Cache_Avatar
 	{
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug( '[Avatar] is avatar request' ) ;
+		Log::debug( '[Avatar] is avatar request' ) ;
 
 		if ( strlen( $md5 ) !== 32 ) {
-			LiteSpeed_Cache_Log::debug( '[Avatar] wrong md5 ' . $md5 ) ;
+			Log::debug( '[Avatar] wrong md5 ' . $md5 ) ;
 			return ;
 		}
 
@@ -78,7 +80,7 @@ class LiteSpeed_Cache_Avatar
 		$url = $wpdb->get_var( $wpdb->prepare( $q, $md5 ) ) ;
 
 		if ( ! $url ) {
-			LiteSpeed_Cache_Log::debug( '[Avatar] no matched url for md5 ' . $md5 ) ;
+			Log::debug( '[Avatar] no matched url for md5 ' . $md5 ) ;
 			return ;
 		}
 
@@ -102,14 +104,14 @@ class LiteSpeed_Cache_Avatar
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_avatar_realtime_gen_dict[ $url ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Avatar] already in dict [url] ' . $url ) ;
+			Log::debug2( '[Avatar] already in dict [url] ' . $url ) ;
 
 			return $this->_avatar_realtime_gen_dict[ $url ] ;
 		}
 
 		$realpath = $this->_realpath( $url ) ;
 		if ( file_exists( $realpath ) && time() - filemtime( $realpath ) <= $this->_conf_cache_ttl ) {
-			LiteSpeed_Cache_Log::debug2( '[Avatar] cache file exists [url] ' . $url ) ;
+			Log::debug2( '[Avatar] cache file exists [url] ' . $url ) ;
 			return $this->_rewrite( $url ) ;
 		}
 
@@ -121,7 +123,7 @@ class LiteSpeed_Cache_Avatar
 
 		// Send request
 		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-			LiteSpeed_Cache_Log::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url ) ;
+			Log::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url ) ;
 			return $url ;
 		}
 
@@ -161,7 +163,7 @@ class LiteSpeed_Cache_Avatar
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		update_option( Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
 	}
 
 	/**
@@ -176,7 +178,7 @@ class LiteSpeed_Cache_Avatar
 
 		$instance = self::get_instance() ;
 
-		$summary = get_option( LiteSpeed_Cache_Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		$summary = get_option( Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 
 		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;
@@ -216,13 +218,13 @@ class LiteSpeed_Cache_Avatar
 	public function rm_cache_folder()
 	{
 		if ( file_exists( LITESPEED_STATIC_DIR . '/avatar' ) ) {
-			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' ) ;
 		}
 
 		// Clear avatar summary
 		$this->_save_summary( array() ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[Avatar] Cleared avatar queue' ) ;
+		Log::debug2( '[Avatar] Cleared avatar queue' ) ;
 	}
 
 	/**
@@ -237,14 +239,14 @@ class LiteSpeed_Cache_Avatar
 
 		$req_summary = self::get_summary() ;
 		if ( ! $req_summary[ 'queue_count' ] ) {
-			LiteSpeed_Cache_Log::debug( '[Avatar] no queue' ) ;
+			Log::debug( '[Avatar] no queue' ) ;
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $force ) {
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-				LiteSpeed_Cache_Log::debug( '[Avatar] curr_request too close' ) ;
+				Log::debug( '[Avatar] curr_request too close' ) ;
 				return ;
 			}
 		}
@@ -255,10 +257,10 @@ class LiteSpeed_Cache_Avatar
 		$q = $wpdb->prepare( $q, array( time() - $instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
 
 		$list = $wpdb->get_results( $q ) ;
-		LiteSpeed_Cache_Log::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
+		Log::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
 
 		foreach ( $list as $v ) {
-			LiteSpeed_Cache_Log::debug( '[Avatar] cron job [url] ' . $v->url ) ;
+			Log::debug( '[Avatar] cron job [url] ' . $v->url ) ;
 
 			self::get_instance()->_generate( $v->url ) ;
 
@@ -291,13 +293,13 @@ class LiteSpeed_Cache_Avatar
 		}
 		$response = wp_remote_get( $url, array( 'timeout' => 180, 'stream' => true, 'filename' => $file ) ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Avatar] _generate [url] ' . $url ) ;
+		Log::debug( '[Avatar] _generate [url] ' . $url ) ;
 
 		// Parse response data
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			file_exists( $file ) && unlink( $file ) ;
-			LiteSpeed_Cache_Log::debug( '[Avatar] failed to get: ' . $error_message ) ;
+			Log::debug( '[Avatar] failed to get: ' . $error_message ) ;
 			return $url ;
 		}
 
@@ -317,7 +319,7 @@ class LiteSpeed_Cache_Avatar
 			$wpdb->query( $wpdb->prepare( $q, array( $url, $md5, time() ) ) ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Avatar] saved avatar ' . $file ) ;
+		Log::debug( '[Avatar] saved avatar ' . $file ) ;
 
 		return $this->_rewrite( $url ) ;
 	}
@@ -332,7 +334,7 @@ class LiteSpeed_Cache_Avatar
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_GENERATE :
@@ -343,7 +345,7 @@ class LiteSpeed_Cache_Avatar
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+$_options = LiteSpeed_Config::get_instance()->get_options() ;
 
 $_crawler_instance = LiteSpeed_Cache_Crawler::get_instance() ;
 
@@ -14,7 +14,7 @@ if ( $meta[ 'curr_crawler' ] >= count( $crawler_list ) ) {
 	$meta[ 'curr_crawler' ] = 0 ;
 }
 
-$is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Cache_Config::O_CRWL_RUN_DURATION] ;
+$is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Config::O_CRWL_RUN_DURATION] ;
 
 $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
@@ -37,7 +37,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		</div>
 
 <?php
-	$seconds = $_options[LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL] ;
+	$seconds = $_options[LiteSpeed_Config::O_CRWL_RUN_INTERVAL] ;
 	if($seconds > 0):
 		$recurrence = '' ;
 		$hours = (int)floor($seconds / 3600) ;
@@ -66,7 +66,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
 				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
 					data-url="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
-					<?php if( $_options[LiteSpeed_Cache_Config::O_CRWL] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
+					<?php if( $_options[LiteSpeed_Config::O_CRWL] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
 					<?php echo $disabled ; ?>
 				/>
 				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
@@ -93,7 +93,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<?php if ( ! $is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::O_CRWL_CRAWL_INTERVAL]) ; ?>
+			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Config::O_CRWL_CRAWL_INTERVAL]) ; ?>
 			<?php endif ; ?>
 		</p>
 

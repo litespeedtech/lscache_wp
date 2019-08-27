@@ -1,11 +1,11 @@
 <?php
 defined( 'WPINC' ) || exit ;
 
-$last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
+$last_generated = LiteSpeed_Avatar::get_summary() ;
 
 ?>
 
-<?php if ( LiteSpeed_Cache_Avatar::need_db() && ! LiteSpeed_Cache_Data::tb_avatar_exist() ) : ?>
+<?php if ( LiteSpeed_Avatar::need_db() && ! LiteSpeed_Cache_Data::tb_avatar_exist() ) : ?>
 <div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
@@ -20,7 +20,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE ; ?>
+			<?php $id = LiteSpeed_Config::O_DISCUSS_AVATAR_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -34,7 +34,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CRON ; ?>
+			<?php $id = LiteSpeed_Config::O_DISCUSS_AVATAR_CRON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -57,7 +57,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 							<?php echo $last_generated[ 'queue_count' ] ; ?>
 						</h4>
 					</div>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_AVATAR, LiteSpeed_Cache_Avatar::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_AVATAR, LiteSpeed_Avatar::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
 					</a>
 				<?php endif ; ?>
@@ -69,7 +69,7 @@ $last_generated = LiteSpeed_Cache_Avatar::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
+			<?php $id = LiteSpeed_Config::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

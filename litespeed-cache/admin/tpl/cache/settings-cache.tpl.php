@@ -10,16 +10,16 @@
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ; ?>
-				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_OFF ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_ON ) ; ?>
 				<?php
 					if ( is_multisite() ) {
-						$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
+						$this->build_radio( $id, LiteSpeed_Config::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
 					}
 				?>
 			</div>
@@ -37,7 +37,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PRIV ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_PRIV ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -50,7 +50,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_COMMENTER ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_COMMENTER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -63,7 +63,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_REST ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_REST ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -76,7 +76,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_PAGE_LOGIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -97,7 +97,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_PRIV_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -111,7 +111,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_FORCE_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -121,14 +121,14 @@
 				<?php $this->_uri_usage_example() ; ?>
 				<br /><?php echo __( 'To define a custom TTL for a URI, add a space followed by the TTL value to the end of the URI.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, %1$s defines a TTL of %2$s seconds for %3$s.', 'litespeed-cache' ), '<code>/mypath/mypage 300</code>', 300, '<code>/mypath/mypage</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_FORCE_PUB_URI ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_FORCE_PUB_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -138,14 +138,14 @@
 				<?php $this->_uri_usage_example() ; ?>
 				<br /><?php echo __( 'To define a custom TTL for a URI, add a space followed by the TTL value to the end of the URI.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, %1$s defines a TTL of %2$s seconds for %3$s.', 'litespeed-cache' ), '<code>/mypath/mypage 300</code>', 300, '<code>/mypath/mypage</code>' ) ; ?>
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ; ?>
+			<?php $id = LiteSpeed_Config::O_CACHE_DROP_QS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -156,7 +156,7 @@
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string' ) ; ?>
 
 				<br />
-				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+				<?php LiteSpeed_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>

@@ -5,15 +5,18 @@
 *
 * @since 1.1.0
 */
+namespace LiteSpeed ;
 
-if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+defined( 'WPINC' ) || exit ;
+
+if ( ! function_exists( 'exception_handler' ) ) {
+	function exception_handler( $errno, $errstr, $errfile, $errline )
 	{
-		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
 }
 
-class Litespeed_File
+class File
 {
 	const MARKER = 'LiteSpeed Operator' ;
 
@@ -44,7 +47,7 @@ class Litespeed_File
 			return 0 ;
 		}
 
-		$file = new SplFileObject($filename) ;
+		$file = new \SplFileObject($filename) ;
 		$file->seek(PHP_INT_MAX) ;
 		return $file->key() + 1 ;
 	}
@@ -69,7 +72,7 @@ class Litespeed_File
 
 		if ( $start_line !== null ) {
 			$res = array() ;
-			$file = new SplFileObject($filename) ;
+			$file = new \SplFileObject($filename) ;
 			$file->seek($start_line) ;
 
 			if ( $lines === null) {
@@ -135,12 +138,12 @@ class Litespeed_File
 				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder ) ;
 			}
 
-			set_error_handler( 'litespeed_exception_handler' ) ;
+			set_error_handler( '\LiteSpeed\exception_handler' ) ;
 
 			try {
 				mkdir( $folder, 0755, true ) ;
 			}
-			catch ( ErrorException $ex ) {
+			catch ( \ErrorException $ex ) {
 				return $silence ? false : sprintf( __( 'Can not create folder: %1$s. Error: %2$s', 'litespeed-cache' ), $folder, $ex->getMessage() ) ;
 			}
 
@@ -151,11 +154,11 @@ class Litespeed_File
 			if ( ! is_writable( $folder ) ) {
 				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder ) ;
 			}
-			set_error_handler( 'litespeed_exception_handler' ) ;
+			set_error_handler( '\LiteSpeed\exception_handler' ) ;
 			try {
 				touch( $filename ) ;
 			}
-			catch ( ErrorException $ex ){
+			catch ( \ErrorException $ex ){
 				return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 			}
 			restore_error_handler() ;
@@ -340,19 +343,19 @@ class Litespeed_File
 	{
 		if ( ! file_exists( $filename ) ) {
 			if ( ! is_writable( dirname( $filename ) ) ) {
-				LiteSpeed_Error::t( 'W', dirname( $filename ) ) ;
+				Error::t( 'W', dirname( $filename ) ) ;
 			}
 
-			set_error_handler("litespeed_exception_handler") ;
+			set_error_handler("\LiteSpeed\exception_handler") ;
 			try {
 				touch( $filename ) ;
-			} catch ( ErrorException $ex ) {
-				LiteSpeed_Error::t( 'W', $filename ) ;
+			} catch ( \ErrorException $ex ) {
+				Error::t( 'W', $filename ) ;
 			}
 			restore_error_handler() ;
 		}
 		elseif ( ! is_writeable( $filename ) ) {
-			LiteSpeed_Error::t( 'W', $filename ) ;
+			Error::t( 'W', $filename ) ;
 		}
 
 		if ( ! is_array( $insertion ) ) {
@@ -364,7 +367,7 @@ class Litespeed_File
 
 		$fp = fopen( $filename, 'r+' ) ;
 		if ( ! $fp ) {
-			LiteSpeed_Error::t( 'W', $filename ) ;
+			Error::t( 'W', $filename ) ;
 		}
 
 		// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.

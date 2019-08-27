@@ -93,7 +93,7 @@ if ( LiteSpeed_Cache_Placeholder::has_lqip_cache() ) {
 	) ;
 }
 
-if ( LiteSpeed_Cache_Avatar::has_cache() ) {
+if ( LiteSpeed_Avatar::has_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all cached gravatar files', 'litespeed-cache' ),
@@ -166,7 +166,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 	<h3 class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></h3>
 	<p class="litespeed-description">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
-		<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
+		<?php LiteSpeed_Doc::one_per_line() ; ?>
 	</p>
 
 	<?php

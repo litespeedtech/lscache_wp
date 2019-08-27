@@ -4,16 +4,15 @@
  *
  * @since      	1.2.3
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_CDN
+class CDN
 {
 	private static $_instance ;
 
@@ -40,28 +39,28 @@ class LiteSpeed_Cache_CDN
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'CDN init' ) ;
+		Log::debug2( 'CDN init' ) ;
 
-		if ( ! LiteSpeed_Cache_Router::can_cdn() ) {
+		if ( ! Router::can_cdn() ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
 			return ;
 		}
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 
 		/**
 		 * Remotely load jQuery
 		 * This is separate from CDN on/off
 		 * @since 1.5
 		 */
-		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ) ;
+		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( Const::O_CDN_REMOTE_JQ ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
 			$this->_load_jquery_remotely() ;
 		}
 
-		$this->_cfg_cdn = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN ) ;
+		$this->_cfg_cdn = $this->__cfg->option( Const::O_CDN ) ;
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
@@ -69,23 +68,23 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->_cfg_url_ori = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_ORI ) ;
+		$this->_cfg_url_ori = $this->__cfg->option( Const::O_CDN_ORI ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS,
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS
+			Const::CDN_MAPPING_INC_IMG,
+			Const::CDN_MAPPING_INC_CSS,
+			Const::CDN_MAPPING_INC_JS
 		) ;
-		foreach ( $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_MAPPING ) as $v ) {
-			if ( ! $v[ LiteSpeed_Cache_Config::CDN_MAPPING_URL ] ) {
+		foreach ( $this->__cfg->option( Const::O_CDN_MAPPING ) as $v ) {
+			if ( ! $v[ Const::CDN_MAPPING_URL ] ) {
 				continue ;
 			}
-			$this_url = $v[ LiteSpeed_Cache_Config::CDN_MAPPING_URL ] ;
+			$this_url = $v[ Const::CDN_MAPPING_URL ] ;
 			$this_host = parse_url( $this_url, PHP_URL_HOST ) ;
 			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
 				if ( $v[ $to_check ] ) {
-					LiteSpeed_Cache_Log::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url ) ;
+					Log::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url ) ;
 
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $to_check, $this_url ) ;
@@ -96,9 +95,9 @@ class LiteSpeed_Cache_CDN
 				}
 			}
 			// Check file types
-			if ( $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) {
-				foreach ( $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] as $v2 ) {
-					$this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] = true ;
+			if ( $v[ Const::CDN_MAPPING_FILETYPE ] ) {
+				foreach ( $v[ Const::CDN_MAPPING_FILETYPE ] as $v2 ) {
+					$this->_cfg_cdn_mapping[ Const::CDN_MAPPING_FILETYPE ] = true ;
 
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $v2, $this_url ) ;
@@ -107,7 +106,7 @@ class LiteSpeed_Cache_CDN
 						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
-				LiteSpeed_Cache_Log::debug2( '[CDN] mapping ' . implode( ',', $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
+				Log::debug2( '[CDN] mapping ' . implode( ',', $v[ Const::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
 			}
 		}
 
@@ -118,7 +117,7 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->_cfg_ori_dir = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = $this->__cfg->option( Const::O_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;
@@ -130,17 +129,17 @@ class LiteSpeed_Cache_CDN
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug( '[CDN] wildcard rule in ' . $v ) ;
+			Log::debug( '[CDN] wildcard rule in ' . $v ) ;
 			$v = preg_quote( $v, '#' ) ;
 			$v = str_replace( '\*', '.*', $v ) ;
-			LiteSpeed_Cache_Log::debug2( '[CDN] translated rule is ' . $v ) ;
+			Log::debug2( '[CDN] translated rule is ' . $v ) ;
 
 			$this->_cfg_url_ori[ $k ] = $v ;
 		}
 
-		$this->_cfg_cdn_exclude = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_EXC ) ;
+		$this->_cfg_cdn_exclude = $this->__cfg->option( Const::O_CDN_EXC ) ;
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
 				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 ) ;
@@ -150,11 +149,11 @@ class LiteSpeed_Cache_CDN
 			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_CSS ] ) ) {
 			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_JS ] ) ) {
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
 
@@ -192,7 +191,7 @@ class LiteSpeed_Cache_CDN
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 
@@ -200,7 +199,7 @@ class LiteSpeed_Cache_CDN
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**
@@ -213,11 +212,11 @@ class LiteSpeed_Cache_CDN
 	{
 		$instance = self::get_instance() ;
 
-		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ] ) ) {
+		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_CSS ] ) ) {
 			return true ;
 		}
 
-		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ] ) ) {
+		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_JS ] ) ) {
 			return true ;
 		}
 
@@ -250,19 +249,19 @@ class LiteSpeed_Cache_CDN
 	private function _finalize()
 	{
 		if ( defined( self::BYPASS ) ) {
-			LiteSpeed_Cache_Log::debug2( 'CDN bypass' ) ;
+			Log::debug2( 'CDN bypass' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'CDN _finalize' ) ;
+		Log::debug( 'CDN _finalize' ) ;
 
 		// Start replacing img src
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_IMG ] ) ) {
 			$this->_replace_img() ;
 			$this->_replace_inline_css() ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_FILETYPE ] ) ) {
 			$this->_replace_file_types() ;
 		}
 
@@ -292,9 +291,9 @@ class LiteSpeed_Cache_CDN
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
+			Log::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
 
-			if( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE, $postfix ) ) {
+			if( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_FILETYPE, $postfix ) ) {
 				continue ;
 			}
 
@@ -318,7 +317,7 @@ class LiteSpeed_Cache_CDN
 				continue ;
 			}
 
-			if ( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ) {
+			if ( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 
@@ -352,7 +351,7 @@ class LiteSpeed_Cache_CDN
 		foreach ( $matches[ 1 ] as $k => $url ) {
 			$url = str_replace( array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url ) ;
 
-			if ( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ) {
+			if ( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 			$attr = str_replace( $matches[ 1 ][ $k ], $url2, $matches[ 0 ][ $k ] ) ;
@@ -371,7 +370,7 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function attach_img_src( $img )
 	{
-		if ( $img && $url = $this->rewrite( $img[ 0 ], LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ) {
+		if ( $img && $url = $this->rewrite( $img[ 0 ], Const::CDN_MAPPING_INC_IMG ) ) {
 			$img[ 0 ] = $url ;
 		}
 		return $img ;
@@ -385,7 +384,7 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function url_img( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -399,7 +398,7 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function url_css( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_CSS ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -413,7 +412,7 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function url_js( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_JS ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -432,7 +431,7 @@ class LiteSpeed_Cache_CDN
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $this->rewrite( $data[ 'url' ], LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ) ) {
+				if( ! $url = $this->rewrite( $data[ 'url' ], Const::CDN_MAPPING_INC_IMG ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
@@ -451,55 +450,55 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function rewrite( $url, $mapping_kind, $postfix = false )
 	{
-		LiteSpeed_Cache_Log::debug2( '[CDN] rewrite ' . $url ) ;
+		Log::debug2( '[CDN] rewrite ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
 
 		if ( empty( $url_parsed[ 'path' ] ) ) {
-			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite bypassed: no path' ) ;
+			Log::debug2( '[CDN] -rewrite bypassed: no path' ) ;
 			return false ;
 		}
 
 		// Only images under wp-cotnent/wp-includes can be replaced
-		$is_internal_folder = LiteSpeed_Cache_Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
+		$is_internal_folder = Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
 		if ( ! $is_internal_folder ) {
-			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
+			Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
 			return false ;
 		}
 
 		// Check if is external url
 		if ( ! empty( $url_parsed[ 'host' ] ) ) {
-			if ( ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
-				LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
+			if ( ! Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
+				Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
 				return false ;
 			}
 		}
 
 		if ( $this->_cfg_cdn_exclude ) {
-			$exclude = LiteSpeed_Cache_Utility::str_hit_array( $url, $this->_cfg_cdn_exclude ) ;
+			$exclude = Utility::str_hit_array( $url, $this->_cfg_cdn_exclude ) ;
 			if ( $exclude ) {
-				LiteSpeed_Cache_Log::debug2( '[CDN] -abort excludes ' . $exclude ) ;
+				Log::debug2( '[CDN] -abort excludes ' . $exclude ) ;
 				return false ;
 			}
 		}
 
 		// Fill full url before replacement
 		if ( empty( $url_parsed[ 'host' ] ) ) {
-			$url = LiteSpeed_Cache_Utility::uri2url( $url ) ;
-			LiteSpeed_Cache_Log::debug2( '[CDN] -fill before rewritten: ' . $url ) ;
+			$url = Utility::uri2url( $url ) ;
+			Log::debug2( '[CDN] -fill before rewritten: ' . $url ) ;
 
 			$url_parsed = parse_url( $url ) ;
 		}
 
 		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
 		if ( $scheme ) {
-			// LiteSpeed_Cache_Log::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
+			// Log::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
 		}
 
 		// Find the mapping url to be replaced to
 		if ( empty( $this->_cfg_cdn_mapping[ $mapping_kind ] ) ) {
 			return false ;
 		}
-		if ( $mapping_kind !== LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ) {
+		if ( $mapping_kind !== Const::CDN_MAPPING_FILETYPE ) {
 			$final_url = $this->_cfg_cdn_mapping[ $mapping_kind ] ;
 		}
 		else {
@@ -521,7 +520,7 @@ class LiteSpeed_Cache_CDN
 				$url = str_replace( $scheme . $v, $final_url, $url ) ;
 			}
 		}
-		LiteSpeed_Cache_Log::debug2( '[CDN] -rewritten: ' . $url ) ;
+		Log::debug2( '[CDN] -rewritten: ' . $url ) ;
 
 		return $url ;
 	}
@@ -592,9 +591,9 @@ class LiteSpeed_Cache_CDN
 			$v = preg_replace( '|[^\d\.]|', '', $v ) ;
 		}
 
-		$src = $this->_cfg_cdn_remote_jquery == LiteSpeed_Cache_Config::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" ;
+		$src = $this->_cfg_cdn_remote_jquery == Const::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
-		LiteSpeed_Cache_Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
+		Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
 
 		wp_deregister_script( 'jquery-core' ) ;
 

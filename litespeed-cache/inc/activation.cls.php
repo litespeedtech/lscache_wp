@@ -1,16 +1,18 @@
 <?php
-defined( 'WPINC' ) || exit ;
 /**
  * The plugin activation class.
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-class LiteSpeed_Cache_Activation
+defined( 'WPINC' ) || exit ;
+
+class Activation
 {
 	private static $_instance ;
 
@@ -40,12 +42,12 @@ class LiteSpeed_Cache_Activation
 			}
 		}
 
-		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
+		do_action( 'litespeed_api_load_thirdparty' ) ;
 
-		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$__cfg = Config::get_instance() ;
 
 		// Check new version @since 2.9.3
-		LiteSpeed_Cache_Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
+		Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
 		/* Network file handler */
 
@@ -55,9 +57,9 @@ class LiteSpeed_Cache_Activation
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					try {
-						LiteSpeed_Htaccess::get_instance()->insert_ls_wrapper() ;
+						Htaccess::get_instance()->insert_ls_wrapper() ;
 					} catch ( \Exception $ex ) {
-						LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+						Admin_Display::error( $ex->getMessage() ) ;
 					}
 				}
 				return ;
@@ -72,11 +74,11 @@ class LiteSpeed_Cache_Activation
 		$__cfg->update_confs() ;
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
-			update_option( LiteSpeed_Cache::WHM_MSG, LiteSpeed_Cache::WHM_MSG_VAL ) ;
+			update_option( Core::WHM_MSG, Core::WHM_MSG_VAL ) ;
 		}
 
 		// Register crawler cron task
-		LiteSpeed_Cache_Task::update() ;
+		Task::update() ;
 	}
 
 	/**
@@ -85,28 +87,28 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function uninstall_litespeed_cache()
 	{
-		LiteSpeed_Cache_Task::clear() ;
+		Task::clear() ;
 
 		// Delete options
-		foreach ( LiteSpeed_Cache_Config::get_instance()->default_vals() as $k => $v ) {
-			delete_option( LiteSpeed_Cache_Config::conf_name( $k ) ) ;
+		foreach ( Config::get_instance()->default_vals() as $k => $v ) {
+			delete_option( Config::conf_name( $k ) ) ;
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( LiteSpeed_Cache_Config::get_instance()->default_site_vals() as $k => $v ) {
-				delete_site_option( LiteSpeed_Cache_Config::conf_name( $k ) ) ;
+			foreach ( Config::get_instance()->default_site_vals() as $k => $v ) {
+				delete_site_option( Config::conf_name( $k ) ) ;
 			}
 		}
 
 		// Delete avatar table
-		LiteSpeed_Cache_Data::get_instance()->del_tables() ;
+		Data::get_instance()->del_tables() ;
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
-			Litespeed_File::rrmdir( LITESPEED_STATIC_DIR ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR ) ;
 		}
 
-		LiteSpeed_Cache_Utility::version_check( 'uninstall' ) ;
+		Utility::version_check( 'uninstall' ) ;
 
 		// Files has been deleted when deactivated
 	}
@@ -218,11 +220,11 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function register_deactivation()
 	{
-		LiteSpeed_Cache_Task::clear() ;
+		Task::clear() ;
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
 
-		LiteSpeed_Cache_Purge::purge_all() ;
+		Purge::purge_all() ;
 
 		if ( is_multisite() ) {
 
@@ -230,9 +232,9 @@ class LiteSpeed_Cache_Activation
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					try {
-						LiteSpeed_Htaccess::get_instance()->insert_ls_wrapper() ;
+						Htaccess::get_instance()->insert_ls_wrapper() ;
 					} catch ( \Exception $ex ) {
-						LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+						Admin_Display::error( $ex->getMessage() ) ;
 					}
 				}
 				return ;
@@ -246,7 +248,7 @@ class LiteSpeed_Cache_Activation
 		} catch ( \Exception $ex ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 
-			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() ) ;
 		}
 
 		/* 2) adv-cache.php; */
@@ -267,14 +269,14 @@ class LiteSpeed_Cache_Activation
 
 		/* 3) object-cache.php; */
 
-		LiteSpeed_Cache_Object::get_instance()->del_file() ;
+		Object::get_instance()->del_file() ;
 
 		/* 4) .htaccess; */
 
 		try {
-			LiteSpeed_Htaccess::get_instance()->clear_rules() ;
+			Htaccess::get_instance()->clear_rules() ;
 		} catch ( \Exception $ex ) {
-			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() ) ;
 		}
 
 		// delete in case it's not deleted prior to deactivation.
@@ -298,23 +300,23 @@ class LiteSpeed_Cache_Activation
 	public function update_files()
 	{
 		// Update cache setting `_CACHE`
-		LiteSpeed_Cache_Config::get_instance()->define_cache() ;
+		Config::get_instance()->define_cache() ;
 
 		// Site options applied already
-		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$options = Config::get_instance()->get_options() ;
 
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ LiteSpeed_Cache_Const::_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ Const::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
-			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() ) ;
 		}
 
 		/* 2) adv-cache.php; */
 
-		if ( $options[ LiteSpeed_Cache_Const::O_UTIL_CHECK_ADVCACHE ] ) {
+		if ( $options[ Const::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
 
 			if ( ! defined( 'LSCACHE_ADV_CACHE' ) ) {
@@ -324,25 +326,25 @@ class LiteSpeed_Cache_Activation
 						. __( 'Learn More', 'litespeed-cache' )
 					. '</a>' ;
 
-				LiteSpeed_Cache_Admin_Display::note( $msg ) ;
+				Admin_Display::note( $msg ) ;
 			}
 		}
 
 		/* 3) object-cache.php; */
 
-		if ( $options[ LiteSpeed_Cache_Const::O_OBJECT ] && ( ! $options[ LiteSpeed_Cache_Const::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
-			LiteSpeed_Cache_Object::get_instance()->update_file( $options ) ;
+		if ( $options[ Const::O_OBJECT ] && ( ! $options[ Const::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+			Object::get_instance()->update_file( $options ) ;
 		}
 		else {
-			LiteSpeed_Cache_Object::get_instance()->del_file() ;
+			Object::get_instance()->del_file() ;
 		}
 
 		/* 4) .htaccess; */
 
 		try {
-			LiteSpeed_Htaccess::get_instance()->update( $options ) ;
+			Htaccess::get_instance()->update( $options ) ;
 		} catch ( \Exception $ex ) {
-			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() ) ;
 		}
 	}
 
@@ -360,7 +362,7 @@ class LiteSpeed_Cache_Activation
 			return false ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Activation] Copying advanced_cache file' ) ;
+		defined( 'LSCWP_LOG' ) && Log::debug( '[Activation] Copying advanced_cache file' ) ;
 
 		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path ) ;
 
@@ -397,9 +399,9 @@ class LiteSpeed_Cache_Activation
 			$conf_file = dirname( ABSPATH ) . '/wp-config.php' ;
 		}
 
-		$content = Litespeed_File::read( $conf_file ) ;
+		$content = File::read( $conf_file ) ;
 		if ( ! $content ) {
-			throw new Exception( 'wp-config file content is empty: ' . $conf_file ) ;
+			throw new \Exception( 'wp-config file content is empty: ' . $conf_file ) ;
 
 		}
 
@@ -413,10 +415,10 @@ class LiteSpeed_Cache_Activation
 			$content = preg_replace( '|^<\?php|', "<?php\ndefine( 'WP_CACHE', true ) ;", $content ) ;
 		}
 
-		$res = Litespeed_File::save( $conf_file, $content, false, false, false ) ;
+		$res = File::save( $conf_file, $content, false, false, false ) ;
 
 		if ( $res !== true ) {
-			throw new Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . $res ) ;
+			throw new \Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . $res ) ;
 		}
 
 		return true ;
@@ -430,7 +432,7 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function dismiss_whm()
 	{
-		delete_option( LiteSpeed_Cache::WHM_MSG ) ;
+		delete_option( Core::WHM_MSG ) ;
 	}
 
 	/**
@@ -442,13 +444,13 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function auto_update()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_AUTO_UPGRADE ) ) {
+		if ( ! Core::config( Config::O_AUTO_UPGRADE ) ) {
 			return ;
 		}
 
 		add_filter( 'auto_update_plugin', function( $update, $item ) {
 				if ( $item->slug == 'litespeed-cache' ) {
-					$auto_v = LiteSpeed_Cache_Utility::version_check( 'auto_update_plugin' ) ;
+					$auto_v = Utility::version_check( 'auto_update_plugin' ) ;
 
 					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
 						return true ;
@@ -467,7 +469,7 @@ class LiteSpeed_Cache_Activation
 	 */
 	public function upgrade()
 	{
-		$plugin = LiteSpeed_Cache::PLUGIN_FILE ;
+		$plugin = Core::PLUGIN_FILE ;
 
 		/**
 		 * @see wp-admin/update.php
@@ -486,16 +488,16 @@ class LiteSpeed_Cache_Activation
 			}
 			ob_end_clean() ;
 		} catch ( \Exception $e ) {
-			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
 			return ;
 		}
 
 		if ( is_wp_error( $result ) ) {
-			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
+		Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
 	}
 
 	/**
@@ -508,7 +510,7 @@ class LiteSpeed_Cache_Activation
 	{
 		$instance = self::get_instance() ;
 
-		$type = LiteSpeed_Cache_Router::verify_type() ;
+		$type = Router::verify_type() ;
 
 		switch ( $type ) {
 			case self::TYPE_UPGRADE :
@@ -519,7 +521,7 @@ class LiteSpeed_Cache_Activation
 				break ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
+		Admin::redirect() ;
 	}
 
 	/**

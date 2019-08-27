@@ -2,7 +2,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ; ?>
+			<?php $id = LiteSpeed_Config::O_UTIL_CHECK_ADVCACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

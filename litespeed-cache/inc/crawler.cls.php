@@ -5,16 +5,15 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
+ * @package    	LiteSpeed
+ * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+namespace LiteSpeed ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
-class LiteSpeed_Cache_Crawler
+class Crawler
 {
 	private static $_instance;
 	private $_sitemap_file ;
@@ -44,9 +43,9 @@ class LiteSpeed_Cache_Crawler
 		}
 		$this->_blacklist_file = $this->_sitemap_file . '.blacklist' ;
 
-		$this->_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$this->_options = Config::get_instance()->get_options() ;
 
-		LiteSpeed_Cache_Log::debug('Crawler: Initialized') ;
+		Log::debug('Crawler: Initialized') ;
 	}
 
 	/**
@@ -74,7 +73,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function get_blacklist()
 	{
-		return Litespeed_File::read($this->_blacklist_file) ;
+		return File::read($this->_blacklist_file) ;
 	}
 
 	/**
@@ -86,7 +85,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function count_blacklist()
 	{
-		return Litespeed_File::count_lines($this->_blacklist_file) ;
+		return File::count_lines($this->_blacklist_file) ;
 	}
 
 	/**
@@ -100,21 +99,21 @@ class LiteSpeed_Cache_Crawler
 	{
 		if ( ! isset( $_POST[ self::CRWL_BLACKLIST ] ) ) {
 			$msg = __( 'Can not find any form data for blacklist', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg ) ;
+			Admin_Display::add_notice( Admin_Display::NOTICE_RED, $msg ) ;
 			return false ;
 		}
 
 		// save blacklist file
-		$ret = Litespeed_File::save( $this->_blacklist_file, LiteSpeed_Cache_Utility::sanitize_lines( $_POST[ self::CRWL_BLACKLIST ], 'string' ), true, false, false ) ;
+		$ret = File::save( $this->_blacklist_file, Utility::sanitize_lines( $_POST[ self::CRWL_BLACKLIST ], 'string' ), true, false, false ) ;
 		if ( $ret !== true ) {
-			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret ) ;
+			Admin_Display::add_notice( Admin_Display::NOTICE_RED, $ret ) ;
 		}
 		else {
 			$msg = sprintf(
 				__( 'File saved successfully: %s', 'litespeed-cache' ),
 				$this->_blacklist_file
 			) ;
-			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+			Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
 		}
 
 		return true ;
@@ -129,9 +128,9 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function append_blacklist( $list )
 	{
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist ' . count( $list ) ) ;
+		defined( 'LSCWP_LOG' ) && Log::debug( 'Crawler: append blacklist ' . count( $list ) ) ;
 
-		$ori_list = Litespeed_File::read( $this->_blacklist_file ) ;
+		$ori_list = File::read( $this->_blacklist_file ) ;
 		$ori_list = explode( "\n", $ori_list ) ;
 		$ori_list = array_merge( $ori_list, $list ) ;
 		$ori_list = array_map( 'trim', $ori_list ) ;
@@ -140,9 +139,9 @@ class LiteSpeed_Cache_Crawler
 		$content = implode( "\n", $ori_list ) ;
 
 		// save blacklist
-		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
+		$ret = File::save( $this->_blacklist_file, $content, true, false, false ) ;
 		if ( $ret !== true ) {
-			LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist failed: ' . $ret ) ;
+			Log::debug( 'Crawler: append blacklist failed: ' . $ret ) ;
 			return false ;
 		}
 
@@ -159,14 +158,14 @@ class LiteSpeed_Cache_Crawler
 	{
 		$ret = $this->_generate_sitemap() ;
 		if ( $ret !== true ) {
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret) ;
+			Admin_Display::add_notice(Admin_Display::NOTICE_RED, $ret) ;
 		}
 		else {
 			$msg = sprintf(
 				__('File created successfully: %s', 'litespeed-cache'),
 				$this->_sitemap_file
 			) ;
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+			Admin_Display::add_notice(Admin_Display::NOTICE_GREEN, $msg) ;
 		}
 	}
 
@@ -188,14 +187,14 @@ class LiteSpeed_Cache_Crawler
 		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
+			Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
 
-			throw new Exception( 'Failed to remote read' ) ;
+			throw new \Exception( 'Failed to remote read' ) ;
 		}
 
 		$xml_object = simplexml_load_string( $response[ 'body' ] ) ;
 		if ( ! $xml_object ) {
-			throw new Exception( 'Failed to parse xml' ) ;
+			throw new \Exception( 'Failed to parse xml' ) ;
 		}
 
 		if ( ! $return_detail ) {
@@ -259,7 +258,7 @@ class LiteSpeed_Cache_Crawler
 	protected function _generate_sitemap()
 	{
 		// use custom sitemap
-		if ( $sitemap = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_CUSTOM_SITEMAP ] ) {
+		if ( $sitemap = $this->_options[ Const::O_CRWL_CUSTOM_SITEMAP ] ) {
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
 			$sitemap_urls = false ;
@@ -267,7 +266,7 @@ class LiteSpeed_Cache_Crawler
 			try {
 				$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
 			} catch( \Exception $e ) {
-				LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+				Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
 			}
 
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
@@ -281,16 +280,16 @@ class LiteSpeed_Cache_Crawler
 			}
 		}
 		else {
-			$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
+			$urls = Crawler_Sitemap::get_instance()->generate_data() ;
 		}
 
 		// filter urls
-		$blacklist = Litespeed_File::read( $this->_blacklist_file ) ;
+		$blacklist = File::read( $this->_blacklist_file ) ;
 		$blacklist = explode( "\n", $blacklist ) ;
 		$urls = array_diff( $urls, $blacklist ) ;
-		LiteSpeed_Cache_Log::debug( 'Crawler: Generate sitemap' ) ;
+		Log::debug( 'Crawler: Generate sitemap' ) ;
 
-		$ret = Litespeed_File::save( $this->_sitemap_file, implode( "\n", $urls ), true, false, false ) ;
+		$ret = File::save( $this->_sitemap_file, implode( "\n", $urls ), true, false, false ) ;
 
 		clearstatcache() ;
 
@@ -333,13 +332,13 @@ class LiteSpeed_Cache_Crawler
 		if ( $ret !== true ) {
 			$log .= "Error: $ret" ;
 			$msg = sprintf(__('Failed to send position reset notification: %s', 'litespeed-cache'), $ret) ;
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg) ;
+			Admin_Display::add_notice(Admin_Display::NOTICE_RED, $msg) ;
 		}
 		else {
 			$msg = __('Position reset notification sent successfully', 'litespeed-cache') ;
-			// LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+			// Admin_Display::add_notice(Admin_Display::NOTICE_GREEN, $msg) ;
 		}
-		LiteSpeed_Cache_Log::debug($log) ;
+		Log::debug($log) ;
 	}
 
 	/**
@@ -351,12 +350,12 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function crawl_data($force = false)
 	{
-		if ( ! LiteSpeed_Cache_Router::can_crawl() ) {
-			LiteSpeed_Cache_Log::debug('Crawler: ......crawler is NOT allowed by the server admin......') ;
+		if ( ! Router::can_crawl() ) {
+			Log::debug('Crawler: ......crawler is NOT allowed by the server admin......') ;
 			return false;
 		}
 		if ( $force ) {
-			LiteSpeed_Cache_Log::debug('Crawler: ......crawler manually ran......') ;
+			Log::debug('Crawler: ......crawler manually ran......') ;
 		}
 		return self::get_instance()->_crawl_data($force) ;
 	}
@@ -382,12 +381,12 @@ class LiteSpeed_Cache_Crawler
 	 */
 	protected function _crawl_data($force)
 	{
-		LiteSpeed_Cache_Log::debug('Crawler: ......crawler started......') ;
+		Log::debug('Crawler: ......crawler started......') ;
 		// for the first time running
 		if ( ! file_exists($this->_sitemap_file) ) {
 			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
-				LiteSpeed_Cache_Log::debug('Crawler: ' . $ret) ;
+				Log::debug('Crawler: ' . $ret) ;
 				return $this->output($ret) ;
 			}
 		}
@@ -396,43 +395,43 @@ class LiteSpeed_Cache_Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[LiteSpeed_Cache_Config::O_CRWL_CRAWL_INTERVAL] ) {
-				LiteSpeed_Cache_Log::debug('Crawler: Cron abort: cache warmed already.') ;
+			if ( ! $force && time() - $last_fnished_at < $this->_options[Const::O_CRWL_CRAWL_INTERVAL] ) {
+				Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
 			}
-			LiteSpeed_Cache_Log::debug( 'Crawler: TouchedEnd. regenerate sitemap....' ) ;
+			Log::debug( 'Crawler: TouchedEnd. regenerate sitemap....' ) ;
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_home_url) ;
-		$crawler->set_run_duration($this->_options[LiteSpeed_Cache_Config::O_CRWL_RUN_DURATION]) ;
+		$crawler->set_run_duration($this->_options[Const::O_CRWL_RUN_DURATION]) ;
 
 		/**
 		 * Limit delay to use server setting
 		 * @since 1.8.3
 		 */
-		$usleep = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_USLEEP ] ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep ) {
-			$usleep = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
+		$usleep = $this->_options[ Const::O_CRWL_USLEEP ] ;
+		if ( ! empty( $_SERVER[ Const::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Const::ENV_CRAWLER_USLEEP ] > $usleep ) {
+			$usleep = $_SERVER[ Const::ENV_CRAWLER_USLEEP ] ;
 		}
 		$crawler->set_run_delay( $usleep ) ;
-		$crawler->set_threads_limit( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_THREADS ] ) ;
+		$crawler->set_threads_limit( $this->_options[ Const::O_CRWL_THREADS ] ) ;
 		/**
 		 * Set timeout to avoid incorrect blacklist addition #900171
 		 * @since  3.0
 		 */
-		$crawler->set_timeout( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_TIMEOUT ] ) ;
+		$crawler->set_timeout( $this->_options[ Const::O_CRWL_TIMEOUT ] ) ;
 
-		$server_load_limit = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT ] ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
-			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
+		$server_load_limit = $this->_options[ Const::O_CRWL_LOAD_LIMIT ] ;
+		if ( ! empty( $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
+			$server_load_limit = $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
 		}
-		elseif ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
-			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ;
+		elseif ( ! empty( $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
+			$server_load_limit = $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] ;
 		}
 		$crawler->set_load_limit( $server_load_limit ) ;
-		if ( $this->_options[LiteSpeed_Cache_Config::O_SERVER_IP] ) {
-			$crawler->set_domain_ip($this->_options[LiteSpeed_Cache_Config::O_SERVER_IP]) ;
+		if ( $this->_options[Const::O_SERVER_IP] ) {
+			$crawler->set_domain_ip($this->_options[Const::O_SERVER_IP]) ;
 		}
 
 		// Get current crawler
@@ -455,7 +454,7 @@ class LiteSpeed_Cache_Crawler
 		 */
 		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
 			// Get role simulation vary name
-			$vary_inst = LiteSpeed_Cache_Vary::get_instance() ;
+			$vary_inst = Vary::get_instance() ;
 			$vary_name = $vary_inst->get_vary_name() ;
 			$vary_val = $vary_inst->finalize_default_vary( $current_crawler[ 'uid' ] ) ;
 			$cookies[ $vary_name ] = $vary_val ;
@@ -502,18 +501,18 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		if ( ! empty($ret['crawled']) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
+			defined( 'LSCWP_LOG' ) && Log::debug( 'Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
 		}
 
 		// return error
 		if ( $ret['error'] !== false ) {
-			LiteSpeed_Cache_Log::debug('Crawler: ' . $ret['error']) ;
+			Log::debug('Crawler: ' . $ret['error']) ;
 			return $this->output($ret['error']) ;
 		}
 		else {
 			$msg = 'Crawler #' . ( $curr_crawler_pos + 1 ) . ' reached end of sitemap file.' ;
 			$msg_t = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $curr_crawler_pos + 1 ) )  ;
-			LiteSpeed_Cache_Log::debug('Crawler: ' . $msg) ;
+			Log::debug('Crawler: ' . $msg) ;
 			return $this->output($msg_t) ;
 		}
 	}
@@ -543,18 +542,18 @@ class LiteSpeed_Cache_Crawler
 		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) ) ;
 
 		// WebP on/off
-		if ( LiteSpeed_Cache_Media::webp_enabled() ) {
+		if ( Media::webp_enabled() ) {
 			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' ) ;
 		}
 
 		// Mobile crawler
-		if ( $this->_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
+		if ( $this->_options[ Const::O_CACHE_MOBILE ] ) {
 			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
 		}
 
 		// Get roles set
 		// List all roles
-		foreach ( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_ROLES ] as $v ) {
+		foreach ( $this->_options[ Const::O_CRWL_ROLES ] as $v ) {
 			$role_title = '' ;
 			$udata = get_userdata( $v ) ;
 			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
@@ -569,7 +568,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Cookie crawler
-		foreach ( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_COOKIES ] as $v ) {
+		foreach ( $this->_options[ Const::O_CRWL_COOKIES ] as $v ) {
 			if ( empty( $v[ 'name' ] ) ) {
 				continue ;
 			}

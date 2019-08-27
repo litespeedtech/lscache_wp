@@ -2,21 +2,21 @@
 if ( !defined('WPINC') ) die;
 // $widget, $return, $instance
 
-$options = ! empty( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : array() ;
+$options = ! empty( $instance[ LiteSpeed_Config::OPTION_NAME ] ) ? $instance[ LiteSpeed_Config::OPTION_NAME ] : array() ;
 
 if ( empty( $options ) ) {
 	$options = array(
-		LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
+		LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE => LiteSpeed_Config::VAL_OFF,
 		LiteSpeed_Cache_ESI::WIDGET_O_TTL => '28800'
 	) ;
 
-	add_filter('litespeed_cache_widget_default_options', 'LiteSpeed_Cache_ESI::widget_default_options', 10, 2) ;
+	add_filter('litespeed_widget_default_options', 'LiteSpeed_Cache_ESI::widget_default_options', 10, 2) ;
 
-	$options = apply_filters( 'litespeed_cache_widget_default_options', $options, $widget ) ;
+	$options = apply_filters( 'litespeed_widget_default_options', $options, $widget ) ;
 }
 
 if ( empty( $options ) ) {
-	$esi = LiteSpeed_Cache_Config::VAL_OFF ;
+	$esi = LiteSpeed_Config::VAL_OFF ;
 	$ttl = '28800' ;
 }
 else {
@@ -41,9 +41,9 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 			$name = $widget->get_field_name( $id ) ;
 
 			$cache_status_list = array(
-				array( LiteSpeed_Cache_Config::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
-				array( LiteSpeed_Cache_Config::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
-				array( LiteSpeed_Cache_Config::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
+				array( LiteSpeed_Config::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
+				array( LiteSpeed_Config::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
+				array( LiteSpeed_Config::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
 			) ;
 
 			foreach ( $cache_status_list as $v ) {
