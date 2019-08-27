@@ -818,11 +818,11 @@ class Admin_Display
 			}
 		}
 
-		$checked = (int) $this->__cfg->option( $id ) == (int) $val ? ' checked ' : '' ;
+		$checked = (int) $this->__cfg->option( $id ) === (int) $val ? ' checked ' : '' ;
 
 		$this->enroll( $id ) ;
 
-		echo "<input type='radio' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**

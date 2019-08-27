@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.2.1
-Stable tag: 2.9.8
+Tested up to: 5.2.2
+Stable tag: 2.9.8.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -32,6 +32,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Combine CSS/JS
 * Automatically generate Critical CSS
 * Lazyload images/iframes
+* Responsive Image Placeholders
 * Multiple CDN support
 * Load CSS/JS Asynchronously
 * Browser Cache
@@ -288,6 +289,34 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.5 - Aug 21 2019 =
+* <strong>CCSS</strong>: Removed potential PHP notice when getting post_type. (@amcgiffert)
+* <strong>CDN</strong>: Bypassed CDN replacement on admin page when adding media to page/post. (@martin_bailey)
+* 🐞<strong>Media</strong>: Fixed inability to update or destroy postmeta data for child images. (#167713)
+
+= 2.9.8.4 - Jul 25 2019 =
+* <strong>Object</strong>: Increased compatibility with phpredis 5.0.
+* <strong>Object</strong>: Appended `wc_session_id` to default Do Not Cache Groups setting to avoid issue where WooCommerce cart items were missing when Object Cache is used. NOTE: Existing users must add `wc_session_id` manually! (#895333)
+* <strong>CSS</strong>: Added null onload handler for CSS async loading. (@joejordanbrown)
+* 🕷️: Increased crawler timeout to avoid wrongly adding a URL to the blacklist.
+* <strong>3rd</strong>: WooCommerce Advanced Bulk Edit can now purge cache automatically.
+
+= 2.9.8.3 - Jul 9 2019 =
+* <strong>CSS</strong>: Enhanced the CSS Minify compatibility for CSS with missing closing bracket syntax errors. (@fa508210020)
+* 🕷️: Crawler now supports both cookie and no-cookie cases. (@tabare)
+* <strong>CCSS</strong>: Enhanced compatibility with requested pages where meta info size exceeds 8k. (@Joe B)
+* <strong>CCSS</strong>: No longer processing "font" or "import" directives as they are not considered critical. (@Ankit @Joe B)
+* <strong>IAPI</strong>: Removed IPv6 from all servers to avoid invalid firewall whitelist.
+
+= 2.9.8.2 - Jun 17 2019 =
+* 🔥🐞 <strong>3rd</strong>: Fixed PHP 5.3 compatibility issue with Facetwp.
+
+= 2.9.8.1 - Jun 17 2019 =
+* <strong>3rd</strong>: Set ESI template hook priority to highest number to prevent ESI conflict with Enfold theme. (#289354)
+* <strong>3rd</strong>: Improved Facetwp reset button compatibility with ESI. (@emilyel)
+* <strong>3rd</strong>: Enabled user role change to fix duplicate login issue for plugins that use alternative login processes. (#114165 #717223 @sergiom87)
+* <strong>GUI</strong>: Wrapped static text with translate function. (@halilemreozen)
 
 = 2.9.8 - May 22 2019 =
 * <strong>Core</strong>: Refactored loading priority so user related functions & optimization features are set after user initialization. (#717223 #114165 #413338)

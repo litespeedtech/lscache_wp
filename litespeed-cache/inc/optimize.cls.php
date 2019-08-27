@@ -366,7 +366,7 @@ class Optimize
 
 						$snippet = '' ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<link rel='preload' data-asynced='1' data-optimized='2' as='style' onload='this.rel=\"stylesheet\"' href='$url' />" ;
+							$snippet .= "<link rel='preload' data-asynced='1' data-optimized='2' as='style' onload='this.onload=null;this.rel=\"stylesheet\"' href='$url' />" ;
 						}
 
 						// enqueue combined file first

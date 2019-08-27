@@ -852,12 +852,12 @@ class Img_Optm
 				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
 				WHERE a.root_id IN ( " . implode( ',', array_fill( 0, count( $root_id_list ), '%d' ) ) . " ) GROUP BY a.post_id" ;
 
-			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, $root_id_list ) ) ) ;
+			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_SIZE ), $root_id_list ) ) ) ;
 
 			$pids_to_update = array() ;
 			$pids_data_to_insert = array() ;
 			foreach ( $tmp as $v ) {
-				$optm_info = $child_postmeta_info[ $v->root_id ] ;
+				$optm_info = serialize( $child_postmeta_info[ $v->root_id ] ) ;
 
 				if ( $v->b_meta_id ) {
 					$pids_to_update[] = $v->post_id ;

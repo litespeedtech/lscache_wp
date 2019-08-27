@@ -589,7 +589,7 @@ class Litespeed_Crawler
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
-			CURLOPT_TIMEOUT => $this->_run_timeout,
+			CURLOPT_TIMEOUT => $this->_run_timeout, // Larger timeout to avoid incorrect blacklist addition #900171
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
@@ -645,9 +645,14 @@ class Litespeed_Crawler
 
 		$cookies = array() ;
 		foreach ( $this->_cookies as $k => $v ) {
+			if ( ! $v ) {
+				continue ;
+			}
 			$cookies[] = "$k=" . urlencode( $v ) ;
 		}
-		$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies ) ;
+		if ( $cookies ) {
+			$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies ) ;
+		}
 
 		return $options ;
 	}
