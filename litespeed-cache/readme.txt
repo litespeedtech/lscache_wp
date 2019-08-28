@@ -214,7 +214,7 @@ Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to 
 
 Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on.
 
-Quick start: replace `wp_create_nonce( 'example' )` with `method_exists( 'LiteSpeed_Cache_API', 'nonce' ) ? LiteSpeed_Cache_API::nonce( 'example' ) : wp_create_nonce( 'example' )`.
+Quick start: replace `wp_create_nonce( 'example' )` with `method_exists( 'LiteSpeed\API', 'nonce' ) ? \LiteSpeed\API::nonce( 'example' ) : wp_create_nonce( 'example' )`.
 
 Learn more on [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api#nonce_issues).
 

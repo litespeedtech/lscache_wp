@@ -39,10 +39,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-// If this file is called directly, abort.
 defined( 'WPINC' ) || exit ;
 
-if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
+if ( class_exists( 'LiteSpeed\Core' ) || defined( 'LSCWP_DIR' ) ) {
 	return ;
 }
 
@@ -72,7 +71,7 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 ! defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
 
 // Auto register LiteSpeed classes
-require_once LSCWP_DIR . 'inc/core.autoload.php' ;
+require_once LSCWP_DIR . 'autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
@@ -80,9 +79,9 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
-		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
-		WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI' ) ;
+		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed\CLI\Admin' ) ;
+		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed\CLI\Purge' ) ;
+		WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed\CLI\IAPI' ) ;
 	}
 }
 
@@ -141,7 +140,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 		}
 
 		if ( $version_supported ) {
-			LiteSpeed_Cache::get_instance() ;
+			\LiteSpeed\Core::get_instance() ;
 		}
 	}
 
@@ -161,7 +160,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 	function litespeed_purge_single_post( $id )
 	{
-		LiteSpeed_Cache_Purge::purge_post( $id ) ;
+		\LiteSpeed\Purge::purge_post( $id ) ;
 	}
 }
 
