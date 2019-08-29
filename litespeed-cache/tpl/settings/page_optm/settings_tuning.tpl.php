@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 global $wp_roles ;
 if ( !isset( $wp_roles ) ) {

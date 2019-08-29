@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 if ( empty( $optm_summary[ 'level' ] ) ) {
 	return ;

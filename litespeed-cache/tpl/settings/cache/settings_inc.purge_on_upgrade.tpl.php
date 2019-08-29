@@ -1,9 +1,12 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<!-- build_setting_purge_on_upgrade -->
 	<tr>
 		<th>
-			<?php $id = Const::O_PURGE_ON_UPGRADE ; ?>
+			<?php $id = Conf::O_PURGE_ON_UPGRADE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

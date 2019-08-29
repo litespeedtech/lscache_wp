@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 $menu_list = array(
 	'purge'				=> __( 'Purge', 'litespeed-cache' ),

@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 $readonly = Htaccess::get_instance()->writable() ? '' : 'readonly';
 

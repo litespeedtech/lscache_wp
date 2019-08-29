@@ -1,5 +1,6 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 if ( ! is_multisite() ) {
 	return ;
@@ -10,7 +11,7 @@ if ( get_current_blog_id() === BLOG_ID_CURRENT_SITE ) {
 }
 
 $site_options = $this->__cfg->load_site_options() ;
-if ( empty( $site_options[ Const::NETWORK_O_USE_PRIMARY ] ) ) {
+if ( empty( $site_options[ Conf::NETWORK_O_USE_PRIMARY ] ) ) {
 	return ;
 }
 ?>

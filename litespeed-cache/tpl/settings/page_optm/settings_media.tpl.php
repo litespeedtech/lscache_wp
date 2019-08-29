@@ -1,4 +1,5 @@
 <?php
+namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $last_responsive_placeholder_generated = Placeholder::get_summary() ;

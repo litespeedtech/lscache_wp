@@ -1,6 +1,6 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
-
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 ?>
 
 1) speed

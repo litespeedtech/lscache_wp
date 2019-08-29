@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 
 if ( ! Admin_Display::get_instance()->show_compatibility_tab()) return;

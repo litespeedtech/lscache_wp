@@ -1,4 +1,7 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>assets/css/litespeed.css" />
 

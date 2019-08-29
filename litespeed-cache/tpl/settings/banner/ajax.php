@@ -1,4 +1,5 @@
 <?php
+namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $url = Utility::build_url( Core::ACTION_UTIL, Utility::TYPE_SCORE_CHK, true ) ;

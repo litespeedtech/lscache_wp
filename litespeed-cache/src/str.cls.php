@@ -8,7 +8,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class String
+class Str
 {
 
 	/**

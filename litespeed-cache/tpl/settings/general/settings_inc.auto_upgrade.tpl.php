@@ -1,9 +1,12 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<!-- build_setting_auto_upgrade -->
 	<tr>
 		<th>
-			<?php $id = Const::O_AUTO_UPGRADE ; ?>
+			<?php $id = Conf::O_AUTO_UPGRADE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

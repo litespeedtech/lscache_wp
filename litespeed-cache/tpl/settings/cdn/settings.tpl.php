@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 $home_url = home_url( '/' ) ;
 $parsed = parse_url( $home_url ) ;

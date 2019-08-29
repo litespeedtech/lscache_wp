@@ -1,9 +1,12 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<!-- build_setting_cache_resources -->
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_RES ; ?>
+			<?php $id = Conf::O_CACHE_RES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

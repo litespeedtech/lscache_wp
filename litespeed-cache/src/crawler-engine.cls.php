@@ -643,7 +643,7 @@ class Crawler_Engine
 		 * Append hash to cookie for validation
 		 * @since  1.9.1
 		 */
-		$hash = String::rrand( 6 ) ;
+		$hash = Str::rrand( 6 ) ;
 		update_option( Conf::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
 		$this->_cookies[ 'litespeed_hash' ] = $hash ;
 

@@ -720,7 +720,7 @@ class Conf
 
 		// Set security key if not initialized yet
 		if ( ! $this->_default_options[ self::HASH ] ) {
-			$this->_default_options[ self::HASH ] = String::rrand( 32 ) ;
+			$this->_default_options[ self::HASH ] = Str::rrand( 32 ) ;
 		}
 
 		$this->_default_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;

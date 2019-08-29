@@ -1,4 +1,7 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<tr>
 		<th class="litespeed-padding-left">

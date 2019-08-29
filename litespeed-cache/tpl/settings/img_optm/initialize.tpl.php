@@ -1,4 +1,7 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 <div class="litespeed-flex-container">
 	<div class="litespeed-width-7-10">

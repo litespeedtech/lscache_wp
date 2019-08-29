@@ -1,4 +1,5 @@
 <?php
+namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full" id="litespeed-banner-promo-slack">

@@ -1,5 +1,6 @@
-<?php defined( 'WPINC' ) || exit ; ?>
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 
 // $server_ip = get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;

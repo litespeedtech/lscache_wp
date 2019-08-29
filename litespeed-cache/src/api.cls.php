@@ -659,7 +659,7 @@ class API extends Conf
 	 */
 	public static function thirdparty( $cls )
 	{
-		add_action('litespeed_api_load_thirdparty', 'LiteSpeed\Thirdparty\\' $cls . '::detect') ;
+		add_action('litespeed_api_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect') ;
 	}
 
 	/**

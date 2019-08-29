@@ -71,10 +71,10 @@ class UriRewriter
 
         // rewrite
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\CSS_MIN\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, __CLASS__ . '::_processUriCB', $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\CSS_MIN\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, __CLASS__ . '::_processUriCB', $css);
 
         $css = self::_unOwlify($css);
 
@@ -100,10 +100,10 @@ class UriRewriter
 
         // append
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\CSS_MIN\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, __CLASS__ . '::_processUriCB', $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\CSS_MIN\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, __CLASS__ . '::_processUriCB', $css);
 
         $css = self::_unOwlify($css);
 

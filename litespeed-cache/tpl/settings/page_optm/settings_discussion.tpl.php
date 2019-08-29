@@ -1,4 +1,5 @@
 <?php
+namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $last_generated = Avatar::get_summary() ;

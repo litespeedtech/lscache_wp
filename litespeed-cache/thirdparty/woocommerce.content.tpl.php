@@ -1,10 +1,17 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed\Thirdparty ;
+
+defined( 'WPINC' ) || exit ;
+
+use \LiteSpeed\API ;
+use \LiteSpeed\Admin_Display ;
+?>
 
 <div data-litespeed-layout='woocommerce'>
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'WooCommerce Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:woocommerce', false, 'litespeed-learn-more' ) ; ?>
+	<?php Admin_Display::get_instance()->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:woocommerce', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <div class="litespeed-callout notice notice-warning inline">
@@ -30,14 +37,14 @@
 			foreach ( $options as $k => $v ) :
 				$checked = (int) $k === (int) API::config( $id ) ? ' checked ' : '' ;
 			?>
-			<?php API::enroll( $id ) ; ?>
+				<?php API::enroll( $id ) ; ?>
 				<div class="litespeed-radio-vertical">
 					<div class='litespeed-radio-vertical-row'>
 						<input type='radio' autocomplete='off' name='<?php echo $id ; ?>' id='conf_<?php echo $id ; ?>_<?php echo $k ; ?>' value='<?php echo $k ; ?>' <?php echo $checked ; ?> />
 						<label for='conf_<?php echo $id ; ?>_<?php echo $k ; ?>'><?php echo $v ; ?></label>
 					</div>
 				</div>
-			<? endforeach ; ?>
+			<?php endforeach ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache' ) ; ?>
 			</div>

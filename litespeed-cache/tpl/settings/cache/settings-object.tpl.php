@@ -1,6 +1,7 @@
-<?php defined( 'WPINC' ) || exit ; ?>
-
 <?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+
 
 $lang_enabled = '<font class="litespeed-success">' . __( 'Enabled', 'litespeed-cache' ) . '</font>' ;
 $lang_disabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed-cache' ) . '</font>' ;

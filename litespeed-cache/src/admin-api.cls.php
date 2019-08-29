@@ -406,7 +406,7 @@ class Admin_API
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
-			$hash = String::rrand( 16 ) ;
+			$hash = Str::rrand( 16 ) ;
 			// store hash
 			update_option( self::DB_API_KEY_HASH, $hash ) ;
 		}

@@ -1,7 +1,9 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
-
-<?php $this->form_action() ; ?>
+$this->form_action() ;
+?>
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Heartbeat Control', 'litespeed-cache' ) ; ?>

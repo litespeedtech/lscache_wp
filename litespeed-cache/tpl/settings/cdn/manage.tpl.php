@@ -1,5 +1,6 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
 
 $cf_on = Core::config( Conf::O_CDN_CLOUDFLARE ) ;
 $cf_domain = Core::config( Conf::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;

@@ -1,4 +1,5 @@
 <?php
+namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $menu_list = array(

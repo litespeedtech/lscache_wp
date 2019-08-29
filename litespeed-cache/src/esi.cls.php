@@ -76,7 +76,7 @@ class ESI
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', __NAMESPACE__ . '\Purge::purge_comment_widget' ) ;
 
-		// This defination is along with LiteSpeed_API::nonce() func
+		// This defination is along with API::nonce() func
 		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;//Used in Bloom
 
 		/**
@@ -118,7 +118,7 @@ class ESI
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
 		function wp_create_nonce( $action = -1 ) {// todo: check if is under ls namespace
-			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) && \LiteSpeed\ESI->is_nonce_action( $action ) ) {
+			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) && \LiteSpeed\ESI::get_instance()->is_nonce_action( $action ) ) {
 				$params = array(
 					'action'	=> $action,
 				) ;

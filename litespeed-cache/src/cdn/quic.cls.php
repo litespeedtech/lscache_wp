@@ -13,7 +13,7 @@ use LiteSpeed\Core ;
 use LiteSpeed\Config ;
 use LiteSpeed\Log ;
 use LiteSpeed\Router ;
-use LiteSpeed\String ;
+use LiteSpeed\Str ;
 use LiteSpeed\Admin ;
 
 defined( 'WPINC' ) || exit ;
@@ -194,7 +194,7 @@ class Quic
 
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
-			$hash = String::rrand( 16 ) ;
+			$hash = Str::rrand( 16 ) ;
 			// store hash
 			update_option( self::DB_API_HASH, $hash ) ;
 		}

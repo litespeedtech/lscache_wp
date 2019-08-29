@@ -1,8 +1,11 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_FAVICON ; ?>
+			<?php $id = Conf::O_CACHE_FAVICON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

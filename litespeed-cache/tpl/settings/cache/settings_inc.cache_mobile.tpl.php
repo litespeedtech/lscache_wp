@@ -1,9 +1,12 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<!-- build_setting_mobile_view start -->
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_MOBILE ; ?>
+			<?php $id = Conf::O_CACHE_MOBILE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -20,13 +23,13 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Const::O_CACHE_MOBILE_RULES ; ?>
+			<?php $id = Conf::O_CACHE_MOBILE_RULES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 		<?php
 			// if set, use value as input value
-			if ( $this->__cfg->option( Const::O_CACHE_MOBILE ) ) {
+			if ( $this->__cfg->option( Conf::O_CACHE_MOBILE ) ) {
 
 				// if enabled, check the setting in file
 				if ( defined( 'LITESPEED_ON' ) ) {
@@ -55,7 +58,7 @@
 
 				<?php $this->_validate_syntax( $id ) ; ?>
 
-				<?php if ( Core::config( Const::O_CACHE_MOBILE ) && ! Core::config( $id ) ) : ?>
+				<?php if ( Core::config( Conf::O_CACHE_MOBILE ) && ! Core::config( $id ) ) : ?>
 				<font class="litespeed-warning">
 					❌
 					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ) ; ?>

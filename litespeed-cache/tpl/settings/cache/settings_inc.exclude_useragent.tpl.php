@@ -1,8 +1,11 @@
-<?php defined( 'WPINC' ) || exit ; ?>
+<?php
+namespace LiteSpeed ;
+defined( 'WPINC' ) || exit ;
+?>
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC_USERAGENTS ; ?>
+			<?php $id = Conf::O_CACHE_EXC_USERAGENTS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
