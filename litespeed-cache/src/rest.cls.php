@@ -15,7 +15,7 @@ class REST
 	private $_internal_rest_status = false ;
 
 	/**
-	 * Constructor of ESI
+	 * Confructor of ESI
 	 *
 	 * @since    2.9.4
 	 * @access private

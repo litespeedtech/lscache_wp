@@ -89,7 +89,7 @@ class Core
 		$this->__cfg->init() ;
 
 		// Check if debug is on
-		if ( $this->__cfg->option( Const::O_DEBUG ) ) {
+		if ( $this->__cfg->option( Conf::O_DEBUG ) ) {
 			Log::init() ;
 		}
 
@@ -98,7 +98,7 @@ class Core
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php' ;
 		}
 
-		if ( self::config( Const::O_DEBUG_DISABLE_ALL ) ) {
+		if ( self::config( Conf::O_DEBUG_DISABLE_ALL ) ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 

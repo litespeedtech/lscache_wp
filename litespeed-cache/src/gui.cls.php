@@ -53,12 +53,12 @@ class GUI
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( Core::config( Const::O_UTIL_INSTANT_CLICK ) ) {
+			if ( Core::config( Conf::O_UTIL_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
 
-		// if ( Core::config( Const::O_ADV_FAVICON ) ) {
+		// if ( Core::config( Conf::O_ADV_FAVICON ) ) {
 		// 	if ( is_admin() ) {
 		// 		add_action( 'admin_head', array( $this, 'favicon' ) ) ;
 		// 	}
@@ -75,7 +75,7 @@ class GUI
 	 */
 	// public function favicon()
 	// {
-	// 	$current_favicon = get_option( Const::O_FAVICON, array() ) ;
+	// 	$current_favicon = get_option( Conf::O_FAVICON, array() ) ;
 	// 	if ( is_admin() ) {
 	// 		if ( ! empty( $current_favicon[ 'backend' ] ) ) {
 	// 			echo "<link rel='icon' href='$current_favicon[backend]' />" ;
@@ -415,7 +415,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Const::TYPE_SET . '[' . Const::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Conf::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -426,7 +426,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Const::TYPE_SET . '[' . Const::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Conf::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -437,7 +437,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Const::TYPE_SET . '[' . Const::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Conf::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -448,7 +448,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Const::TYPE_SET . '[' . Const::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Conf::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -544,7 +544,7 @@ class GUI
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( Core::config( Const::O_CDN_CLOUDFLARE ) ) {
+		if ( Core::config( Conf::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',

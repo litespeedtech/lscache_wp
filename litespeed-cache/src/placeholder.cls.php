@@ -38,14 +38,14 @@ class Placeholder
 	{
 		Log::debug2( '[Placeholder] init' ) ;
 
-		$this->_conf_placeholder_resp = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_conf_placeholder_resp_generator = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
-		$this->_conf_placeholder_resp_svg 	= Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
-		$this->_conf_placeholder_lqip 		= Core::config( Const::O_MEDIA_PLACEHOLDER_LQIP ) ;
-		$this->_conf_placeholder_lqip_qual	= Core::config( Const::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
-		$this->_conf_placeholder_resp_async = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_conf_placeholder_resp_color = Core::config( Const::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
-		$this->_conf_ph_default = Core::config( Const::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+		$this->_conf_placeholder_resp = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_conf_placeholder_resp_generator = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
+		$this->_conf_placeholder_resp_svg 	= Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
+		$this->_conf_placeholder_lqip 		= Core::config( Conf::O_MEDIA_PLACEHOLDER_LQIP ) ;
+		$this->_conf_placeholder_lqip_qual	= Core::config( Conf::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
+		$this->_conf_placeholder_resp_async = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_conf_placeholder_resp_color = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_conf_ph_default = Core::config( Conf::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Placeholder
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		update_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Placeholder
 	 */
 	public static function get_summary()
 	{
-		return get_option( Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		return get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 	}
 
 	/**

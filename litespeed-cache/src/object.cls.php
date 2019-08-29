@@ -49,50 +49,50 @@ class Object
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 
 		if ( $cfg ) {
-			if ( ! is_array( $cfg[ Const::O_OBJECT_GLOBAL_GROUPS ] ) ) {
-				$cfg[ Const::O_OBJECT_GLOBAL_GROUPS ] = explode( "\n", $cfg[ Const::O_OBJECT_GLOBAL_GROUPS ] ) ;
+			if ( ! is_array( $cfg[ Conf::O_OBJECT_GLOBAL_GROUPS ] ) ) {
+				$cfg[ Conf::O_OBJECT_GLOBAL_GROUPS ] = explode( "\n", $cfg[ Conf::O_OBJECT_GLOBAL_GROUPS ] ) ;
 			}
-			if ( ! is_array( $cfg[ Const::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ) {
-				$cfg[ Const::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ Const::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
+			if ( ! is_array( $cfg[ Conf::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ) {
+				$cfg[ Conf::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ Conf::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
 			}
-			$this->_cfg_method = $cfg[ Const::O_OBJECT_KIND ] ? true : false ;
-			$this->_cfg_host = $cfg[ Const::O_OBJECT_HOST ] ;
-			$this->_cfg_port = $cfg[ Const::O_OBJECT_PORT ] ;
-			$this->_cfg_life = $cfg[ Const::O_OBJECT_LIFE ] ;
-			$this->_cfg_persistent = $cfg[ Const::O_OBJECT_PERSISTENT ] ;
-			$this->_cfg_admin = $cfg[ Const::O_OBJECT_ADMIN ] ;
-			$this->_cfg_transients = $cfg[ Const::O_OBJECT_TRANSIENTS ] ;
-			$this->_cfg_db = $cfg[ Const::O_OBJECT_DB_ID ] ;
-			$this->_cfg_user = $cfg[ Const::O_OBJECT_USER ] ;
-			$this->_cfg_pswd = $cfg[ Const::O_OBJECT_PSWD ] ;
-			$this->_global_groups = $cfg[ Const::O_OBJECT_GLOBAL_GROUPS ] ;
-			$this->_non_persistent_groups = $cfg[ Const::O_OBJECT_NON_PERSISTENT_GROUPS ] ;
+			$this->_cfg_method = $cfg[ Conf::O_OBJECT_KIND ] ? true : false ;
+			$this->_cfg_host = $cfg[ Conf::O_OBJECT_HOST ] ;
+			$this->_cfg_port = $cfg[ Conf::O_OBJECT_PORT ] ;
+			$this->_cfg_life = $cfg[ Conf::O_OBJECT_LIFE ] ;
+			$this->_cfg_persistent = $cfg[ Conf::O_OBJECT_PERSISTENT ] ;
+			$this->_cfg_admin = $cfg[ Conf::O_OBJECT_ADMIN ] ;
+			$this->_cfg_transients = $cfg[ Conf::O_OBJECT_TRANSIENTS ] ;
+			$this->_cfg_db = $cfg[ Conf::O_OBJECT_DB_ID ] ;
+			$this->_cfg_user = $cfg[ Conf::O_OBJECT_USER ] ;
+			$this->_cfg_pswd = $cfg[ Conf::O_OBJECT_PSWD ] ;
+			$this->_global_groups = $cfg[ Conf::O_OBJECT_GLOBAL_GROUPS ] ;
+			$this->_non_persistent_groups = $cfg[ Conf::O_OBJECT_NON_PERSISTENT_GROUPS ] ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
 			}
-			$this->_cfg_enabled = $cfg[ Const::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
+			$this->_cfg_enabled = $cfg[ Conf::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 
 			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] init with cfg result : ', $this->_cfg_enabled ) ;
 		}
 		elseif ( class_exists( __NAMESPACE__ . '\Core' ) ) {
-			$this->_cfg_method = Core::config( Const::O_OBJECT_KIND ) ? true : false ;
-			$this->_cfg_host = Core::config( Const::O_OBJECT_HOST ) ;
-			$this->_cfg_port = Core::config( Const::O_OBJECT_PORT ) ;
-			$this->_cfg_life = Core::config( Const::O_OBJECT_LIFE ) ;
-			$this->_cfg_persistent = Core::config( Const::O_OBJECT_PERSISTENT ) ;
-			$this->_cfg_admin = Core::config( Const::O_OBJECT_ADMIN ) ;
-			$this->_cfg_transients = Core::config( Const::O_OBJECT_TRANSIENTS ) ;
-			$this->_cfg_db = Core::config( Const::O_OBJECT_DB_ID ) ;
-			$this->_cfg_user = Core::config( Const::O_OBJECT_USER ) ;
-			$this->_cfg_pswd = Core::config( Const::O_OBJECT_PSWD ) ;
-			$this->_global_groups = Core::config( Const::O_OBJECT_GLOBAL_GROUPS ) ;
-			$this->_non_persistent_groups = Core::config( Const::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
+			$this->_cfg_method = Core::config( Conf::O_OBJECT_KIND ) ? true : false ;
+			$this->_cfg_host = Core::config( Conf::O_OBJECT_HOST ) ;
+			$this->_cfg_port = Core::config( Conf::O_OBJECT_PORT ) ;
+			$this->_cfg_life = Core::config( Conf::O_OBJECT_LIFE ) ;
+			$this->_cfg_persistent = Core::config( Conf::O_OBJECT_PERSISTENT ) ;
+			$this->_cfg_admin = Core::config( Conf::O_OBJECT_ADMIN ) ;
+			$this->_cfg_transients = Core::config( Conf::O_OBJECT_TRANSIENTS ) ;
+			$this->_cfg_db = Core::config( Conf::O_OBJECT_DB_ID ) ;
+			$this->_cfg_user = Core::config( Conf::O_OBJECT_USER ) ;
+			$this->_cfg_pswd = Core::config( Conf::O_OBJECT_PSWD ) ;
+			$this->_global_groups = Core::config( Conf::O_OBJECT_GLOBAL_GROUPS ) ;
+			$this->_non_persistent_groups = Core::config( Conf::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
 			}
-			$this->_cfg_enabled = Core::config( Const::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
+			$this->_cfg_enabled = Core::config( Conf::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true ) ;
@@ -153,18 +153,18 @@ class Object
 
 		// Update data file
 		$data = "[object_cache]"
-			. "\nmethod = " . $options[ Const::O_OBJECT_KIND ]
-			. "\nhost = " . $options[ Const::O_OBJECT_HOST ]
-			. "\nport = " . (int) $options[ Const::O_OBJECT_PORT ]
-			. "\nlife = " . $options[ Const::O_OBJECT_LIFE ]
-			. "\nuser = '" . $options[ Const::O_OBJECT_USER ] . "'"
-			. "\npswd = '" . $options[ Const::O_OBJECT_PSWD ] . "'"
-			. "\ndb = " . (int) $options[ Const::O_OBJECT_DB_ID ]
-			. "\npersistent = " . ( $options[ Const::O_OBJECT_PERSISTENT ] ? 1 : 0 )
-			. "\ncache_admin = " . ( $options[ Const::O_OBJECT_ADMIN ] ? 1 : 0 )
-			. "\ncache_transients = " . ( $options[ Const::O_OBJECT_TRANSIENTS ] ? 1 : 0 )
-			. "\nglobal_groups = " . implode( ',', $options[ Const::O_OBJECT_GLOBAL_GROUPS ] )
-			. "\nnon_persistent_groups = " . implode( ',', $options[ Const::O_OBJECT_NON_PERSISTENT_GROUPS ] )
+			. "\nmethod = " . $options[ Conf::O_OBJECT_KIND ]
+			. "\nhost = " . $options[ Conf::O_OBJECT_HOST ]
+			. "\nport = " . (int) $options[ Conf::O_OBJECT_PORT ]
+			. "\nlife = " . $options[ Conf::O_OBJECT_LIFE ]
+			. "\nuser = '" . $options[ Conf::O_OBJECT_USER ] . "'"
+			. "\npswd = '" . $options[ Conf::O_OBJECT_PSWD ] . "'"
+			. "\ndb = " . (int) $options[ Conf::O_OBJECT_DB_ID ]
+			. "\npersistent = " . ( $options[ Conf::O_OBJECT_PERSISTENT ] ? 1 : 0 )
+			. "\ncache_admin = " . ( $options[ Conf::O_OBJECT_ADMIN ] ? 1 : 0 )
+			. "\ncache_transients = " . ( $options[ Conf::O_OBJECT_TRANSIENTS ] ? 1 : 0 )
+			. "\nglobal_groups = " . implode( ',', $options[ Conf::O_OBJECT_GLOBAL_GROUPS ] )
+			. "\nnon_persistent_groups = " . implode( ',', $options[ Conf::O_OBJECT_NON_PERSISTENT_GROUPS ] )
 			;
 
 		$old_data = File::read( $this->_oc_data_file ) ;

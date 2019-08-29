@@ -56,7 +56,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Const::O_MISC_HTACCESS_FRONT ; ?>
+			<?php $id = Conf::O_MISC_HTACCESS_FRONT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -70,7 +70,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MISC_HTACCESS_BACK ; ?>
+			<?php $id = Conf::O_MISC_HTACCESS_BACK ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

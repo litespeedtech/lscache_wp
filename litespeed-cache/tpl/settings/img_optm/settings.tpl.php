@@ -14,7 +14,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_AUTO ; ?>
+			<?php $id = Conf::O_IMG_OPTM_AUTO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -28,7 +28,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_CRON ; ?>
+			<?php $id = Conf::O_IMG_OPTM_CRON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -41,7 +41,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_ORI ; ?>
+			<?php $id = Conf::O_IMG_OPTM_ORI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -54,7 +54,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_RM_BKUP ; ?>
+			<?php $id = Conf::O_IMG_OPTM_RM_BKUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -73,7 +73,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_WEBP ; ?>
+			<?php $id = Conf::O_IMG_OPTM_WEBP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -86,7 +86,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_LOSSLESS ; ?>
+			<?php $id = Conf::O_IMG_OPTM_LOSSLESS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -100,7 +100,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_EXIF ; ?>
+			<?php $id = Conf::O_IMG_OPTM_EXIF ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -122,7 +122,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_WEBP_ATTR ; ?>
+			<?php $id = Conf::O_IMG_OPTM_WEBP_ATTR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -139,7 +139,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_WEBP_REPLACE_SRCSET ; ?>
+			<?php $id = Conf::O_IMG_OPTM_WEBP_REPLACE_SRCSET ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -153,7 +153,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_IMG_OPTM_JPG_QUALITY ; ?>
+			<?php $id = Conf::O_IMG_OPTM_JPG_QUALITY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

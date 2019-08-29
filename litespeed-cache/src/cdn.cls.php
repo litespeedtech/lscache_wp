@@ -55,12 +55,12 @@ class CDN
 		 * This is separate from CDN on/off
 		 * @since 1.5
 		 */
-		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( Const::O_CDN_REMOTE_JQ ) ;
+		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( Conf::O_CDN_REMOTE_JQ ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
 			$this->_load_jquery_remotely() ;
 		}
 
-		$this->_cfg_cdn = $this->__cfg->option( Const::O_CDN ) ;
+		$this->_cfg_cdn = $this->__cfg->option( Conf::O_CDN ) ;
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
@@ -68,18 +68,18 @@ class CDN
 			return ;
 		}
 
-		$this->_cfg_url_ori = $this->__cfg->option( Const::O_CDN_ORI ) ;
+		$this->_cfg_url_ori = $this->__cfg->option( Conf::O_CDN_ORI ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
-			Const::CDN_MAPPING_INC_IMG,
-			Const::CDN_MAPPING_INC_CSS,
-			Const::CDN_MAPPING_INC_JS
+			Conf::CDN_MAPPING_INC_IMG,
+			Conf::CDN_MAPPING_INC_CSS,
+			Conf::CDN_MAPPING_INC_JS
 		) ;
-		foreach ( $this->__cfg->option( Const::O_CDN_MAPPING ) as $v ) {
-			if ( ! $v[ Const::CDN_MAPPING_URL ] ) {
+		foreach ( $this->__cfg->option( Conf::O_CDN_MAPPING ) as $v ) {
+			if ( ! $v[ Conf::CDN_MAPPING_URL ] ) {
 				continue ;
 			}
-			$this_url = $v[ Const::CDN_MAPPING_URL ] ;
+			$this_url = $v[ Conf::CDN_MAPPING_URL ] ;
 			$this_host = parse_url( $this_url, PHP_URL_HOST ) ;
 			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
@@ -95,9 +95,9 @@ class CDN
 				}
 			}
 			// Check file types
-			if ( $v[ Const::CDN_MAPPING_FILETYPE ] ) {
-				foreach ( $v[ Const::CDN_MAPPING_FILETYPE ] as $v2 ) {
-					$this->_cfg_cdn_mapping[ Const::CDN_MAPPING_FILETYPE ] = true ;
+			if ( $v[ Conf::CDN_MAPPING_FILETYPE ] ) {
+				foreach ( $v[ Conf::CDN_MAPPING_FILETYPE ] as $v2 ) {
+					$this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_FILETYPE ] = true ;
 
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $v2, $this_url ) ;
@@ -106,7 +106,7 @@ class CDN
 						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
-				Log::debug2( '[CDN] mapping ' . implode( ',', $v[ Const::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
+				Log::debug2( '[CDN] mapping ' . implode( ',', $v[ Conf::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
 			}
 		}
 
@@ -117,7 +117,7 @@ class CDN
 			return ;
 		}
 
-		$this->_cfg_ori_dir = $this->__cfg->option( Const::O_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = $this->__cfg->option( Conf::O_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;
@@ -137,9 +137,9 @@ class CDN
 			$this->_cfg_url_ori[ $k ] = $v ;
 		}
 
-		$this->_cfg_cdn_exclude = $this->__cfg->option( Const::O_CDN_EXC ) ;
+		$this->_cfg_cdn_exclude = $this->__cfg->option( Conf::O_CDN_EXC ) ;
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_IMG ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
 				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 ) ;
@@ -149,11 +149,11 @@ class CDN
 			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_CSS ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_CSS ] ) ) {
 			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_JS ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_JS ] ) ) {
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
 
@@ -212,11 +212,11 @@ class CDN
 	{
 		$instance = self::get_instance() ;
 
-		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_CSS ] ) ) {
+		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_CSS ] ) ) {
 			return true ;
 		}
 
-		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_JS ] ) ) {
+		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_JS ] ) ) {
 			return true ;
 		}
 
@@ -256,12 +256,12 @@ class CDN
 		Log::debug( 'CDN _finalize' ) ;
 
 		// Start replacing img src
-		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_INC_IMG ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_INC_IMG ] ) ) {
 			$this->_replace_img() ;
 			$this->_replace_inline_css() ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ Const::CDN_MAPPING_FILETYPE ] ) ) {
+		if ( ! empty( $this->_cfg_cdn_mapping[ Conf::CDN_MAPPING_FILETYPE ] ) ) {
 			$this->_replace_file_types() ;
 		}
 
@@ -293,7 +293,7 @@ class CDN
 
 			Log::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
 
-			if( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_FILETYPE, $postfix ) ) {
+			if( ! $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_FILETYPE, $postfix ) ) {
 				continue ;
 			}
 
@@ -317,7 +317,7 @@ class CDN
 				continue ;
 			}
 
-			if ( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
+			if ( ! $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 
@@ -351,7 +351,7 @@ class CDN
 		foreach ( $matches[ 1 ] as $k => $url ) {
 			$url = str_replace( array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url ) ;
 
-			if ( ! $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
+			if ( ! $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 			$attr = str_replace( $matches[ 1 ][ $k ], $url2, $matches[ 0 ][ $k ] ) ;
@@ -370,7 +370,7 @@ class CDN
 	 */
 	public function attach_img_src( $img )
 	{
-		if ( $img && $url = $this->rewrite( $img[ 0 ], Const::CDN_MAPPING_INC_IMG ) ) {
+		if ( $img && $url = $this->rewrite( $img[ 0 ], Conf::CDN_MAPPING_INC_IMG ) ) {
 			$img[ 0 ] = $url ;
 		}
 		return $img ;
@@ -384,7 +384,7 @@ class CDN
 	 */
 	public function url_img( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_IMG ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_INC_IMG ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -398,7 +398,7 @@ class CDN
 	 */
 	public function url_css( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_CSS ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_INC_CSS ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -412,7 +412,7 @@ class CDN
 	 */
 	public function url_js( $url )
 	{
-		if ( $url && $url2 = $this->rewrite( $url, Const::CDN_MAPPING_INC_JS ) ) {
+		if ( $url && $url2 = $this->rewrite( $url, Conf::CDN_MAPPING_INC_JS ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -431,7 +431,7 @@ class CDN
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $this->rewrite( $data[ 'url' ], Const::CDN_MAPPING_INC_IMG ) ) {
+				if( ! $url = $this->rewrite( $data[ 'url' ], Conf::CDN_MAPPING_INC_IMG ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
@@ -498,7 +498,7 @@ class CDN
 		if ( empty( $this->_cfg_cdn_mapping[ $mapping_kind ] ) ) {
 			return false ;
 		}
-		if ( $mapping_kind !== Const::CDN_MAPPING_FILETYPE ) {
+		if ( $mapping_kind !== Conf::CDN_MAPPING_FILETYPE ) {
 			$final_url = $this->_cfg_cdn_mapping[ $mapping_kind ] ;
 		}
 		else {
@@ -591,7 +591,7 @@ class CDN
 			$v = preg_replace( '|[^\d\.]|', '', $v ) ;
 		}
 
-		$src = $this->_cfg_cdn_remote_jquery == Const::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" ;
+		$src = $this->_cfg_cdn_remote_jquery == Conf::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
 		Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
 

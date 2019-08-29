@@ -4,7 +4,7 @@ namespace LiteSpeed\CLI ;
 defined( 'WPINC' ) || exit ;
 
 use LiteSpeed\Config ;
-use LiteSpeed\Const ;
+use LiteSpeed\Conf ;
 use LiteSpeed\Admin_Settings ;
 use LiteSpeed\Import ;
 use WP_CLI ;
@@ -58,7 +58,7 @@ var_dump($key);exit;
 			Admin_Settings::ENROLL	=> array( $key ),
 			$key 	=> $val,
 		) ;
-		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, Const::O_CDN_MAPPING ) !== 0 ) ) {
+		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, Conf::O_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
@@ -66,14 +66,14 @@ var_dump($key);exit;
 		$options = Config::convert_options_to_input($options) ;
 
 		switch ($key) {
-			case Const::_VERSION:
+			case Conf::_VERSION:
 				//do not allow
 				WP_CLI::error('This option is not available for setting.') ;
 				return ;
 
-			case Const::O_CACHE_MOBILE:
+			case Conf::O_CACHE_MOBILE:
 				// set list then do checkbox
-				if ( $val === 'true' && empty( $options[ Const::O_CACHE_MOBILE_RULES ] ) ) {
+				if ( $val === 'true' && empty( $options[ Conf::O_CACHE_MOBILE_RULES ] ) ) {
 					WP_CLI::error( 'Please set mobile rules value first.' ) ;
 					return ;
 				}
@@ -81,7 +81,7 @@ var_dump($key);exit;
 			case in_array( $key, self::$checkboxes ) :
 				//checkbox
 				if ( $val === 'true' ) {
-					$options[$key] = Const::VAL_ON ;
+					$options[$key] = Conf::VAL_ON ;
 				}
 				elseif ( $val === 'false' ) {
 					unset($options[$key]) ;
@@ -100,20 +100,20 @@ var_dump($key);exit;
 			 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
 			 * 		`set_option cdn-mapping[inc_img][0] true`
 			 */
-			case strpos( $key, Const::O_CDN_MAPPING ) === 0 :
+			case strpos( $key, Conf::O_CDN_MAPPING ) === 0 :
 
 				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
 
 				// Handle switch value
 				if ( in_array( $child_key[ 1 ], array(
-						Const::CDN_MAPPING_INC_IMG,
-						Const::CDN_MAPPING_INC_CSS,
-						Const::CDN_MAPPING_INC_JS,
+						Conf::CDN_MAPPING_INC_IMG,
+						Conf::CDN_MAPPING_INC_CSS,
+						Conf::CDN_MAPPING_INC_JS,
 				) ) ) {
-					$val = $val === 'true' ? Const::VAL_ON : Const::VAL_OFF ;
+					$val = $val === 'true' ? Conf::VAL_ON : Conf::VAL_OFF ;
 				}
 
-				$options[ Const::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
+				$options[ Conf::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
 				break ;
 
 			default:

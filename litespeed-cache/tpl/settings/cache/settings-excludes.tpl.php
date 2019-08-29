@@ -11,7 +11,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC ; ?>
+			<?php $id = Conf::O_CACHE_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -26,7 +26,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC_QS ; ?>
+			<?php $id = Conf::O_CACHE_EXC_QS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -41,7 +41,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC_CAT ; ?>
+			<?php $id = Conf::O_CACHE_EXC_CAT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -71,7 +71,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC_TAG ; ?>
+			<?php $id = Conf::O_CACHE_EXC_TAG ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -118,7 +118,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_EXC_ROLES ; ?>
+			<?php $id = Conf::O_CACHE_EXC_ROLES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

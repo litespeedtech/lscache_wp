@@ -8,7 +8,7 @@ if ( is_multisite() ) {
 	return ;
 }
 
-if ( Core::config( Const::O_AUTO_UPGRADE ) ) {
+if ( Core::config( Conf::O_AUTO_UPGRADE ) ) {
 	return ;
 }
 
@@ -70,8 +70,8 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( Const::TYPE_SET . '[' . Const::O_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = Utility::build_url( Core::ACTION_CONF, Const::TYPE_SET, false, null, $cfg ) ;
+						$cfg = array( Conf::TYPE_SET . '[' . Conf::O_AUTO_UPGRADE . ']' => 1 ) ;
+						$url = Utility::build_url( Core::ACTION_CONF, Conf::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>

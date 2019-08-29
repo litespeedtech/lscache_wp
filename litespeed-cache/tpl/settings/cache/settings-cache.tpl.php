@@ -10,16 +10,16 @@
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE ; ?>
+			<?php $id = Conf::O_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Const::VAL_OFF ) ; ?>
-				<?php $this->build_radio( $id, Const::VAL_ON ) ; ?>
+				<?php $this->build_radio( $id, Conf::VAL_OFF ) ; ?>
+				<?php $this->build_radio( $id, Conf::VAL_ON ) ; ?>
 				<?php
 					if ( is_multisite() ) {
-						$this->build_radio( $id, Const::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
+						$this->build_radio( $id, Conf::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
 					}
 				?>
 			</div>
@@ -37,7 +37,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_PRIV ; ?>
+			<?php $id = Conf::O_CACHE_PRIV ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -50,7 +50,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_COMMENTER ; ?>
+			<?php $id = Conf::O_CACHE_COMMENTER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -63,7 +63,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_REST ; ?>
+			<?php $id = Conf::O_CACHE_REST ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -76,7 +76,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_PAGE_LOGIN ; ?>
+			<?php $id = Conf::O_CACHE_PAGE_LOGIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -97,7 +97,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_PRIV_URI ; ?>
+			<?php $id = Conf::O_CACHE_PRIV_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -111,7 +111,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_FORCE_URI ; ?>
+			<?php $id = Conf::O_CACHE_FORCE_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -128,7 +128,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_FORCE_PUB_URI ; ?>
+			<?php $id = Conf::O_CACHE_FORCE_PUB_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -145,7 +145,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_DROP_QS ; ?>
+			<?php $id = Conf::O_CACHE_DROP_QS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

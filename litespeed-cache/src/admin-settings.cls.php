@@ -12,7 +12,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin_Settings extends Const
+class Admin_Settings extends Conf
 {
 	private static $_instance ;
 

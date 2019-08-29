@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Lang extends Const
+class Lang extends Conf
 {
 	/**
 	 * Get the title of id

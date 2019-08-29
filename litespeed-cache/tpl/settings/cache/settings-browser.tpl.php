@@ -18,7 +18,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_UTIL_BROWSER_CACHE ; ?>
+			<?php $id = Conf::O_UTIL_BROWSER_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -33,7 +33,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_UTIL_BROWSER_CACHE_TTL ; ?>
+			<?php $id = Conf::O_UTIL_BROWSER_CACHE_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

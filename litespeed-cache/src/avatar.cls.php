@@ -163,7 +163,7 @@ class Avatar
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( Const::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		update_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Avatar
 
 		$instance = self::get_instance() ;
 
-		$summary = get_option( Const::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		$summary = get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 
 		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;

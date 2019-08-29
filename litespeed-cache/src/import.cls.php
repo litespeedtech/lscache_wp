@@ -33,7 +33,7 @@ class Import
 		Log::debug( 'Import init' ) ;
 
 		$this->__cfg = Config::get_instance() ;
-		$this->_log_name = Const::conf_name( 'import', 'log' ) ;
+		$this->_log_name = Conf::conf_name( 'import', 'log' ) ;
 	}
 
 	/**

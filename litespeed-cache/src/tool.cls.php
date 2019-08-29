@@ -30,12 +30,12 @@ class Tool
 	 */
 	private function __construct()
 	{
-		$this->_conf_heartbeat_front 		= Core::config( Const::O_MISC_HEARTBEAT_FRONT ) ;
-		$this->_conf_heartbeat_front_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_FRONT_TTL ) ;
-		$this->_conf_heartbeat_back 		= Core::config( Const::O_MISC_HEARTBEAT_BACK ) ;
-		$this->_conf_heartbeat_back_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_BACK_TTL ) ;
-		$this->_conf_heartbeat_editor 		= Core::config( Const::O_MISC_HEARTBEAT_EDITOR ) ;
-		$this->_conf_heartbeat_editor_ttl 	= Core::config( Const::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
+		$this->_conf_heartbeat_front 		= Core::config( Conf::O_MISC_HEARTBEAT_FRONT ) ;
+		$this->_conf_heartbeat_front_ttl 	= Core::config( Conf::O_MISC_HEARTBEAT_FRONT_TTL ) ;
+		$this->_conf_heartbeat_back 		= Core::config( Conf::O_MISC_HEARTBEAT_BACK ) ;
+		$this->_conf_heartbeat_back_ttl 	= Core::config( Conf::O_MISC_HEARTBEAT_BACK_TTL ) ;
+		$this->_conf_heartbeat_editor 		= Core::config( Conf::O_MISC_HEARTBEAT_EDITOR ) ;
+		$this->_conf_heartbeat_editor_ttl 	= Core::config( Conf::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
 	}
 
 	/**

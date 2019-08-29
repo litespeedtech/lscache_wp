@@ -308,7 +308,7 @@ class Activation
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ Const::_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ Conf::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
 			Admin_Display::error( $ex->getMessage() ) ;
@@ -316,7 +316,7 @@ class Activation
 
 		/* 2) adv-cache.php; */
 
-		if ( $options[ Const::O_UTIL_CHECK_ADVCACHE ] ) {
+		if ( $options[ Conf::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
 
 			if ( ! defined( 'LSCACHE_ADV_CACHE' ) ) {
@@ -332,7 +332,7 @@ class Activation
 
 		/* 3) object-cache.php; */
 
-		if ( $options[ Const::O_OBJECT ] && ( ! $options[ Const::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+		if ( $options[ Conf::O_OBJECT ] && ( ! $options[ Conf::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			Object::get_instance()->update_file( $options ) ;
 		}
 		else {

@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Const
+class Conf
 {
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`

@@ -12,7 +12,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class API extends Const
+class API extends Conf
 {
 	const VERSION =	Core::PLUGIN_VERSION ;
 

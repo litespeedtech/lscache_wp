@@ -38,7 +38,7 @@
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Const::O_ESI ; ?>
+			<?php $id = Conf::O_ESI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -51,7 +51,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_ESI_CACHE_ADMBAR ; ?>
+			<?php $id = Conf::O_ESI_CACHE_ADMBAR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -64,7 +64,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_ESI_CACHE_COMMFORM ; ?>
+			<?php $id = Conf::O_ESI_CACHE_COMMFORM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -77,7 +77,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_CACHE_VARY_GROUP ; ?>
+			<?php $id = Conf::O_CACHE_VARY_GROUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

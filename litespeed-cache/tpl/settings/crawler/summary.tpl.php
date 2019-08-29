@@ -12,7 +12,7 @@ if ( $meta[ 'curr_crawler' ] >= count( $crawler_list ) ) {
 	$meta[ 'curr_crawler' ] = 0 ;
 }
 
-$is_running = time() - $meta[ 'is_running' ] <= Core::config( Const::O_CRWL_RUN_DURATION ) ;
+$is_running = time() - $meta[ 'is_running' ] <= Core::config( Conf::O_CRWL_RUN_DURATION ) ;
 
 $disabled = Router::can_crawl() ? '' : 'disabled' ;
 
@@ -35,7 +35,7 @@ $disabled = Router::can_crawl() ? '' : 'disabled' ;
 		</div>
 
 <?php
-	$seconds = Core::config( Const::O_CRWL_RUN_INTERVAL ) ;
+	$seconds = Core::config( Conf::O_CRWL_RUN_INTERVAL ) ;
 	if($seconds > 0):
 		$recurrence = '' ;
 		$hours = (int)floor($seconds / 3600) ;
@@ -64,7 +64,7 @@ $disabled = Router::can_crawl() ? '' : 'disabled' ;
 			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
 				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
 					data-url="<?php echo Utility::build_url( Core::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
-					<?php if( Core::config( Const::O_CRWL ) && Router::can_crawl() ) echo "checked"; ?>
+					<?php if( Core::config( Conf::O_CRWL ) && Router::can_crawl() ) echo "checked"; ?>
 					<?php echo $disabled ; ?>
 				/>
 				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
@@ -91,7 +91,7 @@ $disabled = Router::can_crawl() ? '' : 'disabled' ;
 			<?php if ( ! $is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + Core::config( Const::O_CRWL_CRAWL_INTERVAL )) ; ?>
+			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + Core::config( Conf::O_CRWL_CRAWL_INTERVAL )) ; ?>
 			<?php endif ; ?>
 		</p>
 

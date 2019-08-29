@@ -46,15 +46,15 @@ class Crawler_Sitemap
 	{
 		global $wpdb ;
 
-		$optionOrderBy = Core::config( Const::O_CRWL_ORDER_LINKS ) ;
+		$optionOrderBy = Core::config( Conf::O_CRWL_ORDER_LINKS ) ;
 
-		$show_pages = Core::config( Const::O_CRWL_PAGES ) ;
+		$show_pages = Core::config( Conf::O_CRWL_PAGES ) ;
 
-		$show_posts = Core::config( Const::O_CRWL_POSTS ) ;
+		$show_posts = Core::config( Conf::O_CRWL_POSTS ) ;
 
-		$show_cats = Core::config( Const::O_CRWL_CATS ) ;
+		$show_cats = Core::config( Conf::O_CRWL_CATS ) ;
 
-		$show_tags = Core::config( Const::O_CRWL_TAGS ) ;
+		$show_tags = Core::config( Conf::O_CRWL_TAGS ) ;
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
@@ -84,7 +84,7 @@ class Crawler_Sitemap
 			$post_type_array[] = 'post' ;
 		}
 
-		if ( $excludeCptArr = Core::config( Const::O_CRWL_EXC_CPT ) ) {
+		if ( $excludeCptArr = Core::config( Conf::O_CRWL_EXC_CPT ) ) {
 			$cptArr = get_post_types() ;
 			$cptArr = array_diff($cptArr, array('post', 'page')) ;
 			$cptArr = array_diff($cptArr, $excludeCptArr) ;

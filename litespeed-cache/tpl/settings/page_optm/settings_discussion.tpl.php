@@ -20,7 +20,7 @@ $last_generated = Avatar::get_summary() ;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Const::O_DISCUSS_AVATAR_CACHE ; ?>
+			<?php $id = Conf::O_DISCUSS_AVATAR_CACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -34,7 +34,7 @@ $last_generated = Avatar::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_DISCUSS_AVATAR_CRON ; ?>
+			<?php $id = Conf::O_DISCUSS_AVATAR_CRON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -69,7 +69,7 @@ $last_generated = Avatar::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
+			<?php $id = Conf::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

@@ -12,7 +12,7 @@
 	<tr>
 		<th><?php echo __('Role Simulation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_textarea( Const::O_CRWL_ROLES, 20 ) ; ?>
+			<?php $this->build_textarea( Conf::O_CRWL_ROLES, 20 ) ; ?>
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>
@@ -25,7 +25,7 @@
 	<tr>
 		<th><?php echo __('Cookie Simulation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = Const::O_CRWL_COOKIES ; ?>
+			<?php $id = Conf::O_CRWL_COOKIES ; ?>
 			<?php $this->enroll( $id . '[name][]' ) ; ?>
 			<?php $this->enroll( $id . '[vals][]' ) ; ?>
 			<div id="cookie_crawler">

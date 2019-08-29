@@ -15,7 +15,7 @@ namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 
-class Config extends Const
+class Config extends Conf
 {
 	private static $_instance ;
 

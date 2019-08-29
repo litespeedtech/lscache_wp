@@ -39,20 +39,20 @@ class Cloudflare
 	{
 		$__cfg = Config::get_instance() ;
 
-		if ( ! $__cfg->option( Const::O_CDN_CLOUDFLARE ) ) {
+		if ( ! $__cfg->option( Conf::O_CDN_CLOUDFLARE ) ) {
 			return ;
 		}
 
 		$zone = self::get_instance()->_fetch_zone() ;
 		if ( $zone ) {
-			$__cfg->update( Const::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
+			$__cfg->update( Conf::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
 
-			$__cfg->update( Const::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
+			$__cfg->update( Conf::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
 
 			Log::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" ) ;
 		}
 		else {
-			$__cfg->update( Const::O_CDN_CLOUDFLARE_ZONE, '' ) ;
+			$__cfg->update( Conf::O_CDN_CLOUDFLARE_ZONE, '' ) ;
 			Log::debug( '[Cloudflare] ❌ Get zone failed, clean zone' ) ;
 		}
 
@@ -81,12 +81,12 @@ class Cloudflare
 		}
 		Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
-		$curr_status = get_option( Const::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
+		$curr_status = get_option( Conf::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
 		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
 
 		// update status
-		update_option( Const::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), $curr_status ) ;
+		update_option( Conf::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), $curr_status ) ;
 
 	}
 
@@ -133,7 +133,7 @@ class Cloudflare
 	{
 		Log::debug( '[Cloudflare] _purge_all' ) ;
 
-		$cf_on = Core::config( Const::O_CDN_CLOUDFLARE ) ;
+		$cf_on = Core::config( Conf::O_CDN_CLOUDFLARE ) ;
 		if ( ! $cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
 			Admin_Display::error( $msg ) ;
@@ -164,7 +164,7 @@ class Cloudflare
 	 */
 	private function _zone()
 	{
-		$zone = Core::config( Const::O_CDN_CLOUDFLARE_ZONE ) ;
+		$zone = Core::config( Conf::O_CDN_CLOUDFLARE_ZONE ) ;
 		if ( ! $zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			Admin_Display::error( $msg ) ;
@@ -182,7 +182,7 @@ class Cloudflare
 	 */
 	private function _fetch_zone()
 	{
-		$kw = Core::config( Const::O_CDN_CLOUDFLARE_NAME ) ;
+		$kw = Core::config( Conf::O_CDN_CLOUDFLARE_NAME ) ;
 
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
 
@@ -232,8 +232,8 @@ class Cloudflare
 
 		$header = array(
 			'Content-Type: application/json',
-			'X-Auth-Email: ' . Core::config( Const::O_CDN_CLOUDFLARE_EMAIL ),
-			'X-Auth-Key: ' . Core::config( Const::O_CDN_CLOUDFLARE_KEY ),
+			'X-Auth-Email: ' . Core::config( Conf::O_CDN_CLOUDFLARE_EMAIL ),
+			'X-Auth-Key: ' . Core::config( Conf::O_CDN_CLOUDFLARE_KEY ),
 		) ;
 
 		$ch = curl_init() ;

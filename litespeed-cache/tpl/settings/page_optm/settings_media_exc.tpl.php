@@ -11,7 +11,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_LAZY_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_LAZY_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -31,7 +31,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_LAZY_CLS_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_LAZY_CLS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -46,7 +46,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_LAZY_PARENT_CLS_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_LAZY_PARENT_CLS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -60,7 +60,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_IFRAME_LAZY_CLS_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_IFRAME_LAZY_CLS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -75,7 +75,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -89,7 +89,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Const::O_MEDIA_LAZY_URI_EXC ; ?>
+			<?php $id = Conf::O_MEDIA_LAZY_URI_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

@@ -21,7 +21,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_TTL ; ?>
+			<?php $id = Conf::O_OPTM_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -36,7 +36,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_HTML_MIN ; ?>
+			<?php $id = Conf::O_OPTM_HTML_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -49,7 +49,7 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Const::O_OPTM_CSS_INLINE_MIN ; ?>
+			<?php $id = Conf::O_OPTM_CSS_INLINE_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -62,7 +62,7 @@
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Const::O_OPTM_JS_INLINE_MIN ; ?>
+			<?php $id = Conf::O_OPTM_JS_INLINE_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -75,7 +75,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_DNS_PREFETCH ; ?>
+			<?php $id = Conf::O_OPTM_DNS_PREFETCH ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -91,7 +91,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_RM_COMMENT ; ?>
+			<?php $id = Conf::O_OPTM_RM_COMMENT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -105,7 +105,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_QS_RM ; ?>
+			<?php $id = Conf::O_OPTM_QS_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -127,7 +127,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_GGFONTS_ASYNC ; ?>
+			<?php $id = Conf::O_OPTM_GGFONTS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -142,7 +142,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_GGFONTS_RM ; ?>
+			<?php $id = Conf::O_OPTM_GGFONTS_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -155,7 +155,7 @@
 
 	<tr>
 		<th>
-			<?php $id = Const::O_OPTM_EMOJI_RM ; ?>
+			<?php $id = Conf::O_OPTM_EMOJI_RM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

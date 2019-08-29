@@ -66,8 +66,8 @@ class Htaccess
 		$this->_path_set() ;
 		$this->_default_frontend_htaccess = $this->frontend_htaccess ;
 		$this->_default_backend_htaccess = $this->backend_htaccess ;
-		$this->frontend_htaccess = Core::config( Const::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
-		$this->backend_htaccess = Core::config( Const::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
+		$this->frontend_htaccess = Core::config( Conf::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
+		$this->backend_htaccess = Core::config( Conf::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
 
 		// Filter for frontend&backend htaccess path
 		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;
@@ -442,7 +442,7 @@ class Htaccess
 		 * Add ttl setting
 		 * @since 1.6.3
 		 */
-		$id = Const::O_UTIL_BROWSER_CACHE_TTL ;
+		$id = Conf::O_UTIL_BROWSER_CACHE_TTL ;
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			self::EXPIRES_MODULE_START,
@@ -517,12 +517,12 @@ class Htaccess
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
 
-		$disable_lscache_detail_rules = ! $cfg[ Const::_CACHE ] ;
+		$disable_lscache_detail_rules = ! $cfg[ Conf::_CACHE ] ;
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
-			$id = Const::O_CACHE_MOBILE_RULES ;
-			if ( ! empty( $cfg[ Const::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
+			$id = Conf::O_CACHE_MOBILE_RULES ;
+			if ( ! empty( $cfg[ Conf::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
@@ -531,7 +531,7 @@ class Htaccess
 			}
 
 			// nocache cookie
-			$id = Const::O_CACHE_EXC_COOKIES ;
+			$id = Conf::O_CACHE_EXC_COOKIES ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' .  Utility::arr2regex( $cfg[ $id ], true ) ;
@@ -541,7 +541,7 @@ class Htaccess
 			}
 
 			// nocache user agents
-			$id = Const::O_CACHE_EXC_USERAGENTS ;
+			$id = Conf::O_CACHE_EXC_USERAGENTS ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) ;
@@ -551,7 +551,7 @@ class Htaccess
 			}
 
 			// caching php resource
-			$id = Const::O_CACHE_RES ;
+			$id = Conf::O_CACHE_RES ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
 				$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
@@ -560,7 +560,7 @@ class Htaccess
 			}
 
 			// check login cookie
-			$id = Const::O_CACHE_LOGIN_COOKIE ;
+			$id = Conf::O_CACHE_LOGIN_COOKIE ;
 
 			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
@@ -595,7 +595,7 @@ class Htaccess
 
 			// favicon
 			// frontend and backend
-			$id = Const::O_CACHE_FAVICON ;
+			$id = Conf::O_CACHE_FAVICON ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
 				$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
@@ -604,7 +604,7 @@ class Htaccess
 			}
 
 			// CORS font rules
-			$id = Const::O_CDN ;
+			$id = Conf::O_CDN ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
 				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
@@ -613,7 +613,7 @@ class Htaccess
 			}
 
 			// webp support
-			$id = Const::O_IMG_OPTM_WEBP_REPLACE ;
+			$id = Conf::O_IMG_OPTM_WEBP_REPLACE ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]' ;
@@ -624,7 +624,7 @@ class Htaccess
 			}
 
 			// drop qs support
-			$id = Const::O_CACHE_DROP_QS ;
+			$id = Conf::O_CACHE_DROP_QS ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
 				foreach ( $cfg[ $id ] as $v ) {
@@ -636,7 +636,7 @@ class Htaccess
 		}
 
 		// Browser cache
-		$id = Const::O_UTIL_BROWSER_CACHE ;
+		$id = Conf::O_UTIL_BROWSER_CACHE ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
 			$new_rules_nonls = array_merge( $new_rules_nonls, $this->_browser_cache_rules( $cfg ) ) ;

@@ -25,9 +25,9 @@ class Optimizer
 	 */
 	private function __construct()
 	{
-		$this->_conf_css_font_display = Core::config( Const::O_OPTM_CSS_FONT_DISPLAY ) ;
-		if ( ! empty( Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = Const::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
+		$this->_conf_css_font_display = Core::config( Conf::O_OPTM_CSS_FONT_DISPLAY ) ;
+		if ( ! empty( Conf::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = Conf::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
 		}
 	}
 
@@ -40,11 +40,11 @@ class Optimizer
 	public function html_min( $content )
 	{
 		$options = array() ;
-		if ( Core::config( Const::O_OPTM_CSS_INLINE_MIN ) ) {
+		if ( Core::config( Conf::O_OPTM_CSS_INLINE_MIN ) ) {
 			$options[ 'cssMinifier' ] = __CLASS__ . '::minify_css' ;
 		}
 
-		if ( Core::config( Const::O_OPTM_JS_INLINE_MIN ) ) {
+		if ( Core::config( Conf::O_OPTM_JS_INLINE_MIN ) ) {
 			$options[ 'jsMinifier' ] = __CLASS__ . '::minify_js' ;
 		}
 
@@ -131,7 +131,7 @@ class Optimizer
 		 * Clean comment when minify
 		 * @since  1.7.1
 		 */
-		if ( Core::config( Const::O_OPTM_RM_COMMENT ) ) {
+		if ( Core::config( Conf::O_OPTM_RM_COMMENT ) ) {
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 

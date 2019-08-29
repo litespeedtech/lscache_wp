@@ -545,7 +545,7 @@ class Utility
 	 *
 	 * This will generate http://www.example.com even there is a subfolder in home_url setting
 	 *
-	 * Const LSCWP_DOMAIN has NO trailing /
+	 * Conf LSCWP_DOMAIN has NO trailing /
 	 *
 	 * @since  1.3
 	 * @access public

@@ -1,11 +1,11 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$cf_on = Core::config( Const::O_CDN_CLOUDFLARE ) ;
-$cf_domain = Core::config( Const::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
-$cf_zone = Core::config( Const::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
+$cf_on = Core::config( Conf::O_CDN_CLOUDFLARE ) ;
+$cf_domain = Core::config( Conf::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
+$cf_zone = Core::config( Conf::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 
-$curr_status = get_option( Const::conf_name( CDN\Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
+$curr_status = get_option( Conf::conf_name( CDN\Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
 
 ?>
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>

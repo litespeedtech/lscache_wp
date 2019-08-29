@@ -44,10 +44,10 @@ class Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = Core::config( Const::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = Core::config( Conf::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
-			if ( Core::config( Const::O_PURGE_ON_UPGRADE ) ) {
+			if ( Core::config( Conf::O_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}

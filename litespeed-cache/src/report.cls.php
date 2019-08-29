@@ -72,7 +72,7 @@ class Report
 			'dateline'	=> time(),
 		) ;
 
-		update_option( Const::conf_name( self::ITEM_REF, 'env' ), $data ) ;
+		update_option( Conf::conf_name( self::ITEM_REF, 'env' ), $data ) ;
 
 	}
 
@@ -85,7 +85,7 @@ class Report
 	 */
 	public function get_env_ref()
 	{
-		$info = get_option( Const::conf_name( self::ITEM_REF, 'env' ) ) ;
+		$info = get_option( Conf::conf_name( self::ITEM_REF, 'env' ) ) ;
 
 		if ( ! is_array( $info ) ) {
 			return array(
@@ -157,8 +157,8 @@ class Report
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
 					$opts = Config::get_instance()->load_options( $blog_id, true ) ;
-					if ( isset($opts[ Const::O_CACHE ]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[ Const::O_CACHE ] ;
+					if ( isset($opts[ Conf::O_CACHE ]) ) {
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ Conf::O_CACHE ] ;
 					}
 				}
 			}
@@ -166,9 +166,9 @@ class Report
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Const::O_CDN_QUIC_KEY,
-			Const::O_CDN_CLOUDFLARE_KEY,
-			Const::O_OBJECT_PSWD,
+			Conf::O_CDN_QUIC_KEY,
+			Conf::O_CDN_CLOUDFLARE_KEY,
+			Conf::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {

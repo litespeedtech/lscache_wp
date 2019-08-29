@@ -196,7 +196,7 @@ class Router
 		}
 
 		// Hash validation
-		$hash = get_option( Const::conf_name( Crawler::ITEM_HASH, 'crawler' ) ) ;
+		$hash = get_option( Conf::conf_name( Crawler::ITEM_HASH, 'crawler' ) ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
 			Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;
@@ -310,7 +310,7 @@ class Router
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Core::config( Const::O_ESI ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Core::config( Conf::O_ESI ) ;
 		}
 		return self::$_esi_enabled ;
 	}
@@ -401,7 +401,7 @@ class Router
 	public static function is_admin_ip()
 	{
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = Core::config( Const::O_DEBUG_IPS ) ;
+			$ips = Core::config( Conf::O_DEBUG_IPS ) ;
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}

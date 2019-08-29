@@ -259,7 +259,7 @@ class Crawler
 	protected function _generate_sitemap()
 	{
 		// use custom sitemap
-		if ( $sitemap = $this->_options[ Const::O_CRWL_CUSTOM_SITEMAP ] ) {
+		if ( $sitemap = $this->_options[ Conf::O_CRWL_CUSTOM_SITEMAP ] ) {
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
 			$sitemap_urls = false ;
@@ -396,7 +396,7 @@ class Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[Const::O_CRWL_CRAWL_INTERVAL] ) {
+			if ( ! $force && time() - $last_fnished_at < $this->_options[Conf::O_CRWL_CRAWL_INTERVAL] ) {
 				Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
@@ -405,34 +405,34 @@ class Crawler
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_home_url) ;
-		$crawler->set_run_duration($this->_options[Const::O_CRWL_RUN_DURATION]) ;
+		$crawler->set_run_duration($this->_options[Conf::O_CRWL_RUN_DURATION]) ;
 
 		/**
 		 * Limit delay to use server setting
 		 * @since 1.8.3
 		 */
-		$usleep = $this->_options[ Const::O_CRWL_USLEEP ] ;
-		if ( ! empty( $_SERVER[ Const::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Const::ENV_CRAWLER_USLEEP ] > $usleep ) {
-			$usleep = $_SERVER[ Const::ENV_CRAWLER_USLEEP ] ;
+		$usleep = $this->_options[ Conf::O_CRWL_USLEEP ] ;
+		if ( ! empty( $_SERVER[ Conf::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Conf::ENV_CRAWLER_USLEEP ] > $usleep ) {
+			$usleep = $_SERVER[ Conf::ENV_CRAWLER_USLEEP ] ;
 		}
 		$crawler->set_run_delay( $usleep ) ;
-		$crawler->set_threads_limit( $this->_options[ Const::O_CRWL_THREADS ] ) ;
+		$crawler->set_threads_limit( $this->_options[ Conf::O_CRWL_THREADS ] ) ;
 		/**
 		 * Set timeout to avoid incorrect blacklist addition #900171
 		 * @since  3.0
 		 */
-		$crawler->set_timeout( $this->_options[ Const::O_CRWL_TIMEOUT ] ) ;
+		$crawler->set_timeout( $this->_options[ Conf::O_CRWL_TIMEOUT ] ) ;
 
-		$server_load_limit = $this->_options[ Const::O_CRWL_LOAD_LIMIT ] ;
-		if ( ! empty( $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
-			$server_load_limit = $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
+		$server_load_limit = $this->_options[ Conf::O_CRWL_LOAD_LIMIT ] ;
+		if ( ! empty( $_SERVER[ Conf::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
+			$server_load_limit = $_SERVER[ Conf::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
 		}
-		elseif ( ! empty( $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
-			$server_load_limit = $_SERVER[ Const::ENV_CRAWLER_LOAD_LIMIT ] ;
+		elseif ( ! empty( $_SERVER[ Conf::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ Conf::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
+			$server_load_limit = $_SERVER[ Conf::ENV_CRAWLER_LOAD_LIMIT ] ;
 		}
 		$crawler->set_load_limit( $server_load_limit ) ;
-		if ( $this->_options[Const::O_SERVER_IP] ) {
-			$crawler->set_domain_ip($this->_options[Const::O_SERVER_IP]) ;
+		if ( $this->_options[Conf::O_SERVER_IP] ) {
+			$crawler->set_domain_ip($this->_options[Conf::O_SERVER_IP]) ;
 		}
 
 		// Get current crawler
@@ -548,13 +548,13 @@ class Crawler
 		}
 
 		// Mobile crawler
-		if ( $this->_options[ Const::O_CACHE_MOBILE ] ) {
+		if ( $this->_options[ Conf::O_CACHE_MOBILE ] ) {
 			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
 		}
 
 		// Get roles set
 		// List all roles
-		foreach ( $this->_options[ Const::O_CRWL_ROLES ] as $v ) {
+		foreach ( $this->_options[ Conf::O_CRWL_ROLES ] as $v ) {
 			$role_title = '' ;
 			$udata = get_userdata( $v ) ;
 			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
@@ -569,7 +569,7 @@ class Crawler
 		}
 
 		// Cookie crawler
-		foreach ( $this->_options[ Const::O_CRWL_COOKIES ] as $v ) {
+		foreach ( $this->_options[ Conf::O_CRWL_COOKIES ] as $v ) {
 			if ( empty( $v[ 'name' ] ) ) {
 				continue ;
 			}

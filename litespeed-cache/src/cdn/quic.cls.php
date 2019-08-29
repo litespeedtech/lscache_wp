@@ -9,6 +9,7 @@
  */
 namespace LiteSpeed\CDN ;
 
+use LiteSpeed\Core ;
 use LiteSpeed\Config ;
 use LiteSpeed\Log ;
 use LiteSpeed\Router ;
@@ -36,18 +37,18 @@ class Quic
 	{
 		$options = Config::get_instance()->get_options() ;
 
-		if ( ! $options[ Const::O_CDN_QUIC ] ) {
+		if ( ! $options[ Conf::O_CDN_QUIC ] ) {
 			return false ;
 		}
 
-		if ( empty( $options[ Const::O_CDN_QUIC_EMAIL ] ) || empty( $options[ Const::O_CDN_QUIC_KEY ] ) ) {
+		if ( empty( $options[ Conf::O_CDN_QUIC_EMAIL ] ) || empty( $options[ Conf::O_CDN_QUIC_KEY ] ) ) {
 			return false ;
 		}
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Const::O_CDN_CLOUDFLARE_KEY,
-			Const::O_OBJECT_PSWD,
+			Conf::O_CDN_CLOUDFLARE_KEY,
+			Conf::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
@@ -201,7 +202,7 @@ class Quic
 		$url = 'https://api.quic.cloud' . $uri ;
 
 		$param = array(
-			'_v'	=> Const::PLUGIN_VERSION,
+			'_v'	=> Core::PLUGIN_VERSION,
 			'_hash'	=> $hash,
 			'_data' => $data,
 		) ;

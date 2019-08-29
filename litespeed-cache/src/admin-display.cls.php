@@ -790,8 +790,8 @@ class Admin_Display
 	{
 		echo '<div class="litespeed-switch">' ;
 
-		$this->build_radio( $id, Const::VAL_OFF ) ;
-		$this->build_radio( $id, Const::VAL_ON ) ;
+		$this->build_radio( $id, Conf::VAL_OFF ) ;
+		$this->build_radio( $id, Conf::VAL_ON ) ;
 
 		echo '</div>' ;
 	}

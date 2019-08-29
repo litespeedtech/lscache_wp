@@ -644,7 +644,7 @@ class Crawler_Engine
 		 * @since  1.9.1
 		 */
 		$hash = String::rrand( 6 ) ;
-		update_option( Const::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
+		update_option( Conf::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
 		$this->_cookies[ 'litespeed_hash' ] = $hash ;
 
 		$cookies = array() ;
