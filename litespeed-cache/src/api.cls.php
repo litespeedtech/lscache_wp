@@ -52,6 +52,16 @@ class API extends Const
 	}
 
 	/**
+	 * Append an option to LSCWP options
+	 *
+	 * @since  3.0
+	 */
+	public static function option_append( $name, $default )
+	{
+		Config::get_instance()->option_append( $name, $default ) ;
+	}
+
+	/**
 	 * Force to set an option
 	 * Note: it will only affect the AFTER usage of that option
 	 *
@@ -533,17 +543,6 @@ class API extends Const
 	}
 
 	/**
-	 * Hook setting saving
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_setting_save($hook, $priority = 10, $args = 1)
-	{
-		add_filter('litespeed_save_options', $hook, $priority, $args) ;
-	}
-
-	/**
 	 * Hook widget default settings value
 	 *
 	 * @since 1.1.3
@@ -552,17 +551,6 @@ class API extends Const
 	public static function hook_widget_default_options($hook, $priority = 10, $args = 1)
 	{
 		add_filter('litespeed_widget_default_options', $hook, $priority, $args) ;
-	}
-
-	/**
-	 * Hook get options value
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_get_options($hook)
-	{
-		add_filter('litespeed_get_options', $hook) ;xx
 	}
 
 	/**

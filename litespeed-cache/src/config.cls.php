@@ -57,7 +57,7 @@ class Config extends Const
 		$this->define_cache() ;
 
 		// Hook to options
-		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
+		add_action( 'litespeed_init', array( $this, 'hook_options' ), 30 ) ;
 
 	}
 
@@ -283,6 +283,20 @@ class Config extends Const
 		}
 
 		return $this->_site_options ;
+	}
+
+	/**
+	 * Append a 3rd party option to default options
+	 *
+	 * This will not be affected by network use primary site setting.
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function option_append( $name, $default )
+	{
+		$this->_default_options[ $name ] = $default ;
+		$this->_options[ $name ] = get_option( self::conf_name( $name ), $default ) ;
 	}
 
 	/**

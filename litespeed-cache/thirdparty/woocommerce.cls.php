@@ -71,7 +71,8 @@ class WooCommerce
 		add_action( 'woocommerce_product_set_stock', array( $this, 'purge_product' ) ) ;
 		add_action( 'woocommerce_variation_set_stock', array( $this, 'purge_product' ) ) ; // #984479 Update variations stock
 
-		API::hook_get_options( array( $this, 'get_config' ) ) ;
+		$this->_option_append() ;
+
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
 
 		if ( $this->esi_eanbled ) {
@@ -101,9 +102,8 @@ class WooCommerce
 		if ( is_admin() ) {
 			API::hook_purge_post( array( $this, 'backend_purge' ) ) ;
 			add_action( 'delete_term_relationships', array( $this, 'delete_rel' ), 10, 2 ) ;
-			API::hook_setting_tab( array( $this, 'add_config_tab' ) ) ;
-			API::hook_setting_content( array( $this, 'add_config_content' ) ) ;
-			API::hook_setting_save( array( $this, 'save_config' ), 10, 2 ) ;
+			API::hook_setting_tab( array( $this, 'settings_add_tab' ) ) ;
+			API::hook_setting_content( array( $this, 'settings_add_content' ) ) ;
 			API::hook_widget_default_options( array( $this, 'wc_widget_default' ), 10, 2 ) ;
 		}
 
@@ -768,23 +768,16 @@ class WooCommerce
 	}
 
 	/**
-	 * Hooked to the litespeed_get_options filter.
-	 * This will return the option names needed as well as the default options.
+	 * Append new options
 	 *
 	 * @since 1.6.3 Removed static
-	 * @param array $configs
-	 * @return array
+	 * @since  3.0 new API
 	 */
-	public function get_config($configs)
+	private function _option_append()
 	{
-		if ( ! is_array($configs) ) {
-			return $configs ;
-		}
-		$configs[self::O_UPDATE_INTERVAL] = self::O_PQS_CS ;
-		$configs[self::O_SHOP_FRONT_TTL] = true ;
-		$configs[self::O_WOO_CACHE_CART] = true ;
-
-		return $configs ;
+		API::option_append( self::O_UPDATE_INTERVAL, self::O_PQS_CS ) ;
+		API::option_append( self::O_SHOP_FRONT_TTL, true ) ;
+		API::option_append( self::O_WOO_CACHE_CART, true ) ;
 	}
 
 	/**
@@ -793,7 +786,7 @@ class WooCommerce
 	 *
 	 * @since 1.6.3 Removed static
 	 */
-	public function add_config_tab( $setting_page )
+	public function settings_add_tab( $setting_page )
 	{
 		if ( $setting_page != 'cache' ) {
 			return ;
@@ -807,49 +800,13 @@ class WooCommerce
 	 *
 	 * @since  3.0
 	 */
-	public function add_config_content( $setting_page )
+	public function settings_add_content( $setting_page )
 	{
 		if ( $setting_page != 'cache' ) {
 			return ;
 		}
 
 		require 'woocommerce.content.tpl.php' ;
-	}
-
-	/**
-	 * Hooked to the litespeed_save_options filter.
-	 * Parses the input for this integration's options and updates
-	 * the options array accordingly.
-	 *
-	 * @since 1.6.3 Removed static
-	 * @param array $options The saved options array.
-	 * @param array $input The input options array.
-	 * @return mixed false on failure, updated $options otherwise.
-	 */
-	public function save_config($options, $input)
-	{
-		if ( ! isset($options) ) {
-			return $options ;
-		}
-		if ( isset($input[self::O_UPDATE_INTERVAL]) ) {
-			$update_val_in = $input[self::O_UPDATE_INTERVAL] ;
-			switch ($update_val_in) {
-				case self::O_PQS_CS:
-				case self::O_PS_CS:
-				case self::O_PS_CN:
-				case self::O_PQS_CQS:
-					$options[self::O_UPDATE_INTERVAL] = intval($update_val_in) ;
-					break ;
-				default:
-					// add error message?
-					break ;
-			}
-		}
-
-		$options[ self::O_SHOP_FRONT_TTL ] = API::parse_onoff( $input, self::O_SHOP_FRONT_TTL ) ;
-		$options[ self::O_WOO_CACHE_CART ] = API::parse_onoff( $input, self::O_WOO_CACHE_CART ) ;
-
-		return $options ;
 	}
 
 	/**
@@ -891,7 +848,7 @@ class WooCommerce
 		 * Auto puge for WooCommerce Advanced Bulk Edit plugin,
 		 * Bulk edit hook need to add to preload as it will die before detect.
 		 */
-		add_action( 'wp_ajax_wpmelon_adv_bulk_edit', 'LiteSpeed_Cache_ThirdParty_WooCommerce::bulk_edit_purge', 1 ) ;
+		add_action( 'wp_ajax_wpmelon_adv_bulk_edit', __CLASS__ . '::bulk_edit_purge', 1 ) ;
 	}
 
 	/**
@@ -918,7 +875,7 @@ class WooCommerce
 			$stock_string_arr = array_merge( $stock_string_arr, explode( '#^#', $stock_value ) ) ;
 		}
 
-		$lscwp_3rd_woocommerce = new LiteSpeed_Cache_ThirdParty_WooCommerce ;
+		$lscwp_3rd_woocommerce = new self() ;
 
 		if ( count( $stock_string_arr ) < 1 ) {
 			return ;
