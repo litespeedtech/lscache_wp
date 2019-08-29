@@ -29,10 +29,10 @@ use \LiteSpeed\Admin_Display ;
 		<td>
 			<?php
 			$options = array(
-				__( 'Purge product on changes to the quantity or stock status.', 'litespeed-cache' ) . ' ' . __( 'Purge categories only when stock status changes.', 'litespeed-cache' ),
-				__( 'Purge product and categories only when the stock status changes.', 'litespeed-cache' ),
-				__( 'Purge product only when the stock status changes.', 'litespeed-cache' ) . ' ' . __( 'Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache' ),
-				__( 'Always purge both product and categories on changes to the quantity or stock status.', 'litespeed-cache' ),
+				self::O_PQS_CS	=> __( 'Purge product on changes to the quantity or stock status.', 'litespeed-cache' ) . ' ' . __( 'Purge categories only when stock status changes.', 'litespeed-cache' ),
+				self::O_PS_CS	=> __( 'Purge product and categories only when the stock status changes.', 'litespeed-cache' ),
+				self::O_PS_CN	=> __( 'Purge product only when the stock status changes.', 'litespeed-cache' ) . ' ' . __( 'Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache' ),
+				self::O_PQS_CQS	=> __( 'Always purge both product and categories on changes to the quantity or stock status.', 'litespeed-cache' ),
 			) ;
 			foreach ( $options as $k => $v ) :
 				$checked = (int) $k === (int) API::config( $id ) ? ' checked ' : '' ;

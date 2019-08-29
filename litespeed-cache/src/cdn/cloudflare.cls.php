@@ -10,6 +10,7 @@
 namespace LiteSpeed\CDN ;
 
 use LiteSpeed\Core ;
+use LiteSpeed\Conf ;
 use LiteSpeed\Config ;
 use LiteSpeed\Log ;
 use LiteSpeed\Router ;
