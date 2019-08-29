@@ -1,5 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
 
 $_panels = array(
 	'all' => array(
@@ -53,17 +53,17 @@ $_panels = array(
 $total = 0 ;
 foreach ( $_panels as $tag => $v ) {
 	if ( $tag != 'all' ) {
-		$_panels[ $tag ][ 'count' ] = LiteSpeed_Cache_DB_Optm::db_count( $tag ) ;
+		$_panels[ $tag ][ 'count' ] = DB_Optm::db_count( $tag ) ;
 		if ( ! in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
 			$total += $_panels[ $tag ][ 'count' ] ;
 		}
 	}
-	$_panels[ $tag ][ 'link' ] = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_DB, $tag ) ;
+	$_panels[ $tag ][ 'link' ] = Utility::build_url( Router::ACTION_DB, $tag ) ;
 }
 
 $_panels[ 'all' ][ 'count' ] = $total ;
 
-$autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() ;
+$autoload_summary = DB_Optm::get_instance()->autoload_summary() ;
 
 ?>
 
@@ -107,7 +107,7 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 		</tr></thead>
 		<tbody>
 		<?php
-			$list = LiteSpeed_Cache_DB_Optm::get_instance()->list_myisam() ;
+			$list = DB_Optm::get_instance()->list_myisam() ;
 			if ( $list ) :
 				foreach ( $list as $k => $v ) :
 		?>
@@ -116,7 +116,7 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 					<td><?php echo $v->TABLE_NAME ; ?></td>
 					<td><?php echo $v->ENGINE ; ?></td>
 					<td>
-						<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache_Router::ACTION_DB, LiteSpeed_Cache_DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ) ; ?>">
+						<a href="<?php echo Utility::build_url( Router::ACTION_DB, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ) ; ?>">
 							<?php echo __( 'Convert to InnoDB', 'litespeed-cache' ) ; ?>
 						</a>
 					</td>
@@ -137,7 +137,7 @@ $autoload_summary = LiteSpeed_Cache_DB_Optm::get_instance()->autoload_summary() 
 
 <h3 class="litespeed-title"><?php echo __( 'Database Summary', 'litespeed-cache' ) ; ?></h3>
 
-<h4>Autoload size: <?php echo LiteSpeed_Cache_Utility::real_size( $autoload_summary->autoload_size ) ; ?></h4>
+<h4>Autoload size: <?php echo Utility::real_size( $autoload_summary->autoload_size ) ; ?></h4>
 <h4>Autoload entries: <?php echo $autoload_summary->autload_entries ; ?></h4>
 <h4>Autoload top list:</h4>
 <table class="wp-list-table widefat striped litespeed-width-auto">

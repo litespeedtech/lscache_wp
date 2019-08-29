@@ -1,17 +1,17 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 <?php
 
-$readonly = LiteSpeed_Htaccess::get_instance()->writable() ? '' : 'readonly';
+$readonly = Htaccess::get_instance()->writable() ? '' : 'readonly';
 
 $content = null ;
 try {
-	$content = LiteSpeed_Htaccess::get_instance()->htaccess_read();
+	$content = Htaccess::get_instance()->htaccess_read();
 } catch( \Exception $e ) {
 	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
 }
 
 
-$htaccess_path = LiteSpeed_Htaccess::get_frontend_htaccess() ;
+$htaccess_path = Htaccess::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
 if ( defined( 'LITESPEED_ON' ) ) {
@@ -26,8 +26,8 @@ if ( defined( 'LITESPEED_ON' ) ) {
 		}
 	}
 	// don't dismiss the msg automatically
-	// elseif ( $is_dismissed === LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ) {
-	// 	update_option( self::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+	// elseif ( $is_dismissed === Cache_Admin_Display::RULECONFLICT_ON ) {
+	// 	update_option( self::DISMISS_MSG, Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
 	// }
 }
 
@@ -56,28 +56,28 @@ if ( defined( 'LITESPEED_ON' ) ) {
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HTACCESS_FRONT ; ?>
+			<?php $id = Const::O_MISC_HTACCESS_FRONT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the frontend .httaccess path.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Htaccess::get_frontend_htaccess( true ) ; ?></code>
+				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ) ; ?></code>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HTACCESS_BACK ; ?>
+			<?php $id = Const::O_MISC_HTACCESS_BACK ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the backend .httaccess path.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Htaccess::get_backend_htaccess( true ) ; ?></code>
+				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ) ; ?>: <code><?php echo Htaccess::get_backend_htaccess( true ) ; ?></code>
 			</div>
 		</td>
 	</tr>
@@ -90,15 +90,15 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 <?php elseif( $content !== null ) : ?>
 
-<?php $this->form_action( LiteSpeed_Cache::ACTION_SAVE_HTACCESS ) ; ?>
+<?php $this->form_action( Core::ACTION_SAVE_HTACCESS ) ; ?>
 
 	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 
-	<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Htaccess::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
+	<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . Htaccess::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
 
 	<h4><?php echo $htaccess_path ; ?></h4>
 
-	<textarea name="<?php echo LiteSpeed_Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
+	<textarea name="<?php echo Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
 			<?php echo $readonly; ?>
 		><?php echo esc_textarea($content); ?></textarea>
 	<button type="submit" class="button button-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>

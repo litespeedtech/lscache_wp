@@ -13,7 +13,7 @@ $this->form_action() ;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_DISABLE_ALL ; ?>
+			<?php $id = Const::O_DEBUG_DISABLE_ALL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -26,26 +26,26 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG ; ?>
+			<?php $id = Const::O_DEBUG ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Config::VAL_OFF,
+					Const::VAL_OFF,
 					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Config::VAL_ON,
+					Const::VAL_ON,
 					__( 'ON', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Config::VAL_ON2,
+					Const::VAL_ON2,
 					__( 'Admin IP only', 'litespeed-cache' )
 				) ; ?>
 			</div>
@@ -60,14 +60,14 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_IPS ; ?>
+			<?php $id = Const::O_DEBUG_IPS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_textarea( $id, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Cache_Router::get_ip() ; ?></code>
+				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo Router::get_ip() ; ?></code>
 				<?php $this->_validate_ip( $id ) ; ?>
 				<br />
 				<?php $this->learn_more(
@@ -80,20 +80,20 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_LEVEL ; ?>
+			<?php $id = Const::O_DEBUG_LEVEL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Config::VAL_OFF,
+					Const::VAL_OFF,
 					__( 'Basic', 'litespeed-cache' )
 				) ; ?>
 
 				<?php $this->build_radio(
 					$id,
-					LiteSpeed_Config::VAL_ON,
+					Const::VAL_ON,
 					__( 'Advanced', 'litespeed-cache' )
 				) ; ?>
 			</div>
@@ -105,7 +105,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_FILESIZE ; ?>
+			<?php $id = Const::O_DEBUG_FILESIZE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -120,7 +120,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_COOKIE ; ?>
+			<?php $id = Const::O_DEBUG_COOKIE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -133,7 +133,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MEDIA_LAZY_EXC ; ?>
+			<?php $id = Const::O_MEDIA_LAZY_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -146,7 +146,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_INC ; ?>
+			<?php $id = Const::O_DEBUG_INC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -160,7 +160,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_EXC ; ?>
+			<?php $id = Const::O_DEBUG_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -174,7 +174,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_LOG_FILTERS ; ?>
+			<?php $id = Const::O_DEBUG_LOG_FILTERS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -191,7 +191,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_LOG_NO_FILTERS ; ?>
+			<?php $id = Const::O_DEBUG_LOG_NO_FILTERS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -205,7 +205,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_DEBUG_LOG_NO_PART_FILTERS ; ?>
+			<?php $id = Const::O_DEBUG_LOG_NO_PART_FILTERS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

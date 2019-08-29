@@ -1,8 +1,4 @@
-<?php
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>assets/css/litespeed.css" />
 

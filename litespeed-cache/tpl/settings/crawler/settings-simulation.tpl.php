@@ -1,7 +1,6 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( !defined('WPINC') ) die;
-
-$this->form_action() ;
+	$this->form_action() ;
 ?>
 
 <h3 class="litespeed-title-short">
@@ -13,11 +12,11 @@ $this->form_action() ;
 	<tr>
 		<th><?php echo __('Role Simulation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Config::O_CRWL_ROLES, 20 ) ; ?>
+			<?php $this->build_textarea( Const::O_CRWL_ROLES, 20 ) ; ?>
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>
-				<?php LiteSpeed_Doc::one_per_line() ; ?>
+				<?php Doc::one_per_line() ; ?>
 			</div>
 
 		</td>
@@ -26,7 +25,7 @@ $this->form_action() ;
 	<tr>
 		<th><?php echo __('Cookie Simulation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Config::O_CRWL_COOKIES ; ?>
+			<?php $id = Const::O_CRWL_COOKIES ; ?>
 			<?php $this->enroll( $id . '[name][]' ) ; ?>
 			<?php $this->enroll( $id . '[vals][]' ) ; ?>
 			<div id="cookie_crawler">
@@ -41,7 +40,7 @@ $this->form_action() ;
 						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ) ; ?></h4>
 					</div>
 					<div class='litespeed-col-auto'>
-						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id ; ?>[vals][]" placeholder="<?php LiteSpeed_Doc::one_per_line() ; ?>"></textarea>
+						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id ; ?>[vals][]" placeholder="<?php Doc::one_per_line() ; ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
 						<button type="button" class="button litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>

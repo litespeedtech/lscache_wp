@@ -14,21 +14,21 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_AUTO ; ?>
+			<?php $id = Const::O_IMG_OPTM_AUTO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically request optimization via cron job.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
+				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_CRON ; ?>
+			<?php $id = Const::O_IMG_OPTM_CRON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -41,7 +41,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_ORI ; ?>
+			<?php $id = Const::O_IMG_OPTM_ORI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -54,7 +54,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_RM_BKUP ; ?>
+			<?php $id = Const::O_IMG_OPTM_RM_BKUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -73,7 +73,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_WEBP ; ?>
+			<?php $id = Const::O_IMG_OPTM_WEBP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -86,7 +86,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_LOSSLESS ; ?>
+			<?php $id = Const::O_IMG_OPTM_LOSSLESS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -100,7 +100,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_EXIF ; ?>
+			<?php $id = Const::O_IMG_OPTM_EXIF ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -122,7 +122,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_WEBP_ATTR ; ?>
+			<?php $id = Const::O_IMG_OPTM_WEBP_ATTR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -132,14 +132,14 @@ $this->form_action() ;
 				<?php echo __( 'Specify which element attributes will be replaced with WebP.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Only attributes listed here will be replaced.', 'litespeed-cache' ) ; ?>
 				<br /><?php echo sprintf( __( 'Use the format %1$s or %2$s (element is optional).', 'litespeed-cache' ), '<code>element.attribute</code>', '<code>.attribute</code>' ) ; ?>
-				<?php LiteSpeed_Doc::one_per_line() ; ?>
+				<?php Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET ; ?>
+			<?php $id = Const::O_IMG_OPTM_WEBP_REPLACE_SRCSET ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -153,7 +153,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_IMG_OPTM_JPG_QUALITY ; ?>
+			<?php $id = Const::O_IMG_OPTM_JPG_QUALITY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

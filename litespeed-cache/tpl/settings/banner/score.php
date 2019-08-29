@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
 $last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
 // Check once per 10 days
@@ -123,7 +123,7 @@ else {
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
-							<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
+							<?php echo GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
 						</div>
 					</div>
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -133,7 +133,7 @@ else {
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
-							<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
+							<?php echo GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
 						</div>
 					</div>
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -179,7 +179,7 @@ else {
 	</div>
 
 	<div>
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'score', 'later' => 1 ) ) ; ?>
+		<?php $dismiss_url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'score', 'later' => 1 ) ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
 		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
 	</div>

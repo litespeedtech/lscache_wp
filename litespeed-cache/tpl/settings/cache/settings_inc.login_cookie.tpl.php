@@ -2,7 +2,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_CACHE_LOGIN_COOKIE ; ?>
+			<?php $id = Const::O_CACHE_LOGIN_COOKIE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -39,7 +39,7 @@
 			if ( defined( 'LITESPEED_ON' ) && $this->__cfg->option( $id ) ) {
 
 				try {
-					$cookie_rule = LiteSpeed_Htaccess::get_instance()->current_login_cookie() ;
+					$cookie_rule = Htaccess::get_instance()->current_login_cookie() ;
 				} catch ( \Exception $e ) {
 					echo '<div class="litespeed-callout notice notice-error inline"><p>' . $e->getMessage() . '</p></div>' ;
 				}

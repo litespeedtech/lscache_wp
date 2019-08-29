@@ -1,17 +1,25 @@
 <?php
+namespace LiteSpeed\CLI ;
+
+defined( 'WPINC' ) || exit ;
+
+use LiteSpeed\Log ;
+use LiteSpeed\Img_Optm ;
+use LiteSpeed\Utility ;
+use WP_CLI ;
 
 /**
  * LiteSpeed Cache Image Optm Interface
  */
-class LiteSpeed_Cache_CLI_IAPI
+class IAPI
 {
 	private $_img_optm_instance ;
 
 	public function __construct()
 	{
-		LiteSpeed_Cache_Log::debug( 'CLI_IAPI init' ) ;
+		Log::debug( 'CLI_IAPI init' ) ;
 
-		$this->_img_optm_instance = LiteSpeed_Cache_Img_Optm::get_instance() ;
+		$this->_img_optm_instance = Img_Optm::get_instance() ;
 	}
 
 	/**
@@ -43,7 +51,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
 		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
 
-			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgraded to level $json[level] !" ) ;
+			Log::debug( "[Img_Optm] Upgraded to level $json[level] !" ) ;
 
 			WP_CLI::success('Upgraded to level ' . $json[ 'level' ] ) ;
 		}
@@ -117,7 +125,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
 		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
 			if ( ! empty( $summary[ $v ] ) ) {
-				$summary[ $v ] = LiteSpeed_Cache_Utility::real_size( $summary[ $v ] ) ;
+				$summary[ $v ] = Utility::real_size( $summary[ $v ] ) ;
 			}
 		}
 

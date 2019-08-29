@@ -22,7 +22,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_COMB_PRIO ; ?>
+			<?php $id = Const::O_OPTM_CSS_COMB_PRIO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -44,7 +44,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_EXC ; ?>
+			<?php $id = Const::O_OPTM_CSS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -52,7 +52,7 @@ ksort( $roles ) ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Doc::one_per_line() ; ?>
+				<?php Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_css_excludes</code>' ) ; ?>
@@ -64,7 +64,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_COMB_PRIO ; ?>
+			<?php $id = Const::O_OPTM_JS_COMB_PRIO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -86,7 +86,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_EXC ; ?>
+			<?php $id = Const::O_OPTM_JS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -94,7 +94,7 @@ ksort( $roles ) ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Doc::one_per_line() ; ?>
+				<?php Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_js_excludes</code>' ) ; ?>
@@ -106,7 +106,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_MAX_SIZE ; ?>
+			<?php $id = Const::O_OPTM_MAX_SIZE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -121,7 +121,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CCSS_CON ; ?>
+			<?php $id = Const::O_OPTM_CCSS_CON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -134,7 +134,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_DEFER_EXC ; ?>
+			<?php $id = Const::O_OPTM_JS_DEFER_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -142,7 +142,7 @@ ksort( $roles ) ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php LiteSpeed_Doc::one_per_line() ; ?>
+				<?php Doc::one_per_line() ; ?>
 				<br /><span class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
@@ -154,7 +154,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_EXC ; ?>
+			<?php $id = Const::O_OPTM_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -168,7 +168,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_EXC_ROLES ; ?>
+			<?php $id = Const::O_OPTM_EXC_ROLES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

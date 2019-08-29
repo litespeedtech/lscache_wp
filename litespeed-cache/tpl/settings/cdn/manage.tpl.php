@@ -1,11 +1,11 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$cf_on = LiteSpeed_Cache::config( LiteSpeed_Config::O_CDN_CLOUDFLARE ) ;
-$cf_domain = LiteSpeed_Cache::config( LiteSpeed_Config::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
-$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Config::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
+$cf_on = Core::config( Const::O_CDN_CLOUDFLARE ) ;
+$cf_domain = Core::config( Const::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
+$cf_zone = Core::config( Const::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 
-$curr_status = get_option( LiteSpeed_Config::conf_name( LiteSpeed_CDN_Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
+$curr_status = get_option( Const::conf_name( CDN\Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
 
 ?>
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>
@@ -24,13 +24,13 @@ $curr_status = get_option( LiteSpeed_Config::conf_name( LiteSpeed_CDN_Cloudflare
 
 <p>
 	<b><?php echo __( 'Development Mode', 'litespeed-cache' ) ; ?>:</b>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_CDN_Cloudflare::TYPE_SET_DEVMODE_ON ) ; ?>" class="button litespeed-btn-warning">
+	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_ON ) ; ?>" class="button litespeed-btn-warning">
 		<?php echo __( 'Turn ON', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_CDN_Cloudflare::TYPE_SET_DEVMODE_OFF ) ; ?>" class="button litespeed-btn-warning">
+	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_OFF ) ; ?>" class="button litespeed-btn-warning">
 		<?php echo __( 'Turn OFF', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_CDN_Cloudflare::TYPE_GET_DEVMODE ) ; ?>" class="button litespeed-btn-success">
+	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_GET_DEVMODE ) ; ?>" class="button litespeed-btn-success">
 		<?php echo __( 'Check Status', 'litespeed-cache' ) ; ?>
 	</a>
 
@@ -44,7 +44,7 @@ $curr_status = get_option( LiteSpeed_Config::conf_name( LiteSpeed_CDN_Cloudflare
 		}
 		else {
 			$expired_at = $curr_status[ 'devmode_expired' ] - time() ;
-			$expired_at = LiteSpeed_Cache_Utility::readable_time( $expired_at, 3600 * 3, false ) ;
+			$expired_at = Utility::readable_time( $expired_at, 3600 * 3, false ) ;
 		?>
 			<?php echo sprintf( __( 'Current status is %s.', 'litespeed-cache' ), '<code>' . strtoupper( $curr_status[ 'devmode' ] ) . '</code>' ) ; ?>
 			<?php echo sprintf( __( 'Development mode will be automatically turned off in %s.', 'litespeed-cache' ), '<code>' . $expired_at . '</code>' ) ; ?>
@@ -66,7 +66,7 @@ $curr_status = get_option( LiteSpeed_Config::conf_name( LiteSpeed_CDN_Cloudflare
 	<?php if ( ! $cf_on ) : ?>
 		<a href="#" class="button button-secondary disabled">
 	<?php else : ?>
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_CDN_Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="button litespeed-btn-danger">
+		<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="button litespeed-btn-danger">
 	<?php endif ; ?>
 		<?php echo __( 'Purge Everything', 'litespeed-cache' ) ; ?>
 	</a>

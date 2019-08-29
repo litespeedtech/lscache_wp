@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full" id="litespeed-banner-promo-slack">
 	<div class="litespeed-banner-promo-logo"></div>
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</div>
 	</div>
 	<div>
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'slack' ) ) ; ?>
+		<?php $dismiss_url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'slack' ) ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
 		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">
 			Dismiss

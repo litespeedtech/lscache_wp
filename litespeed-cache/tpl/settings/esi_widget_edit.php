@@ -1,30 +1,31 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( !defined('WPINC') ) die;
+
 // $widget, $return, $instance
 
-$options = ! empty( $instance[ LiteSpeed_Config::OPTION_NAME ] ) ? $instance[ LiteSpeed_Config::OPTION_NAME ] : array() ;
+$options = ! empty( $instance[ Const::OPTION_NAME ] ) ? $instance[ Const::OPTION_NAME ] : array() ;
 
 if ( empty( $options ) ) {
 	$options = array(
-		LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE => LiteSpeed_Config::VAL_OFF,
-		LiteSpeed_Cache_ESI::WIDGET_O_TTL => '28800'
+		ESI::WIDGET_O_ESIENABLE => Const::VAL_OFF,
+		ESI::WIDGET_O_TTL => '28800'
 	) ;
 
-	add_filter('litespeed_widget_default_options', 'LiteSpeed_Cache_ESI::widget_default_options', 10, 2) ;
+	add_filter('litespeed_widget_default_options', 'LiteSpeed\ESI::widget_default_options', 10, 2) ;
 
 	$options = apply_filters( 'litespeed_widget_default_options', $options, $widget ) ;
 }
 
 if ( empty( $options ) ) {
-	$esi = LiteSpeed_Config::VAL_OFF ;
+	$esi = Const::VAL_OFF ;
 	$ttl = '28800' ;
 }
 else {
-	$esi = $options[ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] ;
-	$ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] ;
+	$esi = $options[ ESI::WIDGET_O_ESIENABLE ] ;
+	$ttl = $options[ ESI::WIDGET_O_TTL ] ;
 }
 
-$display = LiteSpeed_Cache_Admin_Display::get_instance() ;
+$display = Admin_Display::get_instance() ;
 
 ?>
 <div class="litespeed-widget-setting">
@@ -37,13 +38,13 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 		<div class="litespeed-switch litespeed-mini">
 		<?php
 
-			$id = LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ;
+			$id = ESI::WIDGET_O_ESIENABLE ;
 			$name = $widget->get_field_name( $id ) ;
 
 			$cache_status_list = array(
-				array( LiteSpeed_Config::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
-				array( LiteSpeed_Config::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
-				array( LiteSpeed_Config::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
+				array( Const::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
+				array( Const::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
+				array( Const::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
 			) ;
 
 			foreach ( $cache_status_list as $v ) {
@@ -61,7 +62,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 	<b><?php echo __( 'Widget Cache TTL:', 'litespeed-cache' ) ; ?></b>
 	&nbsp;&nbsp;
 	<?php
-		$id = LiteSpeed_Cache_ESI::WIDGET_O_TTL ;
+		$id = ESI::WIDGET_O_TTL ;
 		$name = $widget->get_field_name( $id ) ;
 		echo "<input type='text' class='regular-text litespeed-reset' name='$name' value='$ttl' size='7' />" ;
 	?>

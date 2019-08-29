@@ -1,9 +1,7 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
 
-$_options = LiteSpeed_Config::get_instance()->get_options() ;
-
-$_crawler_instance = LiteSpeed_Cache_Crawler::get_instance() ;
+$_crawler_instance = Crawler::get_instance() ;
 
 $sitemap_time = $_crawler_instance->sitemap_time() ;
 
@@ -14,15 +12,15 @@ if ( $meta[ 'curr_crawler' ] >= count( $crawler_list ) ) {
 	$meta[ 'curr_crawler' ] = 0 ;
 }
 
-$is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Config::O_CRWL_RUN_DURATION] ;
+$is_running = time() - $meta[ 'is_running' ] <= Core::config( Const::O_CRWL_RUN_DURATION ) ;
 
-$disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
+$disabled = Router::can_crawl() ? '' : 'disabled' ;
 
 ?>
 
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
 		<p>
-			<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="button button-primary litespeed-right10">
+			<a href="<?php echo Utility::build_url( Core::ACTION_CRAWLER_GENERATE_FILE ) ; ?>" class="button button-primary litespeed-right10">
 				<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
 			</a>
 
@@ -37,7 +35,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		</div>
 
 <?php
-	$seconds = $_options[LiteSpeed_Config::O_CRWL_RUN_INTERVAL] ;
+	$seconds = Core::config( Const::O_CRWL_RUN_INTERVAL ) ;
 	if($seconds > 0):
 		$recurrence = '' ;
 		$hours = (int)floor($seconds / 3600) ;
@@ -65,8 +63,8 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<?php echo __('Crawler Cron', 'litespeed-cache') ; ?>
 			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
 				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
-					data-url="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
-					<?php if( $_options[LiteSpeed_Config::O_CRWL] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
+					data-url="<?php echo Utility::build_url( Core::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
+					<?php if( Core::config( Const::O_CRWL ) && Router::can_crawl() ) echo "checked"; ?>
 					<?php echo $disabled ; ?>
 				/>
 				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
@@ -75,7 +73,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 				</label>
 			</span>
 		</h3>
-		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
+		<?php if ( ! Router::can_crawl() ): ?>
 			<div class="litespeed-callout notice notice-error inline">
 				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
@@ -87,13 +85,13 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		<?php if ( $meta[ 'this_full_beginning_time' ] ) : ?>
 		<p>
 			<b><?php echo __( 'Current sitemap crawl started at', 'litespeed-cache' ) ; ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'this_full_beginning_time' ] ) ; ?>
+			<?php echo Utility::readable_time( $meta[ 'this_full_beginning_time' ] ) ; ?>
 		</p>
 
 			<?php if ( ! $is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Config::O_CRWL_CRAWL_INTERVAL]) ; ?>
+			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + Core::config( Const::O_CRWL_CRAWL_INTERVAL )) ; ?>
 			<?php endif ; ?>
 		</p>
 
@@ -115,14 +113,14 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		<?php if ( $meta[ 'curr_crawler_beginning_time' ] ) : ?>
 		<p>
 			<b><?php echo __('Current crawler started at', 'litespeed-cache') ; ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'curr_crawler_beginning_time' ] ) ; ?>
+			<?php echo Utility::readable_time( $meta[ 'curr_crawler_beginning_time' ] ) ; ?>
 		</p>
 		<?php endif ; ?>
 
 		<?php if ( $meta[ 'last_start_time' ] ) : ?>
 		<p class='litespeed-desc'>
 			<b><?php echo __('Last interval', 'litespeed-cache') ; ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'last_start_time' ] ) ; ?>
+			<?php echo Utility::readable_time( $meta[ 'last_start_time' ] ) ; ?>
 		</p>
 		<?php endif ; ?>
 
@@ -140,9 +138,9 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		<?php endif ; ?>
 
 		<p>
-			<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='button litespeed-btn-warning'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+			<?php echo " <a href='" . Utility::build_url( Core::ACTION_CRAWLER_RESET_POS ) . "' class='button litespeed-btn-warning'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
 
-			$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
+			$href = Router::can_crawl() ? Utility::build_url( Core::ACTION_DO_CRAWL ) : 'javascript:;' ;
 			echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='button litespeed-btn-success' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 			?>
 		</p>
@@ -227,9 +225,9 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
 		<h3 class="litespeed-title"><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache') ; ?></h3>
 
-		<?php $this->form_action( LiteSpeed_Cache::ACTION_BLACKLIST_SAVE ) ; ?>
+		<?php $this->form_action( Core::ACTION_BLACKLIST_SAVE ) ; ?>
 			<p>
-				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo $_crawler_instance->get_blacklist(); ?></textarea>
+				<textarea name="<?php echo Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo $_crawler_instance->get_blacklist(); ?></textarea>
 			</p>
 
 			<p>

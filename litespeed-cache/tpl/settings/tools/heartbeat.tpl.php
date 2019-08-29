@@ -22,7 +22,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_FRONT ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_FRONT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -36,7 +36,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_FRONT_TTL ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_FRONT_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -53,7 +53,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_BACK ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_BACK ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -66,7 +66,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_BACK_TTL ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_BACK_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -83,7 +83,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_EDITOR ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_EDITOR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -96,7 +96,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_MISC_HEARTBEAT_EDITOR_TTL ; ?>
+			<?php $id = Const::O_MISC_HEARTBEAT_EDITOR_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

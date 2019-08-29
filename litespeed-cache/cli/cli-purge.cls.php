@@ -1,9 +1,18 @@
 <?php
+namespace LiteSpeed\CLI ;
+
+defined( 'WPINC' ) || exit ;
+
+use LiteSpeed\Core ;
+use LiteSpeed\Router ;
+use LiteSpeed\Admin_Display ;
+use WP_CLI ;
+
 
 /**
  * LiteSpeed Cache Purge Interface
  */
-class LiteSpeed_Cache_Cli_Purge
+class Purge
 {
 	/**
 	 * List all site domains and ids on the network.
@@ -52,8 +61,8 @@ class LiteSpeed_Cache_Cli_Purge
 	private function _send_request($action, $extra = array())
 	{
 		$data = array(
-			LiteSpeed_Cache_Router::ACTION_KEY => $action,
-			LiteSpeed_Cache::NONCE_NAME => wp_create_nonce($action),
+			Router::ACTION_KEY => $action,
+			Core::NONCE_NAME => wp_create_nonce($action),
 		) ;
 		if ( ! empty($extra) ) {
 			$data = array_merge($data, $extra) ;
@@ -78,10 +87,10 @@ class LiteSpeed_Cache_Cli_Purge
 	public function all( $args, $assoc_args )
 	{
 		if ( is_multisite() ) {
-			$action = LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE ;
+			$action = Core::ACTION_QS_PURGE_EMPTYCACHE ;
 		}
 		else {
-			$action = LiteSpeed_Cache::ACTION_QS_PURGE_ALL ;
+			$action = Core::ACTION_QS_PURGE_ALL ;
 		}
 
 		$purge_ret = $this->_send_request( $action ) ;
@@ -130,7 +139,7 @@ class LiteSpeed_Cache_Cli_Purge
 		}
 		switch_to_blog($blogid) ;
 
-		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_QS_PURGE_ALL) ;
+		$purge_ret = $this->_send_request(Core::ACTION_QS_PURGE_ALL) ;
 		if ( $purge_ret->success ) {
 			WP_CLI::success(__('Purged the blog!', 'litespeed-cache')) ;
 		}
@@ -156,7 +165,7 @@ class LiteSpeed_Cache_Cli_Purge
 	public function url($args, $assoc_args)
 	{
 		$data = array(
-			LiteSpeed_Cache_Router::ACTION_KEY => LiteSpeed_Cache::ACTION_QS_PURGE,
+			Router::ACTION_KEY => Core::ACTION_QS_PURGE,
 		) ;
 		$url = $args[0] ;
 		$deconstructed = wp_parse_url($url) ;
@@ -226,11 +235,11 @@ class LiteSpeed_Cache_Cli_Purge
 		WP_CLI::line('Will purge the following cache tags: ' . $str) ;
 
 		$data = array(
-			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT	=> $select,
-			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST		=> $str,
+			Admin_Display::PURGEBYOPT_SELECT	=> $select,
+			Admin_Display::PURGEBYOPT_LIST		=> $str,
 		) ;
 
-		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_BY, $data) ;
+		$purge_ret = $this->_send_request(Core::ACTION_PURGE_BY, $data) ;
 		if ( $purge_ret->success ) {
 			WP_CLI::success(__('Purged the tags!', 'litespeed-cache')) ;
 		}
@@ -256,7 +265,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function tag($args, $assoc_args)
 	{
-		$this->_purgeby_helper($args, LiteSpeed_Cache_Admin_Display::PURGEBY_TAG, 'get_tag') ;
+		$this->_purgeby_helper($args, Admin_Display::PURGEBY_TAG, 'get_tag') ;
 	}
 
 	/**
@@ -275,7 +284,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function category($args, $assoc_args)
 	{
-		$this->_purgeby_helper($args, LiteSpeed_Cache_Admin_Display::PURGEBY_CAT, 'get_category') ;
+		$this->_purgeby_helper($args, Admin_Display::PURGEBY_CAT, 'get_category') ;
 	}
 
 	/**
@@ -296,7 +305,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function post_id($args, $assoc_args)
 	{
-		$this->_purgeby_helper($args, LiteSpeed_Cache_Admin_Display::PURGEBY_PID, 'get_post') ;
+		$this->_purgeby_helper($args, Admin_Display::PURGEBY_PID, 'get_post') ;
 	}
 
 }

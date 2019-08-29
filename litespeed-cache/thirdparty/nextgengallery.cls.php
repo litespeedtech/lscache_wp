@@ -15,7 +15,7 @@ use \LiteSpeed\API ;
 
 // Try preload instead
 // todo: need test
-// add_action('load_nextgen_gallery_modules', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::detect') ;
+// add_action('load_nextgen_gallery_modules', 'NextGenGallery::detect') ;
 
 class NextGenGallery
 {

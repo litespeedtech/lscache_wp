@@ -1,7 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 if ( empty( $optm_summary[ 'level' ] ) ) {
 	return ;

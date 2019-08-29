@@ -1,6 +1,5 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
+
 <h3 class="litespeed-title"><?php echo __( 'Cache Control Network Settings', 'litespeed-cache' ) ; ?></h3>
 
 <p>

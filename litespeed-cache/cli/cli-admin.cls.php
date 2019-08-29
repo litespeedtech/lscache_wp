@@ -1,16 +1,24 @@
 <?php
+namespace LiteSpeed\CLI ;
+
 defined( 'WPINC' ) || exit ;
+
+use LiteSpeed\Config ;
+use LiteSpeed\Const ;
+use LiteSpeed\Admin_Settings ;
+use LiteSpeed\Import ;
+use WP_CLI ;
 
 /**
  * LiteSpeed Cache Admin Interface
  */
-class LiteSpeed_Cache_Cli_Admin
+class Admin
 {
 	private $__cfg ;
 
 	public function __construct()
 	{
-		$this->__cfg = LiteSpeed_Config::get_instance() ;
+		$this->__cfg = Config::get_instance() ;
 	}
 
 	/**
@@ -47,25 +55,25 @@ class LiteSpeed_Cache_Cli_Admin
 var_dump($key);exit;
 		// Build raw data
 		$raw_data = array(
-			LiteSpeed_Cache_Admin_Settings::ENROLL	=> array( $key ),
+			Admin_Settings::ENROLL	=> array( $key ),
 			$key 	=> $val,
 		) ;
-		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, LiteSpeed_Config::O_CDN_MAPPING ) !== 0 ) ) {
+		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, Const::O_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
 
-		$options = LiteSpeed_Config::convert_options_to_input($options) ;
+		$options = Config::convert_options_to_input($options) ;
 
 		switch ($key) {
-			case LiteSpeed_Config::_VERSION:
+			case Const::_VERSION:
 				//do not allow
 				WP_CLI::error('This option is not available for setting.') ;
 				return ;
 
-			case LiteSpeed_Config::O_CACHE_MOBILE:
+			case Const::O_CACHE_MOBILE:
 				// set list then do checkbox
-				if ( $val === 'true' && empty( $options[ LiteSpeed_Config::O_CACHE_MOBILE_RULES ] ) ) {
+				if ( $val === 'true' && empty( $options[ Const::O_CACHE_MOBILE_RULES ] ) ) {
 					WP_CLI::error( 'Please set mobile rules value first.' ) ;
 					return ;
 				}
@@ -73,7 +81,7 @@ var_dump($key);exit;
 			case in_array( $key, self::$checkboxes ) :
 				//checkbox
 				if ( $val === 'true' ) {
-					$options[$key] = LiteSpeed_Config::VAL_ON ;
+					$options[$key] = Const::VAL_ON ;
 				}
 				elseif ( $val === 'false' ) {
 					unset($options[$key]) ;
@@ -92,20 +100,20 @@ var_dump($key);exit;
 			 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
 			 * 		`set_option cdn-mapping[inc_img][0] true`
 			 */
-			case strpos( $key, LiteSpeed_Config::O_CDN_MAPPING ) === 0 :
+			case strpos( $key, Const::O_CDN_MAPPING ) === 0 :
 
 				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
 
 				// Handle switch value
 				if ( in_array( $child_key[ 1 ], array(
-						LiteSpeed_Config::CDN_MAPPING_INC_IMG,
-						LiteSpeed_Config::CDN_MAPPING_INC_CSS,
-						LiteSpeed_Config::CDN_MAPPING_INC_JS,
+						Const::CDN_MAPPING_INC_IMG,
+						Const::CDN_MAPPING_INC_CSS,
+						Const::CDN_MAPPING_INC_JS,
 				) ) ) {
-					$val = $val === 'true' ? LiteSpeed_Config::VAL_ON : LiteSpeed_Config::VAL_OFF ;
+					$val = $val === 'true' ? Const::VAL_ON : Const::VAL_OFF ;
 				}
 
-				$options[ LiteSpeed_Config::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
+				$options[ Const::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
 				break ;
 
 			default:
@@ -130,7 +138,7 @@ var_dump($key);exit;
 	 */
 	public function get_options($args, $assoc_args)
 	{
-		$options = LiteSpeed_Config::get_instance()->get_options() ;
+		$options = Config::get_instance()->get_options() ;
 		$option_out = array() ;
 
 		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;
@@ -183,7 +191,7 @@ var_dump($key);exit;
 			return ;
 		}
 
-		$data = LiteSpeed_Cache_Import::get_instance()->export() ;
+		$data = Import::get_instance()->export() ;
 
 		if ( file_put_contents( $file, $data ) === false ) {
 			WP_CLI::error( 'Failed to create file.' ) ;
@@ -219,7 +227,7 @@ var_dump($key);exit;
 			WP_CLI::error('File does not exist or is not readable.') ;
 		}
 
-		$res = LiteSpeed_Cache_Import::get_instance()->import( $file ) ;
+		$res = Import::get_instance()->import( $file ) ;
 
 		if ( ! $res ) {
 			WP_CLI::error( 'Failed to parse serialized data from file.' ) ;
@@ -239,7 +247,7 @@ var_dump($key);exit;
 	 */
 	public function reset_options()
 	{
-		$res = LiteSpeed_Cache_Import::get_instance()->reset( $file ) ;
+		$res = Import::get_instance()->reset( $file ) ;
 
 		if ( ! $res ) {
 			WP_CLI::error( 'Failed to reset options.' ) ;
@@ -257,7 +265,7 @@ var_dump($key);exit;
 	 */
 	private function _update_options($options)
 	{
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options) ;
+		$output = Admin_Settings::get_instance()->validate_plugin_settings($options) ;
 
 		global $wp_settings_errors ;
 
@@ -268,7 +276,7 @@ var_dump($key);exit;
 			return ;
 		}
 
-		$ret = LiteSpeed_Config::get_instance()->update_options($output) ;
+		$ret = Config::get_instance()->update_options($output) ;
 
 		WP_CLI::success('Options/Terms updated. Please purge the cache. New options: ' . var_export($options, true)) ;
 		// if ( $ret ) {

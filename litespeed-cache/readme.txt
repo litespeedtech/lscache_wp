@@ -200,10 +200,6 @@ In short, yes. However, for some WooCommerce themes, the cart may not be updated
 
 As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);` sometime before the shutdown hook, and it should be recognized by the cache.
 
-Alternatively, you may use the function xxx`LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
-
-If using the function, make sure to check that the class exists prior to using the function.
-
 Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) for more information and to learn what else you can do to integrate your plugin with LSCWP.
 
 = Are my images optimized? =

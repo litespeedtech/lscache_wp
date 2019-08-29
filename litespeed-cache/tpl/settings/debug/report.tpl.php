@@ -1,7 +1,7 @@
 <?php
 defined( 'WPINC' ) || exit ;
 
-$_report = LiteSpeed_Cache_Report::get_instance() ;
+$_report = Report::get_instance() ;
 $report = $_report->generate_environment_report();
 
 $env_ref = $_report->get_env_ref() ;
@@ -13,7 +13,7 @@ $env_ref = $_report->get_env_ref() ;
 <p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'num' ] ; ?></b></p>
 <p><?php echo __('Report date', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'dateline' ] ; ?></b></p>
 
-<p><a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Report::TYPE_SEND_REPORT ) ; ?>" class="button litespeed-btn-warning">
+<p><a href="<?php echo Utility::build_url( Core::ACTION_REPORT, Report::TYPE_SEND_REPORT ) ; ?>" class="button litespeed-btn-warning">
 	<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
 </a></p>
 <p class="litespeed-desc">

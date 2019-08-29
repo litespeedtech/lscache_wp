@@ -1,5 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if (!defined('WPINC')) die;
 
 $err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache') . ' '
 	. __('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache') . ' '

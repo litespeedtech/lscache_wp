@@ -9,7 +9,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_MIN ; ?>
+			<?php $id = Const::O_OPTM_JS_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -22,7 +22,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_COMB ; ?>
+			<?php $id = Const::O_OPTM_JS_COMB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -36,7 +36,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_HTTP2 ; ?>
+			<?php $id = Const::O_OPTM_JS_HTTP2 ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -49,7 +49,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_DEFER ; ?>
+			<?php $id = Const::O_OPTM_JS_DEFER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -63,12 +63,12 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_JS_INLINE_DEFER ; ?>
+			<?php $id = Const::O_OPTM_JS_INLINE_DEFER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, Const::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 1, __( 'After Dom Ready', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Deferred', 'litespeed-cache' ) ) ; ?>
 			</div>
@@ -81,7 +81,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_EXC_JQ ; ?>
+			<?php $id = Const::O_OPTM_EXC_JQ ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

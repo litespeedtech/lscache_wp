@@ -1,15 +1,11 @@
-<?php
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+<?php defined( 'WPINC' ) || exit ; ?>
 
-?>
 <div class="litespeed-flex-container">
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-large"></div>
 			<div class="litespeed-text-center">
 				<div>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="button button-primary litespeed-btn-large">
+					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="button button-primary litespeed-btn-large">
 						<span class="dashicons dashicons-performance">
 						</span>&nbsp;
 						<?php echo __( 'Initialize Optimization', 'litespeed-cache' ) ; ?>

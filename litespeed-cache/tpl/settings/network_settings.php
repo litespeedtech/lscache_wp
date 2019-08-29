@@ -1,5 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if (!defined('WPINC')) die;
 
 $menuArr = array(
 	'general' => __('General', 'litespeed-cache'),
@@ -11,7 +11,7 @@ $menuArr = array(
 );
 
 global $_options;
-$_options = LiteSpeed_Config::get_instance()->load_site_options();
+$_options = Config::get_instance()->load_site_options();
 
 ?>
 
@@ -20,7 +20,7 @@ $_options = LiteSpeed_Config::get_instance()->load_site_options();
 		<?php echo __('LiteSpeed Cache Network Settings', 'litespeed-cache'); ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		v<?php echo Core::PLUGIN_VERSION; ?>
 	</span>
 	<hr class="wp-header-end">
 
@@ -38,7 +38,7 @@ $_options = LiteSpeed_Config::get_instance()->load_site_options();
 	</h2>
 	<div class="litespeed-body">
 	<?php
-		$this->form_action( LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK ) ;
+		$this->form_action( Core::ACTION_SAVE_SETTINGS_NETWORK ) ;
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

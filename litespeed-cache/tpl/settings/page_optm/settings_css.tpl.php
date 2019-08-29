@@ -14,7 +14,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_MIN ; ?>
+			<?php $id = Const::O_OPTM_CSS_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -27,7 +27,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_COMB ; ?>
+			<?php $id = Const::O_OPTM_CSS_COMB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -41,7 +41,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_HTTP2 ; ?>
+			<?php $id = Const::O_OPTM_CSS_HTTP2 ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -54,7 +54,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_ASYNC ; ?>
+			<?php $id = Const::O_OPTM_CSS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -73,7 +73,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Config::O_OPTM_CCSS_GEN ; ?>
+			<?php $id = Const::O_OPTM_CCSS_GEN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -87,7 +87,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Config::O_OPTM_CCSS_ASYNC ; ?>
+			<?php $id = Const::O_OPTM_CCSS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -102,7 +102,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 			<div class="litespeed-desc litespeed-left20">
 				<?php if ( ! empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
 					<p>
-						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
+						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
 					<p>
 						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
@@ -120,7 +120,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 						<?php endforeach ; ?>
 						</p>
 					</p>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CSS, LiteSpeed_Cache_CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">
+					<a href="<?php echo Utility::build_url( Core::ACTION_CSS, CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
 					</a>
 				<?php endif ; ?>
@@ -131,7 +131,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Config::O_OPTM_CCSS_SEP_POSTTYPE ; ?>
+			<?php $id = Const::O_OPTM_CCSS_SEP_POSTTYPE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -146,7 +146,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Config::O_OPTM_CCSS_SEP_URI ; ?>
+			<?php $id = Const::O_OPTM_CCSS_SEP_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -160,7 +160,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_ASYNC_INLINE ; ?>
+			<?php $id = Const::O_OPTM_CSS_ASYNC_INLINE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -173,12 +173,12 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_OPTM_CSS_FONT_DISPLAY ; ?>
+			<?php $id = Const::O_OPTM_CSS_FONT_DISPLAY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, LiteSpeed_Config::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, Const::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 1, __( 'Block', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Swap', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 3, __( 'Fallback', 'litespeed-cache' ) ) ; ?>

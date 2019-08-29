@@ -1,7 +1,7 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 <?php
 
-$img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
+$img_optm = Img_Optm::get_instance() ;
 
 $img_count = $img_optm->img_count() ;
 $optm_summary = $img_optm->summary_info() ;
@@ -30,7 +30,7 @@ $menu_list = array(
 		<?php echo __( 'LiteSpeed Cache Image Optimization', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+		v<?php echo Core::PLUGIN_VERSION ; ?>
 	</span>
 	<hr class="wp-header-end">
 </div>

@@ -42,9 +42,9 @@ class Divi_Theme_Builder
 		/*
 		// the comment box fix is for user using theme builder, ESI will load the wrong json string
 		// As we disabled all for edit mode, this is no more needed
-		add_action( 'et_fb_before_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_on' ) ;
-		add_action( 'et_fb_after_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_off' ) ;
-		add_filter( 'litespeed_esi_params-comment-form', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::esi_comment_add_slash' ) ;// Note: this is changed in v2.9.8.1
+		add_action( 'et_fb_before_comments_template', 'Divi_Theme_Builder::js_comment_box_on' ) ;
+		add_action( 'et_fb_after_comments_template', 'Divi_Theme_Builder::js_comment_box_off' ) ;
+		add_filter( 'litespeed_esi_params-comment-form', 'Divi_Theme_Builder::esi_comment_add_slash' ) ;// Note: this is changed in v2.9.8.1
 		*/
 	}
 

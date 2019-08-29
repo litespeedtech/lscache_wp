@@ -1,9 +1,6 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
 
-if ( ! defined('ABSPATH') ) {
-    die() ;
-}
-
-LiteSpeed_Cache_ESI::get_instance()->load_esi_block() ;
+\LiteSpeed\ESI::get_instance()->load_esi_block() ;
 
 

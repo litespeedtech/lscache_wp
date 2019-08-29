@@ -18,7 +18,7 @@ $menu_list = array(
 		<?php echo __( 'LiteSpeed Cache Page Optimization', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+		v<?php echo Core::PLUGIN_VERSION ; ?>
 	</span>
 	<hr class="wp-header-end">
 </div>

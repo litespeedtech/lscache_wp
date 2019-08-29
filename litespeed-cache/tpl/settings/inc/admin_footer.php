@@ -1,5 +1,5 @@
+<?php defined( 'WPINC' ) || exit ; ?>
 <?php
-if (!defined('WPINC')) die;
 
 // &#10030;&#10030;&#10030;&#10030;&#10030;
 $rate_us = '<a href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" rel="noopener noreferer" target="_blank">'

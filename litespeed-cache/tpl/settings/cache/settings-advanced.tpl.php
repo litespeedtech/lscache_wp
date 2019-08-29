@@ -21,7 +21,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_UTIL_NO_HTTPS_VARY ; ?>
+			<?php $id = Const::O_UTIL_NO_HTTPS_VARY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -35,7 +35,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_UTIL_INSTANT_CLICK ; ?>
+			<?php $id = Const::O_UTIL_INSTANT_CLICK ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

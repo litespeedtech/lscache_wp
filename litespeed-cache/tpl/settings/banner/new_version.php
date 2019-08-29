@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
 /**
  * NOTE: Only show for single site
@@ -8,12 +8,12 @@ if ( is_multisite() ) {
 	return ;
 }
 
-if ( LiteSpeed_Cache::config( LiteSpeed_Config::O_AUTO_UPGRADE ) ) {
+if ( Core::config( Const::O_AUTO_UPGRADE ) ) {
 	return ;
 }
 
 $current = get_site_transient( 'update_plugins' ) ;
-if ( ! isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
+if ( ! isset( $current->response[ Core::PLUGIN_FILE ] ) ) {
 	return ;
 }
 
@@ -24,7 +24,7 @@ if ( time() - $last_check > 43200 ) {
 	$this->save_summary( $_summary ) ;
 
 	// Detect version
-	$auto_v = LiteSpeed_Cache_Utility::version_check( 'new_version_banner' ) ;
+	$auto_v = Utility::version_check( 'new_version_banner' ) ;
 	$_summary[ 'new_version.v' ] = $auto_v ;
 	$this->save_summary( $_summary ) ;
 	// After detect, don't show, just return and show next time
@@ -36,7 +36,7 @@ if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
 }
 
 // Check if current version is newer than auto_v or not
-if ( LiteSpeed_API::v( $_summary[ 'new_version.v' ] ) ) {
+if ( API::v( $_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 
@@ -62,7 +62,7 @@ if ( $check_only ) {
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
 				<div class="litespeed-banner-description-padding-right-15">
-					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Activation::TYPE_UPGRADE ) ; ?>
+					<?php $url = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_UPGRADE ) ; ?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-success litespeed-btn-mini">
 						<i class="dashicons dashicons-image-rotate">&nbsp;</i>
 						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
@@ -70,8 +70,8 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( LiteSpeed_Config::TYPE_SET . '[' . LiteSpeed_Config::O_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, LiteSpeed_Config::TYPE_SET, false, null, $cfg ) ;
+						$cfg = array( Const::TYPE_SET . '[' . Const::O_AUTO_UPGRADE . ']' => 1 ) ;
+						$url = Utility::build_url( Core::ACTION_CONF, Const::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>
@@ -79,7 +79,7 @@ if ( $check_only ) {
 					</a>
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
-					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'new_version' ) ) ; ?>
+					<?php $url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'new_version' ) ) ; ?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-warning litespeed-btn-mini">
 						 <?php echo __( 'Maybe Later', 'litespeed-cache' ) ; ?>
 					</a>
@@ -89,7 +89,7 @@ if ( $check_only ) {
 	</div>
 
 	<div>
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'new_version', 'later' => 1 ) ) ; ?>
+		<?php $dismiss_url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'new_version', 'later' => 1 ) ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
 		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
 	</div>

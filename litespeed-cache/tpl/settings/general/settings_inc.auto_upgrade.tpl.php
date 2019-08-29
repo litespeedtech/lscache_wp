@@ -3,7 +3,7 @@
 	<!-- build_setting_auto_upgrade -->
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_AUTO_UPGRADE ; ?>
+			<?php $id = Const::O_AUTO_UPGRADE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

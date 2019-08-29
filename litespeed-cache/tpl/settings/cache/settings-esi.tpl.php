@@ -38,7 +38,7 @@
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_ESI ; ?>
+			<?php $id = Const::O_ESI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -51,7 +51,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_ESI_CACHE_ADMBAR ; ?>
+			<?php $id = Const::O_ESI_CACHE_ADMBAR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -64,7 +64,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_ESI_CACHE_COMMFORM ; ?>
+			<?php $id = Const::O_ESI_CACHE_COMMFORM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -77,7 +77,7 @@
 
 	<tr>
 		<th>
-			<?php $id = LiteSpeed_Config::O_CACHE_VARY_GROUP ; ?>
+			<?php $id = Const::O_CACHE_VARY_GROUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -90,7 +90,7 @@
 						$this->build_input(
 							$id . '[' . $role . ']',
 							'litespeed-input-short',
-							LiteSpeed_Cache_Vary::get_instance()->in_vary_group( $role )
+							Vary::get_instance()->in_vary_group( $role )
 						) ;
 					?>
 					</td>
