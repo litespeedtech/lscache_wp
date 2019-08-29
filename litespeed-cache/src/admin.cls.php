@@ -100,7 +100,7 @@ class Admin
 
 		if ( Router::esi_enabled() ) {
 			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
-			add_filter( 'widget_update_callback', 'Admin_Settings::validate_widget_save', 10, 4 ) ;
+			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 ) ;
 		}
 	}
 
@@ -146,7 +146,7 @@ class Admin
 	public static function cleanup_text( $input )
 	{
 		if ( is_array( $input ) ) {
-			return array_map( 'Admin::cleanup_text', $input ) ;
+			return array_map( __CLASS__ . '::cleanup_text', $input ) ;
 		}
 
 		return stripslashes( trim( $input ) ) ;

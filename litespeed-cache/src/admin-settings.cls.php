@@ -325,7 +325,7 @@ class Admin_Settings extends Conf
 		$ttlstr = $new_instance[ ESI::WIDGET_O_TTL ] ;
 
 		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
-			add_filter( 'wp_redirect', 'Admin_Settings::widget_save_err' ) ;
+			add_filter( 'wp_redirect', __CLASS__ . '::widget_save_err' ) ;
 			return false ;
 		}
 
@@ -333,7 +333,7 @@ class Admin_Settings extends Conf
 		$ttl = intval( $ttlstr ) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
-			add_filter( 'wp_redirect', 'Admin_Settings::widget_save_err' ) ;
+			add_filter( 'wp_redirect', __CLASS__ . '::widget_save_err' ) ;
 			return false ; // invalid ttl.
 		}
 
