@@ -641,7 +641,7 @@ h3 .litespeed-learn-more {
 	background:#fff;
 	color: #cc3d6a;
 	border: 1px solid #cc3d6a;
-	box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
+	box-shadow: 0 1px 0 rgba(177, 93, 93, 0.5);
 }
 
 .litespeed .litespeed-btn-danger:hover,
@@ -658,7 +658,7 @@ h3 .litespeed-learn-more {
 	background:#fff;
 	color: #e59544;
 	border: 1px solid #e59544;
-	box-shadow: 0 0 0 1px rgba(230, 150, 69, 0.25);
+	box-shadow: 0 1px 0 rgba(249, 166, 82, 0.55);
 }
 
 .litespeed .litespeed-btn-warning:hover,
@@ -675,7 +675,7 @@ h3 .litespeed-learn-more {
 	background:#fff;
 	color: #36b0b0;
 	border: 1px solid #36b0b0;
-	box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
+	box-shadow: 0 1px 0 rgba(73, 160, 160, 0.55);
 }
 
 .litespeed .litespeed-btn-success:hover,
@@ -694,11 +694,22 @@ h3 .litespeed-learn-more {
     text-shadow: 0 -1px 1px #2264ad, 1px 0 1px #2264ad, 0 1px 1px #2264ad, -1px 0 1px #2264ad;
 }
 
-.litespeed-wrap .button-primary:focus, .litespeed-wrap .button-primary:hover {
+.litespeed-wrap .button-primary:focus,
+.litespeed-wrap .button-primary:hover {
     background: #5891ce;
     border-color: #2264ad;
-    color: #fff;
+	color: #fff;
+}
+
+.litespeed-wrap .button-primary:hover {
     box-shadow: 0 1px 0 #2264ad;
+}
+
+.litespeed-wrap .button-primary:focus{
+	background: #5891ce;
+    border-color: #2264ad;
+	color: #fff;
+	box-shadow:0 1px 0 #0073aa, 0 0 2px 1px #33b3db;
 }
 
 .litespeed .litespeed-btn-primary,
@@ -776,17 +787,15 @@ h3 .litespeed-learn-more {
 ======================================= */
 
 .litespeed-switch {
-	border: 1px solid #538ac6;
-	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	border-radius: 3px;
 	font-size: 14px;
 	font-weight: 600;
 	margin: 0 0 0 ;
-	background-color: #fff;
-	display: inline-block;
+	display: inline-flex;
 	position: relative;
+}
+
+.litespeed-switch input:checked:active + label {
+	box-shadow: 0 2px 0 rgba(27, 146, 146, 0.7), inset 0 2px 5px -3px rgba(0,0,0,.5);
 }
 
 .litespeed-switch input:checked + label {
@@ -794,36 +803,60 @@ h3 .litespeed-learn-more {
 	color: #fff;
 	font-weight: 600;
 	border: 1px solid #36b0b0;
+	box-shadow:0 2px 0 #1b9292;
+	z-index:2;
 }
 
 .litespeed-switch label {
 	font-size: 14px;
 	display: inline-block;
 	min-width: 75px;
-	background-color: #fff;
-	color: #6699cc;
+	background-color: #f9fafc;
 	font-weight: 400;
 	text-align: center;
 	padding: 5px 9px;
 	cursor: pointer;
-	border: 1px solid #f9fafc;
+	border: 1px solid #ccc;
+	border-bottom:none;
+	box-shadow: 0 2px 0 #ccc;
 	position: relative;
 }
 
+.litespeed-switch label:not(:last-child){
+	margin-right:-1px;
+}
+
 .litespeed-switch label:last-child{
-	border-top-right-radius: 2px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
 }
 
 .litespeed-switch label:first-of-type{
-	border-top-left-radius: 2px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
 }
 
-.litespeed-switch input:hover + label,
+.litespeed-switch input:hover + label{
+	border-color: #1a9292;
+	box-shadow:0 2px 0 #1a9292;
+	z-index:2;
+	color: #117171;
+}
 .litespeed-switch input:focus + label {
-	background-color: #f9fafc;
-	font-weight: 400;
-	color: #538ac6;
-	outline: 2px solid #538ac6;
+	color: #117171;
+	box-shadow: 0 0px 0px 2px rgba(28, 138, 128, 0.85);
+	border-color:transparent;
+	z-index:2;
+	
+}
+
+.litespeed-switch input:focus + label + input + input:hover + label,
+.litespeed-switch input:focus + label + input:hover + label{
+	z-index:1;
+}
+
+.litespeed-switch input:active + label{
+	box-shadow:0 2px 0 #1b9292, inset 0 2px 5px -3px rgba(0,0,0,.5);
 }
 
 .litespeed-switch input:checked:hover + label,
