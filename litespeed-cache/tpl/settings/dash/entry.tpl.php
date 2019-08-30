@@ -19,6 +19,7 @@ $menu_list = array(
 </div>
 
 <div class="litespeed-wrap">
+	<?php /*
 	<h2 class="litespeed-header nav-tab-wrapper">
 	<?php
 		$i = 1 ;
@@ -40,5 +41,11 @@ $menu_list = array(
 		}
 	?>
 	</div>
-
+	*/
+	foreach ($menu_list as $tab => $val) {
+		echo "<div data-litespeed-layout='$tab'>" ;
+		require LSCWP_DIR . "tpl/settings/dash/$tab.tpl.php" ;
+		echo "</div>" ;
+	}
+	?>
 </div>

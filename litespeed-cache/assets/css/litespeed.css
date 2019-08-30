@@ -230,6 +230,10 @@
 	font-size: .75em !important;
 }
 
+.litespeed-text-md{
+	font-size:1.2em;
+}
+
 .litespeed-text-right {
 	text-align: right;
 }
@@ -264,6 +268,10 @@
 
 .litespeed-danger {
 	color: #dc3545!important;
+}
+
+.litespeed-text-success{
+	color: #34b15d;
 }
 
 /* =======================================
@@ -351,33 +359,32 @@ h3 .litespeed-learn-more {
 	margin-left: 30px;
 }
 
-
-.litespeed-body code{
-	color: #998c85 ;
+.litespeed-wrap code{
+	color: #666 ;
 	background-color: #dde9f5;
 	border-radius: 3px;
 	font-size: 11px;
 	font-style: normal;
 }
 
-.litespeed-body ul{
+.litespeed-wrap ul{
 	margin-left: 2em;
 }
 
-.litespeed-body i {
+.litespeed-wrap i {
 	font-size: 13px;
 	line-height: 16px;
 }
 
-.litespeed-body .litespeed-desc i {
+.litespeed-wrap .litespeed-desc i {
 	font-size: 12px;
 }
 
-.litespeed-body p {
+.litespeed-wrap p {
 	margin: 1em 0;
 }
 
-.litespeed-body p.submit {
+.litespeed-wrap p.submit {
     margin-bottom: 0;
 }
 
@@ -633,6 +640,13 @@ h3 .litespeed-learn-more {
 	height:auto;
 	line-height:inherit;
 	font-size:inherit;
+	box-shadow:none;
+}
+
+.litespeed-wrap .button-link:hover,
+.litespeed-wrap .button-link:focus{
+	box-shadow: none;
+	background:none;
 }
 
 .litespeed .litespeed-btn-danger,
@@ -801,10 +815,10 @@ h3 .litespeed-learn-more {
 .litespeed-switch input:checked + label {
 	background-color: #36b0b0;
 	color: #fff;
-	font-weight: 600;
 	border: 1px solid #36b0b0;
 	box-shadow:0 2px 0 #1b9292;
 	z-index:2;
+	text-shadow:0 -1px 1px #1b9292, 1px 0 1px #1b9292, 0 1px 1px #1b9292, -1px 0 1px #1b9292;
 }
 
 .litespeed-switch label {
@@ -814,7 +828,7 @@ h3 .litespeed-learn-more {
 	background-color: #f9fafc;
 	font-weight: 400;
 	text-align: center;
-	padding: 5px 9px;
+	padding: 6px 9px 5px 9px;
 	cursor: pointer;
 	border: 1px solid #ccc;
 	border-bottom:none;
@@ -841,6 +855,7 @@ h3 .litespeed-learn-more {
 	box-shadow:0 2px 0 #1a9292;
 	z-index:2;
 	color: #117171;
+	
 }
 .litespeed-switch input:focus + label {
 	color: #117171;
@@ -863,7 +878,8 @@ h3 .litespeed-learn-more {
 .litespeed-switch input:checked:focus + label {
 	background-color: #36b0b0;
 	color: #fff;
-	font-weight: 600;
+	
+	
 }
 
 .litespeed-switch input {
@@ -1121,6 +1137,10 @@ h3 .litespeed-learn-more {
 }
 [class*="litespeed-label-"]:empty {
 	display: none;
+}
+
+.litespeed-label-regular{
+	font-size:1em;
 }
 .litespeed-label-default {
 	background-color: #777;
@@ -1719,7 +1739,7 @@ p.litespeed-txt-disabled {
 
 .litespeed-pie{
 	vertical-align: middle;
-	margin: 5px;
+	margin: 5px 5px 5px 0;
 }
 
 circle.litespeed-pie_bg {
@@ -1951,6 +1971,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 /* =======================================
 		VIEW - image optimization
 ======================================= */
+
 .litespeed-cache_page_litespeed-img_optm .nav-tab-wrapper{
 	border-bottom:none;
 	position: relative;
@@ -2009,6 +2030,142 @@ g.litespeed-pie_info .litespeed-pie-done {
     padding: 20px;
     margin-bottom: 0px;
     margin-top: 0;
+}
+
+.litespeed-postbox .inside.litespeed-postbox-footer--compact{
+	padding: 7px 20px 8px 20px;
+	font-size:12px;
+}
+
+
+/* =======================================
+			VIEW - dashboard
+======================================= */
+
+.litespeed-dashboard-group > .litespeed-flex-container{
+	margin:0 -10px;
+	min-width: 100%;
+    width: auto;
+}
+
+.litespeed-dashboard .litespeed-postbox{
+	margin:10px;
+	
+}
+
+
+.litespeed-dashboard-header{
+	display: flex;
+	align-items: center;
+}
+
+.litespeed-dashboard-header:first-child{
+	margin-top: 1.5rem;
+}
+
+.litespeed-dashboard-header hr {
+    align-self: center;
+    flex-grow: 1;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.litespeed-dashboard-header hr:last-child{
+	margin-right:0;
+}
+
+.litespeed-dashboard-header .litespeed-learn-more {
+	font-weight: normal;
+    text-decoration: none;
+	margin-top: -2px;
+	color:#5e7380;
+}
+
+.litespeed-dashboard-stats h3 {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+	margin-bottom: 0;
+	margin-top:1.2em;
+	color:#777;
+}
+
+.litespeed-dashboard-stats h3 + p{
+	margin-top:0;
+	margin-bottom:0;
+}
+
+.litespeed-dashboard-stats .litespeed-desc{
+	color:#777;
+}
+
+.litespeed-dashboard-stats p strong {
+    font-size:2em;
+	font-weight:normal;
+	margin-right:5px;
+}
+
+.litespeed-dashboard-stats-wrapper {
+    display: flex;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox {
+    margin: 0;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox .inside .litespeed-title {
+    font-size: 14px;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox:not(:first-child) {
+    border-left: none;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox:not(:last-child) {
+    border-right-color: #f9f9f9;
+}
+
+.litespeed-dashboard-group .litespeed-postbox{
+	min-width:calc(25% - 20px);
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.litespeed-dashboard-group hr{
+	margin:1.5rem 0 0.75rem 0;
+}
+
+.litespeed-postbox .litespeed-postbox-refresh{
+	text-decoration: none;
+	color:#36b0b0;
+	line-height: 1;
+    vertical-align: top;
+	margin-left: 0.5rem;
+	margin-bottom:0;
+}
+
+.litespeed-postbox .litespeed-postbox-refresh.button .dashicons{
+	font-size: 22px;
+    top: 0.05em;
+}
+
+.litespeed-postbox p:last-child{
+	margin-bottom:0;
+}
+
+.litespeed-label-dashboard{
+	font-size: 0.92em;
+    padding: .3em .6em .35em .6em;
+    font-weight: normal;
+    display: inline-block;
+    margin-left: .2em;
+    min-width: 2em;
+}
+
+.litespeed-label-dashboard:first-child{
+	margin-left:0;
+	margin-right:.35em;
 }
 
 /********************************* todo *******************************/
