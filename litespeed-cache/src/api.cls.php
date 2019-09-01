@@ -45,10 +45,11 @@ class API extends Conf
 	 *
 	 * @since  3.0
 	 */
-	public function init()
+	public static function init()
 	{
 		add_action( 'litespeed_conf_append', __CLASS__ . '::conf_append', 10, 2 ) ;
 		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
+		add_action( 'litespeed_force_option', __CLASS__ . '::force_option', 10, 2 ) ;
 	}
 
 	/**

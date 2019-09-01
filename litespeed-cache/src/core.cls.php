@@ -93,6 +93,13 @@ class Core
 			Log::init() ;
 		}
 
+		/**
+		 * Load API hooks
+		 *
+		 * @since  3.0
+		 */
+		API::init() ;
+
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php' ;

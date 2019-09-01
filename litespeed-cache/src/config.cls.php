@@ -55,10 +55,6 @@ class Config extends Conf
 		}
 
 		$this->define_cache() ;
-
-		// Hook to options
-		add_action( 'litespeed_init', array( $this, 'hook_options' ), 30 ) ;
-
 	}
 
 	/**
@@ -300,27 +296,6 @@ class Config extends Conf
 	}
 
 	/**
-	 * Give an API to change all options val
-	 * All hooks need to be added before `after_setup_theme`
-	 *
-	 * @since  2.6
-	 * @access public
-	 */
-	public function hook_options()
-	{
-		foreach ( $this->_options as $k => $v ) {
-			$new_v = apply_filters( "litespeed_option_$k", $v ) ;
-
-			if ( $new_v === $v ) {
-				continue ;
-			}
-
-			Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
-			$this->_options[ $k ] = $new_v ;
-		}
-	}
-
-	/**
 	 * Force an option to a certain value
 	 *
 	 * @since  2.6
@@ -332,7 +307,12 @@ class Config extends Conf
 			return ;
 		}
 
-		Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
+		if ( $this->_options[ $k ] === $v ) {
+			return ;
+		}
+
+		Log::debug( "[Conf] ** $k forced from " . var_export( $this->_options[ $k ], true ) . ' to ' . var_export( $v, true ) ) ;
+
 		$this->_options[ $k ] = $v ;
 	}
 
