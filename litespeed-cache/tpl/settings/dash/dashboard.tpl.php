@@ -1,11 +1,51 @@
 <?php
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
+
+$finished_percentage = 10;
+
+$_summary = GUI::get_instance()->get_summary() ;
+$_score = $_summary[ 'score.data' ] ;
+
+// Format loading time
+$speed_before_cache = $_score[ 'speed_before_cache' ] / 1000 ;
+if ( $speed_before_cache < 0.01 ) {
+	$speed_before_cache = 0.01 ;
+}
+$speed_before_cache = number_format( $speed_before_cache, 2 ) ;
+
+$speed_after_cache = $_score[ 'speed_after_cache' ] / 1000 ;
+if ( $speed_after_cache < 0.01 ) {
+	$speed_after_cache = number_format( $speed_after_cache, 3 ) ;
+}
+else {
+	$speed_after_cache = number_format( $speed_after_cache, 2 ) ;
+}
+
+$speed_improved = ( $_score[ 'speed_before_cache' ] - $_score[ 'speed_after_cache' ] ) * 100 / $_score[ 'speed_before_cache' ] ;
+if ( $speed_improved > 99 ) {
+	$speed_improved = number_format( $speed_improved, 2 ) ;
+}
+else {
+	$speed_improved = number_format( $speed_improved ) ;
+}
+
+// Format PageSpeed Score
+$score_improved = ( $_score[ 'score_after_optm' ] - $_score[ 'score_before_optm' ] ) * 100 / $_score[ 'score_after_optm' ] ;
+if ( $score_improved > 99 ) {
+	$score_improved = number_format( $score_improved, 2 ) ;
+}
+else {
+	$score_improved = number_format( $score_improved ) ;
+}
+
+$optm_summary = Img_Optm::get_instance()->summary_info() ;
+
 ?>
 
 <div class="litespeed-dashboard">
 
-	
+
 	<div class="litespeed-dashboard-header">
 		<h3 class="litespeed-dashboard-title"><?php echo __( 'Usage Statistics', 'litespeed-cache' ) ; ?></h3>
 		<hr>
@@ -68,15 +108,15 @@ defined( 'WPINC' ) || exit ;
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 
 	</div>
 
-	
+
 
 	<div class="litespeed-dashboard-group">
-		
+
 		<hr>
 
 		<div class="litespeed-flex-container">
@@ -142,7 +182,7 @@ defined( 'WPINC' ) || exit ;
 						</h3>
 
 						<div>
-						
+
 							<div class="litespeed-margin-bottom20">
 								<div class="litespeed-row-flex" style="margin-left: -10px;">
 									<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -197,7 +237,7 @@ defined( 'WPINC' ) || exit ;
 					</p>
 					<p>
 						<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
-						<?php echo __( 'object cache', 'litespeed-cache' ) ; ?> 
+						<?php echo __( 'object cache', 'litespeed-cache' ) ; ?>
 					</p>
 
 				</div>
