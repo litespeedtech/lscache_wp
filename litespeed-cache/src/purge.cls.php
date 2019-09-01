@@ -107,7 +107,7 @@ class Purge
 				break ;
 
 			case self::TYPE_PURGE_ALL_OPCACHE :
-				$instance->_purge_all_opcache() ;
+				$instance->purge_all_opcache() ;
 				break ;
 
 			case self::TYPE_PURGE_FRONT :
@@ -157,7 +157,7 @@ class Purge
 		// $this->_purge_all_ccss( true ) ;
 		// $this->_purge_all_placeholder( true ) ;
 		$this->_purge_all_object( true ) ;
-		$this->_purge_all_opcache( true ) ;
+		$this->purge_all_opcache( true ) ;
 
 		if ( ! is_string( $reason ) ) {
 			$reason = false ;
@@ -286,9 +286,9 @@ class Purge
 	 * Purge opcode cache
 	 *
 	 * @since  1.8.2
-	 * @access private
+	 * @access public
 	 */
-	private function _purge_all_opcache( $silence = false )
+	public function purge_all_opcache( $silence = false )
 	{
 		if ( ! Router::opcache_enabled() ) {
 			Log::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;

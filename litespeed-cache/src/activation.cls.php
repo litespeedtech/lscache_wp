@@ -366,6 +366,13 @@ class Activation
 
 		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path ) ;
 
+		/**
+		 * Clear OPcache
+		 * @since  3.0
+		 * @see  https://github.com/litespeedtech/lscache_wp/issues/170
+		 */
+		Purge::get_instance()->purge_all_opcache( true ) ;
+
 		include $adv_cache_path ;
 	}
 
