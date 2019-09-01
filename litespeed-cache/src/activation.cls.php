@@ -90,14 +90,14 @@ class Activation
 		Task::clear() ;
 
 		// Delete options
-		foreach ( Config::get_instance()->default_vals() as $k => $v ) {
-			delete_option( Config::conf_name( $k ) ) ;
+		foreach ( Config::get_instance()->load_default_vals() as $k => $v ) {
+			delete_option( Conf::conf_name( $k ) ) ;
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( Config::get_instance()->default_site_vals() as $k => $v ) {
-				delete_site_option( Config::conf_name( $k ) ) ;
+			foreach ( Config::get_instance()->load_default_site_vals() as $k => $v ) {
+				delete_site_option( Conf::conf_name( $k ) ) ;
 			}
 		}
 

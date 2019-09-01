@@ -71,7 +71,7 @@ class Admin_Settings extends Conf
 
 			// Append current field to setting save
 			if ( $v && ! in_array( $v, $_fields ) ) { // Not allow to set core version
-				if ( array_key_exists( $v, $this->_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
+				if ( array_key_exists( $v, self::$_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
 					$_fields[] = $v ;
 				}
 			}
@@ -262,7 +262,7 @@ class Admin_Settings extends Conf
 		foreach ( $raw_data[ self::ENROLL ] as $v ) {
 			// Append current field to setting save
 			if ( $v && ! in_array( $v, $_fields ) && $v != self::_VERSION ) { // Not allow to set core version
-				if ( array_key_exists( $v, $this->_default_site_options ) ) {
+				if ( array_key_exists( $v, self::$_default_site_options ) ) {
 					$_fields[] = $v ;
 				}
 			}
@@ -381,7 +381,7 @@ class Admin_Settings extends Conf
 	{
 		$val = intval( $val ) ;
 
-		if( $val === Config::VAL_ON ) {
+		if( $val === self::VAL_ON ) {
 			return true ;
 		}
 
@@ -400,15 +400,15 @@ class Admin_Settings extends Conf
 	{
 		$val = intval( $val ) ;
 
-		if( $val === Config::VAL_ON ) {
-			return Config::VAL_ON ;
+		if( $val === self::VAL_ON ) {
+			return self::VAL_ON ;
 		}
 
-		if( $val === Config::VAL_ON2 ) {
-			return Config::VAL_ON2 ;
+		if( $val === self::VAL_ON2 ) {
+			return self::VAL_ON2 ;
 		}
 
-		return Config::VAL_OFF ;
+		return self::VAL_OFF ;
 	}
 
 	/**

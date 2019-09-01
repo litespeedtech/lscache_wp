@@ -39,6 +39,23 @@ class API extends Conf
 	const WIDGET_O_TTL =			ESI::WIDGET_O_TTL ;
 
 	/**
+	 * Define hooks to be used in other plugins.
+	 *
+	 * The benefit to use hooks other than functions is no need to detech if LSCWP enabled and function existed or not anymore
+	 *
+	 * @since  3.0
+	 */
+	public function init()
+	{
+		add_action( 'litespeed_conf_append', __CLASS__ . '::conf_append', 10, 2 ) ;
+		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
+	}
+
+	/**
+	 * Append options API
+	 */
+
+	/**
 	 * Disable All
 	 *
 	 * @since 2.9.7.2
@@ -56,9 +73,19 @@ class API extends Conf
 	 *
 	 * @since  3.0
 	 */
-	public static function option_append( $name, $default )
+	public static function conf_append( $name, $default )
 	{
 		Config::get_instance()->option_append( $name, $default ) ;
+	}
+
+	/**
+	 * Extend an bool option max value for LSCWP options when save settings.
+	 *
+	 * @since  3.0
+	 */
+	public static function conf_multi_switch( $id, $v )
+	{
+		Conf::set_multi_switch( $id, $v ) ;
 	}
 
 	/**

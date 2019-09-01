@@ -178,7 +178,7 @@ class Import
 	 */
 	private function _reset()
 	{
-		$options = $this->__cfg->default_vals() ;
+		$options = $this->__cfg->load_default_vals() ;
 
 		$this->__cfg->update_confs( $options ) ;
 

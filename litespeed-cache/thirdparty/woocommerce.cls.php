@@ -775,9 +775,12 @@ class WooCommerce
 	 */
 	private function _option_append()
 	{
-		API::option_append( self::O_UPDATE_INTERVAL, self::O_PQS_CS ) ;
-		API::option_append( self::O_SHOP_FRONT_TTL, true ) ;
-		API::option_append( self::O_WOO_CACHE_CART, true ) ;
+		API::conf_append( self::O_UPDATE_INTERVAL, false ) ;
+		API::conf_append( self::O_SHOP_FRONT_TTL, true ) ;
+		API::conf_append( self::O_WOO_CACHE_CART, true ) ;
+
+		// Append option save value filter
+		API::conf_multi_switch( self::O_UPDATE_INTERVAL, 3 ) ;
 	}
 
 	/**

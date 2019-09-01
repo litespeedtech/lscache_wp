@@ -84,7 +84,7 @@ class Config extends Conf
 		 */
 		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
-				$this->_options = $this->_default_options = $this->default_vals() ;
+				$this->_options = $this->load_default_vals() ;
 				return ;
 			}
 		}
@@ -114,10 +114,10 @@ class Config extends Conf
 		 */
 		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			// Load default values
-			$this->_default_options = $this->default_vals() ;
+			$this->load_default_vals() ;
 
 			// Init new default/missing options
-			foreach ( $this->_default_options as $k => $v ) {
+			foreach ( self::$_default_options as $k => $v ) {
 				// If the option existed, bypass updating
 				// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
 				add_option( self::conf_name( $k ), $v ) ;
@@ -142,7 +142,7 @@ class Config extends Conf
 	public function load_options( $blog_id = null, $dry_run = false )
 	{
 		$options = array() ;
-		foreach ( $this->_default_options as $k => $v ) {
+		foreach ( self::$_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
 				$options[ $k ] = get_blog_option( $blog_id, self::conf_name( $k ), $v ) ;
 			}
@@ -186,7 +186,7 @@ class Config extends Conf
 		}
 
 		// Overwrite single blog options with site options
-		foreach ( $this->_default_options as $k => $v ) {
+		foreach ( self::$_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				$this->_options[ $k ] = $this->_site_options[ $k ] ;
 			}
@@ -252,10 +252,10 @@ class Config extends Conf
 		 */
 		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
 			// Load default values
-			$this->_default_site_options = $this->default_site_vals() ;
+			$this->load_default_site_vals() ;
 
 			// Init new default/missing options
-			foreach ( $this->_default_site_options as $k => $v ) {
+			foreach ( self::$_default_site_options as $k => $v ) {
 				// If the option existed, bypass updating
 				add_site_option( self::conf_name( $k ), $v ) ;
 			}
@@ -278,7 +278,7 @@ class Config extends Conf
 		}
 
 		// Load all site options
-		foreach ( $this->_default_site_options as $k => $v ) {
+		foreach ( self::$_default_site_options as $k => $v ) {
 			$this->_site_options[ $k ] = get_site_option( self::conf_name( $k ), $v ) ;
 		}
 
@@ -295,7 +295,7 @@ class Config extends Conf
 	 */
 	public function option_append( $name, $default )
 	{
-		$this->_default_options[ $name ] = $default ;
+		self::$_default_options[ $name ] = $default ;
 		$this->_options[ $name ] = get_option( self::conf_name( $name ), $default ) ;
 	}
 
@@ -471,13 +471,13 @@ class Config extends Conf
 			return ;
 		}
 
-		if ( ! array_key_exists( $id, $this->_default_options ) ) {
+		if ( ! array_key_exists( $id, self::$_default_options ) ) {
 			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
 			return ;
 		}
 
 		// Validate type
-		if ( is_bool( $this->_default_options[ $id ] ) ) {
+		if ( is_bool( self::$_default_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id ) ;
 			if ( $max && $val > 1 ) {
 				$val %= $max + 1 ;
@@ -486,13 +486,13 @@ class Config extends Conf
 				$val = (bool) $val ;
 			}
 		}
-		elseif ( is_array( $this->_default_options[ $id ] ) ) {
+		elseif ( is_array( self::$_default_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
 				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
 			}
 		}
-		elseif ( ! is_string( $this->_default_options[ $id ] ) ) {
+		elseif ( ! is_string( self::$_default_options[ $id ] ) ) {
 			$val = (int) $val ;
 		}
 		else {
@@ -545,13 +545,13 @@ class Config extends Conf
 	public function network_update( $id, $val )
 	{
 
-		if ( ! array_key_exists( $id, $this->_default_site_options ) ) {
+		if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
 			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid network option ID ' . $id ) ;
 			return ;
 		}
 
 		// Validate type
-		if ( is_bool( $this->_default_site_options[ $id ] ) ) {
+		if ( is_bool( self::$_default_site_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id ) ;
 			if ( $max && $val > 1 ) {
 				$val %= $max + 1 ;
@@ -560,13 +560,13 @@ class Config extends Conf
 				$val = (bool) $val ;
 			}
 		}
-		elseif ( is_array( $this->_default_site_options[ $id ] ) ) {
+		elseif ( is_array( self::$_default_site_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
 				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
 			}
 		}
-		elseif ( ! is_string( $this->_default_site_options[ $id ] ) ) {
+		elseif ( ! is_string( self::$_default_site_options[ $id ] ) ) {
 			$val = (int) $val ;
 		}
 		else {

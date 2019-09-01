@@ -847,7 +847,7 @@ class Admin_Display
 	public function recommended( $id )
 	{
 		if ( ! $this->default_settings ) {
-			$this->default_settings = $this->__cfg->default_vals() ;
+			$this->default_settings = $this->__cfg->load_default_vals() ;
 		}
 
 		$val = $this->default_settings[ $id ] ;

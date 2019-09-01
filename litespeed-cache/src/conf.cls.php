@@ -322,7 +322,7 @@ class Conf
 		4 => 'optional',
 	) ;
 
-	protected $_default_options = array(
+	protected static $_default_options = array(
 		self::_VERSION 			=> '',
 		self::HASH				=> '',
 		self::O_AUTO_UPGRADE 	=> false,
@@ -536,7 +536,7 @@ class Conf
 
 	) ;
 
-	protected $_default_site_options = array(
+	protected static $_default_site_options = array(
 		self::_VERSION 					=> '',
 		self::NETWORK_O_ENABLED 		=> false,
 		self::NETWORK_O_USE_PRIMARY 	=> false,
@@ -577,16 +577,24 @@ class Conf
 
 	) ;
 
+	protected static $_multi_switch_list = array(
+		self::O_CDN_REMOTE_JQ 	=> 2,
+		self::O_DEBUG 			=> 2,
+		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
+		self::O_OPTM_JS_INLINE_DEFER 	=> 2,
+	) ;
+
+
 	private function __construct()
 	{
 	}
 
-	protected function default_site_vals()
+	protected function load_default_site_vals()
 	{
 		// Load network_default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true ) ;
-			foreach ( $this->_default_site_options as $k => $v ) {
+			foreach ( self::$_default_site_options as $k => $v ) {
 				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
 					continue ;
 				}
@@ -615,14 +623,14 @@ class Conf
 					continue ;
 				}
 
-				$this->_default_site_options[ $k ] = $ini_v ;
+				self::$_default_site_options[ $k ] = $ini_v ;
 
 			}
 		}
 
-		$this->_default_site_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
+		self::$_default_site_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
 
-		return $this->_default_site_options ;
+		return self::$_default_site_options ;
 	}
 
 	/**
@@ -631,12 +639,12 @@ class Conf
 	 * @since 3.0
 	 * @access public
 	 */
-	public function default_vals()
+	public function load_default_vals()
 	{
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
-			foreach ( $this->_default_options as $k => $v ) {
+			foreach ( self::$_default_options as $k => $v ) {
 				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
 					continue ;
 				}
@@ -703,29 +711,29 @@ class Conf
 					continue ;
 				}
 
-				$this->_default_options[ $k ] = $ini_v ;
+				self::$_default_options[ $k ] = $ini_v ;
 			}
 
 		}
 
 		// Load internal default vals
-		$this->_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON ; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+		self::$_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON ; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 
 		// Load default vals containing variables
-		if ( ! $this->_default_options[ self::O_CDN_ORI_DIR ] ) {
-			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes" ;
-			$this->_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
-			$this->_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
+		if ( ! self::$_default_options[ self::O_CDN_ORI_DIR ] ) {
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes" ;
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", self::$_default_options[ self::O_CDN_ORI_DIR ] ) ;
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', self::$_default_options[ self::O_CDN_ORI_DIR ] ) ;
 		}
 
 		// Set security key if not initialized yet
-		if ( ! $this->_default_options[ self::HASH ] ) {
-			$this->_default_options[ self::HASH ] = Str::rrand( 32 ) ;
+		if ( ! self::$_default_options[ self::HASH ] ) {
+			self::$_default_options[ self::HASH ] = Str::rrand( 32 ) ;
 		}
 
-		$this->_default_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
+		self::$_default_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
 
-		return $this->_default_options ;
+		return self::$_default_options ;
 	}
 
 	/**
@@ -756,18 +764,21 @@ class Conf
 	 */
 	protected function _conf_multi_switch( $id )
 	{
-		$list = array(
-			self::O_CDN_REMOTE_JQ 	=> 2,
-			self::O_DEBUG 			=> 2,
-			self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
-			self::O_OPTM_JS_INLINE_DEFER 	=> 2,
-		) ;
-
-		if ( ! empty( $list[ $id ] ) ) {
-			return $list[ $id ] ;
+		if ( ! empty( self::$_multi_switch_list[ $id ] ) ) {
+			return self::$_multi_switch_list[ $id ] ;
 		}
 
 		return false ;
+	}
+
+	/**
+	 * Append a new multi swith max limit for the bool option
+	 *
+	 * @since  3.0
+	 */
+	public static function set_multi_switch( $id, $v )
+	{
+		self::$_multi_switch_list[ $id ] = $v ;
 	}
 
 	/**
