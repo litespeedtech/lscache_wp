@@ -13,14 +13,14 @@ class Task
 {
 	private static $_instance ;
 
-	const CRON_ACTION_HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
-	const CRON_ACTION_HOOK_AVATAR = 'litespeed_avatar_trigger' ;
-	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
-	const CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
-	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
-	const CRON_ACTION_HOOK_IMG_PLACEHOLDER = 'litespeed_img_placeholder_trigger' ;
-	const CRON_FITLER_CRAWLER = 'litespeed_crawl_filter' ;
-	const CRON_FITLER = 'litespeed_filter' ;
+	const HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
+	const HOOK_AVATAR = 'litespeed_avatar_trigger' ;
+	const HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
+	const HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
+	const HOOK_CCSS = 'litespeed_ccss_trigger' ;
+	const HOOK_IMG_PLACEHOLDER = 'litespeed_img_placeholder_trigger' ;
+	const FITLER_CRAWLER = 'litespeed_crawl_filter' ;
+	const FITLER = 'litespeed_filter' ;
 
 	/**
 	 * Init
@@ -40,42 +40,42 @@ class Task
 			$this->_schedule_filter_crawler() ;
 
 			// cron hook
-			add_action( self::CRON_ACTION_HOOK_CRAWLER, __NAMESPACE__ . '\Crawler::crawl_data' ) ;
+			add_action( self::HOOK_CRAWLER, __NAMESPACE__ . '\Crawler::crawl_data' ) ;
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
 		if ( Core::config( Conf::O_IMG_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull_optimized_img' ) ;
+			add_action( self::HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull_optimized_img' ) ;
 		}
 
 		// Image optm auto request
 		if ( Core::config( Conf::O_IMG_OPTM_AUTO ) ) {
 			self::schedule_filter_imgoptm_auto_request() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, __NAMESPACE__ . '\Img_Optm::cron_auto_request' ) ;
+			add_action( self::HOOK_IMGOPTM_AUTO_REQUEST, __NAMESPACE__ . '\Img_Optm::cron_auto_request' ) ;
 		}
 
 		// Register ccss generation
 		if ( Core::config( Conf::O_OPTM_CCSS_ASYNC ) ) {
 			self::schedule_filter_ccss() ;
 
-			add_action( self::CRON_ACTION_HOOK_CCSS, __NAMESPACE__ . '\CSS::cron_ccss' ) ;
+			add_action( self::HOOK_CCSS, __NAMESPACE__ . '\CSS::cron_ccss' ) ;
 		}
 
 		// Register image placeholder generation
 		if ( Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
 			self::schedule_filter_placeholder() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, __NAMESPACE__ . '\Placeholder::cron' ) ;
+			add_action( self::HOOK_IMG_PLACEHOLDER, __NAMESPACE__ . '\Placeholder::cron' ) ;
 		}
 
 		// Register avatar warm up
 		if ( Core::config( Conf::O_DISCUSS_AVATAR_CRON ) ) {
 			self::schedule_filter_avatar() ;
 
-			add_action( self::CRON_ACTION_HOOK_AVATAR, __NAMESPACE__ . '\Avatar::cron' ) ;
+			add_action( self::HOOK_AVATAR, __NAMESPACE__ . '\Avatar::cron' ) ;
 		}
 	}
 
@@ -136,9 +136,9 @@ class Task
 	public static function schedule_filter_imgoptm_auto_request()
 	{
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ) {
+		if( ! wp_next_scheduled( self::HOOK_IMGOPTM_AUTO_REQUEST ) ) {
 			Log::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ;
+			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM_AUTO_REQUEST ) ;
 		}
 	}
 
@@ -151,9 +151,9 @@ class Task
 	public static function schedule_filter_imgoptm()
 	{
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM ) ) {
+		if( ! wp_next_scheduled( self::HOOK_IMGOPTM ) ) {
 			Log::debug( 'Cron log: ......img optimization cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM ) ;
+			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM ) ;
 		}
 	}
 
@@ -166,9 +166,9 @@ class Task
 	public static function schedule_filter_ccss()
 	{
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CCSS ) ) {
+		if( ! wp_next_scheduled( self::HOOK_CCSS ) ) {
 			Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_CCSS ) ;
+			wp_schedule_event( time(), self::FITLER, self::HOOK_CCSS ) ;
 		}
 	}
 
@@ -181,9 +181,9 @@ class Task
 	public static function schedule_filter_placeholder()
 	{
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ) {
+		if( ! wp_next_scheduled( self::HOOK_IMG_PLACEHOLDER ) ) {
 			Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ;
+			wp_schedule_event( time(), self::FITLER, self::HOOK_IMG_PLACEHOLDER ) ;
 		}
 	}
 
@@ -196,9 +196,9 @@ class Task
 	public static function schedule_filter_avatar()
 	{
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_AVATAR ) ) {
+		if( ! wp_next_scheduled( self::HOOK_AVATAR ) ) {
 			Log::debug( 'Cron log: ......avatar cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_AVATAR ) ;
+			wp_schedule_event( time(), self::FITLER, self::HOOK_AVATAR ) ;
 		}
 	}
 
@@ -213,9 +213,9 @@ class Task
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) ) ;
 
 		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CRAWLER ) ) {
+		if( ! wp_next_scheduled( self::HOOK_CRAWLER ) ) {
 			Log::debug( 'Crawler cron log: ......cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER_CRAWLER, self::CRON_ACTION_HOOK_CRAWLER ) ;
+			wp_schedule_event( time(), self::FITLER_CRAWLER, self::HOOK_CRAWLER ) ;
 		}
 	}
 
@@ -228,8 +228,8 @@ class Task
 	 */
 	public function lscache_cron_filter( $schedules )
 	{
-		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
-			$schedules[ self::CRON_FITLER ] = array(
+		if ( ! array_key_exists( self::FITLER, $schedules ) ) {
+			$schedules[ self::FITLER ] = array(
 				'interval' => 60,
 				'display'  => __( 'Every Minute', 'litespeed-cache' ),
 			) ;
@@ -248,9 +248,9 @@ class Task
 	{
 		$interval = Core::config( Conf::O_CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
-		if ( ! array_key_exists( self::CRON_FITLER_CRAWLER, $schedules ) ) {
+		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
 			// 	Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
-			$schedules[ self::CRON_FITLER_CRAWLER ] = array(
+			$schedules[ self::FITLER_CRAWLER ] = array(
 				'interval' => $interval,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
 			) ;
@@ -267,7 +267,7 @@ class Task
 	public static function clear()
 	{
 		Log::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
-		wp_clear_scheduled_hook( self::CRON_ACTION_HOOK_CRAWLER ) ;
+		wp_clear_scheduled_hook( self::HOOK_CRAWLER ) ;
 	}
 
 
