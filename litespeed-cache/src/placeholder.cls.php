@@ -276,6 +276,11 @@ class Placeholder
 
 		// Use LQIP Cloud generator, each image placeholder will be separately stored
 
+		// Compatibility with WebP
+		if ( substr( $src, -5 ) === '.webp' ) {
+			$src = substr( $src, 0, -5 ) ;
+		}
+
 		// External images will use cache folder directly
 		$domain = parse_url( $src, PHP_URL_HOST ) ;
 		if ( $domain && ! Utility::internal( $domain ) ) { // todo: need to improve `util:internal()` to include `CDN::internal()`
@@ -412,7 +417,7 @@ class Placeholder
 					'_domain'	=> home_url(),
 					'width'		=> $width,
 					'height'	=> $height,
-					'url'		=> $src,
+					'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
 				$json = Admin_API::post( Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
