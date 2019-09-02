@@ -235,6 +235,8 @@ class Core
 
 			Media::get_instance() ;
 
+			Placeholder::get_instance()->init() ;
+
 			Optimize::get_instance() ;
 
 			// Hook cdn for attachements

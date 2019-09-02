@@ -36,8 +36,6 @@ class Placeholder
 	 */
 	private function __construct()
 	{
-		Log::debug2( '[Placeholder] init' ) ;
-
 		$this->_conf_placeholder_resp = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_conf_placeholder_resp_generator = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
 		$this->_conf_placeholder_resp_svg 	= Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
@@ -46,6 +44,56 @@ class Placeholder
 		$this->_conf_placeholder_resp_async = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
 		$this->_conf_placeholder_resp_color = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		$this->_conf_ph_default = Core::config( Conf::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+	}
+
+	/**
+	 * Init Placeholder
+	 */
+	public function init()
+	{
+		Log::debug2( '[Placeholder] init' ) ;
+		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
+
+	}
+
+	/**
+	 * Display column in Media
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function after_admin_init()
+	{
+		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+	}
+
+	/**
+	 * Display LQIP column
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function media_row_con( $post_id )
+	{
+		$short_path = Utility::att_short_path( wp_get_attachment_url( $post_id ) ) ;
+
+		$lqip_folder = LITESPEED_STATIC_DIR . '/lqip/' . $short_path ;
+
+		if ( is_dir( $lqip_folder ) ) {
+			Log::debug( '[LQIP] Found folder: ' . $short_path ) ;
+			echo '<div><div class="litespeed-text-dimgray litespeed-text-center">LQIP</div>' ;
+
+			// List all files
+			foreach ( scandir( $lqip_folder ) as $v ) {
+				if ( $v == '.' || $v == '..' ) {
+					continue ;
+				}
+
+				echo '<div class="litespeed-media-p"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
+			}
+
+			echo '</div>' ;
+		}
 	}
 
 	/**

@@ -61,6 +61,8 @@ class WooCommerce
 	 */
 	public function add_hooks()
 	{
+		$this->_option_append() ;
+
 		$this->cache_cart = API::config( self::O_WOO_CACHE_CART ) ;
 		$this->esi_eanbled = API::esi_enabled() ;
 
@@ -70,8 +72,6 @@ class WooCommerce
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
 		add_action( 'woocommerce_product_set_stock', array( $this, 'purge_product' ) ) ;
 		add_action( 'woocommerce_variation_set_stock', array( $this, 'purge_product' ) ) ; // #984479 Update variations stock
-
-		$this->_option_append() ;
 
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
 

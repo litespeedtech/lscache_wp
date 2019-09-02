@@ -30,7 +30,7 @@ class Task
 	 */
 	private function __construct()
 	{
-		Log::debug2( 'Task init' ) ;
+		Log::debug2( '[Task] init' ) ;
 
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
 

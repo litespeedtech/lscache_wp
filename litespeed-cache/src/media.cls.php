@@ -129,6 +129,8 @@ class Media
 		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
 		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
 
+		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+
 		// Hook to attachment delete action
 		add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
 	}
@@ -240,13 +242,26 @@ class Media
 			return ;
 		}
 
-		$local_file = get_attached_file( $post_id ) ;
-		$local_file = substr( $local_file, strlen( $this->_wp_upload_dir[ 'basedir' ] ) + 1 ) ;
+		echo '<div class="litespeed-flex-container">' ;
+
+		do_action( 'litespeed_media_row', $post_id ) ;
+
+		echo '</div> ' ;
+	}
+
+	/**
+	 * Display image optm info
+	 *
+	 * @since  3.0
+	 */
+	public function media_row_con( $post_id )
+	{
+
+		$local_file = Utility::att_short_path( wp_get_attachment_url( $post_id ) ) ;
 
 		$size_meta = get_post_meta( $post_id, Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
 		// WebP info
-		$info_webp = '' ;
 		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
 			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
 			$pie_webp = GUI::pie( $percent, 30 ) ;
@@ -266,20 +281,19 @@ class Media
 				$cls_webp = 'litespeed-txt-disabled' ;
 			}
 
-			$info_webp = "<div class='litespeed-media-p $cls_webp litespeed-right20'><div class='litespeed-text-dimgray litespeed-text-center'>WebP</div>" ;
+			echo "<div class='litespeed-media-p $cls_webp litespeed-right20'><div class='litespeed-text-dimgray litespeed-text-center'>WebP</div>" ;
 
 			if ( $desc ) {
-				$info_webp .= sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_webp, $desc, $pie_webp ) ;
+				echo sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_webp, $desc, $pie_webp ) ;
 			}
 			else {
-				$info_webp .= sprintf( '<div title="%1$s">%2$s</div>', $txt_webp, $pie_webp ) ;
+				echo sprintf( '<div title="%1$s">%2$s</div>', $txt_webp, $pie_webp ) ;
 			}
 
-			$info_webp .= '</div>' ;
+			echo '</div>' ;
 		}
 
 		// Original image info
-		$info_ori = '' ;
 		if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
 			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
 			$pie_ori = GUI::pie( $percent, 30 ) ;
@@ -303,36 +317,27 @@ class Media
 				$cls_ori = 'litespeed-txt-disabled' ;
 			}
 
-			$info_ori = "<div class='litespeed-media-p $cls_ori litespeed-right30'><div class='litespeed-text-dimgray litespeed-text-center'>Orig.</div>" ;
+			echo "<div class='litespeed-media-p $cls_ori litespeed-right30'><div class='litespeed-text-dimgray litespeed-text-center'>Orig.</div>" ;
 
 			if ( $desc ) {
-				$info_ori .= sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_ori, $desc, $pie_ori ) ;
+				echo sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_ori, $desc, $pie_ori ) ;
 			}
 			else {
-				$info_ori .= sprintf( '<div title="%1$s">%2$s</div>', $txt_ori, $pie_ori ) ;
+				echo sprintf( '<div title="%1$s">%2$s</div>', $txt_ori, $pie_ori ) ;
 			}
 
-			$info_ori .= '</div>' ;
+			echo '</div>' ;
 		}
 
 		// Delete row btn
-		$del_row = '' ;
 		if ( $size_meta ) {
-			$del_row = '<div><div class="litespeed-text-dimgray litespeed-text-center">' . __( 'Reset', 'litespeed-cache' ) . '</div>' ;
-			$del_row .= sprintf( '<div class="litespeed-media-p"><a href="%1$s" class="">%2$s</a></div>',
+			echo '<div><div class="litespeed-text-dimgray litespeed-text-center">' . __( 'Reset', 'litespeed-cache' ) . '</div>' ;
+			echo sprintf( '<div class="litespeed-media-p"><a href="%1$s" class="">%2$s</a></div>',
 				Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
 				'<span class="dashicons dashicons-trash dashicons-large litespeed-warning litespeed-dashicons-large"></span>'
 			) ;
-			$del_row .= '</div>' ;
+			echo '</div>' ;
 		}
-
-		echo <<<eot
-			<div class="litespeed-flex-container">
-				$info_webp
-				$info_ori
-				$del_row
-			</div>
-eot;
 
 	}
 

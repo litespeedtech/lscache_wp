@@ -39,7 +39,7 @@ class CDN
 	 */
 	private function __construct()
 	{
-		Log::debug2( 'CDN init' ) ;
+		Log::debug2( '[CDN] init' ) ;
 
 		if ( ! Router::can_cdn() ) {
 			if ( ! defined( self::BYPASS ) ) {
