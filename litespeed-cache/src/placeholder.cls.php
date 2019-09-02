@@ -52,8 +52,8 @@ class Placeholder
 	public function init()
 	{
 		Log::debug2( '[Placeholder] init' ) ;
-		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 
+		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 	}
 
 	/**
@@ -64,7 +64,9 @@ class Placeholder
 	 */
 	public function after_admin_init()
 	{
-		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+		if ( $this->_conf_placeholder_lqip ) {
+			add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+		}
 	}
 
 	/**
@@ -75,25 +77,37 @@ class Placeholder
 	 */
 	public function media_row_con( $post_id )
 	{
-		$short_path = Utility::att_short_path( wp_get_attachment_url( $post_id ) ) ;
+		$meta_value = wp_get_attachment_metadata( $post_id ) ;
 
-		$lqip_folder = LITESPEED_STATIC_DIR . '/lqip/' . $short_path ;
+		echo '<div><div class="litespeed-text-dimgray litespeed-text-center">LQIP</div>' ;
 
-		if ( is_dir( $lqip_folder ) ) {
-			Log::debug( '[LQIP] Found folder: ' . $short_path ) ;
-			echo '<div><div class="litespeed-text-dimgray litespeed-text-center">LQIP</div>' ;
+		// List all sizes
+		$all_sizes = array( $meta_value[ 'file' ] ) ;
+		$size_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
+		foreach ( $meta_value[ 'sizes' ] as $v ) {
+			$all_sizes[] = $size_path . $v[ 'file' ] ;
+		}
 
-			// List all files
-			foreach ( scandir( $lqip_folder ) as $v ) {
-				if ( $v == '.' || $v == '..' ) {
-					continue ;
+		foreach ( $all_sizes as $short_path ) {
+			$lqip_folder = LITESPEED_STATIC_DIR . '/lqip/' . $short_path ;
+
+			if ( is_dir( $lqip_folder ) ) {
+				Log::debug( '[LQIP] Found folder: ' . $short_path ) ;
+
+				// List all files
+				foreach ( scandir( $lqip_folder ) as $v ) {
+					if ( $v == '.' || $v == '..' ) {
+						continue ;
+					}
+
+					echo '<div class="litespeed-media-p"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
 				}
 
-				echo '<div class="litespeed-media-p"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
 			}
-
-			echo '</div>' ;
 		}
+
+
+		echo '</div>' ;
 	}
 
 	/**
@@ -131,6 +145,7 @@ class Placeholder
 	{
 		// Low Quality Image Placeholders
 		if ( ! $size ) {
+			Log::debug2( '[Placeholder] no size ' . $src ) ;
 			return false ;
 		}
 

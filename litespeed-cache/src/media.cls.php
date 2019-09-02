@@ -256,8 +256,8 @@ class Media
 	 */
 	public function media_row_con( $post_id )
 	{
-
-		$local_file = Utility::att_short_path( wp_get_attachment_url( $post_id ) ) ;
+		$att_info = wp_get_attachment_metadata( $post_id ) ;
+		$short_path = $att_info[ 'file' ] ;
 
 		$size_meta = get_post_meta( $post_id, Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
@@ -271,11 +271,11 @@ class Media
 			$desc = false ;
 			$cls = 'litespeed-icon-media-webp' ;
 			$cls_webp = '' ;
-			if ( $this->info( $local_file . '.webp', $post_id ) ) {
+			if ( $this->info( $short_path . '.webp', $post_id ) ) {
 				$desc = __( 'Click to Disable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-webp' ;
 			}
-			elseif ( $this->info( $local_file . '.optm.webp', $post_id ) ) {
+			elseif ( $this->info( $short_path . '.optm.webp', $post_id ) ) {
 				$cls .= '-disabled' ;
 				$desc = __( 'Click to Enable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-disabled' ;
@@ -299,9 +299,9 @@ class Media
 			$pie_ori = GUI::pie( $percent, 30 ) ;
 			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), Utility::real_size( $size_meta[ 'ori_saved' ] ) ) ;
 
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
-			$bk_optm_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
+			$extension = pathinfo( $short_path, PATHINFO_EXTENSION ) ;
+			$bk_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
+			$bk_optm_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
 
 			$link = Utility::build_url( Core::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
 			$desc = false ;
