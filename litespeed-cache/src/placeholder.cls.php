@@ -154,6 +154,12 @@ class Placeholder
 			return $tmp_placeholder ;
 		}
 
+		if ( count( $req_summary[ 'queue' ] ) > 100 ) {
+			Log::debug2( '[Placeholder] queue is full' ) ;
+
+			return $tmp_placeholder ;
+		}
+
 		$req_summary[ 'queue' ][] = $arr_key ;
 
 		Log::debug( '[Placeholder] Added placeholder queue' ) ;
@@ -365,6 +371,14 @@ class Placeholder
 
 				if ( empty( $json[ 'data' ] ) ) {
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
+
+					// Unset this item
+					if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $req_summary[ 'queue' ] ) ) {
+						unset( $req_summary[ 'queue' ][ array_search( $raw_size_and_src, $req_summary[ 'queue' ] ) ] ) ;
+					}
+
+					$this->_save_summary( $req_summary ) ;
+
 					return false ;
 				}
 
