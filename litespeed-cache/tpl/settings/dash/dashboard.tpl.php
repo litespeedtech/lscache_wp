@@ -300,6 +300,20 @@ $optm_summary = Img_Optm::get_instance()->summary_info() ;
 							<span class="screen-reader-text"><?php echo __('Update image optimization status', 'litespeed-cache'); ?></span>
 						</a>
 					</h3>
+
+
+					<div class="litespeed-flex-container">
+						<div class="litespeed-icon-vertical-middle">
+							<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
+						</div>
+						<div>
+							<div class="litespeed-dashboard-stats">
+								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
+								<p><strong>1234</strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), 3000 ) ; ?></span></p>
+							</div>
+						</div>
+					</div>
+
 					<p>
 						<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo Utility::real_size( $optm_summary[ 'reduced' ] ) ; ?></code>
 					</p>

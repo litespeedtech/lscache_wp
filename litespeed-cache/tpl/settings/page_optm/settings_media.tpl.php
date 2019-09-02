@@ -168,7 +168,7 @@ $last_responsive_placeholder_generated = Placeholder::get_summary() ;
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
-							<?php echo implode( ' ', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
+							<?php echo implode( '<br>', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">

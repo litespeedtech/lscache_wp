@@ -415,7 +415,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Conf::TYPE_SET . '[' . Conf::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Config::TYPE_SET . '[' . Conf::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -426,7 +426,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Conf::TYPE_SET . '[' . Conf::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Config::TYPE_SET . '[' . Conf::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -437,7 +437,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Conf::TYPE_SET . '[' . Conf::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Config::TYPE_SET . '[' . Conf::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -448,7 +448,7 @@ class GUI
 		) );
 
 		$append_arr = array(
-			Conf::TYPE_SET . '[' . Conf::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Config::TYPE_SET . '[' . Conf::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
