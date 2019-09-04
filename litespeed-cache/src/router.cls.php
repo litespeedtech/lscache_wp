@@ -444,7 +444,7 @@ class Router
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
-		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_passive( $action ) && ! $this->_verify_sapi_aggressive( $action ) ) {
+		if ( ! $this->verify_nonce( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
 				Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
@@ -550,11 +550,6 @@ class Router
 				}
 				return ;
 
-			case Core::ACTION_SAPI_PASSIVE_CALLBACK :
-			case Core::ACTION_SAPI_AGGRESSIVE_CALLBACK :
-				self::$_action = $action ;
-				return ;
-
 			case Core::ACTION_DISMISS:
 				/**
 				 * Non ajax call can dismiss too
@@ -570,46 +565,6 @@ class Router
 				return ;
 		}
 
-	}
-
-	/**
-	 * Verify sapi passive callback
-	 *
-	 * @since 1.5
-	 * @access private
-	 * @param  string $action
-	 * @return bool
-	 */
-	private function _verify_sapi_passive( $action )
-	{
-		if ( $action === Core::ACTION_SAPI_PASSIVE_CALLBACK ) {
-			if ( Admin_API::sapi_valiate_passive_callback() ) {
-				return true ;
-			}
-			exit( 'wrong passive callback' ) ;
-		}
-
-		return false ;
-	}
-
-	/**
-	 * Verify sapi aggressive callback
-	 *
-	 * @since 1.6
-	 * @access private
-	 * @param  string $action
-	 * @return bool
-	 */
-	private function _verify_sapi_aggressive( $action )
-	{
-		if ( $action === Core::ACTION_SAPI_AGGRESSIVE_CALLBACK ) {
-			if ( Admin_API::sapi_validate_aggressive_callback() ) {
-				return true ;
-			}
-
-			exit( 'wrong aggressive callback' ) ;
-		}
-		return false ;
 	}
 
 	/**

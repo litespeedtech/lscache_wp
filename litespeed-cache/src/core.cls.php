@@ -60,8 +60,6 @@ class Core
 	const ACTION_CDN = 'cdn' ;
 	const ACTION_REPORT = 'report' ;
 	const ACTION_CSS = 'css' ;
-	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
-	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
 	const WHM_MSG = 'lscwp_whm_install' ;
 	const WHM_MSG_VAL = 'whm_install' ;
@@ -325,14 +323,6 @@ class Core
 
 			case Router::ACTION_DB:
 				DB_Optm::handler() ;
-				break ;
-
-			case self::ACTION_SAPI_PASSIVE_CALLBACK:
-				Admin_API::sapi_passive_callback() ;
-				break ;
-
-			case self::ACTION_SAPI_AGGRESSIVE_CALLBACK:
-				Admin_API::sapi_aggressive_callback() ;
 				break ;
 
 			case Router::ACTION_PLACEHOLDER:

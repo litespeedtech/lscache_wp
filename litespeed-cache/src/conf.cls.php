@@ -25,6 +25,7 @@ class Conf
 	const _VERSION 	= '_version' ; // Not set-able
 	const HASH 		= 'hash' ; // Not set-able
 	const O_AUTO_UPGRADE 	= 'auto_upgrade' ;
+	const O_API_KEY 		= 'api_key' ;
 	const O_SERVER_IP 		= 'server_ip' ;
 
 	## -------------------------------------------------- ##
@@ -326,6 +327,7 @@ class Conf
 		self::_VERSION 			=> '',
 		self::HASH				=> '',
 		self::O_AUTO_UPGRADE 	=> false,
+		self::O_API_KEY 		=> '',
 		self::O_SERVER_IP 		=> '',
 
 		// Cache

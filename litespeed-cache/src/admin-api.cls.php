@@ -23,10 +23,6 @@ class Admin_API
 	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
 
 	// For each request, send a callback to confirm
-	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
-	const TYPE_NOTIFY_IMG = 'notify_img' ;
-	const TYPE_CHECK_IMG = 'check_img' ;
-	const TYPE_IMG_DESTROY_CALLBACK = 'imgoptm_destroy' ;
 	const TYPE_RESET_KEY = 'reset_key' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
@@ -79,136 +75,32 @@ class Admin_API
 	}
 
 	/**
-	 * Handle aggressive callback requests from LiteSpeed image server
-	 *
-	 * @since  1.6
-	 * @since  1.6.7 Added destroy callback
-	 * @access public
-	 */
-	public static function sapi_aggressive_callback()
-	{
-		$instance = self::get_instance() ;
-
-		switch ( Router::verify_type() ) {
-			case self::TYPE_NOTIFY_IMG :
-				Img_Optm::get_instance()->notify_img() ;
-				break ;
-
-			case self::TYPE_CHECK_IMG :
-				$instance->validate_lsserver() ;
-				Img_Optm::get_instance()->check_img() ;
-				break ;
-
-			case self::TYPE_IMG_DESTROY_CALLBACK :
-				Img_Optm::get_instance()->img_optimize_destroy_callback() ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		exit ;
-	}
-
-	/**
-	 * Validate litespeed api server IP
-	 *
-	 * @since  1.6.5
-	 * @access public
-	 */
-	public function validate_lsserver()
-	{
-		$ip = gethostbyname( 'wp.api.litespeedtech.com' ) ;
-		if ( $ip != Router::get_ip() ) {
-			exit( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
-		}
-	}
-
-	/**
-	 * Handle passive callback requests from LiteSpeed image server
-	 *
-	 * @since  1.6
-	 * @access public
-	 */
-	public static function sapi_passive_callback()
-	{
-		$instance = self::get_instance() ;
-
-		switch ( Router::verify_type() ) {
-			case self::TYPE_REQUEST_CALLBACK :
-				$instance->_request_callback() ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		exit ;
-	}
-
-	/**
 	 * request key callback from LiteSpeed
 	 *
 	 * @since  1.5
-	 * @access private
+	 * @access public
 	 */
-	private function _request_callback()
+	public function hash()
 	{
+		if ( empty( $_POST[ 'hash' ] ) ) {
+			Log::debug( '[IAPI] Lack of hash param' ) ;
+			return array( '_res' => 'err', '_msg' => 'lack_of_param' ) ;
+		}
+
 		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
+
+		if ( $_POST[ 'hash' ] !== md5( $key_hash ) ) {
+			Log::debug( '[IAPI] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] ) ;
+			return array( '_res' => 'err', '_msg' => 'Error hash code' ) ;
+		}
+
+		Control::set_nocache( 'litespeed hash validation' ) ;
+
 		Log::debug( '[IAPI] __callback request hash: ' . $key_hash ) ;
-		exit( $key_hash ) ;
-	}
 
-	/**
-	 * Check if is valid callback from litespeed passive request
-	 *
-	 * @since  1.5
-	 * @access public
-	 * @return bool True if correct
-	 */
-	public static function sapi_valiate_passive_callback()
-	{
-		if ( empty( $_REQUEST[ 'hash' ] ) ) {
-			Log::debug( '[IAPI] __callback bypassed passive check' ) ;
-			return false ;
-		}
-		$instance = self::get_instance() ;
+		delete_option( self::DB_API_KEY_HASH ) ;
 
-		// use tmp hash to check
-		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
-		$hash_check = md5( $key_hash ) === $_REQUEST[ 'hash' ] ;
-
-		Log::debug( '[IAPI] __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
-
-		return $hash_check ;
-	}
-
-	/**
-	 * Check if is valid callback from litespeed aggressive request
-	 *
-	 * @since  1.6
-	 * @access public
-	 * @return bool True if correct
-	 */
-	public static function sapi_validate_aggressive_callback()
-	{
-		$instance = self::get_instance() ;
-
-		// don't have auth_key yet
-		if ( ! $instance->_iapi_key ) {
-			Log::debug( '[IAPI] __callback aggressive check failed: No init key' ) ;
-			return false ;
-		}
-
-		// Once client has auth_key, each time when callback to check, need to carry on this key
-		if ( empty( $_REQUEST[ 'auth_key' ] ) ) {
-			Log::debug( '[IAPI] __callback aggressive check failed: lack of auth_key' ) ;
-			return false ;
-		}
-
-		$res = md5( $instance->_iapi_key ) === $_REQUEST[ 'auth_key' ] ;
-		Log::debug( '[IAPI] __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
-		return $res ;
+		return array( 'hash' => $key_hash ) ;
 	}
 
 	/**

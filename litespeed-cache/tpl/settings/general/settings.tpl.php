@@ -19,9 +19,24 @@ $this->form_action() ;
 	<?php endif ; ?>
 
 	<tr>
-		<th><?php echo __('Server IP', 'litespeed-cache'); ?></th>
+		<th>
+			<?php $id = Conf::O_API_KEY ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
+			<?php $this->build_input($id); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with cloud servers.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Conf::O_SERVER_IP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ) ; ?>

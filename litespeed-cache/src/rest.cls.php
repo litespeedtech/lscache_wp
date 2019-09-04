@@ -45,6 +45,34 @@ class REST
 			}
 		) );
 
+		// Hash callback validate
+		register_rest_route( 'litespeed/v1', '/hash', array(
+			'methods' => 'POST',
+			'callback' => array( Admin_API::get_instance(), 'hash' ),
+		) );
+
+		// Image optm notify_img
+		// Need validation
+		register_rest_route( 'litespeed/v1', '/notify_img', array(
+			'methods' => 'POST',
+			'callback' => array( Img_Optm::get_instance(), 'notify_img' ),
+		) );
+
+		// Image optm imgoptm_destroy
+		// Need validation
+		register_rest_route( 'litespeed/v1', '/imgoptm_destroy', array(
+			'methods' => 'POST',
+			'callback' => array( Img_Optm::get_instance(), 'destroy_callback' ),
+		) );
+
+		// Image optm check_img
+		// Need validation
+		register_rest_route( 'litespeed/v1', '/check_img', array(
+			'methods' => 'POST',
+			'callback' => array( Img_Optm::get_instance(), 'check_img' ),
+		) );
+
+
 	}
 
 	/**

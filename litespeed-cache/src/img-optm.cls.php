@@ -714,9 +714,36 @@ class Img_Optm
 	 */
 	public function notify_img()
 	{
+		// Validate key
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
+		}
+
 		global $wpdb ;
 
-		list( $notified_data, $server, $status ) = $this->_parse_notify_data() ;
+		$notified_data = json_decode( base64_decode( $_POST[ 'data' ] ), true ) ;
+		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
+			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
+			return array( '_res' => 'err', '_msg' => 'no notified data' ) ;
+		}
+
+		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -21 ) !== 'api.litespeedtech.com' ) {
+			Log::debug( '[Img_Optm] notify exit: no/wrong server' ) ;
+			return array( '_res' => 'err', '_msg' => 'no/wrong server' ) ;
+		}
+
+		$_allowed_status = array(
+			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
+			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
+		) ;
+
+		if ( empty( $_POST[ 'status' ] ) || ( ! in_array( $_POST[ 'status' ], $_allowed_status ) && substr( $_POST[ 'status' ], 0, 3 ) != self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) {
+			Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
+			return array( '_res' => 'err', '_msg' => 'no/wrong status' ) ;
+		}
+
+		$server = $_POST[ 'server' ] ;
+		$status = $_POST[ 'status' ] ;
 
 		$pids = array_keys( $notified_data ) ;
 
@@ -897,41 +924,7 @@ class Img_Optm
 
 		// redo count err
 
-		echo json_encode( array( 'count' => count( $notified_data ) ) ) ;
-		exit() ;
-
-	}
-
-	/**
-	 * parse LiteSpeed IAPI server data
-	 *
-	 * @since  1.6.5
-	 * @access public
-	 */
-	private function _parse_notify_data()
-	{
-		$notified_data = json_decode( base64_decode( $_POST[ 'data' ] ), true ) ;
-		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
-			exit( json_encode( 'no notified data' ) ) ;
-		}
-
-		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -21 ) !== 'api.litespeedtech.com' ) {
-			Log::debug( '[Img_Optm] notify exit: no/wrong server' ) ;
-			exit( json_encode( 'no/wrong server' ) ) ;
-		}
-
-		$_allowed_status = array(
-			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
-			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
-		) ;
-
-		if ( empty( $_POST[ 'status' ] ) || ( ! in_array( $_POST[ 'status' ], $_allowed_status ) && substr( $_POST[ 'status' ], 0, 3 ) != self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) {
-			Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
-			exit( json_encode( 'no/wrong status' ) ) ;
-		}
-
-		return array( $notified_data, $_POST[ 'server' ], $_POST[ 'status' ] ) ;
+		return array( '_res' => 'ok', 'count' => count( $notified_data ) ) ;
 	}
 
 	/**
@@ -1224,6 +1217,16 @@ class Img_Optm
 	 */
 	public function check_img()
 	{
+		$ip = gethostbyname( 'wp.api.litespeedtech.com' ) ;
+		if ( $ip != Router::get_ip() ) {
+			return array( '_res' => 'err', '_msg' => 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
+		}
+
+		// Validate key
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
+		}
+
 		global $wpdb ;
 
 		$pid = $_POST[ 'data' ] ;
@@ -1256,8 +1259,7 @@ class Img_Optm
 		}
 		$data[ 'img_data' ] = $img_data ;
 
-		echo json_encode( $data ) ;
-		exit;
+		return array( '_res' => 'ok', 'data' => $data ) ;
 	}
 
 	/**
@@ -1383,15 +1385,20 @@ class Img_Optm
 	 * @since 1.6.7
 	 * @access private
 	 */
-	public function img_optimize_destroy_callback()
+	public function destroy_callback()
 	{
+		// Validate key
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
+		}
+
 		global $wpdb ;
 		Log::debug( '[Img_Optm] excuting DESTROY process' ) ;
 
 		$request_time = get_option( self::DB_IMG_OPTIMIZE_DESTROY ) ;
 		if ( time() - $request_time > 300 ) {
 			Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
-			exit( 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
+			return array( '_res' => 'err', '_msg' => 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
 		}
 
 		/**
@@ -1432,7 +1439,7 @@ class Img_Optm
 
 			Log::debug( '[Img_Optm] To be continued 🚦' ) ;
 
-			exit( 'to_be_continued' ) ;
+			return array( '_res' => 'to_be_continued' ) ;
 		}
 
 		// Delete optm info
@@ -1446,7 +1453,7 @@ class Img_Optm
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
 		delete_option( Conf::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
 
-		exit( 'ok' ) ;
+		return array( '_res' => 'ok' ) ;
 	}
 
 	/**

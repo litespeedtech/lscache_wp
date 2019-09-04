@@ -22,6 +22,9 @@ class Lang extends Conf
 	public static function title( $id )
 	{
 		$_lang_list = array(
+			self::O_SERVER_IP					=> __( 'Server IP', 'litespeed-cache' ),
+			self::O_API_KEY						=> __( 'API Key', 'litespeed-cache' ),
+
 			self::O_CACHE						=> __( 'Enable Cache', 'litespeed-cache' ),
 			self::O_CACHE_TTL_PUB				=> __( 'Default Public Cache TTL', 'litespeed-cache' ),
 			self::O_CACHE_TTL_PRIV				=> __( 'Default Private Cache TTL', 'litespeed-cache' ),
