@@ -694,7 +694,7 @@ class Conf
 							foreach ( $mapping_fields as $v3 ) {
 								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
 								if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
-									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array() ;
+									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array() ; // Note: Since v3.0 its already an array
 								}
 								$this_row[ $v3 ] = $this_v ;
 							}

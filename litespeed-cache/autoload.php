@@ -22,7 +22,7 @@ if ( ! function_exists( '_litespeed_autoload' ) ) {
 		$file = implode( '/', $file ) ;
 		$file = str_replace( '_', '-', strtolower( $file ) ) ;
 
-		if ( strpos( $file, 'lib/' ) === 0 || strpos( $file, 'thirdparty/' ) === 0 ) {
+		if ( strpos( $file, 'lib/' ) === 0 || strpos( $file, 'cli/' ) === 0 || strpos( $file, 'thirdparty/' ) === 0 ) {
 			$file = LSCWP_DIR . $file . '.cls.php' ;
 		}
 		else {

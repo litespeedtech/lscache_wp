@@ -52,77 +52,15 @@ class Admin
 		 * 		`set_option cdn-mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
-var_dump($key);exit;
+
 		// Build raw data
 		$raw_data = array(
 			Admin_Settings::ENROLL	=> array( $key ),
 			$key 	=> $val,
 		) ;
-		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, Conf::O_CDN_MAPPING ) !== 0 ) ) {
-			WP_CLI::error('The options array is empty or the key is not valid.') ;
-			return ;
-		}
 
-		$options = Config::convert_options_to_input($options) ;
+		Admin_Settings::get_instance()->save( $raw_data ) ;
 
-		switch ($key) {
-			case Conf::_VERSION:
-				//do not allow
-				WP_CLI::error('This option is not available for setting.') ;
-				return ;
-
-			case Conf::O_CACHE_MOBILE:
-				// set list then do checkbox
-				if ( $val === 'true' && empty( $options[ Conf::O_CACHE_MOBILE_RULES ] ) ) {
-					WP_CLI::error( 'Please set mobile rules value first.' ) ;
-					return ;
-				}
-				//fall through
-			case in_array( $key, self::$checkboxes ) :
-				//checkbox
-				if ( $val === 'true' ) {
-					$options[$key] = Conf::VAL_ON ;
-				}
-				elseif ( $val === 'false' ) {
-					unset($options[$key]) ;
-				}
-				else {
-					WP_CLI::error('Checkbox value must be true or false.') ;
-					return ;
-				}
-				break ;
-
-			/**
-			 * Special handler for cdn mapping settings
-			 *
-			 * $options is already converted to input format
-			 *
-			 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
-			 * 		`set_option cdn-mapping[inc_img][0] true`
-			 */
-			case strpos( $key, Conf::O_CDN_MAPPING ) === 0 :
-
-				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
-
-				// Handle switch value
-				if ( in_array( $child_key[ 1 ], array(
-						Conf::CDN_MAPPING_INC_IMG,
-						Conf::CDN_MAPPING_INC_CSS,
-						Conf::CDN_MAPPING_INC_JS,
-				) ) ) {
-					$val = $val === 'true' ? Conf::VAL_ON : Conf::VAL_OFF ;
-				}
-
-				$options[ Conf::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
-				break ;
-
-			default:
-				// Everything else, just set the value
-				$options[$key] = $val ;
-				break ;
-		}
-
-		$this->_update_options($options) ;
 	}
 
 	/**

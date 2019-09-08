@@ -51,48 +51,27 @@ class Admin_Settings extends Conf
 
 		$raw_data = Admin::cleanup_text( $raw_data ) ;
 
-		// Sanitize the fields to save
-		$_fields = array() ;
-		foreach ( $raw_data[ self::ENROLL ] as $v ) {
-			// Drop array format
-			if ( strpos( $v, '[' ) !== false ) {
-
-				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 ) { // Separate handler for CDN child settings
-					// todo: Need to be compatible with xx[0] way from CLI
-					$v = substr( $v, 0, -2 ) ;// Drop ending []
-				}
-				elseif ( strpos( $v, self::O_CRWL_COOKIES ) === 0 ) { // Separate handler for Cookie Crawler settings
-					$v = substr( $v, 0, -2 ) ;// Drop ending []
-				}
-				else {
-					$v = substr( $v, 0, strpos( $v, '[' ) ) ;
-				}
-			}
-
-			// Append current field to setting save
-			if ( $v && ! in_array( $v, $_fields ) ) { // Not allow to set core version
-				if ( array_key_exists( $v, self::$_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
-					$_fields[] = $v ;
-				}
-			}
-		}
-
 		// Convert data to config format
 		$the_matrix = array() ;
-		foreach ( $_fields as $id ) {
-			$data = '' ;
+		foreach ( array_unique( $raw_data[ self::ENROLL ] ) as $id ) {
+			$child = false ;
+			// Drop array format
+			if ( strpos( $id, '[' ) !== false ) {
+				if ( strpos( $id, self::O_CDN_MAPPING ) === 0 || strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // CDN child | Cookie Crawler settings
+					$child = substr( $id, strpos( $id, '[' ) + 1, strpos( $id, ']' ) - strpos( $id, '[' ) - 1 ) ;
+					$id = substr( $id, 0, strpos( $id, '[' ) ) ; // Drop ending [] ; Compatible with xx[0] way from CLI
+				}
+				else {
+					$id = substr( $id, 0, strpos( $id, '[' ) ) ; // Drop ending []
+				}
+			}
 
-			/**
-			 * Pass in data
-			 */
-			if ( strpos( $id, self::O_CDN_MAPPING ) === 0 ) { // CDN data
-				/**
-				 * Check if the child key is correct
-				 * Raw data format:
-				 * 		cdn-mapping[url][] = 'xxx'
-				 * 		cdn-mapping[inc_js][] = 1
-				 */
-				$child = str_replace( array( self::O_CDN_MAPPING, '[', ']' ), '', $id ) ;
+			if ( ! array_key_exists( $id, self::$_default_options ) ) {
+				continue ;
+			}
+
+			// Validate $child
+			if ( $id == self::O_CDN_MAPPING ) {
 				if ( ! in_array( $child, array(
 					self::CDN_MAPPING_URL,
 					self::CDN_MAPPING_INC_IMG,
@@ -102,40 +81,89 @@ class Admin_Settings extends Conf
 				) ) ) {
 					continue ;
 				}
-
-				$id = self::O_CDN_MAPPING ;
-				if ( ! empty( $raw_data[ $id ][ $child ] ) ) {
-					$data = $raw_data[ $id ][ $child ] ; // []=xxx
-				}
 			}
-			elseif ( strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // Cookie Crawler data
-				/**
-				 * Save cookie crawler
-				 * Raw Format:
-				 * 		crawler-cookies[name][] = xx
-				 * 		crawler-cookies[vals][] = xx
-				 *
-				 * todo: need to allow null for values
-				 */
-				$child = str_replace( array( self::O_CRWL_COOKIES, '[', ']' ), '', $id ) ;
+			if ( $id == self::O_CRWL_COOKIES ) {
 				if ( ! in_array( $child, array(
 					self::CRWL_COOKIE_NAME,
 					self::CRWL_COOKIE_VALS,
 				) ) ) {
 					continue ;
 				}
-
-				$id = self::O_CRWL_COOKIES ;
-				if ( ! empty( $raw_data[ $id ][ $child ] ) ) {
-					$data = $raw_data[ $id ][ $child ] ; // []=xxx
-				}
 			}
-			elseif ( ! empty( $raw_data[ $id ] ) ) {
-				$data = $raw_data[ $id ] ;
+
+			$data = false ;
+
+			if ( $child ) {
+				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : false ; // []=xxx or [0]=xxx
+			}
+			else {
+				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false ;
 			}
 
 			// Sanitize the value
 			switch ( $id ) {
+				case self::O_CDN_MAPPING :
+					/**
+					 * CDN setting
+					 *
+					 * Raw data format:
+					 * 		cdn-mapping[url][] = 'xxx'
+					 * 		cdn-mapping[url][2] = 'xxx2'
+					 * 		cdn-mapping[inc_js][] = 1
+					 *
+					 * Final format:
+					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
+					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+					 */
+					// Use existing in queue data if existed (Only available when $child != false)
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : $this->__cfg->option( $id ) ;
+
+					foreach ( $data as $k => $v ) {
+						if ( $child == self::CDN_MAPPING_FILETYPE ) {
+							$v = Utility::sanitize_lines( $v ) ;
+						}
+						elseif ( in_array( $v, array(
+							self::CDN_MAPPING_INC_IMG,
+							self::CDN_MAPPING_INC_CSS,
+							self::CDN_MAPPING_INC_JS,
+						) ) ) {
+							// Because these can't be auto detected in `config->update()`, need to format here
+							$v = $v === 'false' ? 0 : (bool) $v ;
+						}
+
+						$data2[ $k ][ $child ] = $v ;
+					}
+					$data = $data2 ;
+					break ;
+
+				case self::O_CRWL_COOKIES :
+					/**
+					 * Cookie Crawler setting
+					 * Raw Format:
+					 * 		crawler-cookies[name][] = xxx
+					 * 		crawler-cookies[name][2] = xxx2
+					 * 		crawler-cookies[vals][] = xxx
+					 *
+					 * todo: need to allow null for values
+					 *
+					 * Final format:
+					 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+					 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
+					 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+					 *
+					 * empty line for `vals` use literal `_null`
+					 */
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : $this->__cfg->option( $id ) ;
+
+					foreach ( $data as $k => $v ) {
+						if ( $child == self::CRWL_COOKIE_VALS ) {
+							$v = Utility::sanitize_lines( $v ) ;
+						}
+						$data2[ $k ][ $child ] = $v ;
+					}
+					$data = $data2 ;
+					break ;
+
 				// Cache exclude cat
 				case self::O_CACHE_EXC_CAT :
 					$data2 = array() ;
@@ -180,43 +208,6 @@ class Admin_Settings extends Conf
 					}
 					break ;
 
-				/**
-				 * Handle multiple CDN setting
-				 * Final format:
-				 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-				 */
-				case self::O_CDN_MAPPING :
-					$data2 = $this->__cfg->option( $id ) ;
-
-					foreach ( $data as $k => $v ) {
-						if ( $child == self::CDN_MAPPING_FILETYPE ) {
-							$v = Utility::sanitize_lines( $v ) ;
-						}
-						$data2[ $k ][ $child ] = $v ;
-					}
-					$data = $data2 ;
-					break ;
-
-				/**
-				 * Handle Cookie Crawler setting
-				 * Final format:
-				 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-				 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-				 *
-				 * empty line for `vals` use literal `_null`
-				 */
-				case self::O_CRWL_COOKIES :
-					$data2 = $this->__cfg->option( $id ) ;
-
-					foreach ( $data as $k => $v ) {
-						if ( $child == self::CRWL_COOKIE_VALS ) {
-							$v = Utility::sanitize_lines( $v ) ;
-						}
-						$data2[ $k ][ $child ] = $v ;
-					}
-					$data = $data2 ;
-					break ;
-
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRWL_EXC_CPT :
 					if ( $data ) {
@@ -226,7 +217,7 @@ class Admin_Settings extends Conf
 					}
 					break ;
 
-				default:
+				default :
 					break ;
 			}
 

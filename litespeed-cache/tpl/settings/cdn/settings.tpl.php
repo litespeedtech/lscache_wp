@@ -90,7 +90,7 @@ $this->form_action() ;
 							<?php $id = Conf::CDN_MAPPING_FILETYPE ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
-						<?php $this->build_textarea( Conf::O_CDN_MAPPING . "[$id][]", 17, $v[ $id ] ) ; ?>
+						<?php $this->build_textarea( Conf::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ) ; ?>
 					</div>
 				</div>
 			</div>

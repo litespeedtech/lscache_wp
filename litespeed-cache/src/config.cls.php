@@ -463,7 +463,7 @@ class Config extends Conf
 				$val %= $max + 1 ;
 			}
 			else {
-				$val = (bool) $val ;
+				$val = $val === 'false' ? 0 : (bool) $val ;
 			}
 		}
 		elseif ( is_array( self::$_default_options[ $id ] ) ) {
