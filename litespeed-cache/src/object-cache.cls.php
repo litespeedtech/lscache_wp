@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Object
+class Object_Cache
 {
 	private static $_instance ;
 

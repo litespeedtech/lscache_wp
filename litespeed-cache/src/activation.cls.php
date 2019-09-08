@@ -269,7 +269,7 @@ class Activation
 
 		/* 3) object-cache.php; */
 
-		Object::get_instance()->del_file() ;
+		Object_Cache::get_instance()->del_file() ;
 
 		/* 4) .htaccess; */
 
@@ -333,10 +333,10 @@ class Activation
 		/* 3) object-cache.php; */
 
 		if ( $options[ Conf::O_OBJECT ] && ( ! $options[ Conf::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
-			Object::get_instance()->update_file( $options ) ;
+			Object_Cache::get_instance()->update_file( $options ) ;
 		}
 		else {
-			Object::get_instance()->del_file() ;
+			Object_Cache::get_instance()->del_file() ;
 		}
 
 		/* 4) .htaccess; */

@@ -204,7 +204,7 @@ class WP_Object_Cache
 	 */
 	private function __construct()
 	{
-		$this->_object_cache = \LiteSpeed\Object::get_instance() ;
+		$this->_object_cache = \LiteSpeed\Object_Cache::get_instance() ;
 
 		$this->multisite = is_multisite() ;
 		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '' ;

@@ -331,7 +331,7 @@ class Purge
 
 			return false ;
 		}
-		Object::get_instance()->flush() ;
+		Object_Cache::get_instance()->flush() ;
 		Log::debug( '[Purge] Flushed object cache' ) ;
 
 		if ( ! $silence ) {

@@ -38,13 +38,13 @@ class Admin
 	 *     $ wp lscache-admin set_option cache-priv false
 	 *
 	 */
-	public function set_option($args, $assoc_args)
+	public function set_option( $args, $assoc_args )
 	{
 		/**
 		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in `const.default.ini`
 		 */
-		$key = $args[0] ;
-		$val = $args[1] ;
+		$key = $args[ 0 ] ;
+		$val = $args[ 1 ] ;
 
 		/**
 		 * For CDN mapping, allow:

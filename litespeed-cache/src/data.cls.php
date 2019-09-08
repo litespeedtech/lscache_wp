@@ -338,7 +338,7 @@ class Data
 
 		// Clear OC to avoid get `_tb_img_optm` from option failed
 		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-			Object::get_instance()->flush() ;
+			Object_Cache::get_instance()->flush() ;
 		}
 	}
 
