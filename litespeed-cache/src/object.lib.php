@@ -16,7 +16,7 @@ if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	}
 }
 
-require_once dirname( __FILE__ ) . '/object.cls.php' ;
+require_once dirname( __FILE__ ) . '/object-cache.cls.php' ;
 
 /**
  * Sets up Object Cache Global and assigns it.
