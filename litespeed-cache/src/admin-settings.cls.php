@@ -248,23 +248,13 @@ class Admin_Settings extends Conf
 
 		$raw_data = Admin::cleanup_text( $raw_data ) ;
 
-		// Sanitize the fields to save
-		$_fields = array() ;
-		foreach ( $raw_data[ self::ENROLL ] as $v ) {
+		foreach ( array_unique( $raw_data[ self::ENROLL ] ) as $id ) {
 			// Append current field to setting save
-			if ( $v && ! in_array( $v, $_fields ) && $v != self::_VERSION ) { // Not allow to set core version
-				if ( array_key_exists( $v, self::$_default_site_options ) ) {
-					$_fields[] = $v ;
-				}
+			if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
+				continue ;
 			}
-		}
 
-		foreach ( $_fields as $id ) {
-			$data = '' ;
-
-			if ( ! empty( $raw_data[ $id ] ) ) {
-				$data = $raw_data[ $id ] ;
-			}
+			$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false ;
 
 			// id validation will be inside
 			$this->__cfg->network_update( $id, $data ) ;

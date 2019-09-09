@@ -359,7 +359,7 @@ class Activation
 	{
 		$adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
 		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
-			return false ;
+			return ;
 		}
 
 		defined( 'LSCWP_LOG' ) && Log::debug( '[Activation] Copying advanced_cache file' ) ;

@@ -56,8 +56,16 @@ class Admin
 		// Build raw data
 		$raw_data = array(
 			Admin_Settings::ENROLL	=> array( $key ),
-			$key 	=> $val,
 		) ;
+
+		// Contains child set
+		if ( strpos( $key, '[' ) ) {
+			parse_str( $key . '=' . $val , $key2 ) ;
+			$raw_data = array_merge( $raw_data, $key2 ) ;
+		}
+		else {
+			$raw_data[ $key ] = $val ;
+		}
 
 		Admin_Settings::get_instance()->save( $raw_data ) ;
 
