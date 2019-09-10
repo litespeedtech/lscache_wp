@@ -319,7 +319,7 @@ class Activation
 		if ( $options[ Conf::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
 
-			if ( ! defined( 'LSCACHE_ADV_CACHE' ) ) {
+			if ( ! defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_CLI' ) ) {
 				$msg = __( 'LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache' )
 					. ' ' . __('LiteSpeed Cache does work with other optimization plugins, but only if functionality is not duplicated. Only one full-page cache may be activated.', 'litespeed-cache')
 					. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank">'

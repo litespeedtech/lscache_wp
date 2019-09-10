@@ -12,7 +12,7 @@ use WP_CLI ;
 /**
  * LiteSpeed Cache Admin Interface
  */
-class Admin
+class Admin extends Conf
 {
 	private $__cfg ;
 
@@ -50,7 +50,12 @@ class Admin
 		 * For CDN mapping, allow:
 		 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
 		 * 		`set_option cdn-mapping[inc_img][0] true`
+		 * 		`set_option cdn-mapping[inc_img][0] 1`
 		 * @since  2.7.1
+		 *
+		 * For Crawler cookies:
+		 * 		`set_option crawler-cookies[name][0] my_currency`
+		 * 		`set_option crawler-cookies[vals][0] "USD\nTWD"`
 		 */
 
 		// Build raw data
@@ -90,19 +95,45 @@ class Admin
 		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;
 		WP_CLI::line($buf) ;
 
-		foreach($options as $key => $value) {
-			if ( in_array($key, self::$checkboxes) ) {
-				if ( $value ) {
-					$value = 'true' ;
+		foreach( $options as $k => $v ) {
+			if ( $k == self::O_CDN_MAPPING || $k == self::O_CRWL_COOKIES ) {
+				foreach ( $v as $k2 => $v2 ) { // $k2 is numeric
+					if ( is_array( $v2 ) ) {
+						foreach ( $v2 as $k3 => $v3 ) { // $k3 = 'url/inc_img/name/vals'
+							if ( is_array( $v3 ) ) {
+								$option_out[] = array( 'key' => '', 'value' => '' ) ;
+								foreach ( $v3 as $k4 => $v4 ) {
+									$option_out[] = array( 'key' => $k4 == 0 ? "{$k}[$k3][$k2]" : '', 'value' => $v4 ) ;
+								}
+								$option_out[] = array( 'key' => '', 'value' => '' ) ;
+							}
+							else {
+								$option_out[] = array( 'key' => "{$k}[$k3][$k2]", 'value' => $v3 ) ;
+							}
+						}
+					}
 				}
-				else {
-					$value = 'false' ;
+				continue ;
+			}
+			elseif ( is_array( $v ) && $v ) {
+				// $v = implode( PHP_EOL, $v ) ;
+				$option_out[] = array( 'key' => '', 'value' => '' ) ;
+				foreach ( $v as $k2 => $v2 ) {
+					$option_out[] = array( 'key' => $k2 == 0 ? $k : '', 'value' => $v2 ) ;
 				}
+				$option_out[] = array( 'key' => '', 'value' => '' ) ;
+				continue ;
 			}
-			elseif ( $value === '' ) {
-				$value = "''" ;
+
+			if ( array_key_exists( $k, self::$_default_options ) && is_bool( self::$_default_options[ $k ] ) && ! $v ) {
+				$v = 0 ;
 			}
-			$option_out[] = array('key' => $key, 'value' => $value) ;
+
+			if ( $v === '' || $v === [] ) {
+				$v = "''" ;
+			}
+
+			$option_out[] = array( 'key' => $k, 'value' => $v ) ;
 		}
 
 		WP_CLI\Utils\format_items('table', $option_out, array('key', 'value')) ;
