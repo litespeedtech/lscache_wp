@@ -3,10 +3,12 @@ namespace LiteSpeed\CLI ;
 
 defined( 'WPINC' ) || exit ;
 
+use LiteSpeed\Core ;
 use LiteSpeed\Config ;
 use LiteSpeed\Conf ;
 use LiteSpeed\Admin_Settings ;
 use LiteSpeed\Import ;
+use LiteSpeed\Utility ;
 use WP_CLI ;
 
 /**
@@ -36,6 +38,7 @@ class Admin extends Conf
 	 *
 	 *     # Set to not cache the login page
 	 *     $ wp lscache-admin set_option cache-priv false
+	 *     $ wp lscache-admin set_option cdn-mapping[url][0] https://cdn.EXAMPLE.com
 	 *
 	 */
 	public function set_option( $args, $assoc_args )
@@ -73,6 +76,8 @@ class Admin extends Conf
 		}
 
 		Admin_Settings::get_instance()->save( $raw_data ) ;
+		WP_CLI::line( "$key:" ) ;
+		$this->get_option( $args, $assoc_args ) ;
 
 	}
 
@@ -87,7 +92,7 @@ class Admin extends Conf
 	 *     $ wp lscache-admin get_options
 	 *
 	 */
-	public function get_options($args, $assoc_args)
+	public function get_options( $args, $assoc_args )
 	{
 		$options = Config::get_instance()->get_options() ;
 		$option_out = array() ;
@@ -137,6 +142,110 @@ class Admin extends Conf
 		}
 
 		WP_CLI\Utils\format_items('table', $option_out, array('key', 'value')) ;
+	}
+
+	/**
+	 * Get the plugin options.
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Get one option
+	 *     $ wp lscache-admin get_option cache-priv
+	 *     $ wp lscache-admin get_option cdn-mapping[url][0]
+	 *
+	 */
+	public function get_option( $args, $assoc_args )
+	{
+		$id = $args[ 0 ] ;
+
+		$child = false ;
+		if ( strpos( $id, '[' ) ) {
+			parse_str( $id, $id2 ) ;
+			Utility::compatibility() ;
+			$id = array_key_first( $id2 ) ;
+
+			$child = array_key_first( $id2[ $id ] ) ; // `url`
+			if ( ! $child ) {
+				WP_CLI::error( 'Wrong child key' ) ;
+				return ;
+			}
+			$numeric = array_key_first( $id2[ $id ][ $child ] ) ; // `0`
+			if ( $numeric === null ) {
+				WP_CLI::error( 'Wrong 2nd level numeric key' ) ;
+				return ;
+			}
+		}
+
+		$v = Core::config( $id ) ;
+		$default_v = self::$_default_options[ $id ] ;
+
+		/**
+		 * For CDN_mapping and crawler_cookies
+		 * Examples of option name:
+		 * 		cdn-mapping[url][0]
+		 * 		crawler-cookies[name][1]
+		 */
+		if ( $id == self::O_CDN_MAPPING ) {
+			if ( ! in_array( $child, array(
+				self::CDN_MAPPING_URL,
+				self::CDN_MAPPING_INC_IMG,
+				self::CDN_MAPPING_INC_CSS,
+				self::CDN_MAPPING_INC_JS,
+				self::CDN_MAPPING_FILETYPE,
+			) ) ) {
+				WP_CLI::error( 'Wrong child key' ) ;
+				return ;
+			}
+		}
+		if ( $id == self::O_CRWL_COOKIES ) {
+			if ( ! in_array( $child, array(
+				self::CRWL_COOKIE_NAME,
+				self::CRWL_COOKIE_VALS,
+			) ) ) {
+				WP_CLI::error( 'Wrong child key' ) ;
+				return ;
+			}
+		}
+
+		if ( $id == self::O_CDN_MAPPING || $id == self::O_CRWL_COOKIES ) {
+			if ( ! empty( $v[ $numeric ][ $child ] ) ) {
+				$v = $v[ $numeric ][ $child ] ;
+			}
+			else {
+				if ( $id == self::O_CDN_MAPPING ) {
+					if ( in_array( $child, array(
+						self::CDN_MAPPING_INC_IMG,
+						self::CDN_MAPPING_INC_CSS,
+						self::CDN_MAPPING_INC_JS,
+					) ) ) {
+						$v = 0 ;
+					}
+					else {
+						$v = "''" ;
+					}
+				}
+				else {
+					$v = "''" ;
+				}
+			}
+		}
+
+		if ( is_array( $v ) ) {
+			$v = implode( PHP_EOL , $v ) ;
+		}
+
+		if ( ! $v && $id != self::O_CDN_MAPPING && $id != self::O_CRWL_COOKIES ) { // empty array for CDN/crawler has been handled
+			if ( is_bool( $default_v ) ) {
+				$v = 0 ;
+			}
+			elseif ( ! is_array( $default_v ) ) {
+				$v = "''" ;
+			}
+		}
+
+		WP_CLI::line( $v ) ;
 	}
 
 	/**

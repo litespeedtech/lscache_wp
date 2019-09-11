@@ -118,3 +118,15 @@ if ( ! function_exists('http_build_url') ) {
 		;
 	}
 }
+
+
+if ( ! function_exists( 'array_key_first' ) ) {
+	function array_key_first( array $arr ) {
+		foreach( $arr as $k => $unused ) {
+			return $k ;
+		}
+		return NULL ;
+	}
+}
+
+
