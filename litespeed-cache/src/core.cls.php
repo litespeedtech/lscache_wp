@@ -56,7 +56,6 @@ class Core
 	const ACTION_IMPORT = 'import' ;
 	const ACTION_PURGE = 'purge' ;
 	const ACTION_IMG_OPTM = 'img_optm' ;
-	const ACTION_IAPI = 'iapi' ;
 	const ACTION_CDN = 'cdn' ;
 	const ACTION_REPORT = 'report' ;
 	const ACTION_CSS = 'css' ;
@@ -341,7 +340,7 @@ class Core
 				$msg = Purge::handler() ;
 				break ;
 
-			case self::ACTION_IAPI:
+			case Router::ACTION_IAPI:
 				$msg = Admin_API::handler() ;
 				break ;
 

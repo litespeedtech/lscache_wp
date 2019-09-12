@@ -269,7 +269,7 @@ class Admin extends Conf
 			$file = $assoc_args['filename'] ;
 		}
 		else {
-			$file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His') . '.data' ;
+			$file = getcwd() . '/litespeed_options_' . date('d_m_Y-His') . '.data' ;
 		}
 
 		if ( ! is_writable(dirname($file)) ) {
@@ -342,34 +342,5 @@ class Admin extends Conf
 		WP_CLI::success( 'Options reset.' ) ;
 	}
 
-	/**
-	 * Update options
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @param array $options The options array to store
-	 */
-	private function _update_options($options)
-	{
-		$output = Admin_Settings::get_instance()->validate_plugin_settings($options) ;
-
-		global $wp_settings_errors ;
-
-		if ( ! empty($wp_settings_errors) ) {
-			foreach ($wp_settings_errors as $err) {
-				WP_CLI::error($err['message']) ;
-			}
-			return ;
-		}
-
-		$ret = Config::get_instance()->update_options($output) ;
-
-		WP_CLI::success('Options/Terms updated. Please purge the cache. New options: ' . var_export($options, true)) ;
-		// if ( $ret ) {
-		// }
-		// else {
-		// 	WP_CLI::error('No options updated.') ;
-		// }
-	}
 }
 

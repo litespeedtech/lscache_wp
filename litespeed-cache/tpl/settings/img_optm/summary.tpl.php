@@ -263,11 +263,6 @@ $closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
 					<?php echo __( 'Switch all images in the media library back to their original unoptimized versions.', 'litespeed-cache' ) ; ?>
 				</div>
 
-				<div class="litespeed-margin-bottom20">
-					<a href="<?php echo Utility::build_url( Core::ACTION_IAPI, Admin_API::TYPE_RESET_KEY ) ; ?>" class="button litespeed-btn-warning" title="<?php echo __( 'The current IAPI key must be reset after changing home URL or domain before making any further optimization requests.', 'litespeed-cache' ) ; ?>">
-						<span class="dashicons dashicons-image-rotate"></span>&nbsp;<?php echo __( 'Reset IAPI Key', 'litespeed-cache' ) ; ?>
-					</a>
-				</div>
 				<div>
 					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
 						<span class="dashicons dashicons-undo"></span>&nbsp;<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>

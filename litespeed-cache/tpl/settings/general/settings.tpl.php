@@ -1,9 +1,8 @@
 <?php
 namespace LiteSpeed ;
+
 defined( 'WPINC' ) || exit ;
 
-
-// $server_ip = get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
 
 $this->form_action() ;
 ?>
@@ -27,6 +26,7 @@ $this->form_action() ;
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with cloud servers.', 'litespeed-cache' ) ; ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_IAPI, Admin_API::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link' ) ; ?>
 			</div>
 		</td>
 	</tr>

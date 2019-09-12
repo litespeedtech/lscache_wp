@@ -15,15 +15,12 @@ class Admin_API
 {
 	private static $_instance ;
 
-	private $_iapi_key ;
 	private $_iapi_cloud ;
 
-	const DB_API_KEY = 'litespeed_api_key' ;
 	const DB_API_CLOUD = 'litespeed_api_cloud' ;
 	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
 
-	// For each request, send a callback to confirm
-	const TYPE_RESET_KEY = 'reset_key' ;
+	const TYPE_GEN_KEY = 'gen_key' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_LIST_CLOUDS = 'list_clouds' ;
@@ -46,7 +43,6 @@ class Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_iapi_key = get_option( self::DB_API_KEY ) ?: '' ;
 		$this->_iapi_cloud = get_option( self::DB_API_CLOUD ) ?: '' ;
 	}
 
@@ -63,8 +59,8 @@ class Admin_API
 		$type = Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_RESET_KEY :
-				$instance->_reset_key() ;
+			case self::TYPE_GEN_KEY :
+				$instance->_gen_key() ;
 				break ;
 
 			default:
@@ -233,19 +229,35 @@ class Admin_API
 	}
 
 	/**
-	 * delete key
+	 * Redirect to quic to get key
 	 *
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _reset_key()
+	private function _gen_key()
 	{
-		delete_option( self::DB_API_KEY ) ;
-		delete_option( self::DB_API_CLOUD ) ;
-		Log::debug( '[IAPI] delete auth_key & closest cloud' ) ;
+		$data = array(
+			'hash'		=> $this->_hash_make(),
+			'domain'	=> get_bloginfo( 'url' ),
+			'email'		=> get_bloginfo( 'admin_email' ),
+		) ;
 
-		$msg = __( 'Reset IAPI key successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		wp_redirect( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ) ) ;
+		exit ;
+	}
+
+	/**
+	 * Make a hash for callback validation
+	 *
+	 * @since  3.0
+	 */
+	private function _hash_make()
+	{
+		$hash = Str::rrand( 16 ) ;
+		// store hash
+		update_option( self::DB_API_KEY_HASH, $hash ) ;
+
+		return $hash ;
 	}
 
 	/**
@@ -298,9 +310,7 @@ class Admin_API
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
-			$hash = Str::rrand( 16 ) ;
-			// store hash
-			update_option( self::DB_API_KEY_HASH, $hash ) ;
+			$hash = $this->_hash_make() ;
 		}
 
 		if ( $server == false ) {

@@ -23,6 +23,7 @@ class Router
 	const ACTION_PLACEHOLDER = 'placeholder' ;
 	const ACTION_AVATAR = 'avatar' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
+	const ACTION_IAPI = 'iapi' ;
 
 	const TYPE = 'litespeed_type' ;
 
@@ -529,7 +530,7 @@ class Router
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case Core::ACTION_IMG_OPTM:
-			case Core::ACTION_IAPI:
+			case self::ACTION_IAPI:
 			case Core::ACTION_CDN_CLOUDFLARE:
 			case Core::ACTION_CDN_QUIC:
 			case Core::ACTION_IMPORT:
