@@ -19,7 +19,7 @@ class Purge
 	protected $_purge_single = false ;
 
 	const X_HEADER = 'X-LiteSpeed-Purge' ;
-	const PURGE_QUEUE = 'litespeed-cache-purge-queue' ;
+	const DB_QUEUE = 'queue' ;
 
 	const TYPE_PURGE_ALL = 'purge_all' ;
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache' ;
@@ -269,7 +269,7 @@ class Purge
 	 */
 	private function _purge_all_cssjs( $silence = false )
 	{
-		update_option( Conf::conf_name( Optimize::ITEM_TIMESTAMP_PURGE_CSS, 'optm' ), time() ) ;
+		Conf::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time(), 'optm' ) ;
 
 		$this->_add( Tag::TYPE_MIN ) ;
 
@@ -376,7 +376,7 @@ class Purge
 		$curr_built = $this->_build() ;
 		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
 			// Can't send, already has output, need to save and wait for next run
-			update_option( self::PURGE_QUEUE, $curr_built ) ;
+			Conf::update_option( self::DB_QUEUE, $curr_built, 'purge' ) ;
 			Log::debug( '[Purge] Output existed, queue stored: ' . $curr_built ) ;
 		}
 		else {

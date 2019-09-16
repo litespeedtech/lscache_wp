@@ -16,7 +16,6 @@ class Import
 	private static $_instance ;
 
 	private $__cfg ;
-	private $_log_name ;
 
 	const TYPE_IMPORT = 'import' ;
 	const TYPE_EXPORT = 'export' ;
@@ -33,7 +32,6 @@ class Import
 		Log::debug( 'Import init' ) ;
 
 		$this->__cfg = Config::get_instance() ;
-		$this->_log_name = Conf::conf_name( 'import', 'log' ) ;
 	}
 
 	/**
@@ -44,7 +42,7 @@ class Import
 	 */
 	public function summary()
 	{
-		$log = get_option( $this->_log_name, array() ) ;
+		$log = Conf::get_option( 'import', array(), 'log' ) ;
 
 		return $log ;
 	}
@@ -87,7 +85,7 @@ class Import
 		$log[ 'export' ][ 'file' ] = $filename ;
 		$log[ 'export' ][ 'time' ] = time() ;
 
-		update_option( $this->_log_name, $log ) ;
+		Conf::update_option( 'import', $log, 'log' ) ;
 
 		Log::debug( 'Import: Saved to ' . $filename ) ;
 
@@ -133,7 +131,7 @@ class Import
 			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
 			$log[ 'import' ][ 'time' ] = time() ;
 
-			update_option( $this->_log_name, $log ) ;
+			Conf::update_option( 'import', $log, 'log' ) ;
 
 			$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
 		}

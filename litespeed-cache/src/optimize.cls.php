@@ -991,7 +991,7 @@ class Optimize
 		// Drop query strings
 		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
 
-		$purge_timestamp = get_option( Conf::conf_name( self::ITEM_TIMESTAMP_PURGE_CSS, 'optm' ) ) ?: '' ;
+		$purge_timestamp = Conf::get_option( self::ITEM_TIMESTAMP_PURGE_CSS, '', 'optm' ) ;
 
 		$hash = md5( json_encode( $src ) . $purge_timestamp ) ;
 

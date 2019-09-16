@@ -17,12 +17,11 @@ class Admin_API
 
 	private $_iapi_cloud ;
 
-	const DB_API_CLOUD = 'litespeed_api_cloud' ;
-	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
+	const DB_CLOUD = 'cloud' ;
+	const DB_HASH = 'hash' ;
 
 	const TYPE_GEN_KEY = 'gen_key' ;
 
-	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_LIST_CLOUDS = 'list_clouds' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
@@ -43,7 +42,7 @@ class Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_iapi_cloud = get_option( self::DB_API_CLOUD ) ?: '' ;
+		$this->_iapi_cloud = Conf::get_option( self::DB_CLOUD, '', 'api' ) ;
 	}
 
 	/**
@@ -60,7 +59,7 @@ class Admin_API
 
 		switch ( $type ) {
 			case self::TYPE_GEN_KEY :
-				$instance->_gen_key() ;
+				$instance->gen_key() ;
 				break ;
 
 			default:
@@ -68,6 +67,62 @@ class Admin_API
 		}
 
 		Admin::redirect() ;
+	}
+
+	/**
+	 * Redirect to QUIC to get key, if is CLI, get json [ 'api_key' => 'asdfasdf' ]
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function gen_key()
+	{
+		$data = array(
+			'hash'		=> $this->_hash_make(),
+			'domain'	=> get_bloginfo( 'url' ),
+			'email'		=> get_bloginfo( 'admin_email' ),
+			'src'		=> defined( 'LITESPEED_CLI' ) ? 'CLI' : 'web',
+		) ;
+
+		if ( ! defined( 'LITESPEED_CLI' ) ) {
+			wp_redirect( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ) ) ;
+			exit ;
+		}
+
+		// CLI handler
+		$response = wp_remote_get( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) ) ;
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message() ;
+			Log::debug( '[IAPI] failed to gen_key: ' . $error_message ) ;
+			Admin_Display::error( __( 'IAPI Error', 'litespeed-cache' ) . ': ' . $error_message ) ;
+			return ;
+		}
+
+		$json = json_decode( $response[ 'body' ], true ) ;
+		if ( $json[ '_res' ] != 'ok' ) {
+			Log::debug( '[IAPI] error to gen_key: ' . $json[ '_msg' ] ) ;
+			Admin_Display::error( __( 'IAPI Error', 'litespeed-cache' ) . ': ' . $json[ '_msg' ] ) ;
+			return ;
+		}
+
+		// Save api_key option
+		$this->_save_api_key( $json[ 'api_key' ] ) ;
+
+		Admin_Display::succeed( __( 'Generate API key successfully.', 'litespeed-cache' ) ) ;
+	}
+
+	/**
+	 * Make a hash for callback validation
+	 *
+	 * @since  3.0
+	 */
+	private function _hash_make()
+	{
+		$hash = Str::rrand( 16 ) ;
+		// store hash
+		Conf::update_option( self::DB_HASH, $hash, 'api' ) ;
+
+		return $hash ;
 	}
 
 	/**
@@ -83,9 +138,9 @@ class Admin_API
 			return array( '_res' => 'err', '_msg' => 'lack_of_param' ) ;
 		}
 
-		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
+		$key_hash = Conf::get_option( self::DB_HASH, false, 'api' ) ;
 
-		if ( $_POST[ 'hash' ] !== md5( $key_hash ) ) {
+		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
 			Log::debug( '[IAPI] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] ) ;
 			return array( '_res' => 'err', '_msg' => 'Error hash code' ) ;
 		}
@@ -94,9 +149,23 @@ class Admin_API
 
 		Log::debug( '[IAPI] __callback request hash: ' . $key_hash ) ;
 
-		delete_option( self::DB_API_KEY_HASH ) ;
+		Conf::delete_option( self::DB_HASH, 'api' ) ;
 
 		return array( 'hash' => $key_hash ) ;
+	}
+
+	/**
+	 * Callback after generated key from QUIC.cloud
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _save_api_key( $api_key )
+	{
+		// This doesn't need to sync QUIC conf
+		Config::get_instance()->update( Conf::O_API_KEY, $api_key ) ;
+
+		Log::debug( '[IAPI] saved auth_key' ) ;
 	}
 
 	/**
@@ -142,44 +211,11 @@ class Admin_API
 		 * All requests must have api_key first
 		 * @since  1.6.5
 		 */
-		if ( ! $instance->_iapi_key ) {
-			$instance->_request_key() ;
+		if ( ! Core::config( Conf::O_API_KEY ) ) {
+			$instance->gen_key() ;
 		}
 
 		return $instance->_post( $action, $data, $server, $no_hash, $time_out ) ;
-	}
-
-	/**
-	 * request key from LiteSpeed
-	 *
-	 * This needs callback validation, so don't use for generic services which don't need security
-	 *
-	 * @since  1.5
-	 * @access private
-	 */
-	private function _request_key()
-	{
-		Log::debug( '[IAPI] req auth_key' ) ;
-
-		// Send request to LiteSpeed
-		$json = $this->_post( self::IAPI_ACTION_REQUEST_KEY, home_url(), true ) ;
-
-		// Check if get key&server correctly
-		if ( empty( $json[ 'auth_key' ] ) ) {
-			Log::debug( '[IAPI] request key failed: ', $json ) ;
-
-			if ( $json ) {
-				$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
-				Admin_Display::error( $msg ) ;
-			}
-			return ;
-		}
-
-		// store data into option locally
-		update_option( self::DB_API_KEY, $json[ 'auth_key' ] ) ;
-		Log::debug( '[IAPI] applied auth_key' ) ;
-
-		$this->_iapi_key = $json[ 'auth_key' ] ;
 	}
 
 	/**
@@ -220,44 +256,12 @@ class Admin_API
 		Log::debug( '[IAPI] Found closest cloud ' . $closest ) ;
 
 		// store data into option locally
-		update_option( self::DB_API_CLOUD, $closest ) ;
+		Conf::update_option( self::DB_CLOUD, $closest, 'api' ) ;
 
 		$this->_iapi_cloud = $closest ;
 
 		// sync API key
-		$this->_request_key() ;
-	}
-
-	/**
-	 * Redirect to quic to get key
-	 *
-	 * @since  1.7.2
-	 * @access private
-	 */
-	private function _gen_key()
-	{
-		$data = array(
-			'hash'		=> $this->_hash_make(),
-			'domain'	=> get_bloginfo( 'url' ),
-			'email'		=> get_bloginfo( 'admin_email' ),
-		) ;
-
-		wp_redirect( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ) ) ;
-		exit ;
-	}
-
-	/**
-	 * Make a hash for callback validation
-	 *
-	 * @since  3.0
-	 */
-	private function _hash_make()
-	{
-		$hash = Str::rrand( 16 ) ;
-		// store hash
-		update_option( self::DB_API_KEY_HASH, $hash ) ;
-
-		return $hash ;
+		$this->gen_key() ;
 	}
 
 	/**
@@ -325,7 +329,7 @@ class Admin_API
 		Log::debug( '[IAPI] posting to : ' . $url ) ;
 
 		$param = array(
-			'auth_key'	=> $this->_iapi_key,
+			'auth_key'	=> Core::config( Conf::O_API_KEY ),
 			'cloud'	=> $this->_iapi_cloud,
 			'v'	=> Core::PLUGIN_VERSION,
 			'hash'	=> $hash,

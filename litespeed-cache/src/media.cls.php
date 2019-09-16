@@ -259,7 +259,7 @@ class Media
 		$att_info = wp_get_attachment_metadata( $post_id ) ;
 		$short_path = $att_info[ 'file' ] ;
 
-		$size_meta = get_post_meta( $post_id, Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
+		$size_meta = get_post_meta( $post_id, Img_Optm::DB_SIZE, true ) ;
 
 		// WebP info
 		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {

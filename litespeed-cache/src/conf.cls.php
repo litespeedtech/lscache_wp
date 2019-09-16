@@ -886,9 +886,99 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function conf_name( $k, $type = 'conf' )
+	public static function name( $k, $type = 'conf' )
 	{
 		return 'litespeed.' . $type . '.' . $k ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_option( $id, $default_v, $type = 'conf' )
+	{
+		return get_option( self::name( $id, $type ), $default_v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_site_option( $id, $default_v, $type = 'conf' )
+	{
+		return get_site_option( self::name( $id, $type ), $default_v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_blog_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_blog_option( $blog_id, $id, $default_v, $type = 'conf' )
+	{
+		return get_blog_option( $blog_id, self::name( $id, $type ), $default_v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's add_option
+	 *
+	 * @since 3.0
+	 */
+	public static function add_option( $id, $v, $type = 'conf' )
+	{
+		add_option( self::name( $id, $type ), $v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's add_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function add_site_option( $id, $v, $type = 'conf' )
+	{
+		add_site_option( self::name( $id, $type ), $v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's update_option
+	 *
+	 * @since 3.0
+	 */
+	public static function update_option( $id, $v, $type = 'conf' )
+	{
+		update_option( self::name( $id, $type ), $v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's update_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function update_site_option( $id, $v, $type = 'conf' )
+	{
+		update_site_option( self::name( $id, $type ), $v ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's delete_option
+	 *
+	 * @since 3.0
+	 */
+	public static function delete_option( $id, $type = 'conf' )
+	{
+		delete_option( self::name( $id, $type ) ) ;
+	}
+
+	/**
+	 * Dropin with prefix for WP's delete_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function delete_site_option( $id, $type = 'conf' )
+	{
+		delete_site_option( self::name( $id, $type ) ) ;
 	}
 
 	/**

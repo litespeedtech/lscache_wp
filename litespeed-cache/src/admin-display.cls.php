@@ -20,7 +20,7 @@ class Admin_Display
 	const NOTICE_GREEN = 'notice notice-success' ;
 	const NOTICE_RED = 'notice notice-error' ;
 	const NOTICE_YELLOW = 'notice notice-warning' ;
-	const LITESPEED_MSG = 'litespeed_messages' ;
+	const DB_MSG = 'messages' ;
 
 	const PURGEBY_CAT = '0' ;
 	const PURGEBY_PID = '1' ;
@@ -30,7 +30,7 @@ class Admin_Display
 	const PURGEBYOPT_SELECT = 'purgeby' ;
 	const PURGEBYOPT_LIST = 'purgebylist' ;
 
-	const DISMISS_MSG = 'litespeed-cache-dismiss' ;
+	const DB_DISMISS_MSG = 'dismiss' ;
 	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
@@ -403,10 +403,8 @@ class Admin_Display
 			return ;
 		}
 
-		$messages = (array)get_option( self::LITESPEED_MSG ) ;
-		if( ! $messages ) {
-			$messages = array() ;
-		}
+		$messages = Conf::get_option( self::DB_MSG, array(), 'admin' ) ;
+
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
 				$messages[] = self::build_notice($color, $str) ;
@@ -415,7 +413,7 @@ class Admin_Display
 		else {
 			$messages[] = self::build_notice($color, $msg) ;
 		}
-		update_option( self::LITESPEED_MSG, $messages ) ;
+		Conf::update_option( self::DB_MSG, $messages, 'admin' ) ;
 	}
 
 	/**
@@ -431,7 +429,7 @@ class Admin_Display
 		}
 
 		// One time msg
-		$messages = get_option( self::LITESPEED_MSG ) ;
+		$messages = Conf::get_option( self::DB_MSG, array(), 'admin' ) ;
 		if( is_array($messages) ) {
 			$messages = array_unique($messages) ;
 
@@ -445,7 +443,7 @@ class Admin_Display
 				echo $msg ;
 			}
 		}
-		delete_option( self::LITESPEED_MSG ) ;
+		Conf::delete_option( self::DB_MSG, 'admin' ) ;
 
 		/**
 		 * Check promo msg first

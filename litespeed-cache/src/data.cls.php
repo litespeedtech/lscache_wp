@@ -117,8 +117,8 @@ class Data
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
-		delete_option( Conf::conf_name( Conf::_VERSION ) ) ;
-		add_option( Conf::conf_name( Conf::_VERSION ), Core::PLUGIN_VERSION ) ;
+		Conf::delete_option( Conf::_VERSION ) ;
+		Conf::add_option( Conf::_VERSION, Core::PLUGIN_VERSION ) ;
 
 		Log::debug( '[Data] Updated version to ' . Core::PLUGIN_VERSION ) ;
 
@@ -153,8 +153,8 @@ class Data
 		// Reload options
 		Config::get_instance()->load_site_options() ;
 
-		delete_site_option( Conf::conf_name( Conf::_VERSION ) ) ;
-		add_site_option( Conf::conf_name( Conf::_VERSION ), Core::PLUGIN_VERSION ) ;
+		Conf::delete_site_option( Conf::_VERSION ) ;
+		Conf::add_site_option( Conf::_VERSION, Core::PLUGIN_VERSION ) ;
 
 		Log::debug( '[Data] Updated site_version to ' . Core::PLUGIN_VERSION ) ;
 

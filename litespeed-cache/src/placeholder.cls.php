@@ -262,7 +262,7 @@ class Placeholder
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		Conf::update_option( self::DB_SUMMARY, $data, 'data' ) ;
 	}
 
 	/**
@@ -273,7 +273,7 @@ class Placeholder
 	 */
 	public static function get_summary()
 	{
-		return get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		return Conf::get_option( self::DB_SUMMARY, array(), 'data' ) ;
 	}
 
 	/**

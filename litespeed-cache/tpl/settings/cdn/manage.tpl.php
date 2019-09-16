@@ -6,7 +6,7 @@ $cf_on = Core::config( Conf::O_CDN_CLOUDFLARE ) ;
 $cf_domain = Core::config( Conf::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
 $cf_zone = Core::config( Conf::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 
-$curr_status = get_option( Conf::conf_name( CDN\Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
+$curr_status = Conf::get_option( CDN\Cloudflare::ITEM_STATUS, array(), 'cdn.cloudflare' ) ;
 
 ?>
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>

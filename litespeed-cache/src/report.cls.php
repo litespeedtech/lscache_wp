@@ -72,7 +72,7 @@ class Report
 			'dateline'	=> time(),
 		) ;
 
-		update_option( Conf::conf_name( self::ITEM_REF, 'env' ), $data ) ;
+		Conf::update_option( self::ITEM_REF, $data, 'env' ) ;
 
 	}
 
@@ -85,7 +85,7 @@ class Report
 	 */
 	public function get_env_ref()
 	{
-		$info = get_option( Conf::conf_name( self::ITEM_REF, 'env' ) ) ;
+		$info = Conf::get_option( self::ITEM_REF, false, 'env' ) ;
 
 		if ( ! is_array( $info ) ) {
 			return array(

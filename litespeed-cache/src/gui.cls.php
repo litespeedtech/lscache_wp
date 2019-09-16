@@ -32,7 +32,10 @@ class GUI
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
 	const TYPE_DISMISS_PROMO = 'promo' ;
 
-	const GUI_SUMMARY = 'litespeed-gui-summary' ;
+	const WHM_MSG = 'lscwp_whm_install' ;
+	const WHM_MSG_VAL = 'whm_install' ;
+
+	const DB_SUMMARY = 'summary' ;
 
 	/**
 	 * Init
@@ -143,7 +146,7 @@ class GUI
 	 */
 	public function get_summary()
 	{
-		return get_option( self::GUI_SUMMARY, array() ) ;
+		return Conf::get_option( self::DB_SUMMARY, array(), 'gui' ) ;
 	}
 
 	/**
@@ -154,7 +157,7 @@ class GUI
 	 */
 	public function save_summary( $data )
 	{
-		update_option( self::GUI_SUMMARY, $data ) ;
+		Conf::update_option( self::DB_SUMMARY, $data, 'gui' ) ;
 	}
 
 	/**
@@ -168,11 +171,11 @@ class GUI
 		$_instance = self::get_instance() ;
 		switch ( Router::verify_type() ) {
 			case self::TYPE_DISMISS_WHM :
-				Activation::dismiss_whm() ;
+				self::dismiss_whm() ;
 				break ;
 
 			case self::TYPE_DISMISS_EXPIRESDEFAULT :
-				update_option( Admin_Display::DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED ) ;
+				Conf::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED, 'gui' ) ;
 				break ;
 
 			case self::TYPE_DISMISS_PROMO :
@@ -229,7 +232,7 @@ class GUI
 	 */
 	public static function has_msg_ruleconflict()
 	{
-		return get_option( Admin_Display::DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON ;
+		return Conf::get_option( Admin_Display::DB_DISMISS_MSG, false, 'gui' ) == Admin_Display::RULECONFLICT_ON ;
 	}
 
 	/**
@@ -241,7 +244,18 @@ class GUI
 	 */
 	public static function has_whm_msg()
 	{
-		return get_option( Core::WHM_MSG ) == Core::WHM_MSG_VAL ;
+		return Conf::get_option( self::WHM_MSG, false, 'gui' ) == self::WHM_MSG_VAL ;
+	}
+
+	/**
+	 * Delete whm msg tag
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 */
+	public static function dismiss_whm()
+	{
+		Conf::delete_option( self::WHM_MSG, 'gui' ) ;
 	}
 
 	/**

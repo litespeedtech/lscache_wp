@@ -16,7 +16,7 @@ class Avatar
 	private static $_instance ;
 
 	const TYPE_GENERATE = 'generate' ;
-	const DB_SUMMARY = 'avatar' ;
+	const DB_SUMMARY = 'summary' ;
 
 	private $_conf_cache_ttl ;
 	private $_tb ;
@@ -163,7 +163,7 @@ class Avatar
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), $data ) ;
+		Conf::update_option( self::DB_SUMMARY, $data, 'avatar' ) ;
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Avatar
 
 		$instance = self::get_instance() ;
 
-		$summary = get_option( Conf::conf_name( self::DB_SUMMARY, 'data' ), array() ) ;
+		$summary = Conf::get_option( self::DB_SUMMARY, array(), 'avatar' ) ;
 
 		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;

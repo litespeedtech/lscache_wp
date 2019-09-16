@@ -17,7 +17,7 @@ class CSS
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
-	const DB_CCSS_SUMMARY = 'litespeed-ccss-summary' ;
+	const DB_CCSS_SUMMARY = 'ccss-summary' ;
 
 	/**
 	 * Output critical css
@@ -59,7 +59,7 @@ class CSS
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( self::DB_CCSS_SUMMARY, $data ) ;
+		Conf::update_option( self::DB_CCSS_SUMMARY, $data, 'css' ) ;
 	}
 
 	/**
@@ -70,7 +70,7 @@ class CSS
 	 */
 	public static function get_summary()
 	{
-		return get_option( self::DB_CCSS_SUMMARY, array() ) ;
+		return Conf::get_option( self::DB_CCSS_SUMMARY, array(), 'css' ) ;
 	}
 
 	/**

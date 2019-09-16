@@ -17,11 +17,11 @@ $htaccess_path = Htaccess::get_frontend_htaccess() ;
 // Check if there is `ExpiresDefault` in .htaccess
 if ( defined( 'LITESPEED_ON' ) ) {
 	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
-		$is_dismissed = get_option( self::DISMISS_MSG ) ;
+		$is_dismissed = Conf::get_option( self::DB_DISMISS_MSG, false, 'gui' ) ;
 		if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
 			// Need to add a notice for browser cache compatibility
 			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
-				update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
+				Conf::update_option( self::DB_DISMISS_MSG, self::RULECONFLICT_ON, 'gui' ) ;
 			}
 			require_once LSCWP_DIR . 'tpl/settings/inc/show_rule_conflict.php' ;
 		}

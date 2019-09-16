@@ -60,9 +60,6 @@ class Core
 	const ACTION_REPORT = 'report' ;
 	const ACTION_CSS = 'css' ;
 
-	const WHM_MSG = 'lscwp_whm_install' ;
-	const WHM_MSG_VAL = 'whm_install' ;
-
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
 
 	protected static $_debug_show_header = false ;
@@ -122,10 +119,10 @@ class Core
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 
 		// Check if there is a purge request in queue
-		if ( $purge_queue = get_option( Purge::PURGE_QUEUE ) ) {
+		if ( $purge_queue = Conf::get_option( Purge::DB_QUEUE, false, 'purge' ) ) {
 			@header( $purge_queue ) ;
 			Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
-			delete_option( Purge::PURGE_QUEUE ) ;
+			Conf::delete_option( Purge::DB_QUEUE, 'purge' ) ;
 		}
 
 		/**

@@ -116,7 +116,7 @@ class Config extends Conf
 			foreach ( self::$_default_options as $k => $v ) {
 				// If the option existed, bypass updating
 				// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
-				add_option( self::conf_name( $k ), $v ) ;
+				self::add_option( $k, $v ) ;
 			}
 		}
 
@@ -140,10 +140,10 @@ class Config extends Conf
 		$options = array() ;
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
-				$options[ $k ] = get_blog_option( $blog_id, self::conf_name( $k ), $v ) ;
+				$options[ $k ] = self::get_blog_option( $blog_id, $k, $v ) ;
 			}
 			else {
-				$options[ $k ] = get_option( self::conf_name( $k ), $v ) ;
+				$options[ $k ] = self::get_option( $k, $v ) ;
 			}
 		}
 
@@ -253,7 +253,7 @@ class Config extends Conf
 			// Init new default/missing options
 			foreach ( self::$_default_site_options as $k => $v ) {
 				// If the option existed, bypass updating
-				add_site_option( self::conf_name( $k ), $v ) ;
+				self::add_site_option( $k, $v ) ;
 			}
 		}
 	}
@@ -275,7 +275,7 @@ class Config extends Conf
 
 		// Load all site options
 		foreach ( self::$_default_site_options as $k => $v ) {
-			$this->_site_options[ $k ] = get_site_option( self::conf_name( $k ), $v ) ;
+			$this->_site_options[ $k ] = self::get_site_option( $k, $v ) ;
 		}
 
 		return $this->_site_options ;
@@ -292,7 +292,7 @@ class Config extends Conf
 	public function option_append( $name, $default )
 	{
 		self::$_default_options[ $name ] = $default ;
-		$this->_options[ $name ] = get_option( self::conf_name( $name ), $default ) ;
+		$this->_options[ $name ] = self::get_option( $name, $default ) ;
 	}
 
 	/**
@@ -481,7 +481,7 @@ class Config extends Conf
 		}
 
 		// Save data
-		update_option( $this->conf_name( $id ), $val ) ;
+		self::update_option( $id, $val ) ;
 
 		// Handle purge if setting changed
 		if ( $this->_options[ $id ] != $val ) {
@@ -555,7 +555,7 @@ class Config extends Conf
 		}
 
 		// Save data
-		update_site_option( $this->conf_name( $id ), $val ) ;
+		self::update_site_option( $id, $val ) ;
 
 		// Handle purge if setting changed
 		if ( $this->_site_options[ $id ] != $val ) {
@@ -652,7 +652,7 @@ class Config extends Conf
 		$output = Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
 		// Save settings now (options & items)
 		foreach ( $output as $k => $v ) {
-			update_option( self::conf_name( $k ), $v ) ;
+			self::update_option( $k, $v ) ;
 		}
 
 		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;

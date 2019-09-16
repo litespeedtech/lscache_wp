@@ -74,7 +74,7 @@ class Activation
 		$__cfg->update_confs() ;
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
-			update_option( Core::WHM_MSG, Core::WHM_MSG_VAL ) ;
+			Conf::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL, 'gui' ) ;
 		}
 
 		// Register crawler cron task
@@ -91,13 +91,13 @@ class Activation
 
 		// Delete options
 		foreach ( Config::get_instance()->load_default_vals() as $k => $v ) {
-			delete_option( Conf::conf_name( $k ) ) ;
+			Conf::delete_option( $k ) ;
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
 			foreach ( Config::get_instance()->load_default_site_vals() as $k => $v ) {
-				delete_site_option( Conf::conf_name( $k ) ) ;
+				Conf::delete_site_option( $k ) ;
 			}
 		}
 
@@ -280,7 +280,7 @@ class Activation
 		}
 
 		// delete in case it's not deleted prior to deactivation.
-		self::dismiss_whm() ;
+		GUI::dismiss_whm() ;
 	}
 
 	/**
@@ -429,17 +429,6 @@ class Activation
 		}
 
 		return true ;
-	}
-
-	/**
-	 * Delete whm msg tag
-	 *
-	 * @since 1.1.1
-	 * @access public
-	 */
-	public static function dismiss_whm()
-	{
-		delete_option( Core::WHM_MSG ) ;
 	}
 
 	/**

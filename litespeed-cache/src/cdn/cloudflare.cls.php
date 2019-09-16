@@ -82,12 +82,12 @@ class Cloudflare
 		}
 		Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
-		$curr_status = get_option( Conf::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
+		$curr_status = Conf::get_option( self::ITEM_STATUS, array(), 'cdn.cloudflare' ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
 		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
 
 		// update status
-		update_option( Conf::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), $curr_status ) ;
+		Conf::update_option( self::ITEM_STATUS, $curr_status, 'cdn.cloudflare' ) ;
 
 	}
 

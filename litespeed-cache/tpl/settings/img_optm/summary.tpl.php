@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
+$closet_server = Conf::get_option( Admin_API::DB_CLOUD, false, 'api' ) ;
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">
@@ -28,7 +28,7 @@ $closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
 			</div>
 		<?php endif ; ?>
 
-		<?php if ( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] && ! $is_running ) : ?>
+		<?php if ( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ] && ! $is_running ) : ?>
 		<div>
 			<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>">
 				<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
@@ -54,12 +54,12 @@ $closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
 
 			<div class="litespeed-light-code">
 
-				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ] ) ) : ?>
+				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_REQUESTED ] ) ) : ?>
 				<p class="litespeed-success">
 					<?php echo __('Images requested', 'litespeed-cache') ; ?>:
 					<code>
-						<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ] ) ; ?>
-						(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ], 'image' ) ; ?>)
+						<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_REQUESTED ] ) ; ?>
+						(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_REQUESTED ], 'image' ) ; ?>)
 					</code>
 				</p>
 				<p class="litespeed-desc">
@@ -68,12 +68,12 @@ $closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
 				</p>
 				<?php endif ; ?>
 
-				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] ) ) : ?>
+				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_NOTIFIED ] ) ) : ?>
 					<p class="litespeed-success">
 						<?php echo __('Images notified to pull', 'litespeed-cache') ; ?>:
 						<code>
-							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] ) ; ?>
-							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ], 'image' ) ; ?>)
+							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_NOTIFIED ] ) ; ?>
+							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ], 'image' ) ; ?>)
 						</code>
 
 					</p>
@@ -90,62 +90,62 @@ $closet_server = get_option( Admin_API::DB_API_CLOUD ) ;
 
 					<div class="litespeed-width-1-2">
 
-						<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ] ) ) : ?>
+						<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_PULLED ] ) ) : ?>
 						<p class="litespeed-success">
 							<?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>:
 							<code>
-								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ] ) ; ?>
-								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ], 'image' ) ; ?>)
+								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_PULLED ] ) ; ?>
+								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_PULLED ], 'image' ) ; ?>)
 							</code>
 						</p>
 						<?php endif ; ?>
 
 						<div class="litespeed-silence">
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ] ) ) : ?>
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_FETCH ] ) ) : ?>
 							<p>
 								<?php echo __('Images failed to fetch', 'litespeed-cache') ; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ], 'image' ) ; ?>)
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_FETCH ] ) ; ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR_FETCH ], 'image' ) ; ?>)
 								</code>
 							</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ] ) ) : ?>
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_OPTM ] ) ) : ?>
 							<p>
 								<?php echo __('Images previously optimized', 'litespeed-cache') ; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ], 'image' ) ; ?>)
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_OPTM ] ) ; ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR_OPTM ], 'image' ) ; ?>)
 								</code>
 							</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ] ) ) : ?>
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR ] ) ) : ?>
 							<p>
 								<?php echo __('Images failed with other errors', 'litespeed-cache') ; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ], 'image' ) ; ?>)
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR ] ) ; ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR ], 'image' ) ; ?>)
 								</code>
 							</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ] ) ) : ?>
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_MISS ] ) ) : ?>
 							<p>
 								<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ], 'image' ) ; ?>)
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_MISS ] ) ; ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_MISS ], 'image' ) ; ?>)
 								</code>
 							</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA ] ) ) : ?>
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_XMETA ] ) ) : ?>
 							<p>
 								<?php echo __('Images with wrong meta', 'litespeed-cache') ; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA ] ) ; ?>
+									<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_XMETA ] ) ; ?>
 								</code>
 							</p>
 							<?php endif ; ?>
