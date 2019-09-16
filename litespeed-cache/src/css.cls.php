@@ -11,9 +11,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class CSS
+class CSS extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'css' ; // DB record prefix name
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
@@ -59,7 +60,7 @@ class CSS
 	 */
 	private function _save_summary( $data )
 	{
-		Conf::update_option( self::DB_CCSS_SUMMARY, $data, 'css' ) ;
+		self::update_option( self::DB_CCSS_SUMMARY, $data ) ;
 	}
 
 	/**
@@ -70,7 +71,7 @@ class CSS
 	 */
 	public static function get_summary()
 	{
-		return Conf::get_option( self::DB_CCSS_SUMMARY, array(), 'css' ) ;
+		return self::get_option( self::DB_CCSS_SUMMARY, array() ) ;
 	}
 
 	/**

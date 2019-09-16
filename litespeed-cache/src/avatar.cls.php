@@ -11,12 +11,12 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Avatar
+class Avatar extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'avatar' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
-	const DB_SUMMARY = 'summary' ;
 
 	private $_conf_cache_ttl ;
 	private $_tb ;
@@ -163,7 +163,7 @@ class Avatar
 	 */
 	private function _save_summary( $data )
 	{
-		Conf::update_option( self::DB_SUMMARY, $data, 'avatar' ) ;
+		self::update_option( self::DB_SUMMARY, $data ) ;
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Avatar
 
 		$instance = self::get_instance() ;
 
-		$summary = Conf::get_option( self::DB_SUMMARY, array(), 'avatar' ) ;
+		$summary = self::get_option( self::DB_SUMMARY, array() ) ;
 
 		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;

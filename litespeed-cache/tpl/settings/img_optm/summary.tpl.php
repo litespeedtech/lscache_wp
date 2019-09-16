@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$closet_server = Conf::get_option( Admin_API::DB_CLOUD, false, 'api' ) ;
+$closet_server = Admin_API::get_option( Admin_API::DB_CLOUD ) ;
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">

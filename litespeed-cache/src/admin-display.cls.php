@@ -12,9 +12,11 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin_Display
+class Admin_Display extends Conf
 {
 	private static $_instance ;
+
+	const DB_PREFIX = 'admin' ; // DB record prefix name
 
 	const NOTICE_BLUE = 'notice notice-info' ;
 	const NOTICE_GREEN = 'notice notice-success' ;
@@ -403,7 +405,7 @@ class Admin_Display
 			return ;
 		}
 
-		$messages = Conf::get_option( self::DB_MSG, array(), 'admin' ) ;
+		$messages = self::get_option( self::DB_MSG ) ;
 
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
@@ -413,7 +415,7 @@ class Admin_Display
 		else {
 			$messages[] = self::build_notice($color, $msg) ;
 		}
-		Conf::update_option( self::DB_MSG, $messages, 'admin' ) ;
+		self::update_option( self::DB_MSG, $messages ) ;
 	}
 
 	/**
@@ -429,7 +431,7 @@ class Admin_Display
 		}
 
 		// One time msg
-		$messages = Conf::get_option( self::DB_MSG, array(), 'admin' ) ;
+		$messages = self::get_option( self::DB_MSG ) ;
 		if( is_array($messages) ) {
 			$messages = array_unique($messages) ;
 
@@ -443,7 +445,7 @@ class Admin_Display
 				echo $msg ;
 			}
 		}
-		Conf::delete_option( self::DB_MSG, 'admin' ) ;
+		self::delete_option( self::DB_MSG ) ;
 
 		/**
 		 * Check promo msg first

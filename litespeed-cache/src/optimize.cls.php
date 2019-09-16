@@ -12,9 +12,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Optimize
+class Optimize extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'optm' ; // DB record prefix name
 
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js' ;
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js' ;
@@ -991,7 +992,7 @@ class Optimize
 		// Drop query strings
 		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
 
-		$purge_timestamp = Conf::get_option( self::ITEM_TIMESTAMP_PURGE_CSS, '', 'optm' ) ;
+		$purge_timestamp = self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ;
 
 		$hash = md5( json_encode( $src ) . $purge_timestamp ) ;
 

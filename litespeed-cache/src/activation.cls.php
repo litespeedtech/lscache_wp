@@ -74,7 +74,7 @@ class Activation
 		$__cfg->update_confs() ;
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
-			Conf::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL, 'gui' ) ;
+			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL ) ;
 		}
 
 		// Register crawler cron task

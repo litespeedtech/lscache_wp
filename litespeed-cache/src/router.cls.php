@@ -197,7 +197,7 @@ class Router
 		}
 
 		// Hash validation
-		$hash = Conf::get_option( Crawler::ITEM_HASH, false, 'crawler' ) ;
+		$hash = Crawler::get_option( Crawler::ITEM_HASH ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
 			Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;

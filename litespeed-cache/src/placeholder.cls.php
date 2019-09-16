@@ -11,12 +11,12 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Placeholder
+class Placeholder extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'placeholder' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
-	const DB_SUMMARY = 'placeholder' ;
 
 	private $_conf_placeholder_resp ;
 	private $_conf_placeholder_resp_generator ;
@@ -262,7 +262,7 @@ class Placeholder
 	 */
 	private function _save_summary( $data )
 	{
-		Conf::update_option( self::DB_SUMMARY, $data, 'data' ) ;
+		self::update_option( self::DB_SUMMARY, $data ) ;
 	}
 
 	/**
@@ -273,7 +273,7 @@ class Placeholder
 	 */
 	public static function get_summary()
 	{
-		return Conf::get_option( self::DB_SUMMARY, array(), 'data' ) ;
+		return self::get_option( self::DB_SUMMARY, array() ) ;
 	}
 
 	/**

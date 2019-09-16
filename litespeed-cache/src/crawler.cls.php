@@ -14,9 +14,11 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Crawler
+class Crawler extends Conf
 {
 	private static $_instance;
+	const DB_PREFIX = 'crawler' ; // DB record prefix name
+
 	private $_sitemap_file ;
 	private $_blacklist_file ;
 	private $_home_url ;

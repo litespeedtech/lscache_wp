@@ -19,9 +19,11 @@ use LiteSpeed\Admin_Display ;
 
 defined( 'WPINC' ) || exit ;
 
-class Cloudflare
+class Cloudflare extends Conf
 {
 	private static $_instance ;
+
+	const DB_PREFIX = 'cdn.cloudflare' ; // DB record prefix name
 
 	const TYPE_PURGE_ALL = 'purge_all' ;
 	const TYPE_GET_DEVMODE = 'get_devmode' ;
@@ -82,12 +84,12 @@ class Cloudflare
 		}
 		Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
-		$curr_status = Conf::get_option( self::ITEM_STATUS, array(), 'cdn.cloudflare' ) ;
+		$curr_status = self::get_option( self::ITEM_STATUS, array() ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
 		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
 
 		// update status
-		Conf::update_option( self::ITEM_STATUS, $curr_status, 'cdn.cloudflare' ) ;
+		self::update_option( self::ITEM_STATUS, $curr_status ) ;
 
 	}
 

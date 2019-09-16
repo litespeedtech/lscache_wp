@@ -11,9 +11,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Import
+class Import extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'import' ; // DB record prefix name
 
 	private $__cfg ;
 
@@ -42,7 +43,7 @@ class Import
 	 */
 	public function summary()
 	{
-		$log = Conf::get_option( 'import', array(), 'log' ) ;
+		$log = self::get_option( 'import', array() ) ;
 
 		return $log ;
 	}
@@ -85,7 +86,7 @@ class Import
 		$log[ 'export' ][ 'file' ] = $filename ;
 		$log[ 'export' ][ 'time' ] = time() ;
 
-		Conf::update_option( 'import', $log, 'log' ) ;
+		self::update_option( 'import', $log ) ;
 
 		Log::debug( 'Import: Saved to ' . $filename ) ;
 
@@ -131,7 +132,7 @@ class Import
 			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
 			$log[ 'import' ][ 'time' ] = time() ;
 
-			Conf::update_option( 'import', $log, 'log' ) ;
+			self::update_option( 'import', $log ) ;
 
 			$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
 		}

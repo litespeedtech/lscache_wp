@@ -12,9 +12,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Report
+class Report extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'env' ; // DB record prefix name
 
 	const TYPE_SEND_REPORT = 'send_report' ;
 
@@ -72,7 +73,7 @@ class Report
 			'dateline'	=> time(),
 		) ;
 
-		Conf::update_option( self::ITEM_REF, $data, 'env' ) ;
+		self::update_option( self::ITEM_REF, $data ) ;
 
 	}
 
@@ -85,7 +86,7 @@ class Report
 	 */
 	public function get_env_ref()
 	{
-		$info = Conf::get_option( self::ITEM_REF, false, 'env' ) ;
+		$info = self::get_option( self::ITEM_REF ) ;
 
 		if ( ! is_array( $info ) ) {
 			return array(

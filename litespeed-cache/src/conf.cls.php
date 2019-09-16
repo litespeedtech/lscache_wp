@@ -18,6 +18,8 @@ class Conf
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 
 	const _CACHE = '_cache' ; // final cache status from setting
+	const DB_PREFIX = 'conf' ; // DB record prefix name
+	const DB_SUMMARY = 'summary' ; // Summary field to be inherited
 
 	## -------------------------------------------------- ##
 	## --------------     	General	    ----------------- ##
@@ -886,9 +888,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function name( $k, $type = 'conf' )
+	public static function name( $id )
 	{
-		return 'litespeed.' . $type . '.' . $k ;
+		return 'litespeed.' . static::DB_PREFIX . '.' . $id ;
 	}
 
 	/**
@@ -896,9 +898,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_option( $id, $default_v, $type = 'conf' )
+	public static function get_option( $id, $default_v )
 	{
-		return get_option( self::name( $id, $type ), $default_v ) ;
+		return get_option( self::name( $id ), $default_v ) ;
 	}
 
 	/**
@@ -906,9 +908,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_site_option( $id, $default_v, $type = 'conf' )
+	public static function get_site_option( $id, $default_v )
 	{
-		return get_site_option( self::name( $id, $type ), $default_v ) ;
+		return get_site_option( self::name( $id ), $default_v ) ;
 	}
 
 	/**
@@ -916,9 +918,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_blog_option( $blog_id, $id, $default_v, $type = 'conf' )
+	public static function get_blog_option( $blog_id, $id, $default_v )
 	{
-		return get_blog_option( $blog_id, self::name( $id, $type ), $default_v ) ;
+		return get_blog_option( $blog_id, self::name( $id ), $default_v ) ;
 	}
 
 	/**
@@ -926,9 +928,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function add_option( $id, $v, $type = 'conf' )
+	public static function add_option( $id, $v )
 	{
-		add_option( self::name( $id, $type ), $v ) ;
+		add_option( self::name( $id ), $v ) ;
 	}
 
 	/**
@@ -936,9 +938,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function add_site_option( $id, $v, $type = 'conf' )
+	public static function add_site_option( $id, $v )
 	{
-		add_site_option( self::name( $id, $type ), $v ) ;
+		add_site_option( self::name( $id ), $v ) ;
 	}
 
 	/**
@@ -946,9 +948,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function update_option( $id, $v, $type = 'conf' )
+	public static function update_option( $id, $v )
 	{
-		update_option( self::name( $id, $type ), $v ) ;
+		update_option( self::name( $id ), $v ) ;
 	}
 
 	/**
@@ -956,9 +958,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function update_site_option( $id, $v, $type = 'conf' )
+	public static function update_site_option( $id, $v )
 	{
-		update_site_option( self::name( $id, $type ), $v ) ;
+		update_site_option( self::name( $id ), $v ) ;
 	}
 
 	/**
@@ -966,9 +968,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function delete_option( $id, $type = 'conf' )
+	public static function delete_option( $id )
 	{
-		delete_option( self::name( $id, $type ) ) ;
+		delete_option( self::name( $id ) ) ;
 	}
 
 	/**
@@ -976,9 +978,9 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function delete_site_option( $id, $type = 'conf' )
+	public static function delete_site_option( $id )
 	{
-		delete_site_option( self::name( $id, $type ) ) ;
+		delete_site_option( self::name( $id ) ) ;
 	}
 
 	/**

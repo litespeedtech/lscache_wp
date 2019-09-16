@@ -10,9 +10,11 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Purge
+class Purge extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'purge' ; // DB record prefix name
+
 	protected $_pub_purge = array() ;
 	protected $_priv_purge = array() ;
 	protected $_purge_related = false ;
@@ -269,7 +271,7 @@ class Purge
 	 */
 	private function _purge_all_cssjs( $silence = false )
 	{
-		Conf::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time(), 'optm' ) ;
+		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() ) ;
 
 		$this->_add( Tag::TYPE_MIN ) ;
 
@@ -376,7 +378,7 @@ class Purge
 		$curr_built = $this->_build() ;
 		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
 			// Can't send, already has output, need to save and wait for next run
-			Conf::update_option( self::DB_QUEUE, $curr_built, 'purge' ) ;
+			self::update_option( self::DB_QUEUE, $curr_built ) ;
 			Log::debug( '[Purge] Output existed, queue stored: ' . $curr_built ) ;
 		}
 		else {

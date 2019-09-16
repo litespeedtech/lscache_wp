@@ -11,9 +11,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Img_Optm
+class Img_Optm extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'img_optm' ; // DB record prefix name
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
@@ -44,7 +45,6 @@ class Img_Optm
 	const DB_NEED_PULL = 'need_pull' ;
 	const DB_CRON_RUN = 'cron_run' ; // last cron running time
 
-	const DB_SUMMARY = 'summary' ;
 	const DB_BK_SUMMARY = 'bk_summary' ;
 	const DB_RMBK_SUMMARY = 'rmbk_summary' ;
 
@@ -104,7 +104,7 @@ class Img_Optm
 		}
 
 		if ( ! empty( $json ) ) {
-			Conf::update_option( self::DB_SUMMARY, $json, 'img_optm' ) ;
+			self::update_option( self::DB_SUMMARY, $json ) ;
 		}
 
 		// If this is for level up try, return data directly
@@ -918,7 +918,7 @@ class Img_Optm
 
 		// Mark need_pull tag for cron
 		if ( $need_pull ) {
-			Conf::update_option( self::DB_NEED_PULL, self::DB_STATUS_NOTIFIED, 'img_optm' ) ;
+			self::update_option( self::DB_NEED_PULL, self::DB_STATUS_NOTIFIED ) ;
 		}
 
 		// redo count err
@@ -938,7 +938,7 @@ class Img_Optm
 			return ;
 		}
 
-		$tag = Conf::get_option( self::DB_NEED_PULL, false, 'img_optm' ) ;
+		$tag = self::get_option( self::DB_NEED_PULL ) ;
 
 		if ( ! $tag || $tag !== self::DB_STATUS_NOTIFIED ) {
 			return ;
@@ -1174,7 +1174,7 @@ class Img_Optm
 
 		// If all pulled, update tag to done
 		Log::debug( '[Img_Optm] Marked pull status to all pulled' ) ;
-		Conf::update_option( self::DB_NEED_PULL, self::DB_STATUS_PULLED, 'img_optm' ) ;
+		self::update_option( self::DB_NEED_PULL, self::DB_STATUS_PULLED ) ;
 
 		$time_cost = time() - $beginning ;
 		if ( $tried_level_up ) {
@@ -1366,7 +1366,7 @@ class Img_Optm
 		Log::debug( '[Img_Optm] sending DESTROY cmd to LiteSpeed IAPI' ) ;
 
 		// Mark request time to avoid duplicated request
-		Conf::update_option( self::DB_DESTROY, time(), 'img_optm' ) ;
+		self::update_option( self::DB_DESTROY, time() ) ;
 
 		// Push to LiteSpeed IAPI server
 		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_DESTROY, false, true ) ;
@@ -1394,7 +1394,7 @@ class Img_Optm
 		global $wpdb ;
 		Log::debug( '[Img_Optm] excuting DESTROY process' ) ;
 
-		$request_time = Conf::get_option( self::DB_DESTROY, false, 'img_optm' ) ;
+		$request_time = self::get_option( self::DB_DESTROY ) ;
 		if ( time() - $request_time > 300 ) {
 			Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
 			return array( '_res' => 'err', '_msg' => 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
@@ -1434,7 +1434,7 @@ class Img_Optm
 			$wpdb->query( $wpdb->prepare( $q, self::DB_STATUS_PULLED, $limit ) ) ;
 
 			// Return continue signal
-			Conf::update_option( self::DB_DESTROY, time(), 'img_optm' ) ;
+			self::update_option( self::DB_DESTROY, time() ) ;
 
 			Log::debug( '[Img_Optm] To be continued 🚦' ) ;
 
@@ -1449,8 +1449,8 @@ class Img_Optm
 		Data::get_instance()->del_table_img_optm() ;
 
 		// Clear credit info
-		Conf::delete_option( self::DB_SUMMARY, 'img_optm' ) ;
-		Conf::delete_option( self::DB_NEED_PULL, 'img_optm' ) ;
+		self::delete_option( self::DB_SUMMARY ) ;
+		self::delete_option( self::DB_NEED_PULL ) ;
 
 		return array( '_res' => 'ok' ) ;
 	}
@@ -1641,7 +1641,7 @@ class Img_Optm
 	 */
 	private function _update_credit( $credit )
 	{
-		$summary = Conf::get_option( self::DB_SUMMARY, array(), 'img_optm' ) ;
+		$summary = self::get_option( self::DB_SUMMARY, array() ) ;
 
 		if ( empty( $summary[ 'credit' ] ) ) {
 			$summary[ 'credit' ] = 0 ;
@@ -1664,7 +1664,7 @@ class Img_Optm
 
 		$summary[ 'credit' ] = $credit ;
 
-		Conf::update_option( self::DB_SUMMARY, $summary, 'img_optm' ) ;
+		self::update_option( self::DB_SUMMARY, $summary ) ;
 	}
 
 	/**
@@ -1701,7 +1701,7 @@ class Img_Optm
 			'count' => $i,
 			'sum' => $total_size,
 		) ;
-		Conf::update_option( self::DB_BK_SUMMARY, $data, 'img_optm' ) ;
+		self::update_option( self::DB_BK_SUMMARY, $data ) ;
 
 		Log::debug( '[Img_Optm] _calc_bkup total: ' . $i . ' [size] ' . $total_size ) ;
 
@@ -1754,7 +1754,7 @@ class Img_Optm
 			'count' => $i,
 			'sum' => $total_size,
 		) ;
-		Conf::update_option( self::DB_RMBK_SUMMARY, $data, 'img_optm' ) ;
+		self::update_option( self::DB_RMBK_SUMMARY, $data ) ;
 
 		Log::debug( '[Img_Optm] _rm_bkup total: ' . $i . ' [size] ' . $total_size ) ;
 
@@ -1772,7 +1772,7 @@ class Img_Optm
 	 */
 	public function summary_info( $field = false )
 	{
-		$optm_summary = Conf::get_option( self::DB_SUMMARY, array(), 'img_optm' ) ;
+		$optm_summary = self::get_option( self::DB_SUMMARY, array() ) ;
 
 		if ( ! $field ) {
 			return $optm_summary ;
@@ -1788,8 +1788,8 @@ class Img_Optm
 	 */
 	public function storage_data()
 	{
-		$summary = Conf::get_option( self::DB_BK_SUMMARY, array(), 'img_optm' ) ;
-		$rm_log = Conf::get_option( self::DB_RMBK_SUMMARY, array(), 'img_optm' ) ;
+		$summary = self::get_option( self::DB_BK_SUMMARY, array() ) ;
+		$rm_log = self::get_option( self::DB_RMBK_SUMMARY, array() ) ;
 
 		return array( $summary, $rm_log ) ;
 	}
@@ -1870,7 +1870,7 @@ class Img_Optm
 	 */
 	public function cron_running( $bool_res = true )
 	{
-		$last_run = Conf::get_option( self::DB_CRON_RUN, false, 'img_optm' ) ;
+		$last_run = self::get_option( self::DB_CRON_RUN ) ;
 
 		$is_running = $last_run && time() - $last_run < 120 ;
 
@@ -1902,7 +1902,7 @@ class Img_Optm
 			}
 		}
 
-		Conf::update_option( self::DB_CRON_RUN, $ts, 'img_optm' ) ;
+		self::update_option( self::DB_CRON_RUN, $ts ) ;
 
 		$this->_cron_ran = true ;
 	}

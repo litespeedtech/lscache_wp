@@ -11,9 +11,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin_API
+class Admin_API extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'api' ;
 
 	private $_iapi_cloud ;
 
@@ -42,7 +43,7 @@ class Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_iapi_cloud = Conf::get_option( self::DB_CLOUD, '', 'api' ) ;
+		$this->_iapi_cloud = self::get_option( self::DB_CLOUD ) ;
 	}
 
 	/**
@@ -120,7 +121,7 @@ class Admin_API
 	{
 		$hash = Str::rrand( 16 ) ;
 		// store hash
-		Conf::update_option( self::DB_HASH, $hash, 'api' ) ;
+		self::update_option( self::DB_HASH, $hash ) ;
 
 		return $hash ;
 	}
@@ -138,7 +139,7 @@ class Admin_API
 			return array( '_res' => 'err', '_msg' => 'lack_of_param' ) ;
 		}
 
-		$key_hash = Conf::get_option( self::DB_HASH, false, 'api' ) ;
+		$key_hash = self::get_option( self::DB_HASH ) ;
 
 		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
 			Log::debug( '[IAPI] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] ) ;
@@ -149,7 +150,7 @@ class Admin_API
 
 		Log::debug( '[IAPI] __callback request hash: ' . $key_hash ) ;
 
-		Conf::delete_option( self::DB_HASH, 'api' ) ;
+		self::delete_option( self::DB_HASH ) ;
 
 		return array( 'hash' => $key_hash ) ;
 	}
@@ -256,7 +257,7 @@ class Admin_API
 		Log::debug( '[IAPI] Found closest cloud ' . $closest ) ;
 
 		// store data into option locally
-		Conf::update_option( self::DB_CLOUD, $closest, 'api' ) ;
+		self::update_option( self::DB_CLOUD, $closest ) ;
 
 		$this->_iapi_cloud = $closest ;
 

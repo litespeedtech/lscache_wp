@@ -12,9 +12,10 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class GUI
+class GUI extends Conf
 {
 	private static $_instance ;
+	const DB_PREFIX = 'gui' ; // DB record prefix name
 
 	private static $_clean_counter = 0 ;
 
@@ -34,8 +35,6 @@ class GUI
 
 	const WHM_MSG = 'lscwp_whm_install' ;
 	const WHM_MSG_VAL = 'whm_install' ;
-
-	const DB_SUMMARY = 'summary' ;
 
 	/**
 	 * Init
@@ -60,36 +59,7 @@ class GUI
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
-
-		// if ( Core::config( Conf::O_ADV_FAVICON ) ) {
-		// 	if ( is_admin() ) {
-		// 		add_action( 'admin_head', array( $this, 'favicon' ) ) ;
-		// 	}
-		// 	else {
-		// 		add_action( 'wp_head', array( $this, 'favicon' ) ) ;
-		// 	}
-		// }
 	}
-
-	/**
-	 * Display the favicon
-	 *
-	 * @since 1.7.2
-	 */
-	// public function favicon()
-	// {
-	// 	$current_favicon = get_option( Conf::O_FAVICON, array() ) ;
-	// 	if ( is_admin() ) {
-	// 		if ( ! empty( $current_favicon[ 'backend' ] ) ) {
-	// 			echo "<link rel='icon' href='$current_favicon[backend]' />" ;
-	// 		}
-	// 	}
-	// 	else {
-	// 		if ( ! empty( $current_favicon[ 'frontend' ] ) ) {
-	// 			echo "<link rel='icon' href='$current_favicon[frontend]' />" ;
-	// 		}
-	// 	}
-	// }
 
 	/**
 	 * Display a pie
@@ -146,7 +116,7 @@ class GUI
 	 */
 	public function get_summary()
 	{
-		return Conf::get_option( self::DB_SUMMARY, array(), 'gui' ) ;
+		return self::get_option( self::DB_SUMMARY, array() ) ;
 	}
 
 	/**
@@ -157,7 +127,7 @@ class GUI
 	 */
 	public function save_summary( $data )
 	{
-		Conf::update_option( self::DB_SUMMARY, $data, 'gui' ) ;
+		self::update_option( self::DB_SUMMARY, $data ) ;
 	}
 
 	/**
@@ -175,7 +145,7 @@ class GUI
 				break ;
 
 			case self::TYPE_DISMISS_EXPIRESDEFAULT :
-				Conf::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED, 'gui' ) ;
+				self::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED ) ;
 				break ;
 
 			case self::TYPE_DISMISS_PROMO :
@@ -232,7 +202,7 @@ class GUI
 	 */
 	public static function has_msg_ruleconflict()
 	{
-		return Conf::get_option( Admin_Display::DB_DISMISS_MSG, false, 'gui' ) == Admin_Display::RULECONFLICT_ON ;
+		return self::get_option( Admin_Display::DB_DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON ;
 	}
 
 	/**
@@ -244,7 +214,7 @@ class GUI
 	 */
 	public static function has_whm_msg()
 	{
-		return Conf::get_option( self::WHM_MSG, false, 'gui' ) == self::WHM_MSG_VAL ;
+		return self::get_option( self::WHM_MSG ) == self::WHM_MSG_VAL ;
 	}
 
 	/**
@@ -255,7 +225,7 @@ class GUI
 	 */
 	public static function dismiss_whm()
 	{
-		Conf::delete_option( self::WHM_MSG, 'gui' ) ;
+		self::delete_option( self::WHM_MSG ) ;
 	}
 
 	/**

@@ -119,10 +119,10 @@ class Core
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 
 		// Check if there is a purge request in queue
-		if ( $purge_queue = Conf::get_option( Purge::DB_QUEUE, false, 'purge' ) ) {
+		if ( $purge_queue = Purge::get_option( Purge::DB_QUEUE ) ) {
 			@header( $purge_queue ) ;
 			Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
-			Conf::delete_option( Purge::DB_QUEUE, 'purge' ) ;
+			Purge::delete_option( Purge::DB_QUEUE ) ;
 		}
 
 		/**
