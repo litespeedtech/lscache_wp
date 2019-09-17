@@ -227,7 +227,7 @@ class Placeholder extends Conf
 
 		Log::debug( '[Placeholder] Added placeholder queue' ) ;
 
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 		return $tmp_placeholder ;
 
 	}
@@ -252,28 +252,6 @@ class Placeholder extends Conf
 	public static function has_lqip_cache()
 	{
 		return is_dir( LITESPEED_STATIC_DIR . '/lqip' ) ;
-	}
-
-	/**
-	 * Save image placeholder summary
-	 *
-	 * @since  2.5.1
-	 * @access private
-	 */
-	private function _save_summary( $data )
-	{
-		self::update_option( self::DB_SUMMARY, $data ) ;
-	}
-
-	/**
-	 * Read last time generated info
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function get_summary()
-	{
-		return self::get_option( self::DB_SUMMARY, array() ) ;
 	}
 
 	/**
@@ -324,7 +302,7 @@ class Placeholder extends Conf
 		}
 
 		// Clear placeholder in queue too
-		$this->_save_summary( array() ) ;
+		self::save_summary( array() ) ;
 
 		Log::debug2( '[Placeholder] Cleared placeholder queue' ) ;
 	}
@@ -342,7 +320,7 @@ class Placeholder extends Conf
 		}
 
 		// Clear LQIP in queue too
-		$this->_save_summary( array() ) ;
+		self::save_summary( array() ) ;
 
 		Log::debug( '[Placeholder] Cleared LQIP queue' ) ;
 	}
@@ -423,7 +401,7 @@ class Placeholder extends Conf
 		else {
 			// Update request status
 			$req_summary[ 'curr_request' ] = time() ;
-			$this->_save_summary( $req_summary ) ;
+			self::save_summary( $req_summary ) ;
 
 			// Generate LQIP
 			if ( $this->_conf_placeholder_lqip ) {
@@ -445,7 +423,7 @@ class Placeholder extends Conf
 						unset( $req_summary[ 'queue' ][ array_search( $raw_size_and_src, $req_summary[ 'queue' ] ) ] ) ;
 					}
 
-					$this->_save_summary( $req_summary ) ;
+					self::save_summary( $req_summary ) ;
 
 					return false ;
 				}
@@ -487,7 +465,7 @@ class Placeholder extends Conf
 			unset( $req_summary[ 'queue' ][ array_search( $raw_size_and_src, $req_summary[ 'queue' ] ) ] ) ;
 		}
 
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
 

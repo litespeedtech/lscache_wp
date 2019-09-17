@@ -109,28 +109,6 @@ class GUI extends Conf
 	}
 
 	/**
-	 * Read summary
-	 *
-	 * @since  2.9
-	 * @access public
-	 */
-	public function get_summary()
-	{
-		return self::get_option( self::DB_SUMMARY, array() ) ;
-	}
-
-	/**
-	 * Save summary
-	 *
-	 * @since  2.9
-	 * @access public
-	 */
-	public function save_summary( $data )
-	{
-		self::update_option( self::DB_SUMMARY, $data ) ;
-	}
-
-	/**
 	 * Dismiss banner
 	 *
 	 * @since 1.0
@@ -159,7 +137,7 @@ class GUI extends Conf
 					break ;
 				}
 
-				$summary = $_instance->get_summary() ;
+				$summary = self::get_summary() ;
 
 				defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
@@ -176,7 +154,7 @@ class GUI extends Conf
 					$summary[ $promo_tag ] = time() + 86400 * 30 ;
 				}
 
-				$_instance->save_summary( $summary ) ;
+				self::save_summary( $summary ) ;
 
 				break ;
 
@@ -276,7 +254,7 @@ class GUI extends Conf
 			return false ;
 		}
 
-		$_summary = $this->get_summary() ;
+		$_summary = self::get_summary() ;
 
 		foreach ( $this->_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
@@ -288,7 +266,7 @@ class GUI extends Conf
 			// first time check
 			if ( empty( $_summary[ $promo_tag ] ) ) {
 				$_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
-				$this->save_summary( $_summary ) ;
+				self::save_summary( $_summary ) ;
 
 				continue ;
 			}
@@ -336,10 +314,10 @@ class GUI extends Conf
 	 */
 	private function _enqueue_score_req_ajax()
 	{
-		$_summary = $this->get_summary() ;
+		$_summary = self::get_summary() ;
 
 		$_summary[ 'score.last_check' ] = time() ;
-		$this->save_summary( $_summary ) ;
+		self::save_summary( $_summary ) ;
 
 		include_once LSCWP_DIR . "tpl/settings/banner/ajax.php" ;
 	}

@@ -4,8 +4,8 @@ defined( 'WPINC' ) || exit ;
 
 $img_optm = Img_Optm::get_instance() ;
 
+$optm_summary = Img_Optm::get_summary() ;
 $img_count = $img_optm->img_count() ;
-$optm_summary = $img_optm->summary_info() ;
 list( $storage_data, $rm_log ) = $img_optm->storage_data() ;
 
 list( $last_run, $is_running ) = $img_optm->cron_running( false ) ;

@@ -18,8 +18,6 @@ class CSS extends Conf
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
-	const DB_CCSS_SUMMARY = 'ccss-summary' ;
-
 	/**
 	 * Output critical css
 	 *
@@ -53,28 +51,6 @@ class CSS extends Conf
 	}
 
 	/**
-	 * Save ccss summary
-	 *
-	 * @since  2.3
-	 * @access private
-	 */
-	private function _save_summary( $data )
-	{
-		self::update_option( self::DB_CCSS_SUMMARY, $data ) ;
-	}
-
-	/**
-	 * Read last time generated info
-	 *
-	 * @since  2.3
-	 * @access public
-	 */
-	public static function get_summary()
-	{
-		return self::get_option( self::DB_CCSS_SUMMARY, array() ) ;
-	}
-
-	/**
 	 * Generate realpath of ccss
 	 *
 	 * @since  2.3
@@ -101,7 +77,7 @@ class CSS extends Conf
 		$req_summary = self::get_summary() ;
 		$req_summary[ 'queue' ] = array() ;
 		$req_summary[ 'curr_request' ] = 0 ;
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		Log::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
@@ -150,7 +126,7 @@ class CSS extends Conf
 			) ;// Current UA will be used to request
 			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
-			$this->_save_summary( $req_summary ) ;
+			self::save_summary( $req_summary ) ;
 			return '' ;
 		}
 
@@ -220,7 +196,7 @@ class CSS extends Conf
 
 		// Update css request status
 		$req_summary[ 'curr_request' ] = time() ;
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		// Generate critical css
 		$data = array(
@@ -256,7 +232,7 @@ class CSS extends Conf
 		$req_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
 		unset( $req_summary[ 'queue' ][ $ccss_type ] ) ;
 
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 

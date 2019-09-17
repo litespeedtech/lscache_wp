@@ -156,17 +156,6 @@ class Avatar extends Conf
 	}
 
 	/**
-	 * Save summary
-	 *
-	 * @since  3.0
-	 * @access private
-	 */
-	private function _save_summary( $data )
-	{
-		self::update_option( self::DB_SUMMARY, $data ) ;
-	}
-
-	/**
 	 * Read last time generated info
 	 *
 	 * @since  3.0
@@ -176,9 +165,9 @@ class Avatar extends Conf
 	{
 		global $wpdb ;
 
-		$instance = self::get_instance() ;
+		$summary = parent::get_summary() ;
 
-		$summary = self::get_option( self::DB_SUMMARY, array() ) ;
+		$instance = self::get_instance() ;
 
 		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
 		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;
@@ -222,7 +211,7 @@ class Avatar extends Conf
 		}
 
 		// Clear avatar summary
-		$this->_save_summary( array() ) ;
+		self::save_summary( array() ) ;
 
 		Log::debug2( '[Avatar] Cleared avatar queue' ) ;
 	}
@@ -285,7 +274,7 @@ class Avatar extends Conf
 
 		// Update request status
 		$req_summary[ 'curr_request' ] = time() ;
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		// Generate
 		if ( ! self::has_cache() ) {
@@ -308,7 +297,7 @@ class Avatar extends Conf
 		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'curr_request' ] = 0 ;
 
-		$this->_save_summary( $req_summary ) ;
+		self::save_summary( $req_summary ) ;
 
 		// Update DB
 		$md5 = md5( $url ) ;

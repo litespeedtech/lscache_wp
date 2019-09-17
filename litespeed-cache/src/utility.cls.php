@@ -87,16 +87,14 @@ class Utility
 	 */
 	private function _score_check()
 	{
-		$_gui = GUI::get_instance() ;
-
-		$_summary = $_gui->get_summary() ;
+		$_summary = GUI::get_summary() ;
 
 		$_summary[ 'score.last_check' ] = time() ;
-		$_gui->save_summary( $_summary ) ;
+		GUI::save_summary( $_summary ) ;
 
 		$score = Admin_API::post( Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600 ) ;
 		$_summary[ 'score.data' ] = $score ;
-		$_gui->save_summary( $_summary ) ;
+		GUI::save_summary( $_summary ) ;
 
 		Log::debug( '[Util] Saved page score ', $score ) ;
 

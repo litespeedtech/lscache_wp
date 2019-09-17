@@ -984,6 +984,28 @@ class Conf
 	}
 
 	/**
+	 * Read summary
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function get_summary()
+	{
+		return self::get_option( static::DB_SUMMARY, array() ) ;
+	}
+
+	/**
+	 * Save summary
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function save_summary( $data )
+	{
+		self::update_option( static::DB_SUMMARY, $data ) ;
+	}
+
+	/**
 	 * Generate server vars
 	 *
 	 * @since 2.4.1

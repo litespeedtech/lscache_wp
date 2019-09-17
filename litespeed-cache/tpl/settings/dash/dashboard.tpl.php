@@ -4,7 +4,7 @@ defined( 'WPINC' ) || exit ;
 
 $finished_percentage = 10;
 
-$_summary = GUI::get_instance()->get_summary() ;
+$_summary = GUI::get_summary() ;
 $_score = $_summary[ 'score.data' ] ;
 
 // Format loading time
@@ -39,7 +39,7 @@ else {
 	$score_improved = number_format( $score_improved ) ;
 }
 
-$optm_summary = Img_Optm::get_instance()->summary_info() ;
+$optm_summary = Img_Optm::get_summary() ;
 
 ?>
 

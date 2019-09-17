@@ -104,7 +104,7 @@ class Img_Optm extends Conf
 		}
 
 		if ( ! empty( $json ) ) {
-			self::update_option( self::DB_SUMMARY, $json ) ;
+			self::save_summary( $json ) ;
 		}
 
 		// If this is for level up try, return data directly
@@ -1235,7 +1235,7 @@ class Img_Optm extends Conf
 		$data = array() ;
 
 		$data[ 'img_count' ] = $this->img_count() ;
-		$data[ 'optm_summary' ] = $this->summary_info() ;
+		$data[ 'optm_summary' ] = self::get_summary() ;
 
 		$data[ '_wp_attached_file' ] = get_post_meta( $pid, '_wp_attached_file', true ) ;
 		$data[ '_wp_attachment_metadata' ] = get_post_meta( $pid, '_wp_attachment_metadata', true ) ;
@@ -1603,7 +1603,7 @@ class Img_Optm extends Conf
 	 */
 	private function _try_level_up()
 	{
-		$optm_summary = $this->summary_info() ;
+		$optm_summary = self::get_summary() ;
 		if ( empty( $optm_summary[ 'level' ] ) || empty( $optm_summary[ 'credit_recovered' ] ) || empty( $optm_summary[ '_level_data' ] ) ) {
 			return ;
 		}
@@ -1641,7 +1641,7 @@ class Img_Optm extends Conf
 	 */
 	private function _update_credit( $credit )
 	{
-		$summary = self::get_option( self::DB_SUMMARY, array() ) ;
+		$summary = self::get_summary() ;
 
 		if ( empty( $summary[ 'credit' ] ) ) {
 			$summary[ 'credit' ] = 0 ;
@@ -1664,7 +1664,7 @@ class Img_Optm extends Conf
 
 		$summary[ 'credit' ] = $credit ;
 
-		self::update_option( self::DB_SUMMARY, $summary ) ;
+		self::save_summary( $summary ) ;
 	}
 
 	/**
@@ -1772,7 +1772,7 @@ class Img_Optm extends Conf
 	 */
 	public function summary_info( $field = false )
 	{
-		$optm_summary = self::get_option( self::DB_SUMMARY, array() ) ;
+		$optm_summary = self::get_summary() ;
 
 		if ( ! $field ) {
 			return $optm_summary ;

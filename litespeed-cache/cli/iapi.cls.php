@@ -35,7 +35,7 @@ class IAPI
 	 */
 	public function sync()
 	{
-		$optm_summary = $this->_img_optm_instance->summary_info() ;
+		$optm_summary = Img_Optm::get_summary() ;
 
 		$json = $this->_img_optm_instance->sync_data() ;
 
@@ -116,7 +116,7 @@ class IAPI
 	 */
 	public function status()
 	{
-		$summary = $this->_img_optm_instance->summary_info() ;
+		$summary = Img_Optm::get_summary() ;
 		$img_count = $this->_img_optm_instance->img_count() ;
 
 		if ( ! empty( $summary[ '_level_data' ] ) ) {
