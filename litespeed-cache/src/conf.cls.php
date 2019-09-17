@@ -589,10 +589,6 @@ class Conf
 	) ;
 
 
-	private function __construct()
-	{
-	}
-
 	protected function load_default_site_vals()
 	{
 		// Load network_default.ini
@@ -898,7 +894,7 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_option( $id, $default_v )
+	public static function get_option( $id, $default_v = false )
 	{
 		return get_option( self::name( $id ), $default_v ) ;
 	}
@@ -908,7 +904,7 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_site_option( $id, $default_v )
+	public static function get_site_option( $id, $default_v = false )
 	{
 		return get_site_option( self::name( $id ), $default_v ) ;
 	}
@@ -918,7 +914,7 @@ class Conf
 	 *
 	 * @since 3.0
 	 */
-	public static function get_blog_option( $blog_id, $id, $default_v )
+	public static function get_blog_option( $blog_id, $id, $default_v = false )
 	{
 		return get_blog_option( $blog_id, self::name( $id ), $default_v ) ;
 	}
