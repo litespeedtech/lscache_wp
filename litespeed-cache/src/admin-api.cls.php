@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Admin_API extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'api' ;
 
 	private $_iapi_cloud ;
@@ -39,9 +39,9 @@ class Admin_API extends Conf
 	 * Init
 	 *
 	 * @since  1.5
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_iapi_cloud = self::get_option( self::DB_CLOUD ) ;
 	}
@@ -438,21 +438,5 @@ class Admin_API extends Conf
 		}
 
 		return $msg ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.5
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

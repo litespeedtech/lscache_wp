@@ -11,9 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Router
+class Router extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const NONCE_NAME = 'LSCWP_NONCE' ;
 	const ACTION_KEY = 'LSCWP_CTRL' ;
@@ -681,21 +681,5 @@ class Router
 				break ;
 		}
 
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

@@ -18,7 +18,7 @@ defined( 'WPINC' ) || exit ;
 
 class Quic
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_api_key ;
 

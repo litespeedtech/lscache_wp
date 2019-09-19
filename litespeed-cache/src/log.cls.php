@@ -14,9 +14,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Log
+class Log extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 	private static $log_path ;
 	private static $_prefix ;
 
@@ -36,7 +36,7 @@ class Log
 	 * @since 1.1.2
 	 * @access public
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log' ;
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler_Engine::FAST_USER_AGENT ) === 0 ) {
@@ -485,21 +485,5 @@ class Log
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

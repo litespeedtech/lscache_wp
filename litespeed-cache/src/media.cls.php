@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Media
+class Media extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js' ;
 
@@ -27,9 +27,9 @@ class Media
 	 * Init
 	 *
 	 * @since  1.4
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug2( '[Media] init' ) ;
 
@@ -857,22 +857,6 @@ class Media
 		Log::debug2( '[Media] - replaced to: ' . $url ) ;
 
 		return $url ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.4
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

@@ -8,9 +8,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class REST
+class REST extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_internal_rest_status = false ;
 
@@ -18,9 +18,9 @@ class REST
 	 * Confructor of ESI
 	 *
 	 * @since    2.9.4
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// Hook to internal REST call
 		add_filter( 'rest_request_before_callbacks', array( $this, 'set_internal_rest_on' ) ) ;
@@ -151,22 +151,5 @@ class REST
 		// Log::debug( '[Util] is_rest check [curr] ', $current_url ) ;
 		// Log::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
 		return strpos( $current_url[ 'path' ], $rest_url[ 'path' ] ) === 0 ;
-	}
-
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.9
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

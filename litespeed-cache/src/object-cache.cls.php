@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Object_Cache
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_oc_data_file ;
 	private $_conn ;
@@ -40,9 +40,9 @@ class Object_Cache
 	 * NOTE: this class may be included without initialized  core
 	 *
 	 * @since  1.8
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct( $cfg = false )
+	protected function __construct( $cfg = false )
 	{
 		defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] init' ) ;
 
@@ -361,8 +361,8 @@ class Object_Cache
 			 * @since  2.9.6 Fixed SASL connection @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:lsmcd:new_sasl
 			 */
 			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) ) {
-				$this->_conn->setOption( Memcached::OPT_BINARY_PROTOCOL, true ) ;
-				$this->_conn->setOption( Memcached::OPT_COMPRESSION, false ) ;
+				$this->_conn->setOption( \Memcached::OPT_BINARY_PROTOCOL, true ) ;
+				$this->_conn->setOption( \Memcached::OPT_COMPRESSION, false ) ;
 				$this->_conn->setSaslAuthData( $this->_cfg_user, $this->_cfg_pswd ) ;
 			}
 
@@ -621,7 +621,6 @@ class Object_Cache
 	 *
 	 * @since 1.8
 	 * @access public
-	 * @return Current class instance.
 	 */
 	public static function get_instance()
 	{

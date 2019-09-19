@@ -11,9 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Tool
+class Tool extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_conf_heartbeat_front ;
 	private $_conf_heartbeat_front_ttl ;
@@ -26,9 +26,9 @@ class Tool
 	 * Init
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_conf_heartbeat_front 		= Core::config( Conf::O_MISC_HEARTBEAT_FRONT ) ;
 		$this->_conf_heartbeat_front_ttl 	= Core::config( Conf::O_MISC_HEARTBEAT_FRONT_TTL ) ;
@@ -168,22 +168,6 @@ class Tool
 		$res = is_admin() && Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], array( 'post.php', 'post-new.php' ) ) ;
 
 		return apply_filters( 'litespeed_is_editor', $res ) ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 3.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

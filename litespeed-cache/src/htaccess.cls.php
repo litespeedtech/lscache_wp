@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Htaccess
+class Htaccess extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor' ;
 
@@ -59,9 +59,9 @@ class Htaccess
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   private
+	 * @access   protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_path_set() ;
 		$this->_default_frontend_htaccess = $this->frontend_htaccess ;
@@ -915,22 +915,6 @@ class Htaccess
 
 		Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) ) ;
 
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }
 

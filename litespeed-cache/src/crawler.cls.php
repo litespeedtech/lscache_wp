@@ -16,7 +16,7 @@ defined( 'WPINC' ) || exit ;
 
 class Crawler extends Conf
 {
-	private static $_instance;
+	protected static $_instance;
 	const DB_PREFIX = 'crawler' ; // DB record prefix name
 
 	private $_sitemap_file ;
@@ -30,9 +30,9 @@ class Crawler extends Conf
 	 * Initialize crawler, assign sitemap path
 	 *
 	 * @since    1.1.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$sitemapPath = LSCWP_DIR . 'var' ;
 		if ( is_multisite() ) {
@@ -654,21 +654,5 @@ class Crawler extends Conf
 			echo "<script>alert('" . htmlspecialchars($msg) . "');</script>" ;
 			// exit;
 		}
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

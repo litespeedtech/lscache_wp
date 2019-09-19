@@ -9,9 +9,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Vary
+class Vary extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const X_HEADER = 'X-LiteSpeed-Vary' ;
 
@@ -26,7 +26,7 @@ class Vary
 	 *
 	 * @since 1.0.4
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// logged in user
 		if ( Router::is_logged_in() ) {
@@ -654,19 +654,4 @@ class Vary
 		setcookie( self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true ) ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

@@ -13,9 +13,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class ESI
+class ESI extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private static $has_esi = false ;
 	private $esi_args = null ;
@@ -37,9 +37,9 @@ class ESI
 	 * Confructor of ESI
 	 *
 	 * @since    1.2.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
@@ -884,19 +884,4 @@ class ESI
 		return $buffer ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

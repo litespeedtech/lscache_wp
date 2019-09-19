@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Control
+class Control extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const BM_CACHEABLE = 1 ;
 	const BM_PRIVATE = 2 ;
@@ -37,9 +37,9 @@ class Control
 	 * Init cache control
 	 *
 	 * @since  1.6.2
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		/**
 		 * Add vary filter for Role Excludes
@@ -813,19 +813,4 @@ class Control
 		self::$_mobile = true ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

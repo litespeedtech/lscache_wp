@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class Report extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'env' ; // DB record prefix name
 
 	const TYPE_SEND_REPORT = 'send_report' ;
@@ -265,19 +265,4 @@ class Report extends Conf
 		return $buf . "\n\n" ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

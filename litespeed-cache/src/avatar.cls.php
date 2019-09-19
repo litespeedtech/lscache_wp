@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Avatar extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'avatar' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
@@ -27,9 +27,9 @@ class Avatar extends Conf
 	 * Init
 	 *
 	 * @since  1.4
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		if ( ! Core::config( Config::O_DISCUSS_AVATAR_CACHE ) ) {
 			return ;
@@ -335,22 +335,6 @@ class Avatar extends Conf
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 3.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

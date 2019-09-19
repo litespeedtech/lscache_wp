@@ -9,9 +9,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Utility
+class Utility extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 	private static $_internal_domains ;
 
 	const TYPE_SCORE_CHK = 'score_chk' ;
@@ -886,21 +886,5 @@ class Utility
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.9
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

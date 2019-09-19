@@ -18,9 +18,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Core
+class Core extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
@@ -77,7 +77,7 @@ class Core
 	 *
 	 * @since    1.0.0
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->__cfg = Config::get_instance() ;
 		$this->__cfg->init() ;
@@ -726,21 +726,4 @@ class Core
 	{
 		API::purge_all() ;
 	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
-
 }

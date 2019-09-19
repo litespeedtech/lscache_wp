@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class Admin_Settings extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const ENROLL = '_settings-enroll' ;
 
@@ -24,9 +24,9 @@ class Admin_Settings extends Conf
 	 * Init
 	 *
 	 * @since  1.3
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->__cfg = Config::get_instance() ;
 	}
@@ -392,19 +392,4 @@ class Admin_Settings extends Conf
 		return self::VAL_OFF ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

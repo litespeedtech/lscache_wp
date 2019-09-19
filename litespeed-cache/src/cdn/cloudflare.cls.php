@@ -21,7 +21,7 @@ defined( 'WPINC' ) || exit ;
 
 class Cloudflare extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const DB_PREFIX = 'cdn.cloudflare' ; // DB record prefix name
 

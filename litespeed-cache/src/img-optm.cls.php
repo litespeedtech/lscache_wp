@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Img_Optm extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'img_optm' ; // DB record prefix name
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
@@ -67,9 +67,9 @@ class Img_Optm extends Conf
 	 * Init
 	 *
 	 * @since  2.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug2( 'ImgOptm init' ) ;
 
@@ -2156,20 +2156,5 @@ class Img_Optm extends Conf
 		Admin::redirect() ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 
 }

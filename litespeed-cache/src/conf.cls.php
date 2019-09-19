@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Conf
+class Conf extends Instance
 {
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`

@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Activation
+class Activation extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const TYPE_UPGRADE = 'upgrade' ;
 
@@ -518,22 +518,6 @@ class Activation
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.9
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

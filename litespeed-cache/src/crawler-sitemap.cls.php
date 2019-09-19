@@ -13,9 +13,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Crawler_Sitemap
+class Crawler_Sitemap extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 	private $home_url ;// Used to simplify urls
 
 	protected $_urls = array() ;
@@ -24,9 +24,9 @@ class Crawler_Sitemap
 	 * Instantiate the class
 	 *
 	 * @since 1.1.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		if ( is_multisite() ) {
 			$this->home_url = get_home_url( get_current_blog_id() ) ;
@@ -132,21 +132,5 @@ class Crawler_Sitemap
 		}
 
 		return apply_filters('litespeed_crawler_sitemap', $this->_urls) ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

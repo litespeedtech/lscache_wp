@@ -12,12 +12,12 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class DB_Optm
+class DB_Optm extends Instance
 {
 	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
 	const TYPE_CONV_TB = 'conv_innodb' ;
 
-	private static $_instance ;
+	protected static $_instance ;
 
 	/**
 	 * Clean/Optimize WP tables
@@ -266,22 +266,6 @@ class DB_Optm
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 3.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

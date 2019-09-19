@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin
+class Admin extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 	private $__cfg ;// cfg instance
 	private $display ;
 
@@ -24,7 +24,7 @@ class Admin
 	 *
 	 * @since    1.0.0
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// Define LSCWP_MU_PLUGIN if is mu-plugins
 		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
@@ -186,21 +186,5 @@ class Admin
 
 		wp_redirect( $url ) ;
 		exit() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

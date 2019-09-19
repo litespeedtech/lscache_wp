@@ -9,9 +9,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Tag
+class Tag extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const TYPE_FEED = 'FD' ;
 	const TYPE_FRONTPAGE = 'F' ;
@@ -43,7 +43,7 @@ class Tag
 	 *
 	 * @since    2.2.3
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// register recent posts widget tag before theme renders it to make it work
 		add_filter( 'widget_posts_args', array( $this, 'add_widget_recent_posts' ) ) ;
@@ -333,22 +333,6 @@ class Tag
 		$hdr = self::X_HEADER . ': ' . implode( ',', $prefix_tags ) ;
 
 		return $hdr ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.2.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

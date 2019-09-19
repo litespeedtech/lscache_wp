@@ -17,7 +17,7 @@ defined( 'WPINC' ) || exit ;
 
 class Config extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const TYPE_SET = 'set' ;
 
@@ -28,9 +28,9 @@ class Config extends Conf
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 	}
 
@@ -687,21 +687,5 @@ class Config extends Conf
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

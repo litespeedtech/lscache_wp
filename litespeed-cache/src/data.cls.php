@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Data
+class Data extends Instance
 {
 	private $_db_updater = array(
 		// Example
@@ -27,7 +27,7 @@ class Data
 		// ),
 	) ;
 
-	private static $_instance ;
+	protected static $_instance ;
 
 	const TB_CSSJS = 'litespeed_cssjs' ;
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
@@ -42,9 +42,9 @@ class Data
 	 * Init
 	 *
 	 * @since  1.3.1
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug2( 'Data init' ) ;
 		global $wpdb ;
@@ -519,22 +519,6 @@ class Data
 		$res = json_decode( $res, true ) ;
 
 		return $res ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.3.1
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

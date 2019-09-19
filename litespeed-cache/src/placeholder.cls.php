@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Placeholder extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'placeholder' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
@@ -32,9 +32,9 @@ class Placeholder extends Conf
 	 * Init
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_conf_placeholder_resp = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_conf_placeholder_resp_generator = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
@@ -496,22 +496,6 @@ class Placeholder extends Conf
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 3.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

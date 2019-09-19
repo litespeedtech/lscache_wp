@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class Optimize extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'optm' ; // DB record prefix name
 
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js' ;
@@ -52,9 +52,9 @@ class Optimize extends Conf
 	 * Init optimizer
 	 *
 	 * @since  1.2.2
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->cfg_css_async = Core::config( Conf::O_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = Core::config( Conf::O_OPTM_JS_DEFER ) ;
@@ -1323,22 +1323,6 @@ class Optimize extends Conf
 		}
 
 		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' ) ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.2.2
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

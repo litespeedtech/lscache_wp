@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Import extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'import' ; // DB record prefix name
 
 	private $__cfg ;
@@ -26,9 +26,9 @@ class Import extends Conf
 	 * Init
 	 *
 	 * @since  1.8.2
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug( 'Import init' ) ;
 
@@ -246,19 +246,4 @@ class Import extends Conf
 		Admin::redirect() ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
 }

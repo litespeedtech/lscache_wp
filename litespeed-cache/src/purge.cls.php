@@ -12,7 +12,7 @@ defined( 'WPINC' ) || exit ;
 
 class Purge extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'purge' ; // DB record prefix name
 
 	protected $_pub_purge = array() ;
@@ -43,7 +43,7 @@ class Purge extends Conf
 	 *
 	 * @since    2.2.3
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		//register purge actions
 		$purge_post_events = array(
@@ -1061,21 +1061,5 @@ class Purge extends Conf
 	{
 		self::purge_all() ;
 		return $val ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

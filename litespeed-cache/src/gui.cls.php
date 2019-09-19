@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class GUI extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'gui' ; // DB record prefix name
 
 	private static $_clean_counter = 0 ;
@@ -40,9 +40,9 @@ class GUI extends Conf
 	 * Init
 	 *
 	 * @since  1.3
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		if ( ! is_admin() ) {
 			Log::debug2( '[GUI] init' ) ;
@@ -727,22 +727,6 @@ class GUI extends Conf
 			Log::debug( "GUI clean wrapper $counter end" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

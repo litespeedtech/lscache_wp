@@ -13,10 +13,11 @@ namespace LiteSpeed\Thirdparty ;
 defined( 'WPINC' ) || exit ;
 
 use \LiteSpeed\API ;
+use \LiteSpeed\Instance ;
 
-class WooCommerce
+class WooCommerce extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const CACHETAG_SHOP = 'WC_S' ;
 	const CACHETAG_TERM = 'WC_T.' ;
@@ -895,22 +896,6 @@ class WooCommerce
 
 			$lscwp_3rd_woocommerce->purge_product( $product );
 		}
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.6.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }
 

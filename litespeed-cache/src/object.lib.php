@@ -180,7 +180,7 @@ function wp_cache_close()
 
 class WP_Object_Cache
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_object_cache ;
 
@@ -200,9 +200,9 @@ class WP_Object_Cache
 	 * Init
 	 *
 	 * @since  1.8
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_object_cache = \LiteSpeed\Object_Cache::get_instance() ;
 
@@ -649,7 +649,6 @@ class WP_Object_Cache
 	 *
 	 * @since 1.8
 	 * @access public
-	 * @return Current class instance.
 	 */
 	public static function get_instance()
 	{

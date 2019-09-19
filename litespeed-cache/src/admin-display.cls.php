@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class Admin_Display extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const DB_PREFIX = 'admin' ; // DB record prefix name
 
@@ -44,9 +44,9 @@ class Admin_Display extends Conf
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   private
+	 * @access   protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// load assets
 		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'litespeed-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
@@ -1087,21 +1087,5 @@ class Admin_Display extends Conf
 		$html .= '</ol></div>' ;
 
 		return $html ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }

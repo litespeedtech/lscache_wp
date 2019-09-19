@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class Doc
 {
-	// private static $_instance ;
+	// protected static $_instance ;
 
 	/**
 	 * Privacy policy

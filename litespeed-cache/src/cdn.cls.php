@@ -12,9 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class CDN
+class CDN extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const BYPASS = 'LITESPEED_BYPASS_CDN' ;
 
@@ -35,9 +35,9 @@ class CDN
 	 * Init
 	 *
 	 * @since  1.2.3
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug2( '[CDN] init' ) ;
 
@@ -599,21 +599,4 @@ class CDN
 
 		wp_register_script( 'jquery-core', $src, false, $v ) ;
 	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.2.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
-
 }

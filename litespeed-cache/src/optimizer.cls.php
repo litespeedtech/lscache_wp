@@ -11,9 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Optimizer
+class Optimizer extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	private $_conf_css_font_display ;
 
@@ -21,9 +21,9 @@ class Optimizer
 	 * Init optimizer
 	 *
 	 * @since  1.9
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->_conf_css_font_display = Core::config( Conf::O_OPTM_CSS_FONT_DISPLAY ) ;
 		if ( ! empty( Conf::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
@@ -311,23 +311,6 @@ class Optimizer
 		$content = trim( $content ) ;
 		return $content ;
 	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.9
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
-
 }
 
 

@@ -9,9 +9,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Task
+class Task extends Instance
 {
-	private static $_instance ;
+	protected static $_instance ;
 
 	const HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
 	const HOOK_AVATAR = 'litespeed_avatar_trigger' ;
@@ -26,9 +26,9 @@ class Task
 	 * Init
 	 *
 	 * @since  1.6
-	 * @access private
+	 * @access protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		Log::debug2( '[Task] init' ) ;
 
@@ -268,23 +268,6 @@ class Task
 	{
 		Log::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
 		wp_clear_scheduled_hook( self::HOOK_CRAWLER ) ;
-	}
-
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.6
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }

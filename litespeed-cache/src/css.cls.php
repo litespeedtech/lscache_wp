@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 class CSS extends Conf
 {
-	private static $_instance ;
+	protected static $_instance ;
 	const DB_PREFIX = 'css' ; // DB record prefix name
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
@@ -302,22 +302,6 @@ class CSS extends Conf
 		}
 
 		Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 2.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 
 }
