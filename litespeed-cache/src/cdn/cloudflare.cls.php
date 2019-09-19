@@ -306,20 +306,4 @@ class Cloudflare extends Conf
 		Admin::redirect() ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.2.3
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
-	}
-
 }

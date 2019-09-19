@@ -13,10 +13,11 @@ use LiteSpeed\Core ;
 use LiteSpeed\Conf ;
 use LiteSpeed\Config ;
 use LiteSpeed\Log ;
+use LiteSpeed\Instance ;
 
 defined( 'WPINC' ) || exit ;
 
-class Quic
+class Quic extends Instance
 {
 	protected static $_instance ;
 
@@ -94,21 +95,5 @@ class Quic
 
 		return $json ;
 
-	}
-
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.8
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self() ;
-		}
-
-		return self::$_instance ;
 	}
 }
