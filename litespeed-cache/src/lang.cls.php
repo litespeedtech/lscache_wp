@@ -171,7 +171,10 @@ class Lang extends Conf
 			self::O_DEBUG_LOG_FILTERS			=> __( 'Log Filters', 'litespeed-cache' ),
 			self::O_DEBUG_LOG_NO_FILTERS		=> __( 'Exclude Filters', 'litespeed-cache' ),
 			self::O_DEBUG_LOG_NO_PART_FILTERS	=> __( 'Exclude Part Filters', 'litespeed-cache' ),
-			// self::O_DEBUG_DISABLE_ALL			=> ,
+
+			self::O_DB_OPTM_REVISIONS_MAX		=> __( 'Revisions Max Number', 'litespeed-cache' ),
+			self::O_DB_OPTM_REVISIONS_AGE		=> __( 'Revisions Max Age', 'litespeed-cache' ),
+
 		) ;
 
 		if ( array_key_exists( $id, $_lang_list ) ) {

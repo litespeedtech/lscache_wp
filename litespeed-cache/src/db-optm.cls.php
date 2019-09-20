@@ -8,16 +8,16 @@
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 class DB_Optm extends Instance
 {
-	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
-	const TYPE_CONV_TB = 'conv_innodb' ;
+	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' );
+	const TYPE_CONV_TB = 'conv_innodb';
 
-	protected static $_instance ;
+	protected static $_instance;
 
 	/**
 	 * Clean/Optimize WP tables
@@ -31,61 +31,67 @@ class DB_Optm extends Instance
 	public static function db_count( $type, $ignore_multisite = false )
 	{
 		if ( $type === 'all' ) {
-			$num = 0 ;
+			$num = 0;
 			foreach ( self::TYPES as $v ) {
-				$num += self::db_count( $v ) ;
+				$num += self::db_count( $v );
 			}
-			return $num ;
+			return $num;
 		}
 
 		if ( ! $ignore_multisite ) {
 			if ( is_multisite() && is_network_admin() ) {
-				$num = 0 ;
-				$blogs = Activation::get_network_ids() ;
+				$num = 0;
+				$blogs = Activation::get_network_ids();
 				foreach ( $blogs as $blog_id ) {
-					switch_to_blog( $blog_id ) ;
-					$num += self::db_count( $type, true ) ;
-					restore_current_blog() ;
+					switch_to_blog( $blog_id );
+					$num += self::db_count( $type, true );
+					restore_current_blog();
 				}
-				return $num ;
+				return $num;
 			}
 		}
 
-		global $wpdb ;
+		global $wpdb;
 
 		switch ( $type ) {
 			case 'revision':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision'" ) ;
+				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
+				$sql = "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision'";
+				if ( $rev_age ) {
+					$sql .= " and post_modified > DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
+				}
+				return $wpdb->get_var( $sql );
 
 			case 'auto_draft':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
 
 			case 'trash_post':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'trash'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'trash'" );
 
 			case 'spam_comment':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'spam'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'spam'" );
 
 			case 'trash_comment':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'trash'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'trash'" );
 
 			case 'trackback-pingback':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" );
 
 			case 'expired_transient':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() );
 
 			case 'all_transients':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" );
 
 			case 'optimize_tables':
-				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ) ;
+				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" );
 
 			case 'all_cssjs' :
-				return Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::tb_cssjs() . "`" ) : 0 ;
+				return Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::tb_cssjs() . "`" ) : 0;
 		}
 
-		return '-' ;
+		return '-';
 	}
 
 	/**
@@ -99,61 +105,67 @@ class DB_Optm extends Instance
 	{
 		if ( $type === 'all' ) {
 			foreach ( self::TYPES as $v ) {
-				$this->_db_clean( $v ) ;
+				$this->_db_clean( $v );
 			}
-			return __( 'Clean all successfully.', 'litespeed-cache' ) ;
+			return __( 'Clean all successfully.', 'litespeed-cache' );
 		}
 
-		global $wpdb ;
+		global $wpdb;
 		switch ( $type ) {
 			case 'revision':
-				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'" ) ;
-				return __( 'Clean post revisions successfully.', 'litespeed-cache' ) ;
+				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
+				$sql = "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'";
+				if ( $rev_age ) {
+					$sql .= " and post_modified > DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
+				}
+				$wpdb->query( $sql );
+				return __( 'Clean post revisions successfully.', 'litespeed-cache' );
 
 			case 'auto_draft':
-				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" ) ;
-				return __( 'Clean auto drafts successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
+				return __( 'Clean auto drafts successfully.', 'litespeed-cache' );
 
 			case 'trash_post':
-				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" ) ;
-				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" );
+				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' );
 
 			case 'spam_comment':
-				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" ) ;
-				return __( 'Clean spam comments successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" );
+				return __( 'Clean spam comments successfully.', 'litespeed-cache' );
 
 			case 'trash_comment':
-				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" ) ;
-				return __( 'Clean trashed comments successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" );
+				return __( 'Clean trashed comments successfully.', 'litespeed-cache' );
 
 			case 'trackback-pingback':
-				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" ) ;
-				return __( 'Clean trackbacks and pingbacks successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" );
+				return __( 'Clean trackbacks and pingbacks successfully.', 'litespeed-cache' );
 
 			case 'expired_transient':
-				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() ) ;
-				return __( 'Clean expired transients successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() );
+				return __( 'Clean expired transients successfully.', 'litespeed-cache' );
 
 			case 'all_transients':
-				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" ) ;
-				return __( 'Clean all transients successfully.', 'litespeed-cache' ) ;
+				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" );
+				return __( 'Clean all transients successfully.', 'litespeed-cache' );
 
 			case 'optimize_tables':
-				$sql = "SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" ;
-				$result = $wpdb->get_results( $sql ) ;
+				$sql = "SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0";
+				$result = $wpdb->get_results( $sql );
 				if ( $result ) {
 					foreach ( $result as $row ) {
-						$wpdb->query( 'OPTIMIZE TABLE ' . $row->table_name ) ;
+						$wpdb->query( 'OPTIMIZE TABLE ' . $row->table_name );
 					}
 				}
-				return __( 'Optimized all tables.', 'litespeed-cache' ) ;
+				return __( 'Optimized all tables.', 'litespeed-cache' );
 
 			case 'all_cssjs' :
 				if ( Data::tb_cssjs_exist() ) {
-					Purge::purge_all() ;
-					$wpdb->query( "TRUNCATE `" . Data::tb_cssjs() . "`" ) ;
+					Purge::purge_all();
+					$wpdb->query( "TRUNCATE `" . Data::tb_cssjs() . "`" );
 				}
-				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
+				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' );
 
 		}
 
@@ -167,9 +179,9 @@ class DB_Optm extends Instance
 	 */
 	public function list_myisam()
 	{
-		global $wpdb ;
-		$q = "SELECT * FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'" ;
-		return $wpdb->get_results( $q ) ;
+		global $wpdb;
+		$q = "SELECT * FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'";
+		return $wpdb->get_results( $q );
 	}
 
 	/**
@@ -180,35 +192,35 @@ class DB_Optm extends Instance
 	 */
 	private function _conv_innodb()
 	{
-		global $wpdb ;
+		global $wpdb;
 
 		if ( empty( $_GET[ 'tb' ] ) ) {
-			Admin_Display::error( 'No table to convert' ) ;
-			return ;
+			Admin_Display::error( 'No table to convert' );
+			return;
 		}
 
-		$tb = false ;
+		$tb = false;
 
-		$list = $this->list_myisam() ;
+		$list = $this->list_myisam();
 		foreach ( $list as $v ) {
 			if ( $v->TABLE_NAME == $_GET[ 'tb' ] ) {
-				$tb = $v->TABLE_NAME ;
-				break ;
+				$tb = $v->TABLE_NAME;
+				break;
 			}
 		}
 
 		if ( ! $tb ) {
-			Admin_Display::error( 'No existing table' ) ;
-			return ;
+			Admin_Display::error( 'No existing table' );
+			return;
 		}
 
-		$q = 'ALTER TABLE ' . DB_NAME . '.' . $tb . ' ENGINE = InnoDB' ;
-		$wpdb->query( $q ) ;
+		$q = 'ALTER TABLE ' . DB_NAME . '.' . $tb . ' ENGINE = InnoDB';
+		$wpdb->query( $q );
 
-		Log::debug( "[DB] Converted $tb to InnoDB" ) ;
+		Log::debug( "[DB] Converted $tb to InnoDB" );
 
-		$msg = __( 'Converted to InnoDB successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		$msg = __( 'Converted to InnoDB successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 
 	}
 
@@ -220,13 +232,13 @@ class DB_Optm extends Instance
 	 */
 	public function autoload_summary()
 	{
-		global $wpdb ;
+		global $wpdb;
 
-		$summary = $wpdb->get_row( "SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload='yes'" ) ;
+		$summary = $wpdb->get_row( "SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload='yes'" );
 
-		$summary->autoload_toplist = $wpdb->get_results( "SELECT option_name, LENGTH(option_value) AS option_value_length FROM `$wpdb->options` WHERE autoload='yes' ORDER BY option_value_length DESC LIMIT 20" ) ;
+		$summary->autoload_toplist = $wpdb->get_results( "SELECT option_name, LENGTH(option_value) AS option_value_length FROM `$wpdb->options` WHERE autoload='yes' ORDER BY option_value_length DESC LIMIT 20" );
 
-		return $summary ;
+		return $summary;
 	}
 
 	/**
@@ -237,35 +249,35 @@ class DB_Optm extends Instance
 	 */
 	public static function handler()
 	{
-		$instance = self::get_instance() ;
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case in_array( $type, self::TYPES ) :
 				if ( is_multisite() && is_network_admin() ) {
-					$blogs = Activation::get_network_ids() ;
+					$blogs = Activation::get_network_ids();
 					foreach ( $blogs as $blog_id ) {
-						switch_to_blog( $blog_id ) ;
-						$msg = $instance->_db_clean( $type ) ;
-						restore_current_blog() ;
+						switch_to_blog( $blog_id );
+						$msg = $instance->_db_clean( $type );
+						restore_current_blog();
 					}
 				}
 				else {
-					$msg = $instance->_db_clean( $type ) ;
+					$msg = $instance->_db_clean( $type );
 				}
-				Admin_Display::succeed( $msg ) ;
-				break ;
+				Admin_Display::succeed( $msg );
+				break;
 
 			case self::TYPE_CONV_TB :
-				$instance->_conv_innodb() ;
-				break ;
+				$instance->_conv_innodb();
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 }

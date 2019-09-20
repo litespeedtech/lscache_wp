@@ -113,6 +113,12 @@ class Conf extends Instance
 	const O_DEBUG_LOG_NO_PART_FILTERS 	= 'debug-log_no_part_filters' ;
 
 	## -------------------------------------------------- ##
+	## --------------	   DB Optm  	----------------- ##
+	## -------------------------------------------------- ##
+	const O_DB_OPTM_REVISIONS_MAX 		= 'db_optm-revisions_max' ;
+	const O_DB_OPTM_REVISIONS_AGE 		= 'db_optm-revisions_age' ;
+
+	## -------------------------------------------------- ##
 	## --------------	  HTML Optm 	----------------- ##
 	## -------------------------------------------------- ##
 	const O_OPTM_CSS_MIN 			= 'optm-css_min' ;
@@ -403,6 +409,10 @@ class Conf extends Instance
 		self::O_DEBUG_LOG_FILTERS 		=> false,
 		self::O_DEBUG_LOG_NO_FILTERS 	=> array(),
 		self::O_DEBUG_LOG_NO_PART_FILTERS => array(),
+
+		// DB Optm
+		self::O_DB_OPTM_REVISIONS_MAX 	=> 0,
+		self::O_DB_OPTM_REVISIONS_AGE 	=> 0,
 
 		// HTML Optm
 		self::O_OPTM_CSS_MIN 			=> false,
