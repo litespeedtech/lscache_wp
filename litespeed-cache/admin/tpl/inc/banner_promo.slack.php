@@ -10,7 +10,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-desciption-content">
 					<?php echo __( 'Want to connect with other LiteSpeed users?', 'litespeed-cache' ) ; ?>
-					<?php echo sprintf( __( 'Join the %s community.', 'litespeed-cache' ), '<a href="https://goo.gl/mrKuTw" target="_blank" class="litespeed-banner-promo-slack-textlink">LiteSpeed Slack</a>' ) ; ?>
+					<?php echo sprintf( __( 'Join the %s community.', 'litespeed-cache' ), '<a href="https://join.slack.com/t/golitespeed/shared_invite/enQtMzE5ODgxMTUyNTgzLTNiNWQ1MWZlYmI4YjEzNTM4NjdiODY2YTQ0OWVlMzBlNGZkY2E3Y2E4MjIzNmNmZmU0ZjIyNWM1ZmNmMWRlOTk" target="_blank" class="litespeed-banner-promo-slack-textlink">LiteSpeed Slack</a>' ) ; ?>
 				</p>
 				<p class="litespeed-banner-promo-slack-line2">
 					golitespeed.slack.com
@@ -18,7 +18,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			</div>
 			<div>
 				<h3 class="litespeed-banner-button-link">
-					<a href="https://goo.gl/mrKuTw" target="_blank">
+					<a href="https://join.slack.com/t/golitespeed/shared_invite/enQtMzE5ODgxMTUyNTgzLTNiNWQ1MWZlYmI4YjEzNTM4NjdiODY2YTQ0OWVlMzBlNGZkY2E3Y2E4MjIzNmNmZmU0ZjIyNWM1ZmNmMWRlOTk" target="_blank">
 						<?php echo __( 'Join Us on Slack', 'litespeed-cache' ) ; ?>
 					</a>
 				</h3>
