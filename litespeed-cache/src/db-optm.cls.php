@@ -57,11 +57,20 @@ class DB_Optm extends Instance
 			case 'revision':
 				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
 				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
-				$sql = "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision'";
+				$sql_add = '';
 				if ( $rev_age ) {
-					$sql .= " and post_modified > DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
+					$sql_add = " and post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
 				}
-				return $wpdb->get_var( $sql );
+				$sql = "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision' $sql_add";
+				if ( ! $rev_max ) {
+					return $wpdb->get_var( $sql );
+				}
+				// Has count limit
+				$sql = "SELECT COUNT(*)-$rev_max FROM `$wpdb->posts` WHERE post_type = 'revision' $sql_add GROUP BY post_parent HAVING count(*)>$rev_max";
+				$res = $wpdb->get_results( $sql, ARRAY_N );
+
+				Utility::compatibility();
+				return array_sum( array_column( $res, 0 ) );
 
 			case 'auto_draft':
 				return $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
@@ -115,11 +124,25 @@ class DB_Optm extends Instance
 			case 'revision':
 				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
 				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
-				$sql = "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'";
+
+				$sql_add = '';
 				if ( $rev_age ) {
-					$sql .= " and post_modified > DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
+					$sql_add = " and post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
 				}
-				$wpdb->query( $sql );
+
+				if ( ! $rev_max ) {
+					$sql = "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision' $sql_add";
+					$wpdb->query( $sql );
+				}
+				else { // Has count limit
+					$sql = "SELECT COUNT(*)-$rev_max as del_max,post_parent FROM `$wpdb->posts` WHERE post_type = 'revision' $sql_add GROUP BY post_parent HAVING count(*)>$rev_max";
+					$res = $wpdb->get_results( $sql );
+					foreach ( $res as $v ) {
+						$sql = "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision' AND post_parent = %d ORDER BY ID LIMIT %d";
+						$wpdb->query( $wpdb->prepare( $sql, array( $v->post_parent, $v->del_max ) ) );
+					}
+				}
+
 				return __( 'Clean post revisions successfully.', 'litespeed-cache' );
 
 			case 'auto_draft':
