@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.8.5
+Stable tag: 2.9.8.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -289,6 +289,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.6 - Sep 24 2019 =
+* <strong>3rd</strong>: Bypassed page optimizations for AMP. (#359748 PR#169)
+* <strong>GUI</strong>: Firefox compatibility with radio button state when reloading pages. (#288940 PR#162)
+* <strong>GUI</strong>: Updated Slack invitation link. (PR#173)
 
 = 2.9.8.5 - Aug 21 2019 =
 * <strong>CCSS</strong>: Removed potential PHP notice when getting post_type. (@amcgiffert)
