@@ -141,7 +141,7 @@ class Router extends Instance
 		 * @since 2.9.8.5
 		 */
 		if (
-			strpos( $_SERVER[ 'REQUEST_URI' ], 'wp-json/wp/v2/media' ) !== false
+			strpos( $_SERVER[ 'REQUEST_URI' ], rest_get_url_prefix() . '/wp/v2/media' ) !== false
 			&& strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
 		) {
 			Log::debug( '[Router] CDN bypassed: wp-json on admin page' ) ;
