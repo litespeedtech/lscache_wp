@@ -36,7 +36,7 @@ defined( 'WPINC' ) || exit ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, private pages are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
-				<?php $this->_validate_ttl( $id, 60, 864000 ) ; ?>
+				<?php $this->_validate_ttl( $id, 60, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>
