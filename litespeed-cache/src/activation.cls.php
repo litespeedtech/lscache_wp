@@ -444,17 +444,26 @@ class Activation extends Instance
 			return ;
 		}
 
-		add_filter( 'auto_update_plugin', function( $update, $item ) {
-				if ( $item->slug == 'litespeed-cache' ) {
-					$auto_v = Utility::version_check( 'auto_update_plugin' ) ;
+		add_filter( 'auto_update_plugin', array( self::get_instance(), 'auto_update_hook' ), 10, 2 ) ;
+	}
 
-					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
-						return true ;
-					}
-				}
+	/**
+	 * Auto upgrade hook
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function auto_update_hook( $update, $item )
+	{
+		if ( $item->slug == 'litespeed-cache' ) {
+			$auto_v = Utility::version_check( 'auto_update_plugin' ) ;
 
-				return $update; // Else, use the normal API response to decide whether to update or not
-			}, 10, 2 ) ;
+			if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
+				return true ;
+			}
+		}
+
+		return $update; // Else, use the normal API response to decide whether to update or not
 	}
 
 	/**
