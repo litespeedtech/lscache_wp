@@ -110,7 +110,7 @@ class Utility extends Instance
 	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::PLUGIN_VERSION . '&v2=' . ( LSCWP_CUR_V ?: '' ) . '&src=' . $src ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::PLUGIN_VERSION . '&v2=' . ( defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '' ) . '&src=' . $src ;
 
 		if ( defined( 'LITESPEED_ERR' ) ) {
 			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
