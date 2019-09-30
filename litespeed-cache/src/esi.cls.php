@@ -572,7 +572,7 @@ class ESI extends Instance
 	 * @param array $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block( $instance, WP_Widget $widget, array $args )
+	public function sub_widget_block( $instance, $widget, $args )
 	{
 		// #210407
 		if ( ! is_array( $instance ) ) {
