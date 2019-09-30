@@ -11,7 +11,7 @@ $wiki = '<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_
 
 $forum = '<a href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank">' . __( 'Visit LSCWP support forum', 'litespeed-cache' ) . '</a>' ;
 
-$community = '<a href="https://goo.gl/FG9S4N" target="_blank">' . __( 'Join LiteSpeed Slack community', 'litespeed-cache' ) . '</a>' ;
+$community = '<a href="https://join.slack.com/t/golitespeed/shared_invite/enQtMzE5ODgxMTUyNTgzLTNiNWQ1MWZlYmI4YjEzNTM4NjdiODY2YTQ0OWVlMzBlNGZkY2E3Y2E4MjIzNmNmZmU0ZjIyNWM1ZmNmMWRlOTk" target="_blank">' . __( 'Join LiteSpeed Slack community', 'litespeed-cache' ) . '</a>' ;
 
 // Change the footer text
 if ( ! is_multisite() || is_network_admin() ) {
