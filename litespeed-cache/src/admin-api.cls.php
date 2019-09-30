@@ -82,6 +82,7 @@ class Admin_API extends Conf
 			'hash'		=> $this->_hash_make(),
 			'domain'	=> get_bloginfo( 'url' ),
 			'email'		=> get_bloginfo( 'admin_email' ),
+			'rest'		=> rest_get_url_prefix(),
 			'src'		=> defined( 'LITESPEED_CLI' ) ? 'CLI' : 'web',
 		) ;
 

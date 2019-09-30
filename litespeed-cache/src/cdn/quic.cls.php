@@ -58,6 +58,9 @@ class Quic extends Instance
 		// Get site domain
 		$options[ '_domain' ] = home_url() ;
 
+		// Rest url
+		$options[ '_rest' ] = rest_get_url_prefix() ;
+
 		// Add server env vars
 		$options[ '_server' ] = Config::get_instance()->server_vars() ;
 
