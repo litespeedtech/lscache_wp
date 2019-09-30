@@ -5,38 +5,40 @@ defined( 'WPINC' ) || exit ;
 $finished_percentage = 10;
 
 $_summary = GUI::get_summary() ;
-$_score = $_summary[ 'score.data' ] ;
+if ( ! empty( $_summary[ 'score.data' ] ) ) {
+	$_score = $_summary[ 'score.data' ] ;
 
-// Format loading time
-$speed_before_cache = $_score[ 'speed_before_cache' ] / 1000 ;
-if ( $speed_before_cache < 0.01 ) {
-	$speed_before_cache = 0.01 ;
-}
-$speed_before_cache = number_format( $speed_before_cache, 2 ) ;
+	// Format loading time
+	$speed_before_cache = $_score[ 'speed_before_cache' ] / 1000 ;
+	if ( $speed_before_cache < 0.01 ) {
+		$speed_before_cache = 0.01 ;
+	}
+	$speed_before_cache = number_format( $speed_before_cache, 2 ) ;
 
-$speed_after_cache = $_score[ 'speed_after_cache' ] / 1000 ;
-if ( $speed_after_cache < 0.01 ) {
-	$speed_after_cache = number_format( $speed_after_cache, 3 ) ;
-}
-else {
-	$speed_after_cache = number_format( $speed_after_cache, 2 ) ;
-}
+	$speed_after_cache = $_score[ 'speed_after_cache' ] / 1000 ;
+	if ( $speed_after_cache < 0.01 ) {
+		$speed_after_cache = number_format( $speed_after_cache, 3 ) ;
+	}
+	else {
+		$speed_after_cache = number_format( $speed_after_cache, 2 ) ;
+	}
 
-$speed_improved = ( $_score[ 'speed_before_cache' ] - $_score[ 'speed_after_cache' ] ) * 100 / $_score[ 'speed_before_cache' ] ;
-if ( $speed_improved > 99 ) {
-	$speed_improved = number_format( $speed_improved, 2 ) ;
-}
-else {
-	$speed_improved = number_format( $speed_improved ) ;
-}
+	$speed_improved = ( $_score[ 'speed_before_cache' ] - $_score[ 'speed_after_cache' ] ) * 100 / $_score[ 'speed_before_cache' ] ;
+	if ( $speed_improved > 99 ) {
+		$speed_improved = number_format( $speed_improved, 2 ) ;
+	}
+	else {
+		$speed_improved = number_format( $speed_improved ) ;
+	}
 
-// Format PageSpeed Score
-$score_improved = ( $_score[ 'score_after_optm' ] - $_score[ 'score_before_optm' ] ) * 100 / $_score[ 'score_after_optm' ] ;
-if ( $score_improved > 99 ) {
-	$score_improved = number_format( $score_improved, 2 ) ;
-}
-else {
-	$score_improved = number_format( $score_improved ) ;
+	// Format PageSpeed Score
+	$score_improved = ( $_score[ 'score_after_optm' ] - $_score[ 'score_before_optm' ] ) * 100 / $_score[ 'score_after_optm' ] ;
+	if ( $score_improved > 99 ) {
+		$score_improved = number_format( $score_improved, 2 ) ;
+	}
+	else {
+		$score_improved = number_format( $score_improved ) ;
+	}
 }
 
 $optm_summary = Img_Optm::get_summary() ;
@@ -133,6 +135,7 @@ $optm_summary = Img_Optm::get_summary() ;
 
 					<div>
 						<div class="litespeed-row-flex" style="margin-left: -10px;">
+							<?php if ( ! empty( $speed_before_cache ) ) : ?>
 							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 								<div>
 									<p class="litespeed-text-grey litespeed-margin-y-remove">
@@ -164,65 +167,68 @@ $optm_summary = Img_Optm::get_summary() ;
 									<?php echo $speed_improved ; ?><span class="litespeed-text-large">%</span>
 								</div>
 							</div>
+							<?php endif ; ?>
 						</div>
 					</div>
 
 				</div>
 			</div>
 
-			<?php if ($_score[ 'score_before_optm' ] < $_score[ 'score_after_optm' ] ) : ?>
-				<div class="postbox litespeed-postbox">
-					<div class="inside">
-						<h3 class="litespeed-title">
-							<?php echo __( 'PageSpeed Score', 'litespeed-cache' ) ; ?>
-							<button type="button" class="button button-link litespeed-postbox-refresh" title="Update Page Score">
-								<span class="dashicons dashicons-update"></span>
-								<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
-							</button>
-						</h3>
+			<div class="postbox litespeed-postbox">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'PageSpeed Score', 'litespeed-cache' ) ; ?>
+						<button type="button" class="button button-link litespeed-postbox-refresh" title="Update Page Score">
+							<span class="dashicons dashicons-update"></span>
+							<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
+						</button>
+					</h3>
 
-						<div>
+					<div>
 
-							<div class="litespeed-margin-bottom20">
-								<div class="litespeed-row-flex" style="margin-left: -10px;">
-									<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-										<div>
-											<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-												<?php echo __( 'Before', 'litespeed-cache' ) ; ?>
-											</p>
-										</div>
-										<div class="litespeed-promo-score" style="margin-top:-5px;">
-											<?php echo GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
-										</div>
+						<div class="litespeed-margin-bottom20">
+							<div class="litespeed-row-flex" style="margin-left: -10px;">
+
+							<?php if ( ! empty( $_score[ 'score_before_optm' ] ) ) : ?>
+								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
+									<div>
+										<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
+											<?php echo __( 'Before', 'litespeed-cache' ) ; ?>
+										</p>
 									</div>
-									<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-										<div>
-											<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-												<?php echo __( 'After', 'litespeed-cache' ) ; ?>
-											</p>
-										</div>
-										<div class="litespeed-promo-score" style="margin-top:-5px;">
-											<?php echo GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
-										</div>
-									</div>
-									<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-										<div>
-											<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
-												<?php echo __( 'Improved by', 'litespeed-cache' ) ; ?>
-											</p>
-										</div>
-										<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
-											<?php echo $score_improved ; ?><span class="litespeed-text-large">%</span>
-										</div>
+									<div class="litespeed-promo-score" style="margin-top:-5px;">
+										<?php echo GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
 									</div>
 								</div>
+								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
+									<div>
+										<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
+											<?php echo __( 'After', 'litespeed-cache' ) ; ?>
+										</p>
+									</div>
+									<div class="litespeed-promo-score" style="margin-top:-5px;">
+										<?php echo GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
+									</div>
+								</div>
+								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
+									<div>
+										<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
+											<?php echo __( 'Improved by', 'litespeed-cache' ) ; ?>
+										</p>
+									</div>
+									<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
+										<?php echo $score_improved ; ?><span class="litespeed-text-large">%</span>
+									</div>
+								</div>
+							<?php endif ; ?>
 
 							</div>
-						</div>
 
+						</div>
 					</div>
+
 				</div>
-			<?php endif ; ?>
+			</div>
 
 			<div class="postbox litespeed-postbox">
 				<div class="inside">
@@ -315,13 +321,13 @@ $optm_summary = Img_Optm::get_summary() ;
 					</div>
 
 					<p>
-						<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo Utility::real_size( $optm_summary[ 'reduced' ] ) ; ?></code>
+						<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'reduced' ] ) ? Utility::real_size( $optm_summary[ 'reduced' ] ) : '-' ; ?></code>
 					</p>
 					<p>
-						<?php echo __( 'Images Pulled', 'litespeed-cache' ) ; ?>: <code><?php echo $optm_summary[ 'img_taken' ] ; ?></code>
+						<?php echo __( 'Images Pulled', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'img_taken' ] ) ? $optm_summary[ 'img_taken' ] : '-' ; ?></code>
 					</p>
 					<p>
-						<?php echo __( 'Last Request', 'litespeed-cache' ) ; ?>: <code><?php echo Utility::readable_time( $optm_summary[ 'last_requested' ] ) ; ?></code>
+						<?php echo __( 'Last Request', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'  ; ?></code>
 					</p>
 				</div>
 			</div>

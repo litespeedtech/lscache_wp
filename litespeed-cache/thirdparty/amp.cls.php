@@ -23,7 +23,7 @@ class AMP
 	 * @since 2.9.8.6
 	 * @access public
 	 */
-	public static function pre_load()
+	public static function preload()
 	{
 		if ( ! function_exists( 'is_amp_endpoint' ) || ! is_amp_endpoint() ) return ;
 		API::force_option( API::O_OPTM_CSS_ASYNC, false ) ;
