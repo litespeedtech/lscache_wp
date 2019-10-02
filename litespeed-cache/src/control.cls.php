@@ -59,6 +59,10 @@ class Control extends Instance
 			}
 			$this->_response_header_ttls[ $v[ 0 ] ] = $v[ 1 ] ;
 		}
+
+		if ( Core::config( Conf::O_PURGE_STALE ) ) {
+			self::set_stale();
+		}
 	}
 
 	/**

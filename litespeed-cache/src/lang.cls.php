@@ -42,7 +42,9 @@ class Lang extends Conf
 			self::O_CACHE_MOBILE_RULES			=> __( 'List of Mobile User Agents', 'litespeed-cache' ),
 			self::O_CACHE_PRIV_URI				=> __( 'Private Cached URIs', 'litespeed-cache' ),
 			self::O_CACHE_DROP_QS				=> __( 'Drop Query String', 'litespeed-cache' ),
+
 			self::O_PURGE_ON_UPGRADE			=> __( 'Purge All On Upgrade', 'litespeed-cache' ),
+			self::O_PURGE_STALE					=> __( 'Purge Stale', 'litespeed-cache' ),
 			self::O_PURGE_TIMED_URLS			=> __( 'Scheduled Purge URLs', 'litespeed-cache' ),
 			self::O_PURGE_TIMED_URLS_TIME		=> __( 'Scheduled Purge Time', 'litespeed-cache' ),
 			self::O_CACHE_FORCE_URI				=> __( 'Force Cache URIs', 'litespeed-cache' ),

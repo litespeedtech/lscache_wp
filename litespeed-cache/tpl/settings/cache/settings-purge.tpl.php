@@ -46,6 +46,19 @@ $break_arr = array(
 	<?php endif; ?>
 
 	<tr>
+		<th>
+			<?php $id = Conf::O_PURGE_STALE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Always set stale for Purge operation to reduce the server load peak for the following visits.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Auto Purge Rules For Publish/Update', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-callout notice notice-warning inline">

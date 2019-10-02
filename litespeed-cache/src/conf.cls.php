@@ -65,6 +65,7 @@ class Conf extends Instance
 	## --------------		Purge 		----------------- ##
 	## -------------------------------------------------- ##
 	const O_PURGE_ON_UPGRADE 		= 'purge-upgrade' ;
+	const O_PURGE_STALE 			= 'purge-stale' ;
 	const O_PURGE_POST_ALL 			= 'purge-post_all' ;
 	const O_PURGE_POST_FRONTPAGE 	= 'purge-post_f' ;
 	const O_PURGE_POST_HOMEPAGE 	= 'purge-post_h' ;
@@ -369,6 +370,7 @@ class Conf extends Instance
 
 		// Purge
 		self::O_PURGE_ON_UPGRADE 		=> false,
+		self::O_PURGE_STALE 			=> false,
 		self::O_PURGE_POST_ALL			=> false,
 		self::O_PURGE_POST_FRONTPAGE	=> false,
 		self::O_PURGE_POST_HOMEPAGE		=> false,
