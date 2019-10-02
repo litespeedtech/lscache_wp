@@ -117,6 +117,10 @@ class Admin_Display extends Conf
 				add_action('wp_default_scripts', array($this, 'unset_update_text'), 20) ;
 			}
 		}
+
+		wp_register_script( Core::PLUGIN_NAME . '-lib-vue', LSWCP_PLUGIN_URL . 'assets/js/vue.min.js', array(), Core::PLUGIN_VERSION, false ) ;
+		wp_enqueue_script( Core::PLUGIN_NAME . '-lib-vue' ) ;
+
 	}
 
 	/**

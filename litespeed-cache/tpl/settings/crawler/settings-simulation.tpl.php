@@ -52,7 +52,6 @@ $this->form_action() ;
 				<button type="button" @click='add_row' class="button litespeed-btn-success litespeed-btn-tiny">+</button>
 			</div>
 
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
 			<script>
 				var cookie_crawler = new Vue( {
 					el: '#cookie_crawler',
