@@ -26,7 +26,8 @@ class LiteSpeed_Cache_ThirdParty_AMP_Bypass
 	 */
 	public static function pre_load()
 	{
-		if ( ! function_exists( 'is_amp_endpoint' ) || ! is_amp_endpoint() ) return ;
+		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return ;
+
 		LiteSpeed_Cache_API::force_option( LiteSpeed_Cache_API::OPID_OPTM_CSS_ASYNC, false ) ;
 		LiteSpeed_Cache_API::force_option( LiteSpeed_Cache_API::OPID_MEDIA_IMG_LAZY, false ) ;
 		LiteSpeed_Cache_API::force_option( LiteSpeed_Cache_API::OPID_MEDIA_IFRAME_LAZY, false ) ;
