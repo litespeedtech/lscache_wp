@@ -238,20 +238,29 @@ $optm_summary = Img_Optm::get_summary() ;
 						<?php echo __( 'Cache Status', 'litespeed-cache' ) ; ?>
 					</h3>
 
-
-					<p>
-						<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
-						<?php echo __( 'cache', 'litespeed-cache' ) ; ?>
-					</p>
-					<p>
-						<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
-						<?php echo __( 'object cache', 'litespeed-cache' ) ; ?>
-					</p>
-
+				<?php
+					$cache_list = array(
+						Conf::O_CACHE			=> __( 'Public Cache', 'litespeed-cache' ),
+						Conf::O_CACHE_PRIV		=> __( 'Private Cache', 'litespeed-cache' ),
+						Conf::O_OBJECT			=> __( 'Object Cache', 'litespeed-cache' ),
+						Conf::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
+					);
+					foreach ( $cache_list as $id => $title ) :
+						$v = Core::config( $id );
+				?>
+						<p>
+							<?php if ( $v ) : ?>
+								<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
+							<?php else: ?>
+								<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+							<?php endif; ?>
+							<?php echo $title; ?>
+						</p>
+					<?php endforeach; ?>
 				</div>
 				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 					<div>
-						<a href="#">Manage Cache</a>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-cache' ); ?>">Manage Cache</a>
 					</div>
 				</div>
 			</div>

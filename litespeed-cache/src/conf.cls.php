@@ -42,6 +42,7 @@ class Conf extends Instance
 	const O_CACHE_RES 				= 'cache-resources' ;
 	const O_CACHE_MOBILE 			= 'cache-mobile' ;
 	const O_CACHE_MOBILE_RULES		= 'cache-mobile_rules' ;
+	const O_CACHE_BROWSER 			= 'cache-browser' ;
 	const O_CACHE_EXC_USERAGENTS 	= 'cache-exc_useragents' ;
 	const O_CACHE_EXC_COOKIES 		= 'cache-exc_cookies' ;
 	const O_CACHE_EXC_QS 			= 'cache-exc_qs' ;
@@ -58,6 +59,7 @@ class Conf extends Instance
 	const O_CACHE_TTL_FRONTPAGE 	= 'cache-ttl_frontpage' ;
 	const O_CACHE_TTL_FEED 			= 'cache-ttl_feed' ;
 	const O_CACHE_TTL_STATUS 		= 'cache-ttl_status' ;
+	const O_CACHE_TTL_BROWSER 		= 'cache-ttl_browser' ;
 	const O_CACHE_LOGIN_COOKIE 		= 'cache-login_cookie' ;
 	const O_CACHE_VARY_GROUP 		= 'cache-vary_group' ;
 
@@ -91,8 +93,6 @@ class Conf extends Instance
 	## -------------------------------------------------- ##
 	## --------------     Utilities	    ----------------- ##
 	## -------------------------------------------------- ##
-	const O_UTIL_BROWSER_CACHE 		= 'util-browser_cache' ;
-	const O_UTIL_BROWSER_CACHE_TTL 	= 'util-browser_cache_ttl' ;
 	const O_UTIL_INSTANT_CLICK 		= 'util-instant_click' ;
 	const O_UTIL_CHECK_ADVCACHE 	= 'util-check_advcache' ;
 	const O_UTIL_NO_HTTPS_VARY 		= 'util-no_https_vary' ;
@@ -350,6 +350,7 @@ class Conf extends Instance
 		self::O_CACHE_RES 				=> false,
 		self::O_CACHE_MOBILE 			=> false,
 		self::O_CACHE_MOBILE_RULES 		=> array(),
+		self::O_CACHE_BROWSER 			=> false,
 		self::O_CACHE_EXC_USERAGENTS 	=> array(),
 		self::O_CACHE_EXC_COOKIES 		=> array(),
 		self::O_CACHE_EXC_QS 			=> array(),
@@ -365,6 +366,7 @@ class Conf extends Instance
 		self::O_CACHE_TTL_PRIV 			=> 0,
 		self::O_CACHE_TTL_FRONTPAGE 	=> 0,
 		self::O_CACHE_TTL_FEED 			=> 0,
+		self::O_CACHE_TTL_BROWSER 		=> 0,
 		self::O_CACHE_TTL_STATUS 		=> array(),
 		self::O_CACHE_LOGIN_COOKIE 		=> '',
 		self::O_CACHE_VARY_GROUP		=> array(),
@@ -393,8 +395,6 @@ class Conf extends Instance
 		self::O_ESI_CACHE_COMMFORM 	 	=> false,
 
 		// Util
-		self::O_UTIL_BROWSER_CACHE 		=> false,
-		self::O_UTIL_BROWSER_CACHE_TTL 	=> 0,
 		self::O_UTIL_INSTANT_CLICK 		=> false,
 		self::O_UTIL_CHECK_ADVCACHE 	=> false,
 		self::O_UTIL_NO_HTTPS_VARY 		=> false,
@@ -562,11 +562,13 @@ class Conf extends Instance
 
 		self::O_CACHE_FAVICON 			=> false,
 		self::O_CACHE_RES 				=> false,
+		self::O_CACHE_BROWSER 			=> false,
 		self::O_CACHE_MOBILE 			=> false,
 		self::O_CACHE_MOBILE_RULES 		=> array(),
 		self::O_CACHE_LOGIN_COOKIE 		=> '',
 		self::O_CACHE_EXC_COOKIES 		=> array(),
 		self::O_CACHE_EXC_USERAGENTS 	=> array(),
+		self::O_CACHE_TTL_BROWSER 		=> 0,
 
 		self::O_PURGE_ON_UPGRADE 		=> false,
 
@@ -584,8 +586,6 @@ class Conf extends Instance
 		self::O_OBJECT_GLOBAL_GROUPS	=> array(),
 		self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
 
-		self::O_UTIL_BROWSER_CACHE 		=> false,
-		self::O_UTIL_BROWSER_CACHE_TTL 	=> 0,
 		self::O_UTIL_CHECK_ADVCACHE 	=> false,
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,

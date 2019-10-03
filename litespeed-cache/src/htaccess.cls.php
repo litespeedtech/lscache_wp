@@ -442,7 +442,7 @@ class Htaccess extends Instance
 		 * Add ttl setting
 		 * @since 1.6.3
 		 */
-		$id = Conf::O_UTIL_BROWSER_CACHE_TTL ;
+		$id = Conf::O_CACHE_TTL_BROWSER ;
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			self::EXPIRES_MODULE_START,
@@ -636,7 +636,7 @@ class Htaccess extends Instance
 		}
 
 		// Browser cache
-		$id = Conf::O_UTIL_BROWSER_CACHE ;
+		$id = Conf::O_CACHE_BROWSER ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
 			$new_rules_nonls = array_merge( $new_rules_nonls, $this->_browser_cache_rules( $cfg ) ) ;
