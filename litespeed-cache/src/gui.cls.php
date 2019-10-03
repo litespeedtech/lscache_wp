@@ -62,6 +62,52 @@ class GUI extends Conf
 	}
 
 	/**
+	 * Get the lscache stats
+	 *
+	 * @since  3.0
+	 */
+	public function lscache_stats()
+	{
+		$parsed = parse_url( get_bloginfo( 'url' ) );
+
+		$response = wp_remote_get( $parsed[ 'scheme' ] . '://' . $parsed[ 'host' ] . '/__LSCACHE/STATS' );
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+		if ( ! is_array( $json ) ) {
+			return false;
+		}
+
+		foreach ( $json as $stats ) {
+			break;
+		}
+
+		if ( ! is_array( $stats ) || ! array_key_exists( 'PUB_CREATES', $stats ) ) {
+			return false;
+		}
+
+		$stat_titles = array(
+			'PUB_CREATES'		=> __( 'Public Caches', 'litespeed-cache' ),
+			'PUB_HITS'			=> __( 'Public Cache Hits', 'litespeed-cache' ),
+			'PVT_CREATES'		=> __( 'Private Caches', 'litespeed-cache' ),
+			'PVT_HITS'			=> __( 'Private Cache Hits', 'litespeed-cache' ),
+		);
+
+		// Build the readable format
+		$data = array();
+		foreach ( $stat_titles as $k => $v ) {
+			if ( array_key_exists( $k, $stats ) ) {
+				$data[ $v ] = number_format( $stats[ $k ] );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6

@@ -2,6 +2,8 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
+$lscache_stats = GUI::get_instance()->lscache_stats();
+
 $finished_percentage = 10;
 
 $_summary = GUI::get_summary() ;
@@ -251,6 +253,21 @@ $optm_summary = Img_Optm::get_summary() ;
 					<div>
 						<a href="#">Manage Cache</a>
 					</div>
+				</div>
+			</div>
+
+			<div class="postbox litespeed-postbox">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'Cache Stats', 'litespeed-cache' ) ; ?>
+					</h3>
+
+				<?php if ( $lscache_stats ) : ?>
+				<?php foreach ( $lscache_stats as $title => $val ) : ?>
+					<p><?php echo $title; ?>: <?php echo $val ? "<code>$val</code>" : '-'; ?></p>
+				<?php endforeach; ?>
+				<?php endif; ?>
+
 				</div>
 			</div>
 
