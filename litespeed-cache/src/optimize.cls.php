@@ -775,6 +775,11 @@ class Optimize extends Conf
 	 */
 	private function _dns_prefetch_init()
 	{
+		// Widely enable link DNS prefetch
+		if ( Core::config( Conf::O_OPTM_DNS_PREFETCH_CTRL ) ) {
+			add_filter( 'litespeed_optm_html_head', array( $this, 'dns_prefetch_xmeta' ), 999 );
+		}
+
 		$this->dns_prefetch = Core::config( Conf::O_OPTM_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
@@ -786,6 +791,18 @@ class Optimize extends Conf
 		else {
 			add_action( 'litespeed_optm', array( $this, 'dns_prefetch_output' ) ) ;
 		}
+	}
+
+	/**
+	 * Append wide prefetch DNS meta
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function dns_prefetch_xmeta( $content )
+	{
+		$content .= '<meta http-equiv="x-dns-prefetch-control" content="on">';
+		return $content;
 	}
 
 	/**

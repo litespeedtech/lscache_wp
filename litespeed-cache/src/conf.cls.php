@@ -154,6 +154,7 @@ class Conf extends Instance
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con' ;
 	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc' ;
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch' ;
+	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl' ;
 	const O_OPTM_EXC 				= 'optm-exc' ;
 	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype' ;
 	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri' ;
@@ -449,6 +450,7 @@ class Conf extends Instance
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
+		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),
 		self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
 		self::O_OPTM_CCSS_SEP_URI		=> array(),

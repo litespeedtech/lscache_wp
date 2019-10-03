@@ -94,6 +94,21 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
+			<?php $id = Conf::O_OPTM_DNS_PREFETCH_CTRL ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Widely enable DNS prefetch for URLs in the document, including images, CSS, JavaScript, and so forth.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve the page loading speed.', 'litespeed-cache' ) ; ?>
+				<?php $this->learn_more( 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Conf::O_OPTM_RM_COMMENT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

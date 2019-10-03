@@ -75,6 +75,7 @@ class Lang extends Conf
 			self::O_OPTM_JS_INLINE_DEFER		=> __( 'Load Inline JS', 'litespeed-cache' ),
 			self::O_OPTM_EXC_JQ					=> __( 'Exclude JQuery', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH			=> __( 'DNS Prefetch', 'litespeed-cache' ),
+			self::O_OPTM_DNS_PREFETCH_CTRL		=> __( 'DNS Prefetch Control', 'litespeed-cache' ),
 			self::O_OPTM_RM_COMMENT				=> __( 'Remove Comments', 'litespeed-cache' ),
 			self::O_OPTM_CSS_COMB_PRIO			=> __( 'Combined CSS Priority', 'litespeed-cache' ),
 			self::O_OPTM_CSS_EXC				=> __( 'CSS Excludes', 'litespeed-cache' ),
