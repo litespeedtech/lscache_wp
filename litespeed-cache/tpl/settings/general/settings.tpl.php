@@ -1,8 +1,16 @@
 <?php
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
+$api_key_val = Core::config( Conf::O_API_KEY );
+if ( ! empty( $_GET[ 'apikey_data' ] ) ) {
+	$apikey_data = json_decode( base64_decode( $_GET[ 'apikey_data' ] ), true );
+	if ( ! empty( $apikey_data[ 'domain_key' ] ) ) {
+		$api_key_val = $apikey_data[ 'domain_key' ];
+		! defined( 'LITESPEED_NEW_API_KEY' ) && define( 'LITESPEED_NEW_API_KEY', true );
+	}
+}
 
 $this->form_action() ;
 ?>
@@ -23,10 +31,13 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_input($id); ?>
+			<?php $this->build_input( $id, null, $api_key_val ); ?>
+			<?php if ( defined( 'LITESPEED_NEW_API_KEY' ) ) : ?>
+				<span class="litespeed-warning"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
+			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with cloud servers.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_IAPI, Admin_API::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link' ) ; ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link' ) ; ?>
 			</div>
 		</td>
 	</tr>

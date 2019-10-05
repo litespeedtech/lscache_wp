@@ -10,6 +10,7 @@
 namespace LiteSpeed\CDN ;
 
 use LiteSpeed\Core ;
+use LiteSpeed\Cloud ;
 use LiteSpeed\Conf ;
 use LiteSpeed\Config ;
 use LiteSpeed\Log ;
@@ -53,11 +54,6 @@ class Quic extends Instance
 			}
 		}
 
-		$instance = self::get_instance() ;
-
-		// Get site domain
-		$options[ '_domain' ] = home_url() ;
-
 		// Rest url
 		$options[ '_rest' ] = rest_get_url_prefix() ;
 
@@ -67,36 +63,7 @@ class Quic extends Instance
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() ) ;
 
-		$res = $instance->_api( '/sync_config', $options ) ;
-		if ( $res != 'ok' ) {
-			Log::debug( '[QUIC] sync config failed [err] ' . $res ) ;
-		}
-		return $res ;
+		Cloud::post( Cloud::ACTION_SYNC_CONF, $options ) ;
 	}
 
-	private function _api( $uri, $data = false, $method = 'POST' )
-	{
-		Log::debug( '[QUIC] _api call' ) ;
-
-		$url = 'https://api.quic.cloud' . $uri ;
-
-		$param = array(
-			'_v'	=> Core::PLUGIN_VERSION,
-			'_data' => $data,
-		) ;
-
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
-
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message() ;
-			Log::debug( '[QUIC] failed to post: ' . $error_message ) ;
-			return $error_message ;
-		}
-		Log::debug( '[QUIC] _api call response: ' . $response[ 'body' ] ) ;
-
-		$json = json_decode( $response[ 'body' ], true ) ;
-
-		return $json ;
-
-	}
 }

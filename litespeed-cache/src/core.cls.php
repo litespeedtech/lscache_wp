@@ -337,8 +337,8 @@ class Core extends Instance
 				$msg = Purge::handler() ;
 				break ;
 
-			case Router::ACTION_IAPI:
-				$msg = Admin_API::handler() ;
+			case Router::ACTION_CLOUD:
+				$msg = Cloud::handler() ;
 				break ;
 
 			case self::ACTION_LOG:

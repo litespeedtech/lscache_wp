@@ -87,12 +87,12 @@ class Admin_API extends Conf
 		) ;
 
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
-			wp_redirect( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ) ) ;
+			wp_redirect( 'https://apidev.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ) ) ;
 			exit ;
 		}
 
 		// CLI handler
-		$response = wp_remote_get( 'https://api.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) ) ;
+		$response = wp_remote_get( 'https://apidev.quic.cloud/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) ) ;
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			Log::debug( '[IAPI] failed to gen_key: ' . $error_message ) ;

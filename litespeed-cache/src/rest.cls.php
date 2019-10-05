@@ -48,7 +48,7 @@ class REST extends Instance
 		// Hash callback validate
 		register_rest_route( 'litespeed/v1', '/hash', array(
 			'methods' => 'POST',
-			'callback' => array( Admin_API::get_instance(), 'hash' ),
+			'callback' => array( Cloud::get_instance(), 'hash' ),
 		) );
 
 		// Image optm notify_img

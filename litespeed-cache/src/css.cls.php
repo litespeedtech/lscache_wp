@@ -105,8 +105,8 @@ class CSS extends Conf
 		}
 
 		// Check if is already in a request, bypass current one
-		$req_summary = self::get_summary() ;
-		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+		$summary = self::get_summary() ;
+		if ( ! empty( $summary[ 'curr_request' ] ) && time() - $summary[ 'curr_request' ] < 300 ) {
 			return '' ;
 		}
 
@@ -116,17 +116,17 @@ class CSS extends Conf
 		// If generate in backend, log it and bypass
 		if ( Core::config( Conf::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
-			if ( empty( $req_summary[ 'queue' ] ) ) {
-				$req_summary[ 'queue' ] = array() ;
+			if ( empty( $summary[ 'queue' ] ) ) {
+				$summary[ 'queue' ] = array() ;
 			}
-			$req_summary[ 'queue' ][ $ccss_type ] = array(
+			$summary[ 'queue' ][ $ccss_type ] = array(
 				'url'			=> $request_url,
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
 			) ;// Current UA will be used to request
 			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
-			self::save_summary( $req_summary ) ;
+			self::save_summary( $summary ) ;
 			return '' ;
 		}
 
