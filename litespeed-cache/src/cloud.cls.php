@@ -15,25 +15,28 @@ class Cloud extends Base
 
 	const CLOUD_SERVER = 'https://apidev.quic.cloud';
 
-	const SVC_IPS 			= 'ips';
-	const SVC_SYNC_CONF 	= 'd/sync_conf';
-	const SVC_CCSS 			= 'ccss' ;
-	const SVC_PLACEHOLDER 	= 'placeholder' ;
-	const SVC_LQIP 			= 'lqip' ;
-	const SVC_ENV_REPORT	= 'env_report' ;
-	const SVC_IMG_OPTM		= 'img_optm' ;
-	const SVC_PAGESCORE		= 'pagescore' ;
+	const SVC_IPS 				= 'ips';
+	const SVC_SYNC_CONF 		= 'd/sync_conf';
+	const SVC_USAGE 			= 'credit/d_summary';
+	const SVC_CCSS 				= 'ccss' ;
+	const SVC_PLACEHOLDER 		= 'placeholder' ;
+	const SVC_LQIP 				= 'lqip' ;
+	const SVC_ENV_REPORT		= 'env_report' ;
+	const SVC_IMG_OPTM			= 'img_optm' ;
+	const SVC_PAGESCORE			= 'pagescore' ;
 
 	const SERVICES = array(
 		'img_optm',
 		'ccss',
 		'lqip',
+		'cdn',
 		'placeholder',
 		'pagescore',
 		'sitehealth',
 	);
 
-	const TYPE_GEN_KEY = 'gen_key';
+	const TYPE_GEN_KEY 		= 'gen_key';
+	const TYPE_SYNC_USAGE 	= 'sync_usage';
 
 	private $_api_key;
 	private $_summary;
@@ -49,6 +52,27 @@ class Cloud extends Base
 		$this->_summary = self::get_summary();
 	}
 
+	/**
+	 * Sync Cloud usage summary data
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _sync_usage()
+	{
+		$usage = $this->_post( self::SVC_USAGE );
+		if ( ! $usage ) {
+			return;
+		}
+
+		foreach ( self::SERVICES as $v ) {
+			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
+		}
+		self::save_summary( $this->_summary );
+
+		$msg = __( 'Communicated with Cloud Server successfully.', 'litespeed-cache' ) ;
+		Admin_Display::succeed( $msg ) ;
+	}
 
 	/**
 	 * ping clouds to find the fastest node
@@ -221,7 +245,7 @@ class Cloud extends Base
 			return;
 		}
 
-		if ( $service === self::SVC_IPS || $service === self::SVC_SYNC_CONF ) {
+		if ( $service === self::SVC_IPS || $service === self::SVC_SYNC_CONF  || $service === self::SVC_USAGE ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {
@@ -487,6 +511,10 @@ class Cloud extends Base
 		switch ( $type ) {
 			case self::TYPE_GEN_KEY :
 				$instance->gen_key();
+				break;
+
+			case self::TYPE_SYNC_USAGE :
+				$instance->_sync_usage();
 				break;
 
 			default:

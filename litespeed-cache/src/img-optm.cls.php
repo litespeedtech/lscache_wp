@@ -4,18 +4,16 @@
  *
  * @since 		2.0
  * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
+ * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
-
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 class Img_Optm extends Base
 {
-	protected static $_instance ;
+	protected static $_instance;
 
-	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
@@ -81,49 +79,6 @@ class Img_Optm extends Base
 		$this->wp_upload_dir = wp_upload_dir() ;
 		$this->__media = Media::get_instance() ;
 		$this->_table_img_optm = Data::tb_img_optm() ;
-	}
-
-	/**
-	 * Sync data from litespeed IAPI server for CLI usage
-	 *
-	 * @since  2.4.4
-	 * @access public
-	 */
-	public function sync_data()
-	{
-		return $this->_sync_data( true ) ;
-	}
-
-	/**
-	 * Sync data from litespeed IAPI server
-	 *
-	 * @since  1.6.5
-	 * @access private
-	 */
-	private function _sync_data( $try_level_up = false )
-	{ self::IAPI_ACTION_MEDIA_SYNC_DATA;
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, true ) ;
-
-		if ( ! is_array( $json ) ) {
-			return ;
-		}
-
-		if ( ! empty( $json ) ) {
-			self::save_summary( $json ) ;
-		}
-
-		// If this is for level up try, return data directly
-		if ( $try_level_up ) {
-			Log::debug( '[Img_Optm] Try Level Up ~ !' ) ;
-			return $json ;
-		}
-
-		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
-
-		if ( ! defined( 'LITESPEED_CLI' ) ) {
-			Admin::redirect() ;
-		}
 	}
 
 	/**

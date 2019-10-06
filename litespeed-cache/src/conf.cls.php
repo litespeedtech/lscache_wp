@@ -381,6 +381,25 @@ class Conf extends Base
 	}
 
 	/**
+	 * Get an option value
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function val( $id )
+	{
+		$instance = self::get_instance();
+
+		if ( isset( $instance->_options[ $id ] ) ) {
+			return $instance->_options[ $id ] ;
+		}
+
+		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+
+		return null ;
+	}
+
+	/**
 	 * Get the selected configuration option.
 	 *
 	 * @since 2.9.8

@@ -4,7 +4,6 @@ defined( 'WPINC' ) || exit;
 
 $lscache_stats = GUI::get_instance()->lscache_stats();
 
-
 $finished_percentage = 10;
 
 $_summary = GUI::get_summary() ;
@@ -52,78 +51,68 @@ $optm_summary = Img_Optm::get_summary() ;
 
 
 	<div class="litespeed-dashboard-header">
-		<h3 class="litespeed-dashboard-title"><?php echo __( 'Usage Statistics', 'litespeed-cache' ) ; ?></h3>
+		<h3 class="litespeed-dashboard-title">
+			<?php echo __( 'Usage Statistics', 'litespeed-cache' ); ?>
+			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_SYNC_USAGE ); ?>">
+				<span class="dashicons dashicons-update"></span>
+				<span class="screen-reader-text"><?php echo __( 'Sync data from Cloud', 'litespeed-cache' ); ?></span>
+			</a>
+		</h3>
 		<hr>
 		<a href="#" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' );?></a>
 	</div>
 
 	<div class="litespeed-dashboard-stats-wrapper">
+		<?php
+		$usage = Cloud::get_summary();
+		$cat_list = array(
+			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
+			'ccss'		=> __( 'CCSS', 'litespeed-cache' ),
+			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
+			'lqip'		=> __( 'LQIP', 'litespeed-cache' ),
+		);
+		if ( ! Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ) {
+			$cat_list[ 'placeholder' ] = __( 'Placeholder', 'litespeed-cache' );
+		}
 
-		<div class="postbox litespeed-postbox">
-			<div class="inside">
-				<h3 class="litespeed-title"><?php echo __( 'Image Optimization', 'litespeed-cache' ) ; ?></h3>
+		foreach ( $cat_list as $svc => $title ) :
+			$finished_percentage = 0;
+			$used = '-';
+			$quota = '-';
+			if ( ! empty( $usage[ 'usage.' . $svc ] ) ) {
+				$finished_percentage = floor( $usage[ 'usage.' . $svc ][ 'used' ] * 100 / $usage[ 'usage.' . $svc ][ 'quota' ] );
+				$used = $usage[ 'usage.' . $svc ][ 'used' ];
+				$quota = $usage[ 'usage.' . $svc ][ 'quota' ];
 
-				<div class="litespeed-flex-container">
-					<div class="litespeed-icon-vertical-middle">
-						<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
-					</div>
-					<div>
-						<div class="litespeed-dashboard-stats">
-							<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-							<p><strong>1234</strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), 3000 ) ; ?></span></p>
+				if ( $svc == 'cdn' ) {
+					$used = Utility::real_size( $used );
+					$quota = Utility::real_size( $quota );
+				}
+			}
+		?>
+			<div class="postbox litespeed-postbox">
+				<div class="inside">
+					<h3 class="litespeed-title"><?php echo $title; ?></h3>
+
+					<div class="litespeed-flex-container">
+						<div class="litespeed-icon-vertical-middle">
+							<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
+						</div>
+						<div>
+							<div class="litespeed-dashboard-stats">
+								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
+								<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), $quota ) ; ?></span></p>
+							</div>
 						</div>
 					</div>
-				</div>
 
-			</div>
-		</div>
-
-		<div class="postbox litespeed-postbox">
-			<div class="inside">
-				<h3 class="litespeed-title"><?php echo __( 'CCSS', 'litespeed-cache' ) ; ?></h3>
-
-				<div class="litespeed-flex-container">
-					<div class="litespeed-icon-vertical-middle">
-						<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
-					</div>
-					<div>
-						<div class="litespeed-dashboard-stats">
-							<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-							<p><strong>1234</strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), 3000 ) ; ?></span></p>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-		<div class="postbox litespeed-postbox">
-			<div class="inside">
-				<h3 class="litespeed-title"><?php echo __( 'CDN Bandwidth', 'litespeed-cache' ) ; ?></h3>
-
-				<div class="litespeed-flex-container">
-					<div class="litespeed-icon-vertical-middle">
-						<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
-					</div>
-					<div>
-						<div class="litespeed-dashboard-stats">
-							<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-							<p><strong>1234 GB</strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), '3000 GB' ) ; ?></span></p>
-						</div>
-					</div>
 				</div>
 			</div>
-
-		</div>
-
+		<?php endforeach; ?>
 	</div>
 
-
-
 	<div class="litespeed-dashboard-group">
-
 		<hr>
-
 		<div class="litespeed-flex-container">
 
 			<div class="postbox litespeed-postbox">
