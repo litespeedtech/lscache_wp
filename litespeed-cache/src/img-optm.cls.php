@@ -11,10 +11,15 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Img_Optm extends Conf
+class Img_Optm extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'img_optm' ; // DB record prefix name
+
+	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
+	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
+	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
+	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
+	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
@@ -96,8 +101,8 @@ class Img_Optm extends Conf
 	 * @access private
 	 */
 	private function _sync_data( $try_level_up = false )
-	{
-		$json = Admin_API::post( Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA, false, true ) ;
+	{ self::IAPI_ACTION_MEDIA_SYNC_DATA;
+		$json = Cloud::post( Cloud::SVC_IMG_OPTM, true ) ;
 
 		if ( ! is_array( $json ) ) {
 			return ;
@@ -676,10 +681,10 @@ class Img_Optm extends Conf
 	{
 		$data = array(
 			'list' 			=> $this->_img_in_queue,
-			'optm_ori'		=> Core::config( Conf::O_IMG_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> Core::config( Conf::O_IMG_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> Core::config( Conf::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> Core::config( Conf::O_IMG_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> Core::config( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> Core::config( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> Core::config( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> Core::config( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
@@ -714,7 +719,7 @@ class Img_Optm extends Conf
 	public function notify_img()
 	{
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -983,9 +988,9 @@ class Img_Optm extends Conf
 		$q = "SELECT * FROM $this->_table_img_optm FORCE INDEX ( optm_status ) WHERE root_id = 0 AND optm_status = %s ORDER BY id LIMIT 1" ;
 		$_q = $wpdb->prepare( $q, self::DB_STATUS_NOTIFIED ) ;
 
-		$optm_ori = Core::config( Conf::O_IMG_OPTM_ORI ) ;
-		$rm_ori_bkup = Core::config( Conf::O_IMG_OPTM_RM_BKUP ) ;
-		$optm_webp = Core::config( Conf::O_IMG_OPTM_WEBP ) ;
+		$optm_ori = Core::config( Base::O_IMG_OPTM_ORI ) ;
+		$rm_ori_bkup = Core::config( Base::O_IMG_OPTM_RM_BKUP ) ;
+		$optm_webp = Core::config( Base::O_IMG_OPTM_WEBP ) ;
 
 		// pull 1 min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;
@@ -1222,7 +1227,7 @@ class Img_Optm extends Conf
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -1387,7 +1392,7 @@ class Img_Optm extends Conf
 	public function destroy_callback()
 	{
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Conf::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -1449,7 +1454,7 @@ class Img_Optm extends Conf
 		Data::get_instance()->del_table_img_optm() ;
 
 		// Clear credit info
-		self::delete_option( self::DB_SUMMARY ) ;
+		self::delete_option( '_summary' ) ;
 		self::delete_option( self::DB_NEED_PULL ) ;
 
 		return array( '_res' => 'ok' ) ;

@@ -41,7 +41,7 @@ defined( 'WPINC' ) || exit ;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Conf::O_ESI ; ?>
+			<?php $id = Base::O_ESI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -54,7 +54,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_ESI_CACHE_ADMBAR ; ?>
+			<?php $id = Base::O_ESI_CACHE_ADMBAR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -67,7 +67,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_ESI_CACHE_COMMFORM ; ?>
+			<?php $id = Base::O_ESI_CACHE_COMMFORM ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -80,7 +80,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_VARY_GROUP ; ?>
+			<?php $id = Base::O_CACHE_VARY_GROUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

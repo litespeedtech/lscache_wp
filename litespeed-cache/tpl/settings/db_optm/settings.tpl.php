@@ -14,7 +14,7 @@ $this->form_action();
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Conf::O_DB_OPTM_REVISIONS_MAX; ?>
+			<?php $id = Base::O_DB_OPTM_REVISIONS_MAX; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -28,7 +28,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_DB_OPTM_REVISIONS_AGE; ?>
+			<?php $id = Base::O_DB_OPTM_REVISIONS_AGE; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>

@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Lang extends Conf
+class Lang extends Base
 {
 	/**
 	 * Get the title of id

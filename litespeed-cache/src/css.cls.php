@@ -11,10 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class CSS extends Conf
+class CSS extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'css' ; // DB record prefix name
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
@@ -32,7 +31,7 @@ class CSS extends Conf
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= Core::config( Conf::O_OPTM_CCSS_CON ) ;
+		$rules .= Core::config( Base::O_OPTM_CCSS_CON ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
@@ -91,7 +90,7 @@ class CSS extends Conf
 	private function _ccss()
 	{
 		// If don't need to generate CCSS, bypass
-		if ( ! Core::config( Conf::O_OPTM_CCSS_GEN ) ) {
+		if ( ! Core::config( Base::O_OPTM_CCSS_GEN ) ) {
 			Log::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
@@ -114,7 +113,7 @@ class CSS extends Conf
 		$request_url = home_url( $wp->request ) ;
 
 		// If generate in backend, log it and bypass
-		if ( Core::config( Conf::O_OPTM_CCSS_ASYNC ) ) {
+		if ( Core::config( Base::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
 			if ( empty( $summary[ 'queue' ] ) ) {
 				$summary[ 'queue' ] = array() ;
@@ -142,7 +141,7 @@ class CSS extends Conf
 	 */
 	private function _separate_mobile_ccss()
 	{
-		return wp_is_mobile() && Core::config( Conf::O_CACHE_MOBILE ) ;
+		return wp_is_mobile() && Core::config( Base::O_CACHE_MOBILE ) ;
 	}
 
 	/**
@@ -153,19 +152,19 @@ class CSS extends Conf
 	 */
 	public static function cron_ccss( $continue = false )
 	{
-		$req_summary = self::get_summary() ;
-		if ( empty( $req_summary[ 'queue' ] ) ) {
+		$summary = self::get_summary() ;
+		if ( empty( $summary[ 'queue' ] ) ) {
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( $summary && ! empty( $summary[ 'curr_request' ] ) && time() - $summary[ 'curr_request' ] < 300 ) {
 				return ;
 			}
 		}
 
-		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
+		foreach ( $summary[ 'queue' ] as $k => $v ) {
 			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
 				Log::debug( '[CSS] previous v2.6.4- data' ) ;
 				return ;
@@ -190,29 +189,28 @@ class CSS extends Conf
 	 */
 	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile )
 	{
-		$req_summary = self::get_summary() ;
+		$summary = self::get_summary() ;
 
 		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		// Update css request status
-		$req_summary[ 'curr_request' ] = time() ;
-		self::save_summary( $req_summary ) ;
+		$summary[ 'curr_request' ] = time() ;
+		self::save_summary( $summary ) ;
 
 		// Generate critical css
 		$data = array(
-			'home_url'	=> home_url(),
-			'url'		=> $request_url,
-			'ccss_type'	=> $ccss_type,
+			'url'			=> $request_url,
+			'ccss_type'		=> $ccss_type,
 			'user_agent'	=> $user_agent,
-			'is_mobile'	=> $is_mobile ? 1 : 0,
+			'is_mobile'		=> $is_mobile ? 1 : 0,
 		) ;
 
 		Log::debug( '[CSS] Generating: ', $data ) ;
 
-		$json = Admin_API::post( Admin_API::IAPI_ACTION_CCSS, $data, true, false, 60 ) ;
+		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
 
 		if ( empty( $json[ 'ccss' ] ) ) {
-			Log::debug( '[CSS] empty ccss ' ) ;
+			Log::debug( '[CSS] empty ccss' ) ;
 			return false ;
 		}
 
@@ -223,16 +221,16 @@ class CSS extends Conf
 		File::save( $ccss_file, $ccss, true ) ;
 
 		// Save summary data
-		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'curr_request' ] = 0 ;
-		if ( empty( $req_summary[ 'ccss_type_history' ] ) ) {
-			$req_summary[ 'ccss_type_history' ] = array() ;
+		$summary[ 'last_spent' ] = time() - $summary[ 'curr_request' ] ;
+		$summary[ 'last_request' ] = $summary[ 'curr_request' ] ;
+		$summary[ 'curr_request' ] = 0 ;
+		if ( empty( $summary[ 'ccss_type_history' ] ) ) {
+			$summary[ 'ccss_type_history' ] = array() ;
 		}
-		$req_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
-		unset( $req_summary[ 'queue' ][ $ccss_type ] ) ;
+		$summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
+		unset( $summary[ 'queue' ][ $ccss_type ] ) ;
 
-		self::save_summary( $req_summary ) ;
+		self::save_summary( $summary ) ;
 
 		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
@@ -254,13 +252,13 @@ class CSS extends Conf
 		$unique = false ;
 
 		// Check if in separate css type option
-		$separate_posttypes = Core::config( Conf::O_OPTM_CCSS_SEP_POSTTYPE ) ;
+		$separate_posttypes = Core::config( Base::O_OPTM_CCSS_SEP_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
-		$separate_uri = Core::config( Conf::O_OPTM_CCSS_SEP_URI ) ;
+		$separate_uri = Core::config( Base::O_OPTM_CCSS_SEP_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
 			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {

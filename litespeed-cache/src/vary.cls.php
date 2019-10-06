@@ -33,7 +33,7 @@ class Vary extends Instance
 			// If not esi, check cache logged-in user setting
 			if ( ! Router::esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
-				if ( Core::config( Conf::O_CACHE_PRIV ) ) {
+				if ( Core::config( Base::O_CACHE_PRIV ) ) {
 					add_action( 'wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout' ) ;
 
 					Control::init_cacheable() ;
@@ -83,7 +83,7 @@ class Vary extends Instance
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
-		$db_cookie = Core::config( Conf::O_CACHE_LOGIN_COOKIE ) ; // [3.0] todo: check if works in network's sites
+		$db_cookie = Core::config( Base::O_CACHE_LOGIN_COOKIE ) ; // [3.0] todo: check if works in network's sites
 
 		// If no vary set in rewrite rule
 		if ( ! isset($_SERVER['LSCACHE_VARY_COOKIE']) ) {
@@ -165,7 +165,7 @@ class Vary extends Instance
 		// set vary=2 for next time vary lookup
 		$this->add_commenter() ;
 
-		if ( Core::config( Conf::O_CACHE_COMMENTER ) ) {
+		if ( Core::config( Base::O_CACHE_COMMENTER ) ) {
 			Control::set_private( 'existing commenter' ) ;
 		}
 		else {
@@ -345,7 +345,7 @@ class Vary extends Instance
 	public function in_vary_group( $role )
 	{
 		$group = 0 ;
-		$vary_groups = Core::config( Conf::O_CACHE_VARY_GROUP ) ;
+		$vary_groups = Core::config( Base::O_CACHE_VARY_GROUP ) ;
 		if ( array_key_exists( $role, $vary_groups ) ) {
 			$group = $vary_groups[ $role ] ;
 		}
@@ -432,7 +432,7 @@ class Vary extends Instance
 			return $res ;
 		}
 		// Encrypt in production
-		return md5( Core::config( Conf::HASH ) . $res ) ;
+		return md5( Core::config( Base::HASH ) . $res ) ;
 
 	}
 
@@ -649,7 +649,7 @@ class Vary extends Instance
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
 		 * @since 1.7
 		 */
-		$is_ssl = Core::config( Conf::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl() ;
+		$is_ssl = Core::config( Base::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl() ;
 
 		setcookie( self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true ) ;
 	}

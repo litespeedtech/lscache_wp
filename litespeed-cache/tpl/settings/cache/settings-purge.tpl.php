@@ -12,29 +12,29 @@ defined( 'WPINC' ) || exit ;
 
 <?php
 $option_list = array(
-	Conf::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_FRONTPAGE => __( 'Front page', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_HOMEPAGE => __( 'Home page', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_PAGES => __( 'Pages', 'litespeed-cache' ),
+	Base::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),
+	Base::O_PURGE_POST_FRONTPAGE => __( 'Front page', 'litespeed-cache' ),
+	Base::O_PURGE_POST_HOMEPAGE => __( 'Home page', 'litespeed-cache' ),
+	Base::O_PURGE_POST_PAGES => __( 'Pages', 'litespeed-cache' ),
 
-	Conf::O_PURGE_POST_PAGES_WITH_RECENT_POSTS => __( 'All pages with Recent Posts Widget', 'litespeed-cache' ),
+	Base::O_PURGE_POST_PAGES_WITH_RECENT_POSTS => __( 'All pages with Recent Posts Widget', 'litespeed-cache' ),
 
-	Conf::O_PURGE_POST_AUTHOR => __( 'Author archive', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_POSTTYPE => __( 'Post type archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_AUTHOR => __( 'Author archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_POSTTYPE => __( 'Post type archive', 'litespeed-cache' ),
 
-	Conf::O_PURGE_POST_YEAR => __( 'Yearly archive', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_MONTH => __( 'Monthly archive', 'litespeed-cache' ),
-	Conf::O_PURGE_POST_DATE => __( 'Daily archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_YEAR => __( 'Yearly archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_MONTH => __( 'Monthly archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_DATE => __( 'Daily archive', 'litespeed-cache' ),
 
-	Conf::O_PURGE_POST_TERM => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
+	Base::O_PURGE_POST_TERM => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
 ) ;
 
 // break line at these ids
 $break_arr = array(
-	Conf::O_PURGE_POST_PAGES,
-	Conf::O_PURGE_POST_PAGES_WITH_RECENT_POSTS,
-	Conf::O_PURGE_POST_POSTTYPE,
-	Conf::O_PURGE_POST_DATE,
+	Base::O_PURGE_POST_PAGES,
+	Base::O_PURGE_POST_PAGES_WITH_RECENT_POSTS,
+	Base::O_PURGE_POST_POSTTYPE,
+	Base::O_PURGE_POST_DATE,
 ) ;
 
 ?>
@@ -47,7 +47,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_PURGE_STALE ; ?>
+			<?php $id = Base::O_PURGE_STALE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -91,7 +91,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_PURGE_TIMED_URLS ; ?>
+			<?php $id = Base::O_PURGE_TIMED_URLS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -106,7 +106,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_PURGE_TIMED_URLS_TIME ; ?>
+			<?php $id = Base::O_PURGE_TIMED_URLS_TIME ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -120,7 +120,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_PURGE_HOOK_ALL ; ?>
+			<?php $id = Base::O_PURGE_HOOK_ALL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

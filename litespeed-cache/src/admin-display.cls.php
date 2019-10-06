@@ -12,11 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin_Display extends Conf
+class Admin_Display extends Base
 {
 	protected static $_instance ;
-
-	const DB_PREFIX = 'admin' ; // DB record prefix name
 
 	const NOTICE_BLUE = 'notice notice-info' ;
 	const NOTICE_GREEN = 'notice notice-success' ;
@@ -92,7 +90,7 @@ class Admin_Display extends Conf
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) ) ;
 		}
 
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 	}
 
 	/**
@@ -794,8 +792,8 @@ class Admin_Display extends Conf
 	{
 		echo '<div class="litespeed-switch">' ;
 
-		$this->build_radio( $id, Conf::VAL_OFF ) ;
-		$this->build_radio( $id, Conf::VAL_ON ) ;
+		$this->build_radio( $id, Base::VAL_OFF ) ;
+		$this->build_radio( $id, Base::VAL_ON ) ;
 
 		echo '</div>' ;
 	}

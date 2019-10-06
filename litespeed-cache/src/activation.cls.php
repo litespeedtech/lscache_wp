@@ -44,8 +44,6 @@ class Activation extends Instance
 
 		do_action( 'litespeed_api_load_thirdparty' ) ;
 
-		$__cfg = Config::get_instance() ;
-
 		// Check new version @since 2.9.3
 		Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
@@ -65,13 +63,13 @@ class Activation extends Instance
 				return ;
 			}
 
-			$__cfg->update_confs() ;
+			Conf::get_instance()->update_confs() ;
 
 			return ;
 		}
 
 		/* Single site file handler */
-		$__cfg->update_confs() ;
+		Conf::get_instance()->update_confs() ;
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL ) ;
@@ -90,14 +88,14 @@ class Activation extends Instance
 		Task::clear() ;
 
 		// Delete options
-		foreach ( Config::get_instance()->load_default_vals() as $k => $v ) {
-			Conf::delete_option( $k ) ;
+		foreach ( Conf::get_instance()->load_default_vals() as $k => $v ) {
+			Base::delete_option( $k ) ;
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( Config::get_instance()->load_default_site_vals() as $k => $v ) {
-				Conf::delete_site_option( $k ) ;
+			foreach ( Conf::get_instance()->load_default_site_vals() as $k => $v ) {
+				Base::delete_site_option( $k ) ;
 			}
 		}
 
@@ -300,15 +298,15 @@ class Activation extends Instance
 	public function update_files()
 	{
 		// Update cache setting `_CACHE`
-		Config::get_instance()->define_cache() ;
+		Conf::get_instance()->define_cache() ;
 
 		// Site options applied already
-		$options = Config::get_instance()->get_options() ;
+		$options = Conf::get_instance()->get_options() ;
 
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ Conf::_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ Base::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
 			Admin_Display::error( $ex->getMessage() ) ;
@@ -316,7 +314,7 @@ class Activation extends Instance
 
 		/* 2) adv-cache.php; */
 
-		if ( $options[ Conf::O_UTIL_CHECK_ADVCACHE ] ) {
+		if ( $options[ Base::O_UTIL_CHECK_ADVCACHE ] ) {
 			$this->_manage_advanced_cache_file() ;
 
 			if ( ! defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_CLI' ) ) {
@@ -332,7 +330,7 @@ class Activation extends Instance
 
 		/* 3) object-cache.php; */
 
-		if ( $options[ Conf::O_OBJECT ] && ( ! $options[ Conf::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+		if ( $options[ Base::O_OBJECT ] && ( ! $options[ Base::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			Object_Cache::get_instance()->update_file( $options ) ;
 		}
 		else {
@@ -440,7 +438,7 @@ class Activation extends Instance
 	 */
 	public static function auto_update()
 	{
-		if ( ! Core::config( Config::O_AUTO_UPGRADE ) ) {
+		if ( ! Core::config( Base::O_AUTO_UPGRADE ) ) {
 			return ;
 		}
 

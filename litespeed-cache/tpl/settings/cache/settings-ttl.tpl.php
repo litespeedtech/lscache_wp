@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_PUB ; ?>
+			<?php $id = Base::O_CACHE_TTL_PUB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -28,7 +28,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_PRIV ; ?>
+			<?php $id = Base::O_CACHE_TTL_PRIV ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -43,7 +43,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_FRONTPAGE ; ?>
+			<?php $id = Base::O_CACHE_TTL_FRONTPAGE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -58,7 +58,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_FEED ; ?>
+			<?php $id = Base::O_CACHE_TTL_FEED ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -73,7 +73,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_STATUS ; ?>
+			<?php $id = Base::O_CACHE_TTL_STATUS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

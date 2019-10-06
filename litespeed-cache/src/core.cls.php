@@ -79,11 +79,11 @@ class Core extends Instance
 	 */
 	protected function __construct()
 	{
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 		$this->__cfg->init() ;
 
 		// Check if debug is on
-		if ( $this->__cfg->option( Conf::O_DEBUG ) ) {
+		if ( $this->__cfg->option( Base::O_DEBUG ) ) {
 			Log::init() ;
 		}
 
@@ -99,7 +99,7 @@ class Core extends Instance
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php' ;
 		}
 
-		if ( self::config( Conf::O_DEBUG_DISABLE_ALL ) ) {
+		if ( self::config( Base::O_DEBUG_DISABLE_ALL ) ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
@@ -153,7 +153,7 @@ class Core extends Instance
 		/**
 		 * Added hook before init
 		 * @since  1.6.6
-		 * @since  2.6 	Added filter to all config values in Config
+		 * @since  2.6 	Added filter to all config values in Conf
 		 */
 		do_action( 'litespeed_init' ) ;
 
@@ -366,7 +366,7 @@ class Core extends Instance
 				break ;
 
 			case self::ACTION_CONF :
-				$msg = Config::handler() ;
+				$msg = Conf::handler() ;
 				break ;
 
 			case self::ACTION_ACTIVATION :
@@ -405,7 +405,7 @@ class Core extends Instance
 	}
 
 	/**
-	 * A shortcut to get the Config config value
+	 * A shortcut to get the Conf config value
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -414,7 +414,7 @@ class Core extends Instance
 	 */
 	public static function config( $opt_id )
 	{
-		return Config::get_instance()->option( $opt_id ) ;
+		return Conf::get_instance()->option( $opt_id ) ;
 	}
 
 	/**

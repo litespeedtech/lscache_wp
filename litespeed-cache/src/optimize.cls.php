@@ -12,10 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Optimize extends Conf
+class Optimize extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'optm' ; // DB record prefix name
 
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js' ;
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js' ;
@@ -56,16 +55,16 @@ class Optimize extends Conf
 	 */
 	protected function __construct()
 	{
-		$this->cfg_css_async = Core::config( Conf::O_OPTM_CSS_ASYNC ) ;
-		$this->cfg_js_defer = Core::config( Conf::O_OPTM_JS_DEFER ) ;
-		$this->cfg_qs_rm = Core::config( Conf::O_OPTM_QS_RM ) ;
+		$this->cfg_css_async = Core::config( Base::O_OPTM_CSS_ASYNC ) ;
+		$this->cfg_js_defer = Core::config( Base::O_OPTM_JS_DEFER ) ;
+		$this->cfg_qs_rm = Core::config( Base::O_OPTM_QS_RM ) ;
 
 		if ( ! Router::can_optm() ) {
 			return ;
 		}
 
 		// To remove emoji from WP
-		if ( Core::config( Conf::O_OPTM_EMOJI_RM ) ) {
+		if ( Core::config( Base::O_OPTM_EMOJI_RM ) ) {
 			$this->_emoji_rm() ;
 		}
 
@@ -84,7 +83,7 @@ class Optimize extends Conf
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', Core::config( Conf::O_OPTM_JS_DEFER_EXC ) ) ;
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', Core::config( Base::O_OPTM_JS_DEFER_EXC ) ) ;
 		}
 
 		/**
@@ -109,7 +108,7 @@ class Optimize extends Conf
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
-		if ( ! Config::get_instance()->in_optm_exc_roles() ) {
+		if ( ! Conf::get_instance()->in_optm_exc_roles() ) {
 			return $varys ;
 		}
 		$varys[ 'role_exclude_optm' ] = 1 ;
@@ -147,11 +146,11 @@ class Optimize extends Conf
 	 */
 	public function serve_satic( $uri )
 	{
-		$this->cfg_css_min = Core::config( Conf::O_OPTM_CSS_MIN ) ;
-		$this->cfg_css_comb = Core::config( Conf::O_OPTM_CSS_COMB ) ;
-		$this->cfg_js_min = Core::config( Conf::O_OPTM_JS_MIN ) ;
-		$this->cfg_js_comb = Core::config( Conf::O_OPTM_JS_COMB ) ;
-		$this->cfg_ttl = Core::config( Conf::O_OPTM_TTL ) ;
+		$this->cfg_css_min = Core::config( Base::O_OPTM_CSS_MIN ) ;
+		$this->cfg_css_comb = Core::config( Base::O_OPTM_CSS_COMB ) ;
+		$this->cfg_js_min = Core::config( Base::O_OPTM_JS_MIN ) ;
+		$this->cfg_js_comb = Core::config( Base::O_OPTM_JS_COMB ) ;
+		$this->cfg_ttl = Core::config( Base::O_OPTM_TTL ) ;
 
 		// If not turn on min files
 		if ( ! $this->cfg_css_min && ! $this->cfg_css_comb && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
@@ -241,19 +240,19 @@ class Optimize extends Conf
 	 */
 	public static function need_db()
 	{
-		if ( Core::config( Conf::O_OPTM_CSS_MIN ) ) {
+		if ( Core::config( Base::O_OPTM_CSS_MIN ) ) {
 			return true ;
 		}
 
-		if ( Core::config( Conf::O_OPTM_CSS_COMB ) ) {
+		if ( Core::config( Base::O_OPTM_CSS_COMB ) ) {
 			return true ;
 		}
 
-		if ( Core::config( Conf::O_OPTM_JS_MIN ) ) {
+		if ( Core::config( Base::O_OPTM_JS_MIN ) ) {
 			return true ;
 		}
 
-		if ( Core::config( Conf::O_OPTM_JS_COMB ) ) {
+		if ( Core::config( Base::O_OPTM_JS_COMB ) ) {
 			return true ;
 		}
 
@@ -280,7 +279,7 @@ class Optimize extends Conf
 		}
 
 		// Check if hit URI excludes
-		$excludes = Core::config( Conf::O_OPTM_EXC ) ;
+		$excludes = Core::config( Base::O_OPTM_EXC ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -290,7 +289,7 @@ class Optimize extends Conf
 		}
 
 		// Check if is exclude optm roles ( Need to set Vary too )
-		if ( $result = Config::get_instance()->in_optm_exc_roles() ) {
+		if ( $result = Conf::get_instance()->in_optm_exc_roles() ) {
 			Log::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
 			return $content ;
 		}
@@ -313,22 +312,22 @@ class Optimize extends Conf
 	 */
 	private function _optimize()
 	{
-		$this->cfg_http2_css = Core::config( Conf::O_OPTM_CSS_HTTP2 ) ;
-		$this->cfg_http2_js = Core::config( Conf::O_OPTM_JS_HTTP2 ) ;
-		$this->cfg_css_min = Core::config( Conf::O_OPTM_CSS_MIN ) ;
-		$this->cfg_css_comb = Core::config( Conf::O_OPTM_CSS_COMB ) ;
-		$this->cfg_js_min = Core::config( Conf::O_OPTM_JS_MIN ) ;
-		$this->cfg_js_comb = Core::config( Conf::O_OPTM_JS_COMB ) ;
-		$this->cfg_exc_jquery = Core::config( Conf::O_OPTM_EXC_JQ ) ;
-		$this->cfg_ggfonts_async = Core::config( Conf::O_OPTM_GGFONTS_ASYNC ) ;
-		$this->_conf_css_font_display = Core::config( Conf::O_OPTM_CSS_FONT_DISPLAY ) ;
-		if ( ! empty( Conf::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = Conf::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
+		$this->cfg_http2_css = Core::config( Base::O_OPTM_CSS_HTTP2 ) ;
+		$this->cfg_http2_js = Core::config( Base::O_OPTM_JS_HTTP2 ) ;
+		$this->cfg_css_min = Core::config( Base::O_OPTM_CSS_MIN ) ;
+		$this->cfg_css_comb = Core::config( Base::O_OPTM_CSS_COMB ) ;
+		$this->cfg_js_min = Core::config( Base::O_OPTM_JS_MIN ) ;
+		$this->cfg_js_comb = Core::config( Base::O_OPTM_JS_COMB ) ;
+		$this->cfg_exc_jquery = Core::config( Base::O_OPTM_EXC_JQ ) ;
+		$this->cfg_ggfonts_async = Core::config( Base::O_OPTM_GGFONTS_ASYNC ) ;
+		$this->_conf_css_font_display = Core::config( Base::O_OPTM_CSS_FONT_DISPLAY ) ;
+		if ( ! empty( Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
 		}
 
-		$this->cfg_ttl = Core::config( Conf::O_OPTM_TTL ) ;
-		$this->cfg_optm_max_size = Core::config( Conf::O_OPTM_MAX_SIZE ) * 1000000 ;
-		$this->cfg_ggfonts_rm = Core::config( Conf::O_OPTM_GGFONTS_RM ) ;
+		$this->cfg_ttl = Core::config( Base::O_OPTM_TTL ) ;
+		$this->cfg_optm_max_size = Core::config( Base::O_OPTM_MAX_SIZE ) * 1000000 ;
+		$this->cfg_ggfonts_rm = Core::config( Base::O_OPTM_GGFONTS_RM ) ;
 
 		if ( ! Router::can_optm() ) {
 			Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
@@ -351,7 +350,7 @@ class Optimize extends Conf
 
 				// IF combine
 				if ( $this->cfg_css_comb ) {
-					$enqueue_first = Core::config( Conf::O_OPTM_CSS_COMB_PRIO ) ;
+					$enqueue_first = Core::config( Base::O_OPTM_CSS_COMB_PRIO ) ;
 
 					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list ) ;
 
@@ -435,7 +434,7 @@ class Optimize extends Conf
 
 				// IF combine
 				if ( $this->cfg_js_comb ) {
-					$enqueue_first = Core::config( Conf::O_OPTM_JS_COMB_PRIO ) ;
+					$enqueue_first = Core::config( Base::O_OPTM_JS_COMB_PRIO ) ;
 
 					// separate head/foot js/raw html
 					$head_js = array() ;
@@ -547,7 +546,7 @@ class Optimize extends Conf
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
-			if ( Core::config( Conf::O_OPTM_CSS_ASYNC_INLINE ) ) {
+			if ( Core::config( Base::O_OPTM_CSS_ASYNC_INLINE ) ) {
 				$this->html_head .= '<script id="litespeed-css-async-lib">' . File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
 			}
 			else {
@@ -588,7 +587,7 @@ class Optimize extends Conf
 		}
 
 		// HTML minify
-		if ( Core::config( Conf::O_OPTM_HTML_MIN ) ) {
+		if ( Core::config( Base::O_OPTM_HTML_MIN ) ) {
 			$this->content = Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 
@@ -613,7 +612,7 @@ class Optimize extends Conf
 	 */
 	private function _js_inline_defer()
 	{
-		$optm_js_inline = (int) Core::config( Conf::O_OPTM_JS_INLINE_DEFER ) ;
+		$optm_js_inline = (int) Core::config( Base::O_OPTM_JS_INLINE_DEFER ) ;
 		if ( ! $optm_js_inline ) {
 			return ;
 		}
@@ -776,11 +775,11 @@ class Optimize extends Conf
 	private function _dns_prefetch_init()
 	{
 		// Widely enable link DNS prefetch
-		if ( Core::config( Conf::O_OPTM_DNS_PREFETCH_CTRL ) ) {
+		if ( Core::config( Base::O_OPTM_DNS_PREFETCH_CTRL ) ) {
 			add_filter( 'litespeed_optm_html_head', array( $this, 'dns_prefetch_xmeta' ), 999 );
 		}
 
-		$this->dns_prefetch = Core::config( Conf::O_OPTM_DNS_PREFETCH ) ;
+		$this->dns_prefetch = Core::config( Base::O_OPTM_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
 		}
@@ -923,10 +922,10 @@ class Optimize extends Conf
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
 		// if ( $file_type == 'css' ) {
-		// 	$excludes = apply_filters( 'litespeed_optimize_css_excludes', Core::config( Conf::O_OPTM_CSS_EXC ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_optimize_css_excludes', Core::config( Base::O_OPTM_CSS_EXC ) ) ;
 		// }
 		// else {
-		// 	$excludes = apply_filters( 'litespeed_optimize_js_excludes', Core::config( Conf::O_OPTM_JS_EXC ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_optimize_js_excludes', Core::config( Base::O_OPTM_JS_EXC ) ) ;
 		// }
 		// if ( $excludes ) {
 		// 	$excludes = explode( "\n", $excludes ) ;
@@ -1058,7 +1057,7 @@ class Optimize extends Conf
 	 */
 	private function _parse_js()
 	{
-		$excludes = apply_filters( 'litespeed_optimize_js_excludes', Core::config( Conf::O_OPTM_JS_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_optimize_js_excludes', Core::config( Base::O_OPTM_JS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -1120,7 +1119,7 @@ class Optimize extends Conf
 	 */
 	private function _handle_css()
 	{
-		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Core::config( Conf::O_OPTM_CSS_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Core::config( Base::O_OPTM_CSS_EXC ) ) ;
 
 		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() ) ;
 

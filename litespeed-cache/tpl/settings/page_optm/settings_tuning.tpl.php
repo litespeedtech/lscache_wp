@@ -23,7 +23,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_COMB_PRIO ; ?>
+			<?php $id = Base::O_OPTM_CSS_COMB_PRIO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -45,7 +45,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_EXC ; ?>
+			<?php $id = Base::O_OPTM_CSS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -65,7 +65,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_COMB_PRIO ; ?>
+			<?php $id = Base::O_OPTM_JS_COMB_PRIO ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -87,7 +87,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_EXC ; ?>
+			<?php $id = Base::O_OPTM_JS_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -107,7 +107,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_MAX_SIZE ; ?>
+			<?php $id = Base::O_OPTM_MAX_SIZE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -122,7 +122,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CCSS_CON ; ?>
+			<?php $id = Base::O_OPTM_CCSS_CON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -135,7 +135,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_DEFER_EXC ; ?>
+			<?php $id = Base::O_OPTM_JS_DEFER_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -155,7 +155,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_EXC ; ?>
+			<?php $id = Base::O_OPTM_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -169,7 +169,7 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_EXC_ROLES ; ?>
+			<?php $id = Base::O_OPTM_EXC_ROLES ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

@@ -20,8 +20,8 @@ else {
 	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
 
-$hide_mem_options = ! Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
-$hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
+$hide_mem_options = ! Core::config( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
+$hide_redis_options = Core::config( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
 
 ?>
 
@@ -35,7 +35,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OBJECT ; ?>
+			<?php $id = Base::O_OBJECT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -49,15 +49,15 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 					<h4><?php echo __( 'Method', 'litespeed-cache' ) ; ?></h4>
 
 					<div class="litespeed-switch">
-						<?php $this->build_radio( Conf::O_OBJECT_KIND, Conf::VAL_OFF, 'Memcached' ) ; ?>
-						<?php $this->build_radio( Conf::O_OBJECT_KIND, Conf::VAL_ON, 'Redis' ) ; ?>
+						<?php $this->build_radio( Base::O_OBJECT_KIND, Base::VAL_OFF, 'Memcached' ) ; ?>
+						<?php $this->build_radio( Base::O_OBJECT_KIND, Base::VAL_ON, 'Redis' ) ; ?>
 					</div>
 				</div>
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Host', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_HOST ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_HOST ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your %s Hostname or IP address.', 'litespeed-cache' ), 'Memcached/<a href="https://www.litespeedtech.com/open-source/litespeed-memcached" target="_blank">LSMCD</a>/Redis' ) ; ?>
 					</div>
@@ -66,13 +66,13 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Port', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_PORT, 'litespeed-input-short2' ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_PORT, 'litespeed-input-short2' ) ; ?>
 				</div>
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Default Object Lifetime', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_LIFE, 'litespeed-input-short2' ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_LIFE, 'litespeed-input-short2' ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Default TTL for cached objects.', 'litespeed-cache' ) ; ?>
 					</div>
@@ -92,7 +92,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto <?php echo $hide_mem_options ; ?>' data="litespeed-mem-divs">
 					<h4><?php echo __( 'Username', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_USER ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_USER ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Only available when %s is installed.', 'litespeed-cache' ), 'SASL' ) ; ?>
 					</div>
@@ -101,7 +101,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_PSWD ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_PSWD ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Specify the password used when connecting.', 'litespeed-cache' ) ; ?>
 					</div>
@@ -110,7 +110,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
 					<h4><?php echo __( 'Redis Database ID', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( Conf::O_OBJECT_DB_ID, 'litespeed-input-short' ) ; ?>
+					<?php $this->build_input( Base::O_OBJECT_DB_ID, 'litespeed-input-short' ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Database to be used', 'litespeed-cache' ) ; ?>
 					</div>
@@ -120,7 +120,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Global Groups', 'litespeed-cache' ) ; ?></h4>
-					<?php $this->build_textarea( Conf::O_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
+					<?php $this->build_textarea( Base::O_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Groups cached at the network level.', 'litespeed-cache' ) ; ?>
 						<?php Doc::one_per_line() ; ?>
@@ -129,7 +129,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Do Not Cache Groups', 'litespeed-cache' ) ; ?></h4>
-					<?php $this->build_textarea( Conf::O_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
+					<?php $this->build_textarea( Base::O_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
 						<?php Doc::one_per_line() ; ?>
 					</div>
@@ -138,14 +138,14 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto'>
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Persistent Connection', 'litespeed-cache' ) ; ?></div>
-						<?php $this->build_toggle( Conf::O_OBJECT_PERSISTENT ) ; ?>
+						<?php $this->build_toggle( Base::O_OBJECT_PERSISTENT ) ; ?>
 					</div>
 					<div class="litespeed-desc">
 						<?php echo __( 'Use keep-alive connections to speed up cache operations.', 'litespeed-cache' ) ; ?>
 					</div>
 					<div class="litespeed-row litespeed-top30">
 						<div class="litespeed-col-inc"><?php echo __( 'Cache Wp-Admin', 'litespeed-cache' ) ; ?></div>
-						<?php $this->build_toggle( Conf::O_OBJECT_ADMIN ) ; ?>
+						<?php $this->build_toggle( Base::O_OBJECT_ADMIN ) ; ?>
 					</div>
 					<div class="litespeed-desc">
 						<?php echo __( 'Improve wp-admin speed through caching. (May encounter expired data)', 'litespeed-cache' ) ; ?>
@@ -155,7 +155,7 @@ $hide_redis_options = Core::config( Conf::O_OBJECT_KIND ) ? '' : ' litespeed-hid
 				<div class='litespeed-col-auto'>
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Store Transients', 'litespeed-cache' ) ; ?></div>
-						<?php $this->build_toggle( Conf::O_OBJECT_TRANSIENTS ) ; ?>
+						<?php $this->build_toggle( Base::O_OBJECT_TRANSIENTS ) ; ?>
 					</div>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Cache Wp-Admin', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>

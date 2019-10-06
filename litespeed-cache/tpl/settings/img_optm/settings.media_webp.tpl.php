@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_IMG_OPTM_WEBP_REPLACE ; ?>
+			<?php $id = Base::O_IMG_OPTM_WEBP_REPLACE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

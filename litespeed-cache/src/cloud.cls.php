@@ -7,17 +7,22 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Cloud extends Conf
+class Cloud extends Base
 {
 	protected static $_instance;
-	const DB_PREFIX = 'cloud';
 
-	const DB_HASH = 'hash' ;
+	const DB_HASH = 'hash';
 
 	const CLOUD_SERVER = 'https://apidev.quic.cloud';
 
-	const ACTION_IPS = 'ips';
-	const ACTION_SYNC_CONF = 'd/sync_conf';
+	const SVC_IPS 			= 'ips';
+	const SVC_SYNC_CONF 	= 'd/sync_conf';
+	const SVC_CCSS 			= 'ccss' ;
+	const SVC_PLACEHOLDER 	= 'placeholder' ;
+	const SVC_LQIP 			= 'lqip' ;
+	const SVC_ENV_REPORT	= 'env_report' ;
+	const SVC_IMG_OPTM		= 'img_optm' ;
+	const SVC_PAGESCORE		= 'pagescore' ;
 
 	const SERVICES = array(
 		'img_optm',
@@ -30,6 +35,7 @@ class Cloud extends Conf
 	const TYPE_GEN_KEY = 'gen_key';
 
 	private $_api_key;
+	private $_summary;
 
 	/**
 	 * Init
@@ -38,7 +44,8 @@ class Cloud extends Conf
 	 */
 	protected function __construct()
 	{
-		$this->_api_key = Core::config( Conf::O_API_KEY );
+		$this->_api_key = Core::config( Base::O_API_KEY );
+		$this->_summary = self::get_summary();
 	}
 
 
@@ -56,10 +63,8 @@ class Cloud extends Conf
 			return;
 		}
 
-		$summary = self::get_summary();
-
 		// Send request to Quic Online Service
-		$json = $this->_post( self::ACTION_IPS, array( 'svc' => $service ) );
+		$json = $this->_post( self::SVC_IPS, array( 'svc' => $service ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
@@ -101,9 +106,63 @@ class Cloud extends Conf
 		Log::debug( '[Cloud] Chose node: ' . $closest );
 
 		// store data into option locally
-		$summary[ 'server.' . $service ] = $closest;
-		$summary[ 'server_date.' . $service ] = time();
-		self::save_summary( $summary );
+		$this->_summary[ 'server.' . $service ] = $closest;
+		$this->_summary[ 'server_date.' . $service ] = time();
+		self::save_summary( $this->_summary );
+	}
+
+	/**
+	 * Get data from QUIC cloud server
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function get( $service, $data = array() )
+	{
+		$instance = self::get_instance();
+		return $instance->_get( $service, $data );
+	}
+
+	/**
+	 * Get data from QUIC cloud server
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _get( $service, $data = false )
+	{
+		if ( ! $this->_api_key ) {
+			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+			Admin_Display::error( $msg );
+			return;
+		}
+
+		// Limit frequent unfinished request to 5min
+		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
+			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
+			if ( $expired > 0 ) {
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %s.', 'litespeed-cache' ), $expired . 's' );
+				Admin_Display::error( $msg );
+				return;
+			}
+		}
+
+		$server = $this->_iapi_cloud;
+
+		$url = $server . '/' . $service;
+
+		if ( $data ) {
+			$url .= '?' . http_build_query( $data );
+		}
+
+		Log::debug( '[Cloud] getting from : ' . $url );
+
+		$this->_summary[ 'curr_request.' . $service ] = time();
+		self::save_summary( $this->_summary );
+
+		$response = wp_remote_get( $url, array( 'timeout' => 15 ) );
+
+		return $this->_parse_response( $response );
 	}
 
 	/**
@@ -112,10 +171,10 @@ class Cloud extends Conf
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function post( $action, $data = false, $time_out = false )
+	public static function post( $service, $data = false, $time_out = false )
 	{
-		$instance = self::get_instance() ;
-		return $instance->_post( $action, $data, $time_out ) ;
+		$instance = self::get_instance();
+		return $instance->_post( $service, $data, $time_out );
 	}
 
 	/**
@@ -132,11 +191,9 @@ class Cloud extends Conf
 			return;
 		}
 
-		$summary = self::get_summary();
-
 		// Limit frequent unfinished request to 5min
-		if ( ! empty( $summary[ 'curr_request.' . $service ] ) ) {
-			$expired = $summary[ 'curr_request.' . $service ] + 300 - time();
+		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
+			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
 			if ( $expired > 0 ) {
 				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %s.', 'litespeed-cache' ), $expired . 's' );
 				Admin_Display::error( $msg );
@@ -144,23 +201,22 @@ class Cloud extends Conf
 			}
 		}
 
-		if ( $service === self::ACTION_IPS || $service === self::ACTION_SYNC_CONF ) {
+		if ( $service === self::SVC_IPS || $service === self::SVC_SYNC_CONF ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {
 			// Check if the stored server needs to be refreshed
-			if ( empty( $summary[ 'server.' . $service ] ) || empty( $summary[ 'server_date.' . $service ] ) || $summary[ 'server_date.' . $service ] > time() + 86400 * 7 ) {
+			if ( empty( $this->_summary[ 'server.' . $service ] ) || empty( $this->_summary[ 'server_date.' . $service ] ) || $this->_summary[ 'server_date.' . $service ] > time() + 86400 * 7 ) {
 				// Request node server first
 				$this->_detect_cloud( $service );
-				$summary = self::get_summary();
 			}
 
-			if ( empty( $summary[ 'server.' . $service ] ) {
+			if ( empty( $this->_summary[ 'server.' . $service ] ) {
 				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . __( 'No available cloud node.', 'litespeed-cache' ) );
 				Admin_Display::error( $msg );
 				return;
 			}
-			$server = $summary[ 'server.' . $service ];
+			$server = $this->_summary[ 'server.' . $service ];
 		}
 
 		$url = $server . '/' . $service;
@@ -173,28 +229,42 @@ class Cloud extends Conf
 			'svc'			=> $service,
 			'v'				=> Core::PLUGIN_VERSION,
 			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
-		) ;
+		);
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
 		 */
-		$summary[ 'curr_request.' . $service ] = time();
-		self::save_summary( $summary );
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
+		$this->_summary[ 'curr_request.' . $service ] = time();
+		self::save_summary( $this->_summary );
 
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) );
+
+		return $this->_parse_response( $response );
+	}
+
+	/**
+	 * Parse response JSON
+	 * Mark the request successful if the response status is ok
+	 *
+	 * @since  3.0
+	 */
+	private function _parse_response( $response )
+	{
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Log::debug( '[Cloud] failed to post: ' . $error_message );
-			return $error_message;
+			Log::debug( '[Cloud] failed to request: ' . $error_message );
+
+			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message;
+			Admin_Display::error( $msg );
+			return false;
 		}
 
-		// parse data from server
 		$json = json_decode( $response[ 'body' ], true );
 
 		if ( ! is_array( $json ) ) {
-			Log::debug( '[Cloud] failed to decode post json: ' . $response[ 'body' ] );
+			Log::debug( '[Cloud] failed to decode response json: ' . $response[ 'body' ] );
 
-			$msg = __( 'Failed to post via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ];
+			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ];
 			Admin_Display::error( $msg );
 
 			return false;
@@ -259,11 +329,34 @@ class Cloud extends Conf
 			return false;
 		}
 
-		$summary[ 'last_request.' . $service ] = $summary[ 'curr_request.' . $service ];
-		$summary[ 'curr_request.' . $service ] = 0;
-		self::save_summary( $summary );
+		$this->_summary[ 'last_request.' . $service ] = $this->_summary[ 'curr_request.' . $service ];
+		$this->_summary[ 'curr_request.' . $service ] = 0;
+		self::save_summary( $this->_summary );
 
 		return $json;
+
+	}
+
+	/**
+	 * Parse _links from json
+	 *
+	 * @since  1.6.5
+	 * @since  1.6.7 Self clean the parameter
+	 * @access private
+	 */
+	private function _parse_link( &$json )
+	{
+		$msg = '';
+
+		if ( ! empty( $json[ '_links' ] ) ) {
+			foreach ( $json[ '_links' ] as $v ) {
+				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] );
+			}
+
+			unset( $json[ '_links' ] );
+		}
+
+		return $msg;
 	}
 
 	/**
@@ -275,24 +368,24 @@ class Cloud extends Conf
 	public function hash()
 	{
 		if ( empty( $_POST[ 'hash' ] ) ) {
-			Log::debug( '[Cloud] Lack of hash param' ) ;
-			return array( '_res' => 'err', '_msg' => 'lack_of_param' ) ;
+			Log::debug( '[Cloud] Lack of hash param' );
+			return array( '_res' => 'err', '_msg' => 'lack_of_param' );
 		}
 
-		$key_hash = self::get_option( self::DB_HASH ) ;
+		$key_hash = self::get_option( self::DB_HASH );
 
 		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
-			Log::debug( '[Cloud] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] ) ;
-			return array( '_res' => 'err', '_msg' => 'Error hash code' ) ;
+			Log::debug( '[Cloud] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] );
+			return array( '_res' => 'err', '_msg' => 'Error hash code' );
 		}
 
-		Control::set_nocache( 'Cloud hash validation' ) ;
+		Control::set_nocache( 'Cloud hash validation' );
 
-		Log::debug( '[Cloud] __callback request hash: ' . $key_hash ) ;
+		Log::debug( '[Cloud] __callback request hash: ' . $key_hash );
 
-		self::delete_option( self::DB_HASH ) ;
+		self::delete_option( self::DB_HASH );
 
-		return array( 'hash' => $key_hash ) ;
+		return array( 'hash' => $key_hash );
 	}
 
 	/**
@@ -361,9 +454,9 @@ class Cloud extends Conf
 	private function _save_api_key( $api_key )
 	{
 		// This doesn't need to sync QUIC conf
-		Config::get_instance()->update( Conf::O_API_KEY, $api_key ) ;
+		Conf::get_instance()->update( Base::O_API_KEY, $api_key );
 
-		Log::debug( '[Cloud] saved auth_key' ) ;
+		Log::debug( '[Cloud] saved auth_key' );
 	}
 
 

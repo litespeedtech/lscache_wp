@@ -12,10 +12,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class GUI extends Conf
+class GUI extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'gui' ; // DB record prefix name
 
 	private static $_clean_counter = 0 ;
 
@@ -55,7 +54,7 @@ class GUI extends Conf
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( Core::config( Conf::O_UTIL_INSTANT_CLICK ) ) {
+			if ( Core::config( Base::O_UTIL_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
@@ -423,7 +422,7 @@ class GUI extends Conf
 		) );
 
 		$append_arr = array(
-			Config::TYPE_SET . '[' . Conf::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Base::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -434,7 +433,7 @@ class GUI extends Conf
 		) );
 
 		$append_arr = array(
-			Config::TYPE_SET . '[' . Conf::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Base::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -445,7 +444,7 @@ class GUI extends Conf
 		) );
 
 		$append_arr = array(
-			Config::TYPE_SET . '[' . Conf::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Base::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -456,7 +455,7 @@ class GUI extends Conf
 		) );
 
 		$append_arr = array(
-			Config::TYPE_SET . '[' . Conf::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			Conf::TYPE_SET . '[' . Base::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -552,7 +551,7 @@ class GUI extends Conf
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( Core::config( Conf::O_CDN_CLOUDFLARE ) ) {
+		if ( Core::config( Base::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',

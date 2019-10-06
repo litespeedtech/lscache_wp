@@ -61,7 +61,7 @@ class Tag extends Instance
 	 */
 	public static function check_login_cacheable()
 	{
-		if ( ! Core::config( Conf::O_CACHE_PAGE_LOGIN ) ) {
+		if ( ! Core::config( Base::O_CACHE_PAGE_LOGIN ) ) {
 			return ;
 		}
 		if ( Control::isset_notcacheable() ) {

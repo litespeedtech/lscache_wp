@@ -15,7 +15,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_MIN ; ?>
+			<?php $id = Base::O_OPTM_CSS_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -28,7 +28,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_COMB ; ?>
+			<?php $id = Base::O_OPTM_CSS_COMB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -42,7 +42,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_HTTP2 ; ?>
+			<?php $id = Base::O_OPTM_CSS_HTTP2 ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -55,7 +55,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_ASYNC ; ?>
+			<?php $id = Base::O_OPTM_CSS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -74,7 +74,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_OPTM_CCSS_GEN ; ?>
+			<?php $id = Base::O_OPTM_CCSS_GEN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -88,7 +88,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_OPTM_CCSS_ASYNC ; ?>
+			<?php $id = Base::O_OPTM_CCSS_ASYNC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -132,7 +132,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_OPTM_CCSS_SEP_POSTTYPE ; ?>
+			<?php $id = Base::O_OPTM_CCSS_SEP_POSTTYPE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -147,7 +147,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_OPTM_CCSS_SEP_URI ; ?>
+			<?php $id = Base::O_OPTM_CCSS_SEP_URI ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -161,7 +161,7 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Conf::O_OPTM_CSS_ASYNC_INLINE ; ?>
+			<?php $id = Base::O_OPTM_CSS_ASYNC_INLINE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -174,12 +174,12 @@ $last_critical_css_generated = CSS::get_summary() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_CSS_FONT_DISPLAY ; ?>
+			<?php $id = Base::O_OPTM_CSS_FONT_DISPLAY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Conf::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, Base::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 1, __( 'Block', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Swap', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 3, __( 'Fallback', 'litespeed-cache' ) ) ; ?>

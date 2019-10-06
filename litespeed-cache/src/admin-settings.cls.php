@@ -12,7 +12,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Admin_Settings extends Conf
+class Admin_Settings extends Base
 {
 	protected static $_instance ;
 
@@ -28,7 +28,7 @@ class Admin_Settings extends Conf
 	 */
 	protected function __construct()
 	{
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 	}
 
 	/**
@@ -318,13 +318,13 @@ class Admin_Settings extends Conf
 			return false ; // invalid ttl.
 		}
 
-		if ( empty( $instance[ Config::OPTION_NAME ] ) ) {// todo: to be removed
-			$instance[ Config::OPTION_NAME ] = array() ;
+		if ( empty( $instance[ Conf::OPTION_NAME ] ) ) {// todo: to be removed
+			$instance[ Conf::OPTION_NAME ] = array() ;
 		}
-		$instance[ Config::OPTION_NAME ][ ESI::WIDGET_O_ESIENABLE ] = $esi ;
-		$instance[ Config::OPTION_NAME ][ ESI::WIDGET_O_TTL ] = $ttl ;
+		$instance[ Conf::OPTION_NAME ][ ESI::WIDGET_O_ESIENABLE ] = $esi ;
+		$instance[ Conf::OPTION_NAME ][ ESI::WIDGET_O_TTL ] = $ttl ;
 
-		$current = ! empty( $old_instance[ Config::OPTION_NAME ] ) ? $old_instance[ Config::OPTION_NAME ] : false ;
+		$current = ! empty( $old_instance[ Conf::OPTION_NAME ] ) ? $old_instance[ Conf::OPTION_NAME ] : false ;
 		if ( ! $current || $esi != $current[ ESI::WIDGET_O_ESIENABLE ] ) {
 			Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}

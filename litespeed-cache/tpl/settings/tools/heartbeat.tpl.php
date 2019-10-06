@@ -24,7 +24,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_FRONT ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_FRONT ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -38,7 +38,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_FRONT_TTL ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_FRONT_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -55,7 +55,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_BACK ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_BACK ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -68,7 +68,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_BACK_TTL ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_BACK_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -85,7 +85,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_EDITOR ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_EDITOR ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -98,7 +98,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_MISC_HEARTBEAT_EDITOR_TTL ; ?>
+			<?php $id = Base::O_MISC_HEARTBEAT_EDITOR_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

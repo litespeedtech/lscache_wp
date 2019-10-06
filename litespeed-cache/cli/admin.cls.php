@@ -4,8 +4,8 @@ namespace LiteSpeed\CLI ;
 defined( 'WPINC' ) || exit ;
 
 use LiteSpeed\Core ;
-use LiteSpeed\Config ;
 use LiteSpeed\Conf ;
+use LiteSpeed\Base ;
 use LiteSpeed\Admin_Settings ;
 use LiteSpeed\Import ;
 use LiteSpeed\Utility ;
@@ -14,13 +14,13 @@ use WP_CLI ;
 /**
  * LiteSpeed Cache Admin Interface
  */
-class Admin extends Conf
+class Admin extends Base
 {
 	private $__cfg ;
 
 	public function __construct()
 	{
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 	}
 
 	/**
@@ -94,7 +94,7 @@ class Admin extends Conf
 	 */
 	public function get_options( $args, $assoc_args )
 	{
-		$options = Config::get_instance()->get_options() ;
+		$options = Conf::get_instance()->get_options() ;
 		$option_out = array() ;
 
 		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;

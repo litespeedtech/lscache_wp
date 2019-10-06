@@ -73,12 +73,12 @@ class Data extends Instance
 		}
 
 		// Gravatar
-		if ( Core::config( Conf::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			$this->_create_tb_avatar() ;
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
-		// if ( Core::config( Conf::O_IMG_OPTM_AUTO ) ) {
+		// if ( Core::config( Base::O_IMG_OPTM_AUTO ) ) {
 		// 	$this->create_tb_img_optm() ;
 		// }
 	}
@@ -112,13 +112,13 @@ class Data extends Instance
 		}
 
 		// Reload options
-		Config::get_instance()->load_options() ;
+		Conf::get_instance()->load_options() ;
 
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
-		Conf::delete_option( Conf::_VERSION ) ;
-		Conf::add_option( Conf::_VERSION, Core::PLUGIN_VERSION ) ;
+		Base::delete_option( Base::_VERSION ) ;
+		Base::add_option( Base::_VERSION, Core::PLUGIN_VERSION ) ;
 
 		Log::debug( '[Data] Updated version to ' . Core::PLUGIN_VERSION ) ;
 
@@ -151,10 +151,10 @@ class Data extends Instance
 		}
 
 		// Reload options
-		Config::get_instance()->load_site_options() ;
+		Conf::get_instance()->load_site_options() ;
 
-		Conf::delete_site_option( Conf::_VERSION ) ;
-		Conf::add_site_option( Conf::_VERSION, Core::PLUGIN_VERSION ) ;
+		Base::delete_site_option( Base::_VERSION ) ;
+		Base::add_site_option( Base::_VERSION, Core::PLUGIN_VERSION ) ;
 
 		Log::debug( '[Data] Updated site_version to ' . Core::PLUGIN_VERSION ) ;
 
@@ -197,7 +197,7 @@ class Data extends Instance
 		}
 		else {
 			// Reload options
-			Config::get_instance()->load_options() ;
+			Conf::get_instance()->load_options() ;
 
 			$this->correct_tb_existance() ;
 

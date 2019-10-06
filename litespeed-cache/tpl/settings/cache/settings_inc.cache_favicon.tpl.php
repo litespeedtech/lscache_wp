@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_FAVICON ; ?>
+			<?php $id = Base::O_CACHE_FAVICON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

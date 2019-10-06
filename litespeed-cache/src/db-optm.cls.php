@@ -55,8 +55,8 @@ class DB_Optm extends Instance
 
 		switch ( $type ) {
 			case 'revision':
-				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
-				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
+				$rev_max = (int) Core::config( Base::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) Core::config( Base::O_DB_OPTM_REVISIONS_AGE );
 				$sql_add = '';
 				if ( $rev_age ) {
 					$sql_add = " and post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
@@ -122,8 +122,8 @@ class DB_Optm extends Instance
 		global $wpdb;
 		switch ( $type ) {
 			case 'revision':
-				$rev_max = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_MAX );
-				$rev_age = (int) Core::config( Conf::O_DB_OPTM_REVISIONS_AGE );
+				$rev_max = (int) Core::config( Base::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) Core::config( Base::O_DB_OPTM_REVISIONS_AGE );
 
 				$sql_add = '';
 				if ( $rev_age ) {

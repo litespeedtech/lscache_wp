@@ -3,7 +3,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-$api_key_val = Core::config( Conf::O_API_KEY );
+$api_key_val = Core::config( Base::O_API_KEY );
 if ( ! empty( $_GET[ 'apikey_data' ] ) ) {
 	$apikey_data = json_decode( base64_decode( $_GET[ 'apikey_data' ] ), true );
 	if ( ! empty( $apikey_data[ 'domain_key' ] ) ) {
@@ -27,7 +27,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_API_KEY ; ?>
+			<?php $id = Base::O_API_KEY ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -44,7 +44,7 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_SERVER_IP ; ?>
+			<?php $id = Base::O_SERVER_IP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

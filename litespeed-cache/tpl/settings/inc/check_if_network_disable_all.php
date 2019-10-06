@@ -11,7 +11,7 @@ if ( get_current_blog_id() === BLOG_ID_CURRENT_SITE ) {
 }
 
 $site_options = $this->__cfg->load_site_options() ;
-if ( empty( $site_options[ Conf::NETWORK_O_USE_PRIMARY ] ) ) {
+if ( empty( $site_options[ Base::NETWORK_O_USE_PRIMARY ] ) ) {
 	return ;
 }
 ?>

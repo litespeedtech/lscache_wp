@@ -45,7 +45,7 @@ class Log extends Instance
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 
-		if ( Core::config( Conf::O_DEBUG_LEVEL ) ) {
+		if ( Core::config( Base::O_DEBUG_LEVEL ) ) {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true ) ;
 		}
 
@@ -150,8 +150,8 @@ class Log extends Instance
 	 */
 	public static function init()
 	{
-		$debug = Core::config( Conf::O_DEBUG ) ;
-		if ( $debug == Conf::VAL_ON2 ) {
+		$debug = Core::config( Base::O_DEBUG ) ;
+		if ( $debug == Base::VAL_ON2 ) {
 			if ( ! Router::is_admin_ip() ) {
 				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true ) ;
 				return ;
@@ -163,7 +163,7 @@ class Log extends Instance
 		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
 		 * @since  3.0
 		 */
-		$list = Core::config( Conf::O_DEBUG_INC ) ;
+		$list = Core::config( Base::O_DEBUG_INC ) ;
 		if ( $list ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
 			if ( ! $result ) {
@@ -171,7 +171,7 @@ class Log extends Instance
 			}
 		}
 
-		$list = Core::config( Conf::O_DEBUG_EXC ) ;
+		$list = Core::config( Base::O_DEBUG_EXC ) ;
 		if ( $list ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list ) ;
 			if ( $result ) {
@@ -186,9 +186,9 @@ class Log extends Instance
 		}
 
 		// Check if hook filters
-		if ( Core::config( Conf::O_DEBUG_LOG_FILTERS ) ) {
-			self::$_ignore_filters = Core::config( Conf::O_DEBUG_LOG_NO_FILTERS ) ;
-			self::$_ignore_part_filters = Core::config( Conf::O_DEBUG_LOG_NO_PART_FILTERS ) ;
+		if ( Core::config( Base::O_DEBUG_LOG_FILTERS ) ) {
+			self::$_ignore_filters = Core::config( Base::O_DEBUG_LOG_NO_FILTERS ) ;
+			self::$_ignore_part_filters = Core::config( Base::O_DEBUG_LOG_NO_PART_FILTERS ) ;
 
 			add_action( 'all', __CLASS__ . '::log_filters' ) ;
 		}
@@ -207,7 +207,7 @@ class Log extends Instance
 		}
 
 		// Check log file size
-		$log_file_size = Core::config( Conf::O_DEBUG_FILESIZE ) ;
+		$log_file_size = Core::config( Base::O_DEBUG_FILESIZE ) ;
 		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
 			File::save( $log_file, '' ) ;
 		}
@@ -242,7 +242,7 @@ class Log extends Instance
 		$param = sprintf( '💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
-		if ( Core::config( Conf::O_DEBUG_COLLAPS_QS ) ) {
+		if ( Core::config( Base::O_DEBUG_COLLAPS_QS ) ) {
 			if ( strlen( $qs ) > 53 ) {
 				$qs = substr( $qs, 0, 53 ) . '...' ;
 			}
@@ -265,7 +265,7 @@ class Log extends Instance
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
 		}
-		if ( Core::config( Conf::O_DEBUG_COOKIE ) ) {
+		if ( Core::config( Base::O_DEBUG_COOKIE ) ) {
 			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
 		}
 		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {

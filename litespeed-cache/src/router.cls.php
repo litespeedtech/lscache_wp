@@ -311,7 +311,7 @@ class Router extends Instance
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Core::config( Conf::O_ESI ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Core::config( Base::O_ESI ) ;
 		}
 		return self::$_esi_enabled ;
 	}
@@ -402,7 +402,7 @@ class Router extends Instance
 	public static function is_admin_ip()
 	{
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = Core::config( Conf::O_DEBUG_IPS ) ;
+			$ips = Core::config( Base::O_DEBUG_IPS ) ;
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}

@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_UTIL_CHECK_ADVCACHE ; ?>
+			<?php $id = Base::O_UTIL_CHECK_ADVCACHE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

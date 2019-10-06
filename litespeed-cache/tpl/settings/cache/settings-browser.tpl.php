@@ -21,7 +21,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_BROWSER ; ?>
+			<?php $id = Base::O_CACHE_BROWSER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -36,7 +36,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_TTL_BROWSER ; ?>
+			<?php $id = Base::O_CACHE_TTL_BROWSER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

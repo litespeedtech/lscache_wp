@@ -92,7 +92,7 @@ class Utility extends Instance
 		$_summary[ 'score.last_check' ] = time() ;
 		GUI::save_summary( $_summary ) ;
 
-		$score = Admin_API::post( Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600 ) ;
+		$score = Cloud::post( Cloud::SVC_PAGESCORE, false, true, true, 600 ) ;
 		$_summary[ 'score.data' ] = $score ;
 		GUI::save_summary( $_summary ) ;
 

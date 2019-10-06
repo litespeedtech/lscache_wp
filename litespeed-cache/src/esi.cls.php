@@ -435,7 +435,7 @@ class ESI extends Instance
 		}
 		Log::debug2( '[ESI] md5_string=' . $str ) ;
 
-		return md5( Core::config( Conf::HASH ) . $str ) ;
+		return md5( Core::config( Base::HASH ) . $str ) ;
 	}
 
 	/**
@@ -549,7 +549,7 @@ class ESI extends Instance
 		switch ($widget_name) {
 			case 'WP_Widget_Recent_Posts' :
 			case 'WP_Widget_Recent_Comments' :
-				$options[self::WIDGET_O_ESIENABLE] = Conf::VAL_OFF ;
+				$options[self::WIDGET_O_ESIENABLE] = Base::VAL_OFF ;
 				$options[self::WIDGET_O_TTL] = 86400 ;
 				break ;
 			default :
@@ -580,17 +580,17 @@ class ESI extends Instance
 		}
 
 		$name = get_class( $widget ) ;
-		if ( ! isset( $instance[ Conf::OPTION_NAME ] ) ) {
+		if ( ! isset( $instance[ Base::OPTION_NAME ] ) ) {
 			return $instance ;
 		}
-		$options = $instance[ Conf::OPTION_NAME ] ;
+		$options = $instance[ Base::OPTION_NAME ] ;
 		if ( ! isset( $options ) || ! $options[ self::WIDGET_O_ESIENABLE ] ) {
 			defined( 'LSCWP_LOG' ) && Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
 
 			return $instance ;
 		}
 
-		$esi_private = $options[ self::WIDGET_O_ESIENABLE ] == Conf::VAL_ON2 ? 'private,' : '' ;
+		$esi_private = $options[ self::WIDGET_O_ESIENABLE ] == Base::VAL_ON2 ? 'private,' : '' ;
 
 		$params = array(
 			self::PARAM_NAME => $name,
@@ -640,7 +640,7 @@ class ESI extends Instance
 		// global $wp_widget_factory ;
 		// $widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
 		$option = $params[ self::PARAM_INSTANCE ] ;
-		$option = $option[ Conf::OPTION_NAME ] ;
+		$option = $option[ Base::OPTION_NAME ] ;
 
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[ self::WIDGET_O_TTL ] ;
@@ -651,7 +651,7 @@ class ESI extends Instance
 		else {
 			Control::set_custom_ttl( $ttl ) ;
 
-			if ( $option[ self::WIDGET_O_ESIENABLE ] == Conf::VAL_ON2 ) {
+			if ( $option[ self::WIDGET_O_ESIENABLE ] == Base::VAL_ON2 ) {
 				Control::set_private() ;
 			}
 			Control::set_no_vary() ;
@@ -683,7 +683,7 @@ class ESI extends Instance
 		}
 
 		wp_admin_bar_render() ;
-		if ( ! Core::config( Conf::O_ESI_CACHE_ADMBAR ) ) {
+		if ( ! Core::config( Base::O_ESI_CACHE_ADMBAR ) ) {
 			Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {
@@ -706,7 +706,7 @@ class ESI extends Instance
 	{
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
 
-		if ( ! Core::config( Conf::O_ESI_CACHE_COMMFORM ) ) {
+		if ( ! Core::config( Base::O_ESI_CACHE_COMMFORM ) ) {
 			Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {

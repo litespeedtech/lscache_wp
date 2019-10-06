@@ -6,7 +6,7 @@ defined( 'WPINC' ) || exit ;
 	<!-- build_setting_auto_upgrade -->
 	<tr>
 		<th>
-			<?php $id = Conf::O_AUTO_UPGRADE ; ?>
+			<?php $id = Base::O_AUTO_UPGRADE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

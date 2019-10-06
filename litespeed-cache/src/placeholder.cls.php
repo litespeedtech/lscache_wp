@@ -11,10 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Placeholder extends Conf
+class Placeholder extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'placeholder' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
 
@@ -36,14 +35,14 @@ class Placeholder extends Conf
 	 */
 	protected function __construct()
 	{
-		$this->_conf_placeholder_resp = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_conf_placeholder_resp_generator = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
-		$this->_conf_placeholder_resp_svg 	= Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
-		$this->_conf_placeholder_lqip 		= Core::config( Conf::O_MEDIA_PLACEHOLDER_LQIP ) ;
-		$this->_conf_placeholder_lqip_qual	= Core::config( Conf::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
-		$this->_conf_placeholder_resp_async = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_conf_placeholder_resp_color = Core::config( Conf::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
-		$this->_conf_ph_default = Core::config( Conf::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+		$this->_conf_placeholder_resp = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_conf_placeholder_resp_generator = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
+		$this->_conf_placeholder_resp_svg 	= Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
+		$this->_conf_placeholder_lqip 		= Core::config( Base::O_MEDIA_PLACEHOLDER_LQIP ) ;
+		$this->_conf_placeholder_lqip_qual	= Core::config( Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
+		$this->_conf_placeholder_resp_async = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_conf_placeholder_resp_color = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_conf_ph_default = Core::config( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 	}
 
 	/**
@@ -407,13 +406,12 @@ class Placeholder extends Conf
 			if ( $this->_conf_placeholder_lqip ) {
 				list( $width, $height ) = explode( 'x', $size ) ;
 				$req_data = array(
-					'_domain'	=> home_url(),
 					'width'		=> $width,
 					'height'	=> $height,
 					'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
-				$json = Admin_API::post( Admin_API::IAPI_ACTION_LQIP, $req_data, true ) ;
+				$json = Cloud::post( Cloud::SVC_LQIP, $req_data ) ;
 
 				if ( empty( $json[ 'data' ] ) ) {
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
@@ -443,7 +441,7 @@ class Placeholder extends Conf
 					'size'	=> $size,
 					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
 				) ;
-				$data = Admin_API::get( Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
+				$data = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
 
 				Log::debug( '[Placeholder] _generate_placeholder ' ) ;
 

@@ -35,7 +35,7 @@ class Admin extends Instance
 		// Also register menu
 		$this->display = Admin_Display::get_instance() ;
 
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 
 		// initialize admin actions
 		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
@@ -44,10 +44,10 @@ class Admin extends Instance
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = Core::config( Conf::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = Core::config( Base::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
-			if ( Core::config( Conf::O_PURGE_ON_UPGRADE ) ) {
+			if ( Core::config( Base::O_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}

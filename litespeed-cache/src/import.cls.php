@@ -11,10 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Import extends Conf
+class Import extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'import' ; // DB record prefix name
 
 	private $__cfg ;
 
@@ -32,7 +31,7 @@ class Import extends Conf
 	{
 		Log::debug( 'Import init' ) ;
 
-		$this->__cfg = Config::get_instance() ;
+		$this->__cfg = Conf::get_instance() ;
 	}
 
 	/**

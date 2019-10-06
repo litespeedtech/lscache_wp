@@ -12,7 +12,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_MIN ; ?>
+			<?php $id = Base::O_OPTM_JS_MIN ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -25,7 +25,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_COMB ; ?>
+			<?php $id = Base::O_OPTM_JS_COMB ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -39,7 +39,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_HTTP2 ; ?>
+			<?php $id = Base::O_OPTM_JS_HTTP2 ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -52,7 +52,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_DEFER ; ?>
+			<?php $id = Base::O_OPTM_JS_DEFER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
@@ -66,12 +66,12 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_JS_INLINE_DEFER ; ?>
+			<?php $id = Base::O_OPTM_JS_INLINE_DEFER ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
 			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Conf::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, Base::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 1, __( 'After Dom Ready', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Deferred', 'litespeed-cache' ) ) ; ?>
 			</div>
@@ -84,7 +84,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_OPTM_EXC_JQ ; ?>
+			<?php $id = Base::O_OPTM_EXC_JQ ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

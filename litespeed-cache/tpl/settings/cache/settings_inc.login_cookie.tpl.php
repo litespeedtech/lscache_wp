@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Conf::O_CACHE_LOGIN_COOKIE ; ?>
+			<?php $id = Base::O_CACHE_LOGIN_COOKIE ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>

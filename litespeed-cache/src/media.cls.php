@@ -83,7 +83,7 @@ class Media extends Instance
 	 */
 	public function adjust_jpg_quality( $quality )
 	{
-		$v = Core::config( Conf::O_IMG_OPTM_JPG_QUALITY ) ;
+		$v = Core::config( Base::O_IMG_OPTM_JPG_QUALITY ) ;
 
 		if ( $v ) {
 			return $v ;
@@ -115,7 +115,7 @@ class Media extends Instance
 	 */
 	public static function webp_enabled()
 	{
-		return Core::config( Conf::O_IMG_OPTM_WEBP_REPLACE ) ;
+		return Core::config( Base::O_IMG_OPTM_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -442,7 +442,7 @@ class Media extends Instance
 		 * Check if URI is excluded
 		 * @since  3.0
 		 */
-		$excludes = Core::config( Conf::O_MEDIA_LAZY_URI_EXC ) ;
+		$excludes = Core::config( Base::O_MEDIA_LAZY_URI_EXC ) ;
 		if ( $excludes ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -451,8 +451,8 @@ class Media extends Instance
 			}
 		}
 
-		$cfg_lazy = Core::config( Conf::O_MEDIA_LAZY ) ;
-		$cfg_iframe_lazy = Core::config( Conf::O_MEDIA_IFRAME_LAZY ) ;
+		$cfg_lazy = Core::config( Base::O_MEDIA_LAZY ) ;
+		$cfg_iframe_lazy = Core::config( Base::O_MEDIA_IFRAME_LAZY ) ;
 
 		if ( $cfg_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img() ;
@@ -495,7 +495,7 @@ class Media extends Instance
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			if ( Core::config( Conf::O_MEDIA_LAZYJS_INLINE ) ) {
+			if ( Core::config( Base::O_MEDIA_LAZYJS_INLINE ) ) {
 				$lazy_lib = '<script>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
 			} else {
 				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
@@ -521,9 +521,9 @@ class Media extends Instance
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Core::config( Conf::O_MEDIA_LAZY_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Core::config( Base::O_MEDIA_LAZY_EXC ) ) ;
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Core::config( Conf::O_MEDIA_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Core::config( Base::O_MEDIA_LAZY_CLS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -534,7 +534,7 @@ class Media extends Instance
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Core::config( Conf::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Core::config( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
 			Log::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
@@ -617,7 +617,7 @@ class Media extends Instance
 	 */
 	private function _parse_iframe()
 	{
-		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Core::config( Conf::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Core::config( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
 
 		$html_list = array() ;
 
@@ -627,7 +627,7 @@ class Media extends Instance
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Core::config( Conf::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Core::config( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
 			Log::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
@@ -684,7 +684,7 @@ class Media extends Instance
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = Core::config( Conf::O_IMG_OPTM_WEBP_ATTR ) ;
+		$webp_ele_to_check = Core::config( Base::O_IMG_OPTM_WEBP_ATTR ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
@@ -736,7 +736,7 @@ class Media extends Instance
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( Core::config( Conf::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( Core::config( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$this->content = Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
 		}
 

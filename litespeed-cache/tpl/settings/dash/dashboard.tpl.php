@@ -1,8 +1,9 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 $lscache_stats = GUI::get_instance()->lscache_stats();
+
 
 $finished_percentage = 10;
 
@@ -240,10 +241,10 @@ $optm_summary = Img_Optm::get_summary() ;
 
 				<?php
 					$cache_list = array(
-						Conf::O_CACHE			=> __( 'Public Cache', 'litespeed-cache' ),
-						Conf::O_CACHE_PRIV		=> __( 'Private Cache', 'litespeed-cache' ),
-						Conf::O_OBJECT			=> __( 'Object Cache', 'litespeed-cache' ),
-						Conf::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
+						Base::O_CACHE			=> __( 'Public Cache', 'litespeed-cache' ),
+						Base::O_CACHE_PRIV		=> __( 'Private Cache', 'litespeed-cache' ),
+						Base::O_OBJECT			=> __( 'Object Cache', 'litespeed-cache' ),
+						Base::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
 					);
 					foreach ( $cache_list as $id => $title ) :
 						$v = Core::config( $id );

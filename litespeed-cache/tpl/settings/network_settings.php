@@ -12,7 +12,7 @@ $menuArr = array(
 );
 
 global $_options;
-$_options = Config::get_instance()->load_site_options();
+$_options = Conf::get_instance()->load_site_options();
 
 ?>
 

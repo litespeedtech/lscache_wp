@@ -2,9 +2,9 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$cf_on = Core::config( Conf::O_CDN_CLOUDFLARE ) ;
-$cf_domain = Core::config( Conf::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
-$cf_zone = Core::config( Conf::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
+$cf_on = Core::config( Base::O_CDN_CLOUDFLARE ) ;
+$cf_domain = Core::config( Base::O_CDN_CLOUDFLARE_NAME ) ?: '-' ;
+$cf_zone = Core::config( Base::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 
 $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() ) ;
 

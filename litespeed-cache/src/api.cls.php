@@ -12,7 +12,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class API extends Conf
+class API extends Base
 {
 	const VERSION =	Core::PLUGIN_VERSION ;
 
@@ -76,7 +76,7 @@ class API extends Conf
 	 */
 	public static function conf_append( $name, $default )
 	{
-		Config::get_instance()->option_append( $name, $default ) ;
+		Conf::get_instance()->option_append( $name, $default ) ;
 	}
 
 	/**
@@ -86,7 +86,7 @@ class API extends Conf
 	 */
 	public static function conf_multi_switch( $id, $v )
 	{
-		Conf::set_multi_switch( $id, $v ) ;
+		Base::set_multi_switch( $id, $v ) ;
 	}
 
 	/**
@@ -98,7 +98,7 @@ class API extends Conf
 	 */
 	public static function force_option( $k, $v )
 	{
-		Config::get_instance()->force_option( $k, $v ) ;
+		Conf::get_instance()->force_option( $k, $v ) ;
 	}
 
 	/**

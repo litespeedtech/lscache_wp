@@ -11,10 +11,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Avatar extends Conf
+class Avatar extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'avatar' ; // DB record prefix name
 
 	const TYPE_GENERATE = 'generate' ;
 
@@ -31,7 +30,7 @@ class Avatar extends Conf
 	 */
 	protected function __construct()
 	{
-		if ( ! Core::config( Config::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( ! Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return ;
 		}
 
@@ -40,7 +39,7 @@ class Avatar extends Conf
 		// Create table
 		$this->_tb = Data::tb_avatar() ;
 
-		$this->_conf_cache_ttl = Core::config( Config::O_DISCUSS_AVATAR_CACHE_TTL ) ;
+		$this->_conf_cache_ttl = Core::config( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) ) ;
 	}
@@ -53,7 +52,7 @@ class Avatar extends Conf
 	 */
 	public static function need_db()
 	{
-		if ( Core::config( Config::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return true ;
 		}
 
@@ -161,7 +160,7 @@ class Avatar extends Conf
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function get_summary()
+	public static function get_summary( $non_used = false )
 	{
 		global $wpdb ;
 

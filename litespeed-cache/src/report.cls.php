@@ -12,14 +12,11 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Report extends Conf
+class Report extends Base
 {
 	protected static $_instance ;
-	const DB_PREFIX = 'env' ; // DB record prefix name
 
 	const TYPE_SEND_REPORT = 'send_report' ;
-
-	const ITEM_REF = 'ref' ;
 
 	/**
 	 * Handle all request actions from main cls
@@ -59,7 +56,7 @@ class Report extends Conf
 			'env' => $report_con,
 		) ;
 
-		$json = Admin_API::post( Admin_API::IAPI_ACTION_ENV_REPORT, Utility::arr2str( $data ), false, true ) ;
+		$json = Cloud::post( Cloud::SVC_ENV_REPORT, $data ) ;
 
 		if ( ! is_array( $json ) ) {
 			Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
@@ -68,12 +65,12 @@ class Report extends Conf
 			return ;
 		}
 
-		$data = array(
+		$summary = array(
 			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
 			'dateline'	=> time(),
 		) ;
 
-		self::update_option( self::ITEM_REF, $data ) ;
+		self::save_summary( $summary ) ;
 
 	}
 
@@ -86,18 +83,18 @@ class Report extends Conf
 	 */
 	public function get_env_ref()
 	{
-		$info = self::get_option( self::ITEM_REF ) ;
+		$summary = self::get_summary() ;
 
-		if ( ! is_array( $info ) ) {
+		if ( ! is_array( $summary ) ) {
 			return array(
 				'num'	=> '-',
 				'dateline'	=> '-',
 			) ;
 		}
 
-		$info[ 'dateline' ] = date( 'm/d/Y H:i:s', $info[ 'dateline' ] ) ;
+		$summary[ 'dateline' ] = date( 'm/d/Y H:i:s', $summary[ 'dateline' ] ) ;
 
-		return $info ;
+		return $summary ;
 	}
 
 	/**
@@ -150,16 +147,16 @@ class Report extends Conf
 		$extras[ 'active plugins' ] = $active_plugins ;
 
 		if ( is_null($options) ) {
-			$options = Config::get_instance()->get_options() ;
+			$options = Conf::get_instance()->get_options() ;
 		}
 
 		if ( ! is_null($options) && is_multisite() ) {
 			$blogs = Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = Config::get_instance()->load_options( $blog_id, true ) ;
-					if ( isset($opts[ Conf::O_CACHE ]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[ Conf::O_CACHE ] ;
+					$opts = Conf::get_instance()->load_options( $blog_id, true ) ;
+					if ( isset($opts[ Base::O_CACHE ]) ) {
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ Base::O_CACHE ] ;
 					}
 				}
 			}
@@ -167,9 +164,9 @@ class Report extends Conf
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Conf::O_CDN_QUIC_KEY,
-			Conf::O_CDN_CLOUDFLARE_KEY,
-			Conf::O_OBJECT_PSWD,
+			Base::O_CDN_QUIC_KEY,
+			Base::O_CDN_CLOUDFLARE_KEY,
+			Base::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
@@ -202,7 +199,7 @@ class Report extends Conf
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
-		$server_vars = array_merge( $server_vars, Config::get_instance()->server_vars() ) ;
+		$server_vars = array_merge( $server_vars, Conf::get_instance()->server_vars() ) ;
 
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 
