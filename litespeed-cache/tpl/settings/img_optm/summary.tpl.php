@@ -3,38 +3,59 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
+
+$optm_summary = Img_Optm::get_summary() ;
+
+$__img_optm = Img_Optm::get_instance() ;
+$img_count = $__img_optm->img_count() ;
+list( $storage_data, $rm_log ) = $__img_optm->storage_data() ;
+list( $last_run, $is_running ) = $__img_optm->cron_running( false ) ;
+
+if ( ! empty( $img_count[ 'total_img' ] ) ) {
+	$finished_percentage = 100 - floor( $img_count[ 'total_not_requested' ] * 100 / $img_count[ 'total_img' ] ) ;
+}
+else {
+	$finished_percentage = 0 ;
+}
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-small"></div>
 
-		<?php if ( $img_count[ 'total_not_requested' ] ) : ?>
-			<div class="litespeed-text-center">
-				<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>" class="button button-primary litespeed-btn-large">
-					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
-				</a>
-
-			</div>
-
-			<div class="litespeed-empty-space-small"></div>
-
-			<div class="litespeed-desc">
-				<?php if ( $closest_server ) : ?>
-					<span title="<?php echo $closest_server ; ?>">☁️</span>
+		<div class="litespeed-text-center">
+			<a class="button button-primary litespeed-btn-large"
+				<?php if ( ! empty( $img_count[ 'total_not_requested' ] ) ) : ?>
+					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>"
+				<?php else : ?>
+					href='javascript:;' disabled
 				<?php endif ; ?>
-				<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'You can send at most %s images.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-			</div>
-		<?php endif ; ?>
+				>
+				<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
+			</a>
+		</div>
 
-		<?php if ( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ] && ! $is_running ) : ?>
+		<div class="litespeed-empty-space-small"></div>
+
+		<div class="litespeed-desc">
+			<?php if ( $closest_server ) : ?>
+				<span title="<?php echo $closest_server ; ?>">☁️</span>
+			<?php endif ; ?>
+			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
+			<?php echo sprintf( __( 'You can send at most %s images.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
+			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+		</div>
+
 		<div>
-			<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>">
+			<a class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
+				<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
+					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>"
+				<?php else : ?>
+					href='javascript:;' disabled
+				<?php endif ; ?>
+				>
 				<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
 			</a>
 		</div>
-		<?php endif ; ?>
 
 		<div class="litespeed-empty-space-medium"></div>
 
@@ -178,7 +199,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 				<h3 class="litespeed-title-short">
 					<?php echo __( 'Storage Optimization', 'litespeed-cache' ) ; ?>
 
-					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
+					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
 					</a>
 				</h3>
 
@@ -203,7 +224,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 					</div>
 				<?php endif ; ?>
 				<hr class="litespeed-hr-with-space" />
-				<div><a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
+				<div><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
 					<span class="dashicons dashicons-trash"></span>&nbsp;<?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
 				</a></div>
 				<div class="litespeed-desc">
@@ -266,7 +287,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 		<div class="postbox litespeed-postbox"><div class="inside">
 			<h3 class="litespeed-title">
 				<?php echo __( 'Optimization Summary', 'litespeed-cache' ) ; ?>
-				<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
+				<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
 				</a>
 			</h3>
 			<p>
@@ -289,15 +310,15 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 				</div>
 
 				<div>
-					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
+					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
 						<span class="dashicons dashicons-undo"></span>&nbsp;<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
 					</a>
 
-					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
+					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
 						<span class="dashicons dashicons-redo"></span>&nbsp;<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 					</a>
 
-					<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="button litespeed-btn-success litespeed-hide" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
+					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="button litespeed-btn-success litespeed-hide" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
 						<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
 					</a>
 
@@ -310,16 +331,12 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 			</div>
 			<div class="inside litespeed-postbox-footer">
 
-				<div><a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY ) ; ?>" class="button litespeed-btn-danger">
+				<div><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY ) ; ?>" class="button litespeed-btn-danger">
 					<span class="dashicons dashicons-dismiss"></span>&nbsp;<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
 				</a></div>
 
 				<div class="litespeed-desc">
 					<?php echo __( 'Remove all previous image optimization requests/results, revert completed optimizations, and delete all optimization files.', 'litespeed-cache' ) ; ?>
-					<div class="litespeed-warning">
-						⚠️
-						<?php echo __( 'This will also reset the credit level.', 'litespeed-cache' ) ; ?>
-					</div>
 				</div>
 				</div>
 		</div>

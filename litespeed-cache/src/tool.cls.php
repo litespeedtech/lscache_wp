@@ -30,12 +30,12 @@ class Tool extends Instance
 	 */
 	protected function __construct()
 	{
-		$this->_conf_heartbeat_front 		= Core::config( Base::O_MISC_HEARTBEAT_FRONT ) ;
-		$this->_conf_heartbeat_front_ttl 	= Core::config( Base::O_MISC_HEARTBEAT_FRONT_TTL ) ;
-		$this->_conf_heartbeat_back 		= Core::config( Base::O_MISC_HEARTBEAT_BACK ) ;
-		$this->_conf_heartbeat_back_ttl 	= Core::config( Base::O_MISC_HEARTBEAT_BACK_TTL ) ;
-		$this->_conf_heartbeat_editor 		= Core::config( Base::O_MISC_HEARTBEAT_EDITOR ) ;
-		$this->_conf_heartbeat_editor_ttl 	= Core::config( Base::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
+		$this->_conf_heartbeat_front 		= Conf::val( Base::O_MISC_HEARTBEAT_FRONT ) ;
+		$this->_conf_heartbeat_front_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_FRONT_TTL ) ;
+		$this->_conf_heartbeat_back 		= Conf::val( Base::O_MISC_HEARTBEAT_BACK ) ;
+		$this->_conf_heartbeat_back_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_BACK_TTL ) ;
+		$this->_conf_heartbeat_editor 		= Conf::val( Base::O_MISC_HEARTBEAT_EDITOR ) ;
+		$this->_conf_heartbeat_editor_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_EDITOR_TTL ) ;
 	}
 
 	/**

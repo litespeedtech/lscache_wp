@@ -51,7 +51,7 @@ class Control extends Instance
 		add_filter( 'wp_redirect', array( $this, 'check_redirect' ), 10, 2 ) ;
 
 		// Load response header conf
-		$this->_response_header_ttls = Core::config( Base::O_CACHE_TTL_STATUS ) ;
+		$this->_response_header_ttls = Conf::val( Base::O_CACHE_TTL_STATUS ) ;
 		foreach ( $this->_response_header_ttls as $k => $v ) {
 			$v = explode( ' ', $v ) ;
 			if ( empty( $v[ 0 ] ) || empty( $v[ 1 ] ) ) {
@@ -60,7 +60,7 @@ class Control extends Instance
 			$this->_response_header_ttls[ $v[ 0 ] ] = $v[ 1 ] ;
 		}
 
-		if ( Core::config( Base::O_PURGE_STALE ) ) {
+		if ( Conf::val( Base::O_PURGE_STALE ) ) {
 			self::set_stale();
 		}
 	}
@@ -100,7 +100,7 @@ class Control extends Instance
 			return false ;
 		}
 
-		return in_array( $role, Core::config( Base::O_CACHE_EXC_ROLES ) ) ? $role : false ;
+		return in_array( $role, Conf::val( Base::O_CACHE_EXC_ROLES ) ) ? $role : false ;
 	}
 
 	/**
@@ -117,13 +117,13 @@ class Control extends Instance
 		add_action( 'wp', __CLASS__ . '::set_cacheable', 5 ) ;
 
 		// Hook WP REST to be cacheable
-		if ( Core::config( Base::O_CACHE_REST ) ) {
+		if ( Conf::val( Base::O_CACHE_REST ) ) {
 			add_action( 'rest_api_init', __CLASS__ . '::set_cacheable', 5 ) ;
 		}
 
 		// Cache resources
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = Core::config( Base::O_CACHE_RES ) ;
+		$cache_res = Conf::val( Base::O_CACHE_RES ) ;
 		if ( $cache_res ) {
 			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
 			$pattern = '!' . LSCWP_CONTENT_FOLDER . Htaccess::RW_PATTERN_RES . '!' ;
@@ -456,8 +456,8 @@ class Control extends Instance
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = Core::config( Base::O_PURGE_TIMED_URLS ) ;
-		$timed_urls_time = Core::config( Base::O_PURGE_TIMED_URLS_TIME ) ;
+		$timed_urls = Conf::val( Base::O_PURGE_TIMED_URLS ) ;
+		$timed_urls_time = Conf::val( Base::O_PURGE_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
 			$current_url = Tag::build_uri_tag( true ) ;
 			if ( in_array( $current_url, $timed_urls ) ) {
@@ -474,19 +474,19 @@ class Control extends Instance
 
 		// Private cache uses private ttl setting
 		if ( self::is_private() ) {
-			return Core::config( Base::O_CACHE_TTL_PRIV ) ;
+			return Conf::val( Base::O_CACHE_TTL_PRIV ) ;
 		}
 
 		if ( is_front_page() ){
-			return Core::config( Base::O_CACHE_TTL_FRONTPAGE ) ;
+			return Conf::val( Base::O_CACHE_TTL_FRONTPAGE ) ;
 		}
 
-		$feed_ttl = Core::config( Base::O_CACHE_TTL_FEED ) ;
+		$feed_ttl = Conf::val( Base::O_CACHE_TTL_FEED ) ;
 		if ( is_feed() && $feed_ttl > 0 ) {
 			return $feed_ttl ;
 		}
 
-		return Core::config( Base::O_CACHE_TTL_PUB ) ;
+		return Conf::val( Base::O_CACHE_TTL_PUB ) ;
 	}
 
 	/**
@@ -574,7 +574,7 @@ class Control extends Instance
 	public static function finalize()
 	{
 		// Check if URI is forced public cache
-		$excludes = Core::config( Base::O_CACHE_FORCE_PUB_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_FORCE_PUB_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
@@ -591,7 +591,7 @@ class Control extends Instance
 		}
 
 		// Check if URI is forced cache
-		$excludes = Core::config( Base::O_CACHE_FORCE_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_FORCE_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
@@ -647,7 +647,7 @@ class Control extends Instance
 		}
 
 		// The following check to the end is ONLY for mobile
-		if ( ! Core::config(Base::O_CACHE_MOBILE) ) {
+		if ( ! Conf::val(Base::O_CACHE_MOBILE) ) {
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
@@ -686,7 +686,7 @@ class Control extends Instance
 			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
 		}
 
-		if ( is_feed() && Core::config( Base::O_CACHE_TTL_FEED ) == 0 ) {
+		if ( is_feed() && Conf::val( Base::O_CACHE_TTL_FEED ) == 0 ) {
 			return $this->_no_cache_for('feed') ;
 		}
 
@@ -703,7 +703,7 @@ class Control extends Instance
 //		}
 
 		// Check private cache URI setting
-		$excludes = Core::config( Base::O_CACHE_PRIV_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_PRIV_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -714,7 +714,7 @@ class Control extends Instance
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = Core::config( Base::O_CACHE_EXC ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC ) ;
 			if ( ! empty( $excludes ) ) {
 				$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
@@ -723,22 +723,22 @@ class Control extends Instance
 			}
 
 			// Check QS excluded setting
-			$excludes = Core::config( Base::O_CACHE_EXC_QS ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_QS ) ;
 			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
-			$excludes = Core::config( Base::O_CACHE_EXC_CAT ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_CAT ) ;
 			if ( ! empty( $excludes ) && has_category( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured Category Do not cache.' ) ;
 			}
 
-			$excludes = Core::config( Base::O_CACHE_EXC_TAG ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_TAG ) ;
 			if ( ! empty( $excludes ) && has_tag( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured Tag Do not cache.' ) ;
 			}
 
-			$excludes = Core::config( Base::O_CACHE_EXC_COOKIES ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_COOKIES ) ;
 			if ( ! empty( $excludes ) && ! empty( $_COOKIE ) ) {
 				$cookie_hit = array_intersect( array_keys( $_COOKIE ), $excludes ) ;
 				if ( $cookie_hit ) {
@@ -746,7 +746,7 @@ class Control extends Instance
 				}
 			}
 
-			$excludes = Core::config( Base::O_CACHE_EXC_USERAGENTS ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_USERAGENTS ) ;
 			if ( ! empty( $excludes ) && isset( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
 				$nummatches = preg_match( Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 				if ( $nummatches ) {

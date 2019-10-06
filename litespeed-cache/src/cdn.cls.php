@@ -55,12 +55,12 @@ class CDN extends Instance
 		 * This is separate from CDN on/off
 		 * @since 1.5
 		 */
-		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( Base::O_CDN_REMOTE_JQ ) ;
+		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
 			$this->_load_jquery_remotely() ;
 		}
 
-		$this->_cfg_cdn = $this->__cfg->option( Base::O_CDN ) ;
+		$this->_cfg_cdn = Conf::val( Base::O_CDN ) ;
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
@@ -68,14 +68,14 @@ class CDN extends Instance
 			return ;
 		}
 
-		$this->_cfg_url_ori = $this->__cfg->option( Base::O_CDN_ORI ) ;
+		$this->_cfg_url_ori = Conf::val( Base::O_CDN_ORI ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			Base::CDN_MAPPING_INC_IMG,
 			Base::CDN_MAPPING_INC_CSS,
 			Base::CDN_MAPPING_INC_JS
 		) ;
-		foreach ( $this->__cfg->option( Base::O_CDN_MAPPING ) as $v ) {
+		foreach ( Conf::val( Base::O_CDN_MAPPING ) as $v ) {
 			if ( ! $v[ Base::CDN_MAPPING_URL ] ) {
 				continue ;
 			}
@@ -117,7 +117,7 @@ class CDN extends Instance
 			return ;
 		}
 
-		$this->_cfg_ori_dir = $this->__cfg->option( Base::O_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = Conf::val( Base::O_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;
@@ -137,7 +137,7 @@ class CDN extends Instance
 			$this->_cfg_url_ori[ $k ] = $v ;
 		}
 
-		$this->_cfg_cdn_exclude = $this->__cfg->option( Base::O_CDN_EXC ) ;
+		$this->_cfg_cdn_exclude = Conf::val( Base::O_CDN_EXC ) ;
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset

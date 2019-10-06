@@ -35,7 +35,7 @@ class Task extends Instance
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
 
 		// Register crawler cron
-		if ( Core::config( Base::O_CRWL ) && Router::can_crawl() ) {
+		if ( Conf::val( Base::O_CRWL ) && Router::can_crawl() ) {
 			// keep cron intval filter
 			$this->_schedule_filter_crawler() ;
 
@@ -44,35 +44,35 @@ class Task extends Instance
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( Core::config( Base::O_IMG_OPTM_CRON ) ) {
+		if ( Conf::val( Base::O_IMG_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
 			add_action( self::HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull_optimized_img' ) ;
 		}
 
 		// Image optm auto request
-		if ( Core::config( Base::O_IMG_OPTM_AUTO ) ) {
+		if ( Conf::val( Base::O_IMG_OPTM_AUTO ) ) {
 			self::schedule_filter_imgoptm_auto_request() ;
 
 			add_action( self::HOOK_IMGOPTM_AUTO_REQUEST, __NAMESPACE__ . '\Img_Optm::cron_auto_request' ) ;
 		}
 
 		// Register ccss generation
-		if ( Core::config( Base::O_OPTM_CCSS_ASYNC ) ) {
+		if ( Conf::val( Base::O_OPTM_CCSS_ASYNC ) ) {
 			self::schedule_filter_ccss() ;
 
 			add_action( self::HOOK_CCSS, __NAMESPACE__ . '\CSS::cron_ccss' ) ;
 		}
 
 		// Register image placeholder generation
-		if ( Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
+		if ( Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
 			self::schedule_filter_placeholder() ;
 
 			add_action( self::HOOK_IMG_PLACEHOLDER, __NAMESPACE__ . '\Placeholder::cron' ) ;
 		}
 
 		// Register avatar warm up
-		if ( Core::config( Base::O_DISCUSS_AVATAR_CRON ) ) {
+		if ( Conf::val( Base::O_DISCUSS_AVATAR_CRON ) ) {
 			self::schedule_filter_avatar() ;
 
 			add_action( self::HOOK_AVATAR, __NAMESPACE__ . '\Avatar::cron' ) ;
@@ -90,7 +90,7 @@ class Task extends Instance
 		$id = Base::O_CRWL ;
 
 		// get new setting
-		$is_enabled = ! Core::config( $id ) ;
+		$is_enabled = ! Conf::val( $id ) ;
 
 		// log
 		Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
@@ -118,7 +118,7 @@ class Task extends Instance
 			$is_active = $options[$id] ;
 		}
 		else {
-			$is_active = Core::config( $id ) ;
+			$is_active = Conf::val( $id ) ;
 		}
 
 		if ( ! $is_active ) {
@@ -246,7 +246,7 @@ class Task extends Instance
 	 */
 	public function lscache_cron_filter_crawler( $schedules )
 	{
-		$interval = Core::config( Base::O_CRWL_RUN_INTERVAL ) ;
+		$interval = Conf::val( Base::O_CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
 			// 	Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;

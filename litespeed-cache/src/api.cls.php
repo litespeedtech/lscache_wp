@@ -675,7 +675,7 @@ class API extends Base
 	 */
 	public static function config($id)
 	{
-		return Core::config($id) ;
+		return Conf::val($id) ;
 	}
 
 	/**

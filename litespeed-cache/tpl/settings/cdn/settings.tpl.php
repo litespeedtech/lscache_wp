@@ -7,7 +7,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = Core::config( Base::O_CDN_MAPPING ) ;
+$cdn_mapping = Conf::val( Base::O_CDN_MAPPING ) ;
 
 
 $this->form_action() ;
@@ -288,7 +288,7 @@ $this->form_action() ;
 					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
 
 				<?php
-					$cf_zone = Core::config( Base::O_CDN_CLOUDFLARE_ZONE ) ;
+					$cf_zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ;
 					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
 					$this->build_input( Base::O_CDN_CLOUDFLARE_NAME, $cls ) ;
 				?>

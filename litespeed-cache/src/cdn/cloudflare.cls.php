@@ -40,7 +40,7 @@ class Cloudflare extends Base
 	{
 		$__cfg = Conf::get_instance() ;
 
-		if ( ! $__cfg->option( Base::O_CDN_CLOUDFLARE ) ) {
+		if ( ! Conf::val( Base::O_CDN_CLOUDFLARE ) ) {
 			return ;
 		}
 
@@ -134,7 +134,7 @@ class Cloudflare extends Base
 	{
 		Log::debug( '[Cloudflare] _purge_all' ) ;
 
-		$cf_on = Core::config( Base::O_CDN_CLOUDFLARE ) ;
+		$cf_on = Conf::val( Base::O_CDN_CLOUDFLARE ) ;
 		if ( ! $cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
 			Admin_Display::error( $msg ) ;
@@ -165,7 +165,7 @@ class Cloudflare extends Base
 	 */
 	private function _zone()
 	{
-		$zone = Core::config( Base::O_CDN_CLOUDFLARE_ZONE ) ;
+		$zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ;
 		if ( ! $zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			Admin_Display::error( $msg ) ;
@@ -183,7 +183,7 @@ class Cloudflare extends Base
 	 */
 	private function _fetch_zone()
 	{
-		$kw = Core::config( Base::O_CDN_CLOUDFLARE_NAME ) ;
+		$kw = Conf::val( Base::O_CDN_CLOUDFLARE_NAME ) ;
 
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
 
@@ -233,8 +233,8 @@ class Cloudflare extends Base
 
 		$header = array(
 			'Content-Type: application/json',
-			'X-Auth-Email: ' . Core::config( Base::O_CDN_CLOUDFLARE_EMAIL ),
-			'X-Auth-Key: ' . Core::config( Base::O_CDN_CLOUDFLARE_KEY ),
+			'X-Auth-Email: ' . Conf::val( Base::O_CDN_CLOUDFLARE_EMAIL ),
+			'X-Auth-Key: ' . Conf::val( Base::O_CDN_CLOUDFLARE_KEY ),
 		) ;
 
 		$ch = curl_init() ;

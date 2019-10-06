@@ -24,6 +24,7 @@ class Router extends Instance
 	const ACTION_AVATAR = 'avatar' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_CLOUD = 'cloud' ;
+	const ACTION_IMG_OPTM = 'img_optm' ;
 
 	const TYPE = 'litespeed_type' ;
 
@@ -311,7 +312,7 @@ class Router extends Instance
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Core::config( Base::O_ESI ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI ) ;
 		}
 		return self::$_esi_enabled ;
 	}
@@ -402,7 +403,7 @@ class Router extends Instance
 	public static function is_admin_ip()
 	{
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = Core::config( Base::O_DEBUG_IPS ) ;
+			$ips = Conf::val( Base::O_DEBUG_IPS ) ;
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}
@@ -529,7 +530,7 @@ class Router extends Instance
 			case Core::ACTION_PURGE:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
-			case Core::ACTION_IMG_OPTM:
+			case self::ACTION_IMG_OPTM:
 			case self::ACTION_CLOUD:
 			case Core::ACTION_CDN_CLOUDFLARE:
 			case Core::ACTION_CDN_QUIC:

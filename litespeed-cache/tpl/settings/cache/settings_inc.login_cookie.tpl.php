@@ -35,11 +35,11 @@ defined( 'WPINC' ) || exit ;
 				. '</p>'
 			;
 
-			if ( preg_match( '#[^\w\-]#', $this->__cfg->option( $id ) ) ) {
+			if ( preg_match( '#[^\w\-]#', Conf::val( $id ) ) ) {
 				echo '<div class="litespeed-callout notice notice-error inline"><p>❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</p></div>' ;
 			}
 
-			if ( defined( 'LITESPEED_ON' ) && $this->__cfg->option( $id ) ) {
+			if ( defined( 'LITESPEED_ON' ) && Conf::val( $id ) ) {
 
 				try {
 					$cookie_rule = Htaccess::get_instance()->current_login_cookie() ;
@@ -48,7 +48,7 @@ defined( 'WPINC' ) || exit ;
 				}
 
 				$cookie_arr = explode( ',', $cookie_rule ) ;
-				if ( ! in_array( $this->__cfg->option( $id ), $cookie_arr ) ) {
+				if ( ! in_array( Conf::val( $id ), $cookie_arr ) ) {
 					echo '<div class="litespeed-callout notice notice-warning inline"><p>'
 							. __( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' )
 						. '</p></div>'

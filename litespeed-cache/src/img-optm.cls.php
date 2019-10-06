@@ -102,8 +102,8 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 
-		$_credit = (int) $this->summary_info( 'credit' ) ;
-		$credit_recovered = (int) $this->summary_info( 'credit_recovered' ) ;
+		$_credit = (int) self::get_summary( 'credit' ) ;
+		$credit_recovered = (int) self::get_summary( 'credit_recovered' ) ;
 
 		Data::get_instance()->create_tb_img_optm() ;
 
@@ -636,10 +636,10 @@ class Img_Optm extends Base
 	{
 		$data = array(
 			'list' 			=> $this->_img_in_queue,
-			'optm_ori'		=> Core::config( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> Core::config( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> Core::config( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> Core::config( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> Conf::val( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> Conf::val( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> Conf::val( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> Conf::val( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
@@ -674,7 +674,7 @@ class Img_Optm extends Base
 	public function notify_img()
 	{
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -943,9 +943,9 @@ class Img_Optm extends Base
 		$q = "SELECT * FROM $this->_table_img_optm FORCE INDEX ( optm_status ) WHERE root_id = 0 AND optm_status = %s ORDER BY id LIMIT 1" ;
 		$_q = $wpdb->prepare( $q, self::DB_STATUS_NOTIFIED ) ;
 
-		$optm_ori = Core::config( Base::O_IMG_OPTM_ORI ) ;
-		$rm_ori_bkup = Core::config( Base::O_IMG_OPTM_RM_BKUP ) ;
-		$optm_webp = Core::config( Base::O_IMG_OPTM_WEBP ) ;
+		$optm_ori = Conf::val( Base::O_IMG_OPTM_ORI ) ;
+		$rm_ori_bkup = Conf::val( Base::O_IMG_OPTM_RM_BKUP ) ;
+		$optm_webp = Conf::val( Base::O_IMG_OPTM_WEBP ) ;
 
 		// pull 1 min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;
@@ -1122,7 +1122,6 @@ class Img_Optm extends Base
 		}
 
 		// Try level up
-		$tried_level_up = $this->_try_level_up() ;
 
 		// Check if there is still task in queue
 		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id = 0 AND optm_status = %s LIMIT 1" ;
@@ -1137,11 +1136,8 @@ class Img_Optm extends Base
 		self::update_option( self::DB_NEED_PULL, self::DB_STATUS_PULLED ) ;
 
 		$time_cost = time() - $beginning ;
-		if ( $tried_level_up ) {
-			$tried_level_up = "[Msg] $tried_level_up" ;
-		}
 
-		return array( 'ok' => "Pulled [ori] $total_pulled_ori [WebP] $total_pulled_webp [cost] {$time_cost}s $tried_level_up" ) ;
+		return array( 'ok' => "Pulled [ori] $total_pulled_ori [WebP] $total_pulled_webp [cost] {$time_cost}s" ) ;
 	}
 
 	/**
@@ -1158,7 +1154,7 @@ class Img_Optm extends Base
 
 		$instance = self::get_instance() ;
 
-		$credit = (int) $instance->summary_info( 'credit' ) ;
+		$credit = (int) self::get_summary( 'credit' ) ;
 		if ( $credit < self::NUM_THRESHOLD_AUTO_REQUEST ) {
 			return false ;
 		}
@@ -1182,7 +1178,7 @@ class Img_Optm extends Base
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -1347,7 +1343,7 @@ class Img_Optm extends Base
 	public function destroy_callback()
 	{
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Core::config( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
@@ -1425,7 +1421,7 @@ class Img_Optm extends Base
 	{return;
 		Log::debug( '[Img_Optm] resend requested images' ) ;
 
-		$_credit = (int) $this->summary_info( 'credit' ) ;
+		$_credit = (int) self::get_summary( 'credit' ) ;
 
 		global $wpdb ;
 
@@ -1553,44 +1549,6 @@ class Img_Optm extends Base
 			$this->_update_credit( $json[ 'credit' ] ) ;
 		}
 
-	}
-
-	/**
-	 * Try to level up
-	 *
-	 * @since 2.4.1
-	 * @access private
-	 */
-	private function _try_level_up()
-	{
-		$optm_summary = self::get_summary() ;
-		if ( empty( $optm_summary[ 'level' ] ) || empty( $optm_summary[ 'credit_recovered' ] ) || empty( $optm_summary[ '_level_data' ] ) ) {
-			return ;
-		}
-
-		// level beyond 5 should be triggered manually
-		if ( $optm_summary[ 'level' ] >= 5 ) {
-			return ;
-		}
-
-		$next_level = $optm_summary[ 'level' ] + 1 ;
-		$next_level_data = $optm_summary[ '_level_data' ][ $next_level ] ;
-
-		if ( $optm_summary[ 'credit_recovered' ] <= $next_level_data[ 0 ] ) {
-			return ;
-		}
-
-		// Now do level up magic
-		// Bless we can get more reviews to encourage me ~
-		$json = $this->_sync_data( true ) ;
-		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
-			$msg = "Upgraded to level $json[level] !" ;
-			Log::debug( "[Img_Optm] $msg" ) ;
-			return $msg ;
-		}
-		else {
-			Log::debug( "[Img_Optm] Upgrade failed [old level data] " . var_export( $optm_summary, true ), $json ) ;
-		}
 	}
 
 	/**
@@ -1722,22 +1680,6 @@ class Img_Optm extends Base
 		Admin_Display::succeed( $msg ) ;
 
 		return $msg ;
-	}
-
-	/**
-	 * Get optm summary
-	 *
-	 * @since 1.6.5
-	 * @access public
-	 */
-	public function summary_info( $field = false )
-	{
-		$optm_summary = self::get_summary() ;
-
-		if ( ! $field ) {
-			return $optm_summary ;
-		}
-		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : 0 ;
 	}
 
 	/**
@@ -2085,7 +2027,7 @@ class Img_Optm extends Base
 
 				// Check if need to self redirect
 				if ( is_array( $result ) && $result[ 'ok' ] === 'to_be_continued' ) {
-					$link = Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ;
+					$link = Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ;
 					// Add i to avoid browser too many redirected warning
 					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
 					$i ++ ;

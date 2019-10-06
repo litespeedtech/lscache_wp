@@ -76,23 +76,23 @@ class Object_Cache
 			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] init with cfg result : ', $this->_cfg_enabled ) ;
 		}
 		elseif ( class_exists( __NAMESPACE__ . '\Core' ) ) {
-			$this->_cfg_method = Core::config( Base::O_OBJECT_KIND ) ? true : false ;
-			$this->_cfg_host = Core::config( Base::O_OBJECT_HOST ) ;
-			$this->_cfg_port = Core::config( Base::O_OBJECT_PORT ) ;
-			$this->_cfg_life = Core::config( Base::O_OBJECT_LIFE ) ;
-			$this->_cfg_persistent = Core::config( Base::O_OBJECT_PERSISTENT ) ;
-			$this->_cfg_admin = Core::config( Base::O_OBJECT_ADMIN ) ;
-			$this->_cfg_transients = Core::config( Base::O_OBJECT_TRANSIENTS ) ;
-			$this->_cfg_db = Core::config( Base::O_OBJECT_DB_ID ) ;
-			$this->_cfg_user = Core::config( Base::O_OBJECT_USER ) ;
-			$this->_cfg_pswd = Core::config( Base::O_OBJECT_PSWD ) ;
-			$this->_global_groups = Core::config( Base::O_OBJECT_GLOBAL_GROUPS ) ;
-			$this->_non_persistent_groups = Core::config( Base::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
+			$this->_cfg_method = Conf::val( Base::O_OBJECT_KIND ) ? true : false ;
+			$this->_cfg_host = Conf::val( Base::O_OBJECT_HOST ) ;
+			$this->_cfg_port = Conf::val( Base::O_OBJECT_PORT ) ;
+			$this->_cfg_life = Conf::val( Base::O_OBJECT_LIFE ) ;
+			$this->_cfg_persistent = Conf::val( Base::O_OBJECT_PERSISTENT ) ;
+			$this->_cfg_admin = Conf::val( Base::O_OBJECT_ADMIN ) ;
+			$this->_cfg_transients = Conf::val( Base::O_OBJECT_TRANSIENTS ) ;
+			$this->_cfg_db = Conf::val( Base::O_OBJECT_DB_ID ) ;
+			$this->_cfg_user = Conf::val( Base::O_OBJECT_USER ) ;
+			$this->_cfg_pswd = Conf::val( Base::O_OBJECT_PSWD ) ;
+			$this->_global_groups = Conf::val( Base::O_OBJECT_GLOBAL_GROUPS ) ;
+			$this->_non_persistent_groups = Conf::val( Base::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
 			}
-			$this->_cfg_enabled = Core::config( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
+			$this->_cfg_enabled = Conf::val( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true ) ;

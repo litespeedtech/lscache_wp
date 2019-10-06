@@ -188,7 +188,7 @@ class Purge extends Base
 		$this->_add( '*' ) ;
 
 		// check if need to reset crawler
-		if ( Core::config( Base::O_CRWL ) ) {
+		if ( Conf::val( Base::O_CRWL ) ) {
 			Crawler::get_instance()->reset_pos() ;
 		}
 
@@ -706,7 +706,7 @@ class Purge extends Base
 		}
 		else {
 			$instance->_add( $purge_tags ) ;
-			if ( Core::config( Base::O_CACHE_REST ) ) {
+			if ( Conf::val( Base::O_CACHE_REST ) ) {
 				$instance->_add( Tag::TYPE_REST ) ;
 			}
 		}
@@ -760,7 +760,7 @@ class Purge extends Base
 	 */
 	public static function purge_feeds()
 	{
-		if ( Core::config(Base::O_CACHE_TTL_FEED) > 0 ) {
+		if ( Conf::val(Base::O_CACHE_TTL_FEED) > 0 ) {
 			self::add(Tag::TYPE_FEED) ;
 		}
 	}
@@ -942,7 +942,7 @@ class Purge extends Base
 		$purge_tags = array() ;
 		$config = Conf::get_instance() ;
 
-		if ( $config->option( Base::O_PURGE_POST_ALL ) ) {
+		if ( Conf::val( Base::O_PURGE_POST_ALL ) ) {
 			// ignore the rest if purge all
 			return array( '*' ) ;
 		}
@@ -980,7 +980,7 @@ class Purge extends Base
 			}
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_TERM ) ) {
+		if ( Conf::val( Base::O_PURGE_POST_TERM ) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
 			//Log::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
@@ -993,36 +993,36 @@ class Purge extends Base
 			}
 		}
 
-		if ( $config->option( Base::O_CACHE_TTL_FEED ) ) {
+		if ( Conf::val( Base::O_CACHE_TTL_FEED ) ) {
 			$purge_tags[] = Tag::TYPE_FEED ;
 		}
 
 		// author, for author posts and feed list
-		if ( $config->option( Base::O_PURGE_POST_AUTHOR) ) {
+		if ( Conf::val( Base::O_PURGE_POST_AUTHOR) ) {
 			$purge_tags[] = Tag::TYPE_AUTHOR . get_post_field('post_author', $post_id) ;
 		}
 
 		// archive and feed of post type
 		// todo: check if type contains space
-		if ( $config->option( Base::O_PURGE_POST_POSTTYPE) ) {
+		if ( Conf::val( Base::O_PURGE_POST_POSTTYPE) ) {
 			if ( get_post_type_archive_link($post_type) ) {
 				$purge_tags[] = Tag::TYPE_ARCHIVE_POSTTYPE . $post_type ;
 			}
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_FRONTPAGE) ) {
+		if ( Conf::val( Base::O_PURGE_POST_FRONTPAGE) ) {
 			$purge_tags[] = Tag::TYPE_FRONTPAGE ;
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_HOMEPAGE) ) {
+		if ( Conf::val( Base::O_PURGE_POST_HOMEPAGE) ) {
 			$purge_tags[] = Tag::TYPE_HOME ;
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_PAGES) ) {
+		if ( Conf::val( Base::O_PURGE_POST_PAGES) ) {
 			$purge_tags[] = Tag::TYPE_PAGES ;
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_PAGES_WITH_RECENT_POSTS) ) {
+		if ( Conf::val( Base::O_PURGE_POST_PAGES_WITH_RECENT_POSTS) ) {
 			$purge_tags[] = Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
 		}
 
@@ -1030,15 +1030,15 @@ class Purge extends Base
 		$date = $post->post_date ;
 		$date = strtotime($date) ;
 
-		if ( $config->option( Base::O_PURGE_POST_DATE) ) {
+		if ( Conf::val( Base::O_PURGE_POST_DATE) ) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Ymd', $date) ;
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_MONTH) ) {
+		if ( Conf::val( Base::O_PURGE_POST_MONTH) ) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Ym', $date) ;
 		}
 
-		if ( $config->option( Base::O_PURGE_POST_YEAR) ) {
+		if ( Conf::val( Base::O_PURGE_POST_YEAR) ) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Y', $date) ;
 		}
 

@@ -48,7 +48,7 @@ class Cloud extends Base
 	 */
 	protected function __construct()
 	{
-		$this->_api_key = Core::config( Base::O_API_KEY );
+		$this->_api_key = Conf::val( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
 	}
 

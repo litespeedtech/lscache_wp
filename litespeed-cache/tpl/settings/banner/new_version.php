@@ -9,7 +9,7 @@ if ( is_multisite() ) {
 	return ;
 }
 
-if ( Core::config( Base::O_AUTO_UPGRADE ) ) {
+if ( Conf::val( Base::O_AUTO_UPGRADE ) ) {
 	return ;
 }
 

@@ -438,7 +438,7 @@ class Activation extends Instance
 	 */
 	public static function auto_update()
 	{
-		if ( ! Core::config( Base::O_AUTO_UPGRADE ) ) {
+		if ( ! Conf::val( Base::O_AUTO_UPGRADE ) ) {
 			return ;
 		}
 

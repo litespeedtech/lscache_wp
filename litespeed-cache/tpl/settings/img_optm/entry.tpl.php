@@ -1,21 +1,6 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
-
-$img_optm = Img_Optm::get_instance() ;
-
-$optm_summary = Img_Optm::get_summary() ;
-$img_count = $img_optm->img_count() ;
-list( $storage_data, $rm_log ) = $img_optm->storage_data() ;
-
-list( $last_run, $is_running ) = $img_optm->cron_running( false ) ;
-
-if ( ! empty( $img_count[ 'total_img' ] ) ) {
-	$finished_percentage = 100 - floor( $img_count[ 'total_not_requested' ] * 100 / $img_count[ 'total_img' ] ) ;
-}
-else {
-	$finished_percentage = 0 ;
-}
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 $menu_list = array(
 	'summary'		=> __( 'Image Optimization Summary', 'litespeed-cache' ),

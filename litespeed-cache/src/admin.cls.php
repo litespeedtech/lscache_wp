@@ -44,10 +44,10 @@ class Admin extends Instance
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = Core::config( Base::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = Conf::val( Base::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
-			if ( Core::config( Base::O_PURGE_ON_UPGRADE ) ) {
+			if ( Conf::val( Base::O_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}

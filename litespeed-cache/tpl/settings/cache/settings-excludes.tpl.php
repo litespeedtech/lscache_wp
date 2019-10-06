@@ -50,8 +50,8 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php
 				$excludes_buf = '' ;
-				if ( $this->__cfg->option( $id ) ) {
-					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $this->__cfg->option( $id ) ) ) ;
+				if ( Conf::val( $id ) ) {
+					$excludes_buf = implode( "\n", array_map( 'get_cat_name', Conf::val( $id ) ) ) ;
 				}
 				$this->build_textarea( $id, false, $excludes_buf ) ;
 			?>
@@ -80,9 +80,9 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php
 				$excludes_buf = '';
-				if ( $this->__cfg->option( $id ) ) {
+				if ( Conf::val( $id ) ) {
 					$tag_names = array() ;
-					foreach ( array_map( 'get_tag', $this->__cfg->option( $id ) ) as $tag ) {
+					foreach ( array_map( 'get_tag', Conf::val( $id ) ) as $tag ) {
 						$tag_names[] = $tag->name ;
 					}
 					if ( ! empty( $tag_names ) ) {

@@ -66,8 +66,8 @@ class Htaccess extends Instance
 		$this->_path_set() ;
 		$this->_default_frontend_htaccess = $this->frontend_htaccess ;
 		$this->_default_backend_htaccess = $this->backend_htaccess ;
-		$this->frontend_htaccess = Core::config( Base::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
-		$this->backend_htaccess = Core::config( Base::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
+		$this->frontend_htaccess = Conf::val( Base::O_MISC_HTACCESS_FRONT ) ?: $this->frontend_htaccess ;
+		$this->backend_htaccess = Conf::val( Base::O_MISC_HTACCESS_BACK ) ?: $this->backend_htaccess ;
 
 		// Filter for frontend&backend htaccess path
 		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;

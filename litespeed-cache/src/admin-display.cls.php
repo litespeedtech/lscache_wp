@@ -677,7 +677,7 @@ class Admin_Display extends Base
 	public function build_textarea( $id, $cols = false, $val = null )
 	{
 		if ( $val === null ) {
-			$val = $this->__cfg->option( $id ) ;
+			$val = Conf::val( $id ) ;
 
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
@@ -706,7 +706,7 @@ class Admin_Display extends Base
 	public function build_input( $id, $cls = null, $val = null, $type = 'text' )
 	{
 		if ( $val === null ) {
-			$val = $this->__cfg->option( $id ) ;
+			$val = Conf::val( $id ) ;
 		}
 
 		$label_id = preg_replace( '|\W|', '', $id ) ;
@@ -731,7 +731,7 @@ class Admin_Display extends Base
 	 */
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
-		if ( $checked === null && $this->__cfg->option( $id ) ) {
+		if ( $checked === null && Conf::val( $id ) ) {
 			$checked = true ;
 		}
 		$checked = $checked ? ' checked ' : '' ;
@@ -757,7 +757,7 @@ class Admin_Display extends Base
 	 */
 	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
 	{
-		if ( $checked === null && $this->__cfg->option( $id ) ) {
+		if ( $checked === null && Conf::val( $id ) ) {
 			$checked = true ;
 		}
 
@@ -820,7 +820,7 @@ class Admin_Display extends Base
 			}
 		}
 
-		$checked = (int) $this->__cfg->option( $id ) === (int) $val ? ' checked ' : '' ;
+		$checked = (int) Conf::val( $id ) === (int) $val ? ' checked ' : '' ;
 
 		$this->enroll( $id ) ;
 
@@ -875,7 +875,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_syntax( $id )
 	{
-		$val = $this->__cfg->option( $id ) ;
+		$val = Conf::val( $id ) ;
 
 		if ( ! $val ) {
 			return ;
@@ -899,7 +899,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false )
 	{
-		$val = $this->__cfg->option( $id ) ;
+		$val = Conf::val( $id ) ;
 
 		if ( $allow_zero && ! $val ) {
 			return ;
@@ -945,7 +945,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_ip( $id )
 	{
-		$val = $this->__cfg->option( $id ) ;
+		$val = Conf::val( $id ) ;
 		if ( ! $val ) {
 			return ;
 		}

@@ -236,7 +236,7 @@ $optm_summary = Img_Optm::get_summary() ;
 						Base::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
 					);
 					foreach ( $cache_list as $id => $title ) :
-						$v = Core::config( $id );
+						$v = Conf::val( $id );
 				?>
 						<p>
 							<?php if ( $v ) : ?>
@@ -317,7 +317,7 @@ $optm_summary = Img_Optm::get_summary() ;
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Image Optimization Summary', 'litespeed-cache' ) ; ?>
-						<a href="<?php echo Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-postbox-refresh" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
+						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-postbox-refresh" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
 							<span class="dashicons dashicons-update"></span>
 							<span class="screen-reader-text"><?php echo __('Update image optimization status', 'litespeed-cache'); ?></span>
 						</a>

@@ -73,12 +73,12 @@ class Data extends Instance
 		}
 
 		// Gravatar
-		if ( Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			$this->_create_tb_avatar() ;
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
-		// if ( Core::config( Base::O_IMG_OPTM_AUTO ) ) {
+		// if ( Conf::val( Base::O_IMG_OPTM_AUTO ) ) {
 		// 	$this->create_tb_img_optm() ;
 		// }
 	}

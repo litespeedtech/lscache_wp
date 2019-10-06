@@ -69,7 +69,7 @@ $this->form_action() ;
 								 * @deprecated 3.0 [ nameA => vals, nameB => vals ]
 								 */
 								$list = array() ;
-								foreach ( $this->__cfg->option( $id ) as $v ) {
+								foreach ( Conf::val( $id ) as $v ) {
 									if ( empty( $v[ 'name' ] ) ) {
 										continue ;
 									}

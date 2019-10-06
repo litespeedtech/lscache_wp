@@ -20,8 +20,8 @@ else {
 	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
 
-$hide_mem_options = ! Core::config( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
-$hide_redis_options = Core::config( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
+$hide_mem_options = ! Conf::val( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
+$hide_redis_options = Conf::val( Base::O_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
 
 ?>
 

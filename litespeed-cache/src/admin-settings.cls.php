@@ -116,7 +116,7 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
 					// Use existing in queue data if existed (Only available when $child != false)
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : $this->__cfg->option( $id ) ;
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id ) ;
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
@@ -153,7 +153,7 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : $this->__cfg->option( $id ) ;
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id ) ;
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {

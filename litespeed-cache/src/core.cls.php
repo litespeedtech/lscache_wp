@@ -55,7 +55,6 @@ class Core extends Instance
 
 	const ACTION_IMPORT = 'import' ;
 	const ACTION_PURGE = 'purge' ;
-	const ACTION_IMG_OPTM = 'img_optm' ;
 	const ACTION_CDN = 'cdn' ;
 	const ACTION_REPORT = 'report' ;
 	const ACTION_CSS = 'css' ;
@@ -83,7 +82,7 @@ class Core extends Instance
 		$this->__cfg->init() ;
 
 		// Check if debug is on
-		if ( $this->__cfg->option( Base::O_DEBUG ) ) {
+		if ( Conf::val( Base::O_DEBUG ) ) {
 			Log::init() ;
 		}
 
@@ -99,7 +98,7 @@ class Core extends Instance
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php' ;
 		}
 
-		if ( self::config( Base::O_DEBUG_DISABLE_ALL ) ) {
+		if ( Conf::val( Base::O_DEBUG_DISABLE_ALL ) ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
@@ -329,7 +328,7 @@ class Core extends Instance
 				Avatar::handler() ;
 				break ;
 
-			case self::ACTION_IMG_OPTM:
+			case Router::ACTION_IMG_OPTM:
 				$msg = Img_Optm::handler() ;
 				break ;
 
@@ -402,19 +401,6 @@ class Core extends Instance
 	public function load_thirdparty()
 	{
 		do_action( 'litespeed_api_load_thirdparty' ) ;
-	}
-
-	/**
-	 * A shortcut to get the Conf config value
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param string $opt_id An option ID if getting an option.
-	 * @return the option value
-	 */
-	public static function config( $opt_id )
-	{
-		return Conf::get_instance()->option( $opt_id ) ;
 	}
 
 	/**

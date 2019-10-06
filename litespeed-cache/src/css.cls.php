@@ -31,7 +31,7 @@ class CSS extends Base
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= Core::config( Base::O_OPTM_CCSS_CON ) ;
+		$rules .= Conf::val( Base::O_OPTM_CCSS_CON ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
@@ -90,7 +90,7 @@ class CSS extends Base
 	private function _ccss()
 	{
 		// If don't need to generate CCSS, bypass
-		if ( ! Core::config( Base::O_OPTM_CCSS_GEN ) ) {
+		if ( ! Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 			Log::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
@@ -113,7 +113,7 @@ class CSS extends Base
 		$request_url = home_url( $wp->request ) ;
 
 		// If generate in backend, log it and bypass
-		if ( Core::config( Base::O_OPTM_CCSS_ASYNC ) ) {
+		if ( Conf::val( Base::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
 			if ( empty( $summary[ 'queue' ] ) ) {
 				$summary[ 'queue' ] = array() ;
@@ -141,7 +141,7 @@ class CSS extends Base
 	 */
 	private function _separate_mobile_ccss()
 	{
-		return wp_is_mobile() && Core::config( Base::O_CACHE_MOBILE ) ;
+		return wp_is_mobile() && Conf::val( Base::O_CACHE_MOBILE ) ;
 	}
 
 	/**
@@ -252,13 +252,13 @@ class CSS extends Base
 		$unique = false ;
 
 		// Check if in separate css type option
-		$separate_posttypes = Core::config( Base::O_OPTM_CCSS_SEP_POSTTYPE ) ;
+		$separate_posttypes = Conf::val( Base::O_OPTM_CCSS_SEP_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
-		$separate_uri = Core::config( Base::O_OPTM_CCSS_SEP_URI ) ;
+		$separate_uri = Conf::val( Base::O_OPTM_CCSS_SEP_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
 			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {

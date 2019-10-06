@@ -35,14 +35,14 @@ class Placeholder extends Base
 	 */
 	protected function __construct()
 	{
-		$this->_conf_placeholder_resp = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_conf_placeholder_resp_generator = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
-		$this->_conf_placeholder_resp_svg 	= Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
-		$this->_conf_placeholder_lqip 		= Core::config( Base::O_MEDIA_PLACEHOLDER_LQIP ) ;
-		$this->_conf_placeholder_lqip_qual	= Core::config( Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
-		$this->_conf_placeholder_resp_async = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_conf_placeholder_resp_color = Core::config( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
-		$this->_conf_ph_default = Core::config( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+		$this->_conf_placeholder_resp = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_conf_placeholder_resp_generator = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
+		$this->_conf_placeholder_resp_svg 	= Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
+		$this->_conf_placeholder_lqip 		= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ;
+		$this->_conf_placeholder_lqip_qual	= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
+		$this->_conf_placeholder_resp_async = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_conf_placeholder_resp_color = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_conf_ph_default = Conf::val( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 	}
 
 	/**

@@ -51,8 +51,8 @@ $_panels = array(
 	),
 );
 
-$rev_max = Core::config( Base::O_DB_OPTM_REVISIONS_MAX );
-$rev_age = Core::config( Base::O_DB_OPTM_REVISIONS_AGE );
+$rev_max = Conf::val( Base::O_DB_OPTM_REVISIONS_MAX );
+$rev_age = Conf::val( Base::O_DB_OPTM_REVISIONS_AGE );
 if ( $rev_max || $rev_age ) {
 	$_panels[ 'revision' ][ 'desc' ] = sprintf( __( 'Clean revisions older than %1$s day(s), excluding %2$s latest revisions', 'litespeed-cache' ), '<strong>' . $rev_age . '</strong>' , '<strong>' . $rev_max . '</strong>' );
 }

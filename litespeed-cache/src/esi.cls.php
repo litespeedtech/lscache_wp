@@ -435,7 +435,7 @@ class ESI extends Instance
 		}
 		Log::debug2( '[ESI] md5_string=' . $str ) ;
 
-		return md5( Core::config( Base::HASH ) . $str ) ;
+		return md5( Conf::val( Base::HASH ) . $str ) ;
 	}
 
 	/**
@@ -683,7 +683,7 @@ class ESI extends Instance
 		}
 
 		wp_admin_bar_render() ;
-		if ( ! Core::config( Base::O_ESI_CACHE_ADMBAR ) ) {
+		if ( ! Conf::val( Base::O_ESI_CACHE_ADMBAR ) ) {
 			Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {
@@ -706,7 +706,7 @@ class ESI extends Instance
 	{
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
 
-		if ( ! Core::config( Base::O_ESI_CACHE_COMMFORM ) ) {
+		if ( ! Conf::val( Base::O_ESI_CACHE_COMMFORM ) ) {
 			Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {

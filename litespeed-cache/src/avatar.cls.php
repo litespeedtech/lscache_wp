@@ -30,7 +30,7 @@ class Avatar extends Base
 	 */
 	protected function __construct()
 	{
-		if ( ! Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( ! Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return ;
 		}
 
@@ -39,7 +39,7 @@ class Avatar extends Base
 		// Create table
 		$this->_tb = Data::tb_avatar() ;
 
-		$this->_conf_cache_ttl = Core::config( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
+		$this->_conf_cache_ttl = Conf::val( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) ) ;
 	}
@@ -52,7 +52,7 @@ class Avatar extends Base
 	 */
 	public static function need_db()
 	{
-		if ( Core::config( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return true ;
 		}
 

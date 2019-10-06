@@ -83,7 +83,7 @@ class Media extends Instance
 	 */
 	public function adjust_jpg_quality( $quality )
 	{
-		$v = Core::config( Base::O_IMG_OPTM_JPG_QUALITY ) ;
+		$v = Conf::val( Base::O_IMG_OPTM_JPG_QUALITY ) ;
 
 		if ( $v ) {
 			return $v ;
@@ -115,7 +115,7 @@ class Media extends Instance
 	 */
 	public static function webp_enabled()
 	{
-		return Core::config( Base::O_IMG_OPTM_WEBP_REPLACE ) ;
+		return Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -267,7 +267,7 @@ class Media extends Instance
 			$pie_webp = GUI::pie( $percent, 30 ) ;
 			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), Utility::real_size( $size_meta[ 'webp_saved' ] ) ) ;
 
-			$link = Utility::build_url( Core::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
+			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
 			$desc = false ;
 			$cls = 'litespeed-icon-media-webp' ;
 			$cls_webp = '' ;
@@ -303,7 +303,7 @@ class Media extends Instance
 			$bk_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
 			$bk_optm_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
 
-			$link = Utility::build_url( Core::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
+			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
 			$desc = false ;
 			$cls = 'litespeed-icon-media-optm' ;
 			$cls_ori = '' ;
@@ -333,7 +333,7 @@ class Media extends Instance
 		if ( $size_meta ) {
 			echo '<div><div class="litespeed-text-dimgray litespeed-text-center">' . __( 'Reset', 'litespeed-cache' ) . '</div>' ;
 			echo sprintf( '<div class="litespeed-media-p"><a href="%1$s" class="">%2$s</a></div>',
-				Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
+				Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
 				'<span class="dashicons dashicons-trash dashicons-large litespeed-warning litespeed-dashicons-large"></span>'
 			) ;
 			echo '</div>' ;
@@ -442,7 +442,7 @@ class Media extends Instance
 		 * Check if URI is excluded
 		 * @since  3.0
 		 */
-		$excludes = Core::config( Base::O_MEDIA_LAZY_URI_EXC ) ;
+		$excludes = Conf::val( Base::O_MEDIA_LAZY_URI_EXC ) ;
 		if ( $excludes ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -451,8 +451,8 @@ class Media extends Instance
 			}
 		}
 
-		$cfg_lazy = Core::config( Base::O_MEDIA_LAZY ) ;
-		$cfg_iframe_lazy = Core::config( Base::O_MEDIA_IFRAME_LAZY ) ;
+		$cfg_lazy = Conf::val( Base::O_MEDIA_LAZY ) ;
+		$cfg_iframe_lazy = Conf::val( Base::O_MEDIA_IFRAME_LAZY ) ;
 
 		if ( $cfg_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img() ;
@@ -495,7 +495,7 @@ class Media extends Instance
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			if ( Core::config( Base::O_MEDIA_LAZYJS_INLINE ) ) {
+			if ( Conf::val( Base::O_MEDIA_LAZYJS_INLINE ) ) {
 				$lazy_lib = '<script>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
 			} else {
 				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
@@ -521,9 +521,9 @@ class Media extends Instance
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Core::config( Base::O_MEDIA_LAZY_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Conf::val( Base::O_MEDIA_LAZY_EXC ) ) ;
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Core::config( Base::O_MEDIA_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_CLS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -534,7 +534,7 @@ class Media extends Instance
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Core::config( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
 			Log::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
@@ -617,7 +617,7 @@ class Media extends Instance
 	 */
 	private function _parse_iframe()
 	{
-		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Core::config( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
 
 		$html_list = array() ;
 
@@ -627,7 +627,7 @@ class Media extends Instance
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Core::config( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
 			Log::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
@@ -684,7 +684,7 @@ class Media extends Instance
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = Core::config( Base::O_IMG_OPTM_WEBP_ATTR ) ;
+		$webp_ele_to_check = Conf::val( Base::O_IMG_OPTM_WEBP_ATTR ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
@@ -736,7 +736,7 @@ class Media extends Instance
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( Core::config( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$this->content = Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
 		}
 

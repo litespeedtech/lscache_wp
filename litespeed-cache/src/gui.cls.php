@@ -51,7 +51,7 @@ class GUI extends Base
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( Core::config( Base::O_UTIL_INSTANT_CLICK ) ) {
+			if ( Conf::val( Base::O_UTIL_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
@@ -548,7 +548,7 @@ class GUI extends Base
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( Core::config( Base::O_CDN_CLOUDFLARE ) ) {
+		if ( Conf::val( Base::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
@@ -629,7 +629,7 @@ class GUI extends Base
 	{
 		return sprintf(
 			'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
-			Utility::build_url( Core::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
+			Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
 			__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
 			__( 'Clean Up Unfinished Data', 'litespeed-cache' )
 		) ;

@@ -72,7 +72,7 @@ class Conf extends Base
 		 */
 		$this->load_options() ;
 
-		$ver = $this->option( self::_VER ) ;
+		$ver = $this->_options[ self::_VER ] ;
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -400,25 +400,6 @@ class Conf extends Base
 	}
 
 	/**
-	 * Get the selected configuration option.
-	 *
-	 * @since 2.9.8
-	 * @access public
-	 * @param string $id Configuration ID.
-	 * @return mixed Selected option if set, NULL if not.
-	 */
-	public function option( $id )
-	{
-		if ( isset( $this->_options[ $id ] ) ) {
-			return $this->_options[ $id ] ;
-		}
-
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
-
-		return NULL ;
-	}
-
-	/**
 	 * Save option
 	 *
 	 * @since  3.0
@@ -613,7 +594,7 @@ class Conf extends Base
 			return false ;
 		}
 
-		return in_array( $role, $this->option( self::O_OPTM_EXC_ROLES ) ) ? $role : false ;
+		return in_array( $role, self::val( self::O_OPTM_EXC_ROLES ) ) ? $role : false ;
 	}
 
 	/**

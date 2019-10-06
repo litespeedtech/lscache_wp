@@ -178,7 +178,7 @@ class Admin extends Base
 			}
 		}
 
-		$v = Core::config( $id ) ;
+		$v = Conf::val( $id ) ;
 		$default_v = self::$_default_options[ $id ] ;
 
 		/**
