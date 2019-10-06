@@ -29,6 +29,7 @@ class Cloud extends Base
 		'ccss',
 		'lqip',
 		'placeholder',
+		'pagescore',
 		'sitehealth',
 	);
 
@@ -57,10 +58,15 @@ class Cloud extends Base
 	 */
 	private function _detect_cloud( $service )
 	{
+		// Check if the stored server needs to be refreshed
+		if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 7 ) {
+			return $this->_summary[ 'server.' . $service ];
+		}
+
 		if ( ! $service || ! in_array( $service, self::SERVICES ) ) {
 			$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $service;
 			Admin_Display::error( $msg );
-			return;
+			return false;
 		}
 
 		// Send request to Quic Online Service
@@ -71,10 +77,10 @@ class Cloud extends Base
 			Log::debug( '[Cloud] request cloud list failed: ', $json );
 
 			if ( $json ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $json );
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . $json;
 				Admin_Display::error( $msg );
 			}
-			return;
+			return false;
 		}
 
 		// Ping closest cloud
@@ -86,7 +92,7 @@ class Cloud extends Base
 
 		if ( $min == 99999 ) {
 			Log::debug( '[Cloud] failed to ping all clouds' );
-			return;
+			return false;
 		}
 
 		// Random pick same time range ip (230ms 250ms)
@@ -99,6 +105,12 @@ class Cloud extends Base
 			}
 		}
 
+		if ( ! $valid_clouds ) {
+			$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . __( 'No available Cloud Node.', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return false;
+		}
+
 		Log::debug( '[Cloud] Closest nodes list', $valid_clouds );
 
 		$closest = $valid_clouds[ array_rand( $valid_clouds ) ];
@@ -109,6 +121,8 @@ class Cloud extends Base
 		$this->_summary[ 'server.' . $service ] = $closest;
 		$this->_summary[ 'server_date.' . $service ] = time();
 		self::save_summary( $this->_summary );
+
+		return $this->_summary[ 'server.' . $service ];
 	}
 
 	/**
@@ -131,23 +145,14 @@ class Cloud extends Base
 	 */
 	private function _get( $service, $data = false )
 	{
-		if ( ! $this->_api_key ) {
-			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
-			Admin_Display::error( $msg );
+		if ( ! $this->_maybe_cloud( $service ) ) {
 			return;
 		}
 
-		// Limit frequent unfinished request to 5min
-		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
-			if ( $expired > 0 ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %s.', 'litespeed-cache' ), $expired . 's' );
-				Admin_Display::error( $msg );
-				return;
-			}
+		$server = $this->_detect_cloud( $service );
+		if ( ! $server ) {
+			return;
 		}
-
-		$server = $this->_iapi_cloud;
 
 		$url = $server . '/' . $service;
 
@@ -163,6 +168,33 @@ class Cloud extends Base
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) );
 
 		return $this->_parse_response( $response );
+	}
+
+	/**
+	 * Check if is able to do cloud request or not
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _maybe_cloud( $service )
+	{
+		if ( ! $this->_api_key ) {
+			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+			Admin_Display::error( $msg );
+			return false;
+		}
+
+		// Limit frequent unfinished request to 5min
+		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
+			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
+			if ( $expired > 0 ) {
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), $expired . 's', $service );
+				Admin_Display::error( $msg );
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -185,38 +217,18 @@ class Cloud extends Base
 	 */
 	private function _post( $service, $data = false, $time_out = false )
 	{
-		if ( ! $this->_api_key ) {
-			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
-			Admin_Display::error( $msg );
+		if ( ! $this->_maybe_cloud( $service ) ) {
 			return;
-		}
-
-		// Limit frequent unfinished request to 5min
-		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
-			if ( $expired > 0 ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %s.', 'litespeed-cache' ), $expired . 's' );
-				Admin_Display::error( $msg );
-				return;
-			}
 		}
 
 		if ( $service === self::SVC_IPS || $service === self::SVC_SYNC_CONF ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {
-			// Check if the stored server needs to be refreshed
-			if ( empty( $this->_summary[ 'server.' . $service ] ) || empty( $this->_summary[ 'server_date.' . $service ] ) || $this->_summary[ 'server_date.' . $service ] > time() + 86400 * 7 ) {
-				// Request node server first
-				$this->_detect_cloud( $service );
-			}
-
-			if ( empty( $this->_summary[ 'server.' . $service ] ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . __( 'No available cloud node.', 'litespeed-cache' ) );
-				Admin_Display::error( $msg );
+			$server = $this->_detect_cloud( $service );
+			if ( ! $server ) {
 				return;
 			}
-			$server = $this->_summary[ 'server.' . $service ];
 		}
 
 		$url = $server . '/' . $service;
