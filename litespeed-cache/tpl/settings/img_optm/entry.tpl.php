@@ -17,11 +17,9 @@ else {
 	$finished_percentage = 0 ;
 }
 
-$optm_summary_file = ! $optm_summary ? 'initialize' : 'summary' ;
-
 $menu_list = array(
-	$optm_summary_file	=> __( 'Image Optimization Summary', 'litespeed-cache' ),
-	'settings'			=> __( 'Image Optimization Settings', 'litespeed-cache' ),
+	'summary'		=> __( 'Image Optimization Summary', 'litespeed-cache' ),
+	'settings'		=> __( 'Image Optimization Settings', 'litespeed-cache' ),
 ) ;
 
 ?>
@@ -31,7 +29,7 @@ $menu_list = array(
 		<?php echo __( 'LiteSpeed Cache Image Optimization', 'litespeed-cache' ) ; ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo Core::PLUGIN_VERSION ; ?>
+		v<?php echo Core::VER ; ?>
 	</span>
 	<hr class="wp-header-end">
 </div>

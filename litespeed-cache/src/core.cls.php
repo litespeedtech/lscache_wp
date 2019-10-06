@@ -25,7 +25,7 @@ class Core extends Instance
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
-	const PLUGIN_VERSION = '3.0' ;
+	const VER = LSCWP_V ;
 
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess' ;
 
@@ -632,7 +632,7 @@ class Core extends Instance
 				defined( 'LSCACHE_IS_ESI' ) ? 'Block' : 'Page',
 				$cache_support,
 				date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ),
-				self::PLUGIN_VERSION
+				self::VER
 			) ;
 		}
 

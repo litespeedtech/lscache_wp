@@ -117,10 +117,10 @@ class Data extends Instance
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
-		Base::delete_option( Base::_VERSION ) ;
-		Base::add_option( Base::_VERSION, Core::PLUGIN_VERSION ) ;
+		Base::delete_option( Base::_VER ) ;
+		Base::add_option( Base::_VER, Core::VER ) ;
 
-		Log::debug( '[Data] Updated version to ' . Core::PLUGIN_VERSION ) ;
+		Log::debug( '[Data] Updated version to ' . Core::VER ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		Purge::purge_all() ;
@@ -153,10 +153,10 @@ class Data extends Instance
 		// Reload options
 		Conf::get_instance()->load_site_options() ;
 
-		Base::delete_site_option( Base::_VERSION ) ;
-		Base::add_site_option( Base::_VERSION, Core::PLUGIN_VERSION ) ;
+		Base::delete_site_option( Base::_VER ) ;
+		Base::add_site_option( Base::_VER, Core::VER ) ;
 
-		Log::debug( '[Data] Updated site_version to ' . Core::PLUGIN_VERSION ) ;
+		Log::debug( '[Data] Updated site_version to ' . Core::VER ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		Purge::purge_all() ;
@@ -192,7 +192,7 @@ class Data extends Instance
 
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0' ;
-		if ( Core::PLUGIN_VERSION != $ver ) {
+		if ( Core::VER != $ver ) {
 			$this->conf_upgrade( $ver ) ;
 		}
 		else {

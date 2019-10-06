@@ -80,7 +80,7 @@ class Log extends Instance
 		}
 
 		$plugin_info = new \stdClass() ;
-		$plugin_info->new_version = Core::PLUGIN_VERSION . '.0.0' ;
+		$plugin_info->new_version = Core::VER . '.0.0' ;
 		$plugin_info->slug = Core::PLUGIN_NAME ;
 		$plugin_info->plugin = Core::PLUGIN_FILE ;
 		$plugin_info->package = $zip ;

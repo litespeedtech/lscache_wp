@@ -72,13 +72,13 @@ class Conf extends Base
 		 */
 		$this->load_options() ;
 
-		$ver = $this->option( self::_VERSION ) ;
+		$ver = $this->option( self::_VER ) ;
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
 		 * In this case, just use default conf
 		 */
-		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::VER ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
 				$this->_options = $this->load_default_vals() ;
 				return ;
@@ -99,7 +99,7 @@ class Conf extends Base
 		/**
 		 * Upgrade conf
 		 */
-		if ( $ver && $ver != Core::PLUGIN_VERSION ) {
+		if ( $ver && $ver != Core::VER ) {
 			// Plugin version will be set inside
 			// Site plugin upgrade & version change will do in load_site_conf
 			Data::get_instance()->conf_upgrade( $ver ) ;
@@ -108,7 +108,7 @@ class Conf extends Base
 		/**
 		 * Sync latest new options
 		 */
-		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::VER ) {
 			// Load default values
 			$this->load_default_vals() ;
 
@@ -233,12 +233,12 @@ class Conf extends Base
 	{
 		$this->load_site_options() ;
 
-		$ver = $this->_site_options[ self::_VERSION ] ;
+		$ver = $this->_site_options[ self::_VER ] ;
 
 		/**
 		 * Upgrade conf
 		 */
-		if ( $ver && $ver != Core::PLUGIN_VERSION ) {
+		if ( $ver && $ver != Core::VER ) {
 			// Site plugin versin will change inside
 			Data::get_instance()->conf_site_upgrade( $ver ) ;
 		}
@@ -246,7 +246,7 @@ class Conf extends Base
 		/**
 		 * Is a new installation
 		 */
-		if ( ! $ver || $ver != Core::PLUGIN_VERSION ) {
+		if ( ! $ver || $ver != Core::VER ) {
 			// Load default values
 			$this->load_default_site_vals() ;
 
@@ -466,7 +466,7 @@ class Conf extends Base
 		// 	return ;
 		// }
 
-		if ( $id == self::_VERSION ) {
+		if ( $id == self::_VER ) {
 			return ;
 		}
 

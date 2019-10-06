@@ -1,8 +1,8 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-$closet_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM ) ;
+$closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">
@@ -19,11 +19,11 @@ $closet_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM ) ;
 			<div class="litespeed-empty-space-small"></div>
 
 			<div class="litespeed-desc">
-				<?php if ( $closet_server ) : ?>
-					<font title="<?php echo $closet_server ; ?>">☁️</font>
+				<?php if ( $closest_server ) : ?>
+					<span title="<?php echo $closest_server ; ?>">☁️</span>
 				<?php endif ; ?>
-				<?php echo __( 'This will send the optimization request and the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'You can send at most %s images at once.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
+				<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'You can send at most %s images.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</div>
 		<?php endif ; ?>
@@ -46,7 +46,6 @@ $closet_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM ) ;
 				<?php endif; ?>
 			</h3>
 			<div class="litespeed-empty-space-medium"></div>
-			<?php include_once LSCWP_DIR . "tpl/settings/img_optm/level_info.tpl.php" ; ?>
 
 			<hr class="litespeed-hr-dotted">
 
@@ -235,7 +234,33 @@ $closet_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM ) ;
 
 	<div class="litespeed-width-3-10">
 		<div class="postbox litespeed-postbox"><div class="inside">
-			<?php include_once LSCWP_DIR . "tpl/settings/img_optm/percentage_summary.tpl.php" ; ?>
+
+			<h3 class="litespeed-title">
+				<?php echo __( 'Image Information', 'litespeed-cache' ) ; ?>
+			</h3>
+
+			<div class="litespeed-flex-container">
+				<div class="litespeed-icon-vertical-middle">
+					<?php echo GUI::pie( $finished_percentage, 100, true ) ; ?>
+				</div>
+				<div>
+					<p>
+						<?php echo __( 'Images total', 'litespeed-cache') ; ?>:
+
+						<code><?php echo Admin_Display::print_plural( $img_count[ 'total_img' ] ) ; ?></code>
+
+						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-left20" title="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">?</a>
+					</p>
+					<p>
+						<?php if ( ! empty( $img_count[ 'total_not_requested' ] ) ) : ?>
+							<?php echo __('Images not yet requested', 'litespeed-cache') ; ?>:
+							<code><?php echo Admin_Display::print_plural( $img_count[ 'total_not_requested' ] ) ; ?></code>
+						<?php else : ?>
+							<font class="litespeed-congratulate"><?php echo __('Congratulations, all done!', 'litespeed-cache') ; ?></font>
+						<?php endif ; ?>
+					</p>
+				</div>
+			</div>
 		</div></div>
 
 		<div class="postbox litespeed-postbox"><div class="inside">

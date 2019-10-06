@@ -21,7 +21,7 @@ $_options = Conf::get_instance()->load_site_options();
 		<?php echo __('LiteSpeed Cache Network Settings', 'litespeed-cache'); ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo Core::PLUGIN_VERSION; ?>
+		v<?php echo Core::VER; ?>
 	</span>
 	<hr class="wp-header-end">
 

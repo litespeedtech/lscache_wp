@@ -92,7 +92,7 @@ class Utility extends Instance
 		$_summary[ 'score.last_check' ] = time() ;
 		GUI::save_summary( $_summary ) ;
 
-		$score = Cloud::post( Cloud::SVC_PAGESCORE, false, true, true, 600 ) ;
+		$score = Cloud::post( Cloud::SVC_PAGESCORE, false, 600 ) ;
 		$_summary[ 'score.data' ] = $score ;
 		GUI::save_summary( $_summary ) ;
 
@@ -110,7 +110,7 @@ class Utility extends Instance
 	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::PLUGIN_VERSION . '&v2=' . ( defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '' ) . '&src=' . $src ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::VER . '&v2=' . ( defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '' ) . '&src=' . $src ;
 
 		if ( defined( 'LITESPEED_ERR' ) ) {
 			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;

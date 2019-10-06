@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit ;
 
 class API extends Base
 {
-	const VERSION =	Core::PLUGIN_VERSION ;
+	const VERSION =	Core::VER ;
 
 	const TYPE_FEED =						Tag::TYPE_FEED ;
 	const TYPE_FRONTPAGE =					Tag::TYPE_FRONTPAGE ;

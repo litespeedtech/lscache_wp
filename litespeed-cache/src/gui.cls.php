@@ -372,7 +372,7 @@ class GUI extends Base
 	 */
 	public function frontend_enqueue_style_public()
 	{
-		wp_enqueue_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), Core::PLUGIN_VERSION, true ) ;
+		wp_enqueue_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), Core::VER, true ) ;
 	}
 
 	/**
@@ -383,7 +383,7 @@ class GUI extends Base
 	 */
 	public function frontend_enqueue_style()
 	{
-		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::PLUGIN_VERSION, 'all' ) ;
+		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::VER, 'all' ) ;
 	}
 
 	/**

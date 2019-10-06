@@ -22,7 +22,7 @@ class Base extends Instance
 	## -------------------------------------------------- ##
 	## --------------     	General	    ----------------- ##
 	## -------------------------------------------------- ##
-	const _VERSION 	= '_version' ; // Not set-able
+	const _VER 	= '_version' ; // Not set-able
 	const HASH 		= 'hash' ; // Not set-able
 	const O_AUTO_UPGRADE 	= 'auto_upgrade' ;
 	const O_API_KEY 		= 'api_key' ;
@@ -332,7 +332,7 @@ class Base extends Instance
 	) ;
 
 	protected static $_default_options = array(
-		self::_VERSION 			=> '',
+		self::_VER 			=> '',
 		self::HASH				=> '',
 		self::O_AUTO_UPGRADE 	=> false,
 		self::O_API_KEY 		=> '',
@@ -553,7 +553,7 @@ class Base extends Instance
 	) ;
 
 	protected static $_default_site_options = array(
-		self::_VERSION 					=> '',
+		self::_VER 					=> '',
 		self::NETWORK_O_ENABLED 		=> false,
 		self::NETWORK_O_USE_PRIMARY 	=> false,
 		self::O_AUTO_UPGRADE 			=> false,
@@ -640,7 +640,7 @@ class Base extends Instance
 			}
 		}
 
-		self::$_default_site_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
+		self::$_default_site_options[ self::_VER ] = Core::VER ;
 
 		return self::$_default_site_options ;
 	}
@@ -743,7 +743,7 @@ class Base extends Instance
 			self::$_default_options[ self::HASH ] = Str::rrand( 32 ) ;
 		}
 
-		self::$_default_options[ self::_VERSION ] = Core::PLUGIN_VERSION ;
+		self::$_default_options[ self::_VER ] = Core::VER ;
 
 		return self::$_default_options ;
 	}

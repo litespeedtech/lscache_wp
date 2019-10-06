@@ -263,7 +263,7 @@ class Cloud extends Base
 			'domain'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
 			'svc'			=> $service,
-			'v'				=> Core::PLUGIN_VERSION,
+			'v'				=> Core::VER,
 			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
 		);
 		/**

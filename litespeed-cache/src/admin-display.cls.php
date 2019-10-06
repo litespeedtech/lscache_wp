@@ -116,7 +116,7 @@ class Admin_Display extends Base
 			}
 		}
 
-		wp_register_script( Core::PLUGIN_NAME . '-lib-vue', LSWCP_PLUGIN_URL . 'assets/js/vue.min.js', array(), Core::PLUGIN_VERSION, false ) ;
+		wp_register_script( Core::PLUGIN_NAME . '-lib-vue', LSWCP_PLUGIN_URL . 'assets/js/vue.min.js', array(), Core::VER, false ) ;
 		wp_enqueue_script( Core::PLUGIN_NAME . '-lib-vue' ) ;
 
 	}
@@ -196,7 +196,7 @@ class Admin_Display extends Base
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::VER, 'all') ;
 	}
 
 	/**
@@ -207,7 +207,7 @@ class Admin_Display extends Base
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::PLUGIN_VERSION, false ) ;
+		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::VER, false ) ;
 
 		$localize_data = array() ;
 		if ( GUI::has_whm_msg() ) {

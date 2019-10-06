@@ -45,6 +45,8 @@ if ( class_exists( 'LiteSpeed\Core' ) || defined( 'LSCWP_DIR' ) ) {
 	return ;
 }
 
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.0' ) ;
+
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
 ! defined( 'LSCWP_BASENAME' ) && define( 'LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php' ) ;//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
