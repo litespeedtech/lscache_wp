@@ -45,7 +45,7 @@ class Activation extends Instance
 		do_action( 'litespeed_api_load_thirdparty' ) ;
 
 		// Check new version @since 2.9.3
-		Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
+		Utility::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
 		/* Network file handler */
 

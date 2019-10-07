@@ -72,7 +72,7 @@ class Conf extends Base
 		 */
 		$this->load_options() ;
 
-		$ver = $this->_options[ self::_VER ] ;
+		$ver = $this->_options[ Base::_VER ] ;
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -233,7 +233,7 @@ class Conf extends Base
 	{
 		$this->load_site_options() ;
 
-		$ver = $this->_site_options[ self::_VER ] ;
+		$ver = $this->_site_options[ Base::_VER ] ;
 
 		/**
 		 * Upgrade conf
@@ -447,7 +447,7 @@ class Conf extends Base
 		// 	return ;
 		// }
 
-		if ( $id == self::_VER ) {
+		if ( $id == Base::_VER ) {
 			return ;
 		}
 

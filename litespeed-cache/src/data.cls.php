@@ -117,8 +117,8 @@ class Data extends Instance
 		$this->correct_tb_existance() ;
 
 		// Update version to latest
-		Base::delete_option( Base::_VER ) ;
-		Base::add_option( Base::_VER, Core::VER ) ;
+		Conf::delete_option( Base::_VER ) ;
+		Conf::add_option( Base::_VER, Core::VER ) ;
 
 		Log::debug( '[Data] Updated version to ' . Core::VER ) ;
 
@@ -153,8 +153,8 @@ class Data extends Instance
 		// Reload options
 		Conf::get_instance()->load_site_options() ;
 
-		Base::delete_site_option( Base::_VER ) ;
-		Base::add_site_option( Base::_VER, Core::VER ) ;
+		Conf::delete_site_option( Base::_VER ) ;
+		Conf::add_site_option( Base::_VER, Core::VER ) ;
 
 		Log::debug( '[Data] Updated site_version to ' . Core::VER ) ;
 
@@ -174,6 +174,7 @@ class Data extends Instance
 	{
 		$previous_options = get_option( 'litespeed-cache-conf' ) ;
 		if ( ! $previous_options ) {
+			Utility::version_check( 'new' ) ;
 			return ;
 		}
 
