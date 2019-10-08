@@ -24,14 +24,15 @@ class Cloud extends Base
 	const SVC_ENV_REPORT		= 'env_report' ;
 	const SVC_IMG_OPTM			= 'img_optm' ;
 	const SVC_PAGESCORE			= 'pagescore' ;
+	const SVC_CDN				= 'cdn' ;
 
 	const SERVICES = array(
-		'img_optm',
-		'ccss',
-		'lqip',
-		'cdn',
-		'placeholder',
-		'pagescore',
+		self::SVC_IMG_OPTM,
+		self::SVC_CCSS,
+		self::SVC_LQIP,
+		self::SVC_CDN,
+		self::SVC_PLACEHOLDER,
+		self::SVC_PAGESCORE,
 		'sitehealth',
 	);
 
@@ -50,6 +51,21 @@ class Cloud extends Base
 	{
 		$this->_api_key = Conf::val( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
+	}
+
+	/**
+	 * Get allowance of current service
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	public function allowance( $service )
+	{
+		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
+			return 0;
+		}
+
+		return $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
 	}
 
 	/**
@@ -191,7 +207,7 @@ class Cloud extends Base
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) );
 
-		return $this->_parse_response( $response );
+		return $this->_parse_response( $response, $service );
 	}
 
 	/**
@@ -275,7 +291,7 @@ class Cloud extends Base
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) );
 
-		return $this->_parse_response( $response );
+		return $this->_parse_response( $response, $service );
 	}
 
 	/**
@@ -284,7 +300,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _parse_response( $response )
+	private function _parse_response( $response, $service )
 	{
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
@@ -353,6 +369,12 @@ class Cloud extends Base
 			return false;
 		}
 
+		// Update usage/quota if returned
+		if ( ! empty( $json[ 'usage' ] ) ) {
+			$this->_summary[ 'usage' . $service ] = $json[ 'usage' ];
+			self::save_summary( $this->_summary );
+		}
+
 		// Parse general error msg
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'Unknown';
@@ -363,6 +385,11 @@ class Cloud extends Base
 			Admin_Display::error( $msg );
 
 			return false;
+		}
+
+		unset( $json[ '_res' ] );
+		if ( ! empty( $json[ '_msg' ] ) ) {
+			unset( $json[ '_msg' ] );
 		}
 
 		$this->_summary[ 'last_request.' . $service ] = $this->_summary[ 'curr_request.' . $service ];

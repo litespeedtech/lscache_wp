@@ -994,7 +994,7 @@ class Admin_Display extends Base
 	 * @since  2.6.1
 	 * @access public
 	 */
-	public function learn_more( $link, $title = false, $class = false )
+	public function learn_more( $link, $title = false, $class = false, $self = false )
 	{
 		if ( $class ) {
 			$class = " class='$class' " ;
@@ -1004,7 +1004,9 @@ class Admin_Display extends Base
 			$title = __( 'Learn More', 'litespeed-cache' ) ;
 		}
 
-		echo " <a href='$link' target='_blank' $class>$title</a>" ;
+		$self = $self ? '' : "target='_blank'";
+
+		echo " <a href='$link' $self $class>$title</a>" ;
 	}
 
 	/**

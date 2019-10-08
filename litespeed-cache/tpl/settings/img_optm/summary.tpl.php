@@ -3,13 +3,17 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
+$usage_cloud = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
+$credit_left = '-';
+if ( ! empty( $usage_cloud[ 'quota' ] ) ) {
+	$credit_left = $usage_cloud[ 'quota' ] - $usage_cloud[ 'used' ];
+}
 
 $optm_summary = Img_Optm::get_summary() ;
 
-$__img_optm = Img_Optm::get_instance() ;
-$img_count = $__img_optm->img_count() ;
-list( $storage_data, $rm_log ) = $__img_optm->storage_data() ;
-list( $last_run, $is_running ) = $__img_optm->cron_running( false ) ;
+$img_count = Img_Optm::get_instance()->img_count() ;
+
+list( $last_run, $is_running ) = Img_Optm::get_instance()->cron_running( false ) ;
 
 if ( ! empty( $img_count[ 'total_img' ] ) ) {
 	$finished_percentage = 100 - floor( $img_count[ 'total_not_requested' ] * 100 / $img_count[ 'total_img' ] ) ;
@@ -41,7 +45,7 @@ else {
 				<span title="<?php echo $closest_server ; ?>">☁️</span>
 			<?php endif ; ?>
 			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-			<?php echo sprintf( __( 'You can send at most %s images.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
+			<?php echo sprintf( __( 'You can send %s more images this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 		</div>
 
@@ -208,17 +212,17 @@ else {
 					<?php echo __( 'The refresh button will calculate the total amount of disk space used by these backups.', 'litespeed-cache' ) ; ?>
 				</div>
 
-				<?php if ( $storage_data ) : ?>
+				<?php if ( ! empty( $optm_summary[ 'bk_summary' ] ) ) : ?>
 					<div class="">
 					<p>
-						<?php echo __( 'Last calculated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $storage_data[ 'date' ] ) . '</code>' ; ?>
+						<?php echo __( 'Last calculated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $optm_summary[ 'bk_summary' ][ 'date' ] ) . '</code>' ; ?>
 					</p>
-					<?php if ( $storage_data[ 'count' ] ) : ?>
+					<?php if ( $optm_summary[ 'bk_summary' ][ 'count' ] ) : ?>
 						<p>
-							<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $storage_data[ 'count' ] . '</code>' ; ?>
+							<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $optm_summary[ 'bk_summary' ][ 'count' ] . '</code>' ; ?>
 						</p>
 						<p>
-							<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . Utility::real_size( $storage_data[ 'sum' ] ) . '</code>' ; ?>
+							<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . Utility::real_size( $optm_summary[ 'bk_summary' ][ 'sum' ] ) . '</code>' ; ?>
 						</p>
 					<?php endif ; ?>
 					</div>
@@ -235,16 +239,16 @@ else {
 						<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
 					</div>
 				</div>
-				<?php if ( $rm_log ) : ?>
+				<?php if ( ! empty( $optm_summary[ 'rmbk_summary' ] ) ) : ?>
 					<div class="">
 					<p>
-						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $rm_log[ 'date' ] ) . '</code>' ; ?>
+						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $optm_summary[ 'rmbk_summary' ][ 'date' ] ) . '</code>' ; ?>
 					</p>
 					<p>
-						<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $rm_log[ 'count' ] . '</code>' ; ?>
+						<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $optm_summary[ 'rmbk_summary' ][ 'count' ] . '</code>' ; ?>
 					</p>
 					<p>
-						<?php echo __( 'Saved', 'litespeed-cache' ) . ': <code>' . Utility::real_size( $rm_log[ 'sum' ] ) . '</code>' ; ?>
+						<?php echo __( 'Saved', 'litespeed-cache' ) . ': <code>' . Utility::real_size( $optm_summary[ 'rmbk_summary' ][ 'sum' ] ) . '</code>' ; ?>
 					</p>
 					</div>
 				<?php endif ; ?>

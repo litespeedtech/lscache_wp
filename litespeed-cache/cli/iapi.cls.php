@@ -70,14 +70,7 @@ class IAPI
 	 */
 	public function push()
 	{
-		$msg = $this->_img_optm_instance->request_optm() ;
-
-		if ( ! is_array( $msg ) ) {
-			WP_CLI::error( $msg ) ;
-		}
-		else {
-			WP_CLI::success( $msg[ 'ok' ] ) ;
-		}
+		$this->_img_optm_instance->request_optm() ;
 	}
 
 	/**
