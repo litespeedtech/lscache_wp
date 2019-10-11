@@ -25,7 +25,7 @@ class AMP
 	 */
 	public static function preload()
 	{
-		if ( ! function_exists( 'is_amp_endpoint' ) || ! is_amp_endpoint() ) return ;
+		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return ;
 		API::force_option( API::O_OPTM_CSS_ASYNC, false ) ;
 		API::force_option( API::O_MEDIA_LAZY, false ) ;
 		API::force_option( API::O_MEDIA_IFRAME_LAZY, false ) ;
