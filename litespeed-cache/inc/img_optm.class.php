@@ -1077,7 +1077,7 @@ class LiteSpeed_Cache_Img_Optm
 				$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
 
 				if ( ! $rm_ori_bkup ) {
-					rename( $local_file, $bk_file ) ;
+					file_exists( $local_file ) && rename( $local_file, $bk_file ) ;
 				}
 
 				// Replace ori img
@@ -1085,13 +1085,13 @@ class LiteSpeed_Cache_Img_Optm
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
 
+				$target_size = filesize( $local_file ) ;
+
 				/**
 				 * API Hook
 				 * @since  2.9.5
 				 */
 				do_action( 'litespeed_img_pull_ori', $row_img, $local_file ) ;
-
-				$target_size = filesize( $local_file ) ;
 
 				$total_pulled_ori ++ ;
 			}
@@ -1126,14 +1126,14 @@ class LiteSpeed_Cache_Img_Optm
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
 
+				$webp_size = filesize( $local_file . '.webp' ) ;
+
 				/**
 				 * API for WebP
 				 * @since 2.9.5
 				 * @see #751737  - API docs for WEBP generation
 				 */
 				do_action( 'litespeed_img_pull_webp', $row_img, $local_file . '.webp' ) ;
-
-				$webp_size = filesize( $local_file . '.webp' ) ;
 
 				$total_pulled_webp ++ ;
 			}
