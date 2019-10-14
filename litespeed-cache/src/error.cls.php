@@ -7,18 +7,20 @@
  * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 class Error
 {
-	const HTA_LOGIN_COOKIE_INVALID = 4300 ; // .htaccess did not find.
-	const HTA_DNF = 4500 ; // .htaccess did not find.
-	const HTA_BK = 9010 ; // backup
-	const HTA_R = 9041 ; // read htaccess
-	const HTA_W = 9042 ; // write
-	const HTA_GET = 9030 ; // failed to get
+	const CODE_SET = array(
+		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
+		'HTA_DNF'		 => 4500, // .htaccess did not find.
+		'HTA_BK'		 => 9010, // backup
+		'HTA_R'			 => 9041, // read htaccess
+		'HTA_W'			 => 9042, // write
+		'HTA_GET'		 => 9030, // failed to get
+	);
 
 	/**
 	 * Throw an error with msg
@@ -27,52 +29,82 @@ class Error
 	 */
 	public static function t( $code, $args = null )
 	{
+		throw new \Exception( self::msg( $code, $args ) );
+	}
+
+	/**
+	 * Translate an error to description
+	 *
+	 * @since  3.0
+	 */
+	public static function msg( $code, $args = null )
+	{
 		switch ( $code ) {
+			case 'empty_list' :
+				$msg = __( 'The image list is empty.', 'litespeed-cache' );
+				break;
+
+			case 'lack_of_param' :
+				$msg = __( 'Not enough parameters. Please check if the domain key is set correctly', 'litespeed-cache' );
+				break;
+
+			case 'unfinished_queue' :
+				$msg = __( 'There is proceeding queue not pulled yet.', 'litespeed-cache' );
+				break;
+
+			case 'err_key' :
+				$msg = __( 'The domain key is not correct. Please try to sync your domain key again.', 'litespeed-cache' );
+				break;
+
+			case 'err_overdraw' :
+				$msg = __( 'Credits are not enough to proceed the current request.', 'litespeed-cache' );
+				break;
+
 			case 'W' :
-				$error = __( '%s file not writable.', 'litespeed-cache' ) ;
+				$msg = __( '%s file not writable.', 'litespeed-cache' );
 				break;
 
 			case 'HTA_DNF' :
 				if ( ! is_array( $args ) ) {
-					$args = array( '<code>' . $args . '</code>' ) ;
+					$args = array( '<code>' . $args . '</code>' );
 				}
-				$args[] = '.htaccess' ;
-				$error = __( 'Could not find %1$s in %2$s.', 'litespeed-cache' ) ;
+				$args[] = '.htaccess';
+				$msg = __( 'Could not find %1$s in %2$s.', 'litespeed-cache' );
 				break;
 
 			case 'HTA_LOGIN_COOKIE_INVALID' :
-				$error = sprintf( __( 'Invalid login cookie. Please check the %s file.', 'litespeed-cache' ), '.htaccess' ) ;
+				$msg = sprintf( __( 'Invalid login cookie. Please check the %s file.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
 			case 'HTA_BK' :
-				$error = sprintf( __( 'Failed to back up %s file, aborted changes.', 'litespeed-cache' ), '.htaccess' ) ;
+				$msg = sprintf( __( 'Failed to back up %s file, aborted changes.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
 			case 'HTA_R' :
-				$error = sprintf( __( '%s file not readable.', 'litespeed-cache' ), '.htaccess' ) ;
+				$msg = sprintf( __( '%s file not readable.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
 			case 'HTA_W' :
-				$error = sprintf( __( '%s file not writable.', 'litespeed-cache' ), '.htaccess' ) ;
+				$msg = sprintf( __( '%s file not writable.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
 			case 'HTA_GET' :
-				$error = sprintf( __( 'Failed to get %s file contents.', 'litespeed-cache' ), '.htaccess' ) ;
+				$msg = sprintf( __( 'Failed to get %s file contents.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
 			default:
-				$error = 'Unknown error' ;
+				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
 				break;
 		}
 
 		if ( $args !== null ) {
-			$error = is_array( $args ) ? vsprintf( $error, $args ) : sprintf( $error, $args ) ;
+			$msg = is_array( $args ) ? vsprintf( $msg, $args ) : sprintf( $msg, $args );
 		}
 
-		if ( defined( __CLASS__ . '::' . $code ) ) {
-			$error = 'ERROR ' . constant( __CLASS__ . '::' . $code ) . ': ' . $error ;
+		if ( isset( self::CODE_SET[ $code ] ) ) {
+			$msg = 'ERROR ' . self::CODE_SET[ $code ] . ': ' . $msg;
 		}
 
-		throw new \Exception( $error ) ;
+		return $msg;
 	}
 }

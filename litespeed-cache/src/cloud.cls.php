@@ -276,7 +276,7 @@ class Cloud extends Base
 		Log::debug( '[Cloud] posting to : ' . $url );
 
 		$param = array(
-			'domain'		=> home_url(),
+			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
 			'svc'			=> $service,
 			'v'				=> Core::VER,
@@ -377,10 +377,10 @@ class Cloud extends Base
 
 		// Parse general error msg
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
-			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'Unknown';
+			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
 			Log::debug( '[Cloud] _err: ' . $json_msg );
 
-			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json_msg;
+			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg );
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
@@ -461,7 +461,7 @@ class Cloud extends Base
 	{
 		$data = array(
 			'hash'		=> $this->_hash_make(),
-			'domain'	=> home_url(),
+			'site_url'	=> home_url(),
 			'email'		=> get_bloginfo( 'admin_email' ),
 			'rest'		=> rest_get_url_prefix(),
 			'src'		=> defined( 'LITESPEED_CLI' ) ? 'CLI' : 'web',
