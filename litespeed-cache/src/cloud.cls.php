@@ -468,6 +468,7 @@ class Cloud extends Base
 		);
 
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
+			$data[ 'ref' ] = $_SERVER[ 'HTTP_REFERER' ];
 			wp_redirect( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 			exit;
 		}
