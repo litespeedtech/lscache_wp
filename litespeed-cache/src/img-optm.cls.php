@@ -105,6 +105,7 @@ class Img_Optm extends Base
 
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
 		if ( ! $allowance ) {
+			Log::debug( '[Img_Optm] No credit' ) ;
 			return;
 		}
 
@@ -497,6 +498,7 @@ class Img_Optm extends Base
 	private function _push_img_in_queue_to_iapi()
 	{
 		$data = array(
+			'action'		=> 'new_req',
 			'list' 			=> $this->_img_in_queue,
 			'optm_ori'		=> Conf::val( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
 			'optm_webp'		=> Conf::val( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
@@ -1124,6 +1126,10 @@ class Img_Optm extends Base
 	 */
 	private function _img_optimize_destroy_unfinished()
 	{
+		if ( ! Data::tb_img_optm_exist() ) {
+			return;
+		}
+
 		global $wpdb ;
 
 		Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
@@ -1201,6 +1207,10 @@ class Img_Optm extends Base
 	 */
 	public function destroy_callback()
 	{
+		if ( ! Data::tb_img_optm_exist() ) {
+			return;
+		}
+
 		// Validate key
 		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
@@ -1451,6 +1461,10 @@ class Img_Optm extends Base
 	 */
 	private function _calc_bkup()
 	{
+		if ( ! Data::tb_img_optm_exist() ) {
+			return;
+		}
+
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_STATUS_PULLED ) ) ;
@@ -1548,7 +1562,10 @@ class Img_Optm extends Base
 	 */
 	public function img_count()
 	{
-		global $wpdb ;
+		global $wpdb;
+
+		$tb_existed = Data::tb_img_optm_exist();
+
 		$q = "SELECT count(*)
 			FROM $wpdb->posts a
 			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
@@ -1558,19 +1575,21 @@ class Img_Optm extends Base
 				AND b.meta_key = '_wp_attachment_metadata'
 			" ;
 		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') " ;
-		$total_img = $wpdb->get_var( $q ) ;
+		$total_not_requested = $total_img = $wpdb->get_var( $q ) ;
 
-		$q = "SELECT count(*)
-			FROM $wpdb->posts a
-			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
-			LEFT JOIN $this->_table_img_optm c ON c.post_id = a.ID
-			WHERE a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
-				AND b.meta_key = '_wp_attachment_metadata'
-				AND c.id IS NULL
-			" ;
-		$total_not_requested = $wpdb->get_var( $q ) ;
+		if ( $tb_existed ) {
+			$q = "SELECT count(*)
+				FROM $wpdb->posts a
+				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+				LEFT JOIN $this->_table_img_optm c ON c.post_id = a.ID
+				WHERE a.post_type = 'attachment'
+					AND a.post_status = 'inherit'
+					AND a.post_mime_type IN ('image/jpeg', 'image/png')
+					AND b.meta_key = '_wp_attachment_metadata'
+					AND c.id IS NULL
+				" ;
+			$total_not_requested = $wpdb->get_var( $q ) ;
+		}
 
 		// images count from img_optm table
 		$q_groups = "SELECT count(distinct post_id) FROM $this->_table_img_optm WHERE optm_status = %s" ;
@@ -1590,22 +1609,20 @@ class Img_Optm extends Base
 		// The images to check
 		$images_to_check[] = self::DB_STATUS_XMETA ;
 
-		$count_list = array() ;
-
-		foreach ( $groups_to_check as $v ) {
-			$count_list[ 'group.' . $v ] = $wpdb->get_var( $wpdb->prepare( $q_groups, $v ) ) ;
-		}
-
-		foreach ( $images_to_check as $v ) {
-			$count_list[ 'img.' . $v ] = $wpdb->get_var( $wpdb->prepare( $q, $v ) ) ;
-		}
-
-		$data = array(
+		$count_list = array(
 			'total_img'	=> $total_img,
 			'total_not_requested'	=> $total_not_requested,
 		) ;
 
-		return array_merge( $data, $count_list ) ;
+		foreach ( $groups_to_check as $v ) {
+			$count_list[ 'group.' . $v ] = $tb_existed ? $wpdb->get_var( $wpdb->prepare( $q_groups, $v ) ) : 0;
+		}
+
+		foreach ( $images_to_check as $v ) {
+			$count_list[ 'img.' . $v ] = $tb_existed ? $wpdb->get_var( $wpdb->prepare( $q, $v ) ) : 0;
+		}
+
+		return $count_list;
 	}
 
 	/**

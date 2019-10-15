@@ -15,9 +15,9 @@ class Cloud extends Base
 
 	const CLOUD_SERVER = 'https://apidev.quic.cloud';
 
-	const SVC_IPS 				= 'ips';
+	const SVC_IPS 				= 'd/ips';
 	const SVC_SYNC_CONF 		= 'd/sync_conf';
-	const SVC_USAGE 			= 'credit/d_summary';
+	const SVC_USAGE 			= 'd/usage';
 	const SVC_CCSS 				= 'ccss' ;
 	const SVC_PLACEHOLDER 		= 'placeholder' ;
 	const SVC_LQIP 				= 'lqip' ;
@@ -61,6 +61,8 @@ class Cloud extends Base
 	 */
 	public function allowance( $service )
 	{
+		$this->_sync_usage();
+
 		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
 			return 0;
 		}
@@ -205,7 +207,7 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service ] = time();
 		self::save_summary( $this->_summary );
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) );
+		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => false ) );
 
 		return $this->_parse_response( $response, $service );
 	}
@@ -278,7 +280,6 @@ class Cloud extends Base
 		$param = array(
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
-			'svc'			=> $service,
 			'v'				=> Core::VER,
 			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
 		);
@@ -289,7 +290,7 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service ] = time();
 		self::save_summary( $this->_summary );
 
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) );
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => false ) );
 
 		return $this->_parse_response( $response, $service );
 	}
@@ -469,12 +470,12 @@ class Cloud extends Base
 
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
 			$data[ 'ref' ] = $_SERVER[ 'HTTP_REFERER' ];
-			wp_redirect( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
+			wp_redirect( self::CLOUD_SERVER . '/req_key?data=' . Utility::arr2str( $data ) );
 			exit;
 		}
 
 		// CLI handler
-		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
+		$response = wp_remote_get( self::CLOUD_SERVER . '/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Log::debug( '[CLoud] failed to gen_key: ' . $error_message );

@@ -295,13 +295,13 @@ else {
 				</a>
 			</h3>
 			<p>
-				<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo Utility::real_size( $optm_summary[ 'reduced' ] ) ; ?></code>
+				<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo isset( $optm_summary[ 'reduced' ] ) ? Utility::real_size( $optm_summary[ 'reduced' ] ) : '-'; ?></code>
 			</p>
 			<p>
-				<?php echo __( 'Images Pulled', 'litespeed-cache' ) ; ?>: <code><?php echo $optm_summary[ 'img_taken' ] ; ?></code>
+				<?php echo __( 'Images Pulled', 'litespeed-cache' ) ; ?>: <code><?php echo isset( $optm_summary[ 'img_taken' ] ) ? $optm_summary[ 'img_taken' ] : '-'; ?></code>
 			</p>
 			<p>
-				<?php echo __( 'Last Request', 'litespeed-cache' ) ; ?>: <code><?php echo Utility::readable_time( $optm_summary[ 'last_requested' ] ) ; ?></code>
+				<?php echo __( 'Last Request', 'litespeed-cache' ) ; ?>: <code><?php echo isset( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'; ?></code>
 			</p>
 		</div></div>
 
