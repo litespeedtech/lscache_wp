@@ -63,7 +63,7 @@ class Quic extends Instance
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() ) ;
 
-		Cloud::post( Cloud::SVC_SYNC_CONF, $options ) ;
+		Cloud::post( Cloud::SVC_D_SYNC_CONF, $options ) ;
 	}
 
 }

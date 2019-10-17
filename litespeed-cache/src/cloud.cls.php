@@ -15,9 +15,9 @@ class Cloud extends Base
 
 	const CLOUD_SERVER = 'https://apidev.quic.cloud';
 
-	const SVC_IPS 				= 'd/ips';
-	const SVC_SYNC_CONF 		= 'd/sync_conf';
-	const SVC_USAGE 			= 'd/usage';
+	const SVC_D_NODES 			= 'd/nodes';
+	const SVC_D_SYNC_CONF 		= 'd/sync_conf';
+	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_CCSS 				= 'ccss' ;
 	const SVC_PLACEHOLDER 		= 'placeholder' ;
 	const SVC_LQIP 				= 'lqip' ;
@@ -78,7 +78,7 @@ class Cloud extends Base
 	 */
 	private function _sync_usage()
 	{
-		$usage = $this->_post( self::SVC_USAGE );
+		$usage = $this->_post( self::SVC_D_USAGE );
 		if ( ! $usage ) {
 			return;
 		}
@@ -88,7 +88,7 @@ class Cloud extends Base
 		}
 		self::save_summary( $this->_summary );
 
-		$msg = __( 'Communicated with Cloud Server successfully.', 'litespeed-cache' ) ;
+		$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;
 		Admin_Display::succeed( $msg ) ;
 	}
 
@@ -112,7 +112,7 @@ class Cloud extends Base
 		}
 
 		// Send request to Quic Online Service
-		$json = $this->_post( self::SVC_IPS, array( 'svc' => $service ) );
+		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $service ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
@@ -263,7 +263,7 @@ class Cloud extends Base
 			return;
 		}
 
-		if ( $service === self::SVC_IPS || $service === self::SVC_SYNC_CONF  || $service === self::SVC_USAGE ) {
+		if ( $service === self::SVC_D_NODES || $service === self::SVC_D_SYNC_CONF  || $service === self::SVC_D_USAGE ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {
