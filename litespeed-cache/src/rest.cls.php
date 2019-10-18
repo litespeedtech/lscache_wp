@@ -39,7 +39,7 @@ class REST extends Instance
 	{
 		register_rest_route( 'litespeed/v1', '/tool/check_ip', array(
 			'methods' => 'GET',
-			'callback' => array( Tool::get_instance(), 'check_ip' ),
+			'callback' => array( $this, 'check_ip' ),
 			'permission_callback'	=> function() {
 				return current_user_can( 'manage_network_options' ) || current_user_can( 'manage_options' ) ;
 			}
@@ -48,31 +48,79 @@ class REST extends Instance
 		// Hash callback validate
 		register_rest_route( 'litespeed/v1', '/hash', array(
 			'methods' => 'POST',
-			'callback' => array( Cloud::get_instance(), 'hash' ),
+			'callback' => array( $this, 'hash' ),
 		) );
 
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
 			'methods' => 'POST',
-			'callback' => array( Img_Optm::get_instance(), 'notify_img' ),
+			'callback' => array( $this, 'notify_img' ),
 		) );
 
 		// Image optm imgoptm_destroy
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/imgoptm_destroy', array(
 			'methods' => 'POST',
-			'callback' => array( Img_Optm::get_instance(), 'destroy_callback' ),
+			'callback' => array( $this, 'imgoptm_destroy' ),
 		) );
 
 		// Image optm check_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/check_img', array(
 			'methods' => 'POST',
-			'callback' => array( Img_Optm::get_instance(), 'check_img' ),
+			'callback' => array( $this, 'check_img' ),
 		) );
+	}
 
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function check_ip()
+	{
+		return Tool::get_instance()->check_ip();
+	}
 
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function hash()
+	{
+		return Cloud::get_instance()->hash();
+	}
+
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function notify_img()
+	{
+		return Img_Optm::get_instance()->notify_img();
+	}
+
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function imgoptm_destroy()
+	{
+		return Img_Optm::get_instance()->destroy_callback();
+	}
+
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function check_img()
+	{
+		return Img_Optm::get_instance()->check_img();
 	}
 
 	/**

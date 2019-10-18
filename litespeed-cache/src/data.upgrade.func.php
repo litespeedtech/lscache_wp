@@ -499,6 +499,8 @@ function litespeed_update_3_0( $ver )
 	$q = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'litespeed_optimizer' ;
 	$wpdb->query( $q ) ;
 
+	// Update image optm table
+xx
 
 	add_option( 'litespeed.conf._version', '3.0' ) ;
 

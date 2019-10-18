@@ -37,7 +37,7 @@ class Avatar extends Base
 		Log::debug2( '[Avatar] init' ) ;
 
 		// Create table
-		$this->_tb = Data::tb_avatar() ;
+		$this->_tb = Data::tb( 'avatar' ) ;
 
 		$this->_conf_cache_ttl = Conf::val( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 

@@ -97,7 +97,7 @@ class DB_Optm extends Instance
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" );
 
 			case 'all_cssjs' :
-				return Data::tb_cssjs_exist() ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::tb_cssjs() . "`" ) : 0;
+				return Data::tb_exist( 'cssjs' ) ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::tb( 'cssjs' ) . "`" ) : 0;
 		}
 
 		return '-';
@@ -184,9 +184,9 @@ class DB_Optm extends Instance
 				return __( 'Optimized all tables.', 'litespeed-cache' );
 
 			case 'all_cssjs' :
-				if ( Data::tb_cssjs_exist() ) {
+				if ( Data::tb_exist( 'cssjs' ) ) {
 					Purge::purge_all();
-					$wpdb->query( "TRUNCATE `" . Data::tb_cssjs() . "`" );
+					$wpdb->query( "TRUNCATE `" . Data::tb( 'cssjs' ) . "`" );
 				}
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' );
 

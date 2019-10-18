@@ -281,7 +281,7 @@ class Cloud extends Base
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
 			'v'				=> Core::VER,
-			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
+			'data' 			=> $data,
 		);
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation

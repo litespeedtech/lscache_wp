@@ -77,7 +77,7 @@ class Img_Optm extends Base
 
 		$this->wp_upload_dir = wp_upload_dir() ;
 		$this->__media = Media::get_instance() ;
-		$this->_table_img_optm = Data::tb_img_optm() ;
+		$this->_table_img_optm = Data::tb( 'img_optm' ) ;
 
 		$this->_summary = self::get_summary();
 	}
@@ -109,7 +109,7 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Data::get_instance()->create_tb_img_optm() ;
+		Data::get_instance()->tb_create( 'img_optm' ) ;
 
 		Log::debug( '[Img_Optm] preparing images to push' ) ;
 
@@ -535,13 +535,13 @@ class Img_Optm extends Base
 	public function notify_img()
 	{
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
 		}
 
 		global $wpdb ;
 
-		$notified_data = json_decode( base64_decode( $_POST[ 'data' ] ), true ) ;
+		$notified_data = $_POST[ 'data' ];
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
 			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
 			return array( '_res' => 'err', '_msg' => 'no notified data' ) ;
@@ -1126,7 +1126,7 @@ class Img_Optm extends Base
 	 */
 	private function _img_optimize_destroy_unfinished()
 	{
-		if ( ! Data::tb_img_optm_exist() ) {
+		if ( ! Data::tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1207,7 +1207,7 @@ class Img_Optm extends Base
 	 */
 	public function destroy_callback()
 	{
-		if ( ! Data::tb_img_optm_exist() ) {
+		if ( ! Data::tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1461,7 +1461,7 @@ class Img_Optm extends Base
 	 */
 	private function _calc_bkup()
 	{
-		if ( ! Data::tb_img_optm_exist() ) {
+		if ( ! Data::tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1564,7 +1564,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		$tb_existed = Data::tb_img_optm_exist();
+		$tb_existed = Data::tb_exist( 'img_optm' );
 
 		$q = "SELECT count(*)
 			FROM $wpdb->posts a

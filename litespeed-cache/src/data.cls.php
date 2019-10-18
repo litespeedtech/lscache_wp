@@ -31,12 +31,8 @@ class Data extends Instance
 
 	const TB_CSSJS = 'litespeed_cssjs' ;
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
+	const TB_IMG_OPTMING = 'litespeed_img_optming' ; // working table
 	const TB_AVATAR = 'litespeed_avatar' ;
-
-	private $_charset_collate ;
-	private $_tb_cssjs ;
-	private $_tb_img_optm ;
-	private $_tb_avatar ;
 
 	/**
 	 * Init
@@ -46,14 +42,6 @@ class Data extends Instance
 	 */
 	protected function __construct()
 	{
-		Log::debug2( 'Data init' ) ;
-		global $wpdb ;
-
-		$this->_charset_collate = $wpdb->get_charset_collate() ;
-
-		$this->_tb_cssjs = $wpdb->prefix . self::TB_CSSJS ;
-		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
-		$this->_tb_avatar = self::tb_avatar() ;
 	}
 
 	/**
@@ -78,9 +66,6 @@ class Data extends Instance
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
-		// if ( Conf::val( Base::O_IMG_OPTM_AUTO ) ) {
-		// 	$this->create_tb_img_optm() ;
-		// }
 	}
 
 	/**
@@ -210,84 +195,48 @@ class Data extends Instance
 	}
 
 	/**
-	 * Get img_optm table name
-	 *
-	 * @since  2.0
-	 * @access public
-	 */
-	public static function tb_img_optm()
-	{
-		global $wpdb ;
-		return $wpdb->prefix . self::TB_IMG_OPTM ;
-	}
-
-	/**
-	 * Get optimizer table
-	 *
-	 * @since  1.4
-	 * @access public
-	 */
-	public static function tb_cssjs()
-	{
-		global $wpdb ;
-		return $wpdb->prefix . self::TB_CSSJS ;
-	}
-
-	/**
-	 * Get avatar table
+	 * Get the table name
 	 *
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function tb_avatar()
-	{
-		global $wpdb ;
-		return $wpdb->prefix . self::TB_AVATAR ;
-	}
-
-	/**
-	 * Check if optimizer table exists or not
-	 *
-	 * @since  1.3.1.1
-	 * @access public
-	 */
-	public static function tb_cssjs_exist()
+	public static function tb( $tb )
 	{
 		global $wpdb ;
 
-		$instance = self::get_instance() ;
+		switch ( $tb ) {
+			case 'img_optm':
+				return $wpdb->prefix . self::TB_IMG_OPTM;
+				break;
 
-		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_cssjs'" ) ;
+			case 'img_optming':
+				return $wpdb->prefix . self::TB_IMG_OPTMING;
+				break;
+
+			case 'ccsjs':
+				return $wpdb->prefix . self::TB_CCSJS;
+				break;
+
+			case 'avatar':
+				return $wpdb->prefix . self::TB_AVATAR ;
+				break;
+
+			default:
+				break;
+		}
+
 	}
 
 	/**
-	 * Check if image optm table existed or not
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function tb_img_optm_exist()
-	{
-		global $wpdb ;
-
-		$instance = self::get_instance() ;
-
-		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_img_optm'" ) ;
-	}
-
-	/**
-	 * Check if avatar table existed or not
+	 * Check if one table exists or not
 	 *
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function tb_avatar_exist()
+	public static function tb_exist( $tb )
 	{
 		global $wpdb ;
-
-		$instance = self::get_instance() ;
-
-		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_avatar'" ) ;
+		return $wpdb->get_var( 'SHOW TABLES LIKE "' . self::tb( $tb ) . '"' ) ;
 	}
 
 	/**
@@ -307,39 +256,29 @@ class Data extends Instance
 	 * @since  2.0
 	 * @access public
 	 */
-	public function create_tb_img_optm()
+	public function tb_create( $tb )
 	{
-		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
-			return ;
-		}
-		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
+		global $wpdb;
 
-		global $wpdb ;
-
-		Log::debug2( '[Data] Checking img_optm table' ) ;
+		Log::debug2( '[Data] Checking table ' . $tb );
 
 		// Check if table exists first
-		if ( self::tb_img_optm_exist() ) {
-			Log::debug2( '[Data] Existed' ) ;
-			return ;
+		if ( self::tb_exist( $tb ) ) {
+			Log::debug2( '[Data] Existed' );
+			return;
 		}
 
-		Log::debug( '[Data] Creating img_optm table' ) ;
+		Log::debug( '[Data] Creating ' . $tb );
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'img_optm' ) . ') %2$s;',
-			$this->_tb_img_optm,
-			$this->_charset_collate // 'DEFAULT CHARSET=utf8'
-		) ;
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( $tb ) . ') %2$s;',
+			self::tb( $tb ),
+			$wpdb->get_charset_collate() // 'DEFAULT CHARSET=utf8'
+		);
 
-		$res = $wpdb->query( $sql ) ;
+		$res = $wpdb->query( $sql );
 		if ( $res !== true ) {
-			Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
-		}
-
-		// Clear OC to avoid get `_tb_img_optm` from option failed
-		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-			Object_Cache::get_instance()->flush() ;
+			Log::debug( '[Data] Warning! Creating table failed!', $sql );
 		}
 	}
 
@@ -349,7 +288,7 @@ class Data extends Instance
 	 * @since  1.3.1
 	 * @access private
 	 */
-	private function _create_tb_cssjs()
+	private function _create_tb_cssjs()xx
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
 			return ;
@@ -370,8 +309,8 @@ class Data extends Instance
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'optm' ) . ') %2$s;',
-			$this->_tb_cssjs,
-			$this->_charset_collate
+			self::tb( 'cssjs' ),
+			$wpdb->get_charset_collate()
 		) ;
 
 		$res = $wpdb->query( $sql ) ;
@@ -399,7 +338,7 @@ class Data extends Instance
 		Log::debug2( '[Data] Checking avatar table' ) ;
 
 		// Check if table exists first
-		if ( self::tb_avatar_exist() ) {
+		if ( self::tb_exist( 'avatar' ) ) {
 			Log::debug2( '[Data] Existed' ) ;
 			return ;
 		}
@@ -408,8 +347,8 @@ class Data extends Instance
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( 'avatar' ) . ') %2$s;',
-			$this->_tb_avatar,
-			$this->_charset_collate
+			self::tb( 'avatar' ),
+			$wpdb->get_charset_collate()
 		) ;
 
 		$res = $wpdb->query( $sql ) ;
@@ -429,13 +368,13 @@ class Data extends Instance
 	{
 		global $wpdb ;
 
-		if ( ! self::tb_img_optm_exist() ) {
+		if ( ! self::tb_exist( 'img_optm' ) ) {
 			return ;
 		}
 
 		Log::debug( '[Data] Deleting img_optm table' ) ;
 
-		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
+		$q = 'DROP TABLE IF EXISTS ' . self::tb( 'img_optm' ) ;
 		$wpdb->query( $q ) ;
 
 		delete_option( $this->_tb_img_optm ) ;
@@ -451,20 +390,20 @@ class Data extends Instance
 	{
 		global $wpdb ;
 
-		if ( self::tb_cssjs_exist() ) {
+		if ( self::tb_exist( 'cssjs' ) ) {
 			Log::debug( '[Data] Deleting cssjs table' ) ;
 
-			$q = "DROP TABLE IF EXISTS $this->_tb_cssjs" ;
+			$q = 'DROP TABLE IF EXISTS ' . self::tb( 'cssjs' ) ;
 			$wpdb->query( $q ) ;
 		}
 
 		// Deleting only can be done when destroy all optm images
 		// $this->del_table_img_optm() ;
 
-		if ( self::tb_avatar_exist() ) {
+		if ( self::tb_exist( 'avatar' ) ) {
 			Log::debug( '[Data] Deleting avatar table' ) ;
 
-			$q = "DROP TABLE IF EXISTS $this->_tb_avatar" ;
+			$q = 'DROP TABLE IF EXISTS ' . self::tb( 'avatar' );
 			$wpdb->query( $q ) ;
 		}
 
@@ -493,7 +432,7 @@ class Data extends Instance
 			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
 		) ;
 
-		$res = $wpdb->replace( $this->_tb_cssjs, $f ) ;
+		$res = $wpdb->replace( self::tb( 'cssjs' ), $f ) ;
 
 		return $res ;
 	}
@@ -513,7 +452,7 @@ class Data extends Instance
 	{
 		global $wpdb ;
 
-		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->_tb_cssjs . '` WHERE `hash_name`=%s', $filename ) ) ;
+		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . self::tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) ) ;
 
 		Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 
