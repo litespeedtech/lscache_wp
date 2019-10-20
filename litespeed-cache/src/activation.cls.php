@@ -100,7 +100,7 @@ class Activation extends Instance
 		}
 
 		// Delete avatar table
-		Data::get_instance()->del_tables() ;
+		Data::get_instance()->tables_del() ;
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
 			File::rrmdir( LITESPEED_STATIC_DIR ) ;

@@ -77,7 +77,7 @@ class Img_Optm extends Base
 
 		$this->wp_upload_dir = wp_upload_dir() ;
 		$this->__media = Media::get_instance() ;
-		$this->_table_img_optm = Data::tb( 'img_optm' ) ;
+		$this->_table_img_optm = Data::get_instance()->tb( 'img_optm' ) ;
 
 		$this->_summary = self::get_summary();
 	}
@@ -1126,7 +1126,7 @@ class Img_Optm extends Base
 	 */
 	private function _img_optimize_destroy_unfinished()
 	{
-		if ( ! Data::tb_exist( 'img_optm' ) ) {
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1207,7 +1207,7 @@ class Img_Optm extends Base
 	 */
 	public function destroy_callback()
 	{
-		if ( ! Data::tb_exist( 'img_optm' ) ) {
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1271,7 +1271,7 @@ class Img_Optm extends Base
 		$wpdb->query( $q ) ;
 
 		// Delete img_optm table
-		Data::get_instance()->del_table_img_optm() ;
+		Data::get_instance()->tb_del( 'img_optm' ) ;
 
 		// Clear credit info
 		self::delete_option( '_summary' ) ;
@@ -1461,7 +1461,7 @@ class Img_Optm extends Base
 	 */
 	private function _calc_bkup()
 	{
-		if ( ! Data::tb_exist( 'img_optm' ) ) {
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1564,7 +1564,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		$tb_existed = Data::tb_exist( 'img_optm' );
+		$tb_existed = Data::get_instance()->tb_exist( 'img_optm' );
 
 		$q = "SELECT count(*)
 			FROM $wpdb->posts a

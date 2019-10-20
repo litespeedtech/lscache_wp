@@ -1018,16 +1018,16 @@ class Optimize extends Base
 
 		// Need to check conflicts
 		// If short hash exists
-		if ( $urls = Data::optm_hash2src( $short . '.' . $file_type ) ) {
+		if ( $urls = Data::get_instance()->optm_hash2src( $short . '.' . $file_type ) ) {
 			// If conflicts
 			if ( $urls !== $src ) {
-				Data::optm_save_src( $hash . '.' . $file_type, $src ) ;
+				Data::get_instance()->optm_save_src( $hash . '.' . $file_type, $src ) ;
 				$filename = $hash ;
 			}
 		}
 		else {
 			// Short hash is safe now
-			Data::optm_save_src( $short . '.' . $file_type, $src ) ;
+			Data::get_instance()->optm_save_src( $short . '.' . $file_type, $src ) ;
 		}
 
 		// Generate static files

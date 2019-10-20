@@ -78,7 +78,7 @@ class Optimizer extends Instance
 	{
 		if ( ! is_array( $filename ) ) {
 			// Search filename in db for src URLs
-			$urls = Data::optm_hash2src( $filename ) ;
+			$urls = Data::get_instance()->optm_hash2src( $filename ) ;
 			if ( ! $urls || ! is_array( $urls ) ) {
 				return false;
 			}
