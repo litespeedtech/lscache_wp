@@ -30,7 +30,7 @@ class Admin extends Instance
 		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
 			define( 'LSCWP_MU_PLUGIN', true ) ;
 		}
-
+// add_filter('admin_footer_text', function($filter){ return get_num_queries() . '---------'; });
 		// Additional litespeed assets on admin display
 		// Also register menu
 		$this->display = Admin_Display::get_instance() ;

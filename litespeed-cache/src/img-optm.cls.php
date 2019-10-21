@@ -14,55 +14,58 @@ class Img_Optm extends Base
 {
 	protected static $_instance;
 
-	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
-	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
-	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
-	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
+	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize';
+	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken';
+	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
+	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished';
 
-	const TYPE_SYNC_DATA = 'sync_data' ;
-	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
-	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan' ;
-	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy' ;
-	const TYPE_IMG_OPTM_DESTROY_UNFINISHED = 'img_optm_destroy-unfinished' ;
-	const TYPE_IMG_PULL = 'img_pull' ;
-	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
-	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
-	const TYPE_CALC_BKUP = 'calc_bkup' ;
-	const TYPE_RESET_ROW = 'reset_row' ;
-	const TYPE_RM_BKUP = 'rm_bkup' ;
+	const TYPE_SYNC_DATA = 'sync_data';
+	const TYPE_IMG_OPTIMIZE = 'img_optm';
+	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan';
+	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy';
+	const TYPE_IMG_OPTM_DESTROY_UNFINISHED = 'img_optm_destroy-unfinished';
+	const TYPE_IMG_PULL = 'img_pull';
+	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori';
+	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm';
+	const TYPE_CALC_BKUP = 'calc_bkup';
+	const TYPE_RESET_ROW = 'reset_row';
+	const TYPE_RM_BKUP = 'rm_bkup';
 
-	const DB_DESTROY = 'litespeed-optimize-destroy' ;
-	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
-	const DB_IMG_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
-	const DB_STATUS_REQUESTED = 'requested' ;
-	const DB_STATUS_NOTIFIED = 'notified' ;
-	const DB_STATUS_PULLED = 'pulled' ;
-	const DB_STATUS_FAILED = 'failed' ;
-	const DB_STATUS_MISS = 'miss' ;
-	const DB_STATUS_ERR = 'err' ;
-	const DB_STATUS_ERR_FETCH = 'err_fetch' ;
-	const DB_STATUS_ERR_OPTM = 'err_optm' ;
-	const DB_STATUS_XMETA = 'xmeta' ;
-	const DB_SIZE = 'litespeed-optimize-size' ;
+	const DB_DESTROY = 'litespeed-optimize-destroy';
+	const DB_IMG_OPTM_DATA = 'litespeed-optimize-data';
+	const DB_IMG_OPTM_STATUS = 'litespeed-optimize-status';
 
-	const DB_NEED_PULL = 'need_pull' ;
-	const DB_CRON_RUN = 'cron_run' ; // last cron running time
+	const DB_STATUS_RAW 		= 0; // 'raw';
+	const DB_STATUS_REQUESTED 	= 3; // 'requested';
+	const DB_STATUS_NOTIFIED 	= 6; // 'notified';
+	const DB_STATUS_PULLED 		= 9; // 'pulled';
+	const DB_STATUS_FAILED 		= -1; //'failed';
+	const DB_STATUS_MISS 		= -3; // 'miss';
+	const DB_STATUS_ERR_FETCH 	= -6; // 'err_fetch';
+	const DB_STATUS_ERR_OPTM 	= -7; // 'err_optm';
+	const DB_STATUS_XMETA 		= -8; // 'xmeta';
+	const DB_STATUS_ERR 		= -9; // 'err';
+	const DB_SIZE = 'litespeed-optimize-size';
 
-	const NUM_THRESHOLD_AUTO_REQUEST = 1200 ;
+	const DB_NEED_PULL = 'need_pull';
+	const DB_CRON_RUN = 'cron_run'; // last cron running time
 
-	private $wp_upload_dir ;
-	private $tmp_pid ;
-	private $tmp_path ;
-	private $_img_in_queue = array() ;
-	private $_img_duplicated_in_queue = array() ;
-	private $_missed_img_in_queue = array() ;
-	private $_img_srcpath_md5_array = array() ;
-	private $_img_total = 0 ;
-	private $_img_group = 0 ;
-	private $_table_img_optm ;
-	private $_cron_ran = false ;
+	const NUM_THRESHOLD_AUTO_REQUEST = 1200;
 
-	private $__media ;
+	private $wp_upload_dir;
+	private $tmp_pid;
+	private $tmp_path;
+	private $_img_in_queue = array();
+	private $_img_duplicated_in_queue = array();
+	private $_missed_img_in_queue = array();
+	private $_img_srcpath_md5_array = array();
+	private $_img_total = 0;
+	private $_img_group = 0;
+	private $_table_img_optm;
+	private $_table_img_optming;
+	private $_cron_ran = false;
+
+	private $__media;
 	private $_summary;
 
 	/**
@@ -73,45 +76,28 @@ class Img_Optm extends Base
 	 */
 	protected function __construct()
 	{
-		Log::debug2( 'ImgOptm init' ) ;
+		Log::debug2( 'ImgOptm init' );
 
-		$this->wp_upload_dir = wp_upload_dir() ;
-		$this->__media = Media::get_instance() ;
-		$this->_table_img_optm = Data::get_instance()->tb( 'img_optm' ) ;
+		$this->wp_upload_dir = wp_upload_dir();
+		$this->__media = Media::get_instance();
+		$this->_table_img_optm = Data::get_instance()->tb( 'img_optm' );
+		$this->_table_img_optming = Data::get_instance()->tb( 'img_optming' );
 
 		$this->_summary = self::get_summary();
 	}
 
 	/**
-	 * Request optm to litespeed IAPI server for CLI usage
+	 * This will gather latest certain images from wp_posts to litespeed_img_optm
 	 *
-	 * @since  2.4.4
-	 * @access public
-	 */
-	public function request_optm()
-	{
-		return $this->_request_optm() ;
-	}
-
-	/**
-	 * Push raw img to LiteSpeed IAPI server
-	 *
-	 * @since 1.6
+	 * @since  3.0
 	 * @access private
 	 */
-	private function _request_optm()
+	private function _gather_images()
 	{
-		global $wpdb ;
+		global $wpdb;
 
-		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
-		if ( ! $allowance ) {
-			Log::debug( '[Img_Optm] No credit' ) ;
-			return;
-		}
-
-		Data::get_instance()->tb_create( 'img_optm' ) ;
-
-		Log::debug( '[Img_Optm] preparing images to push' ) ;
+		Data::get_instance()->tb_create( 'img_optm' );
+		Data::get_instance()->tb_create( 'img_optming' );
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
@@ -125,73 +111,170 @@ class Img_Optm extends Base
 				AND c.id IS NULL
 			ORDER BY a.ID DESC
 			LIMIT %d
-			" ;
-		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) ) ;
+			";
+		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_gather_max_rows', 200 ) );
+		$list = $wpdb->get_results( $q );
 
-		$img_set = array() ;
-		$list = $wpdb->get_results( $q ) ;
 		if ( ! $list ) {
-			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			Admin_Display::succeed( $msg ) ;
-
-			Log::debug( '[Img_Optm] optimize bypass: no image found' ) ;
+			Log::debug( '[Img_Optm] gather_images bypass: no new image found' );
 			return;
 		}
 
-		Log::debug( '[Img_Optm] found images: ' . count( $list ) ) ;
-
 		foreach ( $list as $v ) {
 
-			$meta_value = $this->_parse_wp_meta_value( $v ) ;
+			$meta_value = $this->_parse_wp_meta_value( $v );
 			if ( ! $meta_value ) {
-				$this->_mark_wrong_meta_src( $v->post_id ) ;
-				continue ;
+				$this->_save_err_meta( $v->post_id );
+				continue;
 			}
+
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+			$this->_img_queue( $meta_value, true );
+			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+				array_map( array( $this, '_img_queue' ), $meta_value[ 'sizes' ] );
+			}
+
+		}
+
+		// Save missed images into img_optm
+		$this->_save_err_missed();
+
+		if ( empty( $this->_img_in_queue ) ) {
+			Log::debug( '[Img_Optm] gather_images bypass: empty _img_in_queue' );
+			return;
+		}
+
+		// Save to DB
+		$this->_save_raw();
+
+	}
+
+	/**
+	 * Save failed to parse meta info
+	 *
+	 * @since 2.1.1
+	 * @access private
+	 */
+	private function _save_err_meta( $pid )
+	{
+		$data = array(
+			$pid,
+			self::DB_STATUS_XMETA,
+		) ;
+		$this->_insert_img_optm( $data, 'post_id, optm_status' ) ;
+		Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid ) ;
+	}
+
+	/**
+	 * Saved non-existed images into img_optm
+	 *
+	 * @since 2.0
+	 * @access private
+	 */
+	private function _save_err_missed()
+	{
+		if ( ! $this->_missed_img_in_queue ) {
+			return ;
+		}
+		Log::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_missed_img_in_queue ) ) ;
+
+		$data_to_add = array() ;
+		foreach ( $this->_missed_img_in_queue as $src_data ) {
+			$data_to_add[] = $src_data[ 'pid' ] ;
+			$data_to_add[] = self::DB_STATUS_MISS ;
+			$data_to_add[] = $src_data[ 'src' ] ;
+		}
+		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src' ) ;
+	}
+
+	/**
+	 * Save gathered image raw data
+	 *
+	 * @since  3.0
+	 */
+	private function _save_raw()
+	{
+		$data = array();
+		foreach ( $this->_img_in_queue as $v ) {
+			$data[] = $v[ 'pid' ];
+			$data[] = self::DB_STATUS_RAW;
+			$data[] = $v[ 'src' ];
+			$data[] = $v[ 'src_filesize' ];
+		}
+		$this->_insert_img_optm( $data ) ;
+
+		Log::debug( '[Img_Optm] Saved gathered raw images [total] ' . count( $this->_img_in_queue ) ) ;
+	}
+
+	/**
+	 * Push raw img to image optm server
+	 *
+	 * @since 1.6
+	 * @access private
+	 */
+	private function request_optm()
+	{
+		global $wpdb;
+
+		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
+		if ( ! $allowance ) {
+			Log::debug( '[Img_Optm] No credit' );
+			return;
+		}
+xx
+		Log::debug( '[Img_Optm] preparing images to push' );
+
+		// Get images
+		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) );
+
+		$img_set = array();
+		$list = $wpdb->get_results( $q );
+		if ( ! $list ) {
+			$msg = __( 'No image found.', 'litespeed-cache' );
+			Admin_Display::succeed( $msg );
+
+			Log::debug( '[Img_Optm] optimize bypass: no image found' );
+			return;
+		}
+
+		Log::debug( '[Img_Optm] found images: ' . count( $list ) );
+
+		foreach ( $list as $v ) {
 
 			/**
 			 * Only send 500 images one time
 			 * @since 1.6.3
 			 * @since 1.6.5 use credit limit
 			 */
-			$num_will_incease = 1 ;
+			$num_will_incease = 1;
 			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
-				$num_will_incease += count( $meta_value[ 'sizes' ] ) ;
+				$num_will_incease += count( $meta_value[ 'sizes' ] );
 			}
 			if ( $this->_img_total + $num_will_incease > $allowance ) {
 				if ( ! $this->_img_total ) {
-					$msg = sprintf( __( 'Number of images in one image group (%s) exceeds the credit (%s)', 'litespeed-cache' ), $num_will_incease, $allowance ) ;
-					Admin_Display::error( $msg ) ;
+					$msg = sprintf( __( 'Number of images in one image group (%s) exceeds the credit (%s)', 'litespeed-cache' ), $num_will_incease, $allowance );
+					Admin_Display::error( $msg );
 				}
-				Log::debug( '[Img_Optm] img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $allowance" ) ;
-				break ;
+				Log::debug( '[Img_Optm] img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $allowance" );
+				break;
 			}
 			/**
 			 * Check if need to test run ( new user only allow 1 group at first time)
 			 * @since 1.6.6.1
 			 */
 			if ( $this->_img_total && empty( $this->_summary[ 'recovered' ] ) ) {
-				Log::debug( '[Img_Optm] test run only allow 1 group ' ) ;
-				break ;
+				Log::debug( '[Img_Optm] test run only allow 1 group ' );
+				break;
 			}
 
 			// push orig image to queue
-			$this->tmp_pid = $v->post_id ;
-			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
-			$this->_img_queue( $meta_value, true ) ;
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+			$this->_img_queue( $meta_value, true );
 			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
-				array_map( array( $this, '_img_queue' ), $meta_value[ 'sizes' ] ) ;
+				array_map( array( $this, '_img_queue' ), $meta_value[ 'sizes' ] );
 			}
-		}
-
-		// Save missed images into img_optm
-		$this->_save_missed_into_img_optm() ;
-
-		if ( empty( $this->_img_in_queue ) ) {
-			$msg = __( 'Requested successfully.', 'litespeed-cache' ) ;
-			Admin_Display::succeed( $msg ) ;
-
-			Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
-			return;
 		}
 
 		/**
@@ -201,18 +284,12 @@ class Img_Optm extends Base
 		 * 2. Remove them from $this->_img_in_queue
 		 * 3. After inserted $this->_img_in_queue into img_optm, insert $this->_img_duplicated_in_queue into img_optm with root_id
 		 */
-		$this->_filter_duplicated_src() ;
-
-		if ( empty( $this->_img_in_queue ) ) {
-			$msg = __( 'Optimized successfully.', 'litespeed-cache' ) ;
-			Admin_Display::succeed( $msg ) ;
-			return;
-		}
+		$this->_filter_duplicated_src();
 
 		Log::debug( '[Img_Optm] prepared images to push: groups ' . count( $this->_img_group ) . ' images ' . $this->_img_total );
 
 		// Push to LiteSpeed IAPI server
-		$json = $this->_push_img_in_queue_to_iapi() ;
+		$json = $this->_push_img_in_queue_to_iapi();
 		if ( ! $json ) {
 			return;
 		}
@@ -232,26 +309,26 @@ class Img_Optm extends Base
 			$data_to_add[] = $this->_img_in_queue[ $k ][ 'md5' ];
 			$data_to_add[] = $this->_img_in_queue[ $k ][ 'src_filesize' ];
 		}
-		$this->_insert_img_optm( $data_to_add ) ;
+		$this->_insert_img_optm( $data_to_add );
 
 		// Insert duplicated data
 		if ( $this->_img_duplicated_in_queue ) {
 			// Generate root_id from inserted ones
-			$srcpath_md5_to_search = array() ;
+			$srcpath_md5_to_search = array();
 			foreach ( $this->_img_duplicated_in_queue as $v ) {
-				$srcpath_md5_to_search[] = $v[ 'srcpath_md5' ] ;
+				$srcpath_md5_to_search[] = $v[ 'srcpath_md5' ];
 			}
-			$existing_img_list = $this->_select_img_by_root_srcpath( $srcpath_md5_to_search ) ;
+			$existing_img_list = $this->_select_img_by_root_srcpath( $srcpath_md5_to_search );
 
-			$data_to_add = array() ;
+			$data_to_add = array();
 			foreach ( $this->_img_duplicated_in_queue as $v ) {
-				$existing_info = $existing_img_list[ $v[ 'srcpath_md5' ] ] ;
+				$existing_info = $existing_img_list[ $v[ 'srcpath_md5' ] ];
 
-				$data_to_add[] = $v[ 'pid' ] ;
-				$data_to_add[] = $existing_info[ 'status' ] ;
-				$data_to_add[] = $existing_info[ 'src' ] ;
-				$data_to_add[] = $existing_info[ 'srcpath_md5' ] ;
-				$data_to_add[] = $existing_info[ 'src_md5' ] ;
+				$data_to_add[] = $v[ 'pid' ];
+				$data_to_add[] = $existing_info[ 'status' ];
+				$data_to_add[] = $existing_info[ 'src' ];
+				$data_to_add[] = $existing_info[ 'srcpath_md5' ];
+				$data_to_add[] = $existing_info[ 'src_md5' ];
 				$data_to_add[] = $existing_info[ 'src_filesize' ] ;
 				$data_to_add[] = $existing_info[ 'id' ] ;
 			}
@@ -270,7 +347,7 @@ class Img_Optm extends Base
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, srcpath_md5, src_md5, src_filesize' )
+	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, src_filesize' )
 	{
 		if ( empty( $data ) ) {
 			return ;
@@ -321,22 +398,6 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Save failed to parse meta info
-	 *
-	 * @since 2.1.1
-	 * @access private
-	 */
-	private function _mark_wrong_meta_src( $pid )
-	{
-		$data = array(
-			$pid,
-			self::DB_STATUS_XMETA,
-		) ;
-		$this->_insert_img_optm( $data, 'post_id, optm_status' ) ;
-		Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid ) ;
-	}
-
-	/**
 	 * Filter duplicated src in $this->_img_in_queue
 	 *
 	 * @since 2.0
@@ -378,30 +439,7 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Saved non-existed images into img_optm
-	 *
-	 * @since 2.0
-	 * @access private
-	 */
-	private function _save_missed_into_img_optm()
-	{
-		if ( ! $this->_missed_img_in_queue ) {
-			return ;
-		}
-		Log::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_missed_img_in_queue ) ) ;
-
-		$data_to_add = array() ;
-		foreach ( $this->_missed_img_in_queue as $src_data ) {
-			$data_to_add[] = $src_data[ 'pid' ] ;
-			$data_to_add[] = self::DB_STATUS_MISS ;
-			$data_to_add[] = $src_data[ 'src' ] ;
-			$data_to_add[] = $src_data[ 'srcpath_md5' ] ;
-		}
-		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src, srcpath_md5' ) ;
-	}
-
-	/**
-	 * Add a new img to queue which will be pushed to LiteSpeed
+	 * Add a new img to queue which will be pushed to request
 	 *
 	 * @since 1.6
 	 * @access private
@@ -426,7 +464,6 @@ class Img_Optm extends Base
 			$this->_missed_img_in_queue[] = array(
 				'pid'	=> $this->tmp_pid,
 				'src'	=> $short_file_path,
-				'srcpath_md5'	=> md5( $short_file_path ),
 			) ;
 			Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path ) ;
 			return ;
@@ -1022,7 +1059,7 @@ class Img_Optm extends Base
 
 		// No need to check last time request interval for now
 
-		$instance->_request_optm( 'from cron' ) ;
+		$instance->request_optm( 'from cron' ) ;
 	}
 
 	/**
@@ -1304,7 +1341,7 @@ class Img_Optm extends Base
 			LIMIT %d
 			" ;
 		$limit_rows = apply_filters( 'litespeed_img_optm_resend_rows', 300 ) ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_DATA, $limit_rows ) ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTM_STATUS, self::DB_IMG_OPTM_DATA, $limit_rows ) ) ) ;
 		if ( ! $list ) {
 			Log::debug( '[Img_Optm] resend request bypassed: no image found' ) ;
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
@@ -1865,7 +1902,7 @@ class Img_Optm extends Base
 				break ;
 
 			case self::TYPE_IMG_OPTIMIZE :
-				$instance->_request_optm() ;
+				$instance->request_optm() ;
 				break ;
 
 			case self::TYPE_IMG_OPTIMIZE_RESCAN :
