@@ -6,4 +6,5 @@
   `target_filesize` int(11) NOT NULL DEFAULT '0',
   `webp_filesize` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `post_id` (`post_id`)
+  KEY `post_id` (`post_id`),
+  KEY `optm_status` (`optm_status`)

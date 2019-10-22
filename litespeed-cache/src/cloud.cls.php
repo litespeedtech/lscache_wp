@@ -26,6 +26,12 @@ class Cloud extends Base
 	const SVC_PAGESCORE			= 'pagescore' ;
 	const SVC_CDN				= 'cdn' ;
 
+	const CENTER_SVC_SET = array(
+		self::SVC_D_NODES,
+		self::SVC_D_SYNC_CONF,
+		self::SVC_D_USAGE,
+	);
+
 	const SERVICES = array(
 		self::SVC_IMG_OPTM,
 		self::SVC_CCSS,
@@ -263,7 +269,7 @@ class Cloud extends Base
 			return;
 		}
 
-		if ( $service === self::SVC_D_NODES || $service === self::SVC_D_SYNC_CONF  || $service === self::SVC_D_USAGE ) {
+		if ( in_array( $service, self::CENTER_SVC_SET ) ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {
@@ -281,7 +287,7 @@ class Cloud extends Base
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
 			'v'				=> Core::VER,
-			'data' 			=> $data,
+			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
 		);
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
