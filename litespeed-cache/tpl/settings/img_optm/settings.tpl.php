@@ -22,7 +22,6 @@ $this->form_action() ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically request optimization via cron job.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>

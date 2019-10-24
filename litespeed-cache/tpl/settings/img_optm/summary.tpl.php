@@ -52,7 +52,7 @@ else {
 				<span title="<?php echo $closest_server ; ?>">☁️</span>
 			<?php endif ; ?>
 			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-			<?php echo sprintf( __( 'You can send %s more images this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>
+			<?php echo sprintf( __( 'You have %s points left this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 		</div>
 

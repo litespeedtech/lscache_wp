@@ -107,7 +107,7 @@ class Cloud extends Base
 	private function _detect_cloud( $service )
 	{
 		// Check if the stored server needs to be refreshed
-		if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 7 ) {
+		if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 30 ) {
 			return $this->_summary[ 'server.' . $service ];
 		}
 
