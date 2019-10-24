@@ -15,8 +15,15 @@ $img_count = Img_Optm::get_instance()->img_count() ;
 
 list( $last_run, $is_running ) = Img_Optm::get_instance()->cron_running( false ) ;
 
-if ( ! empty( $img_count[ 'total_img' ] ) ) {
-	$finished_percentage = 100 - floor( ( $img_count[ 'total_raw' ] + $img_count[ 'total_not_gathered' ] ) * 100 / $img_count[ 'total_img' ] ) ;
+if ( ! empty( $img_count[ 'groups_all' ] ) ) {
+	$gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] ) ;
+}
+else {
+	$gathered_percentage = 0 ;
+}
+
+if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
+	$finished_percentage = 100 - floor( $img_count[ 'imgs_raw' ] * 100 / $img_count[ 'imgs_gathered' ] ) ;
 }
 else {
 	$finished_percentage = 0 ;
@@ -28,7 +35,7 @@ else {
 
 		<div class="litespeed-text-center">
 			<a class="button button-primary litespeed-btn-large"
-				<?php if ( ! empty( $img_count[ 'total_raw' ] ) || ! empty( $img_count[ 'total_not_gathered' ] ) ) : ?>
+				<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'imgs_raw' ] ) ) : ?>
 					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>"
 				<?php else : ?>
 					href='javascript:;' disabled
@@ -66,7 +73,7 @@ else {
 		<div>
 			<h3 class="litespeed-title-short">
 				<?php echo __( 'Current Stage Status', 'litespeed-cache' ) ; ?>
-				<?php if ( $img_count[ 'total_raw' ] ) : ?>
+				<?php if ( $img_count[ 'groups_raw' ] ) : ?>
 					<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 				<?php endif; ?>
 			</h3>
@@ -125,64 +132,27 @@ else {
 						<?php endif ; ?>
 
 						<div class="litespeed-silence">
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_FETCH ] ) ) : ?>
+							<?php
+								$list = array(
+									Img_Optm::DB_STATUS_ERR_FETCH	=> __('Images failed to fetch', 'litespeed-cache'),
+									Img_Optm::DB_STATUS_ERR_OPTM	=> __('Images previously optimized', 'litespeed-cache'),
+									Img_Optm::DB_STATUS_ERR			=> __('Images failed with other errors', 'litespeed-cache'),
+									Img_Optm::DB_STATUS_MISS		=> __('Image files missing', 'litespeed-cache'),
+									Img_Optm::DB_STATUS_DUPLICATED	=> __('Image files duplicated', 'litespeed-cache'),
+									Img_Optm::DB_STATUS_XMETA		=> __('Images with wrong meta', 'litespeed-cache'),
+								);
+							?>
+							<?php foreach ( $list as $k => $v ): ?>
+							<?php if ( ! empty( $img_count[ 'group.' . $k ] ) ) : ?>
 							<p>
-								<?php echo __('Images failed to fetch', 'litespeed-cache') ; ?>:
+								<?php echo $v; ?>:
 								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_FETCH ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR_FETCH ], 'image' ) ; ?>)
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . $k ] ); ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . $k ], 'image' ); ?>)
 								</code>
 							</p>
-							<?php endif ; ?>
-
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_OPTM ] ) ) : ?>
-							<p>
-								<?php echo __('Images previously optimized', 'litespeed-cache') ; ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR_OPTM ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR_OPTM ], 'image' ) ; ?>)
-								</code>
-							</p>
-							<?php endif ; ?>
-
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR ] ) ) : ?>
-							<p>
-								<?php echo __('Images failed with other errors', 'litespeed-cache') ; ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_ERR ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_ERR ], 'image' ) ; ?>)
-								</code>
-							</p>
-							<?php endif ; ?>
-
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_MISS ] ) ) : ?>
-							<p>
-								<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_MISS ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_MISS ], 'image' ) ; ?>)
-								</code>
-							</p>
-							<?php endif ; ?>
-
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_DUPLICATED ] ) ) : ?>
-							<p>
-								<?php echo __('Image files duplicated', 'litespeed-cache') ; ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_DUPLICATED ] ) ; ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_DUPLICATED ], 'image' ) ; ?>)
-								</code>
-							</p>
-							<?php endif ; ?>
-
-							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_XMETA ] ) ) : ?>
-							<p>
-								<?php echo __('Images with wrong meta', 'litespeed-cache') ; ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_XMETA ] ) ; ?>
-								</code>
-							</p>
-							<?php endif ; ?>
+							<?php endif; ?>
+							<?php endforeach; ?>
 
 							<?php if ( ! empty( $optm_summary[ 'fetch_failed' ] ) ) : ?>
 								<p>
@@ -276,26 +246,50 @@ else {
 
 			<div class="litespeed-flex-container">
 				<div class="litespeed-icon-vertical-middle">
+					<?php echo GUI::pie( $gathered_percentage, 100, true ) ; ?>
+				</div>
+				<div>
+					<p>
+						<?php echo __( 'Images total', 'litespeed-cache') ; ?>:
+
+						<code><?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] ) ; ?></code>
+
+						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-left20" title="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">?</a>
+					</p>
+					<p>
+						<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) ) : ?>
+							<?php echo __('Images not yet gathered', 'litespeed-cache') ; ?>:
+							<code><?php echo Admin_Display::print_plural( $img_count[ 'groups_not_gathered' ] ) ; ?></code>
+						<?php else : ?>
+							<font class="litespeed-congratulate"><?php echo __('Congratulations, all gathered!', 'litespeed-cache') ; ?></font>
+						<?php endif ; ?>
+					</p>
+				</div>
+			</div>
+
+			<div class="litespeed-flex-container">
+				<div class="litespeed-icon-vertical-middle">
 					<?php echo GUI::pie( $finished_percentage, 100, true ) ; ?>
 				</div>
 				<div>
 					<p>
 						<?php echo __( 'Images total', 'litespeed-cache') ; ?>:
 
-						<code><?php echo Admin_Display::print_plural( $img_count[ 'total_img' ] ) ; ?></code>
+						<code><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ) ; ?></code>
 
 						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-left20" title="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">?</a>
 					</p>
 					<p>
-						<?php if ( ! empty( $img_count[ 'total_raw' ] ) ) : ?>
+						<?php if ( ! empty( $img_count[ 'imgs_raw' ] ) ) : ?>
 							<?php echo __('Images not yet requested', 'litespeed-cache') ; ?>:
-							<code><?php echo Admin_Display::print_plural( $img_count[ 'total_raw' ] ) ; ?></code>
+							<code><?php echo Admin_Display::print_plural( $img_count[ 'imgs_raw' ], 'image' ) ; ?></code>
 						<?php else : ?>
-							<font class="litespeed-congratulate"><?php echo __('Congratulations, all done!', 'litespeed-cache') ; ?></font>
+							<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache') ; ?></font>
 						<?php endif ; ?>
 					</p>
 				</div>
 			</div>
+
 		</div></div>
 
 		<div class="postbox litespeed-postbox"><div class="inside">

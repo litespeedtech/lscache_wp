@@ -402,6 +402,8 @@ class Img_Optm extends Base
 	 */
 	private function _send_request()
 	{
+		global $wpdb;
+
 		$list = array();
 		foreach ( $this->_img_in_queue as $v ) {
 			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] ) ;
@@ -490,7 +492,7 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * LiteSpeed Child server notify Client img status changed
+	 * Cloud server notify Client img status changed
 	 *
 	 * @since  1.6
 	 * @since  1.6.5 Added err/request status free switch
@@ -500,210 +502,126 @@ class Img_Optm extends Base
 	{
 		// Validate key
 		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
-			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
+			return array( '_res' => 'err', '_msg' => 'wrong_key' );
 		}
 
-		global $wpdb ;
+		global $wpdb;
 
 		$notified_data = $_POST[ 'data' ];
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
-			return array( '_res' => 'err', '_msg' => 'no notified data' ) ;
+			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' );
+			return array( '_res' => 'err', '_msg' => 'no notified data' );
 		}
 
-		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -21 ) !== 'api.litespeedtech.com' ) {
-			Log::debug( '[Img_Optm] notify exit: no/wrong server' ) ;
-			return array( '_res' => 'err', '_msg' => 'no/wrong server' ) ;
+		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -11 ) !== '.quic.cloud' ) {
+			Log::debug( '[Img_Optm] notify exit: no/wrong server' );
+			return array( '_res' => 'err', '_msg' => 'no/wrong server' );
 		}
 
 		$_allowed_status = array(
-			self::DB_STATUS_NOTIFIED,
-			self::DB_STATUS_REQUESTED,
-		) ;
+			self::DB_STATUS_NOTIFIED, 		// 6 -> 'notified';
+			self::DB_STATUS_ERR_FETCH, 		// -6 -> 'err_fetch';
+			self::DB_STATUS_ERR_OPTM, 		// -7 -> 'err_optm';
+			self::DB_STATUS_ERR, 			// -9 -> 'err';
+		);
 
-		if ( empty( $_POST[ 'status' ] ) || ( ! in_array( $_POST[ 'status' ], $_allowed_status ) && substr( $_POST[ 'status' ], 0, 3 ) != self::DB_STATUS_ERR ) ) {
-			Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
-			return array( '_res' => 'err', '_msg' => 'no/wrong status' ) ;
+		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
+			Log::debug( '[Img_Optm] notify exit: no/wrong status' );
+			return array( '_res' => 'err', '_msg' => 'no/wrong status' );
 		}
 
-		$server = $_POST[ 'server' ] ;
-		$status = $_POST[ 'status' ] ;
+		$status = $_POST[ 'status' ];
 
-		$pids = array_keys( $notified_data ) ;
+		$last_log_pid = 0;
 
-		$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
-				FROM $this->_table_img_optm a
-				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.optm_status != %s AND a.post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . " )" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_SIZE, self::DB_STATUS_PULLED ), $pids ) ) ) ;
+		if ( $status == self::DB_STATUS_NOTIFIED ) {
+			// Notified data format: [ img_optm_id => [ id=>, src_size=>, ori=>, ori_md5=>, ori_reduced=>, webp=>, webp_md5=>, webp_reduced=> ] ]
+			$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
+					FROM $this->_table_img_optming a
+					LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
+					WHERE a.id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " )";
+			$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_SIZE ), array_keys( $notified_data ) ) ) );
+			foreach ( $list as $v ) {
+				$json = $notified_data[ $v->id ];
 
-		$need_pull = false ;
-		$last_log_pid = 0 ;
-		$postmeta_info = array() ;
-		$child_postmeta_info = array() ;
+				$server_info = array(
+					'server'	=> $_POST[ 'server' ],
+				);
 
-		foreach ( $list as $v ) {
-			if ( ! array_key_exists( $v->src_md5, $notified_data[ $v->post_id ] ) ) {
-				// This image is not in notifcation
-				continue ;
-			}
-
-			$json = $notified_data[ $v->post_id ][ $v->src_md5 ] ;
-
-			$server_info = array(
-				'server'	=> $server,
-			) ;
-
-			// Only need to update meta_info for pull notification, for other notifications, no need to modify meta_info
-			if ( ! empty( $json[ 'ori' ] ) || ! empty( $json[ 'webp' ] ) ) {
 				// Save server side ID to send taken notification after pulled
-				$server_info[ 'id' ] = $json[ 'id' ] ;
+				$server_info[ 'id' ] = $json[ 'id' ];
 
-				// Default optm info array
-				if ( empty( $postmeta_info[ $v->post_id ] ) ) {
-					$postmeta_info[ $v->post_id ] =  array(
-						'meta_id'	=> $v->b_meta_id,
-						'meta_info'	=> array(
-							'ori_total' => 0,
-							'ori_saved' => 0,
-							'webp_total' => 0,
-							'webp_saved' => 0,
-						),
-					) ;
-					// Init optm_info for the first one
-					if ( ! empty( $v->b_meta_id ) ) {
-						foreach ( maybe_unserialize( $v->b_optm_info ) as $k2 => $v2 ) {
-							$postmeta_info[ $v->post_id ][ 'meta_info' ][ $k2 ] += $v2 ;
-						}
+				// Optm info array
+				$postmeta_info =  array(
+					'ori_total' => 0,
+					'ori_saved' => 0,
+					'webp_total' => 0,
+					'webp_saved' => 0,
+				);
+				// Init postmeta_info for the first one
+				if ( ! empty( $v->b_meta_id ) ) {
+					foreach ( maybe_unserialize( $v->b_optm_info ) as $k2 => $v2 ) {
+						$postmeta_info[ $k2 ] += $v2;
 					}
 				}
 
-			}
+				if ( ! empty( $json[ 'ori' ] ) ) {
+					$server_info[ 'ori_md5' ] = $json[ 'ori_md5' ];
+					$server_info[ 'ori' ] = $json[ 'ori' ];
 
-			$target_saved = 0 ;
-			if ( ! empty( $json[ 'ori' ] ) ) {
-				$server_info[ 'ori_md5' ] = $json[ 'ori_md5' ] ;
-				$server_info[ 'ori' ] = $json[ 'ori' ] ;
-
-				$target_saved = $json[ 'ori_reduced' ] ;
-
-				// Append meta info
-				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_total' ] += $json[ 'src_size' ] ;
-				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_saved' ] += $json[ 'ori_reduced' ] ;
-
-			}
-
-			$webp_saved = 0 ;
-			if ( ! empty( $json[ 'webp' ] ) ) {
-				$server_info[ 'webp_md5' ] = $json[ 'webp_md5' ] ;
-				$server_info[ 'webp' ] = $json[ 'webp' ] ;
-
-				$webp_saved = $json[ 'webp_reduced' ] ;
-
-				// Append meta info
-				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_total' ] += $json[ 'src_size' ] ;
-				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_saved' ] += $json[ 'webp_reduced' ] ;
-			}
-
-			// Update status and data
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d, server_info = %s WHERE id = %d " ;
-			$wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, json_encode( $server_info ), $v->id ) ) ) ;
-
-			// Update child images ( same md5 files )
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d WHERE root_id = %d " ;
-			$child_count = $wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, $v->id ) ) ) ;
-
-			// Group child meta_info for later update
-			if ( ! empty( $json[ 'ori' ] ) || ! empty( $json[ 'webp' ] ) ) {
-				if ( $child_count ) {
-					$child_postmeta_info[ $v->id ] = $postmeta_info[ $v->post_id ][ 'meta_info' ] ;
+					// Append meta info
+					$postmeta_info[ 'ori_total' ] += $json[ 'src_size' ];
+					$postmeta_info[ 'ori_saved' ] += $json[ 'ori_reduced' ];
 				}
-			}
 
-			// write log
-			$pid_log = $last_log_pid == $v->post_id ? '.' : $v->post_id ;
-			Log::debug( '[Img_Optm] notify_img [status] ' . $status . " \t\t[pid] " . $pid_log . " \t\t[id] " . $v->id ) ;
-			$last_log_pid = $v->post_id ;
+				if ( ! empty( $json[ 'webp' ] ) ) {
+					$server_info[ 'webp_md5' ] = $json[ 'webp_md5' ];
+					$server_info[ 'webp' ] = $json[ 'webp' ];
 
-			// set need_pull tag
-			if ( $status == self::DB_STATUS_NOTIFIED ) {
-				$need_pull = true ;
-			}
+					// Append meta info
+					$postmeta_info[ 'webp_total' ] += $json[ 'src_size' ];
+					$postmeta_info[ 'webp_saved' ] += $json[ 'webp_reduced' ];
+				}
 
-		}
+				// Update status and data in working table
+				$q = "UPDATE $this->_table_img_optming SET optm_status = %s, server_info = %s WHERE id = %d ";
+				$wpdb->query( $wpdb->prepare( $q, array( $status, json_encode( $server_info ), $v->id ) ) );
 
-		/**
-		 * Update size saved info
-		 * @since  1.6.5
-		 */
-		if ( $postmeta_info ) {
-			foreach ( $postmeta_info as $post_id => $optm_arr ) {
-				$optm_info = serialize( $optm_arr[ 'meta_info' ] ) ;
-
-				if ( ! empty( $optm_arr[ 'meta_id' ] ) ) {
-					$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d " ;
-					$wpdb->query( $wpdb->prepare( $q, array( $optm_info, $optm_arr[ 'meta_id' ] ) ) ) ;
+				// Update postmeta for optm summary
+				$postmeta_info = serialize( $postmeta_info );
+				if ( ! empty( $v->b_meta_id ) ) {
+					$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );
 				}
 				else {
-					Log::debug( '[Img_Optm] New size info [pid] ' . $post_id ) ;
+					Log::debug( '[Img_Optm] New size info [pid] ' . $v->post_id ) ;
 					$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )" ;
-					$wpdb->query( $wpdb->prepare( $q, array( $post_id, self::DB_SIZE, $optm_info ) ) ) ;
+					$wpdb->query( $wpdb->prepare( $q, array( $v->post_id, self::DB_SIZE, $postmeta_info ) ) ) ;
 				}
-			}
-		}
 
-		// Update child postmeta data based on root_id
-		if ( $child_postmeta_info ) {
-			Log::debug( '[Img_Optm] Proceed child images [total] ' . count( $child_postmeta_info ) ) ;
-
-			$root_id_list = array_keys( $child_postmeta_info ) ;
-
-			$q = "SELECT a.*, b.meta_id as b_meta_id
-				FROM $this->_table_img_optm a
-				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.root_id IN ( " . implode( ',', array_fill( 0, count( $root_id_list ), '%d' ) ) . " ) GROUP BY a.post_id" ;
-
-			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_SIZE ), $root_id_list ) ) ) ;
-
-			$pids_to_update = array() ;
-			$pids_data_to_insert = array() ;
-			foreach ( $tmp as $v ) {
-				$optm_info = serialize( $child_postmeta_info[ $v->root_id ] ) ;
-
-				if ( $v->b_meta_id ) {
-					$pids_to_update[] = $v->post_id ;
-				}
-				else {
-					$pids_data_to_insert[] = $v->post_id ;
-					$pids_data_to_insert[] = self::DB_SIZE ;
-					$pids_data_to_insert[] = $optm_info ;
-				}
+				// write log
+				$pid_log = $last_log_pid == $v->post_id ? '.' : $v->post_id;
+				Log::debug( '[Img_Optm] notify_img [status] ' . $status . " \t\t[pid] " . $pid_log . " \t\t[id] " . $v->id );
+				$last_log_pid = $v->post_id;
 			}
 
-			// Update these size_info
-			if ( $pids_to_update ) {
-				$pids_to_update = array_unique( $pids_to_update ) ;
-				Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
-
-				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . " )" ;
-				$wpdb->query( $wpdb->prepare( $q, array_merge( array( $optm_info, self::DB_SIZE ), $pids_to_update ) ) ) ;
-			}
-
-			// Insert these size_info
-			if ( $pids_data_to_insert ) {
-				Log::debug( '[Img_Optm] Insert child group size_info [total] ' . ( count( $pids_data_to_insert ) / 3 ) ) ;
-
-				$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
-				// Add placeholder
-				$q .= $this->_chunk_placeholder( $pids_data_to_insert, 3 ) ;
-				$wpdb->query( $wpdb->prepare( $q, $pids_data_to_insert ) ) ;
-			}
-
-		}
-
-		// Mark need_pull tag for cron
-		if ( $need_pull ) {
+			// Mark need_pull tag for cron
 			self::update_option( self::DB_NEED_PULL, self::DB_STATUS_NOTIFIED ) ;
+		}
+		elseif ( $status == self::DB_STATUS_ERR_FETCH ) {
+			// Only update working table
+			$q = "UPDATE $this->_table_img_optming SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
+		}
+		else { // Other errors will directly update img_optm table and remove the working records
+
+			// Delete from working table
+			$q = "DELETE FROM $this->_table_img_optming WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$wpdb->query( $wpdb->prepare( $q, $notified_data ) );
+
+			// Update img_optm
+			$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
 		}
 
 		// redo count err
@@ -1539,8 +1457,9 @@ class Img_Optm extends Base
 				AND b.meta_key = '_wp_attachment_metadata'
 			";
 		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') " ;
-		$total_not_gathered = $total_raw = $total_img = $wpdb->get_var( $q );
-		$total_raw_imgs = '-';
+		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
+		$imgs_raw = 0;
+		$imgs_gathered = 0;
 
 		if ( $tb_existed ) {
 			$q = "SELECT COUNT(*)
@@ -1553,17 +1472,19 @@ class Img_Optm extends Base
 					AND b.meta_key = '_wp_attachment_metadata'
 					AND c.id IS NULL
 				";
-			$total_not_gathered = $wpdb->get_var( $q );
+			$groups_not_gathered = $wpdb->get_var( $q );
 
 			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d", self::DB_STATUS_RAW );
-			list( $total_raw, $total_raw_imgs ) = $wpdb->get_row( $q, ARRAY_N );
+			list( $groups_raw, $imgs_raw ) = $wpdb->get_row( $q, ARRAY_N );
+			$imgs_gathered = $wpdb->get_var( "SELECT COUNT(*) FROM $this->_table_img_optm" );
 		}
 
 		$count_list = array(
-			'total_img'	=> $total_img,
-			'total_not_gathered'	=> $total_not_gathered,
-			'total_raw'	=> $total_raw,
-			'total_raw_imgs'	=> $total_raw_imgs,
+			'groups_all'	=> $groups_all,
+			'groups_not_gathered'	=> $groups_not_gathered,
+			'groups_raw'	=> $groups_raw,
+			'imgs_raw'	=> $imgs_raw,
+			'imgs_gathered'	=> $imgs_gathered,
 		) ;
 
 		// images count from work table
