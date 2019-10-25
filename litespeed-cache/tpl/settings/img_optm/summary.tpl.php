@@ -32,9 +32,8 @@ else {
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-small"></div>
-
 		<div class="litespeed-text-center">
-			<a class="button button-primary litespeed-btn-large"
+			<a data-litespeed-onlyonce class="button button-primary litespeed-btn-large"
 				<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'imgs_raw' ] ) ) : ?>
 					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>"
 				<?php else : ?>
@@ -57,7 +56,7 @@ else {
 		</div>
 
 		<div>
-			<a class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
+			<a data-litespeed-onlyonce class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
 				<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
 					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>"
 				<?php else : ?>

@@ -89,6 +89,8 @@ class Cloud extends Base
 			return;
 		}
 
+		Log::debug( '[Cloud] _sync_usage ', $usage );
+
 		foreach ( self::SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
@@ -193,7 +195,12 @@ class Cloud extends Base
 	 */
 	private function _get( $service, $data = false )
 	{
-		if ( ! $this->_maybe_cloud( $service ) ) {
+		$service_tag = $service;
+		if ( ! empty( $data[ 'action' ] ) ) {
+			$service_tag .= '-' . $data[ 'action' ];
+		}
+
+		if ( ! $this->_maybe_cloud( $service_tag ) ) {
 			return;
 		}
 
@@ -210,12 +217,12 @@ class Cloud extends Base
 
 		Log::debug( '[Cloud] getting from : ' . $url );
 
-		$this->_summary[ 'curr_request.' . $service ] = time();
+		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary( $this->_summary );
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => false ) );
 
-		return $this->_parse_response( $response, $service );
+		return $this->_parse_response( $response, $service, $service_tag );
 	}
 
 	/**
@@ -224,7 +231,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _maybe_cloud( $service )
+	private function _maybe_cloud( $service_tag )
 	{
 		if ( ! $this->_api_key ) {
 			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
@@ -233,10 +240,12 @@ class Cloud extends Base
 		}
 
 		// Limit frequent unfinished request to 5min
-		if ( ! empty( $this->_summary[ 'curr_request.' . $service ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service ] + 300 - time();
+		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
+			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 300 - time();
 			if ( $expired > 0 ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), $expired . 's', $service );
+				Log::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
+
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, 0 ), '<code>' . $service_tag . '</code>' );
 				Admin_Display::error( $msg );
 				return false;
 			}
@@ -265,7 +274,12 @@ class Cloud extends Base
 	 */
 	private function _post( $service, $data = false, $time_out = false )
 	{
-		if ( ! $this->_maybe_cloud( $service ) ) {
+		$service_tag = $service;
+		if ( ! empty( $data[ 'action' ] ) ) {
+			$service_tag .= '-' . $data[ 'action' ];
+		}
+
+		if ( ! $this->_maybe_cloud( $service_tag ) ) {
 			return;
 		}
 
@@ -293,12 +307,12 @@ class Cloud extends Base
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
 		 */
-		$this->_summary[ 'curr_request.' . $service ] = time();
+		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary( $this->_summary );
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => false ) );
 
-		return $this->_parse_response( $response, $service );
+		return $this->_parse_response( $response, $service, $service_tag );
 	}
 
 	/**
@@ -307,7 +321,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _parse_response( $response, $service )
+	private function _parse_response( $response, $service, $service_tag )
 	{
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
@@ -385,7 +399,7 @@ class Cloud extends Base
 		// Parse general error msg
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
-			Log::debug( '[Cloud] _err: ' . $json_msg );
+			Log::debug( '[Cloud] ❌ _err: ' . $json_msg );
 
 			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg );
 			$msg .= $this->_parse_link( $json );
@@ -399,8 +413,8 @@ class Cloud extends Base
 			unset( $json[ '_msg' ] );
 		}
 
-		$this->_summary[ 'last_request.' . $service ] = $this->_summary[ 'curr_request.' . $service ];
-		$this->_summary[ 'curr_request.' . $service ] = 0;
+		$this->_summary[ 'last_request.' . $service_tag ] = $this->_summary[ 'curr_request.' . $service_tag ];
+		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
 		self::save_summary( $this->_summary );
 
 		return $json;

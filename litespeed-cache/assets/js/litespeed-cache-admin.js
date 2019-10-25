@@ -227,6 +227,17 @@ var _litespeed_dots ;
 			} ) ;
 		} ) ;
 
+		/**
+		 * Click only once
+		 */
+		if ( $( '[data-litespeed-onlyonce]' ).length > 0 ) {
+			$( '[data-litespeed-onlyonce]' ).click( function ( e ) {
+				if ( $( this ).hasClass( 'disabled' ) ) {
+					e.preventDefault();
+				}
+				$( this ).addClass( 'disabled' );
+			} );
+		}
 	}) ;
 })(jQuery) ;
 

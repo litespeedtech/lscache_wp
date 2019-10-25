@@ -72,7 +72,7 @@ class Img_Optm extends Base
 	 */
 	protected function __construct()
 	{
-		Log::debug2( 'ImgOptm init' );
+		Log::debug2( '[ImgOptm] init' );
 
 		$this->wp_upload_dir = wp_upload_dir();
 		$this->__media = Media::get_instance();
@@ -724,7 +724,7 @@ class Img_Optm extends Base
 				 * Use wp orignal get func to avoid allow_url_open off issue
 				 * @since  1.6.5
 				 */
-				$response = wp_remote_get( $server_info[ 'ori' ], array( 'timeout' => 60 ) );
+				$response = wp_remote_get( $server_info[ 'server' ] . '/' . $server_info[ 'ori' ], array( 'timeout' => 60 ) );
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
 					Log::debug( 'IAPI failed to pull image: ' . $error_message );
@@ -775,7 +775,7 @@ class Img_Optm extends Base
 
 			if ( ! empty( $server_info[ 'webp' ] ) ) {
 				// Fetch
-				$response = wp_remote_get( $server_info[ 'webp' ], array( 'timeout' => 60 ) );
+				$response = wp_remote_get( $server_info[ 'server' ] . '/' . $server_info[ 'webp' ], array( 'timeout' => 60 ) );
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
 					Log::debug( 'IAPI failed to pull webp image: ' . $error_message );
@@ -1368,6 +1368,7 @@ class Img_Optm extends Base
 		global $wpdb;
 
 		$tb_existed = Data::get_instance()->tb_exist( 'img_optm' );
+		$tb_existed2 = Data::get_instance()->tb_exist( 'img_optming' );
 
 		$q = "SELECT COUNT(*)
 			FROM $wpdb->posts a
@@ -1409,26 +1410,34 @@ class Img_Optm extends Base
 		) ;
 
 		// images count from work table
-		$q = "SELECT COUNT(distinct post_id),COUNT(*) FROM $this->_table_img_optming WHERE optm_status = %d";
-
-		// The groups to check
+		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optming WHERE optm_status = %d";
 		$groups_to_check = array(
 			self::DB_STATUS_REQUESTED,
 			self::DB_STATUS_NOTIFIED,
+			self::DB_STATUS_ERR_FETCH,
+		) ;
+		foreach ( $groups_to_check as $v ) {
+			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
+			if ( $tb_existed ) {
+				list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+			}
+		}
+
+		// images count from image table
+		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d";
+		$groups_to_check = array(
 			self::DB_STATUS_DUPLICATED,
 			self::DB_STATUS_PULLED,
 			self::DB_STATUS_FAILED,
 			self::DB_STATUS_MISS,
-			self::DB_STATUS_ERR_FETCH,
 			self::DB_STATUS_ERR_OPTM,
 			self::DB_STATUS_XMETA,
-			self::DB_STATUS_ERR,//todo: use img not work table to count
+			self::DB_STATUS_ERR,
 		) ;
-
 		foreach ( $groups_to_check as $v ) {
 			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
 			if ( $tb_existed ) {
-				list( $count_list[ 'img.' . $v ], $count_list[ 'group.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+				list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
 			}
 		}
 
