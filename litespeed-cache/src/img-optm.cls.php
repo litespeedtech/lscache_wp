@@ -837,6 +837,12 @@ class Img_Optm extends Base
 			Cloud::post( Cloud::SVC_IMG_OPTM, $data ); // We don't use $server. So if user changed cloud node, the previous request will fail to notify, but won't hurt so just ignore
 		}
 
+		if ( empty( $this->_summary[ 'recovered' ] ) ) {
+			$this->_summary[ 'recovered' ] = 0;
+		}
+		$this->_summary[ 'recovered' ] += $total_pulled_ori + $total_pulled_webp;
+		self::save_summary( $this->_summary ) ;
+
 		// Check if there is still task in queue
 		$q = "SELECT * FROM $this->_table_img_optming WHERE optm_status = %s LIMIT 1";
 		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::DB_STATUS_NOTIFIED ) );

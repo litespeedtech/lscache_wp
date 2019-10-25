@@ -89,7 +89,7 @@ class Cloud extends Base
 			return;
 		}
 
-		Log::debug( '[Cloud] _sync_usage ', $usage );
+		Log::debug( '[Cloud] _sync_usage ' . json_encode( $usage ) );
 
 		foreach ( self::SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
