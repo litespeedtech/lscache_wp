@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <?php if ( ! LSWCP_ESI_SUPPORT ) : ?>
 	<div class="litespeed-ent-notice">
-		<div class="litespeed-ent-notice-desc"><?php echo __('Available in LiteSpeed Enterprise version', 'litespeed-cache'); ?></div>
+		<div class="litespeed-ent-notice-desc"><?php echo __('Available in LiteSpeed Enterprise version or QUIC.cloud CDN', 'litespeed-cache'); ?></div>
 	</div>
 <?php endif; ?>
 
