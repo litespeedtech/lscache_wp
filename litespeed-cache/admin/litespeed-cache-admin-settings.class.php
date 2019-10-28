@@ -85,7 +85,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_validate_singlesite() ;
 		}
 
-		if ( LSWCP_ESI_SUPPORT ) {
+		// if ( LSWCP_ESI_SUPPORT ) {
 			$orig_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::OPID_ESI_ENABLE ] ;
 
 			$this->_validate_esi() ;
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Admin_Settings
 			if ( $orig_esi_enabled !== $new_esi_enabled ) {
 				LiteSpeed_Cache_Purge::purge_all( 'ESI changed' ) ;
 			}
-		}
+		// }
 
 		if ( ! empty( $this->_err ) ) {
 			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode( '<br />', $this->_err ) ) ;

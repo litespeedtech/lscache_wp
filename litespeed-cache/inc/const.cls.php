@@ -562,11 +562,11 @@ class LiteSpeed_Cache_Const
 			self::CRWL_CRON_ACTIVE => false,
 		) ;
 
-		if ( LSWCP_ESI_SUPPORT ) {
+		// if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
 			$default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
 			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
-		}
+		// }
 
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
