@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.8.7
+Stable tag: 2.9.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -289,6 +289,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.9 - Oct 28 2019 =
+* <strong>Core</strong>: Preload all classes to avoid getting error for upcoming v3.0 upgrade.
+* <strong>Object</strong>: Improved compatibility with upcoming v3.0 release.
+* <strong>ESI</strong>: Unlocked ESI for OLS in case OLS is using QUIC.cloud CDN which supports ESI.
+* <strong>3rd</strong>: Elementor Edit button will now show when ESI enabled. (#PR149 #335322 @maxgorky)
+* 🐞<strong>Media</strong>: Fixed missing Media optimization column when Admin role is excluded from optimization in settings. (@mikeyhash @pako69 @dgilfillan)
 
 = 2.9.8.7 - Oct 11 2019 =
 * <strong>3rd</strong>: Enhanced WP stateless compatibility. (#PR143)

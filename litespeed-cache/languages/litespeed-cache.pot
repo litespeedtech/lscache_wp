@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.8.5\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-08-21 17:30:00+00:00\n"
+"POT-Creation-Date: 2019-10-28 20:50:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -583,7 +583,7 @@ msgid "Disable"
 msgstr ""
 
 #: admin/tpl/crawler.php:91 admin/tpl/inc/check_cache_disabled.php:38
-#: admin/tpl/manage/manage_cdn.php:15
+#: admin/tpl/manage/manage_cdn.php:15 admin/tpl/setting/settings_esi.php:37
 #: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:183
 msgid "WARNING"
 msgstr ""
@@ -757,7 +757,7 @@ msgstr ""
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:34 admin/tpl/setting/settings_esi.php:43
+#: admin/tpl/esi_widget_edit.php:34 admin/tpl/setting/settings_esi.php:44
 msgid "Enable ESI"
 msgstr ""
 
@@ -860,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.8.5)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.9)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -2563,38 +2563,40 @@ msgstr ""
 msgid "ESI sample for developers"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:37
-msgid "Available in LiteSpeed Enterprise version"
+#: admin/tpl/setting/settings_esi.php:38
+msgid ""
+"These options are only available with LiteSpeed Enterprise Web Server or "
+"QUIC.cloud CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:47
+#: admin/tpl/setting/settings_esi.php:48
 msgid ""
 "Enable caches public pages for logged in users and serves the Admin Bar and "
 "Comment Form via ESI blocks. These two blocks will be uncached unless "
 "enabled below."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:53
+#: admin/tpl/setting/settings_esi.php:54
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:57
+#: admin/tpl/setting/settings_esi.php:58
 msgid "Cache the build-in Admin Bar ESI block."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:63
+#: admin/tpl/setting/settings_esi.php:64
 msgid "Cache Comment Form"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:67
+#: admin/tpl/setting/settings_esi.php:68
 msgid "Cache the build-in Comment Form ESI block."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:73
+#: admin/tpl/setting/settings_esi.php:74
 msgid "Vary Group"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:88
+#: admin/tpl/setting/settings_esi.php:89
 msgid ""
 "If your site contains public content that certain user roles can see but "
 "other roles cannot, you can specify a Vary Group for those user roles. For "
@@ -4082,7 +4084,7 @@ msgid "Position reset notification sent successfully"
 msgstr ""
 
 #: inc/crawler.class.php:503 includes/litespeed-cache-crawler.class.php:503
-#: lib/litespeed/litespeed-crawler.class.php:414
+#: lib/litespeed/litespeed-crawler.class.php:413
 msgid "Crawler %s reached end of sitemap file."
 msgstr ""
 
@@ -4379,35 +4381,35 @@ msgstr ""
 msgid " %s ago"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:220
+#: lib/litespeed/litespeed-crawler.class.php:219
 msgid "Cannot read meta file: %s"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:225
+#: lib/litespeed/litespeed-crawler.class.php:224
 msgid "Oh look, there is already another LiteSpeed crawler running!"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:231
+#: lib/litespeed/litespeed-crawler.class.php:230
 msgid "Stopped due to load hit the maximum."
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:313
+#: lib/litespeed/litespeed-crawler.class.php:312
 msgid "Stopped due to error when crawling urls %1$s : %2$s"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:320
+#: lib/litespeed/litespeed-crawler.class.php:319
 msgid "Stopped: crawler disabled by the server admin"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:341
+#: lib/litespeed/litespeed-crawler.class.php:340
 msgid "Stopped due to exceeding defined Maximum Run Time"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:358
+#: lib/litespeed/litespeed-crawler.class.php:357
 msgid "Stopped due to reset meta position"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:366
+#: lib/litespeed/litespeed-crawler.class.php:365
 msgid "Stopped due to load over limit"
 msgstr ""
 
