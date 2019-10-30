@@ -625,13 +625,13 @@ class GUI extends Base
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function img_optm_clean_up_unfinished()
+	public static function img_optm_clean_up( $unfinished_num )
 	{
 		return sprintf(
 			'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
-			Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ),
+			Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ),
 			__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
-			__( 'Clean Up Unfinished Data', 'litespeed-cache' )
+			__( 'Clean Up Unfinished Data', 'litespeed-cache' ) . ( $unfinished_num ? ': ' . Admin_Display::print_plural( $unfinished_num, 'image' ) : '')
 		) ;
 	}
 

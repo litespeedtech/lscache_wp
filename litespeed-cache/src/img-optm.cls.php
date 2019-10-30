@@ -14,16 +14,16 @@ class Img_Optm extends Base
 {
 	protected static $_instance;
 
-	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize';
-	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken';
-	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
-	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished';
+	const CLOUD_ACTION_NEW_REQ = 'new_req';
+	const CLOUD_ACTION_TAKEN = 'taken';
+	const CLOUD_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
+	const CLOUD_ACTION_CLEAN = 'clean';
 
 	const TYPE_SYNC_DATA = 'sync_data';
 	const TYPE_IMG_OPTIMIZE = 'img_optm';
 	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan';
 	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy';
-	const TYPE_IMG_OPTM_DESTROY_UNFINISHED = 'img_optm_destroy-unfinished';
+	const TYPE_CLEAN = 'clean';
 	const TYPE_IMG_PULL = 'img_pull';
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori';
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm';
@@ -35,18 +35,18 @@ class Img_Optm extends Base
 	const DB_IMG_OPTM_DATA = 'litespeed-optimize-data';
 	const DB_IMG_OPTM_STATUS = 'litespeed-optimize-status';
 
-	const DB_STATUS_RAW 		= 0; // 'raw';
-	const DB_STATUS_REQUESTED 	= 3; // 'requested';
-	const DB_STATUS_NOTIFIED 	= 6; // 'notified';
-	const DB_STATUS_DUPLICATED 	= 8; // 'duplicated';
-	const DB_STATUS_PULLED 		= 9; // 'pulled';
-	const DB_STATUS_FAILED 		= -1; //'failed';
-	const DB_STATUS_MISS 		= -3; // 'miss';
-	const DB_STATUS_ERR_FETCH 	= -5; // 'err_fetch';
-	const DB_STATUS_ERR_404 	= -6; // 'err_404';
-	const DB_STATUS_ERR_OPTM 	= -7; // 'err_optm';
-	const DB_STATUS_XMETA 		= -8; // 'xmeta';
-	const DB_STATUS_ERR 		= -9; // 'err';
+	const STATUS_RAW 		= 0; // 'raw';
+	const STATUS_REQUESTED 	= 3; // 'requested';
+	const STATUS_NOTIFIED 	= 6; // 'notified';
+	const STATUS_DUPLICATED 	= 8; // 'duplicated';
+	const STATUS_PULLED 		= 9; // 'pulled';
+	const STATUS_FAILED 		= -1; //'failed';
+	const STATUS_MISS 		= -3; // 'miss';
+	const STATUS_ERR_FETCH 	= -5; // 'err_fetch';
+	const STATUS_ERR_404 	= -6; // 'err_404';
+	const STATUS_ERR_OPTM 	= -7; // 'err_optm';
+	const STATUS_XMETA 		= -8; // 'xmeta';
+	const STATUS_ERR 		= -9; // 'err';
 	const DB_SIZE = 'litespeed-optimize-size';
 
 	const DB_NEED_PULL = 'need_pull';
@@ -97,9 +97,9 @@ class Img_Optm extends Base
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
-			FROM $wpdb->posts a
-			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
-			LEFT JOIN $this->_table_img_optm c ON c.post_id = a.ID
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png')
@@ -203,7 +203,7 @@ class Img_Optm extends Base
 	{
 		$data = array(
 			$pid,
-			self::DB_STATUS_XMETA,
+			self::STATUS_XMETA,
 		);
 		$this->_insert_img_optm( $data, 'post_id, optm_status' );
 		Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid );
@@ -225,7 +225,7 @@ class Img_Optm extends Base
 		$data_to_add = array();
 		foreach ( $this->_img_in_queue_missed as $src_data ) {
 			$data_to_add[] = $src_data[ 'pid' ];
-			$data_to_add[] = self::DB_STATUS_MISS;
+			$data_to_add[] = self::STATUS_MISS;
 			$data_to_add[] = $src_data[ 'src' ];
 		}
 		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src' );
@@ -241,7 +241,7 @@ class Img_Optm extends Base
 		$data = array();
 		foreach ( $this->_img_in_queue as $v ) {
 			$data[] = $v[ 'pid' ];
-			$data[] = self::DB_STATUS_RAW;
+			$data[] = self::STATUS_RAW;
 			$data[] = $v[ 'src' ];
 			$data[] = $v[ 'src_filesize' ];
 		}
@@ -266,7 +266,7 @@ class Img_Optm extends Base
 
 		$division = substr_count( $fields, ',' ) + 1;
 
-		$q = "INSERT INTO $this->_table_img_optm ( $fields ) VALUES ";
+		$q = "INSERT INTO `$this->_table_img_optm` ( $fields ) VALUES ";
 
 		// Add placeholder
 		$q .= $this->_chunk_placeholder( $data, $division );
@@ -316,8 +316,8 @@ class Img_Optm extends Base
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d";
-		$q = $wpdb->prepare( $q, array( self::DB_STATUS_RAW, $allowance ) );
+		$q = "SELECT * FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d";
+		$q = $wpdb->prepare( $q, array( self::STATUS_RAW, $allowance ) );
 
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
 
@@ -389,7 +389,7 @@ class Img_Optm extends Base
 
 		// Update img table
 		$ids = implode( ',', $img_in_queue_duplicated );
-		$q = "UPDATE $this->_table_img_optm SET optm_status = '" . self::DB_STATUS_DUPLICATED . "' WHERE id IN ( $ids )";
+		$q = "UPDATE `$this->_table_img_optm` SET optm_status = '" . self::STATUS_DUPLICATED . "' WHERE id IN ( $ids )";
 		$wpdb->query( $q );
 	}
 
@@ -454,8 +454,8 @@ class Img_Optm extends Base
 		}
 
 		$data = array(
-			'action'		=> 'new_req',
-			'list' 			=> $list,
+			'action'		=> self::CLOUD_ACTION_NEW_REQ,
+			'list' 			=> json_encode( $list ),
 			'optm_ori'		=> Conf::val( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
 			'optm_webp'		=> Conf::val( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
 			'optm_lossless'	=> Conf::val( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
@@ -480,11 +480,11 @@ class Img_Optm extends Base
 
 		$ids = implode( ',', array_map( 'intval', $json[ 'ids' ] ) );
 		// Update img table
-		$q = "UPDATE $this->_table_img_optm SET optm_status = '" . self::DB_STATUS_REQUESTED . "' WHERE id IN ( $ids )";
+		$q = "UPDATE `$this->_table_img_optm` SET optm_status = '" . self::STATUS_REQUESTED . "' WHERE id IN ( $ids )";
 		$wpdb->query( $q );
 
 		// Save to work table
-		$q = "INSERT INTO $this->_table_img_optming ( id, post_id, optm_status, src ) SELECT id, post_id, optm_status, src FROM $this->_table_img_optm WHERE id IN ( $ids )";
+		$q = "INSERT INTO `$this->_table_img_optming` ( id, post_id, optm_status, src ) SELECT id, post_id, optm_status, src FROM $this->_table_img_optm WHERE id IN ( $ids )";
 		$wpdb->query( $q );
 
 		return count( $json[ 'ids' ] );
@@ -518,11 +518,11 @@ class Img_Optm extends Base
 		}
 
 		$_allowed_status = array(
-			self::DB_STATUS_NOTIFIED, 		// 6 -> 'notified';
-			self::DB_STATUS_ERR_FETCH, 		// -5 -> 'err_fetch';
-			self::DB_STATUS_ERR_404, 		// -6 -> 'err_404';
-			self::DB_STATUS_ERR_OPTM, 		// -7 -> 'err_optm';
-			self::DB_STATUS_ERR, 			// -9 -> 'err';
+			self::STATUS_NOTIFIED, 		// 6 -> 'notified';
+			self::STATUS_ERR_FETCH, 		// -5 -> 'err_fetch';
+			self::STATUS_ERR_404, 		// -6 -> 'err_404';
+			self::STATUS_ERR_OPTM, 		// -7 -> 'err_optm';
+			self::STATUS_ERR, 			// -9 -> 'err';
 		);
 
 		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
@@ -534,11 +534,11 @@ class Img_Optm extends Base
 
 		$last_log_pid = 0;
 
-		if ( $status == self::DB_STATUS_NOTIFIED ) {
+		if ( $status == self::STATUS_NOTIFIED ) {
 			// Notified data format: [ img_optm_id => [ id=>, src_size=>, ori=>, ori_md5=>, ori_reduced=>, webp=>, webp_md5=>, webp_reduced=> ] ]
 			$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
-					FROM $this->_table_img_optming a
-					LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
+					FROM `$this->_table_img_optming` a
+					LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.post_id AND b.meta_key = %s
 					WHERE a.id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " )";
 			$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_SIZE ), array_keys( $notified_data ) ) ) );
 			foreach ( $list as $v ) {
@@ -584,18 +584,18 @@ class Img_Optm extends Base
 				}
 
 				// Update status and data in working table
-				$q = "UPDATE $this->_table_img_optming SET optm_status = %s, server_info = %s WHERE id = %d ";
+				$q = "UPDATE `$this->_table_img_optming` SET optm_status = %s, server_info = %s WHERE id = %d ";
 				$wpdb->query( $wpdb->prepare( $q, array( $status, json_encode( $server_info ), $v->id ) ) );
 
 				// Update postmeta for optm summary
 				$postmeta_info = serialize( $postmeta_info );
 				if ( ! empty( $v->b_meta_id ) ) {
-					$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
+					$q = "UPDATE `$wpdb->postmeta` SET meta_value = %s WHERE meta_id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );
 				}
 				else {
 					Log::debug( '[Img_Optm] New size info [pid] ' . $v->post_id );
-					$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )";
+					$q = "INSERT INTO `$wpdb->postmeta` ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )";
 					$wpdb->query( $wpdb->prepare( $q, array( $v->post_id, self::DB_SIZE, $postmeta_info ) ) );
 				}
 
@@ -606,21 +606,21 @@ class Img_Optm extends Base
 			}
 
 			// Mark need_pull tag for cron
-			self::update_option( self::DB_NEED_PULL, self::DB_STATUS_NOTIFIED );
+			self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED );
 		}
-		elseif ( $status == self::DB_STATUS_ERR_FETCH ) {
+		elseif ( $status == self::STATUS_ERR_FETCH ) {
 			// Only update working table
-			$q = "UPDATE $this->_table_img_optming SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
 		}
 		else { // Other errors will directly update img_optm table and remove the working records
 
 			// Delete from working table
-			$q = "DELETE FROM $this->_table_img_optming WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$q = "DELETE FROM `$this->_table_img_optming` WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, $notified_data ) );
 
 			// Update img_optm
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
 		}
 
@@ -643,7 +643,7 @@ class Img_Optm extends Base
 
 		$tag = self::get_option( self::DB_NEED_PULL );
 
-		if ( ! $tag || $tag !== self::DB_STATUS_NOTIFIED ) {
+		if ( ! $tag || $tag !== self::STATUS_NOTIFIED ) {
 			return;
 		}
 
@@ -683,8 +683,8 @@ class Img_Optm extends Base
 
 		global $wpdb;
 
-		$q = "SELECT * FROM $this->_table_img_optming WHERE optm_status = %s ORDER BY id LIMIT 1";
-		$_q = $wpdb->prepare( $q, self::DB_STATUS_NOTIFIED );
+		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %s ORDER BY id LIMIT 1";
+		$_q = $wpdb->prepare( $q, self::STATUS_NOTIFIED );
 
 		$optm_ori = Conf::val( Base::O_IMG_OPTM_ORI );
 		$rm_ori_bkup = Conf::val( Base::O_IMG_OPTM_RM_BKUP );
@@ -737,10 +737,10 @@ class Img_Optm extends Base
 					Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] );
 
 					// Update status to failed
-					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( self::DB_STATUS_FAILED, $row_img->id ) ) );
+					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
-					$q = "DELETE FROM $this->_table_img_optming WHERE id = %d ";
+					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
 					return 'Md5 dismatch'; // exit from running pull process
@@ -788,10 +788,10 @@ class Img_Optm extends Base
 					Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] );
 
 					// update status to failed
-					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( self::DB_STATUS_FAILED, $row_img->id ) ) );
+					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
-					$q = "DELETE FROM $this->_table_img_optming WHERE id = %d ";
+					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
 					return 'WebP md5 dismatch'; // exit from running pull process
@@ -815,10 +815,10 @@ class Img_Optm extends Base
 			Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id );
 
 			// Update pulled status
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE id = %d ";
-			$wpdb->query( $wpdb->prepare( $q, array( self::DB_STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) );
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE id = %d ";
+			$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) );
 			// Delete working table
-			$q = "DELETE FROM $this->_table_img_optming WHERE id = %d ";
+			$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 			$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
 			// Save server_list to notify taken
@@ -831,7 +831,7 @@ class Img_Optm extends Base
 		// Notify IAPI images taken
 		foreach ( $server_list as $server => $img_list ) {
 			$data = array(
-				'action'	=> 'taken',
+				'action'	=> self::CLOUD_ACTION_TAKEN,
 				'list' 		=> $img_list,
 			);
 			Cloud::post( Cloud::SVC_IMG_OPTM, $data ); // We don't use $server. So if user changed cloud node, the previous request will fail to notify, but won't hurt so just ignore
@@ -844,8 +844,8 @@ class Img_Optm extends Base
 		self::save_summary( $this->_summary ) ;
 
 		// Check if there is still task in queue
-		$q = "SELECT * FROM $this->_table_img_optming WHERE optm_status = %s LIMIT 1";
-		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::DB_STATUS_NOTIFIED ) );
+		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %s LIMIT 1";
+		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::STATUS_NOTIFIED ) );
 		if ( $tmp ) {
 			Log::debug( '[Img_Optm] Task in queue, to be continued...' );
 			return array( 'ok' => 'to_be_continued' );
@@ -853,7 +853,7 @@ class Img_Optm extends Base
 
 		// If all pulled, update tag to done
 		Log::debug( '[Img_Optm] Marked pull status to all pulled' );
-		self::update_option( self::DB_NEED_PULL, self::DB_STATUS_PULLED );
+		self::update_option( self::DB_NEED_PULL, self::STATUS_PULLED );
 
 		$time_cost = time() - $beginning;
 
@@ -884,7 +884,7 @@ class Img_Optm extends Base
 	 */
 	public function check_img()
 	{
-		$ip = gethostbyname( 'wp.api.litespeedtech.com' ) ;
+		$ip = gethostbyname( 'my.quic.cloud' ) ;
 		if ( $ip != Router::get_ip() ) {
 			return array( '_res' => 'err', '_msg' => 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
 		}
@@ -909,7 +909,7 @@ class Img_Optm extends Base
 		$data[ '_wp_attachment_metadata' ] = get_post_meta( $pid, '_wp_attachment_metadata', true ) ;
 
 		// Get img_optm data
-		$q = "SELECT * FROM $this->_table_img_optm WHERE post_id = %d" ;
+		$q = "SELECT * FROM `$this->_table_img_optm` WHERE post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid ) ) ;
 		$img_data = array() ;
 		if ( $list ) {
@@ -957,71 +957,43 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Clean up unfinished data for CLI usage
-	 *
-	 * @since  2.4.4
-	 * @access public
-	 */
-	public function destroy_unfinished()
-	{
-		$res = $this->_img_optimize_destroy_unfinished() ;
-
-		return $res ;
-	}
-
-	/**
-	 * Destroy all unfinished queue locally and to LiteSpeed IAPI server
+	 * Clean up all unfinished queue locally and to Cloud server
 	 *
 	 * @since 2.1.2
-	 * @access private
+	 * @access public
 	 */
-	private function _img_optimize_destroy_unfinished()
+	public function clean()
 	{
+		global $wpdb ;
+
 		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
-		global $wpdb ;
+		Log::debug( '[Img_Optm] sending CLEAN cmd to QUIC.cloud' ) ;
 
-		Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
-
-		// Push to LiteSpeed IAPI server and recover credit
-		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED, false, true ) ;
-
-		// confirm link will be displayed by Admin_API automatically
-		if ( is_array( $json ) ) {
-			Log::debug( '[Img_Optm] cmd result', $json ) ;
+		$data = array(
+			'action'	=> self::CLOUD_ACTION_CLEAN,
+		);
+		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
+		if ( ! $json ) {
+			return;
 		}
 
-		// If failed to run request to IAPI
-		if ( ! is_array( $json ) || empty( $json[ 'success' ] ) ) {
-
-			// For other errors that Admin_API didn't take
-			if ( ! is_array( $json ) ) {
-				Admin_Display::error( $json ) ;
-
-				Log::debug( '[Img_Optm] err ', $json ) ;
-
-				return $json ;
-			}
-
-			return ;
+		// Clear local working table queue
+		if ( Data::get_instance()->tb_exist( 'img_optming' ) ) {
+			$q = "TRUNCATE `$this->_table_img_optming`";
+			$wpdb->query( $q );
 		}
 
-		// Clear local queue
-		$_status_to_clear = array(
-			self::DB_STATUS_NOTIFIED,
-			self::DB_STATUS_REQUESTED,
-			self::DB_STATUS_ERR_FETCH,
-		) ;
-		$q = "DELETE FROM $this->_table_img_optm WHERE optm_status IN ( " . implode( ',', array_fill( 0, count( $_status_to_clear ), '%s' ) ) . " )" ;
-		$wpdb->query( $wpdb->prepare( $q, $_status_to_clear ) ) ;
+		// Reset img_optm table's queue
+		if ( Data::get_instance()->tb_exist( 'img_optm' ) ) {
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE optm_status = %s" ;
+			$wpdb->query( $wpdb->prepare( $q, self::STATUS_RAW, self::STATUS_REQUESTED ) ) ;
+		}
 
-		$msg = __( 'Destroy unfinished data successfully.', 'litespeed-cache' ) ;
+		$msg = __( 'Cleaned up unfinished data successfully.', 'litespeed-cache' ) ;
 		Admin_Display::succeed( $msg ) ;
-
-		return $msg ;
-
 	}
 
 	/**
@@ -1080,7 +1052,7 @@ class Img_Optm extends Base
 		// Start deleting files
 		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 3000 ) ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_STATUS_PULLED, $limit ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
 		foreach ( $list as $v ) {
 			// del webp
 			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
@@ -1101,10 +1073,10 @@ class Img_Optm extends Base
 
 		// Check if there are more images, then return `to_be_continued` code
 		$q = "SELECT COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::DB_STATUS_PULLED ) ) ;
+		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 		if ( $total_img > $limit ) {
 			$q = "DELETE FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
-			$wpdb->query( $wpdb->prepare( $q, self::DB_STATUS_PULLED, $limit ) ) ;
+			$wpdb->query( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
 
 			// Return continue signal
 			self::update_option( self::DB_DESTROY, time() ) ;
@@ -1186,7 +1158,7 @@ class Img_Optm extends Base
 			foreach ( $optm_meta as $md5 => $optm_row ) {
 				$optm_list[] = $optm_row[ 0 ] ;
 				// only do for requested/notified img
-				// if ( ! in_array( $optm_row[ 1 ], array( self::DB_STATUS_NOTIFIED, self::DB_STATUS_REQUESTED ) ) ) {
+				// if ( ! in_array( $optm_row[ 1 ], array( self::STATUS_NOTIFIED, self::STATUS_REQUESTED ) ) ) {
 				// 	continue ;
 				// }
 			}
@@ -1242,10 +1214,10 @@ class Img_Optm extends Base
 			$md52src_list = $optm_data_list[ $pid ] ;
 
 			foreach ( $this->_img_in_queue[ $pid ] as $md5 => $src_data ) {
-				$md52src_list[ $md5 ] = array( $src_data[ 'src' ], self::DB_STATUS_REQUESTED ) ;
+				$md52src_list[ $md5 ] = array( $src_data[ 'src' ], self::STATUS_REQUESTED ) ;
 			}
 
-			$new_status = $this->_get_status_by_meta_data( $md52src_list, self::DB_STATUS_REQUESTED ) ;
+			$new_status = $this->_get_status_by_meta_data( $md52src_list, self::STATUS_REQUESTED ) ;
 
 			$md52src_list = serialize( $md52src_list ) ;
 
@@ -1276,7 +1248,7 @@ class Img_Optm extends Base
 
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_STATUS_PULLED ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 
 		$i = 0 ;
 		$total_size = 0 ;
@@ -1327,7 +1299,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_STATUS_PULLED ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 
 		$i = 0 ;
 		$total_size = 0 ;
@@ -1402,7 +1374,7 @@ class Img_Optm extends Base
 				";
 			$groups_not_gathered = $wpdb->get_var( $q );
 
-			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d", self::DB_STATUS_RAW );
+			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d", self::STATUS_RAW );
 			list( $groups_raw, $imgs_raw ) = $wpdb->get_row( $q, ARRAY_N );
 			$imgs_gathered = $wpdb->get_var( "SELECT COUNT(*) FROM $this->_table_img_optm" );
 		}
@@ -1418,9 +1390,9 @@ class Img_Optm extends Base
 		// images count from work table
 		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optming WHERE optm_status = %d";
 		$groups_to_check = array(
-			self::DB_STATUS_REQUESTED,
-			self::DB_STATUS_NOTIFIED,
-			self::DB_STATUS_ERR_FETCH,
+			self::STATUS_REQUESTED,
+			self::STATUS_NOTIFIED,
+			self::STATUS_ERR_FETCH,
 		) ;
 		foreach ( $groups_to_check as $v ) {
 			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
@@ -1432,13 +1404,13 @@ class Img_Optm extends Base
 		// images count from image table
 		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d";
 		$groups_to_check = array(
-			self::DB_STATUS_DUPLICATED,
-			self::DB_STATUS_PULLED,
-			self::DB_STATUS_FAILED,
-			self::DB_STATUS_MISS,
-			self::DB_STATUS_ERR_OPTM,
-			self::DB_STATUS_XMETA,
-			self::DB_STATUS_ERR,
+			self::STATUS_DUPLICATED,
+			self::STATUS_PULLED,
+			self::STATUS_FAILED,
+			self::STATUS_MISS,
+			self::STATUS_ERR_OPTM,
+			self::STATUS_XMETA,
+			self::STATUS_ERR,
 		) ;
 		foreach ( $groups_to_check as $v ) {
 			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
@@ -1505,7 +1477,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_STATUS_PULLED ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 
 		$i = 0 ;
 		foreach ( $list as $v ) {
@@ -1557,7 +1529,7 @@ class Img_Optm extends Base
 
 		global $wpdb ;
 		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_STATUS_PULLED, $pid ) ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $pid ) ) ) ;
 
 		$msg = 'Unknown Msg' ;
 
@@ -1701,8 +1673,8 @@ class Img_Optm extends Base
 				$instance->_img_optimize_destroy() ;
 				break ;
 
-			case self::TYPE_IMG_OPTM_DESTROY_UNFINISHED :
-				$instance->_img_optimize_destroy_unfinished() ;
+			case self::TYPE_CLEAN :
+				$instance->clean() ;
 				break ;
 
 			case self::TYPE_IMG_PULL :

@@ -81,9 +81,9 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed\CLI\Admin' ) ;
-		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed\CLI\Purge' ) ;
-		WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed\CLI\IAPI' ) ;
+		WP_CLI::add_command( 'litespeed-admin', 'LiteSpeed\CLI\Admin' ) ;
+		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' ) ;
+		WP_CLI::add_command( 'litespeed-cloud', 'LiteSpeed\CLI\Cloud' ) ;
 	}
 }
 

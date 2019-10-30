@@ -9,28 +9,28 @@ use LiteSpeed\Utility ;
 use WP_CLI ;
 
 /**
- * LiteSpeed Cache Image Optm Interface
+ * QUIC.cloud API CLI
  */
-class IAPI
+class Cloud
 {
 	private $_img_optm_instance ;
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_IAPI init' ) ;
+		Log::debug( 'CLI_Cloud init' ) ;
 
 		$this->_img_optm_instance = Img_Optm::get_instance() ;
 	}
 
 	/**
-	 * Sync data from IAPI server
+	 * Sync data from cloud server
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Sync or initialize image optimization service
-	 *     $ wp lscache-iapi sync
+	 *     $ wp litespeed-cloud sync
 	 *
 	 */
 	public function sync()
@@ -58,14 +58,14 @@ class IAPI
 	}
 
 	/**
-	 * Send image optimization request to IAPI server
+	 * Send image optimization request to cloud server
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Send image optimization request
-	 *     $ wp lscache-iapi push
+	 *     $ wp litespeed-cloud push
 	 *
 	 */
 	public function push()
@@ -74,14 +74,14 @@ class IAPI
 	}
 
 	/**
-	 * Pull optimized images from IAPI server
+	 * Pull optimized images from cloud server
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Pull images back from IAPI
-	 *     $ wp lscache-iapi pull
+	 *     # Pull images back from cloud
+	 *     $ wp litespeed-cloud pull
 	 *
 	 */
 	public function pull()
@@ -104,7 +104,7 @@ class IAPI
 	 * ## EXAMPLES
 	 *
 	 *     # Show optimization status
-	 *     $ wp lscache-iapi status
+	 *     $ wp litespeed-cloud status
 	 *
 	 */
 	public function status()
@@ -150,7 +150,7 @@ class IAPI
 	 * ## EXAMPLES
 	 *
 	 *     # Show optimization status
-	 *     $ wp lscache-iapi s
+	 *     $ wp litespeed-cloud s
 	 *
 	 */
 	public function s()
@@ -160,20 +160,19 @@ class IAPI
 
 
 	/**
-	 * Clean up unfinished image data from IAPI server
+	 * Clean up unfinished image data from cloud server
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Clean up unfinished requests
-	 *     $ wp lscache-iapi clean
+	 *     $ wp litespeed-cloud clean
 	 *
 	 */
 	public function clean()
 	{
-		$msg = $this->_img_optm_instance->destroy_unfinished() ;
-		WP_CLI::success( $msg ) ;
+		$this->_img_optm_instance->clean() ;
 
 		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) ) ;
 
@@ -188,7 +187,7 @@ class IAPI
 	 * ## EXAMPLES
 	 *
 	 *     # Remove original image backups
-	 *     $ wp lscache-iapi rm_bkup
+	 *     $ wp litespeed-cloud rm_bkup
 	 *
 	 */
 	public function rm_bkup()

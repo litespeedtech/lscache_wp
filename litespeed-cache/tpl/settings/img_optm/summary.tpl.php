@@ -48,7 +48,7 @@ else {
 
 		<div class="litespeed-desc">
 			<?php if ( $closest_server ) : ?>
-				<span title="<?php echo $closest_server ; ?>">☁️</span>
+				<i title="<?php echo $closest_server ; ?>" class='litespeed-quic-icon'></i>
 			<?php endif ; ?>
 			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
 			<?php echo sprintf( __( 'You have %s points left this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>
@@ -57,7 +57,7 @@ else {
 
 		<div>
 			<a data-litespeed-onlyonce class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
-				<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
+				<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
 					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>"
 				<?php else : ?>
 					href='javascript:;' disabled
@@ -84,12 +84,12 @@ else {
 
 			<div class="litespeed-light-code">
 
-				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_REQUESTED ] ) ) : ?>
+				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
 				<p class="litespeed-success">
 					<?php echo __('Images requested', 'litespeed-cache') ; ?>:
 					<code>
-						<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_REQUESTED ] ) ; ?>
-						(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_REQUESTED ], 'image' ) ; ?>)
+						<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ; ?>
+						(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ], 'image' ) ; ?>)
 					</code>
 				</p>
 				<p class="litespeed-desc">
@@ -98,12 +98,12 @@ else {
 				</p>
 				<?php endif ; ?>
 
-				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_NOTIFIED ] ) ) : ?>
+				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ) : ?>
 					<p class="litespeed-success">
 						<?php echo __('Images notified to pull', 'litespeed-cache') ; ?>:
 						<code>
-							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_NOTIFIED ] ) ; ?>
-							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_NOTIFIED ], 'image' ) ; ?>)
+							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ; ?>
+							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ], 'image' ) ; ?>)
 						</code>
 
 					</p>
@@ -120,12 +120,12 @@ else {
 
 					<div class="litespeed-width-1-2">
 
-						<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::DB_STATUS_PULLED ] ) ) : ?>
+						<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_PULLED ] ) ) : ?>
 						<p class="litespeed-success">
 							<?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>:
 							<code>
-								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::DB_STATUS_PULLED ] ) ; ?>
-								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::DB_STATUS_PULLED ], 'image' ) ; ?>)
+								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_PULLED ] ) ; ?>
+								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_PULLED ], 'image' ) ; ?>)
 							</code>
 						</p>
 						<?php endif ; ?>
@@ -133,12 +133,12 @@ else {
 						<div class="litespeed-silence">
 							<?php
 								$list = array(
-									Img_Optm::DB_STATUS_ERR_FETCH	=> __('Images failed to fetch', 'litespeed-cache'),
-									Img_Optm::DB_STATUS_ERR_OPTM	=> __('Images previously optimized', 'litespeed-cache'),
-									Img_Optm::DB_STATUS_ERR			=> __('Images failed with other errors', 'litespeed-cache'),
-									Img_Optm::DB_STATUS_MISS		=> __('Image files missing', 'litespeed-cache'),
-									Img_Optm::DB_STATUS_DUPLICATED	=> __('Image files duplicated', 'litespeed-cache'),
-									Img_Optm::DB_STATUS_XMETA		=> __('Images with wrong meta', 'litespeed-cache'),
+									Img_Optm::STATUS_ERR_FETCH	=> __('Images failed to fetch', 'litespeed-cache'),
+									Img_Optm::STATUS_ERR_OPTM	=> __('Images previously optimized', 'litespeed-cache'),
+									Img_Optm::STATUS_ERR			=> __('Images failed with other errors', 'litespeed-cache'),
+									Img_Optm::STATUS_MISS		=> __('Image files missing', 'litespeed-cache'),
+									Img_Optm::STATUS_DUPLICATED	=> __('Image files duplicated', 'litespeed-cache'),
+									Img_Optm::STATUS_XMETA		=> __('Images with wrong meta', 'litespeed-cache'),
 								);
 							?>
 							<?php foreach ( $list as $k => $v ): ?>
@@ -170,7 +170,7 @@ else {
 					</div>
 
 					<div class="litespeed-width-1-2">
-						<?php echo GUI::img_optm_clean_up_unfinished() ; ?>
+						<?php echo GUI::img_optm_clean_up( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ] + $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] + $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ; ?>
 					</div>
 
 				</div>

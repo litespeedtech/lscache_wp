@@ -36,6 +36,16 @@
    		  UTILITIES - structure
 ======================================= */
 
+.litespeed-quic-icon {
+	background-image: url( '../img/quic-cloud-icon-16x16.svg' );
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+
 .litespeed-row {
 	margin-top: 5px;
 }
@@ -306,7 +316,7 @@
 .litespeed-body table{
 	border-collapse: collapse;
 	width: 100%;
-} 
+}
 
 .litespeed-body .litespeed-width-auto{
 	width:auto;
@@ -401,7 +411,7 @@ h3 .litespeed-learn-more {
 	padding-right: 50px;
 	padding-left: 3px;
 	padding-bottom: 3px;
-	
+
 }
 
 .litespeed-title .button{
@@ -460,7 +470,7 @@ h3 .litespeed-learn-more {
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5;
     border-right: 1px solid #e5e5e5;
-    
+
 }
 
 .litespeed-body .striped>tbody>:nth-child(even) .notice:first-child{
@@ -530,14 +540,14 @@ h3 .litespeed-learn-more {
 }
 
 .litespeed-cards-wrapper{
-	margin:-10px -15px -10px -15px;	
+	margin:-10px -15px -10px -15px;
 }
 
 .litespeed-panel {
 	text-decoration: none;
 	display: flex;
 	justify-content: space-between;
-	padding: 6px 8px 4px 5px; 
+	padding: 6px 8px 4px 5px;
 	width: 322px;
 	margin: 15px 5px 15px 15px;
 	min-height: 75px;
@@ -855,14 +865,14 @@ h3 .litespeed-learn-more {
 	box-shadow:0 2px 0 #1a9292;
 	z-index:2;
 	color: #117171;
-	
+
 }
 .litespeed-switch input:focus + label {
 	color: #117171;
 	box-shadow: 0 0px 0px 2px rgba(28, 138, 128, 0.85);
 	border-color:transparent;
 	z-index:2;
-	
+
 }
 
 .litespeed-switch input:focus + label + input + input:hover + label,
@@ -878,8 +888,8 @@ h3 .litespeed-learn-more {
 .litespeed-switch input:checked:focus + label {
 	background-color: #36b0b0;
 	color: #fff;
-	
-	
+
+
 }
 
 .litespeed-switch input {
@@ -1307,7 +1317,7 @@ ul.litespeed-shell-body {
 
 .litespeed-callout p {
 	margin-left: 0;
-} 
+}
 
 .litespeed-callout ol, .litespeed-callout ul{
 	margin-left:1em;
@@ -2050,7 +2060,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 
 .litespeed-dashboard .litespeed-postbox{
 	margin:10px;
-	
+
 }
 
 

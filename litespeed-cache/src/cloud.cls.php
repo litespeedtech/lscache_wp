@@ -260,10 +260,10 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function post( $service, $data = false, $time_out = false )
+	public static function post( $service, $data = false, $time_out = false, $need_hash = false )
 	{
 		$instance = self::get_instance();
-		return $instance->_post( $service, $data, $time_out );
+		return $instance->_post( $service, $data, $time_out, $need_hash );
 	}
 
 	/**
@@ -272,7 +272,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _post( $service, $data = false, $time_out = false )
+	private function _post( $service, $data = false, $time_out = false, $need_hash = false )
 	{
 		$service_tag = $service;
 		if ( ! empty( $data[ 'action' ] ) ) {
@@ -301,8 +301,11 @@ class Cloud extends Base
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
 			'v'				=> Core::VER,
-			'data' 			=> $data, // TODO : check if need to encode: is_array( $data ) ? json_encode( $data ) : $data,
+			'data' 			=> $data,
 		);
+		if ( $need_hash ) {
+			$param[ 'hash' ] = $this->_hash_make();
+		}
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
@@ -417,6 +420,8 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
 		self::save_summary( $this->_summary );
 
+		Log::debug2( '[Cloud] response', $json );
+
 		return $json;
 
 	}
@@ -490,12 +495,12 @@ class Cloud extends Base
 
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
 			$data[ 'ref' ] = $_SERVER[ 'HTTP_REFERER' ];
-			wp_redirect( self::CLOUD_SERVER . '/req_key?data=' . Utility::arr2str( $data ) );
+			wp_redirect( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 			exit;
 		}
 
 		// CLI handler
-		$response = wp_remote_get( self::CLOUD_SERVER . '/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
+		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Log::debug( '[CLoud] failed to gen_key: ' . $error_message );
