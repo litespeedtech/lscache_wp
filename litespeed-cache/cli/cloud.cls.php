@@ -70,7 +70,7 @@ class Cloud
 	 */
 	public function push()
 	{
-		$this->_img_optm_instance->request_optm() ;
+		$this->_img_optm_instance->new_req() ;
 	}
 
 	/**

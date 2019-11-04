@@ -47,7 +47,7 @@ class Task extends Instance
 		if ( Conf::val( Base::O_IMG_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
-			add_action( self::HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull_optimized_img' ) ;
+			add_action( self::HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull' ) ;
 		}
 
 		// Image optm auto request

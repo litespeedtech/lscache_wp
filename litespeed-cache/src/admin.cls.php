@@ -56,7 +56,7 @@ class Admin extends Instance
 				if ( in_array( $event, array( 'update_option' ) ) ) {
 					continue ;
 				}
-				add_action( $event, 'Purge::purge_all' ) ;
+				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' ) ;
 			}
 			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' ) ;
 		}

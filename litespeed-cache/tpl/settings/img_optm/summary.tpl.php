@@ -35,7 +35,7 @@ else {
 		<div class="litespeed-text-center">
 			<a data-litespeed-onlyonce class="button button-primary litespeed-btn-large"
 				<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'imgs_raw' ] ) ) : ?>
-					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>"
+					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ) ; ?>"
 				<?php else : ?>
 					href='javascript:;' disabled
 				<?php endif ; ?>
@@ -58,7 +58,7 @@ else {
 		<div>
 			<a data-litespeed-onlyonce class="button litespeed-btn-success" title="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
 				<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
-					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ; ?>"
+					href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_PULL ) ; ?>"
 				<?php else : ?>
 					href='javascript:;' disabled
 				<?php endif ; ?>
@@ -159,18 +159,19 @@ else {
 								</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $optm_summary[ 'notify_failed' ] ) ) : ?>
-								<p>
-									<?php echo __( 'Images failed to notify', 'litespeed-cache' ) ; ?>: <code><?php echo $optm_summary[ 'notify_failed' ] ; ?></code>
-								</p>
-							<?php endif ; ?>
-
 						</div>
 
 					</div>
 
 					<div class="litespeed-width-1-2">
-						<?php echo GUI::img_optm_clean_up( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ] + $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] + $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ; ?>
+						<?php $unfinished_num = $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ] + $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] + $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ]; ?>
+						<?php echo sprintf(
+								'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
+								Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ),
+								__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
+								__( 'Clean Up Unfinished Data', 'litespeed-cache' ) . ( $unfinished_num ? ': ' . Admin_Display::print_plural( $unfinished_num, 'image' ) : '')
+							);
+						?>
 					</div>
 
 				</div>
@@ -294,8 +295,6 @@ else {
 		<div class="postbox litespeed-postbox"><div class="inside">
 			<h3 class="litespeed-title">
 				<?php echo __( 'Optimization Summary', 'litespeed-cache' ) ; ?>
-				<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
-				</a>
 			</h3>
 			<p>
 				<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo isset( $optm_summary[ 'reduced' ] ) ? Utility::real_size( $optm_summary[ 'reduced' ] ) : '-'; ?></code>
@@ -338,7 +337,7 @@ else {
 			</div>
 			<div class="inside litespeed-postbox-footer">
 
-				<div><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTM_DESTROY ) ; ?>" class="button litespeed-btn-danger">
+				<div><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY ) ; ?>" class="button litespeed-btn-danger" data-litespeed-cfm="<?php echo __( 'Are you sure to destroy all optimized images?', 'litespeed-cache' ) ; ?>" >
 					<span class="dashicons dashicons-dismiss"></span>&nbsp;<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
 				</a></div>
 

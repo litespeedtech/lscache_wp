@@ -78,6 +78,10 @@ class Placeholder extends Base
 	{
 		$meta_value = wp_get_attachment_metadata( $post_id ) ;
 
+		if ( empty( $meta_value[ 'file' ] ) ) {
+			return;
+		}
+
 		echo '<div><div class="litespeed-text-dimgray litespeed-text-center">LQIP</div>' ;
 
 		// List all sizes

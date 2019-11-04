@@ -85,8 +85,8 @@ $optm_summary = Img_Optm::get_summary() ;
 				$quota = $usage[ 'usage.' . $svc ][ 'quota' ];
 
 				if ( $svc == 'cdn' ) {
-					$used = Utility::real_size( $used );
-					$quota = Utility::real_size( $quota );
+					$used = Utility::real_size( $used * 1024 * 1024 );
+					$quota = Utility::real_size( $quota * 1024 * 1024 );
 				}
 			}
 		?>
@@ -317,12 +317,7 @@ $optm_summary = Img_Optm::get_summary() ;
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Image Optimization Summary', 'litespeed-cache' ) ; ?>
-						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-postbox-refresh" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
-							<span class="dashicons dashicons-update"></span>
-							<span class="screen-reader-text"><?php echo __('Update image optimization status', 'litespeed-cache'); ?></span>
-						</a>
 					</h3>
-
 
 					<div class="litespeed-flex-container">
 						<div class="litespeed-icon-vertical-middle">

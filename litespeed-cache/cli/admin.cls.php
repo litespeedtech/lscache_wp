@@ -134,7 +134,7 @@ class Admin extends Base
 				$v = 0 ;
 			}
 
-			if ( $v === '' || $v === [] ) {
+			if ( $v === '' || $v === array() ) {
 				$v = "''" ;
 			}
 

@@ -19,21 +19,16 @@ class Img_Optm extends Base
 	const CLOUD_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
 	const CLOUD_ACTION_CLEAN = 'clean';
 
-	const TYPE_SYNC_DATA = 'sync_data';
-	const TYPE_IMG_OPTIMIZE = 'img_optm';
+	const TYPE_NEW_REQ = 'new_req';
 	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan';
-	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy';
+	const TYPE_DESTROY = 'destroy';
 	const TYPE_CLEAN = 'clean';
-	const TYPE_IMG_PULL = 'img_pull';
+	const TYPE_PULL = 'pull';
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori';
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm';
 	const TYPE_CALC_BKUP = 'calc_bkup';
 	const TYPE_RESET_ROW = 'reset_row';
 	const TYPE_RM_BKUP = 'rm_bkup';
-
-	const DB_DESTROY = 'litespeed-optimize-destroy';
-	const DB_IMG_OPTM_DATA = 'litespeed-optimize-data';
-	const DB_IMG_OPTM_STATUS = 'litespeed-optimize-status';
 
 	const STATUS_RAW 		= 0; // 'raw';
 	const STATUS_REQUESTED 	= 3; // 'requested';
@@ -297,7 +292,7 @@ class Img_Optm extends Base
 	 * @since 1.6
 	 * @access private
 	 */
-	private function request_optm()
+	private function new_req()
 	{
 		global $wpdb;
 
@@ -307,12 +302,12 @@ class Img_Optm extends Base
 			return;
 		}
 
-		$recovered_count = 1;
-		if ( ! empty( $this->_summary[ 'recovered' ] ) ) {
-			$recovered_count = $this->_summary[ 'recovered' ] > 500 ? $this->_summary[ 'recovered' ] : pow( $this->_summary[ 'recovered' ], 2 );
+		$img_taken_count = 1;
+		if ( ! empty( $this->_summary[ 'img_taken' ] ) ) {
+			$img_taken_count = $this->_summary[ 'img_taken' ] > 500 ? $this->_summary[ 'img_taken' ] : pow( $this->_summary[ 'img_taken' ], 2 );
 		}
 
-		$allowance = min( $allowance, apply_filters( 'litespeed_img_optimize_max_rows', 500 ), $recovered_count );
+		$allowance = min( $allowance, apply_filters( 'litespeed_img_optimize_max_rows', 500 ), $img_taken_count );
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
@@ -487,6 +482,9 @@ class Img_Optm extends Base
 		$q = "INSERT INTO `$this->_table_img_optming` ( id, post_id, optm_status, src ) SELECT id, post_id, optm_status, src FROM $this->_table_img_optm WHERE id IN ( $ids )";
 		$wpdb->query( $q );
 
+		$this->_summary[ 'last_requested' ] = time();
+		self::save_summary( $this->_summary ) ;
+
 		return count( $json[ 'ids' ] );
 	}
 
@@ -499,9 +497,16 @@ class Img_Optm extends Base
 	 */
 	public function notify_img()
 	{
+		// Interval validation to avoid hacking domain_key
+		if ( ! empty( $this->_summary[ 'notify_ts_err' ] ) && time() - $this->_summary[ 'notify_ts_err' ] < 3 ) {
+			return Cloud::err( 'too_often' );
+		}
+
 		// Validate key
 		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
-			return array( '_res' => 'err', '_msg' => 'wrong_key' );
+			$this->_summary[ 'notify_ts_err' ] = time();
+			self::save_summary( $this->_summary ) ;
+			return Cloud::err( 'wrong_key' );
 		}
 
 		global $wpdb;
@@ -509,12 +514,12 @@ class Img_Optm extends Base
 		$notified_data = $_POST[ 'data' ];
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
 			Log::debug( '[Img_Optm] ❌ notify exit: no notified data' );
-			return array( '_res' => 'err', '_msg' => 'no notified data' );
+			return Cloud::err( 'no notified data' );
 		}
 
 		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -11 ) !== '.quic.cloud' ) {
 			Log::debug( '[Img_Optm] notify exit: no/wrong server' );
-			return array( '_res' => 'err', '_msg' => 'no/wrong server' );
+			return Cloud::err( 'no/wrong server' );
 		}
 
 		$_allowed_status = array(
@@ -527,12 +532,16 @@ class Img_Optm extends Base
 
 		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
 			Log::debug( '[Img_Optm] notify exit: no/wrong status', $_POST );
-			return array( '_res' => 'err', '_msg' => 'no/wrong status' );
+			return Cloud::err( 'no/wrong status' );
 		}
 
 		$status = $_POST[ 'status' ];
 
 		$last_log_pid = 0;
+
+		if ( empty( $this->_summary[ 'reduced' ] ) ) {
+			$this->_summary[ 'reduced' ] = 0;
+		}
 
 		if ( $status == self::STATUS_NOTIFIED ) {
 			// Notified data format: [ img_optm_id => [ id=>, src_size=>, ori=>, ori_md5=>, ori_reduced=>, webp=>, webp_md5=>, webp_reduced=> ] ]
@@ -572,6 +581,8 @@ class Img_Optm extends Base
 					// Append meta info
 					$postmeta_info[ 'ori_total' ] += $json[ 'src_size' ];
 					$postmeta_info[ 'ori_saved' ] += $json[ 'ori_reduced' ]; // optimized image size info in img_optm tb will be updated when pull
+
+					$this->_summary[ 'reduced' ] += $json[ 'ori_reduced' ];
 				}
 
 				if ( ! empty( $json[ 'webp' ] ) ) {
@@ -581,6 +592,8 @@ class Img_Optm extends Base
 					// Append meta info
 					$postmeta_info[ 'webp_total' ] += $json[ 'src_size' ];
 					$postmeta_info[ 'webp_saved' ] += $json[ 'webp_reduced' ];
+
+					$this->_summary[ 'reduced' ] += $json[ 'webp_reduced' ];
 				}
 
 				// Update status and data in working table
@@ -605,6 +618,8 @@ class Img_Optm extends Base
 				$last_log_pid = $v->post_id;
 			}
 
+			self::save_summary( $this->_summary );
+
 			// Mark need_pull tag for cron
 			self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED );
 		}
@@ -626,7 +641,7 @@ class Img_Optm extends Base
 
 		// redo count err
 
-		return array( '_res' => 'ok', 'count' => count( $notified_data ) );
+		return Cloud::ok( array( 'count' => count( $notified_data ) ) );
 	}
 
 	/**
@@ -635,7 +650,7 @@ class Img_Optm extends Base
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function cron_pull_optimized_img()
+	public static function cron_pull()
 	{
 		if ( ! defined( 'DOING_CRON' ) ) {
 			return;
@@ -649,7 +664,7 @@ class Img_Optm extends Base
 
 		Log::debug( '[Img_Optm] Cron pull_optimized_img started' );
 
-		self::get_instance()->_pull_optimized_img();
+		self::get_instance()->_pull();
 	}
 
 	/**
@@ -660,7 +675,7 @@ class Img_Optm extends Base
 	 */
 	public function pull_img()
 	{
-		$res = $this->_pull_optimized_img();
+		$res = $this->_pull();
 
 		$this->_update_cron_running( true );
 
@@ -673,7 +688,7 @@ class Img_Optm extends Base
 	 * @since  1.6
 	 * @access private
 	 */
-	private function _pull_optimized_img( $manual = false )
+	private function _pull( $manual = false )
 	{
 		if ( $this->cron_running() ) {
 			$msg = '[Img_Optm] fetch cron is running';
@@ -837,11 +852,11 @@ class Img_Optm extends Base
 			Cloud::post( Cloud::SVC_IMG_OPTM, $data ); // We don't use $server. So if user changed cloud node, the previous request will fail to notify, but won't hurt so just ignore
 		}
 
-		if ( empty( $this->_summary[ 'recovered' ] ) ) {
-			$this->_summary[ 'recovered' ] = 0;
+		if ( empty( $this->_summary[ 'img_taken' ] ) ) {
+			$this->_summary[ 'img_taken' ] = 0;
 		}
-		$this->_summary[ 'recovered' ] += $total_pulled_ori + $total_pulled_webp;
-		self::save_summary( $this->_summary ) ;
+		$this->_summary[ 'img_taken' ] += $total_pulled_ori + $total_pulled_webp;
+		self::save_summary( $this->_summary );
 
 		// Check if there is still task in queue
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %s LIMIT 1";
@@ -873,7 +888,7 @@ class Img_Optm extends Base
 		}
 
 		$instance = self::get_instance() ;
-		$instance->request_optm( 'from cron' ) ;
+		$instance->new_req( 'from cron' ) ;
 	}
 
 	/**
@@ -886,12 +901,12 @@ class Img_Optm extends Base
 	{
 		$ip = gethostbyname( 'my.quic.cloud' ) ;
 		if ( $ip != Router::get_ip() ) {
-			return array( '_res' => 'err', '_msg' => 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
+			return Cloud::err( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
 		}
 
 		// Validate key
 		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
-			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
+			return Cloud::err( 'wrong_key' ) ;
 		}
 
 		global $wpdb ;
@@ -997,61 +1012,29 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake )
+	 * Destroy all optimized images
 	 *
-	 * @since 1.6.7
+	 * @since 3.0
 	 * @access private
 	 */
 	private function _img_optimize_destroy()
 	{
-		Log::debug( '[Img_Optm] sending DESTROY cmd to LiteSpeed IAPI' ) ;
+		global $wpdb ;
 
-		// Mark request time to avoid duplicated request
-		self::update_option( self::DB_DESTROY, time() ) ;
-
-		// Push to LiteSpeed IAPI server
-		$json = Admin_API::post( Admin_API::IAPI_ACTION_REQUEST_DESTROY, false, true ) ;
-
-		// confirm link will be displayed by Admin_API automatically
-		if ( is_array( $json ) && $json ) {
-			Log::debug( '[Img_Optm] cmd result', $json ) ;
-		}
-
-	}
-
-	/**
-	 * Callback from LiteSpeed IAPI server to destroy all optm data
-	 *
-	 * @since 1.6.7
-	 * @access private
-	 */
-	public function destroy_callback()
-	{
 		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+			Log::debug( '[Img_Optm] DESTROY bypassed due to table not exist' ) ;
 			return;
 		}
 
-		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
-			return array( '_res' => 'err', '_msg' => 'wrong_key' ) ;
-		}
-
-		global $wpdb ;
 		Log::debug( '[Img_Optm] excuting DESTROY process' ) ;
 
-		$request_time = self::get_option( self::DB_DESTROY ) ;
-		if ( time() - $request_time > 300 ) {
-			Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
-			return array( '_res' => 'err', '_msg' => 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
-		}
-
 		/**
-		 * Limit to 3000 images each time before redirection to fix Out of memory issue. #665465
+		 * Limit images each time before redirection to fix Out of memory issue. #665465
 		 * @since  2.9.8
 		 */
 		// Start deleting files
-		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 3000 ) ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 500 ) ;
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %s ORDER BY id LIMIT %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
 		foreach ( $list as $v ) {
 			// del webp
@@ -1072,32 +1055,37 @@ class Img_Optm extends Base
 		}
 
 		// Check if there are more images, then return `to_be_continued` code
-		$q = "SELECT COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %s" ;
 		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 		if ( $total_img > $limit ) {
-			$q = "DELETE FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+			$q = "DELETE FROM `$this->_table_img_optm` WHERE optm_status = %s ORDER BY id LIMIT %d" ;
 			$wpdb->query( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
-
-			// Return continue signal
-			self::update_option( self::DB_DESTROY, time() ) ;
 
 			Log::debug( '[Img_Optm] To be continued 🚦' ) ;
 
-			return array( '_res' => 'to_be_continued' ) ;
+			$this->_self_redirect( self::TYPE_DESTROY );
 		}
 
-		// Delete optm info
-		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'litespeed-optimize%'" ;
-		$wpdb->query( $q ) ;
+		// Delete postmeta info
+		$q = "DELETE FROM `$wpdb->postmeta` WHERE meta_key = %s" ;
+		$wpdb->query( $wpdb->prepare( $q, self::DB_SIZE ) ) ;
 
 		// Delete img_optm table
 		Data::get_instance()->tb_del( 'img_optm' ) ;
+		Data::get_instance()->tb_del( 'img_optming' ) ;
 
-		// Clear credit info
+		// Clear options table summary info
 		self::delete_option( '_summary' ) ;
 		self::delete_option( self::DB_NEED_PULL ) ;
 
-		return array( '_res' => 'ok' ) ;
+		// Inform Cloud server
+		$data = array(
+			'action'	=> self::CLOUD_ACTION_CLEAN,
+		);
+		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
+
+		$msg = __( 'Destroy all optimization data successfully.', 'litespeed-cache' ) ;
+		Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -1633,6 +1621,22 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Redirect to self to continue operation
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _self_redirect( $type )
+	{
+		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type ) ;
+		// Add i to avoid browser too many redirected warning
+		$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
+		$i ++ ;
+		$url = html_entity_decode( $link ) . '&i=' . $i ;
+		exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.0
@@ -1657,41 +1661,31 @@ class Img_Optm extends Base
 				$instance->_rm_bkup() ;
 				break ;
 
-			case self::TYPE_SYNC_DATA :
-				$instance->_sync_data() ;
-				break ;
+			case self::TYPE_NEW_REQ:
+				$instance->new_req();
+				break;
 
-			case self::TYPE_IMG_OPTIMIZE :
-				$instance->request_optm() ;
-				break ;
-
-			case self::TYPE_IMG_OPTIMIZE_RESCAN :
+			case self::TYPE_IMG_OPTIMIZE_RESCAN:
 				$instance->_img_optimize_rescan() ;
-				break ;
+				break;
 
-			case self::TYPE_IMG_OPTM_DESTROY :
-				$instance->_img_optimize_destroy() ;
-				break ;
+			case self::TYPE_DESTROY:
+				$instance->_img_optimize_destroy();
+				break;
 
-			case self::TYPE_CLEAN :
-				$instance->clean() ;
-				break ;
+			case self::TYPE_CLEAN:
+				$instance->clean();
+				break;
 
-			case self::TYPE_IMG_PULL :
+			case self::TYPE_PULL :
 				Log::debug( 'ImgOptm: Manually running Cron pull_optimized_img' ) ;
-				$result = $instance->_pull_optimized_img( true ) ;
+				$result = $instance->_pull( true ) ;
 				// Manually running needs to roll back timestamp for next running
 				$instance->_update_cron_running( true ) ;
 
 				// Check if need to self redirect
 				if ( is_array( $result ) && $result[ 'ok' ] === 'to_be_continued' ) {
-					$link = Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_PULL ) ;
-					// Add i to avoid browser too many redirected warning
-					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
-					$i ++ ;
-					$url = html_entity_decode( $link ) . '&i=' . $i ;
-					exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
-					// Admin::redirect( $url ) ;
+					$instance->_self_redirect( self::TYPE_PULL );
 				}
 				break ;
 

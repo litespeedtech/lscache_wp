@@ -257,6 +257,10 @@ class Media extends Instance
 	public function media_row_con( $post_id )
 	{
 		$att_info = wp_get_attachment_metadata( $post_id ) ;
+		if ( empty( $att_info[ 'file' ] ) ) {
+			return;
+		}
+
 		$short_path = $att_info[ 'file' ] ;
 
 		$size_meta = get_post_meta( $post_id, Img_Optm::DB_SIZE, true ) ;

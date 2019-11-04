@@ -420,7 +420,12 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
 		self::save_summary( $this->_summary );
 
-		Log::debug2( '[Cloud] response', $json );
+		if ( $json ) {
+			Log::debug2( '[Cloud] response ok', $json );
+		}
+		else {
+			Log::debug2( '[Cloud] response ok' );
+		}
 
 		return $json;
 
@@ -458,21 +463,23 @@ class Cloud extends Base
 	{
 		if ( empty( $_POST[ 'hash' ] ) ) {
 			Log::debug( '[Cloud] Lack of hash param' );
-			return array( '_res' => 'err', '_msg' => 'lack_of_param' );
+			return self::err( 'lack_of_param' );
 		}
 
 		$key_hash = self::get_option( self::DB_HASH );
+		if ( $key_hash ) { // One time usage only
+			self::delete_option( self::DB_HASH );
+		}
 
 		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
 			Log::debug( '[Cloud] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] );
-			return array( '_res' => 'err', '_msg' => 'Error hash code' );
+			return self::err( 'Error hash code' );
 		}
 
 		Control::set_nocache( 'Cloud hash validation' );
 
 		Log::debug( '[Cloud] __callback request hash: ' . $key_hash );
 
-		self::delete_option( self::DB_HASH );
 
 		return array( 'hash' => $key_hash );
 	}
@@ -549,6 +556,26 @@ class Cloud extends Base
 		Log::debug( '[Cloud] saved auth_key' );
 	}
 
+	/**
+	 * Return succeeded response
+	 *
+	 * @since  3.0
+	 */
+	public static function ok( $data = array() )
+	{
+		$data[ '_res' ] = 'ok';
+		return $data;
+	}
+
+	/**
+	 * Return error
+	 *
+	 * @since  3.0
+	 */
+	public static function err( $code )
+	{
+		return array( '_res' => 'err', '_msg' => $code );
+	}
 
 	/**
 	 * Handle all request actions from main cls
