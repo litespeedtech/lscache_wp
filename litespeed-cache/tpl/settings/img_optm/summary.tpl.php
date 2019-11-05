@@ -324,8 +324,8 @@ else {
 						<span class="dashicons dashicons-redo"></span>&nbsp;<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 					</a>
 
-					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="button litespeed-btn-success litespeed-hide" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
+					<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESCAN ) ; ?>" class="button litespeed-btn-success" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
+						<?php echo __( 'Rescan New Thumbnails', 'litespeed-cache' ) ; ?>
 					</a>
 
 					<p class="litespeed-desc">

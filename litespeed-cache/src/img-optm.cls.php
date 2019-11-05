@@ -20,7 +20,7 @@ class Img_Optm extends Base
 	const CLOUD_ACTION_CLEAN = 'clean';
 
 	const TYPE_NEW_REQ = 'new_req';
-	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan';
+	const TYPE_RESCAN = 'rescan';
 	const TYPE_DESTROY = 'destroy';
 	const TYPE_CLEAN = 'clean';
 	const TYPE_PULL = 'pull';
@@ -176,7 +176,7 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid );
+		// Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid );
 
 		$this->_img_in_queue[] = array(
 			'pid'	=> $this->tmp_pid,
@@ -242,7 +242,7 @@ class Img_Optm extends Base
 		}
 		$this->_insert_img_optm( $data );
 
-		Log::debug( '[Img_Optm] Saved gathered raw images [total] ' . count( $this->_img_in_queue ) );
+		Log::debug( '[Img_Optm] Added raw images [total] ' . count( $this->_img_in_queue ) );
 	}
 
 	/**
@@ -1017,7 +1017,7 @@ class Img_Optm extends Base
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _img_optimize_destroy()
+	private function _destroy()
 	{
 		global $wpdb ;
 
@@ -1089,137 +1089,124 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Resend requested img to LiteSpeed IAPI server
+	 * Rescan to find new generated images
 	 *
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _img_optimize_rescan()
-	{return;
-		Log::debug( '[Img_Optm] resend requested images' ) ;
-
-		$_credit = (int) self::get_summary( 'credit' ) ;
-
+	private function _rescan()
+	{
 		global $wpdb ;
 
-		$q = "SELECT a.post_id, a.meta_value, b.meta_id as bmeta_id, c.meta_id as cmeta_id, c.meta_value as cmeta_value
-			FROM $wpdb->postmeta a
-			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id
-			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.post_id
-			WHERE a.meta_key = '_wp_attachment_metadata'
-				AND b.meta_key = %s
-				AND c.meta_key = %s
-			LIMIT %d
-			" ;
-		$limit_rows = apply_filters( 'litespeed_img_optm_resend_rows', 300 ) ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTM_STATUS, self::DB_IMG_OPTM_DATA, $limit_rows ) ) ) ;
+		$offset = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
+		$limit = 500;
+
+		Log::debug( '[Img_Optm] rescan images' ) ;
+
+		// Get images
+		$q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.id IS NOT NULL
+			ORDER BY a.ID
+			LIMIT %d, %d
+			";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit ) );
+
 		if ( ! $list ) {
-			Log::debug( '[Img_Optm] resend request bypassed: no image found' ) ;
-			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			Admin_Display::error( $msg ) ;
-			return ;
-		}
+			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
+			Admin_Display::succeed( $msg );
 
-		// meta list
-		$optm_data_list = array() ;
-		$optm_data_pid2mid_list = array() ;
-
-		foreach ( $list as $v ) {
-			// wp meta
-			$meta_value = $this->_parse_wp_meta_value( $v ) ;
-			if ( ! $meta_value ) {
-				continue ;
-			}
-			if ( empty( $meta_value[ 'sizes' ] ) ) {
-				continue ;
-			}
-
-			$optm_data_pid2mid_list[ $v->post_id ] = array( 'status_mid' => $v->bmeta_id, 'data_mid' => $v->cmeta_id ) ;
-
-			// prepare for pushing
-			$this->tmp_pid = $v->post_id ;
-			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
-
-			// ls optimized meta
-			$optm_meta = $optm_data_list[ $v->post_id ] = maybe_unserialize( $v->cmeta_value ) ;
-			$optm_list = array() ;
-			foreach ( $optm_meta as $md5 => $optm_row ) {
-				$optm_list[] = $optm_row[ 0 ] ;
-				// only do for requested/notified img
-				// if ( ! in_array( $optm_row[ 1 ], array( self::STATUS_NOTIFIED, self::STATUS_REQUESTED ) ) ) {
-				// 	continue ;
-				// }
-			}
-
-			// check if there is new files from wp meta
-			$img_queue = array() ;
-			foreach ( $meta_value[ 'sizes' ] as $v2 ) {
-				$curr_file = $this->tmp_path . $v2[ 'file' ] ;
-
-				// new child file OR not finished yet
-				if ( ! in_array( $curr_file, $optm_list ) ) {
-					$img_queue[] = $v2 ;
-				}
-			}
-
-			// nothing to add
-			if ( ! $img_queue ) {
-				continue ;
-			}
-
-			$num_will_incease = count( $img_queue ) ;
-			if ( $this->_img_total + $num_will_incease > $_credit ) {
-				Log::debug( '[Img_Optm] resend img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
-				break ;
-			}
-
-			foreach ( $img_queue as $v2 ) {
-				$this->_img_queue( $v2 ) ;
-			}
-		}
-
-		// push to LiteSpeed IAPI server
-		if ( empty( $this->_img_in_queue ) ) {
-			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			Admin_Display::succeed( $msg ) ;
-			return ;
-		}
-
-		$total_groups = count( $this->_img_in_queue ) ;
-		Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
-
-		// Push to LiteSpeed IAPI server
-		// $json = $this->_push_img_in_queue_to_iapxxi();
-		if ( ! $json ) {
+			Log::debug( '[Img_Optm] rescan bypass: no gathered image found' );
 			return;
 		}
-		// Returned data is the requested and notifed images
 
-		$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
+		$pid_set = array();
+		foreach ( $list as $v ) {
+			$pid_set[] = $v->post_id;
 
-		// Update data
-		foreach ( $json[ 'pids' ] as $pid ) {
-			$md52src_list = $optm_data_list[ $pid ] ;
-
-			foreach ( $this->_img_in_queue[ $pid ] as $md5 => $src_data ) {
-				$md52src_list[ $md5 ] = array( $src_data[ 'src' ], self::STATUS_REQUESTED ) ;
+			$meta_value = $this->_parse_wp_meta_value( $v );
+			if ( ! $meta_value ) {
+				continue;
 			}
 
-			$new_status = $this->_get_status_by_meta_data( $md52src_list, self::STATUS_REQUESTED ) ;
-
-			$md52src_list = serialize( $md52src_list ) ;
-
-			// Store data
-			$wpdb->query( $wpdb->prepare( $q, array( $new_status, $optm_data_pid2mid_list[ $pid ][ 'status_mid' ] ) ) ) ;
-			$wpdb->query( $wpdb->prepare( $q, array( $md52src_list, $optm_data_pid2mid_list[ $pid ][ 'data_mid' ] ) ) ) ;
+			// Parse all child src and put them into $this->_img_in_queue, missing ones to $this->_img_in_queue_missed
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+			$this->_append_img_queue( $meta_value, true );
+			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+				array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
+			}
 		}
 
-		$accepted_groups = count( $json[ 'pids' ] ) ;
-		$accepted_imgs = $json[ 'total' ] ;
+		$q = "SELECT src, post_id FROM `$this->_table_img_optm` WHERE post_id IN (" . implode( ',', array_fill( 0, count( $pid_set ), '%d' ) ) . ")";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid_set ) );
 
-		$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
-		Admin_Display::succeed( $msg ) ;
+		$existing_src_set = array();
+		foreach ( $list as $v ) {
+			$existing_src_set[ $v->post_id . '.' . $v->src ] = true;
+		}
 
+		// Filter existing missed img
+		foreach ( $this->_img_in_queue_missed as $k => $v ) { // $v -> pid, src
+			if ( array_key_exists( $v[ 'pid' ] . '.' . $v[ 'src' ], $existing_src_set ) ) {
+				unset( $this->_img_in_queue_missed[ $k ] );
+			}
+		}
+
+		// Filter existing img
+		foreach ( $this->_img_in_queue as $k => $v ) { // $v -> pid, src
+			if ( array_key_exists( $v[ 'pid' ] . '.' . $v[ 'src' ], $existing_src_set ) ) {
+				unset( $this->_img_in_queue[ $k ] );
+			}
+		}
+
+		Log::debug( '[Img_Optm] rescaned [img_missed] ' . count( $this->_img_in_queue_missed ) . ' [img] ' . count( $this->_img_in_queue ) );
+
+		// Check if needs to continue or not
+		$q = "SELECT b.post_id
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.id IS NOT NULL
+			ORDER BY a.ID
+			LIMIT %d, %d
+			";
+		$offset ++;
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, $offset * $limit, 1 ) );
+
+		// Save missed images into img_optm
+		$this->_save_err_missed();
+
+		if ( empty( $this->_img_in_queue ) ) {
+			if ( $to_be_continued ) {
+				$this->_self_redirect( self::TYPE_RESCAN );
+			}
+
+			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
+			Admin_Display::succeed( $msg );
+
+			return;
+		}
+
+		// Save to DB
+		$this->_save_raw();
+
+		if ( $to_be_continued ) {
+			$this->_self_redirect( self::TYPE_RESCAN );
+		}
+
+		$msg = sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), count( $this->_img_in_queue ) );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -1628,12 +1615,14 @@ class Img_Optm extends Base
 	 */
 	private function _self_redirect( $type )
 	{
-		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type ) ;
 		// Add i to avoid browser too many redirected warning
-		$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
-		$i ++ ;
-		$url = html_entity_decode( $link ) . '&i=' . $i ;
-		exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
+		$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0;
+		$i ++;
+
+		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type, false, null, array( 'i' => $i ) );
+
+		$url = html_entity_decode( $link );
+		exit( "<meta http-equiv='refresh' content='0;url=$url'>" );
 	}
 
 	/**
@@ -1665,12 +1654,12 @@ class Img_Optm extends Base
 				$instance->new_req();
 				break;
 
-			case self::TYPE_IMG_OPTIMIZE_RESCAN:
-				$instance->_img_optimize_rescan() ;
+			case self::TYPE_RESCAN:
+				$instance->_rescan() ;
 				break;
 
 			case self::TYPE_DESTROY:
-				$instance->_img_optimize_destroy();
+				$instance->_destroy();
 				break;
 
 			case self::TYPE_CLEAN:
