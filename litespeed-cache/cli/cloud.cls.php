@@ -29,12 +29,12 @@ class Cloud
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Sync or initialize image optimization service
+	 *     # Sync online service usage info
 	 *     $ wp litespeed-cloud sync
 	 *
 	 */
 	public function sync()
-	{
+	{xx
 		$optm_summary = Img_Optm::get_summary() ;
 
 		$json = $this->_img_optm_instance->sync_data() ;
@@ -86,14 +86,7 @@ class Cloud
 	 */
 	public function pull()
 	{
-		$msg = $this->_img_optm_instance->pull_img() ;
-
-		if ( ! is_array( $msg ) ) {
-			WP_CLI::error( $msg ) ;
-		}
-		else {
-			WP_CLI::success( $msg[ 'ok' ] ) ;
-		}
+		$this->_img_optm_instance->pull( true ) ;
 	}
 
 	/**
@@ -108,7 +101,7 @@ class Cloud
 	 *
 	 */
 	public function status()
-	{
+	{xx
 		$summary = Img_Optm::get_summary() ;
 		$img_count = $this->_img_optm_instance->img_count() ;
 
@@ -192,8 +185,7 @@ class Cloud
 	 */
 	public function rm_bkup()
 	{
-		$msg = $this->_img_optm_instance->rm_bkup() ;
-		WP_CLI::success( $msg ) ;
+		$this->_img_optm_instance->rm_bkup() ;
 	}
 
 

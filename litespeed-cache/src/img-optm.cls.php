@@ -287,6 +287,22 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Auto send optm request
+	 *
+	 * @since  2.4.1
+	 * @access public
+	 */
+	public static function cron_auto_request()
+	{
+		if ( ! defined( 'DOING_CRON' ) ) {
+			return false;
+		}
+
+		$instance = self::get_instance();
+		$instance->new_req();
+	}
+
+	/**
 	 * Push raw img to image optm server
 	 *
 	 * @since 1.6
@@ -597,7 +613,7 @@ class Img_Optm extends Base
 				}
 
 				// Update status and data in working table
-				$q = "UPDATE `$this->_table_img_optming` SET optm_status = %s, server_info = %s WHERE id = %d ";
+				$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d, server_info = %s WHERE id = %d ";
 				$wpdb->query( $wpdb->prepare( $q, array( $status, json_encode( $server_info ), $v->id ) ) );
 
 				// Update postmeta for optm summary
@@ -625,7 +641,7 @@ class Img_Optm extends Base
 		}
 		elseif ( $status == self::STATUS_ERR_FETCH ) {
 			// Only update working table
-			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
 		}
 		else { // Other errors will directly update img_optm table and remove the working records
@@ -635,7 +651,7 @@ class Img_Optm extends Base
 			$wpdb->query( $wpdb->prepare( $q, $notified_data ) );
 
 			// Update img_optm
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
 		}
 
@@ -662,43 +678,30 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Log::debug( '[Img_Optm] Cron pull_optimized_img started' );
-
-		self::get_instance()->_pull();
-	}
-
-	/**
-	 * Pull optm data from litespeed IAPI server for CLI usage
-	 *
-	 * @since  2.4.4
-	 * @access public
-	 */
-	public function pull_img()
-	{
-		$res = $this->_pull();
-
-		$this->_update_cron_running( true );
-
-		return $res;
+		self::get_instance()->pull();
 	}
 
 	/**
 	 * Pull optimized img
 	 *
 	 * @since  1.6
-	 * @access private
+	 * @access public
 	 */
-	private function _pull( $manual = false )
+	public function pull( $manual = false )
 	{
-		if ( $this->cron_running() ) {
-			$msg = '[Img_Optm] fetch cron is running';
-			Log::debug( $msg );
-			return $msg;
-		}
-
 		global $wpdb;
 
-		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %s ORDER BY id LIMIT 1";
+		Log::debug( '[Img_Optm] ' . ( $manual ? 'Manually' : 'Cron' ) . ' pull started' );
+
+		if ( $this->cron_running() ) {
+			Log::debug( '[Img_Optm] Pull cron is running' );
+
+			$msg = __( 'Pull Cron is running', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return;
+		}
+
+		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT 1";
 		$_q = $wpdb->prepare( $q, self::STATUS_NOTIFIED );
 
 		$optm_ori = Conf::val( Base::O_IMG_OPTM_ORI );
@@ -706,7 +709,7 @@ class Img_Optm extends Base
 		$optm_webp = Conf::val( Base::O_IMG_OPTM_WEBP );
 
 		// pull 1 min images each time
-		$end_time = time() + ( $manual ? 120 : 60 );
+		$end_time = time() + 60;
 
 		$total_pulled_ori = 0;
 		$total_pulled_webp = 0;
@@ -752,13 +755,15 @@ class Img_Optm extends Base
 					Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] );
 
 					// Update status to failed
-					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id = %d ";
+					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					return 'Md5 dismatch'; // exit from running pull process
+					$msg = __( 'Pulled image md5 dismatched', 'litespeed-cache' );
+					Admin_Display::error( $msg );
+					return;
 				}
 
 				// Backup ori img
@@ -803,13 +808,15 @@ class Img_Optm extends Base
 					Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] );
 
 					// update status to failed
-					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE id = %d ";
+					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					return 'WebP md5 dismatch'; // exit from running pull process
+					$msg = __( 'Pulled WebP image md5 dismatched', 'litespeed-cache' );
+					Admin_Display::error( $msg );
+					return;
 				}
 
 				Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' );
@@ -830,7 +837,7 @@ class Img_Optm extends Base
 			Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id );
 
 			// Update pulled status
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE id = %d ";
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d, target_filesize = %d, webp_filesize = %d WHERE id = %d ";
 			$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) );
 			// Delete working table
 			$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
@@ -858,90 +865,25 @@ class Img_Optm extends Base
 		$this->_summary[ 'img_taken' ] += $total_pulled_ori + $total_pulled_webp;
 		self::save_summary( $this->_summary );
 
+		// Manually running needs to roll back timestamp for next running
+		if ( $manual ) {
+			$this->_update_cron_running( true ) ;
+		}
+
+		$msg = sprintf( __( 'Pulled %d image(s)', 'litespeed-cache' ), $total_pulled_ori + $total_pulled_webp );
+		Admin_Display::succeed( $msg );
+
 		// Check if there is still task in queue
-		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %s LIMIT 1";
-		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::STATUS_NOTIFIED ) );
-		if ( $tmp ) {
+		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d LIMIT 1";
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, self::STATUS_NOTIFIED ) );
+		if ( $to_be_continued ) {
 			Log::debug( '[Img_Optm] Task in queue, to be continued...' );
-			return array( 'ok' => 'to_be_continued' );
+			return $this->_self_redirect( self::TYPE_PULL );
 		}
 
 		// If all pulled, update tag to done
 		Log::debug( '[Img_Optm] Marked pull status to all pulled' );
 		self::update_option( self::DB_NEED_PULL, self::STATUS_PULLED );
-
-		$time_cost = time() - $beginning;
-
-		return array( 'ok' => "Pulled [ori] $total_pulled_ori [WebP] $total_pulled_webp [cost] {$time_cost}s" );
-	}
-
-	/**
-	 * Auto send optm request
-	 *
-	 * @since  2.4.1
-	 * @access public
-	 */
-	public static function cron_auto_request()
-	{
-		if ( ! defined( 'DOING_CRON' ) ) {
-			return false;
-		}
-
-		$instance = self::get_instance() ;
-		$instance->new_req( 'from cron' ) ;
-	}
-
-	/**
-	 * Show an image's optm status
-	 *
-	 * @since  1.6.5
-	 * @access public
-	 */
-	public function check_img()
-	{
-		$ip = gethostbyname( 'my.quic.cloud' ) ;
-		if ( $ip != Router::get_ip() ) {
-			return Cloud::err( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
-		}
-
-		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
-			return Cloud::err( 'wrong_key' ) ;
-		}
-
-		global $wpdb ;
-
-		$pid = $_POST[ 'data' ] ;
-
-		Log::debug( '[Img_Optm] Check image [ID] ' . $pid ) ;
-
-		$data = array() ;
-
-		$data[ 'img_count' ] = $this->img_count() ;
-		$data[ 'optm_summary' ] = self::get_summary() ;
-
-		$data[ '_wp_attached_file' ] = get_post_meta( $pid, '_wp_attached_file', true ) ;
-		$data[ '_wp_attachment_metadata' ] = get_post_meta( $pid, '_wp_attachment_metadata', true ) ;
-
-		// Get img_optm data
-		$q = "SELECT * FROM `$this->_table_img_optm` WHERE post_id = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid ) ) ;
-		$img_data = array() ;
-		if ( $list ) {
-			foreach ( $list as $v ) {
-				$img_data[] = array(
-					'id'	=> $v->id,
-					'optm_status'	=> $v->optm_status,
-					'src'	=> $v->src,
-					'srcpath_md5'	=> $v->srcpath_md5,
-					'src_md5'	=> $v->src_md5,
-					'server_info'	=> $v->server_info,
-				) ;
-			}
-		}
-		$data[ 'img_data' ] = $img_data ;
-
-		return array( '_res' => 'ok', 'data' => $data ) ;
 	}
 
 	/**
@@ -1003,7 +945,7 @@ class Img_Optm extends Base
 
 		// Reset img_optm table's queue
 		if ( Data::get_instance()->tb_exist( 'img_optm' ) ) {
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %s WHERE optm_status = %s" ;
+			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE optm_status = %d" ;
 			$wpdb->query( $wpdb->prepare( $q, self::STATUS_RAW, self::STATUS_REQUESTED ) ) ;
 		}
 
@@ -1034,7 +976,7 @@ class Img_Optm extends Base
 		 */
 		// Start deleting files
 		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 500 ) ;
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
 		foreach ( $list as $v ) {
 			// del webp
@@ -1055,15 +997,15 @@ class Img_Optm extends Base
 		}
 
 		// Check if there are more images, then return `to_be_continued` code
-		$q = "SELECT COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %s" ;
+		$q = "SELECT COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d" ;
 		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 		if ( $total_img > $limit ) {
-			$q = "DELETE FROM `$this->_table_img_optm` WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+			$q = "DELETE FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d" ;
 			$wpdb->query( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
 
 			Log::debug( '[Img_Optm] To be continued 🚦' ) ;
 
-			$this->_self_redirect( self::TYPE_DESTROY );
+			return $this->_self_redirect( self::TYPE_DESTROY );
 		}
 
 		// Delete postmeta info
@@ -1098,7 +1040,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 
-		$offset = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
+		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0 ;
 		$limit = 500;
 
 		Log::debug( '[Img_Optm] rescan images' ) ;
@@ -1189,7 +1131,7 @@ class Img_Optm extends Base
 
 		if ( empty( $this->_img_in_queue ) ) {
 			if ( $to_be_continued ) {
-				$this->_self_redirect( self::TYPE_RESCAN );
+				return $this->_self_redirect( self::TYPE_RESCAN );
 			}
 
 			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
@@ -1202,7 +1144,7 @@ class Img_Optm extends Base
 		$this->_save_raw();
 
 		if ( $to_be_continued ) {
-			$this->_self_redirect( self::TYPE_RESCAN );
+			return $this->_self_redirect( self::TYPE_RESCAN );
 		}
 
 		$msg = sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), count( $this->_img_in_queue ) );
@@ -1217,97 +1159,117 @@ class Img_Optm extends Base
 	 */
 	private function _calc_bkup()
 	{
+		global $wpdb;
+
 		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
-		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
+		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
+		$limit = 500;
 
-		$i = 0 ;
-		$total_size = 0 ;
-		foreach ( $list as $v ) {
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-			$bk_file = $local_filename . '.bk.' . $extension ;
-
-			$img_info = $this->__media->info( $bk_file, $v->post_id ) ;
-			if ( ! $img_info ) {
-				continue ;
-			}
-
-			$i ++ ;
-			$total_size += $img_info[ 'size' ] ;
-
+		if ( ! $offset ) {
+			$this->_summary[ 'bk_summary' ] = array(
+				'date' => time(),
+				'count' => 0,
+				'sum' => 0,
+			);
 		}
 
-		$this->_summary[ 'bk_summary' ] = array(
-			'date' => time(),
-			'count' => $i,
-			'sum' => $total_size,
-		) ;
-		self::save_summary( $this->_summary ) ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
 
-		Log::debug( '[Img_Optm] _calc_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+		foreach ( $list as $v ) {
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
+			$bk_file = $local_filename . '.bk.' . $extension;
 
+			$img_info = $this->__media->info( $bk_file, $v->post_id );
+			if ( ! $img_info ) {
+				continue;
+			}
+
+			$this->_summary[ 'bk_summary' ][ 'count' ] ++;
+			$this->_summary[ 'bk_summary' ][ 'sum' ] += $img_info[ 'size' ];
+		}
+
+		$this->_summary[ 'bk_summary' ][ 'date' ] = time();
+		self::save_summary( $this->_summary );
+
+		Log::debug( '[Img_Optm] _calc_bkup total: ' . $this->_summary[ 'bk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'bk_summary' ][ 'sum' ] );
+
+		$offset ++;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
+
+		if ( $to_be_continued ) {
+			return $this->_self_redirect( self::TYPE_CALC_BKUP );
+		}
+
+		$msg = __( 'Calculated backups successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
-	 * Remove backups for CLI usage
+	 * Delete bkup original images storage
 	 *
 	 * @since  2.5
 	 * @access public
 	 */
 	public function rm_bkup()
 	{
-		return $this->_rm_bkup() ;
-	}
+		global $wpdb;
 
-	/**
-	 * Delete bkup original images storage
-	 *
-	 * @since 2.2.6
-	 * @access private
-	 */
-	private function _rm_bkup()
-	{
-		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
-
-		$i = 0 ;
-		$total_size = 0 ;
-		foreach ( $list as $v ) {
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-			$bk_file = $local_filename . '.bk.' . $extension ;
-
-			// Del ori file
-			$img_info = $this->__media->info( $bk_file, $v->post_id ) ;
-			if ( ! $img_info ) {
-				continue ;
-			}
-
-			$i ++ ;
-			$total_size += $img_info[ 'size' ] ;
-
-			$this->__media->del( $bk_file, $v->post_id ) ;
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+			return;
 		}
 
-		$this->_summary[ 'rmbk_summary' ] = array(
-			'date' => time(),
-			'count' => $i,
-			'sum' => $total_size,
-		) ;
-		self::save_summary( $this->_summary ) ;
+		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
+		$limit = 500;
 
-		Log::debug( '[Img_Optm] _rm_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+		if ( empty( $this->_summary[ 'rmbk_summary' ] ) ) {
+			$this->_summary[ 'rmbk_summary' ] = array(
+				'date' => time(),
+				'count' => 0,
+				'sum' => 0,
+			);
+		}
 
-		$msg = sprintf( __( 'Removed %1$s images and saved %2$s successfully.', 'litespeed-cache' ), $i, Utility::real_size( $total_size ) ) ;
-		Admin_Display::succeed( $msg ) ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
 
-		return $msg ;
+		foreach ( $list as $v ) {
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
+			$bk_file = $local_filename . '.bk.' . $extension;
+
+			// Del ori file
+			$img_info = $this->__media->info( $bk_file, $v->post_id );
+			if ( ! $img_info ) {
+				continue;
+			}
+
+			$this->_summary[ 'rmbk_summary' ][ 'count' ] ++;
+			$this->_summary[ 'rmbk_summary' ][ 'sum' ] += $img_info[ 'size' ];
+
+			$this->__media->del( $bk_file, $v->post_id );
+		}
+
+		$this->_summary[ 'rmbk_summary' ][ 'date' ] = time();
+		self::save_summary( $this->_summary );
+
+		Log::debug( '[Img_Optm] rm_bkup total: ' . $this->_summary[ 'rmbk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'rmbk_summary' ][ 'sum' ] );
+
+		$offset ++;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
+
+		if ( $to_be_continued ) {
+			return $this->_self_redirect( self::TYPE_RM_BKUP );
+		}
+
+		$msg = __( 'Removed backups successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -1451,7 +1413,7 @@ class Img_Optm extends Base
 	private function _batch_switch( $type )
 	{
 		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1503,7 +1465,7 @@ class Img_Optm extends Base
 		$switch_type = substr( $type, 0, 4 ) ;
 
 		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d AND post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $pid ) ) ) ;
 
 		$msg = 'Unknown Msg' ;
@@ -1608,6 +1570,59 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Show an image's optm status
+	 *
+	 * @since  1.6.5
+	 * @access public
+	 */
+	public function check_img()
+	{
+		$ip = gethostbyname( 'my.quic.cloud' ) ;
+		if ( $ip != Router::get_ip() ) {
+			return Cloud::err( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
+		}
+
+		// Validate key
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
+			return Cloud::err( 'wrong_key' ) ;
+		}
+
+		global $wpdb ;
+
+		$pid = $_POST[ 'data' ] ;
+
+		Log::debug( '[Img_Optm] Check image [ID] ' . $pid ) ;
+
+		$data = array() ;
+
+		$data[ 'img_count' ] = $this->img_count() ;
+		$data[ 'optm_summary' ] = self::get_summary() ;
+
+		$data[ '_wp_attached_file' ] = get_post_meta( $pid, '_wp_attached_file', true ) ;
+		$data[ '_wp_attachment_metadata' ] = get_post_meta( $pid, '_wp_attachment_metadata', true ) ;
+
+		// Get img_optm data
+		$q = "SELECT * FROM `$this->_table_img_optm` WHERE post_id = %d" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid ) ) ;
+		$img_data = array() ;
+		if ( $list ) {
+			foreach ( $list as $v ) {
+				$img_data[] = array(
+					'id'	=> $v->id,
+					'optm_status'	=> $v->optm_status,
+					'src'	=> $v->src,
+					'srcpath_md5'	=> $v->srcpath_md5,
+					'src_md5'	=> $v->src_md5,
+					'server_info'	=> $v->server_info,
+				) ;
+			}
+		}
+		$data[ 'img_data' ] = $img_data ;
+
+		return array( '_res' => 'ok', 'data' => $data ) ;
+	}
+
+	/**
 	 * Redirect to self to continue operation
 	 *
 	 * @since  3.0
@@ -1615,11 +1630,16 @@ class Img_Optm extends Base
 	 */
 	private function _self_redirect( $type )
 	{
+		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
+			Admin_Display::succeed( 'To be continued' ); // Show for CLI
+			return;
+		}
+
 		// Add i to avoid browser too many redirected warning
-		$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0;
+		$i = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
 		$i ++;
 
-		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type, false, null, array( 'i' => $i ) );
+		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type, false, null, array( 'litespeed_i' => $i ) );
 
 		$url = html_entity_decode( $link );
 		exit( "<meta http-equiv='refresh' content='0;url=$url'>" );
@@ -1633,21 +1653,21 @@ class Img_Optm extends Base
 	 */
 	public static function handler()
 	{
-		$instance = self::get_instance() ;
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_RESET_ROW :
 				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false ) ;
 				break ;
 
-			case self::TYPE_CALC_BKUP :
-				$instance->_calc_bkup() ;
+			case self::TYPE_CALC_BKUP:
+				$instance->_calc_bkup();
 				break ;
 
 			case self::TYPE_RM_BKUP :
-				$instance->_rm_bkup() ;
+				$instance->rm_bkup() ;
 				break ;
 
 			case self::TYPE_NEW_REQ:
@@ -1655,7 +1675,7 @@ class Img_Optm extends Base
 				break;
 
 			case self::TYPE_RESCAN:
-				$instance->_rescan() ;
+				$instance->_rescan();
 				break;
 
 			case self::TYPE_DESTROY:
@@ -1666,16 +1686,8 @@ class Img_Optm extends Base
 				$instance->clean();
 				break;
 
-			case self::TYPE_PULL :
-				Log::debug( 'ImgOptm: Manually running Cron pull_optimized_img' ) ;
-				$result = $instance->_pull( true ) ;
-				// Manually running needs to roll back timestamp for next running
-				$instance->_update_cron_running( true ) ;
-
-				// Check if need to self redirect
-				if ( is_array( $result ) && $result[ 'ok' ] === 'to_be_continued' ) {
-					$instance->_self_redirect( self::TYPE_PULL );
-				}
+			case self::TYPE_PULL:
+				$instance->pull();
 				break ;
 
 			/**
@@ -1698,6 +1710,5 @@ class Img_Optm extends Base
 
 		Admin::redirect() ;
 	}
-
 
 }

@@ -172,6 +172,12 @@ class Admin extends Instance
 				if ( isset( $_GET[ Router::NONCE_NAME ] ) ) {
 					unset( $_GET[ Router::NONCE_NAME ] ) ;
 				}
+				if ( isset( $_GET[ Router::TYPE ] ) ) {
+					unset( $_GET[ Router::TYPE ] ) ;
+				}
+				if ( isset( $_GET[ 'litespeed_i' ] ) ) {
+					unset( $_GET[ 'litespeed_i' ] ) ;
+				}
 				if ( ! empty( $_GET ) ) {
 					$qs = '?' . http_build_query( $_GET ) ;
 				}
