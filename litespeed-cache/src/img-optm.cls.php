@@ -24,8 +24,8 @@ class Img_Optm extends Base
 	const TYPE_DESTROY = 'destroy';
 	const TYPE_CLEAN = 'clean';
 	const TYPE_PULL = 'pull';
-	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori';
-	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm';
+	const TYPE_BATCH_SWITCH_ORI = 'batch_switch_ori';
+	const TYPE_BATCH_SWITCH_OPTM = 'batch_switch_optm';
 	const TYPE_CALC_BKUP = 'calc_bkup';
 	const TYPE_RESET_ROW = 'reset_row';
 	const TYPE_RM_BKUP = 'rm_bkup';
@@ -320,10 +320,10 @@ class Img_Optm extends Base
 
 		$img_taken_count = 1;
 		if ( ! empty( $this->_summary[ 'img_taken' ] ) ) {
-			$img_taken_count = $this->_summary[ 'img_taken' ] > 500 ? $this->_summary[ 'img_taken' ] : pow( $this->_summary[ 'img_taken' ], 2 );
+			$img_taken_count = $this->_summary[ 'img_taken' ] > 300 ? $this->_summary[ 'img_taken' ] : pow( $this->_summary[ 'img_taken' ], 2 );
 		}
 
-		$allowance = min( $allowance, apply_filters( 'litespeed_img_optimize_max_rows', 500 ), $img_taken_count );
+		$allowance = min( $allowance, apply_filters( 'litespeed_img_optimize_max_rows', 300 ), $img_taken_count );
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
@@ -1176,7 +1176,7 @@ class Img_Optm extends Base
 			);
 		}
 
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
 
 		foreach ( $list as $v ) {
@@ -1199,7 +1199,7 @@ class Img_Optm extends Base
 		Log::debug( '[Img_Optm] _calc_bkup total: ' . $this->_summary[ 'bk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'bk_summary' ][ 'sum' ] );
 
 		$offset ++;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
 
 		if ( $to_be_continued ) {
@@ -1235,7 +1235,7 @@ class Img_Optm extends Base
 			);
 		}
 
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
 
 		foreach ( $list as $v ) {
@@ -1261,7 +1261,7 @@ class Img_Optm extends Base
 		Log::debug( '[Img_Optm] rm_bkup total: ' . $this->_summary[ 'rmbk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'rmbk_summary' ][ 'sum' ] );
 
 		$offset ++;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
 
 		if ( $to_be_continued ) {
@@ -1286,23 +1286,23 @@ class Img_Optm extends Base
 		$tb_existed2 = Data::get_instance()->tb_exist( 'img_optming' );
 
 		$q = "SELECT COUNT(*)
-			FROM $wpdb->posts a
-			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png')
 				AND b.meta_key = '_wp_attachment_metadata'
 			";
-		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') " ;
+		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') ";
 		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
 		$imgs_raw = 0;
 		$imgs_gathered = 0;
 
 		if ( $tb_existed ) {
 			$q = "SELECT COUNT(*)
-				FROM $wpdb->posts a
-				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
-				LEFT JOIN $this->_table_img_optm c ON c.post_id = a.ID
+				FROM `$wpdb->posts` a
+				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+				LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 				WHERE a.post_type = 'attachment'
 					AND a.post_status = 'inherit'
 					AND a.post_mime_type IN ('image/jpeg', 'image/png')
@@ -1311,9 +1311,9 @@ class Img_Optm extends Base
 				";
 			$groups_not_gathered = $wpdb->get_var( $q );
 
-			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d", self::STATUS_RAW );
+			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d", self::STATUS_RAW );
 			list( $groups_raw, $imgs_raw ) = $wpdb->get_row( $q, ARRAY_N );
-			$imgs_gathered = $wpdb->get_var( "SELECT COUNT(*) FROM $this->_table_img_optm" );
+			$imgs_gathered = $wpdb->get_var( "SELECT COUNT(*) FROM `$this->_table_img_optm`" );
 		}
 
 		$count_list = array(
@@ -1322,15 +1322,15 @@ class Img_Optm extends Base
 			'groups_raw'	=> $groups_raw,
 			'imgs_raw'	=> $imgs_raw,
 			'imgs_gathered'	=> $imgs_gathered,
-		) ;
+		);
 
 		// images count from work table
-		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optming WHERE optm_status = %d";
+		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$groups_to_check = array(
 			self::STATUS_REQUESTED,
 			self::STATUS_NOTIFIED,
 			self::STATUS_ERR_FETCH,
-		) ;
+		);
 		foreach ( $groups_to_check as $v ) {
 			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
 			if ( $tb_existed ) {
@@ -1339,7 +1339,7 @@ class Img_Optm extends Base
 		}
 
 		// images count from image table
-		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %d";
+		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d";
 		$groups_to_check = array(
 			self::STATUS_DUPLICATED,
 			self::STATUS_PULLED,
@@ -1348,7 +1348,7 @@ class Img_Optm extends Base
 			self::STATUS_ERR_OPTM,
 			self::STATUS_XMETA,
 			self::STATUS_ERR,
-		) ;
+		);
 		foreach ( $groups_to_check as $v ) {
 			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
 			if ( $tb_existed ) {
@@ -1367,7 +1367,7 @@ class Img_Optm extends Base
 	 */
 	public function cron_running( $bool_res = true )
 	{
-		$last_run = self::get_option( self::DB_CRON_RUN ) ;
+		$last_run = self::get_option( self::DB_CRON_RUN );
 
 		$is_running = $last_run && time() - $last_run < 120 ;
 
@@ -1412,45 +1412,57 @@ class Img_Optm extends Base
 	 */
 	private function _batch_switch( $type )
 	{
-		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
+		global $wpdb;
 
-		$i = 0 ;
+		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
+		$limit = 500;
+
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
+
+		$i = 0;
 		foreach ( $list as $v ) {
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-			$bk_file = $local_filename . '.bk.' . $extension ;
-			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
+			$bk_file = $local_filename . '.bk.' . $extension;
+			$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
 
 			// switch to ori
-			if ( $type === self::TYPE_IMG_BATCH_SWITCH_ORI ) {
+			if ( $type === self::TYPE_BATCH_SWITCH_ORI ) {
 				if ( ! $this->__media->info( $bk_file, $v->post_id ) ) {
-					continue ;
+					continue;
 				}
 
-				$i ++ ;
+				$i ++;
 
-				$this->__media->rename( $v->src, $bk_optm_file, $v->post_id ) ;
-				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
+				$this->__media->rename( $v->src, $bk_optm_file, $v->post_id );
+				$this->__media->rename( $bk_file, $v->src, $v->post_id );
 			}
 			// switch to optm
-			elseif ( $type === self::TYPE_IMG_BATCH_SWITCH_OPTM ) {
+			elseif ( $type === self::TYPE_BATCH_SWITCH_OPTM ) {
 				if ( ! $this->__media->info( $bk_optm_file, $v->post_id ) ) {
-					continue ;
+					continue;
 				}
 
-				$i ++ ;
+				$i ++;
 
-				$this->__media->rename( $v->src, $bk_file, $v->post_id ) ;
-				$this->__media->rename( $bk_optm_file, $v->src, $v->post_id ) ;
+				$this->__media->rename( $v->src, $bk_file, $v->post_id );
+				$this->__media->rename( $bk_optm_file, $v->src, $v->post_id );
 			}
 		}
 
-		Log::debug( '[Img_Optm] batch switched images total: ' . $i ) ;
-		$msg = __( 'Switched images successfully.', 'litespeed-cache' ) ;
-		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
+		Log::debug( '[Img_Optm] batch switched images total: ' . $i );
 
+		$offset ++;
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
+
+		if ( $to_be_continued ) {
+			return $this->_self_redirect( $type );
+		}
+
+		$msg = __( 'Switched images successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -1461,58 +1473,59 @@ class Img_Optm extends Base
 	 */
 	private function _switch_optm_file( $type )
 	{
-		$pid = substr( $type, 4 ) ;
-		$switch_type = substr( $type, 0, 4 ) ;
+		global $wpdb;
 
-		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %d AND post_id = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $pid ) ) ) ;
+		$pid = substr( $type, 4 );
+		$switch_type = substr( $type, 0, 4 );
 
-		$msg = 'Unknown Msg' ;
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d AND post_id = %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $pid ) ) );
+
+		$msg = 'Unknown Msg';
 
 		foreach ( $list as $v ) {
 			// to switch webp file
 			if ( $switch_type === 'webp' ) {
 				if ( $this->__media->info( $v->src . '.webp', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp', $v->post_id ) ;
-					Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src ) ;
+					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp', $v->post_id );
+					Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src );
 
-					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
+					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' );
 				}
 				elseif ( $this->__media->info( $v->src . '.optm.webp', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp', $v->post_id ) ;
-					Log::debug( '[Img_Optm] Enable WebP: ' . $v->src ) ;
+					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp', $v->post_id );
+					Log::debug( '[Img_Optm] Enable WebP: ' . $v->src );
 
-					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
+					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' );
 				}
 			}
 			// to switch original file
 			else {
-				$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-				$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-				$bk_file = $local_filename . '.bk.' . $extension ;
-				$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+				$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
+				$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
+				$bk_file = $local_filename . '.bk.' . $extension;
+				$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
 
 				// revert ori back
 				if ( $this->__media->info( $bk_file, $v->post_id ) ) {
-					$this->__media->rename( $v->src, $bk_optm_file, $v->post_id ) ;
-					$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
-					Log::debug( '[Img_Optm] Restore original img: ' . $bk_file ) ;
+					$this->__media->rename( $v->src, $bk_optm_file, $v->post_id );
+					$this->__media->rename( $bk_file, $v->src, $v->post_id );
+					Log::debug( '[Img_Optm] Restore original img: ' . $bk_file );
 
-					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
+					$msg = __( 'Restored original file successfully.', 'litespeed-cache' );
 				}
 				elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
-					$this->__media->rename( $v->src, $bk_file, $v->post_id ) ;
-					$this->__media->rename( $bk_optm_file, $v->src, $v->post_id ) ;
-					Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src ) ;
+					$this->__media->rename( $v->src, $bk_file, $v->post_id );
+					$this->__media->rename( $bk_optm_file, $v->src, $v->post_id );
+					Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src );
 
-					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
+					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' );
 				}
 
 			}
 		}
 
-		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -1523,50 +1536,50 @@ class Img_Optm extends Base
 	 */
 	public function reset_row( $post_id )
 	{
+		global $wpdb;
+
 		if ( ! $post_id ) {
-			return ;
+			return;
 		}
 
-		$size_meta = get_post_meta( $post_id, self::DB_SIZE, true ) ;
+		$size_meta = get_post_meta( $post_id, self::DB_SIZE, true );
 
 		if ( ! $size_meta ) {
-			return ;
+			return;
 		}
 
-		Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
+		Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id );
 
-		global $wpdb ;
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE post_id = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $post_id ) ) ) ;
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE post_id = %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $post_id ) );
 
 		foreach ( $list as $v ) {
-			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
-			$this->__media->info( $v->src . '.optm.webp', $v->post_id ) && $this->__media->del( $v->src . '.optm.webp', $v->post_id ) ;
+			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id );
+			$this->__media->info( $v->src . '.optm.webp', $v->post_id ) && $this->__media->del( $v->src . '.optm.webp', $v->post_id );
 
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-			$bk_file = $local_filename . '.bk.' . $extension ;
-			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
+			$bk_file = $local_filename . '.bk.' . $extension;
+			$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
 
 			if ( $this->__media->info( $bk_file, $v->post_id ) ) {
-				Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
-				$this->__media->del( $v->src, $v->post_id ) ;
-				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
+				Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file );
+				$this->__media->del( $v->src, $v->post_id );
+				$this->__media->rename( $bk_file, $v->src, $v->post_id );
 			}
 			elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
-				Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
-				$this->__media->del( $bk_optm_file, $v->post_id ) ;
+				Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file );
+				$this->__media->del( $bk_optm_file, $v->post_id );
 			}
 		}
 
-		$q = "DELETE FROM $this->_table_img_optm WHERE post_id = %d" ;
-		$wpdb->query( $wpdb->prepare( $q, $post_id ) ) ;
+		$q = "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d";
+		$wpdb->query( $wpdb->prepare( $q, $post_id ) );
 
-		delete_post_meta( $post_id, self::DB_SIZE ) ;
+		delete_post_meta( $post_id, self::DB_SIZE );
 
-		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' ) ;
-
-		Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg ) ;
+		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -1577,7 +1590,7 @@ class Img_Optm extends Base
 	 */
 	public function check_img()
 	{
-		$ip = gethostbyname( 'my.quic.cloud' ) ;
+		$ip = gethostbyname( 'my.quic.cloud' );
 		if ( $ip != Router::get_ip() ) {
 			return Cloud::err( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
 		}
@@ -1625,6 +1638,8 @@ class Img_Optm extends Base
 	/**
 	 * Redirect to self to continue operation
 	 *
+	 * Note: must return when use this func. CLI/Cron call won't die in this func.
+	 *
 	 * @since  3.0
 	 * @access private
 	 */
@@ -1658,17 +1673,17 @@ class Img_Optm extends Base
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_RESET_ROW :
-				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false ) ;
-				break ;
+			case self::TYPE_RESET_ROW:
+				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false );
+				break;
 
 			case self::TYPE_CALC_BKUP:
 				$instance->_calc_bkup();
-				break ;
+				break;
 
 			case self::TYPE_RM_BKUP :
-				$instance->rm_bkup() ;
-				break ;
+				$instance->rm_bkup();
+				break;
 
 			case self::TYPE_NEW_REQ:
 				$instance->new_req();
@@ -1688,27 +1703,27 @@ class Img_Optm extends Base
 
 			case self::TYPE_PULL:
 				$instance->pull();
-				break ;
+				break;
 
 			/**
 			 * Batch switch
 			 * @since 1.6.3
 			 */
-			case self::TYPE_IMG_BATCH_SWITCH_ORI :
-			case self::TYPE_IMG_BATCH_SWITCH_OPTM :
-				$instance->_batch_switch( $type ) ;
-				break ;
+			case self::TYPE_BATCH_SWITCH_ORI:
+			case self::TYPE_BATCH_SWITCH_OPTM:
+				$instance->_batch_switch( $type );
+				break;
 
-			case substr( $type, 0, 4 ) === 'webp' :
-			case substr( $type, 0, 4 ) === 'orig' :
-				$instance->_switch_optm_file( $type ) ;
-				break ;
+			case substr( $type, 0, 4 ) === 'webp':
+			case substr( $type, 0, 4 ) === 'orig':
+				$instance->_switch_optm_file( $type );
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 }
