@@ -312,9 +312,11 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
+		// Check if has credit to push
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
 		if ( ! $allowance ) {
-			Log::debug( '[Img_Optm] No credit' );
+			Log::debug( '[Img_Optm] ❌ No credit' );
+			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
 			return;
 		}
 

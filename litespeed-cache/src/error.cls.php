@@ -40,7 +40,11 @@ class Error
 	public static function msg( $code, $args = null )
 	{
 		switch ( $code ) {
-			case 'empty_list' :
+			case 'lack_of_quota':
+				$msg = __( 'You don\'t have enough quota left this month.', 'litespeed-cache' );
+				break;
+
+			case 'empty_list':
 				$msg = __( 'The image list is empty.', 'litespeed-cache' );
 				break;
 

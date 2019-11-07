@@ -67,13 +67,40 @@ class Cloud extends Base
 	 */
 	public function allowance( $service )
 	{
-		$this->_sync_usage();
+		// Only auto sync usage at most one time per day
+		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
+			$this->_sync_usage();
+		}
 
 		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
 			return 0;
 		}
 
-		return $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
+		$allowance = $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
+
+		if ( $allowance > 0 ) {
+			return $allowance;
+		}
+
+		// Check if to use account level credit or not
+		if ( empty( $this->_summary[ 'credit_quota' ] ) ) {
+			return 0;
+		}
+
+		$allowance = $this->_summary[ 'credit_quota' ];
+
+		// Check domain cap limit
+		if ( $this->_summary[ 'domain_cap' ] > 0 ) {
+			$cap_allowance = $this->_summary[ 'domain_cap' ];
+			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'credit_used' ] ) ) {
+				$cap_allowance -= $this->_summary[ 'usage.' . $service ][ 'credit_used' ];
+			}
+			if ( $allowance > $cap_allowance ) {
+				$allowance = $cap_allowance;
+			}
+		}
+
+		return $allowance;
 	}
 
 	/**
@@ -94,10 +121,8 @@ class Cloud extends Base
 		foreach ( self::SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
-		self::save_summary( $this->_summary );
 
-		$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		self::save_summary( $this->_summary );
 	}
 
 	/**
@@ -393,10 +418,35 @@ class Cloud extends Base
 			return false;
 		}
 
-		// Update usage/quota if returned
-		if ( ! empty( $json[ 'usage' ] ) ) {
-			$this->_summary[ 'usage' . $service ] = $json[ 'usage' ];
+		// Parse _carry_on info
+		if ( ! empty( $json[ '_carry_on' ] ) ) {
+			// Store generic info
+			foreach ( array( 'usage', 'domain_cap', 'credit_quota', 'promo' ) as $v ) {
+				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
+					switch ( $v ) {
+						case 'usage':
+							$this->_summary[ 'usage.' . $service ] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						case 'promo':
+							if ( empty( $this->_summary[ $v ] ) || ! is_array( $this->_summary[ $v ] ) ) {
+								$this->_summary[ $v ] = array();
+							}
+							$this->_summary[ $v ][] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						case 'domain_cap':
+						case 'credit_quota':
+							$this->_summary[ $v ] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						default:
+							break;
+					}
+				}
+			}
 			self::save_summary( $this->_summary );
+			unset( $json[ '_carry_on' ] );
 		}
 
 		// Parse general error msg
@@ -596,6 +646,9 @@ class Cloud extends Base
 
 			case self::TYPE_SYNC_USAGE :
 				$instance->_sync_usage();
+
+				$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;
+				Admin_Display::succeed( $msg ) ;
 				break;
 
 			default:
