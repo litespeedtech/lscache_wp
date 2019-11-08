@@ -48,7 +48,7 @@ else {
 
 		<div class="litespeed-desc">
 			<?php if ( $closest_server ) : ?>
-				<i title="<?php echo $closest_server ; ?>" class='litespeed-quic-icon'></i>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ) ; ?>" title='<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>'><i class='litespeed-quic-icon'></i></a>
 			<?php endif ; ?>
 			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
 			<?php echo sprintf( __( 'You have %s points left this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>

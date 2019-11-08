@@ -42,8 +42,9 @@ class Cloud extends Base
 		'sitehealth',
 	);
 
-	const TYPE_GEN_KEY 		= 'gen_key';
-	const TYPE_SYNC_USAGE 	= 'sync_usage';
+	const TYPE_REDETECT_CLOUD 	= 'redetect_cloud';
+	const TYPE_GEN_KEY 			= 'gen_key';
+	const TYPE_SYNC_USAGE 		= 'sync_usage';
 
 	private $_api_key;
 	private $_summary;
@@ -131,11 +132,13 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _detect_cloud( $service )
+	private function _detect_cloud( $service, $force = false )
 	{
 		// Check if the stored server needs to be refreshed
-		if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 30 ) {
-			return $this->_summary[ 'server.' . $service ];
+		if ( ! $force ) {
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 30 ) {
+				return $this->_summary[ 'server.' . $service ];
+			}
 		}
 
 		if ( ! $service || ! in_array( $service, self::SERVICES ) ) {
@@ -641,6 +644,12 @@ class Cloud extends Base
 		$type = Router::verify_type();
 
 		switch ( $type ) {
+			case self::TYPE_REDETECT_CLOUD :
+				if ( ! empty( $_GET[ 'svc' ] ) ) {
+					$instance->_detect_cloud( $_GET[ 'svc' ], true );
+				}
+				break;
+
 			case self::TYPE_GEN_KEY :
 				$instance->gen_key();
 				break;

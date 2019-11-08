@@ -41,7 +41,7 @@ class Error
 	{
 		switch ( $code ) {
 			case 'lack_of_quota':
-				$msg = __( 'You don\'t have enough quota left this month.', 'litespeed-cache' );
+				$msg = __( 'You don\'t have enough quota for current service left this month.', 'litespeed-cache' );
 				break;
 
 			case 'empty_list':

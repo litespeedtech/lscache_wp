@@ -216,7 +216,7 @@ class Utility extends Instance
 			$domain = parse_url( $domain, PHP_URL_HOST ) ;
 		}
 		$starttime	= microtime( true ) ;
-		$file		= fsockopen( $domain, 80, $errno, $errstr, 10 ) ;
+		$file		= fsockopen( $domain, 443, $errno, $errstr, 10 ) ;
 		$stoptime	= microtime( true ) ;
 		$status		= 0 ;
 

@@ -2,7 +2,8 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$last_critical_css_generated = CSS::get_summary() ;
+$css_summary = CSS::get_summary() ;
+$closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 ?>
 
@@ -99,21 +100,26 @@ $last_critical_css_generated = CSS::get_summary() ;
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#generate_critical_css' ) ; ?>
 			</div>
 
-			<?php if ( $last_critical_css_generated ) : ?>
+			<?php if ( $css_summary ) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if ( ! empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
+				<?php if ( ! empty( $css_summary[ 'last_request' ] ) ) : ?>
 					<p>
-						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
+						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
 					<p>
-						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
+						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent' ] . 's</code>' ; ?>
 					</p>
 				<?php endif ; ?>
-				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
+
+				<?php if ( $closest_server ) : ?>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_CCSS ) ) ; ?>" title='<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>'><i class='litespeed-quic-icon'></i></a>
+				<?php endif ; ?>
+
+				<?php if ( ! empty( $css_summary[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
-						<?php foreach ( $last_critical_css_generated[ 'queue' ] as $k => $v ) : ?>
+						<?php foreach ( $css_summary[ 'queue' ] as $k => $v ) : ?>
 							<?php if ( ! is_array( $v ) ) continue ; ?>
 							<?php echo $v[ 'url' ] ; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span title="mobile">📱</span>' ; ?>

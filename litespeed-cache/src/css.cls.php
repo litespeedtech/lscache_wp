@@ -17,6 +17,19 @@ class CSS extends Base
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
+	private $_summary;
+
+	/**
+	 * Init
+	 *
+	 * @since  3.0
+	 * @access protected
+	 */
+	protected function __construct()
+	{
+		$this->_summary = self::get_summary();
+	}
+
 	/**
 	 * Output critical css
 	 *
@@ -73,10 +86,9 @@ class CSS extends Base
 		}
 
 		// Clear CCSS in queue too
-		$req_summary = self::get_summary() ;
-		$req_summary[ 'queue' ] = array() ;
-		$req_summary[ 'curr_request' ] = 0 ;
-		self::save_summary( $req_summary ) ;
+		$this->_summary[ 'queue' ] = array() ;
+		$this->_summary[ 'curr_request' ] = 0 ;
+		self::save_summary( $this->_summary ) ;
 
 		Log::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
@@ -104,8 +116,8 @@ class CSS extends Base
 		}
 
 		// Check if is already in a request, bypass current one
-		$summary = self::get_summary() ;
-		if ( ! empty( $summary[ 'curr_request' ] ) && time() - $summary[ 'curr_request' ] < 300 ) {
+		if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
+			Log::debug( '[CCSS] Last request not done' );
 			return '' ;
 		}
 
@@ -115,17 +127,17 @@ class CSS extends Base
 		// If generate in backend, log it and bypass
 		if ( Conf::val( Base::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
-			if ( empty( $summary[ 'queue' ] ) ) {
-				$summary[ 'queue' ] = array() ;
+			if ( empty( $this->_summary[ 'queue' ] ) ) {
+				$this->_summary[ 'queue' ] = array() ;
 			}
-			$summary[ 'queue' ][ $ccss_type ] = array(
+			$this->_summary[ 'queue' ][ $ccss_type ] = array(
 				'url'			=> $request_url,
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
 			) ;// Current UA will be used to request
 			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
-			self::save_summary( $summary ) ;
+			self::save_summary( $this->_summary ) ;
 			return '' ;
 		}
 
@@ -152,19 +164,20 @@ class CSS extends Base
 	 */
 	public static function cron_ccss( $continue = false )
 	{
-		$summary = self::get_summary() ;
-		if ( empty( $summary[ 'queue' ] ) ) {
+		$_instance = self::get_instance();
+		if ( empty( $_instance->_summary[ 'queue' ] ) ) {
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( $summary && ! empty( $summary[ 'curr_request' ] ) && time() - $summary[ 'curr_request' ] < 300 ) {
+			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
+				Log::debug( '[CCSS] Last request not done' );
 				return ;
 			}
 		}
 
-		foreach ( $summary[ 'queue' ] as $k => $v ) {
+		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
 			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
 				Log::debug( '[CSS] previous v2.6.4- data' ) ;
 				return ;
@@ -172,7 +185,7 @@ class CSS extends Base
 
 			Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
 
-			self::get_instance()->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
+			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
 
 			// only request first one
 			if ( ! $continue ) {
@@ -189,13 +202,19 @@ class CSS extends Base
 	 */
 	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile )
 	{
-		$summary = self::get_summary() ;
+		// Check if has credit to push
+		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
+		if ( ! $allowance ) {
+			Log::debug( '[CCSS] ❌ No credit' );
+			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
+			return;
+		}
 
 		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		// Update css request status
-		$summary[ 'curr_request' ] = time() ;
-		self::save_summary( $summary ) ;
+		$this->_summary[ 'curr_request' ] = time() ;
+		self::save_summary( $this->_summary ) ;
 
 		// Generate critical css
 		$data = array(
@@ -210,7 +229,7 @@ class CSS extends Base
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
 
 		if ( empty( $json[ 'ccss' ] ) ) {
-			Log::debug( '[CSS] empty ccss' ) ;
+			Log::debug( '[CSS] ❌ empty ccss' ) ;
 			return false ;
 		}
 
@@ -221,16 +240,16 @@ class CSS extends Base
 		File::save( $ccss_file, $ccss, true ) ;
 
 		// Save summary data
-		$summary[ 'last_spent' ] = time() - $summary[ 'curr_request' ] ;
-		$summary[ 'last_request' ] = $summary[ 'curr_request' ] ;
-		$summary[ 'curr_request' ] = 0 ;
-		if ( empty( $summary[ 'ccss_type_history' ] ) ) {
-			$summary[ 'ccss_type_history' ] = array() ;
+		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'curr_request' ] = 0 ;
+		if ( empty( $this->_summary[ 'ccss_type_history' ] ) ) {
+			$this->_summary[ 'ccss_type_history' ] = array() ;
 		}
-		$summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
-		unset( $summary[ 'queue' ][ $ccss_type ] ) ;
+		$this->_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
+		unset( $this->_summary[ 'queue' ][ $ccss_type ] ) ;
 
-		self::save_summary( $summary ) ;
+		self::save_summary( $this->_summary ) ;
 
 		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
