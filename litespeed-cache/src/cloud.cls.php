@@ -92,8 +92,8 @@ class Cloud extends Base
 		// Check domain cap limit
 		if ( $this->_summary[ 'domain_cap' ] > 0 ) {
 			$cap_allowance = $this->_summary[ 'domain_cap' ];
-			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'credit_used' ] ) ) {
-				$cap_allowance -= $this->_summary[ 'usage.' . $service ][ 'credit_used' ];
+			if ( ! empty( $this->_summary[ 'credit_used' ] ) ) {
+				$cap_allowance -= $this->_summary[ 'credit_used' ];
 			}
 			if ( $allowance > $cap_allowance ) {
 				$allowance = $cap_allowance;
@@ -421,7 +421,7 @@ class Cloud extends Base
 		// Parse _carry_on info
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
 			// Store generic info
-			foreach ( array( 'usage', 'domain_cap', 'credit_quota', 'promo' ) as $v ) {
+			foreach ( array( 'usage', 'domain_cap', 'credit_used', 'credit_quota', 'promo' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
@@ -436,6 +436,7 @@ class Cloud extends Base
 							break;
 
 						case 'domain_cap':
+						case 'credit_used':
 						case 'credit_quota':
 							$this->_summary[ $v ] = $json[ '_carry_on' ][ $v ];
 							break;

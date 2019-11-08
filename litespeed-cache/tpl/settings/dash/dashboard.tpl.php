@@ -58,6 +58,7 @@ else {
 	$img_finished_percentage = 0 ;
 }
 
+$cloud_summary = Cloud::get_summary();
 ?>
 
 <div class="litespeed-dashboard">
@@ -71,13 +72,14 @@ else {
 				<span class="screen-reader-text"><?php echo __( 'Sync data from Cloud', 'litespeed-cache' ); ?></span>
 			</a>
 		</h3>
+		<?php echo ! empty( $cloud_summary[ 'domain_cap' ] ) ? __( 'Domain Cap', 'litespeed-cache' ) . '<b>' . $cloud_summary[ 'domain_cap' ] . '</b>' : ''; ?>
+		<?php echo ! empty( $cloud_summary[ 'credit_quota' ] ) ? __( 'User Credit Quota', 'litespeed-cache' ) . '<b>' . $cloud_summary[ 'credit_quota' ] . '</b>' : ''; ?>
 		<hr>
 		<a href="#" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' );?></a>
 	</div>
 
 	<div class="litespeed-dashboard-stats-wrapper">
 		<?php
-		$usage = Cloud::get_summary();
 		$cat_list = array(
 			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
 			'ccss'		=> __( 'CCSS', 'litespeed-cache' ),
@@ -92,10 +94,10 @@ else {
 			$finished_percentage = 0;
 			$used = '-';
 			$quota = '-';
-			if ( ! empty( $usage[ 'usage.' . $svc ] ) ) {
-				$finished_percentage = floor( $usage[ 'usage.' . $svc ][ 'used' ] * 100 / $usage[ 'usage.' . $svc ][ 'quota' ] );
-				$used = $usage[ 'usage.' . $svc ][ 'used' ];
-				$quota = $usage[ 'usage.' . $svc ][ 'quota' ];
+			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
+				$finished_percentage = floor( $cloud_summary[ 'usage.' . $svc ][ 'used' ] * 100 / $cloud_summary[ 'usage.' . $svc ][ 'quota' ] );
+				$used = $cloud_summary[ 'usage.' . $svc ][ 'used' ];
+				$quota = $cloud_summary[ 'usage.' . $svc ][ 'quota' ];
 
 				if ( $svc == 'cdn' ) {
 					$used = Utility::real_size( $used * 1024 * 1024 );
@@ -114,7 +116,7 @@ else {
 						<div>
 							<div class="litespeed-dashboard-stats">
 								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-								<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), $quota ) ; ?></span></p>
+								<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc">of <?php echo $quota; ?></span></p>
 							</div>
 						</div>
 					</div>
