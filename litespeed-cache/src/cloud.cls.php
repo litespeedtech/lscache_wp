@@ -328,7 +328,7 @@ class Cloud extends Base
 		$param = array(
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
-			'v'				=> Core::VER,
+			'ver'			=> Core::VER,
 			'data' 			=> $data,
 		);
 		if ( $need_hash ) {
