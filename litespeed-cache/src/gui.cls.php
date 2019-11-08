@@ -123,7 +123,6 @@ class GUI extends Base
 			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
-
 	}
 
 	/**

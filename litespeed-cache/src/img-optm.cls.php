@@ -45,7 +45,6 @@ class Img_Optm extends Base
 	const DB_SIZE = 'litespeed-optimize-size';
 
 	const DB_NEED_PULL = 'need_pull';
-	const DB_CRON_RUN = 'cron_run'; // last cron running time
 
 	private $wp_upload_dir;
 	private $tmp_pid;
@@ -1369,7 +1368,7 @@ class Img_Optm extends Base
 	 */
 	public function cron_running( $bool_res = true )
 	{
-		$last_run = self::get_option( self::DB_CRON_RUN );
+		$last_run = ! empty( $this->_summary[ 'last_pull' ] ) ? $this->_summary[ 'last_pull' ] : 0;
 
 		$is_running = $last_run && time() - $last_run < 120 ;
 
@@ -1388,22 +1387,23 @@ class Img_Optm extends Base
 	 */
 	private function _update_cron_running( $done = false )
 	{
-		$ts = time() ;
+		$this->_summary[ 'last_pull' ] = time();
 
 		if ( $done ) {
 			// Only update cron tag when its from the active running cron
 			if ( $this->_cron_ran ) {
 				// Rollback for next running
-				$ts -= 120 ;
+				$this->_summary[ 'last_pull' ] -= 120;
 			}
 			else {
-				return ;
+				return;
 			}
 		}
 
-		self::update_option( self::DB_CRON_RUN, $ts ) ;
+		$this->_summary[ 'last_pull' ] = $ts;
+		self::save_summary( $this->_summary );
 
-		$this->_cron_ran = true ;
+		$this->_cron_ran = true;
 	}
 
 	/**

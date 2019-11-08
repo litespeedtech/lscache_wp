@@ -34,7 +34,7 @@ $this->form_action() ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disabling this will stop the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Disabling this will stop the cron job responsible for pulling optimized images back from Cloud Image Server.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

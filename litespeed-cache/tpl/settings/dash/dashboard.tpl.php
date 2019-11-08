@@ -4,8 +4,6 @@ defined( 'WPINC' ) || exit;
 
 $lscache_stats = GUI::get_instance()->lscache_stats();
 
-$finished_percentage = 10;
-
 $_summary = GUI::get_summary() ;
 if ( ! empty( $_summary[ 'score.data' ] ) ) {
 	$_score = $_summary[ 'score.data' ] ;
@@ -43,7 +41,22 @@ if ( ! empty( $_summary[ 'score.data' ] ) ) {
 	}
 }
 
+// Image related info
 $optm_summary = Img_Optm::get_summary() ;
+$img_count = Img_Optm::get_instance()->img_count() ;
+if ( ! empty( $img_count[ 'groups_all' ] ) ) {
+	$img_gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] ) ;
+}
+else {
+	$img_gathered_percentage = 0 ;
+}
+
+if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
+	$img_finished_percentage = 100 - floor( $img_count[ 'imgs_raw' ] * 100 / $img_count[ 'imgs_gathered' ] ) ;
+}
+else {
+	$img_finished_percentage = 0 ;
+}
 
 ?>
 
@@ -321,25 +334,80 @@ $optm_summary = Img_Optm::get_summary() ;
 
 					<div class="litespeed-flex-container">
 						<div class="litespeed-icon-vertical-middle">
-							<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
+							<?php echo GUI::pie( $img_gathered_percentage, 70, true ) ; ?>
 						</div>
 						<div>
 							<div class="litespeed-dashboard-stats">
-								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-								<p><strong>1234</strong> <span class="litespeed-desc"><?php echo sprintf( __( 'of %s', 'litespeed-cache' ), 3000 ) ; ?></span></p>
+								<h3><?php echo __('Image Prepared','litespeed-cache'); ?></h3>
+								<p>
+									<strong><?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] - $img_count[ 'groups_not_gathered' ] ) ; ?></strong>
+									<span class="litespeed-desc">of <?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] ) ; ?></span>
+								</p>
 							</div>
 						</div>
 					</div>
 
-					<p>
-						<?php echo __( 'Total Reduction', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'reduced' ] ) ? Utility::real_size( $optm_summary[ 'reduced' ] ) : '-' ; ?></code>
+					<div class="litespeed-flex-container">
+						<div class="litespeed-icon-vertical-middle">
+							<?php echo GUI::pie( $img_finished_percentage, 70, true ) ; ?>
+						</div>
+						<div>
+							<div class="litespeed-dashboard-stats">
+								<h3><?php echo __('Image Requested','litespeed-cache'); ?></h3>
+								<p>
+									<strong><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ] - $img_count[ 'imgs_raw' ], 'image' ) ; ?></strong>
+									<span class="litespeed-desc">of <?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ) ; ?></span>
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
+					<p class="litespeed-success">
+						<?php echo __('Images requested', 'litespeed-cache') ; ?>:
+						<code>
+							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ; ?>
+							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ], 'image' ) ; ?>)
+						</code>
 					</p>
-					<p>
-						<?php echo __( 'Images Pulled', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'img_taken' ] ) ? $optm_summary[ 'img_taken' ] : '-' ; ?></code>
-					</p>
+					<?php endif ; ?>
+
+					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ) : ?>
+						<p class="litespeed-success">
+							<?php echo __('Images notified to pull', 'litespeed-cache') ; ?>:
+							<code>
+								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ; ?>
+								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ], 'image' ) ; ?>)
+							</code>
+
+						</p>
+					<?php endif ; ?>
+
 					<p>
 						<?php echo __( 'Last Request', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'  ; ?></code>
 					</p>
+					<p>
+						<?php echo __( 'Last Pull', 'litespeed-cache' ) ; ?>: <code><?php echo ! empty( $optm_summary[ 'last_pull' ] ) ? Utility::readable_time( $optm_summary[ 'last_pull' ] ) : '-'  ; ?></code>
+					</p>
+
+					<?php
+					$cache_list = array(
+						Base::O_IMG_OPTM_AUTO	=> __( 'Auto Request Cron', 'litespeed-cache' ),
+						Base::O_IMG_OPTM_CRON	=> __( 'Auto Pull Cron', 'litespeed-cache' ),
+					);
+					foreach ( $cache_list as $id => $title ) :
+						$v = Conf::val( $id );
+					?>
+						<p>
+							<?php if ( $v ) : ?>
+								<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
+							<?php else: ?>
+								<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+							<?php endif; ?>
+							<?php echo $title; ?>
+						</p>
+					<?php endforeach; ?>
+
 				</div>
 			</div>
 
