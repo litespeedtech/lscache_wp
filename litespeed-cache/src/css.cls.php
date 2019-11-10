@@ -178,11 +178,6 @@ class CSS extends Base
 		}
 
 		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
-			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
-				Log::debug( '[CSS] previous v2.6.4- data' ) ;
-				return ;
-			}
-
 			Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
 
 			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;

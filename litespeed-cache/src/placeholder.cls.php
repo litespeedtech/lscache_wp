@@ -27,6 +27,8 @@ class Placeholder extends Base
 	private $_placeholder_resp_dict = array() ;
 	private $_ph_queue = array() ;
 
+	private $_summary;
+
 	/**
 	 * Init
 	 *
@@ -43,6 +45,8 @@ class Placeholder extends Base
 		$this->_conf_placeholder_resp_async = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
 		$this->_conf_placeholder_resp_color = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		$this->_conf_ph_default = Conf::val( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+
+		$this->_summary = self::get_summary();
 	}
 
 	/**
@@ -192,12 +196,10 @@ class Placeholder extends Base
 
 		$this->_ph_queue[] = $arr_key ;
 
-		$req_summary = self::get_summary() ;
-
 		// Send request to generate placeholder
 		if ( ! $this->_conf_placeholder_resp_async ) {
 			// If requested recently, bypass
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( $this->_summary && ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
 				Log::debug2( '[Placeholder] file bypass generating due to interval limit' ) ;
 				return false ;
 			}
@@ -211,26 +213,26 @@ class Placeholder extends Base
 		$tmp_placeholder = $this->_generate_placeholder_locally( $size ) ;
 
 		// Store it to prepare for cron
-		if ( empty( $req_summary[ 'queue' ] ) ) {
-			$req_summary[ 'queue' ] = array() ;
+		if ( empty( $this->_summary[ 'queue' ] ) ) {
+			$this->_summary[ 'queue' ] = array() ;
 		}
-		if ( in_array( $arr_key, $req_summary[ 'queue' ] ) ) {
+		if ( in_array( $arr_key, $this->_summary[ 'queue' ] ) ) {
 			Log::debug2( '[Placeholder] already in queue' ) ;
 
 			return $tmp_placeholder ;
 		}
 
-		if ( count( $req_summary[ 'queue' ] ) > 100 ) {
+		if ( count( $this->_summary[ 'queue' ] ) > 100 ) {
 			Log::debug2( '[Placeholder] queue is full' ) ;
 
 			return $tmp_placeholder ;
 		}
 
-		$req_summary[ 'queue' ][] = $arr_key ;
+		$this->_summary[ 'queue' ][] = $arr_key ;
 
 		Log::debug( '[Placeholder] Added placeholder queue' ) ;
 
-		self::save_summary( $req_summary ) ;
+		self::save_summary( $this->_summary ) ;
 		return $tmp_placeholder ;
 
 	}
@@ -336,22 +338,23 @@ class Placeholder extends Base
 	 */
 	public static function cron( $continue = false )
 	{
-		$req_summary = self::get_summary() ;
-		if ( empty( $req_summary[ 'queue' ] ) ) {
+		$_instance = self::get_instance();
+		if ( empty( $_instance->_summary[ 'queue' ] ) ) {
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
+				Log::debug( '[Placeholder] Last request not done' );
 				return ;
 			}
 		}
 
-		foreach ( $req_summary[ 'queue' ] as $v ) {
+		foreach ( $_instance->_summary[ 'queue' ] as $v ) {
 			Log::debug( '[Placeholder] cron job [size] ' . $v ) ;
 
-			self::get_instance()->_generate_placeholder( $v ) ;
+			$_instance->_generate_placeholder( $v ) ;
 
 			// only request first one
 			if ( ! $continue ) {
@@ -393,8 +396,6 @@ class Placeholder extends Base
 			$src = $size_and_src[ 1 ] ;
 		}
 
-		$req_summary = self::get_summary() ;
-
 		$file = $this->_placeholder_realpath( $src, $size ) ;
 
 		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_placeholder_resp_generator is changed )
@@ -403,8 +404,8 @@ class Placeholder extends Base
 		}
 		else {
 			// Update request status
-			$req_summary[ 'curr_request' ] = time() ;
-			self::save_summary( $req_summary ) ;
+			$this->_summary[ 'curr_request' ] = time() ;
+			self::save_summary( $this->_summary ) ;
 
 			// Generate LQIP
 			if ( $this->_conf_placeholder_lqip ) {
@@ -421,11 +422,11 @@ class Placeholder extends Base
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
 
 					// Unset this item
-					if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $req_summary[ 'queue' ] ) ) {
-						unset( $req_summary[ 'queue' ][ array_search( $raw_size_and_src, $req_summary[ 'queue' ] ) ] ) ;
+					if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
+						unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
 					}
 
-					self::save_summary( $req_summary ) ;
+					self::save_summary( $this->_summary ) ;
 
 					return false ;
 				}
@@ -460,14 +461,14 @@ class Placeholder extends Base
 		File::save( $file, $data, true ) ;
 
 		// Save summary data
-		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'curr_request' ] = 0 ;
-		if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $req_summary[ 'queue' ] ) ) {
-			unset( $req_summary[ 'queue' ][ array_search( $raw_size_and_src, $req_summary[ 'queue' ] ) ] ) ;
+		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'curr_request' ] = 0 ;
+		if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
+			unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
 		}
 
-		self::save_summary( $req_summary ) ;
+		self::save_summary( $this->_summary ) ;
 
 		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
 
