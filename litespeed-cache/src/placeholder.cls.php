@@ -420,14 +420,6 @@ class Placeholder extends Base
 
 				if ( empty( $json[ 'data' ] ) ) {
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
-
-					// Unset this item
-					if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
-						unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
-					}
-
-					self::save_summary( $this->_summary ) ;
-
 					return false ;
 				}
 
@@ -446,7 +438,14 @@ class Placeholder extends Base
 					'size'	=> $size,
 					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
 				) ;
-				$data = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
+				$json = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
+
+				if ( empty( $json[ 'data' ] ) ) {
+					Log::debug( '[Placeholder] wrong response format', $json ) ;
+					return false ;
+				}
+
+				$data = $json[ 'data' ] ;
 
 				Log::debug( '[Placeholder] _generate_placeholder ' ) ;
 
