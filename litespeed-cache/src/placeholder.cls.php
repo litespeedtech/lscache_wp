@@ -418,12 +418,12 @@ class Placeholder extends Base
 				) ;
 				$json = Cloud::post( Cloud::SVC_LQIP, $req_data ) ;
 
-				if ( empty( $json[ 'data' ] ) ) {
+				if ( empty( $json[ 'lqip' ] ) ) {
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
 					return false ;
 				}
 
-				$data = $json[ 'data' ] ;
+				$data = $json[ 'lqip' ] ;
 
 				Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
 
