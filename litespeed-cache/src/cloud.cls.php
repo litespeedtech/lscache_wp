@@ -239,9 +239,17 @@ class Cloud extends Base
 
 		$url = $server . '/' . $service;
 
+		$param = array(
+			'site_url'		=> home_url(),
+			'domain_key'	=> $this->_api_key,
+			'ver'			=> Core::VER,
+		);
+
 		if ( $data ) {
-			$url .= '?' . http_build_query( $data );
+			$param[ 'data' ] = $data;
 		}
+
+		$url .= '?' . http_build_query( $param );
 
 		Log::debug( '[Cloud] getting from : ' . $url );
 
