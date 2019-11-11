@@ -178,7 +178,7 @@ class Core extends Instance
 		 * Check if is non optm simulator
 		 * @since  2.9
 		 */
-		if ( ! empty( $_GET[ Router::ACTION_KEY ] ) && $_GET[ Router::ACTION_KEY ] == 'before_optm' ) {
+		if ( ! empty( $_GET[ Router::ACTION ] ) && $_GET[ Router::ACTION ] == 'before_optm' ) {
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 

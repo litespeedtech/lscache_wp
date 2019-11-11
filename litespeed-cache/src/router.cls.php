@@ -15,8 +15,8 @@ class Router extends Instance
 {
 	protected static $_instance ;
 
-	const NONCE_NAME = 'LSCWP_NONCE' ;
-	const ACTION_KEY = 'LSCWP_CTRL' ;
+	const NONCE = 'LSCWP_NONCE' ;
+	const ACTION = 'LSCWP_CTRL' ;
 
 
 	const ACTION_DB = 'db' ;
@@ -436,12 +436,12 @@ class Router extends Instance
 	 */
 	private function verify_action()
 	{
-		if ( empty( $_REQUEST[ Router::ACTION_KEY ] ) ) {
+		if ( empty( $_REQUEST[ Router::ACTION ] ) ) {
 			Log::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
 			return ;
 		}
 
-		$action = $_REQUEST[ Router::ACTION_KEY ] ;
+		$action = $_REQUEST[ Router::ACTION ] ;
 		$_is_public_action = false ;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
@@ -579,7 +579,7 @@ class Router extends Instance
 	 */
 	private function verify_nonce( $action )
 	{
-		if ( ! isset( $_REQUEST[Router::NONCE_NAME] ) || ! wp_verify_nonce( $_REQUEST[Router::NONCE_NAME], $action ) ) {
+		if ( ! isset( $_REQUEST[Router::NONCE] ) || ! wp_verify_nonce( $_REQUEST[Router::NONCE], $action ) ) {
 			return false ;
 		}
 		else{

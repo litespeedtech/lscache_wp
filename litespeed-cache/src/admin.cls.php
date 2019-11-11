@@ -166,11 +166,11 @@ class Admin extends Instance
 		$qs = '' ;
 		if ( ! $url ) {
 			if ( ! empty( $_GET ) ) {
-				if ( isset( $_GET[ Router::ACTION_KEY ] ) ) {
-					unset( $_GET[ Router::ACTION_KEY ] ) ;
+				if ( isset( $_GET[ Router::ACTION ] ) ) {
+					unset( $_GET[ Router::ACTION ] ) ;
 				}
-				if ( isset( $_GET[ Router::NONCE_NAME ] ) ) {
-					unset( $_GET[ Router::NONCE_NAME ] ) ;
+				if ( isset( $_GET[ Router::NONCE ] ) ) {
+					unset( $_GET[ Router::NONCE ] ) ;
 				}
 				if ( isset( $_GET[ Router::TYPE ] ) ) {
 					unset( $_GET[ Router::TYPE ] ) ;

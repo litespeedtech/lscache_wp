@@ -4,10 +4,7 @@ defined( 'WPINC' ) || exit;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 $usage_cloud = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
-$credit_left = '-';
-if ( ! empty( $usage_cloud[ 'quota' ] ) ) {
-	$credit_left = $usage_cloud[ 'quota' ] - $usage_cloud[ 'used' ];
-}
+$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
 
 $optm_summary = Img_Optm::get_summary() ;
 
@@ -51,7 +48,7 @@ else {
 				<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ) ; ?>" title='<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>'><i class='litespeed-quic-icon'></i></a>
 			<?php endif ; ?>
 			<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-			<?php echo sprintf( __( 'You have %s points left this month.', 'litespeed-cache' ), '<code>' . $credit_left . '</code>' ) ; ?>
+			<?php echo sprintf( __( 'You have %s points left this month.', 'litespeed-cache' ), '<font style="color:green;font-size:21px;">' . $allowance . '</font>' ) ; ?>
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 		</div>
 

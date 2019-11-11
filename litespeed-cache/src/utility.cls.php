@@ -619,9 +619,6 @@ class Utility extends Instance
 	 *
 	 * @since  1.6 Changed order of 2nd&3rd param, changed 3rd param `append_str` to 2nd `type`
 	 * @access public
-	 * @param string $action The LSCWP_CTRL action to do in the url.
-	 * @param string $is_ajax if is AJAX call or not
-	 * @param string $type The appending type to url
 	 * @return string The built url.
 	 */
 	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
@@ -639,15 +636,15 @@ class Utility extends Instance
 						$prefix = '&' ;
 					}
 				}
-				$combined = $page . $prefix . Router::ACTION_KEY . '=' . $action ;
+				$combined = $page . $prefix . Router::ACTION . '=' . $action ;
 			}
 			else {
 				// Current page rebuild URL
 				$params = $_GET ;
 
 				if ( ! empty( $params ) ) {
-					if ( isset( $params[ 'LSCWP_CTRL' ] ) ) {
-						unset( $params[ 'LSCWP_CTRL' ] ) ;
+					if ( isset( $params[ Router::ACTION ] ) ) {
+						unset( $params[ Router::ACTION ] ) ;
 					}
 					if ( isset( $params[ '_wpnonce' ] ) ) {
 						unset( $params[ '_wpnonce' ] ) ;
@@ -657,11 +654,11 @@ class Utility extends Instance
 					}
 				}
 				global $pagenow ;
-				$combined = $pagenow . $prefix . Router::ACTION_KEY . '=' . $action ;
+				$combined = $pagenow . $prefix . Router::ACTION . '=' . $action ;
 			}
 		}
 		else {
-			$combined = 'admin-ajax.php?action=litespeed_ajax&' . Router::ACTION_KEY . '=' . $action ;
+			$combined = 'admin-ajax.php?action=litespeed_ajax&' . Router::ACTION . '=' . $action ;
 		}
 
 		if ( is_network_admin() ) {
@@ -670,7 +667,7 @@ class Utility extends Instance
 		else {
 			$prenonce = admin_url( $combined ) ;
 		}
-		$url = wp_nonce_url( $prenonce, $action, Router::NONCE_NAME ) ;
+		$url = wp_nonce_url( $prenonce, $action, Router::NONCE ) ;
 
 		if ( $type ) {
 			// Remove potential param `type` from url

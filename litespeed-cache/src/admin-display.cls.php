@@ -634,11 +634,11 @@ class Admin_Display extends Base
 
 		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>' ;
 
-		echo '<input type="hidden" name="' . Router::ACTION_KEY . '" value="' . $action . '" />' ;
+		echo '<input type="hidden" name="' . Router::ACTION . '" value="' . $action . '" />' ;
 		if ( $type ) {
 			echo '<input type="hidden" name="' . Router::TYPE . '" value="' . $type . '" />' ;
 		}
-		wp_nonce_field( $action, Router::NONCE_NAME ) ;
+		wp_nonce_field( $action, Router::NONCE ) ;
 	}
 
 	/**

@@ -678,7 +678,7 @@ class Control extends Instance
 	{
 		// logged_in users already excluded, no hook added
 
-		if( ! empty( $_REQUEST[ Router::ACTION_KEY ] ) ) {
+		if( ! empty( $_REQUEST[ Router::ACTION ] ) ) {
 			return $this->_no_cache_for( 'Query String Action' ) ;
 		}
 

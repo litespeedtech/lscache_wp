@@ -61,8 +61,8 @@ class Purge
 	private function _send_request($action, $extra = array())
 	{
 		$data = array(
-			Router::ACTION_KEY => $action,
-			Core::NONCE_NAME => wp_create_nonce($action),
+			Router::ACTION => $action,
+			Router::NONCE => wp_create_nonce($action),
 		) ;
 		if ( ! empty($extra) ) {
 			$data = array_merge($data, $extra) ;
@@ -165,7 +165,7 @@ class Purge
 	public function url($args, $assoc_args)
 	{
 		$data = array(
-			Router::ACTION_KEY => Core::ACTION_QS_PURGE,
+			Router::ACTION => Core::ACTION_QS_PURGE,
 		) ;
 		$url = $args[0] ;
 		$deconstructed = wp_parse_url($url) ;
