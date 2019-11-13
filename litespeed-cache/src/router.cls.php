@@ -353,7 +353,7 @@ class Router extends Instance
 	public static function get_action()
 	{
 		if ( ! isset( self::$_action ) ) {
-            self::$_action = false;
+			self::$_action = false;
 			self::get_instance()->verify_action() ;
 			if ( self::$_action ) {
 				defined( 'LSCWP_LOG' ) && Log::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
