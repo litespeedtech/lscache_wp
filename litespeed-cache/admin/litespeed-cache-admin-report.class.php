@@ -183,7 +183,7 @@ class LiteSpeed_Cache_Admin_Report
 		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
 		foreach ( $item_options as $v ) {
 			// bypass main conf
-			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {
+			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME || $v == LiteSpeed_Cache_Config::ITEM_ENV_REF ) {
 				continue ;
 			}
 			$options[ $v ] = get_option( $v ) ;

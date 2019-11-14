@@ -12,6 +12,7 @@ $has_pswdless_plugin = false;
 if ( function_exists( 'dologin_gen_link' ) ) {
 	$has_pswdless_plugin = true;
 	if ( ! empty( $_GET[ 'dologin_gen_link' ] ) ) {
+		unset( $_GET[ 'dologin_gen_link' ] );
 		$link = dologin_gen_link( 'Litespeed Report' );
 		?>
 		<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&dologin_gen_link=1', '' ) );</script>
