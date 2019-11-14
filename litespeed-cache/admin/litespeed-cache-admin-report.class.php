@@ -53,8 +53,13 @@ class LiteSpeed_Cache_Admin_Report
 	private function _post_env()
 	{
 		$report_con = $this->generate_environment_report() ;
+
+		// Generate link
+		$link = ! empty( $_POST[ 'link' ] ) ? $_POST[ 'link' ] : '';
+
 		$data = array(
 			'env' => $report_con,
+			'link' => $link,
 		) ;
 
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ), false, true ) ;
