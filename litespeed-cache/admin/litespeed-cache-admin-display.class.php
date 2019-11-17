@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function _fetch_recommended()
 	{
 		$news = get_option( 'litespeed-recommended', array() );
-		if ( ! empty( $news[ 'utime' ] ) && time() - $news[ 'utime' ] < 86400*0 ) {
+		if ( ! empty( $news[ 'utime' ] ) && time() - $news[ 'utime' ] < 86400*1 ) {
 			return $news;
 		}
 

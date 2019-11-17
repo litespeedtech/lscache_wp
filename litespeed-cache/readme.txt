@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.9
+Stable tag: 2.9.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -257,6 +257,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 = What are the known compatible plugins and themes? =
 
 * [WPML](https://wpml.org/)
+* [DoLogin Security](https://wordpress.org/plugins/dologin/)
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
 * [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
@@ -289,6 +290,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.9.1 - Nov 18 2019 =
+* 🌱<strong>Env</strong>: Env report can now append the password less link to avoid sharing wp-admin password directly.
+* <strong>Admin</strong>: Admin page ability to show latest v3.0 beta test link.
+* <strong>3rd</strong>: Compatibility with [DoLogin Security](https://wordpress.org/plugins/dologin/).
+* 🐞<strong>ESI</strong>: Fixed Vary group save failure bug. (@rafasshop)
+* 🐞<strong>3rd</strong>: Divi image picker will now not serve webp anymore for non-webp supported browsers. (@Austin Tinius)
 
 = 2.9.9 - Oct 28 2019 =
 * <strong>Core</strong>: Preload all classes to avoid getting error for upcoming v3.0 upgrade.
