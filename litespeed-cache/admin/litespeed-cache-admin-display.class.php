@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_Display
 			</div>
 
 			<div>
-				<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_GUI::TYPE_DISMISS_RECOMMENDED ) ; ?>
+				<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_Activation::TYPE_DISMISS_RECOMMENDED ) ; ?>
 				<span class="screen-reader-text">Dismiss this notice.</span>
 				<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
 			</div>
