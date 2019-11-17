@@ -304,7 +304,7 @@ class Admin_Display extends Base
 	 */
 	public function admin_footer_text($footer_text)
 	{
-		require_once LSCWP_DIR . 'tpl/settings/inc/admin_footer.php' ;
+		require_once LSCWP_DIR . 'tpl/inc/admin_footer.php' ;
 
 		return $footer_text ;
 	}
@@ -317,7 +317,7 @@ class Admin_Display extends Base
 	 */
 	public function add_help_tabs()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/inc/help_tabs.php' ;
+		require_once LSCWP_DIR . 'tpl/inc/help_tabs.php' ;
 	}
 
 	/**
@@ -470,7 +470,7 @@ class Admin_Display extends Base
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		require LSCWP_DIR . 'tpl/settings/esi_widget_edit.php' ;
+		require LSCWP_DIR . 'tpl/esi_widget_edit.php' ;
 	}
 
 	/**
@@ -481,7 +481,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_dash()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/dash/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/dash/entry.tpl.php' ;
 	}
 
 	/**
@@ -492,7 +492,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_general()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/general/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/general/entry.tpl.php' ;
 	}
 
 	/**
@@ -503,7 +503,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_cdn()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/cdn/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/cdn/entry.tpl.php' ;
 	}
 
 	/**
@@ -515,10 +515,10 @@ class Admin_Display extends Base
 	public function show_menu_cache()
 	{
 		if ( is_network_admin() ) {
-			require_once LSCWP_DIR . 'tpl/settings/network_settings.php' ;
+			require_once LSCWP_DIR . 'tpl/network_settings.php' ;
 		}
 		else {
-			require_once LSCWP_DIR . 'tpl/settings/cache/entry.tpl.php' ;
+			require_once LSCWP_DIR . 'tpl/cache/entry.tpl.php' ;
 		}
 	}
 
@@ -530,7 +530,7 @@ class Admin_Display extends Base
 	 */
 	public function show_tools()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/tools/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/tools/entry.tpl.php' ;
 	}
 
 	/**
@@ -541,7 +541,7 @@ class Admin_Display extends Base
 	 */
 	public function show_crawler()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/crawler/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/crawler/entry.tpl.php' ;
 	}
 
 	/**
@@ -552,7 +552,7 @@ class Admin_Display extends Base
 	 */
 	public function show_img_optm()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/img_optm/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/img_optm/entry.tpl.php' ;
 	}
 
 	/**
@@ -563,7 +563,7 @@ class Admin_Display extends Base
 	 */
 	public function show_page_optm()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/page_optm/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/page_optm/entry.tpl.php' ;
 	}
 
 	/**
@@ -574,7 +574,7 @@ class Admin_Display extends Base
 	 */
 	public function show_db_optm()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/db_optm/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/db_optm/entry.tpl.php' ;
 	}
 
 	/**
@@ -585,7 +585,7 @@ class Admin_Display extends Base
 	 */
 	public function show_debug()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/debug/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/debug/entry.tpl.php' ;
 	}
 
 	/**
@@ -597,7 +597,7 @@ class Admin_Display extends Base
 	 */
 	public function show_display_installed()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/inc/show_display_installed.php' ;
+		require_once LSCWP_DIR . 'tpl/inc/show_display_installed.php' ;
 	}
 
 	/**
@@ -608,7 +608,7 @@ class Admin_Display extends Base
 	 */
 	public static function show_error_cookie()
 	{
-		require_once LSCWP_DIR . 'tpl/settings/inc/show_error_cookie.php' ;
+		require_once LSCWP_DIR . 'tpl/inc/show_error_cookie.php' ;
 	}
 
 	/**
@@ -619,7 +619,7 @@ class Admin_Display extends Base
 	 */
 	public function cache_disabled_warning()
 	{
-		include LSCWP_DIR . "tpl/settings/inc/check_cache_disabled.php" ;
+		include LSCWP_DIR . "tpl/inc/check_cache_disabled.php" ;
 	}
 
 	/**

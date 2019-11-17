@@ -284,7 +284,7 @@ class GUI extends Base
 		// Bypass showing info banner if disabled all in debug
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			if ( $is_litespeed_page && ! $check_only ) {
-				include_once LSCWP_DIR . "tpl/settings/inc/disabled_all.php" ;
+				include_once LSCWP_DIR . "tpl/inc/disabled_all.php" ;
 			}
 
 			return false ;
@@ -326,7 +326,7 @@ class GUI extends Base
 
 			// try to load, if can pass, will set $this->_promo_true = true
 			$this->_promo_true = false ;
-			include LSCWP_DIR . "tpl/settings/banner/$promo_tag.php" ;
+			include LSCWP_DIR . "tpl/banner/$promo_tag.php" ;
 
 			// If not defined, means it didn't pass the display workflow in tpl.
 			if ( ! $this->_promo_true ) {
@@ -360,7 +360,7 @@ class GUI extends Base
 		$_summary[ 'score.last_check' ] = time() ;
 		self::save_summary( $_summary ) ;
 
-		include_once LSCWP_DIR . "tpl/settings/banner/ajax.php" ;
+		include_once LSCWP_DIR . "tpl/banner/ajax.php" ;
 	}
 
 	/**
