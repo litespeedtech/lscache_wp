@@ -195,7 +195,7 @@ class LiteSpeed_Cache_Admin_Display
 					<div class="litespeed-row-flex litespeed-banner-description">
 						<div class="litespeed-banner-description-padding-right-15">
 							<?php if ( ! empty( $news[ 'plugin' ] ) ) : ?>
-							<?php $install_link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => 'dologin' ) ); ?>
+							<?php $install_link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => $news[ 'plugin' ] ) ); ?>
 							<a href="<?php echo $install_link ; ?>" class="litespeed-btn-success litespeed-btn-mini">
 								 <?php echo __( 'Install', 'litespeed-cache' ); ?>
 								 <?php if ( ! empty( $news[ 'plugin_name' ] ) ) echo $news[ 'plugin_name' ]; ?>
