@@ -292,11 +292,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.9.9.1 - Nov 18 2019 =
-* 🌱<strong>Env</strong>: Env report can now append the password less link to avoid sharing wp-admin password directly.
-* <strong>Admin</strong>: Admin page ability to show latest v3.0 beta test link.
+* 🌱<strong>Env</strong>: Environment Report can now append a passwordless link for support access without wp-admin password.
+* <strong>Admin</strong>: The latest v3.0 beta test link may now be shown on the admin page when it's available.
 * <strong>3rd</strong>: Compatibility with [DoLogin Security](https://wordpress.org/plugins/dologin/).
-* 🐞<strong>ESI</strong>: Fixed Vary group save failure bug. (@rafasshop)
-* 🐞<strong>3rd</strong>: Divi image picker will now not serve webp anymore for non-webp supported browsers. (@Austin Tinius)
+* 🐞<strong>ESI</strong>: Fixed a failure issue with Vary Group save. (@rafasshop)
+* 🐞<strong>3rd</strong>: In browsers where WebP is not supported, Divi image picker will no longer serve WebP. (@Austin Tinius)
 
 = 2.9.9 - Oct 28 2019 =
 * <strong>Core</strong>: Preload all classes to avoid getting error for upcoming v3.0 upgrade.
