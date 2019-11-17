@@ -114,6 +114,12 @@ class ESI extends Instance
 	private function _transform_nonce()
 	{
 		Log::debug( '[ESI] Overwrite wp_create_nonce()' ) ;
+
+		// Load ESI nonces in conf
+		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
+			$this->_nonce_actions = array_merge( $this->_nonce_actions, $nonces );
+		}
+
 		/**
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */

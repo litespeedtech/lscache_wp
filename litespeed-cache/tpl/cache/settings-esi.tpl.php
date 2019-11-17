@@ -80,6 +80,20 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
+			<?php $id = Base::O_ESI_NONCE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'The above nonces will be converted to ESI automatically.', 'litespeed-cache' ) ; ?>
+				<?php Doc::one_per_line() ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_CACHE_VARY_GROUP ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

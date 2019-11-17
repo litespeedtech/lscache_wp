@@ -87,6 +87,7 @@ class Base extends Instance
 	const O_ESI 				= 'esi' ;
 	const O_ESI_CACHE_ADMBAR 	= 'esi-cache_admbar' ;
 	const O_ESI_CACHE_COMMFORM 	= 'esi-cache_commform' ;
+	const O_ESI_NONCE 			= 'esi-nonce' ;
 
 	## -------------------------------------------------- ##
 	## --------------     Utilities	    ----------------- ##
@@ -391,6 +392,7 @@ class Base extends Instance
 		self::O_ESI 	 				=> false,
 		self::O_ESI_CACHE_ADMBAR 	 	=> false,
 		self::O_ESI_CACHE_COMMFORM 	 	=> false,
+		self::O_ESI_NONCE 			 	=> array(),
 
 		// Util
 		self::O_UTIL_INSTANT_CLICK 		=> false,
