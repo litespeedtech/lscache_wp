@@ -38,7 +38,7 @@ $install_link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTI
 		<?php if ( ! $has_pswdless_plugin ) : ?>
 		<div class="litespeed-callout-danger">
 			<h4><?php echo __('NOTICE:', 'litespeed-cache'); ?></h4>
-			<?php echo sprintf( __('You will need to install %s to generate the password less link if you need LiteSpeed Support Team to access wp-admin.', 'litespeed-cache'), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
+			<?php echo sprintf( __('To generate a passwordless link for LiteSpeed Support Team access, you must install %s.', 'litespeed-cache'), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
 			<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __('Automatically Install', 'litespeed-cache'); ?></a>
 			<a href="plugin-install.php?s=dologin+security&tab=search&type=term" target="_blank"><?php echo __('Manually Install', 'litespeed-cache'); ?></a>
 		</div>
@@ -65,18 +65,19 @@ $install_link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTI
 			<p>
 				Link: <input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" />
 				<?php if ( $has_pswdless_plugin ) : ?>
-					<a href="<?php echo admin_url( 'admin.php?page=lscache-report&dologin_gen_link=1' ); ?>"><?php echo __( 'Generate Password less Link for Current User', 'litespeed-cache' ) ; ?></a>
+					<a href="<?php echo admin_url( 'admin.php?page=lscache-report&dologin_gen_link=1' ); ?>"><?php echo __( 'Generate Passwordless Link for Current User', 'litespeed-cache' ) ; ?></a>
 				<?php else: ?>
-					<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __( 'Install DoLogin Security to Generate Password less Link', 'litespeed-cache' ) ; ?></a>
+					<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __( 'Install DoLogin Security to Generate Passwordless Link', 'litespeed-cache' ) ; ?></a>
 				<?php endif; ?>
 			</p>
 			<p>
 				<?php if ( $link ) : ?>
-					<strong><?php echo __('Please do NOT directly share the above password less link with anyone.', 'litespeed-cache'); ?></strong>
+					<strong><?php echo __('Please do NOT share the above passwordless link with anyone.', 'litespeed-cache'); ?></strong>
+					<strong><?php echo sprintf( __('Generated links may be managed under <a %s>Settings</a>.', 'litespeed-cache'), 'href="' . menu_page_url( 'dologin', 0 ) . '"' ); ?></strong>
 				<?php endif; ?>
 			</p>
 
-			<p class="litespeed-desc"><?php echo __( 'Generate the wp-admin access link for current logged in user to send it along with the report to LiteSpeed Support Team.', 'litespeed-cache' ) ; ?></p>
+			<p class="litespeed-desc"><?php echo __( 'To grant wp-admin access to the LiteSpeed Support Team, please generate a passwordless link for the current logged-in user to be sent with the report.', 'litespeed-cache' ) ; ?></p>
 
 			<button class="litespeed-btn-warning" type="submit">
 				<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>

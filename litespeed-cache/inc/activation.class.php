@@ -19,6 +19,8 @@ class LiteSpeed_Cache_Activation
 
 	const TYPE_UPGRADE = 'upgrade' ;
 	const TYPE_INSTALL_3RD = 'install_3rd' ;
+	const TYPE_INSTALL_ZIP = 'install_zip' ;
+	const TYPE_DISMISS_RECOMMENDED = 'dismiss_recommended' ;
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
 
@@ -509,6 +511,21 @@ class LiteSpeed_Cache_Activation
 
 			case self::TYPE_INSTALL_3RD :
 				$instance->dash_notifier_install_3rd() ;
+				break ;
+
+			case self::TYPE_DISMISS_RECOMMENDED :
+				$news = get_option( 'litespeed-recommended', array() );
+				$news[ 'new' ] = 0;
+				update_option( 'litespeed-recommended', $news );
+				break ;
+
+			case self::TYPE_INSTALL_ZIP :
+				$news = get_option( 'litespeed-recommended', array() );
+				if ( ! empty( $news[ 'zip' ] ) ) {
+					$news[ 'new' ] = 0;
+					update_option( 'litespeed-recommended', $news );
+					LiteSpeed_Cache_Log::get_instance()->beta_test( $news[ 'zip' ] );
+				}
 				break ;
 
 			default:
