@@ -40,7 +40,7 @@ defined( 'WPINC' ) || exit ;
 			}
 
 			if ( defined( 'LITESPEED_ON' ) && Conf::val( $id ) ) {
-
+				$cookie_rule = '';
 				try {
 					$cookie_rule = Htaccess::get_instance()->current_login_cookie() ;
 				} catch ( \Exception $e ) {

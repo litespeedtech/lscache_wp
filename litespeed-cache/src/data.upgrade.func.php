@@ -500,7 +500,40 @@ function litespeed_update_3_0( $ver )
 	$wpdb->query( $q ) ;
 
 	// Update image optm table
-xx
+	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE `' . $wpdb->prefix . 'litespeed_img_optm`' );
+	if ( $tb_exists ) {
+		$status_mapping = array(
+			'requested'	=> 3,
+			'notified'	=> 6,
+			'pulled'	=> 9,
+			'failed'	=> -1,
+			'miss'		=> -3,
+			'err'		=> -9,
+			'err_fetch'	=> -5,
+			'err_optm'	=> -7,
+			'xmeta'		=> -8,
+		);
+		foreach ( $status_mapping as $k => $v ) {
+			$q = "UPDATE `" . $wpdb->prefix . "litespeed_img_optm` SET optm_status='$v' WHERE optm_status='$k'";
+			$wpdb->query( $q ) ;
+		}
+
+		$q = 'ALTER TABLE `' . $wpdb->prefix . 'litespeed_img_optm`
+				DROP INDEX `post_id_2`,
+				DROP INDEX `root_id`,
+				DROP INDEX `src_md5`,
+				DROP INDEX `srcpath_md5`,
+				DROP COLUMN `srcpath_md5`,
+				DROP COLUMN `src_md5`,
+				DROP COLUMN `root_id`,
+				DROP COLUMN `target_saved`,
+				DROP COLUMN `webp_saved`,
+				DROP COLUMN `server_info`,
+				MODIFY COLUMN `optm_status` tinyint(4) NOT NULL DEFAULT 0,
+				MODIFY COLUMN `src` text COLLATE utf8mb4_unicode_ci NOT NULL
+			';
+		$wpdb->query( $q ) ;
+	}
 
 	add_option( 'litespeed.conf._version', '3.0' ) ;
 
