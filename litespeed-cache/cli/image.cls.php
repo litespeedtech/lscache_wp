@@ -11,7 +11,7 @@ use WP_CLI ;
 /**
  * QUIC.cloud API CLI
  */
-class Cloud
+class Image
 {
 	private $_img_optm_instance ;
 
@@ -23,7 +23,7 @@ class Cloud
 	}
 
 	/**
-	 * Sync data from cloud server
+	 * Sync usage from cloud server
 	 *
 	 * ## OPTIONS
 	 *
@@ -34,7 +34,7 @@ class Cloud
 	 *
 	 */
 	public function sync()
-	{xx
+	{
 		$optm_summary = Img_Optm::get_summary() ;
 
 		$json = $this->_img_optm_instance->sync_data() ;

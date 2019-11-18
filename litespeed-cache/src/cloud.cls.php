@@ -70,7 +70,7 @@ class Cloud extends Base
 	{
 		// Only auto sync usage at most one time per day
 		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
-			$this->_sync_usage();
+			$this->sync_usage();
 		}
 
 		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
@@ -108,16 +108,16 @@ class Cloud extends Base
 	 * Sync Cloud usage summary data
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access public
 	 */
-	private function _sync_usage()
+	public function sync_usage()
 	{
 		$usage = $this->_post( self::SVC_D_USAGE );
 		if ( ! $usage ) {
 			return;
 		}
 
-		Log::debug( '[Cloud] _sync_usage ' . json_encode( $usage ) );
+		Log::debug( '[Cloud] sync_usage ' . json_encode( $usage ) );
 
 		foreach ( self::SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
@@ -130,9 +130,9 @@ class Cloud extends Base
 	 * ping clouds to find the fastest node
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access public
 	 */
-	private function _detect_cloud( $service, $force = false )
+	public function detect_cloud( $service, $force = false )
 	{
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
@@ -232,7 +232,7 @@ class Cloud extends Base
 			return;
 		}
 
-		$server = $this->_detect_cloud( $service );
+		$server = $this->detect_cloud( $service );
 		if ( ! $server ) {
 			return;
 		}
@@ -323,7 +323,7 @@ class Cloud extends Base
 			$server = self::CLOUD_SERVER;
 		}
 		else {
-			$server = $this->_detect_cloud( $service );
+			$server = $this->detect_cloud( $service );
 			if ( ! $server ) {
 				return;
 			}
@@ -654,7 +654,7 @@ class Cloud extends Base
 		switch ( $type ) {
 			case self::TYPE_REDETECT_CLOUD :
 				if ( ! empty( $_GET[ 'svc' ] ) ) {
-					$instance->_detect_cloud( $_GET[ 'svc' ], true );
+					$instance->detect_cloud( $_GET[ 'svc' ], true );
 				}
 				break;
 
@@ -663,7 +663,7 @@ class Cloud extends Base
 				break;
 
 			case self::TYPE_SYNC_USAGE :
-				$instance->_sync_usage();
+				$instance->sync_usage();
 
 				$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;
 				Admin_Display::succeed( $msg ) ;
