@@ -321,8 +321,8 @@ class Optimize extends Base
 		$this->cfg_exc_jquery = Conf::val( Base::O_OPTM_EXC_JQ ) ;
 		$this->cfg_ggfonts_async = Conf::val( Base::O_OPTM_GGFONTS_ASYNC ) ;
 		$this->_conf_css_font_display = Conf::val( Base::O_OPTM_CSS_FONT_DISPLAY ) ;
-		if ( ! empty( Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
+		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
 		}
 
 		$this->cfg_ttl = Conf::val( Base::O_OPTM_TTL ) ;

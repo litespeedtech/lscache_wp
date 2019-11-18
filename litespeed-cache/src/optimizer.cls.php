@@ -26,8 +26,8 @@ class Optimizer extends Instance
 	protected function __construct()
 	{
 		$this->_conf_css_font_display = Conf::val( Base::O_OPTM_CSS_FONT_DISPLAY ) ;
-		if ( ! empty( Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = Base::CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
+		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
+			$this->_conf_css_font_display = Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ;
 		}
 	}
 

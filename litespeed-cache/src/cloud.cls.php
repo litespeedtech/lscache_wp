@@ -26,13 +26,13 @@ class Cloud extends Base
 	const SVC_PAGESCORE			= 'pagescore' ;
 	const SVC_CDN				= 'cdn' ;
 
-	const CENTER_SVC_SET = array(
+	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
 	);
 
-	const SERVICES = array(
+	private static $SERVICES = array(
 		self::SVC_IMG_OPTM,
 		self::SVC_CCSS,
 		self::SVC_LQIP,
@@ -119,7 +119,7 @@ class Cloud extends Base
 
 		Log::debug( '[Cloud] sync_usage ' . json_encode( $usage ) );
 
-		foreach ( self::SERVICES as $v ) {
+		foreach ( self::$SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
 
@@ -141,7 +141,7 @@ class Cloud extends Base
 			}
 		}
 
-		if ( ! $service || ! in_array( $service, self::SERVICES ) ) {
+		if ( ! $service || ! in_array( $service, self::$SERVICES ) ) {
 			$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $service;
 			Admin_Display::error( $msg );
 			return false;
@@ -319,7 +319,7 @@ class Cloud extends Base
 			return;
 		}
 
-		if ( in_array( $service, self::CENTER_SVC_SET ) ) {
+		if ( in_array( $service, self::$CENTER_SVC_SET ) ) {
 			$server = self::CLOUD_SERVER;
 		}
 		else {

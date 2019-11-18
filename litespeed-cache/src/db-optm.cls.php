@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit;
 
 class DB_Optm extends Instance
 {
-	const TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' );
+	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' );
 	const TYPE_CONV_TB = 'conv_innodb';
 
 	protected static $_instance;
@@ -32,7 +32,7 @@ class DB_Optm extends Instance
 	{
 		if ( $type === 'all' ) {
 			$num = 0;
-			foreach ( self::TYPES as $v ) {
+			foreach ( self::$TYPES as $v ) {
 				$num += self::db_count( $v );
 			}
 			return $num;
@@ -113,7 +113,7 @@ class DB_Optm extends Instance
 	private function _db_clean( $type )
 	{
 		if ( $type === 'all' ) {
-			foreach ( self::TYPES as $v ) {
+			foreach ( self::$TYPES as $v ) {
 				$this->_db_clean( $v );
 			}
 			return __( 'Clean all successfully.', 'litespeed-cache' );
@@ -277,7 +277,7 @@ class DB_Optm extends Instance
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case in_array( $type, self::TYPES ) :
+			case in_array( $type, self::$TYPES ) :
 				if ( is_multisite() && is_network_admin() ) {
 					$blogs = Activation::get_network_ids();
 					foreach ( $blogs as $blog_id ) {

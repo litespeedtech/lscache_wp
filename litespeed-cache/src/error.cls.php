@@ -13,7 +13,7 @@ defined( 'WPINC' ) || exit;
 
 class Error
 {
-	const CODE_SET = array(
+	private static $CODE_SET = array(
 		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
 		'HTA_DNF'		 => 4500, // .htaccess did not find.
 		'HTA_BK'		 => 9010, // backup
@@ -105,8 +105,8 @@ class Error
 			$msg = is_array( $args ) ? vsprintf( $msg, $args ) : sprintf( $msg, $args );
 		}
 
-		if ( isset( self::CODE_SET[ $code ] ) ) {
-			$msg = 'ERROR ' . self::CODE_SET[ $code ] . ': ' . $msg;
+		if ( isset( self::$CODE_SET[ $code ] ) ) {
+			$msg = 'ERROR ' . self::$CODE_SET[ $code ] . ': ' . $msg;
 		}
 
 		return $msg;

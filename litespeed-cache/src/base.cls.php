@@ -307,7 +307,7 @@ class Base extends Instance
 	const IMG_OPTM_BM_EXIF 		= 8 ;
 
 	/* Site related options (Will not overwrite other sites' config) */
-	const SINGLE_SITE_OPTIONS = array(
+	protected static $SINGLE_SITE_OPTIONS = array(
 		self::O_CRWL,
 		self::O_CDN,
 		self::O_CDN_ORI,
@@ -325,7 +325,7 @@ class Base extends Instance
 		self::O_CDN_MAPPING,
 	) ;
 
-	const CSS_FONT_DISPLAY_SET = array(
+	public static $CSS_FONT_DISPLAY_SET = array(
 		1 => 'block',
 		2 => 'swap',
 		3 => 'fallback',
