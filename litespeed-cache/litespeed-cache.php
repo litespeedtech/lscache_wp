@@ -21,7 +21,7 @@
  * License:           GPLv3
  * License URI:       http://www.gnu.org/licenses/gpl.html
  * Text Domain:       litespeed-cache
- * Domain Path:       /languages
+ * Domain Path:       /lang
  *
  * Copyright (C) 2015-2017 LiteSpeed Technologies, Inc.
  *

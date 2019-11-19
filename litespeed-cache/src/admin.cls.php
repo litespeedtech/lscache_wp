@@ -70,8 +70,6 @@ class Admin extends Instance
 	 */
 	public function admin_init()
 	{
-		load_plugin_textdomain( Core::PLUGIN_NAME, false, 'litespeed-cache/lang/' ) ;
-
 		$this->_proceed_admin_action() ;
 
 		// Terminate if user doesn't have the access to settings

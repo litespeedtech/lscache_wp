@@ -115,6 +115,7 @@ class Core extends Instance
 		register_uninstall_hook( $plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache' ) ;
 		// }
 
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) ) ;
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 
 		// Check if there is a purge request in queue
@@ -135,6 +136,15 @@ class Core extends Instance
 		 * @since 1.8.1
 		 */
 		ESI::get_instance() ;
+	}
+
+	/**
+	 * Plugin loaded hooks
+	 * @since 3.0
+	 */
+	public function plugins_loaded()
+	{
+		load_plugin_textdomain( Core::PLUGIN_NAME, false, 'litespeed-cache/lang/' ) ;
 	}
 
 	/**
