@@ -81,7 +81,7 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'litespeed-admin', 'LiteSpeed\CLI\Admin' ) ;
+		WP_CLI::add_command( 'litespeed-option', 'LiteSpeed\CLI\Option' ) ;
 		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' ) ;
 		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' ) ;
 		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' ) ;

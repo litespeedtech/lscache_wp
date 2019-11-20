@@ -10,6 +10,10 @@ if ( ! empty( $_GET[ 'apikey_data' ] ) ) {
 		$api_key_val = $apikey_data[ 'domain_key' ];
 		! defined( 'LITESPEED_NEW_API_KEY' ) && define( 'LITESPEED_NEW_API_KEY', true );
 	}
+	unset( $_GET[ 'apikey_data' ] );
+	?>
+	<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&apikey_data=', '&' ) );</script>
+	<?php
 }
 
 $this->form_action() ;

@@ -4,7 +4,6 @@ defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Log;
 use LiteSpeed\Cloud;
-use LiteSpeed\Utility;
 use WP_CLI;
 
 /**
@@ -12,13 +11,32 @@ use WP_CLI;
  */
 class Online
 {
-	private $__cloud ;
+	private $__cloud;
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Cloud init' ) ;
+		Log::debug( 'CLI_Cloud init' );
 
-		$this->__cloud = Cloud::get_instance() ;
+		$this->__cloud = Cloud::get_instance();
+	}
+
+	/**
+	 * Gen key from cloud server
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Generate domain API key from Cloud server
+	 *     $ wp litespeed-online init
+	 *
+	 */
+	public function init()
+	{
+		$key = $this->__cloud->gen_key();
+		if ( $key ) {
+			WP_CLI::success( 'key = ' . $key );
+		}
 	}
 
 	/**
@@ -34,26 +52,70 @@ class Online
 	 */
 	public function sync()
 	{
-		$json = $this->__cloud->sync_usage() ;
+		$json = $this->__cloud->sync_usage();
 
-		WP_CLI::success( 'Sync successfully' ) ;
+		WP_CLI::success( 'Sync successfully' );
 
+		$list = array();
+		foreach ( Cloud::$SERVICES as $v ) {
+			$list[] = array(
+				'key' => $v,
+				'used' => ! empty( $json[ 'usage.' . $v ][ 'used' ] ) ? $json[ 'usage.' . $v ][ 'used' ] : 0,
+				'quota' => ! empty( $json[ 'usage.' . $v ][ 'quota' ] ) ? $json[ 'usage.' . $v ][ 'quota' ] : 0,
+				'credit_used' => ! empty( $json[ 'usage.' . $v ][ 'credit_used' ] ) ? $json[ 'usage.' . $v ][ 'credit_used' ] : 0,
+			);
+		}
+
+		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'used', 'quota', 'credit_used' ) );
 	}
 
 	/**
-	 * Gen key from cloud server
+	 * List all services
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Generate domain API key from Cloud server
-	 *     $ wp litespeed-online gen_key
+	 *     # List all services tag
+	 *     $ wp litespeed-online services
 	 *
 	 */
-	public function gen_key()
+	public function services()
 	{
-		$json = $this->__cloud->gen_key() ;
+		$list = array();
+		foreach ( Cloud::$SERVICES as $v ) {
+			$list[] = array(
+				'service' => $v,
+			);
+		}
+
+		WP_CLI\Utils\format_items( 'table', $list, array( 'service' ) );
+	}
+
+	/**
+	 * List all cloud servers in use
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # List all cloud servers in use
+	 *     $ wp litespeed-online nodes
+	 *
+	 */
+	public function nodes()
+	{
+		$json = Cloud::get_summary();
+
+		$list = array();
+		foreach ( Cloud::$SERVICES as $v ) {
+			$list[] = array(
+				'service' => $v,
+				'server' => ! empty( $json[ 'server.' . $v ] ) ? $json[ 'server.' . $v ] : '',
+			);
+		}
+
+		WP_CLI\Utils\format_items( 'table', $list, array( 'service', 'server' ) );
 	}
 
 	/**
@@ -64,144 +126,16 @@ class Online
 	 * ## EXAMPLES
 	 *
 	 *     # Detect closest Node for one service
-	 *     $ wp litespeed-online detect_cloud img_optm
+	 *     $ wp litespeed-online ping img_optm
 	 *
 	 */
-	public function detect_cloud()
+	public function ping( $param )
 	{
-		$json = $this->__cloud->detect_cloud() ;
+		$svc = $param[ 0 ];
+		$json = $this->__cloud->detect_cloud( $svc );
+		WP_CLI::success( 'Updated closest server.' );
+		WP_CLI::log( 'svc = ' . $svc );
+		WP_CLI::log( 'node = ' . $json );
 	}
-
-	/**
-	 * Send image optimization request to cloud server
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Send image optimization request
-	 *     $ wp litespeed-online push
-	 *
-	 */
-	public function push()
-	{
-		$this->_img_optm_instance->new_req() ;
-	}
-
-	/**
-	 * Pull optimized images from cloud server
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Pull images back from cloud
-	 *     $ wp litespeed-online pull
-	 *
-	 */
-	public function pull()
-	{
-		$this->_img_optm_instance->pull( true ) ;
-	}
-
-	/**
-	 * Show optimization status based on local data
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Show optimization status
-	 *     $ wp litespeed-online status
-	 *
-	 */
-	public function status()
-	{xx
-		$summary = Img_Optm::get_summary() ;
-		$img_count = $this->_img_optm_instance->img_count() ;
-
-		if ( ! empty( $summary[ '_level_data' ] ) ) {
-			unset( $summary[ '_level_data' ] ) ;
-		}
-
-		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
-			if ( ! empty( $summary[ $v ] ) ) {
-				$summary[ $v ] = Utility::real_size( $summary[ $v ] ) ;
-			}
-		}
-
-		if ( ! empty( $summary[ 'last_requested' ] ) ) {
-			$summary[ 'last_requested' ] = date( 'm/d/y H:i:s', $summary[ 'last_requested' ] ) ;
-		}
-
-		$list = array() ;
-		foreach ( $summary as $k => $v ) {
-			$list[] = array( 'key' => $k, 'value' => $v ) ;
-		}
-
-		$list2 = array() ;
-		foreach ( $img_count as $k => $v ) {
-			$list2[] = array( 'key' => $k, 'value' => $v ) ;
-		}
-
-		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) ) ;
-
-		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) ) ;
-		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) ) ;
-	}
-
-	/**
-	 * Show optimization status based on local data
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Show optimization status
-	 *     $ wp litespeed-online s
-	 *
-	 */
-	public function s()
-	{
-		$this->status() ;
-	}
-
-
-	/**
-	 * Clean up unfinished image data from cloud server
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Clean up unfinished requests
-	 *     $ wp litespeed-online clean
-	 *
-	 */
-	public function clean()
-	{
-		$this->_img_optm_instance->clean() ;
-
-		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) ) ;
-
-		$this->status() ;
-	}
-
-	/**
-	 * Remove original image backups
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Remove original image backups
-	 *     $ wp litespeed-online rm_bkup
-	 *
-	 */
-	public function rm_bkup()
-	{
-		$this->_img_optm_instance->rm_bkup() ;
-	}
-
 
 }

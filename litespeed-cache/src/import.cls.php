@@ -16,6 +16,7 @@ class Import extends Base
 	protected static $_instance ;
 
 	private $__cfg ;
+	private $_summary;
 
 	const TYPE_IMPORT = 'import' ;
 	const TYPE_EXPORT = 'export' ;
@@ -32,39 +33,16 @@ class Import extends Base
 		Log::debug( 'Import init' ) ;
 
 		$this->__cfg = Conf::get_instance() ;
-	}
-
-	/**
-	 * Show summary of history
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function summary()
-	{
-		$log = self::get_option( 'import', array() ) ;
-
-		return $log ;
-	}
-
-	/**
-	 * Export settings
-	 *
-	 * @since  2.4.1
-	 * @return string All settings data
-	 */
-	public function export()
-	{
-		return $this->_export( true ) ;
+		$this->_summary = self::get_summary();
 	}
 
 	/**
 	 * Export settings to file
 	 *
 	 * @since  1.8.2
-	 * @access private
+	 * @access public
 	 */
-	private function _export( $only_data_return = false )
+	public function export( $only_data_return = false )
 	{
 
 		$data = $this->__cfg->get_options() ;
@@ -78,14 +56,9 @@ class Import extends Base
 		$filename = $this->_generate_filename() ;
 
 		// Update log
-		$log = $this->summary() ;
-		if ( empty( $log[ 'export' ] ) ) {
-			$log[ 'export' ] = array() ;
-		}
-		$log[ 'export' ][ 'file' ] = $filename ;
-		$log[ 'export' ][ 'time' ] = time() ;
-
-		self::update_option( 'import', $log ) ;
+		$this->_summary[ 'export_file' ] = $filename ;
+		$this->_summary[ 'export_time' ] = time() ;
+		self::save_summary( $this->_summary );
 
 		Log::debug( 'Import: Saved to ' . $filename ) ;
 
@@ -96,22 +69,12 @@ class Import extends Base
 	}
 
 	/**
-	 * Import settings
-	 *
-	 * @since  2.4.1
-	 */
-	public function import( $file )
-	{
-		return $this->_import( $file ) ;
-	}
-
-	/**
 	 * Import settings from file
 	 *
 	 * @since  1.8.2
-	 * @access private
+	 * @access public
 	 */
-	private function _import( $file = false )
+	public function import( $file = false )
 	{
 		if ( ! $file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
@@ -123,21 +86,19 @@ class Import extends Base
 				return false ;
 			}
 
-			// Update log
-			$log = $this->summary() ;
-			if ( empty( $log[ 'import' ] ) ) {
-				$log[ 'import' ] = array() ;
-			}
-			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
-			$log[ 'import' ][ 'time' ] = time() ;
-
-			self::update_option( 'import', $log ) ;
+			$this->_summary[ 'import_file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
 
 			$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
 		}
 		else {
+			$this->_summary[ 'import_file' ] = $file ;
+
 			$data = file_get_contents( $file ) ;
 		}
+
+		// Update log
+		$this->_summary[ 'import_time' ] = time() ;
+		self::save_summary( $this->_summary );
 
 		try {
 			$data = json_decode( base64_decode( $data ), true ) ;
@@ -172,9 +133,9 @@ class Import extends Base
 	 * Reset all configs to default values.
 	 *
 	 * @since  2.6.3
-	 * @access private
+	 * @access public
 	 */
-	private function _reset()
+	public function reset()
 	{
 		$options = $this->__cfg->load_default_vals() ;
 
@@ -227,15 +188,15 @@ class Import extends Base
 
 		switch ( $type ) {
 			case self::TYPE_IMPORT :
-				$instance->_import() ;
+				$instance->import() ;
 				break ;
 
 			case self::TYPE_EXPORT :
-				$instance->_export() ;
+				$instance->export() ;
 				break ;
 
 			case self::TYPE_RESET :
-				$instance->_reset() ;
+				$instance->reset() ;
 				break ;
 
 			default:

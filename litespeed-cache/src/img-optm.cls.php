@@ -305,9 +305,9 @@ class Img_Optm extends Base
 	 * Push raw img to image optm server
 	 *
 	 * @since 1.6
-	 * @access private
+	 * @access public
 	 */
-	private function new_req()
+	public function new_req()
 	{
 		global $wpdb;
 
@@ -541,7 +541,7 @@ class Img_Optm extends Base
 
 		$_allowed_status = array(
 			self::STATUS_NOTIFIED, 		// 6 -> 'notified';
-			self::STATUS_ERR_FETCH, 		// -5 -> 'err_fetch';
+			self::STATUS_ERR_FETCH, 	// -5 -> 'err_fetch';
 			self::STATUS_ERR_404, 		// -6 -> 'err_404';
 			self::STATUS_ERR_OPTM, 		// -7 -> 'err_optm';
 			self::STATUS_ERR, 			// -9 -> 'err';
@@ -1320,8 +1320,8 @@ class Img_Optm extends Base
 		$count_list = array(
 			'groups_all'	=> $groups_all,
 			'groups_not_gathered'	=> $groups_not_gathered,
-			'groups_raw'	=> $groups_raw,
-			'imgs_raw'	=> $imgs_raw,
+			'group.' . self::STATUS_RAW	=> $groups_raw,
+			'img.' . self::STATUS_RAW	=> $imgs_raw,
 			'imgs_gathered'	=> $imgs_gathered,
 		);
 

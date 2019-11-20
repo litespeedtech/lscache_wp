@@ -1,8 +1,8 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-$log = Import::get_instance()->summary() ;
+$summary = Import::get_summary();
 ?>
 
 <h3 class="litespeed-title"><?php echo __('Export Settings', 'litespeed-cache') ; ?></h3>
@@ -11,9 +11,9 @@ $log = Import::get_instance()->summary() ;
 	<?php echo __( 'Export', 'litespeed-cache' ) ; ?>
 </a></div>
 
-<?php if ( ! empty( $log[ 'export' ] ) ) : ?>
+<?php if ( ! empty( $summary[ 'export_file' ] ) ) : ?>
 <div class="litespeed-desc">
-	<?php echo __( 'Last exported', 'litespeed-cache' ) ; ?>: <code><?php echo $log[ 'export' ][ 'file' ] ; ?></code> <?php echo Utility::readable_time( $log[ 'export' ][ 'time' ]) ; ?>
+	<?php echo __( 'Last exported', 'litespeed-cache' ) ; ?>: <code><?php echo $summary[ 'export_file' ] ; ?></code> <?php echo Utility::readable_time( $summary[ 'export_time' ]) ; ?>
 </div>
 <?php endif ; ?>
 
@@ -33,9 +33,9 @@ $log = Import::get_instance()->summary() ;
 	</div>
 </form>
 
-<?php if ( ! empty( $log[ 'import' ] ) ) : ?>
+<?php if ( ! empty( $summary[ 'import_file' ] ) ) : ?>
 <div class="litespeed-desc">
-	<?php echo __( 'Last imported', 'litespeed-cache' ) ; ?>: <code><?php echo $log[ 'import' ][ 'file' ] ; ?></code> <?php echo Utility::readable_time( $log[ 'import' ][ 'time' ]) ; ?>
+	<?php echo __( 'Last imported', 'litespeed-cache' ) ; ?>: <code><?php echo $summary[ 'import_file' ] ; ?></code> <?php echo Utility::readable_time( $summary[ 'import_time' ]) ; ?>
 </div>
 <?php endif ; ?>
 

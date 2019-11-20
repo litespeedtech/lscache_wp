@@ -32,7 +32,7 @@ class Cloud extends Base
 		self::SVC_D_USAGE,
 	);
 
-	private static $SERVICES = array(
+	public static $SERVICES = array(
 		self::SVC_IMG_OPTM,
 		self::SVC_CCSS,
 		self::SVC_LQIP,
@@ -124,6 +124,8 @@ class Cloud extends Base
 		}
 
 		self::save_summary( $this->_summary );
+
+		return $this->_summary;
 	}
 
 	/**
@@ -578,9 +580,9 @@ class Cloud extends Base
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
-		if ( $json[ '_res' ] != 'ok' ) {
-			Log::debug( '[CLoud] error to gen_key: ' . $json[ '_msg' ] );
-			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . $json[ '_msg' ] );
+		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] != 'ok' ) {
+			Log::debug( '[CLoud] error to gen_key: ', $json );
+			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . ( ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : var_export( $json, true ) ) );
 			return;
 		}
 
@@ -588,6 +590,8 @@ class Cloud extends Base
 		$this->_save_api_key( $json[ 'domain_key' ] );
 
 		Admin_Display::succeed( __( 'Generate API key successfully.', 'litespeed-cache' ) );
+
+		return $json[ 'domain_key' ];
 	}
 
 	/**

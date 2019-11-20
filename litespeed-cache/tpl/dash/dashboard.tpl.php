@@ -52,7 +52,7 @@ else {
 }
 
 if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
-	$img_finished_percentage = 100 - floor( $img_count[ 'imgs_raw' ] * 100 / $img_count[ 'imgs_gathered' ] ) ;
+	$img_finished_percentage = 100 - floor( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] * 100 / $img_count[ 'imgs_gathered' ] ) ;
 }
 else {
 	$img_finished_percentage = 0 ;
@@ -357,7 +357,7 @@ $cloud_summary = Cloud::get_summary();
 							<div class="litespeed-dashboard-stats">
 								<h3><?php echo __('Image Requested','litespeed-cache'); ?></h3>
 								<p>
-									<strong><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ] - $img_count[ 'imgs_raw' ], 'image' ) ; ?></strong>
+									<strong><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ] - $img_count[ 'img.' . Img_Optm::STATUS_RAW ], 'image' ) ; ?></strong>
 									<span class="litespeed-desc">of <?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ) ; ?></span>
 								</p>
 							</div>

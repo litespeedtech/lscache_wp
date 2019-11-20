@@ -1,26 +1,26 @@
 <?php
-namespace LiteSpeed\CLI ;
+namespace LiteSpeed\CLI;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Core ;
-use LiteSpeed\Conf ;
-use LiteSpeed\Base ;
-use LiteSpeed\Admin_Settings ;
-use LiteSpeed\Import ;
-use LiteSpeed\Utility ;
-use WP_CLI ;
+use LiteSpeed\Core;
+use LiteSpeed\Conf;
+use LiteSpeed\Base;
+use LiteSpeed\Admin_Settings;
+use LiteSpeed\Import;
+use LiteSpeed\Utility;
+use WP_CLI;
 
 /**
- * LiteSpeed Cache Admin Interface
+ * LiteSpeed Cache option Interface
  */
-class Admin extends Base
+class Option extends Base
 {
-	private $__cfg ;
+	private $__cfg;
 
 	public function __construct()
 	{
-		$this->__cfg = Conf::get_instance() ;
+		$this->__cfg = Conf::get_instance();
 	}
 
 	/**
@@ -37,11 +37,11 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Set to not cache the login page
-	 *     $ wp lscache-admin set_option cache-priv false
-	 *     $ wp lscache-admin set_option cdn-mapping[url][0] https://cdn.EXAMPLE.com
+	 *     $ wp litespeed-option set cache-priv false
+	 *     $ wp litespeed-option set 'cdn-mapping[url][0]' https://cdn.EXAMPLE.com
 	 *
 	 */
-	public function set_option( $args, $assoc_args )
+	public function set( $args, $assoc_args )
 	{
 		/**
 		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in `const.default.ini`
@@ -51,14 +51,14 @@ class Admin extends Base
 
 		/**
 		 * For CDN mapping, allow:
-		 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
-		 * 		`set_option cdn-mapping[inc_img][0] true`
-		 * 		`set_option cdn-mapping[inc_img][0] 1`
+		 * 		`set 'cdn-mapping[url][0]' https://the1st_cdn_url`
+		 * 		`set 'cdn-mapping[inc_img][0]' true`
+		 * 		`set 'cdn-mapping[inc_img][0]' 1`
 		 * @since  2.7.1
 		 *
 		 * For Crawler cookies:
-		 * 		`set_option crawler-cookies[name][0] my_currency`
-		 * 		`set_option crawler-cookies[vals][0] "USD\nTWD"`
+		 * 		`set 'crawler-cookies[name][0]' my_currency`
+		 * 		`set 'crawler-cookies[vals][0]' "USD\nTWD"`
 		 */
 
 		// Build raw data
@@ -77,7 +77,7 @@ class Admin extends Base
 
 		Admin_Settings::get_instance()->save( $raw_data ) ;
 		WP_CLI::line( "$key:" ) ;
-		$this->get_option( $args, $assoc_args ) ;
+		$this->get( $args, $assoc_args ) ;
 
 	}
 
@@ -89,15 +89,15 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Get all options
-	 *     $ wp lscache-admin get_options
+	 *     $ wp litespeed-option all
 	 *
 	 */
-	public function get_options( $args, $assoc_args )
+	public function all( $args, $assoc_args )
 	{
-		$options = Conf::get_instance()->get_options() ;
+		$options = $this->__cfg->get_options() ;
 		$option_out = array() ;
 
-		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;
+		$buf = WP_CLI::colorize("%CThe list of options:%n") ;
 		WP_CLI::line($buf) ;
 
 		foreach( $options as $k => $v ) {
@@ -152,11 +152,11 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Get one option
-	 *     $ wp lscache-admin get_option cache-priv
-	 *     $ wp lscache-admin get_option cdn-mapping[url][0]
+	 *     $ wp litespeed-option get cache-priv
+	 *     $ wp litespeed-option get 'cdn-mapping[url][0]'
 	 *
 	 */
-	public function get_option( $args, $assoc_args )
+	public function get( $args, $assoc_args )
 	{
 		$id = $args[ 0 ] ;
 
@@ -260,10 +260,10 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Export options to a file.
-	 *     $ wp lscache-admin export_options
+	 *     $ wp litespeed-option export
 	 *
 	 */
-	public function export_options($args, $assoc_args)
+	public function export( $args, $assoc_args )
 	{
 		if ( isset($assoc_args['filename']) ) {
 			$file = $assoc_args['filename'] ;
@@ -277,7 +277,7 @@ class Admin extends Base
 			return ;
 		}
 
-		$data = Import::get_instance()->export() ;
+		$data = Import::get_instance()->export( true );
 
 		if ( file_put_contents( $file, $data ) === false ) {
 			WP_CLI::error( 'Failed to create file.' ) ;
@@ -303,10 +303,10 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Import options from CURRENTDIR/options.txt
-	 *     $ wp lscache-admin import_options options.txt
+	 *     $ wp litespeed-option import options.txt
 	 *
 	 */
-	public function import_options($args, $assoc_args)
+	public function import( $args, $assoc_args )
 	{
 		$file = $args[0] ;
 		if ( ! file_exists($file) || ! is_readable($file) ) {
@@ -328,18 +328,12 @@ class Admin extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Reset all options
-	 *     $ wp lscache-admin reset_options
+	 *     $ wp litespeed-option reset
 	 *
 	 */
-	public function reset_options()
+	public function reset()
 	{
-		$res = Import::get_instance()->reset( $file ) ;
-
-		if ( ! $res ) {
-			WP_CLI::error( 'Failed to reset options.' ) ;
-		}
-
-		WP_CLI::success( 'Options reset.' ) ;
+		Import::get_instance()->reset() ;
 	}
 
 }

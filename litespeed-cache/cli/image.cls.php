@@ -1,60 +1,26 @@
 <?php
-namespace LiteSpeed\CLI ;
+namespace LiteSpeed\CLI;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Log ;
-use LiteSpeed\Img_Optm ;
-use LiteSpeed\Utility ;
-use WP_CLI ;
+use LiteSpeed\Lang;
+use LiteSpeed\Log;
+use LiteSpeed\Img_Optm;
+use LiteSpeed\Utility;
+use WP_CLI;
 
 /**
- * QUIC.cloud API CLI
+ * Image Optm API CLI
  */
 class Image
 {
-	private $_img_optm_instance ;
+	private $__img_optm;
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Cloud init' ) ;
+		Log::debug( 'CLI_Cloud init' );
 
-		$this->_img_optm_instance = Img_Optm::get_instance() ;
-	}
-
-	/**
-	 * Sync usage from cloud server
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Sync online service usage info
-	 *     $ wp litespeed-cloud sync
-	 *
-	 */
-	public function sync()
-	{
-		$optm_summary = Img_Optm::get_summary() ;
-
-		$json = $this->_img_optm_instance->sync_data() ;
-
-		if ( ! $json || empty( $json[ 'level' ] ) ) {
-			return ;
-		}
-
-		WP_CLI::success('[Level] ' . $json[ 'level' ] . ' [Credit] ' . $json[ 'credit' ] ) ;
-
-		if ( empty( $optm_summary[ 'level' ] ) || empty( $optm_summary[ 'credit_recovered' ] ) || empty( $optm_summary[ '_level_data' ] ) ) {
-			return ;
-		}
-
-		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
-
-			Log::debug( "[Img_Optm] Upgraded to level $json[level] !" ) ;
-
-			WP_CLI::success('Upgraded to level ' . $json[ 'level' ] ) ;
-		}
+		$this->__img_optm = Img_Optm::get_instance();
 	}
 
 	/**
@@ -65,12 +31,12 @@ class Image
 	 * ## EXAMPLES
 	 *
 	 *     # Send image optimization request
-	 *     $ wp litespeed-cloud push
+	 *     $ wp litespeed-image push
 	 *
 	 */
 	public function push()
 	{
-		$this->_img_optm_instance->new_req() ;
+		$this->__img_optm->new_req();
 	}
 
 	/**
@@ -81,12 +47,12 @@ class Image
 	 * ## EXAMPLES
 	 *
 	 *     # Pull images back from cloud
-	 *     $ wp litespeed-cloud pull
+	 *     $ wp litespeed-image pull
 	 *
 	 */
 	public function pull()
 	{
-		$this->_img_optm_instance->pull( true ) ;
+		$this->__img_optm->pull( true );
 	}
 
 	/**
@@ -97,60 +63,68 @@ class Image
 	 * ## EXAMPLES
 	 *
 	 *     # Show optimization status
-	 *     $ wp litespeed-cloud status
-	 *
-	 */
-	public function status()
-	{xx
-		$summary = Img_Optm::get_summary() ;
-		$img_count = $this->_img_optm_instance->img_count() ;
-
-		if ( ! empty( $summary[ '_level_data' ] ) ) {
-			unset( $summary[ '_level_data' ] ) ;
-		}
-
-		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
-			if ( ! empty( $summary[ $v ] ) ) {
-				$summary[ $v ] = Utility::real_size( $summary[ $v ] ) ;
-			}
-		}
-
-		if ( ! empty( $summary[ 'last_requested' ] ) ) {
-			$summary[ 'last_requested' ] = date( 'm/d/y H:i:s', $summary[ 'last_requested' ] ) ;
-		}
-
-		$list = array() ;
-		foreach ( $summary as $k => $v ) {
-			$list[] = array( 'key' => $k, 'value' => $v ) ;
-		}
-
-		$list2 = array() ;
-		foreach ( $img_count as $k => $v ) {
-			$list2[] = array( 'key' => $k, 'value' => $v ) ;
-		}
-
-		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) ) ;
-
-		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) ) ;
-		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) ) ;
-	}
-
-	/**
-	 * Show optimization status based on local data
-	 *
-	 * ## OPTIONS
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # Show optimization status
-	 *     $ wp litespeed-cloud s
+	 *     $ wp litespeed-image s
 	 *
 	 */
 	public function s()
 	{
-		$this->status() ;
+		$this->status();
 	}
 
+	/**
+	 * Show optimization status based on local data
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Show optimization status
+	 *     $ wp litespeed-image status
+	 *
+	 */
+	public function status()
+	{
+		$summary = Img_Optm::get_summary();
+		$img_count = $this->__img_optm->img_count();
+		foreach ( Lang::img_status() as $k => $v ) {
+			if ( isset( $img_count[ "img.$k" ] )) {
+				$img_count[ "$v - images" ] = $img_count[ "img.$k" ];
+				unset( $img_count[ "img.$k" ] );
+			}
+			if ( isset( $img_count[ "group.$k" ] )) {
+				$img_count[ "$v - groups" ] = $img_count[ "group.$k" ];
+				unset( $img_count[ "group.$k" ] );
+			}
+		}
+
+		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
+			if ( ! empty( $summary[ $v ] ) ) {
+				$summary[ $v ] = Utility::real_size( $summary[ $v ] );
+			}
+		}
+
+		if ( ! empty( $summary[ 'last_requested' ] ) ) {
+			$summary[ 'last_requested' ] = date( 'm/d/y H:i:s', $summary[ 'last_requested' ] );
+		}
+
+		$list = array();
+		foreach ( $summary as $k => $v ) {
+			$list[] = array( 'key' => $k, 'value' => $v );
+		}
+
+		$list2 = array();
+		foreach ( $img_count as $k => $v ) {
+			if ( ! $v ) {
+				continue;
+			}
+			$list2[] = array( 'key' => $k, 'value' => $v );
+		}
+
+		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) );
+
+		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) );
+		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) );
+	}
 
 	/**
 	 * Clean up unfinished image data from cloud server
@@ -160,16 +134,16 @@ class Image
 	 * ## EXAMPLES
 	 *
 	 *     # Clean up unfinished requests
-	 *     $ wp litespeed-cloud clean
+	 *     $ wp litespeed-image clean
 	 *
 	 */
 	public function clean()
 	{
-		$this->_img_optm_instance->clean() ;
+		$this->__img_optm->clean();
 
-		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) ) ;
+		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) );
 
-		$this->status() ;
+		$this->status();
 	}
 
 	/**
@@ -180,12 +154,12 @@ class Image
 	 * ## EXAMPLES
 	 *
 	 *     # Remove original image backups
-	 *     $ wp litespeed-cloud rm_bkup
+	 *     $ wp litespeed-image rm_bkup
 	 *
 	 */
 	public function rm_bkup()
 	{
-		$this->_img_optm_instance->rm_bkup() ;
+		$this->__img_optm->rm_bkup();
 	}
 
 
