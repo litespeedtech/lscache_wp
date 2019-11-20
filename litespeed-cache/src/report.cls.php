@@ -33,7 +33,7 @@ class Report extends Base
 		switch ( $type ) {
 
 			case self::TYPE_SEND_REPORT :
-				$instance->_post_env() ;
+				$instance->post_env() ;
 				break ;
 
 			default:
@@ -47,9 +47,9 @@ class Report extends Base
 	 * post env report number to ls center server
 	 *
 	 * @since  1.6.5
-	 * @access private
+	 * @access public
 	 */
-	private function _post_env()
+	public function post_env()
 	{
 		$report_con = $this->generate_environment_report() ;
 		$data = array(
