@@ -324,12 +324,6 @@ class Admin_Display extends Base
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
-		// If on Dashboard `General Settings` page, append getIP link
-		global $pagenow;
-		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed' ) {
-			$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/' ;
-		}
-
 		if ( $localize_data ) {
 			wp_localize_script(Core::PLUGIN_NAME, 'litespeed_data', $localize_data ) ;
 		}
