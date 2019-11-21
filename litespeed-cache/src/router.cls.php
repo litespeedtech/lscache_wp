@@ -312,7 +312,7 @@ class Router extends Instance
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI ) ;
+			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI ) ;
 		}
 		return self::$_esi_enabled ;
 	}

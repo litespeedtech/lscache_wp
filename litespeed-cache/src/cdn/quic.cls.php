@@ -58,7 +58,7 @@ class Quic extends Instance
 		$options[ '_rest' ] = rest_get_url_prefix() ;
 
 		// Add server env vars
-		$options[ '_server' ] = Conf::get_instance()->server_vars() ;
+		$options[ '_server' ] = Base::get_instance()->server_vars() ;
 
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() ) ;

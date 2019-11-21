@@ -8,8 +8,6 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-Utility::compatibility() ;
-
 class Crawler_Engine
 {
 	private $_baseUrl ;
@@ -628,6 +626,7 @@ class Crawler_Engine
 				$options[CURLOPT_HTTPHEADER][] = "Host: " . $parsed_url['host'] ;
 				// replace domain with direct ip
 				$parsed_url['host'] = $this->_domain_ip ;
+				Utility::compatibility() ;
 				$this->_baseUrl = http_build_url($parsed_url) ;
 			}
 		}

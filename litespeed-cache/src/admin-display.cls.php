@@ -118,7 +118,105 @@ class Admin_Display extends Base
 
 		wp_register_script( Core::PLUGIN_NAME . '-lib-vue', LSWCP_PLUGIN_URL . 'assets/js/vue.min.js', array(), Core::VER, false ) ;
 		wp_enqueue_script( Core::PLUGIN_NAME . '-lib-vue' ) ;
+	}
 
+	/**
+	 * Update latest release news for v3.0
+	 *
+	 * @since 2.9.9.1
+	 */
+	private function _fetch_recommended()
+	{
+		$news = get_option( 'litespeed-recommended', array() );
+		if ( ! empty( $news[ 'utime' ] ) && time() - $news[ 'utime' ] < 86400*1 ) {
+			return $news;
+		}
+
+		$news[ 'utime' ] = time();
+		update_option( 'litespeed-recommended', $news );
+
+		$data = LiteSpeed_Cache_Admin_API::post( 'news' );
+		if ( empty( $data[ 'id' ] ) ) {
+			return $news;
+		}
+
+		// Save news
+		if ( empty( $news[ 'id' ] ) || $news[ 'id' ] != $data[ 'id' ] ) {
+			$news[ 'id' ] = $data[ 'id' ];
+			$news[ 'plugin' ] = ! empty( $data[ 'plugin' ] ) ? $data[ 'plugin' ] : '';
+			$news[ 'title' ] = ! empty( $data[ 'title' ] ) ? $data[ 'title' ] : '';
+			$news[ 'content' ] = ! empty( $data[ 'content' ] ) ? $data[ 'content' ] : '';
+			$news[ 'zip' ] = ! empty( $data[ 'zip' ] ) ? $data[ 'zip' ] : '';
+			$news[ 'new' ] = 1;
+
+			if ( $news[ 'plugin' ] ) {
+				$plugin_info = Activation::get_instance()->dash_notifier_get_plugin_info( $news[ 'plugin' ] );
+				if ( $plugin_info && ! empty( $plugin_info->name ) ) {
+					$news[ 'plugin_name' ] = $plugin_info->name;
+				}
+			}
+
+			update_option( 'litespeed-recommended', $news );
+		}
+
+		return $news;
+	}
+
+	/**
+	 * Load latest news
+	 *
+	 * @since 2.9.9.1
+	 */
+	private function _show_recommended()
+	{
+		// Fetch v3.0 info to show
+		$news = $this->_fetch_recommended();
+		if ( ! $news || empty( $news[ 'new' ] ) ) {
+			return;
+		}
+
+		if ( ! empty( $news[ 'plugin' ] ) && Activation::get_instance()->dash_notifier_is_plugin_active( $news[ 'plugin' ] ) ) {
+			return;
+		}
+
+		?>
+		<div class="litespeed-wrap notice notice-success litespeed-banner-promo-full">
+
+			<div class="litespeed-banner-promo-content">
+				<h3 class="litespeed-banner-title litespeed-top15"><?php echo $news[ 'title' ] ; ?></h3>
+				<div class="litespeed-banner-description">
+					<div class="litespeed-banner-description-padding-right-15">
+						<p class="litespeed-banner-desciption-content">
+							<?php echo $news[ 'content' ]; ?>
+						</p>
+					</div>
+					<div class="litespeed-row-flex litespeed-banner-description">
+						<div class="litespeed-banner-description-padding-right-15">
+							<?php if ( ! empty( $news[ 'plugin' ] ) ) : ?>
+							<?php $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => $news[ 'plugin' ] ) ); ?>
+							<a href="<?php echo $install_link ; ?>" class="litespeed-btn-success litespeed-btn-mini">
+								 <?php echo __( 'Install', 'litespeed-cache' ); ?>
+								 <?php if ( ! empty( $news[ 'plugin_name' ] ) ) echo $news[ 'plugin_name' ]; ?>
+							</a>
+							<?php endif; ?>
+							<?php if ( ! empty( $news[ 'zip' ] ) ) : ?>
+							<?php $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_INSTALL_ZIP ); ?>
+							<a href="<?php echo $install_link ; ?>" class="litespeed-btn-success litespeed-btn-mini">
+								 <?php echo __( 'Install Beta Version', 'litespeed-cache' ); ?>
+							</a>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<?php $dismiss_url = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_DISMISS_RECOMMENDED ) ; ?>
+				<span class="screen-reader-text">Dismiss this notice.</span>
+				<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
@@ -449,12 +547,21 @@ class Admin_Display extends Base
 		}
 		self::delete_option( self::DB_MSG ) ;
 
+		if( empty($_GET['page']) || (substr($_GET['page'], 0, 8) !== 'lscache-' && $_GET['page'] !== 'litespeedcache') ) {
+			global $pagenow;
+			if ( $pagenow != 'plugins.php' && $pagenow != 'index.php' ) {
+				return;
+			}
+		}
+
 		/**
 		 * Check promo msg first
 		 * @since 2.9
 		 */
 		GUI::get_instance()->show_promo() ;
 
+		// Show version news
+		$this->_show_recommended();
 	}
 
 	/**

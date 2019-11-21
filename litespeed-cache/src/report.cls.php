@@ -5,7 +5,7 @@
  *
  * @since      1.1.0
  * @package    LiteSpeed
- * @subpackage LiteSpeed/inc
+ * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed ;
@@ -52,8 +52,13 @@ class Report extends Base
 	public function post_env()
 	{
 		$report_con = $this->generate_environment_report() ;
+
+		// Generate link
+		$link = ! empty( $_POST[ 'link' ] ) ? $_POST[ 'link' ] : '';
+
 		$data = array(
 			'env' => $report_con,
+			'link' => $link,
 		) ;
 
 		$json = Cloud::post( Cloud::SVC_ENV_REPORT, $data ) ;
@@ -75,37 +80,11 @@ class Report extends Base
 	}
 
 	/**
-	 * Get env report number from db
-	 *
-	 * @since  1.6.4
-	 * @access public
-	 * @return array
-	 */
-	public function get_env_ref()
-	{
-		$summary = self::get_summary() ;
-
-		if ( ! is_array( $summary ) ) {
-			return array(
-				'num'	=> '-',
-				'dateline'	=> '-',
-			) ;
-		}
-
-		$summary[ 'dateline' ] = date( 'm/d/Y H:i:s', $summary[ 'dateline' ] ) ;
-
-		return $summary ;
-	}
-
-	/**
 	 * Gathers the environment details and creates the report.
 	 * Will write to the environment report file.
 	 *
 	 * @since 1.0.12
 	 * @access public
-	 * @param mixed $options Array of options to output. If null, will skip
-	 * the options section.
-	 * @return string The built report.
 	 */
 	public function generate_environment_report($options = null)
 	{
@@ -182,11 +161,6 @@ class Report extends Base
 	 * Builds the environment report buffer with the given parameters
 	 *
 	 * @access private
-	 * @param array $server - server variables
-	 * @param array $options - cms options
-	 * @param array $extras - cms specific attributes
-	 * @param array $htaccess_paths - htaccess paths to check.
-	 * @return string The Environment Report buffer.
 	 */
 	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
 	{
@@ -199,13 +173,13 @@ class Report extends Base
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
-		$server_vars = array_merge( $server_vars, Conf::get_instance()->server_vars() ) ;
+		$server_vars = array_merge( $server_vars, Base::get_instance()->server_vars() ) ;
 
-		$buf = $this->format_report_section('Server Variables', $server_vars) ;
+		$buf = $this->_format_report_section('Server Variables', $server_vars) ;
 
-		$buf .= $this->format_report_section('Wordpress Specific Extras', $extras) ;
+		$buf .= $this->_format_report_section('Wordpress Specific Extras', $extras) ;
 
-		$buf .= $this->format_report_section('LSCache Plugin Options', $options) ;
+		$buf .= $this->_format_report_section('LSCache Plugin Options', $options) ;
 
 		if ( empty($htaccess_paths) ) {
 			return $buf ;
@@ -228,16 +202,12 @@ class Report extends Base
 	}
 
 	/**
-	 * Creates a part of the environment report based on a section header
-	 * and an array for the section parameters.
+	 * Creates a part of the environment report based on a section header and an array for the section parameters.
 	 *
 	 * @since 1.0.12
 	 * @access private
-	 * @param string $section_header The section heading
-	 * @param array $section An array of information to output
-	 * @return string The created report block.
 	 */
-	private function format_report_section( $section_header, $section )
+	private function _format_report_section( $section_header, $section )
 	{
 		$tab = '    ' ; // four spaces
 

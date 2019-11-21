@@ -536,7 +536,7 @@ class Control extends Instance
 	{
 		$esi_hdr = '' ;
 		// Fix cli `uninstall --deactivate` fatal err
-		if ( LSWCP_ESI_SUPPORT && class_exists( 'LiteSpeed\ESI' ) && ESI::has_esi() ) {
+		if ( ESI::has_esi() ) {
 			$esi_hdr = ',esi=on' ;
 		}
 

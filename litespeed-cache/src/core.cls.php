@@ -224,7 +224,7 @@ class Core extends Instance
 	{
 		Router::get_instance()->is_crawler_role_simulation() ;
 
-		if ( $result = $this->__cfg->in_optm_exc_roles() ) {
+		if ( ! is_admin() && $result = $this->__cfg->in_optm_exc_roles() ) {
 			Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result ) ;
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}

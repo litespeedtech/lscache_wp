@@ -13,6 +13,8 @@ defined( 'WPINC' ) || exit ;
 
 class Base extends Instance
 {
+	protected static $_instance ;
+
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;

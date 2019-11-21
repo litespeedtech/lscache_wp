@@ -21,6 +21,7 @@ $third_cls = array(
 	'Avada',
 	'BBPress',
 	'Divi_Theme_Builder',
+	'Elementor',
 	'Facetwp',
 	'Like_Dislike_Counter',
 	'Theme_My_Login',
