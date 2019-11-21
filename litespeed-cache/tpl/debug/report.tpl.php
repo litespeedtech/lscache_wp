@@ -41,8 +41,6 @@ $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_IN
 <p class="litespeed-desc">
 	<?php echo __( 'The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache' ); ?>
 	<br />
-	<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
-	<br />
 	<?php echo __('If you run into any issues, please refer to the report number in your support message.', 'litespeed-cache'); ?>
 </p>
 
@@ -51,9 +49,9 @@ $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_IN
 	<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
 
 	<p>
-		Link: <input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" />
+		Link: <input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" style="width:500px;" />
 		<?php if ( $has_pswdless_plugin ) : ?>
-			<a href="<?php echo admin_url( 'admin.php?page=lscache-report&dologin_gen_link=1' ); ?>"><?php echo __( 'Generate Passwordless Link for Current User', 'litespeed-cache' ) ; ?></a>
+			<a href="<?php echo admin_url( 'admin.php?page=litespeed-debug&dologin_gen_link=1' ); ?>"><?php echo __( 'Generate Passwordless Link for Current User', 'litespeed-cache' ) ; ?></a>
 		<?php else: ?>
 			<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __( 'Install DoLogin Security to Generate Passwordless Link', 'litespeed-cache' ) ; ?></a>
 		<?php endif; ?>
