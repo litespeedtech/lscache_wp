@@ -67,13 +67,15 @@ class Report extends Base
 			return ;
 		}
 
+		$num = ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--';
 		$summary = array(
-			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
+			'num'	=> $num,
 			'dateline'	=> time(),
 		) ;
 
 		self::save_summary( $summary ) ;
 
+		return $num;
 	}
 
 	/**

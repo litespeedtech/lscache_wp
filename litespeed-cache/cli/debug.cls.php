@@ -7,15 +7,15 @@ use LiteSpeed\Report;
 use WP_CLI;
 
 /**
- * Report API CLI
+ * Debug API CLI
  */
-class Report
+class Debug
 {
 	private $__report;
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Report init' );
+		Log::debug( 'CLI_Debug init' );
 
 		$this->__report = Report::get_instance();
 	}
@@ -28,12 +28,13 @@ class Report
 	 * ## EXAMPLES
 	 *
 	 *     # Send env report to LiteSpeed
-	 *     $ wp litespeed-report send
+	 *     $ wp litespeed-debug send
 	 *
 	 */
 	public function send()
 	{
-		$this->__report->post_env();
+		$num = $this->__report->post_env();
+		WP_CLI::success( 'Report Number = ' . $num );
 	}
 
 }
