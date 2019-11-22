@@ -21,15 +21,31 @@ class Cloud extends Base
 	const SVC_CCSS 				= 'ccss' ;
 	const SVC_PLACEHOLDER 		= 'placeholder' ;
 	const SVC_LQIP 				= 'lqip' ;
-	const SVC_ENV_REPORT		= 'env_report' ;
 	const SVC_IMG_OPTM			= 'img_optm' ;
 	const SVC_PAGESCORE			= 'pagescore' ;
 	const SVC_CDN				= 'cdn' ;
+
+	const API_NEWS 			= 'wp/news';
+	const API_REPORT		= 'wp/report' ;
+	const API_VER			= 'wp/ver' ;
+	const API_BETA_TEST		= 'wp/beta_test' ;
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
+		self::API_NEWS,
+		self::API_REPORT,
+		self::API_VER,
+		self::API_BETA_TEST,
+	);
+
+	// No api key needed for these services
+	private static $_PUB_SVC_SET = array(
+		self::API_NEWS,
+		self::API_REPORT,
+		self::API_VER,
+		self::API_BETA_TEST,
 	);
 
 	public static $SERVICES = array(
@@ -58,6 +74,67 @@ class Cloud extends Base
 	{
 		$this->_api_key = Conf::val( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
+	}
+
+	/**
+	 * Show latest news
+	 *
+	 * @since 3.0
+	 */
+	public function news()
+	{
+		$this->_update_news();
+
+		if ( empty( $this->_summary[ 'news.new' ] ) ) {
+			return;
+		}
+
+		if ( ! empty( $this->_summary[ 'news.plugin' ] ) && Activation::get_instance()->dash_notifier_is_plugin_active( $this->_summary[ 'news.plugin' ] ) ) {
+			return;
+		}
+
+		require_once LSCWP_DIR . 'tpl/banner/cloud_news.tpl.php' ;
+	}
+
+	/**
+	 * Update latest news
+	 *
+	 * @since 2.9.9.1
+	 */
+	private function _update_news()
+	{
+		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 3 ) {
+			return;
+		}
+
+		$this->_summary[ 'news.utime' ] = time();
+		self::save_summary( $this->_summary );
+
+		$data = self::get( self::API_NEWS );
+		if ( empty( $data[ 'id' ] ) ) {
+			return;
+		}
+
+		// Save news
+		if ( ! empty( $this->_summary[ 'news.id' ] ) && $this->_summary[ 'news.id' ] == $data[ 'id' ] ) {
+			return;
+		}
+
+		$this->_summary[ 'news.id' ] = $data[ 'id' ];
+		$this->_summary[ 'news.plugin' ] = ! empty( $data[ 'plugin' ] ) ? $data[ 'plugin' ] : '';
+		$this->_summary[ 'news.title' ] = ! empty( $data[ 'title' ] ) ? $data[ 'title' ] : '';
+		$this->_summary[ 'news.content' ] = ! empty( $data[ 'content' ] ) ? $data[ 'content' ] : '';
+		$this->_summary[ 'news.zip' ] = ! empty( $data[ 'zip' ] ) ? $data[ 'zip' ] : '';
+		$this->_summary[ 'news.new' ] = 1;
+
+		if ( $this->_summary[ 'news.plugin' ] ) {
+			$plugin_info = Activation::get_instance()->dash_notifier_get_plugin_info( $this->_summary[ 'news.plugin' ] );
+			if ( $plugin_info && ! empty( $plugin_info->name ) ) {
+				$this->_summary[ 'news.plugin_name' ] = $plugin_info->name;
+			}
+		}
+
+		self::save_summary( $this->_summary );
 	}
 
 	/**
@@ -136,6 +213,10 @@ class Cloud extends Base
 	 */
 	public function detect_cloud( $service, $force = false )
 	{
+		if ( in_array( $service, self::$CENTER_SVC_SET ) ) {
+			return self::CLOUD_SERVER;
+		}
+
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
 			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 30 ) {
@@ -271,12 +352,6 @@ class Cloud extends Base
 	 */
 	private function _maybe_cloud( $service_tag )
 	{
-		if ( ! $this->_api_key ) {
-			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
-			Admin_Display::error( $msg );
-			return false;
-		}
-
 		// Limit frequent unfinished request to 5min
 		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
 			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 300 - time();
@@ -287,6 +362,16 @@ class Cloud extends Base
 				Admin_Display::error( $msg );
 				return false;
 			}
+		}
+
+		if ( in_array( $service_tag, self::$_PUB_SVC_SET ) ) {
+			return true;
+		}
+
+		if ( ! $this->_api_key ) {
+			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+			Admin_Display::error( $msg );
+			return false;
 		}
 
 		return true;
@@ -321,14 +406,9 @@ class Cloud extends Base
 			return;
 		}
 
-		if ( in_array( $service, self::$CENTER_SVC_SET ) ) {
-			$server = self::CLOUD_SERVER;
-		}
-		else {
-			$server = $this->detect_cloud( $service );
-			if ( ! $server ) {
-				return;
-			}
+		$server = $this->detect_cloud( $service );
+		if ( ! $server ) {
+			return;
 		}
 
 		$url = $server . '/' . $service;

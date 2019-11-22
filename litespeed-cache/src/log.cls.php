@@ -104,21 +104,16 @@ class Log extends Instance
 	 */
 	private function _package_zip( $commit )
 	{
-		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/client.package_zip?commit=' . $commit ;
+		$data = array(
+			'commit'	=> $commit,
+		);
+		$res = Cloud::get( Cloud::API_BETA_TEST, $data );
 
-		$response = wp_remote_get( $url, array( 'timeout' => 120 ) ) ;
-		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+		if ( empty( $res[ 'zip' ] ) ) {
 			return false ;
 		}
 
-		$url = json_decode( $response[ 'body' ], true ) ;
-
-		if ( empty( $url[ 'zip' ] ) ) {
-			return false ;
-		}
-
-		return $url[ 'zip' ] ;
+		return $res[ 'zip' ] ;
 	}
 
 	/**

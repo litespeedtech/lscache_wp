@@ -109,19 +109,20 @@ class Utility extends Instance
 	 */
 	public static function version_check( $src = false )
 	{
-		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . Core::VER . '&v2=' . ( defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '' ) . '&src=' . $src ;
-
+		$req_data = array(
+			'v'		=> defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '',
+			'src'	=> $src,
+		);
 		if ( defined( 'LITESPEED_ERR' ) ) {
-			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
+			$req_data[ 'err' ] = base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
+		}
+		$data = Cloud::get( Cloud::API_VER, $req_data );
+
+		if ( empty( $data[ 'ver' ] ) ) {
+			return false;
 		}
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
-		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
-			return false ;
-		}
-
-		return $response[ 'body' ] ;
+		return $data[ 'ver' ] ;
 	}
 
 	/**

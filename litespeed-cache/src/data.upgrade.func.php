@@ -536,6 +536,8 @@ function litespeed_update_3_0( $ver )
 		$wpdb->query( $q ) ;
 	}
 
+	delete_option( 'litespeed-recommended' ) ;
+
 	add_option( 'litespeed.conf._version', '3.0' ) ;
 
 }

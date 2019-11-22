@@ -61,12 +61,9 @@ class Report extends Base
 			'link' => $link,
 		) ;
 
-		$json = Cloud::post( Cloud::SVC_ENV_REPORT, $data ) ;
+		$json = Cloud::post( Cloud::API_REPORT, $data ) ;
 
 		if ( ! is_array( $json ) ) {
-			Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
-			$msg = __( 'Failed to push to LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
-			Admin_Display::error( $msg ) ;
 			return ;
 		}
 
