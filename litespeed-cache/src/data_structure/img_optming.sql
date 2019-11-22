@@ -1,4 +1,4 @@
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `optm_status` tinyint(4) NOT NULL DEFAULT '0',
   `src` varchar(1000) NOT NULL DEFAULT '',

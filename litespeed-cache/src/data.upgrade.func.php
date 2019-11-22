@@ -529,6 +529,7 @@ function litespeed_update_3_0( $ver )
 				DROP COLUMN `target_saved`,
 				DROP COLUMN `webp_saved`,
 				DROP COLUMN `server_info`,
+				MODIFY COLUMN `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				MODIFY COLUMN `optm_status` tinyint(4) NOT NULL DEFAULT 0,
 				MODIFY COLUMN `src` text COLLATE utf8mb4_unicode_ci NOT NULL
 			';
