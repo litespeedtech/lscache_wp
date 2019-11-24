@@ -442,11 +442,15 @@ class Admin_Display extends Base
 		}
 		self::delete_option( self::DB_MSG ) ;
 
-		if( empty($_GET['page']) || (substr($_GET['page'], 0, 8) !== 'lscache-' && $_GET['page'] !== 'litespeedcache') ) {
+		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed-' ) ) {
 			global $pagenow;
-			if ( $pagenow != 'plugins.php' && $pagenow != 'index.php' ) {
+			if ( $pagenow != 'plugins.php' ) { // && $pagenow != 'index.php'
 				return;
 			}
+		}
+
+		if ( ! Conf::val( Base::O_NEWS ) ) {
+			return;
 		}
 
 		/**

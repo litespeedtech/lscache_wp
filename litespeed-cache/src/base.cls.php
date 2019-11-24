@@ -29,6 +29,7 @@ class Base extends Instance
 	const O_AUTO_UPGRADE 	= 'auto_upgrade' ;
 	const O_API_KEY 		= 'api_key' ;
 	const O_SERVER_IP 		= 'server_ip' ;
+	const O_NEWS 			= 'news' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
@@ -340,6 +341,7 @@ class Base extends Instance
 		self::O_AUTO_UPGRADE 	=> false,
 		self::O_API_KEY 		=> '',
 		self::O_SERVER_IP 		=> '',
+		self::O_NEWS 			=> false,
 
 		// Cache
 		self::O_CACHE 					=> false,

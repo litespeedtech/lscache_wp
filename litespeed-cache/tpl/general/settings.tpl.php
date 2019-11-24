@@ -62,6 +62,19 @@ $this->form_action() ;
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = Base::O_NEWS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Turn this option ON to get latest news automatically, including hotfix, new releases, available beta version, promotions.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
 
 <?php
