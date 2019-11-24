@@ -32,6 +32,8 @@ class GUI extends Base
 	const WHM_MSG = 'lscwp_whm_install' ;
 	const WHM_MSG_VAL = 'whm_install' ;
 
+	protected $_summary;
+
 	/**
 	 * Init
 	 *
@@ -40,6 +42,8 @@ class GUI extends Base
 	 */
 	protected function __construct()
 	{
+		$this->_summary = self::get_summary();
+
 		if ( ! is_admin() ) {
 			Log::debug2( '[GUI] init' ) ;
 			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
@@ -178,24 +182,22 @@ class GUI extends Base
 					break ;
 				}
 
-				$summary = self::get_summary() ;
-
 				defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
 				// Forever dismiss
 				if ( ! empty( $_GET[ 'done' ] ) ) {
-					$summary[ $promo_tag ] = 'done' ;
+					$_instance->_summary[ $promo_tag ] = 'done' ;
 				}
 				elseif ( ! empty( $_GET[ 'later' ] ) ) {
 					// Delay the banner to half year later
-					$summary[ $promo_tag ] = time() + 86400 * 180 ;
+					$_instance->_summary[ $promo_tag ] = time() + 86400 * 180 ;
 				}
 				else {
 					// Update welcome banner to 30 days after
-					$summary[ $promo_tag ] = time() + 86400 * 30 ;
+					$_instance->_summary[ $promo_tag ] = time() + 86400 * 30 ;
 				}
 
-				self::save_summary( $summary ) ;
+				self::save_summary() ;
 
 				break ;
 
@@ -295,8 +297,6 @@ class GUI extends Base
 			return false ;
 		}
 
-		$_summary = self::get_summary() ;
-
 		foreach ( $this->_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
 
@@ -305,14 +305,14 @@ class GUI extends Base
 			}
 
 			// first time check
-			if ( empty( $_summary[ $promo_tag ] ) ) {
-				$_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
-				self::save_summary( $_summary ) ;
+			if ( empty( $this->_summary[ $promo_tag ] ) ) {
+				$this->_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
+				self::save_summary() ;
 
 				continue ;
 			}
 
-			$promo_timestamp = $_summary[ $promo_tag ] ;
+			$promo_timestamp = $this->_summary[ $promo_tag ] ;
 
 			// was ticked as done
 			if ( $promo_timestamp == 'done' ) {
@@ -355,10 +355,8 @@ class GUI extends Base
 	 */
 	private function _enqueue_score_req_ajax()
 	{
-		$_summary = self::get_summary() ;
-
-		$_summary[ 'score.last_check' ] = time() ;
-		self::save_summary( $_summary ) ;
+		$this->_summary[ 'score.last_check' ] = time() ;
+		self::save_summary() ;
 
 		include_once LSCWP_DIR . "tpl/banner/ajax.php" ;
 	}

@@ -56,7 +56,7 @@ class Img_Optm extends Base
 	private $_cron_ran = false;
 
 	private $__media;
-	private $_summary;
+	protected $_summary;
 
 	/**
 	 * Init
@@ -500,7 +500,7 @@ class Img_Optm extends Base
 		$wpdb->query( $q );
 
 		$this->_summary[ 'last_requested' ] = time();
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 
 		return count( $json[ 'ids' ] );
 	}
@@ -522,7 +522,7 @@ class Img_Optm extends Base
 		// Validate key
 		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
 			$this->_summary[ 'notify_ts_err' ] = time();
-			self::save_summary( $this->_summary ) ;
+			self::save_summary();
 			return Cloud::err( 'wrong_key' );
 		}
 
@@ -635,7 +635,7 @@ class Img_Optm extends Base
 				$last_log_pid = $v->post_id;
 			}
 
-			self::save_summary( $this->_summary );
+			self::save_summary();
 
 			// Mark need_pull tag for cron
 			self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED );
@@ -864,7 +864,7 @@ class Img_Optm extends Base
 			$this->_summary[ 'img_taken' ] = 0;
 		}
 		$this->_summary[ 'img_taken' ] += $total_pulled_ori + $total_pulled_webp;
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		// Manually running needs to roll back timestamp for next running
 		if ( $manual ) {
@@ -1195,7 +1195,7 @@ class Img_Optm extends Base
 		}
 
 		$this->_summary[ 'bk_summary' ][ 'date' ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		Log::debug( '[Img_Optm] _calc_bkup total: ' . $this->_summary[ 'bk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'bk_summary' ][ 'sum' ] );
 
@@ -1257,7 +1257,7 @@ class Img_Optm extends Base
 		}
 
 		$this->_summary[ 'rmbk_summary' ][ 'date' ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		Log::debug( '[Img_Optm] rm_bkup total: ' . $this->_summary[ 'rmbk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'rmbk_summary' ][ 'sum' ] );
 
@@ -1401,7 +1401,7 @@ class Img_Optm extends Base
 		}
 
 		$this->_summary[ 'last_pull' ] = $ts;
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		$this->_cron_ran = true;
 	}

@@ -16,7 +16,7 @@ class Import extends Base
 	protected static $_instance ;
 
 	private $__cfg ;
-	private $_summary;
+	protected $_summary;
 
 	const TYPE_IMPORT = 'import' ;
 	const TYPE_EXPORT = 'export' ;
@@ -58,7 +58,7 @@ class Import extends Base
 		// Update log
 		$this->_summary[ 'export_file' ] = $filename ;
 		$this->_summary[ 'export_time' ] = time() ;
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		Log::debug( 'Import: Saved to ' . $filename ) ;
 
@@ -98,7 +98,7 @@ class Import extends Base
 
 		// Update log
 		$this->_summary[ 'import_time' ] = time() ;
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		try {
 			$data = json_decode( base64_decode( $data ), true ) ;

@@ -17,7 +17,7 @@ class CSS extends Base
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
-	private $_summary;
+	protected $_summary;
 
 	/**
 	 * Init
@@ -88,7 +88,7 @@ class CSS extends Base
 		// Clear CCSS in queue too
 		$this->_summary[ 'queue' ] = array() ;
 		$this->_summary[ 'curr_request' ] = 0 ;
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 
 		Log::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
@@ -137,7 +137,7 @@ class CSS extends Base
 			) ;// Current UA will be used to request
 			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
-			self::save_summary( $this->_summary ) ;
+			self::save_summary();
 			return '' ;
 		}
 
@@ -209,7 +209,7 @@ class CSS extends Base
 
 		// Update css request status
 		$this->_summary[ 'curr_request' ] = time() ;
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 
 		// Generate critical css
 		$data = array(
@@ -244,7 +244,7 @@ class CSS extends Base
 		$this->_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
 		unset( $this->_summary[ 'queue' ][ $ccss_type ] ) ;
 
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 
 		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 

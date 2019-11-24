@@ -63,7 +63,7 @@ class Cloud extends Base
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 
 	private $_api_key;
-	private $_summary;
+	protected $_summary;
 
 	/**
 	 * Init
@@ -108,7 +108,7 @@ class Cloud extends Base
 		}
 
 		$this->_summary[ 'news.utime' ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		$data = self::get( self::API_NEWS );
 		if ( empty( $data[ 'id' ] ) ) {
@@ -134,7 +134,7 @@ class Cloud extends Base
 			}
 		}
 
-		self::save_summary( $this->_summary );
+		self::save_summary();
 	}
 
 	/**
@@ -200,7 +200,7 @@ class Cloud extends Base
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
 
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		return $this->_summary;
 	}
@@ -281,7 +281,7 @@ class Cloud extends Base
 		// store data into option locally
 		$this->_summary[ 'server.' . $service ] = $closest;
 		$this->_summary[ 'server_date.' . $service ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		return $this->_summary[ 'server.' . $service ];
 	}
@@ -337,7 +337,7 @@ class Cloud extends Base
 		Log::debug( '[Cloud] getting from : ' . $url );
 
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => false ) );
 
@@ -429,7 +429,7 @@ class Cloud extends Base
 		 * @since 1.6.4
 		 */
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => false ) );
 
@@ -539,7 +539,7 @@ class Cloud extends Base
 					}
 				}
 			}
-			self::save_summary( $this->_summary );
+			self::save_summary();
 			unset( $json[ '_carry_on' ] );
 		}
 
@@ -562,7 +562,7 @@ class Cloud extends Base
 
 		$this->_summary[ 'last_request.' . $service_tag ] = $this->_summary[ 'curr_request.' . $service_tag ];
 		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
-		self::save_summary( $this->_summary );
+		self::save_summary();
 
 		if ( $json ) {
 			Log::debug2( '[Cloud] response ok', $json );

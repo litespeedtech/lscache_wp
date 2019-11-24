@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
+$last_check = empty( $this->_summary[ 'score.last_check' ] ) ? 0 : $this->_summary[ 'score.last_check' ] ;
 // Check once per 10 days
 if ( time() - $last_check > 864000 ) {
 	// Generate the ajax code to check score in separate request
@@ -11,11 +11,11 @@ if ( time() - $last_check > 864000 ) {
 	return ;
 }
 
-if ( ! isset( $_summary[ 'score.data' ] ) ) {
+if ( ! isset( $this->_summary[ 'score.data' ] ) ) {
 	return ;
 }
 
-$_score = $_summary[ 'score.data' ] ;
+$_score = $this->_summary[ 'score.data' ] ;
 
 if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_cache' ] )  || empty( $_score[ 'score_before_optm' ] )  || empty( $_score[ 'score_after_optm' ] ) ) {
 	return ;

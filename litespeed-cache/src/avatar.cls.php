@@ -21,6 +21,7 @@ class Avatar extends Base
 	private $_tb ;
 
 	private $_avatar_realtime_gen_dict = array() ;
+	protected $_summary;
 
 	/**
 	 * Init
@@ -42,6 +43,8 @@ class Avatar extends Base
 		$this->_conf_cache_ttl = Conf::val( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) ) ;
+
+		$this->_summary = self::get_summary();
 	}
 
 	/**
@@ -118,10 +121,8 @@ class Avatar extends Base
 			return $url ;
 		}
 
-		$req_summary = self::get_summary() ;
-
 		// Send request
-		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+		if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
 			Log::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url ) ;
 			return $url ;
 		}
@@ -233,7 +234,7 @@ class Avatar extends Base
 
 		// For cron, need to check request interval too
 		if ( ! $force ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				Log::debug( '[Avatar] curr_request too close' ) ;
 				return ;
 			}
@@ -267,13 +268,11 @@ class Avatar extends Base
 
 		// Record the data
 
-		$req_summary = self::get_summary() ;
-
 		$file = $this->_realpath( $url ) ;
 
 		// Update request status
-		$req_summary[ 'curr_request' ] = time() ;
-		self::save_summary( $req_summary ) ;
+		$this->_summary[ 'curr_request' ] = time() ;
+		self::save_summary() ;
 
 		// Generate
 		if ( ! self::has_cache() ) {
@@ -292,11 +291,10 @@ class Avatar extends Base
 		}
 
 		// Save summary data
-		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
-		$req_summary[ 'curr_request' ] = 0 ;
-
-		self::save_summary( $req_summary ) ;
+		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ] ;
+		$this->_summary[ 'curr_request' ] = 0 ;
+		self::save_summary() ;
 
 		// Update DB
 		$md5 = md5( $url ) ;

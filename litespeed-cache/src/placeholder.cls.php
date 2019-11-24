@@ -27,7 +27,7 @@ class Placeholder extends Base
 	private $_placeholder_resp_dict = array() ;
 	private $_ph_queue = array() ;
 
-	private $_summary;
+	protected $_summary;
 
 	/**
 	 * Init
@@ -232,7 +232,7 @@ class Placeholder extends Base
 
 		Log::debug( '[Placeholder] Added placeholder queue' ) ;
 
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 		return $tmp_placeholder ;
 
 	}
@@ -405,7 +405,7 @@ class Placeholder extends Base
 		else {
 			// Update request status
 			$this->_summary[ 'curr_request' ] = time() ;
-			self::save_summary( $this->_summary ) ;
+			self::save_summary();
 
 			// Generate LQIP
 			if ( $this->_conf_placeholder_lqip ) {
@@ -467,7 +467,7 @@ class Placeholder extends Base
 			unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
 		}
 
-		self::save_summary( $this->_summary ) ;
+		self::save_summary();
 
 		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
 

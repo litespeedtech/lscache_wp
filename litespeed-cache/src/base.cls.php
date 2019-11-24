@@ -1023,8 +1023,12 @@ class Base extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function save_summary( $data )
+	public static function save_summary( $data = null )
 	{
+		if ( $data === null ) {
+			$data = static::get_instance()->_summary;
+		}
+
 		self::update_option( '_summary', $data ) ;
 	}
 

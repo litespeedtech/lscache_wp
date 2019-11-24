@@ -18,26 +18,26 @@ if ( ! isset( $current->response[ Core::PLUGIN_FILE ] ) ) {
 	return ;
 }
 
-$last_check = empty( $_summary[ 'new_version.last_check' ] ) ? 0 : $_summary[ 'new_version.last_check' ] ;
+$last_check = empty( $this->_summary[ 'new_version.last_check' ] ) ? 0 : $this->_summary[ 'new_version.last_check' ] ;
 // Check once in a half day
 if ( time() - $last_check > 43200 ) {
-	$_summary[ 'new_version.last_check' ] = time() ;
-	Admin_Display::save_summary( $_summary ) ;
+	$this->_summary[ 'new_version.last_check' ] = time() ;
+	Admin_Display::save_summary( $this->_summary ) ;
 
 	// Detect version
 	$auto_v = Utility::version_check( 'new_version_banner' ) ;
-	$_summary[ 'new_version.v' ] = $auto_v ;
-	Admin_Display::save_summary( $_summary ) ;
+	$this->_summary[ 'new_version.v' ] = $auto_v ;
+	Admin_Display::save_summary( $this->_summary ) ;
 	// After detect, don't show, just return and show next time
 	return ;
 }
 
-if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
+if ( ! isset( $this->_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 
 // Check if current version is newer than auto_v or not
-if ( API::v( $_summary[ 'new_version.v' ] ) ) {
+if ( API::v( $this->_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 
@@ -58,7 +58,7 @@ if ( $check_only ) {
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-desciption-content">
-					<?php echo sprintf( __( 'New release %s is available now.', 'litespeed-cache' ), 'v' . $_summary[ 'new_version.v' ] ) ; ?>
+					<?php echo sprintf( __( 'New release %s is available now.', 'litespeed-cache' ), 'v' . $this->_summary[ 'new_version.v' ] ) ; ?>
 				</p>
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
