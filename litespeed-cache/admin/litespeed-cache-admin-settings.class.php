@@ -420,6 +420,8 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
+		$id = LiteSpeed_Cache_Config::OPT_NEWS ;
+		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 	}
 
 	/**

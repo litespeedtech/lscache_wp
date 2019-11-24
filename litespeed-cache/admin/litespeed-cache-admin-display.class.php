@@ -625,9 +625,13 @@ class LiteSpeed_Cache_Admin_Display
 
 		if( empty($_GET['page']) || (substr($_GET['page'], 0, 8) !== 'lscache-' && $_GET['page'] !== 'litespeedcache') ) {
 			global $pagenow;
-			if ( $pagenow != 'plugins.php' && $pagenow != 'index.php' ) {
+			if ( $pagenow != 'plugins.php' ) { //  && $pagenow != 'index.php'
 				return;
 			}
+		}
+
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_NEWS ) ) {
+			return;
 		}
 
 		/**
