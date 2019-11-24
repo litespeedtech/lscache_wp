@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.9.1
+Stable tag: 2.9.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -290,6 +290,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.9.2 - Nov 24 2019 =
+* 🌱<strong>GUI</strong>: New settings to limit News Feed to plugin page only.
 
 = 2.9.9.1 - Nov 18 2019 =
 * 🌱<strong>Env</strong>: Environment Report can now append a passwordless link for support access without wp-admin password.
