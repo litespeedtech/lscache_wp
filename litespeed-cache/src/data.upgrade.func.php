@@ -186,6 +186,7 @@ function litespeed_update_3_0( $ver )
 		'radio_select'				=> 'cache',
 		'hash'						=> 'hash',
 		'auto_upgrade'				=> 'auto_upgrade',
+		'news'						=> 'news',
 		'crawler_domain_ip' 		=> 'server_ip',
 
 		'esi_enabled'				=> 'esi',

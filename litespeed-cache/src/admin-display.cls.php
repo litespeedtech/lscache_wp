@@ -442,7 +442,7 @@ class Admin_Display extends Base
 		}
 		self::delete_option( self::DB_MSG ) ;
 
-		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed-' ) ) {
+		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed-' ) !== 0 ) {
 			global $pagenow;
 			if ( $pagenow != 'plugins.php' ) { // && $pagenow != 'index.php'
 				return;

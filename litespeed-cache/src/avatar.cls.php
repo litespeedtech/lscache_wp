@@ -161,18 +161,11 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function get_summary( $non_used = false )
+	public function queue_count()
 	{
 		global $wpdb ;
-
-		$summary = parent::get_summary() ;
-
-		$instance = self::get_instance() ;
-
-		$q = "SELECT count(*) FROM $instance->_tb WHERE dateline<" . ( time() - $instance->_conf_cache_ttl ) ;
-		$summary[ 'queue_count' ] = $wpdb->get_var( $q ) ;
-
-		return $summary ;
+		$q = "SELECT count(*) FROM $this->_tb WHERE dateline<" . ( time() - $this->_conf_cache_ttl ) ;
+		return $wpdb->get_var( $q ) ;
 	}
 
 	/**
@@ -226,24 +219,22 @@ class Avatar extends Base
 	{
 		global $wpdb ;
 
-		$req_summary = self::get_summary() ;
-		if ( ! $req_summary[ 'queue_count' ] ) {
+		$_instance = self::get_instance();
+		if ( ! $_instance->queue_count() ) {
 			Log::debug( '[Avatar] no queue' ) ;
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $force ) {
-			if ( ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
 				Log::debug( '[Avatar] curr_request too close' ) ;
 				return ;
 			}
 		}
 
-		$instance = self::get_instance() ;
-
-		$q = "SELECT url FROM $instance->_tb WHERE dateline<%d ORDER BY id DESC LIMIT %d" ;
-		$q = $wpdb->prepare( $q, array( time() - $instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
+		$q = "SELECT url FROM $_instance->_tb WHERE dateline < %d ORDER BY id DESC LIMIT %d" ;
+		$q = $wpdb->prepare( $q, array( time() - $_instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
 
 		$list = $wpdb->get_results( $q ) ;
 		Log::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
@@ -251,8 +242,7 @@ class Avatar extends Base
 		foreach ( $list as $v ) {
 			Log::debug( '[Avatar] cron job [url] ' . $v->url ) ;
 
-			self::get_instance()->_generate( $v->url ) ;
-
+			$_instance->_generate( $v->url );
 		}
 	}
 

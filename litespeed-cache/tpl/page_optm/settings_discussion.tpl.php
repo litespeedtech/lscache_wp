@@ -3,7 +3,7 @@ namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $last_generated = Avatar::get_summary() ;
-
+$avatar_queue = Avatar::get_instance()->queue_count();
 ?>
 
 <?php if ( Avatar::need_db() && ! Data::get_instance()->tb_exist( 'avatar' ) ) : ?>
@@ -51,11 +51,11 @@ $last_generated = Avatar::get_summary() ;
 						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_generated[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
 				<?php endif ; ?>
-				<?php if ( $last_generated[ 'queue_count' ] ) : ?>
+				<?php if ( $avatar_queue ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo __( 'Avatar list in queue waiting for update','litespeed-cache' ) ; ?>:
-							<?php echo $last_generated[ 'queue_count' ] ; ?>
+							<?php echo $avatar_queue ; ?>
 						</h4>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_AVATAR, Avatar::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
