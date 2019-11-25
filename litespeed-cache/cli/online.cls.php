@@ -62,11 +62,12 @@ class Online
 				'key' => $v,
 				'used' => ! empty( $json[ 'usage.' . $v ][ 'used' ] ) ? $json[ 'usage.' . $v ][ 'used' ] : 0,
 				'quota' => ! empty( $json[ 'usage.' . $v ][ 'quota' ] ) ? $json[ 'usage.' . $v ][ 'quota' ] : 0,
-				'credit_used' => ! empty( $json[ 'usage.' . $v ][ 'credit_used' ] ) ? $json[ 'usage.' . $v ][ 'credit_used' ] : 0,
+				'PayAsYouGo_Used' => ! empty( $json[ 'usage.' . $v ][ 'pag_used' ] ) ? $json[ 'usage.' . $v ][ 'pag_used' ] : 0,
+				'PayAsYouGo_Balance' => ! empty( $json[ 'usage.' . $v ][ 'pag_bal' ] ) ? $json[ 'usage.' . $v ][ 'pag_bal' ] : 0,
 			);
 		}
 
-		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'used', 'quota', 'credit_used' ) );
+		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'used', 'quota', 'PayAsYouGo_Used', 'PayAsYouGo_Balance' ) );
 	}
 
 	/**

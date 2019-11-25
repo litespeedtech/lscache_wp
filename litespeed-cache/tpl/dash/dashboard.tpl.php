@@ -72,8 +72,6 @@ $cloud_summary = Cloud::get_summary();
 				<span class="screen-reader-text"><?php echo __( 'Sync data from Cloud', 'litespeed-cache' ); ?></span>
 			</a>
 		</h3>
-		<?php echo ! empty( $cloud_summary[ 'domain_cap' ] ) ? __( 'Domain Cap', 'litespeed-cache' ) . '<b>' . $cloud_summary[ 'domain_cap' ] . '</b>' : ''; ?>
-		<?php echo ! empty( $cloud_summary[ 'credit_quota' ] ) ? __( 'User Credit Quota', 'litespeed-cache' ) . '<b>' . $cloud_summary[ 'credit_quota' ] . '</b>' : ''; ?>
 		<hr>
 		<a href="#" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' );?></a>
 	</div>
@@ -92,16 +90,25 @@ $cloud_summary = Cloud::get_summary();
 
 		foreach ( $cat_list as $svc => $title ) :
 			$finished_percentage = 0;
-			$used = '-';
-			$quota = '-';
+			$used = $quota = $pag_used = $pag_total = '-';
+			$pag_width = 0;
 			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
 				$finished_percentage = floor( $cloud_summary[ 'usage.' . $svc ][ 'used' ] * 100 / $cloud_summary[ 'usage.' . $svc ][ 'quota' ] );
 				$used = $cloud_summary[ 'usage.' . $svc ][ 'used' ];
 				$quota = $cloud_summary[ 'usage.' . $svc ][ 'quota' ];
+				$pag_used = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] : 0;
+				$pag_bal = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] : 0;
+				$pag_total = $pag_used + $pag_bal;
+
+				if ( $pag_total ) {
+					$pag_width = round( $pag_used / $pag_total * 100 ) . '%';
+				}
 
 				if ( $svc == 'cdn' ) {
 					$used = Utility::real_size( $used * 1024 * 1024 );
 					$quota = Utility::real_size( $quota * 1024 * 1024 );
+					$pag_used = Utility::real_size( $pag_used * 1024 * 1024 );
+					$pag_total = Utility::real_size( $pag_total * 1024 * 1024 );
 				}
 			}
 		?>
@@ -117,6 +124,7 @@ $cloud_summary = Cloud::get_summary();
 							<div class="litespeed-dashboard-stats">
 								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
 								<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc">of <?php echo $quota; ?></span></p>
+								<p class="litespeed-desc" style="background-color: pink;" title="Pay As You Go"><span style="background-color: cyan;width: <?php echo $pag_width; ?>"><?php echo $pag_used; ?> / <?php echo $pag_total; ?><span></p>
 							</div>
 						</div>
 					</div>

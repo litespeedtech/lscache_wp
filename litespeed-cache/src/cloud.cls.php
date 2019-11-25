@@ -160,25 +160,12 @@ class Cloud extends Base
 			return $allowance;
 		}
 
-		// Check if to use account level credit or not
-		if ( empty( $this->_summary[ 'credit_quota' ] ) ) {
+		// Check Pay As You Go balance
+		if ( empty( $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) ) {
 			return 0;
 		}
 
-		$allowance = $this->_summary[ 'credit_quota' ];
-
-		// Check domain cap limit
-		if ( $this->_summary[ 'domain_cap' ] > 0 ) {
-			$cap_allowance = $this->_summary[ 'domain_cap' ];
-			if ( ! empty( $this->_summary[ 'credit_used' ] ) ) {
-				$cap_allowance -= $this->_summary[ 'credit_used' ];
-			}
-			if ( $allowance > $cap_allowance ) {
-				$allowance = $cap_allowance;
-			}
-		}
-
-		return $allowance;
+		return $this->_summary[ 'usage.' . $service ][ 'pag_bal' ];
 	}
 
 	/**
@@ -514,7 +501,7 @@ class Cloud extends Base
 		// Parse _carry_on info
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
 			// Store generic info
-			foreach ( array( 'usage', 'domain_cap', 'credit_used', 'credit_quota', 'promo' ) as $v ) {
+			foreach ( array( 'usage', 'promo' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
@@ -526,12 +513,6 @@ class Cloud extends Base
 								$this->_summary[ $v ] = array();
 							}
 							$this->_summary[ $v ][] = $json[ '_carry_on' ][ $v ];
-							break;
-
-						case 'domain_cap':
-						case 'credit_used':
-						case 'credit_quota':
-							$this->_summary[ $v ] = $json[ '_carry_on' ][ $v ];
 							break;
 
 						default:
