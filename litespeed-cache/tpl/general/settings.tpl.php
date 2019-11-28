@@ -70,7 +70,7 @@ $this->form_action() ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Turn this option ON to get latest news automatically, including hotfix, new releases, available beta version, promotions.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Turn this option ON to show latest news automatically, including hotfixes, new releases, available beta versions, and promotions.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

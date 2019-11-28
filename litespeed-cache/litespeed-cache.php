@@ -120,11 +120,30 @@ if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
 }
 
 /**
- * Begins execution of the plugin.
+ * Easier API for Purging a single post.
  *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
+ * @since 1.0.1
+ * @param integer $id The post id to purge.
+ */
+if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
+	function litespeed_purge_single_post( $id )
+	{
+		\LiteSpeed\Purge::purge_post( $id ) ;
+	}
+}
+
+/**
+ * Handle exception
+ */
+if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	{
+		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+	}
+}
+
+/**
+ * Begins execution of the plugin.
  *
  * @since    1.0.0
  */
@@ -150,31 +169,3 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 
 	run_litespeed_cache() ;
 }
-
-/**
- * Easier API for Purging a single post.
- *
- * If a third party plugin needs to purge a single post, it can send
- * a purge tag using this function.
- *
- * @since 1.0.1
- * @access public
- * @param integer $id The post id to purge.
- */
-if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
-	function litespeed_purge_single_post( $id )
-	{
-		\LiteSpeed\Purge::purge_post( $id ) ;
-	}
-}
-
-/**
- * Handle exception
- */
-if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
-	{
-		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline) ;
-	}
-}
-
