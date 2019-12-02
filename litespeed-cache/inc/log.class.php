@@ -56,17 +56,19 @@ class LiteSpeed_Cache_Log
 	 * Beta test upgrade
 	 *
 	 * @since 2.9.5
-	 * @access private
+	 * @access public
 	 */
-	private function _beta_test()
+	public function beta_test( $zip = false )
 	{
-		if ( empty( $_POST[ self::BETA_TEST_URL ] ) ) {
-			return ;
-		}
+		if ( ! $zip ) {
+			if ( empty( $_POST[ self::BETA_TEST_URL ] ) ) {
+				return ;
+			}
 
-		// Generate zip url
-		$commit = substr( $_POST[ self::BETA_TEST_URL ], strpos( $_POST[ self::BETA_TEST_URL ], '/commit/' ) + 8 ) ;
-		$zip = $this->_package_zip( $commit ) ;
+			// Generate zip url
+			$commit = substr( $_POST[ self::BETA_TEST_URL ], strpos( $_POST[ self::BETA_TEST_URL ], '/commit/' ) + 8 ) ;
+			$zip = $this->_package_zip( $commit ) ;
+		}
 
 		if ( ! $zip ) {
 			LiteSpeed_Cache_Log::debug( '[Log] ❌  No ZIP file' ) ;
@@ -468,7 +470,7 @@ class LiteSpeed_Cache_Log
 				break ;
 
 			case self::TYPE_BETA_TEST :
-				$instance->_beta_test() ;
+				$instance->beta_test() ;
 				break ;
 
 			default:

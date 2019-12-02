@@ -26,7 +26,7 @@ class LiteSpeed_Cache
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
-	const PLUGIN_VERSION = '2.9.8.5' ;
+	const PLUGIN_VERSION = '2.9.9.1' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -231,7 +231,7 @@ class LiteSpeed_Cache
 	{
 		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
 
-		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+		if ( ! is_admin() && $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
 			LiteSpeed_Cache_Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result ) ;
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}

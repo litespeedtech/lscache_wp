@@ -24,9 +24,10 @@ if ( ! file_exists( $lscwp_dir . 'litespeed-cache.php' ) ) {
 
 $data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 $lib_file = $lscwp_dir . 'inc/object.lib.php' ;
+$lib_file2 = $lscwp_dir . 'src/object.lib.php' ;
 
 // Can't find LSCWP location, terminate object cache process
-if ( ! $lscwp_dir || ! file_exists( $data_file ) || ! file_exists( $lib_file ) ) {
+if ( ! $lscwp_dir || ! file_exists( $data_file ) || ( ! file_exists( $lib_file ) && ! file_exists( $lib_file2 ) ) ) {
 	if ( ! is_admin() ) { // Bypass object cache for frontend
 		require_once ABSPATH . WPINC . '/cache.php' ;
 	}
@@ -38,5 +39,10 @@ if ( ! $lscwp_dir || ! file_exists( $data_file ) || ! file_exists( $lib_file ) )
 }
 else {
 	// Init object cache & LSCWP
-	require_once $lib_file ;
+	if ( file_exists( $lib_file ) ) {
+		require_once $lib_file ;
+	}
+	elseif ( file_exists( $lib_file2 ) ) {
+		require_once $lib_file2 ;
+	}
 }

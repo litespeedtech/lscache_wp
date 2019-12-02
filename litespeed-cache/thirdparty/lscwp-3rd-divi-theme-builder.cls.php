@@ -22,11 +22,12 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 	 * Check if is Edit mode in frontend, disable all LSCWP features to avoid breaking page builder
 	 *
 	 * @since 2.9.7.2 #435538 #581740 #977284
+	 * @since  2.9.9.1 Added 'et_pb_preview' for loading image from library in divi page edit
 	 */
 	public static function pre_load()
 	{
 		if ( ! function_exists( 'et_setup_theme' ) ) return ;
-		if ( ! empty( $_GET[ 'et_fb' ] ) ) {
+		if ( ! empty( $_GET[ 'et_fb' ] ) || ! empty( $_GET[ 'et_pb_preview' ] ) ) {
 			LiteSpeed_Cache_API::disable_all( 'divi edit mode' ) ;
 		}
 	}

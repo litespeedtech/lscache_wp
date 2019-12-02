@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.8.5
+Stable tag: 2.9.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -91,7 +91,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 18. Frontend Adminbar Shortcut
 
 == LSCWP Resources ==
-* [Join our Slack community](https://goo.gl/FG9S4N) to connect with other LiteSpeed users.
+* [Join our Slack community](https://join.slack.com/t/golitespeed/shared_invite/enQtMzE5ODgxMTUyNTgzLTNiNWQ1MWZlYmI4YjEzNTM4NjdiODY2YTQ0OWVlMzBlNGZkY2E3Y2E4MjIzNmNmZmU0ZjIyNWM1ZmNmMWRlOTk) to connect with other LiteSpeed users.
 * [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
 * [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
 * [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
@@ -257,6 +257,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 = What are the known compatible plugins and themes? =
 
 * [WPML](https://wpml.org/)
+* [DoLogin Security](https://wordpress.org/plugins/dologin/)
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
 * [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
@@ -289,6 +290,29 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.9.1 - Nov 18 2019 =
+* 🌱<strong>Env</strong>: Environment Report can now append a passwordless link for support access without wp-admin password.
+* <strong>Admin</strong>: The latest v3.0 beta test link may now be shown on the admin page when it's available.
+* <strong>3rd</strong>: Compatibility with [DoLogin Security](https://wordpress.org/plugins/dologin/).
+* 🐞<strong>ESI</strong>: Fixed a failure issue with Vary Group save. (@rafasshop)
+* 🐞<strong>3rd</strong>: In browsers where WebP is not supported, Divi image picker will no longer serve WebP. (@Austin Tinius)
+
+= 2.9.9 - Oct 28 2019 =
+* <strong>Core</strong>: Preload all classes to avoid getting error for upcoming v3.0 upgrade.
+* <strong>Object</strong>: Improved compatibility with upcoming v3.0 release.
+* <strong>ESI</strong>: Unlocked ESI for OLS in case OLS is using QUIC.cloud CDN which supports ESI.
+* <strong>3rd</strong>: Elementor Edit button will now show when ESI enabled. (#PR149 #335322 @maxgorky)
+* 🐞<strong>Media</strong>: Fixed missing Media optimization column when Admin role is excluded from optimization in settings. (@mikeyhash @pako69 @dgilfillan)
+
+= 2.9.8.7 - Oct 11 2019 =
+* <strong>3rd</strong>: Enhanced WP stateless compatibility. (#PR143)
+* <strong>3rd</strong>: Fixed a PHP warning caused by previous PR for AMP. (#PR176)
+
+= 2.9.8.6 - Sep 24 2019 =
+* <strong>3rd</strong>: Bypassed page optimizations for AMP. (#359748 #PR169)
+* <strong>GUI</strong>: Firefox compatibility with radio button state when reloading pages. (#288940 #PR162)
+* <strong>GUI</strong>: Updated Slack invitation link. (#PR173)
 
 = 2.9.8.5 - Aug 21 2019 =
 * <strong>CCSS</strong>: Removed potential PHP notice when getting post_type. (@amcgiffert)

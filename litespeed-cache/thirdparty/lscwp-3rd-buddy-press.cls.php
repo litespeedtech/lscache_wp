@@ -24,6 +24,9 @@ class LiteSpeed_Cache_ThirdParty_Buddy_Press
 		*/
 		add_filter( 'wp_nav_menu', 'LiteSpeed_Cache_ThirdParty_Buddy_Press::make_esi_menu', 10, 2 ) ;
 		LiteSpeed_Cache_API::hook_tpl_esi( 'bp-menu', 'LiteSpeed_Cache_ThirdParty_Buddy_Press::hook_esi' ) ;
+
+		add_action( 'wp_login', 'LiteSpeed_Cache_ThirdParty_Buddy_Press::buddypress_login_tag', 10, 2 ) ;
+		add_filter( 'xprofile_updated_profile', 'LiteSpeed_Cache_ThirdParty_Buddy_Press::purge_on_profile_update' ) ;
 	}
 
 	public static function make_esi_menu( $nav_menu, $args )
@@ -45,5 +48,14 @@ class LiteSpeed_Cache_ThirdParty_Buddy_Press
 		$menu_array = array( 'menu' => $args[ 0 ], 'menu_class' => $args[ 1 ] ) ;
 		wp_nav_menu( $menu_array ) ;
 		exit;
+	}
+
+	public static function buddypress_login_tag( $user_login, $user ) {
+		LiteSpeed_Cache_API::add_private( $user->ID ) ;
+	}
+
+	function purge_on_profile_update( $id ) {
+		error_log($id);
+		LiteSpeed_Cache_API::purge_private_all();
 	}
 }

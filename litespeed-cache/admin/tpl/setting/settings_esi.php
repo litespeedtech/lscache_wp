@@ -32,9 +32,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <div class="litespeed-relative">
 
-<?php if ( ! LSWCP_ESI_SUPPORT ) : ?>
-	<div class="litespeed-ent-notice">
-		<div class="litespeed-ent-notice-desc"><?php echo __('Available in LiteSpeed Enterprise version', 'litespeed-cache'); ?></div>
+<?php if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' && ! $_options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC ] ) : ?>
+	<div class="litespeed-callout-danger">
+		<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
+		<h4><?php echo __('These options are only available with LiteSpeed Enterprise Web Server or QUIC.cloud CDN.', 'litespeed-cache'); ?></h4>
 	</div>
 <?php endif; ?>
 

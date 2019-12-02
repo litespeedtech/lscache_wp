@@ -4,7 +4,6 @@
 *
 * @since 1.1.0
 */
-LiteSpeed_Cache_Utility::compatibility() ;
 
 class Litespeed_Crawler
 {
@@ -600,6 +599,7 @@ class Litespeed_Crawler
 				$options[CURLOPT_HTTPHEADER][] = "Host: " . $parsed_url['host'] ;
 				// replace domain with direct ip
 				$parsed_url['host'] = $this->_domain_ip ;
+				LiteSpeed_Cache_Utility::compatibility() ;
 				$this->_baseUrl = http_build_url($parsed_url) ;
 			}
 		}

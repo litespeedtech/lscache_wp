@@ -36,6 +36,7 @@ $thirdparty_list = array(
 	'facetwp',
 	'amp-bypass',
 	'buddy-press',
+	'elementor',
 ) ;
 
 foreach ($thirdparty_list as $val) {

@@ -482,7 +482,7 @@ class LiteSpeed_Cache_Control
 	{
 		$esi_hdr = '' ;
 		// Fix cli `uninstall --deactivate` fatal err
-		if ( LSWCP_ESI_SUPPORT && class_exists( 'LiteSpeed_Cache_ESI' ) && LiteSpeed_Cache_ESI::has_esi() ) {
+		if ( class_exists( 'LiteSpeed_Cache_ESI' ) && LiteSpeed_Cache_ESI::has_esi() ) {
 			$esi_hdr = ',esi=on' ;
 		}
 

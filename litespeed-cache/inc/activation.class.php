@@ -18,6 +18,9 @@ class LiteSpeed_Cache_Activation
 	private static $_instance ;
 
 	const TYPE_UPGRADE = 'upgrade' ;
+	const TYPE_INSTALL_3RD = 'install_3rd' ;
+	const TYPE_INSTALL_ZIP = 'install_zip' ;
+	const TYPE_DISMISS_RECOMMENDED = 'dismiss_recommended' ;
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
 
@@ -395,6 +398,101 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
+	 * Detect if the plugin is active or not
+	 *
+	 * @since  1.0
+	 */
+	public function dash_notifier_is_plugin_active( $plugin )
+	{
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' ) ;
+
+		$plugin_path = $plugin . '/' . $plugin . '.php' ;
+
+		return is_plugin_active( $plugin_path ) ;
+	}
+
+	/**
+	 * Detect if the plugin is installed or not
+	 *
+	 * @since  1.0
+	 */
+	public function dash_notifier_is_plugin_installed( $plugin )
+	{
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' ) ;
+
+		$plugin_path = $plugin . '/' . $plugin . '.php' ;
+
+		$valid = validate_plugin( $plugin_path ) ;
+
+		return ! is_wp_error( $valid ) ;
+	}
+
+	/**
+	 * Grab a plugin info from WordPress
+	 *
+	 * @since  1.0
+	 */
+	public function dash_notifier_get_plugin_info( $slug )
+	{
+		include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' ) ;
+		$result = plugins_api( 'plugin_information', array( 'slug' => $slug ) ) ;
+
+		if ( is_wp_error( $result ) ) {
+			return false ;
+		}
+
+		return $result ;
+	}
+
+	/**
+	 * Install the 3rd party plugin
+	 *
+	 * @since  1.0
+	 */
+	public function dash_notifier_install_3rd()
+	{
+		! defined( 'SILENCE_INSTALL' ) && define( 'SILENCE_INSTALL', true );
+
+		$slug = ! empty( $_GET[ 'plugin' ] ) ? $_GET[ 'plugin' ] : false;
+
+		// Check if plugin is installed already
+		if ( ! $slug || $this->dash_notifier_is_plugin_active( $slug ) ) {
+			return ;
+		}
+
+		/**
+		 * @see wp-admin/update.php
+		 */
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' ;
+		include_once ABSPATH . 'wp-admin/includes/file.php' ;
+		include_once ABSPATH . 'wp-admin/includes/misc.php' ;
+
+		$plugin_path = $slug . '/' . $slug . '.php' ;
+
+		if ( ! $this->dash_notifier_is_plugin_installed( $slug ) ) {
+			$plugin_info = $this->dash_notifier_get_plugin_info( $slug ) ;
+			if ( ! $plugin_info ) {
+				return ;
+			}
+			// Try to install plugin
+			try {
+				ob_start() ;
+				$skin = new \Automatic_Upgrader_Skin() ;
+				$upgrader = new \Plugin_Upgrader( $skin ) ;
+				$result = $upgrader->install( $plugin_info->download_link ) ;
+				ob_end_clean() ;
+			} catch ( \Exception $e ) {
+				return ;
+			}
+		}
+
+		if ( ! is_plugin_active( $plugin_path ) ) {
+			activate_plugin( $plugin_path ) ;
+		}
+
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.9
@@ -409,6 +507,25 @@ class LiteSpeed_Cache_Activation
 		switch ( $type ) {
 			case self::TYPE_UPGRADE :
 				$instance->upgrade() ;
+				break ;
+
+			case self::TYPE_INSTALL_3RD :
+				$instance->dash_notifier_install_3rd() ;
+				break ;
+
+			case self::TYPE_DISMISS_RECOMMENDED :
+				$news = get_option( 'litespeed-recommended', array() );
+				$news[ 'new' ] = 0;
+				update_option( 'litespeed-recommended', $news );
+				break ;
+
+			case self::TYPE_INSTALL_ZIP :
+				$news = get_option( 'litespeed-recommended', array() );
+				if ( ! empty( $news[ 'zip' ] ) ) {
+					$news[ 'new' ] = 0;
+					update_option( 'litespeed-recommended', $news );
+					LiteSpeed_Cache_Log::get_instance()->beta_test( $news[ 'zip' ] );
+				}
 				break ;
 
 			default:
