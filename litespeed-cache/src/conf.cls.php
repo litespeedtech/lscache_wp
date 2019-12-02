@@ -153,10 +153,10 @@ class Conf extends Base
 
 		// Bypass site special settings
 		if ( $blog_id !== null ) {
-			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) ) ;
+			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) ) ; // These options are network only
 		}
 
-		$this->_options = $options ;
+		$this->_options = array_merge( $this->_options, $options );
 	}
 
 	/**

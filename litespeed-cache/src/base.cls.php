@@ -783,10 +783,14 @@ class Base extends Instance
 	protected function _conf_multi_switch( $id )
 	{
 		if ( ! empty( self::$_multi_switch_list[ $id ] ) ) {
-			return self::$_multi_switch_list[ $id ] ;
+			return self::$_multi_switch_list[ $id ];
 		}
 
-		return false ;
+		if ( $id == self::O_CACHE && is_multisite() ) {
+			return self::VAL_ON2;
+		}
+
+		return false;
 	}
 
 	/**

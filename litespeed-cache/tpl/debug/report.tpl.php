@@ -25,10 +25,10 @@ $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_IN
 ?>
 
 <?php if ( ! $has_pswdless_plugin ) : ?>
-<div class="litespeed-callout-danger">
+<div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
 	<?php echo sprintf( __( 'To generate a passwordless link for LiteSpeed Support Team access, you must install %s.', 'litespeed-cache' ), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
-	<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __( 'Automatically Install', 'litespeed-cache' ); ?></a>
+	<a href="<?php echo $install_link; ?>" class="button litespeed-btn-success"><?php echo __( 'Automatically Install', 'litespeed-cache' ); ?></a>
 	<a href="plugin-install.php?s=dologin+security&tab=search&type=term" target="_blank"><?php echo __( 'Manually Install', 'litespeed-cache' ); ?></a>
 </div>
 <?php endif; ?>
@@ -53,7 +53,7 @@ $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_IN
 		<?php if ( $has_pswdless_plugin ) : ?>
 			<a href="<?php echo admin_url( 'admin.php?page=litespeed-debug&dologin_gen_link=1' ); ?>"><?php echo __( 'Generate Passwordless Link for Current User', 'litespeed-cache' ) ; ?></a>
 		<?php else: ?>
-			<a href="<?php echo $install_link; ?>" class="litespeed-btn-success"><?php echo __( 'Install DoLogin Security to Generate Passwordless Link', 'litespeed-cache' ) ; ?></a>
+			<a href="<?php echo $install_link; ?>" class="button litespeed-btn-success litespeed-btn-mini"><?php echo __( 'Install DoLogin Security to Generate Passwordless Link', 'litespeed-cache' ) ; ?></a>
 		<?php endif; ?>
 	</p>
 	<p>

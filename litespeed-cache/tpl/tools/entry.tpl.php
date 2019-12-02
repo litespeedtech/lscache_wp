@@ -7,7 +7,7 @@ $menu_list = array(
 	'import_export'		=> __( 'Import / Export', 'litespeed-cache' ),
 ) ;
 
-if ( ! is_multisite() || $is_network_admin ) {
+if ( ! is_multisite() || is_network_admin() ) {
 	$menu_list[ 'edit_htaccess' ] = __( 'Edit .htaccess', 'litespeed-cache' ) ;
 }
 

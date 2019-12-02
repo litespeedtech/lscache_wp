@@ -10,8 +10,8 @@
  */
 defined( 'WPINC' ) || exit ;
 
-if ( ! function_exists( '_litespeed_autoload' ) ) {
-	function _litespeed_autoload( $cls )
+if ( ! function_exists( 'litespeed_autoload' ) ) {
+	function litespeed_autoload( $cls )
 	{
 		if ( strpos( $cls, 'LiteSpeed' ) !== 0 ) {
 			return ;
@@ -35,5 +35,5 @@ if ( ! function_exists( '_litespeed_autoload' ) ) {
 	}
 }
 
-spl_autoload_register( '_litespeed_autoload' ) ;
+spl_autoload_register( 'litespeed_autoload' ) ;
 
