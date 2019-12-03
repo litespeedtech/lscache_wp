@@ -150,5 +150,15 @@ if (!defined('WPINC')) die;
 		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php'; ?>
 	<?php endif ; ?>
 
+	<tr>
+		<th><?php echo __( 'Automatically Feed News', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_NEWS ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Turn this option ON to show latest news automatically, including hotfixes, new releases, available beta versions, promotions.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
 
