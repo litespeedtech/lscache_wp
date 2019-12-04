@@ -1326,34 +1326,38 @@ class Img_Optm extends Base
 		);
 
 		// images count from work table
-		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
-		$groups_to_check = array(
-			self::STATUS_REQUESTED,
-			self::STATUS_NOTIFIED,
-			self::STATUS_ERR_FETCH,
-		);
-		foreach ( $groups_to_check as $v ) {
-			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
-			if ( $tb_existed ) {
-				list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+		if ( $tb_existed2 ) {
+			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
+			$groups_to_check = array(
+				self::STATUS_REQUESTED,
+				self::STATUS_NOTIFIED,
+				self::STATUS_ERR_FETCH,
+			);
+			foreach ( $groups_to_check as $v ) {
+				$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
+				if ( $tb_existed ) {
+					list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+				}
 			}
 		}
 
 		// images count from image table
-		$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d";
-		$groups_to_check = array(
-			self::STATUS_DUPLICATED,
-			self::STATUS_PULLED,
-			self::STATUS_FAILED,
-			self::STATUS_MISS,
-			self::STATUS_ERR_OPTM,
-			self::STATUS_XMETA,
-			self::STATUS_ERR,
-		);
-		foreach ( $groups_to_check as $v ) {
-			$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
-			if ( $tb_existed ) {
-				list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+		if ( $tb_existed ) {
+			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d";
+			$groups_to_check = array(
+				self::STATUS_DUPLICATED,
+				self::STATUS_PULLED,
+				self::STATUS_FAILED,
+				self::STATUS_MISS,
+				self::STATUS_ERR_OPTM,
+				self::STATUS_XMETA,
+				self::STATUS_ERR,
+			);
+			foreach ( $groups_to_check as $v ) {
+				$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
+				if ( $tb_existed ) {
+					list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
+				}
 			}
 		}
 

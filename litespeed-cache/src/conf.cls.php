@@ -80,7 +80,8 @@ class Conf extends Base
 		 */
 		if ( ! $ver || $ver != Core::VER ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
-				$this->_options = $this->load_default_vals() ;
+				$this->_options = $this->load_default_vals();
+				$this->_try_load_site_options();
 				return ;
 			}
 		}
@@ -164,7 +165,6 @@ class Conf extends Base
 	 *
 	 * @since 1.0.13
 	 * @access private
-	 * @return array The updated options.
 	 */
 	private function _try_load_site_options()
 	{
@@ -234,6 +234,17 @@ class Conf extends Base
 		$this->load_site_options() ;
 
 		$ver = $this->_site_options[ Base::_VER ] ;
+
+		/**
+		 * Don't upgrade or run new installations other than from backend visit
+		 * In this case, just use default conf
+		 */
+		if ( ! $ver || $ver != Core::VER ) {
+			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
+				$this->_site_options = $this->load_default_site_vals() ;
+				return ;
+			}
+		}
 
 		/**
 		 * Upgrade conf

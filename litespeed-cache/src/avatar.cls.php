@@ -37,7 +37,6 @@ class Avatar extends Base
 
 		Log::debug2( '[Avatar] init' ) ;
 
-		// Create table
 		$this->_tb = Data::get_instance()->tb( 'avatar' ) ;
 
 		$this->_conf_cache_ttl = Conf::val( Base::O_DISCUSS_AVATAR_CACHE_TTL ) ;
@@ -78,7 +77,7 @@ class Avatar extends Base
 			return ;
 		}
 
-		$q = "SELECT url FROM $this->_tb WHERE md5=%s" ;
+		$q = "SELECT url FROM `$this->_tb` WHERE md5=%s" ;
 		$url = $wpdb->get_var( $wpdb->prepare( $q, $md5 ) ) ;
 
 		if ( ! $url ) {
@@ -163,9 +162,15 @@ class Avatar extends Base
 	 */
 	public function queue_count()
 	{
-		global $wpdb ;
-		$q = "SELECT count(*) FROM $this->_tb WHERE dateline<" . ( time() - $this->_conf_cache_ttl ) ;
-		return $wpdb->get_var( $q ) ;
+		global $wpdb;
+
+		// If var not exists, mean table not exists
+		if ( ! $this->_tb ) {
+			return false;
+		}
+
+		$q = "SELECT COUNT(*) FROM `$this->_tb` WHERE dateline<" . ( time() - $this->_conf_cache_ttl );
+		return $wpdb->get_var( $q );
 	}
 
 	/**
@@ -233,7 +238,7 @@ class Avatar extends Base
 			}
 		}
 
-		$q = "SELECT url FROM $_instance->_tb WHERE dateline < %d ORDER BY id DESC LIMIT %d" ;
+		$q = "SELECT url FROM `$_instance->_tb` WHERE dateline < %d ORDER BY id DESC LIMIT %d" ;
 		$q = $wpdb->prepare( $q, array( time() - $_instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
 
 		$list = $wpdb->get_results( $q ) ;
@@ -288,10 +293,10 @@ class Avatar extends Base
 
 		// Update DB
 		$md5 = md5( $url ) ;
-		$q = "UPDATE $this->_tb SET dateline=%d WHERE md5=%s" ;
+		$q = "UPDATE `$this->_tb` SET dateline=%d WHERE md5=%s" ;
 		$existed = $wpdb->query( $wpdb->prepare( $q, array( time(), $md5 ) ) ) ;
 		if ( ! $existed ) {
-			$q = "INSERT INTO $this->_tb SET url=%s, md5=%s, dateline=%d" ;
+			$q = "INSERT INTO `$this->_tb` SET url=%s, md5=%s, dateline=%d" ;
 			$wpdb->query( $wpdb->prepare( $q, array( $url, $md5, time() ) ) ) ;
 		}
 

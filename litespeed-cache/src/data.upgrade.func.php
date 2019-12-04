@@ -501,7 +501,7 @@ function litespeed_update_3_0( $ver )
 	$wpdb->query( $q ) ;
 
 	// Update image optm table
-	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE `' . $wpdb->prefix . 'litespeed_img_optm`' );
+	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_img_optm"' );
 	if ( $tb_exists ) {
 		$status_mapping = array(
 			'requested'	=> 3,

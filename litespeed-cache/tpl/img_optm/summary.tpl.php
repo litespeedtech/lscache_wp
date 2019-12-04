@@ -25,6 +25,18 @@ if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
 else {
 	$finished_percentage = 0 ;
 }
+
+$unfinished_num = 0;
+if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ] ) ) {
+	$unfinished_num += $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ];
+}
+if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] ) ) {
+	$unfinished_num += $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ];
+}
+if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
+	$unfinished_num += $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ];
+}
+
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10">
@@ -69,7 +81,7 @@ else {
 		<div>
 			<h3 class="litespeed-title-short">
 				<?php echo __( 'Current Stage Status', 'litespeed-cache' ) ; ?>
-				<?php if ( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) : ?>
+				<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
 					<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 				<?php endif; ?>
 			</h3>
@@ -154,7 +166,6 @@ else {
 					</div>
 
 					<div class="litespeed-width-1-2">
-						<?php $unfinished_num = $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ] + $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] + $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ]; ?>
 						<?php echo sprintf(
 								'<a href="%1$s" class="button litespeed-btn-warning" title="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
 								Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ),

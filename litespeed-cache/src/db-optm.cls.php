@@ -96,7 +96,7 @@ class DB_Optm extends Instance
 			case 'optimize_tables':
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" );
 
-			case 'all_cssjs' :
+			case 'all_cssjs':
 				return Data::get_instance()->tb_exist( 'cssjs' ) ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::get_instance()->tb( 'cssjs' ) . "`" ) : 0;
 		}
 

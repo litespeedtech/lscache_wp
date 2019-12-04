@@ -213,8 +213,8 @@ class Data extends Instance
 				return $wpdb->prefix . self::TB_IMG_OPTMING;
 				break;
 
-			case 'ccsjs':
-				return $wpdb->prefix . self::TB_CCSJS;
+			case 'cssjs':
+				return $wpdb->prefix . self::TB_CSSJS;
 				break;
 
 			case 'avatar':
