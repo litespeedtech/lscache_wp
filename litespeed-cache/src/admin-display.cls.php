@@ -37,6 +37,8 @@ class Admin_Display extends Base
 	private $__cfg ;
 	private $messages = array() ;
 	private $default_settings = array() ;
+	private $_is_network_admin = false;
+	private $_is_multisite = false;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -56,10 +58,11 @@ class Admin_Display extends Base
 		// Main js
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ) ;
 
-		$is_network_admin = is_network_admin() ;
+		$this->_is_network_admin = is_network_admin() ;
+		$this->_is_multisite = is_multisite() ;
 
 		// Quick access menu
-		if ( is_multisite() && $is_network_admin ) {
+		if ( is_multisite() && $this->_is_network_admin ) {
 			$manage = 'manage_network_options' ;
 		}
 		else {
@@ -70,7 +73,7 @@ class Admin_Display extends Base
 
 			// `admin_notices` is after `admin_enqueue_scripts`
 			// @see wp-admin/admin-header.php
-			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
+			add_action( $this->_is_network_admin ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
 		}
 
 		/**
@@ -83,7 +86,7 @@ class Admin_Display extends Base
 		}
 
 		// add menus ( Also check for mu-plugins)
-		if ( $is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
+		if ( $this->_is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
 			add_action( 'network_admin_menu', array( $this, 'register_admin_menu' ) ) ;
 		}
 		else {
@@ -139,8 +142,7 @@ class Admin_Display extends Base
 	 */
 	public function register_admin_menu()
 	{
-		$is_network_admin = is_network_admin() ;
-		$capability = $is_network_admin ? 'manage_network_options' : 'manage_options' ;
+		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options' ;
 		if ( current_user_can( $capability ) ) {
 
 			// root menu
@@ -153,19 +155,19 @@ class Admin_Display extends Base
 
 			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' ) ;
+			$this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Database', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' ) ;
+			$this->_add_submenu( __( 'Database', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' ) ;
+			$this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' ) ;
 
-			! $is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' ) ;
 
 
 			// sub menus under options
@@ -520,8 +522,8 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_cache()
 	{
-		if ( is_network_admin() ) {
-			require_once LSCWP_DIR . 'tpl/network_settings.php' ;
+		if ( $this->_is_network_admin ) {
+			require_once LSCWP_DIR . 'tpl/cache/entry_network.tpl.php' ;
 		}
 		else {
 			require_once LSCWP_DIR . 'tpl/cache/entry.tpl.php' ;
