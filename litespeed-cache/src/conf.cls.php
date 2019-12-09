@@ -354,7 +354,7 @@ class Conf extends Base
 		}
 
 		// If use network setting
-		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
+		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::O_CACHE ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 

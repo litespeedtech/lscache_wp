@@ -439,7 +439,7 @@ function litespeed_update_3_0( $ver )
 			$previous_site_options = get_site_option( 'litespeed-cache-conf' ) ;
 
 			$data = array(
-				'network_enabled'		=> 'network_enabled',
+				'network_enabled'		=> 'cache',
 				'use_primary_settings'	=> 'use_primary_settings',
 				'auto_upgrade'			=> 'auto_upgrade',
 				'purge_upgrade'			=> 'purge-upgrade',
@@ -474,6 +474,14 @@ function litespeed_update_3_0( $ver )
 				if ( ! isset( $previous_site_options[ $k ] ) ) {
 					continue ;
 				}
+				// The folllowing values must be array
+				if ( ! is_array( $previous_site_options[ $k ] ) ) {
+					if ( in_array( $v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ) ) ) {
+						$previous_site_options[ $k ] = explode( '|', str_replace( '\\ ', ' ', $previous_site_options[ $k ] ) ) ;
+						$previous_site_options[ $k ] = array_filter( $previous_site_options[ $k ] ) ;
+					}
+				}
+
 				add_site_option( 'litespeed.conf.' . $v, $previous_site_options[ $k ] ) ;
 			}
 

@@ -110,25 +110,25 @@ class Admin extends Instance
 	private function _proceed_admin_action()
 	{
 		// handle actions
-		switch (Router::get_action()) {
+		switch ( Router::get_action() ) {
 
 			// Save htaccess
 			case Core::ACTION_SAVE_HTACCESS:
-				Htaccess::get_instance()->htaccess_editor_save() ;
-				break ;
+				Htaccess::get_instance()->htaccess_editor_save();
+				break;
 
 			case Router::ACTION_SAVE_SETTINGS :
-				Admin_Settings::get_instance()->save( $_POST ) ;
-				break ;
+				Admin_Settings::get_instance()->save( $_POST );
+				break;
 
 
 			// Save network settings
-			case Core::ACTION_SAVE_SETTINGS_NETWORK:
-				Admin_Settings::get_instance()->network_save( $_POST ) ;
-				break ;
+			case Router::ACTION_SAVE_SETTINGS_NETWORK:
+				Admin_Settings::get_instance()->network_save( $_POST );
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
 	}

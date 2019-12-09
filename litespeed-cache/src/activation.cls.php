@@ -301,51 +301,51 @@ class Activation extends Instance
 	public function update_files()
 	{
 		// Update cache setting `_CACHE`
-		Conf::get_instance()->define_cache() ;
+		Conf::get_instance()->define_cache();
 
 		// Site options applied already
-		$options = Conf::get_instance()->get_options() ;
+		$options = Conf::get_instance()->get_options();
 
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ Base::_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ Base::_CACHE ] );
 		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
-			Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() );
 		}
 
 		/* 2) adv-cache.php; */
 
 		if ( $options[ Base::O_UTIL_CHECK_ADVCACHE ] ) {
-			$this->_manage_advanced_cache_file() ;
+			$this->_manage_advanced_cache_file();
 
 			if ( ! defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_CLI' ) ) {
 				$msg = __( 'LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache' )
 					. ' ' . __('LiteSpeed Cache does work with other optimization plugins, but only if functionality is not duplicated. Only one full-page cache may be activated.', 'litespeed-cache')
 					. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank">'
 						. __( 'Learn More', 'litespeed-cache' )
-					. '</a>' ;
+					. '</a>';
 
-				Admin_Display::note( $msg ) ;
+				Admin_Display::note( $msg );
 			}
 		}
 
 		/* 3) object-cache.php; */
 
 		if ( $options[ Base::O_OBJECT ] && ( ! $options[ Base::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
-			Object_Cache::get_instance()->update_file( $options ) ;
+			Object_Cache::get_instance()->update_file( $options );
 		}
 		else {
-			Object_Cache::get_instance()->del_file() ;
+			Object_Cache::get_instance()->del_file();
 		}
 
 		/* 4) .htaccess; */
 
 		try {
-			Htaccess::get_instance()->update( $options ) ;
+			Htaccess::get_instance()->update( $options );
 		} catch ( \Exception $ex ) {
-			Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() );
 		}
 	}
 
@@ -358,23 +358,21 @@ class Activation extends Instance
 	 */
 	private function _manage_advanced_cache_file()
 	{
-		$adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
+		$adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php';
 		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
-			return ;
+			return;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Activation] Copying advanced_cache file' ) ;
+		defined( 'LSCWP_LOG' ) && Log::debug( '[Activation] Copying advanced_cache file' );
 
-		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path ) ;
+		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path );
 
 		/**
 		 * Clear OPcache
 		 * @since  3.0
 		 * @see  https://github.com/litespeedtech/lscache_wp/issues/170
 		 */
-		Purge::get_instance()->purge_all_opcache( true ) ;
-
-		include $adv_cache_path ;
+		Purge::get_instance()->purge_all_opcache( true );
 	}
 
 	/**

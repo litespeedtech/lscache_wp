@@ -15,7 +15,7 @@ $menuArr = array(
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __('LiteSpeed Cache Network Settings', 'litespeed-cache'); ?>
+		<?php echo __('LiteSpeed Cache Network Cache Settings', 'litespeed-cache'); ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo Core::VER; ?>
@@ -35,8 +35,10 @@ $menuArr = array(
 	?>
 	</h2>
 	<div class="litespeed-body">
+		<?php $this->cache_disabled_warning(); ?>
+
 	<?php
-		$this->form_action( Core::ACTION_SAVE_SETTINGS_NETWORK );
+		$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

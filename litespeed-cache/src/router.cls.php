@@ -7,26 +7,25 @@
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
  */
-namespace LiteSpeed ;
-
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 class Router extends Instance
 {
-	protected static $_instance ;
+	protected static $_instance;
 
-	const NONCE = 'LSCWP_NONCE' ;
-	const ACTION = 'LSCWP_CTRL' ;
+	const NONCE = 'LSCWP_NONCE';
+	const ACTION = 'LSCWP_CTRL';
 
+	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
+	const ACTION_DB = 'db';
+	const ACTION_PLACEHOLDER = 'placeholder';
+	const ACTION_AVATAR = 'avatar';
+	const ACTION_SAVE_SETTINGS = 'save-settings';
+	const ACTION_CLOUD = 'cloud';
+	const ACTION_IMG_OPTM = 'img_optm';
 
-	const ACTION_DB = 'db' ;
-	const ACTION_PLACEHOLDER = 'placeholder' ;
-	const ACTION_AVATAR = 'avatar' ;
-	const ACTION_SAVE_SETTINGS = 'save-settings' ;
-	const ACTION_CLOUD = 'cloud' ;
-	const ACTION_IMG_OPTM = 'img_optm' ;
-
-	const TYPE = 'litespeed_type' ;
+	const TYPE = 'litespeed_type';
 
 	private static $_esi_enabled ;
 	private static $_is_ajax ;
@@ -487,7 +486,7 @@ class Router extends Instance
 				return ;
 
 			// Save network settings
-			case Core::ACTION_SAVE_SETTINGS_NETWORK:
+			case self::ACTION_SAVE_SETTINGS_NETWORK:
 				if ( $_can_network_option ) {
 					self::$_action = $action ;
 				}

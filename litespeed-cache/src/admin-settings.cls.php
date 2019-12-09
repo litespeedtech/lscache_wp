@@ -5,20 +5,19 @@
  *
  * @since      1.1.0
  * @package    LiteSpeed
- * @subpackage LiteSpeed/admin
+ * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
-
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 class Admin_Settings extends Base
 {
-	protected static $_instance ;
+	protected static $_instance;
 
-	const ENROLL = '_settings-enroll' ;
+	const ENROLL = '_settings-enroll';
 
-	private $__cfg ;// cfg instance
+	private $__cfg;// cfg instance
 
 	/**
 	 * Init
@@ -28,7 +27,7 @@ class Admin_Settings extends Base
 	 */
 	protected function __construct()
 	{
-		$this->__cfg = Conf::get_instance() ;
+		$this->__cfg = Conf::get_instance();
 	}
 
 	/**
@@ -43,31 +42,31 @@ class Admin_Settings extends Base
 	 */
 	public function save( $raw_data )
 	{
-		Log::debug( '[Settings] saving' ) ;
+		Log::debug( '[Settings] saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
-			exit( 'No fields' ) ;
+			exit( 'No fields' );
 		}
 
-		$raw_data = Admin::cleanup_text( $raw_data ) ;
+		$raw_data = Admin::cleanup_text( $raw_data );
 
 		// Convert data to config format
-		$the_matrix = array() ;
+		$the_matrix = array();
 		foreach ( array_unique( $raw_data[ self::ENROLL ] ) as $id ) {
-			$child = false ;
+			$child = false;
 			// Drop array format
 			if ( strpos( $id, '[' ) !== false ) {
 				if ( strpos( $id, self::O_CDN_MAPPING ) === 0 || strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // CDN child | Cookie Crawler settings
-					$child = substr( $id, strpos( $id, '[' ) + 1, strpos( $id, ']' ) - strpos( $id, '[' ) - 1 ) ;
-					$id = substr( $id, 0, strpos( $id, '[' ) ) ; // Drop ending [] ; Compatible with xx[0] way from CLI
+					$child = substr( $id, strpos( $id, '[' ) + 1, strpos( $id, ']' ) - strpos( $id, '[' ) - 1 );
+					$id = substr( $id, 0, strpos( $id, '[' ) ); // Drop ending []; Compatible with xx[0] way from CLI
 				}
 				else {
-					$id = substr( $id, 0, strpos( $id, '[' ) ) ; // Drop ending []
+					$id = substr( $id, 0, strpos( $id, '[' ) ); // Drop ending []
 				}
 			}
 
 			if ( ! array_key_exists( $id, self::$_default_options ) ) {
-				continue ;
+				continue;
 			}
 
 			// Validate $child
@@ -79,7 +78,7 @@ class Admin_Settings extends Base
 					self::CDN_MAPPING_INC_JS,
 					self::CDN_MAPPING_FILETYPE,
 				) ) ) {
-					continue ;
+					continue;
 				}
 			}
 			if ( $id == self::O_CRWL_COOKIES ) {
@@ -87,17 +86,17 @@ class Admin_Settings extends Base
 					self::CRWL_COOKIE_NAME,
 					self::CRWL_COOKIE_VALS,
 				) ) ) {
-					continue ;
+					continue;
 				}
 			}
 
-			$data = false ;
+			$data = false;
 
 			if ( $child ) {
-				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : false ; // []=xxx or [0]=xxx
+				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : false; // []=xxx or [0]=xxx
 			}
 			else {
-				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false ;
+				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
 			}
 
 			// Sanitize the value
@@ -116,11 +115,11 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
 					// Use existing in queue data if existed (Only available when $child != false)
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id ) ;
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
-							$v = Utility::sanitize_lines( $v ) ;
+							$v = Utility::sanitize_lines( $v );
 						}
 						elseif ( in_array( $v, array(
 							self::CDN_MAPPING_INC_IMG,
@@ -128,13 +127,13 @@ class Admin_Settings extends Base
 							self::CDN_MAPPING_INC_JS,
 						) ) ) {
 							// Because these can't be auto detected in `config->update()`, need to format here
-							$v = $v === 'false' ? 0 : (bool) $v ;
+							$v = $v === 'false' ? 0 : (bool) $v;
 						}
 
-						$data2[ $k ][ $child ] = $v ;
+						$data2[ $k ][ $child ] = $v;
 					}
-					$data = $data2 ;
-					break ;
+					$data = $data2;
+					break;
 
 				case self::O_CRWL_COOKIES :
 					/**
@@ -153,83 +152,83 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id ) ;
+					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
-							$v = Utility::sanitize_lines( $v ) ;
+							$v = Utility::sanitize_lines( $v );
 						}
-						$data2[ $k ][ $child ] = $v ;
+						$data2[ $k ][ $child ] = $v;
 					}
-					$data = $data2 ;
-					break ;
+					$data = $data2;
+					break;
 
 				// Cache exclude cat
 				case self::O_CACHE_EXC_CAT :
-					$data2 = array() ;
-					$data = Utility::sanitize_lines( $data ) ;
+					$data2 = array();
+					$data = Utility::sanitize_lines( $data );
 					foreach ( $data as $v ) {
-						$cat_id = get_cat_ID( $v ) ;
+						$cat_id = get_cat_ID( $v );
 						if ( ! $cat_id ) {
-							continue ;
+							continue;
 						}
 
-						$data2[] = $cat_id ;
+						$data2[] = $cat_id;
 					}
-					$data = $data2 ;
-					break ;
+					$data = $data2;
+					break;
 
 				// Cache exclude tag
 				case self::O_CACHE_EXC_TAG :
-					$data2 = array() ;
-					$data = Utility::sanitize_lines( $data ) ;
+					$data2 = array();
+					$data = Utility::sanitize_lines( $data );
 					foreach ( $data as $v ) {
-						$term = get_term_by( 'name', $v, 'post_tag' ) ;
+						$term = get_term_by( 'name', $v, 'post_tag' );
 						if ( ! $term ) {
 							// todo: can show the error in admin error msg
-							continue ;
+							continue;
 						}
 
-						$data2[] = $term->term_id ;
+						$data2[] = $term->term_id;
 					}
-					$data = $data2 ;
-					break ;
+					$data = $data2;
+					break;
 
 				// `Original URLs`
 				case self::O_CDN_ORI :
-					$data = Utility::sanitize_lines( $data ) ;
+					$data = Utility::sanitize_lines( $data );
 					// Trip scheme
 					foreach ( $data as $k => $v ) {
-						$tmp = parse_url( trim( $v ) ) ;
+						$tmp = parse_url( trim( $v ) );
 						if ( ! empty( $tmp[ 'scheme' ] ) ) {
-							$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
+							$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v );
 						}
-						$data[ $k ] = trim( $v ) ;
+						$data[ $k ] = trim( $v );
 					}
-					break ;
+					break;
 
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRWL_EXC_CPT :
 					if ( $data ) {
-						$data = Utility::sanitize_lines( $data ) ;
-						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
-						$data = array_intersect( $data, $ori ) ;
+						$data = Utility::sanitize_lines( $data );
+						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) );
+						$data = array_intersect( $data, $ori );
 					}
-					break ;
+					break;
 
 				default :
-					break ;
+					break;
 			}
 
-			$the_matrix[ $id ] = $data ;
+			$the_matrix[ $id ] = $data;
 
 		}
 
 		// id validation will be inside
-		$this->__cfg->update_confs( $the_matrix ) ;
+		$this->__cfg->update_confs( $the_matrix );
 
-		$msg = __( 'Options saved.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		$msg = __( 'Options saved.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
@@ -240,28 +239,31 @@ class Admin_Settings extends Base
 	 */
 	public function network_save( $raw_data )
 	{
-		Log::debug( '[Settings] network saving' ) ;
+		Log::debug( '[Settings] network saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
-			exit( 'No fields' ) ;
+			exit( 'No fields' );
 		}
 
-		$raw_data = Admin::cleanup_text( $raw_data ) ;
+		$raw_data = Admin::cleanup_text( $raw_data );
 
 		foreach ( array_unique( $raw_data[ self::ENROLL ] ) as $id ) {
 			// Append current field to setting save
 			if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
-				continue ;
+				continue;
 			}
 
-			$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false ;
+			$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
 
 			// id validation will be inside
-			$this->__cfg->network_update( $id, $data ) ;
+			$this->__cfg->network_update( $id, $data );
 		}
 
 		// Update related files
-		Activation::get_instance()->update_files() ;
+		Activation::get_instance()->update_files();
+
+		$msg = __( 'Options saved.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**

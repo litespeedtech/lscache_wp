@@ -607,7 +607,7 @@ class Htaccess extends Instance
 			$id = Base::O_CDN ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
-				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
+				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;// todo: network
 				$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
 				$new_rules[] = '' ;
 			}

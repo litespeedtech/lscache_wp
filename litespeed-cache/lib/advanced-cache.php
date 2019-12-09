@@ -1,10 +1,10 @@
 <?php
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 /**
  * LiteSpeed Cache Plugin
  */
 
-define('LSCACHE_ADV_CACHE', true);
+define( 'LSCACHE_ADV_CACHE', true );
 
 /**
  * Because of the way it handles caching, the LiteSpeed Cache plugin for WordPress does not need an advanced-cache.php file.
@@ -14,4 +14,3 @@ define('LSCACHE_ADV_CACHE', true);
  * It can also help to avoid conflicts with other full page caches such as W3 Total Cache, etc.
  *
  */
-return;

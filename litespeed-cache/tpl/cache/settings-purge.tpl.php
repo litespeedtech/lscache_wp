@@ -8,8 +8,6 @@ defined( 'WPINC' ) || exit;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:purge', false, 'litespeed-learn-more' ); ?>
 </h3>
 
-<?php $this->cache_disabled_warning(); ?>
-
 <?php
 $option_list = array(
 	Base::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),

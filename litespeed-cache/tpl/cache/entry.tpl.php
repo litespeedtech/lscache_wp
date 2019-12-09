@@ -69,6 +69,7 @@ ksort( $roles );
 	</h2>
 
 	<div class="litespeed-body">
+		<?php $this->cache_disabled_warning(); ?>
 
 	<?php
 	$this->form_action();

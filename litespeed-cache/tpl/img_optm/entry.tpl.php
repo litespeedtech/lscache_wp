@@ -7,6 +7,14 @@ $menu_list = array(
 	'settings'		=> __( 'Image Optimization Settings', 'litespeed-cache' ),
 ) ;
 
+
+if ( $this->_is_network_admin ) {
+	$menu_list = array(
+		'network_settings' => __( 'Image Optimization Settings', 'litespeed-cache' ),
+	);
+}
+
+
 ?>
 
 <div class="wrap">

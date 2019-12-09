@@ -272,7 +272,6 @@ class Base extends Instance
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone' ;
 	const O_CDN_MAPPING 		= 'cdn-mapping' ;
 
-	const NETWORK_O_ENABLED = 'network_enabled' ;
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
 
 	/*** Other consts ***/
@@ -559,8 +558,8 @@ class Base extends Instance
 	) ;
 
 	protected static $_default_site_options = array(
-		self::_VER 					=> '',
-		self::NETWORK_O_ENABLED 		=> false,
+		self::_VER 						=> '',
+		self::O_CACHE 					=> false,
 		self::NETWORK_O_USE_PRIMARY 	=> false,
 		self::O_AUTO_UPGRADE 			=> false,
 
@@ -872,7 +871,6 @@ class Base extends Instance
 			self::O_CACHE,
 			self::O_ESI,
 			self::O_DEBUG_DISABLE_ALL,
-			self::NETWORK_O_ENABLED,
 			self::NETWORK_O_USE_PRIMARY,
 		) ;
 

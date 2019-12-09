@@ -1,6 +1,7 @@
 <?php
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
+
 ?>
 
 	<!-- build_setting_mobile_view start -->
