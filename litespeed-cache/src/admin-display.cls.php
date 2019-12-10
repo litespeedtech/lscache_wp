@@ -142,36 +142,36 @@ class Admin_Display extends Base
 	 */
 	public function register_admin_menu()
 	{
-		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options' ;
+		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options';
 		if ( current_user_can( $capability ) ) {
 
 			// root menu
-			add_menu_page( 'LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed' ) ;
+			add_menu_page( 'LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed' );
 
 			// sub menus
-			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' ) ;
+			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' );
 
-			$this->_add_submenu( __( 'General', 'litespeed-cache' ), 'litespeed-general', 'show_menu_general' ) ;
+			$this->_add_submenu( __( 'General', 'litespeed-cache' ), 'litespeed-general', 'show_menu_general' );
 
-			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' ) ;
+			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' );
 
-			! $this->_is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' );
 
-			$this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' ) ;
+			$this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' );
 
-			! $this->_is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' );
 
-			$this->_add_submenu( __( 'Database', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' ) ;
+			$this->_add_submenu( __( 'Database', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' );
 
-			! $this->_is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' );
 
-			$this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' ) ;
+			$this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' );
 
-			! $this->_is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' ) ;
+			! $this->_is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' );
 
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache-options', array($this, 'show_menu_cache')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache-options', array($this, 'show_menu_cache'));
 		}
 	}
 
@@ -186,7 +186,7 @@ class Admin_Display extends Base
 	 */
 	private function _add_submenu( $menu_title, $menu_slug, $callback )
 	{
-		add_submenu_page( 'litespeed', $menu_title, $menu_title, 'manage_options', $menu_slug, array( $this, $callback ) ) ;
+		add_submenu_page( 'litespeed', $menu_title, $menu_title, 'manage_options', $menu_slug, array( $this, $callback ) );
 	}
 
 	/**
