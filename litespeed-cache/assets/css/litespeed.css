@@ -1988,11 +1988,18 @@ g.litespeed-pie_info .litespeed-pie-done {
 	z-index:2;
 }
 
-.litespeed-cache_page_litespeed-img_optm .litespeed-body [data-litespeed-layout="summary"]{
+.litespeed-cache_page_litespeed-img_optm .litespeed-body{
 	box-shadow:none;
 	border:none;
 	background:none;
 	padding:0;
+}
+
+.litespeed-cache_page_litespeed-img_optm [data-litespeed-layout]:not([data-litespeed-layout='summary']) {
+	background:  #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 1px 20px 20px 20px;
 }
 
 .litespeed-column-secondary{
