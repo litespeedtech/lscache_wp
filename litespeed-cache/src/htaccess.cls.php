@@ -517,122 +517,118 @@ class Htaccess extends Instance
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
 
-		$disable_lscache_detail_rules = ! $cfg[ Base::_CACHE ] ;
+		// mobile agents
+		$id = Base::O_CACHE_MOBILE_RULES ;
+		if ( ! empty( $cfg[ Base::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
+			$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-		if ( ! $disable_lscache_detail_rules ) {
-			// mobile agents
-			$id = Base::O_CACHE_MOBILE_RULES ;
-			if ( ! empty( $cfg[ Base::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]' ;
-				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
-				$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
-				$new_rules[] = '' ;
-			}
+		// nocache cookie
+		$id = Base::O_CACHE_EXC_COOKIES ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
+			$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' .  Utility::arr2regex( $cfg[ $id ], true ) ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
+			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-			// nocache cookie
-			$id = Base::O_CACHE_EXC_COOKIES ;
+		// nocache user agents
+		$id = Base::O_CACHE_EXC_USERAGENTS ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
+			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
+
+		// caching php resource
+		$id = Base::O_CACHE_RES ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
+			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
+			$new_rules[] = $new_rules_backend[] = '' ;
+		}
+
+		// check login cookie
+		$id = Base::O_CACHE_LOGIN_COOKIE ;
+
+		// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
+		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' .  Utility::arr2regex( $cfg[ $id ], true ) ;
-				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
-				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
-				$new_rules[] = '' ;
+				$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
 			}
+			else {
+				$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
+			}
+		}
 
-			// nocache user agents
-			$id = Base::O_CACHE_EXC_USERAGENTS ;
+		$tp_cookies = apply_filters( 'litespeed_api_vary', array() ) ;
+		if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
 			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) ;
-				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
-				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
-				$new_rules[] = '' ;
+				$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
 			}
-
-			// caching php resource
-			$id = Base::O_CACHE_RES ;
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
-				$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
-				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
-				$new_rules[] = $new_rules_backend[] = '' ;
+			else {
+				$cfg[ $id ] = implode( ',', $tp_cookies ) ;
 			}
-
-			// check login cookie
-			$id = Base::O_CACHE_LOGIN_COOKIE ;
-
-			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
+		}
+		// frontend and backend
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$env = 'Cache-Vary:' . $cfg[ $id ] ;
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-				if ( ! empty( $cfg[ $id ] ) ) {
-					$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
-				}
-				else {
-					$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
-				}
+				$env = '"' . $env . '"' ;
 			}
+			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']' ;
+			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-			$tp_cookies = apply_filters( 'litespeed_api_vary', array() ) ;
-			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
-				if ( ! empty( $cfg[ $id ] ) ) {
-					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
-				}
-				else {
-					$cfg[ $id ] = implode( ',', $tp_cookies ) ;
-				}
-			}
-			// frontend and backend
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$env = 'Cache-Vary:' . $cfg[ $id ] ;
-				if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-					$env = '"' . $env . '"' ;
-				}
-				$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START ;
-				$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']' ;
-				$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END ;
-				$new_rules[] = '' ;
-			}
+		// favicon
+		// frontend and backend
+		$id = Base::O_CACHE_FAVICON ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
+			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-			// favicon
-			// frontend and backend
-			$id = Base::O_CACHE_FAVICON ;
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
-				$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
-				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
-				$new_rules[] = '' ;
-			}
+		// CORS font rules
+		$id = Base::O_CDN ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
+			$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ; //todo: network
+			$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-			// CORS font rules
-			$id = Base::O_CDN ;
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
-				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;// todo: network
-				$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
-				$new_rules[] = '' ;
-			}
+		// webp support
+		$id = Base::O_IMG_OPTM_WEBP_REPLACE ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
+			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]' ;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} "Page Speed"' ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
+			$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
 
-			// webp support
-			$id = Base::O_IMG_OPTM_WEBP_REPLACE ;
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]' ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} "Page Speed"' ;
-				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
-				$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
-				$new_rules[] = '' ;
+		// drop qs support
+		$id = Base::O_CACHE_DROP_QS ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
+			foreach ( $cfg[ $id ] as $v ) {
+				$new_rules[] = 'CacheKeyModify -qs:' . $v ;
 			}
-
-			// drop qs support
-			$id = Base::O_CACHE_DROP_QS ;
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
-				foreach ( $cfg[ $id ] as $v ) {
-					$new_rules[] = 'CacheKeyModify -qs:' . $v ;
-				}
-				$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;
-				$new_rules[] = '' ;
-			}
+			$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;
+			$new_rules[] = '' ;
 		}
 
 		// Browser cache
@@ -646,11 +642,11 @@ class Htaccess extends Instance
 		}
 
 		// Add module wrapper for LiteSpeed rules
-		if ( $new_rules || $disable_lscache_detail_rules ) {
+		if ( $new_rules ) {
 			$new_rules = $this->_wrap_ls_module( $new_rules ) ;
 		}
 
-		if ( $new_rules_backend || $disable_lscache_detail_rules ) {
+		if ( $new_rules_backend ) {
 			$new_rules_backend = $this->_wrap_ls_module( $new_rules_backend ) ;
 		}
 
@@ -744,7 +740,7 @@ class Htaccess extends Instance
 	public function update( $cfg )
 	{
 		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
-// var_dump( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls );exit;
+
 		// Check frontend content
 		list( $rules, $rules_nonls ) = $this->_extract_rules() ;
 

@@ -636,8 +636,12 @@ class Admin_Display extends Base
 	 * @since    3.0
 	 * @access public
 	 */
-	public function form_action( $action = Router::ACTION_SAVE_SETTINGS, $type = false, $has_upload = false )
+	public function form_action( $action = false, $type = false, $has_upload = false )
 	{
+		if ( ! $action ) {
+			$action = Router::ACTION_SAVE_SETTINGS;
+		}
+
 		$has_upload = $has_upload ? 'enctype="multipart/form-data"' : '' ;
 
 		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>' ;
@@ -655,13 +659,17 @@ class Admin_Display extends Base
 	 * @since    3.0
 	 * @access public
 	 */
-	public function form_end()
+	public function form_end( $disable_reset = false )
 	{
 		echo "<div class='litespeed-top20'></div>" ;
 		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' ) ;
-		echo '<a href="admin.php?page=litespeed-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
-		echo __( 'Reset All Settings', 'litespeed-cache' ) ;
-		echo '</a>' ;
+
+		if ( ! $disable_reset ) {
+			echo '<a href="admin.php?page=litespeed-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
+			echo __( 'Reset All Settings', 'litespeed-cache' ) ;
+			echo '</a>' ;
+		}
+
 		echo '</form>' ;
 	}
 

@@ -37,21 +37,18 @@ $menuArr = array(
 	<div class="litespeed-body">
 		<?php $this->cache_disabled_warning(); ?>
 
-	<?php
+		<?php
 		$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 
-	// include all tpl for faster UE
-	foreach ($menuArr as $tab => $val) {
-		echo "<div data-litespeed-layout='$tab'>";
-		require LSCWP_DIR . "tpl/cache/network_settings-$tab.tpl.php";
-		echo "</div>";
-	}
+		// include all tpl for faster UE
+		foreach ($menuArr as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>";
+			require LSCWP_DIR . "tpl/cache/network_settings-$tab.tpl.php";
+			echo "</div>";
+		}
 
-	echo "<div class='litespeed-top20'></div>";
+		$this->form_end( true );
 
-	submit_button();
-
-	?>
-	</form>
+		?>
 	</div>
 </div>

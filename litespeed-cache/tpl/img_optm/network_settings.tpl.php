@@ -19,10 +19,5 @@ $this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 </tbody></table>
 
 <?php
-	echo "<div class='litespeed-top20'></div>";
-
-	submit_button();
-	?>
-	</form>
-
+$this->form_end( true );
 
