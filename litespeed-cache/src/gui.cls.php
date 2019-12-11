@@ -465,6 +465,81 @@ class GUI extends Base
 			'title'		=> __( 'More settings', 'litespeed-cache' ),
 			'href'		=> get_admin_url( null, 'admin.php?page=litespeed-cache' ),
 		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-purge-all',
+			'title'		=> __( 'Purge All', 'litespeed-cache' ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL, false, '_ori' ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-purge-all-lscache',
+			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE, false, '_ori' ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-purge-cssjs',
+			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
+			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS, false, '_ori' ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-object',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( Router::opcache_enabled() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-opcache',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( CSS::has_ccss_cache() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-ccss',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( Placeholder::has_lqip_cache() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-placeholder',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( Avatar::has_cache() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-avatar',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
 	}
 
 	/**
@@ -531,7 +606,7 @@ class GUI extends Base
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
-			'id'		=> 'litespeed-purge-all',
+			'id'		=> 'litespeed-purge-all-lscache',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
 			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'		=> array( 'tabindex' => '0' ),

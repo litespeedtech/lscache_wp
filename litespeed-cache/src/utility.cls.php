@@ -622,9 +622,14 @@ class Utility extends Instance
 	 * @access public
 	 * @return string The built url.
 	 */
-	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = array() )
 	{
-		$prefix = '?' ;
+		$prefix = '?';
+
+		if ( $page === '_ori' ) {
+			$page = true;
+			$append_arr[ '_litespeed_ori' ] = 1;
+		}
 
 		if ( ! $is_ajax ) {
 			if ( $page ) {

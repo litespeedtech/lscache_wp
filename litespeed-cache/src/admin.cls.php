@@ -160,35 +160,41 @@ class Admin extends Instance
 	 */
 	public static function redirect( $url = false )
 	{
-		global $pagenow ;
-		$qs = '' ;
+		global $pagenow;
+
+		if ( ! empty( $_GET[ '_litespeed_ori' ] ) ) {
+			wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
+			exit;
+		}
+
+		$qs = '';
 		if ( ! $url ) {
 			if ( ! empty( $_GET ) ) {
 				if ( isset( $_GET[ Router::ACTION ] ) ) {
-					unset( $_GET[ Router::ACTION ] ) ;
+					unset( $_GET[ Router::ACTION ] );
 				}
 				if ( isset( $_GET[ Router::NONCE ] ) ) {
-					unset( $_GET[ Router::NONCE ] ) ;
+					unset( $_GET[ Router::NONCE ] );
 				}
 				if ( isset( $_GET[ Router::TYPE ] ) ) {
-					unset( $_GET[ Router::TYPE ] ) ;
+					unset( $_GET[ Router::TYPE ] );
 				}
 				if ( isset( $_GET[ 'litespeed_i' ] ) ) {
-					unset( $_GET[ 'litespeed_i' ] ) ;
+					unset( $_GET[ 'litespeed_i' ] );
 				}
 				if ( ! empty( $_GET ) ) {
-					$qs = '?' . http_build_query( $_GET ) ;
+					$qs = '?' . http_build_query( $_GET );
 				}
 			}
 			if ( is_network_admin() ) {
-				$url = network_admin_url( $pagenow . $qs ) ;
+				$url = network_admin_url( $pagenow . $qs );
 			}
 			else {
-				$url = admin_url( $pagenow . $qs ) ;
+				$url = admin_url( $pagenow . $qs );
 			}
 		}
 
-		wp_redirect( $url ) ;
-		exit() ;
+		wp_redirect( $url );
+		exit;
 	}
 }
