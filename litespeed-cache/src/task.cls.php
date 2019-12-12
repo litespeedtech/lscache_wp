@@ -80,36 +80,10 @@ class Task extends Instance
 	}
 
 	/**
-	 * Enable/Disable cron task
+	 * todo: still need?
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 */
-	public static function enable()
-	{
-		$id = Base::O_CRWL ;
-
-		// get new setting
-		$is_enabled = ! Conf::val( $id ) ;
-
-		// log
-		Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
-
-		// update config
-		Conf::get_instance()->update_options( array( $id => $is_enabled ) ) ;
-
-		self::update() ;
-
-		echo json_encode( array( 'enable' => $is_enabled ) ) ;
-		wp_die() ;
-	}
-
-	/**
-	 * Update cron status
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @param array $options The options to check if cron should be enabled
 	 */
 	public static function update( $options = false )
 	{

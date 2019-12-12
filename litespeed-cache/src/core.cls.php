@@ -41,7 +41,6 @@ class Core extends Instance
 	const ACTION_QS_NOCACHE = 'NOCACHE' ;
 	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file' ;
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos' ;
-	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable' ;
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
@@ -288,10 +287,6 @@ class Core extends Instance
 			case self::ACTION_CRAWLER_RESET_POS:
 				Crawler::get_instance()->reset_pos() ;
 				Admin::redirect() ;
-				break;
-
-			case self::ACTION_CRAWLER_CRON_ENABLE:
-				Task::enable() ;
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin

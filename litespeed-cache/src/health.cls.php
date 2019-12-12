@@ -62,18 +62,16 @@ class Health extends Base
 	 */
 	public function scores()
 	{
-		$_health_summary = self::get_summary();
-
 		$speed_before = $speed_after = $speed_improved = 0;
-		if ( ! empty( $_health_summary[ 'speed.before' ] ) && ! empty( $_health_summary[ 'speed.after' ] ) ) {
+		if ( ! empty( $this->_summary[ 'speed.before' ] ) && ! empty( $this->_summary[ 'speed.after' ] ) ) {
 			// Format loading time
-			$speed_before = $_health_summary[ 'speed.before' ] / 1000;
+			$speed_before = $this->_summary[ 'speed.before' ] / 1000;
 			if ( $speed_before < 0.01 ) {
 				$speed_before = 0.01;
 			}
 			$speed_before = number_format( $speed_before, 2 );
 
-			$speed_after = $_health_summary[ 'speed.after' ] / 1000;
+			$speed_after = $this->_summary[ 'speed.after' ] / 1000;
 			if ( $speed_after < 0.01 ) {
 				$speed_after = number_format( $speed_after, 3 );
 			}
@@ -81,7 +79,7 @@ class Health extends Base
 				$speed_after = number_format( $speed_after, 2 );
 			}
 
-			$speed_improved = ( $_health_summary[ 'speed.before' ] - $_health_summary[ 'speed.after' ] ) * 100 / $_health_summary[ 'speed.before' ];
+			$speed_improved = ( $this->_summary[ 'speed.before' ] - $this->_summary[ 'speed.after' ] ) * 100 / $this->_summary[ 'speed.before' ];
 			if ( $speed_improved > 99 ) {
 				$speed_improved = number_format( $speed_improved, 2 );
 			}
@@ -91,9 +89,9 @@ class Health extends Base
 		}
 
 		$score_before = $score_after = $score_improved = 0;
-		if ( ! empty( $_health_summary[ 'score.before' ] ) && ! empty( $_health_summary[ 'score.after' ] ) ) {
-			$score_before = $_health_summary[ 'score.before' ];
-			$score_after = $_health_summary[ 'score.after' ];
+		if ( ! empty( $this->_summary[ 'score.before' ] ) && ! empty( $this->_summary[ 'score.after' ] ) ) {
+			$score_before = $this->_summary[ 'score.before' ];
+			$score_after = $this->_summary[ 'score.after' ];
 
 			// Format Score
 			$score_improved = ( $score_after - $score_before ) * 100 / $score_after;

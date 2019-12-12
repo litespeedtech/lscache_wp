@@ -149,10 +149,16 @@ $cloud_summary = Cloud::get_summary();
 								</div>
 							</div>
 							<?php endif; ?>
+
 						</div>
 					</div>
-
 				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.health-speed' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.health-speed' ] ) ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
 			<div class="postbox litespeed-postbox">
@@ -207,8 +213,13 @@ $cloud_summary = Cloud::get_summary();
 
 						</div>
 					</div>
-
 				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.health-score' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.health-score' ] ) ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
 			<div class="postbox litespeed-postbox">
@@ -277,8 +288,7 @@ $cloud_summary = Cloud::get_summary();
 
 				</div>
 				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-					<div><a href="#">More details
-					</a></div>
+					<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>"><?php echo __( 'Manage Crawler', 'litespeed-cache' ); ?></a>
 				</div>
 			</div>
 

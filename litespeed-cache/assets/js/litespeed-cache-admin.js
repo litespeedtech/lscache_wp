@@ -93,13 +93,6 @@ var _litespeed_dots ;
 			litespeed_fetch_meta() ;
 		}) ;
 
-		$('#litespeed_crawler_cron_enable').click(function(event) {
-			var that = this ;
-			$.getJSON( $(that).data('url'), function(json){
-				$(that).prop('checked', json.enable) ;
-			} ) ;
-		}) ;
-
 		/******************** Clear whm msg ********************/
 		$(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
 			$.get(litespeed_data.ajax_url_dismiss_whm) ;

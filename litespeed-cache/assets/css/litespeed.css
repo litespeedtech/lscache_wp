@@ -908,100 +908,6 @@ h3 .litespeed-learn-more {
 }
 
 /* =======================================
-	  SWITCH - drag
-======================================= */
-
-.litespeed-switch-drag {
-	position: relative;
-	width: 100px;
-	-webkit-user-select:none;
-	-moz-user-select:none;
-	-ms-user-select: none;
-	border: 1px solid #538ac6;
-	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	border-radius: 3px;
-	display: inline-block;
-}
-
-.litespeed-switch-drag input {
-	display: none;
-}
-
-.litespeed-switch-drag-label {
-	display: block;
-	overflow: hidden;
-	cursor: pointer;
-}
-
-.litespeed-switch-drag-inner {
-	display: block;
-	width: 200%;
-	margin-left: -100%;
-	transition: margin 0.1s ease-in 0s;
-}
-
-.litespeed-switch-drag-inner:before, .litespeed-switch-drag-inner:after {
-	display: block;
-	float: left;
-	width: 50%;
-	height: 25px;
-	padding: 0;
-	line-height: 25px;
-	font-size: 13px;
-	color: #fff;
-	font-weight: 600;
-	box-sizing: border-box;
-	-moz-box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
-	-webkit-box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
-	box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
-}
-
-.litespeed-switch-drag-inner:before {
-	content: attr(data-on);
-	padding-left: 10px;
-	background-color: #36b0b0;
-	color: #FFFFFF;
-
-}
-
-.litespeed-switch-drag-inner:after {
-	content: attr(data-off);
-	padding-right: 8px;
-	background-color: #f9fafc;
-	color: #6699cc;
-	text-align: right;
-	font-weight: 400;
-}
-
-.litespeed-switch-drag-switch {
-	display: block;
-	width: 25px;
-	margin: 0px;
-	background: #F9FAFC;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 73px;
-	border: 1px solid #6699CC;
-	border-radius: 2px;
-	-moz-box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
-	-webkit-box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
-	box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
-	transition: all 0.1s ease-in 0s;
-}
-
-.litespeed-switch-drag input:checked + .litespeed-switch-drag-label .litespeed-switch-drag-inner {
-	margin-left: 0;
-}
-
-.litespeed-switch-drag input:checked + .litespeed-switch-drag-label .litespeed-switch-drag-switch {
-	right: 0px;
-}
-
-
-/* =======================================
 				TOGGLE
 ======================================= */
 
@@ -1879,12 +1785,6 @@ g.litespeed-pie_info .litespeed-pie-done {
 	vertical-align: middle;
 	height: 20px;
 	margin-left: 10px;
-}
-
-.litespeed-cron-onoff-btn {
-	position: absolute ;
-	left: 180px ;
-	top: -7px ;
 }
 
 /* =======================================

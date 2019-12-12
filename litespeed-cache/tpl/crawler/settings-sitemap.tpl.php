@@ -1,21 +1,23 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-$this->form_action() ;
+$this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Crawler Sitemap Settings', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
-		<th><?php echo __('Custom Sitemap', 'litespeed-cache'); ?></th>
+		<th>
+			<?php $id = Base::O_CRWL_CUSTOM_SITEMAP; ?>
+			<?php $this->title( $id ); ?>
+		</th>
 		<td>
-			<?php $id = Base::O_CRWL_CUSTOM_SITEMAP ; ?>
-			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
+			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
 				<?php echo __('The crawler can use your Google XML Sitemap instead of its own. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
 			</div>
@@ -23,35 +25,35 @@ $this->form_action() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Sitemap Generation', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Sitemap Generation', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-block">
 				<div class='litespeed-cdn-mapping-col2'>
 					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_POSTS ) ;
+						$this->build_toggle( Base::O_CRWL_POSTS );
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_PAGES ) ;
+						$this->build_toggle( Base::O_CRWL_PAGES );
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_CATS ) ;
+						$this->build_toggle( Base::O_CRWL_CATS );
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_TAGS ) ;
+						$this->build_toggle( Base::O_CRWL_TAGS );
 					?>
 					</div>
 
@@ -60,7 +62,7 @@ $this->form_action() ;
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></h4>
 
-					<?php $this->build_textarea( Base::O_CRWL_EXC_CPT, 40 ) ; ?>
+					<?php $this->build_textarea( Base::O_CRWL_EXC_CPT, 40 ); ?>
 
 					<div class="litespeed-desc">
 						<?php echo __('Exclude certain Custom Post Types in sitemap.', 'litespeed-cache'); ?>
@@ -105,7 +107,7 @@ $this->form_action() ;
 						); ?>
 					</div>
 					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ) ; ?>
+						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ); ?>
 					</div>
 				</div>
 			</div>
@@ -116,4 +118,4 @@ $this->form_action() ;
 </tbody></table>
 
 <?php
-$this->form_end() ;
+$this->form_end();

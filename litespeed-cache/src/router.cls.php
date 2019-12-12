@@ -524,7 +524,6 @@ class Router extends Instance
 
 			case Core::ACTION_CRAWLER_GENERATE_FILE:
 			case Core::ACTION_CRAWLER_RESET_POS:
-			case Core::ACTION_CRAWLER_CRON_ENABLE:
 			case Core::ACTION_DO_CRAWL:
 			case Core::ACTION_BLACKLIST_SAVE:
 			case Core::ACTION_PURGE:

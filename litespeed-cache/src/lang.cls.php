@@ -204,7 +204,17 @@ class Lang extends Base
 			self::O_CDN_QUIC					=> __( 'Quic Cloud API', 'litespeed-cache' ),
 			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
 
+			self::O_CRWL						=> __( 'Crawler', 'litespeed-cache' ),
+			self::O_CRWL_USLEEP					=> __( 'Delay', 'litespeed-cache' ),
+			self::O_CRWL_RUN_DURATION			=> __( 'Run Duration', 'litespeed-cache' ),
+			self::O_CRWL_RUN_INTERVAL			=> __( 'Interval Between Runs', 'litespeed-cache' ),
+			self::O_CRWL_CRAWL_INTERVAL			=> __( 'Crawl Interval', 'litespeed-cache' ),
+			self::O_CRWL_THREADS				=> __( 'Threads', 'litespeed-cache' ),
 			self::O_CRWL_TIMEOUT				=> __( 'Timeout', 'litespeed-cache' ),
+			self::O_CRWL_LOAD_LIMIT				=> __( 'Server Load Limit', 'litespeed-cache' ),
+			self::O_CRWL_ROLES					=> __( 'Role Simulation', 'litespeed-cache' ),
+			self::O_CRWL_COOKIES				=> __( 'Cookie Simulation', 'litespeed-cache' ),
+			self::O_CRWL_CUSTOM_SITEMAP			=> __( 'Custom Sitemap', 'litespeed-cache' ),
 
 			self::O_DEBUG_DISABLE_ALL			=> __( 'Disable All Features', 'litespeed-cache' ),
 			self::O_DEBUG						=> __( 'Debug Log', 'litespeed-cache' ),
