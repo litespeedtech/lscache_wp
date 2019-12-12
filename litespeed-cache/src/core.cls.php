@@ -48,7 +48,6 @@ class Core extends Instance
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
 	const ACTION_CONF = 'conf' ;
 	const ACTION_ACTIVATION = 'activate' ;
-	const ACTION_UTIL = 'util' ;
 
 	const ACTION_LOG = 'log' ;
 
@@ -349,6 +348,10 @@ class Core extends Instance
 				$msg = Cloud::handler() ;
 				break ;
 
+			case Router::ACTION_HEALTH:
+				Health::handler() ;
+				break ;
+
 			case self::ACTION_LOG:
 				$msg = Log::handler() ;
 				break ;
@@ -379,10 +382,6 @@ class Core extends Instance
 
 			case self::ACTION_ACTIVATION :
 				$msg = Activation::handler() ;
-				break ;
-
-			case self::ACTION_UTIL :
-				$msg = Utility::handler() ;
 				break ;
 
 			default:

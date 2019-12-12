@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$url = Utility::build_url( Core::ACTION_UTIL, Utility::TYPE_SCORE_CHK, true ) ;
+$url = Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED, true ) ;
 $url = htmlspecialchars_decode( $url ) ;
 ?>
 <script>

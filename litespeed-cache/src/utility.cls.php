@@ -14,9 +14,6 @@ class Utility extends Instance
 	protected static $_instance ;
 	private static $_internal_domains ;
 
-	const TYPE_SCORE_CHK = 'score_chk' ;
-
-
 	/**
 	 * Validate regex
 	 *
@@ -77,28 +74,6 @@ class Utility extends Instance
 	public static function is_rest( $url = false )
 	{
 		return false ;
-	}
-
-	/**
-	 * Check page score
-	 *
-	 * @since  2.9
-	 * @access private
-	 */
-	private function _score_check()
-	{
-		$_summary = GUI::get_summary() ;
-
-		$_summary[ 'score.last_check' ] = time() ;
-		GUI::save_summary( $_summary ) ;
-
-		$score = Cloud::post( Cloud::SVC_PAGESCORE, false, 600 ) ;
-		$_summary[ 'score.data' ] = $score ;
-		GUI::save_summary( $_summary ) ;
-
-		Log::debug( '[Util] Saved page score ', $score ) ;
-
-		exit() ;
 	}
 
 	/**
@@ -865,29 +840,4 @@ class Utility extends Instance
 	}
 
 
-
-
-	/**
-	 * Handle all request actions from main cls
-	 *
-	 * @since  2.9
-	 * @access public
-	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
-
-		$type = Router::verify_type() ;
-
-		switch ( $type ) {
-			case self::TYPE_SCORE_CHK :
-				$instance->_score_check() ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		Admin::redirect() ;
-	}
 }

@@ -24,6 +24,7 @@ class Router extends Instance
 	const ACTION_SAVE_SETTINGS = 'save-settings';
 	const ACTION_CLOUD = 'cloud';
 	const ACTION_IMG_OPTM = 'img_optm';
+	const ACTION_HEALTH = 'health';
 
 	const TYPE = 'litespeed_type';
 
@@ -538,7 +539,7 @@ class Router extends Instance
 			case Core::ACTION_CSS:
 			case Core::ACTION_CONF:
 			case Core::ACTION_ACTIVATION:
-			case Core::ACTION_UTIL:
+			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
