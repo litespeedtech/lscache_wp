@@ -8,13 +8,6 @@ defined( 'WPINC' ) || exit ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<?php if ( Optimize::need_db() && ! Data::get_instance()->tb_exist( 'cssjs' ) ) : ?>
-<div class="litespeed-callout notice notice-error inline">
-	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
-	<p><?php echo sprintf( __( 'Failed to create Optimizer table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
-</div>
-<?php endif; ?>
-
 <div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE', 'litespeed-cache' ) ; ?></h4>
 	<p><?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?></p>

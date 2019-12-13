@@ -101,7 +101,7 @@ class Option extends Base
 		WP_CLI::line($buf) ;
 
 		foreach( $options as $k => $v ) {
-			if ( $k == self::O_CDN_MAPPING || $k == self::O_CRWL_COOKIES ) {
+			if ( $k == self::O_CDN_MAPPING || $k == self::O_CRAWLER_COOKIES ) {
 				foreach ( $v as $k2 => $v2 ) { // $k2 is numeric
 					if ( is_array( $v2 ) ) {
 						foreach ( $v2 as $k3 => $v3 ) { // $k3 = 'url/inc_img/name/vals'
@@ -199,7 +199,7 @@ class Option extends Base
 				return ;
 			}
 		}
-		if ( $id == self::O_CRWL_COOKIES ) {
+		if ( $id == self::O_CRAWLER_COOKIES ) {
 			if ( ! in_array( $child, array(
 				self::CRWL_COOKIE_NAME,
 				self::CRWL_COOKIE_VALS,
@@ -209,7 +209,7 @@ class Option extends Base
 			}
 		}
 
-		if ( $id == self::O_CDN_MAPPING || $id == self::O_CRWL_COOKIES ) {
+		if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
 			if ( ! empty( $v[ $numeric ][ $child ] ) ) {
 				$v = $v[ $numeric ][ $child ] ;
 			}
@@ -236,7 +236,7 @@ class Option extends Base
 			$v = implode( PHP_EOL , $v ) ;
 		}
 
-		if ( ! $v && $id != self::O_CDN_MAPPING && $id != self::O_CRWL_COOKIES ) { // empty array for CDN/crawler has been handled
+		if ( ! $v && $id != self::O_CDN_MAPPING && $id != self::O_CRAWLER_COOKIES ) { // empty array for CDN/crawler has been handled
 			if ( is_bool( $default_v ) ) {
 				$v = 0 ;
 			}

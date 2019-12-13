@@ -13,7 +13,7 @@ $this->form_action();
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL; ?>
+			<?php $id = Base::O_CRAWLER; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -26,7 +26,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_USLEEP; ?>
+			<?php $id = Base::O_CRAWLER_USLEEP; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -53,7 +53,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_RUN_DURATION; ?>
+			<?php $id = Base::O_CRAWLER_RUN_DURATION; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -67,7 +67,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_RUN_INTERVAL; ?>
+			<?php $id = Base::O_CRAWLER_RUN_INTERVAL; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -82,7 +82,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_CRAWL_INTERVAL; ?>
+			<?php $id = Base::O_CRAWLER_CRAWL_INTERVAL; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -96,7 +96,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_THREADS; ?>
+			<?php $id = Base::O_CRAWLER_THREADS; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -111,7 +111,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_TIMEOUT; ?>
+			<?php $id = Base::O_CRAWLER_TIMEOUT; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -142,7 +142,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_LOAD_LIMIT; ?>
+			<?php $id = Base::O_CRAWLER_LOAD_LIMIT; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>

@@ -46,15 +46,15 @@ class Crawler_Sitemap extends Instance
 	{
 		global $wpdb ;
 
-		$optionOrderBy = Conf::val( Base::O_CRWL_ORDER_LINKS ) ;
+		$optionOrderBy = Conf::val( Base::O_CRAWLER_ORDER_LINKS ) ;
 
-		$show_pages = Conf::val( Base::O_CRWL_PAGES ) ;
+		$show_pages = Conf::val( Base::O_CRAWLER_PAGES ) ;
 
-		$show_posts = Conf::val( Base::O_CRWL_POSTS ) ;
+		$show_posts = Conf::val( Base::O_CRAWLER_POSTS ) ;
 
-		$show_cats = Conf::val( Base::O_CRWL_CATS ) ;
+		$show_cats = Conf::val( Base::O_CRAWLER_CATS ) ;
 
-		$show_tags = Conf::val( Base::O_CRWL_TAGS ) ;
+		$show_tags = Conf::val( Base::O_CRAWLER_TAGS ) ;
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
@@ -84,7 +84,7 @@ class Crawler_Sitemap extends Instance
 			$post_type_array[] = 'post' ;
 		}
 
-		if ( $excludeCptArr = Conf::val( Base::O_CRWL_EXC_CPT ) ) {
+		if ( $excludeCptArr = Conf::val( Base::O_CRAWLER_EXC_CPT ) ) {
 			$cptArr = get_post_types() ;
 			$cptArr = array_diff($cptArr, array('post', 'page')) ;
 			$cptArr = array_diff($cptArr, $excludeCptArr) ;

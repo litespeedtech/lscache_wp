@@ -13,7 +13,7 @@ if ( $meta[ 'curr_crawler' ] >= count( $crawler_list ) ) {
 	$meta[ 'curr_crawler' ] = 0;
 }
 
-$is_running = time() - $meta[ 'is_running' ] <= Conf::val( Base::O_CRWL_RUN_DURATION );
+$is_running = time() - $meta[ 'is_running' ] <= Conf::val( Base::O_CRAWLER_RUN_DURATION );
 
 $disabled = Router::can_crawl() ? '' : 'disabled';
 
@@ -36,7 +36,7 @@ $disabled = Router::can_crawl() ? '' : 'disabled';
 		</div>
 
 <?php
-	$seconds = Conf::val( Base::O_CRWL_RUN_INTERVAL );
+	$seconds = Conf::val( Base::O_CRAWLER_RUN_INTERVAL );
 	if($seconds > 0):
 		$recurrence = '';
 		$hours = (int)floor($seconds / 3600);
@@ -81,7 +81,7 @@ $disabled = Router::can_crawl() ? '' : 'disabled';
 			<?php if ( ! $is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ); ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + Conf::val( Base::O_CRWL_CRAWL_INTERVAL )); ?>
+			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + Conf::val( Base::O_CRAWLER_CRAWL_INTERVAL )); ?>
 			<?php endif; ?>
 		</p>
 

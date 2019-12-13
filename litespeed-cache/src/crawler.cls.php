@@ -260,7 +260,7 @@ class Crawler extends Base
 	protected function _generate_sitemap()
 	{
 		// use custom sitemap
-		if ( $sitemap = $this->_options[ Base::O_CRWL_CUSTOM_SITEMAP ] ) {
+		if ( $sitemap = $this->_options[ Base::O_CRAWLER_CUSTOM_SITEMAP ] ) {
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
 			$sitemap_urls = false ;
@@ -397,7 +397,7 @@ class Crawler extends Base
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[Base::O_CRWL_CRAWL_INTERVAL] ) {
+			if ( ! $force && time() - $last_fnished_at < $this->_options[Base::O_CRAWLER_CRAWL_INTERVAL] ) {
 				Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
@@ -406,25 +406,25 @@ class Crawler extends Base
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_home_url) ;
-		$crawler->set_run_duration($this->_options[Base::O_CRWL_RUN_DURATION]) ;
+		$crawler->set_run_duration($this->_options[Base::O_CRAWLER_RUN_DURATION]) ;
 
 		/**
 		 * Limit delay to use server setting
 		 * @since 1.8.3
 		 */
-		$usleep = $this->_options[ Base::O_CRWL_USLEEP ] ;
+		$usleep = $this->_options[ Base::O_CRAWLER_USLEEP ] ;
 		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Base::ENV_CRAWLER_USLEEP ] > $usleep ) {
 			$usleep = $_SERVER[ Base::ENV_CRAWLER_USLEEP ] ;
 		}
 		$crawler->set_run_delay( $usleep ) ;
-		$crawler->set_threads_limit( $this->_options[ Base::O_CRWL_THREADS ] ) ;
+		$crawler->set_threads_limit( $this->_options[ Base::O_CRAWLER_THREADS ] ) ;
 		/**
 		 * Set timeout to avoid incorrect blacklist addition #900171
 		 * @since  3.0
 		 */
-		$crawler->set_timeout( $this->_options[ Base::O_CRWL_TIMEOUT ] ) ;
+		$crawler->set_timeout( $this->_options[ Base::O_CRAWLER_TIMEOUT ] ) ;
 
-		$server_load_limit = $this->_options[ Base::O_CRWL_LOAD_LIMIT ] ;
+		$server_load_limit = $this->_options[ Base::O_CRAWLER_LOAD_LIMIT ] ;
 		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
 			$server_load_limit = $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
 		}
@@ -555,7 +555,7 @@ class Crawler extends Base
 
 		// Get roles set
 		// List all roles
-		foreach ( $this->_options[ Base::O_CRWL_ROLES ] as $v ) {
+		foreach ( $this->_options[ Base::O_CRAWLER_ROLES ] as $v ) {
 			$role_title = '' ;
 			$udata = get_userdata( $v ) ;
 			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
@@ -570,7 +570,7 @@ class Crawler extends Base
 		}
 
 		// Cookie crawler
-		foreach ( $this->_options[ Base::O_CRWL_COOKIES ] as $v ) {
+		foreach ( $this->_options[ Base::O_CRAWLER_COOKIES ] as $v ) {
 			if ( empty( $v[ 'name' ] ) ) {
 				continue ;
 			}

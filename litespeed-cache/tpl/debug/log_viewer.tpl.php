@@ -17,7 +17,7 @@ defined( 'WPINC' ) || exit ;
 	$lines = File::count_lines( $file ) ;
 	$start = $lines > 1000 ? $lines - 1000 : 0 ;
 	$logs = File::read( $file, $start ) ;
-	$logs = implode( "\n", $logs ) ;
+	$logs = $logs ? implode( "\n", $logs ) : '';
 
 	echo nl2br( htmlspecialchars( $logs ) ) ;
 ?>

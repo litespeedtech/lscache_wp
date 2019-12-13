@@ -96,6 +96,10 @@ class Error
 				$msg = sprintf( __( 'Failed to get %s file contents.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
+			case 'failed_tb_creation' :
+				$msg = __( 'Failed to create table %s! SQL: %s.', 'litespeed-cache' );
+				break;
+
 			default:
 				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
 				break;

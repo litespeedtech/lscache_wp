@@ -188,7 +188,7 @@ class Purge extends Base
 		$this->_add( '*' ) ;
 
 		// check if need to reset crawler
-		if ( Conf::val( Base::O_CRWL ) ) {
+		if ( Conf::val( Base::O_CRAWLER ) ) {
 			Crawler::get_instance()->reset_pos() ;
 		}
 

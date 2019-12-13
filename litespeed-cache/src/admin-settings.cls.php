@@ -56,7 +56,7 @@ class Admin_Settings extends Base
 			$child = false;
 			// Drop array format
 			if ( strpos( $id, '[' ) !== false ) {
-				if ( strpos( $id, self::O_CDN_MAPPING ) === 0 || strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // CDN child | Cookie Crawler settings
+				if ( strpos( $id, self::O_CDN_MAPPING ) === 0 || strpos( $id, self::O_CRAWLER_COOKIES ) === 0 ) { // CDN child | Cookie Crawler settings
 					$child = substr( $id, strpos( $id, '[' ) + 1, strpos( $id, ']' ) - strpos( $id, '[' ) - 1 );
 					$id = substr( $id, 0, strpos( $id, '[' ) ); // Drop ending []; Compatible with xx[0] way from CLI
 				}
@@ -81,7 +81,7 @@ class Admin_Settings extends Base
 					continue;
 				}
 			}
-			if ( $id == self::O_CRWL_COOKIES ) {
+			if ( $id == self::O_CRAWLER_COOKIES ) {
 				if ( ! in_array( $child, array(
 					self::CRWL_COOKIE_NAME,
 					self::CRWL_COOKIE_VALS,
@@ -135,7 +135,7 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-				case self::O_CRWL_COOKIES :
+				case self::O_CRAWLER_COOKIES :
 					/**
 					 * Cookie Crawler setting
 					 * Raw Format:
@@ -208,7 +208,7 @@ class Admin_Settings extends Base
 					break;
 
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
-				case self::O_CRWL_EXC_CPT :
+				case self::O_CRAWLER_EXC_CPT :
 					if ( $data ) {
 						$data = Utility::sanitize_lines( $data );
 						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) );

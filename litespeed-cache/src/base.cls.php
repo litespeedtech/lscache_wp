@@ -224,23 +224,23 @@ class Base extends Instance
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
 	## -------------------------------------------------- ##
-	const O_CRWL 				= 'crawler' ;
-	const O_CRWL_POSTS 			= 'crawler-inc_posts' ;
-	const O_CRWL_PAGES 			= 'crawler-inc_pages' ;
-	const O_CRWL_CATS 			= 'crawler-inc_cats' ;
-	const O_CRWL_TAGS 			= 'crawler-inc_tags' ;
-	const O_CRWL_EXC_CPT 		= 'crawler-exc_cpt' ;
-	const O_CRWL_ORDER_LINKS 	= 'crawler-order_links' ;
-	const O_CRWL_USLEEP 		= 'crawler-usleep' ;
-	const O_CRWL_RUN_DURATION 	= 'crawler-run_duration' ;
-	const O_CRWL_RUN_INTERVAL 	= 'crawler-run_interval' ;
-	const O_CRWL_CRAWL_INTERVAL = 'crawler-crawl_interval' ;
-	const O_CRWL_THREADS 		= 'crawler-threads' ;
-	const O_CRWL_TIMEOUT 		= 'crawler-timeout' ;
-	const O_CRWL_LOAD_LIMIT 	= 'crawler-load_limit' ;
-	const O_CRWL_CUSTOM_SITEMAP = 'crawler-custom_sitemap' ;
-	const O_CRWL_ROLES 			= 'crawler-roles' ;
-	const O_CRWL_COOKIES 		= 'crawler-cookies' ;
+	const O_CRAWLER 				= 'crawler' ;
+	const O_CRAWLER_POSTS 			= 'crawler-inc_posts' ;
+	const O_CRAWLER_PAGES 			= 'crawler-inc_pages' ;
+	const O_CRAWLER_CATS 			= 'crawler-inc_cats' ;
+	const O_CRAWLER_TAGS 			= 'crawler-inc_tags' ;
+	const O_CRAWLER_EXC_CPT 		= 'crawler-exc_cpt' ;
+	const O_CRAWLER_ORDER_LINKS 	= 'crawler-order_links' ;
+	const O_CRAWLER_USLEEP 			= 'crawler-usleep' ;
+	const O_CRAWLER_RUN_DURATION 	= 'crawler-run_duration' ;
+	const O_CRAWLER_RUN_INTERVAL 	= 'crawler-run_interval' ;
+	const O_CRAWLER_CRAWL_INTERVAL 	= 'crawler-crawl_interval' ;
+	const O_CRAWLER_THREADS 		= 'crawler-threads' ;
+	const O_CRAWLER_TIMEOUT 		= 'crawler-timeout' ;
+	const O_CRAWLER_LOAD_LIMIT 		= 'crawler-load_limit' ;
+	const O_CRAWLER_CUSTOM_SITEMAP 	= 'crawler-custom_sitemap' ;
+	const O_CRAWLER_ROLES 			= 'crawler-roles' ;
+	const O_CRAWLER_COOKIES 		= 'crawler-cookies' ;
 
 	## -------------------------------------------------- ##
 	## --------------		 Misc 		----------------- ##
@@ -310,7 +310,7 @@ class Base extends Instance
 
 	/* Site related options (Will not overwrite other sites' config) */
 	protected static $SINGLE_SITE_OPTIONS = array(
-		self::O_CRWL,
+		self::O_CRAWLER,
 		self::O_CDN,
 		self::O_CDN_ORI,
 		self::O_CDN_ORI_DIR,
@@ -511,23 +511,23 @@ class Base extends Instance
 		self::O_IMG_OPTM_JPG_QUALITY 	=> 0,
 
 		// Crawler
-		self::O_CRWL 					=> false,
-		self::O_CRWL_POSTS 				=> false,
-		self::O_CRWL_PAGES 				=> false,
-		self::O_CRWL_CATS 				=> false,
-		self::O_CRWL_TAGS 				=> false,
-		self::O_CRWL_EXC_CPT 			=> array(),
-		self::O_CRWL_ORDER_LINKS 		=> '',
-		self::O_CRWL_USLEEP 			=> 0,
-		self::O_CRWL_RUN_DURATION 		=> 0,
-		self::O_CRWL_RUN_INTERVAL 		=> 0,
-		self::O_CRWL_CRAWL_INTERVAL 	=> 0,
-		self::O_CRWL_THREADS 			=> 0,
-		self::O_CRWL_TIMEOUT 			=> 0,
-		self::O_CRWL_LOAD_LIMIT 		=> 0,
-		self::O_CRWL_CUSTOM_SITEMAP 	=> '',
-		self::O_CRWL_ROLES				=> array(),
-		self::O_CRWL_COOKIES 			=> array(),
+		self::O_CRAWLER 					=> false,
+		self::O_CRAWLER_POSTS 				=> false,
+		self::O_CRAWLER_PAGES 				=> false,
+		self::O_CRAWLER_CATS 				=> false,
+		self::O_CRAWLER_TAGS 				=> false,
+		self::O_CRAWLER_EXC_CPT 			=> array(),
+		self::O_CRAWLER_ORDER_LINKS 		=> '',
+		self::O_CRAWLER_USLEEP 			=> 0,
+		self::O_CRAWLER_RUN_DURATION 		=> 0,
+		self::O_CRAWLER_RUN_INTERVAL 		=> 0,
+		self::O_CRAWLER_CRAWL_INTERVAL 	=> 0,
+		self::O_CRAWLER_THREADS 			=> 0,
+		self::O_CRAWLER_TIMEOUT 			=> 0,
+		self::O_CRAWLER_LOAD_LIMIT 		=> 0,
+		self::O_CRAWLER_CUSTOM_SITEMAP 	=> '',
+		self::O_CRAWLER_ROLES				=> array(),
+		self::O_CRAWLER_COOKIES 			=> array(),
 
 		// Misc
 		self::O_MISC_HTACCESS_FRONT 		=> '',
@@ -760,7 +760,7 @@ class Base extends Instance
 	 */
 	protected function _conf_string_val( $id, $val )
 	{
-		if ( $id == self::O_CRWL_ORDER_LINKS ) {
+		if ( $id == self::O_CRAWLER_ORDER_LINKS ) {
 			if ( ! in_array( $id, array(
 				self::CRWL_DATE_DESC,
 				self::CRWL_DATE_ASC,

@@ -7,9 +7,8 @@
  * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
-
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
 class Data extends Instance
 {
@@ -18,21 +17,22 @@ class Data extends Instance
 		// '2.0'	=> array(
 		// 	'litespeed_update_2_0',
 		// ),
-	) ;
+	);
 
 	private $_db_site_updater = array(
 		// Example
 		// '2.0'	=> array(
 		// 	'litespeed_update_site_2_0',
 		// ),
-	) ;
+	);
 
-	protected static $_instance ;
+	protected static $_instance;
 
-	const TB_CSSJS = 'litespeed_cssjs' ;
-	const TB_IMG_OPTM = 'litespeed_img_optm' ;
-	const TB_IMG_OPTMING = 'litespeed_img_optming' ; // working table
-	const TB_AVATAR = 'litespeed_avatar' ;
+	const TB_CSSJS = 'litespeed_cssjs';
+	const TB_IMG_OPTM = 'litespeed_img_optm';
+	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
+	const TB_AVATAR = 'litespeed_avatar';
+	const TB_CRAWLER = 'litespeed_crawler';
 
 	/**
 	 * Init
@@ -57,12 +57,17 @@ class Data extends Instance
 	{
 		// CSS JS optm
 		if ( Optimize::need_db() ) {
-			$this->tb_create( 'cssjs' ) ;
+			$this->tb_create( 'cssjs' );
 		}
 
 		// Gravatar
 		if ( Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
-			$this->tb_create( 'avatar' ) ;
+			$this->tb_create( 'avatar' );
+		}
+
+		// Crawler
+		if ( Conf::val( Base::O_CRAWLER ) ) {
+			$this->tb_create( 'crawler' );
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
@@ -81,36 +86,36 @@ class Data extends Instance
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-		// 	return ;
+		// 	return;
 		// }
 
-		require_once LSCWP_DIR . 'src/data.upgrade.func.php' ;
+		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		foreach ( $this->_db_updater as $k => $v ) {
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
-					call_user_func( $v2 ) ;
+					Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" );
+					call_user_func( $v2 );
 				}
 			}
 		}
 
 		// Reload options
-		Conf::get_instance()->load_options() ;
+		Conf::get_instance()->load_options();
 
-		$this->correct_tb_existance() ;
+		$this->correct_tb_existance();
 
 		// Update version to latest
-		Conf::delete_option( Base::_VER ) ;
-		Conf::add_option( Base::_VER, Core::VER ) ;
+		Conf::delete_option( Base::_VER );
+		Conf::add_option( Base::_VER, Core::VER );
 
-		Log::debug( '[Data] Updated version to ' . Core::VER ) ;
+		Log::debug( '[Data] Updated version to ' . Core::VER );
 
-		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		Purge::purge_all() ;
+		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
+		Purge::purge_all();
 
-		Utility::version_check( 'upgrade' ) ;
+		Utility::version_check( 'upgrade' );
 	}
 
 	/**
@@ -123,28 +128,28 @@ class Data extends Instance
 	 */
 	public function conf_site_upgrade( $ver )
 	{
-		require_once LSCWP_DIR . 'src/data.upgrade.func.php' ;
+		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		foreach ( $this->_db_site_updater as $k => $v ) {
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
-					call_user_func( $v2 ) ;
+					Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" );
+					call_user_func( $v2 );
 				}
 			}
 		}
 
 		// Reload options
-		Conf::get_instance()->load_site_options() ;
+		Conf::get_instance()->load_site_options();
 
-		Conf::delete_site_option( Base::_VER ) ;
-		Conf::add_site_option( Base::_VER, Core::VER ) ;
+		Conf::delete_site_option( Base::_VER );
+		Conf::add_site_option( Base::_VER, Core::VER );
 
-		Log::debug( '[Data] Updated site_version to ' . Core::VER ) ;
+		Log::debug( '[Data] Updated site_version to ' . Core::VER );
 
-		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		Purge::purge_all() ;
+		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
+		Purge::purge_all();
 	}
 
 	/**
@@ -157,40 +162,40 @@ class Data extends Instance
 	 */
 	public function try_upgrade_conf_3_0()
 	{
-		$previous_options = get_option( 'litespeed-cache-conf' ) ;
+		$previous_options = get_option( 'litespeed-cache-conf' );
 		if ( ! $previous_options ) {
-			Utility::version_check( 'new' ) ;
-			return ;
+			Utility::version_check( 'new' );
+			return;
 		}
 
-		$ver = $previous_options[ 'version' ] ;
+		$ver = $previous_options[ 'version' ];
 
-		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
+		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
 
-		Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' ) ;
+		Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
-		require_once LSCWP_DIR . 'src/data.upgrade.func.php' ;
+		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		// Here inside will update the version to v3.0
-		litespeed_update_3_0( $ver ) ;
+		litespeed_update_3_0( $ver );
 
-		Log::debug( '[Data] Upgraded to v3.0' ) ;
+		Log::debug( '[Data] Upgraded to v3.0' );
 
 		// Upgrade from 3.0 to latest version
-		$ver = '3.0' ;
+		$ver = '3.0';
 		if ( Core::VER != $ver ) {
-			$this->conf_upgrade( $ver ) ;
+			$this->conf_upgrade( $ver );
 		}
 		else {
 			// Reload options
-			Conf::get_instance()->load_options() ;
+			Conf::get_instance()->load_options();
 
-			$this->correct_tb_existance() ;
+			$this->correct_tb_existance();
 
-			! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-			Purge::purge_all() ;
+			! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
+			Purge::purge_all();
 
-			Utility::version_check( 'upgrade' ) ;
+			Utility::version_check( 'upgrade' );
 		}
 	}
 
@@ -202,7 +207,7 @@ class Data extends Instance
 	 */
 	public function tb( $tb )
 	{
-		global $wpdb ;
+		global $wpdb;
 
 		switch ( $tb ) {
 			case 'img_optm':
@@ -218,7 +223,11 @@ class Data extends Instance
 				break;
 
 			case 'avatar':
-				return $wpdb->prefix . self::TB_AVATAR ;
+				return $wpdb->prefix . self::TB_AVATAR;
+				break;
+
+			case 'crawler':
+				return $wpdb->prefix . self::TB_CRAWLER;
 				break;
 
 			default:
@@ -235,8 +244,8 @@ class Data extends Instance
 	 */
 	public function tb_exist( $tb )
 	{
-		global $wpdb ;
-		return $wpdb->get_var( 'SHOW TABLES LIKE "' . $this->tb( $tb ) . '"' ) ;
+		global $wpdb;
+		return $wpdb->get_var( 'SHOW TABLES LIKE "' . $this->tb( $tb ) . '"' );
 	}
 
 	/**
@@ -247,7 +256,7 @@ class Data extends Instance
 	 */
 	private function _tb_structure( $tb )
 	{
-		return File::read( LSCWP_DIR . 'src/data_structure/' . $tb . '.sql' ) ;
+		return File::read( LSCWP_DIR . 'src/data_structure/' . $tb . '.sql' );
 	}
 
 	/**
@@ -279,6 +288,7 @@ class Data extends Instance
 		$res = $wpdb->query( $sql );
 		if ( $res !== true ) {
 			Log::debug( '[Data] Warning! Creating table failed!', $sql );
+			Admin_Display::error( Error::msg( 'failed_tb_creation', array( '<code>' . $tb . '</code>', '<code>' . $sql . '</code>' ) ) );
 		}
 	}
 
@@ -290,16 +300,16 @@ class Data extends Instance
 	 */
 	public function tb_del( $tb )
 	{
-		global $wpdb ;
+		global $wpdb;
 
 		if ( ! $this->tb_exist( $tb ) ) {
-			return ;
+			return;
 		}
 
-		Log::debug( '[Data] Deleting table ' . $tb ) ;
+		Log::debug( '[Data] Deleting table ' . $tb );
 
-		$q = 'DROP TABLE IF EXISTS ' . $this->tb( $tb ) ;
-		$wpdb->query( $q ) ;
+		$q = 'DROP TABLE IF EXISTS ' . $this->tb( $tb );
+		$wpdb->query( $q );
 	}
 
 	/**
@@ -310,10 +320,11 @@ class Data extends Instance
 	 */
 	public function tables_del()
 	{
-		global $wpdb ;
+		global $wpdb;
 
 		$this->tb_del( 'cssjs' );
 		$this->tb_del( 'avatar' );
+		$this->tb_del( 'crawler' );
 
 		// Deleting img_optm only can be done when destroy all optm images
 	}
@@ -326,19 +337,19 @@ class Data extends Instance
 	 */
 	public function optm_save_src( $filename, $src )
 	{
-		global $wpdb ;
+		global $wpdb;
 
-		$src = json_encode( $src ) ;
+		$src = json_encode( $src );
 		$f = array(
 			'hash_name'	=> $filename,
 			'src'		=> $src,
 			'dateline'	=> time(),
 			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
-		) ;
+		);
 
-		$res = $wpdb->replace( $this->tb( 'cssjs' ), $f ) ;
+		$res = $wpdb->replace( $this->tb( 'cssjs' ), $f );
 
-		return $res ;
+		return $res;
 	}
 
 	/**
@@ -349,15 +360,15 @@ class Data extends Instance
 	 */
 	public function optm_hash2src( $filename )
 	{
-		global $wpdb ;
+		global $wpdb;
 
-		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) ) ;
+		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) );
 
-		Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
+		Log::debug2( '[Data] Loaded hash2src ' . $res );
 
-		$res = json_decode( $res, true ) ;
+		$res = json_decode( $res, true );
 
-		return $res ;
+		return $res;
 	}
 
 }

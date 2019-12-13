@@ -13,7 +13,7 @@ $this->form_action();
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_CUSTOM_SITEMAP; ?>
+			<?php $id = Base::O_CRAWLER_CUSTOM_SITEMAP; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -32,28 +32,28 @@ $this->form_action();
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_POSTS );
+						$this->build_toggle( Base::O_CRAWLER_POSTS );
 					?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_PAGES );
+						$this->build_toggle( Base::O_CRAWLER_PAGES );
 					?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_CATS );
+						$this->build_toggle( Base::O_CRAWLER_CATS );
 					?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ); ?></div>
 					<?php
-						$this->build_toggle( Base::O_CRWL_TAGS );
+						$this->build_toggle( Base::O_CRAWLER_TAGS );
 					?>
 					</div>
 
@@ -62,7 +62,7 @@ $this->form_action();
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></h4>
 
-					<?php $this->build_textarea( Base::O_CRWL_EXC_CPT, 40 ); ?>
+					<?php $this->build_textarea( Base::O_CRAWLER_EXC_CPT, 40 ); ?>
 
 					<div class="litespeed-desc">
 						<?php echo __('Exclude certain Custom Post Types in sitemap.', 'litespeed-cache'); ?>
@@ -83,25 +83,25 @@ $this->form_action();
 
 					<div class="litespeed-switch">
 						<?php $this->build_radio(
-							Base::O_CRWL_ORDER_LINKS,
+							Base::O_CRAWLER_ORDER_LINKS,
 							Base::CRWL_DATE_DESC,
 							__('Date, descending (Default)', 'litespeed-cache')
 						); ?>
 
 						<?php $this->build_radio(
-							Base::O_CRWL_ORDER_LINKS,
+							Base::O_CRAWLER_ORDER_LINKS,
 							Base::CRWL_DATE_ASC,
 							__('Date, ascending', 'litespeed-cache')
 						); ?>
 
 						<?php $this->build_radio(
-							Base::O_CRWL_ORDER_LINKS,
+							Base::O_CRAWLER_ORDER_LINKS,
 							Base::CRWL_ALPHA_DESC,
 							__('Alphabetical, descending', 'litespeed-cache')
 						); ?>
 
 						<?php $this->build_radio(
-							Base::O_CRWL_ORDER_LINKS,
+							Base::O_CRAWLER_ORDER_LINKS,
 							Base::CRWL_ALPHA_ASC,
 							__('Alphabetical, ascending', 'litespeed-cache')
 						); ?>

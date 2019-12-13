@@ -35,7 +35,7 @@ class Task extends Instance
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
 
 		// Register crawler cron
-		if ( Conf::val( Base::O_CRWL ) && Router::can_crawl() ) {
+		if ( Conf::val( Base::O_CRAWLER ) && Router::can_crawl() ) {
 			// keep cron intval filter
 			$this->_schedule_filter_crawler() ;
 
@@ -87,7 +87,7 @@ class Task extends Instance
 	 */
 	public static function update( $options = false )
 	{
-		$id = Base::O_CRWL ;
+		$id = Base::O_CRAWLER ;
 		if ( $options && isset( $options[ $id ] ) ) {
 			$is_active = $options[$id] ;
 		}
@@ -220,7 +220,7 @@ class Task extends Instance
 	 */
 	public function lscache_cron_filter_crawler( $schedules )
 	{
-		$interval = Conf::val( Base::O_CRWL_RUN_INTERVAL ) ;
+		$interval = Conf::val( Base::O_CRAWLER_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
 			// 	Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;

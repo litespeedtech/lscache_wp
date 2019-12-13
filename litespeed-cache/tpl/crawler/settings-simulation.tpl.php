@@ -13,7 +13,7 @@ $this->form_action();
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_ROLES; ?>
+			<?php $id = Base::O_CRAWLER_ROLES; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -29,7 +29,7 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CRWL_COOKIES; ?>
+			<?php $id = Base::O_CRAWLER_COOKIES; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
