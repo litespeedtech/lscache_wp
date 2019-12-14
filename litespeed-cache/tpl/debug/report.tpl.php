@@ -21,7 +21,7 @@ if ( function_exists( 'dologin_gen_link' ) ) {
 	}
 }
 
-$install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => 'dologin' ) );
+$install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => 'dologin' ) );
 ?>
 
 <?php if ( ! $has_pswdless_plugin ) : ?>
@@ -44,7 +44,7 @@ $install_link = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_IN
 	<?php echo __('If you run into any issues, please refer to the report number in your support message.', 'litespeed-cache'); ?>
 </p>
 
-<form action="<?php echo Utility::build_url( Core::ACTION_REPORT, Report::TYPE_SEND_REPORT ); ?>" method="post">
+<form action="<?php echo Utility::build_url( Router::ACTION_REPORT, Report::TYPE_SEND_REPORT ); ?>" method="post">
 
 	<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
 

@@ -13,7 +13,7 @@ $this->form_action();
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_CRAWLER_CUSTOM_SITEMAP; ?>
+			<?php $id = Base::O_CRAWLER_SITEMAP; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>

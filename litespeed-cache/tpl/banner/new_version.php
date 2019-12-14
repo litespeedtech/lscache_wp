@@ -63,7 +63,7 @@ if ( $check_only ) {
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
 				<div class="litespeed-banner-description-padding-right-15">
-					<?php $url = Utility::build_url( Core::ACTION_ACTIVATION, Activation::TYPE_UPGRADE ) ; ?>
+					<?php $url = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_UPGRADE ) ; ?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-success litespeed-btn-mini">
 						<i class="dashicons dashicons-image-rotate">&nbsp;</i>
 						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
@@ -72,7 +72,7 @@ if ( $check_only ) {
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
 						$cfg = array( Conf::TYPE_SET . '[' . Base::O_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = Utility::build_url( Core::ACTION_CONF, Conf::TYPE_SET, false, null, $cfg ) ;
+						$url = Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="button litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>

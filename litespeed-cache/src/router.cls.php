@@ -18,13 +18,23 @@ class Router extends Instance
 	const ACTION = 'LSCWP_CTRL';
 
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
-	const ACTION_DB = 'db';
+	const ACTION_DB_OPTM = 'db_optm';
 	const ACTION_PLACEHOLDER = 'placeholder';
 	const ACTION_AVATAR = 'avatar';
 	const ACTION_SAVE_SETTINGS = 'save-settings';
 	const ACTION_CLOUD = 'cloud';
 	const ACTION_IMG_OPTM = 'img_optm';
 	const ACTION_HEALTH = 'health';
+	const ACTION_CRAWLER = 'crawler';
+	const ACTION_PURGE = 'purge';
+	const ACTION_CONF = 'conf';
+	const ACTION_ACTIVATION = 'activate';
+	const ACTION_CSS = 'css';
+	const ACTION_IMPORT = 'import';
+	const ACTION_REPORT = 'report';
+	const ACTION_LOG = 'log';
+	const ACTION_CDN_QUIC = 'cdn_quic';
+	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare';
 
 	const TYPE = 'litespeed_type';
 
@@ -499,7 +509,7 @@ class Router extends Instance
 				}
 				return ;
 
-			case self::ACTION_DB:
+			case self::ACTION_DB_OPTM:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
@@ -522,22 +532,21 @@ class Router extends Instance
 				}
 				return ;
 
-			case Core::ACTION_CRAWLER_GENERATE_FILE:
 			case Core::ACTION_CRAWLER_RESET_POS:
 			case Core::ACTION_DO_CRAWL:
-			case Core::ACTION_BLACKLIST_SAVE:
-			case Core::ACTION_PURGE:
+			case self::ACTION_PURGE:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case self::ACTION_IMG_OPTM:
 			case self::ACTION_CLOUD:
-			case Core::ACTION_CDN_CLOUDFLARE:
-			case Core::ACTION_CDN_QUIC:
-			case Core::ACTION_IMPORT:
-			case Core::ACTION_REPORT:
-			case Core::ACTION_CSS:
-			case Core::ACTION_CONF:
-			case Core::ACTION_ACTIVATION:
+			case self::ACTION_CDN_CLOUDFLARE:
+			case self::ACTION_CDN_QUIC:
+			case self::ACTION_CRAWLER:
+			case self::ACTION_IMPORT:
+			case self::ACTION_REPORT:
+			case self::ACTION_CSS:
+			case self::ACTION_CONF:
+			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
 				if ( $_can_option && ! $_is_network_admin ) {
@@ -545,7 +554,7 @@ class Router extends Instance
 				}
 				return ;
 
-			case Core::ACTION_LOG:
+			case self::ACTION_LOG:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
@@ -682,4 +691,27 @@ class Router extends Instance
 		}
 
 	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * This is different than other handlers
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function handler( $cls )
+	{
+		// CDN is child namespaces
+		if ( $cls == self::ACTION_CDN_QUIC || $cls == self::ACTION_CDN_CLOUDFLARE ) {
+			$cls = str_replace( '_', '\\', $cls );
+		}
+
+		$cls = __NAMESPACE__ . '\\' . $cls;
+
+		if ( method_exists( $cls, 'handler' ) ) {
+			return $cls::handler();
+		}
+	}
+
 }

@@ -127,7 +127,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 						<?php endforeach; ?>
 						</p>
 					</p>
-					<a href="<?php echo Utility::build_url( Core::ACTION_CSS, CSS::TYPE_GENERATE_CRITICAL ); ?>" class="litespeed-btn-success">
+					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GENERATE_CRITICAL ); ?>" class="litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
 					</a>
 				<?php endif; ?>

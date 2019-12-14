@@ -6,7 +6,7 @@ defined( 'WPINC' ) || exit ;
 <h3 class="litespeed-title">
 	<?php echo __('Debug Log', 'litespeed-cache'); ?>
 
-	<a href="<?php echo Utility::build_url( Core::ACTION_LOG, Log::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary">
+	<a href="<?php echo Utility::build_url( Router::ACTION_LOG, Log::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary">
 		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
 	</a>
 </h3>

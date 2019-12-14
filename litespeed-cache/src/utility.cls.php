@@ -530,10 +530,8 @@ class Utility extends Instance
 			return ;
 		}
 
-		$home_url = get_home_url( is_multisite() ? get_current_blog_id() : null ) ;
-
 		self::compatibility() ;
-		$domain = http_build_url( $home_url, array(), HTTP_URL_STRIP_ALL ) ;
+		$domain = http_build_url( get_home_url(), array(), HTTP_URL_STRIP_ALL ) ;
 
 		define( 'LSCWP_DOMAIN', $domain ) ;
 	}
@@ -839,5 +837,56 @@ class Utility extends Instance
 
 	}
 
+	/**
+	 * Generate pagination
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function pagination( $total, $return_limit = false, $limit = false )
+	{
+		if ( ! $limit ) {
+			$limit = 30;
+		}
+
+		$pagenum = isset( $_GET[ 'pagenum' ] ) ? absint( $_GET[ 'pagenum' ] ) : 1;
+		$offset = ( $pagenum - 1 ) * $limit;
+		$num_of_pages = ceil( $total / $limit );
+
+		if ( $offset > $total ) {
+			$offset = $total - $limit;
+		}
+
+		if ( $return_limit ) {
+			return "$offset, $limit";
+		}
+
+		$page_links = paginate_links( array(
+			'base' => add_query_arg( 'pagenum', '%#%' ),
+			'format' => '',
+			'prev_text' => __( '&laquo;', 'text-domain' ),
+			'next_text' => __( '&raquo;', 'text-domain' ),
+			'total' => $num_of_pages,
+			'current' => $pagenum,
+		) );
+
+		return '<div class="tablenav"><div class="tablenav-pages" style="margin: 1em 0">' . $page_links . '</div></div>';
+	}
+
+	/**
+	 * Generate placeholder for an array to query
+	 *
+	 * @since 2.0
+	 * @access public
+	 */
+	public static function chunk_placeholder( $data, $division )
+	{
+		$q = implode( ',', array_map(
+			function( $el ) { return '(' . implode( ',', $el ) . ')'; },
+			array_chunk( array_fill( 0, count( $data ), '%s' ), $division )
+		) );
+
+		return $q;
+	}
 
 }

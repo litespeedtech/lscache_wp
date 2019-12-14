@@ -404,7 +404,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
 			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_FRONT, false, true ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_FRONT, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -423,7 +423,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-forced_cache',
 			'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
@@ -434,7 +434,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-noncache',
 			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
@@ -445,7 +445,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-private',
 			'title'		=> __( 'Private cache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$append_arr = array(
@@ -456,7 +456,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-nonoptimize',
 			'title'		=> __( 'No optimization', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_CONF, false, false, true, $append_arr ),
+			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$wp_admin_bar->add_menu( array(
@@ -470,7 +470,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL, false, '_ori' ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL, false, '_ori' ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -478,7 +478,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all-lscache',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE, false, '_ori' ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE, false, '_ori' ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -486,7 +486,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-cssjs',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS, false, '_ori' ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS, false, '_ori' ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -495,7 +495,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-object',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT, false, '_ori' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -505,7 +505,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-opcache',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE, false, '_ori' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -515,7 +515,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS, false, '_ori' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -525,7 +525,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP, false, '_ori' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -535,7 +535,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR, false, '_ori' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -558,7 +558,7 @@ class GUI extends Base
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'litespeed-menu',
 				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 			) ) ;
 		}
@@ -600,7 +600,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -608,7 +608,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all-lscache',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -616,7 +616,7 @@ class GUI extends Base
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-cssjs',
 			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS ),
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -625,7 +625,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Cloudflare', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ),
+				'href'		=> Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -635,7 +635,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-object',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OBJECT ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -645,7 +645,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-opcache',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_OPCACHE ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -655,7 +655,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -665,7 +665,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_PLACEHOLDER ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_PLACEHOLDER ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -675,7 +675,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -685,7 +685,7 @@ class GUI extends Base
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Core::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_AVATAR ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}

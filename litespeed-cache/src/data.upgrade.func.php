@@ -245,7 +245,7 @@ function litespeed_update_3_0( $ver )
 		'crawler_crawl_interval' 	=> 'crawler-crawl_interval',
 		'crawler_threads' 			=> 'crawler-threads',
 		'crawler_load_limit' 		=> 'crawler-load_limit',
-		'crawler_custom_sitemap' 	=> 'crawler-custom_sitemap',
+		'crawler_custom_sitemap' 	=> 'crawler-sitemap',
 
 		'cache_object'				=> 'object',
 		'cache_object_kind'			=> 'object-kind',

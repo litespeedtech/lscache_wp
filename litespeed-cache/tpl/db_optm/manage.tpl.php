@@ -65,7 +65,7 @@ foreach ( $_panels as $tag => $v ) {
 			$total += $_panels[ $tag ][ 'count' ];
 		}
 	}
-	$_panels[ $tag ][ 'link' ] = Utility::build_url( Router::ACTION_DB, $tag );
+	$_panels[ $tag ][ 'link' ] = Utility::build_url( Router::ACTION_DB_OPTM, $tag );
 }
 
 $_panels[ 'all' ][ 'count' ] = $total;
@@ -123,7 +123,7 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 					<td><?php echo $v->TABLE_NAME; ?></td>
 					<td><?php echo $v->ENGINE; ?></td>
 					<td>
-						<a href="<?php echo Utility::build_url( Router::ACTION_DB, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ); ?>">
+						<a href="<?php echo Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ); ?>">
 							<?php echo __( 'Convert to InnoDB', 'litespeed-cache' ); ?>
 						</a>
 					</td>

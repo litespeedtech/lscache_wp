@@ -238,7 +238,7 @@ class Base extends Instance
 	const O_CRAWLER_THREADS 		= 'crawler-threads' ;
 	const O_CRAWLER_TIMEOUT 		= 'crawler-timeout' ;
 	const O_CRAWLER_LOAD_LIMIT 		= 'crawler-load_limit' ;
-	const O_CRAWLER_CUSTOM_SITEMAP 	= 'crawler-custom_sitemap' ;
+	const O_CRAWLER_SITEMAP 		= 'crawler-sitemap';
 	const O_CRAWLER_ROLES 			= 'crawler-roles' ;
 	const O_CRAWLER_COOKIES 		= 'crawler-cookies' ;
 
@@ -511,23 +511,23 @@ class Base extends Instance
 		self::O_IMG_OPTM_JPG_QUALITY 	=> 0,
 
 		// Crawler
-		self::O_CRAWLER 					=> false,
-		self::O_CRAWLER_POSTS 				=> false,
-		self::O_CRAWLER_PAGES 				=> false,
-		self::O_CRAWLER_CATS 				=> false,
-		self::O_CRAWLER_TAGS 				=> false,
-		self::O_CRAWLER_EXC_CPT 			=> array(),
-		self::O_CRAWLER_ORDER_LINKS 		=> '',
+		self::O_CRAWLER 				=> false,
+		self::O_CRAWLER_POSTS 			=> false,
+		self::O_CRAWLER_PAGES 			=> false,
+		self::O_CRAWLER_CATS 			=> false,
+		self::O_CRAWLER_TAGS 			=> false,
+		self::O_CRAWLER_EXC_CPT 		=> array(),
+		self::O_CRAWLER_ORDER_LINKS 	=> '',
 		self::O_CRAWLER_USLEEP 			=> 0,
-		self::O_CRAWLER_RUN_DURATION 		=> 0,
-		self::O_CRAWLER_RUN_INTERVAL 		=> 0,
+		self::O_CRAWLER_RUN_DURATION 	=> 0,
+		self::O_CRAWLER_RUN_INTERVAL 	=> 0,
 		self::O_CRAWLER_CRAWL_INTERVAL 	=> 0,
-		self::O_CRAWLER_THREADS 			=> 0,
-		self::O_CRAWLER_TIMEOUT 			=> 0,
+		self::O_CRAWLER_THREADS 		=> 0,
+		self::O_CRAWLER_TIMEOUT 		=> 0,
 		self::O_CRAWLER_LOAD_LIMIT 		=> 0,
-		self::O_CRAWLER_CUSTOM_SITEMAP 	=> '',
-		self::O_CRAWLER_ROLES				=> array(),
-		self::O_CRAWLER_COOKIES 			=> array(),
+		self::O_CRAWLER_SITEMAP 		=> '',
+		self::O_CRAWLER_ROLES			=> array(),
+		self::O_CRAWLER_COOKIES 		=> array(),
 
 		// Misc
 		self::O_MISC_HTACCESS_FRONT 		=> '',

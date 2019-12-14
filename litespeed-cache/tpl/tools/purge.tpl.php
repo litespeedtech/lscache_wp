@@ -136,7 +136,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 <div class="litespeed-panel-wrapper litespeed-cards-wrapper">
 
 <?php foreach ( $_panels as $v ): ?>
-<?php $tag = ! empty( $v[ 'tag' ] ) ? $v[ 'tag' ] : Core::ACTION_PURGE ; ?>
+<?php $tag = ! empty( $v[ 'tag' ] ) ? $v[ 'tag' ] : Router::ACTION_PURGE ; ?>
 <?php $append_url = ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ; ?>
 
 	<?php if ( ! empty( $v[ 'newline' ] ) ) : ?>

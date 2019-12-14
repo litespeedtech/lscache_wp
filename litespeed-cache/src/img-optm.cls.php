@@ -263,26 +263,10 @@ class Img_Optm extends Base
 		$q = "INSERT INTO `$this->_table_img_optm` ( $fields ) VALUES ";
 
 		// Add placeholder
-		$q .= $this->_chunk_placeholder( $data, $division );
+		$q .= Utility::chunk_placeholder( $data, $division );
 
 		// Store data
 		$wpdb->query( $wpdb->prepare( $q, $data ) );
-	}
-
-	/**
-	 * Generate placeholder for an array to query
-	 *
-	 * @since 2.0
-	 * @access private
-	 */
-	private function _chunk_placeholder( $data, $division )
-	{
-		$q = implode( ',', array_map(
-			function( $el ) { return '(' . implode( ',', $el ) . ')'; },
-			array_chunk( array_fill( 0, count( $data ), '%s' ), $division )
-		) );
-
-		return $q;
 	}
 
 	/**

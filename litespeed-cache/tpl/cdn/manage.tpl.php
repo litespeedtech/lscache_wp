@@ -25,13 +25,13 @@ $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() 
 
 <p>
 	<b><?php echo __( 'Development Mode', 'litespeed-cache' ) ; ?>:</b>
-	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_ON ) ; ?>" class="button litespeed-btn-warning">
+	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_ON ) ; ?>" class="button litespeed-btn-warning">
 		<?php echo __( 'Turn ON', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_OFF ) ; ?>" class="button litespeed-btn-warning">
+	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_OFF ) ; ?>" class="button litespeed-btn-warning">
 		<?php echo __( 'Turn OFF', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_GET_DEVMODE ) ; ?>" class="button litespeed-btn-success">
+	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_GET_DEVMODE ) ; ?>" class="button litespeed-btn-success">
 		<?php echo __( 'Check Status', 'litespeed-cache' ) ; ?>
 	</a>
 
@@ -67,7 +67,7 @@ $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() 
 	<?php if ( ! $cf_on ) : ?>
 		<a href="#" class="button button-secondary disabled">
 	<?php else : ?>
-		<a href="<?php echo Utility::build_url( Core::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="button litespeed-btn-danger">
+		<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="button litespeed-btn-danger">
 	<?php endif ; ?>
 		<?php echo __( 'Purge Everything', 'litespeed-cache' ) ; ?>
 	</a>

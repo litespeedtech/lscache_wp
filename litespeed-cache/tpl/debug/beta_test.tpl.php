@@ -3,7 +3,7 @@ namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 ?>
 
-<?php $this->form_action( Core::ACTION_LOG, Log::TYPE_BETA_TEST ) ; ?>
+<?php $this->form_action( Router::ACTION_LOG, Log::TYPE_BETA_TEST ) ; ?>
 
 	<h3 class="litespeed-title"><?php echo __( 'Try GitHub Version', 'litespeed-cache' ) ; ?></h3>
 
