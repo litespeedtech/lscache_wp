@@ -63,7 +63,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Exclude from cache by URI, Category, Tag, Cookie, User Agent
 * Smart preload crawler with support for SEO-friendly sitemap
 * Multiple crawlers for cache varies
-* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support<sup>*</sup>
+* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support
 * ESI (Edge Side Includes) support<sup>*</sup>
 * Widgets and [Shortcodes](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode) as ESI blocks<sup>*</sup>
 
@@ -162,13 +162,13 @@ Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is
 
 A LiteSpeed web server is required in order to use the LiteSpeed Exclusive Features of this plugin. See **Plugin Features** above for details.
 
+LiteSpeed Exclusive Features may be used with any one of the following:
 * LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
 * OpenLiteSpeed (v1.4.17+) - Free and open source!
 * LiteSpeed WebADC (v2.0+)
+* QUIC.cloud CDN
 
-Any single server or cluster including a LiteSpeed server will work.
-
-The General Features may be used with any web server. LiteSpeed is not required.
+The General Features may be used with any web server at all. LiteSpeed is not required.
 
 = Does this plugin work in a clustered environment? =
 
