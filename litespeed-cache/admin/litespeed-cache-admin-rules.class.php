@@ -351,7 +351,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return $ret ;
 		}
 
-		$zip = new ZipArchive ;
+		$zip = new ZipArchive() ;
 		$dir = dirname($path) ;
 		$arr = scandir($dir) ;
 		$parsed = preg_grep('/\.htaccess_lscachebak_[0-9]+/', $arr) ;
