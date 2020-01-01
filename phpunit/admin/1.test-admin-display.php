@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
      	 	$this->fail();
     	 }
 
-   		 $this->assertTrue(TRUE);		
+   		 $this->assertTrue(true);		
 	}
 
 	/**
@@ -207,7 +207,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
      	 	$this->fail();
     	 }
 
-   		 $this->assertTrue(TRUE);			
+   		 $this->assertTrue(true);			
     	
 	}
 

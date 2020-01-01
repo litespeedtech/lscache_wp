@@ -112,7 +112,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'get_network_count');
         if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -129,7 +129,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'is_deactivate_last');
         if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'try_copy_advanced_cache');
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'setup_cookies');
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -190,7 +190,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'check_user_logged_in');
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -207,7 +207,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'check_cookies');
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -227,7 +227,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $parameters = array($excludes_list);   
         $bool = self::invokeMethod('LiteSpeed_Cache', 'is_uri_excluded', $parameters);
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -244,7 +244,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'is_cacheable');
          if($bool){
-            $this->assertTrue(TRUE);
+            $this->assertTrue(true);
         }
         else
         {
@@ -690,7 +690,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     { 
          $bool = self::invokeMethod('LiteSpeed_Cache', 'check_esi_page');
             if($bool){
-                $this->assertTrue(TRUE);
+                $this->assertTrue(true);
             }
             else
             {
