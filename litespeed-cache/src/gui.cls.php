@@ -540,6 +540,8 @@ class GUI extends Base
 			) );
 		}
 
+		do_action( 'litespeed_frontend_shortcut' );
+
 	}
 
 	/**
@@ -689,6 +691,8 @@ class GUI extends Base
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
+
+		do_action( 'litespeed_backend_shortcut' );
 	}
 
 	/**
