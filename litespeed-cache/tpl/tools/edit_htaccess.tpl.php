@@ -63,7 +63,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the frontend .httaccess path.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify the frontend .htaccess path.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ); ?></code>
 			</div>
 		</td>
@@ -77,7 +77,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the backend .httaccess path.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify the backend .htaccess path.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_backend_htaccess( true ); ?></code>
 			</div>
 		</td>

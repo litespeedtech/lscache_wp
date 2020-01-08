@@ -100,6 +100,10 @@ class Error
 				$msg = __( 'Failed to create table %s! SQL: %s.', 'litespeed-cache' );
 				break;
 
+			case 'crawler_disabled' :
+				$msg = __( 'Crawler disabled by the server admin.', 'litespeed-cache' );
+				break;
+
 			default:
 				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
 				break;

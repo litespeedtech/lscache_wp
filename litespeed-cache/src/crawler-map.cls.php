@@ -16,6 +16,7 @@ class Crawler_Map extends Instance
 	protected static $_instance;
 	private $_home_url; // Used to simplify urls
 	private $_tb;
+	private $__data;
 
 	protected $_urls = array();
 
@@ -28,21 +29,52 @@ class Crawler_Map extends Instance
 	protected function __construct()
 	{
 		$this->_home_url = get_home_url();
-		$this->_tb = Data::get_instance()->tb( 'crawler' );
+		$this->__data = Data::get_instance();
+		$this->_tb = $this->__data->tb( 'crawler' );
 	}
 
-	public function list()
+	/**
+	 * Save URLs crawl status into DB
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function save_map_status( $list )
 	{
 		global $wpdb;
 
-		if ( ! Data::get_instance()->tb_exist( 'crawler' ) ) {
+		// Replace position $this->_summary[ 'curr' ]
+		$pos = (int) $this->_summary[ 'curr' ];
+		foreach ( $list as $bit => $ids ) {
+			$wpdb->query( "UPDATE `$this->_tb` SET status = INSERT( status, $pos, 1, '$bit' ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
+			$list[ $bit ] = array();
+		}
+
+		return $list;
+	}
+
+	/**
+	 * List generated sitemap
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function list( $limit, $offset = false )
+	{
+		global $wpdb;
+
+		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
 			return array();
 		}
 
-		$total = $this->count();
+		if ( $offset === false ) {
+			$total = $this->count();
+			$offset = Utility::pagination( $total, $limit, true );
+		}
 
-		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT " . Utility::pagination( $total, true );
-		return $wpdb->get_results( $q, ARRAY_A );
+
+		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT %d, %d";
+		return $wpdb->get_results( $wpdb->prepare( $q, $offset, $limit ), ARRAY_A );
 
 	}
 
@@ -50,7 +82,7 @@ class Crawler_Map extends Instance
 	{
 		global $wpdb;
 
-		if ( ! Data::get_instance()->tb_exist( 'crawler' ) ) {
+		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
 			return false;
 		}
 
@@ -84,8 +116,10 @@ class Crawler_Map extends Instance
 	 */
 	private function _gen()
 	{
-		if ( ! Data::get_instance()->tb_exist( 'crawler' ) ) {
-			Data::get_instance()->tb_create( 'crawler' );
+		global $wpdb;
+
+		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
+			$this->__data->tb_create( 'crawler' );
 		}
 
 		// use custom sitemap
@@ -114,19 +148,20 @@ class Crawler_Map extends Instance
 			$urls = $this->_build();
 		}
 
-		Log::debug( 'Crawler: Generate sitemap' );
+		Log::debug( '[Crawler] Truncate sitemap' );
+		$wpdb->query( "TRUNCATE `$this->_tb`" );
+
+		Log::debug( '[Crawler] Generate sitemap' );
 
 		foreach ( array_chunk( $urls, 100 ) as $urls2 ) {
 			$this->_save( $urls2 );
 		}
 
+		// Rest all status
+		$status = str_repeat( '-', count( Crawler::get_instance()->list_crawlers() ) );
+		$wpdb->query( "UPDATE `$this->_tb` SET status='$status'" );
+
 		return count( $urls );
-
-		// refresh list size in meta
-		$crawler = new Crawler_Engine( $this->_sitemap_file );
-		$crawler->refresh_list_size();
-
-		return $ret;
 	}
 
 	/**
@@ -137,11 +172,11 @@ class Crawler_Map extends Instance
 	 */
 	private function _save( $data, $fields = 'url' )
 	{
+		global $wpdb;
+
 		if ( empty( $data ) ) {
 			return;
 		}
-
-		global $wpdb;
 
 		$division = substr_count( $fields, ',' ) + 1;
 

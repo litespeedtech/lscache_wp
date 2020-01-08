@@ -142,7 +142,6 @@ class Report extends Base
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Base::O_CDN_QUIC_KEY,
 			Base::O_CDN_CLOUDFLARE_KEY,
 			Base::O_OBJECT_PSWD,
 		) ;

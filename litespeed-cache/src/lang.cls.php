@@ -191,6 +191,7 @@ class Lang extends Base
 			self::O_MISC_HEARTBEAT_EDITOR		=> __( 'Editor Heartbeat', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_EDITOR_TTL	=> __( 'Editor Heartbeat TTL', 'litespeed-cache' ),
 
+			self::O_CDN_QUIC					=> __( 'QUIC.cloud CDN', 'litespeed-cache' ),
 			self::O_CDN 						=> __( 'Use CDN Mapping', 'litespeed-cache' ),
 			self::CDN_MAPPING_URL				=> __( 'CDN URL', 'litespeed-cache' ),
 			self::CDN_MAPPING_INC_IMG			=> __( 'Include Images', 'litespeed-cache' ),
@@ -201,7 +202,6 @@ class Lang extends Base
 			self::O_CDN_ORI_DIR					=> __( 'Included Directories', 'litespeed-cache' ),
 			self::O_CDN_EXC						=> __( 'Exclude Path', 'litespeed-cache' ),
 			self::O_CDN_REMOTE_JQ				=> __( 'Load JQuery Remotely', 'litespeed-cache' ),
-			self::O_CDN_QUIC					=> __( 'Quic Cloud API', 'litespeed-cache' ),
 			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
 
 			self::O_CRAWLER					=> __( 'Crawler', 'litespeed-cache' ),

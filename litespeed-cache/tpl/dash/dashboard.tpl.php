@@ -255,20 +255,20 @@ $cloud_summary = Cloud::get_summary();
 				</div>
 			</div>
 
+			<?php if ( $lscache_stats ) : ?>
 			<div class="postbox litespeed-postbox">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Cache Stats', 'litespeed-cache' ); ?>
 					</h3>
 
-				<?php if ( $lscache_stats ) : ?>
 				<?php foreach ( $lscache_stats as $title => $val ) : ?>
 					<p><?php echo $title; ?>: <?php echo $val ? "<code>$val</code>" : '-'; ?></p>
 				<?php endforeach; ?>
-				<?php endif; ?>
 
 				</div>
 			</div>
+			<?php endif; ?>
 
 			<div class="postbox litespeed-postbox">
 				<div class="inside">

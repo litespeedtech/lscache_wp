@@ -275,7 +275,7 @@ class Vary extends Instance
 		 * Disable vary change if is from crawler
 		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
 		 */
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler_Engine::FAST_USER_AGENT ) === 0 ) {
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) === 0 ) {
 			Log::debug( '[Vary] can_change_vary bypassed due to crawler' ) ;
 			return false ;
 		}

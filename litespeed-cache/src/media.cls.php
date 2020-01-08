@@ -21,8 +21,6 @@ class Media extends Instance
 	private $content ;
 	private $_wp_upload_dir ;
 
-	private $_cfg_img_webp ;
-
 	/**
 	 * Init
 	 *
@@ -36,10 +34,8 @@ class Media extends Instance
 		$this->_wp_upload_dir = wp_upload_dir() ;
 
 		if ( $this->can_media() ) {
-			$this->_cfg_img_webp = self::webp_enabled() ;
-
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-			if ( $this->_cfg_img_webp ) {
+			if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
 				/**
 				 * Add vary filter
 				 * @since  1.6.2
@@ -105,17 +101,6 @@ class Media extends Instance
 		}
 
 		return true ;
-	}
-
-	/**
-	 * Check if enabled webp or not
-	 *
-	 * @since  2.4
-	 * @access public
-	 */
-	public static function webp_enabled()
-	{
-		return Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -438,7 +423,7 @@ class Media extends Instance
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ( $this->_cfg_img_webp && $this->webp_support() ) {
+		if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) && $this->webp_support() ) {
 			$this->_replace_buffer_img_webp() ;
 		}
 

@@ -10,13 +10,39 @@ defined( 'WPINC' ) || exit;
 class Crawler extends Base
 {
 	const TYPE_REFRESH_MAP = 'refresh_map';
+	const TYPE_ADD_BLACKLIST = 'add_blacklist';
+	const TYPE_START = 'start';
+	const TYPE_RESET = 'reset';
+
+	const USER_AGENT = 'lscache_walker';
+	const FAST_USER_AGENT = 'lscache_runner';
+	const CHUNKS = 10000;
+	const ITEM_HASH = 'hash';
 
 	protected static $_instance;
 
 	private $_sitemeta = 'meta.data';
+	private $_resetfile;
+	private $_end_reason;
 
 	private $_options;
+	private $_crawler_conf = array(
+		'cookies' => array(),
+		'headers' => array(),
+		'ua'	=> '',
+	);
+	private $_crawlers = array();
+	private $_cur_threads = -1;
+	private $_max_run_time;
+	private $_cur_thread_time;
+	private $_map_status_list = array(
+		'H'	=> array(),
+		'M'	=> array(),
+		'B'	=> array(),
+	);
 	protected $_summary;
+
+	private $__map;
 
 	/**
 	 * Initialize crawler, assign sitemap path
@@ -30,51 +56,57 @@ class Crawler extends Base
 			$this->_sitemeta = 'meta' . get_current_blog_id() . '.data';
 		}
 
+		$this->_resetfile = LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta . '.reset';
+
 		$this->_options = Conf::get_instance()->get_options();
 
 		$this->_summary = self::get_summary();
+
+		$this->__map = Crawler_Map::get_instance();
 
 		Log::debug( '[Crawler] Init' );
 	}
 
 	/**
-	 * Return crawler meta file
+	 * Overwride get_summary to init elements
 	 *
-	 * @since    1.1.0
+	 * @since  3.0
 	 * @access public
 	 */
-	public function json_path()
+	public static function get_summary( $field = false )
 	{
-		if ( ! file_exists( LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta ) ) {
-			return false;
+		$_default = array(
+			'list_size'			=> 0,
+			'last_update_time'	=> 0,
+			'curr_crawler'		=> 0,
+			'curr_crawler_beginning_time'	=> 0,
+			'last_pos'			=> 0,
+			'last_count'		=> 0,
+			'last_crawled'		=> 0,
+			'last_start_time'	=> 0,
+			'last_status'		=> '',
+			'is_running'		=> 0,
+			'end_reason'		=> '',
+			'meta_save_time'	=> 0,
+			'pos_reset_check'	=> 0,
+			'done'				=> 0,
+			'this_full_beginning_time'	=> 0,
+			'last_full_time_cost'		=> 0,
+			'last_crawler_total_cost'	=> 0,
+		);
+
+		$summary = parent::get_summary();
+		$summary = array_merge( $_default, $summary );
+
+		if ( ! $field ) {
+			return $summary;
 		}
 
-		return LITESPEED_STATIC_URL . '/crawler/' . $this->_sitemeta;
-	}
-
-
-	/**
-	 * Create reset pos file
-	 *
-	 * @since    1.1.0
-	 * @access public
-	 * @return mixed True or error message
-	 */
-	public function reset_pos()
-	{
-		$crawler = new Crawler_Engine($this->_sitemap_file);
-		$ret = $crawler->reset_pos();
-		$log = 'Crawler: Reset pos. ';
-		if ( $ret !== true ) {
-			$log .= "Error: $ret";
-			$msg = sprintf(__('Failed to send position reset notification: %s', 'litespeed-cache'), $ret);
-			Admin_Display::add_notice(Admin_Display::NOTICE_RED, $msg);
+		if ( array_key_exists( $field, $summary ) ) {
+			return $summary[ $field ];
 		}
-		else {
-			$msg = __('Position reset notification sent successfully', 'litespeed-cache');
-			// Admin_Display::add_notice(Admin_Display::NOTICE_GREEN, $msg);
-		}
-		Log::debug($log);
+
+		return null;
 	}
 
 	/**
@@ -82,108 +114,70 @@ class Crawler extends Base
 	 *
 	 * @since    1.1.0
 	 * @access public
-	 * @param bool $force If ignore whole crawling interval
 	 */
-	public static function crawl_data($force = false)
+	public static function start( $force = false )
 	{
 		if ( ! Router::can_crawl() ) {
-			Log::debug('Crawler: ......crawler is NOT allowed by the server admin......');
+			Log::debug( '[Crawler] ......crawler is NOT allowed by the server admin......' );
 			return false;
 		}
-		if ( $force ) {
-			Log::debug('Crawler: ......crawler manually ran......');
-		}
-		return self::get_instance()->_crawl_data($force);
-	}
 
-	/**
-	 * Receive meta info from crawler
-	 *
-	 * @since    1.9.1
-	 * @access   public
-	 */
-	public function read_meta()
-	{
-		$crawler = new Crawler_Engine( $this->_sitemap_file );
-		return $crawler->read_meta();
+		if ( $force ) {
+			Log::debug( '[Crawler] ......crawler manually ran......' );
+		}
+
+		self::get_instance()->_crawl_data( $force );
 	}
 
 	/**
 	 * Crawling start
 	 *
 	 * @since    1.1.0
-	 * @access   protected
-	 * @param bool $force If ignore whole crawling interval
+	 * @access   private
 	 */
-	protected function _crawl_data($force)
+	private function _crawl_data( $force )
 	{
-		Log::debug('Crawler: ......crawler started......');
+		Log::debug( 'Crawler: ......crawler started......' );
 		// for the first time running
-		if ( ! file_exists($this->_sitemap_file) ) {
-			$ret = $this->_generate_sitemap();
-			if ( $ret !== true ) {
-				Log::debug('Crawler: ' . $ret);
-				return $this->output($ret);
-			}
+		if ( ! $this->_summary ) {
+			$this->__map->gen();
 		}
 
-		$crawler = new Crawler_Engine($this->_sitemap_file);
 		// if finished last time, regenerate sitemap
-		if ( $last_fnished_at = $crawler->get_done_status() ) {
+		if ( $this->_summary['done'] === 'touchedEnd' ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[Base::O_CRAWLER_CRAWL_INTERVAL] ) {
-				Log::debug('Crawler: Cron abort: cache warmed already.');
+			$last_fnished_at = $this->_summary[ 'last_full_time_cost' ] + $this->_summary[ 'this_full_beginning_time' ];
+			if ( ! $force && time() - $last_fnished_at < $this->_options[ Base::O_CRAWLER_CRAWL_INTERVAL ] ) {
+				Log::debug( 'Crawler: Cron abort: cache warmed already.' );
 				// if not reach whole crawling interval, exit
 				return;
 			}
 			Log::debug( 'Crawler: TouchedEnd. regenerate sitemap....' );
-			$this->_generate_sitemap();
-		}
-		$crawler->set_base_url( home_url() );
-		$crawler->set_run_duration($this->_options[Base::O_CRAWLER_RUN_DURATION]);
-
-		/**
-		 * Limit delay to use server setting
-		 * @since 1.8.3
-		 */
-		$usleep = $this->_options[ Base::O_CRAWLER_USLEEP ];
-		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Base::ENV_CRAWLER_USLEEP ] > $usleep ) {
-			$usleep = $_SERVER[ Base::ENV_CRAWLER_USLEEP ];
-		}
-		$crawler->set_run_delay( $usleep );
-		$crawler->set_threads_limit( $this->_options[ Base::O_CRAWLER_THREADS ] );
-		/**
-		 * Set timeout to avoid incorrect blacklist addition #900171
-		 * @since  3.0
-		 */
-		$crawler->set_timeout( $this->_options[ Base::O_CRAWLER_TIMEOUT ] );
-
-		$server_load_limit = $this->_options[ Base::O_CRAWLER_LOAD_LIMIT ];
-		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
-			$server_load_limit = $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ];
-		}
-		elseif ( ! empty( $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
-			$server_load_limit = $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ];
-		}
-		$crawler->set_load_limit( $server_load_limit );
-		if ( $this->_options[Base::O_SERVER_IP] ) {
-			$crawler->set_domain_ip($this->_options[Base::O_SERVER_IP]);
+			$this->__map->gen();
 		}
 
-		// Get current crawler
-		$meta = $crawler->read_meta();
-		$curr_crawler_pos = $meta[ 'curr_crawler' ];
-
-		// Generate all crawlers
-		$crawlers = $this->list_crawlers();
+		$this->list_crawlers();
 
 		// In case crawlers are all done but not reload, reload it
-		if ( empty( $crawlers[ $curr_crawler_pos ] ) ) {
-			$curr_crawler_pos = 0;
+		if ( empty( $this->_summary[ 'curr' ] ) || empty( $this->_crawlers[ $this->_summary[ 'curr' ] ] ) ) {
+			$this->_summary[ 'curr' ] = 0;
 		}
-		$current_crawler = $crawlers[ $curr_crawler_pos ];
 
-		$cookies = array();
+		$this->load_conf();
+
+		$this->_engine_start();
+	}
+
+	/**
+	 * Load conf before running crawler
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function load_conf()
+	{
+		$current_crawler = $this->_crawlers[ $this->_summary[ 'curr' ] ];
+
 		/**
 		 * Set role simulation
 		 * @since 1.9.1
@@ -193,8 +187,8 @@ class Crawler extends Base
 			$vary_inst = Vary::get_instance();
 			$vary_name = $vary_inst->get_vary_name();
 			$vary_val = $vary_inst->finalize_default_vary( $current_crawler[ 'uid' ] );
-			$cookies[ $vary_name ] = $vary_val;
-			$cookies[ 'litespeed_role' ] = $current_crawler[ 'uid' ];
+			$this->_crawler_conf[ 'cookies' ][ $vary_name ] = $vary_val;
+			$this->_crawler_conf[ 'cookies' ][ 'litespeed_role' ] = $current_crawler[ 'uid' ];
 		}
 
 		/**
@@ -206,11 +200,7 @@ class Crawler extends Base
 				continue;
 			}
 
-			$cookies[ substr( $k, 7 ) ] = $v;
-		}
-
-		if ( $cookies ) {
-			$crawler->set_cookies( $cookies );
+			$this->_crawler_conf[ 'cookies' ][ substr( $k, 7 ) ] = $v;
 		}
 
 		/**
@@ -218,7 +208,7 @@ class Crawler extends Base
 		 * @since  1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
-			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) );
+			$this->_crawler_conf[ 'headers' ][] = 'Accept: image/webp,*/*';
 		}
 
 		/**
@@ -226,64 +216,451 @@ class Crawler extends Base
 		 * @since  2.8
 		 */
 		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
-			$crawler->set_ua( 'Mobile' );
+			$this->_crawler_conf[ 'ua' ] = 'Mobile';
 		}
 
-		$ret = $crawler->engine_start();
+		$this->_crawler_conf[ 'base' ] = home_url();
 
-		// merge blacklist
-		if ( $ret['blacklist'] ) {
-			$this->append_blacklist($ret['blacklist']);
+		/**
+		 * Limit delay to use server setting
+		 * @since 1.8.3
+		 */
+		$this->_crawler_conf[ 'run_delay' ] = $this->_options[ Base::O_CRAWLER_USLEEP ]; // microseconds
+		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ Base::ENV_CRAWLER_USLEEP ] > $this->_crawler_conf[ 'run_delay' ] ) {
+			$this->_crawler_conf[ 'run_delay' ] = $_SERVER[ Base::ENV_CRAWLER_USLEEP ];
 		}
 
-		if ( ! empty($ret['crawled']) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( 'Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' );
-		}
+		$this->_crawler_conf[ 'run_duration' ] = $this->_options[ Base::O_CRAWLER_RUN_DURATION ];
 
-		// return error
-		if ( $ret['error'] !== false ) {
-			Log::debug('Crawler: ' . $ret['error']);
-			return $this->output($ret['error']);
+		$this->_crawler_conf[ 'load_limit' ] = $this->_options[ Base::O_CRAWLER_LOAD_LIMIT ];
+		if ( ! empty( $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
+			$this->_crawler_conf[ 'load_limit' ] = $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ];
 		}
-		else {
-			$msg = 'Crawler #' . ( $curr_crawler_pos + 1 ) . ' reached end of sitemap file.';
-			$msg_t = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $curr_crawler_pos + 1 ) ) ;
-			Log::debug('Crawler: ' . $msg);
-			return $this->output($msg_t);
+		elseif ( ! empty( $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ] < $this->_crawler_conf[ 'load_limit' ] ) {
+			$this->_crawler_conf[ 'load_limit' ] = $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ];
 		}
-	}
-
-	private function append_blacklist()
-	{
 
 	}
 
 	/**
-	 * List all crawlers
+	 * Start crawler
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _engine_start()
+	{
+		// check if is running
+		if ( $this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf[ 'run_duration' ] ) {
+			$this->_end_reason = 'stopped';
+			Log::debug( '[Crawler] The crawler is running.' );
+			return;
+		}
+
+		// check current load
+		$this->_adjust_current_threads();
+		if ( $this->_cur_threads == 0 ) {
+			$this->_end_reason = 'stopped_highload';
+			Log::debug( '[Crawler] Stopped due to heavy load.' );
+			return;
+		}
+
+		// log started time
+		$this->_summary['last_start_time'] = time();
+		self::save_summary();
+
+		// set time limit
+		$maxTime = (int) ini_get( 'max_execution_time' );
+		if ( $maxTime == 0 ) {
+			$maxTime = 300; // hardlimit
+		}
+		else {
+			$maxTime -= 5;
+		}
+		if ( $maxTime >= $this->_crawler_conf[ 'run_duration' ] ) {
+			$maxTime = $this->_crawler_conf[ 'run_duration' ];
+		}
+		elseif ( ini_set( 'max_execution_time', $this->_crawler_conf[ 'run_duration' ] + 15 ) !== false ) {
+			$maxTime = $this->_crawler_conf[ 'run_duration' ];
+		}
+		$this->_max_run_time = $maxTime + time();
+
+		// mark running
+		$this->_prepare_running();
+		// run cralwer
+		$this->_do_running();
+		$this->_terminate_running();
+	}
+
+	/**
+	 * Adjust threads dynamically
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _adjust_current_threads()
+	{
+		/**
+		 * If server is windows, exit
+		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
+		 */
+		if ( ! function_exists( 'sys_getloadavg' ) ) {
+			Log::debug( '[Crawler] set threads=0 due to func sys_getloadavg not exist!' );
+			$this->_cur_threads = 0;
+			return;
+		}
+
+		$load = sys_getloadavg();
+		$curload = 1;
+
+		if ( $this->_cur_threads == -1 ) {
+			// init
+			if ( $curload > $this->_crawler_conf[ 'load_limit' ] ) {
+				$curthreads = 0;
+			}
+			elseif ( $curload >= ( $this->_crawler_conf[ 'load_limit' ] - 1 ) ) {
+				$curthreads = 1;
+			}
+			else {
+				$curthreads = intval( $this->_crawler_conf[ 'load_limit' ] - $curload );
+				if ( $curthreads > $this->_options[ Base::O_CRAWLER_THREADS ] ) {
+					$curthreads = $this->_options[ Base::O_CRAWLER_THREADS ];
+				}
+			}
+		}
+		else {
+			// adjust
+			$curthreads = $this->_cur_threads;
+			if ( $curload >= $this->_crawler_conf[ 'load_limit' ] + 1 ) {
+				sleep( 5 );  // sleep 5 secs
+				if ( $curthreads >= 1 ) {
+					$curthreads --;
+				}
+			}
+			elseif ( $curload >= $this->_crawler_conf[ 'load_limit' ] ) {
+				if ( $curthreads > 1 ) {// if already 1, keep
+					$curthreads --;
+				}
+			}
+			elseif ( ($curload + 1) < $this->_crawler_conf[ 'load_limit' ] ) {
+				if ( $curthreads < $this->_options[ Base::O_CRAWLER_THREADS ] ) {
+					$curthreads ++;
+				}
+			}
+		}
+
+		// $log = 'set current threads = ' . $curthreads . ' previous=' . $this->_cur_threads
+		// 	. ' max_allowed=' . $this->_options[ Base::O_CRAWLER_THREADS ] . ' load_limit=' . $this->_crawler_conf[ 'load_limit' ] . ' current_load=' . $curload;
+
+		$this->_cur_threads = $curthreads;
+		$this->_cur_thread_time = time();
+	}
+
+	/**
+	 * Mark running status
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _prepare_running()
+	{
+		$this->_summary[ 'is_running' ] = time();
+		$this->_summary[ 'done' ] = 0;// reset done status
+		$this->_summary[ 'last_status' ] = 'prepare running';
+		$this->_summary[ 'last_crawled' ] = 0;
+
+		// Current crawler starttime mark
+		if ( $this->_summary[ 'last_pos' ] == 0 ) {
+			$this->_summary[ 'curr_crawler_beginning_time' ] = time();
+		}
+
+		if ( $this->_summary['curr_crawler'] == 0 && $this->_summary['last_pos'] == 0 ) {
+			$this->_summary['this_full_beginning_time'] = time();
+			$this->_summary['list_size'] = $this->__map->count();
+		}
+		self::save_summary();
+	}
+
+	/**
+	 * Run crawler
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _do_running()
+	{
+		$curlOptions = $this->_get_curl_options();
+
+		while ( $urlChunks = $this->__map->list( self::CHUNKS, $this->_summary['last_pos'] ) ) {
+			// start crawling
+			$urlChunks = array_chunk( $urlChunks, $this->_cur_threads );
+			foreach ( $urlChunks as $rows ) {
+				// multi curl
+				$rets = $this->_multi_request( $rows, $curlOptions );
+
+				// check result headers
+				foreach ( $rows as $row ) {
+					// check response
+					if ( stripos( $rets[ $row[ 'id' ] ], 'HTTP/1.1 428 Precondition Required' ) !== false ) {
+						$this->_end_reason = 'crawler_disabled';
+						Log::debug( '[Crawler] crawler_disabled' );
+						return;
+					}
+
+					$this->_map_status_list[ $this->_status_parse( $rets[ $row[ 'id' ] ] ) ][] = $row[ 'id' ];
+				}
+
+				// update offset position
+				$_time = time();
+				$this->_summary[ 'last_pos' ] += $this->_cur_threads;
+				$this->_summary[ 'last_count' ] = $this->_cur_threads;
+				$this->_summary[ 'last_crawled' ] += $this->_cur_threads;
+				$this->_summary[ 'last_update_time' ] = $_time;
+				$this->_summary[ 'last_status' ] = 'updated position';
+
+				// check duration
+				if ( $this->_summary[ 'last_update_time' ] > $this->_max_run_time ) {
+					$this->_end_reason = 'stopped_maxtime';
+					return;
+					// return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache');
+				}
+
+				// make sure at least each 10s save meta & map status once
+				if ( $_time - $this->_summary[ 'meta_save_time' ] > 10 ) {
+					$this->_map_status_list = $this->__map->_save_map_status( $this->_map_status_list );
+					self::save_summary();
+				}
+
+				// check if need to reset pos each 5s
+				if ( $_time > $this->_summary[ 'pos_reset_check' ] ) {
+					$this->_summary[ 'pos_reset_check' ] = $_time + 5;
+					if ( file_exists( $this->_resetfile ) && unlink( $this->_resetfile ) ) {
+						$this->_summary[ 'last_pos' ] = 0;
+						$this->_summary[ 'curr_crawler' ] = 0;
+						// reset done status
+						$this->_summary[ 'done' ] = 0;
+						$this->_summary[ 'this_full_beginning_time' ] = 0;
+						$this->_end_reason = 'stopped_reset';
+						return;
+						// return __('Stopped due to reset meta position', 'litespeed-cache');
+					}
+				}
+
+				// check loads
+				if ( $this->_summary[ 'last_update_time' ] - $this->_cur_thread_time > 60 ) {
+					$this->_adjust_current_threads();
+					if ( $this->_cur_threads == 0 ) {
+						$this->_end_reason = 'stopped_highload';
+						return;
+						// return __('Stopped due to load over limit', 'litespeed-cache');
+					}
+				}
+
+				$this->_summary[ 'last_status' ] = 'sleeping ' . $this->_crawler_conf[ 'run_delay' ] . 'ms';
+
+				usleep( $this->_crawler_conf[ 'run_delay' ] );
+			}
+		}
+
+		// All URLs are done for current crawler
+		$this->_end_reason = 'end';
+		Log::debug( '[Crawler] Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
+	}
+
+	/**
+	 * Send multi curl requests
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _multi_request( $rows, $options )
+	{
+		$mh = curl_multi_init();
+		$curls = array();
+		foreach ( $rows as $row ) {
+			$curls[ $row[ 'id' ] ] = curl_init();
+			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $this->_crawler_conf[ 'base' ] . $row[ 'url' ] );
+			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
+			curl_multi_add_handle( $mh, $curls[ $row[ 'id' ] ] );
+		}
+
+		// execute curl
+		$last_start_time = null;
+		do {
+			curl_multi_exec( $mh, $last_start_time );
+			if ( curl_multi_select( $mh ) == -1 ) {
+				usleep( 1 );
+			}
+		} while ( $last_start_time > 0 );
+
+		// curl done
+		$ret = array();
+		foreach ( $rows as $row ) {
+			$thisCurl = $curls[ $row[ 'id' ] ];
+			$ret[ $row[ 'id' ] ] = curl_multi_getcontent( $thisCurl );
+
+			curl_multi_remove_handle( $mh, $thisCurl );
+			curl_close( $thisCurl );
+		}
+		curl_multi_close( $mh );
+
+		return $ret;
+	}
+
+	/**
+	 * Check returned curl header to find if the status is 200 ok or not
+	 *
+	 * @since  2.0
+	 * @access private
+	 */
+	private function _status_parse( $headers )
+	{
+		if ( stripos( $headers, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
+			return 'B'; // Blacklist
+		}
+
+		$_http_status_ok_list = array(
+			'HTTP/1.1 200 OK',
+			'HTTP/1.1 201 Created',
+			'HTTP/2 200',
+			'HTTP/2 201',
+		);
+
+		foreach ( $_http_status_ok_list as $http_status ) {
+			if ( stripos( $headers, $http_status ) !== false ) {
+				if ( stripos( $headers, 'x-litespeed-cache: miss' ) !== false ) {
+					return 'M'; // Miss
+				}
+				return 'H'; // Hit
+			}
+		}
+
+		return 'B'; // Blacklist
+	}
+
+	/**
+	 * Get curl_options
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _get_curl_options()
+	{
+		$options = array(
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HEADER => true,
+			CURLOPT_CUSTOMREQUEST => 'GET',
+			CURLOPT_FOLLOWLOCATION => false,
+			CURLOPT_ENCODING => 'gzip',
+			CURLOPT_CONNECTTIMEOUT => 10,
+			CURLOPT_TIMEOUT => $this->_options[ Base::O_CRAWLER_TIMEOUT ], // Larger timeout to avoid incorrect blacklist addition #900171
+			CURLOPT_SSL_VERIFYHOST => 0,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_NOBODY => false,
+			CURLOPT_HTTPHEADER => $this->_crawler_conf[ 'headers' ],
+		);
+		$options[ CURLOPT_HTTPHEADER ][] = 'Cache-Control: max-age=0';
+
+		/**
+		 * Try to enable http2 connection (only available since PHP7+)
+		 * @since  1.9.1
+		 * @since  2.2.7 Commented due to cause no-cache issue
+		 * @since  2.9.1+ Fixed wrongly usage of CURL_HTTP_VERSION_1_1 const
+		 */
+		$options[ CURLOPT_HTTP_VERSION ] = CURL_HTTP_VERSION_1_1;
+		// 	$options[ CURL_HTTP_VERSION_2 ] = 1;
+
+		if ( strpos( $this->_crawler_conf[ 'ua' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
+			$this->_crawler_conf[ 'ua' ] = Crawler::FAST_USER_AGENT . ' ' . $this->_crawler_conf[ 'ua' ];
+		}
+		$options[ CURLOPT_USERAGENT ] = $this->_crawler_conf[ 'ua' ];
+
+		if ( $this->_options[ Base::O_SERVER_IP ] && $this->_crawler_conf[ 'base' ] ) {
+			$parsed_url = parse_url( $this->_crawler_conf[ 'base' ] );
+
+			if ( ! empty( $parsed_url[ 'host' ] ) ) {
+				// assign domain for curl
+				$options[ CURLOPT_HTTPHEADER ][] = 'Host: ' . $parsed_url[ 'host' ];
+				// replace domain with direct ip
+				$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
+				Utility::compatibility();
+				$this->_crawler_conf[ 'base' ] = http_build_url( $parsed_url );
+			}
+		}
+
+		// if is walker
+		// $options[ CURLOPT_FRESH_CONNECT ] = true;
+
+		if ( isset( $_SERVER[ 'HTTP_HOST' ] ) && isset( $_SERVER[ 'REQUEST_URI' ] ) ) {
+			$options[ CURLOPT_REFERER ] = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+		}
+
+		/**
+		 * Append hash to cookie for validation
+		 * @since  1.9.1
+		 */
+		$hash = Str::rrand( 6 );
+		self::update_option( Crawler::ITEM_HASH, $hash );
+		$this->_crawler_conf[ 'cookies' ][ 'litespeed_hash' ] = $hash;
+
+		$cookies = array();
+		foreach ( $this->_crawler_conf[ 'cookies' ] as $k => $v ) {
+			if ( ! $v ) {
+				continue;
+			}
+			$cookies[] = $k . '=' . urlencode( $v );
+		}
+		if ( $cookies ) {
+			$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies );
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Terminate crawling
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 */
+	private function _terminate_running()
+	{
+		$this->_map_status_list = $this->__map->_save_map_status( $this->_map_status_list );
+
+		if ( $this->_end_reason == 'end' ) { // Current crawler is fully done
+			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
+			$this->_summary[ 'curr_crawler' ]++; // Jump to next cralwer
+			$this->_summary[ 'last_pos' ] = 0;// reset last position
+			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
+			$count_crawlers = count( Crawler::get_instance()->list_crawlers() );
+			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
+				Log::debug( 'Crawler Lib: _terminate_running Touched end, whole crawled. Reload crawler!' );
+				$this->_summary[ 'curr_crawler' ] = 0;
+				$this->_summary[ 'done' ] = 'touchedEnd';// log done status
+				$this->_summary[ 'last_full_time_cost' ] = time() - $this->_summary[ 'this_full_beginning_time' ];
+			}
+		}
+		$this->_summary[ 'last_status' ] = 'stopped';
+		$this->_summary[ 'is_running' ] = 0;
+		$this->_summary[ 'end_reason' ] = $this->_end_reason;
+		self::save_summary();
+	}
+
+	/**
+	 * List all crawlers ( tagA => [ valueA => titleA, ... ] ...)
 	 *
 	 * @since    1.9.1
 	 * @access   public
 	 */
-	public function list_crawlers( $count_only = false )
+	public function list_crawlers()
 	{
-		/**
-		 * Data structure:
-		 * 	[
-		 * 		tagA => [
-		 * 			valueA => titleA,
-		 * 			valueB => titleB
-		 * 			...
-		 * 		],
-		 * 		...
-		 * 	]
-		 */
 		$crawler_factors = array();
 
 		// Add default Guest crawler
 		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) );
 
 		// WebP on/off
-		if ( Media::webp_enabled() ) {
+		if ( $this->_options[ Base::O_IMG_OPTM_WEBP_REPLACE ] ) {
 			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' );
 		}
 
@@ -324,15 +701,10 @@ class Crawler extends Base
 		}
 
 		// Crossing generate the crawler list
-		$crawler_list = $this->_recursive_build_crawler( $crawler_factors );
+		$this->_crawlers = $this->_recursive_build_crawler( $crawler_factors );
 
-		if ( $count_only ) {
-			return count( $crawler_list );
-		}
-
-		return $crawler_list;
+		return $this->_crawlers;
 	}
-
 
 	/**
 	 * Build a crawler list recursively
@@ -375,6 +747,61 @@ class Crawler extends Base
 		return $final_list;
 	}
 
+	private function append_blacklist()
+	{
+
+	}
+
+	/**
+	 * Return crawler meta file
+	 *
+	 * @since    1.1.0
+	 * @access public
+	 */
+	public function json_path()
+	{
+		if ( ! file_exists( LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta ) ) {
+			return false;
+		}
+
+		return LITESPEED_STATIC_URL . '/crawler/' . $this->_sitemeta;
+	}
+
+
+	/**
+	 * Create reset pos file
+	 *
+	 * @since    1.1.0
+	 * @access public
+	 */
+	public function reset_pos()
+	{
+		File::save( $this->_resetfile, time() , true );
+	}
+
+	/**
+	 * Display status based by matching crawlers order
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function display_status( $status_row )
+	{
+		$_status_list = array(
+			'-' => __( 'Not crawled yet', 'litespeed-cache' ),
+			'M' => __( 'Miss', 'litespeed-cache' ),
+			'H' => __( 'Hit', 'litespeed-cache' ),
+			'B' => __( 'Blacklist', 'litespeed-cache' ),
+		);
+
+		$status = '';
+		foreach ( str_split( $status_row ) as $v ) {
+			$status .= $v;
+		}
+
+		return $status;
+	}
+
 	/**
 	 * Output info and exit
 	 *
@@ -409,6 +836,15 @@ class Crawler extends Base
 		switch ( $type ) {
 			case self::TYPE_REFRESH_MAP :
 				Crawler_Map::get_instance()->gen();
+				break;
+
+			// Handle the ajax request to proceed crawler manually by admin
+			case self::TYPE_START:
+				self::start( true );
+				break;
+
+			case self::TYPE_RESET:
+				$instance->reset_pos();
 				break;
 
 			default:

@@ -9,6 +9,11 @@ $cf_zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() ) ;
 
 ?>
+<h3 class="litespeed-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
+
+<p><?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="https://my.quic.cloud" target="_blank">https://my.quic.cloud</a></p>
+
+
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>
 
 <?php if ( ! $cf_on ) : ?>

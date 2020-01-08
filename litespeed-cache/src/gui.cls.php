@@ -68,26 +68,7 @@ class GUI extends Base
 	 */
 	public function lscache_stats()
 	{
-		$parsed = parse_url( get_bloginfo( 'url' ) );
-
-		$response = wp_remote_get( $parsed[ 'scheme' ] . '://' . $parsed[ 'host' ] . '/__LSCACHE/STATS' );
-
-		if ( is_wp_error( $response ) ) {
-			return false;
-		}
-
-		$json = json_decode( $response[ 'body' ], true );
-		if ( ! is_array( $json ) ) {
-			return false;
-		}
-
-		foreach ( $json as $stats ) {
-			break;
-		}
-
-		if ( ! is_array( $stats ) || ! array_key_exists( 'PUB_CREATES', $stats ) ) {
-			return false;
-		}
+		return false;
 
 		$stat_titles = array(
 			'PUB_CREATES'		=> __( 'Public Caches', 'litespeed-cache' ),

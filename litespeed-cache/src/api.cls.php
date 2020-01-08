@@ -16,23 +16,23 @@ class API extends Base
 {
 	const VERSION =	Core::VER ;
 
-	const TYPE_FEED =						Tag::TYPE_FEED ;
-	const TYPE_FRONTPAGE =					Tag::TYPE_FRONTPAGE ;
-	const TYPE_HOME =						Tag::TYPE_HOME ;
-	const TYPE_PAGES =						Tag::TYPE_PAGES ;
-	const TYPE_PAGES_WITH_RECENT_POSTS =	Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
-	const TYPE_ERROR =						Tag::TYPE_ERROR ;
-	const TYPE_POST =						Tag::TYPE_POST ;
-	const TYPE_ARCHIVE_POSTTYPE =			Tag::TYPE_ARCHIVE_POSTTYPE ;
-	const TYPE_ARCHIVE_TERM =				Tag::TYPE_ARCHIVE_TERM ;
-	const TYPE_AUTHOR =						Tag::TYPE_AUTHOR ;
-	const TYPE_ARCHIVE_DATE =				Tag::TYPE_ARCHIVE_DATE ;
-	const TYPE_BLOG =						Tag::TYPE_BLOG ;
-	const TYPE_LOGIN =						Tag::TYPE_LOGIN ;
-	const TYPE_URL =						Tag::TYPE_URL ;
-	const TYPE_WIDGET =						Tag::TYPE_WIDGET ;
+	const TYPE_FEED 					= Tag::TYPE_FEED ;
+	const TYPE_FRONTPAGE 				= Tag::TYPE_FRONTPAGE ;
+	const TYPE_HOME 					= Tag::TYPE_HOME ;
+	const TYPE_PAGES 					= Tag::TYPE_PAGES ;
+	const TYPE_PAGES_WITH_RECENT_POSTS 	= Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
+	const TYPE_ERROR 					= Tag::TYPE_ERROR ;
+	const TYPE_POST 					= Tag::TYPE_POST ;
+	const TYPE_ARCHIVE_POSTTYPE 		= Tag::TYPE_ARCHIVE_POSTTYPE ;
+	const TYPE_ARCHIVE_TERM 			= Tag::TYPE_ARCHIVE_TERM ;
+	const TYPE_AUTHOR 					= Tag::TYPE_AUTHOR ;
+	const TYPE_ARCHIVE_DATE 			= Tag::TYPE_ARCHIVE_DATE ;
+	const TYPE_BLOG 					= Tag::TYPE_BLOG ;
+	const TYPE_LOGIN 					= Tag::TYPE_LOGIN ;
+	const TYPE_URL 						= Tag::TYPE_URL ;
+	const TYPE_WIDGET 					= Tag::TYPE_WIDGET ;
 
-	const TYPE_ESI =						Tag::TYPE_ESI ;
+	const TYPE_ESI 					= Tag::TYPE_ESI ;
 
 	const PARAM_NAME =				ESI::PARAM_NAME ;
 	const WIDGET_O_ESIENABLE =	ESI::WIDGET_O_ESIENABLE ;

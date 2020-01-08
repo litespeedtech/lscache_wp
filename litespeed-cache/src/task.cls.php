@@ -40,7 +40,7 @@ class Task extends Instance
 			$this->_schedule_filter_crawler() ;
 
 			// cron hook
-			add_action( self::HOOK_CRAWLER, __NAMESPACE__ . '\Crawler::crawl_data' ) ;
+			add_action( self::HOOK_CRAWLER, __NAMESPACE__ . '\Crawler::start' ) ;
 		}
 
 		// Register img optimization fetch ( always fetch immediately )

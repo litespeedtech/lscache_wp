@@ -41,7 +41,6 @@ class Router extends Instance
 	private static $_esi_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
-	private static $_can_crawl ;
 	private static $_ip ;
 	private static $_action ;
 	private static $_is_admin_ip ;
@@ -202,7 +201,7 @@ class Router extends Instance
 		Log::debug( '[Router] starting crawler role validation' ) ;
 
 		// Check if is from crawler
-		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler_Engine::FAST_USER_AGENT ) !== 0 ) {
+		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
 			Log::debug( '[Router] user agent not match' ) ;
 			return ;
 		}
@@ -332,25 +331,19 @@ class Router extends Instance
 	 *
 	 * @since 1.1.1
 	 * @access public
-	 * @return boolean
 	 */
 	public static function can_crawl()
 	{
-		if ( ! isset( self::$_can_crawl ) ) {
-			self::$_can_crawl = true ;
-
-			if ( isset( $_SERVER['X-LSCACHE'] ) && strpos( $_SERVER['X-LSCACHE'], 'crawler' ) === false ) {
-				self::$_can_crawl = false ;
-			}
-
-			// CLI will bypass this check as crawler library can always do the 428 check
-			if ( defined( 'LITESPEED_CLI' ) ) {
-				self::$_can_crawl = true ;
-			}
-
+		if ( isset( $_SERVER[ 'X-LSCACHE' ] ) && strpos( $_SERVER[ 'X-LSCACHE' ], 'crawler' ) === false ) {
+			return false;
 		}
 
-		return self::$_can_crawl ;
+		// CLI will bypass this check as crawler library can always do the 428 check
+		if ( defined( 'LITESPEED_CLI' ) ) {
+			return true;
+		}
+
+		return true;
 	}
 
 	/**
@@ -532,8 +525,6 @@ class Router extends Instance
 				}
 				return ;
 
-			case Core::ACTION_CRAWLER_RESET_POS:
-			case Core::ACTION_DO_CRAWL:
 			case self::ACTION_PURGE:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:

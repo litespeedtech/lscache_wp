@@ -19,6 +19,20 @@ $this->form_action() ;
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_CDN_QUIC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Enable %s CDN API functionality.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 	<tr>
 		<th>
 			<?php $id = Base::O_CDN ; ?>
@@ -202,53 +216,6 @@ $this->form_action() ;
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_CDN_QUIC ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
-
-				<a id='litespeed_modal_href' href="https://quic.cloud" target="_blank">Register for free at QUIC.cloud</a>
-
-				<!-- <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>assets/css/iziModal.min.css"> -->
-				<!-- <script src="<?php echo LSWCP_PLUGIN_URL ; ?>assets/js/iziModal.min.js"></script> -->
-				<!-- <div id="litespeed_modal"></div> -->
-				<script>
-					// var litespeed_modal = jQuery("#litespeed_modal").iziModal({iframe: true});
-					// jQuery("#litespeed_modal_href").click(function(event) {
-					// 	event.preventDefault();
-					// 	litespeed_modal.iziModal('open', event);
-					// });;
-				</script>
-			</div>
-			<div class="litespeed-block">
-				<div class='litespeed-col'>
-					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
-
-					<?php $this->build_input( Base::O_CDN_QUIC_EMAIL ) ; ?>
-					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
-					</div>
-				</div>
-
-				<div class='litespeed-col'>
-					<h4><?php echo __( 'User API Key', 'litespeed-cache' ) ; ?></h4>
-
-					<?php $this->build_input( Base::O_CDN_QUIC_KEY ) ; ?>
-					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Your API key is used to access %s APIs.', 'litespeed-cache' ), 'QUIC.cloud' ) ; ?>
-						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://my.quic.cloud/dashboard" target="_blank"', 'QUIC.cloud' ) ; ?>
-					</div>
-				</div>
-
 			</div>
 		</td>
 	</tr>

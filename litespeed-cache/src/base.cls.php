@@ -263,8 +263,6 @@ class Base extends Instance
 	const O_CDN_EXC 			= 'cdn-exc' ;
 	const O_CDN_REMOTE_JQ 		= 'cdn-remote_jq' ;
 	const O_CDN_QUIC 			= 'cdn-quic' ;
-	const O_CDN_QUIC_EMAIL		= 'cdn-quic_email' ;
-	const O_CDN_QUIC_KEY 		= 'cdn-quic_key' ;
 	const O_CDN_CLOUDFLARE 		= 'cdn-cloudflare' ;
 	const O_CDN_CLOUDFLARE_EMAIL= 'cdn-cloudflare_email' ;
 	const O_CDN_CLOUDFLARE_KEY 	= 'cdn-cloudflare_key' ;
@@ -318,8 +316,6 @@ class Base extends Instance
 		self::O_CDN_EXC,
 		self::O_CDN_REMOTE_JQ,
 		self::O_CDN_QUIC,
-		self::O_CDN_QUIC_EMAIL,
-		self::O_CDN_QUIC_KEY,
 		self::O_CDN_CLOUDFLARE,
 		self::O_CDN_CLOUDFLARE_EMAIL,
 		self::O_CDN_CLOUDFLARE_KEY,
@@ -547,8 +543,6 @@ class Base extends Instance
 		self::O_CDN_EXC 			=> array(),
 		self::O_CDN_REMOTE_JQ 		=> false,
 		self::O_CDN_QUIC 			=> false,
-		self::O_CDN_QUIC_EMAIL 		=> '',
-		self::O_CDN_QUIC_KEY 		=> '',
 		self::O_CDN_CLOUDFLARE 		=> false,
 		self::O_CDN_CLOUDFLARE_EMAIL => '',
 		self::O_CDN_CLOUDFLARE_KEY 	=> '',

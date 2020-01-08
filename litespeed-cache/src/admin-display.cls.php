@@ -665,7 +665,7 @@ class Admin_Display extends Base
 		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' ) ;
 
 		if ( ! $disable_reset ) {
-			echo '<a href="admin.php?page=litespeed-import" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
+			echo '<a href="admin.php?page=litespeed-tools#import_export" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
 			echo __( 'Reset All Settings', 'litespeed-cache' ) ;
 			echo '</a>' ;
 		}

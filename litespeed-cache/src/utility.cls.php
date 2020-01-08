@@ -843,13 +843,10 @@ class Utility extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function pagination( $total, $return_limit = false, $limit = false )
+	public static function pagination( $total, $limit, $return_offset = false )
 	{
-		if ( ! $limit ) {
-			$limit = 30;
-		}
-
 		$pagenum = isset( $_GET[ 'pagenum' ] ) ? absint( $_GET[ 'pagenum' ] ) : 1;
+
 		$offset = ( $pagenum - 1 ) * $limit;
 		$num_of_pages = ceil( $total / $limit );
 
@@ -857,8 +854,8 @@ class Utility extends Instance
 			$offset = $total - $limit;
 		}
 
-		if ( $return_limit ) {
-			return "$offset, $limit";
+		if ( $return_offset ) {
+			return $offset;
 		}
 
 		$page_links = paginate_links( array(

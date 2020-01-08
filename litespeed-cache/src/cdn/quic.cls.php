@@ -39,10 +39,6 @@ class Quic extends Instance
 			return false ;
 		}
 
-		if ( empty( $options[ Base::O_CDN_QUIC_EMAIL ] ) || empty( $options[ Base::O_CDN_QUIC_KEY ] ) ) {
-			return false ;
-		}
-
 		// Security: Remove cf key in report
 		$secure_fields = array(
 			Base::O_CDN_CLOUDFLARE_KEY,

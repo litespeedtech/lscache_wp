@@ -6,8 +6,9 @@ $crawler_summary = Crawler::get_summary();
 
 $__map = Crawler_Map::get_instance();
 
-$list = $__map->list();
-$pagination = Utility::pagination( $__map->count() );
+$list = $__map->list( 30 );
+$pagination = Utility::pagination( $__map->count(), 30 );
+
 ?>
 <h3 class="litespeed-title"><?php echo __( 'Crawler Stats', 'litespeed-cache' ); ?></h3>
 
@@ -39,7 +40,7 @@ Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( C
 		<th scope="col">#</th>
 		<th scope="col"><?php echo __('URL', 'litespeed-cache'); ?></th>
 		<th scope="col"><?php echo __('Status', 'litespeed-cache'); ?></th>
-		<th scope="col"><?php echo __('Operation', 'litespeed-cache'); ?></th>
+		<th scope="col"><?php echo __( 'Operation', 'litespeed-cache' ); ?></th>
 	</tr></thead>
 	<tbody>
 		<?php foreach ( $list as $i => $v ) : ?>
@@ -48,8 +49,12 @@ Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( C
 			<td>
 				<?php echo $v[ 'url' ]; ?>
 			</td>
-			<td><?php echo $v[ 'status' ]; ?></td>
-			<td><?php echo ""; ?></td>
+			<td>
+				<?php echo Crawler::get_instance()->display_status( $v[ 'status' ] ); ?>
+			</td>
+			<td>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_ADD_BLACKLIST ); ?>" class="button button-primary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>
+			</td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

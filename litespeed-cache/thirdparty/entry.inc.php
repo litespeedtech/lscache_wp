@@ -10,10 +10,9 @@
  * a common place for plugin authors to append their file to.
  *
  */
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-
-use \LiteSpeed\API ;
+use \LiteSpeed\API;
 
 $third_cls = array(
 	'Aelia_CurrencySwitcher',
@@ -25,6 +24,7 @@ $third_cls = array(
 	'Facetwp',
 	'Like_Dislike_Counter',
 	'Theme_My_Login',
+	'User_Switching',
 	'WooCommerce',
 	'Wp_Polls',
 	'WP_PostRatings',
@@ -33,14 +33,14 @@ $third_cls = array(
 	'WPML',
 	'WpTouch',
 	'Yith_Wishlist',
-) ;
+);
 
 foreach ( $third_cls as $v ) {
-	API::thirdparty( $v ) ;
+	API::thirdparty( $v );
 }
 
 // Preload needed for certain thirdparty
-API::hook_init( 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload' ) ;
-API::hook_init( 'LiteSpeed\Thirdparty\WooCommerce::preload' ) ;
-API::hook_init( 'LiteSpeed\Thirdparty\NextGenGallery::preload' ) ;
-API::hook_init( 'LiteSpeed\Thirdparty\AMP::preload' ) ;
+API::hook_init( 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload' );
+API::hook_init( 'LiteSpeed\Thirdparty\WooCommerce::preload' );
+API::hook_init( 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
+API::hook_init( 'LiteSpeed\Thirdparty\AMP::preload' );

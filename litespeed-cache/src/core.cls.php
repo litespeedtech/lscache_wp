@@ -28,8 +28,6 @@ class Core extends Instance
 	const ACTION_QS_PURGE_ALL = 'purge_all';
 	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all';
 	const ACTION_QS_NOCACHE = 'NOCACHE';
-	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos';
-	const ACTION_DO_CRAWL = 'do-crawl';
 
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug';
 
@@ -252,16 +250,6 @@ class Core extends Instance
 
 			case self::ACTION_QS_PURGE_SINGLE:
 				Purge::set_purge_single();
-				break;
-
-			case self::ACTION_CRAWLER_RESET_POS:
-				Crawler::get_instance()->reset_pos();
-				Admin::redirect();
-				break;
-
-			// Handle the ajax request to proceed crawler manually by admin
-			case self::ACTION_DO_CRAWL:
-				Crawler::crawl_data( true );
 				break;
 
 			case self::ACTION_QS_PURGE_ALL:
