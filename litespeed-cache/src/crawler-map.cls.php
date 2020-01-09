@@ -39,14 +39,18 @@ class Crawler_Map extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save_map_status( $list )
+	public function save_map_status( $list, $curr_crawler )
 	{
 		global $wpdb;
 
-		// Replace position $this->_summary[ 'curr' ]
-		$pos = (int) $this->_summary[ 'curr' ];
+		// Replace current crawler's position
+		$pos = $curr_crawler + 1;
 		foreach ( $list as $bit => $ids ) {
-			$wpdb->query( "UPDATE `$this->_tb` SET status = INSERT( status, $pos, 1, '$bit' ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
+			if ( ! $ids ) {
+				continue;
+			}
+			Log::debug( "[Crawler_map] Update list [bit] $bit [count] " . count( $ids ) );
+			exit( "UPDATE `$this->_tb` SET status = INSERT( status, $pos, 1, '$bit' ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
 			$list[ $bit ] = array();
 		}
 

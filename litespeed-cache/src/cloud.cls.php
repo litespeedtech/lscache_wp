@@ -663,6 +663,7 @@ class Cloud extends Base
 	{
 		$hash = Str::rrand( 16 );
 		// store hash
+		self::delete_option( self::DB_HASH );
 		self::update_option( self::DB_HASH, $hash );
 
 		return $hash;

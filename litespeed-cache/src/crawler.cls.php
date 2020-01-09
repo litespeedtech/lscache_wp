@@ -110,6 +110,23 @@ class Crawler extends Base
 	}
 
 	/**
+	 * Overwride save_summary
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function save_summary( $data = null )
+	{
+		self::get_instance()->_summary[ 'meta_save_time' ] = time();
+
+		if ( $data === null ) {
+			$data = self::get_instance()->_summary;
+		}
+
+		parent::save_summary( $data );
+	}
+
+	/**
 	 * Proceed crawling
 	 *
 	 * @since    1.1.0
@@ -427,7 +444,7 @@ class Crawler extends Base
 
 				// make sure at least each 10s save meta & map status once
 				if ( $_time - $this->_summary[ 'meta_save_time' ] > 10 ) {
-					$this->_map_status_list = $this->__map->_save_map_status( $this->_map_status_list );
+					$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr' ] );
 					self::save_summary();
 				}
 
@@ -625,7 +642,7 @@ class Crawler extends Base
 	 */
 	private function _terminate_running()
 	{
-		$this->_map_status_list = $this->__map->_save_map_status( $this->_map_status_list );
+		$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr' ] );
 
 		if ( $this->_end_reason == 'end' ) { // Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
