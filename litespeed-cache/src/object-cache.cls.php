@@ -466,9 +466,13 @@ class Object_Cache
 			return null ;
 		}
 
-		if ( ! $this->_can_cache() ) {
-			return null ;
-		}
+		/**
+		 * To fix the Cloud callback cached as its frontend call but the hash is generated in backend
+		 * Bug found by Stan at Jan/10/2020
+		 */
+		// if ( ! $this->_can_cache() ) {
+		// 	return null ;
+		// }
 
 		if( ! $this->_connect() ) {
 			return null ;
