@@ -44,13 +44,13 @@ class Crawler_Map extends Instance
 		global $wpdb;
 
 		// Replace current crawler's position
-		$pos = $curr_crawler + 1;
+		$curr_crawler = (int) $curr_crawler;
 		foreach ( $list as $bit => $ids ) {
 			if ( ! $ids ) {
 				continue;
 			}
-			Log::debug( "[Crawler_map] Update list [bit] $bit [count] " . count( $ids ) );
-			exit( "UPDATE `$this->_tb` SET status = INSERT( status, $pos, 1, '$bit' ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
+			Log::debug( "🐞🗺️ [Crawler_map] Update list [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
+			$wpdb->query( "UPDATE `$this->_tb` SET res = CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, LENGTH( res )-1-$curr_crawler ) ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
 			$list[ $bit ] = array();
 		}
 
@@ -92,7 +92,7 @@ class Crawler_Map extends Instance
 
 		$q = "SELECT COUNT(*) FROM `$this->_tb`";
 		if ( $bm ) {
-			$q .= "WHERE status & $bm";
+			$q .= "WHERE res & $bm";
 		}
 
 		return $wpdb->get_var( $q );
@@ -135,7 +135,7 @@ class Crawler_Map extends Instance
 			try {
 				$sitemap_urls = $this->_parse( $sitemap );
 			} catch( \Exception $e ) {
-				Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() );
+				Log::debug( '🐞🗺️ ❌ failed to prase custom sitemap: ' . $e->getMessage() );
 			}
 
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
@@ -152,18 +152,21 @@ class Crawler_Map extends Instance
 			$urls = $this->_build();
 		}
 
-		Log::debug( '[Crawler] Truncate sitemap' );
+		Log::debug( '🐞🗺️ Truncate sitemap' );
 		$wpdb->query( "TRUNCATE `$this->_tb`" );
 
-		Log::debug( '[Crawler] Generate sitemap' );
+		Log::debug( '🐞🗺️ Generate sitemap' );
 
 		foreach ( array_chunk( $urls, 100 ) as $urls2 ) {
 			$this->_save( $urls2 );
 		}
 
 		// Rest all status
-		$status = str_repeat( '-', count( Crawler::get_instance()->list_crawlers() ) );
-		$wpdb->query( "UPDATE `$this->_tb` SET status='$status'" );
+		$res = str_repeat( '-', count( Crawler::get_instance()->list_crawlers() ) );
+		$wpdb->query( "UPDATE `$this->_tb` SET res='$res'" );
+
+		// Reset crawler
+		Crawler::get_instance()->reset_pos();
 
 		return count( $urls );
 	}
@@ -208,7 +211,7 @@ class Crawler_Map extends Instance
 		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Log::debug( '[Crawler] failed to read sitemap: ' . $error_message );
+			Log::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
 
 			throw new \Exception( 'Failed to remote read' );
 		}
@@ -325,13 +328,13 @@ class Crawler_Map extends Instance
 		}
 
 		if ( ! empty($post_type_array) ) {
-			Log::debug( 'Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) );
+			Log::debug( '🐞🗺️ Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) );
 
 			$q = "SELECT ID, post_date FROM $wpdb->posts where post_type IN (" . implode( ',', array_fill( 0, count( $post_type_array ), '%s' ) ) . ") AND post_status='publish' $orderBy";
 			$results = $wpdb->get_results( $wpdb->prepare( $q, $post_type_array ) );
 
 			foreach ( $results as $result ){
-				$slug = str_replace($this->home_url, '', get_permalink($result->ID));
+				$slug = str_replace( $this->_home_url, '', get_permalink( $result->ID ) );
 				if ( ! in_array($slug, $blacklist) ) {
 					$this->_urls[] = $slug;
 				}
@@ -343,7 +346,7 @@ class Crawler_Map extends Instance
 			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false));
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
-					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id));
+					$slug = str_replace( $this->_home_url, '', get_category_link( $cat->term_id ) );
 					if ( ! in_array($slug, $blacklist) ){
 						$this->_urls[] = $slug;//var_dump($slug);exit;//todo: check permalink
 					}
@@ -356,7 +359,7 @@ class Crawler_Map extends Instance
 			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false));
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
-					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id));
+					$slug = str_replace( $this->_home_url, '', get_tag_link( $tag->term_id ) );
 					if ( ! in_array($slug, $blacklist) ) {
 						$this->_urls[] = $slug;
 					}

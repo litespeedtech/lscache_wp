@@ -1054,6 +1054,7 @@ class Base extends Instance
 			'LITESPEED_ON_IN_SETTING',
 			'LSCACHE_ADV_CACHE',
 			'LSWCP_TAG_PREFIX',
+			'COOKIEHASH',
 		) ;
 		$server_vars = array() ;
 		foreach ( $consts as $v ) {

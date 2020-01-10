@@ -10,20 +10,12 @@ $list = $__map->list( 30 );
 $pagination = Utility::pagination( $__map->count(), 30 );
 
 ?>
-<h3 class="litespeed-title"><?php echo __( 'Crawler Stats', 'litespeed-cache' ); ?></h3>
-
-Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( Crawler_Map::BM_HIT ); ?>  | Miss: <?php echo $__map->count( Crawler_Map::BM_MISS ); ?> | Blacklist: <?php echo $__map->count( Crawler_Map::BM_BLACKLIST ); ?>
-<br />
-
 <p>
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_REFRESH_MAP ); ?>" class="button button-primary litespeed-right10">
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_REFRESH_MAP ); ?>" class="button button-primary litespeed-right">
 	<?php echo __( 'Refresh Crawler Map', 'litespeed-cache' ); ?>
 </a>
 </p>
 
-<div class="litespeed-desc">
-	<p><?php echo __('All Urls which returned no-cache tags will be added here, after the initial crawling.', 'litespeed-cache'); ?></p>
-</div>
 <p>
 	<?php
 		if ( ! empty( $crawler_summary[ 'sitemap_time' ] ) ) {
@@ -34,12 +26,14 @@ Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( C
 
 <h3 class="litespeed-title"><?php echo __( 'Sitemap List', 'litespeed-cache' ); ?></h3>
 
+<?php echo __( 'Sitemap Total', 'litespeed-cache' ) . ': ' . $__map->count(); ?>
+
 <?php echo $pagination; ?>
 <table class="wp-list-table widefat striped">
 	<thead><tr >
 		<th scope="col">#</th>
-		<th scope="col"><?php echo __('URL', 'litespeed-cache'); ?></th>
-		<th scope="col"><?php echo __('Status', 'litespeed-cache'); ?></th>
+		<th scope="col"><?php echo __( 'URL', 'litespeed-cache' ); ?></th>
+		<th scope="col"><?php echo __( 'Crawler Status', 'litespeed-cache' ); ?></th>
 		<th scope="col"><?php echo __( 'Operation', 'litespeed-cache' ); ?></th>
 	</tr></thead>
 	<tbody>
@@ -50,7 +44,7 @@ Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( C
 				<?php echo $v[ 'url' ]; ?>
 			</td>
 			<td>
-				<?php echo Crawler::get_instance()->display_status( $v[ 'status' ] ); ?>
+				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ] ); ?>
 			</td>
 			<td>
 				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_ADD_BLACKLIST ); ?>" class="button button-primary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>
@@ -60,3 +54,9 @@ Sitemap Total: <?php echo $__map->count(); ?> | Hit: <?php echo $__map->count( C
 	</tbody>
 </table>
 <?php echo $pagination; ?>
+
+<p>
+	<i class="litespeed-dot litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
+</p>

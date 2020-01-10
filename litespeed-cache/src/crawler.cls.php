@@ -64,7 +64,7 @@ class Crawler extends Base
 
 		$this->__map = Crawler_Map::get_instance();
 
-		Log::debug( '[Crawler] Init' );
+		Log::debug( '🐞 Init' );
 	}
 
 	/**
@@ -93,6 +93,7 @@ class Crawler extends Base
 			'this_full_beginning_time'	=> 0,
 			'last_full_time_cost'		=> 0,
 			'last_crawler_total_cost'	=> 0,
+			'crawler_stats'		=> array(), // this will store all crawlers hit/miss crawl status
 		);
 
 		$summary = parent::get_summary();
@@ -117,13 +118,16 @@ class Crawler extends Base
 	 */
 	public static function save_summary( $data = null )
 	{
-		self::get_instance()->_summary[ 'meta_save_time' ] = time();
+		$instance = self::get_instance();
+		$instance->_summary[ 'meta_save_time' ] = time();
 
 		if ( $data === null ) {
-			$data = self::get_instance()->_summary;
+			$data = $instance->_summary;
 		}
 
 		parent::save_summary( $data );
+
+		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode( $data ), true );
 	}
 
 	/**
@@ -135,12 +139,12 @@ class Crawler extends Base
 	public static function start( $force = false )
 	{
 		if ( ! Router::can_crawl() ) {
-			Log::debug( '[Crawler] ......crawler is NOT allowed by the server admin......' );
+			Log::debug( '🐞 ......crawler is NOT allowed by the server admin......' );
 			return false;
 		}
 
 		if ( $force ) {
-			Log::debug( '[Crawler] ......crawler manually ran......' );
+			Log::debug( '🐞 ......crawler manually ran......' );
 		}
 
 		self::get_instance()->_crawl_data( $force );
@@ -154,7 +158,7 @@ class Crawler extends Base
 	 */
 	private function _crawl_data( $force )
 	{
-		Log::debug( 'Crawler: ......crawler started......' );
+		Log::debug( '🐞 ......crawler started......' );
 		// for the first time running
 		if ( ! $this->_summary ) {
 			$this->__map->gen();
@@ -165,19 +169,19 @@ class Crawler extends Base
 			// check whole crawling interval
 			$last_fnished_at = $this->_summary[ 'last_full_time_cost' ] + $this->_summary[ 'this_full_beginning_time' ];
 			if ( ! $force && time() - $last_fnished_at < $this->_options[ Base::O_CRAWLER_CRAWL_INTERVAL ] ) {
-				Log::debug( 'Crawler: Cron abort: cache warmed already.' );
+				Log::debug( '🐞 Cron abort: cache warmed already.' );
 				// if not reach whole crawling interval, exit
 				return;
 			}
-			Log::debug( 'Crawler: TouchedEnd. regenerate sitemap....' );
+			Log::debug( '🐞 TouchedEnd. regenerate sitemap....' );
 			$this->__map->gen();
 		}
 
 		$this->list_crawlers();
 
 		// In case crawlers are all done but not reload, reload it
-		if ( empty( $this->_summary[ 'curr' ] ) || empty( $this->_crawlers[ $this->_summary[ 'curr' ] ] ) ) {
-			$this->_summary[ 'curr' ] = 0;
+		if ( empty( $this->_summary[ 'curr_crawler' ] ) || empty( $this->_crawlers[ $this->_summary[ 'curr_crawler' ] ] ) ) {
+			$this->_summary[ 'curr_crawler' ] = 0;
 		}
 
 		$this->load_conf();
@@ -193,7 +197,7 @@ class Crawler extends Base
 	 */
 	private function load_conf()
 	{
-		$current_crawler = $this->_crawlers[ $this->_summary[ 'curr' ] ];
+		$current_crawler = $this->_crawlers[ $this->_summary[ 'curr_crawler' ] ];
 
 		/**
 		 * Set role simulation
@@ -270,7 +274,7 @@ class Crawler extends Base
 		// check if is running
 		if ( $this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf[ 'run_duration' ] ) {
 			$this->_end_reason = 'stopped';
-			Log::debug( '[Crawler] The crawler is running.' );
+			Log::debug( '🐞 The crawler is running.' );
 			return;
 		}
 
@@ -278,7 +282,7 @@ class Crawler extends Base
 		$this->_adjust_current_threads();
 		if ( $this->_cur_threads == 0 ) {
 			$this->_end_reason = 'stopped_highload';
-			Log::debug( '[Crawler] Stopped due to heavy load.' );
+			Log::debug( '🐞 Stopped due to heavy load.' );
 			return;
 		}
 
@@ -322,7 +326,7 @@ class Crawler extends Base
 		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
 		 */
 		if ( ! function_exists( 'sys_getloadavg' ) ) {
-			Log::debug( '[Crawler] set threads=0 due to func sys_getloadavg not exist!' );
+			Log::debug( '🐞 set threads=0 due to func sys_getloadavg not exist!' );
 			$this->_cur_threads = 0;
 			return;
 		}
@@ -420,11 +424,13 @@ class Crawler extends Base
 					// check response
 					if ( stripos( $rets[ $row[ 'id' ] ], 'HTTP/1.1 428 Precondition Required' ) !== false ) {
 						$this->_end_reason = 'crawler_disabled';
-						Log::debug( '[Crawler] crawler_disabled' );
+						Log::debug( '🐞 crawler_disabled' );
 						return;
 					}
 
-					$this->_map_status_list[ $this->_status_parse( $rets[ $row[ 'id' ] ] ) ][] = $row[ 'id' ];
+					$status = $this->_status_parse( $rets[ $row[ 'id' ] ] );
+					$this->_map_status_list[ $status ][] = $row[ 'id' ];
+					$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ]++;
 				}
 
 				// update offset position
@@ -444,7 +450,7 @@ class Crawler extends Base
 
 				// make sure at least each 10s save meta & map status once
 				if ( $_time - $this->_summary[ 'meta_save_time' ] > 10 ) {
-					$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr' ] );
+					$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr_crawler' ] );
 					self::save_summary();
 				}
 
@@ -481,7 +487,7 @@ class Crawler extends Base
 
 		// All URLs are done for current crawler
 		$this->_end_reason = 'end';
-		Log::debug( '[Crawler] Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
+		Log::debug( '🐞 Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
 	}
 
 	/**
@@ -642,7 +648,7 @@ class Crawler extends Base
 	 */
 	private function _terminate_running()
 	{
-		$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr' ] );
+		$this->_map_status_list = $this->__map->save_map_status( $this->_map_status_list, $this->_summary[ 'curr_crawler' ] );
 
 		if ( $this->_end_reason == 'end' ) { // Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
@@ -651,7 +657,7 @@ class Crawler extends Base
 			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
 			$count_crawlers = count( Crawler::get_instance()->list_crawlers() );
 			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
-				Log::debug( 'Crawler Lib: _terminate_running Touched end, whole crawled. Reload crawler!' );
+				Log::debug( '🐞 _terminate_running Touched end, whole crawled. Reload crawler!' );
 				$this->_summary[ 'curr_crawler' ] = 0;
 				$this->_summary[ 'done' ] = 'touchedEnd';// log done status
 				$this->_summary[ 'last_full_time_cost' ] = time() - $this->_summary[ 'this_full_beginning_time' ];
@@ -805,15 +811,15 @@ class Crawler extends Base
 	public function display_status( $status_row )
 	{
 		$_status_list = array(
-			'-' => __( 'Not crawled yet', 'litespeed-cache' ),
-			'M' => __( 'Miss', 'litespeed-cache' ),
-			'H' => __( 'Hit', 'litespeed-cache' ),
-			'B' => __( 'Blacklist', 'litespeed-cache' ),
+			'-' => 'default',
+			'M' => 'primary',
+			'H' => 'success',
+			'B' => 'danger',
 		);
 
 		$status = '';
-		foreach ( str_split( $status_row ) as $v ) {
-			$status .= $v;
+		foreach ( str_split( $status_row ) as $k => $v ) {
+			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '">' . ( $k + 1 ) . '</i>';
 		}
 
 		return $status;

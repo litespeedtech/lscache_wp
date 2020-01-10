@@ -109,7 +109,7 @@ if($seconds > 0):
 		<?php echo " <a href='" . Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_RESET ) . "' class='button litespeed-btn-warning'>" . __('Reset position', 'litespeed-cache') . "</a>";
 
 		$href = Router::can_crawl() ? Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_START ) : 'javascript:;';
-		echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='button litespeed-btn-success' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>";
+		echo " <a href='$href' id='litespeed_manual_trigger' class='button litespeed-btn-success' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>";
 		?>
 	</p>
 
@@ -119,11 +119,16 @@ if($seconds > 0):
 			<th scope="col">#</th>
 			<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
 			<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache'); ?></th>
-			<th scope="col"><?php echo __('Size', 'litespeed-cache'); ?></th>
-			<th scope="col"><?php echo __('Status', 'litespeed-cache'); ?></th>
+			<th scope="col"><?php echo __( 'Status', 'litespeed-cache' ); ?></th>
+			<th scope="col"><?php echo __( 'Running', 'litespeed-cache' ); ?></th>
 		</tr></thead>
 		<tbody>
-			<?php foreach ( $crawler_list as $i => $v ) : ?>
+			<?php foreach ( $crawler_list as $i => $v ) :
+					$hit = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'H' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'H' ] : '-';
+					$miss = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'M' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'M' ] : '-';
+					$blacklisted = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'B' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'B' ] : '-';
+					$waiting = $summary[ 'list_size' ] - (int)$hit - (int)$miss - (int)$blacklisted ?: '-';
+			?>
 			<tr>
 				<td>
 				<?php
@@ -137,7 +142,13 @@ if($seconds > 0):
 					<?php echo $v[ 'title' ]; ?>
 				</td>
 				<td><?php echo $recurrence; ?></td>
-				<td><?php echo "Size: $summary[list_size]"; ?></td>
+				<td>
+					{Eliza}
+					<?php echo '<span class="litespeed-badge">' . __( 'Waiting', 'litespeed-cache' ) . '</span> ' . $waiting; ?>
+					<?php echo __( 'Hit', 'litespeed-cache' ) . ': ' . $hit; ?>
+					<?php echo __( 'Miss', 'litespeed-cache' ) . ': ' . $miss; ?>
+					<?php echo __( 'Blacklisted', 'litespeed-cache' ) . ': ' . $blacklisted; ?>
+				</td>
 				<td>
 				<?php
 					if ( $i == $summary[ 'curr_crawler' ] ) {

@@ -284,6 +284,31 @@
 	color: #34b15d;
 }
 
+
+.litespeed-bg-default {
+	background-color: #a7a7a7!important;
+}
+
+.litespeed-bg-primary {
+	background-color: #3366CC!important;
+}
+
+.litespeed-bg-success {
+	background-color: #73b38d!important;
+}
+
+.litespeed-bg-warning {
+	background-color: #FF8C00!important;
+}
+
+.litespeed-bg-danger {
+	background-color: #dc3545!important;
+}
+
+.litespeed-bg-text-success{
+	background-color: #34b15d;
+}
+
 /* =======================================
 	  			LAYOUT
 ======================================= */
@@ -2420,3 +2445,25 @@ g.litespeed-pie_info .litespeed-pie-done {
 .litespeed-notice-dismiss:hover, .litespeed-notice-dismiss:active, .litespeed-notice-dismiss:focus {
 	color: #CC2929;
 }
+
+
+
+
+
+
+
+
+.litespeed-dot{
+	display: inline-block;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	color: white;
+}
+
+
+
+
+
+
+
