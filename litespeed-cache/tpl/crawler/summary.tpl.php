@@ -143,11 +143,10 @@ if($seconds > 0):
 				</td>
 				<td><?php echo $recurrence; ?></td>
 				<td>
-					{Eliza}
-					<?php echo '<span class="litespeed-badge">' . __( 'Waiting', 'litespeed-cache' ) . '</span> ' . $waiting; ?>
-					<?php echo __( 'Hit', 'litespeed-cache' ) . ': ' . $hit; ?>
-					<?php echo __( 'Miss', 'litespeed-cache' ) . ': ' . $miss; ?>
-					<?php echo __( 'Blacklisted', 'litespeed-cache' ) . ': ' . $blacklisted; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-default" title="' . __( 'Waiting', 'litespeed-cache' ) . '">' . $waiting . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-success" title="' . __( 'Hit', 'litespeed-cache' ) . '">' . $hit . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-primary" title="' . __( 'Miss', 'litespeed-cache' ) . '">' . $miss . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-danger" title="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . $blacklisted . '</i> '; ?>
 				</td>
 				<td>
 				<?php

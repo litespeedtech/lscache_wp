@@ -10,6 +10,8 @@ defined( 'WPINC' ) || exit;
 class Crawler extends Base
 {
 	const TYPE_REFRESH_MAP = 'refresh_map';
+	const TYPE_EMPTY_BLACKLIST = 'empty_blacklist';
+	const TYPE_REMOVE_BLACKLIST = 'remove_blacklist';
 	const TYPE_ADD_BLACKLIST = 'add_blacklist';
 	const TYPE_START = 'start';
 	const TYPE_RESET = 'reset';
@@ -182,6 +184,7 @@ class Crawler extends Base
 		// In case crawlers are all done but not reload, reload it
 		if ( empty( $this->_summary[ 'curr_crawler' ] ) || empty( $this->_crawlers[ $this->_summary[ 'curr_crawler' ] ] ) ) {
 			$this->_summary[ 'curr_crawler' ] = 0;
+			$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 		}
 
 		$this->load_conf();
@@ -429,7 +432,10 @@ class Crawler extends Base
 					}
 
 					$status = $this->_status_parse( $rets[ $row[ 'id' ] ] );
-					$this->_map_status_list[ $status ][] = $row[ 'id' ];
+					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = $row[ 'url' ];
+					if ( empty( $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ] ) ) {
+						$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ] = 0;
+					}
 					$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ]++;
 				}
 
@@ -460,6 +466,7 @@ class Crawler extends Base
 					if ( file_exists( $this->_resetfile ) && unlink( $this->_resetfile ) ) {
 						$this->_summary[ 'last_pos' ] = 0;
 						$this->_summary[ 'curr_crawler' ] = 0;
+						$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 						// reset done status
 						$this->_summary[ 'done' ] = 0;
 						$this->_summary[ 'this_full_beginning_time' ] = 0;
@@ -653,12 +660,14 @@ class Crawler extends Base
 		if ( $this->_end_reason == 'end' ) { // Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
 			$this->_summary[ 'curr_crawler' ]++; // Jump to next cralwer
+			$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 			$this->_summary[ 'last_pos' ] = 0;// reset last position
 			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
 			$count_crawlers = count( Crawler::get_instance()->list_crawlers() );
 			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
 				Log::debug( '🐞 _terminate_running Touched end, whole crawled. Reload crawler!' );
 				$this->_summary[ 'curr_crawler' ] = 0;
+				$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 				$this->_summary[ 'done' ] = 'touchedEnd';// log done status
 				$this->_summary[ 'last_full_time_cost' ] = time() - $this->_summary[ 'this_full_beginning_time' ];
 			}

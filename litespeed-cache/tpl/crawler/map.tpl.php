@@ -7,7 +7,8 @@ $crawler_summary = Crawler::get_summary();
 $__map = Crawler_Map::get_instance();
 
 $list = $__map->list( 30 );
-$pagination = Utility::pagination( $__map->count(), 30 );
+$count = $__map->count();
+$pagination = Utility::pagination( $count, 30 );
 
 ?>
 <p>
@@ -26,7 +27,7 @@ $pagination = Utility::pagination( $__map->count(), 30 );
 
 <h3 class="litespeed-title"><?php echo __( 'Sitemap List', 'litespeed-cache' ); ?></h3>
 
-<?php echo __( 'Sitemap Total', 'litespeed-cache' ) . ': ' . $__map->count(); ?>
+<?php echo __( 'Sitemap Total', 'litespeed-cache' ) . ': ' . $count; ?>
 
 <?php echo $pagination; ?>
 <table class="wp-list-table widefat striped">

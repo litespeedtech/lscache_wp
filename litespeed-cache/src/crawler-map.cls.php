@@ -31,6 +31,7 @@ class Crawler_Map extends Instance
 		$this->_home_url = get_home_url();
 		$this->__data = Data::get_instance();
 		$this->_tb = $this->__data->tb( 'crawler' );
+		$this->_tb_blacklist = $this->__data->tb( 'crawler_blacklist' );
 	}
 
 	/**
@@ -50,11 +51,79 @@ class Crawler_Map extends Instance
 				continue;
 			}
 			Log::debug( "🐞🗺️ [Crawler_map] Update list [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
-			$wpdb->query( "UPDATE `$this->_tb` SET res = CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, LENGTH( res )-1-$curr_crawler ) ) WHERE id IN ( " . implode( ',', array_map( 'intval', $ids ) ) . " )" );
+			$res = "CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, LENGTH( res )-1-$curr_crawler ) )";
+			$wpdb->query( "UPDATE `$this->_tb` SET res = $res WHERE id IN ( " . implode( ',', array_map( 'intval', array_keys( $ids ) ) ) . " )" );
+
+			// Add blacklist
+			if ( $bit == 'B' ) {
+				$q = "SELECT id, url FROM `$this->_tb_blacklist` WHERE url IN (" . implode( ',', array_fill( 0, count( $ids ), '%s' ) ) . ")";
+				$existing = $wpdb->get_results( $wpdb->prepare( $q, $ids ), ARRAY_A );
+				// Update current crawler status tag in existing blacklist
+				if ( $existing ) {
+					Utility::compatibility();
+					$wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
+				}
+
+				// Append new blacklist
+				if ( count( $ids ) > count( $existing ) ) {
+					$new_urls = array_diff( $ids, array_column( $existing, 'url') );
+
+					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '(%s,%s)' ) );
+					$data = array();
+					$str = array_fill( 0, count( Crawler::get_instance()->list_crawlers() ), '-' );
+					$str[ $curr_crawler ] = 'B';
+					$str = implode( '', $str );
+					foreach ( $new_urls as $v ) {
+						$data[] = $v;
+						$data[] = $str;
+					}
+					$wpdb->query( $wpdb->prepare( $q, $data ) );
+				}
+			}
 			$list[ $bit ] = array();
 		}
 
 		return $list;
+	}
+
+	/**
+	 * List blacklist
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function list_blacklist( $limit, $offset = false )
+	{
+		global $wpdb;
+
+		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+			return array();
+		}
+
+		if ( $offset === false ) {
+			$total = $this->count_blacklist();
+			$offset = Utility::pagination( $total, $limit, true );
+		}
+
+
+		$q = "SELECT * FROM `$this->_tb_blacklist` ORDER BY id DESC LIMIT %d, %d";
+		return $wpdb->get_results( $wpdb->prepare( $q, $offset, $limit ), ARRAY_A );
+
+	}
+
+	/**
+	 * Count blacklist
+	 */
+	public function count_blacklist()
+	{
+		global $wpdb;
+
+		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+			return false;
+		}
+
+		$q = "SELECT COUNT(*) FROM `$this->_tb_blacklist`";
+		return $wpdb->get_var( $q );
 	}
 
 	/**
@@ -82,7 +151,10 @@ class Crawler_Map extends Instance
 
 	}
 
-	public function count( $bm = false )
+	/**
+	 * Count sitemap
+	 */
+	public function count()
 	{
 		global $wpdb;
 
@@ -91,10 +163,6 @@ class Crawler_Map extends Instance
 		}
 
 		$q = "SELECT COUNT(*) FROM `$this->_tb`";
-		if ( $bm ) {
-			$q .= "WHERE res & $bm";
-		}
-
 		return $wpdb->get_var( $q );
 	}
 
@@ -124,6 +192,10 @@ class Crawler_Map extends Instance
 
 		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
 			$this->__data->tb_create( 'crawler' );
+		}
+
+		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+			$this->__data->tb_create( 'crawler_blacklist' );
 		}
 
 		// use custom sitemap

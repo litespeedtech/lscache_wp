@@ -2459,6 +2459,16 @@ g.litespeed-pie_info .litespeed-pie-done {
 	width: 20px;
 	height: 20px;
 	color: white;
+	text-align: center;
+}
+
+.litespeed-badge{
+	display: inline-block;
+	border-radius: 20%;
+	min-width: 50px;
+	height: 20px;
+	color: white;
+	text-align: center;
 }
 
 

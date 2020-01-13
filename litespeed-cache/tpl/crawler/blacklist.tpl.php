@@ -1,0 +1,54 @@
+<?php
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
+
+$crawler_summary = Crawler::get_summary();
+
+$__map = Crawler_Map::get_instance();
+
+$list = $__map->list_blacklist( 30 );
+$count = $__map->count_blacklist();
+$pagination = Utility::pagination( $count, 30 );
+
+?>
+<p>
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_EMPTY_BLACKLIST ); ?>" class="button litespeed-btn-danger litespeed-right " data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
+	<?php echo __( 'Delete all blacklist', 'litespeed-cache' ); ?>
+</a>
+</p>
+
+<h3 class="litespeed-title"><?php echo __( 'Blacklist', 'litespeed-cache' ); ?></h3>
+
+<?php echo __( 'Total', 'litespeed-cache' ) . ': ' . $count; ?>
+
+<?php echo $pagination; ?>
+<table class="wp-list-table widefat striped">
+	<thead><tr >
+		<th scope="col">#</th>
+		<th scope="col"><?php echo __( 'URL', 'litespeed-cache' ); ?></th>
+		<th scope="col"><?php echo __( 'Status', 'litespeed-cache' ); ?></th>
+		<th scope="col"><?php echo __( 'Operation', 'litespeed-cache' ); ?></th>
+	</tr></thead>
+	<tbody>
+		<?php foreach ( $list as $i => $v ) : ?>
+		<tr>
+			<td><?php echo $i + 1; ?></td>
+			<td>
+				<?php echo $v[ 'url' ]; ?>
+			</td>
+			<td>
+				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ] ); ?>
+			</td>
+			<td>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_REMOVE_BLACKLIST ); ?>" class="button button-primary"><?php echo __( 'Remove from Blacklist', 'litespeed-cache' ); ?></a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $pagination; ?>
+
+<p>
+	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not Blacklist', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
+</p>

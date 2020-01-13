@@ -33,6 +33,7 @@ class Data extends Instance
 	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
 	const TB_AVATAR = 'litespeed_avatar';
 	const TB_CRAWLER = 'litespeed_crawler';
+	const TB_CRAWLER_BLACKLIST = 'litespeed_crawler_blacklist';
 
 	/**
 	 * Init
@@ -68,6 +69,7 @@ class Data extends Instance
 		// Crawler
 		if ( Conf::val( Base::O_CRAWLER ) ) {
 			$this->tb_create( 'crawler' );
+			$this->tb_create( 'crawler_blacklist' );
 		}
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
@@ -230,6 +232,10 @@ class Data extends Instance
 				return $wpdb->prefix . self::TB_CRAWLER;
 				break;
 
+			case 'crawler_blacklist':
+				return $wpdb->prefix . self::TB_CRAWLER_BLACKLIST;
+				break;
+
 			default:
 				break;
 		}
@@ -325,6 +331,7 @@ class Data extends Instance
 		$this->tb_del( 'cssjs' );
 		$this->tb_del( 'avatar' );
 		$this->tb_del( 'crawler' );
+		$this->tb_del( 'crawler_blacklist' );
 
 		// Deleting img_optm only can be done when destroy all optm images
 	}

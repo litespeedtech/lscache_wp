@@ -5,6 +5,7 @@ defined( 'WPINC' ) || exit ;
 $menu_list = array(
 	'summary'				=> __( 'Summary', 'litespeed-cache' ),
 	'map'					=> __( 'Map', 'litespeed-cache' ),
+	'blacklist'				=> __( 'Blacklist', 'litespeed-cache' ),
 	'settings-general'		=> __( 'General Settings', 'litespeed-cache' ),
 	'settings-simulation'	=> __( 'Simulation Settings', 'litespeed-cache' ),
 	'settings-sitemap'		=> __( 'Sitemap Settings', 'litespeed-cache' ),
