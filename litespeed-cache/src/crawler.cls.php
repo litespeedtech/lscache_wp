@@ -457,6 +457,7 @@ class Crawler extends Base
 				// check duration
 				if ( $this->_summary[ 'last_update_time' ] > $this->_max_run_time ) {
 					$this->_end_reason = 'stopped_maxtime';
+					Log::debug( '🐞 Terminated due to maxtime' );
 					return;
 					// return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache');
 				}
@@ -471,6 +472,8 @@ class Crawler extends Base
 				if ( $_time > $this->_summary[ 'pos_reset_check' ] ) {
 					$this->_summary[ 'pos_reset_check' ] = $_time + 5;
 					if ( file_exists( $this->_resetfile ) && unlink( $this->_resetfile ) ) {
+						Log::debug( '🐞 Terminated due to reset file' );
+
 						$this->_summary[ 'last_pos' ] = 0;
 						$this->_summary[ 'curr_crawler' ] = 0;
 						$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
@@ -488,6 +491,7 @@ class Crawler extends Base
 					$this->_adjust_current_threads();
 					if ( $this->_cur_threads == 0 ) {
 						$this->_end_reason = 'stopped_highload';
+						Log::debug( '🐞 Terminated due to highload' );
 						return;
 						// return __('Stopped due to load over limit', 'litespeed-cache');
 					}
@@ -501,6 +505,7 @@ class Crawler extends Base
 
 		// All URLs are done for current crawler
 		$this->_end_reason = 'end';
+		$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ 'W' ] = 0;
 		Log::debug( '🐞 Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
 	}
 
@@ -526,7 +531,7 @@ class Crawler extends Base
 		}
 
 		// execute curl
-		if ( $$curls ) {
+		if ( $curls ) {
 			$last_start_time = null;
 			do {
 				curl_multi_exec( $mh, $last_start_time );
@@ -858,7 +863,14 @@ class Crawler extends Base
 
 		$status = '';
 		foreach ( str_split( $status_row ) as $k => $v ) {
-			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '" title="' . $reason_set[ $k ] . '">' . ( $k + 1 ) . '</i>';
+			$reason = $reason_set[ $k ];
+			if ( $reason == 'Man' ) {
+				$reason = __( 'Manually added to blacklist', 'litespeed-cache' );
+			}
+			if ( $reason == 'Existed' ) {
+				$reason = __( 'Previously existed in blacklist', 'litespeed-cache' );
+			}
+			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '" title="' . $reason . '">' . ( $k + 1 ) . '</i>';
 		}
 
 		return $status;

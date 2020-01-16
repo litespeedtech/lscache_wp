@@ -127,7 +127,12 @@ if($seconds > 0):
 					$hit = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'H' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'H' ] : '-';
 					$miss = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'M' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'M' ] : '-';
 					$blacklisted = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'B' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'B' ] : '-';
-					$waiting = $summary[ 'list_size' ] - (int)$hit - (int)$miss - (int)$blacklisted ?: '-';
+					if ( isset( $summary[ 'crawler_stats' ][ $i ][ 'W' ] ) ) {
+						$waiting = $summary[ 'crawler_stats' ][ $i ][ 'W' ] ?: '-';
+					}
+					else {
+						$waiting = $summary[ 'list_size' ] - (int)$hit - (int)$miss - (int)$blacklisted ?: '-';
+					}
 			?>
 			<tr>
 				<td>

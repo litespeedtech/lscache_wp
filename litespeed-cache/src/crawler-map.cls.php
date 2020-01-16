@@ -54,7 +54,7 @@ class Crawler_Map extends Instance
 			if ( ! $ids ) {
 				continue;
 			}
-			Log::debug( "🐞🗺️ [Crawler_map] Update list [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
+			Log::debug( "🐞🗺️ Update map [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
 
 			// Update res first, then reason
 			$right_pos = $total_crawler_pos - $curr_crawler;
@@ -66,10 +66,11 @@ class Crawler_Map extends Instance
 
 			// Add blacklist
 			if ( $bit == 'B' ) {
-				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all ) )";
+				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
 				$existing = $wpdb->get_results( $q, ARRAY_A );
 				// Update current crawler status tag in existing blacklist
 				if ( $existing ) {
+					Log::debug( '🐞🗺️ Update blacklist [count] ' . count( $existing ) );
 					$wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
 				}
 
@@ -77,7 +78,9 @@ class Crawler_Map extends Instance
 				if ( count( $ids ) > count( $existing ) ) {
 					$new_urls = array_diff( array_column( $ids, 'url' ), array_column( $existing, 'url') );
 
-					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '( %s, %s, $s )' ) );
+					Log::debug( '🐞🗺️ Insert into blacklist [count] ' . count( $new_urls ) );
+
+					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '( %s, %s, %s )' ) );
 					$data = array();
 					$res = array_fill( 0, $total_crawler, '-' );
 					$res[ $curr_crawler ] = 'B';
@@ -104,17 +107,20 @@ class Crawler_Map extends Instance
 
 			foreach ( $reason_array as $code => $v2 ) {
 				// Complement comma
-				if ( ! $curr_crawler ) {
+				if ( $curr_crawler ) {
 					$code = ',' . $code;
 				}
-				if ( $curr_crawler == $total_crawler_pos ) {
+				if ( $curr_crawler < $total_crawler_pos ) {
 					$code .= ',';
 				}
+
+				Log::debug( "🗺️🗺️ UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")"  );
 
 				$wpdb->query( "UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")" );
 
 				// Update blacklist reason
 				if ( $bit == 'B' ) {
+					Log::debug( "🗺️🗺️ UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
 					$wpdb->query( "UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
 				}
 			}
@@ -143,9 +149,9 @@ class Crawler_Map extends Instance
 		// Build res&reason
 		$total_crawler = count( Crawler::get_instance()->list_crawlers() );
 		$res = str_repeat( 'B', $total_crawler );
-		$reason = implode( ',', array_fill( 0, $total_crawler, 'Manual' ) );
+		$reason = implode( ',', array_fill( 0, $total_crawler, 'Man' ) );
 
-		$row = $wpdb->get_row( "SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'" );
+		$row = $wpdb->get_row( "SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A );
 
 		if ( ! $row ) {
 			Log::debug( '🐞🗺️ blacklist failed to add [id] ' . $id );
