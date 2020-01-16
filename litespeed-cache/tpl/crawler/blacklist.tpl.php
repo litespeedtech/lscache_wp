@@ -50,5 +50,6 @@ $pagination = Utility::pagination( $count, 30 );
 
 <p>
 	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not Blacklist', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blacklisted due to not cacheable', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
 </p>

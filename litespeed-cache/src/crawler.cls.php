@@ -41,6 +41,7 @@ class Crawler extends Base
 		'H'	=> array(),
 		'M'	=> array(),
 		'B'	=> array(),
+		'N'	=> array(),
 	);
 	protected $_summary;
 
@@ -429,13 +430,13 @@ class Crawler extends Base
 					}
 
 					// check response
-					if ( stripos( $rets[ $row[ 'id' ] ][ 'content' ], 'HTTP/1.1 428 Precondition Required' ) !== false ) {
+					if ( $rets[ $row[ 'id' ] ][ 'code' ] == 428 ) { // HTTP/1.1 428 Precondition Required (need to test)
 						$this->_end_reason = 'crawler_disabled';
 						Log::debug( '🐞 crawler_disabled' );
 						return;
 					}
 
-					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'content' ] ); // B or H or M
+					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'header' ], $rets[ $row[ 'id' ] ][ 'code' ] ); // B or H or M or N(nocache)
 					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = array(
 						'url'	=> $row[ 'url' ],
 						'code' 	=> $rets[ $row[ 'id' ] ][ 'code' ], // 201 or 200 or 404
@@ -524,6 +525,9 @@ class Crawler extends Base
 			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'B' ) {
 				continue;
 			}
+			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'N' ) {
+				continue;
+			}
 			$curls[ $row[ 'id' ] ] = curl_init();
 			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $this->_crawler_conf[ 'base' ] . $row[ 'url' ] );
 			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
@@ -547,15 +551,24 @@ class Crawler extends Base
 			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'B' ) {
 				continue;
 			}
+			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'N' ) {
+				continue;
+			}
 
-			$thisCurl = $curls[ $row[ 'id' ] ];
+			$ch = $curls[ $row[ 'id' ] ];
+
+			// Parse header
+			$header_size = curl_getinfo( $ch, CURLINFO_HEADER_SIZE );
+			$content = curl_multi_getcontent( $ch );
+			$header = substr( $content, 0, $header_size );
+
 			$ret[ $row[ 'id' ] ] = array(
-				'content' => curl_multi_getcontent( $thisCurl ),
-				'code'	=> curl_getinfo( $thisCurl, CURLINFO_HTTP_CODE ),
+				'header' => $header,
+				'code'	=> curl_getinfo( $ch, CURLINFO_HTTP_CODE ),
 			);
 
-			curl_multi_remove_handle( $mh, $thisCurl );
-			curl_close( $thisCurl );
+			curl_multi_remove_handle( $mh, $ch );
+			curl_close( $ch );
 		}
 		curl_multi_close( $mh );
 
@@ -563,27 +576,30 @@ class Crawler extends Base
 	}
 
 	/**
-	 * Check returned curl header to find if the status is 200 ok or not
+	 * Check returned curl header to find if cached or not
 	 *
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _status_parse( $headers )
+	private function _status_parse( $header, $code )
 	{
-		if ( stripos( $headers, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
-			return 'B'; // Blacklist
+		if ( $code == 201 ) {
+			return 'H';
 		}
 
-		$_http_status_ok_list = array(
-			'HTTP/1.1 200 OK',
-			'HTTP/1.1 201 Created',
-			'HTTP/2 200',
-			'HTTP/2 201',
+		if ( stripos( $header, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
+			return 'N'; // Blacklist
+		}
+
+		$_cache_headers = array(
+			'x-litespeed-cache',
+			'x-adc-cache',
+			'x-qc-cache',
 		);
 
-		foreach ( $_http_status_ok_list as $http_status ) {
-			if ( stripos( $headers, $http_status ) !== false ) {
-				if ( stripos( $headers, 'x-litespeed-cache: miss' ) !== false ) {
+		foreach ( $_cache_headers as $_header ) {
+			if ( stripos( $header, $_header ) !== false ) {
+				if ( stripos( $header, $_header . ': miss' ) !== false ) {
 					return 'M'; // Miss
 				}
 				return 'H'; // Hit
@@ -857,6 +873,7 @@ class Crawler extends Base
 			'M' => 'primary',
 			'H' => 'success',
 			'B' => 'danger',
+			'N' => 'warning',
 		);
 
 		$reason_set = explode( ',', $reason_set );

@@ -65,13 +65,13 @@ class Crawler_Map extends Instance
 			$wpdb->query( "UPDATE `$this->_tb` SET res = $sql_res WHERE id IN ( $id_all )" );
 
 			// Add blacklist
-			if ( $bit == 'B' ) {
+			if ( $bit == 'B' || $bit == 'N' ) {
 				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
 				$existing = $wpdb->get_results( $q, ARRAY_A );
 				// Update current crawler status tag in existing blacklist
 				if ( $existing ) {
-					Log::debug( '🐞🗺️ Update blacklist [count] ' . count( $existing ) );
-					$wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
+					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
+					Log::debug( '🐞🗺️ Update blacklist [count] ' . $count );
 				}
 
 				// Append new blacklist
@@ -83,7 +83,7 @@ class Crawler_Map extends Instance
 					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '( %s, %s, %s )' ) );
 					$data = array();
 					$res = array_fill( 0, $total_crawler, '-' );
-					$res[ $curr_crawler ] = 'B';
+					$res[ $curr_crawler ] = $bit;
 					$res = implode( '', $res );
 					$default_reason = $total_crawler > 1 ? str_repeat( ',', $total_crawler - 1 ) : ''; // Pre-populate default reason value first, update later
 					foreach ( $new_urls as $url ) {
@@ -114,14 +114,15 @@ class Crawler_Map extends Instance
 					$code .= ',';
 				}
 
-				Log::debug( "🗺️🗺️ UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")"  );
+				$count = $wpdb->query( "UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")" );
 
-				$wpdb->query( "UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")" );
+				Log::debug( "🐞🗺️ Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
 
 				// Update blacklist reason
-				if ( $bit == 'B' ) {
-					Log::debug( "🗺️🗺️ UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
-					$wpdb->query( "UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
+				if ( $bit == 'B' || $bit == 'N' ) {
+					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
+
+					Log::debug( "🐞🗺️ Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
 				}
 			}
 
@@ -192,7 +193,7 @@ class Crawler_Map extends Instance
 
 		Log::debug( '🐞🗺️ blacklist delete [id] ' . $id );
 
-		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( res, 'B', '-' ) WHERE url = ( SELECT url FROM `$this->_tb_blacklist` WHERE id = '$id' )" );
+		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' ) WHERE url = ( SELECT url FROM `$this->_tb_blacklist` WHERE id = '$id' )" );
 
 		$wpdb->query( "DELETE FROM `$this->_tb_blacklist` WHERE id = '$id'" );
 	}
@@ -213,7 +214,7 @@ class Crawler_Map extends Instance
 
 		Log::debug( '🐞🗺️ Truncate blacklist' );
 
-		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( res, 'B', '-' )" );
+		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' )" );
 
 		$wpdb->query( "TRUNCATE `$this->_tb_blacklist`" );
 	}
@@ -232,14 +233,13 @@ class Crawler_Map extends Instance
 			return array();
 		}
 
-		if ( $offset === false ) {
-			$total = $this->count_blacklist();
-			$offset = Utility::pagination( $total, $limit, true );
-		}
-
-
 		$q = "SELECT * FROM `$this->_tb_blacklist` ORDER BY id DESC";
+
 		if ( $limit !== false ) {
+			if ( $offset === false ) {
+				$total = $this->count_blacklist();
+				$offset = Utility::pagination( $total, $limit, true );
+			}
 			$q .= " LIMIT %d, %d";
 			$q = $wpdb->prepare( $q, $offset, $limit );
 		}

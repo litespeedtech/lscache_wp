@@ -109,7 +109,7 @@ if($seconds > 0):
 		<?php echo " <a href='" . Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_RESET ) . "' class='button litespeed-btn-warning'>" . __('Reset position', 'litespeed-cache') . "</a>";
 
 		$href = Router::can_crawl() ? Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_START ) : 'javascript:;';
-		echo " <a href='$href' id='litespeed_manual_trigger' class='button litespeed-btn-success' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>";
+		echo " <a href='$href' id='litespeed_manual_trigger' class='button litespeed-btn-success' litespeed-accesskey='R' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>";
 		?>
 	</p>
 
@@ -124,14 +124,17 @@ if($seconds > 0):
 		</tr></thead>
 		<tbody>
 			<?php foreach ( $crawler_list as $i => $v ) :
-					$hit = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'H' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'H' ] : '-';
-					$miss = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'M' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'M' ] : '-';
-					$blacklisted = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'B' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'B' ] : '-';
+					$hit = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'H' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'H' ] : 0;
+					$miss = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'M' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'M' ] : 0;
+
+					$blacklisted = ! empty( $summary[ 'crawler_stats' ][ $i ][ 'B' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'B' ] : 0;
+					$blacklisted += ! empty( $summary[ 'crawler_stats' ][ $i ][ 'N' ] ) ? $summary[ 'crawler_stats' ][ $i ][ 'N' ] : 0;
+
 					if ( isset( $summary[ 'crawler_stats' ][ $i ][ 'W' ] ) ) {
-						$waiting = $summary[ 'crawler_stats' ][ $i ][ 'W' ] ?: '-';
+						$waiting = $summary[ 'crawler_stats' ][ $i ][ 'W' ] ?: 0;
 					}
 					else {
-						$waiting = $summary[ 'list_size' ] - (int)$hit - (int)$miss - (int)$blacklisted ?: '-';
+						$waiting = $summary[ 'list_size' ] - $hit - $miss - $blacklisted;
 					}
 			?>
 			<tr>
@@ -148,10 +151,10 @@ if($seconds > 0):
 				</td>
 				<td><?php echo $recurrence; ?></td>
 				<td>
-					<?php echo '<i class="litespeed-badge litespeed-bg-default" title="' . __( 'Waiting', 'litespeed-cache' ) . '">' . $waiting . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-success" title="' . __( 'Hit', 'litespeed-cache' ) . '">' . $hit . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-primary" title="' . __( 'Miss', 'litespeed-cache' ) . '">' . $miss . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-danger" title="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . $blacklisted . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-default" title="' . __( 'Waiting', 'litespeed-cache' ) . '">' . ( $waiting ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-success" title="' . __( 'Hit', 'litespeed-cache' ) . '">' . ( $hit ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-primary" title="' . __( 'Miss', 'litespeed-cache' ) . '">' . ( $miss ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-danger" title="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
 				</td>
 				<td>
 				<?php
