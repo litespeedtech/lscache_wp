@@ -45,6 +45,12 @@ class REST extends Instance
 			}
 		) );
 
+		// IP callback validate
+		register_rest_route( 'litespeed/v1', '/ip_validate', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'ip_validate' ),
+		) );
+
 		// Hash callback validate
 		register_rest_route( 'litespeed/v1', '/hash', array(
 			'methods' => 'POST',
@@ -74,6 +80,16 @@ class REST extends Instance
 	public function check_ip()
 	{
 		return Tool::get_instance()->check_ip();
+	}
+
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function ip_validate()
+	{
+		return Cloud::get_instance()->ip_validate();
 	}
 
 	/**

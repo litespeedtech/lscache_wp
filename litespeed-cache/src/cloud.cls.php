@@ -580,6 +580,39 @@ class Cloud extends Base
 	/**
 	 * Request callback validation from Cloud
 	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function ip_validate()
+	{
+		if ( empty( $_POST[ 'hash' ] ) ) {
+			Log::debug( '[Cloud] Lack of hash param' );
+			return self::err( 'lack_of_param' );
+		}
+
+		if ( empty( $this->_api_key ) ) {
+			Log::debug( '[Cloud] Lack of API key' );
+			return self::err( 'lack_of_api_key' );
+		}
+
+		$to_validate = substr( $this->_api_key, 0, 4 );
+		if ( $_POST[ 'hash' ] !== md5( $to_validate ) ) {
+			Log::debug( '[Cloud] __callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST[ 'hash' ] );
+			return self::err( 'err_hash' );
+		}
+
+		Control::set_nocache( 'Cloud IP hash validation' );
+
+		$res_hash = substr( $this->_api_key, 2, 4 );
+
+		Log::debug( '[Cloud] __callback IP request hash: md5(' . $res_hash . ')' );
+
+		return self::ok( array( 'hash' => md5( $res_hash ) ) );
+	}
+
+	/**
+	 * Request callback validation from Cloud
+	 *
 	 * @since  1.5
 	 * @access public
 	 */
@@ -604,8 +637,7 @@ class Cloud extends Base
 
 		Log::debug( '[Cloud] __callback request hash: ' . $key_hash );
 
-
-		return array( 'hash' => $key_hash );
+		return self::ok( array( 'hash' => $key_hash ) );
 	}
 
 	/**

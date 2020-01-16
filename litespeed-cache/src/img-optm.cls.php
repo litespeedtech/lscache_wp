@@ -258,12 +258,10 @@ class Img_Optm extends Base
 
 		global $wpdb;
 
-		$division = substr_count( $fields, ',' ) + 1;
-
 		$q = "INSERT INTO `$this->_table_img_optm` ( $fields ) VALUES ";
 
 		// Add placeholder
-		$q .= Utility::chunk_placeholder( $data, $division );
+		$q .= Utility::chunk_placeholder( $data, $fields );
 
 		// Store data
 		$wpdb->query( $wpdb->prepare( $q, $data ) );

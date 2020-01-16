@@ -10,9 +10,9 @@ defined( 'WPINC' ) || exit;
 class Crawler extends Base
 {
 	const TYPE_REFRESH_MAP = 'refresh_map';
-	const TYPE_EMPTY_BLACKLIST = 'empty_blacklist';
-	const TYPE_REMOVE_BLACKLIST = 'remove_blacklist';
-	const TYPE_ADD_BLACKLIST = 'add_blacklist';
+	const TYPE_BLACKLIST_EMPTY = 'blacklist_empty';
+	const TYPE_BLACKLIST_DEL = 'blacklist_del';
+	const TYPE_BLACKLIST_ADD = 'blacklist_add';
 	const TYPE_START = 'start';
 	const TYPE_RESET = 'reset';
 
@@ -424,15 +424,22 @@ class Crawler extends Base
 
 				// check result headers
 				foreach ( $rows as $row ) {
+					if ( empty( $rets[ $row[ 'id' ] ] ) ) { // If already in blacklist, no curl happened, no corresponding record
+						continue;
+					}
+
 					// check response
-					if ( stripos( $rets[ $row[ 'id' ] ], 'HTTP/1.1 428 Precondition Required' ) !== false ) {
+					if ( stripos( $rets[ $row[ 'id' ] ][ 'content' ], 'HTTP/1.1 428 Precondition Required' ) !== false ) {
 						$this->_end_reason = 'crawler_disabled';
 						Log::debug( '🐞 crawler_disabled' );
 						return;
 					}
 
-					$status = $this->_status_parse( $rets[ $row[ 'id' ] ] );
-					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = $row[ 'url' ];
+					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'content' ] ); // B or H or M
+					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = array(
+						'url'	=> $row[ 'url' ],
+						'code' 	=> $rets[ $row[ 'id' ] ][ 'code' ], // 201 or 200 or 404
+					);
 					if ( empty( $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ] ) ) {
 						$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ $status ] = 0;
 					}
@@ -499,6 +506,7 @@ class Crawler extends Base
 
 	/**
 	 * Send multi curl requests
+	 * If res=B, bypass request and won't return
 	 *
 	 * @since  1.1.0
 	 * @access private
@@ -508,6 +516,9 @@ class Crawler extends Base
 		$mh = curl_multi_init();
 		$curls = array();
 		foreach ( $rows as $row ) {
+			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'B' ) {
+				continue;
+			}
 			$curls[ $row[ 'id' ] ] = curl_init();
 			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $this->_crawler_conf[ 'base' ] . $row[ 'url' ] );
 			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
@@ -515,19 +526,28 @@ class Crawler extends Base
 		}
 
 		// execute curl
-		$last_start_time = null;
-		do {
-			curl_multi_exec( $mh, $last_start_time );
-			if ( curl_multi_select( $mh ) == -1 ) {
-				usleep( 1 );
-			}
-		} while ( $last_start_time > 0 );
+		if ( $$curls ) {
+			$last_start_time = null;
+			do {
+				curl_multi_exec( $mh, $last_start_time );
+				if ( curl_multi_select( $mh ) == -1 ) {
+					usleep( 1 );
+				}
+			} while ( $last_start_time > 0 );
+		}
 
 		// curl done
 		$ret = array();
 		foreach ( $rows as $row ) {
+			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'B' ) {
+				continue;
+			}
+
 			$thisCurl = $curls[ $row[ 'id' ] ];
-			$ret[ $row[ 'id' ] ] = curl_multi_getcontent( $thisCurl );
+			$ret[ $row[ 'id' ] ] = array(
+				'content' => curl_multi_getcontent( $thisCurl ),
+				'code'	=> curl_getinfo( $thisCurl, CURLINFO_HTTP_CODE ),
+			);
 
 			curl_multi_remove_handle( $mh, $thisCurl );
 			curl_close( $thisCurl );
@@ -663,7 +683,7 @@ class Crawler extends Base
 			$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 			$this->_summary[ 'last_pos' ] = 0;// reset last position
 			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
-			$count_crawlers = count( Crawler::get_instance()->list_crawlers() );
+			$count_crawlers = count( $this->list_crawlers() );
 			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
 				Log::debug( '🐞 _terminate_running Touched end, whole crawled. Reload crawler!' );
 				$this->_summary[ 'curr_crawler' ] = 0;
@@ -686,6 +706,10 @@ class Crawler extends Base
 	 */
 	public function list_crawlers()
 	{
+		if ( $this->_crawlers ) {
+			return $this->_crawlers;
+		}
+
 		$crawler_factors = array();
 
 		// Add default Guest crawler
@@ -817,8 +841,12 @@ class Crawler extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function display_status( $status_row )
+	public function display_status( $status_row, $reason_set )
 	{
+		if ( ! $status_row ) {
+			return '';
+		}
+
 		$_status_list = array(
 			'-' => 'default',
 			'M' => 'primary',
@@ -826,9 +854,11 @@ class Crawler extends Base
 			'B' => 'danger',
 		);
 
+		$reason_set = explode( ',', $reason_set );
+
 		$status = '';
 		foreach ( str_split( $status_row ) as $k => $v ) {
-			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '">' . ( $k + 1 ) . '</i>';
+			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '" title="' . $reason_set[ $k ] . '">' . ( $k + 1 ) . '</i>';
 		}
 
 		return $status;
@@ -866,8 +896,24 @@ class Crawler extends Base
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_REFRESH_MAP :
+			case self::TYPE_REFRESH_MAP:
 				Crawler_Map::get_instance()->gen();
+				break;
+
+			case self::TYPE_BLACKLIST_EMPTY:
+				Crawler_Map::get_instance()->blacklist_empty();
+				break;
+
+			case self::TYPE_BLACKLIST_DEL:
+				if ( ! empty( $_GET[ 'id' ] ) ) {
+					Crawler_Map::get_instance()->blacklist_del( $_GET[ 'id' ] );
+				}
+				break;
+
+			case self::TYPE_BLACKLIST_ADD:
+				if ( ! empty( $_GET[ 'id' ] ) ) {
+					Crawler_Map::get_instance()->blacklist_add( $_GET[ 'id' ] );
+				}
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin

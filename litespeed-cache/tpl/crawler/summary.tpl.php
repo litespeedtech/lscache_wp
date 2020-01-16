@@ -162,6 +162,14 @@ if($seconds > 0):
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+
+	<p>
+		<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __( 'Waiting for Crawling', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
+	</p>
+
 	<div class="litespeed-desc">
 		<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache'); ?></div>
 		<div><?php echo __('Only one crawler can run concurrently.', 'litespeed-cache')

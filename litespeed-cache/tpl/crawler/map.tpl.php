@@ -45,10 +45,10 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo $v[ 'url' ]; ?>
 			</td>
 			<td>
-				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ] ); ?>
+				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_ADD_BLACKLIST ); ?>" class="button button-primary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-primary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>

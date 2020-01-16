@@ -876,8 +876,10 @@ class Utility extends Instance
 	 * @since 2.0
 	 * @access public
 	 */
-	public static function chunk_placeholder( $data, $division )
+	public static function chunk_placeholder( $data, $fields )
 	{
+		$division = substr_count( $fields, ',' ) + 1;
+
 		$q = implode( ',', array_map(
 			function( $el ) { return '(' . implode( ',', $el ) . ')'; },
 			array_chunk( array_fill( 0, count( $data ), '%s' ), $division )
