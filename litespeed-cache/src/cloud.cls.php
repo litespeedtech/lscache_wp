@@ -57,6 +57,7 @@ class Cloud extends Base
 		self::SVC_HEALTH,
 	);
 
+	const TYPE_CLEAR_PROMO 	= 'clear_promo';
 	const TYPE_REDETECT_CLOUD 	= 'redetect_cloud';
 	const TYPE_GEN_KEY 			= 'gen_key';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
@@ -499,6 +500,7 @@ class Cloud extends Base
 
 		// Parse _carry_on info
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
+			Log::debug( '[Cloud] Carry_on usage', $json[ '_carry_on' ] );
 			// Store generic info
 			foreach ( array( 'usage', 'promo' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
@@ -553,6 +555,38 @@ class Cloud extends Base
 
 		return $json;
 
+	}
+
+	/**
+	 * Show promo from cloud
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function show_promo()
+	{
+		if ( empty( $this->_summary[ 'promo' ] ) ) {
+			return;
+		}
+
+		require_once LSCWP_DIR . 'tpl/banner/cloud_promo.tpl.php' ;
+	}
+
+	/**
+	 * Clear promo from cloud
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _clear_promo()
+	{
+		if ( count( $this->_summary[ 'promo' ] ) > 1 ) {
+			array_shift( $this->_summary[ 'promo' ] );
+		}
+		else {
+			$this->_summary[ 'promo' ] = array();
+		}
+		self::save_summary();
 	}
 
 	/**
@@ -753,6 +787,10 @@ class Cloud extends Base
 				if ( ! empty( $_GET[ 'svc' ] ) ) {
 					$instance->detect_cloud( $_GET[ 'svc' ], true );
 				}
+				break;
+
+			case self::TYPE_CLEAR_PROMO:
+				$instance->_clear_promo();
 				break;
 
 			case self::TYPE_GEN_KEY :
