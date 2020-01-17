@@ -6,6 +6,7 @@ $lscache_stats = GUI::get_instance()->lscache_stats();
 
 $health_scores = Health::get_instance()->scores();
 
+$crawler_summary = Crawler::get_summary();
 
 // Image related info
 $optm_summary = Img_Optm::get_summary();
@@ -25,6 +26,9 @@ else {
 }
 
 $cloud_summary = Cloud::get_summary();
+$css_summary = CSS::get_summary();
+$placeholder_summary = Placeholder::get_summary();
+
 ?>
 
 <div class="litespeed-dashboard">
@@ -273,23 +277,32 @@ $cloud_summary = Cloud::get_summary();
 			<div class="postbox litespeed-postbox">
 				<div class="inside">
 					<h3 class="litespeed-title">
-						<?php echo __( 'Crawler Status', 'litespeed-cache' ); ?>
+						<?php echo __( 'Critical CSS', 'litespeed-cache' ); ?>
 					</h3>
 
+					<?php if ( ! empty( $css_summary[ 'last_request' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent' ] . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
+
 					<p>
-						<code>3</code> <?php echo __( 'crawler crons', 'litespeed-cache' ); ?>
-					</p>
-					<p>
-						<?php echo __( 'Current on crawler', 'litespeed-cache' ); ?>: <code>2</code>
-					</p>
-					<p>
-						<?php echo __( 'Position' ); ?> <code>300/500</code>
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue' ] ) ? count( $css_summary[ 'queue' ] ) : '-' ?></code>
+						<a href="<?php echo ! empty( $css_summary[ 'queue' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GENERATE_CRITICAL ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue' ] ) ) echo 'disabled'; ?>">
+							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
+						</a>
 					</p>
 
 				</div>
-				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-					<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>"><?php echo __( 'Manage Crawler', 'litespeed-cache' ); ?></a>
-				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.ccss' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
 			<div class="postbox litespeed-postbox">
@@ -298,19 +311,76 @@ $cloud_summary = Cloud::get_summary();
 						<?php echo __( 'LQIP Placeholder', 'litespeed-cache' ); ?>
 					</h3>
 
+					<?php if ( ! empty( $placeholder_summary[ 'last_request' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $placeholder_summary[ 'last_request' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $placeholder_summary[ 'last_spent' ] . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
+
 					<p>
-						<?php echo __( 'Placeholder generated', 'litespeed-cache' ); ?>: <code>300</code>
-					</p>
-					<p>
-						<?php echo __( 'Last cron time', 'litespeed-cache' ); ?>: <code>08/16/19 12:53</code>
-					</p>
-					<p>
-						<code>150</code> <?php echo __( 'is in queue', 'litespeed-cache' ); ?> <button type="button" class="button button-secondary button-small" title="<?php echo __( 'Click to trigger the cron manually', 'litespeed-cache' ); ?>"><?php echo __( 'Force cron', 'litespeed-cache' ); ?></button>
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? count( $placeholder_summary[ 'queue' ] ) : '-' ?></code>
+						<a href="<?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $placeholder_summary[ 'queue' ] ) ) echo 'disabled'; ?>">
+							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
+						</a>
 					</p>
 
 				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.lqip' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.lqip' ] ) ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
+			<div class="postbox litespeed-postbox">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'Crawler Status', 'litespeed-cache' ); ?>
+					</h3>
+
+					<p>
+						<code><?php echo count( Crawler::get_instance()->list_crawlers() );?></code> <?php echo __( 'Crawler(s)', 'litespeed-cache' ); ?>
+					</p>
+					<p>
+						<?php echo __( 'Current on crawler', 'litespeed-cache' ); ?>: <code><?php echo $crawler_summary[ 'curr_crawler' ] ?></code>
+					</p>
+
+					<?php if ( $crawler_summary[ 'curr_crawler_beginning_time' ] ) : ?>
+					<p>
+						<b><?php echo __('Current crawler started at', 'litespeed-cache'); ?>:</b>
+						<?php echo Utility::readable_time( $crawler_summary[ 'curr_crawler_beginning_time' ] ); ?>
+					</p>
+					<?php endif; ?>
+
+					<?php if ( $crawler_summary[ 'last_start_time' ] ) : ?>
+					<p class='litespeed-desc'>
+						<b><?php echo __('Last interval', 'litespeed-cache'); ?>:</b>
+						<?php echo Utility::readable_time( $crawler_summary[ 'last_start_time' ] ); ?>
+					</p>
+					<?php endif; ?>
+
+					<?php if ( $crawler_summary[ 'end_reason' ] ) : ?>
+					<p class='litespeed-desc'>
+						<b><?php echo __( 'Ended reason', 'litespeed-cache' ); ?>:</b>
+						<?php echo $crawler_summary[ 'end_reason' ]; ?>
+					</p>
+					<?php endif; ?>
+
+					<?php if ( $crawler_summary[ 'last_crawled' ] ) : ?>
+					<p class='litespeed-desc'>
+						<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $crawler_summary[ 'last_crawled' ] ); ?>
+					</p>
+					<?php endif; ?>
+
+				</div>
+				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+					<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>"><?php echo __( 'Manage Crawler', 'litespeed-cache' ); ?></a>
+				</div>
+			</div>
 
 			<div class="postbox litespeed-postbox">
 				<div class="inside">
