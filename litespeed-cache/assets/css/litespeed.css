@@ -1507,6 +1507,22 @@ input.litespeed-input-warning {
 	width: 60% ;
 }
 
+.litespeed-textarea-recommended {
+    display: flex;
+    margin-top: -5px;
+}
+
+.litespeed-textarea-recommended .litespeed-desc {
+    margin: 0 0 0 10px;
+}
+
+.litespeed-textarea-recommended > div:first-child {
+    margin-top: 1.7em;
+    font-size: 12px;
+    margin-right: 15px;
+}
+
+
 /* =======================================
 		   ENTERPRISE NOTICE
 ======================================= */

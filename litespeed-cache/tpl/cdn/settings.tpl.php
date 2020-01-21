@@ -166,8 +166,15 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 40 ) ; ?>
-			<?php $this->recommended( $id, true ) ; ?>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 40 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ) ; ?>
+				</div>
+			</div>
+			
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
 				<?php Doc::one_per_line() ; ?>

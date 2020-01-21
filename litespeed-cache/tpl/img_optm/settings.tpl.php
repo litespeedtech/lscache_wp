@@ -126,8 +126,16 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 40 ) ; ?>
-			<?php $this->recommended( $id, true ) ; ?>
+
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 40 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ) ; ?>
+				</div>
+			</div>
+
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify which element attributes will be replaced with WebP.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Only attributes listed here will be replaced.', 'litespeed-cache' ) ; ?>

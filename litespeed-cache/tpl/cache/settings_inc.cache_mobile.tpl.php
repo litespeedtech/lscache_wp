@@ -48,11 +48,16 @@ defined( 'WPINC' ) || exit ;
 					}
 
 				}
-			}
+			} ?>
 
-			$this->build_textarea( $id, 40 ) ;
-			$this->recommended( $id, true ) ;
-		?>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 40 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ) ; ?>
+				</div>
+			</div>
 
 			<div class="litespeed-desc">
 				<?php Doc::one_per_line() ; ?>
