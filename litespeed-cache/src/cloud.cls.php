@@ -356,8 +356,7 @@ class Cloud extends Base
 		}
 
 		if ( ! $this->_api_key ) {
-			$msg = sprintf( __( 'The Cloud API key need to be set first to use online service. <a %s>Click here to Setting page</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
-			Admin_Display::error( $msg );
+			Admin_Display::error( Error::msg( 'lack_of_api_key' ) );
 			return false;
 		}
 
@@ -565,6 +564,10 @@ class Cloud extends Base
 	 */
 	public function show_promo()
 	{
+		if ( ! $this->_api_key ) {
+			Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
+		}
+
 		if ( empty( $this->_summary[ 'promo' ] ) ) {
 			return;
 		}

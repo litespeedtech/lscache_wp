@@ -40,6 +40,13 @@ class Error
 	public static function msg( $code, $args = null )
 	{
 		switch ( $code ) {
+			case 'lack_of_api_key':
+				$msg = sprintf( __( 'You will need to set %1$s to use the online services. <a %2$s>Click here to set</a>', 'litespeed-cache' ),
+							'<strong>' . Lang::title( Base::O_API_KEY ) . '</strong>',
+							' href="' . admin_url('admin.php?page=litespeed-general') . '" '
+						);
+				break;
+
 			case 'lack_of_quota':
 				$msg = __( 'You don\'t have enough quota for current service left this month.', 'litespeed-cache' );
 				break;
