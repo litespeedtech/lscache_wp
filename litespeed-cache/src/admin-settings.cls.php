@@ -103,7 +103,7 @@ class Admin_Settings extends Base
 			 * Sanitize the value
 			 */
 			switch ( $id ) {
-				case self::O_CDN_MAPPING :
+				case self::O_CDN_MAPPING:
 					/**
 					 * CDN setting
 					 *
@@ -135,21 +135,10 @@ class Admin_Settings extends Base
 						$data2[ $k ][ $child ] = $v;
 					}
 
-					// Drop this line if all children elements are empty
-					foreach ( $data2 as $k => $v ) {
-						foreach ( $v as $v2 ) {
-							if ( $v2 ) {
-								continue 2;
-							}
-						}
-						// If hit here, means all empty
-						unset( $data2[ $k ] );
-					}
-
 					$data = $data2;
 					break;
 
-				case self::O_CRAWLER_COOKIES :
+				case self::O_CRAWLER_COOKIES:
 					/**
 					 * Cookie Crawler setting
 					 * Raw Format:
@@ -175,22 +164,11 @@ class Admin_Settings extends Base
 						$data2[ $k ][ $child ] = $v;
 					}
 
-					// Drop this line if all children elements are empty
-					foreach ( $data2 as $k => $v ) {
-						foreach ( $v as $v2 ) {
-							if ( $v2 ) {
-								continue 2;
-							}
-						}
-						// If hit here, means all empty
-						unset( $data2[ $k ] );
-					}
-
 					$data = $data2;
 					break;
 
 				// Cache exclude cat
-				case self::O_CACHE_EXC_CAT :
+				case self::O_CACHE_EXC_CAT:
 					$data2 = array();
 					$data = Utility::sanitize_lines( $data );
 					foreach ( $data as $v ) {
@@ -221,7 +199,7 @@ class Admin_Settings extends Base
 					break;
 
 				// `Original URLs`
-				case self::O_CDN_ORI :
+				case self::O_CDN_ORI:
 					$data = Utility::sanitize_lines( $data );
 					// Trip scheme
 					foreach ( $data as $k => $v ) {
@@ -234,7 +212,7 @@ class Admin_Settings extends Base
 					break;
 
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
-				case self::O_CRAWLER_EXC_CPT :
+				case self::O_CRAWLER_EXC_CPT:
 					if ( $data ) {
 						$data = Utility::sanitize_lines( $data );
 						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) );
@@ -242,11 +220,59 @@ class Admin_Settings extends Base
 					}
 					break;
 
-				default :
+				default:
 					break;
 			}
 
 			$the_matrix[ $id ] = $data;
+		}
+
+		// Special handler for CDN/Crawler 2d list to drop empty rows
+		foreach ( $the_matrix as $id => $data ) {
+			/**
+			 * Sanitize the value
+			 */
+			switch ( $id ) {
+				/**
+				 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
+				 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+				 *
+				 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+				 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
+				 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+				 */
+				case self::O_CDN_MAPPING:
+				case self::O_CRAWLER_COOKIES:
+					// Drop this line if all children elements are empty
+					foreach ( $data as $k => $v ) {
+						foreach ( $v as $v2 ) {
+							if ( $v2 ) {
+								continue 2;
+							}
+						}
+						// If hit here, means all empty
+						unset( $the_matrix[ $id ][ $k ] );
+					}
+
+				// Don't allow repeated cookie name
+				case self::O_CRAWLER_COOKIES:
+					$existed = array();
+					foreach ( $data as $k => $v ) {
+						if ( ! $v[ self::CRWL_COOKIE_NAME ] || in_array( $v[ self::CRWL_COOKIE_NAME ], $existed ) ) { // Filter repeated or empty name
+							unset( $the_matrix[ $id ][ $k ] );
+							continue;
+						}
+
+						$existed[] = $v[ self::CRWL_COOKIE_NAME ];
+					}
+					break;
+
+				// CDN mapping allow URL values repeated
+				// case self::O_CDN_MAPPING:
+
+				default:
+					break;
+			}
 
 		}
 
