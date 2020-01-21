@@ -182,7 +182,7 @@ else {
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_toggle( $id ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use keep-alive connections to speed up cache operations.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -195,7 +195,7 @@ else {
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_toggle( $id ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Improve wp-admin speed through caching. (May encounter expired data)', 'litespeed-cache' ) ; ?>
 			</div>
@@ -208,7 +208,7 @@ else {
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_toggle( $id ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OBJECT_ADMIN ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
 				<br />
