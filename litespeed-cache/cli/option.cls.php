@@ -45,6 +45,14 @@ class Option extends Base
 	{
 		/**
 		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in `const.default.ini`
+		 *
+		 * For CDN/Crawler mutlti dimension settings, if all children are empty in one line, will delete that line. To delete one line, just set all to empty.
+		 * E.g. to delete cdn-mapping[0], need to run below:
+		 * 											`set cdn-mapping[url][0] ''`
+		 * 											`set cdn-mapping[inc_img][0] ''`
+		 * 											`set cdn-mapping[inc_css][0] ''`
+		 * 											`set cdn-mapping[inc_js][0] ''`
+		 * 											`set cdn-mapping[filetype][0] ''`
 		 */
 		$key = $args[ 0 ] ;
 		$val = $args[ 1 ] ;

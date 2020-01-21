@@ -99,7 +99,9 @@ class Admin_Settings extends Base
 				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
 			}
 
-			// Sanitize the value
+			/**
+			 * Sanitize the value
+			 */
 			switch ( $id ) {
 				case self::O_CDN_MAPPING :
 					/**
@@ -132,6 +134,18 @@ class Admin_Settings extends Base
 
 						$data2[ $k ][ $child ] = $v;
 					}
+
+					// Drop this line if all children elements are empty
+					foreach ( $data2 as $k => $v ) {
+						foreach ( $v as $v2 ) {
+							if ( $v2 ) {
+								continue 2;
+							}
+						}
+						// If hit here, means all empty
+						unset( $data2[ $k ] );
+					}
+
 					$data = $data2;
 					break;
 
@@ -160,6 +174,18 @@ class Admin_Settings extends Base
 						}
 						$data2[ $k ][ $child ] = $v;
 					}
+
+					// Drop this line if all children elements are empty
+					foreach ( $data2 as $k => $v ) {
+						foreach ( $v as $v2 ) {
+							if ( $v2 ) {
+								continue 2;
+							}
+						}
+						// If hit here, means all empty
+						unset( $data2[ $k ] );
+					}
+
 					$data = $data2;
 					break;
 
