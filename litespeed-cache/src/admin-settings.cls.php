@@ -102,6 +102,10 @@ class Admin_Settings extends Base
 			/**
 			 * Sanitize the value
 			 */
+			if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
+				// Use existing in queue data if existed (Only available when $child != false)
+				$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : ( defined( 'WP_CLI' ) && WP_CLI ? Conf::val( $id ) : array() );
+			}
 			switch ( $id ) {
 				case self::O_CDN_MAPPING:
 					/**
@@ -116,9 +120,6 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
-					// Use existing in queue data if existed (Only available when $child != false)
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
-
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
 							$v = Utility::sanitize_lines( $v );
@@ -130,6 +131,10 @@ class Admin_Settings extends Base
 						) ) ) {
 							// Because these can't be auto detected in `config->update()`, need to format here
 							$v = $v === 'false' ? 0 : (bool) $v;
+						}
+
+						if ( empty( $data2[ $k ] ) ) {
+							$data2[ $k ] = array();
 						}
 
 						$data2[ $k ][ $child ] = $v;
@@ -155,12 +160,15 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
-
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
 							$v = Utility::sanitize_lines( $v );
 						}
+
+						if ( empty( $data2[ $k ] ) ) {
+							$data2[ $k ] = array();
+						}
+
 						$data2[ $k ][ $child ] = $v;
 					}
 
@@ -230,50 +238,41 @@ class Admin_Settings extends Base
 		// Special handler for CDN/Crawler 2d list to drop empty rows
 		foreach ( $the_matrix as $id => $data ) {
 			/**
-			 * Sanitize the value
+			 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
+			 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+			 *
+			 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+			 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
+			 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
 			 */
-			switch ( $id ) {
-				/**
-				 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-				 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
-				 *
-				 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-				 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-				 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
-				 */
-				case self::O_CDN_MAPPING:
-				case self::O_CRAWLER_COOKIES:
-					// Drop this line if all children elements are empty
-					foreach ( $data as $k => $v ) {
-						foreach ( $v as $v2 ) {
-							if ( $v2 ) {
-								continue 2;
-							}
+			if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
+				// Drop this line if all children elements are empty
+				foreach ( $data as $k => $v ) {
+					foreach ( $v as $v2 ) {
+						if ( $v2 ) {
+							continue 2;
 						}
-						// If hit here, means all empty
-						unset( $the_matrix[ $id ][ $k ] );
 					}
-
-				// Don't allow repeated cookie name
-				case self::O_CRAWLER_COOKIES:
-					$existed = array();
-					foreach ( $data as $k => $v ) {
-						if ( ! $v[ self::CRWL_COOKIE_NAME ] || in_array( $v[ self::CRWL_COOKIE_NAME ], $existed ) ) { // Filter repeated or empty name
-							unset( $the_matrix[ $id ][ $k ] );
-							continue;
-						}
-
-						$existed[] = $v[ self::CRWL_COOKIE_NAME ];
-					}
-					break;
-
-				// CDN mapping allow URL values repeated
-				// case self::O_CDN_MAPPING:
-
-				default:
-					break;
+					// If hit here, means all empty
+					unset( $the_matrix[ $id ][ $k ] );
+				}
 			}
 
+			// Don't allow repeated cookie name
+			if ( $id == self::O_CRAWLER_COOKIES ) {
+				$existed = array();
+				foreach ( $the_matrix[ $id ] as $k => $v ) {
+					if ( ! $v[ self::CRWL_COOKIE_NAME ] || in_array( $v[ self::CRWL_COOKIE_NAME ], $existed ) ) { // Filter repeated or empty name
+						unset( $the_matrix[ $id ][ $k ] );
+						continue;
+					}
+
+					$existed[] = $v[ self::CRWL_COOKIE_NAME ];
+				}
+			}
+
+			// CDN mapping allow URL values repeated
+			// if ( $id == self::O_CDN_MAPPING ) {}
 		}
 
 		// id validation will be inside
