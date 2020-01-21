@@ -758,9 +758,9 @@ class Admin_Display extends Base
 		$this->enroll( $id ) ;
 
 		echo "<div class='litespeed-tick'>
-				<label for='input_checkbox_$label_id'>$title</label>
-				<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
-			</div>" ;
+			<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
+			<label for='input_checkbox_$label_id'>$title</label>
+		</div>" ;
 	}
 
 	/**

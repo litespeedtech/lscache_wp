@@ -36,7 +36,7 @@ $this->form_action();
 		<td>
 			<?php $this->build_input( $id, null, $api_key_val ); ?>
 			<?php if ( defined( 'LITESPEED_NEW_API_KEY' ) ) : ?>
-				<span class="litespeed-warning"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
+				<span class="litespeed-danger"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
 			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with cloud servers.', 'litespeed-cache' ); ?>

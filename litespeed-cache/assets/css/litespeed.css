@@ -365,6 +365,11 @@
 	max-width:840px;
 }
 
+td > .litespeed-desc:first-child{
+	margin-top: 0px;
+    line-height: 2.24;
+}
+
 .litespeed-h3{
 	line-height: 18px;
 	color: #264d73;
@@ -511,6 +516,7 @@ h3 .litespeed-learn-more {
 
 .litespeed-body .litespeed-vary-table td{
 	width:50%;
+	padding:5px 0px;
 }
 
 /* =======================================
@@ -682,6 +688,15 @@ h3 .litespeed-learn-more {
 .litespeed-wrap .button-link:focus{
 	box-shadow: none;
 	background:none;
+}
+
+.litespeed .litespeed-btn-danger-bg,
+.litespeed-wrap .litespeed-btn-danger-bg,
+.litespeed-btn-danger-bg{
+	background:#dc3545;
+	color: #fff;
+	border: 1px solid #cc3d6a;
+	box-shadow: 0 1px 0 rgba(177, 93, 93, 0.5);
 }
 
 .litespeed .litespeed-btn-danger,
@@ -859,11 +874,11 @@ h3 .litespeed-learn-more {
 .litespeed-switch label {
 	font-size: 14px;
 	display: inline-block;
-	min-width: 75px;
+	min-width: 72px;
 	background-color: #f9fafc;
 	font-weight: 400;
 	text-align: center;
-	padding: 6px 9px 5px 9px;
+	padding: 6px 12px 5px 12px;
 	cursor: pointer;
 	border: 1px solid #ccc;
 	border-bottom:none;
@@ -1272,28 +1287,41 @@ ul.litespeed-shell-body {
 
 .litespeed-tick {
 	display: inline-block;
-	min-width: 125px;
+	/* min-width: 125px; */
 	background: #f2f9ff;
 	padding: 5px 0 5px 0px;
 	border-radius: 3px;
 	cursor: pointer;
-	margin: 5px;
+	margin: 5px 5px 5px 0;
 }
+
+.litespeed-tick-list .litespeed-tick {
+    display: block;
+	margin-bottom: 10px;
+	margin-top:0;
+	background:none;
+}
+
+.litespeed-tick-list .litespeed-tick input[type="checkbox"]{
+	margin-left:0;
+}
+
+.litespeed-tick-list .litespeed-tick label{
+	color:inherit;
+}
+
 
 .litespeed-tick input[type="checkbox"] {
 	height: 18px;
 	width: 18px;
 	vertical-align: middle;
-	margin: 0 10px 0 20px;
-	border: 1px solid #538ac6;
+	margin: 0 10px;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	
 	cursor: pointer;
 }
 
@@ -1333,7 +1361,7 @@ ul.litespeed-shell-body {
 }
 
 .litespeed-tick label {
-	padding: 2px 5px 10px 15px;
+	padding: 2px 15px 10px 0;
 	font-size: 14px;
 	color: #264d73;
 }
