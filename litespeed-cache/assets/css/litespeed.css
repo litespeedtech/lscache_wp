@@ -1543,7 +1543,7 @@ ul.litespeed-shell-body {
 
 .litespeed-form-label{
 	font-size: 1em;
-	margin: 1.33em 0;
+	margin: 0.65rem 0;
 	display: block;
     font-weight: 600;
 }
@@ -1861,7 +1861,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 	display: flex;
 }
 
-.litespeed-cdn-mapping-col1 h4 {
+.litespeed-cdn-mapping-col1 label {
 	position:relative;
 }
 

@@ -102,7 +102,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	<textarea name="<?php echo Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
 			<?php echo $readonly; ?>
 		><?php echo esc_textarea($content); ?></textarea>
-	<button type="submit" class="button button-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
+	<p><button type="submit" class="button button-primary"><?php echo __('Save .htaccess', 'litespeed-cache'); ?></button></p>
 </form>
 
 <?php endif; ?>

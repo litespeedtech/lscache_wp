@@ -54,11 +54,11 @@ $this->form_action() ;
 
 			<div class="litespeed-block" data-litespeed-cdn-mapping="1">
 				<div class='litespeed-cdn-mapping-col1'>
-					<h4>
+					<label class="litespeed-form-label">
 						<?php $id = Base::CDN_MAPPING_URL ; ?>
 						<?php $this->title( $id ) ; ?>
 						<button type="button" class="button litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
-					</h4>
+					</label>
 
 					<?php
 						$this->build_input( Base::O_CDN_MAPPING . "[$id][]", 'litespeed-input-long', $v[ $id ] ) ;
@@ -238,7 +238,7 @@ $this->form_action() ;
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
+					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ) ; ?>
 					<div class="litespeed-desc">
@@ -247,7 +247,7 @@ $this->form_action() ;
 				</div>
 
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></h4>
+				<label class="litespeed-form-label"><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ) ; ?>
 					<div class="litespeed-desc">
@@ -257,7 +257,7 @@ $this->form_action() ;
 				</div>
 
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
+					<label class="litespeed-form-label"><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></label>
 
 				<?php
 					$cf_zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ;
