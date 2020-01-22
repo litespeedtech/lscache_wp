@@ -44,13 +44,11 @@ $summary = Import::get_summary();
 </div>
 
 <h3 class="litespeed-title"><?php echo __('Reset All Settings', 'litespeed-cache') ; ?></h3>
-
-<div><a href="<?php echo Utility::build_url( Router::ACTION_IMPORT, Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger">
-	<?php echo __( 'Reset', 'litespeed-cache' ) ; ?>
+<div><p>🚨 <?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?></p>
+</div>
+<div><a href="<?php echo Utility::build_url( Router::ACTION_IMPORT, Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="button litespeed-btn-danger-bg">
+	<?php echo __( 'Reset Settings', 'litespeed-cache' ) ; ?>
 </a></div>
 
-<div class="litespeed-desc">
-<p>🚨
-	<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?></p>
-</div>
+
 

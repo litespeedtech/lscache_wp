@@ -54,11 +54,11 @@ $this->form_action() ;
 
 			<div class="litespeed-block" data-litespeed-cdn-mapping="1">
 				<div class='litespeed-cdn-mapping-col1'>
-					<h4>
+					<label class="litespeed-form-label">
 						<?php $id = Base::CDN_MAPPING_URL ; ?>
 						<?php $this->title( $id ) ; ?>
 						<button type="button" class="button litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
-					</h4>
+					</label>
 
 					<?php
 						$this->build_input( Base::O_CDN_MAPPING . "[$id][]", 'litespeed-input-long', $v[ $id ] ) ;
@@ -68,9 +68,9 @@ $this->form_action() ;
 					</div>
 				</div>
 
-				<div class='litespeed-cdn-mapping-col2'>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+				<div class="litespeed-col-auto litespeed-cdn-mapping-col2">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_IMG ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -78,8 +78,8 @@ $this->form_action() ;
 						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_CSS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -87,8 +87,8 @@ $this->form_action() ;
 						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_JS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -98,14 +98,12 @@ $this->form_action() ;
 					</div>
 				</div>
 
-				<div class='litespeed-cdn-mapping-col3'>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-col3-title">
-							<?php $id = Base::CDN_MAPPING_FILETYPE ; ?>
-							<?php $this->title( $id ) ; ?>
-						</div>
-						<?php $this->build_textarea( Base::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ) ; ?>
-					</div>
+				<div class="litespeed-col-auto">
+					<label class="litespeed-form-label litespeed-cdn-mapping-col3-title">
+						<?php $id = Base::CDN_MAPPING_FILETYPE ; ?>
+						<?php $this->title( $id ) ; ?>
+					</label>
+					<?php $this->build_textarea( Base::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ) ; ?>
 				</div>
 			</div>
 
@@ -166,8 +164,15 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 40 ) ; ?>
-			<?php $this->recommended( $id, true ) ; ?>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 40 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ) ; ?>
+				</div>
+			</div>
+			
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
 				<?php Doc::one_per_line() ; ?>
@@ -233,7 +238,7 @@ $this->form_action() ;
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
+					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ) ; ?>
 					<div class="litespeed-desc">
@@ -242,7 +247,7 @@ $this->form_action() ;
 				</div>
 
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></h4>
+				<label class="litespeed-form-label"><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ) ; ?>
 					<div class="litespeed-desc">
@@ -252,7 +257,7 @@ $this->form_action() ;
 				</div>
 
 				<div class='litespeed-col'>
-					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
+					<label class="litespeed-form-label"><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></label>
 
 				<?php
 					$cf_zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ;

@@ -75,7 +75,7 @@ $break_arr = array(
 							$this->build_checkbox( $id, $title );
 
 							if ( in_array( $id, $break_arr ) ) {
-								echo '</div><div class="litespeed-top20">';
+								echo '</div><div class="litespeed-tick-wrapper litespeed-top10">';
 							}
 						}
 					?>
@@ -122,8 +122,15 @@ $break_arr = array(
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 50 ); ?>
-			<?php $this->recommended( $id, true ); ?>
+
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 50 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ) ; ?>
+				</div>
+			</div>
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ); ?>

@@ -28,30 +28,30 @@ $this->form_action();
 		<th><?php echo __( 'Sitemap Generation', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-block">
-				<div class='litespeed-cdn-mapping-col2'>
-					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ); ?></div>
+				<div class='litespeed-col-auto litespeed-toggle-stack'>
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-form-label litespeed-form-label--toggle"><?php echo __( 'Include Posts', 'litespeed-cache' ); ?></div>
 					<?php
 						$this->build_toggle( Base::O_CRAWLER_POSTS );
 					?>
 					</div>
 
-					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ); ?></div>
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-form-label litespeed-form-label--toggle"><?php echo __( 'Include Pages', 'litespeed-cache' ); ?></div>
 					<?php
 						$this->build_toggle( Base::O_CRAWLER_PAGES );
 					?>
 					</div>
 
-					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ); ?></div>
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-form-label litespeed-form-label--toggle"><?php echo __( 'Include Categories', 'litespeed-cache' ); ?></div>
 					<?php
 						$this->build_toggle( Base::O_CRAWLER_CATS );
 					?>
 					</div>
 
-					<div class="litespeed-row">
-						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ); ?></div>
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-form-label litespeed-form-label--toggle"><?php echo __( 'Include Tags', 'litespeed-cache' ); ?></div>
 					<?php
 						$this->build_toggle( Base::O_CRAWLER_TAGS );
 					?>

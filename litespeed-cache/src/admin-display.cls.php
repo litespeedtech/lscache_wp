@@ -666,12 +666,6 @@ class Admin_Display extends Base
 		echo "<div class='litespeed-top20'></div>" ;
 		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' ) ;
 
-		if ( ! $disable_reset ) {
-			echo '<a href="admin.php?page=litespeed-tools#import_export" class="button litespeed-btn-danger litespeed-float-resetbtn">' ;
-			echo __( 'Reset All Settings', 'litespeed-cache' ) ;
-			echo '</a>' ;
-		}
-
 		echo '</form>' ;
 	}
 
@@ -763,9 +757,9 @@ class Admin_Display extends Base
 		$this->enroll( $id ) ;
 
 		echo "<div class='litespeed-tick'>
-				<label for='input_checkbox_$label_id'>$title</label>
-				<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
-			</div>" ;
+			<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
+			<label for='input_checkbox_$label_id'>$title</label>
+		</div>" ;
 	}
 
 	/**
@@ -876,13 +870,14 @@ class Admin_Display extends Base
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
 				$val = esc_textarea( $val ) ;
-				$val = "<textarea readonly rows='5' cols='30' class='litespeed-left10'>$val</textarea>" ;
+				$val = '<div class="litespeed-desc">'.__( 'Recommended value', 'litespeed-cache' ) . ':</div>'."<textarea readonly rows='5' cols='30' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
 				$val = esc_textarea( $val ) ;
 				$val = "<code>$val</code>" ;
+				$val = __( 'Recommended value', 'litespeed-cache' ) . ': '.$val;
 			}
-			echo __( 'Recommended value', 'litespeed-cache' ) . ': ' . $val ;
+			echo  $val ;
 		}
 	}
 

@@ -123,14 +123,15 @@ defined( 'WPINC' ) || exit;
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<div class="litespeed-tick-wrapper">
+			<div class="litespeed-desc">
+				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ); ?>
+			</div>
+			<div class="litespeed-tick-list">
 				<?php foreach ( $roles as $role => $title ): ?>
 					<?php $this->build_checkbox( $id . '[]', $title, Control::get_instance()->in_cache_exc_roles( $role ), $role ); ?>
 				<?php endforeach; ?>
 			</div>
-			<div class="litespeed-desc">
-				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ); ?>
-			</div>
+			
 		</td>
 	</tr>
 

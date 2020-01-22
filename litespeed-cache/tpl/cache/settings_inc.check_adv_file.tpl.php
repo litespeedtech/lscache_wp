@@ -9,7 +9,7 @@ defined( 'WPINC' ) || exit ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<div class="litespeed-tick-wrapper">
+			<div class="litespeed-tick-list">
 				<?php
 					$this->build_checkbox( $id, __( 'Include advanced-cache.php', 'litespeed-cache' ) ) ;
 				?>

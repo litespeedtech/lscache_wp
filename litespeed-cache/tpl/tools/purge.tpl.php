@@ -188,7 +188,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 	<?php $this->form_action( Core::ACTION_PURGE_BY ) ; ?>
 		<div class="litespeed-row">
-			<div class="litespeed-switch litespeed-mini">
+			<div class="litespeed-switch litespeed-mini litespeed-right20 litespeed-margin-bottom10">
 				<?php $val = Admin_Display::PURGEBY_CAT;?>
 				<input type="radio" autocomplete="off" name="<?php echo $_option_field; ?>" id="purgeby_option_category"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
@@ -214,7 +214,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 				<label for="purgeby_option_url"><?php echo __('URL', 'litespeed-cache'); ?></label>
 			</div>
 
-			<div class="litespeed-cache-purgeby-text">
+			<div class="litespeed-cache-purgeby-text litespeed-desc">
 				<div class="<?php if($purgeby_option != Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo Admin_Display::PURGEBY_CAT; ?>">
 					<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),

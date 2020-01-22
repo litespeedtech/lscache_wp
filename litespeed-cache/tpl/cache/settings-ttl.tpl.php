@@ -77,8 +77,15 @@ defined( 'WPINC' ) || exit ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 30 ) ; ?>
-			<?php $this->recommended( $id ) ; ?>
+
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 30 ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id ) ; ?>
+				</div>
+			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache' ) ; ?>
 			</div>
