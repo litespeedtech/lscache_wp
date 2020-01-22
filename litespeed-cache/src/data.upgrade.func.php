@@ -132,8 +132,8 @@ function litespeed_update_3_0( $ver )
 		'litespeed-optm-js-defer-excludes' 			=> 'optm-js_defer_exc',
 		'litespeed-cache-dns_prefetch' 				=> 'optm-dns_prefetch',
 		'litespeed-cache-exclude-optimization-roles' => 'optm-exc_roles',
-		'litespeed-log_ignore_filters' 				=> 'debug-log_no_filters',
-		'litespeed-log_ignore_part_filters' 		=> 'debug-log_no_part_filters',
+		'litespeed-log_ignore_filters' 				=> 'debug-log_no_filters', // depreciated
+		'litespeed-log_ignore_part_filters' 		=> 'debug-log_no_part_filters', // depreciated
 		'litespeed-cdn-ori_dir' 					=> 'cdn-ori_dir',
 		'litespeed-cache-cdn_mapping' 				=> 'cdn-mapping',
 		'litespeed-crawler-as-uids' 				=> 'crawler-roles',
@@ -230,7 +230,7 @@ function litespeed_update_3_0( $ver )
 		'log_file_size'				=> 'debug-filesize',
 		'debug_cookie'				=> 'debug-cookie',
 		'collaps_qs'				=> 'debug-collaps_qs',
-		'log_filters' 				=> 'debug-log_filters',
+		// 'log_filters' 				=> 'debug-log_filters',
 
 		'crawler_cron_active' 		=> 'crawler',
 		'crawler_include_posts' 	=> 'crawler-inc_posts',

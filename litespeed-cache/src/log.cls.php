@@ -20,9 +20,6 @@ class Log extends Instance
 	private static $log_path ;
 	private static $_prefix ;
 
-	private static $_ignore_filters ;
-	private static $_ignore_part_filters ;
-
 	const TYPE_CLEAR_LOG = 'clear_log' ;
 	const TYPE_BETA_TEST = 'beta_test' ;
 
@@ -181,14 +178,6 @@ class Log extends Instance
 			define( 'LSCWP_LOG', true ) ;
 
 		}
-
-		// Check if hook filters
-		if ( Conf::val( Base::O_DEBUG_LOG_FILTERS ) ) {
-			self::$_ignore_filters = Conf::val( Base::O_DEBUG_LOG_NO_FILTERS ) ;
-			self::$_ignore_part_filters = Conf::val( Base::O_DEBUG_LOG_NO_PART_FILTERS ) ;
-
-			add_action( 'all', __CLASS__ . '::log_filters' ) ;
-		}
 	}
 
 	/**
@@ -284,31 +273,6 @@ class Log extends Instance
 		$request = array_map( __CLASS__ . '::format_message', $params ) ;
 
 		File::append( $log_file, $request ) ;
-	}
-
-	/**
-	 * Log all filters and action hooks
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public static function log_filters()
-	{
-		$action = current_filter() ;
-
-		if ( self::$_ignore_filters && in_array( $action, self::$_ignore_filters ) ) {
-			return ;
-		}
-
-		if ( self::$_ignore_part_filters ) {
-			foreach ( self::$_ignore_part_filters as $val ) {
-				if ( stripos( $action, $val ) !== false ) {
-					return ;
-				}
-			}
-		}
-
-		self::debug( "===log filter: $action" ) ;
 	}
 
 	/**

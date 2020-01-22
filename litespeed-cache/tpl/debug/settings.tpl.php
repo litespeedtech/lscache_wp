@@ -173,51 +173,6 @@ $this->form_action() ;
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_DEBUG_LOG_FILTERS ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Log all WordPress filter hooks.', 'litespeed-cache' ) ; ?>
-				<font class="litespeed-warning">
-					🚨
-					<?php echo __( 'Enabling this option will cause log file size to grow quickly.', 'litespeed-cache' ) ; ?>
-				</font>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_DEBUG_LOG_NO_FILTERS ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id, 30 ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Listed filters (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_filters', __( 'Recommended default value', 'litespeed-cache' ) ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_DEBUG_LOG_NO_PART_FILTERS ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id, 30 ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Filters containing these strings (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_part_filters', __( 'Recommended default value', 'litespeed-cache' ) ) ; ?>
-			</div>
-		</td>
-	</tr>
-
 </tbody></table>
 
 <?php

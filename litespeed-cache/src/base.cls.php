@@ -111,9 +111,6 @@ class Base extends Instance
 	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs' ;
 	const O_DEBUG_INC 					= 'debug-inc' ;
 	const O_DEBUG_EXC 					= 'debug-exc' ;
-	const O_DEBUG_LOG_FILTERS 			= 'debug-log_filters' ;
-	const O_DEBUG_LOG_NO_FILTERS 		= 'debug-log_no_filters' ;
-	const O_DEBUG_LOG_NO_PART_FILTERS 	= 'debug-log_no_part_filters' ;
 
 	## -------------------------------------------------- ##
 	## --------------	   DB Optm  	----------------- ##
@@ -409,9 +406,6 @@ class Base extends Instance
 		self::O_DEBUG_COLLAPS_QS 		=> false,
 		self::O_DEBUG_INC 				=> array(),
 		self::O_DEBUG_EXC 				=> array(),
-		self::O_DEBUG_LOG_FILTERS 		=> false,
-		self::O_DEBUG_LOG_NO_FILTERS 	=> array(),
-		self::O_DEBUG_LOG_NO_PART_FILTERS => array(),
 
 		// DB Optm
 		self::O_DB_OPTM_REVISIONS_MAX 	=> 0,

@@ -225,9 +225,6 @@ class Lang extends Base
 			self::O_DEBUG_COLLAPS_QS			=> __( 'Collapse Query Strings', 'litespeed-cache' ),
 			self::O_DEBUG_INC					=> __( 'Debug URI Includes', 'litespeed-cache' ),
 			self::O_DEBUG_EXC					=> __( 'Debug URI Excludes', 'litespeed-cache' ),
-			self::O_DEBUG_LOG_FILTERS			=> __( 'Log Filters', 'litespeed-cache' ),
-			self::O_DEBUG_LOG_NO_FILTERS		=> __( 'Exclude Filters', 'litespeed-cache' ),
-			self::O_DEBUG_LOG_NO_PART_FILTERS	=> __( 'Exclude Part Filters', 'litespeed-cache' ),
 
 			self::O_DB_OPTM_REVISIONS_MAX		=> __( 'Revisions Max Number', 'litespeed-cache' ),
 			self::O_DB_OPTM_REVISIONS_AGE		=> __( 'Revisions Max Age', 'litespeed-cache' ),
