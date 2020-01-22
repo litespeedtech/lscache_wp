@@ -186,6 +186,10 @@
 	padding: 5px 10px;
 }
 
+.litespeed-margin-bottom10 {
+	margin-bottom: 10px !important;
+}
+
 .litespeed-margin-bottom20 {
 	margin-bottom: 20px;
 }
@@ -956,11 +960,8 @@ h3 .litespeed-learn-more {
 }
 
 .litespeed-cache-purgeby-text {
-	font-size: 13px;
-	padding-left: 20px;
+	margin:0;
 	display: inline-block;
-	vertical-align: top;
-	margin-top: 5px;
 }
 
 /* =======================================

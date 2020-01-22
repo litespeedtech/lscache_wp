@@ -44,7 +44,7 @@ $this->form_action();
 					<div class='litespeed-col-auto'>
 						<label class="litespeed-form-label"><?php echo __( 'Cookie Values', 'litespeed-cache' ); ?></label>
 					
-						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
+						<textarea v-model="item.vals" rows="5" cols="40" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
 						<button type="button" class="button litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>

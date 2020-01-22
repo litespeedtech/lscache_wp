@@ -64,7 +64,7 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 	</p>
 	<p>
 		<?php if ( $link ) : ?>
-			<strong><?php echo __('Please do NOT share the above passwordless link with anyone.', 'litespeed-cache'); ?></strong>
+			<strong>🚨 <?php echo __('Please do NOT share the above passwordless link with anyone.', 'litespeed-cache'); ?></strong>
 			<strong><?php echo sprintf( __('Generated links may be managed under <a %s>Settings</a>.', 'litespeed-cache'), 'href="' . menu_page_url( 'dologin', 0 ) . '"' ); ?></strong>
 		<?php endif; ?>
 	</p>
