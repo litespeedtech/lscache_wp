@@ -824,11 +824,6 @@ class Crawler extends Base
 		return $final_list;
 	}
 
-	private function append_blacklist()
-	{
-
-	}
-
 	/**
 	 * Return crawler meta file
 	 *

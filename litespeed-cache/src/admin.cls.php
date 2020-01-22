@@ -117,7 +117,7 @@ class Admin extends Instance
 				Htaccess::get_instance()->htaccess_editor_save();
 				break;
 
-			case Router::ACTION_SAVE_SETTINGS :
+			case Router::ACTION_SAVE_SETTINGS:
 				Admin_Settings::get_instance()->save( $_POST );
 				break;
 

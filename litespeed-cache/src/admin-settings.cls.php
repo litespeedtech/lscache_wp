@@ -99,9 +99,15 @@ class Admin_Settings extends Base
 				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
 			}
 
-			// Sanitize the value
+			/**
+			 * Sanitize the value
+			 */
+			if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
+				// Use existing in queue data if existed (Only available when $child != false)
+				$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : ( defined( 'WP_CLI' ) && WP_CLI ? Conf::val( $id ) : array() );
+			}
 			switch ( $id ) {
-				case self::O_CDN_MAPPING :
+				case self::O_CDN_MAPPING:
 					/**
 					 * CDN setting
 					 *
@@ -114,9 +120,6 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
-					// Use existing in queue data if existed (Only available when $child != false)
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
-
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
 							$v = Utility::sanitize_lines( $v );
@@ -130,12 +133,17 @@ class Admin_Settings extends Base
 							$v = $v === 'false' ? 0 : (bool) $v;
 						}
 
+						if ( empty( $data2[ $k ] ) ) {
+							$data2[ $k ] = array();
+						}
+
 						$data2[ $k ][ $child ] = $v;
 					}
+
 					$data = $data2;
 					break;
 
-				case self::O_CRAWLER_COOKIES :
+				case self::O_CRAWLER_COOKIES:
 					/**
 					 * Cookie Crawler setting
 					 * Raw Format:
@@ -152,19 +160,23 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : Conf::val( $id );
-
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
 							$v = Utility::sanitize_lines( $v );
 						}
+
+						if ( empty( $data2[ $k ] ) ) {
+							$data2[ $k ] = array();
+						}
+
 						$data2[ $k ][ $child ] = $v;
 					}
+
 					$data = $data2;
 					break;
 
 				// Cache exclude cat
-				case self::O_CACHE_EXC_CAT :
+				case self::O_CACHE_EXC_CAT:
 					$data2 = array();
 					$data = Utility::sanitize_lines( $data );
 					foreach ( $data as $v ) {
@@ -195,7 +207,7 @@ class Admin_Settings extends Base
 					break;
 
 				// `Original URLs`
-				case self::O_CDN_ORI :
+				case self::O_CDN_ORI:
 					$data = Utility::sanitize_lines( $data );
 					// Trip scheme
 					foreach ( $data as $k => $v ) {
@@ -208,7 +220,7 @@ class Admin_Settings extends Base
 					break;
 
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
-				case self::O_CRAWLER_EXC_CPT :
+				case self::O_CRAWLER_EXC_CPT:
 					if ( $data ) {
 						$data = Utility::sanitize_lines( $data );
 						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) );
@@ -216,12 +228,51 @@ class Admin_Settings extends Base
 					}
 					break;
 
-				default :
+				default:
 					break;
 			}
 
 			$the_matrix[ $id ] = $data;
+		}
 
+		// Special handler for CDN/Crawler 2d list to drop empty rows
+		foreach ( $the_matrix as $id => $data ) {
+			/**
+			 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
+			 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+			 *
+			 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+			 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
+			 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+			 */
+			if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
+				// Drop this line if all children elements are empty
+				foreach ( $data as $k => $v ) {
+					foreach ( $v as $v2 ) {
+						if ( $v2 ) {
+							continue 2;
+						}
+					}
+					// If hit here, means all empty
+					unset( $the_matrix[ $id ][ $k ] );
+				}
+			}
+
+			// Don't allow repeated cookie name
+			if ( $id == self::O_CRAWLER_COOKIES ) {
+				$existed = array();
+				foreach ( $the_matrix[ $id ] as $k => $v ) {
+					if ( ! $v[ self::CRWL_COOKIE_NAME ] || in_array( $v[ self::CRWL_COOKIE_NAME ], $existed ) ) { // Filter repeated or empty name
+						unset( $the_matrix[ $id ][ $k ] );
+						continue;
+					}
+
+					$existed[] = $v[ self::CRWL_COOKIE_NAME ];
+				}
+			}
+
+			// CDN mapping allow URL values repeated
+			// if ( $id == self::O_CDN_MAPPING ) {}
 		}
 
 		// id validation will be inside

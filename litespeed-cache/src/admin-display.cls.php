@@ -368,51 +368,50 @@ class Admin_Display extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function error( $msg )
+	public static function error( $msg, $echo = false )
 	{
-		self::add_notice( self::NOTICE_RED, $msg ) ;
+		self::add_notice( self::NOTICE_RED, $msg, $echo );
 	}
 
 	/**
-	 * Adds a notice to display on the admin page. Multiple messages of the
-	 * same color may be added in a single call. If the list is empty, this
-	 * method will add the action to display notices.
+	 * Adds a notice to display on the admin page
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $color One of the available constants provided by this
-	 *     class.
-	 * @param mixed $msg May be a string for a single message or an array for
-	 *     multiple.
 	 */
-	public static function add_notice($color, $msg)
+	public static function add_notice( $color, $msg, $echo = false )
 	{
 		// Bypass adding for CLI or cron
 		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
 			// WP CLI will show the info directly
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
-				$msg = strip_tags( $msg ) ;
+				$msg = strip_tags( $msg );
 				if ( $color == self::NOTICE_RED ) {
-					\WP_CLI::error( $msg ) ;
+					\WP_CLI::error( $msg );
 				}
 				else {
-					\WP_CLI::success( $msg ) ;
+					\WP_CLI::success( $msg );
 				}
 			}
-			return ;
+			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG ) ;
+		if ( $echo ) {
+			echo self::build_notice( $color, $msg );
+			return;
+		}
+
+		$messages = self::get_option( self::DB_MSG );
 
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
-				$messages[] = self::build_notice($color, $str) ;
+				$messages[] = self::build_notice($color, $str);
 			}
 		}
 		else {
-			$messages[] = self::build_notice($color, $msg) ;
+			$messages[] = self::build_notice($color, $msg);
 		}
-		self::update_option( self::DB_MSG, $messages ) ;
+		self::update_option( self::DB_MSG, $messages );
 	}
 
 	/**
@@ -424,15 +423,15 @@ class Admin_Display extends Base
 	public function display_messages()
 	{
 		if ( GUI::has_whm_msg() ) {
-			$this->show_display_installed() ;
+			$this->show_display_installed();
 		}
 
 		// One time msg
-		$messages = self::get_option( self::DB_MSG ) ;
+		$messages = self::get_option( self::DB_MSG );
 		if( is_array($messages) ) {
-			$messages = array_unique($messages) ;
+			$messages = array_unique($messages);
 
-			$added_thickbox = false ;
+			$added_thickbox = false;
 			foreach ($messages as $msg) {
 				// Added for popup links
 				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
