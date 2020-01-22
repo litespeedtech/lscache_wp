@@ -916,7 +916,7 @@ class Img_Optm extends Base
 			'action'	=> self::CLOUD_ACTION_CLEAN,
 		);
 		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
-		if ( ! $json ) {
+		if ( $json === false ) {
 			return;
 		}
 
