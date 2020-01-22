@@ -38,15 +38,12 @@ $this->form_action();
 			<div id="cookie_crawler">
 				<div class="litespeed-block" v-for="( item, key ) in items">
 					<div class='litespeed-col-auto'>
-						<h4><?php echo __( 'Cookie Name', 'litespeed-cache' ); ?></h4>
+						<label class="litespeed-form-label"><?php echo __( 'Cookie Name', 'litespeed-cache' ); ?></label>
+						<input type="text" v-model="item.name" name="<?php echo $id; ?>[name][]" class="regular-text">
 					</div>
 					<div class='litespeed-col-auto'>
-						<input type="text" v-model="item.name" name="<?php echo $id; ?>[name][]" class="regular-text" style="margin-top:1.33em;" >
-					</div>
-					<div class='litespeed-col-auto'>
-						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ); ?></h4>
-					</div>
-					<div class='litespeed-col-auto'>
+						<label class="litespeed-form-label"><?php echo __( 'Cookie Values', 'litespeed-cache' ); ?></label>
+					
 						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>

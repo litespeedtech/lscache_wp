@@ -148,19 +148,24 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 		margin-left: 20px;
 		margin-right: 20px;
 	}
+	.litespeed-body .field-col:first-child{
+		margin-left:0;
+	}
 </style>
 
 <h3 class="litespeed-title"><?php echo __( 'Database Summary', 'litespeed-cache' ); ?></h3>
 <div>
 	<div class="field-col">
-
-		<h4>Autoload size: <?php echo Utility::real_size( $autoload_summary->autoload_size ); ?></h4>
-		<h4>Autoload entries: <?php echo $autoload_summary->autload_entries; ?></h4>
-		<h4>Autoload top list:</h4>
+		<p>
+		Autoload size: <strong><?php echo Utility::real_size( $autoload_summary->autoload_size ); ?></strong></p>
+		<p>Autoload entries: <strong><?php echo $autoload_summary->autload_entries; ?></strong></p>
+		
+	
 	</div>
 
 	<div class="field-col">
-		<table class="wp-list-table widefat striped litespeed-width-auto">
+	<p>Autoload top list:</p>
+		<table class="wp-list-table widefat striped litespeed-width-auto litespeed-table-compact">
 			<thead><tr >
 				<th scope="col">#</th>
 				<th scope="col"><?php echo __('Option Name', 'litespeed-cache'); ?></th>

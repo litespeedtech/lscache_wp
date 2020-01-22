@@ -68,9 +68,9 @@ $this->form_action() ;
 					</div>
 				</div>
 
-				<div class='litespeed-cdn-mapping-col2'>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+				<div class="litespeed-col-auto litespeed-cdn-mapping-col2">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_IMG ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -78,8 +78,8 @@ $this->form_action() ;
 						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_CSS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -87,8 +87,8 @@ $this->form_action() ;
 						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-inc">
+					<div class="litespeed-row litespeed-toggle-wrapper">
+						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							<?php $id = Base::CDN_MAPPING_INC_JS ; ?>
 							<?php $this->title( $id ) ; ?>
 						</div>
@@ -98,14 +98,12 @@ $this->form_action() ;
 					</div>
 				</div>
 
-				<div class='litespeed-cdn-mapping-col3'>
-					<div class="litespeed-row">
-						<div class="litespeed-cdn-mapping-col3-title">
-							<?php $id = Base::CDN_MAPPING_FILETYPE ; ?>
-							<?php $this->title( $id ) ; ?>
-						</div>
-						<?php $this->build_textarea( Base::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ) ; ?>
-					</div>
+				<div class="litespeed-col-auto">
+					<label class="litespeed-form-label litespeed-cdn-mapping-col3-title">
+						<?php $id = Base::CDN_MAPPING_FILETYPE ; ?>
+						<?php $this->title( $id ) ; ?>
+					</label>
+					<?php $this->build_textarea( Base::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ) ; ?>
 				</div>
 			</div>
 

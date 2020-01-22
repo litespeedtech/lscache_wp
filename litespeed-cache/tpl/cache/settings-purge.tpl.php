@@ -75,7 +75,7 @@ $break_arr = array(
 							$this->build_checkbox( $id, $title );
 
 							if ( in_array( $id, $break_arr ) ) {
-								echo '</div><div class="litespeed-tick-wrapper litespeed-top20">';
+								echo '</div><div class="litespeed-tick-wrapper litespeed-top10">';
 							}
 						}
 					?>
