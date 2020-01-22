@@ -28,7 +28,7 @@ class Router extends Instance
 	const ACTION_CRAWLER = 'crawler';
 	const ACTION_PURGE = 'purge';
 	const ACTION_CONF = 'conf';
-	const ACTION_ACTIVATION = 'activate';
+	const ACTION_ACTIVATION = 'activation';
 	const ACTION_CSS = 'css';
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
