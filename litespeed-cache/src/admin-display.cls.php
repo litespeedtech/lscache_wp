@@ -832,7 +832,12 @@ class Admin_Display extends Base
 			}
 		}
 
-		$checked = (int) Conf::val( $id ) === (int) $val ? ' checked ' : '' ;
+		if ( ! is_string( self::$_default_options[ $id ] ) ) {
+			$checked = (int) Conf::val( $id ) === (int) $val ? ' checked ' : '' ;
+		}
+		else {
+			$checked = Conf::val( $id ) === $val ? ' checked ' : '' ;
+		}
 
 		$this->enroll( $id ) ;
 

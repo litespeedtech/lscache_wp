@@ -756,7 +756,7 @@ class Base extends Instance
 	protected function _conf_string_val( $id, $val )
 	{
 		if ( $id == self::O_CRAWLER_ORDER_LINKS ) {
-			if ( ! in_array( $id, array(
+			if ( ! in_array( $val, array(
 				self::CRWL_DATE_DESC,
 				self::CRWL_DATE_ASC,
 				self::CRWL_ALPHA_DESC,
