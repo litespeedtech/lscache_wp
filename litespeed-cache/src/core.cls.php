@@ -16,10 +16,7 @@ class Core extends Instance
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php';
 	const VER = LSCWP_V;
 
-	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
-
 	const ACTION_DISMISS = 'dismiss';
-	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_PURGE_BY = 'PURGE_BY';
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE';
 	const ACTION_QS_PURGE = 'PURGE';

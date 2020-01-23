@@ -14,6 +14,8 @@ defined( 'WPINC' ) || exit ;
 
 class Admin extends Instance
 {
+	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
+
 	protected static $_instance ;
 	private $__cfg ;// cfg instance
 	private $display ;
@@ -113,7 +115,7 @@ class Admin extends Instance
 		switch ( Router::get_action() ) {
 
 			// Save htaccess
-			case Core::ACTION_SAVE_HTACCESS:
+			case Router::ACTION_SAVE_HTACCESS:
 				Htaccess::get_instance()->htaccess_editor_save();
 				break;
 

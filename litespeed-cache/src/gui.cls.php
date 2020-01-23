@@ -252,7 +252,7 @@ class GUI extends Base
 			array(
 				'litespeed-settings',
 				'litespeed-dash',
-				Core::PAGE_EDIT_HTACCESS,
+				Admin::PAGE_EDIT_HTACCESS,
 				'litespeed-optimization',
 				'litespeed-crawler',
 				'litespeed-import',

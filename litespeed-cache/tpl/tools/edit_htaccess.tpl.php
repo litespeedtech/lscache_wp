@@ -91,7 +91,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 <?php elseif( $content !== null ) : ?>
 
-<?php $this->form_action( Core::ACTION_SAVE_HTACCESS ); ?>
+<?php $this->form_action( Router::ACTION_SAVE_HTACCESS ); ?>
 
 	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 

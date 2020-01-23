@@ -17,6 +17,7 @@ class Router extends Instance
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
+	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
 	const ACTION_DB_OPTM = 'db_optm';
 	const ACTION_PLACEHOLDER = 'placeholder';
@@ -483,7 +484,7 @@ class Router extends Instance
 
 		switch ( $action ) {
 			// Save htaccess
-			case Core::ACTION_SAVE_HTACCESS:
+			case self::ACTION_SAVE_HTACCESS:
 				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
 					self::$_action = $action ;
 				}
