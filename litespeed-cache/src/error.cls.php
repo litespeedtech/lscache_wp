@@ -40,6 +40,11 @@ class Error
 	public static function msg( $code, $args = null )
 	{
 		switch ( $code ) {
+
+			case 'disabled_all':
+				$msg = sprintf( __( 'The setting %s is currently enabled.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_DEBUG_DISABLE_ALL ) . '</strong>' );
+				break;
+
 			case 'lack_of_api_key':
 				$msg = sprintf( __( 'You will need to set %1$s to use the online services. <a %2$s>Click here to set</a>', 'litespeed-cache' ),
 							'<strong>' . Lang::title( Base::O_API_KEY ) . '</strong>',

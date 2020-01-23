@@ -173,7 +173,7 @@ class Core extends Instance
 		Vary::get_instance();
 
 		// Init Purge hooks
-		Purge::get_instance();
+		Purge::get_instance()->init();
 
 		Tag::get_instance();
 
@@ -225,7 +225,7 @@ class Core extends Instance
 		}
 
 		// Load frontend GUI
-		GUI::get_instance();
+		GUI::get_instance()->frontend_init();
 
 	}
 

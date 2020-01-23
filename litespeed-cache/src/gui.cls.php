@@ -35,7 +35,7 @@ class GUI extends Base
 	protected $_summary;
 
 	/**
-	 * Init
+	 * Instance
 	 *
 	 * @since  1.3
 	 * @access protected
@@ -44,20 +44,31 @@ class GUI extends Base
 	{
 		$this->_summary = self::get_summary();
 
-		if ( ! is_admin() ) {
-			Log::debug2( '[GUI] init' ) ;
-			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
-				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
-				add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
-			}
+	}
 
-			/**
-			 * Turn on instant click
-			 * @since  1.8.2
-			 */
-			if ( Conf::val( Base::O_UTIL_INSTANT_CLICK ) ) {
-				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
-			}
+	/**
+	 * Frontend Init
+	 *
+	 * @since  3.0
+	 */
+	public function frontend_init()
+	{
+		if ( is_admin() ) {
+			return;
+		}
+
+		Log::debug2( '[GUI] init' ) ;
+		if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
+			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
+		}
+
+		/**
+		 * Turn on instant click
+		 * @since  1.8.2
+		 */
+		if ( Conf::val( Base::O_UTIL_INSTANT_CLICK ) ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 		}
 	}
 

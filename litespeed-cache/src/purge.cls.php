@@ -44,6 +44,15 @@ class Purge extends Base
 	 */
 	protected function __construct()
 	{
+	}
+
+	/**
+	 * Init hooks
+	 *
+	 * @since  3.0
+	 */
+	public function init()
+	{
 		//register purge actions
 		$purge_post_events = array(
 			'edit_post',
