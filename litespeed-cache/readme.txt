@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.2
-Stable tag: 2.9.9.2
+Stable tag: 3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -286,6 +286,98 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 3.0 - Feb 29 2019 =
+* 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
+* 🌱 LQIP (Low Quality Image Placeholder).
+* 🌱 New QUIC.cloud API key setting.
+* 🌱[ESI] New ESI nonce setting.
+* 🌱 font display optimization. (@Joeee)
+* 🌱 Google font URL display optimization.
+* 🌱 Load Inline JS deferred.
+* 🌱 JPG quality control. (@geckomist)
+* 🌱 Forced public cache setting. (#308207)
+* 🌱<strong>DB</strong>: Table Engine Converter tool. (@johnny Nguyen)
+* 🌱🕷️ New timeout setting to avoid incorrect blacklist addition. (#900171)
+* 🌱 Responsive local svg placeholder.
+* 🌱 Lazy Load Image Parent Class Name Excludes. (@pako69)
+* 🌱 Lazy load iframe class excludes. (@vnnloser)
+* 🌱 Lazy load exclude URIs. (@wordpress_fan1 @aminaz)
+* 🌱 Debug URI includes/excludes setings.
+* 🌱 Frontend & backend .htaccess path customize. (@jon81)
+* 🌱 Database summary: Autoload size. (@JohnnyNguyen)
+* 🌱 Database summary: Autoload entries list.
+* 🌱 Store gravatar locally. (@zzTaLaNo1zz @JohnnyNguyen)
+* 🌱 Gravatar warmup cron.
+* 🌱 Detailed Heartbeat Control (@K9Heaven)
+* 🌱 New `General` menu for global settings.
+* 🌱 New Dashboard menu.
+* 🌱 CLI get single option cmd.
+* 🌱 CLI QUIC.cloud cmd supported.
+* 🌱 [db_optm] Revisions older than. (@thememasterguru)
+* 🌱 [Purge] Purge Stale setting.
+* 🌱 DNS prefetch control setting.
+* 🌱 Cache stats in dashboard.
+* 🌱 New workflow for image optimization (Gather first, request second).
+* 🌱 [Img_optm] The return of Rescan.
+* 🌱 [CLI] CLI can send report now.
+* 🌱 [Health] Page speed and page score now are in dashboard.
+* 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
+* 🕷️ Able to add single rows to blacklist.
+* 🕷️ Crawler data now saved into database instead of creating new files.
+* 🕷️ Larger timeout to avoid wrongly added to blacklist.
+* [Cloud] Able to redetect cloud nodes now.
+* [Img_optm] Fixed stale data in redirected links.
+* [Cache] Default drop qs values. (@gijo Varghese)
+* [LQIP] Show all LQIP images in Media column.
+* [CDN] Can now support custom REST API prefix other than wp-json. (#174 @therealgilles)
+* [IAPI] Used REST for notify/destroy/check_img; Removed callback passive/aggreesive IAPI func
+* [CSSJS] Saved all static files to litespeed folder; Uninstallation will remove static cache folder too; Reduced .htaccess rules by serving CSS/JS directly.
+* [Object] Fixed override different ports issue. (@timofeycom #ISSUE178)
+* [Conf] DB Tables will now only create when activating/upgrading/changing settings.
+* [DB] Simplified table operation funcs.
+* [CSSJS] Bypassed CSS/JS generation to return 404 if file is empty (@grubyy)
+* [CSSJS] Inline JS defer will not conflict with JS inline optm anymore.
+* [GUI] Localized vue.js to avoid CloudFlare cookie. (@politicske)
+* [GUI] Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
+* [GUI] Displayed TTL range below the corresponding setting.
+* Speed up task.cls load speed.
+* CDN settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
+* [OPcache] Purged all opcache when updating cache file. (@closte #170)
+* [CLI] CLI cmd renamed.
+* [CLI] Well-formated table to show all options.
+* Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
+* Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
+* Crawler cookie now support `_null` as empty value.
+* Simplified admin setting logic.
+* Multi values settings now uniformed to multi lines for easier setting.
+* New preset default data file `data/consts.default.ini`.
+* New API: iframe lazyload exclude filter.
+* Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
+* [GUI] human readable seconds. (@MarkCanada)
+* [3rd] Default added parallax-image to webp replacement for BB.
+* API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one.*
+* [API] New hook `litespeed_update_confs` to settings update.
+* [API] New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
+* [API] Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
+* [API] Renamed `litespeed_force_option` to `litespeed_conf_force`.
+* [REST] New rest API to fetch public IP.
+* [GUI] Renamed all backend link tag from lscache to litespeed.
+* [GUI] fixed duplicated form tag.
+* [GUI] Fix cron doc link. (@arnab Mohapatra)
+* [GUI] Frontend adminbar menu added `Purge All` actions. (@Monarobase)
+* Config setting renamed and uniformed.
+* [Conf] Dropped `Conf::option()`. Used `Conf::val()` instead.
+* Improved conf initialization and upgrade convertion workflow.
+* Code base refactored. New namespace LiteSpeed.
+* GUI refactored.
+* [3rd] User Switching plugin compatibility. (@robert Staddon)
+* [Debug] `Disable All Features` now will see the warning banner if ON.
+* [Debug] Dropped `log filters` section.
+* 🐞🕷️ Multi sites will now use separate sitemap even when `Use Primary Site` is ON. (@mrhuynhanh)
+* 🐞[Img_optm] Fixed large volume image table storage issue. (#328956)
+* 🐞 [Cloud] Cloud callback hash validation fixed OC conflict. (@pbpiotr)
+* 🎊 Any user that had the contribution to our WP community or changelog (even just bug report/feedback/suggestion) can apply for extra credits in QUIC.cloud.
 
 = 2.9.9.2 - Nov 24 2019 =
 * 🌱<strong>GUI</strong>: New settings to limit News Feed to plugin page only.
