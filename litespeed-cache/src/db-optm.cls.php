@@ -277,7 +277,8 @@ class DB_Optm extends Instance
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case in_array( $type, self::$TYPES ) :
+			case 'all':
+			case in_array( $type, self::$TYPES ):
 				if ( is_multisite() && is_network_admin() ) {
 					$blogs = Activation::get_network_ids();
 					foreach ( $blogs as $blog_id ) {
