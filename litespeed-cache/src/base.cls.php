@@ -895,8 +895,8 @@ class Base extends Instance
 	 */
 	public static function name( $id )
 	{
-		$cls = ( new \ReflectionClass( get_called_class() ) )->getShortName();
-		return 'litespeed.' . strtolower( $cls ) . '.' . $id ;
+		$cls = new \ReflectionClass( get_called_class() );
+		return 'litespeed.' . strtolower( $cls->getShortName() ) . '.' . $id ;
 	}
 
 	/**
