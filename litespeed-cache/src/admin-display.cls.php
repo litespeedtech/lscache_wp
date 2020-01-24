@@ -464,12 +464,12 @@ class Admin_Display extends Base
 			Admin_Display::error( Error::msg( 'disabled_all' ), true );
 		}
 
-		// Show promo from cloud
-		Cloud::get_instance()->show_promo();
-
 		if ( ! Conf::val( Base::O_NEWS ) ) {
 			return;
 		}
+
+		// Show promo from cloud
+		Cloud::get_instance()->show_promo();
 
 		/**
 		 * Check promo msg first
