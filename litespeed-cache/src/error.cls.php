@@ -48,7 +48,7 @@ class Error
 
 			case 'lack_of_api_key':
 				$msg = sprintf( __( 'You will need to set %s to use the online services.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_API_KEY ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %2$s>Click here to set</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+					' ' . sprintf( __( '<a %s>Click here to set</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
 				break;
 
 			case 'lack_of_quota':

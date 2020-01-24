@@ -48,10 +48,10 @@ class Tool extends Instance
 	{
 		Log::debug( '[Tool] ✅ check_ip' ) ;
 
-		$response = wp_remote_get( 'https://ifconfig.co/ip' ) ;
+		$response = wp_remote_get( 'https://www.doapi.us/ip' ) ;
 
 		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'remote_get_fail', 'Failed to fetch from ifconfig.co', array( 'status' => 404 ) ) ;
+			return new \WP_Error( 'remote_get_fail', 'Failed to fetch from https://www.doapi.us/ip', array( 'status' => 404 ) ) ;
 		}
 
 		$data = $response[ 'body' ] ;
