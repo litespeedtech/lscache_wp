@@ -14,7 +14,7 @@ defined( 'WPINC' ) || exit;
 
 class DB_Optm extends Instance
 {
-	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' );
+	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables', 'all_cssjs' );
 	const TYPE_CONV_TB = 'conv_innodb';
 
 	protected static $_instance;
