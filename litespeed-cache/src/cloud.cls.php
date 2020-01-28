@@ -161,11 +161,10 @@ class Cloud extends Base
 		// Image optm is always free
 		$allowance_max = 0;
 		if ( $service == self::SVC_IMG_OPTM ) {
+			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
 			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
 				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
 			}
-
-			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
 		}
 
 		$allowance = $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];

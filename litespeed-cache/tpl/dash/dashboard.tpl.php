@@ -112,7 +112,7 @@ $placeholder_summary = Placeholder::get_summary();
 					</div>
 					<?php if ( $pag_total > 0 ) { ?>
 						<p class="litespeed-dashboard-stats-payg" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
-							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong> 
+							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
 							<button class="litespeed-info-button" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>" data-balloon-pos="up">
 								<span class="dashicons dashicons-info"></span>
 								<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
@@ -122,7 +122,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 					<?php if ( $svc == 'img_optm' ) { ?>
 						<p class="litespeed-dashboard-stats-total">
-							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $used; ?> / ∞</strong> 
+							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $cloud_summary[ 'usage.' . $svc ][ 'total_used' ]; ?> / ∞</strong>
 							<button class="litespeed-info-button" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>" data-balloon-pos="up">
 								<span class="dashicons dashicons-info"></span>
 							</button>
@@ -337,7 +337,7 @@ $placeholder_summary = Placeholder::get_summary();
 							<?php endforeach; ?>
 						</div>
 					</div>
-					
+
 				</div>
 			</div>
 
