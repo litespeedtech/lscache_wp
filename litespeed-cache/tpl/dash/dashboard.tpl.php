@@ -81,24 +81,44 @@ $placeholder_summary = Placeholder::get_summary();
 					$pag_total = Utility::real_size( $pag_total * 1024 * 1024 );
 				}
 			}
+
+			$percentage_bg = 'success';
+			if( $finished_percentage > 95 ){
+				$percentage_bg = 'danger';
+			} elseif ( $finished_percentage > 85 ){
+				$percentage_bg = 'warning';
+			}
+
 		?>
 			<div class="postbox litespeed-postbox">
 				<div class="inside">
 					<h3 class="litespeed-title"><?php echo $title; ?></h3>
 
 					<div class="litespeed-flex-container">
-						<div class="litespeed-icon-vertical-middle">
-							<?php echo GUI::pie( $finished_percentage, 70, true ); ?>
+						<div class="litespeed-icon-vertical-middle litespeed-pie-<?php echo $percentage_bg;?>">
+							<?php echo GUI::pie( $finished_percentage, 60, false ); ?>
 						</div>
 						<div>
 							<div class="litespeed-dashboard-stats">
 								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-								<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc">of <?php echo $quota; ?></span></p>
-								<p class="litespeed-desc" style="background-color: pink;" title="Pay As You Go"><span style="background-color: cyan;width: <?php echo $pag_width; ?>"><?php echo $pag_used; ?> / <?php echo $pag_total; ?><span></p>
+								<p>
+									<strong><?php echo $used; ?></strong>
+									<?php if( $used != $quota ) { ?>
+										<span class="litespeed-desc"> of <?php echo $quota; ?></span>
+									<?php } ?>
+								</p>
 							</div>
 						</div>
 					</div>
-
+					<?php if ( $pag_total > 0 ) { ?>
+						<p class="litespeed-dashboard-stats-payg" style="margin-top: 0.45em;" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
+							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong style="font-size: 1em;font-weight: 600;color: black;" class=""><?php echo $pag_bal; ?></strong> 
+							<button class="litespeed-info-button" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>" data-balloon-pos="up">
+								<span class="dashicons dashicons-info"></span>
+								<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
+							</button>
+						</p>
+					<?php } ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
@@ -108,7 +128,7 @@ $placeholder_summary = Placeholder::get_summary();
 		<hr>
 		<div class="litespeed-flex-container">
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-pagetime">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Page Load Time', 'litespeed-cache' ); ?>
@@ -165,7 +185,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-pagespeed">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'PageSpeed Score', 'litespeed-cache' ); ?>
@@ -182,32 +202,26 @@ $placeholder_summary = Placeholder::get_summary();
 
 							<?php if ( ! empty( $health_scores[ 'score_before' ] ) ) : ?>
 								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-									<div>
-										<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-											<?php echo __( 'Before', 'litespeed-cache' ); ?>
-										</p>
-									</div>
-									<div class="litespeed-promo-score" style="margin-top:-5px;">
+									<p class="litespeed-text-grey litespeed-text-center">
+										<?php echo __( 'Before', 'litespeed-cache' ); ?>
+									</p>
+									<div class="litespeed-promo-score">
 										<?php echo GUI::pie( $health_scores[ 'score_before' ], 45, false, true, 'litespeed-pie-' . GUI::get_instance()->get_cls_of_pagescore( $health_scores[ 'score_before' ] ) ); ?>
 									</div>
 								</div>
 								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-									<div>
-										<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-											<?php echo __( 'After', 'litespeed-cache' ); ?>
-										</p>
-									</div>
-									<div class="litespeed-promo-score" style="margin-top:-5px;">
+									<p class="litespeed-text-grey litespeed-text-center">
+										<?php echo __( 'After', 'litespeed-cache' ); ?>
+									</p>
+									<div class="litespeed-promo-score">
 										<?php echo GUI::pie( $health_scores[ 'score_after' ], 45, false, true, 'litespeed-pie-' . GUI::get_instance()->get_cls_of_pagescore( $health_scores[ 'score_after' ] ) ); ?>
 									</div>
 								</div>
 								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-									<div>
-										<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
-											<?php echo __( 'Improved by', 'litespeed-cache' ); ?>
-										</p>
-									</div>
-									<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
+									<p class="litespeed-text-grey" style="white-space: nowrap;">
+										<?php echo __( 'Improved by', 'litespeed-cache' ); ?>
+									</p>
+									<div class="litespeed-postbox-score-improve litespeed-text-fern">
 										<?php echo $health_scores[ 'score_improved' ]; ?><span class="litespeed-text-large">%</span>
 									</div>
 								</div>
@@ -226,7 +240,96 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-double litespeed-postbox-imgopt">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'Image Optimization Summary', 'litespeed-cache' ); ?>
+					</h3>
+					<div class="litespeed-postbox-double-content">
+						<div class="litespeed-postbox-double-col">
+							<div class="litespeed-flex-container">
+								<div class="litespeed-icon-vertical-middle">
+									<?php echo GUI::pie( $img_gathered_percentage, 70, true ); ?>
+								</div>
+								<div>
+									<div class="litespeed-dashboard-stats">
+										<h3><?php echo __('Image Groups Prepared','litespeed-cache'); ?></h3>
+										<p>
+											<strong><?php echo ( $img_count[ 'groups_all' ] - $img_count[ 'groups_not_gathered' ] ); ?></strong>
+											<span class="litespeed-desc">of <?php echo $img_count[ 'groups_all' ]; ?></span>
+										</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="litespeed-flex-container">
+								<div class="litespeed-icon-vertical-middle">
+									<?php echo GUI::pie( $img_finished_percentage, 70, true ); ?>
+								</div>
+								<div>
+									<div class="litespeed-dashboard-stats">
+										<h3><?php echo __('Image Requested','litespeed-cache'); ?></h3>
+										<p>
+											<strong><?php echo ( $img_count[ 'imgs_gathered' ] - $img_count[ 'img.' . Img_Optm::STATUS_RAW ]); ?></strong>
+											<span class="litespeed-desc">of <?php echo $img_count[ 'imgs_gathered' ]; ?></span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="litespeed-postbox-double-col">
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
+							<p class="litespeed-success">
+								<?php echo __('Images requested', 'litespeed-cache'); ?>:
+								<code>
+									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ); ?>
+									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ], 'image' ); ?>)
+								</code>
+							</p>
+							<?php endif; ?>
+
+							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ) : ?>
+								<p class="litespeed-success">
+									<?php echo __('Images notified to pull', 'litespeed-cache'); ?>:
+									<code>
+										<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ); ?>
+										(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ], 'image' ); ?>)
+									</code>
+
+								</p>
+							<?php endif; ?>
+
+							<p>
+								<?php echo __( 'Last Request', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'; ?></code>
+							</p>
+							<p>
+								<?php echo __( 'Last Pull', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_pull' ] ) ? Utility::readable_time( $optm_summary[ 'last_pull' ] ) : '-'; ?></code>
+							</p>
+
+							<?php
+							$cache_list = array(
+								Base::O_IMG_OPTM_AUTO	=> __( 'Auto Request Cron', 'litespeed-cache' ),
+								Base::O_IMG_OPTM_CRON	=> __( 'Auto Pull Cron', 'litespeed-cache' ),
+							);
+							foreach ( $cache_list as $id => $title ) :
+								$v = Conf::val( $id );
+							?>
+								<p>
+									<?php if ( $v ) : ?>
+										<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
+									<?php else: ?>
+										<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+									<?php endif; ?>
+									<?php echo $title; ?>
+								</p>
+							<?php endforeach; ?>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="postbox litespeed-postbox litespeed-postbox-cache">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Cache Status', 'litespeed-cache' ); ?>
@@ -260,7 +363,7 @@ $placeholder_summary = Placeholder::get_summary();
 			</div>
 
 			<?php if ( $lscache_stats ) : ?>
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-cache-stats">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Cache Stats', 'litespeed-cache' ); ?>
@@ -274,7 +377,7 @@ $placeholder_summary = Placeholder::get_summary();
 			</div>
 			<?php endif; ?>
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-ccss">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Critical CSS', 'litespeed-cache' ); ?>
@@ -305,7 +408,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-lqip">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'LQIP Placeholder', 'litespeed-cache' ); ?>
@@ -336,7 +439,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox">
+			<div class="postbox litespeed-postbox litespeed-postbox-crawler">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Crawler Status', 'litespeed-cache' ); ?>
@@ -381,92 +484,6 @@ $placeholder_summary = Placeholder::get_summary();
 					<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>"><?php echo __( 'Manage Crawler', 'litespeed-cache' ); ?></a>
 				</div>
 			</div>
-
-			<div class="postbox litespeed-postbox">
-				<div class="inside">
-					<h3 class="litespeed-title">
-						<?php echo __( 'Image Optimization Summary', 'litespeed-cache' ); ?>
-					</h3>
-
-					<div class="litespeed-flex-container">
-						<div class="litespeed-icon-vertical-middle">
-							<?php echo GUI::pie( $img_gathered_percentage, 70, true ); ?>
-						</div>
-						<div>
-							<div class="litespeed-dashboard-stats">
-								<h3><?php echo __('Image Prepared','litespeed-cache'); ?></h3>
-								<p>
-									<strong><?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] - $img_count[ 'groups_not_gathered' ] ); ?></strong>
-									<span class="litespeed-desc">of <?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] ); ?></span>
-								</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="litespeed-flex-container">
-						<div class="litespeed-icon-vertical-middle">
-							<?php echo GUI::pie( $img_finished_percentage, 70, true ); ?>
-						</div>
-						<div>
-							<div class="litespeed-dashboard-stats">
-								<h3><?php echo __('Image Requested','litespeed-cache'); ?></h3>
-								<p>
-									<strong><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ] - $img_count[ 'img.' . Img_Optm::STATUS_RAW ], 'image' ); ?></strong>
-									<span class="litespeed-desc">of <?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ); ?></span>
-								</p>
-							</div>
-						</div>
-					</div>
-
-					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
-					<p class="litespeed-success">
-						<?php echo __('Images requested', 'litespeed-cache'); ?>:
-						<code>
-							<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ); ?>
-							(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_REQUESTED ], 'image' ); ?>)
-						</code>
-					</p>
-					<?php endif; ?>
-
-					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ) ) : ?>
-						<p class="litespeed-success">
-							<?php echo __('Images notified to pull', 'litespeed-cache'); ?>:
-							<code>
-								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_NOTIFIED ] ); ?>
-								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ], 'image' ); ?>)
-							</code>
-
-						</p>
-					<?php endif; ?>
-
-					<p>
-						<?php echo __( 'Last Request', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'; ?></code>
-					</p>
-					<p>
-						<?php echo __( 'Last Pull', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_pull' ] ) ? Utility::readable_time( $optm_summary[ 'last_pull' ] ) : '-'; ?></code>
-					</p>
-
-					<?php
-					$cache_list = array(
-						Base::O_IMG_OPTM_AUTO	=> __( 'Auto Request Cron', 'litespeed-cache' ),
-						Base::O_IMG_OPTM_CRON	=> __( 'Auto Pull Cron', 'litespeed-cache' ),
-					);
-					foreach ( $cache_list as $id => $title ) :
-						$v = Conf::val( $id );
-					?>
-						<p>
-							<?php if ( $v ) : ?>
-								<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
-							<?php else: ?>
-								<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
-							<?php endif; ?>
-							<?php echo $title; ?>
-						</p>
-					<?php endforeach; ?>
-
-				</div>
-			</div>
-
 
 		</div>
 

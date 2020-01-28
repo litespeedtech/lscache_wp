@@ -106,16 +106,16 @@ class GUI extends Base
 	 */
 	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false )
 	{
-		$percentage = '<text x="16.91549431" y="15.5">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>' ;
+		$percentage = '<text x="50%" y="50%">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>' ;
 
 		if ( $percent == 100 && $finished_tick ) {
-			$percentage = '<text x="16.91549431" y="15.5" class="litespeed-pie-done">&#x2713</text>' ;
+			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">&#x2713</text>' ;
 		}
 
 		return "
 		<svg class='litespeed-pie $append_cls' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
-			<circle class='litespeed-pie_bg' />
-			<circle class='litespeed-pie_circle' stroke-dasharray='$percent,100' />
+			<circle class='litespeed-pie_bg' cx='16.91549431' cy='16.91549431' r='15.91549431' />
+			<circle class='litespeed-pie_circle' cx='16.91549431' cy='16.91549431' r='15.91549431' stroke-dasharray='$percent,100' />
 			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
