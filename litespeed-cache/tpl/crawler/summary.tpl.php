@@ -194,7 +194,7 @@ if($seconds > 0):
 		if ( $ajaxUrl ):
 	?>
 
-	<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache'); ?>" class="button button-primary" data-url="<?php echo $ajaxUrl; ?>" />
+	<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache'); ?>" class="button button-secondary" data-url="<?php echo $ajaxUrl; ?>" />
 
 	<div class="litespeed-shell litespeed-hide">
 		<div class="litespeed-shell-header-bar"></div>

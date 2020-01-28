@@ -12,7 +12,7 @@ $pagination = Utility::pagination( $count, 30 );
 
 ?>
 <p>
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-danger litespeed-right " data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="litespeed-right " data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
 	<?php echo __( 'Empty blacklist', 'litespeed-cache' ); ?>
 </a>
 </p>
@@ -40,7 +40,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-primary"><?php echo __( 'Remove from Blacklist', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blacklist', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>
