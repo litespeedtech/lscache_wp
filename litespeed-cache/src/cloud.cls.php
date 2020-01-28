@@ -25,6 +25,10 @@ class Cloud extends Base
 	const SVC_HEALTH			= 'health' ;
 	const SVC_CDN				= 'cdn' ;
 
+	const BM_IMG_OPTM_JUMBO_GROUP = 32;
+	const IMG_OPTM_JUMBO_GROUP = 1000;
+	const IMG_OPTM_DEFAULT_GROUP = 200;
+
 	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
 	const API_VER			= 'wp/ver' ;
@@ -154,15 +158,32 @@ class Cloud extends Base
 			return 0;
 		}
 
+		// Image optm is always free
+		$allowance_max = 0;
+		if ( $service == self::SVC_IMG_OPTM ) {
+			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
+				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
+			}
+
+			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
+		}
+
 		$allowance = $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
 
 		if ( $allowance > 0 ) {
+			if ( $allowance_max && $allowance_max < $allowance ) {
+				return $allowance_max;
+			}
 			return $allowance;
 		}
 
 		// Check Pay As You Go balance
 		if ( empty( $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) ) {
-			return 0;
+			return $allowance_max;
+		}
+
+		if ( $allowance_max && $allowance_max < $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) {
+			return $allowance_max;
 		}
 
 		return $this->_summary[ 'usage.' . $service ][ 'pag_bal' ];

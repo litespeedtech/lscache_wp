@@ -306,7 +306,7 @@ class Img_Optm extends Base
 			$img_taken_count = $this->_summary[ 'img_taken' ] > 300 ? $this->_summary[ 'img_taken' ] : pow( $this->_summary[ 'img_taken' ], 2 );
 		}
 
-		$allowance = min( $allowance, apply_filters( 'litespeed_img_optimize_max_rows', 300 ), $img_taken_count );
+		$allowance = min( $allowance, 1000, $img_taken_count );
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
