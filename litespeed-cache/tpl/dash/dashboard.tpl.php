@@ -100,7 +100,7 @@ $placeholder_summary = Placeholder::get_summary();
 						</div>
 						<div>
 							<div class="litespeed-dashboard-stats">
-								<h3><?php echo __('Used','litespeed-cache'); ?></h3>
+								<h3><?php echo ( $svc == 'img_optm' ? __('Fast Queue Usage','litespeed-cache') : __( 'Usage', 'litespeed-cache' ) ); ?></h3>
 								<p>
 									<strong><?php echo $used; ?></strong>
 									<?php if( $used != $quota ) { ?>
@@ -111,18 +111,30 @@ $placeholder_summary = Placeholder::get_summary();
 						</div>
 					</div>
 					<?php if ( $pag_total > 0 ) { ?>
-						<p class="litespeed-dashboard-stats-payg" style="margin-top: 0.45em;" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
-							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong style="font-size: 1em;font-weight: 600;color: black;" class=""><?php echo $pag_bal; ?></strong> 
+						<p class="litespeed-dashboard-stats-payg" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
+							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong> 
 							<button class="litespeed-info-button" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>" data-balloon-pos="up">
 								<span class="dashicons dashicons-info"></span>
 								<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
 							</button>
 						</p>
 					<?php } ?>
+
+					<?php if ( $svc == 'img_optm' ) { ?>
+						<p class="litespeed-dashboard-stats-total">
+							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $used; ?> / ∞</strong> 
+							<button class="litespeed-info-button" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>" data-balloon-pos="up">
+								<span class="dashicons dashicons-info"></span>
+							</button>
+						</p>
+						<div class="clear"></div>
+					<?php } ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
+
+	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="#" class="litespeed-link-with-icon"">Go to QUIC.cloud dashboard <span class="dashicons dashicons-external"></span></a></p>
 
 	<div class="litespeed-dashboard-group">
 		<hr>

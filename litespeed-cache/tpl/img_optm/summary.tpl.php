@@ -154,9 +154,10 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					</div>
 
 					<p><?php echo sprintf(
-							'<a href="%1$s" class="button button-secondary" data-balloon-pos="right" aria-label="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
-							Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ),
+							'<a href="%1$s" class="button button-secondary" data-balloon-pos="right" aria-label="%2$s" %3$s><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%4$s</a>',
+							($unfinished_num ? Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ) : 'javascript:;'),
 							__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
+							($unfinished_num ? '' : ' disabled'),
 							__( 'Clean Up Unfinished Data', 'litespeed-cache' ) . ( $unfinished_num ? ': ' . Admin_Display::print_plural( $unfinished_num, 'image' ) : '')
 						);
 					?></p>
@@ -169,11 +170,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						<?php echo __( 'A backup of each image is saved before it is optimized.', 'litespeed-cache' ) ; ?>
 					</p>
 
-					<div>
-						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="button button-secondary" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
-								<span class="dashicons dashicons-update"></span> <?php echo __( 'Calculate Backups Disk Space', 'litespeed-cache' ) ; ?>
-						</a>
-					</div>
 
 					<?php if ( ! empty( $optm_summary[ 'bk_summary' ] ) ) : ?>
 						<div class="">
@@ -191,6 +187,19 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						</div>
 					<?php endif ; ?>
 					
+					<div>
+						
+						<a class="button button-secondary" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>"
+							<?php if ( $finished_percentage > 0 ) : ?>
+								href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CALC_BKUP ) ; ?>"
+							<?php else : ?>
+								href='javascript:;' disabled
+							<?php endif ; ?>
+							>
+								<span class="dashicons dashicons-update"></span> <?php echo __( 'Calculate Backups Disk Space', 'litespeed-cache' ) ; ?>
+						</a>
+					</div>
+
 				</div>
 				
 				<hr class="litespeed-hr-with-space">
@@ -312,20 +321,20 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 		<div class="postbox litespeed-postbox">
 			<div class="inside">
-				<h3 class="litespeed-title"><?php echo __('Revert Optimization', 'litespeed-cache') ; ?></h3>
+				<h3 class="litespeed-title"><?php echo __('Optimization Tools', 'litespeed-cache') ; ?></h3>
 
-				<div class="litespeed-desc">
-					<?php echo __( 'Switch all images in the media library back to their original unoptimized versions.', 'litespeed-cache' ) ; ?>
-				</div>
+				<p>
+					<?php echo __( 'You can quickly switch between using original (unoptimized versions) and optimized image files. It will affect all images on your website, both regular and webp versions if available.', 'litespeed-cache' ) ; ?>
+				</p>
 
 				<div class="litespeed-links-group">
 					<span>
-						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-link-with-icon" data-balloon-pos="up" aria-label="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
-							<span class="dashicons dashicons-undo"></span><?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
+						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-link-with-icon" data-balloon-pos="up" aria-label="<?php echo __( 'Use original images (unoptimized) on your site', 'litespeed-cache' ) ; ?>">
+							<span class="dashicons dashicons-undo"></span><?php echo __( 'Use Original Files', 'litespeed-cache' ) ; ?>
 						</a>
 					</span><span>
-						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-link-with-icon" data-balloon-pos="up" aria-label="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
-							<span class="dashicons dashicons-redo"></span><?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
+						<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-link-with-icon litespeed-icon-right" data-balloon-pos="up" aria-label="<?php echo __( 'Switch back to using optimized images on your site', 'litespeed-cache' ) ; ?>">
+							<?php echo __( 'Use Optimized Files', 'litespeed-cache' ) ; ?><span class="dashicons dashicons-redo"></span>
 						</a>
 					</span>
 				</div>

@@ -486,7 +486,7 @@ h3 .litespeed-learn-more {
 	margin: 2em -20px 12px -20px;
 	padding: 12px 20px 12px 20px;
 	border-bottom: 1px solid #eee;
-	font-size: 1.3em;
+	font-size: 1.2em;
 	display: block;
 	border-top: 1px solid #f1f1f1;
 }
@@ -927,7 +927,7 @@ h3 .litespeed-learn-more {
 }
 
 .litespeed-info-button {
-	color: #999999;
+	color: #c8c8c8;
 	padding: 0;
 	-webkit-appearance: none;
 	border: none;
@@ -2311,6 +2311,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 .litespeed-help-btn-icon {
 	text-decoration: none;
 	margin-left: 10px;
+	color: #c8c8c8;
 }
 
 .litespeed-postbox-imgopt-info .litespeed-flex-container {
@@ -2429,9 +2430,34 @@ g.litespeed-pie_info .litespeed-pie-done {
 	height: 60px;
 }
 
+.litespeed-dashboard-stats-wrapper .litespeed-flex-container+p:not(:last-child) {
+	margin-bottom: 0.55em;
+}
+
 .litespeed-dashboard-stats-payg {
-	margin-top: 0.5em;
 	color: #777;
+}
+
+.litespeed-dashboard-stats-payg strong {
+	color: #444;
+}
+
+.postbox .inside>p.litespeed-dashboard-stats-payg {
+	margin-top: 1.35em;
+}
+
+.postbox .inside>p.litespeed-dashboard-stats-payg:last-child {
+
+	margin-bottom: -5px !important;
+}
+
+.litespeed-postbox p.litespeed-dashboard-stats-total {
+	padding: 0.75em 20px 0 20px;
+	border-top: 1px dashed #eee;
+	margin-top: 0.55em;
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-bottom: -0.55em !important;
 }
 
 .litespeed-dashboard-group .litespeed-postbox {
@@ -2505,7 +2531,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin: 0 -20px 12px -20px;
 	padding: 0px 20px 7px 20px;
 	border-bottom: 1px solid #eee;
-	font-size: 1.3em;
+	font-size: 1.2em;
 	display: block;
 }
 
@@ -2576,6 +2602,11 @@ a.litespeed-link-with-icon .dashicons {
 	margin-right: 0.5em;
 }
 
+a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
+	margin-left: 0.5em;
+	margin-right: 0;
+}
+
 .litespeed-links-group:not(:last-child) {
 	margin-bottom: 1em;
 }
@@ -2585,6 +2616,15 @@ a.litespeed-link-with-icon .dashicons {
 	margin: 0 10px;
 	color: #ddd;
 	font-size: 13px;
+}
+
+.litespeed-wrap p.litespeed-qc-dashboard-link {
+	margin-left: 1rem;
+}
+
+.litespeed-right.litespeed-qc-dashboard-link .dashicons {
+	margin-left: 0.5em;
+	margin-right: 0;
 }
 
 /********************************* todo *******************************/
@@ -3006,7 +3046,7 @@ button[aria-label][data-balloon-pos] {
 	position: absolute;
 	white-space: nowrap;
 	z-index: 10;
-	line-height:1.4;
+	line-height: 1.4;
 }
 
 [aria-label][data-balloon-long]:after {
