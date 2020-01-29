@@ -51,17 +51,17 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<?php else : ?>
 					<span class="litespeed-quic-icon"></span>
 				<?php endif ; ?>
-				<?php echo __('Use QUIC.cloud Image Optimizaton Server to optimize your images', 'litespeed-cache' );?>
+				<?php echo __('Optimize images with our cloud server', 'litespeed-cache' );?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</h3>
 
 			<p>
-				<?php echo sprintf( __( 'You can post %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
+				<?php echo sprintf( __( 'You can post max %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
 			</p>
 
 			<?php if ( $wet_limit ) : ?>
-			<p>
-				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything worksfine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
+			<p class="litespeed-desc">
+				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
 				<?php echo __( 'Current limit is', 'litespeed-cache' ) . ': <strong>' . $wet_limit . '</strong>'; ?>
 			</p>
 			<?php endif; ?>
