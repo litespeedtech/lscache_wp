@@ -152,10 +152,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 					<div>
 						<div class="litespeed-flex-container">
-<?php 
-$health_scores[ 'speed_before' ] = '20.0';
-$health_scores[ 'speed_after' ] = '10.0';
-$health_scores[ 'speed_improved' ] = '20'; ?>
+
 							<?php if ( $health_scores[ 'speed_before' ] ) : ?>
 								<div class="litespeed-score-col">
 									<p class="litespeed-text-grey">
