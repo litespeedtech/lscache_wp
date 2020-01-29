@@ -41,9 +41,23 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10 litespeed-image-optim-summary-wrapper">
 		<div class="litespeed-image-optim-summary">
-			<div class="litespeed-empty-space-small"></div>
-			<div class="litespeed-text-center">
-				<a data-litespeed-onlyonce class="button button-primary litespeed-btn-large"
+			
+			<h3>
+				<?php if ( $closest_server ) : ?>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ) ; ?>" class="litespeed-info-button" data-balloon-pos="right" aria-label="<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><span class="litespeed-quic-icon"></span></a>
+				<?php else : ?>
+					<span class="litespeed-quic-icon"></span>
+				<?php endif ; ?>
+				<?php echo __('Use QUIC.cloud Image Optimizaton Server to optimize your images', 'litespeed-cache' );?> 
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+			</h3>
+
+			<p>
+				<?php echo sprintf( __( 'You can post %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
+			</p>
+
+			<div class="litespeed-img-optim-actions">
+				<a data-litespeed-onlyonce class="button button-primary"
 					<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) ) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ) ; ?>"
 					<?php else : ?>
@@ -52,21 +66,8 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					>
 					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 				</a>
-			</div>
 
-			<div class="litespeed-empty-space-small"></div>
-
-			<div class="litespeed-desc">
-				<?php if ( $closest_server ) : ?>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ) ; ?>" title='<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
-				<?php endif ; ?>
-				<?php echo __( 'This will send the optimization request to QUIC.cloud\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'You can post %s images once.', 'litespeed-cache' ), '<font style="color:green;font-size:21px;">' . $allowance . '</font>' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-			</div>
-
-			<div>
-				<a data-litespeed-onlyonce class="button litespeed-btn-success" data-balloon-long data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
+				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-long data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
 					<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_PULL ) ; ?>"
 					<?php else : ?>
@@ -76,8 +77,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
 				</a>
 			</div>
-
-			<div class="litespeed-empty-space-medium"></div>
 
 			<div>
 				<h3 class="litespeed-title-section">

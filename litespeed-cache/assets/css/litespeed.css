@@ -302,6 +302,10 @@ a.litespeed-danger:hover {
 	color: #34b15d;
 }
 
+.litespeed-form-action {
+	color: #1a9292 !important;
+}
+
 
 .litespeed-bg-default {
 	background-color: #a7a7a7 !important;
@@ -934,6 +938,7 @@ h3 .litespeed-learn-more {
 	background: none;
 	vertical-align: middle;
 	line-height: inherit;
+	text-decoration: none;
 }
 
 .litespeed-info-button .dashicons {
@@ -1736,6 +1741,20 @@ input.litespeed-input-warning {
 	margin-right: 15px;
 }
 
+.litespeed-wrap .litespeed-collection-button {
+	text-decoration: none;
+	min-width: 30px;
+	text-align: center;
+}
+
+.litespeed-collection-button[data-action="add"] {
+	margin-top: -5px;
+	margin-left: -5px;
+}
+
+.litespeed-collection-button .dashicons {
+	vertical-align: baseline;
+}
 
 /* =======================================
 		   ENTERPRISE NOTICE
@@ -2118,35 +2137,11 @@ g.litespeed-pie_info .litespeed-pie-done {
 	position: relative;
 }
 
-.litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
-	border-radius: 13px;
-	margin: 0 10px 0 0;
+[data-litespeed-cdn-mapping-del] {
 	position: absolute;
-	right: 10px;
-	top: 0;
-	/*background: #cc3d6a;
-	color: #fff;*/
-	padding: 1px 8px;
-	font-size: 13px;
-	line-height: 1.5;
-	min-width: 14px;
+	right: -6px;
+	top: -6px;
 }
-
-.litespeed-cdn-mapping-inc {
-	/* display: inline-block;
-	margin-left: 36px ;
-	min-width: 100px ;
-	font-weight: bold; */
-}
-
-/* .litespeed-cdn-mapping-col3-title {
-	display: inline-block;
-	vertical-align: top ;
-	font-weight: bold;
-	margin-left: 36px ;
-	margin-right: 10px;
-} */
-
 
 /* =======================================
 		VIEW - crawler
@@ -2156,6 +2151,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	vertical-align: middle;
 	height: 20px;
 	margin-left: 10px;
+}
+
+#cookie_crawler>p:first-child {
+	margin-top: 5px;
 }
 
 /* =======================================
@@ -2326,7 +2325,29 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 0;
 }
 
+.litespeed-image-optim-summary>h3:first-child {
+	margin-top: 1.6em;
+	font-size: 1.2em;
+}
 
+.litespeed-image-optim-summary>h3:first-child .litespeed-quic-icon {
+	width: 1.2em;
+	height: 1.4em;
+	background-size: contain;
+	margin-right: 0.2rem;
+}
+
+.litespeed-img-optim-actions {
+	margin-top: 1.65em;
+	display: flex;
+	align-items: flex-end;
+}
+
+.litespeed-img-optim-actions .button-primary {
+	font-size: 1.1em;
+	margin-right: 1em;
+	padding: 0.25em 0.75em;
+}
 
 /* =======================================
 			VIEW - dashboard
