@@ -6,11 +6,14 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 $usage_cloud = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
 $allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
 
+$__img_optm = Img_Optm::get_instance();
+
+$wet_limit = $__img_optm->wet_limit();
+$img_count = $__img_optm->img_count() ;
+
 $optm_summary = Img_Optm::get_summary() ;
 
-$img_count = Img_Optm::get_instance()->img_count() ;
-
-list( $last_run, $is_running ) = Img_Optm::get_instance()->cron_running( false ) ;
+list( $last_run, $is_running ) = $__img_optm->cron_running( false ) ;
 
 if ( ! empty( $img_count[ 'groups_all' ] ) ) {
 	$gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] ) ;
@@ -41,20 +44,27 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10 litespeed-image-optim-summary-wrapper">
 		<div class="litespeed-image-optim-summary">
-			
+
 			<h3>
 				<?php if ( $closest_server ) : ?>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ) ; ?>" class="litespeed-info-button" data-balloon-pos="right" aria-label="<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><span class="litespeed-quic-icon"></span></a>
 				<?php else : ?>
 					<span class="litespeed-quic-icon"></span>
 				<?php endif ; ?>
-				<?php echo __('Use QUIC.cloud Image Optimizaton Server to optimize your images', 'litespeed-cache' );?> 
+				<?php echo __('Use QUIC.cloud Image Optimizaton Server to optimize your images', 'litespeed-cache' );?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</h3>
 
 			<p>
 				<?php echo sprintf( __( 'You can post %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
 			</p>
+
+			<?php if ( $wet_limit ) : ?>
+			<p>
+				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything worksfine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
+				<?php echo __( 'Current limit is', 'litespeed-cache' ) . ': <strong>' . $wet_limit . '</strong>'; ?>
+			</p>
+			<?php endif; ?>
 
 			<div class="litespeed-img-optim-actions">
 				<a data-litespeed-onlyonce class="button button-primary"

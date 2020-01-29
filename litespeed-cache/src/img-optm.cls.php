@@ -284,6 +284,27 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Calculate wet run allowance
+	 *
+	 * @since 3.0
+	 */
+	public function wet_limit()
+	{
+		if ( empty( $this->_summary[ 'img_taken' ] ) ) {
+			return 1;
+		}
+
+		$wet_limit = pow( $this->_summary[ 'img_taken' ], 2 );
+
+		if ( $wet_limit < Cloud::IMG_OPTM_DEFAULT_GROUP ) {
+			return $wet_limit;
+		}
+
+		// No limit
+		return false;
+	}
+
+	/**
 	 * Push raw img to image optm server
 	 *
 	 * @since 1.6
@@ -295,18 +316,19 @@ class Img_Optm extends Base
 
 		// Check if has credit to push
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
+
+		$wet_limit = $this->wet_limit();
+
+		Log::debug( "[Img_Optm] allowance_max $allowance wet_limit $wet_limit" );
+		if ( $wet_limit && $wet_limit < $allowance ) {
+			$allowance = $wet_limit;
+		}
+
 		if ( ! $allowance ) {
 			Log::debug( '[Img_Optm] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
 			return;
 		}
-
-		$img_taken_count = 1;
-		if ( ! empty( $this->_summary[ 'img_taken' ] ) ) {
-			$img_taken_count = $this->_summary[ 'img_taken' ] > 300 ? $this->_summary[ 'img_taken' ] : pow( $this->_summary[ 'img_taken' ], 2 );
-		}
-
-		$allowance = min( $allowance, 1000, $img_taken_count );
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
