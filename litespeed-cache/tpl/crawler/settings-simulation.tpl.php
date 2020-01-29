@@ -47,11 +47,20 @@ $this->form_action();
 						<textarea v-model="item.vals" rows="5" cols="40" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
-						<button type="button" class="button litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
+						<button type="button" class="button button-link litespeed-collection-button litespeed-danger" data-action="remove" @click="$delete( items, key )">
+							<span class="dashicons dashicons-dismiss"></span>
+							<span class="screen-reader-text"><?php echo __( 'Remove cookie simulation', 'litespeed-cache' ) ; ?></span>
+						</button>
 					</div>
 				</div>
 
-				<button type="button" @click='add_row' class="button litespeed-btn-success litespeed-btn-tiny">+</button>
+				<p>
+					<button type="button" @click='add_row' class="button button-link litespeed-collection-button litespeed-form-action" data-action="add">
+						<span class="dashicons dashicons-plus-alt"></span>
+						<span class="screen-reader-text"><?php echo __( 'Add new cookie simulation', 'litespeed-cache' ) ;?></span>
+					</button>
+				</p>
+
 			</div>
 
 			<script>

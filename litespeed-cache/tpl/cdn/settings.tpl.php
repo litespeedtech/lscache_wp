@@ -57,7 +57,10 @@ $this->form_action() ;
 					<label class="litespeed-form-label">
 						<?php $id = Base::CDN_MAPPING_URL ; ?>
 						<?php $this->title( $id ) ; ?>
-						<button type="button" class="button litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
+						<button type="button" class="button button-link litespeed-collection-button litespeed-danger" data-litespeed-cdn-mapping-del="1" data-action="remove">
+							<span class="dashicons dashicons-dismiss"></span>
+							<span class="screen-reader-text"><?php echo __( 'Remove CDN url', 'litespeed-cache' ) ; ?></span>
+						</button>
 					</label>
 
 					<?php
@@ -109,7 +112,9 @@ $this->form_action() ;
 
 		<?php endforeach ; ?>
 
-			<p><button type="button" class="button litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</button></p>
+			<p><button type="button" class="button litespeed-form-action button-link litespeed-collection-button" id="litespeed-cdn-mapping-add" data-action="add">
+				<span class="dashicons dashicons-plus-alt"></span><span class="screen-reader-text"><?php echo __( 'Add new CDN url', 'litespeed-cache' );?></span>
+			</button></p>
 
 			<div class="litespeed-warning">
 				<?php echo __('NOTE', 'litespeed-cache'); ?>:

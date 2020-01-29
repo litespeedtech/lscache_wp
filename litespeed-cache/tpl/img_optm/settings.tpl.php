@@ -73,19 +73,6 @@ $this->form_action() ;
 
 	<tr>
 		<th>
-			<?php $id = Base::O_IMG_OPTM_WEBP ; ?>
-			<?php $this->title( $id ) ; ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = Base::O_IMG_OPTM_LOSSLESS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -108,6 +95,19 @@ $this->form_action() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_IMG_OPTM_WEBP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
