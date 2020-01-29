@@ -224,14 +224,14 @@ class Media extends Instance
 	public function media_row_actions( $column_name, $post_id )
 	{
 		if ( $column_name !== 'imgoptm' ) {
-			return ;
+			return;
 		}
 
-		echo '<div class="litespeed-flex-container">' ;
+		echo '<div class="litespeed-flex-container">';
 
-		do_action( 'litespeed_media_row', $post_id ) ;
+		do_action( 'litespeed_media_row', $post_id );
 
-		echo '</div> ' ;
+		echo '</div> ';
 	}
 
 	/**
@@ -327,7 +327,6 @@ class Media extends Instance
 			) ;
 			echo '</div>' ;
 		}
-
 	}
 
 	/**
