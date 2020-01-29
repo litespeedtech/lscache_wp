@@ -305,6 +305,31 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Check if need to gather at this moment
+	 *
+	 * @since  3.0
+	 */
+	public function need_gather()
+	{
+		global $wpdb;
+
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) || ! Data::get_instance()->tb_exist( 'img_optming' ) ) {
+			Log::debug( '[Img_Optm] need gather due to no db tables' );
+			return true;
+		}
+
+		$q = "SELECT * FROM `$this->_table_img_optm` WHERE optm_status = %d LIMIT 1";
+		$q = $wpdb->prepare( $q, self::STATUS_RAW );
+
+		if ( ! $wpdb->get_row( $q ) ) {
+			Log::debug( '[Img_Optm] need gather due to no new raw image found' );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Push raw img to image optm server
 	 *
 	 * @since 1.6
@@ -332,16 +357,15 @@ class Img_Optm extends Base
 
 		Log::debug( '[Img_Optm] preparing images to push' );
 
+		if ( $this->need_gather() ) {
+			$this->_gather_images();
+			return;
+		}
+
 		$q = "SELECT * FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d";
 		$q = $wpdb->prepare( $q, array( self::STATUS_RAW, $allowance ) );
 
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
-
-		if ( ! $this->_img_in_queue ) {
-			Log::debug( '[Img_Optm] no new raw image found, need to gather first' );
-			$this->_gather_images();
-			return;
-		}
 
 		$num_a = count( $this->_img_in_queue );
 		Log::debug( '[Img_Optm] Images found: ' . $num_a );
@@ -1408,7 +1432,6 @@ class Img_Optm extends Base
 			}
 		}
 
-		$this->_summary[ 'last_pull' ] = $ts;
 		self::save_summary();
 
 		$this->_cron_ran = true;
