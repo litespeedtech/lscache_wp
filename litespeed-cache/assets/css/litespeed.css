@@ -2648,6 +2648,24 @@ a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 	margin-right: 0;
 }
 
+.litespeed-score-col {
+	flex-grow: 1;
+	padding-right: 15px;
+}
+
+.litespeed-score-col .litespeed-text-md {
+	font-size: 1.35rem;
+}
+
+.litespeed-score-col.litespeed-score-col--imp {
+	text-align: right;
+	padding-right: 0;
+}
+
+.litespeed-score-col--imp .litespeed-text-jumbo {
+	line-height: 1;
+}
+
 /********************************* todo *******************************/
 
 
