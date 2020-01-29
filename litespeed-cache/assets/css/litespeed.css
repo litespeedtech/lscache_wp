@@ -1455,6 +1455,14 @@ ul.litespeed-shell-body {
 	color: #dc3232;
 }
 
+.litespeed-callout-bg{
+	margin: 1.5rem 0;
+	background: #f9f9f9;
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+}
+
 /* =======================================
 			TICK / CHECKBOX
 ======================================= */

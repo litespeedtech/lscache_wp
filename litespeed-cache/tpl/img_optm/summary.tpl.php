@@ -213,11 +213,13 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 				<hr class="litespeed-hr-with-space">
 				<div>
-					<h4><?php echo __( 'Delete all backups of the original images.', 'litespeed-cache' ) ; ?></h4>
-					<p class="litespeed-danger">
-						🚨&nbsp;<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
-						<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
-					</p>
+					<h4><?php echo __( 'Delete all backups of the original images', 'litespeed-cache' ) ; ?></h4>
+					<div class="notice notice-error litespeed-callout-bg inline">
+						<p>
+							🚨&nbsp;<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+							<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
+						</p>
+					</div>
 
 				</div>
 				<?php if ( ! empty( $optm_summary[ 'rmbk_summary' ] ) ) : ?>
