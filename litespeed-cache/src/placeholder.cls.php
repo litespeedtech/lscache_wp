@@ -142,7 +142,7 @@ class Placeholder extends Base
 					}
 
 					if ( $total_files == 0 ) {
-						echo '<div class="litespeed-media-lqip"><img src="' . File::read( $lqip_folder . '/' . $v ) . '" alt="' . sprintf( __( 'LQIP image preview for size %s', 'litespeed-cache' ), $v ) .'"></div>'; 
+						echo '<div class="litespeed-media-lqip"><img src="' . File::read( $lqip_folder . '/' . $v ) . '" alt="' . sprintf( __( 'LQIP image preview for size %s', 'litespeed-cache' ), $v ) .'"></div>';
 					}
 
 					echo '<div class="litespeed-media-size"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
@@ -459,20 +459,21 @@ class Placeholder extends Base
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
 				$json = Cloud::post( Cloud::SVC_LQIP, $req_data ) ;
+				if ( $json === false ) {
+					return false;
+				}
 
-				if ( empty( $json[ 'lqip' ] ) ) {
+				if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
+					// image error, pop up the current queue
+					$this->_popup_and_save( $raw_size_and_src );
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
+
 					return false ;
 				}
 
 				$data = $json[ 'lqip' ] ;
 
 				Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
-
-				if ( strpos( $data, 'data:image/svg+xml' ) !== 0 ) {
-					Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
-					return false ;
-				}
 			}
 			else {
 
@@ -481,20 +482,21 @@ class Placeholder extends Base
 					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
 				) ;
 				$json = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
+				if ( $json === false ) {
+					return false;
+				}
 
-				if ( empty( $json[ 'data' ] ) ) {
+				if ( empty( $json[ 'data' ] ) || strpos( $json[ 'data' ], 'data:image/png;base64,' ) !== 0 ) {
+					// image error, pop up the current queue
+					$this->_popup_and_save( $raw_size_and_src );
 					Log::debug( '[Placeholder] wrong response format', $json ) ;
+
 					return false ;
 				}
 
 				$data = $json[ 'data' ] ;
 
 				Log::debug( '[Placeholder] _generate_placeholder ' ) ;
-
-				if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
-					Log::debug( '[Placeholder] failed to decode response: ' . $data ) ;
-					return false ;
-				}
 			}
 		}
 
@@ -505,17 +507,27 @@ class Placeholder extends Base
 		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ] ;
 		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ] ;
 		$this->_summary[ 'curr_request' ] = 0 ;
-		if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
-			unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
-		}
-
-		self::save_summary();
+		$this->_popup_and_save( $raw_size_and_src );
 
 		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
 
 		Log::debug2( '[Placeholder] placeholder con: ' . $data ) ;
 
 		return $data ;
+	}
+
+	/**
+	 * Pop up the current request and save
+	 *
+	 * @since  3.0
+	 */
+	private function _popup_and_save( $raw_size_and_src )
+	{
+		if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
+			unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] ) ;
+		}
+
+		self::save_summary();
 	}
 
 	/**

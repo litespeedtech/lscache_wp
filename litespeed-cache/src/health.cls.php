@@ -42,7 +42,7 @@ class Health extends Base
 
 		$json = Cloud::post( Cloud::SVC_HEALTH, $data, 600 );
 
-		if ( empty( $json[ 'data' ] ) || empty( $json[ 'data' ][ 'before' ] ) || empty( $json[ 'data' ][ 'after' ] ) ) {
+		if ( empty( $json[ 'data' ][ 'before' ] ) || empty( $json[ 'data' ][ 'after' ] ) ) {
 			Log::debug( '[Health] ❌ no data' );
 			return false;
 		}

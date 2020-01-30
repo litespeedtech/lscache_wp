@@ -222,9 +222,13 @@ class CSS extends Base
 		Log::debug( '[CSS] Generating: ', $data ) ;
 
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
+		if ( $json === false ) {
+			return false;
+		}
 
 		if ( empty( $json[ 'ccss' ] ) ) {
 			Log::debug( '[CSS] ❌ empty ccss' ) ;
+			$this->_popup_and_save( $ccss_type, $request_url );
 			return false ;
 		}
 
@@ -238,6 +242,22 @@ class CSS extends Base
 		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ] ;
 		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ] ;
 		$this->_summary[ 'curr_request' ] = 0 ;
+		$this->_popup_and_save( $ccss_type, $request_url );
+
+		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
+
+		Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
+
+		return $ccss ;
+	}
+
+	/**
+	 * Pop up the current request and save
+	 *
+	 * @since  3.0
+	 */
+	private function _popup_and_save( $ccss_type, $request_url )
+	{
 		if ( empty( $this->_summary[ 'ccss_type_history' ] ) ) {
 			$this->_summary[ 'ccss_type_history' ] = array() ;
 		}
@@ -245,12 +265,6 @@ class CSS extends Base
 		unset( $this->_summary[ 'queue' ][ $ccss_type ] ) ;
 
 		self::save_summary();
-
-		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
-
-		Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
-
-		return $ccss ;
 	}
 
 	/**
