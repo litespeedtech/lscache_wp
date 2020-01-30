@@ -456,7 +456,7 @@ class Cloud extends Base
 
 			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message;
 			Admin_Display::error( $msg );
-			return false;
+			return;
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
@@ -467,7 +467,7 @@ class Cloud extends Base
 			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ];
 			Admin_Display::error( $msg );
 
-			return false;
+			return;
 		}
 
 		if ( ! empty( $json[ '_503' ] ) ) {
@@ -477,7 +477,7 @@ class Cloud extends Base
 			$msg .= ' ' . $json[ '_503' ];
 			Admin_Display::error( $msg );
 
-			return false;
+			return;
 		}
 
 		if ( ! empty( $json[ '_info' ] ) ) {
@@ -514,7 +514,7 @@ class Cloud extends Base
 
 			$msg2 .= $this->_parse_link( $json );
 			Admin_Display::error( $msg . $msg2 );
-			return false;
+			return;
 		}
 
 		// Parse _carry_on info
@@ -553,7 +553,7 @@ class Cloud extends Base
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
-			return false;
+			return;
 		}
 
 		unset( $json[ '_res' ] );
@@ -572,8 +572,8 @@ class Cloud extends Base
 			Log::debug2( '[Cloud] response ok' );
 		}
 
+		// Only successful request return Array
 		return $json;
-
 	}
 
 	/**

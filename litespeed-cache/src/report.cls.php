@@ -62,7 +62,6 @@ class Report extends Base
 		) ;
 
 		$json = Cloud::post( Cloud::API_REPORT, $data ) ;
-
 		if ( ! is_array( $json ) ) {
 			return ;
 		}

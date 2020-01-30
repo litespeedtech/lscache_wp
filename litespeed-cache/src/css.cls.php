@@ -222,7 +222,7 @@ class CSS extends Base
 		Log::debug( '[CSS] Generating: ', $data ) ;
 
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
-		if ( $json === false ) {
+		if ( ! is_array( $json ) ) {
 			return false;
 		}
 

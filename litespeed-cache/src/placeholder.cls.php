@@ -459,7 +459,7 @@ class Placeholder extends Base
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
 				$json = Cloud::post( Cloud::SVC_LQIP, $req_data ) ;
-				if ( $json === false ) {
+				if ( ! is_array( $json ) ) {
 					return false;
 				}
 
@@ -482,7 +482,7 @@ class Placeholder extends Base
 					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
 				) ;
 				$json = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
-				if ( $json === false ) {
+				if ( ! is_array( $json ) ) {
 					return false;
 				}
 
