@@ -227,11 +227,8 @@ class Media extends Instance
 			return;
 		}
 
-		echo '<div class="litespeed-flex-container">';
-
 		do_action( 'litespeed_media_row', $post_id );
 
-		echo '</div> ';
 	}
 
 	/**
@@ -250,43 +247,10 @@ class Media extends Instance
 
 		$size_meta = get_post_meta( $post_id, Img_Optm::DB_SIZE, true ) ;
 
-		// WebP info
-		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
-			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
-			$pie_webp = GUI::pie( $percent, 30 ) ;
-			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), Utility::real_size( $size_meta[ 'webp_saved' ] ) ) ;
-
-			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
-			$desc = false ;
-			$cls = 'litespeed-icon-media-webp' ;
-			$cls_webp = '' ;
-			if ( $this->info( $short_path . '.webp', $post_id ) ) {
-				$desc = __( 'Click to Disable WebP', 'litespeed-cache' ) ;
-				$cls_webp = 'litespeed-txt-webp' ;
-			}
-			elseif ( $this->info( $short_path . '.optm.webp', $post_id ) ) {
-				$cls .= '-disabled' ;
-				$desc = __( 'Click to Enable WebP', 'litespeed-cache' ) ;
-				$cls_webp = 'litespeed-txt-disabled' ;
-			}
-
-			echo "<div class='litespeed-media-p $cls_webp litespeed-right20'><div class='litespeed-text-dimgray litespeed-text-center'>WebP</div>" ;
-
-			if ( $desc ) {
-				echo sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_webp, $desc, $pie_webp ) ;
-			}
-			else {
-				echo sprintf( '<div title="%1$s">%2$s</div>', $txt_webp, $pie_webp ) ;
-			}
-
-			echo '</div>' ;
-		}
-
+		echo '<p>';
 		// Original image info
 		if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
 			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
-			$pie_ori = GUI::pie( $percent, 30 ) ;
-			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), Utility::real_size( $size_meta[ 'ori_saved' ] ) ) ;
 
 			$extension = pathinfo( $short_path, PATHINFO_EXTENSION ) ;
 			$bk_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
@@ -294,36 +258,99 @@ class Media extends Instance
 
 			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
 			$desc = false ;
-			$cls = 'litespeed-icon-media-optm' ;
-			$cls_ori = '' ;
+			
+			$cls = '' ;
+
 			if ( $this->info( $bk_file, $post_id ) ) {
-				$desc = __( 'Click to Restore Original File', 'litespeed-cache' ) ;
-				$cls_ori = 'litespeed-txt-ori' ;
+				$curr_status = __( '(optm)', 'litespeed-cache' ) ;
+				$desc = __( 'Currently using optimized version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' ) ;
 			}
 			elseif ( $this->info( $bk_optm_file, $post_id ) ) {
-				$cls .= '-disabled' ;
-				$desc = __( 'Click to Switch To Optimized File', 'litespeed-cache' ) ;
-				$cls_ori = 'litespeed-txt-disabled' ;
+				$cls .= ' litespeed-warning' ;
+				$curr_status = __( '(non-optm)', 'litespeed-cache' ) ;
+				$desc = __( 'Currently using original (unoptimized) version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
 			}
 
-			echo "<div class='litespeed-media-p $cls_ori litespeed-right30'><div class='litespeed-text-dimgray litespeed-text-center'>Orig.</div>" ;
+			echo GUI::pie_tiny( $percent, 24, 
+				sprintf( __( 'Original file reduced by %1$s (%2$s)', 'litespeed-cache' ), 
+					$percent . '%',
+					Utility::real_size( $size_meta[ 'ori_saved' ] )
+				) , 'left'
+			) ;
+
+			echo sprintf( __( 'Orig saved %s', 'litespeed-cache' ), $percent . '%' ) ;
 
 			if ( $desc ) {
-				echo sprintf( '<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_ori, $desc, $pie_ori ) ;
+				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2s$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
 			}
 			else {
-				echo sprintf( '<div title="%1$s">%2$s</div>', $txt_ori, $pie_ori ) ;
+				echo sprintf( 
+					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
+					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of original file exists.', 'litespeed-cache' ), 
+					__( '(optm)', 'litespeed-cache' ) 
+				) ;
 			}
 
-			echo '</div>' ;
+
+		} else {
+			echo GUI::pie_tiny( 0, 24, 
+				__( 'Congratulation! Your file was already optmized', 'litespeed-cache' ),
+				'left'
+			) ;
+			echo sprintf( __( 'Orig %s', 'litespeed-cache' ), '<span class="litespeed-desc">' . __( '(no savings)', 'litespeed-cache' ) . '</span>' ) ;
 		}
+		echo '</p>';
+
+		echo '<p>';
+		// WebP info
+		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
+			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
+
+			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
+			$desc = false ;
+
+			if ( $this->info( $short_path . '.webp', $post_id ) ) {
+				$curr_status = __( '(optm)', 'litespeed-cache' ) ;
+				$desc = __( 'Currently using optimized version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' ) ;
+			}
+			elseif ( $this->info( $short_path . '.optm.webp', $post_id ) ) {
+				$cls .= ' litespeed-warning' ;
+				$curr_status = __( '(non-optm)', 'litespeed-cache' ) ;
+				$desc = __( 'Currently using original (unoptimized) version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
+			}
+
+			echo GUI::pie_tiny( $percent, 24, 
+				sprintf( __( 'WebP file reduced by %1$s (%2$s)', 'litespeed-cache' ), 
+					$percent . '%',
+					Utility::real_size( $size_meta[ 'ori_saved' ] )
+				) , 'left'
+			) ;
+			echo sprintf( __( 'WebP saved %s', 'litespeed-cache' ), $percent . '%' ) ;
+
+			if ( $desc ) {
+				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2s$s" data-balloon-pos="left" data-balloon-break  aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
+			}
+			else {
+				echo sprintf( 
+					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
+					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of unoptimized WebP file exists.', 'litespeed-cache' ), 
+					__( '(optm)', 'litespeed-cache' ) 
+				) ;
+			}
+
+		} else {
+			
+			echo __( 'WebP', 'litespeed-cache' ) . '<span class="litespeed-left10">—</span>';
+		}
+
+		echo '</p>';
 
 		// Delete row btn
 		if ( $size_meta ) {
-			echo '<div><div class="litespeed-text-dimgray litespeed-text-center">' . __( 'Reset', 'litespeed-cache' ) . '</div>' ;
-			echo sprintf( '<div class="litespeed-media-p"><a href="%1$s" class="">%2$s</a></div>',
+
+			echo sprintf( '<div class="row-actions"><span class="delete"><a href="%1$s" class="">%2$s</a></span></div>',
 				Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
-				'<span class="dashicons dashicons-trash dashicons-large litespeed-warning litespeed-dashicons-large"></span>'
+				__( 'Restore from backup', 'litespeed-cache' )
 			) ;
 			echo '</div>' ;
 		}

@@ -946,6 +946,17 @@ h3 .litespeed-learn-more {
 	vertical-align: middle;
 }
 
+.litespeed-btn-pie {
+	-webkit-appearance: none;
+	background: none;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 0;
+	margin: 0;
+	top: -0.125em;
+}
+
 /* =======================================
    BUTTONS - sizes
 ======================================= */
@@ -1455,7 +1466,7 @@ ul.litespeed-shell-body {
 	color: #dc3232;
 }
 
-.litespeed-callout-bg{
+.litespeed-callout-bg {
 	margin: 1.5rem 0;
 	background: #f9f9f9;
 	border-top: none;
@@ -1912,8 +1923,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	line-height: 1.3125;
 	box-shadow: 1px 1px 0.5em rgba(0, 0, 0, 0.3);
 	margin: 0.5em 1em 1em 0;
-	max-width: 100%;
 	padding: 1em;
+	max-width: 480px;
+	display: flex;
 }
 
 .litespeed-tweet-preview:after {
@@ -1945,8 +1957,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	margin-top: 1em;
 }
 
+
 .litespeed-tweet-cta a {
-	background-color: rgb(29, 161, 242);
+	background-color: #1DA1F2;
 	line-height: 1.3125;
 	color: #fff;
 	font-weight: bold;
@@ -1955,6 +1968,10 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	font-size: 14px;
 	border-radius: 99em;
 	text-decoration: none;
+}
+
+.litespeed-tweet-cta a:hover {
+	background-color: #1E98E1;
 }
 
 .litespeed-tweet-cta a svg {
@@ -1967,9 +1984,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 }
 
 .litespeed-tweet-img {
-	float: left;
-	width: 200px;
-	margin-right: 1rem;
+	max-width: calc(200px + 1rem);
+	padding-right: 1rem;
+	box-sizing: border-box;
 }
 
 .litespeed-tweet-img img {
@@ -2057,6 +2074,7 @@ p.litespeed-txt-disabled {
 	margin: 5px 5px 5px 0;
 }
 
+
 circle.litespeed-pie_bg {
 	stroke: #efefef;
 	stroke-width: 2;
@@ -2074,6 +2092,30 @@ circle.litespeed-pie_circle {
 	stroke-width: 2;
 	stroke-linecap: round;
 	fill: none;
+}
+
+
+.litespeed-pie.litespeed-pie-tiny {
+	margin: 0 2px 0 0;
+}
+
+.litespeed-pie.litespeed-pie-tiny text {
+	font-weight: bold;
+	fill: #828282;
+
+}
+
+.litespeed-pie.litespeed-pie-tiny circle {
+	stroke-linecap: initial;
+}
+
+.litespeed-pie-tiny circle.litespeed-pie_bg,
+.litespeed-pie-tiny circle.litespeed-pie_circle {
+	stroke-width: 3;
+}
+
+.litespeed-pie-tiny circle.litespeed-pie_bg {
+	stroke: #eee;
 }
 
 .litespeed-pie-success circle.litespeed-pie_circle {
@@ -2357,6 +2399,11 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding: 0.35em 0.85em;
 	min-width: 210px;
 	text-align: center;
+}
+
+.imgoptm.column-imgoptm p {
+	margin-bottom: 0.25em;
+	margin-top: 0;
 }
 
 /* =======================================
@@ -2674,6 +2721,15 @@ a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 
 .litespeed-score-col--imp .litespeed-text-jumbo {
 	line-height: 1;
+}
+
+a[data-balloon-pos],
+span[data-balloon-pos] {
+	border-bottom: 1px dashed;
+}
+
+.litespeed-media-href {
+	font-size: 12px;
 }
 
 /********************************* todo *******************************/
