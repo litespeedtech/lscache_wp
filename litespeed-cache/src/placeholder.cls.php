@@ -68,9 +68,44 @@ class Placeholder extends Base
 	public function after_admin_init()
 	{
 		if ( $this->_conf_placeholder_lqip ) {
-			add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
+			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
+			add_action( 'litespeed_media_row_lqip', array( $this, 'media_row_con' ) );
 		}
 	}
+
+	/**
+	 * Media Admin Menu -> LQIP col
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function media_row_title( $posts_columns )
+	{
+		$posts_columns[ 'lqip' ] = __( 'LQIP', 'litespeed-cache' );
+
+		return $posts_columns;
+	}
+
+	/**
+	 * Media Admin Menu -> LQIP Column
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function media_row_actions( $column_name, $post_id )
+	{
+		if ( $column_name !== 'lqip' ) {
+			return;
+		}
+
+		echo '<div class="litespeed-flex-container">';
+
+		do_action( 'litespeed_media_row_lqip', $post_id );
+
+		echo '</div> ';
+	}
+
 
 	/**
 	 * Display LQIP column

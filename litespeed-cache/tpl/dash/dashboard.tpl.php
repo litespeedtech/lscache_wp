@@ -60,7 +60,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 		foreach ( $cat_list as $svc => $title ) :
 			$finished_percentage = 0;
-			$used = $quota = $pag_used = $pag_total = '-';
+			$total_used = $used = $quota = $pag_used = $pag_total = '-';
 			$pag_width = 0;
 			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
 				$finished_percentage = floor( $cloud_summary[ 'usage.' . $svc ][ 'used' ] * 100 / $cloud_summary[ 'usage.' . $svc ][ 'quota' ] );
@@ -69,6 +69,9 @@ $placeholder_summary = Placeholder::get_summary();
 				$pag_used = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] : 0;
 				$pag_bal = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] : 0;
 				$pag_total = $pag_used + $pag_bal;
+				if ( ! empty( $cloud_summary[ 'usage.' . $svc ][ 'total_used' ] ) ) {
+					$total_used = $cloud_summary[ 'usage.' . $svc ][ 'total_used' ];
+				}
 
 				if ( $pag_total ) {
 					$pag_width = round( $pag_used / $pag_total * 100 ) . '%';
@@ -122,7 +125,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 					<?php if ( $svc == 'img_optm' ) { ?>
 						<p class="litespeed-dashboard-stats-total">
-							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $cloud_summary[ 'usage.' . $svc ][ 'total_used' ]; ?> / ∞</strong>
+							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $total_used; ?> / ∞</strong>
 							<button class="litespeed-info-button" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>" data-balloon-pos="up">
 								<span class="dashicons dashicons-info"></span>
 							</button>
