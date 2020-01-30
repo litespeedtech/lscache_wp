@@ -52,17 +52,17 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<?php else : ?>
 					<span class="litespeed-quic-icon"></span>
 				<?php endif ; ?>
-				<?php echo __('Use QUIC.cloud Image Optimizaton Server to optimize your images', 'litespeed-cache' );?>
+				<?php echo __('Optimize images with our cloud server', 'litespeed-cache' );?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</h3>
 
 			<p>
-				<?php echo sprintf( __( 'You can post %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
+				<?php echo sprintf( __( 'You can post max %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
 			</p>
 
 			<?php if ( $wet_limit ) : ?>
-			<p>
-				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything worksfine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
+			<p class="litespeed-desc">
+				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
 				<?php echo __( 'Current limit is', 'litespeed-cache' ) . ': <strong>' . $wet_limit . '</strong>'; ?>
 			</p>
 			<?php endif; ?>
@@ -75,10 +75,10 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						href='javascript:;' disabled
 					<?php endif ; ?>
 					>
-					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo $need_gather ? __( 'Gather Images', 'litespeed-cache' ) : __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
+					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo $need_gather ? __( 'Gather Image Data', 'litespeed-cache' ) : __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 				</a>
 
-				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-long data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
+				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"
 					<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_NOTIFIED ] ) && ! $is_running ) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_PULL ) ; ?>"
 					<?php else : ?>
@@ -214,11 +214,13 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 				<hr class="litespeed-hr-with-space">
 				<div>
-					<h4><?php echo __( 'Delete all backups of the original images.', 'litespeed-cache' ) ; ?></h4>
-					<p class="litespeed-danger">
-						🚨&nbsp;<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
-						<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
-					</p>
+					<h4><?php echo __( 'Delete all backups of the original images', 'litespeed-cache' ) ; ?></h4>
+					<div class="notice notice-error litespeed-callout-bg inline">
+						<p>
+							🚨&nbsp;<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+							<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
+						</p>
+					</div>
 
 				</div>
 				<?php if ( ! empty( $optm_summary[ 'rmbk_summary' ] ) ) : ?>
@@ -303,7 +305,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				</div>
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-				<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESCAN ) ; ?>" class="" data-balloon-pos="up" data-balloon-long aria-label="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
+				<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESCAN ) ; ?>" class="" data-balloon-pos="up" data-balloon-length="large" aria-label="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
 					<?php echo __( 'Rescan New Thumbnails', 'litespeed-cache' ) ; ?>
 				</a>
 			</div>

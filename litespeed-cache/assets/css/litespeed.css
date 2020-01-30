@@ -294,7 +294,8 @@
 	color: #dc3545 !important;
 }
 
-a.litespeed-danger:hover {
+a.litespeed-danger:hover,
+button.litespeed-danger:hover {
 	color: #a00 !important;
 }
 
@@ -306,6 +307,10 @@ a.litespeed-danger:hover {
 	color: #1a9292 !important;
 }
 
+a.litespeed-form-action:hover,
+button.litespeed-form-action:hover {
+	color: #36b0af !important;
+}
 
 .litespeed-bg-default {
 	background-color: #a7a7a7 !important;
@@ -946,6 +951,17 @@ h3 .litespeed-learn-more {
 	vertical-align: middle;
 }
 
+.litespeed-btn-pie {
+	-webkit-appearance: none;
+	background: none;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 0;
+	margin: 0;
+	top: -0.125em;
+}
+
 /* =======================================
    BUTTONS - sizes
 ======================================= */
@@ -1455,6 +1471,14 @@ ul.litespeed-shell-body {
 	color: #dc3232;
 }
 
+.litespeed-callout-bg {
+	margin: 1.5rem 0;
+	background: #f9f9f9;
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+}
+
 /* =======================================
 			TICK / CHECKBOX
 ======================================= */
@@ -1756,6 +1780,12 @@ input.litespeed-input-warning {
 	vertical-align: baseline;
 }
 
+.litespeed-wrap .button:not(.litespeed-btn-large).litespeed-form-action .dashicons {
+	font-size: 1.2em;
+	vertical-align: middle;
+	top: 0;
+}
+
 /* =======================================
 		   ENTERPRISE NOTICE
 ======================================= */
@@ -1904,8 +1934,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	line-height: 1.3125;
 	box-shadow: 1px 1px 0.5em rgba(0, 0, 0, 0.3);
 	margin: 0.5em 1em 1em 0;
-	max-width: 100%;
 	padding: 1em;
+	max-width: 480px;
+	display: flex;
 }
 
 .litespeed-tweet-preview:after {
@@ -1937,8 +1968,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	margin-top: 1em;
 }
 
+
 .litespeed-tweet-cta a {
-	background-color: rgb(29, 161, 242);
+	background-color: #1DA1F2;
 	line-height: 1.3125;
 	color: #fff;
 	font-weight: bold;
@@ -1949,8 +1981,13 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 	text-decoration: none;
 }
 
+.litespeed-tweet-cta a:hover {
+	background-color: #1E98E1;
+}
+
 .litespeed-tweet-cta a svg {
-	max-height: 18px;
+	width: 16px;
+    height: 18px;
 	margin-right: 0.5em;
 }
 
@@ -1959,9 +1996,9 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 }
 
 .litespeed-tweet-img {
-	float: left;
-	width: 200px;
-	margin-right: 1rem;
+	width: calc(240px + 1rem);
+	padding-right: 1rem;
+	box-sizing: border-box;
 }
 
 .litespeed-tweet-img img {
@@ -2049,6 +2086,7 @@ p.litespeed-txt-disabled {
 	margin: 5px 5px 5px 0;
 }
 
+
 circle.litespeed-pie_bg {
 	stroke: #efefef;
 	stroke-width: 2;
@@ -2066,6 +2104,30 @@ circle.litespeed-pie_circle {
 	stroke-width: 2;
 	stroke-linecap: round;
 	fill: none;
+}
+
+
+.litespeed-pie.litespeed-pie-tiny {
+	margin: 0 2px 0 0;
+}
+
+.litespeed-pie.litespeed-pie-tiny text {
+	font-weight: bold;
+	fill: #828282;
+
+}
+
+.litespeed-pie.litespeed-pie-tiny circle {
+	stroke-linecap: initial;
+}
+
+.litespeed-pie-tiny circle.litespeed-pie_bg,
+.litespeed-pie-tiny circle.litespeed-pie_circle {
+	stroke-width: 3;
+}
+
+.litespeed-pie-tiny circle.litespeed-pie_bg {
+	stroke: #eee;
 }
 
 .litespeed-pie-success circle.litespeed-pie_circle {
@@ -2344,9 +2406,41 @@ g.litespeed-pie_info .litespeed-pie-done {
 }
 
 .litespeed-img-optim-actions .button-primary {
-	font-size: 1.1em;
+	font-size: 1.2em;
 	margin-right: 1em;
-	padding: 0.25em 0.75em;
+	padding: 0.35em 0.85em;
+	min-width: 210px;
+	text-align: center;
+}
+
+/* =======================================
+	VIEW - image optm media row
+======================================= */
+
+.imgoptm.column-imgoptm a[data-balloon-pos] {
+	border-bottom:1px dashed;
+}
+
+.imgoptm.column-imgoptm p {
+	margin-bottom: 0.25em;
+	margin-top: 0;
+}
+
+.imgoptm.column-imgoptm p+.row-actions {
+	margin-top: 0.5em;
+}
+
+.fixed .column-lqip {
+	width: 6rem;
+}
+
+.litespeed-media-lqip img {
+	max-width: 62px;
+	max-height: 62px;
+}
+
+.litespeed-media-href {
+	font-size: 12px;
 }
 
 /* =======================================
@@ -2608,12 +2702,12 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding-right: 5px;
 }
 
-a.litespeed-link-with-icon {
+.litespeed-link-with-icon {
 	text-decoration: underline;
 	margin-right: 0.25em;
 }
 
-a.litespeed-link-with-icon .dashicons {
+.litespeed-link-with-icon .dashicons {
 	vertical-align: baseline;
 	position: relative;
 	top: 0.1em;
@@ -2623,7 +2717,7 @@ a.litespeed-link-with-icon .dashicons {
 	margin-right: 0.5em;
 }
 
-a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
+.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 	margin-left: 0.5em;
 	margin-right: 0;
 }
@@ -2647,6 +2741,33 @@ a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 	margin-left: 0.5em;
 	margin-right: 0;
 }
+
+.litespeed-score-col {
+	flex-grow: 1;
+	padding-right: 15px;
+}
+
+.litespeed-score-col .litespeed-text-md {
+	font-size: 1.35rem;
+}
+
+.litespeed-score-col.litespeed-score-col--imp {
+	text-align: right;
+	padding-right: 0;
+}
+
+.litespeed-score-col--imp .litespeed-text-jumbo {
+	line-height: 1;
+}
+
+span[data-balloon-pos] {
+	border-bottom: 1px dashed;
+}
+
+span[aria-label][data-balloon-pos] {
+	cursor: default;
+}
+
 
 /********************************* todo *******************************/
 
@@ -3068,12 +3189,6 @@ button[aria-label][data-balloon-pos] {
 	white-space: nowrap;
 	z-index: 10;
 	line-height: 1.4;
-}
-
-[aria-label][data-balloon-long]:after {
-	max-width: 310px;
-	width: 95vw;
-	white-space: initial;
 }
 
 [aria-label][data-balloon-pos]:before {

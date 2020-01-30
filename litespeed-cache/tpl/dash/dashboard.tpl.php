@@ -154,39 +154,34 @@ $placeholder_summary = Placeholder::get_summary();
 					</h3>
 
 					<div>
-						<div class="litespeed-row-flex" style="margin-left: -10px;">
+						<div class="litespeed-flex-container">
+
 							<?php if ( $health_scores[ 'speed_before' ] ) : ?>
-							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-								<div>
-									<p class="litespeed-text-grey litespeed-margin-y-remove">
+								<div class="litespeed-score-col">
+									<p class="litespeed-text-grey">
 										<?php echo __( 'Before', 'litespeed-cache' ); ?>
 									</p>
-								</div>
-								<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-grey">
-									<?php echo $health_scores[ 'speed_before' ]; ?><span class="litespeed-text-large">s</span>
-								</div>
+									<div class="litespeed-text-md litespeed-text-grey">
+										<?php echo $health_scores[ 'speed_before' ]; ?><span class="litespeed-text-large">s</span>
+									</div>
 
-							</div>
-							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-								<div>
-									<p class="litespeed-text-grey litespeed-margin-y-remove">
+								</div>
+								<div class="litespeed-score-col">
+									<p class="litespeed-text-grey">
 										<?php echo __( 'After', 'litespeed-cache' ); ?>
 									</p>
+									<div class="litespeed-text-md litespeed-text-success">
+										<?php echo $health_scores[ 'speed_after' ]; ?><span class="litespeed-text-large">s</span>
+									</div>
 								</div>
-								<div class="litespeed-top10 litespeed-text-jumbo litespeed-success">
-									<?php echo $health_scores[ 'speed_after' ]; ?><span class="litespeed-text-large">s</span>
-								</div>
-							</div>
-							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
-								<div>
-									<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
+								<div class="litespeed-score-col litespeed-score-col--imp">
+									<p class="litespeed-text-grey" style="white-space: nowrap;">
 										<?php echo __( 'Improved by', 'litespeed-cache' ); ?>
 									</p>
+									<div class="litespeed-text-jumbo litespeed-text-success">
+										<?php echo $health_scores[ 'speed_improved' ]; ?><span class="litespeed-text-large">%</span>
+									</div>
 								</div>
-								<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
-									<?php echo $health_scores[ 'speed_improved' ]; ?><span class="litespeed-text-large">%</span>
-								</div>
-							</div>
 							<?php endif; ?>
 
 						</div>
