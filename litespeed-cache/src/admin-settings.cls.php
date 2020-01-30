@@ -120,7 +120,7 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
-					foreach ( $data as $k => $v ) {
+					if ( $data ) foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
 							$v = Utility::sanitize_lines( $v );
 						}
@@ -160,7 +160,7 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					foreach ( $data as $k => $v ) {
+					if ( $data ) foreach ( $data as $k => $v ) {
 						if ( $child == self::CRWL_COOKIE_VALS ) {
 							$v = Utility::sanitize_lines( $v );
 						}
