@@ -128,11 +128,15 @@ class GUI extends Base
 	 */
 	public static function pie_tiny( $percent, $width = 50, $tooltip = '', $tooltip_pos = 'up', $append_cls = false )
 	{
+
+		// formula C = 2πR
+		$dasharray = 2 * 3.1416 * 9 * ( $percent / 100 );
+
 		return "
 		<button type='button' data-balloon-break data-balloon-pos='$tooltip_pos' aria-label='$tooltip' class='litespeed-btn-pie'>
 		<svg class='litespeed-pie litespeed-pie-tiny $append_cls' viewbox='0 0 30 30' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
 			<circle class='litespeed-pie_bg' cx='15' cy='15' r='9' />
-			<circle class='litespeed-pie_circle' cx='15' cy='15' r='9' stroke-dasharray='$percent,100' />
+			<circle class='litespeed-pie_circle' cx='15' cy='15' r='9' stroke-dasharray='$dasharray,100' />
 			<g class='litespeed-pie_info'><text x='50%' y='50%'>i</text></g>
 		</svg>
 		</button>

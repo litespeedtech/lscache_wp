@@ -2410,6 +2410,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 0;
 }
 
+.imgoptm.column-imgoptm p+.row-actions {
+	margin-top: 0.5em;
+}
+
 .fixed .column-lqip {
 	width: 6rem;
 }
@@ -2417,6 +2421,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 .litespeed-media-lqip img {
 	max-width: 62px;
 	max-height: 62px;
+}
+
+.litespeed-media-href {
+	font-size: 12px;
 }
 
 /* =======================================
@@ -2741,9 +2749,10 @@ span[data-balloon-pos] {
 	border-bottom: 1px dashed;
 }
 
-.litespeed-media-href {
-	font-size: 12px;
+span[aria-label][data-balloon-pos] {
+	cursor: default;
 }
+
 
 /********************************* todo *******************************/
 
