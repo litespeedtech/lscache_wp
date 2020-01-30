@@ -112,8 +112,8 @@ $this->form_action() ;
 
 		<?php endforeach ; ?>
 
-			<p><button type="button" class="button litespeed-form-action button-link litespeed-collection-button" id="litespeed-cdn-mapping-add" data-action="add">
-				<span class="dashicons dashicons-plus-alt"></span><span class="screen-reader-text"><?php echo __( 'Add new CDN url', 'litespeed-cache' );?></span>
+			<p><button type="button" class="button button-link litespeed-form-action litespeed-link-with-icon" id="litespeed-cdn-mapping-add" data-action="add">
+				<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new CDN url', 'litespeed-cache' );?>
 			</button></p>
 
 			<div class="litespeed-warning">

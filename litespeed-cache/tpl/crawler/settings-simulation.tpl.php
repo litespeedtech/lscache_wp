@@ -55,9 +55,8 @@ $this->form_action();
 				</div>
 
 				<p>
-					<button type="button" @click='add_row' class="button button-link litespeed-collection-button litespeed-form-action" data-action="add">
-						<span class="dashicons dashicons-plus-alt"></span>
-						<span class="screen-reader-text"><?php echo __( 'Add new cookie simulation', 'litespeed-cache' ) ;?></span>
+					<button type="button" @click='add_row' class="button button-link litespeed-form-action litespeed-link-with-icon" data-action="add">
+						<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new cookie simulation', 'litespeed-cache' ) ;?>
 					</button>
 				</p>
 

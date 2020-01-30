@@ -294,7 +294,8 @@
 	color: #dc3545 !important;
 }
 
-a.litespeed-danger:hover {
+a.litespeed-danger:hover,
+button.litespeed-danger:hover {
 	color: #a00 !important;
 }
 
@@ -306,6 +307,10 @@ a.litespeed-danger:hover {
 	color: #1a9292 !important;
 }
 
+a.litespeed-form-action:hover,
+button.litespeed-form-action:hover {
+	color: #36b0af !important;
+}
 
 .litespeed-bg-default {
 	background-color: #a7a7a7 !important;
@@ -1775,6 +1780,12 @@ input.litespeed-input-warning {
 	vertical-align: baseline;
 }
 
+.litespeed-wrap .button:not(.litespeed-btn-large).litespeed-form-action .dashicons {
+	font-size: 1.2em;
+	vertical-align: middle;
+	top: 0;
+}
+
 /* =======================================
 		   ENTERPRISE NOTICE
 ======================================= */
@@ -1975,7 +1986,8 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 }
 
 .litespeed-tweet-cta a svg {
-	max-height: 18px;
+	width: 16px;
+    height: 18px;
 	margin-right: 0.5em;
 }
 
@@ -1984,7 +1996,7 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 }
 
 .litespeed-tweet-img {
-	max-width: calc(200px + 1rem);
+	width: calc(240px + 1rem);
 	padding-right: 1rem;
 	box-sizing: border-box;
 }
@@ -2405,6 +2417,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	VIEW - image optm media row
 ======================================= */
 
+.imgoptm.column-imgoptm a[data-balloon-pos] {
+	border-bottom:1px dashed;
+}
+
 .imgoptm.column-imgoptm p {
 	margin-bottom: 0.25em;
 	margin-top: 0;
@@ -2686,12 +2702,12 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding-right: 5px;
 }
 
-a.litespeed-link-with-icon {
+.litespeed-link-with-icon {
 	text-decoration: underline;
 	margin-right: 0.25em;
 }
 
-a.litespeed-link-with-icon .dashicons {
+.litespeed-link-with-icon .dashicons {
 	vertical-align: baseline;
 	position: relative;
 	top: 0.1em;
@@ -2701,7 +2717,7 @@ a.litespeed-link-with-icon .dashicons {
 	margin-right: 0.5em;
 }
 
-a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
+.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 	margin-left: 0.5em;
 	margin-right: 0;
 }
@@ -2744,7 +2760,6 @@ a.litespeed-link-with-icon.litespeed-icon-right .dashicons {
 	line-height: 1;
 }
 
-a[data-balloon-pos],
 span[data-balloon-pos] {
 	border-bottom: 1px dashed;
 }
