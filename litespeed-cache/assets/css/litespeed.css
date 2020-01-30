@@ -2401,9 +2401,22 @@ g.litespeed-pie_info .litespeed-pie-done {
 	text-align: center;
 }
 
+/* =======================================
+	VIEW - image optm media row
+======================================= */
+
 .imgoptm.column-imgoptm p {
 	margin-bottom: 0.25em;
 	margin-top: 0;
+}
+
+.fixed .column-lqip {
+	width: 6rem;
+}
+
+.litespeed-media-lqip img {
+	max-width: 62px;
+	max-height: 62px;
 }
 
 /* =======================================

@@ -292,12 +292,16 @@ class Media extends Instance
 			}
 
 
-		} else {
+		} 
+		elseif ( $size_meta && $size_meta[ 'ori_saved' ] === 0 ){
 			echo GUI::pie_tiny( 0, 24, 
 				__( 'Congratulation! Your file was already optmized', 'litespeed-cache' ),
 				'left'
 			) ;
 			echo sprintf( __( 'Orig %s', 'litespeed-cache' ), '<span class="litespeed-desc">' . __( '(no savings)', 'litespeed-cache' ) . '</span>' ) ;
+		}
+		else {
+			echo __( 'Orig', 'litespeed-cache' ) . '<span class="litespeed-left10">—</span>';
 		}
 		echo '</p>';
 
@@ -308,6 +312,8 @@ class Media extends Instance
 
 			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
 			$desc = false ;
+
+			$cls = '' ;
 
 			if ( $this->info( $short_path . '.webp', $post_id ) ) {
 				$curr_status = __( '(optm)', 'litespeed-cache' ) ;
@@ -339,7 +345,6 @@ class Media extends Instance
 			}
 
 		} else {
-			
 			echo __( 'WebP', 'litespeed-cache' ) . '<span class="litespeed-left10">—</span>';
 		}
 

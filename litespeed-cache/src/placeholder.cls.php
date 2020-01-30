@@ -99,11 +99,8 @@ class Placeholder extends Base
 			return;
 		}
 
-		echo '<div class="litespeed-flex-container">';
-
 		do_action( 'litespeed_media_row_lqip', $post_id );
 
-		echo '</div> ';
 	}
 
 
@@ -121,7 +118,7 @@ class Placeholder extends Base
 			return;
 		}
 
-		echo '<div><div class="litespeed-text-dimgray litespeed-text-center">LQIP</div>' ;
+		$total_files = 0;
 
 		// List all sizes
 		$all_sizes = array( $meta_value[ 'file' ] ) ;
@@ -136,20 +133,30 @@ class Placeholder extends Base
 			if ( is_dir( $lqip_folder ) ) {
 				Log::debug( '[LQIP] Found folder: ' . $short_path ) ;
 
+
+
 				// List all files
 				foreach ( scandir( $lqip_folder ) as $v ) {
 					if ( $v == '.' || $v == '..' ) {
 						continue ;
 					}
 
-					echo '<div class="litespeed-media-p"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
+					if ( $total_files == 0 ) {
+						echo '<div class="litespeed-media-lqip"><img src="' . File::read( $lqip_folder . '/' . $v ) . '" alt="' . sprintf( __( 'LQIP image preview for size %s', 'litespeed-cache' ), $v ) .'"></div>'; 
+					}
+
+					echo '<div class="litespeed-media-size"><a href="' . File::read( $lqip_folder . '/' . $v ) . '" target="_blank">' . $v . '</a></div>' ;
+
+					$total_files++;
 				}
 
 			}
 		}
 
+		if ( $total_files == 0 ) {
+			echo '—';
+		}
 
-		echo '</div>' ;
 	}
 
 	/**
