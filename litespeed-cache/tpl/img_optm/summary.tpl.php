@@ -75,7 +75,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						href='javascript:;' disabled
 					<?php endif ; ?>
 					>
-					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo $need_gather ? __( 'Gather Images', 'litespeed-cache' ) : __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
+					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo $need_gather ? __( 'Gather Image Data', 'litespeed-cache' ) : __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 				</a>
 
 				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-long data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>"

@@ -2355,6 +2355,8 @@ g.litespeed-pie_info .litespeed-pie-done {
 	font-size: 1.2em;
 	margin-right: 1em;
 	padding: 0.35em 0.85em;
+	min-width: 210px;
+	text-align: center;
 }
 
 /* =======================================
