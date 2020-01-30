@@ -3191,12 +3191,6 @@ button[aria-label][data-balloon-pos] {
 	line-height: 1.4;
 }
 
-[aria-label][data-balloon-long]:after {
-	max-width: 310px;
-	width: 95vw;
-	white-space: initial;
-}
-
 [aria-label][data-balloon-pos]:before {
 	width: 0;
 	height: 0;
