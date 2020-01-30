@@ -123,6 +123,7 @@ class Report extends Base
 		) ;
 
 		$extras[ 'active plugins' ] = $active_plugins ;
+		$extras[ 'cloud' ] = Cloud::get_summary();
 
 		if ( is_null($options) ) {
 			$options = Conf::get_instance()->get_options() ;
