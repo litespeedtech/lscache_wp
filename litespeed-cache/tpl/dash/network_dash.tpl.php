@@ -32,6 +32,7 @@ foreach ( $blogs as $blog_id ) {
 
 			foreach ( $cat_list as $svc => $title ) :
 				$finished_percentage = 0;
+				$total_used = $used = $quota = $pag_used = $pag_total = '-';
 				$used = $quota = $pag_used = $pag_total = '-';
 				$pag_width = 0;
 				if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
@@ -53,26 +54,59 @@ foreach ( $blogs as $blog_id ) {
 						$pag_total = Utility::real_size( $pag_total * 1024 * 1024 );
 					}
 				}
+
+				$percentage_bg = 'success';
+				if( $finished_percentage > 95 ){
+					$percentage_bg = 'danger';
+				} elseif ( $finished_percentage > 85 ){
+					$percentage_bg = 'warning';
+				}
+
 			?>
+
+
 				<div class="postbox litespeed-postbox">
 					<div class="inside">
 						<h3 class="litespeed-title"><?php echo $title; ?></h3>
 
 						<div class="litespeed-flex-container">
-							<div class="litespeed-icon-vertical-middle">
-								<?php echo GUI::pie( $finished_percentage, 70, true ) ; ?>
+							<div class="litespeed-icon-vertical-middle litespeed-pie-<?php echo $percentage_bg;?>">
+								<?php echo GUI::pie( $finished_percentage, 60, false ); ?>
 							</div>
 							<div>
 								<div class="litespeed-dashboard-stats">
-									<h3><?php echo __('Used','litespeed-cache'); ?></h3>
-									<p><strong><?php echo $used; ?></strong> <span class="litespeed-desc">of <?php echo $quota; ?></span></p>
-									<p class="litespeed-desc" style="background-color: pink;" title="Pay As You Go"><span style="background-color: cyan;width: <?php echo $pag_width; ?>"><?php echo $pag_used; ?> / <?php echo $pag_total; ?><span></p>
+									<h3><?php echo ( $svc == 'img_optm' ? __('Fast Queue Usage','litespeed-cache') : __( 'Usage', 'litespeed-cache' ) ); ?></h3>
+									<p>
+										<strong><?php echo $used; ?></strong>
+										<?php if( $used != $quota ) { ?>
+											<span class="litespeed-desc"> of <?php echo $quota; ?></span>
+										<?php } ?>
+									</p>
 								</div>
 							</div>
 						</div>
+						<?php if ( $pag_total > 0 ) { ?>
+							<p class="litespeed-dashboard-stats-payg" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
+								<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
+								<button class="litespeed-info-button" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>" data-balloon-pos="up">
+									<span class="dashicons dashicons-info"></span>
+									<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
+								</button>
+							</p>
+						<?php } ?>
 
+						<?php if ( $svc == 'img_optm' ) { ?>
+							<p class="litespeed-dashboard-stats-total">
+								<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $total_used; ?> / ∞</strong>
+								<button class="litespeed-info-button" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>" data-balloon-pos="up">
+									<span class="dashicons dashicons-info"></span>
+								</button>
+							</p>
+							<div class="clear"></div>
+						<?php } ?>
 					</div>
 				</div>
+
 			<?php endforeach; ?>
 	</div>
 
