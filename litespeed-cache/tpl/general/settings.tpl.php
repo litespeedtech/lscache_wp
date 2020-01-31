@@ -34,7 +34,7 @@ $this->form_action();
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id, null, $api_key_val ); ?>
+			<?php $this->build_input( $id, null, defined( 'LITESPEED_NEW_API_KEY' ) ? $api_key_val : null ); ?>
 			<?php if ( defined( 'LITESPEED_NEW_API_KEY' ) ) : ?>
 				<span class="litespeed-danger"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
 			<?php endif; ?>

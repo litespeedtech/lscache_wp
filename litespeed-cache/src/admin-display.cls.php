@@ -733,6 +733,11 @@ class Admin_Display extends Base
 	{
 		if ( $val === null ) {
 			$val = Conf::val( $id ) ;
+
+			// Mask pswds
+			if ( $this->_conf_pswd( $id ) && $val ) {
+				$val = str_repeat( '*', strlen( $val ) );
+			}
 		}
 
 		$label_id = preg_replace( '|\W|', '', $id ) ;
