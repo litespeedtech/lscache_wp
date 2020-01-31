@@ -889,7 +889,7 @@ class Admin_Display extends Base
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
 				$val = esc_textarea( $val ) ;
-				$val = '<div class="litespeed-desc">'.__( 'Recommended value', 'litespeed-cache' ) . ':</div>'."<textarea readonly rows='5' cols='30' class='litespeed-left10'>$val</textarea>" ;
+				$val = '<div class="litespeed-desc">'.__( 'Recommended value', 'litespeed-cache' ) . ':</div>'."<textarea readonly rows='5' cols='30'>$val</textarea>" ;
 			}
 			else {
 				$val = esc_textarea( $val ) ;

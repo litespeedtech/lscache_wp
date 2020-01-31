@@ -40,7 +40,7 @@ $this->form_action();
 			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with our QUIC.cloud servers.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link', true ); ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), '', true ); ?>
 			</div>
 		</td>
 	</tr>
