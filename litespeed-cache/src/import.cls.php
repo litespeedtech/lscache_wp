@@ -45,7 +45,7 @@ class Import extends Base
 	public function export( $only_data_return = false )
 	{
 
-		$data = $this->__cfg->get_options() ;
+		$data = $this->__cfg->get_options( true );
 
 		$data = base64_encode( json_encode( $data ) ) ;
 

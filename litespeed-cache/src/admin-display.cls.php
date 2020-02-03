@@ -703,7 +703,7 @@ class Admin_Display extends Base
 	public function build_textarea( $id, $cols = false, $val = null )
 	{
 		if ( $val === null ) {
-			$val = Conf::val( $id ) ;
+			$val = Conf::val( $id, true ) ;
 
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
@@ -717,6 +717,8 @@ class Admin_Display extends Base
 		$this->enroll( $id ) ;
 
 		echo "<textarea name='$id' rows='5' cols='$cols'>" . esc_textarea( $val ) . "</textarea>" ;
+
+		$this->_check_const_overwritten( $id );
 	}
 
 	/**
@@ -732,7 +734,7 @@ class Admin_Display extends Base
 	public function build_input( $id, $cls = null, $val = null, $type = 'text' )
 	{
 		if ( $val === null ) {
-			$val = Conf::val( $id ) ;
+			$val = Conf::val( $id, true ) ;
 
 			// Mask pswds
 			if ( $this->_conf_pswd( $id ) && $val ) {
@@ -749,6 +751,8 @@ class Admin_Display extends Base
 		$this->enroll( $id ) ;
 
 		echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> " ;
+
+		$this->_check_const_overwritten( $id );
 	}
 
 	/**
@@ -762,7 +766,7 @@ class Admin_Display extends Base
 	 */
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
-		if ( $checked === null && Conf::val( $id ) ) {
+		if ( $checked === null && Conf::val( $id, true ) ) {
 			$checked = true ;
 		}
 		$checked = $checked ? ' checked ' : '' ;
@@ -779,6 +783,8 @@ class Admin_Display extends Base
 			<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
 			<label for='input_checkbox_$label_id'>$title</label>
 		</div>" ;
+
+		$this->_check_const_overwritten( $id );
 	}
 
 	/**
@@ -788,7 +794,7 @@ class Admin_Display extends Base
 	 */
 	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
 	{
-		if ( $checked === null && Conf::val( $id ) ) {
+		if ( $checked === null && Conf::val( $id, true ) ) {
 			$checked = true ;
 		}
 
@@ -809,6 +815,8 @@ class Admin_Display extends Base
 					<span class='litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default'></span>
 				</div>
 			</div>" ;
+
+		$this->_check_const_overwritten( $id );
 	}
 
 	/**
@@ -827,6 +835,8 @@ class Admin_Display extends Base
 		$this->build_radio( $id, Base::VAL_ON ) ;
 
 		echo '</div>' ;
+
+		$this->_check_const_overwritten( $id );
 	}
 
 	/**
@@ -852,15 +862,40 @@ class Admin_Display extends Base
 		}
 
 		if ( ! is_string( self::$_default_options[ $id ] ) ) {
-			$checked = (int) Conf::val( $id ) === (int) $val ? ' checked ' : '' ;
+			$checked = (int) Conf::val( $id, true ) === (int) $val ? ' checked ' : '' ;
 		}
 		else {
-			$checked = Conf::val( $id ) === $val ? ' checked ' : '' ;
+			$checked = Conf::val( $id, true ) === $val ? ' checked ' : '' ;
 		}
 
 		$this->enroll( $id ) ;
 
 		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+	}
+
+	/**
+	 * Show overwritten msg if there is a const defined
+	 *
+	 * @since  3.0
+	 */
+	private function _check_const_overwritten( $id )
+	{
+		$val = $this->__cfg->const_overwritten( $id );
+		if ( $val === null ) {
+			return;
+		}
+
+		if ( is_bool( self::$_default_options[ $id ] ) ) {
+			$val = $val ? __( 'ON', 'litespeed-cache' ) : __( 'OFF', 'litespeed-cache' );
+		}
+		else {
+			if ( is_array( self::$_default_options[ $id ] ) ) {
+				$val = implode( "\n", $val );
+			}
+			$val = esc_textarea( $val );
+		}
+
+		echo "Const overwritten to <code>$val</code>";
 	}
 
 	/**
@@ -912,7 +947,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_syntax( $id )
 	{
-		$val = Conf::val( $id ) ;
+		$val = Conf::val( $id, true ) ;
 
 		if ( ! $val ) {
 			return ;
@@ -936,7 +971,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false )
 	{
-		$val = Conf::val( $id ) ;
+		$val = Conf::val( $id, true ) ;
 
 		if ( $allow_zero && ! $val ) {
 			return ;
@@ -982,7 +1017,7 @@ class Admin_Display extends Base
 	 */
 	private function _validate_ip( $id )
 	{
-		$val = Conf::val( $id ) ;
+		$val = Conf::val( $id, true ) ;
 		if ( ! $val ) {
 			return ;
 		}

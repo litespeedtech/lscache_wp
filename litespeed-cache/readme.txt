@@ -322,10 +322,12 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱 [Img_optm] The return of Rescan.
 * 🌱 [CLI] CLI can send report now.
 * 🌱 [Health] Page speed and page score now are in dashboard.
+* 🌱 [Conf] Supported consts overwritten of `LITESPEED_CONF__` for all settings.  (@menathor)
 * 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🕷️ Able to add single rows to blacklist.
 * 🕷️ Crawler data now saved into database instead of creating new files.
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.
+* [GUI] Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * [Cloud] Able to redetect cloud nodes now.
 * [Img_optm] Fixed stale data in redirected links.
 * [Cache] Default drop qs values. (@gijo Varghese)
