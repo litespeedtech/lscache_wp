@@ -871,6 +871,26 @@ class Base extends Instance
 	}
 
 	/**
+	 * If the setting is a pswd or not
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_pswd( $id )
+	{
+		$check_ids = array(
+			self::O_CDN_CLOUDFLARE_KEY,
+			self::O_OBJECT_PSWD,
+			self::O_API_KEY,
+		) ;
+
+		if ( in_array( $id, $check_ids ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
 	 * If the setting changes worth a purge, return the tag
 	 *
 	 * @since  3.0
