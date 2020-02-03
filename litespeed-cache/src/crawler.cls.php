@@ -163,7 +163,7 @@ class Crawler extends Base
 	{
 		Log::debug( '🐞 ......crawler started......' );
 		// for the first time running
-		if ( ! $this->_summary ) {
+		if ( ! $this->_summary || ! Data::get_instance()->tb_exist( 'crawler' ) || ! Data::get_instance()->tb_exist( 'crawler_blacklist' ) ) {
 			$this->__map->gen();
 		}
 
