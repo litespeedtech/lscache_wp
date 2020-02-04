@@ -60,6 +60,7 @@ class Lang extends Base
 			self::O_CACHE_TTL_PRIV				=> __( 'Default Private Cache TTL', 'litespeed-cache' ),
 			self::O_CACHE_TTL_FRONTPAGE			=> __( 'Default Front Page TTL', 'litespeed-cache' ),
 			self::O_CACHE_TTL_FEED				=> __( 'Default Feed TTL', 'litespeed-cache' ),
+			self::O_CACHE_TTL_REST				=> __( 'Default REST TTL', 'litespeed-cache' ),
 			self::O_CACHE_TTL_STATUS			=> __( 'Default HTTP Status Code Page TTL', 'litespeed-cache' ),
 			self::O_CACHE_TTL_BROWSER			=> __( 'Browser Cache TTL', 'litespeed-cache' ),
 			self::O_AUTO_UPGRADE				=> __( 'Automatically Upgrade', 'litespeed-cache' ),

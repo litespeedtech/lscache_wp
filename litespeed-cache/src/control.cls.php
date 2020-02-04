@@ -486,6 +486,10 @@ class Control extends Instance
 			return $feed_ttl ;
 		}
 
+		if ( REST::get_instance()->is_rest() || REST::get_instance()->is_internal_rest() ) {
+			return Conf::val( Base::O_CACHE_TTL_REST ) ;
+		}
+
 		return Conf::val( Base::O_CACHE_TTL_PUB ) ;
 	}
 
