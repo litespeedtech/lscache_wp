@@ -42,7 +42,7 @@ $this->form_action() ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable Content Delivery Network use.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'If using Cloudflare, leave this setting %s and use Cloudflare API setting below.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
+				<?php echo sprintf( __( 'Leave this setting %1$s if you have QUIC.cloud CDN or Cloudflare API turned %2$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -177,7 +177,7 @@ $this->form_action() ;
 					<?php $this->recommended( $id, true ) ; ?>
 				</div>
 			</div>
-			
+
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
 				<?php Doc::one_per_line() ; ?>

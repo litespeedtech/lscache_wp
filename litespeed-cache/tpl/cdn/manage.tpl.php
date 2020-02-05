@@ -20,7 +20,7 @@ $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() 
 <div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p>
-		<?php echo __('Please go to Settings to turn Cloudflare API on before use the following functionalities.', 'litespeed-cache'); ?>
+		<?php echo __('To enable the following functionality, turn ON Cloudflare API in CDN Settings.', 'litespeed-cache'); ?>
 	</p>
 </div>
 <?php endif ; ?>

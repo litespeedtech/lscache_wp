@@ -51,7 +51,7 @@ $break_arr = array(
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Always set stale for Purge operation to reduce the server load peak for the following visits.', 'litespeed-cache' ); ?>
+				<?php echo __( 'If ON, stale copy of cached page will be shown to visitor until a new cache copy is available. Reduces the server load for following visits. If OFF, page will be dynamically generated while visitor waits.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>

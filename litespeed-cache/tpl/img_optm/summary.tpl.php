@@ -57,7 +57,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 			</h3>
 
 			<p>
-				<?php echo sprintf( __( 'You can post max %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
+				<?php echo sprintf( __( 'You can request a maximum of %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ) ; ?>
 			</p>
 
 			<?php if ( $wet_limit ) : ?>
@@ -91,7 +91,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<div>
 				<h3 class="litespeed-title-section">
-					<?php echo __( 'Current Stage Status', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'Optimization Status', 'litespeed-cache' ) ; ?>
 					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
 						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 					<?php endif; ?>

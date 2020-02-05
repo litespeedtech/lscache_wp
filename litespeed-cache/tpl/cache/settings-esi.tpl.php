@@ -46,7 +46,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Enable caches public pages for logged in users and serves the Admin Bar and Comment Form via ESI blocks. These two blocks will be uncached unless enabled below.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Turn ON to cache public pages for logged in users, and serve the Admin Bar and Comment Form via ESI blocks. These two blocks will be uncached unless enabled below.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -59,7 +59,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __(' Cache the build-in Admin Bar ESI block.', 'litespeed-cache' ) ; ?>
+				<?php echo __(' Cache the built-in Admin Bar ESI block.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -72,7 +72,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache the build-in Comment Form ESI block.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Cache the built-in Comment Form ESI block.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

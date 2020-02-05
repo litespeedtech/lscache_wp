@@ -102,7 +102,8 @@ defined( 'WPINC' ) || exit ;
 				</div>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Specify an HTTP status code and the number of seconds to cache that page, separated by a space.', 'litespeed-cache' ) ; ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

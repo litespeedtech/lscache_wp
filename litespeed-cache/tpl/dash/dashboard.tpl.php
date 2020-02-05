@@ -50,9 +50,9 @@ $placeholder_summary = Placeholder::get_summary();
 		<?php
 		$cat_list = array(
 			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
-			'ccss'		=> __( 'CCSS', 'litespeed-cache' ),
+			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ),
 			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
-			'lqip'		=> __( 'LQIP', 'litespeed-cache' ),
+			'lqip'		=> __( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 		);
 		if ( ! Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ) {
 			$cat_list[ 'placeholder' ] = __( 'Placeholder', 'litespeed-cache' );
@@ -278,7 +278,7 @@ $placeholder_summary = Placeholder::get_summary();
 								</div>
 								<div>
 									<div class="litespeed-dashboard-stats">
-										<h3><?php echo __('Image Requested','litespeed-cache'); ?></h3>
+										<h3><?php echo __('Images Requested','litespeed-cache'); ?></h3>
 										<p>
 											<strong><?php echo ( $img_count[ 'imgs_gathered' ] - $img_count[ 'img.' . Img_Optm::STATUS_RAW ]); ?></strong>
 											<span class="litespeed-desc">of <?php echo $img_count[ 'imgs_gathered' ]; ?></span>
@@ -398,7 +398,7 @@ $placeholder_summary = Placeholder::get_summary();
 							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent' ] . 's</code>'; ?>
+							<?php echo __( 'Cost of previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent' ] . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
@@ -421,7 +421,7 @@ $placeholder_summary = Placeholder::get_summary();
 			<div class="postbox litespeed-postbox litespeed-postbox-lqip">
 				<div class="inside">
 					<h3 class="litespeed-title">
-						<?php echo __( 'LQIP Placeholder', 'litespeed-cache' ); ?>
+						<?php echo __( 'Low Quality Image Placeholder', 'litespeed-cache' ); ?>
 					</h3>
 
 					<?php if ( ! empty( $placeholder_summary[ 'last_request' ] ) ) : ?>
@@ -429,7 +429,7 @@ $placeholder_summary = Placeholder::get_summary();
 							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $placeholder_summary[ 'last_request' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $placeholder_summary[ 'last_spent' ] . 's</code>'; ?>
+							<?php echo __( 'Cost of previous request', 'litespeed-cache' ) . ': <code>' . $placeholder_summary[ 'last_spent' ] . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
@@ -459,7 +459,7 @@ $placeholder_summary = Placeholder::get_summary();
 						<code><?php echo count( Crawler::get_instance()->list_crawlers() );?></code> <?php echo __( 'Crawler(s)', 'litespeed-cache' ); ?>
 					</p>
 					<p>
-						<?php echo __( 'Current on crawler', 'litespeed-cache' ); ?>: <code><?php echo $crawler_summary[ 'curr_crawler' ] ?></code>
+						<?php echo __( 'Currently active crawler', 'litespeed-cache' ); ?>: <code><?php echo $crawler_summary[ 'curr_crawler' ] ?></code>
 					</p>
 
 					<?php if ( $crawler_summary[ 'curr_crawler_beginning_time' ] ) : ?>

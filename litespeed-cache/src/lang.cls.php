@@ -31,7 +31,7 @@ class Lang extends Base
 			Img_Optm::STATUS_ERR_OPTM	=> __( 'Images previously optimized', 'litespeed-cache' ),
 			Img_Optm::STATUS_ERR			=> __( 'Images failed with other errors', 'litespeed-cache' ),
 			Img_Optm::STATUS_MISS		=> __( 'Image files missing', 'litespeed-cache' ),
-			Img_Optm::STATUS_DUPLICATED	=> __( 'Image files duplicated', 'litespeed-cache' ),
+			Img_Optm::STATUS_DUPLICATED	=> __( 'Duplicate image files ignored', 'litespeed-cache' ),
 			Img_Optm::STATUS_XMETA		=> __( 'Images with wrong meta', 'litespeed-cache' ),
 		);
 
@@ -152,11 +152,11 @@ class Lang extends Base
 			self::O_MEDIA_LAZY_PLACEHOLDER		=> __( 'Lazy Load Image Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP		=> __( 'Responsive Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> __( 'Responsive Placeholder Color', 'litespeed-cache' ),
-			self::O_MEDIA_PLACEHOLDER_RESP_GENERATOR	=> __( 'Reponsive Placeholder Generator', 'litespeed-cache' ),
-			self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> __( 'Reponsive Placeholder SVG', 'litespeed-cache' ),
+			self::O_MEDIA_PLACEHOLDER_RESP_GENERATOR	=> __( 'Responsive Placeholder Generator', 'litespeed-cache' ),
+			self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> __( 'Responsive Placeholder SVG', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_LQIP				=> __( 'LQIP Cloud Generator', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_LQIP_QUAL			=> __( 'LQIP Quality', 'litespeed-cache' ),
-			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> __( 'Generate Reponsive Placeholder In Background', 'litespeed-cache' ),
+			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> __( 'Generate Responsive Placeholder In Background', 'litespeed-cache' ),
 			self::O_MEDIA_IFRAME_LAZY			=> __( 'Lazy Load Iframes', 'litespeed-cache' ),
 			self::O_MEDIA_LAZYJS_INLINE			=> __( 'Inline Lazy Load Images Library', 'litespeed-cache' ),
 			self::O_IMG_OPTM_AUTO				=> __( 'Auto Request Cron', 'litespeed-cache' ),

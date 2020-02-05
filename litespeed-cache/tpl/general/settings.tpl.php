@@ -39,7 +39,7 @@ $this->form_action();
 				<span class="litespeed-danger"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
 			<?php endif; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'To use online services, an API key is necessary to increase security when communicating with our QUIC.cloud servers.', 'litespeed-cache' ); ?>
+				<?php echo __( 'An API key is necessary for security when communicating with our QUIC.cloud servers. Required for online services.', 'litespeed-cache' ); ?>
 				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link', true ); ?>
 			</div>
 		</td>
