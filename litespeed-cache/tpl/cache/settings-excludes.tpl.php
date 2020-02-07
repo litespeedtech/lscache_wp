@@ -33,7 +33,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Query string containing these parameters will not be cached.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Query strings containing these parameters will not be cached.', 'litespeed-cache' ); ?>
 				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
@@ -55,7 +55,7 @@ defined( 'WPINC' ) || exit;
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __( 'All categories are cached by default.', 'litespeed-cache' ); ?></b>
-				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'categories', 'litespeed-cache') ); ?>
+				<?php echo sprintf( __( 'To prevent %s from being cached, enter them here.', 'litespeed-cache' ), __( 'categories', 'litespeed-cache') ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
@@ -91,7 +91,7 @@ defined( 'WPINC' ) || exit;
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __( 'All tags are cached by default.', 'litespeed-cache' ); ?></b>
-				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'tags', 'litespeed-cache') ); ?>
+				<?php echo sprintf( __( 'To prevent %s from being cached, enter them here.', 'litespeed-cache' ), __( 'tags', 'litespeed-cache') ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
@@ -131,7 +131,7 @@ defined( 'WPINC' ) || exit;
 					<?php $this->build_checkbox( $id . '[]', $title, Control::get_instance()->in_cache_exc_roles( $role ), $role ); ?>
 				<?php endforeach; ?>
 			</div>
-			
+
 		</td>
 	</tr>
 

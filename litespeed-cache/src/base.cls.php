@@ -59,6 +59,7 @@ class Base extends Instance
 	const O_CACHE_TTL_PRIV 			= 'cache-ttl_priv' ;
 	const O_CACHE_TTL_FRONTPAGE 	= 'cache-ttl_frontpage' ;
 	const O_CACHE_TTL_FEED 			= 'cache-ttl_feed' ;
+	const O_CACHE_TTL_REST 			= 'cache-ttl_rest' ;
 	const O_CACHE_TTL_STATUS 		= 'cache-ttl_status' ;
 	const O_CACHE_TTL_BROWSER 		= 'cache-ttl_browser' ;
 	const O_CACHE_LOGIN_COOKIE 		= 'cache-login_cookie' ;
@@ -362,6 +363,7 @@ class Base extends Instance
 		self::O_CACHE_TTL_PRIV 			=> 0,
 		self::O_CACHE_TTL_FRONTPAGE 	=> 0,
 		self::O_CACHE_TTL_FEED 			=> 0,
+		self::O_CACHE_TTL_REST 			=> 0,
 		self::O_CACHE_TTL_BROWSER 		=> 0,
 		self::O_CACHE_TTL_STATUS 		=> array(),
 		self::O_CACHE_LOGIN_COOKIE 		=> '',

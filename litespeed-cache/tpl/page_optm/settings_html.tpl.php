@@ -8,11 +8,6 @@ defined( 'WPINC' ) || exit ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<div class="litespeed-callout notice notice-warning inline">
-	<h4><?php echo __( 'NOTICE', 'litespeed-cache' ) ; ?></h4>
-	<p><?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?></p>
-</div>
-
 <table class="wp-list-table striped litespeed-table"><tbody>
 
 	<tr>
@@ -159,7 +154,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prevent google fonts from loading on all your pages.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Prevent Google Fonts from loading on all pages.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

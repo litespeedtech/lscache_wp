@@ -71,7 +71,7 @@ $closest_server = Cloud::get_summary( 'server.' . $cloud_svc );
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify a SVG to be used as a placeholder when generate locally.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify an SVG to be used as a placeholder when generating locally.', 'litespeed-cache' ); ?>
 				<?php echo __( 'It will be converted to a base64 placeholder on-the-fly.', 'litespeed-cache' ); ?>
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the corresponding image properties.', 'litespeed-cache' ), '<code>{width} {height}</code>' ); ?>
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the configured background color.', 'litespeed-cache' ), '<code>{color}</code>' ); ?>

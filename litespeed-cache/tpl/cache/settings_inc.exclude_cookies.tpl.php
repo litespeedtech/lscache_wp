@@ -11,7 +11,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'cookies', 'litespeed-cache') ) ; ?>
+				<?php echo sprintf( __( 'To prevent %s from being cached, enter them here.', 'litespeed-cache' ), __( 'cookies', 'litespeed-cache') ) ; ?>
 				<?php Doc::one_per_line() ; ?>
 				<?php $this->_validate_syntax( $id ) ; ?>
 				<br /><?php Doc::notice_htaccess() ; ?>

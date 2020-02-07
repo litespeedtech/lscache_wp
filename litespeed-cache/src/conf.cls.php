@@ -22,6 +22,7 @@ class Conf extends Base
 	const TYPE_SET = 'set' ;
 
 	private $_options = array() ;
+	private $_const_options = array() ;
 	private $_site_options = array() ;
 
 	/**
@@ -158,6 +159,16 @@ class Conf extends Base
 		}
 
 		$this->_options = array_merge( $this->_options, $options );
+
+		// Append const options
+		if ( defined( 'LITESPEED_CONF' ) && LITESPEED_CONF ) {
+			foreach ( self::$_default_options as $k => $v ) {
+				$const = 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $k ) );
+				if ( defined( $const ) ) {
+					$this->_const_options[ $k ] = constant( $const );
+				}
+			}
+		}
 	}
 
 	/**
@@ -386,8 +397,12 @@ class Conf extends Base
 	 * @access public
 	 * @return array The list of configured options.
 	 */
-	public function get_options()
+	public function get_options( $ori = false )
 	{
+		if ( ! $ori ) {
+			return array_merge( $this->_options, $this->_const_options );
+		}
+
 		return $this->_options ;
 	}
 
@@ -397,17 +412,38 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function val( $id )
+	public static function val( $id, $ori = false )
 	{
 		$instance = self::get_instance();
 
 		if ( isset( $instance->_options[ $id ] ) ) {
-			return $instance->_options[ $id ] ;
+			if ( ! $ori ) {
+				$val = $instance->const_overwritten( $id );
+				if ( $val !== null ) {
+					defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) ) ;
+					return $val;
+				}
+			}
+
+			return $instance->_options[ $id ];
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id );
 
-		return null ;
+		return null;
+	}
+
+	/**
+	 * Check if is overwritten
+	 *
+	 * @since  3.0
+	 */
+	public function const_overwritten( $id )
+	{
+		if ( ! isset( $this->_const_options[ $id ] ) || $this->_const_options[ $id ] == $this->_options[ $id ] ) {
+			return null;
+		}
+		return $this->_const_options[ $id ];
 	}
 
 	/**

@@ -72,12 +72,13 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<div class="litespeed-switch">
 				<?php $this->build_radio( $id, Base::VAL_OFF, __( 'Default', 'litespeed-cache' ) ) ; ?>
-				<?php $this->build_radio( $id, 1, __( 'After Dom Ready', 'litespeed-cache' ) ) ; ?>
+				<?php $this->build_radio( $id, 1, __( 'After DOM Ready', 'litespeed-cache' ) ) ; ?>
 				<?php $this->build_radio( $id, 2, __( 'Deferred', 'litespeed-cache' ) ) ; ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo __( 'Load inline JS after dom is fully loaded.', 'litespeed-cache' ) ; ?>
-				<br /><?php echo __( 'This can increase JS compatibility and reduce JS error when turned on the above JS optimization features.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Load inline JS after DOM is fully loaded.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo __( 'This can increase JS compatibility and reduce JS error when the previous JS optimization features are enabled.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo sprintf( __( '%s is recommended.', 'litespeed-cache' ), '<code>' . __( 'Deferred', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>

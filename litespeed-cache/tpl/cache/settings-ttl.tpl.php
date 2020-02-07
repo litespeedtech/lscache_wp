@@ -73,6 +73,21 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
+			<?php $id = Base::O_CACHE_TTL_REST ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify how long, in seconds, REST calls are cached.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_CACHE_TTL_STATUS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -87,7 +102,8 @@ defined( 'WPINC' ) || exit ;
 				</div>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Specify an HTTP status code and the number of seconds to cache that page, separated by a space.', 'litespeed-cache' ) ; ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

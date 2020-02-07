@@ -163,7 +163,7 @@ class Crawler extends Base
 	{
 		Log::debug( '🐞 ......crawler started......' );
 		// for the first time running
-		if ( ! $this->_summary ) {
+		if ( ! $this->_summary || ! Data::get_instance()->tb_exist( 'crawler' ) || ! Data::get_instance()->tb_exist( 'crawler_blacklist' ) ) {
 			$this->__map->gen();
 		}
 
@@ -738,12 +738,12 @@ class Crawler extends Base
 
 		// WebP on/off
 		if ( $this->_options[ Base::O_IMG_OPTM_WEBP_REPLACE ] ) {
-			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' );
+			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 
 		// Mobile crawler
 		if ( $this->_options[ Base::O_CACHE_MOBILE ] ) {
-			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' );
+			$crawler_factors[ 'mobile' ] = array( 1 => '<font title="Mobile">📱</font>', 0 => '' );
 		}
 
 		// Get roles set

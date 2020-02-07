@@ -125,7 +125,7 @@ class Report extends Base
 		$extras[ 'cloud' ] = Cloud::get_summary();
 
 		if ( is_null($options) ) {
-			$options = Conf::get_instance()->get_options() ;
+			$options = Conf::get_instance()->get_options( true );
 		}
 
 		if ( ! is_null($options) && is_multisite() ) {
