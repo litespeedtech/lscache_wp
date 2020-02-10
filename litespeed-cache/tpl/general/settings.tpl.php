@@ -15,6 +15,8 @@ if ( ! empty( $_GET[ 'apikey_data' ] ) ) {
 	<?php
 }
 
+$gen_btn_available = get_option( 'permalink_structure' );
+
 $this->form_action();
 ?>
 
@@ -40,7 +42,17 @@ $this->form_action();
 			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'An API key is necessary for security when communicating with our QUIC.cloud servers. Required for online services.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link', true ); ?>
+				<?php if ( $gen_btn_available ) : ?>
+					<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button button-link', true ); ?>
+				<?php else: ?>
+					<?php $this->learn_more( 'javascript:;', __( 'Generate Key', 'litespeed-cache' ), 'button button-link disabled', true ); ?>
+					<br />
+					<span class="litespeed-danger">
+						<?php echo __( 'Warning', 'litespeed-cache' ); ?>:
+						<?php echo sprintf( __( 'You need to set your WordPress %1$s to other values than %2$s first to generate API key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
+						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
+					</span>
+				<?php endif; ?>
 			</div>
 		</td>
 	</tr>
