@@ -49,7 +49,7 @@ $this->form_action();
 					<br />
 					<span class="litespeed-danger">
 						<?php echo __( 'Warning', 'litespeed-cache' ); ?>:
-						<?php echo sprintf( __( 'You need to set your WordPress %1$s to other values than %2$s first to generate API key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
+						<?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating an API key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
 						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
 					</span>
 				<?php endif; ?>
