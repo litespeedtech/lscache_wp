@@ -13,7 +13,7 @@ class Cloud extends Base
 
 	const DB_HASH = 'hash';
 
-	const CLOUD_SERVER = 'https://apidev.quic.cloud';
+	const CLOUD_SERVER = 'https://api.dev.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF 		= 'd/sync_conf';
