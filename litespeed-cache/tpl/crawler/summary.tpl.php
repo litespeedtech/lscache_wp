@@ -172,7 +172,7 @@ if($seconds > 0):
 	</table>
 
 	<p>
-		<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __( 'Waiting for Crawling', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __( 'Waiting to be Crawled', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
@@ -180,9 +180,9 @@ if($seconds > 0):
 
 	<div class="litespeed-desc">
 		<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache'); ?></div>
-		<div><?php echo __('Only one crawler can run concurrently.', 'litespeed-cache')
-				. __('If both the cron and manual run start at a similar time, the first one to start will run.','litespeed-cache'); ?></div>
-		<div><?php echo sprintf(__('Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" '); ?></div>
+		<div><?php echo __('Crawlers cannot run concurrently.', 'litespeed-cache')
+				. __('If both the cron and a manual run start at similar times, the first to be started will take precedence.','litespeed-cache'); ?></div>
+		<div><?php echo sprintf(__('Please see <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to learn how to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" '); ?></div>
 	</div>
 <?php endif; ?>
 

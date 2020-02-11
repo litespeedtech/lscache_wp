@@ -43,7 +43,7 @@ $this->form_action();
 					</div>
 					<div class='litespeed-col-auto'>
 						<label class="litespeed-form-label"><?php echo __( 'Cookie Values', 'litespeed-cache' ); ?></label>
-					
+
 						<textarea v-model="item.vals" rows="5" cols="40" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
@@ -56,7 +56,7 @@ $this->form_action();
 
 				<p>
 					<button type="button" @click='add_row' class="button button-link litespeed-form-action litespeed-link-with-icon" data-action="add">
-						<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new cookie simulation', 'litespeed-cache' ) ;?>
+						<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new cookie to simulate', 'litespeed-cache' ) ;?>
 					</button>
 				</p>
 
@@ -103,7 +103,7 @@ $this->form_action();
 			<div class="litespeed-desc">
 				<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line, and can include a blank line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_simulation' ); ?>
-				<p><?php echo sprintf( __( 'Use %1$s in %2$s for the case that not set this cookie.', 'litespeed-cache' ), '<code>_null</code>', __( 'Cookie Values', 'litespeed-cache' ) ); ?></p>
+				<p><?php echo sprintf( __( 'Use %1$s in %2$s to indicate this cookie has not been set.', 'litespeed-cache' ), '<code>_null</code>', __( 'Cookie Values', 'litespeed-cache' ) ); ?></p>
 			</div>
 
 		</td>

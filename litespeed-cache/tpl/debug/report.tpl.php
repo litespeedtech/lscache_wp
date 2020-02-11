@@ -38,6 +38,12 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 
 <form action="<?php echo Utility::build_url( Router::ACTION_REPORT, Report::TYPE_SEND_REPORT ); ?>" method="post">
 
+	<p>
+		<button class="button button-primary" type="submit">
+			<?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?>
+		</button>
+	</p>
+
 	<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
 
 
@@ -48,7 +54,7 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 				<?php echo sprintf( __( 'To generate a passwordless link for LiteSpeed Support Team access, you must install %s.', 'litespeed-cache' ), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
 			</p>
 			<p>
-				<a href="<?php echo $install_link; ?>" class="button litespeed-btn litespeed-right20"><?php echo __( 'Install DoLogin Security', 'litespeed-cache' ); ?></a> 
+				<a href="<?php echo $install_link; ?>" class="button litespeed-btn litespeed-right20"><?php echo __( 'Install DoLogin Security', 'litespeed-cache' ); ?></a>
 				<a href="plugin-install.php?s=dologin+security&tab=search&type=term" target="_blank"><?php echo __( 'Go to plugins list', 'litespeed-cache' ); ?></a>
 			</p>
 		</div>
@@ -73,12 +79,11 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 
 	<p class="litespeed-top30">
 			<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
-		</p>
+	</p>
 	<p>
 		<button class="button button-primary" type="submit">
 			<?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?>
 		</button>
-		
 	</p>
 </form>
 
