@@ -52,9 +52,9 @@ $this->form_action() ;
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This should be set to off once everything is working to prevent filling the disk.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'The Admin IP option will only output log messages on requests from admin IPs.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'The logs will be outputted to %s.', 'litespeed-cache' ), '<code>wp-content/debug.log</code>' ) ; ?>
+				<?php echo sprintf( __( 'The logs will be output to %s.', 'litespeed-cache' ), '<code>wp-content/debug.log</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -127,14 +127,14 @@ $this->form_action() ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Log request cookie values.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Log requested cookie values.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = Base::O_MEDIA_LAZY_EXC ; ?>
+			<?php $id = Base::O_DEBUG_COLLAPS_QS ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
