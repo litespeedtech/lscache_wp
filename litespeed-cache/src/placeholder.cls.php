@@ -458,7 +458,7 @@ class Placeholder extends Base
 					'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
 					'quality'	=> $this->_conf_placeholder_lqip_qual,
 				) ;
-				$json = Cloud::post( Cloud::SVC_LQIP, $req_data ) ;
+				$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 ) ;
 				if ( ! is_array( $json ) ) {
 					return false;
 				}
