@@ -87,7 +87,7 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 		<section class="litespeed-panel-content">
 			<div class="litespeed-h3 <?php if ( ! empty( $v[ 'title_cls' ] ) ) echo $v[ 'title_cls' ]; ?>">
 				<?php echo $v[ 'title' ]; ?>
-				<span class="litespeed-panel-counter<?php if ( $v[ 'count' ] > 0 && empty( $v[ 'dismiss_count_icon' ] ) ) echo '-red'; ?>">(<?php echo $v[ 'count' ]; ?>)</span>
+				<span class="litespeed-panel-counter<?php if ( $v[ 'count' ] > 0 && empty( $v[ 'dismiss_count_icon' ] ) ) echo '-red'; ?>">(<?php echo $v[ 'count' ]; ?><?php echo DB_Optm::hide_more() ? '+' : ''; ?>)</span>
 			</div>
 			<span class="litespeed-panel-para"><?php echo $v[ 'desc' ]; ?></span>
 		</section>
@@ -159,8 +159,8 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 		<p>
 		Autoload size: <strong><?php echo Utility::real_size( $autoload_summary->autoload_size ); ?></strong></p>
 		<p>Autoload entries: <strong><?php echo $autoload_summary->autload_entries; ?></strong></p>
-		
-	
+
+
 	</div>
 
 	<div class="field-col">

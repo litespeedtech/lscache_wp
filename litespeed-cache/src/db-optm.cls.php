@@ -14,10 +14,22 @@ defined( 'WPINC' ) || exit;
 
 class DB_Optm extends Instance
 {
+	private static $_hide_more = false;
+
 	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables', 'all_cssjs' );
 	const TYPE_CONV_TB = 'conv_innodb';
 
 	protected static $_instance;
+
+	/**
+	 * Show if there are more sites in hidden
+	 *
+	 * @since  3.0
+	 */
+	public static function hide_more()
+	{
+		return self::$_hide_more;
+	}
 
 	/**
 	 * Clean/Optimize WP tables
@@ -42,7 +54,12 @@ class DB_Optm extends Instance
 			if ( is_multisite() && is_network_admin() ) {
 				$num = 0;
 				$blogs = Activation::get_network_ids();
-				foreach ( $blogs as $blog_id ) {
+				foreach ( $blogs as $k => $blog_id ) {
+					if ( $k > 10 ) {
+						self::$_hide_more = true;
+						break;
+					}
+
 					switch_to_blog( $blog_id );
 					$num += self::db_count( $type, true );
 					restore_current_blog();
