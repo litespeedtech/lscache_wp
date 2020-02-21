@@ -393,6 +393,10 @@ button.litespeed-form-action:hover {
 	max-width: 840px;
 }
 
+.litespeed-desc+.litespeed-desc {
+	margin-top: -5px
+}
+
 td>.litespeed-desc:first-child {
 	margin-top: 0px;
 	line-height: 2.24;
@@ -504,6 +508,14 @@ h3 .litespeed-learn-more {
 	content: '>';
 	color: #cc3d6a;
 }
+
+.litespeed-wrap a.disabled{
+	cursor: not-allowed;
+	opacity: 0.5;
+	text-decoration: none;
+	color: #72777c;
+}
+
 
 /* =======================================
 			LAYOUT - table

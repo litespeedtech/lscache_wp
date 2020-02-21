@@ -895,7 +895,7 @@ class Admin_Display extends Base
 			$val = esc_textarea( $val );
 		}
 
-		echo "Const overwritten to <code>$val</code>";
+		echo '<div class="litespeed-desc litespeed-warning">⚠️ <strong>' . __('Overwritten in wp-config.php', 'litespeed-cache') . '</strong> ' . __('value set to ', 'litespeed-cache') . "<code>$val</code></div>";
 	}
 
 	/**
