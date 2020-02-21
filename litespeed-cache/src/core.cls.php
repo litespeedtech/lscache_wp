@@ -591,19 +591,4 @@ class Core extends Instance
 
 	}
 
-	/**
-	 * Deprecated calls for backward compatibility to v1.1.2.2
-	 */
-	public function purge_post( $id )
-	{
-		litespeed_purge_single_post( $id );
-	}
-
-	/**
-	 * Deprecated calls for backward compatibility to v1.1.2.2
-	 */
-	public function purge_all()
-	{
-		API::purge_all();
-	}
 }

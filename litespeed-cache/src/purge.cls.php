@@ -196,11 +196,6 @@ class Purge extends Base
 	{
 		$this->_add( '*' ) ;
 
-		// check if need to reset crawler
-		if ( Conf::val( Base::O_CRAWLER ) ) {
-			Crawler::get_instance()->reset_pos() ;
-		}
-
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
@@ -529,10 +524,8 @@ class Purge extends Base
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value The category slug.
-	 * @param string $key Unused.
 	 */
-	public function purgeby_cat_cb( $value, $key )
+	public function purge_cat( $value )
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -548,49 +541,21 @@ class Purge extends Base
 			return ;
 		}
 
+		self::add( Tag::TYPE_ARCHIVE_TERM . $cat->term_id ) ;
+
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge category %s', 'litespeed-cache' ), $val ) ) ;
-
-		$this->_add( Tag::TYPE_ARCHIVE_TERM . $cat->term_id ) ;
 	}
 
-	/**
-	 * Callback to add purge tags if admin selects to purge selected post IDs.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @param string $value The post ID.
-	 * @param string $key Unused.
-	 */
-	public function purgeby_pid_cb( $value, $key )
-	{
-		$val = trim( $value ) ;
-		if ( empty( $val ) ) {
-			return ;
-		}
-		if ( ! is_numeric( $val ) ) {
-			Log::debug( "[Purge] $val pid not numeric" ) ;
-			return ;
-		}
-		elseif ( get_post_status( $val ) !== 'publish' ) {
-			Log::debug( "[Purge] $val pid not published" ) ;
-			return ;
-		}
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge Post ID %s', 'litespeed-cache' ), $val ) ) ;
-
-		$this->_add( Tag::TYPE_POST . $val ) ;
-	}
 
 	/**
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value The tag slug.
-	 * @param string $key Unused.
 	 */
-	public function purgeby_tag_cb( $value, $key )
+	public static function purge_tag( $val )
 	{
-		$val = trim( $value ) ;
+		$val = trim( $val ) ;
 		if ( empty( $val ) ) {
 			return ;
 		}
@@ -604,9 +569,9 @@ class Purge extends Base
 			return ;
 		}
 
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge tag %s', 'litespeed-cache' ), $val ) ) ;
+		self::add( Tag::TYPE_ARCHIVE_TERM . $term->term_id ) ;
 
-		$this->_add( Tag::TYPE_ARCHIVE_TERM . $term->term_id ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge tag %s', 'litespeed-cache' ), $val ) ) ;
 	}
 
 	/**
@@ -614,12 +579,10 @@ class Purge extends Base
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value A url to purge.
-	 * @param string $key Unused.
 	 */
-	public function purgeby_url_cb( $value, $key = false )
+	public static function purge_url( $url )
 	{
-		$val = trim( $value ) ;
+		$val = trim( $url ) ;
 		if ( empty( $val ) ) {
 			return ;
 		}
@@ -638,15 +601,13 @@ class Purge extends Base
 			return ;
 		}
 
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) ) ;
+		self::add( $hash ) ;
 
-		$this->_add( $hash ) ;
-		return ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) ) ;
 	}
 
 	/**
-	 * Purge a list of pages when selected by admin. This method will
-	 * look at the post arguments to determine how and what to purge.
+	 * Purge a list of pages when selected by admin. This method will look at the post arguments to determine how and what to purge.
 	 *
 	 * @since 1.0.7
 	 * @access public
@@ -665,61 +626,52 @@ class Purge extends Base
 		$list = explode("\n", $list_buf) ;
 		switch($sel) {
 			case Admin_Display::PURGEBY_CAT:
-				$cb = 'purgeby_cat_cb' ;
+				$cb = 'purge_cat' ;
 				break ;
 			case Admin_Display::PURGEBY_PID:
-				$cb = 'purgeby_pid_cb' ;
+				$cb = 'purge_post' ;
 				break ;
 			case Admin_Display::PURGEBY_TAG:
-				$cb = 'purgeby_tag_cb' ;
+				$cb = 'purge_tag' ;
 				break ;
 			case Admin_Display::PURGEBY_URL:
-				$cb = 'purgeby_url_cb' ;
+				$cb = 'purge_url' ;
 				break ;
 
 			default:
 				return ;
 		}
-		array_walk( $list, array( $this, $cb ) ) ;
+		array_map( __CLASS__ . "::$cb", $list );
 
 		// for redirection
 		$_GET[ Admin_Display::PURGEBYOPT_SELECT ] = $sel ;
 	}
 
 	/**
-	 * Purge a post on update.
-	 *
-	 * This function will get the relevant purge tags to add to the response
-	 * as well.
+	 * Purge all related tags to a post.
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param integer $id The post id to purge.
 	 */
-	public static function purge_post( $id )
+	public static function purge_post( $pid )
 	{
-		$post_id = intval($id) ;
+		$pid = intval( $pid );
 		// ignore the status we don't care
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private', 'draft' )) ) {
-			return ;
+		if ( ! $pid || ! in_array( get_post_status( $pid ), array( 'publish', 'trash', 'private', 'draft' ) ) ) {
+			return;
 		}
 
-		$instance = self::get_instance() ;
+		$purge_tags = self::get_instance()->_get_purge_tags_by_post( $pid );
+		if ( ! $purge_tags ) {
+			return;
+		}
 
-		$purge_tags = $instance->_get_purge_tags_by_post($post_id) ;
-		if ( empty($purge_tags) ) {
-			return ;
+		self::add( $purge_tags );
+		if ( Conf::val( Base::O_CACHE_REST ) ) {
+			self::add( Tag::TYPE_REST );
 		}
-		if ( in_array( '*', $purge_tags ) ) {
-			$instance->_purge_all_lscache() ;
-		}
-		else {
-			$instance->_add( $purge_tags ) ;
-			if ( Conf::val( Base::O_CACHE_REST ) ) {
-				$instance->_add( Tag::TYPE_REST ) ;
-			}
-		}
-		Control::set_stale() ;
+
+		Control::set_stale();
 	}
 
 	/**
@@ -729,9 +681,8 @@ class Purge extends Base
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param type $widget_id The id of the widget to purge.
 	 */
-	public static function purge_widget($widget_id = null)
+	public static function purge_widget( $widget_id = null )
 	{
 		if ( is_null($widget_id) ) {
 			$widget_id = $_POST['widget-id'] ;
@@ -801,7 +752,7 @@ class Purge extends Base
 			return ;
 		}
 
-		do_action('litespeed_api_purge') ;
+		do_action('litespeed_purge_finalize') ;
 
 		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
 		if ( $this->_purge_single ) {
@@ -889,28 +840,29 @@ class Purge extends Base
 	 *
 	 * @since 1.1.0
 	 * @access private
-	 * @param array $purge_tags The purge tags to apply the prefix to.
-	 * @param  boolean $is_private If is private tags or not.
-	 * @return array The array of built purge tags.
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
 	{
-		$curr_bid = is_multisite() ? get_current_blog_id() : '' ;
+		$curr_bid = is_multisite() ? get_current_blog_id() : '';
 
-		if ( ! in_array('*', $purge_tags) ) {
-			$tags = array() ;
-			foreach ($purge_tags as $val) {
-				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . '_' . $val ;
+		if ( ! in_array( '*', $purge_tags ) ) {
+			$tags = array();
+			foreach ( $purge_tags as $val ) {
+				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . '_' . $val;
 			}
-			return $tags ;
+			return $tags;
 		}
 
-		if ( defined('LSWCP_EMPTYCACHE') || $is_private ) {
-			return array('*') ;
+		// Purge All need to check if need to reset crawler or not
+		if ( ! $is_private && Conf::val( Base::O_CRAWLER ) ) {
+			Crawler::get_instance()->reset_pos();
 		}
 
-		// Would only use multisite and network admin except is_network_admin
-		// is false for ajax calls, which is used by wordpress updates v4.6+
+		if ( defined( 'LSWCP_EMPTYCACHE' ) || $is_private ) {
+			return array( '*' );
+		}
+
+		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by wordpress updates v4.6+
 		if ( is_multisite() && (is_network_admin() || (
 				Router::is_ajax() && (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false))
 				)) ) {

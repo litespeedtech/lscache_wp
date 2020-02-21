@@ -50,6 +50,24 @@ class API extends Base
 		add_action( 'litespeed_conf_append', __CLASS__ . '::conf_append', 10, 2 ) ;
 		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
 		add_action( 'litespeed_conf_force', __CLASS__ . '::force_option', 10, 2 ) ;
+
+		/**
+		 * Tag Hooks
+		 */
+		// API::tag_add( $tag ) -> action litespeed_tag_add
+		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' );
+		// API::hook_tag( $hook ) -> action litespeed_tag_finalize
+
+		/**
+		 * Purge Hooks
+		 */
+		// API::hook_purge($tags) -> action litespeed_purge_finalize
+		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' );
+		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
+		add_action( 'litespeed_purge_add_private', __NAMESPACE__ . '\Purge::add_private' );
+		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' );
+		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
+		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
 	}
 
 	/**
@@ -272,7 +290,7 @@ class API extends Base
 	 * @since 1.6.3
 	 * @access public
 	 */
-	public static function add_private( $tags )
+	public static function tag_add_private( $tags )
 	{
 		Tag::add_private( $tags ) ;
 	}
@@ -378,17 +396,6 @@ class API extends Base
 	}
 
 	/**
-	 * Purge all action
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function purge_all()
-	{
-		Purge::purge_all() ;
-	}
-
-	/**
 	 * Purge all private
 	 *
 	 * @since 1.6.3
@@ -479,28 +486,6 @@ class API extends Base
 	public static function hook_control($hook)
 	{
 		add_action('litespeed_api_control', $hook) ;
-	}
-
-	/**
-	 * Hook tag appending to tag
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_tag($hook)
-	{
-		add_action('litespeed_api_tag', $hook) ;
-	}
-
-	/**
-	 * Hook purge tags appending to purge
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_purge($hook)
-	{
-		add_action('litespeed_api_purge', $hook) ;
 	}
 
 	/**

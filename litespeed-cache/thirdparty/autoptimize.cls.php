@@ -7,11 +7,11 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use \LiteSpeed\API ;
+use \LiteSpeed\API;
 
 class Autoptimize
 {
@@ -24,7 +24,7 @@ class Autoptimize
 	public static function detect()
 	{
 		if ( defined( 'AUTOPTIMIZE_PLUGIN_DIR' ) ) {
-			API::hook_purge( __CLASS__ . '::purge' ) ;
+			add_action( 'litespeed_purge_finalize', __CLASS__ . '::purge' );
 		}
 	}
 
@@ -37,7 +37,7 @@ class Autoptimize
 	public static function purge()
 	{
 		if ( defined( 'AUTOPTIMIZE_PURGE' ) || has_action( 'shutdown', 'autoptimize_do_cachepurged_action', 11 ) ) {
-			API::purge_all() ;
+			do_action( 'litespeed_purge_all', '3rd Autoptimize' );
 		}
 	}
 }

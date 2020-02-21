@@ -120,19 +120,6 @@ if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
 }
 
 /**
- * Easier API for Purging a single post.
- *
- * @since 1.0.1
- * @param integer $id The post id to purge.
- */
-if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
-	function litespeed_purge_single_post( $id )
-	{
-		\LiteSpeed\Purge::purge_post( $id ) ;
-	}
-}
-
-/**
  * Handle exception
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {

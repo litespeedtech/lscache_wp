@@ -365,6 +365,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [API] New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
 * [API] Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
 * [API] Renamed `litespeed_force_option` to `litespeed_conf_force`.
+* [API] Removed function `litespeed_purge_single_post`.
 * [REST] New rest API to fetch public IP.
 * [GUI] Renamed all backend link tag from lscache to litespeed.
 * [GUI] fixed duplicated form tag.

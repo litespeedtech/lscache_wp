@@ -22,7 +22,6 @@ $third_cls = array(
 	'Divi_Theme_Builder',
 	'Elementor',
 	'Facetwp',
-	'Like_Dislike_Counter',
 	'Theme_My_Login',
 	'User_Switching',
 	'WooCommerce',

@@ -7,11 +7,11 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use \LiteSpeed\API ;
+use \LiteSpeed\API;
 
 class Avada
 {
@@ -24,11 +24,11 @@ class Avada
 	public static function detect()
 	{
 		if ( ! defined( 'AVADA_VERSION' ) ) {
-			return ;
+			return;
 		}
 
-		add_action( 'update_option_avada_dynamic_css_posts', __CLASS__ . '::flush' ) ;
-		add_action( 'update_option_fusion_options', __CLASS__ . '::flush' ) ;
+		add_action( 'update_option_avada_dynamic_css_posts', __CLASS__ . '::flush' );
+		add_action( 'update_option_fusion_options', __CLASS__ . '::flush' );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Avada
 	 */
 	public static function flush()
 	{
-		API::purge_all() ;
+		do_action( 'litespeed_purge_all', '3rd avada' );
 	}
 
 }

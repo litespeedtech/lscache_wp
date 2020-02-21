@@ -68,7 +68,7 @@ class WooCommerce extends Instance
 		$this->esi_eanbled = API::esi_enabled() ;
 
 		API::hook_control( array( $this, 'set_control' ) ) ;
-		API::hook_tag( array( $this, 'set_tag' ) ) ;
+		add_action( 'litespeed_tag_finalize', array( $this, 'set_tag' ) );
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
 		add_action( 'woocommerce_product_set_stock', array( $this, 'purge_product' ) ) ;
@@ -598,7 +598,7 @@ class WooCommerce extends Instance
 						 * @since 1.6.6.1
 						 */
 						// API::set_cache_no_vary() ;
-						API::add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
+						API::tag_add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
 					else {
 						$err = 'cart is not empty' ;
@@ -608,7 +608,7 @@ class WooCommerce extends Instance
 					if ( $this->cache_cart ) {
 						API::set_cache_private() ;
 						API::set_cache_no_vary() ;
-						API::add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
+						API::tag_add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
 					else {
 						$err = 'ESI cart should be nocache' ;
