@@ -163,7 +163,7 @@ class Conf extends Base
 		// Append const options
 		if ( defined( 'LITESPEED_CONF' ) && LITESPEED_CONF ) {
 			foreach ( self::$_default_options as $k => $v ) {
-				$const = 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $k ) );
+				$const = Base::conf_const( $k );
 				if ( defined( $const ) ) {
 					$this->_const_options[ $k ] = constant( $const );
 				}

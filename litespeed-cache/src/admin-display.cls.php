@@ -895,7 +895,10 @@ class Admin_Display extends Base
 			$val = esc_textarea( $val );
 		}
 
-		echo '<div class="litespeed-desc litespeed-warning">⚠️ <strong>' . __('Overwritten in wp-config.php', 'litespeed-cache') . '</strong> ' . __('value set to ', 'litespeed-cache') . "<code>$val</code></div>";
+		echo '<div class="litespeed-desc litespeed-warning">⚠️ ' .
+				sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' ) . ', ' .
+				sprintf( __( 'currently set to %s', 'litespeed-cache' ), "<code>$val</code>" ) .
+			'</div>';
 	}
 
 	/**

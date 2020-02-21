@@ -794,6 +794,16 @@ class Base extends Instance
 	}
 
 	/**
+	 * Generate const name based on $id
+	 *
+	 * @since  3.0
+	 */
+	public static function conf_const( $id )
+	{
+		return 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $id ) );
+	}
+
+	/**
 	 * Filter to be used when saving setting
 	 *
 	 * @since  3.0
