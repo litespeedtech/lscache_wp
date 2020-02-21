@@ -895,7 +895,7 @@ class Admin_Display extends Base
 			$val = esc_textarea( $val );
 		}
 
-		echo "Const overwritten to <code>$val</code>";
+		echo '<div class="litespeed-desc litespeed-warning">⚠️ <strong>' . __('Overwritten in wp-config.php', 'litespeed-cache') . '</strong> ' . __('value set to ', 'litespeed-cache') . "<code>$val</code></div>";
 	}
 
 	/**
@@ -929,7 +929,7 @@ class Admin_Display extends Base
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val ) ;
 				$val = esc_textarea( $val ) ;
-				$val = '<div class="litespeed-desc">'.__( 'Recommended value', 'litespeed-cache' ) . ':</div>'."<textarea readonly rows='5' cols='30' class='litespeed-left10'>$val</textarea>" ;
+				$val = '<div class="litespeed-desc">'.__( 'Recommended value', 'litespeed-cache' ) . ':</div>'."<textarea readonly rows='5' cols='30'>$val</textarea>" ;
 			}
 			else {
 				$val = esc_textarea( $val ) ;
