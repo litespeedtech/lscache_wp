@@ -53,6 +53,11 @@ $this->form_action();
 						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
 					</span>
 				<?php endif; ?>
+				<br /><?php echo sprintf( __( 'If you have previously generated a key as an anonymous user, but now wish to log into the %1$s Dashboard to see usage, status and statistics, please use the %2$s in %3$s to register at QUIC.cloud.', 'litespeed-cache' ),
+						'<strong>QUIC.cloud</strong>',
+						'<code>' . __( 'Administration Email Address' ) . '</code>',
+						'<code>' . __( 'Settings' ) . ' > ' . __( 'General Settings' ) . '</code>'
+					); ?>
 			</div>
 		</td>
 	</tr>

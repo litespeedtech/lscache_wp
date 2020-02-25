@@ -137,7 +137,7 @@ $placeholder_summary = Placeholder::get_summary();
 		<?php endforeach; ?>
 	</div>
 
-	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="https://my.quic.cloud" class="litespeed-link-with-icon" target="_blank"><?php echo __( 'Go to QUIC.cloud dashboard', 'litespeed-cache' ) ;?> <span class="dashicons dashicons-external"></span></a></p>
+	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="<?php echo Cloud::CLOUD_SERVER_DASH; ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __( 'Go to QUIC.cloud dashboard', 'litespeed-cache' ) ;?> <span class="dashicons dashicons-external"></span></a></p>
 
 	<div class="litespeed-dashboard-group">
 		<hr>
