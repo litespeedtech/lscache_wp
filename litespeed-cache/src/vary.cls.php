@@ -77,7 +77,7 @@ class Vary extends Instance
 		 * @since 1.6.7
 		 */
 		add_action( 'rest_api_init', function(){
-			Log::debug( '[Vary] Rest API init disabled vary change' ) ;
+			Debug2::debug( '[Vary] Rest API init disabled vary change' ) ;
 			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
 		} ) ;
 
@@ -198,7 +198,7 @@ class Vary extends Instance
 	 */
 	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
 	{
-		Log::debug( '[Vary] add_logged_in' ) ;
+		Debug2::debug( '[Vary] add_logged_in' ) ;
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
@@ -219,7 +219,7 @@ class Vary extends Instance
 	 */
 	public function remove_logged_in()
 	{
-		Log::debug( '[Vary] remove_logged_in' ) ;
+		Debug2::debug( '[Vary] remove_logged_in' ) ;
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
@@ -240,7 +240,7 @@ class Vary extends Instance
 	 */
 	public static function can_ajax_vary()
 	{
-		Log::debug( '[Vary] litespeed_ajax_vary -> true' ) ;
+		Debug2::debug( '[Vary] litespeed_ajax_vary -> true' ) ;
 		add_filter( 'litespeed_ajax_vary', '__return_true' ) ;
 	}
 
@@ -258,7 +258,7 @@ class Vary extends Instance
 		 * @since  1.6.6
 		 */
 		if ( Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
-			Log::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
+			Debug2::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
 			return false ;
 		}
 
@@ -267,7 +267,7 @@ class Vary extends Instance
 		 * @since 1.6.5
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
-			Log::debug( '[Vary] can_change_vary bypassed due to method not get/post' ) ;
+			Debug2::debug( '[Vary] can_change_vary bypassed due to method not get/post' ) ;
 			return false ;
 		}
 
@@ -276,12 +276,12 @@ class Vary extends Instance
 		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
 		 */
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) === 0 ) {
-			Log::debug( '[Vary] can_change_vary bypassed due to crawler' ) ;
+			Debug2::debug( '[Vary] can_change_vary bypassed due to crawler' ) ;
 			return false ;
 		}
 
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
-			Log::debug( '[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
+			Debug2::debug( '[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
 			return false ;
 		}
 
@@ -302,7 +302,7 @@ class Vary extends Instance
 			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 		}
 		else {
-			Log::debug2( "[Vary] _update_default_vary bypassed due to run already" ) ;
+			Debug2::debug2( "[Vary] _update_default_vary bypassed due to run already" ) ;
 			return ;
 		}
 
@@ -317,7 +317,7 @@ class Vary extends Instance
 				$expire = time() + 2 * DAY_IN_SECONDS ;
 			}
 			self::_cookie( $vary, $expire ) ;
-			Log::debug( "[Vary] set_cookie ---> $vary" ) ;
+			Debug2::debug( "[Vary] set_cookie ---> $vary" ) ;
 			Control::set_nocache( 'changing default vary' . " $current_vary => $vary" ) ;
 		}
 	}
@@ -354,7 +354,7 @@ class Vary extends Instance
 		}
 
 		if ( $group ) {
-			Log::debug2( '[Vary] role in vary_group [group] ' . $group ) ;
+			Debug2::debug2( '[Vary] role in vary_group [group] ' . $group ) ;
 		}
 
 		return $group ;
@@ -378,7 +378,7 @@ class Vary extends Instance
 			$uid = Router::get_uid() ;
 		}
 		else {
-			Log::debug( '[Vary] uid: ' . $uid ) ;
+			Debug2::debug( '[Vary] uid: ' . $uid ) ;
 		}
 
 		// get user's group id
@@ -395,18 +395,18 @@ class Vary extends Instance
 			// Get admin bar set
 			// see @_get_admin_bar_pref()
 			$pref = get_user_option( 'show_admin_bar_front', $uid ) ;
-			Log::debug2( '[Vary] show_admin_bar_front: ' . $pref ) ;
+			Debug2::debug2( '[Vary] show_admin_bar_front: ' . $pref ) ;
 			$admin_bar = $pref === false || $pref === 'true' ;
 
 			if ( $admin_bar ) {
 				$vary[ 'admin_bar' ] = 1 ;
-				Log::debug2( '[Vary] admin bar : true' ) ;
+				Debug2::debug2( '[Vary] admin bar : true' ) ;
 			}
 
 		}
 		else {
 			// Guest user
-			Log::debug( '[Vary] role id: failed, guest' ) ;
+			Debug2::debug( '[Vary] role id: failed, guest' ) ;
 
 		}
 
@@ -501,7 +501,7 @@ class Vary extends Instance
 		if ( ! empty( $_SERVER[ $tag ] ) ) {
 			$path = parse_url( $_SERVER[ $tag ] ) ;
 			$path = ! empty( $path[ 'path' ] ) ? $path[ 'path' ] : false ;
-			Log::debug( '[Vary] Cookie Vary path: ' . $path ) ;
+			Debug2::debug( '[Vary] Cookie Vary path: ' . $path ) ;
 		}
 		return $path ;
 	}
@@ -533,7 +533,7 @@ class Vary extends Instance
 		 * @since  1.6.6.1
 		 */
 		// if ( ! Control::is_cacheable() ) {
-		// 	Log::debug2( 'Vary: bypass finalize due to not cacheable' ) ;
+		// 	Debug2::debug2( 'Vary: bypass finalize due to not cacheable' ) ;
 		// 	return false;
 		// }
 
@@ -541,7 +541,7 @@ class Vary extends Instance
 		global $post ;
 		if ( ! empty($post->post_password) ) {
 			if ( isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
-				Log::debug( '[Vary] finalize bypassed due to password protected vary ' ) ;
+				Debug2::debug( '[Vary] finalize bypassed due to password protected vary ' ) ;
 				// If user has password cookie, do not cache
 				Control::set_nocache('password protected vary') ;
 				return ;
@@ -551,7 +551,7 @@ class Vary extends Instance
 		}
 
 		if ( empty($tp_cookies) ) {
-			Log::debug2( '[Vary] no custimzed vary ' ) ;
+			Debug2::debug2( '[Vary] no custimzed vary ' ) ;
 			return ;
 		}
 
@@ -579,7 +579,7 @@ class Vary extends Instance
 		 */
 		$cookies = apply_filters( 'litespeed_vary_cookies', self::$_vary_cookies ) ;
 		if ( $cookies !== self::$_vary_cookies ) {
-			Log::debug( '[Vary] vary changed by filter [Old] ' . var_export( self::$_vary_cookies, true ) . ' [New] ' . var_export( $cookies, true )  ) ;
+			Debug2::debug( '[Vary] vary changed by filter [Old] ' . var_export( self::$_vary_cookies, true ) . ' [New] ' . var_export( $cookies, true )  ) ;
 		}
 
 		if ( ! empty( $cookies ) ) {

@@ -29,7 +29,7 @@ class Media extends Instance
 	 */
 	protected function __construct()
 	{
-		Log::debug2( '[Media] init' ) ;
+		Debug2::debug2( '[Media] init' ) ;
 
 		$this->_wp_upload_dir = wp_upload_dir() ;
 
@@ -128,7 +128,7 @@ class Media extends Instance
 	 */
 	public function delete_attachment( $post_id )
 	{
-		Log::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
+		Debug2::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
 		Img_Optm::get_instance()->reset_row( $post_id ) ;
 	}
 
@@ -177,7 +177,7 @@ class Media extends Instance
 
 		if ( file_exists( $real_file ) ) {
 			unlink( $real_file ) ;
-			Log::debug( '[Media] deleted ' . $real_file ) ;
+			Debug2::debug( '[Media] deleted ' . $real_file ) ;
 		}
 
 		do_action( 'litespeed_media_del', $short_file_path, $post_id ) ;
@@ -196,7 +196,7 @@ class Media extends Instance
 
 		if ( file_exists( $real_file ) ) {
 			rename( $real_file, $real_file_new ) ;
-			Log::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new ) ;
+			Debug2::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new ) ;
 		}
 
 		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id ) ;
@@ -258,7 +258,7 @@ class Media extends Instance
 
 			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
 			$desc = false ;
-			
+
 			$cls = '' ;
 
 			if ( $this->info( $bk_file, $post_id ) ) {
@@ -271,8 +271,8 @@ class Media extends Instance
 				$desc = __( 'Currently using original (unoptimized) version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
 			}
 
-			echo GUI::pie_tiny( $percent, 24, 
-				sprintf( __( 'Original file reduced by %1$s (%2$s)', 'litespeed-cache' ), 
+			echo GUI::pie_tiny( $percent, 24,
+				sprintf( __( 'Original file reduced by %1$s (%2$s)', 'litespeed-cache' ),
 					$percent . '%',
 					Utility::real_size( $size_meta[ 'ori_saved' ] )
 				) , 'left'
@@ -284,17 +284,17 @@ class Media extends Instance
 				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
 			}
 			else {
-				echo sprintf( 
+				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
-					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of original file exists.', 'litespeed-cache' ), 
-					__( '(optm)', 'litespeed-cache' ) 
+					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of original file exists.', 'litespeed-cache' ),
+					__( '(optm)', 'litespeed-cache' )
 				) ;
 			}
 
 
-		} 
+		}
 		elseif ( $size_meta && $size_meta[ 'ori_saved' ] === 0 ){
-			echo GUI::pie_tiny( 0, 24, 
+			echo GUI::pie_tiny( 0, 24,
 				__( 'Congratulation! Your file was already optmized', 'litespeed-cache' ),
 				'left'
 			) ;
@@ -325,8 +325,8 @@ class Media extends Instance
 				$desc = __( 'Currently using original (unoptimized) version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
 			}
 
-			echo GUI::pie_tiny( $percent, 24, 
-				sprintf( __( 'WebP file reduced by %1$s (%2$s)', 'litespeed-cache' ), 
+			echo GUI::pie_tiny( $percent, 24,
+				sprintf( __( 'WebP file reduced by %1$s (%2$s)', 'litespeed-cache' ),
 					$percent . '%',
 					Utility::real_size( $size_meta[ 'ori_saved' ] )
 				) , 'left'
@@ -337,10 +337,10 @@ class Media extends Instance
 				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break  aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
 			}
 			else {
-				echo sprintf( 
+				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
-					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of unoptimized WebP file exists.', 'litespeed-cache' ), 
-					__( '(optm)', 'litespeed-cache' ) 
+					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of unoptimized WebP file exists.', 'litespeed-cache' ),
+					__( '(optm)', 'litespeed-cache' )
 				) ;
 			}
 
@@ -424,16 +424,16 @@ class Media extends Instance
 	public static function finalize( $content )
 	{
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
-			Log::debug2( '[Media] bypass: NO_LAZY const' ) ;
+			Debug2::debug2( '[Media] bypass: NO_LAZY const' ) ;
 			return $content ;
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			Log::debug2( '[Media] bypass: Not frontend HTML type' ) ;
+			Debug2::debug2( '[Media] bypass: Not frontend HTML type' ) ;
 			return $content ;
 		}
 
-		Log::debug( '[Media] finalize' ) ;
+		Debug2::debug( '[Media] finalize' ) ;
 
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
@@ -466,7 +466,7 @@ class Media extends Instance
 		if ( $excludes ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
-				Log::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result ) ;
+				Debug2::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result ) ;
 				return ;
 			}
 		}
@@ -556,7 +556,7 @@ class Media extends Instance
 		 */
 		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
-			Log::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
+			Debug2::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
 				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
 			}
@@ -575,19 +575,19 @@ class Media extends Instance
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
-				Log::debug2( '[Media] lazyload bypassed base64 img' ) ;
+				Debug2::debug2( '[Media] lazyload bypassed base64 img' ) ;
 				continue ;
 			}
 
-			Log::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
+			Debug2::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
-				Log::debug2( '[Media] bypassed' ) ;
+				Debug2::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
 
 			if ( ! empty( $attrs[ 'class' ] ) && $hit = Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
-				Log::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit ) ;
+				Debug2::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit ) ;
 				continue ;
 			}
 
@@ -596,7 +596,7 @@ class Media extends Instance
 			 * @since  1.5
 			 */
 			if ( $excludes && Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
-				Log::debug2( '[Media] lazyload image exclude ' . $attrs[ 'src' ] ) ;
+				Debug2::debug2( '[Media] lazyload image exclude ' . $attrs[ 'src' ] ) ;
 				continue ;
 			}
 
@@ -606,7 +606,7 @@ class Media extends Instance
 			 * @since  3.0
 			 */
 			if ( strpos( $attrs[ 'src' ], '{' ) !== false ) {
-				Log::debug2( '[Media] image src has {} ' . $attrs[ 'src' ] ) ;
+				Debug2::debug2( '[Media] image src has {} ' . $attrs[ 'src' ] ) ;
 				continue ;
 			}
 
@@ -649,7 +649,7 @@ class Media extends Instance
 		 */
 		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
 		if ( $parent_cls_exc ) {
-			Log::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
+			Debug2::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
 			foreach ( $parent_cls_exc as $v ) {
 				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
 			}
@@ -663,20 +663,20 @@ class Media extends Instance
 				continue ;
 			}
 
-			Log::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
+			Debug2::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
-				Log::debug2( '[Media] bypassed' ) ;
+				Debug2::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
 
 			if ( ! empty( $attrs[ 'class' ] ) && $hit = Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
-				Log::debug2( '[Media] iframe lazyload cls excludes [hit] ' . $hit ) ;
+				Debug2::debug2( '[Media] iframe lazyload cls excludes [hit] ' . $hit ) ;
 				continue ;
 			}
 
 			if ( apply_filters( 'litespeed_iframe_lazyload_exc', false, $attrs[ 'src' ] ) ) {
-				Log::debug2( '[Media] bypassed by filter' ) ;
+				Debug2::debug2( '[Media] bypassed by filter' ) ;
 				continue ;
 			}
 
@@ -708,11 +708,11 @@ class Media extends Instance
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
-				Log::debug2( '[Media] buffer_webp no . attribute ' . $v ) ;
+				Debug2::debug2( '[Media] buffer_webp no . attribute ' . $v ) ;
 				continue ;
 			}
 
-			Log::debug2( '[Media] buffer_webp attribute ' . $v ) ;
+			Debug2::debug2( '[Media] buffer_webp attribute ' . $v ) ;
 
 			$v = explode( '.', $v ) ;
 			$attr = preg_quote( $v[ 1 ], '#' ) ;
@@ -794,7 +794,7 @@ class Media extends Instance
 	 */
 	public function webp_attach_img_src( $img )
 	{
-		Log::debug2( '[Media] changing attach src: ' . $img[0] ) ;
+		Debug2::debug2( '[Media] changing attach src: ' . $img[0] ) ;
 		if ( $img && $url = $this->replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
@@ -846,10 +846,10 @@ class Media extends Instance
 	 */
 	public function replace_webp( $url )
 	{
-		Log::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
+		Debug2::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
 
 		if ( substr( $url, -5 ) == '.webp' ) {
-			Log::debug2( '[Media] already webp' ) ;
+			Debug2::debug2( '[Media] already webp' ) ;
 			return false ;
 		}
 
@@ -865,16 +865,16 @@ class Media extends Instance
 				$url .= '.webp' ;
 			}
 			else {
-				Log::debug2( '[Media] -no WebP file, bypassed' ) ;
+				Debug2::debug2( '[Media] -no WebP file, bypassed' ) ;
 				return false ;
 			}
 		}
 		else {
-			Log::debug2( '[Media] -no file, bypassed' ) ;
+			Debug2::debug2( '[Media] -no file, bypassed' ) ;
 			return false ;
 		}
 
-		Log::debug2( '[Media] - replaced to: ' . $url ) ;
+		Debug2::debug2( '[Media] - replaced to: ' . $url ) ;
 
 		return $url ;
 	}

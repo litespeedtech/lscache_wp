@@ -12,7 +12,7 @@ namespace LiteSpeed\CDN ;
 use LiteSpeed\Core ;
 use LiteSpeed\Base ;
 use LiteSpeed\Conf ;
-use LiteSpeed\Log ;
+use LiteSpeed\Debug2;
 use LiteSpeed\Router ;
 use LiteSpeed\Admin ;
 use LiteSpeed\Admin_Display ;
@@ -50,11 +50,11 @@ class Cloudflare extends Base
 
 			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
 
-			Log::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" ) ;
+			Debug2::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" ) ;
 		}
 		else {
 			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, '' ) ;
-			Log::debug( '[Cloudflare] ❌ Get zone failed, clean zone' ) ;
+			Debug2::debug( '[Cloudflare] ❌ Get zone failed, clean zone' ) ;
 		}
 
 	}
@@ -67,7 +67,7 @@ class Cloudflare extends Base
 	 */
 	private function _get_devmode( $show_msg = true )
 	{
-		Log::debug( '[Cloudflare] _get_devmode' ) ;
+		Debug2::debug( '[Cloudflare] _get_devmode' ) ;
 
 		$zone = $this->_zone() ;
 		if ( ! $zone ) {
@@ -80,7 +80,7 @@ class Cloudflare extends Base
 		if ( ! $res ) {
 			return ;
 		}
-		Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
+		Debug2::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
 		$curr_status = self::get_option( self::ITEM_STATUS, array() ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
@@ -99,7 +99,7 @@ class Cloudflare extends Base
 	 */
 	private function _set_devmode( $type )
 	{
-		Log::debug( '[Cloudflare] _set_devmode' ) ;
+		Debug2::debug( '[Cloudflare] _set_devmode' ) ;
 
 		$zone = $this->_zone() ;
 		if ( ! $zone ) {
@@ -132,7 +132,7 @@ class Cloudflare extends Base
 	 */
 	private function _purge_all()
 	{
-		Log::debug( '[Cloudflare] _purge_all' ) ;
+		Debug2::debug( '[Cloudflare] _purge_all' ) ;
 
 		$cf_on = Conf::val( Base::O_CDN_CLOUDFLARE ) ;
 		if ( ! $cf_on ) {
@@ -191,7 +191,7 @@ class Cloudflare extends Base
 		if ( $kw && strpos( $kw, '.' ) ) {
 			$zones = $this->_cloudflare_call( $url . '&name=' . $kw, 'GET', false, false ) ;
 			if ( $zones ) {
-				Log::debug( '[Cloudflare] fetch_zone exact matched' ) ;
+				Debug2::debug( '[Cloudflare] fetch_zone exact matched' ) ;
 				return $zones[ 0 ] ;
 			}
 		}
@@ -200,24 +200,24 @@ class Cloudflare extends Base
 		$zones = $this->_cloudflare_call( $url, 'GET', false, false ) ;
 
 		if ( ! $zones ) {
-			Log::debug( '[Cloudflare] fetch_zone no zone' ) ;
+			Debug2::debug( '[Cloudflare] fetch_zone no zone' ) ;
 			return false ;
 		}
 
 		if ( ! $kw ) {
-			Log::debug( '[Cloudflare] fetch_zone no set name, use first one by default' ) ;
+			Debug2::debug( '[Cloudflare] fetch_zone no set name, use first one by default' ) ;
 			return $zones[ 0 ] ;
 		}
 
 		foreach ( $zones as $v ) {
 			if ( strpos( $v[ 'name' ], $kw ) !== false ) {
-				Log::debug( '[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] ) ;
+				Debug2::debug( '[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] ) ;
 				return $v ;
 			}
 		}
 
 		// Can't match current name, return default one
-		Log::debug( '[Cloudflare] fetch_zone failed match name, use first one by default' ) ;
+		Debug2::debug( '[Cloudflare] fetch_zone failed match name, use first one by default' ) ;
 		return $zones[ 0 ] ;
 	}
 
@@ -229,7 +229,7 @@ class Cloudflare extends Base
 	 */
 	private function _cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true )
 	{
-		Log::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" ) ;
+		Debug2::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" ) ;
 
 		$header = array(
 			'Content-Type: application/json',
@@ -253,7 +253,7 @@ class Cloudflare extends Base
 		$json = json_decode( $result, true ) ;
 
 		if ( $json && $json[ 'success' ] && $json[ 'result' ] ) {
-			Log::debug( "[Cloudflare] _cloudflare_call called successfully" ) ;
+			Debug2::debug( "[Cloudflare] _cloudflare_call called successfully" ) ;
 			if ( $show_msg ) {
 				$msg = __( 'Communicated with Cloudflare successfully.', 'litespeed-cache' ) ;
 				Admin_Display::succeed( $msg ) ;
@@ -262,7 +262,7 @@ class Cloudflare extends Base
 			return $json[ 'result' ] ;
 		}
 
-		Log::debug( "[Cloudflare] _cloudflare_call called failed: $result" ) ;
+		Debug2::debug( "[Cloudflare] _cloudflare_call called failed: $result" ) ;
 		if ( $show_msg ) {
 			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' ) ;
 			Admin_Display::error( $msg ) ;

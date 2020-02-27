@@ -35,7 +35,7 @@ class Avatar extends Base
 			return ;
 		}
 
-		Log::debug2( '[Avatar] init' ) ;
+		Debug2::debug2( '[Avatar] init' ) ;
 
 		$this->_tb = Data::get_instance()->tb( 'avatar' ) ;
 
@@ -70,10 +70,10 @@ class Avatar extends Base
 	{
 		global $wpdb ;
 
-		Log::debug( '[Avatar] is avatar request' ) ;
+		Debug2::debug( '[Avatar] is avatar request' ) ;
 
 		if ( strlen( $md5 ) !== 32 ) {
-			Log::debug( '[Avatar] wrong md5 ' . $md5 ) ;
+			Debug2::debug( '[Avatar] wrong md5 ' . $md5 ) ;
 			return ;
 		}
 
@@ -81,7 +81,7 @@ class Avatar extends Base
 		$url = $wpdb->get_var( $wpdb->prepare( $q, $md5 ) ) ;
 
 		if ( ! $url ) {
-			Log::debug( '[Avatar] no matched url for md5 ' . $md5 ) ;
+			Debug2::debug( '[Avatar] no matched url for md5 ' . $md5 ) ;
 			return ;
 		}
 
@@ -105,14 +105,14 @@ class Avatar extends Base
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_avatar_realtime_gen_dict[ $url ] ) ) {
-			Log::debug2( '[Avatar] already in dict [url] ' . $url ) ;
+			Debug2::debug2( '[Avatar] already in dict [url] ' . $url ) ;
 
 			return $this->_avatar_realtime_gen_dict[ $url ] ;
 		}
 
 		$realpath = $this->_realpath( $url ) ;
 		if ( file_exists( $realpath ) && time() - filemtime( $realpath ) <= $this->_conf_cache_ttl ) {
-			Log::debug2( '[Avatar] cache file exists [url] ' . $url ) ;
+			Debug2::debug2( '[Avatar] cache file exists [url] ' . $url ) ;
 			return $this->_rewrite( $url ) ;
 		}
 
@@ -122,7 +122,7 @@ class Avatar extends Base
 
 		// Send request
 		if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
-			Log::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url ) ;
+			Debug2::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url ) ;
 			return $url ;
 		}
 
@@ -211,7 +211,7 @@ class Avatar extends Base
 		// Clear avatar summary
 		self::save_summary( array() ) ;
 
-		Log::debug2( '[Avatar] Cleared avatar queue' ) ;
+		Debug2::debug2( '[Avatar] Cleared avatar queue' ) ;
 	}
 
 	/**
@@ -226,14 +226,14 @@ class Avatar extends Base
 
 		$_instance = self::get_instance();
 		if ( ! $_instance->queue_count() ) {
-			Log::debug( '[Avatar] no queue' ) ;
+			Debug2::debug( '[Avatar] no queue' ) ;
 			return ;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $force ) {
 			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
-				Log::debug( '[Avatar] curr_request too close' ) ;
+				Debug2::debug( '[Avatar] curr_request too close' ) ;
 				return ;
 			}
 		}
@@ -242,10 +242,10 @@ class Avatar extends Base
 		$q = $wpdb->prepare( $q, array( time() - $_instance->_conf_cache_ttl, apply_filters( 'litespeed_avatar_limit', 30 ) ) ) ;
 
 		$list = $wpdb->get_results( $q ) ;
-		Log::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
+		Debug2::debug( '[Avatar] cron job [count] ' . count( $list ) ) ;
 
 		foreach ( $list as $v ) {
-			Log::debug( '[Avatar] cron job [url] ' . $v->url ) ;
+			Debug2::debug( '[Avatar] cron job [url] ' . $v->url ) ;
 
 			$_instance->_generate( $v->url );
 		}
@@ -275,13 +275,13 @@ class Avatar extends Base
 		}
 		$response = wp_remote_get( $url, array( 'timeout' => 180, 'stream' => true, 'filename' => $file ) ) ;
 
-		Log::debug( '[Avatar] _generate [url] ' . $url ) ;
+		Debug2::debug( '[Avatar] _generate [url] ' . $url ) ;
 
 		// Parse response data
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			file_exists( $file ) && unlink( $file ) ;
-			Log::debug( '[Avatar] failed to get: ' . $error_message ) ;
+			Debug2::debug( '[Avatar] failed to get: ' . $error_message ) ;
 			return $url ;
 		}
 
@@ -300,7 +300,7 @@ class Avatar extends Base
 			$wpdb->query( $wpdb->prepare( $q, array( $url, $md5, time() ) ) ) ;
 		}
 
-		Log::debug( '[Avatar] saved avatar ' . $file ) ;
+		Debug2::debug( '[Avatar] saved avatar ' . $file ) ;
 
 		return $this->_rewrite( $url ) ;
 	}

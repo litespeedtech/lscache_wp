@@ -46,7 +46,7 @@ class Tool extends Instance
 	 */
 	public function check_ip()
 	{
-		Log::debug( '[Tool] ✅ check_ip' ) ;
+		Debug2::debug( '[Tool] ✅ check_ip' ) ;
 
 		$response = wp_remote_get( 'https://www.doapi.us/ip' ) ;
 
@@ -56,7 +56,7 @@ class Tool extends Instance
 
 		$data = $response[ 'body' ] ;
 
-		Log::debug( '[Tool] result [ip] ' . $data ) ;
+		Debug2::debug( '[Tool] result [ip] ' . $data ) ;
 
 		return $data ;
 	}
@@ -92,7 +92,7 @@ class Tool extends Instance
 
 		if ( ! $this->_conf_heartbeat_front_ttl ) {
 			wp_deregister_script( 'heartbeat' ) ;
-			Log::debug( '[Tool] Deregistered frontend heartbeat' ) ;
+			Debug2::debug( '[Tool] Deregistered frontend heartbeat' ) ;
 		}
 	}
 
@@ -111,7 +111,7 @@ class Tool extends Instance
 
 			if ( ! $this->_conf_heartbeat_editor_ttl ) {
 				wp_deregister_script( 'heartbeat' ) ;
-				Log::debug( '[Tool] Deregistered editor heartbeat' ) ;
+				Debug2::debug( '[Tool] Deregistered editor heartbeat' ) ;
 			}
 		}
 		else {
@@ -121,7 +121,7 @@ class Tool extends Instance
 
 			if ( ! $this->_conf_heartbeat_back_ttl ) {
 				wp_deregister_script( 'heartbeat' ) ;
-				Log::debug( '[Tool] Deregistered backend heartbeat' ) ;
+				Debug2::debug( '[Tool] Deregistered backend heartbeat' ) ;
 			}
 		}
 
@@ -139,19 +139,19 @@ class Tool extends Instance
 		if ( $this->_is_editor() ) {
 			if ( $this->_conf_heartbeat_editor ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_editor_ttl ;
-				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_editor_ttl ) ;
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_editor_ttl ) ;
 			}
 		}
 		elseif ( ! is_admin() ) {
 			if ( $this->_conf_heartbeat_front ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_front_ttl ;
-				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_front_ttl ) ;
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_front_ttl ) ;
 			}
 		}
 		else {
 			if ( $this->_conf_heartbeat_back ) {
 				$settings[ 'interval' ] = $this->_conf_heartbeat_back_ttl ;
-				Log::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_back_ttl ) ;
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_back_ttl ) ;
 			}
 		}
 		return $settings ;

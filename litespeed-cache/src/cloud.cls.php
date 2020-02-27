@@ -202,7 +202,7 @@ class Cloud extends Base
 			return;
 		}
 
-		Log::debug( '[Cloud] sync_usage ' . json_encode( $usage ) );
+		Debug2::debug( '[Cloud] sync_usage ' . json_encode( $usage ) );
 
 		foreach ( self::$SERVICES as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
@@ -243,7 +243,7 @@ class Cloud extends Base
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
-			Log::debug( '[Cloud] request cloud list failed: ', $json );
+			Debug2::debug( '[Cloud] request cloud list failed: ', $json );
 
 			if ( $json ) {
 				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . $json;
@@ -260,7 +260,7 @@ class Cloud extends Base
 		$min = min( $speed_list );
 
 		if ( $min == 99999 ) {
-			Log::debug( '[Cloud] failed to ping all clouds' );
+			Debug2::debug( '[Cloud] failed to ping all clouds' );
 			return false;
 		}
 
@@ -280,11 +280,11 @@ class Cloud extends Base
 			return false;
 		}
 
-		Log::debug( '[Cloud] Closest nodes list', $valid_clouds );
+		Debug2::debug( '[Cloud] Closest nodes list', $valid_clouds );
 
 		$closest = $valid_clouds[ array_rand( $valid_clouds ) ];
 
-		Log::debug( '[Cloud] Chose node: ' . $closest );
+		Debug2::debug( '[Cloud] Chose node: ' . $closest );
 
 		// store data into option locally
 		$this->_summary[ 'server.' . $service ] = $closest;
@@ -342,7 +342,7 @@ class Cloud extends Base
 
 		$url .= '?' . http_build_query( $param );
 
-		Log::debug( '[Cloud] getting from : ' . $url );
+		Debug2::debug( '[Cloud] getting from : ' . $url );
 
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary();
@@ -364,7 +364,7 @@ class Cloud extends Base
 		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
 			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 300 - time();
 			if ( $expired > 0 ) {
-				Log::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
+				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
 				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, 0 ), '<code>' . $service_tag . '</code>' );
 				Admin_Display::error( $msg );
@@ -420,7 +420,7 @@ class Cloud extends Base
 
 		$url = $server . '/' . $service;
 
-		Log::debug( '[Cloud] posting to : ' . $url );
+		Debug2::debug( '[Cloud] posting to : ' . $url );
 
 		$param = array(
 			'site_url'		=> home_url(),
@@ -453,7 +453,7 @@ class Cloud extends Base
 	{
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Log::debug( '[Cloud] failed to request: ' . $error_message );
+			Debug2::debug( '[Cloud] failed to request: ' . $error_message );
 
 			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message;
 			Admin_Display::error( $msg );
@@ -463,7 +463,7 @@ class Cloud extends Base
 		$json = json_decode( $response[ 'body' ], true );
 
 		if ( ! is_array( $json ) ) {
-			Log::debug( '[Cloud] failed to decode response json: ' . $response[ 'body' ] );
+			Debug2::debug( '[Cloud] failed to decode response json: ' . $response[ 'body' ] );
 
 			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ];
 			Admin_Display::error( $msg );
@@ -472,7 +472,7 @@ class Cloud extends Base
 		}
 
 		if ( ! empty( $json[ '_503' ] ) ) {
-			Log::debug( '[Cloud] service 503 unavailable temporarily. ' . $json[ '_503' ] );
+			Debug2::debug( '[Cloud] service 503 unavailable temporarily. ' . $json[ '_503' ] );
 
 			$msg = __( 'We are working hard to improve your online service experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' );
 			$msg .= ' ' . $json[ '_503' ];
@@ -482,7 +482,7 @@ class Cloud extends Base
 		}
 
 		if ( ! empty( $json[ '_info' ] ) ) {
-			Log::debug( '[Cloud] _info: ' . $json[ '_info' ] );
+			Debug2::debug( '[Cloud] _info: ' . $json[ '_info' ] );
 			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json[ '_info' ];
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::info( $msg );
@@ -490,7 +490,7 @@ class Cloud extends Base
 		}
 
 		if ( ! empty( $json[ '_note' ] ) ) {
-			Log::debug( '[Cloud] _note: ' . $json[ '_note' ] );
+			Debug2::debug( '[Cloud] _note: ' . $json[ '_note' ] );
 			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json[ '_note' ];
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::note( $msg );
@@ -498,7 +498,7 @@ class Cloud extends Base
 		}
 
 		if ( ! empty( $json[ '_success' ] ) ) {
-			Log::debug( '[Cloud] _success: ' . $json[ '_success' ] );
+			Debug2::debug( '[Cloud] _success: ' . $json[ '_success' ] );
 			$msg = __( 'Good news from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json[ '_success' ];
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::succeed( $msg );
@@ -507,7 +507,7 @@ class Cloud extends Base
 
 		// Upgrade is required
 		if ( ! empty( $json[ '_err_req_v' ] ) ) {
-			Log::debug( '[Cloud] _err_req_v: ' . $json[ '_err_req_v' ] );
+			Debug2::debug( '[Cloud] _err_req_v: ' . $json[ '_err_req_v' ] );
 			$msg = sprintf( __( '%1$s plugin version %2$s required for this action.', 'litespeed-cache' ), Core::NAME, 'v' . $json[ '_err_req_v' ] . '+' );
 
 			// Append upgrade link
@@ -520,7 +520,7 @@ class Cloud extends Base
 
 		// Parse _carry_on info
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
-			Log::debug( '[Cloud] Carry_on usage', $json[ '_carry_on' ] );
+			Debug2::debug( '[Cloud] Carry_on usage', $json[ '_carry_on' ] );
 			// Store generic info
 			foreach ( array( 'usage', 'promo' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
@@ -548,7 +548,7 @@ class Cloud extends Base
 		// Parse general error msg
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
-			Log::debug( '[Cloud] ❌ _err: ' . $json_msg );
+			Debug2::debug( '[Cloud] ❌ _err: ' . $json_msg );
 
 			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg );
 			$msg .= $this->_parse_link( $json );
@@ -567,10 +567,10 @@ class Cloud extends Base
 		self::save_summary();
 
 		if ( $json ) {
-			Log::debug2( '[Cloud] response ok', $json );
+			Debug2::debug2( '[Cloud] response ok', $json );
 		}
 		else {
-			Log::debug2( '[Cloud] response ok' );
+			Debug2::debug2( '[Cloud] response ok' );
 		}
 
 		// Only successful request return Array
@@ -644,18 +644,18 @@ class Cloud extends Base
 	public function ip_validate()
 	{
 		if ( empty( $_POST[ 'hash' ] ) ) {
-			Log::debug( '[Cloud] Lack of hash param' );
+			Debug2::debug( '[Cloud] Lack of hash param' );
 			return self::err( 'lack_of_param' );
 		}
 
 		if ( empty( $this->_api_key ) ) {
-			Log::debug( '[Cloud] Lack of API key' );
+			Debug2::debug( '[Cloud] Lack of API key' );
 			return self::err( 'lack_of_api_key' );
 		}
 
 		$to_validate = substr( $this->_api_key, 0, 4 );
 		if ( $_POST[ 'hash' ] !== md5( $to_validate ) ) {
-			Log::debug( '[Cloud] __callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST[ 'hash' ] );
+			Debug2::debug( '[Cloud] __callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST[ 'hash' ] );
 			return self::err( 'err_hash' );
 		}
 
@@ -663,7 +663,7 @@ class Cloud extends Base
 
 		$res_hash = substr( $this->_api_key, 2, 4 );
 
-		Log::debug( '[Cloud] __callback IP request hash: md5(' . $res_hash . ')' );
+		Debug2::debug( '[Cloud] __callback IP request hash: md5(' . $res_hash . ')' );
 
 		return self::ok( array( 'hash' => md5( $res_hash ) ) );
 	}
@@ -677,7 +677,7 @@ class Cloud extends Base
 	public function hash()
 	{
 		if ( empty( $_POST[ 'hash' ] ) ) {
-			Log::debug( '[Cloud] Lack of hash param' );
+			Debug2::debug( '[Cloud] Lack of hash param' );
 			return self::err( 'lack_of_param' );
 		}
 
@@ -687,13 +687,13 @@ class Cloud extends Base
 		}
 
 		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
-			Log::debug( '[Cloud] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] );
+			Debug2::debug( '[Cloud] __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] );
 			return self::err( 'Error hash code' );
 		}
 
 		Control::set_nocache( 'Cloud hash validation' );
 
-		Log::debug( '[Cloud] __callback request hash: ' . $key_hash );
+		Debug2::debug( '[Cloud] __callback request hash: ' . $key_hash );
 
 		return self::ok( array( 'hash' => $key_hash ) );
 	}
@@ -724,14 +724,14 @@ class Cloud extends Base
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Log::debug( '[CLoud] failed to gen_key: ' . $error_message );
+			Debug2::debug( '[CLoud] failed to gen_key: ' . $error_message );
 			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . $error_message );
 			return;
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] != 'ok' ) {
-			Log::debug( '[CLoud] error to gen_key: ', $json );
+			Debug2::debug( '[CLoud] error to gen_key: ', $json );
 			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . ( ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : var_export( $json, true ) ) );
 			return;
 		}
@@ -770,7 +770,7 @@ class Cloud extends Base
 		// This doesn't need to sync QUIC conf
 		Conf::get_instance()->update( Base::O_API_KEY, $api_key );
 
-		Log::debug( '[Cloud] saved auth_key' );
+		Debug2::debug( '[Cloud] saved auth_key' );
 	}
 
 	/**

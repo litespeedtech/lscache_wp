@@ -14,7 +14,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Log extends Instance
+class Debug2 extends Instance
 {
 	protected static $_instance ;
 	private static $log_path ;
@@ -67,11 +67,11 @@ class Log extends Instance
 		}
 
 		if ( ! $zip ) {
-			Log::debug( '[Log] ❌  No ZIP file' ) ;
+			Debug2::debug( '[Debug2] ❌  No ZIP file' ) ;
 			return ;
 		}
 
-		Log::debug( '[Log] ZIP file ' . $zip ) ;
+		Debug2::debug( '[Debug2] ZIP file ' . $zip ) ;
 
 		$update_plugins = get_site_transient( 'update_plugins' ) ;
 		if ( ! is_object( $update_plugins ) ) {
@@ -393,7 +393,7 @@ class Log extends Instance
 				$log = "\n" . $trace[ $i ][ 'file' ] ;
 			}
 			else {
-				if ( $trace[$i]['class'] == 'Log' ) {
+				if ( $trace[$i]['class'] == 'Debug2' ) {
 					continue ;
 				}
 

@@ -39,7 +39,7 @@ class CDN extends Instance
 	 */
 	protected function __construct()
 	{
-		Log::debug2( '[CDN] init' ) ;
+		Debug2::debug2( '[CDN] init' ) ;
 
 		if ( ! Router::can_cdn() ) {
 			if ( ! defined( self::BYPASS ) ) {
@@ -84,7 +84,7 @@ class CDN extends Instance
 			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
 				if ( $v[ $to_check ] ) {
-					Log::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url ) ;
+					Debug2::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url ) ;
 
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $to_check, $this_url ) ;
@@ -106,7 +106,7 @@ class CDN extends Instance
 						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
-				Log::debug2( '[CDN] mapping ' . implode( ',', $v[ Base::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
+				Debug2::debug2( '[CDN] mapping ' . implode( ',', $v[ Base::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
 			}
 		}
 
@@ -129,10 +129,10 @@ class CDN extends Instance
 				continue ;
 			}
 
-			Log::debug( '[CDN] wildcard rule in ' . $v ) ;
+			Debug2::debug( '[CDN] wildcard rule in ' . $v ) ;
 			$v = preg_quote( $v, '#' ) ;
 			$v = str_replace( '\*', '.*', $v ) ;
-			Log::debug2( '[CDN] translated rule is ' . $v ) ;
+			Debug2::debug2( '[CDN] translated rule is ' . $v ) ;
 
 			$this->_cfg_url_ori[ $k ] = $v ;
 		}
@@ -249,11 +249,11 @@ class CDN extends Instance
 	private function _finalize()
 	{
 		if ( defined( self::BYPASS ) ) {
-			Log::debug2( 'CDN bypass' ) ;
+			Debug2::debug2( 'CDN bypass' ) ;
 			return ;
 		}
 
-		Log::debug( 'CDN _finalize' ) ;
+		Debug2::debug( 'CDN _finalize' ) ;
 
 		// Start replacing img src
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
@@ -291,7 +291,7 @@ class CDN extends Instance
 				continue ;
 			}
 
-			Log::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
+			Debug2::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
 
 			if( ! $url2 = $this->rewrite( $url, Base::CDN_MAPPING_FILETYPE, $postfix ) ) {
 				continue ;
@@ -450,25 +450,25 @@ class CDN extends Instance
 	 */
 	public function rewrite( $url, $mapping_kind, $postfix = false )
 	{
-		Log::debug2( '[CDN] rewrite ' . $url ) ;
+		Debug2::debug2( '[CDN] rewrite ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
 
 		if ( empty( $url_parsed[ 'path' ] ) ) {
-			Log::debug2( '[CDN] -rewrite bypassed: no path' ) ;
+			Debug2::debug2( '[CDN] -rewrite bypassed: no path' ) ;
 			return false ;
 		}
 
 		// Only images under wp-cotnent/wp-includes can be replaced
 		$is_internal_folder = Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
 		if ( ! $is_internal_folder ) {
-			Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
+			Debug2::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
 			return false ;
 		}
 
 		// Check if is external url
 		if ( ! empty( $url_parsed[ 'host' ] ) ) {
 			if ( ! Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
-				Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
+				Debug2::debug2( '[CDN] -rewrite failed: host not internal' ) ;
 				return false ;
 			}
 		}
@@ -476,7 +476,7 @@ class CDN extends Instance
 		if ( $this->_cfg_cdn_exclude ) {
 			$exclude = Utility::str_hit_array( $url, $this->_cfg_cdn_exclude ) ;
 			if ( $exclude ) {
-				Log::debug2( '[CDN] -abort excludes ' . $exclude ) ;
+				Debug2::debug2( '[CDN] -abort excludes ' . $exclude ) ;
 				return false ;
 			}
 		}
@@ -484,14 +484,14 @@ class CDN extends Instance
 		// Fill full url before replacement
 		if ( empty( $url_parsed[ 'host' ] ) ) {
 			$url = Utility::uri2url( $url ) ;
-			Log::debug2( '[CDN] -fill before rewritten: ' . $url ) ;
+			Debug2::debug2( '[CDN] -fill before rewritten: ' . $url ) ;
 
 			$url_parsed = parse_url( $url ) ;
 		}
 
 		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
 		if ( $scheme ) {
-			// Log::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
+			// Debug2::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
 		}
 
 		// Find the mapping url to be replaced to
@@ -520,7 +520,7 @@ class CDN extends Instance
 				$url = str_replace( $scheme . $v, $final_url, $url ) ;
 			}
 		}
-		Log::debug2( '[CDN] -rewritten: ' . $url ) ;
+		Debug2::debug2( '[CDN] -rewritten: ' . $url ) ;
 
 		return $url ;
 	}
@@ -593,7 +593,7 @@ class CDN extends Instance
 
 		$src = $this->_cfg_cdn_remote_jquery == Base::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
-		Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
+		Debug2::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
 
 		wp_deregister_script( 'jquery-core' ) ;
 

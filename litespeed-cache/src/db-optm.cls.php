@@ -257,7 +257,7 @@ class DB_Optm extends Instance
 		$q = 'ALTER TABLE ' . DB_NAME . '.' . $tb . ' ENGINE = InnoDB';
 		$wpdb->query( $q );
 
-		Log::debug( "[DB] Converted $tb to InnoDB" );
+		Debug2::debug( "[DB] Converted $tb to InnoDB" );
 
 		$msg = __( 'Converted to InnoDB successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );

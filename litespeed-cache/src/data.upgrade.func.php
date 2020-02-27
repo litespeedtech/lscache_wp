@@ -6,7 +6,7 @@
  */
 defined( 'WPINC' ) || exit ;
 
-use LiteSpeed\Log ;
+use LiteSpeed\Debug2 ;
 
 /**
  * For version under v2.0 to v2.0+
@@ -55,12 +55,12 @@ function litespeed_update_2_0( $ver )
 				}
 			}
 
-			Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
+			Debug2::debug( '[Data] img_optm inserted records: ' . $k ) ;
 		}
 
 		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
 		$rows = $wpdb->query( $wpdb->prepare( $q, 'litespeed-optimize-status' ) ) ;
-		Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
+		Debug2::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
 
 	}
 
@@ -76,10 +76,10 @@ function litespeed_update_2_0( $ver )
 
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
-			Log::debug( '[Data] Warning: Alter table img_optm failed!', $sql ) ;
+			Debug2::debug( '[Data] Warning: Alter table img_optm failed!', $sql ) ;
 		}
 		else {
-			Log::debug( '[Data] Successfully upgraded table img_optm.' ) ;
+			Debug2::debug( '[Data] Successfully upgraded table img_optm.' ) ;
 		}
 
 	}
@@ -405,7 +405,7 @@ function litespeed_update_3_0( $ver )
 			'filetype' 	=> $previous_options[ 'cdn_filetype' ],
 		) ;
 		add_option( 'litespeed.conf.cdn-mapping', array( $cdn_mapping ) ) ;
-		Log::debug( "[Data] plugin_upgrade option adding CDN map" ) ;
+		Debug2::debug( "[Data] plugin_upgrade option adding CDN map" ) ;
 	}
 
 	/**

@@ -50,7 +50,7 @@ class Core extends Instance
 
 		// Check if debug is on
 		if ( Conf::val( Base::O_DEBUG ) ) {
-			Log::init();
+			Debug2::init();
 		}
 
 		/**
@@ -88,7 +88,7 @@ class Core extends Instance
 		// Check if there is a purge request in queue
 		if ( $purge_queue = Purge::get_option( Purge::DB_QUEUE ) ) {
 			@header( $purge_queue );
-			Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
+			Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
 			Purge::delete_option( Purge::DB_QUEUE );
 		}
 
@@ -141,7 +141,7 @@ class Core extends Instance
 		}
 
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
-			Log::debug( '[Core] Bypassed due to debug disable all setting' );
+			Debug2::debug( '[Core] Bypassed due to debug disable all setting' );
 			return;
 		}
 
@@ -192,7 +192,7 @@ class Core extends Instance
 		Router::get_instance()->is_crawler_role_simulation();
 
 		if ( ! is_admin() && $result = $this->__cfg->in_optm_exc_roles() ) {
-			Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
+			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
 		}
 
@@ -305,7 +305,7 @@ class Core extends Instance
 	 */
 	public function footer_hook()
 	{
-		Log::debug( '[Core] Footer hook called' );
+		Debug2::debug( '[Core] Footer hook called' );
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			define( 'LITESPEED_FOOTER_CALLED', true );
 		}
@@ -320,22 +320,22 @@ class Core extends Instance
 	private function _check_is_html( $buffer = null )
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
-			Log::debug2( '[Core] CHK html bypass: miss footer const' );
+			Debug2::debug2( '[Core] CHK html bypass: miss footer const' );
 			return;
 		}
 
 		if ( defined( 'DOING_AJAX' ) ) {
-			Log::debug2( '[Core] CHK html bypass: doing ajax' );
+			Debug2::debug2( '[Core] CHK html bypass: doing ajax' );
 			return;
 		}
 
 		if ( defined( 'DOING_CRON' ) ) {
-			Log::debug2( '[Core] CHK html bypass: doing cron' );
+			Debug2::debug2( '[Core] CHK html bypass: doing cron' );
 			return;
 		}
 
 		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] );
+			Debug2::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] );
 			return;
 		}
 
@@ -357,11 +357,11 @@ class Core extends Instance
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0;
 
 		if ( ! $is_html ) {
-			Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) );
+			Debug2::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) );
 			return;
 		}
 
-		Log::debug( '[Core] Footer check passed' );
+		Debug2::debug( '[Core] Footer check passed' );
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true );
@@ -415,28 +415,28 @@ class Core extends Instance
 		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			Log::debug( '[Core] ESI Start 👇' );
+			Debug2::debug( '[Core] ESI Start 👇' );
 			if ( strlen( $buffer ) > 100 ) {
-				Log::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' );
+				Debug2::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' );
 			}
 			else {
-				Log::debug( $buffer );
+				Debug2::debug( $buffer );
 			}
-			Log::debug( '[Core] ESI End 👆' );
+			Debug2::debug( '[Core] ESI End 👆' );
 		}
 
 		if ( apply_filters( 'litespeed_is_json', false ) ) {
 			if ( json_decode( $buffer, true ) == NULL ) {
-				Log::debug( '[Core] Buffer converting to JSON' );
+				Debug2::debug( '[Core] Buffer converting to JSON' );
 				$buffer = json_encode( $buffer );
 				$buffer = trim( $buffer, '"' );
 			}
 			else {
-				Log::debug( '[Core] JSON Buffer' );
+				Debug2::debug( '[Core] JSON Buffer' );
 			}
 		}
 
-		Log::debug( "End response\n--------------------------------------------------------------------------------\n" );
+		Debug2::debug( "End response\n--------------------------------------------------------------------------------\n" );
 
 		return $buffer;
 	}
@@ -483,7 +483,7 @@ class Core extends Instance
 		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' );
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false;
-			Log::debug( '[Core] ESI silence' );
+			Debug2::debug( '[Core] ESI silence' );
 		}
 		/**
 		 * Silence comment for json req
@@ -491,7 +491,7 @@ class Core extends Instance
 		 */
 		if ( REST::get_instance()->is_rest() || Router::is_ajax() ) {
 			$running_info_showing = false;
-			Log::debug( '[Core] Silence Comment due to REST/AJAX' );
+			Debug2::debug( '[Core] Silence Comment due to REST/AJAX' );
 		}
 
 		$running_info_showing = apply_filters( 'litespeed_comment', $running_info_showing );
@@ -520,7 +520,7 @@ class Core extends Instance
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			@header( $control_header );
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Log::debug( '🌩️ ' . $control_header );
+				Debug2::debug( '🌩️ ' . $control_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $control_header . " -->";
 				}
@@ -529,10 +529,10 @@ class Core extends Instance
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
 			@header( $purge_header );
-			Log::log_purge( $purge_header );
+			Debug2::log_purge( $purge_header );
 
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Log::debug( '🌩️ ' . $purge_header );
+				Debug2::debug( '🌩️ ' . $purge_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
 				}
@@ -542,7 +542,7 @@ class Core extends Instance
 		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
 			@header( $vary_header );
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Log::debug( '🌩️ ' . $vary_header );
+				Debug2::debug( '🌩️ ' . $vary_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
 				}
@@ -565,14 +565,14 @@ class Core extends Instance
 				$debug_header .= $vary_header . '; ';
 			}
 			@header( $debug_header );
-			Log::debug( $debug_header );
+			Debug2::debug( $debug_header );
 		}
 		else {
 			// Control header
 			if ( defined( 'LITESPEED_ON' ) && Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header );
 				if ( defined( 'LSCWP_LOG' ) ) {
-					Log::debug( '🌩️ ' . $tag_header );
+					Debug2::debug( '🌩️ ' . $tag_header );
 					if ( $running_info_showing ) {
 						$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
 					}
@@ -586,7 +586,7 @@ class Core extends Instance
 		}
 
 		if ( $is_forced ) {
-			Log::debug( '--forced--' );
+			Debug2::debug( '--forced--' );
 		}
 
 	}

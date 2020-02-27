@@ -42,7 +42,7 @@ class Admin_Settings extends Base
 	 */
 	public function save( $raw_data )
 	{
-		Log::debug( '[Settings] saving' );
+		Debug2::debug( '[Settings] saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' );
@@ -290,7 +290,7 @@ class Admin_Settings extends Base
 	 */
 	public function network_save( $raw_data )
 	{
-		Log::debug( '[Settings] network saving' );
+		Debug2::debug( '[Settings] network saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
 			exit( 'No fields' );

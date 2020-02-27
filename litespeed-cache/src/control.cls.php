@@ -176,7 +176,7 @@ class Control extends Instance
 			return ;
 		}
 		self::$_control |= self::BM_NO_VARY ;
-		Log::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Control extends Instance
 			return ;
 		}
 		self::$_control |= self::BM_STALE ;
-		Log::debug('[Ctrl] X Cache_control -> stale') ;
+		Debug2::debug('[Ctrl] X Cache_control -> stale') ;
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		Log::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
 	}
 
 	/**
@@ -272,7 +272,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		Log::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
 	}
 
 	/**
@@ -307,7 +307,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		Log::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
 	}
 
 	/**
@@ -338,7 +338,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
-		Log::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
 	}
 
 	/**
@@ -358,7 +358,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
-		Log::debug( '[Ctrl] Forced cacheable' . $reason ) ;
+		Debug2::debug( '[Ctrl] Forced cacheable' . $reason ) ;
 	}
 
 	/**
@@ -379,7 +379,7 @@ class Control extends Instance
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		Log::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
 	}
 
 	/**
@@ -438,7 +438,7 @@ class Control extends Instance
 	{
 		if ( is_numeric($ttl) ) {
 			self::$_custom_ttl = $ttl ;
-			Log::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
+			Debug2::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
 		}
 	}
 
@@ -467,7 +467,7 @@ class Control extends Instance
 				if ( $ttl < 0 ) {
 					$ttl += 86400 ;// add one day
 				}
-				Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
+				Debug2::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
 				return $ttl ;
 			}
 		}
@@ -502,8 +502,8 @@ class Control extends Instance
 	public function check_redirect( $location, $status )
 	{
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
-			Log::debug( "[Ctrl] 301 to $location" ) ;
+			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
+			Debug2::debug( "[Ctrl] 301 to $location" ) ;
 
 			$to_check = array(
 				PHP_URL_SCHEME,
@@ -516,7 +516,7 @@ class Control extends Instance
 			foreach ( $to_check as $v ) {
 				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
 					$is_same_redirect = false ;
-					Log::debug( "[Ctrl] 301 different redirection" ) ;
+					Debug2::debug( "[Ctrl] 301 different redirection" ) ;
 					break ;
 				}
 			}
@@ -583,7 +583,7 @@ class Control extends Instance
 			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::set_public_forced( 'Setting: ' . $result ) ;
-				Log::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
+				Debug2::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
 				if ( $this_ttl ) {
 					self::set_custom_ttl( $this_ttl ) ;
 				}
@@ -600,7 +600,7 @@ class Control extends Instance
 			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
-				Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
+				Debug2::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
 				if ( $this_ttl ) {
 					self::set_custom_ttl( $this_ttl ) ;
 				}
@@ -610,7 +610,7 @@ class Control extends Instance
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
-			Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
+			Debug2::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
 			return ;
 		}
 
@@ -627,7 +627,7 @@ class Control extends Instance
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
-			Log::debug( '[Ctrl] not cacheable after api_control' ) ;
+			Debug2::debug( '[Ctrl] not cacheable after api_control' ) ;
 			return ;
 		}
 
@@ -777,7 +777,7 @@ class Control extends Instance
 	 */
 	private function _no_cache_for( $reason )
 	{
-		Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
+		Debug2::debug('[Ctrl] X Cache_control off - ' . $reason) ;
 		return false ;
 	}
 

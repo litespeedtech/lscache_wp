@@ -4,7 +4,7 @@ namespace LiteSpeed\CLI;
 defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Lang;
-use LiteSpeed\Log;
+use LiteSpeed\Debug2;
 use LiteSpeed\Img_Optm;
 use LiteSpeed\Utility;
 use WP_CLI;
@@ -18,7 +18,7 @@ class Image
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Cloud init' );
+		Debug2::debug( 'CLI_Cloud init' );
 
 		$this->__img_optm = Img_Optm::get_instance();
 	}

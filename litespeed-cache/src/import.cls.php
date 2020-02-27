@@ -30,7 +30,7 @@ class Import extends Base
 	 */
 	protected function __construct()
 	{
-		Log::debug( 'Import init' ) ;
+		Debug2::debug( 'Import init' ) ;
 
 		$this->__cfg = Conf::get_instance() ;
 		$this->_summary = self::get_summary();
@@ -60,7 +60,7 @@ class Import extends Base
 		$this->_summary[ 'export_time' ] = time() ;
 		self::save_summary();
 
-		Log::debug( 'Import: Saved to ' . $filename ) ;
+		Debug2::debug( 'Import: Saved to ' . $filename ) ;
 
 		@header( 'Content-Disposition: attachment; filename=' . $filename ) ;
 		echo $data ;
@@ -78,7 +78,7 @@ class Import extends Base
 	{
 		if ( ! $file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
-				Log::debug( 'Import: Failed to import, wront ls_file' ) ;
+				Debug2::debug( 'Import: Failed to import, wront ls_file' ) ;
 
 				$msg = __( 'Import failed due to file error.', 'litespeed-cache' ) ;
 				Admin_Display::error( $msg ) ;
@@ -103,12 +103,12 @@ class Import extends Base
 		try {
 			$data = json_decode( base64_decode( $data ), true ) ;
 		} catch ( \Exception $ex ) {
-			Log::debug( 'Import: Failed to parse serialized data' ) ;
+			Debug2::debug( 'Import: Failed to parse serialized data' ) ;
 			return false ;
 		}
 
 		if ( ! $data ) {
-			Log::debug( 'Import: Failed to import, no data' ) ;
+			Debug2::debug( 'Import: Failed to import, no data' ) ;
 			return false ;
 		}
 
@@ -116,13 +116,13 @@ class Import extends Base
 
 
 		if ( ! $file ) {
-			Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
+			Debug2::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
 			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
 			Admin_Display::succeed( $msg ) ;
 		}
 		else {
-			Log::debug( 'Import: Imported ' . $file ) ;
+			Debug2::debug( 'Import: Imported ' . $file ) ;
 		}
 
 		return true ;
@@ -141,7 +141,7 @@ class Import extends Base
 
 		$this->__cfg->update_confs( $options ) ;
 
-		Log::debug( '[Import] Reset successfully.' ) ;
+		Debug2::debug( '[Import] Reset successfully.' ) ;
 
 		$msg = __( 'Reset successfully.', 'litespeed-cache' ) ;
 		Admin_Display::succeed( $msg ) ;

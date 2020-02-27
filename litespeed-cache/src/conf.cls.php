@@ -333,7 +333,7 @@ class Conf extends Base
 			return ;
 		}
 
-		Log::debug( "[Conf] ** $k forced from " . var_export( $this->_options[ $k ], true ) . ' to ' . var_export( $v, true ) ) ;
+		Debug2::debug( "[Conf] ** $k forced from " . var_export( $this->_options[ $k ], true ) . ' to ' . var_export( $v, true ) ) ;
 
 		$this->_options[ $k ] = $v ;
 	}
@@ -420,7 +420,7 @@ class Conf extends Base
 			if ( ! $ori ) {
 				$val = $instance->const_overwritten( $id );
 				if ( $val !== null ) {
-					defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) ) ;
+					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) ) ;
 					return $val;
 				}
 			}
@@ -428,7 +428,7 @@ class Conf extends Base
 			return $instance->_options[ $id ];
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id );
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
 
 		return null;
 	}
@@ -499,7 +499,7 @@ class Conf extends Base
 		}
 
 		if ( ! array_key_exists( $id, self::$_default_options ) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id ) ;
 			return ;
 		}
 
@@ -577,7 +577,7 @@ class Conf extends Base
 	{
 
 		if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Conf] Invalid network option ID ' . $id ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid network option ID ' . $id ) ;
 			return ;
 		}
 
@@ -682,7 +682,7 @@ class Conf extends Base
 
 				$options[ $k ] = array_merge( $options[ $k ], $v ) ;
 
-				Log::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
+				Debug2::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
 			}
 
 			// Chnage for single option
@@ -691,7 +691,7 @@ class Conf extends Base
 
 				$options[ $k ] = $v ;
 
-				Log::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
+				Debug2::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
 			}
 
 		}

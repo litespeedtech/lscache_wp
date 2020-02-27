@@ -54,7 +54,7 @@ class Placeholder extends Base
 	 */
 	public function init()
 	{
-		Log::debug2( '[Placeholder] init' ) ;
+		Debug2::debug2( '[Placeholder] init' ) ;
 
 		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 	}
@@ -131,7 +131,7 @@ class Placeholder extends Base
 			$lqip_folder = LITESPEED_STATIC_DIR . '/lqip/' . $short_path ;
 
 			if ( is_dir( $lqip_folder ) ) {
-				Log::debug( '[LQIP] Found folder: ' . $short_path ) ;
+				Debug2::debug( '[LQIP] Found folder: ' . $short_path ) ;
 
 
 
@@ -172,7 +172,7 @@ class Placeholder extends Base
 
 		$additional_attr = '' ;
 		if ( $this->_conf_placeholder_resp_generator && $this_placeholder != $this->_conf_ph_default ) {
-			Log::debug2( '[Placeholder] Use resp placeholder [size] ' . $size ) ;
+			Debug2::debug2( '[Placeholder] Use resp placeholder [size] ' . $size ) ;
 			$additional_attr = ' data-placeholder-resp="' . $size . '"' ;
 		}
 
@@ -194,7 +194,7 @@ class Placeholder extends Base
 	{
 		// Low Quality Image Placeholders
 		if ( ! $size ) {
-			Log::debug2( '[Placeholder] no size ' . $src ) ;
+			Debug2::debug2( '[Placeholder] no size ' . $src ) ;
 			return false ;
 		}
 
@@ -207,14 +207,14 @@ class Placeholder extends Base
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
-		Log::debug2( '[Placeholder] Resp placeholder process [src] ' . $src . ' [size] ' . $size ) ;
+		Debug2::debug2( '[Placeholder] Resp placeholder process [src] ' . $src . ' [size] ' . $size ) ;
 
 		// Only LQIP needs $src
 		$arr_key = $this->_conf_placeholder_lqip ? $size . ' ' . $src : $size ;
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_placeholder_resp_dict[ $arr_key ] ) ) {
-			Log::debug2( '[Placeholder] already in dict' ) ;
+			Debug2::debug2( '[Placeholder] already in dict' ) ;
 
 			return $this->_placeholder_resp_dict[ $arr_key ] ;
 		}
@@ -222,7 +222,7 @@ class Placeholder extends Base
 		// Need to generate the responsive placeholder
 		$placeholder_realpath = $this->_placeholder_realpath( $src, $size ) ; // todo: give offload API
 		if ( file_exists( $placeholder_realpath ) ) {
-			Log::debug2( '[Placeholder] file exists' ) ;
+			Debug2::debug2( '[Placeholder] file exists' ) ;
 			$this->_placeholder_resp_dict[ $arr_key ] = File::read( $placeholder_realpath ) ;
 
 			return $this->_placeholder_resp_dict[ $arr_key ] ;
@@ -232,7 +232,7 @@ class Placeholder extends Base
 
 		// Prevent repeated requests
 		if ( in_array( $arr_key, $this->_ph_queue ) ) {
-			Log::debug2( '[Placeholder] file bypass generating due to in queue' ) ;
+			Debug2::debug2( '[Placeholder] file bypass generating due to in queue' ) ;
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
@@ -242,7 +242,7 @@ class Placeholder extends Base
 		if ( ! $this->_conf_placeholder_resp_async ) {
 			// If requested recently, bypass
 			if ( $this->_summary && ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
-				Log::debug2( '[Placeholder] file bypass generating due to interval limit' ) ;
+				Debug2::debug2( '[Placeholder] file bypass generating due to interval limit' ) ;
 				return false ;
 			}
 			// Generate immediately
@@ -259,20 +259,20 @@ class Placeholder extends Base
 			$this->_summary[ 'queue' ] = array() ;
 		}
 		if ( in_array( $arr_key, $this->_summary[ 'queue' ] ) ) {
-			Log::debug2( '[Placeholder] already in queue' ) ;
+			Debug2::debug2( '[Placeholder] already in queue' ) ;
 
 			return $tmp_placeholder ;
 		}
 
 		if ( count( $this->_summary[ 'queue' ] ) > 100 ) {
-			Log::debug2( '[Placeholder] queue is full' ) ;
+			Debug2::debug2( '[Placeholder] queue is full' ) ;
 
 			return $tmp_placeholder ;
 		}
 
 		$this->_summary[ 'queue' ][] = $arr_key ;
 
-		Log::debug( '[Placeholder] Added placeholder queue' ) ;
+		Debug2::debug( '[Placeholder] Added placeholder queue' ) ;
 
 		self::save_summary();
 		return $tmp_placeholder ;
@@ -351,7 +351,7 @@ class Placeholder extends Base
 		// Clear placeholder in queue too
 		self::save_summary( array() ) ;
 
-		Log::debug2( '[Placeholder] Cleared placeholder queue' ) ;
+		Debug2::debug2( '[Placeholder] Cleared placeholder queue' ) ;
 	}
 
 	/**
@@ -369,7 +369,7 @@ class Placeholder extends Base
 		// Clear LQIP in queue too
 		self::save_summary( array() ) ;
 
-		Log::debug( '[Placeholder] Cleared LQIP queue' ) ;
+		Debug2::debug( '[Placeholder] Cleared LQIP queue' ) ;
 	}
 
 	/**
@@ -388,13 +388,13 @@ class Placeholder extends Base
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
 			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
-				Log::debug( '[Placeholder] Last request not done' );
+				Debug2::debug( '[Placeholder] Last request not done' );
 				return ;
 			}
 		}
 
 		foreach ( $_instance->_summary[ 'queue' ] as $v ) {
-			Log::debug( '[Placeholder] cron job [size] ' . $v ) ;
+			Debug2::debug( '[Placeholder] cron job [size] ' . $v ) ;
 
 			$_instance->_generate_placeholder( $v ) ;
 
@@ -413,7 +413,7 @@ class Placeholder extends Base
 	 */
 	private function _generate_placeholder_locally( $size )
 	{
-		Log::debug2( '[Placeholder] _generate_placeholder local [size] ' . $size ) ;
+		Debug2::debug2( '[Placeholder] _generate_placeholder local [size] ' . $size ) ;
 
 		$size = explode( 'x', $size ) ;
 
@@ -466,14 +466,14 @@ class Placeholder extends Base
 				if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
 					// image error, pop up the current queue
 					$this->_popup_and_save( $raw_size_and_src );
-					Log::debug( '[Placeholder] wrong response format', $json ) ;
+					Debug2::debug( '[Placeholder] wrong response format', $json ) ;
 
 					return false ;
 				}
 
 				$data = $json[ 'lqip' ] ;
 
-				Log::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
+				Debug2::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
 			}
 			else {
 
@@ -489,14 +489,14 @@ class Placeholder extends Base
 				if ( empty( $json[ 'data' ] ) || strpos( $json[ 'data' ], 'data:image/png;base64,' ) !== 0 ) {
 					// image error, pop up the current queue
 					$this->_popup_and_save( $raw_size_and_src );
-					Log::debug( '[Placeholder] wrong response format', $json ) ;
+					Debug2::debug( '[Placeholder] wrong response format', $json ) ;
 
 					return false ;
 				}
 
 				$data = $json[ 'data' ] ;
 
-				Log::debug( '[Placeholder] _generate_placeholder ' ) ;
+				Debug2::debug( '[Placeholder] _generate_placeholder ' ) ;
 			}
 		}
 
@@ -509,9 +509,9 @@ class Placeholder extends Base
 		$this->_summary[ 'curr_request' ] = 0 ;
 		$this->_popup_and_save( $raw_size_and_src );
 
-		Log::debug( '[Placeholder] saved placeholder ' . $file ) ;
+		Debug2::debug( '[Placeholder] saved placeholder ' . $file ) ;
 
-		Log::debug2( '[Placeholder] placeholder con: ' . $data ) ;
+		Debug2::debug2( '[Placeholder] placeholder con: ' . $data ) ;
 
 		return $data ;
 	}

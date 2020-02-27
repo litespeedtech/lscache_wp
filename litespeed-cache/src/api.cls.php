@@ -616,7 +616,7 @@ class API extends Base
 	 */
 	public static function debug( $info, $backtrace_limit = false )
 	{
-		Log::debug( $info, $backtrace_limit ) ;
+		Debug2::debug( $info, $backtrace_limit ) ;
 	}
 
 	/**
@@ -627,7 +627,7 @@ class API extends Base
 	 */
 	public static function debug2( $info, $backtrace_limit = false )
 	{
-		Log::debug2( $info, $backtrace_limit ) ;
+		Debug2::debug2( $info, $backtrace_limit ) ;
 	}
 
 	/**

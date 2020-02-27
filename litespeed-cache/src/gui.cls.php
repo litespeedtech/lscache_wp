@@ -57,7 +57,7 @@ class GUI extends Base
 			return;
 		}
 
-		Log::debug2( '[GUI] init' ) ;
+		Debug2::debug2( '[GUI] init' ) ;
 		if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
 			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
@@ -196,7 +196,7 @@ class GUI extends Base
 					break ;
 				}
 
-				defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
+				defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
 				// Forever dismiss
 				if ( ! empty( $_GET[ 'done' ] ) ) {
@@ -307,7 +307,7 @@ class GUI extends Base
 		}
 
 		if ( file_exists( ABSPATH . '.litespeed_no_banner' ) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Bypass banners due to silence file' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Bypass banners due to silence file' ) ;
 			return false ;
 		}
 
@@ -351,7 +351,7 @@ class GUI extends Base
 				return $promo_tag ;
 			}
 
-			defined( 'LSCWP_LOG' ) && Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Show promo ' . $promo_tag ) ;
 
 			// Only contain one
 			break ;
@@ -798,18 +798,18 @@ class GUI extends Base
 	private function _clean_wrapper( $buffer )
 	{
 		if ( self::$_clean_counter < 1 ) {
-			Log::debug2( "GUI bypassed by no counter" ) ;
+			Debug2::debug2( "GUI bypassed by no counter" ) ;
 			return $buffer ;
 		}
 
-		Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
+		Debug2::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
 
 		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
 			// If miss beginning
 			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
 			if ( $start === false ) {
 				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer ) ;
-				Log::debug2( "GUI lost beginning wrapper $i" ) ;
+				Debug2::debug2( "GUI lost beginning wrapper $i" ) ;
 				continue;
 			}
 
@@ -818,13 +818,13 @@ class GUI extends Base
 			$end = strpos( $buffer, $end_wrapper ) ;
 			if ( $end === false ) {
 				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer ) ;
-				Log::debug2( "GUI lost ending wrapper $i" ) ;
+				Debug2::debug2( "GUI lost ending wrapper $i" ) ;
 				continue;
 			}
 
 			// Now replace wrapped content
 			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) ) ;
-			Log::debug2( "GUI cleaned wrapper $i" ) ;
+			Debug2::debug2( "GUI cleaned wrapper $i" ) ;
 		}
 
 		return $buffer ;
@@ -841,7 +841,7 @@ class GUI extends Base
 		if ( $counter === false ) {
 			self::$_clean_counter ++ ;
 			$counter = self::$_clean_counter ;
-			Log::debug( "GUI clean wrapper $counter begin" ) ;
+			Debug2::debug( "GUI clean wrapper $counter begin" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
 	}
@@ -856,7 +856,7 @@ class GUI extends Base
 	{
 		if ( $counter === false ) {
 			$counter = self::$_clean_counter ;
-			Log::debug( "GUI clean wrapper $counter end" ) ;
+			Debug2::debug( "GUI clean wrapper $counter end" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
 	}

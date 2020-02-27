@@ -746,25 +746,25 @@ class Htaccess extends Instance
 
 		// Check Non-LiteSpeed rules
 		if ( $this->_wrap_do_no_edit( $frontend_rules_nonls ) != $rules_nonls ) {
-			Log::debug( '[Rules] Update non-ls frontend rules' ) ;
+			Debug2::debug( '[Rules] Update non-ls frontend rules' ) ;
 			// Need to update frontend htaccess
 			try {
 				$this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ;
 			} catch ( \Exception $e ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
-				Log::debug( '[Rules] Update Failed' ) ;
+				Debug2::debug( '[Rules] Update Failed' ) ;
 				throw new \Exception( $manual_guide_codes ) ;
 			}
 		}
 
 		// Check LiteSpeed rules
 		if ( $this->_wrap_do_no_edit( $frontend_rules ) != $rules ) {
-			Log::debug( '[Rules] Update frontend rules' ) ;
+			Debug2::debug( '[Rules] Update frontend rules' ) ;
 			// Need to update frontend htaccess
 			try {
 				$this->_insert_wrapper( $frontend_rules ) ;
 			} catch ( \Exception $e ) {
-				Log::debug( '[Rules] Update Failed' ) ;
+				Debug2::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
 				throw new \Exception( $manual_guide_codes ) ;
 			}
@@ -775,12 +775,12 @@ class Htaccess extends Instance
 
 			// Check Non-LiteSpeed rules for backend
 			if ( $this->_wrap_do_no_edit( $backend_rules_nonls ) != $rules_nonls ) {
-				Log::debug( '[Rules] Update non-ls backend rules' ) ;
+				Debug2::debug( '[Rules] Update non-ls backend rules' ) ;
 				// Need to update frontend htaccess
 				try {
 					$this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ;
 				} catch ( \Exception $e ) {
-					Log::debug( '[Rules] Update Failed' ) ;
+					Debug2::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
 					throw new \Exception( $manual_guide_codes ) ;
 				}
@@ -788,12 +788,12 @@ class Htaccess extends Instance
 
 			// Check backend content
 			if ( $this->_wrap_do_no_edit( $backend_rules ) != $rules ) {
-				Log::debug( '[Rules] Update backend rules' ) ;
+				Debug2::debug( '[Rules] Update backend rules' ) ;
 				// Need to update backend htaccess
 				try {
 					$this->_insert_wrapper( $backend_rules, 'backend' ) ;
 				} catch ( \Exception $e ) {
-					Log::debug( '[Rules] Update Failed' ) ;
+					Debug2::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
 					throw new \Exception( $manual_guide_codes ) ;
 				}

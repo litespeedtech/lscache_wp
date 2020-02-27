@@ -203,7 +203,7 @@ class Utility extends Instance
 			$status = floor( $status ) ;
 		}
 
-		Log::debug( "[Util] ping [Domain] $domain \t[Speed] $status" ) ;
+		Debug2::debug( "[Util] ping [Domain] $domain \t[Speed] $status" ) ;
 
 		return $status ;
 	}
@@ -346,7 +346,7 @@ class Utility extends Instance
 		 * @see  https://github.com/litespeedtech/lscache_wp/pull/131/commits/45fc03af308c7d6b5583d1664fad68f75fb6d017
 		 */
 		if ( ! is_array( $haystack ) ) {
-			Log::debug( "[Util] ❌ bad param in str_hit_array()!" ) ;
+			Debug2::debug( "[Util] ❌ bad param in str_hit_array()!" ) ;
 
 			return false ;
 		}
@@ -718,7 +718,7 @@ class Utility extends Instance
 			// Check if is cdn path
 			// Do this to avoid user hardcoded src in tpl
 			if ( ! CDN::internal( $url_parsed[ 'host' ] ) ) {
-				Log::debug2( '[Util] external' ) ;
+				Debug2::debug2( '[Util] external' ) ;
 				return false ;
 			}
 		}
@@ -780,7 +780,7 @@ class Utility extends Instance
 
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
-			Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
+			Debug2::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
 			return false ;
 		}
 
@@ -814,7 +814,7 @@ class Utility extends Instance
 
 				$urls_final[ $k2 ] = str_replace( $url, $url2, $url_info ) ;
 
-				Log::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
+				Debug2::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
 			}
 
 			if ( ! $changed ) {
@@ -830,7 +830,7 @@ class Utility extends Instance
 
 		if ( $srcset_ori ) {
 			$content = str_replace( $srcset_ori, $srcset_final, $content ) ;
-			Log::debug2( '[Util] - srcset replaced' ) ;
+			Debug2::debug2( '[Util] - srcset replaced' ) ;
 		}
 
 		return $content ;

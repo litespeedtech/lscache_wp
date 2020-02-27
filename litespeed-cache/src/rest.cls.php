@@ -131,7 +131,7 @@ class REST extends Instance
 	public function set_internal_rest_on( $not_used = null )
 	{
 		$this->_internal_rest_status = true ;
-		Log::debug2( '[REST] ✅ Internal REST ON [filter] rest_request_before_callbacks' ) ;
+		Debug2::debug2( '[REST] ✅ Internal REST ON [filter] rest_request_before_callbacks' ) ;
 
 		return $not_used ;
 	}
@@ -145,7 +145,7 @@ class REST extends Instance
 	public function set_internal_rest_off( $not_used = null )
 	{
 		$this->_internal_rest_status = false ;
-		Log::debug2( '[REST] ❎ Internal REST OFF [filter] rest_request_after_callbacks' ) ;
+		Debug2::debug2( '[REST] ❎ Internal REST OFF [filter] rest_request_after_callbacks' ) ;
 
 		return $not_used ;
 	}
@@ -194,9 +194,9 @@ class REST extends Instance
 		// Case #3: URL Path begins with wp-json/ (REST prefix) Safe for subfolder installation
 		$rest_url = wp_parse_url( site_url( $prefix ) ) ;
 		$current_url = wp_parse_url( $url ) ;
-		// Log::debug( '[Util] is_rest check [base] ', $rest_url ) ;
-		// Log::debug( '[Util] is_rest check [curr] ', $current_url ) ;
-		// Log::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
+		// Debug2::debug( '[Util] is_rest check [base] ', $rest_url ) ;
+		// Debug2::debug( '[Util] is_rest check [curr] ', $current_url ) ;
+		// Debug2::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
 		return strpos( $current_url[ 'path' ], $rest_url[ 'path' ] ) === 0 ;
 	}
 }

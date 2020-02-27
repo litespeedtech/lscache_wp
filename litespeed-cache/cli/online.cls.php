@@ -2,7 +2,7 @@
 namespace LiteSpeed\CLI;
 defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Log;
+use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
 use WP_CLI;
 
@@ -15,7 +15,7 @@ class Online
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Cloud init' );
+		Debug2::debug( 'CLI_Cloud init' );
 
 		$this->__cloud = Cloud::get_instance();
 	}

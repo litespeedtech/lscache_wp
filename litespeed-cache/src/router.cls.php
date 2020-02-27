@@ -75,14 +75,14 @@ class Router extends Instance
 		}
 
 		if ( self::_is_login_page() ) {
-			Log::debug( '[Router] Optm bypassed: login/reg page' ) ;
+			Debug2::debug( '[Router] Optm bypassed: login/reg page' ) ;
 			$can = false ;
 		}
 
 		$can_final = apply_filters( 'litespeed_can_optm', $can ) ;
 
 		if ( $can_final != $can ) {
-			Log::debug( '[Router] Optm bypassed: filter' ) ;
+			Debug2::debug( '[Router] Optm bypassed: filter' ) ;
 		}
 
 		return $can_final ;
@@ -112,12 +112,12 @@ class Router extends Instance
 
 		if ( is_admin() ) {
 			if ( ! self::is_ajax() ) {
-				Log::debug2( '[Router] CDN bypassed: is not ajax call' ) ;
+				Debug2::debug2( '[Router] CDN bypassed: is not ajax call' ) ;
 				$can = false ;
 			}
 
 			if ( self::from_admin() ) {
-				Log::debug2( '[Router] CDN bypassed: ajax call from admin' ) ;
+				Debug2::debug2( '[Router] CDN bypassed: ajax call from admin' ) ;
 				$can = false ;
 			}
 		}
@@ -143,7 +143,7 @@ class Router extends Instance
 		 * @since  1.6
 		 */
 		if ( self::_is_login_page() ) {
-			Log::debug( '[Router] CDN bypassed: login/reg page' ) ;
+			Debug2::debug( '[Router] CDN bypassed: login/reg page' ) ;
 			$can = false ;
 		}
 
@@ -155,14 +155,14 @@ class Router extends Instance
 			strpos( $_SERVER[ 'REQUEST_URI' ], rest_get_url_prefix() . '/wp/v2/media' ) !== false
 			&& strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
 		) {
-			Log::debug( '[Router] CDN bypassed: wp-json on admin page' ) ;
+			Debug2::debug( '[Router] CDN bypassed: wp-json on admin page' ) ;
 			$can = false ;
 		}
 
 		$can_final = apply_filters( 'litespeed_can_cdn', $can ) ;
 
 		if ( $can_final != $can ) {
-			Log::debug( '[Router] CDN bypassed: filter' ) ;
+			Debug2::debug( '[Router] CDN bypassed: filter' ) ;
 		}
 
 		return $can_final ;
@@ -199,23 +199,23 @@ class Router extends Instance
 			return ;
 		}
 
-		Log::debug( '[Router] starting crawler role validation' ) ;
+		Debug2::debug( '[Router] starting crawler role validation' ) ;
 
 		// Check if is from crawler
 		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
-			Log::debug( '[Router] user agent not match' ) ;
+			Debug2::debug( '[Router] user agent not match' ) ;
 			return ;
 		}
 
 		// Hash validation
 		$hash = Crawler::get_option( Crawler::ITEM_HASH ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
-			Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
+			Debug2::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;
 		}
 
 		$role_uid = $_COOKIE[ 'litespeed_role' ] ;
-		Log::debug( '[Router] role simulate litespeed_role uid ' . $role_uid ) ;
+		Debug2::debug( '[Router] role simulate litespeed_role uid ' . $role_uid ) ;
 
 		wp_set_current_user( $role_uid ) ;
 	}
@@ -234,7 +234,7 @@ class Router extends Instance
 		$user = wp_get_current_user() ;
 		$user_id = $user->ID ;
 
-		Log::debug( '[Router] get_uid: ' . $user_id, 3 ) ;
+		Debug2::debug( '[Router] get_uid: ' . $user_id, 3 ) ;
 
 		define( 'LITESPEED_WP_UID', $user_id ) ;
 
@@ -264,12 +264,12 @@ class Router extends Instance
 				$role = array_shift( $tmp ) ;
 			}
 		}
-		Log::debug( '[Router] get_role: ' . $role ) ;
+		Debug2::debug( '[Router] get_role: ' . $role ) ;
 
 		if ( ! $role ) {
 			return $role ;
 			// Guest user
-			Log::debug( '[Router] role: guest' ) ;
+			Debug2::debug( '[Router] role: guest' ) ;
 
 			/**
 			 * Fix double login issue
@@ -300,7 +300,7 @@ class Router extends Instance
 			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
 			if ( ! $frontend ) {
-				Log::debug( '[Router] No ABSPATH, generating from home option' ) ;
+				Debug2::debug( '[Router] No ABSPATH, generating from home option' ) ;
 				$frontend = parse_url( get_option( 'home' ) ) ;
 				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
 				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;
@@ -360,7 +360,7 @@ class Router extends Instance
 			self::$_action = false;
 			self::get_instance()->verify_action() ;
 			if ( self::$_action ) {
-				defined( 'LSCWP_LOG' ) && Log::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
+				defined( 'LSCWP_LOG' ) && Debug2::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
 			}
 
 		}
@@ -423,11 +423,11 @@ class Router extends Instance
 	public static function verify_type()
 	{
 		if ( empty( $_REQUEST[ self::TYPE ] ) ) {
-			Log::debug( '[Router] no type', 2 ) ;
+			Debug2::debug( '[Router] no type', 2 ) ;
 			return false ;
 		}
 
-		Log::debug( '[Router] parsed type: ' . $_REQUEST[ self::TYPE ], 2 ) ;
+		Debug2::debug( '[Router] parsed type: ' . $_REQUEST[ self::TYPE ], 2 ) ;
 
 		return $_REQUEST[ self::TYPE ] ;
 	}
@@ -441,7 +441,7 @@ class Router extends Instance
 	private function verify_action()
 	{
 		if ( empty( $_REQUEST[ Router::ACTION ] ) ) {
-			Log::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
+			Debug2::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
 			return ;
 		}
 
@@ -453,7 +453,7 @@ class Router extends Instance
 		if ( ! $this->verify_nonce( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
-				Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
+				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
 				return ;
 			}
 
@@ -466,7 +466,7 @@ class Router extends Instance
 					Core::ACTION_QS_PURGE_ALL,
 					Core::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
-				Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
+				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
 				return ;
 			}
 
@@ -474,7 +474,7 @@ class Router extends Instance
 		}
 
 		/* Now it is a valid action, lets log and check the permission */
-		Log::debug( '[Router] LSCWP_CTRL: ' . $action ) ;
+		Debug2::debug( '[Router] LSCWP_CTRL: ' . $action ) ;
 
 		// OK, as we want to do something magic, lets check if its allowed
 		$_is_multisite = is_multisite() ;
@@ -563,7 +563,7 @@ class Router extends Instance
 				return ;
 
 			default:
-				Log::debug( '[Router] LSCWP_CTRL match falied: ' . $action ) ;
+				Debug2::debug( '[Router] LSCWP_CTRL match falied: ' . $action ) ;
 				return ;
 		}
 

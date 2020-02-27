@@ -61,7 +61,7 @@ class Optimizer extends Instance
 			return $content_final ;
 
 		} catch ( \Exception $e ) {
-			Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
+			Debug2::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
 			return $content ;
 		}
@@ -101,7 +101,7 @@ class Optimizer extends Instance
 			return false;
 		}
 
-		Log::debug2( '[Optmer]    urls : ', $urls ) ;
+		Debug2::debug2( '[Optmer]    urls : ', $urls ) ;
 
 		// set_error_handler( 'litespeed_exception_handler' ) ;
 
@@ -121,7 +121,7 @@ class Optimizer extends Instance
 		// } catch ( \Exception $e ) {
 		// 	$tmp = '[url] ' . implode( ', ', $urls ) . ' [err] ' . $e->getMessage() ;
 
-		// 	Log::debug( '******[Optmer] serve err ' . $tmp ) ;
+		// 	Debug2::debug( '******[Optmer] serve err ' . $tmp ) ;
 		// 	error_log( '****** LiteSpeed Optimizer serve err ' . $tmp ) ;
 		// 	return false ;//todo: return ori data
 		// }
@@ -135,7 +135,7 @@ class Optimizer extends Instance
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 
-		Log::debug2( '[Optmer]    Generated content ' . $file_type ) ;
+		Debug2::debug2( '[Optmer]    Generated content ' . $file_type ) ;
 
 		// Add filter
 		$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $urls ) ;
@@ -153,7 +153,7 @@ class Optimizer extends Instance
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			Log::debug2( '[Optmer] [real_path] ' . $real_path ) ;
+			Debug2::debug2( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = File::read( $real_path ) ;
 
 			// Font optimize
@@ -213,7 +213,7 @@ class Optimizer extends Instance
 			return $obj->run( $data ) ;
 
 		} catch ( \Exception $e ) {
-			Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
+			Debug2::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
 			return $data ;
 		}
@@ -233,7 +233,7 @@ class Optimizer extends Instance
 		if ( $js_type ) {
 			preg_match( '#type=([\'"])(.+)\g{1}#isU', $js_type, $matches ) ;
 			if ( $matches && $matches[ 2 ] != 'text/javascript' ) {
-				Log::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
+				Debug2::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
 				return $data ;
 			}
 		}
@@ -242,7 +242,7 @@ class Optimizer extends Instance
 			$data = Lib\JSMin::minify( $data ) ;
 			return $data ;
 		} catch ( \Exception $e ) {
-			Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
+			Debug2::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
 			// error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
 			return $data ;
 		}

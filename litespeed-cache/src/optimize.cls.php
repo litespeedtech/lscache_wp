@@ -162,7 +162,7 @@ class Optimize extends Base
 			return ;
 		}
 
-		Log::debug( '[Optm] start minifying file' ) ;
+		Debug2::debug( '[Optm] start minifying file' ) ;
 
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
@@ -178,23 +178,23 @@ class Optimize extends Base
 			$content = Optimizer::get_instance()->serve( $match[ 0 ], $concat_only ) ;
 
 			if ( ! $content ) {
-				Log::debug( '[Optm] Static file generation bypassed due to empty' ) ;
+				Debug2::debug( '[Optm] Static file generation bypassed due to empty' ) ;
 				return ;
 			}
 
 			// Generate static file
 			File::save( $static_file, $content, true ) ;
-			Log::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
+			Debug2::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
 
 		}
 		else {
 			// Load file from file based cache if not expired
-			Log::debug2( '[Optm] Static file available' ) ;
+			Debug2::debug2( '[Optm] Static file available' ) ;
 		}
 
 		$url = LITESPEED_STATIC_URL . '/cssjs/' . $match[ 0 ] ;
 
-		Log::debug( '[Optm] Redirect to ' . $url ) ;
+		Debug2::debug( '[Optm] Redirect to ' . $url ) ;
 
 		wp_redirect( $url ) ;
 		exit ;
@@ -274,7 +274,7 @@ class Optimize extends Base
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			Log::debug( '[Optm] bypass: Not frontend HTML type' ) ;
+			Debug2::debug( '[Optm] bypass: Not frontend HTML type' ) ;
 			return $content ;
 		}
 
@@ -283,19 +283,19 @@ class Optimize extends Base
 		if ( ! empty( $excludes ) ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
-				Log::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result ) ;
+				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result ) ;
 				return $content ;
 			}
 		}
 
 		// Check if is exclude optm roles ( Need to set Vary too )
 		if ( $result = Conf::get_instance()->in_optm_exc_roles() ) {
-			Log::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
+			Debug2::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
 			return $content ;
 		}
 
 
-		Log::debug( '[Optm] start' ) ;
+		Debug2::debug( '[Optm] start' ) ;
 
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
@@ -330,7 +330,7 @@ class Optimize extends Base
 		$this->cfg_ggfonts_rm = Conf::val( Base::O_OPTM_GGFONTS_RM ) ;
 
 		if ( ! Router::can_optm() ) {
-			Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
+			Debug2::debug( '[Optm] bypass: admin/feed/preview' ) ;
 			return ;
 		}
 
@@ -617,7 +617,7 @@ class Optimize extends Base
 			return ;
 		}
 
-		Log::debug( '[Optm] Inline JS defer' ) ;
+		Debug2::debug( '[Optm] Inline JS defer' ) ;
 
 		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER ) ;
 
@@ -688,7 +688,7 @@ class Optimize extends Base
 			return ;
 		}
 
-		Log::debug2( '[Optm] google fonts async found: ', $this->_ggfonts_urls ) ;
+		Debug2::debug2( '[Optm] google fonts async found: ', $this->_ggfonts_urls ) ;
 
 		$html = '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />' ;
 
@@ -712,7 +712,7 @@ class Optimize extends Base
 			parse_str( $qs, $qs ) ;
 
 			if ( empty( $qs[ 'family' ] ) ) {
-				Log::debug( '[Optm] ERR ggfonts failed to find family: ' . $v ) ;
+				Debug2::debug( '[Optm] ERR ggfonts failed to find family: ' . $v ) ;
 				continue ;
 			}
 
@@ -754,7 +754,7 @@ class Optimize extends Base
 			return ;
 		}
 
-		Log::debug2( '[Optm] google fonts optm ', $this->_ggfonts_urls ) ;
+		Debug2::debug2( '[Optm] google fonts optm ', $this->_ggfonts_urls ) ;
 
 		foreach ( $this->_ggfonts_urls as $v ) {
 			if ( strpos( $v, 'display=' ) ) {
@@ -865,7 +865,7 @@ class Optimize extends Base
 			}
 		}
 		if ( count( $src_arr ) > 1 ) {
-			Log::debug( '[Optm] separate ' . $file_type . ' to ' . count( $src_arr ) ) ;
+			Debug2::debug( '[Optm] separate ' . $file_type . ' to ' . count( $src_arr ) ) ;
 		}
 
 		// group build
@@ -937,7 +937,7 @@ class Optimize extends Base
 
 		// Analyse links
 		foreach ( $src_list as $key => $src ) {
-			Log::debug2( '[Optm] ' . $src ) ;
+			Debug2::debug2( '[Optm] ' . $src ) ;
 
 			/**
 			 * Excluded links won't be done any optm
@@ -945,14 +945,14 @@ class Optimize extends Base
 			 */
 			// if ( $excludes && $exclude = Utility::str_hit_array( $src, $excludes ) ) {
 			// 	$ignored_html[] = $html_list[ $key ] ;
-			// 	Log::debug2( '[Optm]:    Abort excludes: ' . $exclude ) ;
+			// 	Debug2::debug2( '[Optm]:    Abort excludes: ' . $exclude ) ;
 			// 	continue ;
 			// }
 
 			// Check if has no-optimize attr
 			if ( strpos( $html_list[ $key ], 'data-ignore-optimize' ) !== false ) {
 				$ignored_html[] = $html_list[ $key ] ;
-				Log::debug2( '[Optm]    Abort excludes: attr data-ignore-optimize' ) ;
+				Debug2::debug2( '[Optm]    Abort excludes: attr data-ignore-optimize' ) ;
 				continue ;
 			}
 
@@ -960,7 +960,7 @@ class Optimize extends Base
 			$url_parsed = parse_url( $src ) ;
 			if ( ! $file_info = Utility::is_internal_file( $src ) ) {
 				$ignored_html[ $src ] = $html_list[ $key ] ;
-				Log::debug2( '[Optm]    Abort external/non-exist' ) ;
+				Debug2::debug2( '[Optm]    Abort external/non-exist' ) ;
 				continue ;
 			}
 
@@ -971,7 +971,7 @@ class Optimize extends Base
 			 */
 			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
 				$ignored_html[ $src ] = $html_list[ $key ] ;
-				Log::debug2( '[Optm]    Abort jQuery by setting' ) ;
+				Debug2::debug2( '[Optm]    Abort jQuery by setting' ) ;
 
 				// Add to HTTP2 as its ignored but still internal src
 				$this->append_http2( $src, 'js' ) ;
@@ -1041,7 +1041,7 @@ class Optimize extends Base
 			// Generate static file
 			File::save( $static_file, $content, true ) ;
 
-			Log::debug2( '[Optm] Saved static file [path] ' . $static_file ) ;
+			Debug2::debug2( '[Optm] Saved static file [path] ' . $static_file ) ;
 
 		}
 
@@ -1085,7 +1085,7 @@ class Optimize extends Base
 
 			$url_parsed = parse_url( $attrs[ 'src' ], PHP_URL_PATH ) ;
 			if ( substr( $url_parsed, -3 ) !== '.js' ) {
-				Log::debug2( '[Optm] _parse_js bypassed due to not js file ' . $url_parsed ) ;
+				Debug2::debug2( '[Optm] _parse_js bypassed due to not js file ' . $url_parsed ) ;
 				continue ;
 			}
 
@@ -1095,7 +1095,7 @@ class Optimize extends Base
 			}
 // todo @v2.0: allow defer even exclude from optm
 			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
-				Log::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude ) ;
+				Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude ) ;
 				continue ;
 			}
 
@@ -1152,13 +1152,13 @@ class Optimize extends Base
 			}
 
 			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'href' ], $excludes ) ) {
-				Log::debug2( '[Optm] _handle_css bypassed exclude ' . $exclude ) ;
+				Debug2::debug2( '[Optm] _handle_css bypassed exclude ' . $exclude ) ;
 				continue ;
 			}
 
 			// Check if need to remove this css
 			if ( $css_to_be_removed && Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
-				Log::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] ) ;
+				Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] ) ;
 				// Delete this css snippet from orig html
 				$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
 
@@ -1177,7 +1177,7 @@ class Optimize extends Base
 				}
 
 				if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
-					Log::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] ) ;
+					Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] ) ;
 					$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
 
 					continue ;
@@ -1208,12 +1208,12 @@ class Optimize extends Base
 	{
 		foreach ( $html_list as $k => $ori ) {
 			if ( strpos( $ori, 'data-asynced' ) !== false ) {
-				Log::debug2( '[Optm] bypass: attr data-asynced exist' ) ;
+				Debug2::debug2( '[Optm] bypass: attr data-asynced exist' ) ;
 				continue ;
 			}
 
 			if ( strpos( $ori, 'data-no-async' ) !== false ) {
-				Log::debug2( '[Optm] bypass: attr api data-no-async' ) ;
+				Debug2::debug2( '[Optm] bypass: attr api data-no-async' ) ;
 				continue ;
 			}
 
@@ -1243,11 +1243,11 @@ class Optimize extends Base
 				continue ;
 			}
 			if ( strpos( $v, 'data-deferred' ) !== false ) {
-				Log::debug2( '[Optm] bypass: attr data-deferred exist' ) ;
+				Debug2::debug2( '[Optm] bypass: attr data-deferred exist' ) ;
 				continue ;
 			}
 			if ( strpos( $v, 'data-no-defer' ) !== false ) {
-				Log::debug2( '[Optm] bypass: attr api data-no-defer' ) ;
+				Debug2::debug2( '[Optm] bypass: attr api data-no-defer' ) ;
 				continue ;
 			}
 
@@ -1259,14 +1259,14 @@ class Optimize extends Base
 				// parse js src
 				preg_match( '#<script \s*([^>]+)>#isU', $v, $matches ) ;
 				if ( empty( $matches[ 1 ] ) ) {
-					Log::debug( '[Optm] js defer parse html failed: ' . $v ) ;
+					Debug2::debug( '[Optm] js defer parse html failed: ' . $v ) ;
 					continue ;
 				}
 
 				$attrs = Utility::parse_attr( $matches[ 1 ] ) ;
 
 				if ( empty( $attrs[ 'src' ] ) ) {
-					Log::debug( '[Optm] js defer parse src failed: ' . $matches[ 1 ] ) ;
+					Debug2::debug( '[Optm] js defer parse src failed: ' . $matches[ 1 ] ) ;
 					continue ;
 				}
 
@@ -1278,7 +1278,7 @@ class Optimize extends Base
 			 * @since 1.5
 			 */
 			if ( $this->cfg_js_defer_exc && Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
-				Log::debug( '[Optm] js defer exclude ' . $src ) ;
+				Debug2::debug( '[Optm] js defer exclude ' . $src ) ;
 				continue ;
 			}
 
@@ -1287,7 +1287,7 @@ class Optimize extends Base
 			 * @since  1.5
 			 */
 			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
-				Log::debug2( '[Optm]   js defer Abort jQuery by setting' ) ;
+				Debug2::debug2( '[Optm]   js defer Abort jQuery by setting' ) ;
 				continue ;
 			}
 

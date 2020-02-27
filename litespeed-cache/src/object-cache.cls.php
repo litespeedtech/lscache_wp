@@ -44,7 +44,7 @@ class Object_Cache
 	 */
 	protected function __construct( $cfg = false )
 	{
-		defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] init' ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] init' ) ;
 
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 
@@ -73,7 +73,7 @@ class Object_Cache
 			}
 			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] init with cfg result : ', $this->_cfg_enabled ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] init with cfg result : ', $this->_cfg_enabled ) ;
 		}
 		elseif ( class_exists( __NAMESPACE__ . '\Core' ) ) {
 			$this->_cfg_method = Conf::val( Base::O_OBJECT_KIND ) ? true : false ;
@@ -169,7 +169,7 @@ class Object_Cache
 
 		$old_data = File::read( $this->_oc_data_file ) ;
 		if ( $old_data != $data ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
 			File::save( $this->_oc_data_file, $data ) ;
 
 			$changed = true ;
@@ -181,7 +181,7 @@ class Object_Cache
 
 		// Update cls file
 		if ( ! file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] copying object-cache.php file to ' . $_oc_wp_file ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] copying object-cache.php file to ' . $_oc_wp_file ) ;
 			copy( $_oc_ori_file, $_oc_wp_file ) ;
 
 			$changed = true ;
@@ -208,12 +208,12 @@ class Object_Cache
 		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
 
 		if ( file_exists( $_oc_wp_file ) && md5_file( $_oc_wp_file ) === md5_file( $_oc_ori_file ) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] removing ' . $_oc_wp_file ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] removing ' . $_oc_wp_file ) ;
 			unlink( $_oc_wp_file ) ;
 		}
 
 		if ( file_exists( $this->_oc_data_file ) ) {
-			Log::debug( '[Object] Removing ' . $this->_oc_data_file ) ;
+			Debug2::debug( '[Object] Removing ' . $this->_oc_data_file ) ;
 			unlink( $this->_oc_data_file ) ;
 		}
 	}
@@ -237,11 +237,11 @@ class Object_Cache
 	 */
 	private function _reconnect( $cfg )
 	{
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Reconnecting' ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Reconnecting' ) ;
 		// error_log( 'Object: reconnect !' ) ;
 		if ( isset( $this->_conn ) ) {
 			// error_log( 'Object: Quiting existing connection!' ) ;
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Quiting existing connection' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Quiting existing connection' ) ;
 			$this->flush() ;
 			$this->_conn = null ;
 			self::$_instance = null ;
@@ -272,7 +272,7 @@ class Object_Cache
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
 
 		$failed = false ;
 		/**
@@ -282,7 +282,7 @@ class Object_Cache
 		 * @see https://github.com/phpredis/phpredis/#example-1
 		 */
 		if ( $this->_oc_driver == 'Redis' ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
 
 			set_error_handler( 'litespeed_exception_handler' ) ;
 			try {
@@ -335,18 +335,18 @@ class Object_Cache
 		 * Connect to Memcached
 		 */
 		else {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
 			if ( $this->_cfg_persistent ) {
 				$this->_conn = new \Memcached( $this->_get_mem_id() ) ;
 
 				// Check memcached persistent connection
 				if ( $this->_validate_mem_server() ) {
 					// error_log( 'Object: _validate_mem_server' ) ;
-					defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Got persistent ' . $this->_oc_driver . ' connection' ) ;
+					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Got persistent ' . $this->_oc_driver . ' connection' ) ;
 					return true ;
 				}
 
-				defined( 'LSCWP_LOG' ) && Log::debug( '[Object] No persistent ' . $this->_oc_driver . ' server list!' ) ;
+				defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] No persistent ' . $this->_oc_driver . ' server list!' ) ;
 			}
 			else {
 				// error_log( 'Object: new memcached!' ) ;
@@ -374,14 +374,14 @@ class Object_Cache
 
 		// If failed to connect
 		if ( $failed ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] Failed to connect ' . $this->_oc_driver . ' server!' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Failed to connect ' . $this->_oc_driver . ' server!' ) ;
 			$this->_conn = null ;
 			$this->_cfg_enabled = false ;
 			// error_log( 'Object: false!' ) ;
 			return false ;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] Connected' ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] Connected' ) ;
 
 		return true ;
 	}
@@ -447,7 +447,7 @@ class Object_Cache
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] get ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] get ' . $key ) ;
 
 		$res = $this->_conn->get( $key ) ;
 
@@ -478,7 +478,7 @@ class Object_Cache
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] set ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] set ' . $key ) ;
 
 		// error_log( 'Object: set ' . $key ) ;
 
@@ -524,7 +524,7 @@ class Object_Cache
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && Log::debug2( '[Object] delete ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] delete ' . $key ) ;
 
 		if ( $this->_oc_driver == 'Redis' ) {
 			$res = $this->_conn->del( $key ) ;
@@ -545,7 +545,7 @@ class Object_Cache
 	public function flush()
 	{
 		if ( ! $this->_cfg_enabled ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( '[Object] bypass flushing' ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] bypass flushing' ) ;
 			return null ;
 		}
 
@@ -553,7 +553,7 @@ class Object_Cache
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Object] flush!' ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] flush!' ) ;
 
 		if ( $this->_oc_driver == 'Redis' ) {
 			$res = $this->_conn->flushDb() ;

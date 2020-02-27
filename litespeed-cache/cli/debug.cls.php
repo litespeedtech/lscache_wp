@@ -2,7 +2,7 @@
 namespace LiteSpeed\CLI;
 defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Log;
+use LiteSpeed\Debug2;
 use LiteSpeed\Report;
 use WP_CLI;
 
@@ -15,7 +15,7 @@ class Debug
 
 	public function __construct()
 	{
-		Log::debug( 'CLI_Debug init' );
+		Debug2::debug( 'CLI_Debug init' );
 
 		$this->__report = Report::get_instance();
 	}

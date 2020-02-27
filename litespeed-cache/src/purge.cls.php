@@ -177,7 +177,7 @@ class Purge extends Base
 			$reason = "( $reason )" ;
 		}
 
-		Log::debug( '[Purge] Purge all ' . $reason, 3 ) ;
+		Debug2::debug( '[Purge] Purge all ' . $reason, 3 ) ;
 
 		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' ) ;
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
@@ -296,7 +296,7 @@ class Purge extends Base
 	public function purge_all_opcache( $silence = false )
 	{
 		if ( ! Router::opcache_enabled() ) {
-			Log::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;
+			Debug2::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;
 
 			if ( ! $silence ) {
 				$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' ) ;
@@ -308,7 +308,7 @@ class Purge extends Base
 
 		// Purge opcode cache
 		opcache_reset() ;
-		Log::debug( '[Purge] Reset opcode cache' ) ;
+		Debug2::debug( '[Purge] Reset opcode cache' ) ;
 
 		if ( ! $silence ) {
 			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
@@ -327,7 +327,7 @@ class Purge extends Base
 	private function _purge_all_object( $silence = false )
 	{
 		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
-			Log::debug( '[Purge] Failed to flush object cache due to object cache not enabled' ) ;
+			Debug2::debug( '[Purge] Failed to flush object cache due to object cache not enabled' ) ;
 
 			if ( ! $silence ) {
 				$msg = __( 'Object cache is not enabled.', 'litespeed-cache' ) ;
@@ -337,7 +337,7 @@ class Purge extends Base
 			return false ;
 		}
 		Object_Cache::get_instance()->flush() ;
-		Log::debug( '[Purge] Flushed object cache' ) ;
+		Debug2::debug( '[Purge] Flushed object cache' ) ;
 
 		if ( ! $silence ) {
 			$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
@@ -375,18 +375,18 @@ class Purge extends Base
 		}
 
 		$this->_pub_purge = array_merge( $this->_pub_purge, $tags ) ;
-		Log::debug( '[Purge] added ' . implode( ',', $tags ), 8 ) ;
+		Debug2::debug( '[Purge] added ' . implode( ',', $tags ), 8 ) ;
 
 		// Send purge header immediately
 		$curr_built = $this->_build() ;
 		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
 			// Can't send, already has output, need to save and wait for next run
 			self::update_option( self::DB_QUEUE, $curr_built ) ;
-			Log::debug( '[Purge] Output existed, queue stored: ' . $curr_built ) ;
+			Debug2::debug( '[Purge] Output existed, queue stored: ' . $curr_built ) ;
 		}
 		else {
 			@header( $curr_built ) ;
-			Log::debug( $curr_built ) ;
+			Debug2::debug( $curr_built ) ;
 		}
 
 	}
@@ -418,7 +418,7 @@ class Purge extends Base
 			return ;
 		}
 
-		Log::debug( '[Purge] added [private] ' . implode( ',', $tags ), 3 ) ;
+		Debug2::debug( '[Purge] added [private] ' . implode( ',', $tags ), 3 ) ;
 
 		$this->_priv_purge = array_merge( $this->_priv_purge, $tags ) ;
 
@@ -532,12 +532,12 @@ class Purge extends Base
 			return ;
 		}
 		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			Log::debug( "[Purge] $val cat invalid" ) ;
+			Debug2::debug( "[Purge] $val cat invalid" ) ;
 			return ;
 		}
 		$cat = get_category_by_slug( $val ) ;
 		if ( $cat == false ) {
-			Log::debug( "[Purge] $val cat not existed/published" ) ;
+			Debug2::debug( "[Purge] $val cat not existed/published" ) ;
 			return ;
 		}
 
@@ -560,12 +560,12 @@ class Purge extends Base
 			return ;
 		}
 		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			Log::debug( "[Purge] $val tag invalid" ) ;
+			Debug2::debug( "[Purge] $val tag invalid" ) ;
 			return ;
 		}
 		$term = get_term_by( 'slug', $val, 'post_tag' ) ;
 		if ( $term == 0 ) {
-			Log::debug( "[Purge] $val tag not exist" ) ;
+			Debug2::debug( "[Purge] $val tag not exist" ) ;
 			return ;
 		}
 
@@ -588,7 +588,7 @@ class Purge extends Base
 		}
 
 		if ( strpos( $val, '<' ) !== false ) {
-			Log::debug( "[Purge] $val url contains <" ) ;
+			Debug2::debug( "[Purge] $val url contains <" ) ;
 			return ;
 		}
 
@@ -597,7 +597,7 @@ class Purge extends Base
 		$hash = Tag::get_uri_tag( $val ) ;
 
 		if ( $hash === false ) {
-			Log::debug( "[Purge] $val url invalid" ) ;
+			Debug2::debug( "[Purge] $val url invalid" ) ;
 			return ;
 		}
 
@@ -868,7 +868,7 @@ class Purge extends Base
 				)) ) {
 			$blogs = Activation::get_network_ids() ;
 			if ( empty($blogs) ) {
-				Log::debug('[Purge] build_purge_headers: blog list is empty') ;
+				Debug2::debug('[Purge] build_purge_headers: blog list is empty') ;
 				return '' ;
 			}
 			$tags = array() ;
@@ -933,17 +933,17 @@ class Purge extends Base
 			$next_post = get_next_post() ;
 			if( ! empty($prev_post->ID) ) {
 				$purge_tags[] = Tag::TYPE_POST . $prev_post->ID ;
-				Log::debug('--------purge_tags prev is: '.$prev_post->ID) ;
+				Debug2::debug('--------purge_tags prev is: '.$prev_post->ID) ;
 			}
 			if( ! empty($next_post->ID) ) {
 				$purge_tags[] = Tag::TYPE_POST . $next_post->ID ;
-				Log::debug('--------purge_tags next is: '.$next_post->ID) ;
+				Debug2::debug('--------purge_tags next is: '.$next_post->ID) ;
 			}
 		}
 
 		if ( Conf::val( Base::O_PURGE_POST_TERM ) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
-			//Log::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
+			//Debug2::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
 				$terms = get_the_terms($post_id, $tax) ;
 				if ( ! empty($terms) ) {

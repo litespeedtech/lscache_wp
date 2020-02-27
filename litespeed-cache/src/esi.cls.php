@@ -113,7 +113,7 @@ class ESI extends Instance
 	 */
 	private function _transform_nonce()
 	{
-		Log::debug( '[ESI] Overwrite wp_create_nonce()' ) ;
+		Debug2::debug( '[ESI] Overwrite wp_create_nonce()' ) ;
 
 		// Load ESI nonces in conf
 		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
@@ -164,7 +164,7 @@ class ESI extends Instance
 			return ;
 		}
 
-		Log::debug( '[ESI] Append nonce action to nonce list [action] ' . $action ) ;
+		Debug2::debug( '[ESI] Append nonce action to nonce list [action] ' . $action ) ;
 
 		$this->_nonce_actions[] = $action ;
 	}
@@ -188,7 +188,7 @@ class ESI extends Instance
 	public function shortcode( $atts )
 	{
 		if ( empty( $atts[ 0 ] ) ) {
-			Log::debug( '[ESI] ===shortcode wrong format', $atts ) ;
+			Debug2::debug( '[ESI] ===shortcode wrong format', $atts ) ;
 			return 'Wrong shortcode esi format' ;
 		}
 
@@ -239,7 +239,7 @@ class ESI extends Instance
 	{
 		! defined( 'LSCACHE_IS_ESI' ) && define( 'LSCACHE_IS_ESI', $_GET[ self::QS_ACTION ] ) ;// Reused this to ESI block ID
 
-		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
+		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && Debug2::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
 
 		/**
 		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
@@ -282,7 +282,7 @@ class ESI extends Instance
 	{
 		// Check if is an ESI request
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			Log::debug( '[ESI] calling template' ) ;
+			Debug2::debug( '[ESI] calling template' ) ;
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}
@@ -360,7 +360,7 @@ class ESI extends Instance
 		$control = apply_filters('litespeed_esi_control', $control, $block_id ) ;
 
 		if ( !is_array($params) || !is_string($control) ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( "[ESI] 🛑 Sub hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( "[ESI] 🛑 Sub hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
 
 			return false ;
 		}
@@ -401,8 +401,8 @@ class ESI extends Instance
 			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
 		}
 
-		Log::debug( "[ESI] 💕  [BLock_ID] $block_id \t[wrapper] $wrapper \t\t[Control] $control" ) ;
-		Log::debug2( $output ) ;
+		Debug2::debug( "[ESI] 💕  [BLock_ID] $block_id \t[wrapper] $wrapper \t\t[Control] $control" ) ;
+		Debug2::debug2( $output ) ;
 
 		self::set_has_esi() ;
 
@@ -411,7 +411,7 @@ class ESI extends Instance
 		if ( $preserved ) {
 			$hash = md5( $output ) ;
 			self::get_instance()->_esi_preserve_list[ $hash ] = $output ;
-			Log::debug( "[ESI] Preserved to $hash" ) ;
+			Debug2::debug( "[ESI] Preserved to $hash" ) ;
 
 			return $hash ;
 		}
@@ -439,7 +439,7 @@ class ESI extends Instance
 				$str .= $params[ $v ] ;
 			}
 		}
-		Log::debug2( '[ESI] md5_string=' . $str ) ;
+		Debug2::debug2( '[ESI] md5_string=' . $str ) ;
 
 		return md5( Conf::val( Base::HASH ) . $str ) ;
 	}
@@ -461,7 +461,7 @@ class ESI extends Instance
 			return false ;
 		}
 
-		Log::debug2( '[ESI] parms', $unencrypted ) ;
+		Debug2::debug2( '[ESI] parms', $unencrypted ) ;
 		// $unencoded = urldecode($unencrypted) ; no need to do this as $_GET is already parsed
 		$params = json_decode( $unencrypted, true ) ;
 
@@ -481,7 +481,7 @@ class ESI extends Instance
 		 * @since 2.9.6
 		 */
 		if ( empty( $_GET[ '_hash' ] ) || self::_gen_esi_md5( $_GET ) != $_GET[ '_hash' ] ) {
-			Log::debug( '[ESI] ❌ Failed to validate _hash' ) ;
+			Debug2::debug( '[ESI] ❌ Failed to validate _hash' ) ;
 			return ;
 		}
 
@@ -493,7 +493,7 @@ class ESI extends Instance
 				$logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
 			}
 			$logInfo .= ' [ID] ' . LSCACHE_IS_ESI ;
-			Log::debug( $logInfo ) ;
+			Debug2::debug( $logInfo ) ;
 		}
 
 		if ( ! empty( $params[ '_ls_silence' ] ) ) {
@@ -511,7 +511,7 @@ class ESI extends Instance
 		Tag::add( rtrim( Tag::TYPE_ESI, '.' ) ) ;
 		Tag::add( Tag::TYPE_ESI . LSCACHE_IS_ESI ) ;
 
-		// Log::debug(var_export($params, true ));
+		// Debug2::debug(var_export($params, true ));
 
 		/**
 		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505
@@ -591,7 +591,7 @@ class ESI extends Instance
 		}
 		$options = $instance[ Base::OPTION_NAME ] ;
 		if ( ! isset( $options ) || ! $options[ self::WIDGET_O_ESIENABLE ] ) {
-			defined( 'LSCWP_LOG' ) && Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
 
 			return $instance ;
 		}
@@ -650,7 +650,7 @@ class ESI extends Instance
 
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[ self::WIDGET_O_TTL ] ;
-		defined( 'LSCWP_LOG' ) && Log::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
 		if ( $ttl == 0 ) {
 			Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
 		}
@@ -697,7 +697,7 @@ class ESI extends Instance
 			Control::set_no_vary() ;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( 'ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ] ) ;
+		defined( 'LSCWP_LOG' ) && Debug2::debug( 'ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ] ) ;
 	}
 
 
@@ -734,7 +734,7 @@ class ESI extends Instance
 	{
 		$action = $params[ 'action' ] ;
 
-		Log::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
+		Debug2::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
 
 		// set nonce TTL to half day
 		Control::set_custom_ttl( 43200 ) ;
@@ -820,7 +820,7 @@ class ESI extends Instance
 	public function sub_comment_form_block( $unused, $args )
 	{
 		if ( empty( $args ) || empty( $this->esi_args ) ) {
-			Log::debug( 'comment form args empty?' ) ;
+			Debug2::debug( 'comment form args empty?' ) ;
 			return $unused ;
 		}
 		$esi_args = array() ;
@@ -883,7 +883,7 @@ class ESI extends Instance
 
 		$keys = array_keys( $instance->_esi_preserve_list ) ;
 
-		Log::debug( '[ESI] replacing preserved blocks', $keys ) ;
+		Debug2::debug( '[ESI] replacing preserved blocks', $keys ) ;
 
 		$buffer = str_replace( $keys , $instance->_esi_preserve_list, $buffer ) ;
 

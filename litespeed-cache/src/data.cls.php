@@ -97,7 +97,7 @@ class Data extends Instance
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" );
+					Debug2::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" );
 					call_user_func( $v2 );
 				}
 			}
@@ -112,7 +112,7 @@ class Data extends Instance
 		Conf::delete_option( Base::_VER );
 		Conf::add_option( Base::_VER, Core::VER );
 
-		Log::debug( '[Data] Updated version to ' . Core::VER );
+		Debug2::debug( '[Data] Updated version to ' . Core::VER );
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 		Purge::purge_all();
@@ -136,7 +136,7 @@ class Data extends Instance
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
 				foreach ( $v as $v2 ) {
-					Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" );
+					Debug2::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" );
 					call_user_func( $v2 );
 				}
 			}
@@ -148,7 +148,7 @@ class Data extends Instance
 		Conf::delete_site_option( Base::_VER );
 		Conf::add_site_option( Base::_VER, Core::VER );
 
-		Log::debug( '[Data] Updated site_version to ' . Core::VER );
+		Debug2::debug( '[Data] Updated site_version to ' . Core::VER );
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 		Purge::purge_all();
@@ -174,14 +174,14 @@ class Data extends Instance
 
 		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
 
-		Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
+		Debug2::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver );
 
-		Log::debug( '[Data] Upgraded to v3.0' );
+		Debug2::debug( '[Data] Upgraded to v3.0' );
 
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0';
@@ -275,15 +275,15 @@ class Data extends Instance
 	{
 		global $wpdb;
 
-		Log::debug2( '[Data] Checking table ' . $tb );
+		Debug2::debug2( '[Data] Checking table ' . $tb );
 
 		// Check if table exists first
 		if ( $this->tb_exist( $tb ) ) {
-			Log::debug2( '[Data] Existed' );
+			Debug2::debug2( '[Data] Existed' );
 			return;
 		}
 
-		Log::debug( '[Data] Creating ' . $tb );
+		Debug2::debug( '[Data] Creating ' . $tb );
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure( $tb ) . ') %2$s;',
@@ -293,7 +293,7 @@ class Data extends Instance
 
 		$res = $wpdb->query( $sql );
 		if ( $res !== true ) {
-			Log::debug( '[Data] Warning! Creating table failed!', $sql );
+			Debug2::debug( '[Data] Warning! Creating table failed!', $sql );
 			Admin_Display::error( Error::msg( 'failed_tb_creation', array( '<code>' . $tb . '</code>', '<code>' . $sql . '</code>' ) ) );
 		}
 	}
@@ -312,7 +312,7 @@ class Data extends Instance
 			return;
 		}
 
-		Log::debug( '[Data] Deleting table ' . $tb );
+		Debug2::debug( '[Data] Deleting table ' . $tb );
 
 		$q = 'DROP TABLE IF EXISTS ' . $this->tb( $tb );
 		$wpdb->query( $q );
@@ -371,7 +371,7 @@ class Data extends Instance
 
 		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) );
 
-		Log::debug2( '[Data] Loaded hash2src ' . $res );
+		Debug2::debug2( '[Data] Loaded hash2src ' . $res );
 
 		$res = json_decode( $res, true );
 

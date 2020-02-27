@@ -360,7 +360,7 @@ class Activation extends Instance
 			return;
 		}
 
-		defined( 'LSCWP_LOG' ) && Log::debug( '[Activation] Copying advanced_cache file' );
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Copying advanced_cache file' );
 
 		copy( LSCWP_DIR . 'lib/advanced-cache.php', $adv_cache_path );
 
@@ -630,7 +630,7 @@ class Activation extends Instance
 				if ( ! empty( $news[ 'zip' ] ) ) {
 					$news[ 'new' ] = 0;
 					update_option( 'litespeed-recommended', $news );
-					Log::get_instance()->beta_test( $news[ 'zip' ] );
+					Debug2::get_instance()->beta_test( $news[ 'zip' ] );
 				}
 				break ;
 

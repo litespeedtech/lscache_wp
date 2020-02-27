@@ -13,7 +13,7 @@ use LiteSpeed\Core ;
 use LiteSpeed\Cloud ;
 use LiteSpeed\Base ;
 use LiteSpeed\Conf ;
-use LiteSpeed\Log ;
+use LiteSpeed\Debug2;
 use LiteSpeed\Instance ;
 
 defined( 'WPINC' ) || exit ;

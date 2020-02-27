@@ -54,7 +54,7 @@ class Crawler_Map extends Instance
 			if ( ! $ids ) {
 				continue;
 			}
-			Log::debug( "🐞🗺️ Update map [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
+			Debug2::debug( "🐞🗺️ Update map [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
 
 			// Update res first, then reason
 			$right_pos = $total_crawler_pos - $curr_crawler;
@@ -71,14 +71,14 @@ class Crawler_Map extends Instance
 				// Update current crawler status tag in existing blacklist
 				if ( $existing ) {
 					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
-					Log::debug( '🐞🗺️ Update blacklist [count] ' . $count );
+					Debug2::debug( '🐞🗺️ Update blacklist [count] ' . $count );
 				}
 
 				// Append new blacklist
 				if ( count( $ids ) > count( $existing ) ) {
 					$new_urls = array_diff( array_column( $ids, 'url' ), array_column( $existing, 'url') );
 
-					Log::debug( '🐞🗺️ Insert into blacklist [count] ' . count( $new_urls ) );
+					Debug2::debug( '🐞🗺️ Insert into blacklist [count] ' . count( $new_urls ) );
 
 					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '( %s, %s, %s )' ) );
 					$data = array();
@@ -116,13 +116,13 @@ class Crawler_Map extends Instance
 
 				$count = $wpdb->query( "UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")" );
 
-				Log::debug( "🐞🗺️ Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
+				Debug2::debug( "🐞🗺️ Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
 
 				// Update blacklist reason
 				if ( $bit == 'B' || $bit == 'N' ) {
 					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
 
-					Log::debug( "🐞🗺️ Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
+					Debug2::debug( "🐞🗺️ Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
 				}
 			}
 
@@ -155,11 +155,11 @@ class Crawler_Map extends Instance
 		$row = $wpdb->get_row( "SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A );
 
 		if ( ! $row ) {
-			Log::debug( '🐞🗺️ blacklist failed to add [id] ' . $id );
+			Debug2::debug( '🐞🗺️ blacklist failed to add [id] ' . $id );
 			return;
 		}
 
-		Log::debug( '🐞🗺️ Add to blacklist [url] ' . $row[ 'url' ] );
+		Debug2::debug( '🐞🗺️ Add to blacklist [url] ' . $row[ 'url' ] );
 
 		$q = "UPDATE `$this->_tb` SET res = %s, reason = %s WHERE id = %d";
 		$wpdb->query( $wpdb->prepare( $q, array( $res, $reason, $id ) ) );
@@ -191,7 +191,7 @@ class Crawler_Map extends Instance
 
 		$id = (int)$id;
 
-		Log::debug( '🐞🗺️ blacklist delete [id] ' . $id );
+		Debug2::debug( '🐞🗺️ blacklist delete [id] ' . $id );
 
 		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' ) WHERE url = ( SELECT url FROM `$this->_tb_blacklist` WHERE id = '$id' )" );
 
@@ -212,7 +212,7 @@ class Crawler_Map extends Instance
 			return;
 		}
 
-		Log::debug( '🐞🗺️ Truncate blacklist' );
+		Debug2::debug( '🐞🗺️ Truncate blacklist' );
 
 		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' )" );
 
@@ -343,7 +343,7 @@ class Crawler_Map extends Instance
 			try {
 				$sitemap_urls = $this->_parse( $sitemap );
 			} catch( \Exception $e ) {
-				Log::debug( '🐞🗺️ ❌ failed to prase custom sitemap: ' . $e->getMessage() );
+				Debug2::debug( '🐞🗺️ ❌ failed to prase custom sitemap: ' . $e->getMessage() );
 			}
 
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
@@ -360,10 +360,10 @@ class Crawler_Map extends Instance
 			$urls = $this->_build();
 		}
 
-		Log::debug( '🐞🗺️ Truncate sitemap' );
+		Debug2::debug( '🐞🗺️ Truncate sitemap' );
 		$wpdb->query( "TRUNCATE `$this->_tb`" );
 
-		Log::debug( '🐞🗺️ Generate sitemap' );
+		Debug2::debug( '🐞🗺️ Generate sitemap' );
 
 		// Filter URLs in blacklist
 		$blacklist = $this->list_blacklist();
@@ -449,7 +449,7 @@ class Crawler_Map extends Instance
 		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Log::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
+			Debug2::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
 
 			throw new \Exception( 'Failed to remote read' );
 		}
@@ -566,7 +566,7 @@ class Crawler_Map extends Instance
 		}
 
 		if ( ! empty($post_type_array) ) {
-			Log::debug( '🐞🗺️ Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) );
+			Debug2::debug( '🐞🗺️ Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) );
 
 			$q = "SELECT ID, post_date FROM $wpdb->posts where post_type IN (" . implode( ',', array_fill( 0, count( $post_type_array ), '%s' ) ) . ") AND post_status='publish' $orderBy";
 			$results = $wpdb->get_results( $wpdb->prepare( $q, $post_type_array ) );

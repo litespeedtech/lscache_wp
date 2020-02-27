@@ -90,7 +90,7 @@ class CSS extends Base
 		$this->_summary[ 'curr_request' ] = 0 ;
 		self::save_summary();
 
-		Log::debug2( '[CSS] Cleared ccss queue' ) ;
+		Debug2::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
 
 	/**
@@ -103,7 +103,7 @@ class CSS extends Base
 	{
 		// If don't need to generate CCSS, bypass
 		if ( ! Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
-			Log::debug( '[CSS] bypassed ccss due to setting' ) ;
+			Debug2::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
 
@@ -111,13 +111,13 @@ class CSS extends Base
 		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		if ( file_exists( $ccss_file ) ) {
-			Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
+			Debug2::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
 			return File::read( $ccss_file ) ;
 		}
 
 		// Check if is already in a request, bypass current one
 		if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 ) {
-			Log::debug( '[CCSS] Last request not done' );
+			Debug2::debug( '[CCSS] Last request not done' );
 			return '' ;
 		}
 
@@ -135,7 +135,7 @@ class CSS extends Base
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
 			) ;// Current UA will be used to request
-			Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
+			Debug2::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			self::save_summary();
 			return '' ;
@@ -172,13 +172,13 @@ class CSS extends Base
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
 			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
-				Log::debug( '[CCSS] Last request not done' );
+				Debug2::debug( '[CCSS] Last request not done' );
 				return ;
 			}
 		}
 
 		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
-			Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
+			Debug2::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
 
 			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
 
@@ -200,7 +200,7 @@ class CSS extends Base
 		// Check if has credit to push
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
-			Log::debug( '[CCSS] ❌ No credit' );
+			Debug2::debug( '[CCSS] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
 			return;
 		}
@@ -219,7 +219,7 @@ class CSS extends Base
 			'is_mobile'		=> $is_mobile ? 1 : 0,
 		) ;
 
-		Log::debug( '[CSS] Generating: ', $data ) ;
+		Debug2::debug( '[CSS] Generating: ', $data ) ;
 
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
 		if ( ! is_array( $json ) ) {
@@ -227,7 +227,7 @@ class CSS extends Base
 		}
 
 		if ( empty( $json[ 'ccss' ] ) ) {
-			Log::debug( '[CSS] ❌ empty ccss' ) ;
+			Debug2::debug( '[CSS] ❌ empty ccss' ) ;
 			$this->_popup_and_save( $ccss_type, $request_url );
 			return false ;
 		}
@@ -244,9 +244,9 @@ class CSS extends Base
 		$this->_summary[ 'curr_request' ] = 0 ;
 		$this->_popup_and_save( $ccss_type, $request_url );
 
-		Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
+		Debug2::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
-		Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
+		Debug2::debug2( '[CSS] ccss con: ' . $ccss ) ;
 
 		return $ccss ;
 	}
@@ -282,7 +282,7 @@ class CSS extends Base
 		// Check if in separate css type option
 		$separate_posttypes = Conf::val( Base::O_OPTM_CCSS_SEP_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
-			Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
+			Debug2::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
@@ -290,7 +290,7 @@ class CSS extends Base
 		if ( ! empty( $separate_uri ) ) {
 			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {
-				Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
+				Debug2::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
 				$unique = true ;
 			}
 		}
