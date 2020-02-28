@@ -225,6 +225,7 @@ function litespeed_update_3_0( $ver )
 		'login_cookie'				=> 'cache-login_cookie',
 
 		'debug_disable_all'			=> 'debug-disable_all',
+		'debug'						=> 'debug',
 		'admin_ips' 				=> 'debug-ips',
 		'debug_level' 				=> 'debug-level',
 		'log_file_size'				=> 'debug-filesize',
