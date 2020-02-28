@@ -349,7 +349,7 @@ class Cloud extends Base
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => false ) );
 
-		return $this->_parse_response( $response, $service, $service_tag );
+		return $this->_parse_response( $response, $service, $service_tag, $server );
 	}
 
 	/**
@@ -440,7 +440,7 @@ class Cloud extends Base
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => false ) );
 
-		return $this->_parse_response( $response, $service, $service_tag );
+		return $this->_parse_response( $response, $service, $service_tag, $server );
 	}
 
 	/**
@@ -449,13 +449,13 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _parse_response( $response, $service, $service_tag )
+	private function _parse_response( $response, $service, $service_tag, $server )
 	{
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '🌤️  failed to request: ' . $error_message );
 
-			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message;
+			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
 			Admin_Display::error( $msg );
 			return;
 		}
@@ -465,7 +465,7 @@ class Cloud extends Base
 		if ( ! is_array( $json ) ) {
 			Debug2::debug( '🌤️  failed to decode response json: ' . $response[ 'body' ] );
 
-			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ];
+			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
 			Admin_Display::error( $msg );
 
 			return;
@@ -475,7 +475,7 @@ class Cloud extends Base
 			Debug2::debug( '🌤️  service 503 unavailable temporarily. ' . $json[ '_503' ] );
 
 			$msg = __( 'We are working hard to improve your online service experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' );
-			$msg .= ' ' . $json[ '_503' ];
+			$msg .= ' ' . $json[ '_503' ] . " [server] $server [service] $service";
 			Admin_Display::error( $msg );
 
 			return;
@@ -508,7 +508,7 @@ class Cloud extends Base
 		// Upgrade is required
 		if ( ! empty( $json[ '_err_req_v' ] ) ) {
 			Debug2::debug( '🌤️  _err_req_v: ' . $json[ '_err_req_v' ] );
-			$msg = sprintf( __( '%1$s plugin version %2$s required for this action.', 'litespeed-cache' ), Core::NAME, 'v' . $json[ '_err_req_v' ] . '+' );
+			$msg = sprintf( __( '%1$s plugin version %2$s required for this action.', 'litespeed-cache' ), Core::NAME, 'v' . $json[ '_err_req_v' ] . '+' ) . " [server] $server [service] $service";
 
 			// Append upgrade link
 			$msg2 = ' ' . GUI::plugin_upgrade_link( Core::NAME, Core::PLUGIN_NAME, $json[ '_err_req_v' ] );
