@@ -33,7 +33,7 @@ class Router extends Instance
 	const ACTION_CSS = 'css';
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
-	const ACTION_LOG = 'log';
+	const ACTION_DEBUG2 = 'debug2';
 	const ACTION_CDN_QUIC = 'cdn_quic';
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare';
 
@@ -541,7 +541,7 @@ class Router extends Instance
 				}
 				return ;
 
-			case self::ACTION_LOG:
+			case self::ACTION_DEBUG2:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}

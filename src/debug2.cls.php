@@ -25,6 +25,9 @@ class Debug2 extends Instance
 
 	const BETA_TEST_URL = 'beta_test_url' ;
 
+	const BETA_TEST_URL_GITHUB = 'https://github.com/litespeedtech/lscache_wp/archive/master.zip';
+	const BETA_TEST_URL_WP = 'https://downloads.wordpress.org/plugin/litespeed-cache.zip';
+
 	/**
 	 * Log class Confructor
 	 *
@@ -61,9 +64,12 @@ class Debug2 extends Instance
 				return ;
 			}
 
-			// Generate zip url
-			$commit = substr( $_POST[ self::BETA_TEST_URL ], strpos( $_POST[ self::BETA_TEST_URL ], '/commit/' ) + 8 ) ;
-			$zip = $this->_package_zip( $commit ) ;
+			$zip = $_POST[ self::BETA_TEST_URL ];
+			if ( $zip !== Debug2::BETA_TEST_URL_GITHUB && $zip !== Debug2::BETA_TEST_URL_WP ) {
+				// Generate zip url
+				$commit = substr( $zip, strpos( $zip, '/commit/' ) + 8 );
+				$zip = $this->_package_zip( $commit );
+			}
 		}
 
 		if ( ! $zip ) {
