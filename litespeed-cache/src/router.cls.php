@@ -61,16 +61,13 @@ class Router extends Instance
 		if ( is_admin() ) {
 			$can = false ;
 		}
-
-		if ( is_feed() ) {
+		elseif ( is_feed() ) {
 			$can = false ;
 		}
-
-		if ( is_preview() ) {
+		elseif ( is_preview() ) {
 			$can = false ;
 		}
-
-		if ( self::is_ajax() ) {
+		elseif ( self::is_ajax() ) {
 			$can = false ;
 		}
 
@@ -121,12 +118,10 @@ class Router extends Instance
 				$can = false ;
 			}
 		}
-
-		if ( is_feed() ) {
+		elseif ( is_feed() ) {
 			$can = false ;
 		}
-
-		if ( is_preview() ) {
+		elseif ( is_preview() ) {
 			$can = false ;
 		}
 
