@@ -550,7 +550,7 @@ class Cloud extends Base
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
 			Debug2::debug( '🌤️  ❌ _err: ' . $json_msg );
 
-			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg );
+			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server [service] $service";
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
