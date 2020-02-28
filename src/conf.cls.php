@@ -546,7 +546,7 @@ class Conf extends Base
 				foreach ( $diff as $v ) {
 					$v = ltrim( $v, '^' ) ;
 					$v = rtrim( $v, '$' ) ;
-					Purge::get_instance()->purgeby_url_cb( $v ) ;
+					Purge::purge_url( $v ) ;
 				}
 			}
 

@@ -461,7 +461,7 @@ class Purge extends Base
 			exit( 'no referer' ) ;
 		}
 
-		$this->purgeby_url_cb( $_SERVER[ 'HTTP_REFERER' ] ) ;
+		self::purge_url( $_SERVER[ 'HTTP_REFERER' ] ) ;
 
 		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] ) ;
 		exit() ;
