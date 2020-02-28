@@ -65,9 +65,9 @@ class Debug2 extends Instance
 			}
 
 			$zip = $_POST[ self::BETA_TEST_URL ];
-			if ( $zip !== Debug2::BETA_TEST_URL_GITHUB && $zip !== Debug2::BETA_TEST_URL_WP ) {
+			if ( $zip !== Debug2::BETA_TEST_URL_WP ) {
 				// Generate zip url
-				$commit = substr( $zip, strpos( $zip, '/commit/' ) + 8 );
+				$commit = $zip === Debug2::BETA_TEST_URL_GITHUB ? 'latest' : substr( $zip, strpos( $zip, '/commit/' ) + 8 );
 				$zip = $this->_package_zip( $commit );
 			}
 		}
