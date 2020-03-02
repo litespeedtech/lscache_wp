@@ -12,9 +12,9 @@ defined( 'WPINC' ) || exit ;
 
 	<input type="text" name="<?php echo Debug2::BETA_TEST_URL; ?>" class="litespeed-input-long" id='litespeed-beta-test'>
 
-	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='<?php echo Debug2::BETA_TEST_URL_GITHUB; ?>';"><?php echo __( 'Use latest GitHub commit', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_GITHUB; ?></code></p>
+	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='latest';"><?php echo __( 'Use latest GitHub commit', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_GITHUB; ?></code> <?php echo __( 'OR', 'litespeed-cache' ) ?> <code>latest</code></p>
 
-	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='<?php echo Debug2::BETA_TEST_URL_WP; ?>';"><?php echo __( 'Use latest WordPress release version', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_WP; ?></code></p>
+	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='curr';"><?php echo __( 'Use latest WordPress release version', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_WP; ?></code> <?php echo __( 'OR', 'litespeed-cache' ) ?> <code>curr</code></p>
 
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to populate the field with the most recent GitHub commit.', 'litespeed-cache' ), '<code>' . __( 'Use latest GitHub commit', 'litespeed-cache' ) . '</code>' ); ?></div>
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to stop beta testing and go back to the current release from the WordPress Plugin Directory.', 'litespeed-cache' ), '<code>' . __( 'Use latest WordPress release version', 'litespeed-cache' ) . '</code>' ); ?></div>
