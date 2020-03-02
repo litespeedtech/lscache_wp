@@ -52,6 +52,19 @@ class API extends Base
 		add_action( 'litespeed_conf_force', __CLASS__ . '::force_option', 10, 2 ) ;
 
 		/**
+		 * Cache Control Hooks
+		 */
+		// API::hook_control($tags) && action `litespeed_api_control` -> action `litespeed_control_finalize`
+		// API::set_cache_private() -> action `litespeed_control_set_private`
+		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' );
+		// API::set_nocache( $reason = false ) -> action `litespeed_control_set_nocache`
+		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' );
+		// API::not_cacheable() -> filter `litespeed_control_is_cachable`
+		add_filter( 'litespeed_control_is_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 2 ); // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
+		// API:: set_ttl( $val ) -> action `litespeed_control_set_ttl`
+		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 );
+
+		/**
 		 * Tag Hooks
 		 */
 		// API::tag_add( $tag ) -> action litespeed_tag_add
@@ -68,6 +81,11 @@ class API extends Base
 		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' );
 		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
+
+		// API::set_mobile() -> filter `litespeed_is_mobile`
+		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' );
+
+		// add_action( '', __NAMESPACE__ . '\Control::is_mobile' );
 	}
 
 	/**
@@ -153,28 +171,6 @@ class API extends Base
 	}
 
 	/**
-	 * Set mobile
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function set_mobile()
-	{
-		Control::set_mobile() ;
-	}
-
-	/**
-	 * Set cache status to not cacheable
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function set_cache_private()
-	{
-		Control::set_private() ;
-	}
-
-	/**
 	 * Set cache status to no vary
 	 *
 	 * @since 1.2.0
@@ -183,17 +179,6 @@ class API extends Base
 	public static function set_cache_no_vary()
 	{
 		Control::set_no_vary() ;
-	}
-
-	/**
-	 * Set cache status to not cacheable
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function set_nocache( $reason = false )
-	{
-		Control::set_nocache( $reason ?: 'api' ) ;
 	}
 
 	/**
@@ -230,17 +215,6 @@ class API extends Base
 	}
 
 	/**
-	 * Get current not cacheable status
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function not_cacheable()
-	{
-		return ! Control::is_cacheable() ;
-	}
-
-	/**
 	 * Set cache control ttl to use frontpage ttl
 	 *
 	 * @since 1.1.3
@@ -249,17 +223,6 @@ class API extends Base
 	public static function set_use_frontpage_ttl()
 	{
 		Control::set_custom_ttl( self::config( self::O_CACHE_TTL_FRONTPAGE ) ) ;
-	}
-
-	/**
-	 * Set cache control ttl
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public static function set_ttl( $val )
-	{
-		Control::set_custom_ttl( $val ) ;
 	}
 
 	/**
@@ -474,18 +437,6 @@ class API extends Base
 	public static function parse_onoff( $input, $id )
 	{
 		return Admin_Settings::parse_onoff( $input, $id ) ;
-	}
-
-
-	/**
-	 * Hook cacheable check to cache control
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_control($hook)
-	{
-		add_action('litespeed_api_control', $hook) ;
 	}
 
 	/**

@@ -29,7 +29,6 @@ class Control extends Instance
 
 	protected static $_control = 0 ;
 	protected static $_custom_ttl = 0 ;
-	private static $_mobile = false ;
 
 	private $_response_header_ttls = array() ;
 
@@ -434,11 +433,11 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
-	public static function set_custom_ttl($ttl)
+	public static function set_custom_ttl( $ttl, $reason = fase )
 	{
-		if ( is_numeric($ttl) ) {
-			self::$_custom_ttl = $ttl ;
-			Debug2::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
+		if ( is_numeric( $ttl ) ) {
+			self::$_custom_ttl = $ttl;
+			Debug2::debug( '[Ctrl] X Cache_control TTL -> ' . $ttl . ( $reason ? ' [reason] ' . $ttl : '' ) );
 		}
 	}
 
@@ -623,7 +622,7 @@ class Control extends Instance
 
 		// Apply 3rd party filter
 		// NOTE: Hook always needs to run asap because some 3rd party set is_mobile in this hook
-		do_action('litespeed_api_control', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ) ; // Pass ESI block id
+		do_action('litespeed_control_finalize', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ) ; // Pass ESI block id
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
@@ -651,22 +650,23 @@ class Control extends Instance
 		}
 
 		// The following check to the end is ONLY for mobile
-		if ( ! Conf::val(Base::O_CACHE_MOBILE) ) {
-			if ( self::is_mobile() ) {
-				self::set_nocache('mobile') ;
+		$is_mobile = apply_filters( 'litespeed_is_mobile', false );
+		if ( ! Conf::val( Base::O_CACHE_MOBILE ) ) {
+			if ( $is_mobile ) {
+				self::set_nocache( 'mobile' );
 			}
-			return ;
+			return;
 		}
 
-		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && strpos( $_SERVER['LSCACHE_VARY_VALUE'], 'ismobile' ) !== false ) {
-			if ( ! wp_is_mobile() && ! self::is_mobile() ) {
-				self::set_nocache( 'is not mobile' ) ;
-				return ;
+		if ( isset( $_SERVER[ 'LSCACHE_VARY_VALUE' ] ) && strpos( $_SERVER[ 'LSCACHE_VARY_VALUE' ], 'ismobile' ) !== false ) {
+			if ( ! $is_mobile ) {
+				self::set_nocache( 'is not mobile' );
+				return;
 			}
 		}
-		elseif ( wp_is_mobile() || self::is_mobile() ) {
-			self::set_nocache( 'is mobile' ) ;
-			return ;
+		elseif ( $is_mobile ) {
+			self::set_nocache( 'is mobile' );
+			return;
 		}
 
 	}
@@ -795,30 +795,6 @@ class Control extends Instance
 			return implode( ',', $intersect ) ;
 		}
 		return false ;
-	}
-
-	/**
-	 * Gets whether any plugins determined that the current page is mobile.
-	 *
-	 * @access public
-	 * @return boolean True if the current page was deemed mobile, false otherwise.
-	 */
-	public static function is_mobile()
-	{
-		return self::$_mobile ;
-	}
-
-	/**
-	 * Mark the current page as mobile. This may be useful for if the plugin does not override wp_is_mobile.
-	 *
-	 * Must be called before the shutdown hook point.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 */
-	public static function set_mobile()
-	{
-		self::$_mobile = true ;
 	}
 
 }

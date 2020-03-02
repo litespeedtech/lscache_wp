@@ -214,6 +214,25 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Clear all existing cloud nodes for future reconnect
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function clear_cloud()
+	{
+		foreach ( self::$SERVICES as $service ) {
+			if ( isset( $this->_summary[ 'server.' . $service ] ) ) {
+				unset( $this->_summary[ 'server.' . $service ] );
+			}
+			if ( isset( $this->_summary[ 'server_date.' . $service ] ) ) {
+				unset( $this->_summary[ 'server_date.' . $service ] );
+			}
+		}
+		self::save_summary();
+	}
+
+	/**
 	 * ping clouds to find the fastest node
 	 *
 	 * @since  3.0

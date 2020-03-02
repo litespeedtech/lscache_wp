@@ -114,9 +114,9 @@ $placeholder_summary = Placeholder::get_summary();
 						</div>
 					</div>
 					<?php if ( $pag_total > 0 ) { ?>
-						<p class="litespeed-dashboard-stats-payg" title="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
+						<p class="litespeed-dashboard-stats-payg" data-balloon-pos="up" aria-label="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
 							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
-							<button class="litespeed-info-button" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>" data-balloon-pos="up">
+							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>">
 								<span class="dashicons dashicons-info"></span>
 								<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
 							</button>
@@ -126,7 +126,7 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php if ( $svc == 'img_optm' ) { ?>
 						<p class="litespeed-dashboard-stats-total">
 							<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $total_used; ?> / ∞</strong>
-							<button class="litespeed-info-button" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>" data-balloon-pos="up">
+							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>">
 								<span class="dashicons dashicons-info"></span>
 							</button>
 						</p>
@@ -195,7 +195,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 					<?php $closest_server = Cloud::get_summary( 'server.' . CLoud::SVC_HEALTH ); ?>
 					<?php if ( $closest_server ) : ?>
-						<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_HEALTH ) ); ?>" title='<?php echo sprintf( __( 'Current closest Cloud server is %s. Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>" class="litespeed-right"><i class='litespeed-quic-icon'></i></a>
+						<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_HEALTH ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10;Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>" class="litespeed-right"><i class='litespeed-quic-icon'></i></a>
 					<?php endif; ?>
 				</div>
 			</div>

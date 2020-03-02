@@ -743,7 +743,7 @@ class Crawler extends Base
 
 		// Mobile crawler
 		if ( $this->_options[ Base::O_CACHE_MOBILE ] ) {
-			$crawler_factors[ 'mobile' ] = array( 1 => '<font title="Mobile">📱</font>', 0 => '' );
+			$crawler_factors[ 'mobile' ] = array( 1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>', 0 => '' );
 		}
 
 		// Get roles set
@@ -773,7 +773,7 @@ class Crawler extends Base
 			$crawler_factors[ $this_cookie_key ] = array();
 
 			foreach ( $v[ 'vals' ] as $v2 ) {
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font title="Cookie">🍪</font>' . $v[ 'name' ] . '=' . $v2;
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . $v[ 'name' ] . '=' . $v2;
 			}
 		}
 
@@ -882,7 +882,10 @@ class Crawler extends Base
 			if ( $reason == 'Existed' ) {
 				$reason = __( 'Previously existed in blacklist', 'litespeed-cache' );
 			}
-			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '" title="' . $reason . '">' . ( $k + 1 ) . '</i>';
+			if ( $reason ) {
+				$reason = 'data-balloon-pos="up" aria-label="' . $reason . '"';
+			}
+			$status .= '<i class="litespeed-dot litespeed-bg-' . $_status_list[ $v ] . '" ' . $reason . '>' . ( $k + 1 ) . '</i>';
 		}
 
 		return $status;

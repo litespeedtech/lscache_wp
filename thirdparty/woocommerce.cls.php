@@ -67,7 +67,7 @@ class WooCommerce extends Instance
 		$this->cache_cart = API::config( self::O_WOO_CACHE_CART ) ;
 		$this->esi_eanbled = API::esi_enabled() ;
 
-		API::hook_control( array( $this, 'set_control' ) ) ;
+		add_action( 'litespeed_control_finalize', array( $this, 'set_control' ) );
 		add_action( 'litespeed_tag_finalize', array( $this, 'set_tag' ) );
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
@@ -463,22 +463,6 @@ class WooCommerce extends Instance
 	}
 
 	/**
-	 * Check and set shop front page ttl
-	 *
-	 * @since 1.1.3
-	 * @since 1.6.3 Removed static
-	 * @access private
-	 */
-	private function set_ttl()
-	{
-		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			if ( API::config( self::O_SHOP_FRONT_TTL ) ) {
-				API::set_use_frontpage_ttl() ;
-			}
-		}
-	}
-
-	/**
 	 * Set WooCommerce cache tags based on page type.
 	 *
 	 * @since 1.0.9
@@ -504,8 +488,7 @@ class WooCommerce extends Instance
 			$ttl = $sale_to - $now ;
 		}
 		if ( $ttl && $ttl < API::get_ttl() ) {
-			API::debug( "WooCommerce set scheduled TTL to $ttl" ) ;
-			API::set_ttl( $ttl ) ;
+			do_action( 'litespeed_control_set_ttl', $ttl, "WooCommerce set scheduled TTL to $ttl" ) ;
 		}
 
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
@@ -547,8 +530,8 @@ class WooCommerce extends Instance
 	 */
 	public function set_control($esi_id)
 	{
-		if ( API::not_cacheable() ) {
-			return ;
+		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+			return;
 		}
 
 		/**
@@ -563,14 +546,19 @@ class WooCommerce extends Instance
 		if ( ! isset($woocom) ) {
 			return ;
 		}
-		$this->set_ttl() ;
+
+		// Set TTL
+		if ( function_exists( 'is_shop' ) && is_shop() ) {
+			if ( API::config( self::O_SHOP_FRONT_TTL ) ) {
+				API::set_use_frontpage_ttl() ;
+			}
+		}
 
 		// For later versions, DONOTCACHEPAGE should be set.
 		// No need to check uri/qs.
 		if ( version_compare($woocom->version, '1.4.2', '>=') ) {
 			if ( version_compare( $woocom->version, '3.2.0', '<' ) && defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
-				API::debug('3rd party woocommerce not cache by constant') ;
-				API::set_nocache() ;
+				do_action( 'litespeed_control_set_nocache', '3rd party woocommerce not cache by constant' );
 				return ;
 			}
 			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
@@ -592,7 +580,7 @@ class WooCommerce extends Instance
 				}
 				elseif ( ! $this->esi_eanbled && $woocom->cart->get_cart_contents_count() !== 0 ) {
 					if ( $this->cache_cart ) {
-						API::set_cache_private() ;
+						do_action( 'litespeed_control_set_private', 'cache cart' );
 						/**
 						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary
 						 * @since 1.6.6.1
@@ -606,7 +594,7 @@ class WooCommerce extends Instance
 				}
 				elseif ( $esi_id === 'storefront-cart-header' ) {
 					if ( $this->cache_cart ) {
-						API::set_cache_private() ;
+						do_action( 'litespeed_control_set_private', 'cache cart' );
 						API::set_cache_no_vary() ;
 						API::tag_add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
@@ -619,8 +607,7 @@ class WooCommerce extends Instance
 				}
 
 				if ( $err ) {
-					API::debug('3rd party woocommerce not cache due to ' . $err) ;
-					API::set_nocache() ;
+					do_action( 'litespeed_control_set_nocache', '3rd party woocommerce not cache due to ' . $err );
 					return ;
 				}
 			}
@@ -634,14 +621,14 @@ class WooCommerce extends Instance
 		}
 
 		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) {
-			API::set_nocache() ;
+			do_action( 'litespeed_control_set_nocache', 'uri in cart/account/user pages' );
 			return ;
 		}
 
 		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]) ;
 		$qs_len = strlen($qs) ;
 		if ( ! empty($qs) && $qs_len >= 12 && strpos( $qs, 'add-to-cart=' ) === 0 ) {
-			API::set_nocache() ;
+			do_action( 'litespeed_control_set_nocache', 'qs contains add-to-cart' );
 			return ;
 		}
 	}

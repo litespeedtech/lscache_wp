@@ -507,6 +507,11 @@ class Conf extends Base
 			return;
 		}
 
+		// Special handler for QUIC.cloud domain key to clear all existing nodes
+		if ( $id == Base::O_API_KEY ) {
+			Cloud::get_instance()->clear_cloud();
+		}
+
 		// Validate type
 		if ( is_bool( self::$_default_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id ) ;

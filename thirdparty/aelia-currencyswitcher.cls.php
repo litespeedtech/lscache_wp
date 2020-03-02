@@ -47,8 +47,8 @@ class Aelia_CurrencySwitcher
 	 */
 	public static function check_cookies()
 	{
-		if ( API::not_cacheable() ) {
-			return ;
+		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+			return;
 		}
 
 		// NOTE: is_cart and is_checkout should also be checked, but will be checked by woocommerce anyway.

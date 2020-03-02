@@ -104,7 +104,7 @@ class Yith_Wishlist
 		$post = get_post( $params[ self::ESI_PARAM_POSTID ] ) ;
 		$wp_query->setup_postdata( $post ) ;
 		echo YITH_WCWL_Shortcode::add_to_wishlist( /*$params[self::ESI_PARAM_ATTS]*/array() ) ;
-		API::set_cache_private() ;
+		do_action( 'litespeed_control_set_private', 'yith wishlist' );
 		API::set_cache_no_vary() ;
 	}
 

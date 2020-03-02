@@ -25,7 +25,7 @@ class Theme_My_Login
 	public static function detect()
 	{
 		if ( defined( 'THEME_MY_LOGIN_PATH' ) ) {
-			API::hook_control( __CLASS__ . '::set_control' ) ;
+			add_action( 'litespeed_control_finalize', __CLASS__ . '::set_control' );
 		}
 	}
 
@@ -37,15 +37,14 @@ class Theme_My_Login
 	 */
 	public static function set_control()
 	{
-		if ( API::not_cacheable() ) {
-			return ;
+		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+			return;
 		}
 
 		// check if this page is TML page or not
 		if ( class_exists( 'Theme_My_Login' ) && Theme_My_Login::is_tml_page() ) {
-			API::set_nocache() ;
+			do_action( 'litespeed_control_set_nocache', 'Theme My Login' );
 		}
 	}
 
 }
-

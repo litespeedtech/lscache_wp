@@ -334,7 +334,7 @@ class Media extends Instance
 			echo sprintf( __( 'WebP saved %s', 'litespeed-cache' ), $percent . '%' ) ;
 
 			if ( $desc ) {
-				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break  aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
+				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
 			}
 			else {
 				echo sprintf(

@@ -27,7 +27,7 @@ class BBPress
 		if ( function_exists( 'is_bbpress' ) ) {
 			API::hook_purge_post( __CLASS__ . '::on_purge' ) ;
 			if ( Router::esi_enabled() ) {// don't consider private cache yet (will do if any feedback)
-				API::hook_control( __CLASS__ . '::set_control' ) ;
+				add_action( 'litespeed_control_finalize', __CLASS__ . '::set_control' );
 			}
 		}
 	}
@@ -40,15 +40,14 @@ class BBPress
 	 */
 	public static function set_control()
 	{
-		if ( API::not_cacheable() ) {
+		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
 			return ;
 		}
 
 		// set non ESI public
 		if ( is_bbpress() && Router::is_logged_in() ) {
-			API::set_nocache( 'bbpress cant cache loggedin' ) ;
+			do_action( 'litespeed_control_set_nocache', 'bbpress nocache due to loggedin' );
 		}
-
 	}
 
 	/**

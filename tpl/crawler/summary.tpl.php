@@ -151,10 +151,10 @@ if($seconds > 0):
 				</td>
 				<td><?php echo $recurrence; ?></td>
 				<td>
-					<?php echo '<i class="litespeed-badge litespeed-bg-default" title="' . __( 'Waiting', 'litespeed-cache' ) . '">' . ( $waiting ?: '-' ) . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-success" title="' . __( 'Hit', 'litespeed-cache' ) . '">' . ( $hit ?: '-' ) . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-primary" title="' . __( 'Miss', 'litespeed-cache' ) . '">' . ( $miss ?: '-' ) . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-danger" title="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-default" data-balloon-pos="up" aria-label="' . __( 'Waiting', 'litespeed-cache' ) . '">' . ( $waiting ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-success" data-balloon-pos="up" aria-label="' . __( 'Hit', 'litespeed-cache' ) . '">' . ( $hit ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-primary" data-balloon-pos="up" aria-label="' . __( 'Miss', 'litespeed-cache' ) . '">' . ( $miss ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
 				</td>
 				<td>
 				<?php

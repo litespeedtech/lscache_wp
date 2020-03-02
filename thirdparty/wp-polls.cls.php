@@ -25,7 +25,7 @@ class Wp_Polls
 
 	public static function set_control()
 	{
-		API::set_nocache() ;
+		do_action( 'litespeed_control_set_nocache', 'wp polls' );
 	}
 }
 
