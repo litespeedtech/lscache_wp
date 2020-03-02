@@ -503,7 +503,7 @@ class Conf extends Base
 			return ;
 		}
 
-		if ( $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
+		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
 			return;
 		}
 
