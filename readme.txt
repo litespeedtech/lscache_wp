@@ -329,6 +329,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🕷️ Crawler data now saved into database instead of creating new files.
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.
 * 🕷️ Manually changed the priority of mobile and WebP. (@rafaucau)
+* [ESI] Added Bloom nonce to ESI for Elegant Themes.
 * [GUI] Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * [Cloud] Able to redetect cloud nodes now.
 * [Img_optm] Fixed stale data in redirected links.

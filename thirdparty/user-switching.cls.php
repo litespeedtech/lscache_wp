@@ -21,7 +21,7 @@ class User_Switching
 		 * @since  3.0 @Robert Staddon
 		 */
 		if ( function_exists( 'current_user_switched' ) && $old_user = current_user_switched() ) {
-			API::nonce_action( 'switch_to_olduser_' . $old_user->ID );
+			do_action( 'litespeed_nonce', 'switch_to_olduser_' . $old_user->ID );
 		}
 	}
 }

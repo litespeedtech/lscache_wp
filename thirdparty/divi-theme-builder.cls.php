@@ -38,14 +38,14 @@ class Divi_Theme_Builder
 		 * Add contact form to nonce
 		 * @since  2.9.7.1 #475461
 		 */
-		API::nonce_action( 'et-pb-contact-form-submit' );
+		do_action( 'litespeed_nonce', 'et-pb-contact-form-submit' );
 
 		/**
 		 * Subscribe module and A/B logging
 		 * @since  3.0 @Robert Staddon
 		 */
-		API::nonce_action( 'et_frontend_nonce' );
-		API::nonce_action( 'et_ab_log_nonce' );
+		do_action( 'litespeed_nonce', 'et_frontend_nonce' );
+		do_action( 'litespeed_nonce', 'et_ab_log_nonce' );
 
 		/*
 		// the comment box fix is for user using theme builder, ESI will load the wrong json string

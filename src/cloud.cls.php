@@ -64,6 +64,7 @@ class Cloud extends Base
 
 	const TYPE_CLEAR_PROMO 	= 'clear_promo';
 	const TYPE_REDETECT_CLOUD 	= 'redetect_cloud';
+	const TYPE_CLEAR_CLOUD 		= 'clear_cloud';
 	const TYPE_GEN_KEY 			= 'gen_key';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 
@@ -79,6 +80,61 @@ class Cloud extends Base
 	{
 		$this->_api_key = Conf::val( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
+	}
+
+	/**
+	 * Show latest commit version always if is on dev
+	 *
+	 * @since 3.0
+	 */
+	public function check_dev_version()
+	{
+		if ( ! preg_match( '/[^\d\.]/', Core::VER ) ) {
+			return;
+		}
+
+		$last_check = empty( $this->_summary[ 'last_request.' . self::API_VER ] ) ? 0 : $this->_summary[ 'last_request.' . self::API_VER ] ;
+
+		if ( time() - $last_check > 600 ) {
+			$auto_v = self::version_check( 'dev' );
+			if ( ! empty( $auto_v[ 'dev' ] ) ) {
+				$this->_summary[ 'version.dev' ] = $auto_v[ 'dev' ];
+				self::save_summary( $this->_summary );
+			}
+		}
+
+		if ( empty( $this->_summary[ 'version.dev' ] ) ) {
+			return;
+		}
+
+		Debug2::debug( '🌤️  Latest dev version ' . $this->_summary[ 'version.dev' ] );
+
+		if ( version_compare( $this->_summary[ 'version.dev' ], Core::VER, '<=' ) ) {
+			return;
+		}
+
+		// Show the dev banner
+		require_once LSCWP_DIR . 'tpl/banner/new_version_dev.tpl.php';
+	}
+
+	/**
+	 * Check latest version
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function version_check( $src = false )
+	{
+		$req_data = array(
+			'v'		=> defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '',
+			'src'	=> $src,
+		);
+		if ( defined( 'LITESPEED_ERR' ) ) {
+			$req_data[ 'err' ] = base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
+		}
+		$data = self::get( self::API_VER, $req_data );
+
+		return $data;
 	}
 
 	/**
@@ -381,7 +437,7 @@ class Cloud extends Base
 	{
 		// Limit frequent unfinished request to 5min
 		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 3 - time(); // todo: 300
+			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 30 - time(); // todo: 300
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
@@ -826,7 +882,11 @@ class Cloud extends Base
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_REDETECT_CLOUD :
+			case self::TYPE_CLEAR_CLOUD:
+				$instance->clear_cloud();
+				break;
+
+			case self::TYPE_REDETECT_CLOUD:
 				if ( ! empty( $_GET[ 'svc' ] ) ) {
 					$instance->detect_cloud( $_GET[ 'svc' ], true );
 				}

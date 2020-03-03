@@ -117,7 +117,7 @@ class Data extends Instance
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 		Purge::purge_all();
 
-		Utility::version_check( 'upgrade' );
+		Cloud::version_check( 'upgrade' );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Data extends Instance
 	{
 		$previous_options = get_option( 'litespeed-cache-conf' );
 		if ( ! $previous_options ) {
-			Utility::version_check( 'new' );
+			Cloud::version_check( 'new' );
 			return;
 		}
 
@@ -197,7 +197,7 @@ class Data extends Instance
 			! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 			Purge::purge_all();
 
-			Utility::version_check( 'upgrade' );
+			Cloud::version_check( 'upgrade' );
 		}
 	}
 

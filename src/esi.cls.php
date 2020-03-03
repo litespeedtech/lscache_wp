@@ -76,9 +76,6 @@ class ESI extends Instance
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', __NAMESPACE__ . '\Purge::purge_comment_widget' ) ;
 
-		// This defination is along with API::nonce() func
-		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;//Used in Bloom
-
 		/**
 		 * Recover REQUEST_URI
 		 * @since  1.8.1
@@ -119,6 +116,8 @@ class ESI extends Instance
 		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
 			$this->_nonce_actions = array_merge( $this->_nonce_actions, $nonces );
 		}
+
+		add_action( 'litespeed_nonce', array( $this, 'nonce_action' ) );
 
 		/**
 		 * If the nonce is in none_actions filter, convert it to ESI

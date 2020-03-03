@@ -22,7 +22,6 @@ class API extends Base
 	const TYPE_PAGES 					= Tag::TYPE_PAGES ;
 	const TYPE_PAGES_WITH_RECENT_POSTS 	= Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
 	const TYPE_ERROR 					= Tag::TYPE_ERROR ;
-	const TYPE_POST 					= Tag::TYPE_POST ;
 	const TYPE_ARCHIVE_POSTTYPE 		= Tag::TYPE_ARCHIVE_POSTTYPE ;
 	const TYPE_ARCHIVE_TERM 			= Tag::TYPE_ARCHIVE_TERM ;
 	const TYPE_AUTHOR 					= Tag::TYPE_AUTHOR ;
@@ -30,7 +29,6 @@ class API extends Base
 	const TYPE_BLOG 					= Tag::TYPE_BLOG ;
 	const TYPE_LOGIN 					= Tag::TYPE_LOGIN ;
 	const TYPE_URL 						= Tag::TYPE_URL ;
-	const TYPE_WIDGET 					= Tag::TYPE_WIDGET ;
 
 	const TYPE_ESI 					= Tag::TYPE_ESI ;
 
@@ -47,45 +45,62 @@ class API extends Base
 	 */
 	public static function init()
 	{
-		add_action( 'litespeed_conf_append', __CLASS__ . '::conf_append', 10, 2 ) ;
+		/**
+		 * Init
+		 */
+		// API::hook_init( $hook ) -> action `litespeed_init`
+
+		/**
+		 * Conf
+		 */
+		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // API::config($id) -> filter `litespeed_conf`
+		// API::conf_append( $name, $default ) -> action `litespeed_conf_append`
 		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
-		add_action( 'litespeed_conf_force', __CLASS__ . '::force_option', 10, 2 ) ;
+		// API::force_option( $k, $v ) -> action ``litespeed_conf_force`
 
 		/**
 		 * Cache Control Hooks
 		 */
 		// API::hook_control($tags) && action `litespeed_api_control` -> action `litespeed_control_finalize`
-		// API::set_cache_private() -> action `litespeed_control_set_private`
-		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' );
-		// API::set_nocache( $reason = false ) -> action `litespeed_control_set_nocache`
-		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' );
-		// API::not_cacheable() -> filter `litespeed_control_is_cachable`
-		add_filter( 'litespeed_control_is_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 2 ); // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
-		// API:: set_ttl( $val ) -> action `litespeed_control_set_ttl`
-		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 );
+		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // API::set_cache_private() -> action `litespeed_control_set_private`
+		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // API::set_nocache( $reason = false ) -> action `litespeed_control_set_nocache`
+		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // API::not_cacheable() -> filter `litespeed_control_cacheable` // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
+		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // API::set_ttl( $val ) -> action `litespeed_control_set_ttl`
+		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // API::get_ttl() -> filter `litespeed_control_ttl`
 
 		/**
 		 * Tag Hooks
 		 */
-		// API::tag_add( $tag ) -> action litespeed_tag_add
-		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' );
-		// API::hook_tag( $hook ) -> action litespeed_tag_finalize
+		// API::hook_tag( $hook ) -> action `litespeed_tag_finalize`
+		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // API::tag_add( $tag ) -> action `litespeed_tag_add`
+		add_action( 'litespeed_tag_add_post', __NAMESPACE__ . '\Tag::add_post' );
+		add_action( 'litespeed_tag_add_widget', __NAMESPACE__ . '\Tag::add_widget' );
+		add_action( 'litespeed_tag_add_private', __NAMESPACE__ . '\Tag::add_private' ); // API::tag_add_private( $tags ) -> action `litespeed_tag_add_private`
+		add_action( 'litespeed_tag_add_private_esi', __NAMESPACE__ . '\Tag::add_private_esi' );
 
 		/**
 		 * Purge Hooks
 		 */
-		// API::hook_purge($tags) -> action litespeed_purge_finalize
-		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' );
+		// API::hook_purge($tags) -> action `litespeed_purge_finalize`
+		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // API::purge($tags) -> action `litespeed_purge`
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
-		add_action( 'litespeed_purge_add_private', __NAMESPACE__ . '\Purge::add_private' );
-		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' );
+		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // API::purge_post( $pid ) -> action `litespeed_purge_post`
+		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
 		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
+		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
+		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> action `litespeed_purge_private`
+		add_action( 'litespeed_purge_private_esi', __NAMESPACE__ . '\Purge::add_private_esi' );
 
-		// API::set_mobile() -> filter `litespeed_is_mobile`
-		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' );
+		/**
+		 * ESI
+		 */
+		// API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) -> action `litespeed_nonce`
 
-		// add_action( '', __NAMESPACE__ . '\Control::is_mobile' );
+		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' ); // API::set_mobile() -> filter `litespeed_is_mobile`
+
+		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> action `litespeed_debug`
+		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> action `litespeed_debug2`
 	}
 
 	/**
@@ -106,16 +121,6 @@ class API extends Base
 	}
 
 	/**
-	 * Append an option to LSCWP options
-	 *
-	 * @since  3.0
-	 */
-	public static function conf_append( $name, $default )
-	{
-		Conf::get_instance()->option_append( $name, $default ) ;
-	}
-
-	/**
 	 * Extend an bool option max value for LSCWP options when save settings.
 	 *
 	 * @since  3.0
@@ -123,18 +128,6 @@ class API extends Base
 	public static function conf_multi_switch( $id, $v )
 	{
 		Base::set_multi_switch( $id, $v ) ;
-	}
-
-	/**
-	 * Force to set an option
-	 * Note: it will only affect the AFTER usage of that option
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function force_option( $k, $v )
-	{
-		Conf::get_instance()->force_option( $k, $v ) ;
 	}
 
 	/**
@@ -222,40 +215,7 @@ class API extends Base
 	 */
 	public static function set_use_frontpage_ttl()
 	{
-		Control::set_custom_ttl( self::config( self::O_CACHE_TTL_FRONTPAGE ) ) ;
-	}
-
-	/**
-	 * Get current cache control ttl
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public static function get_ttl()
-	{
-		return Control::get_ttl() ;
-	}
-
-	/**
-	 * Add public tag to cache
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function tag_add($tags)
-	{
-		Tag::add($tags) ;
-	}
-
-	/**
-	 * Add public tag to cache
-	 *
-	 * @since 1.6.3
-	 * @access public
-	 */
-	public static function tag_add_private( $tags )
-	{
-		Tag::add_private( $tags ) ;
+		Control::set_custom_ttl( Conf::val( self::O_CACHE_TTL_FRONTPAGE ) ) ;
 	}
 
 	/**
@@ -367,40 +327,6 @@ class API extends Base
 	public static function purge_private_all()
 	{
 		Purge::add_private( '*' ) ;
-	}
-
-	/**
-	 * Purge private tag
-	 *
-	 * @since 1.6.3
-	 * @access public
-	 */
-	public static function purge_private( $tags )
-	{
-		Purge::add_private( $tags ) ;
-	}
-
-	/**
-	 * Purge single action
-	 *
-	 * @since 1.3
-	 * @access public
-	 * @param  int $pid The ID of a post
-	 */
-	public static function purge_post( $pid )
-	{
-		Purge::purge_post( $pid ) ;
-	}
-
-	/**
-	 * Add purge tags
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function purge($tags)
-	{
-		Purge::add($tags) ;
 	}
 
 	/**
@@ -533,55 +459,6 @@ class API extends Base
 	}
 
 	/**
-	 * Easiest way to replace WP nonce to an ESI widget
-	 *
-	 * @since 2.6
-	 * @deprecated 2.9.5 Dropped-in wp_create_nonce replacement
-	 * @access public
-	 */
-	public static function nonce( $action = -1, $defence_for_html_filter = true )
-	{
-		if ( ! self::esi_enabled() ) {
-			return wp_create_nonce( $action ) ;
-		}
-
-		// Replace it to ESI
-		return self::esi_url( 'nonce', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
-	}
-
-	/**
-	 * Append an action to nonce to convert it to ESI
-	 *
-	 * @since  2.9.5
-	 */
-	public static function nonce_action( $action )
-	{
-		ESI::get_instance()->nonce_action( $action ) ;
-	}
-
-	/**
-	 * Log debug info
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function debug( $info, $backtrace_limit = false )
-	{
-		Debug2::debug( $info, $backtrace_limit ) ;
-	}
-
-	/**
-	 * Log debug info ( advanced mode )
-	 *
-	 * @since 1.6.6.1
-	 * @access public
-	 */
-	public static function debug2( $info, $backtrace_limit = false )
-	{
-		Debug2::debug2( $info, $backtrace_limit ) ;
-	}
-
-	/**
 	 * Get ESI enable setting value
 	 *
 	 * @since 1.2.0
@@ -604,17 +481,6 @@ class API extends Base
 	}
 
 	/**
-	 * Get cfg setting value
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function config($id)
-	{
-		return Conf::val($id) ;
-	}
-
-	/**
 	 * register 3rd party detect hooks
 	 *
 	 * @since 1.1.3
@@ -624,17 +490,6 @@ class API extends Base
 	public static function thirdparty( $cls )
 	{
 		add_action('litespeed_api_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect') ;
-	}
-
-	/**
-	 * Hook to litespeed init
-	 *
-	 * @since 1.6.6
-	 * @access public
-	 */
-	public static function hook_init( $hook )
-	{
-		add_action( 'litespeed_init', $hook ) ;
 	}
 
 	/**

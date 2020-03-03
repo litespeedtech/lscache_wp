@@ -121,6 +121,39 @@ class Tag extends Instance
 	}
 
 	/**
+	 * Add a post id to cache tag
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function add_post( $pid )
+	{
+		self::add( self::TYPE_POST . $pid );
+	}
+
+	/**
+	 * Add a widget id to cache tag
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function add_widget( $id )
+	{
+		self::add( self::TYPE_WIDGET . $id );
+	}
+
+	/**
+	 * Add a private ESI to cache tag
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function add_private_esi( $tag )
+	{
+		self::add_private( self::TYPE_ESI . $tag );
+	}
+
+	/**
 	 * Adds private cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.6.3
@@ -287,7 +320,7 @@ class Tag extends Instance
 	private static function _finalize()
 	{
 		// run 3rdparty hooks to tag
-		do_action( 'litespeed_api_tag' ) ;
+		do_action( 'litespeed_tag_finalize' );
 		// generate wp tags
 		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
 			$type_tags = self::_build_type_tags() ;

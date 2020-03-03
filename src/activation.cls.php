@@ -45,7 +45,7 @@ class Activation extends Instance
 		do_action( 'litespeed_api_load_thirdparty' ) ;
 
 		// Check new version @since 2.9.3
-		Utility::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
+		Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
 		/* Network file handler */
 
@@ -106,7 +106,7 @@ class Activation extends Instance
 			File::rrmdir( LITESPEED_STATIC_DIR ) ;
 		}
 
-		Utility::version_check( 'uninstall' ) ;
+		Cloud::version_check( 'uninstall' ) ;
 
 		// Files has been deleted when deactivated
 	}
@@ -454,9 +454,9 @@ class Activation extends Instance
 	public function auto_update_hook( $update, $item )
 	{
 		if ( $item->slug == 'litespeed-cache' ) {
-			$auto_v = Utility::version_check( 'auto_update_plugin' ) ;
+			$auto_v = Cloud::version_check( 'auto_update_plugin' ) ;
 
-			if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
+			if ( ! empty( $auto_v[ 'latest' ] ) && ! empty( $item->new_version ) && $auto_v[ 'latest' ] === $item->new_version ) {
 				return true ;
 			}
 		}

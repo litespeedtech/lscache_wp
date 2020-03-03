@@ -7,11 +7,11 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use \LiteSpeed\API ;
+use \LiteSpeed\API;
 
 class WP_PostRatings
 {
@@ -25,7 +25,7 @@ class WP_PostRatings
 	public static function detect()
 	{
 		if ( defined( 'WP_POSTRATINGS_VERSION' ) ) {
-			add_action( 'rate_post', __CLASS__ . '::flush', 10, 3 ) ;
+			add_action( 'rate_post', __CLASS__ . '::flush', 10, 3 );
 		}
 	}
 
@@ -37,7 +37,7 @@ class WP_PostRatings
 	 */
 	public static function flush( $uid, $post_id, $post_ratings_score )
 	{
-		API::purge( API::TYPE_POST . $post_id ) ;
+		do_action( 'litespeed_purge_post', $post_id );
 	}
 
 }

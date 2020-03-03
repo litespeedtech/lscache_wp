@@ -64,7 +64,7 @@ class WooCommerce extends Instance
 	{
 		$this->_option_append() ;
 
-		$this->cache_cart = API::config( self::O_WOO_CACHE_CART ) ;
+		$this->cache_cart = apply_filters( 'litespeed_conf', self::O_WOO_CACHE_CART ) ;
 		$this->esi_eanbled = API::esi_enabled() ;
 
 		add_action( 'litespeed_control_finalize', array( $this, 'set_control' ) );
@@ -138,8 +138,8 @@ class WooCommerce extends Instance
 	 */
 	public function purge_esi()
 	{
-		API::debug( '3rd woo purge ESI in action: ' . current_filter() ) ;
-		API::purge_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
+		do_action( 'litespeed_debug', '3rd woo purge ESI in action: ' . current_filter() ) ;
+		do_action( 'litespeed_purge_private_esi', 'storefront-cart-header' );
 
 	}
 
@@ -152,7 +152,7 @@ class WooCommerce extends Instance
 	public function check_if_need_esi( $template )
 	{
 		if (  $this->vary_needed() ) {
-			API::debug( 'API: 3rd woo added ESI' ) ;
+			do_action( 'litespeed_debug', 'API: 3rd woo added ESI' ) ;
 			API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
 		}
 
@@ -169,7 +169,7 @@ class WooCommerce extends Instance
 	public function vary_maintain( $vary )
 	{
 		if ( $this->vary_needed() ) {
-			API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;
+			do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' ) ;
 			$vary[ 'woo_cart' ] = 1 ;
 		}
 		return $vary ;
@@ -310,7 +310,7 @@ class WooCommerce extends Instance
 		}
 		$related_posts = $args['post__in'] ;
 		foreach ( $related_posts as $related ) {
-			API::tag_add( API::TYPE_POST . $related ) ;
+			do_action( 'litespeed_tag_add_post', $related );
 		}
 		return $args ;
 	}
@@ -487,12 +487,12 @@ class WooCommerce extends Instance
 		elseif ( $sale_to && $now < $sale_to ) {
 			$ttl = $sale_to - $now ;
 		}
-		if ( $ttl && $ttl < API::get_ttl() ) {
+		if ( $ttl && $ttl < apply_filters( 'litespeed_control_ttl', 0 ) ) {
 			do_action( 'litespeed_control_set_ttl', $ttl, "WooCommerce set scheduled TTL to $ttl" ) ;
 		}
 
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			API::tag_add(self::CACHETAG_SHOP) ;
+			do_action( 'litespeed_tag_add', self::CACHETAG_SHOP );
 		}
 		if ( function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
 			return ;
@@ -511,7 +511,7 @@ class WooCommerce extends Instance
 			return ;
 		}
 		while ( isset($term) ) {
-			API::tag_add(self::CACHETAG_TERM . $term->term_id) ;
+			do_action( 'litespeed_tag_add', self::CACHETAG_TERM . $term->term_id );
 			if ( $term->parent == 0 ) {
 				break ;
 			}
@@ -530,7 +530,7 @@ class WooCommerce extends Instance
 	 */
 	public function set_control($esi_id)
 	{
-		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+		if ( ! apply_filters( 'litespeed_control_cacheable', false ) ) {
 			return;
 		}
 
@@ -549,7 +549,7 @@ class WooCommerce extends Instance
 
 		// Set TTL
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			if ( API::config( self::O_SHOP_FRONT_TTL ) ) {
+			if ( apply_filters( 'litespeed_conf', self::O_SHOP_FRONT_TTL ) ) {
 				API::set_use_frontpage_ttl() ;
 			}
 		}
@@ -586,7 +586,7 @@ class WooCommerce extends Instance
 						 * @since 1.6.6.1
 						 */
 						// API::set_cache_no_vary() ;
-						API::tag_add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
+						do_action( 'litespeed_tag_add_private_esi', 'storefront-cart-header' );
 					}
 					else {
 						$err = 'cart is not empty' ;
@@ -596,7 +596,7 @@ class WooCommerce extends Instance
 					if ( $this->cache_cart ) {
 						do_action( 'litespeed_control_set_private', 'cache cart' );
 						API::set_cache_no_vary() ;
-						API::tag_add_private( API::TYPE_ESI . 'storefront-cart-header' ) ;
+						do_action( 'litespeed_tag_add_private_esi', 'storefront-cart-header' );
 					}
 					else {
 						$err = 'ESI cart should be nocache' ;
@@ -643,7 +643,7 @@ class WooCommerce extends Instance
 	 */
 	public function purge_product($product)
 	{
-		$config = API::config(self::O_UPDATE_INTERVAL) ;
+		$config = apply_filters( 'litespeed_conf', self::O_UPDATE_INTERVAL ) ;
 		if ( is_null($config) ) {
 			$config = self::O_PQS_CS ;
 		}
@@ -658,11 +658,11 @@ class WooCommerce extends Instance
 			$this->backend_purge($product->get_id()) ;
 		}
 
-		API::purge( API::TYPE_POST . $product->get_id() ) ;
+		do_action( 'litespeed_purge_post', $product->get_id() );
 
 		// Check if is variation, purge stock too #984479
 		if ( $product->is_type( 'variation' ) ) {
-			API::purge( API::TYPE_POST . $product->get_parent_id() ) ;
+			do_action( 'litespeed_purge_post', $product->get_parent_id() );
 		}
 	}
 
@@ -687,7 +687,7 @@ class WooCommerce extends Instance
 			return ;
 		}
 		foreach ( $term_ids as $term_id ) {
-			API::purge(self::CACHETAG_TERM . $term_id) ;
+			do_action( 'litespeed_purge', self::CACHETAG_TERM . $term_id );
 		}
 	}
 
@@ -712,7 +712,7 @@ class WooCommerce extends Instance
 		$cats = $this->get_cats($post_id) ;
 		if ( ! empty($cats) ) {
 			foreach ( $cats as $cat ) {
-				API::purge(self::CACHETAG_TERM . $cat) ;
+				do_action( 'litespeed_purge', self::CACHETAG_TERM . $cat );
 			}
 		}
 
@@ -723,7 +723,7 @@ class WooCommerce extends Instance
 		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids')) ;
 		if ( ! empty($tags) ) {
 			foreach ( $tags as $tag ) {
-				API::purge(self::CACHETAG_TERM . $tag) ;
+				do_action( 'litespeed_purge', self::CACHETAG_TERM . $tag );
 			}
 		}
 	}
@@ -751,7 +751,7 @@ class WooCommerce extends Instance
 		global $wp_widget_factory ;
 		$recent_reviews = $wp_widget_factory->widgets[ 'WC_Widget_Recent_Reviews' ] ;
 		if ( ! is_null( $recent_reviews ) ) {
-			API::tag_add( API::TYPE_WIDGET . $recent_reviews->id ) ;
+			do_action( 'litespeed_tag_add_widget', $recent_reviews->id );
 		}
 	}
 
@@ -763,9 +763,9 @@ class WooCommerce extends Instance
 	 */
 	private function _option_append()
 	{
-		API::conf_append( self::O_UPDATE_INTERVAL, false ) ;
-		API::conf_append( self::O_SHOP_FRONT_TTL, true ) ;
-		API::conf_append( self::O_WOO_CACHE_CART, true ) ;
+		do_action( 'litespeed_conf_append', self::O_UPDATE_INTERVAL, false );
+		do_action( 'litespeed_conf_append', self::O_SHOP_FRONT_TTL, true );
+		do_action( 'litespeed_conf_append', self::O_WOO_CACHE_CART, true );
 
 		// Append option save value filter
 		API::conf_multi_switch( self::O_UPDATE_INTERVAL, 3 ) ;
@@ -877,7 +877,7 @@ class WooCommerce extends Instance
 			$product = wc_get_product( $product_id ) ;
 
 			if ( empty( $product ) ) {
-				API::debug( '3rd woo purge: ' . $product_id . ' not found.' ) ;
+				do_action( 'litespeed_debug', '3rd woo purge: ' . $product_id . ' not found.' ) ;
 				continue ;
 			}
 

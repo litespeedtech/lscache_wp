@@ -39,7 +39,7 @@ foreach ( $third_cls as $v ) {
 }
 
 // Preload needed for certain thirdparty
-API::hook_init( 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload' );
-API::hook_init( 'LiteSpeed\Thirdparty\WooCommerce::preload' );
-API::hook_init( 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
-API::hook_init( 'LiteSpeed\Thirdparty\AMP::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload' );

@@ -404,6 +404,17 @@ class Purge extends Base
 	}
 
 	/**
+	 * Add private ESI tag to purge list
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function add_private_esi( $tag )
+	{
+		self::add_private( Tag::TYPE_ESI . $tag );
+	}
+
+	/**
 	 * Add tags to private purge
 	 *
 	 * @since 2.2
@@ -645,6 +656,28 @@ class Purge extends Base
 
 		// for redirection
 		$_GET[ Admin_Display::PURGEBYOPT_SELECT ] = $sel ;
+	}
+
+	/**
+	 * Purge ESI
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function purge_esi( $tag )
+	{
+		self::add( Tag::TYPE_ESI . $tag );
+	}
+
+	/**
+	 * Purge a certain post type
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function purge_posttype( $post_type )
+	{
+		self::add( Tag::TYPE_ARCHIVE_POSTTYPE . $post_type );
 	}
 
 	/**

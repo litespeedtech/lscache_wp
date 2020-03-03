@@ -40,7 +40,7 @@ class BBPress
 	 */
 	public static function set_control()
 	{
-		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+		if ( ! apply_filters( 'litespeed_control_cacheable', false ) ) {
 			return ;
 		}
 
@@ -65,22 +65,22 @@ class BBPress
 		}
 
 		// Need to purge base forums page, bbPress page was updated.
-		API::purge( API::TYPE_ARCHIVE_POSTTYPE . bbp_get_forum_post_type() ) ;
-		$ancestors = get_post_ancestors( $post_id ) ;
+		do_action( 'litespeed_purge_posttype', bbp_get_forum_post_type() );
+		$ancestors = get_post_ancestors( $post_id );
 
 		// If there are ancestors, need to purge them as well.
 		if ( ! empty( $ancestors ) ) {
 			foreach ( $ancestors as $ancestor ) {
-				API::purge( API::TYPE_POST . $ancestor ) ;
+				do_action( 'litespeed_purge_post', $ancestor );
 			}
 		}
 
 		global $wp_widget_factory ;
 		if ( bbp_is_reply( $post_id ) && ! is_null( $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ] ) ) {
-			API::purge( API::TYPE_WIDGET . $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ]->id ) ;
+			do_action( 'litespeed_purge_widget', $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ]->id );
 		}
 		if ( bbp_is_topic( $post_id ) && ! is_null( $wp_widget_factory->widgets[ 'BBP_Topics_Widget' ] ) ) {
-			API::purge( API::TYPE_WIDGET . $wp_widget_factory->widgets[ 'BBP_Topics_Widget' ]->id ) ;
+			do_action( 'litespeed_purge_widget', $wp_widget_factory->widgets[ 'BBP_Topics_Widget' ]->id );
 		}
 	}
 }

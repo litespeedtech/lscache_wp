@@ -25,9 +25,11 @@ if ( time() - $last_check > 43200 ) {
 	Admin_Display::save_summary( $this->_summary ) ;
 
 	// Detect version
-	$auto_v = Utility::version_check( 'new_version_banner' ) ;
-	$this->_summary[ 'new_version.v' ] = $auto_v ;
-	Admin_Display::save_summary( $this->_summary ) ;
+	$auto_v = Cloud::version_check( 'new_version_banner' );
+	if ( ! empty( $auto_v[ 'latest' ] ) ) {
+		$this->_summary[ 'new_version.v' ] = $auto_v[ 'latest' ];
+		Admin_Display::save_summary( $this->_summary ) ;
+	}
 	// After detect, don't show, just return and show next time
 	return ;
 }

@@ -435,6 +435,9 @@ class Admin_Display extends Base
 			$this->show_display_installed();
 		}
 
+		// If is in dev version, always check latest update
+		Cloud::get_instance()->check_dev_version();
+
 		// One time msg
 		$messages = self::get_option( self::DB_MSG );
 		if( is_array($messages) ) {

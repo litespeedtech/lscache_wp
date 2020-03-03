@@ -77,30 +77,6 @@ class Utility extends Instance
 	}
 
 	/**
-	 * Check latest version
-	 *
-	 * @since  2.9
-	 * @access public
-	 */
-	public static function version_check( $src = false )
-	{
-		$req_data = array(
-			'v'		=> defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '',
-			'src'	=> $src,
-		);
-		if ( defined( 'LITESPEED_ERR' ) ) {
-			$req_data[ 'err' ] = base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
-		}
-		$data = Cloud::get( Cloud::API_VER, $req_data );
-
-		if ( empty( $data[ 'ver' ] ) ) {
-			return false;
-		}
-
-		return $data[ 'ver' ] ;
-	}
-
-	/**
 	 * Get current page type
 	 *
 	 * @since  2.9

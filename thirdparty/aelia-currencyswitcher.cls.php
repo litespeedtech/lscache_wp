@@ -47,7 +47,7 @@ class Aelia_CurrencySwitcher
 	 */
 	public static function check_cookies()
 	{
-		if ( ! apply_filter( 'litespeed_control_is_cacheable', false ) ) {
+		if ( ! apply_filters( 'litespeed_control_cacheable', false ) ) {
 			return;
 		}
 

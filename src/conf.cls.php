@@ -10,20 +10,20 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 
 class Conf extends Base
 {
-	protected static $_instance ;
+	protected static $_instance;
 
-	const TYPE_SET = 'set' ;
+	const TYPE_SET = 'set';
 
-	private $_options = array() ;
-	private $_const_options = array() ;
-	private $_site_options = array() ;
+	private $_options = array();
+	private $_const_options = array();
+	private $_site_options = array();
 
 	/**
 	 * Initialize the class and set its properties.
@@ -45,7 +45,7 @@ class Conf extends Base
 	{
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
 		// Conf may be stale, upgrade later
-		$this->_conf_db_init() ;
+		$this->_conf_db_init();
 
 		/**
 		 * Detect if has quic.cloud set
@@ -54,6 +54,9 @@ class Conf extends Base
 		if ( $this->_options[ self::O_CDN_QUIC ] ) {
 			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 		}
+
+		add_action( 'litespeed_conf_append', array( $this, 'option_append' ), 10, 2 );
+		add_action( 'litespeed_conf_force', array( $this, 'force_option' ), 10, 2 );
 
 		$this->define_cache() ;
 	}

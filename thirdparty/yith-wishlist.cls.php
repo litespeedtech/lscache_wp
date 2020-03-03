@@ -48,7 +48,7 @@ class Yith_Wishlist
 	 */
 	public static function purge()
 	{
-		API::purge( API::TYPE_ESI . 'yith-wcwl-add' ) ;
+		do_action( 'litespeed_purge_esi', 'yith-wcwl-add' );
 	}
 
 	/**
