@@ -881,7 +881,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _check_const_overwritten( $id )
+	protected function _check_const_overwritten( $id )
 	{
 		$val = $this->__cfg->const_overwritten( $id );
 		if ( $val === null ) {
@@ -951,7 +951,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_syntax( $id )
+	protected function _validate_syntax( $id )
 	{
 		$val = Conf::val( $id, true ) ;
 
@@ -975,7 +975,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false )
+	protected function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false )
 	{
 		$val = Conf::val( $id, true ) ;
 
@@ -1021,7 +1021,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_ip( $id )
+	protected function _validate_ip( $id )
 	{
 		$val = Conf::val( $id, true ) ;
 		if ( ! $val ) {
@@ -1052,9 +1052,9 @@ class Admin_Display extends Base
 	 * Display API environment variable support
 	 *
 	 * @since  1.8.3
-	 * @access private
+	 * @access protected
 	 */
-	private function _api_env_var()
+	protected function _api_env_var()
 	{
 		$args = func_get_args() ;
 		$s = '<code>' . implode( '</code>, <code>', $args ) . '</code>' ;
@@ -1091,9 +1091,9 @@ class Admin_Display extends Base
 	 * Display URI setting example
 	 *
 	 * @since  2.6.1
-	 * @access private
+	 * @access protected
 	 */
-	private function _uri_usage_example()
+	protected function _uri_usage_example()
 	{
 		echo __( 'The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache' ) ;
 		echo ' ' . sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ;
