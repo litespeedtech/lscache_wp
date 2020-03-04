@@ -18,7 +18,7 @@ class Tag extends Instance
 	const TYPE_HOME = 'H' ;
 	const TYPE_PAGES = 'PGS' ;
 	const TYPE_PAGES_WITH_RECENT_POSTS = 'PGSRP' ;
-	const TYPE_ERROR = 'ERR.' ;
+	const TYPE_HTTP = 'HTTP.' ;
 	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.' ;
 	const TYPE_ARCHIVE_TERM = 'T.' ; //for is_category|is_tag|is_tax

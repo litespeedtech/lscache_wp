@@ -518,13 +518,13 @@ class Purge extends Base
 	 */
 	private function _purge_error( $type = false )
 	{
-		$this->_add( Tag::TYPE_ERROR ) ;
+		$this->_add( Tag::TYPE_HTTP ) ;
 
 		if ( ! $type || ! in_array( $type, array( '403', '404', '500' ) ) ) {
 			return ;
 		}
 
-		$this->_add( Tag::TYPE_ERROR . $type ) ;
+		$this->_add( Tag::TYPE_HTTP . $type ) ;
 
 		$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;

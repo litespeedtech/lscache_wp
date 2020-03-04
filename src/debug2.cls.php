@@ -60,11 +60,11 @@ class Debug2 extends Instance
 	public function beta_test( $zip = false )
 	{
 		if ( ! $zip ) {
-			if ( empty( $_POST[ self::BETA_TEST_URL ] ) ) {
+			if ( empty( $_REQUEST[ self::BETA_TEST_URL ] ) ) {
 				return ;
 			}
 
-			$zip = $_POST[ self::BETA_TEST_URL ];
+			$zip = $_REQUEST[ self::BETA_TEST_URL ];
 			if ( $zip !== Debug2::BETA_TEST_URL_WP ) {
 				if ( $zip === 'latest' ) {
 					$zip = Debug2::BETA_TEST_URL_WP;
@@ -96,9 +96,9 @@ class Debug2 extends Instance
 		}
 
 		$plugin_info = new \stdClass() ;
-		$plugin_info->new_version = Core::VER . '.0.0' ;
-		$plugin_info->slug = Core::PLUGIN_NAME ;
-		$plugin_info->plugin = Core::PLUGIN_FILE ;
+		$plugin_info->new_version = Core::VER;
+		$plugin_info->slug = Core::PLUGIN_NAME;
+		$plugin_info->plugin = Core::PLUGIN_FILE;
 		$plugin_info->package = $zip ;
 		$plugin_info->url = 'https://wordpress.org/plugins/litespeed-cache/' ;
 

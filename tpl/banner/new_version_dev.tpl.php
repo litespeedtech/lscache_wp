@@ -18,6 +18,11 @@ defined( 'WPINC' ) || exit;
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
 				<div class="litespeed-banner-description-padding-right-15">
+					<?php $url = Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_BETA_TEST, false, null, array( Debug2::BETA_TEST_URL => 'dev' ) ) ; ?>
+					<a href="<?php echo $url ; ?>" class="button litespeed-btn-success litespeed-btn-mini">
+						<i class="dashicons dashicons-image-rotate">&nbsp;</i>
+						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
+					</a>
 				</div>
 			</div>
 		</div>

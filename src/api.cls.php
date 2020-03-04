@@ -21,7 +21,7 @@ class API extends Base
 	const TYPE_HOME 					= Tag::TYPE_HOME ;
 	const TYPE_PAGES 					= Tag::TYPE_PAGES ;
 	const TYPE_PAGES_WITH_RECENT_POSTS 	= Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
-	const TYPE_ERROR 					= Tag::TYPE_ERROR ;
+	const TYPE_HTTP 					= Tag::TYPE_HTTP ;
 	const TYPE_ARCHIVE_POSTTYPE 		= Tag::TYPE_ARCHIVE_POSTTYPE ;
 	const TYPE_ARCHIVE_TERM 			= Tag::TYPE_ARCHIVE_TERM ;
 	const TYPE_AUTHOR 					= Tag::TYPE_AUTHOR ;

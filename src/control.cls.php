@@ -157,7 +157,7 @@ class Control extends Instance
 		}
 
 		// Set cache tag
-		Tag::add( Tag::TYPE_ERROR . $code ) ;
+		Tag::add( Tag::TYPE_HTTP . $code ) ;
 
 		// Give the default status_header back
 		return $status_header ;
