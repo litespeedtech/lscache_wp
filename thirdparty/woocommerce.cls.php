@@ -123,7 +123,7 @@ class WooCommerce extends Instance
 					add_action( $v, array( $this, 'purge_esi' ) ) ;
 				}
 				else {
-					add_action( $v, 'LiteSpeed\API::purge_private_all' ) ;
+					add_action( $v, array( $this, 'purge_private_all' ) ) ;
 				}
 			}
 		}
@@ -141,6 +141,17 @@ class WooCommerce extends Instance
 		do_action( 'litespeed_debug', '3rd woo purge ESI in action: ' . current_filter() ) ;
 		do_action( 'litespeed_purge_private_esi', 'storefront-cart-header' );
 
+	}
+
+	/**
+	 * Purge private all
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function purge_private_all()
+	{
+		do_action( 'litespeed_purge_private_all' );
 	}
 
 	/**

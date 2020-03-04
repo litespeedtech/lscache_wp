@@ -19,6 +19,7 @@ $third_cls = array(
 	'Autoptimize',
 	'Avada',
 	'BBPress',
+	'Beaver_Builder',
 	'Divi_Theme_Builder',
 	'Elementor',
 	'Facetwp',
@@ -34,8 +35,8 @@ $third_cls = array(
 	'Yith_Wishlist',
 );
 
-foreach ( $third_cls as $v ) {
-	API::thirdparty( $v );
+foreach ( $third_cls as $cls ) {
+	add_action( 'litespeed_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect' ) ;
 }
 
 // Preload needed for certain thirdparty

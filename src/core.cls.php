@@ -294,7 +294,7 @@ class Core extends Instance
 	 */
 	public function load_thirdparty()
 	{
-		do_action( 'litespeed_api_load_thirdparty' );
+		do_action( 'litespeed_load_thirdparty' );
 	}
 
 	/**

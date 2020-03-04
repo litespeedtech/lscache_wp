@@ -39,7 +39,7 @@ if ( ! isset( $this->_summary[ 'new_version.v' ] ) ) {
 }
 
 // Check if current version is newer than auto_v or not
-if ( API::v( $this->_summary[ 'new_version.v' ] ) ) {
+if ( version_compare( Core::VER, $this->_summary[ 'new_version.v' ], '>=' ) ) {
 	return ;
 }
 

@@ -64,6 +64,9 @@ class API extends Base
 		// API::hook_control($tags) && action `litespeed_api_control` -> action `litespeed_control_finalize`
 		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // API::set_cache_private() -> action `litespeed_control_set_private`
 		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // API::set_nocache( $reason = false ) -> action `litespeed_control_set_nocache`
+		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // API::set_cacheable( $reason ) -> action `litespeed_control_set_cacheable` // Might needed if not call hook `wp`
+		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // API::set_force_cacheable( $reason ) -> action `litespeed_control_force_cacheable` // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
+		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // API::set_force_public( $reason ) -> action `litespeed_control_force_public` // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
 		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // API::not_cacheable() -> filter `litespeed_control_cacheable` // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
 		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // API::set_ttl( $val ) -> action `litespeed_control_set_ttl`
 		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // API::get_ttl() -> filter `litespeed_control_ttl`
@@ -91,6 +94,7 @@ class API extends Base
 		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
 		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> action `litespeed_purge_private`
 		add_action( 'litespeed_purge_private_esi', __NAMESPACE__ . '\Purge::add_private_esi' );
+		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // API::purge_private_all() -> action `litespeed_purge_private_all`
 
 		/**
 		 * ESI
@@ -153,17 +157,6 @@ class API extends Base
 	}
 
 	/**
-	 * Compare version
-	 *
-	 * @since 1.3
-	 * @access public
-	 */
-	public static function v( $v )
-	{
-		return version_compare( self::VERSION, $v, '>=' ) ;
-	}
-
-	/**
 	 * Set cache status to no vary
 	 *
 	 * @since 1.2.0
@@ -172,39 +165,6 @@ class API extends Base
 	public static function set_cache_no_vary()
 	{
 		Control::set_no_vary() ;
-	}
-
-	/**
-	 * Set cache status to cacheable ( By default cacheable status will be set when called WP hook `wp` )
-	 *
-	 * @since 2.2
-	 * @access public
-	 */
-	public static function set_cacheable( $reason )
-	{
-		Control::set_cacheable( $reason ) ;
-	}
-
-	/**
-	 * Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
-	 *
-	 * @since 2.2
-	 * @access public
-	 */
-	public static function set_force_cacheable( $reason )
-	{
-		Control::force_cacheable( $reason ) ;
-	}
-
-	/**
-	 * Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
-	 *
-	 * @since 2.9.7.2
-	 * @access public
-	 */
-	public static function set_force_public( $reason )
-	{
-		Control::set_public_forced( $reason ) ;
 	}
 
 	/**
@@ -316,17 +276,6 @@ class API extends Base
 	public static function vary_append_commenter()
 	{
 		Vary::get_instance()->append_commenter() ;
-	}
-
-	/**
-	 * Purge all private
-	 *
-	 * @since 1.6.3
-	 * @access public
-	 */
-	public static function purge_private_all()
-	{
-		Purge::add_private( '*' ) ;
 	}
 
 	/**
@@ -478,18 +427,6 @@ class API extends Base
 	public static function cache_enabled()
 	{
 		return defined( 'LITESPEED_ON' ) ;
-	}
-
-	/**
-	 * register 3rd party detect hooks
-	 *
-	 * @since 1.1.3
-	 * @since  3.0 Renamed from `regiter()` to `thirdparty()`
-	 * @access public
-	 */
-	public static function thirdparty( $cls )
-	{
-		add_action('litespeed_api_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect') ;
 	}
 
 	/**

@@ -415,6 +415,17 @@ class Purge extends Base
 	}
 
 	/**
+	 * Add private all tag to purge list
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function add_private_all()
+	{
+		self::add_private( '*' );
+	}
+
+	/**
 	 * Add tags to private purge
 	 *
 	 * @since 2.2

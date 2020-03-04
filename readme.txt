@@ -378,6 +378,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * Code base refactored. New namespace LiteSpeed.
 * GUI refactored.
 * [3rd] User Switching plugin compatibility. (@robert Staddon)
+* [3rd] Beaver Builder plugin compatibility with v3.0.0.
 * [Network] Fixed potential timeout issue when containing a large volume of sites. (@alican532)
 * [Debug] `Disable All Features` now will see the warning banner if ON.
 * [Debug] Dropped `log filters` section.
