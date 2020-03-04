@@ -544,6 +544,7 @@ class Media extends Instance
 		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Conf::val( Base::O_MEDIA_LAZY_EXC ) ) ;
 
 		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_CLS_EXC ) ) ;
+		$cls_excludes[] = 'skip-lazy'; // https://core.trac.wordpress.org/ticket/44427
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -581,7 +582,7 @@ class Media extends Instance
 
 			Debug2::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
 
-			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
+			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-skip-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
 				Debug2::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
@@ -637,7 +638,8 @@ class Media extends Instance
 	 */
 	private function _parse_iframe()
 	{
-		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) );
+		$cls_excludes[] = 'skip-lazy'; // https://core.trac.wordpress.org/ticket/44427
 
 		$html_list = array() ;
 
@@ -665,7 +667,7 @@ class Media extends Instance
 
 			Debug2::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
 
-			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
+			if ( ! empty( $attrs[ 'data-no-lazy' ] ) ||  ! empty( $attrs[ 'data-skip-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
 				Debug2::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}

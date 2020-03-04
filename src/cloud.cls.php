@@ -530,8 +530,10 @@ class Cloud extends Base
 			$error_message = $response->get_error_message();
 			Debug2::debug( '🌤️  failed to request: ' . $error_message );
 
-			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
-			Admin_Display::error( $msg );
+			if ( $service !== self::API_VER ) {
+				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
+				Admin_Display::error( $msg );
+			}
 			return;
 		}
 
@@ -540,8 +542,10 @@ class Cloud extends Base
 		if ( ! is_array( $json ) ) {
 			Debug2::debug( '🌤️  failed to decode response json: ' . $response[ 'body' ] );
 
-			$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
-			Admin_Display::error( $msg );
+			if ( $service !== self::API_VER ) {
+				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
+				Admin_Display::error( $msg );
+			}
 
 			return;
 		}
