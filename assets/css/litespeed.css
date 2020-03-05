@@ -509,7 +509,7 @@ h3 .litespeed-learn-more {
 	color: #cc3d6a;
 }
 
-.litespeed-wrap a.disabled{
+.litespeed-wrap a.disabled {
 	cursor: not-allowed;
 	opacity: 0.5;
 	text-decoration: none;
@@ -1575,7 +1575,7 @@ ul.litespeed-shell-body {
 }
 
 .litespeed-tick label {
-	padding: 2px 15px 10px 0;
+	padding: 2px 0px 2px 0;
 	font-size: 14px;
 	color: #264d73;
 }
@@ -1589,86 +1589,25 @@ ul.litespeed-shell-body {
 			RADIO - vertical
 ======================================= */
 
-.litespeed-radio-vertical {
-	border-left: 1px solid #538ac6;
-	height: 100%;
-	margin-left: 8px;
-	display: inline-block;
-	min-width: 150px;
-	background: #f9fafc;
-	padding: 5px 0 5px 0px;
-	border-radius: 3px;
-	cursor: pointer;
+.litespeed-radio-row {
+	margin-bottom: 12px;
+    position: relative;
+    padding-left: 1.5rem;
 }
 
-.litespeed-radio-vertical label {
-	min-width: 115px;
-	padding: 3px 10px 6px 8px;
+.litespeed-radio-row input[type=radio] {
+    margin-top: 0;
+    margin-bottom: 0;
+	position: absolute;
+	line-height: 1;
+	left: 0;
+	top: 0.7em;
+	transform: translateY(-50%);
 }
 
-.litespeed-radio-vertical label:hover {
-	min-width: 115px;
-	color: #6699cc;
-	padding: 3px 10px 6px 8px;
-}
-
-
-.litespeed-radio-vertical-row {
-	margin: 20px 10px 25px 0px;
-	width: 100%;
-}
-
-.litespeed-radio-vertical-row input {
-	height: 15.5px;
-	min-width: 15px;
-	vertical-align: middle;
-	margin: -2px 0 0 -8px;
-	border: 1px solid #538ac6;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	background: #fff;
-	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-border-radius: 50% !important;
-	border-radius: 50% !important;
-	cursor: pointer;
-}
-
-.litespeed-radio-vertical-row input:not(:disabled):hover {
-	border-color: #538ac6;
-	-moz-box-shadow: inset 0 0 1px 3px #36b0b0;
-	-webkit-box-shadow: inset 0 1px 3px #36b0b0;
-	box-shadow: inset 0 0 1px 3px #36b0b0;
-
-}
-
-.litespeed-radio-vertical-row input:active:not(:disabled) {
-	border-color: #538ac6;
-}
-
-.litespeed-radio-vertical-row input:focus {
-	outline: none;
-}
-
-.litespeed-radio-vertical-row input:checked {
-	border-color: #538ac6;
-	-moz-box-shadow: inset 0 0 0.5px 3px #fff;
-	-webkit-box-shadow: inset 0 0 0.5px 3px #fff;
-	box-shadow: inset 0 0 0.5px 3px #fff;
-	background: #36b0b0;
-}
-
-.litespeed-radio-vertical-row input:checked:before {
-	text-indent: -9999px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	font-size: 24px;
-	width: 6px;
-	height: 6px;
-	margin: 4px;
-	line-height: 16px;
+.litespeed-radio-row label{
+	vertical-align: text-bottom;
+	line-height:1.4;
 }
 
 /* =======================================

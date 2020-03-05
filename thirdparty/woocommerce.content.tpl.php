@@ -39,11 +39,9 @@ use \LiteSpeed\Admin_Display ;
 				$checked = (int) $k === $conf ? ' checked ' : '' ;
 			?>
 				<?php API::enroll( $id ) ; ?>
-				<div class="litespeed-radio-vertical">
-					<div class='litespeed-radio-vertical-row'>
-						<input type='radio' autocomplete='off' name='<?php echo $id ; ?>' id='conf_<?php echo $id ; ?>_<?php echo $k ; ?>' value='<?php echo $k ; ?>' <?php echo $checked ; ?> />
-						<label for='conf_<?php echo $id ; ?>_<?php echo $k ; ?>'><?php echo $v ; ?></label>
-					</div>
+				<div class='litespeed-radio-row'>
+					<input type='radio' autocomplete='off' name='<?php echo $id ; ?>' id='conf_<?php echo $id ; ?>_<?php echo $k ; ?>' value='<?php echo $k ; ?>' <?php echo $checked ; ?> />
+					<label for='conf_<?php echo $id ; ?>_<?php echo $k ; ?>'><?php echo $v ; ?></label>
 				</div>
 			<?php endforeach ; ?>
 			<div class="litespeed-desc">
