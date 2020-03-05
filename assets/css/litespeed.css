@@ -1591,13 +1591,13 @@ ul.litespeed-shell-body {
 
 .litespeed-radio-row {
 	margin-bottom: 12px;
-    position: relative;
-    padding-left: 1.5rem;
+	position: relative;
+	padding-left: 1.5rem;
 }
 
 .litespeed-radio-row input[type=radio] {
-    margin-top: 0;
-    margin-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
 	position: absolute;
 	line-height: 1;
 	left: 0;
@@ -1605,9 +1605,9 @@ ul.litespeed-shell-body {
 	transform: translateY(-50%);
 }
 
-.litespeed-radio-row label{
+.litespeed-radio-row label {
 	vertical-align: text-bottom;
-	line-height:1.4;
+	line-height: 1.4;
 }
 
 /* =======================================
