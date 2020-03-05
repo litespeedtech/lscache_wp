@@ -433,7 +433,7 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
-	public static function set_custom_ttl( $ttl, $reason = fase )
+	public static function set_custom_ttl( $ttl, $reason = false )
 	{
 		if ( is_numeric( $ttl ) ) {
 			self::$_custom_ttl = $ttl;

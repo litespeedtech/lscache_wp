@@ -43,20 +43,22 @@ $this->form_action();
 			<?php if ( defined( 'LITESPEED_NEW_API_KEY' ) ) : ?>
 				<span class="litespeed-danger"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
 			<?php endif; ?>
+			<?php if ( $gen_btn_available ) : ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button litespeed-btn-success', true ); ?>
+			<?php else: ?>
+				<?php $this->learn_more( 'javascript:;', __( 'Generate Key', 'litespeed-cache' ), 'button disabled', true ); ?>
+				<br />
+				<div class="litespeed-callout notice notice-error inline">
+					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating an API key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
+						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
+					</p>
+				</div>
+			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'An API key is necessary for security when communicating with our QUIC.cloud servers. Required for online services.', 'litespeed-cache' ); ?>
-				<?php if ( $gen_btn_available ) : ?>
-					<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), '', true ); ?>
-				<?php else: ?>
-					<?php $this->learn_more( 'javascript:;', __( 'Generate Key', 'litespeed-cache' ), 'disabled', true ); ?>
-					<br />
-					<span class="litespeed-danger">
-						<?php echo __( 'Warning', 'litespeed-cache' ); ?>:
-						<?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating an API key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
-						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
-					</span>
-				<?php endif; ?>
-				<br /><?php echo sprintf( __( 'If you have previously generated a key as an anonymous user, but now wish to log into the %1$s Dashboard to see usage, status and statistics, please use the %2$s in %3$s to register at QUIC.cloud.', 'litespeed-cache' ),
+				<br /><?php Doc::notice_ips(); ?>
+				<?php echo sprintf( __( 'If you have previously generated a key as an anonymous user, but now wish to log into the %1$s Dashboard to see usage, status and statistics, please use the %2$s in %3$s to register at QUIC.cloud.', 'litespeed-cache' ),
 						'<strong>QUIC.cloud</strong>',
 						'<code>' . __( 'Administration Email Address' ) . '</code>',
 						'<code>' . __( 'Settings' ) . ' > ' . __( 'General Settings' ) . '</code>'
