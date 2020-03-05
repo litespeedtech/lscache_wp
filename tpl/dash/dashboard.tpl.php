@@ -114,7 +114,7 @@ $placeholder_summary = Placeholder::get_summary();
 						</div>
 					</div>
 					<?php if ( $pag_total > 0 ) { ?>
-						<p class="litespeed-dashboard-stats-payg" data-balloon-pos="up" aria-label="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
+						<p class="litespeed-dashboard-stats-payg">
 							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
 							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>">
 								<span class="dashicons dashicons-info"></span>
