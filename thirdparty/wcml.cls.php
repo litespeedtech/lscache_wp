@@ -13,22 +13,25 @@ class WCML
 
 	public static function detect()
 	{
-		if ( ! defined( 'WPML_PLUGIN_BASENAME' ) ) return;
+		if ( ! defined( 'WCML_VERSION' ) ) return;
 
-		add_filter( 'litespeed_internal_domains', __CLASS__ . '::append_domains' );
+		add_filter( 'wcml_client_currency', __CLASS__ . '::apply_client_currency' );
+		add_action( 'wcml_set_client_currency', __CLASS__ . '::set_client_currency' );
 	}
 
-	/**
-	 * Take language domains as internal domains
-	 */
-	public static function append_domains( $domains )
+	public static function set_client_currency( $currency )
 	{
-		$wpml_domains = apply_filters( 'wpml_setting', false, 'language_domains' );
-		if ( $wpml_domains ) {
-			$domains = array_merge( $domains, array_values( $wpml_domains ) );
+		self::apply_client_currency( $currency );
+
+		do_action( 'litespeed_vary_ajax_force' );
+	}
+
+	public static function apply_client_currency( $currency )
+	{
+		if ( $currency !== wcml_get_woocommerce_currency_option() ) {
+			do_action( 'litespeed_vary_append', 'wcml_currency', $currency );
 		}
 
-		return $domains;
+		return $currency;
 	}
-
 }

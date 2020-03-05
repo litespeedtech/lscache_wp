@@ -70,13 +70,13 @@ class Control extends Instance
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function vary_add_role_exclude( $varies )
+	public function vary_add_role_exclude( $vary )
 	{
-		if ( ! $this->in_cache_exc_roles() ) {
-			return $varies ;
+		if ( $this->in_cache_exc_roles() ) {
+			$vary[ 'role_exclude_cache' ] = 1;
 		}
-		$varies[ 'role_exclude_cache' ] = 1 ;
-		return $varies ;
+
+		return $vary;
 	}
 
 	/**

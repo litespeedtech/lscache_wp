@@ -90,7 +90,7 @@ class Optimize extends Base
 		 * Add vary filter for Role Excludes
 		 * @since  1.6
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) );
 
 		/**
 		 * Prefetch DNS
@@ -106,13 +106,13 @@ class Optimize extends Base
 	 * @since  1.6
 	 * @access public
 	 */
-	public function vary_add_role_exclude( $varys )
+	public function vary_add_role_exclude( $vary )
 	{
-		if ( ! Conf::get_instance()->in_optm_exc_roles() ) {
-			return $varys ;
+		if ( Conf::get_instance()->in_optm_exc_roles() ) {
+			$vary[ 'role_exclude_optm' ] = 1;
 		}
-		$varys[ 'role_exclude_optm' ] = 1 ;
-		return $varys ;
+
+		return $vary;
 	}
 
 	/**

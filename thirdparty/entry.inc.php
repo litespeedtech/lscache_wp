@@ -25,6 +25,7 @@ $third_cls = array(
 	'Facetwp',
 	'Theme_My_Login',
 	'User_Switching',
+	'WCML',
 	'WooCommerce',
 	'Wp_Polls',
 	'WP_PostRatings',

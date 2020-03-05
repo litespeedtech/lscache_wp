@@ -48,63 +48,77 @@ class API extends Base
 		/**
 		 * Init
 		 */
-		// API::hook_init( $hook ) -> action `litespeed_init`
+		// API::hook_init( $hook ) -> Action `litespeed_init`
 
 		/**
 		 * Conf
 		 */
-		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // API::config($id) -> filter `litespeed_conf`
-		// API::conf_append( $name, $default ) -> action `litespeed_conf_append`
+		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // API::config($id) -> Filter `litespeed_conf`
+		// API::conf_append( $name, $default ) -> Action `litespeed_conf_append`
 		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
-		// API::force_option( $k, $v ) -> action ``litespeed_conf_force`
+		// API::force_option( $k, $v ) -> Action ``litespeed_conf_force`
 
 		/**
 		 * Cache Control Hooks
 		 */
-		// API::hook_control($tags) && action `litespeed_api_control` -> action `litespeed_control_finalize`
-		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // API::set_cache_private() -> action `litespeed_control_set_private`
-		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // API::set_nocache( $reason = false ) -> action `litespeed_control_set_nocache`
-		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // API::set_cacheable( $reason ) -> action `litespeed_control_set_cacheable` // Might needed if not call hook `wp`
-		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // API::set_force_cacheable( $reason ) -> action `litespeed_control_force_cacheable` // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
-		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // API::set_force_public( $reason ) -> action `litespeed_control_force_public` // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
-		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // API::not_cacheable() -> filter `litespeed_control_cacheable` // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
-		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // API::set_ttl( $val ) -> action `litespeed_control_set_ttl`
-		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // API::get_ttl() -> filter `litespeed_control_ttl`
+		// API::hook_control($tags) && action `litespeed_api_control` -> Action `litespeed_control_finalize`
+		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // API::set_cache_private() -> Action `litespeed_control_set_private`
+		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // API::set_nocache( $reason = false ) -> Action `litespeed_control_set_nocache`
+		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // API::set_cacheable( $reason ) -> Action `litespeed_control_set_cacheable` // Might needed if not call hook `wp`
+		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // API::set_force_cacheable( $reason ) -> Action `litespeed_control_force_cacheable` // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
+		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // API::set_force_public( $reason ) -> Action `litespeed_control_force_public` // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
+		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // API::not_cacheable() -> Filter `litespeed_control_cacheable` // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
+		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // API::set_ttl( $val ) -> Action `litespeed_control_set_ttl`
+		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // API::get_ttl() -> Filter `litespeed_control_ttl`
 
 		/**
 		 * Tag Hooks
 		 */
-		// API::hook_tag( $hook ) -> action `litespeed_tag_finalize`
-		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // API::tag_add( $tag ) -> action `litespeed_tag_add`
+		// API::hook_tag( $hook ) -> Action `litespeed_tag_finalize`
+		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // API::tag_add( $tag ) -> Action `litespeed_tag_add`
 		add_action( 'litespeed_tag_add_post', __NAMESPACE__ . '\Tag::add_post' );
 		add_action( 'litespeed_tag_add_widget', __NAMESPACE__ . '\Tag::add_widget' );
-		add_action( 'litespeed_tag_add_private', __NAMESPACE__ . '\Tag::add_private' ); // API::tag_add_private( $tags ) -> action `litespeed_tag_add_private`
+		add_action( 'litespeed_tag_add_private', __NAMESPACE__ . '\Tag::add_private' ); // API::tag_add_private( $tags ) -> Action `litespeed_tag_add_private`
 		add_action( 'litespeed_tag_add_private_esi', __NAMESPACE__ . '\Tag::add_private_esi' );
 
 		/**
 		 * Purge Hooks
 		 */
-		// API::hook_purge($tags) -> action `litespeed_purge_finalize`
-		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // API::purge($tags) -> action `litespeed_purge`
+		// API::hook_purge($tags) -> Action `litespeed_purge_finalize`
+		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // API::purge($tags) -> Action `litespeed_purge`
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
-		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // API::purge_post( $pid ) -> action `litespeed_purge_post`
+		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // API::purge_post( $pid ) -> Action `litespeed_purge_post`
 		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
 		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
-		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> action `litespeed_purge_private`
+		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> Action `litespeed_purge_private`
 		add_action( 'litespeed_purge_private_esi', __NAMESPACE__ . '\Purge::add_private_esi' );
-		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // API::purge_private_all() -> action `litespeed_purge_private_all`
+		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // API::purge_private_all() -> Action `litespeed_purge_private_all`
 
 		/**
 		 * ESI
 		 */
-		// API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) -> action `litespeed_nonce`
+		// API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) -> Action `litespeed_nonce`
 
-		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' ); // API::set_mobile() -> filter `litespeed_is_mobile`
 
+		/**
+		 * Vary
+		 *
+		 * To modify default vary, There are two ways: Action `litespeed_vary_append` or Filter `litespeed_vary`
+		 */
+		add_action( 'litespeed_vary_ajax_force', __NAMESPACE__ . '\Vary::can_ajax_vary' ); // API::force_vary() -> Action `litespeed_vary_ajax_force` // Force finalize vary even if its in an AJAX call
+		add_action( 'litespeed_vary_append', __NAMESPACE__ . '\Vary::append', 10, 2 ); // API::vary( $k, $v, $default = null ) -> Action `litespeed_vary_append // Alter default vary cookie value // Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
+		// API::hook_vary_finalize( $hook ) -> Filter `litespeed_vary`
+
+		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
+
+		/**
+		 * Mist
+		 */
 		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> action `litespeed_debug`
 		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> action `litespeed_debug2`
+
 	}
 
 	/**
@@ -216,44 +230,6 @@ class API extends Base
 	public static function filter_vary_cookies( $hook, $priority = 10 )
 	{
 		add_filter( 'litespeed_vary_cookies', $hook, $priority ) ;
-	}
-
-	/**
-	 * Alter default vary cookie value
-	 *
-	 * Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function vary( $k, $v, $default = null )
-	{
-		if ( $v === $default ) {
-			return ;
-		}
-		Vary::append( $k, $v ) ;
-	}
-
-	/**
-	 * Hook vary tags to default vary finialization
-	 *
-	 * @since 1.7.2
-	 * @access public
-	 */
-	public static function hook_vary_finalize( $hook )
-	{
-		add_filter( 'litespeed_vary', $hook ) ;
-	}
-
-	/**
-	 * Force finalize vary even if its in an AJAX call
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function force_vary()
-	{
-		Vary::can_ajax_vary() ;
 	}
 
 	/**

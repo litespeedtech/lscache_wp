@@ -18,6 +18,7 @@ class Vary extends Instance
 	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
 	private static $_vary_cookies = array() ; // vary header only!
 	private static $_default_vary_val = array() ;
+	private static $_can_change_vary = false; // Currently only AJAX used this
 
 	/**
 	 * Adds the actions used for setting up cookies on log in/out.
@@ -240,8 +241,8 @@ class Vary extends Instance
 	 */
 	public static function can_ajax_vary()
 	{
-		Debug2::debug( '[Vary] litespeed_ajax_vary -> true' ) ;
-		add_filter( 'litespeed_ajax_vary', '__return_true' ) ;
+		Debug2::debug( '[Vary] _can_change_vary -> true' ) ;
+		self::$_can_change_vary = true;
 	}
 
 	/**
@@ -253,13 +254,11 @@ class Vary extends Instance
 	private function can_change_vary()
 	{
 		// Don't change for ajax due to ajax not sending webp header
-		/**
-		 * Added `litespeed_ajax_vary` hook for 3rd party to set vary when doing ajax call ( Login With Ajax )
-		 * @since  1.6.6
-		 */
-		if ( Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
-			Debug2::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
-			return false ;
+		if ( Router::is_ajax() ) {
+			if ( ! self::$_can_change_vary ) {
+				Debug2::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
+				return false ;
+			}
 		}
 
 		/**
@@ -372,7 +371,7 @@ class Vary extends Instance
 	 */
 	public function finalize_default_vary( $uid = false )
 	{
-		$vary = self::$_default_vary_val ;
+		$vary = self::$_default_vary_val;
 
 		if ( ! $uid ) {
 			$uid = Router::get_uid() ;
@@ -414,8 +413,9 @@ class Vary extends Instance
 		 * Add filter
 		 * @since 1.6 Added for Role Excludes for optimization cls
 		 * @since 1.6.2 Hooked to webp
+		 * @since 3.0 Used by 3rd hooks too
 		 */
-		$vary = apply_filters( 'litespeed_vary', $vary ) ;
+		$vary = apply_filters( 'litespeed_vary', $vary );
 
 		if ( ! $vary ) {
 			return false ;
@@ -625,7 +625,7 @@ class Vary extends Instance
 	 */
 	public static function append( $name, $val )
 	{
-		self::$_default_vary_val[ $name ] = $val ;
+		self::$_default_vary_val[ $name ] = $val;
 	}
 
 	/**

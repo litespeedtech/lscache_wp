@@ -96,7 +96,7 @@ class WooCommerce extends Instance
 			 * @since  1.7.2
 			 */
 			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
-			API::hook_vary_finalize( array( $this, 'vary_maintain' ) ) ;
+			add_filter( 'litespeed_vary', array( $this, 'vary_maintain' ) );
 
 		}
 
@@ -180,10 +180,11 @@ class WooCommerce extends Instance
 	public function vary_maintain( $vary )
 	{
 		if ( $this->vary_needed() ) {
-			do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' ) ;
-			$vary[ 'woo_cart' ] = 1 ;
+			do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' );
+			$vary[ 'woo_cart' ] = 1;
 		}
-		return $vary ;
+
+		return $vary;
 	}
 
 	/**
