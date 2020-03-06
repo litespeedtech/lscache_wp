@@ -34,11 +34,11 @@ class Admin_Display extends Base
 	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
-	private $__cfg ;
-	private $messages = array() ;
-	private $default_settings = array() ;
-	private $_is_network_admin = false;
-	private $_is_multisite = false;
+	protected $__cfg ;
+	protected $messages = array() ;
+	protected $default_settings = array() ;
+	protected $_is_network_admin = false;
+	protected $_is_multisite = false;
 
 	/**
 	 * Initialize the class and set its properties.
