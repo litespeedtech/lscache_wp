@@ -111,7 +111,7 @@ class API extends Base
 		add_action( 'litespeed_vary_append', __NAMESPACE__ . '\Vary::append', 10, 2 ); // API::vary( $k, $v, $default = null ) -> Action `litespeed_vary_append // Alter default vary cookie value // Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
 		// API::hook_vary_finalize( $hook ) -> Filter `litespeed_vary`
 
-		add_filter( 'litespeed_is_mobile', wp_is_mobile() ? '__return_true' : '__return_false' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
+		add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
 
 		/**
 		 * Mist

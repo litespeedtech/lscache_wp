@@ -672,6 +672,17 @@ class Control extends Instance
 	}
 
 	/**
+	 * Check if is mobile for filter `litespeed_is_mobile` in API
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function is_mobile()
+	{
+		return wp_is_mobile();
+	}
+
+	/**
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0

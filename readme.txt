@@ -287,7 +287,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 3.0 - Feb 29 2019 =
+= 3.0 - Mar 10 2019 =
 * 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
 * 🌱 LQIP (Low Quality Image Placeholder).
 * 🌱 New QUIC.cloud API key setting.
@@ -379,6 +379,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * GUI refactored.
 * [3rd] User Switching plugin compatibility. (@robert Staddon)
 * [3rd] Beaver Builder plugin compatibility with v3.0.0.
+* [3rd] Avada plugin compatibility w/ BBPress. (@pimg)
 * [Network] Fixed potential timeout issue when containing a large volume of sites. (@alican532)
 * [Debug] `Disable All Features` now will see the warning banner if ON.
 * [Debug] Dropped `log filters` section.

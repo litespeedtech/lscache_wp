@@ -60,8 +60,13 @@ class BBPress
 	 */
 	public static function on_purge($post_id)
 	{
-		if ( ! is_bbpress() && ! bbp_is_forum($post_id) && ! bbp_is_topic($post_id) && ! bbp_is_reply($post_id) ) {
-			return ;
+		if ( ! is_bbpress() ) {
+			if ( ! function_exists( 'bbp_is_forum' ) || ! function_exists( 'bbp_is_topic' ) || ! function_exists( 'bbp_is_reply' ) ) {
+				return;
+			}
+			if ( ! bbp_is_forum( $post_id ) && ! bbp_is_topic( $post_id ) && ! bbp_is_reply( $post_id ) ) {
+				return;
+			}
 		}
 
 		// Need to purge base forums page, bbPress page was updated.
