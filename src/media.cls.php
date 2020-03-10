@@ -328,7 +328,7 @@ class Media extends Instance
 			echo GUI::pie_tiny( $percent, 24,
 				sprintf( __( 'WebP file reduced by %1$s (%2$s)', 'litespeed-cache' ),
 					$percent . '%',
-					Utility::real_size( $size_meta[ 'ori_saved' ] )
+					Utility::real_size( $size_meta[ 'webp_saved' ] )
 				) , 'left'
 			) ;
 			echo sprintf( __( 'WebP saved %s', 'litespeed-cache' ), $percent . '%' ) ;
