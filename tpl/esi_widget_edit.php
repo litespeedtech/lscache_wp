@@ -4,11 +4,11 @@ defined( 'WPINC' ) || exit ;
 
 // $widget, $return, $instance
 
-$options = ! empty( $instance[ Const::OPTION_NAME ] ) ? $instance[ Const::OPTION_NAME ] : array() ;
+$options = ! empty( $instance[ Base::OPTION_NAME ] ) ? $instance[ Base::OPTION_NAME ] : array() ;
 
 if ( empty( $options ) ) {
 	$options = array(
-		ESI::WIDGET_O_ESIENABLE => Const::VAL_OFF,
+		ESI::WIDGET_O_ESIENABLE => Base::VAL_OFF,
 		ESI::WIDGET_O_TTL => '28800'
 	) ;
 
@@ -18,7 +18,7 @@ if ( empty( $options ) ) {
 }
 
 if ( empty( $options ) ) {
-	$esi = Const::VAL_OFF ;
+	$esi = Base::VAL_OFF ;
 	$ttl = '28800' ;
 }
 else {
@@ -43,9 +43,9 @@ $display = Admin_Display::get_instance() ;
 			$name = $widget->get_field_name( $id ) ;
 
 			$cache_status_list = array(
-				array( Const::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
-				array( Const::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
-				array( Const::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
+				array( Base::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
+				array( Base::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
+				array( Base::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
 			) ;
 
 			foreach ( $cache_status_list as $v ) {
