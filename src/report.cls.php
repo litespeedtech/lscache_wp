@@ -56,9 +56,12 @@ class Report extends Base
 		// Generate link
 		$link = ! empty( $_POST[ 'link' ] ) ? $_POST[ 'link' ] : '';
 
+		$notes = ! empty( $_POST[ 'notes' ] ) ? $_POST[ 'notes' ] : '';
+
 		$data = array(
 			'env' => $report_con,
 			'link' => $link,
+			'notes' => $notes,
 		) ;
 
 		$json = Cloud::post( Cloud::API_REPORT, $data ) ;

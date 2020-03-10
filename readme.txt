@@ -287,7 +287,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 3.0 - Mar 10 2019 =
+= 3.0 - Apr 1 2019 =
 * 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
 * 🌱 LQIP (Low Quality Image Placeholder).
 * 🌱 New QUIC.cloud API key setting.
@@ -377,6 +377,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * Improved conf initialization and upgrade convertion workflow.
 * Code base refactored. New namespace LiteSpeed.
 * GUI refactored.
+* [Debug] Report can now append notes.
 * [3rd] User Switching plugin compatibility. (@robert Staddon)
 * [3rd] Beaver Builder plugin compatibility with v3.0.0.
 * [3rd] Avada plugin compatibility w/ BBPress. (@pimg)

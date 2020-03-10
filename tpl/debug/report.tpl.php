@@ -24,6 +24,18 @@ if ( function_exists( 'dologin_gen_link' ) ) {
 $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_INSTALL_3RD, false, null, array( 'plugin' => 'dologin' ) );
 ?>
 
+<?php if ( ! $has_pswdless_plugin ) : ?>
+	<div class="litespeed-callout notice notice-warning inline">
+		<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
+		<p>
+			<?php echo sprintf( __( 'To generate a passwordless link for LiteSpeed Support Team access, you must install %s.', 'litespeed-cache' ), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
+		</p>
+		<p>
+			<a href="<?php echo $install_link; ?>" class="button litespeed-btn litespeed-right20"><?php echo __( 'Install DoLogin Security', 'litespeed-cache' ); ?></a>
+			<a href="plugin-install.php?s=dologin+security&tab=search&type=term" target="_blank"><?php echo __( 'Go to plugins list', 'litespeed-cache' ); ?></a>
+		</p>
+	</div>
+<?php endif; ?>
 
 <h3 class="litespeed-title"><?php echo __('LiteSpeed Report Number', 'litespeed-cache') ; ?></h3>
 
@@ -36,55 +48,51 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 	<?php echo __('If you run into any issues, please refer to the report number in your support message.', 'litespeed-cache'); ?>
 </p>
 
-<form action="<?php echo Utility::build_url( Router::ACTION_REPORT, Report::TYPE_SEND_REPORT ); ?>" method="post">
+<form action="<?php echo Utility::build_url( Router::ACTION_REPORT, Report::TYPE_SEND_REPORT ); ?>" method="post" class="litespeed-relative">
+<table class="wp-list-table striped litespeed-table"><tbody>
+	<tr>
+		<th><?php echo __( 'System Information', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __( 'Passwordless Link', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" style="width:500px;" />
+			<?php if ( $has_pswdless_plugin ) : ?>
+				<a href="<?php echo admin_url( 'admin.php?page=litespeed-debug&dologin_gen_link=1' ); ?>" class="button button-secondary"><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></a>
+			<?php else: ?>
+				<button type="button" class="button button-secondary" disabled><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></button>
+			<?php endif; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'To grant wp-admin access to the LiteSpeed Support Team, please generate a passwordless link for the current logged-in user to be sent with the report.', 'litespeed-cache' ) ; ?>
+			<?php if ( $link ) : ?>
+				<br /><strong>🚨 <?php echo __('Please do NOT share the above passwordless link with anyone.', 'litespeed-cache'); ?></strong>
+				<strong><?php echo sprintf( __('Generated links may be managed under <a %s>Settings</a>.', 'litespeed-cache'), 'href="' . menu_page_url( 'dologin', 0 ) . '"' ); ?></strong>
+			<?php endif; ?>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __( 'Notes', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<textarea name="notes" rows="10" cols="100"></textarea>
+			<div class="litespeed-desc">
+				<?php echo __( 'Optional', 'litespeed-cache' ); ?>:
+				<?php echo __( 'provide more information here to assist the LiteSpeed team with debugging.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+</tbody></table>
 
-	<p>
-		<button class="button button-primary" type="submit">
-			<?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?>
-		</button>
-	</p>
+<div class='litespeed-top20'></div>
+<button class="button button-primary" type="submit"><?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?></button>
+<button class="button button-primary litespeed-float-submit" type="submit"><?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?></button>
 
-	<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
-
-
-	<?php if ( ! $has_pswdless_plugin ) : ?>
-		<div class="litespeed-callout notice notice-warning inline">
-			<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
-			<p>
-				<?php echo sprintf( __( 'To generate a passwordless link for LiteSpeed Support Team access, you must install %s.', 'litespeed-cache' ), '<a href="https://wordpress.org/plugins/dologin/" target="_blank">DoLogin Security</a>' ); ?>
-			</p>
-			<p>
-				<a href="<?php echo $install_link; ?>" class="button litespeed-btn litespeed-right20"><?php echo __( 'Install DoLogin Security', 'litespeed-cache' ); ?></a>
-				<a href="plugin-install.php?s=dologin+security&tab=search&type=term" target="_blank"><?php echo __( 'Go to plugins list', 'litespeed-cache' ); ?></a>
-			</p>
-		</div>
-	<?php endif; ?>
-	<p>
-		<label for="litespeed-report-link" class="litespeed-right10">Passwordless link</label>
-		<input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" style="width:500px;" />
-		<?php if ( $has_pswdless_plugin ) : ?>
-			<a href="<?php echo admin_url( 'admin.php?page=litespeed-debug&dologin_gen_link=1' ); ?>" class="button button-secondary"><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></a>
-		<?php else: ?>
-			<button type="button" class="button button-secondary" disabled><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></button>
-		<?php endif; ?>
-	</p>
-	<p>
-		<?php if ( $link ) : ?>
-			<strong>🚨 <?php echo __('Please do NOT share the above passwordless link with anyone.', 'litespeed-cache'); ?></strong>
-			<strong><?php echo sprintf( __('Generated links may be managed under <a %s>Settings</a>.', 'litespeed-cache'), 'href="' . menu_page_url( 'dologin', 0 ) . '"' ); ?></strong>
-		<?php endif; ?>
-	</p>
-
-	<p class="litespeed-desc"><?php echo __( 'To grant wp-admin access to the LiteSpeed Support Team, please generate a passwordless link for the current logged-in user to be sent with the report.', 'litespeed-cache' ) ; ?></p>
-
-	<p class="litespeed-top30">
-			<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
-	</p>
-	<p>
-		<button class="button button-primary" type="submit">
-			<?php echo __( 'Send to LiteSpeed', 'litespeed-cache' ) ; ?>
-		</button>
-	</p>
+<p class="litespeed-top30 litespeed-left10 litespeed-desc">
+	<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
+</p>
 </form>
 
 <?php include_once LSCWP_DIR . "tpl/inc/api_key.php" ; ?>

@@ -3,10 +3,10 @@ namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 $menu_list = array(
+	'report' 			=> __( 'Report', 'litespeed-cache' ),
 	'settings' 			=> __( 'Debug Settings', 'litespeed-cache' ),
 	'log_viewer' 		=> __( 'Log View', 'litespeed-cache' ),
 	'beta_test'			=> __( 'Beta Test', 'litespeed-cache' ),
-	'report' 			=> __( 'Report', 'litespeed-cache' ),
 ) ;
 
 ?>
