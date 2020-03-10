@@ -864,7 +864,9 @@ class Admin_Display extends Base
 			}
 		}
 
-		if ( ! is_string( self::$_default_options[ $id ] ) ) {
+		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
+
+		if ( ! is_string( $default ) ) {
 			$checked = (int) Conf::val( $id, true ) === (int) $val ? ' checked ' : '' ;
 		}
 		else {
@@ -888,11 +890,13 @@ class Admin_Display extends Base
 			return;
 		}
 
-		if ( is_bool( self::$_default_options[ $id ] ) ) {
+		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
+
+		if ( is_bool( $default ) ) {
 			$val = $val ? __( 'ON', 'litespeed-cache' ) : __( 'OFF', 'litespeed-cache' );
 		}
 		else {
-			if ( is_array( self::$_default_options[ $id ] ) ) {
+			if ( is_array( $default ) ) {
 				$val = implode( "\n", $val );
 			}
 			$val = esc_textarea( $val );

@@ -329,28 +329,28 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🕷️ Crawler data now saved into database instead of creating new files.
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.
 * 🕷️ Manually changed the priority of mobile and WebP. (@rafaucau)
-* [ESI] Added Bloom nonce to ESI for Elegant Themes.
-* [GUI] Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
-* [Cloud] Able to redetect cloud nodes now.
-* [Img_optm] Fixed stale data in redirected links.
-* [Cache] Default drop qs values. (@gijo Varghese)
-* [LQIP] Show all LQIP images in Media column.
-* [CDN] Can now support custom REST API prefix other than wp-json. (#174 @therealgilles)
-* [IAPI] Used REST for notify/destroy/check_img; Removed callback passive/aggreesive IAPI func
-* [CSSJS] Saved all static files to litespeed folder; Uninstallation will remove static cache folder too; Reduced .htaccess rules by serving CSS/JS directly.
-* [Object] Fixed override different ports issue. (@timofeycom #ISSUE178)
-* [Conf] DB Tables will now only create when activating/upgrading/changing settings.
-* [DB] Simplified table operation funcs.
-* [CSSJS] Bypassed CSS/JS generation to return 404 if file is empty (@grubyy)
-* [CSSJS] Inline JS defer will not conflict with JS inline optm anymore.
-* [GUI] Localized vue.js to avoid CloudFlare cookie. (@politicske)
-* [GUI] Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
-* [GUI] Displayed TTL range below the corresponding setting.
+* **ESI** Added Bloom nonce to ESI for Elegant Themes.
+* **GUI** Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
+* **Cloud** Able to redetect cloud nodes now.
+* **Img_optm** Fixed stale data in redirected links.
+* **Cache** Default drop qs values. (@gijo Varghese)
+* **LQIP** Show all LQIP images in Media column.
+* **CDN** Can now support custom REST API prefix other than wp-json. (#174 @therealgilles)
+* **IAPI** Used REST for notify/destroy/check_img; Removed callback passive/aggreesive IAPI func
+* **CSSJS** Saved all static files to litespeed folder; Uninstallation will remove static cache folder too; Reduced .htaccess rules by serving CSS/JS directly.
+* **Object** Fixed override different ports issue. (@timofeycom #ISSUE178)
+* **Conf** DB Tables will now only create when activating/upgrading/changing settings.
+* **DB** Simplified table operation funcs.
+* **CSSJS** Bypassed CSS/JS generation to return 404 if file is empty (@grubyy)
+* **CSSJS** Inline JS defer will not conflict with JS inline optm anymore.
+* **GUI** Localized vue.js to avoid CloudFlare cookie. (@politicske)
+* **GUI** Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
+* **GUI** Displayed TTL range below the corresponding setting.
 * Speed up task.cls load speed.
 * CDN settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
-* [OPcache] Purged all opcache when updating cache file. (@closte #170)
-* [CLI] CLI cmd renamed.
-* [CLI] Well-formated table to show all options.
+* **OPcache** Purged all opcache when updating cache file. (@closte #170)
+* **CLI** CLI cmd renamed.
+* **CLI** Well-formated table to show all options.
 * Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
 * Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
 * Crawler cookie now support `_null` as empty value.
@@ -359,14 +359,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * New preset default data file `data/consts.default.ini`.
 * New API: iframe lazyload exclude filter.
 * Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
-* [GUI] human readable seconds. (@MarkCanada)
-* [3rd] Default added parallax-image to webp replacement for BB.
+* **GUI** human readable seconds. (@MarkCanada)
+* **3rd** Default added parallax-image to webp replacement for BB.
 * API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one.*
-* [API] New hook `litespeed_update_confs` to settings update.
-* [API] New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
-* [API] Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
-* [API] Renamed `litespeed_force_option` to `litespeed_conf_force`.
-* [API] Removed function `litespeed_purge_single_post`.
+* **API** New hook `litespeed_update_confs` to settings update.
+* **API** New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
+* **API** Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
+* **API** Renamed `litespeed_force_option` to `litespeed_conf_force`.
+* **API** Removed function `litespeed_purge_single_post`.
 * [REST] New rest API to fetch public IP.
 * [GUI] Renamed all backend link tag from lscache to litespeed.
 * [GUI] fixed duplicated form tag.
@@ -390,14 +390,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🎊 Any user that had the contribution to our WP community or changelog (even just bug report/feedback/suggestion) can apply for extra credits in QUIC.cloud.
 
 = 2.9.9.2 - Nov 24 2019 =
-* 🌱<strong>GUI</strong>: New settings to limit News Feed to plugin page only.
+* 🌱**GUI** New settings to limit News Feed to plugin page only.
 
 = 2.9.9.1 - Nov 18 2019 =
-* 🌱<strong>Env</strong>: Environment Report can now append a passwordless link for support access without wp-admin password.
-* <strong>Admin</strong>: The latest v3.0 beta test link may now be shown on the admin page when it's available.
-* <strong>3rd</strong>: Compatibility with [DoLogin Security](https://wordpress.org/plugins/dologin/).
-* 🐞<strong>ESI</strong>: Fixed a failure issue with Vary Group save. (@rafasshop)
-* 🐞<strong>3rd</strong>: In browsers where WebP is not supported, Divi image picker will no longer serve WebP. (@Austin Tinius)
+* 🌱**Env** Environment Report can now append a passwordless link for support access without wp-admin password.
+* **Admin** The latest v3.0 beta test link may now be shown on the admin page when it's available.
+* **3rd** Compatibility with [DoLogin Security](https://wordpress.org/plugins/dologin/).
+* 🐞**ESI** Fixed a failure issue with Vary Group save. (@rafasshop)
+* 🐞**3rd** In browsers where WebP is not supported, Divi image picker will no longer serve WebP. (@Austin Tinius)
 
 = 2.9.9 - Oct 28 2019 =
 * <strong>Core</strong>: Preload all classes to avoid getting error for upcoming v3.0 upgrade.
