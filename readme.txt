@@ -291,9 +291,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
 * 🌱 LQIP (Low Quality Image Placeholder).
 * 🌱 New QUIC.cloud API key setting.
-* 🌱[ESI] New ESI nonce setting.
-* 🌱 font display optimization. (@Joeee)
+* 🌱 **ESI** New ESI nonce setting.
+* 🌱 Font display optimization. (@Joeee)
 * 🌱 Google font URL display optimization.
+* 🌱 **Img_optm** Supported GIF WebP optimization. (@Lucas Rolff)
 * 🌱 Load Inline JS deferred.
 * 🌱 JPG quality control. (@geckomist)
 * 🌱 Forced public cache setting. (#308207)
@@ -385,7 +386,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [Debug] `Disable All Features` now will see the warning banner if ON.
 * [Debug] Dropped `log filters` section.
 * 🐞🕷️ Multi sites will now use separate sitemap even when `Use Primary Site` is ON. (@mrhuynhanh)
-* 🐞[Img_optm] Fixed large volume image table storage issue. (#328956)
+* 🐞**Img_optm** Fixed large volume image table storage issue. (#328956)
 * 🐞 [Cloud] Cloud callback hash validation fixed OC conflict. (@pbpiotr)
 * 🎊 Any user that had the contribution to our WP community or changelog (even just bug report/feedback/suggestion) can apply for extra credits in QUIC.cloud.
 
