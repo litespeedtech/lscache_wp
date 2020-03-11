@@ -96,7 +96,7 @@ class Img_Optm extends Base
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 				AND b.meta_key = '_wp_attachment_metadata'
 				AND c.id IS NULL
 			ORDER BY a.ID DESC
@@ -166,7 +166,7 @@ class Img_Optm extends Base
 		// check file exists or not
 		$_img_info = $this->__media->info( $short_file_path, $this->tmp_pid );
 
-		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png' ) ) ) {
+		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png', 'gif' ) ) ) {
 			$this->_img_in_queue_missed[] = array(
 				'pid'	=> $this->tmp_pid,
 				'src'	=> $short_file_path,
@@ -1081,7 +1081,7 @@ class Img_Optm extends Base
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 				AND b.meta_key = '_wp_attachment_metadata'
 				AND c.id IS NOT NULL
 			ORDER BY a.ID
@@ -1146,7 +1146,7 @@ class Img_Optm extends Base
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 				AND b.meta_key = '_wp_attachment_metadata'
 				AND c.id IS NOT NULL
 			ORDER BY a.ID
@@ -1319,10 +1319,10 @@ class Img_Optm extends Base
 			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 				AND b.meta_key = '_wp_attachment_metadata'
 			";
-		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') ";
+		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
 		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
 		$imgs_raw = 0;
 		$imgs_gathered = 0;
@@ -1334,7 +1334,7 @@ class Img_Optm extends Base
 				LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 				WHERE a.post_type = 'attachment'
 					AND a.post_status = 'inherit'
-					AND a.post_mime_type IN ('image/jpeg', 'image/png')
+					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 					AND b.meta_key = '_wp_attachment_metadata'
 					AND c.id IS NULL
 				";
