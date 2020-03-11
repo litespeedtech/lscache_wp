@@ -828,16 +828,17 @@ class Admin_Display extends Base
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
 	 * @access public
-	 * @param  string $id
 	 */
 	public function build_switch( $id )
 	{
-		echo '<div class="litespeed-switch">' ;
+		$this->enroll( $id );
 
-		$this->build_radio( $id, Base::VAL_OFF ) ;
-		$this->build_radio( $id, Base::VAL_ON ) ;
+		echo '<div class="litespeed-switch">';
 
-		echo '</div>' ;
+		$this->build_radio( $id, Base::VAL_OFF, null, true );
+		$this->build_radio( $id, Base::VAL_ON, null, true );
+
+		echo '</div>';
 
 		$this->_check_const_overwritten( $id );
 	}
@@ -847,11 +848,8 @@ class Admin_Display extends Base
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @param  string $id
-	 * @param  string $val     Default value of this input
-	 * @param  string $txt     Title of this input
 	 */
-	public function build_radio( $id, $val, $txt = null )
+	public function build_radio( $id, $val, $txt = null, $bypass_enroll = false )
 	{
 		$id_attr = 'input_radio_' . preg_replace( '|\W|', '', $id ) . '_' . $val ;
 
@@ -873,7 +871,9 @@ class Admin_Display extends Base
 			$checked = Conf::val( $id, true ) === $val ? ' checked ' : '' ;
 		}
 
-		$this->enroll( $id ) ;
+		if ( ! $bypass_enroll ) {
+			$this->enroll( $id );
+		}
 
 		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}

@@ -135,7 +135,7 @@ $this->form_action();
 				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ); ?>
 				<br /><?php echo __('Your server IP is', 'litespeed-cache'); ?>: <code id='litespeed_server_ip'>-</code> <a href="javascript:;" class="button button-link" id="litespeed_get_ip"><?php echo __('Check my public IP from', 'litespeed-cache'); ?> DoAPI.us</a>
 				<font class="litespeed-warning litespeed-left10">
-					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'The auto detected IP may not be accurate if you have an additional outgoing IP set or have multiple IPs configured on your server. Please make sure the IP is valid to be used to visit your site.', 'litespeed-cache' ); ?>
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'the auto-detected IP may not be accurate if you have an additional outgoing IP set, or you have multiple IPs configured on your server. Please make sure this IP is the correct one for visiting your site.', 'litespeed-cache' ); ?>
 				</font>
 
 				<?php $this->_validate_ip( $id ); ?>
