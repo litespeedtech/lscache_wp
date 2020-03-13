@@ -447,6 +447,13 @@ class Img_Optm extends Base
 		foreach ( $this->_img_in_queue as $v ) {
 			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
 
+			if ( empty( $_img_info[ 'url' ] ) || empty( $_img_info[ 'md5' ] ) ) {
+				// attachment doesn't exist, delete the record
+				$q = "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d";
+				$wpdb->query( $wpdb->prepare( $q, $v[ 'post_id' ] ) );
+				continue;
+			}
+
 			/**
 			 * Filter `litespeed_img_optm_options_per_image`
 			 * @since 2.4.2
@@ -493,6 +500,12 @@ class Img_Optm extends Base
 			$list[] = $img;
 		}
 
+		if ( ! $list ) {
+			$msg = __( 'No valid image found in the current request.', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return;
+		}
+
 		$data = array(
 			'action'		=> self::CLOUD_ACTION_NEW_REQ,
 			'list' 			=> json_encode( $list ),
@@ -511,7 +524,7 @@ class Img_Optm extends Base
 		// Check data format
 		if ( empty( $json[ 'ids' ] ) ) {
 			Debug2::debug( '[Img_Optm] Failed to parse response data from Cloud server ', $json );
-			$msg = __( 'Failed to parse response data from Cloud server', 'litespeed-cache' );
+			$msg = __( 'No valid image found by Cloud server in the current request.', 'litespeed-cache' );
 			Admin_Display::error( $msg );
 			return;
 		}
@@ -1575,16 +1588,20 @@ class Img_Optm extends Base
 			return;
 		}
 
-		$size_meta = get_post_meta( $post_id, self::DB_SIZE, true );
+		// Gathered image don't have DB_SIZE info yet
+		// $size_meta = get_post_meta( $post_id, self::DB_SIZE, true );
 
-		if ( ! $size_meta ) {
-			return;
-		}
+		// if ( ! $size_meta ) {
+		// 	return;
+		// }
 
 		Debug2::debug( '[Img_Optm] _reset_row [pid] ' . $post_id );
 
 		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE post_id = %d";
 		$list = $wpdb->get_results( $wpdb->prepare( $q, $post_id ) );
+		if ( ! $list ) {
+			return;
+		}
 
 		foreach ( $list as $v ) {
 			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id );

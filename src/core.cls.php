@@ -199,11 +199,13 @@ class Core extends Instance
 		// Heartbeat control
 		Tool::heartbeat();
 
+		$__media = Media::get_instance();
+
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Check missing static files
 			Router::serve_static();
 
-			Media::get_instance();
+			$__media->init();
 
 			Placeholder::get_instance()->init();
 

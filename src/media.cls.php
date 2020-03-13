@@ -29,10 +29,22 @@ class Media extends Instance
 	 */
 	protected function __construct()
 	{
-		Debug2::debug2( '[Media] init' ) ;
+		Debug2::debug2( '[Media] init' );
 
-		$this->_wp_upload_dir = wp_upload_dir() ;
+		$this->_wp_upload_dir = wp_upload_dir();
 
+		// This always needs to load w/ WP
+		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) );
+	}
+
+	/**
+	 * Init optm features
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function init()
+	{
 		if ( $this->can_media() ) {
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 			if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
@@ -62,13 +74,12 @@ class Media extends Instance
 			Avatar::get_instance() ;
 		}
 
-		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
-
 		/**
 		 * JPG quality control
 		 * @since  3.0
 		 */
 		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) ) ;
+
 	}
 
 	/**
