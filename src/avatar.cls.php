@@ -182,7 +182,7 @@ class Avatar extends Base
 	 */
 	private function _rewrite( $url )
 	{
-		return LITESPEED_STATIC_URL . '/avatar/' . md5( $url ) ;
+		return LITESPEED_STATIC_URL . '/avatar/' . md5( $url ) . '.jpg';
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Avatar extends Base
 	 */
 	private function _realpath( $url )
 	{
-		return LITESPEED_STATIC_DIR . '/avatar/' . md5( $url ) ;
+		return LITESPEED_STATIC_DIR . '/avatar/' . md5( $url ) . '.jpg';
 	}
 
 	/**
