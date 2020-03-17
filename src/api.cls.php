@@ -133,7 +133,7 @@ class API extends Base
 	 */
 	public static function disable_all( $reason )
 	{
-		self::debug( '[API] Disabled_all due to ' . $reason ) ;
+		do_action( 'litespeed_debug', '[API] Disabled_all due to ' . $reason );
 
 		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 	}
