@@ -10,6 +10,7 @@ defined( 'WPINC' ) || exit;
 class Crawler extends Base
 {
 	const TYPE_REFRESH_MAP = 'refresh_map';
+	const TYPE_EMPTY = 'empty';
 	const TYPE_BLACKLIST_EMPTY = 'blacklist_empty';
 	const TYPE_BLACKLIST_DEL = 'blacklist_del';
 	const TYPE_BLACKLIST_ADD = 'blacklist_add';
@@ -529,8 +530,34 @@ class Crawler extends Base
 				continue;
 			}
 			$curls[ $row[ 'id' ] ] = curl_init();
-			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $this->_crawler_conf[ 'base' ] . $row[ 'url' ] );
-			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
+
+			// Append URL
+			$url = $row[ 'url' ];
+			$curlopt_host = '';
+			if ( $this->_options[ Base::O_CRAWLER_DROP_DOMAIN ] ) {
+				$url = $this->_crawler_conf[ 'base' ] . $row[ 'url' ];
+			}
+			elseif ( $this->_options[ Base::O_SERVER_IP ] ) {
+				// Resolve URL to IP
+				$parsed_url = parse_url( $row[ 'url' ] );
+
+				if ( ! empty( $parsed_url[ 'host' ] ) ) {
+					// assign domain for curl
+					$curlopt_host = 'Host: ' . $parsed_url[ 'host' ]; // Will append to CURLOPT_HTTPHEADER
+					// replace domain with direct ip
+					$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
+					$url = http_build_url( $parsed_url );
+				}
+			}
+			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $url );
+			Debug2::debug( '🐞 Crawling [url] ' . $url . ( $url == $row[ 'url' ] ? '' : ' [ori] ' . $row[ 'url' ] ) );
+
+			$this_options = $options;
+			if ( $curlopt_host ) {
+				$this_options[ CURLOPT_HTTPHEADER ][] = $curlopt_host;
+			}
+			curl_setopt_array( $curls[ $row[ 'id' ] ], $this_options );
+
 			curl_multi_add_handle( $mh, $curls[ $row[ 'id' ] ] );
 		}
 
@@ -646,16 +673,19 @@ class Crawler extends Base
 		}
 		$options[ CURLOPT_USERAGENT ] = $this->_crawler_conf[ 'ua' ];
 
-		if ( $this->_options[ Base::O_SERVER_IP ] && $this->_crawler_conf[ 'base' ] ) {
-			$parsed_url = parse_url( $this->_crawler_conf[ 'base' ] );
+		if ( $this->_options[ Base::O_SERVER_IP ] ) {
+			Utility::compatibility();
+			if ( $this->_options[ Base::O_CRAWLER_DROP_DOMAIN ] && $this->_crawler_conf[ 'base' ] ) {
+				// Resolve URL to IP
+				$parsed_url = parse_url( $this->_crawler_conf[ 'base' ] );
 
-			if ( ! empty( $parsed_url[ 'host' ] ) ) {
-				// assign domain for curl
-				$options[ CURLOPT_HTTPHEADER ][] = 'Host: ' . $parsed_url[ 'host' ];
-				// replace domain with direct ip
-				$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
-				Utility::compatibility();
-				$this->_crawler_conf[ 'base' ] = http_build_url( $parsed_url );
+				if ( ! empty( $parsed_url[ 'host' ] ) ) {
+					// assign domain for curl
+					$options[ CURLOPT_HTTPHEADER ][] = 'Host: ' . $parsed_url[ 'host' ];
+					// replace domain with direct ip
+					$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
+					$this->_crawler_conf[ 'base' ] = http_build_url( $parsed_url );
+				}
 			}
 		}
 
@@ -925,6 +955,10 @@ class Crawler extends Base
 		switch ( $type ) {
 			case self::TYPE_REFRESH_MAP:
 				Crawler_Map::get_instance()->gen();
+				break;
+
+			case self::TYPE_EMPTY:
+				Crawler_Map::get_instance()->empty();
 				break;
 
 			case self::TYPE_BLACKLIST_EMPTY:

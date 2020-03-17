@@ -216,6 +216,7 @@ class Lang extends Base
 			self::O_CRAWLER_ROLES			=> __( 'Role Simulation', 'litespeed-cache' ),
 			self::O_CRAWLER_COOKIES			=> __( 'Cookie Simulation', 'litespeed-cache' ),
 			self::O_CRAWLER_SITEMAP			=> __( 'Custom Sitemap', 'litespeed-cache' ),
+			self::O_CRAWLER_DROP_DOMAIN		=> __( 'Drop Domain from Sitemap', 'litespeed-cache' ),
 
 			self::O_DEBUG_DISABLE_ALL			=> __( 'Disable All Features', 'litespeed-cache' ),
 			self::O_DEBUG						=> __( 'Debug Log', 'litespeed-cache' ),

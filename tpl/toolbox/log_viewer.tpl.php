@@ -6,7 +6,7 @@ defined( 'WPINC' ) || exit ;
 <h3 class="litespeed-title">
 	<?php echo __('Debug Log', 'litespeed-cache'); ?>
 
-	<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary">
+	<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary" litespeed-accesskey='D'>
 		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
 	</a>
 </h3>
@@ -23,3 +23,6 @@ defined( 'WPINC' ) || exit ;
 ?>
 
 
+	<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary">
+		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
+	</a>

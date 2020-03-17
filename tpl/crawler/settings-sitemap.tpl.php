@@ -25,6 +25,20 @@ $this->form_action();
 	</tr>
 
 	<tr>
+		<th>
+			<?php $id = Base::O_CRAWLER_DROP_DOMAIN; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'The crawler will parse the sitemap and save into the database before crawling. When parsing the sitemap, dropping the domain can save DB storage.', 'litespeed-cache' ); ?>
+				<?php echo __( 'If you are using multiple domains for one site, and have multiple domains in the sitemap, please keep this option OFF so the crawler knows to crawl every domain.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Sitemap Generation', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-block">

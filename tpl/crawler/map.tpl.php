@@ -11,8 +11,12 @@ $count = $__map->count();
 $pagination = Utility::pagination( $count, 30 );
 
 ?>
-<p>
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_REFRESH_MAP ); ?>" class="litespeed-right">
+<p class="litespeed-right">
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_EMPTY ); ?>" class="button litespeed-btn-warning">
+	<?php echo __( 'Clean Crawler Map', 'litespeed-cache' ); ?>
+</a>
+
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_REFRESH_MAP ); ?>" class="button button-secondary">
 	<?php echo __( 'Refresh Crawler Map', 'litespeed-cache' ); ?>
 </a>
 </p>

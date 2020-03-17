@@ -11,8 +11,8 @@ $count = $__map->count_blacklist();
 $pagination = Utility::pagination( $count, 30 );
 
 ?>
-<p>
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="litespeed-right " data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
+<p class="litespeed-right">
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
 	<?php echo __( 'Empty blacklist', 'litespeed-cache' ); ?>
 </a>
 </p>

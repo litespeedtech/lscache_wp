@@ -323,8 +323,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱 [Img_optm] The return of Rescan.
 * 🌱 [CLI] CLI can send report now.
 * 🌱 [Health] Page speed and page score now are in dashboard.
-* 🌱 [Conf] Supported consts overwritten of `LITESPEED_CONF__` for all settings.  (@menathor)
+* 🌱 [Conf] Supported consts overwritten of `LITESPEED_CONF__` for all settings. (@menathor)
 * 🌱 [REST] New REST TTL setting.  (@thekendog)
+* 🌱 🐞 Support for multiple domains in custom sitemap. (@alchem)
 * 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🕷️ Able to add single rows to blacklist.
 * 🕷️ Crawler data now saved into database instead of creating new files.
@@ -369,26 +370,27 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **API** Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
 * **API** Renamed `litespeed_force_option` to `litespeed_conf_force`.
 * **API** Removed function `litespeed_purge_single_post`.
-* [REST] New rest API to fetch public IP.
-* [GUI] Renamed all backend link tag from lscache to litespeed.
-* [GUI] fixed duplicated form tag.
-* [GUI] Fix cron doc link. (@arnab Mohapatra)
-* [GUI] Frontend adminbar menu added `Purge All` actions. (@Monarobase)
+* **REST** New rest API to fetch public IP.
+* **GUI** Renamed all backend link tag from lscache to litespeed.
+* **GUI** fixed duplicated form tag.
+* **GUI** Fix cron doc link. (@arnab Mohapatra)
+* **GUI** Frontend adminbar menu added `Purge All` actions. (@Monarobase)
 * Config setting renamed and uniformed.
-* [Conf] Dropped `Conf::option()`. Used `Conf::val()` instead.
+* **Conf** Dropped `Conf::option()`. Used `Conf::val()` instead.
 * Improved conf initialization and upgrade convertion workflow.
 * Code base refactored. New namespace LiteSpeed.
 * GUI refactored.
-* [Debug] Report can now append notes.
-* [3rd] User Switching plugin compatibility. (@robert Staddon)
-* [3rd] Beaver Builder plugin compatibility with v3.0.0.
-* [3rd] Avada plugin compatibility w/ BBPress. (@pimg)
-* [Network] Fixed potential timeout issue when containing a large volume of sites. (@alican532)
-* [Debug] `Disable All Features` now will see the warning banner if ON.
-* [Debug] Dropped `log filters` section.
+* **Debug** Report can now append notes.
+* **3rd** User Switching plugin compatibility. (@robert Staddon)
+* **3rd** Beaver Builder plugin compatibility with v3.0.0.
+* **3rd** Avada plugin compatibility w/ BBPress. (@pimg)
+* **Network** Fixed potential timeout issue when containing a large volume of sites. (@alican532)
+* **Debug** `Disable All Features` now will see the warning banner if ON.
+* **Debug** Dropped `log filters` section.
+* **Debug** Debug and Tools sections combined into new `Toolbox` section.
 * 🐞🕷️ Multi sites will now use separate sitemap even when `Use Primary Site` is ON. (@mrhuynhanh)
 * 🐞**Img_optm** Fixed large volume image table storage issue. (#328956)
-* 🐞 [Cloud] Cloud callback hash validation fixed OC conflict. (@pbpiotr)
+* 🐞 **Cloud** Cloud callback hash validation fixed OC conflict. (@pbpiotr)
 * 🎊 Any user that had the contribution to our WP community or changelog (even just bug report/feedback/suggestion) can apply for extra credits in QUIC.cloud.
 
 = 2.9.9.2 - Nov 24 2019 =

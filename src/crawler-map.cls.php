@@ -263,6 +263,20 @@ class Crawler_Map extends Instance
 	}
 
 	/**
+	 * Empty sitemap
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function empty()
+	{
+		Data::get_instance()->tb_del( 'crawler' );
+
+		$msg = __( 'Sitemap cleaned successfully', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
+	}
+
+	/**
 	 * List generated sitemap
 	 *
 	 * @since  3.0
@@ -347,10 +361,15 @@ class Crawler_Map extends Instance
 			}
 
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
-				foreach ( $sitemap_urls as $val ) {
-					if ( stripos( $val, $this->_home_url ) === 0 ) {
-						$urls[] = substr( $val, $offset );
+				if ( Conf::val( Base::O_CRAWLER_DROP_DOMAIN ) ) {
+					foreach ( $sitemap_urls as $val ) {
+						if ( stripos( $val, $this->_home_url ) === 0 ) {
+							$urls[] = substr( $val, $offset );
+						}
 					}
+				}
+				else {
+					$urls = $sitemap_urls;
 				}
 
 				$urls = array_unique( $urls );

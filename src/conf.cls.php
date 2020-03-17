@@ -510,11 +510,6 @@ class Conf extends Base
 			return;
 		}
 
-		// Special handler for QUIC.cloud domain key to clear all existing nodes
-		if ( $id == Base::O_API_KEY ) {
-			Cloud::get_instance()->clear_cloud();
-		}
-
 		// Validate type
 		if ( is_bool( self::$_default_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id ) ;
@@ -544,6 +539,16 @@ class Conf extends Base
 
 		// Handle purge if setting changed
 		if ( $this->_options[ $id ] != $val ) {
+
+			// Special handler for QUIC.cloud domain key to clear all existing nodes
+			if ( $id == Base::O_API_KEY ) {
+				Cloud::get_instance()->clear_cloud();
+			}
+
+			// Special handler for crawler: reset sitemap when drop_domain setting changed
+			if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
+				Crawler_Map::get_instance()->empty();
+			}
 
 			// Check if need to fire a purge or not
 			if ( $this->_conf_purge( $id ) ) {

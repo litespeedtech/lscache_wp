@@ -167,10 +167,7 @@ class Admin_Display extends Base
 
 			! $this->_is_network_admin && $this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' );
 
-			$this->_add_submenu( __( 'Tools', 'litespeed-cache' ), 'litespeed-tools', 'show_tools' );
-
-			! $this->_is_network_admin && $this->_add_submenu( __( 'Debug', 'litespeed-cache' ), 'litespeed-debug', 'show_debug' );
-
+			$this->_add_submenu( __( 'Toolbox', 'litespeed-cache' ), 'litespeed-toolbox', 'show_toolbox' );
 
 			// sub menus under options
 			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache-options', array($this, 'show_menu_cache'));
@@ -555,9 +552,9 @@ class Admin_Display extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public function show_tools()
+	public function show_toolbox()
 	{
-		require_once LSCWP_DIR . 'tpl/tools/entry.tpl.php' ;
+		require_once LSCWP_DIR . 'tpl/toolbox/entry.tpl.php' ;
 	}
 
 	/**
@@ -602,17 +599,6 @@ class Admin_Display extends Base
 	public function show_db_optm()
 	{
 		require_once LSCWP_DIR . 'tpl/db_optm/entry.tpl.php' ;
-	}
-
-	/**
-	 * Outputs the debug tabs.
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public function show_debug()
-	{
-		require_once LSCWP_DIR . 'tpl/debug/entry.tpl.php' ;
 	}
 
 	/**
