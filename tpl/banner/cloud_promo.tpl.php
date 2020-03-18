@@ -13,8 +13,8 @@ defined( 'WPINC' ) || exit;
 			<h2><?php echo __( 'You just unlocked a promotion from QUIC.cloud!', 'litespeed-cache' );?></h2>
 			<p>Spread the love and earn <strong><?php echo $this->_summary[ 'promo' ][ 0 ][ 'quota' ]; ?></strong> credits to use in our QUIC.cloud online services.</p>
 			<p>
-				<a class="button button-primary" href="<?php echo $this->_summary[ 'promo' ][ 0 ][ 'url' ]; ?>">Send to twitter to get <?php echo $this->_summary[ 'promo' ][ 0 ][ 'quota' ]; ?> bonus</a>
-				<a href="#" target="_blank"><?php echo __( 'Learn more', 'litespeed-cache' );?></a>
+				<a class="button button-primary" href="<?php echo $this->_summary[ 'promo' ][ 0 ][ 'url' ]; ?>" target="_blank">Send to twitter to get <?php echo $this->_summary[ 'promo' ][ 0 ][ 'quota' ]; ?> bonus</a>
+				<a href="https://www.quic.cloud/faq/#credit" target="_blank"><?php echo __( 'Learn more', 'litespeed-cache' );?></a>
 			</p>
 		</div>
 

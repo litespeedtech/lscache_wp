@@ -970,11 +970,11 @@ class Admin_Display extends Base
 		$val = Conf::val( $id, true ) ;
 
 		if ( $allow_zero && ! $val ) {
-			return ;
+			// return ;
 		}
 
 		$tip = array() ;
-		if ( $min && $val < $min ) {
+		if ( $min && $val < $min && ( ! $allow_zero || $val != 0 ) ) {
 			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
 		}
 		if ( $max && $val > $max ) {

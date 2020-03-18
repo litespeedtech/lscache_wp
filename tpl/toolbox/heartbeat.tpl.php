@@ -75,7 +75,8 @@ $this->form_action() ;
 			<?php $this->build_input( $id, 'litespeed-input-short') ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify the %s heartbeat interval in seconds.', 'litespeed-cache' ), 'backend' ) ; ?>
-				<?php echo sprintf( __( 'WordPress valid interval is %s seconds', 'litespeed-cache' ), '<code>15</code> ~ <code>120</code>' ) ; ?>
+				<?php echo sprintf( __( 'WordPress valid interval is %s seconds', 'litespeed-cache' ), '<code>15</code> ~ <code>120</code>' ) ; ?><br />
+				<?php echo sprintf( __( 'Set to %1$s to forbid heartbeat on %2$s.', 'litespeed-cache' ), '<code>0</code>', 'frontend' ) ; ?><br />
 				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 15, 120, true ) ; ?>
 			</div>
@@ -104,7 +105,8 @@ $this->form_action() ;
 			<?php $this->build_input( $id, 'litespeed-input-short') ; ?> <?php $this->readable_seconds() ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify the %s heartbeat interval in seconds.', 'litespeed-cache' ), 'backend editor' ) ; ?>
-				<?php echo sprintf( __( 'WordPress valid interval is %s seconds', 'litespeed-cache' ), '<code>15</code> ~ <code>120</code>' ) ; ?>
+				<?php echo sprintf( __( 'WordPress valid interval is %s seconds', 'litespeed-cache' ), '<code>15</code> ~ <code>120</code>' ) ; ?><br />
+				<?php echo sprintf( __( 'Set to %1$s to forbid heartbeat on %2$s.', 'litespeed-cache' ), '<code>0</code>', 'frontend' ) ; ?><br />
 				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 15, 120, true ) ; ?>
 			</div>
