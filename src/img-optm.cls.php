@@ -974,7 +974,7 @@ class Img_Optm extends Base
 		$data = array(
 			'action'	=> self::CLOUD_ACTION_CLEAN,
 		);
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
+		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data, 120 );
 		if ( ! is_array( $json ) ) {
 			return;
 		}
