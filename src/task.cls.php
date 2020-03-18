@@ -30,7 +30,7 @@ class Task extends Instance
 	 */
 	protected function __construct()
 	{
-		Debug2::debug2( '[Task] init' ) ;
+		Debug2::debug2( '⏰ Task init' ) ;
 
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
 
@@ -111,7 +111,7 @@ class Task extends Instance
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_IMGOPTM_AUTO_REQUEST ) ) {
-			Debug2::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
+			Debug2::debug( '⏰ Cron log: img optm auto request cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM_AUTO_REQUEST ) ;
 		}
 	}
@@ -126,7 +126,7 @@ class Task extends Instance
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_IMGOPTM ) ) {
-			Debug2::debug( 'Cron log: ......img optimization cron hook register......' ) ;
+			Debug2::debug( '⏰ Cron log: img optimization cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM ) ;
 		}
 	}
@@ -141,7 +141,7 @@ class Task extends Instance
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_CCSS ) ) {
-			Debug2::debug( 'Cron log: ......ccss cron hook register......' ) ;
+			Debug2::debug( '⏰ Cron log: ccss cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER, self::HOOK_CCSS ) ;
 		}
 	}
@@ -156,7 +156,7 @@ class Task extends Instance
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_IMG_PLACEHOLDER ) ) {
-			Debug2::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
+			Debug2::debug( '⏰ Cron log: image placeholder cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER, self::HOOK_IMG_PLACEHOLDER ) ;
 		}
 	}
@@ -171,7 +171,7 @@ class Task extends Instance
 	{
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_AVATAR ) ) {
-			Debug2::debug( 'Cron log: ......avatar cron hook register......' ) ;
+			Debug2::debug( '⏰ Cron log: avatar cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER, self::HOOK_AVATAR ) ;
 		}
 	}
@@ -188,7 +188,7 @@ class Task extends Instance
 
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::HOOK_CRAWLER ) ) {
-			Debug2::debug( 'Crawler cron log: ......cron hook register......' ) ;
+			Debug2::debug( '⏰ Crawler cron log: cron hook register' ) ;
 			wp_schedule_event( time(), self::FITLER_CRAWLER, self::HOOK_CRAWLER ) ;
 		}
 	}
@@ -223,7 +223,7 @@ class Task extends Instance
 		$interval = Conf::val( Base::O_CRAWLER_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
-			// 	Debug2::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
+			// 	Debug2::debug('Crawler cron log: cron filter '.$interval.' added') ;
 			$schedules[ self::FITLER_CRAWLER ] = array(
 				'interval' => $interval,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
@@ -240,7 +240,7 @@ class Task extends Instance
 	 */
 	public static function clear()
 	{
-		Debug2::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
+		Debug2::debug( '⏰ Crawler cron log: cron hook cleared' ) ;
 		wp_clear_scheduled_hook( self::HOOK_CRAWLER ) ;
 	}
 

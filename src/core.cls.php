@@ -522,7 +522,7 @@ class Core extends Instance
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			@header( $control_header );
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '📀 ' . $control_header );
+				Debug2::debug( '💰 ' . $control_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $control_header . " -->";
 				}
@@ -534,7 +534,7 @@ class Core extends Instance
 			Debug2::log_purge( $purge_header );
 
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '📀 ' . $purge_header );
+				Debug2::debug( '💰 ' . $purge_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
 				}
@@ -544,7 +544,7 @@ class Core extends Instance
 		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
 			@header( $vary_header );
 			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '📀 ' . $vary_header );
+				Debug2::debug( '💰 ' . $vary_header );
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
 				}
@@ -574,7 +574,7 @@ class Core extends Instance
 			if ( defined( 'LITESPEED_ON' ) && Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header );
 				if ( defined( 'LSCWP_LOG' ) ) {
-					Debug2::debug( '📀 ' . $tag_header );
+					Debug2::debug( '💰 ' . $tag_header );
 					if ( $running_info_showing ) {
 						$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
 					}

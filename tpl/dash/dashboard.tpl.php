@@ -323,8 +323,8 @@ $placeholder_summary = Placeholder::get_summary();
 
 							<?php
 							$cache_list = array(
-								Base::O_IMG_OPTM_AUTO	=> __( 'Auto Request Cron', 'litespeed-cache' ),
-								Base::O_IMG_OPTM_CRON	=> __( 'Auto Pull Cron', 'litespeed-cache' ),
+								Base::O_IMG_OPTM_AUTO	=> Lang::title( Base::O_IMG_OPTM_AUTO ),
+								Base::O_IMG_OPTM_CRON	=> Lang::title( Base::O_IMG_OPTM_CRON ),
 							);
 							foreach ( $cache_list as $id => $title ) :
 								$v = Conf::val( $id );

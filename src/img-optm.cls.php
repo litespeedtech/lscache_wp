@@ -714,9 +714,12 @@ class Img_Optm extends Base
 			return;
 		}
 
+		Debug2::debug( '[Img_Optm] cron_pull running' );
+
 		$tag = self::get_option( self::DB_NEED_PULL );
 
-		if ( ! $tag || $tag !== self::STATUS_NOTIFIED ) {
+		if ( ! $tag || $tag != self::STATUS_NOTIFIED ) {
+			Debug2::debug( '[Img_Optm] ❌ no need pull [tag] ' . $tag );
 			return;
 		}
 
