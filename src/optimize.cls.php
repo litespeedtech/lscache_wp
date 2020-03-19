@@ -48,19 +48,28 @@ class Optimize extends Base
 	private $html_head = '' ; // The html info prepend to <body>
 
 	/**
-	 * Init optimizer
 	 *
 	 * @since  1.2.2
 	 * @access protected
 	 */
 	protected function __construct()
 	{
+	}
+
+	/**
+	 * Init optimizer
+	 *
+	 * @since  3.0
+	 * @access protected
+	 */
+	public function init()
+	{
 		$this->cfg_css_async = Conf::val( Base::O_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = Conf::val( Base::O_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = Conf::val( Base::O_OPTM_QS_RM ) ;
 
 		if ( ! Router::can_optm() ) {
-			return ;
+			return;
 		}
 
 		// To remove emoji from WP
@@ -96,8 +105,7 @@ class Optimize extends Base
 		 * Prefetch DNS
 		 * @since 1.7.1
 		 */
-		$this->_dns_prefetch_init() ;
-
+		$this->_dns_prefetch_init();
 	}
 
 	/**

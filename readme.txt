@@ -332,6 +332,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.
 * 🕷️ Manually changed the priority of mobile and WebP. (@rafaucau)
 * **Browser** Larger Browser Cache TTL for Google Page Score improvement. (@max2348)
+* **Task** Cron refactored. Disabled cron will not show in cron list anymore.
 * **ESI** Added Bloom nonce to ESI for Elegant Themes.
 * **GUI** Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * **Cloud** Able to redetect cloud nodes now.

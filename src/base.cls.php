@@ -831,13 +831,13 @@ class Base extends Instance
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			// self::	=> '',
 			// self::	=> '',
-		) ;
+		);
 
 		if ( ! empty( $filters[ $id ] ) ) {
-			return $filters[ $id ] ;
+			return $filters[ $id ];
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -855,13 +855,9 @@ class Base extends Instance
 			self::O_CACHE_FORCE_URI,
 			self::O_CACHE_FORCE_PUB_URI,
 			self::O_CACHE_EXC,
-		) ;
+		);
 
-		if ( in_array( $id, $check_ids ) ) {
-			return true ;
-		}
-
-		return false ;
+		return in_array( $id, $check_ids );
 	}
 
 	/**
@@ -876,13 +872,9 @@ class Base extends Instance
 			self::O_ESI,
 			self::O_DEBUG_DISABLE_ALL,
 			self::NETWORK_O_USE_PRIMARY,
-		) ;
+		);
 
-		if ( in_array( $id, $check_ids ) ) {
-			return true ;
-		}
-
-		return false ;
+		return in_array( $id, $check_ids );
 	}
 
 	/**
@@ -896,13 +888,28 @@ class Base extends Instance
 			self::O_CDN_CLOUDFLARE_KEY,
 			self::O_OBJECT_PSWD,
 			self::O_API_KEY,
-		) ;
+		);
 
-		if ( in_array( $id, $check_ids ) ) {
-			return true ;
-		}
+		return in_array( $id, $check_ids );
+	}
 
-		return false ;
+	/**
+	 * If the setting is cron related or not
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_cron( $id )
+	{
+		$check_ids = array(
+			self::O_IMG_OPTM_CRON,
+			self::O_OPTM_CCSS_ASYNC,
+			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
+			self::O_DISCUSS_AVATAR_CRON,
+			self::O_IMG_OPTM_AUTO,
+			self::O_CRAWLER,
+		);
+
+		return in_array( $id, $check_ids );
 	}
 
 	/**
@@ -914,13 +921,13 @@ class Base extends Instance
 	{
 		$check_ids = array(
 			self::O_CACHE_PAGE_LOGIN	=> Tag::TYPE_LOGIN,
-		) ;
+		);
 
 		if ( ! empty( $check_ids[ $id ] ) ) {
-			return $check_ids[ $id ] ;
+			return $check_ids[ $id ];
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -931,7 +938,7 @@ class Base extends Instance
 	public static function name( $id )
 	{
 		$cls = new \ReflectionClass( get_called_class() );
-		return 'litespeed.' . strtolower( $cls->getShortName() ) . '.' . $id ;
+		return 'litespeed.' . strtolower( $cls->getShortName() ) . '.' . $id;
 	}
 
 	/**

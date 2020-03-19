@@ -5,22 +5,25 @@
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 class Task extends Instance
 {
-	protected static $_instance ;
+	protected static $_instance;
 
-	const HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
-	const HOOK_AVATAR = 'litespeed_avatar_trigger' ;
-	const HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
-	const HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
-	const HOOK_CCSS = 'litespeed_ccss_trigger' ;
-	const HOOK_IMG_PLACEHOLDER = 'litespeed_img_placeholder_trigger' ;
-	const FITLER_CRAWLER = 'litespeed_crawl_filter' ;
-	const FITLER = 'litespeed_filter' ;
+	private static $_triggers = array(
+		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_imgoptm_pull', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_pull' ), // always fetch immediately
+		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_ccss', 'hook' => __NAMESPACE__ . '\CSS::cron_ccss' ),
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_lqip', 'hook' => __NAMESPACE__ . '\Placeholder::cron' ),
+		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_avatar', 'hook' => __NAMESPACE__ . '\Avatar::cron' ),
+		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_imgoptm_req', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_auto_request' ),
+		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_crawler', 'hook' => __NAMESPACE__ . '\Crawler::start' ), // Set crawler to last one to use above results
+	);
+
+	const FITLER_CRAWLER = 'litespeed_crawl_filter';
+	const FITLER = 'litespeed_filter';
 
 	/**
 	 * Init
@@ -30,167 +33,82 @@ class Task extends Instance
 	 */
 	protected function __construct()
 	{
-		Debug2::debug2( '⏰ Task init' ) ;
-
-		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) ) ;
-
-		// Register crawler cron
-		if ( Conf::val( Base::O_CRAWLER ) && Router::can_crawl() ) {
-			// keep cron intval filter
-			$this->_schedule_filter_crawler() ;
-
-			// cron hook
-			add_action( self::HOOK_CRAWLER, __NAMESPACE__ . '\Crawler::start' ) ;
-		}
-
-		// Register img optimization fetch ( always fetch immediately )
-		if ( Conf::val( Base::O_IMG_OPTM_CRON ) ) {
-			self::schedule_filter_imgoptm() ;
-
-			add_action( self::HOOK_IMGOPTM, __NAMESPACE__ . '\Img_Optm::cron_pull' ) ;
-		}
-
-		// Image optm auto request
-		if ( Conf::val( Base::O_IMG_OPTM_AUTO ) ) {
-			self::schedule_filter_imgoptm_auto_request() ;
-
-			add_action( self::HOOK_IMGOPTM_AUTO_REQUEST, __NAMESPACE__ . '\Img_Optm::cron_auto_request' ) ;
-		}
-
-		// Register ccss generation
-		if ( Conf::val( Base::O_OPTM_CCSS_ASYNC ) ) {
-			self::schedule_filter_ccss() ;
-
-			add_action( self::HOOK_CCSS, __NAMESPACE__ . '\CSS::cron_ccss' ) ;
-		}
-
-		// Register image placeholder generation
-		if ( Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ) {
-			self::schedule_filter_placeholder() ;
-
-			add_action( self::HOOK_IMG_PLACEHOLDER, __NAMESPACE__ . '\Placeholder::cron' ) ;
-		}
-
-		// Register avatar warm up
-		if ( Conf::val( Base::O_DISCUSS_AVATAR_CRON ) ) {
-			self::schedule_filter_avatar() ;
-
-			add_action( self::HOOK_AVATAR, __NAMESPACE__ . '\Avatar::cron' ) ;
-		}
 	}
 
 	/**
-	 * todo: still need?
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public static function update( $options = false )
-	{
-		$id = Base::O_CRAWLER ;
-		if ( $options && isset( $options[ $id ] ) ) {
-			$is_active = $options[$id] ;
-		}
-		else {
-			$is_active = Conf::val( $id ) ;
-		}
-
-		if ( ! $is_active ) {
-			self::clear() ;
-		}
-
-	}
-
-	/**
-	 * Schedule cron img optm auto request
-	 *
-	 * @since 2.4.1
-	 * @access public
-	 */
-	public static function schedule_filter_imgoptm_auto_request()
-	{
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_IMGOPTM_AUTO_REQUEST ) ) {
-			Debug2::debug( '⏰ Cron log: img optm auto request cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM_AUTO_REQUEST ) ;
-		}
-	}
-
-	/**
-	 * Schedule cron img optimization
-	 *
-	 * @since 1.6.1
-	 * @access public
-	 */
-	public static function schedule_filter_imgoptm()
-	{
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_IMGOPTM ) ) {
-			Debug2::debug( '⏰ Cron log: img optimization cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER, self::HOOK_IMGOPTM ) ;
-		}
-	}
-
-	/**
-	 * Schedule cron ccss generation
-	 *
-	 * @since 2.3
-	 * @access public
-	 */
-	public static function schedule_filter_ccss()
-	{
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_CCSS ) ) {
-			Debug2::debug( '⏰ Cron log: ccss cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER, self::HOOK_CCSS ) ;
-		}
-	}
-
-	/**
-	 * Schedule cron image placeholder generation
-	 *
-	 * @since 2.5.1
-	 * @access public
-	 */
-	public static function schedule_filter_placeholder()
-	{
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_IMG_PLACEHOLDER ) ) {
-			Debug2::debug( '⏰ Cron log: image placeholder cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER, self::HOOK_IMG_PLACEHOLDER ) ;
-		}
-	}
-
-	/**
-	 * Schedule cron avatar
+	 * Keep all tasks in cron
 	 *
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function schedule_filter_avatar()
+	public function init()
 	{
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_AVATAR ) ) {
-			Debug2::debug( '⏰ Cron log: avatar cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER, self::HOOK_AVATAR ) ;
+		Debug2::debug2( '⏰ Task init' );
+
+		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
+
+		foreach ( self::$_triggers as $id => $trigger ) {
+			if ( Conf::val( $id ) ) {
+				// Special check for crawler
+				if ( $id == Base::O_CRAWLER ) {
+					if ( ! Router::can_crawl() ) {
+						continue;
+					}
+
+					add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) );
+				}
+
+				if( ! wp_next_scheduled( $trigger[ 'name' ] ) ) {
+					Debug2::debug( '⏰ Cron hook register [name] ' . $trigger[ 'name' ] );
+
+					wp_schedule_event( time(), $id == Base::O_CRAWLER ? self::FITLER_CRAWLER : self::FITLER, $trigger[ 'name' ] );
+				}
+
+				add_action( $trigger[ 'name' ], $trigger[ 'hook' ] );
+			}
 		}
+
 	}
 
 	/**
-	 * Schedule cron crawler
+	 * Clean all potential existing crons
 	 *
-	 * @since 1.1.0
-	 * @access private
+	 * @since 3.0
+	 * @access public
 	 */
-	private function _schedule_filter_crawler()
+	public static function destroy()
 	{
-		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) ) ;
+		Utility::compatibility();
+		array_map( 'wp_clear_scheduled_hook', array_column( self::$_triggers, 'name' ) );
+	}
 
-		// Schedule event here to see if it can lost again or not
-		if( ! wp_next_scheduled( self::HOOK_CRAWLER ) ) {
-			Debug2::debug( '⏰ Crawler cron log: cron hook register' ) ;
-			wp_schedule_event( time(), self::FITLER_CRAWLER, self::HOOK_CRAWLER ) ;
+	/**
+	 * Try to clean the crons if disabled
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function try_clean( $id )
+	{
+		// Clean v2's leftover cron ( will remove in v3.1 )
+		foreach ( wp_get_ready_cron_jobs() as $hooks ) {
+			foreach ( $hooks as $hook => $v ) {
+				if ( strpos( $hook, 'litespeed_' ) === 0 && substr( $hook, -8 ) === '_trigger' ) {
+					Debug2::debug( '⏰ Cron clear legacy [hook] ' . $hook );
+					wp_clear_scheduled_hook( $hook );
+				}
+			}
 		}
+
+		if ( $id && ! empty( self::$_triggers[ $id ] ) ) {
+			if ( ! Conf::val( $id ) || ( $id == Base::O_CRAWLER && ! Router::can_crawl() ) ) {
+				Debug2::debug( '⏰ Cron clear [id] ' . $id . ' [hook] ' . self::$_triggers[ $id ][ 'name' ] );
+				wp_clear_scheduled_hook( self::$_triggers[ $id ][ 'name' ] );
+			}
+			return;
+		}
+
+		Debug2::debug( '⏰ ❌ Unknown cron [id] ' . $id );
 	}
 
 	/**
@@ -198,7 +116,6 @@ class Task extends Instance
 	 *
 	 * @since 1.6.1
 	 * @access public
-	 * @param array $schedules WP Hook
 	 */
 	public function lscache_cron_filter( $schedules )
 	{
@@ -206,9 +123,9 @@ class Task extends Instance
 			$schedules[ self::FITLER ] = array(
 				'interval' => 60,
 				'display'  => __( 'Every Minute', 'litespeed-cache' ),
-			) ;
+			);
 		}
-		return $schedules ;
+		return $schedules;
 	}
 
 	/**
@@ -216,32 +133,19 @@ class Task extends Instance
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @param array $schedules WP Hook
 	 */
 	public function lscache_cron_filter_crawler( $schedules )
 	{
-		$interval = Conf::val( Base::O_CRAWLER_RUN_INTERVAL ) ;
-		// $wp_schedules = wp_get_schedules() ;
+		$interval = Conf::val( Base::O_CRAWLER_RUN_INTERVAL );
+		// $wp_schedules = wp_get_schedules();
 		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
-			// 	Debug2::debug('Crawler cron log: cron filter '.$interval.' added') ;
+			// 	Debug2::debug('Crawler cron log: cron filter '.$interval.' added');
 			$schedules[ self::FITLER_CRAWLER ] = array(
 				'interval' => $interval,
-				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
-			) ;
+				'display'  => __( 'LiteSpeed Crawler Cron', 'litespeed-cache' ),
+			);
 		}
-		return $schedules ;
-	}
-
-	/**
-	 * Clear cron
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public static function clear()
-	{
-		Debug2::debug( '⏰ Crawler cron log: cron hook cleared' ) ;
-		wp_clear_scheduled_hook( self::HOOK_CRAWLER ) ;
+		return $schedules;
 	}
 
 }

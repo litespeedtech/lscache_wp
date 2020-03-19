@@ -28,7 +28,7 @@ defined( 'WPINC' ) || exit;
 					<p class="litespeed-tweet-text"><?php echo $this->_summary[ 'promo' ][ 0 ][ 'content' ]; ?></p>
 
 					<div class="litespeed-tweet-cta">
-						<a href="<?php echo $this->_summary[ 'promo' ][ 0 ][ 'url' ]; ?>" class="litespeed-tweet-btn"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+						<a href="<?php echo $this->_summary[ 'promo' ][ 0 ][ 'url' ]; ?>" class="litespeed-tweet-btn" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 								viewBox="0 0 250 250" xml:space="preserve">
 							<path class="st0" d="M78.6,226.6c94.3,0,145.9-78.2,145.9-145.9c0-2.2,0-4.4-0.1-6.6c10-7.3,18.7-16.3,25.6-26.5
 								c-9.4,4.1-19.3,6.9-29.5,8.1c10.7-6.4,18.7-16.5,22.5-28.4c-10.1,6-21.1,10.2-32.6,12.4c-19.4-20.7-51.9-21.7-72.6-2.2

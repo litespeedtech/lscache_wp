@@ -209,13 +209,13 @@ class Core extends Instance
 
 			Placeholder::get_instance()->init();
 
-			Optimize::get_instance();
+			Optimize::get_instance()->init();
 
 			// Hook cdn for attachements
 			CDN::get_instance();
 
 			// load cron tasks
-			Task::get_instance();
+			Task::get_instance()->init();
 		}
 
 		// load litespeed actions

@@ -24,6 +24,8 @@ class Conf extends Base
 	private $_options = array();
 	private $_const_options = array();
 	private $_site_options = array();
+	private $_updated_ids = array();
+
 
 	/**
 	 * Initialize the class and set its properties.
@@ -459,33 +461,64 @@ class Conf extends Base
 	{
 		if ( $the_matrix ) {
 			foreach ( $the_matrix as $id => $val ) {
-				$this->update( $id, $val ) ;
+				$this->update( $id, $val );
 			}
 		}
 
-		do_action( 'litespeed_update_confs', $the_matrix ) ;
+		if ( $this->_updated_ids ) {
+			foreach ( $this->_updated_ids as $id ) {
+				// Special handler for QUIC.cloud domain key to clear all existing nodes
+				if ( $id == Base::O_API_KEY ) {
+					Cloud::get_instance()->clear_cloud();
+				}
+
+				// Special handler for crawler: reset sitemap when drop_domain setting changed
+				if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
+					Crawler_Map::get_instance()->empty();
+				}
+
+				// Check if need to do a purge all or not
+				if ( $this->_conf_purge_all( $id ) ) {
+					Purge::purge_all( 'conf changed [id] ' . $id );
+				}
+
+				// Check if need to purge a tag
+				if ( $tag = $this->_conf_purge_tag( $id ) ) {
+					Purge::add( $tag );
+				}
+
+				// Update cron
+				if ( $this->_conf_cron( $id ) ) {
+					Task::try_clean( $id );
+				}
+			}
+		}
+
+		do_action( 'litespeed_update_confs', $the_matrix );
 
 		// Update related tables
-		Data::get_instance()->correct_tb_existance() ;
+		Data::get_instance()->correct_tb_existance();
 
 		// Update related files
-		Activation::get_instance()->update_files() ;
+		Activation::get_instance()->update_files();
 
 		/**
 		 * CDN related actions - Cloudflare
 		 */
-		CDN\Cloudflare::get_instance()->try_refresh_zone() ;
+		CDN\Cloudflare::get_instance()->try_refresh_zone();
 
 		/**
 		 * CDN related actions - QUIC.cloud
 		 * @since 2.3
 		 */
-		CDN\Quic::try_sync_config() ;
+		CDN\Quic::try_sync_config();
 
 	}
 
 	/**
 	 * Save option
+	 *
+	 * Note: this is direct save, won't trigger corresponding file update or data sync. To save settings normally, always use `Conf->update_confs()`
 	 *
 	 * @since  3.0
 	 * @access public
@@ -494,16 +527,16 @@ class Conf extends Base
 	{
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
-		// 	return ;
+		// 	return;
 		// }
 
 		if ( $id == Base::_VER ) {
-			return ;
+			return;
 		}
 
 		if ( ! array_key_exists( $id, self::$_default_options ) ) {
-			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id ) ;
-			return ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
+			return;
 		}
 
 		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
@@ -512,72 +545,51 @@ class Conf extends Base
 
 		// Validate type
 		if ( is_bool( self::$_default_options[ $id ] ) ) {
-			$max = $this->_conf_multi_switch( $id ) ;
+			$max = $this->_conf_multi_switch( $id );
 			if ( $max && $val > 1 ) {
-				$val %= $max + 1 ;
+				$val %= $max + 1;
 			}
 			else {
-				$val = $val === 'false' ? 0 : (bool) $val ;
+				$val = $val === 'false' ? 0 : (bool) $val;
 			}
 		}
 		elseif ( is_array( self::$_default_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
-				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
+				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
 			}
 		}
 		elseif ( ! is_string( self::$_default_options[ $id ] ) ) {
-			$val = (int) $val ;
+			$val = (int) $val;
 		}
 		else {
 			// Check if the string has a limit set
-			$val = $this->_conf_string_val( $id, $val ) ;
+			$val = $this->_conf_string_val( $id, $val );
 		}
 
 		// Save data
-		self::update_option( $id, $val ) ;
+		self::update_option( $id, $val );
 
 		// Handle purge if setting changed
 		if ( $this->_options[ $id ] != $val ) {
+			$this->_updated_ids[] = $id;
 
-			// Special handler for QUIC.cloud domain key to clear all existing nodes
-			if ( $id == Base::O_API_KEY ) {
-				Cloud::get_instance()->clear_cloud();
-			}
-
-			// Special handler for crawler: reset sitemap when drop_domain setting changed
-			if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
-				Crawler_Map::get_instance()->empty();
-			}
-
-			// Check if need to fire a purge or not
+			// Check if need to fire a purge or not (Here has to stay inside `update()` bcos need comparing old value)
 			if ( $this->_conf_purge( $id ) ) {
-				$diff = array_diff( $val, $this->_options[ $id ] ) ;
-				$diff2 = array_diff( $this->_options[ $id ], $val ) ;
-				$diff = array_merge( $diff, $diff2 ) ;
+				$diff = array_diff( $val, $this->_options[ $id ] );
+				$diff2 = array_diff( $this->_options[ $id ], $val );
+				$diff = array_merge( $diff, $diff2 );
 				// If has difference
 				foreach ( $diff as $v ) {
-					$v = ltrim( $v, '^' ) ;
-					$v = rtrim( $v, '$' ) ;
-					Purge::purge_url( $v ) ;
+					$v = ltrim( $v, '^' );
+					$v = rtrim( $v, '$' );
+					Purge::purge_url( $v );
 				}
-			}
-
-			// Check if need to do a purge all or not
-			if ( $this->_conf_purge_all( $id ) ) {
-				Purge::purge_all( 'conf changed [id] ' . $id ) ;
-			}
-
-			// Check if need to purge a tag
-			if ( $tag = $this->_conf_purge_tag( $id ) ) {
-				Purge::add( $tag ) ;
 			}
 		}
 
-		// No need to update cron here, Cron will register in each init
-
 		// Update in-memory data
-		$this->_options[ $id ] = $val ;
+		$this->_options[ $id ] = $val;
 	}
 
 	/**
@@ -590,7 +602,7 @@ class Conf extends Base
 	{
 
 		if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
-			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid network option ID ' . $id ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid network option ID ' . $id );
 			return ;
 		}
 

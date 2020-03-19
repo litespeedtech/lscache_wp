@@ -74,9 +74,6 @@ class Activation extends Instance
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL ) ;
 		}
-
-		// Register crawler cron task
-		Task::update() ;
 	}
 
 	/**
@@ -85,7 +82,7 @@ class Activation extends Instance
 	 */
 	public static function uninstall_litespeed_cache()
 	{
-		Task::clear() ;
+		Task::destroy();
 
 		// Delete options
 		foreach ( Conf::get_instance()->load_default_vals() as $k => $v ) {
@@ -215,7 +212,7 @@ class Activation extends Instance
 	 */
 	public static function register_deactivation()
 	{
-		Task::clear() ;
+		Task::destroy();
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
 
