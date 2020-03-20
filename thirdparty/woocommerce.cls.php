@@ -12,8 +12,9 @@ namespace LiteSpeed\Thirdparty ;
 
 defined( 'WPINC' ) || exit ;
 
-use \LiteSpeed\API ;
-use \LiteSpeed\Instance ;
+use \LiteSpeed\API;
+use \LiteSpeed\Base;
+use \LiteSpeed\Instance;
 
 class WooCommerce extends Instance
 {
