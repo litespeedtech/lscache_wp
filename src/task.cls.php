@@ -14,12 +14,12 @@ class Task extends Instance
 	protected static $_instance;
 
 	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_imgoptm_pull', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_pull' ), // always fetch immediately
-		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_ccss', 'hook' => __NAMESPACE__ . '\CSS::cron_ccss' ),
-		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_lqip', 'hook' => __NAMESPACE__ . '\Placeholder::cron' ),
-		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_avatar', 'hook' => __NAMESPACE__ . '\Avatar::cron' ),
-		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_imgoptm_req', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_auto_request' ),
-		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_crawler', 'hook' => __NAMESPACE__ . '\Crawler::start' ), // Set crawler to last one to use above results
+		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_pull' ), // always fetch immediately
+		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => __NAMESPACE__ . '\CSS::cron_ccss' ),
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_task_lqip', 'hook' => __NAMESPACE__ . '\Placeholder::cron' ),
+		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_task_avatar', 'hook' => __NAMESPACE__ . '\Avatar::cron' ),
+		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_task_imgoptm_req', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_auto_request' ),
+		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_task_crawler', 'hook' => __NAMESPACE__ . '\Crawler::start' ), // Set crawler to last one to use above results
 	);
 
 	const FITLER_CRAWLER = 'litespeed_crawl_filter';
@@ -93,7 +93,7 @@ class Task extends Instance
 		// Clean v2's leftover cron ( will remove in v3.1 )
 		foreach ( wp_get_ready_cron_jobs() as $hooks ) {
 			foreach ( $hooks as $hook => $v ) {
-				if ( strpos( $hook, 'litespeed_' ) === 0 && substr( $hook, -8 ) === '_trigger' ) {
+				if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
 					Debug2::debug( '⏰ Cron clear legacy [hook] ' . $hook );
 					wp_clear_scheduled_hook( $hook );
 				}
