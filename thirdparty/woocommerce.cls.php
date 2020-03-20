@@ -19,6 +19,8 @@ class WooCommerce extends Instance
 {
 	protected static $_instance ;
 
+	const O_CACHE_TTL_FRONTPAGE = Base::O_CACHE_TTL_FRONTPAGE;
+
 	const CACHETAG_SHOP = 'WC_S' ;
 	const CACHETAG_TERM = 'WC_T.' ;
 	const O_UPDATE_INTERVAL = 'wc_update_interval' ;
@@ -103,8 +105,8 @@ class WooCommerce extends Instance
 		if ( is_admin() ) {
 			API::hook_purge_post( array( $this, 'backend_purge' ) ) ;
 			add_action( 'delete_term_relationships', array( $this, 'delete_rel' ), 10, 2 ) ;
-			API::hook_setting_tab( array( $this, 'settings_add_tab' ) ) ;
-			API::hook_setting_content( array( $this, 'settings_add_content' ) ) ;
+			add_action( 'litespeed_settings_tab', array( $this, 'settings_add_tab' ) );
+			add_action( 'litespeed_settings_content', array( $this, 'settings_add_content' ) );
 			API::hook_widget_default_options( array( $this, 'wc_widget_default' ), 10, 2 ) ;
 		}
 
@@ -562,7 +564,7 @@ class WooCommerce extends Instance
 		// Set TTL
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
 			if ( apply_filters( 'litespeed_conf', self::O_SHOP_FRONT_TTL ) ) {
-				API::set_use_frontpage_ttl() ;
+				do_action( 'litespeed_control_set_ttl', apply_filters( 'litespeed_conf', self::O_CACHE_TTL_FRONTPAGE ) );
 			}
 		}
 
@@ -597,7 +599,7 @@ class WooCommerce extends Instance
 						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary
 						 * @since 1.6.6.1
 						 */
-						// API::set_cache_no_vary() ;
+						// do_action( 'litespeed_vary_no' );
 						do_action( 'litespeed_tag_add_private_esi', 'storefront-cart-header' );
 					}
 					else {
@@ -607,7 +609,7 @@ class WooCommerce extends Instance
 				elseif ( $esi_id === 'storefront-cart-header' ) {
 					if ( $this->cache_cart ) {
 						do_action( 'litespeed_control_set_private', 'cache cart' );
-						API::set_cache_no_vary() ;
+						do_action( 'litespeed_vary_no' );
 						do_action( 'litespeed_tag_add_private_esi', 'storefront-cart-header' );
 					}
 					else {
@@ -780,7 +782,7 @@ class WooCommerce extends Instance
 		do_action( 'litespeed_conf_append', self::O_WOO_CACHE_CART, true );
 
 		// Append option save value filter
-		API::conf_multi_switch( self::O_UPDATE_INTERVAL, 3 ) ;
+		do_action( 'litespeed_conf_multi_switch', self::O_UPDATE_INTERVAL, 3 );
 	}
 
 	/**

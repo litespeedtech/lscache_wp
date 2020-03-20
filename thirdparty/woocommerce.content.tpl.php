@@ -38,7 +38,7 @@ use \LiteSpeed\Admin_Display ;
 			foreach ( $options as $k => $v ) :
 				$checked = (int) $k === $conf ? ' checked ' : '' ;
 			?>
-				<?php API::enroll( $id ) ; ?>
+				<?php do_action( 'litespeed_setting_enroll', $id ); ?>
 				<div class='litespeed-radio-row'>
 					<input type='radio' autocomplete='off' name='<?php echo $id ; ?>' id='conf_<?php echo $id ; ?>_<?php echo $k ; ?>' value='<?php echo $k ; ?>' <?php echo $checked ; ?> />
 					<label for='conf_<?php echo $id ; ?>_<?php echo $k ; ?>'><?php echo $v ; ?></label>
@@ -56,7 +56,7 @@ use \LiteSpeed\Admin_Display ;
 			<?php echo __( 'Use Front Page TTL for the Shop Page', 'litespeed-cache' ) ; ?>
 		</th>
 		<td>
-			<?php API::build_switch( $id ) ; ?>
+			<?php do_action( 'litespeed_build_switch', $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Checking this option will force the shop page to use the front page TTL setting.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, if the homepage for the site is located at %1$s, the shop page may be located at %2$s.', 'litespeed-cache' ), 'https://www.EXAMPLE.com', 'https://www.EXAMPLE.com/shop' ) ; ?>
@@ -70,7 +70,7 @@ use \LiteSpeed\Admin_Display ;
 			<?php echo __( 'Privately Cache Cart', 'litespeed-cache' ) ; ?>
 		</th>
 		<td>
-			<?php API::build_switch( $id ) ; ?>
+			<?php do_action( 'litespeed_build_switch', $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Privately cache cart when not empty.', 'litespeed-cache' ) ; ?>
 			</div>

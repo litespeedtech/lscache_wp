@@ -8,13 +8,13 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 class API extends Base
 {
-	const VERSION =	Core::VER ;
+	const VERSION =	Core::VER;
 
 	const TYPE_FEED 					= Tag::TYPE_FEED ;
 	const TYPE_FRONTPAGE 				= Tag::TYPE_FRONTPAGE ;
@@ -55,7 +55,7 @@ class API extends Base
 		 */
 		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // API::config($id) -> Filter `litespeed_conf`
 		// API::conf_append( $name, $default ) -> Action `litespeed_conf_append`
-		add_action( 'litespeed_conf_multi_switch', __CLASS__ . '::conf_multi_switch', 10, 2 ) ;
+		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2 );
 		// API::force_option( $k, $v ) -> Action ``litespeed_conf_force`
 
 		/**
@@ -110,20 +110,35 @@ class API extends Base
 		add_action( 'litespeed_vary_ajax_force', __NAMESPACE__ . '\Vary::can_ajax_vary' ); // API::force_vary() -> Action `litespeed_vary_ajax_force` // Force finalize vary even if its in an AJAX call
 		add_action( 'litespeed_vary_append', __NAMESPACE__ . '\Vary::append', 10, 2 ); // API::vary( $k, $v, $default = null ) -> Action `litespeed_vary_append // Alter default vary cookie value // Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
 		// API::hook_vary_finalize( $hook ) -> Filter `litespeed_vary`
+		add_action( 'litespeed_vary_no', __NAMESPACE__ . '\Control::set_no_vary' ); // API::set_cache_no_vary() -> Action `litespeed_vary_no` // Set cache status to no vary
 
 		add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
 
 		/**
 		 * Mist
 		 */
-		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> action `litespeed_debug`
-		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> action `litespeed_debug2`
+		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> Action `litespeed_debug`
+		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> Action `litespeed_debug2`
 
+		add_action( 'litspeed_after_admin_init', __CLASS__ . '::after_admin_init' );
 	}
 
 	/**
-	 * Append options API
+	 * API for admin related
+	 *
+	 * @since  3.0
+	 * @access public
 	 */
+	public static function after_admin_init()
+	{
+		/**
+		 * GUI
+		 */
+		add_action( 'litespeed_setting_enroll', array( Admin_Display::get_instance(), 'enroll' ), 10, 4 ); // API::enroll( $id ) // Register a field in setting form to save
+		add_action( 'litespeed_build_switch', array( Admin_Display::get_instance(), 'build_switch' ) ); // API::build_switch( $id ) // Build a switch div html snippet
+		// API::hook_setting_content( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_content`
+		// API::hook_setting_tab( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_tab`
+	}
 
 	/**
 	 * Disable All
@@ -136,16 +151,6 @@ class API extends Base
 		do_action( 'litespeed_debug', '[API] Disabled_all due to ' . $reason );
 
 		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
-	}
-
-	/**
-	 * Extend an bool option max value for LSCWP options when save settings.
-	 *
-	 * @since  3.0
-	 */
-	public static function conf_multi_switch( $id, $v )
-	{
-		Base::set_multi_switch( $id, $v ) ;
 	}
 
 	/**
@@ -168,28 +173,6 @@ class API extends Base
 	public static function clean_wrapper_end( $counter = false )
 	{
 		return GUI::clean_wrapper_end( $counter ) ;
-	}
-
-	/**
-	 * Set cache status to no vary
-	 *
-	 * @since 1.2.0
-	 * @access public
-	 */
-	public static function set_cache_no_vary()
-	{
-		Control::set_no_vary() ;
-	}
-
-	/**
-	 * Set cache control ttl to use frontpage ttl
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function set_use_frontpage_ttl()
-	{
-		Control::set_custom_ttl( Conf::val( self::O_CACHE_TTL_FRONTPAGE ) ) ;
 	}
 
 	/**
@@ -255,42 +238,6 @@ class API extends Base
 	}
 
 	/**
-	 * Register an option for settings
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public static function enroll( $id )
-	{
-		Admin_Display::get_instance()->enroll( $id ) ;
-	}
-
-	/**
-	 * Build a switch div html snippet
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function build_switch( $id )
-	{
-		Admin_Display::get_instance()->build_switch( $id ) ;
-	}
-
-	/**
-	 * Filter the value for checkbox via input and id (enabled/disabled)
-	 *
-	 * @since  1.1.6
-	 * @access public
-	 * @param int $input The whole input array
-	 * @param string $id The ID of the option
-	 * @return bool Filtered value
-	 */
-	public static function parse_onoff( $input, $id )
-	{
-		return Admin_Settings::parse_onoff( $input, $id ) ;
-	}
-
-	/**
 	 * Hook purge post action to purge
 	 *
 	 * @since 1.1.3
@@ -333,28 +280,6 @@ class API extends Base
 	public static function hook_esi_param( $hook, $priority = 10, $args = 2 )
 	{
 		add_filter( 'litespeed_esi_params', $hook, $priority, $args ) ;
-	}
-
-	/**
-	 * Hook setting tab
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_setting_tab( $hook, $priority = 10, $args = 1 )
-	{
-		add_action( 'litespeed_settings_tab', $hook, $priority, $args ) ;
-	}
-
-	/**
-	 * Hook setting content
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public static function hook_setting_content( $hook, $priority = 10, $args = 1 )
-	{
-		add_action( 'litespeed_settings_content', $hook, $priority, $args ) ;
 	}
 
 	/**
@@ -416,4 +341,3 @@ class API extends Base
 	}
 
 }
-

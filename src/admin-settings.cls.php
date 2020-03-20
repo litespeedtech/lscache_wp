@@ -390,39 +390,6 @@ class Admin_Settings extends Base
 	}
 
 	/**
-	 * Filter the value for checkbox via input and id (enabled/disabled)
-	 *
-	 * @since  1.1.6
-	 * @access public
-	 * @param int $input The whole input array
-	 * @param string $id The ID of the option
-	 * @return bool Filtered value
-	 */
-	public static function parse_onoff( $input, $id )
-	{
-		return isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
-	}
-
-	/**
-	 * Filter the value for checkbox (enabled/disabled)
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 * @param int $val The checkbox value
-	 * @return bool Filtered value
-	 */
-	public static function is_checked( $val )
-	{
-		$val = intval( $val ) ;
-
-		if( $val === self::VAL_ON ) {
-			return true ;
-		}
-
-		return false ;
-	}
-
-	/**
 	 * Filter the value for radio (enabled/disabled/notset)
 	 *
 	 * @since  1.1.0
