@@ -104,7 +104,7 @@ class WooCommerce extends Instance
 		}
 
 		if ( is_admin() ) {
-			API::hook_purge_post( array( $this, 'backend_purge' ) ) ;
+			add_action('litespeed_api_purge_post', array( $this, 'backend_purge' ) ) ;//todo
 			add_action( 'delete_term_relationships', array( $this, 'delete_rel' ), 10, 2 ) ;
 			add_action( 'litespeed_settings_tab', array( $this, 'settings_add_tab' ) );
 			add_action( 'litespeed_settings_content', array( $this, 'settings_add_content' ) );

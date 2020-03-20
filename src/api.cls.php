@@ -95,6 +95,7 @@ class API extends Base
 		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> Action `litespeed_purge_private`
 		add_action( 'litespeed_purge_private_esi', __NAMESPACE__ . '\Purge::add_private_esi' );
 		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // API::purge_private_all() -> Action `litespeed_purge_private_all`
+		// API::hook_purge_post($hook) -> Action `litespeed_api_purge_post` // Triggered when purge a post
 
 		/**
 		 * ESI
@@ -235,17 +236,6 @@ class API extends Base
 	public static function vary_append_commenter()
 	{
 		Vary::get_instance()->append_commenter() ;
-	}
-
-	/**
-	 * Hook purge post action to purge
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_purge_post($hook)
-	{
-		add_action('litespeed_api_purge_post', $hook) ;
 	}
 
 	/**
