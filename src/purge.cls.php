@@ -59,7 +59,7 @@ class Purge extends Base
 			// 'save_post',
 			'delete_post',
 			'wp_trash_post',
-			'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
 			// 'wp_update_comment_count', // TODO: check if needed for non ESI
 		);
 		foreach ( $purge_post_events as $event ) {
@@ -67,8 +67,26 @@ class Purge extends Base
 			add_action( $event, __CLASS__ . '::purge_post' );
 		}
 
+		// Purge post only when status is/was publish
+		add_action( 'transition_post_status', __CLASS__ . '::purge_publish', 10, 3 );
+
 		add_action( 'wp_update_comment_count', __CLASS__ . '::purge_feeds' ) ;
 
+	}
+
+	/**
+	 * Only purge publish related status post
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public static function purge_publish( $new_status, $old_status, $post )
+	{
+		if ( $new_status != 'publish' && $old_status != 'publish' ) {
+			return;
+		}
+
+		self::purge_post( $post->ID );
 	}
 
 	/**
@@ -931,13 +949,10 @@ class Purge extends Base
 	 *
 	 * If the purge all pages configuration is set, all pages will be purged.
 	 *
-	 * This includes site wide post types (e.g. front page) as well as
-	 * any third party plugin specific post tags.
+	 * This includes site wide post types (e.g. front page) as well as any third party plugin specific post tags.
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @param integer $post_id The id of the post about to be purged.
-	 * @return array The list of purge tags correlated with the post.
 	 */
 	private function _get_purge_tags_by_post( $post_id )
 	{

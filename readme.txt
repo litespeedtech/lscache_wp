@@ -332,7 +332,8 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.
 * 🕷️ Manually changed the priority of mobile and WebP. (@rafaucau)
 * **Browser** Larger Browser Cache TTL for Google Page Score improvement. (@max2348)
-* **Task** Cron refactored. Disabled cron will not show in cron list anymore.
+* **Task** Task refactored. Disabled cron will not show in cron list anymore.
+* **Task** Speed up task load speed.
 * **ESI** Added Bloom nonce to ESI for Elegant Themes.
 * **GUI** Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * **Cloud** Able to redetect cloud nodes now.
@@ -350,11 +351,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **GUI** Localized vue.js to avoid CloudFlare cookie. (@politicske)
 * **GUI** Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
 * **GUI** Displayed TTL range below the corresponding setting.
-* Speed up task.cls load speed.
 * CDN settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
 * **OPcache** Purged all opcache when updating cache file. (@closte #170)
 * **CLI** CLI cmd renamed.
 * **CLI** Well-formated table to show all options.
+* **Purge** Only purge publish status related posts to avoid continual unnecessary draft purges. (@Jakub Knytl)
 * Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
 * Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
 * Crawler cookie now support `_null` as empty value.
