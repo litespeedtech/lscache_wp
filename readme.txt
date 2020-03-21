@@ -366,7 +366,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
 * **GUI** human readable seconds. (@MarkCanada)
 * **3rd** Default added parallax-image to webp replacement for BB.
-* API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one.*
+* API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one. Same for ESI blocks.* ESI shortcode doesn't change.
 * **API** New hook `litespeed_update_confs` to settings update.
 * **API** New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
 * **API** Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly

@@ -3,15 +3,10 @@
  * The Third Party integration with the NextGen Gallery plugin.
  *
  * @since		1.0.5
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty ;
 
 defined( 'WPINC' ) || exit ;
-
-use \LiteSpeed\API ;
 
 // Try preload instead
 // todo: need test

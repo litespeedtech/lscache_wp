@@ -3,15 +3,10 @@
  * The Third Party integration with the WPTouch Mobile plugin.
  *
  * @since		1.0.7
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
-
-use \LiteSpeed\API ;
+defined( 'WPINC' ) || exit;
 
 class WpTouch
 {

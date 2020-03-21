@@ -68,7 +68,7 @@ class WooCommerce extends Instance
 		$this->_option_append() ;
 
 		$this->cache_cart = apply_filters( 'litespeed_conf', self::O_WOO_CACHE_CART ) ;
-		$this->esi_eanbled = API::esi_enabled() ;
+		$this->esi_eanbled = apply_filters( 'litespeed_esi_status', false );
 
 		add_action( 'litespeed_control_finalize', array( $this, 'set_control' ) );
 		add_action( 'litespeed_tag_finalize', array( $this, 'set_tag' ) );
@@ -81,16 +81,16 @@ class WooCommerce extends Instance
 
 		if ( $this->esi_eanbled ) {
 			if ( function_exists( 'is_shop' ) && ! is_shop() ) {
-				API::hook_tpl_not_esi( array( $this, 'set_block_template' ) ) ;
+				add_action( 'litespeed_tpl_normal', array( $this, 'set_block_template' ) );
 				// No need for add-to-cart button
-				// API::hook_tpl_esi( 'wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
+				// add_action( 'litespeed_esi_load-wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
 
-				API::hook_tpl_esi( 'storefront-cart-header', array( $this, 'load_cart_header' ) ) ;
-				API::hook_tpl_esi( 'widget', array( $this, 'register_post_view' ) ) ;
+				add_action( 'litespeed_esi_load-storefront-cart-header', array( $this, 'load_cart_header' ) );
+				add_action( 'litespeed_esi_load-widget', array( $this, 'register_post_view' ) );
 			}
 
 			if ( function_exists( 'is_product' ) && is_product() ) {
-				API::hook_esi_param( array( $this, 'add_post_id' ) ) ;
+				add_filter( 'litespeed_esi_params', array( $this, 'add_post_id' ), 10, 2 );
 			}
 
 			/**
@@ -98,7 +98,7 @@ class WooCommerce extends Instance
 			 * Call when template_include to make sure woo cart is initialized
 			 * @since  1.7.2
 			 */
-			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
+			add_action( 'template_include', array( $this, 'check_if_need_esi' ) );
 			add_filter( 'litespeed_vary', array( $this, 'vary_maintain' ) );
 
 		}
@@ -108,7 +108,7 @@ class WooCommerce extends Instance
 			add_action( 'delete_term_relationships', array( $this, 'delete_rel' ), 10, 2 ) ;
 			add_action( 'litespeed_settings_tab', array( $this, 'settings_add_tab' ) );
 			add_action( 'litespeed_settings_content', array( $this, 'settings_add_content' ) );
-			API::hook_widget_default_options( array( $this, 'wc_widget_default' ), 10, 2 ) ;
+			add_filter( 'litespeed_widget_default_options', array( $this, 'wc_widget_default' ), 10, 2 );
 		}
 
 		// Purge cart if is ESI / Purge private if not enabled ESI
@@ -166,11 +166,11 @@ class WooCommerce extends Instance
 	public function check_if_need_esi( $template )
 	{
 		if (  $this->vary_needed() ) {
-			do_action( 'litespeed_debug', 'API: 3rd woo added ESI' ) ;
-			API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
+			do_action( 'litespeed_debug', 'API: 3rd woo added ESI' );
+			add_action( 'litespeed_tpl_normal', array( $this, 'set_swap_header_cart' ) );
 		}
 
-		return $template ;
+		return $template;
 
 	}
 
@@ -215,11 +215,9 @@ class WooCommerce extends Instance
 
 	/**
 	 * Hooked to the litespeed_is_not_esi_template action.
-	 * If the request is not an esi request, I want to set my own hook
-	 * in woocommerce_before_template_part to see if it's something I can ESI.
+	 * If the request is not an esi request, I want to set my own hook in woocommerce_before_template_part to see if it's something I can ESI.
 	 *
 	 * @since 1.1.0
-	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
 	public function set_block_template()
@@ -249,19 +247,12 @@ class WooCommerce extends Instance
 
 	/**
 	 * Hooked to the woocommerce_before_template_part action.
-	 * Checks if the template contains 'add-to-cart'. If so, and if I
-	 * want to ESI the request, block it and build my esi code block.
+	 * Checks if the template contains 'add-to-cart'. If so, and if I want to ESI the request, block it and build my esi code block.
 	 *
 	 * The function parameters will be passed to the esi request.
 	 *
 	 * @since 1.1.0
-	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @global type $post Needed for post id
-	 * @param type $template_name
-	 * @param type $template_path
-	 * @param type $located
-	 * @param type $args
 	 */
 	public function block_template($template_name, $template_path, $located, $args)
 	{
@@ -274,6 +265,12 @@ class WooCommerce extends Instance
 			return ;
 		}
 		return ;
+
+
+
+
+							// todo: wny not use?
+
 		global $post ;
 		$params = array(
 			self::ESI_PARAM_ARGS => $args,
@@ -284,8 +281,8 @@ class WooCommerce extends Instance
 		) ;
 		add_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ) ) ;
 		add_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999) ;
-		echo API::esi_url('wc-add-to-cart-form', 'WC_CART_FORM', $params) ;
-		echo API::clean_wrapper_begin() ;
+		echo apply_filters( 'litespeed_esi_url', 'wc-add-to-cart-form', 'WC_CART_FORM', $params );
+		echo apply_filters( 'litespeed_clean_wrapper_begin', '' );
 	}
 
 	/**
@@ -302,7 +299,7 @@ class WooCommerce extends Instance
 		if ( ! empty($template_name) && strpos($template_name, 'add-to-cart') === false ) {
 			return ;
 		}
-		echo API::clean_wrapper_end() ;
+		echo apply_filters( 'litespeed_clean_wrapper_end', '' );
 		remove_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ) ) ;
 		remove_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999) ;
 	}
@@ -357,11 +354,11 @@ class WooCommerce extends Instance
 	 */
 	public function esi_cart_header()
 	{
-		echo API::esi_url( 'storefront-cart-header', 'STOREFRONT_CART_HEADER' ) ;
+		echo apply_filters( 'litespeed_esi_url', 'storefront-cart-header', 'STOREFRONT_CART_HEADER' );
 	}
 
 	/**
-	 * Hooked to the litespeed_load_esi_block-storefront-cart-header action.
+	 * Hooked to the litespeed_esi_load-storefront-cart-header action.
 	 * Generates the cart header for esi display.
 	 *
 	 * @since 1.1.0
@@ -370,11 +367,11 @@ class WooCommerce extends Instance
 	 */
 	public function load_cart_header()
 	{
-		storefront_header_cart() ;
+		storefront_header_cart();
 	}
 
 	/**
-	 * Hooked to the litespeed_load_esi_block-wc-add-to-cart-form action.
+	 * Hooked to the litespeed_esi_load-wc-add-to-cart-form action.
 	 * Parses the esi input parameters and generates the add to cart form
 	 * for esi display.
 	 *
@@ -428,23 +425,20 @@ class WooCommerce extends Instance
 	/**
 	 * Adds the post id to the widget ESI parameters for the Recently Viewed widget.
 	 *
-	 * This is needed in the esi request to update the cookie properly.
+	 * This is needed in the ESI request to update the cookie properly.
 	 *
 	 * @since 1.1.0
-	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param array $params The current ESI parameters.
-	 * @return array The updated esi parameters.
 	 */
 	public function add_post_id( $params, $block_id )
 	{
 		if ( $block_id == 'widget' ) {
 			if ( $params[ API::PARAM_NAME ] == 'WC_Widget_Recently_Viewed' ) {
-				$params[ self::ESI_PARAM_POSTID ] = get_the_ID() ;
+				$params[ self::ESI_PARAM_POSTID ] = get_the_ID();
 			}
 		}
 
-		return $params ;
+		return $params;
 	}
 
 	/**
@@ -454,27 +448,23 @@ class WooCommerce extends Instance
 	 * This function will set it to enable and no cache by default.
 	 *
 	 * @since 1.1.0
-	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param array $options The current default widget options.
-	 * @param type $widget The current widget to configure.
-	 * @return array The updated default widget options.
 	 */
-	public function wc_widget_default($options, $widget)
+	public function wc_widget_default( $options, $widget )
 	{
-		if ( ! is_array($options) ) {
-			return $options ;
+		if ( ! is_array( $options ) ) {
+			return $options;
 		}
-		$widget_name = get_class($widget) ;
+		$widget_name = get_class( $widget ) ;
 		if ( $widget_name === 'WC_Widget_Recently_Viewed' ) {
-			$options[API::WIDGET_O_ESIENABLE] = API::VAL_ON2 ;
-			$options[API::WIDGET_O_TTL] = 0 ;
+			$options[ API::WIDGET_O_ESIENABLE ] = API::VAL_ON2;
+			$options[ API::WIDGET_O_TTL ] = 0;
 		}
 		elseif ( $widget_name === 'WC_Widget_Recent_Reviews' ) {
-			$options[API::WIDGET_O_ESIENABLE] = API::VAL_ON ;
-			$options[API::WIDGET_O_TTL] = 86400 ;
+			$options[ API::WIDGET_O_ESIENABLE ] = API::VAL_ON;
+			$options[ API::WIDGET_O_TTL ] = 86400;
 		}
-		return $options ;
+		return $options;
 	}
 
 	/**

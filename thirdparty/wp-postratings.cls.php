@@ -3,15 +3,10 @@
  * The Third Party integration with the WP-PostRatings plugin.
  *
  * @since		1.1.1
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 
 defined( 'WPINC' ) || exit;
-
-use \LiteSpeed\API;
 
 class WP_PostRatings
 {

@@ -8,8 +8,6 @@ namespace LiteSpeed\Thirdparty;
 
 defined( 'WPINC' ) || exit;
 
-use \LiteSpeed\API;
-
 class User_Switching
 {
 	public static function detect()

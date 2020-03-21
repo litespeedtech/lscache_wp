@@ -55,10 +55,9 @@ class Core extends Instance
 
 		/**
 		 * Load API hooks
-		 *
 		 * @since  3.0
 		 */
-		API::init();
+		API::get_instance()->init();
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
@@ -72,7 +71,6 @@ class Core extends Instance
 		/**
 		 * Register plugin activate/deactivate/uninstall hooks
 		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		 *
 		 * @since  2.7.1	Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {

@@ -3,16 +3,12 @@
  * The Third Party integration with the bbPress plugin.
  *
  * @since		1.0.5
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use \LiteSpeed\API ;
-use \LiteSpeed\Router ;
+use \LiteSpeed\Router;
 
 class BBPress
 {
@@ -25,8 +21,8 @@ class BBPress
 	public static function detect()
 	{
 		if ( function_exists( 'is_bbpress' ) ) {
-			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge' ) ;//todo
-			if ( Router::esi_enabled() ) {// don't consider private cache yet (will do if any feedback)
+			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge' );//todo
+			if ( apply_filters( 'litespeed_esi_status', false ) ) {// don't consider private cache yet (will do if any feedback)
 				add_action( 'litespeed_control_finalize', __CLASS__ . '::set_control' );
 			}
 		}
@@ -41,7 +37,7 @@ class BBPress
 	public static function set_control()
 	{
 		if ( ! apply_filters( 'litespeed_control_cacheable', false ) ) {
-			return ;
+			return;
 		}
 
 		// set non ESI public
@@ -80,7 +76,7 @@ class BBPress
 			}
 		}
 
-		global $wp_widget_factory ;
+		global $wp_widget_factory;
 		if ( bbp_is_reply( $post_id ) && ! is_null( $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ] ) ) {
 			do_action( 'litespeed_purge_widget', $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ]->id );
 		}

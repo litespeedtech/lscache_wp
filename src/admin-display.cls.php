@@ -486,15 +486,12 @@ class Admin_Display extends Base
 	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
 	 * This will append the esi on/off selector and ttl text.
 	 *
-	 * @access public
 	 * @since 1.1.0
-	 * @param type $widget
-	 * @param type $return
-	 * @param type $instance
+	 * @access public
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		require LSCWP_DIR . 'tpl/esi_widget_edit.php' ;
+		require LSCWP_DIR . 'tpl/esi_widget_edit.php';
 	}
 
 	/**

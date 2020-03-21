@@ -36,6 +36,18 @@ class API extends Base
 	const WIDGET_O_ESIENABLE =	ESI::WIDGET_O_ESIENABLE ;
 	const WIDGET_O_TTL =			ESI::WIDGET_O_TTL ;
 
+	protected static $_instance;
+
+	/**
+	 * Instance
+	 *
+	 * @since  3.0
+	 * @access protected
+	 */
+	protected function __construct()
+	{
+	}
+
 	/**
 	 * Define hooks to be used in other plugins.
 	 *
@@ -43,7 +55,7 @@ class API extends Base
 	 *
 	 * @since  3.0
 	 */
-	public static function init()
+	public function init()
 	{
 		/**
 		 * Init
@@ -101,7 +113,12 @@ class API extends Base
 		 * ESI
 		 */
 		// API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) -> Action `litespeed_nonce`
-
+		add_filter( 'litespeed_esi_status', __NAMESPACE__ . '\Router::esi_enabled' ); // API::esi_enabled() -> Filter `litespeed_esi_status` // Get ESI enable status
+		add_filter( 'litespeed_esi_url', __NAMESPACE__ . '\ESI::sub_esi_block', 10, 8 ); // API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false ) // Generate ESI block url
+		// API::hook_widget_default_options( $hook ) -> Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd
+		// API::hook_esi_param( $hook ) -> Filter `litespeed_esi_params`
+		// API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template` -> Action `litespeed_tpl_normal`
+		// API::hook_tpl_esi($block, $hook) -> Action `litespeed_esi_block-$block` // add_action( 'litespeed_esi_load-' . $block, $hook )
 
 		/**
 		 * Vary
@@ -116,12 +133,21 @@ class API extends Base
 		add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
 
 		/**
+		 * GUI
+		 */
+		// API::clean_wrapper_begin( $counter = false ) -> Filter `litespeed_clean_wrapper_begin` // Start a to-be-removed html wrapper
+		add_filter( 'litespeed_clean_wrapper_begin', __NAMESPACE__ . '\GUI::clean_wrapper_begin' );
+		// API::clean_wrapper_end( $counter = false ) -> Filter `litespeed_clean_wrapper_end` // End a to-be-removed html wrapper
+		add_filter( 'litespeed_clean_wrapper_end', __NAMESPACE__ . '\GUI::clean_wrapper_end' );
+
+		/**
 		 * Mist
 		 */
 		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> Action `litespeed_debug`
 		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> Action `litespeed_debug2`
+		add_action( 'litespeed_disable_all', array( $this, '_disable_all' ) ); // API::disable_all( $reason ) -> Action `litespeed_disable_all`
 
-		add_action( 'litspeed_after_admin_init', __CLASS__ . '::after_admin_init' );
+		add_action( 'litspeed_after_admin_init', array( $this, '_after_admin_init' ) );
 	}
 
 	/**
@@ -130,7 +156,7 @@ class API extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function after_admin_init()
+	public function _after_admin_init()
 	{
 		/**
 		 * GUI
@@ -142,38 +168,16 @@ class API extends Base
 	}
 
 	/**
-	 * Disable All
+	 * Disable All (Note: Not for direct call, always use Hooks)
 	 *
 	 * @since 2.9.7.2
 	 * @access public
 	 */
-	public static function disable_all( $reason )
+	public function _disable_all( $reason )
 	{
 		do_action( 'litespeed_debug', '[API] Disabled_all due to ' . $reason );
 
-		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
-	}
-
-	/**
-	 * Start a to-be-removed html wrapper
-	 *
-	 * @since 1.4
-	 * @access public
-	 */
-	public static function clean_wrapper_begin( $counter = false )
-	{
-		return GUI::clean_wrapper_begin( $counter ) ;
-	}
-
-	/**
-	 * End a to-be-removed html wrapper
-	 *
-	 * @since 1.4
-	 * @access public
-	 */
-	public static function clean_wrapper_end( $counter = false )
-	{
-		return GUI::clean_wrapper_end( $counter ) ;
+		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true );
 	}
 
 	/**
@@ -236,98 +240,6 @@ class API extends Base
 	public static function vary_append_commenter()
 	{
 		Vary::get_instance()->append_commenter() ;
-	}
-
-	/**
-	 * Hook not ESI template
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_tpl_not_esi($hook)
-	{
-		add_action('litespeed_is_not_esi_template', $hook) ;
-	}
-
-	/**
-	 * Hook ESI template block
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_tpl_esi($block, $hook)
-	{
-		add_action('litespeed_load_esi_block-' . $block, $hook) ;
-	}
-
-	/**
-	 * Hook ESI params
-	 *
-	 * @since 1.1.3
-	 * @since  2.9.8.1 Changed hook name and params
-	 * @access public
-	 */
-	public static function hook_esi_param( $hook, $priority = 10, $args = 2 )
-	{
-		add_filter( 'litespeed_esi_params', $hook, $priority, $args ) ;
-	}
-
-	/**
-	 * Hook widget default settings value
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_widget_default_options($hook, $priority = 10, $args = 1)
-	{
-		add_filter('litespeed_widget_default_options', $hook, $priority, $args) ;
-	}
-
-	/**
-	 * Generate ESI block url
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @param string $control Cache control tag
-	 */
-	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
-	{
-		if ( $control === 'default' ) {
-			$control = 'private,no-vary' ;
-		}
-		return ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_val ) ;
-	}
-
-	/**
-	 * Get ESI enable setting value
-	 *
-	 * @since 1.2.0
-	 * @access public
-	 */
-	public static function esi_enabled()
-	{
-		return Router::esi_enabled() ;
-	}
-
-	/**
-	 * Get cache enable setting value
-	 *
-	 * @since 1.3
-	 * @access public
-	 */
-	public static function cache_enabled()
-	{
-		return defined( 'LITESPEED_ON' ) ;
-	}
-
-	/**
-	 * Hook to check if need to bypass CDN or not
-	 *
-	 * @since  3.0
-	 */
-	public static function hook_can_cdn( $hook )
-	{
-		add_filter( 'litespeed_can_cdn', $hook ) ;
 	}
 
 }

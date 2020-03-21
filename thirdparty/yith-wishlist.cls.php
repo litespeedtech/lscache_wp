@@ -11,8 +11,6 @@ namespace LiteSpeed\Thirdparty ;
 
 defined( 'WPINC' ) || exit ;
 
-use \LiteSpeed\API ;
-
 class Yith_Wishlist
 {
 	const ESI_PARAM_ATTS = 'yith_wcwl_atts' ;
@@ -30,9 +28,9 @@ class Yith_Wishlist
 		if ( ! defined( 'WOOCOMMERCE_VERSION' ) || ! defined( 'YITH_WCWL' ) ) {
 			return ;
 		}
-		if ( API::esi_enabled() ) {
-			API::hook_tpl_not_esi( __CLASS__ . '::is_not_esi' ) ;
-			API::hook_tpl_esi( 'yith-wcwl-add', __CLASS__ . '::load_add_to_wishlist' ) ;
+		if ( apply_filters( 'litespeed_esi_status', false ) ) {
+			add_action( 'litespeed_tpl_normal', __CLASS__ . '::is_not_esi' );
+			add_action( 'litespeed_esi_load-yith_wcwl_add', __CLASS__ . '::load_add_to_wishlist' );
 
 			// hook to add/delete wishlist
 			add_action( 'yith_wcwl_added_to_wishlist', __CLASS__ . '::purge' ) ;
@@ -48,7 +46,7 @@ class Yith_Wishlist
 	 */
 	public static function purge()
 	{
-		do_action( 'litespeed_purge_esi', 'yith-wcwl-add' );
+		do_action( 'litespeed_purge_esi', 'yith_wcwl_add' );
 	}
 
 	/**
@@ -85,11 +83,11 @@ class Yith_Wishlist
 		$params = array(
 			self::ESI_PARAM_POSTID => $post->ID,
 		) ;
-		return API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
+		return apply_filters( 'litespeed_esi_url', 'yith_wcwl_add', 'YITH ADD TO WISHLIST', $params );
 	}
 
 	/**
-	 * Hooked to the litespeed_load_esi_block-yith-wcwl-add action.
+	 * Hooked to the litespeed_esi_load-yith_wcwl_add action.
 	 *
 	 * This will load the add to wishlist button html for output.
 	 *

@@ -3,15 +3,10 @@
  * The Third Party integration with the WP-Polls plugin.
  *
  * @since		1.0.7
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
-
-use \LiteSpeed\API ;
+defined( 'WPINC' ) || exit;
 
 // todo: need test
 
@@ -19,8 +14,8 @@ class Wp_Polls
 {
 	public static function detect()
 	{
-		add_filter( 'wp_polls_display_pollvote', __CLASS__ . '::set_control' ) ;
-		add_filter( 'wp_polls_display_pollresult', __CLASS__ . '::set_control' ) ;
+		add_filter( 'wp_polls_display_pollvote', __CLASS__ . '::set_control' );
+		add_filter( 'wp_polls_display_pollresult', __CLASS__ . '::set_control' );
 	}
 
 	public static function set_control()

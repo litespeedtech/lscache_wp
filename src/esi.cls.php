@@ -260,12 +260,12 @@ class ESI extends Instance
 		add_action( 'rest_api_init', array( $this, 'load_esi_block' ), 101 ) ;
 
 		// Register ESI blocks
-		add_action('litespeed_load_esi_block-widget', array($this, 'load_widget_block')) ;
-		add_action('litespeed_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
-		add_action('litespeed_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
+		add_action('litespeed_esi_load-widget', array($this, 'load_widget_block')) ;
+		add_action('litespeed_esi_load-admin-bar', array($this, 'load_admin_bar_block')) ;
+		add_action('litespeed_esi_load-comment-form', array($this, 'load_comment_form_block')) ;
 
-		add_action('litespeed_load_esi_block-nonce', array( $this, 'load_nonce_block' ) ) ;
-		add_action('litespeed_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
+		add_action('litespeed_esi_load-nonce', array( $this, 'load_nonce_block' ) ) ;
+		add_action('litespeed_esi_load-esi', array( $this, 'load_esi_shortcode' ) ) ;
 	}
 
 	/**
@@ -285,8 +285,8 @@ class ESI extends Instance
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}
-		$this->register_not_esi_actions() ;
-		return $template ;
+		$this->_register_not_esi_actions();
+		return $template;
 	}
 
 	/**
@@ -294,11 +294,11 @@ class ESI extends Instance
 	 * Specifically when the page is NOT an esi page.
 	 *
 	 * @since    1.1.3
-	 * @access   public
+	 * @access   private
 	 */
-	public function register_not_esi_actions()
+	private function _register_not_esi_actions()
 	{
-		do_action('litespeed_is_not_esi_template') ;
+		do_action( 'litespeed_tpl_normal' );
 
 		if ( ! Control::is_cacheable() ) {
 			return ;
@@ -355,7 +355,7 @@ class ESI extends Instance
 			$params[ 'is_json' ] = 1 ;
 		}
 
-		$params = apply_filters( 'litespeed_esi_params', $params, $block_id ) ;
+		$params = apply_filters( 'litespeed_esi_params', $params, $block_id );
 		$control = apply_filters('litespeed_esi_control', $control, $block_id ) ;
 
 		if ( !is_array($params) || !is_string($control) ) {
@@ -528,7 +528,7 @@ class ESI extends Instance
 			}
 		}
 
-		do_action('litespeed_load_esi_block-' . LSCACHE_IS_ESI, $params) ;
+		do_action('litespeed_esi_load-' . LSCACHE_IS_ESI, $params) ;
 	}
 
 // BEGIN helper functions
@@ -540,9 +540,6 @@ class ESI extends Instance
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $options The current options selected.
-	 * @param WP_Widget $widget The widget to be configured.
-	 * @return array The updated options.
 	 */
 	public static function widget_default_options($options, $widget)
 	{

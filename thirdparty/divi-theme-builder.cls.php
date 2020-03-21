@@ -3,15 +3,10 @@
  * The Third Party integration with DIVI Theme.
  *
  * @since		2.9.0
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 
 defined( 'WPINC' ) || exit;
-
-use \LiteSpeed\API;
 
 class Divi_Theme_Builder
 {
@@ -27,7 +22,7 @@ class Divi_Theme_Builder
 	{
 		if ( ! function_exists( 'et_setup_theme' ) ) return;
 		if ( ! empty( $_GET[ 'et_fb' ] ) || ! empty( $_GET[ 'et_pb_preview' ] ) ) {
-			API::disable_all( 'divi edit mode' );
+			do_action( 'litespeed_disable_all', 'divi edit mode' );
 		}
 	}
 
