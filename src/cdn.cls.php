@@ -275,7 +275,7 @@ class CDN extends Instance
 	 */
 	private function _replace_file_types()
 	{
-		preg_match_all( '#(src|data-src|href)\s*=\s*[\'"]([^\'"\\\]+)[\'"]#i', $this->content, $matches ) ;
+		preg_match_all( '#(src|data-src|href|poster)\s*=\s*[\'"]([^\'"\\\]+)[\'"]#i', $this->content, $matches ) ;
 		if ( empty( $matches[ 2 ] ) ) {
 			return ;
 		}
