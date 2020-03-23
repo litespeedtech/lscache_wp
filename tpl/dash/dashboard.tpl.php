@@ -78,10 +78,10 @@ $placeholder_summary = Placeholder::get_summary();
 				}
 
 				if ( $svc == 'cdn' ) {
-					$used = Utility::real_size( $used * 1024 * 1024 );
-					$quota = Utility::real_size( $quota * 1024 * 1024 );
-					$pag_used = Utility::real_size( $pag_used * 1024 * 1024 );
-					$pag_total = Utility::real_size( $pag_total * 1024 * 1024 );
+					$used = Utility::real_size( $used * 1000000 * 100, true );
+					$quota = Utility::real_size( $quota * 1000000 * 100, true );
+					$pag_used = Utility::real_size( $pag_used * 1000000 * 100, true );
+					$pag_total = Utility::real_size( $pag_total * 1000000 * 100, true );
 				}
 			}
 

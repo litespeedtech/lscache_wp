@@ -250,7 +250,6 @@ class Utility extends Instance
 	 *
 	 * @since  1.6
 	 * @access public
-	 * @return string
 	 */
 	public static function arr2str( $arr )
 	{
@@ -266,23 +265,24 @@ class Utility extends Instance
 	 *
 	 * @since  1.6
 	 * @access public
-	 * @return string
 	 */
-	public static function real_size( $filesize )
+	public static function real_size( $filesize, $is_1000 = false )
 	{
-		if ( $filesize >= 1073741824 ) {
-			$filesize = round( $filesize / 1073741824 * 100 ) / 100 . 'G' ;
+		$unit = $is_1000 ? 1000 : 1024;
+
+		if ( $filesize >= pow( $unit, 3 ) ) {
+			$filesize = round( $filesize / pow( $unit, 3 ) * 100 ) / 100 . 'G';
 		}
-		elseif ( $filesize >= 1048576 ) {
-			$filesize = round( $filesize / 1048576 * 100 ) / 100 . 'M' ;
+		elseif ( $filesize >= pow( $unit, 2 ) ) {
+			$filesize = round( $filesize / pow( $unit, 2 ) * 100 ) / 100 . 'M';
 		}
-		elseif ( $filesize >= 1024 ) {
-			$filesize = round( $filesize / 1024 * 100 ) / 100 . 'K' ;
+		elseif ( $filesize >= $unit ) {
+			$filesize = round( $filesize / $unit * 100 ) / 100 . 'K';
 		}
 		else {
-			$filesize = $filesize . 'B' ;
+			$filesize = $filesize . 'B';
 		}
-		return $filesize ;
+		return $filesize;
 	}
 
 	/**
