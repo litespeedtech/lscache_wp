@@ -355,7 +355,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **OPcache** Purged all opcache when updating cache file. (@closte #170)
 * **CLI** CLI cmd renamed.
 * **CLI** Well-formated table to show all options.
-* **Purge** Only purge publish status related posts to avoid continual unnecessary draft purges. (@Jakub Knytl)
+* **Purge** Only purge related posts that have a status of "published" to avoid unnecessary "draft" purges. (@Jakub Knytl)
 * Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
 * Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
 * Crawler cookie now support `_null` as empty value.
