@@ -958,6 +958,23 @@ class Admin_Display extends Base
 	}
 
 	/**
+	 * Validate if the htaccess path is valid
+	 *
+	 * @since  3.0
+	 */
+	protected function _validate_htaccess_path( $id )
+	{
+		$val = Conf::val( $id, true );
+		if ( ! $val ) {
+			return;
+		}
+
+		if ( substr( $val, -10 ) !== '/.htaccess' ) {
+			echo '<br /><font class="litespeed-warning"> ❌ ' . sprintf( __( 'Path must end with %s', 'litespeed-cache' ), '<code>/.htaccess</code>' ) . '</font>';
+		}
+	}
+
+	/**
 	 * Check ttl instead of error when saving
 	 *
 	 * @since  3.0

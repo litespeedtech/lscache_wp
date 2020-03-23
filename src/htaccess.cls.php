@@ -853,8 +853,6 @@ class Htaccess extends Instance
 	 * Generate rules plain data for manual insert
 	 *
 	 * @since  1.1.5
-	 * @param  array  $rules
-	 * @return array        final rules data for htaccess
 	 */
 	private function _wrap_rules_with_marker( $rules, $marker = false )
 	{
@@ -879,7 +877,6 @@ class Htaccess extends Instance
 	 *
 	 * @since 1.0.4
 	 * @access public
-	 * @param  string  $clear_all	Deactivation will give true, so clear all rules, otherwise only clear lscache related rules.
 	 */
 	public function clear_rules()
 	{

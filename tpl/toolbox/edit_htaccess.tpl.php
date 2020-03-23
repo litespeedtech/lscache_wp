@@ -65,6 +65,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the frontend .htaccess path.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ); ?></code>
+				<?php $this->_validate_htaccess_path( $id ); ?>
 			</div>
 		</td>
 	</tr>
@@ -79,6 +80,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the backend .htaccess path.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_backend_htaccess( true ); ?></code>
+				<?php $this->_validate_htaccess_path( $id ); ?>
 			</div>
 		</td>
 	</tr>
