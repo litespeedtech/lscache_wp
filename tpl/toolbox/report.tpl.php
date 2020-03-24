@@ -61,7 +61,7 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 		<td>
 			<input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" style="width:500px;" />
 			<?php if ( $has_pswdless_plugin ) : ?>
-				<a href="<?php echo admin_url( 'admin.php?page=litespeed-debug&dologin_gen_link=1' ); ?>" class="button button-secondary"><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></a>
+				<a href="<?php echo admin_url( 'admin.php?page=litespeed-toolbox&dologin_gen_link=1' ); ?>" class="button button-secondary"><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></a>
 			<?php else: ?>
 				<button type="button" class="button button-secondary" disabled><?php echo __( 'Generate Link for Current User', 'litespeed-cache' ) ; ?></button>
 			<?php endif; ?>

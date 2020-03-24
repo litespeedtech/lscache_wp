@@ -43,7 +43,7 @@ class Error
 
 			case 'disabled_all':
 				$msg = sprintf( __( 'The setting %s is currently enabled.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_DEBUG_DISABLE_ALL ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %s>Click here to change</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-debug') . '" ' );
+					' ' . sprintf( __( '<a %s>Click here to change</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-toolbox') . '" ' );
 				break;
 
 			case 'lack_of_api_key':
