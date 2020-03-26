@@ -29,8 +29,13 @@ defined( 'WPINC' ) || exit;
 					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"'); ?>
 
 				<strong><?php echo __('NOTICE', 'litespeed-cache'); ?>: </strong><?php echo __('When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache'); ?>
+
 				<?php if ( $this->_is_multisite ): ?>
 				<br><?php echo __('The network admin setting can be overridden here.', 'litespeed-cache'); ?>
+				<?php endif; ?>
+
+				<?php if ( ! Conf::val( Base::O_CACHE ) && Conf::val( Base::O_CDN_QUIC ) ): ?>
+				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
 				<?php endif; ?>
 			</div>
 		</td>
