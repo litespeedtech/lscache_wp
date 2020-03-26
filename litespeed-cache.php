@@ -130,6 +130,47 @@ if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 }
 
 /**
+ * Overwride the WP nonce funcs outside of LiteSpeed namespace
+ * @since  3.0
+ */
+if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
+	function litespeed_define_nonce_func()
+	{
+		/**
+		 * If the nonce is in none_actions filter, convert it to ESI
+		 */
+		function wp_create_nonce( $action = -1 ) {
+			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) && \LiteSpeed\ESI::get_instance()->is_nonce_action( $action ) ) {
+				$params = array(
+					'action'	=> $action,
+				) ;
+				return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, '', true, true ) ;
+			}
+
+			return wp_create_nonce_litespeed_esi( $action ) ;
+
+		}
+
+		/**
+		 * Ori WP wp_create_nonce
+		 */
+		function wp_create_nonce_litespeed_esi( $action = -1 ) {
+			$user = wp_get_current_user();
+			$uid  = (int) $user->ID;
+			if ( ! $uid ) {
+				/** This filter is documented in wp-includes/pluggable.php */
+				$uid = apply_filters( 'nonce_user_logged_out', $uid, $action );
+			}
+
+			$token = wp_get_session_token();
+			$i     = wp_nonce_tick();
+
+			return substr( wp_hash( $i . '|' . $action . '|' . $uid . '|' . $token, 'nonce' ), -12, 10 );
+		}
+	}
+}
+
+/**
  * Begins execution of the plugin.
  *
  * @since    1.0.0
