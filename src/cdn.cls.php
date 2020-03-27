@@ -275,30 +275,50 @@ class CDN extends Instance
 	 */
 	private function _replace_file_types()
 	{
-		preg_match_all( '#(src|data-src|href|poster)\s*=\s*[\'"]([^\'"\\\]+)[\'"]#i', $this->content, $matches ) ;
-		if ( empty( $matches[ 2 ] ) ) {
-			return ;
-		}
+		$ele_to_check = Conf::val( Base::O_CDN_ATTR );
 
-		$filetypes = array_keys( $this->_cfg_cdn_mapping ) ;
-		foreach ( $matches[ 2 ] as $k => $url ) {
-			$url_parsed = parse_url( $url ) ;
-			if ( empty( $url_parsed[ 'path' ] ) ) {
-				continue ;
-			}
-			$postfix = substr( $url_parsed[ 'path' ], strrpos( $url_parsed[ 'path' ], '.' ) ) ;
-			if ( ! in_array( $postfix, $filetypes ) ) {
-				continue ;
+		foreach ( $ele_to_check as $v ) {
+			if ( ! $v || strpos( $v, '.' ) === false ) {
+				Debug2::debug2( '[CDN] replace setting bypassed: no . attribute ' . $v );
+				continue;
 			}
 
-			Debug2::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
+			Debug2::debug2( '[CDN] replace attribute ' . $v );
 
-			if( ! $url2 = $this->rewrite( $url, Base::CDN_MAPPING_FILETYPE, $postfix ) ) {
-				continue ;
+			$v = explode( '.', $v );
+			$attr = preg_quote( $v[ 1 ], '#' );
+			if ( $v[ 0 ] ) {
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
+			}
+			else {
+				$pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU';
 			}
 
-			$attr = str_replace( $url, $url2, $matches[ 0 ][ $k ] ) ;
-			$this->content = str_replace( $matches[ 0 ][ $k ], $attr, $this->content ) ;
+			preg_match_all( $pattern, $this->content, $matches );
+
+			if ( empty( $matches[ $v[ 0 ] ? 3 : 2 ] ) ) {
+				continue;
+			}
+
+			foreach ( $matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url ) {
+				$url_parsed = parse_url( $url );
+				if ( empty( $url_parsed[ 'path' ] ) ) {
+					continue;
+				}
+				$postfix = substr( $url_parsed[ 'path' ], strrpos( $url_parsed[ 'path' ], '.' ) );
+				if ( ! array_key_exists( $postfix, $this->_cfg_cdn_mapping ) ) {
+					continue;
+				}
+
+				Debug2::debug2( '[CDN] matched file_type ' . $postfix . ' : ' . $url );
+
+				if( ! $url2 = $this->rewrite( $url, Base::CDN_MAPPING_FILETYPE, $postfix ) ) {
+					continue;
+				}
+
+				$attr = str_replace( $url, $url2, $matches[ 0 ][ $k2 ] );
+				$this->content = str_replace( $matches[ 0 ][ $k2 ], $attr, $this->content );
+			}
 		}
 	}
 

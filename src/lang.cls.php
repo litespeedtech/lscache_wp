@@ -199,6 +199,7 @@ class Lang extends Base
 			self::CDN_MAPPING_INC_CSS			=> __( 'Include CSS', 'litespeed-cache' ),
 			self::CDN_MAPPING_INC_JS			=> __( 'Include JS', 'litespeed-cache' ),
 			self::CDN_MAPPING_FILETYPE			=> __( 'Include File Types', 'litespeed-cache' ),
+			self::O_CDN_ATTR					=> __( 'HTML Attribute To Replace', 'litespeed-cache' ),
 			self::O_CDN_ORI						=> __( 'Original URLs', 'litespeed-cache' ),
 			self::O_CDN_ORI_DIR					=> __( 'Included Directories', 'litespeed-cache' ),
 			self::O_CDN_EXC						=> __( 'Exclude Path', 'litespeed-cache' ),

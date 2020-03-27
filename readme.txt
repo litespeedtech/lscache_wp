@@ -325,6 +325,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱 [Health] Page speed and page score now are in dashboard.
 * 🌱 [Conf] Supported consts overwritten of `LITESPEED_CONF__` for all settings. (@menathor)
 * 🌱 [REST] New REST TTL setting.  (@thekendog)
+* 🌱**CDN** New setting `HTML Attribute To Replace`. CDN can now support any HTML attribute to be replaced. (@danushkaj91)
 * 🌱 🐞 Support for multiple domains in custom sitemap. (@alchem)
 * 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🕷️ Able to add single rows to blacklist.
@@ -351,7 +352,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **GUI** Localized vue.js to avoid CloudFlare cookie. (@politicske)
 * **GUI** Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
 * **GUI** Displayed TTL range below the corresponding setting.
-* CDN settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
+* **CDN** settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
 * **OPcache** Purged all opcache when updating cache file. (@closte #170)
 * **CLI** CLI cmd renamed.
 * **CLI** Well-formated table to show all options.

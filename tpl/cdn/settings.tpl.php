@@ -102,7 +102,7 @@ $this->form_action() ;
 				</div>
 
 				<div class="litespeed-col-auto">
-					<label class="litespeed-form-label litespeed-cdn-mapping-col3-title">
+					<label class="litespeed-form-label">
 						<?php $id = Base::CDN_MAPPING_FILETYPE ; ?>
 						<?php $this->title( $id ) ; ?>
 					</label>
@@ -145,6 +145,31 @@ $this->form_action() ;
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#include_file_types' ) ; ?>
 			</div>
 
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_CDN_ATTR; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id, 40 ); ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ); ?>
+				</div>
+			</div>
+
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify which HTML element attributes will be replaced with CDN Mapping.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Only attributes listed here will be replaced.', 'litespeed-cache' ); ?>
+				<br /><?php echo sprintf( __( 'Use the format %1$s or %2$s (element is optional).', 'litespeed-cache' ), '<code>element.attribute</code>', '<code>.attribute</code>' ); ?>
+				<?php Doc::one_per_line(); ?>
+			</div>
 		</td>
 	</tr>
 

@@ -267,7 +267,8 @@ class Base extends Instance
 	const O_CDN_CLOUDFLARE_KEY 	= 'cdn-cloudflare_key' ;
 	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name' ;
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone' ;
-	const O_CDN_MAPPING 		= 'cdn-mapping' ;
+	const O_CDN_MAPPING 		= 'cdn-mapping';
+	const O_CDN_ATTR 			= 'cdn-attr';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
 
@@ -284,11 +285,11 @@ class Base extends Instance
 	const CRWL_COOKIE_NAME 		= 'name' ;
 	const CRWL_COOKIE_VALS 		= 'vals' ;
 
-	const CDN_MAPPING_URL 		= 'url' ;
-	const CDN_MAPPING_INC_IMG 	= 'inc_img' ;
-	const CDN_MAPPING_INC_CSS 	= 'inc_css' ;
-	const CDN_MAPPING_INC_JS 	= 'inc_js' ;
-	const CDN_MAPPING_FILETYPE 	= 'filetype' ;
+	const CDN_MAPPING_URL 		= 'url';
+	const CDN_MAPPING_INC_IMG 	= 'inc_img';
+	const CDN_MAPPING_INC_CSS 	= 'inc_css';
+	const CDN_MAPPING_INC_JS 	= 'inc_js';
+	const CDN_MAPPING_FILETYPE 	= 'filetype';
 
 	const CRWL_DATE_DESC 		= 'date_desc' ;
 	const CRWL_DATE_ASC 		= 'date_asc' ;
@@ -322,6 +323,7 @@ class Base extends Instance
 		self::O_CDN_CLOUDFLARE_NAME,
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
+		self::O_CDN_ATTR,
 	) ;
 
 	public static $CSS_FONT_DISPLAY_SET = array(
@@ -548,6 +550,7 @@ class Base extends Instance
 		self::O_CDN_CLOUDFLARE_NAME => '',
 		self::O_CDN_CLOUDFLARE_ZONE => '',
 		self::O_CDN_MAPPING 		=> array(),
+		self::O_CDN_ATTR 			=> array(),
 
 	) ;
 
