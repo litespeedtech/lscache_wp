@@ -20,7 +20,7 @@ class ESI extends Instance
 	private static $has_esi = false ;
 	private $esi_args = null ;
 	private $_esi_preserve_list = array() ;
-	private $_nonce_actions = array( -1 ) ;
+	private $_nonce_actions = array( -1 => '' ); // val is cache control
 
 	const QS_ACTION = 'lsesi' ;
 	const QS_PARAMS = 'esi' ;
@@ -114,7 +114,12 @@ class ESI extends Instance
 
 		// Load ESI nonces in conf
 		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
-			$this->_nonce_actions = array_merge( $this->_nonce_actions, $nonces );
+			foreach ( $nonces as $action ) {
+				$action = explode( ' ', $action );
+				$control = ! empty( $action[ 1 ] ) ? $action[ 1 ] : '';
+
+				$this->_nonce_actions[ $action[ 0 ] ] = $control;
+			}
 		}
 
 		add_action( 'litespeed_nonce', array( $this, 'nonce_action' ) );
@@ -129,13 +134,16 @@ class ESI extends Instance
 	 */
 	public function nonce_action( $action )
 	{
-		if ( in_array( $action, $this->_nonce_actions ) ) {
-			return ;
+		if ( array_key_exists( $action, $this->_nonce_actions ) ) {
+			return;
 		}
 
-		Debug2::debug( '[ESI] Append nonce action to nonce list [action] ' . $action ) ;
+		Debug2::debug( '[ESI] Append nonce action to nonce list [action] ' . $action );
 
-		$this->_nonce_actions[] = $action ;
+		$action = explode( ' ', $action );
+		$control = ! empty( $action[ 1 ] ) ? $action[ 1 ] : '';
+
+		$this->_nonce_actions[ $action[ 0 ] ] = $control;
 	}
 
 	/**
@@ -145,7 +153,7 @@ class ESI extends Instance
 	 */
 	public function is_nonce_action( $action )
 	{
-		return in_array( $action, $this->_nonce_actions ) ;
+		return array_key_exists( $action, $this->_nonce_actions ) ? $this->_nonce_actions[ $action ] : null;
 	}
 
 	/**

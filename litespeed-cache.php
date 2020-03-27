@@ -140,11 +140,14 @@ if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
 		function wp_create_nonce( $action = -1 ) {
-			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) && \LiteSpeed\ESI::get_instance()->is_nonce_action( $action ) ) {
-				$params = array(
-					'action'	=> $action,
-				) ;
-				return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, '', true, true ) ;
+			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) ) {
+				$control = \LiteSpeed\ESI::get_instance()->is_nonce_action( $action );
+				if ( $control !== null ) {
+					$params = array(
+						'action'	=> $action,
+					) ;
+					return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, $control, true, true ) ;
+				}
 			}
 
 			return wp_create_nonce_litespeed_esi( $action ) ;
