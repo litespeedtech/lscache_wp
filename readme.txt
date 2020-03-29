@@ -366,7 +366,6 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * New API: iframe lazyload exclude filter.
 * Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
 * **GUI** human readable seconds. (@MarkCanada)
-* **3rd** Default added parallax-image to webp replacement for BB.
 * API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one. Same for ESI blocks.* ESI shortcode doesn't change.
 * **API** New hook `litespeed_update_confs` to settings update.
 * **API** New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
@@ -384,9 +383,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * Code base refactored. New namespace LiteSpeed.
 * GUI refactored.
 * **Debug** Report can now append notes.
+* **3rd** Default added parallax-image to webp replacement for BB.
 * **3rd** User Switching plugin compatibility. (@robert Staddon)
 * **3rd** Beaver Builder plugin compatibility with v3.0.0.
 * **3rd** Avada plugin compatibility w/ BBPress. (@pimg)
+* **3rd** WooCommerce PayPal Checkout Gateway compatibility.
 * **Network** Fixed potential timeout issue when containing a large volume of sites. (@alican532)
 * **Debug** `Disable All Features` now will see the warning banner if ON.
 * **Debug** Dropped `log filters` section.

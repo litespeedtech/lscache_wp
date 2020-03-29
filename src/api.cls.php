@@ -60,65 +60,65 @@ class API extends Base
 		/**
 		 * Init
 		 */
-		// API::hook_init( $hook ) -> Action `litespeed_init`
+		// Action `litespeed_init` // @previous API::hook_init( $hook )
 
 		/**
 		 * Conf
 		 */
-		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // API::config($id) -> Filter `litespeed_conf`
-		// API::conf_append( $name, $default ) -> Action `litespeed_conf_append`
+		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // @previous API::config($id)
+		// Action `litespeed_conf_append` // @previous API::conf_append( $name, $default )
 		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2 );
-		// API::force_option( $k, $v ) -> Action ``litespeed_conf_force`
+		// Action ``litespeed_conf_force` // @previous API::force_option( $k, $v )
 
 		/**
 		 * Cache Control Hooks
 		 */
-		// API::hook_control($tags) && action `litespeed_api_control` -> Action `litespeed_control_finalize`
-		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // API::set_cache_private() -> Action `litespeed_control_set_private`
-		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // API::set_nocache( $reason = false ) -> Action `litespeed_control_set_nocache`
-		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // API::set_cacheable( $reason ) -> Action `litespeed_control_set_cacheable` // Might needed if not call hook `wp`
-		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // API::set_force_cacheable( $reason ) -> Action `litespeed_control_force_cacheable` // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
-		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // API::set_force_public( $reason ) -> Action `litespeed_control_force_public` // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
-		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // API::not_cacheable() -> Filter `litespeed_control_cacheable` // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not
-		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // API::set_ttl( $val ) -> Action `litespeed_control_set_ttl`
-		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // API::get_ttl() -> Filter `litespeed_control_ttl`
+		// Action `litespeed_control_finalize` // @previous API::hook_control($tags) && action `litespeed_api_control`
+		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // @previous  API::set_cache_private()
+		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // @previous  API::set_nocache( $reason = false )
+		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // Might needed if not call hook `wp` // @previous API::set_cacheable( $reason )
+		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_cacheable( $reason )
+		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_public( $reason )
+		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not // @previous API::not_cacheable()
+		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // @previous API::set_ttl( $val )
+		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // @previous API::get_ttl()
 
 		/**
 		 * Tag Hooks
 		 */
-		// API::hook_tag( $hook ) -> Action `litespeed_tag_finalize`
-		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // API::tag_add( $tag ) -> Action `litespeed_tag_add`
+		// Action `litespeed_tag_finalize` // @previous API::hook_tag( $hook )
+		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // @previous API::tag_add( $tag )
 		add_action( 'litespeed_tag_add_post', __NAMESPACE__ . '\Tag::add_post' );
 		add_action( 'litespeed_tag_add_widget', __NAMESPACE__ . '\Tag::add_widget' );
-		add_action( 'litespeed_tag_add_private', __NAMESPACE__ . '\Tag::add_private' ); // API::tag_add_private( $tags ) -> Action `litespeed_tag_add_private`
+		add_action( 'litespeed_tag_add_private', __NAMESPACE__ . '\Tag::add_private' ); // @previous API::tag_add_private( $tags )
 		add_action( 'litespeed_tag_add_private_esi', __NAMESPACE__ . '\Tag::add_private_esi' );
 
 		/**
 		 * Purge Hooks
 		 */
-		// API::hook_purge($tags) -> Action `litespeed_purge_finalize`
-		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // API::purge($tags) -> Action `litespeed_purge`
+		// Action `litespeed_purge_finalize` // @previous API::hook_purge($tags)
+		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // @previous API::purge($tags)
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
-		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // API::purge_post( $pid ) -> Action `litespeed_purge_post`
+		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // @previous API::purge_post( $pid )
 		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
 		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
-		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // API::purge_private( $tags ) -> Action `litespeed_purge_private`
+		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // @previous API::purge_private( $tags )
 		add_action( 'litespeed_purge_private_esi', __NAMESPACE__ . '\Purge::add_private_esi' );
-		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // API::purge_private_all() -> Action `litespeed_purge_private_all`
-		// API::hook_purge_post($hook) -> Action `litespeed_api_purge_post` // Triggered when purge a post
+		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // @previous API::purge_private_all()
+		// Action `litespeed_api_purge_post` // Triggered when purge a post // @previous API::hook_purge_post($hook)
 
 		/**
 		 * ESI
 		 */
-		// API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) -> Action `litespeed_nonce`
-		add_filter( 'litespeed_esi_status', __NAMESPACE__ . '\Router::esi_enabled' ); // API::esi_enabled() -> Filter `litespeed_esi_status` // Get ESI enable status
-		add_filter( 'litespeed_esi_url', __NAMESPACE__ . '\ESI::sub_esi_block', 10, 8 ); // API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false ) // Generate ESI block url
-		// API::hook_widget_default_options( $hook ) -> Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd
-		// API::hook_esi_param( $hook ) -> Filter `litespeed_esi_params`
-		// API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template` -> Action `litespeed_tpl_normal`
-		// API::hook_tpl_esi($block, $hook) -> Action `litespeed_esi_block-$block` // add_action( 'litespeed_esi_load-' . $block, $hook )
+		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true )
+		add_filter( 'litespeed_esi_status', __NAMESPACE__ . '\Router::esi_enabled' ); // Get ESI enable status // @previous API::esi_enabled()
+		add_filter( 'litespeed_esi_url', __NAMESPACE__ . '\ESI::sub_esi_block', 10, 8 ); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
+		// Filter `litespeed_esi_params` // @previous API::hook_esi_param( $hook )
+		// Action `litespeed_tpl_normal` // @previous API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template`
+		// Action `litespeed_esi_block-$block` // @usage add_action( 'litespeed_esi_load-' . $block, $hook ) // @previous API::hook_tpl_esi($block, $hook)
 
 		/**
 		 * Vary

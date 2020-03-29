@@ -27,6 +27,7 @@ $third_cls = array(
 	'User_Switching',
 	'WCML',
 	'WooCommerce',
+	'Woo_Paypal',
 	'Wp_Polls',
 	'WP_PostRatings',
 	'Wpdiscuz',
