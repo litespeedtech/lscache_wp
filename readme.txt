@@ -291,41 +291,39 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
 * 🌱 LQIP (Low Quality Image Placeholder).
 * 🌱 New QUIC.cloud API key setting.
-* 🌱 **ESI** New ESI nonce setting.
-* 🌱 Font display optimization. (@Joeee)
-* 🌱 Google font URL display optimization.
-* 🌱 **Img_optm** Supported GIF WebP optimization. (@Lucas Rolff)
-* 🌱 Load Inline JS deferred.
+* 🌱**ESI** New ESI nonce setting.
 * 🌱 JPG quality control. (@geckomist)
-* 🌱 Forced public cache setting. (#308207)
-* 🌱<strong>DB</strong>: Table Engine Converter tool. (@johnny Nguyen)
+* 🌱**Cache** Forced public cache setting. (#308207)
 * 🌱🕷️ New timeout setting to avoid incorrect blacklist addition. (#900171)
 * 🌱 Responsive local svg placeholder.
-* 🌱 Lazy Load Image Parent Class Name Excludes. (@pako69)
-* 🌱 Lazy load iframe class excludes. (@vnnloser)
-* 🌱 Lazy load exclude URIs. (@wordpress_fan1 @aminaz)
-* 🌱 Debug URI includes/excludes setings.
 * 🌱 Frontend & backend .htaccess path customize. (@jon81)
-* 🌱 Database summary: Autoload size. (@JohnnyNguyen)
-* 🌱 Database summary: Autoload entries list.
-* 🌱 Store gravatar locally. (@zzTaLaNo1zz @JohnnyNguyen)
 * 🌱 Gravatar warmup cron.
 * 🌱 Detailed Heartbeat Control (@K9Heaven)
-* 🌱 New `General` menu for global settings.
-* 🌱 New Dashboard menu.
-* 🌱 CLI get single option cmd.
-* 🌱 CLI QUIC.cloud cmd supported.
-* 🌱 [db_optm] Revisions older than. (@thememasterguru)
-* 🌱 [Purge] Purge Stale setting.
-* 🌱 DNS prefetch control setting.
-* 🌱 Cache stats in dashboard.
-* 🌱 New workflow for image optimization (Gather first, request second).
-* 🌱 [Img_optm] The return of Rescan.
-* 🌱 [CLI] CLI can send report now.
-* 🌱 [Health] Page speed and page score now are in dashboard.
-* 🌱 [Conf] Supported consts overwritten of `LITESPEED_CONF__` for all settings. (@menathor)
-* 🌱 [REST] New REST TTL setting.  (@thekendog)
+* 🌱**DB** Table Engine Converter tool. (@johnny Nguyen)
+* 🌱**DB** Database summary: Autoload size. (@JohnnyNguyen)
+* 🌱**DB** Database summary: Autoload entries list.
+* 🌱**DB** Revisions older than. (@thememasterguru)
+* 🌱**Purge** Purge Stale setting.
+* 🌱**Page Optimize** Font display optimization. (@Joeee)
+* 🌱**Page Optimize** Google font URL display optimization.
+* 🌱**Page Optimize** Load Inline JS deferred.
+* 🌱**Page Optimize** Store gravatar locally. (@zzTaLaNo1zz @JohnnyNguyen)
+* 🌱**Page Optimize** DNS prefetch control setting.
+* 🌱**Page Optimize** Lazy Load Image Parent Class Name Excludes. (@pako69)
+* 🌱**Page Optimize** Lazy load iframe class excludes. (@vnnloser)
+* 🌱**Page Optimize** Lazy load exclude URIs. (@wordpress_fan1 @aminaz)
+* 🌱**GUI** New Dashboard and new menus.
+* 🌱**Image Optimize** Supported GIF WebP optimization. (@Lucas Rolff)
+* 🌱**Image Optimize** New workflow for image optimization (Gather first, request second).
+* 🌱**Image Optimize** The return of Rescan.
+* 🌱**CLI** Get single option cmd.
+* 🌱**CLI** QUIC.cloud cmd supported.
+* 🌱**CLI** CLI can send report now.
+* 🌱**Health** Page speed and page score now are in dashboard.
+* 🌱**Conf** Supported consts overwritten of `LITESPEED_CONF__` for all settings. (@menathor)
+* 🌱**REST** New REST TTL setting.  (@thekendog)
 * 🌱**CDN** New setting `HTML Attribute To Replace`. CDN can now support any HTML attribute to be replaced. (@danushkaj91)
+* 🌱**Debug** Debug URI includes/excludes setings.
 * 🌱 🐞 Support for multiple domains in custom sitemap. (@alchem)
 * 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🕷️ Able to add single rows to blacklist.
@@ -387,7 +385,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **3rd** User Switching plugin compatibility. (@robert Staddon)
 * **3rd** Beaver Builder plugin compatibility with v3.0.0.
 * **3rd** Avada plugin compatibility w/ BBPress. (@pimg)
-* **3rd** WooCommerce PayPal Checkout Gateway compatibility.
+* **3rd** WooCommerce PayPal Checkout Gateway compatibility. (#960642 @Glen Cabusas)
 * **Network** Fixed potential timeout issue when containing a large volume of sites. (@alican532)
 * **Debug** `Disable All Features` now will see the warning banner if ON.
 * **Debug** Dropped `log filters` section.

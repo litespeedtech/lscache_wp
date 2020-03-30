@@ -87,7 +87,7 @@ defined( 'WPINC' ) || exit ;
 			<div class="litespeed-desc">
 				<?php echo __( 'The above nonces will be converted to ESI automatically.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
-				<br /><?php echo __( 'Support 2nd param to specify cache control. Use space to separate.', 'litespeed-cache' ); ?>: <code>my_nonce_action private</code>
+				<br /><?php echo __( 'An optional second parameter may be used to specify cache control. Use a space to separate', 'litespeed-cache' ); ?>: <code>my_nonce_action private</code>
 			</div>
 		</td>
 	</tr>
