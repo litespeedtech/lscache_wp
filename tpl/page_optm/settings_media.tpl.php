@@ -76,7 +76,6 @@ $closest_server = Cloud::get_summary( 'server.' . $cloud_svc );
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the corresponding image properties.', 'litespeed-cache' ), '<code>{width} {height}</code>' ); ?>
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the configured background color.', 'litespeed-cache' ), '<code>{color}</code>' ); ?>
 				<br /><?php $this->recommended( $id ); ?>
-				<br /><?php echo __( 'Online SVG generator tool', 'litespeed-cache' ); ?>: <a href="https://www.svgator.com/" target="_blank">https://www.svgator.com/</a>
 			</div>
 		</td>
 	</tr>

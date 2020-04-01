@@ -570,21 +570,21 @@ class GUI extends Base
 	{
 		global $wp_admin_bar ;
 
-		if ( defined( 'LITESPEED_ON' ) ) {
-			$wp_admin_bar->add_menu( array(
-				'id'    => 'litespeed-menu',
-				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
-				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-			) ) ;
-		}
-		else {
-			$wp_admin_bar->add_menu( array(
-				'id'    => 'litespeed-menu',
-				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '"></span>',
-				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-			) ) ;
-		}
+		// if ( defined( 'LITESPEED_ON' ) ) {
+		$wp_admin_bar->add_menu( array(
+			'id'    => 'litespeed-menu',
+			'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
+			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
+			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+		) ) ;
+		// }
+		// else {
+		// 	$wp_admin_bar->add_menu( array(
+		// 		'id'    => 'litespeed-menu',
+		// 		'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '"></span>',
+		// 		'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+		// 	) ) ;
+		// }
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
