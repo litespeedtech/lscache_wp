@@ -20,7 +20,6 @@ class Cloud extends Base
 	const SVC_D_SYNC_CONF 		= 'd/sync_conf';
 	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_CCSS 				= 'ccss' ;
-	const SVC_PLACEHOLDER 		= 'placeholder' ;
 	const SVC_LQIP 				= 'lqip' ;
 	const SVC_IMG_OPTM			= 'img_optm' ;
 	const SVC_HEALTH			= 'health' ;
@@ -58,7 +57,6 @@ class Cloud extends Base
 		self::SVC_CCSS,
 		self::SVC_LQIP,
 		self::SVC_CDN,
-		self::SVC_PLACEHOLDER,
 		self::SVC_HEALTH,
 	);
 

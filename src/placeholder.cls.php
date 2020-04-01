@@ -18,7 +18,6 @@ class Placeholder extends Base
 	const TYPE_GENERATE = 'generate' ;
 
 	private $_conf_placeholder_resp ;
-	private $_conf_placeholder_resp_generator ;
 	private $_conf_placeholder_resp_svg ;
 	private $_conf_placeholder_lqip ;
 	private $_conf_placeholder_lqip_qual ;
@@ -38,7 +37,6 @@ class Placeholder extends Base
 	protected function __construct()
 	{
 		$this->_conf_placeholder_resp = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_conf_placeholder_resp_generator = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_GENERATOR ) ;
 		$this->_conf_placeholder_resp_svg 	= Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
 		$this->_conf_placeholder_lqip 		= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ;
 		$this->_conf_placeholder_lqip_qual	= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
@@ -171,8 +169,8 @@ class Placeholder extends Base
 		$this_placeholder = $this->_placeholder( $src, $size ) ?: $this->_conf_ph_default ;
 
 		$additional_attr = '' ;
-		if ( $this->_conf_placeholder_resp_generator && $this_placeholder != $this->_conf_ph_default ) {
-			Debug2::debug2( '[Placeholder] Use resp placeholder [size] ' . $size ) ;
+		if ( $this->_conf_placeholder_lqip && $this_placeholder != $this->_conf_ph_default ) {
+			Debug2::debug2( '[Placeholder] Use resp LQIP [size] ' . $size ) ;
 			$additional_attr = ' data-placeholder-resp="' . $size . '"' ;
 		}
 
@@ -203,14 +201,14 @@ class Placeholder extends Base
 		}
 
 		// If use local generator
-		if ( ! $this->_conf_placeholder_resp_generator ) {
+		if ( ! $this->_conf_placeholder_lqip ) {
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
-		Debug2::debug2( '[Placeholder] Resp placeholder process [src] ' . $src . ' [size] ' . $size ) ;
+		Debug2::debug2( '[Placeholder] Resp LQIP process [src] ' . $src . ' [size] ' . $size ) ;
 
 		// Only LQIP needs $src
-		$arr_key = $this->_conf_placeholder_lqip ? $size . ' ' . $src : $size ;
+		$arr_key = $size . ' ' . $src;
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_placeholder_resp_dict[ $arr_key ] ) ) {
@@ -280,17 +278,6 @@ class Placeholder extends Base
 	}
 
 	/**
-	 * Check if there is a placeholder cache folder
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public static function has_placehoder_cache()
-	{
-		return is_dir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
-	}
-
-	/**
 	 * Check if there is a LQIP cache folder
 	 *
 	 * @since  3.0
@@ -309,11 +296,6 @@ class Placeholder extends Base
 	 */
 	private function _placeholder_realpath( $src, $size )
 	{
-		// Use plain color placholder
-		if ( ! $this->_conf_placeholder_lqip ) {
-			return LITESPEED_STATIC_DIR . "/placeholder/$size." . md5( $this->_conf_placeholder_resp_color ) ;
-		}
-
 		// Use LQIP Cloud generator, each image placeholder will be separately stored
 
 		// Compatibility with WebP
@@ -334,24 +316,6 @@ class Placeholder extends Base
 
 		return LITESPEED_STATIC_DIR . '/lqip/' . $short_path . '/' . $size ;
 
-	}
-
-	/**
-	 * Delete file-based cache folder
-	 *
-	 * @since  2.5.1
-	 * @access public
-	 */
-	public function rm_cache_folder()
-	{
-		if ( self::has_placehoder_cache() ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/placeholder' ) ;
-		}
-
-		// Clear placeholder in queue too
-		self::save_summary( array() ) ;
-
-		Debug2::debug2( '[Placeholder] Cleared placeholder queue' ) ;
 	}
 
 	/**
@@ -440,8 +404,8 @@ class Placeholder extends Base
 
 		$file = $this->_placeholder_realpath( $src, $size ) ;
 
-		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_placeholder_resp_generator is changed )
-		if ( ! $this->_conf_placeholder_resp_generator ) {
+		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_placeholder_lqip is changed )
+		if ( ! $this->_conf_placeholder_lqip ) {
 			$data = $this->_generate_placeholder_locally( $size ) ;
 		}
 		else {
@@ -450,54 +414,29 @@ class Placeholder extends Base
 			self::save_summary();
 
 			// Generate LQIP
-			if ( $this->_conf_placeholder_lqip ) {
-				list( $width, $height ) = explode( 'x', $size ) ;
-				$req_data = array(
-					'width'		=> $width,
-					'height'	=> $height,
-					'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
-					'quality'	=> $this->_conf_placeholder_lqip_qual,
-				) ;
-				$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 ) ;
-				if ( ! is_array( $json ) ) {
-					return false;
-				}
-
-				if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
-					// image error, pop up the current queue
-					$this->_popup_and_save( $raw_size_and_src );
-					Debug2::debug( '[Placeholder] wrong response format', $json ) ;
-
-					return false ;
-				}
-
-				$data = $json[ 'lqip' ] ;
-
-				Debug2::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
+			list( $width, $height ) = explode( 'x', $size ) ;
+			$req_data = array(
+				'width'		=> $width,
+				'height'	=> $height,
+				'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
+				'quality'	=> $this->_conf_placeholder_lqip_qual,
+			) ;
+			$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 ) ;
+			if ( ! is_array( $json ) ) {
+				return false;
 			}
-			else {
 
-				$req_data = array(
-					'size'	=> $size,
-					'color'	=> base64_encode( $this->_conf_placeholder_resp_color ), // Encode the color
-				) ;
-				$json = Cloud::get( Cloud::SVC_PLACEHOLDER, $req_data ) ;
-				if ( ! is_array( $json ) ) {
-					return false;
-				}
+			if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
+				// image error, pop up the current queue
+				$this->_popup_and_save( $raw_size_and_src );
+				Debug2::debug( '[Placeholder] wrong response format', $json ) ;
 
-				if ( empty( $json[ 'data' ] ) || strpos( $json[ 'data' ], 'data:image/png;base64,' ) !== 0 ) {
-					// image error, pop up the current queue
-					$this->_popup_and_save( $raw_size_and_src );
-					Debug2::debug( '[Placeholder] wrong response format', $json ) ;
-
-					return false ;
-				}
-
-				$data = $json[ 'data' ] ;
-
-				Debug2::debug( '[Placeholder] _generate_placeholder ' ) ;
+				return false ;
 			}
+
+			$data = $json[ 'lqip' ] ;
+
+			Debug2::debug( '[Placeholder] _generate_placeholder LQIP' ) ;
 		}
 
 		// Write to file
@@ -509,9 +448,7 @@ class Placeholder extends Base
 		$this->_summary[ 'curr_request' ] = 0 ;
 		$this->_popup_and_save( $raw_size_and_src );
 
-		Debug2::debug( '[Placeholder] saved placeholder ' . $file ) ;
-
-		Debug2::debug2( '[Placeholder] placeholder con: ' . $data ) ;
+		Debug2::debug( '[Placeholder] saved LQIP ' . $file ) ;
 
 		return $data ;
 	}

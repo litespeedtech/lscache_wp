@@ -676,16 +676,6 @@ class GUI extends Base
 			) );
 		}
 
-		if ( Placeholder::has_placehoder_cache() ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'	=> 'litespeed-menu',
-				'id'		=> 'litespeed-purge-placeholder',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_PLACEHOLDER ),
-				'meta'		=> array( 'tabindex' => '0' ),
-			) );
-		}
-
 		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',

@@ -4,8 +4,7 @@ defined( 'WPINC' ) || exit;
 
 $placeholder_summary = Placeholder::get_summary();
 
-$cloud_svc = Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ? Cloud::SVC_LQIP : Cloud::SVC_PLACEHOLDER;
-$closest_server = Cloud::get_summary( 'server.' . $cloud_svc );
+$closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 ?>
 
@@ -88,24 +87,8 @@ $closest_server = Cloud::get_summary( 'server.' . $cloud_svc );
 		<td>
 			<?php $this->build_input( $id, null, null, 'color' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the responsive placeholder color when generating online.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify the responsive SVG placeholder color.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_MEDIA_PLACEHOLDER_RESP_GENERATOR; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Base::VAL_OFF, __( 'Local', 'litespeed-cache' ) ); ?>
-				<?php $this->build_radio( $id, Base::VAL_ON, __( 'Cloud', 'litespeed-cache' ) ); ?>
-			</div>
-			<div class="litespeed-desc">
-				<?php echo __( 'Specify the generator used for base64 image.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -168,7 +151,7 @@ $closest_server = Cloud::get_summary( 'server.' . $cloud_svc );
 				<?php endif; ?>
 
 				<?php if ( $closest_server ) : ?>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => $cloud_svc ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_LQIP ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $placeholder_summary[ 'queue' ] ) ) : ?>

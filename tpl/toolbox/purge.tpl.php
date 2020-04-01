@@ -76,15 +76,6 @@ if ( CSS::has_ccss_cache() ) {
 	) ;
 }
 
-if ( Placeholder::has_placehoder_cache() ) {
-	$_panels[] = array(
-		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
-		'desc'	=> __( 'This will delete all generated image placeholder files', 'litespeed-cache' ),
-		'icon'	=> 'purge-placeholder',
-		'append_url'	=> Purge::TYPE_PURGE_ALL_PLACEHOLDER,
-	) ;
-}
-
 if ( Placeholder::has_lqip_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
