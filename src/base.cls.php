@@ -190,7 +190,6 @@ class Base extends Instance
 	const O_MEDIA_LAZY_PLACEHOLDER 				= 'media-lazy_placeholder' ;
 	const O_MEDIA_PLACEHOLDER_RESP 				= 'media-placeholder_resp' ;
 	const O_MEDIA_PLACEHOLDER_RESP_COLOR		= 'media-placeholder_resp_color' ;
-	const O_MEDIA_PLACEHOLDER_RESP_GENERATOR	= 'media-placeholder_resp_generator' ;
 	const O_MEDIA_PLACEHOLDER_RESP_SVG			= 'media-placeholder_resp_svg' ;
 	const O_MEDIA_PLACEHOLDER_LQIP				= 'media-placeholder_lqip' ;
 	const O_MEDIA_PLACEHOLDER_LQIP_QUAL			= 'media-placeholder_lqip_qual' ;
@@ -480,7 +479,6 @@ class Base extends Instance
 		self::O_MEDIA_LAZY_PLACEHOLDER 				=> '',
 		self::O_MEDIA_PLACEHOLDER_RESP				=> false,
 		self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '',
-		self::O_MEDIA_PLACEHOLDER_RESP_GENERATOR	=> false,
 		self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> '',
 		self::O_MEDIA_PLACEHOLDER_LQIP				=> false,
 		self::O_MEDIA_PLACEHOLDER_LQIP_QUAL			=> 0,
