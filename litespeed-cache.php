@@ -77,15 +77,15 @@ require_once LSCWP_DIR . 'autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
-	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true );
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'litespeed-option', 'LiteSpeed\CLI\Option' ) ;
-		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' ) ;
-		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' ) ;
-		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' ) ;
-		WP_CLI::add_command( 'litespeed-debug', 'LiteSpeed\CLI\Debug' ) ;
+		WP_CLI::add_command( 'litespeed-option', 'LiteSpeed\CLI\Option' );
+		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' );
+		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' );
+		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' );
+		WP_CLI::add_command( 'litespeed-debug', 'LiteSpeed\CLI\Debug' );
 	}
 }
 
