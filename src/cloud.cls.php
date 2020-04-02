@@ -29,6 +29,9 @@ class Cloud extends Base
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
+	const EXPIRATION_NODE = 5; // Days before node expired
+	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
+
 	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
 	const API_VER			= 'wp/ver' ;
@@ -300,7 +303,7 @@ class Cloud extends Base
 
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
-			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * 30 ) {
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] < time() + 86400 * self::EXPIRATION_NODE ) {
 				return $this->_summary[ 'server.' . $service ];
 			}
 		}
@@ -435,7 +438,7 @@ class Cloud extends Base
 	{
 		// Limit frequent unfinished request to 5min
 		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + 30 - time(); // todo: 300
+			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + self::EXPIRATION_REQ - time();
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
