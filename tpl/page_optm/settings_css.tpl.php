@@ -192,7 +192,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php $this->build_radio( $id, 4, __( 'Optional', 'litespeed-cache' ) ); ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Set this to append %1$s to all %2$s rules before caching CSS to specify the font display style.', 'litespeed-cache' ), '<code>font-display</code>', '<code>@font-face</code>' ); ?>
+				<?php echo sprintf( __( 'Set this to append %1$s to all %2$s rules before caching CSS to specify how fonts should be displayed while being downloaded.', 'litespeed-cache' ), '<code>font-display</code>', '<code>@font-face</code>' ); ?>
 				<br /><?php echo sprintf( __( '%s is recommended.', 'litespeed-cache' ), '<code>' . __( 'Swap', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
