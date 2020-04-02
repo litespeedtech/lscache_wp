@@ -36,7 +36,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 	<div class="litespeed-dashboard-header">
 		<h3 class="litespeed-dashboard-title">
-			<?php echo __( 'Usage Statistics', 'litespeed-cache' ); ?>
+			<?php echo __( 'QUIC.cloud Service Usage Statistics', 'litespeed-cache' ); ?>
 			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_SYNC_USAGE ); ?>">
 				<span class="dashicons dashicons-update"></span>
 				<span class="screen-reader-text"><?php echo __( 'Sync data from Cloud', 'litespeed-cache' ); ?></span>

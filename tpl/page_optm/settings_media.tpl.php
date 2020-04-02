@@ -40,7 +40,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify a base64 image to be used as a placeholder while other images finish loading.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify a base64 image to be used as a simple placeholder while images finish loading.', 'litespeed-cache' ); ?>
 				<br /><?php echo sprintf( __( 'This can be predefined in %2$s as well using constant %1$s, with this setting taking priority.', 'litespeed-cache' ), '<code>LITESPEED_PLACEHOLDER</code>', '<code>wp-config.php</code>' ); ?>
 				<br /><?php echo sprintf( __( 'By default a gray image placeholder %s will be used.', 'litespeed-cache' ), '<code>data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=</code>' ); ?>
 				<br /><?php echo sprintf( __( 'For example, %s can be used for a transparent placeholder.', 'litespeed-cache' ), '<code>data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</code>' ); ?>
@@ -71,7 +71,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify an SVG to be used as a placeholder when generating locally.', 'litespeed-cache' ); ?>
-				<?php echo __( 'It will be converted to a base64 placeholder on-the-fly.', 'litespeed-cache' ); ?>
+				<?php echo __( 'It will be converted to a base64 SVG placeholder on-the-fly.', 'litespeed-cache' ); ?>
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the corresponding image properties.', 'litespeed-cache' ), '<code>{width} {height}</code>' ); ?>
 				<br /><?php echo sprintf( __( 'Variables %s will be replaced with the configured background color.', 'litespeed-cache' ), '<code>{color}</code>' ); ?>
 				<br /><?php $this->recommended( $id ); ?>
@@ -87,7 +87,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_input( $id, null, null, 'color' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the responsive SVG placeholder color.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify the responsive placeholder SVG color.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
 			</div>
 		</td>
@@ -101,8 +101,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Use online LQIP (Low Quality Image Placeholder) generator service for better user experience when images are loading.', 'litespeed-cache' ); ?>
-				<br /><?php echo __( 'Keep this off to use plain color placeholder.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Use QUIC.cloud LQIP (Low Quality Image Placeholder) generator service for responsive image previews while loading.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'Keep this off to use plain color placeholders.', 'litespeed-cache' ); ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder_lqip' ); ?>
 			</div>
 		</td>
@@ -150,7 +150,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Automatically generate %s in the background via a cron-based queue.', 'litespeed-cache' ), __( 'Responsive Placeholder', 'litespeed-cache' ) ); ?>
+				<?php echo __( 'Automatically generate LQIP in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 				<?php echo sprintf(
 					__( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
 					'<code>' . __('ON', 'litespeed-cache') . '</code>',
