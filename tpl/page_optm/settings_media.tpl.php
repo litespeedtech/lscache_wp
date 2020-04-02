@@ -87,7 +87,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_input( $id, null, null, 'color' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the responsive SVG placeholder color.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Specify the responsive placeholder SVG color.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
 			</div>
 		</td>
