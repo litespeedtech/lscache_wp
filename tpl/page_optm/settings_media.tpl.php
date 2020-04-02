@@ -101,8 +101,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Use online LQIP (Low Quality Image Placeholder) generator service for better user experience when images are loading.', 'litespeed-cache' ); ?>
-				<br /><?php echo __( 'Keep this off to use plain color placeholder.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Use QUIC.cloud LQIP (Low Quality Image Placeholder) generator service for responsive image previews while loading.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'Keep this off to use plain color placeholders.', 'litespeed-cache' ); ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder_lqip' ); ?>
 			</div>
 		</td>
