@@ -149,7 +149,7 @@ class Lang extends Base
 			self::O_MEDIA_IFRAME_LAZY_CLS_EXC			=> __( 'Lazy Load Iframe Class Name Excludes', 'litespeed-cache' ),
 			self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC	=> __( 'Lazy Load Iframe Parent Class Name Excludes', 'litespeed-cache' ),
 			self::O_MEDIA_LAZY_URI_EXC			=> __( 'Lazy Load URI Excludes', 'litespeed-cache' ),
-			self::O_MEDIA_LAZY_PLACEHOLDER		=> __( 'Lazy Load Image Placeholder', 'litespeed-cache' ),
+			self::O_MEDIA_LAZY_PLACEHOLDER		=> __( 'Basic Image Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP		=> __( 'Responsive Placeholder', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> __( 'Responsive Placeholder Color', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> __( 'Responsive Placeholder SVG', 'litespeed-cache' ),
