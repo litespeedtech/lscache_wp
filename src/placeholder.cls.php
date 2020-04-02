@@ -19,8 +19,10 @@ class Placeholder extends Base
 
 	private $_conf_placeholder_resp ;
 	private $_conf_placeholder_resp_svg ;
-	private $_conf_placeholder_lqip ;
-	private $_conf_placeholder_lqip_qual ;
+	private $_conf_lqip;
+	private $_conf_lqip_qual;
+	private $_conf_lqip_min_w;
+	private $_conf_lqip_min_h;
 	private $_conf_placeholder_resp_color ;
 	private $_conf_placeholder_resp_async ;
 	private $_placeholder_resp_dict = array() ;
@@ -38,8 +40,10 @@ class Placeholder extends Base
 	{
 		$this->_conf_placeholder_resp = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_conf_placeholder_resp_svg 	= Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) ;
-		$this->_conf_placeholder_lqip 		= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ;
-		$this->_conf_placeholder_lqip_qual	= Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL ) ;
+		$this->_conf_lqip 		= Conf::val( Base::O_MEDIA_LQIP );
+		$this->_conf_lqip_qual	= Conf::val( Base::O_MEDIA_LQIP_QUAL );
+		$this->_conf_lqip_min_w	= Conf::val( Base::O_MEDIA_LQIP_MIN_W );
+		$this->_conf_lqip_min_h	= Conf::val( Base::O_MEDIA_LQIP_MIN_H );
 		$this->_conf_placeholder_resp_async = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
 		$this->_conf_placeholder_resp_color = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		$this->_conf_ph_default = Conf::val( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
@@ -65,7 +69,7 @@ class Placeholder extends Base
 	 */
 	public function after_admin_init()
 	{
-		if ( $this->_conf_placeholder_lqip ) {
+		if ( $this->_conf_lqip ) {
 			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
 			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
 			add_action( 'litespeed_media_row_lqip', array( $this, 'media_row_con' ) );
@@ -169,7 +173,7 @@ class Placeholder extends Base
 		$this_placeholder = $this->_placeholder( $src, $size ) ?: $this->_conf_ph_default ;
 
 		$additional_attr = '' ;
-		if ( $this->_conf_placeholder_lqip && $this_placeholder != $this->_conf_ph_default ) {
+		if ( $this->_conf_lqip && $this_placeholder != $this->_conf_ph_default ) {
 			Debug2::debug2( '[Placeholder] Use resp LQIP [size] ' . $size ) ;
 			$additional_attr = ' data-placeholder-resp="' . $size . '"' ;
 		}
@@ -201,13 +205,12 @@ class Placeholder extends Base
 		}
 
 		// If use local generator
-		if ( ! $this->_conf_placeholder_lqip ) {
+		if ( ! $this->_conf_lqip || ! $this->_lqip_size_check( $size ) ) {
 			return $this->_generate_placeholder_locally( $size ) ;
 		}
 
 		Debug2::debug2( '[Placeholder] Resp LQIP process [src] ' . $src . ' [size] ' . $size ) ;
 
-		// Only LQIP needs $src
 		$arr_key = $size . ' ' . $src;
 
 		// Check if its already in dict or not
@@ -404,8 +407,8 @@ class Placeholder extends Base
 
 		$file = $this->_placeholder_realpath( $src, $size ) ;
 
-		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_placeholder_lqip is changed )
-		if ( ! $this->_conf_placeholder_lqip ) {
+		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_lqip is changed )
+		if ( ! $this->_conf_lqip || ! $this->_lqip_size_check( $size ) ) {
 			$data = $this->_generate_placeholder_locally( $size ) ;
 		}
 		else {
@@ -419,7 +422,7 @@ class Placeholder extends Base
 				'width'		=> $width,
 				'height'	=> $height,
 				'url'		=> substr( $src, -5 ) === '.webp' ? substr( $src, 0, -5 ) : $src,
-				'quality'	=> $this->_conf_placeholder_lqip_qual,
+				'quality'	=> $this->_conf_lqip_qual,
 			) ;
 			$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 ) ;
 			if ( ! is_array( $json ) ) {
@@ -451,6 +454,21 @@ class Placeholder extends Base
 		Debug2::debug( '[Placeholder] saved LQIP ' . $file ) ;
 
 		return $data ;
+	}
+
+	/**
+	 * Check if the size is valid to send LQIP request or not
+	 *
+	 * @since  3.0
+	 */
+	private function _lqip_size_check( $size )
+	{
+		$size = explode( 'x', $size );
+		if ( $size[ 0 ] >= $this->_conf_lqip_min_w || $size[ 1 ] >= $this->_conf_lqip_min_h ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

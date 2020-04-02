@@ -54,9 +54,6 @@ $placeholder_summary = Placeholder::get_summary();
 			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
 			'lqip'		=> __( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 		);
-		if ( ! Conf::val( Base::O_MEDIA_PLACEHOLDER_LQIP ) ) {
-			$cat_list[ 'placeholder' ] = __( 'Placeholder', 'litespeed-cache' );
-		}
 
 		foreach ( $cat_list as $svc => $title ) :
 			$finished_percentage = 0;

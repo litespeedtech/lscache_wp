@@ -15,7 +15,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           3.0.0-rc11
+ * Version:           3.0.0-rc12
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -45,7 +45,7 @@ if ( class_exists( 'LiteSpeed\Core' ) || defined( 'LSCWP_DIR' ) ) {
 	return;
 }
 
-! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.0.0-rc11' );
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.0.0-rc12' );
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -77,15 +77,15 @@ require_once LSCWP_DIR . 'autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
-	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true );
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'litespeed-option', 'LiteSpeed\CLI\Option' ) ;
-		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' ) ;
-		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' ) ;
-		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' ) ;
-		WP_CLI::add_command( 'litespeed-debug', 'LiteSpeed\CLI\Debug' ) ;
+		WP_CLI::add_command( 'litespeed-option', 'LiteSpeed\CLI\Option' );
+		WP_CLI::add_command( 'litespeed-purge', 'LiteSpeed\CLI\Purge' );
+		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' );
+		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' );
+		WP_CLI::add_command( 'litespeed-debug', 'LiteSpeed\CLI\Debug' );
 	}
 }
 

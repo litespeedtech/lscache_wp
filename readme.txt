@@ -288,21 +288,21 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 3.0 - Apr 1 2019 =
-* 🌱 Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
-* 🌱 LQIP (Low Quality Image Placeholder).
+* 🌱**Media** LQIP (Low Quality Image Placeholder).
+* 🌱**Page Optimize** Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
 * 🌱 New QUIC.cloud API key setting.
 * 🌱**ESI** New ESI nonce setting.
-* 🌱 JPG quality control. (@geckomist)
-* 🌱**Cache** Forced public cache setting. (#308207)
-* 🌱🕷️ New timeout setting to avoid incorrect blacklist addition. (#900171)
-* 🌱 Responsive local svg placeholder.
-* 🌱 Frontend & backend .htaccess path customize. (@jon81)
-* 🌱 Gravatar warmup cron.
-* 🌱 Detailed Heartbeat Control (@K9Heaven)
+* 🌱**Media** JPG quality control. (@geckomist)
+* 🌱**Media** Responsive local SVG placeholder.
+* 🌱**Discussion** Gravatar warmup cron.
 * 🌱**DB** Table Engine Converter tool. (@johnny Nguyen)
 * 🌱**DB** Database summary: Autoload size. (@JohnnyNguyen)
 * 🌱**DB** Database summary: Autoload entries list.
 * 🌱**DB** Revisions older than. (@thememasterguru)
+* 🌱**Cache** Forced public cache setting. (#308207)
+* 🌱🕷️ New timeout setting to avoid incorrect blacklist addition. (#900171)
+* 🌱**Htaccess** Frontend & backend .htaccess path customize. (@jon81)
+* 🌱**Toolbox** Detailed Heartbeat Control (@K9Heaven)
 * 🌱**Purge** Purge Stale setting.
 * 🌱**Page Optimize** Font display optimization. (@Joeee)
 * 🌱**Page Optimize** Google font URL display optimization.
@@ -326,6 +326,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱**Debug** Debug URI includes/excludes setings.
 * 🌱 🐞 Support for multiple domains in custom sitemap. (@alchem)
 * 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
+* 🌱**Media** LQIP minimum dimensions setting. (@Lukasz Szmigiel)
 * 🕷️ Able to add single rows to blacklist.
 * 🕷️ Crawler data now saved into database instead of creating new files.
 * 🕷️ Larger timeout to avoid wrongly added to blacklist.

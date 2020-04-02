@@ -95,7 +95,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 	<tr>
 		<th>
-			<?php $id = Base::O_MEDIA_PLACEHOLDER_LQIP; ?>
+			<?php $id = Base::O_MEDIA_LQIP; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -110,7 +110,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 	<tr>
 		<th>
-			<?php $id = Base::O_MEDIA_PLACEHOLDER_LQIP_QUAL; ?>
+			<?php $id = Base::O_MEDIA_LQIP_QUAL; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -120,6 +120,24 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 				<br /><?php echo __( 'Larger numbers will generate higher resolution quality placeholder, but will result in larger files which will increase page size and consume more points.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
 				<?php $this->_validate_ttl( $id, 1, 20 ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_MEDIA_LQIP_MIN_W; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-short' ); ?> x
+			<?php $this->build_input( Base::O_MEDIA_LQIP_MIN_H, 'litespeed-input-short' ); ?>
+			<?php echo __( 'pixels', 'litespeed-cache' ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'LQIP requests will not be sent for images where both width and height are smaller than these dimensions.', 'litespeed-cache' ); ?>
+				<?php $this->recommended( $id ); ?>
+				<?php $this->_validate_ttl( $id, 10, 800 ); ?>
+				<?php $this->_validate_ttl( Base::O_MEDIA_LQIP_MIN_H, 10, 800 ); ?>
 			</div>
 		</td>
 	</tr>

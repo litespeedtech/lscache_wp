@@ -191,8 +191,10 @@ class Base extends Instance
 	const O_MEDIA_PLACEHOLDER_RESP 				= 'media-placeholder_resp' ;
 	const O_MEDIA_PLACEHOLDER_RESP_COLOR		= 'media-placeholder_resp_color' ;
 	const O_MEDIA_PLACEHOLDER_RESP_SVG			= 'media-placeholder_resp_svg' ;
-	const O_MEDIA_PLACEHOLDER_LQIP				= 'media-placeholder_lqip' ;
-	const O_MEDIA_PLACEHOLDER_LQIP_QUAL			= 'media-placeholder_lqip_qual' ;
+	const O_MEDIA_LQIP							= 'media-lqip' ;
+	const O_MEDIA_LQIP_QUAL						= 'media-lqip_qual' ;
+	const O_MEDIA_LQIP_MIN_W					= 'media-lqip_min_w';
+	const O_MEDIA_LQIP_MIN_H					= 'media-lqip_min_h';
 	const O_MEDIA_PLACEHOLDER_RESP_ASYNC		= 'media-placeholder_resp_async' ;
 	const O_MEDIA_IFRAME_LAZY 					= 'media-iframe_lazy' ;
 	const O_MEDIA_LAZYJS_INLINE 				= 'media-lazyjs_inline' ;
@@ -480,8 +482,10 @@ class Base extends Instance
 		self::O_MEDIA_PLACEHOLDER_RESP				=> false,
 		self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '',
 		self::O_MEDIA_PLACEHOLDER_RESP_SVG			=> '',
-		self::O_MEDIA_PLACEHOLDER_LQIP				=> false,
-		self::O_MEDIA_PLACEHOLDER_LQIP_QUAL			=> 0,
+		self::O_MEDIA_LQIP				=> false,
+		self::O_MEDIA_LQIP_QUAL			=> 0,
+		self::O_MEDIA_LQIP_MIN_W		=> 0,
+		self::O_MEDIA_LQIP_MIN_H		=> 0,
 		self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> false,
 		self::O_MEDIA_IFRAME_LAZY 					=> false,
 		self::O_MEDIA_LAZYJS_INLINE 				=> false,
