@@ -150,7 +150,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Automatically generate %s in the background via a cron-based queue.', 'litespeed-cache' ), __( 'LQIP', 'litespeed-cache' ) ); ?>
+				<?php echo __( 'Automatically generate LQIP in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 				<?php echo sprintf(
 					__( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
 					'<code>' . __('ON', 'litespeed-cache') . '</code>',
