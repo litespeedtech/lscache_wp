@@ -426,7 +426,7 @@ class Placeholder extends Base
 			) ;
 			$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 ) ;
 			if ( ! is_array( $json ) ) {
-				return false;
+				return $this->_generate_placeholder_locally( $size );
 			}
 
 			if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
@@ -434,7 +434,7 @@ class Placeholder extends Base
 				$this->_popup_and_save( $raw_size_and_src );
 				Debug2::debug( '[Placeholder] wrong response format', $json ) ;
 
-				return false ;
+				return $this->_generate_placeholder_locally( $size );
 			}
 
 			$data = $json[ 'lqip' ] ;
