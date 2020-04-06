@@ -628,9 +628,10 @@ class Router extends Instance
 				$_ip = array_shift( $_ip ) ;
 			}
 
-			if ( ! $_ip ) {
-				$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
-			}
+		}
+
+		if ( ! $_ip ) {
+			$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
 		}
 		return $_ip ;
 	}
