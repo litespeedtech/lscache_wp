@@ -384,7 +384,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **Debug** Report can now append notes.
 * **3rd** Default added parallax-image to webp replacement for BB.
 * **3rd** User Switching plugin compatibility. (@robert Staddon)
-* **3rd** Beaver Builder plugin compatibility with v3.0.0.
+* **3rd** Beaver Builder plugin compatibility with v3.0.
 * **3rd** Avada plugin compatibility w/ BBPress. (@pimg)
 * **3rd** WooCommerce PayPal Checkout Gateway compatibility. (#960642 @Glen Cabusas)
 * **Network** Fixed potential timeout issue when containing a large volume of sites. (@alican532)
