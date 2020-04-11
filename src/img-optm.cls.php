@@ -795,14 +795,9 @@ class Img_Optm extends Base
 				}
 
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
-					// Reset the image to gathered status
-					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_RAW, $row_img->id ) ) );
-					// Delete working table
-					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
+					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized image file expired and got deleted.', 'litespeed-cache' );
+					$msg = __( 'Optimized image file expired and got cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}
@@ -861,7 +856,9 @@ class Img_Optm extends Base
 				}
 
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
-					$msg = __( 'Optimized WebP file expired and got deleted.', 'litespeed-cache' );
+					$this->_step_back_image( $row_img->id );
+
+					$msg = __( 'Optimized WebP file expired and got cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}
@@ -948,6 +945,24 @@ class Img_Optm extends Base
 		// If all pulled, update tag to done
 		Debug2::debug( '[Img_Optm] Marked pull status to all pulled' );
 		self::update_option( self::DB_NEED_PULL, self::STATUS_PULLED );
+	}
+
+	/**
+	 * Push image back to previous status
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _step_back_image( $id )
+	{
+		global $wpdb;
+
+		// Reset the image to gathered status
+		$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
+		$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_RAW, $id ) ) );
+		// Delete working table
+		$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+		$wpdb->query( $wpdb->prepare( $q, $id ) );
 	}
 
 	/**
