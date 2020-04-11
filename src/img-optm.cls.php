@@ -790,14 +790,27 @@ class Img_Optm extends Base
 				$response = wp_remote_get( $server_info[ 'server' ] . '/' . $server_info[ 'ori' ], array( 'timeout' => 60 ) );
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
-					Debug2::debug( 'IAPI failed to pull image: ' . $error_message );
+					Debug2::debug( '[Img_Optm] ❌ failed to pull image: ' . $error_message );
+					return;
+				}
+
+				if ( $response[ 'response' ][ 'code' ] == 404 ) {
+					// Reset the image to gathered status
+					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_RAW, $row_img->id ) ) );
+					// Delete working table
+					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
+
+					$msg = __( 'Optimized image file expired and got deleted.', 'litespeed-cache' );
+					Admin_Display::error( $msg );
 					return;
 				}
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] );
 
 				if ( ! file_exists( $local_file . '.tmp' ) || ! filesize( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
-					Debug2::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] );
+					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized img: file md5 dismatch [url] ' . $server_info[ 'server' ] . '/' . $server_info[ 'ori' ] . ' [server_md5] ' . $server_info[ 'ori_md5' ] );
 
 					// Update status to failed
 					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
@@ -843,14 +856,20 @@ class Img_Optm extends Base
 				$response = wp_remote_get( $server_info[ 'server' ] . '/' . $server_info[ 'webp' ], array( 'timeout' => 60 ) );
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
-					Debug2::debug( 'IAPI failed to pull webp image: ' . $error_message );
+					Debug2::debug( '[Img_Optm] failed to pull webp image: ' . $error_message );
+					return;
+				}
+
+				if ( $response[ 'response' ][ 'code' ] == 404 ) {
+					$msg = __( 'Optimized WebP file expired and got deleted.', 'litespeed-cache' );
+					Admin_Display::error( $msg );
 					return;
 				}
 
 				file_put_contents( $local_file . '.webp', $response[ 'body' ] );
 
 				if ( ! file_exists( $local_file . '.webp' ) || ! filesize( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
-					Debug2::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] );
+					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] );
 
 					// update status to failed
 					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
