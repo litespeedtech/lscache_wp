@@ -337,7 +337,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **ESI** Added Bloom nonce to ESI for Elegant Themes.
 * **Cloud** Able to redetect cloud nodes now.
 * **Img_optm** Fixed stale data in redirected links.
-* **Lazyload** HTML body now will be appeneded a CSS class `litespeed_lazyloaded` after lazyload finished. (@Adam Wilson)
+* **Lazyload** CSS class `litespeed_lazyloaded` is now appended to HTML body after lazyload is finished. (@Adam Wilson)
 * **Cache** Default drop qs values. (@gijo Varghese)
 * **LQIP** Show all LQIP images in Media column.
 * **CDN** Can now support custom REST API prefix other than wp-json. (#174 @therealgilles)
