@@ -927,6 +927,9 @@ class Cloud extends Base
 
 		$this->_summary[ 'is_linked' ] = 1;
 		self::save_summary();
+
+		// Drop QS
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . $_GET[ 'qc_res' ] . "&domain_hash=" . $_GET[ 'domain_hash' ] . "', '' ) );</script>";
 	}
 
 	/**

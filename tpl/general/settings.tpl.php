@@ -4,6 +4,7 @@ defined( 'WPINC' ) || exit;
 
 $__cloud = Cloud::get_instance();
 
+// This will drop QS param `qc_res` and `domain_hash` also
 $__cloud->update_is_linked_status();
 
 $permalink_structure = get_option( 'permalink_structure' );
@@ -62,7 +63,7 @@ $this->form_action();
 			<?php endif; ?>
 
 			<?php if ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
-				<?php $this->learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-success litespeed-right', true ); ?>
+				<?php $this->learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-success litespeed-right', false ); ?>
 			<?php elseif ( $__cloud->can_link_qc() ) : ?>
 				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-warning litespeed-right', true ); ?>
 			<?php else: ?>
