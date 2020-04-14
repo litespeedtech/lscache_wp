@@ -3,22 +3,24 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $api_key_val = Conf::val( Base::O_API_KEY );
-if ( ! empty( $_GET[ 'apikey_data' ] ) ) {
-	$apikey_data = json_decode( base64_decode( $_GET[ 'apikey_data' ] ), true );
-	if ( ! empty( $apikey_data[ 'domain_key' ] ) && $api_key_val != $apikey_data[ 'domain_key' ] ) {
-		$api_key_val = $apikey_data[ 'domain_key' ];
-		! defined( 'LITESPEED_NEW_API_KEY' ) && define( 'LITESPEED_NEW_API_KEY', true );
-	}
-	unset( $_GET[ 'apikey_data' ] );
-	?>
-	<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&apikey_data=', '&' ) );</script>
-	<?php
-}
 
-$gen_btn_available = get_option( 'permalink_structure' );
+$__cloud = Cloud::get_instance();
+
+$__cloud->update_is_linked_status();
+
+$permalink_structure = get_option( 'permalink_structure' );
 
 $cloud_summary = Cloud::get_summary();
 
+$can_token = $__cloud->can_token();
+
+$apply_btn_txt = __( 'Apply API Key', 'litespeed-cache' );
+if ( $api_key_val ) {
+	$apply_btn_txt = __( 'Refresh API Key', 'litespeed-cache' );
+}
+if ( ! $can_token ) {
+	$apply_btn_txt = __( 'Waiting for Approval', 'litespeed-cache' );
+}
 
 $this->form_action();
 ?>
@@ -39,14 +41,15 @@ $this->form_action();
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id, null, defined( 'LITESPEED_NEW_API_KEY' ) ? $api_key_val : null ); ?>
-			<?php if ( defined( 'LITESPEED_NEW_API_KEY' ) ) : ?>
-				<span class="litespeed-danger"><?php echo sprintf( __( 'Not saved yet! You need to click %s to save this option.', 'litespeed-cache' ), __( 'Save Changes', 'litespeed-cache' ) ); ?></span>
-			<?php endif; ?>
-			<?php if ( $gen_btn_available ) : ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), __( 'Generate Key', 'litespeed-cache' ), 'button litespeed-btn-success', true ); ?>
+			<?php $this->build_input( $id ); ?>
+
+			<?php if ( $permalink_structure && $can_token ) : ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, 'button litespeed-btn-success', true ); ?>
 			<?php else: ?>
-				<?php $this->learn_more( 'javascript:;', __( 'Generate Key', 'litespeed-cache' ), 'button disabled', true ); ?>
+				<?php $this->learn_more( 'javascript:;', $apply_btn_txt, 'button disabled', true ); ?>
+			<?php endif; ?>
+
+			<?php if ( ! $permalink_structure ) : ?>
 				<br />
 				<div class="litespeed-callout notice notice-error inline">
 					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
@@ -55,6 +58,20 @@ $this->form_action();
 					</p>
 				</div>
 			<?php endif; ?>
+
+			<?php if ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
+				<?php $this->learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Check QUIC.cloud my dashboard', 'litespeed-cache' ), 'button litespeed-btn-success litespeed-right', true ); ?>
+			<?php elseif ( $__cloud->can_link_qc() ) : ?>
+				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-warning litespeed-right', true ); ?>
+			<?php else: ?>
+				<?php $this->learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button disabled litespeed-btn-warning litespeed-right', true ); ?>
+				<br />
+				<div class="litespeed-callout notice notice-error inline">
+					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ); ?></p>
+				</div>
+			<?php endif; ?>
+
 			<div class="litespeed-desc">
 				<?php echo __( 'An API key is necessary for security when communicating with our QUIC.cloud servers. Required for online services.', 'litespeed-cache' ); ?>
 				<br /><?php Doc::notice_ips(); ?>

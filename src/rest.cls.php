@@ -51,10 +51,16 @@ class REST extends Instance
 			'callback' => array( $this, 'ip_validate' ),
 		) );
 
-		// Hash callback validate
-		register_rest_route( 'litespeed/v1', '/hash', array(
+		// Token callback validate
+		register_rest_route( 'litespeed/v1', '/token', array(
 			'methods' => 'POST',
-			'callback' => array( $this, 'hash' ),
+			'callback' => array( $this, 'token' ),
+		) );
+
+		// API key callback notification
+		register_rest_route( 'litespeed/v1', '/apikey', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'apikey' ),
 		) );
 
 		// Image optm notify_img
@@ -97,9 +103,19 @@ class REST extends Instance
 	 *
 	 * @since  3.0
 	 */
-	public function hash()
+	public function token()
 	{
-		return Cloud::get_instance()->hash();
+		return Cloud::get_instance()->token_validate();
+	}
+
+	/**
+	 * Launch api call
+	 *
+	 * @since  3.0
+	 */
+	public function apikey()
+	{
+		return Cloud::get_instance()->save_apikey();
 	}
 
 	/**

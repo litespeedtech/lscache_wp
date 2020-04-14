@@ -11,8 +11,6 @@ class Cloud extends Base
 {
 	protected static $_instance;
 
-	const DB_HASH = 'hash';
-
 	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
 	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 
@@ -31,6 +29,7 @@ class Cloud extends Base
 
 	const EXPIRATION_NODE = 5; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
+	const EXPIRATION_TOKEN = 300; // Min intval to request a token
 
 	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
@@ -63,10 +62,11 @@ class Cloud extends Base
 		self::SVC_HEALTH,
 	);
 
-	const TYPE_CLEAR_PROMO 	= 'clear_promo';
+	const TYPE_CLEAR_PROMO 		= 'clear_promo';
 	const TYPE_REDETECT_CLOUD 	= 'redetect_cloud';
 	const TYPE_CLEAR_CLOUD 		= 'clear_cloud';
 	const TYPE_GEN_KEY 			= 'gen_key';
+	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 
 	private $_api_key;
@@ -466,10 +466,10 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function post( $service, $data = false, $time_out = false, $need_hash = false )
+	public static function post( $service, $data = false, $time_out = false )
 	{
 		$instance = self::get_instance();
-		return $instance->_post( $service, $data, $time_out, $need_hash );
+		return $instance->_post( $service, $data, $time_out );
 	}
 
 	/**
@@ -478,7 +478,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _post( $service, $data = false, $time_out = false, $need_hash = false )
+	private function _post( $service, $data = false, $time_out = false )
 	{
 		$service_tag = $service;
 		if ( ! empty( $data[ 'action' ] ) ) {
@@ -504,13 +504,7 @@ class Cloud extends Base
 			'ver'			=> Core::VER,
 			'data' 			=> $data,
 		);
-		if ( $need_hash ) {
-			$param[ 'hash' ] = $this->_hash_make();
-		}
-		/**
-		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
-		 * @since 1.6.4
-		 */
+
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary();
 
@@ -749,37 +743,17 @@ class Cloud extends Base
 	}
 
 	/**
-	 * Request callback validation from Cloud
+	 * Can apply for a new token or not
 	 *
-	 * @since  1.5
-	 * @access public
+	 * @since 3.0
 	 */
-	public function hash()
+	public function can_token()
 	{
-		if ( empty( $_POST[ 'hash' ] ) ) {
-			Debug2::debug( '❄️  Lack of hash param' );
-			return self::err( 'lack_of_param' );
-		}
-
-		$key_hash = self::get_option( self::DB_HASH );
-		if ( $key_hash ) { // One time usage only
-			self::delete_option( self::DB_HASH );
-		}
-
-		if ( ! $key_hash || $_POST[ 'hash' ] !== md5( $key_hash ) ) {
-			Debug2::debug( '❄️  __callback request hash wrong: md5(' . $key_hash . ') !== ' . $_POST[ 'hash' ] );
-			return self::err( 'Error hash code' );
-		}
-
-		Control::set_nocache( 'Cloud hash validation' );
-
-		Debug2::debug( '❄️  __callback request hash: ' . $key_hash );
-
-		return self::ok( array( 'hash' => $key_hash ) );
+		return empty( $this->_summary[ 'token_ts' ] ) || time() - $this->_summary[ 'token_ts' ] > self::EXPIRATION_TOKEN;
 	}
 
 	/**
-	 * Redirect to QUIC to get key, if is CLI, get json [ 'domain_key' => 'asdfasdf' ]
+	 * Send request for domain key, get json [ 'token' => 'asdfasdf' ]
 	 *
 	 * @since  3.0
 	 * @access public
@@ -787,21 +761,11 @@ class Cloud extends Base
 	public function gen_key()
 	{
 		$data = array(
-			'hash'		=> $this->_hash_make(),
 			'site_url'	=> home_url(),
-			'email'		=> get_bloginfo( 'admin_email' ),
 			'rest'		=> rest_get_url_prefix(),
-			'src'		=> defined( 'LITESPEED_CLI' ) ? 'CLI' : 'web',
 		);
 
-		if ( ! defined( 'LITESPEED_CLI' ) ) {
-			$data[ 'ref' ] = $_SERVER[ 'HTTP_REFERER' ];
-			wp_redirect( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
-			exit;
-		}
-
-		// CLI handler
-		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ), array( 'timeout' => 300 ) );
+		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '[CLoud] failed to gen_key: ' . $error_message );
@@ -810,47 +774,153 @@ class Cloud extends Base
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
-		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] != 'ok' ) {
-			Debug2::debug( '[CLoud] error to gen_key: ', $json );
-			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . ( ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : var_export( $json, true ) ) );
+
+		// Parse general error msg
+		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
+			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
+			Debug2::debug( '❄️  ❌ _err: ' . $json_msg );
+
+			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server";
+			$msg .= $this->_parse_link( $json );
+			Admin_Display::error( $msg );
+
 			return;
 		}
 
-		// Save domain_key option
-		$this->_save_api_key( $json[ 'domain_key' ] );
+		// Save token option
+		$this->_summary[ 'token' ] = $json[ 'token' ];
+		$this->_summary[ 'token_ts' ] = time();
+		self::save_summary();
 
-		Admin_Display::succeed( __( 'Generate API key successfully.', 'litespeed-cache' ) );
-
-		return $json[ 'domain_key' ];
+		Admin_Display::succeed( __( 'Applied API key successfully. Please wait for approval result. It will be automatically sent to your WordPress.', 'litespeed-cache' ) );
 	}
 
 	/**
-	 * Make a hash for callback validation
+	 * Token callback validation from Cloud
 	 *
 	 * @since  3.0
+	 * @access public
 	 */
-	private function _hash_make()
+	public function token_validate()
 	{
-		$hash = Str::rrand( 16 );
-		// store hash
-		self::delete_option( self::DB_HASH );
-		self::update_option( self::DB_HASH, $hash );
+		try {
+			$this->_validate_hash();
+		} catch( \Exception $e ) {
+			return self::err( $e->getMessage() );
+		}
 
-		return $hash;
+		Control::set_nocache( 'Cloud token validation' );
+
+		Debug2::debug( '❄️  __callback token validation passed' );
+
+		return self::ok( array( 'hash' => md5( substr( $this->_summary[ 'token' ], 3, 8 ) ) ) );
 	}
 
 	/**
-	 * Callback after generated key from QUIC.cloud
+	 * Callback for approval of api key after validated token and gen key from QUIC.cloud
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access public
 	 */
-	private function _save_api_key( $api_key )
+	public function save_apikey()
 	{
+		// Validate token hash first
+		if ( empty( $_POST[ 'domain_key' ] ) || ! isset( $_POST[ 'is_linked' ] ) ) {
+			return self::err( 'lack_of_param' );
+		}
+
+		try {
+			$this->_validate_hash( 1 );
+		} catch( \Exception $e ) {
+			return self::err( $e->getMessage() );
+		}
+
 		// This doesn't need to sync QUIC conf
-		Conf::get_instance()->update( Base::O_API_KEY, $api_key );
+		Conf::get_instance()->update( Base::O_API_KEY, $_POST[ 'domain_key' ] );
+		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
+		// Clear token
+		unset( $this->_summary[ 'token' ] );
+		self::save_summary();
 
 		Debug2::debug( '❄️  saved auth_key' );
+	}
+
+	/**
+	 * Validate POST hash match local token or not
+	 *
+	 * @since  3.0
+	 */
+	private function _validate_hash( $offset = 0 )
+	{
+		if ( empty( $_POST[ 'hash' ] ) ) {
+			Debug2::debug( '❄️  Lack of hash param' );
+			throw new \Exception( 'lack_of_param' );
+		}
+
+		if ( empty( $this->_summary[ 'token' ] ) ) {
+			Debug2::debug( '❄️  token validate failed: token not exist' );
+			throw new \Exception( 'lack_of_local_token' );
+		}
+
+		if ( $_POST[ 'hash' ] !== md5( substr( $this->_summary[ 'token' ], $offset, 8 ) ) ) {
+			Debug2::debug( '❄️  token validate failed: token mismatch hash !== ' . $_POST[ 'hash' ] );
+			throw new \Exception( 'mismatch' );
+		}
+	}
+
+	/**
+	 * If can link the domain to QC user or not
+	 *
+	 * @since  3.0
+	 */
+	public function can_link_qc()
+	{
+		return empty( $cloud_summary[ 'is_linked' ] ) && $this->_api_key;
+	}
+
+	/**
+	 * Link the domain to QC user
+	 *
+	 * @since  3.0
+	 */
+	private function _link_to_qc()
+	{
+		if ( ! $this->can_link_qc() ) {
+			return;
+		}
+
+		$data = array(
+			'site_url'		=> home_url(),
+			'domain_hash'	=> md5( substr( $this->_api_key, 0, 8 ) ),
+			'ref'			=> $_SERVER[ 'HTTP_REFERER' ],
+		);
+
+		wp_redirect( self::CLOUD_SERVER . '/u/wp?data=' . Utility::arr2str( $data ) );
+		exit;
+	}
+
+	/**
+	 * Update is_linked status if is a redirected back from QC
+	 *
+	 * @since  3.0
+	 */
+	public function update_is_linked_status()
+	{
+		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'domain_hash' ] ) ) {
+			return;
+		}
+
+		if ( ! $this->_api_key ) {
+			return;
+		}
+
+		if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
+			Admin_Display::error( __( 'Domain key hash mismatch', 'litespeed-cache' ), true );
+			return;
+		}
+
+		$this->_summary[ 'is_linked' ] = 1;
+		self::save_summary();
 	}
 
 	/**
@@ -901,11 +971,15 @@ class Cloud extends Base
 				$instance->_clear_promo();
 				break;
 
-			case self::TYPE_GEN_KEY :
+			case self::TYPE_GEN_KEY:
 				$instance->gen_key();
 				break;
 
-			case self::TYPE_SYNC_USAGE :
+			case self::TYPE_LINK:
+				$instance->_link_to_qc();
+				break;
+
+			case self::TYPE_SYNC_USAGE:
 				$instance->sync_usage();
 
 				$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;

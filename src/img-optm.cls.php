@@ -797,7 +797,7 @@ class Img_Optm extends Base
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
 					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized image file expired and got cleared.', 'litespeed-cache' );
+					$msg = __( 'Optimized image file expired and was cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}
@@ -858,7 +858,7 @@ class Img_Optm extends Base
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
 					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized WebP file expired and got cleared.', 'litespeed-cache' );
+					$msg = __( 'Optimized WebP file expired and was cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}
