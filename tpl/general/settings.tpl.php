@@ -2,8 +2,6 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$api_key_val = Conf::val( Base::O_API_KEY );
-
 $__cloud = Cloud::get_instance();
 
 $__cloud->update_is_linked_status();
@@ -15,7 +13,7 @@ $cloud_summary = Cloud::get_summary();
 $can_token = $__cloud->can_token();
 
 $apply_btn_txt = __( 'Apply API Key', 'litespeed-cache' );
-if ( $api_key_val ) {
+if ( Conf::val( Base::O_API_KEY ) ) {
 	$apply_btn_txt = __( 'Refresh API Key', 'litespeed-cache' );
 }
 if ( ! $can_token ) {
