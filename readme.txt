@@ -300,7 +300,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱**DB** Database summary: Autoload entries list.
 * 🌱**DB** Revisions older than. (@thememasterguru)
 * 🌱**Cache** Forced public cache setting. (#308207)
-* 🌱🕷️ New timeout setting to avoid incorrect blacklist addition. (#900171)
+* 🌱**Crawler** New timeout setting to avoid incorrect blacklist addition. (#900171)
 * 🌱**Htaccess** Frontend & backend .htaccess path customize. (@jon81)
 * 🌱**Toolbox** Detailed Heartbeat Control (@K9Heaven)
 * 🌱**Purge** Purge Stale setting.
@@ -324,20 +324,20 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱**REST** New REST TTL setting.  (@thekendog)
 * 🌱**CDN** New setting `HTML Attribute To Replace`. CDN can now support any HTML attribute to be replaced. (@danushkaj91)
 * 🌱**Debug** Debug URI includes/excludes setings.
-* 🌱 🐞 Support for multiple domains in custom sitemap. (@alchem)
-* 🌱🕷️ New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
+* 🌱**Crawler** 🐞 Support for multiple domains in custom sitemap. (@alchem)
+* 🌱**Crawler** New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🌱**Media** LQIP minimum dimensions setting. (@Lukasz Szmigiel)
-* 🕷️ Able to add single rows to blacklist.
-* 🕷️ Crawler data now saved into database instead of creating new files.
-* 🕷️ Larger timeout to avoid wrongly added to blacklist.
-* 🕷️ Manually changed the priority of mobile and WebP. (@rafaucau)
+* **Crawler** Able to add single rows to blacklist.
+* **Crawler** Crawler data now saved into database instead of creating new files.
+* **Crawler** Larger timeout to avoid wrongly added to blacklist.
+* **Crawler** Manually changed the priority of mobile and WebP. (@rafaucau)
 * **Browser** Larger Browser Cache TTL for Google Page Score improvement. (@max2348)
 * **Task** Task refactored. Disabled cron will not show in cron list anymore.
 * **Task** Speed up task load speed.
 * **ESI** Added Bloom nonce to ESI for Elegant Themes.
-* **GUI** Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * **Cloud** Able to redetect cloud nodes now.
 * **Img_optm** Fixed stale data in redirected links.
+* **Lazyload** HTML body now will be appeneded a CSS class `litespeed_lazyloaded` after lazyload finished. (@Adam Wilson)
 * **Cache** Default drop qs values. (@gijo Varghese)
 * **LQIP** Show all LQIP images in Media column.
 * **CDN** Can now support custom REST API prefix other than wp-json. (#174 @therealgilles)
@@ -348,39 +348,40 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **DB** Simplified table operation funcs.
 * **CSSJS** Bypassed CSS/JS generation to return 404 if file is empty (@grubyy)
 * **CSSJS** Inline JS defer will not conflict with JS inline optm anymore.
-* **GUI** Localized vue.js to avoid CloudFlare cookie. (@politicske)
-* **GUI** Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
-* **GUI** Displayed TTL range below the corresponding setting.
 * **CDN** settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
 * **OPcache** Purged all opcache when updating cache file. (@closte #170)
 * **CLI** CLI cmd renamed.
 * **CLI** Well-formated table to show all options.
 * **Purge** Only purge related posts that have a status of "published" to avoid unnecessary "draft" purges. (@Jakub Knytl)
-* Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
-* Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
-* Crawler cookie now support `_null` as empty value.
-* Simplified admin setting logic.
-* Multi values settings now uniformed to multi lines for easier setting.
-* New preset default data file `data/consts.default.ini`.
-* New API: iframe lazyload exclude filter.
-* Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
+* **GUI** Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
+* **Htaccess** Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
+* **Crawler** Crawler cookie now support `_null` as empty value.
+* **Crawler** Avoid crawler PHP fatal error on Windows OS. (@technisolutions)
+* **Admin** Simplified admin setting logic.
+* **Conf** Multi values settings now uniformed to multi lines for easier setting.
+* **Conf** New preset default data file `data/consts.default.ini`.
+* **Conf** Config setting renamed and uniformed.
+* **Conf** Dropped `Conf::option()`. Used `Conf::val()` instead.
+* **Conf** Improved conf initialization and upgrade convertion workflow.
+* **Core** Code base refactored. New namespace LiteSpeed.
+* **API** New API: iframe lazyload exclude filter.
 * **GUI** human readable seconds. (@MarkCanada)
-* API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one. Same for ESI blocks.* ESI shortcode doesn't change.
+* **API** API refactored. * NOTE: All 3rd party plugins that are using previous APIs, especially `LiteSpeed_Cache_API`, need to be adjusted to the latest one. Same for ESI blocks.* ESI shortcode doesn't change.
 * **API** New hook `litespeed_update_confs` to settings update.
 * **API** New Hooks `litespeed_frontend_shortcut` and `litespeed_backend_shortcut` for dropdown menu. (@callaloo)
 * **API** Removed `litespeed_option_*` hooks. Use `litespeed_force_option` hook insteadly
 * **API** Renamed `litespeed_force_option` to `litespeed_conf_force`.
 * **API** Removed function `litespeed_purge_single_post`.
 * **REST** New rest API to fetch public IP.
+* **GUI** Hiding Cloudflare/Object Cache/Cloud API key credentials. (@menathor)
 * **GUI** Renamed all backend link tag from lscache to litespeed.
 * **GUI** fixed duplicated form tag.
 * **GUI** Fix cron doc link. (@arnab Mohapatra)
 * **GUI** Frontend adminbar menu added `Purge All` actions. (@Monarobase)
-* Config setting renamed and uniformed.
-* **Conf** Dropped `Conf::option()`. Used `Conf::val()` instead.
-* Improved conf initialization and upgrade convertion workflow.
-* Code base refactored. New namespace LiteSpeed.
-* GUI refactored.
+* **GUI** Localized vue.js to avoid CloudFlare cookie. (@politicske)
+* **GUI** Always show optm column in Media Library for future single row optm operation. (@mikeyhash)
+* **GUI** Displayed TTL range below the corresponding setting.
+* **GUI** GUI refactored.
 * **Debug** Report can now append notes.
 * **3rd** Default added parallax-image to webp replacement for BB.
 * **3rd** User Switching plugin compatibility. (@robert Staddon)
@@ -391,7 +392,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * **Debug** `Disable All Features` now will see the warning banner if ON.
 * **Debug** Dropped `log filters` section.
 * **Debug** Debug and Tools sections combined into new `Toolbox` section.
-* 🐞🕷️ Multi sites will now use separate sitemap even when `Use Primary Site` is ON. (@mrhuynhanh)
+* 🐞**Crawler** Multi sites will now use separate sitemap even when `Use Primary Site` is ON. (@mrhuynhanh)
 * 🐞**Img_optm** Fixed large volume image table storage issue. (#328956)
 * 🐞 **Cloud** Cloud callback hash validation fixed OC conflict. (@pbpiotr)
 * 🎊 Any user that had the contribution to our WP community or changelog (even just bug report/feedback/suggestion) can apply for extra credits in QUIC.cloud.

@@ -115,6 +115,23 @@ class Error
 				$msg = __( 'Crawler disabled by the server admin.', 'litespeed-cache' );
 				break;
 
+			/*** QC error code ***/
+			case 'try_later':
+				$msg = __( 'Previous request too recent. Please try again later.', 'litespeed-cache' );
+				break;
+
+			case 'waiting_for_approval':
+				$msg = __( 'Your application is waiting for approval.', 'litespeed-cache' );
+				break;
+
+			case 'callback_fail':
+				$msg = __( 'The callback validation to your domain failed. Please make sure there is no firewall blocking our servers.', 'litespeed-cache' );
+				break;
+
+			case 'forbidden':
+				$msg = __( 'Your domain has been forbidden from using our services due to a previous policy violation.', 'litespeed-cache' );
+				break;
+
 			default:
 				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
 				break;

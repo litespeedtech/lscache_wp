@@ -29,7 +29,7 @@ class Cloud extends Base
 
 	const EXPIRATION_NODE = 5; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
-	const EXPIRATION_TOKEN = 300; // Min intval to request a token
+	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
 
 	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
@@ -780,7 +780,7 @@ class Cloud extends Base
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
 			Debug2::debug( '❄️  ❌ _err: ' . $json_msg );
 
-			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server";
+			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg );
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
@@ -792,7 +792,9 @@ class Cloud extends Base
 		$this->_summary[ 'token_ts' ] = time();
 		self::save_summary();
 
-		Admin_Display::succeed( __( 'Applied API key successfully. Please wait for approval result. It will be automatically sent to your WordPress.', 'litespeed-cache' ) );
+		Debug2::debug( '❄️ ✅ send request for key successfully.' );
+
+		Admin_Display::succeed( __( 'Applied for Domain key successfully. Please wait for result. Domain key will be automatically sent to your WordPress.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -811,7 +813,7 @@ class Cloud extends Base
 
 		Control::set_nocache( 'Cloud token validation' );
 
-		Debug2::debug( '❄️  __callback token validation passed' );
+		Debug2::debug( '❄️ ✅ __callback token validation passed' );
 
 		return self::ok( array( 'hash' => md5( substr( $this->_summary[ 'token' ], 3, 8 ) ) ) );
 	}
@@ -838,11 +840,15 @@ class Cloud extends Base
 		// This doesn't need to sync QUIC conf
 		Conf::get_instance()->update( Base::O_API_KEY, $_POST[ 'domain_key' ] );
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
+		$this->_summary[ 'apikey_ts' ] = time();
 		// Clear token
 		unset( $this->_summary[ 'token' ] );
 		self::save_summary();
 
-		Debug2::debug( '❄️  saved auth_key' );
+		Debug2::debug( '❄️ ✅ saved auth_key' );
+		Admin_Display::succeed( __( 'Congratulations, your Domain Key has been approved! The setting has been updated accordingly.', 'litespeed-cache' ) );
+
+		return self::ok();
 	}
 
 	/**
@@ -895,7 +901,7 @@ class Cloud extends Base
 			'ref'			=> $_SERVER[ 'HTTP_REFERER' ],
 		);
 
-		wp_redirect( self::CLOUD_SERVER . '/u/wp?data=' . Utility::arr2str( $data ) );
+		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str( $data ) );
 		exit;
 	}
 

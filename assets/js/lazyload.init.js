@@ -9,11 +9,15 @@
 (function( window, document ){
 	'use strict' ;
 
-	var instance ;
-	var update_lazyload ;
+	var instance;
+	var update_lazyload;
+
+	var litespeed_finish_callback = function(){
+		document.body.classList.add( 'litespeed_lazyloaded' );
+	}
 
 	var init = function(){
-		instance = new LazyLoad( { elements_selector : "[data-lazyloaded]" } ) ;
+		instance = new LazyLoad( { elements_selector: "[data-lazyloaded]", callback_finish: litespeed_finish_callback } );
 
 		update_lazyload = function(){
 			instance.update() ;
