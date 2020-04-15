@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.0-rc2\n"
+"Project-Id-Version: LiteSpeed Cache 3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-03-13 18:41:45+00:00\n"
+"POT-Creation-Date: 2020-04-15 18:40:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,29 +28,29 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: src/activation.cls.php:305
+#: src/activation.cls.php:302
 msgid ""
 "LiteSpeed has detected another plugin using the \"Advanced Cache\" file."
 msgstr ""
 
-#: src/activation.cls.php:306
+#: src/activation.cls.php:303
 msgid ""
 "LiteSpeed Cache does work with other optimization plugins, but only if "
 "functionality is not duplicated. Only one full-page cache may be activated."
 msgstr ""
 
-#: src/activation.cls.php:308 src/admin-display.cls.php:1086 src/doc.cls.php:38
+#: src/activation.cls.php:305 src/admin-display.cls.php:1086 src/doc.cls.php:38
 #: tpl/cdn/manage.tpl.php:66 tpl/dash/dashboard.tpl.php:46
 #: tpl/img_optm/summary.tpl.php:56 tpl/img_optm/summary.tpl.php:96
 #: tpl/inc/check_cache_disabled.php:50
 msgid "Learn More"
 msgstr ""
 
-#: src/activation.cls.php:494 src/activation.cls.php:499
+#: src/activation.cls.php:491 src/activation.cls.php:496
 msgid "Failed to upgrade."
 msgstr ""
 
-#: src/activation.cls.php:503
+#: src/activation.cls.php:500
 msgid "Upgraded successfully."
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Cache"
 msgstr ""
 
-#: src/admin-display.cls.php:160 tpl/cdn/settings.tpl.php:242
+#: src/admin-display.cls.php:160 tpl/cdn/settings.tpl.php:267
 msgid "CDN"
 msgstr ""
 
@@ -84,75 +84,75 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: src/admin-display.cls.php:168 src/lang.cls.php:208
+#: src/admin-display.cls.php:168 src/lang.cls.php:210
 msgid "Crawler"
 msgstr ""
 
 #: src/admin-display.cls.php:170
-msgid "Tools"
+msgid "Toolbox"
 msgstr ""
 
-#: src/admin-display.cls.php:172
-msgid "Debug"
-msgstr ""
-
-#: src/admin-display.cls.php:257 src/gui.cls.php:600
-#: tpl/general/settings.tpl.php:64
+#: src/admin-display.cls.php:254 src/gui.cls.php:600
 msgid "Settings"
 msgstr ""
 
-#: src/admin-display.cls.php:277
+#: src/admin-display.cls.php:274
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: src/admin-display.cls.php:684 tpl/general/settings.tpl.php:44
+#: src/admin-display.cls.php:667
 msgid "Save Changes"
 msgstr ""
 
-#: src/admin-display.cls.php:805 src/admin-display.cls.php:858
-#: src/admin-display.cls.php:896 tpl/cache/settings_inc.cache_mobile.tpl.php:70
-#: tpl/cdn/settings.tpl.php:45 tpl/debug/settings.tpl.php:44
-#: tpl/page_optm/settings_css.tpl.php:67 tpl/page_optm/settings_css.tpl.php:84
-#: tpl/page_optm/settings_css.tpl.php:85 tpl/page_optm/settings_js.tpl.php:94
+#: src/admin-display.cls.php:788 src/admin-display.cls.php:841
+#: src/admin-display.cls.php:879 tpl/cache/settings_inc.cache_mobile.tpl.php:70
+#: tpl/cdn/settings.tpl.php:45 tpl/page_optm/settings_css.tpl.php:67
+#: tpl/page_optm/settings_css.tpl.php:84 tpl/page_optm/settings_css.tpl.php:85
+#: tpl/page_optm/settings_js.tpl.php:94
 #: tpl/page_optm/settings_media.tpl.php:156
 #: tpl/page_optm/settings_tuning.tpl.php:36
 #: tpl/page_optm/settings_tuning.tpl.php:78
+#: tpl/toolbox/settings-debug.tpl.php:44
 msgid "ON"
 msgstr ""
 
-#: src/admin-display.cls.php:806 src/admin-display.cls.php:861
-#: src/admin-display.cls.php:896 tpl/cache/settings_inc.object.tpl.php:213
-#: tpl/cdn/settings.tpl.php:45 tpl/cdn/settings.tpl.php:212
-#: tpl/debug/settings.tpl.php:38 tpl/page_optm/settings_css.tpl.php:84
-#: tpl/page_optm/settings_css.tpl.php:99
+#: src/admin-display.cls.php:789 src/admin-display.cls.php:844
+#: src/admin-display.cls.php:879 tpl/cache/settings_inc.object.tpl.php:213
+#: tpl/cdn/settings.tpl.php:45 tpl/cdn/settings.tpl.php:237
+#: tpl/page_optm/settings_css.tpl.php:84 tpl/page_optm/settings_css.tpl.php:99
 #: tpl/page_optm/settings_media.tpl.php:159
 #: tpl/page_optm/settings_tuning.tpl.php:33
 #: tpl/page_optm/settings_tuning.tpl.php:75
+#: tpl/toolbox/settings-debug.tpl.php:38
 msgid "OFF"
 msgstr ""
 
-#: src/admin-display.cls.php:906
+#: src/admin-display.cls.php:889
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:907
+#: src/admin-display.cls.php:890
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:919 tpl/cache/settings_inc.object.tpl.php:106
+#: src/admin-display.cls.php:902 tpl/cache/settings_inc.object.tpl.php:106
 #: tpl/crawler/settings-general.tpl.php:60
 #: tpl/crawler/settings-general.tpl.php:74
 #: tpl/crawler/settings-general.tpl.php:89 tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:942 src/admin-display.cls.php:947
+#: src/admin-display.cls.php:925 src/admin-display.cls.php:930
 msgid "Recommended value"
 msgstr ""
 
-#: src/admin-display.cls.php:972
+#: src/admin-display.cls.php:955
 msgid "Invalid rewrite rule"
+msgstr ""
+
+#: src/admin-display.cls.php:973
+msgid "Path must end with %s"
 msgstr ""
 
 #: src/admin-display.cls.php:992
@@ -262,82 +262,98 @@ msgstr ""
 msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
-#: src/cloud.cls.php:311 src/cloud.cls.php:324 src/cloud.cls.php:353
-#: src/cloud.cls.php:444
+#: src/cloud.cls.php:314 src/cloud.cls.php:327 src/cloud.cls.php:356
+#: src/cloud.cls.php:447
 msgid "Cloud Error"
 msgstr ""
 
-#: src/cloud.cls.php:353
+#: src/cloud.cls.php:356
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:444
+#: src/cloud.cls.php:447
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:534 src/cloud.cls.php:546
+#: src/cloud.cls.php:531 src/cloud.cls.php:543
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:556
+#: src/cloud.cls.php:553
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:565 src/cloud.cls.php:573
+#: src/cloud.cls.php:562 src/cloud.cls.php:570
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:581
+#: src/cloud.cls.php:578
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:590
+#: src/cloud.cls.php:587
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:632
+#: src/cloud.cls.php:629 src/cloud.cls.php:785
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:807 src/cloud.cls.php:814
+#: src/cloud.cls.php:774
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:821
-msgid "Generate API key successfully."
+#: src/cloud.cls.php:799
+msgid ""
+"Applied for Domain key successfully. Please wait for result. Domain key will "
+"be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:910
+#: src/cloud.cls.php:852
+msgid ""
+"Congratulations, your Domain Key has been approved! The setting has been "
+"updated accordingly."
+msgstr ""
+
+#: src/cloud.cls.php:927
+msgid "Domain key hash mismatch"
+msgstr ""
+
+#: src/cloud.cls.php:997
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:717
+#: src/conf.cls.php:734
 msgid "Changed setting successfully."
 msgstr ""
 
-#: src/core.cls.php:262
+#: src/core.cls.php:260
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: src/core.cls.php:267
+#: src/core.cls.php:265
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: src/crawler-map.cls.php:315
+#: src/crawler-map.cls.php:275
+msgid "Sitemap cleaned successfully"
+msgstr ""
+
+#: src/crawler-map.cls.php:329
 msgid "Sitemap created successfully: %d items"
 msgstr ""
 
-#: src/crawler.cls.php:737
+#: src/crawler.cls.php:767
 msgid "Guest"
 msgstr ""
 
-#: src/crawler.cls.php:880
+#: src/crawler.cls.php:910
 msgid "Manually added to blacklist"
 msgstr ""
 
-#: src/crawler.cls.php:883
+#: src/crawler.cls.php:913
 msgid "Previously existed in blacklist"
 msgstr ""
 
@@ -492,7 +508,27 @@ msgstr ""
 msgid "Crawler disabled by the server admin."
 msgstr ""
 
-#: src/error.cls.php:119
+#: src/error.cls.php:120
+msgid "Previous request too recent. Please try again later."
+msgstr ""
+
+#: src/error.cls.php:124
+msgid "Your application is waiting for approval."
+msgstr ""
+
+#: src/error.cls.php:128
+msgid ""
+"The callback validation to your domain failed. Please make sure there is no "
+"firewall blocking our servers."
+msgstr ""
+
+#: src/error.cls.php:132
+msgid ""
+"Your domain has been forbidden from using our services due to a previous "
+"policy violation."
+msgstr ""
+
+#: src/error.cls.php:136
 msgid "Unknown error"
 msgstr ""
 
@@ -565,12 +601,11 @@ msgstr ""
 #: src/gui.cls.php:541 src/gui.cls.php:551 src/gui.cls.php:618
 #: src/gui.cls.php:626 src/gui.cls.php:634 src/gui.cls.php:643
 #: src/gui.cls.php:653 src/gui.cls.php:663 src/gui.cls.php:673
-#: src/gui.cls.php:683 src/gui.cls.php:693 src/gui.cls.php:703
-#: tpl/tools/purge.tpl.php:39 tpl/tools/purge.tpl.php:45
-#: tpl/tools/purge.tpl.php:54 tpl/tools/purge.tpl.php:63
-#: tpl/tools/purge.tpl.php:72 tpl/tools/purge.tpl.php:81
-#: tpl/tools/purge.tpl.php:90 tpl/tools/purge.tpl.php:99
-#: tpl/tools/purge.tpl.php:108
+#: src/gui.cls.php:683 src/gui.cls.php:693 tpl/toolbox/purge.tpl.php:39
+#: tpl/toolbox/purge.tpl.php:45 tpl/toolbox/purge.tpl.php:54
+#: tpl/toolbox/purge.tpl.php:63 tpl/toolbox/purge.tpl.php:72
+#: tpl/toolbox/purge.tpl.php:81 tpl/toolbox/purge.tpl.php:90
+#: tpl/toolbox/purge.tpl.php:99
 msgid "Purge All"
 msgstr ""
 
@@ -578,30 +613,30 @@ msgstr ""
 msgid "LSCache"
 msgstr ""
 
-#: src/gui.cls.php:502 src/gui.cls.php:634 tpl/tools/purge.tpl.php:45
+#: src/gui.cls.php:502 src/gui.cls.php:634 tpl/toolbox/purge.tpl.php:45
 msgid "CSS/JS Cache"
 msgstr ""
 
 #: src/gui.cls.php:511 src/gui.cls.php:653 src/lang.cls.php:79
-#: tpl/dash/dashboard.tpl.php:357 tpl/tools/purge.tpl.php:54
+#: tpl/dash/dashboard.tpl.php:354 tpl/toolbox/purge.tpl.php:54
 msgid "Object Cache"
 msgstr ""
 
-#: src/gui.cls.php:521 src/gui.cls.php:663 tpl/tools/purge.tpl.php:63
+#: src/gui.cls.php:521 src/gui.cls.php:663 tpl/toolbox/purge.tpl.php:63
 msgid "Opcode Cache"
 msgstr ""
 
 #: src/gui.cls.php:531 src/gui.cls.php:673 tpl/dash/dashboard.tpl.php:53
-#: tpl/dash/dashboard.tpl.php:398 tpl/tools/purge.tpl.php:72
+#: tpl/dash/dashboard.tpl.php:395 tpl/toolbox/purge.tpl.php:72
 msgid "Critical CSS"
 msgstr ""
 
-#: src/gui.cls.php:541 src/gui.cls.php:693 tpl/tools/purge.tpl.php:90
+#: src/gui.cls.php:541 src/gui.cls.php:683 tpl/toolbox/purge.tpl.php:81
 msgid "LQIP Cache"
 msgstr ""
 
-#: src/gui.cls.php:551 src/gui.cls.php:703 src/lang.cls.php:141
-#: tpl/tools/purge.tpl.php:99
+#: src/gui.cls.php:551 src/gui.cls.php:693 src/lang.cls.php:141
+#: tpl/toolbox/purge.tpl.php:90
 msgid "Gravatar Cache"
 msgstr ""
 
@@ -609,15 +644,7 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.0-rc2)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: src/gui.cls.php:584 tpl/banner/new_version.php:59
-#: tpl/banner/new_version_dev.tpl.php:12 tpl/cache/more_settings_tip.tpl.php:15
-#: tpl/inc/admin_footer.php:8
-msgid "LiteSpeed Cache"
-msgstr ""
-
-#: src/gui.cls.php:592 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:242
+#: src/gui.cls.php:592 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:267
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
@@ -626,51 +653,47 @@ msgstr ""
 msgid "Cloudflare"
 msgstr ""
 
-#: src/gui.cls.php:683 tpl/tools/purge.tpl.php:81
-msgid "Placeholder Cache"
-msgstr ""
-
-#: src/gui.cls.php:723 tpl/img_optm/summary.tpl.php:169
+#: src/gui.cls.php:713 tpl/img_optm/summary.tpl.php:169
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: src/gui.cls.php:724 tpl/img_optm/summary.tpl.php:171
+#: src/gui.cls.php:714 tpl/img_optm/summary.tpl.php:171
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: src/gui.cls.php:743
+#: src/gui.cls.php:733
 msgid "Install %s"
 msgstr ""
 
-#: src/gui.cls.php:744
+#: src/gui.cls.php:734
 msgid "Install Now"
 msgstr ""
 
-#: src/gui.cls.php:764
+#: src/gui.cls.php:754
 msgid ""
 "<a href=\"%1$s\" %2$s>View version %3$s details</a> or <a href=\"%4$s\" %5$s "
 "target=\"_blank\">update now</a>."
 msgstr ""
 
-#: src/gui.cls.php:767
+#: src/gui.cls.php:757
 msgid "View %1$s version %2$s details"
 msgstr ""
 
-#: src/gui.cls.php:772
+#: src/gui.cls.php:762
 msgid "Update %s now"
 msgstr ""
 
-#: src/htaccess.cls.php:357
+#: src/htaccess.cls.php:364
 msgid "Mobile Agent Rules"
 msgstr ""
 
-#: src/htaccess.cls.php:839
+#: src/htaccess.cls.php:846
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: src/htaccess.cls.php:912
+#: src/htaccess.cls.php:916
 msgid "File Saved."
 msgstr ""
 
@@ -694,67 +717,75 @@ msgstr ""
 msgid "No valid image found by Cloud server in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:741
+#: src/img-optm.cls.php:744
 msgid "Pull Cron is running"
 msgstr ""
 
-#: src/img-optm.cls.php:806
+#: src/img-optm.cls.php:800
+msgid "Optimized image file expired and was cleared."
+msgstr ""
+
+#: src/img-optm.cls.php:817
 msgid "Pulled image md5 dismatched"
 msgstr ""
 
-#: src/img-optm.cls.php:859
+#: src/img-optm.cls.php:861
+msgid "Optimized WebP file expired and was cleared."
+msgstr ""
+
+#: src/img-optm.cls.php:878
 msgid "Pulled WebP image md5 dismatched"
 msgstr ""
 
-#: src/img-optm.cls.php:915
+#: src/img-optm.cls.php:934
 msgid "Pulled %d image(s)"
 msgstr ""
 
-#: src/img-optm.cls.php:994
+#: src/img-optm.cls.php:1031
 msgid "Cleaned up unfinished data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1071
+#: src/img-optm.cls.php:1108
 msgid "Destroy all optimization data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1106 src/img-optm.cls.php:1179
+#: src/img-optm.cls.php:1143 src/img-optm.cls.php:1216
 msgid "Rescaned successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1192
+#: src/img-optm.cls.php:1229
 msgid "Rescaned %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1251
+#: src/img-optm.cls.php:1288
 msgid "Calculated backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1313
+#: src/img-optm.cls.php:1350
 msgid "Removed backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1510
+#: src/img-optm.cls.php:1547
 msgid "Switched images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1539
+#: src/img-optm.cls.php:1576
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1545
+#: src/img-optm.cls.php:1582
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1561
+#: src/img-optm.cls.php:1598
 msgid "Restored original file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1568
+#: src/img-optm.cls.php:1605
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1631
+#: src/img-optm.cls.php:1668
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -774,11 +805,11 @@ msgstr ""
 msgid "Images not requested"
 msgstr ""
 
-#: src/lang.cls.php:25 tpl/dash/dashboard.tpl.php:298
+#: src/lang.cls.php:25 tpl/dash/dashboard.tpl.php:295
 msgid "Images requested"
 msgstr ""
 
-#: src/lang.cls.php:26 tpl/dash/dashboard.tpl.php:308
+#: src/lang.cls.php:26 tpl/dash/dashboard.tpl.php:305
 msgid "Images notified to pull"
 msgstr ""
 
@@ -819,14 +850,14 @@ msgid "Server IP"
 msgstr ""
 
 #: src/lang.cls.php:55
-msgid "API Key"
+msgid "Domain Key"
 msgstr ""
 
 #: src/lang.cls.php:57
 msgid "Enable Cache"
 msgstr ""
 
-#: src/lang.cls.php:58 tpl/dash/dashboard.tpl.php:358
+#: src/lang.cls.php:58 tpl/dash/dashboard.tpl.php:355
 msgid "Browser Cache"
 msgstr ""
 
@@ -1180,10 +1211,10 @@ msgid "Lazy Load URI Excludes"
 msgstr ""
 
 #: src/lang.cls.php:152
-msgid "Lazy Load Image Placeholder"
+msgid "Basic Image Placeholder"
 msgstr ""
 
-#: src/lang.cls.php:153 tpl/page_optm/settings_media.tpl.php:153
+#: src/lang.cls.php:153
 msgid "Responsive Placeholder"
 msgstr ""
 
@@ -1192,286 +1223,294 @@ msgid "Responsive Placeholder Color"
 msgstr ""
 
 #: src/lang.cls.php:155
-msgid "Responsive Placeholder Generator"
-msgstr ""
-
-#: src/lang.cls.php:156
 msgid "Responsive Placeholder SVG"
 msgstr ""
 
-#: src/lang.cls.php:157
+#: src/lang.cls.php:156
 msgid "LQIP Cloud Generator"
 msgstr ""
 
-#: src/lang.cls.php:158
+#: src/lang.cls.php:157
 msgid "LQIP Quality"
 msgstr ""
 
-#: src/lang.cls.php:159
-msgid "Generate Responsive Placeholder In Background"
+#: src/lang.cls.php:158
+msgid "LQIP Minimum Dimensions"
 msgstr ""
 
 #: src/lang.cls.php:160
-msgid "Lazy Load Iframes"
+msgid "Generate LQIP In Background"
 msgstr ""
 
 #: src/lang.cls.php:161
+msgid "Lazy Load Iframes"
+msgstr ""
+
+#: src/lang.cls.php:162
 msgid "Inline Lazy Load Images Library"
 msgstr ""
 
-#: src/lang.cls.php:162 tpl/dash/dashboard.tpl.php:326
+#: src/lang.cls.php:163
 msgid "Auto Request Cron"
 msgstr ""
 
-#: src/lang.cls.php:163 tpl/dash/dashboard.tpl.php:327
+#: src/lang.cls.php:164
 msgid "Auto Pull Cron"
 msgstr ""
 
-#: src/lang.cls.php:164
+#: src/lang.cls.php:165
 msgid "Optimize Original Images"
 msgstr ""
 
-#: src/lang.cls.php:165
+#: src/lang.cls.php:166
 msgid "Remove Original Backups"
 msgstr ""
 
-#: src/lang.cls.php:166
+#: src/lang.cls.php:167
 msgid "Create WebP Versions"
 msgstr ""
 
-#: src/lang.cls.php:167
+#: src/lang.cls.php:168
 msgid "Optimize Losslessly"
 msgstr ""
 
-#: src/lang.cls.php:168
+#: src/lang.cls.php:169
 msgid "Preserve EXIF/XMP data"
 msgstr ""
 
-#: src/lang.cls.php:169
+#: src/lang.cls.php:170
 msgid "WebP Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:170
+#: src/lang.cls.php:171
 msgid "WebP For Extra srcset"
 msgstr ""
 
-#: src/lang.cls.php:171
+#: src/lang.cls.php:172
 msgid "WordPress Image Quality Control"
 msgstr ""
 
-#: src/lang.cls.php:172 tpl/esi_widget_edit.php:36
+#: src/lang.cls.php:173 tpl/esi_widget_edit.php:36
 msgid "Enable ESI"
 msgstr ""
 
-#: src/lang.cls.php:173
+#: src/lang.cls.php:174
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: src/lang.cls.php:174
+#: src/lang.cls.php:175
 msgid "Cache Comment Form"
 msgstr ""
 
-#: src/lang.cls.php:175
+#: src/lang.cls.php:176
 msgid "ESI Nonce"
 msgstr ""
 
-#: src/lang.cls.php:176
+#: src/lang.cls.php:177
 msgid "Vary Group"
 msgstr ""
 
-#: src/lang.cls.php:177
+#: src/lang.cls.php:178
 msgid "Purge All Hooks"
 msgstr ""
 
-#: src/lang.cls.php:178
+#: src/lang.cls.php:179
 msgid "Improve HTTP/HTTPS Compatibility"
 msgstr ""
 
-#: src/lang.cls.php:179
+#: src/lang.cls.php:180
 msgid "Instant Click"
 msgstr ""
 
-#: src/lang.cls.php:180
+#: src/lang.cls.php:181
 msgid "Check Advanced Cache"
 msgstr ""
 
-#: src/lang.cls.php:181
+#: src/lang.cls.php:182
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: src/lang.cls.php:182
+#: src/lang.cls.php:183
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: src/lang.cls.php:183
+#: src/lang.cls.php:184
 msgid "Login Cookie"
 msgstr ""
 
-#: src/lang.cls.php:184
+#: src/lang.cls.php:185
 msgid "Image WebP Replacement"
 msgstr ""
 
-#: src/lang.cls.php:186
+#: src/lang.cls.php:187
 msgid "Frontend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:187
+#: src/lang.cls.php:188
 msgid "Backend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:188
+#: src/lang.cls.php:189
 msgid "Frontend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:189
+#: src/lang.cls.php:190
 msgid "Frontend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:190
+#: src/lang.cls.php:191
 msgid "Backend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:191
+#: src/lang.cls.php:192
 msgid "Backend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:192
+#: src/lang.cls.php:193
 msgid "Editor Heartbeat"
 msgstr ""
 
-#: src/lang.cls.php:193
+#: src/lang.cls.php:194
 msgid "Editor Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:195
+#: src/lang.cls.php:196
 msgid "QUIC.cloud CDN"
 msgstr ""
 
-#: src/lang.cls.php:196
+#: src/lang.cls.php:197
 msgid "Use CDN Mapping"
 msgstr ""
 
-#: src/lang.cls.php:197
+#: src/lang.cls.php:198
 msgid "CDN URL"
 msgstr ""
 
-#: src/lang.cls.php:198
+#: src/lang.cls.php:199
 msgid "Include Images"
 msgstr ""
 
-#: src/lang.cls.php:199
+#: src/lang.cls.php:200
 msgid "Include CSS"
 msgstr ""
 
-#: src/lang.cls.php:200
+#: src/lang.cls.php:201
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:201 tpl/cdn/settings.tpl.php:144
+#: src/lang.cls.php:202 tpl/cdn/settings.tpl.php:144
 msgid "Include File Types"
 msgstr ""
 
-#: src/lang.cls.php:202
-msgid "Original URLs"
-msgstr ""
-
 #: src/lang.cls.php:203
-msgid "Included Directories"
+msgid "HTML Attribute To Replace"
 msgstr ""
 
 #: src/lang.cls.php:204
-msgid "Exclude Path"
+msgid "Original URLs"
 msgstr ""
 
 #: src/lang.cls.php:205
-msgid "Load JQuery Remotely"
+msgid "Included Directories"
 msgstr ""
 
 #: src/lang.cls.php:206
+msgid "Exclude Path"
+msgstr ""
+
+#: src/lang.cls.php:207
+msgid "Load JQuery Remotely"
+msgstr ""
+
+#: src/lang.cls.php:208
 msgid "Cloudflare API"
 msgstr ""
 
-#: src/lang.cls.php:209
+#: src/lang.cls.php:211
 msgid "Delay"
 msgstr ""
 
-#: src/lang.cls.php:210
+#: src/lang.cls.php:212
 msgid "Run Duration"
 msgstr ""
 
-#: src/lang.cls.php:211
+#: src/lang.cls.php:213
 msgid "Interval Between Runs"
 msgstr ""
 
-#: src/lang.cls.php:212
+#: src/lang.cls.php:214
 msgid "Crawl Interval"
 msgstr ""
 
-#: src/lang.cls.php:213
+#: src/lang.cls.php:215
 msgid "Threads"
 msgstr ""
 
-#: src/lang.cls.php:214
+#: src/lang.cls.php:216
 msgid "Timeout"
 msgstr ""
 
-#: src/lang.cls.php:215
+#: src/lang.cls.php:217
 msgid "Server Load Limit"
 msgstr ""
 
-#: src/lang.cls.php:216
+#: src/lang.cls.php:218
 msgid "Role Simulation"
 msgstr ""
 
-#: src/lang.cls.php:217
+#: src/lang.cls.php:219
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:218 tpl/crawler/settings-sitemap.tpl.php:110
+#: src/lang.cls.php:220 tpl/crawler/settings-sitemap.tpl.php:124
 msgid "Custom Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:220 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:221
+msgid "Drop Domain from Sitemap"
+msgstr ""
+
+#: src/lang.cls.php:223 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:221 tpl/debug/log_viewer.tpl.php:7
+#: src/lang.cls.php:224 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:222
+#: src/lang.cls.php:225
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:223
+#: src/lang.cls.php:226
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:224
+#: src/lang.cls.php:227
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:225
+#: src/lang.cls.php:228
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:226
+#: src/lang.cls.php:229
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:227
+#: src/lang.cls.php:230
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:231
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:230
+#: src/lang.cls.php:233
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:231
+#: src/lang.cls.php:234
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1564,88 +1603,84 @@ msgstr ""
 msgid "Restore from backup"
 msgstr ""
 
-#: src/placeholder.cls.php:85 tpl/dash/network_dash.tpl.php:30
+#: src/placeholder.cls.php:87 tpl/dash/network_dash.tpl.php:30
 msgid "LQIP"
 msgstr ""
 
-#: src/placeholder.cls.php:145
+#: src/placeholder.cls.php:147
 msgid "LQIP image preview for size %s"
 msgstr ""
 
-#: src/purge.cls.php:182
+#: src/purge.cls.php:195
 msgid "Purged all caches successfully."
 msgstr ""
 
-#: src/purge.cls.php:200
+#: src/purge.cls.php:213
 msgid "Notified LiteSpeed Web Server to purge all LSCache entries."
 msgstr ""
 
-#: src/purge.cls.php:216
+#: src/purge.cls.php:229
 msgid "Cleaned all critical CSS files."
 msgstr ""
 
-#: src/purge.cls.php:232
-msgid "Cleaned all placeholder files."
-msgstr ""
-
-#: src/purge.cls.php:248
+#: src/purge.cls.php:245
 msgid "Cleaned all LQIP files."
 msgstr ""
 
-#: src/purge.cls.php:264
+#: src/purge.cls.php:261
 msgid "Cleaned all gravatar files."
 msgstr ""
 
-#: src/purge.cls.php:285
+#: src/purge.cls.php:282
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: src/purge.cls.php:302
+#: src/purge.cls.php:299
 msgid "Opcode cache is not enabled."
 msgstr ""
 
-#: src/purge.cls.php:314
+#: src/purge.cls.php:311
 msgid "Reset the entire opcode cache successfully."
 msgstr ""
 
-#: src/purge.cls.php:333
+#: src/purge.cls.php:330
 msgid "Object cache is not enabled."
 msgstr ""
 
-#: src/purge.cls.php:343
+#: src/purge.cls.php:340
 msgid "Purge all object caches successfully."
 msgstr ""
 
-#: src/purge.cls.php:506
+#: src/purge.cls.php:503
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: src/purge.cls.php:520
+#: src/purge.cls.php:517
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: src/purge.cls.php:540
+#: src/purge.cls.php:537
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: src/purge.cls.php:568
+#: src/purge.cls.php:565
 msgid "Purge category %s"
 msgstr ""
 
-#: src/purge.cls.php:596
+#: src/purge.cls.php:593
 msgid "Purge tag %s"
 msgstr ""
 
-#: src/purge.cls.php:628
+#: src/purge.cls.php:625
 msgid "Purge url %s"
 msgstr ""
 
-#: src/task.cls.php:208
+#: src/task.cls.php:125
 msgid "Every Minute"
 msgstr ""
 
-#: src/task.cls.php:229
-msgid "LiteSpeed Cache Custom Cron Crawler"
+#: src/task.cls.php:145
+msgid "LiteSpeed Crawler Cron"
 msgstr ""
 
 #: src/utility.cls.php:239
@@ -1674,8 +1709,8 @@ msgstr ""
 
 #: thirdparty/woocommerce.content.tpl.php:18
 #: tpl/cache/settings-advanced.tpl.php:12
-#: tpl/cache/settings_inc.browser.tpl.php:12 tpl/debug/report.tpl.php:29
-#: tpl/tools/heartbeat.tpl.php:14
+#: tpl/cache/settings_inc.browser.tpl.php:12 tpl/toolbox/heartbeat.tpl.php:14
+#: tpl/toolbox/report.tpl.php:29
 msgid "NOTICE:"
 msgstr ""
 
@@ -1779,6 +1814,13 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
+#: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
+msgid "LiteSpeed Cache"
+msgstr ""
+
 #: tpl/banner/new_version.php:59
 msgid "New Version Available!"
 msgstr ""
@@ -1788,7 +1830,7 @@ msgid "New release %s is available now."
 msgstr ""
 
 #: tpl/banner/new_version.php:71 tpl/banner/new_version_dev.tpl.php:24
-#: tpl/debug/beta_test.tpl.php:22
+#: tpl/toolbox/beta_test.tpl.php:22
 msgid "Upgrade"
 msgstr ""
 
@@ -1812,26 +1854,26 @@ msgstr ""
 msgid "Thank You for Using the LiteSpeed Cache Plugin!"
 msgstr ""
 
-#: tpl/banner/score.php:77 tpl/dash/dashboard.tpl.php:149
+#: tpl/banner/score.php:77 tpl/dash/dashboard.tpl.php:146
 msgid "Page Load Time"
 msgstr ""
 
 #: tpl/banner/score.php:83 tpl/banner/score.php:123
-#: tpl/dash/dashboard.tpl.php:162 tpl/dash/dashboard.tpl.php:221
+#: tpl/dash/dashboard.tpl.php:159 tpl/dash/dashboard.tpl.php:218
 msgid "Before"
 msgstr ""
 
 #: tpl/banner/score.php:94 tpl/banner/score.php:133
-#: tpl/dash/dashboard.tpl.php:171 tpl/dash/dashboard.tpl.php:229
+#: tpl/dash/dashboard.tpl.php:168 tpl/dash/dashboard.tpl.php:226
 msgid "After"
 msgstr ""
 
 #: tpl/banner/score.php:104 tpl/banner/score.php:143
-#: tpl/dash/dashboard.tpl.php:179 tpl/dash/dashboard.tpl.php:237
+#: tpl/dash/dashboard.tpl.php:176 tpl/dash/dashboard.tpl.php:234
 msgid "Improved by"
 msgstr ""
 
-#: tpl/banner/score.php:117 tpl/dash/dashboard.tpl.php:206
+#: tpl/banner/score.php:117 tpl/dash/dashboard.tpl.php:203
 msgid "PageSpeed Score"
 msgstr ""
 
@@ -1876,7 +1918,7 @@ msgid "TTL"
 msgstr ""
 
 #: tpl/cache/entry.tpl.php:8 tpl/cache/entry_network.tpl.php:7
-#: tpl/tools/entry.tpl.php:6 tpl/tools/purge.tpl.php:134
+#: tpl/toolbox/entry.tpl.php:6 tpl/toolbox/purge.tpl.php:125
 msgid "Purge"
 msgstr ""
 
@@ -1897,7 +1939,7 @@ msgid "Browser"
 msgstr ""
 
 #: tpl/cache/entry.tpl.php:18 tpl/cache/entry_network.tpl.php:11
-#: tpl/debug/settings.tpl.php:98
+#: tpl/toolbox/settings-debug.tpl.php:98
 msgid "Advanced"
 msgstr ""
 
@@ -2015,59 +2057,65 @@ msgid ""
 "When disabling the cache, all cached entries for this blog will be purged."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:33
+#: tpl/cache/settings-cache.tpl.php:34
 msgid "The network admin setting can be overridden here."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:47
+#: tpl/cache/settings-cache.tpl.php:38
+msgid ""
+"With QUIC.cloud enabled, you may still be seeing cache headers from your "
+"local server."
+msgstr ""
+
+#: tpl/cache/settings-cache.tpl.php:52
 msgid "Privately cache frontend pages for logged-in users. (LSWS %s required)"
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:60
+#: tpl/cache/settings-cache.tpl.php:65
 msgid ""
 "Privately cache commenters that have pending comments. Disabling this option "
 "will serve non-cacheable pages to commenters. (LSWS %s required)"
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:73
+#: tpl/cache/settings-cache.tpl.php:78
 msgid "Cache requests made by WordPress REST API calls."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:86
+#: tpl/cache/settings-cache.tpl.php:91
 msgid "Disabling this option may negatively affect performance."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:107
+#: tpl/cache/settings-cache.tpl.php:112
 msgid "URI Paths containing these strings will NOT be cached as public."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:121
+#: tpl/cache/settings-cache.tpl.php:126
 msgid ""
 "Paths containing these strings will be cached regardless of no-cacheable "
 "settings."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:123 tpl/cache/settings-cache.tpl.php:140
+#: tpl/cache/settings-cache.tpl.php:128 tpl/cache/settings-cache.tpl.php:145
 msgid ""
 "To define a custom TTL for a URI, add a space followed by the TTL value to "
 "the end of the URI."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:124 tpl/cache/settings-cache.tpl.php:141
+#: tpl/cache/settings-cache.tpl.php:129 tpl/cache/settings-cache.tpl.php:146
 msgid "For example, %1$s defines a TTL of %2$s seconds for %3$s."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:138
+#: tpl/cache/settings-cache.tpl.php:143
 msgid ""
 "Paths containing these strings will be forced to public cached regardless of "
 "no-cacheable settings."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:155
+#: tpl/cache/settings-cache.tpl.php:160
 msgid "Ignore certain query strings when caching."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:156
+#: tpl/cache/settings-cache.tpl.php:161
 msgid "For example, to drop parameters beginning with %s, %s can be used here."
 msgstr ""
 
@@ -2138,7 +2186,13 @@ msgstr ""
 msgid "The above nonces will be converted to ESI automatically."
 msgstr ""
 
-#: tpl/cache/settings-esi.tpl.php:117
+#: tpl/cache/settings-esi.tpl.php:90
+msgid ""
+"An optional second parameter may be used to specify cache control. Use a "
+"space to separate"
+msgstr ""
+
+#: tpl/cache/settings-esi.tpl.php:118
 msgid ""
 "If your site contains public content that certain user roles can see but "
 "other roles cannot, you can specify a Vary Group for those user roles. For "
@@ -2730,69 +2784,82 @@ msgid ""
 "types from the %s box."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:159
+#: tpl/cdn/settings.tpl.php:168
+msgid ""
+"Specify which HTML element attributes will be replaced with CDN Mapping."
+msgstr ""
+
+#: tpl/cdn/settings.tpl.php:169 tpl/img_optm/settings.tpl.php:140
+msgid "Only attributes listed here will be replaced."
+msgstr ""
+
+#: tpl/cdn/settings.tpl.php:170 tpl/img_optm/settings.tpl.php:141
+msgid "Use the format %1$s or %2$s (element is optional)."
+msgstr ""
+
+#: tpl/cdn/settings.tpl.php:184
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:160
+#: tpl/cdn/settings.tpl.php:185
 msgid ""
 "Wildcard %1$s supported (match zero or more characters). For example, to "
 "match %2$s and %3$s, use %4$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:182
+#: tpl/cdn/settings.tpl.php:207
 msgid "Only files within these directories will be pointed to the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:196
+#: tpl/cdn/settings.tpl.php:221
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:228
+#: tpl/cdn/settings.tpl.php:253
 msgid ""
 "Improve page load time by loading jQuery from a remote CDN service instead "
 "of locally."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:241
+#: tpl/cdn/settings.tpl.php:266
 msgid "Use %s API functionality."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:242
+#: tpl/cdn/settings.tpl.php:267
 msgid "This can be managed from <a %2$s>%1$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:246
+#: tpl/cdn/settings.tpl.php:271
 msgid "Email Address"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:250
+#: tpl/cdn/settings.tpl.php:275
 msgid "Your Email address on %s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:255
+#: tpl/cdn/settings.tpl.php:280
 msgid "Global API Key"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:259
+#: tpl/cdn/settings.tpl.php:284
 msgid "Your API key is used to access %s APIs."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:260
+#: tpl/cdn/settings.tpl.php:285
 msgid "Get it from <a %1$s>%2$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:265
+#: tpl/cdn/settings.tpl.php:290
 msgid "Domain"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:273
+#: tpl/cdn/settings.tpl.php:298
 msgid "You can just type part of the domain."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:274
+#: tpl/cdn/settings.tpl.php:299
 msgid ""
 "Once saved, it will be matched with the current list and completed "
 "automatically."
@@ -2814,12 +2881,12 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:28 tpl/crawler/map.tpl.php:36
-#: tpl/tools/purge.tpl.php:214
+#: tpl/crawler/blacklist.tpl.php:28 tpl/crawler/map.tpl.php:40
+#: tpl/toolbox/purge.tpl.php:205
 msgid "URL"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:30 tpl/crawler/map.tpl.php:38
+#: tpl/crawler/blacklist.tpl.php:30 tpl/crawler/map.tpl.php:42
 msgid "Operation"
 msgstr ""
 
@@ -2831,11 +2898,11 @@ msgstr ""
 msgid "Not Blacklist"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:53 tpl/crawler/map.tpl.php:62
+#: tpl/crawler/blacklist.tpl.php:53 tpl/crawler/map.tpl.php:66
 msgid "Blacklisted due to not cacheable"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:54 tpl/crawler/map.tpl.php:63
+#: tpl/crawler/blacklist.tpl.php:54 tpl/crawler/map.tpl.php:67
 #: tpl/crawler/summary.tpl.php:157 tpl/crawler/summary.tpl.php:178
 msgid "Blacklisted"
 msgstr ""
@@ -2850,7 +2917,7 @@ msgstr ""
 
 #: tpl/crawler/entry.tpl.php:9 tpl/general/entry.tpl.php:6
 #: tpl/general/entry.tpl.php:11 tpl/general/network_settings.tpl.php:8
-#: tpl/general/settings.tpl.php:27 tpl/general/settings.tpl.php:64
+#: tpl/general/settings.tpl.php:39
 msgid "General Settings"
 msgstr ""
 
@@ -2867,34 +2934,38 @@ msgid "LiteSpeed Cache Crawler"
 msgstr ""
 
 #: tpl/crawler/map.tpl.php:16
+msgid "Clean Crawler Map"
+msgstr ""
+
+#: tpl/crawler/map.tpl.php:20
 msgid "Refresh Crawler Map"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:23
+#: tpl/crawler/map.tpl.php:27
 msgid "Generated at %s"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:28
+#: tpl/crawler/map.tpl.php:32
 msgid "Sitemap List"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:30
+#: tpl/crawler/map.tpl.php:34
 msgid "Sitemap Total"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:37 tpl/dash/dashboard.tpl.php:460
+#: tpl/crawler/map.tpl.php:41 tpl/dash/dashboard.tpl.php:457
 msgid "Crawler Status"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:51
+#: tpl/crawler/map.tpl.php:55
 msgid "Add to Blacklist"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:60 tpl/crawler/summary.tpl.php:176
+#: tpl/crawler/map.tpl.php:64 tpl/crawler/summary.tpl.php:176
 msgid "Cache Hit"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:61 tpl/crawler/summary.tpl.php:177
+#: tpl/crawler/map.tpl.php:65 tpl/crawler/summary.tpl.php:177
 msgid "Cache Miss"
 msgstr ""
 
@@ -3029,59 +3100,72 @@ msgid ""
 "full URL to your sitemap here."
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:28
+#: tpl/crawler/settings-sitemap.tpl.php:35
+msgid ""
+"The crawler will parse the sitemap and save into the database before "
+"crawling. When parsing the sitemap, dropping the domain can save DB storage."
+msgstr ""
+
+#: tpl/crawler/settings-sitemap.tpl.php:36
+msgid ""
+"If you are using multiple domains for one site, and have multiple domains in "
+"the sitemap, please keep this option OFF so the crawler knows to crawl every "
+"domain."
+msgstr ""
+
+#: tpl/crawler/settings-sitemap.tpl.php:42
 msgid "Sitemap Generation"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:33
+#: tpl/crawler/settings-sitemap.tpl.php:47
 msgid "Include Posts"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:40
+#: tpl/crawler/settings-sitemap.tpl.php:54
 msgid "Include Pages"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:47
+#: tpl/crawler/settings-sitemap.tpl.php:61
 msgid "Include Categories"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:54
+#: tpl/crawler/settings-sitemap.tpl.php:68
 msgid "Include Tags"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:63
+#: tpl/crawler/settings-sitemap.tpl.php:77
 msgid "Exclude Custom Post Types"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:68
+#: tpl/crawler/settings-sitemap.tpl.php:82
 msgid "Exclude certain Custom Post Types in sitemap."
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:74
+#: tpl/crawler/settings-sitemap.tpl.php:88
 msgid "Available Custom Post Type"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:82
+#: tpl/crawler/settings-sitemap.tpl.php:96
 msgid "Order links by"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:88
+#: tpl/crawler/settings-sitemap.tpl.php:102
 msgid "Date, descending (Default)"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:94
+#: tpl/crawler/settings-sitemap.tpl.php:108
 msgid "Date, ascending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:100
+#: tpl/crawler/settings-sitemap.tpl.php:114
 msgid "Alphabetical, descending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:106
+#: tpl/crawler/settings-sitemap.tpl.php:120
 msgid "Alphabetical, ascending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:110
+#: tpl/crawler/settings-sitemap.tpl.php:124
 msgid "These options will be invalid when using %s."
 msgstr ""
 
@@ -3136,19 +3220,19 @@ msgstr ""
 msgid "Run time for previous crawler"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:83 tpl/dash/dashboard.tpl.php:472
+#: tpl/crawler/summary.tpl.php:83 tpl/dash/dashboard.tpl.php:469
 msgid "Current crawler started at"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:90 tpl/dash/dashboard.tpl.php:479
+#: tpl/crawler/summary.tpl.php:90 tpl/dash/dashboard.tpl.php:476
 msgid "Last interval"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:97 tpl/dash/dashboard.tpl.php:486
+#: tpl/crawler/summary.tpl.php:97 tpl/dash/dashboard.tpl.php:483
 msgid "Ended reason"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:104 tpl/dash/dashboard.tpl.php:493
+#: tpl/crawler/summary.tpl.php:104 tpl/dash/dashboard.tpl.php:490
 msgid "<b>Last crawled:</b> %s item(s)"
 msgstr ""
 
@@ -3224,8 +3308,8 @@ msgstr ""
 msgid "No crawler meta file generated yet"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:39 tpl/dash/network_dash.tpl.php:19
-msgid "Usage Statistics"
+#: tpl/dash/dashboard.tpl.php:39
+msgid "QUIC.cloud Service Usage Statistics"
 msgstr ""
 
 #: tpl/dash/dashboard.tpl.php:42
@@ -3236,132 +3320,128 @@ msgstr ""
 msgid "CDN Bandwidth"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:55 tpl/dash/dashboard.tpl.php:429
+#: tpl/dash/dashboard.tpl.php:55 tpl/dash/dashboard.tpl.php:426
 msgid "Low Quality Image Placeholder"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:58
-msgid "Placeholder"
-msgstr ""
-
-#: tpl/dash/dashboard.tpl.php:106 tpl/dash/network_dash.tpl.php:78
+#: tpl/dash/dashboard.tpl.php:103 tpl/dash/network_dash.tpl.php:78
 msgid "Fast Queue Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:106 tpl/dash/network_dash.tpl.php:78
+#: tpl/dash/dashboard.tpl.php:103 tpl/dash/network_dash.tpl.php:78
 msgid "Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:118 tpl/dash/network_dash.tpl.php:90
+#: tpl/dash/dashboard.tpl.php:115 tpl/dash/network_dash.tpl.php:90
 msgid "PAYG Balance"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:119 tpl/dash/network_dash.tpl.php:91
+#: tpl/dash/dashboard.tpl.php:116 tpl/dash/network_dash.tpl.php:91
 msgid "This Month Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:121 tpl/dash/network_dash.tpl.php:93
+#: tpl/dash/dashboard.tpl.php:118 tpl/dash/network_dash.tpl.php:93
 msgid "Pay as You Go Usage Statistics"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:128 tpl/dash/network_dash.tpl.php:100
+#: tpl/dash/dashboard.tpl.php:125 tpl/dash/network_dash.tpl.php:100
 msgid "Total Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:129 tpl/dash/network_dash.tpl.php:101
+#: tpl/dash/dashboard.tpl.php:126 tpl/dash/network_dash.tpl.php:101
 msgid "Total images optimized in this month"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:140
+#: tpl/dash/dashboard.tpl.php:137
 msgid "Go to QUIC.cloud dashboard"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:152
+#: tpl/dash/dashboard.tpl.php:149
 msgid "Refresh page load time"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:193 tpl/dash/dashboard.tpl.php:253
-#: tpl/dash/dashboard.tpl.php:421 tpl/dash/dashboard.tpl.php:452
+#: tpl/dash/dashboard.tpl.php:190 tpl/dash/dashboard.tpl.php:250
+#: tpl/dash/dashboard.tpl.php:418 tpl/dash/dashboard.tpl.php:449
 msgid "Last requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:198
+#: tpl/dash/dashboard.tpl.php:195
 msgid "Current closest Cloud server is %s.&#10;Click to redetect."
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:198 tpl/img_optm/summary.tpl.php:51
+#: tpl/dash/dashboard.tpl.php:195 tpl/img_optm/summary.tpl.php:51
 #: tpl/page_optm/settings_css.tpl.php:115
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Are you sure to redetect the closest cloud server for this service?"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:209
+#: tpl/dash/dashboard.tpl.php:206
 msgid "Refresh page score"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:261 tpl/img_optm/entry.tpl.php:6
+#: tpl/dash/dashboard.tpl.php:258 tpl/img_optm/entry.tpl.php:6
 msgid "Image Optimization Summary"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:271
+#: tpl/dash/dashboard.tpl.php:268
 msgid "Image Groups Prepared"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:286
+#: tpl/dash/dashboard.tpl.php:283
 msgid "Images Requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:318 tpl/img_optm/summary.tpl.php:326
+#: tpl/dash/dashboard.tpl.php:315 tpl/img_optm/summary.tpl.php:326
 msgid "Last Request"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:321
+#: tpl/dash/dashboard.tpl.php:318
 msgid "Last Pull"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:350
+#: tpl/dash/dashboard.tpl.php:347
 msgid "Cache Status"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:355
+#: tpl/dash/dashboard.tpl.php:352
 msgid "Public Cache"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:356
+#: tpl/dash/dashboard.tpl.php:353
 msgid "Private Cache"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:384
+#: tpl/dash/dashboard.tpl.php:381
 msgid "Cache Stats"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:403 tpl/dash/dashboard.tpl.php:434
+#: tpl/dash/dashboard.tpl.php:400 tpl/dash/dashboard.tpl.php:431
 #: tpl/page_optm/settings_css.tpl.php:107
 #: tpl/page_optm/settings_media.tpl.php:167
 msgid "Last generated"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:406 tpl/dash/dashboard.tpl.php:437
-msgid "Cost of previous request"
+#: tpl/dash/dashboard.tpl.php:403 tpl/dash/dashboard.tpl.php:434
+msgid "Time to execute previous request"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:411 tpl/dash/dashboard.tpl.php:442
+#: tpl/dash/dashboard.tpl.php:408 tpl/dash/dashboard.tpl.php:439
 msgid "Requests in queue"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:413 tpl/dash/dashboard.tpl.php:444
+#: tpl/dash/dashboard.tpl.php:410 tpl/dash/dashboard.tpl.php:441
 msgid "Force cron"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:464
+#: tpl/dash/dashboard.tpl.php:461
 msgid "Crawler(s)"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:467
+#: tpl/dash/dashboard.tpl.php:464
 msgid "Currently active crawler"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:499
+#: tpl/dash/dashboard.tpl.php:496
 msgid "Manage Crawler"
 msgstr ""
 
@@ -3371,6 +3451,10 @@ msgstr ""
 
 #: tpl/dash/entry.tpl.php:20
 msgid "LiteSpeed Cache Dashboard"
+msgstr ""
+
+#: tpl/dash/network_dash.tpl.php:19
+msgid "Usage Statistics"
 msgstr ""
 
 #: tpl/dash/network_dash.tpl.php:28
@@ -3531,228 +3615,6 @@ msgid ""
 "Revisions newer than this many days will be kept when cleaning revisions."
 msgstr ""
 
-#: tpl/debug/beta_test.tpl.php:8
-msgid "Try GitHub Version"
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:10
-msgid ""
-"Use this section to switch plugin versions. To beta test a GitHub commit, "
-"enter the commit URL in the field below."
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:11
-msgid "Example"
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:15 tpl/debug/beta_test.tpl.php:19
-msgid "Use latest GitHub commit"
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:15 tpl/debug/beta_test.tpl.php:17
-msgid "OR"
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:17 tpl/debug/beta_test.tpl.php:20
-msgid "Use latest WordPress release version"
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:19
-msgid ""
-"Press the %s button to populate the field with the most recent GitHub commit."
-msgstr ""
-
-#: tpl/debug/beta_test.tpl.php:20
-msgid ""
-"Press the %s button to stop beta testing and go back to the current release "
-"from the WordPress Plugin Directory."
-msgstr ""
-
-#: tpl/debug/entry.tpl.php:6
-msgid "Report"
-msgstr ""
-
-#: tpl/debug/entry.tpl.php:7 tpl/debug/settings.tpl.php:10
-msgid "Debug Settings"
-msgstr ""
-
-#: tpl/debug/entry.tpl.php:8
-msgid "Log View"
-msgstr ""
-
-#: tpl/debug/entry.tpl.php:9
-msgid "Beta Test"
-msgstr ""
-
-#: tpl/debug/entry.tpl.php:16
-msgid "LiteSpeed Cache Debug"
-msgstr ""
-
-#: tpl/debug/log_viewer.tpl.php:10
-msgid "Clear Log"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:31
-msgid ""
-"To generate a passwordless link for LiteSpeed Support Team access, you must "
-"install %s."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:34
-msgid "Install DoLogin Security"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:35
-msgid "Go to plugins list"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:40
-msgid "LiteSpeed Report Number"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:42
-msgid "Report number"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:43
-msgid "Report date"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:46
-msgid ""
-"The environment report contains detailed information about the WordPress "
-"configuration."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:48
-msgid ""
-"If you run into any issues, please refer to the report number in your "
-"support message."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:54
-msgid "System Information"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:60
-msgid "Passwordless Link"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:64 tpl/debug/report.tpl.php:66
-msgid "Generate Link for Current User"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:69
-msgid ""
-"To grant wp-admin access to the LiteSpeed Support Team, please generate a "
-"passwordless link for the current logged-in user to be sent with the report."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:71
-msgid "Please do NOT share the above passwordless link with anyone."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:72
-msgid "Generated links may be managed under <a %s>Settings</a>."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:78
-msgid "Notes"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:82 tpl/page_optm/settings_css.tpl.php:192
-msgid "Optional"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:83
-msgid ""
-"provide more information here to assist the LiteSpeed team with debugging."
-msgstr ""
-
-#: tpl/debug/report.tpl.php:90 tpl/debug/report.tpl.php:91
-msgid "Send to LiteSpeed"
-msgstr ""
-
-#: tpl/debug/report.tpl.php:94
-msgid ""
-"Send this report to LiteSpeed. Refer to this report number when posting in "
-"the WordPress support forum."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:23
-msgid ""
-"This will disable LSCache and all optimization features for debug purpose."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:50
-msgid "Admin IP only"
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:54
-msgid "Outputs to WordPress debug log."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:55
-msgid ""
-"To prevent filling up the disk, this setting should be OFF when everything "
-"is working."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:56
-msgid ""
-"The Admin IP option will only output log messages on requests from admin IPs."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:57
-msgid "The logs will be output to %s."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:70
-msgid ""
-"Allows listed IPs (one per line) to perform certain actions from their "
-"browsers."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:71
-msgid "Your IP"
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:76
-msgid "More information about the available commands can be found here."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:92
-msgid "Basic"
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:102
-msgid "Advanced level will log more details."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:113 tpl/page_optm/settings_tuning.tpl.php:114
-msgid "MB"
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:115
-msgid "Specify the maximum size of the log file."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:130
-msgid "Log requested cookie values."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:143
-msgid "Shorten query strings in the debug log to improve readability."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:156
-msgid "Only log listed pages."
-msgstr ""
-
-#: tpl/debug/settings.tpl.php:170
-msgid "Prevent any debug log of listed pages."
-msgstr ""
-
 #: tpl/esi_widget_edit.php:46
 msgid "Public"
 msgstr ""
@@ -3781,70 +3643,87 @@ msgstr ""
 msgid "LiteSpeed Cache General Settings"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:44
-msgid "Not saved yet! You need to click %s to save this option."
+#: tpl/general/settings.tpl.php:16
+msgid "Apply Domain Key"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:47 tpl/general/settings.tpl.php:49
-msgid "Generate Key"
+#: tpl/general/settings.tpl.php:18
+msgid "Refresh Domain Key"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:52
+#: tpl/general/settings.tpl.php:20
+msgid "Waiting for Refresh"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:24
+msgid "Waiting for Approval"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:29
+msgid "Requested"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:32
+msgid "Approved"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:66
+msgid "Visit My Dashboard on QUIC.cloud"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:68 tpl/general/settings.tpl.php:70
+msgid "Link to QUIC.cloud"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:72 tpl/general/settings.tpl.php:79
 msgid "Warning"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:53
-msgid ""
-"You must set WordPress %1$s to a value other than %2$s before generating an "
-"API key."
+#: tpl/general/settings.tpl.php:73
+msgid "You must have %1$s first before linking to QUIC.cloud."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:53
+#: tpl/general/settings.tpl.php:80
+msgid ""
+"You must set WordPress %1$s to a value other than %2$s before generating an "
+"Domain key."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:80
 msgid "Permalink Settings"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:53
+#: tpl/general/settings.tpl.php:80
 msgid "Plain"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:54
+#: tpl/general/settings.tpl.php:81
 msgid "Click here to config"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:59
+#: tpl/general/settings.tpl.php:87
 msgid ""
-"An API key is necessary for security when communicating with our QUIC.cloud "
-"servers. Required for online services."
+"An Domain key is necessary for security when communicating with our QUIC."
+"cloud servers. Required for online services."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:61
-msgid ""
-"If you have previously generated a key as an anonymous user, but now wish to "
-"log into the %1$s Dashboard to see usage, status and statistics, please use "
-"the %2$s in %3$s to register at QUIC.cloud."
-msgstr ""
-
-#: tpl/general/settings.tpl.php:63
-msgid "Administration Email Address"
-msgstr ""
-
-#: tpl/general/settings.tpl.php:69
+#: tpl/general/settings.tpl.php:90
 msgid "Current Cloud Nodes in Service"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:70
+#: tpl/general/settings.tpl.php:91
 msgid "Click to clear all nodes for further redetection."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:70
+#: tpl/general/settings.tpl.php:91
 msgid "Are you sure to clear all cloud nodes?"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:82
+#: tpl/general/settings.tpl.php:103
 msgid "No cloud services currently in use"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:100
+#: tpl/general/settings.tpl.php:121
 msgid ""
 "Turn this option ON to show latest news automatically, including hotfixes, "
 "new releases, available beta versions, and promotions."
@@ -3924,14 +3803,6 @@ msgstr ""
 
 #: tpl/img_optm/settings.tpl.php:139
 msgid "Specify which element attributes will be replaced with WebP."
-msgstr ""
-
-#: tpl/img_optm/settings.tpl.php:140
-msgid "Only attributes listed here will be replaced."
-msgstr ""
-
-#: tpl/img_optm/settings.tpl.php:141
-msgid "Use the format %1$s or %2$s (element is optional)."
 msgstr ""
 
 #: tpl/img_optm/settings.tpl.php:155
@@ -4323,7 +4194,7 @@ msgstr ""
 msgid "Optimization Settings"
 msgstr ""
 
-#: tpl/page_optm/entry.tpl.php:9 tpl/page_optm/settings_media.tpl.php:13
+#: tpl/page_optm/entry.tpl.php:9 tpl/page_optm/settings_media.tpl.php:12
 msgid "Media Settings"
 msgstr ""
 
@@ -4402,8 +4273,8 @@ msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:84
 msgid ""
-"Leave this option %1$s to allow communication with LiteSpeed CCSS server. If "
-"set to %2$s, Critical CSS will not be generated."
+"Leave this option %1$s to allow communication with QUIC.cloud CCSS service. "
+"If set to %2$s, Critical CSS will not be generated."
 msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:85
@@ -4467,6 +4338,7 @@ msgid "Block"
 msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:190
+#: tpl/page_optm/settings_css.tpl.php:196
 msgid "Swap"
 msgstr ""
 
@@ -4474,10 +4346,18 @@ msgstr ""
 msgid "Fallback"
 msgstr ""
 
+#: tpl/page_optm/settings_css.tpl.php:192 tpl/toolbox/report.tpl.php:82
+msgid "Optional"
+msgstr ""
+
 #: tpl/page_optm/settings_css.tpl.php:195
 msgid ""
-"Set this to append %1$s to all %2$s rules before caching CSS to specify the "
-"font display style."
+"Set this to append %1$s to all %2$s rules before caching CSS to specify how "
+"fonts should be displayed while being downloaded."
+msgstr ""
+
+#: tpl/page_optm/settings_css.tpl.php:196 tpl/page_optm/settings_js.tpl.php:81
+msgid "%s is recommended."
 msgstr ""
 
 #: tpl/page_optm/settings_discussion.tpl.php:12
@@ -4615,10 +4495,6 @@ msgid ""
 "optimization features are enabled."
 msgstr ""
 
-#: tpl/page_optm/settings_js.tpl.php:81
-msgid "%s is recommended."
-msgstr ""
-
 #: tpl/page_optm/settings_js.tpl.php:94
 msgid ""
 "Improve compatibility with inline JS by preventing jQuery optimization. "
@@ -4631,109 +4507,103 @@ msgid ""
 "this option."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:26
+#: tpl/page_optm/settings_media.tpl.php:25
 msgid "Load images only when they enter the viewport."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:27
+#: tpl/page_optm/settings_media.tpl.php:26
 #: tpl/page_optm/settings_media.tpl.php:200
 msgid "This can improve page loading time by reducing initial HTTP requests."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:30
+#: tpl/page_optm/settings_media.tpl.php:29
 msgid "Adding Style to Your Lazy-Loaded Images"
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:44
+#: tpl/page_optm/settings_media.tpl.php:43
 msgid ""
-"Specify a base64 image to be used as a placeholder while other images finish "
-"loading."
+"Specify a base64 image to be used as a simple placeholder while images "
+"finish loading."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:45
+#: tpl/page_optm/settings_media.tpl.php:44
 msgid ""
 "This can be predefined in %2$s as well using constant %1$s, with this "
 "setting taking priority."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:46
+#: tpl/page_optm/settings_media.tpl.php:45
 msgid "By default a gray image placeholder %s will be used."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:47
+#: tpl/page_optm/settings_media.tpl.php:46
 msgid "For example, %s can be used for a transparent placeholder."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:60
+#: tpl/page_optm/settings_media.tpl.php:59
 msgid ""
 "Responsive image placeholders can help to reduce layout reshuffle when "
 "images are loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:61
+#: tpl/page_optm/settings_media.tpl.php:60
 msgid ""
 "This will generate the placeholder with same dimensions as the image if it "
 "has the width and height attributes."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:74
+#: tpl/page_optm/settings_media.tpl.php:73
 msgid "Specify an SVG to be used as a placeholder when generating locally."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:75
-msgid "It will be converted to a base64 placeholder on-the-fly."
+#: tpl/page_optm/settings_media.tpl.php:74
+msgid "It will be converted to a base64 SVG placeholder on-the-fly."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:76
+#: tpl/page_optm/settings_media.tpl.php:75
 msgid "Variables %s will be replaced with the corresponding image properties."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:77
+#: tpl/page_optm/settings_media.tpl.php:76
 msgid "Variables %s will be replaced with the configured background color."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:79
-msgid "Online SVG generator tool"
+#: tpl/page_optm/settings_media.tpl.php:90
+msgid "Specify the responsive placeholder SVG color."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:92
-msgid "Specify the responsive placeholder color when generating online."
+#: tpl/page_optm/settings_media.tpl.php:104
+msgid ""
+"Use QUIC.cloud LQIP (Low Quality Image Placeholder) generator service for "
+"responsive image previews while loading."
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:105
-msgid "Local"
+msgid "Keep this off to use plain color placeholders."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:106
-msgid "Cloud"
-msgstr ""
-
-#: tpl/page_optm/settings_media.tpl.php:109
-msgid "Specify the generator used for base64 image."
-msgstr ""
-
-#: tpl/page_optm/settings_media.tpl.php:122
-msgid ""
-"Use online LQIP (Low Quality Image Placeholder) generator service for better "
-"user experience when images are loading."
-msgstr ""
-
-#: tpl/page_optm/settings_media.tpl.php:123
-msgid "Keep this off to use plain color placeholder."
-msgstr ""
-
-#: tpl/page_optm/settings_media.tpl.php:137
+#: tpl/page_optm/settings_media.tpl.php:119
 msgid "Specify the quality when generating LQIP."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:138
+#: tpl/page_optm/settings_media.tpl.php:120
 msgid ""
 "Larger numbers will generate higher resolution quality placeholder, but will "
 "result in larger files which will increase page size and consume more points."
 msgstr ""
 
+#: tpl/page_optm/settings_media.tpl.php:135
+msgid "pixels"
+msgstr ""
+
+#: tpl/page_optm/settings_media.tpl.php:137
+msgid ""
+"LQIP requests will not be sent for images where both width and height are "
+"smaller than these dimensions."
+msgstr ""
+
 #: tpl/page_optm/settings_media.tpl.php:153
-msgid "Automatically generate %s in the background via a cron-based queue."
+msgid "Automatically generate LQIP in the background via a cron-based queue."
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:155
@@ -4841,6 +4711,11 @@ msgstr ""
 msgid "Listed JS files will not be minified/combined."
 msgstr ""
 
+#: tpl/page_optm/settings_tuning.tpl.php:114
+#: tpl/toolbox/settings-debug.tpl.php:113
+msgid "MB"
+msgstr ""
+
 #: tpl/page_optm/settings_tuning.tpl.php:116
 msgid "Specify the maximum size in megabytes for combined files."
 msgstr ""
@@ -4867,298 +4742,509 @@ msgstr ""
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:39
+#: tpl/toolbox/beta_test.tpl.php:8
+msgid "Try GitHub Version"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:10
+msgid ""
+"Use this section to switch plugin versions. To beta test a GitHub commit, "
+"enter the commit URL in the field below."
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:11
+msgid "Example"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:15 tpl/toolbox/beta_test.tpl.php:19
+msgid "Use latest GitHub commit"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:15 tpl/toolbox/beta_test.tpl.php:17
+msgid "OR"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:17 tpl/toolbox/beta_test.tpl.php:20
+msgid "Use latest WordPress release version"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:19
+msgid ""
+"Press the %s button to populate the field with the most recent GitHub commit."
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:20
+msgid ""
+"Press the %s button to stop beta testing and go back to the current release "
+"from the WordPress Plugin Directory."
+msgstr ""
+
+#: tpl/toolbox/edit_htaccess.tpl.php:39
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:43
+#: tpl/toolbox/edit_htaccess.tpl.php:43
 msgid "This page is meant for advanced users."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:45
+#: tpl/toolbox/edit_htaccess.tpl.php:45
 msgid "Any changes made to the .htaccess file may break the site."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:46
+#: tpl/toolbox/edit_htaccess.tpl.php:46
 msgid "Please consult the host/server admin before making any changes."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:53
+#: tpl/toolbox/edit_htaccess.tpl.php:53
 msgid ".htaccess Path Settings"
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:66
+#: tpl/toolbox/edit_htaccess.tpl.php:66
 msgid "Specify the frontend .htaccess path."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:67 tpl/tools/edit_htaccess.tpl.php:81
+#: tpl/toolbox/edit_htaccess.tpl.php:67 tpl/toolbox/edit_htaccess.tpl.php:82
 msgid "Leave empty to auto detect"
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:80
+#: tpl/toolbox/edit_htaccess.tpl.php:81
 msgid "Specify the backend .htaccess path."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:90
+#: tpl/toolbox/edit_htaccess.tpl.php:92
 msgid "File editing is disabled in configuration."
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:96
+#: tpl/toolbox/edit_htaccess.tpl.php:98
 msgid "Current %s Contents"
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:98
+#: tpl/toolbox/edit_htaccess.tpl.php:100
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: tpl/tools/edit_htaccess.tpl.php:105
+#: tpl/toolbox/edit_htaccess.tpl.php:107
 msgid "Save .htaccess"
 msgstr ""
 
-#: tpl/tools/entry.tpl.php:10
+#: tpl/toolbox/entry.tpl.php:10
 msgid "Import / Export"
 msgstr ""
 
-#: tpl/tools/entry.tpl.php:14
+#: tpl/toolbox/entry.tpl.php:14
 msgid "Edit .htaccess"
 msgstr ""
 
-#: tpl/tools/entry.tpl.php:18
+#: tpl/toolbox/entry.tpl.php:18
 msgid "Heartbeat"
 msgstr ""
 
-#: tpl/tools/entry.tpl.php:24
-msgid "LiteSpeed Cache Tools"
+#: tpl/toolbox/entry.tpl.php:19
+msgid "Report"
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:9
+#: tpl/toolbox/entry.tpl.php:20 tpl/toolbox/settings-debug.tpl.php:10
+msgid "Debug Settings"
+msgstr ""
+
+#: tpl/toolbox/entry.tpl.php:21
+msgid "Log View"
+msgstr ""
+
+#: tpl/toolbox/entry.tpl.php:22
+msgid "Beta Test"
+msgstr ""
+
+#: tpl/toolbox/entry.tpl.php:28
+msgid "LiteSpeed Cache Toolbox"
+msgstr ""
+
+#: tpl/toolbox/heartbeat.tpl.php:9
 msgid "Heartbeat Control"
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:15
+#: tpl/toolbox/heartbeat.tpl.php:15
 msgid "Disable WordPress interval heartbeat to reduce server load."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:18
+#: tpl/toolbox/heartbeat.tpl.php:18
 msgid ""
 "Disabling this may cause WordPress tasks triggered by AJAX to stop working."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:34
-msgid "Turn ON to use heartbeat on frontend."
+#: tpl/toolbox/heartbeat.tpl.php:34
+msgid "Turn ON to control heartbeat on frontend."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:47 tpl/tools/heartbeat.tpl.php:76
-#: tpl/tools/heartbeat.tpl.php:105
+#: tpl/toolbox/heartbeat.tpl.php:47 tpl/toolbox/heartbeat.tpl.php:77
+#: tpl/toolbox/heartbeat.tpl.php:107
 msgid "Specify the %s heartbeat interval in seconds."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:48
+#: tpl/toolbox/heartbeat.tpl.php:48
 msgid "WordPress valid interval is %s seconds."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:63
-msgid "Turn ON to use heartbeat on backend."
+#: tpl/toolbox/heartbeat.tpl.php:49 tpl/toolbox/heartbeat.tpl.php:79
+#: tpl/toolbox/heartbeat.tpl.php:109
+msgid "Set to %1$s to forbid heartbeat on %2$s."
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:77 tpl/tools/heartbeat.tpl.php:106
+#: tpl/toolbox/heartbeat.tpl.php:64
+msgid "Turn ON to control heartbeat on backend."
+msgstr ""
+
+#: tpl/toolbox/heartbeat.tpl.php:78 tpl/toolbox/heartbeat.tpl.php:108
 msgid "WordPress valid interval is %s seconds"
 msgstr ""
 
-#: tpl/tools/heartbeat.tpl.php:92
-msgid "Turn ON to use heartbeat in backend editor."
+#: tpl/toolbox/heartbeat.tpl.php:94
+msgid "Turn ON to control heartbeat in backend editor."
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:8
+#: tpl/toolbox/import_export.tpl.php:8
 msgid "Export Settings"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:11
+#: tpl/toolbox/import_export.tpl.php:11
 msgid "Export"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:16
+#: tpl/toolbox/import_export.tpl.php:16
 msgid "Last exported"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:21
+#: tpl/toolbox/import_export.tpl.php:21
 msgid ""
 "This will export all current LiteSpeed Cache settings and save as a file."
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:24
+#: tpl/toolbox/import_export.tpl.php:24
 msgid "Import Settings"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:32
+#: tpl/toolbox/import_export.tpl.php:32
 msgid "Import"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:38
+#: tpl/toolbox/import_export.tpl.php:38
 msgid "Last imported"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:43
+#: tpl/toolbox/import_export.tpl.php:43
 msgid ""
 "This will import settings from a file and override all current LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:46
+#: tpl/toolbox/import_export.tpl.php:46
 msgid "Reset All Settings"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:47
+#: tpl/toolbox/import_export.tpl.php:47
 msgid "This will reset all settings to default settings."
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:49
+#: tpl/toolbox/import_export.tpl.php:49
 msgid "Are you sure to reset all settings to default settings?"
 msgstr ""
 
-#: tpl/tools/import_export.tpl.php:50
+#: tpl/toolbox/import_export.tpl.php:50
 msgid "Reset Settings"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:7
+#: tpl/toolbox/log_viewer.tpl.php:10 tpl/toolbox/log_viewer.tpl.php:27
+msgid "Clear Log"
+msgstr ""
+
+#: tpl/toolbox/purge.tpl.php:7
 msgid "Purge Front Page"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:8
+#: tpl/toolbox/purge.tpl.php:8
 msgid "This will Purge Front Page only"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:13
+#: tpl/toolbox/purge.tpl.php:13
 msgid "Purge Pages"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:14
+#: tpl/toolbox/purge.tpl.php:14
 msgid "This will Purge Pages only"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:19 tpl/tools/purge.tpl.php:25
-#: tpl/tools/purge.tpl.php:31
+#: tpl/toolbox/purge.tpl.php:19 tpl/toolbox/purge.tpl.php:25
+#: tpl/toolbox/purge.tpl.php:31
 msgid "Purge %s Error"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:20 tpl/tools/purge.tpl.php:26
-#: tpl/tools/purge.tpl.php:32
+#: tpl/toolbox/purge.tpl.php:20 tpl/toolbox/purge.tpl.php:26
+#: tpl/toolbox/purge.tpl.php:32
 msgid "Purge error pages, including %s pages"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:33
+#: tpl/toolbox/purge.tpl.php:33
 msgid "Purge 500 Error"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:34
+#: tpl/toolbox/purge.tpl.php:34
 msgid "Purge error pages, including 500 pages"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:40
+#: tpl/toolbox/purge.tpl.php:40
 msgid "Purge the litespeed cache entries created by this plugin"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:46
+#: tpl/toolbox/purge.tpl.php:46
 msgid "This will purge all minified/combined CSS/JS entries only"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:55
+#: tpl/toolbox/purge.tpl.php:55
 msgid "Purge all the object caches"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:64
+#: tpl/toolbox/purge.tpl.php:64
 msgid "Reset the entire opcode cache"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:73
+#: tpl/toolbox/purge.tpl.php:73
 msgid "This will delete all generated critical CSS files"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:82
-msgid "This will delete all generated image placeholder files"
-msgstr ""
-
-#: tpl/tools/purge.tpl.php:91
+#: tpl/toolbox/purge.tpl.php:82
 msgid "This will delete all generated image LQIP placeholder files"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:100
+#: tpl/toolbox/purge.tpl.php:91
 msgid "This will delete all cached gravatar files"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:109
+#: tpl/toolbox/purge.tpl.php:100
 msgid "Purge the cache entries created by this plugin"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:118
+#: tpl/toolbox/purge.tpl.php:109
 msgid "Empty Entire Cache"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:119
+#: tpl/toolbox/purge.tpl.php:110
 msgid ""
 "Clears all cache entries related to this site, <i>including other web "
 "applications</i>."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:120
+#: tpl/toolbox/purge.tpl.php:111
 msgid "This action should only be used if things are cached incorrectly."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:124
+#: tpl/toolbox/purge.tpl.php:115
 msgid "This will clear EVERYTHING inside the cache."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:125
+#: tpl/toolbox/purge.tpl.php:116
 msgid "This may cause heavy load on the server."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:126
+#: tpl/toolbox/purge.tpl.php:117
 msgid "If only the WordPress site should be purged, use purge all."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:167
+#: tpl/toolbox/purge.tpl.php:158
 msgid "Purge By..."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:169
+#: tpl/toolbox/purge.tpl.php:160
 msgid "Select below for \"Purge by\" options."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:196
+#: tpl/toolbox/purge.tpl.php:187
 msgid "Category"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:202
+#: tpl/toolbox/purge.tpl.php:193
 msgid "Post ID"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:208
+#: tpl/toolbox/purge.tpl.php:199
 msgid "Tag"
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:220
+#: tpl/toolbox/purge.tpl.php:211
 msgid ""
 "Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:225
+#: tpl/toolbox/purge.tpl.php:216
 msgid "Purge pages by post ID."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:229
+#: tpl/toolbox/purge.tpl.php:220
 msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:234
+#: tpl/toolbox/purge.tpl.php:225
 msgid "Purge pages by relative or full URL."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:235
+#: tpl/toolbox/purge.tpl.php:226
 msgid "e.g. Use %s or %s."
 msgstr ""
 
-#: tpl/tools/purge.tpl.php:248
+#: tpl/toolbox/purge.tpl.php:239
 msgid "Purge List"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:31
+msgid ""
+"To generate a passwordless link for LiteSpeed Support Team access, you must "
+"install %s."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:34
+msgid "Install DoLogin Security"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:35
+msgid "Go to plugins list"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:40
+msgid "LiteSpeed Report Number"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:42
+msgid "Report number"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:43
+msgid "Report date"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:46
+msgid ""
+"The environment report contains detailed information about the WordPress "
+"configuration."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:48
+msgid ""
+"If you run into any issues, please refer to the report number in your "
+"support message."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:54
+msgid "System Information"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:60
+msgid "Passwordless Link"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:64 tpl/toolbox/report.tpl.php:66
+msgid "Generate Link for Current User"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:69
+msgid ""
+"To grant wp-admin access to the LiteSpeed Support Team, please generate a "
+"passwordless link for the current logged-in user to be sent with the report."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:71
+msgid "Please do NOT share the above passwordless link with anyone."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:72
+msgid "Generated links may be managed under <a %s>Settings</a>."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:78
+msgid "Notes"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:83
+msgid ""
+"provide more information here to assist the LiteSpeed team with debugging."
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:90 tpl/toolbox/report.tpl.php:91
+msgid "Send to LiteSpeed"
+msgstr ""
+
+#: tpl/toolbox/report.tpl.php:94
+msgid ""
+"Send this report to LiteSpeed. Refer to this report number when posting in "
+"the WordPress support forum."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:23
+msgid ""
+"This will disable LSCache and all optimization features for debug purpose."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:50
+msgid "Admin IP only"
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:54
+msgid "Outputs to WordPress debug log."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:55
+msgid ""
+"To prevent filling up the disk, this setting should be OFF when everything "
+"is working."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:56
+msgid ""
+"The Admin IP option will only output log messages on requests from admin IPs."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:57
+msgid "The logs will be output to %s."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:70
+msgid ""
+"Allows listed IPs (one per line) to perform certain actions from their "
+"browsers."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:71
+msgid "Your IP"
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:76
+msgid "More information about the available commands can be found here."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:92
+msgid "Basic"
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:102
+msgid "Advanced level will log more details."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:115
+msgid "Specify the maximum size of the log file."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:130
+msgid "Log requested cookie values."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:143
+msgid "Shorten query strings in the debug log to improve readability."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:156
+msgid "Only log listed pages."
+msgstr ""
+
+#: tpl/toolbox/settings-debug.tpl.php:170
+msgid "Prevent any debug log of listed pages."
 msgstr ""
 
 #. Plugin URI of the plugin/theme

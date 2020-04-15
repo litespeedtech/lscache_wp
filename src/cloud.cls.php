@@ -287,6 +287,8 @@ class Cloud extends Base
 			}
 		}
 		self::save_summary();
+
+		Debug2::debug( '❄️  Cleared all local service node caches' );
 	}
 
 	/**
