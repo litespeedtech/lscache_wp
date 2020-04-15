@@ -11,8 +11,8 @@ class Cloud extends Base
 {
 	protected static $_instance;
 
-	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
-	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
+	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF 		= 'd/sync_conf';
