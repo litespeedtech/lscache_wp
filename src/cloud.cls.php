@@ -837,8 +837,9 @@ class Cloud extends Base
 			return self::err( $e->getMessage() );
 		}
 
-		// This doesn't need to sync QUIC conf
-		Conf::get_instance()->update( Base::O_API_KEY, $_POST[ 'domain_key' ] );
+		// This doesn't need to sync QUIC conf but need to clear nodes
+		Conf::get_instance()->update_confs( array( Base::O_API_KEY => $_POST[ 'domain_key' ] ) );
+
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
 		$this->_summary[ 'apikey_ts' ] = time();
 		// Clear token
