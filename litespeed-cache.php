@@ -9,7 +9,6 @@
  *
  * @link              https://www.litespeedtech.com
  * @since             1.0.0
- * @package           LiteSpeed_Cache
  *
  * @wordpress-plugin
  * Plugin Name:       LiteSpeed Cache
