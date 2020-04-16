@@ -91,7 +91,7 @@ class Data extends Instance
 		// 	return;
 		// }
 
-		if ( $this->get_upgrade_lock() ) {
+		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
 
@@ -138,7 +138,7 @@ class Data extends Instance
 	 */
 	public function conf_site_upgrade( $ver )
 	{
-		if ( $this->get_upgrade_lock() ) {
+		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
 
@@ -175,14 +175,29 @@ class Data extends Instance
 	 *
 	 * @since 3.0.1
 	 */
-	public function get_upgrade_lock()
+	private function _get_upgrade_lock()
 	{
 		$is_upgrading = get_option( 'litespeed.data.upgrading' );
 		if ( $is_upgrading && time() - $is_upgrading < 3600 ) {
-			return true;
+			return $is_upgrading;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Show the upgrading banner if upgrade script is running
+	 *
+	 * @since 3.0.1
+	 */
+	public function check_upgrading_msg()
+	{
+		$is_upgrading = $this->_get_upgrade_lock();
+		if ( ! $is_upgrading ) {
+			return;
+		}
+
+		Admin_Display::info( sprintf( __( 'The database is upgrading in backend since %s. This message will disappear after upgraded.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ), true );
 	}
 
 	/**
@@ -222,7 +237,7 @@ class Data extends Instance
 
 		Debug2::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
-		if ( $this->get_upgrade_lock() ) {
+		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
 

@@ -470,7 +470,7 @@ class Optimize extends Base
 					if ( $head_js ) {
 						$urls = $this->_limit_size_build_hash_url( $head_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= '<script data-optimized="1" src="$url" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
+							$snippet .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -505,7 +505,7 @@ class Optimize extends Base
 					if ( $foot_js ) {
 						$urls = $this->_limit_size_build_hash_url( $foot_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= '<script data-optimized="1" src="$url" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
+							$snippet .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;

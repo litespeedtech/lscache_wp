@@ -341,9 +341,9 @@ class Admin_Display extends Base
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function info( $msg )
+	public static function info( $msg, $echo = false )
 	{
-		self::add_notice( self::NOTICE_BLUE, $msg ) ;
+		self::add_notice( self::NOTICE_BLUE, $msg, $echo );
 	}
 
 	/**
@@ -352,9 +352,9 @@ class Admin_Display extends Base
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function note( $msg )
+	public static function note( $msg, $echo = false )
 	{
-		self::add_notice( self::NOTICE_YELLOW, $msg ) ;
+		self::add_notice( self::NOTICE_YELLOW, $msg, $echo );
 	}
 
 	/**
@@ -363,9 +363,9 @@ class Admin_Display extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function succeed( $msg )
+	public static function succeed( $msg, $echo = false )
 	{
-		self::add_notice( self::NOTICE_GREEN, $msg ) ;
+		self::add_notice( self::NOTICE_GREEN, $msg, $echo );
 	}
 
 	/**
@@ -431,6 +431,8 @@ class Admin_Display extends Base
 		if ( GUI::has_whm_msg() ) {
 			$this->show_display_installed();
 		}
+
+		Data::get_instance()->check_upgrading_msg();
 
 		// If is in dev version, always check latest update
 		Cloud::get_instance()->check_dev_version();
