@@ -364,7 +364,7 @@ class Optimize extends Base
 
 					$snippet = '' ;
 					foreach ( $urls as $url ) {
-						$snippet .= "<link data-optimized='2' rel='stylesheet' href='$url' />" ;// use 2 as combined
+						$snippet .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />' ;// use 2 as combined
 					}
 
 					// Handle css async load
@@ -374,7 +374,7 @@ class Optimize extends Base
 
 						$snippet = '' ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<link rel='preload' data-asynced='1' data-optimized='2' as='style' onload='this.onload=null;this.rel=\"stylesheet\"' href='$url' />" ;
+							$snippet .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
 						}
 
 						// enqueue combined file first
@@ -470,7 +470,7 @@ class Optimize extends Base
 					if ( $head_js ) {
 						$urls = $this->_limit_size_build_hash_url( $head_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= '<script data-optimized="1" src="$url" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -505,7 +505,7 @@ class Optimize extends Base
 					if ( $foot_js ) {
 						$urls = $this->_limit_size_build_hash_url( $foot_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= '<script data-optimized="1" src="$url" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -555,12 +555,12 @@ class Optimize extends Base
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
 			if ( Conf::val( Base::O_OPTM_CSS_ASYNC_INLINE ) ) {
-				$this->html_head .= '<script id="litespeed-css-async-lib">' . File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
+				$this->html_head .= '<script id="litespeed-css-async-lib">' . File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>';
 			}
 			else {
-				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC ;
-				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
-				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
+				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
+				$this->html_head .= '<script id="litespeed-css-async-lib" src="' . $css_async_lib_url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';// Don't exclude it from defer for now
+				$this->append_http2( $css_async_lib_url, 'js' ); // async lib will be http/2 pushed always
 			}
 		}
 
@@ -673,7 +673,7 @@ class Optimize extends Base
 
 				$script_ori[] = $match[ 0 ] ;
 
-				$deferred = "document.addEventListener('DOMContentLoaded',function(){" . $con . '});' ;
+				$deferred = 'document.addEventListener("DOMContentLoaded",function(){' . $con . '});' ;
 
 				$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>' ;
 			}
@@ -736,7 +736,7 @@ class Optimize extends Base
 
 		}
 
-		$html .= "'" . implode( "','", $families ) . "'" ;
+		$html .= '"' . implode( '","', $families ) . '"' ;
 
 		$html .= ']}};</script>' ;
 
@@ -843,7 +843,7 @@ class Optimize extends Base
 	{
 		foreach ( $this->dns_prefetch as $v ) {
 			if ( $v ) {
-				$this->html_head .= "<link rel='dns-prefetch' href='$v' />" ;
+				$this->html_head .= '<link rel="dns-prefetch" href="' . $v . '" />';
 			}
 		}
 	}
@@ -899,7 +899,7 @@ class Optimize extends Base
 		foreach ( $src_queue_list as $key => $src ) {
 			$url = $this->_build_hash_url( $src, $file_type ) ;
 			$snippet = str_replace( $src, $url, $html_list[ $key ] ) ;
-			$snippet = str_replace( "<$tag ", "<$tag data-optimized='1' ", $snippet ) ;
+			$snippet = str_replace( "<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet ) ;
 
 			$html_list[ $key ] = $snippet ;
 
@@ -1227,7 +1227,7 @@ class Optimize extends Base
 
 			// async replacement
 			$v = str_replace( 'stylesheet', 'preload', $ori ) ;
-			$v = str_replace( '<link', "<link data-asynced='1' as='style' onload='this.onload=null;this.rel=\"stylesheet\"' ", $v ) ;
+			$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
 			// Append to noscript content
 			$v .= '<noscript>' . $ori . '</noscript>' ;
 			$html_list[ $k ] = $v ;
