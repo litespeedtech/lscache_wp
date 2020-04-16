@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-15 18:40:15+00:00\n"
+"POT-Creation-Date: 2020-04-16 18:18:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,7 +39,7 @@ msgid ""
 "functionality is not duplicated. Only one full-page cache may be activated."
 msgstr ""
 
-#: src/activation.cls.php:305 src/admin-display.cls.php:1086 src/doc.cls.php:38
+#: src/activation.cls.php:305 src/admin-display.cls.php:1088 src/doc.cls.php:38
 #: tpl/cdn/manage.tpl.php:66 tpl/dash/dashboard.tpl.php:46
 #: tpl/img_optm/summary.tpl.php:56 tpl/img_optm/summary.tpl.php:96
 #: tpl/inc/check_cache_disabled.php:50
@@ -101,12 +101,12 @@ msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: src/admin-display.cls.php:667
+#: src/admin-display.cls.php:669
 msgid "Save Changes"
 msgstr ""
 
-#: src/admin-display.cls.php:788 src/admin-display.cls.php:841
-#: src/admin-display.cls.php:879 tpl/cache/settings_inc.cache_mobile.tpl.php:70
+#: src/admin-display.cls.php:790 src/admin-display.cls.php:843
+#: src/admin-display.cls.php:881 tpl/cache/settings_inc.cache_mobile.tpl.php:70
 #: tpl/cdn/settings.tpl.php:45 tpl/page_optm/settings_css.tpl.php:67
 #: tpl/page_optm/settings_css.tpl.php:84 tpl/page_optm/settings_css.tpl.php:85
 #: tpl/page_optm/settings_js.tpl.php:94
@@ -117,8 +117,8 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: src/admin-display.cls.php:789 src/admin-display.cls.php:844
-#: src/admin-display.cls.php:879 tpl/cache/settings_inc.object.tpl.php:213
+#: src/admin-display.cls.php:791 src/admin-display.cls.php:846
+#: src/admin-display.cls.php:881 tpl/cache/settings_inc.object.tpl.php:213
 #: tpl/cdn/settings.tpl.php:45 tpl/cdn/settings.tpl.php:237
 #: tpl/page_optm/settings_css.tpl.php:84 tpl/page_optm/settings_css.tpl.php:99
 #: tpl/page_optm/settings_media.tpl.php:159
@@ -128,62 +128,62 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: src/admin-display.cls.php:889
+#: src/admin-display.cls.php:891
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:890
+#: src/admin-display.cls.php:892
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:902 tpl/cache/settings_inc.object.tpl.php:106
+#: src/admin-display.cls.php:904 tpl/cache/settings_inc.object.tpl.php:106
 #: tpl/crawler/settings-general.tpl.php:60
 #: tpl/crawler/settings-general.tpl.php:74
 #: tpl/crawler/settings-general.tpl.php:89 tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:925 src/admin-display.cls.php:930
+#: src/admin-display.cls.php:927 src/admin-display.cls.php:932
 msgid "Recommended value"
 msgstr ""
 
-#: src/admin-display.cls.php:955
+#: src/admin-display.cls.php:957
 msgid "Invalid rewrite rule"
 msgstr ""
 
-#: src/admin-display.cls.php:973
+#: src/admin-display.cls.php:975
 msgid "Path must end with %s"
 msgstr ""
 
-#: src/admin-display.cls.php:992
+#: src/admin-display.cls.php:994
 msgid "Minimum value"
 msgstr ""
 
-#: src/admin-display.cls.php:995
+#: src/admin-display.cls.php:997
 msgid "Maximum value"
 msgstr ""
 
-#: src/admin-display.cls.php:1007
+#: src/admin-display.cls.php:1009
 msgid "Zero, or"
 msgstr ""
 
-#: src/admin-display.cls.php:1014
+#: src/admin-display.cls.php:1016
 msgid "Larger than"
 msgstr ""
 
-#: src/admin-display.cls.php:1017
+#: src/admin-display.cls.php:1019
 msgid "Smaller than"
 msgstr ""
 
-#: src/admin-display.cls.php:1020
+#: src/admin-display.cls.php:1022
 msgid "Value range"
 msgstr ""
 
-#: src/admin-display.cls.php:1046
+#: src/admin-display.cls.php:1048
 msgid "Invalid IP"
 msgstr ""
 
-#: src/admin-display.cls.php:1067 tpl/page_optm/settings_css.tpl.php:69
+#: src/admin-display.cls.php:1069 tpl/page_optm/settings_css.tpl.php:69
 #: tpl/page_optm/settings_html.tpl.php:127
 #: tpl/page_optm/settings_media_exc.tpl.php:25
 #: tpl/page_optm/settings_tuning.tpl.php:39
@@ -194,43 +194,43 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: src/admin-display.cls.php:1068
+#: src/admin-display.cls.php:1070
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: src/admin-display.cls.php:1102
+#: src/admin-display.cls.php:1104
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: src/admin-display.cls.php:1103
+#: src/admin-display.cls.php:1105
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
-#: src/admin-display.cls.php:1105
+#: src/admin-display.cls.php:1107
 msgid "To match the beginning, add %s to the beginning of the item."
 msgstr ""
 
-#: src/admin-display.cls.php:1106
+#: src/admin-display.cls.php:1108
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: src/admin-display.cls.php:1107 src/doc.cls.php:49
+#: src/admin-display.cls.php:1109 src/doc.cls.php:49
 msgid "One per line."
 msgstr ""
 
-#: src/admin-display.cls.php:1122
+#: src/admin-display.cls.php:1124
 msgid "%s groups"
 msgstr ""
 
-#: src/admin-display.cls.php:1125
+#: src/admin-display.cls.php:1127
 msgid "%s images"
 msgstr ""
 
-#: src/admin-display.cls.php:1135
+#: src/admin-display.cls.php:1137
 msgid "%s group"
 msgstr ""
 
-#: src/admin-display.cls.php:1138
+#: src/admin-display.cls.php:1140
 msgid "%s image"
 msgstr ""
 
@@ -355,6 +355,12 @@ msgstr ""
 
 #: src/crawler.cls.php:913
 msgid "Previously existed in blacklist"
+msgstr ""
+
+#: src/data.cls.php:200
+msgid ""
+"The database has been upgrading in the background since %s. This message "
+"will disappear once upgrade is complete."
 msgstr ""
 
 #: src/db-optm.cls.php:136
@@ -1814,7 +1820,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8

@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4
-Stable tag: 3.0
+Stable tag: 3.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -286,6 +286,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 3.0.1 - Apr 16 2020 =
+* **Data** Increased timeout for database upgrade related to version upgrade. Display a banner while update in progress.
+* **Page Optimize** All appended HTML attributes now will use double quotes to reduce the conflicts when the optimized resources are in JS snippets.
 
 = 3.0 - Apr 15 2020 =
 * 🌱**Media** LQIP (Low Quality Image Placeholder).

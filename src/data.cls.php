@@ -197,7 +197,7 @@ class Data extends Instance
 			return;
 		}
 
-		Admin_Display::info( sprintf( __( 'The database is upgrading in backend since %s. This message will disappear after upgraded.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ), true );
+		Admin_Display::info( sprintf( __( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ), true );
 	}
 
 	/**
