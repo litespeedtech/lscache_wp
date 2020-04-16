@@ -2,6 +2,8 @@
 /**
  * Database upgrade funcs
  *
+ * NOTE: whenever called this file, always call Data::get_upgrade_lock and Data::_set_upgrade_lock first.
+ *
  * @since  3.0
  */
 defined( 'WPINC' ) || exit ;
@@ -105,11 +107,13 @@ function litespeed_update_2_0( $ver )
  */
 function litespeed_update_3_0( $ver )
 {
-	global $wpdb ;
+	global $wpdb;
 	// Upgrade v2.0- to v2.0 first
 	if ( version_compare( $ver, '2.0', '<' ) ) {
 		litespeed_update_2_0( $ver ) ;
 	}
+
+	set_time_limit( 86400 );
 
 	// conv items to litespeed.conf.*
 	$data = array(

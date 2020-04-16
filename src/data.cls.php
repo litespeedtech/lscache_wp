@@ -91,6 +91,12 @@ class Data extends Instance
 		// 	return;
 		// }
 
+		if ( $this->get_upgrade_lock() ) {
+			return;
+		}
+
+		$this->_set_upgrade_lock( true );
+
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		foreach ( $this->_db_updater as $k => $v ) {
@@ -114,6 +120,8 @@ class Data extends Instance
 
 		Debug2::debug( '[Data] Updated version to ' . Core::VER );
 
+		$this->_set_upgrade_lock( false );
+
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 		Purge::purge_all();
 
@@ -130,6 +138,12 @@ class Data extends Instance
 	 */
 	public function conf_site_upgrade( $ver )
 	{
+		if ( $this->get_upgrade_lock() ) {
+			return;
+		}
+
+		$this->_set_upgrade_lock( true );
+
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		foreach ( $this->_db_site_updater as $k => $v ) {
@@ -150,8 +164,40 @@ class Data extends Instance
 
 		Debug2::debug( '[Data] Updated site_version to ' . Core::VER );
 
+		$this->_set_upgrade_lock( false );
+
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true );// clear all sites caches
 		Purge::purge_all();
+	}
+
+	/**
+	 * Check if upgrade script is running or not
+	 *
+	 * @since 3.0.1
+	 */
+	public function get_upgrade_lock()
+	{
+		$is_upgrading = get_option( 'litespeed.data.upgrading' );
+		if ( $is_upgrading && time() - $is_upgrading < 3600 ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Set lock for upgrade process
+	 *
+	 * @since 3.0.1
+	 */
+	private function _set_upgrade_lock( $lock )
+	{
+		if ( ! $lock ) {
+			delete_option( 'litespeed.data.upgrading' );
+		}
+		else {
+			update_option( 'litespeed.data.upgrading', time() );
+		}
 	}
 
 	/**
@@ -176,10 +222,18 @@ class Data extends Instance
 
 		Debug2::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
+		if ( $this->get_upgrade_lock() ) {
+			return;
+		}
+
+		$this->_set_upgrade_lock( true );
+
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		// Here inside will update the version to v3.0
 		litespeed_update_3_0( $ver );
+
+		$this->_set_upgrade_lock( false );
 
 		Debug2::debug( '[Data] Upgraded to v3.0' );
 
