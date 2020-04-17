@@ -78,6 +78,7 @@ $placeholder_summary = Placeholder::get_summary();
 					$used = Utility::real_size( $used * 1000000 * 100, true );
 					$quota = Utility::real_size( $quota * 1000000 * 100, true );
 					$pag_used = Utility::real_size( $pag_used * 1000000 * 100, true );
+					$pag_bal = Utility::real_size( $pag_bal * 1000000 * 100, true );
 					$pag_total = Utility::real_size( $pag_total * 1000000 * 100, true );
 				}
 			}
