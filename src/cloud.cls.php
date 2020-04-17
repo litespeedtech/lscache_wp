@@ -765,6 +765,7 @@ class Cloud extends Base
 		$data = array(
 			'site_url'	=> home_url(),
 			'rest'		=> rest_get_url_prefix(),
+			'server_ip'	=> Conf::val( Base::O_SERVER_IP ),
 		);
 
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
