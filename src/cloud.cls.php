@@ -792,6 +792,9 @@ class Cloud extends Base
 		// Save token option
 		$this->_summary[ 'token' ] = $json[ 'token' ];
 		$this->_summary[ 'token_ts' ] = time();
+		if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
+			unset( $this->_summary[ 'apikey_ts' ] );
+		}
 		self::save_summary();
 
 		Debug2::debug( '❄️ ✅ send request for key successfully.' );
@@ -849,7 +852,7 @@ class Cloud extends Base
 		self::save_summary();
 
 		Debug2::debug( '❄️ ✅ saved auth_key' );
-		Admin_Display::succeed( __( 'Congratulations, your Domain Key has been approved! The setting has been updated accordingly.', 'litespeed-cache' ) );
+		Admin_Display::succeed( '🎊 ' . __( 'Congratulations, your Domain Key has been approved! The setting has been updated accordingly.', 'litespeed-cache' ) );
 
 		return self::ok();
 	}
@@ -884,7 +887,7 @@ class Cloud extends Base
 	 */
 	public function can_link_qc()
 	{
-		return empty( $cloud_summary[ 'is_linked' ] ) && $this->_api_key;
+		return empty( $this->_summary[ 'is_linked' ] ) && $this->_api_key;
 	}
 
 	/**

@@ -13,14 +13,16 @@ $cloud_summary = Cloud::get_summary();
 
 $can_token = $__cloud->can_token();
 
+$is_requesting = ! empty( $cloud_summary[ 'token_ts' ] ) && ( empty( $cloud_summary[ 'apikey_ts' ] ) || $cloud_summary[ 'token_ts' ] > $cloud_summary[ 'apikey_ts' ] );
+
 $apply_btn_txt = __( 'Apply Domain Key', 'litespeed-cache' );
 if ( Conf::val( Base::O_API_KEY ) ) {
 	$apply_btn_txt = __( 'Refresh Domain Key', 'litespeed-cache' );
-	if ( ! $can_token && ! empty( $cloud_summary[ 'token_ts' ] ) && ! empty( $cloud_summary[ 'apikey_ts' ] ) && $cloud_summary[ 'token_ts' ] > $cloud_summary[ 'apikey_ts' ] ) {
+	if ( $is_requesting ) {
 		$apply_btn_txt = __( 'Waiting for Refresh', 'litespeed-cache' );
 	}
 }
-elseif ( ! $can_token ) {
+elseif ( $is_requesting ) {
 	$apply_btn_txt = __( 'Waiting for Approval', 'litespeed-cache' );
 }
 
@@ -51,7 +53,11 @@ $this->form_action();
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ); ?>
+			<?php if ( ! $is_requesting || $can_token ) : ?>
+				<?php $this->build_input( $id ); ?>
+			<?php else: ?>
+				<?php $this->build_input( $id, null, null, 'text', true ); ?>
+			<?php endif; ?>
 
 			<?php if ( $permalink_structure && $can_token ) : ?>
 				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, 'button litespeed-btn-success', true ); ?>
@@ -68,9 +74,12 @@ $this->form_action();
 				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-warning litespeed-right', true ); ?>
 			<?php else: ?>
 				<?php $this->learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button disabled litespeed-btn-warning litespeed-right', true ); ?>
-				<div class="litespeed-callout notice notice-error inline">
-					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
-					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( $is_requesting ) : ?>
+				<div class="litespeed-callout notice notice-warning inline">
+					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo __( 'Please wait. You will be notified upon approval.', 'litespeed-cache' ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -80,6 +89,18 @@ $this->form_action();
 					<p><?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating an Domain key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
 						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
 					</p>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( ! Conf::val( Base::O_API_KEY ) ) : ?>
+				<div class="litespeed-callout notice notice-error inline">
+					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ); ?></p>
+				</div>
+			<?php elseif ( empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
+				<div class="litespeed-callout notice notice-warning inline">
+					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo sprintf( __( 'You can click the %s button to link to QUIC.cloud.', 'litespeed-cache' ), '<code>' . __( 'Link to QUIC.cloud', 'litespeed-cache' ) . '</code>' ); ?></p>
 				</div>
 			<?php endif; ?>
 

@@ -714,15 +714,11 @@ class Admin_Display extends Base
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @param  string $id
-	 * @param  string $cls     Appending styles
-	 * @param  string $val       Field value
-	 * @param  string $type      Input type
 	 */
-	public function build_input( $id, $cls = null, $val = null, $type = 'text' )
+	public function build_input( $id, $cls = null, $val = null, $type = 'text', $disabled = false )
 	{
 		if ( $val === null ) {
-			$val = Conf::val( $id, true ) ;
+			$val = Conf::val( $id, true );
 
 			// Mask pswds
 			if ( $this->_conf_pswd( $id ) && $val ) {
@@ -730,15 +726,19 @@ class Admin_Display extends Base
 			}
 		}
 
-		$label_id = preg_replace( '|\W|', '', $id ) ;
+		$label_id = preg_replace( '|\W|', '', $id );
 
 		if ( $type == 'text' ) {
-			$cls = "regular-text $cls" ;
+			$cls = "regular-text $cls";
 		}
 
-		$this->enroll( $id ) ;
-
-		echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> " ;
+		if ( $disabled ) {
+			echo "<input type='$type' class='$cls' value='" . esc_textarea( $val ) ."' id='input_$label_id' disabled /> ";
+		}
+		else {
+			$this->enroll( $id );
+			echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> ";
+		}
 
 		$this->_check_const_overwritten( $id );
 	}
@@ -755,7 +755,7 @@ class Admin_Display extends Base
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
 		if ( $checked === null && Conf::val( $id, true ) ) {
-			$checked = true ;
+			$checked = true;
 		}
 		$checked = $checked ? ' checked ' : '' ;
 
