@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-16 18:18:02+00:00\n"
+"POT-Creation-Date: 2020-04-17 19:48:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -297,31 +297,31 @@ msgstr ""
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:629 src/cloud.cls.php:785
+#: src/cloud.cls.php:629 src/cloud.cls.php:786
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:774
+#: src/cloud.cls.php:775
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:799
+#: src/cloud.cls.php:803
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:852
+#: src/cloud.cls.php:856
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:927
+#: src/cloud.cls.php:931
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:997
+#: src/cloud.cls.php:1001
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -624,7 +624,7 @@ msgid "CSS/JS Cache"
 msgstr ""
 
 #: src/gui.cls.php:511 src/gui.cls.php:653 src/lang.cls.php:79
-#: tpl/dash/dashboard.tpl.php:354 tpl/toolbox/purge.tpl.php:54
+#: tpl/dash/dashboard.tpl.php:355 tpl/toolbox/purge.tpl.php:54
 msgid "Object Cache"
 msgstr ""
 
@@ -633,7 +633,7 @@ msgid "Opcode Cache"
 msgstr ""
 
 #: src/gui.cls.php:531 src/gui.cls.php:673 tpl/dash/dashboard.tpl.php:53
-#: tpl/dash/dashboard.tpl.php:395 tpl/toolbox/purge.tpl.php:72
+#: tpl/dash/dashboard.tpl.php:396 tpl/toolbox/purge.tpl.php:72
 msgid "Critical CSS"
 msgstr ""
 
@@ -811,11 +811,11 @@ msgstr ""
 msgid "Images not requested"
 msgstr ""
 
-#: src/lang.cls.php:25 tpl/dash/dashboard.tpl.php:295
+#: src/lang.cls.php:25 tpl/dash/dashboard.tpl.php:296
 msgid "Images requested"
 msgstr ""
 
-#: src/lang.cls.php:26 tpl/dash/dashboard.tpl.php:305
+#: src/lang.cls.php:26 tpl/dash/dashboard.tpl.php:306
 msgid "Images notified to pull"
 msgstr ""
 
@@ -863,7 +863,7 @@ msgstr ""
 msgid "Enable Cache"
 msgstr ""
 
-#: src/lang.cls.php:58 tpl/dash/dashboard.tpl.php:355
+#: src/lang.cls.php:58 tpl/dash/dashboard.tpl.php:356
 msgid "Browser Cache"
 msgstr ""
 
@@ -1820,7 +1820,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -1860,26 +1860,26 @@ msgstr ""
 msgid "Thank You for Using the LiteSpeed Cache Plugin!"
 msgstr ""
 
-#: tpl/banner/score.php:77 tpl/dash/dashboard.tpl.php:146
+#: tpl/banner/score.php:77 tpl/dash/dashboard.tpl.php:147
 msgid "Page Load Time"
 msgstr ""
 
 #: tpl/banner/score.php:83 tpl/banner/score.php:123
-#: tpl/dash/dashboard.tpl.php:159 tpl/dash/dashboard.tpl.php:218
+#: tpl/dash/dashboard.tpl.php:160 tpl/dash/dashboard.tpl.php:219
 msgid "Before"
 msgstr ""
 
 #: tpl/banner/score.php:94 tpl/banner/score.php:133
-#: tpl/dash/dashboard.tpl.php:168 tpl/dash/dashboard.tpl.php:226
+#: tpl/dash/dashboard.tpl.php:169 tpl/dash/dashboard.tpl.php:227
 msgid "After"
 msgstr ""
 
 #: tpl/banner/score.php:104 tpl/banner/score.php:143
-#: tpl/dash/dashboard.tpl.php:176 tpl/dash/dashboard.tpl.php:234
+#: tpl/dash/dashboard.tpl.php:177 tpl/dash/dashboard.tpl.php:235
 msgid "Improved by"
 msgstr ""
 
-#: tpl/banner/score.php:117 tpl/dash/dashboard.tpl.php:203
+#: tpl/banner/score.php:117 tpl/dash/dashboard.tpl.php:204
 msgid "PageSpeed Score"
 msgstr ""
 
@@ -2923,7 +2923,7 @@ msgstr ""
 
 #: tpl/crawler/entry.tpl.php:9 tpl/general/entry.tpl.php:6
 #: tpl/general/entry.tpl.php:11 tpl/general/network_settings.tpl.php:8
-#: tpl/general/settings.tpl.php:39
+#: tpl/general/settings.tpl.php:41
 msgid "General Settings"
 msgstr ""
 
@@ -2959,7 +2959,7 @@ msgstr ""
 msgid "Sitemap Total"
 msgstr ""
 
-#: tpl/crawler/map.tpl.php:41 tpl/dash/dashboard.tpl.php:457
+#: tpl/crawler/map.tpl.php:41 tpl/dash/dashboard.tpl.php:458
 msgid "Crawler Status"
 msgstr ""
 
@@ -3032,7 +3032,8 @@ msgstr ""
 msgid "Check my public IP from"
 msgstr ""
 
-#: tpl/crawler/settings-general.tpl.php:138
+#: tpl/crawler/settings-general.tpl.php:138 tpl/general/settings.tpl.php:81
+#: tpl/general/settings.tpl.php:102
 msgid "Notice"
 msgstr ""
 
@@ -3226,19 +3227,19 @@ msgstr ""
 msgid "Run time for previous crawler"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:83 tpl/dash/dashboard.tpl.php:469
+#: tpl/crawler/summary.tpl.php:83 tpl/dash/dashboard.tpl.php:470
 msgid "Current crawler started at"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:90 tpl/dash/dashboard.tpl.php:476
+#: tpl/crawler/summary.tpl.php:90 tpl/dash/dashboard.tpl.php:477
 msgid "Last interval"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:97 tpl/dash/dashboard.tpl.php:483
+#: tpl/crawler/summary.tpl.php:97 tpl/dash/dashboard.tpl.php:484
 msgid "Ended reason"
 msgstr ""
 
-#: tpl/crawler/summary.tpl.php:104 tpl/dash/dashboard.tpl.php:490
+#: tpl/crawler/summary.tpl.php:104 tpl/dash/dashboard.tpl.php:491
 msgid "<b>Last crawled:</b> %s item(s)"
 msgstr ""
 
@@ -3326,128 +3327,128 @@ msgstr ""
 msgid "CDN Bandwidth"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:55 tpl/dash/dashboard.tpl.php:426
+#: tpl/dash/dashboard.tpl.php:55 tpl/dash/dashboard.tpl.php:427
 msgid "Low Quality Image Placeholder"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:103 tpl/dash/network_dash.tpl.php:78
+#: tpl/dash/dashboard.tpl.php:104 tpl/dash/network_dash.tpl.php:78
 msgid "Fast Queue Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:103 tpl/dash/network_dash.tpl.php:78
+#: tpl/dash/dashboard.tpl.php:104 tpl/dash/network_dash.tpl.php:78
 msgid "Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:115 tpl/dash/network_dash.tpl.php:90
+#: tpl/dash/dashboard.tpl.php:116 tpl/dash/network_dash.tpl.php:90
 msgid "PAYG Balance"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:116 tpl/dash/network_dash.tpl.php:91
+#: tpl/dash/dashboard.tpl.php:117 tpl/dash/network_dash.tpl.php:91
 msgid "This Month Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:118 tpl/dash/network_dash.tpl.php:93
+#: tpl/dash/dashboard.tpl.php:119 tpl/dash/network_dash.tpl.php:93
 msgid "Pay as You Go Usage Statistics"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:125 tpl/dash/network_dash.tpl.php:100
+#: tpl/dash/dashboard.tpl.php:126 tpl/dash/network_dash.tpl.php:100
 msgid "Total Usage"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:126 tpl/dash/network_dash.tpl.php:101
+#: tpl/dash/dashboard.tpl.php:127 tpl/dash/network_dash.tpl.php:101
 msgid "Total images optimized in this month"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:137
+#: tpl/dash/dashboard.tpl.php:138
 msgid "Go to QUIC.cloud dashboard"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:149
+#: tpl/dash/dashboard.tpl.php:150
 msgid "Refresh page load time"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:190 tpl/dash/dashboard.tpl.php:250
-#: tpl/dash/dashboard.tpl.php:418 tpl/dash/dashboard.tpl.php:449
+#: tpl/dash/dashboard.tpl.php:191 tpl/dash/dashboard.tpl.php:251
+#: tpl/dash/dashboard.tpl.php:419 tpl/dash/dashboard.tpl.php:450
 msgid "Last requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:195
+#: tpl/dash/dashboard.tpl.php:196
 msgid "Current closest Cloud server is %s.&#10;Click to redetect."
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:195 tpl/img_optm/summary.tpl.php:51
+#: tpl/dash/dashboard.tpl.php:196 tpl/img_optm/summary.tpl.php:51
 #: tpl/page_optm/settings_css.tpl.php:115
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Are you sure to redetect the closest cloud server for this service?"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:206
+#: tpl/dash/dashboard.tpl.php:207
 msgid "Refresh page score"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:258 tpl/img_optm/entry.tpl.php:6
+#: tpl/dash/dashboard.tpl.php:259 tpl/img_optm/entry.tpl.php:6
 msgid "Image Optimization Summary"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:268
+#: tpl/dash/dashboard.tpl.php:269
 msgid "Image Groups Prepared"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:283
+#: tpl/dash/dashboard.tpl.php:284
 msgid "Images Requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:315 tpl/img_optm/summary.tpl.php:326
+#: tpl/dash/dashboard.tpl.php:316 tpl/img_optm/summary.tpl.php:326
 msgid "Last Request"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:318
+#: tpl/dash/dashboard.tpl.php:319
 msgid "Last Pull"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:347
+#: tpl/dash/dashboard.tpl.php:348
 msgid "Cache Status"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:352
+#: tpl/dash/dashboard.tpl.php:353
 msgid "Public Cache"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:353
+#: tpl/dash/dashboard.tpl.php:354
 msgid "Private Cache"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:381
+#: tpl/dash/dashboard.tpl.php:382
 msgid "Cache Stats"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:400 tpl/dash/dashboard.tpl.php:431
+#: tpl/dash/dashboard.tpl.php:401 tpl/dash/dashboard.tpl.php:432
 #: tpl/page_optm/settings_css.tpl.php:107
 #: tpl/page_optm/settings_media.tpl.php:167
 msgid "Last generated"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:403 tpl/dash/dashboard.tpl.php:434
+#: tpl/dash/dashboard.tpl.php:404 tpl/dash/dashboard.tpl.php:435
 msgid "Time to execute previous request"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:408 tpl/dash/dashboard.tpl.php:439
+#: tpl/dash/dashboard.tpl.php:409 tpl/dash/dashboard.tpl.php:440
 msgid "Requests in queue"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:410 tpl/dash/dashboard.tpl.php:441
+#: tpl/dash/dashboard.tpl.php:411 tpl/dash/dashboard.tpl.php:442
 msgid "Force cron"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:461
+#: tpl/dash/dashboard.tpl.php:462
 msgid "Crawler(s)"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:464
+#: tpl/dash/dashboard.tpl.php:465
 msgid "Currently active crawler"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:496
+#: tpl/dash/dashboard.tpl.php:497
 msgid "Manage Crawler"
 msgstr ""
 
@@ -3649,87 +3650,102 @@ msgstr ""
 msgid "LiteSpeed Cache General Settings"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:16
+#: tpl/general/settings.tpl.php:18
 msgid "Apply Domain Key"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:18
+#: tpl/general/settings.tpl.php:20
 msgid "Refresh Domain Key"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:20
+#: tpl/general/settings.tpl.php:22
 msgid "Waiting for Refresh"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:24
+#: tpl/general/settings.tpl.php:26
 msgid "Waiting for Approval"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:29
+#: tpl/general/settings.tpl.php:31
 msgid "Requested"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:32
+#: tpl/general/settings.tpl.php:34
 msgid "Approved"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:66
+#: tpl/general/settings.tpl.php:72
 msgid "Visit My Dashboard on QUIC.cloud"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:68 tpl/general/settings.tpl.php:70
+#: tpl/general/settings.tpl.php:74 tpl/general/settings.tpl.php:76
+#: tpl/general/settings.tpl.php:103
 msgid "Link to QUIC.cloud"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:72 tpl/general/settings.tpl.php:79
+#: tpl/general/settings.tpl.php:82
+msgid "Please wait. You will be notified upon approval."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:88 tpl/general/settings.tpl.php:97
 msgid "Warning"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:73
-msgid "You must have %1$s first before linking to QUIC.cloud."
-msgstr ""
-
-#: tpl/general/settings.tpl.php:80
+#: tpl/general/settings.tpl.php:89
 msgid ""
 "You must set WordPress %1$s to a value other than %2$s before generating an "
 "Domain key."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:80
+#: tpl/general/settings.tpl.php:89
 msgid "Permalink Settings"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:80
+#: tpl/general/settings.tpl.php:89
 msgid "Plain"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:81
+#: tpl/general/settings.tpl.php:90
 msgid "Click here to config"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:87
+#: tpl/general/settings.tpl.php:98
+msgid "You must have %1$s first before linking to QUIC.cloud."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:103
+msgid ""
+"You must click the %s button if you wish to associate this site with a QUIC."
+"cloud account."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:104
+msgid "Benefits of linking to a QUIC.cloud account"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:109
 msgid ""
 "An Domain key is necessary for security when communicating with our QUIC."
 "cloud servers. Required for online services."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:90
+#: tpl/general/settings.tpl.php:112
 msgid "Current Cloud Nodes in Service"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:91
+#: tpl/general/settings.tpl.php:113
 msgid "Click to clear all nodes for further redetection."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:91
+#: tpl/general/settings.tpl.php:113
 msgid "Are you sure to clear all cloud nodes?"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:103
+#: tpl/general/settings.tpl.php:125
 msgid "No cloud services currently in use"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:121
+#: tpl/general/settings.tpl.php:143
 msgid ""
 "Turn this option ON to show latest news automatically, including hotfixes, "
 "new releases, available beta versions, and promotions."
