@@ -50,7 +50,7 @@ $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() 
 		}
 		else {
 			$expired_at = $curr_status[ 'devmode_expired' ] - time() ;
-			$expired_at = Utility::readable_time( $expired_at, 3600 * 3, false ) ;
+			$expired_at = Utility::readable_time( $expired_at, 3600 * 3, true );
 		?>
 			<?php echo sprintf( __( 'Current status is %s.', 'litespeed-cache' ), '<code>' . strtoupper( $curr_status[ 'devmode' ] ) . '</code>' ) ; ?>
 			<?php echo sprintf( __( 'Development mode will be automatically turned off in %s.', 'litespeed-cache' ), '<code>' . $expired_at . '</code>' ) ; ?>

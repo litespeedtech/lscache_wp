@@ -33,6 +33,10 @@ if ( ! empty( $cloud_summary[ 'token_ts' ] ) ) {
 if ( ! empty( $cloud_summary[ 'apikey_ts' ] ) ) {
 	$apply_ts_txt .= ' ' . __( 'Approved', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $cloud_summary[ 'apikey_ts' ] ) . '</code>';
 }
+if ( ! $can_token ) {
+	$next_available_req = $cloud_summary[ 'token_ts' ] + Cloud::EXPIRATION_TOKEN - time();
+	$apply_ts_txt .= sprintf( __( 'Next available request time: <code>After %s</code>', 'litespeed-cache' ), Utility::readable_time( $next_available_req, 0, true ) );
+}
 
 $this->form_action();
 ?>

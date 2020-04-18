@@ -190,7 +190,7 @@ class Utility extends Instance
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $backward = true )
+	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $forword = false )
 	{
 
 		if ( strlen( $seconds_or_timestamp ) == 10 ) {
@@ -236,10 +236,10 @@ class Utility extends Instance
 		}
 
 		if ( ! $res ) {
-			return $backward ? __( 'just now', 'litespeed-cache' ) : __( 'right now', 'litespeed-cache' ) ;
+			return $forword ? __( 'right now', 'litespeed-cache' ) : __( 'just now', 'litespeed-cache' );
 		}
 
-		$res = $backward ? sprintf( __( ' %s ago', 'litespeed-cache' ), $res ) : $res ;
+		$res = $forword ? $res : sprintf( __( ' %s ago', 'litespeed-cache' ), $res );
 
 		return $res ;
 	}

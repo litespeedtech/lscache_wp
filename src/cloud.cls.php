@@ -444,7 +444,7 @@ class Cloud extends Base
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, 0 ), '<code>' . $service_tag . '</code>' );
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, true ), '<code>' . $service_tag . '</code>' );
 				Admin_Display::error( $msg );
 				return false;
 			}
