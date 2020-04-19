@@ -59,6 +59,9 @@ $placeholder_summary = Placeholder::get_summary();
 			$finished_percentage = 0;
 			$total_used = $used = $quota = $pag_used = $pag_total = '-';
 			$pag_width = 0;
+			$percentage_bg = 'success';
+			$pag_txt_color = '';
+
 			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
 				$finished_percentage = floor( $cloud_summary[ 'usage.' . $svc ][ 'used' ] * 100 / $cloud_summary[ 'usage.' . $svc ][ 'quota' ] );
 				$used = $cloud_summary[ 'usage.' . $svc ][ 'used' ];
@@ -74,20 +77,23 @@ $placeholder_summary = Placeholder::get_summary();
 					$pag_width = round( $pag_used / $pag_total * 100 ) . '%';
 				}
 
+				if ( $finished_percentage > 85 ) {
+					$percentage_bg = 'warning';
+					if ( $finished_percentage > 95 ) {
+						$percentage_bg = 'danger';
+						if ( $pag_bal ) { // is using PAG quota
+							$percentage_bg = 'warning';
+							$pag_txt_color = 'litespeed-success';
+						}
+					}
+				}
+
 				if ( $svc == 'cdn' ) {
 					$used = Utility::real_size( $used * 1000000 * 100, true );
 					$quota = Utility::real_size( $quota * 1000000 * 100, true );
 					$pag_used = Utility::real_size( $pag_used * 1000000 * 100, true );
 					$pag_bal = Utility::real_size( $pag_bal * 1000000 * 100, true );
-					$pag_total = Utility::real_size( $pag_total * 1000000 * 100, true );
 				}
-			}
-
-			$percentage_bg = 'success';
-			if( $finished_percentage > 95 ){
-				$percentage_bg = 'danger';
-			} elseif ( $finished_percentage > 85 ){
-				$percentage_bg = 'warning';
 			}
 
 		?>
@@ -112,7 +118,7 @@ $placeholder_summary = Placeholder::get_summary();
 						</div>
 					</div>
 					<?php if ( $pag_total > 0 ) { ?>
-						<p class="litespeed-dashboard-stats-payg">
+						<p class="litespeed-dashboard-stats-payg <?php echo $pag_txt_color; ?>">
 							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
 							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>">
 								<span class="dashicons dashicons-info"></span>
