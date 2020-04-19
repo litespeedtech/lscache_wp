@@ -701,33 +701,34 @@ class Base extends Instance
 							self::CDN_MAPPING_INC_CSS,
 							self::CDN_MAPPING_INC_JS,
 							self::CDN_MAPPING_FILETYPE, // Array
-						) ;
-						$ini_v = array() ;
-						foreach ( $default_ini_cfg[ $k ][ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
-							$this_row = array() ;
+						);
+						$ini_v2 = array();
+						foreach ( $ini_v[ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
+							$this_row = array();
 							foreach ( $mapping_fields as $v3 ) {
-								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
+								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false;
 								if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
-									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array() ; // Note: Since v3.0 its already an array
+									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array(); // Note: Since v3.0 its already an array
 								}
-								$this_row[ $v3 ] = $this_v ;
+								$this_row[ $v3 ] = $this_v;
 							}
-							$ini_v[ $k2 ] = $this_row ;
+							$ini_v2[ $k2 ] = $this_row;
 						}
+						$ini_v = $ini_v2;
 					}
 					/**
 					 * Default multiple lines to array
 					 */
 					else {
-						$ini_v = Utility::sanitize_lines( $ini_v ) ;
+						$ini_v = Utility::sanitize_lines( $ini_v );
 					}
 				}
 
 				if ( $ini_v == $v ) {
-					continue ;
+					continue;
 				}
 
-				self::$_default_options[ $k ] = $ini_v ;
+				self::$_default_options[ $k ] = $ini_v;
 			}
 
 		}
