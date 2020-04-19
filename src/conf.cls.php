@@ -76,9 +76,9 @@ class Conf extends Base
 		 *
 		 * NOTE: Load before run `conf_upgrade()` to avoid infinite loop when getting conf in `conf_upgrade()`
 		 */
-		$this->load_options() ;
+		$this->load_options();
 
-		$ver = $this->_options[ Base::_VER ] ;
+		$ver = $this->_options[ Base::_VER ];
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -88,7 +88,7 @@ class Conf extends Base
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
 				$this->_options = $this->load_default_vals();
 				$this->_try_load_site_options();
-				return ;
+				return;
 			}
 		}
 
@@ -97,10 +97,10 @@ class Conf extends Base
 		 */
 		if ( ! $ver ) {
 			// Try upgrade first (network will upgrade inside too)
-			Data::get_instance()->try_upgrade_conf_3_0() ;
+			Data::get_instance()->try_upgrade_conf_3_0();
 		}
 		else {
-			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver ) ;
+			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
 		}
 
 		/**
@@ -109,7 +109,7 @@ class Conf extends Base
 		if ( $ver && $ver != Core::VER ) {
 			// Plugin version will be set inside
 			// Site plugin upgrade & version change will do in load_site_conf
-			Data::get_instance()->conf_upgrade( $ver ) ;
+			Data::get_instance()->conf_upgrade( $ver );
 		}
 
 		/**

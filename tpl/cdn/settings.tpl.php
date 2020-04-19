@@ -7,8 +7,12 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = Conf::val( Base::O_CDN_MAPPING ) ;
-
+$cdn_mapping = Conf::val( Base::O_CDN_MAPPING );
+// Special handler: Append one row if somehow the DB default preset value got deleted
+if ( ! $cdn_mapping ) {
+	$this->load_default_vals();
+	$cdn_mapping = self::$_default_options[ Base::O_CDN_MAPPING ];
+}
 
 $this->form_action() ;
 ?>
