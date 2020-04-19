@@ -99,6 +99,11 @@ class Data extends Instance
 
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
+		// Init log manually
+		if ( Conf::val( Base::O_DEBUG ) ) {
+			Debug2::init();
+		}
+
 		foreach ( $this->_db_updater as $k => $v ) {
 			if ( version_compare( $ver, $k, '<' ) ) {
 				// run each callback
@@ -235,6 +240,10 @@ class Data extends Instance
 
 		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
 
+		// Init log manually
+		if ( Conf::val( Base::O_DEBUG ) ) {
+			Debug2::init();
+		}
 		Debug2::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
 		if ( $this->_get_upgrade_lock() ) {
