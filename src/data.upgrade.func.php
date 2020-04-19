@@ -116,6 +116,7 @@ function litespeed_update_3_0( $ver )
 	set_time_limit( 86400 );
 
 	// conv items to litespeed.conf.*
+	Debug2::debug( "[Data] Conv items to litespeed.conf.*" );
 	$data = array(
 		'litespeed-cache-exclude-cache-roles' 		=> 'cache-exc_roles',
 		'litespeed-cache-drop_qs' 					=> 'cache-drop_qs',
@@ -146,6 +147,7 @@ function litespeed_update_3_0( $ver )
 	foreach ( $data as $k => $v ) {
 		$old_data = get_option( $k ) ;
 		if ( $old_data ) {
+			Debug2::debug( "[Data] Convert $k" );
 			// They must be an array
 			if ( ! is_array( $old_data ) && $v != 'optm-ccss_con' ) {
 				$old_data = explode( "\n", $old_data ) ;
@@ -164,6 +166,7 @@ function litespeed_update_3_0( $ver )
 
 			add_option( 'litespeed.conf.' . $v, $old_data ) ;
 		}
+		Debug2::debug( "[Data] Delete $k" );
 		delete_option( $k ) ;
 	}
 
@@ -184,6 +187,7 @@ function litespeed_update_3_0( $ver )
 	}
 
 	// Conv conf from litespeed-cache-conf child to litespeed.conf.*
+	Debug2::debug( "[Data] Conv conf from litespeed-cache-conf child to litespeed.conf.*" );
 	$previous_options = get_option( 'litespeed-cache-conf' ) ;
 
 	$data = array(
@@ -435,13 +439,15 @@ function litespeed_update_3_0( $ver )
 	}
 
 	// Backup stale conf
-	delete_option( 'litespeed-cache-conf' ) ;
-	add_option( 'litespeed-cache-conf.bk', $previous_options ) ;
+	Debug2::debug( "[Data] Backup stale conf" );
+	delete_option( 'litespeed-cache-conf' );
+	add_option( 'litespeed-cache-conf.bk', $previous_options );
 
 	// Upgrade site_options if is network
 	if ( is_multisite() ) {
 		$ver = get_site_option( 'litespeed.conf._version' ) ;
 		if ( ! $ver ) {
+			Debug2::debug( "[Data] Conv multisite" );
 			$previous_site_options = get_site_option( 'litespeed-cache-conf' ) ;
 
 			$data = array(
@@ -511,10 +517,12 @@ function litespeed_update_3_0( $ver )
 	}
 
 	// delete tables
+	Debug2::debug( "[Data] Drop litespeed_optimizer" );
 	$q = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'litespeed_optimizer' ;
 	$wpdb->query( $q ) ;
 
 	// Update image optm table
+	Debug2::debug( "[Data] Upgrade img_optm table" );
 	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_img_optm"' );
 	if ( $tb_exists ) {
 		$status_mapping = array(
@@ -551,7 +559,9 @@ function litespeed_update_3_0( $ver )
 		$wpdb->query( $q ) ;
 	}
 
-	delete_option( 'litespeed-recommended' ) ;
+	delete_option( 'litespeed-recommended' );
+
+	Debug2::debug( "[Data] litespeed_update_3_0 done!" );
 
 	add_option( 'litespeed.conf._version', '3.0' ) ;
 
