@@ -346,25 +346,15 @@ class Admin_Settings extends Base
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
 	{
 		if ( empty( $new_instance ) ) {
-			return $instance ;
+			return $instance;
 		}
 
-		if ( ! isset( $new_instance[ ESI::WIDGET_O_ESIENABLE ] ) ) {
-			return $instance ;
-		}
-		if ( ! isset( $new_instance[ ESI::WIDGET_O_TTL ] ) ) {
-			return $instance ;
-		}
-		$esistr = $new_instance[ ESI::WIDGET_O_ESIENABLE ] ;
-		$ttlstr = $new_instance[ ESI::WIDGET_O_TTL ] ;
-
-		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
-			add_filter( 'wp_redirect', __CLASS__ . '::widget_save_err' ) ;
-			return false ;
+		if ( ! isset( $new_instance[ ESI::WIDGET_O_ESIENABLE ] ) || ! isset( $new_instance[ ESI::WIDGET_O_TTL ] ) ) {
+			return $instance;
 		}
 
-		$esi = self::is_checked_radio( $esistr ) ;
-		$ttl = intval( $ttlstr ) ;
+		$esi = intval( $new_instance[ ESI::WIDGET_O_ESIENABLE ] ) % 3;
+		$ttl = (int) $new_instance[ ESI::WIDGET_O_TTL ];
 
 		if ( $ttl != 0 && $ttl < 30 ) {
 			add_filter( 'wp_redirect', __CLASS__ . '::widget_save_err' ) ;
@@ -388,28 +378,4 @@ class Admin_Settings extends Base
 		Purge::purge_all( 'Wdiget saved' ) ;
 		return $instance ;
 	}
-
-	/**
-	 * Filter the value for radio (enabled/disabled/notset)
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 * @param int $val The radio value
-	 * @return int Filtered value
-	 */
-	public static function is_checked_radio( $val )
-	{
-		$val = intval( $val ) ;
-
-		if( $val === self::VAL_ON ) {
-			return self::VAL_ON ;
-		}
-
-		if( $val === self::VAL_ON2 ) {
-			return self::VAL_ON2 ;
-		}
-
-		return self::VAL_OFF ;
-	}
-
 }

@@ -164,7 +164,7 @@ class Avatar extends Base
 	{
 		global $wpdb;
 
-		// If var not exists, mean table not exists
+		// If var not exists, mean table not exists // todo: not true
 		if ( ! $this->_tb ) {
 			return false;
 		}
