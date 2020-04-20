@@ -95,31 +95,7 @@ $this->form_action();
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __('Order links by', 'litespeed-cache'); ?></h4>
 
-					<div class="litespeed-switch">
-						<?php $this->build_radio(
-							Base::O_CRAWLER_ORDER_LINKS,
-							Base::CRWL_DATE_DESC,
-							__('Date, descending (Default)', 'litespeed-cache')
-						); ?>
-
-						<?php $this->build_radio(
-							Base::O_CRAWLER_ORDER_LINKS,
-							Base::CRWL_DATE_ASC,
-							__('Date, ascending', 'litespeed-cache')
-						); ?>
-
-						<?php $this->build_radio(
-							Base::O_CRAWLER_ORDER_LINKS,
-							Base::CRWL_ALPHA_DESC,
-							__('Alphabetical, descending', 'litespeed-cache')
-						); ?>
-
-						<?php $this->build_radio(
-							Base::O_CRAWLER_ORDER_LINKS,
-							Base::CRWL_ALPHA_ASC,
-							__('Alphabetical, ascending', 'litespeed-cache')
-						); ?>
-					</div>
+					<?php $this->build_switch( Base::O_CRAWLER_ORDER_LINKS, array( __('Date, descending (Default)', 'litespeed-cache'), __('Date, ascending', 'litespeed-cache'), __('Alphabetical, descending', 'litespeed-cache'), __('Alphabetical, ascending', 'litespeed-cache') ) ); ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ); ?>
 					</div>

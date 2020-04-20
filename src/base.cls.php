@@ -292,11 +292,6 @@ class Base extends Instance
 	const CDN_MAPPING_INC_JS 	= 'inc_js';
 	const CDN_MAPPING_FILETYPE 	= 'filetype';
 
-	const CRWL_DATE_DESC 		= 'date_desc' ;
-	const CRWL_DATE_ASC 		= 'date_asc' ;
-	const CRWL_ALPHA_DESC 		= 'alpha_desc' ;
-	const CRWL_ALPHA_ASC 		= 'alpha_asc' ;
-
 	const VAL_OFF 	= 0 ;
 	const VAL_ON 	= 1 ;
 	const VAL_ON2 	= 2 ;
@@ -516,7 +511,7 @@ class Base extends Instance
 		self::O_CRAWLER_CATS 			=> false,
 		self::O_CRAWLER_TAGS 			=> false,
 		self::O_CRAWLER_EXC_CPT 		=> array(),
-		self::O_CRAWLER_ORDER_LINKS 	=> '',
+		self::O_CRAWLER_ORDER_LINKS 	=> false,
 		self::O_CRAWLER_USLEEP 			=> 0,
 		self::O_CRAWLER_RUN_DURATION 	=> 0,
 		self::O_CRAWLER_RUN_INTERVAL 	=> 0,
@@ -602,6 +597,7 @@ class Base extends Instance
 		self::O_DEBUG 			=> 2,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
 		self::O_OPTM_JS_INLINE_DEFER 	=> 2,
+		self::O_CRAWLER_ORDER_LINKS 	=> 3,
 	) ;
 
 
@@ -760,18 +756,7 @@ class Base extends Instance
 	 */
 	protected function _conf_string_val( $id, $val )
 	{
-		if ( $id == self::O_CRAWLER_ORDER_LINKS ) {
-			if ( ! in_array( $val, array(
-				self::CRWL_DATE_DESC,
-				self::CRWL_DATE_ASC,
-				self::CRWL_ALPHA_DESC,
-				self::CRWL_ALPHA_ASC,
-			) ) ) {
-				$val = self::CRWL_DATE_DESC ;
-			}
-		}
-
-		return $val ;
+		return $val;
 	}
 
 	/**

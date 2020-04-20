@@ -31,7 +31,7 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ), __( 'Admin IP only', 'litespeed-cache' ) ) ); ?>
+			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ), __( 'Admin IP Only', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache' ) ; ?>

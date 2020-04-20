@@ -828,7 +828,7 @@ class Admin_Display extends Base
 		}
 
 		foreach ( $title_list as $k => $v ) {
-			$this->build_radio( $id, $k, $v, true );
+			$this->_build_radio( $id, $k, $v );
 		}
 
 		echo '</div>';
@@ -840,20 +840,11 @@ class Admin_Display extends Base
 	 * Build a radio input html codes and output
 	 *
 	 * @since 1.1.0
-	 * @access public
+	 * @access private
 	 */
-	public function build_radio( $id, $val, $txt = null, $bypass_enroll = false )
+	private function _build_radio( $id, $val, $txt )
 	{
 		$id_attr = 'input_radio_' . preg_replace( '|\W|', '', $id ) . '_' . $val ;
-
-		if ( ! $txt ) {
-			if ( $val ) {
-				$txt = __( 'ON', 'litespeed-cache' ) ;
-			}
-			else {
-				$txt = __( 'OFF', 'litespeed-cache' ) ;
-			}
-		}
 
 		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 
@@ -862,10 +853,6 @@ class Admin_Display extends Base
 		}
 		else {
 			$checked = Conf::val( $id, true ) === $val ? ' checked ' : '' ;
-		}
-
-		if ( ! $bypass_enroll ) {
-			$this->enroll( $id );
 		}
 
 		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;

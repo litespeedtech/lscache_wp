@@ -539,8 +539,6 @@ class Crawler_Map extends Instance
 	{
 		global $wpdb;
 
-		$optionOrderBy = Conf::val( Base::O_CRAWLER_ORDER_LINKS );
-
 		$show_pages = Conf::val( Base::O_CRAWLER_PAGES );
 
 		$show_posts = Conf::val( Base::O_CRAWLER_POSTS );
@@ -549,20 +547,20 @@ class Crawler_Map extends Instance
 
 		$show_tags = Conf::val( Base::O_CRAWLER_TAGS );
 
-		switch ( $optionOrderBy ) {
-			case 'date_asc':
+		switch ( Conf::val( Base::O_CRAWLER_ORDER_LINKS ) ) {
+			case 1:
 				$orderBy = " ORDER BY post_date ASC";
 				break;
 
-			case 'alpha_desc':
+			case 2:
 				$orderBy = " ORDER BY post_title DESC";
 				break;
 
-			case 'alpha_asc':
+			case 3:
 				$orderBy = " ORDER BY post_title ASC";
 				break;
 
-			case 'date_desc':
+			case 0:
 			default:
 				$orderBy = " ORDER BY post_date DESC";
 				break;
