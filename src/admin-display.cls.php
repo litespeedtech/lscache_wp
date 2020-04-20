@@ -814,14 +814,22 @@ class Admin_Display extends Base
 	 * @since 1.7 removed param $disable
 	 * @access public
 	 */
-	public function build_switch( $id )
+	public function build_switch( $id, $title_list = false )
 	{
 		$this->enroll( $id );
 
 		echo '<div class="litespeed-switch">';
 
-		$this->build_radio( $id, Base::VAL_OFF, null, true );
-		$this->build_radio( $id, Base::VAL_ON, null, true );
+		if ( ! $title_list ) {
+			$title_list = array(
+				__( 'OFF', 'litespeed-cache' ),
+				__( 'ON', 'litespeed-cache' ),
+			);
+		}
+
+		foreach ( $title_list as $k => $v ) {
+			$this->build_radio( $id, $k, $v, true );
+		}
 
 		echo '</div>';
 

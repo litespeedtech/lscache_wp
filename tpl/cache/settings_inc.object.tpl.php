@@ -63,10 +63,7 @@ else {
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Base::VAL_OFF, 'Memcached' ) ; ?>
-				<?php $this->build_radio( $id, Base::VAL_ON, 'Redis' ) ; ?>
-			</div>
+			<?php $this->build_switch( $id, array( 'Memcached', 'Redis' ) ); ?>
 		</td>
 	</tr>
 

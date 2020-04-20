@@ -15,15 +15,11 @@ defined( 'WPINC' ) || exit;
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio( $id, Base::VAL_OFF ); ?>
-				<?php $this->build_radio( $id, Base::VAL_ON ); ?>
-				<?php
-					if ( $this->_is_multisite ) {
-						$this->build_radio( $id, Base::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) );
-					}
-				?>
-			</div>
+			<?php if ( $this->_is_multisite ) : ?>
+				<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ), __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ); ?>
+			<?php else : ?>
+				<?php $this->build_switch( $id ); ?>
+			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf(__('Please visit the <a %s>Information</a> page on how to test the cache.', 'litespeed-cache'),
 					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"'); ?>

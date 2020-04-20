@@ -234,25 +234,7 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_OFF,
-					__( 'OFF', 'litespeed-cache' )
-				) ; ?>
-
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_ON,
-					'Google'
-				) ; ?>
-
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_ON2,
-					'Cdnjs'
-				) ; ?>
-			</div>
+			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), 'Google', 'CDNJS' ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ) ; ?>
 			</div>

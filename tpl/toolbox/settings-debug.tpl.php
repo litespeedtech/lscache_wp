@@ -31,25 +31,7 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_OFF,
-					__( 'OFF', 'litespeed-cache' )
-				) ; ?>
-
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_ON,
-					__( 'ON', 'litespeed-cache' )
-				) ; ?>
-
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_ON2,
-					__( 'Admin IP only', 'litespeed-cache' )
-				) ; ?>
-			</div>
+			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ), __( 'Admin IP only', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache' ) ; ?>
@@ -85,19 +67,7 @@ $this->form_action() ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<div class="litespeed-switch">
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_OFF,
-					__( 'Basic', 'litespeed-cache' )
-				) ; ?>
-
-				<?php $this->build_radio(
-					$id,
-					Base::VAL_ON,
-					__( 'Advanced', 'litespeed-cache' )
-				) ; ?>
-			</div>
+			<?php $this->build_switch( $id, array( __( 'Basic', 'litespeed-cache' ), __( 'Advanced', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Advanced level will log more details.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -178,11 +148,4 @@ $this->form_action() ;
 <?php
 
 $this->form_end() ;
-
-
-
-
-
-
-
 
