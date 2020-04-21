@@ -620,12 +620,12 @@ class Optimize extends Base
 	 */
 	private function _js_inline_defer()
 	{
-		$optm_js_inline = (int) Conf::val( Base::O_OPTM_JS_INLINE_DEFER ) ;
+		$optm_js_inline = Conf::val( Base::O_OPTM_JS_INLINE_DEFER );
 		if ( ! $optm_js_inline ) {
 			return ;
 		}
 
-		Debug2::debug( '[Optm] Inline JS defer' ) ;
+		Debug2::debug( '[Optm] Inline JS defer ' . $optm_js_inline );
 
 		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER ) ;
 

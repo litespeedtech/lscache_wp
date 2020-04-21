@@ -55,7 +55,7 @@ class CDN extends Instance
 		 * This is separate from CDN on/off
 		 * @since 1.5
 		 */
-		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ ) ;
+		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ );
 		if ( $this->_cfg_cdn_remote_jquery ) {
 			$this->_load_jquery_remotely() ;
 		}

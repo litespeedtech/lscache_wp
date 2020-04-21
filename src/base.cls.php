@@ -592,6 +592,7 @@ class Base extends Instance
 
 	) ;
 
+	// NOTE: all the val of following items will be int while not bool
 	protected static $_multi_switch_list = array(
 		self::O_CDN_REMOTE_JQ 	=> 2,
 		self::O_DEBUG 			=> 2,
@@ -615,12 +616,12 @@ class Base extends Instance
 				$ini_v = $default_ini_cfg[ $k ] ;
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
-					$max = $this->_conf_multi_switch( $k ) ;
-					if ( $max && $ini_v > 1 ) {
-						$ini_v %= $max + 1 ;
+					$max = $this->_conf_multi_switch( $k );
+					if ( $max ) {
+						$ini_v %= $max + 1;
 					}
 					else {
-						$ini_v = (bool) $ini_v ;
+						$ini_v = (bool) $ini_v;
 					}
 				}
 
@@ -666,11 +667,11 @@ class Base extends Instance
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
 					$max = $this->_conf_multi_switch( $k ) ;
-					if ( $max && $ini_v > 1 ) {
-						$ini_v %= $max + 1 ;
+					if ( $max ) {
+						$ini_v %= $max + 1;
 					}
 					else {
-						$ini_v = (bool) $ini_v ;
+						$ini_v = (bool) $ini_v;
 					}
 				}
 

@@ -152,6 +152,9 @@ class Conf extends Base
 			else {
 				$options[ $k ] = self::get_option( $k, $v ) ;
 			}
+
+			// Correct value type
+			$options[ $k ] = $this->_type_casting( $options[ $k ], $k );
 		}
 
 		if ( $dry_run ) {
@@ -170,10 +173,46 @@ class Conf extends Base
 			foreach ( self::$_default_options as $k => $v ) {
 				$const = Base::conf_const( $k );
 				if ( defined( $const ) ) {
-					$this->_const_options[ $k ] = constant( $const );
+					$this->_const_options[ $k ] = $this->_type_casting( constant( $const ), $k );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Correct the option type
+	 *
+	 * TODO: add similar network func
+	 *
+	 * @since  3.0.3
+	 */
+	private function _type_casting( $val, $id )
+	{
+		if ( is_bool( self::$_default_options[ $id ] ) ) {
+			$max = $this->_conf_multi_switch( $id );
+			if ( $max ) {
+				$val = (int) $val;
+				$val %= $max + 1;
+			}
+			else {
+				$val = (bool) $val;
+			}
+		}
+		elseif ( is_array( self::$_default_options[ $id ] ) ) {
+			// from textarea input
+			if ( ! is_array( $val ) ) {
+				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
+			}
+		}
+		elseif ( ! is_string( self::$_default_options[ $id ] ) ) {
+			$val = (int) $val;
+		}
+		else {
+			// Check if the string has a limit set
+			$val = $this->_conf_string_val( $id, $val );
+		}
+
+		return $val;
 	}
 
 	/**
@@ -230,7 +269,7 @@ class Conf extends Base
 		}
 		// If is not activated on network, it will not have site options
 		if ( ! is_plugin_active_for_network( Core::PLUGIN_FILE ) ) {
-			if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 ) { // Default to cache on
+			if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON2 ) { // Default to cache on
 				$this->_options[ self::_CACHE ] = true ;
 			}
 			return false ;
@@ -334,6 +373,8 @@ class Conf extends Base
 			return ;
 		}
 
+		$v = $this->_type_casting( $v, $k );
+
 		if ( $this->_options[ $k ] === $v ) {
 			return ;
 		}
@@ -358,7 +399,7 @@ class Conf extends Base
 
 		// Init global const cache on setting
 		$this->_options[ self::_CACHE ] = false ;
-		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
+		if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 
@@ -370,7 +411,7 @@ class Conf extends Base
 		}
 
 		// If use network setting
-		if ( $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::O_CACHE ] ) {
+		if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::O_CACHE ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 
@@ -544,28 +585,7 @@ class Conf extends Base
 		}
 
 		// Validate type
-		if ( is_bool( self::$_default_options[ $id ] ) ) {
-			$max = $this->_conf_multi_switch( $id );
-			if ( $max && $val > 1 ) {
-				$val %= $max + 1;
-			}
-			else {
-				$val = $val === 'false' ? 0 : (bool) $val;
-			}
-		}
-		elseif ( is_array( self::$_default_options[ $id ] ) ) {
-			// from textarea input
-			if ( ! is_array( $val ) ) {
-				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
-			}
-		}
-		elseif ( ! is_string( self::$_default_options[ $id ] ) ) {
-			$val = (int) $val;
-		}
-		else {
-			// Check if the string has a limit set
-			$val = $this->_conf_string_val( $id, $val );
-		}
+		$val = $this->_type_casting( $val, $id );
 
 		// Save data
 		self::update_option( $id, $val );

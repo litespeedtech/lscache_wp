@@ -43,7 +43,7 @@ $display = Admin_Display::get_instance() ;
 			$name = $widget->get_field_name( $id ) ;
 
 			$cache_status_list = array(
-				array( Base::VAL_ON, 	__( 'Public', 'litespeed-cache' ) ),
+				array( Base::VAL_ON, __( 'Public', 'litespeed-cache' ) ),
 				array( Base::VAL_ON2, __( 'Private', 'litespeed-cache' ) ),
 				array( Base::VAL_OFF, __( 'Disable', 'litespeed-cache' ) ),
 			) ;
