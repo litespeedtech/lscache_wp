@@ -154,7 +154,7 @@ class Conf extends Base
 			}
 
 			// Correct value type
-			$options[ $k ] = $this->_type_casting( $options[ $k ], $k );
+			$options[ $k ] = $this->type_casting( $options[ $k ], $k );
 		}
 
 		if ( $dry_run ) {
@@ -173,46 +173,10 @@ class Conf extends Base
 			foreach ( self::$_default_options as $k => $v ) {
 				$const = Base::conf_const( $k );
 				if ( defined( $const ) ) {
-					$this->_const_options[ $k ] = $this->_type_casting( constant( $const ), $k );
+					$this->_const_options[ $k ] = $this->type_casting( constant( $const ), $k );
 				}
 			}
 		}
-	}
-
-	/**
-	 * Correct the option type
-	 *
-	 * TODO: add similar network func
-	 *
-	 * @since  3.0.3
-	 */
-	private function _type_casting( $val, $id )
-	{
-		if ( is_bool( self::$_default_options[ $id ] ) ) {
-			$max = $this->_conf_multi_switch( $id );
-			if ( $max ) {
-				$val = (int) $val;
-				$val %= $max + 1;
-			}
-			else {
-				$val = (bool) $val;
-			}
-		}
-		elseif ( is_array( self::$_default_options[ $id ] ) ) {
-			// from textarea input
-			if ( ! is_array( $val ) ) {
-				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
-			}
-		}
-		elseif ( ! is_string( self::$_default_options[ $id ] ) ) {
-			$val = (int) $val;
-		}
-		else {
-			// Check if the string has a limit set
-			$val = $this->_conf_string_val( $id, $val );
-		}
-
-		return $val;
 	}
 
 	/**
@@ -373,7 +337,7 @@ class Conf extends Base
 			return ;
 		}
 
-		$v = $this->_type_casting( $v, $k );
+		$v = $this->type_casting( $v, $k );
 
 		if ( $this->_options[ $k ] === $v ) {
 			return ;
@@ -585,7 +549,7 @@ class Conf extends Base
 		}
 
 		// Validate type
-		$val = $this->_type_casting( $val, $id );
+		$val = $this->type_casting( $val, $id );
 
 		// Save data
 		self::update_option( $id, $val );

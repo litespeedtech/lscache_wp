@@ -602,6 +602,48 @@ class Base extends Instance
 	) ;
 
 
+	/**
+	 * Correct the option type
+	 *
+	 * TODO: add similar network func
+	 *
+	 * @since  3.0.3
+	 */
+	protected function type_casting( $val, $id, $is_site_conf = false )
+	{
+		$default_v = ! $is_site_conf ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
+		if ( is_bool( $default_v ) ) {
+			$max = $this->_conf_multi_switch( $id );
+			if ( $max ) {
+				$val = (int) $val;
+				$val %= $max + 1;
+			}
+			else {
+				$val = (bool) $val;
+			}
+		}
+		elseif ( is_array( $default_v ) ) {
+			// from textarea input
+			if ( ! is_array( $val ) ) {
+				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
+			}
+		}
+		elseif ( ! is_string( $default_v ) ) {
+			$val = (int) $val;
+		}
+		else {
+			// Check if the string has a limit set
+			$val = $this->_conf_string_val( $id, $val );
+		}
+
+		return $val;
+	}
+
+	/**
+	 * Load default network settings from data.ini
+	 *
+	 * @since  3.0
+	 */
 	protected function load_default_site_vals()
 	{
 		// Load network_default.ini
@@ -613,30 +655,13 @@ class Base extends Instance
 				}
 
 				// Parse value in ini file
-				$ini_v = $default_ini_cfg[ $k ] ;
-
-				if ( is_bool( $v ) ) { // Keep value type constantly
-					$max = $this->_conf_multi_switch( $k );
-					if ( $max ) {
-						$ini_v %= $max + 1;
-					}
-					else {
-						$ini_v = (bool) $ini_v;
-					}
-				}
-
-				if ( is_array( $v ) ) {
-					/**
-					 * Default multiple lines to array
-					 */
-					$ini_v = explode( "\n", $ini_v ) ;
-				}
+				$ini_v = $this->type_casting( $default_ini_cfg[ $k ], $k, true );
 
 				if ( $ini_v == $v ) {
-					continue ;
+					continue;
 				}
 
-				self::$_default_site_options[ $k ] = $ini_v ;
+				self::$_default_site_options[ $k ] = $ini_v;
 
 			}
 		}
@@ -663,62 +688,44 @@ class Base extends Instance
 				}
 
 				// Parse value in ini file
-				$ini_v = $default_ini_cfg[ $k ] ;
-
-				if ( is_bool( $v ) ) { // Keep value type constantly
-					$max = $this->_conf_multi_switch( $k ) ;
-					if ( $max ) {
-						$ini_v %= $max + 1;
-					}
-					else {
-						$ini_v = (bool) $ini_v;
-					}
-				}
+				$ini_v = $this->type_casting( $default_ini_cfg[ $k ], $k );
 
 				// NOTE: Multiple lines value must be stored as array
-				if ( is_array( $v ) ) {
-					/**
-					 * Special handler for CDN_mapping
-					 *
-					 * format in .ini:
-					 * 		[cdn-mapping]
-					 *   	url[0] = 'https://example.com/'
-					 *     	inc_js[0] = true
-					 *     	filetype[0] = '.css
-					 *     				   .js
-					 *     				   .jpg'
-					 *
-					 * format out:
-					 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
-					 */
-					if ( $k == self::O_CDN_MAPPING ) {
-						$mapping_fields = array(
-							self::CDN_MAPPING_URL,
-							self::CDN_MAPPING_INC_IMG,
-							self::CDN_MAPPING_INC_CSS,
-							self::CDN_MAPPING_INC_JS,
-							self::CDN_MAPPING_FILETYPE, // Array
-						);
-						$ini_v2 = array();
-						foreach ( $ini_v[ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
-							$this_row = array();
-							foreach ( $mapping_fields as $v3 ) {
-								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false;
-								if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
-									$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array(); // Note: Since v3.0 its already an array
-								}
-								$this_row[ $v3 ] = $this_v;
+				/**
+				 * Special handler for CDN_mapping
+				 *
+				 * format in .ini:
+				 * 		[cdn-mapping]
+				 *   	url[0] = 'https://example.com/'
+				 *     	inc_js[0] = true
+				 *     	filetype[0] = '.css
+				 *     				   .js
+				 *     				   .jpg'
+				 *
+				 * format out:
+				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
+				 */
+				if ( $k == self::O_CDN_MAPPING ) {
+					$mapping_fields = array(
+						self::CDN_MAPPING_URL,
+						self::CDN_MAPPING_INC_IMG,
+						self::CDN_MAPPING_INC_CSS,
+						self::CDN_MAPPING_INC_JS,
+						self::CDN_MAPPING_FILETYPE, // Array
+					);
+					$ini_v2 = array();
+					foreach ( $ini_v[ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
+						$this_row = array();
+						foreach ( $mapping_fields as $v3 ) {
+							$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false;
+							if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
+								$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array(); // Note: Since v3.0 its already an array
 							}
-							$ini_v2[ $k2 ] = $this_row;
+							$this_row[ $v3 ] = $this_v;
 						}
-						$ini_v = $ini_v2;
+						$ini_v2[ $k2 ] = $this_row;
 					}
-					/**
-					 * Default multiple lines to array
-					 */
-					else {
-						$ini_v = Utility::sanitize_lines( $ini_v );
-					}
+					$ini_v = $ini_v2;
 				}
 
 				if ( $ini_v == $v ) {
