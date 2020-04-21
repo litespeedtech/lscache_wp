@@ -18,7 +18,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 == Requirements ==
 **General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGiNX, etc.).
 
-**LiteSpeed Exclusive Features** require one of the following: OpenLiteSpeed, commercial LiteSpeed products, LiteSpeed-powered hosting, or QUIc.cloud CDN. [Why?](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:faq#why_do_the_cache_features_require_litespeed_server)
+**LiteSpeed Exclusive Features** require one of the following: OpenLiteSpeed, commercial LiteSpeed products, LiteSpeed-powered hosting, or QUIc.cloud CDN. [Why?](https://docs.litespeedtech.com/lscache/lscwp/faq/#why-do-the-cache-features-require-a-litespeed-server)
 
 == Plugin Features ==
 
