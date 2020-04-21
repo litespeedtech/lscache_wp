@@ -738,6 +738,7 @@ class Base extends Instance
 		}
 
 		// Load internal default vals
+		// Setting the default bool to int is also to avoid type casting override it back to bool
 		self::$_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON ; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 
 		// Load default vals containing variables

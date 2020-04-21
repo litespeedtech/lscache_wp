@@ -295,7 +295,6 @@ class Conf extends Base
 	 *
 	 * @since 1.0.2
 	 * @access public
-	 * @return array Returns the current site options.
 	 */
 	public function load_site_options()
 	{
@@ -305,10 +304,12 @@ class Conf extends Base
 
 		// Load all site options
 		foreach ( self::$_default_site_options as $k => $v ) {
-			$this->_site_options[ $k ] = self::get_site_option( $k, $v ) ;
+			$this->_site_options[ $k ] = self::get_site_option( $k, $v );
+
+			$this->_site_options[ $k ] = $this->type_casting( $this->_site_options[ $k ], $k, true );
 		}
 
-		return $this->_site_options ;
+		return $this->_site_options;
 	}
 
 	/**

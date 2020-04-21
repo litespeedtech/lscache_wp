@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -286,6 +286,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 3.0.3 - Apr 21 2020 =
+* **Conf** Settings from predefined default data ini file, constant overwritten (e.g. `define( 'LITESPEED_CONF__DEBUG', true );`) or forced option will now all be type cast.
+* **Upgrade** CDN mapping and other multiple lines settings can now migrate correctly in upgrading process from v2 to v3.
 
 = 3.0.2 - Apr 17 2020 =
 * **GUI** More guidance on domain key setting page.
