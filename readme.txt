@@ -288,8 +288,8 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 3.0.3 - Apr 21 2020 =
-* **Conf** Settings from predefined default data ini file, constant overwritten (e.g. `define( 'LITESPEED_CONF__DEBUG', true );`) or forced option will now all be type cast.
-* **Upgrade** CDN mapping and other multiple lines settings can now migrate correctly in upgrading process from v2 to v3.
+* **Conf** Settings from all options (data ini, defined constant, and forced) will be filtered and cast to expected type.
+* **Upgrade** CDN mapping and other multiple line settings will now migrate correctly when upgrading from v2 to v3.
 
 = 3.0.2 - Apr 17 2020 =
 * **GUI** More guidance on domain key setting page.
