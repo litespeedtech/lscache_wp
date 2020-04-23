@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.3\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-21 19:58:22+00:00\n"
+"POT-Creation-Date: 2020-04-23 17:35:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,29 +28,11 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: src/activation.cls.php:302
-msgid ""
-"LiteSpeed has detected another plugin using the \"Advanced Cache\" file."
-msgstr ""
-
-#: src/activation.cls.php:303
-msgid ""
-"LiteSpeed Cache does work with other optimization plugins, but only if "
-"functionality is not duplicated. Only one full-page cache may be activated."
-msgstr ""
-
-#: src/activation.cls.php:305 src/admin-display.cls.php:1083 src/doc.cls.php:38
-#: tpl/cdn/manage.tpl.php:66 tpl/dash/dashboard.tpl.php:46
-#: tpl/img_optm/summary.tpl.php:56 tpl/img_optm/summary.tpl.php:96
-#: tpl/inc/check_cache_disabled.php:50
-msgid "Learn More"
-msgstr ""
-
-#: src/activation.cls.php:491 src/activation.cls.php:496
+#: src/activation.cls.php:432 src/activation.cls.php:437
 msgid "Failed to upgrade."
 msgstr ""
 
-#: src/activation.cls.php:500
+#: src/activation.cls.php:441
 msgid "Upgraded successfully."
 msgstr ""
 
@@ -84,7 +66,7 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: src/admin-display.cls.php:168 src/lang.cls.php:210
+#: src/admin-display.cls.php:168 src/lang.cls.php:209
 msgid "Crawler"
 msgstr ""
 
@@ -199,6 +181,12 @@ msgstr ""
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
+#: src/admin-display.cls.php:1083 src/doc.cls.php:38 tpl/cdn/manage.tpl.php:66
+#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:56
+#: tpl/img_optm/summary.tpl.php:96 tpl/inc/check_cache_disabled.php:42
+msgid "Learn More"
+msgstr ""
+
 #: src/admin-display.cls.php:1099
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
@@ -286,7 +274,7 @@ msgid ""
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:562 src/cloud.cls.php:570
+#: src/cloud.cls.php:562 src/cloud.cls.php:570 src/cloud.cls.php:812
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
@@ -298,35 +286,35 @@ msgstr ""
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:629 src/cloud.cls.php:786
+#: src/cloud.cls.php:629 src/cloud.cls.php:801
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:775
+#: src/cloud.cls.php:776
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:803
+#: src/cloud.cls.php:820
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:856
+#: src/cloud.cls.php:873
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:931
+#: src/cloud.cls.php:948
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1001
+#: src/cloud.cls.php:1018
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:719
+#: src/conf.cls.php:711
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -438,7 +426,7 @@ msgid ""
 "Before generating key, please verify all IPs on this list are whitelisted"
 msgstr ""
 
-#: src/doc.cls.php:76
+#: src/doc.cls.php:76 tpl/general/settings.tpl.php:89
 msgid "Current Online Server IPs"
 msgstr ""
 
@@ -1330,194 +1318,190 @@ msgid "Instant Click"
 msgstr ""
 
 #: src/lang.cls.php:181
-msgid "Check Advanced Cache"
-msgstr ""
-
-#: src/lang.cls.php:182
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: src/lang.cls.php:183
+#: src/lang.cls.php:182
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: src/lang.cls.php:184
+#: src/lang.cls.php:183
 msgid "Login Cookie"
 msgstr ""
 
-#: src/lang.cls.php:185
+#: src/lang.cls.php:184
 msgid "Image WebP Replacement"
 msgstr ""
 
-#: src/lang.cls.php:187
+#: src/lang.cls.php:186
 msgid "Frontend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:188
+#: src/lang.cls.php:187
 msgid "Backend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:189
+#: src/lang.cls.php:188
 msgid "Frontend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:190
+#: src/lang.cls.php:189
 msgid "Frontend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:191
+#: src/lang.cls.php:190
 msgid "Backend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:192
+#: src/lang.cls.php:191
 msgid "Backend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:193
+#: src/lang.cls.php:192
 msgid "Editor Heartbeat"
 msgstr ""
 
-#: src/lang.cls.php:194
+#: src/lang.cls.php:193
 msgid "Editor Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:196
+#: src/lang.cls.php:195
 msgid "QUIC.cloud CDN"
 msgstr ""
 
-#: src/lang.cls.php:197
+#: src/lang.cls.php:196
 msgid "Use CDN Mapping"
 msgstr ""
 
-#: src/lang.cls.php:198
+#: src/lang.cls.php:197
 msgid "CDN URL"
 msgstr ""
 
-#: src/lang.cls.php:199
+#: src/lang.cls.php:198
 msgid "Include Images"
 msgstr ""
 
-#: src/lang.cls.php:200
+#: src/lang.cls.php:199
 msgid "Include CSS"
 msgstr ""
 
-#: src/lang.cls.php:201
+#: src/lang.cls.php:200
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:202 tpl/cdn/settings.tpl.php:148
+#: src/lang.cls.php:201 tpl/cdn/settings.tpl.php:148
 msgid "Include File Types"
 msgstr ""
 
-#: src/lang.cls.php:203
+#: src/lang.cls.php:202
 msgid "HTML Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:204
+#: src/lang.cls.php:203
 msgid "Original URLs"
 msgstr ""
 
-#: src/lang.cls.php:205
+#: src/lang.cls.php:204
 msgid "Included Directories"
 msgstr ""
 
-#: src/lang.cls.php:206
+#: src/lang.cls.php:205
 msgid "Exclude Path"
 msgstr ""
 
-#: src/lang.cls.php:207
+#: src/lang.cls.php:206
 msgid "Load JQuery Remotely"
 msgstr ""
 
-#: src/lang.cls.php:208
+#: src/lang.cls.php:207
 msgid "Cloudflare API"
 msgstr ""
 
-#: src/lang.cls.php:211
+#: src/lang.cls.php:210
 msgid "Delay"
 msgstr ""
 
-#: src/lang.cls.php:212
+#: src/lang.cls.php:211
 msgid "Run Duration"
 msgstr ""
 
-#: src/lang.cls.php:213
+#: src/lang.cls.php:212
 msgid "Interval Between Runs"
 msgstr ""
 
-#: src/lang.cls.php:214
+#: src/lang.cls.php:213
 msgid "Crawl Interval"
 msgstr ""
 
-#: src/lang.cls.php:215
+#: src/lang.cls.php:214
 msgid "Threads"
 msgstr ""
 
-#: src/lang.cls.php:216
+#: src/lang.cls.php:215
 msgid "Timeout"
 msgstr ""
 
-#: src/lang.cls.php:217
+#: src/lang.cls.php:216
 msgid "Server Load Limit"
 msgstr ""
 
-#: src/lang.cls.php:218
+#: src/lang.cls.php:217
 msgid "Role Simulation"
 msgstr ""
 
-#: src/lang.cls.php:219
+#: src/lang.cls.php:218
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:220 tpl/crawler/settings-sitemap.tpl.php:100
+#: src/lang.cls.php:219 tpl/crawler/settings-sitemap.tpl.php:100
 msgid "Custom Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:221
+#: src/lang.cls.php:220
 msgid "Drop Domain from Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:223 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:222 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:224 tpl/toolbox/log_viewer.tpl.php:7
+#: src/lang.cls.php:223 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:225
+#: src/lang.cls.php:224
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:226
+#: src/lang.cls.php:225
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:227
+#: src/lang.cls.php:226
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:227
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:229
+#: src/lang.cls.php:228
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:230
+#: src/lang.cls.php:229
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:231
+#: src/lang.cls.php:230
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:233
+#: src/lang.cls.php:232
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:234
+#: src/lang.cls.php:233
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1821,7 +1805,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.3)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2029,19 +2013,19 @@ msgstr ""
 msgid "These settings are meant for ADVANCED USERS ONLY."
 msgstr ""
 
-#: tpl/cache/settings-advanced.tpl.php:33
+#: tpl/cache/settings-advanced.tpl.php:32
 msgid ""
 "Enable this option if you are using both HTTP and HTTPS in the same domain "
 "and are noticing cache irregularities."
 msgstr ""
 
-#: tpl/cache/settings-advanced.tpl.php:47
+#: tpl/cache/settings-advanced.tpl.php:46
 msgid ""
 "When a vistor hovers over a page link, preload that page. This will speed up "
 "the visit to that link."
 msgstr ""
 
-#: tpl/cache/settings-advanced.tpl.php:51
+#: tpl/cache/settings-advanced.tpl.php:50
 msgid ""
 "This will generate extra requests to the server, which will increase server "
 "load."
@@ -2162,7 +2146,7 @@ msgid "ESI sample for developers"
 msgstr ""
 
 #: tpl/cache/settings-esi.tpl.php:35 tpl/cdn/manage.tpl.php:21
-#: tpl/crawler/summary.tpl.php:46 tpl/inc/check_cache_disabled.php:39
+#: tpl/crawler/summary.tpl.php:46 tpl/inc/check_cache_disabled.php:31
 #: tpl/inc/check_if_network_disable_all.php:19 tpl/page_optm/entry.tpl.php:31
 #: tpl/page_optm/settings_discussion.tpl.php:11
 msgid "WARNING"
@@ -2462,28 +2446,6 @@ msgstr ""
 msgid ""
 "Caching these pages may improve server performance by avoiding unnecessary "
 "PHP calls."
-msgstr ""
-
-#: tpl/cache/settings_inc.check_adv_file.tpl.php:14
-msgid "Include advanced-cache.php"
-msgstr ""
-
-#: tpl/cache/settings_inc.check_adv_file.tpl.php:18
-msgid ""
-"The advanced-cache.php file is used by many caching plugins to signal that a "
-"cache is active."
-msgstr ""
-
-#: tpl/cache/settings_inc.check_adv_file.tpl.php:19
-msgid ""
-"When this option is checked and this file is detected as belonging to "
-"another plugin, LiteSpeed's caching functionality will not work."
-msgstr ""
-
-#: tpl/cache/settings_inc.check_adv_file.tpl.php:22
-msgid ""
-"You may need to uncheck this option if you are using multiple optimization "
-"plugins."
 msgstr ""
 
 #: tpl/cache/settings_inc.exclude_cookies.tpl.php:14
@@ -3034,7 +2996,7 @@ msgid "Check my public IP from"
 msgstr ""
 
 #: tpl/crawler/settings-general.tpl.php:138 tpl/general/settings.tpl.php:85
-#: tpl/general/settings.tpl.php:106
+#: tpl/general/settings.tpl.php:96 tpl/general/settings.tpl.php:117
 msgid "Notice"
 msgstr ""
 
@@ -3684,73 +3646,99 @@ msgid "Visit My Dashboard on QUIC.cloud"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:78 tpl/general/settings.tpl.php:80
-#: tpl/general/settings.tpl.php:107
+#: tpl/general/settings.tpl.php:118
 msgid "Link to QUIC.cloud"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:86
+msgid ""
+"There is a problem receiving your domain key. Please click the %s button to "
+"retry."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:87
+msgid ""
+"There are two reasons why we might not be able to communicate with your "
+"domain:"
+msgstr ""
+
+#: tpl/general/settings.tpl.php:88
+msgid "The POST callback to %s failed."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:89
+msgid "Our %s was not whitelisted."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:90
+msgid ""
+"Please verify that your other plugins are not blocking REST API calls, "
+"whitelist our server IPs, or contact your server admin for assistance."
+msgstr ""
+
+#: tpl/general/settings.tpl.php:97
 msgid "Please wait. You will be notified upon approval."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:92 tpl/general/settings.tpl.php:101
+#: tpl/general/settings.tpl.php:103 tpl/general/settings.tpl.php:112
 msgid "Warning"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:93
+#: tpl/general/settings.tpl.php:104
 msgid ""
 "You must set WordPress %1$s to a value other than %2$s before generating an "
 "Domain key."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:93
+#: tpl/general/settings.tpl.php:104
 msgid "Permalink Settings"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:93
+#: tpl/general/settings.tpl.php:104
 msgid "Plain"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:94
+#: tpl/general/settings.tpl.php:105
 msgid "Click here to config"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:102
+#: tpl/general/settings.tpl.php:113
 msgid "You must have %1$s first before linking to QUIC.cloud."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:107
+#: tpl/general/settings.tpl.php:118
 msgid ""
 "You must click the %s button if you wish to associate this site with a QUIC."
 "cloud account."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:108
+#: tpl/general/settings.tpl.php:119
 msgid "Benefits of linking to a QUIC.cloud account"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:113
+#: tpl/general/settings.tpl.php:124
 msgid ""
 "An Domain key is necessary for security when communicating with our QUIC."
 "cloud servers. Required for online services."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:116
+#: tpl/general/settings.tpl.php:127
 msgid "Current Cloud Nodes in Service"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:117
+#: tpl/general/settings.tpl.php:128
 msgid "Click to clear all nodes for further redetection."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:117
+#: tpl/general/settings.tpl.php:128
 msgid "Are you sure to clear all cloud nodes?"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:129
+#: tpl/general/settings.tpl.php:140
 msgid "No cloud services currently in use"
 msgstr ""
 
-#: tpl/general/settings.tpl.php:147
+#: tpl/general/settings.tpl.php:158
 msgid ""
 "Turn this option ON to show latest news automatically, including hotfixes, "
 "new releases, available beta versions, and promotions."
@@ -4080,15 +4068,11 @@ msgid ""
 "provider."
 msgstr ""
 
-#: tpl/inc/check_cache_disabled.php:23
+#: tpl/inc/check_cache_disabled.php:22
 msgid "Please enable LiteSpeed Cache in the plugin settings."
 msgstr ""
 
-#: tpl/inc/check_cache_disabled.php:30
-msgid "LiteSpeed Cache is disabled."
-msgstr ""
-
-#: tpl/inc/check_cache_disabled.php:42
+#: tpl/inc/check_cache_disabled.php:34
 msgid "Caching functions on this page are currently unavailable!"
 msgstr ""
 

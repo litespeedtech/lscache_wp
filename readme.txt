@@ -288,9 +288,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 3.0.4 - Apr 23 2020 =
-* **Cloud** Apply Domain Key now can receive the error info in next apply action if failed to generate.
-* **GUI** Apply Domain Key timeout now will see the trouble shooting guidance.
-* **REST** Adding /ping and /token to REST GET for easier debug.
+* **Cloud** Apply Domain Key now receives error info in next apply action if failed to generate.
+* **GUI** Apply Domain Key timeout now displays troubleshooting guidance.
+* **REST** Added /ping and /token to REST GET for easier debug.
+* **Cache** Dropped `advanced-cache.php` file detection and usage.
 
 = 3.0.3 - Apr 21 2020 =
 * **Conf** Settings from all options (data ini, defined constant, and forced) will be filtered and cast to expected type.
