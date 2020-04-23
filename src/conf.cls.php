@@ -357,11 +357,6 @@ class Conf extends Base
 	 */
 	public function define_cache()
 	{
-		// Check advanced_cache setting (compatible for both network and single site)
-		if ( ! $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
-			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
-		}
-
 		// Init global const cache on setting
 		$this->_options[ self::_CACHE ] = false ;
 		if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
@@ -392,13 +387,10 @@ class Conf extends Base
 	private function _define_cache_on()
 	{
 		if ( ! $this->_options[ self::_CACHE ] ) {
-			return ;
+			return;
 		}
 
-		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
-
-		// Use this for cache enabled setting check
-		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
+		defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true );
 	}
 
 	/**

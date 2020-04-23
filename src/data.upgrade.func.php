@@ -206,7 +206,6 @@ function litespeed_update_3_0( $ver )
 		'cache_browser'				=> 'cache-browser',
 		'cache_browser_ttl'			=> 'cache-ttl_browser',
 		'instant_click'				=> 'util-instant_click',
-		'check_advancedcache'		=> 'util-check_advcache',
 		'use_http_for_https_vary' 	=> 'util-no_https_vary',
 
 		'purge_upgrade'				=> 'purge-upgrade',
@@ -478,7 +477,6 @@ function litespeed_update_3_0( $ver )
 
 				'cache_browser'				=> 'cache-browser',
 				'cache_browser_ttl'			=> 'cache-ttl_browser',
-				'check_advancedcache'		=> 'util-check_advcache',
 
 				'media_webp_replace'		=> 'img_optm-webp_replace',
 			) ;

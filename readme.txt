@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -287,13 +287,18 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 3.0.4 - Apr 23 2020 =
+* **Cloud** Apply Domain Key now can receive the error info in next apply action if failed to generate.
+* **GUI** Apply Domain Key timeout now will see the trouble shooting guidance.
+* **REST** Adding /ping and /token to REST GET for easier debug.
+
 = 3.0.3 - Apr 21 2020 =
 * **Conf** Settings from all options (data ini, defined constant, and forced) will be filtered and cast to expected type.
 * **Upgrade** CDN mapping and other multiple line settings will now migrate correctly when upgrading from v2 to v3.
 
 = 3.0.2 - Apr 17 2020 =
 * **GUI** More guidance on domain key setting page.
-* **QUIC.cloud** Now Apply Domain Key will append the server IP if it exists in Crawler Server IP setting.
+* **Cloud** Now Apply Domain Key will append the server IP if it exists in Crawler Server IP setting.
 
 = 3.0.1 - Apr 16 2020 =
 * **Data** Increased timeout for database upgrade related to version upgrade. Display a banner while update in progress.
@@ -302,7 +307,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 = 3.0 - Apr 15 2020 =
 * 🌱**Media** LQIP (Low Quality Image Placeholder).
 * 🌱**Page Optimize** Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
-* 🌱 New QUIC.cloud API key setting.
+* 🌱**Cloud** New QUIC.cloud API key setting.
 * 🌱**ESI** New ESI nonce setting.
 * 🌱**Media** JPG quality control. (@geckomist)
 * 🌱**Media** Responsive local SVG placeholder.

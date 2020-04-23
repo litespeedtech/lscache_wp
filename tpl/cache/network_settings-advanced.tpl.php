@@ -11,7 +11,6 @@ defined( 'WPINC' ) || exit;
 <table class="wp-list-table striped litespeed-table"><tbody>
 
 <?php
-	require LSCWP_DIR . 'tpl/cache/settings_inc.check_adv_file.tpl.php';
 	require LSCWP_DIR . 'tpl/cache/settings_inc.login_cookie.tpl.php';
 ?>
 

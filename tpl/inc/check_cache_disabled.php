@@ -17,18 +17,10 @@ if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
 		) ;
 	}
 }
-
-if ( ! defined( 'LITESPEED_ON_IN_SETTING' ) ) {
+elseif ( ! defined( 'LITESPEED_ON' ) ) {
 	$reasons[] = array(
 		'title' => __( 'Please enable LiteSpeed Cache in the plugin settings.', 'litespeed-cache' ) ,
 		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general#enable_litespeed_cache',
-	) ;
-}
-
-if ( ! $reasons && ! defined( 'LITESPEED_ON' ) ) {
-	$reasons[] = array(
-		'title' => __( 'LiteSpeed Cache is disabled.', 'litespeed-cache' ) ,
-		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:troubleshooting:lscache-is-disabled',
 	) ;
 }
 

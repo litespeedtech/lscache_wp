@@ -178,7 +178,6 @@ class Lang extends Base
 			self::O_PURGE_HOOK_ALL				=> __( 'Purge All Hooks', 'litespeed-cache' ),
 			self::O_UTIL_NO_HTTPS_VARY			=> __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ),
 			self::O_UTIL_INSTANT_CLICK			=> __( 'Instant Click', 'litespeed-cache' ),
-			self::O_UTIL_CHECK_ADVCACHE			=> __( 'Check Advanced Cache', 'litespeed-cache' ),
 			self::O_CACHE_EXC_COOKIES			=> __( 'Do Not Cache Cookies', 'litespeed-cache' ),
 			self::O_CACHE_EXC_USERAGENTS		=> __( 'Do Not Cache User Agents', 'litespeed-cache' ),
 			self::O_CACHE_LOGIN_COOKIE			=> __( 'Login Cookie', 'litespeed-cache' ),

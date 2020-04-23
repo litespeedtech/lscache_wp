@@ -17,7 +17,6 @@ defined( 'WPINC' ) || exit;
 
 	<?php
 		if ( ! $this->_is_multisite ) :
-			require LSCWP_DIR . 'tpl/cache/settings_inc.check_adv_file.tpl.php';
 			require LSCWP_DIR . 'tpl/cache/settings_inc.login_cookie.tpl.php';
 		endif;
 	?>

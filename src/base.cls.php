@@ -97,7 +97,6 @@ class Base extends Instance
 	## --------------     Utilities	    ----------------- ##
 	## -------------------------------------------------- ##
 	const O_UTIL_INSTANT_CLICK 		= 'util-instant_click' ;
-	const O_UTIL_CHECK_ADVCACHE 	= 'util-check_advcache' ;
 	const O_UTIL_NO_HTTPS_VARY 		= 'util-no_https_vary' ;
 
 	## -------------------------------------------------- ##
@@ -395,7 +394,6 @@ class Base extends Instance
 
 		// Util
 		self::O_UTIL_INSTANT_CLICK 		=> false,
-		self::O_UTIL_CHECK_ADVCACHE 	=> false,
 		self::O_UTIL_NO_HTTPS_VARY 		=> false,
 
 		// Debug
@@ -582,8 +580,6 @@ class Base extends Instance
 		self::O_OBJECT_PSWD 			=> '',
 		self::O_OBJECT_GLOBAL_GROUPS	=> array(),
 		self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
-
-		self::O_UTIL_CHECK_ADVCACHE 	=> false,
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 
@@ -1087,8 +1083,6 @@ class Base extends Instance
 			'LITESPEED_CLI',
 			'LITESPEED_ALLOWED',
 			'LITESPEED_ON',
-			'LITESPEED_ON_IN_SETTING',
-			'LSCACHE_ADV_CACHE',
 			'LSWCP_TAG_PREFIX',
 			'COOKIEHASH',
 		) ;
