@@ -56,6 +56,14 @@ class REST extends Instance
 			'methods' => 'POST',
 			'callback' => array( $this, 'token' ),
 		) );
+		register_rest_route( 'litespeed/v1', '/token', array(
+			'methods' => 'GET',
+			'callback' => array( $this, 'token_get' ),
+		) );
+		register_rest_route( 'litespeed/v1', '/ping', array(
+			'methods' => 'GET',
+			'callback' => array( $this, 'ping' ),
+		) );
 
 		// API key callback notification
 		register_rest_route( 'litespeed/v1', '/apikey', array(
@@ -76,6 +84,26 @@ class REST extends Instance
 			'methods' => 'POST',
 			'callback' => array( $this, 'check_img' ),
 		) );
+	}
+
+	/**
+	 * Token get for
+	 *
+	 * @since  3.0.4
+	 */
+	public function token_get()
+	{
+		return Cloud::ok();
+	}
+
+	/**
+	 * Ping pong
+	 *
+	 * @since  3.0.4
+	 */
+	public function ping()
+	{
+		return Cloud::ok( array( 'ver' => Core::VER ) );
 	}
 
 	/**

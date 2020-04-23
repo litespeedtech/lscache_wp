@@ -80,6 +80,17 @@ $this->form_action();
 				<?php $this->learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button disabled litespeed-btn-warning litespeed-right', true ); ?>
 			<?php endif; ?>
 
+			<?php if ( $is_requesting && $can_token ) : ?>
+				<div class="litespeed-callout notice notice-error inline">
+					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
+					<p><?php echo sprintf( __( 'There is a problem receiving your domain key. Please click the %s button to retry.', 'litespeed-cache' ), '<code>' . $apply_btn_txt . '</code>' ); ?></p>
+					<p><?php echo __( 'There are two reasons why we might not be able to communicate with your domain:', 'litespeed-cache' ); ?>:</p>
+					<p>1) <?php echo sprintf( __( 'The POST callback to %s failed.', 'litespeed-cache' ), '<code>' . home_url() . '/' . rest_get_url_prefix() . '/litespeed/v1/token</code>' ); ?> </p>
+					<p>2) <?php echo sprintf( __( 'Our %s was not whitelisted.', 'litespeed-cache' ), __( 'Current Online Server IPs', 'litespeed-cache' ) ); ?></p>
+					<p><?php echo __( 'Please verify that your other plugins are not blocking REST API calls, whitelist our server IPs, or contact your server admin for assistance.', 'litespeed-cache' ); ?>:</p>
+				</div>
+			<?php endif; ?>
+
 			<?php if ( $is_requesting ) : ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>

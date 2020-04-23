@@ -766,6 +766,7 @@ class Cloud extends Base
 			'site_url'	=> home_url(),
 			'rest'		=> rest_get_url_prefix(),
 			'server_ip'	=> Conf::val( Base::O_SERVER_IP ),
+			'token'		=> $this->_summary[ 'token' ],
 		);
 
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
@@ -778,8 +779,22 @@ class Cloud extends Base
 
 		$json = json_decode( $response[ 'body' ], true );
 
+		// Save token option
+		if ( ! empty( $json[ 'token' ] ) ) {
+			$this->_summary[ 'token' ] = $json[ 'token' ];
+			$this->_summary[ 'token_ts' ] = time();
+			if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
+				unset( $this->_summary[ 'apikey_ts' ] );
+			}
+			self::save_summary();
+		}
+
 		// Parse general error msg
 		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
+			// clear current token
+			unset( $this->_summary[ 'token' ] );
+			self::save_summary();
+
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
 			Debug2::debug( '❄️  ❌ _err: ' . $json_msg );
 
@@ -790,13 +805,15 @@ class Cloud extends Base
 			return;
 		}
 
-		// Save token option
-		$this->_summary[ 'token' ] = $json[ 'token' ];
-		$this->_summary[ 'token_ts' ] = time();
-		if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
-			unset( $this->_summary[ 'apikey_ts' ] );
+		// This is a ok msg
+		if ( ! empty( $json[ '_msg' ] ) ) {
+			Debug2::debug( '❄️  _msg: ' . $json[ '_msg' ] );
+
+			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json[ '_msg' ] );
+			$msg .= $this->_parse_link( $json );
+			Admin_Display::info( $msg );
+			return;
 		}
-		self::save_summary();
 
 		Debug2::debug( '❄️ ✅ send request for key successfully.' );
 
