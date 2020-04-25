@@ -120,12 +120,24 @@ class Error
 				$msg = __( 'Previous request too recent. Please try again later.', 'litespeed-cache' );
 				break;
 
+			case substr( $code, 0, 10 ) === 'try_later ':
+				$msg = sprintf( __( 'Previous request too recent. Please try again after %s.', 'litespeed-cache' ), '<code>' . Utility::readable_time( substr( $code, 10 ), 3600, true ) . '</code>' );
+				break;
+
 			case 'waiting_for_approval':
 				$msg = __( 'Your application is waiting for approval.', 'litespeed-cache' );
 				break;
 
+			case 'callback_fail_hash':
+				$msg = __( 'The callback validation to your domain failed due to hash mismatch.', 'litespeed-cache' );
+				break;
+
 			case 'callback_fail':
 				$msg = __( 'The callback validation to your domain failed. Please make sure there is no firewall blocking our servers.', 'litespeed-cache' );
+				break;
+
+			case substr( $code, 0, 14 ) === 'callback_fail ':
+				$msg = __( 'The callback validation to your domain failed. Please make sure there is no firewall blocking our servers. Response code: ', 'litespeed-cache' ) . substr( $code, 14 );
 				break;
 
 			case 'forbidden':
