@@ -6,8 +6,8 @@ $crawler_summary = Crawler::get_summary();
 
 $__map = Crawler_Map::get_instance();
 
-$list = $__map->list( 30 );
-$count = $__map->count();
+$list = $__map->list_map( 30 );
+$count = $__map->count_map();
 $pagination = Utility::pagination( $count, 30 );
 
 ?>

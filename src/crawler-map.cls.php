@@ -282,7 +282,7 @@ class Crawler_Map extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list( $limit, $offset = false )
+	public function list_map( $limit, $offset = false )
 	{
 		global $wpdb;
 
@@ -291,7 +291,7 @@ class Crawler_Map extends Instance
 		}
 
 		if ( $offset === false ) {
-			$total = $this->count();
+			$total = $this->count_map();
 			$offset = Utility::pagination( $total, $limit, true );
 		}
 
@@ -304,7 +304,7 @@ class Crawler_Map extends Instance
 	/**
 	 * Count sitemap
 	 */
-	public function count()
+	public function count_map()
 	{
 		global $wpdb;
 
