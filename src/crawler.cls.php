@@ -958,7 +958,7 @@ class Crawler extends Base
 				break;
 
 			case self::TYPE_EMPTY:
-				Crawler_Map::get_instance()->empty();
+				Crawler_Map::get_instance()->empty_map();
 				break;
 
 			case self::TYPE_BLACKLIST_EMPTY:

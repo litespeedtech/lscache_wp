@@ -472,7 +472,7 @@ class Conf extends Base
 
 				// Special handler for crawler: reset sitemap when drop_domain setting changed
 				if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
-					Crawler_Map::get_instance()->empty();
+					Crawler_Map::get_instance()->empty_map();
 				}
 
 				// Check if need to do a purge all or not

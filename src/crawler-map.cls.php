@@ -268,7 +268,7 @@ class Crawler_Map extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function empty()
+	public function empty_map()
 	{
 		Data::get_instance()->tb_del( 'crawler' );
 
