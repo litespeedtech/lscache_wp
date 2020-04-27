@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4
-Stable tag: 3.0.4
+Stable tag: 3.0.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -246,6 +246,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.0.8 - Apr 27 2020 =
+* Released v3 on WordPress officially.
 
 = 3.0.4 - Apr 23 2020 =
 * **Cloud** Apply Domain Key now receives error info in next apply action if failed to generate.
