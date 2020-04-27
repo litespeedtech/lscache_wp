@@ -15,7 +15,7 @@ $can_token = $__cloud->can_token();
 
 $is_requesting = ! empty( $cloud_summary[ 'token_ts' ] ) && ( empty( $cloud_summary[ 'apikey_ts' ] ) || $cloud_summary[ 'token_ts' ] > $cloud_summary[ 'apikey_ts' ] );
 
-$apply_btn_txt = __( 'Apply Domain Key', 'litespeed-cache' );
+$apply_btn_txt = __( 'Request Domain Key', 'litespeed-cache' );
 if ( Conf::val( Base::O_API_KEY ) ) {
 	$apply_btn_txt = __( 'Refresh Domain Key', 'litespeed-cache' );
 	if ( $is_requesting ) {
