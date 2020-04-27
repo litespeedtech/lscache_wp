@@ -652,8 +652,8 @@ class Crawler extends Base
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
 			CURLOPT_TIMEOUT => $this->_options[ Base::O_CRAWLER_TIMEOUT ], // Larger timeout to avoid incorrect blacklist addition #900171
-			CURLOPT_SSL_VERIFYHOST => 0,
-			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => 2,
+			CURLOPT_SSL_VERIFYPEER => true,
 			CURLOPT_NOBODY => false,
 			CURLOPT_HTTPHEADER => $this->_crawler_conf[ 'headers' ],
 		);
