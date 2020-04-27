@@ -268,7 +268,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 3.0 - Apr 15 2020 =
 * 🌱**Media** LQIP (Low Quality Image Placeholder).
 * 🌱**Page Optimize** Load Inline JS Deferred Compatibility Mode. (Special thanks to @joe B - AppsON)
-* 🌱 New QUIC.cloud API key setting.
+* 🌱**Cloud** New QUIC.cloud API key setting.
 * 🌱**ESI** New ESI nonce setting.
 * 🌱**Media** JPG quality control. (@geckomist)
 * 🌱**Media** Responsive local SVG placeholder.
