@@ -73,23 +73,16 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 == Screenshots ==
 
 1. Plugin Benchmarks
-2. Admin Settings - Cache
-3. Admin Settings - Purge
-4. Admin Settings - Excludes
-5. Admin Settings - Optimize
-6. Admin Settings - Tuning
-7. Admin Settings - Media
-8. Admin Settings - CDN
-9. Admin Settings - ESI
-10. Admin Settings - Crawler
-11. Admin Settings - Thirdparty WooCommerce
-12. Admin Management - Purge
-13. Admin Management - DB Optimizer
-14. Image Optimization
-15. Admin Crawler Status Page
-16. Cache Miss Example
-17. Cache Hit Example
-18. Frontend Adminbar Shortcut
+2. Admin - Dashboard
+3. Admin - Image Optimization
+4. Admin - Crawler
+5. Admin Settings - Cache
+6. Admin Settings - Page Optimization
+7. Admin Settings - CDN
+8. Admin Settings - DB Optimizer
+9. Admin Settings - Toolbox
+10. Cache Miss Example
+11. Cache Hit Example
 
 == LSCWP Resources ==
 * [Join our Slack community](https://litespeedtech.com/slack) to connect with other LiteSpeed users.
