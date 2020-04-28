@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.8.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.8.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-27 20:29:13+00:00\n"
+"POT-Creation-Date: 2020-04-28 12:56:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1819,7 +1819,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.8.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.8.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -3731,9 +3731,7 @@ msgid "Benefits of linking to a QUIC.cloud account"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:124
-msgid ""
-"An Domain key is necessary for security when communicating with our QUIC."
-"cloud servers. Required for online services."
+msgid "A Domain Key is required for QUIC.cloud online services."
 msgstr ""
 
 #: tpl/general/settings.tpl.php:127
