@@ -922,7 +922,7 @@ class Cloud extends Base
 		$data = array(
 			'site_url'		=> home_url(),
 			'domain_hash'	=> md5( substr( $this->_api_key, 0, 8 ) ),
-			'ref'			=> $_SERVER[ 'HTTP_REFERER' ],
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-general' ),
 		);
 
 		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str( $data ) );
