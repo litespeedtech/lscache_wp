@@ -370,9 +370,10 @@ class Img_Optm extends Base
 		$num_a = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
+		$this->_filter_invalid_src();
 		$num_b = count( $this->_img_in_queue );
 		if ( $num_b != $num_a ) {
-			Debug2::debug( '[Img_Optm] Images after filtered duplicated src: ' . $num_b );
+			Debug2::debug( '[Img_Optm] Images after filtered duplicated/invalid src: ' . $num_b );
 		}
 
 		if ( ! $num_b ) {
@@ -425,11 +426,53 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Debug2::debug( '[Img_Optm] Found duplicated src [total_img_duplicated] ' . count( $img_in_queue_duplicated ) );
+		$count = count( $img_in_queue_duplicated );
+		$msg = sprintf( __( 'Bypassed %1$s duplicated images.', 'litespeed-cache' ), $count );
+		Admin_Display::succeed( $msg );
+
+		Debug2::debug( '[Img_Optm] Found duplicated src [total_img_duplicated] ' . $count );
 
 		// Update img table
 		$ids = implode( ',', $img_in_queue_duplicated );
 		$q = "UPDATE `$this->_table_img_optm` SET optm_status = '" . self::STATUS_DUPLICATED . "' WHERE id IN ( $ids )";
+		$wpdb->query( $q );
+	}
+
+	/**
+	 * Filter the invalid src before sending
+	 *
+	 * @since 3.0.8.3
+	 * @access private
+	 */
+	private function _filter_invalid_src()
+	{
+		global $wpdb;
+
+		$img_in_queue_invalid = array();
+		foreach ( $this->_img_in_queue as $k => $v ) {
+			if ( $v[ 'src' ] ) {
+				$extension = pathinfo( $v[ 'src' ], PATHINFO_EXTENSION );
+			}
+			if ( ! $v[ 'src' ] || empty( $extension ) || ! in_array( $extension, array( 'jpg', 'jpeg', 'png', 'gif' ) ) ) {
+				$img_in_queue_invalid[] = $v[ 'id' ];
+				unset( $this->_img_in_queue[ $k ] );
+				continue;
+			}
+		}
+
+		if ( ! $img_in_queue_invalid ) {
+			return;
+		}
+
+		$count = count( $img_in_queue_invalid );
+		$msg = sprintf( __( 'Cleared %1$s invalid images.', 'litespeed-cache' ), $count );
+		Admin_Display::succeed( $msg );
+
+		Debug2::debug( '[Img_Optm] Found invalid src [total] ' . $count );
+
+		// Update img table
+		$ids = implode( ',', $img_in_queue_invalid );
+		$q = "DELETE FROM `$this->_table_img_optm` WHERE id IN ( $ids )";
 		$wpdb->query( $q );
 	}
 
