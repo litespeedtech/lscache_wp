@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4
-Stable tag: 3.0.8.2
+Stable tag: 3.0.8.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -189,12 +189,6 @@ Yes it can work well with OpenLiteSpeed, although some features may not be suppo
 
 In short, yes. However, for some WooCommerce themes, the cart may not be updated correctly. Please [visit our blog](https://blog.litespeedtech.com/2017/05/31/wpw-fixing-lscachewoocommerce-conflicts/) for a quick tutorial on how to detect this problem and fix it if necessary.
 
-= My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
-
-As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);` sometime before the shutdown hook, and it should be recognized by the cache.
-
-Please see [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/) for more information and to learn what else you can do to integrate your plugin with LSCWP.
-
 = Are my images optimized? =
 
 Images are not optimized automatically unless you set **LiteSpeed Cache > Image Optimization > Image Optimization Settings > Auto Request Cron** to `ON`. You may also optimiza your images manually. [Learn more](https://docs.litespeedtech.com/lscache/lscwp/imageopt/).
@@ -202,28 +196,6 @@ Images are not optimized automatically unless you set **LiteSpeed Cache > Image 
 = How do I make a WP nonce cacheable in my third-party plugin? =
 
 Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on. Learn more in [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/).
-
-= How do I get WP-PostViews to display an updating view count? =
-
-1. Use: `<div id="postviews_lscwp"></div>`
-    to replace
-    `<?php if(function_exists('the_views')) { the_views(); } ?>`
-    * NOTE: The id can be changed, but the div id and the ajax function must match.
-1. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
-    `
-    jQuery.ajax({
-        type:"GET",
-        url:viewsCacheL10n.admin_ajax_url,
-        data:"postviews_id="+viewsCacheL10n.post_id+"&action=postviews",
-        cache:!1,
-        success:function(data) {
-            if(data) {
-                jQuery('#postviews_lscwp').html(data+' views');
-            }
-       }
-    });
-    `
-1. Purge the cache to use the updated pages.
 
 = How do I enable the crawler? =
 
@@ -239,6 +211,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.0.8.3 - Apr 28 2020 =
+* **CLOUD** Better compatibility for the Link to QUIC.cloud operation. (@Ronei de Sousa Almeida)
+* **Image Optimize** Automatically clear invalid image sources before sending requests. (@Richard Hordern)
 
 = 3.0.8.2 - Apr 27 2020 =
 * **GUI** Corrected the Request Domain Key wording.
