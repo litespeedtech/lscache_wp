@@ -27,7 +27,7 @@ class Cloud extends Base
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
-	const EXPIRATION_NODE = 5; // Days before node expired
+	const EXPIRATION_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
 
