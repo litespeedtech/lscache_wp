@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.4
-Stable tag: 3.0.8.3
+Tested up to: 5.4.1
+Stable tag: 3.0.8.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -207,13 +207,52 @@ For more detailed information about crawler setup, please see [the Crawler docum
 
 = What are the known compatible plugins and themes? =
 
+* [WPML](https://wpml.org/)
+* [DoLogin Security](https://wordpress.org/plugins/dologin/)
+* [bbPress](https://wordpress.org/plugins/bbpress/)
+* [WooCommerce](https://wordpress.org/plugins/woocommerce/)
+* [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
+* [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
+* [Wordfence Security](https://wordpress.org/plugins/wordfence/)
+* [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
+* [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/)
+* Aelia CurrencySwitcher
+* [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
+* Autoptimize
+* [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
+* [WP Touch](https://wordpress.org/plugins/wptouch/)
+* [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
+* [WPLister](https://www.wplab.com/plugins/wp-lister/)
+* [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
+* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
+* [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
+* [Elegant Divi Builder] (https://www.elegantthemes.com/plugins/divi-builder/)
+* [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
+* Login With Ajax
+* [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
+* [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
+* [BoomBox — Viral Magazine WordPress Theme](https://themeforest.net/item/boombox-viral-buzz-wordpress-theme/16596434?ref=PX-lab)
+* Beaver Builder
+* FacetWP (LSWS 5.3.6+)
+* WpDiscuz
+* WP-Stateless
+* Elementor
+
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 
 == Changelog ==
 
+= 3.0.8.4 - Apr 30 2020 =
+* 🌱**Crawler** New setting: Sitemap timeout. (#364607)
+* **Image Optimize** Images that fail to optimize are now counted to increase next request limit.
+* **Cloud** Redetect fastest node every 3 days.
+* **Cloud** Suppressed auto upgrade version detection error. (@marc Dahl)
+* **3rd** 3rd party namespace compatibility. (#366352)
+
 = 3.0.8.3 - Apr 28 2020 =
-* **CLOUD** Better compatibility for the Link to QUIC.cloud operation. (@Ronei de Sousa Almeida)
+* **Cloud** Better compatibility for the Link to QUIC.cloud operation. (@Ronei de Sousa Almeida)
 * **Image Optimize** Automatically clear invalid image sources before sending requests. (@Richard Hordern)
 
 = 3.0.8.2 - Apr 27 2020 =
