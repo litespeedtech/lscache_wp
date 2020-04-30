@@ -290,11 +290,14 @@ class Img_Optm extends Base
 	 */
 	public function wet_limit()
 	{
-		if ( empty( $this->_summary[ 'img_taken' ] ) ) {
-			return 1;
+		$wet_limit = 1;
+		if ( ! empty( $this->_summary[ 'img_taken' ] ) ) {
+			$wet_limit = pow( $this->_summary[ 'img_taken' ], 2 );
 		}
 
-		$wet_limit = pow( $this->_summary[ 'img_taken' ], 2 );
+		if ( $wet_limit == 1 && ! empty( $this->_summary[ 'img_status.' . self::STATUS_ERR_OPTM ] ) ) {
+			$wet_limit = pow( $this->_summary[ 'img_status.' . self::STATUS_ERR_OPTM ], 2 );
+		}
 
 		if ( $wet_limit < Cloud::IMG_OPTM_DEFAULT_GROUP ) {
 			return $wet_limit;
@@ -738,6 +741,15 @@ class Img_Optm extends Base
 			// Update img_optm
 			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
+
+			// Log the failed optm to summary, to be counted in wet_limit
+			if ( $status == self::STATUS_ERR_OPTM ) {
+				if ( empty( $this->_summary[ 'img_status.' . $status ] ) ) {
+					$this->_summary[ 'img_status.' . $status ] = 0;
+				}
+				$this->_summary[ 'img_status.' . $status ] += count( $notified_data );
+				self::save_summary();
+			}
 		}
 
 		// redo count err
