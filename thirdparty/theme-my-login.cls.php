@@ -37,7 +37,7 @@ class Theme_My_Login
 		}
 
 		// check if this page is TML page or not
-		if ( class_exists( 'Theme_My_Login' ) && Theme_My_Login::is_tml_page() ) {
+		if ( class_exists( 'Theme_My_Login' ) && \Theme_My_Login::is_tml_page() ) {
 			do_action( 'litespeed_control_set_nocache', 'Theme My Login' );
 		}
 	}

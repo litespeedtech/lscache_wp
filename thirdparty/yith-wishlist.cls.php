@@ -101,7 +101,7 @@ class Yith_Wishlist
 		global $post, $wp_query ;
 		$post = get_post( $params[ self::ESI_PARAM_POSTID ] ) ;
 		$wp_query->setup_postdata( $post ) ;
-		echo YITH_WCWL_Shortcode::add_to_wishlist( /*$params[self::ESI_PARAM_ATTS]*/array() ) ;
+		echo \YITH_WCWL_Shortcode::add_to_wishlist( /*$params[self::ESI_PARAM_ATTS]*/array() ) ;
 		do_action( 'litespeed_control_set_private', 'yith wishlist' );
 		do_action( 'litespeed_vary_no' );
 	}
