@@ -118,7 +118,7 @@ class API extends Base
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
 		// Filter `litespeed_esi_params` // @previous API::hook_esi_param( $hook )
 		// Action `litespeed_tpl_normal` // @previous API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template`
-		// Action `litespeed_esi_block-$block` // @usage add_action( 'litespeed_esi_load-' . $block, $hook ) // @previous API::hook_tpl_esi($block, $hook)
+		// Action `litespeed_esi_load-$block` // @usage add_action( 'litespeed_esi_load-' . $block, $hook ) // @previous API::hook_tpl_esi($block, $hook)
 
 		/**
 		 * Vary
