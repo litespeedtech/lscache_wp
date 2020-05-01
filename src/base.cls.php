@@ -611,6 +611,13 @@ class Base extends Instance
 	{
 		$default_v = ! $is_site_conf ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 		if ( is_bool( $default_v ) ) {
+			if ( $val === 'true' ) {
+				$val = true;
+			}
+			if ( $val === 'false' ) {
+				$val = false;
+			}
+
 			$max = $this->_conf_multi_switch( $id );
 			if ( $max ) {
 				$val = (int) $val;
