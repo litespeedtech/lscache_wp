@@ -620,7 +620,7 @@ class Crawler extends Base
 
 		$_cache_headers = array(
 			'x-litespeed-cache',
-			'x-adc-cache',
+			'x-lsadc-cache',
 			'x-qc-cache',
 		);
 
