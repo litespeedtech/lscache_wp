@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.0.8.4
+Stable tag: 3.0.8.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.0.8.5 - May 1 2020 =
+* **3rd** Hotfix for WPLister critical error due to v3.0.8.4 changes.
+* **CLI** Options can now use true/false as value for bool. (@gavin)
+* **CLI** Detect error if the ID does not exist when get/set an option value.
+* **Doc** An API comment typo for `litespeed_esi_load-` is fixed.
 
 = 3.0.8.4 - Apr 30 2020 =
 * 🌱**Crawler** New setting: Sitemap timeout. (#364607)
