@@ -39,6 +39,21 @@ $this->form_action();
 	</tr>
 
 	<tr>
+		<th>
+			<?php $id = Base::O_CRAWLER_MAP_TIMEOUT; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-short' ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the timeout while parsing the sitemap.', 'litespeed-cache' ); ?>
+				<?php $this->recommended( $id ); ?>
+				<?php $this->_validate_ttl( $id, 15, 1800 ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Sitemap Generation', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-block">

@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.4\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.8.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-23 17:35:13+00:00\n"
+"POT-Creation-Date: 2020-05-01 14:19:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -252,7 +252,7 @@ msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
 #: src/cloud.cls.php:314 src/cloud.cls.php:327 src/cloud.cls.php:356
-#: src/cloud.cls.php:447
+#: src/cloud.cls.php:448
 msgid "Cloud Error"
 msgstr ""
 
@@ -260,57 +260,57 @@ msgstr ""
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:447
+#: src/cloud.cls.php:448
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:531 src/cloud.cls.php:543
+#: src/cloud.cls.php:534 src/cloud.cls.php:546
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:553
+#: src/cloud.cls.php:556
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:562 src/cloud.cls.php:570 src/cloud.cls.php:812
+#: src/cloud.cls.php:565 src/cloud.cls.php:573 src/cloud.cls.php:815
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:578
+#: src/cloud.cls.php:581
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:587
+#: src/cloud.cls.php:590
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:629 src/cloud.cls.php:801
+#: src/cloud.cls.php:632 src/cloud.cls.php:804
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:776
+#: src/cloud.cls.php:779
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:820
+#: src/cloud.cls.php:823
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:873
+#: src/cloud.cls.php:876
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:948
+#: src/cloud.cls.php:951
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1018
+#: src/cloud.cls.php:1021
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -326,11 +326,11 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: src/crawler-map.cls.php:275
+#: src/crawler-map.cls.php:277
 msgid "Sitemap cleaned successfully"
 msgstr ""
 
-#: src/crawler-map.cls.php:329
+#: src/crawler-map.cls.php:331
 msgid "Sitemap created successfully: %d items"
 msgstr ""
 
@@ -463,67 +463,85 @@ msgid "There is proceeding queue not pulled yet."
 msgstr ""
 
 #: src/error.cls.php:71
+msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgstr ""
+
+#: src/error.cls.php:75
 msgid ""
 "The domain key is not correct. Please try to sync your domain key again."
 msgstr ""
 
-#: src/error.cls.php:75
+#: src/error.cls.php:79
 msgid "Credits are not enough to proceed the current request."
 msgstr ""
 
-#: src/error.cls.php:79 src/error.cls.php:103
+#: src/error.cls.php:83 src/error.cls.php:107
 msgid "%s file not writable."
 msgstr ""
 
-#: src/error.cls.php:87
+#: src/error.cls.php:91
 msgid "Could not find %1$s in %2$s."
 msgstr ""
 
-#: src/error.cls.php:91
+#: src/error.cls.php:95
 msgid "Invalid login cookie. Please check the %s file."
 msgstr ""
 
-#: src/error.cls.php:95
+#: src/error.cls.php:99
 msgid "Failed to back up %s file, aborted changes."
 msgstr ""
 
-#: src/error.cls.php:99
+#: src/error.cls.php:103
 msgid "%s file not readable."
 msgstr ""
 
-#: src/error.cls.php:107
+#: src/error.cls.php:111
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: src/error.cls.php:111
+#: src/error.cls.php:115
 msgid "Failed to create table %s! SQL: %s."
 msgstr ""
 
-#: src/error.cls.php:115
+#: src/error.cls.php:119
 msgid "Crawler disabled by the server admin."
 msgstr ""
 
-#: src/error.cls.php:120
+#: src/error.cls.php:124
 msgid "Previous request too recent. Please try again later."
 msgstr ""
 
-#: src/error.cls.php:124
+#: src/error.cls.php:128
+msgid "Previous request too recent. Please try again after %s."
+msgstr ""
+
+#: src/error.cls.php:132
 msgid "Your application is waiting for approval."
 msgstr ""
 
-#: src/error.cls.php:128
+#: src/error.cls.php:136
+msgid "The callback validation to your domain failed due to hash mismatch."
+msgstr ""
+
+#: src/error.cls.php:140
 msgid ""
 "The callback validation to your domain failed. Please make sure there is no "
 "firewall blocking our servers."
 msgstr ""
 
-#: src/error.cls.php:132
+#: src/error.cls.php:144
+msgid ""
+"The callback validation to your domain failed. Please make sure there is no "
+"firewall blocking our servers. Response code: "
+msgstr ""
+
+#: src/error.cls.php:148
 msgid ""
 "Your domain has been forbidden from using our services due to a previous "
 "policy violation."
 msgstr ""
 
-#: src/error.cls.php:136
+#: src/error.cls.php:152
 msgid "Unknown error"
 msgstr ""
 
@@ -700,87 +718,95 @@ msgstr ""
 msgid "Gathered %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:392
+#: src/img-optm.cls.php:396
 msgid "Pushed %1$s to Cloud server, accepted %2$s."
 msgstr ""
 
-#: src/img-optm.cls.php:504
+#: src/img-optm.cls.php:433
+msgid "Bypassed %1$s duplicated images."
+msgstr ""
+
+#: src/img-optm.cls.php:471
+msgid "Cleared %1$s invalid images."
+msgstr ""
+
+#: src/img-optm.cls.php:550
 msgid "No valid image found in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:527
+#: src/img-optm.cls.php:573
 msgid "No valid image found by Cloud server in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:744
+#: src/img-optm.cls.php:799
 msgid "Pull Cron is running"
 msgstr ""
 
-#: src/img-optm.cls.php:800
+#: src/img-optm.cls.php:855
 msgid "Optimized image file expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:817
+#: src/img-optm.cls.php:872
 msgid "Pulled image md5 dismatched"
 msgstr ""
 
-#: src/img-optm.cls.php:861
+#: src/img-optm.cls.php:916
 msgid "Optimized WebP file expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:878
+#: src/img-optm.cls.php:933
 msgid "Pulled WebP image md5 dismatched"
 msgstr ""
 
-#: src/img-optm.cls.php:934
+#: src/img-optm.cls.php:989
 msgid "Pulled %d image(s)"
 msgstr ""
 
-#: src/img-optm.cls.php:1031
+#: src/img-optm.cls.php:1086
 msgid "Cleaned up unfinished data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1108
+#: src/img-optm.cls.php:1163
 msgid "Destroy all optimization data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1143 src/img-optm.cls.php:1216
+#: src/img-optm.cls.php:1198 src/img-optm.cls.php:1271
 msgid "Rescaned successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1229
+#: src/img-optm.cls.php:1284
 msgid "Rescaned %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1288
+#: src/img-optm.cls.php:1343
 msgid "Calculated backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1350
+#: src/img-optm.cls.php:1405
 msgid "Removed backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1547
+#: src/img-optm.cls.php:1602
 msgid "Switched images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1576
+#: src/img-optm.cls.php:1631
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1582
+#: src/img-optm.cls.php:1637
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1598
+#: src/img-optm.cls.php:1653
 msgid "Restored original file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1605
+#: src/img-optm.cls.php:1660
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1668
+#: src/img-optm.cls.php:1723
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -1453,7 +1479,7 @@ msgstr ""
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:219 tpl/crawler/settings-sitemap.tpl.php:100
+#: src/lang.cls.php:219 tpl/crawler/settings-sitemap.tpl.php:115
 msgid "Custom Sitemap"
 msgstr ""
 
@@ -1461,47 +1487,51 @@ msgstr ""
 msgid "Drop Domain from Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:222 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:221
+msgid "Sitemap Timeout"
+msgstr ""
+
+#: src/lang.cls.php:223 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:223 tpl/toolbox/log_viewer.tpl.php:7
+#: src/lang.cls.php:224 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:224
+#: src/lang.cls.php:225
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:225
+#: src/lang.cls.php:226
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:226
+#: src/lang.cls.php:227
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:227
+#: src/lang.cls.php:228
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:229
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:229
+#: src/lang.cls.php:230
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:230
+#: src/lang.cls.php:231
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:232
+#: src/lang.cls.php:233
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:233
+#: src/lang.cls.php:234
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1805,7 +1835,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.4)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.8.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -3083,59 +3113,63 @@ msgid ""
 "domain."
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:42
+#: tpl/crawler/settings-sitemap.tpl.php:49
+msgid "Specify the timeout while parsing the sitemap."
+msgstr ""
+
+#: tpl/crawler/settings-sitemap.tpl.php:57
 msgid "Sitemap Generation"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:47
+#: tpl/crawler/settings-sitemap.tpl.php:62
 msgid "Include Posts"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:54
+#: tpl/crawler/settings-sitemap.tpl.php:69
 msgid "Include Pages"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:61
+#: tpl/crawler/settings-sitemap.tpl.php:76
 msgid "Include Categories"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:68
+#: tpl/crawler/settings-sitemap.tpl.php:83
 msgid "Include Tags"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:77
+#: tpl/crawler/settings-sitemap.tpl.php:92
 msgid "Exclude Custom Post Types"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:82
+#: tpl/crawler/settings-sitemap.tpl.php:97
 msgid "Exclude certain Custom Post Types in sitemap."
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:88
+#: tpl/crawler/settings-sitemap.tpl.php:103
 msgid "Available Custom Post Type"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:96
+#: tpl/crawler/settings-sitemap.tpl.php:111
 msgid "Order links by"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:98
+#: tpl/crawler/settings-sitemap.tpl.php:113
 msgid "Date, descending (Default)"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:98
+#: tpl/crawler/settings-sitemap.tpl.php:113
 msgid "Date, ascending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:98
+#: tpl/crawler/settings-sitemap.tpl.php:113
 msgid "Alphabetical, descending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:98
+#: tpl/crawler/settings-sitemap.tpl.php:113
 msgid "Alphabetical, ascending"
 msgstr ""
 
-#: tpl/crawler/settings-sitemap.tpl.php:100
+#: tpl/crawler/settings-sitemap.tpl.php:115
 msgid "These options will be invalid when using %s."
 msgstr ""
 
@@ -3614,7 +3648,7 @@ msgid "LiteSpeed Cache General Settings"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:18
-msgid "Apply Domain Key"
+msgid "Request Domain Key"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:20
@@ -3717,9 +3751,7 @@ msgid "Benefits of linking to a QUIC.cloud account"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:124
-msgid ""
-"An Domain key is necessary for security when communicating with our QUIC."
-"cloud servers. Required for online services."
+msgid "A Domain Key is required for QUIC.cloud online services."
 msgstr ""
 
 #: tpl/general/settings.tpl.php:127

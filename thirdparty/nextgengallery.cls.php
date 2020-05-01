@@ -99,7 +99,7 @@ class NextGenGallery
 			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.') ;
 			return ;
 		}
-		$image = C_Image_Mapper::get_instance()->find($id) ;
+		$image = \C_Image_Mapper::get_instance()->find($id) ;
 		if ( $image ) {
 			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid );
 		}

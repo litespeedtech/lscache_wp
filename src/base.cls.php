@@ -238,6 +238,7 @@ class Base extends Instance
 	const O_CRAWLER_LOAD_LIMIT 		= 'crawler-load_limit' ;
 	const O_CRAWLER_SITEMAP 		= 'crawler-sitemap';
 	const O_CRAWLER_DROP_DOMAIN		= 'crawler-drop_domain';
+	const O_CRAWLER_MAP_TIMEOUT		= 'crawler-map_timeout';
 	const O_CRAWLER_ROLES 			= 'crawler-roles' ;
 	const O_CRAWLER_COOKIES 		= 'crawler-cookies' ;
 
@@ -519,6 +520,7 @@ class Base extends Instance
 		self::O_CRAWLER_LOAD_LIMIT 		=> 0,
 		self::O_CRAWLER_SITEMAP 		=> '',
 		self::O_CRAWLER_DROP_DOMAIN		=> false,
+		self::O_CRAWLER_MAP_TIMEOUT		=> 0,
 		self::O_CRAWLER_ROLES			=> array(),
 		self::O_CRAWLER_COOKIES 		=> array(),
 
@@ -609,6 +611,13 @@ class Base extends Instance
 	{
 		$default_v = ! $is_site_conf ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 		if ( is_bool( $default_v ) ) {
+			if ( $val === 'true' ) {
+				$val = true;
+			}
+			if ( $val === 'false' ) {
+				$val = false;
+			}
+
 			$max = $this->_conf_multi_switch( $id );
 			if ( $max ) {
 				$val = (int) $val;

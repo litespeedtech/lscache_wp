@@ -15,7 +15,7 @@ $can_token = $__cloud->can_token();
 
 $is_requesting = ! empty( $cloud_summary[ 'token_ts' ] ) && ( empty( $cloud_summary[ 'apikey_ts' ] ) || $cloud_summary[ 'token_ts' ] > $cloud_summary[ 'apikey_ts' ] );
 
-$apply_btn_txt = __( 'Apply Domain Key', 'litespeed-cache' );
+$apply_btn_txt = __( 'Request Domain Key', 'litespeed-cache' );
 if ( Conf::val( Base::O_API_KEY ) ) {
 	$apply_btn_txt = __( 'Refresh Domain Key', 'litespeed-cache' );
 	if ( $is_requesting ) {
@@ -121,7 +121,7 @@ $this->form_action();
 			<?php endif; ?>
 
 			<div class="litespeed-desc">
-				<?php echo __( 'An Domain key is necessary for security when communicating with our QUIC.cloud servers. Required for online services.', 'litespeed-cache' ); ?>
+				<?php echo __( 'A Domain Key is required for QUIC.cloud online services.', 'litespeed-cache' ); ?>
 				<br /><?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>

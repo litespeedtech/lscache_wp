@@ -67,6 +67,10 @@ class Error
 				$msg = __( 'There is proceeding queue not pulled yet.', 'litespeed-cache' );
 				break;
 
+			case strpos( $code, 'unfinished_queue ' ) === 0:
+				$msg = sprintf( __( 'There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache' ), '<code>' . substr( $code, strlen( 'unfinished_queue ' ) ) . '</code>' );
+				break;
+
 			case 'err_key' :
 				$msg = __( 'The domain key is not correct. Please try to sync your domain key again.', 'litespeed-cache' );
 				break;
@@ -120,8 +124,8 @@ class Error
 				$msg = __( 'Previous request too recent. Please try again later.', 'litespeed-cache' );
 				break;
 
-			case substr( $code, 0, 10 ) === 'try_later ':
-				$msg = sprintf( __( 'Previous request too recent. Please try again after %s.', 'litespeed-cache' ), '<code>' . Utility::readable_time( substr( $code, 10 ), 3600, true ) . '</code>' );
+			case strpos( $code, 'try_later ' ) === 0:
+				$msg = sprintf( __( 'Previous request too recent. Please try again after %s.', 'litespeed-cache' ), '<code>' . Utility::readable_time( substr( $code, strlen( 'try_later ' ) ), 3600, true ) . '</code>' );
 				break;
 
 			case 'waiting_for_approval':

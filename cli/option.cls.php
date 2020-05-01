@@ -186,8 +186,13 @@ class Option extends Base
 			}
 		}
 
+		if ( ! isset( self::$_default_options[ $id ] ) ) {
+			WP_CLI::error( 'ID not exist [id] ' . $id );
+			return;
+		}
+
 		$v = Conf::val( $id ) ;
-		$default_v = self::$_default_options[ $id ] ;
+		$default_v = self::$_default_options[ $id ];
 
 		/**
 		 * For CDN_mapping and crawler_cookies

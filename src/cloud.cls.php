@@ -27,7 +27,7 @@ class Cloud extends Base
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
-	const EXPIRATION_NODE = 5; // Days before node expired
+	const EXPIRATION_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
 
@@ -444,8 +444,11 @@ class Cloud extends Base
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, true ), '<code>' . $service_tag . '</code>' );
-				Admin_Display::error( $msg );
+				if ( $service_tag !== self::API_VER ) {
+					$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, true ), '<code>' . $service_tag . '</code>' );
+					Admin_Display::error( $msg );
+				}
+
 				return false;
 			}
 		}
@@ -922,7 +925,7 @@ class Cloud extends Base
 		$data = array(
 			'site_url'		=> home_url(),
 			'domain_hash'	=> md5( substr( $this->_api_key, 0, 8 ) ),
-			'ref'			=> $_SERVER[ 'HTTP_REFERER' ],
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-general' ),
 		);
 
 		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str( $data ) );

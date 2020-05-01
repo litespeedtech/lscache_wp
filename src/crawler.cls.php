@@ -402,7 +402,7 @@ class Crawler extends Base
 
 		if ( $this->_summary['curr_crawler'] == 0 && $this->_summary['last_pos'] == 0 ) {
 			$this->_summary['this_full_beginning_time'] = time();
-			$this->_summary['list_size'] = $this->__map->count();
+			$this->_summary['list_size'] = $this->__map->count_map();
 		}
 		self::save_summary();
 	}
@@ -417,7 +417,7 @@ class Crawler extends Base
 	{
 		$curlOptions = $this->_get_curl_options();
 
-		while ( $urlChunks = $this->__map->list( self::CHUNKS, $this->_summary['last_pos'] ) ) {
+		while ( $urlChunks = $this->__map->list_map( self::CHUNKS, $this->_summary['last_pos'] ) ) {
 			// start crawling
 			$urlChunks = array_chunk( $urlChunks, $this->_cur_threads );
 			foreach ( $urlChunks as $rows ) {
@@ -620,7 +620,7 @@ class Crawler extends Base
 
 		$_cache_headers = array(
 			'x-litespeed-cache',
-			'x-adc-cache',
+			'x-lsadc-cache',
 			'x-qc-cache',
 		);
 
@@ -958,7 +958,7 @@ class Crawler extends Base
 				break;
 
 			case self::TYPE_EMPTY:
-				Crawler_Map::get_instance()->empty();
+				Crawler_Map::get_instance()->empty_map();
 				break;
 
 			case self::TYPE_BLACKLIST_EMPTY:

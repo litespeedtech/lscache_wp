@@ -17,6 +17,7 @@ class Crawler_Map extends Instance
 	private $_home_url; // Used to simplify urls
 	private $_tb;
 	private $__data;
+	private $_conf_map_timeout;
 
 	protected $_urls = array();
 
@@ -32,6 +33,7 @@ class Crawler_Map extends Instance
 		$this->__data = Data::get_instance();
 		$this->_tb = $this->__data->tb( 'crawler' );
 		$this->_tb_blacklist = $this->__data->tb( 'crawler_blacklist' );
+		$this->_conf_map_timeout = Conf::val( Base::O_CRAWLER_MAP_TIMEOUT );
 	}
 
 	/**
@@ -268,7 +270,7 @@ class Crawler_Map extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function empty()
+	public function empty_map()
 	{
 		Data::get_instance()->tb_del( 'crawler' );
 
@@ -282,7 +284,7 @@ class Crawler_Map extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list( $limit, $offset = false )
+	public function list_map( $limit, $offset = false )
 	{
 		global $wpdb;
 
@@ -291,7 +293,7 @@ class Crawler_Map extends Instance
 		}
 
 		if ( $offset === false ) {
-			$total = $this->count();
+			$total = $this->count_map();
 			$offset = Utility::pagination( $total, $limit, true );
 		}
 
@@ -304,7 +306,7 @@ class Crawler_Map extends Instance
 	/**
 	 * Count sitemap
 	 */
-	public function count()
+	public function count_map()
 	{
 		global $wpdb;
 
@@ -465,7 +467,7 @@ class Crawler_Map extends Instance
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) );
+		$response = wp_remote_get( $sitemap, array( 'timeout' => $this->_conf_map_timeout ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
