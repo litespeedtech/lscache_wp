@@ -245,7 +245,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 3.0.8.5 - May 1 2020 =
-* **3rd** Hotfix for WPLister critical error due to v3.0.8.4 changes.
+* 🔥🐞**3rd** Hotfix for WPLister critical error due to v3.0.8.4 changes.
+* **Image Optimize** Unfinished queue now will get more detailed info to indicate the proceeding status on node.
 * **CLI** Options can now use true/false as value for bool. (@gavin)
 * **CLI** Detect error if the ID does not exist when get/set an option value.
 * **Doc** An API comment typo for `litespeed_esi_load-` is fixed.

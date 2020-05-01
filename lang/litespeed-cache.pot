@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.0.8.4\n"
+"Project-Id-Version: LiteSpeed Cache 3.0.8.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-04-30 19:53:58+00:00\n"
+"POT-Creation-Date: 2020-05-01 14:19:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -463,81 +463,85 @@ msgid "There is proceeding queue not pulled yet."
 msgstr ""
 
 #: src/error.cls.php:71
+msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgstr ""
+
+#: src/error.cls.php:75
 msgid ""
 "The domain key is not correct. Please try to sync your domain key again."
 msgstr ""
 
-#: src/error.cls.php:75
+#: src/error.cls.php:79
 msgid "Credits are not enough to proceed the current request."
 msgstr ""
 
-#: src/error.cls.php:79 src/error.cls.php:103
+#: src/error.cls.php:83 src/error.cls.php:107
 msgid "%s file not writable."
 msgstr ""
 
-#: src/error.cls.php:87
+#: src/error.cls.php:91
 msgid "Could not find %1$s in %2$s."
 msgstr ""
 
-#: src/error.cls.php:91
+#: src/error.cls.php:95
 msgid "Invalid login cookie. Please check the %s file."
 msgstr ""
 
-#: src/error.cls.php:95
+#: src/error.cls.php:99
 msgid "Failed to back up %s file, aborted changes."
 msgstr ""
 
-#: src/error.cls.php:99
+#: src/error.cls.php:103
 msgid "%s file not readable."
 msgstr ""
 
-#: src/error.cls.php:107
+#: src/error.cls.php:111
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: src/error.cls.php:111
+#: src/error.cls.php:115
 msgid "Failed to create table %s! SQL: %s."
 msgstr ""
 
-#: src/error.cls.php:115
+#: src/error.cls.php:119
 msgid "Crawler disabled by the server admin."
 msgstr ""
 
-#: src/error.cls.php:120
+#: src/error.cls.php:124
 msgid "Previous request too recent. Please try again later."
 msgstr ""
 
-#: src/error.cls.php:124
+#: src/error.cls.php:128
 msgid "Previous request too recent. Please try again after %s."
 msgstr ""
 
-#: src/error.cls.php:128
+#: src/error.cls.php:132
 msgid "Your application is waiting for approval."
 msgstr ""
 
-#: src/error.cls.php:132
-msgid "The callback validation to your domain failed due to hash mismatch."
-msgstr ""
-
 #: src/error.cls.php:136
-msgid ""
-"The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers."
+msgid "The callback validation to your domain failed due to hash mismatch."
 msgstr ""
 
 #: src/error.cls.php:140
 msgid ""
 "The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers. Response code: "
+"firewall blocking our servers."
 msgstr ""
 
 #: src/error.cls.php:144
+msgid ""
+"The callback validation to your domain failed. Please make sure there is no "
+"firewall blocking our servers. Response code: "
+msgstr ""
+
+#: src/error.cls.php:148
 msgid ""
 "Your domain has been forbidden from using our services due to a previous "
 "policy violation."
 msgstr ""
 
-#: src/error.cls.php:148
+#: src/error.cls.php:152
 msgid "Unknown error"
 msgstr ""
 
@@ -1831,7 +1835,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.8.4)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.0.8.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
