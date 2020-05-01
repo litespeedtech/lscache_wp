@@ -860,7 +860,7 @@ class Img_Optm extends Base
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] );
 
 				if ( ! file_exists( $local_file . '.tmp' ) || ! filesize( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
-					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized img: file md5 dismatch [url] ' . $server_info[ 'server' ] . '/' . $server_info[ 'ori' ] . ' [server_md5] ' . $server_info[ 'ori_md5' ] );
+					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info[ 'server' ] . '/' . $server_info[ 'ori' ] . ' [server_md5] ' . $server_info[ 'ori_md5' ] );
 
 					// Update status to failed
 					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
@@ -869,7 +869,7 @@ class Img_Optm extends Base
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					$msg = __( 'Pulled image md5 dismatched', 'litespeed-cache' );
+					$msg = __( 'Pulled image md5 does not match original image md5.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}
@@ -921,7 +921,7 @@ class Img_Optm extends Base
 				file_put_contents( $local_file . '.webp', $response[ 'body' ] );
 
 				if ( ! file_exists( $local_file . '.webp' ) || ! filesize( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
-					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] );
+					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized webp img: file md5 mismatch, server md5: ' . $server_info[ 'webp_md5' ] );
 
 					// update status to failed
 					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
@@ -930,7 +930,7 @@ class Img_Optm extends Base
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					$msg = __( 'Pulled WebP image md5 dismatched', 'litespeed-cache' );
+					$msg = __( 'Pulled WebP image md5 does not match original image md5.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					return;
 				}

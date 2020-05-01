@@ -747,7 +747,7 @@ msgid "Optimized image file expired and was cleared."
 msgstr ""
 
 #: src/img-optm.cls.php:872
-msgid "Pulled image md5 dismatched"
+msgid "Pulled image md5 does not match original image md5."
 msgstr ""
 
 #: src/img-optm.cls.php:916
@@ -755,7 +755,7 @@ msgid "Optimized WebP file expired and was cleared."
 msgstr ""
 
 #: src/img-optm.cls.php:933
-msgid "Pulled WebP image md5 dismatched"
+msgid "Pulled WebP image md5 does not match original image md5."
 msgstr ""
 
 #: src/img-optm.cls.php:989
