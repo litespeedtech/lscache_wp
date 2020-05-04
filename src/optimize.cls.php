@@ -64,7 +64,11 @@ class Optimize extends Base
 	 */
 	public function init()
 	{
-		$this->cfg_css_async = Conf::val( Base::O_OPTM_CSS_ASYNC ) ;
+		$this->cfg_css_async = Conf::val( Base::O_OPTM_CSS_ASYNC );
+		if ( $this->cfg_css_async && ! Conf::val( Base::O_API_KEY ) ) {
+			Debug2::debug( '[Optm] ❌ CCSS set to OFF due to lack of domain key' );
+			$this->cfg_css_async = false;
+		}
 		$this->cfg_js_defer = Conf::val( Base::O_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = Conf::val( Base::O_OPTM_QS_RM ) ;
 

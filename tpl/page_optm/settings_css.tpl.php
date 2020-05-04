@@ -62,6 +62,12 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
+				<?php if ( ! Conf::val( Base::O_API_KEY ) ) : ?>
+				<div class="litespeed-callout notice notice-error inline">
+					<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
+					<?php echo Error::msg( 'lack_of_api_key' ); ?>
+				</div>
+				<?php endif; ?>
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?><br />
 				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
