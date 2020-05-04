@@ -305,7 +305,7 @@ class Cloud extends Base
 
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
-			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() + 86400 * self::EXPIRATION_NODE ) {
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::EXPIRATION_NODE ) {
 				return $this->_summary[ 'server.' . $service ];
 			}
 		}
