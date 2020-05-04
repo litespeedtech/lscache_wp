@@ -8,7 +8,7 @@ $rate_us = '<a href="https://wordpress.org/support/plugin/litespeed-cache/review
 				. sprintf( __( 'Rate %s on %s', 'litespeed-cache' ), '<strong>' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . $stars . '</strong>', 'WordPress.org' )
 			. '</a>' ;
 
-$wiki = '<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp" target="_blank">' . __( 'Read LiteSpeed Wiki', 'litespeed-cache' ) . '</a>' ;
+$wiki = '<a href="https://docs.litespeedtech.com/lscache/lscwp/overview/" target="_blank">' . __( 'Read LiteSpeed Documentation', 'litespeed-cache' ) . '</a>' ;
 
 $forum = '<a href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank">' . __( 'Visit LSCWP support forum', 'litespeed-cache' ) . '</a>' ;
 
