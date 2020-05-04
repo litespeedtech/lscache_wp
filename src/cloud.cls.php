@@ -769,8 +769,10 @@ class Cloud extends Base
 			'site_url'	=> home_url(),
 			'rest'		=> rest_get_url_prefix(),
 			'server_ip'	=> Conf::val( Base::O_SERVER_IP ),
-			'token'		=> $this->_summary[ 'token' ],
 		);
+		if ( ! empty( $this->_summary[ 'token' ] ) ) {
+			$data[ 'token' ] = $this->_summary[ 'token' ];
+		}
 
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 		if ( is_wp_error( $response ) ) {
