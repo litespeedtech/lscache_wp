@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.0.8.5
+Stable tag: 3.0.8.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.0.8.6 - May 4 2020 =
+* **CCSS** Bypassed CCSS functionality on frontend when domain key isn't setup yet.
+* **Cloud** Fixed WP node redetection bug when node expired. (@Joshua Reynolds)
+* **Crawler** Fixed an issue where URL is wrongly blacklisted when using ADC.
 
 = 3.0.8.5 - May 1 2020 =
 * 🔥🐞**3rd** Hotfix for WPLister critical error due to v3.0.8.4 changes.
