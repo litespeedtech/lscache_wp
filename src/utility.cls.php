@@ -780,17 +780,17 @@ class Utility extends Instance
 			$changed = false ;
 
 			foreach ( $urls_final as $k2 => $url_info ) {
-				list( $url, $size ) = explode( ' ', trim( $url_info ) ) ;
+				$url_info_arr = explode( ' ', trim( $url_info ) );
 
-				if ( ! $url2 = call_user_func( $callback, $url ) ) {
+				if ( ! $url2 = call_user_func( $callback, $url_info_arr[ 0 ] ) ) {
 					continue ;
 				}
 
 				$changed = true ;
 
-				$urls_final[ $k2 ] = str_replace( $url, $url2, $url_info ) ;
+				$urls_final[ $k2 ] = str_replace( $url_info_arr[ 0 ], $url2, $url_info ) ;
 
-				Debug2::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
+				Debug2::debug2( '[Util] - srcset replaced to ' . $url2 . ( ! empty( $url_info_arr[ 1 ] ) ? ' ' . $url_info_arr[ 1 ] : '' ) ) ;
 			}
 
 			if ( ! $changed ) {
