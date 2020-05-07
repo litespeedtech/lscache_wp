@@ -46,3 +46,4 @@ add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload'
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload' );

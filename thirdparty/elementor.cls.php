@@ -9,6 +9,21 @@ defined( 'WPINC' ) || exit;
 
 class Elementor
 {
+	public static function preload()
+	{
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+			return;
+		}
+
+		if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] === 'elementor' ) {
+			do_action( 'litespeed_disable_all', 'elementor edit mode' );
+		}
+
+		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], 'action=elementor' ) ) {
+			do_action( 'litespeed_disable_all', 'elementor edit mode in HTTP_REFERER' );
+		}
+	}
+
 	/**
 	 * Detect if Elementor is installed and it's on ESI
 	 *
