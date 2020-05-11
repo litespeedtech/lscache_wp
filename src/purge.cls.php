@@ -194,6 +194,8 @@ class Purge extends Base
 
 		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' ) ;
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
+
+		do_action( 'litespeed_purged_all' );
 	}
 
 	/**
