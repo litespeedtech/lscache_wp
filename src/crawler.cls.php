@@ -533,30 +533,13 @@ class Crawler extends Base
 
 			// Append URL
 			$url = $row[ 'url' ];
-			$curlopt_host = '';
 			if ( $this->_options[ Base::O_CRAWLER_DROP_DOMAIN ] ) {
 				$url = $this->_crawler_conf[ 'base' ] . $row[ 'url' ];
-			}
-			elseif ( $this->_options[ Base::O_SERVER_IP ] ) {
-				// Resolve URL to IP
-				$parsed_url = parse_url( $row[ 'url' ] );
-
-				if ( ! empty( $parsed_url[ 'host' ] ) ) {
-					// assign domain for curl
-					$curlopt_host = 'Host: ' . $parsed_url[ 'host' ]; // Will append to CURLOPT_HTTPHEADER
-					// replace domain with direct ip
-					$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
-					$url = http_build_url( $parsed_url );
-				}
 			}
 			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $url );
 			Debug2::debug( '🐞 Crawling [url] ' . $url . ( $url == $row[ 'url' ] ? '' : ' [ori] ' . $row[ 'url' ] ) );
 
-			$this_options = $options;
-			if ( $curlopt_host ) {
-				$this_options[ CURLOPT_HTTPHEADER ][] = $curlopt_host;
-			}
-			curl_setopt_array( $curls[ $row[ 'id' ] ], $this_options );
+			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
 
 			curl_multi_add_handle( $mh, $curls[ $row[ 'id' ] ] );
 		}
@@ -673,18 +656,19 @@ class Crawler extends Base
 		}
 		$options[ CURLOPT_USERAGENT ] = $this->_crawler_conf[ 'ua' ];
 
-		if ( $this->_options[ Base::O_SERVER_IP ] ) {
+		if ( $ip = $this->_options[ Base::O_SERVER_IP ] ) {
 			Utility::compatibility();
 			if ( $this->_options[ Base::O_CRAWLER_DROP_DOMAIN ] && $this->_crawler_conf[ 'base' ] ) {
 				// Resolve URL to IP
 				$parsed_url = parse_url( $this->_crawler_conf[ 'base' ] );
 
 				if ( ! empty( $parsed_url[ 'host' ] ) ) {
-					// assign domain for curl
-					$options[ CURLOPT_HTTPHEADER ][] = 'Host: ' . $parsed_url[ 'host' ];
-					// replace domain with direct ip
-					$parsed_url[ 'host' ] = $this->_options[ Base::O_SERVER_IP ];
-					$this->_crawler_conf[ 'base' ] = http_build_url( $parsed_url );
+					$dom = $parsed_url[ 'host' ];
+					$port = $parsed_url[ 'scheme' ] == 'https' ? '443' : '80';
+					$url = $dom . ':' . $port . ':' . $ip;
+
+					$options[ CURLOPT_RESOLVE ] = [ $url ];
+					$options[ CURLOPT_DNS_USE_GLOBAL_CACHE ] = false;
 				}
 			}
 		}
