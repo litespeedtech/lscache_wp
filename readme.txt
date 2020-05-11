@@ -244,6 +244,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 3.0.8.7 - May ? 2020 =
+* **Page Optimize** Fixed the bug that Purge Stale will get 404 for next visitor on CSS/JS.
+
 = 3.0.8.6 - May 4 2020 =
 * **CCSS** Bypassed CCSS functionality on frontend when domain key isn't setup yet.
 * **Cloud** Fixed WP node redetection bug when node expired. (@Joshua Reynolds)
