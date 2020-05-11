@@ -14,12 +14,12 @@ class Task extends Instance
 	protected static $_instance;
 
 	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_pull' ), // always fetch immediately
-		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => __NAMESPACE__ . '\CSS::cron_ccss' ),
-		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_task_lqip', 'hook' => __NAMESPACE__ . '\Placeholder::cron' ),
-		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_task_avatar', 'hook' => __NAMESPACE__ . '\Avatar::cron' ),
-		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_task_imgoptm_req', 'hook' => __NAMESPACE__ . '\Img_Optm::cron_auto_request' ),
-		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_task_crawler', 'hook' => __NAMESPACE__ . '\Crawler::start' ), // Set crawler to last one to use above results
+		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::cron_pull' ), // always fetch immediately
+		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss' ),
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron' ),
+		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron' ),
+		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request' ),
+		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start' ), // Set crawler to last one to use above results
 	);
 
 	const FITLER_CRAWLER = 'litespeed_crawl_filter';
