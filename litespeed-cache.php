@@ -182,8 +182,8 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 	{
 		$version_supported = true ;
 
-		//Check minimum PHP requirements, which is 5.3 at the moment.
-		if ( version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
+		//Check minimum PHP requirements, which is 5.6 at the moment.
+		if ( version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
 			$version_supported = false ;
 		}
 
