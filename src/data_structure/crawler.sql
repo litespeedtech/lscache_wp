@@ -4,5 +4,5 @@
   `reason` text NOT NULL COMMENT 'response code, comma separated',
   `mtime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `url` (`url`),
+  KEY `url` (`url`(765)),
   KEY `res` (`res`)

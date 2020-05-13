@@ -6,4 +6,4 @@
   PRIMARY KEY (`id`),
   KEY `post_id` (`post_id`),
   KEY `optm_status` (`optm_status`),
-  KEY `src` (`src`)
+  KEY `src` (`src`(765))
