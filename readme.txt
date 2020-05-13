@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.0.8.6
+Stable tag: 3.0.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,8 +244,17 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 3.0.8.7 - May ? 2020 =
-* **Page Optimize** Fixed the bug that Purge Stale will get 404 for next visitor on CSS/JS.
+= 3.0.9 - May 13 2020 =
+* **Purge** Comment cache can be successfully purged now.
+* **Data** Better MySQL charset support for crawler/image optimize table creation. (@Roshan Jonah)
+* **API** New hook to fire after Purge All. (@salvatorefresta)
+* **Crawler** Resolve IP for crawler.
+* **Task** PHP5.3 Cron compatibility fix.
+* **3rd** Elementor edit mode compatibility.
+* **Page Optimize** Fixed an issue where Purge Stale returned 404 for next visitor on CSS/JS.
+* **Page Optimize** Fixed the PHP warning when srcset doesn't have size info inside. (@gvidano)
+* **Cloud** Fixed the potential PHP warning when applying for the domain key.
+* **Core** PHP __DIR__ const replacement. (@MathiasReker)
 
 = 3.0.8.6 - May 4 2020 =
 * **CCSS** Bypassed CCSS functionality on frontend when domain key isn't setup yet.
