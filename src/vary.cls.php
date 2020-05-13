@@ -3,21 +3,18 @@
  * The plugin vary class to manage X-LiteSpeed-Vary
  *
  * @since      	1.1.3
- * @since  		1.5 Moved into /inc
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-defined( 'WPINC' ) || exit ;
+class Vary extends Instance {
+	protected static $_instance;
 
-class Vary extends Instance
-{
-	protected static $_instance ;
+	const X_HEADER = 'X-LiteSpeed-Vary';
 
-	const X_HEADER = 'X-LiteSpeed-Vary' ;
-
-	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
-	private static $_vary_cookies = array() ; // vary header only!
-	private static $_default_vary_val = array() ;
+	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
+	private static $_vary_cookies = array(); // vary header only!
+	private static $_default_vary_val = array();
 	private static $_can_change_vary = false; // Currently only AJAX used this
 
 	/**
@@ -27,94 +24,93 @@ class Vary extends Instance
 	 *
 	 * @since 1.0.4
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		// logged in user
 		if ( Router::is_logged_in() ) {
 			// If not esi, check cache logged-in user setting
 			if ( ! Router::esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
 				if ( Conf::val( Base::O_CACHE_PRIV ) ) {
-					add_action( 'wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout' ) ;
+					add_action( 'wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout' );
 
-					Control::init_cacheable() ;
-					Control::set_private( 'logged in user' ) ;
+					Control::init_cacheable();
+					Control::set_private( 'logged in user' );
 				}
 				// No cache for logged-in user
 				else {
-					Control::set_nocache( 'logged in user' ) ;
+					Control::set_nocache( 'logged in user' );
 				}
 			}
 			// ESI is on, can be public cache
 			else {
 				// Need to make sure vary is using group id
-				Control::init_cacheable() ;
+				Control::init_cacheable();
 			}
 
 			// register logout hook to clear login status
-			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) ) ;
+			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) );
 
 		}
 		else {
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 ) ;
-			add_action( 'wp_login', __NAMESPACE__ . '\Purge::purge_on_logout' ) ;
+			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 );
+			add_action( 'wp_login', __NAMESPACE__ . '\Purge::purge_on_logout' );
 
-			Control::init_cacheable() ;
+			Control::init_cacheable();
 
 			// Check `login page` cacheable setting because they don't go through main WP logic
-			add_action( 'login_init', __NAMESPACE__ . '\Tag::check_login_cacheable', 5 ) ;
+			add_action( 'login_init', __NAMESPACE__ . '\Tag::check_login_cacheable', 5 );
 
 		}
 
 		// Add comment list ESI
-		add_filter('comments_array', array( $this, 'check_commenter' ) ) ;
+		add_filter( 'comments_array', array( $this, 'check_commenter' ) );
 
 		// Set vary cookie for commenter.
-		add_action('set_comment_cookies', array( $this, 'append_commenter' ) ) ;
+		add_action( 'set_comment_cookies', array( $this, 'append_commenter' ) );
 
 		/**
 		 * Don't change for REST call because they don't carry on user info usually
 		 * @since 1.6.7
 		 */
 		add_action( 'rest_api_init', function(){
-			Debug2::debug( '[Vary] Rest API init disabled vary change' ) ;
-			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
-		} ) ;
+			Debug2::debug( '[Vary] Rest API init disabled vary change' );
+			add_filter( 'litespeed_can_change_vary', '__return_false' );
+		} );
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
-		$db_cookie = Conf::val( Base::O_CACHE_LOGIN_COOKIE ) ; // [3.0] todo: check if works in network's sites
+		$db_cookie = Conf::val( Base::O_CACHE_LOGIN_COOKIE ); // [3.0] todo: check if works in network's sites
 
 		// If no vary set in rewrite rule
 		if ( ! isset($_SERVER['LSCACHE_VARY_COOKIE']) ) {
 			if ( $db_cookie ) {
 				// Display cookie error msg to admin
 				if ( is_multisite() ? is_network_admin() : is_admin() ) {
-					Admin_Display::show_error_cookie() ;
+					Admin_Display::show_error_cookie();
 				}
-				Control::set_nocache('vary cookie setting error') ;
-				return ;
+				Control::set_nocache('vary cookie setting error');
+				return;
 			}
-			return ;
+			return;
 		}
 		// If db setting does not exist, skip checking db value
 		if ( ! $db_cookie ) {
-			return ;
+			return;
 		}
 
 		// beyond this point, need to make sure db vary setting is in $_SERVER env.
-		$vary_arr = explode(',', $_SERVER['LSCACHE_VARY_COOKIE']) ;
+		$vary_arr = explode(',', $_SERVER['LSCACHE_VARY_COOKIE']);
 
 		if ( in_array($db_cookie, $vary_arr) ) {
-			self::$_vary_name = $db_cookie ;
-			return ;
+			self::$_vary_name = $db_cookie;
+			return;
 		}
 
 		if ( is_multisite() ? is_network_admin() : is_admin() ) {
-			Admin_Display::show_error_cookie() ;
+			Admin_Display::show_error_cookie();
 		}
-		Control::set_nocache('vary cookie setting lost error') ;
+		Control::set_nocache('vary cookie setting lost error');
 	}
 
 	/**

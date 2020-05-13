@@ -59,7 +59,7 @@ class Purge extends Base
 			'delete_post',
 			'wp_trash_post',
 			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-			// 'wp_update_comment_count', // TODO: check if needed for non ESI
+			'wp_update_comment_count', // TODO: check if needed for non ESI
 		);
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
