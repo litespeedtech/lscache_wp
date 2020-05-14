@@ -39,7 +39,7 @@ class Router extends Instance
 
 	const TYPE = 'litespeed_type';
 
-	private static $_esi_enabled ;
+	private static $_esi_enabled;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
 	private static $_ip ;
@@ -654,28 +654,32 @@ class Router extends Instance
 	 */
 	public static function serve_static()
 	{
-		if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
-			return ;
+		if ( empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
+			return;
 		}
 
-		$path = substr( $_SERVER[ 'SCRIPT_URI' ], strlen( LITESPEED_STATIC_URL . '/' ) ) ;
-		$path = explode( '/', $path, 2 ) ;
+		if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
+			return;
+		}
+
+		$path = substr( $_SERVER[ 'SCRIPT_URI' ], strlen( LITESPEED_STATIC_URL . '/' ) );
+		$path = explode( '/', $path, 2 );
 
 		if ( empty( $path[ 0 ] ) || empty( $path[ 1 ] ) ) {
-			return ;
+			return;
 		}
 
 		switch ( $path[ 0 ] ) {
 			case 'avatar' :
-				Avatar::get_instance()->serve_satic( $path[ 1 ] ) ;
-				break ;
+				Avatar::get_instance()->serve_satic( $path[ 1 ] );
+				break;
 
 			case 'cssjs' :
-				Optimize::get_instance()->serve_satic( $path[ 1 ] ) ;
-				break ;
+				Optimize::get_instance()->serve_satic( $path[ 1 ] );
+				break;
 
 			default :
-				break ;
+				break;
 		}
 
 	}
