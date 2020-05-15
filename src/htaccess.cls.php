@@ -187,7 +187,7 @@ class Htaccess extends Instance
 				return false;
 			}
 
-			if ( ! empty( $_SERVER[ 'DOCUMENT_ROOT' ] ) && $start_path === $_SERVER[ 'DOCUMENT_ROOT' ] ) {
+			if ( ! empty( $_SERVER[ 'DOCUMENT_ROOT' ] ) && wp_normalize_path( $start_path ) === wp_normalize_path( $_SERVER[ 'DOCUMENT_ROOT' ] ) ) {
 				return false;
 			}
 
