@@ -178,26 +178,27 @@ class Htaccess extends Instance
 	 *
 	 * As dirname() strips the ending '/', paths passed in must exclude the final '/'
 	 *
-	 * If can't find, return false
-	 *
 	 * @since 1.0.11
 	 * @access private
-	 * @param string $start_path The first directory level to search.
-	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
-	private function _htaccess_search( $start_path )
-	{
+	private function _htaccess_search( $start_path ) {
 		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
 			if ( $start_path === '/' || ! $start_path ) {
-				return false ;
+				return false;
 			}
+
 			if ( ! empty( $_SERVER[ 'DOCUMENT_ROOT' ] ) && $start_path === $_SERVER[ 'DOCUMENT_ROOT' ] ) {
-				return false ;
+				return false;
 			}
-			$start_path = dirname( $start_path ) ;
+
+			if ( dirname( $start_path ) === $start_path ) {
+				return false;
+			}
+
+			$start_path = dirname( $start_path );
 		}
 
-		return $start_path ;
+		return $start_path;
 	}
 
 	/**
