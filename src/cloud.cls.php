@@ -11,11 +11,12 @@ class Cloud extends Base
 {
 	protected static $_instance;
 
-	const CLOUD_SERVER = 'https://api.quic.cloud';
-	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
+	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
+	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
-	const SVC_D_SYNC_CONF 		= 'd/sync_conf';
+	const SVC_D_REGIONNODES			= 'd/regionnodes';
+	const SVC_D_SYNC_CONF			= 'd/sync_conf';
 	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_CCSS 				= 'ccss' ;
 	const SVC_LQIP 				= 'lqip' ;
@@ -38,6 +39,7 @@ class Cloud extends Base
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
+		self::SVC_D_REGIONNODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
 		self::API_NEWS,
@@ -317,7 +319,11 @@ class Cloud extends Base
 		}
 
 		// Send request to Quic Online Service
-		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $service ) );
+		$cloud_endpoint = self::SVC_D_NODES;
+		if($service == self::SVC_IMG_OPTM) {
+			$cloud_endpoint = self::SVC_D_REGIONNODES;
+		}
+		$json = $this->_post( $cloud_endpoint, array( 'svc' => $service ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {

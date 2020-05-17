@@ -370,6 +370,8 @@ class Img_Optm extends Base
 
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
 
+		// TODO: Possibly limit maximum number of items waiting (status requested) to 5x their limit (1000 or 5000)
+
 		$num_a = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
@@ -657,12 +659,17 @@ class Img_Optm extends Base
 			foreach ( $list as $v ) {
 				$json = $notified_data[ $v->id ];
 
+				$server = ! empty( $json['server'] ) ? $json['server'] : $_POST['server'];
+
 				$server_info = array(
-					'server'	=> $_POST[ 'server' ],
+					'server'	=> $server,
 				);
 
 				// Save server side ID to send taken notification after pulled
 				$server_info[ 'id' ] = $json[ 'id' ];
+				if ( !empty( $json['file_id'] ) ) {
+					$server_info['file_id'] = $json['file_id'];
+				}
 
 				// Optm info array
 				$postmeta_info =  array(
@@ -963,7 +970,9 @@ class Img_Optm extends Base
 			if ( empty( $server_list[ $server_info[ 'server' ] ] ) ) {
 				$server_list[ $server_info[ 'server' ] ] = array();
 			}
-			$server_list[ $server_info[ 'server' ] ][] = $server_info[ 'id' ];
+
+			$server_info_id = ! empty( $server_info['file_id'] ) ? $server_info['file_id'] : $server_info['id'];
+			$server_list[ $server_info[ 'server' ] ][] = $server_info_id;
 		}
 
 		// Notify IAPI images taken
@@ -971,8 +980,9 @@ class Img_Optm extends Base
 			$data = array(
 				'action'	=> self::CLOUD_ACTION_TAKEN,
 				'list' 		=> $img_list,
+				'server'	=> $server,
 			);
-			Cloud::post( Cloud::SVC_IMG_OPTM, $data ); // We don't use $server. So if user changed cloud node, the previous request will fail to notify, but won't hurt so just ignore
+			Cloud::post( Cloud::SVC_IMG_OPTM, $data );
 		}
 
 		if ( empty( $this->_summary[ 'img_taken' ] ) ) {
