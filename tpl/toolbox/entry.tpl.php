@@ -19,8 +19,12 @@ if ( ! $this->_is_network_admin ) {
 	$menu_list[ 'report' ] 			= __( 'Report', 'litespeed-cache' );
 	$menu_list[ 'settings-debug' ] 	= __( 'Debug Settings', 'litespeed-cache' );
 	$menu_list[ 'log_viewer' ] 		= __( 'Log View', 'litespeed-cache' );
+}
+
+if ( ! $this->_is_multisite || $this->_is_network_admin ) {
 	$menu_list[ 'beta_test' ] 		= __( 'Beta Test', 'litespeed-cache' );
 }
+
 ?>
 
 <div class="wrap">

@@ -431,6 +431,18 @@ class Conf extends Base
 			return $instance->_options[ $id ];
 		}
 
+		if ( isset( $instance->_site_options[ $id ] ) ) {
+			if ( ! $ori ) {
+				$val = $instance->const_overwritten( $id );
+				if ( $val !== null ) {
+					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) ) ;
+					return $val;
+				}
+			}
+
+			return $instance->_site_options[ $id ];
+		}
+
 		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
 
 		return null;
