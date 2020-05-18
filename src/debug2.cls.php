@@ -401,7 +401,7 @@ class Debug2 extends Instance
 	{
 		$msg = '' ;
 
-		$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 3 ) ;
+		$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace() : debug_backtrace( false, $backtrace_limit + 3 );
 		for ( $i=2 ; $i <= $backtrace_limit + 2 ; $i++ ) {// 0st => _backtrace_info(), 1st => push()
 			if ( empty( $trace[ $i ][ 'class' ] ) ) {
 				if ( empty( $trace[ $i ][ 'file' ] ) ) {
@@ -410,11 +410,16 @@ class Debug2 extends Instance
 				$log = "\n" . $trace[ $i ][ 'file' ] ;
 			}
 			else {
-				if ( $trace[$i]['class'] == 'Debug2' ) {
+				if ( $trace[$i]['class'] == __CLASS__ ) {
 					continue ;
 				}
 
-				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+				$args = '';
+				if ( ! empty( $trace[ $i ][ 'args' ] ) ) {
+					$args = implode( ', ', $trace[ $i ][ 'args' ] );
+				}
+
+				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '(' . $args . ')';
 			}
 			if ( ! empty( $trace[$i-1]['line'] ) ) {
 				$log .= '@' . $trace[$i-1]['line'] ;
