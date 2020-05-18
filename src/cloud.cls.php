@@ -15,8 +15,8 @@ class Cloud extends Base
 	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
-	const SVC_D_REGIONNODES			= 'd/regionnodes';
-	const SVC_D_SYNC_CONF			= 'd/sync_conf';
+	const SVC_D_SYNC_CONF		= 'd/sync_conf';
+	const SVC_D_REGIONNODES		= 'd/regionnodes';
 	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_CCSS 				= 'ccss' ;
 	const SVC_LQIP 				= 'lqip' ;

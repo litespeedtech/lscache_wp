@@ -1071,16 +1071,6 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Debug2::debug( '[Img_Optm] sending CLEAN cmd to QUIC.cloud' ) ;
-
-		$data = array(
-			'action'	=> self::CLOUD_ACTION_CLEAN,
-		);
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data, 120 );
-		if ( ! is_array( $json ) ) {
-			return;
-		}
-
 		// Clear local working table queue
 		if ( Data::get_instance()->tb_exist( 'img_optming' ) ) {
 			$q = "TRUNCATE `$this->_table_img_optming`";
