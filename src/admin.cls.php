@@ -70,9 +70,10 @@ class Admin extends Instance
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function admin_init()
-	{
-		$this->_proceed_admin_action() ;
+	public function admin_init() {
+		Control::set_nocache( 'Admin page' );
+
+		$this->_proceed_admin_action();
 
 		// Terminate if user doesn't have the access to settings
 		if( is_network_admin() ) {
@@ -95,8 +96,6 @@ class Admin extends Instance
 		}
 
 		do_action( 'litspeed_after_admin_init' ) ;
-
-		Control::set_nocache( 'Admin page' ) ;
 
 		if ( Router::esi_enabled() ) {
 			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
