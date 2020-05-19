@@ -420,7 +420,9 @@ class Debug2 extends Instance
 						if ( is_array( $v ) ) {
 							$v = 'ARRAY';
 						}
-						$args .= $v . ',';
+						if ( is_string( $v ) || is_numeric( $v ) ) {
+							$args .= $v . ',';
+						}
 					}
 
 					$args = substr( $args, 0, -1 );
