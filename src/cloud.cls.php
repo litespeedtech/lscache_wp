@@ -28,6 +28,8 @@ class Cloud extends Base
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
+	const IMGOPTM_TAKEN         = 'img_optm-taken';
+
 	const EXPIRATION_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
@@ -448,6 +450,10 @@ class Cloud extends Base
 		if ( ! empty( $this->_summary[ 'last_request.' . $service_tag ] ) ) {
 			$expired = $this->_summary[ 'last_request.' . $service_tag ] + self::EXPIRATION_REQ - time();
 			if ( $expired > 0 ) {
+			    if ( $service_tag == self::IMGOPTM_TAKEN) {
+			        // we don't want the `img_optm-taken` to fail at any given time
+			        return true;
+                }
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
 				if ( $service_tag !== self::API_VER ) {

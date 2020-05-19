@@ -982,6 +982,7 @@ class Img_Optm extends Base
 				'list' 		=> $img_list,
 				'server'	=> $server,
 			);
+			// TODO: improve this so we do not call once per server, but just once and then filter on the server side
 			Cloud::post( Cloud::SVC_IMG_OPTM, $data );
 		}
 
