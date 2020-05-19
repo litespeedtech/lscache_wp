@@ -859,9 +859,9 @@ class Img_Optm extends Base
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
 					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized image file expired and was cleared.', 'litespeed-cache' );
+					$msg = __( 'Optimized image file(s) expired and was cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
-					return;
+					continue;
 				}
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] );
