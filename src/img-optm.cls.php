@@ -1154,12 +1154,6 @@ class Img_Optm extends Base
 		self::delete_option( '_summary' ) ;
 		self::delete_option( self::DB_NEED_PULL ) ;
 
-		// Inform Cloud server
-		$data = array(
-			'action'	=> self::CLOUD_ACTION_CLEAN,
-		);
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
-
 		$msg = __( 'Destroy all optimization data successfully.', 'litespeed-cache' ) ;
 		Admin_Display::succeed( $msg ) ;
 	}
