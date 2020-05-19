@@ -445,8 +445,8 @@ class Cloud extends Base
 	private function _maybe_cloud( $service_tag )
 	{
 		// Limit frequent unfinished request to 5min
-		if ( ! empty( $this->_summary[ 'curr_request.' . $service_tag ] ) ) {
-			$expired = $this->_summary[ 'curr_request.' . $service_tag ] + self::EXPIRATION_REQ - time();
+		if ( ! empty( $this->_summary[ 'last_request.' . $service_tag ] ) ) {
+			$expired = $this->_summary[ 'last_request.' . $service_tag ] + self::EXPIRATION_REQ - time();
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
