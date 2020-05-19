@@ -583,6 +583,17 @@ class Base extends Instance
 		self::O_OBJECT_GLOBAL_GROUPS	=> array(),
 		self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
 
+		// Debug
+		self::O_DEBUG_DISABLE_ALL 		=> false,
+		self::O_DEBUG 					=> false,
+		self::O_DEBUG_IPS 				=> array(),
+		self::O_DEBUG_LEVEL 			=> false,
+		self::O_DEBUG_FILESIZE 			=> 0,
+		self::O_DEBUG_COOKIE 			=> false,
+		self::O_DEBUG_COLLAPS_QS 		=> false,
+		self::O_DEBUG_INC 				=> array(),
+		self::O_DEBUG_EXC 				=> array(),
+
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 
 		self::O_MISC_HTACCESS_FRONT 	=> '',

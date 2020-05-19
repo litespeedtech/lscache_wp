@@ -587,9 +587,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function network_update( $id, $val )
-	{
-
+	public function network_update( $id, $val ) {
 		if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid network option ID ' . $id );
 			return ;
