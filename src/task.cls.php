@@ -91,14 +91,14 @@ class Task extends Instance
 	public static function try_clean( $id )
 	{
 		// Clean v2's leftover cron ( will remove in v3.1 )
-		foreach ( wp_get_ready_cron_jobs() as $hooks ) {
-			foreach ( $hooks as $hook => $v ) {
-				if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
-					Debug2::debug( '⏰ Cron clear legacy [hook] ' . $hook );
-					wp_clear_scheduled_hook( $hook );
-				}
-			}
-		}
+		// foreach ( wp_get_ready_cron_jobs() as $hooks ) {
+		// 	foreach ( $hooks as $hook => $v ) {
+		// 		if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
+		// 			Debug2::debug( '⏰ Cron clear legacy [hook] ' . $hook );
+		// 			wp_clear_scheduled_hook( $hook );
+		// 		}
+		// 	}
+		// }
 
 		if ( $id && ! empty( self::$_triggers[ $id ] ) ) {
 			if ( ! Conf::val( $id ) || ( $id == Base::O_CRAWLER && ! Router::can_crawl() ) ) {

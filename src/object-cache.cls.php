@@ -485,7 +485,11 @@ class Object_Cache
 		$ttl = $expire ?: $this->_cfg_life ;
 
 		if ( $this->_oc_driver == 'Redis' ) {
-			$res = $this->_conn->setEx( $key, $ttl, $data ) ;
+			try {
+				$res = $this->_conn->setEx( $key, $ttl, $data ) ;
+			} catch ( \RedisException $ex ) {
+				throw new \Exception( $ex->getMessage(), $ex->getCode(), $ex );
+			}
 		}
 		else {
 			$res = $this->_conn->set( $key, $data, $ttl ) ;

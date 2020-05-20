@@ -17,10 +17,14 @@ if ( ! $this->_is_multisite || $this->_is_network_admin ) {
 if ( ! $this->_is_network_admin ) {
 	$menu_list[ 'heartbeat' ] 		= __( 'Heartbeat', 'litespeed-cache' ); // todo: will add this to network level later
 	$menu_list[ 'report' ] 			= __( 'Report', 'litespeed-cache' );
+}
+
+if ( ! $this->_is_multisite || $this->_is_network_admin ) {
 	$menu_list[ 'settings-debug' ] 	= __( 'Debug Settings', 'litespeed-cache' );
 	$menu_list[ 'log_viewer' ] 		= __( 'Log View', 'litespeed-cache' );
 	$menu_list[ 'beta_test' ] 		= __( 'Beta Test', 'litespeed-cache' );
 }
+
 ?>
 
 <div class="wrap">

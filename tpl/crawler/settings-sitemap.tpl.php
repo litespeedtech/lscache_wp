@@ -102,7 +102,7 @@ $this->form_action();
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
 						<p>
-							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
+							<?php echo implode('<br />', array_diff(get_post_types(), array('post', 'page'))); ?>
 						</p>
 					</div>
 				</div>
