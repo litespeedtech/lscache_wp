@@ -1057,6 +1057,10 @@ class Base extends Instance
 	{
 		$summary = self::get_option( '_summary', array() );
 
+		if ( ! is_array( $summary ) ) {
+			$summary = array();
+		}
+
 		if ( ! $field ) {
 			return $summary;
 		}
