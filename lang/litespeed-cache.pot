@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.1-rc1\n"
+"Project-Id-Version: LiteSpeed Cache 3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-05-14 17:37:35+00:00\n"
+"POT-Creation-Date: 2020-05-20 12:46:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -182,8 +182,8 @@ msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
 #: src/admin-display.cls.php:1083 src/doc.cls.php:38 tpl/cdn/manage.tpl.php:66
-#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:56
-#: tpl/img_optm/summary.tpl.php:96 tpl/inc/check_cache_disabled.php:42
+#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:57
+#: tpl/img_optm/summary.tpl.php:97 tpl/inc/check_cache_disabled.php:42
 msgid "Learn More"
 msgstr ""
 
@@ -314,7 +314,7 @@ msgstr ""
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:711
+#: src/conf.cls.php:721
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -666,11 +666,11 @@ msgstr ""
 msgid "Cloudflare"
 msgstr ""
 
-#: src/gui.cls.php:713 tpl/img_optm/summary.tpl.php:169
+#: src/gui.cls.php:713 tpl/img_optm/summary.tpl.php:170
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: src/gui.cls.php:714 tpl/img_optm/summary.tpl.php:171
+#: src/gui.cls.php:714 tpl/img_optm/summary.tpl.php:172
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
@@ -696,17 +696,17 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: src/htaccess.cls.php:364
+#: src/htaccess.cls.php:365
 msgid "Mobile Agent Rules"
 msgstr ""
 
-#: src/htaccess.cls.php:846
+#: src/htaccess.cls.php:847
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: src/htaccess.cls.php:916
+#: src/htaccess.cls.php:917
 msgid "File Saved."
 msgstr ""
 
@@ -1835,7 +1835,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.1-rc1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2877,7 +2877,7 @@ msgstr ""
 msgid "Blacklist"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:22 tpl/img_optm/summary.tpl.php:194
+#: tpl/crawler/blacklist.tpl.php:22 tpl/img_optm/summary.tpl.php:195
 msgid "Total"
 msgstr ""
 
@@ -3374,7 +3374,7 @@ msgstr ""
 msgid "Current closest Cloud server is %s.&#10;Click to redetect."
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:202 tpl/img_optm/summary.tpl.php:51
+#: tpl/dash/dashboard.tpl.php:202 tpl/img_optm/summary.tpl.php:52
 #: tpl/page_optm/settings_css.tpl.php:121
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Are you sure to redetect the closest cloud server for this service?"
@@ -3396,7 +3396,7 @@ msgstr ""
 msgid "Images Requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:322 tpl/img_optm/summary.tpl.php:326
+#: tpl/dash/dashboard.tpl.php:322 tpl/img_optm/summary.tpl.php:337
 msgid "Last Request"
 msgstr ""
 
@@ -3818,11 +3818,11 @@ msgid ""
 "images."
 msgstr ""
 
-#: tpl/img_optm/settings.tpl.php:66 tpl/img_optm/summary.tpl.php:220
+#: tpl/img_optm/settings.tpl.php:66 tpl/img_optm/summary.tpl.php:231
 msgid "This is irreversible."
 msgstr ""
 
-#: tpl/img_optm/settings.tpl.php:67 tpl/img_optm/summary.tpl.php:221
+#: tpl/img_optm/settings.tpl.php:67 tpl/img_optm/summary.tpl.php:232
 msgid "You will be unable to Revert Optimization once the backups are deleted!"
 msgstr ""
 
@@ -3863,207 +3863,211 @@ msgstr ""
 msgid "The image compression quality setting of WordPress out of 100."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:51 tpl/page_optm/settings_css.tpl.php:121
+#: tpl/img_optm/summary.tpl.php:52 tpl/page_optm/settings_css.tpl.php:121
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Current closest Cloud server is %s.&#10; Click to redetect."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:55
+#: tpl/img_optm/summary.tpl.php:56
 msgid "Optimize images with our cloud server"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:60
+#: tpl/img_optm/summary.tpl.php:61
 msgid "You can request a maximum of %s images at once."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:65
+#: tpl/img_optm/summary.tpl.php:66
 msgid ""
 "To make sure our server can communicate with your server without any issues "
 "and everything works fine, for the few first requests the amount images "
 "allowed in single request is limited."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:66
+#: tpl/img_optm/summary.tpl.php:67
 msgid "Current limit is"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:78
+#: tpl/img_optm/summary.tpl.php:79
 msgid "Gather Image Data"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:78
+#: tpl/img_optm/summary.tpl.php:79
 msgid "Send Optimization Request"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:81
+#: tpl/img_optm/summary.tpl.php:82
 msgid "Only press the button if the pull cron job is disabled."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:81
+#: tpl/img_optm/summary.tpl.php:82
 msgid "Images will be pulled automatically if the cron job is running."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:88
+#: tpl/img_optm/summary.tpl.php:89
 msgid "Pull Images"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:94
+#: tpl/img_optm/summary.tpl.php:95
 msgid "Optimization Status"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:111
+#: tpl/img_optm/summary.tpl.php:112
 msgid ""
 "After LiteSpeed's Image Optimization Server finishes optimization, it will "
 "notify your site to pull the optimized images."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:112
+#: tpl/img_optm/summary.tpl.php:113
 msgid "This process is automatic."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:127
+#: tpl/img_optm/summary.tpl.php:128
 msgid "Last pull initiated by cron at %s."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:176
+#: tpl/img_optm/summary.tpl.php:177
 msgid "Storage Optimization"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:180
+#: tpl/img_optm/summary.tpl.php:181
 msgid "A backup of each image is saved before it is optimized."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:187
+#: tpl/img_optm/summary.tpl.php:188
 msgid "Last calculated"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:191 tpl/img_optm/summary.tpl.php:232
+#: tpl/img_optm/summary.tpl.php:192 tpl/img_optm/summary.tpl.php:243
 msgid "Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:202
+#: tpl/img_optm/summary.tpl.php:203
 msgid "Calculate Original Image Storage"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:209
+#: tpl/img_optm/summary.tpl.php:210
 msgid "Calculate Backups Disk Space"
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:217
+msgid "Thumbnail Size Set"
+msgstr ""
+
+#: tpl/img_optm/summary.tpl.php:228
 msgid "Delete all backups of the original images"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:229
+#: tpl/img_optm/summary.tpl.php:240
 #: tpl/page_optm/settings_discussion.tpl.php:51
 msgid "Last ran"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:235
+#: tpl/img_optm/summary.tpl.php:246
 msgid "Saved"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:239
+#: tpl/img_optm/summary.tpl.php:250
 msgid "Are you sure to remove all image backups?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:240
+#: tpl/img_optm/summary.tpl.php:251
 msgid "Remove Original Image Backups"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:251
+#: tpl/img_optm/summary.tpl.php:262
 msgid "Image Information"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:260 tpl/img_optm/summary.tpl.php:287
+#: tpl/img_optm/summary.tpl.php:271 tpl/img_optm/summary.tpl.php:298
 msgid "Images total"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:264 tpl/img_optm/summary.tpl.php:291
+#: tpl/img_optm/summary.tpl.php:275 tpl/img_optm/summary.tpl.php:302
 msgid "What is a group?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:266 tpl/img_optm/summary.tpl.php:293
+#: tpl/img_optm/summary.tpl.php:277 tpl/img_optm/summary.tpl.php:304
 msgid "What is an image group?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:271
+#: tpl/img_optm/summary.tpl.php:282
 msgid "Images not yet gathered"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:274
+#: tpl/img_optm/summary.tpl.php:285
 msgid "Congratulations, all gathered!"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:298
+#: tpl/img_optm/summary.tpl.php:309
 msgid "Images not yet requested"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:301
+#: tpl/img_optm/summary.tpl.php:312
 msgid "Congratulations, all requested!"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:308
+#: tpl/img_optm/summary.tpl.php:319
 msgid ""
 "Scan for any new unoptimized image thumbnail sizes and resend necessary "
 "image optimization requests."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:309
+#: tpl/img_optm/summary.tpl.php:320
 msgid "Rescan New Thumbnails"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:317
+#: tpl/img_optm/summary.tpl.php:328
 msgid "Optimization Summary"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:320
+#: tpl/img_optm/summary.tpl.php:331
 msgid "Total Reduction"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:323
+#: tpl/img_optm/summary.tpl.php:334
 msgid "Images Pulled"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:330
+#: tpl/img_optm/summary.tpl.php:341
 msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:336
+#: tpl/img_optm/summary.tpl.php:347
 msgid "Optimization Tools"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:339
+#: tpl/img_optm/summary.tpl.php:350
 msgid ""
 "You can quickly switch between using original (unoptimized versions) and "
 "optimized image files. It will affect all images on your website, both "
 "regular and webp versions if available."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:344
+#: tpl/img_optm/summary.tpl.php:355
 msgid "Use original images (unoptimized) on your site"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:345
+#: tpl/img_optm/summary.tpl.php:356
 msgid "Use Original Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:348
+#: tpl/img_optm/summary.tpl.php:359
 msgid "Switch back to using optimized images on your site"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:349
+#: tpl/img_optm/summary.tpl.php:360
 msgid "Use Optimized Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:357
+#: tpl/img_optm/summary.tpl.php:368
 msgid "Are you sure to destroy all optimized images?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:358
+#: tpl/img_optm/summary.tpl.php:369
 msgid "Destroy All Optimization Data"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:362
+#: tpl/img_optm/summary.tpl.php:373
 msgid ""
 "Remove all previous image optimization requests/results, revert completed "
 "optimizations, and delete all optimization files."
@@ -4874,19 +4878,19 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: tpl/toolbox/entry.tpl.php:20 tpl/toolbox/settings-debug.tpl.php:10
+#: tpl/toolbox/entry.tpl.php:23 tpl/toolbox/settings-debug.tpl.php:10
 msgid "Debug Settings"
 msgstr ""
 
-#: tpl/toolbox/entry.tpl.php:21
+#: tpl/toolbox/entry.tpl.php:24
 msgid "Log View"
 msgstr ""
 
-#: tpl/toolbox/entry.tpl.php:22
+#: tpl/toolbox/entry.tpl.php:25
 msgid "Beta Test"
 msgstr ""
 
-#: tpl/toolbox/entry.tpl.php:28
+#: tpl/toolbox/entry.tpl.php:32
 msgid "LiteSpeed Cache Toolbox"
 msgstr ""
 
