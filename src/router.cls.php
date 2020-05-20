@@ -521,7 +521,6 @@ class Router extends Instance
 				}
 				return ;
 
-			case self::ACTION_PURGE:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case self::ACTION_IMG_OPTM:
@@ -541,11 +540,12 @@ class Router extends Instance
 				}
 				return ;
 
+			case self::ACTION_PURGE:
 			case self::ACTION_DEBUG2:
 				if ( $_can_network_option || $_can_option ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case Core::ACTION_DISMISS:
 				/**

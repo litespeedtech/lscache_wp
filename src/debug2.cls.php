@@ -416,7 +416,16 @@ class Debug2 extends Instance
 
 				$args = '';
 				if ( ! empty( $trace[ $i ][ 'args' ] ) ) {
-					$args = implode( ', ', $trace[ $i ][ 'args' ] );
+					foreach ( $trace[ $i ][ 'args' ] as $v ) {
+						if ( is_array( $v ) ) {
+							$v = 'ARRAY';
+						}
+						if ( is_string( $v ) || is_numeric( $v ) ) {
+							$args .= $v . ',';
+						}
+					}
+
+					$args = substr( $args, 0, -1 );
 				}
 
 				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '(' . $args . ')';

@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.0.9
+Stable tag: 3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.1 - May 20 2020 =
+* 🌱**Network** Added Debug settings to network level when on network.
+* 🐞**Purge** Network now can purge all.
+* 🐞**Network** Fixed issue where saving the network primary site settings failed.
+* **Network** Moved Beta Test to network level when on network.
+* 🐞**Cache** Fixed issue in admin where new post editor was wrongly cached for non-admin roles. (@TEKFused)
+* 🐞**Data** Fixed issue with crawler & img_optm table creation failure. (@berdini @piercand)
+* 🐞**Core** Improved plugin activation compatibility on Windows 10 #224 (@greenphp)
+* **Core** Improved compatibility for .htaccess path search.
+* **Object** Catch RedisException. (@elparts)
+* Fixed Script URI issue in 3.0.9 #223 (@aonsyed)
+* **Image Optimize** Show thumbnail size set list in image optimization summary. (@Johnny Nguyen)
+* **Debug** Parameters will now be logged.
 
 = 3.0.9 - May 13 2020 =
 * **Purge** Comment cache can be successfully purged now.
