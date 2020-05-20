@@ -30,9 +30,9 @@ class Cloud extends Base
 
 	const IMGOPTM_TAKEN         = 'img_optm-taken';
 
-	const EXPIRATION_NODE = 3; // Days before node expired
-	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
-	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
+	const EXPIRATION_NODE 	= 1; 	// Hours before node expired
+	const EXPIRATION_REQ	= 300; 	// Seconds of min interval between two unfinished requests
+	const EXPIRATION_TOKEN 	= 900; 	// Min intval to request a token 15m
 
 	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
@@ -309,7 +309,9 @@ class Cloud extends Base
 
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
-			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::EXPIRATION_NODE ) {
+			$expiry = time() - (3600 * self::EXPIRATION_NODE);
+
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > $expiry ) {
 				return $this->_summary[ 'server.' . $service ];
 			}
 		}
@@ -322,9 +324,11 @@ class Cloud extends Base
 
 		// Send request to Quic Online Service
 		$cloud_endpoint = self::SVC_D_NODES;
+
 		if($service == self::SVC_IMG_OPTM) {
 			$cloud_endpoint = self::SVC_D_REGIONNODES;
 		}
+
 		$json = $this->_post( $cloud_endpoint, array( 'svc' => $service ) );
 
 		// Check if get list correctly
@@ -335,14 +339,22 @@ class Cloud extends Base
 				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . $json;
 				Admin_Display::error( $msg );
 			}
+
+			// Return cached version if we have it
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) ){
+				return $this->_summary[ 'server.' . $service ];
+			}
+			
 			return false;
 		}
 
 		// Ping closest cloud
 		$speed_list = array();
+
 		foreach ( $json[ 'list' ] as $v ) {
 			$speed_list[ $v ] = Utility::ping( $v );
 		}
+		
 		$min = min( $speed_list );
 
 		if ( $min == 99999 ) {
