@@ -371,7 +371,7 @@ class Img_Optm extends Base
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
 
 		// Limit maximum number of items waiting (status requested) to 5x their limit (1000 or 5000)
-		$q = "SELECT COUNT(1) FROM `$this->_table_img_optm` WHERE optm_status = %d";
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare( $q, array( self::STATUS_REQUESTED) );
 		$total_requested = $wpdb->get_var( $q );
 		$max_requested = $allowance * 5;
