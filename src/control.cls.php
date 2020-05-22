@@ -499,7 +499,7 @@ class Control extends Instance
 	 * @since 1.1.3
 	 */
 	public function check_redirect( $location, $status )
-	{
+	{ // TODO: some env don't have SCRIPT_URI but only REQUEST_URI, need to be compatible
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
 			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			Debug2::debug( "[Ctrl] 301 to $location" ) ;
