@@ -462,10 +462,10 @@ class Cloud extends Base
 		if ( ! empty( $this->_summary[ 'last_request.' . $service_tag ] ) ) {
 			$expired = $this->_summary[ 'last_request.' . $service_tag ] + self::EXPIRATION_REQ - time();
 			if ( $expired > 0 ) {
-			    if ( $service_tag == self::IMGOPTM_TAKEN) {
-			        // we don't want the `img_optm-taken` to fail at any given time
-			        return true;
-                }
+				if ( $service_tag == self::IMGOPTM_TAKEN) {
+					// we don't want the `img_optm-taken` to fail at any given time
+					return true;
+				}
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
 				if ( $service_tag !== self::API_VER ) {

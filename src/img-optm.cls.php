@@ -870,7 +870,7 @@ class Img_Optm extends Base
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
 					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized image file(s) expired and was cleared.', 'litespeed-cache' );
+					$msg = __( 'Some optimized image file(s) has expired and was cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
 					continue;
 				}
@@ -887,9 +887,9 @@ class Img_Optm extends Base
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					$msg = __( 'Pulled image md5 does not match the notified image md5.', 'litespeed-cache' );
+					$msg = __( 'One or more pulled images does not match with the notified image md5', 'litespeed-cache' );
 					Admin_Display::error( $msg );
-					return;
+					continue;
 				}
 
 				// Backup ori img
