@@ -370,7 +370,17 @@ class Img_Optm extends Base
 
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
 
-		// TODO: Possibly limit maximum number of items waiting (status requested) to 5x their limit (1000 or 5000)
+		// Limit maximum number of items waiting (status requested) to 5x their limit (1000 or 5000)
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optm` WHERE optm_status = %d";
+		$q = $wpdb->prepare( $q, array( self::STATUS_REQUESTED) );
+		$total_requested = $wpdb->get_var( $q );
+		$max_requested = $allowance * 5;
+
+		if ( $total_requested > $max_requested ) {
+			Debug2::debug( '[Img_Optm] ❌ Too many queued images ('.$total_requested.' > '.$max_requested.')' );
+			Admin_Display::error( Error::msg( 'too_many_requested' ) );
+			return;
+		}
 
 		$num_a = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );

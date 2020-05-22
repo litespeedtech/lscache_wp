@@ -55,6 +55,10 @@ class Error
 				$msg = __( 'You don\'t have enough quota for current service left this month.', 'litespeed-cache' );
 				break;
 
+			case 'too_many_requested':
+				$msg = __( 'You have too many requested images, please try again in a few minutes.', 'litespeed-cache' );
+				break;
+
 			case 'empty_list':
 				$msg = __( 'The image list is empty.', 'litespeed-cache' );
 				break;
