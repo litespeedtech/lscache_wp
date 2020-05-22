@@ -30,7 +30,7 @@ class Cloud extends Base
 
 	const IMGOPTM_TAKEN         = 'img_optm-taken';
 
-	const EXPIRATION_NODE 	= 1; 	// Hours before node expired
+	const EXPIRATION_NODE 	= 6; 	// Hours before node expired
 	const EXPIRATION_REQ	= 300; 	// Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN 	= 900; 	// Min intval to request a token 15m
 
