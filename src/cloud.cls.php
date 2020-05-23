@@ -445,7 +445,7 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary();
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => false ) );
+		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => true ) );
 
 		return $this->_parse_response( $response, $service, $service_tag, $server );
 	}
@@ -537,7 +537,7 @@ class Cloud extends Base
 		$this->_summary[ 'curr_request.' . $service_tag ] = time();
 		self::save_summary();
 
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => false ) );
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => true ) );
 
 		return $this->_parse_response( $response, $service, $service_tag, $server );
 	}
