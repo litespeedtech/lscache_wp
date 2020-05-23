@@ -654,15 +654,23 @@ class Router extends Instance
 	 */
 	public static function serve_static()
 	{
-		if ( empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
+		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
+			if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
+				return;
+			}
+			$path = substr( $_SERVER[ 'SCRIPT_URI' ], strlen( LITESPEED_STATIC_URL . '/' ) );
+		}
+		elseif ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+			$static_path = parse_url( LITESPEED_STATIC_URL, PHP_URL_PATH ) . '/';
+			if ( strpos( $_SERVER[ 'REQUEST_URI' ], $static_path ) !== 0 ) {
+				return;
+			}
+			$path = substr( parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH ), strlen( $static_path ) );
+		}
+		else {
 			return;
 		}
 
-		if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
-			return;
-		}
-
-		$path = substr( $_SERVER[ 'SCRIPT_URI' ], strlen( LITESPEED_STATIC_URL . '/' ) );
 		$path = explode( '/', $path, 2 );
 
 		if ( empty( $path[ 0 ] ) || empty( $path[ 1 ] ) ) {
