@@ -59,6 +59,10 @@ class Error
 				$msg = __( 'You have too many requested images, please try again in a few minutes.', 'litespeed-cache' );
 				break;
 
+			case 'too_many_notified':
+				$msg = __( 'You have too many notified images, please pull down notified images first.', 'litespeed-cache' );
+				break;
+
 			case 'empty_list':
 				$msg = __( 'The image list is empty.', 'litespeed-cache' );
 				break;
