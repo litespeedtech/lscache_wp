@@ -370,6 +370,18 @@ class Img_Optm extends Base
 
 		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
 
+		// Limit maximum number of items waiting (status requested) to the allowance
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
+		$q = $wpdb->prepare( $q, array( self::STATUS_REQUESTED) );
+		$total_requested = $wpdb->get_var( $q );
+		$max_requested = $allowance * 1;
+
+		if ( $total_requested > $max_requested ) {
+			Debug2::debug( '[Img_Optm] ❌ Too many queued images ('.$total_requested.' > '.$max_requested.')' );
+			Admin_Display::error( Error::msg( 'too_many_requested' ) );
+			return;
+		}
+
 		$num_a = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
@@ -409,6 +421,7 @@ class Img_Optm extends Base
 
 		$srcpath_list = array();
 
+		// TODO: Fix memory usage for a large amount of images
 		$list = $wpdb->get_results( "SELECT src FROM $this->_table_img_optming" );
 		foreach ( $list as $v ) {
 			$srcpath_list[] = $v->src;
@@ -657,12 +670,17 @@ class Img_Optm extends Base
 			foreach ( $list as $v ) {
 				$json = $notified_data[ $v->id ];
 
+				$server = ! empty( $json['server'] ) ? $json['server'] : $_POST['server'];
+
 				$server_info = array(
-					'server'	=> $_POST[ 'server' ],
+					'server'	=> $server,
 				);
 
 				// Save server side ID to send taken notification after pulled
 				$server_info[ 'id' ] = $json[ 'id' ];
+				if ( !empty( $json['file_id'] ) ) {
+					$server_info['file_id'] = $json['file_id'];
+				}
 
 				// Optm info array
 				$postmeta_info =  array(
@@ -852,9 +870,9 @@ class Img_Optm extends Base
 				if ( $response[ 'response' ][ 'code' ] == 404 ) {
 					$this->_step_back_image( $row_img->id );
 
-					$msg = __( 'Optimized image file expired and was cleared.', 'litespeed-cache' );
+					$msg = __( 'Some optimized image file(s) has expired and was cleared.', 'litespeed-cache' );
 					Admin_Display::error( $msg );
-					return;
+					continue;
 				}
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] );
@@ -869,9 +887,9 @@ class Img_Optm extends Base
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
 
-					$msg = __( 'Pulled image md5 does not match the notified image md5.', 'litespeed-cache' );
+					$msg = __( 'One or more pulled images does not match with the notified image md5', 'litespeed-cache' );
 					Admin_Display::error( $msg );
-					return;
+					continue;
 				}
 
 				// Backup ori img
@@ -963,7 +981,9 @@ class Img_Optm extends Base
 			if ( empty( $server_list[ $server_info[ 'server' ] ] ) ) {
 				$server_list[ $server_info[ 'server' ] ] = array();
 			}
-			$server_list[ $server_info[ 'server' ] ][] = $server_info[ 'id' ];
+
+			$server_info_id = ! empty( $server_info['file_id'] ) ? $server_info['file_id'] : $server_info['id'];
+			$server_list[ $server_info[ 'server' ] ][] = $server_info_id;
 		}
 
 		// Notify IAPI images taken
@@ -971,8 +991,10 @@ class Img_Optm extends Base
 			$data = array(
 				'action'	=> self::CLOUD_ACTION_TAKEN,
 				'list' 		=> $img_list,
+				'server'	=> $server,
 			);
-			Cloud::post( Cloud::SVC_IMG_OPTM, $data ); // We don't use $server. So if user changed cloud node, the previous request will fail to notify, but won't hurt so just ignore
+			// TODO: improve this so we do not call once per server, but just once and then filter on the server side
+			Cloud::post( Cloud::SVC_IMG_OPTM, $data );
 		}
 
 		if ( empty( $this->_summary[ 'img_taken' ] ) ) {
@@ -1061,16 +1083,6 @@ class Img_Optm extends Base
 			return;
 		}
 
-		Debug2::debug( '[Img_Optm] sending CLEAN cmd to QUIC.cloud' ) ;
-
-		$data = array(
-			'action'	=> self::CLOUD_ACTION_CLEAN,
-		);
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data, 120 );
-		if ( ! is_array( $json ) ) {
-			return;
-		}
-
 		// Clear local working table queue
 		if ( Data::get_instance()->tb_exist( 'img_optming' ) ) {
 			$q = "TRUNCATE `$this->_table_img_optming`";
@@ -1153,12 +1165,6 @@ class Img_Optm extends Base
 		// Clear options table summary info
 		self::delete_option( '_summary' ) ;
 		self::delete_option( self::DB_NEED_PULL ) ;
-
-		// Inform Cloud server
-		$data = array(
-			'action'	=> self::CLOUD_ACTION_CLEAN,
-		);
-		$json = Cloud::post( Cloud::SVC_IMG_OPTM, $data ) ;
 
 		$msg = __( 'Destroy all optimization data successfully.', 'litespeed-cache' ) ;
 		Admin_Display::succeed( $msg ) ;
