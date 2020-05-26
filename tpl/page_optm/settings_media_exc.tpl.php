@@ -36,7 +36,15 @@ defined( 'WPINC' ) || exit ;
 			<?php $this->title( $id ) ; ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id ) ; ?>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id ) ; ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ); ?>
+				</div>
+			</div>
+
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
