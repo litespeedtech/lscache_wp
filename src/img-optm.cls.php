@@ -382,6 +382,18 @@ class Img_Optm extends Base
 			return;
 		}
 
+		// Limit maximum number of items waiting to be pulled
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
+		$q = $wpdb->prepare( $q, array( self::STATUS_NOTIFIED) );
+		$total_notified = $wpdb->get_var( $q );
+		$max_notified = $allowance * 5;
+
+		if ( $total_notified > $max_notified ) {
+			Debug2::debug( '[Img_Optm] ❌ Too many notified images ('.$total_notified.' > '.$max_notified.')' );
+			Admin_Display::error( Error::msg( 'too_many_notified' ) );
+			return;
+		}
+
 		$num_a = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
