@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.1
+Stable tag: 3.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.4 - May 26 2020 =
+* **Image Optimize** Different approach to run the service. (@Lucas Rolff)
+* **Cloud** Different approach to run the service. (@Lucas Rolff)
+* **Crawler** PHP 5.3 compatibility. (@JTS-FIN #230 @infinite1ar)
+* **Page Optimize** CSS/JS won't meet 404 issue anymore in certain server environment that is missing SCRIPT_URI. (@ankit)
+* **Data** Summary data storage typecast enhancement.
 
 = 3.1 - May 20 2020 =
 * 🌱**Network** Added Debug settings to network level when on network.

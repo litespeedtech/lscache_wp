@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-05-20 12:46:18+00:00\n"
+"POT-Creation-Date: 2020-05-26 16:41:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -251,66 +251,66 @@ msgstr ""
 msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
-#: src/cloud.cls.php:314 src/cloud.cls.php:327 src/cloud.cls.php:356
-#: src/cloud.cls.php:448
+#: src/cloud.cls.php:320 src/cloud.cls.php:339 src/cloud.cls.php:376
+#: src/cloud.cls.php:472
 msgid "Cloud Error"
 msgstr ""
 
-#: src/cloud.cls.php:356
+#: src/cloud.cls.php:376
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:448
+#: src/cloud.cls.php:472
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:534 src/cloud.cls.php:546
+#: src/cloud.cls.php:558 src/cloud.cls.php:570
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:556
+#: src/cloud.cls.php:580
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:565 src/cloud.cls.php:573 src/cloud.cls.php:817
+#: src/cloud.cls.php:589 src/cloud.cls.php:597 src/cloud.cls.php:841
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:581
+#: src/cloud.cls.php:605
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:590
+#: src/cloud.cls.php:614
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:632 src/cloud.cls.php:806
+#: src/cloud.cls.php:656 src/cloud.cls.php:830
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:781
+#: src/cloud.cls.php:805
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:825
+#: src/cloud.cls.php:849
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:878
+#: src/cloud.cls.php:902
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:953
+#: src/cloud.cls.php:977
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1023
+#: src/cloud.cls.php:1047
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -451,97 +451,101 @@ msgid "You don't have enough quota for current service left this month."
 msgstr ""
 
 #: src/error.cls.php:59
-msgid "The image list is empty."
+msgid "You have too many requested images, please try again in a few minutes."
 msgstr ""
 
 #: src/error.cls.php:63
-msgid "Not enough parameters. Please check if the domain key is set correctly"
+msgid "The image list is empty."
 msgstr ""
 
 #: src/error.cls.php:67
-msgid "There is proceeding queue not pulled yet."
+msgid "Not enough parameters. Please check if the domain key is set correctly"
 msgstr ""
 
 #: src/error.cls.php:71
-msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgid "There is proceeding queue not pulled yet."
 msgstr ""
 
 #: src/error.cls.php:75
+msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgstr ""
+
+#: src/error.cls.php:79
 msgid ""
 "The domain key is not correct. Please try to sync your domain key again."
 msgstr ""
 
-#: src/error.cls.php:79
+#: src/error.cls.php:83
 msgid "Credits are not enough to proceed the current request."
 msgstr ""
 
-#: src/error.cls.php:83 src/error.cls.php:107
+#: src/error.cls.php:87 src/error.cls.php:111
 msgid "%s file not writable."
 msgstr ""
 
-#: src/error.cls.php:91
+#: src/error.cls.php:95
 msgid "Could not find %1$s in %2$s."
 msgstr ""
 
-#: src/error.cls.php:95
+#: src/error.cls.php:99
 msgid "Invalid login cookie. Please check the %s file."
 msgstr ""
 
-#: src/error.cls.php:99
+#: src/error.cls.php:103
 msgid "Failed to back up %s file, aborted changes."
 msgstr ""
 
-#: src/error.cls.php:103
+#: src/error.cls.php:107
 msgid "%s file not readable."
 msgstr ""
 
-#: src/error.cls.php:111
+#: src/error.cls.php:115
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: src/error.cls.php:115
+#: src/error.cls.php:119
 msgid "Failed to create table %s! SQL: %s."
 msgstr ""
 
-#: src/error.cls.php:119
+#: src/error.cls.php:123
 msgid "Crawler disabled by the server admin."
 msgstr ""
 
-#: src/error.cls.php:124
+#: src/error.cls.php:128
 msgid "Previous request too recent. Please try again later."
 msgstr ""
 
-#: src/error.cls.php:128
+#: src/error.cls.php:132
 msgid "Previous request too recent. Please try again after %s."
 msgstr ""
 
-#: src/error.cls.php:132
+#: src/error.cls.php:136
 msgid "Your application is waiting for approval."
 msgstr ""
 
-#: src/error.cls.php:136
-msgid "The callback validation to your domain failed due to hash mismatch."
-msgstr ""
-
 #: src/error.cls.php:140
-msgid ""
-"The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers."
+msgid "The callback validation to your domain failed due to hash mismatch."
 msgstr ""
 
 #: src/error.cls.php:144
 msgid ""
 "The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers. Response code: "
+"firewall blocking our servers."
 msgstr ""
 
 #: src/error.cls.php:148
+msgid ""
+"The callback validation to your domain failed. Please make sure there is no "
+"firewall blocking our servers. Response code: "
+msgstr ""
+
+#: src/error.cls.php:152
 msgid ""
 "Your domain has been forbidden from using our services due to a previous "
 "policy violation."
 msgstr ""
 
-#: src/error.cls.php:152
+#: src/error.cls.php:156
 msgid "Unknown error"
 msgstr ""
 
@@ -718,95 +722,95 @@ msgstr ""
 msgid "Gathered %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:396
+#: src/img-optm.cls.php:408
 msgid "Pushed %1$s to Cloud server, accepted %2$s."
 msgstr ""
 
-#: src/img-optm.cls.php:433
+#: src/img-optm.cls.php:446
 msgid "Bypassed %1$s duplicated images."
 msgstr ""
 
-#: src/img-optm.cls.php:471
+#: src/img-optm.cls.php:484
 msgid "Cleared %1$s invalid images."
 msgstr ""
 
-#: src/img-optm.cls.php:550
+#: src/img-optm.cls.php:563
 msgid "No valid image found in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:573
+#: src/img-optm.cls.php:586
 msgid "No valid image found by Cloud server in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:799
+#: src/img-optm.cls.php:817
 msgid "Pull Cron is running"
 msgstr ""
 
-#: src/img-optm.cls.php:855
-msgid "Optimized image file expired and was cleared."
+#: src/img-optm.cls.php:873
+msgid "Some optimized image file(s) has expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:872
-msgid "Pulled image md5 does not match the notified image md5."
+#: src/img-optm.cls.php:890
+msgid "One or more pulled images does not match with the notified image md5"
 msgstr ""
 
-#: src/img-optm.cls.php:916
+#: src/img-optm.cls.php:934
 msgid "Optimized WebP file expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:933
+#: src/img-optm.cls.php:951
 msgid "Pulled WebP image md5 does not match the notified WebP image md5."
 msgstr ""
 
-#: src/img-optm.cls.php:989
+#: src/img-optm.cls.php:1011
 msgid "Pulled %d image(s)"
 msgstr ""
 
-#: src/img-optm.cls.php:1086
+#: src/img-optm.cls.php:1098
 msgid "Cleaned up unfinished data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1163
+#: src/img-optm.cls.php:1169
 msgid "Destroy all optimization data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1198 src/img-optm.cls.php:1271
+#: src/img-optm.cls.php:1204 src/img-optm.cls.php:1277
 msgid "Rescaned successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1284
+#: src/img-optm.cls.php:1290
 msgid "Rescaned %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1343
+#: src/img-optm.cls.php:1349
 msgid "Calculated backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1405
+#: src/img-optm.cls.php:1411
 msgid "Removed backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1602
+#: src/img-optm.cls.php:1608
 msgid "Switched images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1631
+#: src/img-optm.cls.php:1637
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1637
+#: src/img-optm.cls.php:1643
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1653
+#: src/img-optm.cls.php:1659
 msgid "Restored original file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1660
+#: src/img-optm.cls.php:1666
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1723
+#: src/img-optm.cls.php:1729
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -1835,7 +1839,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -4677,28 +4681,28 @@ msgstr ""
 msgid "Filter %s is supported."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:41
+#: tpl/page_optm/settings_media_exc.tpl.php:49
 msgid "Images containing these class names will not be lazy loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:42
-#: tpl/page_optm/settings_media_exc.tpl.php:71
+#: tpl/page_optm/settings_media_exc.tpl.php:50
+#: tpl/page_optm/settings_media_exc.tpl.php:79
 msgid "Both full and partial strings can be used."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:56
+#: tpl/page_optm/settings_media_exc.tpl.php:64
 msgid "Images having these parent class names will not be lazy loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:70
+#: tpl/page_optm/settings_media_exc.tpl.php:78
 msgid "Iframes containing these class names will not be lazy loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:85
+#: tpl/page_optm/settings_media_exc.tpl.php:93
 msgid "Iframes having these parent class names will not be lazy loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:99
+#: tpl/page_optm/settings_media_exc.tpl.php:107
 msgid "Prevent any lazy load of listed pages."
 msgstr ""
 
