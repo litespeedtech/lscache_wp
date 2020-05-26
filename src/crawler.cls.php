@@ -667,7 +667,7 @@ class Crawler extends Base
 					$port = $parsed_url[ 'scheme' ] == 'https' ? '443' : '80';
 					$url = $dom . ':' . $port . ':' . $ip;
 
-					$options[ CURLOPT_RESOLVE ] = [ $url ];
+					$options[ CURLOPT_RESOLVE ] = array( $url );
 					$options[ CURLOPT_DNS_USE_GLOBAL_CACHE ] = false;
 				}
 			}
