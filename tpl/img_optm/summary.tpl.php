@@ -1,7 +1,6 @@
 <?php
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
-global $_wp_additional_image_sizes;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 $usage_cloud = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
@@ -216,7 +215,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<div>
 					<h4><?php echo __( 'Thumbnail Size Set', 'litespeed-cache' ) ; ?></h4>
 					<div class="litespeed-desc litespeed-left20">
-						<?php foreach ( $_wp_additional_image_sizes as $title => $size ) {
+						<?php foreach ( Media::get_instance()->get_image_sizes() as $title => $size ) {
 							echo "<div>$title ( " . ( $size[ 'width' ] ? $size[ 'width' ] . 'px' : '*' ) . ' x ' . ( $size[ 'height' ] ? $size[ 'height' ] . 'px' : '*' ) . ' )</div>';
 						} ; ?>
 					</div>

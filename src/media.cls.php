@@ -378,10 +378,9 @@ class Media extends Instance
 	 * NOTE: this is not used because it has to be after admin_init
 	 *
 	 * @since 1.6.2
-	 * @access private
 	 * @return array $sizes Data for all currently-registered image sizes.
 	 */
-	private function get_image_sizes() {
+	public function get_image_sizes() {
 		global $_wp_additional_image_sizes ;
 		$sizes = array();
 
