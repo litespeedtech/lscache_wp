@@ -830,6 +830,10 @@ class Utility extends Instance
 			$offset = $total - $limit;
 		}
 
+		if ( $offset < 0 ) {
+			$offset = 0;
+		}
+
 		if ( $return_offset ) {
 			return $offset;
 		}
