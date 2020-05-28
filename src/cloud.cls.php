@@ -344,7 +344,7 @@ class Cloud extends Base
 			if ( ! empty( $this->_summary[ 'server.' . $service ] ) ){
 				return $this->_summary[ 'server.' . $service ];
 			}
-			
+
 			return false;
 		}
 
@@ -354,7 +354,7 @@ class Cloud extends Base
 		foreach ( $json[ 'list' ] as $v ) {
 			$speed_list[ $v ] = Utility::ping( $v );
 		}
-		
+
 		$min = min( $speed_list );
 
 		if ( $min == 99999 ) {
@@ -791,7 +791,7 @@ class Cloud extends Base
 	{
 		$data = array(
 			'site_url'	=> home_url(),
-			'rest'		=> rest_get_url_prefix(),
+			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 			'server_ip'	=> Conf::val( Base::O_SERVER_IP ),
 		);
 		if ( ! empty( $this->_summary[ 'token' ] ) ) {

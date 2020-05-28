@@ -51,7 +51,7 @@ class Quic extends Instance
 		}
 
 		// Rest url
-		$options[ '_rest' ] = rest_get_url_prefix() ;
+		$options[ '_rest' ] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
 
 		// Add server env vars
 		$options[ '_server' ] = Base::get_instance()->server_vars() ;
