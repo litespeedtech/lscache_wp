@@ -667,64 +667,49 @@ class Conf extends Base
 	 * @access private
 	 */
 	private function _set_conf()
-	{exit('');
+	{
+		/**
+		 * NOTE: For URL Query String setting,
+		 * 		1. If append lines to an array setting e.g. `cache-force_uri`, use `set[cache-force_uri][]=the_url`.
+		 *   	2. If replace the array setting with one line, use `set[cache-force_uri]=the_url`.
+		 *   	3. If replace the array setting with multi lines value, use 2 then 1.
+		 */
 		if ( empty( $_GET[ self::TYPE_SET ] ) || ! is_array( $_GET[ self::TYPE_SET ] ) ) {
+			return;
+		}
+
+		$the_matrix = array();
+		foreach ( $_GET[ self::TYPE_SET ] as $id => $v ) {
+			if ( ! array_key_exists( $id, $this->_options ) ) {
+				continue;
+			}
+
+			// Append new item to array type settings
+			if ( is_array( $v ) && is_array( $this->_options[ $id ] ) ) {
+				$v = array_merge( $this->_options[ $id ], $v ) ;
+
+				Debug2::debug( '[Conf] Appended to settings [' . $id . ']: ' . var_export( $v, true ) );
+			}
+			else {
+				Debug2::debug( '[Conf] Set setting [' . $id . ']: ' . var_export( $v, true ) );
+			}
+
+			$the_matrix[ $id ] = $v;
+		}
+
+		if ( ! $the_matrix ) {
 			return ;
 		}
 
-		$options = $this->_options ;
-		// Get items
-		foreach ( $this->stored_items() as $v ) {//xxx
-			$options[ $v ] = $this->get_item( $v ) ;
-		}
+		$this->update_confs( $the_matrix );
 
-		$changed = false ;
-		foreach ( $_GET[ self::TYPE_SET ] as $k => $v ) {
-			if ( ! isset( $options[ $k ] ) ) {
-				continue ;
-			}
-
-			if ( is_bool( $options[ $k ] ) ) {//xx
-				$v = (bool) $v ;
-			}
-
-			// Change for items
-			if ( is_array( $v ) && is_array( $options[ $k ] ) ) {
-				$changed = true ;
-
-				$options[ $k ] = array_merge( $options[ $k ], $v ) ;
-
-				Debug2::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
-			}
-
-			// Chnage for single option
-			if ( ! is_array( $v ) ) {
-				$changed = true ;
-
-				$options[ $k ] = $v ;
-
-				Debug2::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
-			}
-
-		}
-
-		if ( ! $changed ) {
-			return ;
-		}
-
-		$output = Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
-		// Save settings now (options & items)
-		foreach ( $output as $k => $v ) {
-			self::update_option( $k, $v ) ;
-		}
-
-		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		$msg = __( 'Changed setting successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 
 		// Redirect if changed frontend URL
 		if ( ! empty( $_GET[ 'redirect' ] ) ) {
-			wp_redirect( $_GET[ 'redirect' ] ) ;
-			exit() ;
+			wp_redirect( $_GET[ 'redirect' ] );
+			exit();
 		}
 	}
 
@@ -736,19 +721,19 @@ class Conf extends Base
 	 */
 	public static function handler()
 	{
-		$instance = self::get_instance() ;
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_SET :
-				$instance->_set_conf() ;
-				break ;
+				$instance->_set_conf();
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 }

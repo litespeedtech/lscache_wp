@@ -429,49 +429,51 @@ class GUI extends Base
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		$append_arr = array(
-			Conf::TYPE_SET . '[' . Base::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
-			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-		) ;
-		$wp_admin_bar->add_menu( array(
-			'parent'	=> 'litespeed-single-action',
-			'id'		=> 'litespeed-single-forced_cache',
-			'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
-		) );
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+			$append_arr = array(
+				Conf::TYPE_SET . '[' . Base::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
+			) ;
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-single-action',
+				'id'		=> 'litespeed-single-forced_cache',
+				'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, true, $append_arr ),
+			) );
 
-		$append_arr = array(
-			Conf::TYPE_SET . '[' . Base::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
-			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-		) ;
-		$wp_admin_bar->add_menu( array(
-			'parent'	=> 'litespeed-single-action',
-			'id'		=> 'litespeed-single-noncache',
-			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
-		) );
+			$append_arr = array(
+				Conf::TYPE_SET . '[' . Base::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
+			) ;
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-single-action',
+				'id'		=> 'litespeed-single-noncache',
+				'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, true, $append_arr ),
+			) );
 
-		$append_arr = array(
-			Conf::TYPE_SET . '[' . Base::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
-			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-		) ;
-		$wp_admin_bar->add_menu( array(
-			'parent'	=> 'litespeed-single-action',
-			'id'		=> 'litespeed-single-private',
-			'title'		=> __( 'Private cache', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
-		) );
+			$append_arr = array(
+				Conf::TYPE_SET . '[' . Base::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
+			) ;
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-single-action',
+				'id'		=> 'litespeed-single-private',
+				'title'		=> __( 'Private cache', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, true, $append_arr ),
+			) );
 
-		$append_arr = array(
-			Conf::TYPE_SET . '[' . Base::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
-			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-		) ;
-		$wp_admin_bar->add_menu( array(
-			'parent'	=> 'litespeed-single-action',
-			'id'		=> 'litespeed-single-nonoptimize',
-			'title'		=> __( 'No optimization', 'litespeed-cache' ),
-			'href'		=> Utility::build_url( Router::ACTION_CONF, false, false, true, $append_arr ),
-		) );
+			$append_arr = array(
+				Conf::TYPE_SET . '[' . Base::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
+			) ;
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-single-action',
+				'id'		=> 'litespeed-single-nonoptimize',
+				'title'		=> __( 'No optimization', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, true, $append_arr ),
+			) );
+		}
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
