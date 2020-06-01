@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.1
-Stable tag: 3.2
+Stable tag: 3.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.2.1 - Jun 1 2020 =
+* **Cloud** LQIP/CCSS rate limit tweaks. (@ianpegg)
+* **Admin** Improved frontend Admin Bar menu functionality. (#708642)
+* **Crawler** Fixed an issue where cleaning up a crawler map with a leftover page number would cause a MySQL error. (@saowp)
+* **Image Optimize** Added WP default thumbnails to image optimization summary list. (@johnny Nguyen)
+* **REST** Improved REST compatibility w/ WP4.4-. (#767203)
+* **GUI** Moved Use Primary Site Configuration to General menu. (@joshua)
 
 = 3.2 - May 27 2020 =
 * **Image Optimize** Major improvements in queue management, scalability, and speed. (@Lucas Rolff)

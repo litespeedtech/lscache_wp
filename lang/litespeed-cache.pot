@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.4\n"
+"Project-Id-Version: LiteSpeed Cache 3.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-05-26 16:41:52+00:00\n"
+"POT-Creation-Date: 2020-06-01 18:05:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "CDN"
 msgstr ""
 
-#: src/admin-display.cls.php:162 src/gui.cls.php:609
+#: src/admin-display.cls.php:162 src/gui.cls.php:611
 #: tpl/dash/dashboard.tpl.php:52 tpl/dash/network_dash.tpl.php:27
 msgid "Image Optimization"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Toolbox"
 msgstr ""
 
-#: src/admin-display.cls.php:254 src/gui.cls.php:600
+#: src/admin-display.cls.php:254 src/gui.cls.php:602
 msgid "Settings"
 msgstr ""
 
@@ -182,8 +182,8 @@ msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
 #: src/admin-display.cls.php:1083 src/doc.cls.php:38 tpl/cdn/manage.tpl.php:66
-#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:57
-#: tpl/img_optm/summary.tpl.php:97 tpl/inc/check_cache_disabled.php:42
+#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:56
+#: tpl/img_optm/summary.tpl.php:96 tpl/inc/check_cache_disabled.php:42
 msgid "Learn More"
 msgstr ""
 
@@ -252,7 +252,7 @@ msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
 #: src/cloud.cls.php:320 src/cloud.cls.php:339 src/cloud.cls.php:376
-#: src/cloud.cls.php:472
+#: src/cloud.cls.php:478
 msgid "Cloud Error"
 msgstr ""
 
@@ -260,61 +260,61 @@ msgstr ""
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:472
+#: src/cloud.cls.php:478
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:558 src/cloud.cls.php:570
+#: src/cloud.cls.php:564 src/cloud.cls.php:576
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:580
+#: src/cloud.cls.php:586
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:589 src/cloud.cls.php:597 src/cloud.cls.php:841
+#: src/cloud.cls.php:595 src/cloud.cls.php:603 src/cloud.cls.php:847
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:605
+#: src/cloud.cls.php:611
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:614
+#: src/cloud.cls.php:620
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:656 src/cloud.cls.php:830
+#: src/cloud.cls.php:662 src/cloud.cls.php:836
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:805
+#: src/cloud.cls.php:811
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:849
+#: src/cloud.cls.php:855
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:902
+#: src/cloud.cls.php:908
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:977
+#: src/cloud.cls.php:983
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1047
+#: src/cloud.cls.php:1053
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:721
+#: src/conf.cls.php:706
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -455,97 +455,102 @@ msgid "You have too many requested images, please try again in a few minutes."
 msgstr ""
 
 #: src/error.cls.php:63
-msgid "The image list is empty."
+msgid ""
+"You have too many notified images, please pull down notified images first."
 msgstr ""
 
 #: src/error.cls.php:67
-msgid "Not enough parameters. Please check if the domain key is set correctly"
+msgid "The image list is empty."
 msgstr ""
 
 #: src/error.cls.php:71
-msgid "There is proceeding queue not pulled yet."
+msgid "Not enough parameters. Please check if the domain key is set correctly"
 msgstr ""
 
 #: src/error.cls.php:75
-msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgid "There is proceeding queue not pulled yet."
 msgstr ""
 
 #: src/error.cls.php:79
+msgid "There is proceeding queue not pulled yet. Queue info: %s."
+msgstr ""
+
+#: src/error.cls.php:83
 msgid ""
 "The domain key is not correct. Please try to sync your domain key again."
 msgstr ""
 
-#: src/error.cls.php:83
+#: src/error.cls.php:87
 msgid "Credits are not enough to proceed the current request."
 msgstr ""
 
-#: src/error.cls.php:87 src/error.cls.php:111
+#: src/error.cls.php:91 src/error.cls.php:115
 msgid "%s file not writable."
 msgstr ""
 
-#: src/error.cls.php:95
+#: src/error.cls.php:99
 msgid "Could not find %1$s in %2$s."
 msgstr ""
 
-#: src/error.cls.php:99
+#: src/error.cls.php:103
 msgid "Invalid login cookie. Please check the %s file."
 msgstr ""
 
-#: src/error.cls.php:103
+#: src/error.cls.php:107
 msgid "Failed to back up %s file, aborted changes."
 msgstr ""
 
-#: src/error.cls.php:107
+#: src/error.cls.php:111
 msgid "%s file not readable."
 msgstr ""
 
-#: src/error.cls.php:115
+#: src/error.cls.php:119
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: src/error.cls.php:119
+#: src/error.cls.php:123
 msgid "Failed to create table %s! SQL: %s."
 msgstr ""
 
-#: src/error.cls.php:123
+#: src/error.cls.php:127
 msgid "Crawler disabled by the server admin."
 msgstr ""
 
-#: src/error.cls.php:128
+#: src/error.cls.php:132
 msgid "Previous request too recent. Please try again later."
 msgstr ""
 
-#: src/error.cls.php:132
+#: src/error.cls.php:136
 msgid "Previous request too recent. Please try again after %s."
 msgstr ""
 
-#: src/error.cls.php:136
+#: src/error.cls.php:140
 msgid "Your application is waiting for approval."
 msgstr ""
 
-#: src/error.cls.php:140
-msgid "The callback validation to your domain failed due to hash mismatch."
-msgstr ""
-
 #: src/error.cls.php:144
-msgid ""
-"The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers."
+msgid "The callback validation to your domain failed due to hash mismatch."
 msgstr ""
 
 #: src/error.cls.php:148
 msgid ""
 "The callback validation to your domain failed. Please make sure there is no "
-"firewall blocking our servers. Response code: "
+"firewall blocking our servers."
 msgstr ""
 
 #: src/error.cls.php:152
+msgid ""
+"The callback validation to your domain failed. Please make sure there is no "
+"firewall blocking our servers. Response code: "
+msgstr ""
+
+#: src/error.cls.php:156
 msgid ""
 "Your domain has been forbidden from using our services due to a previous "
 "policy violation."
 msgstr ""
 
-#: src/error.cls.php:156
+#: src/error.cls.php:160
 msgid "Unknown error"
 msgstr ""
 
@@ -593,32 +598,32 @@ msgstr ""
 msgid "Mark this page as "
 msgstr ""
 
-#: src/gui.cls.php:439
+#: src/gui.cls.php:440
 msgid "Forced cacheable"
 msgstr ""
 
-#: src/gui.cls.php:450
+#: src/gui.cls.php:451
 msgid "Non cacheable"
 msgstr ""
 
-#: src/gui.cls.php:461
+#: src/gui.cls.php:462
 msgid "Private cache"
 msgstr ""
 
-#: src/gui.cls.php:472
+#: src/gui.cls.php:473
 msgid "No optimization"
 msgstr ""
 
-#: src/gui.cls.php:479
+#: src/gui.cls.php:481
 msgid "More settings"
 msgstr ""
 
-#: src/gui.cls.php:486 src/gui.cls.php:494 src/gui.cls.php:502
-#: src/gui.cls.php:511 src/gui.cls.php:521 src/gui.cls.php:531
-#: src/gui.cls.php:541 src/gui.cls.php:551 src/gui.cls.php:618
-#: src/gui.cls.php:626 src/gui.cls.php:634 src/gui.cls.php:643
-#: src/gui.cls.php:653 src/gui.cls.php:663 src/gui.cls.php:673
-#: src/gui.cls.php:683 src/gui.cls.php:693 tpl/toolbox/purge.tpl.php:39
+#: src/gui.cls.php:488 src/gui.cls.php:496 src/gui.cls.php:504
+#: src/gui.cls.php:513 src/gui.cls.php:523 src/gui.cls.php:533
+#: src/gui.cls.php:543 src/gui.cls.php:553 src/gui.cls.php:620
+#: src/gui.cls.php:628 src/gui.cls.php:636 src/gui.cls.php:645
+#: src/gui.cls.php:655 src/gui.cls.php:665 src/gui.cls.php:675
+#: src/gui.cls.php:685 src/gui.cls.php:695 tpl/toolbox/purge.tpl.php:39
 #: tpl/toolbox/purge.tpl.php:45 tpl/toolbox/purge.tpl.php:54
 #: tpl/toolbox/purge.tpl.php:63 tpl/toolbox/purge.tpl.php:72
 #: tpl/toolbox/purge.tpl.php:81 tpl/toolbox/purge.tpl.php:90
@@ -626,77 +631,77 @@ msgstr ""
 msgid "Purge All"
 msgstr ""
 
-#: src/gui.cls.php:494 src/gui.cls.php:576 src/gui.cls.php:626
+#: src/gui.cls.php:496 src/gui.cls.php:578 src/gui.cls.php:628
 msgid "LSCache"
 msgstr ""
 
-#: src/gui.cls.php:502 src/gui.cls.php:634 tpl/toolbox/purge.tpl.php:45
+#: src/gui.cls.php:504 src/gui.cls.php:636 tpl/toolbox/purge.tpl.php:45
 msgid "CSS/JS Cache"
 msgstr ""
 
-#: src/gui.cls.php:511 src/gui.cls.php:653 src/lang.cls.php:79
+#: src/gui.cls.php:513 src/gui.cls.php:655 src/lang.cls.php:79
 #: tpl/dash/dashboard.tpl.php:361 tpl/toolbox/purge.tpl.php:54
 msgid "Object Cache"
 msgstr ""
 
-#: src/gui.cls.php:521 src/gui.cls.php:663 tpl/toolbox/purge.tpl.php:63
+#: src/gui.cls.php:523 src/gui.cls.php:665 tpl/toolbox/purge.tpl.php:63
 msgid "Opcode Cache"
 msgstr ""
 
-#: src/gui.cls.php:531 src/gui.cls.php:673 tpl/dash/dashboard.tpl.php:53
+#: src/gui.cls.php:533 src/gui.cls.php:675 tpl/dash/dashboard.tpl.php:53
 #: tpl/dash/dashboard.tpl.php:402 tpl/toolbox/purge.tpl.php:72
 msgid "Critical CSS"
 msgstr ""
 
-#: src/gui.cls.php:541 src/gui.cls.php:683 tpl/toolbox/purge.tpl.php:81
+#: src/gui.cls.php:543 src/gui.cls.php:685 tpl/toolbox/purge.tpl.php:81
 msgid "LQIP Cache"
 msgstr ""
 
-#: src/gui.cls.php:551 src/gui.cls.php:693 src/lang.cls.php:141
+#: src/gui.cls.php:553 src/gui.cls.php:695 src/lang.cls.php:141
 #: tpl/toolbox/purge.tpl.php:90
 msgid "Gravatar Cache"
 msgstr ""
 
-#: src/gui.cls.php:576
+#: src/gui.cls.php:578
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: src/gui.cls.php:592 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:253
+#: src/gui.cls.php:594 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:253
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
 
-#: src/gui.cls.php:643 tpl/cdn/manage.tpl.php:17
+#: src/gui.cls.php:645 tpl/cdn/manage.tpl.php:17
 msgid "Cloudflare"
 msgstr ""
 
-#: src/gui.cls.php:713 tpl/img_optm/summary.tpl.php:170
+#: src/gui.cls.php:715 tpl/img_optm/summary.tpl.php:169
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: src/gui.cls.php:714 tpl/img_optm/summary.tpl.php:172
+#: src/gui.cls.php:716 tpl/img_optm/summary.tpl.php:171
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: src/gui.cls.php:733
+#: src/gui.cls.php:735
 msgid "Install %s"
 msgstr ""
 
-#: src/gui.cls.php:734
+#: src/gui.cls.php:736
 msgid "Install Now"
 msgstr ""
 
-#: src/gui.cls.php:754
+#: src/gui.cls.php:756
 msgid ""
 "<a href=\"%1$s\" %2$s>View version %3$s details</a> or <a href=\"%4$s\" %5$s "
 "target=\"_blank\">update now</a>."
 msgstr ""
 
-#: src/gui.cls.php:757
+#: src/gui.cls.php:759
 msgid "View %1$s version %2$s details"
 msgstr ""
 
-#: src/gui.cls.php:762
+#: src/gui.cls.php:764
 msgid "Update %s now"
 msgstr ""
 
@@ -722,95 +727,95 @@ msgstr ""
 msgid "Gathered %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:408
+#: src/img-optm.cls.php:420
 msgid "Pushed %1$s to Cloud server, accepted %2$s."
 msgstr ""
 
-#: src/img-optm.cls.php:446
+#: src/img-optm.cls.php:458
 msgid "Bypassed %1$s duplicated images."
 msgstr ""
 
-#: src/img-optm.cls.php:484
+#: src/img-optm.cls.php:496
 msgid "Cleared %1$s invalid images."
 msgstr ""
 
-#: src/img-optm.cls.php:563
+#: src/img-optm.cls.php:575
 msgid "No valid image found in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:586
+#: src/img-optm.cls.php:598
 msgid "No valid image found by Cloud server in the current request."
 msgstr ""
 
-#: src/img-optm.cls.php:817
+#: src/img-optm.cls.php:829
 msgid "Pull Cron is running"
 msgstr ""
 
-#: src/img-optm.cls.php:873
+#: src/img-optm.cls.php:885
 msgid "Some optimized image file(s) has expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:890
+#: src/img-optm.cls.php:902
 msgid "One or more pulled images does not match with the notified image md5"
 msgstr ""
 
-#: src/img-optm.cls.php:934
+#: src/img-optm.cls.php:946
 msgid "Optimized WebP file expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:951
+#: src/img-optm.cls.php:963
 msgid "Pulled WebP image md5 does not match the notified WebP image md5."
 msgstr ""
 
-#: src/img-optm.cls.php:1011
+#: src/img-optm.cls.php:1023
 msgid "Pulled %d image(s)"
 msgstr ""
 
-#: src/img-optm.cls.php:1098
+#: src/img-optm.cls.php:1110
 msgid "Cleaned up unfinished data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1169
+#: src/img-optm.cls.php:1181
 msgid "Destroy all optimization data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1204 src/img-optm.cls.php:1277
+#: src/img-optm.cls.php:1216 src/img-optm.cls.php:1289
 msgid "Rescaned successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1290
+#: src/img-optm.cls.php:1302
 msgid "Rescaned %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1349
+#: src/img-optm.cls.php:1361
 msgid "Calculated backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1411
+#: src/img-optm.cls.php:1423
 msgid "Removed backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1608
+#: src/img-optm.cls.php:1620
 msgid "Switched images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1637
+#: src/img-optm.cls.php:1649
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1643
+#: src/img-optm.cls.php:1655
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1659
+#: src/img-optm.cls.php:1671
 msgid "Restored original file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1666
+#: src/img-optm.cls.php:1678
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1729
+#: src/img-optm.cls.php:1741
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -1720,11 +1725,11 @@ msgstr ""
 msgid " %s ago"
 msgstr ""
 
-#: src/utility.cls.php:840
+#: src/utility.cls.php:844
 msgid "&laquo;"
 msgstr ""
 
-#: src/utility.cls.php:841
+#: src/utility.cls.php:845
 msgid "&raquo;"
 msgstr ""
 
@@ -1839,7 +1844,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.4)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.2.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2018,19 +2023,6 @@ msgstr ""
 #: tpl/cache/network_settings-cache.tpl.php:19
 msgid ""
 "This is to ensure compatibility prior to enabling the cache for all sites."
-msgstr ""
-
-#: tpl/cache/network_settings-cache.tpl.php:25
-msgid "Use Primary Site Configuration"
-msgstr ""
-
-#: tpl/cache/network_settings-cache.tpl.php:29
-msgid ""
-"Check this option to use the primary site's configuration for all subsites."
-msgstr ""
-
-#: tpl/cache/network_settings-cache.tpl.php:30
-msgid "This will disable the settings page on all subsites."
 msgstr ""
 
 #: tpl/cache/network_settings-excludes.tpl.php:7
@@ -2881,7 +2873,7 @@ msgstr ""
 msgid "Blacklist"
 msgstr ""
 
-#: tpl/crawler/blacklist.tpl.php:22 tpl/img_optm/summary.tpl.php:195
+#: tpl/crawler/blacklist.tpl.php:22 tpl/img_optm/summary.tpl.php:194
 msgid "Total"
 msgstr ""
 
@@ -3378,7 +3370,7 @@ msgstr ""
 msgid "Current closest Cloud server is %s.&#10;Click to redetect."
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:202 tpl/img_optm/summary.tpl.php:52
+#: tpl/dash/dashboard.tpl.php:202 tpl/img_optm/summary.tpl.php:51
 #: tpl/page_optm/settings_css.tpl.php:121
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Are you sure to redetect the closest cloud server for this service?"
@@ -3400,7 +3392,7 @@ msgstr ""
 msgid "Images Requested"
 msgstr ""
 
-#: tpl/dash/dashboard.tpl.php:322 tpl/img_optm/summary.tpl.php:337
+#: tpl/dash/dashboard.tpl.php:322 tpl/img_optm/summary.tpl.php:336
 msgid "Last Request"
 msgstr ""
 
@@ -3652,6 +3644,19 @@ msgstr ""
 msgid "LiteSpeed Cache General Settings"
 msgstr ""
 
+#: tpl/general/network_settings.tpl.php:20
+msgid "Use Primary Site Configuration"
+msgstr ""
+
+#: tpl/general/network_settings.tpl.php:24
+msgid ""
+"Check this option to use the primary site's configuration for all subsites."
+msgstr ""
+
+#: tpl/general/network_settings.tpl.php:25
+msgid "This will disable the settings page on all subsites."
+msgstr ""
+
 #: tpl/general/settings.tpl.php:18
 msgid "Request Domain Key"
 msgstr ""
@@ -3822,11 +3827,11 @@ msgid ""
 "images."
 msgstr ""
 
-#: tpl/img_optm/settings.tpl.php:66 tpl/img_optm/summary.tpl.php:231
+#: tpl/img_optm/settings.tpl.php:66 tpl/img_optm/summary.tpl.php:230
 msgid "This is irreversible."
 msgstr ""
 
-#: tpl/img_optm/settings.tpl.php:67 tpl/img_optm/summary.tpl.php:232
+#: tpl/img_optm/settings.tpl.php:67 tpl/img_optm/summary.tpl.php:231
 msgid "You will be unable to Revert Optimization once the backups are deleted!"
 msgstr ""
 
@@ -3867,211 +3872,211 @@ msgstr ""
 msgid "The image compression quality setting of WordPress out of 100."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:52 tpl/page_optm/settings_css.tpl.php:121
+#: tpl/img_optm/summary.tpl.php:51 tpl/page_optm/settings_css.tpl.php:121
 #: tpl/page_optm/settings_media.tpl.php:172
 msgid "Current closest Cloud server is %s.&#10; Click to redetect."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:56
+#: tpl/img_optm/summary.tpl.php:55
 msgid "Optimize images with our cloud server"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:61
+#: tpl/img_optm/summary.tpl.php:60
 msgid "You can request a maximum of %s images at once."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:66
+#: tpl/img_optm/summary.tpl.php:65
 msgid ""
 "To make sure our server can communicate with your server without any issues "
 "and everything works fine, for the few first requests the amount images "
 "allowed in single request is limited."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:67
+#: tpl/img_optm/summary.tpl.php:66
 msgid "Current limit is"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:79
+#: tpl/img_optm/summary.tpl.php:78
 msgid "Gather Image Data"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:79
+#: tpl/img_optm/summary.tpl.php:78
 msgid "Send Optimization Request"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:82
+#: tpl/img_optm/summary.tpl.php:81
 msgid "Only press the button if the pull cron job is disabled."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:82
+#: tpl/img_optm/summary.tpl.php:81
 msgid "Images will be pulled automatically if the cron job is running."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:89
+#: tpl/img_optm/summary.tpl.php:88
 msgid "Pull Images"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:95
+#: tpl/img_optm/summary.tpl.php:94
 msgid "Optimization Status"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:112
+#: tpl/img_optm/summary.tpl.php:111
 msgid ""
 "After LiteSpeed's Image Optimization Server finishes optimization, it will "
 "notify your site to pull the optimized images."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:113
+#: tpl/img_optm/summary.tpl.php:112
 msgid "This process is automatic."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:128
+#: tpl/img_optm/summary.tpl.php:127
 msgid "Last pull initiated by cron at %s."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:177
+#: tpl/img_optm/summary.tpl.php:176
 msgid "Storage Optimization"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:181
+#: tpl/img_optm/summary.tpl.php:180
 msgid "A backup of each image is saved before it is optimized."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:188
+#: tpl/img_optm/summary.tpl.php:187
 msgid "Last calculated"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:192 tpl/img_optm/summary.tpl.php:243
+#: tpl/img_optm/summary.tpl.php:191 tpl/img_optm/summary.tpl.php:242
 msgid "Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:203
+#: tpl/img_optm/summary.tpl.php:202
 msgid "Calculate Original Image Storage"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:210
+#: tpl/img_optm/summary.tpl.php:209
 msgid "Calculate Backups Disk Space"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:217
+#: tpl/img_optm/summary.tpl.php:216
 msgid "Thumbnail Size Set"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:228
+#: tpl/img_optm/summary.tpl.php:227
 msgid "Delete all backups of the original images"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:240
+#: tpl/img_optm/summary.tpl.php:239
 #: tpl/page_optm/settings_discussion.tpl.php:51
 msgid "Last ran"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:246
+#: tpl/img_optm/summary.tpl.php:245
 msgid "Saved"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:250
+#: tpl/img_optm/summary.tpl.php:249
 msgid "Are you sure to remove all image backups?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:251
+#: tpl/img_optm/summary.tpl.php:250
 msgid "Remove Original Image Backups"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:262
+#: tpl/img_optm/summary.tpl.php:261
 msgid "Image Information"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:271 tpl/img_optm/summary.tpl.php:298
+#: tpl/img_optm/summary.tpl.php:270 tpl/img_optm/summary.tpl.php:297
 msgid "Images total"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:275 tpl/img_optm/summary.tpl.php:302
+#: tpl/img_optm/summary.tpl.php:274 tpl/img_optm/summary.tpl.php:301
 msgid "What is a group?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:277 tpl/img_optm/summary.tpl.php:304
+#: tpl/img_optm/summary.tpl.php:276 tpl/img_optm/summary.tpl.php:303
 msgid "What is an image group?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:282
+#: tpl/img_optm/summary.tpl.php:281
 msgid "Images not yet gathered"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:285
+#: tpl/img_optm/summary.tpl.php:284
 msgid "Congratulations, all gathered!"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:309
+#: tpl/img_optm/summary.tpl.php:308
 msgid "Images not yet requested"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:312
+#: tpl/img_optm/summary.tpl.php:311
 msgid "Congratulations, all requested!"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:319
+#: tpl/img_optm/summary.tpl.php:318
 msgid ""
 "Scan for any new unoptimized image thumbnail sizes and resend necessary "
 "image optimization requests."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:320
+#: tpl/img_optm/summary.tpl.php:319
 msgid "Rescan New Thumbnails"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:328
+#: tpl/img_optm/summary.tpl.php:327
 msgid "Optimization Summary"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:331
+#: tpl/img_optm/summary.tpl.php:330
 msgid "Total Reduction"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:334
+#: tpl/img_optm/summary.tpl.php:333
 msgid "Images Pulled"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:341
+#: tpl/img_optm/summary.tpl.php:340
 msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:347
+#: tpl/img_optm/summary.tpl.php:346
 msgid "Optimization Tools"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:350
+#: tpl/img_optm/summary.tpl.php:349
 msgid ""
 "You can quickly switch between using original (unoptimized versions) and "
 "optimized image files. It will affect all images on your website, both "
 "regular and webp versions if available."
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:355
+#: tpl/img_optm/summary.tpl.php:354
 msgid "Use original images (unoptimized) on your site"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:356
+#: tpl/img_optm/summary.tpl.php:355
 msgid "Use Original Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:359
+#: tpl/img_optm/summary.tpl.php:358
 msgid "Switch back to using optimized images on your site"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:360
+#: tpl/img_optm/summary.tpl.php:359
 msgid "Use Optimized Files"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:368
+#: tpl/img_optm/summary.tpl.php:367
 msgid "Are you sure to destroy all optimized images?"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:369
+#: tpl/img_optm/summary.tpl.php:368
 msgid "Destroy All Optimization Data"
 msgstr ""
 
-#: tpl/img_optm/summary.tpl.php:373
+#: tpl/img_optm/summary.tpl.php:372
 msgid ""
 "Remove all previous image optimization requests/results, revert completed "
 "optimizations, and delete all optimization files."
