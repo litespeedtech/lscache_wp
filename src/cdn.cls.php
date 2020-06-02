@@ -124,18 +124,7 @@ class CDN extends Instance
 		}
 
 		// Check if need preg_replace
-		foreach ( $this->_cfg_url_ori as $k => $v ) {
-			if ( strpos( $v, '*' ) === false ) {
-				continue ;
-			}
-
-			Debug2::debug( '[CDN] wildcard rule in ' . $v ) ;
-			$v = preg_quote( $v, '#' ) ;
-			$v = str_replace( '\*', '.*', $v ) ;
-			Debug2::debug2( '[CDN] translated rule is ' . $v ) ;
-
-			$this->_cfg_url_ori[ $k ] = $v ;
-		}
+		$this->_cfg_url_ori = Utility::wildcard2regex( $this->_cfg_url_ori );
 
 		$this->_cfg_cdn_exclude = Conf::val( Base::O_CDN_EXC ) ;
 

@@ -9,10 +9,9 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Utility extends Instance
-{
-	protected static $_instance ;
-	private static $_internal_domains ;
+class Utility extends Instance {
+	protected static $_instance;
+	private static $_internal_domains;
 
 	/**
 	 * Validate regex
@@ -22,8 +21,7 @@ class Utility extends Instance
 	 * @access public
 	 * @return bool True for valid rules, false otherwise.
 	 */
-	public static function syntax_checker( $rules )
-	{
+	public static function syntax_checker( $rules ) {
 		$success = true ;
 
 		set_error_handler( 'litespeed_exception_handler' ) ;
@@ -45,23 +43,40 @@ class Utility extends Instance
 	 *
 	 * @since  3.0
 	 */
-	public static function arr2regex( $arr, $drop_delimiter = false )
-	{
-		$arr = self::sanitize_lines( $arr ) ;
+	public static function arr2regex( $arr, $drop_delimiter = false ) {
+		$arr = self::sanitize_lines( $arr );
 
-		$new_arr = array() ;
+		$new_arr = array();
 		foreach ( $arr as $v ) {
-			$new_arr[] = preg_quote( $v, '#' ) ;
+			$new_arr[] = preg_quote( $v, '#' );
 		}
 
-		$regex = implode( '|', $new_arr ) ;
-		$regex = str_replace( ' ', '\\ ', $regex ) ;
+		$regex = implode( '|', $new_arr );
+		$regex = str_replace( ' ', '\\ ', $regex );
 
 		if ( $drop_delimiter ) {
-			return $regex ;
+			return $regex;
 		}
 
-		return '#' . $regex . '#' ;
+		return '#' . $regex . '#';
+	}
+
+	/**
+	 * Replace wildcard to regex
+	 *
+	 * @since  3.2.2
+	 */
+	public static function wildcard2regex( $string ) {
+		if ( is_array( $string ) ) {
+			return array_map( __CLASS__ . '::wildcard2regex', $string );
+		}
+
+		if ( strpos( $string, '*' ) !== false ) {
+			$string = preg_quote( $string, '#' );
+			$string = str_replace( '\*', '.*', $string );
+		}
+
+		return $string;
 	}
 
 	/**

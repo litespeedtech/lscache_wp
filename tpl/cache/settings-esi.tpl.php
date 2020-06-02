@@ -89,6 +89,9 @@ defined( 'WPINC' ) || exit ;
 				<?php Doc::one_per_line(); ?>
 				<br /><?php echo __( 'An optional second parameter may be used to specify cache control. Use a space to separate', 'litespeed-cache' ); ?>: <code>my_nonce_action private</code>
 			</div>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>nonce_formid_1</code>', '<code>nonce_formid_3</code>', '<code>nonce_formid_*</code>' ) ; ?>
+			</div>
 		</td>
 	</tr>
 

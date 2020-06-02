@@ -13,8 +13,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class ESI extends Instance
-{
+class ESI extends Instance {
 	protected static $_instance ;
 
 	private static $has_esi = false ;
@@ -39,8 +38,7 @@ class ESI extends Instance
 	 * @since    1.2.0
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 * @since  2.9.7.2
@@ -69,8 +67,7 @@ class ESI extends Instance
 	 * @since 2.9.7.2
 	 * @access public
 	 */
-	public function esi_init()
-	{
+	public function esi_init() {
 		add_action( 'template_include', array( $this, 'esi_template' ), 99999 ) ;
 
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' ) ;
@@ -108,22 +105,17 @@ class ESI extends Instance
 	 *
 	 * @since  2.9.5
 	 */
-	private function _transform_nonce()
-	{
-		Debug2::debug( '[ESI] Overwrite wp_create_nonce()' ) ;
-
+	private function _transform_nonce() {
 		// Load ESI nonces in conf
 		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
 			foreach ( $nonces as $action ) {
-				$action = explode( ' ', $action );
-				$control = ! empty( $action[ 1 ] ) ? $action[ 1 ] : '';
-
-				$this->_nonce_actions[ $action[ 0 ] ] = $control;
+				$this->nonce_action( $action );
 			}
 		}
 
 		add_action( 'litespeed_nonce', array( $this, 'nonce_action' ) );
 
+		Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
 		litespeed_define_nonce_func();
 	}
 
@@ -132,18 +124,22 @@ class ESI extends Instance
 	 *
 	 * @since  2.9.5
 	 */
-	public function nonce_action( $action )
-	{
+	public function nonce_action( $action ) {
+		// Split the Cache Control
+		$action = explode( ' ', $action );
+		$control = ! empty( $action[ 1 ] ) ? $action[ 1 ] : '';
+		$action = $action[ 0 ];
+
+		// Wildcard supported
+		$action = Utility::wildcard2regex( $action );
+
 		if ( array_key_exists( $action, $this->_nonce_actions ) ) {
 			return;
 		}
 
-		Debug2::debug( '[ESI] Append nonce action to nonce list [action] ' . $action );
+		$this->_nonce_actions[ $action ] = $control;
 
-		$action = explode( ' ', $action );
-		$control = ! empty( $action[ 1 ] ) ? $action[ 1 ] : '';
-
-		$this->_nonce_actions[ $action[ 0 ] ] = $control;
+		Debug2::debug( '[ESI] Appended nonce action to nonce list [action] ' . $action );
 	}
 
 	/**
@@ -153,7 +149,20 @@ class ESI extends Instance
 	 */
 	public function is_nonce_action( $action )
 	{
-		return array_key_exists( $action, $this->_nonce_actions ) ? $this->_nonce_actions[ $action ] : null;
+		foreach ( $this->_nonce_actions as $k => $v ) {
+			if ( strpos( $k, '*' ) !== false ) {
+				if( preg_match( '#' . $k . '#iU', $action ) ) {
+					return $v;
+				}
+			}
+			else {
+				if ( $k == $action ) {
+					return $v;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -212,8 +221,7 @@ class ESI extends Instance
 	 * @since    1.1.3
 	 * @access   private
 	 */
-	private function _register_esi_actions()
-	{
+	private function _register_esi_actions() {
 		! defined( 'LSCACHE_IS_ESI' ) && define( 'LSCACHE_IS_ESI', $_GET[ self::QS_ACTION ] ) ;// Reused this to ESI block ID
 
 		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && Debug2::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
@@ -242,7 +250,7 @@ class ESI extends Instance
 		add_action('litespeed_esi_load-admin-bar', array($this, 'load_admin_bar_block')) ;
 		add_action('litespeed_esi_load-comment-form', array($this, 'load_comment_form_block')) ;
 
-		add_action('litespeed_esi_load-nonce', array( $this, 'load_nonce_block' ) ) ;
+		add_action('litespeed_esi_load-nonce', array( $this, 'load_nonce_block' ) );
 		add_action('litespeed_esi_load-esi', array( $this, 'load_esi_shortcode' ) ) ;
 	}
 
@@ -704,24 +712,23 @@ class ESI extends Instance
 	 * @access public
 	 * @since 2.6
 	 */
-	public function load_nonce_block( $params )
-	{
-		$action = $params[ 'action' ] ;
+	public function load_nonce_block( $params ) {
+		$action = $params[ 'action' ];
 
-		Debug2::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
+		Debug2::debug( '[ESI] load_nonce_block [action] ' . $action );
 
 		// set nonce TTL to half day
-		Control::set_custom_ttl( 43200 ) ;
+		Control::set_custom_ttl( 43200 );
 
 		if ( Router::is_logged_in() ) {
-			Control::set_private() ;
+			Control::set_private();
 		}
 
 		if ( function_exists( 'wp_create_nonce_litespeed_esi' ) ) {
-			echo wp_create_nonce_litespeed_esi( $action ) ;
+			echo wp_create_nonce_litespeed_esi( $action );
 		}
 		else {
-			echo wp_create_nonce( $action ) ;
+			echo wp_create_nonce( $action );
 		}
 	}
 

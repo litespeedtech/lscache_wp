@@ -12,8 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class API extends Base
-{
+class API extends Base {
 	const VERSION =	Core::VER;
 
 	const TYPE_FEED 					= Tag::TYPE_FEED ;
@@ -44,8 +43,7 @@ class API extends Base
 	 * @since  3.0
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 	}
 
 	/**
@@ -55,8 +53,7 @@ class API extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function init()
-	{
+	public function init() {
 		/**
 		 * Init
 		 */
