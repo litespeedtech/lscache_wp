@@ -25,8 +25,9 @@ class AMP
 	 */
 	public static function preload()
 	{
-		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return ;
-		do_action( 'litespeed_conf_force', API::O_OPTM_CSS_ASYNC, false );
+		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return;
+		add_filter( 'litespeed_can_optm', '__return_false' );
+		// do_action( 'litespeed_conf_force', API::O_OPTM_CSS_ASYNC, false );
 		do_action( 'litespeed_conf_force', API::O_MEDIA_LAZY, false );
 		do_action( 'litespeed_conf_force', API::O_MEDIA_IFRAME_LAZY, false );
 	}
