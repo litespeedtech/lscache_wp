@@ -20,6 +20,7 @@ $third_cls = array(
 	'Avada',
 	'BBPress',
 	'Beaver_Builder',
+	'Caldera_Forms',
 	'Divi_Theme_Builder',
 	'Elementor',
 	'Facetwp',
