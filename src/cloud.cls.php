@@ -468,6 +468,12 @@ class Cloud extends Base
 		if ( $service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ ) {
 			$timestamp_tag = 'last_request.';
 		}
+		else {
+			// For all other requests, if is under debug mode, will always allow
+			if ( Conf::val( Base::O_DEBUG ) ) {
+				return true;
+			}
+		}
 
 		if ( ! empty( $this->_summary[ $timestamp_tag . $service_tag ] ) ) {
 			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + self::EXPIRATION_REQ - time();
