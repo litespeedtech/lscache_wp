@@ -425,7 +425,7 @@ class Debug2 extends Instance
 						}
 					}
 
-					$args = substr( $args, 0, -1 );
+					$args = substr( $args, 0, strlen( $args ) > 100 ? 100 : -1 );
 				}
 
 				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '(' . $args . ')';
