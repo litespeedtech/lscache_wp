@@ -91,7 +91,7 @@ class Lang extends Base
 			self::O_OBJECT_TRANSIENTS			=> __( 'Store Transients', 'litespeed-cache' ),
 
 			self::O_PURGE_ON_UPGRADE			=> __( 'Purge All On Upgrade', 'litespeed-cache' ),
-			self::O_PURGE_STALE					=> __( 'Purge Stale', 'litespeed-cache' ),
+			self::O_PURGE_STALE					=> __( 'Serve Stale', 'litespeed-cache' ),
 			self::O_PURGE_TIMED_URLS			=> __( 'Scheduled Purge URLs', 'litespeed-cache' ),
 			self::O_PURGE_TIMED_URLS_TIME		=> __( 'Scheduled Purge Time', 'litespeed-cache' ),
 			self::O_CACHE_FORCE_URI				=> __( 'Force Cache URIs', 'litespeed-cache' ),

@@ -44,19 +44,6 @@ $break_arr = array(
 	<?php endif; ?>
 
 	<tr>
-		<th>
-			<?php $id = Base::O_PURGE_STALE; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'If ON, stale copy of cached page will be shown to visitor until a new cache copy is available. Reduces the server load for following visits. If OFF, page will be dynamically generated while visitor waits.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
 		<th><?php echo __( 'Auto Purge Rules For Publish/Update', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-callout notice notice-warning inline">
@@ -83,6 +70,26 @@ $break_arr = array(
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_PURGE_STALE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'If ON, stale copy of cached page will be shown to visitor until a new cache copy is available. Reduces the server load for following visits. If OFF, page will be dynamically generated while visitor waits.', 'litespeed-cache' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-stale' ); ?>
+			</div>
+			<div class="litespeed-callout notice notice-warning inline">
+				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
+				<p>
+					<?php echo __( 'NOTE: By design, this option may serve stale content. Do not enable this option, if that is not OK with you.', 'litespeed-cache' ); ?><br />
+				</p>
 			</div>
 		</td>
 	</tr>
