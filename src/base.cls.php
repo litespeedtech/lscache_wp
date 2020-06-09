@@ -304,6 +304,7 @@ class Base extends Instance
 
 	/* Site related options (Will not overwrite other sites' config) */
 	protected static $SINGLE_SITE_OPTIONS = array(
+		self::O_API_KEY,
 		self::O_CRAWLER,
 		self::O_CRAWLER_SITEMAP,
 		self::O_CRAWLER_DROP_DOMAIN,

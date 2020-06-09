@@ -23,6 +23,7 @@ class Conf extends Base
 
 	private $_options = array();
 	private $_const_options = array();
+	private $_primary_options = array();
 	private $_site_options = array();
 	private $_updated_ids = array();
 
@@ -142,15 +143,14 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function load_options( $blog_id = null, $dry_run = false )
-	{
-		$options = array() ;
+	public function load_options( $blog_id = null, $dry_run = false ) {
+		$options = array();
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
-				$options[ $k ] = self::get_blog_option( $blog_id, $k, $v ) ;
+				$options[ $k ] = self::get_blog_option( $blog_id, $k, $v );
 			}
 			else {
-				$options[ $k ] = self::get_option( $k, $v ) ;
+				$options[ $k ] = self::get_option( $k, $v );
 			}
 
 			// Correct value type
@@ -158,15 +158,18 @@ class Conf extends Base
 		}
 
 		if ( $dry_run ) {
-			return $options ;
+			return $options;
 		}
 
 		// Bypass site special settings
 		if ( $blog_id !== null ) {
-			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) ) ; // These options are network only
+			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) ); // These options are network only
+			$this->_primary_options = array_merge( $this->_primary_options, $options );
+		}
+		else {
+			$this->_options = array_merge( $this->_options, $options );
 		}
 
-		$this->_options = array_merge( $this->_options, $options );
 
 		// Append const options
 		if ( defined( 'LITESPEED_CONF' ) && LITESPEED_CONF ) {
@@ -185,25 +188,24 @@ class Conf extends Base
 	 * @since 1.0.13
 	 * @access private
 	 */
-	private function _try_load_site_options()
-	{
+	private function _try_load_site_options() {
 		if ( ! $this->_if_need_site_options() ) {
-			return ;
+			return;
 		}
 
-		$this->_conf_site_db_init() ;
+		$this->_conf_site_db_init();
 
 		// If network set to use primary setting
 		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
-			$this->load_options( BLOG_ID_CURRENT_SITE ) ;
+			$this->load_options( BLOG_ID_CURRENT_SITE );
 		}
 
 		// Overwrite single blog options with site options
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
-				$this->_options[ $k ] = $this->_site_options[ $k ] ;
+				$this->_options[ $k ] = $this->_site_options[ $k ];
 			}
 		}
 	}
@@ -403,7 +405,7 @@ class Conf extends Base
 	public function get_options( $ori = false )
 	{
 		if ( ! $ori ) {
-			return array_merge( $this->_options, $this->_const_options );
+			return array_merge( $this->_options, $this->_primary_options, $this->_const_options );
 		}
 
 		return $this->_options ;
@@ -424,6 +426,11 @@ class Conf extends Base
 				$val = $instance->const_overwritten( $id );
 				if ( $val !== null ) {
 					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) ) ;
+					return $val;
+				}
+
+				$val = $instance->primary_overwritten( $id ); // Network Use primary site settings
+				if ( $val !== null ) {
 					return $val;
 				}
 			}
@@ -449,7 +456,7 @@ class Conf extends Base
 	}
 
 	/**
-	 * Check if is overwritten
+	 * Check if is overwritten by const
 	 *
 	 * @since  3.0
 	 */
@@ -459,6 +466,19 @@ class Conf extends Base
 			return null;
 		}
 		return $this->_const_options[ $id ];
+	}
+
+	/**
+	 * Check if is overwritten by primary site
+	 *
+	 * @since  3.2.2
+	 */
+	public function primary_overwritten( $id )
+	{
+		if ( ! isset( $this->_primary_options[ $id ] ) || $this->_primary_options[ $id ] == $this->_options[ $id ] ) {
+			return null;
+		}
+		return $this->_primary_options[ $id ];
 	}
 
 	/**

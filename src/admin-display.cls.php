@@ -706,7 +706,7 @@ class Admin_Display extends Base
 
 		echo "<textarea name='$id' rows='5' cols='$cols'>" . esc_textarea( $val ) . "</textarea>" ;
 
-		$this->_check_const_overwritten( $id );
+		$this->_check_overwritten( $id );
 	}
 
 	/**
@@ -740,7 +740,7 @@ class Admin_Display extends Base
 			echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> ";
 		}
 
-		$this->_check_const_overwritten( $id );
+		$this->_check_overwritten( $id );
 	}
 
 	/**
@@ -772,7 +772,7 @@ class Admin_Display extends Base
 			<label for='input_checkbox_$label_id'>$title</label>
 		</div>" ;
 
-		$this->_check_const_overwritten( $id );
+		$this->_check_overwritten( $id );
 	}
 
 	/**
@@ -804,7 +804,7 @@ class Admin_Display extends Base
 				</div>
 			</div>" ;
 
-		$this->_check_const_overwritten( $id );
+		$this->_check_overwritten( $id );
 	}
 
 	/**
@@ -833,7 +833,7 @@ class Admin_Display extends Base
 
 		echo '</div>';
 
-		$this->_check_const_overwritten( $id );
+		$this->_check_overwritten( $id );
 	}
 
 	/**
@@ -863,12 +863,14 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.0
 	 */
-	protected function _check_const_overwritten( $id )
-	{
-		$val = $this->__cfg->const_overwritten( $id );
-		if ( $val === null ) {
+	protected function _check_overwritten( $id ) {
+		$const_val = $this->__cfg->const_overwritten( $id );
+		$primary_val = $this->__cfg->primary_overwritten( $id );
+		if ( $const_val === null && $primary_val === null ) {
 			return;
 		}
+
+		$val = $const_val !== null ? $const_val : $primary_val;
 
 		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 
@@ -882,10 +884,15 @@ class Admin_Display extends Base
 			$val = esc_textarea( $val );
 		}
 
-		echo '<div class="litespeed-desc litespeed-warning">⚠️ ' .
-				sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' ) . ', ' .
-				sprintf( __( 'currently set to %s', 'litespeed-cache' ), "<code>$val</code>" ) .
-			'</div>';
+		echo '<div class="litespeed-desc litespeed-warning">⚠️ ';
+
+		if ( $const_val !== null ) {
+			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' );
+		} else {
+			echo __( 'This setting is overwritten by the primary site setting', 'litespeed-cache' );
+		}
+
+		echo ', ' . sprintf( __( 'currently set to %s', 'litespeed-cache' ), "<code>$val</code>" ) . '</div>';
 	}
 
 	/**
