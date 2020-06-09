@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.2.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-06-01 18:05:00+00:00\n"
+"POT-Creation-Date: 2020-06-09 20:48:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -88,7 +88,7 @@ msgid "Save Changes"
 msgstr ""
 
 #: src/admin-display.cls.php:790 src/admin-display.cls.php:826
-#: src/admin-display.cls.php:876 tpl/cache/settings-cache.tpl.php:19
+#: src/admin-display.cls.php:878 tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.cache_mobile.tpl.php:70 tpl/cdn/settings.tpl.php:49
 #: tpl/page_optm/settings_css.tpl.php:73 tpl/page_optm/settings_css.tpl.php:90
 #: tpl/page_optm/settings_css.tpl.php:91 tpl/page_optm/settings_js.tpl.php:90
@@ -100,7 +100,7 @@ msgid "ON"
 msgstr ""
 
 #: src/admin-display.cls.php:791 src/admin-display.cls.php:825
-#: src/admin-display.cls.php:876 tpl/cache/settings-cache.tpl.php:19
+#: src/admin-display.cls.php:878 tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.object.tpl.php:210 tpl/cdn/settings.tpl.php:49
 #: tpl/cdn/settings.tpl.php:237 tpl/page_optm/settings_css.tpl.php:90
 #: tpl/page_optm/settings_css.tpl.php:105
@@ -111,62 +111,66 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: src/admin-display.cls.php:886
+#: src/admin-display.cls.php:890
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:887
+#: src/admin-display.cls.php:892
+msgid "This setting is overwritten by the primary site setting"
+msgstr ""
+
+#: src/admin-display.cls.php:895
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:899 tpl/cache/settings_inc.object.tpl.php:103
+#: src/admin-display.cls.php:906 tpl/cache/settings_inc.object.tpl.php:103
 #: tpl/crawler/settings-general.tpl.php:60
 #: tpl/crawler/settings-general.tpl.php:74
 #: tpl/crawler/settings-general.tpl.php:89 tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:922 src/admin-display.cls.php:927
+#: src/admin-display.cls.php:929 src/admin-display.cls.php:934
 msgid "Recommended value"
 msgstr ""
 
-#: src/admin-display.cls.php:952
+#: src/admin-display.cls.php:959
 msgid "Invalid rewrite rule"
 msgstr ""
 
-#: src/admin-display.cls.php:970
+#: src/admin-display.cls.php:977
 msgid "Path must end with %s"
 msgstr ""
 
-#: src/admin-display.cls.php:989
+#: src/admin-display.cls.php:996
 msgid "Minimum value"
 msgstr ""
 
-#: src/admin-display.cls.php:992
+#: src/admin-display.cls.php:999
 msgid "Maximum value"
 msgstr ""
 
-#: src/admin-display.cls.php:1004
+#: src/admin-display.cls.php:1011
 msgid "Zero, or"
 msgstr ""
 
-#: src/admin-display.cls.php:1011
+#: src/admin-display.cls.php:1018
 msgid "Larger than"
 msgstr ""
 
-#: src/admin-display.cls.php:1014
+#: src/admin-display.cls.php:1021
 msgid "Smaller than"
 msgstr ""
 
-#: src/admin-display.cls.php:1017
+#: src/admin-display.cls.php:1024
 msgid "Value range"
 msgstr ""
 
-#: src/admin-display.cls.php:1043
+#: src/admin-display.cls.php:1050
 msgid "Invalid IP"
 msgstr ""
 
-#: src/admin-display.cls.php:1064 tpl/page_optm/settings_css.tpl.php:75
+#: src/admin-display.cls.php:1071 tpl/page_optm/settings_css.tpl.php:75
 #: tpl/page_optm/settings_html.tpl.php:127
 #: tpl/page_optm/settings_media_exc.tpl.php:25
 #: tpl/page_optm/settings_tuning.tpl.php:39
@@ -177,49 +181,49 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: src/admin-display.cls.php:1065
+#: src/admin-display.cls.php:1072
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: src/admin-display.cls.php:1083 src/doc.cls.php:38 tpl/cdn/manage.tpl.php:66
+#: src/admin-display.cls.php:1090 src/doc.cls.php:38 tpl/cdn/manage.tpl.php:66
 #: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:56
 #: tpl/img_optm/summary.tpl.php:96 tpl/inc/check_cache_disabled.php:42
 msgid "Learn More"
 msgstr ""
 
-#: src/admin-display.cls.php:1099
+#: src/admin-display.cls.php:1106
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: src/admin-display.cls.php:1100
+#: src/admin-display.cls.php:1107
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
-#: src/admin-display.cls.php:1102
+#: src/admin-display.cls.php:1109
 msgid "To match the beginning, add %s to the beginning of the item."
 msgstr ""
 
-#: src/admin-display.cls.php:1103
+#: src/admin-display.cls.php:1110
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: src/admin-display.cls.php:1104 src/doc.cls.php:49
+#: src/admin-display.cls.php:1111 src/doc.cls.php:49
 msgid "One per line."
 msgstr ""
 
-#: src/admin-display.cls.php:1119
+#: src/admin-display.cls.php:1126
 msgid "%s groups"
 msgstr ""
 
-#: src/admin-display.cls.php:1122
+#: src/admin-display.cls.php:1129
 msgid "%s images"
 msgstr ""
 
-#: src/admin-display.cls.php:1132
+#: src/admin-display.cls.php:1139
 msgid "%s group"
 msgstr ""
 
-#: src/admin-display.cls.php:1135
+#: src/admin-display.cls.php:1142
 msgid "%s image"
 msgstr ""
 
@@ -252,7 +256,7 @@ msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
 #: src/cloud.cls.php:320 src/cloud.cls.php:339 src/cloud.cls.php:376
-#: src/cloud.cls.php:478
+#: src/cloud.cls.php:484
 msgid "Cloud Error"
 msgstr ""
 
@@ -260,61 +264,61 @@ msgstr ""
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:478
+#: src/cloud.cls.php:484
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:564 src/cloud.cls.php:576
+#: src/cloud.cls.php:570 src/cloud.cls.php:582
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:586
+#: src/cloud.cls.php:592
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:595 src/cloud.cls.php:603 src/cloud.cls.php:847
+#: src/cloud.cls.php:601 src/cloud.cls.php:609 src/cloud.cls.php:853
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:611
+#: src/cloud.cls.php:617
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:620
+#: src/cloud.cls.php:626
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:662 src/cloud.cls.php:836
+#: src/cloud.cls.php:668 src/cloud.cls.php:842
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:811
+#: src/cloud.cls.php:817
 msgid "CLoud Error"
 msgstr ""
 
-#: src/cloud.cls.php:855
+#: src/cloud.cls.php:861
 msgid ""
 "Applied for Domain key successfully. Please wait for result. Domain key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:908
+#: src/cloud.cls.php:914
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:983
+#: src/cloud.cls.php:989
 msgid "Domain key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1053
+#: src/cloud.cls.php:1059
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:706
+#: src/conf.cls.php:726
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -1020,14 +1024,14 @@ msgid "Purge All On Upgrade"
 msgstr ""
 
 #: src/lang.cls.php:94
-msgid "Purge Stale"
+msgid "Serve Stale"
 msgstr ""
 
-#: src/lang.cls.php:95 tpl/cache/settings-purge.tpl.php:113
+#: src/lang.cls.php:95 tpl/cache/settings-purge.tpl.php:123
 msgid "Scheduled Purge URLs"
 msgstr ""
 
-#: src/lang.cls.php:96 tpl/cache/settings-purge.tpl.php:98
+#: src/lang.cls.php:96 tpl/cache/settings-purge.tpl.php:105
 msgid "Scheduled Purge Time"
 msgstr ""
 
@@ -1713,23 +1717,23 @@ msgstr ""
 msgid "LiteSpeed Crawler Cron"
 msgstr ""
 
-#: src/utility.cls.php:239
+#: src/utility.cls.php:254
 msgid "right now"
 msgstr ""
 
-#: src/utility.cls.php:239
+#: src/utility.cls.php:254
 msgid "just now"
 msgstr ""
 
-#: src/utility.cls.php:242
+#: src/utility.cls.php:257
 msgid " %s ago"
 msgstr ""
 
-#: src/utility.cls.php:844
+#: src/utility.cls.php:859
 msgid "&laquo;"
 msgstr ""
 
-#: src/utility.cls.php:845
+#: src/utility.cls.php:860
 msgid "&raquo;"
 msgstr ""
 
@@ -1844,7 +1848,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.2.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.2.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2210,7 +2214,14 @@ msgid ""
 "space to separate"
 msgstr ""
 
-#: tpl/cache/settings-esi.tpl.php:118
+#: tpl/cache/settings-esi.tpl.php:93 tpl/cache/settings-purge.tpl.php:110
+#: tpl/cdn/settings.tpl.php:189
+msgid ""
+"Wildcard %1$s supported (match zero or more characters). For example, to "
+"match %2$s and %3$s, use %4$s."
+msgstr ""
+
+#: tpl/cache/settings-esi.tpl.php:121
 msgid ""
 "If your site contains public content that certain user roles can see but "
 "other roles cannot, you can specify a Vary Group for those user roles. For "
@@ -2318,62 +2329,68 @@ msgstr ""
 msgid "Term archive (include category, tag, and tax)"
 msgstr ""
 
+#: tpl/cache/settings-purge.tpl.php:47
+msgid "Auto Purge Rules For Publish/Update"
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:50 tpl/cache/settings-purge.tpl.php:89
+msgid "Note"
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:52
+msgid ""
+"Select \"All\" if there are dynamic widgets linked to posts on pages other "
+"than the front or home pages."
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:53
+msgid "Other checkboxes will be ignored."
+msgstr ""
+
 #: tpl/cache/settings-purge.tpl.php:54
+msgid ""
+"Select only the archive types that are currently used, the others can be "
+"left unchecked."
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:72
+msgid ""
+"Select which pages will be automatically purged when posts are published/"
+"updated."
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:85
 msgid ""
 "If ON, stale copy of cached page will be shown to visitor until a new cache "
 "copy is available. Reduces the server load for following visits. If OFF, "
 "page will be dynamically generated while visitor waits."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:60
-msgid "Auto Purge Rules For Publish/Update"
-msgstr ""
-
-#: tpl/cache/settings-purge.tpl.php:63
-msgid "Note"
-msgstr ""
-
-#: tpl/cache/settings-purge.tpl.php:65
+#: tpl/cache/settings-purge.tpl.php:91
 msgid ""
-"Select \"All\" if there are dynamic widgets linked to posts on pages other "
-"than the front or home pages."
+"NOTE: By design, this option may serve stale content. Do not enable this "
+"option, if that is not OK with you."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:66
-msgid "Other checkboxes will be ignored."
-msgstr ""
-
-#: tpl/cache/settings-purge.tpl.php:67
-msgid ""
-"Select only the archive types that are currently used, the others can be "
-"left unchecked."
-msgstr ""
-
-#: tpl/cache/settings-purge.tpl.php:85
-msgid ""
-"Select which pages will be automatically purged when posts are published/"
-"updated."
-msgstr ""
-
-#: tpl/cache/settings-purge.tpl.php:98
+#: tpl/cache/settings-purge.tpl.php:105
 msgid ""
 "The URLs here (one per line) will be purged automatically at the time set in "
 "the option \"%s\"."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:99
+#: tpl/cache/settings-purge.tpl.php:106
 msgid "Both %1$s and %2$s are acceptable."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:113
+#: tpl/cache/settings-purge.tpl.php:123
 msgid "Specify the time to purge the \"%s\" list."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:114
+#: tpl/cache/settings-purge.tpl.php:124
 msgid "Current server time is %s."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:136
+#: tpl/cache/settings-purge.tpl.php:146
 msgid "A Purge All will be executed when WordPress runs these hooks."
 msgstr ""
 
@@ -2797,12 +2814,6 @@ msgstr ""
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
-msgstr ""
-
-#: tpl/cdn/settings.tpl.php:189
-msgid ""
-"Wildcard %1$s supported (match zero or more characters). For example, to "
-"match %2$s and %3$s, use %4$s."
 msgstr ""
 
 #: tpl/cdn/settings.tpl.php:211
