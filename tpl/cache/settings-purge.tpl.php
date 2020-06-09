@@ -106,6 +106,9 @@ $break_arr = array(
 				<?php echo sprintf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<code>http://www.example.com/path/url.php</code>', '<code>/path/url.php</code>' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ) ; ?>
+			</div>
 		</td>
 	</tr>
 

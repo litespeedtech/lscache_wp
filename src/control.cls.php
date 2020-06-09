@@ -446,50 +446,58 @@ class Control extends Instance
 	 *
 	 * @access public
 	 * @since 1.1.3
-	 * @return int $ttl An integer to use as the TTL.
 	 */
-	public static function get_ttl()
-	{
+	public static function get_ttl() {
 		if ( self::$_custom_ttl != 0 ) {
-			return self::$_custom_ttl ;
+			return self::$_custom_ttl;
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = Conf::val( Base::O_PURGE_TIMED_URLS ) ;
-		$timed_urls_time = Conf::val( Base::O_PURGE_TIMED_URLS_TIME ) ;
+		$timed_urls = Utility::wildcard2regex( Conf::val( Base::O_PURGE_TIMED_URLS ) );
+		$timed_urls_time = Conf::val( Base::O_PURGE_TIMED_URLS_TIME );
 		if ( $timed_urls && $timed_urls_time ) {
-			$current_url = Tag::build_uri_tag( true ) ;
-			if ( in_array( $current_url, $timed_urls ) ) {
-				// Use time limit ttl
-				$scheduled_time = strtotime( $timed_urls_time ) ;
-				$ttl = $scheduled_time - time() ;
-				if ( $ttl < 0 ) {
-					$ttl += 86400 ;// add one day
+			$current_url = Tag::build_uri_tag( true );
+			// Use time limit ttl
+			$scheduled_time = strtotime( $timed_urls_time );
+			$ttl = $scheduled_time - time();
+			if ( $ttl < 0 ) {
+				$ttl += 86400;// add one day
+			}
+			foreach ( $timed_urls as $v ) {
+				if ( strpos( $v, '*' ) !== false ) {
+					if( preg_match( '#' . $v . '#iU', $current_url ) ) {
+						Debug2::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl . ' due to scheduled purge regex ' . $v );
+						return $ttl;
+					}
 				}
-				Debug2::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
-				return $ttl ;
+				else {
+					if ( $v == $current_url ) {
+						Debug2::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl . ' due to scheduled purge rule ' . $v );
+						return $ttl;
+					}
+				}
 			}
 		}
 
 		// Private cache uses private ttl setting
 		if ( self::is_private() ) {
-			return Conf::val( Base::O_CACHE_TTL_PRIV ) ;
+			return Conf::val( Base::O_CACHE_TTL_PRIV );
 		}
 
 		if ( is_front_page() ){
-			return Conf::val( Base::O_CACHE_TTL_FRONTPAGE ) ;
+			return Conf::val( Base::O_CACHE_TTL_FRONTPAGE );
 		}
 
-		$feed_ttl = Conf::val( Base::O_CACHE_TTL_FEED ) ;
+		$feed_ttl = Conf::val( Base::O_CACHE_TTL_FEED );
 		if ( is_feed() && $feed_ttl > 0 ) {
-			return $feed_ttl ;
+			return $feed_ttl;
 		}
 
 		if ( REST::get_instance()->is_rest() || REST::get_instance()->is_internal_rest() ) {
-			return Conf::val( Base::O_CACHE_TTL_REST ) ;
+			return Conf::val( Base::O_CACHE_TTL_REST );
 		}
 
-		return Conf::val( Base::O_CACHE_TTL_PUB ) ;
+		return Conf::val( Base::O_CACHE_TTL_PUB );
 	}
 
 	/**
