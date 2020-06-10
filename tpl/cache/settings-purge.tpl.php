@@ -88,7 +88,7 @@ $break_arr = array(
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
 				<p>
-					<?php echo __( 'NOTE: By design, this option may serve stale content. Do not enable this option, if that is not OK with you.', 'litespeed-cache' ); ?><br />
+					<?php echo __( 'By design, this option may serve stale content. Do not enable this option, if that is not OK with you.', 'litespeed-cache' ); ?><br />
 				</p>
 			</div>
 		</td>
@@ -108,6 +108,13 @@ $break_arr = array(
 			</div>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ) ; ?>
+			</div>
+			<div class="litespeed-callout notice notice-warning inline">
+				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
+				<p>
+					<?php echo __( 'For URLs with wildcards, there may be a delay in initiating scheduled purge.', 'litespeed-cache' ); ?><br />
+					<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#scheduled-purge-urls' ); ?>
+				</p>
 			</div>
 		</td>
 	</tr>
