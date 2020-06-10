@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 3.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-06-09 20:48:44+00:00\n"
+"POT-Creation-Date: 2020-06-10 18:52:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1027,7 +1027,7 @@ msgstr ""
 msgid "Serve Stale"
 msgstr ""
 
-#: src/lang.cls.php:95 tpl/cache/settings-purge.tpl.php:123
+#: src/lang.cls.php:95 tpl/cache/settings-purge.tpl.php:130
 msgid "Scheduled Purge URLs"
 msgstr ""
 
@@ -2334,6 +2334,7 @@ msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
 #: tpl/cache/settings-purge.tpl.php:50 tpl/cache/settings-purge.tpl.php:89
+#: tpl/cache/settings-purge.tpl.php:113
 msgid "Note"
 msgstr ""
 
@@ -2368,8 +2369,8 @@ msgstr ""
 
 #: tpl/cache/settings-purge.tpl.php:91
 msgid ""
-"NOTE: By design, this option may serve stale content. Do not enable this "
-"option, if that is not OK with you."
+"By design, this option may serve stale content. Do not enable this option, "
+"if that is not OK with you."
 msgstr ""
 
 #: tpl/cache/settings-purge.tpl.php:105
@@ -2382,15 +2383,20 @@ msgstr ""
 msgid "Both %1$s and %2$s are acceptable."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:123
+#: tpl/cache/settings-purge.tpl.php:115
+msgid ""
+"For URLs with wildcards, there may be a delay in initiating scheduled purge."
+msgstr ""
+
+#: tpl/cache/settings-purge.tpl.php:130
 msgid "Specify the time to purge the \"%s\" list."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:124
+#: tpl/cache/settings-purge.tpl.php:131
 msgid "Current server time is %s."
 msgstr ""
 
-#: tpl/cache/settings-purge.tpl.php:146
+#: tpl/cache/settings-purge.tpl.php:153
 msgid "A Purge All will be executed when WordPress runs these hooks."
 msgstr ""
 

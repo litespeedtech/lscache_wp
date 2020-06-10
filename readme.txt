@@ -245,14 +245,15 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 3.2.2 - Jun 10 2020 =
-* **Purge** Scheduled Purge URLs now supports wildcard. (#427338)
+* 🌱**Purge** Scheduled Purge URLs now supports wildcard. (#427338)
+* 🌱**ESI** ESI Nonce supports wildcard match now.
 * **Network** Use Primary Site Settings now can support Domain Key, and override mechanism improved. (@alican532 #96266273)
 * **Cloud** Debug mode will now have no interval limit for most cloud requests. (@ruikai)
 * **Conf** Default Purge Stale to OFF.
 * **GUI** Purge Stale renamed to Serve Stale.
 * **Data** Predefined nonce list located in `/litespeed-cache/data/esi.nonce.txt`. Pull requests welcome.
 * **Debug** Limited parameter log length.
-* **ESI** ESI Nonce supports wildcard match now.
+* 🐞**CDN** Fixed an issue where upgrading lost value of CDN switch setting. (#888668)
 * **3rd** Caldera Forms ESI Nonce enhancement. (@paconarud16 @marketingsweet)
 * **3rd** Elementor now purges correctly after post/page updates.
 * **3rd** Disabled Page Optimization features on AMP to avoid webfont JS inject. (@rahulgupta1985)
