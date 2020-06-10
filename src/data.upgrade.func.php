@@ -267,6 +267,7 @@ function litespeed_update_3_0( $ver )
 		'cache_object_user'			=> 'object-user',
 		'cache_object_pswd'			=> 'object-psw',
 
+		'cdn'						=> 'cdn',
 		'cdn_ori'					=> 'cdn-ori',
 		'cdn_exclude' 				=> 'cdn-exc',
 		'cdn_remote_jquery'			=> 'cdn-remote_jq',
