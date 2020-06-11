@@ -37,7 +37,7 @@ $_panels = array(
 	),
 	array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - LSCache',
-		'desc'	=> __( 'Purge the litespeed cache entries created by this plugin', 'litespeed-cache' ),
+		'desc'	=> __( 'Purge the LiteSpeed cache entries created by this plugin', 'litespeed-cache' ),
 		'icon'	=> 'purge-all',
 		'append_url'	=> Purge::TYPE_PURGE_ALL_LSCACHE,
 	),
@@ -88,7 +88,7 @@ if ( Placeholder::has_lqip_cache() ) {
 if ( Avatar::has_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
-		'desc'	=> __( 'This will delete all cached gravatar files', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all cached Gravatar files', 'litespeed-cache' ),
 		'icon'	=> 'purge-cssjs',
 		'append_url'	=> Purge::TYPE_PURGE_ALL_AVATAR,
 	) ;
@@ -97,7 +97,7 @@ if ( Avatar::has_cache() ) {
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),
-	'desc'	=> __( 'Purge the cache entries created by this plugin', 'litespeed-cache' ),
+	'desc'	=> __( 'Purge the cache entries created by this plugin except for Critical CSS & LQIP caches', 'litespeed-cache' ),
 	'icon'	=> 'purge-all',
 	'title_cls'	=> 'litespeed-warning',
 	'newline'	=> true,
@@ -122,7 +122,10 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <?php include_once LSCWP_DIR . "tpl/inc/check_cache_disabled.php" ; ?>
 
-<h3 class="litespeed-title"><?php echo __('Purge', 'litespeed-cache'); ?></h3>
+<h3 class="litespeed-title">
+	<?php echo __('Purge', 'litespeed-cache'); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#purge-tab', false, 'litespeed-learn-more' ); ?>
+</h3>
 
 <div class="litespeed-panel-wrapper litespeed-cards-wrapper">
 
