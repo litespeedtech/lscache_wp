@@ -145,23 +145,11 @@ defined( 'WPINC' ) || exit;
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_CACHE_DROP_QS; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id, 40 ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Ignore certain query strings when caching.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string' ); ?>
-
-				<br />
-				<?php Doc::one_per_line(); ?>
-			</div>
-		</td>
-	</tr>
+	<?php
+		if ( ! $this->_is_multisite ) :
+			require LSCWP_DIR . 'tpl/cache/settings_inc.cache_dropquery.tpl.php';
+		endif;
+	?>
 
 </tbody></table>
 
