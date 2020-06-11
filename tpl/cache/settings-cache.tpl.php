@@ -31,7 +31,7 @@ defined( 'WPINC' ) || exit;
 				<?php endif; ?>
 
 				<?php if ( ! Conf::val( Base::O_CACHE ) && Conf::val( Base::O_CDN_QUIC ) ): ?>
-				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
+				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud CDN enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
 				<?php endif; ?>
 			</div>
 		</td>

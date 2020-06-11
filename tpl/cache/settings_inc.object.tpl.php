@@ -25,7 +25,7 @@ else {
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Object Cache Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:object', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#object-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -75,7 +75,7 @@ else {
 		<td>
 			<?php $this->build_input( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Your %s Hostname or IP address.', 'litespeed-cache' ), 'Memcached/<a href="https://www.litespeedtech.com/open-source/litespeed-memcached" target="_blank">LSMCD</a>/Redis' ) ; ?>
+				<?php echo sprintf( __( 'Your %s Hostname or IP address.', 'litespeed-cache' ), 'Memcached/<a href="https://docs.litespeedtech.com/products/lsmcd/" target="_blank">LSMCD</a>/Redis' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -209,7 +209,7 @@ else {
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OBJECT_ADMIN ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
 				<br />
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#store_transients' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#store-transients' ) ; ?>
 			</div>
 		</td>
 	</tr>

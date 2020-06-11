@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'ESI Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#esi-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <div class="litespeed-description">
@@ -24,7 +24,7 @@ defined( 'WPINC' ) || exit ;
 		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode' ) ; ?>
 	</p>
 	<p>
-		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
+		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/api/#esi', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
 	</p>
 </div>
 

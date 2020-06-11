@@ -11,13 +11,13 @@ use \LiteSpeed\Admin_Display ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'WooCommerce Settings', 'litespeed-cache' ) ; ?>
-	<?php Admin_Display::get_instance()->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:woocommerce', false, 'litespeed-learn-more' ) ; ?>
+	<?php Admin_Display::get_instance()->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#woocommerce-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
 	<p><?php echo __( 'After verifying that the cache works in general, please test the cart.', 'litespeed-cache' ) ; ?></p>
-	<p><?php echo sprintf( __( 'To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"' ) ; ?></p>
+	<p><?php echo sprintf( __( 'To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache' ), 'href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank"' ) ; ?></p>
 </div>
 
 <table class="wp-list-table striped litespeed-table"><tbody>

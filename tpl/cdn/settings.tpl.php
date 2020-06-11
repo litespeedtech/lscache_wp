@@ -19,7 +19,7 @@ $this->form_action() ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'CDN Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -63,7 +63,7 @@ $this->form_action() ;
 						<?php $this->title( $id ) ; ?>
 						<button type="button" class="button button-link litespeed-collection-button litespeed-danger" data-litespeed-cdn-mapping-del="1" data-action="remove">
 							<span class="dashicons dashicons-dismiss"></span>
-							<span class="screen-reader-text"><?php echo __( 'Remove CDN url', 'litespeed-cache' ) ; ?></span>
+							<span class="screen-reader-text"><?php echo __( 'Remove CDN URL', 'litespeed-cache' ) ; ?></span>
 						</button>
 					</label>
 
@@ -117,7 +117,7 @@ $this->form_action() ;
 		<?php endforeach ; ?>
 
 			<p><button type="button" class="button button-link litespeed-form-action litespeed-link-with-icon" id="litespeed-cdn-mapping-add" data-action="add">
-				<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new CDN url', 'litespeed-cache' );?>
+				<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new CDN URL', 'litespeed-cache' );?>
 			</button></p>
 
 			<div class="litespeed-warning">
@@ -142,11 +142,11 @@ $this->form_action() ;
 				<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
 				<?php Doc::one_per_line() ; ?>
 				<?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#include_file_types', __( 'Default value', 'litespeed-cache' ) ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types', __( 'Default value', 'litespeed-cache' ) ) ; ?>
 
 				<br />
 				<?php echo sprintf( __( 'If you turn any of the above settings OFF, please remove the related file types from the %s box.' ), '<b>' . __( 'Include File Types', 'litespeed-cache' ) . '</b>' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#include_file_types' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types' ) ; ?>
 			</div>
 
 		</td>
@@ -268,7 +268,7 @@ $this->form_action() ;
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ) ; ?>
-						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://www.cloudflare.com/a/profile" target="_blank"', 'Cloudflare' ) ; ?>
+						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"', 'Cloudflare' ) ; ?>
 					</div>
 				</div>
 
