@@ -39,7 +39,7 @@ else {
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#memcached-lsmcd-and-redis-object-cache-support-in-lscwp' ) ; ?>
 			</div>
 			<div class="litespeed-block">
 
@@ -50,7 +50,7 @@ else {
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Memcached' ) ; ?>: <?php echo $mem_enabled ; ?><br />
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Redis' ) ; ?>: <?php echo $redis_enabled ; ?><br />
 					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?>
-					<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#how_to_debug' ) ; ?>
+					<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#how-to-debug' ) ; ?>
 				</div>
 
 			</div>

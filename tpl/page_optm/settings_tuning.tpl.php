@@ -16,7 +16,7 @@ ksort( $roles ) ;
 ?>
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Tuning Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#tuning-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>

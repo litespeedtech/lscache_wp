@@ -7,7 +7,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Crawler Simulation Settings', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#simulation-settings-tab', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -102,7 +102,7 @@ $this->form_action();
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line, and can include a blank line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_simulation' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#cookie-simulation' ); ?>
 				<p><?php echo sprintf( __( 'Use %1$s in %2$s to indicate this cookie has not been set.', 'litespeed-cache' ), '<code>_null</code>', __( 'Cookie Values', 'litespeed-cache' ) ); ?></p>
 			</div>
 

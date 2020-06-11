@@ -8,7 +8,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'DB Optimization Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:db_optm', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/database/#db-optimization-settings-tab', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>

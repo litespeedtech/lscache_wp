@@ -5,6 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 <h3 class="litespeed-title">
 	<?php echo __('Debug Log', 'litespeed-cache'); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#log-view-tab', false, 'litespeed-learn-more' ); ?>
 
 	<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ) ; ?>" class="button button-primary" litespeed-accesskey='D'>
 		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
