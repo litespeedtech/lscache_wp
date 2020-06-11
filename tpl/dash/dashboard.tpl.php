@@ -43,7 +43,7 @@ $placeholder_summary = Placeholder::get_summary();
 			</a>
 		</h3>
 		<hr>
-		<a href="#" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' );?></a>
+		<a href="https://docs.litespeedtech.com/lscache/lscwp/dashboard/#usage-statistics" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' );?></a>
 	</div>
 
 	<div class="litespeed-dashboard-stats-wrapper">
