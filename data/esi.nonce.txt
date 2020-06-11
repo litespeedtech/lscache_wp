@@ -1,0 +1,3 @@
+cmreg_registration_nonce private
+role_nonce private
+wdap-call-nonce private
