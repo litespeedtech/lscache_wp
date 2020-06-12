@@ -166,6 +166,43 @@ class ESI extends Instance {
 	}
 
 	/**
+	 * Get ESI latest nonce list from git
+	 *
+	 * @since  3.2.3
+	 */
+	public function fetch_esi_nonce() {
+		// Read latest list from https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt
+		$response = wp_remote_get( 'https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt' );
+		if ( is_wp_error( $response ) ) {
+			return new \WP_Error( 'remote_get_fail', 'Failed to fetch from https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt', array( 'status' => 404 ) );
+		}
+
+		$data = $response[ 'body' ];
+		$data = explode( "\n", $data );
+		$list = array();
+		foreach ( $data as $v ) {
+			// Drop comments (Codes from dologin)
+			if ( strpos( $v, '#' ) !== false ) {
+				$v = trim( substr( $v, 0, strpos( $v, '#' ) ) );
+			}
+
+			if ( ! $v ) {
+				continue;
+			}
+
+			$list[] = $v;
+		}
+
+		Debug2::debug( '[ESI] Latest list', $list );
+
+		$ori = ! empty( $_POST[ 'nonce_val' ] ) ? explode( "\n", $_POST[ 'nonce_val' ] ) : array();
+
+		$list = array_unique( array_filter( array_merge( $ori, $list ) ) );
+		$list = implode( "\n", $list );
+		return array( 'list' => $list );
+	}
+
+	/**
 	 * Shortcode ESI
 	 *
 	 * @since 2.8

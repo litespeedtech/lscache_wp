@@ -221,6 +221,27 @@ var _litespeed_dots ;
 		} ) ;
 
 		/**
+		 * Get latest nonce
+		 * @since  3.2.3
+		 */
+		$( '#litespeed_fetch_esi_nonce' ).click( function( e ) {
+			$.ajax( {
+				url: litespeed_data.ajax_url_fetch_esi_nonce,
+				dataType: 'json',
+				method: 'POST',
+				data: { nonce_val: $( '[name="esi-nonce"]' ).val() },
+				beforeSend: function ( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', litespeed_data.nonce );
+				},
+				success: function( data ) {
+					if ( data.list ) {
+						$( '[name="esi-nonce"]' ).val( data.list );
+					}
+				}
+			} );
+		} );
+
+		/**
 		 * Click only once
 		 */
 		if ( $( '[data-litespeed-onlyonce]' ).length > 0 ) {

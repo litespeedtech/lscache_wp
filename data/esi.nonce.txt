@@ -1,3 +1,5 @@
 cmreg_registration_nonce private
 role_nonce private
+
+# Woocommerce Delivery Area Pro #16843635
 wdap-call-nonce private
