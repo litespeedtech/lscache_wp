@@ -206,6 +206,7 @@ class Conf extends Base
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				$this->_options[ $k ] = $this->_site_options[ $k ];
+				$this->_primary_options[ $k ] = $this->_site_options[ $k ];
 			}
 		}
 	}
