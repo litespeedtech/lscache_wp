@@ -998,6 +998,24 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Check if this visit is from cloud or not
+	 *
+	 * @since  3.0
+	 */
+	public static function is_from_cloud() {
+		$response = wp_remote_get( 'https://www.quic.cloud/ips?json' );
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message();
+			Debug2::debug( '[CLoud] failed to get ip whitelist: ' . $error_message );
+			throw new \Exception( 'Failed to fetch QUIC.cloud whitelist' );
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		return Router::get_instance()->ip_access( $json );
+	}
+
+	/**
 	 * Return succeeded response
 	 *
 	 * @since  3.0

@@ -131,6 +131,11 @@ class API extends Base {
 		add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
 
 		/**
+		 * Cloud
+		 */
+		add_filter( 'litespeed_is_from_cloud', __NAMESPACE__ . '\Cloud::is_from_cloud' ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+
+		/**
 		 * GUI
 		 */
 		// API::clean_wrapper_begin( $counter = false ) -> Filter `litespeed_clean_wrapper_begin` // Start a to-be-removed html wrapper

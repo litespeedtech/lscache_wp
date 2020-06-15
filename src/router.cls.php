@@ -587,26 +587,23 @@ class Router extends Instance
 	 * Check if the ip is in the range
 	 *
 	 * @since 1.1.0
-	 * @access private
-	 * @param  string $ip_list IP list
-	 * @return bool
+	 * @access public
 	 */
-	private function ip_access( $ip_list )
-	{
+	public function ip_access( $ip_list ) {
 		if ( ! $ip_list ) {
-			return false ;
+			return false;
 		}
 		if ( ! isset( self::$_ip ) ) {
-			self::$_ip = $this->get_ip() ;
+			self::$_ip = $this->get_ip();
 		}
-		// $uip = explode('.', $_ip) ;
-		// if(empty($uip) || count($uip) != 4) Return false ;
-		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip)) ;
+		// $uip = explode('.', $_ip);
+		// if(empty($uip) || count($uip) != 4) Return false;
+		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
 		// foreach($ip_list as $key => $ip) {
-		// 	if(count($ip) != 4) continue ;
-		// 	for($i = 0 ; $i <= 3 ; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i] ;
+		// 	if(count($ip) != 4) continue;
+		// 	for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
 		// }
-		return in_array( self::$_ip, $ip_list ) ;
+		return in_array( self::$_ip, $ip_list );
 	}
 
 	/**
