@@ -5,7 +5,10 @@ defined( 'WPINC' ) || exit;
 $summary = Import::get_summary();
 ?>
 
-<h3 class="litespeed-title"><?php echo __('Export Settings', 'litespeed-cache') ; ?></h3>
+<h3 class="litespeed-title">
+	<?php echo __('Export Settings', 'litespeed-cache') ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#importexport-tab', false, 'litespeed-learn-more' ); ?>
+</h3>
 
 <div><a href="<?php echo Utility::build_url( Router::ACTION_IMPORT, Import::TYPE_EXPORT ) ; ?>" class="button button-primary">
 	<?php echo __( 'Export', 'litespeed-cache' ) ; ?>

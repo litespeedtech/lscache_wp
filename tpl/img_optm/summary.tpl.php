@@ -52,8 +52,8 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<?php else : ?>
 					<span class="litespeed-quic-icon"></span>
 				<?php endif ; ?>
-				<?php echo __('Optimize images with our cloud server', 'litespeed-cache' );?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<?php echo __('Optimize images with our QUIC.cloud server', 'litespeed-cache' );?>
+				<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-summary-tab" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</h3>
 
 			<p>
@@ -93,7 +93,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<h3 class="litespeed-title-section">
 					<?php echo __( 'Optimization Status', 'litespeed-cache' ) ; ?>
 					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
-						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+						<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#optimization-summary" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 					<?php endif; ?>
 				</h3>
 
@@ -108,7 +108,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 							</code>
 						</p>
 						<p class="litespeed-desc">
-							<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
+							<?php echo __( 'After the QUIC.cloud Image Optimization server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 							<?php echo __( 'This process is automatic.', 'litespeed-cache' ) ; ?>
 						</p>
 					<?php endif ; ?>
@@ -213,7 +213,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				</div>
 
 				<div>
-					<h4><?php echo __( 'Thumbnail Size Set', 'litespeed-cache' ) ; ?></h4>
+					<h4><?php echo __( 'Image Thumbnail Group Sizes', 'litespeed-cache' ) ; ?></h4>
 					<div class="litespeed-desc litespeed-left20">
 						<?php foreach ( Media::get_instance()->get_image_sizes() as $title => $size ) {
 							echo "<div>$title ( " . ( $size[ 'width' ] ? $size[ 'width' ] . 'px' : '*' ) . ' x ' . ( $size[ 'height' ] ? $size[ 'height' ] . 'px' : '*' ) . ' )</div>';
@@ -271,7 +271,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 							<code><?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] ) ; ?></code>
 
-							<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">
+							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">
 								<span class="dashicons dashicons-editor-help"></span>
 								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
 							</a>
@@ -298,7 +298,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 							<code><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ) ; ?></code>
 
-							<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">
+							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">
 								<span class="dashicons dashicons-editor-help"></span>
 								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
 							</a>

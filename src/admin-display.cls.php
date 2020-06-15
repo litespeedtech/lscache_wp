@@ -1076,7 +1076,7 @@ class Admin_Display extends Base
 			. __( 'API', 'litespeed-cache' ) . ': '
 			. sprintf( __( 'Server variable(s) %s available to override this setting.', 'litespeed-cache' ), $s ) ;
 
-		$this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:server_variables' ) ;
+		$this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#limiting-the-crawler' ) ;
 	}
 
 	/**

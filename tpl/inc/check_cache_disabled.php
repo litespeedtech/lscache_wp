@@ -8,19 +8,19 @@ if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
 	if ( defined( 'LITESPEED_SERVER_TYPE' ) && LITESPEED_SERVER_TYPE == 'NONE' ) {
 		$reasons[] = array(
 			'title' => __( 'To use the caching functions you must have a LiteSpeed web server or be using QUIC.cloud CDN.', 'litespeed-cache' ),
-			'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#requirements',
+			'link'	=> 'https://docs.litespeedtech.com/lscache/lscwp/faq/#why-do-the-cache-features-require-a-litespeed-server',
 		) ;
 	} else {
 		$reasons[] = array(
 			'title' => __( 'Please enable the LSCache Module at the server level, or ask your hosting provider.', 'litespeed-cache' ),
-			'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation',
+			'link'	=> 'https://docs.litespeedtech.com/lscache/lscwp/overview/#prerequisites',
 		) ;
 	}
 }
 elseif ( ! defined( 'LITESPEED_ON' ) ) {
 	$reasons[] = array(
 		'title' => __( 'Please enable LiteSpeed Cache in the plugin settings.', 'litespeed-cache' ) ,
-		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general#enable_litespeed_cache',
+		'link'	=> 'https://docs.litespeedtech.com/lscache/lscwp/cache/#enable-cache',
 	) ;
 }
 
@@ -31,7 +31,7 @@ if ( $reasons ) :
 		<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 
 		<p>
-			<?php echo __( 'Caching functions on this page are currently unavailable!', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'LSCache caching functions on this page are currently unavailable!', 'litespeed-cache' ) ; ?>
 		</p>
 
 		<ul class="litespeed-list">

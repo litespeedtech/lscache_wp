@@ -8,7 +8,7 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Debug Settings', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#debug-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -54,7 +54,7 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 				<?php $this->_validate_ip( $id ) ; ?>
 				<br />
 				<?php $this->learn_more(
-					'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
+					'https://docs.litespeedtech.com/lscache/lscwp/admin/#admin-ip-commands',
 					__( 'More information about the available commands can be found here.', 'litespeed-cache' )
 				) ; ?>
 			</div>

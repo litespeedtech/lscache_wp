@@ -6,7 +6,7 @@ defined( 'WPINC' ) || exit;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'General Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <?php

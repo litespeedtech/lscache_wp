@@ -14,7 +14,7 @@ if ( ! $this->_is_network_admin ) {
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache DataBase Optimization', 'litespeed-cache' ); ?>
+		<?php echo __( 'LiteSpeed Cache Database Optimization', 'litespeed-cache' ); ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo Core::VER; ?>

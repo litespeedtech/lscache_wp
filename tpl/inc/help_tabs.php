@@ -8,8 +8,8 @@ defined( 'WPINC' ) || exit ;
 			'title'   => __('Overview', 'litespeed-cache'),
 			'content' => '<p>'
 				. __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server.', 'litespeed-cache') . ' '
-				. __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')
-				. '</p><p>' . __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled.', 'litespeed-cache')
+				. __('This plugin communicates with a LiteSpeed or QUIC.cloud server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')
+				. '</p><p>' . __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled unless using QUIC.cloud services or other optimization features.', 'litespeed-cache')
 				. '</p>',
 		));
 

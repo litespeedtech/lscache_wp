@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Cache Control Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -22,7 +22,7 @@ defined( 'WPINC' ) || exit;
 			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf(__('Please visit the <a %s>Information</a> page on how to test the cache.', 'litespeed-cache'),
-					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"'); ?>
+					'href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank"'); ?>
 
 				<strong><?php echo __('NOTICE', 'litespeed-cache'); ?>: </strong><?php echo __('When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache'); ?>
 
@@ -31,7 +31,7 @@ defined( 'WPINC' ) || exit;
 				<?php endif; ?>
 
 				<?php if ( ! Conf::val( Base::O_CACHE ) && Conf::val( Base::O_CDN_QUIC ) ): ?>
-				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
+				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud CDN enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
 				<?php endif; ?>
 			</div>
 		</td>
@@ -145,23 +145,11 @@ defined( 'WPINC' ) || exit;
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_CACHE_DROP_QS; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id, 40 ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Ignore certain query strings when caching.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string' ); ?>
-
-				<br />
-				<?php Doc::one_per_line(); ?>
-			</div>
-		</td>
-	</tr>
+	<?php
+		if ( ! $this->_is_multisite ) :
+			require LSCWP_DIR . 'tpl/cache/settings_inc.cache_dropquery.tpl.php';
+		endif;
+	?>
 
 </tbody></table>
 

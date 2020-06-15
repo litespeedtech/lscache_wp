@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Optimization Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#optimization-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -72,10 +72,10 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Prefetching DNS can reduce latency for visitors.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
 				<?php Doc::one_per_line() ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#dns-prefetch' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -139,9 +139,9 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Use Web Font Loader library to load Google Fonts asynchronously while leave other CSS intact.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Use Web Font Loader library to load Google Fonts asynchronously while leaving other CSS intact.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will also add a preconnect to Google for faster Google Fonts downloading.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning:google-fonts' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#load-google-fonts-asynchronously' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -167,7 +167,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Stop loading wordpress.org emoji. Browser default emoji will be displayed instead.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Stop loading WordPress.org emoji. Browser default emoji will be displayed instead.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>

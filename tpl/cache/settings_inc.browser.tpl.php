@@ -4,7 +4,7 @@ defined( 'WPINC' ) || exit;
 ?>
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Browser Cache Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:browser', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#browser-tab', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <?php if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) : ?>
@@ -26,7 +26,7 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Browser caching stores static files locally in the user\'s browser. Turn on this setting to reduce repeated requests for static files.', 'litespeed-cache' ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
-				<br /><?php echo sprintf( __( 'You can turn on browser caching in server admin too. <a %s>Learn more about LiteSpeed browser cache setting</a>.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:browser_cache" target="_blank"' ); ?>
+				<br /><?php echo sprintf( __( 'You can turn on browser caching in server admin too. <a %s>Learn more about LiteSpeed browser cache settings</a>.', 'litespeed-cache' ), 'href="https://docs.litespeedtech.com/lscache/lscwp/cache/#how-to-set-it-up" target="_blank"' ); ?>
 			</div>
 		</td>
 	</tr>

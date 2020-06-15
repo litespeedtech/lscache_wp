@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Purge Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:purge', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-tab', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <?php
@@ -151,7 +151,7 @@ $break_arr = array(
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-all-hooks' ); ?>
 			</div>
 		</td>
 	</tr>

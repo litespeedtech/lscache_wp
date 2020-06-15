@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.4.1
-Stable tag: 3.2.2
+Tested up to: 5.4.2
+Stable tag: 3.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.2.3 - Jun 11 2020 =
+* **GUI** Updated remaining documentation links & some minor UI tweaks. (@Joshua Reynolds)
 
 = 3.2.2 - Jun 10 2020 =
 * 🌱**Purge** Scheduled Purge URLs now supports wildcard. (#427338)

@@ -40,12 +40,14 @@ if($seconds > 0):
 
 	<h3 class="litespeed-title litespeed-relative">
 		<?php echo __('Crawler Cron', 'litespeed-cache'); ?>
+		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/', false, 'litespeed-learn-more' ); ?>
 	</h3>
+
 	<?php if ( ! Router::can_crawl() ): ?>
 		<div class="litespeed-callout notice notice-error inline">
 			<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 			<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
-			<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed information.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"'); ?></p>
+			<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed information.', 'litespeed-cache'), 'href="https://docs.litespeedtech.com/lscache/lscwp/admin/#enabling-and-limiting-the-crawler" target="_blank"'); ?></p>
 		</div>
 	<?php endif; ?>
 
@@ -181,7 +183,7 @@ if($seconds > 0):
 	<div class="litespeed-desc">
 		<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache'); ?></div>
 		<div><?php echo __('Crawlers cannot run concurrently.', 'litespeed-cache')
-				. __('If both the cron and a manual run start at similar times, the first to be started will take precedence.','litespeed-cache'); ?></div>
+		 . __('&nbsp;If both the cron and a manual run start at similar times, the first to be started will take precedence.','litespeed-cache'); ?></div>
 		<div><?php echo sprintf(__('Please see <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to learn how to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" '); ?></div>
 	</div>
 <?php endif; ?>

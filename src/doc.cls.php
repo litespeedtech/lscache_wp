@@ -59,6 +59,7 @@ class Doc
 	{
 		echo '<font class="litespeed-warning">' ;
 		echo '⚠️ ' . __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ;
+		echo ' <a href="https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab" target="_blank" class="litespeed-learn-more">' . __( 'Learn More', 'litespeed-cache' ) . '</a>' ;
 		echo '</font>' ;
 	}
 

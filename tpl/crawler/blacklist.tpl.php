@@ -17,7 +17,10 @@ $pagination = Utility::pagination( $count, 30 );
 </a>
 </p>
 
-<h3 class="litespeed-title"><?php echo __( 'Blacklist', 'litespeed-cache' ); ?></h3>
+<h3 class="litespeed-title">
+	<?php echo __( 'Blacklist', 'litespeed-cache' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab', false, 'litespeed-learn-more' ); ?>
+</h3>
 
 <?php echo __( 'Total', 'litespeed-cache' ) . ': ' . $count; ?>
 

@@ -9,7 +9,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'CSS Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:css', false, 'litespeed-learn-more' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -36,7 +36,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine CSS files.', 'litespeed-cache' ); ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ); ?></a>
+				<a href="https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ); ?></a>
 			</div>
 		</td>
 	</tr>
@@ -103,7 +103,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically generate critical CSS in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#generate_critical_css' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-critical-css-in-the-background' ); ?>
 			</div>
 
 			<?php if ( $css_summary ) : ?>
@@ -152,7 +152,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 			<div class="litespeed-desc">
 				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#separate_ccss_cache_post_types' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
 			</div>
 		</td>
 	</tr>

@@ -7,7 +7,7 @@ $this->form_action() ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Image Optimization Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -33,7 +33,7 @@ $this->form_action() ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disabling this will stop the cron job responsible for pulling optimized images back from Cloud Image Server.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Disabling this will stop the cron job responsible for pulling optimized images back from QUIC.cloud Image Server.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -153,7 +153,7 @@ $this->form_action() ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#webp-for-extra-srcset' ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'JS Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:js', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#js-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -32,7 +32,7 @@ defined( 'WPINC' ) || exit ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine JS files.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
+				<a href="https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
 			</div>
 		</td>
 	</tr>
@@ -72,9 +72,8 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id, array( __( 'Default', 'litespeed-cache' ), __( 'After DOM Ready', 'litespeed-cache' ), __( 'Deferred', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Load inline JS after DOM is fully loaded.', 'litespeed-cache' ) ; ?>
-				<br /><?php echo __( 'This can increase JS compatibility and reduce JS error when the previous JS optimization features are enabled.', 'litespeed-cache' ) ; ?>
-				<br /><?php echo sprintf( __( '%s is recommended.', 'litespeed-cache' ), '<code>' . __( 'Deferred', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php echo __( 'Loading inline JS after DOM is fully loaded can increase JS compatibility and reduce JS error when other JS optimization features are enabled.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo sprintf( __( '%s is recommended although would cause the most issues for scripts that are placed inline to avoid being deferred.', 'litespeed-cache' ), '<code>' . __( 'Deferred', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
