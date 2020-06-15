@@ -22,7 +22,7 @@ defined( 'WPINC' ) || exit;
 			<?php endif; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf(__('Please visit the <a %s>Information</a> page on how to test the cache.', 'litespeed-cache'),
-					'https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank"'); ?>
+					'href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank"'); ?>
 
 				<strong><?php echo __('NOTICE', 'litespeed-cache'); ?>: </strong><?php echo __('When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache'); ?>
 

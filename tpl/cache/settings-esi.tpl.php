@@ -21,10 +21,10 @@ defined( 'WPINC' ) || exit ;
 			'<code>[shortcodeA att1="val1" att2="val2"]</code>',
 			'<code>[esi shortcodeA att1="val1" att2="val2"]</code>'
 		) ; ?>
-		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode' ) ; ?>
+		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#turning-wordpress-shortcodes-into-esi-blocks' ) ; ?>
 	</p>
 	<p>
-		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/api/#esi', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
+		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/api/#generate-esi-block-url', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
 	</p>
 </div>
 

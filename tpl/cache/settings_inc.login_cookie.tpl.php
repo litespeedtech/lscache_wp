@@ -34,6 +34,7 @@ defined( 'WPINC' ) || exit ;
 					. ' ' . __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache')
 				. '</p>'
 			;
+			<br /><?php Doc::notice_htaccess() ; ?>
 
 			if ( preg_match( '#[^\w\-]#', Conf::val( $id ) ) ) {
 				echo '<div class="litespeed-callout notice notice-error inline"><p>❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</p></div>' ;

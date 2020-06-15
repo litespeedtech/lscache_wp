@@ -75,7 +75,7 @@ defined( 'WPINC' ) || exit ;
 				<?php echo __( 'Prefetching DNS can reduce latency for visitors.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
 				<?php Doc::one_per_line() ; ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#dns-prefetch-control' ) ; ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#dns-prefetch' ) ; ?>
 			</div>
 		</td>
 	</tr>

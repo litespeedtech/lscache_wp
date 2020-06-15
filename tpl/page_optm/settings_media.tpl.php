@@ -157,7 +157,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 					'<code>' . Lang::title( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) . '</code>'
 				); ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-reponsive-placeholder-in-background' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-lqip-in-background' ); ?>
 			</div>
 
 			<?php if ( $placeholder_summary ) : ?>
