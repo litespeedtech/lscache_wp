@@ -183,7 +183,7 @@ if($seconds > 0):
 	<div class="litespeed-desc">
 		<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache'); ?></div>
 		<div><?php echo __('Crawlers cannot run concurrently.', 'litespeed-cache')
-		';&nbsp;' . __('If both the cron and a manual run start at similar times, the first to be started will take precedence.','litespeed-cache'); ?></div>
+		 . __('&nbsp;If both the cron and a manual run start at similar times, the first to be started will take precedence.','litespeed-cache'); ?></div>
 		<div><?php echo sprintf(__('Please see <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to learn how to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" '); ?></div>
 	</div>
 <?php endif; ?>
