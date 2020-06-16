@@ -730,17 +730,13 @@ class Optimize extends Base
 
 			$subset = empty( $qs[ 'subset' ] ) ? '' : ':' . $qs[ 'subset' ] ;
 
-			if ( $this->_conf_css_font_display ) {
-				$subset .= '&display=' . $this->_conf_css_font_display ; // https://github.com/typekit/webfontloader/issues/409
-			}
-
 			foreach ( array_filter( explode( '|', $qs[ 'family' ] ) ) as $v2 ) {
 				$families[] = $v2 . $subset ;
 			}
 
 		}
 
-		$html .= '"' . implode( '","', $families ) . '"' ;
+		$html .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
 
 		$html .= ']}};</script>' ;
 
