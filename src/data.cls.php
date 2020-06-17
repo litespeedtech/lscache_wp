@@ -338,8 +338,7 @@ class Data extends Instance
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _tb_structure( $tb )
-	{
+	private function _tb_structure( $tb ) {
 		return File::read( LSCWP_DIR . 'src/data_structure/' . $tb . '.sql' );
 	}
 
@@ -349,8 +348,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_create( $tb )
-	{
+	public function tb_create( $tb ) {
 		global $wpdb;
 
 		Debug2::debug2( '[Data] Checking table ' . $tb );
@@ -382,8 +380,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_del( $tb )
-	{
+	public function tb_del( $tb ) {
 		global $wpdb;
 
 		if ( ! $this->tb_exist( $tb ) ) {
@@ -402,8 +399,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tables_del()
-	{
+	public function tables_del() {
 		global $wpdb;
 
 		$this->tb_del( 'cssjs' );
@@ -420,8 +416,7 @@ class Data extends Instance
 	 * @since  1.3.1
 	 * @access public
 	 */
-	public function optm_save_src( $filename, $src )
-	{
+	public function optm_save_src( $filename, $src ) {
 		global $wpdb;
 
 		$src = json_encode( $src );
@@ -443,15 +438,14 @@ class Data extends Instance
 	 * @since  1.3.1
 	 * @access public
 	 */
-	public function optm_hash2src( $filename )
-	{
+	public function optm_hash2src( $filename ) {
 		global $wpdb;
 
-		$res = $wpdb->get_var( $wpdb->prepare( 'SELECT src FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) );
+		$res = $wpdb->get_row( $wpdb->prepare( 'SELECT src, refer FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) );
 
-		Debug2::debug2( '[Data] Loaded hash2src ' . $res );
+		Debug2::debug2( '[Data] Loaded hash2src ' . $res[ 'src' ] );
 
-		$res = json_decode( $res, true );
+		$res[ 'src' ] = json_decode( $res[ 'src' ], true );
 
 		return $res;
 	}

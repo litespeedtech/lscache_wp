@@ -43,6 +43,25 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_CSS_UNIQUE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'When having %1$s %2$s, enabling this will get one combined CSS file for each URI, regardless of the setting %3$s.', 'litespeed-cache' ),
+						'<code>' . Lang::title( Base::O_OPTM_CSS_COMB ) . '</code>',
+						'<code>' . __( 'ON', 'litespeed-cache' ) . '</code>',
+						'<code>' . Lang::title( Base::O_OPTM_MAX_SIZE ) . '</code>' ); ?>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo __( 'This is useful when you want to refine/lint your CSS and further drop the unused CSS per page.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_CSS_HTTP2; ?>
 			<?php $this->title( $id ); ?>
 		</th>

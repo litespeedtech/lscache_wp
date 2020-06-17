@@ -72,24 +72,32 @@ class Optimizer extends Instance
 	 *
 	 * @since  1.9
 	 * @access public
-	 * @return string The final content
 	 */
-	public function serve( $filename, $concat_only )
-	{
-		if ( ! is_array( $filename ) ) {
-			// Search filename in db for src URLs
-			$urls = Data::get_instance()->optm_hash2src( $filename ) ;
-			if ( ! $urls || ! is_array( $urls ) ) {
+	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
+		// Search src set in db based on the requested filename
+		if ( ! $src_list ) {
+			$optm_data = Data::get_instance()->optm_hash2src( $filename );
+			if ( ! $optm_data[ 'src' ] || ! is_array( $optm_data[ 'src' ] ) ) {
 				return false;
 			}
+			$src_list = $optm_data[ 'src' ];
+			$page_url = $optm_data[ 'refer' ];
 		}
-		else {
-			$urls = $filename ;
+
+		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 );
+
+		// Check if need to run Unique CSS feature
+		if ( $file_type == 'css' ) {
+			$content = apply_filters( 'litespeed_css_serve', false, $filename, $src_list, $page_url );
+			if ( $content ) {
+				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $filename . ' [url] ' . $page_url );
+				return $content;
+			}
 		}
 
 		// Parse real file path
 		$real_files = array() ;
-		foreach ( $urls as $url ) {
+		foreach ( $src_list as $url ) {
 			$real_file = Utility::is_internal_file( $url ) ;
 			if ( ! $real_file ) {
 				continue ;
@@ -101,13 +109,11 @@ class Optimizer extends Instance
 			return false;
 		}
 
-		Debug2::debug2( '[Optmer]    urls : ', $urls ) ;
+		Debug2::debug2( '[Optmer]    src_list : ', $src_list ) ;
 
 		// set_error_handler( 'litespeed_exception_handler' ) ;
 
 		$content = '' ;
-		$tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
-		$file_type = substr( $tmp, strrpos( $tmp, '.' ) + 1 ) ;
 		// try {
 		// Handle CSS
 		if ( $file_type === 'css' ) {
@@ -119,7 +125,7 @@ class Optimizer extends Instance
 		}
 
 		// } catch ( \Exception $e ) {
-		// 	$tmp = '[url] ' . implode( ', ', $urls ) . ' [err] ' . $e->getMessage() ;
+		// 	$tmp = '[url] ' . implode( ', ', $src_list ) . ' [err] ' . $e->getMessage() ;
 
 		// 	Debug2::debug( '******[Optmer] serve err ' . $tmp ) ;
 		// 	error_log( '****** LiteSpeed Optimizer serve err ' . $tmp ) ;
@@ -138,7 +144,7 @@ class Optimizer extends Instance
 		Debug2::debug2( '[Optmer]    Generated content ' . $file_type ) ;
 
 		// Add filter
-		$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $urls ) ;
+		$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src_list ) ;
 
 		return $content ;
 	}

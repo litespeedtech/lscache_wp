@@ -854,35 +854,35 @@ class Optimize extends Base
 	 * @since  1.3
 	 * @access private
 	 */
-	private function _limit_size_build_hash_url( $src_queue_list, $file_size_list, $file_type = 'css' )
-	{
-		$total = 0 ;
-		$i = 0 ;
-		$src_arr = array() ;
+	private function _limit_size_build_hash_url( $src_queue_list, $file_size_list, $file_type = 'css' ) {
+		$total = 0;
+		$i = 0;
+		$src_arr = array();
+		$url_sensitive = Conf::val( Base::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 		foreach ( $src_queue_list as $k => $v ) {
 
-			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array() ;
+			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array();
 
-			$src_arr[ $i ][] = $v ;
+			$src_arr[ $i ][] = $v;
 
-			$total += $file_size_list[ $k ] ;
+			$total += $file_size_list[ $k ];
 
-			if ( $total > $this->cfg_optm_max_size ) { // If larger than 1M, separate them
+			if ( $total > $this->cfg_optm_max_size && ! $url_sensitive ) { // If larger than 1M, separate them
 				$total = 0;
-				$i ++ ;
+				$i ++;
 			}
 		}
 		if ( count( $src_arr ) > 1 ) {
-			Debug2::debug( '[Optm] separate ' . $file_type . ' to ' . count( $src_arr ) ) ;
+			Debug2::debug( '[Optm] separate ' . $file_type . ' to ' . count( $src_arr ) );
 		}
 
 		// group build
-		$hashed_arr = array() ;
+		$hashed_arr = array();
 		foreach ( $src_arr as $v ) {
-			$hashed_arr[] = $this->_build_hash_url( $v, $file_type ) ;
+			$hashed_arr[] = $this->_build_hash_url( $v, $file_type, $url_sensitive );
 		}
 
-		return $hashed_arr ;
+		return $hashed_arr;
 	}
 
 	/**
@@ -1001,59 +1001,67 @@ class Optimize extends Base
 	 * @access private
 	 * @return string The final URL
 	 */
-	private function _build_hash_url( $src, $file_type = 'css' )
-	{
+	private function _build_hash_url( $src, $file_type = 'css', $url_sensitive = false ) {
 		if ( ! $src ) {
-			return false ;
+			return false;
+		}
+
+		// For those env who don't support SCRIPT_URI, need to keep $url_sensitive OFF.
+		if ( empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
+			$url_sensitive = false;
 		}
 
 		if ( ! is_array( $src ) ) {
-			$src = array( $src ) ;
+			$src = array( $src );
 		}
 
-		$src = array_values( $src ) ;
+		$src = array_values( $src );
 
 		// Drop query strings
-		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
+		$src = array_map( array( $this, 'remove_query_strings' ), $src );
 
-		$purge_timestamp = self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ;
+		$purge_timestamp = self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS );
 
-		$hash = md5( json_encode( $src ) . $purge_timestamp ) ;
+		$hash = md5( json_encode( $src ) . $purge_timestamp );
 
-		$short = substr( $hash, -5 ) ;
+		$short = substr( $hash, -5 );
 
-		$filename = $short ;
+		$filename = $short . '.' . $file_type;
 
 		// Need to check conflicts
 		// If short hash exists
-		if ( $urls = Data::get_instance()->optm_hash2src( $short . '.' . $file_type ) ) {
+		$existed = false;
+		if ( $optm_data = Data::get_instance()->optm_hash2src( $filename ) ) {
 			// If conflicts
-			if ( $urls !== $src ) {
-				Data::get_instance()->optm_save_src( $hash . '.' . $file_type, $src ) ;
-				$filename = $hash ;
+			if ( $optm_data[ 'src' ] === $src && ( ! $url_sensitive || $optm_data[ 'refer' ] === $_SERVER[ 'SCRIPT_URI' ] ) ) {
+				$existed = true;
+			}
+			else {
+				$filename = $hash . '.' . $file_type;
 			}
 		}
-		else {
-			// Short hash is safe now
-			Data::get_instance()->optm_save_src( $short . '.' . $file_type, $src ) ;
+
+		// Need to insert the record
+		if ( ! $existed ) {
+			Data::get_instance()->optm_save_src( $filename, $src );
 		}
 
 		// Generate static files
-		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename.$file_type" ;
+		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
 		// Check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min ) ;
+			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
 
-			$content = Optimizer::get_instance()->serve( $src, $concat_only ) ;
+			$content = Optimizer::get_instance()->serve( $filename, $concat_only, $src, ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : false );
 
 			// Generate static file
-			File::save( $static_file, $content, true ) ;
+			File::save( $static_file, $content, true );
 
-			Debug2::debug2( '[Optm] Saved static file [path] ' . $static_file ) ;
+			Debug2::debug2( '[Optm] Saved static file [path] ' . $static_file );
 
 		}
 
-		return LITESPEED_STATIC_URL . '/cssjs/' . $filename . '.' . $file_type ;
+		return LITESPEED_STATIC_URL . '/cssjs/' . $filename;
 	}
 
 	/**

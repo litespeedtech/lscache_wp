@@ -11,124 +11,124 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Base extends Instance
-{
-	protected static $_instance ;
+class Base extends Instance {
+	protected static $_instance;
 
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`
-	const OPTION_NAME = 'litespeed-cache-conf' ;
+	const OPTION_NAME = 'litespeed-cache-conf';
 
-	const _CACHE = '_cache' ; // final cache status from setting
+	const _CACHE = '_cache'; // final cache status from setting
 
 	## -------------------------------------------------- ##
 	## --------------     	General	    ----------------- ##
 	## -------------------------------------------------- ##
-	const _VER 	= '_version' ; // Not set-able
-	const HASH 		= 'hash' ; // Not set-able
-	const O_AUTO_UPGRADE 	= 'auto_upgrade' ;
-	const O_API_KEY 		= 'api_key' ;
-	const O_SERVER_IP 		= 'server_ip' ;
-	const O_NEWS 			= 'news' ;
+	const _VER 	= '_version'; // Not set-able
+	const HASH 		= 'hash'; // Not set-able
+	const O_AUTO_UPGRADE 	= 'auto_upgrade';
+	const O_API_KEY 		= 'api_key';
+	const O_SERVER_IP 		= 'server_ip';
+	const O_NEWS 			= 'news';
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_CACHE 					= 'cache' ;
-	const O_CACHE_PRIV 				= 'cache-priv' ;
-	const O_CACHE_COMMENTER 		= 'cache-commenter' ;
-	const O_CACHE_REST 				= 'cache-rest' ;
-	const O_CACHE_PAGE_LOGIN		= 'cache-page_login' ;
-	const O_CACHE_FAVICON 			= 'cache-favicon' ;
-	const O_CACHE_RES 				= 'cache-resources' ;
-	const O_CACHE_MOBILE 			= 'cache-mobile' ;
-	const O_CACHE_MOBILE_RULES		= 'cache-mobile_rules' ;
-	const O_CACHE_BROWSER 			= 'cache-browser' ;
-	const O_CACHE_EXC_USERAGENTS 	= 'cache-exc_useragents' ;
-	const O_CACHE_EXC_COOKIES 		= 'cache-exc_cookies' ;
-	const O_CACHE_EXC_QS 			= 'cache-exc_qs' ;
-	const O_CACHE_EXC_CAT 			= 'cache-exc_cat' ;
-	const O_CACHE_EXC_TAG 			= 'cache-exc_tag' ;
-	const O_CACHE_FORCE_URI 		= 'cache-force_uri' ;
-	const O_CACHE_FORCE_PUB_URI		= 'cache-force_pub_uri' ;
-	const O_CACHE_PRIV_URI 			= 'cache-priv_uri' ;
-	const O_CACHE_EXC 				= 'cache-exc' ;
-	const O_CACHE_EXC_ROLES 		= 'cache-exc_roles' ;
-	const O_CACHE_DROP_QS 			= 'cache-drop_qs' ;
-	const O_CACHE_TTL_PUB 			= 'cache-ttl_pub' ;
-	const O_CACHE_TTL_PRIV 			= 'cache-ttl_priv' ;
-	const O_CACHE_TTL_FRONTPAGE 	= 'cache-ttl_frontpage' ;
-	const O_CACHE_TTL_FEED 			= 'cache-ttl_feed' ;
-	const O_CACHE_TTL_REST 			= 'cache-ttl_rest' ;
-	const O_CACHE_TTL_STATUS 		= 'cache-ttl_status' ;
-	const O_CACHE_TTL_BROWSER 		= 'cache-ttl_browser' ;
-	const O_CACHE_LOGIN_COOKIE 		= 'cache-login_cookie' ;
-	const O_CACHE_VARY_GROUP 		= 'cache-vary_group' ;
+	const O_CACHE 					= 'cache';
+	const O_CACHE_PRIV 				= 'cache-priv';
+	const O_CACHE_COMMENTER 		= 'cache-commenter';
+	const O_CACHE_REST 				= 'cache-rest';
+	const O_CACHE_PAGE_LOGIN		= 'cache-page_login';
+	const O_CACHE_FAVICON 			= 'cache-favicon';
+	const O_CACHE_RES 				= 'cache-resources';
+	const O_CACHE_MOBILE 			= 'cache-mobile';
+	const O_CACHE_MOBILE_RULES		= 'cache-mobile_rules';
+	const O_CACHE_BROWSER 			= 'cache-browser';
+	const O_CACHE_EXC_USERAGENTS 	= 'cache-exc_useragents';
+	const O_CACHE_EXC_COOKIES 		= 'cache-exc_cookies';
+	const O_CACHE_EXC_QS 			= 'cache-exc_qs';
+	const O_CACHE_EXC_CAT 			= 'cache-exc_cat';
+	const O_CACHE_EXC_TAG 			= 'cache-exc_tag';
+	const O_CACHE_FORCE_URI 		= 'cache-force_uri';
+	const O_CACHE_FORCE_PUB_URI		= 'cache-force_pub_uri';
+	const O_CACHE_PRIV_URI 			= 'cache-priv_uri';
+	const O_CACHE_EXC 				= 'cache-exc';
+	const O_CACHE_EXC_ROLES 		= 'cache-exc_roles';
+	const O_CACHE_DROP_QS 			= 'cache-drop_qs';
+	const O_CACHE_TTL_PUB 			= 'cache-ttl_pub';
+	const O_CACHE_TTL_PRIV 			= 'cache-ttl_priv';
+	const O_CACHE_TTL_FRONTPAGE 	= 'cache-ttl_frontpage';
+	const O_CACHE_TTL_FEED 			= 'cache-ttl_feed';
+	const O_CACHE_TTL_REST 			= 'cache-ttl_rest';
+	const O_CACHE_TTL_STATUS 		= 'cache-ttl_status';
+	const O_CACHE_TTL_BROWSER 		= 'cache-ttl_browser';
+	const O_CACHE_LOGIN_COOKIE 		= 'cache-login_cookie';
+	const O_CACHE_VARY_GROUP 		= 'cache-vary_group';
 
 	## -------------------------------------------------- ##
 	## --------------		Purge 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_PURGE_ON_UPGRADE 		= 'purge-upgrade' ;
-	const O_PURGE_STALE 			= 'purge-stale' ;
-	const O_PURGE_POST_ALL 			= 'purge-post_all' ;
-	const O_PURGE_POST_FRONTPAGE 	= 'purge-post_f' ;
-	const O_PURGE_POST_HOMEPAGE 	= 'purge-post_h' ;
-	const O_PURGE_POST_PAGES 		= 'purge-post_p' ;
-	const O_PURGE_POST_PAGES_WITH_RECENT_POSTS = 'purge-post_pwrp' ;
-	const O_PURGE_POST_AUTHOR 		= 'purge-post_a' ;
-	const O_PURGE_POST_YEAR 		= 'purge-post_y' ;
-	const O_PURGE_POST_MONTH 		= 'purge-post_m' ;
-	const O_PURGE_POST_DATE 		= 'purge-post_d' ;
-	const O_PURGE_POST_TERM 		= 'purge-post_t' ; // include category|tag|tax
-	const O_PURGE_POST_POSTTYPE 	= 'purge-post_pt' ;
-	const O_PURGE_TIMED_URLS 		= 'purge-timed_urls' ;
-	const O_PURGE_TIMED_URLS_TIME 	= 'purge-timed_urls_time' ;
-	const O_PURGE_HOOK_ALL 			= 'purge-hook_all' ;
+	const O_PURGE_ON_UPGRADE 		= 'purge-upgrade';
+	const O_PURGE_STALE 			= 'purge-stale';
+	const O_PURGE_POST_ALL 			= 'purge-post_all';
+	const O_PURGE_POST_FRONTPAGE 	= 'purge-post_f';
+	const O_PURGE_POST_HOMEPAGE 	= 'purge-post_h';
+	const O_PURGE_POST_PAGES 		= 'purge-post_p';
+	const O_PURGE_POST_PAGES_WITH_RECENT_POSTS = 'purge-post_pwrp';
+	const O_PURGE_POST_AUTHOR 		= 'purge-post_a';
+	const O_PURGE_POST_YEAR 		= 'purge-post_y';
+	const O_PURGE_POST_MONTH 		= 'purge-post_m';
+	const O_PURGE_POST_DATE 		= 'purge-post_d';
+	const O_PURGE_POST_TERM 		= 'purge-post_t'; // include category|tag|tax
+	const O_PURGE_POST_POSTTYPE 	= 'purge-post_pt';
+	const O_PURGE_TIMED_URLS 		= 'purge-timed_urls';
+	const O_PURGE_TIMED_URLS_TIME 	= 'purge-timed_urls_time';
+	const O_PURGE_HOOK_ALL 			= 'purge-hook_all';
 
 	## -------------------------------------------------- ##
 	## --------------     	 ESI	    ----------------- ##
 	## -------------------------------------------------- ##
-	const O_ESI 				= 'esi' ;
-	const O_ESI_CACHE_ADMBAR 	= 'esi-cache_admbar' ;
-	const O_ESI_CACHE_COMMFORM 	= 'esi-cache_commform' ;
-	const O_ESI_NONCE 			= 'esi-nonce' ;
+	const O_ESI 				= 'esi';
+	const O_ESI_CACHE_ADMBAR 	= 'esi-cache_admbar';
+	const O_ESI_CACHE_COMMFORM 	= 'esi-cache_commform';
+	const O_ESI_NONCE 			= 'esi-nonce';
 
 	## -------------------------------------------------- ##
 	## --------------     Utilities	    ----------------- ##
 	## -------------------------------------------------- ##
-	const O_UTIL_INSTANT_CLICK 		= 'util-instant_click' ;
-	const O_UTIL_NO_HTTPS_VARY 		= 'util-no_https_vary' ;
+	const O_UTIL_INSTANT_CLICK 		= 'util-instant_click';
+	const O_UTIL_NO_HTTPS_VARY 		= 'util-no_https_vary';
 
 	## -------------------------------------------------- ##
 	## --------------		Debug 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_DEBUG_DISABLE_ALL 			= 'debug-disable_all' ;
-	const O_DEBUG 						= 'debug' ;
-	const O_DEBUG_IPS 					= 'debug-ips' ;
-	const O_DEBUG_LEVEL 				= 'debug-level' ;
-	const O_DEBUG_FILESIZE 				= 'debug-filesize' ;
-	const O_DEBUG_COOKIE 				= 'debug-cookie' ;
-	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs' ;
-	const O_DEBUG_INC 					= 'debug-inc' ;
-	const O_DEBUG_EXC 					= 'debug-exc' ;
+	const O_DEBUG_DISABLE_ALL 			= 'debug-disable_all';
+	const O_DEBUG 						= 'debug';
+	const O_DEBUG_IPS 					= 'debug-ips';
+	const O_DEBUG_LEVEL 				= 'debug-level';
+	const O_DEBUG_FILESIZE 				= 'debug-filesize';
+	const O_DEBUG_COOKIE 				= 'debug-cookie';
+	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs';
+	const O_DEBUG_INC 					= 'debug-inc';
+	const O_DEBUG_EXC 					= 'debug-exc';
 
 	## -------------------------------------------------- ##
 	## --------------	   DB Optm  	----------------- ##
 	## -------------------------------------------------- ##
-	const O_DB_OPTM_REVISIONS_MAX 		= 'db_optm-revisions_max' ;
-	const O_DB_OPTM_REVISIONS_AGE 		= 'db_optm-revisions_age' ;
+	const O_DB_OPTM_REVISIONS_MAX 		= 'db_optm-revisions_max';
+	const O_DB_OPTM_REVISIONS_AGE 		= 'db_optm-revisions_age';
 
 	## -------------------------------------------------- ##
 	## --------------	  HTML Optm 	----------------- ##
 	## -------------------------------------------------- ##
-	const O_OPTM_CSS_MIN 			= 'optm-css_min' ;
-	const O_OPTM_CSS_INLINE_MIN 	= 'optm-css_inline_min' ;
-	const O_OPTM_CSS_COMB 			= 'optm-css_comb' ;
-	const O_OPTM_CSS_COMB_PRIO 		= 'optm-css_comb_priority' ;
-	const O_OPTM_CSS_HTTP2 			= 'optm-css_http2' ;
-	const O_OPTM_CSS_EXC 			= 'optm-css_exc' ;
-	const O_OPTM_JS_MIN 			= 'optm-js_min' ;
-	const O_OPTM_JS_INLINE_MIN 		= 'optm-js_inline_min' ;
+	const O_OPTM_CSS_MIN 			= 'optm-css_min';
+	const O_OPTM_CSS_INLINE_MIN 	= 'optm-css_inline_min';
+	const O_OPTM_CSS_COMB 			= 'optm-css_comb';
+	const O_OPTM_CSS_COMB_PRIO 		= 'optm-css_comb_priority';
+	const O_OPTM_CSS_UNIQUE 		= 'optm-css_unique';
+	const O_OPTM_CSS_HTTP2 			= 'optm-css_http2';
+	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
+	const O_OPTM_JS_MIN 			= 'optm-js_min';
+	const O_OPTM_JS_INLINE_MIN 		= 'optm-js_inline_min';
 	const O_OPTM_JS_COMB 			= 'optm-js_comb' ;
 	const O_OPTM_JS_COMB_PRIO 		= 'optm-js_comb_priority' ;
 	const O_OPTM_JS_HTTP2 			= 'optm-js_http2' ;
@@ -418,6 +418,7 @@ class Base extends Instance
 		self::O_OPTM_CSS_INLINE_MIN 	=> false,
 		self::O_OPTM_CSS_COMB 			=> false,
 		self::O_OPTM_CSS_COMB_PRIO 		=> false,
+		self::O_OPTM_CSS_UNIQUE 		=> false,
 		self::O_OPTM_CSS_HTTP2 			=> false,
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,
