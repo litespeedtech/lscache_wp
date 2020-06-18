@@ -382,6 +382,9 @@ class Core extends Instance
 	{
 		$this->_check_is_html( $buffer );
 
+		// Hook to modify buffer before
+		$buffer = apply_filters('litespeed_buffer_before', $buffer);
+
 		// Replace ESI preserved list
 		$buffer = ESI::finalize( $buffer );
 
@@ -435,6 +438,9 @@ class Core extends Instance
 				Debug2::debug( '[Core] JSON Buffer' );
 			}
 		}
+
+		// Hook to modify buffer after
+		$buffer = apply_filters('litespeed_buffer_after', $buffer);
 
 		Debug2::debug( "End response\n--------------------------------------------------------------------------------\n" );
 
