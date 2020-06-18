@@ -245,6 +245,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 3.2.3 - Jun 18 2020 =
+* 🌱**Page Optimize** Added Unique CSS option for future removal of unused CSS per page. (@moongear)
+* **Page Optimize** Fixed an issue where Font Optimization could fail when having Load JS Deferred and Load Inline JS Deferred. (#PR241 @joejordanbrown)
 * 🐞**Page Optimize** Fixed an issue with Font Display Optimization which caused Google Fonts to load incorrectly. (#PR240 @joejordanbrown @haidan)
 * 🐞**Network** Use Primary Site Configuration setting for network sites now works properly with Object Cache and Browser Cache. (#56175101)
 * **API** Added filter `litespeed_is_from_cloud` to detect if the current request is from QC or not. (@lechon)
