@@ -738,12 +738,19 @@ class Optimize extends Base
 
 		$html .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
 
-		$html .= ']}};</script>' ;
+		$html .= ']}};';
+	
+		// if webfontloader lib was loaded before WebFontConfig variable, call WebFont.load
+		$html .= 'if ( typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
+
+		$html .= '</script>' ;
 
 		// https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js
 		$webfont_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_WEBFONTLOADER ;
 
-		$html .= '<script id="litespeed-webfont-lib" src="' . $webfont_lib_url . '" async></script>' ;
+		// default async, if js defer set use defer
+		// TODO: make defer optional
+		$html .= '<script id="litespeed-webfont-lib" src="' . $webfont_lib_url . '" ' . ( $this->cfg_js_defer ? 'defer' : 'async' ) . '></script>' ;
 		$this->append_http2( $webfont_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 
 		// Put this in the very beginning for preconnect
