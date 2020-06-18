@@ -741,7 +741,7 @@ class Optimize extends Base
 		$html .= ']}};';
 	
 		// if webfontloader lib was loaded before WebFontConfig variable, call WebFont.load
-		$html .= 'if ( typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
+		$html .= 'if ( typeof WebFont === "object" && typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
 
 		$html .= '</script>' ;
 
