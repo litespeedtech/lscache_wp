@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.2
-Stable tag: 3.2.3
+Stable tag: 3.2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -233,8 +233,8 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
 * [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
 * [BoomBox — Viral Magazine WordPress Theme](https://themeforest.net/item/boombox-viral-buzz-wordpress-theme/16596434?ref=PX-lab)
-* Beaver Builder
 * FacetWP (LSWS 5.3.6+)
+* Beaver Builder
 * WpDiscuz
 * WP-Stateless
 * Elementor
@@ -243,6 +243,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.2.3.1 - Jun 18 2020 =
+* **API** New filter `litespeed_buffer_before` and `litespeed_buffer_after`. (#PR243 @joejordanbrown)
 
 = 3.2.3 - Jun 18 2020 =
 * 🌱**Page Optimize** Added Unique CSS option for future removal of unused CSS per page. (@moongear)
