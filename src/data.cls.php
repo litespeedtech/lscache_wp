@@ -441,7 +441,7 @@ class Data extends Instance
 	public function optm_hash2src( $filename ) {
 		global $wpdb;
 
-		$res = $wpdb->get_row( $wpdb->prepare( 'SELECT src, refer FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ) );
+		$res = $wpdb->get_row( $wpdb->prepare( 'SELECT src, refer FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ), ARRAY_A );
 
 		Debug2::debug2( '[Data] Loaded hash2src ' . $res[ 'src' ] );
 
