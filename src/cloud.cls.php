@@ -470,7 +470,7 @@ class Cloud extends Base
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
-			if ( Conf::val( Base::O_DEBUG ) ) {
+			if ( Conf::val( Base::O_DEBUG ) && $this->_api_key ) {
 				return true;
 			}
 		}
