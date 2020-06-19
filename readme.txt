@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.2
-Stable tag: 3.2.3.1
+Stable tag: 3.2.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,6 +243,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.2.3.2 - Jun 18 2020 =
+* 🔥🐞**Page Optimize** Hotfix for CSS/JS minify/combine.
 
 = 3.2.3.1 - Jun 18 2020 =
 * **API** New filter `litespeed_buffer_before` and `litespeed_buffer_after`. (#PR243 @joejordanbrown)
