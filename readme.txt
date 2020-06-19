@@ -245,7 +245,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 3.2.3.2 - Jun 19 2020 =
-* 🔥🐞**Page Optimize** Hotfix for CSS/JS minify/combine.
+* 🔥🐞**Page Optimize** Hotfix for CSS/JS minify/combine. (@jdelgadoesteban @martin_bailey)
 
 = 3.2.3.1 - Jun 18 2020 =
 * **API** New filter `litespeed_buffer_before` and `litespeed_buffer_after`. (#PR243 @joejordanbrown)
