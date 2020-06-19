@@ -443,6 +443,10 @@ class Data extends Instance
 
 		$res = $wpdb->get_row( $wpdb->prepare( 'SELECT src, refer FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ), ARRAY_A );
 
+		if ( empty( $res[ 'src' ] ) ) {
+			return false;
+		}
+
 		Debug2::debug2( '[Data] Loaded hash2src ' . $res[ 'src' ] );
 
 		$res[ 'src' ] = json_decode( $res[ 'src' ], true );

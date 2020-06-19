@@ -77,7 +77,7 @@ class Optimizer extends Instance
 		// Search src set in db based on the requested filename
 		if ( ! $src_list ) {
 			$optm_data = Data::get_instance()->optm_hash2src( $filename );
-			if ( ! $optm_data[ 'src' ] || ! is_array( $optm_data[ 'src' ] ) ) {
+			if ( empty( $optm_data[ 'src' ] ) || ! is_array( $optm_data[ 'src' ] ) ) {
 				return false;
 			}
 			$src_list = $optm_data[ 'src' ];
