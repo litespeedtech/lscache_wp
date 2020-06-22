@@ -398,7 +398,7 @@ class Admin_Display extends Base
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$msg = strip_tags( $msg );
 				if ( $color == self::NOTICE_RED ) {
-					\WP_CLI::error( $msg );
+					\WP_CLI::error( $msg, false );
 				}
 				else {
 					\WP_CLI::success( $msg );
