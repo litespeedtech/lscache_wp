@@ -231,7 +231,7 @@ class Admin_Display extends Base
 			$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/';
 			$localize_data[ 'nonce' ] = wp_create_nonce( 'wp_rest' );
 		}
-		if ( ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-crawler' )
+		if ( ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-cache' )
 			|| ( $pagenow == 'options-general.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-cache-options' )
 		) {
 			$localize_data[ 'ajax_url_fetch_esi_nonce' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/fetch_esi_nonce' ) : '/';
