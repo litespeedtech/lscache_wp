@@ -293,86 +293,71 @@ class GUI extends Base
 	 * @since 2.1
 	 * @access public
 	 */
-	public function show_promo( $check_only = false )
-	{
-		$is_litespeed_page = $this->_is_litespeed_page() ;
+	public function show_promo( $check_only = false ) {
+		$is_litespeed_page = $this->_is_litespeed_page();
 
 		// Bypass showing info banner if disabled all in debug
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			if ( $is_litespeed_page && ! $check_only ) {
-				include_once LSCWP_DIR . "tpl/inc/disabled_all.php" ;
+				include_once LSCWP_DIR . "tpl/inc/disabled_all.php";
 			}
 
-			return false ;
+			return false;
 		}
 
 		if ( file_exists( ABSPATH . '.litespeed_no_banner' ) ) {
-			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Bypass banners due to silence file' ) ;
-			return false ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Bypass banners due to silence file' );
+			return false;
 		}
 
 		foreach ( $this->_promo_list as $promo_tag => $v ) {
-			list( $delay_days, $litespeed_page_only ) = $v ;
+			list( $delay_days, $litespeed_page_only ) = $v;
 
 			if ( $litespeed_page_only && ! $is_litespeed_page ) {
-				continue ;
+				continue;
 			}
 
 			// first time check
 			if ( empty( $this->_summary[ $promo_tag ] ) ) {
-				$this->_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
-				self::save_summary() ;
+				$this->_summary[ $promo_tag ] = time() + 86400 * $delay_days;
+				self::save_summary();
 
-				continue ;
+				continue;
 			}
 
-			$promo_timestamp = $this->_summary[ $promo_tag ] ;
+			$promo_timestamp = $this->_summary[ $promo_tag ];
 
 			// was ticked as done
 			if ( $promo_timestamp == 'done' ) {
-				continue ;
+				continue;
 			}
 
 			// Not reach the dateline yet
 			if ( time() < $promo_timestamp ) {
-				continue ;
+				continue;
 			}
 
 			// try to load, if can pass, will set $this->_promo_true = true
-			$this->_promo_true = false ;
-			include LSCWP_DIR . "tpl/banner/$promo_tag.php" ;
+			$this->_promo_true = false;
+			include LSCWP_DIR . "tpl/banner/$promo_tag.php";
 
 			// If not defined, means it didn't pass the display workflow in tpl.
 			if ( ! $this->_promo_true ) {
-				continue ;
+				continue;
 			}
 
 			if ( $check_only ) {
-				return $promo_tag ;
+				return $promo_tag;
 			}
 
-			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Show promo ' . $promo_tag ) ;
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Show promo ' . $promo_tag );
 
 			// Only contain one
-			break ;
+			break;
 
 		}
 
-		return false ;
-	}
-
-	/**
-	 * Enqueue ajax call for score updating
-	 *
-	 * @since 2.9
-	 * @access private
-	 */
-	private function _enqueue_score_req_ajax()
-	{
-		$this->_summary[ 'score.last_check' ] = time() ;
-		self::save_summary() ;
-
-		include_once LSCWP_DIR . "tpl/banner/ajax.php" ;
+		return false;
 	}
 
 	/**

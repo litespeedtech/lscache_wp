@@ -1,4 +1,8 @@
 <?php
+/**
+ * @deprecated 3.3 Will only show banner after user manually checked score
+ */
+
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
