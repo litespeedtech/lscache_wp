@@ -44,7 +44,6 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Cloudflare API
 * Single Site and Multisite (Network) support
 * Import/Export settings
-* Basic/Advanced setting view
 * Attractive, easy-to-understand interface
 * WebP image format support
 * Heartbeat control
