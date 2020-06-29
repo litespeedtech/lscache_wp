@@ -890,22 +890,39 @@ class ESI extends Instance {
 	 * @since  2.6
 	 * @access public
 	 */
-	public static function finalize( $buffer )
-	{
-		$instance = self::get_instance() ;
+	public static function finalize( $buffer ) {
+		$instance = self::get_instance();
 
 		// Bypass if no preserved list to be replaced
 		if ( ! $instance->_esi_preserve_list ) {
-			return $buffer ;
+			return $buffer;
 		}
 
-		$keys = array_keys( $instance->_esi_preserve_list ) ;
+		$keys = array_keys( $instance->_esi_preserve_list );
 
-		Debug2::debug( '[ESI] replacing preserved blocks', $keys ) ;
+		Debug2::debug( '[ESI] replacing preserved blocks', $keys );
 
-		$buffer = str_replace( $keys , $instance->_esi_preserve_list, $buffer ) ;
+		$buffer = str_replace( $keys, $instance->_esi_preserve_list, $buffer );
 
-		return $buffer ;
+		return $buffer;
+	}
+
+	/**
+	 * Check if the content contains preserved list or not
+	 *
+	 * @since  3.3
+	 */
+	public function contain_preserve_esi( $content ) {
+		$hit_list = array();
+		foreach ( $this->_esi_preserve_list as $k => $v ) {
+			if ( strpos( $content, '"' . $k . '"' ) !== false ) {
+				$hit_list[] = '"' . $k . '"';
+			}
+			if ( strpos( $content, "'" . $k . "'" ) !== false ) {
+				$hit_list[] = "'" . $k . "'";
+			}
+		}
+		return $hit_list;
 	}
 
 }

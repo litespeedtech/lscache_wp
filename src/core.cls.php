@@ -385,8 +385,6 @@ class Core extends Instance
 		// Hook to modify buffer before
 		$buffer = apply_filters('litespeed_buffer_before', $buffer);
 
-		// Replace ESI preserved list
-		$buffer = ESI::finalize( $buffer );
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Image lazy load check
@@ -405,6 +403,12 @@ class Core extends Instance
 
 			$buffer = CDN::finalize( $buffer );
 		}
+
+		/**
+		 * Replace ESI preserved list
+		 * @since  3.3 Replace this in the end to avoid `Inline JS Defer` or other Page Optm features encoded ESI tags wrongly, which caused LSWS can't recognize ESI
+		 */
+		$buffer = ESI::finalize( $buffer );
 
 		$this->send_headers( true );
 

@@ -47,6 +47,8 @@ class Optimize extends Base
 	private $html_foot = '' ; // The html info append to <body>
 	private $html_head = '' ; // The html info prepend to <body>
 
+	private static $_var_i = 0;
+
 	/**
 	 *
 	 * @since  1.2.2
@@ -580,38 +582,38 @@ class Optimize extends Base
 		 */
 		$this->_font_optm() ;
 
-		// Replace html head part
-		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head ) ;
-		if ( $this->html_head ) {
-			// Put header content to be after charset
-			if ( strpos( $this->content, '<meta charset' ) !== false ) {
-				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 ) ;
-			}
-			else {
-				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 ) ;
-			}
-		}
-
-		// Replace html foot part
-		$this->html_foot = apply_filters( 'litespeed_optm_html_foot', $this->html_foot ) ;
-		if ( $this->html_foot ) {
-			$this->content = str_replace( '</body>', $this->html_foot . '</body>' , $this->content ) ;
-		}
-
-		// HTML minify
-		if ( Conf::val( Base::O_OPTM_HTML_MIN ) ) {
-			$this->content = Optimizer::get_instance()->html_min( $this->content ) ;
-		}
-
 		/**
 		 * Inline script manipulated until document is ready
 		 *
 		 * @since  3.0
 		 */
-		$this->_js_inline_defer() ;
+		$this->_js_inline_defer();
+
+		// Replace html head part
+		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head );
+		if ( $this->html_head ) {
+			// Put header content to be after charset
+			if ( strpos( $this->content, '<meta charset' ) !== false ) {
+				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 );
+			}
+			else {
+				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 );
+			}
+		}
+
+		// Replace html foot part
+		$this->html_foot = apply_filters( 'litespeed_optm_html_foot', $this->html_foot );
+		if ( $this->html_foot ) {
+			$this->content = str_replace( '</body>', $this->html_foot . '</body>' , $this->content );
+		}
+
+		// HTML minify
+		if ( Conf::val( Base::O_OPTM_HTML_MIN ) ) {
+			$this->content = Optimizer::get_instance()->html_min( $this->content );
+		}
 
 		if ( $this->http2_headers ) {
-			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
+			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
 
 	}
@@ -622,69 +624,82 @@ class Optimize extends Base
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _js_inline_defer()
-	{
+	private function _js_inline_defer() {
 		$optm_js_inline = Conf::val( Base::O_OPTM_JS_INLINE_DEFER );
 		if ( ! $optm_js_inline ) {
-			return ;
+			return;
 		}
 
 		Debug2::debug( '[Optm] Inline JS defer ' . $optm_js_inline );
 
-		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER ) ;
+		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER );
 
-		$script_ori = array() ;
-		$script_deferred = array() ;
+		$script_ori = array();
+		$script_deferred = array();
 
+		$js_var_preserve = array();
 		foreach ( $matches as $match ) {
 
 			if ( ! empty( $match[ 1 ] ) ) {
-				$attrs = Utility::parse_attr( $match[ 1 ] ) ;
+				$attrs = Utility::parse_attr( $match[ 1 ] );
 
 				if ( ! empty( $attrs[ 'src' ] ) ) {
-					continue ;
+					continue;
 				}
 
 				if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
-					continue ;
+					continue;
 				}
 
 				if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
-					continue ;
+					continue;
 				}
 			}
 
-			$con = trim( $match[ 2 ] ) ;
+			$con = trim( $match[ 2 ] );
 			if ( ! $con ) {
-				continue ;
+				continue;
 			}
 
 			if ( $optm_js_inline === 2 ) {
-				$script_ori[] = $match[ 0 ] ;
-				$script_deferred[] = '<script src="data:text/javascript;base64, ' . base64_encode( $con ) . '" defer ' . $match[ 1 ] . '></script>' ;
+				$script_ori[] = $match[ 0 ];
+				// Check if the content contains ESI nonce or not
+				if ( $esi_placeholder_list = ESI::get_instance()->contain_preserve_esi( $con ) ) {
+					foreach ( $esi_placeholder_list as $esi_placeholder ) {
+						$js_var = '__litespeed_var_' . ( self::$_var_i ++ ) . '__';
+						$con = str_replace( $esi_placeholder, $js_var, $con );
+						$js_var_preserve[] = $js_var . '=' . $esi_placeholder;
+					}
+				}
+				$script_deferred[] = '<script src="data:text/javascript;base64, ' . base64_encode( $con ) . '" defer ' . $match[ 1 ] . '></script>';
 			}
 			else {
 				// Prevent var scope issue
 				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
-					continue ;
+					continue;
 				}
 
 				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
-					continue ;
+					continue;
 				}
 
-				// $con = str_replace( 'var ', 'window.', $con ) ;
+				// $con = str_replace( 'var ', 'window.', $con );
 
-				$script_ori[] = $match[ 0 ] ;
+				$script_ori[] = $match[ 0 ];
 
-				$deferred = 'document.addEventListener("DOMContentLoaded",function(){' . $con . '});' ;
+				$deferred = 'document.addEventListener("DOMContentLoaded",function(){' . $con . '});';
 
-				$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>' ;
+				$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>';
 			}
 
 		}
 
-		$this->content = str_replace( $script_ori, $script_deferred, $this->content ) ;
+		if ( $js_var_preserve ) {
+			$this->html_head .= '<script>var ' . implode( ',', $js_var_preserve ) . ';</script>';
+			Debug2::debug2( '[Optm] Inline JS defer vars', $js_var_preserve );
+		}
+
+		$this->content = str_replace( $script_ori, $script_deferred, $this->content );
 
 	}
 
@@ -739,7 +754,7 @@ class Optimize extends Base
 		$html .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
 
 		$html .= ']}};';
-	
+
 		// if webfontloader lib was loaded before WebFontConfig variable, call WebFont.load
 		$html .= 'if ( typeof WebFont === "object" && typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
 
@@ -1013,10 +1028,8 @@ class Optimize extends Base
 			return false;
 		}
 
-		// For those env who don't support SCRIPT_URI, need to keep $url_sensitive OFF.
-		if ( empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
-			$url_sensitive = false;
-		}
+		global $wp;
+		$request_url = home_url( $wp->request );
 
 		if ( ! is_array( $src ) ) {
 			$src = array( $src );
@@ -1040,7 +1053,7 @@ class Optimize extends Base
 		$existed = false;
 		if ( $optm_data = Data::get_instance()->optm_hash2src( $filename ) ) {
 			// If conflicts
-			if ( $optm_data[ 'src' ] === $src && ( ! $url_sensitive || $optm_data[ 'refer' ] === $_SERVER[ 'SCRIPT_URI' ] ) ) {
+			if ( $optm_data[ 'src' ] === $src && ( ! $url_sensitive || $optm_data[ 'refer' ] === $request_url ) ) {
 				$existed = true;
 			}
 			else {
@@ -1059,7 +1072,7 @@ class Optimize extends Base
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
 
-			$content = Optimizer::get_instance()->serve( $filename, $concat_only, $src, ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : false );
+			$content = Optimizer::get_instance()->serve( $filename, $concat_only, $src, $request_url );
 
 			// Generate static file
 			File::save( $static_file, $content, true );

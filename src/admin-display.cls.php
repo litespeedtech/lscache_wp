@@ -431,8 +431,7 @@ class Admin_Display extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function display_messages()
-	{
+	public function display_messages() {
 		if ( GUI::has_whm_msg() ) {
 			$this->show_display_installed();
 		}
@@ -452,12 +451,12 @@ class Admin_Display extends Base
 				// Added for popup links
 				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
 					add_thickbox();
-					$added_thickbox = true ;
+					$added_thickbox = true;
 				}
-				echo $msg ;
+				echo $msg;
 			}
 		}
-		self::delete_option( self::DB_MSG ) ;
+		self::delete_option( self::DB_MSG );
 
 		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed' ) !== 0 ) {
 			global $pagenow;
@@ -482,7 +481,7 @@ class Admin_Display extends Base
 		 * Check promo msg first
 		 * @since 2.9
 		 */
-		GUI::get_instance()->show_promo() ;
+		GUI::get_instance()->show_promo();
 
 		// Show version news
 		Cloud::get_instance()->news();
