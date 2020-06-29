@@ -132,7 +132,7 @@ if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
 					$params = array(
 						'action'	=> $action,
 					);
-					return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, $control, true, true );
+					return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, $control, true, true, true );
 				}
 			}
 
