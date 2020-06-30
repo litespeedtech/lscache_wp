@@ -132,7 +132,9 @@ class Core extends Instance
 		do_action( 'litespeed_init' );
 
 		// in `after_setup_theme`, before `init` hook
-		Activation::auto_update();
+		if ( ! defined( 'LITESPEED_BYPASS_AUTO_V' ) ) {
+			Activation::auto_update();
+		}
 
 		if( is_admin() ) {
 			Admin::get_instance();

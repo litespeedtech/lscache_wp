@@ -89,6 +89,11 @@ class Conf extends Base
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
 				$this->_options = $this->load_default_vals();
 				$this->_try_load_site_options();
+
+				// Disable new installation auto upgrade to avoid overwritten to customized data.ini
+				if ( ! $ver ) {
+					! defined( 'LITESPEED_BYPASS_AUTO_V' ) && define( 'LITESPEED_BYPASS_AUTO_V', true );
+				}
 				return;
 			}
 		}
