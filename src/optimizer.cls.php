@@ -74,6 +74,8 @@ class Optimizer extends Instance
 	 * @access public
 	 */
 	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
+		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+
 		// Search src set in db based on the requested filename
 		if ( ! $src_list ) {
 			$optm_data = Data::get_instance()->optm_hash2src( $filename );
@@ -88,7 +90,13 @@ class Optimizer extends Instance
 
 		// Check if need to run Unique CSS feature
 		if ( $file_type == 'css' ) {
-			$content = apply_filters( 'litespeed_css_serve', false, $filename, $src_list, $page_url );
+			// CHeck if need to trigger UCSS or not
+			$content = false;
+			if ( Conf::val( Base::O_OPTM_UCSS ) && ! Conf::val( Base::O_OPTM_UCSS_ASYNC ) ) {
+				$content = CSS::get_instance()->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
+			}
+
+			$content = apply_filters( 'litespeed_css_serve', $content, $filename, $src_list, $page_url );
 			if ( $content ) {
 				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $filename . ' [url] ' . $page_url );
 				return $content;

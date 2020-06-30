@@ -3,19 +3,14 @@
  * The optimize css class.
  *
  * @since      	2.3
- * @package  	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-defined( 'WPINC' ) || exit ;
+class CSS extends Base {
+	protected static $_instance;
 
-class CSS extends Base
-{
-	protected static $_instance ;
-
-	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
+	const TYPE_GENERATE_CRITICAL = 'generate_critical';
 
 	protected $_summary;
 
@@ -41,12 +36,12 @@ class CSS extends Base
 	{
 		// Get critical css for current page
 		// Note: need to consider mobile
-		$rules = self::get_instance()->_ccss() ;
+		$rules = self::get_instance()->_ccss();
 
 		// Append default critical css
-		$rules .= Conf::val( Base::O_OPTM_CCSS_CON ) ;
+		$rules .= Conf::val( Base::O_OPTM_CCSS_CON );
 
-		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
+		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head;
 
 		return $html_head ;
 	}
@@ -92,6 +87,12 @@ class CSS extends Base
 
 		Debug2::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
+
+
+	public function gen_ucss( $page_url, $ua ) {
+		return $this->_generate_ucss( $page_url, $ua );
+	}
+
 
 	/**
 	 * The critical css content of the current page
@@ -249,6 +250,70 @@ class CSS extends Base
 		Debug2::debug2( '[CSS] ccss con: ' . $ccss ) ;
 
 		return $ccss ;
+	}
+
+	/**
+	 * Send to QC API to generate UCSS
+	 *
+	 * @since  3.3
+	 * @access private
+	 */
+	private function _generate_ucss( $request_url, $user_agent ) {
+		// Check if has credit to push
+		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
+		if ( ! $allowance ) {
+			Debug2::debug( '[UCSS] ❌ No credit' );
+			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
+			return;
+		}
+
+		// Update UCSS request status
+		$this->_summary[ 'curr_request_ucss' ] = time();
+		self::save_summary();
+
+		// Generate UCSS
+		$data = array(
+			'type'			=> 'ucss',
+			'url'			=> $request_url,
+			'whitelist'		=> Conf::val( Base::O_OPTM_UCSS_WHITELIST ),
+			'user_agent'	=> $user_agent,
+		);
+
+		Debug2::debug( '[UCSS] Generating UCSS: ', $data );
+
+		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 ) ;
+		if ( ! is_array( $json ) ) {
+			return false;
+		}
+
+		if ( empty( $json[ 'ucss' ] ) ) {
+			Debug2::debug( '[UCSS] ❌ empty ucss' );
+			// $this->_popup_and_save( $ccss_type, $request_url );
+			return false;
+		}
+
+		$ucss = $json[ 'ucss' ];
+		Debug2::debug2( '[UCSS] ucss con: ' . $ucss );
+
+		if ( substr( $ucss, 0, 2 ) == '/*' && substr( $ucss, -2 ) == '*/' ) {
+			$ucss = '';
+		}
+		// Add filters
+		$ucss = apply_filters( 'litespeed_ucss', $ucss, $request_url );
+
+		// Write to file
+		// File::save( $ucss_file, $ucss, true );
+
+		// Save summary data
+		$this->_summary[ 'last_spent_ucss' ] = time() - $this->_summary[ 'curr_request_ucss' ];
+		$this->_summary[ 'last_request_ucss' ] = $this->_summary[ 'curr_request_ucss' ];
+		$this->_summary[ 'curr_request_ucss' ] = 0;
+		self::save_summary();
+		// $this->_popup_and_save( $ccss_type, $request_url );
+
+		// Debug2::debug( '[UCSS] saved ucss ' . $ucss_file );
+
+		return $ucss;
 	}
 
 	/**

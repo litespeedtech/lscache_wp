@@ -61,6 +61,65 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 	</tr>
 
 	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_UCSS; ?>
+			<?php $this->title( $id ); ?> (Experiential Only)
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_UCSS_ASYNC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Generate unique CSS in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
+			</div>
+
+			<?php if ( $css_summary ) : ?>
+			<div class="litespeed-desc litespeed-left20">
+				<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
+					<p>
+						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
+					</p>
+					<p>
+						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
+					</p>
+				<?php endif; ?>
+
+				<?php if ( $closest_server ) : ?>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_CCSS ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+				<?php endif; ?>
+
+			</div>
+			<?php endif; ?>
+
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_CSS_HTTP2; ?>
 			<?php $this->title( $id ); ?>
