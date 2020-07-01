@@ -667,12 +667,12 @@ class Control extends Instance
 		}
 
 		if ( isset( $_SERVER[ 'LSCACHE_VARY_VALUE' ] ) && strpos( $_SERVER[ 'LSCACHE_VARY_VALUE' ], 'ismobile' ) !== false ) {
-			if ( ! $is_mobile ) {
+			if ( ! wp_is_mobile() && ! $is_mobile ) {
 				self::set_nocache( 'is not mobile' );
 				return;
 			}
 		}
-		elseif ( $is_mobile ) {
+		elseif ( wp_is_mobile() || $is_mobile ) {
 			self::set_nocache( 'is mobile' );
 			return;
 		}

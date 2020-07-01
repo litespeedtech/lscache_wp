@@ -128,7 +128,7 @@ class API extends Base {
 		// API::hook_vary_finalize( $hook ) -> Filter `litespeed_vary`
 		add_action( 'litespeed_vary_no', __NAMESPACE__ . '\Control::set_no_vary' ); // API::set_cache_no_vary() -> Action `litespeed_vary_no` // Set cache status to no vary
 
-		add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
+		// add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
 
 		/**
 		 * Cloud

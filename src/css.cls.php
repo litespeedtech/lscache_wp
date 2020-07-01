@@ -154,7 +154,7 @@ class CSS extends Base {
 	 */
 	private function _separate_mobile_ccss()
 	{
-		return apply_filters( 'litespeed_is_mobile', false ) && Conf::val( Base::O_CACHE_MOBILE ) ;
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && Conf::val( Base::O_CACHE_MOBILE ) ;
 	}
 
 	/**
