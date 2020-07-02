@@ -692,23 +692,31 @@ class Admin_Display extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function build_textarea( $id, $cols = false, $val = null )
-	{
+	public function build_textarea( $id, $cols = false, $val = null ) {
 		if ( $val === null ) {
-			$val = Conf::val( $id, true ) ;
+			$val = Conf::val( $id, true );
 
 			if ( is_array( $val ) ) {
-				$val = implode( "\n", $val ) ;
+				$val = implode( "\n", $val );
 			}
 		}
 
 		if ( ! $cols ) {
-			$cols = 80 ;
+			$cols = 80;
 		}
 
-		$this->enroll( $id ) ;
+		$rows = 5;
+		$lines = substr_count( $val, "\n" ) + 2;
+		if ( $lines > $rows ) {
+			$rows = $lines;
+		}
+		if ( $rows > 40 ) {
+			$rows = 40;
+		}
 
-		echo "<textarea name='$id' rows='5' cols='$cols'>" . esc_textarea( $val ) . "</textarea>" ;
+		$this->enroll( $id );
+
+		echo "<textarea name='$id' rows='$rows' cols='$cols'>" . esc_textarea( $val ) . "</textarea>";
 
 		$this->_check_overwritten( $id );
 	}
@@ -761,7 +769,7 @@ class Admin_Display extends Base
 		if ( $checked === null && Conf::val( $id, true ) ) {
 			$checked = true;
 		}
-		$checked = $checked ? ' checked ' : '' ;
+		$checked = $checked ? ' checked ' : '';
 
 		$label_id = preg_replace( '|\W|', '', $id ) ;
 
