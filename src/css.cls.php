@@ -275,9 +275,22 @@ class CSS extends Base {
 		$data = array(
 			'type'			=> 'ucss',
 			'url'			=> $request_url,
-			'whitelist'		=> Conf::val( Base::O_OPTM_UCSS_WHITELIST ),
+			'whitelist'		=> $this->_filter_whitelist(),
 			'user_agent'	=> $user_agent,
+			'is_mobile'		=> $this->_separate_mobile_ccss(),
 		);
+
+		// Append cookie for roles auth
+		if ( $uid = get_current_user_id() ) {
+			// Get role simulation vary name
+			$vary_inst = Vary::get_instance();
+			$vary_name = $vary_inst->get_vary_name();
+			$vary_val = $vary_inst->finalize_default_vary( $uid );
+			$data[ 'cookies' ] = array();
+			$data[ 'cookies' ][ $vary_name ] = $vary_val;
+			$data[ 'cookies' ][ 'litespeed_role' ] = $uid;
+			$data[ 'cookies' ][ 'litespeed_hash' ] = Router::get_hash();
+		}
 
 		Debug2::debug( '[UCSS] Generating UCSS: ', $data );
 
@@ -314,6 +327,28 @@ class CSS extends Base {
 		// Debug2::debug( '[UCSS] saved ucss ' . $ucss_file );
 
 		return $ucss;
+	}
+
+	/**
+	 * Filter the comment content, add quotes to selector from whitelist. Return the json
+	 *
+	 * @since 3.3
+	 */
+	private function _filter_whitelist() {
+		$whitelist = array();
+		$val = Conf::val( Base::O_OPTM_UCSS_WHITELIST );
+		foreach ( $val as $k => $v ) {
+			if ( substr( $v, 0, 2 ) === '//' ) {
+				continue;
+			}
+			// Wrap in quotes for selectors
+			if ( substr( $v, 0, 1 ) !== '/' && strpos( $v, '"' ) === false && strpos( $v, "'" ) === false ) {
+				// $v = "'$v'";
+			}
+			$whitelist[] = $v;
+		}
+
+		return $whitelist;
 	}
 
 	/**

@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Router extends Instance
+class Router extends Base
 {
 	protected static $_instance;
 
@@ -38,6 +38,8 @@ class Router extends Instance
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare';
 
 	const TYPE = 'litespeed_type';
+
+	const ITEM_HASH = 'hash';
 
 	private static $_esi_enabled;
 	private static $_is_ajax ;
@@ -180,61 +182,56 @@ class Router extends Instance
 	}
 
 	/**
-	 * Crawler simulate role
+	 * UCSS/Crawler role simulator
 	 *
 	 * @since  1.9.1
-	 * @access public
+	 * @since  3.3 Renamed from `is_crawler_role_simulation`
 	 */
-	public function is_crawler_role_simulation()
-	{
+	public function is_role_simulation() {
 		if( is_admin() ) {
-			return ;
+			return;
 		}
 
 		if ( empty( $_COOKIE[ 'litespeed_role' ] ) || empty( $_COOKIE[ 'litespeed_hash' ] ) ) {
-			return ;
+			return;
 		}
 
-		Debug2::debug( '[Router] starting crawler role validation' ) ;
+		Debug2::debug( '[Router] starting role validation' );
 
 		// Check if is from crawler
-		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
-			Debug2::debug( '[Router] user agent not match' ) ;
-			return ;
-		}
+		// if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
+		// 	Debug2::debug( '[Router] user agent not match' );
+		// 	return;
+		// }
 
 		// Hash validation
-		$hash = Crawler::get_option( Crawler::ITEM_HASH ) ;
+		$hash = self::get_option( self::ITEM_HASH );
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
-			Debug2::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
-			return ;
+			Debug2::debug( '[Router] hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash );
+			return;
 		}
 
-		$role_uid = $_COOKIE[ 'litespeed_role' ] ;
-		Debug2::debug( '[Router] role simulate litespeed_role uid ' . $role_uid ) ;
+		$role_uid = $_COOKIE[ 'litespeed_role' ];
+		Debug2::debug( '[Router] role simulate litespeed_role uid ' . $role_uid );
 
-		wp_set_current_user( $role_uid ) ;
+		wp_set_current_user( $role_uid );
 	}
 
 	/**
-	 * Get user id
+	 * Get a security hash
 	 *
-	 * @since  1.6.2
+	 * @since  3.3
 	 */
-	public static function get_uid()
-	{
-		if ( defined( 'LITESPEED_WP_UID' ) ) {
-			return LITESPEED_WP_UID ;
+	public static function get_hash() {
+		// Reuse previous hash if existed
+		$hash = self::get_option( self::ITEM_HASH );
+		if ( $hash ) {
+			return $hash;
 		}
 
-		$user = wp_get_current_user() ;
-		$user_id = $user->ID ;
-
-		Debug2::debug( '[Router] get_uid: ' . $user_id, 3 ) ;
-
-		define( 'LITESPEED_WP_UID', $user_id ) ;
-
-		return LITESPEED_WP_UID ;
+		$hash = Str::rrand( 6 );
+		self::update_option( self::ITEM_HASH, $hash );
+		return $hash;
 	}
 
 	/**
@@ -242,14 +239,13 @@ class Router extends Instance
 	 *
 	 * @since  1.6.2
 	 */
-	public static function get_role( $uid = null )
-	{
+	public static function get_role( $uid = null ) {
 		if ( defined( 'LITESPEED_WP_ROLE' ) ) {
-			return LITESPEED_WP_ROLE ;
+			return LITESPEED_WP_ROLE;
 		}
 
 		if ( $uid === null ) {
-			$uid = self::get_uid() ;
+			$uid = get_current_user_id();
 		}
 
 		$role = false ;

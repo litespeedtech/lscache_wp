@@ -20,7 +20,6 @@ class Crawler extends Base
 	const USER_AGENT = 'lscache_walker';
 	const FAST_USER_AGENT = 'lscache_runner';
 	const CHUNKS = 10000;
-	const ITEM_HASH = 'hash';
 
 	protected static $_instance;
 
@@ -684,9 +683,7 @@ class Crawler extends Base
 		 * Append hash to cookie for validation
 		 * @since  1.9.1
 		 */
-		$hash = Str::rrand( 6 );
-		self::update_option( Crawler::ITEM_HASH, $hash );
-		$this->_crawler_conf[ 'cookies' ][ 'litespeed_hash' ] = $hash;
+		$this->_crawler_conf[ 'cookies' ][ 'litespeed_hash' ] = Router::get_hash();
 
 		$cookies = array();
 		foreach ( $this->_crawler_conf[ 'cookies' ] as $k => $v ) {

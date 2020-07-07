@@ -3,7 +3,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           3.3-rc7
+ * Version:           3.3-rc8
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -33,7 +33,7 @@ if ( class_exists( 'LiteSpeed\Core' ) || defined( 'LSCWP_DIR' ) ) {
 	return;
 }
 
-! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.3-rc7' );
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.3-rc8' );
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', __DIR__ . '/' ) ;// Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -144,8 +144,7 @@ if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
 		 * Ori WP wp_create_nonce
 		 */
 		function wp_create_nonce_litespeed_esi( $action = -1 ) {
-			$user = wp_get_current_user();
-			$uid  = (int) $user->ID;
+			$uid  = get_current_user_id();
 			if ( ! $uid ) {
 				/** This filter is documented in wp-includes/pluggable.php */
 				$uid = apply_filters( 'nonce_user_logged_out', $uid, $action );

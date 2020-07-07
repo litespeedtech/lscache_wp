@@ -287,7 +287,7 @@ class Vary extends Instance {
 	 * Update default vary
 	 *
 	 * @since 1.6.2
-	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid from router::get_uid )
+	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid )
 	 * @access private
 	 */
 	private function _update_default_vary( $uid = false, $expire = false )
@@ -365,15 +365,14 @@ class Vary extends Instance {
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function finalize_default_vary( $uid = false )
-	{
+	public function finalize_default_vary( $uid = false ) {
 		$vary = self::$_default_vary_val;
 
 		if ( ! $uid ) {
-			$uid = Router::get_uid() ;
+			$uid = get_current_user_id();
 		}
 		else {
-			Debug2::debug( '[Vary] uid: ' . $uid ) ;
+			Debug2::debug( '[Vary] uid: ' . $uid );
 		}
 
 		// get user's group id

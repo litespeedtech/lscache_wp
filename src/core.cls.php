@@ -156,6 +156,7 @@ class Core extends Instance
 		 * @since  2.9
 		 */
 		if ( ! empty( $_GET[ Router::ACTION ] ) && $_GET[ Router::ACTION ] == 'before_optm' ) {
+			Debug2::debug( '[Core] ⛑️ bypass_optm due to QS CTRL' );
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
 		}
 
@@ -189,7 +190,7 @@ class Core extends Instance
 	 */
 	public function after_user_init()
 	{
-		Router::get_instance()->is_crawler_role_simulation();
+		Router::get_instance()->is_role_simulation();
 
 		if ( ! is_admin() && $result = $this->__cfg->in_optm_exc_roles() ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
