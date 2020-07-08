@@ -16,9 +16,9 @@ LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin,
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO.
 
 == Requirements ==
-**General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGiNX, etc.).
+**General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGINX, etc.).
 
-**LiteSpeed Exclusive Features** require one of the following: OpenLiteSpeed, commercial LiteSpeed products, LiteSpeed-powered hosting, or QUIc.cloud CDN. [Why?](https://docs.litespeedtech.com/lscache/lscwp/faq/#why-do-the-cache-features-require-a-litespeed-server)
+**LiteSpeed Exclusive Features** require one of the following: OpenLiteSpeed, commercial LiteSpeed products, LiteSpeed-powered hosting, or QUIC.cloud CDN. [Why?](https://docs.litespeedtech.com/lscache/lscwp/faq/#why-do-the-cache-features-require-a-litespeed-server)
 
 == Plugin Features ==
 
@@ -42,9 +42,8 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * HTTP/2 Push for CSS/JS (on web servers that support it)
 * DNS Prefetch
 * Cloudflare API
-* Single Site and Multi Site (Network) support
+* Single Site and Multisite (Network) support
 * Import/Export settings
-* Basic/Advanced setting view
 * Attractive, easy-to-understand interface
 * WebP image format support
 * Heartbeat control
@@ -58,7 +57,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Separate caching of desktop and mobile views
 * Ability to schedule purge for specified URLs
 * WooCommerce and bbPress support
-* [WordPress CLI](https://docs.litespeedtech.com/lscache/lscwp/admin/#wordpress-cli) commands
+* [WordPress CLI](https://docs.litespeedtech.com/lscache/lscwp/cli/) commands
 * API system for easy cache integration
 * Exclude from cache by URI, Category, Tag, Cookie, User Agent
 * Smart preload crawler with support for SEO-friendly sitemap
@@ -109,13 +108,13 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 = Notes for LiteSpeed Web Server Enterprise =
 
 * Make sure that your license includes the LSCache module. A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") is available for free for 15 days.
-* The server must be configured to have caching enabled. If you are the server admin, [click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration) for instructions. Otherwise, please request that the server admin configure the cache root for the server.
+* The server must be configured to have caching enabled. If you are the server admin, [click here](https://docs.litespeedtech.com/lscache/lscwp/overview/#configure-cache-root) for instructions. Otherwise, please request that the server admin configure the cache root for the server.
 
 = Notes for OpenLiteSpeed =
 
 * This integration utilizes OpenLiteSpeed's cache module.
-* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the `--wordpresspath` parameter.
-* If OLS and WordPress are both already installed, please follow the instructions in [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
+* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](https://openlitespeed.org/kb/1-click-install/). If using an existing WordPress installation, use the `--wordpresspath` parameter.
+* If OLS and WordPress are both already installed, please follow the instructions in [How To Set Up LSCache For WordPress](https://openlitespeed.org/kb/how-to-setup-lscache-for-wordpress/).
 
 == Third Party Compatibility ==
 
@@ -191,11 +190,11 @@ In short, yes. However, for some WooCommerce themes, the cart may not be updated
 
 = Are my images optimized? =
 
-Images are not optimized automatically unless you set **LiteSpeed Cache > Image Optimization > Image Optimization Settings > Auto Request Cron** to `ON`. You may also optimiza your images manually. [Learn more](https://docs.litespeedtech.com/lscache/lscwp/imageopt/).
+Images are not optimized automatically unless you set **LiteSpeed Cache > Image Optimization > Image Optimization Settings > Auto Request Cron** to `ON`. You may also optimize your images manually. [Learn more](https://docs.litespeedtech.com/lscache/lscwp/imageopt/).
 
 = How do I make a WP nonce cacheable in my third-party plugin? =
 
-Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on. Learn more in [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/).
+Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached separately, regardless of the TTL of the page it is on. Learn more in [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/#esi). We also welcome contributions to our predefined list of known third party plugin nonces that users can optionally include via [the plugin's ESI settings](https://docs.litespeedtech.com/lscache/lscwp/cache/#esi-nonce). 
 
 = How do I enable the crawler? =
 
@@ -227,7 +226,7 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
-* [Elegant Divi Builder] (https://www.elegantthemes.com/plugins/divi-builder/)
+* [Elegant Divi Builder](https://www.elegantthemes.com/plugins/divi-builder/)
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 * Login With Ajax
 * [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)

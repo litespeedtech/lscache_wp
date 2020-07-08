@@ -177,7 +177,7 @@ class Lang extends Base
 			self::O_ESI							=> __( 'Enable ESI', 'litespeed-cache' ),
 			self::O_ESI_CACHE_ADMBAR			=> __( 'Cache Admin Bar', 'litespeed-cache' ),
 			self::O_ESI_CACHE_COMMFORM			=> __( 'Cache Comment Form', 'litespeed-cache' ),
-			self::O_ESI_NONCE					=> __( 'ESI Nonce', 'litespeed-cache' ),
+			self::O_ESI_NONCE					=> __( 'ESI Nonces', 'litespeed-cache' ),
 			self::O_CACHE_VARY_GROUP			=> __( 'Vary Group', 'litespeed-cache' ),
 			self::O_PURGE_HOOK_ALL				=> __( 'Purge All Hooks', 'litespeed-cache' ),
 			self::O_UTIL_NO_HTTPS_VARY			=> __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ),

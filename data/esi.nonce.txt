@@ -1,5 +1,30 @@
+## Predefined elsewhere so not needed here:
+
+## WordPress core
+#stats_nonce
+#subscribe_nonce
+
+# Divi Theme Builder
+#et-pb-contact-form-submit
+#et_frontend_nonce
+#et_ab_log_nonce
+
+# WooCommerce PayPal Checkout
+#_wc_ppec_update_shipping_costs_nonce private
+#_wc_ppec_start_checkout_nonce private
+#_wc_ppec_generate_cart_nonce private
+
+# User Switching
+#switch_to_olduser_'<ID>'
+
+# Caldera Forms
+#caldera_forms_front_*
+
+## Predefined list of ESI nonces:
+
+# CM Registration Pro
 cmreg_registration_nonce private
 role_nonce private
 
-# Woocommerce Delivery Area Pro #16843635
+# WooCommerce Delivery Area Pro #16843635
 wdap-call-nonce private
