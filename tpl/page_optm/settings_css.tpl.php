@@ -60,7 +60,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_UCSS; ?>
 			<?php $this->title( $id ); ?> (Experiential Only)
@@ -73,7 +73,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_UCSS_ASYNC; ?>
 			<?php $this->title( $id ); ?>
@@ -106,7 +106,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
 			<?php $this->title( $id ); ?>

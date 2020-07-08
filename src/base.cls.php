@@ -424,7 +424,7 @@ class Base extends Instance {
 		self::O_OPTM_CSS_UNIQUE 		=> false,
 		self::O_OPTM_UCSS 				=> false,
 		self::O_OPTM_UCSS_ASYNC			=> false,
-		self::O_OPTM_UCSS_WHITELIST		=> array(),
+		// self::O_OPTM_UCSS_WHITELIST		=> array(),
 		self::O_OPTM_CSS_HTTP2 			=> false,
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,

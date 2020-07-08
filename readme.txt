@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.2
-Stable tag: 3.2.3.2
+Stable tag: 3.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,19 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 3.2.4 - Jul 8 2020 =
+* **Object** New installations no longer get custom data.ini reset, as this could cause lost configuration. (@Eric)
+* **ESI** Now using `svar` to load nonces more quickly. (@Lauren)
+* **ESI** Fixed the conflicts between nonces in inline JS and ESI Nonces when Inline JS Deferred is enabled. (@JesseDistad)
+* 🐞**ESI** Fixed Fetch Latest Predefined Nonce button.
+* 🐞**Cache** Fixed an issue where mobile visits were not being cached when Cache Mobile was disabled.
+* **Router** Dropped `Router::get_uid()` function.
+* **Crawler** Updated role simulator function for future UCSS usage.
+* **GUI** Textarea will now automatically adjust the height based on the number of rows input.
+* **CLI** Fixed an issue that caused WP-Cron to exit when a task errored out. (@DovidLevine @MatthewJohnson)
+* **Cloud** No longer communcate with QUIC.cloud when Domain Key is not set and Debug is enabled.
+* **Cloud** Score banner no longer automatically fetches a new score. (@LucasRolff)
+
 = 3.2.3.2 - Jun 19 2020 =
 * 🔥🐞**Page Optimize** Hotfix for CSS/JS minify/combine. (@jdelgadoesteban @martin_bailey)
 
@@ -282,7 +295,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **GUI** Moved Use Primary Site Configuration to General menu. (@joshua)
 
 = 3.2 - May 27 2020 =
-* **Image Optimize** Major improvements in queue management, scalability, and speed. (@Lucas Rolff)
+* **Image Optimize** Major improvements in queue management, scalability, and speed. (@LucasRolff)
 * **Cloud** Implemented a series of communication enhancements. (@Lucas Rolff)
 * **Crawler** Enhanced PHP 5.3 compatibility. (@JTS-FIN #230)
 * **Page Optimize** Appended image template in wpDiscuz script into default lazyload image exclude list. (@philipfaster @szmigieldesign)
