@@ -657,6 +657,9 @@ class Optimize extends Base
 			}
 
 			$con = trim( $match[ 2 ] );
+			// Minify JS first
+			$con = Optimizer::minify_js( $con );
+
 			if ( ! $con ) {
 				continue;
 			}
