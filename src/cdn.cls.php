@@ -37,18 +37,22 @@ class CDN extends Instance
 	 * @since  1.2.3
 	 * @access protected
 	 */
-	protected function __construct()
-	{
-		Debug2::debug2( '[CDN] init' ) ;
+	protected function __construct() {
+		Debug2::debug2( '[CDN] init' );
+
+		if ( defined( self::BYPASS ) ) {
+			Debug2::debug2( 'CDN bypass' );
+			return;
+		}
 
 		if ( ! Router::can_cdn() ) {
 			if ( ! defined( self::BYPASS ) ) {
-				define( self::BYPASS, true ) ;
+				define( self::BYPASS, true );
 			}
-			return ;
+			return;
 		}
 
-		$this->__cfg = Conf::get_instance() ;
+		$this->__cfg = Conf::get_instance();
 
 		/**
 		 * Remotely load jQuery
@@ -57,93 +61,93 @@ class CDN extends Instance
 		 */
 		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ );
 		if ( $this->_cfg_cdn_remote_jquery ) {
-			$this->_load_jquery_remotely() ;
+			$this->_load_jquery_remotely();
 		}
 
-		$this->_cfg_cdn = Conf::val( Base::O_CDN ) ;
+		$this->_cfg_cdn = Conf::val( Base::O_CDN );
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
-				define( self::BYPASS, true ) ;
+				define( self::BYPASS, true );
 			}
-			return ;
+			return;
 		}
 
-		$this->_cfg_url_ori = Conf::val( Base::O_CDN_ORI ) ;
+		$this->_cfg_url_ori = Conf::val( Base::O_CDN_ORI );
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			Base::CDN_MAPPING_INC_IMG,
 			Base::CDN_MAPPING_INC_CSS,
 			Base::CDN_MAPPING_INC_JS
-		) ;
+		);
 		foreach ( Conf::val( Base::O_CDN_MAPPING ) as $v ) {
 			if ( ! $v[ Base::CDN_MAPPING_URL ] ) {
-				continue ;
+				continue;
 			}
-			$this_url = $v[ Base::CDN_MAPPING_URL ] ;
-			$this_host = parse_url( $this_url, PHP_URL_HOST ) ;
+			$this_url = $v[ Base::CDN_MAPPING_URL ];
+			$this_host = parse_url( $this_url, PHP_URL_HOST );
 			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
 				if ( $v[ $to_check ] ) {
-					Debug2::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url ) ;
+					Debug2::debug2( '[CDN] mapping ' . $to_check . ' -> ' . $this_url );
 
 					// If filetype to url is one to many, make url be an array
-					$this->_append_cdn_mapping( $to_check, $this_url ) ;
+					$this->_append_cdn_mapping( $to_check, $this_url );
 
 					if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
-						$this->cdn_mapping_hosts[] = $this_host ;
+						$this->cdn_mapping_hosts[] = $this_host;
 					}
 				}
 			}
 			// Check file types
 			if ( $v[ Base::CDN_MAPPING_FILETYPE ] ) {
 				foreach ( $v[ Base::CDN_MAPPING_FILETYPE ] as $v2 ) {
-					$this->_cfg_cdn_mapping[ Base::CDN_MAPPING_FILETYPE ] = true ;
+					$this->_cfg_cdn_mapping[ Base::CDN_MAPPING_FILETYPE ] = true;
 
 					// If filetype to url is one to many, make url be an array
-					$this->_append_cdn_mapping( $v2, $this_url ) ;
+					$this->_append_cdn_mapping( $v2, $this_url );
 
 					if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
-						$this->cdn_mapping_hosts[] = $this_host ;
+						$this->cdn_mapping_hosts[] = $this_host;
 					}
 				}
-				Debug2::debug2( '[CDN] mapping ' . implode( ',', $v[ Base::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
+				Debug2::debug2( '[CDN] mapping ' . implode( ',', $v[ Base::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url );
 			}
 		}
 
 		if ( ! $this->_cfg_url_ori || ! $this->_cfg_cdn_mapping ) {
 			if ( ! defined( self::BYPASS ) ) {
-				define( self::BYPASS, true ) ;
+				define( self::BYPASS, true );
 			}
-			return ;
+			return;
 		}
 
-		$this->_cfg_ori_dir = Conf::val( Base::O_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = Conf::val( Base::O_CDN_ORI_DIR );
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
-			$this->_cfg_ori_dir[] = UPLOADS ;
+			$this->_cfg_ori_dir[] = UPLOADS;
 		}
 
 		// Check if need preg_replace
 		$this->_cfg_url_ori = Utility::wildcard2regex( $this->_cfg_url_ori );
 
-		$this->_cfg_cdn_exclude = Conf::val( Base::O_CDN_EXC ) ;
+		$this->_cfg_cdn_exclude = Conf::val( Base::O_CDN_EXC );
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 ) ;
+				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 );
 			}
 			// Hook to mime icon
-			add_filter( 'wp_get_attachment_image_src', array( $this, 'attach_img_src' ), 999 ) ;
-			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 ) ;
+			add_filter( 'wp_get_attachment_image_src', array( $this, 'attach_img_src' ), 999 );
+			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 );
 		}
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
-			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 ) ;
+			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 );
 		}
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ] ) ) {
-			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
+			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 );
 		}
 
 	}
