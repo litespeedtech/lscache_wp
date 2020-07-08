@@ -194,7 +194,7 @@ Images are not optimized automatically unless you set **LiteSpeed Cache > Image 
 
 = How do I make a WP nonce cacheable in my third-party plugin? =
 
-Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached separately, regardless of the TTL of the page it is on. Learn more in [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/#esi). We also welcome contributions to our predefined list of known third party plugin nonces that users can optionally include via [the plugin's ESI settings](https://docs.litespeedtech.com/lscache/lscwp/cache/#esi-nonce). 
+Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached separately, regardless of the TTL of the page it is on. Learn more in [the API documentation](https://docs.litespeedtech.com/lscache/lscwp/api/#esi). We also welcome contributions to our predefined list of known third party plugin nonces that users can optionally include via [the plugin's ESI settings](https://docs.litespeedtech.com/lscache/lscwp/cache/#esi-nonce).
 
 = How do I enable the crawler? =
 
@@ -249,6 +249,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **ESI** Fixed the conflicts between nonces in inline JS and ESI Nonces when Inline JS Deferred is enabled. (@JesseDistad)
 * 🐞**ESI** Fixed Fetch Latest Predefined Nonce button.
 * 🐞**Cache** Fixed an issue where mobile visits were not being cached when Cache Mobile was disabled.
+* **CDN** Bypass CDN constant `LITESPEED_BYPASS_CDN` now will apply to all CDN replacements.
 * **Router** Dropped `Router::get_uid()` function.
 * **Crawler** Updated role simulator function for future UCSS usage.
 * **GUI** Textarea will now automatically adjust the height based on the number of rows input.
