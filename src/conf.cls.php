@@ -579,6 +579,15 @@ class Conf extends Base
 			return;
 		}
 
+		// Special handler for CDN Original URLs
+		if ( $id == Base::O_CDN_ORI && ! $val ) {
+			$home_url = home_url( '/' );
+			$parsed = parse_url( $home_url );
+			$home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url );
+
+			$val = $home_url;
+		}
+
 		// Validate type
 		$val = $this->type_casting( $val, $id );
 
