@@ -25,7 +25,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 = General Features =
 
 * Free QUIC.cloud CDN Cache
-* Object Cache (Memcached/LSMCD/Redis)
+* Object Cache (Memcached/LSMCD/Redis) Support<sup>+</sup>
 * Image Optimization (Lossless/Lossy)
 * Minify CSS, JavaScript, and HTML
 * Minify inline CSS/JS
@@ -33,12 +33,12 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Automatically generate Critical CSS
 * Lazyload images/iframes
 * Responsive Image Placeholders
-* Multiple CDN support
+* Multiple CDN Support<sup>+</sup>
 * Load CSS/JS Asynchronously
-* Browser Cache
+* Browser Cache Support<sup>+</sup>
 * Database Cleaner and Optimizer
 * PageSpeed score optimization
-* OPcode Cache
+* OPcode Cache Support<sup>+</sup>
 * HTTP/2 Push for CSS/JS (on web servers that support it)
 * DNS Prefetch
 * Cloudflare API
@@ -47,6 +47,8 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Attractive, easy-to-understand interface
 * WebP image format support
 * Heartbeat control
+
+<sup>+</sup> This service is not provided by the LSCache plugin, nor is it guaranteed to be installed by your service provider. However, the plugin is compatible with the service if it is in use on your site.
 
 = LiteSpeed Exclusive Features =
 
