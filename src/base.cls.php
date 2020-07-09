@@ -132,162 +132,163 @@ class Base extends Instance {
 	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
 	const O_OPTM_JS_INLINE_MIN 		= 'optm-js_inline_min';
-	const O_OPTM_JS_COMB 			= 'optm-js_comb' ;
-	const O_OPTM_JS_COMB_PRIO 		= 'optm-js_comb_priority' ;
-	const O_OPTM_JS_HTTP2 			= 'optm-js_http2' ;
-	const O_OPTM_JS_EXC 			= 'optm-js_exc' ;
-	const O_OPTM_TTL 				= 'optm-ttl' ;
-	const O_OPTM_HTML_MIN 			= 'optm-html_min' ;
-	const O_OPTM_QS_RM 				= 'optm-qs_rm' ;
-	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm' ;
-	const O_OPTM_CSS_ASYNC 			= 'optm-css_async' ;
-	const O_OPTM_CCSS_GEN 			= 'optm-ccss_gen' ;
-	const O_OPTM_CCSS_ASYNC 		= 'optm-ccss_async' ;
-	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline' ;
-	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display' ;
-	const O_OPTM_JS_DEFER 			= 'optm-js_defer' ;
-	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer' ;
-	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm' ;
-	const O_OPTM_EXC_JQ 			= 'optm-exc_jq' ;
-	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async' ;
-	const O_OPTM_MAX_SIZE 			= 'optm-max_size' ;
-	const O_OPTM_RM_COMMENT 		= 'optm-rm_comment' ;
-	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles' ;
-	const O_OPTM_CCSS_CON			= 'optm-ccss_con' ;
-	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc' ;
-	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch' ;
-	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl' ;
-	const O_OPTM_EXC 				= 'optm-exc' ;
-	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype' ;
-	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri' ;
+	const O_OPTM_JS_COMB 			= 'optm-js_comb';
+	const O_OPTM_JS_COMB_PRIO 		= 'optm-js_comb_priority';
+	const O_OPTM_JS_HTTP2 			= 'optm-js_http2';
+	const O_OPTM_JS_EXC 			= 'optm-js_exc';
+	const O_OPTM_TTL 				= 'optm-ttl';
+	const O_OPTM_HTML_MIN 			= 'optm-html_min';
+	const O_OPTM_QS_RM 				= 'optm-qs_rm';
+	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
+	const O_OPTM_CSS_ASYNC 			= 'optm-css_async';
+	const O_OPTM_CCSS_GEN 			= 'optm-ccss_gen';
+	const O_OPTM_CCSS_ASYNC 		= 'optm-ccss_async';
+	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
+	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
+	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
+	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer';
+	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
+	const O_OPTM_EXC_JQ 			= 'optm-exc_jq';
+	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
+	const O_OPTM_MAX_SIZE 			= 'optm-max_size';
+	const O_OPTM_RM_COMMENT 		= 'optm-rm_comment';
+	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
+	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
+	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc';
+	const O_OPTM_JS_INLINE_DEFER_EXC = 'optm-js_inline_defer_exc';
+	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
+	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
+	const O_OPTM_EXC 				= 'optm-exc';
+	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype';
+	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri';
 
 	## -------------------------------------------------- ##
 	## --------------	Object Cache	----------------- ##
 	## -------------------------------------------------- ##
-	const O_OBJECT				 = 'object' ;
-	const O_OBJECT_KIND			 = 'object-kind' ;
-	const O_OBJECT_HOST			 = 'object-host' ;
-	const O_OBJECT_PORT			 = 'object-port' ;
-	const O_OBJECT_LIFE			 = 'object-life' ;
-	const O_OBJECT_PERSISTENT	 = 'object-persistent' ;
-	const O_OBJECT_ADMIN		 = 'object-admin' ;
-	const O_OBJECT_TRANSIENTS	 = 'object-transients' ;
-	const O_OBJECT_DB_ID		 = 'object-db_id' ;
-	const O_OBJECT_USER			 = 'object-user' ;
-	const O_OBJECT_PSWD			 = 'object-pswd' ;
-	const O_OBJECT_GLOBAL_GROUPS = 'object-global_groups' ;
-	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups' ;
+	const O_OBJECT				 = 'object';
+	const O_OBJECT_KIND			 = 'object-kind';
+	const O_OBJECT_HOST			 = 'object-host';
+	const O_OBJECT_PORT			 = 'object-port';
+	const O_OBJECT_LIFE			 = 'object-life';
+	const O_OBJECT_PERSISTENT	 = 'object-persistent';
+	const O_OBJECT_ADMIN		 = 'object-admin';
+	const O_OBJECT_TRANSIENTS	 = 'object-transients';
+	const O_OBJECT_DB_ID		 = 'object-db_id';
+	const O_OBJECT_USER			 = 'object-user';
+	const O_OBJECT_PSWD			 = 'object-pswd';
+	const O_OBJECT_GLOBAL_GROUPS = 'object-global_groups';
+	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups';
 
 	## -------------------------------------------------- ##
 	## --------------	Discussion		----------------- ##
 	## -------------------------------------------------- ##
-	const O_DISCUSS_AVATAR_CACHE		= 'discuss-avatar_cache' ;
-	const O_DISCUSS_AVATAR_CRON			= 'discuss-avatar_cron' ;
-	const O_DISCUSS_AVATAR_CACHE_TTL	= 'discuss-avatar_cache_ttl' ;
+	const O_DISCUSS_AVATAR_CACHE		= 'discuss-avatar_cache';
+	const O_DISCUSS_AVATAR_CRON			= 'discuss-avatar_cron';
+	const O_DISCUSS_AVATAR_CACHE_TTL	= 'discuss-avatar_cache_ttl';
 
 	## -------------------------------------------------- ##
 	## --------------		 Media 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MEDIA_LAZY 							= 'media-lazy' ;
-	const O_MEDIA_LAZY_PLACEHOLDER 				= 'media-lazy_placeholder' ;
-	const O_MEDIA_PLACEHOLDER_RESP 				= 'media-placeholder_resp' ;
-	const O_MEDIA_PLACEHOLDER_RESP_COLOR		= 'media-placeholder_resp_color' ;
-	const O_MEDIA_PLACEHOLDER_RESP_SVG			= 'media-placeholder_resp_svg' ;
-	const O_MEDIA_LQIP							= 'media-lqip' ;
-	const O_MEDIA_LQIP_QUAL						= 'media-lqip_qual' ;
+	const O_MEDIA_LAZY 							= 'media-lazy';
+	const O_MEDIA_LAZY_PLACEHOLDER 				= 'media-lazy_placeholder';
+	const O_MEDIA_PLACEHOLDER_RESP 				= 'media-placeholder_resp';
+	const O_MEDIA_PLACEHOLDER_RESP_COLOR		= 'media-placeholder_resp_color';
+	const O_MEDIA_PLACEHOLDER_RESP_SVG			= 'media-placeholder_resp_svg';
+	const O_MEDIA_LQIP							= 'media-lqip';
+	const O_MEDIA_LQIP_QUAL						= 'media-lqip_qual';
 	const O_MEDIA_LQIP_MIN_W					= 'media-lqip_min_w';
 	const O_MEDIA_LQIP_MIN_H					= 'media-lqip_min_h';
-	const O_MEDIA_PLACEHOLDER_RESP_ASYNC		= 'media-placeholder_resp_async' ;
-	const O_MEDIA_IFRAME_LAZY 					= 'media-iframe_lazy' ;
-	const O_MEDIA_LAZYJS_INLINE 				= 'media-lazyjs_inline' ;
-	const O_MEDIA_LAZY_EXC 						= 'media-lazy_exc' ;
-	const O_MEDIA_LAZY_CLS_EXC 					= 'media-lazy_cls_exc' ;
-	const O_MEDIA_LAZY_PARENT_CLS_EXC 			= 'media-lazy_parent_cls_exc' ;
-	const O_MEDIA_IFRAME_LAZY_CLS_EXC 			= 'media-iframe_lazy_cls_exc' ;
-	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc' ;
-	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc' ;
+	const O_MEDIA_PLACEHOLDER_RESP_ASYNC		= 'media-placeholder_resp_async';
+	const O_MEDIA_IFRAME_LAZY 					= 'media-iframe_lazy';
+	const O_MEDIA_LAZYJS_INLINE 				= 'media-lazyjs_inline';
+	const O_MEDIA_LAZY_EXC 						= 'media-lazy_exc';
+	const O_MEDIA_LAZY_CLS_EXC 					= 'media-lazy_cls_exc';
+	const O_MEDIA_LAZY_PARENT_CLS_EXC 			= 'media-lazy_parent_cls_exc';
+	const O_MEDIA_IFRAME_LAZY_CLS_EXC 			= 'media-iframe_lazy_cls_exc';
+	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc';
+	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
 	## -------------------------------------------------- ##
-	const O_IMG_OPTM_AUTO 				= 'img_optm-auto' ;
-	const O_IMG_OPTM_CRON 				= 'img_optm-cron' ;
-	const O_IMG_OPTM_ORI 				= 'img_optm-ori' ;
-	const O_IMG_OPTM_RM_BKUP 			= 'img_optm-rm_bkup' ;
-	const O_IMG_OPTM_WEBP 				= 'img_optm-webp' ;
-	const O_IMG_OPTM_LOSSLESS 			= 'img_optm-lossless' ;
-	const O_IMG_OPTM_EXIF 				= 'img_optm-exif' ;
-	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm-webp_replace' ;
-	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm-webp_attr' ;
-	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset' ;
-	const O_IMG_OPTM_JPG_QUALITY 		= 'img_optm-jpg_quality' ;
+	const O_IMG_OPTM_AUTO 				= 'img_optm-auto';
+	const O_IMG_OPTM_CRON 				= 'img_optm-cron';
+	const O_IMG_OPTM_ORI 				= 'img_optm-ori';
+	const O_IMG_OPTM_RM_BKUP 			= 'img_optm-rm_bkup';
+	const O_IMG_OPTM_WEBP 				= 'img_optm-webp';
+	const O_IMG_OPTM_LOSSLESS 			= 'img_optm-lossless';
+	const O_IMG_OPTM_EXIF 				= 'img_optm-exif';
+	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm-webp_replace';
+	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm-webp_attr';
+	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
+	const O_IMG_OPTM_JPG_QUALITY 		= 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
 	## -------------------------------------------------- ##
-	const O_CRAWLER 				= 'crawler' ;
-	const O_CRAWLER_POSTS 			= 'crawler-inc_posts' ;
-	const O_CRAWLER_PAGES 			= 'crawler-inc_pages' ;
-	const O_CRAWLER_CATS 			= 'crawler-inc_cats' ;
-	const O_CRAWLER_TAGS 			= 'crawler-inc_tags' ;
-	const O_CRAWLER_EXC_CPT 		= 'crawler-exc_cpt' ;
-	const O_CRAWLER_ORDER_LINKS 	= 'crawler-order_links' ;
-	const O_CRAWLER_USLEEP 			= 'crawler-usleep' ;
-	const O_CRAWLER_RUN_DURATION 	= 'crawler-run_duration' ;
-	const O_CRAWLER_RUN_INTERVAL 	= 'crawler-run_interval' ;
-	const O_CRAWLER_CRAWL_INTERVAL 	= 'crawler-crawl_interval' ;
-	const O_CRAWLER_THREADS 		= 'crawler-threads' ;
-	const O_CRAWLER_TIMEOUT 		= 'crawler-timeout' ;
-	const O_CRAWLER_LOAD_LIMIT 		= 'crawler-load_limit' ;
+	const O_CRAWLER 				= 'crawler';
+	const O_CRAWLER_POSTS 			= 'crawler-inc_posts';
+	const O_CRAWLER_PAGES 			= 'crawler-inc_pages';
+	const O_CRAWLER_CATS 			= 'crawler-inc_cats';
+	const O_CRAWLER_TAGS 			= 'crawler-inc_tags';
+	const O_CRAWLER_EXC_CPT 		= 'crawler-exc_cpt';
+	const O_CRAWLER_ORDER_LINKS 	= 'crawler-order_links';
+	const O_CRAWLER_USLEEP 			= 'crawler-usleep';
+	const O_CRAWLER_RUN_DURATION 	= 'crawler-run_duration';
+	const O_CRAWLER_RUN_INTERVAL 	= 'crawler-run_interval';
+	const O_CRAWLER_CRAWL_INTERVAL 	= 'crawler-crawl_interval';
+	const O_CRAWLER_THREADS 		= 'crawler-threads';
+	const O_CRAWLER_TIMEOUT 		= 'crawler-timeout';
+	const O_CRAWLER_LOAD_LIMIT 		= 'crawler-load_limit';
 	const O_CRAWLER_SITEMAP 		= 'crawler-sitemap';
 	const O_CRAWLER_DROP_DOMAIN		= 'crawler-drop_domain';
 	const O_CRAWLER_MAP_TIMEOUT		= 'crawler-map_timeout';
-	const O_CRAWLER_ROLES 			= 'crawler-roles' ;
-	const O_CRAWLER_COOKIES 		= 'crawler-cookies' ;
+	const O_CRAWLER_ROLES 			= 'crawler-roles';
+	const O_CRAWLER_COOKIES 		= 'crawler-cookies';
 
 	## -------------------------------------------------- ##
 	## --------------		 Misc 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MISC_HTACCESS_FRONT 		= 'misc-htaccess_front' ;
-	const O_MISC_HTACCESS_BACK 			= 'misc-htaccess_back' ;
-	const O_MISC_HEARTBEAT_FRONT		= 'misc-heartbeat_front' ;
-	const O_MISC_HEARTBEAT_FRONT_TTL	= 'misc-heartbeat_front_ttl' ;
-	const O_MISC_HEARTBEAT_BACK			= 'misc-heartbeat_back' ;
-	const O_MISC_HEARTBEAT_BACK_TTL		= 'misc-heartbeat_back_ttl' ;
-	const O_MISC_HEARTBEAT_EDITOR		= 'misc-heartbeat_editor' ;
-	const O_MISC_HEARTBEAT_EDITOR_TTL	= 'misc-heartbeat_editor_ttl' ;
+	const O_MISC_HTACCESS_FRONT 		= 'misc-htaccess_front';
+	const O_MISC_HTACCESS_BACK 			= 'misc-htaccess_back';
+	const O_MISC_HEARTBEAT_FRONT		= 'misc-heartbeat_front';
+	const O_MISC_HEARTBEAT_FRONT_TTL	= 'misc-heartbeat_front_ttl';
+	const O_MISC_HEARTBEAT_BACK			= 'misc-heartbeat_back';
+	const O_MISC_HEARTBEAT_BACK_TTL		= 'misc-heartbeat_back_ttl';
+	const O_MISC_HEARTBEAT_EDITOR		= 'misc-heartbeat_editor';
+	const O_MISC_HEARTBEAT_EDITOR_TTL	= 'misc-heartbeat_editor_ttl';
 
 	## -------------------------------------------------- ##
 	## --------------		 CDN 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_CDN 				= 'cdn' ;
-	const O_CDN_ORI 			= 'cdn-ori' ;
-	const O_CDN_ORI_DIR 		= 'cdn-ori_dir' ;
-	const O_CDN_EXC 			= 'cdn-exc' ;
-	const O_CDN_REMOTE_JQ 		= 'cdn-remote_jq' ;
-	const O_CDN_QUIC 			= 'cdn-quic' ;
-	const O_CDN_CLOUDFLARE 		= 'cdn-cloudflare' ;
-	const O_CDN_CLOUDFLARE_EMAIL= 'cdn-cloudflare_email' ;
-	const O_CDN_CLOUDFLARE_KEY 	= 'cdn-cloudflare_key' ;
-	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name' ;
-	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone' ;
+	const O_CDN 				= 'cdn';
+	const O_CDN_ORI 			= 'cdn-ori';
+	const O_CDN_ORI_DIR 		= 'cdn-ori_dir';
+	const O_CDN_EXC 			= 'cdn-exc';
+	const O_CDN_REMOTE_JQ 		= 'cdn-remote_jq';
+	const O_CDN_QUIC 			= 'cdn-quic';
+	const O_CDN_CLOUDFLARE 		= 'cdn-cloudflare';
+	const O_CDN_CLOUDFLARE_EMAIL= 'cdn-cloudflare_email';
+	const O_CDN_CLOUDFLARE_KEY 	= 'cdn-cloudflare_key';
+	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name';
+	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
 	const O_CDN_MAPPING 		= 'cdn-mapping';
 	const O_CDN_ATTR 			= 'cdn-attr';
 
-	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
+	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
 	/*** Other consts ***/
-	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val //xx todo: may need to remove
+	const O_GUIDE = 'litespeed-guide'; // Array of each guidance tag as key, step as val //xx todo: may need to remove
 
 	// Server variables
-	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
-	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT' ;
-	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE' ;
+	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP';
+	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT';
+	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE';
 
-	// const O_FAVICON = 'litespeed-cache-favicon' ;
+	// const O_FAVICON = 'litespeed-cache-favicon';
 
-	const CRWL_COOKIE_NAME 		= 'name' ;
-	const CRWL_COOKIE_VALS 		= 'vals' ;
+	const CRWL_COOKIE_NAME 		= 'name';
+	const CRWL_COOKIE_VALS 		= 'vals';
 
 	const CDN_MAPPING_URL 		= 'url';
 	const CDN_MAPPING_INC_IMG 	= 'inc_img';
@@ -295,15 +296,15 @@ class Base extends Instance {
 	const CDN_MAPPING_INC_JS 	= 'inc_js';
 	const CDN_MAPPING_FILETYPE 	= 'filetype';
 
-	const VAL_OFF 	= 0 ;
-	const VAL_ON 	= 1 ;
-	const VAL_ON2 	= 2 ;
+	const VAL_OFF 	= 0;
+	const VAL_ON 	= 1;
+	const VAL_ON2 	= 2;
 
 	/* This is for API hook usage */
-	const IMG_OPTM_BM_ORI 		= 1 ;
-	const IMG_OPTM_BM_WEBP 		= 2 ;
-	const IMG_OPTM_BM_LOSSLESS 	= 4 ;
-	const IMG_OPTM_BM_EXIF 		= 8 ;
+	const IMG_OPTM_BM_ORI 		= 1;
+	const IMG_OPTM_BM_WEBP 		= 2;
+	const IMG_OPTM_BM_LOSSLESS 	= 4;
+	const IMG_OPTM_BM_EXIF 		= 8;
 
 	/* Site related options (Will not overwrite other sites' config) */
 	protected static $SINGLE_SITE_OPTIONS = array(
@@ -324,14 +325,14 @@ class Base extends Instance {
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
-	) ;
+	);
 
 	public static $CSS_FONT_DISPLAY_SET = array(
 		1 => 'block',
 		2 => 'swap',
 		3 => 'fallback',
 		4 => 'optional',
-	) ;
+	);
 
 	protected static $_default_options = array(
 		self::_VER 			=> '',
@@ -452,6 +453,7 @@ class Base extends Instance {
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
+		self::O_OPTM_JS_INLINE_DEFER_EXC => array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),
@@ -557,7 +559,7 @@ class Base extends Instance {
 		self::O_CDN_MAPPING 		=> array(),
 		self::O_CDN_ATTR 			=> array(),
 
-	) ;
+	);
 
 	protected static $_default_site_options = array(
 		self::_VER 						=> '',
@@ -607,7 +609,7 @@ class Base extends Instance {
 		self::O_MISC_HTACCESS_FRONT 	=> '',
 		self::O_MISC_HTACCESS_BACK		=> '',
 
-	) ;
+	);
 
 	// NOTE: all the val of following items will be int while not bool
 	protected static $_multi_switch_list = array(
@@ -616,7 +618,7 @@ class Base extends Instance {
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
 		self::O_OPTM_JS_INLINE_DEFER 	=> 2,
 		self::O_CRAWLER_ORDER_LINKS 	=> 3,
-	) ;
+	);
 
 
 	/**
@@ -672,10 +674,10 @@ class Base extends Instance {
 	{
 		// Load network_default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true ) ;
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true );
 			foreach ( self::$_default_site_options as $k => $v ) {
 				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
-					continue ;
+					continue;
 				}
 
 				// Parse value in ini file
@@ -690,9 +692,9 @@ class Base extends Instance {
 			}
 		}
 
-		self::$_default_site_options[ self::_VER ] = Core::VER ;
+		self::$_default_site_options[ self::_VER ] = Core::VER;
 
-		return self::$_default_site_options ;
+		return self::$_default_site_options;
 	}
 
 	/**
@@ -705,10 +707,10 @@ class Base extends Instance {
 	{
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true );
 			foreach ( self::$_default_options as $k => $v ) {
 				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
-					continue ;
+					continue;
 				}
 
 				// Parse value in ini file
@@ -763,7 +765,7 @@ class Base extends Instance {
 
 		// Load internal default vals
 		// Setting the default bool to int is also to avoid type casting override it back to bool
-		self::$_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON ; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+		self::$_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 
 		// Load default vals containing variables
 		if ( ! self::$_default_options[ self::O_CDN_ORI_DIR ] ) {

@@ -630,6 +630,8 @@ class Optimize extends Base
 			return;
 		}
 
+		$optm_js_inline_exc = Conf::val( Base::O_OPTM_JS_INLINE_DEFER_EXC );
+
 		Debug2::debug( '[Optm] Inline JS defer ' . $optm_js_inline );
 
 		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER );
@@ -656,7 +658,17 @@ class Optimize extends Base
 				}
 			}
 
-			$con = trim( $match[ 2 ] );
+			$con = $match[ 2 ];
+
+			if ( $optm_js_inline_exc ) {
+				$hit = Utility::str_hit_array( $con, $optm_js_inline_exc );
+				if ( $hit ) {
+					Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
+					continue;
+				}
+			}
+
+			$con = trim( $con );
 			// Minify JS first
 			$con = Optimizer::minify_js( $con );
 

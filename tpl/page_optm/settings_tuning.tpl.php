@@ -155,6 +155,20 @@ ksort( $roles ) ;
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_JS_INLINE_DEFER_EXC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Inline JS codes including the above fragment will not be deferred.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_EXC ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -181,7 +195,7 @@ ksort( $roles ) ;
 					<?php $this->build_checkbox( $id . '[]', $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
 				<?php endforeach; ?>
 			</div>
-			
+
 		</td>
 	</tr>
 
