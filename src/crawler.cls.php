@@ -387,8 +387,7 @@ class Crawler extends Base
 	 * @since  1.1.0
 	 * @access private
 	 */
-	private function _prepare_running()
-	{
+	private function _prepare_running() {
 		$this->_summary[ 'is_running' ] = time();
 		$this->_summary[ 'done' ] = 0;// reset done status
 		$this->_summary[ 'last_status' ] = 'prepare running';
@@ -399,10 +398,15 @@ class Crawler extends Base
 			$this->_summary[ 'curr_crawler_beginning_time' ] = time();
 		}
 
-		if ( $this->_summary['curr_crawler'] == 0 && $this->_summary['last_pos'] == 0 ) {
-			$this->_summary['this_full_beginning_time'] = time();
-			$this->_summary['list_size'] = $this->__map->count_map();
+		if ( $this->_summary[ 'curr_crawler' ] == 0 && $this->_summary[ 'last_pos' ] == 0 ) {
+			$this->_summary[ 'this_full_beginning_time' ] = time();
+			$this->_summary[ 'list_size' ] = $this->__map->count_map();
 		}
+
+		if ( $this->_summary[ 'end_reason' ] == 'end' && $this->_summary[ 'last_pos' ] == 0 ) {
+			$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
+		}
+
 		self::save_summary();
 	}
 
@@ -712,14 +716,14 @@ class Crawler extends Base
 		if ( $this->_end_reason == 'end' ) { // Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
 			$this->_summary[ 'curr_crawler' ]++; // Jump to next cralwer
-			$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
+			// $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array(); // reset this at next crawl time
 			$this->_summary[ 'last_pos' ] = 0;// reset last position
 			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
 			$count_crawlers = count( $this->list_crawlers() );
 			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
 				Debug2::debug( '🐞 _terminate_running Touched end, whole crawled. Reload crawler!' );
 				$this->_summary[ 'curr_crawler' ] = 0;
-				$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
+				// $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 				$this->_summary[ 'done' ] = 'touchedEnd';// log done status
 				$this->_summary[ 'last_full_time_cost' ] = time() - $this->_summary[ 'this_full_beginning_time' ];
 			}
