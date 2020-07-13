@@ -670,7 +670,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function load_default_site_vals()
+	public function load_default_site_vals()
 	{
 		// Load network_default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
