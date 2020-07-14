@@ -104,13 +104,23 @@ class Optimizer extends Instance
 		}
 
 		// Parse real file path
-		$real_files = array() ;
-		foreach ( $src_list as $url ) {
-			$real_file = Utility::is_internal_file( $url ) ;
+		$real_files = array();
+		foreach ( $src_list as $src_info ) {
+			$real_file = Utility::is_internal_file( ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info );
+
 			if ( ! $real_file ) {
-				continue ;
+				continue;
 			}
-			$real_files[] = $real_file[ 0 ] ;
+
+			if ( ! empty( $src_info[ 'media' ] ) ) {
+				$real_files[] = array(
+					'src' => $real_file[ 0 ],
+					'media' => $src_info[ 'media' ],
+				);
+			}
+			else {
+				$real_files[] = $real_file[ 0 ];
+			}
 		}
 
 		if ( ! $real_files ) {
@@ -125,11 +135,11 @@ class Optimizer extends Instance
 		// try {
 		// Handle CSS
 		if ( $file_type === 'css' ) {
-			$content = $this->_serve_css( $real_files, $concat_only ) ;
+			$content = $this->_serve_css( $real_files, $concat_only );
 		}
 		// Handle JS
 		else {
-			$content = $this->_serve_js( $real_files, $concat_only ) ;
+			$content = $this->_serve_js( $real_files, $concat_only );
 		}
 
 		// } catch ( \Exception $e ) {
@@ -166,7 +176,15 @@ class Optimizer extends Instance
 	private function _serve_css( $files, $concat_only = false )
 	{
 		$con = array() ;
-		foreach ( $files as $real_path ) {
+		foreach ( $files as $path_info ) {
+			$media = false;
+			if ( ! empty( $path_info[ 'src' ] ) ) {
+				$real_path = $path_info[ 'src' ];
+				$media = $path_info[ 'media' ];
+			}
+			else {
+				$real_path = $path_info;
+			}
 			Debug2::debug2( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = File::read( $real_path ) ;
 
@@ -183,10 +201,14 @@ class Optimizer extends Instance
 
 			$data = Lib\CSS_MIN\UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
 
-			$con[] = $data ;
+			if ( $media ) {
+				$data = '@media ' . $media . '{' . $data . '}';
+			}
+
+			$con[] = $data;
 		}
 
-		return implode( '', $con ) ;
+		return implode( '', $con );
 	}
 
 	/**

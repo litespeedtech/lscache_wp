@@ -418,8 +418,11 @@ class Optimize extends Base
 				}
 				// Only HTTP2 push
 				else {
-					foreach ( $src_queue_list as $val ) {
-						$this->append_http2( $val ) ;
+					foreach ( $src_queue_list as $src ) {
+						if ( ! empty( $src[ 'src' ] ) ) {
+							$src = $src[ 'src' ];
+						}
+						$this->append_http2( $src ) ;
 					}
 				}
 			}
@@ -896,11 +899,10 @@ class Optimize extends Base
 		$i = 0;
 		$src_arr = array();
 		$url_sensitive = Conf::val( Base::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
-		foreach ( $src_queue_list as $k => $v ) {
-
+		foreach ( $src_queue_list as $k => $src ) {
 			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array();
 
-			$src_arr[ $i ][] = $v;
+			$src_arr[ $i ][] = $src;
 
 			$total += $file_size_list[ $k ];
 
@@ -915,8 +917,8 @@ class Optimize extends Base
 
 		// group build
 		$hashed_arr = array();
-		foreach ( $src_arr as $v ) {
-			$hashed_arr[] = $this->_build_hash_url( $v, $file_type, $url_sensitive );
+		foreach ( $src_arr as $src_list ) {
+			$hashed_arr[] = $this->_build_hash_url( $src_list, $file_type, $url_sensitive );
 		}
 
 		return $hashed_arr;
@@ -928,12 +930,14 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
-	{
-		$html_list_ori = $html_list ;
+	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' ) {
+		$html_list_ori = $html_list;
 
-		$tag = $file_type === 'css' ? 'link' : 'script' ;
+		$tag = $file_type === 'css' ? 'link' : 'script';
 		foreach ( $src_queue_list as $key => $src ) {
+			if ( ! empty( $src[ 'src' ] ) ) {
+				$src = $src[ 'src' ];
+			}
 			$url = $this->_build_hash_url( $src, $file_type ) ;
 			$snippet = str_replace( $src, $url, $html_list[ $key ] ) ;
 			$snippet = str_replace( "<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet ) ;
@@ -964,8 +968,7 @@ class Optimize extends Base
 	 * @access private
 	 * @return array Array(Ignored raw html, src needed to be handled list, filesize for param 2nd )
 	 */
-	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
-	{
+	private function _analyse_links( $src_list, $html_list, $file_type = 'css' ) {
 		// if ( $file_type == 'css' ) {
 		// 	$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) ) ;
 		// }
@@ -977,11 +980,19 @@ class Optimize extends Base
 		// }
 
 		$ignored_html = array() ;
-		$src_queue_list = array() ;
+		$src_queue_list = array();
 		$file_size_list = array() ;
 
 		// Analyse links
-		foreach ( $src_list as $key => $src ) {
+		foreach ( $src_list as $key => $src_info ) {
+			// CSS has different format when having media='' conditional attribute
+			if ( ! empty( $src_info[ 'src' ] ) ) {
+				$src = $src_info[ 'src' ];
+			}
+			else {
+				$src = $src_info;
+			}
+
 			Debug2::debug2( '[Optm] ' . $src ) ;
 
 			/**
@@ -1024,7 +1035,9 @@ class Optimize extends Base
 				continue ;
 			}
 
-			$src_queue_list[ $key ] = $src ;
+			// Note: some CSS may have different format
+			$src_queue_list[ $key ] = $src_info;
+
 			$file_size_list[ $key ] = $file_info[ 1 ] ;
 		}
 
@@ -1050,10 +1063,17 @@ class Optimize extends Base
 			$src = array( $src );
 		}
 
-		$src = array_values( $src );
-
 		// Drop query strings
-		$src = array_map( array( $this, 'remove_query_strings' ), $src );
+		foreach ( $src as $k => $v ) {
+			if ( ! empty( $v[ 'src' ] ) ) {
+				$src[ $k ][ 'src' ] = $this->remove_query_strings( $v[ 'src' ] ); // CSS w/ cond `media=`
+			}
+			else {
+				$src[ $k ] = $this->remove_query_strings( $v );
+			}
+		}
+
+		// $src = array_values( $src );
 
 		$purge_timestamp = self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS );
 
@@ -1168,8 +1188,7 @@ class Optimize extends Base
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _handle_css()
-	{
+	private function _handle_css() {
 		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) ) ;
 
 		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() ) ;
@@ -1240,11 +1259,20 @@ class Optimize extends Base
 				continue ;
 			}
 
-			$src_list[] = $attrs[ 'href' ] ;
-			$html_list[] = $match[ 0 ] ;
+			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
+				$src_list[] = array(
+					'src' => $attrs[ 'href' ],
+					'media' => $attrs[ 'media' ],
+				);
+			}
+			else {
+				$src_list[] = $attrs[ 'href' ];
+			}
+
+			$html_list[] = $match[ 0 ];
 		}
 
-		return array( $src_list, $html_list ) ;
+		return array( $src_list, $html_list );
 	}
 
 	/**
