@@ -8,44 +8,42 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Optimize extends Base
-{
-	protected static $_instance ;
+class Optimize extends Base {
+	protected static $_instance;
 
-	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js' ;
-	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js' ;
+	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js';
+	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js';
 
-	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css' ;
+	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
-	private $content ;
-	private $http2_headers = array() ;
+	private $content;
+	private $http2_headers = array();
 
-	private $cfg_http2_css ;
-	private $cfg_http2_js ;
-	private $cfg_css_min ;
-	private $cfg_css_comb ;
-	private $cfg_js_min ;
-	private $cfg_js_comb ;
-	private $cfg_css_async ;
-	private $cfg_js_defer ;
-	private $cfg_js_defer_exc = false ;
-	private $cfg_qs_rm ;
-	private $cfg_exc_jquery ;
-	private $cfg_ggfonts_async ;
-	private $_conf_css_font_display ;
-	private $cfg_optm_max_size ;
-	private $cfg_ttl ;
-	private $cfg_ggfonts_rm ;
+	private $cfg_http2_css;
+	private $cfg_http2_js;
+	private $cfg_css_min;
+	private $cfg_css_comb;
+	private $cfg_js_min;
+	private $cfg_js_comb;
+	private $cfg_css_async;
+	private $cfg_js_defer;
+	private $cfg_js_defer_exc = false;
+	private $cfg_exc_jquery;
+	private $cfg_ggfonts_async;
+	private $_conf_css_font_display;
+	private $cfg_optm_max_size;
+	private $cfg_ttl;
+	private $cfg_ggfonts_rm;
 
-	private $dns_prefetch ;
-	private $_ggfonts_urls = array() ;
+	private $dns_prefetch;
+	private $_ggfonts_urls = array();
 
-	private $html_foot = '' ; // The html info append to <body>
-	private $html_head = '' ; // The html info prepend to <body>
+	private $html_foot = ''; // The html info append to <body>
+	private $html_head = ''; // The html info prepend to <body>
 
 	private static $_var_i = 0;
 
@@ -54,8 +52,7 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 	}
 
 	/**
@@ -64,15 +61,13 @@ class Optimize extends Base
 	 * @since  3.0
 	 * @access protected
 	 */
-	public function init()
-	{
+	public function init() {
 		$this->cfg_css_async = Conf::val( Base::O_OPTM_CSS_ASYNC );
 		if ( $this->cfg_css_async && ! Conf::val( Base::O_API_KEY ) ) {
 			Debug2::debug( '[Optm] ❌ CCSS set to OFF due to lack of domain key' );
 			$this->cfg_css_async = false;
 		}
 		$this->cfg_js_defer = Conf::val( Base::O_OPTM_JS_DEFER ) ;
-		$this->cfg_qs_rm = Conf::val( Base::O_OPTM_QS_RM ) ;
 
 		if ( ! Router::can_optm() ) {
 			return;
@@ -83,7 +78,7 @@ class Optimize extends Base
 			$this->_emoji_rm() ;
 		}
 
-		if ( $this->cfg_qs_rm ) {
+		if ( Conf::val( Base::O_OPTM_QS_RM ) ) {
 			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 		}
@@ -1063,6 +1058,9 @@ class Optimize extends Base
 			$src = array( $src );
 		}
 
+		// Query string hash
+		$qs_hash = substr( md5( json_encode( $src ) . self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+
 		// Drop query strings
 		foreach ( $src as $k => $v ) {
 			if ( ! empty( $v[ 'src' ] ) ) {
@@ -1074,14 +1072,8 @@ class Optimize extends Base
 		}
 
 		// $src = array_values( $src );
-
-		$purge_timestamp = self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS );
-
-		$hash = md5( json_encode( $src ) . $purge_timestamp );
-
-		$short = substr( $hash, -5 );
-
-		$filename = $short . '.' . $file_type;
+		$hash = md5( json_encode( $src ) );
+		$filename = substr( $hash, -5 ) . '.' . $file_type;
 
 		// Need to check conflicts
 		// If short hash exists
@@ -1098,7 +1090,7 @@ class Optimize extends Base
 
 		// Need to insert the record
 		if ( ! $existed ) {
-			Data::get_instance()->optm_save_src( $filename, $src );
+			Data::get_instance()->optm_save_src( $filename, $src, $request_url );
 		}
 
 		// Generate static files
@@ -1116,7 +1108,7 @@ class Optimize extends Base
 
 		}
 
-		return LITESPEED_STATIC_URL . '/cssjs/' . $filename;
+		return LITESPEED_STATIC_URL . '/cssjs/' . $filename . '?' . $qs_hash;
 	}
 
 	/**

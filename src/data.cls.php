@@ -416,7 +416,7 @@ class Data extends Instance
 	 * @since  1.3.1
 	 * @access public
 	 */
-	public function optm_save_src( $filename, $src ) {
+	public function optm_save_src( $filename, $src, $request_url ) {
 		global $wpdb;
 
 		$src = json_encode( $src );
@@ -424,7 +424,7 @@ class Data extends Instance
 			'hash_name'	=> $filename,
 			'src'		=> $src,
 			'dateline'	=> time(),
-			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
+			'refer' 	=> $request_url,
 		);
 
 		$res = $wpdb->replace( $this->tb( 'cssjs' ), $f );
