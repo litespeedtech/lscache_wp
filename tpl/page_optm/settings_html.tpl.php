@@ -118,7 +118,6 @@ defined( 'WPINC' ) || exit ;
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Remove query strings from static resources.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-warning">
 					⚠️
 					<?php echo __( 'Google reCAPTCHA will be bypassed automatically.', 'litespeed-cache' ) ; ?>
