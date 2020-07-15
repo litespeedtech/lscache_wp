@@ -87,8 +87,7 @@ class Report extends Base
 	 * @since 1.0.12
 	 * @access public
 	 */
-	public function generate_environment_report($options = null)
-	{
+	public function generate_environment_report( $options = null ) {
 		global $wp_version, $_SERVER ;
 		$frontend_htaccess = Htaccess::get_frontend_htaccess() ;
 		$backend_htaccess = Htaccess::get_backend_htaccess() ;
@@ -129,6 +128,15 @@ class Report extends Base
 
 		if ( is_null($options) ) {
 			$options = Conf::get_instance()->get_options( true );
+
+			if ( is_multisite() ) {
+				$options2 = Conf::get_instance()->get_options();
+				foreach ( $options2 as $k => $v ) {
+					if ( $options[ $k ] !== $v ) {
+						$options[ '[Overwritten] ' . $k ] = $v;
+					}
+				}
+			}
 		}
 
 		if ( ! is_null($options) && is_multisite() ) {
