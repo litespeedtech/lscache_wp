@@ -210,7 +210,7 @@ class Conf extends Base
 		// Overwrite single blog options with site options
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
-				$this->_options[ $k ] = $this->_site_options[ $k ];
+				// $this->_options[ $k ] = $this->_site_options[ $k ];
 				$this->_primary_options[ $k ] = $this->_site_options[ $k ];
 			}
 		}
