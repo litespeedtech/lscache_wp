@@ -147,6 +147,8 @@ class Base extends Instance {
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
 	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer';
+	const O_OPTM_JS_LOCALIZE		= 'optm-js_localize';
+	const O_OPTM_JS_LOCALIZE_DOMAINS	= 'optm-js_localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
 	const O_OPTM_EXC_JQ 			= 'optm-exc_jq';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
@@ -444,6 +446,8 @@ class Base extends Instance {
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
+		self::O_OPTM_JS_LOCALIZE 		=> false,
+		self::O_OPTM_JS_LOCALIZE_DOMAINS	=> array(),
 		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_EXC_JQ 			=> false,
@@ -855,6 +859,8 @@ class Base extends Instance {
 			self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
+			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
+			self::O_OPTM_JS_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize JS`
 			// self::	=> '',
 			// self::	=> '',
 		);

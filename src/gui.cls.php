@@ -388,8 +388,7 @@ class GUI extends Base
 	 * @since  1.3
 	 * @access public
 	 */
-	public function frontend_shortcut()
-	{
+	public function frontend_shortcut() {
 		global $wp_admin_bar ;
 
 		$wp_admin_bar->add_menu( array(
@@ -521,6 +520,16 @@ class GUI extends Base
 			) );
 		}
 
+		if ( Conf::val( Base::O_OPTM_JS_LOCALIZE ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-localjs',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized JS', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALJS, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
 		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
@@ -553,8 +562,7 @@ class GUI extends Base
 	 * @global WP_Admin_Bar $wp_admin_bar
 	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`
 	 */
-	public function backend_shortcut()
-	{
+	public function backend_shortcut() {
 		global $wp_admin_bar ;
 
 		// if ( defined( 'LITESPEED_ON' ) ) {
@@ -659,6 +667,16 @@ class GUI extends Base
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( Conf::val( Base::O_OPTM_JS_LOCALIZE ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-localjs',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized JS', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALJS ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}

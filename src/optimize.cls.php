@@ -210,6 +210,33 @@ class Optimize extends Base {
 	}
 
 	/**
+	 * Localize JS
+	 *
+	 * @since  3.3
+	 */
+	public function serve_local( $uri ) {
+		$url = 'https://' . $uri;
+
+		Control::set_no_vary();
+		Control::set_public_forced( 'Localized JS' );
+		Tag::add( Tag::TYPE_LOCALJS );
+
+		header('Content-Type: application/javascript');
+
+		$res = wp_remote_get( $url );
+
+		$content = wp_remote_retrieve_body( $res );
+
+		if ( ! $content ) {
+			$content = '/* Failed to load ' . $url . ' */';
+		}
+
+		echo $content;
+
+		exit;
+	}
+
+	/**
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.1
@@ -572,13 +599,19 @@ class Optimize extends Base {
 		 * Handle google fonts async
 		 * This will result in a JS snippet in head, so need to put it in the end to avoid being replaced by JS parser
 		 */
-		$this->_async_ggfonts() ;
+		$this->_async_ggfonts();
 
 		/**
 		 * Font display optm
 		 * @since  3.0
 		 */
-		$this->_font_optm() ;
+		$this->_font_optm();
+
+		/**
+		 * Localize GG/FB JS
+		 * @since  3.3
+		 */
+		$this->_localize_js();
 
 		/**
 		 * Inline script manipulated until document is ready
@@ -614,6 +647,33 @@ class Optimize extends Base {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
 
+	}
+
+	/**
+	 * Localize JS
+	 *
+	 * @since 3.3
+	 * @access private
+	 */
+	private function _localize_js() {
+		if ( ! Conf::val( Base::O_OPTM_JS_LOCALIZE ) ) {
+			return;
+		}
+
+		$domains = Conf::val( Base::O_OPTM_JS_LOCALIZE_DOMAINS );
+		if ( ! $domains ) {
+			return;
+		}
+
+		foreach ( $domains as $v ) {
+			if ( ! $v || substr( $v, 0, 2 ) !== '//' ) {
+				continue;
+			}
+
+			$v = substr( $v, 2 );
+
+			$this->content = str_replace( 'https://' . $v, LITESPEED_STATIC_URL . '/localjs/' . $v, $this->content );
+		}
 	}
 
 	/**
@@ -1118,8 +1178,7 @@ class Optimize extends Base {
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _parse_js()
-	{
+	private function _parse_js() {
 		$excludes = apply_filters( 'litespeed_optimize_js_excludes', Conf::val( Base::O_OPTM_JS_EXC ) ) ;
 
 		$src_list = array() ;
@@ -1144,6 +1203,10 @@ class Optimize extends Base {
 			}
 			if ( empty( $attrs[ 'src' ] ) ) {
 				continue ;
+			}
+
+			if ( strpos( $attrs[ 'src' ], '/localjs/' ) !== false ) {
+				continue;
 			}
 
 			$url_parsed = parse_url( $attrs[ 'src' ], PHP_URL_PATH ) ;

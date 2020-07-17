@@ -206,19 +206,6 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-				// `Original URLs`
-				case self::O_CDN_ORI:
-					$data = Utility::sanitize_lines( $data );
-					// Trip scheme
-					foreach ( $data as $k => $v ) {
-						$tmp = parse_url( trim( $v ) );
-						if ( ! empty( $tmp[ 'scheme' ] ) ) {
-							$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v );
-						}
-						$data[ $k ] = trim( $v );
-					}
-					break;
-
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRAWLER_EXC_CPT:
 					if ( $data ) {

@@ -3,46 +3,44 @@
  * The plugin purge class for X-LiteSpeed-Purge
  *
  * @since      	1.1.3
- * @since  		1.5 Moved into /inc
  * @since  		2.2 Refactored. Changed access from public to private for most func and class variables.
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Purge extends Base
-{
-	protected static $_instance ;
+class Purge extends Base {
+	protected static $_instance;
 
-	protected $_pub_purge = array() ;
-	protected $_priv_purge = array() ;
-	protected $_purge_related = false ;
-	protected $_purge_single = false ;
+	protected $_pub_purge = array();
+	protected $_priv_purge = array();
+	protected $_purge_related = false;
+	protected $_purge_single = false;
 
-	const X_HEADER = 'X-LiteSpeed-Purge' ;
-	const DB_QUEUE = 'queue' ;
+	const X_HEADER = 'X-LiteSpeed-Purge';
+	const DB_QUEUE = 'queue';
 
-	const TYPE_PURGE_ALL = 'purge_all' ;
-	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache' ;
-	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs' ;
-	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss' ;
-	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip' ;
-	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar' ;
-	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object' ;
-	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache' ;
+	const TYPE_PURGE_ALL = 'purge_all';
+	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache';
+	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs';
+	const TYPE_PURGE_ALL_LOCALJS = 'purge_all_localjs';
+	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
+	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip';
+	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar';
+	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object';
+	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache';
 
-	const TYPE_PURGE_FRONT = 'purge_front' ;
-	const TYPE_PURGE_FRONTPAGE = 'purge_frontpage' ;
-	const TYPE_PURGE_PAGES = 'purge_pages' ;
-	const TYPE_PURGE_ERROR = 'purge_error' ;
+	const TYPE_PURGE_FRONT = 'purge_front';
+	const TYPE_PURGE_FRONTPAGE = 'purge_frontpage';
+	const TYPE_PURGE_PAGES = 'purge_pages';
+	const TYPE_PURGE_ERROR = 'purge_error';
 
 	/**
 	 * Initialize
 	 *
 	 * @since    2.2.3
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 	}
 
 	/**
@@ -50,8 +48,7 @@ class Purge extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function init()
-	{
+	public function init() {
 		//register purge actions
 		$purge_post_events = array(
 			// 'edit_post',
@@ -79,8 +76,7 @@ class Purge extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function purge_publish( $new_status, $old_status, $post )
-	{
+	public static function purge_publish( $new_status, $old_status, $post ) {
 		if ( $new_status != 'publish' && $old_status != 'publish' ) {
 			return;
 		}
@@ -94,66 +90,69 @@ class Purge extends Base
 	 * @since  1.8
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
+	public static function handler() {
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_PURGE_ALL :
-				$instance->_purge_all() ;
-				break ;
+			case self::TYPE_PURGE_ALL:
+				$instance->_purge_all();
+				break;
 
-			case self::TYPE_PURGE_ALL_LSCACHE :
-				$instance->_purge_all_lscache() ;
-				break ;
+			case self::TYPE_PURGE_ALL_LSCACHE:
+				$instance->_purge_all_lscache();
+				break;
 
-			case self::TYPE_PURGE_ALL_CSSJS :
-				$instance->_purge_all_cssjs() ;
-				break ;
+			case self::TYPE_PURGE_ALL_CSSJS:
+				$instance->_purge_all_cssjs();
+				break;
 
-			case self::TYPE_PURGE_ALL_CCSS :
-				$instance->_purge_all_ccss() ;
-				break ;
+			case self::TYPE_PURGE_ALL_LOCALJS:
+				$instance->_purge_all_localjs();
+				break;
 
-			case self::TYPE_PURGE_ALL_LQIP :
-				$instance->_purge_all_lqip() ;
-				break ;
+			case self::TYPE_PURGE_ALL_CCSS:
+				$instance->_purge_all_ccss();
+				break;
 
-			case self::TYPE_PURGE_ALL_AVATAR :
-				$instance->_purge_all_avatar() ;
-				break ;
+			case self::TYPE_PURGE_ALL_LQIP:
+				$instance->_purge_all_lqip();
+				break;
 
-			case self::TYPE_PURGE_ALL_OBJECT :
-				$instance->_purge_all_object() ;
-				break ;
+			case self::TYPE_PURGE_ALL_AVATAR:
+				$instance->_purge_all_avatar();
+				break;
 
-			case self::TYPE_PURGE_ALL_OPCACHE :
-				$instance->purge_all_opcache() ;
-				break ;
+			case self::TYPE_PURGE_ALL_OBJECT:
+				$instance->_purge_all_object();
+				break;
 
-			case self::TYPE_PURGE_FRONT :
-				$instance->_purge_front() ;
-				break ;
+			case self::TYPE_PURGE_ALL_OPCACHE:
+				$instance->purge_all_opcache();
+				break;
 
-			case self::TYPE_PURGE_FRONTPAGE :
-				$instance->_purge_frontpage() ;
-				break ;
+			case self::TYPE_PURGE_FRONT:
+				$instance->_purge_front();
+				break;
 
-			case self::TYPE_PURGE_PAGES :
-				$instance->_purge_pages() ;
-				break ;
+			case self::TYPE_PURGE_FRONTPAGE:
+				$instance->_purge_frontpage();
+				break;
 
-			case strpos( $type, self::TYPE_PURGE_ERROR ) === 0 :
-				$instance->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) ) ;
-				break ;
+			case self::TYPE_PURGE_PAGES:
+				$instance->_purge_pages();
+				break;
+
+			case strpos( $type, self::TYPE_PURGE_ERROR ) === 0:
+				$instance->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 	/**
@@ -162,9 +161,8 @@ class Purge extends Base
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function purge_all( $reason = false )
-	{
-		self::get_instance()->_purge_all( $reason ) ;
+	public static function purge_all( $reason = false ) {
+		self::get_instance()->_purge_all( $reason );
 	}
 
 	/**
@@ -173,27 +171,27 @@ class Purge extends Base
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _purge_all( $reason = false )
-	{
-		$this->_purge_all_lscache( true ) ;
-		$this->_purge_all_cssjs( true ) ;
-		// $this->_purge_all_ccss( true ) ;
-		// $this->_purge_all_lqip( true ) ;
-		$this->_purge_all_object( true ) ;
-		$this->purge_all_opcache( true ) ;
+	private function _purge_all( $reason = false ) {
+		$this->_purge_all_lscache( true );
+		$this->_purge_all_cssjs( true );
+		$this->_purge_all_localjs( true );
+		// $this->_purge_all_ccss( true );
+		// $this->_purge_all_lqip( true );
+		$this->_purge_all_object( true );
+		$this->purge_all_opcache( true );
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = "( $reason )" ;
+			$reason = "( $reason )";
 		}
 
-		Debug2::debug( '[Purge] Purge all ' . $reason, 3 ) ;
+		Debug2::debug( '[Purge] Purge all ' . $reason, 3 );
 
-		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' ) ;
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
+		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' );
+		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
 
 		do_action( 'litespeed_purged_all' );
 	}
@@ -209,7 +207,7 @@ class Purge extends Base
 	 */
 	private function _purge_all_lscache( $silence = false )
 	{
-		$this->_add( '*' ) ;
+		$this->_add( '*' );
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
@@ -255,8 +253,7 @@ class Purge extends Base
 	 * @since    3.0
 	 * @access   private
 	 */
-	private function _purge_all_avatar( $silence = false )
-	{
+	private function _purge_all_avatar( $silence = false ) {
 		Avatar::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
@@ -266,23 +263,37 @@ class Purge extends Base
 	}
 
 	/**
+	 * Delete all localized JS
+	 *
+	 * @since    3.3
+	 * @access   private
+	 */
+	private function _purge_all_localjs( $silence = false ) {
+		$this->_add( Tag::TYPE_LOCALJS );
+
+		if ( ! $silence ) {
+			$msg = __( 'Notified LiteSpeed Web Server to purge localized JS entries.', 'litespeed-cache' );
+			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		}
+	}
+
+	/**
 	 * Alerts LiteSpeed Web Server to purge pages.
 	 *
 	 * @since    1.2.2
 	 * @access   private
 	 */
-	private function _purge_all_cssjs( $silence = false )
-	{
-		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() ) ;
+	private function _purge_all_cssjs( $silence = false ) {
+		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() );
 
-		$this->_add( Tag::TYPE_MIN ) ;
+		$this->_add( Tag::TYPE_MIN );
 
 		// For non-ls users
-		Optimize::get_instance()->rm_cache_folder() ;
+		Optimize::get_instance()->rm_cache_folder();
 
 		if ( ! $silence ) {
-			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
+			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );
+			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
 		}
 	}
 
@@ -292,29 +303,28 @@ class Purge extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function purge_all_opcache( $silence = false )
-	{
+	public function purge_all_opcache( $silence = false ) {
 		if ( ! Router::opcache_enabled() ) {
-			Debug2::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;
+			Debug2::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' );
 
 			if ( ! $silence ) {
-				$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' ) ;
-				Admin_Display::error( $msg ) ;
+				$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' );
+				Admin_Display::error( $msg );
 			}
 
-			return false ;
+			return false;
 		}
 
 		// Purge opcode cache
-		opcache_reset() ;
-		Debug2::debug( '[Purge] Reset opcode cache' ) ;
+		opcache_reset();
+		Debug2::debug( '[Purge] Reset opcode cache' );
 
 		if ( ! $silence ) {
-			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
+			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' );
+			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
 		}
 
-		return true ;
+		return true;
 	}
 
 	/**

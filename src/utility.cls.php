@@ -506,6 +506,20 @@ class Utility extends Instance {
 	}
 
 	/**
+	 * Drop protocol `https:` from https://example.com
+	 *
+	 * @since  3.3
+	 */
+	public static function noprotocol( $url ) {
+		$tmp = parse_url( trim( $url ) );
+		if ( ! empty( $tmp[ 'scheme' ] ) ) {
+			$url = str_replace( $tmp[ 'scheme' ] . ':', '', $url );
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Generate domain const
 	 *
 	 * This will generate http://www.example.com even there is a subfolder in home_url setting
@@ -536,8 +550,7 @@ class Utility extends Instance {
 	 * @param  bool $type String handler type
 	 * @return string
 	 */
-	public static function sanitize_lines( $arr, $type = null )
-	{
+	public static function sanitize_lines( $arr, $type = null ) {
 		if ( ! $arr ) {
 			if ( $type === 'string' ) {
 				return '' ;
@@ -562,6 +575,11 @@ class Utility extends Instance {
 		if ( $type === 'domain' ) {
 			$arr = array_map( __CLASS__ . '::parse_domain', $arr ) ;// Only keep domain
 			$changed = true ;
+		}
+
+		if ( $type === 'noprotocol' ) {
+			$arr = array_map( __CLASS__ . '::noprotocol', $arr ); // Drop protocol, `https://example.com` -> `//example.com`
+			$changed = true;
 		}
 
 		if ( $changed ) {

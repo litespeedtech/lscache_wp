@@ -672,12 +672,16 @@ class Router extends Base
 		}
 
 		switch ( $path[ 0 ] ) {
-			case 'avatar' :
+			case 'avatar':
 				Avatar::get_instance()->serve_satic( $path[ 1 ] );
 				break;
 
-			case 'cssjs' :
+			case 'cssjs':
 				Optimize::get_instance()->serve_satic( $path[ 1 ] );
+				break;
+
+			case 'localjs':
+				Optimize::get_instance()->serve_local( $path[ 1 ] );
 				break;
 
 			default :
