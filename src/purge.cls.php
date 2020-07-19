@@ -226,7 +226,7 @@ class Purge extends Base {
 		CSS::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
-			$msg = __( 'Cleaned all critical CSS files.', 'litespeed-cache' ) ;
+			$msg = __( 'Cleaned all Critical CSS files.', 'litespeed-cache' ) ;
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
 		}
 	}
@@ -257,7 +257,7 @@ class Purge extends Base {
 		Avatar::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
-			$msg = __( 'Cleaned all gravatar files.', 'litespeed-cache' ) ;
+			$msg = __( 'Cleaned all Gravatar files.', 'litespeed-cache' ) ;
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
 		}
 	}
@@ -526,7 +526,7 @@ class Purge extends Base {
 	{
 		$this->_add( Tag::TYPE_PAGES ) ;
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
+		$msg = __( 'Notified LiteSpeed Web Server to purge all pages.', 'litespeed-cache' ) ;
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg ) ;
 	}
 
