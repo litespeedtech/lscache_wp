@@ -813,8 +813,8 @@ class Cloud extends Base
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Debug2::debug( '[CLoud] failed to gen_key: ' . $error_message );
-			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			Debug2::debug( '[Cloud] failed to gen_key: ' . $error_message );
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
 			return;
 		}
 
