@@ -101,7 +101,7 @@ $this->form_action();
 			<?php if ( ! $permalink_structure ) : ?>
 				<div class="litespeed-callout notice notice-error inline">
 					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
-					<p><?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating an Domain key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
+					<p><?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating a Domain Key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
 						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
 					</p>
 				</div>
