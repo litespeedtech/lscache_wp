@@ -858,7 +858,7 @@ class Cloud extends Base
 
 		Debug2::debug( '❄️ ✅ send request for key successfully.' );
 
-		Admin_Display::succeed( __( 'Applied for Domain key successfully. Please wait for result. Domain key will be automatically sent to your WordPress.', 'litespeed-cache' ) );
+		Admin_Display::succeed( __( 'Applied for Domain Key successfully. Please wait for result. Domain Key will be automatically sent to your WordPress.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -986,7 +986,7 @@ class Cloud extends Base
 		}
 
 		if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
-			Admin_Display::error( __( 'Domain key hash mismatch', 'litespeed-cache' ), true );
+			Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
 			return;
 		}
 
