@@ -33,7 +33,7 @@ defined( 'WPINC' ) || exit ;
 <?php if ( ! LSWCP_ESI_SUPPORT && ! Conf::val( Base::O_CDN_QUIC ) ) : ?>
 	<div class="litespeed-callout-danger">
 		<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
-		<h4><?php echo __( 'These options are only available with LiteSpeed Enterprise Web Server or QUIC.cloud CDN.', 'litespeed-cache' ); ?></h4>
+		<h4><?php echo __( 'These options are only available with LiteSpeed Web Server Enterprise or QUIC.cloud CDN.', 'litespeed-cache' ); ?></h4>
 	</div>
 <?php endif; ?>
 
