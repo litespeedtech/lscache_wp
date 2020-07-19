@@ -62,7 +62,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<?php if ( $wet_limit ) : ?>
 			<p class="litespeed-desc">
-				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the amount images allowed in single request is limited.' ) ; ?>
+				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the number of images allowed in a single request is limited.' ) ; ?>
 				<?php echo __( 'Current limit is', 'litespeed-cache' ) . ': <strong>' . $wet_limit . '</strong>'; ?>
 			</p>
 			<?php endif; ?>
@@ -246,7 +246,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					</p>
 					</div>
 				<?php endif ; ?>
-				<div class="litespeed-image-optim-summary-footer"><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="litespeed-link-with-icon litespeed-danger">
+				<div class="litespeed-image-optim-summary-footer"><a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to remove all image backups?', 'litespeed-cache' ) ; ?>" class="litespeed-link-with-icon litespeed-danger">
 					<span class="dashicons dashicons-trash"></span><?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
 				</a></div>
 			</div>
