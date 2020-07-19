@@ -297,12 +297,12 @@ msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
 #: src/cloud.cls.php:817
-msgid "CLoud Error"
+msgid "Cloud Error"
 msgstr ""
 
 #: src/cloud.cls.php:861
 msgid ""
-"Applied for Domain key successfully. Please wait for result. Domain key will "
+"Applied for Domain key successfully. Please wait for result. Domain Key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
@@ -313,7 +313,7 @@ msgid ""
 msgstr ""
 
 #: src/cloud.cls.php:989
-msgid "Domain key hash mismatch"
+msgid "Domain Key hash mismatch"
 msgstr ""
 
 #: src/cloud.cls.php:1077
@@ -1660,7 +1660,7 @@ msgid "Notified LiteSpeed Web Server to purge all LSCache entries."
 msgstr ""
 
 #: src/purge.cls.php:231
-msgid "Cleaned all critical CSS files."
+msgid "Cleaned all Critical CSS files."
 msgstr ""
 
 #: src/purge.cls.php:247
@@ -1668,7 +1668,7 @@ msgid "Cleaned all LQIP files."
 msgstr ""
 
 #: src/purge.cls.php:263
-msgid "Cleaned all gravatar files."
+msgid "Cleaned all Gravatar files."
 msgstr ""
 
 #: src/purge.cls.php:284
@@ -1696,7 +1696,7 @@ msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
 #: src/purge.cls.php:519
-msgid "Notified LiteSpeed Web Server to purge pages."
+msgid "Notified LiteSpeed Web Server to purge all pages."
 msgstr ""
 
 #: src/purge.cls.php:539
@@ -2081,7 +2081,7 @@ msgstr ""
 
 #: tpl/cache/settings-cache.tpl.php:27
 msgid ""
-"When disabling the cache, all cached entries for this blog will be purged."
+"When disabling the cache, all cached entries for this site will be purged."
 msgstr ""
 
 #: tpl/cache/settings-cache.tpl.php:30
@@ -2183,7 +2183,7 @@ msgstr ""
 
 #: tpl/cache/settings-esi.tpl.php:36
 msgid ""
-"These options are only available with LiteSpeed Enterprise Web Server or "
+"These options are only available with LiteSpeed Web Server Enterprise or "
 "QUIC.cloud CDN."
 msgstr ""
 
@@ -2369,9 +2369,9 @@ msgstr ""
 
 #: tpl/cache/settings-purge.tpl.php:85
 msgid ""
-"If ON, stale copy of cached page will be shown to visitor until a new cache "
+"If ON, the stale copy of a cached page will be shown to visitors until a new cache "
 "copy is available. Reduces the server load for following visits. If OFF, "
-"page will be dynamically generated while visitor waits."
+"the page will be dynamically generated while visitors wait."
 msgstr ""
 
 #: tpl/cache/settings-purge.tpl.php:91
@@ -2672,7 +2672,7 @@ msgstr ""
 #: tpl/cache/settings_inc.purge_on_upgrade.tpl.php:15
 msgid ""
 "When enabled, the cache will automatically purge when any plugins, themes, "
-"or WordPress core is upgraded."
+"or WordPress core are upgraded."
 msgstr ""
 
 #: tpl/cdn/entry.tpl.php:6 tpl/cdn/settings.tpl.php:21
@@ -3225,7 +3225,7 @@ msgstr ""
 #: tpl/crawler/summary.tpl.php:49
 msgid ""
 "The crawler feature is not enabled on the LiteSpeed server. Please consult "
-"your server admin."
+"your server admin or hosting provider."
 msgstr ""
 
 #: tpl/crawler/summary.tpl.php:50
@@ -3405,7 +3405,7 @@ msgstr ""
 #: tpl/dash/dashboard.tpl.php:202 tpl/img_optm/summary.tpl.php:51
 #: tpl/page_optm/settings_css.tpl.php:140
 #: tpl/page_optm/settings_media.tpl.php:172
-msgid "Are you sure to redetect the closest cloud server for this service?"
+msgid "Are you sure you want to redetect the closest cloud server for this service?"
 msgstr ""
 
 #: tpl/dash/dashboard.tpl.php:213
@@ -3728,7 +3728,7 @@ msgstr ""
 
 #: tpl/general/settings.tpl.php:86
 msgid ""
-"There is a problem receiving your domain key. Please click the %s button to "
+"There was a problem with retrieving your Domain Key. Please click the %s button to "
 "retry."
 msgstr ""
 
@@ -3762,7 +3762,7 @@ msgstr ""
 
 #: tpl/general/settings.tpl.php:104
 msgid ""
-"You must set WordPress %1$s to a value other than %2$s before generating an "
+"You must set WordPress %1$s to a value other than %2$s before generating a "
 "Domain key."
 msgstr ""
 
@@ -3805,7 +3805,7 @@ msgid "Click to clear all nodes for further redetection."
 msgstr ""
 
 #: tpl/general/settings.tpl.php:128
-msgid "Are you sure to clear all cloud nodes?"
+msgid "Are you sure you want to clear all cloud nodes?"
 msgstr ""
 
 #: tpl/general/settings.tpl.php:140
@@ -3920,8 +3920,8 @@ msgstr ""
 #: tpl/img_optm/summary.tpl.php:65
 msgid ""
 "To make sure our server can communicate with your server without any issues "
-"and everything works fine, for the few first requests the amount images "
-"allowed in single request is limited."
+"and everything works fine, for the few first requests the number of images "
+"allowed in a single request is limited."
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:66
@@ -4008,7 +4008,7 @@ msgid "Saved"
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:249
-msgid "Are you sure to remove all image backups?"
+msgid "Are you sure you want to remove all image backups?"
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:250
@@ -4101,7 +4101,7 @@ msgid "Use Optimized Files"
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:367
-msgid "Are you sure to destroy all optimized images?"
+msgid "Are you sure you want to destroy all optimized images?"
 msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:368
@@ -4375,7 +4375,7 @@ msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:109
 msgid ""
-"Leave this option %1$s to allow communication with QUIC.cloud CCSS service. "
+"Leave this option %1$s to allow communication with the QUIC.cloud CCSS service. "
 "If set to %2$s, Critical CSS will not be generated."
 msgstr ""
 
@@ -5006,7 +5006,7 @@ msgstr ""
 
 #: tpl/toolbox/import_export.tpl.php:24
 msgid ""
-"This will export all current LiteSpeed Cache settings and save as a file."
+"This will export all current LiteSpeed Cache settings and save them as a file."
 msgstr ""
 
 #: tpl/toolbox/import_export.tpl.php:27
@@ -5036,7 +5036,7 @@ msgid "This will reset all settings to default settings."
 msgstr ""
 
 #: tpl/toolbox/import_export.tpl.php:52
-msgid "Are you sure to reset all settings to default settings?"
+msgid "Are you sure you want to reset all settings back to the default settings?"
 msgstr ""
 
 #: tpl/toolbox/import_export.tpl.php:53
@@ -5138,7 +5138,7 @@ msgid "This may cause heavy load on the server."
 msgstr ""
 
 #: tpl/toolbox/purge.tpl.php:117
-msgid "If only the WordPress site should be purged, use purge all."
+msgid "If only the WordPress site should be purged, use Purge All."
 msgstr ""
 
 #: tpl/toolbox/purge.tpl.php:161
