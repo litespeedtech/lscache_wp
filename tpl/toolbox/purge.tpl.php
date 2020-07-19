@@ -123,7 +123,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		'title_cls'	=> 'litespeed-danger',
 		'cfm'	=>  esc_html( __( 'This will clear EVERYTHING inside the cache.', 'litespeed-cache' ) ) . ' ' .
 					esc_html( __( 'This may cause heavy load on the server.', 'litespeed-cache' ) ) . ' ' .
-					esc_html( __( 'If only the WordPress site should be purged, use purge all.', 'litespeed-cache' ) )
+					esc_html( __( 'If only the WordPress site should be purged, use Purge All.', 'litespeed-cache' ) )
 	) ;
 }
 
