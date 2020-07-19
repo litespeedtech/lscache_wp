@@ -2671,8 +2671,8 @@ msgstr ""
 
 #: tpl/cache/settings_inc.purge_on_upgrade.tpl.php:15
 msgid ""
-"When enabled, the cache will automatically purge when any plugins, themes, "
-"or WordPress core are upgraded."
+"When enabled, the cache will automatically purge when any plugins, themes "
+"or WordPress Core are upgraded."
 msgstr ""
 
 #: tpl/cdn/entry.tpl.php:6 tpl/cdn/settings.tpl.php:21
