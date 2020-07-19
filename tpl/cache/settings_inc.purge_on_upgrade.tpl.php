@@ -12,7 +12,7 @@ defined( 'WPINC' ) || exit ;
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'When enabled, the cache will automatically purge when any plugins, themes, or WordPress core is upgraded.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'When enabled, the cache will automatically purge when any plugins, themes or WordPress Core are upgraded.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
