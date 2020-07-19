@@ -3763,7 +3763,7 @@ msgstr ""
 #: tpl/general/settings.tpl.php:104
 msgid ""
 "You must set WordPress %1$s to a value other than %2$s before generating a "
-"Domain key."
+"Domain Key."
 msgstr ""
 
 #: tpl/general/settings.tpl.php:104
