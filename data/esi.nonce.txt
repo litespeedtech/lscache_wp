@@ -31,3 +31,6 @@ wdap-call-nonce private
 
 # SEOpress Cookie Consent
 seopress_cookies_user_consent_nonce
+
+#SearchWP Metrics
+swpmtxnonce
