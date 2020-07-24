@@ -8,7 +8,7 @@ $menu_list = array(
 	'settings_html' 			=> __( 'Optimization Settings', 'litespeed-cache' ),
 	'settings_media' 			=> __( 'Media Settings', 'litespeed-cache' ),
 	'settings_media_exc'		=> __( 'Media Excludes', 'litespeed-cache' ),
-	'settings_discussion'		=> __( 'Discussion Settings', 'litespeed-cache' ),
+	'settings_localization'		=> __( 'Localization Settings', 'litespeed-cache' ),
 	'settings_tuning' 			=> __( 'Tuning Settings', 'litespeed-cache' ),
 ) ;
 

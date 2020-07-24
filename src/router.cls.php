@@ -680,7 +680,7 @@ class Router extends Base
 				Optimize::get_instance()->serve_satic( $path[ 1 ] );
 				break;
 
-			case 'localjs':
+			case 'localres':
 				Optimize::get_instance()->serve_local( $path[ 1 ] );
 				break;
 

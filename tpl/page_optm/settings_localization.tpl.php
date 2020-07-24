@@ -14,8 +14,8 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 <?php endif; ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Discussion Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#discussion-settings-tab', false, 'litespeed-learn-more' ) ; ?>
+	<?php echo __( 'Localization Settings', 'litespeed-cache' ) ; ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-settings-tab', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -34,7 +34,7 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 	</tr>
 
 	<tr>
-		<th>
+		<th class="litespeed-padding-left">
 			<?php $id = Base::O_DISCUSS_AVATAR_CRON ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -69,7 +69,7 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 	</tr>
 
 	<tr>
-		<th>
+		<th class="litespeed-padding-left">
 			<?php $id = Base::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>
@@ -79,6 +79,47 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 				<?php echo __( 'Specify how long, in seconds, Gravatar files are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 3600 ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_LOCALIZE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Localize external resources.', 'litespeed-cache' ); ?>
+				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_LOCALIZE_DOMAINS; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'These domains will be replaced to local URL.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Only HTTPS protocol supported.', 'litespeed-cache' ); ?>
+
+				<br /><?php echo sprintf( __( 'Comment lines supported (started w/ %s).', 'litespeed-cache' ), '<code>#</code>' ); ?>
+
+				<br /><?php echo sprintf( __( 'Can use space to separate the format and the URL if the format is not %s.', 'litespeed-cache' ),  '<code>JS</code>' ); ?>
+				<?php echo __( 'Currently format supports', 'litespeed-cache' ) . ':<code>JS</code>, <code>FONT</code>'; ?>.
+				<?php echo __( 'The format will affect the response content type header.', 'litespeed-cache' ); ?>
+
+				<br /><?php echo __( 'For example', 'litespeed-cache' ); ?>: <code>https://www.example.com</code>
+
+				<br /><?php echo __( 'Example 2', 'litespeed-cache' ); ?>: <code>FONT https://fonts.googleapis.com</code>
+
+				<br /><?php echo sprintf( __( 'The protocol prefix %s will be automatically partially dropped after option saved.', 'litespeed-cache' ), '<code>https:</code>' ); ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

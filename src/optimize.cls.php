@@ -21,6 +21,7 @@ class Optimize extends Base {
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
 	private $content;
+	private $content_ori;
 	private $http2_headers = array();
 
 	private $cfg_http2_css;
@@ -81,11 +82,6 @@ class Optimize extends Base {
 		if ( Conf::val( Base::O_OPTM_QS_RM ) ) {
 			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-		}
-
-		// Check if there is any critical css rules setting
-		if ( $this->cfg_css_async ) {
-			add_filter( 'litespeed_optm_html_head', __NAMESPACE__ . '\CSS::prepend_ccss', 1 ) ;
 		}
 
 		/**
@@ -303,41 +299,40 @@ class Optimize extends Base {
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function finalize( $content )
-	{
+	public static function finalize( $content ) {
 		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again ( But can be removed as mini file doesn't have LITESPEED_IS_HTML, keep for efficiency)
-			return $content ;
+			return $content;
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			Debug2::debug( '[Optm] bypass: Not frontend HTML type' ) ;
-			return $content ;
+			Debug2::debug( '[Optm] bypass: Not frontend HTML type' );
+			return $content;
 		}
 
 		// Check if hit URI excludes
-		$excludes = Conf::val( Base::O_OPTM_EXC ) ;
+		$excludes = Conf::val( Base::O_OPTM_EXC );
 		if ( ! empty( $excludes ) ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
-				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result ) ;
-				return $content ;
+				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result );
+				return $content;
 			}
 		}
 
 		// Check if is exclude optm roles ( Need to set Vary too )
 		if ( $result = Conf::get_instance()->in_optm_exc_roles() ) {
-			Debug2::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
-			return $content ;
+			Debug2::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result );
+			return $content;
 		}
 
 
-		Debug2::debug( '[Optm] start' ) ;
+		Debug2::debug( '[Optm] start' );
 
-		$instance = self::get_instance() ;
-		$instance->content = $content ;
+		$instance = self::get_instance();
+		$instance->content_ori = $instance->content = $content;
 
-		$instance->_optimize() ;
-		return $instance->content ;
+		$instance->_optimize();
+		return $instance->content;
 	}
 
 	/**
@@ -346,8 +341,7 @@ class Optimize extends Base {
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _optimize()
-	{
+	private function _optimize() {
 		$this->cfg_http2_css = Conf::val( Base::O_OPTM_CSS_HTTP2 ) ;
 		$this->cfg_http2_js = Conf::val( Base::O_OPTM_JS_HTTP2 ) ;
 		$this->cfg_css_min = Conf::val( Base::O_OPTM_CSS_MIN ) ;
@@ -615,10 +609,14 @@ class Optimize extends Base {
 
 		/**
 		 * Inline script manipulated until document is ready
-		 *
 		 * @since  3.0
 		 */
 		$this->_js_inline_defer();
+
+		// Check if there is any critical css rules setting
+		if ( $this->cfg_css_async ) {
+			$this->html_head = CSS::prepend_ccss( $this->html_head, $this->content_ori );
+		}
 
 		// Replace html head part
 		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head );
@@ -656,11 +654,11 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _localize_js() {
-		if ( ! Conf::val( Base::O_OPTM_JS_LOCALIZE ) ) {
+		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
 			return;
 		}
 
-		$domains = Conf::val( Base::O_OPTM_JS_LOCALIZE_DOMAINS );
+		$domains = Conf::val( Base::O_OPTM_LOCALIZE_DOMAINS );
 		if ( ! $domains ) {
 			return;
 		}
@@ -672,7 +670,7 @@ class Optimize extends Base {
 
 			$v = substr( $v, 2 );
 
-			$this->content = str_replace( 'https://' . $v, LITESPEED_STATIC_URL . '/localjs/' . $v, $this->content );
+			$this->content = str_replace( 'https://' . $v, LITESPEED_STATIC_URL . '/localres/' . $v, $this->content );
 		}
 	}
 
@@ -1205,7 +1203,7 @@ class Optimize extends Base {
 				continue ;
 			}
 
-			if ( strpos( $attrs[ 'src' ], '/localjs/' ) !== false ) {
+			if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
 				continue;
 			}
 
@@ -1244,50 +1242,50 @@ class Optimize extends Base {
 	 * @return array  All the src & related raw html list
 	 */
 	private function _handle_css() {
-		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) );
 
-		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() ) ;
+		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() );
 
-		$src_list = array() ;
-		$html_list = array() ;
+		$src_list = array();
+		$html_list = array();
 
-		// $dom = new \PHPHtmlParser\Dom ;
-		// $dom->load( $content ) ;return $val;
-		// $items = $dom->find( 'link' ) ;
+		// $dom = new \PHPHtmlParser\Dom;
+		// $dom->load( $content );return $val;
+		// $items = $dom->find( 'link' );
 
-		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
-		preg_match_all( '#<link \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
+		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
+		preg_match_all( '#<link \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
-			$attrs = Utility::parse_attr( $match[ 1 ] ) ;
+			$attrs = Utility::parse_attr( $match[ 1 ] );
 
 			if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
-				continue ;
+				continue;
 			}
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
-				continue ;
+				continue;
 			}
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
-				continue ;
+				continue;
 			}
 			if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-				continue ;
+				continue;
 			}
 			if ( empty( $attrs[ 'href' ] ) ) {
-				continue ;
+				continue;
 			}
 
 			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'href' ], $excludes ) ) {
-				Debug2::debug2( '[Optm] _handle_css bypassed exclude ' . $exclude ) ;
-				continue ;
+				Debug2::debug2( '[Optm] _handle_css bypassed exclude ' . $exclude );
+				continue;
 			}
 
 			// Check if need to remove this css
 			if ( $css_to_be_removed && Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
-				Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] ) ;
+				Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] );
 				// Delete this css snippet from orig html
-				$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
+				$this->content = str_replace( $match[ 0 ], '', $this->content );
 
-				continue ;
+				continue;
 			}
 
 			// Check Google fonts hit
@@ -1298,20 +1296,20 @@ class Optimize extends Base {
 				 * @since  3.0 For fotn display optm, need to parse google fonts URL too
 				 */
 				if ( ! in_array( $attrs[ 'href' ], $this->_ggfonts_urls ) ) {
-					$this->_ggfonts_urls[] = $attrs[ 'href' ] ;
+					$this->_ggfonts_urls[] = $attrs[ 'href' ];
 				}
 
 				if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
-					Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] ) ;
-					$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
+					Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] );
+					$this->content = str_replace( $match[ 0 ], '', $this->content );
 
-					continue ;
+					continue;
 				}
 			}
 
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
-				continue ;
+				continue;
 			}
 
 			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
@@ -1342,21 +1340,21 @@ class Optimize extends Base {
 	{
 		foreach ( $html_list as $k => $ori ) {
 			if ( strpos( $ori, 'data-asynced' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr data-asynced exist' ) ;
-				continue ;
+				Debug2::debug2( '[Optm] bypass: attr data-asynced exist' );
+				continue;
 			}
 
 			if ( strpos( $ori, 'data-no-async' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr api data-no-async' ) ;
-				continue ;
+				Debug2::debug2( '[Optm] bypass: attr api data-no-async' );
+				continue;
 			}
 
 			// async replacement
-			$v = str_replace( 'stylesheet', 'preload', $ori ) ;
+			$v = str_replace( 'stylesheet', 'preload', $ori );
 			$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
 			// Append to noscript content
-			$v .= '<noscript>' . $ori . '</noscript>' ;
-			$html_list[ $k ] = $v ;
+			$v .= '<noscript>' . $ori . '</noscript>';
+			$html_list[ $k ] = $v;
 		}
 		return $html_list ;
 	}

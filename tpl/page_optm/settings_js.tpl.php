@@ -80,37 +80,6 @@ defined( 'WPINC' ) || exit ;
 
 	<tr>
 		<th>
-			<?php $id = Base::O_OPTM_JS_LOCALIZE; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Localize Google Analytics JS.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize_js' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_OPTM_JS_LOCALIZE_DOMAINS; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'These domains will be replaced to local URL.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Only HTTPS protocol supported.', 'litespeed-cache' ); ?>
-				<?php echo __( 'For example', 'litespeed-cache' ); ?>: <code>https://www.example.com</code>
-				<?php echo sprintf( __( 'The prefix %s will be automatically dropped after option saved.', 'litespeed-cache' ), '<code>https://</code>' ); ?>
-				<?php Doc::one_per_line(); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = Base::O_OPTM_EXC_JQ ; ?>
 			<?php $this->title( $id ) ; ?>
 		</th>

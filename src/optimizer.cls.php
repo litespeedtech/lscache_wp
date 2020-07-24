@@ -202,7 +202,7 @@ class Optimizer extends Instance
 			$data = Lib\CSS_MIN\UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
 
 			if ( $media ) {
-				$data = '@media ' . $media . '{' . $data . '}';
+				$data = '@media ' . $media . '{' . $data . "\n}";
 			}
 
 			$con[] = $data;
