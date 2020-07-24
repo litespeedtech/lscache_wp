@@ -5,17 +5,30 @@
 *
 * @since 1.1.0
 */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class File
-{
-	const MARKER = 'LiteSpeed Operator' ;
+class File {
+	const MARKER = 'LiteSpeed Operator';
 
-	function __construct()
-	{
+	function __construct() {
 		// nothing to do here
+	}
+
+	/**
+	 * Detect if an URL is 404
+	 *
+	 * @since  3.3
+	 */
+	public static function is_404( $url ) {
+		$response = wp_remote_get( $url );
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( $code == 404 ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -25,24 +38,23 @@ class File
 	 */
 	public static function rrmdir( $dir ) {
 
-		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
+		$files = array_diff( scandir( $dir ), array( '.', '..' ) );
 
 		foreach ( $files as $file ) {
-			is_dir( "$dir/$file" ) ? self::rrmdir( "$dir/$file" ) : unlink( "$dir/$file" ) ;
+			is_dir( "$dir/$file" ) ? self::rrmdir( "$dir/$file" ) : unlink( "$dir/$file" );
 		}
 
-		return rmdir( $dir ) ;
+		return rmdir( $dir );
 	}
 
-	public static function count_lines($filename)
-	{
+	public static function count_lines($filename) {
 		if ( ! file_exists($filename) ) {
-			return 0 ;
+			return 0;
 		}
 
-		$file = new \SplFileObject($filename) ;
-		$file->seek(PHP_INT_MAX) ;
-		return $file->key() + 1 ;
+		$file = new \SplFileObject($filename);
+		$file->seek(PHP_INT_MAX);
+		return $file->key() + 1;
 	}
 
 	/**
@@ -53,46 +65,45 @@ class File
 	 * @param int $start_line
 	 * @param int $lines
 	 */
-	public static function read($filename, $start_line = null, $lines = null)
-	{
+	public static function read($filename, $start_line = null, $lines = null) {
 		if ( ! file_exists($filename) ) {
-			return '' ;
+			return '';
 		}
 
 		if ( ! is_readable($filename) ) {
-			return false ;
+			return false;
 		}
 
 		if ( $start_line !== null ) {
-			$res = array() ;
-			$file = new \SplFileObject($filename) ;
-			$file->seek($start_line) ;
+			$res = array();
+			$file = new \SplFileObject($filename);
+			$file->seek($start_line);
 
 			if ( $lines === null) {
 				while ( ! $file->eof() ) {
-					$res[] = rtrim($file->current(), "\n") ;
-					$file->next() ;
+					$res[] = rtrim($file->current(), "\n");
+					$file->next();
 				}
 			}
 			else{
-				for ( $i=0 ; $i < $lines ; $i++ ) {
+				for ( $i=0; $i < $lines; $i++ ) {
 					if ( $file->eof() ) {
-						break ;
+						break;
 					}
-					$res[] = rtrim($file->current(), "\n") ;
-					$file->next() ;
+					$res[] = rtrim($file->current(), "\n");
+					$file->next();
 				}
 			}
 
-			unset($file) ;
-			return $res ;
+			unset($file);
+			return $res;
 		}
 
-		$content = file_get_contents( $filename ) ;
+		$content = file_get_contents( $filename );
 
-		$content = self::remove_zero_space( $content ) ;
+		$content = self::remove_zero_space( $content );
 
-		return $content ;
+		return $content;
 	}
 
 	/**
@@ -105,9 +116,8 @@ class File
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function append( $filename, $data, $mkdir = false, $silence = true )
-	{
-		return self::save( $filename, $data, $mkdir, true, $silence ) ;
+	public static function append( $filename, $data, $mkdir = false, $silence = true ) {
+		return self::save( $filename, $data, $mkdir, true, $silence );
 	}
 
 	/**
@@ -120,54 +130,53 @@ class File
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true )
-	{
-		$error = false ;
-		$folder = dirname( $filename ) ;
+	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true ) {
+		$error = false;
+		$folder = dirname( $filename );
 
 		// mkdir if folder does not exist
 		if ( ! file_exists( $folder ) ) {
 			if ( ! $mkdir ) {
-				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder ) ;
+				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder );
 			}
 
-			set_error_handler( 'litespeed_exception_handler' ) ;
+			set_error_handler( 'litespeed_exception_handler' );
 
 			try {
-				mkdir( $folder, 0755, true ) ;
+				mkdir( $folder, 0755, true );
 			}
 			catch ( \ErrorException $ex ) {
-				return $silence ? false : sprintf( __( 'Can not create folder: %1$s. Error: %2$s', 'litespeed-cache' ), $folder, $ex->getMessage() ) ;
+				return $silence ? false : sprintf( __( 'Can not create folder: %1$s. Error: %2$s', 'litespeed-cache' ), $folder, $ex->getMessage() );
 			}
 
-			restore_error_handler() ;
+			restore_error_handler();
 		}
 
 		if ( ! file_exists( $filename ) ) {
 			if ( ! is_writable( $folder ) ) {
-				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder ) ;
+				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder );
 			}
-			set_error_handler( 'litespeed_exception_handler' ) ;
+			set_error_handler( 'litespeed_exception_handler' );
 			try {
-				touch( $filename ) ;
+				touch( $filename );
 			}
 			catch ( \ErrorException $ex ){
-				return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
+				return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename );
 			}
-			restore_error_handler() ;
+			restore_error_handler();
 		}
 		elseif ( ! is_writeable( $filename ) ) {
-			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
+			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename );
 		}
 
-		$data = self::remove_zero_space( $data ) ;
+		$data = self::remove_zero_space( $data );
 
-		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX ) ;
+		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX );
 		if ( $ret === false ) {
-			return $silence ? false : sprintf( __( 'Failed to write to %s.', 'litespeed-cache' ), $filename ) ;
+			return $silence ? false : sprintf( __( 'Failed to write to %s.', 'litespeed-cache' ), $filename );
 		}
 
-		return true ;
+		return true;
 	}
 
 	/**
@@ -176,23 +185,22 @@ class File
 	 * @since 2.1.2
 	 * @since 2.9 changed to public
 	 */
-	public static function remove_zero_space( $content )
-	{
+	public static function remove_zero_space( $content ) {
 		if ( is_array( $content ) ) {
-			$content = array_map( __CLASS__ . '::remove_zero_space', $content ) ;
-			return $content ;
+			$content = array_map( __CLASS__ . '::remove_zero_space', $content );
+			return $content;
 		}
 
 		// Remove UTF-8 BOM if present
 		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
-			$content = substr( $content, 3 ) ;
+			$content = substr( $content, 3 );
 		}
 
-		$content = str_replace( "\xe2\x80\x8b", '', $content ) ;
-		$content = str_replace( "\xe2\x80\x8c", '', $content ) ;
-		$content = str_replace( "\xe2\x80\x8d", '', $content ) ;
+		$content = str_replace( "\xe2\x80\x8b", '', $content );
+		$content = str_replace( "\xe2\x80\x8c", '', $content );
+		$content = str_replace( "\xe2\x80\x8d", '', $content );
 
-		return $content ;
+		return $content;
 	}
 
 	/**
@@ -208,17 +216,16 @@ class File
 	 * @param bool 	       $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
-	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
-	{
+	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false) {
 		if ( !$marker ) {
-			$marker = self::MARKER ;
+			$marker = self::MARKER;
 		}
 
 		if ( !$insertion ) {
-			$insertion = array() ;
+			$insertion = array();
 		}
 
-		return self::_insert_with_markers($filename, $marker, $insertion, $prepend) ;//todo: capture exceptions
+		return self::_insert_with_markers($filename, $marker, $insertion, $prepend);//todo: capture exceptions
 	}
 
 	/**
@@ -228,20 +235,19 @@ class File
 	 * @param string $marker
 	 * @return string The block data
 	 */
-	public static function wrap_marker_data($insertion, $marker = false)
-	{
+	public static function wrap_marker_data($insertion, $marker = false) {
 		if ( ! $marker ) {
-			$marker = self::MARKER ;
+			$marker = self::MARKER;
 		}
-		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$start_marker = "# BEGIN {$marker}";
+		$end_marker   = "# END {$marker}";
 
 		$new_data = implode( "\n", array_merge(
 			array( $start_marker ),
 			$insertion,
 			array( $end_marker )
-		) ) ;
-		return $new_data ;
+		) );
+		return $new_data;
 	}
 
 	/**
@@ -251,26 +257,25 @@ class File
 	 * @param string $marker
 	 * @return string The current block data
 	 */
-	public static function touch_marker_data($filename, $marker = false)
-	{
+	public static function touch_marker_data($filename, $marker = false) {
 		if( ! $marker ) {
-			$marker = self::MARKER ;
+			$marker = self::MARKER;
 		}
 
-		$result = self::_extract_from_markers($filename, $marker) ;
+		$result = self::_extract_from_markers($filename, $marker);
 
 		if( ! $result ) {
-			return false ;
+			return false;
 		}
 
-		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$start_marker = "# BEGIN {$marker}";
+		$end_marker   = "# END {$marker}";
 		$new_data = implode( "\n", array_merge(
 			array( $start_marker ),
 			$result,
 			array( $end_marker )
-		) ) ;
-		return $new_data ;
+		) );
+		return $new_data;
 	}
 
 	/**
@@ -280,12 +285,11 @@ class File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	public static function extract_from_markers($filename, $marker = false)
-	{
+	public static function extract_from_markers($filename, $marker = false) {
 		if( ! $marker ) {
-			$marker = self::MARKER ;
+			$marker = self::MARKER;
 		}
-		return self::_extract_from_markers($filename, $marker) ;
+		return self::_extract_from_markers($filename, $marker);
 	}
 
 	/**
@@ -295,30 +299,29 @@ class File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	private static function _extract_from_markers( $filename, $marker )
-	{
-		$result = array() ;
+	private static function _extract_from_markers( $filename, $marker ) {
+		$result = array();
 
 		if (!file_exists($filename) ) {
-			return $result ;
+			return $result;
 		}
 
 		if ( $markerdata = explode( "\n", implode( '', file($filename) ) ) ) {
-			$state = false ;
+			$state = false;
 			foreach ( $markerdata as $markerline ) {
 				if ( strpos($markerline, '# END ' . $marker) !== false ) {
-					$state = false ;
+					$state = false;
 				}
 				if ( $state ) {
-					$result[] = $markerline ;
+					$result[] = $markerline;
 				}
 				if (strpos($markerline, '# BEGIN ' . $marker) !== false) {
-					$state = true ;
+					$state = true;
 				}
 			}
 		}
 
-		return array_map('trim', $result) ;
+		return array_map('trim', $result);
 	}
 
 	/**
@@ -332,75 +335,74 @@ class File
 	 * @since  3.0 Throw errors if failed
 	 * @access private
 	 */
-	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)
-	{
+	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false) {
 		if ( ! file_exists( $filename ) ) {
 			if ( ! is_writable( dirname( $filename ) ) ) {
-				Error::t( 'W', dirname( $filename ) ) ;
+				Error::t( 'W', dirname( $filename ) );
 			}
 
-			set_error_handler("litespeed_exception_handler") ;
+			set_error_handler("litespeed_exception_handler");
 			try {
-				touch( $filename ) ;
+				touch( $filename );
 			} catch ( \ErrorException $ex ) {
-				Error::t( 'W', $filename ) ;
+				Error::t( 'W', $filename );
 			}
-			restore_error_handler() ;
+			restore_error_handler();
 		}
 		elseif ( ! is_writeable( $filename ) ) {
-			Error::t( 'W', $filename ) ;
+			Error::t( 'W', $filename );
 		}
 
 		if ( ! is_array( $insertion ) ) {
-			$insertion = explode( "\n", $insertion ) ;
+			$insertion = explode( "\n", $insertion );
 		}
 
-		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$start_marker = "# BEGIN {$marker}";
+		$end_marker   = "# END {$marker}";
 
-		$fp = fopen( $filename, 'r+' ) ;
+		$fp = fopen( $filename, 'r+' );
 		if ( ! $fp ) {
-			Error::t( 'W', $filename ) ;
+			Error::t( 'W', $filename );
 		}
 
 		// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.
-		flock( $fp, LOCK_EX ) ;
+		flock( $fp, LOCK_EX );
 
-		$lines = array() ;
+		$lines = array();
 		while ( ! feof($fp) ) {
-			$lines[] = rtrim(fgets($fp), "\r\n" ) ;
+			$lines[] = rtrim(fgets($fp), "\r\n" );
 		}
 
 		// Split out the existing file into the preceding lines, and those that appear after the marker
-		$pre_lines = $post_lines = $existing_lines = array() ;
-		$found_marker = $found_end_marker = false ;
+		$pre_lines = $post_lines = $existing_lines = array();
+		$found_marker = $found_end_marker = false;
 		foreach ( $lines as $line ) {
 			if ( ! $found_marker && false !== strpos($line, $start_marker) ) {
-				$found_marker = true ;
-				continue ;
+				$found_marker = true;
+				continue;
 			}
 			elseif ( ! $found_end_marker && false !== strpos($line, $end_marker) ) {
-				$found_end_marker = true ;
-				continue ;
+				$found_end_marker = true;
+				continue;
 			}
 
 			if ( ! $found_marker ) {
-				$pre_lines[] = $line ;
+				$pre_lines[] = $line;
 			}
 			elseif ( $found_marker && $found_end_marker ) {
-				$post_lines[] = $line ;
+				$post_lines[] = $line;
 			}
 			else {
-				$existing_lines[] = $line ;
+				$existing_lines[] = $line;
 			}
 		}
 
 		// Check to see if there was a change
 		if ( $existing_lines === $insertion ) {
-			flock($fp, LOCK_UN) ;
-			fclose($fp) ;
+			flock($fp, LOCK_UN);
+			fclose($fp);
 
-			return true ;
+			return true;
 		}
 
 		// Check if need to prepend data if not exist
@@ -411,7 +413,7 @@ class File
 				$insertion,
 				array( $end_marker ),
 				$pre_lines
-			) ) ;
+			) );
 
 		}
 		else {
@@ -422,21 +424,21 @@ class File
 				$insertion,
 				array( $end_marker ),
 				$post_lines
-			) ) ;
+			) );
 		}
 
 
 		// Write to the start of the file, and truncate it to that length
-		fseek($fp, 0) ;
-		$bytes = fwrite($fp, $new_file_data) ;
+		fseek($fp, 0);
+		$bytes = fwrite($fp, $new_file_data);
 		if ( $bytes ) {
-			ftruncate($fp, ftell($fp)) ;
+			ftruncate($fp, ftell($fp));
 		}
-		fflush($fp) ;
-		flock($fp, LOCK_UN) ;
-		fclose($fp) ;
+		fflush($fp);
+		flock($fp, LOCK_UN);
+		fclose($fp);
 
-		return (bool) $bytes ;
+		return (bool) $bytes;
 	}
 }
 
