@@ -211,37 +211,46 @@ class CSS extends Base {
 		// Parse HTML to gather all CSS content before requesting
 		$css = '';
 		if ( $html ) {
-			preg_match_all( '#<link \s*([^>]+)/?>#isU', $html, $matches, PREG_SET_ORDER );
+			preg_match_all( '#<link \s*([^>]+)/?>|<style.*>(.+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 			foreach ( $matches as $match ) {
-				$attrs = Utility::parse_attr( $match[ 1 ] );
+				$attrs = false;
+				if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
+					$attrs = Utility::parse_attr( $match[ 1 ] );
 
-				if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
-					continue;
-				}
-
-				if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-					continue;
-				}
-				if ( empty( $attrs[ 'href' ] ) ) {
-					continue;
-				}
-
-				// Check Google fonts hit
-				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
-					$html = str_replace( $match[ 0 ], '', $html );
-					continue;
-				}
-
-				// Load CSS content
-				$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
-				if ( ! $real_file ) {
-					$con = wp_remote_retrieve_body( wp_remote_get( $attrs[ 'href' ] ) );
-					if ( ! $con ) {
+					if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
 						continue;
 					}
+
+					if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
+						continue;
+					}
+					if ( empty( $attrs[ 'href' ] ) ) {
+						continue;
+					}
+
+					// Check Google fonts hit
+					if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+						$html = str_replace( $match[ 0 ], '', $html );
+						continue;
+					}
+
+					// Load CSS content
+					$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
+					if ( ! $real_file ) {
+						Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
+						$con = wp_remote_retrieve_body( wp_remote_get( $attrs[ 'href' ] ) );
+						if ( ! $con ) {
+							continue;
+						}
+					}
+					else {
+						Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
+						$con = File::read( $real_file[ 0 ] );
+					}
 				}
-				else {
-					$con = File::read( $real_file[ 0 ] );
+				else { // Inline style
+					Debug2::debug2( '[CCSS] Load inline CSS ' . substr( $match[ 2 ], 0, 100 ) . '...' );
+					$con = $match[ 2 ];
 				}
 
 				$con = Optimizer::minify_css( $con );
@@ -255,6 +264,8 @@ class CSS extends Base {
 
 				$html = str_replace( $match[ 0 ], '', $html );
 			}
+
+			$html = Optimizer::get_instance()->html_min( $html, true );
 		}
 
 		// Generate critical css
@@ -265,6 +276,7 @@ class CSS extends Base {
 			'is_mobile'		=> $is_mobile ? 1 : 0,
 			'html'			=> $html,
 			'css'			=> $css,
+			'type'			=> 'CCSS',
 		);
 
 		Debug2::debug( '[CSS] Generating: ', $data );
@@ -320,7 +332,7 @@ class CSS extends Base {
 
 		// Generate UCSS
 		$data = array(
-			'type'			=> 'ucss',
+			'type'			=> 'UCSS',
 			'url'			=> $request_url,
 			'whitelist'		=> $this->_filter_whitelist(),
 			'user_agent'	=> $user_agent,
