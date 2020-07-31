@@ -1,84 +1,84 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-$last_generated = Avatar::get_summary() ;
+$last_generated = Avatar::get_summary();
 $avatar_queue = Avatar::get_instance()->queue_count();
 ?>
 
 <?php if ( Avatar::need_db() && ! Data::get_instance()->tb_exist( 'avatar' ) ) : ?>
 <div class="litespeed-callout notice notice-error inline">
-	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
-	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
+	<h4><?php echo __( 'WARNING', 'litespeed-cache' ); ?></h4>
+	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ); ?></p>
 </div>
 <?php endif; ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Localization Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-settings-tab', false, 'litespeed-learn-more' ) ; ?>
+	<?php echo __( 'Localization Settings', 'litespeed-cache' ); ?>
+	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-settings-tab', false, 'litespeed-learn-more' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_DISCUSS_AVATAR_CACHE ; ?>
-			<?php $this->title( $id ) ; ?>
+			<?php $id = Base::O_DISCUSS_AVATAR_CACHE; ?>
+			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id ) ; ?>
+			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Store Gravatar locally.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Accelerates the speed by caching Gravatar (Globally Recognized Avatars).', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Store Gravatar locally.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Accelerates the speed by caching Gravatar (Globally Recognized Avatars).', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Base::O_DISCUSS_AVATAR_CRON ; ?>
-			<?php $this->title( $id ) ; ?>
+			<?php $id = Base::O_DISCUSS_AVATAR_CRON; ?>
+			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id ) ; ?>
+			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Refresh Gravatar cache by cron.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Refresh Gravatar cache by cron.', 'litespeed-cache' ); ?>
 			</div>
 
 			<?php if ( $last_generated ) : ?>
 			<div class="litespeed-desc">
 				<?php if ( ! empty( $last_generated[ 'last_request' ] ) ) : ?>
 					<p>
-						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_generated[ 'last_request' ] ) . '</code>' ; ?>
+						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_generated[ 'last_request' ] ) . '</code>'; ?>
 					</p>
-				<?php endif ; ?>
+				<?php endif; ?>
 				<?php if ( $avatar_queue ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'Avatar list in queue waiting for update','litespeed-cache' ) ; ?>:
-							<?php echo $avatar_queue ; ?>
+							<?php echo __( 'Avatar list in queue waiting for update','litespeed-cache' ); ?>:
+							<?php echo $avatar_queue; ?>
 						</h4>
 					</div>
-					<a href="<?php echo Utility::build_url( Router::ACTION_AVATAR, Avatar::TYPE_GENERATE ) ; ?>" class="button litespeed-btn-success">
-						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
+					<a href="<?php echo Utility::build_url( Router::ACTION_AVATAR, Avatar::TYPE_GENERATE ); ?>" class="button litespeed-btn-success">
+						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
 					</a>
-				<?php endif ; ?>
+				<?php endif; ?>
 			</div>
-			<?php endif ; ?>
+			<?php endif; ?>
 
 		</td>
 	</tr>
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Base::O_DISCUSS_AVATAR_CACHE_TTL ; ?>
-			<?php $this->title( $id ) ; ?>
+			<?php $id = Base::O_DISCUSS_AVATAR_CACHE_TTL; ?>
+			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id ) ; ?> <?php $this->readable_seconds() ; ?>
+			<?php $this->build_input( $id ); ?> <?php $this->readable_seconds(); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify how long, in seconds, Gravatar files are cached.', 'litespeed-cache' ) ; ?>
-				<?php $this->recommended( $id ) ; ?>
-				<?php $this->_validate_ttl( $id, 3600 ) ; ?>
+				<?php echo __( 'Specify how long, in seconds, Gravatar files are cached.', 'litespeed-cache' ); ?>
+				<?php $this->recommended( $id ); ?>
+				<?php $this->_validate_ttl( $id, 3600 ); ?>
 			</div>
 		</td>
 	</tr>
@@ -103,10 +103,19 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id ); ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ); ?>
+				</div>
+			</div>
+
 			<div class="litespeed-desc">
 				<?php echo __( 'These domains will be replaced to local URL.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Only HTTPS protocol supported.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
 
 				<br /><?php echo sprintf( __( 'Comment lines supported (started w/ %s).', 'litespeed-cache' ), '<code>#</code>' ); ?>
 
@@ -118,8 +127,6 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 
 				<br /><?php echo __( 'Example 2', 'litespeed-cache' ); ?>: <code>FONT https://fonts.googleapis.com</code>
 
-				<br /><?php echo sprintf( __( 'The protocol prefix %s will be automatically partially dropped after option saved.', 'litespeed-cache' ), '<code>https:</code>' ); ?>
-				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

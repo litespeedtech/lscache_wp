@@ -107,7 +107,7 @@ $break_arr = array(
 				<?php Doc::one_per_line(); ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ) ; ?>
+				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -142,10 +142,10 @@ $break_arr = array(
 
 			<div class="litespeed-textarea-recommended">
 				<div>
-					<?php $this->build_textarea( $id, 50 ) ; ?>
+					<?php $this->build_textarea( $id, 50 ); ?>
 				</div>
 				<div>
-					<?php $this->recommended( $id, true ) ; ?>
+					<?php $this->recommended( $id ); ?>
 				</div>
 			</div>
 

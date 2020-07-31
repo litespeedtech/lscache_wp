@@ -602,10 +602,10 @@ class Optimize extends Base {
 		$this->_font_optm();
 
 		/**
-		 * Localize GG/FB JS
+		 * Localize GG/FB JS/Fonts
 		 * @since  3.3
 		 */
-		$this->_localize_js();
+		$this->content = Localization::get_instance()->finalize( $this->content );
 
 		/**
 		 * Inline script manipulated until document is ready
@@ -645,33 +645,6 @@ class Optimize extends Base {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
 
-	}
-
-	/**
-	 * Localize JS
-	 *
-	 * @since 3.3
-	 * @access private
-	 */
-	private function _localize_js() {
-		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
-			return;
-		}
-
-		$domains = Conf::val( Base::O_OPTM_LOCALIZE_DOMAINS );
-		if ( ! $domains ) {
-			return;
-		}
-
-		foreach ( $domains as $v ) {
-			if ( ! $v || substr( $v, 0, 2 ) !== '//' ) {
-				continue;
-			}
-
-			$v = substr( $v, 2 );
-
-			$this->content = str_replace( 'https://' . $v, LITESPEED_STATIC_URL . '/localres/' . $v, $this->content );
-		}
 	}
 
 	/**
