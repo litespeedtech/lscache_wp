@@ -269,7 +269,7 @@ class Purge extends Base {
 	 * @access   private
 	 */
 	private function _purge_all_localres( $silence = false ) {
-		$this->_add( Tag::TYPE_LOCALJS );
+		$this->_add( Tag::TYPE_LOCALRES );
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge localized resource entries.', 'litespeed-cache' );

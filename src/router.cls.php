@@ -681,7 +681,7 @@ class Router extends Base
 				break;
 
 			case 'localres':
-				Optimize::get_instance()->serve_local( $path[ 1 ] );
+				Localization::get_instance()->serve_static( $path[ 1 ] );
 				break;
 
 			default :

@@ -11,8 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Error
-{
+class Error {
 	private static $CODE_SET = array(
 		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
 		'HTA_DNF'		 => 4500, // .htaccess did not find.
@@ -27,8 +26,7 @@ class Error
 	 *
 	 * @since  3.0
 	 */
-	public static function t( $code, $args = null )
-	{
+	public static function t( $code, $args = null ) {
 		throw new \Exception( self::msg( $code, $args ) );
 	}
 
@@ -37,8 +35,7 @@ class Error
 	 *
 	 * @since  3.0
 	 */
-	public static function msg( $code, $args = null )
-	{
+	public static function msg( $code, $args = null ) {
 		switch ( $code ) {
 
 			case 'disabled_all':

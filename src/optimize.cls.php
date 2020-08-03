@@ -206,33 +206,6 @@ class Optimize extends Base {
 	}
 
 	/**
-	 * Localize JS
-	 *
-	 * @since  3.3
-	 */
-	public function serve_local( $uri ) {
-		$url = 'https://' . $uri;
-
-		Control::set_no_vary();
-		Control::set_public_forced( 'Localized JS' );
-		Tag::add( Tag::TYPE_LOCALJS );
-
-		header('Content-Type: application/javascript');
-
-		$res = wp_remote_get( $url );
-
-		$content = wp_remote_retrieve_body( $res );
-
-		if ( ! $content ) {
-			$content = '/* Failed to load ' . $url . ' */';
-		}
-
-		echo $content;
-
-		exit;
-	}
-
-	/**
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.1

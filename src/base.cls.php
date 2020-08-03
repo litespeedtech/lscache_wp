@@ -852,7 +852,7 @@ class Base extends Instance {
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
-			self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize JS`
+			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
 			// self::	=> '',
 			// self::	=> '',
 		);

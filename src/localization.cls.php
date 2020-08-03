@@ -12,6 +12,32 @@ class Localization extends Base {
 	protected static $_instance;
 
 
+	/**
+	 * Localize Resources
+	 *
+	 * @since  3.3
+	 */
+	public function serve_static( $uri ) {
+		$url = 'https://' . $uri;
+
+		Control::set_no_vary();
+		Control::set_public_forced( 'Localized Resources' );
+		Tag::add( Tag::TYPE_LOCALRES );
+
+		header( 'Content-Type: application/javascript' );
+
+		$res = wp_remote_get( $url );
+		$content = wp_remote_retrieve_body( $res );
+
+		if ( ! $content ) {
+			$content = '/* Failed to load ' . $url . ' */';
+		}
+
+		echo $content;
+
+		exit;
+	}
+
 
 
 	/**
@@ -22,12 +48,12 @@ class Localization extends Base {
 	 */
 	public function finalize( $content ) {
 		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
-			return;
+			return $content;
 		}
 
 		$domains = Conf::val( Base::O_OPTM_LOCALIZE_DOMAINS );
 		if ( ! $domains ) {
-			return;
+			return $content;
 		}
 
 		foreach ( $domains as $v ) {
@@ -47,6 +73,10 @@ class Localization extends Base {
 			}
 
 			if ( strpos( $domain, 'https://' ) !== 0 ) {
+				continue;
+			}
+
+			if ( $type != 'js' ) {
 				continue;
 			}
 

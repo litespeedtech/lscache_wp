@@ -12,8 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class DB_Optm extends Instance
-{
+class DB_Optm extends Instance {
 	private static $_hide_more = false;
 
 	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables', 'all_cssjs' );
@@ -26,8 +25,7 @@ class DB_Optm extends Instance
 	 *
 	 * @since  3.0
 	 */
-	public static function hide_more()
-	{
+	public static function hide_more() {
 		return self::$_hide_more;
 	}
 
@@ -40,8 +38,7 @@ class DB_Optm extends Instance
 	 * @param  bool $ignore_multisite If ignore multisite check
 	 * @return  int The rows that will be affected
 	 */
-	public static function db_count( $type, $ignore_multisite = false )
-	{
+	public static function db_count( $type, $ignore_multisite = false ) {
 		if ( $type === 'all' ) {
 			$num = 0;
 			foreach ( self::$TYPES as $v ) {
@@ -127,8 +124,7 @@ class DB_Optm extends Instance
 	 * @since 3.0 changed to private
 	 * @access private
 	 */
-	private function _db_clean( $type )
-	{
+	private function _db_clean( $type ) {
 		if ( $type === 'all' ) {
 			foreach ( self::$TYPES as $v ) {
 				$this->_db_clean( $v );
@@ -217,8 +213,7 @@ class DB_Optm extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public function list_myisam()
-	{
+	public function list_myisam() {
 		global $wpdb;
 		$q = "SELECT * FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'";
 		return $wpdb->get_results( $q );
@@ -230,8 +225,7 @@ class DB_Optm extends Instance
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _conv_innodb()
-	{
+	private function _conv_innodb() {
 		global $wpdb;
 
 		if ( empty( $_GET[ 'tb' ] ) ) {
@@ -270,8 +264,7 @@ class DB_Optm extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function autoload_summary()
-	{
+	public function autoload_summary() {
 		global $wpdb;
 
 		$summary = $wpdb->get_row( "SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload='yes'" );
@@ -287,8 +280,7 @@ class DB_Optm extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler()
-	{
+	public static function handler() {
 		$instance = self::get_instance();
 
 		$type = Router::verify_type();
