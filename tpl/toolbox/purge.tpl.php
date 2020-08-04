@@ -67,7 +67,7 @@ if ( Router::opcache_enabled() ) {
 	) ;
 }
 
-if ( CSS::has_ccss_cache() ) {
+if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),

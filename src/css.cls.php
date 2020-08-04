@@ -31,10 +31,9 @@ class CSS extends Base {
 	 * @since  2.3 Migrated from optimize.cls
 	 * @access public
 	 */
-	public static function prepend_ccss( $html_head, $html = false ) {
-		if ( $html ) {
-			$html = Optimizer::get_instance()->html_min( $html );
-		}
+	public static function prepend_ccss( $html_head, $html ) {
+		$html = Optimizer::get_instance()->html_min( $html );
+
 		// Get critical css for current page
 		// Note: need to consider mobile
 		$rules = self::get_instance()->_ccss( $html );
@@ -45,16 +44,6 @@ class CSS extends Base {
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head;
 
 		return $html_head;
-	}
-
-	/**
-	 * Check if there is a ccss cache folder
-	 *
-	 * @since  2.3
-	 * @access public
-	 */
-	public static function has_ccss_cache() {
-		return is_dir( LITESPEED_STATIC_DIR . '/ccss' );
 	}
 
 	/**
@@ -178,7 +167,13 @@ class CSS extends Base {
 		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
 			Debug2::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
-			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] );
+			// Gather HTML to send
+			$url = add_query_arg( 'LSCWP_CTRL', 'before_optm', $v[ 'url' ] );
+			$html = Crawler::get_instance()->self_curl( $url, $v[ 'user_agent' ] );
+
+			Debug2::debug2( '[CSS] self_curl result....', $html );
+
+			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ], $html );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -193,7 +188,7 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile, $html = '' ) {
+	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile, $html ) {
 		// Check if has credit to push
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
@@ -208,64 +203,74 @@ class CSS extends Base {
 		$this->_summary[ 'curr_request' ] = time();
 		self::save_summary();
 
+		$html = Optimizer::get_instance()->html_min( $html, true );
+		// Drop <noscript>xxx</noscript>
+		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
+
+		if ( ! $html ) {
+			return false;
+		}
+
 		// Parse HTML to gather all CSS content before requesting
 		$css = '';
-		if ( $html ) {
-			preg_match_all( '#<link \s*([^>]+)/?>|<style.*>(.+)</style>#isU', $html, $matches, PREG_SET_ORDER );
-			foreach ( $matches as $match ) {
-				$attrs = false;
-				if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
-					$attrs = Utility::parse_attr( $match[ 1 ] );
+		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
+		foreach ( $matches as $match ) {
+			$attrs = false;
+			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
+				$attrs = Utility::parse_attr( $match[ 1 ] );
 
-					if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
+				if ( ! empty( $attrs[ 'rel' ] ) ) {
+					if ( $attrs[ 'rel' ] !== 'stylesheet' && $attrs[ 'rel' ] !== 'preload' ) {
 						continue;
-					}
-
-					if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-						continue;
-					}
-					if ( empty( $attrs[ 'href' ] ) ) {
-						continue;
-					}
-
-					// Check Google fonts hit
-					if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
-						$html = str_replace( $match[ 0 ], '', $html );
-						continue;
-					}
-
-					// Load CSS content
-					$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
-					if ( ! $real_file ) {
-						Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
-						$con = wp_remote_retrieve_body( wp_remote_get( $attrs[ 'href' ] ) );
-						if ( ! $con ) {
-							continue;
-						}
-					}
-					else {
-						Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
-						$con = File::read( $real_file[ 0 ] );
 					}
 				}
-				else { // Inline style
-					Debug2::debug2( '[CCSS] Load inline CSS ' . substr( $match[ 2 ], 0, 100 ) . '...' );
-					$con = $match[ 2 ];
+
+				if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
+					continue;
+				}
+				if ( empty( $attrs[ 'href' ] ) ) {
+					continue;
 				}
 
-				$con = Optimizer::minify_css( $con );
+				// Check Google fonts hit
+				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+					$html = str_replace( $match[ 0 ], '', $html );
+					continue;
+				}
 
-				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
-					$css .= '@media ' . $attrs[ 'media' ] . '{' . $con . "\n}";
+				// Load CSS content
+				$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
+				if ( ! $real_file ) {
+					Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
+					$con = wp_remote_retrieve_body( wp_remote_get( $attrs[ 'href' ] ) );
+					if ( ! $con ) {
+						continue;
+					}
 				}
 				else {
-					$css .= $con . "\n";
+					Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
+					$con = File::read( $real_file[ 0 ] );
 				}
-
-				$html = str_replace( $match[ 0 ], '', $html );
+			}
+			else { // Inline style
+				Debug2::debug2( '[CCSS] Load inline CSS ' . substr( $match[ 2 ], 0, 100 ) . '...' );
+				$con = $match[ 2 ];
 			}
 
-			$html = Optimizer::get_instance()->html_min( $html, true );
+			$con = Optimizer::minify_css( $con );
+
+			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
+				$css .= '@media ' . $attrs[ 'media' ] . '{' . $con . "\n}";
+			}
+			else {
+				$css .= $con . "\n";
+			}
+
+			$html = str_replace( $match[ 0 ], '', $html );
+		}
+
+		if ( ! $css ) {
+			return false;
 		}
 
 		// Generate critical css

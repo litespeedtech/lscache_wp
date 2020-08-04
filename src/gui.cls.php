@@ -510,7 +510,7 @@ class GUI extends Base
 			) );
 		}
 
-		if ( CSS::has_ccss_cache() ) {
+		if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -661,7 +661,7 @@ class GUI extends Base
 			) );
 		}
 
-		if ( CSS::has_ccss_cache() ) {
+		if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',

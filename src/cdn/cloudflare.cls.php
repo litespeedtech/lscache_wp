@@ -7,28 +7,27 @@
  * @subpackage 	LiteSpeed/src/cdn
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\CDN ;
+namespace LiteSpeed\CDN;
 
-use LiteSpeed\Core ;
-use LiteSpeed\Base ;
-use LiteSpeed\Conf ;
+use LiteSpeed\Core;
+use LiteSpeed\Base;
+use LiteSpeed\Conf;
 use LiteSpeed\Debug2;
-use LiteSpeed\Router ;
-use LiteSpeed\Admin ;
-use LiteSpeed\Admin_Display ;
+use LiteSpeed\Router;
+use LiteSpeed\Admin;
+use LiteSpeed\Admin_Display;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Cloudflare extends Base
-{
-	protected static $_instance ;
+class Cloudflare extends Base {
+	protected static $_instance;
 
-	const TYPE_PURGE_ALL = 'purge_all' ;
-	const TYPE_GET_DEVMODE = 'get_devmode' ;
-	const TYPE_SET_DEVMODE_ON = 'set_devmode_on' ;
-	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off' ;
+	const TYPE_PURGE_ALL = 'purge_all';
+	const TYPE_GET_DEVMODE = 'get_devmode';
+	const TYPE_SET_DEVMODE_ON = 'set_devmode_on';
+	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off';
 
-	const ITEM_STATUS = 'status' ;
+	const ITEM_STATUS = 'status';
 
 	/**
 	 * Update zone&name based on latest settings
@@ -36,25 +35,24 @@ class Cloudflare extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function try_refresh_zone()
-	{
-		$__cfg = Conf::get_instance() ;
+	public static function try_refresh_zone() {
+		$__cfg = Conf::get_instance();
 
 		if ( ! Conf::val( Base::O_CDN_CLOUDFLARE ) ) {
-			return ;
+			return;
 		}
 
-		$zone = self::get_instance()->_fetch_zone() ;
+		$zone = self::get_instance()->_fetch_zone();
 		if ( $zone ) {
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
+			$__cfg->update( Base::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] );
 
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
+			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] );
 
-			Debug2::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" ) ;
+			Debug2::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" );
 		}
 		else {
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, '' ) ;
-			Debug2::debug( '[Cloudflare] ❌ Get zone failed, clean zone' ) ;
+			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, '' );
+			Debug2::debug( '[Cloudflare] ❌ Get zone failed, clean zone' );
 		}
 
 	}
@@ -65,29 +63,28 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _get_devmode( $show_msg = true )
-	{
-		Debug2::debug( '[Cloudflare] _get_devmode' ) ;
+	private function _get_devmode( $show_msg = true ) {
+		Debug2::debug( '[Cloudflare] _get_devmode' );
 
-		$zone = $this->_zone() ;
+		$zone = $this->_zone();
 		if ( ! $zone ) {
-			return ;
+			return;
 		}
 
-		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
-		$res = $this->_cloudflare_call( $url, 'GET', false, $show_msg ) ;
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode';
+		$res = $this->_cloudflare_call( $url, 'GET', false, $show_msg );
 
 		if ( ! $res ) {
-			return ;
+			return;
 		}
-		Debug2::debug( '[Cloudflare] _get_devmode result ', $res ) ;
+		Debug2::debug( '[Cloudflare] _get_devmode result ', $res );
 
-		$curr_status = self::get_option( self::ITEM_STATUS, array() ) ;
-		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
-		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
+		$curr_status = self::get_option( self::ITEM_STATUS, array() );
+		$curr_status[ 'devmode' ] = $res[ 'value' ];
+		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time();
 
 		// update status
-		self::update_option( self::ITEM_STATUS, $curr_status ) ;
+		self::update_option( self::ITEM_STATUS, $curr_status );
 
 	}
 
@@ -97,29 +94,28 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _set_devmode( $type )
-	{
-		Debug2::debug( '[Cloudflare] _set_devmode' ) ;
+	private function _set_devmode( $type ) {
+		Debug2::debug( '[Cloudflare] _set_devmode' );
 
-		$zone = $this->_zone() ;
+		$zone = $this->_zone();
 		if ( ! $zone ) {
-			return ;
+			return;
 		}
 
-		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
-		$new_val = $type == self::TYPE_SET_DEVMODE_ON ? 'on' : 'off' ;
-		$data = array( 'value' => $new_val ) ;
-		$res = $this->_cloudflare_call( $url, 'PATCH', $data ) ;
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode';
+		$new_val = $type == self::TYPE_SET_DEVMODE_ON ? 'on' : 'off';
+		$data = array( 'value' => $new_val );
+		$res = $this->_cloudflare_call( $url, 'PATCH', $data );
 
 		if ( ! $res ) {
-			return ;
+			return;
 		}
 
-		$res = $this->_get_devmode( false ) ;
+		$res = $this->_get_devmode( false );
 
 		if ( $res ) {
-			$msg = sprintf( __( 'Notified Cloudflare to set development mode to %s successfully.', 'litespeed-cache' ), strtoupper( $new_val ) ) ;
-			Admin_Display::succeed( $msg ) ;
+			$msg = sprintf( __( 'Notified Cloudflare to set development mode to %s successfully.', 'litespeed-cache' ), strtoupper( $new_val ) );
+			Admin_Display::succeed( $msg );
 		}
 
 	}
@@ -130,30 +126,29 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _purge_all()
-	{
-		Debug2::debug( '[Cloudflare] _purge_all' ) ;
+	private function _purge_all() {
+		Debug2::debug( '[Cloudflare] _purge_all' );
 
-		$cf_on = Conf::val( Base::O_CDN_CLOUDFLARE ) ;
+		$cf_on = Conf::val( Base::O_CDN_CLOUDFLARE );
 		if ( ! $cf_on ) {
-			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
-			Admin_Display::error( $msg ) ;
-			return ;
+			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return;
 		}
 
-		$zone = $this->_zone() ;
+		$zone = $this->_zone();
 		if ( ! $zone ) {
-			return ;
+			return;
 		}
 
-		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache' ;
-		$data = array( 'purge_everything' => true ) ;
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
+		$data = array( 'purge_everything' => true );
 
-		$res = $this->_cloudflare_call( $url, 'DELETE', $data ) ;
+		$res = $this->_cloudflare_call( $url, 'DELETE', $data );
 
 		if ( $res ) {
-			$msg = __( 'Notified Cloudflare to purge all successfully.', 'litespeed-cache' ) ;
-			Admin_Display::succeed( $msg ) ;
+			$msg = __( 'Notified Cloudflare to purge all successfully.', 'litespeed-cache' );
+			Admin_Display::succeed( $msg );
 		}
 	}
 
@@ -163,16 +158,15 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _zone()
-	{
-		$zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE ) ;
+	private function _zone() {
+		$zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE );
 		if ( ! $zone ) {
-			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
-			Admin_Display::error( $msg ) ;
-			return false ;
+			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return false;
 		}
 
-		return $zone ;
+		return $zone;
 	}
 
 	/**
@@ -181,44 +175,43 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _fetch_zone()
-	{
-		$kw = Conf::val( Base::O_CDN_CLOUDFLARE_NAME ) ;
+	private function _fetch_zone() {
+		$kw = Conf::val( Base::O_CDN_CLOUDFLARE_NAME );
 
-		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
+		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all';
 
 		// Try exact match first
 		if ( $kw && strpos( $kw, '.' ) ) {
-			$zones = $this->_cloudflare_call( $url . '&name=' . $kw, 'GET', false, false ) ;
+			$zones = $this->_cloudflare_call( $url . '&name=' . $kw, 'GET', false, false );
 			if ( $zones ) {
-				Debug2::debug( '[Cloudflare] fetch_zone exact matched' ) ;
-				return $zones[ 0 ] ;
+				Debug2::debug( '[Cloudflare] fetch_zone exact matched' );
+				return $zones[ 0 ];
 			}
 		}
 
 		// Can't find, try to get default one
-		$zones = $this->_cloudflare_call( $url, 'GET', false, false ) ;
+		$zones = $this->_cloudflare_call( $url, 'GET', false, false );
 
 		if ( ! $zones ) {
-			Debug2::debug( '[Cloudflare] fetch_zone no zone' ) ;
-			return false ;
+			Debug2::debug( '[Cloudflare] fetch_zone no zone' );
+			return false;
 		}
 
 		if ( ! $kw ) {
-			Debug2::debug( '[Cloudflare] fetch_zone no set name, use first one by default' ) ;
-			return $zones[ 0 ] ;
+			Debug2::debug( '[Cloudflare] fetch_zone no set name, use first one by default' );
+			return $zones[ 0 ];
 		}
 
 		foreach ( $zones as $v ) {
 			if ( strpos( $v[ 'name' ], $kw ) !== false ) {
-				Debug2::debug( '[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] ) ;
-				return $v ;
+				Debug2::debug( '[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] );
+				return $v;
 			}
 		}
 
 		// Can't match current name, return default one
-		Debug2::debug( '[Cloudflare] fetch_zone failed match name, use first one by default' ) ;
-		return $zones[ 0 ] ;
+		Debug2::debug( '[Cloudflare] fetch_zone failed match name, use first one by default' );
+		return $zones[ 0 ];
 	}
 
 	/**
@@ -227,48 +220,47 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true )
-	{
-		Debug2::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" ) ;
+	private function _cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
+		Debug2::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" );
 
 		$header = array(
 			'Content-Type: application/json',
 			'X-Auth-Email: ' . Conf::val( Base::O_CDN_CLOUDFLARE_EMAIL ),
 			'X-Auth-Key: ' . Conf::val( Base::O_CDN_CLOUDFLARE_KEY ),
-		) ;
+		);
 
-		$ch = curl_init() ;
-		curl_setopt( $ch, CURLOPT_URL, $url ) ;
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method ) ;
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ) ;
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ) ;
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		if ( $data ) {
 			if ( is_array( $data ) ) {
-				$data = json_encode( $data ) ;
+				$data = json_encode( $data );
 			}
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, $data ) ;
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		}
-		$result = curl_exec( $ch ) ;
+		$result = curl_exec( $ch );
 
-		$json = json_decode( $result, true ) ;
+		$json = json_decode( $result, true );
 
 		if ( $json && $json[ 'success' ] && $json[ 'result' ] ) {
-			Debug2::debug( "[Cloudflare] _cloudflare_call called successfully" ) ;
+			Debug2::debug( "[Cloudflare] _cloudflare_call called successfully" );
 			if ( $show_msg ) {
-				$msg = __( 'Communicated with Cloudflare successfully.', 'litespeed-cache' ) ;
-				Admin_Display::succeed( $msg ) ;
+				$msg = __( 'Communicated with Cloudflare successfully.', 'litespeed-cache' );
+				Admin_Display::succeed( $msg );
 			}
 
-			return $json[ 'result' ] ;
+			return $json[ 'result' ];
 		}
 
-		Debug2::debug( "[Cloudflare] _cloudflare_call called failed: $result" ) ;
+		Debug2::debug( "[Cloudflare] _cloudflare_call called failed: $result" );
 		if ( $show_msg ) {
-			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' ) ;
-			Admin_Display::error( $msg ) ;
+			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' );
+			Admin_Display::error( $msg );
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -277,31 +269,30 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
+	public static function handler() {
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_PURGE_ALL :
-				$instance->_purge_all() ;
-				break ;
+				$instance->_purge_all();
+				break;
 
 			case self::TYPE_GET_DEVMODE :
-				$instance->_get_devmode() ;
-				break ;
+				$instance->_get_devmode();
+				break;
 
 			case self::TYPE_SET_DEVMODE_ON :
 			case self::TYPE_SET_DEVMODE_OFF :
-				$instance->_set_devmode( $type ) ;
-				break ;
+				$instance->_set_devmode( $type );
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 }
