@@ -43,7 +43,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'General Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -64,20 +64,20 @@ $this->form_action();
 			<?php endif; ?>
 
 			<?php if ( $permalink_structure && $can_token ) : ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, 'button litespeed-btn-success', true ); ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, true, 'button litespeed-btn-success' ); ?>
 			<?php else: ?>
-				<?php $this->learn_more( 'javascript:;', $apply_btn_txt, 'button disabled', true ); ?>
+				<?php Doc::learn_more( 'javascript:;', $apply_btn_txt, true, 'button disabled' ); ?>
 			<?php endif; ?>
 			<?php if ( $apply_ts_txt ) : ?>
 				<span class="litespeed-desc"><?php echo $apply_ts_txt; ?></span>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
-				<?php $this->learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-success litespeed-right', false ); ?>
+				<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success litespeed-right' ); ?>
 			<?php elseif ( $__cloud->can_link_qc() ) : ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-warning litespeed-right', true ); ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning litespeed-right' ); ?>
 			<?php else: ?>
-				<?php $this->learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button disabled litespeed-btn-warning litespeed-right', true ); ?>
+				<?php Doc::learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button disabled litespeed-btn-warning litespeed-right' ); ?>
 			<?php endif; ?>
 
 			<?php if ( $is_requesting && $can_token ) : ?>
@@ -116,7 +116,7 @@ $this->form_action();
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
 					<p><?php echo sprintf( __( 'You must click the %s button if you wish to associate this site with a QUIC.cloud account.', 'litespeed-cache' ), '<code>' . __( 'Link to QUIC.cloud', 'litespeed-cache' ) . '</code>' ); ?></p>
-					<p><?php $this->learn_more( 'https://www.quic.cloud/faq/#do-i-need-to-register-on-quic-cloud-to-use-the-online-services', __( 'Benefits of linking to a QUIC.cloud account', 'litespeed-cache' ) ); ?></p>
+					<p><?php Doc::learn_more( 'https://www.quic.cloud/faq/#do-i-need-to-register-on-quic-cloud-to-use-the-online-services', __( 'Benefits of linking to a QUIC.cloud account', 'litespeed-cache' ) ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -125,7 +125,7 @@ $this->form_action();
 				<br /><?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
-						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to clear all cloud nodes?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
 					</h4>
 					<p>
 						<?php

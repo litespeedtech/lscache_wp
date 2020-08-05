@@ -10,7 +10,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Media Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#media-settings-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#media-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -103,7 +103,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 			<div class="litespeed-desc">
 				<?php echo __( 'Use QUIC.cloud LQIP (Low Quality Image Placeholder) generator service for responsive image previews while loading.', 'litespeed-cache' ); ?>
 				<br /><?php echo __( 'Keep this off to use plain color placeholders.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#lqip-cloud-generator' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#lqip-cloud-generator' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -157,7 +157,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 					'<code>' . Lang::title( Base::O_MEDIA_PLACEHOLDER_RESP_SVG ) . '</code>'
 				); ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-lqip-in-background' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-lqip-in-background' ); ?>
 			</div>
 
 			<?php if ( $placeholder_summary ) : ?>
@@ -212,7 +212,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 			<div class="litespeed-desc">
 				<?php echo __( 'Include the lazy load image JavaScript library inline.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#inline-lazy-load-images-library' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#inline-lazy-load-images-library' ); ?>
 			</div>
 		</td>
 	</tr>

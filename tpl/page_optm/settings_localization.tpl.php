@@ -15,7 +15,7 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Localization Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-settings-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -92,7 +92,7 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Localize external resources.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
 			</div>
 		</td>
 	</tr>

@@ -37,7 +37,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 <h3 class="litespeed-title">
 	<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab' ); ?>
 </h3>
 
 <div class="litespeed-callout notice notice-error inline">

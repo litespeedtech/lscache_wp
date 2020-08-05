@@ -4,14 +4,14 @@ defined( 'WPINC' ) || exit;
 ?>
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Browser Cache Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#browser-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#browser-tab' ); ?>
 </h3>
 
 <?php if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) : ?>
 <div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
 	<p><?php echo __( 'OpenLiteSpeed users please check this', 'litespeed-cache' ); ?>:
-	<?php $this->learn_more( 'https://openlitespeed.org/kb/how-to-set-up-custom-headers/', 'Setting Up Custom Headers' ); ?></p>
+	<?php Doc::learn_more( 'https://openlitespeed.org/kb/how-to-set-up-custom-headers/', __( 'Setting Up Custom Headers', 'litespeed-cache' ) ); ?></p>
 </div>
 <?php endif; ?>
 

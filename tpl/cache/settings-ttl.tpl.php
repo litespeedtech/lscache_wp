@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'TTL', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#ttl-tab', false, 'litespeed-learn-more' ) ; ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#ttl-tab' ); ?>
 </h3>
 
 

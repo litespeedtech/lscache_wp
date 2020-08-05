@@ -25,7 +25,7 @@ else {
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Object Cache Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#object-tab', false, 'litespeed-learn-more' ) ; ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#object-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -39,7 +39,7 @@ else {
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#memcached-lsmcd-and-redis-object-cache-support-in-lscwp' ) ; ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#memcached-lsmcd-and-redis-object-cache-support-in-lscwp' ); ?>
 			</div>
 			<div class="litespeed-block">
 
@@ -50,7 +50,7 @@ else {
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Memcached' ) ; ?>: <?php echo $mem_enabled ; ?><br />
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Redis' ) ; ?>: <?php echo $redis_enabled ; ?><br />
 					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?>
-					<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#how-to-debug' ) ; ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#how-to-debug' ); ?>
 				</div>
 
 			</div>
@@ -209,7 +209,7 @@ else {
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OBJECT_ADMIN ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
 				<br />
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#store-transients' ) ; ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#store-transients' ); ?>
 			</div>
 		</td>
 	</tr>

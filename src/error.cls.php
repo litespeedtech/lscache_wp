@@ -40,12 +40,12 @@ class Error {
 
 			case 'disabled_all':
 				$msg = sprintf( __( 'The setting %s is currently enabled.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_DEBUG_DISABLE_ALL ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %s>Click here to change</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-toolbox') . '" ' );
+					Doc::learn_more( admin_url( 'admin.php?page=litespeed-toolbox' ), __( 'Click here to change.', 'litespeed-cache' ), true, false, true );
 				break;
 
 			case 'lack_of_api_key':
 				$msg = sprintf( __( 'You will need to set %s to use the online services.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_API_KEY ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %s>Click here to set</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+					Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
 				break;
 
 			case 'lack_of_quota':

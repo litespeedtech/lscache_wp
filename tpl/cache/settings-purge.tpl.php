@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Purge Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-tab' ); ?>
 </h3>
 
 <?php
@@ -83,7 +83,7 @@ $break_arr = array(
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'If ON, stale copy of cached page will be shown to visitor until a new cache copy is available. Reduces the server load for following visits. If OFF, page will be dynamically generated while visitor waits.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -113,7 +113,7 @@ $break_arr = array(
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
 				<p>
 					<?php echo __( 'For URLs with wildcards, there may be a delay in initiating scheduled purge.', 'litespeed-cache' ); ?><br />
-					<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#scheduled-purge-urls' ); ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#scheduled-purge-urls' ); ?>
 				</p>
 			</div>
 		</td>
@@ -151,7 +151,7 @@ $break_arr = array(
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-all-hooks' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-all-hooks' ); ?>
 			</div>
 		</td>
 	</tr>

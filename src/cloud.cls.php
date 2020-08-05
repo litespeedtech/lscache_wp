@@ -7,8 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Cloud extends Base
-{
+class Cloud extends Base {
 	protected static $_instance;
 
 	const CLOUD_SERVER = 'https://api.quic.cloud';
@@ -81,8 +80,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->_api_key = Conf::val( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
 	}
@@ -92,8 +90,7 @@ class Cloud extends Base
 	 *
 	 * @since 3.0
 	 */
-	public function check_dev_version()
-	{
+	public function check_dev_version() {
 		if ( ! preg_match( '/[^\d\.]/', Core::VER ) ) {
 			return;
 		}
@@ -128,8 +125,7 @@ class Cloud extends Base
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function version_check( $src = false )
-	{
+	public static function version_check( $src = false ) {
 		$req_data = array(
 			'v'		=> defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '',
 			'src'	=> $src,
@@ -147,8 +143,7 @@ class Cloud extends Base
 	 *
 	 * @since 3.0
 	 */
-	public function news()
-	{
+	public function news() {
 		$this->_update_news();
 
 		if ( empty( $this->_summary[ 'news.new' ] ) ) {
@@ -167,8 +162,7 @@ class Cloud extends Base
 	 *
 	 * @since 2.9.9.1
 	 */
-	private function _update_news()
-	{
+	private function _update_news() {
 		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 3 ) {
 			return;
 		}
@@ -209,8 +203,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	public function allowance( $service )
-	{
+	public function allowance( $service ) {
 		// Only auto sync usage at most one time per day
 		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
 			$this->sync_usage();
@@ -256,8 +249,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function sync_usage()
-	{
+	public function sync_usage() {
 		$usage = $this->_post( self::SVC_D_USAGE );
 		if ( ! $usage ) {
 			return;
@@ -280,8 +272,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function clear_cloud()
-	{
+	public function clear_cloud() {
 		foreach ( self::$SERVICES as $service ) {
 			if ( isset( $this->_summary[ 'server.' . $service ] ) ) {
 				unset( $this->_summary[ 'server.' . $service ] );
@@ -301,8 +292,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function detect_cloud( $service, $force = false )
-	{
+	public function detect_cloud( $service, $force = false ) {
 		if ( in_array( $service, self::$CENTER_SVC_SET ) ) {
 			return self::CLOUD_SERVER;
 		}
@@ -398,8 +388,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function get( $service, $data = array() )
-	{
+	public static function get( $service, $data = array() ) {
 		$instance = self::get_instance();
 		return $instance->_get( $service, $data );
 	}
@@ -410,8 +399,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _get( $service, $data = false )
-	{
+	private function _get( $service, $data = false ) {
 		$service_tag = $service;
 		if ( ! empty( $data[ 'action' ] ) ) {
 			$service_tag .= '-' . $data[ 'action' ];
@@ -456,8 +444,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _maybe_cloud( $service_tag )
-	{
+	private function _maybe_cloud( $service_tag ) {
 		// we don't want the `img_optm-taken` to fail at any given time
 		if ( $service_tag == self::IMGOPTM_TAKEN ) {
 			return true;
@@ -507,8 +494,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function post( $service, $data = false, $time_out = false )
-	{
+	public static function post( $service, $data = false, $time_out = false ) {
 		$instance = self::get_instance();
 		return $instance->_post( $service, $data, $time_out );
 	}
@@ -519,8 +505,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _post( $service, $data = false, $time_out = false )
-	{
+	private function _post( $service, $data = false, $time_out = false ) {
 		$service_tag = $service;
 		if ( ! empty( $data[ 'action' ] ) ) {
 			$service_tag .= '-' . $data[ 'action' ];
@@ -560,8 +545,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _parse_response( $response, $service, $service_tag, $server )
-	{
+	private function _parse_response( $response, $service, $service_tag, $server ) {
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '❄️  failed to request: ' . $error_message );
@@ -673,7 +657,8 @@ class Cloud extends Base
 			if ( $json_msg == 'site_not_registered' ) {
 				Conf::get_instance()->update_confs( array( Base::O_API_KEY => '' ) );
 
-				$msg = __( 'Invalid site. Domain key in settings is automatically removed.', 'litespeed-cache' );
+				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
+				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
 				Admin_Display::error( $msg );
 			}
 
@@ -706,8 +691,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function show_promo()
-	{
+	public function show_promo() {
 		if ( ! $this->_api_key ) {
 			Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
 		}
@@ -725,8 +709,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _clear_promo()
-	{
+	private function _clear_promo() {
 		if ( count( $this->_summary[ 'promo' ] ) > 1 ) {
 			array_shift( $this->_summary[ 'promo' ] );
 		}
@@ -743,8 +726,7 @@ class Cloud extends Base
 	 * @since  1.6.7 Self clean the parameter
 	 * @access private
 	 */
-	private function _parse_link( &$json )
-	{
+	private function _parse_link( &$json ) {
 		$msg = '';
 
 		if ( ! empty( $json[ '_links' ] ) ) {
@@ -764,8 +746,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function ip_validate()
-	{
+	public function ip_validate() {
 		if ( empty( $_POST[ 'hash' ] ) ) {
 			Debug2::debug( '❄️  Lack of hash param' );
 			return self::err( 'lack_of_param' );
@@ -796,8 +777,7 @@ class Cloud extends Base
 	 *
 	 * @since 3.0
 	 */
-	public function can_token()
-	{
+	public function can_token() {
 		return empty( $this->_summary[ 'token_ts' ] ) || time() - $this->_summary[ 'token_ts' ] > self::EXPIRATION_TOKEN;
 	}
 
@@ -807,8 +787,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function gen_key()
-	{
+	public function gen_key() {
 		$data = array(
 			'site_url'	=> home_url(),
 			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
@@ -875,8 +854,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function token_validate()
-	{
+	public function token_validate() {
 		try {
 			$this->_validate_hash();
 		} catch( \Exception $e ) {
@@ -896,8 +874,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save_apikey()
-	{
+	public function save_apikey() {
 		// Validate token hash first
 		if ( empty( $_POST[ 'domain_key' ] ) || ! isset( $_POST[ 'is_linked' ] ) ) {
 			return self::err( 'lack_of_param' );
@@ -929,8 +906,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_hash( $offset = 0 )
-	{
+	private function _validate_hash( $offset = 0 ) {
 		if ( empty( $_POST[ 'hash' ] ) ) {
 			Debug2::debug( '❄️  Lack of hash param' );
 			throw new \Exception( 'lack_of_param' );
@@ -952,8 +928,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function can_link_qc()
-	{
+	public function can_link_qc() {
 		return empty( $this->_summary[ 'is_linked' ] ) && $this->_api_key;
 	}
 
@@ -962,8 +937,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _link_to_qc()
-	{
+	private function _link_to_qc() {
 		if ( ! $this->can_link_qc() ) {
 			return;
 		}
@@ -983,8 +957,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function update_is_linked_status()
-	{
+	public function update_is_linked_status() {
 		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'domain_hash' ] ) ) {
 			return;
 		}
@@ -1028,8 +1001,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	public static function ok( $data = array() )
-	{
+	public static function ok( $data = array() ) {
 		$data[ '_res' ] = 'ok';
 		return $data;
 	}
@@ -1039,8 +1011,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	public static function err( $code )
-	{
+	public static function err( $code ) {
 		return array( '_res' => 'err', '_msg' => $code );
 	}
 
@@ -1050,8 +1021,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler()
-	{
+	public static function handler() {
 		$instance = self::get_instance();
 
 		$type = Router::verify_type();

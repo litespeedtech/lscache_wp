@@ -1045,27 +1045,7 @@ class Admin_Display extends Base {
 			. __( 'API', 'litespeed-cache' ) . ': '
 			. sprintf( __( 'Server variable(s) %s available to override this setting.', 'litespeed-cache' ), $s );
 
-		$this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#limiting-the-crawler' );
-	}
-
-	/**
-	 * Display learn more link
-	 *
-	 * @since  2.6.1
-	 * @access public
-	 */
-	public function learn_more( $link, $title = false, $class = false, $self = false ) {
-		if ( $class ) {
-			$class = " class='$class' ";
-		}
-
-		if ( ! $title ) {
-			$title = __( 'Learn More', 'litespeed-cache' );
-		}
-
-		$self = $self ? '' : "target='_blank'";
-
-		echo " <a href='$link' $self $class>$title</a>";
+		Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#limiting-the-crawler' );
 	}
 
 	/**
