@@ -218,9 +218,9 @@ class Admin_Display extends Base {
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo;
 		}
 
-		// If on crawler page, append getIP link
+		// If on Server IP setting page, append getIP link
 		global $pagenow;
-		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-crawler' ) {
+		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-general' ) {
 			$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/';
 			$localize_data[ 'nonce' ] = wp_create_nonce( 'wp_rest' );
 		}
