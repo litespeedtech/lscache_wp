@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.2
-Stable tag: 3.2.4
+Stable tag: 3.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -24,7 +24,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 = General Features =
 
-* QUIC.cloud CDN Cache
+* Free QUIC.cloud CDN Cache
 * Object Cache (Memcached/LSMCD/Redis) Support<sup>+</sup>
 * Image Optimization (Lossless/Lossy)
 * Minify CSS, JavaScript, and HTML
@@ -244,6 +244,31 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.3 - Aug 6 2020 =
+* 🌱**Page Optimize** Added a new setting, Inline JS Deferred Excludes. (@ankit)
+* **Page Optimize** CSS/JS Combine/Minify file versions will be differentiated by query string hash instead of new filename to reduce DB/file system storage.
+* **Page Optimize** Added the ability to use local copies of external JS files for better control over page score impacts.
+* **Page Optimize** Improved combination of CSS media queries. (@galbaras)
+* **Page Optimize** Reprioritized Inline JS Defer to be optimized before encoding, for a significantly smaller result.
+* **LQIP** Detect if the file exists before sending LQIP request to QUIC.cloud.
+* **CCSS** Sped up CCSS process significantly by sending HTML and CSS in request.
+* **CCSS** Improvements to mobile CSS support in CCSS.
+* **CCSS** Minimize CCSS failures by attempting to automatically fix CSS syntax errors.
+* **Cloud** Domain Key will be deleted after QUIC.cloud site_not_registered error to avoid endless repeated requests.
+* **CDN** CDN Original URL will default to WP Site URL if not set. (@ruikai)
+* **CLI** Global output format `--format=json/yaml/dump` and `--json` support in CLI. (@alya1992)
+* **CDN** Improved handling of non-image CSS `url()` sources in CDN. (@daniel McD)
+* 🐞**CDN** Fixed CDN replacement conflict w/ JS/CSS Optimize. (@ankit)
+* **Crawler** Only reset Crawler waiting queues when crawling begins. (@ruikai)
+* **Network** Network Enable Cache is no longer reset to ON Use Network Settings in enabled. (@RavanH)
+* 🐞**Activation** Fixed a PHP warning that appeared during uninstall. (@RavanH)
+* **Debug** Automatically omit long strings when dumping an array to debug log.
+* **Report** Subsites report now shows overwritten values along w/ original values. (#52593959)
+* **REST** Improved WP5.5 REST compatibility. (@oldrup)
+* **GUI** Server IP setting moved from Crawler menu to General menu.
+* **GUI** Localize resources moved to Localization tab.
+* **Config** News option now defaults to ON.
 
 = 3.2.4 - Jul 8 2020 =
 * **Object** New installations no longer get custom data.ini reset, as this could cause lost configuration. (@Eric)
