@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 3.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-08-05 21:31:25+00:00\n"
+"POT-Creation-Date: 2020-08-06 17:29:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4532,7 +4532,7 @@ msgid "Prefetching DNS can reduce latency for visitors."
 msgstr ""
 
 #: tpl/page_optm/settings_html.tpl.php:76
-#: tpl/page_optm/settings_localization.tpl.php:130
+#: tpl/page_optm/settings_localization.tpl.php:131
 msgid "For example"
 msgstr ""
 
@@ -4666,42 +4666,46 @@ msgid "Localize external resources."
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:116
-msgid "These domains will be replaced to local URL."
+msgid ""
+"Resources from the domains listed here will be copied and replaced with "
+"local URLs."
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:117
-msgid "Only HTTPS protocol supported."
+msgid "HTTPS sources only."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:120
-msgid "Comment lines supported (started w/ %s)."
+#: tpl/page_optm/settings_localization.tpl.php:119
+msgid "List as file format (optional) + URL, separated by a space."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:123
-msgid "Can use space to separate the supported file formats."
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:124
-msgid "Default format is %s."
+#: tpl/page_optm/settings_localization.tpl.php:122
+msgid ""
+"Comments are supported. Start a line with a %s to turn it into a comment "
+"line."
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:125
+msgid "If format is not specified, %s is assumed."
+msgstr ""
+
+#: tpl/page_optm/settings_localization.tpl.php:126
 msgid "Currently format supports"
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:127
-msgid "%s format will be supported in later versions."
+#: tpl/page_optm/settings_localization.tpl.php:128
+msgid "%s format will be added in a future version."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:128
+#: tpl/page_optm/settings_localization.tpl.php:129
 msgid "The format will affect the response content type header."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:130
+#: tpl/page_optm/settings_localization.tpl.php:131
 msgid "or"
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:132
+#: tpl/page_optm/settings_localization.tpl.php:134
 msgid "Example 2"
 msgstr ""
 
@@ -4933,7 +4937,7 @@ msgid "Listed JS files will not be deferred."
 msgstr ""
 
 #: tpl/page_optm/settings_tuning.tpl.php:164
-msgid "Inline JS codes including the above fragment will not be deferred."
+msgid "Inline JS codes including the above fragments will not be deferred."
 msgstr ""
 
 #: tpl/page_optm/settings_tuning.tpl.php:178

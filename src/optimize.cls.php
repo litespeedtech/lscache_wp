@@ -1202,7 +1202,7 @@ class Optimize extends Base {
 				continue;
 			}
 			if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-				continue;
+				// continue;
 			}
 			if ( empty( $attrs[ 'href' ] ) ) {
 				continue;
