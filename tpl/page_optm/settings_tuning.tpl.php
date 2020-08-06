@@ -161,7 +161,7 @@ ksort( $roles );
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Inline JS codes including the above fragment will not be deferred.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Inline JS codes including the above fragments will not be deferred.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>

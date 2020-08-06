@@ -582,7 +582,7 @@ class Optimize extends Base {
 
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async ) {
-			$this->html_head = CSS::prepend_ccss( $this->html_head, $this->content_ori );
+			$this->html_head = CSS::prepend_ccss( $this->html_head );
 		}
 
 		// Replace html head part

@@ -31,12 +31,10 @@ class CSS extends Base {
 	 * @since  2.3 Migrated from optimize.cls
 	 * @access public
 	 */
-	public static function prepend_ccss( $html_head, $html ) {
-		$html = Optimizer::get_instance()->html_min( $html );
-
+	public static function prepend_ccss( $html_head ) {
 		// Get critical css for current page
 		// Note: need to consider mobile
-		$rules = self::get_instance()->_ccss( $html );
+		$rules = self::get_instance()->_ccss();
 
 		// Append default critical css
 		$rules .= Conf::val( Base::O_OPTM_CCSS_CON );
@@ -87,7 +85,7 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _ccss( $html ) {
+	private function _ccss() {
 		// If don't need to generate CCSS, bypass
 		if ( ! Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 			Debug2::debug( '[CSS] bypassed ccss due to setting' );
@@ -129,7 +127,7 @@ class CSS extends Base {
 		}
 
 		// generate on the fly
-		return $this->_generate_ccss( $request_url, $ccss_type, $_SERVER[ 'HTTP_USER_AGENT' ], $this->_separate_mobile_ccss(), $html );
+		return $this->_generate_ccss( $request_url, $ccss_type, $_SERVER[ 'HTTP_USER_AGENT' ], $this->_separate_mobile_ccss() );
 	}
 
 	/**
@@ -167,13 +165,7 @@ class CSS extends Base {
 		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
 			Debug2::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
-			// Gather HTML to send
-			$url = add_query_arg( 'LSCWP_CTRL', 'before_optm', $v[ 'url' ] );
-			$html = Crawler::get_instance()->self_curl( $url, $v[ 'user_agent' ] );
-
-			Debug2::debug2( '[CSS] self_curl result....', $html );
-
-			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ], $html );
+			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -188,7 +180,7 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile, $html ) {
+	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile ) {
 		// Check if has credit to push
 		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
@@ -202,6 +194,11 @@ class CSS extends Base {
 		// Update css request status
 		$this->_summary[ 'curr_request' ] = time();
 		self::save_summary();
+
+		// Gather guest HTML to send
+		$html = Crawler::get_instance()->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent );
+		Debug2::debug2( '[CSS] self_curl result....', $html );
+
 
 		$html = Optimizer::get_instance()->html_min( $html, true );
 		// Drop <noscript>xxx</noscript>
