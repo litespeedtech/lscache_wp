@@ -250,6 +250,7 @@ class CSS extends Base {
 				else {
 					Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
 					$con = File::read( $real_file[ 0 ] );
+					$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, dirname( $real_file[ 0 ] ) );
 				}
 			}
 			else { // Inline style
