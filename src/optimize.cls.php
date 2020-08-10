@@ -694,6 +694,10 @@ class Optimize extends Base {
 					continue;
 				}
 
+				if ( strpos( $con, 'document.addEventListener' ) !== false ) {
+					continue;
+				}
+
 				// $con = str_replace( 'var ', 'window.', $con );
 
 				$script_ori[] = $match[ 0 ];
