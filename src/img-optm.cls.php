@@ -433,7 +433,6 @@ class Img_Optm extends Base
 
 		$srcpath_list = array();
 
-		// TODO: Fix memory usage for a large amount of images
 		$list = $wpdb->get_results( "SELECT src FROM $this->_table_img_optming" );
 		foreach ( $list as $v ) {
 			$srcpath_list[] = $v->src;
