@@ -261,6 +261,25 @@ class Cloud extends Base {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
 
+		// Reset TTL if quota recovered
+		$outage_reset_list = array();
+		foreach ( $usage as $svc => $data ) {
+			if ( $data[ 'quota' ] + $data[ 'pag_bal' ] > $data[ 'used' ] ) {
+				$outage_reset_list[] = $svc;
+			}
+		}
+		if ( $outage_reset_list ) {
+			foreach ( $this->_summary as $k => $v ) {
+				if ( strpos( $k, 'ttl.' ) === 0 ) {
+					foreach ( $outage_reset_list as $svc ) {
+						if ( strpos( $k, 'ttl.' . $svc ) === 0 ) {
+							unset( $this->_summary[ $k ] );
+						}
+					}
+				}
+			}
+		}
+
 		self::save_summary();
 
 		return $this->_summary;
@@ -281,6 +300,13 @@ class Cloud extends Base {
 				unset( $this->_summary[ 'server_date.' . $service ] );
 			}
 		}
+		// Unset TTL
+		foreach ( $this->_summary as $k => $v ) {
+			if ( strpos( $k, 'ttl.' ) === 0 ) {
+				unset( $this->_summary[ $k ] );
+			}
+		}
+
 		self::save_summary();
 
 		Debug2::debug( '❄️  Cleared all local service node caches' );
