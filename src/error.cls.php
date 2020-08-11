@@ -88,6 +88,10 @@ class Error {
 				$msg = __( 'Credits are not enough to proceed the current request.', 'litespeed-cache' );
 				break;
 
+			case strpos( $code, 'err_overdraw ' ) === 0:
+				$msg = __( 'Credits are not enough to proceed the current request.', 'litespeed-cache' ) . sprintf( __( 'The next request will be automatically delayed by %s.', 'litespeed-cache' ), '<code>' . Utility::readable_time( substr( $code, strlen( 'err_overdraw ' ) ), 3600, true ) . '</code>' );
+				break;
+
 			case 'W':
 				$msg = __( '%s file not writable.', 'litespeed-cache' );
 				break;
