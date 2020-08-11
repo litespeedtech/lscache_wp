@@ -7,9 +7,9 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
 class Base extends Instance {
 	protected static $_instance;
@@ -147,8 +147,8 @@ class Base extends Instance {
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
 	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer';
-	const O_OPTM_JS_LOCALIZE		= 'optm-js_localize';
-	const O_OPTM_JS_LOCALIZE_DOMAINS	= 'optm-js_localize_domains';
+	const O_OPTM_LOCALIZE			= 'optm-localize';
+	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
 	const O_OPTM_EXC_JQ 			= 'optm-exc_jq';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
@@ -446,8 +446,6 @@ class Base extends Instance {
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
-		self::O_OPTM_JS_LOCALIZE 		=> false,
-		self::O_OPTM_JS_LOCALIZE_DOMAINS	=> array(),
 		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_EXC_JQ 			=> false,
@@ -483,6 +481,8 @@ class Base extends Instance {
 		self::O_DISCUSS_AVATAR_CACHE		=> false,
 		self::O_DISCUSS_AVATAR_CRON			=> false,
 		self::O_DISCUSS_AVATAR_CACHE_TTL	=> 0,
+		self::O_OPTM_LOCALIZE 			=> false,
+		self::O_OPTM_LOCALIZE_DOMAINS	=> array(),
 
 		// Media
 		self::O_MEDIA_LAZY 							=> false,
@@ -632,8 +632,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0.3
 	 */
-	protected function type_casting( $val, $id, $is_site_conf = false )
-	{
+	protected function type_casting( $val, $id, $is_site_conf = false ) {
 		$default_v = ! $is_site_conf ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 		if ( is_bool( $default_v ) ) {
 			if ( $val === 'true' ) {
@@ -674,8 +673,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	public function load_default_site_vals()
-	{
+	public function load_default_site_vals() {
 		// Load network_default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true );
@@ -707,8 +705,7 @@ class Base extends Instance {
 	 * @since 3.0
 	 * @access public
 	 */
-	public function load_default_vals()
-	{
+	public function load_default_vals() {
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true );
@@ -773,19 +770,19 @@ class Base extends Instance {
 
 		// Load default vals containing variables
 		if ( ! self::$_default_options[ self::O_CDN_ORI_DIR ] ) {
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes" ;
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", self::$_default_options[ self::O_CDN_ORI_DIR ] ) ;
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', self::$_default_options[ self::O_CDN_ORI_DIR ] ) ;
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes";
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", self::$_default_options[ self::O_CDN_ORI_DIR ] );
+			self::$_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', self::$_default_options[ self::O_CDN_ORI_DIR ] );
 		}
 
 		// Set security key if not initialized yet
 		if ( ! self::$_default_options[ self::HASH ] ) {
-			self::$_default_options[ self::HASH ] = Str::rrand( 32 ) ;
+			self::$_default_options[ self::HASH ] = Str::rrand( 32 );
 		}
 
-		self::$_default_options[ self::_VER ] = Core::VER ;
+		self::$_default_options[ self::_VER ] = Core::VER;
 
-		return self::$_default_options ;
+		return self::$_default_options;
 	}
 
 	/**
@@ -793,8 +790,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_string_val( $id, $val )
-	{
+	protected function _conf_string_val( $id, $val ) {
 		return $val;
 	}
 
@@ -803,8 +799,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_multi_switch( $id )
-	{
+	protected function _conf_multi_switch( $id ) {
 		if ( ! empty( self::$_multi_switch_list[ $id ] ) ) {
 			return self::$_multi_switch_list[ $id ];
 		}
@@ -821,9 +816,8 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	public static function set_multi_switch( $id, $v )
-	{
-		self::$_multi_switch_list[ $id ] = $v ;
+	public static function set_multi_switch( $id, $v ) {
+		self::$_multi_switch_list[ $id ] = $v;
 	}
 
 	/**
@@ -831,8 +825,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	public static function conf_const( $id )
-	{
+	public static function conf_const( $id ) {
 		return 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $id ) );
 	}
 
@@ -841,8 +834,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_filter( $id )
-	{
+	protected function _conf_filter( $id ) {
 		$filters = array(
 			self::O_MEDIA_LAZY_EXC		=> 'uri',
 			self::O_DEBUG_INC			=> 'relative',
@@ -860,7 +852,7 @@ class Base extends Instance {
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
-			self::O_OPTM_JS_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize JS`
+			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
 			// self::	=> '',
 			// self::	=> '',
 		);
@@ -877,8 +869,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge( $id )
-	{
+	protected function _conf_purge( $id ) {
 		$check_ids = array(
 			self::O_MEDIA_LAZY_URI_EXC,
 			self::O_OPTM_EXC,
@@ -897,8 +888,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge_all( $id )
-	{
+	protected function _conf_purge_all( $id ) {
 		$check_ids = array(
 			self::O_CACHE,
 			self::O_ESI,
@@ -914,8 +904,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_pswd( $id )
-	{
+	protected function _conf_pswd( $id ) {
 		$check_ids = array(
 			self::O_CDN_CLOUDFLARE_KEY,
 			self::O_OBJECT_PSWD,
@@ -930,8 +919,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_cron( $id )
-	{
+	protected function _conf_cron( $id ) {
 		$check_ids = array(
 			self::O_IMG_OPTM_CRON,
 			self::O_OPTM_CCSS_ASYNC,
@@ -949,8 +937,7 @@ class Base extends Instance {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge_tag( $id )
-	{
+	protected function _conf_purge_tag( $id ) {
 		$check_ids = array(
 			self::O_CACHE_PAGE_LOGIN	=> Tag::TYPE_LOGIN,
 		);
@@ -967,8 +954,7 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function name( $id )
-	{
+	public static function name( $id ) {
 		$cls = new \ReflectionClass( get_called_class() );
 		return 'litespeed.' . strtolower( $cls->getShortName() ) . '.' . $id;
 	}
@@ -978,9 +964,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function get_option( $id, $default_v = false )
-	{
-		return get_option( self::name( $id ), $default_v ) ;
+	public static function get_option( $id, $default_v = false ) {
+		return get_option( self::name( $id ), $default_v );
 	}
 
 	/**
@@ -988,9 +973,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function get_site_option( $id, $default_v = false )
-	{
-		return get_site_option( self::name( $id ), $default_v ) ;
+	public static function get_site_option( $id, $default_v = false ) {
+		return get_site_option( self::name( $id ), $default_v );
 	}
 
 	/**
@@ -998,9 +982,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function get_blog_option( $blog_id, $id, $default_v = false )
-	{
-		return get_blog_option( $blog_id, self::name( $id ), $default_v ) ;
+	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
+		return get_blog_option( $blog_id, self::name( $id ), $default_v );
 	}
 
 	/**
@@ -1008,9 +991,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function add_option( $id, $v )
-	{
-		add_option( self::name( $id ), $v ) ;
+	public static function add_option( $id, $v ) {
+		add_option( self::name( $id ), $v );
 	}
 
 	/**
@@ -1018,9 +1000,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function add_site_option( $id, $v )
-	{
-		add_site_option( self::name( $id ), $v ) ;
+	public static function add_site_option( $id, $v ) {
+		add_site_option( self::name( $id ), $v );
 	}
 
 	/**
@@ -1028,9 +1009,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function update_option( $id, $v )
-	{
-		update_option( self::name( $id ), $v ) ;
+	public static function update_option( $id, $v ) {
+		update_option( self::name( $id ), $v );
 	}
 
 	/**
@@ -1038,9 +1018,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function update_site_option( $id, $v )
-	{
-		update_site_option( self::name( $id ), $v ) ;
+	public static function update_site_option( $id, $v ) {
+		update_site_option( self::name( $id ), $v );
 	}
 
 	/**
@@ -1048,9 +1027,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function delete_option( $id )
-	{
-		delete_option( self::name( $id ) ) ;
+	public static function delete_option( $id ) {
+		delete_option( self::name( $id ) );
 	}
 
 	/**
@@ -1058,9 +1036,8 @@ class Base extends Instance {
 	 *
 	 * @since 3.0
 	 */
-	public static function delete_site_option( $id )
-	{
-		delete_site_option( self::name( $id ) ) ;
+	public static function delete_site_option( $id ) {
+		delete_site_option( self::name( $id ) );
 	}
 
 	/**
@@ -1069,8 +1046,7 @@ class Base extends Instance {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function get_summary( $field = false )
-	{
+	public static function get_summary( $field = false ) {
 		$summary = self::get_option( '_summary', array() );
 
 		if ( ! is_array( $summary ) ) {
@@ -1094,13 +1070,12 @@ class Base extends Instance {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function save_summary( $data = null )
-	{
+	public static function save_summary( $data = null ) {
 		if ( $data === null ) {
 			$data = static::get_instance()->_summary;
 		}
 
-		self::update_option( '_summary', $data ) ;
+		self::update_option( '_summary', $data );
 	}
 
 	/**
@@ -1108,8 +1083,7 @@ class Base extends Instance {
 	 *
 	 * @since 2.4.1
 	 */
-	public function server_vars()
-	{
+	public function server_vars() {
 		$consts = array(
 			'WP_SITEURL',
 			'WP_HOME',
@@ -1125,13 +1099,13 @@ class Base extends Instance {
 			'LITESPEED_ON',
 			'LSWCP_TAG_PREFIX',
 			'COOKIEHASH',
-		) ;
-		$server_vars = array() ;
+		);
+		$server_vars = array();
 		foreach ( $consts as $v ) {
-			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL;
 		}
 
-		return $server_vars ;
+		return $server_vars;
 	}
 
 }

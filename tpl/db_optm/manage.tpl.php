@@ -76,7 +76,7 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 
 <h3 class="litespeed-title">
 	<?php echo __('Database Optimizer', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/database/', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/database/' ); ?>
 </h3>
 
 <div class="litespeed-panel-wrapper litespeed-cards-wrapper">

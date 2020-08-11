@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Purge Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-tab' ); ?>
 </h3>
 
 <?php
@@ -83,7 +83,7 @@ $break_arr = array(
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'If ON, the stale copy of a cached page will be shown to visitors until a new cache copy is available. Reduces the server load for following visits. If OFF, the page will be dynamically generated while visitors wait.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -107,13 +107,13 @@ $break_arr = array(
 				<?php Doc::one_per_line(); ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ) ; ?>
+				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
 				<p>
 					<?php echo __( 'For URLs with wildcards, there may be a delay in initiating scheduled purge.', 'litespeed-cache' ); ?><br />
-					<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#scheduled-purge-urls' ); ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#scheduled-purge-urls' ); ?>
 				</p>
 			</div>
 		</td>
@@ -142,16 +142,16 @@ $break_arr = array(
 
 			<div class="litespeed-textarea-recommended">
 				<div>
-					<?php $this->build_textarea( $id, 50 ) ; ?>
+					<?php $this->build_textarea( $id, 50 ); ?>
 				</div>
 				<div>
-					<?php $this->recommended( $id, true ) ; ?>
+					<?php $this->recommended( $id ); ?>
 				</div>
 			</div>
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ); ?>
-				<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-all-hooks' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#purge-all-hooks' ); ?>
 			</div>
 		</td>
 	</tr>

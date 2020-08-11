@@ -39,7 +39,7 @@ $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_
 
 <h3 class="litespeed-title">
 	<?php echo __('LiteSpeed Report', 'litespeed-cache') ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#report-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#report-tab' ); ?>
 </h3>
 
 <p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo ! empty( $env_ref[ 'num' ] ) ? $env_ref[ 'num' ] : '-' ; ?></b></p>

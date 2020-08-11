@@ -67,7 +67,7 @@ if ( Router::opcache_enabled() ) {
 	) ;
 }
 
-if ( CSS::has_ccss_cache() ) {
+if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
@@ -76,12 +76,12 @@ if ( CSS::has_ccss_cache() ) {
 	) ;
 }
 
-if ( Conf::val( Base::O_OPTM_JS_LOCALIZE ) ) {
+if ( Conf::val( Base::O_OPTM_LOCALIZE ) ) {
 	$_panels[] = array(
-		'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized JS', 'litespeed-cache' ),
-		'desc'	=> __( 'This will delete all localized JS files', 'litespeed-cache' ),
+		'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all localized resources', 'litespeed-cache' ),
 		'icon'	=> 'purge-cssjs',
-		'append_url'	=> Purge::TYPE_PURGE_ALL_LOCALJS,
+		'append_url'	=> Purge::TYPE_PURGE_ALL_LOCALRES,
 	);
 }
 
@@ -133,7 +133,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <h3 class="litespeed-title">
 	<?php echo __('Purge', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#purge-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#purge-tab' ); ?>
 </h3>
 
 <div class="litespeed-panel-wrapper litespeed-cards-wrapper">

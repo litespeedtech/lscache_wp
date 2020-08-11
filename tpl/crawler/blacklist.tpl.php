@@ -19,7 +19,7 @@ $pagination = Utility::pagination( $count, 30 );
 
 <h3 class="litespeed-title">
 	<?php echo __( 'Blacklist', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab' ); ?>
 </h3>
 
 <?php echo __( 'Total', 'litespeed-cache' ) . ': ' . $count; ?>

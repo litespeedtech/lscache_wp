@@ -56,26 +56,31 @@ class REST extends Instance {
 		register_rest_route( 'litespeed/v1', '/ip_validate', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'ip_validate' ),
+			'permission_callback'	=> '__return_true',
 		) );
 
 		// Token callback validate
 		register_rest_route( 'litespeed/v1', '/token', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'token' ),
+			'permission_callback'	=> '__return_true',
 		) );
 		register_rest_route( 'litespeed/v1', '/token', array(
 			'methods' => 'GET',
 			'callback' => array( $this, 'token_get' ),
+			'permission_callback'	=> '__return_true',
 		) );
 		register_rest_route( 'litespeed/v1', '/ping', array(
 			'methods' => 'GET',
 			'callback' => array( $this, 'ping' ),
+			'permission_callback'	=> '__return_true',
 		) );
 
 		// API key callback notification
 		register_rest_route( 'litespeed/v1', '/apikey', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'apikey' ),
+			'permission_callback'	=> '__return_true',
 		) );
 
 		// Image optm notify_img
@@ -83,6 +88,7 @@ class REST extends Instance {
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'notify_img' ),
+			'permission_callback'	=> '__return_true',
 		) );
 
 		// Image optm check_img
@@ -90,6 +96,7 @@ class REST extends Instance {
 		register_rest_route( 'litespeed/v1', '/check_img', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'check_img' ),
+			'permission_callback'	=> '__return_true',
 		) );
 
 	}

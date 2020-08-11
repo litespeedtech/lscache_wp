@@ -1,13 +1,13 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 ?>
 
-<?php $this->form_action( Router::ACTION_DEBUG2, Debug2::TYPE_BETA_TEST ) ; ?>
+<?php $this->form_action( Router::ACTION_DEBUG2, Debug2::TYPE_BETA_TEST ); ?>
 
 	<h3 class="litespeed-title">
 		<?php echo __( 'Try GitHub Version', 'litespeed-cache' ); ?>
-		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#beta-test-tab', false, 'litespeed-learn-more' ); ?>
+		<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#beta-test-tab' ); ?>
 	</h3>
 
 	<div class="litespeed-desc"><?php echo __( 'Use this section to switch plugin versions. To beta test a GitHub commit, enter the commit URL in the field below.', 'litespeed-cache' ); ?></div>

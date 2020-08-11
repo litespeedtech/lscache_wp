@@ -43,7 +43,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __( 'General Settings', 'litespeed-cache' ); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -64,20 +64,20 @@ $this->form_action();
 			<?php endif; ?>
 
 			<?php if ( $permalink_structure && $can_token ) : ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, 'button litespeed-btn-success', true ); ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, true, 'button litespeed-btn-success' ); ?>
 			<?php else: ?>
-				<?php $this->learn_more( 'javascript:;', $apply_btn_txt, 'button disabled', true ); ?>
+				<?php Doc::learn_more( 'javascript:;', $apply_btn_txt, true, 'button disabled' ); ?>
 			<?php endif; ?>
 			<?php if ( $apply_ts_txt ) : ?>
 				<span class="litespeed-desc"><?php echo $apply_ts_txt; ?></span>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
-				<?php $this->learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-success litespeed-right', false ); ?>
+				<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success litespeed-right' ); ?>
 			<?php elseif ( $__cloud->can_link_qc() ) : ?>
-				<?php $this->learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button litespeed-btn-warning litespeed-right', true ); ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning litespeed-right' ); ?>
 			<?php else: ?>
-				<?php $this->learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), 'button disabled litespeed-btn-warning litespeed-right', true ); ?>
+				<?php Doc::learn_more( 'javascript:;', __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button disabled litespeed-btn-warning litespeed-right' ); ?>
 			<?php endif; ?>
 
 			<?php if ( $is_requesting && $can_token ) : ?>
@@ -116,7 +116,7 @@ $this->form_action();
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
 					<p><?php echo sprintf( __( 'You must click the %s button if you wish to associate this site with a QUIC.cloud account.', 'litespeed-cache' ), '<code>' . __( 'Link to QUIC.cloud', 'litespeed-cache' ) . '</code>' ); ?></p>
-					<p><?php $this->learn_more( 'https://www.quic.cloud/faq/#do-i-need-to-register-on-quic-cloud-to-use-the-online-services', __( 'Benefits of linking to a QUIC.cloud account', 'litespeed-cache' ) ); ?></p>
+					<p><?php Doc::learn_more( 'https://www.quic.cloud/faq/#do-i-need-to-register-on-quic-cloud-to-use-the-online-services', __( 'Benefits of linking to a QUIC.cloud account', 'litespeed-cache' ) ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -125,7 +125,7 @@ $this->form_action();
 				<br /><?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
-						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
 					</h4>
 					<p>
 						<?php
@@ -143,6 +143,25 @@ $this->form_action();
 					</p>
 				</div>
 
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_SERVER_IP; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_input($id); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ); ?>
+				<br /><?php echo __('Your server IP is', 'litespeed-cache'); ?>: <code id='litespeed_server_ip'>-</code> <a href="javascript:;" class="button button-link" id="litespeed_get_ip"><?php echo __('Check my public IP from', 'litespeed-cache'); ?> DoAPI.us</a>
+				<font class="litespeed-warning litespeed-left10">
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'the auto-detected IP may not be accurate if you have an additional outgoing IP set, or you have multiple IPs configured on your server. Please make sure this IP is the correct one for visiting your site.', 'litespeed-cache' ); ?>
+				</font>
+
+				<?php $this->_validate_ip( $id ); ?>
 			</div>
 		</td>
 	</tr>

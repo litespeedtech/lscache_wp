@@ -50,9 +50,14 @@ class Online
 	 *     $ wp litespeed-online sync
 	 *
 	 */
-	public function sync()
+	public function sync( $args, $assoc_args )
 	{
 		$json = $this->__cloud->sync_usage();
+
+		if ( ! empty( $assoc_args[ 'format' ] ) ) {
+			WP_CLI::print_value( $json, $assoc_args );
+			return;
+		}
 
 		WP_CLI::success( 'Sync successfully' );
 
@@ -81,8 +86,13 @@ class Online
 	 *     $ wp litespeed-online services
 	 *
 	 */
-	public function services()
+	public function services( $args, $assoc_args )
 	{
+		if ( ! empty( $assoc_args[ 'format' ] ) ) {
+			WP_CLI::print_value( Cloud::$SERVICES, $assoc_args );
+			return;
+		}
+
 		$list = array();
 		foreach ( Cloud::$SERVICES as $v ) {
 			$list[] = array(
@@ -104,16 +114,24 @@ class Online
 	 *     $ wp litespeed-online nodes
 	 *
 	 */
-	public function nodes()
+	public function nodes( $args, $assoc_args )
 	{
 		$json = Cloud::get_summary();
 
 		$list = array();
+		$json_output = array();
 		foreach ( Cloud::$SERVICES as $v ) {
+			$server = ! empty( $json[ 'server.' . $v ] ) ? $json[ 'server.' . $v ] : '';
 			$list[] = array(
 				'service' => $v,
-				'server' => ! empty( $json[ 'server.' . $v ] ) ? $json[ 'server.' . $v ] : '',
+				'server' => $server,
 			);
+			$json_output[] = array( $v => $server );
+		}
+
+		if ( ! empty( $assoc_args[ 'format' ] ) ) {
+			WP_CLI::print_value( $json_output, $assoc_args );
+			return;
 		}
 
 		WP_CLI\Utils\format_items( 'table', $list, array( 'service', 'server' ) );

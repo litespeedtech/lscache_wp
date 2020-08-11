@@ -8,29 +8,28 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Control extends Instance
-{
-	protected static $_instance ;
+class Control extends Instance {
+	protected static $_instance;
 
-	const BM_CACHEABLE = 1 ;
-	const BM_PRIVATE = 2 ;
-	const BM_SHARED = 4 ;
-	const BM_NO_VARY = 8 ;
-	const BM_FORCED_CACHEABLE = 32 ;
-	const BM_PUBLIC_FORCED = 64 ;
-	const BM_STALE = 128 ;
-	const BM_NOTCACHEABLE = 256 ;
+	const BM_CACHEABLE = 1;
+	const BM_PRIVATE = 2;
+	const BM_SHARED = 4;
+	const BM_NO_VARY = 8;
+	const BM_FORCED_CACHEABLE = 32;
+	const BM_PUBLIC_FORCED = 64;
+	const BM_STALE = 128;
+	const BM_NOTCACHEABLE = 256;
 
-	const X_HEADER = 'X-LiteSpeed-Cache-Control' ;
+	const X_HEADER = 'X-LiteSpeed-Cache-Control';
 
-	protected static $_control = 0 ;
-	protected static $_custom_ttl = 0 ;
+	protected static $_control = 0;
+	protected static $_custom_ttl = 0;
 
-	private $_response_header_ttls = array() ;
+	private $_response_header_ttls = array();
 
 	/**
 	 * Init cache control
@@ -38,25 +37,24 @@ class Control extends Instance
 	 * @since  1.6.2
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		/**
 		 * Add vary filter for Role Excludes
 		 * @since  1.6.2
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) );
 
 		// 301 redirect hook
-		add_filter( 'wp_redirect', array( $this, 'check_redirect' ), 10, 2 ) ;
+		add_filter( 'wp_redirect', array( $this, 'check_redirect' ), 10, 2 );
 
 		// Load response header conf
-		$this->_response_header_ttls = Conf::val( Base::O_CACHE_TTL_STATUS ) ;
+		$this->_response_header_ttls = Conf::val( Base::O_CACHE_TTL_STATUS );
 		foreach ( $this->_response_header_ttls as $k => $v ) {
-			$v = explode( ' ', $v ) ;
+			$v = explode( ' ', $v );
 			if ( empty( $v[ 0 ] ) || empty( $v[ 1 ] ) ) {
-				continue ;
+				continue;
 			}
-			$this->_response_header_ttls[ $v[ 0 ] ] = $v[ 1 ] ;
+			$this->_response_header_ttls[ $v[ 0 ] ] = $v[ 1 ];
 		}
 
 		if ( Conf::val( Base::O_PURGE_STALE ) ) {
@@ -70,8 +68,7 @@ class Control extends Instance
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function vary_add_role_exclude( $vary )
-	{
+	public function vary_add_role_exclude( $vary ) {
 		if ( $this->in_cache_exc_roles() ) {
 			$vary[ 'role_exclude_cache' ] = 1;
 		}
@@ -88,18 +85,17 @@ class Control extends Instance
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_cache_exc_roles( $role = null )
-	{
+	public function in_cache_exc_roles( $role = null ) {
 		// Get user role
 		if ( $role === null ) {
-			$role = Router::get_role() ;
+			$role = Router::get_role();
 		}
 
 		if ( ! $role ) {
-			return false ;
+			return false;
 		}
 
-		return in_array( $role, Conf::val( Base::O_CACHE_EXC_ROLES ) ) ? $role : false ;
+		return in_array( $role, Conf::val( Base::O_CACHE_EXC_ROLES ) ) ? $role : false;
 	}
 
 	/**
@@ -109,30 +105,29 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function init_cacheable()
-	{
+	public static function init_cacheable() {
 		// Hook `wp` to mark default cacheable status
 		// NOTE: Any process that does NOT run into `wp` hook will not get cacheable by default
-		add_action( 'wp', __CLASS__ . '::set_cacheable', 5 ) ;
+		add_action( 'wp', __CLASS__ . '::set_cacheable', 5 );
 
 		// Hook WP REST to be cacheable
 		if ( Conf::val( Base::O_CACHE_REST ) ) {
-			add_action( 'rest_api_init', __CLASS__ . '::set_cacheable', 5 ) ;
+			add_action( 'rest_api_init', __CLASS__ . '::set_cacheable', 5 );
 		}
 
 		// Cache resources
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = Conf::val( Base::O_CACHE_RES ) ;
+		$cache_res = Conf::val( Base::O_CACHE_RES );
 		if ( $cache_res ) {
-			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
-			$pattern = '!' . LSCWP_CONTENT_FOLDER . Htaccess::RW_PATTERN_RES . '!' ;
+			$uri = esc_url( $_SERVER["REQUEST_URI"] );// todo: check if need esc_url()
+			$pattern = '!' . LSCWP_CONTENT_FOLDER . Htaccess::RW_PATTERN_RES . '!';
 			if ( preg_match( $pattern, $uri ) ) {
-				add_action( 'wp_loaded', __CLASS__ . '::set_cacheable', 5 ) ;
+				add_action( 'wp_loaded', __CLASS__ . '::set_cacheable', 5 );
 			}
 		}
 
 		// Check error page
-		add_filter( 'status_header', array( self::get_instance(), 'check_error_codes' ), 10, 2 ) ;
+		add_filter( 'status_header', array( self::get_instance(), 'check_error_codes' ), 10, 2 );
 	}
 
 
@@ -145,22 +140,21 @@ class Control extends Instance
 	 * @param $code
 	 * @return $eror_status
 	 */
-	public function check_error_codes( $status_header, $code )
-	{
+	public function check_error_codes( $status_header, $code ) {
 		if ( array_key_exists( $code, $this->_response_header_ttls ) ) {
 			if ( self::is_cacheable() && ! $this->_response_header_ttls[ $code ] ) {
-				self::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code ) ;
+				self::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code );
 			}
 
 			// Set TTL
-			self::set_custom_ttl( $this->_response_header_ttls[ $code ] ) ;
+			self::set_custom_ttl( $this->_response_header_ttls[ $code ] );
 		}
 
 		// Set cache tag
-		Tag::add( Tag::TYPE_HTTP . $code ) ;
+		Tag::add( Tag::TYPE_HTTP . $code );
 
 		// Give the default status_header back
-		return $status_header ;
+		return $status_header;
 	}
 
 	/**
@@ -169,13 +163,12 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function set_no_vary()
-	{
+	public static function set_no_vary() {
 		if ( self::is_no_vary() ) {
-			return ;
+			return;
 		}
-		self::$_control |= self::BM_NO_VARY ;
-		Debug2::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
+		self::$_control |= self::BM_NO_VARY;
+		Debug2::debug( '[Ctrl] X Cache_control -> no-vary', 3 );
 	}
 
 	/**
@@ -184,9 +177,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function is_no_vary()
-	{
-		return self::$_control & self::BM_NO_VARY ;
+	public static function is_no_vary() {
+		return self::$_control & self::BM_NO_VARY;
 	}
 
 	/**
@@ -195,13 +187,12 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function set_stale()
-	{
+	public static function set_stale() {
 		if ( self::is_stale() ) {
-			return ;
+			return;
 		}
-		self::$_control |= self::BM_STALE ;
-		Debug2::debug('[Ctrl] X Cache_control -> stale') ;
+		self::$_control |= self::BM_STALE;
+		Debug2::debug('[Ctrl] X Cache_control -> stale');
 	}
 
 	/**
@@ -210,9 +201,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function is_stale()
-	{
-		return self::$_control & self::BM_STALE ;
+	public static function is_stale() {
+		return self::$_control & self::BM_STALE;
 	}
 
 	/**
@@ -222,22 +212,21 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_shared( $reason = false )
-	{
+	public static function set_shared( $reason = false ) {
 		if ( self::is_shared() ) {
-			return ;
+			return;
 		}
-		self::$_control |= self::BM_SHARED ;
-		self::set_private() ;
+		self::$_control |= self::BM_SHARED;
+		self::set_private();
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = "( $reason )" ;
+			$reason = "( $reason )";
 		}
-		Debug2::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> shared ' . $reason );
 	}
 
 	/**
@@ -246,9 +235,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function is_shared()
-	{
-		return (self::$_control & self::BM_SHARED) && self::is_private() ;
+	public static function is_shared() {
+		return (self::$_control & self::BM_SHARED) && self::is_private();
 	}
 
 	/**
@@ -257,21 +245,20 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.7.1
 	 */
-	public static function set_public_forced( $reason = false )
-	{
+	public static function set_public_forced( $reason = false ) {
 		if ( self::is_public_forced() ) {
-			return ;
+			return;
 		}
-		self::$_control |= self::BM_PUBLIC_FORCED ;
+		self::$_control |= self::BM_PUBLIC_FORCED;
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = "( $reason )" ;
+			$reason = "( $reason )";
 		}
-		Debug2::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> public forced ' . $reason );
 	}
 
 	/**
@@ -280,9 +267,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.7.1
 	 */
-	public static function is_public_forced()
-	{
-		return self::$_control & self::BM_PUBLIC_FORCED ;
+	public static function is_public_forced() {
+		return self::$_control & self::BM_PUBLIC_FORCED;
 	}
 
 	/**
@@ -292,21 +278,20 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_private( $reason = false )
-	{
+	public static function set_private( $reason = false ) {
 		if ( self::is_private() ) {
-			return ;
+			return;
 		}
-		self::$_control |= self::BM_PRIVATE ;
+		self::$_control |= self::BM_PRIVATE;
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = "( $reason )" ;
+			$reason = "( $reason )";
 		}
-		Debug2::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> private ' . $reason );
 	}
 
 	/**
@@ -315,9 +300,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function is_private()
-	{
-		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced() ;
+	public static function is_private() {
+		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced();
 	}
 
 	/**
@@ -326,18 +310,17 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function set_cacheable( $reason = false )
-	{
-		self::$_control |= self::BM_CACHEABLE ;
+	public static function set_cacheable( $reason = false ) {
+		self::$_control |= self::BM_CACHEABLE;
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = ' [reason] ' . $reason ;
+			$reason = ' [reason] ' . $reason;
 		}
-		Debug2::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
+		Debug2::debug( '[Ctrl] X Cache_control init on' . $reason );
 	}
 
 	/**
@@ -346,18 +329,17 @@ class Control extends Instance
 	 * @access public
 	 * @since 2.2
 	 */
-	public static function force_cacheable( $reason = false )
-	{
-		self::$_control |= self::BM_FORCED_CACHEABLE ;
+	public static function force_cacheable( $reason = false ) {
+		self::$_control |= self::BM_FORCED_CACHEABLE;
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = ' [reason] ' . $reason ;
+			$reason = ' [reason] ' . $reason;
 		}
-		Debug2::debug( '[Ctrl] Forced cacheable' . $reason ) ;
+		Debug2::debug( '[Ctrl] Forced cacheable' . $reason );
 	}
 
 	/**
@@ -367,18 +349,17 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_nocache( $reason = false )
-	{
-		self::$_control |= self::BM_NOTCACHEABLE ;
+	public static function set_nocache( $reason = false ) {
+		self::$_control |= self::BM_NOTCACHEABLE;
 
 		if ( ! is_string( $reason ) ) {
-			$reason = false ;
+			$reason = false;
 		}
 
 		if ( $reason ) {
-			$reason = "( $reason )" ;
+			$reason = "( $reason )";
 		}
-		Debug2::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
+		Debug2::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 );
 	}
 
 	/**
@@ -388,9 +369,8 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @return bool True if notcacheable bit is set, otherwise false.
 	 */
-	public static function isset_notcacheable()
-	{
-		return self::$_control & self::BM_NOTCACHEABLE ;
+	public static function isset_notcacheable() {
+		return self::$_control & self::BM_NOTCACHEABLE;
 	}
 
 	/**
@@ -399,9 +379,8 @@ class Control extends Instance
 	 * @access public
 	 * @since 	2.2
 	 */
-	public static function is_forced_cacheable()
-	{
-		return self::$_control & self::BM_FORCED_CACHEABLE ;
+	public static function is_forced_cacheable() {
+		return self::$_control & self::BM_FORCED_CACHEABLE;
 	}
 
 	/**
@@ -411,19 +390,18 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @return bool True if is still cacheable, otherwise false.
 	 */
-	public static function is_cacheable()
-	{
+	public static function is_cacheable() {
 		// If its forced public cacheable
 		if ( self::is_public_forced() ) {
-			return true ;
+			return true;
 		}
 
 		// If its forced cacheable
 		if ( self::is_forced_cacheable() ) {
-			return true ;
+			return true;
 		}
 
-		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
+		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE;
 	}
 
 	/**
@@ -433,8 +411,7 @@ class Control extends Instance
 	 * @since 1.1.3
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
-	public static function set_custom_ttl( $ttl, $reason = false )
-	{
+	public static function set_custom_ttl( $ttl, $reason = false ) {
 		if ( is_numeric( $ttl ) ) {
 			self::$_custom_ttl = $ttl;
 			Debug2::debug( '[Ctrl] X Cache_control TTL -> ' . $ttl . ( $reason ? ' [reason] ' . $ttl : '' ) );
@@ -506,34 +483,33 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public function check_redirect( $location, $status )
-	{ // TODO: some env don't have SCRIPT_URI but only REQUEST_URI, need to be compatible
+	public function check_redirect( $location, $status ) { // TODO: some env don't have SCRIPT_URI but only REQUEST_URI, need to be compatible
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
-			Debug2::debug( "[Ctrl] 301 to $location" ) ;
+			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] );
+			Debug2::debug( "[Ctrl] 301 to $location" );
 
 			$to_check = array(
 				PHP_URL_SCHEME,
 				PHP_URL_HOST,
 				PHP_URL_PATH,
-			) ;
+			);
 
-			$is_same_redirect = true ;
+			$is_same_redirect = true;
 
 			foreach ( $to_check as $v ) {
 				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
-					$is_same_redirect = false ;
-					Debug2::debug( "[Ctrl] 301 different redirection" ) ;
-					break ;
+					$is_same_redirect = false;
+					Debug2::debug( "[Ctrl] 301 different redirection" );
+					break;
 				}
 			}
 
 			if ( $is_same_redirect ) {
-				self::set_nocache( '301 to same url' ) ;
+				self::set_nocache( '301 to same url' );
 			}
 		}
 
-		return $location ;
+		return $location;
 	}
 
 	/**
@@ -543,37 +519,36 @@ class Control extends Instance
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache control header.
 	 */
-	public static function output()
-	{
-		$esi_hdr = '' ;
+	public static function output() {
+		$esi_hdr = '';
 		// Fix cli `uninstall --deactivate` fatal err
 		if ( ESI::has_esi() ) {
-			$esi_hdr = ',esi=on' ;
+			$esi_hdr = ',esi=on';
 		}
 
-		$hdr = self::X_HEADER . ': ' ;
+		$hdr = self::X_HEADER . ': ';
 
 		if ( ! self::is_cacheable() ) {
-			$hdr .= 'no-cache' . $esi_hdr ;
-			return $hdr ;
+			$hdr .= 'no-cache' . $esi_hdr;
+			return $hdr;
 		}
 
 		if ( self::is_shared() ) {
-			$hdr .= 'shared,private' ;
+			$hdr .= 'shared,private';
 		}
 		elseif ( self::is_private() ) {
-			$hdr .= 'private' ;
+			$hdr .= 'private';
 		}
 		else {
-			$hdr .= 'public' ;
+			$hdr .= 'public';
 		}
 
 		if ( self::is_no_vary() ) {
-			$hdr .= ',no-vary' ;
+			$hdr .= ',no-vary';
 		}
 
-		$hdr .= ',max-age=' . self::get_ttl() . $esi_hdr ;
-		return $hdr ;
+		$hdr .= ',max-age=' . self::get_ttl() . $esi_hdr;
+		return $hdr;
 	}
 
 	/**
@@ -582,34 +557,33 @@ class Control extends Instance
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function finalize()
-	{
+	public static function finalize() {
 		// Check if URI is forced public cache
-		$excludes = Conf::val( Base::O_CACHE_FORCE_PUB_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_FORCE_PUB_URI );
 		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
 			if ( $result ) {
-				self::set_public_forced( 'Setting: ' . $result ) ;
-				Debug2::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result ) ;
+				self::set_public_forced( 'Setting: ' . $result );
+				Debug2::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result );
 				if ( $this_ttl ) {
-					self::set_custom_ttl( $this_ttl ) ;
+					self::set_custom_ttl( $this_ttl );
 				}
 			}
 		}
 
 		if ( self::is_public_forced() ) {
-			return ;
+			return;
 		}
 
 		// Check if URI is forced cache
-		$excludes = Conf::val( Base::O_CACHE_FORCE_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_FORCE_URI );
 		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
 			if ( $result ) {
-				self::force_cacheable() ;
-				Debug2::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
+				self::force_cacheable();
+				Debug2::debug( '[Ctrl] Forced cacheable due to setting: ' . $result );
 				if ( $this_ttl ) {
-					self::set_custom_ttl( $this_ttl ) ;
+					self::set_custom_ttl( $this_ttl );
 				}
 			}
 		}
@@ -617,44 +591,44 @@ class Control extends Instance
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
-			Debug2::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
-			return ;
+			Debug2::debug( '[Ctrl] not cacheable before ctrl finalize' );
+			return;
 		}
 
 		if ( defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE ) {
-			self::set_nocache('LSCACHE_NO_CACHE constant defined') ;
-			return ;
+			self::set_nocache('LSCACHE_NO_CACHE constant defined');
+			return;
 		}
 
-		$instance = self::get_instance() ;
+		$instance = self::get_instance();
 
 		// Apply 3rd party filter
 		// NOTE: Hook always needs to run asap because some 3rd party set is_mobile in this hook
-		do_action('litespeed_control_finalize', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ) ; // Pass ESI block id
+		do_action('litespeed_control_finalize', defined( 'LSCACHE_IS_ESI' ) ? LSCACHE_IS_ESI : false ); // Pass ESI block id
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
-			Debug2::debug( '[Ctrl] not cacheable after api_control' ) ;
-			return ;
+			Debug2::debug( '[Ctrl] not cacheable after api_control' );
+			return;
 		}
 
 		if ( is_preview() ) {
-			self::set_nocache( 'preview page' ) ;
-			return ;
+			self::set_nocache( 'preview page' );
+			return;
 		}
 
 		// Check litespeed setting to set cacheable status
 		if ( ! $instance->_setting_cacheable() ) {
-			self::set_nocache() ;
-			return ;
+			self::set_nocache();
+			return;
 		}
 
 		// If user has password cookie, do not cache (moved from vary)
-		global $post ;
+		global $post;
 		if ( ! empty($post->post_password) && isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
 			// If user has password cookie, do not cache
-			self::set_nocache('pswd cookie') ;
-			return ;
+			self::set_nocache('pswd cookie');
+			return;
 		}
 
 		// The following check to the end is ONLY for mobile
@@ -685,8 +659,7 @@ class Control extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function is_mobile()
-	{
+	public static function is_mobile() {
 		return wp_is_mobile();
 	}
 
@@ -697,93 +670,92 @@ class Control extends Instance
 	 * @access private
 	 * @return boolean True if cacheable, false otherwise.
 	 */
-	private function _setting_cacheable()
-	{
+	private function _setting_cacheable() {
 		// logged_in users already excluded, no hook added
 
 		if( ! empty( $_REQUEST[ Router::ACTION ] ) ) {
-			return $this->_no_cache_for( 'Query String Action' ) ;
+			return $this->_no_cache_for( 'Query String Action' );
 		}
 
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
-			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
+			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]);
 		}
 
 		if ( is_feed() && Conf::val( Base::O_CACHE_TTL_FEED ) == 0 ) {
-			return $this->_no_cache_for('feed') ;
+			return $this->_no_cache_for('feed');
 		}
 
 		if ( is_trackback() ) {
-			return $this->_no_cache_for('trackback') ;
+			return $this->_no_cache_for('trackback');
 		}
 
 		if ( is_search() ) {
-			return $this->_no_cache_for('search') ;
+			return $this->_no_cache_for('search');
 		}
 
 //		if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
-//			return $this->_no_cache_for('no theme used') ;
+//			return $this->_no_cache_for('no theme used');
 //		}
 
 		// Check private cache URI setting
-		$excludes = Conf::val( Base::O_CACHE_PRIV_URI ) ;
+		$excludes = Conf::val( Base::O_CACHE_PRIV_URI );
 		if ( ! empty( $excludes ) ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
-				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
+				self::set_private( 'Admin cfg Private Cached URI: ' . $result );
 			}
 		}
 
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = Conf::val( Base::O_CACHE_EXC ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC );
 			if ( ! empty( $excludes ) ) {
-				$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+				$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 				if ( $result ) {
-					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
+					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result );
 				}
 			}
 
 			// Check QS excluded setting
-			$excludes = Conf::val( Base::O_CACHE_EXC_QS ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_QS );
 			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( $excludes ) ) {
-				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
+				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs );
 			}
 
-			$excludes = Conf::val( Base::O_CACHE_EXC_CAT ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_CAT );
 			if ( ! empty( $excludes ) && has_category( $excludes ) ) {
-				return $this->_no_cache_for( 'Admin configured Category Do not cache.' ) ;
+				return $this->_no_cache_for( 'Admin configured Category Do not cache.' );
 			}
 
-			$excludes = Conf::val( Base::O_CACHE_EXC_TAG ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_TAG );
 			if ( ! empty( $excludes ) && has_tag( $excludes ) ) {
-				return $this->_no_cache_for( 'Admin configured Tag Do not cache.' ) ;
+				return $this->_no_cache_for( 'Admin configured Tag Do not cache.' );
 			}
 
-			$excludes = Conf::val( Base::O_CACHE_EXC_COOKIES ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_COOKIES );
 			if ( ! empty( $excludes ) && ! empty( $_COOKIE ) ) {
-				$cookie_hit = array_intersect( array_keys( $_COOKIE ), $excludes ) ;
+				$cookie_hit = array_intersect( array_keys( $_COOKIE ), $excludes );
 				if ( $cookie_hit ) {
-					return $this->_no_cache_for( 'Admin configured Cookie Do not cache.' ) ;
+					return $this->_no_cache_for( 'Admin configured Cookie Do not cache.' );
 				}
 			}
 
-			$excludes = Conf::val( Base::O_CACHE_EXC_USERAGENTS ) ;
+			$excludes = Conf::val( Base::O_CACHE_EXC_USERAGENTS );
 			if ( ! empty( $excludes ) && isset( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-				$nummatches = preg_match( Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
+				$nummatches = preg_match( Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] );
 				if ( $nummatches ) {
-						return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
+						return $this->_no_cache_for('Admin configured User Agent Do not cache.');
 				}
 			}
 
 			// Check if is exclude roles ( Need to set Vary too )
 			if ( $result = $this->in_cache_exc_roles() ) {
-				return $this->_no_cache_for( 'Role Excludes setting ' . $result ) ;
+				return $this->_no_cache_for( 'Role Excludes setting ' . $result );
 			}
 		}
 
-		return true ;
+		return true;
 	}
 
 	/**
@@ -794,10 +766,9 @@ class Control extends Instance
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	private function _no_cache_for( $reason )
-	{
-		Debug2::debug('[Ctrl] X Cache_control off - ' . $reason) ;
-		return false ;
+	private function _no_cache_for( $reason ) {
+		Debug2::debug('[Ctrl] X Cache_control off - ' . $reason);
+		return false;
 	}
 
 	/**
@@ -808,12 +779,11 @@ class Control extends Instance
 	 * @param  array  $excludes QS excludes setting
 	 * @return boolean|string False if not excluded, otherwise the hit qs list
 	 */
-	private function _is_qs_excluded( $excludes )
-	{
+	private function _is_qs_excluded( $excludes ) {
 		if ( ! empty( $_GET ) && $intersect = array_intersect( array_keys( $_GET ), $excludes ) ) {
-			return implode( ',', $intersect ) ;
+			return implode( ',', $intersect );
 		}
-		return false ;
+		return false;
 	}
 
 }

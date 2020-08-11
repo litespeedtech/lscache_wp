@@ -7,7 +7,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Crawler General Settings', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#general-settings-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#general-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -120,25 +120,6 @@ $this->form_action();
 				<?php echo __( 'Specify the timeout while crawling each URL.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
 				<?php $this->_validate_ttl( $id, 10, 300 ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_SERVER_IP; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_input($id); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ); ?>
-				<br /><?php echo __('Your server IP is', 'litespeed-cache'); ?>: <code id='litespeed_server_ip'>-</code> <a href="javascript:;" class="button button-link" id="litespeed_get_ip"><?php echo __('Check my public IP from', 'litespeed-cache'); ?> DoAPI.us</a>
-				<font class="litespeed-warning litespeed-left10">
-					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'the auto-detected IP may not be accurate if you have an additional outgoing IP set, or you have multiple IPs configured on your server. Please make sure this IP is the correct one for visiting your site.', 'litespeed-cache' ); ?>
-				</font>
-
-				<?php $this->_validate_ip( $id ); ?>
 			</div>
 		</td>
 	</tr>

@@ -11,8 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Error
-{
+class Error {
 	private static $CODE_SET = array(
 		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
 		'HTA_DNF'		 => 4500, // .htaccess did not find.
@@ -27,8 +26,7 @@ class Error
 	 *
 	 * @since  3.0
 	 */
-	public static function t( $code, $args = null )
-	{
+	public static function t( $code, $args = null ) {
 		throw new \Exception( self::msg( $code, $args ) );
 	}
 
@@ -37,18 +35,17 @@ class Error
 	 *
 	 * @since  3.0
 	 */
-	public static function msg( $code, $args = null )
-	{
+	public static function msg( $code, $args = null ) {
 		switch ( $code ) {
 
 			case 'disabled_all':
 				$msg = sprintf( __( 'The setting %s is currently enabled.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_DEBUG_DISABLE_ALL ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %s>Click here to change</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-toolbox') . '" ' );
+					Doc::learn_more( admin_url( 'admin.php?page=litespeed-toolbox' ), __( 'Click here to change.', 'litespeed-cache' ), true, false, true );
 				break;
 
 			case 'lack_of_api_key':
 				$msg = sprintf( __( 'You will need to set %s to use the online services.', 'litespeed-cache' ), '<strong>' . Lang::title( Base::O_API_KEY ) . '</strong>' ) .
-					' ' . sprintf( __( '<a %s>Click here to set</a>.', 'litespeed-cache' ), ' href="' . admin_url('admin.php?page=litespeed-general') . '" ' );
+					Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
 				break;
 
 			case 'lack_of_quota':
@@ -67,11 +64,11 @@ class Error
 				$msg = __( 'The image list is empty.', 'litespeed-cache' );
 				break;
 
-			case 'lack_of_param' :
+			case 'lack_of_param':
 				$msg = __( 'Not enough parameters. Please check if the domain key is set correctly', 'litespeed-cache' );
 				break;
 
-			case 'unfinished_queue' :
+			case 'unfinished_queue':
 				$msg = __( 'There is proceeding queue not pulled yet.', 'litespeed-cache' );
 				break;
 
@@ -79,19 +76,23 @@ class Error
 				$msg = sprintf( __( 'There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache' ), '<code>' . substr( $code, strlen( 'unfinished_queue ' ) ) . '</code>' );
 				break;
 
-			case 'err_key' :
+			case 'site_not_registered':
+				$msg = __( 'The site is not registered on QUIC.cloud.', 'litespeed-cache' );
+				break;
+
+			case 'err_key':
 				$msg = __( 'The domain key is not correct. Please try to sync your domain key again.', 'litespeed-cache' );
 				break;
 
-			case 'err_overdraw' :
+			case 'err_overdraw':
 				$msg = __( 'Credits are not enough to proceed the current request.', 'litespeed-cache' );
 				break;
 
-			case 'W' :
+			case 'W':
 				$msg = __( '%s file not writable.', 'litespeed-cache' );
 				break;
 
-			case 'HTA_DNF' :
+			case 'HTA_DNF':
 				if ( ! is_array( $args ) ) {
 					$args = array( '<code>' . $args . '</code>' );
 				}
@@ -99,31 +100,31 @@ class Error
 				$msg = __( 'Could not find %1$s in %2$s.', 'litespeed-cache' );
 				break;
 
-			case 'HTA_LOGIN_COOKIE_INVALID' :
+			case 'HTA_LOGIN_COOKIE_INVALID':
 				$msg = sprintf( __( 'Invalid login cookie. Please check the %s file.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
-			case 'HTA_BK' :
+			case 'HTA_BK':
 				$msg = sprintf( __( 'Failed to back up %s file, aborted changes.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
-			case 'HTA_R' :
+			case 'HTA_R':
 				$msg = sprintf( __( '%s file not readable.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
-			case 'HTA_W' :
+			case 'HTA_W':
 				$msg = sprintf( __( '%s file not writable.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
-			case 'HTA_GET' :
+			case 'HTA_GET':
 				$msg = sprintf( __( 'Failed to get %s file contents.', 'litespeed-cache' ), '.htaccess' );
 				break;
 
-			case 'failed_tb_creation' :
+			case 'failed_tb_creation':
 				$msg = __( 'Failed to create table %s! SQL: %s.', 'litespeed-cache' );
 				break;
 
-			case 'crawler_disabled' :
+			case 'crawler_disabled':
 				$msg = __( 'Crawler disabled by the server admin.', 'litespeed-cache' );
 				break;
 

@@ -40,7 +40,7 @@ if($seconds > 0):
 
 	<h3 class="litespeed-title litespeed-relative">
 		<?php echo __('Crawler Cron', 'litespeed-cache'); ?>
-		<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/', false, 'litespeed-learn-more' ); ?>
+		<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/' ); ?>
 	</h3>
 
 	<?php if ( ! Router::can_crawl() ): ?>

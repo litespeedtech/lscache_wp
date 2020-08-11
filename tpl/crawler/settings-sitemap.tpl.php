@@ -7,7 +7,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Crawler Sitemap Settings', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#sitemap-settings-tab', false, 'litespeed-learn-more' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#sitemap-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>

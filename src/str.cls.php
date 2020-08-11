@@ -4,12 +4,11 @@
 *
 * @since 1.3
 */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Str
-{
+class Str {
 
 	/**
 	 * Generate random string
@@ -20,53 +19,52 @@ class Str
 	 * @param  int  $type    1-Number 2-LowerChar 4-UpperChar
 	 * @return string
 	 */
-	public static function rrand( $len, $type = 7 )
-	{
-		mt_srand( ( double ) microtime() * 1000000 ) ;
+	public static function rrand( $len, $type = 7 ) {
+		mt_srand( ( double ) microtime() * 1000000 );
 
 		switch( $type ) {
 			case 0 :
-				$charlist = '012' ;
-				break ;
+				$charlist = '012';
+				break;
 
 			case 1 :
-				$charlist = '0123456789' ;
-				break ;
+				$charlist = '0123456789';
+				break;
 
 			case 2 :
-				$charlist = 'abcdefghijklmnopqrstuvwxyz' ;
-				break ;
+				$charlist = 'abcdefghijklmnopqrstuvwxyz';
+				break;
 
 			case 3 :
-				$charlist = '0123456789abcdefghijklmnopqrstuvwxyz' ;
-				break ;
+				$charlist = '0123456789abcdefghijklmnopqrstuvwxyz';
+				break;
 
 			case 4 :
-				$charlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
-				break ;
+				$charlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
 
 			case 5 :
-				$charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
-				break ;
+				$charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
 
 			case 6 :
-				$charlist = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
-				break ;
+				$charlist = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
 
 			case 7 :
-				$charlist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
-				break ;
+				$charlist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
 
 		}
 
-		$str = '' ;
+		$str = '';
 
-		$max = strlen( $charlist ) - 1 ;
-		for( $i = 0 ; $i < $len ; $i++ ) {
-			$str .= $charlist[ mt_rand( 0, $max ) ] ;
+		$max = strlen( $charlist ) - 1;
+		for( $i = 0; $i < $len; $i++ ) {
+			$str .= $charlist[ mt_rand( 0, $max ) ];
 		}
 
-		return $str ;
+		return $str;
 	}
 
 

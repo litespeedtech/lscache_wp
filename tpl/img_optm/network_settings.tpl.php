@@ -1,13 +1,13 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed;
+defined( 'WPINC' ) || exit;
 
-$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK ) ;
+$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Image Optimization Settings', 'litespeed-cache' ) ; ?>
-	<?php $this->learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-settings-tab', false, 'litespeed-learn-more' ) ; ?>
+	<?php echo __( 'Image Optimization Settings', 'litespeed-cache' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -16,5 +16,5 @@ $this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK ) ;
 </tbody></table>
 
 <?php
-$this->form_end( true ) ;
+$this->form_end( true );
 
