@@ -800,8 +800,8 @@ class Cloud extends Base {
 		$response = wp_remote_get( self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str( $data ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Debug2::debug( '[CLoud] failed to gen_key: ' . $error_message );
-			Admin_Display::error( __( 'CLoud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			Debug2::debug( '[Cloud] failed to gen_key: ' . $error_message );
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
 			return;
 		}
 
@@ -845,7 +845,7 @@ class Cloud extends Base {
 
 		Debug2::debug( '❄️ ✅ send request for key successfully.' );
 
-		Admin_Display::succeed( __( 'Applied for Domain key successfully. Please wait for result. Domain key will be automatically sent to your WordPress.', 'litespeed-cache' ) );
+		Admin_Display::succeed( __( 'Applied for Domain Key successfully. Please wait for result. Domain Key will be automatically sent to your WordPress.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -967,7 +967,7 @@ class Cloud extends Base {
 		}
 
 		if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
-			Admin_Display::error( __( 'Domain key hash mismatch', 'litespeed-cache' ), true );
+			Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
 			return;
 		}
 
