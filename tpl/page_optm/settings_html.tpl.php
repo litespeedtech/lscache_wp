@@ -181,6 +181,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'This option will remove all %s tags from HTML.', 'litespeed-cache' ), '<code>&lt;noscript&gt;</code>' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#remove-noscript-tags' ); ?>
 			</div>
 		</td>
 	</tr>
