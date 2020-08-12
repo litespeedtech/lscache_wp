@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.4.2
-Stable tag: 3.3
+Stable tag: 3.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,17 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.3.1 - Aug 12 2020 =
+* 🌱**Page Optimize** New option to Remove Noscript Tags. (@phuc88bmt)
+* 🐞**LQIP** Fixed a critical bug that bypassed all requests in v3.3.
+* **LQIP** Requests are now bypassed if domain has no credit left.
+* **Page Optimize** Inline defer will be bypassed if document listener is detected in the code. (@ssurfer)
+* **CCSS** Print-only styles will no longer be included in Critical CSS.
+* **API** Added hooks to Purge action to handle file deletions. (@biati)
+* **Cloud** Plain permalinks are no longer required for use of cloud services.
+* **Data** Added an access denial to work with OpenLiteSpeed. (@spenweb #PR228)
+* **GUI** Spelling and grammar adjustments. (@blastoise186 #PR253)
 
 = 3.3 - Aug 6 2020 =
 * 🌱**Page Optimize** Added a new setting, Inline JS Deferred Excludes. (@ankit)
