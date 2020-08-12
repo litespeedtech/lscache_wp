@@ -150,6 +150,7 @@ class Base extends Instance {
 	const O_OPTM_LOCALIZE			= 'optm-localize';
 	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
+	const O_OPTM_NOSCRIPT_RM 		= 'optm-noscript_rm';
 	const O_OPTM_EXC_JQ 			= 'optm-exc_jq';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
 	const O_OPTM_MAX_SIZE 			= 'optm-max_size';
@@ -448,6 +449,7 @@ class Base extends Instance {
 		self::O_OPTM_JS_DEFER 			=> false,
 		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
+		self::O_OPTM_NOSCRIPT_RM 		=> false,
 		self::O_OPTM_EXC_JQ 			=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
 		self::O_OPTM_MAX_SIZE 			=> 0,

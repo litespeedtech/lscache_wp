@@ -603,6 +603,11 @@ class Optimize extends Base {
 			$this->content = str_replace( '</body>', $this->html_foot . '</body>' , $this->content );
 		}
 
+		// Drop noscript if enabled
+		if ( Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ) {
+			$this->content = preg_replace( '#<noscript>.*</noscript>#isU', '', $this->content );
+		}
+
 		// HTML minify
 		if ( Conf::val( Base::O_OPTM_HTML_MIN ) ) {
 			$this->content = Optimizer::get_instance()->html_min( $this->content );
@@ -1290,7 +1295,9 @@ class Optimize extends Base {
 			$v = str_replace( 'stylesheet', 'preload', $ori );
 			$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
 			// Append to noscript content
-			$v .= '<noscript>' . $ori . '</noscript>';
+			if ( ! Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ) {
+				$v .= '<noscript>' . $ori . '</noscript>';
+			}
 			$html_list[ $k ] = $v;
 		}
 		return $html_list;

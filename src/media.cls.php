@@ -512,7 +512,7 @@ class Media extends Instance
 			$html_list_ori = $html_list ;
 
 			foreach ( $html_list as $k => $v ) {
-				$snippet = '<noscript>' . $v . '</noscript>' ;
+				$snippet = Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>' ;
 				$v = str_replace( ' src=', ' data-src=', $v ) ;
 				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v ) ;
 				$snippet = $v . $snippet ;

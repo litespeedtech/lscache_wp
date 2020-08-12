@@ -142,6 +142,7 @@ class Lang extends Base
 			self::O_OPTM_JS_DEFER_EXC			=> __( 'JS Deferred Excludes', 'litespeed-cache' ),
 			self::O_OPTM_JS_INLINE_DEFER_EXC	=> __( 'Inline JS Deferred Excludes', 'litespeed-cache' ),
 			self::O_OPTM_EMOJI_RM				=> __( 'Remove WordPress Emoji', 'litespeed-cache' ),
+			self::O_OPTM_NOSCRIPT_RM			=> __( 'Remove Noscript Tag', 'litespeed-cache' ),
 			self::O_OPTM_EXC					=> __( 'URI Excludes', 'litespeed-cache' ),
 			self::O_OPTM_EXC_ROLES				=> __( 'Role Excludes', 'litespeed-cache' ),
 
