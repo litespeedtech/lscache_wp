@@ -25,10 +25,10 @@ class File {
 		$response = wp_remote_get( $url );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( $code == 404 ) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
