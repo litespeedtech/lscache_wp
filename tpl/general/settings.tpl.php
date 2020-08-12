@@ -7,8 +7,6 @@ $__cloud = Cloud::get_instance();
 // This will drop QS param `qc_res` and `domain_hash` also
 $__cloud->update_is_linked_status();
 
-$permalink_structure = get_option( 'permalink_structure' );
-
 $cloud_summary = Cloud::get_summary();
 
 $can_token = $__cloud->can_token();
@@ -63,7 +61,7 @@ $this->form_action();
 				<?php $this->build_input( $id, null, null, 'text', true ); ?>
 			<?php endif; ?>
 
-			<?php if ( $permalink_structure && $can_token ) : ?>
+			<?php if ( $can_token ) : ?>
 				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY ), $apply_btn_txt, true, 'button litespeed-btn-success' ); ?>
 			<?php else: ?>
 				<?php Doc::learn_more( 'javascript:;', $apply_btn_txt, true, 'button disabled' ); ?>
@@ -95,15 +93,6 @@ $this->form_action();
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
 					<p><?php echo __( 'Please wait. You will be notified upon approval.', 'litespeed-cache' ); ?></p>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( ! $permalink_structure ) : ?>
-				<div class="litespeed-callout notice notice-error inline">
-					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
-					<p><?php echo sprintf( __( 'You must set WordPress %1$s to a value other than %2$s before generating a Domain Key.', 'litespeed-cache' ), '<code>' . __( 'Permalink Settings' ) . '</code>', '<code>' . __( 'Plain' ) . '</code>' ); ?>
-						<?php echo '<a href="options-permalink.php">' . __( 'Click here to config', 'litespeed-cache' ) . '</a>'; ?>
-					</p>
 				</div>
 			<?php endif; ?>
 
