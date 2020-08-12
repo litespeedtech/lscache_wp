@@ -205,8 +205,7 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access public
 	 */
-	private function _purge_all_lscache( $silence = false )
-	{
+	private function _purge_all_lscache( $silence = false ) {
 		$this->_add( '*' );
 
 		if ( ! $silence ) {
@@ -221,8 +220,9 @@ class Purge extends Base {
 	 * @since    2.3
 	 * @access   private
 	 */
-	private function _purge_all_ccss( $silence = false )
-	{
+	private function _purge_all_ccss( $silence = false ) {
+		do_action( 'litespeed_purged_all_ccss' );
+
 		CSS::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
@@ -237,8 +237,9 @@ class Purge extends Base {
 	 * @since    3.0
 	 * @access   private
 	 */
-	private function _purge_all_lqip( $silence = false )
-	{
+	private function _purge_all_lqip( $silence = false ) {
+		do_action( 'litespeed_purged_all_lqip' );
+
 		Placeholder::get_instance()->rm_lqip_cache_folder() ;
 
 		if ( ! $silence ) {
@@ -254,6 +255,8 @@ class Purge extends Base {
 	 * @access   private
 	 */
 	private function _purge_all_avatar( $silence = false ) {
+		do_action( 'litespeed_purged_all_avatar' );
+
 		Avatar::get_instance()->rm_cache_folder() ;
 
 		if ( ! $silence ) {
@@ -269,6 +272,8 @@ class Purge extends Base {
 	 * @access   private
 	 */
 	private function _purge_all_localres( $silence = false ) {
+		do_action( 'litespeed_purged_all_localres' );
+
 		$this->_add( Tag::TYPE_LOCALRES );
 
 		if ( ! $silence ) {
@@ -284,6 +289,8 @@ class Purge extends Base {
 	 * @access   private
 	 */
 	private function _purge_all_cssjs( $silence = false ) {
+		do_action( 'litespeed_purged_all_cssjs' );
+
 		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() );
 
 		$this->_add( Tag::TYPE_MIN );
@@ -333,8 +340,7 @@ class Purge extends Base {
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _purge_all_object( $silence = false )
-	{
+	private function _purge_all_object( $silence = false ) {
 		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
 			Debug2::debug( '[Purge] Failed to flush object cache due to object cache not enabled' ) ;
 
@@ -345,6 +351,9 @@ class Purge extends Base {
 
 			return false ;
 		}
+
+		do_action( 'litespeed_purged_all_object' );
+
 		Object_Cache::get_instance()->flush() ;
 		Debug2::debug( '[Purge] Flushed object cache' ) ;
 
