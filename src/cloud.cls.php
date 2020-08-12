@@ -478,22 +478,6 @@ class Cloud extends Base {
 			}
 		}
 
-		// Check TTL first
-		if ( ! empty( $this->_summary[ 'ttl.' . $service_tag ] ) ) {
-			$expired = $this->_summary[ 'ttl.' . $service_tag ] - time();
-			if ( $expired > 0 ) {
-				Debug2::debug( "[Cloud] ❌ TTL limited [$service_tag] until $expired seconds" );
-
-				if ( $service_tag !== self::API_VER ) {
-					$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . Error::msg( 'err_overdraw ' . $expired ) . ' <code>Tag: ' . $service_tag . '</code>';
-					Admin_Display::error( $msg );
-				}
-
-				return false;
-			}
-		}
-
-
 		if ( ! empty( $this->_summary[ $timestamp_tag . $service_tag ] ) ) {
 			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + self::EXPIRATION_REQ - time();
 			if ( $expired > 0 ) {
@@ -692,14 +676,6 @@ class Cloud extends Base {
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
 				Admin_Display::error( $msg );
-			}
-
-			// Overdraw will suppress this service until TTL expired
-			if ( strpos( $json_msg, 'err_overdraw ' ) === 0 ) {
-				$ttl = substr( $json_msg, strlen( 'err_overdraw ' ) );
-
-				$this->_summary[ 'ttl.' . $service_tag ] = time() + $ttl;
-				self::save_summary();
 			}
 
 			return;
