@@ -441,7 +441,11 @@ class Conf extends Base
 				}
 			}
 
-			return $instance->_options[ $id ];
+			// Network orignal value will be in _site_options
+			if ( ! is_network_admin() ) {
+				return $instance->_options[ $id ];
+			}
+
 		}
 
 		if ( isset( $instance->_site_options[ $id ] ) ) {
@@ -479,11 +483,16 @@ class Conf extends Base
 	 *
 	 * @since  3.2.2
 	 */
-	public function primary_overwritten( $id )
-	{
+	public function primary_overwritten( $id ) {
 		if ( ! isset( $this->_primary_options[ $id ] ) || $this->_primary_options[ $id ] == $this->_options[ $id ] ) {
 			return null;
 		}
+
+		// Network admin settings is impossible to be overwritten by primary
+		if ( is_network_admin() ) {
+			return null;
+		}
+
 		return $this->_primary_options[ $id ];
 	}
 
