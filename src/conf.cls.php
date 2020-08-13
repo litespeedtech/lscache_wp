@@ -442,7 +442,7 @@ class Conf extends Base
 			}
 
 			// Network orignal value will be in _site_options
-			if ( ! is_network_admin() ) {
+			if ( ! is_network_admin() || ! isset( $instance->_site_options[ $id ] ) ) {
 				return $instance->_options[ $id ];
 			}
 
