@@ -325,13 +325,15 @@ class Conf extends Base
 	 *
 	 * This will not be affected by network use primary site setting.
 	 *
+	 * NOTE: If it is a multi switch option, need to call `_conf_multi_switch()` first
+	 *
 	 * @since  3.0
 	 * @access public
 	 */
-	public function option_append( $name, $default )
-	{
-		self::$_default_options[ $name ] = $default ;
-		$this->_options[ $name ] = self::get_option( $name, $default ) ;
+	public function option_append( $name, $default ) {
+		self::$_default_options[ $name ] = $default;
+		$this->_options[ $name ] = self::get_option( $name, $default );
+		$this->_options[ $name ] = $this->type_casting( $this->_options[ $name ], $name );
 	}
 
 	/**
