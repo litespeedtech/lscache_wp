@@ -646,9 +646,10 @@ class WooCommerce extends Instance
 	 * @access public
 	 * @param WC_Product $product
 	 */
-	public function purge_product($product)
-	{
-		$config = apply_filters( 'litespeed_conf', self::O_UPDATE_INTERVAL ) ;
+	public function purge_product($product) {
+		do_action( 'litespeed_debug', '[3rd] Woo Purge [pid]' . $product->get_id() );
+
+		$config = (int) apply_filters( 'litespeed_conf', self::O_UPDATE_INTERVAL ) ;
 		if ( is_null($config) ) {
 			$config = self::O_PQS_CS ;
 		}
@@ -657,6 +658,7 @@ class WooCommerce extends Instance
 			$this->backend_purge($product->get_id()) ;
 		}
 		elseif ( $config !== self::O_PQS_CS && $product->is_in_stock() ) {
+			do_action( 'litespeed_debug', '[3rd] Woo No purge needed [option] ' . $config );
 			return ;
 		}
 		elseif ( $config !== self::O_PS_CN && ! $product->is_in_stock() ) {
