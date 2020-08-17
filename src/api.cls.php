@@ -106,6 +106,7 @@ class API extends Base {
 		add_action( 'litespeed_purge_private_all', __NAMESPACE__ . '\Purge::add_private_all' ); // @previous API::purge_private_all()
 		// Action `litespeed_api_purge_post` // Triggered when purge a post // @previous API::hook_purge_post($hook)
 		// Action `litespeed_purged_all` // Triggered after purged all.
+		add_action( 'litespeed_purge_all_object', __NAMESPACE__ . '\Purge::purge_all_object' );
 
 		/**
 		 * ESI
