@@ -25,6 +25,7 @@ class Conf extends Base {
 	private $_primary_options = array();
 	private $_site_options = array();
 	private $_updated_ids = array();
+	private $_is_primary = false;
 
 
 	/**
@@ -163,8 +164,10 @@ class Conf extends Base {
 		}
 
 		// Bypass site special settings
-		if ( $blog_id !== null ) {
-			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) ); // These options are network only
+		if ( $blog_id !== null ) { // This is to load the primary settings ONLY
+			// These options are the ones that can be overwritten by primary
+			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) );
+
 			$this->_primary_options = array_merge( $this->_primary_options, $options );
 		}
 		else {
@@ -196,8 +199,10 @@ class Conf extends Base {
 
 		$this->_conf_site_db_init();
 
+		$this->_is_primary = get_current_blog_id() == BLOG_ID_CURRENT_SITE;
+
 		// If network set to use primary setting
-		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
+		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) && ! $this->_is_primary ) { // subsites or network admin
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->load_options( BLOG_ID_CURRENT_SITE );
@@ -207,9 +212,33 @@ class Conf extends Base {
 		foreach ( self::$_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				// $this->_options[ $k ] = $this->_site_options[ $k ];
+
+				// Special handler to `Enable Cache` option if the value is set to OFF
+				if ( $k == self::O_CACHE ) {
+					if ( $this->_is_primary ) {
+						if ( $this->_options[ $k ] != $this->_site_options[ $k ] ) {
+							if ( $this->_options[ $k ] != self::VAL_ON2 ) {
+								continue;
+							}
+						}
+					}
+					else {
+						if ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) {
+							if ( isset( $this->_primary_options[ $k ] ) && $this->_primary_options[ $k ] != self::VAL_ON2 ) { // This case will use _primary_options override always
+								continue;
+							}
+						}
+						else {
+							continue;
+						}
+					}
+				}
+
+				// _primary_options will store primary settings + network settings, OR, store the network settings for subsites
 				$this->_primary_options[ $k ] = $this->_site_options[ $k ];
 			}
 		}
+		// var_dump($this->_options);
 	}
 
 	/**
