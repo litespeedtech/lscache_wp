@@ -861,7 +861,7 @@ class Admin_Display extends Base {
 		if ( $const_val !== null ) {
 			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' );
 		} else {
-			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE ) {
+			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && Conf::val( Base::NETWORK_O_USE_PRIMARY ) ) {
 				echo __( 'This setting is overwritten by the primary site setting', 'litespeed-cache' );
 			}
 			else {
