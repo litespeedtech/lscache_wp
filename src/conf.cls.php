@@ -229,7 +229,9 @@ class Conf extends Base {
 							}
 						}
 						else {
-							continue;
+							if ( $this->_options[ $k ] != self::VAL_ON2 ) {
+								continue;
+							}
 						}
 					}
 				}
