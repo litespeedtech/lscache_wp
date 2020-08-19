@@ -60,7 +60,7 @@ class CDN extends Instance {
 		 */
 		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ );
 		if ( $this->_cfg_cdn_remote_jquery ) {
-			$this->_load_jquery_remotely();
+			add_action( 'wp', array( $this, 'load_jquery_remotely' ) );
 		}
 
 		$this->_cfg_cdn = Conf::val( Base::O_CDN );
@@ -582,10 +582,9 @@ class CDN extends Instance {
 	 * Remote load jQuery remotely
 	 *
 	 * @since  1.5
-	 * @since  2.9.8 Changed to private
-	 * @access private
+	 * @access public
 	 */
-	private function _load_jquery_remotely() {
+	public function load_jquery_remotely() {
 		// default jq version
 		$v = '1.12.4';
 
@@ -599,10 +598,12 @@ class CDN extends Instance {
 
 		$src = $this->_cfg_cdn_remote_jquery == Base::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js";
 
-		Debug2::debug2( '[CDN] load_jquery_remotely: ' . $src );
-
 		wp_deregister_script( 'jquery-core' );
+		wp_deregister_script( 'jquery' );
 
-		wp_register_script( 'jquery-core', $src, false, $v );
+		$res = wp_register_script( 'jquery-core', $src, false, $v );
+		$res = wp_register_script( 'jquery', $src, false, $v );
+
+		Debug2::debug2( '[CDN] load_jquery_remotely: ' . $src, $res );
 	}
 }
