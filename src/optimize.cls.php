@@ -605,7 +605,7 @@ class Optimize extends Base {
 
 		// Drop noscript if enabled
 		if ( Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ) {
-			$this->content = preg_replace( '#<noscript>.*</noscript>#isU', '', $this->content );
+			// $this->content = preg_replace( '#<noscript>.*</noscript>#isU', '', $this->content );
 		}
 
 		// HTML minify
