@@ -217,8 +217,10 @@ class CSS extends Base {
 				$attrs = Utility::parse_attr( $match[ 1 ] );
 
 				if ( ! empty( $attrs[ 'rel' ] ) ) {
-					if ( $attrs[ 'rel' ] !== 'stylesheet' && $attrs[ 'rel' ] !== 'preload' ) {
-						continue;
+					if ( $attrs[ 'rel' ] != 'stylesheet' ) {
+						if ( $attrs[ 'rel' ] != 'preload' || empty( $attrs[ 'as' ] ) || $attrs[ 'as' ] != 'style' ) {
+							continue;
+						}
 					}
 				}
 
