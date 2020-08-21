@@ -183,7 +183,7 @@ class DB_Optm extends Instance {
 				return __( 'Clean expired transients successfully.', 'litespeed-cache' );
 
 			case 'all_transients':
-				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" );
+				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%\\_transient\\_%'" );
 				return __( 'Clean all transients successfully.', 'litespeed-cache' );
 
 			case 'optimize_tables':
