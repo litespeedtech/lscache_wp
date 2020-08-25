@@ -396,6 +396,7 @@ class ESI extends Instance {
 		}
 		if ( $params ) {
 			$appended_params[ self::QS_PARAMS ] = base64_encode( json_encode( $params ) ) ;
+			Debug2::debug2( '[ESI] param ', $params );
 		}
 
 		// Append hash
@@ -812,31 +813,22 @@ class ESI extends Instance {
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $defaults The default comment form settings.
-	 * @return array The default comment form settings.
 	 */
-	public function register_comment_form_actions( $defaults )
-	{
+	public function register_comment_form_actions( $defaults ) {
 		$this->esi_args = $defaults ;
 		echo GUI::clean_wrapper_begin() ;
-		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_btn' ), 1000, 2 ); // To save the params passed in
+		add_action( 'comment_form', array( $this, 'sub_comment_form_block' ), 1000 ) ;
 		return $defaults ;
 	}
 
 	/**
-	 * Hooked to the comment_form_submit_button filter.
+	 * Store the args passed in comment_form for the ESI comment param usage in `$this->sub_comment_form_block()`
 	 *
-	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
-	 *
+	 * @since  3.3.2
 	 * @access public
-	 * @since 1.1.3
-	 * @global type $post
-	 * @param $unused
-	 * @param array $args The used comment form args.
-	 * @return unused.
 	 */
-	public function sub_comment_form_block( $unused, $args )
-	{
+	public function sub_comment_form_btn( $unused, $args ) {
 		if ( empty( $args ) || empty( $this->esi_args ) ) {
 			Debug2::debug( 'comment form args empty?' ) ;
 			return $unused ;
@@ -859,17 +851,29 @@ class ESI extends Instance {
 			}
 		}
 
+		$this->esi_args = $esi_args;
+
+		return $unused ;
+	}
+
+	/**
+	 * Hooked to the comment_form_submit_button filter.
+	 *
+	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
+	 *
+	 * @access public
+	 * @since 1.1.3
+	 */
+	public function sub_comment_form_block( $post_id ) {
 		echo GUI::clean_wrapper_end() ;
-		global $post ;
 		$params = array(
-			self::PARAM_ID => $post->ID,
-			self::PARAM_ARGS => $esi_args,
+			self::PARAM_ID => $post_id,
+			self::PARAM_ARGS => $this->esi_args,
 		) ;
 
 		echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
 		echo GUI::clean_wrapper_begin() ;
 		add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
-		return $unused ;
 	}
 
 	/**

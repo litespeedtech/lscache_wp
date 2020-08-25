@@ -9,28 +9,27 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class GUI extends Base
-{
-	protected static $_instance ;
+class GUI extends Base {
+	protected static $_instance;
 
-	private static $_clean_counter = 0 ;
+	private static $_clean_counter = 0;
 
-	private $_promo_true ;
+	private $_promo_true;
 
 	// [ file_tag => [ days, litespeed_only ], ... ]
 	private $_promo_list = array(
 		'new_version'	=> array( 1, false ),
 		'score'			=> array( 5, false ),
 		// 'slack'		=> array( 3, false ),
-	) ;
+	);
 
 
-	const TYPE_DISMISS_WHM = 'whm' ;
-	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
-	const TYPE_DISMISS_PROMO = 'promo' ;
+	const TYPE_DISMISS_WHM = 'whm';
+	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault';
+	const TYPE_DISMISS_PROMO = 'promo';
 
-	const WHM_MSG = 'lscwp_whm_install' ;
-	const WHM_MSG_VAL = 'whm_install' ;
+	const WHM_MSG = 'lscwp_whm_install';
+	const WHM_MSG_VAL = 'whm_install';
 
 	protected $_summary;
 
@@ -40,8 +39,7 @@ class GUI extends Base
 	 * @since  1.3
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->_summary = self::get_summary();
 
 	}
@@ -51,16 +49,15 @@ class GUI extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function frontend_init()
-	{
+	public function frontend_init() {
 		if ( is_admin() ) {
 			return;
 		}
 
-		Debug2::debug2( '[GUI] init' ) ;
+		Debug2::debug2( '[GUI] init' );
 		if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
-			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
+			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) );
+			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 );
 		}
 
 		/**
@@ -68,7 +65,7 @@ class GUI extends Base
 		 * @since  1.8.2
 		 */
 		if ( Conf::val( Base::O_UTIL_INSTANT_CLICK ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
+			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) );
 		}
 	}
 
@@ -77,8 +74,7 @@ class GUI extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function lscache_stats()
-	{
+	public function lscache_stats() {
 		return false;
 
 		$stat_titles = array(
@@ -104,12 +100,11 @@ class GUI extends Base
 	 *
 	 * @since 1.6.6
 	 */
-	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false )
-	{
-		$percentage = '<text x="50%" y="50%">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>' ;
+	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false ) {
+		$percentage = '<text x="50%" y="50%">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>';
 
 		if ( $percent == 100 && $finished_tick ) {
-			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">&#x2713</text>' ;
+			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">&#x2713</text>';
 		}
 
 		return "
@@ -126,8 +121,7 @@ class GUI extends Base
 	 *
 	 * @since 3.0
 	 */
-	public static function pie_tiny( $percent, $width = 50, $tooltip = '', $tooltip_pos = 'up', $append_cls = false )
-	{
+	public static function pie_tiny( $percent, $width = 50, $tooltip = '', $tooltip_pos = 'up', $append_cls = false ) {
 
 		// formula C = 2πR
 		$dasharray = 2 * 3.1416 * 9 * ( $percent / 100 );
@@ -154,17 +148,16 @@ class GUI extends Base
 	 * @since  2.9
 	 * @access public
 	 */
-	public function get_cls_of_pagescore( $score )
-	{
+	public function get_cls_of_pagescore( $score ) {
 		if ( $score >= 90 ) {
-			return 'success' ;
+			return 'success';
 		}
 
 		if ( $score >= 50 ) {
-			return 'warning' ;
+			return 'warning';
 		}
 
-		return 'danger' ;
+		return 'danger';
 	}
 
 	/**
@@ -173,59 +166,58 @@ class GUI extends Base
 	 * @since 1.0
 	 * @access public
 	 */
-	public static function dismiss()
-	{
-		$_instance = self::get_instance() ;
+	public static function dismiss() {
+		$_instance = self::get_instance();
 		switch ( Router::verify_type() ) {
 			case self::TYPE_DISMISS_WHM :
-				self::dismiss_whm() ;
-				break ;
+				self::dismiss_whm();
+				break;
 
 			case self::TYPE_DISMISS_EXPIRESDEFAULT :
-				self::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED ) ;
-				break ;
+				self::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED );
+				break;
 
 			case self::TYPE_DISMISS_PROMO :
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
-					break ;
+					break;
 				}
 
-				$promo_tag = $_GET[ 'promo_tag' ] ;
+				$promo_tag = $_GET[ 'promo_tag' ];
 
 				if ( empty( $_instance->_promo_list[ $promo_tag ] ) ) {
-					break ;
+					break;
 				}
 
-				defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
+				defined( 'LSCWP_LOG' ) && Debug2::debug( '[GUI] Dismiss promo ' . $promo_tag );
 
 				// Forever dismiss
 				if ( ! empty( $_GET[ 'done' ] ) ) {
-					$_instance->_summary[ $promo_tag ] = 'done' ;
+					$_instance->_summary[ $promo_tag ] = 'done';
 				}
 				elseif ( ! empty( $_GET[ 'later' ] ) ) {
 					// Delay the banner to half year later
-					$_instance->_summary[ $promo_tag ] = time() + 86400 * 180 ;
+					$_instance->_summary[ $promo_tag ] = time() + 86400 * 180;
 				}
 				else {
 					// Update welcome banner to 30 days after
-					$_instance->_summary[ $promo_tag ] = time() + 86400 * 30 ;
+					$_instance->_summary[ $promo_tag ] = time() + 86400 * 30;
 				}
 
-				self::save_summary() ;
+				self::save_summary();
 
-				break ;
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
 		if ( Router::is_ajax() ) {
 			// All dismiss actions are considered as ajax call, so just exit
-			exit( json_encode( array( 'success' => 1 ) ) ) ;
+			exit( json_encode( array( 'success' => 1 ) ) );
 		}
 
 		// Plain click link, redirect to referral url
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 	/**
@@ -235,9 +227,8 @@ class GUI extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function has_msg_ruleconflict()
-	{
-		return self::get_option( Admin_Display::DB_DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON ;
+	public static function has_msg_ruleconflict() {
+		return self::get_option( Admin_Display::DB_DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON;
 	}
 
 	/**
@@ -247,9 +238,8 @@ class GUI extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function has_whm_msg()
-	{
-		return self::get_option( self::WHM_MSG ) == self::WHM_MSG_VAL ;
+	public static function has_whm_msg() {
+		return self::get_option( self::WHM_MSG ) == self::WHM_MSG_VAL;
 	}
 
 	/**
@@ -258,9 +248,8 @@ class GUI extends Base
 	 * @since 1.1.1
 	 * @access public
 	 */
-	public static function dismiss_whm()
-	{
-		self::delete_option( self::WHM_MSG ) ;
+	public static function dismiss_whm() {
+		self::delete_option( self::WHM_MSG );
 	}
 
 	/**
@@ -268,8 +257,7 @@ class GUI extends Base
 	 *
 	 * @since  2.9
 	 */
-	private function _is_litespeed_page()
-	{
+	private function _is_litespeed_page() {
 		if ( ! empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
 			array(
 				'litespeed-settings',
@@ -281,10 +269,10 @@ class GUI extends Base
 				'litespeed-report',
 			) )
 		) {
-			return true ;
+			return true;
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -366,9 +354,8 @@ class GUI extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function frontend_enqueue_style_public()
-	{
-		wp_enqueue_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), Core::VER, true ) ;
+	public function frontend_enqueue_style_public() {
+		wp_enqueue_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), Core::VER, true );
 	}
 
 	/**
@@ -377,9 +364,8 @@ class GUI extends Base
 	 * @since  1.3
 	 * @access public
 	 */
-	public function frontend_enqueue_style()
-	{
-		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::VER, 'all' ) ;
+	public function frontend_enqueue_style() {
+		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::VER, 'all' );
 	}
 
 	/**
@@ -389,14 +375,14 @@ class GUI extends Base
 	 * @access public
 	 */
 	public function frontend_shortcut() {
-		global $wp_admin_bar ;
+		global $wp_admin_bar;
 
 		$wp_admin_bar->add_menu( array(
 			'id'	=> 'litespeed-menu',
 			'title'	=> '<span class="ab-icon"></span>',
 			'href'	=> get_admin_url( null, 'admin.php?page=litespeed' ),
 			'meta'	=> array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-		) ) ;
+		) );
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
@@ -417,7 +403,7 @@ class GUI extends Base
 			$append_arr = array(
 				Conf::TYPE_SET . '[' . Base::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-			) ;
+			);
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-single-action',
 				'id'		=> 'litespeed-single-forced_cache',
@@ -428,7 +414,7 @@ class GUI extends Base
 			$append_arr = array(
 				Conf::TYPE_SET . '[' . Base::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-			) ;
+			);
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-single-action',
 				'id'		=> 'litespeed-single-noncache',
@@ -439,7 +425,7 @@ class GUI extends Base
 			$append_arr = array(
 				Conf::TYPE_SET . '[' . Base::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-			) ;
+			);
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-single-action',
 				'id'		=> 'litespeed-single-private',
@@ -450,7 +436,7 @@ class GUI extends Base
 			$append_arr = array(
 				Conf::TYPE_SET . '[' . Base::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-			) ;
+			);
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-single-action',
 				'id'		=> 'litespeed-single-nonoptimize',
@@ -563,7 +549,7 @@ class GUI extends Base
 	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`
 	 */
 	public function backend_shortcut() {
-		global $wp_admin_bar ;
+		global $wp_admin_bar;
 
 		// if ( defined( 'LITESPEED_ON' ) ) {
 		$wp_admin_bar->add_menu( array(
@@ -571,14 +557,14 @@ class GUI extends Base
 			'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
 			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-		) ) ;
+		) );
 		// }
 		// else {
 		// 	$wp_admin_bar->add_menu( array(
 		// 		'id'    => 'litespeed-menu',
 		// 		'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '"></span>',
 		// 		'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-		// 	) ) ;
+		// 	) );
 		// }
 
 		$wp_admin_bar->add_menu( array(
@@ -710,14 +696,13 @@ class GUI extends Base
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function img_optm_clean_up( $unfinished_num )
-	{
+	public static function img_optm_clean_up( $unfinished_num ) {
 		return sprintf(
 			'<a href="%1$s" class="button litespeed-btn-warning" data-balloon-pos="up" aria-label="%2$s"><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%3$s</a>',
 			Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ),
 			__( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ),
 			__( 'Clean Up Unfinished Data', 'litespeed-cache' ) . ( $unfinished_num ? ': ' . Admin_Display::print_plural( $unfinished_num, 'image' ) : '')
-		) ;
+		);
 	}
 
 	/**
@@ -726,9 +711,8 @@ class GUI extends Base
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function plugin_install_link( $title, $name, $v )
-	{
-		$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=' . $name ), 'install-plugin_' . $name ) ;
+	public static function plugin_install_link( $title, $name, $v ) {
+		$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=' . $name ), 'install-plugin_' . $name );
 
 		$action = sprintf(
 			'<a href="%1$s" class="install-now" data-slug="%2$s" data-name="%3$s" aria-label="%4$s">%5$s</a>',
@@ -739,9 +723,9 @@ class GUI extends Base
 			__( 'Install Now' )
 		);
 
-		return $action ;
+		return $action;
 
-		// $msg .= " <a href='$upgrade_link' class='litespeed-btn-success' target='_blank'>" . __( 'Click here to upgrade', 'litespeed-cache' ) . '</a>' ;
+		// $msg .= " <a href='$upgrade_link' class='litespeed-btn-success' target='_blank'>" . __( 'Click here to upgrade', 'litespeed-cache' ) . '</a>';
 
 	}
 
@@ -751,10 +735,9 @@ class GUI extends Base
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function plugin_upgrade_link( $title, $name, $v )
-	{
+	public static function plugin_upgrade_link( $title, $name, $v ) {
 		$details_url = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $name . '&section=changelog&TB_iframe=true&width=600&height=800' );
-		$file = $name . '/' . $name . '.php' ;
+		$file = $name . '/' . $name . '.php';
 
 		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.' ),
 			esc_url( $details_url ),
@@ -768,7 +751,7 @@ class GUI extends Base
 			)
 		);
 
-		return $msg ;
+		return $msg;
 	}
 
 	/**
@@ -777,10 +760,9 @@ class GUI extends Base
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function finalize( $buffer )
-	{
-		$instance = self::get_instance() ;
-		return $instance->_clean_wrapper( $buffer ) ;
+	public static function finalize( $buffer ) {
+		$instance = self::get_instance();
+		return $instance->_clean_wrapper( $buffer );
 	}
 
 	/**
@@ -790,39 +772,38 @@ class GUI extends Base
 	 * @since  1.6 converted to private with adding prefix _
 	 * @access private
 	 */
-	private function _clean_wrapper( $buffer )
-	{
+	private function _clean_wrapper( $buffer ) {
 		if ( self::$_clean_counter < 1 ) {
-			Debug2::debug2( "GUI bypassed by no counter" ) ;
-			return $buffer ;
+			Debug2::debug2( "GUI bypassed by no counter" );
+			return $buffer;
 		}
 
-		Debug2::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
+		Debug2::debug2( "GUI start cleaning counter " . self::$_clean_counter );
 
-		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
+		for ( $i = 1; $i <= self::$_clean_counter; $i ++ ) {
 			// If miss beginning
-			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
+			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) );
 			if ( $start === false ) {
-				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer ) ;
-				Debug2::debug2( "GUI lost beginning wrapper $i" ) ;
+				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer );
+				Debug2::debug2( "GUI lost beginning wrapper $i" );
 				continue;
 			}
 
 			// If miss end
-			$end_wrapper = self::clean_wrapper_end( $i ) ;
-			$end = strpos( $buffer, $end_wrapper ) ;
+			$end_wrapper = self::clean_wrapper_end( $i );
+			$end = strpos( $buffer, $end_wrapper );
 			if ( $end === false ) {
-				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer ) ;
-				Debug2::debug2( "GUI lost ending wrapper $i" ) ;
+				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer );
+				Debug2::debug2( "GUI lost ending wrapper $i" );
 				continue;
 			}
 
 			// Now replace wrapped content
-			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) ) ;
-			Debug2::debug2( "GUI cleaned wrapper $i" ) ;
+			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) );
+			Debug2::debug2( "GUI cleaned wrapper $i" );
 		}
 
-		return $buffer ;
+		return $buffer;
 	}
 
 	/**
@@ -831,14 +812,13 @@ class GUI extends Base
 	 * @since  1.4
 	 * @access public
 	 */
-	public static function clean_wrapper_begin( $counter = false )
-	{
+	public static function clean_wrapper_begin( $counter = false ) {
 		if ( $counter === false ) {
-			self::$_clean_counter ++ ;
-			$counter = self::$_clean_counter ;
-			Debug2::debug( "GUI clean wrapper $counter begin" ) ;
+			self::$_clean_counter ++;
+			$counter = self::$_clean_counter;
+			Debug2::debug( "GUI clean wrapper $counter begin" );
 		}
-		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
+		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->';
 	}
 
 	/**
@@ -847,13 +827,12 @@ class GUI extends Base
 	 * @since  1.4
 	 * @access public
 	 */
-	public static function clean_wrapper_end( $counter = false )
-	{
+	public static function clean_wrapper_end( $counter = false ) {
 		if ( $counter === false ) {
-			$counter = self::$_clean_counter ;
-			Debug2::debug( "GUI clean wrapper $counter end" ) ;
+			$counter = self::$_clean_counter;
+			Debug2::debug( "GUI clean wrapper $counter end" );
 		}
-		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
+		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->';
 	}
 
 }
