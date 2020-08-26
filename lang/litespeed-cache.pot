@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.3.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-08-12 20:09:53+00:00\n"
+"POT-Creation-Date: 2020-08-26 11:41:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "CDN"
 msgstr ""
 
-#: src/admin-display.cls.php:157 src/gui.cls.php:604
+#: src/admin-display.cls.php:157 src/gui.cls.php:590
 #: tpl/dash/dashboard.tpl.php:52 tpl/dash/network_dash.tpl.php:27
 msgid "Image Optimization"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Toolbox"
 msgstr ""
 
-#: src/admin-display.cls.php:251 src/gui.cls.php:595
+#: src/admin-display.cls.php:251 src/gui.cls.php:581
 msgid "Settings"
 msgstr ""
 
@@ -117,62 +117,66 @@ msgstr ""
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:864
+#: src/admin-display.cls.php:865
 msgid "This setting is overwritten by the primary site setting"
 msgstr ""
 
-#: src/admin-display.cls.php:867
+#: src/admin-display.cls.php:868
+msgid "This setting is overwritten by the Network setting"
+msgstr ""
+
+#: src/admin-display.cls.php:872
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:877 tpl/cache/settings_inc.object.tpl.php:103
+#: src/admin-display.cls.php:882 tpl/cache/settings_inc.object.tpl.php:103
 #: tpl/crawler/settings-general.tpl.php:60
 #: tpl/crawler/settings-general.tpl.php:74
 #: tpl/crawler/settings-general.tpl.php:89 tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:908 src/admin-display.cls.php:913
+#: src/admin-display.cls.php:913 src/admin-display.cls.php:918
 msgid "Recommended value"
 msgstr ""
 
-#: src/admin-display.cls.php:937
+#: src/admin-display.cls.php:942
 msgid "Invalid rewrite rule"
 msgstr ""
 
-#: src/admin-display.cls.php:954
+#: src/admin-display.cls.php:959
 msgid "Path must end with %s"
 msgstr ""
 
-#: src/admin-display.cls.php:972
+#: src/admin-display.cls.php:977
 msgid "Minimum value"
 msgstr ""
 
-#: src/admin-display.cls.php:975
+#: src/admin-display.cls.php:980
 msgid "Maximum value"
 msgstr ""
 
-#: src/admin-display.cls.php:987
+#: src/admin-display.cls.php:992
 msgid "Zero, or"
 msgstr ""
 
-#: src/admin-display.cls.php:994
+#: src/admin-display.cls.php:999
 msgid "Larger than"
 msgstr ""
 
-#: src/admin-display.cls.php:997
+#: src/admin-display.cls.php:1002
 msgid "Smaller than"
 msgstr ""
 
-#: src/admin-display.cls.php:1000
+#: src/admin-display.cls.php:1005
 msgid "Value range"
 msgstr ""
 
-#: src/admin-display.cls.php:1025
+#: src/admin-display.cls.php:1030
 msgid "Invalid IP"
 msgstr ""
 
-#: src/admin-display.cls.php:1045 tpl/page_optm/settings_css.tpl.php:153
+#: src/admin-display.cls.php:1050 tpl/page_optm/settings_css.tpl.php:153
 #: tpl/page_optm/settings_html.tpl.php:126
 #: tpl/page_optm/settings_media_exc.tpl.php:25
 #: tpl/page_optm/settings_tuning.tpl.php:39
@@ -183,43 +187,43 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: src/admin-display.cls.php:1046
+#: src/admin-display.cls.php:1051
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: src/admin-display.cls.php:1058
+#: src/admin-display.cls.php:1063
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: src/admin-display.cls.php:1059
+#: src/admin-display.cls.php:1064
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
-#: src/admin-display.cls.php:1061
+#: src/admin-display.cls.php:1066
 msgid "To match the beginning, add %s to the beginning of the item."
 msgstr ""
 
-#: src/admin-display.cls.php:1062
+#: src/admin-display.cls.php:1067
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: src/admin-display.cls.php:1063 src/doc.cls.php:61
+#: src/admin-display.cls.php:1068 src/doc.cls.php:61
 msgid "One per line."
 msgstr ""
 
-#: src/admin-display.cls.php:1077
+#: src/admin-display.cls.php:1082
 msgid "%s groups"
 msgstr ""
 
-#: src/admin-display.cls.php:1080
+#: src/admin-display.cls.php:1085
 msgid "%s images"
 msgstr ""
 
-#: src/admin-display.cls.php:1090
+#: src/admin-display.cls.php:1095
 msgid "%s group"
 msgstr ""
 
-#: src/admin-display.cls.php:1093
+#: src/admin-display.cls.php:1098
 msgid "%s image"
 msgstr ""
 
@@ -320,7 +324,7 @@ msgstr ""
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:741
+#: src/conf.cls.php:766
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -586,57 +590,57 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: src/gui.cls.php:85
+#: src/gui.cls.php:81
 msgid "Public Caches"
 msgstr ""
 
-#: src/gui.cls.php:86
+#: src/gui.cls.php:82
 msgid "Public Cache Hits"
 msgstr ""
 
-#: src/gui.cls.php:87
+#: src/gui.cls.php:83
 msgid "Private Caches"
 msgstr ""
 
-#: src/gui.cls.php:88
+#: src/gui.cls.php:84
 msgid "Private Cache Hits"
 msgstr ""
 
-#: src/gui.cls.php:404
+#: src/gui.cls.php:390
 msgid "Purge this page"
 msgstr ""
 
-#: src/gui.cls.php:412
+#: src/gui.cls.php:398
 msgid "Mark this page as "
 msgstr ""
 
-#: src/gui.cls.php:424
+#: src/gui.cls.php:410
 msgid "Forced cacheable"
 msgstr ""
 
-#: src/gui.cls.php:435
+#: src/gui.cls.php:421
 msgid "Non cacheable"
 msgstr ""
 
-#: src/gui.cls.php:446
+#: src/gui.cls.php:432
 msgid "Private cache"
 msgstr ""
 
-#: src/gui.cls.php:457
+#: src/gui.cls.php:443
 msgid "No optimization"
 msgstr ""
 
-#: src/gui.cls.php:465
+#: src/gui.cls.php:451
 msgid "More settings"
 msgstr ""
 
-#: src/gui.cls.php:472 src/gui.cls.php:480 src/gui.cls.php:488
-#: src/gui.cls.php:497 src/gui.cls.php:507 src/gui.cls.php:517
-#: src/gui.cls.php:527 src/gui.cls.php:537 src/gui.cls.php:547
-#: src/gui.cls.php:613 src/gui.cls.php:621 src/gui.cls.php:629
-#: src/gui.cls.php:638 src/gui.cls.php:648 src/gui.cls.php:658
-#: src/gui.cls.php:668 src/gui.cls.php:678 src/gui.cls.php:688
-#: src/gui.cls.php:698 tpl/toolbox/purge.tpl.php:39
+#: src/gui.cls.php:458 src/gui.cls.php:466 src/gui.cls.php:474
+#: src/gui.cls.php:483 src/gui.cls.php:493 src/gui.cls.php:503
+#: src/gui.cls.php:513 src/gui.cls.php:523 src/gui.cls.php:533
+#: src/gui.cls.php:599 src/gui.cls.php:607 src/gui.cls.php:615
+#: src/gui.cls.php:624 src/gui.cls.php:634 src/gui.cls.php:644
+#: src/gui.cls.php:654 src/gui.cls.php:664 src/gui.cls.php:674
+#: src/gui.cls.php:684 tpl/toolbox/purge.tpl.php:39
 #: tpl/toolbox/purge.tpl.php:45 tpl/toolbox/purge.tpl.php:54
 #: tpl/toolbox/purge.tpl.php:63 tpl/toolbox/purge.tpl.php:72
 #: tpl/toolbox/purge.tpl.php:81 tpl/toolbox/purge.tpl.php:90
@@ -644,81 +648,81 @@ msgstr ""
 msgid "Purge All"
 msgstr ""
 
-#: src/gui.cls.php:480 src/gui.cls.php:571 src/gui.cls.php:621
+#: src/gui.cls.php:466 src/gui.cls.php:557 src/gui.cls.php:607
 msgid "LSCache"
 msgstr ""
 
-#: src/gui.cls.php:488 src/gui.cls.php:629 tpl/toolbox/purge.tpl.php:45
+#: src/gui.cls.php:474 src/gui.cls.php:615 tpl/toolbox/purge.tpl.php:45
 msgid "CSS/JS Cache"
 msgstr ""
 
-#: src/gui.cls.php:497 src/gui.cls.php:648 src/lang.cls.php:79
+#: src/gui.cls.php:483 src/gui.cls.php:634 src/lang.cls.php:79
 #: tpl/dash/dashboard.tpl.php:361 tpl/toolbox/purge.tpl.php:54
 msgid "Object Cache"
 msgstr ""
 
-#: src/gui.cls.php:507 src/gui.cls.php:658 tpl/toolbox/purge.tpl.php:63
+#: src/gui.cls.php:493 src/gui.cls.php:644 tpl/toolbox/purge.tpl.php:63
 msgid "Opcode Cache"
 msgstr ""
 
-#: src/gui.cls.php:517 src/gui.cls.php:668 tpl/dash/dashboard.tpl.php:53
+#: src/gui.cls.php:503 src/gui.cls.php:654 tpl/dash/dashboard.tpl.php:53
 #: tpl/dash/dashboard.tpl.php:402 tpl/toolbox/purge.tpl.php:72
 msgid "Critical CSS"
 msgstr ""
 
-#: src/gui.cls.php:527 src/gui.cls.php:678 tpl/toolbox/purge.tpl.php:81
+#: src/gui.cls.php:513 src/gui.cls.php:664 tpl/toolbox/purge.tpl.php:81
 msgid "Localized Resources"
 msgstr ""
 
-#: src/gui.cls.php:537 src/gui.cls.php:688 tpl/toolbox/purge.tpl.php:90
+#: src/gui.cls.php:523 src/gui.cls.php:674 tpl/toolbox/purge.tpl.php:90
 msgid "LQIP Cache"
 msgstr ""
 
-#: src/gui.cls.php:547 src/gui.cls.php:698 src/lang.cls.php:149
+#: src/gui.cls.php:533 src/gui.cls.php:684 src/lang.cls.php:149
 #: tpl/toolbox/purge.tpl.php:99
 msgid "Gravatar Cache"
 msgstr ""
 
-#: src/gui.cls.php:571
+#: src/gui.cls.php:557
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: src/gui.cls.php:587 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:253
+#: src/gui.cls.php:573 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:253
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
 
-#: src/gui.cls.php:638 tpl/cdn/manage.tpl.php:17
+#: src/gui.cls.php:624 tpl/cdn/manage.tpl.php:17
 msgid "Cloudflare"
 msgstr ""
 
-#: src/gui.cls.php:718 tpl/img_optm/summary.tpl.php:169
+#: src/gui.cls.php:703 tpl/img_optm/summary.tpl.php:169
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: src/gui.cls.php:719 tpl/img_optm/summary.tpl.php:171
+#: src/gui.cls.php:704 tpl/img_optm/summary.tpl.php:171
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: src/gui.cls.php:738
+#: src/gui.cls.php:722
 msgid "Install %s"
 msgstr ""
 
-#: src/gui.cls.php:739
+#: src/gui.cls.php:723
 msgid "Install Now"
 msgstr ""
 
-#: src/gui.cls.php:759
+#: src/gui.cls.php:742
 msgid ""
 "<a href=\"%1$s\" %2$s>View version %3$s details</a> or <a href=\"%4$s\" %5$s "
 "target=\"_blank\">update now</a>."
 msgstr ""
 
-#: src/gui.cls.php:762
+#: src/gui.cls.php:745
 msgid "View %1$s version %2$s details"
 msgstr ""
 
-#: src/gui.cls.php:767
+#: src/gui.cls.php:750
 msgid "Update %s now"
 msgstr ""
 
@@ -1726,11 +1730,11 @@ msgstr ""
 msgid "Reset the entire opcode cache successfully."
 msgstr ""
 
-#: src/purge.cls.php:348
+#: src/purge.cls.php:358
 msgid "Object cache is not enabled."
 msgstr ""
 
-#: src/purge.cls.php:361
+#: src/purge.cls.php:371
 msgid "Purge all object caches successfully."
 msgstr ""
 
@@ -1738,23 +1742,23 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: src/purge.cls.php:538
+#: src/purge.cls.php:537
 msgid "Notified LiteSpeed Web Server to purge all pages."
 msgstr ""
 
-#: src/purge.cls.php:558
+#: src/purge.cls.php:556
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: src/purge.cls.php:586
+#: src/purge.cls.php:583
 msgid "Purge category %s"
 msgstr ""
 
-#: src/purge.cls.php:614
+#: src/purge.cls.php:610
 msgid "Purge tag %s"
 msgstr ""
 
-#: src/purge.cls.php:646
+#: src/purge.cls.php:641
 msgid "Purge url %s"
 msgstr ""
 
@@ -1897,7 +1901,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.3.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.3.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
