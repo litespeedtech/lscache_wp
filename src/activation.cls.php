@@ -8,20 +8,19 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Activation extends Instance
-{
-	protected static $_instance ;
+class Activation extends Instance {
+	protected static $_instance;
 
-	const TYPE_UPGRADE = 'upgrade' ;
-	const TYPE_INSTALL_3RD = 'install_3rd' ;
-	const TYPE_INSTALL_ZIP = 'install_zip' ;
-	const TYPE_DISMISS_RECOMMENDED = 'dismiss_recommended' ;
+	const TYPE_UPGRADE = 'upgrade';
+	const TYPE_INSTALL_3RD = 'install_3rd';
+	const TYPE_INSTALL_ZIP = 'install_zip';
+	const TYPE_DISMISS_RECOMMENDED = 'dismiss_recommended';
 
-	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
+	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
 	/**
 	 * The activation hook callback.
@@ -29,23 +28,22 @@ class Activation extends Instance
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function register_activation()
-	{
-		$count = 0 ;
-		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
+	public static function register_activation() {
+		$count = 0;
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() );
 
 		if ( is_multisite() ) {
-			$count = self::get_network_count() ;
+			$count = self::get_network_count();
 			if ( $count !== false ) {
-				$count = intval( $count ) + 1 ;
-				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
+				$count = intval( $count ) + 1;
+				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS );
 			}
 		}
 
-		do_action( 'litespeed_load_thirdparty' ) ;
+		do_action( 'litespeed_load_thirdparty' );
 
 		// Check new version @since 2.9.3
-		Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
+		Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
 
 		/* Network file handler */
 
@@ -55,24 +53,24 @@ class Activation extends Instance
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					try {
-						Htaccess::get_instance()->insert_ls_wrapper() ;
+						Htaccess::get_instance()->insert_ls_wrapper();
 					} catch ( \Exception $ex ) {
-						Admin_Display::error( $ex->getMessage() ) ;
+						Admin_Display::error( $ex->getMessage() );
 					}
 				}
-				return ;
+				return;
 			}
 
-			Conf::get_instance()->update_confs() ;
+			Conf::get_instance()->update_confs();
 
-			return ;
+			return;
 		}
 
 		/* Single site file handler */
-		Conf::get_instance()->update_confs() ;
+		Conf::get_instance()->update_confs();
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
-			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL ) ;
+			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
 		}
 	}
 
@@ -80,30 +78,29 @@ class Activation extends Instance
 	 * Uninstall plugin
 	 * @since 1.1.0
 	 */
-	public static function uninstall_litespeed_cache()
-	{
+	public static function uninstall_litespeed_cache() {
 		Task::destroy();
 
 		// Delete options
 		foreach ( Conf::get_instance()->load_default_vals() as $k => $v ) {
-			Base::delete_option( $k ) ;
+			Base::delete_option( $k );
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
 			foreach ( Conf::get_instance()->load_default_site_vals() as $k => $v ) {
-				Base::delete_site_option( $k ) ;
+				Base::delete_site_option( $k );
 			}
 		}
 
 		// Delete avatar table
-		Data::get_instance()->tables_del() ;
+		Data::get_instance()->tables_del();
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR ) ;
+			File::rrmdir( LITESPEED_STATIC_DIR );
 		}
 
-		Cloud::version_check( 'uninstall' ) ;
+		Cloud::version_check( 'uninstall' );
 
 		// Files has been deleted when deactivated
 	}
@@ -117,22 +114,21 @@ class Activation extends Instance
 	 * @access public
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids( $args = array() )
-	{
-		global $wp_version ;
+	public static function get_network_ids( $args = array() ) {
+		global $wp_version;
 		if ( version_compare( $wp_version, '4.6', '<' ) ) {
-			$blogs = wp_get_sites( $args ) ;
+			$blogs = wp_get_sites( $args );
 			if ( ! empty( $blogs ) ) {
 				foreach ( $blogs as $key => $blog ) {
-					$blogs[ $key ] = $blog[ 'blog_id' ] ;
+					$blogs[ $key ] = $blog[ 'blog_id' ];
 				}
 			}
 		}
 		else {
-			$args[ 'fields' ] = 'ids' ;
-			$blogs = get_sites( $args ) ;
+			$args[ 'fields' ] = 'ids';
+			$blogs = get_sites( $args );
 		}
-		return $blogs ;
+		return $blogs;
 	}
 
 	/**
@@ -141,26 +137,25 @@ class Activation extends Instance
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private static function get_network_count()
-	{
-		$count = get_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
+	private static function get_network_count() {
+		$count = get_site_transient( self::NETWORK_TRANSIENT_COUNT );
 		if ( $count !== false ) {
-			return intval( $count ) ;
+			return intval( $count );
 		}
 		// need to update
-		$default = array() ;
-		$count = 0 ;
+		$default = array();
+		$count = 0;
 
-		$sites = self::get_network_ids( array( 'deleted' => 0 ) ) ;
+		$sites = self::get_network_ids( array( 'deleted' => 0 ) );
 		if ( empty( $sites ) ) {
-			return false ;
+			return false;
 		}
 
 		foreach ( $sites as $site ) {
-			$bid = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site ;
-			$plugins = get_blog_option( $bid , 'active_plugins', $default ) ;
+			$bid = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site;
+			$plugins = get_blog_option( $bid , 'active_plugins', $default );
 			if ( in_array( LSCWP_BASENAME, $plugins, true ) ) {
-				$count++ ;
+				$count++;
 			}
 		}
 
@@ -170,13 +165,13 @@ class Activation extends Instance
 		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 		}
 
 		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
-			$count++ ;
+			$count++;
 		}
-		return $count ;
+		return $count;
 	}
 
 	/**
@@ -185,21 +180,20 @@ class Activation extends Instance
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private static function is_deactivate_last()
-	{
-		$count = self::get_network_count() ;
+	private static function is_deactivate_last() {
+		$count = self::get_network_count();
 		if ( $count === false ) {
-			return false ;
+			return false;
 		}
 		if ( $count !== 1 ) {
 			// Not deactivating the last one.
-			$count-- ;
-			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
-			return false ;
+			$count--;
+			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS );
+			return false;
 		}
 
-		delete_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
-		return true ;
+		delete_site_transient( self::NETWORK_TRANSIENT_COUNT );
+		return true;
 	}
 
 	/**
@@ -210,13 +204,12 @@ class Activation extends Instance
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function register_deactivation()
-	{
+	public static function register_deactivation() {
 		Task::destroy();
 
-		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() );
 
-		Purge::purge_all() ;
+		Purge::purge_all();
 
 		if ( is_multisite() ) {
 
@@ -224,41 +217,41 @@ class Activation extends Instance
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					try {
-						Htaccess::get_instance()->insert_ls_wrapper() ;
+						Htaccess::get_instance()->insert_ls_wrapper();
 					} catch ( \Exception $ex ) {
-						Admin_Display::error( $ex->getMessage() ) ;
+						Admin_Display::error( $ex->getMessage() );
 					}
 				}
-				return ;
+				return;
 			}
 		}
 
 		/* 1) wp-config.php; */
 
 		try {
-			self::get_instance()->_manage_wp_cache_const( false ) ;
+			self::get_instance()->_manage_wp_cache_const( false );
 		} catch ( \Exception $ex ) {
-			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
+			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 
-			Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() );
 		}
 
 		/* 2) adv-cache.php; Dropped in v3.0.4 */
 
 		/* 3) object-cache.php; */
 
-		Object_Cache::get_instance()->del_file() ;
+		Object_Cache::get_instance()->del_file();
 
 		/* 4) .htaccess; */
 
 		try {
-			Htaccess::get_instance()->clear_rules() ;
+			Htaccess::get_instance()->clear_rules();
 		} catch ( \Exception $ex ) {
-			Admin_Display::error( $ex->getMessage() ) ;
+			Admin_Display::error( $ex->getMessage() );
 		}
 
 		// delete in case it's not deleted prior to deactivation.
-		GUI::dismiss_whm() ;
+		GUI::dismiss_whm();
 	}
 
 	/**
@@ -275,8 +268,7 @@ class Activation extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public function update_files()
-	{
+	public function update_files() {
 		// Update cache setting `_CACHE`
 		Conf::get_instance()->define_cache();
 
@@ -322,49 +314,48 @@ class Activation extends Instance
 	 * @since  3.0 Refactored
 	 * @access private
 	 */
-	private function _manage_wp_cache_const( $enable )
-	{
+	private function _manage_wp_cache_const( $enable ) {
 		if ( $enable ) {
 			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
-				return false ;
+				return false;
 			}
 		}
 		elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
-				return false ;
+				return false;
 		}
 
 		/**
 		 * Follow WP's logic to locate wp-config file
 		 * @see wp-load.php
 		 */
-		$conf_file = ABSPATH . 'wp-config.php' ;
+		$conf_file = ABSPATH . 'wp-config.php';
 		if ( ! file_exists( $conf_file ) ) {
-			$conf_file = dirname( ABSPATH ) . '/wp-config.php' ;
+			$conf_file = dirname( ABSPATH ) . '/wp-config.php';
 		}
 
-		$content = File::read( $conf_file ) ;
+		$content = File::read( $conf_file );
 		if ( ! $content ) {
-			throw new \Exception( 'wp-config file content is empty: ' . $conf_file ) ;
+			throw new \Exception( 'wp-config file content is empty: ' . $conf_file );
 
 		}
 
 		// Remove the line `define('WP_CACHE', true/false);` first
 		if ( defined( 'WP_CACHE' ) ) {
-			$content = preg_replace( '|define\(\s*(["\'])WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content ) ;
+			$content = preg_replace( '|define\(\s*(["\'])WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content );
 		}
 
 		// Insert const
 		if ( $enable ) {
-			$content = preg_replace( '|^<\?php|', "<?php\ndefine( 'WP_CACHE', true ) ;", $content ) ;
+			$content = preg_replace( '|^<\?php|', "<?php\ndefine( 'WP_CACHE', true );", $content );
 		}
 
-		$res = File::save( $conf_file, $content, false, false, false ) ;
+		$res = File::save( $conf_file, $content, false, false, false );
 
 		if ( $res !== true ) {
-			throw new \Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . $res ) ;
+			throw new \Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . $res );
 		}
 
-		return true ;
+		return true;
 	}
 
 	/**
@@ -374,13 +365,12 @@ class Activation extends Instance
 	 * @since 2.9.8 Moved here from ls.cls
 	 * @access public
 	 */
-	public static function auto_update()
-	{
+	public static function auto_update() {
 		if ( ! Conf::val( Base::O_AUTO_UPGRADE ) ) {
-			return ;
+			return;
 		}
 
-		add_filter( 'auto_update_plugin', array( self::get_instance(), 'auto_update_hook' ), 10, 2 ) ;
+		add_filter( 'auto_update_plugin', array( self::get_instance(), 'auto_update_hook' ), 10, 2 );
 	}
 
 	/**
@@ -389,13 +379,12 @@ class Activation extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function auto_update_hook( $update, $item )
-	{
+	public function auto_update_hook( $update, $item ) {
 		if ( $item->slug == 'litespeed-cache' ) {
-			$auto_v = Cloud::version_check( 'auto_update_plugin' ) ;
+			$auto_v = Cloud::version_check( 'auto_update_plugin' );
 
 			if ( ! empty( $auto_v[ 'latest' ] ) && ! empty( $item->new_version ) && $auto_v[ 'latest' ] === $item->new_version ) {
-				return true ;
+				return true;
 			}
 		}
 
@@ -408,37 +397,36 @@ class Activation extends Instance
 	 * @since 2.9
 	 * @access public
 	 */
-	public function upgrade()
-	{
-		$plugin = Core::PLUGIN_FILE ;
+	public function upgrade() {
+		$plugin = Core::PLUGIN_FILE;
 
 		/**
 		 * @see wp-admin/update.php
 		 */
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' ;
-		include_once ABSPATH . 'wp-admin/includes/file.php' ;
-		include_once ABSPATH . 'wp-admin/includes/misc.php' ;
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/file.php';
+		include_once ABSPATH . 'wp-admin/includes/misc.php';
 
 		try {
-			ob_start() ;
-			$skin = new \WP_Ajax_Upgrader_Skin() ;
-			$upgrader = new \Plugin_Upgrader( $skin ) ;
-			$result = $upgrader->upgrade( $plugin ) ;
+			ob_start();
+			$skin = new \WP_Ajax_Upgrader_Skin();
+			$upgrader = new \Plugin_Upgrader( $skin );
+			$result = $upgrader->upgrade( $plugin );
 			if ( ! is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
-				activate_plugin( $plugin ) ;
+				activate_plugin( $plugin );
 			}
-			ob_end_clean() ;
+			ob_end_clean();
 		} catch ( \Exception $e ) {
-			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
-			return ;
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) );
+			return;
 		}
 
 		if ( is_wp_error( $result ) ) {
-			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
-			return ;
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) );
+			return;
 		}
 
-		Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
+		Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -446,13 +434,12 @@ class Activation extends Instance
 	 *
 	 * @since  1.0
 	 */
-	public function dash_notifier_is_plugin_active( $plugin )
-	{
-		include_once( ABSPATH . 'wp-admin/includes/plugin.php' ) ;
+	public function dash_notifier_is_plugin_active( $plugin ) {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-		$plugin_path = $plugin . '/' . $plugin . '.php' ;
+		$plugin_path = $plugin . '/' . $plugin . '.php';
 
-		return is_plugin_active( $plugin_path ) ;
+		return is_plugin_active( $plugin_path );
 	}
 
 	/**
@@ -460,15 +447,14 @@ class Activation extends Instance
 	 *
 	 * @since  1.0
 	 */
-	public function dash_notifier_is_plugin_installed( $plugin )
-	{
-		include_once( ABSPATH . 'wp-admin/includes/plugin.php' ) ;
+	public function dash_notifier_is_plugin_installed( $plugin ) {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-		$plugin_path = $plugin . '/' . $plugin . '.php' ;
+		$plugin_path = $plugin . '/' . $plugin . '.php';
 
-		$valid = validate_plugin( $plugin_path ) ;
+		$valid = validate_plugin( $plugin_path );
 
-		return ! is_wp_error( $valid ) ;
+		return ! is_wp_error( $valid );
 	}
 
 	/**
@@ -476,16 +462,15 @@ class Activation extends Instance
 	 *
 	 * @since  1.0
 	 */
-	public function dash_notifier_get_plugin_info( $slug )
-	{
-		include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' ) ;
-		$result = plugins_api( 'plugin_information', array( 'slug' => $slug ) ) ;
+	public function dash_notifier_get_plugin_info( $slug ) {
+		include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+		$result = plugins_api( 'plugin_information', array( 'slug' => $slug ) );
 
 		if ( is_wp_error( $result ) ) {
-			return false ;
+			return false;
 		}
 
-		return $result ;
+		return $result;
 	}
 
 	/**
@@ -493,45 +478,44 @@ class Activation extends Instance
 	 *
 	 * @since  1.0
 	 */
-	public function dash_notifier_install_3rd()
-	{
+	public function dash_notifier_install_3rd() {
 		! defined( 'SILENCE_INSTALL' ) && define( 'SILENCE_INSTALL', true );
 
 		$slug = ! empty( $_GET[ 'plugin' ] ) ? $_GET[ 'plugin' ] : false;
 
 		// Check if plugin is installed already
 		if ( ! $slug || $this->dash_notifier_is_plugin_active( $slug ) ) {
-			return ;
+			return;
 		}
 
 		/**
 		 * @see wp-admin/update.php
 		 */
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' ;
-		include_once ABSPATH . 'wp-admin/includes/file.php' ;
-		include_once ABSPATH . 'wp-admin/includes/misc.php' ;
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/file.php';
+		include_once ABSPATH . 'wp-admin/includes/misc.php';
 
-		$plugin_path = $slug . '/' . $slug . '.php' ;
+		$plugin_path = $slug . '/' . $slug . '.php';
 
 		if ( ! $this->dash_notifier_is_plugin_installed( $slug ) ) {
-			$plugin_info = $this->dash_notifier_get_plugin_info( $slug ) ;
+			$plugin_info = $this->dash_notifier_get_plugin_info( $slug );
 			if ( ! $plugin_info ) {
-				return ;
+				return;
 			}
 			// Try to install plugin
 			try {
-				ob_start() ;
-				$skin = new \Automatic_Upgrader_Skin() ;
-				$upgrader = new \Plugin_Upgrader( $skin ) ;
-				$result = $upgrader->install( $plugin_info->download_link ) ;
-				ob_end_clean() ;
+				ob_start();
+				$skin = new \Automatic_Upgrader_Skin();
+				$upgrader = new \Plugin_Upgrader( $skin );
+				$result = $upgrader->install( $plugin_info->download_link );
+				ob_end_clean();
 			} catch ( \Exception $e ) {
-				return ;
+				return;
 			}
 		}
 
 		if ( ! is_plugin_active( $plugin_path ) ) {
-			activate_plugin( $plugin_path ) ;
+			activate_plugin( $plugin_path );
 		}
 
 	}
@@ -542,26 +526,25 @@ class Activation extends Instance
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
+	public static function handler() {
+		$instance = self::get_instance();
 
-		$type = Router::verify_type() ;
+		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_UPGRADE :
-				$instance->upgrade() ;
-				break ;
+				$instance->upgrade();
+				break;
 
 			case self::TYPE_INSTALL_3RD :
-				$instance->dash_notifier_install_3rd() ;
-				break ;
+				$instance->dash_notifier_install_3rd();
+				break;
 
 			case self::TYPE_DISMISS_RECOMMENDED :
 				$news = get_option( 'litespeed-recommended', array() );
 				$news[ 'new' ] = 0;
 				update_option( 'litespeed-recommended', $news );
-				break ;
+				break;
 
 			case self::TYPE_INSTALL_ZIP :
 				$news = get_option( 'litespeed-recommended', array() );
@@ -570,13 +553,13 @@ class Activation extends Instance
 					update_option( 'litespeed-recommended', $news );
 					Debug2::get_instance()->beta_test( $news[ 'zip' ] );
 				}
-				break ;
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 }

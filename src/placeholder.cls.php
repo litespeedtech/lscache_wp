@@ -228,6 +228,11 @@ class Placeholder extends Base {
 			return $this->_generate_placeholder_locally( $size );
 		}
 
+		if ( $hit = Utility::str_hit_array( $src, Conf::val( Base::O_MEDIA_LQIP_EXC ) ) ) {
+			Debug2::debug2( '[LQIP] file bypass generating due to exclude setting [hit] ' . $hit );
+			return $this->_generate_placeholder_locally( $size );
+		}
+
 		$this->_ph_queue[] = $arr_key;
 
 		// Send request to generate placeholder
@@ -415,6 +420,7 @@ class Placeholder extends Base {
 
 			// CHeck if the image is 404 first
 			if ( File::is_404( $req_data[ 'url' ] ) ) {
+				$this->_append_exc( $src );
 				$this->_popup_and_save( $raw_size_and_src );
 				Debug2::debug( '[LQIP] 404 before request [src] ' . $req_data[ 'url' ] );
 				return $this->_generate_placeholder_locally( $size );
@@ -431,6 +437,7 @@ class Placeholder extends Base {
 
 			if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
 				// image error, pop up the current queue
+				$this->_append_exc( $src );
 				$this->_popup_and_save( $raw_size_and_src );
 				Debug2::debug( '[LQIP] wrong response format', $json );
 
@@ -468,6 +475,18 @@ class Placeholder extends Base {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Add to LQIP exclude list
+	 *
+	 * @since  3.3.2
+	 */
+	private function _append_exc( $src ) {
+		$val = Conf::val( Base::O_MEDIA_LQIP_EXC );
+		$val[] = $src;
+		Conf::get_instance()->update( Base::O_MEDIA_LQIP_EXC, $val );
+		Debug2::debug( '[LQIP] Appended to LQIP Excludes [URL] ' . $src );
 	}
 
 	/**

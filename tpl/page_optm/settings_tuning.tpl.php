@@ -52,7 +52,7 @@ ksort( $roles );
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
@@ -94,7 +94,7 @@ ksort( $roles );
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
@@ -142,7 +142,7 @@ ksort( $roles );
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><span class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:

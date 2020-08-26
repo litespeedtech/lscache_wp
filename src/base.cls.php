@@ -210,6 +210,7 @@ class Base extends Instance {
 	const O_MEDIA_IFRAME_LAZY_CLS_EXC 			= 'media-iframe_lazy_cls_exc';
 	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc';
 	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc';
+	const O_MEDIA_LQIP_EXC						= 'media-lqip_exc';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -505,6 +506,7 @@ class Base extends Instance {
 		self::O_MEDIA_IFRAME_LAZY_CLS_EXC 			=> array(),
 		self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	=> array(),
 		self::O_MEDIA_LAZY_URI_EXC 					=> array(),
+		self::O_MEDIA_LQIP_EXC 						=> array(),
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO 			=> false,

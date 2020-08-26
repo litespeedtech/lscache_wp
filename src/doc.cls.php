@@ -62,6 +62,21 @@ class Doc {
 	}
 
 	/**
+	 * One per line
+	 *
+	 * @since  3.3.2
+	 * @access public
+	 */
+	public static function full_or_partial_url( $string_only = false ) {
+		if ( $string_only ) {
+			echo __( 'Both full and partial strings can be used.', 'litespeed-cache' );
+		}
+		else {
+			echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' );
+		}
+	}
+
+	/**
 	 * Notice to edit .htaccess
 	 *
 	 * @since  3.0

@@ -19,7 +19,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
@@ -47,7 +47,7 @@ defined( 'WPINC' ) || exit;
 
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url( true ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
@@ -76,7 +76,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Iframes containing these class names will not be lazy loaded.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url( true ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
@@ -106,6 +106,20 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any lazy load of listed pages.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_MEDIA_LQIP_EXC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'These images will not generate LQIP.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
 			</div>
 		</td>
 	</tr>
