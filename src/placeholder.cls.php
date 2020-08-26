@@ -485,7 +485,7 @@ class Placeholder extends Base {
 	/**
 	 * Add to LQIP exclude list
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 */
 	private function _append_exc( $src ) {
 		$val = Conf::val( Base::O_MEDIA_LQIP_EXC );
@@ -529,7 +529,7 @@ class Placeholder extends Base {
 	/**
 	 * Clear all waiting queues
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 */
 	public function clear_q() {
 		if ( empty( $this->_summary[ 'queue' ] ) ) {

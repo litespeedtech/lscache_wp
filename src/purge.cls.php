@@ -337,7 +337,7 @@ class Purge extends Base {
 	/**
 	 * Purge object cache
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 * @access public
 	 */
 	public static function purge_all_object( $silence = true ) {

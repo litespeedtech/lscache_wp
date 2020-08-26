@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.3.2\n"
+"Project-Id-Version: LiteSpeed Cache 3.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-08-26 14:06:22+00:00\n"
+"POT-Creation-Date: 2020-08-26 18:28:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -354,6 +354,10 @@ msgstr ""
 
 #: src/crawler.cls.php:909
 msgid "Previously existed in blacklist"
+msgstr ""
+
+#: src/css.cls.php:448 src/placeholder.cls.php:542
+msgid "Queue cleared successfully."
 msgstr ""
 
 #: src/data.cls.php:205
@@ -1698,11 +1702,11 @@ msgstr ""
 msgid "Restore from backup"
 msgstr ""
 
-#: src/placeholder.cls.php:82 tpl/dash/network_dash.tpl.php:30
+#: src/placeholder.cls.php:83 tpl/dash/network_dash.tpl.php:30
 msgid "LQIP"
 msgstr ""
 
-#: src/placeholder.cls.php:140
+#: src/placeholder.cls.php:141
 msgid "LQIP image preview for size %s"
 msgstr ""
 
@@ -1913,7 +1917,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.3.2)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -4425,7 +4429,7 @@ msgstr ""
 #: tpl/page_optm/settings_css.tpl.php:150
 #: tpl/page_optm/settings_html.tpl.php:107
 #: tpl/page_optm/settings_html.tpl.php:170 tpl/page_optm/settings_js.tpl.php:62
-#: tpl/page_optm/settings_media.tpl.php:214
+#: tpl/page_optm/settings_media.tpl.php:217
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
@@ -4459,54 +4463,54 @@ msgid ""
 "Automatically generate critical CSS in the background via a cron-based queue."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:204
+#: tpl/page_optm/settings_css.tpl.php:205
 msgid "URL list in queue waiting for cron"
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:215
+#: tpl/page_optm/settings_css.tpl.php:218
 #: tpl/page_optm/settings_localization.tpl.php:62
-#: tpl/page_optm/settings_media.tpl.php:183
+#: tpl/page_optm/settings_media.tpl.php:186
 msgid "Run Queue Manually"
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:231
+#: tpl/page_optm/settings_css.tpl.php:234
 msgid ""
 "List post types where each item of that type should have its own CCSS "
 "generated."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:232
+#: tpl/page_optm/settings_css.tpl.php:235
 msgid ""
 "For example, if every Page on the site has different formatting, enter %s in "
 "the box. Separate critical CSS files will be stored for every Page on the "
 "site."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:246
+#: tpl/page_optm/settings_css.tpl.php:249
 msgid ""
 "Separate critical CSS files will be generated for paths containing these "
 "strings."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:260
+#: tpl/page_optm/settings_css.tpl.php:263
 msgid "This will inline the asynchronous CSS library to avoid render blocking."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:271 tpl/page_optm/settings_js.tpl.php:73
+#: tpl/page_optm/settings_css.tpl.php:274 tpl/page_optm/settings_js.tpl.php:73
 msgid "Default"
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:273
+#: tpl/page_optm/settings_css.tpl.php:276
 msgid ""
 "Set this to append %1$s to all %2$s rules before caching CSS to specify how "
 "fonts should be displayed while being downloaded."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:274
+#: tpl/page_optm/settings_css.tpl.php:277
 msgid "%s is recommended."
 msgstr ""
 
-#: tpl/page_optm/settings_css.tpl.php:274
+#: tpl/page_optm/settings_css.tpl.php:277
 msgid "Swap"
 msgstr ""
 
@@ -4717,7 +4721,7 @@ msgid "Load images only when they enter the viewport."
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:26
-#: tpl/page_optm/settings_media.tpl.php:200
+#: tpl/page_optm/settings_media.tpl.php:203
 msgid "This can improve page loading time by reducing initial HTTP requests."
 msgstr ""
 
@@ -4817,15 +4821,15 @@ msgid ""
 "will be used."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:177
+#: tpl/page_optm/settings_media.tpl.php:178
 msgid "Size list in queue waiting for cron"
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:199
+#: tpl/page_optm/settings_media.tpl.php:202
 msgid "Load iframes only when they enter the viewport."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:213
+#: tpl/page_optm/settings_media.tpl.php:216
 msgid "Include the lazy load image JavaScript library inline."
 msgstr ""
 

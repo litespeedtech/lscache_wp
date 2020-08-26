@@ -435,7 +435,7 @@ class CSS extends Base {
 	/**
 	 * Clear all waiting queues
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 */
 	public function clear_q() {
 		if ( empty( $this->_summary[ 'queue' ] ) ) {

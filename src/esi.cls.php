@@ -825,7 +825,7 @@ class ESI extends Instance {
 	/**
 	 * Store the args passed in comment_form for the ESI comment param usage in `$this->sub_comment_form_block()`
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 * @access public
 	 */
 	public function sub_comment_form_btn( $unused, $args ) {

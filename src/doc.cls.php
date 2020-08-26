@@ -64,7 +64,7 @@ class Doc {
 	/**
 	 * One per line
 	 *
-	 * @since  3.3.2
+	 * @since  3.4
 	 * @access public
 	 */
 	public static function full_or_partial_url( $string_only = false ) {
