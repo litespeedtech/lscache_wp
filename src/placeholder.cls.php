@@ -390,10 +390,14 @@ class Placeholder extends Base {
 		// Parse containing size and src info
 		$size_and_src = explode( ' ', $raw_size_and_src, 2 );
 		$size = $size_and_src[ 0 ];
-		$src = false;
-		if ( ! empty( $size_and_src[ 1 ] ) ) {
-			$src = $size_and_src[ 1 ];
+
+		if ( empty( $size_and_src[ 1 ] ) ) {
+			$this->_popup_and_save( $raw_size_and_src );
+			Debug2::debug( '[LQIP] ❌ No src [raw] ' . $raw_size_and_src );
+			return $this->_generate_placeholder_locally( $size );
 		}
+
+		$src = $size_and_src[ 1 ];
 
 		$file = $this->_placeholder_realpath( $src, $size );
 
@@ -420,8 +424,8 @@ class Placeholder extends Base {
 
 			// CHeck if the image is 404 first
 			if ( File::is_404( $req_data[ 'url' ] ) ) {
-				$this->_append_exc( $src );
 				$this->_popup_and_save( $raw_size_and_src );
+				$this->_append_exc( $src );
 				Debug2::debug( '[LQIP] 404 before request [src] ' . $req_data[ 'url' ] );
 				return $this->_generate_placeholder_locally( $size );
 			}
@@ -437,8 +441,8 @@ class Placeholder extends Base {
 
 			if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
 				// image error, pop up the current queue
-				$this->_append_exc( $src );
 				$this->_popup_and_save( $raw_size_and_src );
+				$this->_append_exc( $src );
 				Debug2::debug( '[LQIP] wrong response format', $json );
 
 				return $this->_generate_placeholder_locally( $size );
@@ -487,6 +491,25 @@ class Placeholder extends Base {
 		$val[] = $src;
 		Conf::get_instance()->update( Base::O_MEDIA_LQIP_EXC, $val );
 		Debug2::debug( '[LQIP] Appended to LQIP Excludes [URL] ' . $src );
+
+		if ( ! empty( $this->_summary[ 'queue' ] ) ) {
+			$changed = false;
+			foreach ( $this->_summary[ 'queue' ] as $k => $raw_size_and_src ) {
+				$size_and_src = explode( ' ', $raw_size_and_src, 2 );
+				if ( empty( $size_and_src[ 1 ] ) ) {
+					continue;
+				}
+
+				if ( $size_and_src[ 1 ] == $src ) {
+					unset( $this->_summary[ 'queue' ][ $k ] );
+					$changed = true;
+				}
+			}
+
+			if ( $changed ) {
+				self::save_summary();
+			}
+		}
 	}
 
 	/**
