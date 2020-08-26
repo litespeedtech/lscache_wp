@@ -15,6 +15,7 @@ class Placeholder extends Base {
 	protected static $_instance;
 
 	const TYPE_GENERATE = 'generate';
+	const TYPE_CLEAR_Q = 'clear_q';
 
 	private $_conf_placeholder_resp;
 	private $_conf_placeholder_resp_svg;
@@ -526,6 +527,23 @@ class Placeholder extends Base {
 	}
 
 	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  3.3.2
+	 */
+	public function clear_q() {
+		if ( empty( $this->_summary[ 'queue' ] ) ) {
+			return;
+		}
+
+		$this->_summary[ 'queue' ] = array();
+		self::save_summary();
+
+		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.5.1
@@ -539,6 +557,10 @@ class Placeholder extends Base {
 		switch ( $type ) {
 			case self::TYPE_GENERATE :
 				self::cron( true );
+				break;
+
+			case self::TYPE_CLEAR_Q :
+				$instance->clear_q();
 				break;
 
 			default:

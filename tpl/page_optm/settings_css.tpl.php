@@ -201,7 +201,10 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 				<?php if ( ! empty( $css_summary[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
-						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?></h4>
+						<h4>
+							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?>
+							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
+						</h4>
 						<p>
 						<?php foreach ( $css_summary[ 'queue' ] as $k => $v ) : ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>

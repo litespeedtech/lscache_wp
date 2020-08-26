@@ -174,7 +174,10 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 				<?php if ( ! empty( $placeholder_summary[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
-						<h4><?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ); ?></h4>
+						<h4>
+							<?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ); ?>
+							<a href="<?php echo Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
+						</h4>
 						<p>
 							<?php echo implode( '<br>', $placeholder_summary[ 'queue' ] ); ?>
 						</p>

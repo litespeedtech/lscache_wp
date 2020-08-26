@@ -11,6 +11,7 @@ class CSS extends Base {
 	protected static $_instance;
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical';
+	const TYPE_CLEAR_Q = 'clear_q';
 
 	protected $_summary;
 
@@ -432,6 +433,23 @@ class CSS extends Base {
 	}
 
 	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  3.3.2
+	 */
+	public function clear_q() {
+		if ( empty( $this->_summary[ 'queue' ] ) ) {
+			return;
+		}
+
+		$this->_summary[ 'queue' ] = array();
+		self::save_summary();
+
+		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
+	}
+
+	/**
 	 * The critical css file for current page
 	 *
 	 * @since  2.3
@@ -485,6 +503,10 @@ class CSS extends Base {
 		switch ( $type ) {
 			case self::TYPE_GENERATE_CRITICAL :
 				self::cron_ccss( true );
+				break;
+
+			case self::TYPE_CLEAR_Q :
+				$instance->clear_q();
 				break;
 
 			default:
