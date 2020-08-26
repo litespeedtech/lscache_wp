@@ -435,7 +435,7 @@ class Placeholder extends Base {
 			$this->_summary[ 'curr_request' ] = time();
 			self::save_summary();
 
-			$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 30 );
+			$json = Cloud::post( Cloud::SVC_LQIP, $req_data, 120 );
 			if ( ! is_array( $json ) ) {
 				return $this->_generate_placeholder_locally( $size );
 			}
