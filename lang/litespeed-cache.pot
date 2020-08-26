@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 3.3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-08-26 11:41:59+00:00\n"
+"POT-Creation-Date: 2020-08-26 14:06:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,11 +28,11 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: src/activation.cls.php:432 src/activation.cls.php:437
+#: src/activation.cls.php:420 src/activation.cls.php:425
 msgid "Failed to upgrade."
 msgstr ""
 
-#: src/activation.cls.php:441
+#: src/activation.cls.php:429
 msgid "Upgraded successfully."
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: src/admin-display.cls.php:163 src/lang.cls.php:217
+#: src/admin-display.cls.php:163 src/lang.cls.php:218
 msgid "Crawler"
 msgstr ""
 
@@ -421,28 +421,36 @@ msgid ""
 "admin before their natural expiration, if necessary."
 msgstr ""
 
-#: src/doc.cls.php:40 src/doc.cls.php:73 tpl/cdn/manage.tpl.php:66
+#: src/doc.cls.php:40 src/doc.cls.php:88 tpl/cdn/manage.tpl.php:66
 #: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:56
 #: tpl/img_optm/summary.tpl.php:96 tpl/inc/check_cache_disabled.php:42
 msgid "Learn More"
 msgstr ""
 
 #: src/doc.cls.php:72
+msgid "Both full and partial strings can be used."
+msgstr ""
+
+#: src/doc.cls.php:75
+msgid "Both full URLs and partial strings can be used."
+msgstr ""
+
+#: src/doc.cls.php:87
 msgid "This setting will edit the .htaccess file."
 msgstr ""
 
-#: src/doc.cls.php:85
+#: src/doc.cls.php:100
 msgid ""
 "For online services to work correctly, you must whitelist all online server "
 "IPs."
 msgstr ""
 
-#: src/doc.cls.php:86
+#: src/doc.cls.php:101
 msgid ""
 "Before generating key, please verify all IPs on this list are whitelisted"
 msgstr ""
 
-#: src/doc.cls.php:87 tpl/general/settings.tpl.php:87
+#: src/doc.cls.php:102 tpl/general/settings.tpl.php:87
 msgid "Current Online Server IPs"
 msgstr ""
 
@@ -1294,306 +1302,310 @@ msgid "Lazy Load URI Excludes"
 msgstr ""
 
 #: src/lang.cls.php:160
-msgid "Basic Image Placeholder"
+msgid "LQIP Excludes"
 msgstr ""
 
 #: src/lang.cls.php:161
-msgid "Responsive Placeholder"
+msgid "Basic Image Placeholder"
 msgstr ""
 
 #: src/lang.cls.php:162
-msgid "Responsive Placeholder Color"
+msgid "Responsive Placeholder"
 msgstr ""
 
 #: src/lang.cls.php:163
-msgid "Responsive Placeholder SVG"
+msgid "Responsive Placeholder Color"
 msgstr ""
 
 #: src/lang.cls.php:164
-msgid "LQIP Cloud Generator"
+msgid "Responsive Placeholder SVG"
 msgstr ""
 
 #: src/lang.cls.php:165
-msgid "LQIP Quality"
+msgid "LQIP Cloud Generator"
 msgstr ""
 
 #: src/lang.cls.php:166
+msgid "LQIP Quality"
+msgstr ""
+
+#: src/lang.cls.php:167
 msgid "LQIP Minimum Dimensions"
 msgstr ""
 
-#: src/lang.cls.php:168
+#: src/lang.cls.php:169
 msgid "Generate LQIP In Background"
 msgstr ""
 
-#: src/lang.cls.php:169
+#: src/lang.cls.php:170
 msgid "Lazy Load Iframes"
 msgstr ""
 
-#: src/lang.cls.php:170
+#: src/lang.cls.php:171
 msgid "Inline Lazy Load Images Library"
 msgstr ""
 
-#: src/lang.cls.php:171
+#: src/lang.cls.php:172
 msgid "Auto Request Cron"
 msgstr ""
 
-#: src/lang.cls.php:172
+#: src/lang.cls.php:173
 msgid "Auto Pull Cron"
 msgstr ""
 
-#: src/lang.cls.php:173
+#: src/lang.cls.php:174
 msgid "Optimize Original Images"
 msgstr ""
 
-#: src/lang.cls.php:174
+#: src/lang.cls.php:175
 msgid "Remove Original Backups"
 msgstr ""
 
-#: src/lang.cls.php:175
+#: src/lang.cls.php:176
 msgid "Create WebP Versions"
 msgstr ""
 
-#: src/lang.cls.php:176
+#: src/lang.cls.php:177
 msgid "Optimize Losslessly"
 msgstr ""
 
-#: src/lang.cls.php:177
+#: src/lang.cls.php:178
 msgid "Preserve EXIF/XMP data"
 msgstr ""
 
-#: src/lang.cls.php:178
+#: src/lang.cls.php:179
 msgid "WebP Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:179
+#: src/lang.cls.php:180
 msgid "WebP For Extra srcset"
 msgstr ""
 
-#: src/lang.cls.php:180
+#: src/lang.cls.php:181
 msgid "WordPress Image Quality Control"
 msgstr ""
 
-#: src/lang.cls.php:181 tpl/esi_widget_edit.php:36
+#: src/lang.cls.php:182 tpl/esi_widget_edit.php:36
 msgid "Enable ESI"
 msgstr ""
 
-#: src/lang.cls.php:182
+#: src/lang.cls.php:183
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: src/lang.cls.php:183
+#: src/lang.cls.php:184
 msgid "Cache Comment Form"
 msgstr ""
 
-#: src/lang.cls.php:184
+#: src/lang.cls.php:185
 msgid "ESI Nonces"
 msgstr ""
 
-#: src/lang.cls.php:185
+#: src/lang.cls.php:186
 msgid "Vary Group"
 msgstr ""
 
-#: src/lang.cls.php:186
+#: src/lang.cls.php:187
 msgid "Purge All Hooks"
 msgstr ""
 
-#: src/lang.cls.php:187
+#: src/lang.cls.php:188
 msgid "Improve HTTP/HTTPS Compatibility"
 msgstr ""
 
-#: src/lang.cls.php:188
+#: src/lang.cls.php:189
 msgid "Instant Click"
 msgstr ""
 
-#: src/lang.cls.php:189
+#: src/lang.cls.php:190
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: src/lang.cls.php:190
+#: src/lang.cls.php:191
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: src/lang.cls.php:191
+#: src/lang.cls.php:192
 msgid "Login Cookie"
 msgstr ""
 
-#: src/lang.cls.php:192
+#: src/lang.cls.php:193
 msgid "Image WebP Replacement"
 msgstr ""
 
-#: src/lang.cls.php:194
+#: src/lang.cls.php:195
 msgid "Frontend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:195
+#: src/lang.cls.php:196
 msgid "Backend .htaccess Path"
 msgstr ""
 
-#: src/lang.cls.php:196
+#: src/lang.cls.php:197
 msgid "Frontend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:197
+#: src/lang.cls.php:198
 msgid "Frontend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:198
+#: src/lang.cls.php:199
 msgid "Backend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:199
+#: src/lang.cls.php:200
 msgid "Backend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:200
+#: src/lang.cls.php:201
 msgid "Editor Heartbeat"
 msgstr ""
 
-#: src/lang.cls.php:201
+#: src/lang.cls.php:202
 msgid "Editor Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:203
+#: src/lang.cls.php:204
 msgid "QUIC.cloud CDN"
 msgstr ""
 
-#: src/lang.cls.php:204
+#: src/lang.cls.php:205
 msgid "Use CDN Mapping"
 msgstr ""
 
-#: src/lang.cls.php:205
+#: src/lang.cls.php:206
 msgid "CDN URL"
 msgstr ""
 
-#: src/lang.cls.php:206
+#: src/lang.cls.php:207
 msgid "Include Images"
 msgstr ""
 
-#: src/lang.cls.php:207
+#: src/lang.cls.php:208
 msgid "Include CSS"
 msgstr ""
 
-#: src/lang.cls.php:208
+#: src/lang.cls.php:209
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:209 tpl/cdn/settings.tpl.php:148
+#: src/lang.cls.php:210 tpl/cdn/settings.tpl.php:148
 msgid "Include File Types"
 msgstr ""
 
-#: src/lang.cls.php:210
+#: src/lang.cls.php:211
 msgid "HTML Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:211
+#: src/lang.cls.php:212
 msgid "Original URLs"
 msgstr ""
 
-#: src/lang.cls.php:212
+#: src/lang.cls.php:213
 msgid "Included Directories"
 msgstr ""
 
-#: src/lang.cls.php:213
+#: src/lang.cls.php:214
 msgid "Exclude Path"
 msgstr ""
 
-#: src/lang.cls.php:214
+#: src/lang.cls.php:215
 msgid "Load JQuery Remotely"
 msgstr ""
 
-#: src/lang.cls.php:215
+#: src/lang.cls.php:216
 msgid "Cloudflare API"
 msgstr ""
 
-#: src/lang.cls.php:218
+#: src/lang.cls.php:219
 msgid "Delay"
 msgstr ""
 
-#: src/lang.cls.php:219
+#: src/lang.cls.php:220
 msgid "Run Duration"
 msgstr ""
 
-#: src/lang.cls.php:220
+#: src/lang.cls.php:221
 msgid "Interval Between Runs"
 msgstr ""
 
-#: src/lang.cls.php:221
+#: src/lang.cls.php:222
 msgid "Crawl Interval"
 msgstr ""
 
-#: src/lang.cls.php:222
+#: src/lang.cls.php:223
 msgid "Threads"
 msgstr ""
 
-#: src/lang.cls.php:223
+#: src/lang.cls.php:224
 msgid "Timeout"
 msgstr ""
 
-#: src/lang.cls.php:224
+#: src/lang.cls.php:225
 msgid "Server Load Limit"
 msgstr ""
 
-#: src/lang.cls.php:225
+#: src/lang.cls.php:226
 msgid "Role Simulation"
 msgstr ""
 
-#: src/lang.cls.php:226
+#: src/lang.cls.php:227
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:227 tpl/crawler/settings-sitemap.tpl.php:115
+#: src/lang.cls.php:228 tpl/crawler/settings-sitemap.tpl.php:115
 msgid "Custom Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:229
 msgid "Drop Domain from Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:229
+#: src/lang.cls.php:230
 msgid "Sitemap Timeout"
 msgstr ""
 
-#: src/lang.cls.php:231 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:232 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:232 tpl/toolbox/log_viewer.tpl.php:7
+#: src/lang.cls.php:233 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:233
+#: src/lang.cls.php:234
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:234
+#: src/lang.cls.php:235
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:235
+#: src/lang.cls.php:236
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:236
+#: src/lang.cls.php:237
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:237
+#: src/lang.cls.php:238
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:238
+#: src/lang.cls.php:239
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:239
+#: src/lang.cls.php:240
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:241
+#: src/lang.cls.php:242
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:242
+#: src/lang.cls.php:243
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1770,23 +1782,23 @@ msgstr ""
 msgid "LiteSpeed Crawler Cron"
 msgstr ""
 
-#: src/utility.cls.php:254
+#: src/utility.cls.php:250
 msgid "right now"
 msgstr ""
 
-#: src/utility.cls.php:254
+#: src/utility.cls.php:250
 msgid "just now"
 msgstr ""
 
-#: src/utility.cls.php:257
+#: src/utility.cls.php:253
 msgid " %s ago"
 msgstr ""
 
-#: src/utility.cls.php:877
+#: src/utility.cls.php:857
 msgid "&laquo;"
 msgstr ""
 
-#: src/utility.cls.php:878
+#: src/utility.cls.php:858
 msgid "&raquo;"
 msgstr ""
 
@@ -4821,13 +4833,6 @@ msgstr ""
 msgid "Listed images will not be lazy loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media_exc.tpl.php:22
-#: tpl/page_optm/settings_tuning.tpl.php:55
-#: tpl/page_optm/settings_tuning.tpl.php:97
-#: tpl/page_optm/settings_tuning.tpl.php:145
-msgid "Both full URLs and partial strings can be used."
-msgstr ""
-
 #: tpl/page_optm/settings_media_exc.tpl.php:26
 #: tpl/page_optm/settings_tuning.tpl.php:59
 #: tpl/page_optm/settings_tuning.tpl.php:101
@@ -4837,11 +4842,6 @@ msgstr ""
 
 #: tpl/page_optm/settings_media_exc.tpl.php:49
 msgid "Images containing these class names will not be lazy loaded."
-msgstr ""
-
-#: tpl/page_optm/settings_media_exc.tpl.php:50
-#: tpl/page_optm/settings_media_exc.tpl.php:79
-msgid "Both full and partial strings can be used."
 msgstr ""
 
 #: tpl/page_optm/settings_media_exc.tpl.php:64
@@ -4858,6 +4858,10 @@ msgstr ""
 
 #: tpl/page_optm/settings_media_exc.tpl.php:107
 msgid "Prevent any lazy load of listed pages."
+msgstr ""
+
+#: tpl/page_optm/settings_media_exc.tpl.php:121
+msgid "These images will not generate LQIP."
 msgstr ""
 
 #: tpl/page_optm/settings_tuning.tpl.php:32
