@@ -240,7 +240,8 @@ class CSS extends Base {
 
 				// Load CSS content
 				$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
-				if ( ! $real_file ) {
+				$postfix = pathinfo( parse_url( $attrs[ 'href' ], PHP_URL_PATH ), PATHINFO_EXTENSION );
+				if ( ! $real_file || $postfix != 'css' ) {
 					Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
 					$con = wp_remote_retrieve_body( wp_remote_get( $attrs[ 'href' ] ) );
 					if ( ! $con ) {
