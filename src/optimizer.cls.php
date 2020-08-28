@@ -103,7 +103,16 @@ class Optimizer extends Instance {
 		// Parse real file path
 		$real_files = array();
 		foreach ( $src_list as $src_info ) {
-			$real_file = Utility::is_internal_file( ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info );
+			$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
+			$postfix = pathinfo( parse_url( $src, PHP_URL_PATH ), PATHINFO_EXTENSION );
+			if ( $postfix != $file_type ) {
+				Debug2::debug2( '[Optmer] Not static file, will read as remote [src] ' . $src );
+				$real_file = $src;
+			}
+			else {
+				$real_file = Utility::is_internal_file( $src );
+				$real_file = ! empty( $real_file[ 0 ] ) ? $real_file[ 0 ] : false;
+			}
 
 			if ( ! $real_file ) {
 				continue;
@@ -111,12 +120,12 @@ class Optimizer extends Instance {
 
 			if ( ! empty( $src_info[ 'media' ] ) ) {
 				$real_files[] = array(
-					'src' => $real_file[ 0 ],
+					'src' => $real_file,
 					'media' => $src_info[ 'media' ],
 				);
 			}
 			else {
-				$real_files[] = $real_file[ 0 ];
+				$real_files[] = $real_file;
 			}
 		}
 
@@ -182,7 +191,16 @@ class Optimizer extends Instance {
 				$real_path = $path_info;
 			}
 			Debug2::debug2( '[Optmer] [real_path] ' . $real_path );
-			$data = File::read( $real_path );
+
+			// Check if its remote or local path
+			if ( strpos( $real_path, 'http' ) === 0 ) {
+				$data = wp_remote_retrieve_body( wp_remote_get( $real_path ) );
+				$dirname = dirname( parse_url( $real_path, PHP_URL_PATH ) );
+			}
+			else {
+				$data = File::read( $real_path );
+				$dirname = dirname( $real_path );
+			}
 
 			// Font optimize
 			if ( $this->_conf_css_font_display ) {
@@ -195,7 +213,7 @@ class Optimizer extends Instance {
 				$data = self::minify_css( $data );
 			}
 
-			$data = Lib\CSS_MIN\UriRewriter::rewrite( $data, dirname( $real_path ) );
+			$data = Lib\CSS_MIN\UriRewriter::rewrite( $data, $dirname );
 
 			if ( $media ) {
 				$data = '@media ' . $media . '{' . $data . "\n}";
@@ -216,7 +234,13 @@ class Optimizer extends Instance {
 	private function _serve_js( $files, $concat_only ) {
 		$con = array();
 		foreach ( $files as $real_path ) {
-			$data = File::read( $real_path );
+			// Check if its remote or local path
+			if ( strpos( $real_path, 'http' ) === 0 ) {
+				$data = wp_remote_retrieve_body( wp_remote_get( $real_path ) );
+			}
+			else {
+				$data = File::read( $real_path );
+			}
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
 				$data = self::minify_js( $data );
