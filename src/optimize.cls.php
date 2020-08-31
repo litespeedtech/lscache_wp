@@ -1160,8 +1160,17 @@ class Optimize extends Base {
 			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue;
 			}
-// todo @v2.0: allow defer even exclude from optm
+
 			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
+				// Maybe defer
+				if ( $this->cfg_js_defer ) {
+					$deferred = $this->_js_defer( array( $match[ 0 ] ) );
+					$deferred = $deferred[ 0 ];
+					if ( $deferred != $match[ 0 ] ) {
+						$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
+					}
+				}
+
 				Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
 				continue;
 			}
