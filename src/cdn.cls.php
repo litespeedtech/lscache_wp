@@ -408,8 +408,7 @@ class CDN extends Instance {
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_css( $url )
-	{
+	public function url_css( $url ) {
 		if ( $url && $url2 = $this->rewrite( $url, Base::CDN_MAPPING_INC_CSS ) ) {
 			$url = $url2;
 		}

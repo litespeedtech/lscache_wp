@@ -3,19 +3,19 @@
  * The Third Party integration with the YITH WooCommerce Wishlist plugin.
  *
  * @since		1.1.0
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Yith_Wishlist
-{
-	const ESI_PARAM_ATTS = 'yith_wcwl_atts' ;
-	const ESI_PARAM_POSTID = 'yith_wcwl_post_id' ;
-	private static $atts = null ; // Not currently used. Depends on how YITH adds attributes
+use \LiteSpeed\Tag;
+use \LiteSpeed\Conf;
+use \LiteSpeed\Base;
+
+class Yith_Wishlist {
+	const ESI_PARAM_POSTID = 'yith_pid';
+	private static $_post_id;
+
 
 	/**
 	 * Detects if YITH WooCommerce Wishlist and WooCommerce are installed.
@@ -23,18 +23,17 @@ class Yith_Wishlist
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if ( ! defined( 'WOOCOMMERCE_VERSION' ) || ! defined( 'YITH_WCWL' ) ) {
-			return ;
+			return;
 		}
 		if ( apply_filters( 'litespeed_esi_status', false ) ) {
 			add_action( 'litespeed_tpl_normal', __CLASS__ . '::is_not_esi' );
 			add_action( 'litespeed_esi_load-yith_wcwl_add', __CLASS__ . '::load_add_to_wishlist' );
 
 			// hook to add/delete wishlist
-			add_action( 'yith_wcwl_added_to_wishlist', __CLASS__ . '::purge' ) ;
-			add_action( 'yith_wcwl_removed_from_wishlist', __CLASS__ . '::purge' ) ;
+			add_action( 'yith_wcwl_added_to_wishlist', __CLASS__ . '::purge' );
+			add_action( 'yith_wcwl_removed_from_wishlist', __CLASS__ . '::purge' );
 		}
 	}
 
@@ -44,8 +43,7 @@ class Yith_Wishlist
 	 * @since 1.2.0
 	 * @access public
 	 */
-	public static function purge()
-	{
+	public static function purge() {
 		do_action( 'litespeed_purge_esi', 'yith_wcwl_add' );
 	}
 
@@ -58,32 +56,51 @@ class Yith_Wishlist
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function is_not_esi()
-	{
-		add_filter( 'yith_wcwl_add_to_wishlisth_button_html', __CLASS__ . '::sub_add_to_wishlist', 999 ) ;
+	public static function is_not_esi() {
+		add_filter( 'yith_wcwl_add_to_wishlist_params', __CLASS__ . '::add_to_wishlist_params', 999, 2 );
 
+		add_filter( 'yith_wcwl_add_to_wishlisth_button_html', __CLASS__ . '::sub_add_to_wishlist', 999 );
+	}
+
+	/**
+	 * Store the post id for later shortcode usage
+	 *
+	 * @since  3.4.1
+	 */
+	public static function add_to_wishlist_params( $defaults, $atts ) {
+		self::$_post_id = ! empty( $atts[ 'product_id' ] ) ? $atts[ 'product_id' ] : $defaults[ 'product_id' ];
+
+		return $defaults;
 	}
 
 	/**
 	 * Hooked to the yith_wcwl_add_to_wishlisth_button_html filter.
 	 *
-	 * The add to wishlist button displays a different output when the item
-	 * is already in the wishlist/cart. For this reason, the button must be
-	 * an ESI block. This function replaces the normal html with the ESI
-	 * block.
+	 * The add to wishlist button displays a different output when the item is already in the wishlist/cart.
+	 * For this reason, the button must be an ESI block. This function replaces the normal html with the ESI block.
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @param $template unused
-	 * @return string The html for future callbacks to filter.
 	 */
-	public static function sub_add_to_wishlist( $template )
-	{
-		global $post ;
+	public static function sub_add_to_wishlist( $template ) {
 		$params = array(
-			self::ESI_PARAM_POSTID => $post->ID,
-		) ;
-		return apply_filters( 'litespeed_esi_url', 'yith_wcwl_add', 'YITH ADD TO WISHLIST', $params );
+			self::ESI_PARAM_POSTID => self::$_post_id,
+		);
+
+		$inline_tags = array(
+			'',
+			rtrim( Tag::TYPE_ESI, '.' ),
+			Tag::TYPE_ESI . 'yith_wcwl_add',
+		);
+		$inline_tags = implode( ',', array_map( function($val){ return 'public:' . LSWCP_TAG_PREFIX . '_' . $val; }, $inline_tags ) );
+		$inline_tags .= ',' . LSWCP_TAG_PREFIX . '_tag_priv';
+
+		$inline_params = array(
+			'val'	=> $template,
+			'tag'	=> $inline_tags,
+			'control' => 'private,no-vary,max-age=' . Conf::val( Base::O_CACHE_TTL_PRIV ),
+		);
+		return apply_filters( 'litespeed_esi_url', 'yith_wcwl_add', 'YITH ADD TO WISHLIST', $params, 'private,no-vary', false, false, false, $inline_params );
 	}
 
 	/**
@@ -93,15 +110,12 @@ class Yith_Wishlist
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @global $post, $wp_query
-	 * @param array $params The input ESI parameters.
 	 */
-	public static function load_add_to_wishlist( $params )
-	{
-		global $post, $wp_query ;
-		$post = get_post( $params[ self::ESI_PARAM_POSTID ] ) ;
-		$wp_query->setup_postdata( $post ) ;
-		echo \YITH_WCWL_Shortcode::add_to_wishlist( /*$params[self::ESI_PARAM_ATTS]*/array() ) ;
+	public static function load_add_to_wishlist( $params ) {
+		// global $post, $wp_query;
+		// $post = get_post( $params[ self::ESI_PARAM_POSTID ] );
+		// $wp_query->setup_postdata( $post );
+		echo \YITH_WCWL_Shortcode::add_to_wishlist( array( 'product_id' => $params[ self::ESI_PARAM_POSTID ] ) );
 		do_action( 'litespeed_control_set_private', 'yith wishlist' );
 		do_action( 'litespeed_vary_no' );
 	}

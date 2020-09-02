@@ -8,17 +8,16 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Admin extends Instance
-{
+class Admin extends Instance {
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
 
-	protected static $_instance ;
-	private $__cfg ;// cfg instance
-	private $display ;
+	protected static $_instance;
+	private $__cfg;// cfg instance
+	private $display;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -26,41 +25,40 @@ class Admin extends Instance
 	 *
 	 * @since    1.0.0
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		// Define LSCWP_MU_PLUGIN if is mu-plugins
 		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
-			define( 'LSCWP_MU_PLUGIN', true ) ;
+			define( 'LSCWP_MU_PLUGIN', true );
 		}
 
 		// Additional litespeed assets on admin display
 		// Also register menu
-		$this->display = Admin_Display::get_instance() ;
+		$this->display = Admin_Display::get_instance();
 
-		$this->__cfg = Conf::get_instance() ;
+		$this->__cfg = Conf::get_instance();
 
 		// initialize admin actions
-		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		// add link to plugin list page
-		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
+		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->display, 'add_plugin_links' ) );
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = Conf::val( Base::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = Conf::val( Base::O_PURGE_HOOK_ALL );
 
 			// purge all on upgrade
 			if ( Conf::val( Base::O_PURGE_ON_UPGRADE ) ) {
-				$purge_all_events[] = 'upgrader_process_complete' ;
-				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
+				$purge_all_events[] = 'upgrader_process_complete';
+				$purge_all_events[] = 'admin_action_do-plugin-upgrade';
 			}
 			foreach ( $purge_all_events as $event ) {
 				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
 				if ( in_array( $event, array( 'update_option' ) ) ) {
-					continue ;
+					continue;
 				}
-				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' ) ;
+				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
 			}
-			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' ) ;
+			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' );
 		}
 	}
 
@@ -77,13 +75,13 @@ class Admin extends Instance
 
 		// Terminate if user doesn't have the access to settings
 		if( is_network_admin() ) {
-			$capability = 'manage_network_options' ;
+			$capability = 'manage_network_options';
 		}
 		else {
-			$capability = 'manage_options' ;
+			$capability = 'manage_options';
 		}
 		if ( ! current_user_can($capability) ) {
-			return ;
+			return;
 		}
 
 		// Save setting from admin settings page
@@ -92,14 +90,14 @@ class Admin extends Instance
 		// Add privacy policy
 		// @since 2.2.6
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			wp_add_privacy_policy_content( Core::PLUGIN_NAME, Doc::privacy_policy() ) ;
+			wp_add_privacy_policy_content( Core::PLUGIN_NAME, Doc::privacy_policy() );
 		}
 
-		do_action( 'litspeed_after_admin_init' ) ;
+		do_action( 'litspeed_after_admin_init' );
 
 		if ( Router::esi_enabled() ) {
-			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
-			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 ) ;
+			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 );
+			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 );
 		}
 	}
 
@@ -108,8 +106,7 @@ class Admin extends Instance
 	 *
 	 * @since 1.1.0
 	 */
-	private function _proceed_admin_action()
-	{
+	private function _proceed_admin_action() {
 		// handle actions
 		switch ( Router::get_action() ) {
 
@@ -142,13 +139,12 @@ class Admin extends Instance
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	public static function cleanup_text( $input )
-	{
+	public static function cleanup_text( $input ) {
 		if ( is_array( $input ) ) {
-			return array_map( __CLASS__ . '::cleanup_text', $input ) ;
+			return array_map( __CLASS__ . '::cleanup_text', $input );
 		}
 
-		return stripslashes( trim( $input ) ) ;
+		return stripslashes( trim( $input ) );
 	}
 
 	/**
@@ -159,8 +155,7 @@ class Admin extends Instance
 	 * @access public
 	 * @global string $pagenow
 	 */
-	public static function redirect( $url = false )
-	{
+	public static function redirect( $url = false ) {
 		global $pagenow;
 
 		if ( ! empty( $_GET[ '_litespeed_ori' ] ) ) {

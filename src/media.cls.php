@@ -8,18 +8,17 @@
  * @subpackage 	Core/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Media extends Instance
-{
-	protected static $_instance ;
+class Media extends Instance {
+	protected static $_instance;
 
-	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js' ;
+	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
 
-	private $content ;
-	private $_wp_upload_dir ;
+	private $content;
+	private $_wp_upload_dir;
 
 	/**
 	 * Init
@@ -27,8 +26,7 @@ class Media extends Instance
 	 * @since  1.4
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		Debug2::debug2( '[Media] init' );
 
 		$this->_wp_upload_dir = wp_upload_dir();
@@ -43,8 +41,7 @@ class Media extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function init()
-	{
+	public function init() {
 		if ( $this->can_media() ) {
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 			if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
@@ -53,17 +50,17 @@ class Media extends Instance
 				 * @since  1.6.2
 				 */
 				// Moved to htaccess
-				// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) ) ;
+				// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) );
 
 				//
 				if ( $this->webp_support() ) {
 					// Hook to srcset
 					if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-						add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
+						add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 );
 					}
 					// Hook to mime icon
-					// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
-					// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ; // disabled to avoid wp-admin display
+					// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
+					// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
 				}
 			}
 
@@ -71,14 +68,14 @@ class Media extends Instance
 			 * Replace gravatar
 			 * @since  3.0
 			 */
-			Avatar::get_instance() ;
+			Avatar::get_instance();
 		}
 
 		/**
 		 * JPG quality control
 		 * @since  3.0
 		 */
-		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) ) ;
+		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) );
 
 	}
 
@@ -88,15 +85,14 @@ class Media extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function adjust_jpg_quality( $quality )
-	{
-		$v = Conf::val( Base::O_IMG_OPTM_JPG_QUALITY ) ;
+	public function adjust_jpg_quality( $quality ) {
+		$v = Conf::val( Base::O_IMG_OPTM_JPG_QUALITY );
 
 		if ( $v ) {
-			return $v ;
+			return $v;
 		}
 
-		return $quality ;
+		return $quality;
 	}
 
 	/**
@@ -105,13 +101,12 @@ class Media extends Instance
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function can_media()
-	{
+	private function can_media() {
 		if ( is_admin() ) {
-			return false ;
+			return false;
 		}
 
-		return true ;
+		return true;
 	}
 
 	/**
@@ -120,15 +115,14 @@ class Media extends Instance
 	 * @since 1.6.3
 	 * @access public
 	 */
-	public function after_admin_init()
-	{
-		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
-		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+	public function after_admin_init() {
+		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
+		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
 
-		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) ) ;
+		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) );
 
 		// Hook to attachment delete action
-		add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
+		add_action( 'delete_attachment', array( $this, 'delete_attachment' ) );
 	}
 
 	/**
@@ -137,10 +131,9 @@ class Media extends Instance
 	 * @since 2.4.3
 	 * @access public
 	 */
-	public function delete_attachment( $post_id )
-	{
-		Debug2::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
-		Img_Optm::get_instance()->reset_row( $post_id ) ;
+	public function delete_attachment( $post_id ) {
+		Debug2::debug( '[Media] delete_attachment [pid] ' . $post_id );
+		Img_Optm::get_instance()->reset_row( $post_id );
 	}
 
 	/**
@@ -151,16 +144,15 @@ class Media extends Instance
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function info( $short_file_path, $post_id )
-	{
-		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+	public function info( $short_file_path, $post_id ) {
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path;
 
 		if ( file_exists( $real_file ) ) {
 			return array(
 				'url'	=> $this->_wp_upload_dir[ 'baseurl' ] . '/' . $short_file_path,
 				'md5'	=> md5_file( $real_file ),
 				'size'	=> filesize( $real_file ),
-			) ;
+			);
 		}
 
 		/**
@@ -168,12 +160,12 @@ class Media extends Instance
 		 * @since 2.9.8
 		 * @return array( 'url', 'md5', 'size' )
 		 */
-		$info = apply_filters( 'litespeed_media_info', array(), $short_file_path, $post_id ) ;
+		$info = apply_filters( 'litespeed_media_info', array(), $short_file_path, $post_id );
 		if ( ! empty( $info[ 'url' ] ) && ! empty( $info[ 'md5' ] ) && ! empty( $info[ 'size' ] ) ) {
-			return $info ;
+			return $info;
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -182,16 +174,15 @@ class Media extends Instance
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function del( $short_file_path, $post_id )
-	{
-		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+	public function del( $short_file_path, $post_id ) {
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path;
 
 		if ( file_exists( $real_file ) ) {
-			unlink( $real_file ) ;
-			Debug2::debug( '[Media] deleted ' . $real_file ) ;
+			unlink( $real_file );
+			Debug2::debug( '[Media] deleted ' . $real_file );
 		}
 
-		do_action( 'litespeed_media_del', $short_file_path, $post_id ) ;
+		do_action( 'litespeed_media_del', $short_file_path, $post_id );
 	}
 
 	/**
@@ -200,17 +191,16 @@ class Media extends Instance
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function rename( $short_file_path, $short_file_path_new, $post_id )
-	{
-		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
-		$real_file_new = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new ;
+	public function rename( $short_file_path, $short_file_path_new, $post_id ) {
+		$real_file = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path;
+		$real_file_new = $this->_wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new;
 
 		if ( file_exists( $real_file ) ) {
-			rename( $real_file, $real_file_new ) ;
-			Debug2::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new ) ;
+			rename( $real_file, $real_file_new );
+			Debug2::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new );
 		}
 
-		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id ) ;
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
 	}
 
 	/**
@@ -219,11 +209,10 @@ class Media extends Instance
 	 * @since 1.6.3
 	 * @access public
 	 */
-	public function media_row_title( $posts_columns )
-	{
-		$posts_columns[ 'imgoptm' ] = __( 'LiteSpeed Optimization', 'litespeed-cache' ) ;
+	public function media_row_title( $posts_columns ) {
+		$posts_columns[ 'imgoptm' ] = __( 'LiteSpeed Optimization', 'litespeed-cache' );
 
-		return $posts_columns ;
+		return $posts_columns;
 	}
 
 	/**
@@ -232,8 +221,7 @@ class Media extends Instance
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function media_row_actions( $column_name, $post_id )
-	{
+	public function media_row_actions( $column_name, $post_id ) {
 		if ( $column_name !== 'imgoptm' ) {
 			return;
 		}
@@ -247,39 +235,38 @@ class Media extends Instance
 	 *
 	 * @since  3.0
 	 */
-	public function media_row_con( $post_id )
-	{
-		$att_info = wp_get_attachment_metadata( $post_id ) ;
+	public function media_row_con( $post_id ) {
+		$att_info = wp_get_attachment_metadata( $post_id );
 		if ( empty( $att_info[ 'file' ] ) ) {
 			return;
 		}
 
-		$short_path = $att_info[ 'file' ] ;
+		$short_path = $att_info[ 'file' ];
 
-		$size_meta = get_post_meta( $post_id, Img_Optm::DB_SIZE, true ) ;
+		$size_meta = get_post_meta( $post_id, Img_Optm::DB_SIZE, true );
 
 		echo '<p>';
 		// Original image info
 		if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
-			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
+			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] );
 
-			$extension = pathinfo( $short_path, PATHINFO_EXTENSION ) ;
-			$bk_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
-			$bk_optm_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
+			$extension = pathinfo( $short_path, PATHINFO_EXTENSION );
+			$bk_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.' . $extension;
+			$bk_optm_file = substr( $short_path, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension;
 
-			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'orig' . $post_id ) ;
-			$desc = false ;
+			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'orig' . $post_id );
+			$desc = false;
 
-			$cls = '' ;
+			$cls = '';
 
 			if ( $this->info( $bk_file, $post_id ) ) {
-				$curr_status = __( '(optm)', 'litespeed-cache' ) ;
-				$desc = __( 'Currently using optimized version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' ) ;
+				$curr_status = __( '(optm)', 'litespeed-cache' );
+				$desc = __( 'Currently using optimized version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' );
 			}
 			elseif ( $this->info( $bk_optm_file, $post_id ) ) {
-				$cls .= ' litespeed-warning' ;
-				$curr_status = __( '(non-optm)', 'litespeed-cache' ) ;
-				$desc = __( 'Currently using original (unoptimized) version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
+				$cls .= ' litespeed-warning';
+				$curr_status = __( '(non-optm)', 'litespeed-cache' );
+				$desc = __( 'Currently using original (unoptimized) version of file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' );
 			}
 
 			echo GUI::pie_tiny( $percent, 24,
@@ -287,19 +274,19 @@ class Media extends Instance
 					$percent . '%',
 					Utility::real_size( $size_meta[ 'ori_saved' ] )
 				) , 'left'
-			) ;
+			);
 
-			echo sprintf( __( 'Orig saved %s', 'litespeed-cache' ), $percent . '%' ) ;
+			echo sprintf( __( 'Orig saved %s', 'litespeed-cache' ), $percent . '%' );
 
 			if ( $desc ) {
-				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
+				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status );
 			}
 			else {
 				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
 					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of original file exists.', 'litespeed-cache' ),
 					__( '(optm)', 'litespeed-cache' )
-				) ;
+				);
 			}
 
 
@@ -308,8 +295,8 @@ class Media extends Instance
 			echo GUI::pie_tiny( 0, 24,
 				__( 'Congratulation! Your file was already optmized', 'litespeed-cache' ),
 				'left'
-			) ;
-			echo sprintf( __( 'Orig %s', 'litespeed-cache' ), '<span class="litespeed-desc">' . __( '(no savings)', 'litespeed-cache' ) . '</span>' ) ;
+			);
+			echo sprintf( __( 'Orig %s', 'litespeed-cache' ), '<span class="litespeed-desc">' . __( '(no savings)', 'litespeed-cache' ) . '</span>' );
 		}
 		else {
 			echo __( 'Orig', 'litespeed-cache' ) . '<span class="litespeed-left10">—</span>';
@@ -319,21 +306,21 @@ class Media extends Instance
 		echo '<p>';
 		// WebP info
 		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
-			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
+			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] );
 
-			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id ) ;
-			$desc = false ;
+			$link = Utility::build_url( Router::ACTION_IMG_OPTM, 'webp' . $post_id );
+			$desc = false;
 
-			$cls = '' ;
+			$cls = '';
 
 			if ( $this->info( $short_path . '.webp', $post_id ) ) {
-				$curr_status = __( '(optm)', 'litespeed-cache' ) ;
-				$desc = __( 'Currently using optimized version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' ) ;
+				$curr_status = __( '(optm)', 'litespeed-cache' );
+				$desc = __( 'Currently using optimized version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to original (unoptimized) version.', 'litespeed-cache' );
 			}
 			elseif ( $this->info( $short_path . '.optm.webp', $post_id ) ) {
-				$cls .= ' litespeed-warning' ;
-				$curr_status = __( '(non-optm)', 'litespeed-cache' ) ;
-				$desc = __( 'Currently using original (unoptimized) version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' ) ;
+				$cls .= ' litespeed-warning';
+				$curr_status = __( '(non-optm)', 'litespeed-cache' );
+				$desc = __( 'Currently using original (unoptimized) version of WebP file.', 'litespeed-cache' ) . '&#10;' . __( 'Click to switch to optimized version.', 'litespeed-cache' );
 			}
 
 			echo GUI::pie_tiny( $percent, 24,
@@ -341,18 +328,18 @@ class Media extends Instance
 					$percent . '%',
 					Utility::real_size( $size_meta[ 'webp_saved' ] )
 				) , 'left'
-			) ;
-			echo sprintf( __( 'WebP saved %s', 'litespeed-cache' ), $percent . '%' ) ;
+			);
+			echo sprintf( __( 'WebP saved %s', 'litespeed-cache' ), $percent . '%' );
 
 			if ( $desc ) {
-				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status ) ;
+				echo sprintf( ' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status );
 			}
 			else {
 				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
 					__( 'Using optimized version of file. ', 'litespeed-cache' ) . '&#10;' . __( 'No backup of unoptimized WebP file exists.', 'litespeed-cache' ),
 					__( '(optm)', 'litespeed-cache' )
-				) ;
+				);
 			}
 
 		} else {
@@ -367,8 +354,8 @@ class Media extends Instance
 			echo sprintf( '<div class="row-actions"><span class="delete"><a href="%1$s" class="">%2$s</a></span></div>',
 				Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
 				__( 'Restore from backup', 'litespeed-cache' )
-			) ;
-			echo '</div>' ;
+			);
+			echo '</div>';
 		}
 	}
 
@@ -381,24 +368,24 @@ class Media extends Instance
 	 * @return array $sizes Data for all currently-registered image sizes.
 	 */
 	public function get_image_sizes() {
-		global $_wp_additional_image_sizes ;
+		global $_wp_additional_image_sizes;
 		$sizes = array();
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
 			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
-				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' ) ;
-				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' ) ;
-				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' ) ;
+				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' );
+				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' );
+				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' );
 			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
 				$sizes[ $_size ] = array(
 					'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
 					'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
 					'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ]
-				) ;
+				);
 			}
 		}
 
-		return $sizes ;
+		return $sizes;
 	}
 
 
@@ -408,17 +395,16 @@ class Media extends Instance
 	 * @since  1.6.2
 	 * @access public
 	 */
-	private function webp_support()
-	{
+	private function webp_support() {
 		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
-			return true ;
+			return true;
 		}
 
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
-			return true ;
+			return true;
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -431,25 +417,24 @@ class Media extends Instance
 	 * @access public
 	 * @return  string The buffer
 	 */
-	public static function finalize( $content )
-	{
+	public static function finalize( $content ) {
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
-			Debug2::debug2( '[Media] bypass: NO_LAZY const' ) ;
-			return $content ;
+			Debug2::debug2( '[Media] bypass: NO_LAZY const' );
+			return $content;
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			Debug2::debug2( '[Media] bypass: Not frontend HTML type' ) ;
-			return $content ;
+			Debug2::debug2( '[Media] bypass: Not frontend HTML type' );
+			return $content;
 		}
 
-		Debug2::debug( '[Media] finalize' ) ;
+		Debug2::debug( '[Media] finalize' );
 
-		$instance = self::get_instance() ;
-		$instance->content = $content ;
+		$instance = self::get_instance();
+		$instance->content = $content;
 
-		$instance->_finalize() ;
-		return $instance->content ;
+		$instance->_finalize();
+		return $instance->content;
 	}
 
 	/**
@@ -458,81 +443,80 @@ class Media extends Instance
 	 * @since  1.4
 	 * @access private
 	 */
-	private function _finalize()
-	{
+	private function _finalize() {
 		/**
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
 		if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE ) && $this->webp_support() ) {
-			$this->_replace_buffer_img_webp() ;
+			$this->_replace_buffer_img_webp();
 		}
 
 		/**
 		 * Check if URI is excluded
 		 * @since  3.0
 		 */
-		$excludes = Conf::val( Base::O_MEDIA_LAZY_URI_EXC ) ;
+		$excludes = Conf::val( Base::O_MEDIA_LAZY_URI_EXC );
 		if ( $excludes ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
-				Debug2::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result ) ;
-				return ;
+				Debug2::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result );
+				return;
 			}
 		}
 
-		$cfg_lazy = Conf::val( Base::O_MEDIA_LAZY ) ;
-		$cfg_iframe_lazy = Conf::val( Base::O_MEDIA_IFRAME_LAZY ) ;
+		$cfg_lazy = Conf::val( Base::O_MEDIA_LAZY );
+		$cfg_iframe_lazy = Conf::val( Base::O_MEDIA_IFRAME_LAZY );
 
 		if ( $cfg_lazy ) {
-			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img() ;
-			$html_list_ori = $html_list ;
+			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
+			$html_list_ori = $html_list;
 		}
 
 		// image lazy load
 		if ( $cfg_lazy ) {
 
-			$__placeholder = Placeholder::get_instance() ;
+			$__placeholder = Placeholder::get_instance();
 
 			foreach ( $html_list as $k => $v ) {
-				$size = $placeholder_list[ $k ] ;
-				$src = $src_list[ $k ] ;
+				$size = $placeholder_list[ $k ];
+				$src = $src_list[ $k ];
 
-				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size ) ;
+				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size );
 			}
 		}
 
 		if ( $cfg_lazy ) {
-			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
+			$this->content = str_replace( $html_list_ori, $html_list, $this->content );
 		}
 
 		// iframe lazy load
 		if ( $cfg_iframe_lazy ) {
-			$html_list = $this->_parse_iframe() ;
-			$html_list_ori = $html_list ;
+			$html_list = $this->_parse_iframe();
+			$html_list_ori = $html_list;
 
 			foreach ( $html_list as $k => $v ) {
-				$snippet = Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>' ;
-				$v = str_replace( ' src=', ' data-src=', $v ) ;
-				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v ) ;
-				$snippet = $v . $snippet ;
+				$snippet = Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>';
+				$v = str_replace( ' src=', ' data-src=', $v );
+				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v );
+				$snippet = $v . $snippet;
 
-				$html_list[ $k ] = $snippet ;
+				$html_list[ $k ] = $snippet;
 			}
 
-			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
+			$this->content = str_replace( $html_list_ori, $html_list, $this->content );
 		}
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
 			if ( Conf::val( Base::O_MEDIA_LAZYJS_INLINE ) ) {
-				$lazy_lib = '<script>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
+				$lazy_lib = '<script>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
 			} else {
-				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
-				$lazy_lib = '<script src="' . $lazy_lib_url . '"></script>' ;
+				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD;
+				$lazy_lib = '<script src="' . $lazy_lib_url . '"></script>';
 			}
 
-			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content ) ;
+			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content );
 		}
 	}
 
@@ -544,41 +528,40 @@ class Media extends Instance
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _parse_img()
-	{
+	private function _parse_img() {
 		/**
 		 * Exclude list
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Conf::val( Base::O_MEDIA_LAZY_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_media_lazy_img_excludes', Conf::val( Base::O_MEDIA_LAZY_EXC ) );
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_CLS_EXC ) );
 		$cls_excludes[] = 'skip-lazy'; // https://core.trac.wordpress.org/ticket/44427
 
-		$src_list = array() ;
-		$html_list = array() ;
-		$placeholder_list = array() ;
+		$src_list = array();
+		$html_list = array();
+		$placeholder_list = array();
 
-		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
+		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
 		/**
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', Conf::val( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) );
 		if ( $parent_cls_exc ) {
-			Debug2::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc ) ;
+			Debug2::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
-		preg_match_all( '#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
+		preg_match_all( '#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
-			$attrs = Utility::parse_attr( $match[ 1 ] ) ;
+			$attrs = Utility::parse_attr( $match[ 1 ] );
 
 			if ( empty( $attrs[ 'src' ] ) ) {
-				continue ;
+				continue;
 			}
 
 			/**
@@ -586,20 +569,20 @@ class Media extends Instance
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
-				Debug2::debug2( '[Media] lazyload bypassed base64 img' ) ;
-				continue ;
+				Debug2::debug2( '[Media] lazyload bypassed base64 img' );
+				continue;
 			}
 
-			Debug2::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
+			Debug2::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] );
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-skip-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
-				Debug2::debug2( '[Media] bypassed' ) ;
-				continue ;
+				Debug2::debug2( '[Media] bypassed' );
+				continue;
 			}
 
 			if ( ! empty( $attrs[ 'class' ] ) && $hit = Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
-				Debug2::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit ) ;
-				continue ;
+				Debug2::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit );
+				continue;
 			}
 
 			/**
@@ -607,8 +590,8 @@ class Media extends Instance
 			 * @since  1.5
 			 */
 			if ( $excludes && Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
-				Debug2::debug2( '[Media] lazyload image exclude ' . $attrs[ 'src' ] ) ;
-				continue ;
+				Debug2::debug2( '[Media] lazyload image exclude ' . $attrs[ 'src' ] );
+				continue;
 			}
 
 			/**
@@ -617,26 +600,26 @@ class Media extends Instance
 			 * @since  3.0
 			 */
 			if ( strpos( $attrs[ 'src' ], '{' ) !== false ) {
-				Debug2::debug2( '[Media] image src has {} ' . $attrs[ 'src' ] ) ;
-				continue ;
+				Debug2::debug2( '[Media] image src has {} ' . $attrs[ 'src' ] );
+				continue;
 			}
 
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
-				continue ;
+				continue;
 			}
 
-			$placeholder = false ;
+			$placeholder = false;
 			if ( ! empty( $attrs[ 'width' ] ) && ! empty( $attrs[ 'height' ] ) ) {
-				$placeholder = $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] ;
+				$placeholder = $attrs[ 'width' ] . 'x' . $attrs[ 'height' ];
 			}
 
-			$src_list[] = $attrs[ 'src' ] ;
-			$html_list[] = $match[ 0 ] ;
-			$placeholder_list[] = $placeholder ;
+			$src_list[] = $attrs[ 'src' ];
+			$html_list[] = $match[ 0 ];
+			$placeholder_list[] = $placeholder;
 		}
 
-		return array( $src_list, $html_list, $placeholder_list ) ;
+		return array( $src_list, $html_list, $placeholder_list );
 	}
 
 	/**
@@ -646,61 +629,60 @@ class Media extends Instance
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _parse_iframe()
-	{
+	private function _parse_iframe() {
 		$cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) );
 		$cls_excludes[] = 'skip-lazy'; // https://core.trac.wordpress.org/ticket/44427
 
-		$html_list = array() ;
+		$html_list = array();
 
-		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
+		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
 
 		/**
 		 * Exclude parent classes
 		 * @since  3.0
 		 */
-		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) ) ;
+		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', Conf::val( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) );
 		if ( $parent_cls_exc ) {
-			Debug2::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc ) ;
+			Debug2::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content ) ;
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
-		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER ) ;
+		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
-			$attrs = Utility::parse_attr( $match[ 1 ] ) ;
+			$attrs = Utility::parse_attr( $match[ 1 ] );
 
 			if ( empty( $attrs[ 'src' ] ) ) {
-				continue ;
+				continue;
 			}
 
-			Debug2::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
+			Debug2::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] );
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) ||  ! empty( $attrs[ 'data-skip-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
-				Debug2::debug2( '[Media] bypassed' ) ;
-				continue ;
+				Debug2::debug2( '[Media] bypassed' );
+				continue;
 			}
 
 			if ( ! empty( $attrs[ 'class' ] ) && $hit = Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
-				Debug2::debug2( '[Media] iframe lazyload cls excludes [hit] ' . $hit ) ;
-				continue ;
+				Debug2::debug2( '[Media] iframe lazyload cls excludes [hit] ' . $hit );
+				continue;
 			}
 
 			if ( apply_filters( 'litespeed_iframe_lazyload_exc', false, $attrs[ 'src' ] ) ) {
-				Debug2::debug2( '[Media] bypassed by filter' ) ;
-				continue ;
+				Debug2::debug2( '[Media] bypassed by filter' );
+				continue;
 			}
 
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
-				continue ;
+				continue;
 			}
 
-			$html_list[] = $match[ 0 ] ;
+			$html_list[] = $match[ 0 ];
 		}
 
-		return $html_list ;
+		return $html_list;
 	}
 
 	/**
@@ -709,42 +691,41 @@ class Media extends Instance
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function _replace_buffer_img_webp()
-	{
-		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
+	private function _replace_buffer_img_webp() {
+		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches );
 		/**
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = Conf::val( Base::O_IMG_OPTM_WEBP_ATTR ) ;
+		$webp_ele_to_check = Conf::val( Base::O_IMG_OPTM_WEBP_ATTR );
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
-				Debug2::debug2( '[Media] buffer_webp no . attribute ' . $v ) ;
-				continue ;
+				Debug2::debug2( '[Media] buffer_webp no . attribute ' . $v );
+				continue;
 			}
 
-			Debug2::debug2( '[Media] buffer_webp attribute ' . $v ) ;
+			Debug2::debug2( '[Media] buffer_webp attribute ' . $v );
 
-			$v = explode( '.', $v ) ;
-			$attr = preg_quote( $v[ 1 ], '#' ) ;
+			$v = explode( '.', $v );
+			$attr = preg_quote( $v[ 1 ], '#' );
 			if ( $v[ 0 ] ) {
-				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU' ;
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
 			}
 			else {
-				$pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU' ;
+				$pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU';
 			}
 
-			preg_match_all( $pattern, $this->content, $matches ) ;
+			preg_match_all( $pattern, $this->content, $matches );
 
 			foreach ( $matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url ) {
 				// Check if is a DATA-URI
 				if ( strpos( $url, 'data:image' ) !== false ) {
-					continue ;
+					continue;
 				}
 
 				if ( ! $url2 = $this->replace_webp( $url ) ) {
-					continue ;
+					continue;
 				}
 
 				if ( $v[ 0 ] ) {
@@ -752,16 +733,16 @@ class Media extends Instance
 						'<' . $v[ 0 ] . '%1$s' . $v[ 1 ] . '=%2$s',
 						$matches[ 1 ][ $k2 ],
 						$matches[ 2 ][ $k2 ] . $url2 . $matches[ 2 ][ $k2 ]
-					) ;
+					);
 				}
 				else {
 					$html_snippet = sprintf(
 						' ' . $v[ 1 ] . '=%1$s',
 						$matches[ 1 ][ $k2 ] . $url2 . $matches[ 1 ][ $k2 ]
-					) ;
+					);
 				}
 
-				$this->content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $this->content ) ;
+				$this->content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $this->content );
 
 			}
 		}
@@ -769,30 +750,30 @@ class Media extends Instance
 		// parse srcset
 		// todo: should apply this to cdn too
 		if ( Conf::val( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
-			$this->content = Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
+			$this->content = Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) );
 		}
 
 		// Replace background-image
-		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches ) ;
+		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches );
 		foreach ( $matches[ 2 ] as $k => $url ) {
 			// Check if is a DATA-URI
 			if ( strpos( $url, 'data:image' ) !== false ) {
-				continue ;
+				continue;
 			}
 
 			/**
 			 * Support quotes in src `background-image: url('src')`
 			 * @since 2.9.3
 			 */
-			$url = trim( $url, '\'"' ) ;
+			$url = trim( $url, '\'"' );
 
 			if ( ! $url2 = $this->replace_webp( $url ) ) {
-				continue ;
+				continue;
 			}
 
-			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 ) ;
-			$html_snippet = str_replace( $url, $url2, $matches[ 0 ][ $k ] ) ;
-			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
+			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 );
+			$html_snippet = str_replace( $url, $url2, $matches[ 0 ][ $k ] );
+			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content );
 		}
 	}
 
@@ -804,13 +785,12 @@ class Media extends Instance
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public function webp_attach_img_src( $img )
-	{
-		Debug2::debug2( '[Media] changing attach src: ' . $img[0] ) ;
+	public function webp_attach_img_src( $img ) {
+		Debug2::debug2( '[Media] changing attach src: ' . $img[0] );
 		if ( $img && $url = $this->replace_webp( $img[ 0 ] ) ) {
-			$img[ 0 ] = $url ;
+			$img[ 0 ] = $url;
 		}
-		return $img ;
+		return $img;
 	}
 
 	/**
@@ -821,12 +801,11 @@ class Media extends Instance
 	 * @param  string $url
 	 * @return string
 	 */
-	public function webp_url( $url )
-	{
+	public function webp_url( $url ) {
 		if ( $url && $url2 = $this->replace_webp( $url ) ) {
-			$url = $url2 ;
+			$url = $url2;
 		}
-		return $url ;
+		return $url;
 	}
 
 	/**
@@ -837,17 +816,16 @@ class Media extends Instance
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public function webp_srcset( $srcs )
-	{
+	public function webp_srcset( $srcs ) {
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
 				if( ! $url = $this->replace_webp( $data[ 'url' ] ) ) {
-					continue ;
+					continue;
 				}
-				$srcs[ $w ][ 'url' ] = $url ;
+				$srcs[ $w ][ 'url' ] = $url;
 			}
 		}
-		return $srcs ;
+		return $srcs;
 	}
 
 	/**
@@ -856,13 +834,12 @@ class Media extends Instance
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function replace_webp( $url )
-	{
-		Debug2::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
+	public function replace_webp( $url ) {
+		Debug2::debug2( '[Media] webp replacing: ' . $url, 4 );
 
 		if ( substr( $url, -5 ) == '.webp' ) {
-			Debug2::debug2( '[Media] already webp' ) ;
-			return false ;
+			Debug2::debug2( '[Media] already webp' );
+			return false;
 		}
 
 		/**
@@ -874,21 +851,21 @@ class Media extends Instance
 		if ( apply_filters( 'litespeed_media_check_ori', Utility::is_internal_file( $url ), $url ) ) {
 			// check if has webp file
 			if ( apply_filters( 'litespeed_media_check_webp', Utility::is_internal_file( $url, 'webp' ), $url ) ) {
-				$url .= '.webp' ;
+				$url .= '.webp';
 			}
 			else {
-				Debug2::debug2( '[Media] -no WebP file, bypassed' ) ;
-				return false ;
+				Debug2::debug2( '[Media] -no WebP file, bypassed' );
+				return false;
 			}
 		}
 		else {
-			Debug2::debug2( '[Media] -no file, bypassed' ) ;
-			return false ;
+			Debug2::debug2( '[Media] -no file, bypassed' );
+			return false;
 		}
 
-		Debug2::debug2( '[Media] - replaced to: ' . $url ) ;
+		Debug2::debug2( '[Media] - replaced to: ' . $url );
 
-		return $url ;
+		return $url;
 	}
 
 }

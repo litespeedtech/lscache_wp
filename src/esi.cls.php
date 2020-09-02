@@ -331,7 +331,7 @@ class ESI extends Instance {
 			return ;
 		}
 
-		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
+		add_filter('widget_display_callback', array( $this, 'sub_widget_block' ), 0, 3);
 
 		// Add admin_bar esi
 		if ( Router::is_logged_in() ) {
@@ -360,11 +360,9 @@ class ESI extends Instance {
 	 * @param bool $silence If generate wrapper comment or not
 	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
 	 * @param bool $svar  		If store the value in memory or not, in memory wil be faster
-	 * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
-	 * @return bool|string    	False on error, the output otherwise.
+	 * @param array $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
 	 */
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
-	{
+	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() ) {
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
 		}
@@ -411,7 +409,20 @@ class ESI extends Instance {
 		// Generate ESI URL
 		$url = add_query_arg( $appended_params, trailingslashit( wp_make_link_relative( home_url() ) ) ) ;
 
-		$output = "<esi:include src='$url'" ;
+		$output = '';
+
+		if ( ! empty( $inline_param[ 'val' ] ) ) {
+			$output .= "<esi:inline name='$url'";
+			if ( ! empty( $inline_param[ 'control' ] ) ) {
+				$output .= " cache-control='" . $inline_param[ 'control' ] . "'";
+			}
+			if ( ! empty( $inline_param[ 'tag' ] ) ) {
+				$output .= " cache-tag='" . $inline_param[ 'tag' ] . "'";
+			}
+			$output .= '>' . $inline_param[ 'val' ] . '</esi:inline>';
+		}
+
+		$output .= "<esi:include src='$url'" ;
 		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
 		}
@@ -555,7 +566,6 @@ class ESI extends Instance {
 		do_action('litespeed_esi_load-' . LSCACHE_IS_ESI, $params) ;
 	}
 
-// BEGIN helper functions
 // The *_sub_* functions are helpers for the sub_* functions.
 // The *_load_* functions are helpers for the load_* functions.
 
@@ -584,8 +594,6 @@ class ESI extends Instance {
 		return $options ;
 	}
 
-// END helper functions.
-
 	/**
 	 * Hooked to the widget_display_callback filter.
 	 * If the admin configured the widget to display via esi, this function
@@ -598,8 +606,7 @@ class ESI extends Instance {
 	 * @param array $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block( $instance, $widget, $args )
-	{
+	public function sub_widget_block( $instance, $widget, $args ) {
 		// #210407
 		if ( ! is_array( $instance ) ) {
 			return $instance ;
@@ -625,8 +632,9 @@ class ESI extends Instance {
 			self::PARAM_ARGS => $args
 		) ;
 
-		echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
-		return false ;
+		echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' );
+
+		return false;
 	}
 
 	/**
