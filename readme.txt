@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.5
-Stable tag: 3.4
+Stable tag: 3.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.4.1 - Sep 2 2020 =
+* 🐞**CCSS** Fixed an issue where dynamically generated CSS failed with `TypeError: Cannot read property type of undefined`.
+* 🐞**Page Optimize** Fixed CSS optimization compatibility for CSS dynamically generated with PHP.
+* **Page Optimize** Added the ability to defer JS even when the resource is excluded from other JS optimizations. (@slr1979)
+* **ESI** Added support for ESI last paramater inline value.
+* **3rd** YITH Wishlist, when cached for the first time, will no longer send sub requests.
 
 = 3.4 - Aug 26 2020 =
 * 🌱**LQIP** New setting **LQIP Excludes**.
