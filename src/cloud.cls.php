@@ -682,9 +682,9 @@ class Cloud extends Base {
 	 * @access public
 	 */
 	public function show_promo() {
-		if ( ! $this->_api_key && ! defined( 'LITESPEED_DISMISS_DOMAIN_KEY' ) ) {
-			Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
-		}
+		// if ( ! $this->_api_key && ! defined( 'LITESPEED_DISMISS_DOMAIN_KEY' ) ) {
+		// 	Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
+		// }
 
 		if ( empty( $this->_summary[ 'promo' ] ) ) {
 			return;
