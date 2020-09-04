@@ -217,11 +217,13 @@ class CSS extends Base {
 			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
 				$attrs = Utility::parse_attr( $match[ 1 ] );
 
-				if ( ! empty( $attrs[ 'rel' ] ) ) {
-					if ( $attrs[ 'rel' ] != 'stylesheet' ) {
-						if ( $attrs[ 'rel' ] != 'preload' || empty( $attrs[ 'as' ] ) || $attrs[ 'as' ] != 'style' ) {
-							continue;
-						}
+				if ( empty( $attrs[ 'rel' ] ) ) {
+					continue;
+				}
+
+				if ( $attrs[ 'rel' ] != 'stylesheet' ) {
+					if ( $attrs[ 'rel' ] != 'preload' || empty( $attrs[ 'as' ] ) || $attrs[ 'as' ] != 'style' ) {
+						continue;
 					}
 				}
 
