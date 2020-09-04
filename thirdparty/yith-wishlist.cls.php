@@ -30,6 +30,7 @@ class Yith_Wishlist {
 		if ( apply_filters( 'litespeed_esi_status', false ) ) {
 			add_action( 'litespeed_tpl_normal', __CLASS__ . '::is_not_esi' );
 			add_action( 'litespeed_esi_load-yith_wcwl_add', __CLASS__ . '::load_add_to_wishlist' );
+			add_filter( 'litespeed_esi_inline-yith_wcwl_add', __CLASS__ . '::inline_add_to_wishlist', 20, 2 );
 
 			// hook to add/delete wishlist
 			add_action( 'yith_wcwl_added_to_wishlist', __CLASS__ . '::purge' );
@@ -95,11 +96,14 @@ class Yith_Wishlist {
 		$inline_tags = implode( ',', array_map( function($val){ return 'public:' . LSWCP_TAG_PREFIX . '_' . $val; }, $inline_tags ) );
 		$inline_tags .= ',' . LSWCP_TAG_PREFIX . '_tag_priv';
 
+		do_action( 'litespeed_esi_combine', 'yith_wcwl_add' );
+
 		$inline_params = array(
 			'val'	=> $template,
 			'tag'	=> $inline_tags,
 			'control' => 'private,no-vary,max-age=' . Conf::val( Base::O_CACHE_TTL_PRIV ),
 		);
+
 		return apply_filters( 'litespeed_esi_url', 'yith_wcwl_add', 'YITH ADD TO WISHLIST', $params, 'private,no-vary', false, false, false, $inline_params );
 	}
 
@@ -118,6 +122,35 @@ class Yith_Wishlist {
 		echo \YITH_WCWL_Shortcode::add_to_wishlist( array( 'product_id' => $params[ self::ESI_PARAM_POSTID ] ) );
 		do_action( 'litespeed_control_set_private', 'yith wishlist' );
 		do_action( 'litespeed_vary_no' );
+	}
+
+	/**
+	 * Generate ESI inline value
+	 *
+	 * @since  3.4.2
+	 */
+	public static function inline_add_to_wishlist( $res, $params ) {
+		if ( ! is_array( $res ) ) {
+			$res = array();
+		}
+
+		$pid = $params[ self::ESI_PARAM_POSTID ];
+
+		$res[ 'val' ] = \YITH_WCWL_Shortcode::add_to_wishlist( array( 'product_id' => $pid ) );
+
+		$res[ 'control' ] = 'private,no-vary,max-age=' . Conf::val( Base::O_CACHE_TTL_PRIV );
+
+		$inline_tags = array(
+			'',
+			rtrim( Tag::TYPE_ESI, '.' ),
+			Tag::TYPE_ESI . 'yith_wcwl_add',
+		);
+		$inline_tags = implode( ',', array_map( function( $val ) { return 'public:' . LSWCP_TAG_PREFIX . '_' . $val; }, $inline_tags ) );
+		$inline_tags .= ',' . LSWCP_TAG_PREFIX . '_tag_priv';
+
+		$res[ 'tag' ] = $inline_tags;
+
+		return $res;
 	}
 
 }

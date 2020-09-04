@@ -416,13 +416,14 @@ class Core extends Instance {
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			Debug2::debug( '[Core] ESI Start 👇' );
-			if ( strlen( $buffer ) > 100 ) {
-				Debug2::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' );
+			if ( strlen( $buffer ) > 500 ) {
+				Debug2::debug( trim( substr( $buffer, 0, 500 ) ) . '.....' );
 			}
 			else {
 				Debug2::debug( $buffer );
 			}
 			Debug2::debug( '[Core] ESI End 👆' );
+			Debug2::debug( $buffer );
 		}
 
 		if ( apply_filters( 'litespeed_is_json', false ) ) {
