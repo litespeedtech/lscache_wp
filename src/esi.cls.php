@@ -350,6 +350,10 @@ class ESI extends Instance {
 	 * @since  3.4.2
 	 */
 	public static function combine( $block_id ) {
+		if ( ! isset( $_SERVER[ 'X-LSCACHE' ] ) || strpos( $_SERVER[ 'X-LSCACHE' ], 'combine' ) === false ) {
+			return;
+		}
+
 		if ( in_array( $block_id, self::$_combine_ids ) ) {
 			return;
 		}
@@ -482,7 +486,7 @@ class ESI extends Instance {
 		if ( in_array( $block_id, self::$_combine_ids ) ) {
 			$output .= " combine='sub'";
 		}
-		if ( $block_id == self::COMBO ) {
+		if ( $block_id == self::COMBO && isset( $_SERVER[ 'X-LSCACHE' ] ) && strpos( $_SERVER[ 'X-LSCACHE' ], 'combine' ) !== false ) {
 			$output .= " combine='main'";
 		}
 		$output .= " />";
