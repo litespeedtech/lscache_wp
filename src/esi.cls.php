@@ -384,7 +384,7 @@ class ESI extends Instance {
 			$esi_param = ! empty( $qs[ self::QS_PARAMS ] ) ? $this->_parse_esi_param( $qs[ self::QS_PARAMS ] ) : false;
 			$inline_param = apply_filters( 'litespeed_esi_inline-' . $esi_id, array(), $esi_param ); // Returned array need to be [ val, control, tag ]
 			if ( $inline_param ) {
-				$output .= $this->_build_inline( $url, $inline_param );
+				$output .= self::_build_inline( $url, $inline_param );
 			}
 		}
 
@@ -396,7 +396,7 @@ class ESI extends Instance {
 	 *
 	 * @since  3.4.2
 	 */
-	private function _build_inline( $url, $inline_param ) {
+	private static function _build_inline( $url, $inline_param ) {
 		if ( ! $url || empty( $inline_param[ 'val' ] ) || empty( $inline_param[ 'control' ] ) || empty( $inline_param[ 'tag' ] ) ) {
 			return '';
 		}
@@ -469,7 +469,7 @@ class ESI extends Instance {
 
 		$output = '';
 		if ( $inline_param ) {
-			$output .= $this->_build_inline( $url, $inline_param );
+			$output .= self::_build_inline( $url, $inline_param );
 		}
 
 		$output .= "<esi:include src='$url'";
@@ -962,7 +962,7 @@ class ESI extends Instance {
 		// Prepend combo esi block
 		if ( self::$_combine_ids ) {
 			Debug2::debug( '[ESI] 🍔 Enabled combo' );
-			$esi_block = self::sub_esi_block( self::COMBO, '__COMBINE_MAIN__', array(), 'no-cache' );
+			$esi_block = self::sub_esi_block( self::COMBO, '__COMBINE_MAIN__', array(), 'no-cache', true );
 			$buffer = $esi_block . $buffer;
 		}
 
