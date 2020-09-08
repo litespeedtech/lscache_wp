@@ -978,7 +978,7 @@ class Cloud extends Base {
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '[CLoud] failed to get ip whitelist: ' . $error_message );
-			throw new \Exception( 'Failed to fetch QUIC.cloud whitelist' );
+			throw new \Exception( 'Failed to fetch QUIC.cloud whitelist ' . $error_message );
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
