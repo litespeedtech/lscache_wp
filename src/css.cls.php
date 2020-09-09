@@ -223,7 +223,7 @@ class CSS extends Base {
 
 		Debug2::debug( '[CSS] Generating: ', $data );
 
-		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 );
+		$json = Cloud::post( Cloud::SVC_CCSS, $data, 30 );
 		if ( ! is_array( $json ) ) {
 			return false;
 		}
@@ -259,10 +259,26 @@ class CSS extends Base {
 	 * @since  3.4.3
 	 */
 	public function test_url( $request_url ) {
-		$html = $this->_prepare_html( $request_url, $_SERVER[ 'HTTP_USER_AGENT' ] );
+		$user_agent = $_SERVER[ 'HTTP_USER_AGENT' ];
+		$html = $this->_prepare_html( $request_url, $user_agent );
 		list( $css, $html ) = $this->_prepare_css( $html );
 		var_dump( $css );
 
+		$data = array(
+			'url'			=> $request_url,
+			'ccss_type'		=> 'test',
+			'user_agent'	=> $user_agent,
+			'is_mobile'		=> 0,
+			'html'			=> $html,
+			'css'			=> $css,
+			'type'			=> 'CCSS',
+		);
+
+		// Debug2::debug( '[CSS] Generating: ', $data );
+
+		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 );
+
+		var_dump($json);
 	}
 
 	/**
