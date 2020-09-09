@@ -779,6 +779,19 @@ class Utility extends Instance {
 	}
 
 	/**
+	 * Safely parse URL for v5.3 compatibility
+	 *
+	 * @since  3.4.3
+	 */
+	public static function parse_url_safe( $url, $component = -1 ) {
+		if ( substr( $url, 0, 2 ) == '//' ) {
+			$url = 'https:' . $url;
+		}
+
+		return parse_url( $url, $component );
+	}
+
+	/**
 	 * Replace url in srcset to new value
 	 *
 	 * @since  2.2.3

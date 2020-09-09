@@ -323,9 +323,10 @@ class CSS extends Base {
 				$postfix = pathinfo( parse_url( $attrs[ 'href' ], PHP_URL_PATH ), PATHINFO_EXTENSION );
 				if ( ! $real_file || $postfix != 'css' ) {
 					Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
-					$res = wp_remote_get( $attrs[ 'href' ] );
+					$this_url = substr( $attrs[ 'href' ], 0, 2 ) == '//' ? 'https:' . $attrs[ 'href' ] : $attrs[ 'href' ];
+					$res = wp_remote_get( $this_url );
 					if ( is_wp_error( $res ) ) {
-						Debug2::debug2( '[CCSS] Load Remote CSS error ' );
+						Debug2::debug2( '[CCSS] ❌ Load Remote CSS error ' );
 						continue;
 					}
 					$con = wp_remote_retrieve_body( $res );
