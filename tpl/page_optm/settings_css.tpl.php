@@ -2,6 +2,9 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
+// CSS::get_instance()->test_url( '' );
+// exit;
+
 $css_summary = CSS::get_summary();
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 

@@ -292,6 +292,7 @@ class CSS extends Base {
 		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs = false;
+			$debug_info = '';
 			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
 				$attrs = Utility::parse_attr( $match[ 1 ] );
 
@@ -318,6 +319,8 @@ class CSS extends Base {
 					continue;
 				}
 
+				$debug_info = $attrs[ 'href' ];
+
 				// Load CSS content
 				$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
 				$postfix = pathinfo( parse_url( $attrs[ 'href' ], PHP_URL_PATH ), PATHINFO_EXTENSION );
@@ -325,8 +328,9 @@ class CSS extends Base {
 					Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
 					$this_url = substr( $attrs[ 'href' ], 0, 2 ) == '//' ? 'https:' . $attrs[ 'href' ] : $attrs[ 'href' ];
 					$res = wp_remote_get( $this_url );
-					if ( is_wp_error( $res ) ) {
-						Debug2::debug2( '[CCSS] ❌ Load Remote CSS error ' );
+					$res_code = wp_remote_retrieve_response_code( $res );
+					if ( is_wp_error( $res ) || $res_code == 404 ) {
+						Debug2::debug2( '[CCSS] ❌ Load Remote CSS error [code] ' . $res_code );
 						continue;
 					}
 					$con = wp_remote_retrieve_body( $res );
@@ -338,14 +342,20 @@ class CSS extends Base {
 					Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
 					$con = File::read( $real_file[ 0 ] );
 					$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, dirname( $real_file[ 0 ] ) );
+
+					$debug_info .= ' -- ' . $real_file[ 0 ];
 				}
 			}
 			else { // Inline style
 				Debug2::debug2( '[CCSS] Load inline CSS ' . substr( $match[ 2 ], 0, 100 ) . '...' );
 				$con = $match[ 2 ];
+
+				$debug_info = '__INLINE__';
 			}
 
 			$con = Optimizer::minify_css( $con );
+
+			$con = '/* ' . $debug_info . ' */' . $con;
 
 			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 				$css .= '@media ' . $attrs[ 'media' ] . '{' . $con . "\n}";
