@@ -329,7 +329,7 @@ class Data extends Instance
 	public function tb_exist( $tb )
 	{
 		global $wpdb;
-		return $wpdb->get_var( 'SHOW TABLES LIKE "' . $this->tb( $tb ) . '"' );
+		return $wpdb->get_var( "SHOW TABLES LIKE '" . $this->tb( $tb ) . "'" );
 	}
 
 	/**
