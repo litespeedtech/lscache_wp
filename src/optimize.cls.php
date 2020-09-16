@@ -33,10 +33,8 @@ class Optimize extends Base {
 	private $cfg_css_async;
 	private $cfg_js_defer;
 	private $cfg_js_defer_exc = false;
-	private $cfg_exc_jquery;
 	private $cfg_ggfonts_async;
 	private $_conf_css_font_display;
-	private $cfg_optm_max_size;
 	private $cfg_ttl;
 	private $cfg_ggfonts_rm;
 
@@ -315,7 +313,6 @@ class Optimize extends Base {
 		$this->cfg_css_comb = Conf::val( Base::O_OPTM_CSS_COMB );
 		$this->cfg_js_min = Conf::val( Base::O_OPTM_JS_MIN );
 		$this->cfg_js_comb = Conf::val( Base::O_OPTM_JS_COMB );
-		$this->cfg_exc_jquery = Conf::val( Base::O_OPTM_EXC_JQ );
 		$this->cfg_ggfonts_async = Conf::val( Base::O_OPTM_GGFONTS_ASYNC );
 		$this->_conf_css_font_display = Conf::val( Base::O_OPTM_CSS_FONT_DISPLAY );
 		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
@@ -323,7 +320,6 @@ class Optimize extends Base {
 		}
 
 		$this->cfg_ttl = Conf::val( Base::O_OPTM_TTL );
-		$this->cfg_optm_max_size = Conf::val( Base::O_OPTM_MAX_SIZE ) * 1000000;
 		$this->cfg_ggfonts_rm = Conf::val( Base::O_OPTM_GGFONTS_RM );
 
 		if ( ! Router::can_optm() ) {
@@ -335,77 +331,46 @@ class Optimize extends Base {
 
 		// Parse css from content
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
-			list( $src_list, $html_list ) = $this->_handle_css();
+			list( $src_list, $html_list ) = $this->_parse_css();
 		}
 
 		// css optimizer
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css ) {
 
 			if ( $src_list ) {
-				// Analyze local file
-				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list );
-
 				// IF combine
 				if ( $this->cfg_css_comb ) {
-					$enqueue_first = Conf::val( Base::O_OPTM_CSS_COMB_PRIO );
-
-					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list );
-
-					$snippet = '';
-					foreach ( $urls as $url ) {
-						$snippet .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
-					}
-
+					$url = $this->_build_hash_url( $src_list );
 					// Handle css async load
 					if ( $this->cfg_css_async ) {
-						// Only ignored html snippet needs async
-						$ignored_html_async = $this->_async_css_list( $ignored_html );
-
-						$snippet = '';
-						foreach ( $urls as $url ) {
-							$snippet .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
-						}
-
-						// enqueue combined file first
-						if ( $enqueue_first ) {
-							$this->html_head .= $snippet . implode( '', $ignored_html_async );
-						}
-						else {
-							$this->html_head .= implode( '', $ignored_html_async ) . $snippet;
-						}
-
+						$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
 					}
 					else {
-						// enqueue combined file first
-						if ( $enqueue_first ) {
-							$this->html_head .= $snippet . implode( '', $ignored_html );
-						}
-						else {
-							$this->html_head .= implode( '', $ignored_html ) . $snippet;
-						}
+						$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
 					}
 
 					// Move all css to top
-					$this->content = str_replace( $html_list, '', $this->content );// todo: need to keep position for certain files
+					$this->content = str_replace( $html_list, '', $this->content );
 
 					// Add to HTTP2
-					foreach ( $urls as $url ) {
-						$this->append_http2( $url );
-					}
+					$this->append_http2( $url );
 
 				}
 				// Only minify
 				elseif ( $this->cfg_css_min ) {
 					// will handle async css load inside
-					$this->_src_queue_handler( $src_queue_list, $html_list );
+					$this->_src_queue_handler( $src_list, $html_list );
 				}
 				// Only HTTP2 push
 				else {
-					foreach ( $src_queue_list as $src ) {
-						if ( ! empty( $src[ 'src' ] ) ) {
-							$src = $src[ 'src' ];
+					foreach ( $src_list as $src_info ) {
+						if ( ! empty( $src_info[ 'inl' ] ) ) {
+							continue;
 						}
-						$this->append_http2( $src );
+						if ( empty( $src_info[ 'src' ] ) ) {
+							continue;
+						}
+						$this->append_http2( $src_info[ 'src' ] );
 					}
 				}
 			}
@@ -414,7 +379,7 @@ class Optimize extends Base {
 		// Handle css lazy load if not handled async loaded yet
 		if ( $this->cfg_css_async && ! $this->cfg_css_min && ! $this->cfg_css_comb ) {
 			// async html
-			$html_list_async = $this->_async_css_list( $html_list );
+			$html_list_async = $this->_async_css_list( $html_list, $src_list );
 
 			// Replace async css
 			$this->content = str_replace( $html_list, $html_list_async, $this->content );
@@ -430,18 +395,12 @@ class Optimize extends Base {
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js ) {
 
 			if ( $src_list ) {
-				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list, 'js' );
-
 				// IF combine
 				if ( $this->cfg_js_comb ) {
-					$enqueue_first = Conf::val( Base::O_OPTM_JS_COMB_PRIO );
-
 					// separate head/foot js/raw html
 					$head_js = array();
-					$head_ignored_html = array();
 					$foot_js = array();
-					$foot_ignored_html = array();
-					foreach ( $src_queue_list as $k => $src ) {
+					foreach ( $src_list as $k => $src ) {
 						if ( in_array( $src, $head_src_list ) ) {
 							$head_js[ $k ] = $src;
 						}
@@ -449,70 +408,21 @@ class Optimize extends Base {
 							$foot_js[ $k ] = $src;
 						}
 					}
-					foreach ( $ignored_html as $src => $html ) {
-						if ( in_array( $src, $head_src_list ) ) {
-							$head_ignored_html[ $src ] = $html;
-						}
-						else {
-							$foot_ignored_html[] = $html;
-						}
-					}
 
-					$snippet = '';
 					if ( $head_js ) {
-						$urls = $this->_limit_size_build_hash_url( $head_js, $file_size_list, 'js' );
-						foreach ( $urls as $url ) {
-							$snippet .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+						$url = $this->_build_hash_url( $head_js, 'js' );
+						$this->html_head .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
 
-							// Add to HTTP2
-							$this->append_http2( $url, 'js' );
-						}
-					}
-					if ( $this->cfg_js_defer ) {
-						$head_ignored_html = $this->_js_defer( $head_ignored_html );
+						// Add to HTTP2
+						$this->append_http2( $url, 'js' );
 					}
 
-					/**
-					 * Enqueue combined file first
-					 * @since  1.6
-					 */
-					if ( $enqueue_first ) {
-						// Make jQuery to be the first one
-						// Suppose jQuery is in header
-						foreach ( $head_ignored_html as $src => $html ) {
-							if ( $this->_is_jquery( $src ) ) {
-								// jQuery should be always the first one
-								$this->html_head .= $html;
-								unset( $head_ignored_html[ $src ] );
-								break;
-							}
-						}
-						$this->html_head .= $snippet . implode( '', $head_ignored_html );
-					}
-					else {
-						$this->html_head .= implode( '', $head_ignored_html ) . $snippet;
-					}
-
-					$snippet = '';
 					if ( $foot_js ) {
-						$urls = $this->_limit_size_build_hash_url( $foot_js, $file_size_list, 'js' );
-						foreach ( $urls as $url ) {
-							$snippet .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+						$url = $this->_build_hash_url( $foot_js, 'js' );
+						$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
 
-							// Add to HTTP2
-							$this->append_http2( $url, 'js' );
-						}
-					}
-					if ( $this->cfg_js_defer ) {
-						$foot_ignored_html = $this->_js_defer( $foot_ignored_html );
-					}
-
-					// enqueue combined file first
-					if ( $enqueue_first ) {
-						$this->html_foot .= $snippet . implode( '', $foot_ignored_html );
-					}
-					else {
-						$this->html_foot .= implode( '', $foot_ignored_html ) . $snippet;
+						// Add to HTTP2
+						$this->append_http2( $url, 'js' );
 					}
 
 					// Will move all js to top/bottom
@@ -522,11 +432,11 @@ class Optimize extends Base {
 				// Only minify
 				elseif ( $this->cfg_js_min ) {
 					// Will handle js defer inside
-					$this->_src_queue_handler( $src_queue_list, $html_list, 'js' );
+					$this->_src_queue_handler( $src_list, $html_list, 'js' );
 				}
 				// Only HTTP2 push
 				else {
-					foreach ( $src_queue_list as $val ) {
+					foreach ( $src_list as $val ) {
 						$this->append_http2( $val, 'js' );
 					}
 				}
@@ -536,7 +446,7 @@ class Optimize extends Base {
 		// Handle js defer if not handled defer yet
 		if ( $this->cfg_js_defer && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
 			// defer html
-			$html_list2 = $this->_js_defer( $html_list );
+			$html_list2 = $this->_js_defer_list( $html_list, $src_list );
 
 			// Replace async js
 			$this->content = str_replace( $html_list, $html_list2, $this->content );
@@ -885,159 +795,52 @@ class Optimize extends Base {
 	}
 
 	/**
-	 * Limit combined filesize when build hash url
-	 *
-	 * @since  1.3
-	 * @access private
-	 */
-	private function _limit_size_build_hash_url( $src_queue_list, $file_size_list, $file_type = 'css' ) {
-		$total = 0;
-		$i = 0;
-		$src_arr = array();
-		$url_sensitive = Conf::val( Base::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
-		foreach ( $src_queue_list as $k => $src ) {
-			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array();
-
-			$src_arr[ $i ][] = $src;
-
-			$total += $file_size_list[ $k ];
-
-			if ( $total > $this->cfg_optm_max_size && ! $url_sensitive ) { // If larger than 1M, separate them
-				$total = 0;
-				$i ++;
-			}
-		}
-		if ( count( $src_arr ) > 1 ) {
-			Debug2::debug( '[Optm] separate ' . $file_type . ' to ' . count( $src_arr ) );
-		}
-
-		// group build
-		$hashed_arr = array();
-		foreach ( $src_arr as $src_list ) {
-			$hashed_arr[] = $this->_build_hash_url( $src_list, $file_type, $url_sensitive );
-		}
-
-		return $hashed_arr;
-	}
-
-	/**
 	 * Run minify with src queue list
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' ) {
+	private function _src_queue_handler( $src_list, $html_list, $file_type = 'css' ) {
 		$html_list_ori = $html_list;
 
-		$tag = $file_type === 'css' ? 'link' : 'script';
-		foreach ( $src_queue_list as $key => $src ) {
-			if ( ! empty( $src[ 'src' ] ) ) {
-				$src = $src[ 'src' ];
+		$tag = $file_type == 'css' ? 'link' : 'script';
+		foreach ( $src_list as $key => $src_info ) {
+			// Minify inline CSS/JS
+			if ( ! empty( $src_info[ 'inl' ] ) ) {
+				if ( $file_type == 'css' ) {
+					$code = Optimizer::minify_css( $src_info[ 'src' ] );
+				}
+				else {
+					continue; // todo: consider inline js minify later
+					// check $js_type is text/script or not
+					// $code = Optimizer::minify_js( $src_info[ 'src' ], $js_type );
+				}
+				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 			}
-			$url = $this->_build_hash_url( $src, $file_type );
-			$snippet = str_replace( $src, $url, $html_list[ $key ] );
+			else {
+				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
+				$url = $this->_build_hash_url( $src, $file_type );
+				$snippet = str_replace( $src, $url, $html_list[ $key ] );
+
+				// Handle css async load
+				if ( $file_type == 'css' && $this->cfg_css_async ) {
+					$snippet = $this->_async_css( $snippet );
+				}
+
+				// Handle js defer
+				if ( $file_type === 'js' && $this->cfg_js_defer ) { // TODO: check after inline JS
+					$snippet = $this->_js_defer( $snippet, $src ); // NOTE: No inline JS yet
+				}
+
+				// Add to HTTP2
+				$this->append_http2( $url, $file_type );
+			}
+
 			$snippet = str_replace( "<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet );
-
 			$html_list[ $key ] = $snippet;
-
-			// Add to HTTP2
-			$this->append_http2( $url, $file_type );
-		}
-
-		// Handle css async load
-		if ( $file_type === 'css' && $this->cfg_css_async ) {
-			$html_list = $this->_async_css_list( $html_list );
-		}
-
-		// Handle js defer
-		if ( $file_type === 'js' && $this->cfg_js_defer ) {
-			$html_list = $this->_js_defer( $html_list );
 		}
 
 		$this->content = str_replace( $html_list_ori, $html_list, $this->content );
-	}
-
-	/**
-	 * Check that links are internal or external
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 * @return array Array(Ignored raw html, src needed to be handled list, filesize for param 2nd )
-	 */
-	private function _analyse_links( $src_list, $html_list, $file_type = 'css' ) {
-		// if ( $file_type == 'css' ) {
-		// 	$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) );
-		// }
-		// else {
-		// 	$excludes = apply_filters( 'litespeed_optimize_js_excludes', Conf::val( Base::O_OPTM_JS_EXC ) );
-		// }
-		// if ( $excludes ) {
-		// 	$excludes = explode( "\n", $excludes );
-		// }
-
-		$ignored_html = array();
-		$src_queue_list = array();
-		$file_size_list = array();
-
-		// Analyse links
-		foreach ( $src_list as $key => $src_info ) {
-			// CSS has different format when having media='' conditional attribute
-			if ( ! empty( $src_info[ 'src' ] ) ) {
-				$src = $src_info[ 'src' ];
-			}
-			else {
-				$src = $src_info;
-			}
-
-			Debug2::debug2( '[Optm] ' . $src );
-
-			/**
-			 * Excluded links won't be done any optm
-			 * @since 1.7
-			 */
-			// if ( $excludes && $exclude = Utility::str_hit_array( $src, $excludes ) ) {
-			// 	$ignored_html[] = $html_list[ $key ];
-			// 	Debug2::debug2( '[Optm]:    Abort excludes: ' . $exclude );
-			// 	continue;
-			// }
-
-			// Check if has no-optimize attr
-			if ( strpos( $html_list[ $key ], 'data-ignore-optimize' ) !== false ) {
-				$ignored_html[] = $html_list[ $key ];
-				Debug2::debug2( '[Optm]    Abort excludes: attr data-ignore-optimize' );
-				continue;
-			}
-
-			// Check if is external URL
-			$url_parsed = parse_url( $src );
-			if ( ! $file_info = Utility::is_internal_file( $src ) ) {
-				$ignored_html[ $src ] = $html_list[ $key ];
-				Debug2::debug2( '[Optm]    Abort external/non-exist' );
-				continue;
-			}
-
-			/**
-			 * Check if exclude jQuery or not
-			 * Exclude from minify/combine
-			 * @since  1.5
-			 */
-			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
-				$ignored_html[ $src ] = $html_list[ $key ];
-				Debug2::debug2( '[Optm]    Abort jQuery by setting' );
-
-				// Add to HTTP2 as its ignored but still internal src
-				$this->append_http2( $src, 'js' );
-
-				continue;
-			}
-
-			// Note: some CSS may have different format
-			$src_queue_list[ $key ] = $src_info;
-
-			$file_size_list[ $key ] = $file_info[ 1 ];
-		}
-
-		return array( $ignored_html, $src_queue_list, $file_size_list );
 	}
 
 	/**
@@ -1048,10 +851,7 @@ class Optimize extends Base {
 	 * @return string The final URL
 	 */
 	private function _build_hash_url( $src, $file_type = 'css', $url_sensitive = false ) {
-		if ( ! $src ) {
-			return false;
-		}
-
+		// $url_sensitive = Conf::val( Base::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 		global $wp;
 		$request_url = home_url( $wp->request );
 
@@ -1064,6 +864,9 @@ class Optimize extends Base {
 
 		// Drop query strings
 		foreach ( $src as $k => $v ) {
+			if ( ! empty( $v[ 'inl' ] ) ) {
+				continue;
+			}
 			if ( ! empty( $v[ 'src' ] ) ) {
 				$src[ $k ][ 'src' ] = $this->remove_query_strings( $v[ 'src' ] ); // CSS w/ cond `media=`
 			}
@@ -1100,13 +903,7 @@ class Optimize extends Base {
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
 
-			$content = Optimizer::get_instance()->serve( $filename, $concat_only, $src, $request_url );
-
-			// Generate static file
-			File::save( $static_file, $content, true );
-
-			Debug2::debug2( '[Optm] Saved static file [path] ' . $static_file );
-
+			Optimizer::get_instance()->serve( $filename, $concat_only, $src, $request_url );
 		}
 
 		return LITESPEED_STATIC_URL . '/cssjs/' . $filename . '?' . $qs_hash;
@@ -1117,7 +914,6 @@ class Optimize extends Base {
 	 *
 	 * @since  1.2.2
 	 * @access private
-	 * @return array  All the src & related raw html list
 	 */
 	private function _parse_js() {
 		$excludes = apply_filters( 'litespeed_optimize_js_excludes', Conf::val( Base::O_OPTM_JS_EXC ) );
@@ -1164,8 +960,7 @@ class Optimize extends Base {
 			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
 				// Maybe defer
 				if ( $this->cfg_js_defer ) {
-					$deferred = $this->_js_defer( array( $match[ 0 ] ) );
-					$deferred = $deferred[ 0 ];
+					$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
 					if ( $deferred != $match[ 0 ] ) {
 						$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 					}
@@ -1193,7 +988,7 @@ class Optimize extends Base {
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _handle_css() {
+	private function _parse_css() {
 		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) );
 
 		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() );
@@ -1206,73 +1001,78 @@ class Optimize extends Base {
 		// $items = $dom->find( 'link' );
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
-		preg_match_all( '#<link ([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ); // Changed in v3.3 `<link \s*` to `<link ` and see if css can parse w/o issue
+		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
-			$attrs = Utility::parse_attr( $match[ 1 ] );
-
-			if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
-				continue;
-			}
-			if ( isset( $attrs[ 'data-optimized' ] ) ) {
-				continue;
-			}
-			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
-				continue;
-			}
-			if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-				// continue;
-			}
-			if ( empty( $attrs[ 'href' ] ) ) {
-				continue;
-			}
-
-			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'href' ], $excludes ) ) {
-				Debug2::debug2( '[Optm] _handle_css bypassed exclude ' . $exclude );
-				continue;
-			}
-
-			// Check if need to remove this css
-			if ( $css_to_be_removed && Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
-				Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] );
-				// Delete this css snippet from orig html
-				$this->content = str_replace( $match[ 0 ], '', $this->content );
-
-				continue;
-			}
-
-			// Check Google fonts hit
-			if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
-				/**
-				 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
-				 * @since  2.7.3
-				 * @since  3.0 For fotn display optm, need to parse google fonts URL too
-				 */
-				if ( ! in_array( $attrs[ 'href' ], $this->_ggfonts_urls ) ) {
-					$this->_ggfonts_urls[] = $attrs[ 'href' ];
-				}
-
-				if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
-					Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] );
-					$this->content = str_replace( $match[ 0 ], '', $this->content );
-
-					continue;
-				}
-			}
-
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue;
 			}
 
-			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
-				$src_list[] = array(
-					'src' => $attrs[ 'href' ],
-					'media' => $attrs[ 'media' ],
-				);
+			if ( $excludes && $exclude = Utility::str_hit_array( $match[ 0 ], $excludes ) ) {
+				Debug2::debug2( '[Optm] _parse_css bypassed exclude ' . $exclude );
+				continue;
 			}
-			else {
-				$src_list[] = $attrs[ 'href' ];
+
+			$this_src_arr = array();
+			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
+				$attrs = Utility::parse_attr( $match[ 1 ] );
+
+				if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
+					continue;
+				}
+				if ( empty( $attrs[ 'href' ] ) ) {
+					continue;
+				}
+
+				// Check if need to remove this css
+				if ( $css_to_be_removed && Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
+					Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] );
+					// Delete this css snippet from orig html
+					$this->content = str_replace( $match[ 0 ], '', $this->content );
+
+					continue;
+				}
+
+				// Check Google fonts hit
+				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+					/**
+					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
+					 * @since  2.7.3
+					 * @since  3.0 For fotn display optm, need to parse google fonts URL too
+					 */
+					if ( ! in_array( $attrs[ 'href' ], $this->_ggfonts_urls ) ) {
+						$this->_ggfonts_urls[] = $attrs[ 'href' ];
+					}
+
+					if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
+						Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] );
+						$this->content = str_replace( $match[ 0 ], '', $this->content );
+
+						continue;
+					}
+				}
+
+				if ( isset( $attrs[ 'data-optimized' ] ) ) {
+					// $this_src_arr[ 'exc' ] = true;
+					continue;
+				}
+				elseif ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+					// $this_src_arr[ 'exc' ] = true;
+					continue;
+				}
+
+				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
+					$this_src_arr[ 'media' ] = $attrs[ 'media' ];
+				}
+
+				$this_src_arr[ 'src' ] = $attrs[ 'href' ];
 			}
+			else { // Inline style
+				$this_src_arr[ 'inl' ] = true;
+				$this_src_arr[ 'src' ] = $match[ 2 ];
+			}
+
+			$src_list[] = $this_src_arr;
 
 			$html_list[] = $match[ 0 ];
 		}
@@ -1285,110 +1085,90 @@ class Optimize extends Base {
 	 *
 	 * @since  1.3
 	 * @access private
-	 * @param  array $html_list Orignal css array
-	 * @return array            (array)css_async_list
 	 */
-	private function _async_css_list( $html_list ) {
+	private function _async_css_list( $html_list, $src_list ) {
 		foreach ( $html_list as $k => $ori ) {
-			if ( strpos( $ori, 'data-asynced' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr data-asynced exist' );
+			if ( ! empty( $src_list[ $k ][ 'inl' ] ) ) {
 				continue;
 			}
 
-			if ( strpos( $ori, 'data-no-async' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr api data-no-async' );
-				continue;
-			}
-
-			// async replacement
-			$v = str_replace( 'stylesheet', 'preload', $ori );
-			$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
-			// Append to noscript content
-			if ( ! Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ) {
-				$v .= '<noscript>' . $ori . '</noscript>';
-			}
-			$html_list[ $k ] = $v;
+			$html_list[ $k ] = $this->_async_css( $ori );
 		}
 		return $html_list;
 	}
 
 	/**
-	 * Add defer to js
+	 * Async CSS snippet
+	 * @since 3.5
+	 */
+	private function _async_css( $ori ) {
+		if ( strpos( $ori, 'data-asynced' ) !== false ) {
+			Debug2::debug2( '[Optm] bypass: attr data-asynced exist' );
+			return $ori;
+		}
+
+		if ( strpos( $ori, 'data-no-async' ) !== false ) {
+			Debug2::debug2( '[Optm] bypass: attr api data-no-async' );
+			return $ori;
+		}
+
+		// async replacement
+		$v = str_replace( 'stylesheet', 'preload', $ori );
+		$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
+		// Append to noscript content
+		if ( ! Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ) {
+			$v .= '<noscript>' . $ori . '</noscript>';
+		}
+
+		return $v;
+	}
+
+	/**
+	 * Add defer to JS
 	 *
 	 * @since  1.3
 	 * @access private
 	 */
-	private function _js_defer( $html_list ) {
+	private function _js_defer_list( $html_list, $src_list ) {
 		foreach ( $html_list as $k => $v ) {
-			if ( strpos( $v, 'async' ) !== false ) {
-				continue;
-			}
-			if ( strpos( $v, 'defer' ) !== false ) {
-				continue;
-			}
-			if ( strpos( $v, 'data-deferred' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr data-deferred exist' );
-				continue;
-			}
-			if ( strpos( $v, 'data-no-defer' ) !== false ) {
-				Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
-				continue;
-			}
-
-			/**
-			 * Parse src for excluding js from setting
-			 * @since 1.5
-			 */
-			if ( $this->cfg_js_defer_exc || $this->cfg_exc_jquery ) {
-				// parse js src
-				preg_match( '#<script \s*([^>]+)>#isU', $v, $matches );
-				if ( empty( $matches[ 1 ] ) ) {
-					Debug2::debug( '[Optm] js defer parse html failed: ' . $v );
-					continue;
-				}
-
-				$attrs = Utility::parse_attr( $matches[ 1 ] );
-
-				if ( empty( $attrs[ 'src' ] ) ) {
-					Debug2::debug( '[Optm] js defer parse src failed: ' . $matches[ 1 ] );
-					continue;
-				}
-
-				$src = $attrs[ 'src' ];
-			}
-
-			/**
-			 * Exclude js from setting
-			 * @since 1.5
-			 */
-			if ( $this->cfg_js_defer_exc && Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
-				Debug2::debug( '[Optm] js defer exclude ' . $src );
-				continue;
-			}
-
-			/**
-			 * Check if exclude jQuery
-			 * @since  1.5
-			 */
-			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
-				Debug2::debug2( '[Optm]   js defer Abort jQuery by setting' );
-				continue;
-			}
-
-			$html_list[ $k ] = str_replace( '></script>', ' defer data-deferred="1"></script>', $v );
+			$html_list[ $k ] = $this->_js_defer( $v, $src_list[ $k ] );
 		}
 
 		return $html_list;
 	}
 
 	/**
-	 * Check if is jq lib
+	 * Defer JS snippet
 	 *
-	 * @since  1.5
-	 * @access private
+	 * @since  3.5
 	 */
-	private function _is_jquery( $src ) {
-		return stripos( $src, 'jquery.js' ) !== false || stripos( $src, 'jquery.min.js' ) !== false;
+	private function _js_defer( $ori, $src ) {
+		if ( strpos( $ori, 'async' ) !== false ) {
+			return $ori;
+		}
+		if ( strpos( $ori, 'defer' ) !== false ) {
+			return $ori;
+		}
+		if ( strpos( $ori, 'data-deferred' ) !== false ) {
+			Debug2::debug2( '[Optm] bypass: attr data-deferred exist' );
+			return $ori;
+		}
+		if ( strpos( $ori, 'data-no-defer' ) !== false ) {
+			Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
+			return $ori;
+		}
+
+		/**
+		 * Exclude JS from setting
+		 * @since 1.5
+		 */
+		if ( $this->cfg_js_defer_exc && Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
+			Debug2::debug( '[Optm] js defer exclude ' . $src );
+			return $ori;
+		}
+
+		$v = str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
+		return $v;
 	}
 
 	/**

@@ -25,7 +25,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Minify CSS files.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Minify CSS files and inline CSS code.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -38,7 +38,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Combine CSS files.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Combine CSS files and inline CSS code.', 'litespeed-cache' ); ?>
 				<a href="https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ); ?></a>
 			</div>
 		</td>
@@ -52,10 +52,9 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'When having %1$s %2$s, enabling this will get one combined CSS file for each URI, regardless of the setting %3$s.', 'litespeed-cache' ),
+				<?php echo sprintf( __( 'When having %1$s %2$s, enabling this will get one combined CSS file for each URI.', 'litespeed-cache' ),
 						'<code>' . Lang::title( Base::O_OPTM_CSS_COMB ) . '</code>',
-						'<code>' . __( 'ON', 'litespeed-cache' ) . '</code>',
-						'<code>' . Lang::title( Base::O_OPTM_MAX_SIZE ) . '</code>' ); ?>
+						'<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'This is useful when you want to refine/lint your CSS and further drop the unused CSS per page.', 'litespeed-cache' ); ?>

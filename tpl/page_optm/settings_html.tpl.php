@@ -40,19 +40,6 @@ defined( 'WPINC' ) || exit;
 
 	<tr>
 		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_CSS_INLINE_MIN; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Minify inline CSS code.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_JS_INLINE_MIN; ?>
 			<?php $this->title( $id ); ?>
 		</th>

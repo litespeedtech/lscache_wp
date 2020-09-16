@@ -121,9 +121,7 @@ class Base extends Instance {
 	## --------------	  HTML Optm 	----------------- ##
 	## -------------------------------------------------- ##
 	const O_OPTM_CSS_MIN 			= 'optm-css_min';
-	const O_OPTM_CSS_INLINE_MIN 	= 'optm-css_inline_min';
 	const O_OPTM_CSS_COMB 			= 'optm-css_comb';
-	const O_OPTM_CSS_COMB_PRIO 		= 'optm-css_comb_priority';
 	const O_OPTM_CSS_UNIQUE 		= 'optm-css_unique';
 	const O_OPTM_UCSS 				= 'optm-ucss';
 	const O_OPTM_UCSS_ASYNC 		= 'optm-ucss_async';
@@ -133,7 +131,6 @@ class Base extends Instance {
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
 	const O_OPTM_JS_INLINE_MIN 		= 'optm-js_inline_min';
 	const O_OPTM_JS_COMB 			= 'optm-js_comb';
-	const O_OPTM_JS_COMB_PRIO 		= 'optm-js_comb_priority';
 	const O_OPTM_JS_HTTP2 			= 'optm-js_http2';
 	const O_OPTM_JS_EXC 			= 'optm-js_exc';
 	const O_OPTM_TTL 				= 'optm-ttl';
@@ -151,9 +148,7 @@ class Base extends Instance {
 	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
 	const O_OPTM_NOSCRIPT_RM 		= 'optm-noscript_rm';
-	const O_OPTM_EXC_JQ 			= 'optm-exc_jq';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
-	const O_OPTM_MAX_SIZE 			= 'optm-max_size';
 	const O_OPTM_RM_COMMENT 		= 'optm-rm_comment';
 	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
@@ -423,9 +418,7 @@ class Base extends Instance {
 
 		// HTML Optm
 		self::O_OPTM_CSS_MIN 			=> false,
-		self::O_OPTM_CSS_INLINE_MIN 	=> false,
 		self::O_OPTM_CSS_COMB 			=> false,
-		self::O_OPTM_CSS_COMB_PRIO 		=> false,
 		self::O_OPTM_CSS_UNIQUE 		=> false,
 		self::O_OPTM_UCSS 				=> false,
 		self::O_OPTM_UCSS_ASYNC			=> false,
@@ -435,7 +428,6 @@ class Base extends Instance {
 		self::O_OPTM_JS_MIN 			=> false,
 		self::O_OPTM_JS_INLINE_MIN 		=> false,
 		self::O_OPTM_JS_COMB 			=> false,
-		self::O_OPTM_JS_COMB_PRIO 		=> false,
 		self::O_OPTM_JS_HTTP2 			=> false,
 		self::O_OPTM_JS_EXC 			=> array(),
 		self::O_OPTM_TTL 				=> 0,
@@ -451,9 +443,7 @@ class Base extends Instance {
 		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_NOSCRIPT_RM 		=> false,
-		self::O_OPTM_EXC_JQ 			=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
-		self::O_OPTM_MAX_SIZE 			=> 0,
 		self::O_OPTM_RM_COMMENT 		=> false,
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',

@@ -37,9 +37,6 @@ class Optimizer extends Instance {
 	 */
 	public function html_min( $content, $force_inline_minify = false ) {
 		$options = array();
-		if ( Conf::val( Base::O_OPTM_CSS_INLINE_MIN ) || $force_inline_minify ) {
-			$options[ 'cssMinifier' ] = __CLASS__ . '::minify_css';
-		}
 
 		if ( Conf::val( Base::O_OPTM_JS_INLINE_MIN ) || $force_inline_minify ) {
 			$options[ 'jsMinifier' ] = __CLASS__ . '::minify_js';
@@ -71,6 +68,7 @@ class Optimizer extends Instance {
 	 * @access public
 	 */
 	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
+		$__css = CSS::get_instance();
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 
 		// Search src set in db based on the requested filename
@@ -90,7 +88,7 @@ class Optimizer extends Instance {
 			// CHeck if need to trigger UCSS or not
 			$content = false;
 			if ( Conf::val( Base::O_OPTM_UCSS ) && ! Conf::val( Base::O_OPTM_UCSS_ASYNC ) ) {
-				$content = CSS::get_instance()->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
+				$content = $__css->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
 			}
 
 			$content = apply_filters( 'litespeed_css_serve', $content, $filename, $src_list, $page_url );
@@ -100,129 +98,61 @@ class Optimizer extends Instance {
 			}
 		}
 
-		// Parse real file path
+		// Clear if existed
+		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
+		File::save( $static_file, '', true ); // TODO: need to lock file too
+
+		// Load content
+		$_rm_comment = Conf::val( Base::O_OPTM_RM_COMMENT );
 		$real_files = array();
 		foreach ( $src_list as $src_info ) {
-			$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
-			$postfix = pathinfo( parse_url( $src, PHP_URL_PATH ), PATHINFO_EXTENSION );
-			if ( $postfix != $file_type ) {
-				Debug2::debug2( '[Optmer] Not static file, will read as remote [src] ' . $src );
-				$real_file = $src;
+			$is_min = false;
+			$src = false;
+			if ( ! empty( $src_info[ 'inl' ] ) ) { // Load inline
+				$content = $src_info[ 'src' ];
 			}
-			else {
-				$real_file = Utility::is_internal_file( $src );
-				$real_file = ! empty( $real_file[ 0 ] ) ? $real_file[ 0 ] : false;
+			else { // Load file
+				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
+				$content = $__css->load_file( $src );
+
+				if ( ! $content ) {
+					continue;
+				}
+
+				$is_min = $this->_is_min( $src );
 			}
 
-			if ( ! $real_file ) {
-				continue;
+			if ( $_rm_comment ) {
+				$content = $this->_remove_comment( $content, $file_type );
 			}
 
-			if ( ! empty( $src_info[ 'media' ] ) ) {
-				$real_files[] = array(
-					'src' => $real_file,
-					'media' => $src_info[ 'media' ],
-				);
+			// CSS related features
+			if ( $file_type == 'css' ) {
+				// Font optimize
+				if ( $this->_conf_css_font_display ) {
+					$content = preg_replace( '#(@font\-face\s*\{)#isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $content );
+				}
+
+				$content = preg_replace( '/@charset[^;]+;\\s*/', '', $content );
+
+				if ( ! empty( $src_info[ 'media' ] ) ) {
+					$content = '@media ' . $src_info[ 'media' ] . '{' . $content . "\n}";
+				}
+
+				if ( ! $concat_only && ! $is_min ) {
+					$content = self::minify_css( $content );
+				}
 			}
-			else {
-				$real_files[] = $real_file;
-			}
+
+			// Add filter
+			$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src );
+
+			// Write to file
+			File::save( $static_file, $content, true, true );
+
 		}
 
-		if ( ! $real_files ) {
-			return false;
-		}
-
-		Debug2::debug2( '[Optmer]    src_list : ', $src_list );
-
-		// set_error_handler( 'litespeed_exception_handler' );
-
-		$content = '';
-		// try {
-		// Handle CSS
-		if ( $file_type === 'css' ) {
-			$content = $this->_serve_css( $real_files, $concat_only );
-		}
-		// Handle JS
-		else {
-			$content = $this->_serve_js( $real_files, $concat_only );
-		}
-
-		// } catch ( \Exception $e ) {
-		// 	$tmp = '[url] ' . implode( ', ', $src_list ) . ' [err] ' . $e->getMessage();
-
-		// 	Debug2::debug( '******[Optmer] serve err ' . $tmp );
-		// 	error_log( '****** LiteSpeed Optimizer serve err ' . $tmp );
-		// 	return false;//todo: return ori data
-		// }
-		// restore_error_handler();
-
-		/**
-		 * Clean comment when minify
-		 * @since  1.7.1
-		 */
-		if ( Conf::val( Base::O_OPTM_RM_COMMENT ) ) {
-			$content = $this->_remove_comment( $content, $file_type );
-		}
-
-		Debug2::debug2( '[Optmer]    Generated content ' . $file_type );
-
-		// Add filter
-		$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src_list );
-
-		return $content;
-	}
-
-	/**
-	 * Serve css with/without minify
-	 *
-	 * @since  1.9
-	 * @access private
-	 */
-	private function _serve_css( $files, $concat_only = false ) {
-		$con = array();
-		foreach ( $files as $path_info ) {
-			$media = false;
-			if ( ! empty( $path_info[ 'src' ] ) ) {
-				$real_path = $path_info[ 'src' ];
-				$media = $path_info[ 'media' ];
-			}
-			else {
-				$real_path = $path_info;
-			}
-			Debug2::debug2( '[Optmer] [real_path] ' . $real_path );
-
-			// Check if its remote or local path
-			if ( strpos( $real_path, 'http' ) === 0 ) {
-				$data = wp_remote_retrieve_body( wp_remote_get( $real_path ) );
-				$dirname = dirname( parse_url( $real_path, PHP_URL_PATH ) );
-			}
-			else {
-				$data = File::read( $real_path );
-				$dirname = dirname( $real_path );
-			}
-
-			// Font optimize
-			if ( $this->_conf_css_font_display ) {
-				$data = preg_replace( '#(@font\-face\s*\{)#isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $data );
-			}
-
-			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data );
-
-			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-				$data = self::minify_css( $data );
-			}
-
-			$data = Lib\CSS_MIN\UriRewriter::rewrite( $data, $dirname );
-
-			if ( $media ) {
-				$data = '@media ' . $media . '{' . $data . "\n}";
-			}
-
-			$con[] = $data;
-		}
-
-		return implode( '', $con );
+		Debug2::debug2( '[Optmer] Saved static file [path] ' . $static_file );
 	}
 
 	/**

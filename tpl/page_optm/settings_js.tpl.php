@@ -78,21 +78,4 @@ defined( 'WPINC' ) || exit;
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_OPTM_EXC_JQ; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Improve compatibility with inline JS by preventing jQuery optimization. (Recommended Setting: %s)', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ); ?>
-				<br /><font class="litespeed-warning">
-					⚠️
-					<?php echo sprintf( __( 'If there is any JS error related to %1$s when enabled %2$s, please turn on this option.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ); ?>
-				</font>
-			</div>
-		</td>
-	</tr>
-
 </tbody></table>

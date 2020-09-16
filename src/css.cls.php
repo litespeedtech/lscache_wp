@@ -338,28 +338,9 @@ class CSS extends Base {
 				$debug_info = $attrs[ 'href' ];
 
 				// Load CSS content
-				$real_file = Utility::is_internal_file( $attrs[ 'href' ] );
-				$postfix = pathinfo( parse_url( $attrs[ 'href' ], PHP_URL_PATH ), PATHINFO_EXTENSION );
-				if ( ! $real_file || $postfix != 'css' ) {
-					Debug2::debug2( '[CCSS] Load Remote CSS ' . $attrs[ 'href' ] );
-					$this_url = substr( $attrs[ 'href' ], 0, 2 ) == '//' ? 'https:' . $attrs[ 'href' ] : $attrs[ 'href' ];
-					$res = wp_remote_get( $this_url );
-					$res_code = wp_remote_retrieve_response_code( $res );
-					if ( is_wp_error( $res ) || $res_code == 404 ) {
-						Debug2::debug2( '[CCSS] ❌ Load Remote CSS error [code] ' . $res_code );
-						continue;
-					}
-					$con = wp_remote_retrieve_body( $res );
-					if ( ! $con ) {
-						continue;
-					}
-				}
-				else {
-					Debug2::debug2( '[CCSS] Load local CSS ' . $real_file[ 0 ] );
-					$con = File::read( $real_file[ 0 ] );
-					$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, dirname( $real_file[ 0 ] ) );
-
-					$debug_info .= ' -- ' . $real_file[ 0 ];
+				$con = $this->load_file( $attrs[ 'href' ] );
+				if ( ! $con ) {
+					continue;
 				}
 			}
 			else { // Inline style
@@ -384,6 +365,44 @@ class CSS extends Base {
 		}
 
 		return array( $css, $html );
+	}
+
+	/**
+	 * Load remote/local resource
+	 *
+	 * @since  3.5
+	 */
+	public function load_file( $src, $file_type = 'css' ) {
+		$real_file = Utility::is_internal_file( $src );
+		$postfix = pathinfo( parse_url( $src, PHP_URL_PATH ), PATHINFO_EXTENSION );
+		if ( ! $real_file || $postfix != $file_type ) {
+			Debug2::debug2( '[CSS] Load Remote [' . $file_type . '] ' . $src );
+			$this_url = substr( $src, 0, 2 ) == '//' ? 'https:' . $src : $src;
+			$res = wp_remote_get( $this_url );
+			$res_code = wp_remote_retrieve_response_code( $res );
+			if ( is_wp_error( $res ) || $res_code == 404 ) {
+				Debug2::debug2( '[CSS] ❌ Load Remote error [code] ' . $res_code );
+				return false;
+			}
+			$con = wp_remote_retrieve_body( $res );
+			if ( ! $con ) {
+				return false;
+			}
+
+			$dirname = dirname( parse_url( $this_url, PHP_URL_PATH ) );
+		}
+		else {
+			Debug2::debug2( '[CSS] Load local [' . $file_type . '] ' . $real_file[ 0 ] );
+			$con = File::read( $real_file[ 0 ] );
+
+			$dirname = dirname( $real_file[ 0 ] );
+		}
+
+		if ( $file_type == 'css' ) {
+			$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, $dirname ); // TODO: check if remote URL relative resource can be rewritten correctly or not
+		}
+
+		return $con;
 	}
 
 	/**
