@@ -113,7 +113,7 @@ class Optimizer extends Instance {
 			}
 			else { // Load file
 				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
-				$content = $__css->load_file( $src );
+				$content = $__css->load_file( $src, $file_type );
 
 				if ( ! $content ) {
 					continue;
