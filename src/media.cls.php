@@ -132,6 +132,10 @@ class Media extends Instance {
 	 * @access public
 	 */
 	public function delete_attachment( $post_id ) {
+		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+			return;
+		}
+
 		Debug2::debug( '[Media] delete_attachment [pid] ' . $post_id );
 		Img_Optm::get_instance()->reset_row( $post_id );
 	}
