@@ -143,6 +143,16 @@ class Optimizer extends Instance {
 					$content = self::minify_css( $content );
 				}
 			}
+			else {
+				if ( ! $concat_only && ! $is_min ) {
+					$content = self::minify_js( $content );
+				}
+				else {
+					$content = $this->_null_minifier( $content );
+				}
+
+				$content .= "\n;";
+			}
 
 			// Add filter
 			$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src );
@@ -153,36 +163,6 @@ class Optimizer extends Instance {
 		}
 
 		Debug2::debug2( '[Optmer] Saved static file [path] ' . $static_file );
-	}
-
-	/**
-	 * Serve JS with/without minify
-	 *
-	 * @since  1.9
-	 * @access private
-	 */
-	private function _serve_js( $files, $concat_only ) {
-		$con = array();
-		foreach ( $files as $real_path ) {
-			// Check if its remote or local path
-			if ( strpos( $real_path, 'http' ) === 0 ) {
-				$data = wp_remote_retrieve_body( wp_remote_get( $real_path ) );
-			}
-			else {
-				$data = File::read( $real_path );
-			}
-
-			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-				$data = self::minify_js( $data );
-			}
-			else {
-				$data = $this->_null_minifier( $data );
-			}
-
-			$con[] = $data;
-		}
-
-		return implode( "\n;", $con );
 	}
 
 	/**
