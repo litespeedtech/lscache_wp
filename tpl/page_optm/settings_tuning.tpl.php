@@ -48,7 +48,7 @@ ksort( $roles );
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Listed JS files or inline JS code will not be minified/combined.', 'litespeed-cache' ); ?>
 				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><font class="litespeed-success">
@@ -89,20 +89,6 @@ ksort( $roles );
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ); ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ); ?>
 				</span>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_OPTM_JS_INLINE_DEFER_EXC; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Inline JS codes including the above fragments will not be deferred.', 'litespeed-cache' ); ?>
-				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

@@ -143,7 +143,6 @@ class Base extends Instance {
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
-	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer';
 	const O_OPTM_LOCALIZE			= 'optm-localize';
 	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
@@ -153,7 +152,6 @@ class Base extends Instance {
 	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
 	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc';
-	const O_OPTM_JS_INLINE_DEFER_EXC = 'optm-js_inline_defer_exc';
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
 	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
 	const O_OPTM_EXC 				= 'optm-exc';
@@ -440,7 +438,6 @@ class Base extends Instance {
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
-		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_NOSCRIPT_RM 		=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
@@ -448,7 +445,6 @@ class Base extends Instance {
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
-		self::O_OPTM_JS_INLINE_DEFER_EXC => array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),
@@ -614,7 +610,6 @@ class Base extends Instance {
 		self::O_CDN_REMOTE_JQ 	=> 2,
 		self::O_DEBUG 			=> 2,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
-		self::O_OPTM_JS_INLINE_DEFER 	=> 2,
 		self::O_CRAWLER_ORDER_LINKS 	=> 3,
 	);
 

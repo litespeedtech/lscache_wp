@@ -377,7 +377,7 @@ class CSS extends Base {
 		$postfix = pathinfo( parse_url( $src, PHP_URL_PATH ), PATHINFO_EXTENSION );
 		if ( ! $real_file || $postfix != $file_type ) {
 			Debug2::debug2( '[CSS] Load Remote [' . $file_type . '] ' . $src );
-			$this_url = substr( $src, 0, 2 ) == '//' ? 'https:' . $src : $src;
+			$this_url = substr( $src, 0, 2 ) == '//' ? set_url_scheme( $src ) : $src;
 			$res = wp_remote_get( $this_url );
 			$res_code = wp_remote_retrieve_response_code( $res );
 			if ( is_wp_error( $res ) || $res_code == 404 ) {

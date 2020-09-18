@@ -367,9 +367,6 @@ class Optimize extends Base {
 						if ( ! empty( $src_info[ 'inl' ] ) ) {
 							continue;
 						}
-						if ( empty( $src_info[ 'src' ] ) ) {
-							continue;
-						}
 						$this->append_http2( $src_info[ 'src' ] );
 					}
 				}
@@ -400,12 +397,12 @@ class Optimize extends Base {
 					// separate head/foot js/raw html
 					$head_js = array();
 					$foot_js = array();
-					foreach ( $src_list as $k => $src ) {
-						if ( in_array( $src, $head_src_list ) ) {
-							$head_js[ $k ] = $src;
+					foreach ( $src_list as $k => $src_info ) {
+						if ( in_array( $src_info[ 'src' ], $head_src_list ) ) {
+							$head_js[ $k ] = $src_info[ 'src' ];
 						}
 						else {
-							$foot_js[ $k ] = $src;
+							$foot_js[ $k ] = $src_info[ 'src' ];
 						}
 					}
 
@@ -436,8 +433,11 @@ class Optimize extends Base {
 				}
 				// Only HTTP2 push
 				else {
-					foreach ( $src_list as $val ) {
-						$this->append_http2( $val, 'js' );
+					foreach ( $src_list as $src_info ) {
+						if ( ! empty( $src_info[ 'inl' ] ) ) {
+							continue;
+						}
+						$this->append_http2( $src_info[ 'src' ], 'js' );
 					}
 				}
 			}
@@ -484,12 +484,6 @@ class Optimize extends Base {
 		 */
 		$this->content = Localization::get_instance()->finalize( $this->content );
 
-		/**
-		 * Inline script manipulated until document is ready
-		 * @since  3.0
-		 */
-		$this->_js_inline_defer();
-
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async ) {
 			$this->html_head = CSS::prepend_ccss( $this->html_head );
@@ -526,110 +520,6 @@ class Optimize extends Base {
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
-
-	}
-
-	/**
-	 * Inline JS defer
-	 *
-	 * @since 3.0
-	 * @access private
-	 */
-	private function _js_inline_defer() {
-		$optm_js_inline = Conf::val( Base::O_OPTM_JS_INLINE_DEFER );
-		if ( ! $optm_js_inline ) {
-			return;
-		}
-
-		$optm_js_inline_exc = Conf::val( Base::O_OPTM_JS_INLINE_DEFER_EXC );
-
-		Debug2::debug( '[Optm] Inline JS defer ' . $optm_js_inline );
-
-		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $this->content, $matches, PREG_SET_ORDER );
-
-		$script_ori = array();
-		$script_deferred = array();
-
-		$js_var_preserve = array();
-		foreach ( $matches as $match ) {
-
-			if ( ! empty( $match[ 1 ] ) ) {
-				$attrs = Utility::parse_attr( $match[ 1 ] );
-
-				if ( ! empty( $attrs[ 'src' ] ) ) {
-					continue;
-				}
-
-				if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
-					continue;
-				}
-
-				if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
-					continue;
-				}
-			}
-
-			$con = $match[ 2 ];
-
-			if ( $optm_js_inline_exc ) {
-				$hit = Utility::str_hit_array( $con, $optm_js_inline_exc );
-				if ( $hit ) {
-					Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
-					continue;
-				}
-			}
-
-			$con = trim( $con );
-			// Minify JS first
-			$con = Optimizer::minify_js( $con );
-
-			if ( ! $con ) {
-				continue;
-			}
-
-			if ( $optm_js_inline === 2 ) {
-				$script_ori[] = $match[ 0 ];
-				// Check if the content contains ESI nonce or not
-				if ( $esi_placeholder_list = ESI::get_instance()->contain_preserve_esi( $con ) ) {
-					foreach ( $esi_placeholder_list as $esi_placeholder ) {
-						$js_var = '__litespeed_var_' . ( self::$_var_i ++ ) . '__';
-						$con = str_replace( $esi_placeholder, $js_var, $con );
-						$js_var_preserve[] = $js_var . '=' . $esi_placeholder;
-					}
-				}
-				$script_deferred[] = '<script src="data:text/javascript;base64, ' . base64_encode( $con ) . '" defer ' . $match[ 1 ] . '></script>';
-			}
-			else {
-				// Prevent var scope issue
-				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
-					continue;
-				}
-
-				if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
-					continue;
-				}
-
-				if ( strpos( $con, 'document.addEventListener' ) !== false ) {
-					continue;
-				}
-
-				// $con = str_replace( 'var ', 'window.', $con );
-
-				$script_ori[] = $match[ 0 ];
-
-				$deferred = 'document.addEventListener("DOMContentLoaded",function(){' . $con . '});';
-
-				$script_deferred[] = '<script' . $match[ 1 ] . '>' . $deferred . '</script>';
-			}
-
-		}
-
-		if ( $js_var_preserve ) {
-			$this->html_head .= '<script>var ' . implode( ',', $js_var_preserve ) . ';</script>';
-			Debug2::debug2( '[Optm] Inline JS defer vars', $js_var_preserve );
-		}
-
-		$this->content = str_replace( $script_ori, $script_deferred, $this->content );
 
 	}
 
@@ -811,16 +701,13 @@ class Optimize extends Base {
 					$code = Optimizer::minify_css( $src_info[ 'src' ] );
 				}
 				else {
-					continue; // todo: consider inline js minify later
-					// check $js_type is text/script or not
-					// $code = Optimizer::minify_js( $src_info[ 'src' ], $js_type );
+					continue; // Inline JS minify will be done by HTML minify
 				}
 				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 			}
 			else {
-				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
-				$url = $this->_build_hash_url( $src, $file_type );
-				$snippet = str_replace( $src, $url, $html_list[ $key ] );
+				$url = $this->_build_hash_url( $src_info[ 'src' ], $file_type );
+				$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
 
 				// Handle css async load
 				if ( $file_type == 'css' && $this->cfg_css_async ) {
@@ -828,8 +715,8 @@ class Optimize extends Base {
 				}
 
 				// Handle js defer
-				if ( $file_type === 'js' && $this->cfg_js_defer ) { // TODO: check after inline JS
-					$snippet = $this->_js_defer( $snippet, $src ); // NOTE: No inline JS yet
+				if ( $file_type === 'js' && $this->cfg_js_defer ) {
+					$snippet = $this->_js_defer( $snippet, $src_info[ 'src' ] );
 				}
 
 				// Add to HTTP2
@@ -868,7 +755,7 @@ class Optimize extends Base {
 				continue;
 			}
 			if ( ! empty( $v[ 'src' ] ) ) {
-				$src[ $k ][ 'src' ] = $this->remove_query_strings( $v[ 'src' ] ); // CSS w/ cond `media=`
+				$src[ $k ][ 'src' ] = $this->remove_query_strings( $v[ 'src' ] ); // CSS/JS combine
 			}
 			else {
 				$src[ $k ] = $this->remove_query_strings( $v );
@@ -923,14 +810,15 @@ class Optimize extends Base {
 		$head_src_list = array();
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
-		preg_match_all( '#<script ([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER ); // v3.3 Changed `<script \s*(` to `<script (`
+		preg_match_all( '#<script([^>]*)>(.*)</script>|</head>#isU', $content, $matches, PREG_SET_ORDER );
 		$is_head = true;
 		foreach ( $matches as $match ) {
-			if ( $match[ 0 ] === '</head>' ) {
+			if ( $match[ 0 ] == '</head>' ) {
 				$is_head = false;
 				continue;
 			}
-			$attrs = Utility::parse_attr( $match[ 1 ] );
+
+			$attrs = empty( $match[ 1 ] ) ? array() : Utility::parse_attr( $match[ 1 ] );
 
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue;
@@ -938,17 +826,7 @@ class Optimize extends Base {
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
 				continue;
 			}
-			if ( empty( $attrs[ 'src' ] ) ) {
-				continue;
-			}
-
-			if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
-				continue;
-			}
-
-			$url_parsed = parse_url( $attrs[ 'src' ], PHP_URL_PATH );
-			if ( substr( $url_parsed, -3 ) !== '.js' ) {
-				Debug2::debug2( '[Optm] _parse_js bypassed due to not js file ' . $url_parsed );
+			if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
 				continue;
 			}
 
@@ -957,24 +835,46 @@ class Optimize extends Base {
 				continue;
 			}
 
-			if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
-				// Maybe defer
-				if ( $this->cfg_js_defer ) {
-					$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
-					if ( $deferred != $match[ 0 ] ) {
-						$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
+			$this_src_arr = array();
+			// JS files
+			if ( ! empty( $attrs[ 'src' ] ) ) {
+				// Exclude check
+				if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
+					// Maybe defer
+					if ( $this->cfg_js_defer ) {
+						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
+						if ( $deferred != $match[ 0 ] ) {
+							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
+						}
 					}
+
+					Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
+					continue;
 				}
 
-				Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
-				continue;
+				if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
+					continue;
+				}
+
+				$this_src_arr[ 'src' ] = $attrs[ 'src' ];
+			}
+			// Inline JS
+			elseif ( ! empty( $match[ 2 ] ) ) {
+				// Exclude check
+				if ( $excludes && $exclude = Utility::str_hit_array( $match[ 2 ], $excludes ) ) {
+					Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
+					continue;
+				}
+
+				$this_src_arr[ 'inl' ] = true;
+				$this_src_arr[ 'src' ] = $match[ 2 ];
 			}
 
-			$src_list[] = $attrs[ 'src' ];
+			$src_list[] = $this_src_arr;
 			$html_list[] = $match[ 0 ];
 
 			if ( $is_head ) {
-				$head_src_list[] = $attrs[ 'src' ];
+				$head_src_list[] = $this_src_arr[ 'src' ];
 			}
 		}
 
@@ -1131,7 +1031,11 @@ class Optimize extends Base {
 	 */
 	private function _js_defer_list( $html_list, $src_list ) {
 		foreach ( $html_list as $k => $v ) {
-			$html_list[ $k ] = $this->_js_defer( $v, $src_list[ $k ] );
+			if ( ! empty( $src_list[ $k ][ 'inl' ] ) ) {
+				continue;
+			}
+
+			$html_list[ $k ] = $this->_js_defer( $v, $src_list[ $k ][ 'src' ] );
 		}
 
 		return $html_list;
