@@ -399,10 +399,10 @@ class Optimize extends Base {
 					$foot_js = array();
 					foreach ( $src_list as $k => $src_info ) {
 						if ( in_array( $src_info[ 'src' ], $head_src_list ) ) {
-							$head_js[ $k ] = $src_info[ 'src' ];
+							$head_js[ $k ] = $src_info;
 						}
 						else {
-							$foot_js[ $k ] = $src_info[ 'src' ];
+							$foot_js[ $k ] = $src_info;
 						}
 					}
 
