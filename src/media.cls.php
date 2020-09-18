@@ -407,6 +407,13 @@ class Media extends Instance {
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
 			return true;
 		}
+		
+		$lscwp_ios_version = preg_match("/OS ((\d+_?){2,3})/i", $_SERVER['HTTP_USER_AGENT'], $matches);
+		$lscwp_ios_version = str_replace("_",".",$matches[1]);
+		$lscwp_ios_version = substr($lscwp_ios_version, 0, strpos($lscwp_ios_version, "."));
+		if ($lscwp_ios_version >= '14'){
+			return true;
+		}
 
 		return false;
 	}
