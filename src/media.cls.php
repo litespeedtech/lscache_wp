@@ -404,15 +404,18 @@ class Media extends Instance {
 			return true;
 		}
 
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
-			return true;
-		}
-		
-		if (preg_match("/iPhone OS (\d+)_/i", $_SERVER['HTTP_USER_AGENT'], $matches)) {
-			$lscwp_ios_version = $matches[1];
-			if ($lscwp_ios_version >= 14){
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
+			if ( strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
 				return true;
 			}
+
+			if ( preg_match( "/iPhone OS (\d+)_/i", $_SERVER[ 'HTTP_USER_AGENT' ], $matches ) ) {
+				$lscwp_ios_version = $matches[1];
+				if ($lscwp_ios_version >= 14){
+					return true;
+				}
+			}
+		}
 
 		return false;
 	}
