@@ -408,12 +408,11 @@ class Media extends Instance {
 			return true;
 		}
 		
-		$lscwp_ios_version = preg_match("/OS ((\d+_?){2,3})/i", $_SERVER['HTTP_USER_AGENT'], $matches);
-		$lscwp_ios_version = str_replace("_",".",$matches[1]);
-		$lscwp_ios_version = substr($lscwp_ios_version, 0, strpos($lscwp_ios_version, "."));
-		if ($lscwp_ios_version >= '14'){
-			return true;
-		}
+		if (preg_match("/iPhone OS (\d+)_/i", $_SERVER['HTTP_USER_AGENT'], $matches)) {
+			$lscwp_ios_version = $matches[1];
+			if ($lscwp_ios_version >= 14){
+				return true;
+			}
 
 		return false;
 	}
