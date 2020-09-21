@@ -10,8 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Router extends Base
-{
+class Router extends Base {
 	protected static $_instance;
 
 	const NONCE = 'LSCWP_NONCE';
@@ -42,12 +41,12 @@ class Router extends Base
 	const ITEM_HASH = 'hash';
 
 	private static $_esi_enabled;
-	private static $_is_ajax ;
-	private static $_is_logged_in ;
-	private static $_ip ;
-	private static $_action ;
-	private static $_is_admin_ip ;
-	private static $_frontend_path ;
+	private static $_is_ajax;
+	private static $_is_logged_in;
+	private static $_ip;
+	private static $_action;
+	private static $_is_admin_ip;
+	private static $_frontend_path;
 
 	/**
 	 * Check if can run optimize
@@ -56,35 +55,34 @@ class Router extends Base
 	 * @since  2.3.1 Relocated from cdn.cls
 	 * @access public
 	 */
-	public static function can_optm()
-	{
-		$can = true ;
+	public static function can_optm() {
+		$can = true;
 
 		if ( is_admin() ) {
-			$can = false ;
+			$can = false;
 		}
 		elseif ( is_feed() ) {
-			$can = false ;
+			$can = false;
 		}
 		elseif ( is_preview() ) {
-			$can = false ;
+			$can = false;
 		}
 		elseif ( self::is_ajax() ) {
-			$can = false ;
+			$can = false;
 		}
 
 		if ( self::_is_login_page() ) {
-			Debug2::debug( '[Router] Optm bypassed: login/reg page' ) ;
-			$can = false ;
+			Debug2::debug( '[Router] Optm bypassed: login/reg page' );
+			$can = false;
 		}
 
-		$can_final = apply_filters( 'litespeed_can_optm', $can ) ;
+		$can_final = apply_filters( 'litespeed_can_optm', $can );
 
 		if ( $can_final != $can ) {
-			Debug2::debug( '[Router] Optm bypassed: filter' ) ;
+			Debug2::debug( '[Router] Optm bypassed: filter' );
 		}
 
-		return $can_final ;
+		return $can_final;
 	}
 
 	/**
@@ -93,9 +91,8 @@ class Router extends Base
 	 * @since 2.4.2.1
 	 * @access public
 	 */
-	public static function from_admin()
-	{
-		return ! empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
+	public static function from_admin() {
+		return ! empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0;
 	}
 
 	/**
@@ -105,26 +102,25 @@ class Router extends Base
 	 * @since  2.3.1 Relocated from cdn.cls
 	 * @access public
 	 */
-	public static function can_cdn()
-	{
-		$can = true ;
+	public static function can_cdn() {
+		$can = true;
 
 		if ( is_admin() ) {
 			if ( ! self::is_ajax() ) {
-				Debug2::debug2( '[Router] CDN bypassed: is not ajax call' ) ;
-				$can = false ;
+				Debug2::debug2( '[Router] CDN bypassed: is not ajax call' );
+				$can = false;
 			}
 
 			if ( self::from_admin() ) {
-				Debug2::debug2( '[Router] CDN bypassed: ajax call from admin' ) ;
-				$can = false ;
+				Debug2::debug2( '[Router] CDN bypassed: ajax call from admin' );
+				$can = false;
 			}
 		}
 		elseif ( is_feed() ) {
-			$can = false ;
+			$can = false;
 		}
 		elseif ( is_preview() ) {
-			$can = false ;
+			$can = false;
 		}
 
 		/**
@@ -132,7 +128,7 @@ class Router extends Base
 		 * @since  2.7.2
 		 */
 		if ( defined( 'DOING_CRON' ) ) {
-			$can = false ;
+			$can = false;
 		}
 
 		/**
@@ -140,8 +136,8 @@ class Router extends Base
 		 * @since  1.6
 		 */
 		if ( self::_is_login_page() ) {
-			Debug2::debug( '[Router] CDN bypassed: login/reg page' ) ;
-			$can = false ;
+			Debug2::debug( '[Router] CDN bypassed: login/reg page' );
+			$can = false;
 		}
 
 		/**
@@ -153,17 +149,17 @@ class Router extends Base
 			strpos( $_SERVER[ 'REQUEST_URI' ], $rest_prefix . '/wp/v2/media' ) !== false
 			&& strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
 		) {
-			Debug2::debug( '[Router] CDN bypassed: wp-json on admin page' ) ;
-			$can = false ;
+			Debug2::debug( '[Router] CDN bypassed: wp-json on admin page' );
+			$can = false;
 		}
 
-		$can_final = apply_filters( 'litespeed_can_cdn', $can ) ;
+		$can_final = apply_filters( 'litespeed_can_cdn', $can );
 
 		if ( $can_final != $can ) {
-			Debug2::debug( '[Router] CDN bypassed: filter' ) ;
+			Debug2::debug( '[Router] CDN bypassed: filter' );
 		}
 
-		return $can_final ;
+		return $can_final;
 	}
 
 	/**
@@ -172,13 +168,12 @@ class Router extends Base
 	 * @since  2.3.1
 	 * @access protected
 	 */
-	protected static function _is_login_page()
-	{
+	protected static function _is_login_page() {
 		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
-			return true ;
+			return true;
 		}
 
-		return false ;
+		return false;
 	}
 
 	/**
@@ -248,20 +243,20 @@ class Router extends Base
 			$uid = get_current_user_id();
 		}
 
-		$role = false ;
+		$role = false;
 		if ( $uid ) {
-			$user = get_userdata( $uid ) ;
+			$user = get_userdata( $uid );
 			if ( isset( $user->roles ) && is_array( $user->roles ) ) {
-				$tmp = array_values( $user->roles ) ;
-				$role = array_shift( $tmp ) ;
+				$tmp = array_values( $user->roles );
+				$role = array_shift( $tmp );
 			}
 		}
-		Debug2::debug( '[Router] get_role: ' . $role ) ;
+		Debug2::debug( '[Router] get_role: ' . $role );
 
 		if ( ! $role ) {
-			return $role ;
+			return $role;
 			// Guest user
-			Debug2::debug( '[Router] role: guest' ) ;
+			Debug2::debug( '[Router] role: guest' );
 
 			/**
 			 * Fix double login issue
@@ -270,13 +265,13 @@ class Router extends Base
 			 * @since  2.9.8 Won't assign const if in login process
 			 */
 			if ( substr_compare( wp_login_url(), $GLOBALS[ 'pagenow' ], -strlen( $GLOBALS[ 'pagenow' ] ) ) === 0 ) {
-				return $role ;
+				return $role;
 			}
 		}
 
-		define( 'LITESPEED_WP_ROLE', $role ) ;
+		define( 'LITESPEED_WP_ROLE', $role );
 
-		return LITESPEED_WP_ROLE ;
+		return LITESPEED_WP_ROLE;
 	}
 
 	/**
@@ -286,22 +281,21 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function frontend_path()//todo: move to htaccess.cls ?
-	{
+	public static function frontend_path() { //todo: move to htaccess.cls ?
 		if ( ! isset( self::$_frontend_path ) ) {
-			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
+			$frontend = rtrim( ABSPATH, '/' ); // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
 			if ( ! $frontend ) {
-				Debug2::debug( '[Router] No ABSPATH, generating from home option' ) ;
-				$frontend = parse_url( get_option( 'home' ) ) ;
-				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
-				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;
+				Debug2::debug( '[Router] No ABSPATH, generating from home option' );
+				$frontend = parse_url( get_option( 'home' ) );
+				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '';
+				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend;
 			}
-			$frontend = realpath( $frontend ) ;
+			$frontend = realpath( $frontend );
 
-			self::$_frontend_path = $frontend ;
+			self::$_frontend_path = $frontend;
 		}
-		return self::$_frontend_path ;
+		return self::$_frontend_path;
 	}
 
 	/**
@@ -311,12 +305,11 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function esi_enabled()
-	{
+	public static function esi_enabled() {
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI ) ;
+			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI );
 		}
-		return self::$_esi_enabled ;
+		return self::$_esi_enabled;
 	}
 
 	/**
@@ -325,8 +318,7 @@ class Router extends Base
 	 * @since 1.1.1
 	 * @access public
 	 */
-	public static function can_crawl()
-	{
+	public static function can_crawl() {
 		if ( isset( $_SERVER[ 'X-LSCACHE' ] ) && strpos( $_SERVER[ 'X-LSCACHE' ], 'crawler' ) === false ) {
 			return false;
 		}
@@ -346,17 +338,16 @@ class Router extends Base
 	 * @access public
 	 * @return string
 	 */
-	public static function get_action()
-	{
+	public static function get_action() {
 		if ( ! isset( self::$_action ) ) {
 			self::$_action = false;
-			self::get_instance()->verify_action() ;
+			self::get_instance()->verify_action();
 			if ( self::$_action ) {
-				defined( 'LSCWP_LOG' ) && Debug2::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
+				defined( 'LSCWP_LOG' ) && Debug2::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) );
 			}
 
 		}
-		return self::$_action ;
+		return self::$_action;
 	}
 
 	/**
@@ -366,12 +357,11 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_logged_in()
-	{
+	public static function is_logged_in() {
 		if ( ! isset( self::$_is_logged_in ) ) {
-			self::$_is_logged_in = is_user_logged_in() ;
+			self::$_is_logged_in = is_user_logged_in();
 		}
-		return self::$_is_logged_in ;
+		return self::$_is_logged_in;
 	}
 
 	/**
@@ -381,12 +371,11 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_ajax()
-	{
+	public static function is_ajax() {
 		if ( ! isset( self::$_is_ajax ) ) {
-			self::$_is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ;
+			self::$_is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 		}
-		return self::$_is_ajax ;
+		return self::$_is_ajax;
 	}
 
 	/**
@@ -396,14 +385,13 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_admin_ip()
-	{
+	public static function is_admin_ip() {
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = Conf::val( Base::O_DEBUG_IPS ) ;
+			$ips = Conf::val( Base::O_DEBUG_IPS );
 
-			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
+			self::$_is_admin_ip = self::get_instance()->ip_access( $ips );
 		}
-		return self::$_is_admin_ip ;
+		return self::$_is_admin_ip;
 	}
 
 	/**
@@ -412,16 +400,15 @@ class Router extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function verify_type()
-	{
+	public static function verify_type() {
 		if ( empty( $_REQUEST[ self::TYPE ] ) ) {
-			Debug2::debug( '[Router] no type', 2 ) ;
-			return false ;
+			Debug2::debug( '[Router] no type', 2 );
+			return false;
 		}
 
-		Debug2::debug( '[Router] parsed type: ' . $_REQUEST[ self::TYPE ], 2 ) ;
+		Debug2::debug( '[Router] parsed type: ' . $_REQUEST[ self::TYPE ], 2 );
 
-		return $_REQUEST[ self::TYPE ] ;
+		return $_REQUEST[ self::TYPE ];
 	}
 
 	/**
@@ -430,23 +417,22 @@ class Router extends Base
 	 * @since 1.1.0
 	 * @access private
 	 */
-	private function verify_action()
-	{
+	private function verify_action() {
 		if ( empty( $_REQUEST[ Router::ACTION ] ) ) {
-			Debug2::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
-			return ;
+			Debug2::debug2( '[Router] LSCWP_CTRL bypassed empty' );
+			return;
 		}
 
-		$action = $_REQUEST[ Router::ACTION ] ;
-		$_is_public_action = false ;
+		$action = $_REQUEST[ Router::ACTION ];
+		$_is_public_action = false;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
 		if ( ! $this->verify_nonce( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
-				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
-				return ;
+				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action );
+				return;
 			}
 
 			// check if it is public action
@@ -458,54 +444,54 @@ class Router extends Base
 					Core::ACTION_QS_PURGE_ALL,
 					Core::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
-				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
-				return ;
+				Debug2::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action );
+				return;
 			}
 
-			$_is_public_action = true ;
+			$_is_public_action = true;
 		}
 
 		/* Now it is a valid action, lets log and check the permission */
-		Debug2::debug( '[Router] LSCWP_CTRL: ' . $action ) ;
+		Debug2::debug( '[Router] LSCWP_CTRL: ' . $action );
 
 		// OK, as we want to do something magic, lets check if its allowed
-		$_is_multisite = is_multisite() ;
-		$_is_network_admin = $_is_multisite && is_network_admin() ;
-		$_can_network_option = $_is_network_admin && current_user_can( 'manage_network_options' ) ;
-		$_can_option = current_user_can( 'manage_options' ) ;
+		$_is_multisite = is_multisite();
+		$_is_network_admin = $_is_multisite && is_network_admin();
+		$_can_network_option = $_is_network_admin && current_user_can( 'manage_network_options' );
+		$_can_option = current_user_can( 'manage_options' );
 
 		switch ( $action ) {
 			// Save htaccess
 			case self::ACTION_SAVE_HTACCESS:
 				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			// Save network settings
 			case self::ACTION_SAVE_SETTINGS_NETWORK:
 				if ( $_can_network_option ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case Core::ACTION_PURGE_BY:
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case self::ACTION_DB_OPTM:
 				if ( $_can_network_option || $_can_option ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case Core::ACTION_PURGE_EMPTYCACHE:// todo: moved to purge.cls type action
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case Core::ACTION_QS_NOCACHE:
 			case Core::ACTION_QS_PURGE:
@@ -514,9 +500,9 @@ class Router extends Base
 			case Core::ACTION_QS_PURGE_ALL:
 			case Core::ACTION_QS_PURGE_EMPTYCACHE:
 				if ( defined( 'LITESPEED_ON' ) && ( $_is_public_action || self::is_ajax() ) ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
@@ -533,9 +519,9 @@ class Router extends Base
 			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
 				if ( $_can_option && ! $_is_network_admin ) {
-					self::$_action = $action ;
+					self::$_action = $action;
 				}
-				return ;
+				return;
 
 			case self::ACTION_PURGE:
 			case self::ACTION_DEBUG2:
@@ -550,13 +536,13 @@ class Router extends Base
 				 * @since  2.9
 				 */
 				// if ( self::is_ajax() ) {
-				self::$_action = $action ;
+				self::$_action = $action;
 				// }
-				return ;
+				return;
 
 			default:
-				Debug2::debug( '[Router] LSCWP_CTRL match falied: ' . $action ) ;
-				return ;
+				Debug2::debug( '[Router] LSCWP_CTRL match falied: ' . $action );
+				return;
 		}
 
 	}
@@ -569,13 +555,12 @@ class Router extends Base
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function verify_nonce( $action )
-	{
+	private function verify_nonce( $action ) {
 		if ( ! isset( $_REQUEST[Router::NONCE] ) || ! wp_verify_nonce( $_REQUEST[Router::NONCE], $action ) ) {
-			return false ;
+			return false;
 		}
 		else{
-			return true ;
+			return true;
 		}
 	}
 
@@ -610,24 +595,23 @@ class Router extends Base
 	 * @access public
 	 * @return string
 	 */
-	public static function get_ip()
-	{
-		$_ip = '' ;
+	public static function get_ip() {
+		$_ip = '';
 		if ( function_exists( 'apache_request_headers' ) ) {
-			$apache_headers = apache_request_headers() ;
-			$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false ;
+			$apache_headers = apache_request_headers();
+			$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
 			if ( ! $_ip ) {
-				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false ;
-				$_ip = explode( ", ", $_ip ) ;
-				$_ip = array_shift( $_ip ) ;
+				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
+				$_ip = explode( ',', $_ip );
+				$_ip = $_ip[ 0 ];
 			}
 
 		}
 
 		if ( ! $_ip ) {
-			$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
+			$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false;
 		}
-		return $_ip ;
+		return $_ip;
 	}
 
 	/**
@@ -636,9 +620,8 @@ class Router extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public static function opcache_enabled()
-	{
-		return function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ;
+	public static function opcache_enabled() {
+		return function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' );
 	}
 
 	/**
@@ -646,8 +629,7 @@ class Router extends Base
 	 *
 	 * @since  3.0
 	 */
-	public static function serve_static()
-	{
+	public static function serve_static() {
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
 			if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
 				return;
@@ -698,8 +680,7 @@ class Router extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler( $cls )
-	{
+	public static function handler( $cls ) {
 		// CDN is child namespaces
 		if ( $cls == self::ACTION_CDN_QUIC || $cls == self::ACTION_CDN_CLOUDFLARE ) {
 			$cls = str_replace( '_', '\\', $cls );
