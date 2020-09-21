@@ -1,3 +1,7 @@
+# Predefined list for excluding JS files or inline JS codes #
+
+# comment can use `# `(there is a space following), or `##`, can use both as a new line or end of one line
+
 maps-api-ssl.google.com
 document.write
 gtag
