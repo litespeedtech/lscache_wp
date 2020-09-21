@@ -34,3 +34,6 @@ seopress_cookies_user_consent_nonce
 
 #SearchWP Metrics
 swpmtxnonce
+
+#wpDataTables #986128
+wdt*
