@@ -109,7 +109,9 @@ class ESI extends Instance {
 	 */
 	private function _transform_nonce() {
 		// Load ESI nonces in conf
-		if ( $nonces = Conf::val( Base::O_ESI_NONCE ) ) {
+		$nonces = Conf::val( Base::O_ESI_NONCE );
+		add_filter( 'litespeed_esi_nonces', array( Data::get_instance(), 'load_esi_nonces' ) );
+		if ( apply_filters( 'litespeed_esi_nonces', $nonces ) ) {
 			foreach ( $nonces as $action ) {
 				$this->nonce_action( $action );
 			}
@@ -164,43 +166,6 @@ class ESI extends Instance {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get ESI latest nonce list from git
-	 *
-	 * @since  3.2.3
-	 */
-	public function fetch_esi_nonce() {
-		// Read latest list from https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt
-		$response = wp_remote_get( 'https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt' );
-		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'remote_get_fail', 'Failed to fetch from https://raw.githubusercontent.com/litespeedtech/lscache_wp/master/data/esi.nonce.txt', array( 'status' => 404 ) );
-		}
-
-		$data = $response[ 'body' ];
-		$data = explode( "\n", $data );
-		$list = array();
-		foreach ( $data as $v ) {
-			// Drop comments (Codes from dologin)
-			if ( strpos( $v, '#' ) !== false ) {
-				$v = trim( substr( $v, 0, strpos( $v, '#' ) ) );
-			}
-
-			if ( ! $v ) {
-				continue;
-			}
-
-			$list[] = $v;
-		}
-
-		Debug2::debug( '[ESI] Latest list', $list );
-
-		$ori = ! empty( $_POST[ 'nonce_val' ] ) ? explode( "\n", $_POST[ 'nonce_val' ] ) : array();
-
-		$list = array_unique( array_filter( array_merge( $ori, $list ) ) );
-		$list = implode( "\n", $list );
-		return array( 'list' => $list );
 	}
 
 	/**

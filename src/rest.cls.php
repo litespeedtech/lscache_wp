@@ -42,16 +42,6 @@ class REST extends Instance {
 			}
 		) );
 
-		// fetch_esi_nonce
-		// Need validation
-		register_rest_route( 'litespeed/v1', '/fetch_esi_nonce', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'fetch_esi_nonce' ),
-			'permission_callback'	=> function() {
-				return current_user_can( 'manage_network_options' ) || current_user_can( 'manage_options' );
-			}
-		) );
-
 		// IP callback validate
 		register_rest_route( 'litespeed/v1', '/ip_validate', array(
 			'methods' => 'POST',
@@ -171,15 +161,6 @@ class REST extends Instance {
 	 */
 	public function check_img() {
 		return Img_Optm::get_instance()->check_img();
-	}
-
-	/**
-	 * Launch api call
-	 *
-	 * @since  3.2.3
-	 */
-	public function fetch_esi_nonce() {
-		return ESI::get_instance()->fetch_esi_nonce();
 	}
 
 	/**

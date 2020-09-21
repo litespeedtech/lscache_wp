@@ -40,6 +40,7 @@ class Optimize extends Base {
 
 	private $dns_prefetch;
 	private $_ggfonts_urls = array();
+	private $__data;
 
 	private $html_foot = ''; // The html info append to <body>
 	private $html_head = ''; // The html info prepend to <body>
@@ -52,6 +53,7 @@ class Optimize extends Base {
 	 * @access protected
 	 */
 	protected function __construct() {
+		$this->__data = Data::get_instance();
 	}
 
 	/**
@@ -385,6 +387,7 @@ class Optimize extends Base {
 
 		// Parse js from buffer as needed
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
+			add_filter( 'litespeed_optimize_js_excludes', array( $this->__data, 'load_js_exc' ) );
 			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js();
 		}
 
@@ -769,7 +772,7 @@ class Optimize extends Base {
 		// Need to check conflicts
 		// If short hash exists
 		$existed = false;
-		if ( $optm_data = Data::get_instance()->optm_hash2src( $filename ) ) {
+		if ( $optm_data = $this->__data->optm_hash2src( $filename ) ) {
 			// If conflicts
 			if ( $optm_data[ 'src' ] === $src && ( ! $url_sensitive || $optm_data[ 'refer' ] === $request_url ) ) {
 				$existed = true;
@@ -781,7 +784,7 @@ class Optimize extends Base {
 
 		// Need to insert the record
 		if ( ! $existed ) {
-			Data::get_instance()->optm_save_src( $filename, $src, $request_url );
+			$this->__data->optm_save_src( $filename, $src, $request_url );
 		}
 
 		// Generate static files

@@ -10,8 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Data extends Instance
-{
+class Data extends Instance {
 	private $_db_updater = array(
 		// Example
 		// '2.0'	=> array(
@@ -41,8 +40,7 @@ class Data extends Instance
 	 * @since  1.3.1
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 	}
 
 	/**
@@ -54,8 +52,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function correct_tb_existance()
-	{
+	public function correct_tb_existance() {
 		// CSS JS optm
 		if ( Optimize::need_db() ) {
 			$this->tb_create( 'cssjs' );
@@ -83,8 +80,7 @@ class Data extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public function conf_upgrade( $ver )
-	{
+	public function conf_upgrade( $ver ) {
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
@@ -141,8 +137,7 @@ class Data extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public function conf_site_upgrade( $ver )
-	{
+	public function conf_site_upgrade( $ver ) {
 		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
@@ -180,8 +175,7 @@ class Data extends Instance
 	 *
 	 * @since 3.0.1
 	 */
-	private function _get_upgrade_lock()
-	{
+	private function _get_upgrade_lock() {
 		$is_upgrading = get_option( 'litespeed.data.upgrading' );
 		if ( $is_upgrading && time() - $is_upgrading < 3600 ) {
 			return $is_upgrading;
@@ -195,8 +189,7 @@ class Data extends Instance
 	 *
 	 * @since 3.0.1
 	 */
-	public function check_upgrading_msg()
-	{
+	public function check_upgrading_msg() {
 		$is_upgrading = $this->_get_upgrade_lock();
 		if ( ! $is_upgrading ) {
 			return;
@@ -210,8 +203,7 @@ class Data extends Instance
 	 *
 	 * @since 3.0.1
 	 */
-	private function _set_upgrade_lock( $lock )
-	{
+	private function _set_upgrade_lock( $lock ) {
 		if ( ! $lock ) {
 			delete_option( 'litespeed.data.upgrading' );
 		}
@@ -228,8 +220,7 @@ class Data extends Instance
 	 * @since 3.0
 	 * @access public
 	 */
-	public function try_upgrade_conf_3_0()
-	{
+	public function try_upgrade_conf_3_0() {
 		$previous_options = get_option( 'litespeed-cache-conf' );
 		if ( ! $previous_options ) {
 			Cloud::version_check( 'new' );
@@ -285,8 +276,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb( $tb )
-	{
+	public function tb( $tb ) {
 		global $wpdb;
 
 		switch ( $tb ) {
@@ -326,8 +316,7 @@ class Data extends Instance
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_exist( $tb )
-	{
+	public function tb_exist( $tb ) {
 		global $wpdb;
 		return $wpdb->get_var( "SHOW TABLES LIKE '" . $this->tb( $tb ) . "'" );
 	}
@@ -452,6 +441,66 @@ class Data extends Instance
 		$res[ 'src' ] = json_decode( $res[ 'src' ], true );
 
 		return $res;
+	}
+
+	/**
+	 * Get list from `data/js_excludes.txt`
+	 *
+	 * @since  3.5
+	 */
+	public function load_js_exc( $list ) {
+		$data = $this->_load_per_line( 'js_excludes.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Get list from `data/esi.nonces.txt`
+	 *
+	 * @since  3.5
+	 */
+	public function load_esi_nonces( $list ) {
+		$data = $this->_load_per_line( 'esi.nonces.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Load file per line
+	 *
+	 * Support two kinds of comments:
+	 * 		1. `# this is comment`
+	 * 		2. `##this is comment`
+	 *
+	 * @since  3.5
+	 */
+	private function _load_per_line( $file ) {
+		$data = File::read( LSCWP_DIR . 'data/' . $file );
+		$data = explode( PHP_EOL, $data );
+		$list = array();
+		foreach ( $data as $v ) {
+			// Drop two kinds of comments
+			if ( strpos( $v, '##' ) !== false ) {
+				$v = trim( substr( $v, 0, strpos( $v, '##' ) ) );
+			}
+			if ( strpos( $v, '# ' ) !== false ) {
+				$v = trim( substr( $v, 0, strpos( $v, '# ' ) ) );
+			}
+
+			if ( ! $v ) {
+				continue;
+			}
+
+			$list[] = $v;
+		}
+
+		return $list;
 	}
 
 }

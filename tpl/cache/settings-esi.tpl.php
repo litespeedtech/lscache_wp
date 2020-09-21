@@ -88,9 +88,13 @@ defined( 'WPINC' ) || exit ;
 					<?php $this->build_textarea( $id ) ; ?>
 				</div>
 				<div class="litespeed-width-3-10">
-					<a class="button litespeed-btn-warning" id="litespeed_fetch_esi_nonce"><?php echo __( 'Fetch Latest Predefined Nonces', 'litespeed-cache' ); ?></a>
 					<p class="litespeed-desc">
-						<?php echo __( 'This will append any new predefined nonces found from the latest list source', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonce.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonce.txt</a>
+						<?php echo __( 'The list will be merged with the predefined nonces in your local data file.', 'litespeed-cache' ); ?>
+						<?php echo __( 'The latest data file is', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonce.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonce.txt</a>
+						<br /><font class="litespeed-success">
+							<?php echo __( 'API', 'litespeed-cache' ); ?>:
+							<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_esi_nonces</code>' ); ?>
+						</font>
 					</p>
 				</div>
 			</div>
