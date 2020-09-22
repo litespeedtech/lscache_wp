@@ -61,10 +61,7 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'NOTE', 'litespeed-cache' ); ?>:</h4>
 				<ol>
-					<li><?php echo __( 'If the category slug is not found, the category will be removed from the list on save.', 'litespeed-cache' ); ?></li>
-					<li><?php echo sprintf( __( 'To exclude %1$s, insert %2$s.', 'litespeed-cache' ),
-								'<code>http://www.example.com/category/category-slug/</code>',
-								'<code>category-slug</code>' ); ?></li>
+					<li><?php echo __( 'If the category name is not found, the category will be removed from the list on save.', 'litespeed-cache' ); ?></li>
 				</ol>
 			</div>
 		</td>
