@@ -263,6 +263,10 @@ class Object_Cache {
 			return null;
 		}
 
+		if ( defined( 'LITESPEED_OC_FAILURE' ) ) {
+			return false;
+		}
+
 		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port );
 
 		$failed = false;
@@ -368,6 +372,7 @@ class Object_Cache {
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Failed to connect ' . $this->_oc_driver . ' server!' );
 			$this->_conn = null;
 			$this->_cfg_enabled = false;
+			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 			// error_log( 'Object: false!' );
 			return false;
 		}
