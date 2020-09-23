@@ -389,18 +389,23 @@ class CSS extends Base {
 				return false;
 			}
 
-			$dirname = dirname( parse_url( $this_url, PHP_URL_PATH ) );
+			if ( $file_type == 'css' ) {
+				$dirname = dirname( $this_url ) . '/';
+
+				$con = Lib\CSS_MIN\UriRewriter::prepend( $con, $dirname );
+			}
 		}
 		else {
 			Debug2::debug2( '[CSS] Load local [' . $file_type . '] ' . $real_file[ 0 ] );
 			$con = File::read( $real_file[ 0 ] );
 
-			$dirname = dirname( $real_file[ 0 ] );
+			if ( $file_type == 'css' ) {
+				$dirname = dirname( $real_file[ 0 ] );
+
+				$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, $dirname );
+			}
 		}
 
-		if ( $file_type == 'css' ) {
-			$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, $dirname ); // TODO: check if remote URL relative resource can be rewritten correctly or not
-		}
 
 		return $con;
 	}
