@@ -790,11 +790,10 @@ class Optimize extends Base {
 		$html_list = array();
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
-		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $content, $matches );
-// Debug2::debug2('==========checking=xxxxxx===========', $matches);return array(false,false);
+		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs = empty( $match[ 1 ] ) ? array() : Utility::parse_attr( $match[ 1 ] );
-// Debug2::debug2('==========checking============', $match[0]);
+
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue;
 			}
@@ -844,7 +843,7 @@ class Optimize extends Base {
 				$this_src_arr[ 'inl' ] = true;
 				$this_src_arr[ 'src' ] = $match[ 2 ];
 			}
-// Debug2::debug2('==============appended');
+
 			$src_list[] = $this_src_arr;
 			$html_list[] = $match[ 0 ];
 		}
