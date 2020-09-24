@@ -388,7 +388,7 @@ class Optimize extends Base {
 		// Parse js from buffer as needed
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->__data, 'load_js_exc' ) );
-			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js();
+			list( $src_list, $html_list ) = $this->_parse_js();
 		}
 
 		// js optimizer
@@ -397,35 +397,13 @@ class Optimize extends Base {
 			if ( $src_list ) {
 				// IF combine
 				if ( $this->cfg_js_comb ) {
-					// separate head/foot js/raw html
-					$head_js = array();
-					$foot_js = array();
-					foreach ( $src_list as $k => $src_info ) {
-						if ( in_array( $src_info[ 'src' ], $head_src_list ) ) {
-							$head_js[ $k ] = $src_info;
-						}
-						else {
-							$foot_js[ $k ] = $src_info;
-						}
-					}
+					$url = $this->_build_hash_url( $src_list, 'js' );
+					$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
 
-					if ( $head_js ) {
-						$url = $this->_build_hash_url( $head_js, 'js' );
-						$this->html_head .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+					// Add to HTTP2
+					$this->append_http2( $url, 'js' );
 
-						// Add to HTTP2
-						$this->append_http2( $url, 'js' );
-					}
-
-					if ( $foot_js ) {
-						$url = $this->_build_hash_url( $foot_js, 'js' );
-						$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
-
-						// Add to HTTP2
-						$this->append_http2( $url, 'js' );
-					}
-
-					// Will move all js to top/bottom
+					// Will move all JS to bottom combined one
 					$this->content = str_replace( $html_list, '', $this->content );
 
 				}
@@ -810,19 +788,13 @@ class Optimize extends Base {
 
 		$src_list = array();
 		$html_list = array();
-		$head_src_list = array();
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
-		preg_match_all( '#<script([^>]*)>(.*)</script>|</head>#isU', $content, $matches, PREG_SET_ORDER );
-		$is_head = true;
+		preg_match_all( '#<script([^>]*)>(.*)</script>#isU', $content, $matches );
+// Debug2::debug2('==========checking=xxxxxx===========', $matches);return array(false,false);
 		foreach ( $matches as $match ) {
-			if ( $match[ 0 ] == '</head>' ) {
-				$is_head = false;
-				continue;
-			}
-
 			$attrs = empty( $match[ 1 ] ) ? array() : Utility::parse_attr( $match[ 1 ] );
-
+// Debug2::debug2('==========checking============', $match[0]);
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue;
 			}
@@ -872,16 +844,12 @@ class Optimize extends Base {
 				$this_src_arr[ 'inl' ] = true;
 				$this_src_arr[ 'src' ] = $match[ 2 ];
 			}
-
+// Debug2::debug2('==============appended');
 			$src_list[] = $this_src_arr;
 			$html_list[] = $match[ 0 ];
-
-			if ( $is_head ) {
-				$head_src_list[] = $this_src_arr[ 'src' ];
-			}
 		}
 
-		return array( $src_list, $html_list, $head_src_list );
+		return array( $src_list, $html_list );
 	}
 
 	/**
