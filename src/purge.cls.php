@@ -295,7 +295,6 @@ class Purge extends Base {
 
 		$this->_add( Tag::TYPE_MIN );
 
-		// For non-ls users
 		Optimize::get_instance()->rm_cache_folder();
 
 		if ( ! $silence ) {

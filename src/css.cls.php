@@ -261,9 +261,11 @@ class CSS extends Base {
 	public function test_url( $request_url ) {
 		$user_agent = $_SERVER[ 'HTTP_USER_AGENT' ];
 		$html = $this->_prepare_html( $request_url, $user_agent );
-		list( $css, $html ) = $this->_prepare_css( $html );
-		var_dump( $css );
+		list( $css, $html ) = $this->_prepare_css( $html, true );
+		// var_dump( $css );
+$css = <<<EOT
 
+EOT;
 		$data = array(
 			'url'			=> $request_url,
 			'ccss_type'		=> 'test',
@@ -303,7 +305,7 @@ class CSS extends Base {
 	 *
 	 * @since  3.4.3
 	 */
-	private function _prepare_css( $html ) {
+	private function _prepare_css( $html, $dryrun =false ) {
 		$css = '';
 		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
@@ -338,9 +340,14 @@ class CSS extends Base {
 				$debug_info = $attrs[ 'href' ];
 
 				// Load CSS content
-				$con = $this->load_file( $attrs[ 'href' ] );
-				if ( ! $con ) {
-					continue;
+				if ( ! $dryrun ) { // Dryrun will not load CSS but just drop them
+					$con = $this->load_file( $attrs[ 'href' ] );
+					if ( ! $con ) {
+						continue;
+					}
+				}
+				else {
+					$con = '';
 				}
 			}
 			else { // Inline style
