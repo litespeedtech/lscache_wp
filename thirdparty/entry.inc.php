@@ -26,6 +26,7 @@ $third_cls = array(
 	'Facetwp',
 	'Theme_My_Login',
 	'User_Switching',
+	'VillaTheme_Multi_Currency',
 	'WCML',
 	'WooCommerce',
 	'Woo_Paypal',
