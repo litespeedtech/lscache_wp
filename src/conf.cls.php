@@ -655,6 +655,10 @@ class Conf extends Base {
 			return;
 		}
 
+		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
+			return;
+		}
+
 		// Validate type
 		if ( is_bool( self::$_default_site_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id );
