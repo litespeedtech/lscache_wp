@@ -644,7 +644,7 @@ class Cloud extends Base {
 			Admin_Display::error( $msg );
 
 			// Site not on QC, delete invalid domain key
-			if ( $json_msg == 'site_not_registered' ) {
+			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
 				Conf::get_instance()->update_confs( array( Base::O_API_KEY => '' ) );
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
