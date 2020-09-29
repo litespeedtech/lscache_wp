@@ -830,6 +830,10 @@ class Optimize extends Base {
 					continue;
 				}
 
+				if ( strpos( $attrs[ 'src' ], 'instant_click' ) !== false ) {
+					continue;
+				}
+
 				$this_src_arr[ 'src' ] = $attrs[ 'src' ];
 			}
 			// Inline JS

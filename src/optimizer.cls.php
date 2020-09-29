@@ -145,7 +145,7 @@ class Optimizer extends Instance {
 			}
 			else {
 				if ( ! $concat_only && ! $is_min ) {
-					$content = self::minify_js( $content );
+					$content = self::minify_js( $content ); // TODO: may encounter minify var conflict
 				}
 				else {
 					$content = $this->_null_minifier( $content );
