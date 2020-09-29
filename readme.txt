@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.5.1
-Stable tag: 3.4.2
+Stable tag: 3.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,38 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.5 - Sep 29 2020 =
+* **Page Optimize** Refactored CSS/JS optimization.
+* **Page Optimize** CSS and JS Combine now each save to a single file without memory usage issues.
+* **CSS** Inline CSS Minify is now a part of CSS Minify, and will respect thr original priorities. (thanks to @galbaras)
+* **JS** JS Combine now generates a single JS file in the footer. (Special thanks to @ankit)
+* **JS** JS Combine now combines external JS files, too. (Thanks to @ankit)
+* **JS** JS Deferred Excludes now uses the original path/filename as keywords instead of the minified path/filename, when JS Minify is enabled.
+* **JS** JS Combine now combines inline JS, too.
+* **JS** JS Excludes may now be used for inline JS snippet.
+* **Page Optimize** Inline CSS Minify and Max Combined File Size retired due to changes listed above.
+* **CSS** Combined CSS Priority retired due to changes listed above.
+* **JS** Exclude JQuery, Combined JS Priority, Load Inline JS Deferred, and Inline JS Deferred Excludes retired due to changes listed above.
+* **JS** Predefined data file data/js_excludes.txt now available for JS Excludes.
+* **ESI** Predefined data file data/esi.nonces.txt now available for ESI Nonces.
+* **ESI** Remote Fetch ESI Nonces functionality retired.
+* **API** Added support for new litespeed_esi_nonces filter.
+* **Object** Object Cache will not try to reconnect after failure to connect in a single process.
+* **CCSS** Remote read CSS will add the scheme if it is missing from the URL.
+* **CCSS** CSS will no longer be prepared for a URL if 404 result is detected.
+* **CCSS** Fixed most failures caused by third party CSS syntax errors.
+* **CCSS** Remote read CSS will fix the scheme if the URL doesn't have it.
+* **CCSS** Excluded 404 when preparing CSS before request.
+* **CCSS** Adjusted CCSS timeout from 180 seconds to 30 seconds.
+* **Image Optimize** Fixed the delete attachment database error that occurred when not using the image optimization service yet.
+* **Media** Added iOS 14 WebP support.
+* **Data** Fixed database creation failure for MySQL v8.
+* **Cloud** Error code err_key will clear the domain key in order to avoid duplicate invalid requests.
+* **Network** Fixed issue with object cache password file storage that occurred when resaving the settings. (#302358)
+* **Misc** Fixed IP detect compatibility w/ Apache.
+* **GUI** Fixed the description for Do Not Cache Categories.
+* **Preload** Upgraded Instant Click to a new stable preload library. (@stasonua0)
 
 = 3.4.2 - Sep 8 2020 =
 * **CCSS** Corrected the issue that wrongly appended non-CSS files to CSS in links before sending request.
