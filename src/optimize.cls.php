@@ -875,7 +875,8 @@ class Optimize extends Base {
 		// $items = $dom->find( 'link' );
 
 		$content = preg_replace( array( '#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU' ), '', $this->content );
-		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER );
+		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER );
+
 		foreach ( $matches as $match ) {
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
@@ -890,7 +891,6 @@ class Optimize extends Base {
 			$this_src_arr = array();
 			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
 				$attrs = Utility::parse_attr( $match[ 1 ] );
-
 				if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
 					continue;
 				}
@@ -942,8 +942,13 @@ class Optimize extends Base {
 				$this_src_arr[ 'src' ] = $attrs[ 'href' ];
 			}
 			else { // Inline style
-				$this_src_arr[ 'inl' ] = true;
-				$this_src_arr[ 'src' ] = $match[ 2 ];
+				$attrs = Utility::parse_attr( $match[ 2 ] );
+
+				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
+					$this_src_arr[ 'media' ] = $attrs[ 'media' ];
+				}
+								$this_src_arr[ 'inl' ] = true;
+				$this_src_arr[ 'src' ] = $match[ 3 ];
 			}
 
 			$src_list[] = $this_src_arr;
