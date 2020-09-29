@@ -263,9 +263,13 @@ class CSS extends Base {
 		$html = $this->_prepare_html( $request_url, $user_agent );
 		list( $css, $html ) = $this->_prepare_css( $html, true );
 		// var_dump( $css );
-$css = <<<EOT
+// 		$html = <<<EOT
 
-EOT;
+// EOT;
+
+// 		$css = <<<EOT
+
+// EOT;
 		$data = array(
 			'url'			=> $request_url,
 			'ccss_type'		=> 'test',
