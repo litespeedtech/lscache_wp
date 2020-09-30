@@ -5,6 +5,10 @@
 # JS file URL excludes
 maps-api-ssl.google.com
 stats.wp.com
+js.stripe.com
+userway.org
+google.com/recaptcha
+
 
 # Inline JS excludes
 document.write
@@ -13,3 +17,5 @@ nonce
 gtm
 dataLayer
 adsbygoogle
+js.stripe.com
+google-analytics.com
