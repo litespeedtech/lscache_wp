@@ -8,7 +8,7 @@ stats.wp.com
 js.stripe.com
 userway
 google.com/recaptcha
-
+maps.googleapis.com
 
 # Inline JS excludes
 document.write
