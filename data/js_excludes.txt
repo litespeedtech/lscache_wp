@@ -6,7 +6,7 @@
 maps-api-ssl.google.com
 stats.wp.com
 js.stripe.com
-userway.org
+userway
 google.com/recaptcha
 
 
