@@ -389,7 +389,7 @@ class Optimize extends Base {
 		}
 
 		// Parse js from buffer as needed
-		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->__data, 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
 		}
@@ -436,6 +436,10 @@ class Optimize extends Base {
 			$this->content = str_replace( $html_list, $html_list2, $this->content );
 		}
 
+		// Handle Inline JS defer if not combined
+		if ( $this->cfg_js_inline_defer && ! $this->cfg_js_comb ) {
+			$this->_js_inline_defer_handler( $src_list, $html_list );
+		}
 
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
@@ -856,6 +860,9 @@ class Optimize extends Base {
 
 				$this_src_arr[ 'inl' ] = true;
 				$this_src_arr[ 'src' ] = $match[ 2 ];
+				if ( $match[ 1 ] ) {
+					$this_src_arr[ 'attrs' ] = $match[ 1 ];
+				}
 			}
 
 			$src_list[] = $this_src_arr;
@@ -868,6 +875,25 @@ class Optimize extends Base {
 		}
 
 		return array( $src_list, $html_list );
+	}
+
+	/**
+	 * Handle inline JS defer if no combined
+	 *
+	 * @since  3.5
+	 */
+	private function _js_inline_defer_handler( $src_list, $html_list ) {
+		foreach ( $src_list as $k => $src_info ) {
+			if ( empty( $src_info[ 'inl' ] ) ) {
+				continue;
+			}
+
+			$attrs = ! empty( $src_info[ 'attrs' ] ) ? $src_info[ 'attrs' ] : '';
+			$deferred = $this->_js_inline_defer( $src_info[ 'src' ], $attrs );
+			if ( $deferred ) {
+				$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
+			}
+		}
 	}
 
 	/**
