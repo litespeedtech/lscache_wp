@@ -32,6 +32,7 @@ class Optimize extends Base {
 	private $cfg_js_comb;
 	private $cfg_css_async;
 	private $cfg_js_defer;
+	private $cfg_js_inline_defer;
 	private $cfg_js_defer_exc = false;
 	private $cfg_ggfonts_async;
 	private $_conf_css_font_display;
@@ -46,6 +47,7 @@ class Optimize extends Base {
 	private $html_head = ''; // The html info prepend to <body>
 
 	private static $_var_i = 0;
+	private static $_var_preserve_js = array();
 
 	/**
 	 *
@@ -69,6 +71,7 @@ class Optimize extends Base {
 			$this->cfg_css_async = false;
 		}
 		$this->cfg_js_defer = Conf::val( Base::O_OPTM_JS_DEFER );
+		$this->cfg_js_inline_defer = Conf::val( Base::O_OPTM_JS_INLINE_DEFER );
 
 		if ( ! Router::can_optm() ) {
 			return;
@@ -88,7 +91,7 @@ class Optimize extends Base {
 		 * Exclude js from deferred setting
 		 * @since 1.5
 		 */
-		if ( $this->cfg_js_defer ) {
+		if ( $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', Conf::val( Base::O_OPTM_JS_DEFER_EXC ) );
 		}
 
@@ -840,6 +843,13 @@ class Optimize extends Base {
 			elseif ( ! empty( $match[ 2 ] ) ) {
 				// Exclude check
 				if ( $excludes && $exclude = Utility::str_hit_array( $match[ 2 ], $excludes ) ) {
+					// Maybe defer
+					if ( $this->cfg_js_inline_defer ) {
+						$deferred = $this->_js_inline_defer( $match[ 2 ], $match[ 1 ] );
+						if ( $deferred ) {
+							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
+						}
+					}
 					Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
 					continue;
 				}
@@ -852,7 +862,66 @@ class Optimize extends Base {
 			$html_list[] = $match[ 0 ];
 		}
 
+		if ( $this->_var_preserve_js ) {
+			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
+			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
+		}
+
 		return array( $src_list, $html_list );
+	}
+
+	/**
+	 * Inline JS defer
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function _js_inline_defer( $con, $attrs ) {
+		if ( $this->cfg_js_defer_exc ) {
+			$hit = Utility::str_hit_array( $con, $this->cfg_js_defer_exc );
+			if ( $hit ) {
+				Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
+				return;
+			}
+		}
+
+		$con = trim( $con );
+		// Minify JS first
+		$con = Optimizer::minify_js( $con );
+
+		if ( ! $con ) {
+			return;
+		}
+
+		if ( $this->cfg_js_inline_defer === 2 ) {
+			// Check if the content contains ESI nonce or not
+			if ( $esi_placeholder_list = ESI::get_instance()->contain_preserve_esi( $con ) ) {
+				foreach ( $esi_placeholder_list as $esi_placeholder ) {
+					$js_var = '__litespeed_var_' . ( self::$_var_i ++ ) . '__';
+					$con = str_replace( $esi_placeholder, $js_var, $con );
+					$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
+				}
+			}
+			return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
+		}
+		else {
+			// Prevent var scope issue
+			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
+				return;
+			}
+
+			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
+				return;
+			}
+
+			if ( strpos( $con, 'document.addEventListener' ) !== false ) {
+				return;
+			}
+
+			// $con = str_replace( 'var ', 'window.', $con );
+
+			return '<script' . $attrs . '>document.addEventListener("DOMContentLoaded",function(){' . $con . '});</script>';
+		}
 	}
 
 	/**
