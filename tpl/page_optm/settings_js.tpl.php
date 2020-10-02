@@ -31,7 +31,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Combine JS files.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Combine all local JS files into a single file.', 'litespeed-cache' ); ?>
 				<a href="https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ); ?></a>
 			</div>
 		</td>
@@ -45,8 +45,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Combine external JS files and inline JS codes too.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'Turning this %1$s will help maintaining the priorities of JS execution, which may reduce uncessary JS errors when using %2$s.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . Lang::title( Base::O_OPTM_JS_COMB ) . '</code>' ); ?>
+				<?php echo sprintf( __( 'Include external JS and inline JS in combined file when %1$s is also enabled. This option helps maintain the priorities of JS execution, which should minimize potential errors caused by JS Combine.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_JS_COMB ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
