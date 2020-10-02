@@ -129,8 +129,8 @@ class Base extends Instance {
 	const O_OPTM_CSS_HTTP2 			= 'optm-css_http2';
 	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
-	const O_OPTM_JS_INLINE_MIN 		= 'optm-js_inline_min';
 	const O_OPTM_JS_COMB 			= 'optm-js_comb';
+	const O_OPTM_JS_COMB_EXT_INL	= 'optm-js_comb_ext_inl';
 	const O_OPTM_JS_HTTP2 			= 'optm-js_http2';
 	const O_OPTM_JS_EXC 			= 'optm-js_exc';
 	const O_OPTM_TTL 				= 'optm-ttl';
@@ -425,8 +425,8 @@ class Base extends Instance {
 		self::O_OPTM_CSS_HTTP2 			=> false,
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,
-		self::O_OPTM_JS_INLINE_MIN 		=> false,
 		self::O_OPTM_JS_COMB 			=> false,
+		self::O_OPTM_JS_COMB_EXT_INL	=> false,
 		self::O_OPTM_JS_HTTP2 			=> false,
 		self::O_OPTM_JS_EXC 			=> array(),
 		self::O_OPTM_TTL 				=> 0,

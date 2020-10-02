@@ -689,7 +689,7 @@ class Optimize extends Base {
 					$code = Optimizer::minify_css( $src_info[ 'src' ] );
 				}
 				else {
-					continue; // Inline JS minify will be done by HTML minify
+					$code = Optimizer::minify_js( $src_info[ 'src' ] );
 				}
 				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 			}
@@ -793,6 +793,8 @@ class Optimize extends Base {
 	private function _parse_js() {
 		$excludes = apply_filters( 'litespeed_optimize_js_excludes', Conf::val( Base::O_OPTM_JS_EXC ) );
 
+		$combine_ext_inl = Conf::val( Base::O_OPTM_JS_COMB_EXT_INL );
+
 		$src_list = array();
 		$html_list = array();
 
@@ -820,7 +822,9 @@ class Optimize extends Base {
 			// JS files
 			if ( ! empty( $attrs[ 'src' ] ) ) {
 				// Exclude check
-				if ( $excludes && $exclude = Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
+				$js_excluded = $excludes && Utility::str_hit_array( $attrs[ 'src' ], $excludes );
+				$ext_excluded = ! $combine_ext_inl && ! Utility::is_internal_file( $attrs[ 'src' ] );
+				if ( $js_excluded || $ext_excluded ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
 						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
@@ -829,7 +833,7 @@ class Optimize extends Base {
 						}
 					}
 
-					Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
+					Debug2::debug2( '[Optm] _parse_js bypassed exclude due to ' . ( $js_excluded ? 'js excluded' : 'external js' ) );
 					continue;
 				}
 
@@ -846,7 +850,8 @@ class Optimize extends Base {
 			// Inline JS
 			elseif ( ! empty( $match[ 2 ] ) ) {
 				// Exclude check
-				if ( $excludes && $exclude = Utility::str_hit_array( $match[ 2 ], $excludes ) ) {
+				$js_excluded = $excludes && Utility::str_hit_array( $match[ 2 ], $excludes );
+				if ( $js_excluded || ! $combine_ext_inl ) {
 					// Maybe defer
 					if ( $this->cfg_js_inline_defer ) {
 						$deferred = $this->_js_inline_defer( $match[ 2 ], $match[ 1 ] );
@@ -854,7 +859,7 @@ class Optimize extends Base {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 						}
 					}
-					Debug2::debug2( '[Optm] _parse_js bypassed exclude ' . $exclude );
+					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js excluded' : 'inline js' ) );
 					continue;
 				}
 

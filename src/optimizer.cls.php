@@ -38,7 +38,7 @@ class Optimizer extends Instance {
 	public function html_min( $content, $force_inline_minify = false ) {
 		$options = array();
 
-		if ( Conf::val( Base::O_OPTM_JS_INLINE_MIN ) || $force_inline_minify ) {
+		if ( $force_inline_minify ) {
 			$options[ 'jsMinifier' ] = __CLASS__ . '::minify_js';
 		}
 

@@ -39,19 +39,6 @@ defined( 'WPINC' ) || exit;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_JS_INLINE_MIN; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Minify inline JS code.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_DNS_PREFETCH; ?>
 			<?php $this->title( $id ); ?>

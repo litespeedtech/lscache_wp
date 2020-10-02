@@ -303,7 +303,7 @@ function litespeed_update_3_0( $ver )
 		'css_http2'				=> 'optm-css_http2',
 		'css_exclude' 			=> 'optm-css_exc',
 		'js_minify'				=> 'optm-js_min',
-		'js_inline_minify'		=> 'optm-js_inline_min',
+		// 'js_inline_minify'		=> 'optm-js_inline_min',
 		'js_combine'			=> 'optm-js_comb',
 		// 'js_combined_priority'	=> 'optm-js_comb_priority',
 		'js_http2'				=> 'optm-js_http2',
