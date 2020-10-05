@@ -12,10 +12,9 @@ defined( 'WPINC' ) || exit;
 
 class Data extends Instance {
 	private $_db_updater = array(
-		// Example
-		// '2.0'	=> array(
-		// 	'litespeed_update_2_0',
-		// ),
+		'3.5.0.3'	=> array(
+			'litespeed_update_3_5',
+		),
 	);
 
 	private $_db_site_updater = array(
@@ -195,7 +194,7 @@ class Data extends Instance {
 			return;
 		}
 
-		Admin_Display::info( sprintf( __( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ), true );
+		Admin_Display::info( sprintf( __( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ) . ' [LiteSpeed]', true );
 	}
 
 	/**

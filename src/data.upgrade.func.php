@@ -6,17 +6,31 @@
  *
  * @since  3.0
  */
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Debug2 ;
+use LiteSpeed\Debug2;
+use LiteSpeed\Conf;
+
+/**
+ * Append jQuery to JS optm exclude list for max compatibility
+ *
+ * @since  3.5.1
+ */
+function litespeed_update_3_5() {
+	foreach ( array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v ) {
+		$curr_setting = Conf::val( $v );
+		$curr_setting[] = 'jquery.js';
+		$curr_setting[] = 'jquery.min.js';
+		Conf::get_instance()->update( $v, $curr_setting );
+	}
+}
 
 /**
  * For version under v2.0 to v2.0+
  *
  * @since  3.0
  */
-function litespeed_update_2_0( $ver )
-{
+function litespeed_update_2_0( $ver ) {
 	global $wpdb ;
 
 	// Table version only exists after all old data migrated
@@ -105,8 +119,7 @@ function litespeed_update_2_0( $ver )
  *
  * @since  3.0
  */
-function litespeed_update_3_0( $ver )
-{
+function litespeed_update_3_0( $ver ) {
 	global $wpdb;
 	// Upgrade v2.0- to v2.0 first
 	if ( version_compare( $ver, '2.0', '<' ) ) {
