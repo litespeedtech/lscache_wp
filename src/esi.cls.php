@@ -111,7 +111,7 @@ class ESI extends Instance {
 		// Load ESI nonces in conf
 		$nonces = Conf::val( Base::O_ESI_NONCE );
 		add_filter( 'litespeed_esi_nonces', array( Data::get_instance(), 'load_esi_nonces' ) );
-		if ( apply_filters( 'litespeed_esi_nonces', $nonces ) ) {
+		if ( $nonces = apply_filters( 'litespeed_esi_nonces', $nonces ) ) {
 			foreach ( $nonces as $action ) {
 				$this->nonce_action( $action );
 			}

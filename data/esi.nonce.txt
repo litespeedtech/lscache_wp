@@ -1,3 +1,5 @@
+# !!!!! Legacy file for v3.5.1- !!!!!
+
 ## Predefined elsewhere so not needed here:
 
 ## WordPress core

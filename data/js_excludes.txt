@@ -9,7 +9,6 @@ stats.wp.com
 # Inline JS excludes
 document.write
 gtag
-nonce
 gtm
 dataLayer
 adsbygoogle

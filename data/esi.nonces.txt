@@ -1,3 +1,9 @@
+## To predefine more list, please submit a PR to https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonces.txt
+## 	 Comment Format:
+## 		1. `# this is comment`
+## 		2. `##this is comment`
+
+
 ## Predefined elsewhere so not needed here:
 
 ## WordPress core

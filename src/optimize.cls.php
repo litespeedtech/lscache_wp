@@ -441,6 +441,12 @@ class Optimize extends Base {
 			$this->_js_inline_defer_handler( $src_list, $html_list );
 		}
 
+		// Append JS inline var for preserved ESI
+		if ( $this->_var_preserve_js ) {
+			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
+			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
+		}
+
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
@@ -734,6 +740,18 @@ class Optimize extends Base {
 			$src = array( $src );
 		}
 
+		// Replace preserved ESI (before generating hash)
+		if ( $file_type == 'js' ) {
+			foreach ( $src as $k => $v ) {
+				if ( empty( $v[ 'inl' ] ) ) {
+					continue;
+				}
+				if ( ! empty( $v[ 'src' ] ) ) {
+					$src[ $k ][ 'src' ] = $this->_preserve_esi( $v[ 'src' ] );
+				}
+			}
+		}
+
 		// Query string hash
 		$qs_hash = substr( md5( json_encode( $src ) . self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
 
@@ -874,11 +892,6 @@ class Optimize extends Base {
 			$html_list[] = $match[ 0 ];
 		}
 
-		if ( $this->_var_preserve_js ) {
-			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
-			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
-		}
-
 		return array( $src_list, $html_list );
 	}
 
@@ -926,13 +939,7 @@ class Optimize extends Base {
 
 		if ( $this->cfg_js_inline_defer === 2 ) {
 			// Check if the content contains ESI nonce or not
-			if ( $esi_placeholder_list = ESI::get_instance()->contain_preserve_esi( $con ) ) {
-				foreach ( $esi_placeholder_list as $esi_placeholder ) {
-					$js_var = '__litespeed_var_' . ( self::$_var_i ++ ) . '__';
-					$con = str_replace( $esi_placeholder, $js_var, $con );
-					$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
-				}
-			}
+			$con = $this->_preserve_esi( $con );
 			return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
 		}
 		else {
@@ -953,6 +960,25 @@ class Optimize extends Base {
 
 			return '<script' . $attrs . '>document.addEventListener("DOMContentLoaded",function(){' . $con . '});</script>';
 		}
+	}
+
+	/**
+	 * Replace ESI to JS inline var (mainly used to avoid nonce timeout)
+	 *
+	 * @since  3.5.1
+	 */
+	private function _preserve_esi( $con ) {
+		$esi_placeholder_list = ESI::get_instance()->contain_preserve_esi( $con );
+		if ( ! $esi_placeholder_list ) {
+			return $con;
+		}
+
+		foreach ( $esi_placeholder_list as $esi_placeholder ) {
+			$js_var = '__litespeed_var_' . ( self::$_var_i ++ ) . '__';
+			$con = str_replace( $esi_placeholder, $js_var, $con );
+			$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
+		}
+		return $con;
 	}
 
 	/**
