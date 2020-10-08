@@ -13,15 +13,26 @@ use LiteSpeed\Conf;
 
 /**
  * Append jQuery to JS optm exclude list for max compatibility
+ * Turn off JS Combine and Defer
  *
  * @since  3.5.1
  */
 function litespeed_update_3_5() {
+	$__conf = Conf::get_instance();
+	// Excludes jQuery
 	foreach ( array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v ) {
 		$curr_setting = Conf::val( $v );
 		$curr_setting[] = 'jquery.js';
 		$curr_setting[] = 'jquery.min.js';
-		Conf::get_instance()->update( $v, $curr_setting );
+		$__conf->update( $v, $curr_setting );
+	}
+	// Turn off JS Combine and defer
+	foreach ( array( 'optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer' ) as $v ) {
+		$curr_setting = Conf::val( $v );
+		if ( ! $curr_setting ) {
+			continue;
+		}
+		$__conf->update( $v, false );
 	}
 }
 
