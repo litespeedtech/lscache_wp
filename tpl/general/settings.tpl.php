@@ -92,7 +92,7 @@ $this->form_action();
 			<?php if ( $is_requesting ) : ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Notice', 'litespeed-cache' ); ?>:</h4>
-					<p><?php echo __( 'Please wait. You will be notified upon approval.', 'litespeed-cache' ); ?></p>
+					<p><?php echo __( 'Request submitted. Please wait, then refresh the page to see approval notification.', 'litespeed-cache' ); ?></p>
 				</div>
 			<?php endif; ?>
 
