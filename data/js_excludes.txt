@@ -5,6 +5,7 @@
 # JS file URL excludes
 maps-api-ssl.google.com
 stats.wp.com
+js.stripe.com
 
 # Inline JS excludes
 document.write
