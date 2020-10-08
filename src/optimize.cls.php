@@ -47,7 +47,7 @@ class Optimize extends Base {
 	private $html_head = ''; // The html info prepend to <body>
 
 	private static $_var_i = 0;
-	private static $_var_preserve_js = array();
+	private $_var_preserve_js = array();
 
 	/**
 	 *
