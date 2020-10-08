@@ -642,7 +642,7 @@ class Control extends Instance {
 
 		$env_vary = isset( $_SERVER[ 'LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'LSCACHE_VARY_VALUE' ] : false;
 		if ( ! $env_vary ) {
-			$env_vary = isset( $_SERVER[ 'HTTP_LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'HTTP_LSCACHE_VARY_VALUE' ] : false;
+			$env_vary = isset( $_SERVER[ 'HTTP_X_LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'HTTP_X_LSCACHE_VARY_VALUE' ] : false;
 		}
 		if ( $env_vary && strpos( $env_vary, 'ismobile' ) !== false ) {
 			if ( ! wp_is_mobile() && ! $is_mobile ) {
