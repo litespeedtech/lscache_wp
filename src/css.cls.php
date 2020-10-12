@@ -563,6 +563,10 @@ class CSS extends Base {
 	{
 		$css = Utility::page_type();
 
+		if ( is_multisite() ) {
+			$css .= '-' . get_current_blog_id();
+		}
+
 		$unique = false;
 
 		// Check if in separate css type option
