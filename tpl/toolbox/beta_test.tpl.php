@@ -1,6 +1,15 @@
 <?php
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
+
+// Existing public version list
+$v_list = array(
+	'3.5.0.1' => 'https://github.com/litespeedtech/lscache_wp/commit/e7c1d22fd10fcfc5eb54fa195f551fd64a500e41',
+	'3.4.2'	=> 'https://github.com/litespeedtech/lscache_wp/commit/668d5370676145ed85ebf2233de56fb8fe03f081',
+	'3.3.2'	=> 'https://github.com/litespeedtech/lscache_wp/commit/bcc3e25f4b896b605c2748cee7d69cd7bd167c31',
+	'3.2.4'	=> 'https://github.com/litespeedtech/lscache_wp/commit/e1a10be73ec8894b728e0a8ca1bd4f88f71178b9',
+);
+
 ?>
 
 <?php $this->form_action( Router::ACTION_DEBUG2, Debug2::TYPE_BETA_TEST ); ?>
@@ -18,6 +27,12 @@ defined( 'WPINC' ) || exit;
 	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='dev';"><?php echo __( 'Use latest GitHub commit', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_GITHUB; ?></code> <?php echo __( 'OR', 'litespeed-cache' ) ?> <code>dev</code></p>
 
 	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='latest';"><?php echo __( 'Use latest WordPress release version', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_WP; ?></code> <?php echo __( 'OR', 'litespeed-cache' ) ?> <code>latest</code></p>
+
+	<?php foreach ( $v_list as $v => $link ) : ?>
+
+		<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='<?php echo $link; ?>';"><?php echo $v; ?></a></p>
+
+	<?php endforeach; ?>
 
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to use the most recent GitHub commit.', 'litespeed-cache' ), '<code>' . __( 'Use latest GitHub commit', 'litespeed-cache' ) . '</code>' ); ?></div>
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to stop beta testing and go back to the current release from the WordPress Plugin Directory.', 'litespeed-cache' ), '<code>' . __( 'Use latest WordPress release version', 'litespeed-cache' ) . '</code>' ); ?></div>
