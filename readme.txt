@@ -15,6 +15,8 @@ LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin,
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO.
 
+LiteSpeed Cache for WordPress is compatible with ClassicPress.
+
 == Requirements ==
 **General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGiNX, etc.).
 
