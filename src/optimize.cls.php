@@ -840,7 +840,7 @@ class Optimize extends Base {
 			// JS files
 			if ( ! empty( $attrs[ 'src' ] ) ) {
 				// Exclude check
-				$js_excluded = $excludes && Utility::str_hit_array( $attrs[ 'src' ], $excludes );
+				$js_excluded = $excludes ? Utility::str_hit_array( $attrs[ 'src' ], $excludes ) : false;
 				$ext_excluded = ! $combine_ext_inl && ! Utility::is_internal_file( $attrs[ 'src' ] );
 				if ( $js_excluded || $ext_excluded ) {
 					// Maybe defer
@@ -851,7 +851,7 @@ class Optimize extends Base {
 						}
 					}
 
-					Debug2::debug2( '[Optm] _parse_js bypassed exclude due to ' . ( $js_excluded ? 'js excluded' : 'external js' ) );
+					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js files excluded [hit] ' . $js_excluded : 'external js' ) );
 					continue;
 				}
 
@@ -867,8 +867,9 @@ class Optimize extends Base {
 			}
 			// Inline JS
 			elseif ( ! empty( $match[ 2 ] ) ) {
+				// Debug2::debug( '🌹🌹🌹 ' . $match[2] . '🌹' );
 				// Exclude check
-				$js_excluded = $excludes && Utility::str_hit_array( $match[ 2 ], $excludes );
+				$js_excluded = $excludes ? Utility::str_hit_array( $match[ 2 ], $excludes ) : false;
 				if ( $js_excluded || ! $combine_ext_inl ) {
 					// Maybe defer
 					if ( $this->cfg_js_inline_defer ) {
@@ -877,7 +878,7 @@ class Optimize extends Base {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 						}
 					}
-					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js excluded' : 'inline js' ) );
+					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js excluded [hit] ' . $js_excluded : 'inline js' ) );
 					continue;
 				}
 

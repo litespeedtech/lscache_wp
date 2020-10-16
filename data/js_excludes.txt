@@ -6,6 +6,8 @@
 maps-api-ssl.google.com
 stats.wp.com
 js.stripe.com
+paypal.com/sdk/js
+maps.google.com/maps
 
 # Inline JS excludes
 document.write
