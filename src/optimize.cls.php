@@ -841,7 +841,8 @@ class Optimize extends Base {
 			if ( ! empty( $attrs[ 'src' ] ) ) {
 				// Exclude check
 				$js_excluded = $excludes ? Utility::str_hit_array( $attrs[ 'src' ], $excludes ) : false;
-				$ext_excluded = ! $combine_ext_inl && ! Utility::is_internal_file( $attrs[ 'src' ] );
+				$is_internal = Utility::is_internal_file( $attrs[ 'src' ] );
+				$ext_excluded = ! $combine_ext_inl && ! $is_internal;
 				if ( $js_excluded || $ext_excluded ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
@@ -851,15 +852,25 @@ class Optimize extends Base {
 						}
 					}
 
+					if ( $is_internal ) {
+						$this->append_http2( $attrs[ 'src' ], 'js' );
+					}
+
 					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js files excluded [hit] ' . $js_excluded : 'external js' ) );
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
+					if ( $is_internal ) {
+						$this->append_http2( $attrs[ 'src' ], 'js' );
+					}
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], 'instant_click' ) !== false ) {
+					if ( $is_internal ) {
+						$this->append_http2( $attrs[ 'src' ], 'js' );
+					}
 					continue;
 				}
 
