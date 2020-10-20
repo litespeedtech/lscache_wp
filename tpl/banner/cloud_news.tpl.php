@@ -27,7 +27,7 @@ defined( 'WPINC' ) || exit;
 					<?php if ( ! empty( $this->_summary[ 'news.zip' ] ) ) : ?>
 					<?php $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_INSTALL_ZIP ); ?>
 					<a href="<?php echo $install_link ; ?>" class="litespeed-btn-success litespeed-btn-mini">
-						 <?php echo __( 'Install Beta Version', 'litespeed-cache' ); ?>
+						 <?php echo __( 'Install', 'litespeed-cache' ); ?>
 					</a>
 					<?php endif; ?>
 				</div>
