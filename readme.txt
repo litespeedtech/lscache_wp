@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.5.1
-Stable tag: 3.5.0.1
+Stable tag: 3.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -246,6 +246,24 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.5.1 - Oct 20 2020 =
+* **JS** Inline JS containing nonces can now be combined.
+* **JS** Reset JS Combine/Defer to OFF when upgrading to avoid breaking sites.
+* **JS** Added new option JS Combine External and Inline to allow backwards compatibility.
+* **JS** Added Inline JS Defer option back. (@ankit)
+* **Page Optimize** Dropped Inline JS Minify option and merged the feature into JS Minify.
+* **JS** Pre-added jQuery to the default JS excludes/defer list for better layout compatibility for new users.
+* **JS** Excluded Stripe/PayPal/Google Mapa from JS optimization. (@FPCSJames)
+* **JS** Allowed excluded JS to still be HTTP2 pushed. (@joshua)
+* **CCSS** Critical CSS now can avoid network pollution from other sites. (@ankit)
+* **Toolbox** Beta Test now displays recent public versions so it is easier to revert to an older version
+* **Vary** Server environment variable Vary can now be passed to original server from QUIC.cloud for non-LiteSpeed servers.
+* **ESI** Improved backward compatibility for ESI nonce list. (@zach E)
+* **Doc** Added note that LSCWP works with ClassicPress.
+
+= 3.5.0.2 - Sep 30 2020 =
+* This is a temporary revert fix. Code is SAME as v3.4.2.
 
 = 3.5.0.1 - Sep 29 2020 =
 * 🔥🐞**CSS** Fixed print media query issue when having CSS Combine. (@paddy-duncan)
