@@ -540,18 +540,19 @@ class Activation extends Instance {
 				$instance->dash_notifier_install_3rd();
 				break;
 
-			case self::TYPE_DISMISS_RECOMMENDED :
-				$news = get_option( 'litespeed-recommended', array() );
-				$news[ 'new' ] = 0;
-				update_option( 'litespeed-recommended', $news );
+			case self::TYPE_DISMISS_RECOMMENDED:
+				$summary = Cloud::get_summary();
+				$summary[ 'news.new' ] = 0;
+				Cloud::save_summary( $summary );
 				break;
 
-			case self::TYPE_INSTALL_ZIP :
-				$news = get_option( 'litespeed-recommended', array() );
-				if ( ! empty( $news[ 'zip' ] ) ) {
-					$news[ 'new' ] = 0;
-					update_option( 'litespeed-recommended', $news );
-					Debug2::get_instance()->beta_test( $news[ 'zip' ] );
+			case self::TYPE_INSTALL_ZIP:
+				$summary = Cloud::get_summary();
+				if ( ! empty( $summary[ 'news.zip' ] ) ) {
+					$summary[ 'news.new' ] = 0;
+					Cloud::save_summary( $summary );
+
+					Debug2::get_instance()->beta_test( $summary[ 'zip' ] );
 				}
 				break;
 
