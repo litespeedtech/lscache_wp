@@ -254,7 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **JS** Added Inline JS Defer option back. (@ankit)
 * **Page Optimize** Dropped Inline JS Minify option and merged the feature into JS Minify.
 * **JS** Pre-added jQuery to the default JS excludes/defer list for better layout compatibility for new users.
-* **JS** Excluded Stripe/PayPal/Google Mapa from JS optimization. (@FPCSJames)
+* **JS** Excluded Stripe/PayPal/Google Map from JS optimization. (@FPCSJames)
 * **JS** Allowed excluded JS to still be HTTP2 pushed. (@joshua)
 * **CCSS** Critical CSS now can avoid network pollution from other sites. (@ankit)
 * **Toolbox** Beta Test now displays recent public versions so it is easier to revert to an older version
