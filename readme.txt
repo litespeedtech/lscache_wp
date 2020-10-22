@@ -260,7 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Toolbox** Beta Test now displays recent public versions so it is easier to revert to an older version
 * **Vary** Server environment variable Vary can now be passed to original server from QUIC.cloud for non-LiteSpeed servers.
 * **ESI** Improved backward compatibility for ESI nonce list. (@zach E)
-* **Misc** Fixed failure of upgrade button on plugin news banner and made cosmetic improvements.
+* 🐞**Misc** Fixed failure of upgrade button on plugin news banner and made cosmetic improvements.
 * **Doc** Added note that LSCWP works with ClassicPress.
 
 = 3.5.0.2 - Sep 30 2020 =
