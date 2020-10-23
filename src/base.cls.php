@@ -837,10 +837,10 @@ class Base extends Instance {
 			self::O_CACHE_FORCE_URI		=> 'relative',
 			self::O_CACHE_FORCE_PUB_URI	=> 'relative',
 			self::O_CACHE_EXC			=> 'relative',
-			self::O_OPTM_CSS_EXC		=> 'uri',
-			self::O_OPTM_JS_EXC			=> 'uri',
+			// self::O_OPTM_CSS_EXC		=> 'uri', // Need to comment out for inline & external CSS
+			// self::O_OPTM_JS_EXC			=> 'uri',
 			self::O_OPTM_EXC			=> 'relative',
-			self::O_OPTM_JS_DEFER_EXC	=> 'uri',
+			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
