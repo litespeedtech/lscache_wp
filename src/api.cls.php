@@ -138,6 +138,11 @@ class API extends Base {
 		add_filter( 'litespeed_is_from_cloud', __NAMESPACE__ . '\Cloud::is_from_cloud' ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
+		 * Media
+		 */
+		add_action( 'litespeed_media_reset', __NAMESPACE__ . '\Media::delete_attachment' ); // Reset one media row
+
+		/**
 		 * GUI
 		 */
 		// API::clean_wrapper_begin( $counter = false ) -> Filter `litespeed_clean_wrapper_begin` // Start a to-be-removed html wrapper
