@@ -1012,7 +1012,7 @@ class Optimize extends Base {
 		// $dom->load( $content );return $val;
 		// $items = $dom->find( 'link' );
 
-		$content = preg_replace( array( '#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU' ), '', $this->content );
+		$content = preg_replace( array( '#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU', '#<noscript([^>]*)>.*</noscript>#isU' ), '', $this->content );
 		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER );
 
 		foreach ( $matches as $match ) {
