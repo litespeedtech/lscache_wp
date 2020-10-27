@@ -27,6 +27,7 @@ class GUI extends Base {
 	const TYPE_DISMISS_WHM = 'whm';
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault';
 	const TYPE_DISMISS_PROMO = 'promo';
+	const TYPE_DISMISS_PIN = 'pin';
 
 	const WHM_MSG = 'lscwp_whm_install';
 	const WHM_MSG_VAL = 'whm_install';
@@ -177,7 +178,11 @@ class GUI extends Base {
 				self::update_option( Admin_Display::DB_DISMISS_MSG, Admin_Display::RULECONFLICT_DISMISSED );
 				break;
 
-			case self::TYPE_DISMISS_PROMO :
+			case self::TYPE_DISMISS_PIN:
+				admin_display::dismiss_pin();
+				break;
+
+			case self::TYPE_DISMISS_PROMO:
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
 					break;
 				}

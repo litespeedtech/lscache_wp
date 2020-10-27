@@ -20,6 +20,7 @@ class Admin_Display extends Base {
 	const NOTICE_RED = 'notice notice-error';
 	const NOTICE_YELLOW = 'notice notice-warning';
 	const DB_MSG = 'messages';
+	const DB_MSG_PIN = 'msg_pin';
 
 	const PURGEBY_CAT = '0';
 	const PURGEBY_PID = '1';
@@ -316,8 +317,15 @@ class Admin_Display extends Base {
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	public static function build_notice($color, $str) {
-		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>';
+	public static function build_notice( $color, $str, $irremovable = false ) {
+		$cls = $color;
+		if ( $irremovable ) {
+			$cls .= ' litespeed-irremovable';
+		}
+		else {
+			$cls .= ' is-dismissible';
+		}
+		return '<div class="' . $cls . '"><p>'. $str . '</p></div>';
 	}
 
 	/**
@@ -326,8 +334,8 @@ class Admin_Display extends Base {
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function info( $msg, $echo = false ) {
-		self::add_notice( self::NOTICE_BLUE, $msg, $echo );
+	public static function info( $msg, $echo = false, $irremovable = false ) {
+		self::add_notice( self::NOTICE_BLUE, $msg, $echo, $irremovable );
 	}
 
 	/**
@@ -336,8 +344,8 @@ class Admin_Display extends Base {
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function note( $msg, $echo = false ) {
-		self::add_notice( self::NOTICE_YELLOW, $msg, $echo );
+	public static function note( $msg, $echo = false, $irremovable = false ) {
+		self::add_notice( self::NOTICE_YELLOW, $msg, $echo, $irremovable );
 	}
 
 	/**
@@ -346,8 +354,8 @@ class Admin_Display extends Base {
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function succeed( $msg, $echo = false ) {
-		self::add_notice( self::NOTICE_GREEN, $msg, $echo );
+	public static function succeed( $msg, $echo = false, $irremovable = false ) {
+		self::add_notice( self::NOTICE_GREEN, $msg, $echo, $irremovable );
 	}
 
 	/**
@@ -356,8 +364,8 @@ class Admin_Display extends Base {
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function error( $msg, $echo = false ) {
-		self::add_notice( self::NOTICE_RED, $msg, $echo );
+	public static function error( $msg, $echo = false, $irremovable = false ) {
+		self::add_notice( self::NOTICE_RED, $msg, $echo, $irremovable );
 	}
 
 	/**
@@ -366,7 +374,7 @@ class Admin_Display extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public static function add_notice( $color, $msg, $echo = false ) {
+	public static function add_notice( $color, $msg, $echo = false, $irremovable = false ) {
 		// Bypass adding for CLI or cron
 		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
 			// WP CLI will show the info directly
@@ -387,17 +395,20 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG );
+		$msg_name = $irremovable ? self::DB_MSG_PIN : self::DB_MSG;
+
+		$messages = self::get_option( $msg_name );
 
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
-				$messages[] = self::build_notice($color, $str);
+				$messages[] = self::build_notice( $color, $str, $irremovable );
 			}
 		}
 		else {
-			$messages[] = self::build_notice($color, $msg);
+			$messages[] = self::build_notice( $color, $msg, $irremovable );
 		}
-		self::update_option( self::DB_MSG, $messages );
+		$messages = array_unique( $messages );
+		self::update_option( $msg_name, $messages );
 	}
 
 	/**
@@ -418,11 +429,9 @@ class Admin_Display extends Base {
 
 		// One time msg
 		$messages = self::get_option( self::DB_MSG );
-		if( is_array($messages) ) {
-			$messages = array_unique($messages);
-
-			$added_thickbox = false;
-			foreach ($messages as $msg) {
+		$added_thickbox = false;
+		if( is_array( $messages ) ) {
+			foreach ( $messages as $msg ) {
 				// Added for popup links
 				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
 					add_thickbox();
@@ -432,6 +441,25 @@ class Admin_Display extends Base {
 			}
 		}
 		self::delete_option( self::DB_MSG );
+
+		// Pinned msg
+		$messages = self::get_option( self::DB_MSG_PIN );
+		if( is_array( $messages ) ) {
+			foreach ( $messages as $k => $msg ) {
+				// Added for popup links
+				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
+					add_thickbox();
+					$added_thickbox = true;
+				}
+
+				// Append close btn
+				if ( substr( $msg, -6 ) == '</div>' ) {
+					$link = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PIN, false, null, array( 'msgid' => $k ) );
+					$msg = substr( $msg, 0, -6 ) . '<p><a href="' . $link . '" class="button litespeed-btn-primary litespeed-btn-mini">' . __( 'Dismiss', 'litespeed-cache' ) . '</a>' . '</p></div>';
+				}
+				echo $msg;
+			}
+		}
 
 		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed' ) !== 0 ) {
 			global $pagenow;
@@ -460,6 +488,31 @@ class Admin_Display extends Base {
 
 		// Show version news
 		Cloud::get_instance()->news();
+	}
+
+	/**
+	 * Dismiss pinned msg
+	 *
+	 * @since 3.5.2
+	 * @access public
+	 */
+	public static function dismiss_pin() {
+		if ( ! isset( $_GET[ 'msgid' ] ) ) {
+			return;
+		}
+
+		$messages = self::get_option( self::DB_MSG_PIN );
+		if ( empty( $messages[ $_GET[ 'msgid' ] ] ) ) {
+			return;
+		}
+
+		unset( $messages[ $_GET[ 'msgid' ] ] );
+		if ( ! $messages ) {
+			self::delete_option( self::DB_MSG_PIN );
+		}
+		else {
+			self::update_option( self::DB_MSG_PIN, $messages );
+		}
 	}
 
 	/**

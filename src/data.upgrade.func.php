@@ -10,6 +10,7 @@ defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Conf;
+use LiteSpeed\Admin_Display;
 
 /**
  * Append jQuery to JS optm exclude list for max compatibility
@@ -27,12 +28,20 @@ function litespeed_update_3_5() {
 		$__conf->update( $v, $curr_setting );
 	}
 	// Turn off JS Combine and defer
+	$show_msg = false;
 	foreach ( array( 'optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer' ) as $v ) {
 		$curr_setting = Conf::val( $v );
 		if ( ! $curr_setting ) {
 			continue;
 		}
+		$show_msg = true;
 		$__conf->update( $v, false );
+	}
+
+	if ( $show_msg ) {
+		$msg = sprintf( __( 'LiteSpeed Cache upgraded successfully. NOTE: Due to changes in this version, the settings %1$s and %2$s have been turned OFF. Please turn them back on manually and verify that your site layout is correct, and you have no JS errors.', 'litespeed-cache' ), '<code>' . __( 'JS Combine', 'litespeed-cache' ) . '</code>', '<code>' . __( 'JS Defer', 'litespeed-cache' ) . '</code>' );
+		$msg .= sprintf( ' <a href="admin.php?page=litespeed-page_optm#settings_js">%s</a>.', __( 'Click here to settings', 'litespeed-cache' ) );
+		Admin_Display::info( $msg, false, true );
 	}
 }
 
