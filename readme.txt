@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.5.1
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -246,6 +246,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 
 == Changelog ==
+
+= 3.5.2 - Oct 27 2020 =
+* **CSS** `CSS Combine` now can be compatible w/ inline noscript CSS. (@galbaras)
+* **GUI** Manual dismiss message for JS option reset in v3.5.1 upgrade process. (#473917)
+* 🐞**CSS** `CSS Excludes` setting will no more lose items beginning w/ `#`. (@ankit)
+* **API** New API `litespeed_media_reset` for images edit purpose. (@Andro)
 
 = 3.5.1 - Oct 20 2020 =
 * **JS** Inline JS containing nonces can now be combined.
