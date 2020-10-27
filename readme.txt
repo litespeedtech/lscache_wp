@@ -248,10 +248,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 3.5.2 - Oct 27 2020 =
-* **CSS** `CSS Combine` now can be compatible w/ inline noscript CSS. (@galbaras)
-* **GUI** Manual dismiss message for JS option reset in v3.5.1 upgrade process. (#473917)
-* 🐞**CSS** `CSS Excludes` setting will no more lose items beginning w/ `#`. (@ankit)
-* **API** New API `litespeed_media_reset` for images edit purpose. (@Andro)
+* **CSS** `CSS Combine` is now compatible w/ inline noscript CSS. (@galbaras)
+* **GUI** Added ability to manually dismiss the JS option reset message in v3.5.1 upgrade process. (#473917)
+* 🐞**CSS** `CSS Excludes` setting will no longer lose items beginning w/ `#`. (@ankit)
+* **API** New `litespeed_media_reset` API function for image editing purposes. (@Andro)
 
 = 3.5.1 - Oct 20 2020 =
 * **JS** Inline JS containing nonces can now be combined.
