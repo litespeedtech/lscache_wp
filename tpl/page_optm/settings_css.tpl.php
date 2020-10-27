@@ -65,12 +65,13 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 	<tr class="litespeed-hide">
 		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_UCSS; ?>
-			<?php $this->title( $id ); ?> (Experiential Only)
+			<?php $this->title( $id ); ?>
 		</th>
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
+				<?php echo __( 'This will drop the unused CSS on each page.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
