@@ -354,7 +354,7 @@ function litespeed_update_3_0( $ver ) {
 		// 'optm_exclude_jquery'	=> 'optm-exc_jq',
 		'optm_ggfonts_async'	=> 'optm-ggfonts_async',
 		// 'optm_max_size'			=> 'optm-max_size',
-		'optm_rm_comment'		=> 'optm-rm_comment',
+		// 'optm_rm_comment'		=> 'optm-rm_comment',
 	) ;
 	foreach ( $data as $k => $v ) {
 		if ( ! isset( $previous_options[ $k ] ) ) {

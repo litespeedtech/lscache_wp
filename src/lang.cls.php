@@ -127,7 +127,6 @@ class Lang extends Base
 			self::O_OPTM_LOCALIZE_DOMAINS		=> __( 'Localization Domains', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH			=> __( 'DNS Prefetch', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH_CTRL		=> __( 'DNS Prefetch Control', 'litespeed-cache' ),
-			self::O_OPTM_RM_COMMENT				=> __( 'Remove Comments', 'litespeed-cache' ),
 			self::O_OPTM_CSS_EXC				=> __( 'CSS Excludes', 'litespeed-cache' ),
 			self::O_OPTM_JS_EXC					=> __( 'JS Excludes', 'litespeed-cache' ),
 			self::O_OPTM_QS_RM					=> __( 'Remove Query Strings', 'litespeed-cache' ),

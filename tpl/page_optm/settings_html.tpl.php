@@ -71,20 +71,6 @@ defined( 'WPINC' ) || exit;
 
 	<tr>
 		<th>
-			<?php $id = Base::O_OPTM_RM_COMMENT; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Remove the comments inside of JS/CSS files when minifying.', 'litespeed-cache' ); ?>
-				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = Base::O_OPTM_QS_RM; ?>
 			<?php $this->title( $id ); ?>
 		</th>

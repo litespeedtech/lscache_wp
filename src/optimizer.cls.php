@@ -103,7 +103,6 @@ class Optimizer extends Instance {
 		File::save( $static_file, '', true ); // TODO: need to lock file too
 
 		// Load content
-		$_rm_comment = Conf::val( Base::O_OPTM_RM_COMMENT );
 		$real_files = array();
 		foreach ( $src_list as $src_info ) {
 			$is_min = false;
@@ -120,10 +119,6 @@ class Optimizer extends Instance {
 				}
 
 				$is_min = $this->_is_min( $src );
-			}
-
-			if ( $_rm_comment ) {
-				$content = $this->_remove_comment( $content, $file_type );
 			}
 
 			// CSS related features
@@ -237,40 +232,6 @@ class Optimizer extends Instance {
 		return false;
 	}
 
-	/**
-	 * Remove comment when minify
-	 *
-	 * @since  1.7.1
-	 * @since  1.9 Moved here from optiize.cls
-	 * @access private
-	 */
-	private function _remove_comment( $content, $type ) {
-		$_from = array(
-			'|\/\*.*\*\/|U',
-			'|\/\*.*\*\/|sU',
-			"|\n+|",
-			// "|;+\n*;+|",
-			// "|\n+;|",
-			// "|;\n+|"
-		);
-
-		$_to = array(
-			'',
-			"\n",
-			"\n",
-			// ';',
-			// ';',
-			// ';',
-		);
-
-		$content = preg_replace( $_from, $_to, $content );
-		if ( $type == 'css' ) {
-			$content = preg_replace( "|: *|", ':', $content );
-			$content = preg_replace( "| */ *|", '/', $content );
-		}
-		$content = trim( $content );
-		return $content;
-	}
 }
 
 
