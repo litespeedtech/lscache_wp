@@ -443,6 +443,20 @@ class Data extends Instance {
 	}
 
 	/**
+	 * Get list from `data/css_excludes.txt`
+	 *
+	 * @since  3.6
+	 */
+	public function load_css_exc( $list ) {
+		$data = $this->_load_per_line( 'css_excludes.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get list from `data/js_excludes.txt`
 	 *
 	 * @since  3.5

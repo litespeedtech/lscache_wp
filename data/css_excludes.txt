@@ -1,0 +1,24 @@
+# Predefined list for excluding CSS files or inline CSS codes #
+# Comment can use `# `(there is a space following), or `##`, can use both as a new line or end of one line
+# If you want to predefine new items, please send a Pull Request to https://github.com/litespeedtech/lscache_wp/blob/master/data/css_excludes.txt We will merge into next plugin release
+
+# CSS file URL excludes
+
+
+
+# Inline CSS excludes
+
+########## Flatsome theme random string excludes ############
+#row-
+#col-
+#cats-
+#stack-
+#timer-
+#gap-
+#portfolio-
+#image_
+#banner-
+#map-
+#text-box-
+#page-header-
+#section_

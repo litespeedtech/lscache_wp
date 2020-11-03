@@ -336,6 +336,7 @@ class Optimize extends Base {
 
 		// Parse css from content
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
+			add_filter( 'litespeed_optimize_css_excludes', array( $this->__data, 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
 		}
 
