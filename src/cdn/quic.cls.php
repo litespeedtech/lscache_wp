@@ -49,6 +49,7 @@ class Quic extends Instance
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
 			}
 		}
+		unset( $options[ Base::O_MEDIA_LQIP_EXC ] );
 
 		// Rest url
 		$options[ '_rest' ] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
