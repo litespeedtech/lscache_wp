@@ -934,6 +934,11 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _js_inline_defer( $con, $attrs ) {
+		if ( strpos( $attrs, 'data-no-defer' ) !== false ) {
+			Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
+			return;
+		}
+
 		if ( $this->cfg_js_defer_exc ) {
 			$hit = Utility::str_hit_array( $con, $this->cfg_js_defer_exc );
 			if ( $hit ) {
