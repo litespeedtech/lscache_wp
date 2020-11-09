@@ -3237,6 +3237,14 @@ msgstr ""
 msgid "These options will be invalid when using %s."
 msgstr ""
 
+#: tpl/crawler/settings-sitemap.tpl.php:120
+msgid "Posts Max Age"
+msgstr ""
+
+#: tpl/crawler/settings-sitemap.tpl.php:126
+msgid "Posts older than max age (in days), will not be included in the sitemap."
+msgstr ""
+
 #: tpl/crawler/summary.tpl.php:23
 msgid "%d hours"
 msgstr ""
