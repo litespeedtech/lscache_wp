@@ -15,3 +15,5 @@ gtag
 gtm
 dataLayer
 adsbygoogle
+
+block_tdi_ ## Theme: Newspaper by tagDiv.com
