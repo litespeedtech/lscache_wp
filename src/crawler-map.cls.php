@@ -533,6 +533,12 @@ class Crawler_Map extends Instance {
 
 		$show_tags = Conf::val( Base::O_CRAWLER_TAGS );
 
+		$post_max_age = Conf::val( Base::O_CRAWLER_POST_MAX_AGE );
+
+		if($post_max_age){
+			$post_max_age = mktime(0, 0, 0, date("m")  , date("d")-$post_max_age, date("Y"));
+		}
+
 		switch ( Conf::val( Base::O_CRAWLER_ORDER_LINKS ) ) {
 			case 1:
 				$orderBy = " ORDER BY post_date ASC";
@@ -576,7 +582,14 @@ class Crawler_Map extends Instance {
 
 			foreach ( $results as $result ){
 				$slug = str_replace( $this->_home_url, '', get_permalink( $result->ID ) );
-				if ( ! in_array($slug, $blacklist) ) {
+
+				$within_allowed_age = true;
+				if($post_max_age){
+					$postDate = strtotime(get_the_date("d-m-Y", $result->ID ));
+					$within_allowed_age = $post_max_age <= $postDate;
+				}
+
+				if ( ! in_array($slug, $blacklist) && $within_allowed_age) {
 					$this->_urls[] = $slug;
 				}
 			}
