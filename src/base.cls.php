@@ -149,6 +149,7 @@ class Base extends Instance {
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
 	const O_OPTM_NOSCRIPT_RM 		= 'optm-noscript_rm';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
+	const O_OPTM_RM_COMMENT 		= 'optm-rm_comment';
 	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
 	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc';
@@ -230,6 +231,7 @@ class Base extends Instance {
 	const O_CRAWLER_TAGS 			= 'crawler-inc_tags';
 	const O_CRAWLER_EXC_CPT 		= 'crawler-exc_cpt';
 	const O_CRAWLER_ORDER_LINKS 	= 'crawler-order_links';
+	const O_CRAWLER_POST_MAX_AGE 	= 'crawler-post_max_age';
 	const O_CRAWLER_USLEEP 			= 'crawler-usleep';
 	const O_CRAWLER_RUN_DURATION 	= 'crawler-run_duration';
 	const O_CRAWLER_RUN_INTERVAL 	= 'crawler-run_interval';
@@ -442,6 +444,7 @@ class Base extends Instance {
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_NOSCRIPT_RM 		=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
+		self::O_OPTM_RM_COMMENT 		=> false,
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
@@ -515,6 +518,7 @@ class Base extends Instance {
 		self::O_CRAWLER_TAGS 			=> false,
 		self::O_CRAWLER_EXC_CPT 		=> array(),
 		self::O_CRAWLER_ORDER_LINKS 	=> false,
+		self::O_CRAWLER_POST_MAX_AGE    => 0,	
 		self::O_CRAWLER_USLEEP 			=> 0,
 		self::O_CRAWLER_RUN_DURATION 	=> 0,
 		self::O_CRAWLER_RUN_INTERVAL 	=> 0,
