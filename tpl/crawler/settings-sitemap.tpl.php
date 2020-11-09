@@ -115,6 +115,18 @@ $this->form_action();
 						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ); ?>
 					</div>
 				</div>
+
+				<div class='litespeed-col-auto'>
+					<h4><?php echo __('Posts Max Age', 'litespeed-cache'); ?></h4>
+					<div class='litespeed-col-auto'>
+						<?php $id = Base::O_CRAWLER_POST_MAX_AGE; ?>
+						<?php $this->build_input( $id, 'litespeed-input-short' ); ?> <?php echo __( 'Day(s)', 'litespeed-cache' ); ?>
+					</div>
+					<div class="litespeed-desc">
+						<?php echo __( 'Posts older than max age (in days), will not be included in the sitemap.', 'litespeed-cache' ); ?>
+						<?php $this->_validate_ttl( $id, 1,false, true ); ?>
+					</div>
+				</div>
 			</div>
 
 		</td>
