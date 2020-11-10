@@ -92,6 +92,7 @@ class Optimize extends Base {
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
+			add_filter( 'litespeed_optm_js_defer_exc', array( $this->__data, 'load_js_defer_exc' ) );
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', Conf::val( Base::O_OPTM_JS_DEFER_EXC ) );
 		}
 

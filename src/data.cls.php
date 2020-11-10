@@ -471,6 +471,20 @@ class Data extends Instance {
 	}
 
 	/**
+	 * Get list from `data/js_defer_excludes.txt`
+	 *
+	 * @since  3.6
+	 */
+	public function load_js_defer_exc( $list ) {
+		$data = $this->_load_per_line( 'js_defer_excludes.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get list from `data/esi.nonces.txt`
 	 *
 	 * @since  3.5
