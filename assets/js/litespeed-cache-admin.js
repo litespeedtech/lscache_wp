@@ -120,7 +120,10 @@ var _litespeed_dots ;
 		/** Lets copy one more submit button **/
 		if ( $( 'input[name="LSCWP_CTRL"]' ).length > 0 ) {
 			var btn = $( 'input.litespeed-duplicate-float' ) ;
-			btn.clone().addClass( 'litespeed-float-submit' ).insertAfter( btn ) ;
+			btn.clone().addClass( 'litespeed-float-submit' ).removeAttr( 'id' ).insertAfter( btn ) ;
+		}
+		if ( $( 'input[id="LSCWP_NONCE"]' ).length > 0 ) {
+			$( 'input[id="LSCWP_NONCE"]' ).removeAttr( 'id' );
 		}
 
 		/** Promo banner **/
@@ -286,10 +289,6 @@ function litespeed_keycode( num ) {
 }
 
 function litespeed_display_tab(tab) {
-	// setting page -> display submit button
-	if ( jQuery('#litespeed-submit').length > 0 ){
-		jQuery('#litespeed-submit').toggle(tab != 'compatibilities') ;
-	}
 	jQuery('[data-litespeed-tab]').removeClass('nav-tab-active') ;
 	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('nav-tab-active') ;
 	jQuery('[data-litespeed-layout]').hide() ;
