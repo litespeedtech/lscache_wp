@@ -46,6 +46,19 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_CSS_COMB_EXT_INL; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Include external CSS and inline CSS in combined file when %1$s is also enabled. This option helps maintain the priorities of CSS, which should minimize potential errors caused by CSS Combine.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_CSS_COMB ) . '</code>' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_CSS_UNIQUE; ?>
 			<?php $this->title( $id ); ?>
 		</th>

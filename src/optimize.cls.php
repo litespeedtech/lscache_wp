@@ -1010,6 +1010,8 @@ class Optimize extends Base {
 	private function _parse_css() {
 		$excludes = apply_filters( 'litespeed_optimize_css_excludes', Conf::val( Base::O_OPTM_CSS_EXC ) );
 
+		$combine_ext_inl = Conf::val( Base::O_OPTM_CSS_COMB_EXT_INL );
+
 		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() );
 
 		$src_list = array();
@@ -1080,6 +1082,21 @@ class Optimize extends Base {
 					continue;
 				}
 
+				$is_internal = Utility::is_internal_file( $attrs[ 'href' ] );
+				$ext_excluded = ! $combine_ext_inl && ! $is_internal;
+				if ( $ext_excluded ) {
+					Debug2::debug2( '[Optm] Bypassed due to external link' );
+					// Maybe defer
+					if ( $this->cfg_css_async ) {
+						$snippet = $this->_async_css( $match[ 0 ] );
+						if ( $snippet != $match[ 0 ] ) {
+							$this->content = str_replace( $match[ 0 ], $snippet, $this->content );
+						}
+					}
+
+					continue;
+				}
+
 				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 					$this_src_arr[ 'media' ] = $attrs[ 'media' ];
 				}
@@ -1087,12 +1104,18 @@ class Optimize extends Base {
 				$this_src_arr[ 'src' ] = $attrs[ 'href' ];
 			}
 			else { // Inline style
+				if ( ! $combine_ext_inl ) {
+					Debug2::debug2( '[Optm] Bypassed due to inline' );
+					continue;
+				}
+
 				$attrs = Utility::parse_attr( $match[ 2 ] );
 
 				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 					$this_src_arr[ 'media' ] = $attrs[ 'media' ];
 				}
-								$this_src_arr[ 'inl' ] = true;
+
+				$this_src_arr[ 'inl' ] = true;
 				$this_src_arr[ 'src' ] = $match[ 3 ];
 			}
 
