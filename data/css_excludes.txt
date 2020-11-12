@@ -25,4 +25,6 @@
 
 .tdi_ # Theme: Newspaper by tagDiv.com 2020
 
-.tabs-wd- # WoodMart - Responsive WooCommerce WordPress Theme
+######### WoodMart - Responsive WooCommerce WordPress Theme ########
+.tabs-wd-
+#wd-
