@@ -121,6 +121,9 @@ class Conf extends Base {
 		if ( ! $ver || $ver != Core::VER ) {
 			// Load default values
 			$this->load_default_vals();
+			if ( ! $ver ) { // New install
+				$this->_options = self::$_default_options;
+			}
 
 			// Init new default/missing options
 			foreach ( self::$_default_options as $k => $v ) {
