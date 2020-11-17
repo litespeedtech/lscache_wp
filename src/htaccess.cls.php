@@ -610,6 +610,10 @@ class Htaccess extends Instance {
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone.*Version/(\d{2}).*Safari';
 			$new_rules[] = 'RewriteCond %1 >13';
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Mac.*Version/(\d{2}.\d{1,2}(.\d{1,2})?).*Safari';
+			$new_rules[] = 'RewriteCond %1 >14.0.1 [OR]';
+			$new_rules[] = 'RewriteCond %1 =14.0.1';
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_END;
 			$new_rules[] = '';
 		}
