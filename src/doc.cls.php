@@ -57,8 +57,12 @@ class Doc {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function one_per_line() {
-		echo __( 'One per line.', 'litespeed-cache' );
+	public static function one_per_line( $return = false ) {
+		$str = __( 'One per line.', 'litespeed-cache' );
+		if ( $return ) {
+			return $str;
+		}
+		echo $str;
 	}
 
 	/**

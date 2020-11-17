@@ -35,69 +35,32 @@ $this->form_action();
 		<td>
 			<?php $this->enroll( $id . '[name][]' ); ?>
 			<?php $this->enroll( $id . '[vals][]' ); ?>
-			<div id="cookie_crawler">
-				<div class="litespeed-block" v-for="( item, key ) in items">
-					<div class='litespeed-col-auto'>
-						<label class="litespeed-form-label"><?php echo __( 'Cookie Name', 'litespeed-cache' ); ?></label>
-						<input type="text" v-model="item.name" name="<?php echo $id; ?>[name][]" class="regular-text">
-					</div>
-					<div class='litespeed-col-auto'>
-						<label class="litespeed-form-label"><?php echo __( 'Cookie Values', 'litespeed-cache' ); ?></label>
 
-						<textarea v-model="item.vals" rows="5" cols="40" name="<?php echo $id; ?>[vals][]" placeholder="<?php Doc::one_per_line(); ?>"></textarea>
-					</div>
-					<div class='litespeed-col-auto'>
-						<button type="button" class="button button-link litespeed-collection-button litespeed-danger" data-action="remove" @click="$delete( items, key )">
-							<span class="dashicons dashicons-dismiss"></span>
-							<span class="screen-reader-text"><?php echo __( 'Remove cookie simulation', 'litespeed-cache' ) ; ?></span>
-						</button>
-					</div>
-				</div>
+			<div id="litespeed_crawler_simulation_div"></div>
 
-				<p>
-					<button type="button" @click='add_row' class="button button-link litespeed-form-action litespeed-link-with-icon" data-action="add">
-						<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new cookie to simulate', 'litespeed-cache' ) ;?>
-					</button>
-				</p>
-
-			</div>
-
-			<script>
-				var cookie_crawler = new Vue( {
-					el: '#cookie_crawler',
-					data: {
-						counter: 0,
-						items : [
-							<?php
-								// Build the cookie crawler Vue data
-								/**
-								 * Data Src Structure:
-								 * @since  3.0
-								 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-								 * 	 	crawler-cookie[ 0 ][ vals ] = 'xxx'
-								 *
-								 * @deprecated 3.0 [ nameA => vals, nameB => vals ]
-								 */
-								$list = array();
-								foreach ( Conf::val( $id ) as $v ) {
-									if ( empty( $v[ 'name' ] ) ) {
-										continue;
-									}
-
-									$list[] = "{ name: '$v[name]', vals: `" . implode( "\n", $v[ 'vals' ] ) . "` }";// $v contains line break
-								}
-								echo implode( ',', $list );
-							?>
-						]
-					},
-					methods: {
-						add_row() {
-							this.items.push( {
-								id: ++ this.counter
-							} );
+			<script type="text/babel">
+				<?php
+					// Build the cookie crawler Vue data
+					/**
+					 * Data Src Structure:
+					 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+					 * 	 	crawler-cookie[ 0 ][ vals ] = 'xxx'
+					 */
+					$list = array();
+					foreach ( Conf::val( $id ) as $v ) {
+						if ( empty( $v[ 'name' ] ) ) {
+							continue;
 						}
+
+						$list[] = "{ name: '$v[name]', vals: `" . implode( "\n", $v[ 'vals' ] ) . "` }";// $v contains line break
 					}
-				} );
+				?>
+				const simulatorList = [ <?php echo implode( ',', $list ); ?> ];
+				ReactDOM.render(
+					<CrawlerSimulate list={ simulatorList } />,
+					document.getElementById( 'litespeed_crawler_simulation_div' )
+				);
+
 			</script>
 
 			<div class="litespeed-desc">

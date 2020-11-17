@@ -556,7 +556,7 @@ class Router extends Base {
 	 * @return bool
 	 */
 	private function verify_nonce( $action ) {
-		if ( ! isset( $_REQUEST[Router::NONCE] ) || ! wp_verify_nonce( $_REQUEST[Router::NONCE], $action ) ) {
+		if ( ! isset( $_REQUEST[ Router::NONCE ] ) || ! wp_verify_nonce( $_REQUEST[ Router::NONCE ], $action ) ) {
 			return false;
 		}
 		else{

@@ -40,6 +40,8 @@ class Admin_Display extends Base {
 	protected $_is_network_admin = false;
 	protected $_is_multisite = false;
 
+	private $_btn_i = 0;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -47,11 +49,6 @@ class Admin_Display extends Base {
 	 * @access   protected
 	 */
 	protected function __construct() {
-		// load assets
-		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'litespeed-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) );
-		}
-
 		// main css
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		// Main js
@@ -95,32 +92,6 @@ class Admin_Display extends Base {
 		}
 
 		$this->__cfg = Conf::get_instance();
-	}
-
-	/**
-	 * Load LiteSpeed assets
-	 *
-	 * @since    1.1.0
-	 * @access public
-	 * @param  array $hook WP hook
-	 */
-	public function load_assets($hook) {
-		// Admin footer
-		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1);
-
-		if( defined( 'LITESPEED_ON' ) ) {
-			// Help tab
-			$this->add_help_tabs();
-
-			global $pagenow;
-			if ( $pagenow === 'plugins.php' ) {//todo: check if work
-				add_action('wp_default_scripts', array($this, 'set_update_text'), 0);
-				add_action('wp_default_scripts', array($this, 'unset_update_text'), 20);
-			}
-		}
-
-		wp_register_script( Core::PLUGIN_NAME . '-lib-vue', LSWCP_PLUGIN_URL . 'assets/js/vue.min.js', array(), Core::VER, false );
-		wp_enqueue_script( Core::PLUGIN_NAME . '-lib-vue' );
 	}
 
 	/**
@@ -219,18 +190,58 @@ class Admin_Display extends Base {
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo;
 		}
 
-		// If on Server IP setting page, append getIP link
+		// Injection to LiteSpeed pages
 		global $pagenow;
-		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'litespeed-general' ) {
-			$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/';
-			$localize_data[ 'nonce' ] = wp_create_nonce( 'wp_rest' );
+		if ( $pagenow == 'admin.php' && ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'litespeed-' ) === 0 || $_GET[ 'page' ] == 'litespeed' ) ) {
+			// Admin footer
+			add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1);
+
+			// Babel JS type correction
+			add_filter( 'script_loader_tag', array( $this, 'bable_type' ), 10, 3 );
+
+			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false );
+			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false );
+
+			wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/crawler.js', array(), Core::VER, false );
+			( Core::PLUGIN_NAME . '-crawler' );
+
+			// Crawler Cookie Simulation
+			if ( $_GET[ 'page' ] == 'litespeed-crawler' ) {
+				$localize_data[ 'lang' ] = array();
+				$localize_data[ 'lang' ][ 'cookie_name' ] = __( 'Cookie Name', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'cookie_value' ] = __( 'Cookie Values', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'one_per_line' ] = Doc::one_per_line( true );
+				$localize_data[ 'lang' ][ 'remove_cookie_simulation' ] = __( 'Remove cookie simulation', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'add_cookie_simulation_row' ] = __( 'Add new cookie to simulate', 'litespeed-cache' );
+				$localize_data[ 'ids' ] = array();
+				$localize_data[ 'ids' ][ 'crawler_cookies' ] = Base::O_CRAWLER_COOKIES;
+			}
+
+			// If on Server IP setting page, append getIP link
+			if ( $_GET[ 'page' ] == 'litespeed-general' ) {
+				$localize_data[ 'ajax_url_getIP' ] = function_exists( 'get_rest_url' ) ? get_rest_url( null, 'litespeed/v1/tool/check_ip' ) : '/';
+				$localize_data[ 'nonce' ] = wp_create_nonce( 'wp_rest' );
+			}
 		}
 
 		if ( $localize_data ) {
-			wp_localize_script(Core::PLUGIN_NAME, 'litespeed_data', $localize_data );
+			wp_localize_script( Core::PLUGIN_NAME, 'litespeed_data', $localize_data );
 		}
 
 		wp_enqueue_script( Core::PLUGIN_NAME );
+	}
+
+	/**
+	 * Babel type for crawler
+	 *
+	 * @since  3.6
+	 */
+	public function bable_type( $tag, $handle, $src ) {
+		if ( $handle != Core::PLUGIN_NAME . '-crawler' ) {
+			return $tag;
+		}
+
+		return '<script src="' . $src . '" type="text/babel"></script>';
 	}
 
 	/**
@@ -249,43 +260,6 @@ class Admin_Display extends Base {
 	}
 
 	/**
-	 * Add text to recommend updating upon update success.
-	 *
-	 * @since 1.0.8.1
-	 * @access public
-	 * @param string $translations
-	 * @param string $text
-	 * @return string
-	 */
-	public function add_update_text($translations, $text) {
-		if ( $text !== 'Updated!' ) {
-			return $translations;
-		}
-
-		return $translations . ' ' . __('It is recommended that LiteSpeed Cache be purged after updating a plugin.', 'litespeed-cache');
-	}
-
-	/**
-	 * Add the filter to update plugin update text.
-	 *
-	 * @since 1.0.8.1
-	 * @access public
-	 */
-	public function set_update_text() {
-		add_filter('gettext', array($this, 'add_update_text'), 10, 2);
-	}
-
-	/**
-	 * Remove the filter to update plugin update text.
-	 *
-	 * @since 1.0.8.1
-	 * @access public
-	 */
-	public function unset_update_text() {
-		remove_filter('gettext', array($this, 'add_update_text'));
-	}
-
-	/**
 	 * Change the admin footer text on LiteSpeed Cache admin pages.
 	 *
 	 * @since  1.0.13
@@ -296,16 +270,6 @@ class Admin_Display extends Base {
 		require_once LSCWP_DIR . 'tpl/inc/admin_footer.php';
 
 		return $footer_text;
-	}
-
-	/**
-	 * Displays the help tab in the admin pages.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function add_help_tabs() {
-		require_once LSCWP_DIR . 'tpl/inc/help_tabs.php';
 	}
 
 	/**
@@ -683,7 +647,7 @@ class Admin_Display extends Base {
 	 */
 	public function form_end( $disable_reset = false ) {
 		echo "<div class='litespeed-top20'></div>";
-		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit' );
+		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit', true, array( 'id' => 'litespeed-submit-' . $this->_btn_i++ ) );
 
 		echo '</form>';
 	}
