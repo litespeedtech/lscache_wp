@@ -93,6 +93,7 @@ class Htaccess extends Instance {
 			self::REWRITE_ON,
 			"CacheLookup on",
 			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
+			"RewriteRule \.object-cache\.ini - [F,L]",
 		);
 
 		// backend .htaccess privilege
