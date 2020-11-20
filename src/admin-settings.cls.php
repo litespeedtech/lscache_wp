@@ -206,15 +206,6 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-				// `Sitemap Generation` -> `Exclude Custom Post Types`
-				case self::O_CRAWLER_EXC_CPT:
-					if ( $data ) {
-						$data = Utility::sanitize_lines( $data );
-						$ori = array_diff( get_post_types(), array( 'post', 'page' ) );
-						$data = array_intersect( $data, $ori );
-					}
-					break;
-
 				default:
 					break;
 			}
