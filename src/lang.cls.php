@@ -104,7 +104,6 @@ class Lang extends Base
 			self::O_OPTM_CSS_MIN				=> __( 'CSS Minify', 'litespeed-cache' ),
 			self::O_OPTM_CSS_COMB				=> __( 'CSS Combine', 'litespeed-cache' ),
 			self::O_OPTM_CSS_COMB_EXT_INL		=> __( 'CSS Combine External and Inline', 'litespeed-cache' ),
-			self::O_OPTM_CSS_UNIQUE				=> __( 'Unique CSS File', 'litespeed-cache' ),
 			self::O_OPTM_UCSS					=> __( 'Generate UCSS', 'litespeed-cache' ),
 			self::O_OPTM_UCSS_ASYNC				=> __( 'Generate UCSS in Background', 'litespeed-cache' ),
 			self::O_OPTM_UCSS_WHITELIST			=> __( 'UCSS Whitelist Selector', 'litespeed-cache' ),

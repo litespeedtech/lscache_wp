@@ -123,7 +123,6 @@ class Base extends Instance {
 	const O_OPTM_CSS_MIN 			= 'optm-css_min';
 	const O_OPTM_CSS_COMB 			= 'optm-css_comb';
 	const O_OPTM_CSS_COMB_EXT_INL	= 'optm-css_comb_ext_inl';
-	const O_OPTM_CSS_UNIQUE 		= 'optm-css_unique';
 	const O_OPTM_UCSS 				= 'optm-ucss';
 	const O_OPTM_UCSS_ASYNC 		= 'optm-ucss_async';
 	const O_OPTM_UCSS_WHITELIST 	= 'optm-ucss_whitelist';
@@ -419,7 +418,6 @@ class Base extends Instance {
 		self::O_OPTM_CSS_MIN 			=> false,
 		self::O_OPTM_CSS_COMB 			=> false,
 		self::O_OPTM_CSS_COMB_EXT_INL	=> false,
-		self::O_OPTM_CSS_UNIQUE 		=> false,
 		self::O_OPTM_UCSS 				=> false,
 		self::O_OPTM_UCSS_ASYNC			=> false,
 		// self::O_OPTM_UCSS_WHITELIST		=> array(),
