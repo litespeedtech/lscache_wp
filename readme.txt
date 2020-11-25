@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Stable tag: 3.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 3.6 - Dec 11 2020 =
 * 🌱**WebP** Added WebP support on Safari Big Sur or Safari v14.0.1+. (@ruikai)
 * 🐞**Config** Fixed an issue where new installations were not getting the correct default .htaccess content.
+* **Crawler** Will auto bypass empty sub-sitemap instead of throwing an exception.
 * **Crawler** Now using React for Cookie Simulation settings instead of Vue.js. Dropped Vue.js.
 * **Crawler** Dropped `Sitemap Generation` (will only use 3rd party sitemap for crawler).
 * **CSS** Added `CSS Combine External and Inline` option for backward compatibility. (@lisa)
@@ -261,6 +262,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Excluded tagDev.com Newspaper theme dynamic CSS/JS from CSS/JS Combine.
 * **CSS** Added predefined JS defer excludes list. (@Shivam)
 * **JS** `data-no-defer` option now supports inline JS. (@rafaucau)
+* **Media** Lazyload inline library is now bypassed by JS Combine.
 * **Admin** Fixed WP-Admin console ID duplicate warnings.
 * **Cloud** Dropped QUIC.cloud sync options that have long been unused.
 * **CSS** Dropped `Unique CSS File` option (UCSS will always generate unique file, will use whitelist to group post type to one CSS).
