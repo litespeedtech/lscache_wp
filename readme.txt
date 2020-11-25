@@ -253,7 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Crawler** Now using React for Cookie Simulation settings instead of Vue.js. Dropped Vue.js.
 * **Crawler** Dropped `Sitemap Generation` (will only use 3rd party sitemap for crawler).
 * **CSS** Added `CSS Combine External and Inline` option for backward compatibility. (@lisa)
-* **Object** Forbid .object-cache.ini visits. (@Shivam)
+* **Object** Forbid .object-cache.ini visits. (@Tarik)
 * **Page Optimize** Dropped `Remove Comments` option to avoid combine error.
 * **CSS** Added a predefined CSS exclude file `data/css_excludes.txt`.
 * **CSS** Excluded Flatsome theme random inline CSS from combine.
