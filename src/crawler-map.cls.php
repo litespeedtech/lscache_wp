@@ -459,12 +459,12 @@ class Crawler_Map extends Instance {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
 
-			throw new \Exception( 'Failed to remote read' );
+			throw new \Exception( 'Failed to remote read ' . $sitemap );
 		}
 
 		$xml_object = simplexml_load_string( $response[ 'body' ] );
 		if ( ! $xml_object ) {
-			throw new \Exception( 'Failed to parse xml' );
+			throw new \Exception( 'Failed to parse xml ' . $sitemap );
 		}
 
 		if ( ! $return_detail ) {
