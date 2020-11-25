@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 3.6 - Dec 11 2020 =
 * 🌱**WebP** Added WebP support on Safari Big Sur or Safari v14.0.1+. (@ruikai)
 * 🐞**Config** Fixed an issue where new installations were not getting the correct default .htaccess content.
-* **Crawler** Will auto bypass empty sub-sitemap instead of throwing an exception.
+* **Crawler** Will auto bypass empty sub-sitemap instead of throwing an exception. (@nanoprobes @Tobolo)
 * **Crawler** Now using React for Cookie Simulation settings instead of Vue.js. Dropped Vue.js.
 * **Crawler** Dropped `Sitemap Generation` (will only use 3rd party sitemap for crawler).
 * **CSS** Added `CSS Combine External and Inline` option for backward compatibility. (@lisa)
