@@ -202,11 +202,9 @@ class Admin_Display extends Base {
 			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false );
 			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false );
 
-			wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/crawler.js', array(), Core::VER, false );
-			( Core::PLUGIN_NAME . '-crawler' );
-
 			// Crawler Cookie Simulation
 			if ( $_GET[ 'page' ] == 'litespeed-crawler' ) {
+				wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/component.crawler.js', array(), Core::VER, false );
 				$localize_data[ 'lang' ] = array();
 				$localize_data[ 'lang' ][ 'cookie_name' ] = __( 'Cookie Name', 'litespeed-cache' );
 				$localize_data[ 'lang' ][ 'cookie_value' ] = __( 'Cookie Values', 'litespeed-cache' );
