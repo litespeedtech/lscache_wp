@@ -1,5 +1,5 @@
 /**
- * Crawler simulation modals
+ * Crawler simulation module
  * @author Hai Zheng
  */
 class CrawlerSimulate extends React.Component {
