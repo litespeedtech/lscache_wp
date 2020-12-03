@@ -14,9 +14,9 @@ class CDNMapping extends React.Component {
 		this.addNew = this.addNew.bind( this );
 	}
 
-	onChange( e, index ) {console.log(e.target);
-		const target = e.target;
-		const value = target.dataset.value ? target.dataset.value : target.value;
+	onChange( e, index ) {
+		const target = e.currentTarget;
+		const value = target.dataset.hasOwnProperty('value') ? Boolean(target.dataset.value*1) : target.value;
 		const list = this.state.list;
 		list[ index ][ target.dataset.type ] = value;
 
@@ -63,13 +63,7 @@ class CDNMappingBlock extends React.Component {
 		this.delRow = this.delRow.bind( this );
 	}
 
-stopPropagation(e){
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-}
-
 	onChange( e ) {
-		this.stopPropagation(e);
 		this.props.onChange( e, this.props.index );
 	}
 
@@ -99,8 +93,8 @@ stopPropagation(e){
 						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							{ litespeed_data[ 'lang' ][ 'cdn_mapping_inc_img' ] }
 						</div>
-						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_img?'primary':'default litespeed-toggleoff'}`} data-type="inc_img" data-value={!item.inc_img} onClick={this.onChange}>
-							<input name={ name_prefix + '[inc_img][]' } type='hidden' value={item.inc_img} />
+						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_img?'primary':'default litespeed-toggleoff'}`} data-type="inc_img" data-value={item.inc_img?0:1} onClick={this.onChange}>
+							<input name={ name_prefix + '[inc_img][]' } type='hidden' value={item.inc_img?1:0} />
 							<div className='litespeed-toggle-group'>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>{ litespeed_data[ 'lang' ][ 'on' ] }</label>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off'>{ litespeed_data[ 'lang' ][ 'off' ] }</label>
@@ -112,8 +106,8 @@ stopPropagation(e){
 						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							{ litespeed_data[ 'lang' ][ 'cdn_mapping_inc_css' ] }
 						</div>
-						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_css?'primary':'default litespeed-toggleoff'}`} data-type="inc_css" data-value={!item.inc_css} onClick={this.onChange}>
-							<input name={ name_prefix + '[inc_css][]' } type='hidden' value={item.inc_css} />
+						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_css?'primary':'default litespeed-toggleoff'}`} data-type="inc_css" data-value={item.inc_css?0:1} onClick={this.onChange}>
+							<input name={ name_prefix + '[inc_css][]' } type='hidden' value={item.inc_css?1:0} />
 							<div className='litespeed-toggle-group'>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>{ litespeed_data[ 'lang' ][ 'on' ] }</label>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off'>{ litespeed_data[ 'lang' ][ 'off' ] }</label>
@@ -125,8 +119,8 @@ stopPropagation(e){
 						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
 							{ litespeed_data[ 'lang' ][ 'cdn_mapping_inc_js' ] }
 						</div>
-						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_js?'primary':'default litespeed-toggleoff'}`} data-type="inc_js" data-value={!item.inc_js} onClick={this.onChange}>
-							<input name={ name_prefix + '[inc_js][]' } type='hidden' value={item.inc_js} />
+						<div className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_js?'primary':'default litespeed-toggleoff'}`} data-type="inc_js" data-value={item.inc_js?0:1} onClick={this.onChange}>
+							<input name={ name_prefix + '[inc_js][]' } type='hidden' value={item.inc_js?1:0} />
 							<div className='litespeed-toggle-group'>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>{ litespeed_data[ 'lang' ][ 'on' ] }</label>
 								<label className='litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off'>{ litespeed_data[ 'lang' ][ 'off' ] }</label>
