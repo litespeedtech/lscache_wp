@@ -39,28 +39,10 @@ $this->form_action();
 			<div id="litespeed_crawler_simulation_div"></div>
 
 			<script type="text/babel">
-				<?php
-					// Build the cookie crawler Vue data
-					/**
-					 * Data Src Structure:
-					 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-					 * 	 	crawler-cookie[ 0 ][ vals ] = 'xxx'
-					 */
-					$list = array();
-					foreach ( Conf::val( $id ) as $v ) {
-						if ( empty( $v[ 'name' ] ) ) {
-							continue;
-						}
-
-						$list[] = "{ name: '$v[name]', vals: `" . implode( "\n", $v[ 'vals' ] ) . "` }";// $v contains line break
-					}
-				?>
-				const simulatorList = [ <?php echo implode( ',', $list ); ?> ];
 				ReactDOM.render(
-					<CrawlerSimulate list={ simulatorList } />,
+					<CrawlerSimulate list={ <?php echo json_encode( Conf::val( $id ) ); ?> } />,
 					document.getElementById( 'litespeed_crawler_simulation_div' )
 				);
-
 			</script>
 
 			<div class="litespeed-desc">
