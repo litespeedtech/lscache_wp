@@ -26,7 +26,9 @@ $v_list = array(
 
 	<input type="text" name="<?php echo Debug2::BETA_TEST_URL; ?>" class="litespeed-input-long" id='litespeed-beta-test'>
 
-	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='dev';"><?php echo __( 'Use latest GitHub commit', 'litespeed-cache' ); ?></a> <code>dev</code></p>
+	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='dev';"><?php echo __( 'Use latest GitHub Dev commit', 'litespeed-cache' ); ?></a> <code>dev</code></p>
+
+	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='master';"><?php echo __( 'Use latest GitHub Master commit', 'litespeed-cache' ); ?></a> <code>master</code></p>
 
 	<p><a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='latest';"><?php echo __( 'Use latest WordPress release version', 'litespeed-cache' ); ?></a> <code><?php echo Debug2::BETA_TEST_URL_WP; ?></code> <?php echo __( 'OR', 'litespeed-cache' ) ?> <code>latest</code></p>
 
