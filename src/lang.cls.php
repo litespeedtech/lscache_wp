@@ -205,7 +205,6 @@ class Lang extends Base
 			self::O_CDN_ORI						=> __( 'Original URLs', 'litespeed-cache' ),
 			self::O_CDN_ORI_DIR					=> __( 'Included Directories', 'litespeed-cache' ),
 			self::O_CDN_EXC						=> __( 'Exclude Path', 'litespeed-cache' ),
-			self::O_CDN_REMOTE_JQ				=> __( 'Load JQuery Remotely', 'litespeed-cache' ),
 			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
 
 			self::O_CRAWLER					=> __( 'Crawler', 'litespeed-cache' ),

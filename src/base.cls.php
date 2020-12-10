@@ -256,7 +256,6 @@ class Base extends Instance {
 	const O_CDN_ORI 			= 'cdn-ori';
 	const O_CDN_ORI_DIR 		= 'cdn-ori_dir';
 	const O_CDN_EXC 			= 'cdn-exc';
-	const O_CDN_REMOTE_JQ 		= 'cdn-remote_jq';
 	const O_CDN_QUIC 			= 'cdn-quic';
 	const O_CDN_CLOUDFLARE 		= 'cdn-cloudflare';
 	const O_CDN_CLOUDFLARE_EMAIL= 'cdn-cloudflare_email';
@@ -307,7 +306,6 @@ class Base extends Instance {
 		self::O_CDN_ORI,
 		self::O_CDN_ORI_DIR,
 		self::O_CDN_EXC,
-		self::O_CDN_REMOTE_JQ,
 		self::O_CDN_QUIC,
 		self::O_CDN_CLOUDFLARE,
 		self::O_CDN_CLOUDFLARE_EMAIL,
@@ -531,7 +529,6 @@ class Base extends Instance {
 		self::O_CDN_ORI 			=> array(),
 		self::O_CDN_ORI_DIR 		=> array(),
 		self::O_CDN_EXC 			=> array(),
-		self::O_CDN_REMOTE_JQ 		=> false,
 		self::O_CDN_QUIC 			=> false,
 		self::O_CDN_CLOUDFLARE 		=> false,
 		self::O_CDN_CLOUDFLARE_EMAIL => '',
@@ -595,7 +592,6 @@ class Base extends Instance {
 
 	// NOTE: all the val of following items will be int while not bool
 	protected static $_multi_switch_list = array(
-		self::O_CDN_REMOTE_JQ 	=> 2,
 		self::O_DEBUG 			=> 2,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
 		self::O_OPTM_JS_INLINE_DEFER 	=> 2,

@@ -179,19 +179,6 @@ $this->form_action();
 
 	<tr>
 		<th>
-			<?php $id = Base::O_CDN_REMOTE_JQ; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), 'Google', 'CDNJS' ) ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = Base::O_CDN_CLOUDFLARE; ?>
 			<?php $this->title( $id ); ?>
 		</th>
