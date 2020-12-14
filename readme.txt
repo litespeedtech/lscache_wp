@@ -259,7 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CSS** Added a predefined CSS exclude file `data/css_excludes.txt`.
 * **CSS** Excluded Flatsome theme random inline CSS from combine.
 * **CSS** Excluded WoodMart theme from combine. (@moemauphie)
-* **Page Optimize** Excluded tagDev.com Newspaper theme dynamic CSS/JS from CSS/JS Combine.
+* **Page Optimize** Excluded tagDiv.com Newspaper theme dynamic CSS/JS from CSS/JS Combine.
 * **CSS** Added predefined JS defer excludes list. (@Shivam)
 * **JS** `data-no-defer` option now supports inline JS. (@rafaucau)
 * **Media** Lazyload inline library is now bypassed by JS Combine.
