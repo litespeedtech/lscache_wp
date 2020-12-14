@@ -247,7 +247,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 3.6 - Dec 11 2020 =
+= 3.6 - Dec 14 2020 =
 * 🌱**WebP** Added WebP support on Safari Big Sur or Safari v14.0.1+. (@ruikai)
 * 🐞**Config** Fixed an issue where new installations were not getting the correct default .htaccess content.
 * **Crawler** Will auto bypass empty sub-sitemap instead of throwing an exception. (@nanoprobes @Tobolo)
