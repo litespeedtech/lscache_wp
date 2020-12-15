@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.6\n"
+"Project-Id-Version: LiteSpeed Cache 3.6.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-11-23 20:59:38+00:00\n"
+"POT-Creation-Date: 2020-12-15 14:41:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Cache"
 msgstr ""
 
-#: src/admin-display.cls.php:127 tpl/cdn/settings.tpl.php:253
+#: src/admin-display.cls.php:127 tpl/cdn/settings.tpl.php:189
 msgid "CDN"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: src/admin-display.cls.php:135 src/lang.cls.php:211
+#: src/admin-display.cls.php:135 src/lang.cls.php:210
 msgid "Crawler"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Cookie Name"
 msgstr ""
 
-#: src/admin-display.cls.php:212 tpl/crawler/settings-simulation.tpl.php:69
+#: src/admin-display.cls.php:212 tpl/crawler/settings-simulation.tpl.php:51
 msgid "Cookie Values"
 msgstr ""
 
@@ -90,20 +90,21 @@ msgstr ""
 msgid "Add new cookie to simulate"
 msgstr ""
 
-#: src/admin-display.cls.php:257 src/gui.cls.php:586
-msgid "Settings"
+#: src/admin-display.cls.php:234
+msgid "CDN URL to be used. For example, %s"
 msgstr ""
 
-#: src/admin-display.cls.php:422
-msgid "Dismiss"
+#: src/admin-display.cls.php:236
+msgid "Remove CDN URL"
 msgstr ""
 
-#: src/admin-display.cls.php:650
-msgid "Save Changes"
+#: src/admin-display.cls.php:237
+msgid "Add new CDN URL"
 msgstr ""
 
-#: src/admin-display.cls.php:775 src/admin-display.cls.php:810
-#: src/admin-display.cls.php:861 tpl/cache/settings-cache.tpl.php:19
+#: src/admin-display.cls.php:238 src/admin-display.cls.php:799
+#: src/admin-display.cls.php:834 src/admin-display.cls.php:885
+#: tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.cache_mobile.tpl.php:70 tpl/cdn/settings.tpl.php:49
 #: tpl/page_optm/settings_css.tpl.php:149
 #: tpl/page_optm/settings_css.tpl.php:166
@@ -113,81 +114,93 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: src/admin-display.cls.php:776 src/admin-display.cls.php:809
-#: src/admin-display.cls.php:861 tpl/cache/settings-cache.tpl.php:19
+#: src/admin-display.cls.php:239 src/admin-display.cls.php:800
+#: src/admin-display.cls.php:833 src/admin-display.cls.php:885
+#: tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.object.tpl.php:210 tpl/cdn/settings.tpl.php:49
-#: tpl/cdn/settings.tpl.php:237 tpl/page_optm/settings_css.tpl.php:83
-#: tpl/page_optm/settings_css.tpl.php:166
+#: tpl/page_optm/settings_css.tpl.php:83 tpl/page_optm/settings_css.tpl.php:166
 #: tpl/page_optm/settings_css.tpl.php:181
 #: tpl/page_optm/settings_media.tpl.php:159
 #: tpl/toolbox/settings-debug.tpl.php:34
 msgid "OFF"
 msgstr ""
 
-#: src/admin-display.cls.php:873
+#: src/admin-display.cls.php:281 src/gui.cls.php:586
+msgid "Settings"
+msgstr ""
+
+#: src/admin-display.cls.php:446
+msgid "Dismiss"
+msgstr ""
+
+#: src/admin-display.cls.php:674
+msgid "Save Changes"
+msgstr ""
+
+#: src/admin-display.cls.php:897
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:876
+#: src/admin-display.cls.php:900
 msgid "This setting is overwritten by the primary site setting"
 msgstr ""
 
-#: src/admin-display.cls.php:879
+#: src/admin-display.cls.php:903
 msgid "This setting is overwritten by the Network setting"
 msgstr ""
 
-#: src/admin-display.cls.php:883
+#: src/admin-display.cls.php:907
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:893 tpl/cache/settings_inc.object.tpl.php:103
+#: src/admin-display.cls.php:917 tpl/cache/settings_inc.object.tpl.php:103
 #: tpl/crawler/settings-general.tpl.php:60
 #: tpl/crawler/settings-general.tpl.php:74
 #: tpl/crawler/settings-general.tpl.php:89 tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:924 src/admin-display.cls.php:929
+#: src/admin-display.cls.php:948 src/admin-display.cls.php:953
 msgid "Recommended value"
 msgstr ""
 
-#: src/admin-display.cls.php:953
+#: src/admin-display.cls.php:977
 msgid "Invalid rewrite rule"
 msgstr ""
 
-#: src/admin-display.cls.php:970
+#: src/admin-display.cls.php:994
 msgid "Path must end with %s"
 msgstr ""
 
-#: src/admin-display.cls.php:988
+#: src/admin-display.cls.php:1012
 msgid "Minimum value"
 msgstr ""
 
-#: src/admin-display.cls.php:991
+#: src/admin-display.cls.php:1015
 msgid "Maximum value"
 msgstr ""
 
-#: src/admin-display.cls.php:1003
+#: src/admin-display.cls.php:1027
 msgid "Zero, or"
 msgstr ""
 
-#: src/admin-display.cls.php:1010
+#: src/admin-display.cls.php:1034
 msgid "Larger than"
 msgstr ""
 
-#: src/admin-display.cls.php:1013
+#: src/admin-display.cls.php:1037
 msgid "Smaller than"
 msgstr ""
 
-#: src/admin-display.cls.php:1016
+#: src/admin-display.cls.php:1040
 msgid "Value range"
 msgstr ""
 
-#: src/admin-display.cls.php:1041
+#: src/admin-display.cls.php:1065
 msgid "Invalid IP"
 msgstr ""
 
-#: src/admin-display.cls.php:1061 tpl/cache/settings-esi.tpl.php:95
+#: src/admin-display.cls.php:1085 tpl/cache/settings-esi.tpl.php:95
 #: tpl/page_optm/settings_css.tpl.php:151
 #: tpl/page_optm/settings_html.tpl.php:86
 #: tpl/page_optm/settings_media_exc.tpl.php:25
@@ -197,43 +210,43 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: src/admin-display.cls.php:1062
+#: src/admin-display.cls.php:1086
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: src/admin-display.cls.php:1074
+#: src/admin-display.cls.php:1098
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: src/admin-display.cls.php:1075
+#: src/admin-display.cls.php:1099
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
-#: src/admin-display.cls.php:1077
+#: src/admin-display.cls.php:1101
 msgid "To match the beginning, add %s to the beginning of the item."
 msgstr ""
 
-#: src/admin-display.cls.php:1078
+#: src/admin-display.cls.php:1102
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: src/admin-display.cls.php:1079 src/doc.cls.php:61
+#: src/admin-display.cls.php:1103 src/doc.cls.php:61
 msgid "One per line."
 msgstr ""
 
-#: src/admin-display.cls.php:1093
+#: src/admin-display.cls.php:1117
 msgid "%s groups"
 msgstr ""
 
-#: src/admin-display.cls.php:1096
+#: src/admin-display.cls.php:1120
 msgid "%s images"
 msgstr ""
 
-#: src/admin-display.cls.php:1106
+#: src/admin-display.cls.php:1130
 msgid "%s group"
 msgstr ""
 
-#: src/admin-display.cls.php:1109
+#: src/admin-display.cls.php:1133
 msgid "%s image"
 msgstr ""
 
@@ -346,15 +359,15 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: src/crawler-map.cls.php:266
+#: src/crawler-map.cls.php:267
 msgid "Sitemap cleaned successfully"
 msgstr ""
 
-#: src/crawler-map.cls.php:318
+#: src/crawler-map.cls.php:319
 msgid "No valid sitemap parsed for crawler."
 msgstr ""
 
-#: src/crawler-map.cls.php:322
+#: src/crawler-map.cls.php:323
 msgid "Sitemap created successfully: %d items"
 msgstr ""
 
@@ -733,7 +746,7 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: src/gui.cls.php:578 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:253
+#: src/gui.cls.php:578 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:189
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
@@ -1495,7 +1508,7 @@ msgstr ""
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:203 tpl/cdn/settings.tpl.php:148
+#: src/lang.cls.php:203 tpl/cdn/settings.tpl.php:97
 msgid "Include File Types"
 msgstr ""
 
@@ -1516,102 +1529,98 @@ msgid "Exclude Path"
 msgstr ""
 
 #: src/lang.cls.php:208
-msgid "Load JQuery Remotely"
-msgstr ""
-
-#: src/lang.cls.php:209
 msgid "Cloudflare API"
 msgstr ""
 
-#: src/lang.cls.php:212
+#: src/lang.cls.php:211
 msgid "Delay"
 msgstr ""
 
-#: src/lang.cls.php:213
+#: src/lang.cls.php:212
 msgid "Run Duration"
 msgstr ""
 
-#: src/lang.cls.php:214
+#: src/lang.cls.php:213
 msgid "Interval Between Runs"
 msgstr ""
 
-#: src/lang.cls.php:215
+#: src/lang.cls.php:214
 msgid "Crawl Interval"
 msgstr ""
 
-#: src/lang.cls.php:216
+#: src/lang.cls.php:215
 msgid "Threads"
 msgstr ""
 
-#: src/lang.cls.php:217
+#: src/lang.cls.php:216
 msgid "Timeout"
 msgstr ""
 
-#: src/lang.cls.php:218
+#: src/lang.cls.php:217
 msgid "Server Load Limit"
 msgstr ""
 
-#: src/lang.cls.php:219
+#: src/lang.cls.php:218
 msgid "Role Simulation"
 msgstr ""
 
-#: src/lang.cls.php:220
+#: src/lang.cls.php:219
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:221
+#: src/lang.cls.php:220
 msgid "Custom Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:222
+#: src/lang.cls.php:221
 msgid "Drop Domain from Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:223
+#: src/lang.cls.php:222
 msgid "Sitemap Timeout"
 msgstr ""
 
-#: src/lang.cls.php:225 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:224 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:226 tpl/toolbox/log_viewer.tpl.php:7
+#: src/lang.cls.php:225 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:227
+#: src/lang.cls.php:226
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:227
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:229
+#: src/lang.cls.php:228
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:230
+#: src/lang.cls.php:229
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:231
+#: src/lang.cls.php:230
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:232
+#: src/lang.cls.php:231
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:233
+#: src/lang.cls.php:232
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:235
+#: src/lang.cls.php:234
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:236
+#: src/lang.cls.php:235
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1915,7 +1924,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.6)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.6.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -1931,7 +1940,7 @@ msgid "New release %s is available now."
 msgstr ""
 
 #: tpl/banner/new_version.php:71 tpl/banner/new_version_dev.tpl.php:24
-#: tpl/toolbox/beta_test.tpl.php:44
+#: tpl/toolbox/beta_test.tpl.php:48
 msgid "Upgrade"
 msgstr ""
 
@@ -2054,7 +2063,7 @@ msgstr ""
 
 #: tpl/cache/more_settings_tip.tpl.php:12
 #: tpl/cache/settings-excludes.tpl.php:62
-#: tpl/cache/settings-excludes.tpl.php:95 tpl/cdn/settings.tpl.php:124
+#: tpl/cache/settings-excludes.tpl.php:95 tpl/cdn/settings.tpl.php:73
 #: tpl/crawler/settings-general.tpl.php:39
 #: tpl/crawler/settings-general.tpl.php:140
 #: tpl/crawler/settings-general.tpl.php:145
@@ -2291,7 +2300,7 @@ msgid ""
 msgstr ""
 
 #: tpl/cache/settings-esi.tpl.php:107 tpl/cache/settings-purge.tpl.php:110
-#: tpl/cdn/settings.tpl.php:189
+#: tpl/cdn/settings.tpl.php:138
 msgid ""
 "Wildcard %1$s supported (match zero or more characters). For example, to "
 "match %2$s and %3$s, use %4$s."
@@ -2837,129 +2846,111 @@ msgid ""
 "%2$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:66
-msgid "Remove CDN URL"
-msgstr ""
-
 #: tpl/cdn/settings.tpl.php:74
-msgid "CDN URL to be used. For example, %s"
-msgstr ""
-
-#: tpl/cdn/settings.tpl.php:120
-msgid "Add new CDN URL"
-msgstr ""
-
-#: tpl/cdn/settings.tpl.php:125
 msgid ""
 "To randomize CDN hostname, define multiple hostnames for the same resources."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:130
+#: tpl/cdn/settings.tpl.php:79
 msgid ""
 "Serve all image files through the CDN. This will affect all attachments, "
 "HTML %s tags, and CSS %s attributes."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:134
+#: tpl/cdn/settings.tpl.php:83
 msgid ""
 "Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
 "files."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:138
+#: tpl/cdn/settings.tpl.php:87
 msgid ""
 "Serve all JavaScript files through the CDN. This will affect all enqueued WP "
 "JavaScript files."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:142
+#: tpl/cdn/settings.tpl.php:91
 msgid "Static file type links to be replaced by CDN links."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:144
+#: tpl/cdn/settings.tpl.php:93
 msgid "This will affect all tags containing attributes: %s %s %s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:145
+#: tpl/cdn/settings.tpl.php:94
 msgid "Default value"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:148
+#: tpl/cdn/settings.tpl.php:97
 msgid ""
 "If you turn any of the above settings OFF, please remove the related file "
 "types from the %s box."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:172
+#: tpl/cdn/settings.tpl.php:121
 msgid ""
 "Specify which HTML element attributes will be replaced with CDN Mapping."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:173 tpl/img_optm/settings.tpl.php:140
+#: tpl/cdn/settings.tpl.php:122 tpl/img_optm/settings.tpl.php:140
 msgid "Only attributes listed here will be replaced."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:174 tpl/img_optm/settings.tpl.php:141
+#: tpl/cdn/settings.tpl.php:123 tpl/img_optm/settings.tpl.php:141
 msgid "Use the format %1$s or %2$s (element is optional)."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:188
+#: tpl/cdn/settings.tpl.php:137
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:211
+#: tpl/cdn/settings.tpl.php:160
 msgid "Only files within these directories will be pointed to the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:225
+#: tpl/cdn/settings.tpl.php:174
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:239
-msgid ""
-"Improve page load time by loading jQuery from a remote CDN service instead "
-"of locally."
-msgstr ""
-
-#: tpl/cdn/settings.tpl.php:252
+#: tpl/cdn/settings.tpl.php:188
 msgid "Use %s API functionality."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:253
+#: tpl/cdn/settings.tpl.php:189
 msgid "This can be managed from <a %2$s>%1$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:257
+#: tpl/cdn/settings.tpl.php:193
 msgid "Email Address"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:261
+#: tpl/cdn/settings.tpl.php:197
 msgid "Your Email address on %s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:266
+#: tpl/cdn/settings.tpl.php:202
 msgid "Global API Key"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:270
+#: tpl/cdn/settings.tpl.php:206
 msgid "Your API key is used to access %s APIs."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:271
+#: tpl/cdn/settings.tpl.php:207
 msgid "Get it from <a %1$s>%2$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:276
+#: tpl/cdn/settings.tpl.php:212
 msgid "Domain"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:284
+#: tpl/cdn/settings.tpl.php:220
 msgid "You can just type part of the domain."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:285
+#: tpl/cdn/settings.tpl.php:221
 msgid ""
 "Once saved, it will be matched with the current list and completed "
 "automatically."
@@ -3137,14 +3128,14 @@ msgid ""
 "To crawl the site as a logged-in user, enter the user ids to be simulated."
 msgstr ""
 
-#: tpl/crawler/settings-simulation.tpl.php:67
+#: tpl/crawler/settings-simulation.tpl.php:49
 msgid ""
 "To crawl for a particular cookie, enter the cookie name, and the values you "
 "wish to crawl for. Values should be one per line, and can include a blank "
 "line. There will be one crawler created per cookie value, per simulated role."
 msgstr ""
 
-#: tpl/crawler/settings-simulation.tpl.php:69
+#: tpl/crawler/settings-simulation.tpl.php:51
 msgid "Use %1$s in %2$s to indicate this cookie has not been set."
 msgstr ""
 
@@ -4787,37 +4778,45 @@ msgstr ""
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:20
+#: tpl/toolbox/beta_test.tpl.php:22
 msgid "Try GitHub Version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:24
+#: tpl/toolbox/beta_test.tpl.php:26
 msgid ""
 "Use this section to switch plugin versions. To beta test a GitHub commit, "
 "enter the commit URL in the field below."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:25
+#: tpl/toolbox/beta_test.tpl.php:27
 msgid "Example"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:29 tpl/toolbox/beta_test.tpl.php:41
-msgid "Use latest GitHub commit"
+#: tpl/toolbox/beta_test.tpl.php:31
+msgid "Use latest GitHub Dev commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:31 tpl/toolbox/beta_test.tpl.php:42
+#: tpl/toolbox/beta_test.tpl.php:33
+msgid "Use latest GitHub Master commit"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:35 tpl/toolbox/beta_test.tpl.php:46
 msgid "Use latest WordPress release version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:31
+#: tpl/toolbox/beta_test.tpl.php:35
 msgid "OR"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:41
+#: tpl/toolbox/beta_test.tpl.php:45
 msgid "Press the %s button to use the most recent GitHub commit."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:42
+#: tpl/toolbox/beta_test.tpl.php:45
+msgid "Use latest GitHub commit"
+msgstr ""
+
+#: tpl/toolbox/beta_test.tpl.php:46
 msgid ""
 "Press the %s button to stop beta testing and go back to the current release "
 "from the WordPress Plugin Directory."
