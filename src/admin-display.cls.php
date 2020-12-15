@@ -1062,7 +1062,7 @@ class Admin_Display extends Base {
 			}
 
 			if ( ! \WP_Http::is_ip_address( $v ) ) {
-				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . $v . '</code>.';
+				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . esc_textarea( $v ) . '</code>.';
 			}
 		}
 
