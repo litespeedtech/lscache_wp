@@ -303,7 +303,7 @@ function litespeed_update_3_0( $ver ) {
 		'cdn'						=> 'cdn',
 		'cdn_ori'					=> 'cdn-ori',
 		'cdn_exclude' 				=> 'cdn-exc',
-		'cdn_remote_jquery'			=> 'cdn-remote_jq',
+		// 'cdn_remote_jquery'			=> 'cdn-remote_jq',
 		'cdn_quic'					=> 'cdn-quic',
 		'cdn_cloudflare'			=> 'cdn-cloudflare',
 		'cdn_cloudflare_email'		=> 'cdn-cloudflare_email',

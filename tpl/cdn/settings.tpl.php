@@ -54,71 +54,20 @@ $this->form_action();
 	<tr>
 		<th class="litespeed-padding-left"></th>
 		<td>
-		<?php foreach ( $cdn_mapping as $v ) : ?>
+			<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_URL . '][]' ); ?>
+			<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_IMG . '][]' ); ?>
+			<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_CSS . '][]' ); ?>
+			<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_JS . '][]' ); ?>
+			<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_FILETYPE . '][]' ); ?>
 
-			<div class="litespeed-block" data-litespeed-cdn-mapping="1">
-				<div class='litespeed-cdn-mapping-col1'>
-					<label class="litespeed-form-label">
-						<?php $id = Base::CDN_MAPPING_URL; ?>
-						<?php $this->title( $id ); ?>
-						<button type="button" class="button button-link litespeed-collection-button litespeed-danger" data-litespeed-cdn-mapping-del="1" data-action="remove">
-							<span class="dashicons dashicons-dismiss"></span>
-							<span class="screen-reader-text"><?php echo __( 'Remove CDN URL', 'litespeed-cache' ); ?></span>
-						</button>
-					</label>
+			<div id="litespeed_cdn_mapping_div"></div>
 
-					<?php
-						$this->build_input( Base::O_CDN_MAPPING . "[$id][]", 'litespeed-input-long', $v[ $id ] );
-					?>
-					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ); ?>
-					</div>
-				</div>
-
-				<div class="litespeed-col-auto litespeed-cdn-mapping-col2">
-					<div class="litespeed-row litespeed-toggle-wrapper">
-						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
-							<?php $id = Base::CDN_MAPPING_INC_IMG; ?>
-							<?php $this->title( $id ); ?>
-						</div>
-					<?php
-						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false );
-					?>
-					</div>
-					<div class="litespeed-row litespeed-toggle-wrapper">
-						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
-							<?php $id = Base::CDN_MAPPING_INC_CSS; ?>
-							<?php $this->title( $id ); ?>
-						</div>
-					<?php
-						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false );
-					?>
-					</div>
-					<div class="litespeed-row litespeed-toggle-wrapper">
-						<div class="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">
-							<?php $id = Base::CDN_MAPPING_INC_JS; ?>
-							<?php $this->title( $id ); ?>
-						</div>
-					<?php
-						$this->build_toggle( Base::O_CDN_MAPPING . "[$id][]", ! empty( $v[ $id ] ) ? true : false );
-					?>
-					</div>
-				</div>
-
-				<div class="litespeed-col-auto">
-					<label class="litespeed-form-label">
-						<?php $id = Base::CDN_MAPPING_FILETYPE; ?>
-						<?php $this->title( $id ); ?>
-					</label>
-					<?php $this->build_textarea( Base::O_CDN_MAPPING . "[$id][]", 18, is_array( $v[ $id ] ) ? implode( "\n", $v[ $id ] ) : $v[ $id ] ); ?>
-				</div>
-			</div>
-
-		<?php endforeach; ?>
-
-			<p><button type="button" class="button button-link litespeed-form-action litespeed-link-with-icon" id="litespeed-cdn-mapping-add" data-action="add">
-				<span class="dashicons dashicons-plus-alt"></span><?php echo __( 'Add new CDN URL', 'litespeed-cache' );?>
-			</button></p>
+			<script type="text/babel">
+				ReactDOM.render(
+					<CDNMapping list={ <?php echo json_encode( $cdn_mapping ); ?> } />,
+					document.getElementById( 'litespeed_cdn_mapping_div' )
+				);
+			</script>
 
 			<div class="litespeed-warning">
 				<?php echo __('NOTE', 'litespeed-cache'); ?>:
@@ -224,19 +173,6 @@ $this->form_action();
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_CDN_REMOTE_JQ; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), 'Google', 'CDNJS' ) ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>

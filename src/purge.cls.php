@@ -698,6 +698,7 @@ class Purge extends Base {
 	 */
 	public static function purge_posttype( $post_type ) {
 		self::add( Tag::TYPE_ARCHIVE_POSTTYPE . $post_type );
+		self::add( $post_type );
 	}
 
 	/**
@@ -1008,6 +1009,7 @@ class Purge extends Base {
 		if ( Conf::val( Base::O_PURGE_POST_POSTTYPE) ) {
 			if ( get_post_type_archive_link($post_type) ) {
 				$purge_tags[] = Tag::TYPE_ARCHIVE_POSTTYPE . $post_type;
+				$purge_tags[] = $post_type;
 			}
 		}
 

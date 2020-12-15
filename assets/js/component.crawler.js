@@ -54,6 +54,7 @@ class CrawlerSimulate extends React.Component {
 	}
 }
 
+// { name: '', vals: '' }
 class SimulationBlock extends React.Component {
 	constructor( props ) {
 		super( props );
@@ -80,7 +81,7 @@ class SimulationBlock extends React.Component {
 				</div>
 				<div className="litespeed-col-auto">
 					<label className="litespeed-form-label">{ litespeed_data[ 'lang' ][ 'cookie_values' ] }</label>
-					<textarea rows="5" cols="40" name={ litespeed_data[ 'ids' ][ 'crawler_cookies' ] + '[vals][]' } placeholder={ litespeed_data[ 'lang' ][ 'one_per_line' ] } value={item.vals} data-type="vals" onChange={this.handleInputChange} />
+					<textarea rows="5" cols="40" name={ litespeed_data[ 'ids' ][ 'crawler_cookies' ] + '[vals][]' } placeholder={ litespeed_data[ 'lang' ][ 'one_per_line' ] } value={ Array.isArray(item.vals) ? item.vals.join("\n") : item.vals } data-type="vals" onChange={this.handleInputChange} />
 				</div>
 				<div className="litespeed-col-auto">
 					<button type="button" className="button button-link litespeed-collection-button litespeed-danger" onClick={this.delRow}>

@@ -137,6 +137,8 @@ class Optimizer extends Instance {
 				if ( ! $concat_only && ! $is_min ) {
 					$content = self::minify_css( $content );
 				}
+
+				$content = CDN::finalize( $content );
 			}
 			else {
 				if ( ! $concat_only && ! $is_min ) {

@@ -196,11 +196,13 @@ class Admin_Display extends Base {
 			// Admin footer
 			add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1);
 
-			// Babel JS type correction
-			add_filter( 'script_loader_tag', array( $this, 'bable_type' ), 10, 3 );
+			if ( $_GET[ 'page' ] == 'litespeed-crawler' || $_GET[ 'page' ] == 'litespeed-cdn' ) {
+				// Babel JS type correction
+				add_filter( 'script_loader_tag', array( $this, 'bable_type' ), 10, 3 );
 
-			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false );
-			wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false );
+			}
 
 			// Crawler Cookie Simulation
 			if ( $_GET[ 'page' ] == 'litespeed-crawler' ) {
@@ -211,8 +213,32 @@ class Admin_Display extends Base {
 				$localize_data[ 'lang' ][ 'one_per_line' ] = Doc::one_per_line( true );
 				$localize_data[ 'lang' ][ 'remove_cookie_simulation' ] = __( 'Remove cookie simulation', 'litespeed-cache' );
 				$localize_data[ 'lang' ][ 'add_cookie_simulation_row' ] = __( 'Add new cookie to simulate', 'litespeed-cache' );
-				$localize_data[ 'ids' ] = array();
+				empty( $localize_data[ 'ids' ] ) && $localize_data[ 'ids' ] = array();
 				$localize_data[ 'ids' ][ 'crawler_cookies' ] = Base::O_CRAWLER_COOKIES;
+			}
+
+			// CDN mapping
+			if ( $_GET[ 'page' ] == 'litespeed-cdn' ) {
+				$home_url = home_url( '/' );
+				$parsed = parse_url( $home_url );
+				$home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url );
+				$cdn_url = 'https://cdn.' . substr( $home_url, 2 );
+
+				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', array(), Core::VER, false );
+				$localize_data[ 'lang' ] = array();
+				$localize_data[ 'lang' ][ 'cdn_mapping_url' ] = Lang::title( Base::CDN_MAPPING_URL );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_img' ] = Lang::title( Base::CDN_MAPPING_INC_IMG );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_css' ] = Lang::title( Base::CDN_MAPPING_INC_CSS );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_js' ] = Lang::title( Base::CDN_MAPPING_INC_JS );
+				$localize_data[ 'lang' ][ 'cdn_mapping_filetype' ] = Lang::title( Base::CDN_MAPPING_FILETYPE );
+				$localize_data[ 'lang' ][ 'cdn_mapping_url_desc' ] = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' );
+				$localize_data[ 'lang' ][ 'one_per_line' ] = Doc::one_per_line( true );
+				$localize_data[ 'lang' ][ 'cdn_mapping_remove' ] = __( 'Remove CDN URL', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'add_cdn_mapping_row' ] = __( 'Add new CDN URL', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'on' ] = __( 'ON', 'litespeed-cache' );
+				$localize_data[ 'lang' ][ 'off' ] = __( 'OFF', 'litespeed-cache' );
+				empty( $localize_data[ 'ids' ] ) && $localize_data[ 'ids' ] = array();
+				$localize_data[ 'ids' ][ 'cdn_mapping' ] = Base::O_CDN_MAPPING;
 			}
 
 			// If on Server IP setting page, append getIP link
@@ -235,7 +261,7 @@ class Admin_Display extends Base {
 	 * @since  3.6
 	 */
 	public function bable_type( $tag, $handle, $src ) {
-		if ( $handle != Core::PLUGIN_NAME . '-crawler' ) {
+		if ( $handle != Core::PLUGIN_NAME . '-crawler' && $handle != Core::PLUGIN_NAME . '-cdn' ) {
 			return $tag;
 		}
 
@@ -1036,7 +1062,7 @@ class Admin_Display extends Base {
 			}
 
 			if ( ! \WP_Http::is_ip_address( $v ) ) {
-				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . $v . '</code>.';
+				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . esc_textarea( $v ) . '</code>.';
 			}
 		}
 

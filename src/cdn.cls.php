@@ -24,7 +24,6 @@ class CDN extends Instance {
 	private $_cfg_ori_dir;
 	private $_cfg_cdn_mapping = array();
 	private $_cfg_cdn_exclude;
-	private $_cfg_cdn_remote_jquery;
 
 	private $cdn_mapping_hosts = array();
 
@@ -52,16 +51,6 @@ class CDN extends Instance {
 		}
 
 		$this->__cfg = Conf::get_instance();
-
-		/**
-		 * Remotely load jQuery
-		 * This is separate from CDN on/off
-		 * @since 1.5
-		 */
-		$this->_cfg_cdn_remote_jquery = Conf::val( Base::O_CDN_REMOTE_JQ );
-		if ( $this->_cfg_cdn_remote_jquery ) {
-			add_action( 'wp', array( $this, 'load_jquery_remotely' ) );
-		}
 
 		$this->_cfg_cdn = Conf::val( Base::O_CDN );
 		if ( ! $this->_cfg_cdn ) {
@@ -577,32 +566,4 @@ class CDN extends Instance {
 		return in_array( $host, $instance->cdn_mapping_hosts );// todo: can add $this->_is_ori_url() check in future
 	}
 
-	/**
-	 * Remote load jQuery remotely
-	 *
-	 * @since  1.5
-	 * @access public
-	 */
-	public function load_jquery_remotely() {
-		// default jq version
-		$v = '1.12.4';
-
-		// load wp's jq version
-		global $wp_scripts;
-		if ( isset( $wp_scripts->registered[ 'jquery-core' ]->ver ) ) {
-			$v = $wp_scripts->registered[ 'jquery-core' ]->ver;
-			// Remove all unexpected chars to fix WP5.2.1 jq version issue @see https://wordpress.org/support/topic/problem-with-wordpress-5-2-1/
-			$v = preg_replace( '|[^\d\.]|', '', $v );
-		}
-
-		$src = $this->_cfg_cdn_remote_jquery == Base::VAL_ON2 ? "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" : "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js";
-
-		wp_deregister_script( 'jquery-core' );
-		wp_deregister_script( 'jquery' );
-
-		$res = wp_register_script( 'jquery-core', $src, false, $v );
-		$res = wp_register_script( 'jquery', $src, false, $v );
-
-		Debug2::debug2( '[CDN] load_jquery_remotely: ' . $src, $res );
-	}
 }

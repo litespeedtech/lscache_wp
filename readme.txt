@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.5.3
-Stable tag: 3.6
+Tested up to: 5.6
+Stable tag: 3.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -247,6 +247,18 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 3.6.1 - Dec 21 2020 =
+* **WP** Tested up to WP v5.6.
+* **CDN** Dropped the option `Load JQuery Remotely`.
+* **CDN** Fixed CDN URL replacement issue in optimized CSS files. (@ankit)
+* **CDN** Fixed an issue where CDN CLI wouldn't set mapping image/CSS/JS to OFF when `false` was the value.
+* **CDN** Started using React for CDN Mapping settings.
+* **GUI** Secured Server IP setting from potential XSS issues.
+* **Toolbox** Supported both dev and master branches for Beta Test. Latest version updated to v3.6.1.
+* **Purge** Purge Pages now can purge non-archive pages too.
+* **Admin** Simplified the admin JS.
+* **Admin** Limited crawler-related react JS to crawler page only.
+
 = 3.6 - Dec 14 2020 =
 * 🌱**WebP** Added WebP support on Safari Big Sur or Safari v14.0.1+. (@ruikai)
 * 🐞**Config** Fixed an issue where new installations were not getting the correct default .htaccess content.
@@ -267,7 +279,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Dropped QUIC.cloud sync options that have long been unused.
 * **CSS** Dropped `Unique CSS File` option (UCSS will always generate unique file, will use whitelist to group post type to one CSS).
 * **GUI** Dropped Help tab.
-* **Test** Added 3.5.2 to version list.
+* **Toolbox** Added 3.5.2 to version list.
 
 = 3.5.2 - Oct 27 2020 =
 * **CSS** `CSS Combine` is now compatible w/ inline noscript CSS. (@galbaras)
