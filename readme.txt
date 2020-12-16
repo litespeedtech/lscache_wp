@@ -249,12 +249,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 3.6.1 - Dec 21 2020 =
 * **WP** Tested up to WP v5.6.
-* **WebP** Reverted WebP support on Safari Big Sur or Safari v14.0.1+ due to no way to detect MacOS versions from UA. (@antomal)
+* **WebP** Reverted WebP support on Safari Big Sur and Safari v14.0.1+ due to an inability to detect MacOS versions from UA. (@antomal)
 * **CDN** Dropped the option `Load JQuery Remotely`.
 * **CDN** Fixed CDN URL replacement issue in optimized CSS files. (@ankit)
 * **CDN** Fixed an issue where CDN CLI wouldn't set mapping image/CSS/JS to OFF when `false` was the value.
 * **CDN** Started using React for CDN Mapping settings.
-* **GUI** Secured Server IP setting from potential XSS issues.
+* **GUI** Secured Server IP setting from potential XSS issues. (@WonTae Jang)
 * **Toolbox** Supported both dev and master branches for Beta Test. Latest version updated to v3.6.1.
 * **Purge** Purge Pages now can purge non-archive pages too.
 * **Admin** Simplified the admin JS.
