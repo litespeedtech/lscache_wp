@@ -181,17 +181,12 @@ class Optimize extends Base {
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
 
-			$content = Optimizer::get_instance()->serve( $match[ 0 ], $concat_only );
+			$res = Optimizer::get_instance()->serve( $match[ 0 ], $concat_only );
 
-			if ( ! $content ) {
+			if ( ! $res ) {
 				Debug2::debug( '[Optm] Static file generation bypassed due to empty' );
 				return;
 			}
-
-			// Generate static file
-			File::save( $static_file, $content, true );
-			Debug2::debug2( '[Optm] Saved cache to file [path] ' . $static_file );
-
 		}
 		else {
 			// Load file from file based cache if not expired

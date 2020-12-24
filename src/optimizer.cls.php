@@ -62,7 +62,7 @@ class Optimizer extends Instance {
 	}
 
 	/**
-	 * Run minify process and return final content
+	 * Run minify process and save content
 	 *
 	 * @since  1.9
 	 * @access public
@@ -70,6 +70,8 @@ class Optimizer extends Instance {
 	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
 		$__css = CSS::get_instance();
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+
+		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
 
 		// Search src set in db based on the requested filename
 		if ( ! $src_list ) {
@@ -94,12 +96,12 @@ class Optimizer extends Instance {
 			$content = apply_filters( 'litespeed_css_serve', $content, $filename, $src_list, $page_url );
 			if ( $content ) {
 				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $filename . ' [url] ' . $page_url );
-				return $content;
+				File::save( $static_file, $content, true ); // todo: UCSS CDN and CSS font display setting
+				return true;
 			}
 		}
 
 		// Clear if existed
-		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
 		File::save( $static_file, '', true ); // TODO: need to lock file too
 
 		// Load content
@@ -160,6 +162,7 @@ class Optimizer extends Instance {
 		}
 
 		Debug2::debug2( '[Optmer] Saved static file [path] ' . $static_file );
+		return true;
 	}
 
 	/**
