@@ -839,8 +839,9 @@ class Optimize extends Base {
 				// Exclude check
 				$js_excluded = $excludes ? Utility::str_hit_array( $attrs[ 'src' ], $excludes ) : false;
 				$is_internal = Utility::is_internal_file( $attrs[ 'src' ] );
+				$is_file = substr( $attrs[ 'src' ], 0, 5 ) != 'data:';
 				$ext_excluded = ! $combine_ext_inl && ! $is_internal;
-				if ( $js_excluded || $ext_excluded ) {
+				if ( $js_excluded || $ext_excluded || ! $is_file ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
 						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );

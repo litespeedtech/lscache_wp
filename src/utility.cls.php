@@ -704,6 +704,10 @@ class Utility extends Instance {
 	 * @return string|bool The real path of file OR false
 	 */
 	public static function is_internal_file( $url, $addition_postfix = false ) {
+		if ( substr( $url, 0, 5 ) == 'data:' ) {
+			Debug2::debug2( '[Util] data: content not file' );
+			return false;
+		}
 		$url_parsed = parse_url( $url );
 		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
 			// Check if is cdn path
