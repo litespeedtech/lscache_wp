@@ -10,7 +10,10 @@ $menu_list = array(
 	'settings_media_exc'		=> __( 'Media Excludes', 'litespeed-cache' ),
 	'settings_localization'		=> __( 'Localization', 'litespeed-cache' ),
 	'settings_tuning' 			=> __( 'Tuning', 'litespeed-cache' ),
-) ;
+);
+
+$db_count = DB_Optm::db_count( 'all_cssjs', true );
+$maybe_show_warning = $db_count > wp_count_posts()->publish * 2 && $db_count > 10000;
 
 ?>
 
@@ -30,6 +33,17 @@ $menu_list = array(
 	<div class="litespeed-callout notice notice-error inline">
 		<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 		<p><?php echo sprintf( __( 'Failed to create Optimizer table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
+	</div>
+	<?php endif; ?>
+
+	<?php if ( $maybe_show_warning ): ?>
+	<div class="litespeed-callout notice notice-warning inline">
+		<h4><?php echo __( 'NOTICE', 'litespeed-cache' ) ; ?></h4>
+		<p>
+			<?php echo sprintf( __( 'You are now having %s records in CSS/JS optimization table. You may need to check if you have random string issue or not.', 'litespeed-cache' ), '<code>' . $db_count . '</code>' ); ?>
+			<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/#find-and-exclude-the-random-string' ); ?>
+		<p><?php echo sprintf( __( 'To clear the outdated CSS/JS optimization data, please go to %s menu.', 'litespeed-cache' ), '<a href="' . admin_url( 'admin.php?page=litespeed-db_optm' ) . '">' . __( 'Database' ) . '</a>' ); ?></p>
+		</p>
 	</div>
 	<?php endif; ?>
 
