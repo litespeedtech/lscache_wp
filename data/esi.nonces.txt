@@ -43,3 +43,7 @@ swpmtxnonce
 
 #wpDataTables #986128
 wdt*
+
+#WPBakery gallery
+_vcnonce
+data-vc-public-nonce
