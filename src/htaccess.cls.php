@@ -469,6 +469,7 @@ class Htaccess extends Instance {
 				'ExpiresByType application/font-woff2 A' . $ttl,
 				'ExpiresByType application/vnd.ms-fontobject A' . $ttl,
 				'ExpiresByType font/ttf A' . $ttl,
+				'ExpiresByType font/otf A' . $ttl,
 				'ExpiresByType font/woff A' . $ttl,
 				'ExpiresByType font/woff2 A' . $ttl,
 				'',
