@@ -228,7 +228,14 @@ class Purge
 
 		$str = implode(',', $filtered);
 
-		WP_CLI::line('Will purge the following cache tags: ' . $str);
+		$purge_titles = array(
+			0 => 'Category',
+			1 => 'Post ID',
+			2 => 'Tag',
+			3 => 'URL',
+		);
+
+		WP_CLI::line('Will purge the following: [' . $purge_titles[ $select ] . '] ' . $str);
 
 		$data = array(
 			Admin_Display::PURGEBYOPT_SELECT	=> $select,
@@ -237,7 +244,7 @@ class Purge
 
 		$purge_ret = $this->_send_request( Core::ACTION_PURGE_BY, $data );
 		if ( $purge_ret->success ) {
-			WP_CLI::success(__('Purged the tags!', 'litespeed-cache'));
+			WP_CLI::success(__('Purged!', 'litespeed-cache'));
 		}
 		else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
