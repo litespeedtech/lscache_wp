@@ -1,14 +1,14 @@
-# Copyright (C) 2020 LiteSpeed Cache
+# Copyright (C) 2021 LiteSpeed Cache
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 3.6.1\n"
+"Project-Id-Version: LiteSpeed Cache 3.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2020-12-15 14:41:17+00:00\n"
+"POT-Creation-Date: 2021-01-12 20:00:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -24,8 +24,8 @@ msgstr ""
 msgid "Purged the url!"
 msgstr ""
 
-#: cli/purge.cls.php:240
-msgid "Purged the tags!"
+#: cli/purge.cls.php:247
+msgid "Purged!"
 msgstr ""
 
 #: src/activation.cls.php:420 src/activation.cls.php:425
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Page Optimization"
 msgstr ""
 
-#: src/admin-display.cls.php:133
+#: src/admin-display.cls.php:133 tpl/page_optm/entry.tpl.php:45
 msgid "Database"
 msgstr ""
 
@@ -785,17 +785,17 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: src/htaccess.cls.php:354
+#: src/htaccess.cls.php:355
 msgid "Mobile Agent Rules"
 msgstr ""
 
-#: src/htaccess.cls.php:830
+#: src/htaccess.cls.php:843
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: src/htaccess.cls.php:897
+#: src/htaccess.cls.php:910
 msgid "File Saved."
 msgstr ""
 
@@ -1809,11 +1809,11 @@ msgstr ""
 msgid " %s ago"
 msgstr ""
 
-#: src/utility.cls.php:870
+#: src/utility.cls.php:874
 msgid "&laquo;"
 msgstr ""
 
-#: src/utility.cls.php:871
+#: src/utility.cls.php:875
 msgid "&raquo;"
 msgstr ""
 
@@ -1924,7 +1924,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.6.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 3.6.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2145,7 +2145,8 @@ msgstr ""
 msgid "Please visit the <a %s>Information</a> page on how to test the cache."
 msgstr ""
 
-#: tpl/cache/settings-cache.tpl.php:27 tpl/page_optm/entry.tpl.php:37
+#: tpl/cache/settings-cache.tpl.php:27 tpl/page_optm/entry.tpl.php:41
+#: tpl/page_optm/entry.tpl.php:51
 msgid "NOTICE"
 msgstr ""
 
@@ -2245,7 +2246,7 @@ msgstr ""
 
 #: tpl/cache/settings-esi.tpl.php:35 tpl/cdn/manage.tpl.php:21
 #: tpl/crawler/summary.tpl.php:48 tpl/inc/check_cache_disabled.php:31
-#: tpl/inc/check_if_network_disable_all.php:19 tpl/page_optm/entry.tpl.php:31
+#: tpl/inc/check_if_network_disable_all.php:19 tpl/page_optm/entry.tpl.php:34
 #: tpl/page_optm/settings_css.tpl.php:143
 #: tpl/page_optm/settings_localization.tpl.php:11
 msgid "WARNING"
@@ -4247,17 +4248,27 @@ msgstr ""
 msgid "Tuning"
 msgstr ""
 
-#: tpl/page_optm/entry.tpl.php:19
+#: tpl/page_optm/entry.tpl.php:22
 msgid "LiteSpeed Cache Page Optimization"
 msgstr ""
 
-#: tpl/page_optm/entry.tpl.php:32
+#: tpl/page_optm/entry.tpl.php:35
 msgid ""
 "Failed to create Optimizer table. Please follow <a %s>Table Creation "
 "guidance from LiteSpeed Wiki</a> to finish setup."
 msgstr ""
 
-#: tpl/page_optm/entry.tpl.php:38
+#: tpl/page_optm/entry.tpl.php:43
+msgid ""
+"You are now having %s records in CSS/JS optimization table. You may need to "
+"check if you have random string issue or not."
+msgstr ""
+
+#: tpl/page_optm/entry.tpl.php:45
+msgid "To clear the outdated CSS/JS optimization data, please go to %s menu."
+msgstr ""
+
+#: tpl/page_optm/entry.tpl.php:52
 msgid ""
 "Please test thoroughly when enabling any option in this list. After changing "
 "Minify/Combine settings, please do a Purge All action."
