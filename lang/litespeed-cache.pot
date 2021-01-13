@@ -4824,7 +4824,7 @@ msgid "Press the %s button to use the most recent GitHub commit."
 msgstr ""
 
 #: tpl/toolbox/beta_test.tpl.php:45
-msgid "Use latest GitHub commit"
+msgid "Use latest GitHub Dev/Master commit"
 msgstr ""
 
 #: tpl/toolbox/beta_test.tpl.php:46
