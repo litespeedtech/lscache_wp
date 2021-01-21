@@ -3,10 +3,10 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $last_generated = Avatar::get_summary();
-$avatar_queue = Avatar::get_instance()->queue_count();
+$avatar_queue = Avatar::cls()->queue_count();
 ?>
 
-<?php if ( Avatar::need_db() && ! Data::get_instance()->tb_exist( 'avatar' ) ) : ?>
+<?php if ( $this->cls( 'Avatar' )->need_db() && ! $this->cls( 'Data' )->tb_exist( 'avatar' ) ) : ?>
 <div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ); ?></h4>
 	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ); ?></p>

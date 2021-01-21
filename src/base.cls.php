@@ -12,8 +12,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Base extends Instance {
-	protected static $_instance;
-
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf';
@@ -138,8 +136,6 @@ class Base extends Instance {
 	const O_OPTM_QS_RM 				= 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC 			= 'optm-css_async';
-	const O_OPTM_CCSS_GEN 			= 'optm-ccss_gen';
-	const O_OPTM_CCSS_ASYNC 		= 'optm-ccss_async';
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
@@ -425,8 +421,6 @@ class Base extends Instance {
 		self::O_OPTM_QS_RM 				=> false,
 		self::O_OPTM_GGFONTS_RM 		=> false,
 		self::O_OPTM_CSS_ASYNC 			=> false,
-		self::O_OPTM_CCSS_GEN 			=> false,
-		self::O_OPTM_CCSS_ASYNC 		=> false,
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
@@ -895,7 +889,7 @@ class Base extends Instance {
 	protected function _conf_cron( $id ) {
 		$check_ids = array(
 			self::O_IMG_OPTM_CRON,
-			self::O_OPTM_CCSS_ASYNC,
+			self::O_OPTM_CSS_ASYNC,
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
 			self::O_DISCUSS_AVATAR_CRON,
 			self::O_IMG_OPTM_AUTO,
@@ -920,135 +914,6 @@ class Base extends Instance {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Generate conf name for wp_options record
-	 *
-	 * @since 3.0
-	 */
-	public static function name( $id ) {
-		$cls = new \ReflectionClass( get_called_class() );
-		return 'litespeed.' . strtolower( $cls->getShortName() ) . '.' . $id;
-	}
-
-	/**
-	 * Dropin with prefix for WP's get_option
-	 *
-	 * @since 3.0
-	 */
-	public static function get_option( $id, $default_v = false ) {
-		return get_option( self::name( $id ), $default_v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's get_site_option
-	 *
-	 * @since 3.0
-	 */
-	public static function get_site_option( $id, $default_v = false ) {
-		return get_site_option( self::name( $id ), $default_v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's get_blog_option
-	 *
-	 * @since 3.0
-	 */
-	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
-		return get_blog_option( $blog_id, self::name( $id ), $default_v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's add_option
-	 *
-	 * @since 3.0
-	 */
-	public static function add_option( $id, $v ) {
-		add_option( self::name( $id ), $v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's add_site_option
-	 *
-	 * @since 3.0
-	 */
-	public static function add_site_option( $id, $v ) {
-		add_site_option( self::name( $id ), $v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's update_option
-	 *
-	 * @since 3.0
-	 */
-	public static function update_option( $id, $v ) {
-		update_option( self::name( $id ), $v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's update_site_option
-	 *
-	 * @since 3.0
-	 */
-	public static function update_site_option( $id, $v ) {
-		update_site_option( self::name( $id ), $v );
-	}
-
-	/**
-	 * Dropin with prefix for WP's delete_option
-	 *
-	 * @since 3.0
-	 */
-	public static function delete_option( $id ) {
-		delete_option( self::name( $id ) );
-	}
-
-	/**
-	 * Dropin with prefix for WP's delete_site_option
-	 *
-	 * @since 3.0
-	 */
-	public static function delete_site_option( $id ) {
-		delete_site_option( self::name( $id ) );
-	}
-
-	/**
-	 * Read summary
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function get_summary( $field = false ) {
-		$summary = self::get_option( '_summary', array() );
-
-		if ( ! is_array( $summary ) ) {
-			$summary = array();
-		}
-
-		if ( ! $field ) {
-			return $summary;
-		}
-
-		if ( array_key_exists( $field, $summary ) ) {
-			return $summary[ $field ];
-		}
-
-		return null;
-	}
-
-	/**
-	 * Save summary
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function save_summary( $data = null ) {
-		if ( $data === null ) {
-			$data = static::get_instance()->_summary;
-		}
-
-		self::update_option( '_summary', $data );
 	}
 
 	/**

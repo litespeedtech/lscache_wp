@@ -13,8 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Htaccess extends Instance {
-	protected static $_instance;
-
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
 	private $frontend_htaccess = null;
@@ -66,11 +64,11 @@ class Htaccess extends Instance {
 		$this->_default_frontend_htaccess = $this->frontend_htaccess;
 		$this->_default_backend_htaccess = $this->backend_htaccess;
 
-		$frontend_htaccess = Conf::val( Base::O_MISC_HTACCESS_FRONT );
+		$frontend_htaccess = $this->conf( Base::O_MISC_HTACCESS_FRONT );
 		if ( $frontend_htaccess && substr( $frontend_htaccess, -10 ) === '/.htaccess' ) {
 			$this->frontend_htaccess = $frontend_htaccess;
 		}
-		$backend_htaccess = Conf::val( Base::O_MISC_HTACCESS_BACK );
+		$backend_htaccess = $this->conf( Base::O_MISC_HTACCESS_BACK );
 		if ( $backend_htaccess && substr( $backend_htaccess, -10 ) === '/.htaccess' ) {
 			$this->backend_htaccess = $backend_htaccess;
 		}
@@ -151,9 +149,9 @@ class Htaccess extends Instance {
 	 */
 	public static function get_frontend_htaccess( $show_default = false ) {
 		if ( $show_default ) {
-			return self::get_instance()->_default_frontend_htaccess;
+			return self::cls()->_default_frontend_htaccess;
 		}
-		return self::get_instance()->frontend_htaccess;
+		return self::cls()->frontend_htaccess;
 	}
 
 	/**
@@ -164,9 +162,9 @@ class Htaccess extends Instance {
 	 */
 	public static function get_backend_htaccess( $show_default = false ) {
 		if ( $show_default ) {
-			return self::get_instance()->_default_backend_htaccess;
+			return self::cls()->_default_backend_htaccess;
 		}
-		return self::get_instance()->backend_htaccess;
+		return self::cls()->backend_htaccess;
 	}
 
 	/**

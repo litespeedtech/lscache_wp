@@ -30,7 +30,7 @@ defined( 'WPINC' ) || exit;
 				<br><?php echo __('The network admin setting can be overridden here.', 'litespeed-cache'); ?>
 				<?php endif; ?>
 
-				<?php if ( ! Conf::val( Base::O_CACHE ) && Conf::val( Base::O_CDN_QUIC ) ): ?>
+				<?php if ( ! $this->conf( Base::O_CACHE ) && $this->conf( Base::O_CDN_QUIC ) ): ?>
 				<br><font class="litespeed-success"><?php echo __( 'With QUIC.cloud CDN enabled, you may still be seeing cache headers from your local server.', 'litespeed-cache' ); ?></font>
 				<?php endif; ?>
 			</div>

@@ -11,10 +11,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Admin_Settings extends Base
-{
-	protected static $_instance;
-
+class Admin_Settings extends Base{
 	const ENROLL = '_settings-enroll';
 
 	private $__cfg;// cfg instance
@@ -27,7 +24,7 @@ class Admin_Settings extends Base
 	 */
 	protected function __construct()
 	{
-		$this->__cfg = Conf::get_instance();
+		$this->__cfg = Conf::cls();
 	}
 
 	/**
@@ -104,7 +101,7 @@ class Admin_Settings extends Base
 			 */
 			if ( $id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES ) {
 				// Use existing in queue data if existed (Only available when $child != false)
-				$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : ( defined( 'WP_CLI' ) && WP_CLI ? Conf::val( $id ) : array() );
+				$data2 = array_key_exists( $id, $the_matrix ) ? $the_matrix[ $id ] : ( defined( 'WP_CLI' ) && WP_CLI ? $this->conf( $id ) : array() );
 			}
 			switch ( $id ) {
 				case self::O_CDN_MAPPING:
@@ -289,7 +286,7 @@ class Admin_Settings extends Base
 		}
 
 		// Update related files
-		Activation::get_instance()->update_files();
+		Activation::cls()->update_files();
 
 		$msg = __( 'Options saved.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );

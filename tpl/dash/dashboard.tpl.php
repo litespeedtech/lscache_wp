@@ -2,15 +2,15 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$lscache_stats = GUI::get_instance()->lscache_stats();
+$lscache_stats = GUI::cls()->lscache_stats();
 
-$health_scores = Health::get_instance()->scores();
+$health_scores = Health::cls()->scores();
 
 $crawler_summary = Crawler::get_summary();
 
 // Image related info
 $optm_summary = Img_Optm::get_summary();
-$img_count = Img_Optm::get_instance()->img_count();
+$img_count = Img_Optm::cls()->img_count();
 if ( ! empty( $img_count[ 'groups_all' ] ) ) {
 	$img_gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] );
 }
@@ -225,7 +225,7 @@ $placeholder_summary = Placeholder::get_summary();
 										<?php echo __( 'Before', 'litespeed-cache' ); ?>
 									</p>
 									<div class="litespeed-promo-score">
-										<?php echo GUI::pie( $health_scores[ 'score_before' ], 45, false, true, 'litespeed-pie-' . GUI::get_instance()->get_cls_of_pagescore( $health_scores[ 'score_before' ] ) ); ?>
+										<?php echo GUI::pie( $health_scores[ 'score_before' ], 45, false, true, 'litespeed-pie-' . GUI::cls()->get_cls_of_pagescore( $health_scores[ 'score_before' ] ) ); ?>
 									</div>
 								</div>
 								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -233,7 +233,7 @@ $placeholder_summary = Placeholder::get_summary();
 										<?php echo __( 'After', 'litespeed-cache' ); ?>
 									</p>
 									<div class="litespeed-promo-score">
-										<?php echo GUI::pie( $health_scores[ 'score_after' ], 45, false, true, 'litespeed-pie-' . GUI::get_instance()->get_cls_of_pagescore( $health_scores[ 'score_after' ] ) ); ?>
+										<?php echo GUI::pie( $health_scores[ 'score_after' ], 45, false, true, 'litespeed-pie-' . GUI::cls()->get_cls_of_pagescore( $health_scores[ 'score_after' ] ) ); ?>
 									</div>
 								</div>
 								<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -331,7 +331,7 @@ $placeholder_summary = Placeholder::get_summary();
 								Base::O_IMG_OPTM_CRON	=> Lang::title( Base::O_IMG_OPTM_CRON ),
 							);
 							foreach ( $cache_list as $id => $title ) :
-								$v = Conf::val( $id );
+								$v = $this->conf( $id );
 							?>
 								<p>
 									<?php if ( $v ) : ?>
@@ -362,7 +362,7 @@ $placeholder_summary = Placeholder::get_summary();
 						Base::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
 					);
 					foreach ( $cache_list as $id => $title ) :
-						$v = Conf::val( $id );
+						$v = $this->conf( $id );
 				?>
 						<p>
 							<?php if ( $v ) : ?>
@@ -465,7 +465,7 @@ $placeholder_summary = Placeholder::get_summary();
 					</h3>
 
 					<p>
-						<code><?php echo count( Crawler::get_instance()->list_crawlers() );?></code> <?php echo __( 'Crawler(s)', 'litespeed-cache' ); ?>
+						<code><?php echo count( Crawler::cls()->list_crawlers() );?></code> <?php echo __( 'Crawler(s)', 'litespeed-cache' ); ?>
 					</p>
 					<p>
 						<?php echo __( 'Currently active crawler', 'litespeed-cache' ); ?>: <code><?php echo $crawler_summary[ 'curr_crawler' ] ?></code>

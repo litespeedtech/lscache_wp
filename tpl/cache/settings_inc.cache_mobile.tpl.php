@@ -30,14 +30,14 @@ defined( 'WPINC' ) || exit;
 		<td>
 		<?php
 			// if set, use value as input value
-			if ( Conf::val( Base::O_CACHE_MOBILE ) ) {
+			if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
 
 				// if enabled, check the setting in file
 				if ( defined( 'LITESPEED_ON' ) ) {
 
 					try {
-						$mobile_agents = Htaccess::get_instance()->current_mobile_agents();
-						if ( $mobile_agents !== Utility::arr2regex( Conf::val( $id ), true ) ) {
+						$mobile_agents = Htaccess::cls()->current_mobile_agents();
+						if ( $mobile_agents !== Utility::arr2regex( $this->conf( $id ), true ) ) {
 							echo '<div class="litespeed-callout notice notice-error inline"><p>'
 									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
 									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
@@ -64,7 +64,7 @@ defined( 'WPINC' ) || exit;
 
 				<?php $this->_validate_syntax( $id ); ?>
 
-				<?php if ( Conf::val( Base::O_CACHE_MOBILE ) && ! Conf::val( $id ) ) : ?>
+				<?php if ( $this->conf( Base::O_CACHE_MOBILE ) && ! $this->conf( $id ) ) : ?>
 				<font class="litespeed-warning">
 					❌
 					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ); ?>

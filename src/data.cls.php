@@ -24,8 +24,6 @@ class Data extends Instance {
 		// ),
 	);
 
-	protected static $_instance;
-
 	const TB_CSSJS = 'litespeed_cssjs';
 	const TB_IMG_OPTM = 'litespeed_img_optm';
 	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
@@ -53,17 +51,17 @@ class Data extends Instance {
 	 */
 	public function correct_tb_existance() {
 		// CSS JS optm
-		if ( Optimize::need_db() ) {
+		if ( $this->cls( 'Optimize' )->need_db() ) {
 			$this->tb_create( 'cssjs' );
 		}
 
 		// Gravatar
-		if ( Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			$this->tb_create( 'avatar' );
 		}
 
 		// Crawler
-		if ( Conf::val( Base::O_CRAWLER ) ) {
+		if ( $this->conf( Base::O_CRAWLER ) ) {
 			$this->tb_create( 'crawler' );
 			$this->tb_create( 'crawler_blacklist' );
 		}
@@ -95,8 +93,8 @@ class Data extends Instance {
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
 		// Init log manually
-		if ( Conf::val( Base::O_DEBUG ) ) {
-			Debug2::init();
+		if ( $this->conf( Base::O_DEBUG ) ) {
+			$this->cls( 'Debug2' )->init();
 		}
 
 		foreach ( $this->_db_updater as $k => $v ) {
@@ -110,7 +108,7 @@ class Data extends Instance {
 		}
 
 		// Reload options
-		Conf::get_instance()->load_options();
+		Conf::cls()->load_options();
 
 		$this->correct_tb_existance();
 
@@ -156,7 +154,7 @@ class Data extends Instance {
 		}
 
 		// Reload options
-		Conf::get_instance()->load_site_options();
+		$this->cls( 'Conf' )->load_site_options();
 
 		Conf::delete_site_option( Base::_VER );
 		Conf::add_site_option( Base::_VER, Core::VER );
@@ -231,8 +229,8 @@ class Data extends Instance {
 		! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
 
 		// Init log manually
-		if ( Conf::val( Base::O_DEBUG ) ) {
-			Debug2::init();
+		if ( $this->conf( Base::O_DEBUG ) ) {
+			$this->cls( 'Debug2' )->init();
 		}
 		Debug2::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' );
 
@@ -258,7 +256,7 @@ class Data extends Instance {
 		}
 		else {
 			// Reload options
-			Conf::get_instance()->load_options();
+			Conf::cls()->load_options();
 
 			$this->correct_tb_existance();
 

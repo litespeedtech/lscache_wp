@@ -20,7 +20,7 @@ class Image
 	{
 		Debug2::debug( 'CLI_Cloud init' );
 
-		$this->__img_optm = Img_Optm::get_instance();
+		$this->__img_optm = Img_Optm::cls();
 	}
 
 	/**

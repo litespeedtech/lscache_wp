@@ -12,8 +12,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Avatar extends Base {
-	protected static $_instance;
-
 	const TYPE_GENERATE = 'generate';
 
 	private $_conf_cache_ttl;
@@ -29,15 +27,15 @@ class Avatar extends Base {
 	 * @access protected
 	 */
 	protected function __construct() {
-		if ( ! Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( ! $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}
 
 		Debug2::debug2( '[Avatar] init' );
 
-		$this->_tb = Data::get_instance()->tb( 'avatar' );
+		$this->_tb = $this->cls( 'Data' )->tb( 'avatar' );
 
-		$this->_conf_cache_ttl = Conf::val( Base::O_DISCUSS_AVATAR_CACHE_TTL );
+		$this->_conf_cache_ttl = $this->conf( Base::O_DISCUSS_AVATAR_CACHE_TTL );
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) );
 
@@ -50,8 +48,8 @@ class Avatar extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function need_db() {
-		if ( Conf::val( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+	public function need_db() {
+		if ( $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			return true;
 		}
 
@@ -212,7 +210,7 @@ class Avatar extends Base {
 	public static function cron( $force = false ) {
 		global $wpdb;
 
-		$_instance = self::get_instance();
+		$_instance = self::cls();
 		if ( ! $_instance->queue_count() ) {
 			Debug2::debug( '[Avatar] no queue' );
 			return;
@@ -298,9 +296,7 @@ class Avatar extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {

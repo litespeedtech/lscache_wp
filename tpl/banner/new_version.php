@@ -9,7 +9,7 @@ if ( is_multisite() ) {
 	return;
 }
 
-if ( Conf::val( Base::O_AUTO_UPGRADE ) ) {
+if ( $this->conf( Base::O_AUTO_UPGRADE ) ) {
 	return;
 }
 

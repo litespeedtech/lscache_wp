@@ -12,8 +12,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Placeholder extends Base {
-	protected static $_instance;
-
 	const TYPE_GENERATE = 'generate';
 	const TYPE_CLEAR_Q = 'clear_q';
 
@@ -37,15 +35,15 @@ class Placeholder extends Base {
 	 * @access protected
 	 */
 	protected function __construct() {
-		$this->_conf_placeholder_resp = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP );
-		$this->_conf_placeholder_resp_svg 	= Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_SVG );
-		$this->_conf_lqip 		= Conf::val( Base::O_MEDIA_LQIP );
-		$this->_conf_lqip_qual	= Conf::val( Base::O_MEDIA_LQIP_QUAL );
-		$this->_conf_lqip_min_w	= Conf::val( Base::O_MEDIA_LQIP_MIN_W );
-		$this->_conf_lqip_min_h	= Conf::val( Base::O_MEDIA_LQIP_MIN_H );
-		$this->_conf_placeholder_resp_async = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC );
-		$this->_conf_placeholder_resp_color = Conf::val( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR );
-		$this->_conf_ph_default = Conf::val( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER;
+		$this->_conf_placeholder_resp = $this->conf( Base::O_MEDIA_PLACEHOLDER_RESP );
+		$this->_conf_placeholder_resp_svg 	= $this->conf( Base::O_MEDIA_PLACEHOLDER_RESP_SVG );
+		$this->_conf_lqip 		= $this->conf( Base::O_MEDIA_LQIP );
+		$this->_conf_lqip_qual	= $this->conf( Base::O_MEDIA_LQIP_QUAL );
+		$this->_conf_lqip_min_w	= $this->conf( Base::O_MEDIA_LQIP_MIN_W );
+		$this->_conf_lqip_min_h	= $this->conf( Base::O_MEDIA_LQIP_MIN_H );
+		$this->_conf_placeholder_resp_async = $this->conf( Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC );
+		$this->_conf_placeholder_resp_color = $this->conf( Base::O_MEDIA_PLACEHOLDER_RESP_COLOR );
+		$this->_conf_ph_default = $this->conf( Base::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER;
 
 		$this->_summary = self::get_summary();
 	}
@@ -171,7 +169,7 @@ class Placeholder extends Base {
 			$additional_attr = ' data-placeholder-resp="' . $size . '"';
 		}
 
-		$snippet = Conf::val( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $html . '</noscript>';
+		$snippet = $this->conf( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $html . '</noscript>';
 		$html = str_replace( array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $html );
 		$html = str_replace( '<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $html );
 		$snippet = $html . $snippet;
@@ -229,7 +227,7 @@ class Placeholder extends Base {
 			return $this->_generate_placeholder_locally( $size );
 		}
 
-		if ( $hit = Utility::str_hit_array( $src, Conf::val( Base::O_MEDIA_LQIP_EXC ) ) ) {
+		if ( $hit = Utility::str_hit_array( $src, $this->conf( Base::O_MEDIA_LQIP_EXC ) ) ) {
 			Debug2::debug2( '[LQIP] file bypass generating due to exclude setting [hit] ' . $hit );
 			return $this->_generate_placeholder_locally( $size );
 		}
@@ -340,7 +338,7 @@ class Placeholder extends Base {
 	 * @access public
 	 */
 	public static function cron( $continue = false ) {
-		$_instance = self::get_instance();
+		$_instance = self::cls();
 		if ( empty( $_instance->_summary[ 'queue' ] ) ) {
 			return;
 		}
@@ -407,7 +405,7 @@ class Placeholder extends Base {
 			$data = $this->_generate_placeholder_locally( $size );
 		}
 		else {
-			$allowance = Cloud::get_instance()->allowance( Cloud::SVC_LQIP );
+			$allowance = Cloud::cls()->allowance( Cloud::SVC_LQIP );
 			if ( ! $allowance ) {
 				Debug2::debug( '[LQIP] ❌ No credit' );
 				Admin_Display::error( Error::msg( 'lack_of_quota' ) );
@@ -488,9 +486,9 @@ class Placeholder extends Base {
 	 * @since  3.4
 	 */
 	private function _append_exc( $src ) {
-		$val = Conf::val( Base::O_MEDIA_LQIP_EXC );
+		$val = $this->conf( Base::O_MEDIA_LQIP_EXC );
 		$val[] = $src;
-		Conf::get_instance()->update( Base::O_MEDIA_LQIP_EXC, $val );
+		Conf::cls()->update( Base::O_MEDIA_LQIP_EXC, $val );
 		Debug2::debug( '[LQIP] Appended to LQIP Excludes [URL] ' . $src );
 
 		if ( ! empty( $this->_summary[ 'queue' ] ) ) {
@@ -549,9 +547,7 @@ class Placeholder extends Base {
 	 * @since  2.5.1
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
@@ -560,7 +556,7 @@ class Placeholder extends Base {
 				break;
 
 			case self::TYPE_CLEAR_Q :
-				$instance->clear_q();
+				$this->clear_q();
 				break;
 
 			default:

@@ -20,9 +20,9 @@ class WPLister
 	{
 		if ( defined( 'WOOCOMMERCE_VERSION' ) && defined( 'WPLISTER_VERSION' ) ) {
 			// User reported this will sync correctly.
-			add_action( 'wplister_revise_inventory_status', array( WooCommerce::get_instance(), 'backend_purge' ) );
+			add_action( 'wplister_revise_inventory_status', array( WooCommerce::cls(), 'backend_purge' ) );
 			// Added as a safety measure for WPLister Pro only.
-			add_action( 'wplister_inventory_status_changed', array( WooCommerce::get_instance(), 'backend_purge' ) );
+			add_action( 'wplister_inventory_status_changed', array( WooCommerce::cls(), 'backend_purge' ) );
 		}
 	}
 

@@ -7,7 +7,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Debug2 extends Instance {
-	protected static $_instance;
 	private static $log_path;
 	private static $_prefix;
 
@@ -34,7 +33,7 @@ class Debug2 extends Instance {
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() );
 
-		if ( Conf::val( Base::O_DEBUG_LEVEL ) ) {
+		if ( $this->conf( Base::O_DEBUG_LEVEL ) ) {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true );
 		}
 
@@ -88,7 +87,7 @@ class Debug2 extends Instance {
 		set_site_transient( 'update_plugins', $update_plugins );
 
 		// Run upgrade
-		Activation::get_instance()->upgrade();
+		Activation::cls()->upgrade();
 	}
 
 	/**
@@ -124,7 +123,7 @@ class Debug2 extends Instance {
 
 		$purge_file = LSCWP_CONTENT_DIR . '/debug.purge.log';
 
-		self::get_instance()->_init_request( $purge_file );
+		self::cls()->_init_request( $purge_file );
 
 		$msg = $purge_header . self::_backtrace_info( 6 );
 
@@ -138,10 +137,10 @@ class Debug2 extends Instance {
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function init() {
-		$debug = Conf::val( Base::O_DEBUG );
+	public function init() {
+		$debug = $this->conf( Base::O_DEBUG );
 		if ( $debug == Base::VAL_ON2 ) {
-			if ( ! Router::is_admin_ip() ) {
+			if ( ! $this->cls( 'Router' )->is_admin_ip() ) {
 				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
 				return;
 			}
@@ -152,7 +151,7 @@ class Debug2 extends Instance {
 		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
 		 * @since  3.0
 		 */
-		$list = Conf::val( Base::O_DEBUG_INC );
+		$list = $this->conf( Base::O_DEBUG_INC );
 		if ( $list ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list );
 			if ( ! $result ) {
@@ -160,7 +159,7 @@ class Debug2 extends Instance {
 			}
 		}
 
-		$list = Conf::val( Base::O_DEBUG_EXC );
+		$list = $this->conf( Base::O_DEBUG_EXC );
 		if ( $list ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list );
 			if ( $result ) {
@@ -169,7 +168,7 @@ class Debug2 extends Instance {
 		}
 
 		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
-			self::get_instance()->_init_request();
+			$this->_init_request();
 			define( 'LSCWP_LOG', true );
 
 		}
@@ -187,7 +186,7 @@ class Debug2 extends Instance {
 		}
 
 		// Check log file size
-		$log_file_size = Conf::val( Base::O_DEBUG_FILESIZE );
+		$log_file_size = $this->conf( Base::O_DEBUG_FILESIZE );
 		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
 			File::save( $log_file, '' );
 		}
@@ -222,7 +221,7 @@ class Debug2 extends Instance {
 		$param = sprintf( '💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) );
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '';
-		if ( Conf::val( Base::O_DEBUG_COLLAPS_QS ) ) {
+		if ( $this->conf( Base::O_DEBUG_COLLAPS_QS ) ) {
 			if ( strlen( $qs ) > 53 ) {
 				$qs = substr( $qs, 0, 53 ) . '...';
 			}
@@ -245,7 +244,7 @@ class Debug2 extends Instance {
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
 		}
-		if ( Conf::val( Base::O_DEBUG_COOKIE ) ) {
+		if ( $this->conf( Base::O_DEBUG_COOKIE ) ) {
 			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
 		}
 		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
@@ -438,18 +437,16 @@ class Debug2 extends Instance {
 	 * @since  1.6.6
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_CLEAR_LOG :
-				$instance->_clear_log();
+				$this->_clear_log();
 				break;
 
 			case self::TYPE_BETA_TEST :
-				$instance->beta_test();
+				$this->beta_test();
 				break;
 
 			default:

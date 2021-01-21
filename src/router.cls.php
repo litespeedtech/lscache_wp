@@ -11,8 +11,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Router extends Base {
-	protected static $_instance;
-
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
@@ -33,8 +31,26 @@ class Router extends Base {
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
 	const ACTION_DEBUG2 = 'debug2';
-	const ACTION_CDN_QUIC = 'cdn_quic';
-	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare';
+	const ACTION_CDN_CLOUDFLARE = 'CDN\\Cloudflare';
+
+	// List all handlers here
+	private static $_HANDLERS = array(
+		self::ACTION_ACTIVATION,
+		self::ACTION_AVATAR,
+		self::ACTION_CDN_CLOUDFLARE,
+		self::ACTION_CLOUD,
+		self::ACTION_CONF,
+		self::ACTION_CRAWLER,
+		self::ACTION_CSS,
+		self::ACTION_DB_OPTM,
+		self::ACTION_DEBUG2,
+		self::ACTION_HEALTH,
+		self::ACTION_IMG_OPTM,
+		self::ACTION_IMPORT,
+		self::ACTION_PLACEHOLDER,
+		self::ACTION_PURGE,
+		self::ACTION_REPORT,
+	);
 
 	const TYPE = 'litespeed_type';
 
@@ -305,9 +321,9 @@ class Router extends Base {
 	 * @access public
 	 * @return boolean
 	 */
-	public static function esi_enabled() {
+	public function esi_enabled() {
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && Conf::val( Base::O_ESI );
+			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && $this->conf( Base::O_ESI );
 		}
 		return self::$_esi_enabled;
 	}
@@ -341,7 +357,7 @@ class Router extends Base {
 	public static function get_action() {
 		if ( ! isset( self::$_action ) ) {
 			self::$_action = false;
-			self::get_instance()->verify_action();
+			self::cls()->verify_action();
 			if ( self::$_action ) {
 				defined( 'LSCWP_LOG' ) && Debug2::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) );
 			}
@@ -385,11 +401,11 @@ class Router extends Base {
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_admin_ip() {
+	public function is_admin_ip() {
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = Conf::val( Base::O_DEBUG_IPS );
+			$ips = $this->conf( Base::O_DEBUG_IPS );
 
-			self::$_is_admin_ip = self::get_instance()->ip_access( $ips );
+			self::$_is_admin_ip = $this->ip_access( $ips );
 		}
 		return self::$_is_admin_ip;
 	}
@@ -509,7 +525,6 @@ class Router extends Base {
 			case self::ACTION_IMG_OPTM:
 			case self::ACTION_CLOUD:
 			case self::ACTION_CDN_CLOUDFLARE:
-			case self::ACTION_CDN_QUIC:
 			case self::ACTION_CRAWLER:
 			case self::ACTION_IMPORT:
 			case self::ACTION_REPORT:
@@ -629,7 +644,7 @@ class Router extends Base {
 	 *
 	 * @since  3.0
 	 */
-	public static function serve_static() {
+	public function serve_static() {
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
 			if ( strpos( $_SERVER[ 'SCRIPT_URI' ], LITESPEED_STATIC_URL . '/' ) !== 0 ) {
 				return;
@@ -655,15 +670,15 @@ class Router extends Base {
 
 		switch ( $path[ 0 ] ) {
 			case 'avatar':
-				Avatar::get_instance()->serve_satic( $path[ 1 ] );
+				$this->cls( 'Avatar' )->serve_satic( $path[ 1 ] );
 				break;
 
 			case 'cssjs':
-				Optimize::get_instance()->serve_satic( $path[ 1 ] );
+				$this->cls( 'Optimize' )->serve_satic( $path[ 1 ] );
 				break;
 
 			case 'localres':
-				Localization::get_instance()->serve_static( $path[ 1 ] );
+				$this->cls( 'Localization' )->serve_static( $path[ 1 ] );
 				break;
 
 			default :
@@ -680,17 +695,12 @@ class Router extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler( $cls ) {
-		// CDN is child namespaces
-		if ( $cls == self::ACTION_CDN_QUIC || $cls == self::ACTION_CDN_CLOUDFLARE ) {
-			$cls = str_replace( '_', '\\', $cls );
+	public function handler( $cls ) {
+		if ( ! in_array( $cls, self::$_HANDLERS ) ) {
+			return;
 		}
 
-		$cls = __NAMESPACE__ . '\\' . $cls;
-
-		if ( method_exists( $cls, 'handler' ) ) {
-			return $cls::handler();
-		}
+		return $this->cls( $cls )->handler();
 	}
 
 }

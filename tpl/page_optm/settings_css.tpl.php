@@ -2,12 +2,11 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-// CSS::get_instance()->test_url( '' );
+// CSS::cls()->test_url( '' );
 // exit;
 
 $css_summary = CSS::get_summary();
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
-
 ?>
 
 <h3 class="litespeed-title-short">
@@ -138,7 +137,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php if ( ! Conf::val( Base::O_API_KEY ) ) : ?>
+				<?php if ( ! $this->conf( Base::O_API_KEY ) ) : ?>
 				<div class="litespeed-callout notice notice-error inline">
 					<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 					<?php echo Error::msg( 'lack_of_api_key' ); ?>
@@ -147,39 +146,14 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?><br />
 				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
+				<br /><?php echo sprintf( __( 'Enalbing this option will automatically enable Critical CSS generation (%s service).', 'litespeed-cache' ), '<code>QUIC.cloud</code>' ); ?><br />
+				<?php echo __( 'Automatical generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-critical-css-in-the-background' ); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ); ?>
 				</font>
-			</div>
-		</td>
-	</tr>
 
-	<tr>
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_CCSS_GEN; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Leave this option %1$s to allow communication with the QUIC.cloud CCSS service. If set to %2$s, Critical CSS will not be generated.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?><br />
-				<?php echo sprintf( __( 'This option only works if %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Load CSS Asynchronously', 'litespeed-cache' ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_CCSS_ASYNC; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Automatically generate critical CSS in the background via a cron-based queue.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-critical-css-in-the-background' ); ?>
 			</div>
 
 			<?php if ( $css_summary ) : ?>

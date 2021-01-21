@@ -8,8 +8,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Core extends Instance {
-	protected static $_instance;
-
 	const NAME = 'LiteSpeed Cache';
 	const PLUGIN_NAME = 'litespeed-cache';
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php';
@@ -31,8 +29,6 @@ class Core extends Instance {
 
 	private $footer_comment = '';
 
-	private $__cfg;
-
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -43,26 +39,25 @@ class Core extends Instance {
 	 * @since    1.0.0
 	 */
 	protected function __construct() {
-		$this->__cfg = Conf::get_instance();
-		$this->__cfg->init();
+		$this->cls( 'Conf' )->init();
 
 		// Check if debug is on
-		if ( Conf::val( Base::O_DEBUG ) ) {
-			Debug2::init();
+		if ( $this->conf( Base::O_DEBUG ) ) {
+			$this->cls( 'Debug2' )->init();
 		}
 
 		/**
 		 * Load API hooks
 		 * @since  3.0
 		 */
-		API::get_instance()->init();
+		$this->cls( 'API' )->init();
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php';
 		}
 
-		if ( Conf::val( Base::O_DEBUG_DISABLE_ALL ) ) {
+		if ( $this->conf( Base::O_DEBUG_DISABLE_ALL ) ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true );
 		}
 
@@ -92,13 +87,13 @@ class Core extends Instance {
 		 * Hook internal REST
 		 * @since  2.9.4
 		 */
-		REST::get_instance();
+		$this->cls( 'REST' );
 
 		/**
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
 		 */
-		ESI::get_instance();
+		$this->cls( 'ESI' );
 	}
 
 	/**
@@ -129,11 +124,11 @@ class Core extends Instance {
 
 		// in `after_setup_theme`, before `init` hook
 		if ( ! defined( 'LITESPEED_BYPASS_AUTO_V' ) ) {
-			Activation::auto_update();
+			$this->cls( 'Activation' )->auto_update();
 		}
 
 		if( is_admin() ) {
-			Admin::get_instance();
+			$this->cls( 'Admin' );
 		}
 
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
@@ -160,16 +155,16 @@ class Core extends Instance {
 		 * Register vary filter
 		 * @since  1.6.2
 		 */
-		Control::get_instance();
+		$this->cls( 'Control' );
 
 		// 1. Init vary
 		// 2. Init cacheable status
-		Vary::get_instance();
+		$this->cls( 'Vary' );
 
 		// Init Purge hooks
-		Purge::get_instance()->init();
+		$this->cls( 'Purge' )->init();
 
-		Tag::get_instance();
+		$this->cls( 'Tag' );
 
 		// Load hooks that may be related to users
 		add_action( 'init', array( $this, 'after_user_init' ) );
@@ -185,33 +180,33 @@ class Core extends Instance {
 	 * @access public
 	 */
 	public function after_user_init() {
-		Router::get_instance()->is_role_simulation();
+		$this->cls( 'Router' )->is_role_simulation();
 
-		if ( ! is_admin() && $result = $this->__cfg->in_optm_exc_roles() ) {
+		if ( ! is_admin() && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
 		}
 
 		// Heartbeat control
-		Tool::heartbeat();
+		$this->cls( 'Tool' )->heartbeat();
 
-		$__media = Media::get_instance();
+		$__media = $this->cls( 'Media' );
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Check missing static files
-			Router::serve_static();
+			$this->cls( 'Router' )->serve_static();
 
 			$__media->init();
 
-			Placeholder::get_instance()->init();
+			$this->cls( 'Placeholder' )->init();
 
-			Optimize::get_instance()->init();
+			Router::can_optm() && $this->cls( 'Optimize' )->init();
 
 			// Hook cdn for attachements
-			CDN::get_instance();
+			$this->cls( 'CDN' );
 
 			// load cron tasks
-			Task::get_instance()->init();
+			Task::cls()->init();
 		}
 
 		// load litespeed actions
@@ -220,7 +215,7 @@ class Core extends Instance {
 		}
 
 		// Load frontend GUI
-		GUI::get_instance()->frontend_init();
+		GUI::cls()->frontend_init();
 
 	}
 
@@ -258,7 +253,7 @@ class Core extends Instance {
 				break;
 
 			case self::ACTION_PURGE_BY:
-				Purge::get_instance()->purge_list();
+				$this->cls( 'Purge' )->purge_list();
 				$msg = __( 'Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache' );
 				break;
 
@@ -267,7 +262,7 @@ class Core extends Instance {
 				break;
 
 			default:
-				$msg = Router::handler( $action );
+				$msg = $this->cls( 'Router' )->handler( $action );
 				break;
 		}
 		if ( $msg && ! Router::is_ajax() ) {
@@ -392,7 +387,7 @@ class Core extends Instance {
 		$buffer = GUI::finalize( $buffer );
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			$buffer = Optimize::finalize( $buffer );
+			$buffer = $this->cls( 'Optimize' )->finalize( $buffer );
 
 			$buffer = CDN::finalize( $buffer );
 		}
@@ -401,7 +396,7 @@ class Core extends Instance {
 		 * Replace ESI preserved list
 		 * @since  3.3 Replace this in the end to avoid `Inline JS Defer` or other Page Optm features encoded ESI tags wrongly, which caused LSWS can't recognize ESI
 		 */
-		$buffer = ESI::finalize( $buffer );
+		$buffer = $this->cls( 'ESI' )->finalize( $buffer );
 
 		$this->send_headers( true );
 
@@ -466,7 +461,7 @@ class Core extends Instance {
 		$this->_check_is_html();
 
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_api_control`.
-		Control::finalize();
+		$this->cls( 'Control' )->finalize();
 
 		$vary_header = Vary::finalize();
 
@@ -480,7 +475,7 @@ class Core extends Instance {
 		$purge_header = Purge::output();
 
 		// generate `control` header in the end in case control status is changed by other headers.
-		$control_header = Control::output();
+		$control_header = $this->cls( 'Control' )->output();
 
 		// Init comment info
 		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' );
@@ -492,7 +487,7 @@ class Core extends Instance {
 		 * Silence comment for json req
 		 * @since 2.9.3
 		 */
-		if ( REST::get_instance()->is_rest() || Router::is_ajax() ) {
+		if ( REST::cls()->is_rest() || Router::is_ajax() ) {
 			$running_info_showing = false;
 			Debug2::debug( '[Core] Silence Comment due to REST/AJAX' );
 		}

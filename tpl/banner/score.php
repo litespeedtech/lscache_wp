@@ -2,7 +2,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$health_scores = Health::get_instance()->scores();
+$health_scores = Health::cls()->scores();
 
 // If speed is not reduced half or score is larger
 if ( $health_scores[ 'speed_before' ] < $health_scores[ 'speed_after' ] * 2 || $health_scores[ 'score_before' ] > $health_scores[ 'score_after' ] ) {

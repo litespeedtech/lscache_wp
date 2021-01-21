@@ -4,25 +4,356 @@
  *
  * @since      	3.0
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-abstract class Instance
-{
+abstract class Instance {
+	// Instance set
+	private static $_instances;
+
+	private static $_options = array();
+	private static $_const_options = array();
+	private static $_primary_options = array();
+	private static $_network_options = array();
+
+	/**
+	 * Load an instance or create it if not existed
+	 * @since  3.7
+	 */
+	public static function cls( $cls = false ) {
+		if ( ! $cls ) {
+			$cls = self::ori_cls();
+		}
+		$cls = __NAMESPACE__ . '\\' . $cls;
+
+		$cls_tag = strtolower( $cls );
+		if ( ! isset( self::$_instances[ $cls_tag ] ) ) {
+			self::$_instances[ $cls_tag ] = new $cls();
+		}
+
+		return self::$_instances[ $cls_tag ];
+	}
+
+	/**
+	 * Set one conf or confs
+	 */
+	public function set_conf( $id, $val = null ) {
+		if ( is_array( $id ) ) {
+			foreach ( $id as $k => $v ) {
+				$this->set_conf( $k, $v );
+			}
+			return;
+		}
+		self::$_options[ $id ] = $val;
+	}
+
+	/**
+	 * Set one primary conf or confs
+	 */
+	public function set_primary_conf( $id, $val = null ) {
+		if ( is_array( $id ) ) {
+			foreach ( $id as $k => $v ) {
+				$this->set_primary_conf( $k, $v );
+			}
+			return;
+		}
+		self::$_primary_options[ $id ] = $val;
+	}
+
+	/**
+	 * Set one network conf
+	 */
+	public function set_network_conf( $id, $val = null ) {
+		if ( is_array( $id ) ) {
+			foreach ( $id as $k => $v ) {
+				$this->set_network_conf( $k, $v );
+			}
+			return;
+		}
+		self::$_network_options[ $id ] = $val;
+	}
+
+	/**
+	 * Set one const conf
+	 */
+	public function set_const_conf( $id, $val ) {
+		self::$_const_options[ $id ] = $val;
+	}
+
+	/**
+	 * Check if is overwritten by const
+	 *
+	 * @since  3.0
+	 */
+	public function const_overwritten( $id ) {
+		if ( ! isset( self::$_const_options[ $id ] ) || self::$_const_options[ $id ] == $this->conf( $id ) ) {
+			return null;
+		}
+		return self::$_const_options[ $id ];
+	}
+
+	/**
+	 * Check if is overwritten by primary site
+	 *
+	 * @since  3.2.2
+	 */
+	public function primary_overwritten( $id ) {
+		if ( ! isset( self::$_primary_options[ $id ] ) || self::$_primary_options[ $id ] == $this->conf( $id ) ) {
+			return null;
+		}
+
+		// Network admin settings is impossible to be overwritten by primary
+		if ( is_network_admin() ) {
+			return null;
+		}
+
+		return self::$_primary_options[ $id ];
+	}
+
+	/**
+	 * Get the list of configured options for the blog.
+	 *
+	 * @since 1.0
+	 */
+	public function get_options( $ori = false ) {
+		if ( ! $ori ) {
+			return array_merge( self::$_options, self::$_primary_options, self::$_const_options );
+		}
+
+		return self::$_options;
+	}
+
+	/**
+	 * If has a conf or not
+	 */
+	public function has_conf( $id ) {
+		return array_key_exists( $id, self::$_options );
+	}
+
+	/**
+	 * If has a primary conf or not
+	 */
+	public function has_primary_conf( $id ) {
+		return array_key_exists( $id, self::$_primary_options );
+	}
+
+	/**
+	 * If has a network conf or not
+	 */
+	public function has_network_conf( $id ) {
+		return array_key_exists( $id, self::$_network_options );
+	}
+
+	/**
+	 * Get conf
+	 */
+	public function conf( $id, $ori = false ) {
+		if ( isset( self::$_options[ $id ] ) ) {
+			if ( ! $ori ) {
+				$val = $this->const_overwritten( $id );
+				if ( $val !== null ) {
+					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) );
+					return $val;
+				}
+
+				$val = $this->primary_overwritten( $id ); // Network Use primary site settings
+				if ( $val !== null ) {
+					return $val;
+				}
+			}
+
+			// Network orignal value will be in _network_options
+			if ( ! is_network_admin() || ! $this->has_network_conf( $id ) ) {
+				return self::$_options[ $id ];
+			}
+
+		}
+
+		if ( $this->has_network_conf( $id ) ) {
+			if ( ! $ori ) {
+				$val = $this->const_overwritten( $id );
+				if ( $val !== null ) {
+					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) );
+					return $val;
+				}
+			}
+
+			return $this->network_conf( $id );
+		}
+
+		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
+
+		return null;
+	}
+
+	/**
+	 * Get primary conf
+	 */
+	public function primary_conf( $id ) {
+		return self::$_primary_options[ $id ];
+	}
+
+	/**
+	 * Get network conf
+	 */
+	public function network_conf( $id ) {
+		if ( ! $this->has_network_conf( $id ) ) {
+			return null;
+		}
+
+		return self::$_network_options[ $id ];
+	}
+
+	/**
+	 * Get called class short name
+	 */
+	public static function ori_cls() {
+		$cls = new \ReflectionClass( get_called_class() );
+		$shortname = $cls->getShortName();
+		$namespace = str_replace( __NAMESPACE__ . '\\', '', $cls->getNamespaceName() . '\\' );
+		if ( $namespace ) { // the left namespace after dropped LiteSpeed
+			$shortname = $namespace . $shortname;
+		}
+
+		return $shortname;
+	}
+
+	/**
+	 * Generate conf name for wp_options record
+	 *
+	 * @since 3.0
+	 */
+	public static function name( $id ) {
+		return 'litespeed.' . strtolower( self::ori_cls() ) . '.' . $id;
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_option( $id, $default_v = false ) {
+		return get_option( self::name( $id ), $default_v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_site_option( $id, $default_v = false ) {
+		return get_site_option( self::name( $id ), $default_v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's get_blog_option
+	 *
+	 * @since 3.0
+	 */
+	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
+		return get_blog_option( $blog_id, self::name( $id ), $default_v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's add_option
+	 *
+	 * @since 3.0
+	 */
+	public static function add_option( $id, $v ) {
+		add_option( self::name( $id ), $v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's add_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function add_site_option( $id, $v ) {
+		add_site_option( self::name( $id ), $v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's update_option
+	 *
+	 * @since 3.0
+	 */
+	public static function update_option( $id, $v ) {
+		update_option( self::name( $id ), $v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's update_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function update_site_option( $id, $v ) {
+		update_site_option( self::name( $id ), $v );
+	}
+
+	/**
+	 * Dropin with prefix for WP's delete_option
+	 *
+	 * @since 3.0
+	 */
+	public static function delete_option( $id ) {
+		delete_option( self::name( $id ) );
+	}
+
+	/**
+	 * Dropin with prefix for WP's delete_site_option
+	 *
+	 * @since 3.0
+	 */
+	public static function delete_site_option( $id ) {
+		delete_site_option( self::name( $id ) );
+	}
+
+	/**
+	 * Read summary
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function get_summary( $field = false ) {
+		$summary = self::get_option( '_summary', array() );
+
+		if ( ! is_array( $summary ) ) {
+			$summary = array();
+		}
+
+		if ( ! $field ) {
+			return $summary;
+		}
+
+		if ( array_key_exists( $field, $summary ) ) {
+			return $summary[ $field ];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Save summary
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function save_summary( $data = null ) {
+		if ( $data === null ) {
+			$data = static::cls()->_summary;
+		}
+
+		self::update_option( '_summary', $data );
+	}
+
 	/**
 	 * Get the current instance object. To be inherited.
 	 *
 	 * @since 3.0
-	 * @access public
 	 */
-	public static function get_instance()
-	{
-		if ( ! isset( static::$_instance ) ) {
-			static::$_instance = new static() ;
-		}
-
-		return static::$_instance ;
+	public static function get_instance() {
+		return static::cls();
 	}
 
 }

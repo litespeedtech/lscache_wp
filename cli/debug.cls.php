@@ -17,7 +17,7 @@ class Debug
 	{
 		Debug2::debug( 'CLI_Debug init' );
 
-		$this->__report = Report::get_instance();
+		$this->__report = Report::cls();
 	}
 
 	/**

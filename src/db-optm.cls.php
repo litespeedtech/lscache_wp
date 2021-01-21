@@ -18,8 +18,6 @@ class DB_Optm extends Instance {
 	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables', 'all_cssjs' );
 	const TYPE_CONV_TB = 'conv_innodb';
 
-	protected static $_instance;
-
 	/**
 	 * Show if there are more sites in hidden
 	 *
@@ -38,11 +36,11 @@ class DB_Optm extends Instance {
 	 * @param  bool $ignore_multisite If ignore multisite check
 	 * @return  int The rows that will be affected
 	 */
-	public static function db_count( $type, $ignore_multisite = false ) {
+	public function db_count( $type, $ignore_multisite = false ) {
 		if ( $type === 'all' ) {
 			$num = 0;
 			foreach ( self::$TYPES as $v ) {
-				$num += self::db_count( $v );
+				$num += $this->db_count( $v );
 			}
 			return $num;
 		}
@@ -58,7 +56,7 @@ class DB_Optm extends Instance {
 					}
 
 					switch_to_blog( $blog_id );
-					$num += self::db_count( $type, true );
+					$num += $this->db_count( $type, true );
 					restore_current_blog();
 				}
 				return $num;
@@ -69,8 +67,8 @@ class DB_Optm extends Instance {
 
 		switch ( $type ) {
 			case 'revision':
-				$rev_max = (int) Conf::val( Base::O_DB_OPTM_REVISIONS_MAX );
-				$rev_age = (int) Conf::val( Base::O_DB_OPTM_REVISIONS_AGE );
+				$rev_max = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
 				$sql_add = '';
 				if ( $rev_age ) {
 					$sql_add = " and post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY ) ";
@@ -111,7 +109,7 @@ class DB_Optm extends Instance {
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" );
 
 			case 'all_cssjs':
-				return Data::get_instance()->tb_exist( 'cssjs' ) ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . Data::get_instance()->tb( 'cssjs' ) . "`" ) : 0;
+				return $this->cls( 'Data' )->tb_exist( 'cssjs' ) ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . $this->cls( 'Data' )->tb( 'cssjs' ) . "`" ) : 0;
 		}
 
 		return '-';
@@ -135,8 +133,8 @@ class DB_Optm extends Instance {
 		global $wpdb;
 		switch ( $type ) {
 			case 'revision':
-				$rev_max = (int) Conf::val( Base::O_DB_OPTM_REVISIONS_MAX );
-				$rev_age = (int) Conf::val( Base::O_DB_OPTM_REVISIONS_AGE );
+				$rev_max = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
 
 				$sql_add = '';
 				if ( $rev_age ) {
@@ -197,9 +195,9 @@ class DB_Optm extends Instance {
 				return __( 'Optimized all tables.', 'litespeed-cache' );
 
 			case 'all_cssjs' :
-				if ( Data::get_instance()->tb_exist( 'cssjs' ) ) {
+				if ( $this->cls( 'Data' )->tb_exist( 'cssjs' ) ) {
 					Purge::purge_all();
-					$wpdb->query( "TRUNCATE `" . Data::get_instance()->tb( 'cssjs' ) . "`" );
+					$wpdb->query( "TRUNCATE `" . $this->cls( 'Data' )->tb( 'cssjs' ) . "`" );
 				}
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' );
 
@@ -280,9 +278,7 @@ class DB_Optm extends Instance {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
@@ -292,18 +288,18 @@ class DB_Optm extends Instance {
 					$blogs = Activation::get_network_ids();
 					foreach ( $blogs as $blog_id ) {
 						switch_to_blog( $blog_id );
-						$msg = $instance->_db_clean( $type );
+						$msg = $this->_db_clean( $type );
 						restore_current_blog();
 					}
 				}
 				else {
-					$msg = $instance->_db_clean( $type );
+					$msg = $this->_db_clean( $type );
 				}
 				Admin_Display::succeed( $msg );
 				break;
 
 			case self::TYPE_CONV_TB :
-				$instance->_conv_innodb();
+				$this->_conv_innodb();
 				break;
 
 			default:

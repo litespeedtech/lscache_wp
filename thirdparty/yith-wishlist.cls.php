@@ -101,7 +101,7 @@ class Yith_Wishlist {
 		$inline_params = array(
 			'val'	=> $template,
 			'tag'	=> $inline_tags,
-			'control' => 'private,no-vary,max-age=' . Conf::val( Base::O_CACHE_TTL_PRIV ),
+			'control' => 'private,no-vary,max-age=' . Conf::cls()->conf( Base::O_CACHE_TTL_PRIV ),
 		);
 
 		return apply_filters( 'litespeed_esi_url', 'yith_wcwl_add', 'YITH ADD TO WISHLIST', $params, 'private,no-vary', false, false, false, $inline_params );
@@ -138,7 +138,7 @@ class Yith_Wishlist {
 
 		$res[ 'val' ] = \YITH_WCWL_Shortcode::add_to_wishlist( array( 'product_id' => $pid ) );
 
-		$res[ 'control' ] = 'private,no-vary,max-age=' . Conf::val( Base::O_CACHE_TTL_PRIV );
+		$res[ 'control' ] = 'private,no-vary,max-age=' . Conf::cls()->conf( Base::O_CACHE_TTL_PRIV );
 
 		$inline_tags = array(
 			'',

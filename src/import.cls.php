@@ -11,10 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Import extends Base
-{
-	protected static $_instance ;
-
+class Import extends Base {
 	private $__cfg ;
 	protected $_summary;
 
@@ -32,7 +29,7 @@ class Import extends Base
 	{
 		Debug2::debug( 'Import init' ) ;
 
-		$this->__cfg = Conf::get_instance() ;
+		$this->__cfg = Conf::cls() ;
 		$this->_summary = self::get_summary();
 	}
 
@@ -180,30 +177,27 @@ class Import extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
-
-		$type = Router::verify_type() ;
+	public function handler() {
+		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_IMPORT :
-				$instance->import() ;
-				break ;
+			case self::TYPE_IMPORT:
+				$this->import();
+				break;
 
-			case self::TYPE_EXPORT :
-				$instance->export() ;
-				break ;
+			case self::TYPE_EXPORT:
+				$this->export();
+				break;
 
-			case self::TYPE_RESET :
-				$instance->reset() ;
-				break ;
+			case self::TYPE_RESET:
+				$this->reset();
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 }

@@ -12,30 +12,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Tool extends Instance {
-	protected static $_instance;
-
-	private $_conf_heartbeat_front;
-	private $_conf_heartbeat_front_ttl;
-	private $_conf_heartbeat_back;
-	private $_conf_heartbeat_back_ttl;
-	private $_conf_heartbeat_editor;
-	private $_conf_heartbeat_editor_ttl;
-
-	/**
-	 * Init
-	 *
-	 * @since  3.0
-	 * @access protected
-	 */
-	protected function __construct() {
-		$this->_conf_heartbeat_front 		= Conf::val( Base::O_MISC_HEARTBEAT_FRONT );
-		$this->_conf_heartbeat_front_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_FRONT_TTL );
-		$this->_conf_heartbeat_back 		= Conf::val( Base::O_MISC_HEARTBEAT_BACK );
-		$this->_conf_heartbeat_back_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_BACK_TTL );
-		$this->_conf_heartbeat_editor 		= Conf::val( Base::O_MISC_HEARTBEAT_EDITOR );
-		$this->_conf_heartbeat_editor_ttl 	= Conf::val( Base::O_MISC_HEARTBEAT_EDITOR_TTL );
-	}
-
 	/**
 	 * Get public IP
 	 *
@@ -66,12 +42,10 @@ class Tool extends Instance {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function heartbeat() {
-		$instance = self::get_instance();
-
-		add_action( 'wp_enqueue_scripts', array( $instance, 'heartbeat_frontend' ) );
-		add_action( 'admin_enqueue_scripts', array( $instance, 'heartbeat_backend' ) );
-		add_filter( 'heartbeat_settings', array( $instance, 'heartbeat_settings' ) );
+	public function heartbeat() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'heartbeat_frontend' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'heartbeat_backend' ) );
+		add_filter( 'heartbeat_settings', array( $this, 'heartbeat_settings' ) );
 	}
 
 	/**
@@ -81,11 +55,11 @@ class Tool extends Instance {
 	 * @access public
 	 */
 	public function heartbeat_frontend() {
-		if ( ! $this->_conf_heartbeat_front ) {
+		if ( ! $this->conf( Base::O_MISC_HEARTBEAT_FRONT ) ) {
 			return;
 		}
 
-		if ( ! $this->_conf_heartbeat_front_ttl ) {
+		if ( ! $this->conf( Base::O_MISC_HEARTBEAT_FRONT_TTL ) ) {
 			wp_deregister_script( 'heartbeat' );
 			Debug2::debug( '[Tool] Deregistered frontend heartbeat' );
 		}
@@ -99,21 +73,21 @@ class Tool extends Instance {
 	 */
 	public function heartbeat_backend() {
 		if ( $this->_is_editor() ) {
-			if ( ! $this->_conf_heartbeat_editor ) {
+			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_EDITOR ) ) {
 				return;
 			}
 
-			if ( ! $this->_conf_heartbeat_editor_ttl ) {
+			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_EDITOR_TTL ) ) {
 				wp_deregister_script( 'heartbeat' );
 				Debug2::debug( '[Tool] Deregistered editor heartbeat' );
 			}
 		}
 		else {
-			if ( ! $this->_conf_heartbeat_back ) {
+			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_BACK ) ) {
 				return;
 			}
 
-			if ( ! $this->_conf_heartbeat_back_ttl ) {
+			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_BACK_TTL ) ) {
 				wp_deregister_script( 'heartbeat' );
 				Debug2::debug( '[Tool] Deregistered backend heartbeat' );
 			}
@@ -130,21 +104,21 @@ class Tool extends Instance {
 	public function heartbeat_settings( $settings ) {
 		// Check editor first to make frontend editor valid too
 		if ( $this->_is_editor() ) {
-			if ( $this->_conf_heartbeat_editor ) {
-				$settings[ 'interval' ] = $this->_conf_heartbeat_editor_ttl;
-				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_editor_ttl );
+			if ( $this->conf( Base::O_MISC_HEARTBEAT_EDITOR ) ) {
+				$settings[ 'interval' ] = $this->conf( Base::O_MISC_HEARTBEAT_EDITOR_TTL );
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->conf( Base::O_MISC_HEARTBEAT_EDITOR_TTL ) );
 			}
 		}
 		elseif ( ! is_admin() ) {
-			if ( $this->_conf_heartbeat_front ) {
-				$settings[ 'interval' ] = $this->_conf_heartbeat_front_ttl;
-				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_front_ttl );
+			if ( $this->conf( Base::O_MISC_HEARTBEAT_FRONT ) ) {
+				$settings[ 'interval' ] = $this->conf( Base::O_MISC_HEARTBEAT_FRONT_TTL );
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->conf( Base::O_MISC_HEARTBEAT_FRONT_TTL ) );
 			}
 		}
 		else {
-			if ( $this->_conf_heartbeat_back ) {
-				$settings[ 'interval' ] = $this->_conf_heartbeat_back_ttl;
-				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->_conf_heartbeat_back_ttl );
+			if ( $this->conf( Base::O_MISC_HEARTBEAT_BACK ) ) {
+				$settings[ 'interval' ] = $this->conf( Base::O_MISC_HEARTBEAT_BACK_TTL );
+				Debug2::debug( '[Tool] Heartbeat interval set to ' . $this->conf( Base::O_MISC_HEARTBEAT_BACK_TTL ) );
 			}
 		}
 		return $settings;

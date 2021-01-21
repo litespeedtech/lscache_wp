@@ -8,8 +8,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class CSS extends Base {
-	protected static $_instance;
-
 	const TYPE_GENERATE_CRITICAL = 'generate_critical';
 	const TYPE_CLEAR_Q = 'clear_q';
 
@@ -29,20 +27,20 @@ class CSS extends Base {
 	 * Output critical css
 	 *
 	 * @since  1.3
-	 * @since  2.3 Migrated from optimize.cls
 	 * @access public
 	 */
-	public static function prepend_ccss( $html_head ) {
+	public function prepare_ccss() {
 		// Get critical css for current page
 		// Note: need to consider mobile
-		$rules = self::get_instance()->_ccss();
+		$rules = $this->_ccss();
+		if ( ! $rules ) {
+			return null;
+		}
 
 		// Append default critical css
-		$rules .= Conf::val( Base::O_OPTM_CCSS_CON );
+		$rules .= $this->conf( Base::O_OPTM_CCSS_CON );
 
-		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head;
-
-		return $html_head;
+		return '<style id="litespeed-optm-css-rules">' . $rules . '</style>';
 	}
 
 	/**
@@ -79,20 +77,21 @@ class CSS extends Base {
 		return $this->_generate_ucss( $page_url, $ua );
 	}
 
+	/**
+	 * Generate currnt url
+	 * @since  3.7
+	 */
+	private function _curr_url() {
+		global $wp;
+		return home_url( $wp->request );
+	}
 
 	/**
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _ccss() {
-		// If don't need to generate CCSS, bypass
-		if ( ! Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
-			Debug2::debug( '[CSS] bypassed ccss due to setting' );
-			return '';
-		}
-
 		$ccss_type = $this->_which_css();
 		$ccss_file = $this->_ccss_realpath( $ccss_type );
 
@@ -101,34 +100,21 @@ class CSS extends Base {
 			return File::read( $ccss_file );
 		}
 
-		// Check if is already in a request, bypass current one
-		if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 && ! Conf::val( Base::O_DEBUG ) ) {
-			Debug2::debug( '[CCSS] Last request not done' );
-			return '';
+		$request_url = $this->_curr_url();
+
+		// Store it to prepare for cron
+		if ( empty( $this->_summary[ 'queue' ] ) ) {
+			$this->_summary[ 'queue' ] = array();
 		}
+		$this->_summary[ 'queue' ][ $ccss_type ] = array(
+			'url'			=> $request_url,
+			'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
+			'is_mobile'		=> $this->_separate_mobile_ccss(),
+		);// Current UA will be used to request
+		Debug2::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] );
 
-		global $wp;
-		$request_url = home_url( $wp->request );
-
-		// If generate in backend, log it and bypass
-		if ( Conf::val( Base::O_OPTM_CCSS_ASYNC ) ) {
-			// Store it to prepare for cron
-			if ( empty( $this->_summary[ 'queue' ] ) ) {
-				$this->_summary[ 'queue' ] = array();
-			}
-			$this->_summary[ 'queue' ][ $ccss_type ] = array(
-				'url'			=> $request_url,
-				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
-				'is_mobile'		=> $this->_separate_mobile_ccss(),
-			);// Current UA will be used to request
-			Debug2::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] );
-
-			self::save_summary();
-			return '';
-		}
-
-		// generate on the fly
-		return $this->_generate_ccss( $request_url, $ccss_type, $_SERVER[ 'HTTP_USER_AGENT' ], $this->_separate_mobile_ccss() );
+		self::save_summary();
+		return null;
 	}
 
 	/**
@@ -137,9 +123,8 @@ class CSS extends Base {
 	 * @since  2.6.4
 	 * @access private
 	 */
-	private function _separate_mobile_ccss()
-	{
-		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && Conf::val( Base::O_CACHE_MOBILE );
+	private function _separate_mobile_ccss() {
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( Base::O_CACHE_MOBILE );
 	}
 
 	/**
@@ -148,16 +133,15 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	public static function cron_ccss( $continue = false )
-	{
-		$_instance = self::get_instance();
+	public static function cron_ccss( $continue = false ) {
+		$_instance = self::cls();
 		if ( empty( $_instance->_summary[ 'queue' ] ) ) {
 			return;
 		}
 
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 ) {
+			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 && ! $_instance->conf( Base::O_DEBUG ) ) {
 				Debug2::debug( '[CCSS] Last request not done' );
 				return;
 			}
@@ -183,7 +167,7 @@ class CSS extends Base {
 	 */
 	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile ) {
 		// Check if has credit to push
-		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
+		$allowance = Cloud::cls()->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
 			Debug2::debug( '[CCSS] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
@@ -293,11 +277,11 @@ class CSS extends Base {
 	 * @since  3.4.3
 	 */
 	private function _prepare_html( $request_url, $user_agent ) {
-		$html = Crawler::get_instance()->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent );
+		$html = Crawler::cls()->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent );
 		Debug2::debug2( '[CSS] self_curl result....', $html );
 
 
-		$html = Optimizer::get_instance()->html_min( $html, true );
+		$html = Optimizer::cls()->html_min( $html, true );
 		// Drop <noscript>xxx</noscript>
 		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
 
@@ -429,7 +413,7 @@ class CSS extends Base {
 	 */
 	private function _generate_ucss( $request_url, $user_agent ) {
 		// Check if has credit to push
-		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_CCSS );
+		$allowance = Cloud::cls()->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
 			Debug2::debug( '[UCSS] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
@@ -452,7 +436,7 @@ class CSS extends Base {
 		// Append cookie for roles auth
 		if ( $uid = get_current_user_id() ) {
 			// Get role simulation vary name
-			$vary_inst = Vary::get_instance();
+			$vary_inst = Vary::cls();
 			$vary_name = $vary_inst->get_vary_name();
 			$vary_val = $vary_inst->finalize_default_vary( $uid );
 			$data[ 'cookies' ] = array();
@@ -505,7 +489,7 @@ class CSS extends Base {
 	 */
 	private function _filter_whitelist() {
 		$whitelist = array();
-		$val = Conf::val( Base::O_OPTM_UCSS_WHITELIST );
+		$val = $this->conf( Base::O_OPTM_UCSS_WHITELIST );
 		foreach ( $val as $k => $v ) {
 			if ( substr( $v, 0, 2 ) === '//' ) {
 				continue;
@@ -570,13 +554,13 @@ class CSS extends Base {
 		$unique = false;
 
 		// Check if in separate css type option
-		$separate_posttypes = Conf::val( Base::O_OPTM_CCSS_SEP_POSTTYPE );
+		$separate_posttypes = $this->conf( Base::O_OPTM_CCSS_SEP_POSTTYPE );
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			Debug2::debug( '[CSS] Hit separate posttype setting [type] ' . $css );
 			$unique = true;
 		}
 
-		$separate_uri = Conf::val( Base::O_OPTM_CCSS_SEP_URI );
+		$separate_uri = $this->conf( Base::O_OPTM_CCSS_SEP_URI );
 		if ( ! empty( $separate_uri ) ) {
 			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri );
 			if ( $result ) {
@@ -602,10 +586,7 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
@@ -614,7 +595,7 @@ class CSS extends Base {
 				break;
 
 			case self::TYPE_CLEAR_Q :
-				$instance->clear_q();
+				$this->clear_q();
 				break;
 
 			default:

@@ -13,8 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Activation extends Instance {
-	protected static $_instance;
-
 	const TYPE_UPGRADE = 'upgrade';
 	const TYPE_INSTALL_3RD = 'install_3rd';
 	const TYPE_INSTALL_ZIP = 'install_zip';
@@ -53,7 +51,7 @@ class Activation extends Instance {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					try {
-						Htaccess::get_instance()->insert_ls_wrapper();
+						Htaccess::cls()->insert_ls_wrapper();
 					} catch ( \Exception $ex ) {
 						Admin_Display::error( $ex->getMessage() );
 					}
@@ -61,13 +59,13 @@ class Activation extends Instance {
 				return;
 			}
 
-			Conf::get_instance()->update_confs();
+			Conf::cls()->update_confs();
 
 			return;
 		}
 
 		/* Single site file handler */
-		Conf::get_instance()->update_confs();
+		Conf::cls()->update_confs();
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
@@ -82,19 +80,19 @@ class Activation extends Instance {
 		Task::destroy();
 
 		// Delete options
-		foreach ( Conf::get_instance()->load_default_vals() as $k => $v ) {
+		foreach ( Conf::cls()->load_default_vals() as $k => $v ) {
 			Base::delete_option( $k );
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( Conf::get_instance()->load_default_site_vals() as $k => $v ) {
+			foreach ( Conf::cls()->load_default_site_vals() as $k => $v ) {
 				Base::delete_site_option( $k );
 			}
 		}
 
 		// Delete avatar table
-		Data::get_instance()->tables_del();
+		Data::cls()->tables_del();
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
 			File::rrmdir( LITESPEED_STATIC_DIR );
@@ -217,7 +215,7 @@ class Activation extends Instance {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					try {
-						Htaccess::get_instance()->insert_ls_wrapper();
+						Htaccess::cls()->insert_ls_wrapper();
 					} catch ( \Exception $ex ) {
 						Admin_Display::error( $ex->getMessage() );
 					}
@@ -229,7 +227,7 @@ class Activation extends Instance {
 		/* 1) wp-config.php; */
 
 		try {
-			self::get_instance()->_manage_wp_cache_const( false );
+			self::cls()->_manage_wp_cache_const( false );
 		} catch ( \Exception $ex ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 
@@ -245,7 +243,7 @@ class Activation extends Instance {
 		/* 4) .htaccess; */
 
 		try {
-			Htaccess::get_instance()->clear_rules();
+			Htaccess::cls()->clear_rules();
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( $ex->getMessage() );
 		}
@@ -270,10 +268,10 @@ class Activation extends Instance {
 	 */
 	public function update_files() {
 		// Update cache setting `_CACHE`
-		Conf::get_instance()->define_cache();
+		Conf::cls()->define_cache();
 
 		// Site options applied already
-		$options = Conf::get_instance()->get_options();
+		$options = Conf::cls()->get_options();
 
 		/* 1) wp-config.php; */
 
@@ -298,7 +296,7 @@ class Activation extends Instance {
 		/* 4) .htaccess; */
 
 		try {
-			Htaccess::get_instance()->update( $options );
+			Htaccess::cls()->update( $options );
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( $ex->getMessage() );
 		}
@@ -362,15 +360,14 @@ class Activation extends Instance {
 	 * Handle auto update
 	 *
 	 * @since 2.7.2
-	 * @since 2.9.8 Moved here from ls.cls
 	 * @access public
 	 */
-	public static function auto_update() {
-		if ( ! Conf::val( Base::O_AUTO_UPGRADE ) ) {
+	public function auto_update() {
+		if ( ! $this->conf( Base::O_AUTO_UPGRADE ) ) {
 			return;
 		}
 
-		add_filter( 'auto_update_plugin', array( self::get_instance(), 'auto_update_hook' ), 10, 2 );
+		add_filter( 'auto_update_plugin', array( $this, 'auto_update_hook' ), 10, 2 );
 	}
 
 	/**
@@ -526,18 +523,16 @@ class Activation extends Instance {
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_UPGRADE :
-				$instance->upgrade();
+				$this->upgrade();
 				break;
 
 			case self::TYPE_INSTALL_3RD :
-				$instance->dash_notifier_install_3rd();
+				$this->dash_notifier_install_3rd();
 				break;
 
 			case self::TYPE_DISMISS_RECOMMENDED:
@@ -552,7 +547,7 @@ class Activation extends Instance {
 					$summary[ 'news.new' ] = 0;
 					Cloud::save_summary( $summary );
 
-					Debug2::get_instance()->beta_test( $summary[ 'zip' ] );
+					$this->cls( 'Debug2' )->beta_test( $summary[ 'zip' ] );
 				}
 				break;
 

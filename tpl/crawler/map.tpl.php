@@ -4,7 +4,7 @@ defined( 'WPINC' ) || exit;
 
 $crawler_summary = Crawler::get_summary();
 
-$__map = Crawler_Map::get_instance();
+$__map = Crawler_Map::cls();
 
 $list = $__map->list_map( 30 );
 $count = $__map->count_map();
@@ -52,7 +52,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo $v[ 'url' ]; ?>
 			</td>
 			<td>
-				<?php echo Crawler::get_instance()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
+				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
 				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>

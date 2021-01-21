@@ -10,10 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Img_Optm extends Base
-{
-	protected static $_instance;
-
+class Img_Optm extends Base {
 	const CLOUD_ACTION_NEW_REQ = 'new_req';
 	const CLOUD_ACTION_TAKEN = 'taken';
 	const CLOUD_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
@@ -64,14 +61,13 @@ class Img_Optm extends Base
 	 * @since  2.0
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		Debug2::debug2( '[ImgOptm] init' );
 
 		$this->wp_upload_dir = wp_upload_dir();
-		$this->__media = Media::get_instance();
-		$this->_table_img_optm = Data::get_instance()->tb( 'img_optm' );
-		$this->_table_img_optming = Data::get_instance()->tb( 'img_optming' );
+		$this->__media = Media::cls();
+		$this->_table_img_optm = Data::cls()->tb( 'img_optm' );
+		$this->_table_img_optming = Data::cls()->tb( 'img_optming' );
 
 		$this->_summary = self::get_summary();
 	}
@@ -86,8 +82,8 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		Data::get_instance()->tb_create( 'img_optm' );
-		Data::get_instance()->tb_create( 'img_optming' );
+		Data::cls()->tb_create( 'img_optm' );
+		Data::cls()->tb_create( 'img_optming' );
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
@@ -279,7 +275,7 @@ class Img_Optm extends Base
 			return false;
 		}
 
-		$instance = self::get_instance();
+		$instance = self::cls();
 		$instance->new_req();
 	}
 
@@ -316,7 +312,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) || ! Data::get_instance()->tb_exist( 'img_optming' ) ) {
+		if ( ! Data::cls()->tb_exist( 'img_optm' ) || ! Data::cls()->tb_exist( 'img_optming' ) ) {
 			Debug2::debug( '[Img_Optm] need gather due to no db tables' );
 			return true;
 		}
@@ -343,7 +339,7 @@ class Img_Optm extends Base
 		global $wpdb;
 
 		// Check if has credit to push
-		$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
+		$allowance = Cloud::cls()->allowance( Cloud::SVC_IMG_OPTM );
 
 		$wet_limit = $this->wet_limit();
 
@@ -579,10 +575,10 @@ class Img_Optm extends Base
 		$data = array(
 			'action'		=> self::CLOUD_ACTION_NEW_REQ,
 			'list' 			=> json_encode( $list ),
-			'optm_ori'		=> Conf::val( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> Conf::val( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> Conf::val( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> Conf::val( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> $this->conf( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> $this->conf( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> $this->conf( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> $this->conf( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		);
 
 		// Push to Cloud server
@@ -631,7 +627,7 @@ class Img_Optm extends Base
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( $this->conf( Base::O_API_KEY ) ) ) {
 			$this->_summary[ 'notify_ts_err' ] = time();
 			self::save_summary();
 			return Cloud::err( 'wrong_key' );
@@ -807,7 +803,7 @@ class Img_Optm extends Base
 			return;
 		}
 
-		self::get_instance()->pull();
+		self::cls()->pull();
 	}
 
 	/**
@@ -833,9 +829,9 @@ class Img_Optm extends Base
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT 1";
 		$_q = $wpdb->prepare( $q, self::STATUS_NOTIFIED );
 
-		$optm_ori = Conf::val( Base::O_IMG_OPTM_ORI );
-		$rm_ori_bkup = Conf::val( Base::O_IMG_OPTM_RM_BKUP );
-		$optm_webp = Conf::val( Base::O_IMG_OPTM_WEBP );
+		$optm_ori = $this->conf( Base::O_IMG_OPTM_ORI );
+		$rm_ori_bkup = $this->conf( Base::O_IMG_OPTM_RM_BKUP );
+		$optm_webp = $this->conf( Base::O_IMG_OPTM_WEBP );
 
 		// pull 1 min images each time
 		$end_time = time() + 60;
@@ -1090,18 +1086,18 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 
-		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
 		// Clear local working table queue
-		if ( Data::get_instance()->tb_exist( 'img_optming' ) ) {
+		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
 			$q = "TRUNCATE `$this->_table_img_optming`";
 			$wpdb->query( $q );
 		}
 
 		// Reset img_optm table's queue
-		if ( Data::get_instance()->tb_exist( 'img_optm' ) ) {
+		if ( Data::cls()->tb_exist( 'img_optm' ) ) {
 			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE optm_status = %d" ;
 			$wpdb->query( $wpdb->prepare( $q, self::STATUS_RAW, self::STATUS_REQUESTED ) ) ;
 		}
@@ -1120,7 +1116,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb ;
 
-		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
 			Debug2::debug( '[Img_Optm] DESTROY bypassed due to table not exist' ) ;
 			return;
 		}
@@ -1170,8 +1166,8 @@ class Img_Optm extends Base
 		$wpdb->query( $wpdb->prepare( $q, self::DB_SIZE ) ) ;
 
 		// Delete img_optm table
-		Data::get_instance()->tb_del( 'img_optm' ) ;
-		Data::get_instance()->tb_del( 'img_optming' ) ;
+		Data::cls()->tb_del( 'img_optm' ) ;
+		Data::cls()->tb_del( 'img_optming' ) ;
 
 		// Clear options table summary info
 		self::delete_option( '_summary' ) ;
@@ -1312,7 +1308,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1371,7 +1367,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if ( ! Data::get_instance()->tb_exist( 'img_optm' ) ) {
+		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
 			return;
 		}
 
@@ -1433,8 +1429,8 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		$tb_existed = Data::get_instance()->tb_exist( 'img_optm' );
-		$tb_existed2 = Data::get_instance()->tb_exist( 'img_optming' );
+		$tb_existed = Data::cls()->tb_exist( 'img_optm' );
+		$tb_existed2 = Data::cls()->tb_exist( 'img_optming' );
 
 		$q = "SELECT COUNT(*)
 			FROM `$wpdb->posts` a
@@ -1755,7 +1751,7 @@ class Img_Optm extends Base
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( Conf::val( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( $this->conf( Base::O_API_KEY ) ) ) {
 			return Cloud::err( 'wrong_key' ) ;
 		}
 
@@ -1825,43 +1821,40 @@ class Img_Optm extends Base
 	 * @since  2.0
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_RESET_ROW:
-				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false );
+				$this->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false );
 				break;
 
 			case self::TYPE_CALC_BKUP:
-				$instance->_calc_bkup();
+				$this->_calc_bkup();
 				break;
 
 			case self::TYPE_RM_BKUP :
-				$instance->rm_bkup();
+				$this->rm_bkup();
 				break;
 
 			case self::TYPE_NEW_REQ:
-				$instance->new_req();
+				$this->new_req();
 				break;
 
 			case self::TYPE_RESCAN:
-				$instance->_rescan();
+				$this->_rescan();
 				break;
 
 			case self::TYPE_DESTROY:
-				$instance->_destroy();
+				$this->_destroy();
 				break;
 
 			case self::TYPE_CLEAN:
-				$instance->clean();
+				$this->clean();
 				break;
 
 			case self::TYPE_PULL:
-				$instance->pull();
+				$this->pull();
 				break;
 
 			/**
@@ -1870,12 +1863,12 @@ class Img_Optm extends Base
 			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
-				$instance->_batch_switch( $type );
+				$this->_batch_switch( $type );
 				break;
 
 			case substr( $type, 0, 4 ) === 'webp':
 			case substr( $type, 0, 4 ) === 'orig':
-				$instance->_switch_optm_file( $type );
+				$this->_switch_optm_file( $type );
 				break;
 
 			default:

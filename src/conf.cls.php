@@ -16,14 +16,8 @@ defined( 'WPINC' ) || exit;
 
 
 class Conf extends Base {
-	protected static $_instance;
-
 	const TYPE_SET = 'set';
 
-	private $_options = array();
-	private $_const_options = array();
-	private $_primary_options = array();
-	private $_site_options = array();
 	private $_updated_ids = array();
 	private $_is_primary = false;
 
@@ -52,7 +46,7 @@ class Conf extends Base {
 		 * Detect if has quic.cloud set
 		 * @since  2.9.7
 		 */
-		if ( $this->_options[ self::O_CDN_QUIC ] ) {
+		if ( $this->conf( self::O_CDN_QUIC ) ) {
 			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true );
 		}
 
@@ -76,7 +70,7 @@ class Conf extends Base {
 		 */
 		$this->load_options();
 
-		$ver = $this->_options[ Base::_VER ];
+		$ver = $this->conf( Base::_VER );
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -84,7 +78,7 @@ class Conf extends Base {
 		 */
 		if ( ! $ver || $ver != Core::VER ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
-				$this->_options = $this->load_default_vals();
+				$this->set_conf( $this->load_default_vals() );
 				$this->_try_load_site_options();
 
 				// Disable new installation auto upgrade to avoid overwritten to customized data.ini
@@ -100,7 +94,7 @@ class Conf extends Base {
 		 */
 		if ( ! $ver ) {
 			// Try upgrade first (network will upgrade inside too)
-			Data::get_instance()->try_upgrade_conf_3_0();
+			Data::cls()->try_upgrade_conf_3_0();
 		}
 		else {
 			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
@@ -112,7 +106,7 @@ class Conf extends Base {
 		if ( $ver && $ver != Core::VER ) {
 			// Plugin version will be set inside
 			// Site plugin upgrade & version change will do in load_site_conf
-			Data::get_instance()->conf_upgrade( $ver );
+			Data::cls()->conf_upgrade( $ver );
 		}
 
 		/**
@@ -122,7 +116,7 @@ class Conf extends Base {
 			// Load default values
 			$this->load_default_vals();
 			if ( ! $ver ) { // New install
-				$this->_options = self::$_default_options;
+				$this->set_conf( self::$_default_options );
 			}
 
 			// Init new default/missing options
@@ -171,10 +165,10 @@ class Conf extends Base {
 			// These options are the ones that can be overwritten by primary
 			$options = array_diff_key( $options, array_flip( self::$SINGLE_SITE_OPTIONS ) );
 
-			$this->_primary_options = array_merge( $this->_primary_options, $options );
+			$this->set_primary_conf( $options );
 		}
 		else {
-			$this->_options = array_merge( $this->_options, $options );
+			$this->set_conf( $options );
 		}
 
 
@@ -183,7 +177,7 @@ class Conf extends Base {
 			foreach ( self::$_default_options as $k => $v ) {
 				$const = Base::conf_const( $k );
 				if ( defined( $const ) ) {
-					$this->_const_options[ $k ] = $this->type_casting( constant( $const ), $k );
+					$this->set_const_conf( $k, $this->type_casting( constant( $const ), $k ) );
 				}
 			}
 		}
@@ -205,7 +199,7 @@ class Conf extends Base {
 		$this->_is_primary = get_current_blog_id() == BLOG_ID_CURRENT_SITE;
 
 		// If network set to use primary setting
-		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) && ! $this->_is_primary ) { // subsites or network admin
+		if ( $this->network_conf( self::NETWORK_O_USE_PRIMARY ) && ! $this->_is_primary ) { // subsites or network admin
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->load_options( BLOG_ID_CURRENT_SITE );
@@ -213,35 +207,36 @@ class Conf extends Base {
 
 		// Overwrite single blog options with site options
 		foreach ( self::$_default_options as $k => $v ) {
-			if ( isset( $this->_site_options[ $k ] ) ) {
-				// $this->_options[ $k ] = $this->_site_options[ $k ];
+			if ( ! $this->has_network_conf( $k ) ) {
+				continue;
+			}
+			// $this->_options[ $k ] = $this->_network_options[ $k ];
 
-				// Special handler to `Enable Cache` option if the value is set to OFF
-				if ( $k == self::O_CACHE ) {
-					if ( $this->_is_primary ) {
-						if ( $this->_options[ $k ] != $this->_site_options[ $k ] ) {
-							if ( $this->_options[ $k ] != self::VAL_ON2 ) {
-								continue;
-							}
-						}
-					}
-					else {
-						if ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) {
-							if ( isset( $this->_primary_options[ $k ] ) && $this->_primary_options[ $k ] != self::VAL_ON2 ) { // This case will use _primary_options override always
-								continue;
-							}
-						}
-						else {
-							if ( $this->_options[ $k ] != self::VAL_ON2 ) {
-								continue;
-							}
+			// Special handler to `Enable Cache` option if the value is set to OFF
+			if ( $k == self::O_CACHE ) {
+				if ( $this->_is_primary ) {
+					if ( $this->conf( $k ) != $this->network_conf( $k ) ) {
+						if ( $this->conf( $k ) != self::VAL_ON2 ) {
+							continue;
 						}
 					}
 				}
-
-				// _primary_options will store primary settings + network settings, OR, store the network settings for subsites
-				$this->_primary_options[ $k ] = $this->_site_options[ $k ];
+				else {
+					if ( $this->network_conf( self::NETWORK_O_USE_PRIMARY ) ) {
+						if ( $this->has_primary_conf( $k ) && $this->primary_conf( $k ) != self::VAL_ON2 ) { // This case will use primary_options override always
+							continue;
+						}
+					}
+					else {
+						if ( $this->conf( $k ) != self::VAL_ON2 ) {
+							continue;
+						}
+					}
+				}
 			}
+
+			// primary_options will store primary settings + network settings, OR, store the network settings for subsites
+			$this->set_primary_conf( $k, $this->network_conf( $k ) );
 		}
 		// var_dump($this->_options);
 	}
@@ -270,8 +265,8 @@ class Conf extends Base {
 		}
 		// If is not activated on network, it will not have site options
 		if ( ! is_plugin_active_for_network( Core::PLUGIN_FILE ) ) {
-			if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON2 ) { // Default to cache on
-				$this->_options[ self::_CACHE ] = true;
+			if ( (int)$this->conf( self::O_CACHE ) == self::VAL_ON2 ) { // Default to cache on
+				$this->set_conf( self::_CACHE, true );
 			}
 			return false;
 		}
@@ -288,7 +283,7 @@ class Conf extends Base {
 	private function _conf_site_db_init() {
 		$this->load_site_options();
 
-		$ver = $this->_site_options[ Base::_VER ];
+		$ver = $this->network_conf( Base::_VER );
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -296,7 +291,7 @@ class Conf extends Base {
 		 */
 		if ( ! $ver || $ver != Core::VER ) {
 			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
-				$this->_site_options = $this->load_default_site_vals();
+				$this->set_network_conf( $this->load_default_site_vals() );
 				return;
 			}
 		}
@@ -306,7 +301,7 @@ class Conf extends Base {
 		 */
 		if ( $ver && $ver != Core::VER ) {
 			// Site plugin versin will change inside
-			Data::get_instance()->conf_site_upgrade( $ver );
+			Data::cls()->conf_site_upgrade( $ver );
 		}
 
 		/**
@@ -333,18 +328,16 @@ class Conf extends Base {
 	 * @access public
 	 */
 	public function load_site_options() {
-		if ( ! is_multisite() || $this->_site_options ) {
-			return $this->_site_options;
+		if ( ! is_multisite() ) {
+			return null;
 		}
 
 		// Load all site options
 		foreach ( self::$_default_site_options as $k => $v ) {
-			$this->_site_options[ $k ] = self::get_site_option( $k, $v );
-
-			$this->_site_options[ $k ] = $this->type_casting( $this->_site_options[ $k ], $k, true );
+			$val = self::get_site_option( $k, $v );
+			$val = $this->type_casting( $val, $k, true );
+			$this->set_network_conf( $k, $val );
 		}
-
-		return $this->_site_options;
 	}
 
 	/**
@@ -359,8 +352,8 @@ class Conf extends Base {
 	 */
 	public function option_append( $name, $default ) {
 		self::$_default_options[ $name ] = $default;
-		$this->_options[ $name ] = self::get_option( $name, $default );
-		$this->_options[ $name ] = $this->type_casting( $this->_options[ $name ], $name );
+		$this->set_conf( $name, self::get_option( $name, $default ) );
+		$this->set_conf( $name, $this->type_casting( $this->conf( $name ), $name ) );
 	}
 
 	/**
@@ -370,19 +363,19 @@ class Conf extends Base {
 	 * @access public
 	 */
 	public function force_option( $k, $v ) {
-		if ( ! array_key_exists( $k, $this->_options ) ) {
+		if ( ! $this->has_conf( $k ) ) {
 			return;
 		}
 
 		$v = $this->type_casting( $v, $k );
 
-		if ( $this->_options[ $k ] === $v ) {
+		if ( $this->conf( $k ) === $v ) {
 			return;
 		}
 
-		Debug2::debug( "[Conf] ** $k forced from " . var_export( $this->_options[ $k ], true ) . ' to ' . var_export( $v, true ) );
+		Debug2::debug( "[Conf] ** $k forced from " . var_export( $this->conf( $k ), true ) . ' to ' . var_export( $v, true ) );
 
-		$this->_options[ $k ] = $v;
+		$this->set_conf( $k, $v );
 	}
 
 	/**
@@ -393,9 +386,9 @@ class Conf extends Base {
 	 */
 	public function define_cache() {
 		// Init global const cache on setting
-		$this->_options[ self::_CACHE ] = false;
-		if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
-			$this->_options[ self::_CACHE ] = true;
+		$this->set_conf( self::_CACHE, false );
+		if ( (int) $this->conf( self::O_CACHE ) == self::VAL_ON || $this->conf( self::O_CDN_QUIC ) ) {
+			$this->set_conf( self::_CACHE, true );
 		}
 
 		// Check network
@@ -406,8 +399,8 @@ class Conf extends Base {
 		}
 
 		// If use network setting
-		if ( (int) $this->_options[ self::O_CACHE ] == self::VAL_ON2 && $this->_site_options[ self::O_CACHE ] ) {
-			$this->_options[ self::_CACHE ] = true;
+		if ( (int) $this->conf( self::O_CACHE ) == self::VAL_ON2 && $this->network_conf( self::O_CACHE ) ) {
+			$this->set_conf( self::_CACHE, true );
 		}
 
 		$this->_define_cache_on();
@@ -420,7 +413,7 @@ class Conf extends Base {
 	 * @access private
 	 */
 	private function _define_cache_on() {
-		if ( ! $this->_options[ self::_CACHE ] ) {
+		if ( ! $this->conf( self::_CACHE ) ) {
 			return;
 		}
 
@@ -428,95 +421,15 @@ class Conf extends Base {
 	}
 
 	/**
-	 * Get the list of configured options for the blog.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array The list of configured options.
-	 */
-	public function get_options( $ori = false ) {
-		if ( ! $ori ) {
-			return array_merge( $this->_options, $this->_primary_options, $this->_const_options );
-		}
-
-		return $this->_options;
-	}
-
-	/**
 	 * Get an option value
 	 *
 	 * @since  3.0
 	 * @access public
+	 * @deprecated 3.7 Use $this->conf() instead
 	 */
 	public static function val( $id, $ori = false ) {
-		$instance = self::get_instance();
-
-		if ( isset( $instance->_options[ $id ] ) ) {
-			if ( ! $ori ) {
-				$val = $instance->const_overwritten( $id );
-				if ( $val !== null ) {
-					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) );
-					return $val;
-				}
-
-				$val = $instance->primary_overwritten( $id ); // Network Use primary site settings
-				if ( $val !== null ) {
-					return $val;
-				}
-			}
-
-			// Network orignal value will be in _site_options
-			if ( ! is_network_admin() || ! isset( $instance->_site_options[ $id ] ) ) {
-				return $instance->_options[ $id ];
-			}
-
-		}
-
-		if ( isset( $instance->_site_options[ $id ] ) ) {
-			if ( ! $ori ) {
-				$val = $instance->const_overwritten( $id );
-				if ( $val !== null ) {
-					defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] 🏛️ const option ' . $id . '=' . var_export( $val, true ) );
-					return $val;
-				}
-			}
-
-			return $instance->_site_options[ $id ];
-		}
-
-		defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
-
-		return null;
-	}
-
-	/**
-	 * Check if is overwritten by const
-	 *
-	 * @since  3.0
-	 */
-	public function const_overwritten( $id ) {
-		if ( ! isset( $this->_const_options[ $id ] ) || $this->_const_options[ $id ] == $this->_options[ $id ] ) {
-			return null;
-		}
-		return $this->_const_options[ $id ];
-	}
-
-	/**
-	 * Check if is overwritten by primary site
-	 *
-	 * @since  3.2.2
-	 */
-	public function primary_overwritten( $id ) {
-		if ( ! isset( $this->_primary_options[ $id ] ) || $this->_primary_options[ $id ] == $this->_options[ $id ] ) {
-			return null;
-		}
-
-		// Network admin settings is impossible to be overwritten by primary
-		if ( is_network_admin() ) {
-			return null;
-		}
-
-		return $this->_primary_options[ $id ];
+		error_log( 'Called deprecated function \LiteSpeed\Conf::val(). Please use API call instead.' );
+		return self::cls()->conf( $id, $ori );
 	}
 
 	/**
@@ -536,12 +449,12 @@ class Conf extends Base {
 			foreach ( $this->_updated_ids as $id ) {
 				// Special handler for QUIC.cloud domain key to clear all existing nodes
 				if ( $id == Base::O_API_KEY ) {
-					Cloud::get_instance()->clear_cloud();
+					Cloud::cls()->clear_cloud();
 				}
 
 				// Special handler for crawler: reset sitemap when drop_domain setting changed
 				if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
-					Crawler_Map::get_instance()->empty_map();
+					Crawler_Map::cls()->empty_map();
 				}
 
 				// Check if need to do a purge all or not
@@ -556,7 +469,7 @@ class Conf extends Base {
 
 				// Update cron
 				if ( $this->_conf_cron( $id ) ) {
-					Task::try_clean( $id );
+					$this->cls( 'Task' )->try_clean( $id );
 				}
 			}
 		}
@@ -564,15 +477,15 @@ class Conf extends Base {
 		do_action( 'litespeed_update_confs', $the_matrix );
 
 		// Update related tables
-		Data::get_instance()->correct_tb_existance();
+		Data::cls()->correct_tb_existance();
 
 		// Update related files
-		Activation::get_instance()->update_files();
+		Activation::cls()->update_files();
 
 		/**
 		 * CDN related actions - Cloudflare
 		 */
-		CDN\Cloudflare::get_instance()->try_refresh_zone();
+		$this->cls( 'CDN\Cloudflare' )->try_refresh_zone();
 
 		/**
 		 * CDN related actions - QUIC.cloud
@@ -625,13 +538,13 @@ class Conf extends Base {
 		self::update_option( $id, $val );
 
 		// Handle purge if setting changed
-		if ( $this->_options[ $id ] != $val ) {
+		if ( $this->conf( $id ) != $val ) {
 			$this->_updated_ids[] = $id;
 
 			// Check if need to fire a purge or not (Here has to stay inside `update()` bcos need comparing old value)
 			if ( $this->_conf_purge( $id ) ) {
-				$diff = array_diff( $val, $this->_options[ $id ] );
-				$diff2 = array_diff( $this->_options[ $id ], $val );
+				$diff = array_diff( $val, $this->conf( $id ) );
+				$diff2 = array_diff( $this->conf( $id ), $val );
 				$diff = array_merge( $diff, $diff2 );
 				// If has difference
 				foreach ( $diff as $v ) {
@@ -643,7 +556,7 @@ class Conf extends Base {
 		}
 
 		// Update in-memory data
-		$this->_options[ $id ] = $val;
+		$this->set_conf( $id, $val );
 	}
 
 	/**
@@ -690,20 +603,21 @@ class Conf extends Base {
 		self::update_site_option( $id, $val );
 
 		// Handle purge if setting changed
-		if ( $this->_site_options[ $id ] != $val ) {
+		if ( $this->network_conf( $id ) != $val ) {
 			// Check if need to do a purge all or not
 			if ( $this->_conf_purge_all( $id ) ) {
 				Purge::purge_all( '[Conf] Network conf changed [id] ' . $id );
 			}
+
+			// Update in-memory data
+			$this->set_network_conf( $id, $val );
 		}
 
 		// No need to update cron here, Cron will register in each init
 
-		// Update in-memory data
-		$this->_site_options[ $id ] = $val;
 
-		if ( isset( $this->_options[ $id ] ) ) {
-			$this->_options[ $id ] = $val;
+		if ( $this->has_conf( $id ) ) {
+			$this->set_conf( $id, $val );
 		}
 	}
 
@@ -725,7 +639,7 @@ class Conf extends Base {
 			return false;
 		}
 
-		return in_array( $role, self::val( self::O_OPTM_EXC_ROLES ) ) ? $role : false;
+		return in_array( $role, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? $role : false;
 	}
 
 	/**
@@ -747,13 +661,13 @@ class Conf extends Base {
 
 		$the_matrix = array();
 		foreach ( $_GET[ self::TYPE_SET ] as $id => $v ) {
-			if ( ! array_key_exists( $id, $this->_options ) ) {
+			if ( ! $this->has_conf( $id ) ) {
 				continue;
 			}
 
 			// Append new item to array type settings
-			if ( is_array( $v ) && is_array( $this->_options[ $id ] ) ) {
-				$v = array_merge( $this->_options[ $id ], $v );
+			if ( is_array( $v ) && is_array( $this->conf( $id ) ) ) {
+				$v = array_merge( $this->conf( $id ), $v );
 
 				Debug2::debug( '[Conf] Appended to settings [' . $id . ']: ' . var_export( $v, true ) );
 			}
@@ -786,14 +700,12 @@ class Conf extends Base {
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_SET :
-				$instance->_set_conf();
+				$this->_set_conf();
 				break;
 
 			default:

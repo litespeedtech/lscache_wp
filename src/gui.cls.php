@@ -10,8 +10,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class GUI extends Base {
-	protected static $_instance;
-
 	private static $_clean_counter = 0;
 
 	private $_promo_true;
@@ -65,7 +63,7 @@ class GUI extends Base {
 		 * Turn on instant click
 		 * @since  1.8.2
 		 */
-		if ( Conf::val( Base::O_UTIL_INSTANT_CLICK ) ) {
+		if ( $this->conf( Base::O_UTIL_INSTANT_CLICK ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) );
 		}
 	}
@@ -168,7 +166,7 @@ class GUI extends Base {
 	 * @access public
 	 */
 	public static function dismiss() {
-		$_instance = self::get_instance();
+		$_instance = self::cls();
 		switch ( Router::verify_type() ) {
 			case self::TYPE_DISMISS_WHM :
 				self::dismiss_whm();
@@ -501,7 +499,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
+		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -511,7 +509,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Conf::val( Base::O_OPTM_LOCALIZE ) ) {
+		if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-localres',
@@ -622,7 +620,7 @@ class GUI extends Base {
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( Conf::val( Base::O_CDN_CLOUDFLARE ) ) {
+		if ( $this->conf( Base::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
@@ -652,7 +650,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
+		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -662,7 +660,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Conf::val( Base::O_OPTM_LOCALIZE ) ) {
+		if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-localres',
@@ -766,7 +764,7 @@ class GUI extends Base {
 	 * @access public
 	 */
 	public static function finalize( $buffer ) {
-		$instance = self::get_instance();
+		$instance = self::cls();
 		return $instance->_clean_wrapper( $buffer );
 	}
 

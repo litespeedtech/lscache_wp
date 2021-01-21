@@ -8,15 +8,12 @@
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed ;
+namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-class Report extends Base
-{
-	protected static $_instance ;
-
-	const TYPE_SEND_REPORT = 'send_report' ;
+class Report extends Base {
+	const TYPE_SEND_REPORT = 'send_report';
 
 	/**
 	 * Handle all request actions from main cls
@@ -24,23 +21,19 @@ class Report extends Base
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance() ;
-
-		$type = Router::verify_type() ;
+	public function handler() {
+		$type = Router::verify_type();
 
 		switch ( $type ) {
-
-			case self::TYPE_SEND_REPORT :
-				$instance->post_env() ;
-				break ;
+			case self::TYPE_SEND_REPORT:
+				$this->post_env();
+				break;
 
 			default:
-				break ;
+				break;
 		}
 
-		Admin::redirect() ;
+		Admin::redirect();
 	}
 
 	/**
@@ -51,7 +44,7 @@ class Report extends Base
 	 */
 	public function post_env()
 	{
-		$report_con = $this->generate_environment_report() ;
+		$report_con = $this->generate_environment_report();
 
 		// Generate link
 		$link = ! empty( $_POST[ 'link' ] ) ? $_POST[ 'link' ] : '';
@@ -62,20 +55,20 @@ class Report extends Base
 			'env' => $report_con,
 			'link' => $link,
 			'notes' => $notes,
-		) ;
+		);
 
-		$json = Cloud::post( Cloud::API_REPORT, $data ) ;
+		$json = Cloud::post( Cloud::API_REPORT, $data );
 		if ( ! is_array( $json ) ) {
-			return ;
+			return;
 		}
 
 		$num = ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--';
 		$summary = array(
 			'num'	=> $num,
 			'dateline'	=> time(),
-		) ;
+		);
 
-		self::save_summary( $summary ) ;
+		self::save_summary( $summary );
 
 		return $num;
 	}
@@ -88,30 +81,30 @@ class Report extends Base
 	 * @access public
 	 */
 	public function generate_environment_report( $options = null ) {
-		global $wp_version, $_SERVER ;
-		$frontend_htaccess = Htaccess::get_frontend_htaccess() ;
-		$backend_htaccess = Htaccess::get_backend_htaccess() ;
-		$paths = array($frontend_htaccess) ;
+		global $wp_version, $_SERVER;
+		$frontend_htaccess = Htaccess::get_frontend_htaccess();
+		$backend_htaccess = Htaccess::get_backend_htaccess();
+		$paths = array($frontend_htaccess);
 		if ( $frontend_htaccess != $backend_htaccess ) {
-			$paths[] = $backend_htaccess ;
+			$paths[] = $backend_htaccess;
 		}
 
 		if ( is_multisite() ) {
-			$active_plugins = get_site_option('active_sitewide_plugins') ;
+			$active_plugins = get_site_option('active_sitewide_plugins');
 			if ( ! empty($active_plugins) ) {
-				$active_plugins = array_keys($active_plugins) ;
+				$active_plugins = array_keys($active_plugins);
 			}
 		}
 		else {
-			$active_plugins = get_option('active_plugins') ;
+			$active_plugins = get_option('active_plugins');
 		}
 
 		if ( function_exists('wp_get_theme') ) {
-			$theme_obj = wp_get_theme() ;
-			$active_theme = $theme_obj->get('Name') ;
+			$theme_obj = wp_get_theme();
+			$active_theme = $theme_obj->get('Name');
 		}
 		else {
-			$active_theme = get_current_theme() ;
+			$active_theme = get_current_theme();
 		}
 
 		$extras = array(
@@ -121,16 +114,16 @@ class Report extends Base
 			'home_url' => home_url(),
 			'locale' => get_locale(),
 			'active theme' => $active_theme,
-		) ;
+		);
 
-		$extras[ 'active plugins' ] = $active_plugins ;
+		$extras[ 'active plugins' ] = $active_plugins;
 		$extras[ 'cloud' ] = Cloud::get_summary();
 
 		if ( is_null($options) ) {
-			$options = Conf::get_instance()->get_options( true );
+			$options = Conf::cls()->get_options( true );
 
 			if ( is_multisite() ) {
-				$options2 = Conf::get_instance()->get_options();
+				$options2 = Conf::cls()->get_options();
 				foreach ( $options2 as $k => $v ) {
 					if ( $options[ $k ] !== $v ) {
 						$options[ '[Overwritten] ' . $k ] = $v;
@@ -140,12 +133,12 @@ class Report extends Base
 		}
 
 		if ( ! is_null($options) && is_multisite() ) {
-			$blogs = Activation::get_network_ids() ;
+			$blogs = Activation::get_network_ids();
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = Conf::get_instance()->load_options( $blog_id, true ) ;
+					$opts = Conf::cls()->load_options( $blog_id, true );
 					if ( isset($opts[ Base::O_CACHE ]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[ Base::O_CACHE ] ;
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ Base::O_CACHE ];
 					}
 				}
 			}
@@ -155,15 +148,15 @@ class Report extends Base
 		$secure_fields = array(
 			Base::O_CDN_CLOUDFLARE_KEY,
 			Base::O_OBJECT_PSWD,
-		) ;
+		);
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
-				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
+				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) );
 			}
 		}
 
-		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
-		return $report ;
+		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths);
+		return $report;
 	}
 
 	/**
@@ -178,36 +171,36 @@ class Report extends Base
 			'SERVER_SOFTWARE'=>'',
 			'X-LSCACHE'=>'',
 			'HTTP_X_LSCACHE'=>''
-		) ;
-		$server_vars = array_intersect_key($server, $server_keys) ;
-		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
+		);
+		$server_vars = array_intersect_key($server, $server_keys);
+		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX;
 
-		$server_vars = array_merge( $server_vars, Base::get_instance()->server_vars() ) ;
+		$server_vars = array_merge( $server_vars, Base::cls()->server_vars() );
 
-		$buf = $this->_format_report_section('Server Variables', $server_vars) ;
+		$buf = $this->_format_report_section('Server Variables', $server_vars);
 
-		$buf .= $this->_format_report_section('Wordpress Specific Extras', $extras) ;
+		$buf .= $this->_format_report_section('Wordpress Specific Extras', $extras);
 
-		$buf .= $this->_format_report_section('LSCache Plugin Options', $options) ;
+		$buf .= $this->_format_report_section('LSCache Plugin Options', $options);
 
 		if ( empty($htaccess_paths) ) {
-			return $buf ;
+			return $buf;
 		}
 
 		foreach ( $htaccess_paths as $path ) {
 			if ( ! file_exists($path) || ! is_readable($path) ) {
-				$buf .= $path . " does not exist or is not readable.\n" ;
-				continue ;
+				$buf .= $path . " does not exist or is not readable.\n";
+				continue;
 			}
 
-			$content = file_get_contents($path) ;
+			$content = file_get_contents($path);
 			if ( $content === false ) {
-				$buf .= $path . " returned false for file_get_contents.\n" ;
-				continue ;
+				$buf .= $path . " returned false for file_get_contents.\n";
+				continue;
 			}
-			$buf .= $path . " contents:\n" . $content . "\n\n" ;
+			$buf .= $path . " contents:\n" . $content . "\n\n";
 		}
-		return $buf ;
+		return $buf;
 	}
 
 	/**
@@ -218,27 +211,27 @@ class Report extends Base
 	 */
 	private function _format_report_section( $section_header, $section )
 	{
-		$tab = '    ' ; // four spaces
+		$tab = '    '; // four spaces
 
 		if ( empty( $section ) ) {
-			return 'No matching ' . $section_header . "\n\n" ;
+			return 'No matching ' . $section_header . "\n\n";
 		}
-		$buf = $section_header ;
+		$buf = $section_header;
 
 		foreach ( $section as $k => $v ) {
-			$buf .= "\n" . $tab ;
+			$buf .= "\n" . $tab;
 
 			if ( ! is_numeric( $k ) ) {
-				$buf .= $k . ' = ' ;
+				$buf .= $k . ' = ';
 			}
 
 			if ( ! is_string( $v ) ) {
-				$v = var_export( $v, true ) ;
+				$v = var_export( $v, true );
 			}
 
-			$buf .= $v ;
+			$buf .= $v;
 		}
-		return $buf . "\n\n" ;
+		return $buf . "\n\n";
 	}
 
 }

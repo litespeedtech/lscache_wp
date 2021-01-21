@@ -13,8 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin_Display extends Base {
-	protected static $_instance;
-
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
@@ -66,7 +64,7 @@ class Admin_Display extends Base {
 		}
 		if ( current_user_can( $manage ) ) {
 			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) ) {
-				add_action( 'wp_before_admin_bar_render', array( GUI::get_instance(), 'backend_shortcut' ) );
+				add_action( 'wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ) );
 			}
 
 			// `admin_notices` is after `admin_enqueue_scripts`
@@ -91,7 +89,7 @@ class Admin_Display extends Base {
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		}
 
-		$this->__cfg = Conf::get_instance();
+		$this->__cfg = Conf::cls();
 	}
 
 	/**
@@ -184,7 +182,7 @@ class Admin_Display extends Base {
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url;
 		}
 
-		$promo_tag = GUI::get_instance()->show_promo( true );
+		$promo_tag = GUI::cls()->show_promo( true );
 		if ( $promo_tag ) {
 			$ajax_url_promo = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) );
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo;
@@ -410,10 +408,10 @@ class Admin_Display extends Base {
 			$this->show_display_installed();
 		}
 
-		Data::get_instance()->check_upgrading_msg();
+		Data::cls()->check_upgrading_msg();
 
 		// If is in dev version, always check latest update
-		Cloud::get_instance()->check_dev_version();
+		Cloud::cls()->check_dev_version();
 
 		// One time msg
 		$messages = self::get_option( self::DB_MSG );
@@ -461,21 +459,21 @@ class Admin_Display extends Base {
 			Admin_Display::error( Error::msg( 'disabled_all' ), true );
 		}
 
-		if ( ! Conf::val( Base::O_NEWS ) ) {
+		if ( ! $this->conf( Base::O_NEWS ) ) {
 			return;
 		}
 
 		// Show promo from cloud
-		Cloud::get_instance()->show_promo();
+		Cloud::cls()->show_promo();
 
 		/**
 		 * Check promo msg first
 		 * @since 2.9
 		 */
-		GUI::get_instance()->show_promo();
+		GUI::cls()->show_promo();
 
 		// Show version news
-		Cloud::get_instance()->news();
+		Cloud::cls()->news();
 	}
 
 	/**
@@ -694,7 +692,7 @@ class Admin_Display extends Base {
 	 */
 	public function build_textarea( $id, $cols = false, $val = null ) {
 		if ( $val === null ) {
-			$val = Conf::val( $id, true );
+			$val = $this->conf( $id, true );
 
 			if ( is_array( $val ) ) {
 				$val = implode( "\n", $val );
@@ -729,7 +727,7 @@ class Admin_Display extends Base {
 	 */
 	public function build_input( $id, $cls = null, $val = null, $type = 'text', $disabled = false ) {
 		if ( $val === null ) {
-			$val = Conf::val( $id, true );
+			$val = $this->conf( $id, true );
 
 			// Mask pswds
 			if ( $this->_conf_pswd( $id ) && $val ) {
@@ -764,7 +762,7 @@ class Admin_Display extends Base {
 	 * @param  bool $checked
 	 */
 	public function build_checkbox( $id, $title, $checked = null, $value = 1 ) {
-		if ( $checked === null && Conf::val( $id, true ) ) {
+		if ( $checked === null && $this->conf( $id, true ) ) {
 			$checked = true;
 		}
 		$checked = $checked ? ' checked ' : '';
@@ -791,7 +789,7 @@ class Admin_Display extends Base {
 	 * @since 1.7
 	 */
 	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null ) {
-		if ( $checked === null && Conf::val( $id, true ) ) {
+		if ( $checked === null && $this->conf( $id, true ) ) {
 			$checked = true;
 		}
 
@@ -856,10 +854,10 @@ class Admin_Display extends Base {
 		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 
 		if ( ! is_string( $default ) ) {
-			$checked = (int) Conf::val( $id, true ) === (int) $val ? ' checked ' : '';
+			$checked = (int) $this->conf( $id, true ) === (int) $val ? ' checked ' : '';
 		}
 		else {
-			$checked = Conf::val( $id, true ) === $val ? ' checked ' : '';
+			$checked = $this->conf( $id, true ) === $val ? ' checked ' : '';
 		}
 
 		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>";
@@ -896,7 +894,7 @@ class Admin_Display extends Base {
 		if ( $const_val !== null ) {
 			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' );
 		} else {
-			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && Conf::val( Base::NETWORK_O_USE_PRIMARY ) ) {
+			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf( Base::NETWORK_O_USE_PRIMARY ) ) {
 				echo __( 'This setting is overwritten by the primary site setting', 'litespeed-cache' );
 			}
 			else {
@@ -962,7 +960,7 @@ class Admin_Display extends Base {
 	 * @since  3.0
 	 */
 	protected function _validate_syntax( $id ) {
-		$val = Conf::val( $id, true );
+		$val = $this->conf( $id, true );
 
 		if ( ! $val ) {
 			return;
@@ -985,7 +983,7 @@ class Admin_Display extends Base {
 	 * @since  3.0
 	 */
 	protected function _validate_htaccess_path( $id ) {
-		$val = Conf::val( $id, true );
+		$val = $this->conf( $id, true );
 		if ( ! $val ) {
 			return;
 		}
@@ -1001,7 +999,7 @@ class Admin_Display extends Base {
 	 * @since  3.0
 	 */
 	protected function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false ) {
-		$val = Conf::val( $id, true );
+		$val = $this->conf( $id, true );
 
 		if ( $allow_zero && ! $val ) {
 			// return;
@@ -1046,7 +1044,7 @@ class Admin_Display extends Base {
 	 * @since  3.0
 	 */
 	protected function _validate_ip( $id ) {
-		$val = Conf::val( $id, true );
+		$val = $this->conf( $id, true );
 		if ( ! $val ) {
 			return;
 		}

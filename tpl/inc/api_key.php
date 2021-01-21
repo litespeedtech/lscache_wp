@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$api_key = Conf::val( Base::O_API_KEY ) ;
+$api_key = $this->conf( Base::O_API_KEY ) ;
 
 ?>
 

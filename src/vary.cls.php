@@ -8,8 +8,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Vary extends Instance {
-	protected static $_instance;
-
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
@@ -28,12 +26,12 @@ class Vary extends Instance {
 		// logged in user
 		if ( Router::is_logged_in() ) {
 			// If not esi, check cache logged-in user setting
-			if ( ! Router::esi_enabled() ) {
+			if ( ! $this->cls( 'Router' )->esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
-				if ( Conf::val( Base::O_CACHE_PRIV ) ) {
+				if ( $this->conf( Base::O_CACHE_PRIV ) ) {
 					add_action( 'wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout' );
 
-					Control::init_cacheable();
+					$this->cls( 'Control' )->init_cacheable();
 					Control::set_private( 'logged in user' );
 				}
 				// No cache for logged-in user
@@ -44,7 +42,7 @@ class Vary extends Instance {
 			// ESI is on, can be public cache
 			else {
 				// Need to make sure vary is using group id
-				Control::init_cacheable();
+				$this->cls( 'Control' )->init_cacheable();
 			}
 
 			// register logout hook to clear login status
@@ -56,10 +54,10 @@ class Vary extends Instance {
 			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 );
 			add_action( 'wp_login', __NAMESPACE__ . '\Purge::purge_on_logout' );
 
-			Control::init_cacheable();
+			$this->cls( 'Control' )->init_cacheable();
 
 			// Check `login page` cacheable setting because they don't go through main WP logic
-			add_action( 'login_init', __NAMESPACE__ . '\Tag::check_login_cacheable', 5 );
+			add_action( 'login_init', array( $this->cls( 'Tag' ), 'check_login_cacheable' ), 5 );
 
 		}
 
@@ -80,7 +78,7 @@ class Vary extends Instance {
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
-		$db_cookie = Conf::val( Base::O_CACHE_LOGIN_COOKIE ); // [3.0] todo: check if works in network's sites
+		$db_cookie = $this->conf( Base::O_CACHE_LOGIN_COOKIE ); // [3.0] todo: check if works in network's sites
 
 		// If no vary set in rewrite rule
 		if ( ! isset($_SERVER['LSCACHE_VARY_COOKIE']) ) {
@@ -161,7 +159,7 @@ class Vary extends Instance {
 		// set vary=2 for next time vary lookup
 		$this->add_commenter();
 
-		if ( Conf::val( Base::O_CACHE_COMMENTER ) ) {
+		if ( $this->conf( Base::O_CACHE_COMMENTER ) ) {
 			Control::set_private( 'existing commenter' );
 		}
 		else {
@@ -304,7 +302,7 @@ class Vary extends Instance {
 			if ( ! $expire ) {
 				$expire = time() + 2 * DAY_IN_SECONDS;
 			}
-			self::_cookie( $vary, $expire );
+			$this->_cookie( $vary, $expire );
 			Debug2::debug( "[Vary] set_cookie ---> $vary" );
 			Control::set_nocache( 'changing default vary' . " $current_vary => $vary" );
 		}
@@ -331,7 +329,7 @@ class Vary extends Instance {
 	 */
 	public function in_vary_group( $role ) {
 		$group = 0;
-		$vary_groups = Conf::val( Base::O_CACHE_VARY_GROUP );
+		$vary_groups = $this->conf( Base::O_CACHE_VARY_GROUP );
 		if ( array_key_exists( $role, $vary_groups ) ) {
 			$group = $vary_groups[ $role ];
 		}
@@ -418,7 +416,7 @@ class Vary extends Instance {
 			return $res;
 		}
 		// Encrypt in production
-		return md5( Conf::val( Base::HASH ) . $res );
+		return md5( $this->conf( Base::HASH ) . $res );
 
 	}
 
@@ -448,7 +446,7 @@ class Vary extends Instance {
 
 			// save it
 			// only set commenter status for current domain path
-			self::_cookie( 'commenter', time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) );
+			$this->_cookie( 'commenter', time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) );
 			Control::set_nocache( 'adding commenter status' );
 		}
 	}
@@ -465,7 +463,7 @@ class Vary extends Instance {
 			// unset( $_COOKIE[ self::$_vary_name ] ); // not needed
 
 			// save it
-			self::_cookie( false, false, self::_relative_path() );
+			$this->_cookie( false, false, self::_relative_path() );
 			Control::set_nocache( 'removing commenter status' );
 		}
 	}
@@ -500,7 +498,7 @@ class Vary extends Instance {
 	 * if the post is not password protected. Vary header otherwise.
 	 */
 	public static function finalize() {
-		return self::get_instance()->_finalize();
+		return self::cls()->_finalize();
 
 	}
 
@@ -616,7 +614,7 @@ class Vary extends Instance {
 	 * @param integer $expire Expire time.
 	 * @param boolean $path False if use wp root path as cookie path
 	 */
-	private static function _cookie($val = false, $expire = false, $path = false) {
+	private function _cookie($val = false, $expire = false, $path = false) {
 		if ( ! $val ) {
 			$expire = 1;
 		}
@@ -625,7 +623,7 @@ class Vary extends Instance {
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
 		 * @since 1.7
 		 */
-		$is_ssl = Conf::val( Base::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl();
+		$is_ssl = $this->conf( Base::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl();
 
 		setcookie( self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true );
 	}

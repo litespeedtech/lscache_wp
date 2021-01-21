@@ -16,10 +16,7 @@ use \LiteSpeed\API;
 use \LiteSpeed\Base;
 use \LiteSpeed\Instance;
 
-class WooCommerce extends Instance
-{
-	protected static $_instance ;
-
+class WooCommerce extends Instance {
 	const O_CACHE_TTL_FRONTPAGE = Base::O_CACHE_TTL_FRONTPAGE;
 
 	const CACHETAG_SHOP = 'WC_S' ;
@@ -53,7 +50,7 @@ class WooCommerce extends Instance
 			return ;
 		}
 
-		self::get_instance()->add_hooks() ;
+		self::cls()->add_hooks() ;
 
 	}
 

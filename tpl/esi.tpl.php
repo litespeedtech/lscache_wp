@@ -1,6 +1,6 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 <?php
 
-\LiteSpeed\ESI::get_instance()->load_esi_block() ;
+\LiteSpeed\ESI::cls()->load_esi_block() ;
 
 

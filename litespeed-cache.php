@@ -3,7 +3,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           3.6.2
+ * Version:           3.7-rc1
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -33,7 +33,7 @@ if ( class_exists( 'LiteSpeed\Core' ) || defined( 'LSCWP_DIR' ) ) {
 	return;
 }
 
-! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.6.2' );
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '3.7-rc1' );
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', __DIR__ . '/' ) ;// Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -127,12 +127,12 @@ if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
 		 */
 		function wp_create_nonce( $action = -1 ) {
 			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) ) {
-				$control = \LiteSpeed\ESI::get_instance()->is_nonce_action( $action );
+				$control = \LiteSpeed\ESI::cls()->is_nonce_action( $action );
 				if ( $control !== null ) {
 					$params = array(
 						'action'	=> $action,
 					);
-					return \LiteSpeed\ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, $control, true, true, true );
+					return \LiteSpeed\ESI::cls()->sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, $control, true, true, true );
 				}
 			}
 
@@ -175,7 +175,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 			return;
 		}
 
-		\LiteSpeed\Core::get_instance();
+		\LiteSpeed\Core::cls();
 	}
 
 	run_litespeed_cache();

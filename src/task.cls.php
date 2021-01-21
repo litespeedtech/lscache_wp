@@ -10,11 +10,9 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Task extends Instance {
-	protected static $_instance;
-
 	private static $_triggers = array(
 		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::cron_pull' ), // always fetch immediately
-		Base::O_OPTM_CCSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss' ),
+		Base::O_OPTM_CSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss' ),
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron' ),
 		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron' ),
 		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request' ),
@@ -45,7 +43,7 @@ class Task extends Instance {
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
 
 		foreach ( self::$_triggers as $id => $trigger ) {
-			if ( Conf::val( $id ) ) {
+			if ( $this->conf( $id ) ) {
 				// Special check for crawler
 				if ( $id == Base::O_CRAWLER ) {
 					if ( ! Router::can_crawl() ) {
@@ -84,7 +82,7 @@ class Task extends Instance {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function try_clean( $id ) {
+	public function try_clean( $id ) {
 		// Clean v2's leftover cron ( will remove in v3.1 )
 		// foreach ( wp_get_ready_cron_jobs() as $hooks ) {
 		// 	foreach ( $hooks as $hook => $v ) {
@@ -96,7 +94,7 @@ class Task extends Instance {
 		// }
 
 		if ( $id && ! empty( self::$_triggers[ $id ] ) ) {
-			if ( ! Conf::val( $id ) || ( $id == Base::O_CRAWLER && ! Router::can_crawl() ) ) {
+			if ( ! $this->conf( $id ) || ( $id == Base::O_CRAWLER && ! Router::can_crawl() ) ) {
 				Debug2::debug( '⏰ Cron clear [id] ' . $id . ' [hook] ' . self::$_triggers[ $id ][ 'name' ] );
 				wp_clear_scheduled_hook( self::$_triggers[ $id ][ 'name' ] );
 			}
@@ -129,7 +127,7 @@ class Task extends Instance {
 	 * @access public
 	 */
 	public function lscache_cron_filter_crawler( $schedules ) {
-		$interval = Conf::val( Base::O_CRAWLER_RUN_INTERVAL );
+		$interval = $this->conf( Base::O_CRAWLER_RUN_INTERVAL );
 		// $wp_schedules = wp_get_schedules();
 		if ( ! array_key_exists( self::FITLER_CRAWLER, $schedules ) ) {
 			// 	Debug2::debug('Crawler cron log: cron filter '.$interval.' added');

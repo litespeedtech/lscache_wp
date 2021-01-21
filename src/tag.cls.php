@@ -10,8 +10,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Tag extends Instance {
-	protected static $_instance;
-
 	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F';
 	const TYPE_HOME = 'H';
@@ -58,8 +56,8 @@ class Tag extends Instance {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function check_login_cacheable() {
-		if ( ! Conf::val( Base::O_CACHE_PAGE_LOGIN ) ) {
+	public function check_login_cacheable() {
+		if ( ! $this->conf( Base::O_CACHE_PAGE_LOGIN ) ) {
 			return;
 		}
 		if ( Control::isset_notcacheable() ) {
@@ -71,7 +69,7 @@ class Tag extends Instance {
 			return;
 		}
 
-		Control::set_cacheable();
+		$this->cls( 'Control' )->set_cacheable();
 
 		self::add( self::TYPE_LOGIN );
 
@@ -272,7 +270,7 @@ class Tag extends Instance {
 		}
 
 		// Check REST API
-		if ( REST::get_instance()->is_rest() ) {
+		if ( REST::cls()->is_rest() ) {
 			$tags[] = self::TYPE_REST;
 
 			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false;

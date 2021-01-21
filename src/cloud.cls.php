@@ -8,8 +8,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
-	protected static $_instance;
-
 	const CLOUD_SERVER = 'https://api.quic.cloud';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 
@@ -81,7 +79,7 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	protected function __construct() {
-		$this->_api_key = Conf::val( Base::O_API_KEY );
+		$this->_api_key = $this->conf( Base::O_API_KEY );
 		$this->_summary = self::get_summary();
 	}
 
@@ -150,7 +148,7 @@ class Cloud extends Base {
 			return;
 		}
 
-		if ( ! empty( $this->_summary[ 'news.plugin' ] ) && Activation::get_instance()->dash_notifier_is_plugin_active( $this->_summary[ 'news.plugin' ] ) ) {
+		if ( ! empty( $this->_summary[ 'news.plugin' ] ) && Activation::cls()->dash_notifier_is_plugin_active( $this->_summary[ 'news.plugin' ] ) ) {
 			return;
 		}
 
@@ -188,7 +186,7 @@ class Cloud extends Base {
 		$this->_summary[ 'news.new' ] = 1;
 
 		if ( $this->_summary[ 'news.plugin' ] ) {
-			$plugin_info = Activation::get_instance()->dash_notifier_get_plugin_info( $this->_summary[ 'news.plugin' ] );
+			$plugin_info = Activation::cls()->dash_notifier_get_plugin_info( $this->_summary[ 'news.plugin' ] );
 			if ( $plugin_info && ! empty( $plugin_info->name ) ) {
 				$this->_summary[ 'news.plugin_name' ] = $plugin_info->name;
 			}
@@ -379,7 +377,7 @@ class Cloud extends Base {
 	 * @access public
 	 */
 	public static function get( $service, $data = array() ) {
-		$instance = self::get_instance();
+		$instance = self::cls();
 		return $instance->_get( $service, $data );
 	}
 
@@ -447,7 +445,7 @@ class Cloud extends Base {
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
-			if ( Conf::val( Base::O_DEBUG ) && $this->_api_key ) {
+			if ( $this->conf( Base::O_DEBUG ) && $this->_api_key ) {
 				return true;
 			}
 		}
@@ -485,7 +483,7 @@ class Cloud extends Base {
 	 * @access public
 	 */
 	public static function post( $service, $data = false, $time_out = false ) {
-		$instance = self::get_instance();
+		$instance = self::cls();
 		return $instance->_post( $service, $data, $time_out );
 	}
 
@@ -645,7 +643,7 @@ class Cloud extends Base {
 
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
-				Conf::get_instance()->update_confs( array( Base::O_API_KEY => '' ) );
+				Conf::cls()->update_confs( array( Base::O_API_KEY => '' ) );
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
@@ -781,7 +779,7 @@ class Cloud extends Base {
 		$data = array(
 			'site_url'	=> home_url(),
 			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
-			'server_ip'	=> Conf::val( Base::O_SERVER_IP ),
+			'server_ip'	=> $this->conf( Base::O_SERVER_IP ),
 		);
 		if ( ! empty( $this->_summary[ 'token' ] ) ) {
 			$data[ 'token' ] = $this->_summary[ 'token' ];
@@ -877,7 +875,7 @@ class Cloud extends Base {
 		}
 
 		// This doesn't need to sync QUIC conf but need to clear nodes
-		Conf::get_instance()->update_confs( array( Base::O_API_KEY => $_POST[ 'domain_key' ] ) );
+		Conf::cls()->update_confs( array( Base::O_API_KEY => $_POST[ 'domain_key' ] ) );
 
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
 		$this->_summary[ 'apikey_ts' ] = time();
@@ -983,7 +981,7 @@ class Cloud extends Base {
 
 		$json = json_decode( $response[ 'body' ], true );
 
-		return Router::get_instance()->ip_access( $json );
+		return Router::cls()->ip_access( $json );
 	}
 
 	/**
@@ -1011,36 +1009,34 @@ class Cloud extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_CLEAR_CLOUD:
-				$instance->clear_cloud();
+				$this->clear_cloud();
 				break;
 
 			case self::TYPE_REDETECT_CLOUD:
 				if ( ! empty( $_GET[ 'svc' ] ) ) {
-					$instance->detect_cloud( $_GET[ 'svc' ], true );
+					$this->detect_cloud( $_GET[ 'svc' ], true );
 				}
 				break;
 
 			case self::TYPE_CLEAR_PROMO:
-				$instance->_clear_promo();
+				$this->_clear_promo();
 				break;
 
 			case self::TYPE_GEN_KEY:
-				$instance->gen_key();
+				$this->gen_key();
 				break;
 
 			case self::TYPE_LINK:
-				$instance->_link_to_qc();
+				$this->_link_to_qc();
 				break;
 
 			case self::TYPE_SYNC_USAGE:
-				$instance->sync_usage();
+				$this->sync_usage();
 
 				$msg = __( 'Sync credit allowance with Cloud Server successfully.', 'litespeed-cache' ) ;
 				Admin_Display::succeed( $msg ) ;

@@ -2,7 +2,7 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$_report = Report::get_instance() ;
+$_report = Report::cls() ;
 $report = $_report->generate_environment_report();
 
 $env_ref = Report::get_summary() ;

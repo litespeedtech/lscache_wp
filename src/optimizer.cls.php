@@ -12,8 +12,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Optimizer extends Instance {
-	protected static $_instance;
-
 	private $_conf_css_font_display;
 
 	/**
@@ -23,7 +21,7 @@ class Optimizer extends Instance {
 	 * @access protected
 	 */
 	protected function __construct() {
-		$this->_conf_css_font_display = Conf::val( Base::O_OPTM_CSS_FONT_DISPLAY );
+		$this->_conf_css_font_display = $this->conf( Base::O_OPTM_CSS_FONT_DISPLAY );
 		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
 			$this->_conf_css_font_display = Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ];
 		}
@@ -68,14 +66,13 @@ class Optimizer extends Instance {
 	 * @access public
 	 */
 	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
-		$__css = CSS::get_instance();
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 
 		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
 
 		// Search src set in db based on the requested filename
 		if ( ! $src_list ) {
-			$optm_data = Data::get_instance()->optm_hash2src( $filename );
+			$optm_data = Data::cls()->optm_hash2src( $filename );
 			if ( empty( $optm_data[ 'src' ] ) || ! is_array( $optm_data[ 'src' ] ) ) {
 				return false;
 			}
@@ -89,8 +86,8 @@ class Optimizer extends Instance {
 		if ( $file_type == 'css' ) {
 			// CHeck if need to trigger UCSS or not
 			$content = false;
-			if ( Conf::val( Base::O_OPTM_UCSS ) && ! Conf::val( Base::O_OPTM_UCSS_ASYNC ) ) {
-				$content = $__css->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
+			if ( $this->conf( Base::O_OPTM_UCSS ) && ! $this->conf( Base::O_OPTM_UCSS_ASYNC ) ) {
+				$content = $this->cls( 'CSS' )->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
 			}
 
 			$content = apply_filters( 'litespeed_css_serve', $content, $filename, $src_list, $page_url );
@@ -114,7 +111,7 @@ class Optimizer extends Instance {
 			}
 			else { // Load file
 				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
-				$content = $__css->load_file( $src, $file_type );
+				$content = $this->cls( 'CSS' )->load_file( $src, $file_type );
 
 				if ( ! $content ) {
 					continue;

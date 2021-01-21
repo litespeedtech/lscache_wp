@@ -51,8 +51,8 @@ $_panels = array(
 	),
 );
 
-$rev_max = Conf::val( Base::O_DB_OPTM_REVISIONS_MAX );
-$rev_age = Conf::val( Base::O_DB_OPTM_REVISIONS_AGE );
+$rev_max = $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
+$rev_age = $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
 if ( $rev_max || $rev_age ) {
 	$_panels[ 'revision' ][ 'desc' ] = sprintf( __( 'Clean revisions older than %1$s day(s), excluding %2$s latest revisions', 'litespeed-cache' ), '<strong>' . $rev_age . '</strong>' , '<strong>' . $rev_max . '</strong>' );
 }
@@ -60,7 +60,7 @@ if ( $rev_max || $rev_age ) {
 $total = 0;
 foreach ( $_panels as $tag => $v ) {
 	if ( $tag != 'all' ) {
-		$_panels[ $tag ][ 'count' ] = DB_Optm::db_count( $tag );
+		$_panels[ $tag ][ 'count' ] = $this->cls( 'DB_Optm' )->db_count( $tag );
 		if ( ! in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
 			$total += $_panels[ $tag ][ 'count' ];
 		}
@@ -70,7 +70,7 @@ foreach ( $_panels as $tag => $v ) {
 
 $_panels[ 'all' ][ 'count' ] = $total;
 
-$autoload_summary = DB_Optm::get_instance()->autoload_summary();
+$autoload_summary = DB_Optm::cls()->autoload_summary();
 
 ?>
 
@@ -117,7 +117,7 @@ $autoload_summary = DB_Optm::get_instance()->autoload_summary();
 		</tr></thead>
 		<tbody>
 		<?php
-			$list = DB_Optm::get_instance()->list_myisam();
+			$list = DB_Optm::cls()->list_myisam();
 			if ( $list ) :
 				foreach ( $list as $k => $v ) :
 		?>

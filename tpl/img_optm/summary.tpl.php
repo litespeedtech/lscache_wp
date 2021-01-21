@@ -4,9 +4,9 @@ defined( 'WPINC' ) || exit;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
 $usage_cloud = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
-$allowance = Cloud::get_instance()->allowance( Cloud::SVC_IMG_OPTM );
+$allowance = Cloud::cls()->allowance( Cloud::SVC_IMG_OPTM );
 
-$__img_optm = Img_Optm::get_instance();
+$__img_optm = Img_Optm::cls();
 
 $wet_limit = $__img_optm->wet_limit();
 $img_count = $__img_optm->img_count();
@@ -215,7 +215,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				<div>
 					<h4><?php echo __( 'Image Thumbnail Group Sizes', 'litespeed-cache' ) ; ?></h4>
 					<div class="litespeed-desc litespeed-left20">
-						<?php foreach ( Media::get_instance()->get_image_sizes() as $title => $size ) {
+						<?php foreach ( Media::cls()->get_image_sizes() as $title => $size ) {
 							echo "<div>$title ( " . ( $size[ 'width' ] ? $size[ 'width' ] . 'px' : '*' ) . ' x ' . ( $size[ 'height' ] ? $size[ 'height' ] . 'px' : '*' ) . ' )</div>';
 						} ; ?>
 					</div>

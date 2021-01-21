@@ -67,7 +67,7 @@ if ( Router::opcache_enabled() ) {
 	) ;
 }
 
-if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
+if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
@@ -76,7 +76,7 @@ if ( Conf::val( Base::O_OPTM_CCSS_GEN ) ) {
 	) ;
 }
 
-if ( Conf::val( Base::O_OPTM_LOCALIZE ) ) {
+if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
 	$_panels[] = array(
 		'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all localized resources', 'litespeed-cache' ),

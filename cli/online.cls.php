@@ -17,7 +17,7 @@ class Online
 	{
 		Debug2::debug( 'CLI_Cloud init' );
 
-		$this->__cloud = Cloud::get_instance();
+		$this->__cloud = Cloud::cls();
 	}
 
 	/**

@@ -13,8 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class CDN extends Instance {
-	protected static $_instance;
-
 	const BYPASS = 'LITESPEED_BYPASS_CDN';
 
 	private $content;
@@ -26,8 +24,6 @@ class CDN extends Instance {
 	private $_cfg_cdn_exclude;
 
 	private $cdn_mapping_hosts = array();
-
-	private $__cfg;// cfg instance
 
 	/**
 	 * Init
@@ -50,9 +46,7 @@ class CDN extends Instance {
 			return;
 		}
 
-		$this->__cfg = Conf::get_instance();
-
-		$this->_cfg_cdn = Conf::val( Base::O_CDN );
+		$this->_cfg_cdn = $this->conf( Base::O_CDN );
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true );
@@ -60,14 +54,14 @@ class CDN extends Instance {
 			return;
 		}
 
-		$this->_cfg_url_ori = Conf::val( Base::O_CDN_ORI );
+		$this->_cfg_url_ori = $this->conf( Base::O_CDN_ORI );
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			Base::CDN_MAPPING_INC_IMG,
 			Base::CDN_MAPPING_INC_CSS,
 			Base::CDN_MAPPING_INC_JS
 		);
-		foreach ( Conf::val( Base::O_CDN_MAPPING ) as $v ) {
+		foreach ( $this->conf( Base::O_CDN_MAPPING ) as $v ) {
 			if ( ! $v[ Base::CDN_MAPPING_URL ] ) {
 				continue;
 			}
@@ -109,7 +103,7 @@ class CDN extends Instance {
 			return;
 		}
 
-		$this->_cfg_ori_dir = Conf::val( Base::O_CDN_ORI_DIR );
+		$this->_cfg_ori_dir = $this->conf( Base::O_CDN_ORI_DIR );
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS;
@@ -118,7 +112,7 @@ class CDN extends Instance {
 		// Check if need preg_replace
 		$this->_cfg_url_ori = Utility::wildcard2regex( $this->_cfg_url_ori );
 
-		$this->_cfg_cdn_exclude = Conf::val( Base::O_CDN_EXC );
+		$this->_cfg_cdn_exclude = $this->conf( Base::O_CDN_EXC );
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
@@ -162,33 +156,13 @@ class CDN extends Instance {
 	}
 
 	/**
-	 * Handle all request actions from main cls
-	 *
-	 * @since  1.7.2
-	 * @access public
-	 */
-	public static function handler() {
-		$instance = self::get_instance();
-
-		$type = Router::verify_type();
-
-		switch ( $type ) {
-
-			default:
-				break;
-		}
-
-		Admin::redirect();
-	}
-
-	/**
 	 * If include css/js in CDN
 	 *
 	 * @since  1.6.2.1
 	 * @return bool true if included in CDN
 	 */
 	public static function inc_type( $type ) {
-		$instance = self::get_instance();
+		$instance = self::cls();
 
 		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
 			return true;
@@ -210,7 +184,7 @@ class CDN extends Instance {
 	 * @return  string The content that is after optimization
 	 */
 	public static function finalize( $content ) {
-		$instance = self::get_instance();
+		$instance = self::cls();
 		$instance->content = $content;
 
 		$instance->_finalize();
@@ -250,7 +224,7 @@ class CDN extends Instance {
 	 * @access private
 	 */
 	private function _replace_file_types() {
-		$ele_to_check = Conf::val( Base::O_CDN_ATTR );
+		$ele_to_check = $this->conf( Base::O_CDN_ATTR );
 
 		foreach ( $ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
@@ -561,7 +535,7 @@ class CDN extends Instance {
 			return false;
 		}
 
-		$instance = self::get_instance();
+		$instance = self::cls();
 
 		return in_array( $host, $instance->cdn_mapping_hosts );// todo: can add $this->_is_ori_url() check in future
 	}

@@ -40,7 +40,7 @@ $this->form_action();
 
 			<script type="text/babel">
 				ReactDOM.render(
-					<CrawlerSimulate list={ <?php echo json_encode( Conf::val( $id ) ); ?> } />,
+					<CrawlerSimulate list={ <?php echo json_encode( $this->conf( $id ) ); ?> } />,
 					document.getElementById( 'litespeed_crawler_simulation_div' )
 				);
 			</script>

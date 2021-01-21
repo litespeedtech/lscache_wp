@@ -48,8 +48,8 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php
 				$excludes_buf = '';
-				if ( Conf::val( $id ) ) {
-					$excludes_buf = implode( "\n", array_map( 'get_cat_name', Conf::val( $id ) ) );
+				if ( $this->conf( $id ) ) {
+					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $this->conf( $id ) ) );
 				}
 				$this->build_textarea( $id, false, $excludes_buf );
 			?>
@@ -75,9 +75,9 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php
 				$excludes_buf = '';
-				if ( Conf::val( $id ) ) {
+				if ( $this->conf( $id ) ) {
 					$tag_names = array();
-					foreach ( array_map( 'get_tag', Conf::val( $id ) ) as $tag ) {
+					foreach ( array_map( 'get_tag', $this->conf( $id ) ) as $tag ) {
 						$tag_names[] = $tag->name;
 					}
 					if ( ! empty( $tag_names ) ) {
@@ -125,7 +125,7 @@ defined( 'WPINC' ) || exit;
 			</div>
 			<div class="litespeed-tick-list">
 				<?php foreach ( $roles as $role => $title ): ?>
-					<?php $this->build_checkbox( $id . '[]', $title, Control::get_instance()->in_cache_exc_roles( $role ), $role ); ?>
+					<?php $this->build_checkbox( $id . '[]', $title, Control::cls()->in_cache_exc_roles( $role ), $role ); ?>
 				<?php endforeach; ?>
 			</div>
 

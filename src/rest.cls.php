@@ -9,8 +9,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class REST extends Instance {
-	protected static $_instance;
-
 	private $_internal_rest_status = false;
 
 	/**
@@ -115,7 +113,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function check_ip() {
-		return Tool::get_instance()->check_ip();
+		return Tool::cls()->check_ip();
 	}
 
 	/**
@@ -124,7 +122,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function ip_validate() {
-		return Cloud::get_instance()->ip_validate();
+		return Cloud::cls()->ip_validate();
 	}
 
 	/**
@@ -133,7 +131,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function token() {
-		return Cloud::get_instance()->token_validate();
+		return Cloud::cls()->token_validate();
 	}
 
 	/**
@@ -142,7 +140,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function apikey() {
-		return Cloud::get_instance()->save_apikey();
+		return Cloud::cls()->save_apikey();
 	}
 
 	/**
@@ -151,7 +149,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function notify_img() {
-		return Img_Optm::get_instance()->notify_img();
+		return Img_Optm::cls()->notify_img();
 	}
 
 	/**
@@ -160,7 +158,7 @@ class REST extends Instance {
 	 * @since  3.0
 	 */
 	public function check_img() {
-		return Img_Optm::get_instance()->check_img();
+		return Img_Optm::cls()->check_img();
 	}
 
 	/**

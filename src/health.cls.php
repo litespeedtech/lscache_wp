@@ -11,12 +11,10 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Health extends Base
-{
+class Health extends Base {
 	const TYPE_SPEED = 'speed';
 	const TYPE_SCORE = 'score';
 
-	protected static $_instance;
 	protected $_summary;
 
 	/**
@@ -119,16 +117,13 @@ class Health extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function handler()
-	{
-		$instance = self::get_instance();
-
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_SPEED :
-			case self::TYPE_SCORE :
-				$instance->_ping( $type );
+			case self::TYPE_SPEED:
+			case self::TYPE_SCORE:
+				$this->_ping( $type );
 				break;
 
 			default:

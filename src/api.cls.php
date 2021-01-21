@@ -35,8 +35,6 @@ class API extends Base {
 	const WIDGET_O_ESIENABLE =	ESI::WIDGET_O_ESIENABLE ;
 	const WIDGET_O_TTL =			ESI::WIDGET_O_TTL ;
 
-	protected static $_instance;
-
 	/**
 	 * Instance
 	 *
@@ -62,7 +60,7 @@ class API extends Base {
 		/**
 		 * Conf
 		 */
-		add_filter( 'litespeed_conf', __NAMESPACE__ . '\Conf::val' ); // @previous API::config($id)
+		add_filter( 'litespeed_conf', array( $this, 'conf' ) ); // @previous API::config($id)
 		// Action `litespeed_conf_append` // @previous API::conf_append( $name, $default )
 		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2 );
 		// Action ``litespeed_conf_force` // @previous API::force_option( $k, $v )
@@ -73,12 +71,12 @@ class API extends Base {
 		// Action `litespeed_control_finalize` // @previous API::hook_control($tags) && action `litespeed_api_control`
 		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' ); // @previous  API::set_cache_private()
 		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' ); // @previous  API::set_nocache( $reason = false )
-		add_action( 'litespeed_control_set_cacheable', __NAMESPACE__ . '\Control::set_cacheable' ); // Might needed if not call hook `wp` // @previous API::set_cacheable( $reason )
+		add_action( 'litespeed_control_set_cacheable', array( $this, 'set_cacheable' ) ); // Might needed if not call hook `wp` // @previous API::set_cacheable( $reason )
 		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' ); // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_cacheable( $reason )
 		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' ); // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_public( $reason )
 		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 ); // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not // @previous API::not_cacheable()
 		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 ); // @previous API::set_ttl( $val )
-		add_filter( 'litespeed_control_ttl', __NAMESPACE__ . '\Control::get_ttl', 3 ); // @previous API::get_ttl()
+		add_filter( 'litespeed_control_ttl', array( $this, 'get_ttl' ), 3 ); // @previous API::get_ttl()
 
 		/**
 		 * Tag Hooks
@@ -96,7 +94,7 @@ class API extends Base {
 		// Action `litespeed_purge_finalize` // @previous API::hook_purge($tags)
 		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' ); // @previous API::purge($tags)
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
-		add_action( 'litespeed_purge_post', __NAMESPACE__ . '\Purge::purge_post' ); // @previous API::purge_post( $pid )
+		add_action( 'litespeed_purge_post', array( $this, 'purge_post' ) ); // @previous API::purge_post( $pid )
 		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
 		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
@@ -112,8 +110,8 @@ class API extends Base {
 		 * ESI
 		 */
 		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true )
-		add_filter( 'litespeed_esi_status', __NAMESPACE__ . '\Router::esi_enabled' ); // Get ESI enable status // @previous API::esi_enabled()
-		add_filter( 'litespeed_esi_url', __NAMESPACE__ . '\ESI::sub_esi_block', 10, 8 ); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+		add_filter( 'litespeed_esi_status', array( $this, 'esi_enabled' ) ); // Get ESI enable status // @previous API::esi_enabled()
+		add_filter( 'litespeed_esi_url', array( $this, 'sub_esi_block' ), 10, 8 ); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
 		// Filter `litespeed_esi_params` // @previous API::hook_esi_param( $hook )
 		// Action `litespeed_tpl_normal` // @previous API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template`
@@ -171,8 +169,8 @@ class API extends Base {
 		/**
 		 * GUI
 		 */
-		add_action( 'litespeed_setting_enroll', array( Admin_Display::get_instance(), 'enroll' ), 10, 4 ); // API::enroll( $id ) // Register a field in setting form to save
-		add_action( 'litespeed_build_switch', array( Admin_Display::get_instance(), 'build_switch' ) ); // API::build_switch( $id ) // Build a switch div html snippet
+		add_action( 'litespeed_setting_enroll', array( Admin_Display::cls(), 'enroll' ), 10, 4 ); // API::enroll( $id ) // Register a field in setting form to save
+		add_action( 'litespeed_build_switch', array( Admin_Display::cls(), 'build_switch' ) ); // API::build_switch( $id ) // Build a switch div html snippet
 		// API::hook_setting_content( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_content`
 		// API::hook_setting_tab( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_tab`
 	}
@@ -249,7 +247,27 @@ class API extends Base {
 	 */
 	public static function vary_append_commenter()
 	{
-		Vary::get_instance()->append_commenter() ;
+		Vary::cls()->append_commenter() ;
+	}
+
+	public static function purge_post( $pid ) {
+		$this->cls( 'Purge' )->purge_post( $pid );
+	}
+
+	public static function set_cacheable( $reason = false ) {
+		$this->cls( 'Control' )->set_cacheable( $reason );
+	}
+
+	public static function esi_enabled() {
+		return $this->cls( 'Router' )->esi_enabled();
+	}
+
+	public static function get_ttl() {
+		return $this->cls( 'Control' )->get_ttl();
+	}
+
+	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() ) {
+		return $this->cls( 'ESI' )->sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() );
 	}
 
 }

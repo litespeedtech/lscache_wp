@@ -26,7 +26,7 @@ else {
 	$ttl = $options[ ESI::WIDGET_O_TTL ] ;
 }
 
-$display = Admin_Display::get_instance() ;
+$display = Admin_Display::cls() ;
 
 ?>
 <div class="litespeed-widget-setting">

@@ -2,7 +2,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$__cloud = Cloud::get_instance();
+$__cloud = Cloud::cls();
 
 // This will drop QS param `qc_res` and `domain_hash` also
 $__cloud->update_is_linked_status();
@@ -14,7 +14,7 @@ $can_token = $__cloud->can_token();
 $is_requesting = ! empty( $cloud_summary[ 'token_ts' ] ) && ( empty( $cloud_summary[ 'apikey_ts' ] ) || $cloud_summary[ 'token_ts' ] > $cloud_summary[ 'apikey_ts' ] );
 
 $apply_btn_txt = __( 'Request Domain Key', 'litespeed-cache' );
-if ( Conf::val( Base::O_API_KEY ) ) {
+if ( $this->conf( Base::O_API_KEY ) ) {
 	$apply_btn_txt = __( 'Refresh Domain Key', 'litespeed-cache' );
 	if ( $is_requesting ) {
 		$apply_btn_txt = __( 'Waiting for Refresh', 'litespeed-cache' );
@@ -96,7 +96,7 @@ $this->form_action();
 				</div>
 			<?php endif; ?>
 
-			<?php if ( ! Conf::val( Base::O_API_KEY ) ) : ?>
+			<?php if ( ! $this->conf( Base::O_API_KEY ) ) : ?>
 				<div class="litespeed-callout notice notice-error inline">
 					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
 					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ); ?></p>

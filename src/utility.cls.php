@@ -10,7 +10,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Utility extends Instance {
-	protected static $_instance;
 	private static $_internal_domains;
 
 	/**

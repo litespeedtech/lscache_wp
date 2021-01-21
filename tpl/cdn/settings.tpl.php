@@ -7,7 +7,7 @@ $parsed = parse_url( $home_url );
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url );
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 );
 
-$cdn_mapping = Conf::val( Base::O_CDN_MAPPING );
+$cdn_mapping = $this->conf( Base::O_CDN_MAPPING );
 // Special handler: Append one row if somehow the DB default preset value got deleted
 if ( ! $cdn_mapping ) {
 	$this->load_default_vals();
@@ -212,7 +212,7 @@ $this->form_action();
 					<label class="litespeed-form-label"><?php echo __( 'Domain', 'litespeed-cache' ); ?></label>
 
 				<?php
-					$cf_zone = Conf::val( Base::O_CDN_CLOUDFLARE_ZONE );
+					$cf_zone = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE );
 					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning';
 					$this->build_input( Base::O_CDN_CLOUDFLARE_NAME, $cls );
 				?>
