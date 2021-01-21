@@ -73,7 +73,7 @@ class Object_Cache {
 
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] init with cfg result : ', $this->_cfg_enabled );
 		}
-		elseif ( class_exists( __NAMESPACE__ . '\Core' ) ) {
+		elseif ( method_exists( __NAMESPACE__ . '\Core', 'cls' ) ) {
 			$__core = Core::cls();
 			$this->_cfg_method = $__core->conf( Base::O_OBJECT_KIND ) ? true : false;
 			$this->_cfg_host = $__core->conf( Base::O_OBJECT_HOST );
