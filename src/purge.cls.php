@@ -400,7 +400,7 @@ class Purge extends Base {
 
 		// Send purge header immediately
 		$curr_built = $this->_build();
-		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
+		if ( defined( 'LITESPEED_DID_send_headers' ) || defined( 'LITESPEED_CLI' ) ) {
 			// Can't send, already has output, need to save and wait for next run
 			self::update_option( self::DB_QUEUE, $curr_built );
 			Debug2::debug( '[Purge] Output existed, queue stored: ' . $curr_built );
