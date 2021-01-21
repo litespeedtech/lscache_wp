@@ -20,7 +20,6 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be cached.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
-				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>
