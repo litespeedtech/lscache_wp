@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Core extends Instance {
+class Core extends Root {
 	const NAME = 'LiteSpeed Cache';
 	const PLUGIN_NAME = 'litespeed-cache';
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php';

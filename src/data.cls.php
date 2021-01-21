@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Data extends Instance {
+class Data extends Root {
 	private $_db_updater = array(
 		'3.5.0.3'	=> array(
 			'litespeed_update_3_5',

@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class CDN extends Instance {
+class CDN extends Root {
 	const BYPASS = 'LITESPEED_BYPASS_CDN';
 
 	private $content;

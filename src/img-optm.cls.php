@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Img_Optm extends Base {
+class Img_Optm extends Trunk {
 	const CLOUD_ACTION_NEW_REQ = 'new_req';
 	const CLOUD_ACTION_TAKEN = 'taken';
 	const CLOUD_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';
@@ -575,10 +575,10 @@ class Img_Optm extends Base {
 		$data = array(
 			'action'		=> self::CLOUD_ACTION_NEW_REQ,
 			'list' 			=> json_encode( $list ),
-			'optm_ori'		=> $this->conf( Base::O_IMG_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> $this->conf( Base::O_IMG_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> $this->conf( Base::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> $this->conf( Base::O_IMG_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> $this->conf( self::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> $this->conf( self::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> $this->conf( self::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> $this->conf( self::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		);
 
 		// Push to Cloud server
@@ -627,7 +627,7 @@ class Img_Optm extends Base {
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( $this->conf( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
 			$this->_summary[ 'notify_ts_err' ] = time();
 			self::save_summary();
 			return Cloud::err( 'wrong_key' );
@@ -829,9 +829,9 @@ class Img_Optm extends Base {
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT 1";
 		$_q = $wpdb->prepare( $q, self::STATUS_NOTIFIED );
 
-		$optm_ori = $this->conf( Base::O_IMG_OPTM_ORI );
-		$rm_ori_bkup = $this->conf( Base::O_IMG_OPTM_RM_BKUP );
-		$optm_webp = $this->conf( Base::O_IMG_OPTM_WEBP );
+		$optm_ori = $this->conf( self::O_IMG_OPTM_ORI );
+		$rm_ori_bkup = $this->conf( self::O_IMG_OPTM_RM_BKUP );
+		$optm_webp = $this->conf( self::O_IMG_OPTM_WEBP );
 
 		// pull 1 min images each time
 		$end_time = time() + 60;
@@ -1751,7 +1751,7 @@ class Img_Optm extends Base {
 		}
 
 		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( $this->conf( Base::O_API_KEY ) ) ) {
+		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
 			return Cloud::err( 'wrong_key' ) ;
 		}
 

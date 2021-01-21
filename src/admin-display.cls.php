@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Admin_Display extends Base {
+class Admin_Display extends Trunk {
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
@@ -212,7 +212,7 @@ class Admin_Display extends Base {
 				$localize_data[ 'lang' ][ 'remove_cookie_simulation' ] = __( 'Remove cookie simulation', 'litespeed-cache' );
 				$localize_data[ 'lang' ][ 'add_cookie_simulation_row' ] = __( 'Add new cookie to simulate', 'litespeed-cache' );
 				empty( $localize_data[ 'ids' ] ) && $localize_data[ 'ids' ] = array();
-				$localize_data[ 'ids' ][ 'crawler_cookies' ] = Base::O_CRAWLER_COOKIES;
+				$localize_data[ 'ids' ][ 'crawler_cookies' ] = self::O_CRAWLER_COOKIES;
 			}
 
 			// CDN mapping
@@ -224,11 +224,11 @@ class Admin_Display extends Base {
 
 				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', array(), Core::VER, false );
 				$localize_data[ 'lang' ] = array();
-				$localize_data[ 'lang' ][ 'cdn_mapping_url' ] = Lang::title( Base::CDN_MAPPING_URL );
-				$localize_data[ 'lang' ][ 'cdn_mapping_inc_img' ] = Lang::title( Base::CDN_MAPPING_INC_IMG );
-				$localize_data[ 'lang' ][ 'cdn_mapping_inc_css' ] = Lang::title( Base::CDN_MAPPING_INC_CSS );
-				$localize_data[ 'lang' ][ 'cdn_mapping_inc_js' ] = Lang::title( Base::CDN_MAPPING_INC_JS );
-				$localize_data[ 'lang' ][ 'cdn_mapping_filetype' ] = Lang::title( Base::CDN_MAPPING_FILETYPE );
+				$localize_data[ 'lang' ][ 'cdn_mapping_url' ] = Lang::title( self::CDN_MAPPING_URL );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_img' ] = Lang::title( self::CDN_MAPPING_INC_IMG );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_css' ] = Lang::title( self::CDN_MAPPING_INC_CSS );
+				$localize_data[ 'lang' ][ 'cdn_mapping_inc_js' ] = Lang::title( self::CDN_MAPPING_INC_JS );
+				$localize_data[ 'lang' ][ 'cdn_mapping_filetype' ] = Lang::title( self::CDN_MAPPING_FILETYPE );
 				$localize_data[ 'lang' ][ 'cdn_mapping_url_desc' ] = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' );
 				$localize_data[ 'lang' ][ 'one_per_line' ] = Doc::one_per_line( true );
 				$localize_data[ 'lang' ][ 'cdn_mapping_remove' ] = __( 'Remove CDN URL', 'litespeed-cache' );
@@ -236,7 +236,7 @@ class Admin_Display extends Base {
 				$localize_data[ 'lang' ][ 'on' ] = __( 'ON', 'litespeed-cache' );
 				$localize_data[ 'lang' ][ 'off' ] = __( 'OFF', 'litespeed-cache' );
 				empty( $localize_data[ 'ids' ] ) && $localize_data[ 'ids' ] = array();
-				$localize_data[ 'ids' ][ 'cdn_mapping' ] = Base::O_CDN_MAPPING;
+				$localize_data[ 'ids' ][ 'cdn_mapping' ] = self::O_CDN_MAPPING;
 			}
 
 			// If on Server IP setting page, append getIP link
@@ -459,7 +459,7 @@ class Admin_Display extends Base {
 			Admin_Display::error( Error::msg( 'disabled_all' ), true );
 		}
 
-		if ( ! $this->conf( Base::O_NEWS ) ) {
+		if ( ! $this->conf( self::O_NEWS ) ) {
 			return;
 		}
 
@@ -892,9 +892,9 @@ class Admin_Display extends Base {
 		echo '<div class="litespeed-desc litespeed-warning">⚠️ ';
 
 		if ( $const_val !== null ) {
-			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' );
+			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Trunk::conf_const( $id ) . '</code>' );
 		} else {
-			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf( Base::NETWORK_O_USE_PRIMARY ) ) {
+			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf( self::NETWORK_O_USE_PRIMARY ) ) {
 				echo __( 'This setting is overwritten by the primary site setting', 'litespeed-cache' );
 			}
 			else {

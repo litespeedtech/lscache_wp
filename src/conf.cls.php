@@ -15,7 +15,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 
-class Conf extends Base {
+class Conf extends Trunk {
 	const TYPE_SET = 'set';
 
 	private $_updated_ids = array();
@@ -70,7 +70,7 @@ class Conf extends Base {
 		 */
 		$this->load_options();
 
-		$ver = $this->conf( Base::_VER );
+		$ver = $this->conf( self::_VER );
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -175,7 +175,7 @@ class Conf extends Base {
 		// Append const options
 		if ( defined( 'LITESPEED_CONF' ) && LITESPEED_CONF ) {
 			foreach ( self::$_default_options as $k => $v ) {
-				$const = Base::conf_const( $k );
+				$const = Trunk::conf_const( $k );
 				if ( defined( $const ) ) {
 					$this->set_const_conf( $k, $this->type_casting( constant( $const ), $k ) );
 				}
@@ -283,7 +283,7 @@ class Conf extends Base {
 	private function _conf_site_db_init() {
 		$this->load_site_options();
 
-		$ver = $this->network_conf( Base::_VER );
+		$ver = $this->network_conf( self::_VER );
 
 		/**
 		 * Don't upgrade or run new installations other than from backend visit
@@ -448,13 +448,13 @@ class Conf extends Base {
 		if ( $this->_updated_ids ) {
 			foreach ( $this->_updated_ids as $id ) {
 				// Special handler for QUIC.cloud domain key to clear all existing nodes
-				if ( $id == Base::O_API_KEY ) {
-					Cloud::cls()->clear_cloud();
+				if ( $id == self::O_API_KEY ) {
+					$this->cls( 'Cloud' )->clear_cloud();
 				}
 
 				// Special handler for crawler: reset sitemap when drop_domain setting changed
-				if ( $id == Base::O_CRAWLER_DROP_DOMAIN ) {
-					Crawler_Map::cls()->empty_map();
+				if ( $id == self::O_CRAWLER_DROP_DOMAIN ) {
+					$this->cls( 'Crawler_Map' )->empty_map();
 				}
 
 				// Check if need to do a purge all or not
@@ -477,10 +477,10 @@ class Conf extends Base {
 		do_action( 'litespeed_update_confs', $the_matrix );
 
 		// Update related tables
-		Data::cls()->correct_tb_existance();
+		$this->cls( 'Data' )->correct_tb_existance();
 
 		// Update related files
-		Activation::cls()->update_files();
+		$this->cls( 'Activation' )->update_files();
 
 		/**
 		 * CDN related actions - Cloudflare
@@ -509,7 +509,7 @@ class Conf extends Base {
 		// 	return;
 		// }
 
-		if ( $id == Base::_VER ) {
+		if ( $id == self::_VER ) {
 			return;
 		}
 
@@ -523,7 +523,7 @@ class Conf extends Base {
 		}
 
 		// Special handler for CDN Original URLs
-		if ( $id == Base::O_CDN_ORI && ! $val ) {
+		if ( $id == self::O_CDN_ORI && ! $val ) {
 			$home_url = home_url( '/' );
 			$parsed = parse_url( $home_url );
 			$home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url );

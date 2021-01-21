@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Report extends Base {
+class Report extends Trunk {
 	const TYPE_SEND_REPORT = 'send_report';
 
 	/**
@@ -137,8 +137,8 @@ class Report extends Base {
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
 					$opts = Conf::cls()->load_options( $blog_id, true );
-					if ( isset($opts[ Base::O_CACHE ]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[ Base::O_CACHE ];
+					if ( isset($opts[ self::O_CACHE ]) ) {
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ self::O_CACHE ];
 					}
 				}
 			}
@@ -146,8 +146,8 @@ class Report extends Base {
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Base::O_CDN_CLOUDFLARE_KEY,
-			Base::O_OBJECT_PSWD,
+			self::O_CDN_CLOUDFLARE_KEY,
+			self::O_OBJECT_PSWD,
 		);
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
@@ -175,7 +175,7 @@ class Report extends Base {
 		$server_vars = array_intersect_key($server, $server_keys);
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX;
 
-		$server_vars = array_merge( $server_vars, Base::cls()->server_vars() );
+		$server_vars = array_merge( $server_vars, $this->cls( 'Trunk' )->server_vars() );
 
 		$buf = $this->_format_report_section('Server Variables', $server_vars);
 

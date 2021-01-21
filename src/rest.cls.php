@@ -8,7 +8,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class REST extends Instance {
+class REST extends Root {
 	private $_internal_rest_status = false;
 
 	/**

@@ -13,7 +13,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class ESI extends Instance {
+class ESI extends Root {
 	private static $has_esi = false;
 	private static $_combine_ids = array();
 	private $esi_args = null;

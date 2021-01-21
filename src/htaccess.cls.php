@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Htaccess extends Instance {
+class Htaccess extends Root {
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
 	private $frontend_htaccess = null;

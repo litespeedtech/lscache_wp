@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Admin extends Instance {
+class Admin extends Root {
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
 
 	/**

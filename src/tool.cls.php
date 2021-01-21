@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Tool extends Instance {
+class Tool extends Root {
 	/**
 	 * Get public IP
 	 *

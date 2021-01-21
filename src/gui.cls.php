@@ -9,7 +9,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class GUI extends Base {
+class GUI extends Trunk {
 	private static $_clean_counter = 0;
 
 	private $_promo_true;
@@ -63,7 +63,7 @@ class GUI extends Base {
 		 * Turn on instant click
 		 * @since  1.8.2
 		 */
-		if ( $this->conf( Base::O_UTIL_INSTANT_CLICK ) ) {
+		if ( $this->conf( self::O_UTIL_INSTANT_CLICK ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) );
 		}
 	}
@@ -404,7 +404,7 @@ class GUI extends Base {
 
 		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 			$append_arr = array(
-				Conf::TYPE_SET . '[' . Base::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				Conf::TYPE_SET . '[' . self::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 			);
 			$wp_admin_bar->add_menu( array(
@@ -415,7 +415,7 @@ class GUI extends Base {
 			) );
 
 			$append_arr = array(
-				Conf::TYPE_SET . '[' . Base::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				Conf::TYPE_SET . '[' . self::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 			);
 			$wp_admin_bar->add_menu( array(
@@ -426,7 +426,7 @@ class GUI extends Base {
 			) );
 
 			$append_arr = array(
-				Conf::TYPE_SET . '[' . Base::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				Conf::TYPE_SET . '[' . self::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 			);
 			$wp_admin_bar->add_menu( array(
@@ -437,7 +437,7 @@ class GUI extends Base {
 			) );
 
 			$append_arr = array(
-				Conf::TYPE_SET . '[' . Base::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+				Conf::TYPE_SET . '[' . self::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 				'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 			);
 			$wp_admin_bar->add_menu( array(
@@ -509,7 +509,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
+		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-localres',
@@ -620,7 +620,7 @@ class GUI extends Base {
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( $this->conf( Base::O_CDN_CLOUDFLARE ) ) {
+		if ( $this->conf( self::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
@@ -660,7 +660,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
+		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-localres',

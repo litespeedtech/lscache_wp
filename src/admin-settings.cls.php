@@ -11,7 +11,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Admin_Settings extends Base{
+class Admin_Settings extends Trunk {
 	const ENROLL = '_settings-enroll';
 
 	private $__cfg;// cfg instance

@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Router extends Base {
+class Router extends Trunk {
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
@@ -323,7 +323,7 @@ class Router extends Base {
 	 */
 	public function esi_enabled() {
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && $this->conf( Base::O_ESI );
+			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && $this->conf( self::O_ESI );
 		}
 		return self::$_esi_enabled;
 	}
@@ -403,7 +403,7 @@ class Router extends Base {
 	 */
 	public function is_admin_ip() {
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = $this->conf( Base::O_DEBUG_IPS );
+			$ips = $this->conf( self::O_DEBUG_IPS );
 
 			self::$_is_admin_ip = $this->ip_access( $ips );
 		}

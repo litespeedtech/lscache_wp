@@ -9,7 +9,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Task extends Instance {
+class Task extends Root {
 	private static $_triggers = array(
 		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::cron_pull' ), // always fetch immediately
 		Base::O_OPTM_CSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss' ),

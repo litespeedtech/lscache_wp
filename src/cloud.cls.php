@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Cloud extends Base {
+class Cloud extends Trunk {
 	const CLOUD_SERVER = 'https://api.quic.cloud';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 
@@ -79,7 +79,7 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	protected function __construct() {
-		$this->_api_key = $this->conf( Base::O_API_KEY );
+		$this->_api_key = $this->conf( self::O_API_KEY );
 		$this->_summary = self::get_summary();
 	}
 
@@ -445,7 +445,7 @@ class Cloud extends Base {
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
-			if ( $this->conf( Base::O_DEBUG ) && $this->_api_key ) {
+			if ( $this->conf( self::O_DEBUG ) && $this->_api_key ) {
 				return true;
 			}
 		}
@@ -643,7 +643,7 @@ class Cloud extends Base {
 
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
-				Conf::cls()->update_confs( array( Base::O_API_KEY => '' ) );
+				Conf::cls()->update_confs( array( self::O_API_KEY => '' ) );
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
@@ -779,7 +779,7 @@ class Cloud extends Base {
 		$data = array(
 			'site_url'	=> home_url(),
 			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
-			'server_ip'	=> $this->conf( Base::O_SERVER_IP ),
+			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
 		);
 		if ( ! empty( $this->_summary[ 'token' ] ) ) {
 			$data[ 'token' ] = $this->_summary[ 'token' ];
@@ -875,7 +875,7 @@ class Cloud extends Base {
 		}
 
 		// This doesn't need to sync QUIC conf but need to clear nodes
-		Conf::cls()->update_confs( array( Base::O_API_KEY => $_POST[ 'domain_key' ] ) );
+		Conf::cls()->update_confs( array( self::O_API_KEY => $_POST[ 'domain_key' ] ) );
 
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
 		$this->_summary[ 'apikey_ts' ] = time();

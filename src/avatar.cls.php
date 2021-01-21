@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Avatar extends Base {
+class Avatar extends Trunk {
 	const TYPE_GENERATE = 'generate';
 
 	private $_conf_cache_ttl;
@@ -27,7 +27,7 @@ class Avatar extends Base {
 	 * @access protected
 	 */
 	protected function __construct() {
-		if ( ! $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}
 
@@ -35,7 +35,7 @@ class Avatar extends Base {
 
 		$this->_tb = $this->cls( 'Data' )->tb( 'avatar' );
 
-		$this->_conf_cache_ttl = $this->conf( Base::O_DISCUSS_AVATAR_CACHE_TTL );
+		$this->_conf_cache_ttl = $this->conf( self::O_DISCUSS_AVATAR_CACHE_TTL );
 
 		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) );
 
@@ -49,7 +49,7 @@ class Avatar extends Base {
 	 * @access public
 	 */
 	public function need_db() {
-		if ( $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+		if ( $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return true;
 		}
 

@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Control extends Instance {
+class Control extends Root {
 	const BM_CACHEABLE = 1;
 	const BM_PRIVATE = 2;
 	const BM_SHARED = 4;

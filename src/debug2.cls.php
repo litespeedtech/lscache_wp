@@ -6,7 +6,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Debug2 extends Instance {
+class Debug2 extends Root {
 	private static $log_path;
 	private static $_prefix;
 

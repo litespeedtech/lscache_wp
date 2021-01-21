@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class API extends Base {
+class API extends Trunk {
 	const VERSION =	Core::VER;
 
 	const TYPE_FEED 					= Tag::TYPE_FEED ;
@@ -62,7 +62,7 @@ class API extends Base {
 		 */
 		add_filter( 'litespeed_conf', array( $this, 'conf' ) ); // @previous API::config($id)
 		// Action `litespeed_conf_append` // @previous API::conf_append( $name, $default )
-		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2 );
+		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Trunk::set_multi_switch', 10, 2 );
 		// Action ``litespeed_conf_force` // @previous API::force_option( $k, $v )
 
 		/**

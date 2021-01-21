@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Optimizer extends Instance {
+class Optimizer extends Root {
 	private $_conf_css_font_display;
 
 	/**

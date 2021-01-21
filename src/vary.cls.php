@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Vary extends Instance {
+class Vary extends Root {
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check

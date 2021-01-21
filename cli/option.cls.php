@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Core;
 use LiteSpeed\Conf;
-use LiteSpeed\Base;
+use LiteSpeed\Trunk;
 use LiteSpeed\Admin_Settings;
 use LiteSpeed\Import;
 use LiteSpeed\Utility;
@@ -14,7 +14,7 @@ use WP_CLI;
 /**
  * LiteSpeed Cache option Interface
  */
-class Option extends Base {
+class Option extends Trunk {
 	private $__cfg;
 
 	public function __construct() {

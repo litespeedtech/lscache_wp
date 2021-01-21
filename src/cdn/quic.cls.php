@@ -14,11 +14,11 @@ use LiteSpeed\Cloud;
 use LiteSpeed\Base;
 use LiteSpeed\Conf;
 use LiteSpeed\Debug2;
-use LiteSpeed\Instance;
+use LiteSpeed\Root;
 
 defined( 'WPINC' ) || exit;
 
-class Quic extends Instance {
+class Quic extends Root {
 	private $_api_key;
 
 	const TYPE_REG = 'reg';

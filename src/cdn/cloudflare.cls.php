@@ -10,7 +10,7 @@
 namespace LiteSpeed\CDN;
 
 use LiteSpeed\Core;
-use LiteSpeed\Base;
+use LiteSpeed\Trunk;
 use LiteSpeed\Conf;
 use LiteSpeed\Debug2;
 use LiteSpeed\Router;
@@ -19,7 +19,7 @@ use LiteSpeed\Admin_Display;
 
 defined( 'WPINC' ) || exit;
 
-class Cloudflare extends Base {
+class Cloudflare extends Trunk {
 	const TYPE_PURGE_ALL = 'purge_all';
 	const TYPE_GET_DEVMODE = 'get_devmode';
 	const TYPE_SET_DEVMODE_ON = 'set_devmode_on';
@@ -36,20 +36,20 @@ class Cloudflare extends Base {
 	public function try_refresh_zone() {
 		$__cfg = $this->cls( 'Conf' );
 
-		if ( ! $this->conf( Base::O_CDN_CLOUDFLARE ) ) {
+		if ( ! $this->conf( self::O_CDN_CLOUDFLARE ) ) {
 			return;
 		}
 
 		$zone = self::cls()->_fetch_zone();
 		if ( $zone ) {
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] );
+			$__cfg->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] );
 
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] );
+			$__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] );
 
 			Debug2::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" );
 		}
 		else {
-			$__cfg->update( Base::O_CDN_CLOUDFLARE_ZONE, '' );
+			$__cfg->update( self::O_CDN_CLOUDFLARE_ZONE, '' );
 			Debug2::debug( '[Cloudflare] ❌ Get zone failed, clean zone' );
 		}
 
@@ -127,7 +127,7 @@ class Cloudflare extends Base {
 	private function _purge_all() {
 		Debug2::debug( '[Cloudflare] _purge_all' );
 
-		$cf_on = $this->conf( Base::O_CDN_CLOUDFLARE );
+		$cf_on = $this->conf( self::O_CDN_CLOUDFLARE );
 		if ( ! $cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' );
 			Admin_Display::error( $msg );
@@ -157,7 +157,7 @@ class Cloudflare extends Base {
 	 * @access private
 	 */
 	private function _zone() {
-		$zone = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE );
+		$zone = $this->conf( self::O_CDN_CLOUDFLARE_ZONE );
 		if ( ! $zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' );
 			Admin_Display::error( $msg );
@@ -174,7 +174,7 @@ class Cloudflare extends Base {
 	 * @access private
 	 */
 	private function _fetch_zone() {
-		$kw = $this->conf( Base::O_CDN_CLOUDFLARE_NAME );
+		$kw = $this->conf( self::O_CDN_CLOUDFLARE_NAME );
 
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all';
 
@@ -223,8 +223,8 @@ class Cloudflare extends Base {
 
 		$header = array(
 			'Content-Type: application/json',
-			'X-Auth-Email: ' . $this->conf( Base::O_CDN_CLOUDFLARE_EMAIL ),
-			'X-Auth-Key: ' . $this->conf( Base::O_CDN_CLOUDFLARE_KEY ),
+			'X-Auth-Email: ' . $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
+			'X-Auth-Key: ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
 		);
 
 		$ch = curl_init();

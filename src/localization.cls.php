@@ -8,7 +8,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Localization extends Base {
+class Localization extends Trunk {
 	/**
 	 * Localize Resources
 	 *
@@ -44,11 +44,11 @@ class Localization extends Base {
 	 * @access public
 	 */
 	public function finalize( $content ) {
-		if ( ! $this->conf( Base::O_OPTM_LOCALIZE ) ) {
+		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			return $content;
 		}
 
-		$domains = $this->conf( Base::O_OPTM_LOCALIZE_DOMAINS );
+		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
 		if ( ! $domains ) {
 			return $content;
 		}

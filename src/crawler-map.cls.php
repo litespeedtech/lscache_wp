@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Crawler_Map extends Instance {
+class Crawler_Map extends Root {
 	const BM_MISS = 1;
 	const BM_HIT = 2;
 	const BM_BLACKLIST = 4;

@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Import extends Base {
+class Import extends Trunk {
 	private $__cfg ;
 	protected $_summary;
 

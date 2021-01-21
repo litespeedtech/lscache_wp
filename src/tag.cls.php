@@ -9,7 +9,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Tag extends Instance {
+class Tag extends Root {
 	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F';
 	const TYPE_HOME = 'H';

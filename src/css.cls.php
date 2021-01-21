@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class CSS extends Base {
+class CSS extends Trunk {
 	const TYPE_GENERATE_CRITICAL = 'generate_critical';
 	const TYPE_CLEAR_Q = 'clear_q';
 
@@ -38,7 +38,7 @@ class CSS extends Base {
 		}
 
 		// Append default critical css
-		$rules .= $this->conf( Base::O_OPTM_CCSS_CON );
+		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
 		return '<style id="litespeed-optm-css-rules">' . $rules . '</style>';
 	}
@@ -124,7 +124,7 @@ class CSS extends Base {
 	 * @access private
 	 */
 	private function _separate_mobile_ccss() {
-		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( Base::O_CACHE_MOBILE );
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( self::O_CACHE_MOBILE );
 	}
 
 	/**
@@ -141,7 +141,7 @@ class CSS extends Base {
 
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 && ! $_instance->conf( Base::O_DEBUG ) ) {
+			if ( ! empty( $_instance->_summary[ 'curr_request' ] ) && time() - $_instance->_summary[ 'curr_request' ] < 300 && ! $_instance->conf( self::O_DEBUG ) ) {
 				Debug2::debug( '[CCSS] Last request not done' );
 				return;
 			}
@@ -489,7 +489,7 @@ class CSS extends Base {
 	 */
 	private function _filter_whitelist() {
 		$whitelist = array();
-		$val = $this->conf( Base::O_OPTM_UCSS_WHITELIST );
+		$val = $this->conf( self::O_OPTM_UCSS_WHITELIST );
 		foreach ( $val as $k => $v ) {
 			if ( substr( $v, 0, 2 ) === '//' ) {
 				continue;
@@ -554,13 +554,13 @@ class CSS extends Base {
 		$unique = false;
 
 		// Check if in separate css type option
-		$separate_posttypes = $this->conf( Base::O_OPTM_CCSS_SEP_POSTTYPE );
+		$separate_posttypes = $this->conf( self::O_OPTM_CCSS_SEP_POSTTYPE );
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			Debug2::debug( '[CSS] Hit separate posttype setting [type] ' . $css );
 			$unique = true;
 		}
 
-		$separate_uri = $this->conf( Base::O_OPTM_CCSS_SEP_URI );
+		$separate_uri = $this->conf( self::O_OPTM_CCSS_SEP_URI );
 		if ( ! empty( $separate_uri ) ) {
 			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri );
 			if ( $result ) {

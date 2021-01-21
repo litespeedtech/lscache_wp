@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Media extends Instance {
+class Media extends Root {
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
 
 	private $content;

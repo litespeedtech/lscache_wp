@@ -9,7 +9,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Utility extends Instance {
+class Utility extends Root {
 	private static $_internal_domains;
 
 	/**
