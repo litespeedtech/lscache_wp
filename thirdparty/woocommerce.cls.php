@@ -14,9 +14,9 @@ defined( 'WPINC' ) || exit;
 
 use \LiteSpeed\API;
 use \LiteSpeed\Base;
-use \LiteSpeed\Root;
+use \LiteSpeed\Trunk;
 
-class WooCommerce extends Root {
+class WooCommerce extends Trunk {
 	const O_CACHE_TTL_FRONTPAGE = Base::O_CACHE_TTL_FRONTPAGE;
 
 	const CACHETAG_SHOP = 'WC_S' ;

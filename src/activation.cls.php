@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Activation extends Root {
+class Activation extends Trunk {
 	const TYPE_UPGRADE = 'upgrade';
 	const TYPE_INSTALL_3RD = 'install_3rd';
 	const TYPE_INSTALL_ZIP = 'install_zip';

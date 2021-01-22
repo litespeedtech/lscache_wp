@@ -12,11 +12,11 @@ namespace LiteSpeed\CDN;
 use LiteSpeed\Core;
 use LiteSpeed\Cloud;
 use LiteSpeed\Debug2;
-use LiteSpeed\Root;
+use LiteSpeed\Trunk;
 
 defined( 'WPINC' ) || exit;
 
-class Quic extends Root {
+class Quic extends Trunk {
 	private $_api_key;
 
 	const TYPE_REG = 'reg';
@@ -27,7 +27,7 @@ class Quic extends Root {
 	 * @access public
 	 */
 	public static function try_sync_config() {
-		$options = $this->get_options();
+		$options = self::cls()->get_options();
 
 		if ( ! $options[ self::O_CDN_QUIC ] ) {
 			return false;
@@ -49,7 +49,7 @@ class Quic extends Root {
 		$options[ '_rest' ] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
 
 		// Add server env vars
-		$options[ '_server' ] = $this->cls( 'Trunk' )->server_vars();
+		$options[ '_server' ] = self::cls()->server_vars();
 
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() );
