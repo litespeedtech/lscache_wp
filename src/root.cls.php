@@ -225,7 +225,11 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function name( $id ) {
-		return 'litespeed.' . strtolower( self::ori_cls() ) . '.' . $id;
+		$name = strtolower( self::ori_cls() );
+		if ( $name == 'conf2' ) {
+			$name = 'conf';
+		}
+		return 'litespeed.' . $name . '.' . $id;
 	}
 
 	/**
