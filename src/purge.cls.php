@@ -391,11 +391,15 @@ class Purge extends Trunk {
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags );
 		}
+
+		$tags = $this->_prepend_bid( $tags );
+
 		if ( ! array_diff( $tags, $this->_pub_purge ) ) {
 			return;
 		}
 
 		$this->_pub_purge = array_merge( $this->_pub_purge, $tags );
+		$this->_pub_purge = array_unique( $this->_pub_purge );
 		Debug2::debug( '[Purge] added ' . implode( ',', $tags ), 8 );
 
 		// Send purge header immediately
@@ -453,6 +457,9 @@ class Purge extends Trunk {
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags );
 		}
+		
+		$tags = $this->_prepend_bid( $tags );
+
 		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
 			return;
 		}
@@ -460,10 +467,33 @@ class Purge extends Trunk {
 		Debug2::debug( '[Purge] added [private] ' . implode( ',', $tags ), 3 );
 
 		$this->_priv_purge = array_merge( $this->_priv_purge, $tags );
+		$this->_priv_purge = array_unique( $this->_priv_purge );
 
 		// Send purge header immediately
 		@header( $this->_build() );
 	}
+
+
+	/**
+	 * Incorporate blog_id into purge tags for multisite
+	 *
+	 * @since 3.7
+	 * @access private
+	 * @param mixed $tags Tags to add to the list.
+	*/
+	private function _prepend_bid( $tags ){
+		if ( in_array('*', $tags ) ){
+			return array( '*' );
+		}
+
+		$curr_bid = is_multisite() ? get_current_blog_id() : '';
+
+		foreach ( $tags as $k => $v ) {
+			$tags[ $k ] = $curr_bid. '_' .$v;
+		}
+		return $tags;
+	}
+
 
 	/**
 	 * Activate `purge related tags` for Admin QS.
@@ -889,7 +919,7 @@ class Purge extends Trunk {
 		if ( ! in_array( '*', $purge_tags ) ) {
 			$tags = array();
 			foreach ( $purge_tags as $val ) {
-				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . '_' . $val;
+				$tags[] = LSWCP_TAG_PREFIX . $val;
 			}
 			return $tags;
 		}
