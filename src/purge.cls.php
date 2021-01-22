@@ -482,21 +482,16 @@ class Purge extends Trunk {
 	 * @param mixed $tags Tags to add to the list.
 	*/
 	private function _append_bid( $tags ){
-		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags );
+		if ( in_array('*', $tags ) ){
+			return array( '*' );
 		}
 
 		$curr_bid = is_multisite() ? get_current_blog_id() : '';
 
-		if ( ! in_array( '*', $tags ) ) {
-			$tags_combine = array();
-			foreach ( $tags as $val ) {
-				$tags_combine[] = $curr_bid . '_' . $val;
-			}
-			return $tags_combine;
+		foreach ( $tags as $k => $v ) {
+			$tags[ $k ] = $curr_bid. '_' .$v;
 		}
-		else
-			return array( '*' );
+		return $tags;
 	}
 
 
