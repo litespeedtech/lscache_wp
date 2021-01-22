@@ -938,7 +938,6 @@ class Purge extends Trunk {
 		// If not, purge everything on the site.
 
 		$purge_tags = array();
-		$config = Conf::cls();
 
 		if ( $this->conf( self::O_PURGE_POST_ALL ) ) {
 			// ignore the rest if purge all

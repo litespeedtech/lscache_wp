@@ -113,7 +113,7 @@ class Optimize extends Trunk {
 	 * @access public
 	 */
 	public function vary_add_role_exclude( $vary ) {
-		if ( $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+		if ( $this->cls( 'Conf2' )->in_optm_exc_roles() ) {
 			$vary[ 'role_exclude_optm' ] = 1;
 		}
 
@@ -283,7 +283,7 @@ class Optimize extends Trunk {
 		}
 
 		// Check if is exclude optm roles ( Need to set Vary too )
-		if ( $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+		if ( $result = $this->cls( 'Conf2' )->in_optm_exc_roles() ) {
 			Debug2::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result );
 			return $content;
 		}

@@ -643,7 +643,7 @@ class Cloud extends Trunk {
 
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
-				Conf::cls()->update_confs( array( self::O_API_KEY => '' ) );
+				$this->cls( 'Conf2' )->update_confs( array( self::O_API_KEY => '' ) );
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
@@ -875,7 +875,7 @@ class Cloud extends Trunk {
 		}
 
 		// This doesn't need to sync QUIC conf but need to clear nodes
-		Conf::cls()->update_confs( array( self::O_API_KEY => $_POST[ 'domain_key' ] ) );
+		$this->cls( 'Conf2' )->update_confs( array( self::O_API_KEY => $_POST[ 'domain_key' ] ) );
 
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
 		$this->_summary[ 'apikey_ts' ] = time();

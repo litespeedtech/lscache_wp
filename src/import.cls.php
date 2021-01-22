@@ -12,7 +12,6 @@ namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
 class Import extends Trunk {
-	private $__cfg ;
 	protected $_summary;
 
 	const TYPE_IMPORT = 'import' ;
@@ -25,11 +24,9 @@ class Import extends Trunk {
 	 * @since  1.8.2
 	 * @access protected
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		Debug2::debug( 'Import init' ) ;
 
-		$this->__cfg = Conf::cls() ;
 		$this->_summary = self::get_summary();
 	}
 
@@ -39,10 +36,9 @@ class Import extends Trunk {
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function export( $only_data_return = false )
-	{
+	public function export( $only_data_return = false ) {
 
-		$data = $this->__cfg->get_options( true );
+		$data = $this->get_options( true );
 
 		$data = base64_encode( json_encode( $data ) ) ;
 
@@ -109,7 +105,7 @@ class Import extends Trunk {
 			return false ;
 		}
 
-		$this->__cfg->update_confs( $data ) ;
+		$this->cls( 'Conf2' )->update_confs( $data ) ;
 
 
 		if ( ! $file ) {
@@ -134,9 +130,9 @@ class Import extends Trunk {
 	 */
 	public function reset()
 	{
-		$options = $this->__cfg->load_default_vals() ;
+		$options = $this->cls( 'Conf2' )->load_default_vals() ;
 
-		$this->__cfg->update_confs( $options ) ;
+		$this->cls( 'Conf2' )->update_confs( $options ) ;
 
 		Debug2::debug( '[Import] Reset successfully.' ) ;
 

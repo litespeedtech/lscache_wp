@@ -488,7 +488,7 @@ class Placeholder extends Trunk {
 	private function _append_exc( $src ) {
 		$val = $this->conf( self::O_MEDIA_LQIP_EXC );
 		$val[] = $src;
-		Conf::cls()->update( self::O_MEDIA_LQIP_EXC, $val );
+		$this->cls( 'Conf2' )->update( self::O_MEDIA_LQIP_EXC, $val );
 		Debug2::debug( '[LQIP] Appended to LQIP Excludes [URL] ' . $src );
 
 		if ( ! empty( $this->_summary[ 'queue' ] ) ) {

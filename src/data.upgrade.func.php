@@ -9,7 +9,7 @@
 defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Debug2;
-use LiteSpeed\Conf;
+use LiteSpeed\Conf2;
 use LiteSpeed\Admin_Display;
 
 /**
@@ -19,10 +19,10 @@ use LiteSpeed\Admin_Display;
  * @since  3.5.1
  */
 function litespeed_update_3_5() {
-	$__conf = Conf::cls();
+	$__conf = Conf2::cls();
 	// Excludes jQuery
 	foreach ( array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v ) {
-		$curr_setting = Conf::cls()->conf( $v );
+		$curr_setting = $__conf->conf( $v );
 		$curr_setting[] = 'jquery.js';
 		$curr_setting[] = 'jquery.min.js';
 		$__conf->update( $v, $curr_setting );
@@ -30,7 +30,7 @@ function litespeed_update_3_5() {
 	// Turn off JS Combine and defer
 	$show_msg = false;
 	foreach ( array( 'optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer' ) as $v ) {
-		$curr_setting = Conf::cls()->conf( $v );
+		$curr_setting = $__conf->conf( $v );
 		if ( ! $curr_setting ) {
 			continue;
 		}

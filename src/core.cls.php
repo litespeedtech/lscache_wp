@@ -2,6 +2,8 @@
 /**
  * The core plugin class.
  *
+ * Note: Core doesn't allow $this->cls( 'Core' )
+ *
  * @since      	1.0.0
  */
 namespace LiteSpeed;
@@ -39,7 +41,7 @@ class Core extends Root {
 	 * @since    1.0.0
 	 */
 	protected function __construct() {
-		$this->cls( 'Conf' )->init();
+		$this->cls( 'Conf2' )->init();
 
 		// Check if debug is on
 		if ( $this->conf( Base::O_DEBUG ) ) {
@@ -118,7 +120,7 @@ class Core extends Root {
 		/**
 		 * Added hook before init
 		 * @since  1.6.6
-		 * @since  2.6 	Added filter to all config values in Conf
+		 * @since  2.6 	Added filter to all config values in Conf2
 		 */
 		do_action( 'litespeed_init' );
 
@@ -182,7 +184,7 @@ class Core extends Root {
 	public function after_user_init() {
 		$this->cls( 'Router' )->is_role_simulation();
 
-		if ( ! is_admin() && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+		if ( ! is_admin() && $result = $this->cls( 'Conf2' )->in_optm_exc_roles() ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
 		}

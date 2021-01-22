@@ -32,7 +32,6 @@ class Admin_Display extends Trunk {
 	const RULECONFLICT_ON = 'ExpiresDefault_1';
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0';
 
-	protected $__cfg;
 	protected $messages = array();
 	protected $default_settings = array();
 	protected $_is_network_admin = false;
@@ -88,8 +87,6 @@ class Admin_Display extends Trunk {
 		else {
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		}
-
-		$this->__cfg = Conf::cls();
 	}
 
 	/**
@@ -869,8 +866,8 @@ class Admin_Display extends Trunk {
 	 * @since  3.0
 	 */
 	protected function _check_overwritten( $id ) {
-		$const_val = $this->__cfg->const_overwritten( $id );
-		$primary_val = $this->__cfg->primary_overwritten( $id );
+		$const_val = $this->const_overwritten( $id );
+		$primary_val = $this->primary_overwritten( $id );
 		if ( $const_val === null && $primary_val === null ) {
 			return;
 		}
@@ -924,7 +921,7 @@ class Admin_Display extends Trunk {
 	 */
 	public function recommended( $id ) {
 		if ( ! $this->default_settings ) {
-			$this->default_settings = $this->__cfg->load_default_vals();
+			$this->default_settings = $this->load_default_vals();
 		}
 
 		$val = $this->default_settings[ $id ];

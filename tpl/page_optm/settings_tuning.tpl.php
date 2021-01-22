@@ -121,7 +121,7 @@ ksort( $roles );
 			</div>
 			<div class="litespeed-tick-list">
 				<?php foreach ( $roles as $role => $title ): ?>
-					<?php $this->build_checkbox( $id . '[]', $title, $this->__cfg->in_optm_exc_roles( $role ), $role ); ?>
+					<?php $this->build_checkbox( $id . '[]', $title, $this->cls( 'Conf2' )->in_optm_exc_roles( $role ), $role ); ?>
 				<?php endforeach; ?>
 			</div>
 

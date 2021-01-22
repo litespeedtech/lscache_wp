@@ -11,8 +11,6 @@ namespace LiteSpeed\CDN;
 
 use LiteSpeed\Core;
 use LiteSpeed\Cloud;
-use LiteSpeed\Base;
-use LiteSpeed\Conf;
 use LiteSpeed\Debug2;
 use LiteSpeed\Root;
 
@@ -29,29 +27,29 @@ class Quic extends Root {
 	 * @access public
 	 */
 	public static function try_sync_config() {
-		$options = Conf::cls()->get_options();
+		$options = $this->get_options();
 
-		if ( ! $options[ Base::O_CDN_QUIC ] ) {
+		if ( ! $options[ self::O_CDN_QUIC ] ) {
 			return false;
 		}
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			Base::O_CDN_CLOUDFLARE_KEY,
-			Base::O_OBJECT_PSWD,
+			self::O_CDN_CLOUDFLARE_KEY,
+			self::O_OBJECT_PSWD,
 		);
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) );
 			}
 		}
-		unset( $options[ Base::O_MEDIA_LQIP_EXC ] );
+		unset( $options[ self::O_MEDIA_LQIP_EXC ] );
 
 		// Rest url
 		$options[ '_rest' ] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
 
 		// Add server env vars
-		$options[ '_server' ] = Base::cls()->server_vars();
+		$options[ '_server' ] = $this->cls( 'Trunk' )->server_vars();
 
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() );

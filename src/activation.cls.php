@@ -59,13 +59,13 @@ class Activation extends Root {
 				return;
 			}
 
-			Conf::cls()->update_confs();
+			Conf2::cls()->update_confs();
 
 			return;
 		}
 
 		/* Single site file handler */
-		Conf::cls()->update_confs();
+		Conf2::cls()->update_confs();
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
@@ -80,13 +80,13 @@ class Activation extends Root {
 		Task::destroy();
 
 		// Delete options
-		foreach ( Conf::cls()->load_default_vals() as $k => $v ) {
+		foreach ( Conf2::cls()->load_default_vals() as $k => $v ) {
 			Base::delete_option( $k );
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( Conf::cls()->load_default_site_vals() as $k => $v ) {
+			foreach ( Conf2::cls()->load_default_site_vals() as $k => $v ) {
 				Base::delete_site_option( $k );
 			}
 		}
@@ -268,15 +268,15 @@ class Activation extends Root {
 	 */
 	public function update_files() {
 		// Update cache setting `_CACHE`
-		Conf::cls()->define_cache();
+		$this->cls( 'Conf2' )->define_cache();
 
 		// Site options applied already
-		$options = Conf::cls()->get_options();
+		$options = $this->get_options();
 
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ Base::_CACHE ] );
+			$this->_manage_wp_cache_const( $options[ self::_CACHE ] );
 		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
 			Admin_Display::error( $ex->getMessage() );
@@ -286,7 +286,7 @@ class Activation extends Root {
 
 		/* 3) object-cache.php; */
 
-		if ( $options[ Base::O_OBJECT ] && ( ! $options[ Base::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+		if ( $options[ self::O_OBJECT ] && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			Object_Cache::get_instance()->update_file( $options );
 		}
 		else {
@@ -296,7 +296,7 @@ class Activation extends Root {
 		/* 4) .htaccess; */
 
 		try {
-			Htaccess::cls()->update( $options );
+			$this->cls( 'Htaccess' )->update( $options );
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( $ex->getMessage() );
 		}

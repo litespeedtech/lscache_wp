@@ -120,10 +120,10 @@ class Report extends Trunk {
 		$extras[ 'cloud' ] = Cloud::get_summary();
 
 		if ( is_null($options) ) {
-			$options = Conf::cls()->get_options( true );
+			$options = $this->get_options( true );
 
 			if ( is_multisite() ) {
-				$options2 = Conf::cls()->get_options();
+				$options2 = $this->get_options();
 				foreach ( $options2 as $k => $v ) {
 					if ( $options[ $k ] !== $v ) {
 						$options[ '[Overwritten] ' . $k ] = $v;
@@ -136,7 +136,7 @@ class Report extends Trunk {
 			$blogs = Activation::get_network_ids();
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = Conf::cls()->load_options( $blog_id, true );
+					$opts = $this->cls( 'Conf2' )->load_options( $blog_id, true );
 					if ( isset($opts[ self::O_CACHE ]) ) {
 						$options['blog ' . $blog_id . ' radio select'] = $opts[ self::O_CACHE ];
 					}

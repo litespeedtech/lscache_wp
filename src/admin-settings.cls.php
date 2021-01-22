@@ -14,19 +14,6 @@ defined( 'WPINC' ) || exit;
 class Admin_Settings extends Trunk {
 	const ENROLL = '_settings-enroll';
 
-	private $__cfg;// cfg instance
-
-	/**
-	 * Init
-	 *
-	 * @since  1.3
-	 * @access protected
-	 */
-	protected function __construct()
-	{
-		$this->__cfg = Conf::cls();
-	}
-
 	/**
 	 * Save settings
 	 *
@@ -37,8 +24,7 @@ class Admin_Settings extends Trunk {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save( $raw_data )
-	{
+	public function save( $raw_data ) {
 		Debug2::debug( '[Settings] saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
@@ -251,7 +237,7 @@ class Admin_Settings extends Trunk {
 		}
 
 		// id validation will be inside
-		$this->__cfg->update_confs( $the_matrix );
+		$this->cls( 'Conf2' )->update_confs( $the_matrix );
 
 		$msg = __( 'Options saved.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
@@ -263,8 +249,7 @@ class Admin_Settings extends Trunk {
 	 * @since 3.0
 	 * @access public
 	 */
-	public function network_save( $raw_data )
-	{
+	public function network_save( $raw_data ) {
 		Debug2::debug( '[Settings] network saving' );
 
 		if ( empty( $raw_data[ self::ENROLL ] ) ) {
@@ -282,7 +267,7 @@ class Admin_Settings extends Trunk {
 			$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
 
 			// id validation will be inside
-			$this->__cfg->network_update( $id, $data );
+			$this->cls( 'Conf2' )->network_update( $id, $data );
 		}
 
 		// Update related files
@@ -301,8 +286,7 @@ class Admin_Settings extends Trunk {
 	 * @param string $location The location string.
 	 * @return string the updated location string.
 	 */
-	public static function widget_save_err( $location )
-	{
+	public static function widget_save_err( $location ) {
 		return str_replace( '?message=0', '?error=0', $location ) ;
 	}
 
@@ -318,8 +302,7 @@ class Admin_Settings extends Trunk {
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
-	{
+	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget ) {
 		if ( empty( $new_instance ) ) {
 			return $instance;
 		}
@@ -336,13 +319,13 @@ class Admin_Settings extends Trunk {
 			return false ; // invalid ttl.
 		}
 
-		if ( empty( $instance[ Conf::OPTION_NAME ] ) ) {// todo: to be removed
-			$instance[ Conf::OPTION_NAME ] = array() ;
+		if ( empty( $instance[ Conf2::OPTION_NAME ] ) ) {// todo: to be removed
+			$instance[ Conf2::OPTION_NAME ] = array() ;
 		}
-		$instance[ Conf::OPTION_NAME ][ ESI::WIDGET_O_ESIENABLE ] = $esi ;
-		$instance[ Conf::OPTION_NAME ][ ESI::WIDGET_O_TTL ] = $ttl ;
+		$instance[ Conf2::OPTION_NAME ][ ESI::WIDGET_O_ESIENABLE ] = $esi ;
+		$instance[ Conf2::OPTION_NAME ][ ESI::WIDGET_O_TTL ] = $ttl ;
 
-		$current = ! empty( $old_instance[ Conf::OPTION_NAME ] ) ? $old_instance[ Conf::OPTION_NAME ] : false ;
+		$current = ! empty( $old_instance[ Conf2::OPTION_NAME ] ) ? $old_instance[ Conf2::OPTION_NAME ] : false ;
 		if ( ! $current || $esi != $current[ ESI::WIDGET_O_ESIENABLE ] ) {
 			Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}

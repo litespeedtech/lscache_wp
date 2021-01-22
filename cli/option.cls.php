@@ -3,11 +3,8 @@ namespace LiteSpeed\CLI;
 
 defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Core;
-use LiteSpeed\Conf;
 use LiteSpeed\Trunk;
 use LiteSpeed\Admin_Settings;
-use LiteSpeed\Import;
 use LiteSpeed\Utility;
 use WP_CLI;
 
@@ -15,12 +12,6 @@ use WP_CLI;
  * LiteSpeed Cache option Interface
  */
 class Option extends Trunk {
-	private $__cfg;
-
-	public function __construct() {
-		$this->__cfg = Conf::cls();
-	}
-
 	/**
 	 * Set an individual LiteSpeed Cache option.
 	 *
@@ -80,7 +71,7 @@ class Option extends Trunk {
 			$raw_data[ $key ] = $val;
 		}
 
-		Admin_Settings::cls()->save( $raw_data );
+		$this->cls( 'Admin_Settings' )->save( $raw_data );
 		WP_CLI::line( "$key:" );
 		$this->get( $args, $assoc_args );
 
@@ -99,7 +90,7 @@ class Option extends Trunk {
 	 *
 	 */
 	public function all( $args, $assoc_args ) {
-		$options = $this->__cfg->get_options();
+		$options = $this->get_options();
 
 		if ( ! empty( $assoc_args[ 'format' ] ) ) {
 			WP_CLI::print_value( $options, $assoc_args );
@@ -291,7 +282,7 @@ class Option extends Trunk {
 			return;
 		}
 
-		$data = Import::cls()->export( true );
+		$data = $this->cls( 'Import' )->export( true );
 
 		if ( file_put_contents( $file, $data ) === false ) {
 			WP_CLI::error( 'Failed to create file.' );
@@ -326,7 +317,7 @@ class Option extends Trunk {
 			WP_CLI::error('File does not exist or is not readable.');
 		}
 
-		$res = Import::cls()->import( $file );
+		$res = $this->cls( 'Import' )->import( $file );
 
 		if ( ! $res ) {
 			WP_CLI::error( 'Failed to parse serialized data from file.' );
@@ -345,7 +336,7 @@ class Option extends Trunk {
 	 *
 	 */
 	public function reset() {
-		Import::cls()->reset();
+		$this->cls( 'Import' )->reset();
 	}
 
 }
