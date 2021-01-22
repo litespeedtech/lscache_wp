@@ -392,7 +392,7 @@ class Purge extends Trunk {
 			$tags = array( $tags );
 		}
 
-		$tags = $this->_append_bid( $tags );
+		$tags = $this->_prepend_bid( $tags );
 
 		if ( ! array_diff( $tags, $this->_pub_purge ) ) {
 			return;
@@ -458,7 +458,7 @@ class Purge extends Trunk {
 			$tags = array( $tags );
 		}
 		
-		$tags = $this->_append_bid( $tags );
+		$tags = $this->_prepend_bid( $tags );
 
 		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
 			return;
@@ -481,7 +481,7 @@ class Purge extends Trunk {
 	 * @access private
 	 * @param mixed $tags Tags to add to the list.
 	*/
-	private function _append_bid( $tags ){
+	private function _prepend_bid( $tags ){
 		if ( in_array('*', $tags ) ){
 			return array( '*' );
 		}
