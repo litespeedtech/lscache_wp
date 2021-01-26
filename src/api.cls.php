@@ -250,24 +250,24 @@ class API extends Trunk {
 		Vary::cls()->append_commenter() ;
 	}
 
-	public static function purge_post( $pid ) {
+	public function purge_post( $pid ) {
 		$this->cls( 'Purge' )->purge_post( $pid );
 	}
 
-	public static function set_cacheable( $reason = false ) {
+	public function set_cacheable( $reason = false ) {
 		$this->cls( 'Control' )->set_cacheable( $reason );
 	}
 
-	public static function esi_enabled() {
+	public function esi_enabled() {
 		return $this->cls( 'Router' )->esi_enabled();
 	}
 
-	public static function get_ttl() {
+	public function get_ttl() {
 		return $this->cls( 'Control' )->get_ttl();
 	}
 
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() ) {
-		return $this->cls( 'ESI' )->sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() );
+	public function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_param = array() ) {
+		return $this->cls( 'ESI' )->sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_param );
 	}
 
 }
