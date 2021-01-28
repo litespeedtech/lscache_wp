@@ -288,7 +288,7 @@ class CDN extends Root {
 			}
 
 			$html_snippet = sprintf(
-				'<img %1$s src=%2$s %3$s>',
+				'<img %1$s src=%2$s%3$s>',
 				$matches[ 1 ][ $k ],
 				$matches[ 2 ][ $k ] . $url2 . $matches[ 4 ][ $k ],
 				$matches[ 5 ][ $k ]

@@ -8,6 +8,8 @@ stats.wp.com
 js.stripe.com
 paypal.com/sdk/js
 maps.google.com/maps
+cse.google.com/cse.js
+plugins/syntaxhighlighter/
 
 # Inline JS excludes
 document.write
