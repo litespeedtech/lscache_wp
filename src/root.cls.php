@@ -87,7 +87,7 @@ abstract class Root {
 	 * @since  3.0
 	 */
 	public function const_overwritten( $id ) {
-		if ( ! isset( self::$_const_options[ $id ] ) || self::$_const_options[ $id ] == $this->conf( $id ) ) {
+		if ( ! isset( self::$_const_options[ $id ] ) || self::$_const_options[ $id ] == self::$_options[ $id ] ) {
 			return null;
 		}
 		return self::$_const_options[ $id ];
@@ -99,7 +99,7 @@ abstract class Root {
 	 * @since  3.2.2
 	 */
 	public function primary_overwritten( $id ) {
-		if ( ! isset( self::$_primary_options[ $id ] ) || self::$_primary_options[ $id ] == $this->conf( $id ) ) {
+		if ( ! isset( self::$_primary_options[ $id ] ) || self::$_primary_options[ $id ] == self::$_options[ $id ] ) {
 			return null;
 		}
 
