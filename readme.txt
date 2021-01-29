@@ -247,15 +247,17 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 3.6.2 - Jan 25 2021 =
+= 3.6.2 - Feb 1 2021 =
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
 * **Page Optimize** Fixed an issue where purge CSS/JS only caused 404 errors.
 * **Page Optimize** Added a notice for CSS/JS data detection and potential random string issue.
+* **Page Optimize** Limited localization resources to specified .js only. (@closte #292)
 * **JS** Data src may now be bypassed from JS Combine. (@ankit)
 * **CLI** Fixed a message typo in Purge. (@flixwatchsupport)
 * **Browser** Added font/otf to Browser Cache expire list. (@ruikai)
 * **Data** Updated data files to accept PR from dev branch only.
 * **3rd** Add data-view-breakpoint-pointer to js_excludes.txt for the Events Calendar plugin. (@therealgilles)
+* **Doc** CDN Mapping description improvement. (@mihai A.)
 
 = 3.6.1 - Dec 21 2020 =
 * **WP** Tested up to WP v5.6.
