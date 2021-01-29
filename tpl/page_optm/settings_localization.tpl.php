@@ -113,25 +113,16 @@ $avatar_queue = Avatar::get_instance()->queue_count();
 			</div>
 
 			<div class="litespeed-desc">
-				<?php echo __( 'Resources from the domains listed here will be copied and replaced with local URLs.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Resources listed here will be copied and replaced with local URLs.', 'litespeed-cache' ); ?>
 				<?php echo __( 'HTTPS sources only.', 'litespeed-cache' ); ?>
 
-				<br /><?php echo __( 'List as file format (optional) + URL, separated by a space.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 
 				<br /><?php echo sprintf( __( 'Comments are supported. Start a line with a %s to turn it into a comment line.', 'litespeed-cache' ), '<code>#</code>' ); ?>
 
-				<br />
-				<?php echo sprintf( __( 'If format is not specified, %s is assumed.', 'litespeed-cache' ),  '<code>JS</code>' ); ?>
-				<?php echo __( 'Currently format supports', 'litespeed-cache' ) . ':<code>JS</code>'; ?>.
-
-				<br /><?php echo sprintf( __( '%s format will be added in a future version.', 'litespeed-cache' ), '<code>FONT</code>' ); ?>.
-				<?php echo __( 'The format will affect the response content type header.', 'litespeed-cache' ); ?>
-
-				<br /><?php echo __( 'For example', 'litespeed-cache' ); ?>: <code>https://www.example.com</code> <?php echo __( 'or', 'litespeed-cache' ); ?> <code>JS https://cdnjs.com</code>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-domains' ); ?>
-
-				<!--<br /><?php echo __( 'Example 2', 'litespeed-cache' ); ?>: <code>FONT https://fonts.googleapis.com</code>-->
+				<br /><?php echo __( 'Non-`.js` file extensions will be ignored.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-files' ); ?>
 
 			</div>
 		</td>

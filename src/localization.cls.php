@@ -20,6 +20,55 @@ class Localization extends Base {
 	public function serve_static( $uri ) {
 		$url = 'https://' . $uri;
 
+		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
+			wp_redirect( $url );
+			exit;
+		}
+
+		if ( substr( $url, -3 ) !== '.js' ) {
+			wp_redirect( $url );
+			exit;
+		}
+
+		$match = false;
+		$domains = Conf::val( Base::O_OPTM_LOCALIZE_DOMAINS );
+		foreach ( $domains as $v ) {
+			if ( ! $v || strpos( $v, '#' ) === 0 ) {
+				continue;
+			}
+
+			$type = 'js';
+			$domain = $v;
+			// Try to parse space splitted value
+			if ( strpos( $v, ' ' ) ) {
+				$v = explode( ' ', $v );
+				if ( ! empty( $v[ 1 ] ) ) {
+					$type = strtolower( $v[ 0 ] );
+					$domain = $v[ 1 ];
+				}
+			}
+
+			if ( strpos( $domain, 'https://' ) !== 0 ) {
+				continue;
+			}
+
+			if ( $type != 'js' ) {
+				continue;
+			}
+
+			if ( strpos( $url, $domain ) !== 0 ) {
+				continue;
+			}
+
+			$match = true;
+			break;
+		}
+
+		if ( ! $match ) {
+			wp_redirect( $url );
+			exit;
+		}
+
 		Control::set_no_vary();
 		Control::set_public_forced( 'Localized Resources' );
 		Tag::add( Tag::TYPE_LOCALRES );
