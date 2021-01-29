@@ -45,8 +45,7 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Enable Content Delivery Network use.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'Leave this setting %1$s if you have QUIC.cloud CDN or Cloudflare API turned %2$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a Content Delivery Network (CDN). NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
