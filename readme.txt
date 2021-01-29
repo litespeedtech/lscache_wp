@@ -257,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Browser** Added font/otf to Browser Cache expire list. (@ruikai)
 * **Data** Updated data files to accept PR from dev branch only.
 * **3rd** Add data-view-breakpoint-pointer to js_excludes.txt for the Events Calendar plugin. (@therealgilles)
+* **Cloud** Bypassed invalid requests.
 * **Doc** CDN Mapping description improvement. (@mihai A.)
 
 = 3.6.1 - Dec 21 2020 =
