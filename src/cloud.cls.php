@@ -435,6 +435,10 @@ class Cloud extends Base {
 	 * @access private
 	 */
 	private function _maybe_cloud( $service_tag ) {
+		if ( ! wp_http_validate_url( home_url() ) ) {
+			return false;
+		}
+
 		// we don't want the `img_optm-taken` to fail at any given time
 		if ( $service_tag == self::IMGOPTM_TAKEN ) {
 			return true;
