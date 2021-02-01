@@ -17,7 +17,7 @@ class Localization extends Trunk {
 	public function serve_static( $uri ) {
 		$url = 'https://' . $uri;
 
-		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
+		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			// wp_redirect( $url );
 			exit( 'Not supported' );
 		}
@@ -28,7 +28,7 @@ class Localization extends Trunk {
 		}
 
 		$match = false;
-		$domains = Conf::val( Base::O_OPTM_LOCALIZE_DOMAINS );
+		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
 		foreach ( $domains as $v ) {
 			if ( ! $v || strpos( $v, '#' ) === 0 ) {
 				continue;
