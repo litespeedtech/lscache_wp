@@ -40,7 +40,7 @@ var _litespeed_dots ;
 	jQuery(document).ready(function () {
 		/************** Common LiteSpeed JS **************/
 		// Link confirm
-		$('[data-litespeed-cfm]').click(function(event) {
+		$('[data-litespeed-cfm]').on( 'click', function(event) {
 			if(confirm($.trim($(this).data('litespeed-cfm')).replace(/\\n/g,"\n"))) {
 				return true ;
 			}
@@ -62,7 +62,7 @@ var _litespeed_dots ;
 			}
 			litespeed_display_tab(litespeed_tab_current) ;
 			// tab switch
-			$('[data-litespeed-tab]').click(function(event) {
+			$('[data-litespeed-tab]').on( 'click', function(event) {
 				litespeed_display_tab($(this).data('litespeed-tab')) ;
 				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab') ;
 				$(this).blur() ;
@@ -70,13 +70,13 @@ var _litespeed_dots ;
 		}
 
 		// Manage page -> purge by
-		$('[name=purgeby]').change(function(event) {
+		$('[name=purgeby]').on( 'change', function(event) {
 			$('[data-purgeby]').hide() ;
 			$('[data-purgeby='+this.value+']').show() ;
 		}) ;
 
 		/*************** crawler ******************/
-		$('#litespeed-crawl-url-btn').click(function () {
+		$('#litespeed-crawl-url-btn').on( 'click', function () {
 			if( ! $(this).data('url') ){
 				return false ;
 			}
@@ -87,7 +87,7 @@ var _litespeed_dots ;
 			$(this).hide() ;
 		}) ;
 
-		$('#litespeed_manual_trigger').click(function(event) {
+		$('#litespeed_manual_trigger').on( 'click', function(event) {
 			$('#litespeed-loading-dot').before('<li>Manually Started</li>') ;
 			_litespeed_shell_interval = _litespeed_shell_interval_range[0] ;
 			litespeed_fetch_meta() ;
@@ -127,11 +127,11 @@ var _litespeed_dots ;
 		}
 
 		/** Promo banner **/
-		$( '#litespeed-promo-done' ).click( function( event ) {
+		$( '#litespeed-promo-done' ).on( 'click', function( event ) {
 			$( '.litespeed-banner-promo-full' ).slideUp() ;
 			$.get( litespeed_data.ajax_url_promo + '&done=1' ) ;
 		} ) ;
-		$( '#litespeed-promo-later' ).click( function( event ) {
+		$( '#litespeed-promo-later' ).on( 'click', function( event ) {
 			$( '.litespeed-banner-promo-full' ).slideUp() ;
 			$.get( litespeed_data.ajax_url_promo ) ;
 		} ) ;
@@ -148,7 +148,7 @@ var _litespeed_dots ;
 				var txt = litespeed_readable_time( $input.val() ) ;
 				$( that ).html( txt ? '= ' + txt : '' ) ;
 
-				$input.keyup(function(event) {
+				$input.on( 'keyup', function(event) {
 					var txt = litespeed_readable_time( $( this ).val() ) ;
 					$( that ).html( txt ? '= ' + txt : '' ) ;
 				});
@@ -159,7 +159,7 @@ var _litespeed_dots ;
 		 * Get server IP
 		 * @since  3.0
 		 */
-		$( '#litespeed_get_ip' ).click( function( e ) {
+		$( '#litespeed_get_ip' ).on( 'click', function( e ) {
 			$.ajax( {
 				url: litespeed_data.ajax_url_getIP,
 				dataType: 'json',
@@ -176,7 +176,7 @@ var _litespeed_dots ;
 		 * Click only once
 		 */
 		if ( $( '[data-litespeed-onlyonce]' ).length > 0 ) {
-			$( '[data-litespeed-onlyonce]' ).click( function ( e ) {
+			$( '[data-litespeed-onlyonce]' ).on( 'click', function ( e ) {
 				if ( $( this ).hasClass( 'disabled' ) ) {
 					e.preventDefault();
 				}
