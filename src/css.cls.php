@@ -17,9 +17,8 @@ class CSS extends Trunk {
 	 * Init
 	 *
 	 * @since  3.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_summary = self::get_summary();
 	}
 

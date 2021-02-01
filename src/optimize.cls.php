@@ -51,9 +51,8 @@ class Optimize extends Trunk {
 	/**
 	 *
 	 * @since  1.2.2
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->__data = Data::cls();
 	}
 

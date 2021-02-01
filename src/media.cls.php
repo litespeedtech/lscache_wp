@@ -22,9 +22,8 @@ class Media extends Root {
 	 * Init
 	 *
 	 * @since  1.4
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		Debug2::debug2( '[Media] init' );
 
 		$this->_wp_upload_dir = wp_upload_dir();

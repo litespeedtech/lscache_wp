@@ -186,9 +186,8 @@ class WP_Object_Cache {
 	 * Init
 	 *
 	 * @since  1.8
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_object_cache = \LiteSpeed\Object_Cache::get_instance();
 
 		$this->multisite = is_multisite();

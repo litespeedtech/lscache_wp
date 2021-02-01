@@ -21,16 +21,6 @@ class Conf2 extends Trunk {
 	private $_updated_ids = array();
 	private $_is_primary = false;
 
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function __construct() {
-	}
-
 	/**
 	 * Specify init logic to avoid infinite loop when calling conf.cls instance
 	 *

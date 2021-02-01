@@ -29,9 +29,8 @@ class CDN extends Root {
 	 * Init
 	 *
 	 * @since  1.2.3
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		Debug2::debug2( '[CDN] init' );
 
 		if ( defined( self::BYPASS ) ) {

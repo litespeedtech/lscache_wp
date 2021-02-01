@@ -39,9 +39,8 @@ class Object_Cache {
 	 * NOTE: this class may be included without initialized  core
 	 *
 	 * @since  1.8
-	 * @access protected
 	 */
-	protected function __construct( $cfg = false ) {
+	public function __construct( $cfg = false ) {
 		defined( 'LSCWP_LOG' ) && Debug2::debug2( '[Object] init' );
 
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini';

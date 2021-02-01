@@ -18,9 +18,8 @@ class Optimizer extends Root {
 	 * Init optimizer
 	 *
 	 * @since  1.9
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_conf_css_font_display = $this->conf( Base::O_OPTM_CSS_FONT_DISPLAY );
 		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
 			$this->_conf_css_font_display = Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ];

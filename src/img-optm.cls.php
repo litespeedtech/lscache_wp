@@ -59,9 +59,8 @@ class Img_Optm extends Trunk {
 	 * Init
 	 *
 	 * @since  2.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		Debug2::debug2( '[ImgOptm] init' );
 
 		$this->wp_upload_dir = wp_upload_dir();

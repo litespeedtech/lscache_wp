@@ -21,7 +21,7 @@ class Admin extends Root {
 	 *
 	 * @since    1.0.0
 	 */
-	protected function __construct() {
+	public function __construct() {
 		// Define LSCWP_MU_PLUGIN if is mu-plugins
 		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
 			define( 'LSCWP_MU_PLUGIN', true );

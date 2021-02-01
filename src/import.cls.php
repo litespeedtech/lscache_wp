@@ -22,9 +22,8 @@ class Import extends Trunk {
 	 * Init
 	 *
 	 * @since  1.8.2
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		Debug2::debug( 'Import init' ) ;
 
 		$this->_summary = self::get_summary();

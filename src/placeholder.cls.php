@@ -32,9 +32,8 @@ class Placeholder extends Trunk {
 	 * Init
 	 *
 	 * @since  3.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_conf_placeholder_resp = $this->conf( self::O_MEDIA_PLACEHOLDER_RESP );
 		$this->_conf_placeholder_resp_svg 	= $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
 		$this->_conf_lqip 		= $this->conf( self::O_MEDIA_LQIP );

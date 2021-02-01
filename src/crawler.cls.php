@@ -45,9 +45,8 @@ class Crawler extends Trunk {
 	 * Initialize crawler, assign sitemap path
 	 *
 	 * @since    1.1.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		if ( is_multisite() ) {
 			$this->_sitemeta = 'meta' . get_current_blog_id() . '.data';
 		}

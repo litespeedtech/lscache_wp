@@ -41,7 +41,7 @@ class Tag extends Root {
 	 *
 	 * @since    2.2.3
 	 */
-	protected function __construct() {
+	public function __construct() {
 		// register recent posts widget tag before theme renders it to make it work
 		add_filter( 'widget_posts_args', array( $this, 'add_widget_recent_posts' ) );
 

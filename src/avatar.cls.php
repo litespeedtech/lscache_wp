@@ -24,9 +24,8 @@ class Avatar extends Trunk {
 	 * Init
 	 *
 	 * @since  1.4
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}

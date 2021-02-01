@@ -35,9 +35,8 @@ class Data extends Root {
 	 * Init
 	 *
 	 * @since  1.3.1
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 	}
 
 	/**

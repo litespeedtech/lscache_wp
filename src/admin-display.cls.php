@@ -43,9 +43,8 @@ class Admin_Display extends Trunk {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		// main css
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		// Main js

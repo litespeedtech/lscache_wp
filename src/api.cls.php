@@ -39,9 +39,8 @@ class API extends Trunk {
 	 * Instance
 	 *
 	 * @since  3.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 	}
 
 	/**

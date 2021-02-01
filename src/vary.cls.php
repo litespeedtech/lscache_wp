@@ -22,7 +22,7 @@ class Vary extends Root {
 	 *
 	 * @since 1.0.4
 	 */
-	protected function __construct() {
+	public function __construct() {
 		// logged in user
 		if ( Router::is_logged_in() ) {
 			// If not esi, check cache logged-in user setting

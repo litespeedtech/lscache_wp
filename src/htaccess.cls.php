@@ -57,9 +57,8 @@ class Htaccess extends Root {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_path_set();
 		$this->_default_frontend_htaccess = $this->frontend_htaccess;
 		$this->_default_backend_htaccess = $this->backend_htaccess;

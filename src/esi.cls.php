@@ -36,9 +36,8 @@ class ESI extends Root {
 	 * Confructor of ESI
 	 *
 	 * @since    1.2.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 * @since  2.9.7.2

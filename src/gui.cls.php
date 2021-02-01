@@ -36,9 +36,8 @@ class GUI extends Trunk {
 	 * Instance
 	 *
 	 * @since  1.3
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_summary = self::get_summary();
 
 	}

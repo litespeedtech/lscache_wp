@@ -15,9 +15,8 @@ class REST extends Root {
 	 * Confructor of ESI
 	 *
 	 * @since    2.9.4
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		// Hook to internal REST call
 		add_filter( 'rest_request_before_callbacks', array( $this, 'set_internal_rest_on' ) );
 		add_filter( 'rest_request_after_callbacks', array( $this, 'set_internal_rest_off' ) );

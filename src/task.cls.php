@@ -23,15 +23,6 @@ class Task extends Root {
 	const FITLER = 'litespeed_filter';
 
 	/**
-	 * Init
-	 *
-	 * @since  1.6
-	 * @access protected
-	 */
-	protected function __construct() {
-	}
-
-	/**
 	 * Keep all tasks in cron
 	 *
 	 * @since 3.0

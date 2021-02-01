@@ -40,7 +40,7 @@ class Core extends Root {
 	 *
 	 * @since    1.0.0
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->cls( 'Conf2' )->init();
 
 		// Check if debug is on

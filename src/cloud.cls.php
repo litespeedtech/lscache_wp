@@ -78,7 +78,7 @@ class Cloud extends Trunk {
 	 *
 	 * @since  3.0
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_api_key = $this->conf( self::O_API_KEY );
 		$this->_summary = self::get_summary();
 	}

@@ -22,9 +22,8 @@ class Crawler_Map extends Root {
 	 * Instantiate the class
 	 *
 	 * @since 1.1.0
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		$this->_home_url = get_home_url();
 		$this->__data = Data::cls();
 		$this->_tb = $this->__data->tb( 'crawler' );

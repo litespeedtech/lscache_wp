@@ -32,9 +32,8 @@ class Control extends Root {
 	 * Init cache control
 	 *
 	 * @since  1.6.2
-	 * @access protected
 	 */
-	protected function __construct() {
+	public function __construct() {
 		/**
 		 * Add vary filter for Role Excludes
 		 * @since  1.6.2

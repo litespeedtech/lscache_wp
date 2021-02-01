@@ -25,7 +25,7 @@ class Debug2 extends Root {
 	 * @since 1.1.2
 	 * @access public
 	 */
-	protected function __construct() {
+	public function __construct() {
 		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log';
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) === 0 ) {
 			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log';

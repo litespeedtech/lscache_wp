@@ -34,14 +34,6 @@ class Purge extends Trunk {
 	const TYPE_PURGE_ERROR = 'purge_error';
 
 	/**
-	 * Initialize
-	 *
-	 * @since    2.2.3
-	 */
-	protected function __construct() {
-	}
-
-	/**
 	 * Init hooks
 	 *
 	 * @since  3.0
@@ -457,7 +449,7 @@ class Purge extends Trunk {
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags );
 		}
-		
+
 		$tags = $this->_prepend_bid( $tags );
 
 		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
