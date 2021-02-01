@@ -251,7 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
 * **Page Optimize** Fixed an issue where purge CSS/JS only caused 404 errors.
 * **Page Optimize** Added a notice for CSS/JS data detection and potential random string issue.
-* **Page Optimize** Limited localization resources to specified .js only. (@closte #292)
+* **Page Optimize** Limited localization resources to specified .js only. (@closte #292 @ormonk)
 * **JS** Data src may now be bypassed from JS Combine. (@ankit)
 * **CLI** Fixed a message typo in Purge. (@flixwatchsupport)
 * **Browser** Added font/otf to Browser Cache expire list. (@ruikai)

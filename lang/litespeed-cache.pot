@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 3.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2021-01-12 20:00:48+00:00\n"
+"POT-Creation-Date: 2021-02-01 14:26:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Cache"
 msgstr ""
 
-#: src/admin-display.cls.php:127 tpl/cdn/settings.tpl.php:189
+#: src/admin-display.cls.php:127 tpl/cdn/settings.tpl.php:188
 msgid "CDN"
 msgstr ""
 
@@ -105,7 +105,7 @@ msgstr ""
 #: src/admin-display.cls.php:238 src/admin-display.cls.php:799
 #: src/admin-display.cls.php:834 src/admin-display.cls.php:885
 #: tpl/cache/settings-cache.tpl.php:19
-#: tpl/cache/settings_inc.cache_mobile.tpl.php:70 tpl/cdn/settings.tpl.php:49
+#: tpl/cache/settings_inc.cache_mobile.tpl.php:70 tpl/cdn/settings.tpl.php:48
 #: tpl/page_optm/settings_css.tpl.php:149
 #: tpl/page_optm/settings_css.tpl.php:166
 #: tpl/page_optm/settings_css.tpl.php:167
@@ -117,7 +117,7 @@ msgstr ""
 #: src/admin-display.cls.php:239 src/admin-display.cls.php:800
 #: src/admin-display.cls.php:833 src/admin-display.cls.php:885
 #: tpl/cache/settings-cache.tpl.php:19
-#: tpl/cache/settings_inc.object.tpl.php:210 tpl/cdn/settings.tpl.php:49
+#: tpl/cache/settings_inc.object.tpl.php:210 tpl/cdn/settings.tpl.php:48
 #: tpl/page_optm/settings_css.tpl.php:83 tpl/page_optm/settings_css.tpl.php:166
 #: tpl/page_optm/settings_css.tpl.php:181
 #: tpl/page_optm/settings_media.tpl.php:159
@@ -279,7 +279,7 @@ msgid "Failed to communicate with Cloudflare"
 msgstr ""
 
 #: src/cloud.cls.php:308 src/cloud.cls.php:325 src/cloud.cls.php:356
-#: src/cloud.cls.php:461 src/cloud.cls.php:794
+#: src/cloud.cls.php:465 src/cloud.cls.php:798
 msgid "Cloud Error"
 msgstr ""
 
@@ -287,63 +287,63 @@ msgstr ""
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:461
+#: src/cloud.cls.php:465
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:544 src/cloud.cls.php:556
+#: src/cloud.cls.php:548 src/cloud.cls.php:560
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:566
+#: src/cloud.cls.php:570
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:575 src/cloud.cls.php:583 src/cloud.cls.php:830
+#: src/cloud.cls.php:579 src/cloud.cls.php:587 src/cloud.cls.php:834
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:591
+#: src/cloud.cls.php:595
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:600
+#: src/cloud.cls.php:604
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:642 src/cloud.cls.php:819
+#: src/cloud.cls.php:646 src/cloud.cls.php:823
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:650
+#: src/cloud.cls.php:654
 msgid ""
 "Site not recognized. Domain Key has been automatically removed. Please "
 "request a new one."
 msgstr ""
 
-#: src/cloud.cls.php:651 src/error.cls.php:48
+#: src/cloud.cls.php:655 src/error.cls.php:48
 msgid "Click here to set."
 msgstr ""
 
-#: src/cloud.cls.php:838
+#: src/cloud.cls.php:842
 msgid ""
 "Applied for Domain Key successfully. Please wait for result. Domain Key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:889
+#: src/cloud.cls.php:893
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:960
+#: src/cloud.cls.php:964
 msgid "Domain Key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1045
+#: src/cloud.cls.php:1049
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -746,7 +746,7 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: src/gui.cls.php:578 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:189
+#: src/gui.cls.php:578 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:188
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
@@ -1229,7 +1229,7 @@ msgid "Localize Resources"
 msgstr ""
 
 #: src/lang.cls.php:127
-msgid "Localization Domains"
+msgid "Localization Files"
 msgstr ""
 
 #: src/lang.cls.php:128
@@ -1508,7 +1508,7 @@ msgstr ""
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:203 tpl/cdn/settings.tpl.php:97
+#: src/lang.cls.php:203 tpl/cdn/settings.tpl.php:96
 msgid "Include File Types"
 msgstr ""
 
@@ -2063,7 +2063,7 @@ msgstr ""
 
 #: tpl/cache/more_settings_tip.tpl.php:12
 #: tpl/cache/settings-excludes.tpl.php:62
-#: tpl/cache/settings-excludes.tpl.php:95 tpl/cdn/settings.tpl.php:73
+#: tpl/cache/settings-excludes.tpl.php:95 tpl/cdn/settings.tpl.php:72
 #: tpl/crawler/settings-general.tpl.php:39
 #: tpl/crawler/settings-general.tpl.php:140
 #: tpl/crawler/settings-general.tpl.php:145
@@ -2301,7 +2301,7 @@ msgid ""
 msgstr ""
 
 #: tpl/cache/settings-esi.tpl.php:107 tpl/cache/settings-purge.tpl.php:110
-#: tpl/cdn/settings.tpl.php:138
+#: tpl/cdn/settings.tpl.php:137
 msgid ""
 "Wildcard %1$s supported (match zero or more characters). For example, to "
 "match %2$s and %3$s, use %4$s."
@@ -2838,120 +2838,117 @@ msgid "Enable %s CDN API functionality."
 msgstr ""
 
 #: tpl/cdn/settings.tpl.php:48
-msgid "Enable Content Delivery Network use."
-msgstr ""
-
-#: tpl/cdn/settings.tpl.php:49
 msgid ""
-"Leave this setting %1$s if you have QUIC.cloud CDN or Cloudflare API turned "
-"%2$s."
+"Turn this setting %1$s if you are using a Content Delivery Network (CDN). "
+"NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are "
+"only using QUIC.cloud or Cloudflare, leave this setting %2$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:74
+#: tpl/cdn/settings.tpl.php:73
 msgid ""
 "To randomize CDN hostname, define multiple hostnames for the same resources."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:79
+#: tpl/cdn/settings.tpl.php:78
 msgid ""
 "Serve all image files through the CDN. This will affect all attachments, "
 "HTML %s tags, and CSS %s attributes."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:83
+#: tpl/cdn/settings.tpl.php:82
 msgid ""
 "Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
 "files."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:87
+#: tpl/cdn/settings.tpl.php:86
 msgid ""
 "Serve all JavaScript files through the CDN. This will affect all enqueued WP "
 "JavaScript files."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:91
+#: tpl/cdn/settings.tpl.php:90
 msgid "Static file type links to be replaced by CDN links."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:93
+#: tpl/cdn/settings.tpl.php:92
 msgid "This will affect all tags containing attributes: %s %s %s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:94
+#: tpl/cdn/settings.tpl.php:93
 msgid "Default value"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:97
+#: tpl/cdn/settings.tpl.php:96
 msgid ""
 "If you turn any of the above settings OFF, please remove the related file "
 "types from the %s box."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:121
+#: tpl/cdn/settings.tpl.php:120
 msgid ""
 "Specify which HTML element attributes will be replaced with CDN Mapping."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:122 tpl/img_optm/settings.tpl.php:140
+#: tpl/cdn/settings.tpl.php:121 tpl/img_optm/settings.tpl.php:140
 msgid "Only attributes listed here will be replaced."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:123 tpl/img_optm/settings.tpl.php:141
+#: tpl/cdn/settings.tpl.php:122 tpl/img_optm/settings.tpl.php:141
 msgid "Use the format %1$s or %2$s (element is optional)."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:137
+#: tpl/cdn/settings.tpl.php:136
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:160
+#: tpl/cdn/settings.tpl.php:159
 msgid "Only files within these directories will be pointed to the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:174
+#: tpl/cdn/settings.tpl.php:173
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:188
+#: tpl/cdn/settings.tpl.php:187
 msgid "Use %s API functionality."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:189
+#: tpl/cdn/settings.tpl.php:188
 msgid "This can be managed from <a %2$s>%1$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:193
+#: tpl/cdn/settings.tpl.php:192
 msgid "Email Address"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:197
+#: tpl/cdn/settings.tpl.php:196
 msgid "Your Email address on %s."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:202
+#: tpl/cdn/settings.tpl.php:201
 msgid "Global API Key"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:206
+#: tpl/cdn/settings.tpl.php:205
 msgid "Your API key is used to access %s APIs."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:207
+#: tpl/cdn/settings.tpl.php:206
 msgid "Get it from <a %1$s>%2$s</a>."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:212
+#: tpl/cdn/settings.tpl.php:211
 msgid "Domain"
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:220
+#: tpl/cdn/settings.tpl.php:219
 msgid "You can just type part of the domain."
 msgstr ""
 
-#: tpl/cdn/settings.tpl.php:221
+#: tpl/cdn/settings.tpl.php:220
 msgid ""
 "Once saved, it will be matched with the current list and completed "
 "automatically."
@@ -4434,7 +4431,6 @@ msgid "Prefetching DNS can reduce latency for visitors."
 msgstr ""
 
 #: tpl/page_optm/settings_html.tpl.php:50
-#: tpl/page_optm/settings_localization.tpl.php:131
 msgid "For example"
 msgstr ""
 
@@ -4567,47 +4563,26 @@ msgid "Localize external resources."
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:116
-msgid ""
-"Resources from the domains listed here will be copied and replaced with "
-"local URLs."
+msgid "Resources listed here will be copied and replaced with local URLs."
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:117
 msgid "HTTPS sources only."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:119
-msgid "List as file format (optional) + URL, separated by a space."
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:122
+#: tpl/page_optm/settings_localization.tpl.php:121
 msgid ""
 "Comments are supported. Start a line with a %s to turn it into a comment "
 "line."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:125
-msgid "If format is not specified, %s is assumed."
+#: tpl/page_optm/settings_localization.tpl.php:123
+msgid "Non-`.js` file extensions will be ignored."
 msgstr ""
 
-#: tpl/page_optm/settings_localization.tpl.php:126
-msgid "Currently format supports"
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:128
-msgid "%s format will be added in a future version."
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:129
-msgid "The format will affect the response content type header."
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:131
-msgid "or"
-msgstr ""
-
-#: tpl/page_optm/settings_localization.tpl.php:134
-msgid "Example 2"
+#: tpl/page_optm/settings_localization.tpl.php:124
+#: tpl/toolbox/beta_test.tpl.php:27
+msgid "Example"
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:25
@@ -4797,10 +4772,6 @@ msgstr ""
 msgid ""
 "Use this section to switch plugin versions. To beta test a GitHub commit, "
 "enter the commit URL in the field below."
-msgstr ""
-
-#: tpl/toolbox/beta_test.tpl.php:27
-msgid "Example"
 msgstr ""
 
 #: tpl/toolbox/beta_test.tpl.php:31
