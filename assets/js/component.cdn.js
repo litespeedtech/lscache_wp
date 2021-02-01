@@ -81,7 +81,7 @@ class CDNMappingBlock extends React.Component {
 			<div className="litespeed-block">
 				<div className='litespeed-cdn-mapping-col1'>
 					<label className="litespeed-form-label">{ litespeed_data[ 'lang' ][ 'cdn_mapping_url' ] }</label>
-					<input type="text" name={ name_prefix + '[url][]' } className="regular-text litespeed-input-long" value={item.url} data-type="url" onChange={this.onChange} />
+					<input type="text" name={ name_prefix + '[url][]' } className="regular-text litespeed-input-long" value={item.url?item.url:''} data-type="url" onChange={this.onChange} />
 
 					<div className="litespeed-desc">
 						<span dangerouslySetInnerHTML={{ __html: litespeed_data[ 'lang' ][ 'cdn_mapping_url_desc' ] }} />
