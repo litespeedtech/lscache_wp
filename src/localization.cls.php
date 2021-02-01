@@ -21,13 +21,13 @@ class Localization extends Base {
 		$url = 'https://' . $uri;
 
 		if ( ! Conf::val( Base::O_OPTM_LOCALIZE ) ) {
-			wp_redirect( $url );
-			exit;
+			// wp_redirect( $url );
+			exit( 'Not supported' );
 		}
 
 		if ( substr( $url, -3 ) !== '.js' ) {
-			wp_redirect( $url );
-			exit;
+			// wp_redirect( $url );
+			exit( 'Not supported' );
 		}
 
 		$match = false;
@@ -65,8 +65,8 @@ class Localization extends Base {
 		}
 
 		if ( ! $match ) {
-			wp_redirect( $url );
-			exit;
+			// wp_redirect( $url );
+			exit( 'Not supported' );
 		}
 
 		Control::set_no_vary();
