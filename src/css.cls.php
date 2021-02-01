@@ -112,6 +112,9 @@ class CSS extends Trunk {
 		);// Current UA will be used to request
 		Debug2::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] );
 
+		// Prepare cache tag for later purge
+		Tag::add( 'CCSS.' . $ccss_type );
+
 		self::save_summary();
 		return null;
 	}
@@ -150,6 +153,8 @@ class CSS extends Trunk {
 			Debug2::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
 			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] );
+
+			Purge::add( 'CCSS.' . $k );
 
 			// only request first one
 			if ( ! $continue ) {

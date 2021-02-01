@@ -39,9 +39,9 @@ class Tag extends Root {
 	/**
 	 * Initialize
 	 *
-	 * @since    2.2.3
+	 * @since 3.7
 	 */
-	public function __construct() {
+	public function init() {
 		// register recent posts widget tag before theme renders it to make it work
 		add_filter( 'widget_posts_args', array( $this, 'add_widget_recent_posts' ) );
 
@@ -111,7 +111,13 @@ class Tag extends Root {
 			$tags = array( $tags );
 		}
 
+		Debug2::debug( '💰 [Tag] Add ', $tags );
+
 		self::$_tags = array_merge( self::$_tags, $tags );
+
+		// Send purge header immediately
+		$tag_header = self::cls()->output( true );
+		@header( $tag_header );
 	}
 
 	/**
@@ -325,8 +331,10 @@ class Tag extends Root {
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
-	public static function output() {
-		self::_finalize();
+	public function output( $no_finalize = false ) {
+		if ( ! $no_finalize ) {
+			self::_finalize();
+		}
 
 		$prefix_tags = array();
 		/**

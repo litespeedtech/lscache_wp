@@ -166,7 +166,7 @@ class Core extends Root {
 		// Init Purge hooks
 		$this->cls( 'Purge' )->init();
 
-		$this->cls( 'Tag' );
+		$this->cls( 'Tag' )->init();
 
 		// Load hooks that may be related to users
 		add_action( 'init', array( $this, 'after_user_init' ) );
@@ -468,7 +468,7 @@ class Core extends Root {
 		$vary_header = Vary::finalize();
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
-		$tag_header = Tag::output();
+		$tag_header = $this->cls( 'Tag' )->output();
 		if ( Control::is_cacheable() && ! $tag_header ) {
 			Control::set_nocache( 'empty tag header' );
 		}
