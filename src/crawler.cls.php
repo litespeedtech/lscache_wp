@@ -278,6 +278,7 @@ class Crawler extends Trunk {
 
 		// set time limit
 		$maxTime = (int) ini_get( 'max_execution_time' );
+		Debug2::debug( '🐞 ini_get max_execution_time=' . $maxTime );
 		if ( $maxTime == 0 ) {
 			$maxTime = 300; // hardlimit
 		}
@@ -286,10 +287,13 @@ class Crawler extends Trunk {
 		}
 		if ( $maxTime >= $this->_crawler_conf[ 'run_duration' ] ) {
 			$maxTime = $this->_crawler_conf[ 'run_duration' ];
+			Debug2::debug( '🐞 Use run_duration setting as max_execution_time=' . $maxTime );
 		}
 		elseif ( ini_set( 'max_execution_time', $this->_crawler_conf[ 'run_duration' ] + 15 ) !== false ) {
 			$maxTime = $this->_crawler_conf[ 'run_duration' ];
+			Debug2::debug( '🐞 ini_set max_execution_time=' . $maxTime );
 		}
+		Debug2::debug( '🐞 final max_execution_time=' . $maxTime );
 		$this->_max_run_time = $maxTime + time();
 
 		// mark running
