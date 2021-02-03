@@ -117,9 +117,10 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 			<?php $this->build_input( $id, 'litespeed-input-short' ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the quality when generating LQIP.', 'litespeed-cache' ); ?>
-				<br /><?php echo __( 'Larger numbers will generate higher resolution quality placeholder, but will result in larger files which will increase page size and consume more points.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'Larger number will generate higher resolution quality placeholder, but will result in larger files which will increase page size and consume more points.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
-				<?php $this->_validate_ttl( $id, 1, 20 ); ?>
+				<?php $this->_validate_ttl( $id, 1, 20 ); ?>				
+				<br />💡: <?php echo sprintf(__('Changes to this setting do not apply to already-generated LQIPs. To regenerate existing LQIPs, please %s first from the admin bar menu.', 'litespeed-cache'), '<code>' . __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ) . '</code>'); ?>
 			</div>
 		</td>
 	</tr>
