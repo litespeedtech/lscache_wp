@@ -119,7 +119,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 				<?php echo __( 'Specify the quality when generating LQIP.', 'litespeed-cache' ); ?>
 				<br /><?php echo __( 'Larger numbers will generate higher resolution quality placeholder, but will result in larger files which will increase page size and consume more points.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
-				<?php $this->_validate_ttl( $id, 1, 20 ); ?>
+				<?php $this->_validate_ttl( $id, 1, 20 ); ?>				
+				<br /><?php echo __('💡: Changes to this setting do not apply to already-generated LQIPs. To regenerate existing LQIPs, please Purge All - LQIP Cache first from the admin bar menu. ', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -136,7 +137,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 			<div class="litespeed-desc">
 				<?php echo __( 'LQIP requests will not be sent for images where both width and height are smaller than these dimensions.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
-				<?php $this->_validate_ttl( $id, 10, 800 ); ?>
+				<!-- <?php $this->_validate_ttl( $id, 10, 800 ); ?> -->
 				<?php $this->_validate_ttl( Base::O_MEDIA_LQIP_MIN_H, 10, 800 ); ?>
 			</div>
 		</td>
