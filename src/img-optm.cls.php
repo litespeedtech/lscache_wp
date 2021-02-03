@@ -1192,7 +1192,7 @@ class Img_Optm extends Trunk {
 		Debug2::debug( '[Img_Optm] rescan images' ) ;
 
 		// Get images
-		$q = "SELECT b.post_id, b.meta_value
+		$q = "SELECT DISTINCT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
 			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
