@@ -1182,29 +1182,26 @@ class Img_Optm extends Trunk {
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _rescan()
-	{
-		global $wpdb ;
+	private function _rescan() {
+		global $wpdb;
 
-		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0 ;
+		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
 		$limit = 500;
 
-		Debug2::debug( '[Img_Optm] rescan images' ) ;
+		Debug2::debug( '[Img_Optm] rescan images' );
 
 		// Get images
-		$q = "SELECT DISTINCT b.post_id, b.meta_value
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
-			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
+		$q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->posts` a, `$wpdb->postmeta` b
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+				AND a.ID = b.post_id
 				AND b.meta_key = '_wp_attachment_metadata'
-				AND c.id IS NOT NULL
 			ORDER BY a.ID
 			LIMIT %d, %d
 			";
-		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit ) );
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit + 1 ) ); // last one is the seed for next batch
 
 		if ( ! $list ) {
 			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
@@ -1212,6 +1209,13 @@ class Img_Optm extends Trunk {
 
 			Debug2::debug( '[Img_Optm] rescan bypass: no gathered image found' );
 			return;
+		}
+
+		if ( count( $list ) == $limit + 1 ) {
+			$to_be_continued = true;
+			array_pop( $list ); // last one is the seed for next round, discard here.
+		} else {
+			$to_be_continued = false;
 		}
 
 		$pid_set = array();
@@ -1256,44 +1260,20 @@ class Img_Optm extends Trunk {
 
 		Debug2::debug( '[Img_Optm] rescaned [img_missed] ' . count( $this->_img_in_queue_missed ) . ' [img] ' . count( $this->_img_in_queue ) );
 
-		// Check if needs to continue or not
-		$q = "SELECT b.post_id
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
-			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
-			WHERE a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND b.meta_key = '_wp_attachment_metadata'
-				AND c.id IS NOT NULL
-			ORDER BY a.ID
-			LIMIT %d, %d
-			";
-		$offset ++;
-		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, $offset * $limit, 1 ) );
-
 		// Save missed images into img_optm
 		$this->_save_err_missed();
 
-		if ( empty( $this->_img_in_queue ) ) {
-			if ( $to_be_continued ) {
-				return $this->_self_redirect( self::TYPE_RESCAN );
-			}
-
-			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
-			Admin_Display::succeed( $msg );
-
-			return;
+		$count = count( $this->_img_in_queue );
+		if ( $count > 0 ) {
+			// Save to DB
+			$this->_save_raw();
 		}
-
-		// Save to DB
-		$this->_save_raw();
 
 		if ( $to_be_continued ) {
 			return $this->_self_redirect( self::TYPE_RESCAN );
 		}
 
-		$msg = sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), count( $this->_img_in_queue ) );
+		$msg = $count ? sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescaned successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
 	}
 
@@ -1519,7 +1499,7 @@ class Img_Optm extends Trunk {
 	{
 		$last_run = ! empty( $this->_summary[ 'last_pull' ] ) ? $this->_summary[ 'last_pull' ] : 0;
 
-		$is_running = $last_run && time() - $last_run < 120 ;
+		$is_running = $last_run && time() - $last_run < 120;
 
 		if ( $bool_res ) {
 			return $is_running ;
