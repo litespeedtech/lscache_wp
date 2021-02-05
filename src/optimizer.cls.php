@@ -64,44 +64,36 @@ class Optimizer extends Root {
 	 * @since  1.9
 	 * @access public
 	 */
-	public function serve( $filename, $concat_only, $src_list = false, $page_url = false ) {
-		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
-
-		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
-
-		// Search src set in db based on the requested filename
-		if ( ! $src_list ) {
-			$optm_data = Data::cls()->optm_hash2src( $filename );
-			if ( empty( $optm_data[ 'src' ] ) || ! is_array( $optm_data[ 'src' ] ) ) {
-				return false;
-			}
-			$src_list = $optm_data[ 'src' ];
-			$page_url = $optm_data[ 'refer' ];
-		}
-
-		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 );
-
+	public function serve( $static_file, $file_type, $concat_only, $src_list = false, $page_url = false ) {
 		// Check if need to run Unique CSS feature
 		if ( $file_type == 'css' ) {
 			// CHeck if need to trigger UCSS or not
 			$content = false;
 			if ( $this->conf( Base::O_OPTM_UCSS ) && ! $this->conf( Base::O_OPTM_UCSS_ASYNC ) ) {
+				$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 				$content = $this->cls( 'CSS' )->gen_ucss( $page_url, $ua );//todo: how to store ua!!!
 			}
 
-			$content = apply_filters( 'litespeed_css_serve', $content, $filename, $src_list, $page_url );
+			$content = apply_filters( 'litespeed_css_serve', $content, $static_file, $src_list, $page_url );
 			if ( $content ) {
-				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $filename . ' [url] ' . $page_url );
+				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $static_file . ' [url] ' . $page_url );
 				File::save( $static_file, $content, true ); // todo: UCSS CDN and CSS font display setting
 				return true;
 			}
 		}
 
-		// Clear if existed
-		File::save( $static_file, '', true ); // TODO: need to lock file too
+		// Create tmp file to avoid conflict
+		$tmp_static_file = $static_file . '.tmp';
+		if ( file_exists( $tmp_static_file ) && time() - filemtime( $tmp_static_file ) <= 600 ) { // some other request is generating
+			return false;
+		}
+		File::save( $tmp_static_file, '/* ' . ( is_array( $src_list ) ? $page_url : $src_list ) . ' */', true );
 
 		// Load content
 		$real_files = array();
+		if ( ! is_array( $src_list ) ) {
+			$src_list = array( array( 'src' => $src_list ) );
+		}
 		foreach ( $src_list as $src_info ) {
 			$is_min = false;
 			$src = false;
@@ -109,14 +101,13 @@ class Optimizer extends Root {
 				$content = $src_info[ 'src' ];
 			}
 			else { // Load file
-				$src = ! empty( $src_info[ 'src' ] ) ? $src_info[ 'src' ] : $src_info;
-				$content = $this->cls( 'CSS' )->load_file( $src, $file_type );
+				$content = $this->cls( 'CSS' )->load_file( $src_info[ 'src' ], $file_type );
 
 				if ( ! $content ) {
 					continue;
 				}
 
-				$is_min = $this->_is_min( $src );
+				$is_min = $this->_is_min( $src_info[ 'src' ] );
 			}
 
 			// CSS related features
@@ -136,7 +127,7 @@ class Optimizer extends Root {
 					$content = self::minify_css( $content );
 				}
 
-				$content = CDN::finalize( $content );
+				$content = $this->cls( 'CDN' )->finalize( $content );
 			}
 			else {
 				if ( ! $concat_only && ! $is_min ) {
@@ -150,12 +141,13 @@ class Optimizer extends Root {
 			}
 
 			// Add filter
-			$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src );
+			$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $src_info[ 'src' ] );
 
 			// Write to file
-			File::save( $static_file, $content, true, true );
-
+			File::save( $tmp_static_file, $content, true, true );
 		}
+
+		rename( $tmp_static_file, $static_file );
 
 		Debug2::debug2( '[Optmer] Saved static file [path] ' . $static_file );
 		return true;

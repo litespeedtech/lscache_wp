@@ -112,6 +112,19 @@ ksort( $roles );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_GUEST_ONLY; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Only optimize pages for guest visitors. If turned this OFF, CSS/JS/CCSS files will be doubled by each user group.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_EXC_ROLES; ?>
 			<?php $this->title( $id ); ?>
 		</th>

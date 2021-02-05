@@ -87,6 +87,8 @@ class Admin extends Root {
 			wp_add_privacy_policy_content( Core::PLUGIN_NAME, Doc::privacy_policy() );
 		}
 
+		$this->cls( 'Media' )->after_admin_init();
+
 		do_action( 'litspeed_after_admin_init' );
 
 		if ( $this->cls( 'Router' )->esi_enabled() ) {

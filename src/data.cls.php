@@ -15,6 +15,9 @@ class Data extends Root {
 		'3.5.0.3'	=> array(
 			'litespeed_update_3_5',
 		),
+		'3.7-rc11'	=> array(
+			'litespeed_update_3_7',
+		),
 	);
 
 	private $_db_site_updater = array(
@@ -24,7 +27,6 @@ class Data extends Root {
 		// ),
 	);
 
-	const TB_CSSJS = 'litespeed_cssjs';
 	const TB_IMG_OPTM = 'litespeed_img_optm';
 	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
 	const TB_AVATAR = 'litespeed_avatar';
@@ -49,11 +51,6 @@ class Data extends Root {
 	 * @access public
 	 */
 	public function correct_tb_existance() {
-		// CSS JS optm
-		if ( $this->cls( 'Optimize' )->need_db() ) {
-			$this->tb_create( 'cssjs' );
-		}
-
 		// Gravatar
 		if ( $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
 			$this->tb_create( 'avatar' );
@@ -284,10 +281,6 @@ class Data extends Root {
 				return $wpdb->prefix . self::TB_IMG_OPTMING;
 				break;
 
-			case 'cssjs':
-				return $wpdb->prefix . self::TB_CSSJS;
-				break;
-
 			case 'avatar':
 				return $wpdb->prefix . self::TB_AVATAR;
 				break;
@@ -387,56 +380,11 @@ class Data extends Root {
 	public function tables_del() {
 		global $wpdb;
 
-		$this->tb_del( 'cssjs' );
 		$this->tb_del( 'avatar' );
 		$this->tb_del( 'crawler' );
 		$this->tb_del( 'crawler_blacklist' );
 
 		// Deleting img_optm only can be done when destroy all optm images
-	}
-
-	/**
-	 * save optimizer src to db
-	 *
-	 * @since  1.3.1
-	 * @access public
-	 */
-	public function optm_save_src( $filename, $src, $request_url ) {
-		global $wpdb;
-
-		$src = json_encode( $src );
-		$f = array(
-			'hash_name'	=> $filename,
-			'src'		=> $src,
-			'dateline'	=> time(),
-			'refer' 	=> $request_url,
-		);
-
-		$res = $wpdb->replace( $this->tb( 'cssjs' ), $f );
-
-		return $res;
-	}
-
-	/**
-	 * Get src set from hash in optimizer
-	 *
-	 * @since  1.3.1
-	 * @access public
-	 */
-	public function optm_hash2src( $filename ) {
-		global $wpdb;
-
-		$res = $wpdb->get_row( $wpdb->prepare( 'SELECT src, refer FROM `' . $this->tb( 'cssjs' ) . '` WHERE `hash_name`=%s', $filename ), ARRAY_A );
-
-		if ( empty( $res[ 'src' ] ) ) {
-			return false;
-		}
-
-		Debug2::debug2( '[Data] Loaded hash2src ' . $res[ 'src' ] );
-
-		$res[ 'src' ] = json_decode( $res[ 'src' ], true );
-
-		return $res;
 	}
 
 	/**

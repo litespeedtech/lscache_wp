@@ -71,10 +71,13 @@ class Router extends Trunk {
 	 * @since  2.3.1 Relocated from cdn.cls
 	 * @access public
 	 */
-	public static function can_optm() {
+	public function can_optm() {
 		$can = true;
 
-		if ( is_admin() ) {
+		if ( is_user_logged_in() && $this->conf( self::O_OPTM_GUEST_ONLY ) ) {
+			$can = false;
+		}
+		elseif ( is_admin() ) {
 			$can = false;
 		}
 		elseif ( is_feed() ) {
@@ -671,10 +674,6 @@ class Router extends Trunk {
 		switch ( $path[ 0 ] ) {
 			case 'avatar':
 				$this->cls( 'Avatar' )->serve_satic( $path[ 1 ] );
-				break;
-
-			case 'cssjs':
-				$this->cls( 'Optimize' )->serve_satic( $path[ 1 ] );
 				break;
 
 			case 'localres':

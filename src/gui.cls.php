@@ -47,11 +47,7 @@ class GUI extends Trunk {
 	 *
 	 * @since  3.0
 	 */
-	public function frontend_init() {
-		if ( is_admin() ) {
-			return;
-		}
-
+	public function init() {
 		Debug2::debug2( '[GUI] init' );
 		if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) );
@@ -65,6 +61,9 @@ class GUI extends Trunk {
 		if ( $this->conf( self::O_UTIL_INSTANT_CLICK ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) );
 		}
+
+		// NOTE: this needs to be before optimizer to avoid wrapper being removed
+		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 8 );
 	}
 
 	/**
@@ -762,9 +761,8 @@ class GUI extends Trunk {
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function finalize( $buffer ) {
-		$instance = self::cls();
-		return $instance->_clean_wrapper( $buffer );
+	public function finalize( $buffer ) {
+		return $this->_clean_wrapper( $buffer );
 	}
 
 	/**

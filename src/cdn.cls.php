@@ -30,7 +30,7 @@ class CDN extends Root {
 	 *
 	 * @since  1.2.3
 	 */
-	public function __construct() {
+	public function init() {
 		Debug2::debug2( '[CDN] init' );
 
 		if ( defined( self::BYPASS ) ) {
@@ -131,6 +131,7 @@ class CDN extends Root {
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 );
 		}
 
+		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 30 );
 	}
 
 	/**
@@ -160,14 +161,12 @@ class CDN extends Root {
 	 * @since  1.6.2.1
 	 * @return bool true if included in CDN
 	 */
-	public static function inc_type( $type ) {
-		$instance = self::cls();
-
-		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
+	public function inc_type( $type ) {
+		if ( $type == 'css' && ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
 			return true;
 		}
 
-		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ] ) ) {
+		if ( $type == 'js' && ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ] ) ) {
 			return true;
 		}
 
@@ -182,12 +181,11 @@ class CDN extends Root {
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function finalize( $content ) {
-		$instance = self::cls();
-		$instance->content = $content;
+	public function finalize( $content ) {
+		$this->content = $content;
 
-		$instance->_finalize();
-		return $instance->content;
+		$this->_finalize();
+		return $this->content;
 	}
 
 	/**
@@ -198,7 +196,6 @@ class CDN extends Root {
 	 */
 	private function _finalize() {
 		if ( defined( self::BYPASS ) ) {
-			Debug2::debug2( 'CDN bypass' );
 			return;
 		}
 

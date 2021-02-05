@@ -39,7 +39,6 @@ class Optimize extends Trunk {
 
 	private $dns_prefetch;
 	private $_ggfonts_urls = array();
-	private $__data;
 	private $_ccss;
 
 	private $html_foot = ''; // The html info append to <body>
@@ -47,14 +46,6 @@ class Optimize extends Trunk {
 
 	private static $_var_i = 0;
 	private $_var_preserve_js = array();
-
-	/**
-	 *
-	 * @since  1.2.2
-	 */
-	public function __construct() {
-		$this->__data = Data::cls();
-	}
 
 	/**
 	 * Init optimizer
@@ -88,7 +79,7 @@ class Optimize extends Trunk {
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
-			add_filter( 'litespeed_optm_js_defer_exc', array( $this->__data, 'load_js_defer_exc' ) );
+			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
 		}
 
@@ -103,6 +94,8 @@ class Optimize extends Trunk {
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init();
+
+		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 20 );
 	}
 
 	/**
@@ -141,71 +134,17 @@ class Optimize extends Trunk {
 	}
 
 	/**
-	 * Check if the request is for static file
-	 *
-	 * @since  1.2.2
-	 * @since  3.0 Renamed func. Changed access to public
-	 * @access public
-	 */
-	public function serve_satic( $uri ) {
-		$this->cfg_css_min = $this->conf( self::O_OPTM_CSS_MIN );
-		$this->cfg_css_comb = $this->conf( self::O_OPTM_CSS_COMB );
-		$this->cfg_js_min = $this->conf( self::O_OPTM_JS_MIN );
-		$this->cfg_js_comb = $this->conf( self::O_OPTM_JS_COMB );
-		$this->cfg_ttl = $this->conf( self::O_OPTM_TTL );
-
-		// If not turn on min files
-		if ( ! $this->cfg_css_min && ! $this->cfg_css_comb && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
-			return;
-		}
-
-		// try to match `xx.css`
-		if ( ! preg_match( '#^(\w+)\.(css|js)#U', $uri, $match ) ) {
-			return;
-		}
-
-		Debug2::debug( '[Optm] start minifying file' );
-
-		// Proceed css/js file generation
-		define( 'LITESPEED_MIN_FILE', true );
-
-		$file_type = $match[ 2 ];
-
-		$static_file = LITESPEED_STATIC_DIR . '/cssjs/' . $match[ 0 ];
-
-		// Even if hit PHP, still check if the file is valid to bypass minify process
-		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
-
-			$res = Optimizer::cls()->serve( $match[ 0 ], $concat_only );
-
-			if ( ! $res ) {
-				Debug2::debug( '[Optm] Static file generation bypassed due to empty' );
-				return;
-			}
-		}
-		else {
-			// Load file from file based cache if not expired
-			Debug2::debug2( '[Optm] Static file available' );
-		}
-
-		$url = LITESPEED_STATIC_URL . '/cssjs/' . $match[ 0 ];
-
-		Debug2::debug( '[Optm] Redirect to ' . $url );
-
-		wp_redirect( $url );
-		exit;
-	}
-
-	/**
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.1
 	 * @access public
 	 */
 	public function rm_cache_folder() {
-		if ( file_exists( LITESPEED_STATIC_DIR . '/cssjs' ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/cssjs' );
+		if ( file_exists( LITESPEED_STATIC_DIR . '/css' ) ) {
+			File::rrmdir( LITESPEED_STATIC_DIR . '/css' );
+		}
+		if ( file_exists( LITESPEED_STATIC_DIR . '/js' ) ) {
+			File::rrmdir( LITESPEED_STATIC_DIR . '/js' );
 		}
 	}
 
@@ -228,32 +167,6 @@ class Optimize extends Trunk {
 	}
 
 	/**
-	 * Check if need db table or not
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public function need_db() {
-		if ( $this->conf( self::O_OPTM_CSS_MIN ) ) {
-			return true;
-		}
-
-		if ( $this->conf( self::O_OPTM_CSS_COMB ) ) {
-			return true;
-		}
-
-		if ( $this->conf( self::O_OPTM_JS_MIN ) ) {
-			return true;
-		}
-
-		if ( $this->conf( self::O_OPTM_JS_COMB ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Run optimize process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
@@ -262,10 +175,6 @@ class Optimize extends Trunk {
 	 * @return  string The content that is after optimization
 	 */
 	public function finalize( $content ) {
-		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again ( But can be removed as mini file doesn't have LITESPEED_IS_HTML, keep for efficiency)
-			return $content;
-		}
-
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			Debug2::debug( '[Optm] bypass: Not frontend HTML type' );
 			return $content;
@@ -279,12 +188,6 @@ class Optimize extends Trunk {
 				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result );
 				return $content;
 			}
-		}
-
-		// Check if is exclude optm roles ( Need to set Vary too )
-		if ( $result = $this->cls( 'Conf2' )->in_optm_exc_roles() ) {
-			Debug2::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result );
-			return $content;
 		}
 
 		Debug2::debug( '[Optm] start' );
@@ -317,7 +220,7 @@ class Optimize extends Trunk {
 		$this->cfg_ttl = $this->conf( self::O_OPTM_TTL );
 		$this->cfg_ggfonts_rm = $this->conf( self::O_OPTM_GGFONTS_RM );
 
-		if ( ! Router::can_optm() ) {
+		if ( ! $this->cls( 'Router' )->can_optm() ) {
 			Debug2::debug( '[Optm] bypass: admin/feed/preview' );
 			return;
 		}
@@ -334,7 +237,7 @@ class Optimize extends Trunk {
 
 		// Parse css from content
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
-			add_filter( 'litespeed_optimize_css_excludes', array( $this->__data, 'load_css_exc' ) );
+			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
 		}
 
@@ -345,20 +248,21 @@ class Optimize extends Trunk {
 				// IF combine
 				if ( $this->cfg_css_comb ) {
 					$url = $this->_build_hash_url( $src_list );
-					// Handle css async load
-					if ( $this->cfg_css_async ) {
-						$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+					if ( $url ) {
+						// Handle css async load
+						if ( $this->cfg_css_async ) {
+							$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+						}
+						else {
+							$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
+						}
+
+						// Move all css to top
+						$this->content = str_replace( $html_list, '', $this->content );
+
+						// Add to HTTP2
+						$this->append_http2( $url );
 					}
-					else {
-						$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
-					}
-
-					// Move all css to top
-					$this->content = str_replace( $html_list, '', $this->content );
-
-					// Add to HTTP2
-					$this->append_http2( $url );
-
 				}
 				// Only minify
 				elseif ( $this->cfg_css_min ) {
@@ -389,7 +293,7 @@ class Optimize extends Trunk {
 
 		// Parse js from buffer as needed
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
-			add_filter( 'litespeed_optimize_js_excludes', array( $this->__data, 'load_js_exc' ) );
+			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
 		}
 
@@ -400,14 +304,15 @@ class Optimize extends Trunk {
 				// IF combine
 				if ( $this->cfg_js_comb ) {
 					$url = $this->_build_hash_url( $src_list, 'js' );
-					$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+					if ( $url ) {
+						$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
 
-					// Add to HTTP2
-					$this->append_http2( $url, 'js' );
+						// Add to HTTP2
+						$this->append_http2( $url, 'js' );
 
-					// Will move all JS to bottom combined one
-					$this->content = str_replace( $html_list, '', $this->content );
-
+						// Will move all JS to bottom combined one
+						$this->content = str_replace( $html_list, '', $this->content );
+					}
 				}
 				// Only minify
 				elseif ( $this->cfg_js_min ) {
@@ -700,7 +605,11 @@ class Optimize extends Trunk {
 			}
 			else {
 				$url = $this->_build_hash_url( $src_info[ 'src' ], $file_type );
-				$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
+				if ( $url ) {
+					$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
+					// Add to HTTP2
+					$this->append_http2( $url, $file_type );
+				}
 
 				// Handle css async load
 				if ( $file_type == 'css' && $this->cfg_css_async ) {
@@ -711,9 +620,6 @@ class Optimize extends Trunk {
 				if ( $file_type === 'js' && $this->cfg_js_defer ) {
 					$snippet = $this->_js_defer( $snippet, $src_info[ 'src' ] );
 				}
-
-				// Add to HTTP2
-				$this->append_http2( $url, $file_type );
 			}
 
 			$snippet = str_replace( "<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet );
@@ -730,75 +636,55 @@ class Optimize extends Trunk {
 	 * @access private
 	 * @return string The final URL
 	 */
-	private function _build_hash_url( $src, $file_type = 'css', $url_sensitive = false ) {
+	private function _build_hash_url( $src, $file_type = 'css' ) {
 		// $url_sensitive = $this->conf( self::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 		global $wp;
 		$request_url = home_url( $wp->request );
 
-		if ( ! is_array( $src ) ) {
-			$src = array( $src );
-		}
-
 		// Replace preserved ESI (before generating hash)
-		if ( $file_type == 'js' ) {
+		if ( $file_type == 'js' && is_array( $src ) ) {
 			foreach ( $src as $k => $v ) {
 				if ( empty( $v[ 'inl' ] ) ) {
 					continue;
 				}
-				if ( ! empty( $v[ 'src' ] ) ) {
-					$src[ $k ][ 'src' ] = $this->_preserve_esi( $v[ 'src' ] );
-				}
+				$src[ $k ][ 'src' ] = $this->_preserve_esi( $v[ 'src' ] );
 			}
 		}
 
-		// Query string hash
-		$qs_hash = substr( md5( json_encode( $src ) . self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
-
-		// Drop query strings
-		foreach ( $src as $k => $v ) {
-			if ( ! empty( $v[ 'inl' ] ) ) {
-				continue;
-			}
-			if ( ! empty( $v[ 'src' ] ) ) {
-				$src[ $k ][ 'src' ] = $this->remove_query_strings( $v[ 'src' ] ); // CSS/JS combine
-			}
-			else {
-				$src[ $k ] = $this->remove_query_strings( $v );
+		if ( is_array( $src ) ) { // Use the page URL as filename
+			$md5_src = md5( $request_url );
+			// 404 uses fixed filename
+			if ( is_404() ) {
+				$md5_src = '404';
 			}
 		}
-
-		// $src = array_values( $src );
-		$hash = md5( json_encode( $src ) );
-		$filename = substr( $hash, -5 ) . '.' . $file_type;
-
-		// Need to check conflicts
-		// If short hash exists
-		$existed = false;
-		if ( $optm_data = $this->__data->optm_hash2src( $filename ) ) {
-			// If conflicts
-			if ( $optm_data[ 'src' ] === $src && ( ! $url_sensitive || $optm_data[ 'refer' ] === $request_url ) ) {
-				$existed = true;
-			}
-			else {
-				$filename = $hash . '.' . $file_type;
-			}
+		else {
+			$md5_src = md5( $this->remove_query_strings( $src ) );
 		}
 
-		// Need to insert the record
-		if ( ! $existed ) {
-			$this->__data->optm_save_src( $filename, $src, $request_url );
+		$filename = $md5_src . '.' . $file_type;
+		if ( is_user_logged_in() ) {
+			$role = Router::get_role();
+			$filename = $this->cls( 'Vary' )->in_vary_group( $role ) . '_' . $filename;
+		}
+		if ( is_multisite() ) {
+			$filename = get_current_blog_id() . '/' . $filename;
 		}
 
 		// Generate static files
-		$static_file = LITESPEED_STATIC_DIR . "/cssjs/$filename";
+		$static_file = LITESPEED_STATIC_DIR . "/$file_type/$filename";
 		// Check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
 			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
 
-			Optimizer::cls()->serve( $filename, $concat_only, $src, $request_url );
+			$res = $this->cls( 'Optimizer' )->serve( $static_file, $file_type, $concat_only, $src, $request_url );
+			if ( ! $res ) {
+				return false; // Failed to generate
+			}
 		}
 
-		return LITESPEED_STATIC_URL . '/cssjs/' . $filename . '?' . $qs_hash;
+		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+		return LITESPEED_STATIC_URL . "/$file_type/$filename?ver=$qs_hash";
 	}
 
 	/**
@@ -1235,7 +1121,7 @@ class Optimize extends Trunk {
 		 * For CDN enabled ones, bypass http/2 push
 		 * @since  1.6.2.1
 		 */
-		if ( CDN::inc_type( $file_type ) ) {
+		if ( $this->cls( 'CDN' )->inc_type( $file_type ) ) {
 			return;
 		}
 

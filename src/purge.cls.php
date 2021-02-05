@@ -277,6 +277,8 @@ class Purge extends Trunk {
 	 * @access   private
 	 */
 	private function _purge_all_cssjs( $silence = false ) {
+		$this->_purge_all_lscache( $silence ); // Purge CSSJS must purge lscache too to avoid 404
+
 		do_action( 'litespeed_purged_all_cssjs' );
 
 		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() );

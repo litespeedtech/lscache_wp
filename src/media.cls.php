@@ -27,9 +27,6 @@ class Media extends Root {
 		Debug2::debug2( '[Media] init' );
 
 		$this->_wp_upload_dir = wp_upload_dir();
-
-		// This always needs to load w/ WP
-		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) );
 	}
 
 	/**
@@ -39,41 +36,38 @@ class Media extends Root {
 	 * @access public
 	 */
 	public function init() {
-		if ( $this->can_media() ) {
-			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-			if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
-				/**
-				 * Add vary filter
-				 * @since  1.6.2
-				 */
-				// Moved to htaccess
-				// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) );
+		if ( is_admin() ) {
+			return;
+		}
 
-				//
-				if ( $this->webp_support() ) {
-					// Hook to srcset
-					if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-						add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 );
-					}
-					// Hook to mime icon
-					// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
-					// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
-				}
-			}
-
+		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
+		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
 			/**
-			 * Replace gravatar
-			 * @since  3.0
+			 * Add vary filter
+			 * @since  1.6.2
 			 */
-			Avatar::cls();
+			// Moved to htaccess
+			// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) );
+
+			//
+			if ( $this->webp_support() ) {
+				// Hook to srcset
+				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
+					add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 );
+				}
+				// Hook to mime icon
+				// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
+				// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
+			}
 		}
 
 		/**
-		 * JPG quality control
+		 * Replace gravatar
 		 * @since  3.0
 		 */
-		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) );
+		$this->cls( 'Avatar' );
 
+		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 4 );
 	}
 
 	/**
@@ -93,26 +87,18 @@ class Media extends Root {
 	}
 
 	/**
-	 * Check if it can use Media frontend
-	 *
-	 * @since  1.6.2
-	 * @access private
-	 */
-	private function can_media() {
-		if ( is_admin() ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Register admin menu
 	 *
 	 * @since 1.6.3
 	 * @access public
 	 */
 	public function after_admin_init() {
+		/**
+		 * JPG quality control
+		 * @since  3.0
+		 */
+		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) );
+
 		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
 		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
 
@@ -427,7 +413,7 @@ class Media extends Root {
 	 * @access public
 	 * @return  string The buffer
 	 */
-	public static function finalize( $content ) {
+	public function finalize( $content ) {
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
 			Debug2::debug2( '[Media] bypass: NO_LAZY const' );
 			return $content;
@@ -440,11 +426,9 @@ class Media extends Root {
 
 		Debug2::debug( '[Media] finalize' );
 
-		$instance = self::cls();
-		$instance->content = $content;
-
-		$instance->_finalize();
-		return $instance->content;
+		$this->content = $content;
+		$this->_finalize();
+		return $this->content;
 	}
 
 	/**

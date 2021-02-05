@@ -134,6 +134,7 @@ class Lang extends Trunk {
 			self::O_OPTM_EMOJI_RM				=> __( 'Remove WordPress Emoji', 'litespeed-cache' ),
 			self::O_OPTM_NOSCRIPT_RM			=> __( 'Remove Noscript Tag', 'litespeed-cache' ),
 			self::O_OPTM_EXC					=> __( 'URI Excludes', 'litespeed-cache' ),
+			self::O_OPTM_GUEST_ONLY				=> __( 'Optimize for Guest Only', 'litespeed-cache' ),
 			self::O_OPTM_EXC_ROLES				=> __( 'Role Excludes', 'litespeed-cache' ),
 
 			self::O_DISCUSS_AVATAR_CACHE		=> __( 'Gravatar Cache', 'litespeed-cache' ),

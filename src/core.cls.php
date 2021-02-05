@@ -192,23 +192,21 @@ class Core extends Root {
 		// Heartbeat control
 		$this->cls( 'Tool' )->heartbeat();
 
-		$__media = $this->cls( 'Media' );
-
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Check missing static files
 			$this->cls( 'Router' )->serve_static();
 
-			$__media->init();
+			$this->cls( 'Media' )->init();
 
 			$this->cls( 'Placeholder' )->init();
 
-			Router::can_optm() && $this->cls( 'Optimize' )->init();
+			$this->cls( 'Router' )->can_optm() && $this->cls( 'Optimize' )->init();
 
 			// Hook cdn for attachements
-			$this->cls( 'CDN' );
+			$this->cls( 'CDN' )->init();
 
 			// load cron tasks
-			Task::cls()->init();
+			$this->cls( 'Task' )->init();
 		}
 
 		// load litespeed actions
@@ -217,7 +215,9 @@ class Core extends Root {
 		}
 
 		// Load frontend GUI
-		GUI::cls()->frontend_init();
+		if ( ! is_admin() ) {
+			$this->cls( 'GUI' )->init();
+		}
 
 	}
 
@@ -375,24 +375,13 @@ class Core extends Root {
 		// Hook to modify buffer before
 		$buffer = apply_filters('litespeed_buffer_before', $buffer);
 
-
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			// Image lazy load check
-			$buffer = Media::finalize( $buffer );
-		}
-
 		/**
-		 * Clean wrapper mainly for esi block
-		 * NOTE: this needs to be before optimizer to avoid wrapper being removed
-		 * @since 1.4
+		 * Media: Image lazyload && WebP
+		 * GUI: Clean wrapper mainly for esi block NOTE: this needs to be before optimizer to avoid wrapper being removed
+		 * Optimize
+		 * CDN
 		 */
-		$buffer = GUI::finalize( $buffer );
-
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			$buffer = $this->cls( 'Optimize' )->finalize( $buffer );
-
-			$buffer = CDN::finalize( $buffer );
-		}
+		$buffer = apply_filters( 'litespeed_buffer_finalize', $buffer );
 
 		/**
 		 * Replace ESI preserved list
@@ -465,7 +454,7 @@ class Core extends Root {
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_api_control`.
 		$this->cls( 'Control' )->finalize();
 
-		$vary_header = Vary::finalize();
+		$vary_header = $this->cls( 'Vary' )->finalize();
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
 		$tag_header = $this->cls( 'Tag' )->output();

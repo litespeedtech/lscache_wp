@@ -150,6 +150,7 @@ class Trunk extends Root {
 	const O_OPTM_EXC 				= 'optm-exc';
 	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype';
 	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri';
+	const O_OPTM_GUEST_ONLY 		= 'optm-guest_only';
 
 	## -------------------------------------------------- ##
 	## --------------	Object Cache	----------------- ##
@@ -433,6 +434,7 @@ class Trunk extends Root {
 		self::O_OPTM_EXC				=> array(),
 		self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
 		self::O_OPTM_CCSS_SEP_URI		=> array(),
+		self::O_OPTM_GUEST_ONLY			=> false,
 
 		// Object
 		self::O_OBJECT 					=> false,

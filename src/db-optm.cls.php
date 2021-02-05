@@ -15,7 +15,7 @@ defined( 'WPINC' ) || exit;
 class DB_Optm extends Root {
 	private static $_hide_more = false;
 
-	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables', 'all_cssjs' );
+	private static $TYPES = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients', 'optimize_tables' );
 	const TYPE_CONV_TB = 'conv_innodb';
 
 	/**
@@ -107,9 +107,6 @@ class DB_Optm extends Root {
 
 			case 'optimize_tables':
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE <> 'InnoDB' and DATA_FREE > 0" );
-
-			case 'all_cssjs':
-				return $this->cls( 'Data' )->tb_exist( 'cssjs' ) ? $wpdb->get_var( "SELECT COUNT(*) FROM `" . $this->cls( 'Data' )->tb( 'cssjs' ) . "`" ) : 0;
 		}
 
 		return '-';
@@ -193,14 +190,6 @@ class DB_Optm extends Root {
 					}
 				}
 				return __( 'Optimized all tables.', 'litespeed-cache' );
-
-			case 'all_cssjs' :
-				if ( $this->cls( 'Data' )->tb_exist( 'cssjs' ) ) {
-					Purge::purge_all();
-					$wpdb->query( "TRUNCATE `" . $this->cls( 'Data' )->tb( 'cssjs' ) . "`" );
-				}
-				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' );
-
 		}
 
 	}

@@ -124,8 +124,8 @@ defined( 'WPINC' ) || exit ;
 						$this->build_input(
 							$id . '[' . $role . ']',
 							'litespeed-input-short',
-							Vary::cls()->in_vary_group( $role )
-						) ;
+							$this->cls( 'Vary' )->in_vary_group( $role )
+						);
 					?>
 					</td>
 				</tr>

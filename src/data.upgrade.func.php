@@ -11,6 +11,27 @@ defined( 'WPINC' ) || exit;
 use LiteSpeed\Debug2;
 use LiteSpeed\Conf2;
 use LiteSpeed\Admin_Display;
+use LiteSpeed\File;
+
+/**
+ * Drop cssjs table and rm cssjs folder
+ * @since 3.7
+ */
+function litespeed_update_3_7() {
+	global $wpdb;
+	$tb = $wpdb->prefix . 'litespeed_cssjs';
+	$existed = $wpdb->get_var( "SHOW TABLES LIKE '$tb'" );
+	if ( ! $existed ) {
+		return;
+	}
+
+	$q = 'DROP TABLE IF EXISTS ' . $tb;
+	$wpdb->query( $q );
+
+	if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
+		File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
+	}
+}
 
 /**
  * Append jQuery to JS optm exclude list for max compatibility

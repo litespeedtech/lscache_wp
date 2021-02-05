@@ -47,7 +47,6 @@ class Htaccess extends Root {
 	const MARKER_CORS = '### marker CORS';
 	const MARKER_WEBP = '### marker WEBP';
 	const MARKER_DROPQS = '### marker DROPQS';
-	const MARKER_NETWORK_CSSJS_AUTOGEN = '### marker Network CSS/JS Auto Generation Rules';
 	const MARKER_START = ' start ###';
 	const MARKER_END = ' end ###';
 
@@ -633,20 +632,6 @@ class Htaccess extends Root {
 			$new_rules_backend_nonls = array_merge( $new_rules_backend_nonls, $this->_browser_cache_rules( $cfg ) );
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_END;
 			$new_rules_nonls[] = '';
-		}
-
-		// Network CSS/JS auto generate
-		if ( is_multisite() ) {
-			$rewrite_base = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
-			$new_rules_nonls[] = self::MARKER_NETWORK_CSSJS_AUTOGEN . self::MARKER_START;
-			$new_rules_nonls[] = self::REWRITE_ON;
-			$new_rules_nonls[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
-			$new_rules_nonls[] = 'RewriteCond %{REQUEST_URI} !^' . $rewrite_base . LSCWP_CONTENT_FOLDER;
-			$new_rules_nonls[] = 'RewriteRule ^([_0-9a-zA-Z-]+/)?(' . LSCWP_CONTENT_FOLDER . '/litespeed/cssjs/.*) $2 [L]';
-			$new_rules_nonls[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
-			$new_rules_nonls[] = 'RewriteCond %{REQUEST_URI} ^' . $rewrite_base . LSCWP_CONTENT_FOLDER . '/litespeed/cssjs/.+\.(css|js)$';
-			$new_rules_nonls[] = 'RewriteRule . ' . $rewrite_base . 'index.php [L]';
-			$new_rules_nonls[] = self::MARKER_NETWORK_CSSJS_AUTOGEN . self::MARKER_END;
 		}
 
 		// Add module wrapper for LiteSpeed rules

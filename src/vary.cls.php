@@ -497,12 +497,7 @@ class Vary extends Root {
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
 	 */
-	public static function finalize() {
-		return self::cls()->_finalize();
-
-	}
-
-	private function _finalize() {
+	public function finalize() {
 		// Finalize default vary
 		$this->_update_default_vary();
 
