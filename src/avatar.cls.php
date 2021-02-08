@@ -170,7 +170,7 @@ class Avatar extends Trunk {
 	 * @since  3.0
 	 */
 	private function _rewrite( $url ) {
-		return LITESPEED_STATIC_URL . '/avatar/' . md5( $url ) . '.jpg';
+		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath( $url );
 	}
 
 	/**
@@ -180,7 +180,20 @@ class Avatar extends Trunk {
 	 * @access private
 	 */
 	private function _realpath( $url ) {
-		return LITESPEED_STATIC_DIR . '/avatar/' . md5( $url ) . '.jpg';
+		return LITESPEED_STATIC_DIR . '/avatar/' . $this->_filepath( $url );
+	}
+
+	/**
+	 * Get filepath
+	 *
+	 * @since  3.7
+	 */
+	private function _filepath( $url ) {
+		$filename = md5( $url ) . '.jpg';
+		if ( is_multisite() ) {
+			$filename = get_current_blog_id() . '/' . $filename;
+		}
+		return $filename;
 	}
 
 	/**
@@ -189,9 +202,12 @@ class Avatar extends Trunk {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function rm_cache_folder() {
-		if ( file_exists( LITESPEED_STATIC_DIR . '/avatar' ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' );
+	public function rm_cache_folder( $subsite_id = false ) {
+		if ( $subsite_id ) {
+			file_exists( LITESPEED_STATIC_DIR . '/avatar' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/avatar/' . $subsite_id );
+		}
+		else {
+			file_exists( LITESPEED_STATIC_DIR . '/avatar' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' );
 		}
 
 		// Clear avatar summary

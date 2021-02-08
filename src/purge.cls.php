@@ -211,7 +211,7 @@ class Purge extends Trunk {
 	private function _purge_all_ccss( $silence = false ) {
 		do_action( 'litespeed_purged_all_ccss' );
 
-		$this->cls( 'CSS' )->rm_cache_folder();
+		$this->cls( 'CSS' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Critical CSS files.', 'litespeed-cache' );
@@ -245,7 +245,7 @@ class Purge extends Trunk {
 	private function _purge_all_avatar( $silence = false ) {
 		do_action( 'litespeed_purged_all_avatar' );
 
-		Avatar::cls()->rm_cache_folder();
+		Avatar::cls()->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Gravatar files.', 'litespeed-cache' );
@@ -285,7 +285,7 @@ class Purge extends Trunk {
 
 		$this->_add( Tag::TYPE_MIN );
 
-		Optimize::cls()->rm_cache_folder();
+		$this->cls( 'Optimize' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );
@@ -927,10 +927,7 @@ class Purge extends Trunk {
 			return array( '*' );
 		}
 
-		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by wordpress updates v4.6+
-		if ( is_multisite() && (is_network_admin() || (
-				Router::is_ajax() && (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false))
-				)) ) {
+		if ( is_multisite() && ! $this->_is_subsite_purge() ) {
 			$blogs = Activation::get_network_ids();
 			if ( empty($blogs) ) {
 				Debug2::debug('[Purge] build_purge_headers: blog list is empty');
@@ -945,6 +942,32 @@ class Purge extends Trunk {
 		else {
 			return array(LSWCP_TAG_PREFIX . $curr_bid . '_');
 		}
+	}
+
+	/**
+	 * Check if this purge blongs to a subsite purge
+	 *
+	 * @since  3.7
+	 */
+	private function _is_subsite_purge() {
+		if ( ! is_multisite() ) {
+			return false;
+		}
+
+		if ( is_network_admin() ) {
+			return false;
+		}
+
+		if ( defined( 'LSWCP_EMPTYCACHE' ) ) {
+			return false;
+		}
+
+		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by wordpress updates v4.6+
+		if ( Router::is_ajax() && ( check_ajax_referer( 'updates', false, false ) || check_ajax_referer( 'litespeed-purgeall-network', false, false ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

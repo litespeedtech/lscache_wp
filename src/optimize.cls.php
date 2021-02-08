@@ -139,13 +139,15 @@ class Optimize extends Trunk {
 	 * @since  2.1
 	 * @access public
 	 */
-	public function rm_cache_folder() {
-		if ( file_exists( LITESPEED_STATIC_DIR . '/css' ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/css' );
+	public function rm_cache_folder( $subsite_id = false ) {
+		if ( $subsite_id ) {
+			file_exists( LITESPEED_STATIC_DIR . '/css/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/css/' . $subsite_id );
+			file_exists( LITESPEED_STATIC_DIR . '/js/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/js/' . $subsite_id );
+			return;
 		}
-		if ( file_exists( LITESPEED_STATIC_DIR . '/js' ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/js' );
-		}
+
+		file_exists( LITESPEED_STATIC_DIR . '/css' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/css' );
+		file_exists( LITESPEED_STATIC_DIR . '/js' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/js' );
 	}
 
 	/**

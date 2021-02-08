@@ -174,11 +174,15 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php if ( ! empty( $css_summary[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?>
+							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue' ] ); ?> )
 							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
-						<?php foreach ( $css_summary[ 'queue' ] as $k => $v ) : ?>
+						<?php $i=0; foreach ( $css_summary[ 'queue' ] as $k => $v ) : ?>
+							<?php if ( $i++ > 20 ) : ?>
+								<?php echo '...'; ?>
+								<?php break; ?>
+							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
 							<?php echo $v[ 'url' ]; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
@@ -192,35 +196,6 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php endif; ?>
 			</div>
 			<?php endif; ?>
-		</td>
-	</tr>
-
-	<tr>
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_CCSS_SEP_POSTTYPE; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_CCSS_SEP_URI; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ); ?>
-				<?php $this->_uri_usage_example(); ?>
-			</div>
 		</td>
 	</tr>
 

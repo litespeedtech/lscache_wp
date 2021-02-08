@@ -58,9 +58,12 @@ class CSS extends Trunk {
 	 * @since  2.3
 	 * @access public
 	 */
-	public function rm_cache_folder() {
-		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
+	public function rm_cache_folder( $subsite_id = false ) {
+		if ( $subsite_id ) {
+			file_exists( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id );
+		}
+		else {
+			file_exists( LITESPEED_STATIC_DIR . '/ccss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
 		}
 
 		// Clear CCSS in queue too
@@ -547,41 +550,27 @@ class CSS extends Trunk {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _which_css()
-	{
-		$css = Utility::page_type();
+	private function _which_css() {
+		// $md5_src = md5( $_SERVER[ 'SCRIPT_URI' ] );
+		$md5_src = md5( $this->_curr_url() );
+		if ( is_404() ) {
+			$md5_src = '404';
+		}
 
+		$filename = $md5_src;
+		if ( is_user_logged_in() ) {
+			$role = Router::get_role();
+			$filename = $this->cls( 'Vary' )->in_vary_group( $role ) . '_' . $filename;
+		}
 		if ( is_multisite() ) {
-			$css .= '-' . get_current_blog_id();
-		}
-
-		$unique = false;
-
-		// Check if in separate css type option
-		$separate_posttypes = $this->conf( self::O_OPTM_CCSS_SEP_POSTTYPE );
-		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
-			Debug2::debug( '[CSS] Hit separate posttype setting [type] ' . $css );
-			$unique = true;
-		}
-
-		$separate_uri = $this->conf( self::O_OPTM_CCSS_SEP_URI );
-		if ( ! empty( $separate_uri ) ) {
-			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri );
-			if ( $result ) {
-				Debug2::debug( '[CSS] Hit separate URI setting: ' . $result );
-				$unique = true;
-			}
-		}
-
-		if ( $unique ) {
-			$css .= '-' . md5( $_SERVER[ 'REQUEST_URI' ] );
+			$filename = get_current_blog_id() . '/' . $filename;
 		}
 
 		if ( $this->_separate_mobile_ccss() ) {
-			$css .= '.mobile';
+			$filename .= '.mobile';
 		}
 
-		return $css;
+		return $filename;
 	}
 
 	/**

@@ -148,8 +148,6 @@ class Trunk extends Root {
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
 	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
 	const O_OPTM_EXC 				= 'optm-exc';
-	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype';
-	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri';
 	const O_OPTM_GUEST_ONLY 		= 'optm-guest_only';
 
 	## -------------------------------------------------- ##
@@ -432,8 +430,6 @@ class Trunk extends Root {
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),
-		self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
-		self::O_OPTM_CCSS_SEP_URI		=> array(),
 		self::O_OPTM_GUEST_ONLY			=> false,
 
 		// Object
@@ -819,7 +815,6 @@ class Trunk extends Root {
 			self::O_OPTM_EXC			=> 'relative',
 			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
-			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
 			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
 			// self::	=> '',
