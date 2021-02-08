@@ -521,7 +521,7 @@ class Optimize extends Trunk {
 	private function _dns_prefetch_init() {
 		// Widely enable link DNS prefetch
 		if ( $this->conf( self::O_OPTM_DNS_PREFETCH_CTRL ) ) {
-			add_filter( 'litespeed_optm_html_head', array( $this, 'dns_prefetch_xmeta' ), 999 );
+			@header( 'X-DNS-Prefetch-Control: on' );
 		}
 
 		$this->dns_prefetch = $this->conf( self::O_OPTM_DNS_PREFETCH );
@@ -535,17 +535,6 @@ class Optimize extends Trunk {
 		else {
 			add_action( 'litespeed_optm', array( $this, 'dns_prefetch_output' ) );
 		}
-	}
-
-	/**
-	 * Append wide prefetch DNS meta
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public function dns_prefetch_xmeta( $content ) {
-		$content .= '<meta http-equiv="x-dns-prefetch-control" content="on">';
-		return $content;
 	}
 
 	/**
@@ -1048,7 +1037,7 @@ class Optimize extends Trunk {
 		$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
 		// Append to noscript content
 		if ( ! $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) {
-			$v .= '<noscript>' . $ori . '</noscript>';
+			$v .= '<noscript>' . preg_replace( '/ id=\'[\w-]+\' /U', ' ', $ori ) . '</noscript>';
 		}
 
 		return $v;
