@@ -10,6 +10,7 @@ paypal.com/sdk/js
 maps.google.com/maps
 cse.google.com/cse.js
 /syntaxhighlighter/
+spotlight-social-photo-feeds ## https://docs.spotlightwp.com/article/757-autoptimize-compatibility @Tobolo
 
 # Inline JS excludes
 document.write
