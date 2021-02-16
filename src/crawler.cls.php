@@ -226,7 +226,7 @@ class Crawler extends Trunk {
 		 * @since  2.8
 		 */
 		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
-			$this->_crawler_conf[ 'ua' ] = 'Mobile';
+			$this->_crawler_conf[ 'ua' ] = 'Mobile iPhone';
 		}
 
 		/**
