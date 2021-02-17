@@ -74,11 +74,6 @@ class CSS extends Trunk {
 		Debug2::debug2( '[CSS] Cleared ccss queue' );
 	}
 
-
-	public function gen_ucss( $page_url, $ua ) {
-		return $this->_generate_ucss( $page_url, $ua );
-	}
-
 	/**
 	 * Generate currnt url
 	 * @since  3.7
@@ -336,7 +331,7 @@ class CSS extends Trunk {
 
 				// Load CSS content
 				if ( ! $dryrun ) { // Dryrun will not load CSS but just drop them
-					$con = $this->load_file( $attrs[ 'href' ] );
+					$con = $this->cls( 'Optimizer' )->load_file( $attrs[ 'href' ] );
 					if ( ! $con ) {
 						continue;
 					}
@@ -369,47 +364,8 @@ class CSS extends Trunk {
 		return array( $css, $html );
 	}
 
-	/**
-	 * Load remote/local resource
-	 *
-	 * @since  3.5
-	 */
-	public function load_file( $src, $file_type = 'css' ) {
-		$real_file = Utility::is_internal_file( $src );
-		$postfix = pathinfo( parse_url( $src, PHP_URL_PATH ), PATHINFO_EXTENSION );
-		if ( ! $real_file || $postfix != $file_type ) {
-			Debug2::debug2( '[CSS] Load Remote [' . $file_type . '] ' . $src );
-			$this_url = substr( $src, 0, 2 ) == '//' ? set_url_scheme( $src ) : $src;
-			$res = wp_remote_get( $this_url );
-			$res_code = wp_remote_retrieve_response_code( $res );
-			if ( is_wp_error( $res ) || $res_code == 404 ) {
-				Debug2::debug2( '[CSS] ❌ Load Remote error [code] ' . $res_code );
-				return false;
-			}
-			$con = wp_remote_retrieve_body( $res );
-			if ( ! $con ) {
-				return false;
-			}
-
-			if ( $file_type == 'css' ) {
-				$dirname = dirname( $this_url ) . '/';
-
-				$con = Lib\CSS_MIN\UriRewriter::prepend( $con, $dirname );
-			}
-		}
-		else {
-			Debug2::debug2( '[CSS] Load local [' . $file_type . '] ' . $real_file[ 0 ] );
-			$con = File::read( $real_file[ 0 ] );
-
-			if ( $file_type == 'css' ) {
-				$dirname = dirname( $real_file[ 0 ] );
-
-				$con = Lib\CSS_MIN\UriRewriter::rewrite( $con, $dirname );
-			}
-		}
-
-
-		return $con;
+	public function gen_ucss( $page_url, $ua ) {
+		return $this->_generate_ucss( $page_url, $ua );
 	}
 
 	/**
@@ -443,9 +399,8 @@ class CSS extends Trunk {
 		// Append cookie for roles auth
 		if ( $uid = get_current_user_id() ) {
 			// Get role simulation vary name
-			$vary_inst = Vary::cls();
-			$vary_name = $vary_inst->get_vary_name();
-			$vary_val = $vary_inst->finalize_default_vary( $uid );
+			$vary_name = $this->cls( 'Vary' )->get_vary_name();
+			$vary_val = $this->cls( 'Vary' )->finalize_default_vary( $uid );
 			$data[ 'cookies' ] = array();
 			$data[ 'cookies' ][ $vary_name ] = $vary_val;
 			$data[ 'cookies' ][ 'litespeed_role' ] = $uid;

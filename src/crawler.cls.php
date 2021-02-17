@@ -194,9 +194,8 @@ class Crawler extends Trunk {
 		 */
 		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
 			// Get role simulation vary name
-			$vary_inst = Vary::cls();
-			$vary_name = $vary_inst->get_vary_name();
-			$vary_val = $vary_inst->finalize_default_vary( $current_crawler[ 'uid' ] );
+			$vary_name = $this->cls( 'Vary' )->get_vary_name();
+			$vary_val = $this->cls( 'Vary' )->finalize_default_vary( $current_crawler[ 'uid' ] );
 			$this->_crawler_conf[ 'cookies' ][ $vary_name ] = $vary_val;
 			$this->_crawler_conf[ 'cookies' ][ 'litespeed_role' ] = $current_crawler[ 'uid' ];
 		}

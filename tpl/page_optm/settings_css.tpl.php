@@ -67,20 +67,6 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This will drop the unused CSS on each page.', 'litespeed-cache' ); ?>
 			</div>
-		</td>
-	</tr>
-
-	<tr class="litespeed-hide">
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_UCSS_ASYNC; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Generate unique CSS in the background via a cron-based queue.', 'litespeed-cache' ); ?>
-				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ); ?>
-			</div>
 
 			<?php if ( $css_summary ) : ?>
 			<div class="litespeed-desc litespeed-left20">
@@ -185,6 +171,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
 							<?php echo $v[ 'url' ]; ?>
+							<?php if ( $pos = strpos( $k, '_' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 							<br />
 						<?php endforeach; ?>

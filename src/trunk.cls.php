@@ -119,7 +119,6 @@ class Trunk extends Root {
 	const O_OPTM_CSS_COMB 			= 'optm-css_comb';
 	const O_OPTM_CSS_COMB_EXT_INL	= 'optm-css_comb_ext_inl';
 	const O_OPTM_UCSS 				= 'optm-ucss';
-	const O_OPTM_UCSS_ASYNC 		= 'optm-ucss_async';
 	const O_OPTM_UCSS_WHITELIST 	= 'optm-ucss_whitelist';
 	const O_OPTM_CSS_HTTP2 			= 'optm-css_http2';
 	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
@@ -403,7 +402,6 @@ class Trunk extends Root {
 		self::O_OPTM_CSS_COMB 			=> false,
 		self::O_OPTM_CSS_COMB_EXT_INL	=> false,
 		self::O_OPTM_UCSS 				=> false,
-		self::O_OPTM_UCSS_ASYNC			=> false,
 		// self::O_OPTM_UCSS_WHITELIST		=> array(),
 		self::O_OPTM_CSS_HTTP2 			=> false,
 		self::O_OPTM_CSS_EXC 			=> array(),

@@ -42,14 +42,6 @@ class Media extends Root {
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
-			/**
-			 * Add vary filter
-			 * @since  1.6.2
-			 */
-			// Moved to htaccess
-			// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) );
-
-			//
 			if ( $this->webp_support() ) {
 				// Hook to srcset
 				if ( function_exists( 'wp_calculate_image_srcset' ) ) {

@@ -41,11 +41,22 @@ class Optimize extends Trunk {
 	private $_ggfonts_urls = array();
 	private $_ccss;
 
+	private $__optimizer;
+
 	private $html_foot = ''; // The html info append to <body>
 	private $html_head = ''; // The html info prepend to <body>
 
 	private static $_var_i = 0;
 	private $_var_preserve_js = array();
+
+	/**
+	 * Constructor
+	 * @since  3.7
+	 */
+	public function __construct() {
+		Debug2::debug( '[Optm] init' );
+		$this->__optimizer = $this->cls( 'Optimizer' );
+	}
 
 	/**
 	 * Init optimizer
@@ -414,7 +425,7 @@ class Optimize extends Trunk {
 
 		// HTML minify
 		if ( $this->conf( self::O_OPTM_HTML_MIN ) ) {
-			$this->content = Optimizer::cls()->html_min( $this->content );
+			$this->content = $this->__optimizer->html_min( $this->content );
 		}
 
 		if ( $this->http2_headers ) {
@@ -595,7 +606,7 @@ class Optimize extends Trunk {
 				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 			}
 			else {
-				$url = $this->_build_hash_url( $src_info[ 'src' ], $file_type );
+				$url = $this->_build_single_hash_url( $src_info[ 'src' ], $file_type );
 				if ( $url ) {
 					$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
 					// Add to HTTP2
@@ -621,61 +632,55 @@ class Optimize extends Trunk {
 	}
 
 	/**
+	 * Build a single URL mapped filename (This will not save in DB)
+	 * @since  3.7
+	 */
+	private function _build_single_hash_url( $src, $file_type = 'css' ) {
+		$content = $this->__optimizer->load_file( $src, $file_type );
+
+		$is_min = $this->__optimizer->is_min( $src );
+
+		$content = $this->__optimizer->optm_snippet( $content, $file_type, ! $is_min, $src );
+
+		// Save to file
+		$filename = $file_type . '/' . md5( $this->remove_query_strings( $src ) ) . '.' . $file_type;
+		$static_file = LITESPEED_STATIC_DIR . '/' . $filename;
+		File::save( $static_file, $content, true );
+
+		$qs_hash = substr( md5( $src ), -5 );
+		return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
+	}
+
+	/**
 	 * Generate full URL path with hash for a list of src
 	 *
 	 * @since  1.2.2
 	 * @access private
-	 * @return string The final URL
 	 */
-	private function _build_hash_url( $src, $file_type = 'css' ) {
+	private function _build_hash_url( $src_list, $file_type = 'css' ) {
 		// $url_sensitive = $this->conf( self::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 		global $wp;
-		$request_url = home_url( $wp->request );
+		$request_url = home_url( $wp->request ); // TODO: make sure this url doesn't have qs, so no need to call remove_query_strings()
 
 		// Replace preserved ESI (before generating hash)
-		if ( $file_type == 'js' && is_array( $src ) ) {
-			foreach ( $src as $k => $v ) {
+		if ( $file_type == 'js' ) {
+			foreach ( $src_list as $k => $v ) {
 				if ( empty( $v[ 'inl' ] ) ) {
 					continue;
 				}
-				$src[ $k ][ 'src' ] = $this->_preserve_esi( $v[ 'src' ] );
+				$src_list[ $k ][ 'src' ] = $this->_preserve_esi( $v[ 'src' ] );
 			}
 		}
 
-		if ( is_array( $src ) ) { // Use the page URL as filename
-			$md5_src = md5( $request_url );
-			// 404 uses fixed filename
-			if ( is_404() ) {
-				$md5_src = '404';
-			}
-		}
-		else {
-			$md5_src = md5( $this->remove_query_strings( $src ) );
-		}
+		$minify = $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min;
+		$file_path = $this->__optimizer->serve( $request_url, $file_type, $minify, $src_list );
 
-		$filename = $md5_src . '.' . $file_type;
-		if ( is_user_logged_in() ) {
-			$role = Router::get_role();
-			$filename = $this->cls( 'Vary' )->in_vary_group( $role ) . '_' . $filename;
-		}
-		if ( is_multisite() ) {
-			$filename = get_current_blog_id() . '/' . $filename;
-		}
-
-		// Generate static files
-		$static_file = LITESPEED_STATIC_DIR . "/$file_type/$filename";
-		// Check if the file is valid to bypass minify process
-		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min );
-
-			$res = $this->cls( 'Optimizer' )->serve( $static_file, $file_type, $concat_only, $src, $request_url );
-			if ( ! $res ) {
-				return false; // Failed to generate
-			}
+		if ( ! $file_path ) {
+			return false; // Failed to generate
 		}
 
 		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
-		return LITESPEED_STATIC_URL . "/$file_type/$filename?ver=$qs_hash";
+		return LITESPEED_STATIC_URL . "$file_path?ver=$qs_hash";
 	}
 
 	/**

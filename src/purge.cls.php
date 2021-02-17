@@ -287,6 +287,8 @@ class Purge extends Trunk {
 
 		$this->cls( 'Optimize' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
+		// todo: delete db records too
+
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );

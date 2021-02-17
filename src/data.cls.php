@@ -27,11 +27,20 @@ class Data extends Root {
 		// ),
 	);
 
+	private $_url_file_types = array(
+		'css' => 1,
+		'js' => 2,
+		'ccss' => 3,
+		'ucss' => 4,
+	);
+
 	const TB_IMG_OPTM = 'litespeed_img_optm';
 	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
 	const TB_AVATAR = 'litespeed_avatar';
 	const TB_CRAWLER = 'litespeed_crawler';
 	const TB_CRAWLER_BLACKLIST = 'litespeed_crawler_blacklist';
+	const TB_URL = 'litespeed_url';
+	const TB_URL_FILE = 'litespeed_url_file';
 
 	/**
 	 * Init
@@ -61,6 +70,10 @@ class Data extends Root {
 			$this->tb_create( 'crawler' );
 			$this->tb_create( 'crawler_blacklist' );
 		}
+
+		// URL mapping
+		$this->tb_create( 'url' );
+		$this->tb_create( 'url_file' );
 
 		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
 	}
@@ -293,6 +306,14 @@ class Data extends Root {
 				return $wpdb->prefix . self::TB_CRAWLER_BLACKLIST;
 				break;
 
+			case 'url':
+				return $wpdb->prefix . self::TB_URL;
+				break;
+
+			case 'url_file':
+				return $wpdb->prefix . self::TB_URL_FILE;
+				break;
+
 			default:
 				break;
 		}
@@ -378,13 +399,60 @@ class Data extends Root {
 	 * @access public
 	 */
 	public function tables_del() {
-		global $wpdb;
-
 		$this->tb_del( 'avatar' );
 		$this->tb_del( 'crawler' );
 		$this->tb_del( 'crawler_blacklist' );
+		$this->tb_del( 'url' );
+		$this->tb_del( 'url_file' );
 
 		// Deleting img_optm only can be done when destroy all optm images
+	}
+
+	/**
+	 * Generate filename based on URL, if content md5 existed, reuse existing file.
+	 * @since  3.7
+	 */
+	public function save_url( $page_url, $vary, $file_type, $filecon_md5, $path ) {
+		global $wpdb;
+
+		$type = $this->_url_file_types[ $file_type ];
+
+		$tb_url = $this->tb( 'url' );
+		$tb_url_file = $this->tb( 'url_file' );
+		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $page_url ), ARRAY_A );
+		if ( ! $url_row ) {
+			$q = "INSERT INTO `$tb_url` SET url=%s";
+			$url_id = $wpdb->query( $wpdb->prepare( $q, $page_url ) );
+		}
+		else {
+			$url_id = $url_row[ 'id' ];
+		}
+
+		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d";
+		$file_row = $wpdb->get_row( $wpdb->prepare( $q, array( $url_id, $vary, $type ) ), ARRAY_A );
+		if ( ! $file_row ) {
+			$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d";
+			$wpdb->query( $wpdb->prepare( $q, array( $url_id, $vary, $filecon_md5, $type ) ) );
+			return;
+		}
+
+		// Check if has previous file or not
+		if ( $file_row[ 'filename' ] == $filecon_md5 ) {
+			return;
+		}
+
+		// Check if has other records used this file or not
+		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
+		$q = "SELECT id FROM `$tb_url_file` WHERE id != %d AND filename = %s LIMIT 1";
+		if ( file_exists( $file_to_del ) && ! $wpdb->get_var( $wpdb->prepare( $q, array( $file_row[ 'id' ], $file_row[ 'filename' ] ) ) ) ) {
+			// Safe to delete
+			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
+			unlink( $file_to_del );
+		}
+
+		$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
+		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
 	}
 
 	/**
