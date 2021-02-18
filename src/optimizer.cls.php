@@ -122,7 +122,7 @@ class Optimizer extends Root {
 		// validate md5
 		$filecon_md5 = md5_file( $tmp_static_file );
 
-		$final_file_path = $file_path_prefix . ( is_404() ? '404' : $filecon_md5 ) . '.' . $file_type;
+		$final_file_path = $file_path_prefix . $filecon_md5 . '.' . $file_type;
 		$realfile = LITESPEED_STATIC_DIR . $final_file_path;
 		if ( ! file_exists( $realfile ) ) {
 			rename( $tmp_static_file, $realfile );
