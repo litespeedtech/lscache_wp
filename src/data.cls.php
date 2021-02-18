@@ -442,17 +442,17 @@ class Data extends Root {
 			return;
 		}
 
+		$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
+		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
+
 		// Check if has other records used this file or not
 		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
-		$q = "SELECT id FROM `$tb_url_file` WHERE id != %d AND filename = %s LIMIT 1";
-		if ( file_exists( $file_to_del ) && ! $wpdb->get_var( $wpdb->prepare( $q, array( $file_row[ 'id' ], $file_row[ 'filename' ] ) ) ) ) {
+		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s LIMIT 1";
+		if ( file_exists( $file_to_del ) && ! $wpdb->get_var( $wpdb->prepare( $q, $file_row[ 'filename' ] ) ) ) {
 			// Safe to delete
 			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
 			unlink( $file_to_del );
 		}
-
-		$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
-		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
 	}
 
 	/**

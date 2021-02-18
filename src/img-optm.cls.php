@@ -1601,15 +1601,14 @@ class Img_Optm extends Trunk {
 	 * @since 1.6.2
 	 * @access private
 	 */
-	private function _switch_optm_file( $type )
-	{
+	private function _switch_optm_file( $type ) {
 		global $wpdb;
 
 		$pid = substr( $type, 4 );
 		$switch_type = substr( $type, 0, 4 );
 
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d AND post_id = %d";
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $pid ) ) );
+		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE post_id = %d AND optm_status = %d";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $pid, self::STATUS_PULLED ) ) );
 
 		$msg = 'Unknown Msg';
 
