@@ -416,6 +416,11 @@ class Media extends Root {
 			return $content;
 		}
 
+		if ( ! Control::is_cacheable() ) {
+			Debug2::debug( '[Media] bypass: Not cacheable' );
+			return $content;
+		}
+
 		Debug2::debug( '[Media] finalize' );
 
 		$this->content = $content;
