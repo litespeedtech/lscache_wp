@@ -192,6 +192,11 @@ class Optimize extends Trunk {
 			return $content;
 		}
 
+		if ( ! Control::is_cacheable() ) {
+			Debug2::debug( '[Optm] bypass: Not cacheable' );
+			return $content;
+		}
+
 		// Check if hit URI excludes
 		$excludes = $this->conf( self::O_OPTM_EXC );
 		if ( ! empty( $excludes ) ) {
@@ -658,7 +663,7 @@ class Optimize extends Trunk {
 	private function _build_hash_url( $src_list, $file_type = 'css' ) {
 		// $url_sensitive = $this->conf( self::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 		global $wp;
-		$request_url = home_url( $wp->request ); // TODO: make sure this url doesn't have qs, so no need to call remove_query_strings()
+		$request_url = home_url( $wp->request );
 
 		// Replace preserved ESI (before generating hash)
 		if ( $file_type == 'js' ) {
