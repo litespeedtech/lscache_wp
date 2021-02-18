@@ -34,7 +34,6 @@ class Optimize extends Trunk {
 	private $cfg_js_defer_exc = false;
 	private $cfg_ggfonts_async;
 	private $_conf_css_font_display;
-	private $cfg_ttl;
 	private $cfg_ggfonts_rm;
 
 	private $dns_prefetch;
@@ -230,7 +229,6 @@ class Optimize extends Trunk {
 			$this->_conf_css_font_display = self::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ];
 		}
 
-		$this->cfg_ttl = $this->conf( self::O_OPTM_TTL );
 		$this->cfg_ggfonts_rm = $this->conf( self::O_OPTM_GGFONTS_RM );
 
 		if ( ! $this->cls( 'Router' )->can_optm() ) {

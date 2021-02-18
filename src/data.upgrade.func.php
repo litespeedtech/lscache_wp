@@ -362,7 +362,7 @@ function litespeed_update_3_0( $ver ) {
 		// 'js_combined_priority'	=> 'optm-js_comb_priority',
 		'js_http2'				=> 'optm-js_http2',
 		'js_exclude' 			=> 'optm-js_exc',
-		'optimize_ttl'			=> 'optm-ttl',
+		// 'optimize_ttl'			=> 'optm-ttl',
 		'html_minify'			=> 'optm-html_min',
 		'optm_qs_rm'			=> 'optm-qs_rm',
 		'optm_ggfonts_rm'		=> 'optm-ggfonts_rm',

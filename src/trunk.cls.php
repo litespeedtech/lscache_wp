@@ -127,7 +127,6 @@ class Trunk extends Root {
 	const O_OPTM_JS_COMB_EXT_INL	= 'optm-js_comb_ext_inl';
 	const O_OPTM_JS_HTTP2 			= 'optm-js_http2';
 	const O_OPTM_JS_EXC 			= 'optm-js_exc';
-	const O_OPTM_TTL 				= 'optm-ttl';
 	const O_OPTM_HTML_MIN 			= 'optm-html_min';
 	const O_OPTM_QS_RM 				= 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
@@ -410,7 +409,6 @@ class Trunk extends Root {
 		self::O_OPTM_JS_COMB_EXT_INL	=> false,
 		self::O_OPTM_JS_HTTP2 			=> false,
 		self::O_OPTM_JS_EXC 			=> array(),
-		self::O_OPTM_TTL 				=> 0,
 		self::O_OPTM_HTML_MIN 			=> false,
 		self::O_OPTM_QS_RM 				=> false,
 		self::O_OPTM_GGFONTS_RM 		=> false,

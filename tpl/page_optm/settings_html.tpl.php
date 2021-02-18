@@ -9,22 +9,6 @@ defined( 'WPINC' ) || exit;
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_OPTM_TTL; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_input( $id ); ?> <?php $this->readable_seconds(); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Specify how long, in seconds, CSS/JS files are cached.', 'litespeed-cache' ); ?>
-				<?php $this->recommended( $id ); ?>
-				<?php $this->_validate_ttl( $id, 3600 ); ?>
-			</div>
-		</td>
-	</tr>
-
 	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_HTML_MIN; ?>
