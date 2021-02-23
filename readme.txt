@@ -247,6 +247,15 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 3.7 - 2021 =
+* **API** Dropped function `hook_vary_add()`.
+* **API** Dropped function `vary_add()`.
+* **API** Dropped function `filter_vary_cookies()`.
+* **API** Dropped function `hook_vary()`.
+* **API** Dropped action `litespeed_vary_add`.
+* **API** Dropped filter `litespeed_api_vary`.
+* **API** Use `litespeed_vary_curr_cookies` and `litespeed_vary_cookies` for Vary cookie operations instead.
+
 = 3.6.2 - Feb 1 2021 =
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
 * **Page Optimize** Fixed an issue where purge CSS/JS only caused 404 errors.

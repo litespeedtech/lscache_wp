@@ -52,7 +52,7 @@ class Quic extends Trunk {
 		$options[ '_server' ] = self::cls()->server_vars();
 
 		// Append hooks
-		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_api_vary', array() );
+		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_vary_cookies', array() );
 
 		Cloud::post( Cloud::SVC_D_SYNC_CONF, $options );
 	}

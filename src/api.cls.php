@@ -123,8 +123,10 @@ class API extends Trunk {
 		 * To modify default vary, There are two ways: Action `litespeed_vary_append` or Filter `litespeed_vary`
 		 */
 		add_action( 'litespeed_vary_ajax_force', __NAMESPACE__ . '\Vary::can_ajax_vary' ); // API::force_vary() -> Action `litespeed_vary_ajax_force` // Force finalize vary even if its in an AJAX call
+		// Filter `litespeed_vary_curr_cookies` to generate current in use vary, which will be used for response vary header.
+		// Filter `litespeed_vary_cookies` to register the final vary cookies, which will be written to rewrite rule. (litespeed_vary_curr_cookies are always equal to or less than litespeed_vary_cookies)
 		add_action( 'litespeed_vary_append', __NAMESPACE__ . '\Vary::append', 10, 2 ); // API::vary( $k, $v, $default = null ) -> Action `litespeed_vary_append // Alter default vary cookie value // Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
-		// API::hook_vary_finalize( $hook ) -> Filter `litespeed_vary`
+		// Filter `litespeed_vary` // Previous API::hook_vary_finalize( $hook )
 		add_action( 'litespeed_vary_no', __NAMESPACE__ . '\Control::set_no_vary' ); // API::set_cache_no_vary() -> Action `litespeed_vary_no` // Set cache status to no vary
 
 		// add_filter( 'litespeed_is_mobile', __NAMESPACE__ . '\Control::is_mobile' ); // API::set_mobile() -> Filter `litespeed_is_mobile`
@@ -188,64 +190,9 @@ class API extends Trunk {
 	}
 
 	/**
-	 * Hook new vary cookies to vary finialization
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function hook_vary_add( $hook )
-	{
-		add_action( 'litespeed_vary_add', $hook ) ;
-	}
-
-	/**
-	 * Add a new vary cookie
-	 *
-	 * @since 1.1.3
-	 * @since  2.7.1 Changed to filter hook instead of `Vary::add()`
-	 * @access public
-	 */
-	public static function vary_add( $vary, $priority = 10 )
-	{
-		add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
-			if ( ! is_array( $vary ) ) {
-				$vary = array( $vary ) ;
-			}
-			$cookies = array_merge( $cookies, $vary ) ;
-			return $cookies ;
-		}, $priority ) ;
-	}
-
-	/**
-	 * Hook vary cookies to vary finialization
-	 *
-	 * @since 2.7.1
-	 * @access public
-	 */
-	public static function filter_vary_cookies( $hook, $priority = 10 )
-	{
-		add_filter( 'litespeed_vary_cookies', $hook, $priority ) ;
-	}
-
-	/**
-	 * Hook vary appending to vary
-	 *
-	 * NOTE: This will add vary to rewrite rule
-	 *
-	 * @since 1.1.3
-	 * @since  2.7.1 This didn't work in 2.7- due to used add_action not filter
-	 * @access public
-	 */
-	public static function hook_vary( $hook )
-	{
-		add_filter( 'litespeed_api_vary', $hook ) ;
-	}
-
-	/**
 	 * @since 3.0
 	 */
-	public static function vary_append_commenter()
-	{
+	public static function vary_append_commenter() {
 		Vary::cls()->append_commenter() ;
 	}
 

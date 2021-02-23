@@ -550,27 +550,18 @@ class Htaccess extends Root {
 		$id = Base::O_CACHE_LOGIN_COOKIE;
 
 		// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
+		$vary_cookies = $cfg[ $id ] ? array( $cfg[ $id ] ) : array();
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH;
-			}
-			else {
-				$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH;
-			}
+			$vary_cookies[] = ',wp-postpass_' . COOKIEHASH;
 		}
 
-		$tp_cookies = apply_filters( 'litespeed_api_vary', array() );
-		if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
-			if ( ! empty( $cfg[ $id ] ) ) {
-				$cfg[ $id ] .= ',' . implode( ',', $tp_cookies );
-			}
-			else {
-				$cfg[ $id ] = implode( ',', $tp_cookies );
-			}
+		$tp_cookies = apply_filters( 'litespeed_vary_cookies', array() );
+		if ( $tp_cookies && is_array( $tp_cookies ) ) {
+			$vary_cookies = array_merge( $vary_cookies, $tp_cookies );
 		}
 		// frontend and backend
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$env = 'Cache-Vary:' . $cfg[ $id ];
+		if ( $vary_cookies ) {
+			$env = 'Cache-Vary:' . implode( ',', $vary_cookies );
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 				$env = '"' . $env . '"';
 			}

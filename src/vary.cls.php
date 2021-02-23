@@ -11,7 +11,6 @@ class Vary extends Root {
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
-	private static $_vary_cookies = array(); // vary header only!
 	private static $_default_vary_val = array();
 	private static $_can_change_vary = false; // Currently only AJAX used this
 
@@ -489,103 +488,82 @@ class Vary extends Root {
 	/**
 	 * Builds the vary header.
 	 *
-	 * Currently, this only checks post passwords.
+	 * NOTE: Non caccheable page can still set vary ( for logged in process )
+	 *
+	 * Currently, this only checks post passwords and 3rd party.
 	 *
 	 * @since 1.0.13
 	 * @access public
 	 * @global $post
-	 * @return mixed false if the user has the postpass cookie. Empty string
-	 * if the post is not password protected. Vary header otherwise.
+	 * @return mixed false if the user has the postpass cookie. Empty string if the post is not password protected. Vary header otherwise.
 	 */
 	public function finalize() {
+
 		// Finalize default vary
 		$this->_update_default_vary();
 
-		/**
-		 * Non caccheable page can still set vary ( for logged in process )
-		 * @since  1.6.6.1
-		 */
-		// if ( ! Control::is_cacheable() ) {
-		// 	Debug2::debug2( 'Vary: bypass finalize due to not cacheable' );
-		// 	return false;
-		// }
+		$tp_cookies = $this->finalize_curr_vary_cookies();
 
-		$tp_cookies = $this->_format_vary_cookies();
-		global $post;
-		if ( ! empty($post->post_password) ) {
-			if ( isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
-				Debug2::debug( '[Vary] finalize bypassed due to password protected vary ' );
-				// If user has password cookie, do not cache
-				Control::set_nocache('password protected vary');
-				return;
-			}
-
-			$tp_cookies[] = 'cookie=wp-postpass_' . COOKIEHASH;
-		}
-
-		if ( empty($tp_cookies) ) {
-			Debug2::debug2( '[Vary] no custimzed vary ' );
+		if ( ! $tp_cookies ) {
+			Debug2::debug2( '[Vary] no custimzed vary' );
 			return;
 		}
 
-		return self::X_HEADER . ': ' . implode(',', $tp_cookies);
-
+		return self::X_HEADER . ': ' . implode( ',', $tp_cookies );
 	}
 
 	/**
-	 * Gets vary cookies that are already added for the current page.
+	 * Gets vary cookies or their values unique hash that are already added for the current page.
 	 *
 	 * @since 1.0.13
-	 * @access private
-	 * @return array An array of all vary cookies currently added.
+	 * @access public
+	 * @return array List of all vary cookies currently added.
 	 */
-	private function _format_vary_cookies() {
-		/**
-		 * To add new varys, use hook `API::filter_vary_cookies()` before here
-		 */
-		do_action( 'litespeed_vary_add' );
+	public function finalize_curr_vary_cookies( $values_json = false ) {
+		global $post;
 
-		/**
-		 * Give a filter to manipulate vary
-		 * @since 2.7.1
-		 */
-		$cookies = apply_filters( 'litespeed_vary_cookies', self::$_vary_cookies );
-		if ( $cookies !== self::$_vary_cookies ) {
-			Debug2::debug( '[Vary] vary changed by filter [Old] ' . var_export( self::$_vary_cookies, true ) . ' [New] ' . var_export( $cookies, true )  );
-		}
-
-		if ( ! empty( $cookies ) ) {
+		$cookies = apply_filters( 'litespeed_vary_curr_cookies', array() );
+		if ( $cookies ) {
 			$cookies = array_filter( array_unique( $cookies ) );
+			Debug2::debug( '[Vary] vary cookies changed by filter litespeed_vary_curr_cookies', $cookies );
 		}
 
-		if ( empty($cookies) ) {
+		// Format cookie name data or value data
+		if ( $cookies ) {
+			foreach ( $cookies as $k => $v ) {
+				$cookies[ $k ] = $values_json ? $this->_get_cookie_val( $v ) : 'cookie=' . $v;
+			}
+		}
+
+		if ( ! empty( $post->post_password ) ) {
+			$postpass_key = 'wp-postpass_' . COOKIEHASH;
+			if ( $this->_get_cookie_val( $postpass_key ) ) {
+				Debug2::debug( '[Vary] finalize bypassed due to password protected vary ' );
+				// If user has password cookie, do not cache & ignore existing vary cookies
+				Control::set_nocache( 'password protected vary' );
+				return false;
+			}
+
+			$cookies[] = $values_json ? $this->_get_cookie_val( $postpass_key ) : 'cookie=' . $postpass_key;
+		}
+
+		if ( ! $cookies ) {
 			return false;
 		}
 
-		foreach ($cookies as $key => $val) {
-			$cookies[$key] = 'cookie=' . $val;
+		if ( $values_json ) {
+			return json_encode( $cookies );
 		}
 
 		return $cookies;
 	}
 
-	/**
-	 * Adds vary to the list of vary cookies for the current page.
-	 * This is to add a new vary cookie
-	 *
-	 * @since 1.0.13
-	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
-	 * @access public
-	 * @param mixed $vary A string or array of vary cookies to add to the current list.
-	 */
-	public static function add( $vary ) {
-		if ( ! is_array( $vary ) ) {
-			$vary = array( $vary );
+	private function _get_cookie_val( $key ) {
+		if ( ! empty( $_COOKIE[ $key ] ) ) {
+			return $_COOKIE[ $key ];
 		}
 
-		error_log( 'Deprecated since LSCWP 2.7.1! [Vary] Add new vary ' . var_export( $vary, true ) );
-
-		self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary);
+		return false;
 	}
 
 	/**

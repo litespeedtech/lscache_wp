@@ -412,7 +412,7 @@ class Data extends Root {
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
 	 * @since  3.7
 	 */
-	public function save_url( $page_url, $vary, $file_type, $filecon_md5, $path ) {
+	public function save_url( $request_url, $vary, $file_type, $filecon_md5, $path ) {
 		global $wpdb;
 
 		$type = $this->_url_file_types[ $file_type ];
@@ -420,10 +420,10 @@ class Data extends Root {
 		$tb_url = $this->tb( 'url' );
 		$tb_url_file = $this->tb( 'url_file' );
 		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $page_url ), ARRAY_A );
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A );
 		if ( ! $url_row ) {
 			$q = "INSERT INTO `$tb_url` SET url=%s";
-			$url_id = $wpdb->query( $wpdb->prepare( $q, $page_url ) );
+			$url_id = $wpdb->query( $wpdb->prepare( $q, $request_url ) );
 		}
 		else {
 			$url_id = $url_row[ 'id' ];
@@ -453,6 +453,34 @@ class Data extends Root {
 			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
 			unlink( $file_to_del );
 		}
+	}
+
+	/**
+	 * Load CCSS related file
+	 * @since  3.7
+	 */
+	public function load_url_file( $request_url, $vary, $file_type ) {
+		global $wpdb;
+
+		$type = $this->_url_file_types[ $file_type ];
+
+		$tb_url = $this->tb( 'url' );
+		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A );
+		if ( ! $url_row ) {
+			return false;
+		}
+
+		$url_id = $url_row[ 'id' ];
+
+		$tb_url_file = $this->tb( 'url_file' );
+		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d";
+		$file_row = $wpdb->get_row( $wpdb->prepare( $q, array( $url_id, $vary, $type ) ), ARRAY_A );
+		if ( ! $file_row ) {
+			return false;
+		}
+
+		return $file_row[ 'filename' ];
 	}
 
 	/**
