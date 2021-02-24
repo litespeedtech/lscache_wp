@@ -530,6 +530,7 @@ class Vary extends Root {
 
 		// Format cookie name data or value data
 		if ( $cookies ) {
+			sort( $cookies );
 			foreach ( $cookies as $k => $v ) {
 				$cookies[ $k ] = $values_json ? $this->_get_cookie_val( $v ) : 'cookie=' . $v;
 			}
