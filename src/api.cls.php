@@ -125,7 +125,6 @@ class API extends Trunk {
 		add_action( 'litespeed_vary_ajax_force', __NAMESPACE__ . '\Vary::can_ajax_vary' ); // API::force_vary() -> Action `litespeed_vary_ajax_force` // Force finalize vary even if its in an AJAX call
 		// Filter `litespeed_vary_curr_cookies` to generate current in use vary, which will be used for response vary header.
 		// Filter `litespeed_vary_cookies` to register the final vary cookies, which will be written to rewrite rule. (litespeed_vary_curr_cookies are always equal to or less than litespeed_vary_cookies)
-		add_action( 'litespeed_vary_append', __NAMESPACE__ . '\Vary::append', 10, 2 ); // API::vary( $k, $v, $default = null ) -> Action `litespeed_vary_append // Alter default vary cookie value // Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
 		// Filter `litespeed_vary` // Previous API::hook_vary_finalize( $hook )
 		add_action( 'litespeed_vary_no', __NAMESPACE__ . '\Control::set_no_vary' ); // API::set_cache_no_vary() -> Action `litespeed_vary_no` // Set cache status to no vary
 

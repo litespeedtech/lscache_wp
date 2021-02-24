@@ -11,7 +11,6 @@ class Vary extends Root {
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
-	private static $_default_vary_val = array();
 	private static $_can_change_vary = false; // Currently only AJAX used this
 
 	/**
@@ -344,7 +343,7 @@ class Vary extends Root {
 	}
 
 	/**
-	 * Finalize default vary
+	 * Finalize default Vary Cookie
 	 *
 	 *  Get user vary tag based on admin_bar & role
 	 *
@@ -354,7 +353,7 @@ class Vary extends Root {
 	 * @access public
 	 */
 	public function finalize_default_vary( $uid = false ) {
-		$vary = self::$_default_vary_val;
+		$vary = array();
 
 		if ( ! $uid ) {
 			$uid = get_current_user_id();
@@ -565,16 +564,6 @@ class Vary extends Root {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Append child value to default vary
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function append( $name, $val ) {
-		self::$_default_vary_val[ $name ] = $val;
 	}
 
 	/**

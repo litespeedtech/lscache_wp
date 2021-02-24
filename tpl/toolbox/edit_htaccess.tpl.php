@@ -11,7 +11,6 @@ try {
 	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>';
 }
 
-
 $htaccess_path = Htaccess::get_frontend_htaccess();
 
 // Check if there is `ExpiresDefault` in .htaccess

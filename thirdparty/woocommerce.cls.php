@@ -177,8 +177,7 @@ class WooCommerce extends Trunk {
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function vary_maintain( $vary )
-	{
+	public function vary_maintain( $vary ) {
 		if ( $this->vary_needed() ) {
 			do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' );
 			$vary[ 'woo_cart' ] = 1;
