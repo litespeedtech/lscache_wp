@@ -132,7 +132,8 @@ class Optimizer extends Root {
 		}
 
 		$vary = $this->cls( 'Vary' )->finalize_curr_vary_cookies( true );
-		$vary .= $this->cls( 'Vary' )->finalize_default_vary( get_current_user_id() ); // todo: need to check webp works or not
+		$vary .= $this->cls( 'Vary' )->finalize_default_vary( get_current_user_id() );
+		$vary .= $this->cls( 'Vary' )->get_env_vary();
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
 		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary ? md5( $vary ) : false, $file_type, $filecon_md5, dirname( $realfile ) );
 

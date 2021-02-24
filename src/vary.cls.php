@@ -415,7 +415,19 @@ class Vary extends Root {
 		}
 		// Encrypt in production
 		return md5( $this->conf( Base::HASH ) . $res );
+	}
 
+	/**
+	 * Get request environment Vary
+	 *
+	 * @since  3.7
+	 */
+	public function get_env_vary() {
+		$env_vary = isset( $_SERVER[ 'LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'LSCACHE_VARY_VALUE' ] : false;
+		if ( ! $env_vary ) {
+			$env_vary = isset( $_SERVER[ 'HTTP_X_LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'HTTP_X_LSCACHE_VARY_VALUE' ] : false;
+		}
+		return $env_vary;
 	}
 
 	/**
@@ -558,6 +570,11 @@ class Vary extends Root {
 		return $cookies;
 	}
 
+	/**
+	 * Get one vary cookie value
+	 *
+	 * @since  3.7
+	 */
 	private function _get_cookie_val( $key ) {
 		if ( ! empty( $_COOKIE[ $key ] ) ) {
 			return $_COOKIE[ $key ];
