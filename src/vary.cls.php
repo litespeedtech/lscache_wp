@@ -418,6 +418,18 @@ class Vary extends Root {
 	}
 
 	/**
+	 * Get the hash of all vary related values
+	 *
+	 * @since  3.7
+	 */
+	public function finalize_full_varies() {
+		$vary = $this->_finalize_curr_vary_cookies( true );
+		$vary .= $this->finalize_default_vary( get_current_user_id() );
+		$vary .= $this->get_env_vary();
+		return $vary;
+	}
+
+	/**
 	 * Get request environment Vary
 	 *
 	 * @since  3.7
@@ -509,11 +521,10 @@ class Vary extends Root {
 	 * @return mixed false if the user has the postpass cookie. Empty string if the post is not password protected. Vary header otherwise.
 	 */
 	public function finalize() {
-
 		// Finalize default vary
 		$this->_update_default_vary();
 
-		$tp_cookies = $this->finalize_curr_vary_cookies();
+		$tp_cookies = $this->_finalize_curr_vary_cookies();
 
 		if ( ! $tp_cookies ) {
 			Debug2::debug2( '[Vary] no custimzed vary' );
@@ -527,25 +538,13 @@ class Vary extends Root {
 	 * Gets vary cookies or their values unique hash that are already added for the current page.
 	 *
 	 * @since 1.0.13
-	 * @access public
+	 * @access private
 	 * @return array List of all vary cookies currently added.
 	 */
-	public function finalize_curr_vary_cookies( $values_json = false ) {
+	private function _finalize_curr_vary_cookies( $values_json = false ) {
 		global $post;
 
-		$cookies = apply_filters( 'litespeed_vary_curr_cookies', array() );
-		if ( $cookies ) {
-			$cookies = array_filter( array_unique( $cookies ) );
-			Debug2::debug( '[Vary] vary cookies changed by filter litespeed_vary_curr_cookies', $cookies );
-		}
-
-		// Format cookie name data or value data
-		if ( $cookies ) {
-			sort( $cookies );
-			foreach ( $cookies as $k => $v ) {
-				$cookies[ $k ] = $values_json ? $this->_get_cookie_val( $v ) : 'cookie=' . $v;
-			}
-		}
+		$cookies = array(); // No need to append default vary cookie name
 
 		if ( ! empty( $post->post_password ) ) {
 			$postpass_key = 'wp-postpass_' . COOKIEHASH;
@@ -556,18 +555,25 @@ class Vary extends Root {
 				return false;
 			}
 
-			$cookies[] = $values_json ? $this->_get_cookie_val( $postpass_key ) : 'cookie=' . $postpass_key;
+			$cookies[] = $values_json ? $this->_get_cookie_val( $postpass_key ) : $postpass_key;
+		}
+
+		$cookies = apply_filters( 'litespeed_vary_curr_cookies', $cookies );
+		if ( $cookies ) {
+			$cookies = array_filter( array_unique( $cookies ) );
+			Debug2::debug( '[Vary] vary cookies changed by filter litespeed_vary_curr_cookies', $cookies );
 		}
 
 		if ( ! $cookies ) {
 			return false;
 		}
-
-		if ( $values_json ) {
-			return json_encode( $cookies );
+		// Format cookie name data or value data
+		sort( $cookies ); // This is to maintain the cookie val orders for $values_json=true case.
+		foreach ( $cookies as $k => $v ) {
+			$cookies[ $k ] = $values_json ? $this->_get_cookie_val( $v ) : 'cookie=' . $v;
 		}
 
-		return $cookies;
+		return $values_json ? json_encode( $cookies ) : $cookies;
 	}
 
 	/**

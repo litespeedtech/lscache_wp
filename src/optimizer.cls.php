@@ -131,9 +131,7 @@ class Optimizer extends Root {
 			unlink( $tmp_static_file );
 		}
 
-		$vary = $this->cls( 'Vary' )->finalize_curr_vary_cookies( true );
-		$vary .= $this->cls( 'Vary' )->finalize_default_vary( get_current_user_id() );
-		$vary .= $this->cls( 'Vary' )->get_env_vary();
+		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
 		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary ? md5( $vary ) : false, $file_type, $filecon_md5, dirname( $realfile ) );
 

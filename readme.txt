@@ -257,7 +257,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **API** Use `litespeed_vary_curr_cookies` and `litespeed_vary_cookies` for Vary cookie operations instead.
 * **API** Dropped action `litespeed_vary_append`.
 * **Vary** Dropped function `append()`.
-* Note: Need to test if `WCML` vary works or not.
+Note: Need to test if `WCML` vary works or not.
+Note: Need to test if OLS password protect page works on cache or not.
+todo: test if response vary header can work in latest OLS, drop the two vary lines in htaccess.cls
+Note: test Aelia_CurrencySwitcher
 
 = 3.6.2 - Feb 1 2021 =
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
