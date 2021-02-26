@@ -133,7 +133,7 @@ class Optimizer extends Root {
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
-		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary ? md5( $vary ) : false, $file_type, $filecon_md5, dirname( $realfile ) );
+		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
 
 		return $final_file_path;
 	}

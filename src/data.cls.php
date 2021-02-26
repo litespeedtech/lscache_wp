@@ -409,11 +409,26 @@ class Data extends Root {
 	}
 
 	/**
+	 * Keep table but clear all data
+	 *
+	 * @since  3.7
+	 */
+	public function table_reset( $tb ) {
+		global $wpdb;
+		$q = 'TRUNCATE TABLE ' . $this->tb( $tb );
+		$wpdb->query( $q );
+	}
+
+	/**
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
 	 * @since  3.7
 	 */
 	public function save_url( $request_url, $vary, $file_type, $filecon_md5, $path ) {
 		global $wpdb;
+
+		if ( strlen( $vary ) > 32 ) {
+			$vary = md5( $vary );
+		}
 
 		$type = $this->_url_file_types[ $file_type ];
 
@@ -461,6 +476,10 @@ class Data extends Root {
 	 */
 	public function load_url_file( $request_url, $vary, $file_type ) {
 		global $wpdb;
+
+		if ( strlen( $vary ) > 32 ) {
+			$vary = md5( $vary );
+		}
 
 		$type = $this->_url_file_types[ $file_type ];
 
