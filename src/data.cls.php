@@ -413,7 +413,7 @@ class Data extends Root {
 	 *
 	 * @since  3.7
 	 */
-	public function table_reset( $tb ) {
+	public function table_truncate( $tb ) {
 		global $wpdb;
 		$q = 'TRUNCATE TABLE ' . $this->tb( $tb );
 		$wpdb->query( $q );

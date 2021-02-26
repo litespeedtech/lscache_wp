@@ -302,7 +302,7 @@ class Vary extends Root {
 			}
 			$this->_cookie( $vary, $expire );
 			Debug2::debug( "[Vary] set_cookie ---> $vary" );
-			Control::set_nocache( 'changing default vary' . " $current_vary => $vary" );
+			// Control::set_nocache( 'changing default vary' . " $current_vary => $vary" );
 		}
 	}
 
@@ -469,7 +469,7 @@ class Vary extends Root {
 			// save it
 			// only set commenter status for current domain path
 			$this->_cookie( 'commenter', time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) );
-			Control::set_nocache( 'adding commenter status' );
+			// Control::set_nocache( 'adding commenter status' );
 		}
 	}
 
@@ -486,7 +486,7 @@ class Vary extends Root {
 
 			// save it
 			$this->_cookie( false, false, self::_relative_path() );
-			Control::set_nocache( 'removing commenter status' );
+			// Control::set_nocache( 'removing commenter status' );
 		}
 	}
 
