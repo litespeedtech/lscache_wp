@@ -784,6 +784,10 @@ class Optimize extends Trunk {
 					$this_src_arr[ 'attrs' ] = $match[ 1 ];
 				}
 			}
+			else { // Compatibility to those who changed src to data-src already
+				Debug2::debug2( '[Optm] No JS src or inline JS content' );
+				continue;
+			}
 
 			$src_list[] = $this_src_arr;
 			$html_list[] = $match[ 0 ];
