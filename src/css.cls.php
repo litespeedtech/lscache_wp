@@ -305,9 +305,8 @@ class CSS extends Trunk {
 	 */
 	private function _prepare_css( $html, $dryrun =false ) {
 		$css = '';
-		preg_match_all( '#<link ([^>]+)/?>|<style[^>]*>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
+		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
-			$attrs = false;
 			$debug_info = '';
 			if ( strpos( $match[ 0 ], '<link' ) === 0 ) {
 				$attrs = Utility::parse_attr( $match[ 1 ] );
@@ -323,7 +322,7 @@ class CSS extends Trunk {
 				}
 
 				if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
-					continue;
+					// continue; // Lets allow print to reuse this func in UCSS
 				}
 				if ( empty( $attrs[ 'href' ] ) ) {
 					continue;
@@ -349,22 +348,24 @@ class CSS extends Trunk {
 				}
 			}
 			else { // Inline style
-				Debug2::debug2( '[CCSS] Load inline CSS ' . substr( $match[ 2 ], 0, 100 ) . '...' );
-				$con = $match[ 2 ];
+				$attrs = Utility::parse_attr( $match[ 2 ] );
+				Debug2::debug2( '[CSS] Load inline CSS ' . substr( $match[ 3 ], 0, 100 ) . '...', $attrs );
+				$con = $match[ 3 ];
 
 				$debug_info = '__INLINE__';
 			}
 
 			$con = Optimizer::minify_css( $con );
 
-			$con = '/* ' . $debug_info . ' */' . $con;
-
 			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
-				$css .= '@media ' . $attrs[ 'media' ] . '{' . $con . "\n}";
+				$con = '@media ' . $attrs[ 'media' ] . '{' . $con . "}\n";
 			}
 			else {
-				$css .= $con . "\n";
+				$con = $con . "\n";
 			}
+
+			$con = '/* ' . $debug_info . ' */' . $con;
+			$css .= $con;
 
 			$html = str_replace( $match[ 0 ], '', $html );
 		}
