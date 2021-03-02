@@ -43,16 +43,6 @@ class CSS extends Trunk {
 	}
 
 	/**
-	 * Generate realpath of ccss
-	 *
-	 * @since  2.3
-	 * @access private
-	 */
-	private function _ccss_realpath( $ccss_type ) {
-		return LITESPEED_STATIC_DIR . "/ccss/$ccss_type.css";
-	}
-
-	/**
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.3
@@ -75,43 +65,51 @@ class CSS extends Trunk {
 	}
 
 	/**
-	 * Generate currnt url
-	 * @since  3.7
-	 */
-	private function _curr_url() {
-		global $wp;
-		return home_url( $wp->request );
-	}
-
-	/**
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
 	 */
 	private function _ccss() {
-		$ccss_type = $this->_which_css();
-		$ccss_file = $this->_ccss_realpath( $ccss_type );
+		global $wp;
+		$request_url = home_url( $wp->request );
 
-		if ( file_exists( $ccss_file ) ) {
-			Debug2::debug2( '[CSS] existing ccss ' . $ccss_file );
-			return File::read( $ccss_file );
+		$file_path_prefix = '/ccss/';
+		if ( is_multisite() ) {
+			$file_path_prefix .= get_current_blog_id() . '/';
 		}
 
-		$request_url = $this->_curr_url();
+		$req_url_tag = is_404() ? '404' : $request_url;
+
+		$vary = $this->cls( 'Vary' )->finalize_full_varies();
+		$filename = $this->cls( 'Data' )->load_url_file( $req_url_tag, $vary, 'ccss' );
+		if ( $filename ) {
+			$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . $filename . '.css';
+
+			if ( file_exists( $static_file ) ) {
+				Debug2::debug2( '[CSS] existing ccss ' . $static_file );
+				return File::read( $static_file );
+			}
+		}
+
+		$uid = get_current_user_id();
 
 		// Store it to prepare for cron
 		if ( empty( $this->_summary[ 'queue' ] ) ) {
 			$this->_summary[ 'queue' ] = array();
 		}
-		$this->_summary[ 'queue' ][ $ccss_type ] = array(
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $req_url_tag;
+		$this->_summary[ 'queue' ][ $queue_k ] = array(
 			'url'			=> $request_url,
 			'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
-		);// Current UA will be used to request
-		Debug2::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] );
+			'uid'			=> $uid,
+			'vary'			=> $vary,
+			'url_tag'		=> $req_url_tag,
+		); // Current UA will be used to request
+		Debug2::debug( '[CSS] Added queue [req_url_tag] ' . $req_url_tag . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
-		Tag::add( 'CCSS.' . $ccss_type );
+		Tag::add( 'CCSS.' . md5( $queue_k ) );
 
 		self::save_summary();
 		return null;
@@ -150,9 +148,15 @@ class CSS extends Trunk {
 		foreach ( $_instance->_summary[ 'queue' ] as $k => $v ) {
 			Debug2::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
-			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] );
+			if ( empty( $v[ 'url_tag' ] ) ) {
+				Debug2::debug( '[CSS] wrong queue format' );
+				$this->_popup_and_save( $k, $v[ 'url' ] );
+				continue;
+			}
 
-			Purge::add( 'CCSS.' . $k );
+			$_instance->_generate_ccss( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $v[ 'is_mobile' ] );
+
+			Purge::add( 'CCSS.' . md5( $k ) );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -167,41 +171,39 @@ class CSS extends Trunk {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile ) {
+	private function _generate_ccss( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $is_mobile ) {
 		// Check if has credit to push
-		$allowance = Cloud::cls()->allowance( Cloud::SVC_CCSS );
+		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {
 			Debug2::debug( '[CCSS] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
 			return;
 		}
 
-		$ccss_file = $this->_ccss_realpath( $ccss_type );
-
 		// Update css request status
 		$this->_summary[ 'curr_request' ] = time();
 		self::save_summary();
 
 		// Gather guest HTML to send
-		$html = $this->_prepare_html( $request_url, $user_agent );
+		$html = $this->_prepare_html( $request_url, $user_agent, $uid );
 
 		if ( ! $html ) {
-			return false;
+			return;
 		}
 
 		// Parse HTML to gather all CSS content before requesting
 		list( $css, $html ) = $this->_prepare_css( $html );
 
 		if ( ! $css ) {
-			return false;
+			return;
 		}
 
 		// Generate critical css
 		$data = array(
 			'url'			=> $request_url,
-			'ccss_type'		=> $ccss_type,
+			'ccss_type'		=> $queue_k,
 			'user_agent'	=> $user_agent,
-			'is_mobile'		=> $is_mobile ? 1 : 0,
+			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
 			'html'			=> $html,
 			'css'			=> $css,
 			'type'			=> 'CCSS',
@@ -211,32 +213,38 @@ class CSS extends Trunk {
 
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 30 );
 		if ( ! is_array( $json ) ) {
-			return false;
+			return;
 		}
 
 		if ( empty( $json[ 'ccss' ] ) ) {
 			Debug2::debug( '[CSS] ❌ empty ccss' );
-			$this->_popup_and_save( $ccss_type, $request_url );
-			return false;
+			$this->_popup_and_save( $queue_k, $request_url );
+			return;
 		}
 
 		// Add filters
-		$ccss = apply_filters( 'litespeed_ccss', $json[ 'ccss' ], $ccss_type );
+		$ccss = apply_filters( 'litespeed_ccss', $json[ 'ccss' ], $queue_k );
+		Debug2::debug2( '[CSS] ccss con: ' . $ccss );
 
 		// Write to file
-		File::save( $ccss_file, $ccss, true );
+		$filecon_md5 = md5( $ccss );
+
+		$file_path_prefix = '/ccss/';
+		if ( is_multisite() ) {
+			$file_path_prefix .= get_current_blog_id() . '/';
+		}
+		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . $filecon_md5 . '.css';
+
+		File::save( $static_file, $ccss, true );
+		Debug2::debug2( "[CCSS] Save URL to file [file] $static_file [vary] $vary" );
+
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, 'ccss', $filecon_md5, dirname( $static_file ) );
 
 		// Save summary data
 		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ];
 		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ];
 		$this->_summary[ 'curr_request' ] = 0;
-		$this->_popup_and_save( $ccss_type, $request_url );
-
-		Debug2::debug( '[CSS] saved ccss ' . $ccss_file );
-
-		Debug2::debug2( '[CSS] ccss con: ' . $ccss );
-
-		return $ccss;
+		$this->_popup_and_save( $queue_k, $request_url );
 	}
 
 	/**
@@ -278,12 +286,12 @@ class CSS extends Trunk {
 	 *
 	 * @since  3.4.3
 	 */
-	private function _prepare_html( $request_url, $user_agent ) {
-		$html = Crawler::cls()->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent );
+	private function _prepare_html( $request_url, $user_agent, $uid = false ) {
+		$html = $this->cls( 'Crawler' )->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent, $uid );
 		Debug2::debug2( '[CSS] self_curl result....', $html );
 
 
-		$html = Optimizer::cls()->html_min( $html, true );
+		$html = $this->cls( 'Optimizer' )->html_min( $html, true );
 		// Drop <noscript>xxx</noscript>
 		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
 
@@ -471,13 +479,18 @@ class CSS extends Trunk {
 	 *
 	 * @since  3.0
 	 */
-	private function _popup_and_save( $ccss_type, $request_url )
+	private function _popup_and_save( $queue_k, $request_url )
 	{
 		if ( empty( $this->_summary[ 'ccss_type_history' ] ) ) {
 			$this->_summary[ 'ccss_type_history' ] = array();
 		}
-		$this->_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url;
-		unset( $this->_summary[ 'queue' ][ $ccss_type ] );
+		$this->_summary[ 'ccss_type_history' ][ $queue_k ] = $request_url;
+
+		while ( count( $this->_summary[ 'ccss_type_history' ] ) > 100 ) {
+			array_shift( $this->_summary[ 'ccss_type_history' ] );
+		}
+
+		unset( $this->_summary[ 'queue' ][ $queue_k ] );
 
 		self::save_summary();
 	}
@@ -497,35 +510,6 @@ class CSS extends Trunk {
 
 		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
-	}
-
-	/**
-	 * The critical css file for current page
-	 *
-	 * @since  2.3
-	 * @access private
-	 */
-	private function _which_css() {
-		// $md5_src = md5( $_SERVER[ 'SCRIPT_URI' ] );
-		$md5_src = md5( $this->_curr_url() );
-		if ( is_404() ) {
-			$md5_src = '404';
-		}
-
-		$filename = $md5_src;
-		if ( is_user_logged_in() ) {
-			$role = Router::get_role();
-			$filename = $this->cls( 'Vary' )->in_vary_group( $role ) . '_' . $filename;
-		}
-		if ( is_multisite() ) {
-			$filename = get_current_blog_id() . '/' . $filename;
-		}
-
-		if ( $this->_separate_mobile_ccss() ) {
-			$filename .= '.mobile';
-		}
-
-		return $filename;
 	}
 
 	/**

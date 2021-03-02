@@ -171,7 +171,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
 							<?php echo $v[ 'url' ]; ?>
-							<?php if ( $pos = strpos( $k, '_' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
+							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 							<br />
 						<?php endforeach; ?>
