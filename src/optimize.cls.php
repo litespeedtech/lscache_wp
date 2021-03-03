@@ -171,6 +171,10 @@ class Optimize extends Trunk {
 			return $src;
 		}
 
+		if ( ! Utility::is_internal_file( $src ) ) {
+			return $src;
+		}
+
 		if ( strpos( $src, '.js?' ) !== false || strpos( $src, '.css?' ) !== false ) {
 			$src = preg_replace( '/\?.*/', '', $src );
 		}
