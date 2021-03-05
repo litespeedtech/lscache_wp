@@ -213,6 +213,9 @@ class Purge extends Trunk {
 
 		$this->cls( 'CSS' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
+		$this->cls( 'Data' )->url_file_clean( 'ccss' );
+		$this->cls( 'Data' )->url_file_clean( 'ucss' );
+
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Critical CSS files.', 'litespeed-cache' );
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
@@ -287,7 +290,8 @@ class Purge extends Trunk {
 
 		$this->cls( 'Optimize' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
-		$this->cls( 'Data' )->table_truncate( 'url_file' );
+		$this->cls( 'Data' )->url_file_clean( 'css' );
+		$this->cls( 'Data' )->url_file_clean( 'js' );
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );

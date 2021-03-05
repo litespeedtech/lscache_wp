@@ -402,18 +402,49 @@ $placeholder_summary = Placeholder::get_summary();
 						<?php echo __( 'Critical CSS', 'litespeed-cache' ); ?>
 					</h3>
 
-					<?php if ( ! empty( $css_summary[ 'last_request' ] ) ) : ?>
+					<?php if ( ! empty( $css_summary[ 'last_request_ccss' ] ) ) : ?>
 						<p>
-							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request' ] ) . '</code>'; ?>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ccss' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent' ] . 's</code>'; ?>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ccss' ] . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue' ] ) ? count( $css_summary[ 'queue' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GENERATE_CRITICAL ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? count( $css_summary[ 'queue_ccss' ] ) : '-' ?></code>
+						<a href="<?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ccss' ] ) ) echo 'disabled'; ?>">
+							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
+						</a>
+					</p>
+
+				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.ccss' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
+					</div>
+				<?php endif; ?>
+			</div>
+
+			<div class="postbox litespeed-postbox litespeed-postbox-ucss litespeed-hide">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'Unique CSS', 'litespeed-cache' ); ?>
+					</h3>
+
+					<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
+
+					<p>
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? count( $css_summary[ 'queue_ucss' ] ) : '-' ?></code>
+						<a href="<?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ucss' ] ) ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>

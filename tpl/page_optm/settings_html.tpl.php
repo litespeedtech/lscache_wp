@@ -61,7 +61,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Remove query strings from static resources.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Remove query strings from internal static resources.', 'litespeed-cache' ); ?>
 				<br /><font class="litespeed-warning">
 					⚠️
 					<?php echo __( 'Google reCAPTCHA will be bypassed automatically.', 'litespeed-cache' ); ?>

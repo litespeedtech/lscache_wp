@@ -65,29 +65,24 @@ class Optimizer extends Root {
 	 * @access public
 	 */
 	public function serve( $request_url, $file_type, $minify, $src_list ) {
+		// Try Unique CSS
+		if ( $file_type == 'css' ) {
+			$content = false;
+			if ( $this->conf( Base::O_OPTM_UCSS ) ) {
+				$final_file_path = $this->cls( 'CSS' )->load_ucss( $request_url );
+
+				if ( $final_file_path ) {
+					return $final_file_path;
+				}
+			}
+		}
+
 		// Before generated, don't know the contented hash filename yet, so used url hash as tmp filename
 		$file_path_prefix = '/' . $file_type . '/';
 		if ( is_multisite() ) {
 			$file_path_prefix .= get_current_blog_id() . '/';
 		}
 		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . ( is_404() ? '404' : md5( $request_url ) ) . '.' . $file_type;
-
-		// Check if need to run Unique CSS feature
-		if ( $file_type == 'css' ) {
-			// CHeck if need to trigger UCSS or not
-			$content = false;
-			if ( $this->conf( Base::O_OPTM_UCSS ) ) {
-				$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
-				$content = $this->cls( 'CSS' )->gen_ucss( $request_url, $ua );//todo: how to store ua!!!
-			}
-
-			$content = apply_filters( 'litespeed_css_serve', $content, $static_file, $src_list, $request_url );//xx
-			if ( $content ) {
-				Debug2::debug( '[Optmer] Content from filter `litespeed_css_serve` for [file] ' . $static_file . ' [url] ' . $request_url );
-				File::save( $static_file, $content, true ); // todo: UCSS CDN and CSS font display setting
-				return true;
-			}
-		}
 
 		// Create tmp file to avoid conflict
 		$tmp_static_file = $static_file . '.tmp';

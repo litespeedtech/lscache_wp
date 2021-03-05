@@ -401,7 +401,7 @@ class Trunk extends Root {
 		self::O_OPTM_CSS_COMB 			=> false,
 		self::O_OPTM_CSS_COMB_EXT_INL	=> false,
 		self::O_OPTM_UCSS 				=> false,
-		// self::O_OPTM_UCSS_WHITELIST		=> array(),
+		self::O_OPTM_UCSS_WHITELIST		=> array(),
 		self::O_OPTM_CSS_HTTP2 			=> false,
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,

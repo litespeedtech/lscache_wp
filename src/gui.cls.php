@@ -497,11 +497,11 @@ class GUI extends Trunk {
 			) );
 		}
 
-		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
+		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - CCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
@@ -648,11 +648,11 @@ class GUI extends Trunk {
 			) );
 		}
 
-		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
+		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - CCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );

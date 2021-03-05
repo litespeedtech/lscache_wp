@@ -420,6 +420,18 @@ class Data extends Root {
 	}
 
 	/**
+	 * Clean certain type of url_file
+	 *
+	 * @since  3.7
+	 */
+	public function url_file_clean( $file_type ) {
+		global $wpdb;
+		$type = $this->_url_file_types[ $file_type ];
+		$q = 'DELETE FROM ' . $this->tb( 'url_file' ) . ' WHERE `type` = %d';
+		$wpdb->query( $wpdb->prepare( $q, $type ) );
+	}
+
+	/**
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
 	 * @since  3.7
 	 */
@@ -509,6 +521,20 @@ class Data extends Root {
 	 */
 	public function load_css_exc( $list ) {
 		$data = $this->_load_per_line( 'css_excludes.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Get list from `data/ucss_whitelist.txt`
+	 *
+	 * @since  3.7
+	 */
+	public function load_ucss_whitelist( $list ) {
+		$data = $this->_load_per_line( 'ucss_whitelist.txt' );
 		if ( $data ) {
 			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
 		}

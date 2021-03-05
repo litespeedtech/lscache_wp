@@ -640,7 +640,7 @@ class Control extends Root {
 		}
 		if ( $env_vary && strpos( $env_vary, 'ismobile' ) !== false ) {
 			if ( ! wp_is_mobile() && ! $is_mobile ) {
-				self::set_nocache( 'is not mobile' );
+				self::set_nocache( 'is not mobile' ); // todo: no need to uncache, it will correct vary value in vary finalize anyways
 				return;
 			}
 		}

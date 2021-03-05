@@ -104,7 +104,7 @@ class Lang extends Trunk {
 			self::O_OPTM_CSS_COMB				=> __( 'CSS Combine', 'litespeed-cache' ),
 			self::O_OPTM_CSS_COMB_EXT_INL		=> __( 'CSS Combine External and Inline', 'litespeed-cache' ),
 			self::O_OPTM_UCSS					=> __( 'Generate UCSS', 'litespeed-cache' ),
-			self::O_OPTM_UCSS_WHITELIST			=> __( 'UCSS Whitelist Selector', 'litespeed-cache' ),
+			self::O_OPTM_UCSS_WHITELIST			=> __( 'UCSS Whitelist', 'litespeed-cache' ),
 			self::O_OPTM_CSS_HTTP2				=> __( 'CSS HTTP/2 Push', 'litespeed-cache' ),
 			self::O_OPTM_JS_MIN					=> __( 'JS Minify', 'litespeed-cache' ),
 			self::O_OPTM_JS_COMB				=> __( 'JS Combine', 'litespeed-cache' ),

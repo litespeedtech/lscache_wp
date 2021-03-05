@@ -946,18 +946,18 @@ class Optimize extends Trunk {
 				}
 
 				// Check Google fonts hit
-				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
+				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {Debug2::debug('---------------handling ' .$attrs['href'] );
 					/**
 					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
 					 * @since  2.7.3
-					 * @since  3.0 For fotn display optm, need to parse google fonts URL too
+					 * @since  3.0 For font display optm, need to parse google fonts URL too
 					 */
 					if ( ! in_array( $attrs[ 'href' ], $this->_ggfonts_urls ) ) {
 						$this->_ggfonts_urls[] = $attrs[ 'href' ];
 					}
 
 					if ( $this->cfg_ggfonts_rm || $this->cfg_ggfonts_async ) {
-						Debug2::debug2( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] );
+						Debug2::debug( '[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ] );
 						$this->content = str_replace( $match[ 0 ], '', $this->content );
 
 						continue;
