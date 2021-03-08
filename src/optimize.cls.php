@@ -946,7 +946,7 @@ class Optimize extends Trunk {
 				}
 
 				// Check Google fonts hit
-				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {Debug2::debug('---------------handling ' .$attrs['href'] );
+				if ( strpos( $attrs[ 'href' ], 'fonts.googleapis.com' ) !== false ) {
 					/**
 					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
 					 * @since  2.7.3
