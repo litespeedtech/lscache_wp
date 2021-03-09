@@ -14,7 +14,6 @@ defined( 'WPINC' ) || exit;
 
 use \LiteSpeed\API;
 use \LiteSpeed\Base;
-use \LiteSpeed\Base;
 
 class WooCommerce extends Base {
 	const O_CACHE_TTL_FRONTPAGE = Base::O_CACHE_TTL_FRONTPAGE;
