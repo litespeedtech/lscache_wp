@@ -1002,6 +1002,10 @@ class Optimize extends Trunk {
 
 				$attrs = Utility::parse_attr( $match[ 2 ] );
 
+				if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+					continue;
+				}
+
 				if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 					$this_src_arr[ 'media' ] = $attrs[ 'media' ];
 				}
