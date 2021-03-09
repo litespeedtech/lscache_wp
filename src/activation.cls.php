@@ -410,7 +410,7 @@ class Activation extends Trunk {
 			$upgrader = new \Plugin_Upgrader( $skin );
 			$result = $upgrader->upgrade( $plugin );
 			if ( ! is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
-				activate_plugin( $plugin );
+				activate_plugin( $plugin, '', is_multisite() );
 			}
 			ob_end_clean();
 		} catch ( \Exception $e ) {
