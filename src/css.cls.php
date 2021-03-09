@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class CSS extends Trunk {
+class CSS extends Base {
 	const TYPE_GEN_CCSS = 'gen_ccss';
 	const TYPE_GEN_UCSS = 'gen_ucss';
 	const TYPE_CLEAR_Q = 'clear_q';

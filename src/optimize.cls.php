@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Optimize extends Trunk {
+class Optimize extends Base {
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js';
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js';
 
@@ -115,7 +115,7 @@ class Optimize extends Trunk {
 	 * @access public
 	 */
 	public function vary_add_role_exclude( $vary ) {
-		if ( $this->cls( 'Conf2' )->in_optm_exc_roles() ) {
+		if ( $this->cls( 'Conf' )->in_optm_exc_roles() ) {
 			$vary[ 'role_exclude_optm' ] = 1;
 		}
 

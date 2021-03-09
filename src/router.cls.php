@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Router extends Trunk {
+class Router extends Base {
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 

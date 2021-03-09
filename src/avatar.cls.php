@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Avatar extends Trunk {
+class Avatar extends Base {
 	const TYPE_GENERATE = 'generate';
 
 	private $_conf_cache_ttl;

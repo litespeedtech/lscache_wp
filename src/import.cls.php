@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Import extends Trunk {
+class Import extends Base {
 	protected $_summary;
 
 	const TYPE_IMPORT = 'import' ;
@@ -104,7 +104,7 @@ class Import extends Trunk {
 			return false ;
 		}
 
-		$this->cls( 'Conf2' )->update_confs( $data ) ;
+		$this->cls( 'Conf' )->update_confs( $data ) ;
 
 
 		if ( ! $file ) {
@@ -129,9 +129,9 @@ class Import extends Trunk {
 	 */
 	public function reset()
 	{
-		$options = $this->cls( 'Conf2' )->load_default_vals() ;
+		$options = $this->cls( 'Conf' )->load_default_vals() ;
 
-		$this->cls( 'Conf2' )->update_confs( $options ) ;
+		$this->cls( 'Conf' )->update_confs( $options ) ;
 
 		Debug2::debug( '[Import] Reset successfully.' ) ;
 

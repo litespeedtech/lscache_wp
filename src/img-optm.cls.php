@@ -10,7 +10,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Img_Optm extends Trunk {
+class Img_Optm extends Base {
 	const CLOUD_ACTION_NEW_REQ = 'new_req';
 	const CLOUD_ACTION_TAKEN = 'taken';
 	const CLOUD_ACTION_REQUEST_DESTROY = 'imgoptm_destroy';

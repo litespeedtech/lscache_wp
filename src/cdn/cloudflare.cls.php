@@ -10,7 +10,7 @@
 namespace LiteSpeed\CDN;
 
 use LiteSpeed\Core;
-use LiteSpeed\Trunk;
+use LiteSpeed\Base;
 use LiteSpeed\Debug2;
 use LiteSpeed\Router;
 use LiteSpeed\Admin;
@@ -18,7 +18,7 @@ use LiteSpeed\Admin_Display;
 
 defined( 'WPINC' ) || exit;
 
-class Cloudflare extends Trunk {
+class Cloudflare extends Base {
 	const TYPE_PURGE_ALL = 'purge_all';
 	const TYPE_GET_DEVMODE = 'get_devmode';
 	const TYPE_SET_DEVMODE_ON = 'set_devmode_on';
@@ -39,14 +39,14 @@ class Cloudflare extends Trunk {
 
 		$zone = $this->_fetch_zone();
 		if ( $zone ) {
-			$this->cls( 'Conf2' )->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] );
+			$this->cls( 'Conf' )->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] );
 
-			$this->cls( 'Conf2' )->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] );
+			$this->cls( 'Conf' )->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] );
 
 			Debug2::debug( "[Cloudflare] Get zone successfully \t\t[ID] $zone[id]" );
 		}
 		else {
-			$this->cls( 'Conf2' )->update( self::O_CDN_CLOUDFLARE_ZONE, '' );
+			$this->cls( 'Conf' )->update( self::O_CDN_CLOUDFLARE_ZONE, '' );
 			Debug2::debug( '[Cloudflare] ❌ Get zone failed, clean zone' );
 		}
 

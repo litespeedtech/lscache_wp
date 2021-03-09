@@ -73,8 +73,8 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( Conf2::TYPE_SET . '[' . Base::O_AUTO_UPGRADE . ']' => 1 );
-						$url = Utility::build_url( Router::ACTION_CONF, Conf2::TYPE_SET, false, null, $cfg );
+						$cfg = array( Conf::TYPE_SET . '[' . Base::O_AUTO_UPGRADE . ']' => 1 );
+						$url = Utility::build_url( Router::ACTION_CONF, Conf::TYPE_SET, false, null, $cfg );
 					?>
 					<a href="<?php echo $url; ?>" class="button litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>

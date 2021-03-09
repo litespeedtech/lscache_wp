@@ -8,7 +8,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Localization extends Trunk {
+class Localization extends Base {
 	/**
 	 * Localize Resources
 	 *

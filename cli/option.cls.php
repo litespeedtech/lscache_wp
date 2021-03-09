@@ -3,7 +3,7 @@ namespace LiteSpeed\CLI;
 
 defined( 'WPINC' ) || exit;
 
-use LiteSpeed\Trunk;
+use LiteSpeed\Base;
 use LiteSpeed\Admin_Settings;
 use LiteSpeed\Utility;
 use WP_CLI;
@@ -11,7 +11,7 @@ use WP_CLI;
 /**
  * LiteSpeed Cache option Interface
  */
-class Option extends Trunk {
+class Option extends Base {
 	/**
 	 * Set an individual LiteSpeed Cache option.
 	 *

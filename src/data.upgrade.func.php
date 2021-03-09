@@ -9,7 +9,7 @@
 defined( 'WPINC' ) || exit;
 
 use LiteSpeed\Debug2;
-use LiteSpeed\Conf2;
+use LiteSpeed\Conf;
 use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
@@ -40,7 +40,7 @@ function litespeed_update_3_7() {
  * @since  3.5.1
  */
 function litespeed_update_3_5() {
-	$__conf = Conf2::cls();
+	$__conf = Conf::cls();
 	// Excludes jQuery
 	foreach ( array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v ) {
 		$curr_setting = $__conf->conf( $v );

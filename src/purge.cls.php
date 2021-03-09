@@ -9,7 +9,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Purge extends Trunk {
+class Purge extends Base {
 	protected $_pub_purge = array();
 	protected $_priv_purge = array();
 	protected $_purge_related = false;

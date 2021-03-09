@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Activation extends Trunk {
+class Activation extends Base {
 	const TYPE_UPGRADE = 'upgrade';
 	const TYPE_INSTALL_3RD = 'install_3rd';
 	const TYPE_INSTALL_ZIP = 'install_zip';
@@ -59,13 +59,13 @@ class Activation extends Trunk {
 				return;
 			}
 
-			Conf2::cls()->update_confs();
+			Conf::cls()->update_confs();
 
 			return;
 		}
 
 		/* Single site file handler */
-		Conf2::cls()->update_confs();
+		Conf::cls()->update_confs();
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
@@ -80,13 +80,13 @@ class Activation extends Trunk {
 		Task::destroy();
 
 		// Delete options
-		foreach ( Conf2::cls()->load_default_vals() as $k => $v ) {
+		foreach ( Conf::cls()->load_default_vals() as $k => $v ) {
 			Base::delete_option( $k );
 		}
 
 		// Delete site options
 		if ( is_multisite() ) {
-			foreach ( Conf2::cls()->load_default_site_vals() as $k => $v ) {
+			foreach ( Conf::cls()->load_default_site_vals() as $k => $v ) {
 				Base::delete_site_option( $k );
 			}
 		}
@@ -268,7 +268,7 @@ class Activation extends Trunk {
 	 */
 	public function update_files() {
 		// Update cache setting `_CACHE`
-		$this->cls( 'Conf2' )->define_cache();
+		$this->cls( 'Conf' )->define_cache();
 
 		// Site options applied already
 		$options = $this->get_options();

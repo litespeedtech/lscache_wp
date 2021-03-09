@@ -87,7 +87,7 @@ class Data extends Root {
 	 * @access public
 	 */
 	public function conf_upgrade( $ver ) {
-		// Skip count check if `Use Primary Site Conf2igurations` is on
+		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 		// 	return;
@@ -117,13 +117,13 @@ class Data extends Root {
 		}
 
 		// Reload options
-		$this->cls( 'Conf2' )->load_options();
+		$this->cls( 'Conf' )->load_options();
 
 		$this->correct_tb_existance();
 
 		// Update version to latest
-		Conf2::delete_option( Base::_VER );
-		Conf2::add_option( Base::_VER, Core::VER );
+		Conf::delete_option( Base::_VER );
+		Conf::add_option( Base::_VER, Core::VER );
 
 		Debug2::debug( '[Data] Updated version to ' . Core::VER );
 
@@ -163,10 +163,10 @@ class Data extends Root {
 		}
 
 		// Reload options
-		$this->cls( 'Conf2' )->load_site_options();
+		$this->cls( 'Conf' )->load_site_options();
 
-		Conf2::delete_site_option( Base::_VER );
-		Conf2::add_site_option( Base::_VER, Core::VER );
+		Conf::delete_site_option( Base::_VER );
+		Conf::add_site_option( Base::_VER, Core::VER );
 
 		Debug2::debug( '[Data] Updated site_version to ' . Core::VER );
 
@@ -265,7 +265,7 @@ class Data extends Root {
 		}
 		else {
 			// Reload options
-			$this->cls( 'Conf2' )->load_options();
+			$this->cls( 'Conf' )->load_options();
 
 			$this->correct_tb_existance();
 

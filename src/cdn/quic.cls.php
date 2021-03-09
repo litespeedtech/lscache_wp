@@ -12,11 +12,11 @@ namespace LiteSpeed\CDN;
 use LiteSpeed\Core;
 use LiteSpeed\Cloud;
 use LiteSpeed\Debug2;
-use LiteSpeed\Trunk;
+use LiteSpeed\Base;
 
 defined( 'WPINC' ) || exit;
 
-class Quic extends Trunk {
+class Quic extends Base {
 	private $_api_key;
 
 	const TYPE_REG = 'reg';

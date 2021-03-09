@@ -11,7 +11,7 @@ namespace LiteSpeed ;
 
 defined( 'WPINC' ) || exit ;
 
-class Lang extends Trunk {
+class Lang extends Base {
 	/**
 	 * Get image status per status bit
 	 *

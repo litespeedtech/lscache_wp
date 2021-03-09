@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Report extends Trunk {
+class Report extends Base {
 	const TYPE_SEND_REPORT = 'send_report';
 
 	/**
@@ -136,7 +136,7 @@ class Report extends Trunk {
 			$blogs = Activation::get_network_ids();
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = $this->cls( 'Conf2' )->load_options( $blog_id, true );
+					$opts = $this->cls( 'Conf' )->load_options( $blog_id, true );
 					if ( isset($opts[ self::O_CACHE ]) ) {
 						$options['blog ' . $blog_id . ' radio select'] = $opts[ self::O_CACHE ];
 					}
@@ -175,7 +175,7 @@ class Report extends Trunk {
 		$server_vars = array_intersect_key($server, $server_keys);
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX;
 
-		$server_vars = array_merge( $server_vars, $this->cls( 'Trunk' )->server_vars() );
+		$server_vars = array_merge( $server_vars, $this->cls( 'Base' )->server_vars() );
 
 		$buf = $this->_format_report_section('Server Variables', $server_vars);
 

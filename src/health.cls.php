@@ -11,7 +11,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Health extends Trunk {
+class Health extends Base {
 	const TYPE_SPEED = 'speed';
 	const TYPE_SCORE = 'score';
 

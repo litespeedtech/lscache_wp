@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Admin_Display extends Trunk {
+class Admin_Display extends Base {
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
@@ -888,7 +888,7 @@ class Admin_Display extends Trunk {
 		echo '<div class="litespeed-desc litespeed-warning">⚠️ ';
 
 		if ( $const_val !== null ) {
-			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Trunk::conf_const( $id ) . '</code>' );
+			echo sprintf( __( 'This setting is overwritten by the PHP constant %s', 'litespeed-cache' ), '<code>' . Base::conf_const( $id ) . '</code>' );
 		} else {
 			if ( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf( self::NETWORK_O_USE_PRIMARY ) ) {
 				echo __( 'This setting is overwritten by the primary site setting', 'litespeed-cache' );

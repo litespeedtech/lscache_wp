@@ -7,7 +7,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class Crawler extends Trunk {
+class Crawler extends Base {
 	const TYPE_REFRESH_MAP = 'refresh_map';
 	const TYPE_EMPTY = 'empty';
 	const TYPE_BLACKLIST_EMPTY = 'blacklist_empty';
