@@ -782,6 +782,9 @@ class Purge extends Base {
 	 */
 	public static function purge_comment_widget() {
 		global $wp_widget_factory;
+		if ( ! isset( $wp_widget_factory->widgets[ 'WP_Widget_Recent_Comments' ] ) ) {
+			return;
+		}
 		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'];
 		if ( !is_null($recent_comments) ) {
 			self::add(Tag::TYPE_WIDGET . $recent_comments->id);
