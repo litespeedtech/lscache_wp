@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.6
-Stable tag: 3.6.2
+Tested up to: 5.7
+Stable tag: 3.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -262,6 +262,10 @@ Note: Need to test if OLS password protect page works on cache or not.
 todo: test if response vary header can work in latest OLS, drop the two vary lines in htaccess.cls
 Note: test Aelia_CurrencySwitcher
 Note: Need to test When vary changed (add comment/approved comment) will the page cache correctly or not.
+
+= 3.6.3 - Mar 10 2021 =
+* **Core** Fixed potential upgrade failure when new versions have changes in activation related functions.
+* **Core** Upgrade process won't get deactivated anymore on Network setup.
 
 = 3.6.2 - Feb 1 2021 =
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
