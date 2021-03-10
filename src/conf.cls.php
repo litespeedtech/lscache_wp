@@ -115,16 +115,6 @@ class Conf extends Base {
 			}
 		}
 
-		// Activation delayed file update
-		if ( self::get_option( '__activation' ) ) {
-			// Check new version @since 2.9.3
-			Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
-
-			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
-
-			self::delete_option( '__activation' );
-		}
-
 		/**
 		 * Sync latest new options
 		 */
@@ -150,6 +140,15 @@ class Conf extends Base {
 		 */
 		$this->_try_load_site_options();
 
+		// Activation delayed file update
+		if ( self::get_option( '__activation' ) ) {
+			// Check new version @since 2.9.3
+			Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
+
+			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
+
+			self::delete_option( '__activation' );
+		}
 	}
 
 	/**
