@@ -40,15 +40,11 @@ class Activation extends Instance {
 			}
 		}
 
-		do_action( 'litespeed_load_thirdparty' );
-
-		// Check new version @since 2.9.3
-		Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
+		// Files will be delayed updated in next visit to wp-admin
+		Conf::update_option( '__activation', Core::VER );
 
 		/* Network file handler */
-
 		if ( is_multisite() ) {
-
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
@@ -58,16 +54,8 @@ class Activation extends Instance {
 						Admin_Display::error( $ex->getMessage() );
 					}
 				}
-				return;
 			}
-
-			Conf::get_instance()->update_confs();
-
-			return;
 		}
-
-		/* Single site file handler */
-		Conf::get_instance()->update_confs();
 
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
