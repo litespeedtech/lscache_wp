@@ -107,19 +107,6 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide2">
-		<th class="litespeed-padding-left">
-			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_textarea( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
 	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_CSS_COMB_EXT_INL; ?>

@@ -62,6 +62,22 @@ ksort( $roles );
 		</td>
 	</tr>
 
+	<tr class="litespeed-hide2">
+		<th>
+			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
+				<br /><font class="litespeed-success">
+					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/ucss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/ucss_whitelist.txt</a>
+				</font>
+			</div>
+		</td>
+	</tr>
+
 	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_CCSS_CON; ?>
