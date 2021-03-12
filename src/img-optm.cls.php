@@ -625,8 +625,13 @@ class Img_Optm extends Base {
 			return Cloud::err( 'too_often' );
 		}
 
+		$post_data = json_decode(file_get_contents('php://input'), true);
+		if($post_data == null) {
+			$post_data = $_POST;
+		}
+
 		// Validate key
-		if ( empty( $_POST[ 'domain_key' ] ) || $_POST[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
+		if ( empty( $post_data[ 'domain_key' ] ) || $post_data[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
 			$this->_summary[ 'notify_ts_err' ] = time();
 			self::save_summary();
 			return Cloud::err( 'wrong_key' );
@@ -634,13 +639,13 @@ class Img_Optm extends Base {
 
 		global $wpdb;
 
-		$notified_data = $_POST[ 'data' ];
+		$notified_data = $post_data[ 'data' ];
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
 			Debug2::debug( '[Img_Optm] ❌ notify exit: no notified data' );
 			return Cloud::err( 'no notified data' );
 		}
 
-		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -11 ) !== '.quic.cloud' ) {
+		if ( empty( $post_data[ 'server' ] ) || substr( $post_data[ 'server' ], -11 ) !== '.quic.cloud' ) {
 			Debug2::debug( '[Img_Optm] notify exit: no/wrong server' );
 			return Cloud::err( 'no/wrong server' );
 		}
@@ -653,8 +658,8 @@ class Img_Optm extends Base {
 			self::STATUS_ERR, 			// -9 -> 'err';
 		);
 
-		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
-			Debug2::debug( '[Img_Optm] notify exit: no/wrong status', $_POST );
+		if ( empty( $post_data[ 'status' ] ) || ! in_array( $post_data[ 'status' ], $_allowed_status ) ) {
+			Debug2::debug( '[Img_Optm] notify exit: no/wrong status', $post_data );
 			return Cloud::err( 'no/wrong status' );
 		}
 
@@ -676,7 +681,7 @@ class Img_Optm extends Base {
 			foreach ( $list as $v ) {
 				$json = $notified_data[ $v->id ];
 
-				$server = ! empty( $json['server'] ) ? $json['server'] : $_POST['server'];
+				$server = ! empty( $json['server'] ) ? $json['server'] : $post_data['server'];
 
 				$server_info = array(
 					'server'	=> $server,
