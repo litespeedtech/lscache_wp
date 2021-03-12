@@ -678,6 +678,7 @@ class Img_Optm extends Base {
 					LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.post_id AND b.meta_key = %s
 					WHERE a.id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " )";
 			$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_SIZE ), array_keys( $notified_data ) ) ) );
+			$ls_optm_size_row_exists_postids = array();
 			foreach ( $list as $v ) {
 				$json = $notified_data[ $v->id ];
 
@@ -735,15 +736,17 @@ class Img_Optm extends Base {
 
 				// Update postmeta for optm summary
 				$postmeta_info = serialize( $postmeta_info );
-				if ( ! empty( $v->b_meta_id ) ) {
-					$q = "UPDATE `$wpdb->postmeta` SET meta_value = %s WHERE meta_id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );
-				}
-				else {
+				if ( empty( $v->b_meta_id ) && ! in_array( $v->post_id, $ls_optm_size_row_exists_postids ) ) {
 					Debug2::debug( '[Img_Optm] New size info [pid] ' . $v->post_id );
 					$q = "INSERT INTO `$wpdb->postmeta` ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )";
 					$wpdb->query( $wpdb->prepare( $q, array( $v->post_id, self::DB_SIZE, $postmeta_info ) ) );
+					$ls_optm_size_row_exists_postids[] = $v->post_id;
 				}
+				else {
+					$q = "UPDATE `$wpdb->postmeta` SET meta_value = %s WHERE meta_id = %d ";
+					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );				    
+				}
+
 
 				// write log
 				$pid_log = $last_log_pid == $v->post_id ? '.' : $v->post_id;
