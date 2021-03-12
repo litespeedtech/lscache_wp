@@ -626,7 +626,7 @@ class Img_Optm extends Base {
 		}
 
 		$post_data = json_decode(file_get_contents('php://input'), true);
-		if($post_data == null) {
+		if( is_null( $post_data ) ) {
 			$post_data = $_POST;
 		}
 
