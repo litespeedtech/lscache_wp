@@ -2,5 +2,5 @@
 `url` varchar(500) NOT NULL,
 `cache_tags` varchar(1000) NOT NULL DEFAULT '',
 PRIMARY KEY (`id`),
-UNIQUE KEY `url` (`url`),
+UNIQUE KEY `url` (`url`(191)),
 KEY `cache_tags` (`cache_tags`(191))
