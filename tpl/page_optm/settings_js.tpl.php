@@ -69,24 +69,11 @@ defined( 'WPINC' ) || exit;
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id ); ?>
+			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'Deferred', 'litespeed-cache' ), __( 'Delayed', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php $id = Base::O_OPTM_JS_INLINE_DEFER; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id, array( __( 'Default', 'litespeed-cache' ), __( 'After DOM Ready', 'litespeed-cache' ), __( 'Deferred', 'litespeed-cache' ) ) ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Loading inline JS after DOM is fully loaded can increase JS compatibility and reduce JS error when other JS optimization features are enabled.', 'litespeed-cache' ); ?>
-				<br /><?php echo sprintf( __( '%s is recommended although would cause the most issues for scripts that are placed inline to avoid being deferred.', 'litespeed-cache' ), '<code>' . __( 'Deferred', 'litespeed-cache' ) . '</code>' ); ?>
+				<br /><?php echo sprintf( __( '%s will give the maximum page speed score result.', 'litespeed-cache' ), '<code>' . __( 'Delayed', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>

@@ -30,7 +30,6 @@ class Optimize extends Base {
 	private $cfg_js_comb;
 	private $cfg_css_async;
 	private $cfg_js_defer;
-	private $cfg_js_inline_defer;
 	private $cfg_js_defer_exc = false;
 	private $cfg_ggfonts_async;
 	private $_conf_css_font_display;
@@ -72,7 +71,6 @@ class Optimize extends Base {
 			}
 		}
 		$this->cfg_js_defer = $this->conf( self::O_OPTM_JS_DEFER );
-		$this->cfg_js_inline_defer = $this->conf( self::O_OPTM_JS_INLINE_DEFER );
 
 		// To remove emoji from WP
 		if ( $this->conf( self::O_OPTM_EMOJI_RM ) ) {
@@ -88,7 +86,7 @@ class Optimize extends Base {
 		 * Exclude js from deferred setting
 		 * @since 1.5
 		 */
-		if ( $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
+		if ( $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
 		}
@@ -312,57 +310,59 @@ class Optimize extends Base {
 		}
 
 		// Parse js from buffer as needed
-		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer || $this->cfg_js_inline_defer ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
 		}
 
 		// js optimizer
-		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js ) {
+		if ( $src_list ) {
+			// IF combine
+			if ( $this->cfg_js_comb ) {
+				$url = $this->_build_hash_url( $src_list, 'js' );
+				if ( $url ) {
+					$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
 
-			if ( $src_list ) {
-				// IF combine
-				if ( $this->cfg_js_comb ) {
-					$url = $this->_build_hash_url( $src_list, 'js' );
-					if ( $url ) {
-						$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+					// Add to HTTP2
+					$this->append_http2( $url, 'js' );
 
-						// Add to HTTP2
-						$this->append_http2( $url, 'js' );
-
-						// Will move all JS to bottom combined one
-						$this->content = str_replace( $html_list, '', $this->content );
-					}
+					// Will move all JS to bottom combined one
+					$this->content = str_replace( $html_list, '', $this->content );
 				}
-				// Only minify
-				elseif ( $this->cfg_js_min ) {
-					// Will handle js defer inside
-					$this->_src_queue_handler( $src_list, $html_list, 'js' );
-				}
-				// Only HTTP2 push
-				else {
-					foreach ( $src_list as $src_info ) {
-						if ( ! empty( $src_info[ 'inl' ] ) ) {
-							continue;
+			}
+			// Only minify
+			elseif ( $this->cfg_js_min ) {
+				// Will handle js defer inside
+				$this->_src_queue_handler( $src_list, $html_list, 'js' );
+			}
+			// Only HTTP2 push and Defer
+			else {
+				foreach ( $src_list as $k => $src_info ) {
+					// Inline JS
+					if ( ! empty( $src_info[ 'inl' ] ) ) {
+						if ( $this->cfg_js_defer ) {
+							$attrs = ! empty( $src_info[ 'attrs' ] ) ? $src_info[ 'attrs' ] : '';
+							$deferred = $this->_js_inline_defer( $src_info[ 'src' ], $attrs );
+							if ( $deferred ) {
+								$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
+							}
 						}
-						$this->append_http2( $src_info[ 'src' ], 'js' );
+					}
+					// JS files
+					else {
+						if ( $this->cfg_js_defer ) {
+							$deferred = $this->_js_defer( $html_list[ $k ], $src_info[ 'src' ] );
+							if ( $deferred ) {
+								$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
+							}
+						}
+						// HTTP2 push
+						if ( $this->cfg_http2_js ) {
+							$this->append_http2( $src_info[ 'src' ], 'js' );
+						}
 					}
 				}
 			}
-		}
-
-		// Handle js defer if not handled defer yet
-		if ( $this->cfg_js_defer && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
-			// defer html
-			$html_list2 = $this->_js_defer_list( $html_list, $src_list );
-
-			// Replace async js
-			$this->content = str_replace( $html_list, $html_list2, $this->content );
-		}
-
-		// Handle Inline JS defer if not combined
-		if ( $this->cfg_js_inline_defer && ! $this->cfg_js_comb ) {
-			$this->_js_inline_defer_handler( $src_list, $html_list );
 		}
 
 		// Append JS inline var for preserved ESI
@@ -400,7 +400,7 @@ class Optimize extends Base {
 		 * Localize GG/FB JS/Fonts
 		 * @since  3.3
 		 */
-		$this->content = Localization::cls()->finalize( $this->content );
+		$this->content = $this->cls( 'Localization' )->finalize( $this->content );
 
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async && $this->_ccss ) {
@@ -611,7 +611,10 @@ class Optimize extends Base {
 					$code = Optimizer::minify_js( $src_info[ 'src' ] );
 				}
 				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
+
+				// todo: inline defer JS
 			}
+			// CSS/JS files
 			else {
 				$url = $this->_build_single_hash_url( $src_info[ 'src' ], $file_type );
 				if ( $url ) {
@@ -627,7 +630,7 @@ class Optimize extends Base {
 
 				// Handle js defer
 				if ( $file_type === 'js' && $this->cfg_js_defer ) {
-					$snippet = $this->_js_defer( $snippet, $src_info[ 'src' ] );
+					$snippet = $this->_js_defer( $snippet, $src_info[ 'src' ] ) ?: $snippet;
 				}
 			}
 
@@ -736,7 +739,7 @@ class Optimize extends Base {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
 						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
-						if ( $deferred != $match[ 0 ] ) {
+						if ( $deferred ) {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 						}
 					}
@@ -772,7 +775,7 @@ class Optimize extends Base {
 				$js_excluded = $excludes ? Utility::str_hit_array( $match[ 2 ], $excludes ) : false;
 				if ( $js_excluded || ! $combine_ext_inl ) {
 					// Maybe defer
-					if ( $this->cfg_js_inline_defer ) {
+					if ( $this->cfg_js_defer ) {
 						$deferred = $this->_js_inline_defer( $match[ 2 ], $match[ 1 ] );
 						if ( $deferred ) {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
@@ -801,25 +804,6 @@ class Optimize extends Base {
 	}
 
 	/**
-	 * Handle inline JS defer if no combined
-	 *
-	 * @since  3.5
-	 */
-	private function _js_inline_defer_handler( $src_list, $html_list ) {
-		foreach ( $src_list as $k => $src_info ) {
-			if ( empty( $src_info[ 'inl' ] ) ) {
-				continue;
-			}
-
-			$attrs = ! empty( $src_info[ 'attrs' ] ) ? $src_info[ 'attrs' ] : '';
-			$deferred = $this->_js_inline_defer( $src_info[ 'src' ], $attrs );
-			if ( $deferred ) {
-				$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
-			}
-		}
-	}
-
-	/**
 	 * Inline JS defer
 	 *
 	 * @since 3.0
@@ -828,14 +812,14 @@ class Optimize extends Base {
 	private function _js_inline_defer( $con, $attrs ) {
 		if ( strpos( $attrs, 'data-no-defer' ) !== false ) {
 			Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
-			return;
+			return false;
 		}
 
 		if ( $this->cfg_js_defer_exc ) {
 			$hit = Utility::str_hit_array( $con, $this->cfg_js_defer_exc );
 			if ( $hit ) {
 				Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
-				return;
+				return false;
 			}
 		}
 
@@ -844,32 +828,12 @@ class Optimize extends Base {
 		$con = Optimizer::minify_js( $con );
 
 		if ( ! $con ) {
-			return;
+			return false;
 		}
 
-		if ( $this->cfg_js_inline_defer === 2 ) {
-			// Check if the content contains ESI nonce or not
-			$con = $this->_preserve_esi( $con );
-			return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
-		}
-		else {
-			// Prevent var scope issue
-			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) === false ) {
-				return;
-			}
-
-			if ( strpos( $con, 'var ' ) !== false && strpos( $con, '{' ) !== false && strpos( $con, '{' ) > strpos( $con, 'var ' ) ) {
-				return;
-			}
-
-			if ( strpos( $con, 'document.addEventListener' ) !== false ) {
-				return;
-			}
-
-			// $con = str_replace( 'var ', 'window.', $con );
-
-			return '<script' . $attrs . '>document.addEventListener("DOMContentLoaded",function(){' . $con . '});</script>';
-		}
+		// Check if the content contains ESI nonce or not
+		$con = $this->_preserve_esi( $con );
+		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
 	}
 
 	/**
@@ -878,7 +842,7 @@ class Optimize extends Base {
 	 * @since  3.5.1
 	 */
 	private function _preserve_esi( $con ) {
-		$esi_placeholder_list = ESI::cls()->contain_preserve_esi( $con );
+		$esi_placeholder_list = $this->cls( 'ESI' )->contain_preserve_esi( $con );
 		if ( ! $esi_placeholder_list ) {
 			return $con;
 		}
@@ -1066,42 +1030,24 @@ class Optimize extends Base {
 	}
 
 	/**
-	 * Add defer to JS
-	 *
-	 * @since  1.3
-	 * @access private
-	 */
-	private function _js_defer_list( $html_list, $src_list ) {
-		foreach ( $html_list as $k => $v ) {
-			if ( ! empty( $src_list[ $k ][ 'inl' ] ) ) {
-				continue;
-			}
-
-			$html_list[ $k ] = $this->_js_defer( $v, $src_list[ $k ][ 'src' ] );
-		}
-
-		return $html_list;
-	}
-
-	/**
 	 * Defer JS snippet
 	 *
 	 * @since  3.5
 	 */
 	private function _js_defer( $ori, $src ) {
 		if ( strpos( $ori, 'async' ) !== false ) {
-			return $ori;
+			return false;
 		}
 		if ( strpos( $ori, 'defer' ) !== false ) {
-			return $ori;
+			return false;
 		}
 		if ( strpos( $ori, 'data-deferred' ) !== false ) {
 			Debug2::debug2( '[Optm] bypass: attr data-deferred exist' );
-			return $ori;
+			return false;
 		}
 		if ( strpos( $ori, 'data-no-defer' ) !== false ) {
 			Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
-			return $ori;
+			return false;
 		}
 
 		/**
@@ -1110,9 +1056,10 @@ class Optimize extends Base {
 		 */
 		if ( $this->cfg_js_defer_exc && Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
 			Debug2::debug( '[Optm] js defer exclude ' . $src );
-			return $ori;
+			return false;
 		}
 
+		// $v = str_replace( ' src=', ' data-src=', $ori );
 		$v = str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
 		return $v;
 	}

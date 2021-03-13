@@ -134,7 +134,6 @@ class Base extends Root {
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
-	const O_OPTM_JS_INLINE_DEFER	= 'optm-js_inline_defer';
 	const O_OPTM_LOCALIZE			= 'optm-localize';
 	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
@@ -416,7 +415,6 @@ class Base extends Root {
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
-		self::O_OPTM_JS_INLINE_DEFER	=> false,
 		self::O_OPTM_EMOJI_RM 			=> false,
 		self::O_OPTM_NOSCRIPT_RM 		=> false,
 		self::O_OPTM_GGFONTS_ASYNC 		=> false,
@@ -579,7 +577,7 @@ class Base extends Root {
 	protected static $_multi_switch_list = array(
 		self::O_DEBUG 			=> 2,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
-		self::O_OPTM_JS_INLINE_DEFER 	=> 2,
+		self::O_OPTM_JS_DEFER 	=> 2,
 	);
 
 
