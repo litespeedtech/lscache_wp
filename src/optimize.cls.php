@@ -3,10 +3,6 @@
  * The optimize class.
  *
  * @since      	1.2.2
- * @since  		1.5 Moved into /inc
- * @package  	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
 
@@ -15,6 +11,7 @@ defined( 'WPINC' ) || exit;
 class Optimize extends Base {
 	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js';
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js';
+	const LIB_FILE_JS_DELAY = 'assets/js/js_delay.js';
 
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
@@ -321,7 +318,7 @@ class Optimize extends Base {
 			if ( $this->cfg_js_comb ) {
 				$url = $this->_build_hash_url( $src_list, 'js' );
 				if ( $url ) {
-					$this->html_foot .= '<script data-optimized="1" src="' . $url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';
+					$this->html_foot .= $this->_build_js_tag( $url );
 
 					// Add to HTTP2
 					$this->append_http2( $url, 'js' );
@@ -367,7 +364,7 @@ class Optimize extends Base {
 
 		// Append JS inline var for preserved ESI
 		if ( $this->_var_preserve_js ) {
-			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
+			$this->html_head .= $this->_build_js_inline( 'var ' . implode( ',', $this->_var_preserve_js ) . ';' );
 			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
 		}
 
@@ -375,11 +372,11 @@ class Optimize extends Base {
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
 			if ( $this->conf( self::O_OPTM_CSS_ASYNC_INLINE ) ) {
-				$this->html_head .= '<script id="litespeed-css-async-lib">' . File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>';
+				$this->html_head .= $this->_build_js_inline( File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ), true );
 			}
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
-				$this->html_head .= '<script id="litespeed-css-async-lib" src="' . $css_async_lib_url . '" ' . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>';// Don't exclude it from defer for now
+				$this->html_head .= $this->_build_js_tag( $css_async_lib_url, 'litespeed-css-async-lib' ); // Don't exclude it from defer for now
 				$this->append_http2( $css_async_lib_url, 'js' ); // async lib will be http/2 pushed always
 			}
 		}
@@ -395,6 +392,9 @@ class Optimize extends Base {
 		 * @since  3.0
 		 */
 		$this->_font_optm();
+
+		// Inject JS Delay lib
+		$this->_maybe_js_delay();
 
 		/**
 		 * Localize GG/FB JS/Fonts
@@ -438,7 +438,52 @@ class Optimize extends Base {
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
+	}
 
+	/**
+	 * Build a full JS tag
+	 *
+	 * @since  4.0
+	 */
+	private function _build_js_tag( $src ) {
+		if ( $this->cfg_js_defer === 2 ) {
+			return '<script data-optimized="1" data-src="' . $src . '"></script>';
+		}
+
+		if ( $this->cfg_js_defer ) {
+			return '<script data-optimized="1" src="' . $src . '" defer></script>';
+		}
+
+		return '<script data-optimized="1" src="' . $src . '"></script>';
+	}
+
+	/**
+	 * Build a full inline JS snippet
+	 *
+	 * @since  4.0
+	 */
+	private function _build_js_inline( $script, $minified = false ) {
+		if ( $this->cfg_js_defer ) {
+			$deferred = $this->_js_inline_defer( $script, false, $minified );
+			if ( $deferred ) {
+				return $deferred;
+			}
+		}
+
+		return '<script>' . $script . '</script>';
+	}
+
+	/**
+	 * Load JS delay lib
+	 *
+	 * @since 4.0
+	 */
+	private function _maybe_js_delay() {
+		if ( $this->cfg_js_defer !== 2 ) {
+			return;
+		}
+
+		$this->html_foot .= '<script>' . File::read( LSCWP_DIR . self::LIB_FILE_JS_DELAY ) . '</script>';
 	}
 
 	/**
@@ -466,7 +511,7 @@ class Optimize extends Base {
 		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
 		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
-		$html .='<script>WebFontConfig={google:{families:[';
+		$script ='WebFontConfig={google:{families:[';
 
 		$families = array();
 		foreach ( $this->_ggfonts_urls as $v ) {
@@ -485,24 +530,22 @@ class Optimize extends Base {
 			foreach ( array_filter( explode( '|', $qs[ 'family' ] ) ) as $v2 ) {
 				$families[] = $v2 . $subset;
 			}
-
 		}
 
-		$html .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
+		$script .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
 
-		$html .= ']}};';
+		$script .= ']}};';
 
 		// if webfontloader lib was loaded before WebFontConfig variable, call WebFont.load
-		$html .= 'if ( typeof WebFont === "object" && typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
+		$script .= 'if ( typeof WebFont === "object" && typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';
 
-		$html .= '</script>';
+		$html .= $this->_build_js_inline( $script );
 
 		// https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js
 		$webfont_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_WEBFONTLOADER;
 
 		// default async, if js defer set use defer
-		// TODO: make defer optional
-		$html .= '<script id="litespeed-webfont-lib" src="' . $webfont_lib_url . '" ' . ( $this->cfg_js_defer ? 'defer' : 'async' ) . '></script>';
+		$html .= $this->_build_js_tag( $webfont_lib_url );
 		$this->append_http2( $webfont_lib_url, 'js' ); // async lib will be http/2 pushed always
 
 		// Put this in the very beginning for preconnect
@@ -816,7 +859,7 @@ class Optimize extends Base {
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _js_inline_defer( $con, $attrs ) {
+	private function _js_inline_defer( $con, $attrs = false, $minified = false ) {
 		if ( strpos( $attrs, 'data-no-defer' ) !== false ) {
 			Debug2::debug2( '[Optm] bypass: attr api data-no-defer' );
 			return false;
@@ -832,7 +875,9 @@ class Optimize extends Base {
 
 		$con = trim( $con );
 		// Minify JS first
-		$con = Optimizer::minify_js( $con );
+		if ( ! $minified ) {
+			$con = Optimizer::minify_js( $con );
+		}
 
 		if ( ! $con ) {
 			return false;
@@ -840,6 +885,11 @@ class Optimize extends Base {
 
 		// Check if the content contains ESI nonce or not
 		$con = $this->_preserve_esi( $con );
+
+		if ( $this->cfg_js_defer === 2 ) {
+			return '<script' . $attrs . ' data-src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+		}
+
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
 	}
 
@@ -1066,9 +1116,11 @@ class Optimize extends Base {
 			return false;
 		}
 
-		// $v = str_replace( ' src=', ' data-src=', $ori );
-		$v = str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
-		return $v;
+		if ( $this->cfg_js_defer === 2 ) {
+			return str_replace( ' src=', ' data-src=', $ori );
+		}
+
+		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
 	}
 
 	/**
