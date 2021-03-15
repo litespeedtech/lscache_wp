@@ -606,13 +606,20 @@ class Optimize extends Base {
 			if ( ! empty( $src_info[ 'inl' ] ) ) {
 				if ( $file_type == 'css' ) {
 					$code = Optimizer::minify_css( $src_info[ 'src' ] );
+					$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 				}
 				else {
-					$code = Optimizer::minify_js( $src_info[ 'src' ] );
+					// Inline defer JS
+					if ( $this->cfg_js_defer ) {
+						$attrs = ! empty( $src_info[ 'attrs' ] ) ? $src_info[ 'attrs' ] : '';
+						$snippet = $this->_js_inline_defer( $src_info[ 'src' ], $attrs ) ?: $html_list[ $key ];
+					}
+					else {
+						$code = Optimizer::minify_js( $src_info[ 'src' ] );
+						$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
+					}
 				}
-				$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 
-				// todo: inline defer JS
 			}
 			// CSS/JS files
 			else {

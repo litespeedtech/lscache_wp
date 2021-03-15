@@ -25,7 +25,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ); ?>
 				<br /><font class="litespeed-success">
-					💡:
+					💡
 					<a href="https://docs.litespeedtech.com/lscache/lscwp/pageopt/#lazy-load-images" target="_blank"><?php echo __('Adding Style to Your Lazy-Loaded Images', 'litespeed-cache'); ?></a>
 				</font>
 			</div>
@@ -119,8 +119,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 				<?php echo __( 'Specify the quality when generating LQIP.', 'litespeed-cache' ); ?>
 				<br /><?php echo __( 'Larger number will generate higher resolution quality placeholder, but will result in larger files which will increase page size and consume more points.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $id ); ?>
-				<?php $this->_validate_ttl( $id, 1, 20 ); ?>				
-				<br />💡: <?php echo sprintf(__('Changes to this setting do not apply to already-generated LQIPs. To regenerate existing LQIPs, please %s first from the admin bar menu.', 'litespeed-cache'), '<code>' . __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ) . '</code>'); ?>
+				<?php $this->_validate_ttl( $id, 1, 20 ); ?>
+				<br />💡 <?php echo sprintf(__('Changes to this setting do not apply to already-generated LQIPs. To regenerate existing LQIPs, please %s first from the admin bar menu.', 'litespeed-cache'), '<code>' . __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ) . '</code>'); ?>
 			</div>
 		</td>
 	</tr>
