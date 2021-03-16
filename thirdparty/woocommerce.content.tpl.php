@@ -18,7 +18,8 @@ use \LiteSpeed\Admin_Display;
 <div class="litespeed-callout notice notice-warning inline">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
 	<p><?php echo __( 'After verifying that the cache works in general, please test the cart.', 'litespeed-cache' ); ?></p>
-	<p><?php echo sprintf( __( 'To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache' ), 'href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank"' ); ?></p>
+	<p><?php echo sprintf( __( 'To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache' ), 'href="https://docs.litespeedtech.com/lscache/lscwp/installation/#non-cacheable-pages" target="_blank"' ); ?></p>
+	<p><?php echo __( 'By default, the My Account, Checkout, and Cart pages are automatically excluded from caching. Misconfiguration of page associations in WooCommerce settings may cause some pages to be erroneously excluded.', 'litespeed-cache' ); ?></p>
 </div>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
