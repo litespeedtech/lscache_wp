@@ -327,6 +327,9 @@ class Router extends Base {
 	public function esi_enabled() {
 		if ( ! isset( self::$_esi_enabled ) ) {
 			self::$_esi_enabled = defined( 'LITESPEED_ON' ) && $this->conf( self::O_ESI );
+			if( ! empty( $_REQUEST[ self::ACTION ] ) ) {
+				self::$_esi_enabled = false;
+			}
 		}
 		return self::$_esi_enabled;
 	}
