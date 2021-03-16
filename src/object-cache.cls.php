@@ -8,12 +8,11 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
-
 defined( 'WPINC' ) || exit;
 
-class Object_Cache {
-	protected static $_instance;
+require_once dirname( __DIR__ ) . '/autoload.php';
 
+class Object_Cache extends Root {
 	private $_oc_data_file;
 	private $_conn;
 	private $_cfg_enabled;
@@ -72,25 +71,25 @@ class Object_Cache {
 
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] init with cfg result : ', $this->_cfg_enabled );
 		}
-		elseif ( method_exists( __NAMESPACE__ . '\Core', 'cls' ) ) {
-			$__core = Core::cls();
-			$this->_cfg_method = $__core->conf( Base::O_OBJECT_KIND ) ? true : false;
-			$this->_cfg_host = $__core->conf( Base::O_OBJECT_HOST );
-			$this->_cfg_port = $__core->conf( Base::O_OBJECT_PORT );
-			$this->_cfg_life = $__core->conf( Base::O_OBJECT_LIFE );
-			$this->_cfg_persistent = $__core->conf( Base::O_OBJECT_PERSISTENT );
-			$this->_cfg_admin = $__core->conf( Base::O_OBJECT_ADMIN );
-			$this->_cfg_transients = $__core->conf( Base::O_OBJECT_TRANSIENTS );
-			$this->_cfg_db = $__core->conf( Base::O_OBJECT_DB_ID );
-			$this->_cfg_user = $__core->conf( Base::O_OBJECT_USER );
-			$this->_cfg_pswd = $__core->conf( Base::O_OBJECT_PSWD );
-			$this->_global_groups = $__core->conf( Base::O_OBJECT_GLOBAL_GROUPS );
-			$this->_non_persistent_groups = $__core->conf( Base::O_OBJECT_NON_PERSISTENT_GROUPS );
+		// If OC is OFF, will hit here to init OC after conf initialized
+		elseif ( defined( 'LITESPEED_CONF_LOADED' ) ) {
+			$this->_cfg_method = $this->conf( Base::O_OBJECT_KIND ) ? true : false;
+			$this->_cfg_host = $this->conf( Base::O_OBJECT_HOST );
+			$this->_cfg_port = $this->conf( Base::O_OBJECT_PORT );
+			$this->_cfg_life = $this->conf( Base::O_OBJECT_LIFE );
+			$this->_cfg_persistent = $this->conf( Base::O_OBJECT_PERSISTENT );
+			$this->_cfg_admin = $this->conf( Base::O_OBJECT_ADMIN );
+			$this->_cfg_transients = $this->conf( Base::O_OBJECT_TRANSIENTS );
+			$this->_cfg_db = $this->conf( Base::O_OBJECT_DB_ID );
+			$this->_cfg_user = $this->conf( Base::O_OBJECT_USER );
+			$this->_cfg_pswd = $this->conf( Base::O_OBJECT_PSWD );
+			$this->_global_groups = $this->conf( Base::O_OBJECT_GLOBAL_GROUPS );
+			$this->_non_persistent_groups = $this->conf( Base::O_OBJECT_NON_PERSISTENT_GROUPS );
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
-			$this->_cfg_enabled = $__core->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true );
@@ -236,13 +235,13 @@ class Object_Cache {
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Object] Quiting existing connection' );
 			$this->flush();
 			$this->_conn = null;
-			self::$_instance = null;
+			$this->cls( false, true );
 		}
 
-		self::$_instance = new self( $cfg );
-		self::$_instance->_connect();
-		if ( isset( self::$_instance->_conn ) ) {
-			self::$_instance->flush();
+		$cls = $this->cls( false, false, $cfg );
+		$cls->_connect();
+		if ( isset( $cls->_conn ) ) {
+			$cls->flush();
 		}
 
 	}
@@ -609,17 +608,4 @@ class Object_Cache {
 		return in_array( $group, $this->_non_persistent_groups );
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.8
-	 * @access public
-	 */
-	public static function get_instance() {
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
-	}
 }

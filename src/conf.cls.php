@@ -124,6 +124,9 @@ class Conf extends Base {
 		 */
 		$this->_try_load_site_options();
 
+		// Mark as conf loaded
+		! defined( 'LITESPEED_CONF_LOADED' ) && define( 'LITESPEED_CONF_LOADED', true );
+
 		// Activation delayed file update
 		if ( self::get_option( '__activation' ) ) {
 			// Check new version @since 2.9.3

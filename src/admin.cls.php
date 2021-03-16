@@ -36,6 +36,11 @@ class Admin extends Root {
 		// add link to plugin list page
 		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->cls( 'Admin_Display' ), 'add_plugin_links' ) );
 
+		// Hook attachment upload
+		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
+			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );
+		}
+
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
 			$purge_all_events = $this->conf( Base::O_PURGE_HOOK_ALL );
@@ -98,6 +103,15 @@ class Admin extends Root {
 	}
 
 	/**
+	 * Handle attachment update
+	 * @since  4.0
+	 */
+	public function wp_update_attachment_metadata( $data, $post_id ) {
+		$this->cls( 'Img_Optm' )->wp_update_attachment_metadata( $data, $post_id );
+		return $data;
+	}
+
+	/**
 	 * Run litespeed admin actions
 	 *
 	 * @since 1.1.0
@@ -108,17 +122,17 @@ class Admin extends Root {
 
 			// Save htaccess
 			case Router::ACTION_SAVE_HTACCESS:
-				Htaccess::cls()->htaccess_editor_save();
+				$this->cls( 'Htaccess' )->htaccess_editor_save();
 				break;
 
 			case Router::ACTION_SAVE_SETTINGS:
-				Admin_Settings::cls()->save( $_POST );
+				$this->cls( 'Admin_Settings' )->save( $_POST );
 				break;
 
 
 			// Save network settings
 			case Router::ACTION_SAVE_SETTINGS_NETWORK:
-				Admin_Settings::cls()->network_save( $_POST );
+				$this->cls( 'Admin_Settings' )->network_save( $_POST );
 				break;
 
 			default:

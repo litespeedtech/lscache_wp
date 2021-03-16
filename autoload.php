@@ -6,6 +6,9 @@
  */
 defined( 'WPINC' ) || exit;
 
+// Force define for object cache usage before plugin init
+! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', __DIR__ . '/' ) ;// Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
+
 if ( ! function_exists( 'litespeed_autoload' ) ) {
 	function litespeed_autoload( $cls ) {
 		if ( strpos( $cls, '.' ) !== false ) {

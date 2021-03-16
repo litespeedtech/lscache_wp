@@ -21,15 +21,26 @@ abstract class Root {
 	 * Load an instance or create it if not existed
 	 * @since  3.7
 	 */
-	public static function cls( $cls = false ) {
+	public static function cls( $cls = false, $unset = false, $data = false ) {
 		if ( ! $cls ) {
 			$cls = self::ori_cls();
 		}
 		$cls = __NAMESPACE__ . '\\' . $cls;
 
 		$cls_tag = strtolower( $cls );
+
 		if ( ! isset( self::$_instances[ $cls_tag ] ) ) {
-			self::$_instances[ $cls_tag ] = new $cls();
+			if ( $unset ) {
+				return;
+			}
+
+			self::$_instances[ $cls_tag ] = new $cls( $data );
+		}
+		else {
+			if ( $unset ) {
+				unset( self::$_instances[ $cls_tag ] );
+				return;
+			}
 		}
 
 		return self::$_instances[ $cls_tag ];

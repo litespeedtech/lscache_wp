@@ -9,7 +9,7 @@ $lang_disabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed
 $mem_enabled = class_exists( 'Memcached' ) ? $lang_enabled : $lang_disabled ;
 $redis_enabled = class_exists( 'Redis' ) ? $lang_enabled : $lang_disabled ;
 
-$mem_conn = Object_Cache::get_instance()->test_connection() ;
+$mem_conn = $this->cls( 'Object_Cache' )->test_connection();
 if ( $mem_conn === null ) {
 	$mem_conn_desc = '<font class="litespeed-desc">' . __( 'Not Available', 'litespeed-cache' ) . '</font>' ;
 }

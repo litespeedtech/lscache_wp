@@ -359,7 +359,7 @@ class Purge extends Base {
 
 		do_action( 'litespeed_purged_all_object' );
 
-		Object_Cache::get_instance()->flush();
+		$this->cls( 'Object_Cache' )->flush();
 		Debug2::debug( '[Purge] Flushed object cache' );
 
 		if ( ! $silence ) {

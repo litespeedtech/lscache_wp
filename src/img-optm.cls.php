@@ -64,11 +64,20 @@ class Img_Optm extends Base {
 		Debug2::debug2( '[ImgOptm] init' );
 
 		$this->wp_upload_dir = wp_upload_dir();
-		$this->__media = Media::cls();
-		$this->_table_img_optm = Data::cls()->tb( 'img_optm' );
-		$this->_table_img_optming = Data::cls()->tb( 'img_optming' );
+		$this->__media = $this->cls( 'Media' );
+		$this->_table_img_optm = $this->cls( 'Data' )->tb( 'img_optm' );
+		$this->_table_img_optming = $this->cls( 'Data' )->tb( 'img_optming' );
 
 		$this->_summary = self::get_summary();
+	}
+
+	/**
+	 * Gather images auto when update attachment meta
+	 *
+	 * @since  4.0
+	 */
+	public function wp_update_attachment_metadata( $data, $post_id ) {
+		Debug2::debug2( '[ImgOptm] 🖌️ Auto update attachment meta [id] ' . $post_id );
 	}
 
 	/**
@@ -77,8 +86,7 @@ class Img_Optm extends Base {
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _gather_images()
-	{
+	private function _gather_images() {
 		global $wpdb;
 
 		Data::cls()->tb_create( 'img_optm' );
@@ -744,7 +752,7 @@ class Img_Optm extends Base {
 				}
 				else {
 					$q = "UPDATE `$wpdb->postmeta` SET meta_value = %s WHERE meta_id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );				    
+					$wpdb->query( $wpdb->prepare( $q, array( $postmeta_info, $v->b_meta_id ) ) );
 				}
 
 

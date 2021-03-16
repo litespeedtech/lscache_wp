@@ -226,7 +226,7 @@ class Activation extends Base {
 
 		/* 3) object-cache.php; */
 
-		Object_Cache::get_instance()->del_file();
+		Object_Cache::cls()->del_file();
 
 		/* 4) .htaccess; */
 
@@ -255,6 +255,8 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function update_files() {
+		Debug2::debug( '🗂️ [Activation] update_files' );
+
 		// Update cache setting `_CACHE`
 		$this->cls( 'Conf' )->define_cache();
 
@@ -275,10 +277,10 @@ class Activation extends Base {
 		/* 3) object-cache.php; */
 
 		if ( $options[ self::O_OBJECT ] && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
-			Object_Cache::get_instance()->update_file( $options );
+			$this->cls( 'Object_Cache' )->update_file( $options );
 		}
 		else {
-			Object_Cache::get_instance()->del_file();
+			$this->cls( 'Object_Cache' )->del_file();
 		}
 
 		/* 4) .htaccess; */

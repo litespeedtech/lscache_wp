@@ -107,7 +107,7 @@ class ESI extends Root {
 	private function _transform_nonce() {
 		// Load ESI nonces in conf
 		$nonces = $this->conf( Base::O_ESI_NONCE );
-		add_filter( 'litespeed_esi_nonces', array( Data::cls(), 'load_esi_nonces' ) );
+		add_filter( 'litespeed_esi_nonces', array( $this->cls( 'Data' ), 'load_esi_nonces' ) );
 		if ( $nonces = apply_filters( 'litespeed_esi_nonces', $nonces ) ) {
 			foreach ( $nonces as $action ) {
 				$this->nonce_action( $action );
@@ -227,7 +227,7 @@ class ESI extends Root {
 		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
 		 * @since 2.9.3
 		 */
-		if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! REST::cls()->is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
+		if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! $this->cls( 'REST' )->is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
 			$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ];
 		}
 
@@ -466,7 +466,7 @@ class ESI extends Root {
 		// Will reverse the buffer when output in self::finalize()
 		if ( $preserved ) {
 			$hash = md5( $output );
-			self::cls()->_esi_preserve_list[ $hash ] = $output;
+			$this->_esi_preserve_list[ $hash ] = $output;
 			Debug2::debug( "[ESI] Preserved to $hash" );
 
 			return $hash;
