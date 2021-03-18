@@ -280,7 +280,7 @@ class Activation extends Base {
 			$this->cls( 'Object_Cache' )->update_file( $options );
 		}
 		else {
-			$this->cls( 'Object_Cache' )->del_file();
+			$this->cls( 'Object_Cache' )->del_file(); // Note: because it doesn't reconnect, which caused setting page OC option changes delayed, thus may meet Connect Test Failed issue (Next refresh will correct it). Not a big deal, will keep as is.
 		}
 
 		/* 4) .htaccess; */
