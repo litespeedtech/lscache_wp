@@ -36,11 +36,6 @@ class Admin extends Root {
 		// add link to plugin list page
 		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->cls( 'Admin_Display' ), 'add_plugin_links' ) );
 
-		// Hook attachment upload
-		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
-			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );
-		}
-
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
 			$purge_all_events = $this->conf( Base::O_PURGE_HOOK_ALL );
@@ -69,6 +64,11 @@ class Admin extends Root {
 	 */
 	public function admin_init() {
 		Control::set_nocache( 'Admin page' );
+
+		// Hook attachment upload
+		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
+			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );
+		}
 
 		$this->_proceed_admin_action();
 

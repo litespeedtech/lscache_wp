@@ -151,8 +151,8 @@ class API extends Base {
 		/**
 		 * Mist
 		 */
-		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug' ); // API::debug()-> Action `litespeed_debug`
-		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2' ); // API::debug2()-> Action `litespeed_debug2`
+		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug', 10, 2 ); // API::debug()-> Action `litespeed_debug`
+		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2', 10, 2 ); // API::debug2()-> Action `litespeed_debug2`
 		add_action( 'litespeed_disable_all', array( $this, '_disable_all' ) ); // API::disable_all( $reason ) -> Action `litespeed_disable_all`
 
 		add_action( 'litspeed_after_admin_init', array( $this, '_after_admin_init' ) );
@@ -164,13 +164,12 @@ class API extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function _after_admin_init()
-	{
+	public function _after_admin_init() {
 		/**
 		 * GUI
 		 */
-		add_action( 'litespeed_setting_enroll', array( Admin_Display::cls(), 'enroll' ), 10, 4 ); // API::enroll( $id ) // Register a field in setting form to save
-		add_action( 'litespeed_build_switch', array( Admin_Display::cls(), 'build_switch' ) ); // API::build_switch( $id ) // Build a switch div html snippet
+		add_action( 'litespeed_setting_enroll', array( $this->cls( 'Admin_Display' ), 'enroll' ), 10, 4 ); // API::enroll( $id ) // Register a field in setting form to save
+		add_action( 'litespeed_build_switch', array( $this->cls( 'Admin_Display' ), 'build_switch' ) ); // API::build_switch( $id ) // Build a switch div html snippet
 		// API::hook_setting_content( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_content`
 		// API::hook_setting_tab( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_tab`
 	}
@@ -181,8 +180,7 @@ class API extends Base {
 	 * @since 2.9.7.2
 	 * @access public
 	 */
-	public function _disable_all( $reason )
-	{
+	public function _disable_all( $reason ) {
 		do_action( 'litespeed_debug', '[API] Disabled_all due to ' . $reason );
 
 		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true );

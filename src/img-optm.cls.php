@@ -48,6 +48,7 @@ class Img_Optm extends Base {
 	private $tmp_path;
 	private $_img_in_queue = array();
 	private $_img_in_queue_missed = array();
+	private $_existed_src_list = array();
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
@@ -76,8 +77,74 @@ class Img_Optm extends Base {
 	 *
 	 * @since  4.0
 	 */
-	public function wp_update_attachment_metadata( $data, $post_id ) {
+	public function wp_update_attachment_metadata( $meta_value, $post_id ) {
+		global $wpdb;
+
 		Debug2::debug2( '[ImgOptm] 🖌️ Auto update attachment meta [id] ' . $post_id );
+
+		if ( empty( $meta_value[ 'file' ] ) ) {
+			return;
+		}
+
+		// Prepare images
+		$this->tmp_pid = $post_id;
+		$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+		$this->_append_img_queue( $meta_value, true );
+		if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+			array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
+		}
+
+		if ( empty( $this->_img_in_queue ) ) {
+			Debug2::debug( '[Img_Optm] auto update attachment meta bypass: empty _img_in_queue', $meta_value );
+			return;
+		}
+
+		// Load gathered images
+		if ( ! $this->_existed_src_list ) { // To aavoid extra query when recalling this function
+			Debug2::debug( '[Img_Optm] SELECT src from img_optm table' );
+			$q = "SELECT src FROM `$this->_table_img_optm` WHERE post_id = %d";
+			$list = $wpdb->get_results( $wpdb->prepare( $q, $post_id ) );
+			foreach ( $list as $v ) {
+				$this->_existed_src_list[] = $post_id . '.' . $v->src;
+			}
+		}
+
+		// Bypass existing images
+		foreach ( $this->_img_in_queue as $k => $v ) {
+			if ( in_array( $post_id . '.' . $v[ 'src' ], $this->_existed_src_list ) ) {
+				unset( $this->_img_in_queue[ $k ] );
+			}
+		}
+		if ( ! empty( $this->_img_in_queue_missed ) ) {
+			foreach ( $this->_img_in_queue_missed as $k => $v ) {
+				if ( in_array( $post_id . '.' . $v[ 'src' ], $this->_existed_src_list ) ) {
+					unset( $this->_img_in_queue_missed[ $k ] );
+				}
+			}
+		}
+
+		// Append new img to existing list
+		if ( $this->_img_in_queue ) {
+			foreach ( $this->_img_in_queue as $v ) {
+				$this->_existed_src_list[] = $post_id . '.' . $v[ 'src' ];
+			}
+		}
+		if ( $this->_img_in_queue_missed ) {
+			foreach ( $this->_img_in_queue_missed as $v ) {
+				$this->_existed_src_list[] = $post_id . '.' . $v[ 'src' ];
+			}
+		}
+
+		// Save missed images into img_optm
+		$this->_save_err_missed();
+
+		if ( empty( $this->_img_in_queue ) ) {
+			Debug2::debug( '[Img_Optm] auto update attachment meta 2 bypass: empty _img_in_queue' );
+			return;
+		}
+
+		// Save to DB
+		$this->_save_raw();
 	}
 
 	/**
@@ -89,8 +156,8 @@ class Img_Optm extends Base {
 	private function _gather_images() {
 		global $wpdb;
 
-		Data::cls()->tb_create( 'img_optm' );
-		Data::cls()->tb_create( 'img_optming' );
+		$this->cls( 'Data' )->tb_create( 'img_optm' );
+		$this->cls( 'Data' )->tb_create( 'img_optming' );
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
@@ -117,7 +184,6 @@ class Img_Optm extends Base {
 		}
 
 		foreach ( $list as $v ) {
-
 			$meta_value = $this->_parse_wp_meta_value( $v );
 			if ( ! $meta_value ) {
 				$this->_save_err_meta( $v->post_id );
@@ -153,8 +219,7 @@ class Img_Optm extends Base {
 	 * @since 1.6
 	 * @access private
 	 */
-	private function _append_img_queue( $meta_value, $is_ori_file = false )
-	{
+	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
 		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
 			Debug2::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value );
 			return;
