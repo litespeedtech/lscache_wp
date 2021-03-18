@@ -86,19 +86,6 @@ class Img_Optm extends Base {
 			return;
 		}
 
-		// Prepare images
-		$this->tmp_pid = $post_id;
-		$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
-		$this->_append_img_queue( $meta_value, true );
-		if ( ! empty( $meta_value[ 'sizes' ] ) ) {
-			array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
-		}
-
-		if ( empty( $this->_img_in_queue ) ) {
-			Debug2::debug( '[Img_Optm] auto update attachment meta bypass: empty _img_in_queue', $meta_value );
-			return;
-		}
-
 		// Load gathered images
 		if ( ! $this->_existed_src_list ) { // To aavoid extra query when recalling this function
 			Debug2::debug( '[Img_Optm] SELECT src from img_optm table' );
@@ -109,36 +96,18 @@ class Img_Optm extends Base {
 			}
 		}
 
-		// Bypass existing images
-		foreach ( $this->_img_in_queue as $k => $v ) {
-			if ( in_array( $post_id . '.' . $v[ 'src' ], $this->_existed_src_list ) ) {
-				unset( $this->_img_in_queue[ $k ] );
-			}
-		}
-		if ( ! empty( $this->_img_in_queue_missed ) ) {
-			foreach ( $this->_img_in_queue_missed as $k => $v ) {
-				if ( in_array( $post_id . '.' . $v[ 'src' ], $this->_existed_src_list ) ) {
-					unset( $this->_img_in_queue_missed[ $k ] );
-				}
-			}
-		}
-
-		// Append new img to existing list
-		if ( $this->_img_in_queue ) {
-			foreach ( $this->_img_in_queue as $v ) {
-				$this->_existed_src_list[] = $post_id . '.' . $v[ 'src' ];
-			}
-		}
-		if ( $this->_img_in_queue_missed ) {
-			foreach ( $this->_img_in_queue_missed as $v ) {
-				$this->_existed_src_list[] = $post_id . '.' . $v[ 'src' ];
-			}
+		// Prepare images
+		$this->tmp_pid = $post_id;
+		$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+		$this->_append_img_queue( $meta_value, true );
+		if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+			array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
 		}
 
 		// Save missed images into img_optm
 		$this->_save_err_missed();
 
-		if ( empty( $this->_img_in_queue ) ) {
+		if ( ! $this->_img_in_queue ) {
 			Debug2::debug( '[Img_Optm] auto update attachment meta 2 bypass: empty _img_in_queue' );
 			return;
 		}
@@ -201,15 +170,15 @@ class Img_Optm extends Base {
 		// Save missed images into img_optm
 		$this->_save_err_missed();
 
-		if ( empty( $this->_img_in_queue ) ) {
+		if ( ! $this->_img_in_queue ) {
 			Debug2::debug( '[Img_Optm] gather_images bypass: empty _img_in_queue' );
 			return;
 		}
 
 		// Save to DB
-		$this->_save_raw();
+		$count = $this->_save_raw();
 
-		$msg = sprintf( __( 'Gathered %d images successfully.', 'litespeed-cache' ), count( $this->_img_in_queue ) );
+		$msg = sprintf( __( 'Gathered %d images successfully.', 'litespeed-cache' ), $count );
 		Admin_Display::succeed( $msg );
 	}
 
@@ -229,6 +198,16 @@ class Img_Optm extends Base {
 
 		if ( ! $is_ori_file ) {
 			$short_file_path = $this->tmp_path . $short_file_path;
+		}
+
+		// Check if src is gathered already or not
+		if ( in_array( $this->tmp_pid . '.' . $short_file_path, $this->_existed_src_list ) ) {
+			// Debug2::debug2( '[Img_Optm] bypass image due to gathered: pid ' . $this->tmp_pid . ' ' . $short_file_path );
+			return;
+		}
+		else {
+			// Append handled images
+			$this->_existed_src_list[] = $this->tmp_pid . '.' . $short_file_path;
 		}
 
 		// check file exists or not
@@ -261,8 +240,7 @@ class Img_Optm extends Base {
 	 * @since 2.1.1
 	 * @access private
 	 */
-	private function _save_err_meta( $pid )
-	{
+	private function _save_err_meta( $pid ) {
 		$data = array(
 			$pid,
 			self::STATUS_XMETA,
@@ -277,12 +255,13 @@ class Img_Optm extends Base {
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _save_err_missed()
-	{
+	private function _save_err_missed() {
 		if ( ! $this->_img_in_queue_missed ) {
 			return;
 		}
-		Debug2::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_img_in_queue_missed ) );
+
+		$count = count( $this->_img_in_queue_missed );
+		Debug2::debug( '[Img_Optm] Missed img need to save [total] ' . $count );
 
 		$data_to_add = array();
 		foreach ( $this->_img_in_queue_missed as $src_data ) {
@@ -291,6 +270,9 @@ class Img_Optm extends Base {
 			$data_to_add[] = $src_data[ 'src' ];
 		}
 		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src' );
+
+		unset( $this->_img_in_queue_missed );
+		return $count;
 	}
 
 	/**
@@ -298,8 +280,7 @@ class Img_Optm extends Base {
 	 *
 	 * @since  3.0
 	 */
-	private function _save_raw()
-	{
+	private function _save_raw() {
 		$data = array();
 		foreach ( $this->_img_in_queue as $v ) {
 			$data[] = $v[ 'pid' ];
@@ -309,7 +290,12 @@ class Img_Optm extends Base {
 		}
 		$this->_insert_img_optm( $data );
 
-		Debug2::debug( '[Img_Optm] Added raw images [total] ' . count( $this->_img_in_queue ) );
+		$count = count( $this->_img_in_queue );
+		unset( $this->_img_in_queue );
+
+		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
+
+		return $count;
 	}
 
 	/**
@@ -318,8 +304,7 @@ class Img_Optm extends Base {
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, src_filesize' )
-	{
+	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, src_filesize' ) {
 		if ( empty( $data ) ) {
 			return;
 		}
@@ -1299,43 +1284,39 @@ class Img_Optm extends Base {
 			$to_be_continued = false;
 		}
 
+		// Prepare post_ids to inquery gathered images
 		$pid_set = array();
+		$scanned_list = array();
 		foreach ( $list as $v ) {
-			$pid_set[] = $v->post_id;
-
 			$meta_value = $this->_parse_wp_meta_value( $v );
 			if ( ! $meta_value ) {
 				continue;
 			}
 
+			$scanned_list[] = array(
+				'pid' => $v->post_id,
+				'meta' => $meta_value,
+			);
+
+			$pid_set[] = $v->post_id;
+		}
+
+		// Build gathered images
+		$q = "SELECT src, post_id FROM `$this->_table_img_optm` WHERE post_id IN (" . implode( ',', array_fill( 0, count( $pid_set ), '%d' ) ) . ")";
+		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid_set ) );
+		foreach ( $list as $v ) {
+			$this->_existed_src_list[] = $v->post_id . '.' . $v->src;
+		}
+
+		// Find new images
+		foreach ( $scanned_list as $v ) {
+			$meta_value = $v[ 'meta' ];
 			// Parse all child src and put them into $this->_img_in_queue, missing ones to $this->_img_in_queue_missed
-			$this->tmp_pid = $v->post_id;
+			$this->tmp_pid = $v[ 'pid' ];
 			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
 			$this->_append_img_queue( $meta_value, true );
 			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
 				array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
-			}
-		}
-
-		$q = "SELECT src, post_id FROM `$this->_table_img_optm` WHERE post_id IN (" . implode( ',', array_fill( 0, count( $pid_set ), '%d' ) ) . ")";
-		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid_set ) );
-
-		$existing_src_set = array();
-		foreach ( $list as $v ) {
-			$existing_src_set[ $v->post_id . '.' . $v->src ] = true;
-		}
-
-		// Filter existing missed img
-		foreach ( $this->_img_in_queue_missed as $k => $v ) { // $v -> pid, src
-			if ( array_key_exists( $v[ 'pid' ] . '.' . $v[ 'src' ], $existing_src_set ) ) {
-				unset( $this->_img_in_queue_missed[ $k ] );
-			}
-		}
-
-		// Filter existing img
-		foreach ( $this->_img_in_queue as $k => $v ) { // $v -> pid, src
-			if ( array_key_exists( $v[ 'pid' ] . '.' . $v[ 'src' ], $existing_src_set ) ) {
-				unset( $this->_img_in_queue[ $k ] );
 			}
 		}
 
