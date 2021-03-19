@@ -1096,9 +1096,10 @@ class Optimize extends Base {
 	 * @since  3.5
 	 */
 	private function _js_defer( $ori, $src ) {
-		if ( strpos( $ori, 'async' ) !== false ) {
-			return false;
+		if ( strpos( $ori, ' async' ) !== false ) {
+			$ori = str_replace( ' async', '', $ori );
 		}
+
 		if ( strpos( $ori, 'defer' ) !== false ) {
 			return false;
 		}
