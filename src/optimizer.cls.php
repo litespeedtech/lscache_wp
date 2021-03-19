@@ -156,6 +156,8 @@ class Optimizer extends Root {
 			}
 
 			$content = $this->cls( 'CDN' )->finalize( $content );
+
+			$content = $this->cls( 'Media' )->replace_background_webp( $content );
 		}
 		else {
 			if ( $minify ) {

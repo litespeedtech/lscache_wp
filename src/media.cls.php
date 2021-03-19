@@ -440,7 +440,7 @@ class Media extends Root {
 		 * @since 1.6.2
 		 */
 		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) && $this->webp_support() ) {
-			$this->_replace_buffer_img_webp();
+			$this->content = $this->_replace_buffer_img_webp( $this->content );
 		}
 
 		/**
@@ -488,7 +488,7 @@ class Media extends Root {
 
 			foreach ( $html_list as $k => $v ) {
 				$snippet = $this->conf( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>';
-				$v = str_replace( ' src=', ' data-src=', $v );
+				$v = str_replace( ' src=', ' litespeed-src=', $v );
 				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v );
 				$snippet = $v . $snippet;
 
@@ -682,8 +682,7 @@ class Media extends Root {
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function _replace_buffer_img_webp() {
-		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches );
+	private function _replace_buffer_img_webp( $content ) {
 		/**
 		 * Added custom element & attribute support
 		 * @since 2.2.2
@@ -701,13 +700,13 @@ class Media extends Root {
 			$v = explode( '.', $v );
 			$attr = preg_quote( $v[ 1 ], '#' );
 			if ( $v[ 0 ] ) {
-				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\2#iU';
 			}
 			else {
-				$pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU';
+				$pattern = '# ' . $attr . '=([\'"])(.+)\1#iU';
 			}
 
-			preg_match_all( $pattern, $this->content, $matches );
+			preg_match_all( $pattern, $content, $matches );
 
 			foreach ( $matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url ) {
 				// Check if is a DATA-URI
@@ -733,7 +732,7 @@ class Media extends Root {
 					);
 				}
 
-				$this->content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $this->content );
+				$content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $content );
 
 			}
 		}
@@ -741,12 +740,24 @@ class Media extends Root {
 		// parse srcset
 		// todo: should apply this to cdn too
 		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
-			$this->content = Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) );
+			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
 		}
 
 		// Replace background-image
-		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches );
-		foreach ( $matches[ 2 ] as $k => $url ) {
+		$content = $this->replace_background_webp( $content );
+
+		return $content;
+	}
+
+	/**
+	 * Replace background image
+	 *
+	 * @since  4.0
+	 */
+	public function replace_background_webp( $content ) {
+		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
+		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
+		foreach ( $matches[ 1 ] as $k => $url ) {
 			// Check if is a DATA-URI
 			if ( strpos( $url, 'data:image' ) !== false ) {
 				continue;
@@ -764,8 +775,10 @@ class Media extends Root {
 
 			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 );
 			$html_snippet = str_replace( $url, $url2, $matches[ 0 ][ $k ] );
-			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content );
+			$content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $content );
 		}
+
+		return $content;
 	}
 
 	/**
@@ -826,7 +839,7 @@ class Media extends Root {
 	 * @access public
 	 */
 	public function replace_webp( $url ) {
-		Debug2::debug2( '[Media] webp replacing: ' . $url, 4 );
+		Debug2::debug2( '[Media] webp replacing: ' . $url );
 
 		if ( substr( $url, -5 ) == '.webp' ) {
 			Debug2::debug2( '[Media] already webp' );

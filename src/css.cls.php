@@ -501,6 +501,7 @@ class CSS extends Base {
 			}
 
 			$con = Optimizer::minify_css( $con );
+			$con = $this->cls( 'Media' )->replace_background_webp( $con );
 
 			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 				$con = '@media ' . $attrs[ 'media' ] . '{' . $con . "}\n";

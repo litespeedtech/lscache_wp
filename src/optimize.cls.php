@@ -649,6 +649,7 @@ class Optimize extends Base {
 			if ( ! empty( $src_info[ 'inl' ] ) ) {
 				if ( $file_type == 'css' ) {
 					$code = Optimizer::minify_css( $src_info[ 'src' ] );
+					$code = $this->cls( 'Media' )->replace_background_webp( $code );
 					$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 				}
 				else {
