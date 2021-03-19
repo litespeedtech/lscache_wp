@@ -447,7 +447,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
@@ -887,7 +887,11 @@ class Optimize extends Base {
 		$con = $this->_preserve_esi( $con );
 
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script' . $attrs . ' data-src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			// Drop type attribute from $attrs
+			if ( strpos( $attrs, ' type=' ) !== false ) {
+				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
+			}
+			return '<script' . $attrs . ' type="litespeed/javascript" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 		}
 
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
@@ -1117,7 +1121,10 @@ class Optimize extends Base {
 		}
 
 		if ( $this->cfg_js_defer === 2 ) {
-			return str_replace( ' src=', ' data-src=', $ori );
+			if ( strpos( $ori, ' type=' ) !== false ) {
+				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
+			}
+			return str_replace( ' src=', ' type="litespeed/javascript" src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
