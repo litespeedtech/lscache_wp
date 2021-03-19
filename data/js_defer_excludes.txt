@@ -5,6 +5,3 @@
 
 # JS file URL excludes
 
-# Analytics JS also measure the load-time as it is being loaded on the website itself and Google sends a report each month to the user. If these files are deferred, The Analytics JS shows a longer page-load time, even if the website isn't actually slow. by Shivam
-gtm.js
-analytics.js
