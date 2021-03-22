@@ -10,7 +10,8 @@ defined( 'WPINC' ) || exit;
 class CSS extends Base {
 	const TYPE_GEN_CCSS = 'gen_ccss';
 	const TYPE_GEN_UCSS = 'gen_ucss';
-	const TYPE_CLEAR_Q = 'clear_q';
+	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
+	const TYPE_CLEAR_Q_UCSS = 'clear_q_ucss';
 
 	protected $_summary;
 	private $_ucss_whitelist;
@@ -568,7 +569,7 @@ class CSS extends Base {
 	 * @since  3.4
 	 */
 	public function clear_q( $type ) {
-		if ( empty( $this->_summary[ 'queue_ ' . $type ] ) ) {
+		if ( empty( $this->_summary[ 'queue_' . $type ] ) ) {
 			return;
 		}
 
@@ -597,8 +598,12 @@ class CSS extends Base {
 				self::cron_ccss( true );
 				break;
 
-			case self::TYPE_CLEAR_Q:
-				$this->clear_q();
+			case self::TYPE_CLEAR_Q_UCSS:
+				$this->clear_q( 'ucss' );
+				break;
+
+			case self::TYPE_CLEAR_Q_CCSS:
+				$this->clear_q( 'ccss' );
 				break;
 
 			default:

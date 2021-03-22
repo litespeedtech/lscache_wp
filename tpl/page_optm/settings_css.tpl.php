@@ -81,7 +81,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ucss' ] ); ?> )
-							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
+							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_UCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
 						<?php $i=0; foreach ( $css_summary[ 'queue_ucss' ] as $k => $v ) : ?>
@@ -179,7 +179,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ccss' ] ); ?> )
-							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
+							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_CCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
 						<?php $i=0; foreach ( $css_summary[ 'queue_ccss' ] as $k => $v ) : ?>
