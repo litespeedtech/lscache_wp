@@ -600,8 +600,34 @@ class Media extends Root {
 				continue;
 			}
 
+			// Add missing dimensions
+			if ( $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
+				if ( empty( $attrs[ 'width' ] ) || $attrs[ 'width' ] == 'auto' || empty( $attrs[ 'height' ] ) || $attrs[ 'height' ] == 'auto' ) {
+					$dimensions = $this->_detect_dimensions( $attrs[ 'src' ] );
+					if ( $dimensions ) {
+						$ori_width = $dimensions[ 0 ];
+						$ori_height = $dimensions[ 1 ];
+						// Calculate height based on width
+						if ( ! empty( $attrs[ 'width' ] ) && $attrs[ 'width' ] != 'auto' ) {
+							$ori_height = intval( $ori_height * $attrs[ 'width' ] / $ori_width );
+						}
+						elseif ( ! empty( $attrs[ 'height' ] ) && $attrs[ 'height' ] != 'auto' ) {
+							$ori_width = intval( $ori_width * $attrs[ 'height' ] / $ori_height );
+						}
+
+						$attrs[ 'width' ] = $ori_width;
+						$attrs[ 'height' ] = $ori_height;
+						$new_html = preg_replace( '#(width|height)=(["\'])[^\2]*\2#', '', $match[ 0 ] );
+						$new_html = str_replace( '<img ', '<img width="' . $attrs[ 'width' ] . '" height="' . $attrs[ 'height' ] . '" ', $new_html );
+						Debug2::debug( '[Media] Add missing sizes ' . $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] . ' to ' . $attrs[ 'src' ] );
+						$this->content = str_replace( $match[ 0 ], $new_html, $this->content );
+						$match[ 0 ] = $new_html;
+					}
+				}
+			}
+
 			$placeholder = false;
-			if ( ! empty( $attrs[ 'width' ] ) && ! empty( $attrs[ 'height' ] ) ) {
+			if ( ! empty( $attrs[ 'width' ] ) && $attrs[ 'width' ] != 'auto' && ! empty( $attrs[ 'height' ] ) && $attrs[ 'height' ] != 'auto' ) {
 				$placeholder = $attrs[ 'width' ] . 'x' . $attrs[ 'height' ];
 			}
 
@@ -611,6 +637,25 @@ class Media extends Root {
 		}
 
 		return array( $src_list, $html_list, $placeholder_list );
+	}
+
+	/**
+	 * Detect the original sizes
+	 *
+	 * @since  4.0
+	 */
+	private function _detect_dimensions( $src ) {
+		if ( $pathinfo = Utility::is_internal_file( $src ) ) {
+			$src = $pathinfo[ 0 ];
+		}
+
+		$sizes = getimagesize( $src );
+
+		if ( ! empty( $sizes[ 0 ] ) && ! empty( $sizes[ 1 ] ) ) {
+			return $sizes;
+		}
+
+		return false;
 	}
 
 	/**
@@ -782,6 +827,46 @@ class Media extends Root {
 	}
 
 	/**
+	 * Replace internal image src to webp
+	 *
+	 * @since  1.6.2
+	 * @access public
+	 */
+	public function replace_webp( $url ) {
+		Debug2::debug2( '[Media] webp replacing: ' . $url );
+
+		if ( substr( $url, -5 ) == '.webp' ) {
+			Debug2::debug2( '[Media] already webp' );
+			return false;
+		}
+
+		/**
+		 * WebP API hook
+		 * NOTE: As $url may contain query strings, WebP check will need to parse_url before appending .webp
+		 * @since  2.9.5
+		 * @see  #751737 - API docs for WebP generation
+		 */
+		if ( apply_filters( 'litespeed_media_check_ori', Utility::is_internal_file( $url ), $url ) ) {
+			// check if has webp file
+			if ( apply_filters( 'litespeed_media_check_webp', Utility::is_internal_file( $url, 'webp' ), $url ) ) {
+				$url .= '.webp';
+			}
+			else {
+				Debug2::debug2( '[Media] -no WebP file, bypassed' );
+				return false;
+			}
+		}
+		else {
+			Debug2::debug2( '[Media] -no file, bypassed' );
+			return false;
+		}
+
+		Debug2::debug2( '[Media] - replaced to: ' . $url );
+
+		return $url;
+	}
+
+	/**
 	 * Hook to wp_get_attachment_image_src
 	 *
 	 * @since  1.6.2
@@ -830,46 +915,6 @@ class Media extends Root {
 			}
 		}
 		return $srcs;
-	}
-
-	/**
-	 * Replace internal image src to webp
-	 *
-	 * @since  1.6.2
-	 * @access public
-	 */
-	public function replace_webp( $url ) {
-		Debug2::debug2( '[Media] webp replacing: ' . $url );
-
-		if ( substr( $url, -5 ) == '.webp' ) {
-			Debug2::debug2( '[Media] already webp' );
-			return false;
-		}
-
-		/**
-		 * WebP API hook
-		 * NOTE: As $url may contain query strings, WebP check will need to parse_url before appending .webp
-		 * @since  2.9.5
-		 * @see  #751737 - API docs for WEBP generation
-		 */
-		if ( apply_filters( 'litespeed_media_check_ori', Utility::is_internal_file( $url ), $url ) ) {
-			// check if has webp file
-			if ( apply_filters( 'litespeed_media_check_webp', Utility::is_internal_file( $url, 'webp' ), $url ) ) {
-				$url .= '.webp';
-			}
-			else {
-				Debug2::debug2( '[Media] -no WebP file, bypassed' );
-				return false;
-			}
-		}
-		else {
-			Debug2::debug2( '[Media] -no file, bypassed' );
-			return false;
-		}
-
-		Debug2::debug2( '[Media] - replaced to: ' . $url );
-
-		return $url;
 	}
 
 }

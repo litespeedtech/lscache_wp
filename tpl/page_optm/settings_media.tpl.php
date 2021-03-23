@@ -208,6 +208,20 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_MEDIA_ADD_MISSING_SIZES; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Set an explicit width and height on image elements to reduce layout shifts and improve CLS.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://web.dev/optimize-cls/?utm_source=lighthouse&utm_medium=unknown#images-without-dimensions' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_MEDIA_LAZYJS_INLINE; ?>
 			<?php $this->title( $id ); ?>
 		</th>
