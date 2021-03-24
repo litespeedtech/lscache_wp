@@ -31,7 +31,7 @@ class Router extends Base {
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
 	const ACTION_DEBUG2 = 'debug2';
-	const ACTION_CDN_CLOUDFLARE = 'CDN\\Cloudflare';
+	const ACTION_CDN_CLOUDFLARE = 'CDN\Cloudflare';
 
 	// List all handlers here
 	private static $_HANDLERS = array(
@@ -445,7 +445,12 @@ class Router extends Base {
 			return;
 		}
 
-		$action = $_REQUEST[ Router::ACTION ];
+		$action = stripslashes($_REQUEST[ Router::ACTION ]);
+		
+		if ( ! $action ) {
+		    return;
+		}
+		
 		$_is_public_action = false;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
