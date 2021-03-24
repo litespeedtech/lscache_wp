@@ -218,11 +218,19 @@ class Cloudflare extends Base {
 	private function _cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
 		Debug2::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" );
 
-		$header = array(
-			'Content-Type: application/json',
-			'X-Auth-Email: ' . $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
-			'X-Auth-Key: ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
-		);
+		if ( 40 == strlen($this->conf( self::O_CDN_CLOUDFLARE_KEY ))){
+			$header = array(
+				'Content-Type: application/json',
+				'Authorization: Bearer ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
+			);
+		}
+		else {
+			$header = array(
+				'Content-Type: application/json',
+				'X-Auth-Email: ' . $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
+				'X-Auth-Key: ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
+			);
+		}
 
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
