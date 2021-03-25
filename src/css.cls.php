@@ -289,6 +289,8 @@ class CSS extends Base {
 	 * @access private
 	 */
 	private function _generate( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile ) {
+		set_time_limit( 120 );
+
 		// Check if has credit to push
 		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_CCSS );
 		if ( ! $allowance ) {

@@ -907,8 +907,9 @@ class Img_Optm extends Base {
 
 		$server_list = array();
 
-		set_time_limit( $end_time + 20 );
 		while ( time() < $end_time ) {
+			set_time_limit( 80 );
+
 			$row_img = $wpdb->get_row( $_q );
 			if ( ! $row_img ) {
 				// No image
