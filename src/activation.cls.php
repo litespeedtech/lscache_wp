@@ -329,7 +329,7 @@ class Activation extends Base {
 
 		// Remove the line `define('WP_CACHE', true/false);` first
 		if ( defined( 'WP_CACHE' ) ) {
-			$content = preg_replace( '|define\(\s*([\'|"])WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content );
+			$content = preg_replace( '|define\(\s*(\'|")WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content );
 		}
 
 		// Insert const
