@@ -543,7 +543,7 @@ class Media extends Root {
 		if ( $parent_cls_exc ) {
 			Debug2::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\2]*' . preg_quote( $v, '#' ) . '[^\2]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
@@ -617,7 +617,7 @@ class Media extends Root {
 
 						$attrs[ 'width' ] = $ori_width;
 						$attrs[ 'height' ] = $ori_height;
-						$new_html = preg_replace( '#(width|height)=(["\'])[^\2]*\2#', '', $match[ 0 ] );
+						$new_html = preg_replace( '#(width|height)=(\'|")[^\2]*\2#', '', $match[ 0 ] );
 						$new_html = str_replace( '<img ', '<img width="' . $attrs[ 'width' ] . '" height="' . $attrs[ 'height' ] . '" ', $new_html );
 						Debug2::debug( '[Media] Add missing sizes ' . $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] . ' to ' . $attrs[ 'src' ] );
 						$this->content = str_replace( $match[ 0 ], $new_html, $this->content );
@@ -681,7 +681,7 @@ class Media extends Root {
 		if ( $parent_cls_exc ) {
 			Debug2::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\2]*' . preg_quote( $v, '#' ) . '[^\2]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
@@ -745,10 +745,10 @@ class Media extends Root {
 			$v = explode( '.', $v );
 			$attr = preg_quote( $v[ 1 ], '#' );
 			if ( $v[ 0 ] ) {
-				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\2#iU';
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=(\'|")([^\2]+)\2#iU';
 			}
 			else {
-				$pattern = '# ' . $attr . '=([\'"])(.+)\1#iU';
+				$pattern = '# ' . $attr . '=(\'|")([^\1]+)\1#iU';
 			}
 
 			preg_match_all( $pattern, $content, $matches );
