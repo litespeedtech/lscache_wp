@@ -306,13 +306,6 @@ class Base extends Root {
 		self::O_CDN_ATTR,
 	);
 
-	public static $CSS_FONT_DISPLAY_SET = array(
-		1 => 'block',
-		2 => 'swap',
-		3 => 'fallback',
-		4 => 'optional',
-	);
-
 	protected static $_default_options = array(
 		self::_VER 			=> '',
 		self::HASH				=> '',
@@ -578,7 +571,6 @@ class Base extends Root {
 	// NOTE: all the val of following items will be int while not bool
 	protected static $_multi_switch_list = array(
 		self::O_DEBUG 			=> 2,
-		self::O_OPTM_CSS_FONT_DISPLAY 	=> 4,
 		self::O_OPTM_JS_DEFER 	=> 2,
 	);
 

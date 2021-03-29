@@ -21,9 +21,6 @@ class Optimizer extends Root {
 	 */
 	public function __construct() {
 		$this->_conf_css_font_display = $this->conf( Base::O_OPTM_CSS_FONT_DISPLAY );
-		if ( ! empty( Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = Base::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ];
-		}
 	}
 
 	/**
@@ -142,7 +139,7 @@ class Optimizer extends Root {
 		if ( $file_type == 'css' ) {
 			// Font optimize
 			if ( $this->_conf_css_font_display ) {
-				$content = preg_replace( '#(@font\-face\s*\{)#isU', '${1}font-display:' . $this->_conf_css_font_display . ';', $content );
+				$content = preg_replace( '#(@font\-face\s*\{)#isU', '${1}font-display:swap;', $content );
 			}
 
 			$content = preg_replace( '/@charset[^;]+;\\s*/', '', $content );

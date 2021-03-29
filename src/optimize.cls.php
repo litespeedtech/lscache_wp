@@ -229,9 +229,6 @@ class Optimize extends Base {
 		$this->cfg_js_comb = $this->conf( self::O_OPTM_JS_COMB );
 		$this->cfg_ggfonts_async = $this->conf( self::O_OPTM_GGFONTS_ASYNC );
 		$this->_conf_css_font_display = $this->conf( self::O_OPTM_CSS_FONT_DISPLAY );
-		if ( ! empty( self::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ] ) ) {
-			$this->_conf_css_font_display = self::$CSS_FONT_DISPLAY_SET[ $this->_conf_css_font_display ];
-		}
 
 		$this->cfg_ggfonts_rm = $this->conf( self::O_OPTM_GGFONTS_RM );
 
@@ -532,7 +529,7 @@ class Optimize extends Base {
 			}
 		}
 
-		$script .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=' . $this->_conf_css_font_display : '' ) . '"';
+		$script .= '"' . implode( '","', $families ) . ( $this->_conf_css_font_display ? '&display=swap' : '' ) . '"';
 
 		$script .= ']}};';
 
@@ -569,9 +566,9 @@ class Optimize extends Base {
 			if ( strpos( $v, 'display=' ) ) {
 				continue;
 			}
-			$this->html_head = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->html_head );
-			$this->html_foot = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->html_foot );
-			$this->content = str_replace( $v, $v . '&#038;display=' . $this->_conf_css_font_display, $this->content );
+			$this->html_head = str_replace( $v, $v . '&#038;display=swap', $this->html_head );
+			$this->html_foot = str_replace( $v, $v . '&#038;display=swap', $this->html_foot );
+			$this->content = str_replace( $v, $v . '&#038;display=swap', $this->content );
 		}
 	}
 

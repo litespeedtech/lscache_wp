@@ -223,7 +223,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_switch( $id, array( __( 'Default', 'litespeed-cache' ), 'Block', 'Swap', 'Fallback', 'Optional' ) ); ?>
+			<?php $this->build_switch( $id, array( __( 'Default', 'litespeed-cache' ), 'Swap' ) ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Set this to append %1$s to all %2$s rules before caching CSS to specify how fonts should be displayed while being downloaded.', 'litespeed-cache' ), '<code>font-display</code>', '<code>@font-face</code>' ); ?>
 				<br /><?php echo sprintf( __( '%s is recommended.', 'litespeed-cache' ), '<code>' . __( 'Swap', 'litespeed-cache' ) . '</code>' ); ?>

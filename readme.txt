@@ -308,7 +308,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Better regex for optimize parsing.
 * **Page Optimize** Eliminated w3 validator dns prefetch and duplicated id errors. (@sumit Pandey)
 * **Page Optimize** New Optimize for Guest Only option under Tuning.
-* **Page Optimize** forbidden external link redirection for localization.
+* **Page Optimize** Forbidden external link redirection for localization.
+* **Page Optimize** Simplified `Font Display Optimization` option.
 * **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
 * **Network** Dropped network cssjs rewrite rules.
 * **GUI** Bypass score banner when score failed to detect (both 0). (@ankit)
