@@ -246,6 +246,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.0 (previous 3.7) - 2021 =
 * 🌱**UCSS** Hello UCSS.
+* 🌱**CCSS** New `CCSS Per URL` option.
 * 🌱**Media** New option `Add Missing Sizes` for CLS improvement. (@Fahim)
 * **Media** WebP can now be replaced in CSS.
 * **Media** Drop image tags in noscript to avoid lazyload. (@Abe #314 @mattthomas-photography)
@@ -261,6 +262,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **ESI** Disabled ESI when no cacheable. (@titsmaker)
 * **Debug** Better debug format for 2nd param in log.
 * **CDN** Add basic support to use CloudFlare API Tokens (@Abe #320)
+* **CSS** Simplified `Font Display Optimization` option.
 * **CSS** Manual cron timeout fix. (@jesse Distad)
 * **CSS** Inline CSS can now use `data-no-optimize` to exclude too. (@popaionut)
 * **JS** Combined Load JS defer and Load Inline JS defer options.
@@ -309,7 +311,6 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Eliminated w3 validator dns prefetch and duplicated id errors. (@sumit Pandey)
 * **Page Optimize** New Optimize for Guest Only option under Tuning.
 * **Page Optimize** Forbidden external link redirection for localization.
-* **Page Optimize** Simplified `Font Display Optimization` option.
 * **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
 * **Network** Dropped network cssjs rewrite rules.
 * **GUI** Bypass score banner when score failed to detect (both 0). (@ankit)

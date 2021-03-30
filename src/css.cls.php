@@ -104,6 +104,24 @@ class CSS extends Base {
 	}
 
 	/**
+	 * Generate CCSS url tag
+	 *
+	 * @since 4.0
+	 */
+	private function _gen_ccss_file_tag( $request_url ) {
+		if ( is_404() ) {
+			return '404';
+		}
+
+		if ( $this->conf( self::O_OPTM_CCSS_PER_URL ) ) {
+			return $request_url;
+		}
+
+		// Per posttype
+		return Utility::page_type();
+	}
+
+	/**
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
@@ -113,7 +131,7 @@ class CSS extends Base {
 		$request_url = home_url( $wp->request );
 
 		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
-		$url_tag = is_404() ? '404' : $request_url;
+		$url_tag = $this->_gen_ccss_file_tag( $request_url );
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ccss' );
 		if ( $filename ) {

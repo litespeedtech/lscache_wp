@@ -206,6 +206,19 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 	<tr>
 		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_CCSS_PER_URL; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Disabling this will get pages to generate CCSS per Post Type, which can save significant CCSS quota. However, it may result in CSS wrong styling if your posts are built w/ page builders.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_CSS_ASYNC_INLINE; ?>
 			<?php $this->title( $id ); ?>
 		</th>
