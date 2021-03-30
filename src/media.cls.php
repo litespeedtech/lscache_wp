@@ -800,6 +800,10 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
+		if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+			return $content;
+		}
+
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
 		foreach ( $matches[ 1 ] as $k => $url ) {
