@@ -399,6 +399,13 @@ class Optimize extends Base {
 		 */
 		$this->content = $this->cls( 'Localization' )->finalize( $this->content );
 
+		/**
+		 * HTML Lazyload
+		 */
+		if ( $this->conf( self::O_OPTM_HTML_LAZY ) ) {
+			$this->html_head = $this->cls( 'CSS' )->prepare_html_lazy() . $this->html_head;
+		}
+
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async && $this->_ccss ) {
 			$this->html_head = $this->_ccss . $this->html_head;

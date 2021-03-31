@@ -28,6 +28,14 @@ class CSS extends Base {
 	}
 
 	/**
+	 * HTML lazyload CSS
+	 * @since 4.0
+	 */
+	public function prepare_html_lazy() {
+		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;}</style>';
+	}
+
+	/**
 	 * Output critical css
 	 *
 	 * @since  1.3

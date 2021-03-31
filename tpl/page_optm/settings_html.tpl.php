@@ -55,6 +55,21 @@ defined( 'WPINC' ) || exit;
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_HTML_LAZY; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Delay render off-screen HTML elements by its selector.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazy' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_QS_RM; ?>
 			<?php $this->title( $id ); ?>
 		</th>

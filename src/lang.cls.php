@@ -111,6 +111,7 @@ class Lang extends Base {
 			self::O_OPTM_JS_COMB_EXT_INL		=> __( 'JS Combine External and Inline', 'litespeed-cache' ),
 			self::O_OPTM_JS_HTTP2				=> __( 'JS HTTP/2 Push', 'litespeed-cache' ),
 			self::O_OPTM_HTML_MIN				=> __( 'HTML Minify', 'litespeed-cache' ),
+			self::O_OPTM_HTML_LAZY				=> __( 'HTML Lazyload Selectors', 'litespeed-cache' ),
 			self::O_OPTM_CSS_ASYNC				=> __( 'Load CSS Asynchronously', 'litespeed-cache' ),
 			self::O_OPTM_CCSS_PER_URL			=> __( 'CCSS Per URL', 'litespeed-cache' ),
 			self::O_OPTM_CSS_ASYNC_INLINE		=> __( 'Inline CSS Async Lib', 'litespeed-cache' ),

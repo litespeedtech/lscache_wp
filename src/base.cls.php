@@ -128,6 +128,7 @@ class Base extends Root {
 	const O_OPTM_JS_HTTP2 			= 'optm-js_http2';
 	const O_OPTM_JS_EXC 			= 'optm-js_exc';
 	const O_OPTM_HTML_MIN 			= 'optm-html_min';
+	const O_OPTM_HTML_LAZY 			= 'optm-html_lazy';
 	const O_OPTM_QS_RM 				= 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC 			= 'optm-css_async';
@@ -404,6 +405,7 @@ class Base extends Root {
 		self::O_OPTM_JS_HTTP2 			=> false,
 		self::O_OPTM_JS_EXC 			=> array(),
 		self::O_OPTM_HTML_MIN 			=> false,
+		self::O_OPTM_HTML_LAZY 			=> array(),
 		self::O_OPTM_QS_RM 				=> false,
 		self::O_OPTM_GGFONTS_RM 		=> false,
 		self::O_OPTM_CSS_ASYNC 			=> false,

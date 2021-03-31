@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit ;
 $menu_list = array(
 	'settings_css' 				=> __( 'CSS Settings', 'litespeed-cache' ),
 	'settings_js'				=> __( 'JS Settings', 'litespeed-cache' ),
-	'settings_html' 			=> __( 'Optimization', 'litespeed-cache' ),
+	'settings_html' 			=> __( 'HTML Settings', 'litespeed-cache' ),
 	'settings_media' 			=> __( 'Media Settings', 'litespeed-cache' ),
 	'settings_media_exc'		=> __( 'Media Excludes', 'litespeed-cache' ),
 	'settings_localization'		=> __( 'Localization', 'litespeed-cache' ),

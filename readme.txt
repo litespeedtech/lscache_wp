@@ -246,6 +246,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.0 (previous 3.7) - 2021 =
 * 🌱**UCSS** Hello UCSS.
+* 🌱**CCSS** New `HTML Lazyload` option. (@Ankit)
 * 🌱**CCSS** New `CCSS Per URL` option.
 * 🌱**Media** New option `Add Missing Sizes` for CLS improvement. (@Fahim)
 * **Media** WebP can now be replaced in CSS.
