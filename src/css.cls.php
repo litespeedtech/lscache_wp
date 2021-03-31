@@ -32,7 +32,7 @@ class CSS extends Base {
 	 * @since 4.0
 	 */
 	public function prepare_html_lazy() {
-		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;}</style>';
+		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
 	}
 
 	/**
