@@ -155,7 +155,7 @@ class Crawler extends Root {
 		if ( $this->_summary['done'] === 'touchedEnd' ) {
 			// check whole crawling interval
 			$last_fnished_at = $this->_summary[ 'last_full_time_cost' ] + $this->_summary[ 'this_full_beginning_time' ];
-			if ( ! $force && time() - $last_fnished_at < $this->conf( self::O_CRAWLER_CRAWL_INTERVAL ) ) {
+			if ( ! $force && time() - $last_fnished_at < $this->conf( Base::O_CRAWLER_CRAWL_INTERVAL ) ) {
 				Debug2::debug( '🐞 Cron abort: cache warmed already.' );
 				// if not reach whole crawling interval, exit
 				return;
