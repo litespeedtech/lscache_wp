@@ -150,8 +150,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?><br />
 				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
-				<br /><?php echo sprintf( __( 'Enalbing this option will automatically enable Critical CSS generation (%s service).', 'litespeed-cache' ), '<code>QUIC.cloud</code>' ); ?><br />
-				<?php echo __( 'Automatical generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+				<br /><?php echo sprintf( __( 'Enabling this option will automatically enable Critical CSS generation (%s service).', 'litespeed-cache' ), '<code>QUIC.cloud</code>' ); ?><br />
+				<?php echo __( 'Automatic generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-critical-css-in-the-background' ); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:

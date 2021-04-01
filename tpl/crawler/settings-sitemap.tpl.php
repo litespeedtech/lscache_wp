@@ -19,7 +19,7 @@ $this->form_action();
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __('The crawler can use your Google XML Sitemap instead of its own. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
+				<?php echo __('The crawler will use your XML sitemap or sitemap index. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
