@@ -300,7 +300,6 @@ class CDN extends Root {
 	 * @access private
 	 */
 	private function _replace_inline_css() {
-		// preg_match_all( '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%|])([^)]+)\s*\)([^;},\s]*)/i', $this->content, $matches );
 		Debug2::debug2( '[CDN] _replace_inline_css', $this->_cfg_cdn_mapping );
 
 		/**
@@ -309,7 +308,7 @@ class CDN extends Root {
 		 * @see  #685485
 		 * @since 3.0
 		 */
-		preg_match_all( '#url\((?![\'"]?data)[\'"]?([^\)\'"\\\]+)[\'"]?\)#i', $this->content, $matches );
+		preg_match_all( '/url\((?![\'"]?data)[\'"]?([^\)\'"\\\]+)[\'"]?\)/i', $this->content, $matches );
 		foreach ( $matches[ 1 ] as $k => $url ) {
 			$url = str_replace( array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url );
 

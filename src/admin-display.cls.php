@@ -731,7 +731,7 @@ class Admin_Display extends Base {
 			}
 		}
 
-		$label_id = preg_replace( '|\W|', '', $id );
+		$label_id = preg_replace( '/\W/', '', $id );
 
 		if ( $type == 'text' ) {
 			$cls = "regular-text $cls";
@@ -763,7 +763,7 @@ class Admin_Display extends Base {
 		}
 		$checked = $checked ? ' checked ' : '';
 
-		$label_id = preg_replace( '|\W|', '', $id );
+		$label_id = preg_replace( '/\W/', '', $id );
 
 		if ( $value !== 1 ) {
 			$label_id .= '_' . $value;
@@ -845,7 +845,7 @@ class Admin_Display extends Base {
 	 * @access private
 	 */
 	private function _build_radio( $id, $val, $txt ) {
-		$id_attr = 'input_radio_' . preg_replace( '|\W|', '', $id ) . '_' . $val;
+		$id_attr = 'input_radio_' . preg_replace( '/\W/', '', $id ) . '_' . $val;
 
 		$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 
