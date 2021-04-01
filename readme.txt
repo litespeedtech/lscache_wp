@@ -91,7 +91,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * [Join our Slack community](https://litespeedtech.com/slack) to connect with other LiteSpeed users.
 * [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
 * [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/overview/).
-* [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
+* [Read WordPress Wednesday tutorials on our blog](https://blog.litespeedtech.com/tag/wordpress-wednesday).
 * [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
 * [LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
 
@@ -112,7 +112,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 = Notes for LiteSpeed Web Server Enterprise =
 
 * Make sure that your license includes the LSCache module. A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") is available for free for 15 days.
-* The server must be configured to have caching enabled. If you are the server admin, [click here](https://docs.litespeedtech.com/lscache/lscwp/overview/#configure-cache-root) for instructions. Otherwise, please request that the server admin configure the cache root for the server.
+* The server must be configured to have caching enabled. If you are the server admin, [click here](https://docs.litespeedtech.com/lscache/start/#configure-cache-root-and-cache-policy) for instructions. Otherwise, please request that the server admin configure the cache root for the server.
 
 = Notes for OpenLiteSpeed =
 
@@ -132,7 +132,7 @@ This plugin includes a Privacy blurb that you can add to your site's Privacy Pol
 
 In addition to caching, our WordPress plugin has an Image Optimization feature. When optimization is requested, images are transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. LiteSpeed keeps copies of optimized images for 7 days (in case of network stability issues) and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to our server so that we may better provide technical support. Neither of these features collects any visitor data. Only server and site data is involved.
 
-Please see [LiteSpeed’s Privacy Policy](https://www.litespeedtech.com/company/privacy-policy) for our complete Privacy/GDPR statement.
+Please see the [QUIC.cloud Privacy Policy](https://quic.cloud/privacy-policy/) for our complete Privacy/GDPR statement.
 
 == Frequently Asked Questions ==
 
