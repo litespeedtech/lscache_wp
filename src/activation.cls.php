@@ -329,12 +329,12 @@ class Activation extends Base {
 
 		// Remove the line `define('WP_CACHE', true/false);` first
 		if ( defined( 'WP_CACHE' ) ) {
-			// $content = preg_replace( '|define\(\s*([\'|"])WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content );
+			$content = preg_replace( '/define\(\s*([\'"])WP_CACHE\1\s*,\s*\w+\s*\)\s*;/sU', '', $content );
 		}
 
 		// Insert const
 		if ( $enable ) {
-			$content = preg_replace( '|^<\?php|', "<?php\ndefine( 'WP_CACHE', true );", $content );
+			$content = preg_replace( '/^<\?php/', "<?php\ndefine( 'WP_CACHE', true );", $content );
 		}
 
 		$res = File::save( $conf_file, $content, false, false, false );

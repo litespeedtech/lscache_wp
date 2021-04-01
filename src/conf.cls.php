@@ -520,7 +520,7 @@ class Conf extends Base {
 			return;
 		}
 
-		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
+		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '/[^\*]/', $val ) ) {
 			return;
 		}
 
@@ -573,7 +573,7 @@ class Conf extends Base {
 			return;
 		}
 
-		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '|[^\*]|', $val ) ) {
+		if ( $val && $this->_conf_pswd( $id ) && ! preg_match( '/[^\*]/', $val ) ) {
 			return;
 		}
 

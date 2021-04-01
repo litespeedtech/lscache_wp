@@ -279,7 +279,7 @@ class Optimizer extends Root {
 	 */
 	public function is_min( $filename ) {
 		$basename = basename( $filename );
-		if ( preg_match( '|[-\.]min\.(?:[a-zA-Z]+)$|i', $basename ) ) {
+		if ( preg_match( '/[-\.]min\.(?:[a-zA-Z]+)$/i', $basename ) ) {
 			return true;
 		}
 

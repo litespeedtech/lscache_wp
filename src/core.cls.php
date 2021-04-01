@@ -339,7 +339,7 @@ class Core extends Root {
 			$buffer = substr( $buffer, 0, 300 );
 		}
 		if ( strstr( $buffer, '<!--' ) !== false ) {
-			$buffer = preg_replace( '|<!--.*?-->|s', '', $buffer );
+			$buffer = preg_replace( '/<!--.*?-->/s', '', $buffer );
 		}
 		$buffer = trim( $buffer );
 
