@@ -21,13 +21,13 @@ class Online
 	}
 
 	/**
-	 * Gen key from cloud server
+	 * Generate domain key from QUIC.cloud server (See https://quic.cloud/terms/)
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Generate domain API key from Cloud server
+	 *     # Generate domain API key from QUIC.cloud
 	 *     $ wp litespeed-online init
 	 *
 	 */
@@ -40,13 +40,13 @@ class Online
 	}
 
 	/**
-	 * Sync data from cloud server
+	 * Sync usage data from QUIC.cloud 
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Sync online service usage info
+	 *     # Sync QUIC.cloud service usage info
 	 *     $ wp litespeed-online sync
 	 *
 	 */
@@ -76,7 +76,7 @@ class Online
 	}
 
 	/**
-	 * List all services
+	 * List all QUIC.cloud services
 	 *
 	 * ## OPTIONS
 	 *
@@ -104,13 +104,13 @@ class Online
 	}
 
 	/**
-	 * List all cloud servers in use
+	 * List all QUIC.cloud servers in use
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # List all cloud servers in use
+	 *     # List all QUIC.cloud servers in use
 	 *     $ wp litespeed-online nodes
 	 *
 	 */
@@ -138,13 +138,13 @@ class Online
 	}
 
 	/**
-	 * Detect closest Node server for current service
+	 * Detect closest node server for current service
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Detect closest Node for one service
+	 *     # Detect closest node for one service
 	 *     $ wp litespeed-online ping img_optm
 	 *
 	 */

@@ -46,7 +46,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Widely enable DNS prefetch for URLs in the document, including images, CSS, JavaScript, and so forth.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Automatically enable DNS prefetching for all URLs in the document, including images, CSS, JavaScript, and so forth.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve the page loading speed.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control' ); ?>
 			</div>
@@ -61,7 +61,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Delay render off-screen HTML elements by its selector.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Delay rendering off-screen HTML elements by its selector.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazy' ); ?>
 			</div>

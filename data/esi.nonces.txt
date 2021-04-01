@@ -7,24 +7,25 @@
 ## Predefined elsewhere so not needed here:
 
 ## WordPress core
-#stats_nonce
-#subscribe_nonce
+# stats_nonce
+# subscribe_nonce
 
 # Divi Theme Builder
-#et-pb-contact-form-submit
-#et_frontend_nonce
-#et_ab_log_nonce
+# et-pb-contact-form-submit
+# et_frontend_nonce
+# et_ab_log_nonce
 
 # WooCommerce PayPal Checkout
-#_wc_ppec_update_shipping_costs_nonce private
-#_wc_ppec_start_checkout_nonce private
-#_wc_ppec_generate_cart_nonce private
+# _wc_ppec_update_shipping_costs_nonce private
+# _wc_ppec_start_checkout_nonce private
+# _wc_ppec_generate_cart_nonce private
 
 # User Switching
-#switch_to_olduser_'<ID>'
+# switch_to_olduser_'<ID>'
 
 # Caldera Forms
-#caldera_forms_front_*
+# caldera_forms_front_*
+
 
 ## Predefined list of ESI nonces:
 
@@ -38,12 +39,17 @@ wdap-call-nonce private
 # SEOpress Cookie Consent
 seopress_cookies_user_consent_nonce
 
-#SearchWP Metrics
+# SearchWP Metrics
 swpmtxnonce
 
-#wpDataTables #986128
+# wpDataTables #986128
 wdt*
 
-#WPBakery gallery
+# WPBakery gallery
 _vcnonce
 data-vc-public-nonce
+
+# Extra Theme
+rating_nonce
+timeline_nonce
+blog_feed_nonce

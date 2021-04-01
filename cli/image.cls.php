@@ -24,7 +24,7 @@ class Image
 	}
 
 	/**
-	 * Send image optimization request to cloud server
+	 * Send image optimization request to QUIC.cloud server
 	 *
 	 * ## OPTIONS
 	 *
@@ -40,7 +40,7 @@ class Image
 	}
 
 	/**
-	 * Pull optimized images from cloud server
+	 * Pull optimized images from QUIC.cloud server
 	 *
 	 * ## OPTIONS
 	 *
@@ -127,7 +127,7 @@ class Image
 	}
 
 	/**
-	 * Clean up unfinished image data from cloud server
+	 * Clean up unfinished image data from QUIC.cloud server
 	 *
 	 * ## OPTIONS
 	 *
