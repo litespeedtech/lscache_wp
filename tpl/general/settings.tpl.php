@@ -99,7 +99,7 @@ $this->form_action();
 			<?php if ( ! $this->conf( Base::O_API_KEY ) ) : ?>
 				<div class="litespeed-callout notice notice-error inline">
 					<h4><?php echo __( 'Warning', 'litespeed-cache' ); ?>:</h4>
-					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ) . 'See <a href="https://quic.cloud/terms/">Terms</a>'; ?></p>
+					<p><?php echo sprintf( __( 'You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_API_KEY ) . '</code>' ) . ' See <a href="https://quic.cloud/terms/">Terms</a>.'; ?></p>
 				</div>
 			<?php elseif ( empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
 				<div class="litespeed-callout notice notice-warning inline">
