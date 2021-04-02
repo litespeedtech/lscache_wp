@@ -5,3 +5,6 @@
 
 ############# DoBar compatibility #############
 .pace-inactive
+
+############# DIVI ################
+.et_pb_number_counter.active
