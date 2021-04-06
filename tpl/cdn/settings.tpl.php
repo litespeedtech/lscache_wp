@@ -48,8 +48,12 @@ $this->form_action();
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a traditional Content Delivery Network (CDN) or a subdomain for static content with QUIC.cloud CDN.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#use-cdn-mapping' ); ?>
-				<br />
-				<?php echo sprintf( __( 'NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
+			</div>
+
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-warning">
+				<?php echo __('NOTE', 'litespeed-cache'); ?>:
+				<?php echo sprintf( __( 'QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
