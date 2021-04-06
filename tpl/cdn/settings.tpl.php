@@ -189,23 +189,23 @@ $this->form_action();
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
-					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ); ?></label>
-
-					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ); ?>
-					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
-						<?php echo sprintf( __( 'Optional when API token used.', 'litespeed-cache' ) ); ?>
-					</div>
-				</div>
-
-				<div class='litespeed-col'>
 				<label class="litespeed-form-label"><?php echo __( 'Global API Key / API Token', 'litespeed-cache' ); ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ); ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key / token is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"', 'Cloudflare' ); ?>
-						<?php echo sprintf( __( 'Recommend to generate  the token from Cloudflare  API token template "WordPress ".', 'litespeed-cache' ) ); ?>
+						<?php echo sprintf( __( 'Recommended to generate the token from Cloudflare API token template "WordPress".', 'litespeed-cache' ) ); ?>
+					</div>
+				</div>
+
+				<div class='litespeed-col'>
+					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ); ?></label>
+
+					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ); ?>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+						<?php echo sprintf( __( 'Optional when API token used.', 'litespeed-cache' ) ); ?>
 					</div>
 				</div>
 
