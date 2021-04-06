@@ -33,7 +33,7 @@ $this->form_action();
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable %s CDN API functionality.', 'litespeed-cache' ), 'QUIC.cloud' ); ?>
-				<?php Doc::learn_more( 'https://quic.cloud/' ); ?>
+				<?php Doc::learn_more( 'https://quic.cloud/docs/cdn/getting-started/verify-quic-cloud-cdn-is-working/#check-lscache-wordpress-plugin' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -46,7 +46,9 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a Content Delivery Network (CDN). NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a traditional Content Delivery Network (CDN) or a subdomain for static content with QUIC.cloud CDN.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#use-cdn-mapping' ); ?>
+				<?php echo sprintf( __( 'NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
