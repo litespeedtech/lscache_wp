@@ -33,6 +33,7 @@ $this->form_action();
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable %s CDN API functionality.', 'litespeed-cache' ), 'QUIC.cloud' ); ?>
+				<?php Doc::learn_more( 'https://quic.cloud/' ); ?>
 			</div>
 		</td>
 	</tr>
