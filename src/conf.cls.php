@@ -552,7 +552,7 @@ class Conf extends Base {
 				foreach ( $diff as $v ) {
 					$v = ltrim( $v, '^' );
 					$v = rtrim( $v, '$' );
-					Purge::purge_url( $v );
+					$this->cls( 'Purge' )->purge_url( $v );
 				}
 			}
 		}
