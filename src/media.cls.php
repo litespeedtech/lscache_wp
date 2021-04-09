@@ -458,6 +458,7 @@ class Media extends Root {
 
 		$cfg_lazy = $this->conf( Base::O_MEDIA_LAZY );
 		$cfg_iframe_lazy = $this->conf( Base::O_MEDIA_IFRAME_LAZY );
+		$cfg_js_delay = $this->conf( Base::O_OPTM_JS_DEFER ) == 2;
 
 		if ( $cfg_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
@@ -488,7 +489,12 @@ class Media extends Root {
 
 			foreach ( $html_list as $k => $v ) {
 				$snippet = $this->conf( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>';
-				$v = str_replace( ' src=', ' data-src=', $v );
+				if ( $cfg_js_delay ) {
+					$v = str_replace( ' src=', ' litespeed-src=', $v );
+				}
+				else {
+					$v = str_replace( ' src=', ' data-src=', $v );
+				}
 				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v );
 				$snippet = $v . $snippet;
 
