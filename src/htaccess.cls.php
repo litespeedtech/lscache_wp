@@ -512,7 +512,7 @@ class Htaccess extends Root {
 		if ( ! empty( $cfg[ Base::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START;
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]';
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]';
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+ismobile]';
 			$new_rules[] = self::MARKER_MOBILE . self::MARKER_END;
 			$new_rules[] = '';
 		}
