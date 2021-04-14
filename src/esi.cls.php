@@ -67,7 +67,7 @@ class ESI extends Root {
 	 * @access public
 	 */
 	public function esi_init() {
-		add_action( 'template_include', array( $this, 'esi_template' ), 99999 );
+		add_filter( 'template_include', array( $this, 'esi_template' ), 99999 );
 
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'wp_update_comment_count', __NAMESPACE__ . '\Purge::purge_comment_widget' );
