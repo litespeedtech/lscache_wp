@@ -252,7 +252,7 @@ class Optimizer extends Root {
 		}
 
 		try {
-			$data = Lib\JSMin::minify( $data );
+			$data = Lib\JS_MIN\JSMin::minify( $data );
 			return $data;
 		} catch ( \Exception $e ) {
 			Debug2::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() );
