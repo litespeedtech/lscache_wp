@@ -249,6 +249,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**CCSS** New `HTML Lazyload` option. (@Ankit)
 * 🌱**CCSS** New `CCSS Per URL` option.
 * 🌱**Media** New option `Add Missing Sizes` for CLS improvement. (@Fahim)
+* 🌱**JS** New JS minification library for better compression and compatibility w/ template literals. (@LuminSol)
 * **Media** WebP can now be replaced in CSS.
 * **Media** Drop image tags in noscript to avoid lazyload. (@Abe #314 @mattthomas-photography)
 * **Media** Bypassed optimization if not cacheable.
