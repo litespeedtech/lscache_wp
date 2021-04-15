@@ -880,7 +880,7 @@ class Optimize extends Base {
 
 		$con = trim( $con );
 		// Minify JS first
-		if ( ! $minified ) {
+		if ( ! $minified && $this->cfg_js_defer !== 2 ) {
 			$con = Optimizer::minify_js( $con );
 		}
 
@@ -896,7 +896,9 @@ class Optimize extends Base {
 			if ( strpos( $attrs, ' type=' ) !== false ) {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
-			return '<script' . $attrs . ' type="litespeed/javascript" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			// $this->i2++;
+			// return '<script' . $attrs . ' type="litespeed/javascript" i="' . $this->i2 . '">' . $con . '</script>';
+			return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
