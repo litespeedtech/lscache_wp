@@ -855,8 +855,18 @@ class Admin_Display extends Base {
 		else {
 			$checked = $this->conf( $id, true ) === $val ? ' checked ' : '';
 		}
+		
+		if (strpos($id_attr, 'input_radio_objectkind_0') !== false) {
+			$auto_port='onClick="document.getElementById(\'input_objectport\').value=11211"';
+		}
+		elseif (strpos($id_attr, 'input_radio_objectkind_1') !== false) {
+			$auto_port='onClick="document.getElementById(\'input_objectport\').value=6379"';
+		}
+		else{
+			$auto_port='';    
+		}
 
-		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>";
+		echo "<input type='radio' autocomplete='off' name='$id' id='$id_attr' value='$val' $checked $auto_port /> <label for='$id_attr'>$txt</label>";
 	}
 
 	/**
