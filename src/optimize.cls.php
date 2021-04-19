@@ -44,6 +44,8 @@ class Optimize extends Base {
 	private static $_var_i = 0;
 	private $_var_preserve_js = array();
 
+	private $i2 = 0;
+
 	/**
 	 * Constructor
 	 * @since  3.7
@@ -793,7 +795,7 @@ class Optimize extends Base {
 				if ( $js_excluded || $ext_excluded || ! $is_file ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
-						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
+						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] ); // todo: this can't follow the i2 order
 						if ( $deferred ) {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 						}
@@ -880,7 +882,7 @@ class Optimize extends Base {
 
 		$con = trim( $con );
 		// Minify JS first
-		if ( ! $minified && $this->cfg_js_defer !== 2 ) {
+		if ( ! $minified ) { // && $this->cfg_js_defer !== 2
 			$con = Optimizer::minify_js( $con );
 		}
 
@@ -896,9 +898,10 @@ class Optimize extends Base {
 			if ( strpos( $attrs, ' type=' ) !== false ) {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
-			// $this->i2++;
-			// return '<script' . $attrs . ' type="litespeed/javascript" i="' . $this->i2 . '">' . $con . '</script>';
-			return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
+			$this->i2++;
+			return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '">' . $con . '</script>';
+			// return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode( $con ) . '" defer></script>';
@@ -1132,7 +1135,8 @@ class Optimize extends Base {
 			if ( strpos( $ori, ' type=' ) !== false ) {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
-			return str_replace( ' src=', ' type="litespeed/javascript" src=', $ori );
+			$this->i2++;
+			return str_replace( ' src=', ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
