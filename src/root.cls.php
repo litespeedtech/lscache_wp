@@ -334,7 +334,7 @@ abstract class Root {
 		$summary = self::get_option( '_summary', array() );
 
 		if ( ! is_array( $summary ) ) {
-			$summary = array();
+			$summary = json_decode( $summary, true ) ?: array();
 		}
 
 		if ( ! $field ) {
@@ -358,6 +358,8 @@ abstract class Root {
 		if ( $data === null ) {
 			$data = static::cls()->_summary;
 		}
+
+		$data = json_encode( $data ) ?: $data;
 
 		self::update_option( '_summary', $data );
 	}

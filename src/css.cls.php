@@ -160,7 +160,7 @@ class CSS extends Base {
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_summary[ 'queue_ccss' ][ $queue_k ] = array(
 			'url'			=> $request_url,
-			'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
+			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'uid'			=> $uid,
 			'vary'			=> $vary,
@@ -170,6 +170,11 @@ class CSS extends Base {
 
 		// Prepare cache tag for later purge
 		Tag::add( 'CCSS.' . md5( $queue_k ) );
+
+		// For v4.0- clean up
+		if ( isset( $this->_summary[ 'ccss_type_history' ] ) ) {
+			unset( $this->_summary[ 'ccss_type_history' ] );
+		}
 
 		self::save_summary();
 		return null;
@@ -204,7 +209,7 @@ class CSS extends Base {
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_summary[ 'queue_ucss' ][ $queue_k ] = array(
 			'url'			=> $request_url,
-			'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
+			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'uid'			=> $uid,
 			'vary'			=> $vary,
@@ -582,7 +587,7 @@ class CSS extends Base {
 		}
 		$this->_summary[ $type . '_history' ][ $queue_k ] = $request_url;
 
-		while ( count( $this->_summary[ $type . '_history' ] ) > 100 ) {
+		while ( count( $this->_summary[ $type . '_history' ] ) > 10 ) {
 			array_shift( $this->_summary[ $type . '_history' ] );
 		}
 
