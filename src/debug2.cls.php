@@ -318,7 +318,7 @@ class Debug2 extends Root {
 		if ( $backtrace_limit !== false ) {
 			if ( ! is_numeric( $backtrace_limit ) ) {
 				$backtrace_limit = self::trim_longtext( $backtrace_limit );
-				if ( count( $backtrace_limit ) == 1 && ! empty( $backtrace_limit[ 0 ] ) ) {
+				if ( is_array( $backtrace_limit ) && count( $backtrace_limit ) == 1 && ! empty( $backtrace_limit[ 0 ] ) ) {
 					$msg .= ' --- ' . $backtrace_limit[ 0 ];
 				}
 				else {
