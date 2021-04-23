@@ -136,6 +136,40 @@ $this->form_action();
 		</td>
 	</tr>
 
+	<?php if ( ! $this->_is_multisite ) : ?>
+		<?php require LSCWP_DIR . 'tpl/general/settings_inc.guest.tpl.php'; ?>
+	<?php endif; ?>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_GUEST_OPTM; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This will give maximum optimizations for guest mode users.', 'litespeed-cache' ); ?>
+				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
+					<br /><font class="litespeed-warning litespeed-left10">
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+					</font>
+				<?php endif; ?>
+
+				<?php if ( ! $this->conf( Base::O_CACHE_MOBILE ) ) : ?>
+				<br /><font class="litespeed-danger litespeed-left10">
+				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_CACHE_MOBILE ) . '</code>' ); ?>
+				</font>
+				<?php endif; ?>
+
+				<?php if ( ! $this->conf( Base::O_IMG_OPTM_WEBP ) ) : ?>
+				<br /><font class="litespeed-danger litespeed-left10">
+				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on and finish all WebP generation to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_IMG_OPTM_WEBP ) . '</code>' ); ?>
+				</font>
+				<?php endif; ?>
+			</div>
+		</td>
+	</tr>
+
 	<tr>
 		<th>
 			<?php $id = Base::O_SERVER_IP; ?>
@@ -145,10 +179,9 @@ $this->form_action();
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enter this site\'s IP address to allow cloud services directly call IP instead of domain name. This eliminates the overhead of DNS and CDN lookups.', 'litespeed-cache' ); ?>
-				<br /><?php echo __('Your server IP is', 'litespeed-cache'); ?>: <code id='litespeed_server_ip'>-</code> <a href="javascript:;" class="button button-link" id="litespeed_get_ip"><?php echo __('Check my public IP from', 'litespeed-cache'); ?> DoAPI.us</a>
-				<font class="litespeed-warning litespeed-left10">
-					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'the auto-detected IP may not be accurate if you have an additional outgoing IP set, or you have multiple IPs configured on your server. Please make sure this IP is the correct one for visiting your site.', 'litespeed-cache' ); ?>
-				</font>
+				<br /><?php echo __('Your server IP', 'litespeed-cache'); ?>: <code id='litespeed_server_ip'>-</code> <a href="javascript:;" class="button button-link" id="litespeed_get_ip"><?php echo __('Check my public IP from', 'litespeed-cache'); ?> DoAPI.us</a>
+				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo __( 'the auto-detected IP may not be accurate if you have an additional outgoing IP set, or you have multiple IPs configured on your server.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'Please make sure this IP is the correct one for visiting your site.', 'litespeed-cache' ); ?>
 
 				<?php $this->_validate_ip( $id ); ?>
 			</div>

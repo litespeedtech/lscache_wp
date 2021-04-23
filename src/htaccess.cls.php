@@ -509,7 +509,7 @@ class Htaccess extends Root {
 
 		// mobile agents
 		$id = Base::O_CACHE_MOBILE_RULES;
-		if ( ! empty( $cfg[ Base::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
+		if ( ( ! empty( $cfg[ Base::O_CACHE_MOBILE ] ) || ! empty( $cfg[ Base::O_GUEST ] ) ) && ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START;
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . Utility::arr2regex( $cfg[ $id ], true ) . ' [NC]';
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+ismobile]';
@@ -586,7 +586,7 @@ class Htaccess extends Root {
 
 		// webp support
 		$id = Base::O_IMG_OPTM_WEBP_REPLACE;
-		if ( ! empty( $cfg[ $id ] ) ) {
+		if ( ! empty( $cfg[ $id ] ) || ! empty( $cfg[ Base::O_GUEST ] ) ) {
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START;
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]';
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} "Page Speed"';

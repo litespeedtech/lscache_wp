@@ -439,12 +439,10 @@ class CDN extends Root {
 			}
 		}
 
-		if ( $this->_cfg_cdn_exclude ) {
-			$exclude = Utility::str_hit_array( $url, $this->_cfg_cdn_exclude );
-			if ( $exclude ) {
-				Debug2::debug2( '[CDN] -abort excludes ' . $exclude );
-				return false;
-			}
+		$exclude = Utility::str_hit_array( $url, $this->_cfg_cdn_exclude );
+		if ( $exclude ) {
+			Debug2::debug2( '[CDN] -abort excludes ' . $exclude );
+			return false;
 		}
 
 		// Fill full url before replacement

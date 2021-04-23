@@ -34,9 +34,9 @@ class Placeholder extends Base {
 	 * @since  3.0
 	 */
 	public function __construct() {
-		$this->_conf_placeholder_resp = $this->conf( self::O_MEDIA_PLACEHOLDER_RESP );
-		$this->_conf_placeholder_resp_svg 	= $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
-		$this->_conf_lqip 		= $this->conf( self::O_MEDIA_LQIP );
+		$this->_conf_placeholder_resp = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP );
+		$this->_conf_placeholder_resp_svg 	= defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
+		$this->_conf_lqip 		= ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_MEDIA_LQIP );
 		$this->_conf_lqip_qual	= $this->conf( self::O_MEDIA_LQIP_QUAL );
 		$this->_conf_lqip_min_w	= $this->conf( self::O_MEDIA_LQIP_MIN_W );
 		$this->_conf_lqip_min_h	= $this->conf( self::O_MEDIA_LQIP_MIN_H );
@@ -168,7 +168,7 @@ class Placeholder extends Base {
 			$additional_attr = ' data-placeholder-resp="' . $size . '"';
 		}
 
-		$snippet = $this->conf( self::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $html . '</noscript>';
+		$snippet = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $html . '</noscript>';
 		$html = str_replace( array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $html );
 		$html = str_replace( '<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $html );
 		$snippet = $html . $snippet;

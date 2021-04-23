@@ -317,6 +317,11 @@ class Tag extends Root {
 			$type_tags = self::_build_type_tags();
 			self::$_tags = array_merge( self::$_tags, $type_tags );
 		}
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			self::$_tags[] = 'guest';
+		}
+
 		// append blog main tag
 		self::$_tags[] = '';
 		// removed duplicates

@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.7
+Tested up to: 5.7.1
 Stable tag: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -244,7 +244,10 @@ For more detailed information about crawler setup, please see [the Crawler docum
 
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
-= 4.0 (previous 3.7) - 2021 =
+== Changelog ==
+
+= 4.0 - May 2021 =
+* 🌱🌱🌱**Guest** Guest Mode.
 * 🌱**UCSS** Hello UCSS.
 * 🌱**CCSS** New `HTML Lazyload` option. (@Ankit)
 * 🌱**CCSS** New `CCSS Per URL` option.
@@ -261,7 +264,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Image Optimize** Optimized SQL query for better efficiency. (@lucas @lauren)
 * **Image Optimize** Fixed rescan creating massive duplicated images issue. (#954399)
 * **Image Optimize** Image optimization pie will not show 100% anymore if there is still a small amount unfinished queue.
+* **Image Optimize** WebP generation defaults to ON for guest mode concern.
 * **ESI** Disabled ESI when no cacheable. (@titsmaker)
+* **ESI** Fixed the issue that Divi disabling all in edit mode can't disable ESI. (@Abe)
+* **ESI** ESI init moved to be under `init` hook from `plugin_loaded` hook.
 * **Debug** Better debug format for 2nd param in log.
 * **CDN** Add basic support to use CloudFlare API Tokens (@Abe #320)
 * **CSS** Simplified `Font Display Optimization` option.
@@ -314,6 +320,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** New Optimize for Guest Only option under Tuning.
 * **Page Optimize** Forbidden external link redirection for localization.
 * **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
+* **Data** Summary data is stored in JSON format to speed up backend visit. (#233250)
 * **Network** Dropped network cssjs rewrite rules.
 * **GUI** Bypass score banner when score failed to detect (both 0). (@ankit)
 * **GUI** Fixed deprecated JQ funcs warning in wp-admin. (@krzxsiek)
@@ -323,8 +330,6 @@ Note: Need to test if OLS password protect page works on cache or not.
 todo: test if response vary header can work in latest OLS, drop the two vary lines in htaccess.cls
 Note: test Aelia_CurrencySwitcher
 Note: Need to test When vary changed (add comment/approved comment) will the page cache correctly or not.
-
-== Changelog ==
 
 = 3.6.4 - Mar 15 2021 =
 * **Toolbox** Fixed Beta Test upgrade error when upgrading to v3.7+.

@@ -20,7 +20,56 @@ class Vary extends Root {
 	 *
 	 * @since 1.0.4
 	 */
-	public function __construct() {
+	public function init() {
+		$this->_update_vary_name();
+	}
+
+	/**
+	 * Update the default vary name if changed
+	 *
+	 * @since  4.0
+	 */
+	private function _update_vary_name() {
+		$db_cookie = $this->conf( Base::O_CACHE_LOGIN_COOKIE ); // [3.0] todo: check if works in network's sites
+
+		// If no vary set in rewrite rule
+		if ( ! isset( $_SERVER[ 'LSCACHE_VARY_COOKIE' ] ) ) {
+			if ( $db_cookie ) {
+				// Display cookie error msg to admin
+				if ( is_multisite() ? is_network_admin() : is_admin() ) {
+					Admin_Display::show_error_cookie();
+				}
+				Control::set_nocache( 'vary cookie setting error' );
+				return;
+			}
+			return;
+		}
+		// If db setting does not exist, skip checking db value
+		if ( ! $db_cookie ) {
+			return;
+		}
+
+		// beyond this point, need to make sure db vary setting is in $_SERVER env.
+		$vary_arr = explode( ',', $_SERVER[ 'LSCACHE_VARY_COOKIE' ] );
+
+		if ( in_array( $db_cookie, $vary_arr ) ) {
+			self::$_vary_name = $db_cookie;
+			return;
+		}
+
+		if ( is_multisite() ? is_network_admin() : is_admin() ) {
+			Admin_Display::show_error_cookie();
+		}
+		Control::set_nocache('vary cookie setting lost error');
+
+	}
+
+	/**
+	 * Hooks after user init
+	 *
+	 * @since  4.0
+	 */
+	public function after_user_init() {
 		// logged in user
 		if ( Router::is_logged_in() ) {
 			// If not esi, check cache logged-in user setting
@@ -48,6 +97,9 @@ class Vary extends Root {
 
 		}
 		else {
+			// Only after vary init, can detect if is Guest mode or not
+			$this->_maybe_guest_mode();
+
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
 			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 );
 			add_action( 'wp_login', __NAMESPACE__ . '\Purge::purge_on_logout' );
@@ -57,6 +109,9 @@ class Vary extends Root {
 			// Check `login page` cacheable setting because they don't go through main WP logic
 			add_action( 'login_init', array( $this->cls( 'Tag' ), 'check_login_cacheable' ), 5 );
 
+			if ( ! empty( $_GET[ 'litespeed_guest' ] ) ) {
+				add_action( 'wp_loaded', array( $this, 'update_guest_vary' ), 20 );
+			}
 		}
 
 		// Add comment list ESI
@@ -69,44 +124,160 @@ class Vary extends Root {
 		 * Don't change for REST call because they don't carry on user info usually
 		 * @since 1.6.7
 		 */
-		add_action( 'rest_api_init', function(){
+		add_action( 'rest_api_init', function(){ // this hook is fired in `init` hook
 			Debug2::debug( '[Vary] Rest API init disabled vary change' );
 			add_filter( 'litespeed_can_change_vary', '__return_false' );
 		} );
+	}
 
-		/******** Below to the end is only for cookie name setting check ********/
-		// Get specific cookie name
-		$db_cookie = $this->conf( Base::O_CACHE_LOGIN_COOKIE ); // [3.0] todo: check if works in network's sites
-
-		// If no vary set in rewrite rule
-		if ( ! isset($_SERVER['LSCACHE_VARY_COOKIE']) ) {
-			if ( $db_cookie ) {
-				// Display cookie error msg to admin
-				if ( is_multisite() ? is_network_admin() : is_admin() ) {
-					Admin_Display::show_error_cookie();
-				}
-				Control::set_nocache('vary cookie setting error');
-				return;
-			}
-			return;
-		}
-		// If db setting does not exist, skip checking db value
-		if ( ! $db_cookie ) {
+	/**
+	 * Check if is Guest mode or not
+	 *
+	 * @since  4.0
+	 */
+	private function _maybe_guest_mode() {
+		if ( ! $this->conf( Base::O_GUEST ) ) {
 			return;
 		}
 
-		// beyond this point, need to make sure db vary setting is in $_SERVER env.
-		$vary_arr = explode(',', $_SERVER['LSCACHE_VARY_COOKIE']);
-
-		if ( in_array($db_cookie, $vary_arr) ) {
-			self::$_vary_name = $db_cookie;
+		// If vary is set, then not a guest
+		if ( self::has_vary() ) {
 			return;
 		}
 
-		if ( is_multisite() ? is_network_admin() : is_admin() ) {
-			Admin_Display::show_error_cookie();
+		// If has admin QS, then no guest
+		if ( ! empty( $_GET[ Router::ACTION ] ) ) {
+			return;
 		}
-		Control::set_nocache('vary cookie setting lost error');
+
+		// If is the request to update vary, then no guest
+		if ( ! empty( $_GET[ 'litespeed_guest' ] ) ) {
+			return;
+		}
+
+		Debug2::debug( '[Vary] 👒👒 Guest mode' );
+
+		! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );
+
+		if ( $this->conf( Base::O_GUEST_OPTM ) ) {
+			! defined( 'LITESPEED_GUEST_OPTM' ) && define( 'LITESPEED_GUEST_OPTM', true );
+		}
+	}
+
+	/**
+	 * Update Guest vary
+	 *
+	 * @since  4.0
+	 */
+	public function update_guest_vary() {
+		if ( $this->_always_guest() ) {
+			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );
+			Debug2::debug( '[Vary] 🤠🤠 Guest' );
+			echo '[]';
+			exit;
+		}
+
+		$vary = $this->finalize_default_vary();
+
+		// save it
+		$expire = time() + 2 * DAY_IN_SECONDS;
+
+		$this->_cookie( $vary, $expire );
+		Debug2::debug( "[Vary] update guest vary set_cookie ---> $vary" );
+
+		// return json
+		echo json_encode( array( 'reload' => 'yes' ) );
+		exit;
+	}
+
+	/**
+	 * Detect if is a guest visitor
+	 *
+	 * @since  4.0
+	 */
+	private function _always_guest() {
+		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
+			return false;
+		}
+
+		$match = preg_match( '#Page Speed|Lighthouse|GTmetrix|Google|Pingdom|bot#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
+		if ( $match ) {
+			return true;
+		}
+
+		$ips = [
+			'208.70.247.157',
+			'172.255.48.130',
+			'172.255.48.131',
+			'172.255.48.132',
+			'172.255.48.133',
+			'172.255.48.134',
+			'172.255.48.135',
+			'172.255.48.136',
+			'172.255.48.137',
+			'172.255.48.138',
+			'172.255.48.139',
+			'172.255.48.140',
+			'172.255.48.141',
+			'172.255.48.142',
+			'172.255.48.143',
+			'172.255.48.144',
+			'172.255.48.145',
+			'172.255.48.146',
+			'172.255.48.147',
+			'52.229.122.240',
+			'104.214.72.101',
+			'13.66.7.11',
+			'13.85.24.83',
+			'13.85.24.90',
+			'13.85.82.26',
+			'40.74.242.253',
+			'40.74.243.13',
+			'40.74.243.176',
+			'104.214.48.247',
+			'157.55.189.189',
+			'104.214.110.135',
+			'70.37.83.240',
+			'65.52.36.250',
+			'13.78.216.56',
+			'52.162.212.163',
+			'23.96.34.105',
+			'65.52.113.236',
+			'172.255.61.34',
+			'172.255.61.35',
+			'172.255.61.36',
+			'172.255.61.37',
+			'172.255.61.38',
+			'172.255.61.39',
+			'172.255.61.40',
+			'104.41.2.19',
+			'191.235.98.164',
+			'191.235.99.221',
+			'191.232.194.51',
+			'52.237.235.185',
+			'52.237.250.73',
+			'52.237.236.145',
+			'104.211.143.8',
+			'104.211.165.53',
+			'52.172.14.87',
+			'40.83.89.214',
+			'52.175.57.81',
+			'20.188.63.151',
+			'20.52.36.49',
+			'52.246.165.153',
+			'51.144.102.233',
+			'13.76.97.224',
+			'102.133.169.66',
+			'52.231.199.170',
+			'13.53.162.7',
+			'40.123.218.94',
+		];
+
+		if ( $this->cls( 'Router' )->ip_access( $ips ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -353,7 +524,15 @@ class Vary extends Root {
 	 * @access public
 	 */
 	public function finalize_default_vary( $uid = false ) {
+		if ( defined( 'LITESPEED_GUEST' ) ) {
+			return false;
+		}
+
 		$vary = array();
+
+		if ( $this->conf( Base::O_GUEST ) ) {
+			$vary[ 'guest_mode' ] = 1;
+		}
 
 		if ( ! $uid ) {
 			$uid = get_current_user_id();
@@ -394,7 +573,7 @@ class Vary extends Root {
 		/**
 		 * Add filter
 		 * @since 1.6 Added for Role Excludes for optimization cls
-		 * @since 1.6.2 Hooked to webp
+		 * @since 1.6.2 Hooked to webp (checked in v4, no webp anymore)
 		 * @since 3.0 Used by 3rd hooks too
 		 */
 		$vary = apply_filters( 'litespeed_vary', $vary );

@@ -35,9 +35,10 @@ class ESI extends Root {
 	/**
 	 * Confructor of ESI
 	 *
-	 * @since    1.2.0
+	 * @since  1.2.0
+	 * @since  4.0 Change to be after Vary init in hook 'after_setup_theme'
 	 */
-	public function __construct() {
+	public function init() {
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 * @since  2.9.7.2
@@ -46,8 +47,13 @@ class ESI extends Root {
 			return;
 		}
 
+		// Guest mode, don't need to use ESI
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			return;
+		}
+
 		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
-		add_action( 'litespeed_initing', array( $this, 'esi_init' ) );
+		$this->_hooks();
 
 		/**
 		 * Overwrite wp_create_nonce func
@@ -64,9 +70,10 @@ class ESI extends Root {
 	 * Load delayed by hook to give the ability to bypass by LITESPEED_DISABLE_ALL const
 	 *
 	 * @since 2.9.7.2
-	 * @access public
+	 * @since  4.0 Changed to private from public
+	 * @access private
 	 */
-	public function esi_init() {
+	private function _hooks() {
 		add_filter( 'template_include', array( $this, 'esi_template' ), 99999 );
 
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' );

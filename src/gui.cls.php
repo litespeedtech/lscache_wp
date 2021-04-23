@@ -21,6 +21,7 @@ class GUI extends Base {
 		// 'slack'		=> array( 3, false ),
 	);
 
+	const LIB_GUEST_JS = 'assets/js/guest.min.js';
 
 	const TYPE_DISMISS_WHM = 'whm';
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault';
@@ -762,7 +763,25 @@ class GUI extends Base {
 	 * @access public
 	 */
 	public function finalize( $buffer ) {
-		return $this->_clean_wrapper( $buffer );
+		$buffer = $this->_clean_wrapper( $buffer );
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false ) {
+			$buffer = $this->_enqueue_guest_js( $buffer );
+		}
+
+		return $buffer;
+	}
+
+	/**
+	 * Append guest JS to update vary
+	 *
+	 * @since  4.0
+	 */
+	private function _enqueue_guest_js( $buffer ) {
+		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
+		$js_con = str_replace( 'litespeed_url', esc_url( add_query_arg( 'litespeed_guest', 1, home_url( '/' ) ) ), $js_con );
+		$buffer = str_replace( '</body>', '<script data-no-optimize="1" async>' . $js_con . '</script></body>', $buffer );
+		return $buffer;
 	}
 
 	/**

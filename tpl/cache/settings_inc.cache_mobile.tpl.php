@@ -15,8 +15,8 @@ defined( 'WPINC' ) || exit;
 				$this->build_switch( $id );
 			?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache mobile views separately.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Only enable for AMP or mobile-specific design/content, not for responsive sites.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Serve a separate cache copy for mobile visitors.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#cache-mobile', 'Learn more about when this is needed' ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
 			</div>
 		</td>

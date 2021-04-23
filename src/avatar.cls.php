@@ -60,7 +60,7 @@ class Avatar extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function serve_satic( $md5 ) {
+	public function serve_static( $md5 ) {
 		global $wpdb;
 
 		Debug2::debug( '[Avatar] is avatar request' );

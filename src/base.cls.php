@@ -23,6 +23,8 @@ class Base extends Root {
 	const O_AUTO_UPGRADE 	= 'auto_upgrade';
 	const O_API_KEY 		= 'api_key';
 	const O_SERVER_IP 		= 'server_ip';
+	const O_GUEST 			= 'guest';
+	const O_GUEST_OPTM		= 'guest_optm';
 	const O_NEWS 			= 'news';
 
 	## -------------------------------------------------- ##
@@ -314,6 +316,8 @@ class Base extends Root {
 		self::O_AUTO_UPGRADE 	=> false,
 		self::O_API_KEY 		=> '',
 		self::O_SERVER_IP 		=> '',
+		self::O_GUEST 			=> false,
+		self::O_GUEST_OPTM 		=> false,
 		self::O_NEWS 			=> false,
 
 		// Cache
@@ -527,6 +531,7 @@ class Base extends Root {
 		self::O_CACHE 					=> false,
 		self::NETWORK_O_USE_PRIMARY 	=> false,
 		self::O_AUTO_UPGRADE 			=> false,
+		self::O_GUEST 					=> false,
 
 		self::O_CACHE_FAVICON 			=> false,
 		self::O_CACHE_RES 				=> false,

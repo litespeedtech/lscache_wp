@@ -27,6 +27,8 @@ $this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 		</td>
 	</tr>
 
+	<?php require LSCWP_DIR . 'tpl/general/settings_inc.guest.tpl.php'; ?>
+
 </tbody></table>
 
 <?php

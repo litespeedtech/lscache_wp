@@ -65,7 +65,7 @@ class Optimizer extends Root {
 		// Try Unique CSS
 		if ( $file_type == 'css' ) {
 			$content = false;
-			if ( $this->conf( Base::O_OPTM_UCSS ) ) {
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_UCSS ) ) {
 				$final_file_path = $this->cls( 'CSS' )->load_ucss( $request_url );
 
 				if ( $final_file_path ) {

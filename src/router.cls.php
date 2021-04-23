@@ -446,11 +446,11 @@ class Router extends Base {
 		}
 
 		$action = stripslashes($_REQUEST[ Router::ACTION ]);
-		
+
 		if ( ! $action ) {
 		    return;
 		}
-		
+
 		$_is_public_action = false;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
@@ -601,7 +601,7 @@ class Router extends Base {
 			return false;
 		}
 		if ( ! isset( self::$_ip ) ) {
-			self::$_ip = $this->get_ip();
+			self::$_ip = self::get_ip();
 		}
 		// $uip = explode('.', $_ip);
 		// if(empty($uip) || count($uip) != 4) Return false;
@@ -681,7 +681,7 @@ class Router extends Base {
 
 		switch ( $path[ 0 ] ) {
 			case 'avatar':
-				$this->cls( 'Avatar' )->serve_satic( $path[ 1 ] );
+				$this->cls( 'Avatar' )->serve_static( $path[ 1 ] );
 				break;
 
 			case 'localres':

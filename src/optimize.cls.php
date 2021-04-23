@@ -62,7 +62,7 @@ class Optimize extends Base {
 	 * @access protected
 	 */
 	public function init() {
-		$this->cfg_css_async = $this->conf( self::O_OPTM_CSS_ASYNC );
+		$this->cfg_css_async = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_ASYNC );
 		if ( $this->cfg_css_async ) {
 			if ( ! $this->conf( self::O_API_KEY ) ) {
 				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to lack of domain key' );
@@ -70,6 +70,9 @@ class Optimize extends Base {
 			}
 		}
 		$this->cfg_js_defer = $this->conf( self::O_OPTM_JS_DEFER );
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
+			$this->cfg_js_defer = 2;
+		}
 
 		// To remove emoji from WP
 		if ( $this->conf( self::O_OPTM_EMOJI_RM ) ) {
@@ -85,7 +88,7 @@ class Optimize extends Base {
 		 * Exclude js from deferred setting
 		 * @since 1.5
 		 */
-		if ( $this->cfg_js_defer ) {
+		if ( $this->cfg_js_defer && ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
 		}
@@ -193,15 +196,14 @@ class Optimize extends Base {
 			return $content;
 		}
 
-		if ( ! Control::is_cacheable() ) {
-			Debug2::debug( '[Optm] bypass: Not cacheable' );
-			return $content;
-		}
+		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
+			if ( ! Control::is_cacheable() ) {
+				Debug2::debug( '[Optm] bypass: Not cacheable' );
+				return $content;
+			}
 
-		// Check if hit URI excludes
-		$excludes = $this->conf( self::O_OPTM_EXC );
-		if ( ! empty( $excludes ) ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
+			// Check if hit URI excludes
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $this->conf( self::O_OPTM_EXC ) );
 			if ( $result ) {
 				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result );
 				return $content;
@@ -223,16 +225,15 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _optimize() {
-		$this->cfg_http2_css = $this->conf( self::O_OPTM_CSS_HTTP2 );
-		$this->cfg_http2_js = $this->conf( self::O_OPTM_JS_HTTP2 );
-		$this->cfg_css_min = $this->conf( self::O_OPTM_CSS_MIN );
-		$this->cfg_css_comb = $this->conf( self::O_OPTM_CSS_COMB );
-		$this->cfg_js_min = $this->conf( self::O_OPTM_JS_MIN );
-		$this->cfg_js_comb = $this->conf( self::O_OPTM_JS_COMB );
-		$this->cfg_ggfonts_async = $this->conf( self::O_OPTM_GGFONTS_ASYNC );
-		$this->_conf_css_font_display = $this->conf( self::O_OPTM_CSS_FONT_DISPLAY );
-
-		$this->cfg_ggfonts_rm = $this->conf( self::O_OPTM_GGFONTS_RM );
+		$this->cfg_http2_css =  defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_HTTP2 );
+		$this->cfg_http2_js = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_HTTP2 );
+		$this->cfg_css_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_MIN );
+		$this->cfg_css_comb = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_COMB );
+		$this->cfg_js_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_MIN );
+		$this->cfg_js_comb = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_COMB );
+		$this->cfg_ggfonts_rm = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_GGFONTS_RM );
+		$this->cfg_ggfonts_async = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_GGFONTS_ASYNC ); // forced rm already
+		$this->_conf_css_font_display = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_CSS_FONT_DISPLAY );
 
 		if ( ! $this->cls( 'Router' )->can_optm() ) {
 			Debug2::debug( '[Optm] bypass: admin/feed/preview' );
@@ -437,7 +438,7 @@ class Optimize extends Base {
 		}
 
 		// HTML minify
-		if ( $this->conf( self::O_OPTM_HTML_MIN ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_HTML_MIN ) ) {
 			$this->content = $this->__optimizer->html_min( $this->content );
 		}
 
@@ -589,7 +590,7 @@ class Optimize extends Base {
 	 */
 	private function _dns_prefetch_init() {
 		// Widely enable link DNS prefetch
-		if ( $this->conf( self::O_OPTM_DNS_PREFETCH_CTRL ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_DNS_PREFETCH_CTRL ) ) {
 			@header( 'X-DNS-Prefetch-Control: on' );
 		}
 
@@ -788,7 +789,7 @@ class Optimize extends Base {
 			// JS files
 			if ( ! empty( $attrs[ 'src' ] ) ) {
 				// Exclude check
-				$js_excluded = $excludes ? Utility::str_hit_array( $attrs[ 'src' ], $excludes ) : false;
+				$js_excluded = Utility::str_hit_array( $attrs[ 'src' ], $excludes );
 				$is_internal = Utility::is_internal_file( $attrs[ 'src' ] );
 				$is_file = substr( $attrs[ 'src' ], 0, 5 ) != 'data:';
 				$ext_excluded = ! $combine_ext_inl && ! $is_internal;
@@ -829,7 +830,7 @@ class Optimize extends Base {
 			elseif ( ! empty( $match[ 2 ] ) ) {
 				// Debug2::debug( '🌹🌹🌹 ' . $match[2] . '🌹' );
 				// Exclude check
-				$js_excluded = $excludes ? Utility::str_hit_array( $match[ 2 ], $excludes ) : false;
+				$js_excluded = Utility::str_hit_array( $match[ 2 ], $excludes );
 				if ( $js_excluded || ! $combine_ext_inl ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
@@ -872,12 +873,10 @@ class Optimize extends Base {
 			return false;
 		}
 
-		if ( $this->cfg_js_defer_exc ) {
-			$hit = Utility::str_hit_array( $con, $this->cfg_js_defer_exc );
-			if ( $hit ) {
-				Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
-				return false;
-			}
+		$hit = Utility::str_hit_array( $con, $this->cfg_js_defer_exc );
+		if ( $hit ) {
+			Debug2::debug2( '[Optm] inline js defer excluded [setting] ' . $hit );
+			return false;
 		}
 
 		$con = trim( $con );
@@ -956,7 +955,7 @@ class Optimize extends Base {
 				continue;
 			}
 
-			if ( $excludes && $exclude = Utility::str_hit_array( $match[ 0 ], $excludes ) ) {
+			if ( $exclude = Utility::str_hit_array( $match[ 0 ], $excludes ) ) {
 				Debug2::debug2( '[Optm] _parse_css bypassed exclude ' . $exclude );
 				continue;
 			}
@@ -972,7 +971,7 @@ class Optimize extends Base {
 				}
 
 				// Check if need to remove this css
-				if ( $css_to_be_removed && Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
+				if ( Utility::str_hit_array( $attrs[ 'href' ], $css_to_be_removed ) ) {
 					Debug2::debug( '[Optm] rm css snippet ' . $attrs[ 'href' ] );
 					// Delete this css snippet from orig html
 					$this->content = str_replace( $match[ 0 ], '', $this->content );
@@ -1093,7 +1092,7 @@ class Optimize extends Base {
 		$v = str_replace( 'stylesheet', 'preload', $ori );
 		$v = str_replace( '<link', '<link data-asynced="1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" ', $v );
 		// Append to noscript content
-		if ( ! $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) {
+		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) && ! $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) {
 			$v .= '<noscript>' . preg_replace( '/ id=\'[\w-]+\' /U', ' ', $ori ) . '</noscript>';
 		}
 
@@ -1126,7 +1125,7 @@ class Optimize extends Base {
 		 * Exclude JS from setting
 		 * @since 1.5
 		 */
-		if ( $this->cfg_js_defer_exc && Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
+		if ( Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
 			Debug2::debug( '[Optm] js defer exclude ' . $src );
 			return false;
 		}

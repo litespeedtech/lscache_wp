@@ -33,7 +33,7 @@ class Control extends Root {
 	 *
 	 * @since  1.6.2
 	 */
-	public function __construct() {
+	public function init() {
 		/**
 		 * Add vary filter for Role Excludes
 		 * @since  1.6.2
@@ -297,6 +297,10 @@ class Control extends Root {
 	 * @since 1.1.3
 	 */
 	public static function is_private() {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			return false;
+		}
+
 		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced();
 	}
 
@@ -387,6 +391,11 @@ class Control extends Root {
 	 * @return bool True if is still cacheable, otherwise false.
 	 */
 	public static function is_cacheable() {
+		// Guest mode always cacheable
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			return true;
+		}
+
 		// If its forced public cacheable
 		if ( self::is_public_forced() ) {
 			return true;
@@ -516,13 +525,20 @@ class Control extends Root {
 	 * @return string empty string if empty, otherwise the cache control header.
 	 */
 	public function output() {
+		$hdr = self::X_HEADER . ': ';
+
+		// Guest mode directly return cacheable result
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			$hdr .= 'public';
+			$hdr .= ',max-age=' . $this->get_ttl();
+			return $hdr;
+		}
+
 		$esi_hdr = '';
 		// Fix cli `uninstall --deactivate` fatal err
 		if ( ESI::has_esi() ) {
 			$esi_hdr = ',esi=on';
 		}
-
-		$hdr = self::X_HEADER . ': ';
 
 		if ( ! self::is_cacheable() ) {
 			$hdr .= 'no-cache' . $esi_hdr;
@@ -554,16 +570,19 @@ class Control extends Root {
 	 * @since 1.1.3
 	 */
 	public function finalize() {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			return;
+		}
+
 		// Check if URI is forced public cache
 		$excludes = $this->conf( Base::O_CACHE_FORCE_PUB_URI );
-		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
-			if ( $result ) {
-				self::set_public_forced( 'Setting: ' . $result );
-				Debug2::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result );
-				if ( $this_ttl ) {
-					self::set_custom_ttl( $this_ttl );
-				}
+		$hit =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
+		if ( $hit ) {
+			list( $result, $this_ttl ) = $hit;
+			self::set_public_forced( 'Setting: ' . $result );
+			Debug2::debug( '[Ctrl] Forced public cacheable due to setting: ' . $result );
+			if ( $this_ttl ) {
+				self::set_custom_ttl( $this_ttl );
 			}
 		}
 
@@ -573,14 +592,13 @@ class Control extends Root {
 
 		// Check if URI is forced cache
 		$excludes = $this->conf( Base::O_CACHE_FORCE_URI );
-		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
-			if ( $result ) {
-				self::force_cacheable();
-				Debug2::debug( '[Ctrl] Forced cacheable due to setting: ' . $result );
-				if ( $this_ttl ) {
-					self::set_custom_ttl( $this_ttl );
-				}
+		$hit =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
+		if ( $hit ) {
+			list( $result, $this_ttl ) = $hit;
+			self::force_cacheable();
+			Debug2::debug( '[Ctrl] Forced cacheable due to setting: ' . $result );
+			if ( $this_ttl ) {
+				self::set_custom_ttl( $this_ttl );
 			}
 		}
 
@@ -697,22 +715,18 @@ class Control extends Root {
 
 		// Check private cache URI setting
 		$excludes = $this->conf( Base::O_CACHE_PRIV_URI );
-		if ( ! empty( $excludes ) ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
-			if ( $result ) {
-				self::set_private( 'Admin cfg Private Cached URI: ' . $result );
-			}
+		$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
+		if ( $result ) {
+			self::set_private( 'Admin cfg Private Cached URI: ' . $result );
 		}
 
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
 			$excludes = $this->conf( Base::O_CACHE_EXC );
-			if ( ! empty( $excludes ) ) {
-				$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
-				if ( $result ) {
-					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result );
-				}
+			$result =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
+			if ( $result ) {
+				return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result );
 			}
 
 			// Check QS excluded setting
