@@ -321,6 +321,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Forbidden external link redirection for localization.
 * **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
 * **Data** Summary data is stored in JSON format to speed up backend visit. (#233250)
+* **Data** Default `CSS Combine External and Inline` and `JS Combine External and Inline` to On for new installations for better compatibility.
 * **Network** Dropped network cssjs rewrite rules.
 * **GUI** Bypass score banner when score failed to detect (both 0). (@ankit)
 * **GUI** Fixed deprecated JQ funcs warning in wp-admin. (@krzxsiek)
