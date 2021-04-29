@@ -50,7 +50,7 @@ $placeholder_summary = Placeholder::get_summary();
 		<?php
 		$cat_list = array(
 			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
-			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ),
+			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ) . '/' . __( 'Unique CSS', 'litespeed-cache' ),
 			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
 			'lqip'		=> __( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 		);
@@ -427,7 +427,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox litespeed-postbox-ucss litespeed-hide">
+			<div class="postbox litespeed-postbox litespeed-postbox-ucss">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Unique CSS', 'litespeed-cache' ); ?>
