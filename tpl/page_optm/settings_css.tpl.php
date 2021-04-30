@@ -212,7 +212,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disabling this will get pages to generate CCSS per Post Type, which can save significant CCSS quota. However, it may result in CSS wrong styling if your posts are built w/ page builders.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Disable this option to generate CCSS per Post Type instead of per page. This can save significant CCSS quota, however it may result in incorrect CSS styling if your site uses a page builder.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>

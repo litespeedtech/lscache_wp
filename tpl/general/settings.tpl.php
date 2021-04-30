@@ -148,7 +148,8 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This will give maximum optimizations for guest mode users.', 'litespeed-cache' ); ?>
+				<?php echo __( 'This option enables maximum optimization for Guest Mode users.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization' ); ?>
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
 					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>

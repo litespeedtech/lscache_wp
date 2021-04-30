@@ -77,7 +77,6 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
-				<br />🔑 <?php echo sprintf( __( '%s will significantly increase the page speed score result.', 'litespeed-cache' ), '<code>' . __( 'Delayed', 'litespeed-cache' ) . '</code>' ); ?>
 				<br /><font class="litespeed-danger">
 					🚨 <?php echo __( 'This option may result in JS error or layout issue on frontend pages on certain themes/plugins.', 'litespeed-cache' ); ?>
 				</font>
