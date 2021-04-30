@@ -65,6 +65,30 @@ class Router extends Base {
 	private static $_frontend_path;
 
 	/**
+	 * Redirect to self to continue operation
+	 *
+	 * Note: must return when use this func. CLI/Cron call won't die in this func.
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function self_redirect( $action, $type ) {
+		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
+			Admin_Display::succeed( 'To be continued' ); // Show for CLI
+			return;
+		}
+
+		// Add i to avoid browser too many redirected warning
+		$i = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
+		$i ++;
+
+		$link = Utility::build_url( $action, $type, false, null, array( 'litespeed_i' => $i ) );
+
+		$url = html_entity_decode( $link );
+		exit( "<meta http-equiv='refresh' content='0;url=$url'>" );
+	}
+
+	/**
 	 * Check if can run optimize
 	 *
 	 * @since  1.3

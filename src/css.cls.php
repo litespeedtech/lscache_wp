@@ -255,6 +255,7 @@ class CSS extends Base {
 			}
 		}
 
+		$i = 0;
 		foreach ( $_instance->_summary[ 'queue_ccss' ] as $k => $v ) {
 			$_instance->_popup_and_save( 'ccss', $k, $v[ 'url' ] );
 			Debug2::debug( '[CCSS] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
@@ -264,6 +265,7 @@ class CSS extends Base {
 				continue;
 			}
 
+			$i ++;
 			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ccss', $v[ 'is_mobile' ] );
 
 			if ( $res ) {
@@ -273,6 +275,10 @@ class CSS extends Base {
 			// only request first one
 			if ( ! $continue ) {
 				return;
+			}
+
+			if ( $i > 3 ) {
+				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS );
 			}
 		}
 	}
@@ -296,10 +302,12 @@ class CSS extends Base {
 			}
 		}
 
+		$i = 0;
 		foreach ( $_instance->_summary[ 'queue_ucss' ] as $k => $v ) {
 			$_instance->_popup_and_save( 'ucss', $k, $v[ 'url' ] );
 			Debug2::debug( '[UCSS] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
+			$i ++;
 			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ucss', $v[ 'is_mobile' ] );
 
 			if ( $res ) {
@@ -309,6 +317,10 @@ class CSS extends Base {
 			// only request first one
 			if ( ! $continue ) {
 				return;
+			}
+
+			if ( $i > 3 ) {
+				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS );
 			}
 		}
 	}

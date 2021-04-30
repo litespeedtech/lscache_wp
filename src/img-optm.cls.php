@@ -1089,7 +1089,7 @@ class Img_Optm extends Base {
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, self::STATUS_NOTIFIED ) );
 		if ( $to_be_continued ) {
 			Debug2::debug( '[Img_Optm] Task in queue, to be continued...' );
-			return $this->_self_redirect( self::TYPE_PULL );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_PULL );
 		}
 
 		// If all pulled, update tag to done
@@ -1224,7 +1224,7 @@ class Img_Optm extends Base {
 
 			Debug2::debug( '[Img_Optm] To be continued 🚦' ) ;
 
-			return $this->_self_redirect( self::TYPE_DESTROY );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_DESTROY );
 		}
 
 		// Delete postmeta info
@@ -1333,7 +1333,7 @@ class Img_Optm extends Base {
 		}
 
 		if ( $to_be_continued ) {
-			return $this->_self_redirect( self::TYPE_RESCAN );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_RESCAN );
 		}
 
 		$msg = $count ? sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescaned successfully.', 'litespeed-cache' );
@@ -1392,7 +1392,7 @@ class Img_Optm extends Base {
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
 
 		if ( $to_be_continued ) {
-			return $this->_self_redirect( self::TYPE_CALC_BKUP );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_CALC_BKUP );
 		}
 
 		$msg = __( 'Calculated backups successfully.', 'litespeed-cache' );
@@ -1454,7 +1454,7 @@ class Img_Optm extends Base {
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
 
 		if ( $to_be_continued ) {
-			return $this->_self_redirect( self::TYPE_RM_BKUP );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_RM_BKUP );
 		}
 
 		$msg = __( 'Removed backups successfully.', 'litespeed-cache' );
@@ -1651,7 +1651,7 @@ class Img_Optm extends Base {
 		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
 
 		if ( $to_be_continued ) {
-			return $this->_self_redirect( $type );
+			return Router::self_redirect( Router::ACTION_IMG_OPTM, $type );
 		}
 
 		$msg = __( 'Switched images successfully.', 'litespeed-cache' );
@@ -1829,31 +1829,6 @@ class Img_Optm extends Base {
 		$data[ 'img_data' ] = $img_data ;
 
 		return array( '_res' => 'ok', 'data' => $data ) ;
-	}
-
-	/**
-	 * Redirect to self to continue operation
-	 *
-	 * Note: must return when use this func. CLI/Cron call won't die in this func.
-	 *
-	 * @since  3.0
-	 * @access private
-	 */
-	private function _self_redirect( $type )
-	{
-		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
-			Admin_Display::succeed( 'To be continued' ); // Show for CLI
-			return;
-		}
-
-		// Add i to avoid browser too many redirected warning
-		$i = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
-		$i ++;
-
-		$link = Utility::build_url( Router::ACTION_IMG_OPTM, $type, false, null, array( 'litespeed_i' => $i ) );
-
-		$url = html_entity_decode( $link );
-		exit( "<meta http-equiv='refresh' content='0;url=$url'>" );
 	}
 
 	/**
