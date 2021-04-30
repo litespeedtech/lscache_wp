@@ -4,6 +4,7 @@ defined( 'WPINC' ) || exit;
 
 // Existing public version list
 $v_list = array(
+	'4.0',
 	'3.6.4',
 	'3.6.1',
 	'3.6',
@@ -45,6 +46,10 @@ $v_list = array(
 
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to use the most recent GitHub commit. Master is for release candidate & Dev is for experimental testing.', 'litespeed-cache' ), '<code>' . __( 'Use latest GitHub Dev/Master commit', 'litespeed-cache' ) . '</code>' ); ?></div>
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to stop beta testing and go back to the current release from the WordPress Plugin Directory.', 'litespeed-cache' ), '<code>' . __( 'Use latest WordPress release version', 'litespeed-cache' ) . '</code>' ); ?></div>
+
+	<p class="litespeed-danger">
+		🚨 <?php echo sprintf( __( 'To upgrade to %1$s versions, you must be on at least %2$s or later versions to avoid upgrade error.', 'litespeed-cache' ), '<code>dev/master/v4+</code>', '<code>v3.6.4</code>' ); ?>
+	</p>
 
 	<button type="submit" class="button button-primary"><?php echo __('Upgrade', 'litespeed-cache'); ?></button>
 </form>
