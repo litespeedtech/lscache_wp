@@ -21,6 +21,7 @@ class Cloud extends Base {
 	const SVC_HEALTH			= 'health' ;
 	const SVC_CDN				= 'cdn' ;
 
+	const BM_IMG_OPTM_PRIO = 16;
 	const BM_IMG_OPTM_JUMBO_GROUP = 32;
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
@@ -193,6 +194,19 @@ class Cloud extends Base {
 		}
 
 		self::save_summary();
+	}
+
+	/**
+	 * Check if contains a package in a service or not
+	 *
+	 * @since  4.0
+	 */
+	public function has_pkg( $service, $pkg ) {
+		if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & $pkg ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -442,10 +456,14 @@ class Cloud extends Base {
 			return true;
 		}
 
+		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
 		$timestamp_tag = 'curr_request.';
 		if ( $service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ ) {
 			$timestamp_tag = 'last_request.';
+			if ( $this->has_pkg( self::SVC_IMG_OPTM, self::BM_IMG_OPTM_PRIO ) ) {
+				$expiration_req /= 3;
+			}
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
@@ -455,7 +473,7 @@ class Cloud extends Base {
 		}
 
 		if ( ! empty( $this->_summary[ $timestamp_tag . $service_tag ] ) ) {
-			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + self::EXPIRATION_REQ - time();
+			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + $expiration_req - time();
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
