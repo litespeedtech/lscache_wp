@@ -246,51 +246,56 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.0 - May 2021 =
-* 🌱🌱🌱**Guest** Guest Mode.
-* 🌱**UCSS** Hello UCSS.
-* 🌱**CCSS** New `HTML Lazyload` option. (@Ankit)
-* 🌱**CCSS** New `CCSS Per URL` option.
-* 🌱**Media** New option `Add Missing Sizes` for CLS improvement. (@Fahim)
-* 🌱**JS** New JS minification library for better compression and compatibility w/ template literals. (@LuminSol)
-* **Media** WebP can now be replaced in CSS.
-* **Media** Drop image tags in noscript to avoid lazyload. (@Abe #314 @mattthomas-photography)
-* **Media** Bypassed optimization if not cacheable.
-* **Image Optimize** Auto hook to `wp_update_attachment_metadata` to automate gathering images process, and to be able to handle the new thumbnail generation after image uploaded. (@smerriman).
-* **Image Optimize** Now repeated image thumbnails won't be gathered anymore.
-* **Image Optimize** Simplified rescan/gather/upload_hook existing images detection.
-* **Image Optimize** Fixed the duplicated optimize size records in postmeta table. (@Abe #315)
-* **Image Optimize** Allow either json POST request or normal form request in `notify_img`. (@Lucas #313)
+= 4.0 - Apr 30 2021 =
+* 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.
+* 🌱**UCSS** Added a new service: `Unique CSS`, to drop unused CSS from elements from combined CSS
+* 🌱**CCSS** Added `HTML Lazyload` option. (@Ankit)
+* 🌱**CCSS** Added `CCSS Per URL` option to allow Critical CSS to be generated for each page instead of for each Post Type.
+* 🌱**Media** Added `Add Missing Sizes` setting for improving Cumulative Layout Shift. (@Fahim)
+* 🌱**JS** Switched to new JS minification library for better compression and compatibility w/ template literals. (@LuminSol)
+* **Media** WebP may now be replaced in CSS.
+* **Media** Can now drop image tags in noscript to avoid lazyload. (@Abe #314 @mattthomas-photography)
+* **Media** Bypass optimization if a page is not cacheable.
+* **Image Optimize** Auto hook to `wp_update_attachment_metadata` to automate image gathering process, and to handle the new thumbnail generation after images are uploaded. (@smerriman).
+* **Image Optimize** Repeated image thumbnails won't be gathered anymore.
+* **Image Optimize** Simplified the rescan/gather/upload_hook for existing image detection.
+* **Image Optimize** Fixed the duplicated optimize size records in the postmeta table. (@Abe #315)
+* **Image Optimize** Allow either JSON POST request or normal form request in `notify_img`. (@Lucas #313)
 * **Image Optimize** Optimized SQL query for better efficiency. (@lucas @lauren)
-* **Image Optimize** Fixed rescan creating massive duplicated images issue. (#954399)
-* **Image Optimize** Image optimization pie will not show 100% anymore if there is still a small amount unfinished queue.
-* **Image Optimize** WebP generation defaults to ON for guest mode concern.
-* **ESI** Disabled ESI when no cacheable. (@titsmaker)
-* **ESI** Fixed the issue that Divi disabling all in edit mode can't disable ESI. (@Abe)
-* **ESI** ESI init moved to be under `init` hook from `plugin_loaded` hook.
-* **Debug** Better debug format for 2nd param in log.
-* **CDN** Add basic support to use CloudFlare API Tokens (@Abe #320)
+* **Image Optimize** Fixed issue where rescan mass created duplicate images. (#954399)
+* **Image Optimize** Image optimization pie will not show 100% anymore if there is still a small amount in the unfinished queue.
+* **Image Optimize** WebP generation defaults to ON for Guest Mode.
+* **Image Optimize** `Priority Line` package now can have smaller request interval.
+* **ESI** Disable ESI when page is not cacheable. (@titsmaker)
+* **ESI** Fixed an issue where Divi was disabling all in edit mode, but couldn't disable ESI. (@Abe)
+* **ESI** ESI init moved under `init` hook from `plugin_loaded` hook.
+* **CDN** Add basic support for CloudFlare API Tokens (@Abe #320)
 * **CSS** Simplified `Font Display Optimization` option.
-* **CSS** Manual cron timeout fix. (@jesse Distad)
-* **CSS** Inline CSS can now use `data-no-optimize` to exclude too. (@popaionut)
-* **JS** Combined Load JS defer and Load Inline JS defer options.
+* **CSS** Fixed manual cron timeout issue. (@jesse Distad)
+* **CSS** Inline CSS may now use `data-no-optimize` to be excluded from optimization. (@popaionut)
+* **JS** Combined `Load JS Defer` and `Load Inline JS Defer` options.
 * **JS** Forced async to defer.
 * **JS** Moved Google Analytics JS from constant default to setting default for removal.
-* **JS** Fixed potential JS parsing issue if the JS src is changed to data-src by other plugins. (@ankit)
+* **JS** Fixed potential JS parsing issue caused by JS src being changed to data-src by other plugins. (@ankit)
 * **JS** Excluded spotlight from JS optimize. (@tobolo)
-* **CCSS** CCSS history will be kept only 100 items.
-* **CCSS** CCSS Purge appearance in topbar menu will be decided by CCSS cache existance while not the setting only.
-* **CCSS** CCSS queue will always drop once requested to avoid stuck queues when the current request keeps failed.
-* **CCSS** CCSS will not hide adminbar anymore.
-* **CCSS** CCSS now can separate by network subsites. (@Joshua)
-* **CCSS** CCSS unique filename per URL per user role per subsite.
-* **CCSS** Dropped Separate CCSS Cache Post Types option.
-* **CCSS** Dropped Separate CCSS Cache URIs option.
-* **CCSS** Subsites purge Avatar/CSS/JS/CCSS will not affect whole network anymore.
-* **CCSS** Better queue list for CCSS (auto collapse if more than 20, show total on top).
-* **CSSJS** Used separate css&js folder instead of cssjs.
-* **CSSJS** Auto purge after generated CCSS.
-* **Cache** Send cache tag header whenever adding a tag to make tag effective in page optimize process.
+* **CCSS** Fixed CCSS/UCSS manual cron timeout issue.
+* **CCSS** Only 10 items will be kept for CCSS history.
+* **CCSS** The appearance of CCSS Purge in the topbar menu will be determined by the existance of CCSS cache, and not the setting only.
+* **CCSS** To avoid stuck queues when the current request keeps failing, the CCSS queue will always drop once requested.
+* **CCSS** CCSS will no longer hide adminbar.
+* **CCSS** CCSS may now be separate for network subsites. (@Joshua)
+* **CCSS** Gave CCSS a unique filename per URL per user role per subsite.
+* **CCSS** Dropped `Separate CCSS Cache Post Types` option.
+* **CCSS** Dropped `Separate CCSS Cache URIs` option.
+* **CCSS** Subsites purge Avatar/CSS/JS/CCSS will not affect the whole network anymore.
+* **CCSS** Implemented a better queue list for CCSS that auto collapses if there are more than 20 entries, and shows the total on top.
+* **CSSJS** Now using separate CSS and JS folders instead of `cssjs`.
+* **CSSJS** Automatically purge cache after CCSS is generated.
+* **Network** Dropped network CSS/JS rewrite rules.
+* **Cache** Send cache tag header whenever adding a tag to make it effective in the page optimization process.
+* **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
+* **Object** Used `cls` instead of `get_instance` for init.
+* **Cloud** Replaced one-time message with a dismissible-only message when the domain key has been automatically cleared due to domain/key dismatch.
 * **API** Dropped function `hook_vary_add()`.
 * **API** Dropped function `vary_add()`.
 * **API** Dropped function `filter_vary_cookies()`.
@@ -301,36 +306,28 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **API** Dropped action `litespeed_vary_append`.
 * **Vary** 3rd party vary cookies will not append into .htaccess anymore but only present in response vary header if in use.
 * **Vary** Dropped function `append()`.
-* **Vary** Commenter cookie change changed to cacheable now.
+* **Vary** Commenter cookie is now considered cacheable.
 * **Crawler** Minor update to crawler user agent to accommodate mobile_detect.php (@Abe #304)
-* **Data** Table truncate function.
-* **Data** New tables url & url_file.
+* **Data** Added a table truncate function.
+* **Data** Added new tables url & url_file.
 * **Data** Dropped cssjs table.
+* **Data** Options/Summary data is now stored in JSON format to speed up backend visit. (#233250)
+* **Data** Default `CSS Combine External and Inline` and `JS Combine External and Inline` to On for new installations for better compatibility.
 * **Purge** Fixed potential purge warning for certain themes.
 * **Purge** Purge will be stored for next valid visit to trigger if it is initially generated by CLI.
-* **Object** Used `cls` instead of `get_instance` for init.
-* **Page Optimize** CSS Combine/JS Combine will now share same file if contents are same. Limited disk usage for better file usage and less random string issue compact when user doesn't set it well.
+* **Page Optimize** `CSS Combine`/`JS Combine` will now share the same file if the contents are the same. Limited disk usage for better file usage and fewer issues with random string problems.
 * **Page Optimize** Dropped option CSS/JS Cache TTL.
-* **Page Optimize** Bypassed optimization if not cacheable.
+* **Page Optimize** Bypass optimization if page not cacheable.
 * **Page Optimize** Purge CSS/JS will purge the `url_file` table too.
-* **Page Optimize** Vary could store w/ shorter vary value.
-* **Page Optimize** Remove QS wont affect external assets anymore. (@ankit)
-* **Page Optimize** Better regex for optimize parsing.
-* **Page Optimize** Eliminated w3 validator dns prefetch and duplicated id errors. (@sumit Pandey)
-* **Page Optimize** New Optimize for Guest Only option under Tuning.
-* **Page Optimize** Forbidden external link redirection for localization.
-* **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
-* **Data** Summary data is stored in JSON format to speed up backend visit. (#233250)
-* **Data** Default `CSS Combine External and Inline` and `JS Combine External and Inline` to On for new installations for better compatibility.
-* **Network** Dropped network cssjs rewrite rules.
-* **GUI** Bypass score banner when score failed to detect (both 0). (@ankit)
-* **GUI** Fixed deprecated JQ funcs warning in wp-admin. (@krzxsiek)
-Note: Need to test upgrade process when Object Cache is ON.
-Note: Need to test if `WCML` vary works or not.
-Note: Need to test if OLS password protect page works on cache or not.
-todo: test if response vary header can work in latest OLS, drop the two vary lines in htaccess.cls
-Note: test Aelia_CurrencySwitcher
-Note: Need to test When vary changed (add comment/approved comment) will the page cache correctly or not.
+* **Page Optimize** Optionally store a vary with a shorter value.
+* **Page Optimize** Removing query strings will no longer affect external assets. (@ankit)
+* **Page Optimize** Better regex for optimization parsing.
+* **Page Optimize** Eliminated w3 validator for DNS prefetch and duplicated ID errors. (@sumit Pandey)
+* **Page Optimize** New Optimization for Guest Only option under Tuning.
+* **Page Optimize** Now forbidding external link redirection for localization.
+* **Debug** Implemented a better debug format for the 2nd parameter in the log.
+* **GUI** Bypass page score banner when score is not detected (both 0). (@ankit)
+* **GUI** Fixed deprecated JQuery function warning in WP-Admin. (@krzxsiek)
 
 = 3.6.4 - Mar 15 2021 =
 * **Toolbox** Fixed Beta Test upgrade error when upgrading to v3.7+.
