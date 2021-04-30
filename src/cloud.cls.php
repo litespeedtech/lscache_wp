@@ -651,7 +651,7 @@ class Cloud extends Base {
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
-				Admin_Display::error( $msg );
+				Admin_Display::error( $msg, false, true );
 			}
 
 			return;
