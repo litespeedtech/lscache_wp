@@ -379,7 +379,7 @@ class Admin_Display extends Base {
 
 		$msg_name = $irremovable ? self::DB_MSG_PIN : self::DB_MSG;
 
-		$messages = self::get_option( $msg_name );
+		$messages = self::get_option( $msg_name, array() );
 
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
@@ -410,7 +410,7 @@ class Admin_Display extends Base {
 		Cloud::cls()->check_dev_version();
 
 		// One time msg
-		$messages = self::get_option( self::DB_MSG );
+		$messages = self::get_option( self::DB_MSG, array() );
 		$added_thickbox = false;
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $msg ) {
@@ -425,7 +425,7 @@ class Admin_Display extends Base {
 		self::delete_option( self::DB_MSG );
 
 		// Pinned msg
-		$messages = self::get_option( self::DB_MSG_PIN );
+		$messages = self::get_option( self::DB_MSG_PIN, array() );
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $k => $msg ) {
 				// Added for popup links
@@ -483,7 +483,7 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG_PIN );
+		$messages = self::get_option( self::DB_MSG_PIN, array() );
 		if ( empty( $messages[ $_GET[ 'msgid' ] ] ) ) {
 			return;
 		}
