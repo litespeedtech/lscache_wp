@@ -427,7 +427,7 @@ class Conf extends Base {
 	 *
 	 * @since  3.0
 	 * @access public
-	 * @deprecated 3.7 Use $this->conf() instead
+	 * @deprecated 4.0 Use $this->conf() instead
 	 */
 	public static function val( $id, $ori = false ) {
 		error_log( 'Called deprecated function \LiteSpeed\Conf::val(). Please use API call instead.' );

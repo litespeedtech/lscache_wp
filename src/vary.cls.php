@@ -303,7 +303,7 @@ class Vary extends Root {
 		if ( apply_filters( 'litespeed_vary_check_commenter_pending', true ) ) {
 			$pending = false;
 			foreach ( $comments as $comment ) {
-				if ( ! $comment->comment_approved ) {// current user has pending comment
+				if ( ! $comment->comment_approved ) { // current user has pending comment
 					$pending = true;
 					break;
 				}
@@ -311,6 +311,7 @@ class Vary extends Root {
 
 			// No pending comments, don't need to add private cache
 			if ( ! $pending ) {
+				Debug2::debug( '[Vary] No pending comment' );
 				$this->remove_commenter();
 
 				// Remove commenter prefilled info if exists, for public cache
@@ -599,7 +600,7 @@ class Vary extends Root {
 	/**
 	 * Get the hash of all vary related values
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function finalize_full_varies() {
 		$vary = $this->_finalize_curr_vary_cookies( true );
@@ -611,7 +612,7 @@ class Vary extends Root {
 	/**
 	 * Get request environment Vary
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function get_env_vary() {
 		$env_vary = isset( $_SERVER[ 'LSCACHE_VARY_VALUE' ] ) ? $_SERVER[ 'LSCACHE_VARY_VALUE' ] : false;
@@ -643,6 +644,7 @@ class Vary extends Root {
 	private function add_commenter( $from_redirect = false ) {
 		// If the cookie is lost somehow, set it
 		if ( self::has_vary() !== 'commenter' ) {
+			Debug2::debug( '[Vary] Add commenter' );
 			// $_COOKIE[ self::$_vary_name ] = 'commenter'; // not needed
 
 			// save it
@@ -660,6 +662,7 @@ class Vary extends Root {
 	 */
 	private function remove_commenter() {
 		if ( self::has_vary() === 'commenter' ) {
+			Debug2::debug( '[Vary] Remove commenter' );
 			// remove logged in status from global var
 			// unset( $_COOKIE[ self::$_vary_name ] ); // not needed
 
@@ -758,7 +761,7 @@ class Vary extends Root {
 	/**
 	 * Get one vary cookie value
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	private function _get_cookie_val( $key ) {
 		if ( ! empty( $_COOKIE[ $key ] ) ) {

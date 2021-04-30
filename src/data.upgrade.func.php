@@ -15,9 +15,9 @@ use LiteSpeed\File;
 
 /**
  * Drop cssjs table and rm cssjs folder
- * @since 3.7
+ * @since 4.0
  */
-function litespeed_update_3_7() {
+function litespeed_update_4() {
 	global $wpdb;
 	$tb = $wpdb->prefix . 'litespeed_cssjs';
 	$existed = $wpdb->get_var( "SHOW TABLES LIKE '$tb'" );

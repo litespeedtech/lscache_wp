@@ -477,7 +477,7 @@ class Purge extends Base {
 	/**
 	 * Incorporate blog_id into purge tags for multisite
 	 *
-	 * @since 3.7
+	 * @since 4.0
 	 * @access private
 	 * @param mixed $tags Tags to add to the list.
 	*/
@@ -956,7 +956,7 @@ class Purge extends Base {
 	/**
 	 * Check if this purge blongs to a subsite purge
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	private function _is_subsite_purge() {
 		if ( ! is_multisite() ) {

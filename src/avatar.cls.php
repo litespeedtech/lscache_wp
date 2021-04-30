@@ -186,7 +186,7 @@ class Avatar extends Base {
 	/**
 	 * Get filepath
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	private function _filepath( $url ) {
 		$filename = md5( $url ) . '.jpg';

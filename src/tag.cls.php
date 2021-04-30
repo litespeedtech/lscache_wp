@@ -39,7 +39,7 @@ class Tag extends Root {
 	/**
 	 * Initialize
 	 *
-	 * @since 3.7
+	 * @since 4.0
 	 */
 	public function init() {
 		// register recent posts widget tag before theme renders it to make it work

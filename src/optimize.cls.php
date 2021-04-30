@@ -48,7 +48,7 @@ class Optimize extends Base {
 
 	/**
 	 * Constructor
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function __construct() {
 		Debug2::debug( '[Optm] init' );
@@ -701,7 +701,7 @@ class Optimize extends Base {
 
 	/**
 	 * Build a single URL mapped filename (This will not save in DB)
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	private function _build_single_hash_url( $src, $file_type = 'css' ) {
 		$content = $this->__optimizer->load_file( $src, $file_type );

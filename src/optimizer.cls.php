@@ -132,7 +132,7 @@ class Optimizer extends Root {
 
 	/**
 	 * Load a single file
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
 		// CSS related features

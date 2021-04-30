@@ -19,7 +19,7 @@ abstract class Root {
 
 	/**
 	 * Load an instance or create it if not existed
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public static function cls( $cls = false, $unset = false, $data = false ) {
 		if ( ! $cls ) {

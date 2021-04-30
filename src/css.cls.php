@@ -58,7 +58,7 @@ class CSS extends Base {
 	/**
 	 * Detect if there is ccss/ucss folder or not
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function has_ccss_folder() {
 		$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
@@ -100,7 +100,7 @@ class CSS extends Base {
 	/**
 	 * Build the static filepath
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	private function _build_filepath_prefix( $type ) {
 		$filepath_prefix = '/' . $type . '/';
@@ -183,7 +183,7 @@ class CSS extends Base {
 	/**
 	 * Get UCSS path
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function load_ucss( $request_url ) {
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
@@ -280,7 +280,7 @@ class CSS extends Base {
 	/**
 	 * Generate UCSS
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public static function cron_ucss( $continue = false ) {
 		$_instance = self::cls();
