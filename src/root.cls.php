@@ -334,7 +334,10 @@ abstract class Root {
 	 */
 	private static function _maybe_decode( $v ) {
 		if ( ! is_array( $v ) ) {
-			$v = json_decode( $v, true ) ?: $v;
+			$v2 = json_decode( $v, true );
+			if ( $v2 !== null ) {
+				$v = $v2;
+			}
 		}
 		return $v;
 	}
