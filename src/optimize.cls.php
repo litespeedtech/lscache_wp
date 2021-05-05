@@ -191,6 +191,11 @@ class Optimize extends Base {
 	 * @return  string The content that is after optimization
 	 */
 	public function finalize( $content ) {
+		if ( defined( 'LITESPEED_NO_PAGEOPTM' ) ) {
+			Debug2::debug2( '[Optm] bypass: NO_PAGEOPTM const' );
+			return $content;
+		}
+
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			Debug2::debug( '[Optm] bypass: Not frontend HTML type' );
 			return $content;
