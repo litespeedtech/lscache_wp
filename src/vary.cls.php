@@ -150,6 +150,14 @@ class Vary extends Root {
 			return;
 		}
 
+		if ( defined( 'DOING_AJAX' ) ) {
+			return;
+		}
+
+		if ( defined( 'DOING_CRON' ) ) {
+			return;
+		}
+
 		// If is the request to update vary, then no guest
 		if ( ! empty( $_GET[ 'litespeed_guest' ] ) ) {
 			return;
