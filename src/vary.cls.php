@@ -159,6 +159,7 @@ class Vary extends Root {
 		}
 
 		// If is the request to update vary, then no guest
+		// Don't need anymore as it is always ajax call
 		if ( ! empty( $_GET[ 'litespeed_guest' ] ) ) {
 			return;
 		}
