@@ -491,7 +491,7 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$snippet = $cfg_trim_noscript ? '' : '<noscript>' . $v . '</noscript>';
 				if ( $cfg_js_delay ) {
-					$v = str_replace( ' src=', ' litespeed-src=', $v );
+					$v = str_replace( ' src=', ' data-litespeed-src=', $v );
 				}
 				else {
 					$v = str_replace( ' src=', ' data-src=', $v );

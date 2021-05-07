@@ -459,7 +459,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" type="litespeed/javascript" src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
@@ -903,8 +903,8 @@ class Optimize extends Base {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
 			$this->i2++;
-			return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '">' . $con . '</script>';
-			// return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '">' . $con . '</script>';
+			// return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
@@ -1140,7 +1140,7 @@ class Optimize extends Base {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
 			$this->i2++;
-			return str_replace( ' src=', ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src=', $ori );
+			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . $this->i2 . '" data-src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
