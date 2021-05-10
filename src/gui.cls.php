@@ -760,7 +760,7 @@ class GUI extends Base {
 	private function _enqueue_guest_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
 		$js_con = str_replace( 'litespeed_url', esc_url( add_query_arg( 'litespeed_guest', 1, home_url( '/' ) ) ), $js_con );
-		$buffer = str_replace( '</body>', '<script data-no-optimize="1" async>' . $js_con . '</script></body>', $buffer );
+		$buffer = str_replace( '</body>', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer );
 		return $buffer;
 	}
 
