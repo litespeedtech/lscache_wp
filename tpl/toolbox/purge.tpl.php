@@ -74,15 +74,6 @@ if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
 	) ;
 }
 
-if ( $this->conf( Base::O_OPTM_LOCALIZE ) ) {
-	$_panels[] = array(
-		'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
-		'desc'	=> __( 'This will delete all localized resources', 'litespeed-cache' ),
-		'icon'	=> 'purge-cssjs',
-		'append_url'	=> Purge::TYPE_PURGE_ALL_LOCALRES,
-	);
-}
-
 if ( Placeholder::has_lqip_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),

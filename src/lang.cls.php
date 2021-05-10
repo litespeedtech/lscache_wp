@@ -119,8 +119,6 @@ class Lang extends Base {
 			self::O_OPTM_CSS_ASYNC_INLINE		=> __( 'Inline CSS Async Lib', 'litespeed-cache' ),
 			self::O_OPTM_CSS_FONT_DISPLAY		=> __( 'Font Display Optimization', 'litespeed-cache' ),
 			self::O_OPTM_JS_DEFER				=> __( 'Load JS Deferred', 'litespeed-cache' ),
-			self::O_OPTM_LOCALIZE				=> __( 'Localize Resources', 'litespeed-cache' ),
-			self::O_OPTM_LOCALIZE_DOMAINS		=> __( 'Localization Files', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH			=> __( 'DNS Prefetch', 'litespeed-cache' ),
 			self::O_OPTM_DNS_PREFETCH_CTRL		=> __( 'DNS Prefetch Control', 'litespeed-cache' ),
 			self::O_OPTM_CSS_EXC				=> __( 'CSS Excludes', 'litespeed-cache' ),

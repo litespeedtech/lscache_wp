@@ -508,16 +508,6 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'	=> 'litespeed-menu',
-				'id'		=> 'litespeed-purge-localres',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES, false, '_ori' ),
-				'meta'		=> array( 'tabindex' => '0' ),
-			) );
-		}
-
 		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
@@ -655,16 +645,6 @@ class GUI extends Base {
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - CCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
-				'meta'		=> array( 'tabindex' => '0' ),
-			) );
-		}
-
-		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'	=> 'litespeed-menu',
-				'id'		=> 'litespeed-purge-localres',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
