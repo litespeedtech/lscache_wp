@@ -402,12 +402,6 @@ class Optimize extends Base {
 		$this->_maybe_js_delay();
 
 		/**
-		 * Localize GG/FB JS/Fonts
-		 * @since  3.3
-		 */
-		$this->content = $this->cls( 'Localization' )->finalize( $this->content );
-
-		/**
 		 * HTML Lazyload
 		 */
 		if ( $this->conf( self::O_OPTM_HTML_LAZY ) ) {
