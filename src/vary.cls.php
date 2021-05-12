@@ -179,8 +179,8 @@ class Vary extends Root {
 	 * @since  4.0
 	 */
 	public function update_guest_vary() {
-		if ( $this->_always_guest() ) {
-			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );
+		if ( $this->_always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
+			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // todo: Why specify this? To bypass vary finialze ?
 			Debug2::debug( '[Vary] 🤠🤠 Guest' );
 			echo '[]';
 			exit;
