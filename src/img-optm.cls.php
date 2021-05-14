@@ -721,7 +721,7 @@ class Img_Optm extends Base {
 			return Cloud::err( 'no/wrong status' );
 		}
 
-		$status = $post_data[ 'status' ];
+		$status = $_POST[ 'status' ];
 
 		$last_log_pid = 0;
 
