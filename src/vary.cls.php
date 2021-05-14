@@ -179,6 +179,9 @@ class Vary extends Root {
 	 * @since  4.0
 	 */
 	public function update_guest_vary() {
+		// This process must not be cached
+
+
 		if ( $this->_always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // Reuse this const to bypass set vary in vary finalize
 			Debug2::debug( '[Vary] 🤠🤠 Guest' );
@@ -186,13 +189,7 @@ class Vary extends Root {
 			exit;
 		}
 
-		$vary = $this->finalize_default_vary();
-
-		// save it
-		$expire = time() + 2 * DAY_IN_SECONDS;
-
-		$this->_cookie( $vary, $expire );
-		Debug2::debug( "[Vary] update guest vary set_cookie ---> $vary" );
+		Debug2::debug( "[Vary] Will update guest vary in finalize" );
 
 		// return json
 		echo json_encode( array( 'reload' => 'yes' ) );
