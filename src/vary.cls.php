@@ -180,7 +180,7 @@ class Vary extends Root {
 	 */
 	public function update_guest_vary() {
 		if ( $this->_always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
-			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // Specify this to bypass set vary in vary finialze
+			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // Reuse this const to bypass set vary in vary finalize
 			Debug2::debug( '[Vary] 🤠🤠 Guest' );
 			echo '[]';
 			exit;
@@ -534,6 +534,8 @@ class Vary extends Root {
 	 * @access public
 	 */
 	public function finalize_default_vary( $uid = false ) {
+		// Must check this to bypass vary generation for guests
+		// Must check this to avoid Guest page's CSS/JS/CCSS/UCSS get non-guest vary filename
 		if ( defined( 'LITESPEED_GUEST' ) ) {
 			return false;
 		}
@@ -713,7 +715,9 @@ class Vary extends Root {
 	 */
 	public function finalize() {
 		// Finalize default vary
-		$this->_update_default_vary();
+		if ( ! defined( 'LITESPEED_GUEST' ) ) {
+			$this->_update_default_vary();
+		}
 
 		$tp_cookies = $this->_finalize_curr_vary_cookies();
 
