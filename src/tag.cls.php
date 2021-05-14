@@ -336,6 +336,10 @@ class Tag extends Root {
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
 	public function output( $no_finalize = false ) {
+		if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+			return;
+		}
+
 		if ( ! $no_finalize ) {
 			self::_finalize();
 		}

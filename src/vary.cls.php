@@ -180,7 +180,7 @@ class Vary extends Root {
 	 */
 	public function update_guest_vary() {
 		// This process must not be cached
-
+		! defined( 'LSCACHE_NO_CACHE' ) && define( 'LSCACHE_NO_CACHE', true );
 
 		if ( $this->_always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // Reuse this const to bypass set vary in vary finalize
