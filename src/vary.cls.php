@@ -200,7 +200,7 @@ class Vary extends Root {
 	}
 
 	/**
-	 * Detect if is a guest visitor
+	 * Detect if is a guest visitor or not
 	 *
 	 * @since  4.0
 	 */
