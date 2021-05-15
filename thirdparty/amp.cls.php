@@ -13,8 +13,34 @@ defined( 'WPINC' ) || exit ;
 
 use \LiteSpeed\API ;
 
-class AMP
-{
+/**
+ * AMP compatibility.
+ */
+class AMP {
+
+	/***
+	 * Disable Optimizations on AMP endpoint.
+	 */
+	public static function disable_optimizations_on_amp() {
+
+		// Check if for AMP page.
+		if ( function_exists( 'amp_is_request' ) && amp_is_request() ) {
+
+			// Bypass all optimizations.
+			if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+				define( 'LITESPEED_BYPASS_OPTM', true );
+			}
+
+			// Stop adding lazyload scripts.
+			if ( ! defined( 'LITESPEED_NO_LAZY' ) ) {
+				define( 'LITESPEED_NO_LAZY', true );
+			}
+
+			// Stop other optimizations.
+			add_filter( 'litespeed_can_optm', '__return_false' );
+		}
+	}
+
 	/**
 	 * CSS async will affect AMP result and
 	 * Lazyload will inject JS library which AMP not allowed
@@ -23,14 +49,9 @@ class AMP
 	 * @since 2.9.8.6
 	 * @access public
 	 */
-	public static function preload()
-	{
-		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return;
-		! defined( 'LITESPEED_NO_PAGEOPTM' ) && define( 'LITESPEED_NO_PAGEOPTM', true );
-		! defined( 'LITESPEED_NO_LAZY' ) && define( 'LITESPEED_NO_LAZY', true );
-		// add_filter( 'litespeed_can_optm', '__return_false' );
-		// do_action( 'litespeed_conf_force', API::O_OPTM_CSS_ASYNC, false );
-		// do_action( 'litespeed_conf_force', API::O_MEDIA_LAZY, false );
-		// do_action( 'litespeed_conf_force', API::O_MEDIA_IFRAME_LAZY, false );
+	public static function preload() {
+
+		add_action( 'wp', __CLASS__ . '::disable_optimizations_on_amp' );
+
 	}
 }
