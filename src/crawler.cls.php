@@ -800,7 +800,7 @@ class Crawler extends Root {
 			$crawler_factors[ $this_cookie_key ] = array();
 
 			foreach ( $v[ 'vals' ] as $v2 ) {
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . $v[ 'name' ] . '=' . $v2;
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . esc_html( $v[ 'name' ] ) . '=' . esc_html( $v2 );
 			}
 		}
 
