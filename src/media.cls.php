@@ -792,7 +792,7 @@ class Media extends Root {
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
 		}
 
@@ -808,9 +808,12 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
-		if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) && ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+//todo: xx need to detect if its webp UA or not, currently i doubt it always replaced to webp when calling by public way
 			return $content;
 		}
+
+		Debug2::debug2( '[Media] Start replacing bakcground WebP.' );
 
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
