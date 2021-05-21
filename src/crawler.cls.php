@@ -696,9 +696,12 @@ class Crawler extends Root {
 	 *
 	 * @since  3.3
 	 */
-	public function self_curl( $url, $ua, $uid = false ) {
+	public function self_curl( $url, $ua, $uid = false, $accept = false ) { // $accept not in use yet
 		$this->_crawler_conf[ 'base' ] = home_url();
 		$this->_crawler_conf[ 'ua' ] = $ua;
+		if ( $accept ) {
+			$this->_crawler_conf[ 'headers' ] = array( 'Accept: ' . $accept );
+		}
 		if ( $uid ) {
 			$this->_crawler_conf[ 'cookies' ][ 'litespeed_role' ] = $uid;
 			$this->_crawler_conf[ 'cookies' ][ 'litespeed_hash' ] = Router::get_hash();

@@ -93,6 +93,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php echo $v[ 'url' ]; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
+							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>
 							<br />
 						<?php endforeach; ?>
 						</p>
@@ -191,6 +192,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php echo $v[ 'url' ]; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
+							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>
 							<br />
 						<?php endforeach; ?>
 						</p>

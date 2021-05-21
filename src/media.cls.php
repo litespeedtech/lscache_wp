@@ -374,7 +374,7 @@ class Media extends Root {
 	 * @since  1.6.2
 	 * @access public
 	 */
-	private function webp_support() {
+	public function webp_support() {
 		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
 			return true;
 		}
@@ -797,7 +797,9 @@ class Media extends Root {
 		}
 
 		// Replace background-image
-		$content = $this->replace_background_webp( $content );
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+			$content = $this->replace_background_webp( $content );
+		}
 
 		return $content;
 	}
@@ -808,11 +810,6 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
-		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) && ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
-//todo: xx need to detect if its webp UA or not, currently i doubt it always replaced to webp when calling by public way
-			return $content;
-		}
-
 		Debug2::debug2( '[Media] Start replacing bakcground WebP.' );
 
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
@@ -848,7 +845,7 @@ class Media extends Root {
 	 * @access public
 	 */
 	public function replace_webp( $url ) {
-		Debug2::debug2( '[Media] webp replacing: ' . $url );
+		Debug2::debug2( '[Media] webp replacing: ' . substr( $url, 0, 200 ) );
 
 		if ( substr( $url, -5 ) == '.webp' ) {
 			Debug2::debug2( '[Media] already webp' );

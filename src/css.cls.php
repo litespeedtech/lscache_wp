@@ -162,6 +162,7 @@ class CSS extends Base {
 			'url'			=> $request_url,
 			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
+			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
@@ -211,6 +212,7 @@ class CSS extends Base {
 			'url'			=> $request_url,
 			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
+			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
@@ -265,8 +267,12 @@ class CSS extends Base {
 				continue;
 			}
 
+			if ( ! isset( $v[ 'is_webp' ] ) ) {
+				$v[ 'is_webp' ] = false;
+			}
+
 			$i ++;
-			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ccss', $v[ 'is_mobile' ] );
+			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ccss', $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 
 			if ( $res ) {
 				Purge::add( 'CCSS.' . md5( $k ) );
@@ -307,8 +313,12 @@ class CSS extends Base {
 			$_instance->_popup_and_save( 'ucss', $k, $v[ 'url' ] );
 			Debug2::debug( '[UCSS] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
+			if ( ! isset( $v[ 'is_webp' ] ) ) {
+				$v[ 'is_webp' ] = false;
+			}
+
 			$i ++;
-			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ucss', $v[ 'is_mobile' ] );
+			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ucss', $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 
 			if ( $res ) {
 				Purge::add( 'UCSS.' . md5( $k ) );
@@ -331,7 +341,7 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile ) {
+	private function _generate( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
 		set_time_limit( 120 );
 
 		// Check if has credit to push
@@ -356,10 +366,10 @@ class CSS extends Base {
 		// Parse HTML to gather all CSS content before requesting
 		$css = false;
 		if ( $type == 'ccss' ) {
-			list( $css, $html ) = $this->_prepare_css( $html );
+			list( $css, $html ) = $this->_prepare_css( $html, $is_webp );
 		}
 		else {
-			list( , $html ) = $this->_prepare_css( $html, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
+			list( , $html ) = $this->_prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
 			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
 			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
@@ -380,6 +390,7 @@ class CSS extends Base {
 			'ccss_type'		=> $queue_k,
 			'user_agent'	=> $user_agent,
 			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
+			'is_webp'		=> $is_webp ? 1 : 0,
 			'html'			=> $html,
 			'css'			=> $css,
 		);
@@ -439,7 +450,7 @@ class CSS extends Base {
 	public function test_url( $request_url ) {
 		$user_agent = $_SERVER[ 'HTTP_USER_AGENT' ];
 		$html = $this->_prepare_html( $request_url, $user_agent );
-		list( $css, $html ) = $this->_prepare_css( $html, true );
+		list( $css, $html ) = $this->_prepare_css( $html, true, true );
 		// var_dump( $css );
 // 		$html = <<<EOT
 
@@ -488,7 +499,7 @@ class CSS extends Base {
 	 *
 	 * @since  3.4.3
 	 */
-	private function _prepare_css( $html, $dryrun = false ) {
+	private function _prepare_css( $html, $is_webp = false, $dryrun = false ) {
 		$css = '';
 		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
@@ -547,7 +558,9 @@ class CSS extends Base {
 			}
 
 			$con = Optimizer::minify_css( $con );
-			$con = $this->cls( 'Media' )->replace_background_webp( $con );
+			if ( $is_webp ) {
+				$con = $this->cls( 'Media' )->replace_background_webp( $con );
+			}
 
 			if ( ! empty( $attrs[ 'media' ] ) && $attrs[ 'media' ] !== 'all' ) {
 				$con = '@media ' . $attrs[ 'media' ] . '{' . $con . "}\n";
