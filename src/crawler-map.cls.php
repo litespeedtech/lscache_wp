@@ -497,8 +497,8 @@ class Crawler_Map extends Root {
 			else {
 				foreach ( $xml_array[ 'url' ] as $val ) {
 					$val = (array) $val;
-					if ( ! empty( $val[ 'loc' ] ) ) {
-						$this->_urls[] = $val[ 'loc' ];
+					if ( ! empty( (string) $val[ 'loc' ] ) ) {
+						$this->_urls[] = (string) $val[ 'loc' ];
 					}
 				}
 			}
