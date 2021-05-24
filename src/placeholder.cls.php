@@ -35,7 +35,7 @@ class Placeholder extends Base {
 	 */
 	public function __construct() {
 		$this->_conf_placeholder_resp = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP );
-		$this->_conf_placeholder_resp_svg 	= defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
+		$this->_conf_placeholder_resp_svg 	= $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
 		$this->_conf_lqip 		= ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_MEDIA_LQIP );
 		$this->_conf_lqip_qual	= $this->conf( self::O_MEDIA_LQIP_QUAL );
 		$this->_conf_lqip_min_w	= $this->conf( self::O_MEDIA_LQIP_MIN_W );
