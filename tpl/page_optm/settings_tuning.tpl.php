@@ -62,7 +62,7 @@ ksort( $roles );
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide2">
+	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
 			<?php $this->title( $id ); ?>
@@ -74,6 +74,35 @@ ksort( $roles );
 				<br /><font class="litespeed-success">
 					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt</a>
 				</font>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_CCSS_SEP_POSTTYPE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_CCSS_SEP_URI; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ); ?>
+				<?php $this->_uri_usage_example(); ?>
 			</div>
 		</td>
 	</tr>

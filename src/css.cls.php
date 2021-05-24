@@ -125,8 +125,22 @@ class CSS extends Base {
 			return $request_url;
 		}
 
+		$sep_uri = $this->conf( self::O_OPTM_CCSS_SEP_URI );
+		if ( $sep_uri && $hit = Utility::str_hit_array( $request_url, $sep_uri ) ) {
+			Debug2::debug( '[CCSS] Separate CCSS due to separate URI setting: ' . $hit );
+			return $request_url;
+		}
+
+		$pt = Utility::page_type();
+
+		$sep_pt = $this->conf( self::O_OPTM_CCSS_SEP_POSTTYPE );
+		if ( in_array( $pt, $sep_pt ) ) {
+			Debug2::debug( '[CCSS] Separate CCSS due to posttype setting: ' . $pt );
+			return $request_url;
+		}
+
 		// Per posttype
-		return Utility::page_type();
+		return $pt;
 	}
 
 	/**

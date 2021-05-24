@@ -127,6 +127,8 @@ class Lang extends Base {
 			self::O_OPTM_GGFONTS_ASYNC			=> __( 'Load Google Fonts Asynchronously', 'litespeed-cache' ),
 			self::O_OPTM_GGFONTS_RM				=> __( 'Remove Google Fonts', 'litespeed-cache' ),
 			self::O_OPTM_CCSS_CON				=> __( 'Critical CSS Rules', 'litespeed-cache' ),
+			self::O_OPTM_CCSS_SEP_POSTTYPE		=> __( 'Separate CCSS Cache Post Types', 'litespeed-cache' ),
+			self::O_OPTM_CCSS_SEP_URI			=> __( 'Separate CCSS Cache URIs', 'litespeed-cache' ),
 			self::O_OPTM_JS_DEFER_EXC			=> __( 'JS Deferred Excludes', 'litespeed-cache' ),
 			self::O_OPTM_EMOJI_RM				=> __( 'Remove WordPress Emoji', 'litespeed-cache' ),
 			self::O_OPTM_NOSCRIPT_RM			=> __( 'Remove Noscript Tag', 'litespeed-cache' ),

@@ -135,6 +135,8 @@ class Base extends Root {
 	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC 			= 'optm-css_async';
 	const O_OPTM_CCSS_PER_URL 		= 'optm-ccss_per_url';
+	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype';
+	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri';
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
@@ -412,6 +414,8 @@ class Base extends Root {
 		self::O_OPTM_GGFONTS_RM 		=> false,
 		self::O_OPTM_CSS_ASYNC 			=> false,
 		self::O_OPTM_CCSS_PER_URL 		=> false,
+		self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
+		self::O_OPTM_CCSS_SEP_URI		=> array(),
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
@@ -806,6 +810,7 @@ class Base extends Root {
 			// self::O_OPTM_CSS_EXC		=> 'uri', // Need to comment out for inline & external CSS
 			// self::O_OPTM_JS_EXC			=> 'uri',
 			self::O_OPTM_EXC			=> 'relative',
+			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
