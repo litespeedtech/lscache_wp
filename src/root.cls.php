@@ -9,6 +9,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 abstract class Root {
+	const CONF_FILE = '.litespeed_conf.dat';
 	// Instance set
 	private static $_instances;
 

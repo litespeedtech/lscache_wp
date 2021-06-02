@@ -22,6 +22,7 @@ class GUI extends Base {
 	);
 
 	const LIB_GUEST_JS = 'assets/js/guest.min.js';
+	const PHP_GUEST = 'guest.vary.php';
 
 	const TYPE_DISMISS_WHM = 'whm';
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault';
@@ -759,7 +760,9 @@ class GUI extends Base {
 	 */
 	private function _enqueue_guest_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
-		$js_con = str_replace( 'litespeed_url', esc_url( add_query_arg( 'litespeed_guest', 1, home_url( '/' ) ) ), $js_con );
+		// $guest_update_url = add_query_arg( 'litespeed_guest', 1, home_url( '/' ) );
+		$guest_update_url = LSWCP_PLUGIN_URL . self::PHP_GUEST;
+		$js_con = str_replace( 'litespeed_url', esc_url( $guest_update_url ), $js_con );
 		$buffer = str_replace( '</body>', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer );
 		return $buffer;
 	}

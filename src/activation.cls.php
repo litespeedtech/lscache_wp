@@ -20,6 +20,17 @@ class Activation extends Base {
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
+	private $_data_file;
+
+	/**
+	 * Construct
+	 *
+	 * @since 4.1
+	 */
+	public function __construct() {
+		$this->_data_file = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE;
+	}
+
 	/**
 	 * The activation hook callback.
 	 *
@@ -236,6 +247,10 @@ class Activation extends Base {
 			Admin_Display::error( $ex->getMessage() );
 		}
 
+		/* 5) .litespeed_conf.dat; */
+
+		$this->_del_conf_data_file();
+
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();
 	}
@@ -250,6 +265,7 @@ class Activation extends Base {
 	 * 		2) adv-cache.php;
 	 * 		3) object-cache.php;
 	 * 		4) .htaccess;
+	 * 		5) .litespeed_conf.dat;
 	 *
 	 * @since 3.0
 	 * @access public
@@ -289,6 +305,72 @@ class Activation extends Base {
 			$this->cls( 'Htaccess' )->update( $options );
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( $ex->getMessage() );
+		}
+
+		/* 5) .litespeed_conf.dat; */
+
+		if ( ( $options[ self::O_GUEST ] || $options[ self::O_OBJECT ] ) && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+			$this->_update_conf_data_file( $options );
+		}
+	}
+
+	/**
+	 * Delete data conf file
+	 *
+	 * @since  4.1
+	 */
+	private function _del_conf_data_file() {
+		if ( file_exists( $this->_data_file ) ) {
+			unlink( $this->_data_file );
+		}
+	}
+
+	/**
+	 * Update data conf file for guest mode & object cache
+	 *
+	 * @since  4.1
+	 */
+	private function _update_conf_data_file( $options ) {
+		$ids = array();
+		if ( $options[ self::O_OBJECT ] ) {
+			$this_ids = array(
+				self::O_OBJECT_KIND,
+				self::O_OBJECT_HOST,
+				self::O_OBJECT_PORT,
+				self::O_OBJECT_LIFE,
+				self::O_OBJECT_USER,
+				self::O_OBJECT_PSWD,
+				self::O_OBJECT_DB_ID,
+				self::O_OBJECT_PERSISTENT,
+				self::O_OBJECT_ADMIN,
+				self::O_OBJECT_TRANSIENTS,
+				self::O_OBJECT_GLOBAL_GROUPS,
+				self::O_OBJECT_NON_PERSISTENT_GROUPS,
+			);
+			$ids = array_merge( $ids, $this_ids );
+		}
+
+		if ( $options[ self::O_GUEST ] ) {
+			$this_ids = array(
+				self::HASH,
+				self::O_CACHE_LOGIN_COOKIE,
+				self::O_DEBUG,
+				self::O_DEBUG_IPS,
+				self::O_UTIL_NO_HTTPS_VARY,
+			);
+			$ids = array_merge( $ids, $this_ids );
+		}
+
+		$data = array();
+		foreach ( $ids as $v ) {
+			$data[ $v ] = $options[ $v ];
+		}
+		$data = json_encode( $data );
+
+		$old_data = File::read( $this->_data_file );
+		if ( $old_data != $data ) {
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Updating .litespeed_conf.dat' );
+			File::save( $this->_data_file, $data );
 		}
 	}
 

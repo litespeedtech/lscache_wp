@@ -160,6 +160,7 @@ class Vary extends Root {
 
 		// If is the request to update vary, then no guest
 		// Don't need anymore as it is always ajax call
+		// Still keep it in case some WP blocked the lightweigh guest vary update script, WP can still update the vary
 		if ( ! empty( $_GET[ 'litespeed_guest' ] ) ) {
 			return;
 		}
@@ -177,12 +178,14 @@ class Vary extends Root {
 	 * Update Guest vary
 	 *
 	 * @since  4.0
+	 * @deprecated 4.1 Use independent lightweight guest.vary.php as a replacement
 	 */
 	public function update_guest_vary() {
 		// This process must not be cached
 		! defined( 'LSCACHE_NO_CACHE' ) && define( 'LSCACHE_NO_CACHE', true );
 
-		if ( $this->_always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
+		$_guest = new Lib\Guest();
+		if ( $_guest->always_guest() || self::has_vary() ) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 			! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true ); // Reuse this const to bypass set vary in vary finalize
 			Debug2::debug( '[Vary] 🤠🤠 Guest' );
 			echo '[]';
@@ -194,96 +197,6 @@ class Vary extends Root {
 		// return json
 		echo json_encode( array( 'reload' => 'yes' ) );
 		exit;
-	}
-
-	/**
-	 * Detect if is a guest visitor or not
-	 *
-	 * @since  4.0
-	 */
-	private function _always_guest() {
-		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-			return false;
-		}
-
-		$match = preg_match( '#Page Speed|Lighthouse|GTmetrix|Google|Pingdom|bot#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
-		if ( $match ) {
-			return true;
-		}
-
-		$ips = [
-			'208.70.247.157',
-			'172.255.48.130',
-			'172.255.48.131',
-			'172.255.48.132',
-			'172.255.48.133',
-			'172.255.48.134',
-			'172.255.48.135',
-			'172.255.48.136',
-			'172.255.48.137',
-			'172.255.48.138',
-			'172.255.48.139',
-			'172.255.48.140',
-			'172.255.48.141',
-			'172.255.48.142',
-			'172.255.48.143',
-			'172.255.48.144',
-			'172.255.48.145',
-			'172.255.48.146',
-			'172.255.48.147',
-			'52.229.122.240',
-			'104.214.72.101',
-			'13.66.7.11',
-			'13.85.24.83',
-			'13.85.24.90',
-			'13.85.82.26',
-			'40.74.242.253',
-			'40.74.243.13',
-			'40.74.243.176',
-			'104.214.48.247',
-			'157.55.189.189',
-			'104.214.110.135',
-			'70.37.83.240',
-			'65.52.36.250',
-			'13.78.216.56',
-			'52.162.212.163',
-			'23.96.34.105',
-			'65.52.113.236',
-			'172.255.61.34',
-			'172.255.61.35',
-			'172.255.61.36',
-			'172.255.61.37',
-			'172.255.61.38',
-			'172.255.61.39',
-			'172.255.61.40',
-			'104.41.2.19',
-			'191.235.98.164',
-			'191.235.99.221',
-			'191.232.194.51',
-			'52.237.235.185',
-			'52.237.250.73',
-			'52.237.236.145',
-			'104.211.143.8',
-			'104.211.165.53',
-			'52.172.14.87',
-			'40.83.89.214',
-			'52.175.57.81',
-			'20.188.63.151',
-			'20.52.36.49',
-			'52.246.165.153',
-			'51.144.102.233',
-			'13.76.97.224',
-			'102.133.169.66',
-			'52.231.199.170',
-			'13.53.162.7',
-			'40.123.218.94',
-		];
-
-		if ( $this->cls( 'Router' )->ip_access( $ips ) ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

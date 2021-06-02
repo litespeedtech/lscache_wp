@@ -14,6 +14,16 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Drop object cache data file
+ * @since 4.1
+ */
+function litespeed_update_4_1() {
+	if ( file_exists( WP_CONTENT_DIR . '/.object-cache.ini' ) ) {
+		unlink( WP_CONTENT_DIR . '/.object-cache.ini' );
+	}
+}
+
+/**
  * Drop cssjs table and rm cssjs folder
  * @since 4.0
  */
