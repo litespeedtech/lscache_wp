@@ -497,10 +497,10 @@ class WooCommerce extends Base {
 		if ( function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
 			return ;
 		}
-		if ( isset($GLOBALS['product_cat']) ) {
+		if ( isset($GLOBALS['product_cat']) && is_string( $GLOBALS['product_cat'] ) ) { // todo: need to check previous woo version to find if its from old woo versions or not!
 			$term = get_term_by('slug', $GLOBALS['product_cat'], 'product_cat') ;
 		}
-		elseif ( isset($GLOBALS['product_tag']) ) {
+		elseif ( isset($GLOBALS['product_tag']) && is_string( $GLOBALS['product_tag'] ) ) {
 			$term = get_term_by('slug', $GLOBALS['product_tag'], 'product_tag') ;
 		}
 		else {
