@@ -20,7 +20,7 @@ class Activation extends Base {
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
-	private $_data_file;
+	private static $_data_file;
 
 	/**
 	 * Construct
@@ -28,7 +28,7 @@ class Activation extends Base {
 	 * @since 4.1
 	 */
 	public function __construct() {
-		$this->_data_file = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE;
+		self::$_data_file = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE;
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Activation extends Base {
 
 		/* 5) .litespeed_conf.dat; */
 
-		$this->_del_conf_data_file();
+		self::_del_conf_data_file();
 
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();
@@ -319,9 +319,9 @@ class Activation extends Base {
 	 *
 	 * @since  4.1
 	 */
-	private function _del_conf_data_file() {
-		if ( file_exists( $this->_data_file ) ) {
-			unlink( $this->_data_file );
+	private static function _del_conf_data_file() {
+		if ( file_exists( self::$_data_file ) ) {
+			unlink( self::$_data_file );
 		}
 	}
 
@@ -369,10 +369,10 @@ class Activation extends Base {
 		}
 		$data = json_encode( $data );
 
-		$old_data = File::read( $this->_data_file );
+		$old_data = File::read( self::$_data_file );
 		if ( $old_data != $data ) {
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Updating .litespeed_conf.dat' );
-			File::save( $this->_data_file, $data );
+			File::save( self::$_data_file, $data );
 		}
 	}
 
