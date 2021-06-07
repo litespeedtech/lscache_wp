@@ -357,6 +357,8 @@ class Activation extends Base {
 				self::O_DEBUG,
 				self::O_DEBUG_IPS,
 				self::O_UTIL_NO_HTTPS_VARY,
+				self::O_GUEST_UAS,
+				self::O_GUEST_IPS,
 			);
 			$ids = array_merge( $ids, $this_ids );
 		}

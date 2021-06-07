@@ -4,6 +4,7 @@ defined( 'WPINC' ) || exit;
 
 $menu_list = array(
 	'settings'	=> __( 'General Settings', 'litespeed-cache' ),
+	'settings_tuning' => __( 'Tuning', 'litespeed-cache' ),
 );
 
 if ( $this->_is_network_admin ) {

@@ -26,6 +26,8 @@ class Base extends Root {
 	const O_GUEST 			= 'guest';
 	const O_GUEST_OPTM		= 'guest_optm';
 	const O_NEWS 			= 'news';
+	const O_GUEST_UAS 		= 'guest_uas';
+	const O_GUEST_IPS 		= 'guest_ips';
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
@@ -319,6 +321,8 @@ class Base extends Root {
 		self::O_GUEST 			=> false,
 		self::O_GUEST_OPTM 		=> false,
 		self::O_NEWS 			=> false,
+		self::O_GUEST_UAS 		=> array(),
+		self::O_GUEST_IPS 		=> array(),
 
 		// Cache
 		self::O_CACHE 					=> false,
