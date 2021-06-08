@@ -579,6 +579,10 @@ class Core extends Root {
 			$this->footer_comment .= "\n<!-- Object Cache " . \WP_Object_Cache::get_instance()->debug() . " -->";
 		}
 
+		if ( defined( 'LITESPEED_GUEST' ) ) {
+			$this->footer_comment .= "\n<!-- Guest Mode -->";
+		}
+
 		if ( $is_forced ) {
 			Debug2::debug( '--forced--' );
 		}
