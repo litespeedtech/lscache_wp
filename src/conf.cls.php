@@ -129,7 +129,8 @@ class Conf extends Base {
 
 		/**
 		 * Activation delayed file update
-		 * This is to avoid file correction script changed in new versions
+		 * Pros: This is to avoid file correction script changed in new versions
+		 * Cons: Conf upgrade won't get file correction if there is new values that are used in file
 		 */
 		if ( self::get_option( '__activation' ) ) {
 			// Check new version @since 2.9.3
