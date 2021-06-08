@@ -209,6 +209,10 @@ class Crawler extends Root {
 				continue;
 			}
 
+			if ( $v == '_null' ) {
+				continue;
+			}
+
 			$this->_crawler_conf[ 'cookies' ][ substr( $k, 7 ) ] = $v;
 		}
 
@@ -803,7 +807,7 @@ class Crawler extends Root {
 			$crawler_factors[ $this_cookie_key ] = array();
 
 			foreach ( $v[ 'vals' ] as $v2 ) {
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . esc_html( $v[ 'name' ] ) . '=' . esc_html( $v2 );
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = $v2 == '_null' ? '' : '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . esc_html( $v[ 'name' ] ) . '=' . esc_html( $v2 );
 			}
 		}
 
