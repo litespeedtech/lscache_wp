@@ -775,6 +775,16 @@ class Crawler extends Root {
 			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 
+		// Guest Mode on/off
+		if ( $this->conf( Base::O_GUEST ) ) {
+			$vary_name = $this->cls( 'Vary' )->get_vary_name();
+			$vary_val = 'guest_mode:1';
+			if ( ! defined( 'LSCWP_LOG' ) ) {
+				$vary_val = md5( $this->conf( Base::HASH ) . $vary_val );
+			}
+			$crawler_factors[ 'cookie:' . $vary_name ] = array( $vary_val => '', '_null' => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>' );
+		}
+
 		// Mobile crawler
 		if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
 			$crawler_factors[ 'mobile' ] = array( 1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>', 0 => '' );
