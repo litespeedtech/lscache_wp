@@ -136,6 +136,11 @@ class Vary extends Root {
 	 * @since  4.0
 	 */
 	private function _maybe_guest_mode() {
+		if ( defined( 'LITESPEED_GUEST' ) ) {
+			Debug2::debug( '[Vary] 👒👒 Guest mode ' . ( LITESPEED_GUEST ? 'predefined' : 'turned off' ) );
+			return;
+		}
+
 		if ( ! $this->conf( Base::O_GUEST ) ) {
 			return;
 		}
@@ -446,7 +451,7 @@ class Vary extends Root {
 	public function finalize_default_vary( $uid = false ) {
 		// Must check this to bypass vary generation for guests
 		// Must check this to avoid Guest page's CSS/JS/CCSS/UCSS get non-guest vary filename
-		if ( defined( 'LITESPEED_GUEST' ) ) {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
 			return false;
 		}
 
@@ -625,7 +630,7 @@ class Vary extends Root {
 	 */
 	public function finalize() {
 		// Finalize default vary
-		if ( ! defined( 'LITESPEED_GUEST' ) ) {
+		if ( ! defined( 'LITESPEED_GUEST' ) || ! LITESPEED_GUEST ) {
 			$this->_update_default_vary();
 		}
 

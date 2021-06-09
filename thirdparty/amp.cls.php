@@ -28,6 +28,7 @@ class AMP
 		if ( ! function_exists( 'is_amp_endpoint' ) || is_admin() || ! isset( $_GET[ 'amp' ] ) ) return;
 		! defined( 'LITESPEED_NO_PAGEOPTM' ) && define( 'LITESPEED_NO_PAGEOPTM', true );
 		! defined( 'LITESPEED_NO_LAZY' ) && define( 'LITESPEED_NO_LAZY', true );
+		! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', false );
 		// add_filter( 'litespeed_can_optm', '__return_false' );
 		// do_action( 'litespeed_conf_force', API::O_OPTM_CSS_ASYNC, false );
 		// do_action( 'litespeed_conf_force', API::O_MEDIA_LAZY, false );
