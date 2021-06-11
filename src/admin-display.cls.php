@@ -382,8 +382,8 @@ class Admin_Display extends Base {
 		$messages = self::get_option( $msg_name, array() );
 
 		if ( is_array($msg) ) {
-			foreach ($msg as $str) {
-				$messages[] = self::build_notice( $color, $str, $irremovable );
+			foreach ( $msg as $k => $str ) {
+				$messages[ $k ] = self::build_notice( $color, $str, $irremovable );
 			}
 		}
 		else {

@@ -479,7 +479,7 @@ class Cloud extends Base {
 
 				if ( $service_tag !== self::API_VER ) {
 					$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, true ), '<code>' . $service_tag . '</code>' );
-					Admin_Display::error( $msg );
+					Admin_Display::error( array( 'cloud_trylater' => $msg ) );
 				}
 
 				return false;
