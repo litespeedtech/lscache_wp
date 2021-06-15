@@ -25,6 +25,18 @@ use \LiteSpeed\Admin_Display;
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
+			<?php $id = self::O_ESI_CACHE_CART; ?>
+			<?php echo __( 'Use ESI for Cart', 'litespeed-cache' ); ?>
+		</th>
+		<td>
+			<?php do_action( 'litespeed_build_switch' , $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf(__( 'When the option is ON, cart information will be implemented as ESI blocks. NOTE: To make it work, you need to turn on %1$s under ESI settings. '),'<code>Enable ESI</code>', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th>
 			<?php $id = self::O_UPDATE_INTERVAL; ?>
 			<?php echo __( 'Product Update Interval', 'litespeed-cache' ); ?>
 		</th>
