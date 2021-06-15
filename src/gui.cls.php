@@ -16,8 +16,8 @@ class GUI extends Base {
 
 	// [ file_tag => [ days, litespeed_only ], ... ]
 	private $_promo_list = array(
-		'new_version'	=> array( 1, false ),
-		'score'			=> array( 5, false ),
+		'new_version'	=> array( 7, false ),
+		'score'			=> array( 14, false ),
 		// 'slack'		=> array( 3, false ),
 	);
 
