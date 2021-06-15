@@ -35,7 +35,6 @@ class WooCommerce extends Base {
 	const ESI_PARAM_PATH = 'wc_path' ;
 	const ESI_PARAM_LOCATED = 'wc_located' ;
 
-	private $esi_wc_cart;
 	private $cache_cart ;
 	private $esi_eanbled ;
 
@@ -168,7 +167,9 @@ class WooCommerce extends Base {
 			do_action( 'litespeed_debug', 'API: 3rd woo added ESI' );
 			add_action( 'litespeed_tpl_normal', array( $this, 'set_swap_header_cart' ) );
 		}
+
 		return $template;
+
 	}
 
 	/**
@@ -178,10 +179,12 @@ class WooCommerce extends Base {
 	 * @access public
 	 */
 	public function vary_maintain( $vary ) {
-			if ( $this->vary_needed() ) {
-				do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' );
-				$vary[ 'woo_cart' ] = 1;
-			}
+
+		if ( $this->vary_needed() ) {
+			do_action( 'litespeed_debug', 'API: 3rd woo added vary due to cart not empty' );
+			$vary[ 'woo_cart' ] = 1;
+		}
+
 		return $vary;
 	}
 
@@ -205,7 +208,7 @@ class WooCommerce extends Base {
 		if ( is_null( $woocom->cart ) ) {
 			return false ;
 		}
-		return $woocom->cart->get_cart_contents_count() > 0;
+		return $woocom->cart->get_cart_contents_count() > 0 ;
 	}
 
 	/**
@@ -767,7 +770,7 @@ class WooCommerce extends Base {
 		// Append option save value filter
 		do_action( 'litespeed_conf_multi_switch', self::O_UPDATE_INTERVAL, 3 ); // This need to be before conf_append
 
-		do_action( 'litespeed_conf_append', self::O_ESI_CACHE_CART, true);
+		do_action( 'litespeed_conf_append', self::O_ESI_CACHE_CART, true );
 		do_action( 'litespeed_conf_append', self::O_UPDATE_INTERVAL, false );
 		do_action( 'litespeed_conf_append', self::O_SHOP_FRONT_TTL, true );
 		do_action( 'litespeed_conf_append', self::O_WOO_CACHE_CART, true );
