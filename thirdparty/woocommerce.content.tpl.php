@@ -6,6 +6,8 @@ defined( 'WPINC' ) || exit;
 use \LiteSpeed\API;
 use \LiteSpeed\Doc;
 use \LiteSpeed\Admin_Display;
+use \LiteSpeed\Lang;
+use \LiteSpeed\Base;
 ?>
 
 <div data-litespeed-layout='woocommerce'>
@@ -23,6 +25,18 @@ use \LiteSpeed\Admin_Display;
 </div>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
+	<tr>
+		<th>
+			<?php $id = self::O_ESI_CACHE_CART; ?>
+			<?php echo __( 'Use ESI for Cart', 'litespeed-cache' ); ?>
+		</th>
+		<td>
+			<?php do_action( 'litespeed_build_switch' , $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'When the option is ON, cart information will be implemented as ESI blocks. NOTE: To make it work, you need to turn on %1$s under ESI settings.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_ESI ) . '</code>' ); ?>
+			</div>
+		</td>
+	</tr>
 	<tr>
 		<th>
 			<?php $id = self::O_UPDATE_INTERVAL; ?>
