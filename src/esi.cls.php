@@ -62,6 +62,8 @@ class ESI extends Root {
 		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
 			$this->_transform_nonce();
 		}
+
+		! defined( 'LITESPEED_ESI_INITED' ) && define( 'LITESPEED_ESI_INITED', true );
 	}
 
 	/**
@@ -122,9 +124,6 @@ class ESI extends Root {
 		}
 
 		add_action( 'litespeed_nonce', array( $this, 'nonce_action' ) );
-
-		Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
-		litespeed_define_nonce_func();
 	}
 
 	/**
@@ -156,6 +155,11 @@ class ESI extends Root {
 	 * @since 2.9.5
 	 */
 	public function is_nonce_action( $action ) {
+		// If GM not run yet, then ESI not init yet, then ESI nonce will not be allowed even nonce func replaced.
+		if ( ! defined( 'LITESPEED_ESI_INITED' ) ) {
+			return null;
+		}
+
 		foreach ( $this->_nonce_actions as $k => $v ) {
 			if ( strpos( $k, '*' ) !== false ) {
 				if( preg_match( '#' . $k . '#iU', $action ) ) {

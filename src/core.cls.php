@@ -90,6 +90,17 @@ class Core extends Root {
 		 * @since  2.9.4
 		 */
 		$this->cls( 'REST' );
+
+		/**
+		 * Hook wpnonce function
+		 *
+		 * Note: ESI nonce won't be available until hook after_setup_theme ESI init due to Guest Mode concern
+		 * @since v4.1
+		 */
+		if ( $this->cls( 'Router' )->esi_enabled() ) {
+			Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
+			litespeed_define_nonce_func();
+		}
 	}
 
 	/**
