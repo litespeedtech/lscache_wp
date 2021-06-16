@@ -59,9 +59,7 @@ class ESI extends Root {
 		 * Overwrite wp_create_nonce func
 		 * @since  2.9.5
 		 */
-		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
-			$this->_transform_nonce();
-		}
+		$this->_transform_nonce();
 
 		! defined( 'LITESPEED_ESI_INITED' ) && define( 'LITESPEED_ESI_INITED', true );
 	}
@@ -114,6 +112,10 @@ class ESI extends Root {
 	 * @since  2.9.5
 	 */
 	private function _transform_nonce() {
+		if ( is_admin() ) {
+			return;
+		}
+
 		// Load ESI nonces in conf
 		$nonces = $this->conf( Base::O_ESI_NONCE );
 		add_filter( 'litespeed_esi_nonces', array( $this->cls( 'Data' ), 'load_esi_nonces' ) );
@@ -157,6 +159,10 @@ class ESI extends Root {
 	public function is_nonce_action( $action ) {
 		// If GM not run yet, then ESI not init yet, then ESI nonce will not be allowed even nonce func replaced.
 		if ( ! defined( 'LITESPEED_ESI_INITED' ) ) {
+			return null;
+		}
+
+		if ( is_admin() ) {
 			return null;
 		}
 
