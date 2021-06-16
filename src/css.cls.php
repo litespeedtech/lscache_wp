@@ -297,7 +297,8 @@ class CSS extends Base {
 				return;
 			}
 
-			if ( $i > 3 ) {
+			if ( $i > 0 ) {
+				$_instance->_print_loading( count( $_instance->_summary[ 'queue_ccss' ] ), 'CCSS' );
 				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS );
 			}
 		}
@@ -343,10 +344,18 @@ class CSS extends Base {
 				return;
 			}
 
-			if ( $i > 3 ) {
+			if ( $i > 0 ) {
+				$_instance->_print_loading( count( $_instance->_summary[ 'queue_ucss' ] ), 'UCSS' );
 				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS );
 			}
 		}
+	}
+
+	private function _print_loading( $counter, $type ) {
+		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
+		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />";
+		echo sprintf( __( ' %1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
+		echo '</div>';
 	}
 
 	/**
