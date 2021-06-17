@@ -282,6 +282,10 @@
 	color: #3366CC !important;
 }
 
+.litespeed-info {
+	color: #d1ecf1 !important;
+}
+
 .litespeed-success {
 	color: #73b38d !important;
 }
@@ -318,6 +322,10 @@ button.litespeed-form-action:hover {
 
 .litespeed-bg-primary {
 	background-color: #3366CC !important;
+}
+
+.litespeed-bg-info {
+	background-color: #d1ecf1 !important;
 }
 
 .litespeed-bg-success {
