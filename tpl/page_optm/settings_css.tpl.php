@@ -80,7 +80,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php if ( ! empty( $css_summary[ 'queue_ucss' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ucss' ] ); ?> )
+							<?php echo sprintf( __( 'URL list in %s queue waiting for cron', 'litespeed-cache' ), 'UCSS' ); ?> ( <?php echo count( $css_summary[ 'queue_ucss' ] ); ?> )
 							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_UCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
@@ -99,7 +99,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ); ?>" class="button litespeed-btn-success">
-						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
+						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'UCSS' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>
@@ -179,7 +179,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php if ( ! empty( $css_summary[ 'queue_ccss' ] ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ccss' ] ); ?> )
+							<?php echo sprintf( __( 'URL list in %s queue waiting for cron', 'litespeed-cache' ), 'CCSS' ); ?> ( <?php echo count( $css_summary[ 'queue_ccss' ] ); ?> )
 							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_CCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
@@ -198,7 +198,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ); ?>" class="button litespeed-btn-success">
-						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
+						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'CCSS' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>
