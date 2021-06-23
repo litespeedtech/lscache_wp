@@ -29,6 +29,8 @@ $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
 
+$ccss_count = count( CSS::cls()->load_queue( 'ccss' ) );
+$ucss_count = count( CSS::cls()->load_queue( 'ucss' ) );
 ?>
 
 <div class="litespeed-dashboard">
@@ -412,8 +414,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? count( $css_summary[ 'queue_ccss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ccss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ccss_count ?: '-'; ?></code>
+						<a href="<?php echo $ccss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ccss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
@@ -443,8 +446,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? count( $css_summary[ 'queue_ucss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ucss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ucss_count ?: '-' ?></code>
+						<a href="<?php echo $ucss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ucss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>

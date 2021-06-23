@@ -262,6 +262,7 @@ class Optimize extends Base {
 		do_action( 'litespeed_optm' );
 
 		// Parse css from content
+		$src_list = false;
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
@@ -318,6 +319,7 @@ class Optimize extends Base {
 		}
 
 		// Parse js from buffer as needed
+		$src_list = false;
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
