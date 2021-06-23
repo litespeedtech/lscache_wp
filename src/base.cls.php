@@ -148,6 +148,7 @@ class Base extends Root {
 	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
 	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc';
+	const O_OPTM_GM_JS_EXC 			= 'optm-gm_js_exc';
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
 	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
 	const O_OPTM_EXC 				= 'optm-exc';
@@ -429,6 +430,7 @@ class Base extends Root {
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
+		self::O_OPTM_GM_JS_EXC			=> array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),

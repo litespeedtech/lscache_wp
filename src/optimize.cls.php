@@ -84,13 +84,19 @@ class Optimize extends Base {
 			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 );
 		}
 
-		/**
-		 * Exclude js from deferred setting
-		 * @since 1.5
-		 */
-		if ( $this->cfg_js_defer && ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
-			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+		// GM JS exclude @since 4.1
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_gm_js_exc', $this->conf( self::O_OPTM_GM_JS_EXC ) );
+		}
+		else {
+			/**
+			 * Exclude js from deferred setting
+			 * @since 1.5
+			 */
+			if ( $this->cfg_js_defer ) {
+				add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
+				$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+			}
 		}
 
 		/**

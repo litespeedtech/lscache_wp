@@ -144,6 +144,26 @@ ksort( $roles );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_GM_JS_EXC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Listed JS files or inline JS code will not be optimized by %s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
+				<?php Doc::one_per_line(); ?>
+				<br /><span class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_gm_js_exc</code>' ); ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ); ?>
+				</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_EXC; ?>
 			<?php $this->title( $id ); ?>
 		</th>
