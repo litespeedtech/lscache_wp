@@ -101,7 +101,7 @@ class Doc {
 	 */
 	public static function notice_ips() {
 		echo '<div class="litespeed-warning">';
-		echo '⚠️ ' . __( 'For online services to work correctly, you must whitelist all online server IPs.', 'litespeed-cache' ) . '<br/>';
+		echo '⚠️ ' . __( 'For online services to work correctly, you must whitelist all QUIC.cloud server IPs.', 'litespeed-cache' ) . '<br/>';
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __( 'Before generating key, please verify all IPs on this list are whitelisted', 'litespeed-cache' ) . ': ';
 		echo '<a href="' . Cloud::CLOUD_SERVER . '/ips" target="_blank">' . __( 'Current Online Server IPs', 'litespeed-cache' ) . '</a>';
 		echo '</div>';
