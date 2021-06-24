@@ -21,7 +21,7 @@ class Doc {
 	 * @access public
 	 */
 	public static function privacy_policy() {
-		return __( 'This site utilizes caching in order to facilitate a faster response time and better user experience. Caching potentially stores a duplicate copy of every web page that is on display on this site. All cache files are temporary, and are never accessed by any third party, except as necessary to obtain technical support from the cache plugin vendor. Cache files expire on a schedule set by the site administrator, but may easily be purged by the admin before their natural expiration, if necessary.', 'litespeed-cache' );
+		return __( 'This site utilizes caching in order to facilitate a faster response time and better user experience. Caching potentially stores a duplicate copy of every web page that is on display on this site. All cache files are temporary, and are never accessed by any third party, except as necessary to obtain technical support from the cache plugin vendor. Cache files expire on a schedule set by the site administrator, but may easily be purged by the admin before their natural expiration, if necessary. We may use QUIC.cloud services to process & cache your data temporarily. Please see <a href="https://quic.cloud/privacy-policy/" target="_blank>their privacy policy</a> for more details.', 'litespeed-cache' );
 	}
 
 
