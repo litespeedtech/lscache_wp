@@ -4,7 +4,7 @@ defined( 'WPINC' ) || exit;
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Optimization Settings', 'litespeed-cache' ); ?>
+	<?php echo __( 'HTML Settings', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#optimization-settings-tab' ); ?>
 </h3>
 

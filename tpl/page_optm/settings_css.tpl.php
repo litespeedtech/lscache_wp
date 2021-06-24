@@ -63,6 +63,7 @@ $ucss_queue = CSS::cls()->load_queue( 'ucss' );
 
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Automatic generation of unused CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 			</div>
 
 			<div class="litespeed-desc litespeed-left20">
@@ -153,13 +154,12 @@ $ucss_queue = CSS::cls()->load_queue( 'ucss' );
 				<?php endif; ?>
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?><br />
+				<?php echo __( 'Use QUIC.cloud online service to generate critical CSS and load remaining CSS asynchronously.', 'litespeed-cache' ); ?><br />
+				<?php echo __( 'Automatic generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?><br />
 				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
-				<br /><?php echo sprintf( __( 'Enabling this option will automatically enable Critical CSS generation (%s service).', 'litespeed-cache' ), '<code>QUIC.cloud</code>' ); ?><br />
-				<?php echo __( 'Automatic generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-critical-css-in-the-background' ); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ); ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in HTML code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ); ?>
 				</font>
 
 			</div>

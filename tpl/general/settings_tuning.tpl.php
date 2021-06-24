@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 ?>
 <h3 class="litespeed-title-short">
 	<?php echo __( 'Tuning Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#tuning-settings-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#tuning-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -17,7 +17,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id, 30 ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed User Agent will be considered as Guest Mode visitors.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Listed User Agents will be considered as Guest Mode visitors.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>

@@ -184,7 +184,7 @@ ksort( $roles );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Only optimize pages for guest visitors. If turned this OFF, CSS/JS/CCSS files will be doubled by each user group.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Only optimize pages for guest (not logged in) visitors. If turned this OFF, CSS/JS/CCSS files will be doubled by each user group.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
