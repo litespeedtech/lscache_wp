@@ -214,8 +214,8 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Set an explicit width and height on image elements to reduce layout shifts and improve CLS.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://web.dev/optimize-cls/?utm_source=lighthouse&utm_medium=unknown#images-without-dimensions' ); ?>
+				<?php echo __( 'Set an explicit width and height on image elements to reduce layout shifts and improve CLS (a Core Web Vitals metric).', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://web.dev/optimize-cls/#images-without-dimensions' ); ?>
 				<br /><?php echo sprintf( __( 'Note: this option only works when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_MEDIA_LAZY ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
