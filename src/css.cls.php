@@ -166,8 +166,15 @@ class CSS extends Base {
 
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 
+
 		// Store it to prepare for cron
 		$queue = $this->load_queue( 'ccss' );
+
+		if ( count( $queue ) > 500 ) {
+			Debug2::debug( '[CSS] CCSS Queue is full - 500' );
+			return null;
+		}
+
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$queue[ $queue_k ] = array(
 			'url'			=> $request_url,
@@ -258,6 +265,12 @@ class CSS extends Base {
 
 		// Store it for cron
 		$queue = $this->load_queue( 'ucss' );
+
+		if ( count( $queue ) > 500 ) {
+			Debug2::debug( '[CSS] UCSS Queue is full - 500' );
+			return false;
+		}
+
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$queue[ $queue_k ] = array(
 			'url'			=> $request_url,

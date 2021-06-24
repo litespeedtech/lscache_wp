@@ -476,6 +476,8 @@ class Placeholder extends Base {
 			return true;
 		}
 
+		Debug2::debug2( '[LQIP] Size too small' );
+
 		return false;
 	}
 
