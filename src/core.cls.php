@@ -92,10 +92,15 @@ class Core extends Root {
 		$this->cls( 'REST' );
 
 		/**
-		 * Preload ESI functionality for ESI request uri recovery
-		 * @since 1.8.1
+		 * Hook wpnonce function
+		 *
+		 * Note: ESI nonce won't be available until hook after_setup_theme ESI init due to Guest Mode concern
+		 * @since v4.1
 		 */
-		$this->cls( 'ESI' );
+		if ( $this->cls( 'Router' )->esi_enabled() && ! function_exists( 'wp_create_nonce' ) ) {
+			Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
+			litespeed_define_nonce_func();
+		}
 	}
 
 	/**
@@ -119,6 +124,7 @@ class Core extends Root {
 	public function init() {
 		/**
 		 * Added hook before init
+		 * 3rd party preload hooks will be fired here too (e.g. Divi disable all in edit mode)
 		 * @since  1.6.6
 		 * @since  2.6 	Added filter to all config values in Conf
 		 */
@@ -157,11 +163,11 @@ class Core extends Root {
 		 * Register vary filter
 		 * @since  1.6.2
 		 */
-		$this->cls( 'Control' );
+		$this->cls( 'Control' )->init();
 
 		// 1. Init vary
 		// 2. Init cacheable status
-		$this->cls( 'Vary' );
+		$this->cls( 'Vary' )->init();
 
 		// Init Purge hooks
 		$this->cls( 'Purge' )->init();
@@ -184,7 +190,17 @@ class Core extends Root {
 	public function after_user_init() {
 		$this->cls( 'Router' )->is_role_simulation();
 
-		if ( ! is_admin() && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+		// Detect if is Guest mode or not also
+		$this->cls( 'Vary' )->after_user_init();
+
+		/**
+		 * Preload ESI functionality for ESI request uri recovery
+		 * @since 1.8.1
+		 * @since  4.0 ESI init needs to be after Guest mode detection to bypass ESI if is under Guest mode
+		 */
+		$this->cls( 'ESI' )->init();
+
+		if ( ! is_admin() && ! defined( 'LITESPEED_GUEST_OPTM' ) && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
 		}
@@ -458,7 +474,7 @@ class Core extends Root {
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
 		$tag_header = $this->cls( 'Tag' )->output();
-		if ( Control::is_cacheable() && ! $tag_header ) {
+		if ( ! $tag_header && Control::is_cacheable() ) {
 			Control::set_nocache( 'empty tag header' );
 		}
 
@@ -572,6 +588,10 @@ class Core extends Root {
 		// Object cache comment
 		if ( $running_info_showing && defined( 'LSCWP_LOG' ) && defined( 'LSCWP_OBJECT_CACHE' ) && method_exists( 'WP_Object_Cache', 'debug' ) ) {
 			$this->footer_comment .= "\n<!-- Object Cache " . \WP_Object_Cache::get_instance()->debug() . " -->";
+		}
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && $running_info_showing ) {
+			$this->footer_comment .= "\n<!-- Guest Mode -->";
 		}
 
 		if ( $is_forced ) {

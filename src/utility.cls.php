@@ -323,6 +323,9 @@ class Utility extends Root {
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
 	public static function str_hit_array( $needle, $haystack, $has_ttl = false ) {
+		if ( ! $haystack ) {
+			return false;
+		}
 		/**
 		 * Safety check to avoid PHP warning
 		 * @see  https://github.com/litespeedtech/lscache_wp/pull/131/commits/45fc03af308c7d6b5583d1664fad68f75fb6d017

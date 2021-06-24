@@ -127,7 +127,11 @@ class Conf extends Base {
 		// Mark as conf loaded
 		! defined( 'LITESPEED_CONF_LOADED' ) && define( 'LITESPEED_CONF_LOADED', true );
 
-		// Activation delayed file update
+		/**
+		 * Activation delayed file update
+		 * Pros: This is to avoid file correction script changed in new versions
+		 * Cons: Conf upgrade won't get file correction if there is new values that are used in file
+		 */
 		if ( self::get_option( '__activation' ) ) {
 			// Check new version @since 2.9.3
 			Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
@@ -427,7 +431,7 @@ class Conf extends Base {
 	 *
 	 * @since  3.0
 	 * @access public
-	 * @deprecated 3.7 Use $this->conf() instead
+	 * @deprecated 4.0 Use $this->conf() instead
 	 */
 	public static function val( $id, $ori = false ) {
 		error_log( 'Called deprecated function \LiteSpeed\Conf::val(). Please use API call instead.' );
@@ -552,7 +556,7 @@ class Conf extends Base {
 				foreach ( $diff as $v ) {
 					$v = ltrim( $v, '^' );
 					$v = rtrim( $v, '$' );
-					Purge::purge_url( $v );
+					$this->cls( 'Purge' )->purge_url( $v );
 				}
 			}
 		}

@@ -209,6 +209,10 @@ class Crawler extends Root {
 				continue;
 			}
 
+			if ( $v == '_null' ) {
+				continue;
+			}
+
 			$this->_crawler_conf[ 'cookies' ][ substr( $k, 7 ) ] = $v;
 		}
 
@@ -696,9 +700,12 @@ class Crawler extends Root {
 	 *
 	 * @since  3.3
 	 */
-	public function self_curl( $url, $ua, $uid = false ) {
+	public function self_curl( $url, $ua, $uid = false, $accept = false ) { // $accept not in use yet
 		$this->_crawler_conf[ 'base' ] = home_url();
 		$this->_crawler_conf[ 'ua' ] = $ua;
+		if ( $accept ) {
+			$this->_crawler_conf[ 'headers' ] = array( 'Accept: ' . $accept );
+		}
 		if ( $uid ) {
 			$this->_crawler_conf[ 'cookies' ][ 'litespeed_role' ] = $uid;
 			$this->_crawler_conf[ 'cookies' ][ 'litespeed_hash' ] = Router::get_hash();
@@ -768,6 +775,16 @@ class Crawler extends Root {
 			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 
+		// Guest Mode on/off
+		if ( $this->conf( Base::O_GUEST ) ) {
+			$vary_name = $this->cls( 'Vary' )->get_vary_name();
+			$vary_val = 'guest_mode:1';
+			if ( ! defined( 'LSCWP_LOG' ) ) {
+				$vary_val = md5( $this->conf( Base::HASH ) . $vary_val );
+			}
+			$crawler_factors[ 'cookie:' . $vary_name ] = array( $vary_val => '', '_null' => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>' );
+		}
+
 		// Mobile crawler
 		if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
 			$crawler_factors[ 'mobile' ] = array( 1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>', 0 => '' );
@@ -800,7 +817,7 @@ class Crawler extends Root {
 			$crawler_factors[ $this_cookie_key ] = array();
 
 			foreach ( $v[ 'vals' ] as $v2 ) {
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . $v[ 'name' ] . '=' . $v2;
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = $v2 == '_null' ? '' : '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . esc_html( $v[ 'name' ] ) . '=' . esc_html( $v2 );
 			}
 		}
 

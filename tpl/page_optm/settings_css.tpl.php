@@ -7,6 +7,9 @@ defined( 'WPINC' ) || exit;
 
 $css_summary = CSS::get_summary();
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
+
+$ccss_queue = CSS::cls()->load_queue( 'ccss' );
+$ucss_queue = CSS::cls()->load_queue( 'ucss' );
 ?>
 
 <h3 class="litespeed-title-short">
@@ -62,29 +65,30 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
 			</div>
 
-			<?php if ( $css_summary ) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
-					<p>
-						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
-					</p>
-					<p>
-						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
-					</p>
+				<?php if ( $css_summary ) : ?>
+					<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<?php if ( $closest_server ) : ?>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_CCSS ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
 				<?php endif; ?>
 
-				<?php if ( ! empty( $css_summary[ 'queue_ucss' ] ) ) : ?>
+				<?php if ( ! empty( $ucss_queue ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ucss' ] ); ?> )
+							<?php echo sprintf( __( 'URL list in %s queue waiting for cron', 'litespeed-cache' ), 'UCSS' ); ?> ( <?php echo count( $ucss_queue ); ?> )
 							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_UCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
-						<?php $i=0; foreach ( $css_summary[ 'queue_ucss' ] as $k => $v ) : ?>
+						<?php $i=0; foreach ( $ucss_queue as $k => $v ) : ?>
 							<?php if ( $i++ > 20 ) : ?>
 								<?php echo '...'; ?>
 								<?php break; ?>
@@ -93,16 +97,16 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php echo $v[ 'url' ]; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
+							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>
 							<br />
 						<?php endforeach; ?>
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ); ?>" class="button litespeed-btn-success">
-						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
+						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'UCSS' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>
-			<?php endif; ?>
 
 		</td>
 	</tr>
@@ -160,29 +164,30 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
 			</div>
 
-			<?php if ( $css_summary ) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if ( ! empty( $css_summary[ 'last_request_ccss' ] ) ) : ?>
-					<p>
-						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ccss' ] ) . '</code>'; ?>
-					</p>
-					<p>
-						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ccss' ] . 's</code>'; ?>
-					</p>
+				<?php if ( $css_summary ) : ?>
+					<?php if ( ! empty( $css_summary[ 'last_request_ccss' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ccss' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ccss' ] . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<?php if ( $closest_server ) : ?>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_CCSS ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
 				<?php endif; ?>
 
-				<?php if ( ! empty( $css_summary[ 'queue_ccss' ] ) ) : ?>
+				<?php if ( ! empty( $ccss_queue ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ); ?> ( <?php echo count( $css_summary[ 'queue_ccss' ] ); ?> )
+							<?php echo sprintf( __( 'URL list in %s queue waiting for cron', 'litespeed-cache' ), 'CCSS' ); ?> ( <?php echo count( $ccss_queue ); ?> )
 							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_CCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
-						<?php $i=0; foreach ( $css_summary[ 'queue_ccss' ] as $k => $v ) : ?>
+						<?php $i=0; foreach ( $ccss_queue as $k => $v ) : ?>
 							<?php if ( $i++ > 20 ) : ?>
 								<?php echo '...'; ?>
 								<?php break; ?>
@@ -191,16 +196,16 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 							<?php echo $v[ 'url' ]; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
+							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>
 							<br />
 						<?php endforeach; ?>
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ); ?>" class="button litespeed-btn-success">
-						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
+						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'CCSS' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>
-			<?php endif; ?>
 		</td>
 	</tr>
 
@@ -212,7 +217,7 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disabling this will get pages to generate CCSS per Post Type, which can save significant CCSS quota. However, it may result in CSS wrong styling if your posts are built w/ page builders.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Disable this option to generate CCSS per Post Type instead of per page. This can save significant CCSS quota, however it may result in incorrect CSS styling if your site uses a page builder.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>

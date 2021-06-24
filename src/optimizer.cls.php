@@ -65,7 +65,7 @@ class Optimizer extends Root {
 		// Try Unique CSS
 		if ( $file_type == 'css' ) {
 			$content = false;
-			if ( $this->conf( Base::O_OPTM_UCSS ) ) {
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_UCSS ) ) {
 				$final_file_path = $this->cls( 'CSS' )->load_ucss( $request_url );
 
 				if ( $final_file_path ) {
@@ -132,7 +132,7 @@ class Optimizer extends Root {
 
 	/**
 	 * Load a single file
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
 		// CSS related features
@@ -154,7 +154,10 @@ class Optimizer extends Root {
 
 			$content = $this->cls( 'CDN' )->finalize( $content );
 
-			$content = $this->cls( 'Media' )->replace_background_webp( $content );
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+				$content = $this->cls( 'Media' )->replace_background_webp( $content );
+			}
+
 		}
 		else {
 			if ( $minify ) {

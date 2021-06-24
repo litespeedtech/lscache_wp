@@ -35,7 +35,7 @@ ksort( $roles );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_css_excludes</code>' ); ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ); ?>
-					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/css_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/css_excludes.txt</a>
+					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/css_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/css_excludes.txt</a>
 				</font>
 			</div>
 		</td>
@@ -56,13 +56,13 @@ ksort( $roles );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_js_excludes</code>' ); ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ); ?>
-					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/js_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/js_excludes.txt</a>
+					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/js_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/js_excludes.txt</a>
 				</font>
 			</div>
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide2">
+	<tr>
 		<th>
 			<?php $id = Base::O_OPTM_UCSS_WHITELIST; ?>
 			<?php $this->title( $id ); ?>
@@ -71,9 +71,39 @@ ksort( $roles );
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
+				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<br /><font class="litespeed-success">
-					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/ucss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/ucss_whitelist.txt</a>
+					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt</a>
 				</font>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_CCSS_SEP_POSTTYPE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_CCSS_SEP_URI; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ); ?>
+				<?php $this->_uri_usage_example(); ?>
 			</div>
 		</td>
 	</tr>
@@ -106,7 +136,27 @@ ksort( $roles );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ); ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ); ?>
-					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/js_defer_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/js_defer_excludes.txt</a>
+					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/js_defer_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/js_defer_excludes.txt</a>
+				</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_GM_JS_EXC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Listed JS files or inline JS code will not be optimized by %s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
+				<?php Doc::one_per_line(); ?>
+				<br /><span class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_gm_js_exc</code>' ); ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ); ?>
 				</span>
 			</div>
 		</td>

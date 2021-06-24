@@ -29,6 +29,8 @@ $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
 
+$ccss_count = count( CSS::cls()->load_queue( 'ccss' ) );
+$ucss_count = count( CSS::cls()->load_queue( 'ucss' ) );
 ?>
 
 <div class="litespeed-dashboard">
@@ -50,7 +52,7 @@ $placeholder_summary = Placeholder::get_summary();
 		<?php
 		$cat_list = array(
 			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
-			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ),
+			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ) . '/' . __( 'Unique CSS', 'litespeed-cache' ),
 			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
 			'lqip'		=> __( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 		);
@@ -89,10 +91,10 @@ $placeholder_summary = Placeholder::get_summary();
 				}
 
 				if ( $svc == 'cdn' ) {
-					$used = Utility::real_size( $used * 1000000 * 100, true );
-					$quota = Utility::real_size( $quota * 1000000 * 100, true );
-					$pag_used = Utility::real_size( $pag_used * 1000000 * 100, true );
-					$pag_bal = Utility::real_size( $pag_bal * 1000000 * 100, true );
+					// $used = Utility::real_size( $used * 1000000 * 100, true );
+					// $quota = Utility::real_size( $quota * 1000000 * 100, true );
+					// $pag_used = Utility::real_size( $pag_used * 1000000 * 100, true );
+					// $pag_bal = Utility::real_size( $pag_bal * 1000000 * 100, true );
 				}
 			}
 
@@ -412,8 +414,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? count( $css_summary[ 'queue_ccss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ccss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ccss_count ?: '-'; ?></code>
+						<a href="<?php echo $ccss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ccss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
@@ -427,7 +430,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<?php endif; ?>
 			</div>
 
-			<div class="postbox litespeed-postbox litespeed-postbox-ucss litespeed-hide">
+			<div class="postbox litespeed-postbox litespeed-postbox-ucss">
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Unique CSS', 'litespeed-cache' ); ?>
@@ -443,8 +446,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? count( $css_summary[ 'queue_ucss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ucss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ucss_count ?: '-' ?></code>
+						<a href="<?php echo $ucss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ucss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>

@@ -95,7 +95,7 @@ class API extends Base {
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
 		add_action( 'litespeed_purge_post', array( $this, 'purge_post' ) ); // @previous API::purge_post( $pid )
 		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
-		add_action( 'litespeed_purge_url', __NAMESPACE__ . '\Purge::purge_url' );
+		add_action( 'litespeed_purge_url', array( $this, 'purge_url' ) );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
 		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' ); // @previous API::purge_private( $tags )
@@ -195,6 +195,10 @@ class API extends Base {
 
 	public function purge_post( $pid ) {
 		$this->cls( 'Purge' )->purge_post( $pid );
+	}
+
+	public function purge_url( $url ) {
+		$this->cls( 'Purge' )->purge_url( $url );
 	}
 
 	public function set_cacheable( $reason = false ) {

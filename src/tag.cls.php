@@ -29,7 +29,6 @@ class Tag extends Root {
 	const TYPE_REST = 'REST';
 	const TYPE_LIST = 'LIST';
 	const TYPE_MIN = 'MIN';
-	const TYPE_LOCALRES = 'LOCALRES';
 
 	const X_HEADER = 'X-LiteSpeed-Tag';
 
@@ -39,7 +38,7 @@ class Tag extends Root {
 	/**
 	 * Initialize
 	 *
-	 * @since 3.7
+	 * @since 4.0
 	 */
 	public function init() {
 		// register recent posts widget tag before theme renders it to make it work
@@ -317,6 +316,11 @@ class Tag extends Root {
 			$type_tags = self::_build_type_tags();
 			self::$_tags = array_merge( self::$_tags, $type_tags );
 		}
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			self::$_tags[] = 'guest';
+		}
+
 		// append blog main tag
 		self::$_tags[] = '';
 		// removed duplicates
@@ -332,6 +336,10 @@ class Tag extends Root {
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
 	public function output( $no_finalize = false ) {
+		if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+			return;
+		}
+
 		if ( ! $no_finalize ) {
 			self::_finalize();
 		}

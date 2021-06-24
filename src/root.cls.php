@@ -9,6 +9,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 abstract class Root {
+	const CONF_FILE = '.litespeed_conf.dat';
 	// Instance set
 	private static $_instances;
 
@@ -19,7 +20,7 @@ abstract class Root {
 
 	/**
 	 * Load an instance or create it if not existed
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public static function cls( $cls = false, $unset = false, $data = false ) {
 		if ( ! $cls ) {
@@ -237,7 +238,7 @@ abstract class Root {
 	 */
 	public static function name( $id ) {
 		$name = strtolower( self::ori_cls() );
-		if ( $name == 'conf2' ) {
+		if ( $name == 'conf2' ) { // For a certain 3.7rc correction, can be dropped after v4
 			$name = 'conf';
 		}
 		return 'litespeed.' . $name . '.' . $id;
@@ -249,7 +250,14 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function get_option( $id, $default_v = false ) {
-		return get_option( self::name( $id ), $default_v );
+		$v = get_option( self::name( $id ), $default_v );
+
+		// Maybe decode array
+		if ( is_array( $default_v ) ) {
+			$v = self::_maybe_decode( $v );
+		}
+
+		return $v;
 	}
 
 	/**
@@ -258,7 +266,14 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function get_site_option( $id, $default_v = false ) {
-		return get_site_option( self::name( $id ), $default_v );
+		$v = get_site_option( self::name( $id ), $default_v );
+
+		// Maybe decode array
+		if ( is_array( $default_v ) ) {
+			$v = self::_maybe_decode( $v );
+		}
+
+		return $v;
 	}
 
 	/**
@@ -267,7 +282,14 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
-		return get_blog_option( $blog_id, self::name( $id ), $default_v );
+		$v = get_blog_option( $blog_id, self::name( $id ), $default_v );
+
+		// Maybe decode array
+		if ( is_array( $default_v ) ) {
+			$v = self::_maybe_decode( $v );
+		}
+
+		return $v;
 	}
 
 	/**
@@ -276,7 +298,7 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function add_option( $id, $v ) {
-		add_option( self::name( $id ), $v );
+		add_option( self::name( $id ), self::_maybe_encode( $v ) );
 	}
 
 	/**
@@ -285,7 +307,7 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function add_site_option( $id, $v ) {
-		add_site_option( self::name( $id ), $v );
+		add_site_option( self::name( $id ), self::_maybe_encode( $v ) );
 	}
 
 	/**
@@ -294,7 +316,7 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function update_option( $id, $v ) {
-		update_option( self::name( $id ), $v );
+		update_option( self::name( $id ), self::_maybe_encode( $v ) );
 	}
 
 	/**
@@ -303,7 +325,34 @@ abstract class Root {
 	 * @since 3.0
 	 */
 	public static function update_site_option( $id, $v ) {
-		update_site_option( self::name( $id ), $v );
+		update_site_option( self::name( $id ), self::_maybe_encode( $v ) );
+	}
+
+	/**
+	 * Decode an array
+	 *
+	 * @since  4.0
+	 */
+	private static function _maybe_decode( $v ) {
+		if ( ! is_array( $v ) ) {
+			$v2 = json_decode( $v, true );
+			if ( $v2 !== null ) {
+				$v = $v2;
+			}
+		}
+		return $v;
+	}
+
+	/**
+	 * Encode an array
+	 *
+	 * @since  4.0
+	 */
+	private static function _maybe_encode( $v ) {
+		if ( is_array( $v ) ) {
+			$v = json_encode( $v ) ?: $v; // Non utf-8 encoded value will get failed, then used ori value
+		}
+		return $v;
 	}
 
 	/**
@@ -332,10 +381,6 @@ abstract class Root {
 	 */
 	public static function get_summary( $field = false ) {
 		$summary = self::get_option( '_summary', array() );
-
-		if ( ! is_array( $summary ) ) {
-			$summary = array();
-		}
 
 		if ( ! $field ) {
 			return $summary;

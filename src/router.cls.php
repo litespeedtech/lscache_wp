@@ -65,6 +65,30 @@ class Router extends Base {
 	private static $_frontend_path;
 
 	/**
+	 * Redirect to self to continue operation
+	 *
+	 * Note: must return when use this func. CLI/Cron call won't die in this func.
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function self_redirect( $action, $type ) {
+		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
+			Admin_Display::succeed( 'To be continued' ); // Show for CLI
+			return;
+		}
+
+		// Add i to avoid browser too many redirected warning
+		$i = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
+		$i ++;
+
+		$link = Utility::build_url( $action, $type, false, null, array( 'litespeed_i' => $i ) );
+
+		$url = html_entity_decode( $link );
+		exit( "<meta http-equiv='refresh' content='0;url=$url'>" );
+	}
+
+	/**
 	 * Check if can run optimize
 	 *
 	 * @since  1.3
@@ -446,11 +470,11 @@ class Router extends Base {
 		}
 
 		$action = stripslashes($_REQUEST[ Router::ACTION ]);
-		
+
 		if ( ! $action ) {
 		    return;
 		}
-		
+
 		$_is_public_action = false;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
@@ -601,7 +625,7 @@ class Router extends Base {
 			return false;
 		}
 		if ( ! isset( self::$_ip ) ) {
-			self::$_ip = $this->get_ip();
+			self::$_ip = self::get_ip();
 		}
 		// $uip = explode('.', $_ip);
 		// if(empty($uip) || count($uip) != 4) Return false;
@@ -681,11 +705,7 @@ class Router extends Base {
 
 		switch ( $path[ 0 ] ) {
 			case 'avatar':
-				$this->cls( 'Avatar' )->serve_satic( $path[ 1 ] );
-				break;
-
-			case 'localres':
-				$this->cls( 'Localization' )->serve_static( $path[ 1 ] );
+				$this->cls( 'Avatar' )->serve_static( $path[ 1 ] );
 				break;
 
 			default :

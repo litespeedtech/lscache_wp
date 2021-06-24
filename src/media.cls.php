@@ -41,7 +41,7 @@ class Media extends Root {
 		}
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
 			if ( $this->webp_support() ) {
 				// Hook to srcset
 				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
@@ -374,7 +374,7 @@ class Media extends Root {
 	 * @since  1.6.2
 	 * @access public
 	 */
-	private function webp_support() {
+	public function webp_support() {
 		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
 			return true;
 		}
@@ -439,7 +439,7 @@ class Media extends Root {
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) && $this->webp_support() ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
 			$this->content = $this->_replace_buffer_img_webp( $this->content );
 		}
 
@@ -448,7 +448,7 @@ class Media extends Root {
 		 * @since  3.0
 		 */
 		$excludes = $this->conf( Base::O_MEDIA_LAZY_URI_EXC );
-		if ( $excludes ) {
+		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
 				Debug2::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result );
@@ -456,8 +456,10 @@ class Media extends Root {
 			}
 		}
 
-		$cfg_lazy = $this->conf( Base::O_MEDIA_LAZY );
-		$cfg_iframe_lazy = $this->conf( Base::O_MEDIA_IFRAME_LAZY );
+		$cfg_lazy = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_LAZY );
+		$cfg_iframe_lazy = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_IFRAME_LAZY );
+		$cfg_js_delay = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_JS_DEFER ) == 2;
+		$cfg_trim_noscript = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_NOSCRIPT_RM );
 
 		if ( $cfg_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
@@ -487,8 +489,13 @@ class Media extends Root {
 			$html_list_ori = $html_list;
 
 			foreach ( $html_list as $k => $v ) {
-				$snippet = $this->conf( Base::O_OPTM_NOSCRIPT_RM ) ? '' : '<noscript>' . $v . '</noscript>';
-				$v = str_replace( ' src=', ' data-src=', $v );
+				$snippet = $cfg_trim_noscript ? '' : '<noscript>' . $v . '</noscript>';
+				if ( $cfg_js_delay ) {
+					$v = str_replace( ' src=', ' data-litespeed-src=', $v );
+				}
+				else {
+					$v = str_replace( ' src=', ' data-src=', $v );
+				}
 				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v );
 				$snippet = $v . $snippet;
 
@@ -500,7 +507,7 @@ class Media extends Root {
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			if ( $this->conf( Base::O_MEDIA_LAZYJS_INLINE ) ) {
+			if ( ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( Base::O_MEDIA_LAZYJS_INLINE ) ) {
 				$lazy_lib = '<script data-no-optimize="1">' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
 			} else {
 				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD;
@@ -601,8 +608,9 @@ class Media extends Root {
 			}
 
 			// Add missing dimensions
-			if ( $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
 				if ( empty( $attrs[ 'width' ] ) || $attrs[ 'width' ] == 'auto' || empty( $attrs[ 'height' ] ) || $attrs[ 'height' ] == 'auto' ) {
+					Debug2::debug( '[Media] ⚠️ Missing sizes for image [src] ' . $attrs[ 'src' ] );
 					$dimensions = $this->_detect_dimensions( $attrs[ 'src' ] );
 					if ( $dimensions ) {
 						$ori_width = $dimensions[ 0 ];
@@ -784,12 +792,14 @@ class Media extends Root {
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
 		}
 
 		// Replace background-image
-		$content = $this->replace_background_webp( $content );
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+			$content = $this->replace_background_webp( $content );
+		}
 
 		return $content;
 	}
@@ -800,9 +810,7 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
-		if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
-			return $content;
-		}
+		Debug2::debug2( '[Media] Start replacing bakcground WebP.' );
 
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
@@ -837,7 +845,7 @@ class Media extends Root {
 	 * @access public
 	 */
 	public function replace_webp( $url ) {
-		Debug2::debug2( '[Media] webp replacing: ' . $url );
+		Debug2::debug2( '[Media] webp replacing: ' . substr( $url, 0, 200 ) );
 
 		if ( substr( $url, -5 ) == '.webp' ) {
 			Debug2::debug2( '[Media] already webp' );

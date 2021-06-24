@@ -9,6 +9,7 @@ defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
 	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
@@ -21,6 +22,7 @@ class Cloud extends Base {
 	const SVC_HEALTH			= 'health' ;
 	const SVC_CDN				= 'cdn' ;
 
+	const BM_IMG_OPTM_PRIO = 16;
 	const BM_IMG_OPTM_JUMBO_GROUP = 32;
 	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
@@ -31,18 +33,24 @@ class Cloud extends Base {
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
 
-	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
-	const API_VER			= 'wp/ver' ;
-	const API_BETA_TEST		= 'wp/beta_test' ;
+	const API_NEWS 			= 'news';
+	const API_VER			= 'ver';
+	const API_BETA_TEST		= 'beta_test';
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
 		self::SVC_D_REGIONNODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
-		self::API_NEWS,
+		// self::API_NEWS,
 		self::API_REPORT,
+		// self::API_VER,
+		// self::API_BETA_TEST,
+	);
+
+	private static $WP_SVC_SET = array(
+		self::API_NEWS,
 		self::API_VER,
 		self::API_BETA_TEST,
 	);
@@ -196,6 +204,19 @@ class Cloud extends Base {
 	}
 
 	/**
+	 * Check if contains a package in a service or not
+	 *
+	 * @since  4.0
+	 */
+	public function has_pkg( $service, $pkg ) {
+		if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & $pkg ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get allowance of current service
 	 *
 	 * @since  3.0
@@ -293,6 +314,10 @@ class Cloud extends Base {
 	public function detect_cloud( $service, $force = false ) {
 		if ( in_array( $service, self::$CENTER_SVC_SET ) ) {
 			return self::CLOUD_SERVER;
+		}
+
+		if ( in_array( $service, self::$WP_SVC_SET ) ) {
+			return self::CLOUD_SERVER_WP;
 		}
 
 		// Check if the stored server needs to be refreshed
@@ -442,10 +467,14 @@ class Cloud extends Base {
 			return true;
 		}
 
+		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
 		$timestamp_tag = 'curr_request.';
 		if ( $service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ ) {
 			$timestamp_tag = 'last_request.';
+			if ( $this->has_pkg( self::SVC_IMG_OPTM, self::BM_IMG_OPTM_PRIO ) ) {
+				$expiration_req /= 3;
+			}
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
@@ -455,13 +484,13 @@ class Cloud extends Base {
 		}
 
 		if ( ! empty( $this->_summary[ $timestamp_tag . $service_tag ] ) ) {
-			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + self::EXPIRATION_REQ - time();
+			$expired = $this->_summary[ $timestamp_tag . $service_tag ] + $expiration_req - time();
 			if ( $expired > 0 ) {
 				Debug2::debug( "[Cloud] ❌ try [$service_tag] after $expired seconds" );
 
 				if ( $service_tag !== self::API_VER ) {
 					$msg = __( 'Cloud Error', 'litespeed-cache' ) . ': ' . sprintf( __( 'Please try after %1$s for service %2$s.', 'litespeed-cache' ), Utility::readable_time( $expired, 0, true ), '<code>' . $service_tag . '</code>' );
-					Admin_Display::error( $msg );
+					Admin_Display::error( array( 'cloud_trylater' => $msg ) );
 				}
 
 				return false;
@@ -651,7 +680,8 @@ class Cloud extends Base {
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
-				Admin_Display::error( $msg );
+				$msg .= Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true );
+				Admin_Display::error( $msg, false, true );
 			}
 
 			return;

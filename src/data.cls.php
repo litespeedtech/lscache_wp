@@ -15,8 +15,11 @@ class Data extends Root {
 		'3.5.0.3'	=> array(
 			'litespeed_update_3_5',
 		),
-		'3.7-rc11'	=> array(
-			'litespeed_update_3_7',
+		'4.0'	=> array(
+			'litespeed_update_4',
+		),
+		'4.1'	=> array(
+			'litespeed_update_4_1',
 		),
 	);
 
@@ -120,6 +123,9 @@ class Data extends Root {
 		$this->cls( 'Conf' )->load_options();
 
 		$this->correct_tb_existance();
+
+		// Update related files
+		$this->cls( 'Activation' )->update_files();
 
 		// Update version to latest
 		Conf::delete_option( Base::_VER );
@@ -411,7 +417,7 @@ class Data extends Root {
 	/**
 	 * Keep table but clear all data
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function table_truncate( $tb ) {
 		global $wpdb;
@@ -422,7 +428,7 @@ class Data extends Root {
 	/**
 	 * Clean certain type of url_file
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function url_file_clean( $file_type ) {
 		global $wpdb;
@@ -433,7 +439,7 @@ class Data extends Root {
 
 	/**
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function save_url( $request_url, $vary, $file_type, $filecon_md5, $path ) {
 		global $wpdb;
@@ -484,7 +490,7 @@ class Data extends Root {
 
 	/**
 	 * Load CCSS related file
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function load_url_file( $request_url, $vary, $file_type ) {
 		global $wpdb;
@@ -531,7 +537,7 @@ class Data extends Root {
 	/**
 	 * Get list from `data/ucss_whitelist.txt`
 	 *
-	 * @since  3.7
+	 * @since  4.0
 	 */
 	public function load_ucss_whitelist( $list ) {
 		$data = $this->_load_per_line( 'ucss_whitelist.txt' );

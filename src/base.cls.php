@@ -23,7 +23,11 @@ class Base extends Root {
 	const O_AUTO_UPGRADE 	= 'auto_upgrade';
 	const O_API_KEY 		= 'api_key';
 	const O_SERVER_IP 		= 'server_ip';
+	const O_GUEST 			= 'guest';
+	const O_GUEST_OPTM		= 'guest_optm';
 	const O_NEWS 			= 'news';
+	const O_GUEST_UAS 		= 'guest_uas';
+	const O_GUEST_IPS 		= 'guest_ips';
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
@@ -133,17 +137,18 @@ class Base extends Root {
 	const O_OPTM_GGFONTS_RM 		= 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC 			= 'optm-css_async';
 	const O_OPTM_CCSS_PER_URL 		= 'optm-ccss_per_url';
+	const O_OPTM_CCSS_SEP_POSTTYPE 	= 'optm-ccss_sep_posttype';
+	const O_OPTM_CCSS_SEP_URI 		= 'optm-ccss_sep_uri';
 	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY 	= 'optm-css_font_display';
 	const O_OPTM_JS_DEFER 			= 'optm-js_defer';
-	const O_OPTM_LOCALIZE			= 'optm-localize';
-	const O_OPTM_LOCALIZE_DOMAINS	= 'optm-localize_domains';
 	const O_OPTM_EMOJI_RM 			= 'optm-emoji_rm';
 	const O_OPTM_NOSCRIPT_RM 		= 'optm-noscript_rm';
 	const O_OPTM_GGFONTS_ASYNC 		= 'optm-ggfonts_async';
 	const O_OPTM_EXC_ROLES 			= 'optm-exc_roles';
 	const O_OPTM_CCSS_CON			= 'optm-ccss_con';
 	const O_OPTM_JS_DEFER_EXC 		= 'optm-js_defer_exc';
+	const O_OPTM_GM_JS_EXC 			= 'optm-gm_js_exc';
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
 	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
 	const O_OPTM_EXC 				= 'optm-exc';
@@ -314,7 +319,11 @@ class Base extends Root {
 		self::O_AUTO_UPGRADE 	=> false,
 		self::O_API_KEY 		=> '',
 		self::O_SERVER_IP 		=> '',
+		self::O_GUEST 			=> false,
+		self::O_GUEST_OPTM 		=> false,
 		self::O_NEWS 			=> false,
+		self::O_GUEST_UAS 		=> array(),
+		self::O_GUEST_IPS 		=> array(),
 
 		// Cache
 		self::O_CACHE 					=> false,
@@ -410,6 +419,8 @@ class Base extends Root {
 		self::O_OPTM_GGFONTS_RM 		=> false,
 		self::O_OPTM_CSS_ASYNC 			=> false,
 		self::O_OPTM_CCSS_PER_URL 		=> false,
+		self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
+		self::O_OPTM_CCSS_SEP_URI		=> array(),
 		self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
 		self::O_OPTM_CSS_FONT_DISPLAY 	=> false,
 		self::O_OPTM_JS_DEFER 			=> false,
@@ -419,6 +430,7 @@ class Base extends Root {
 		self::O_OPTM_EXC_ROLES			=> array(),
 		self::O_OPTM_CCSS_CON			=> '',
 		self::O_OPTM_JS_DEFER_EXC		=> array(),
+		self::O_OPTM_GM_JS_EXC			=> array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
 		self::O_OPTM_EXC				=> array(),
@@ -443,8 +455,6 @@ class Base extends Root {
 		self::O_DISCUSS_AVATAR_CACHE		=> false,
 		self::O_DISCUSS_AVATAR_CRON			=> false,
 		self::O_DISCUSS_AVATAR_CACHE_TTL	=> 0,
-		self::O_OPTM_LOCALIZE 			=> false,
-		self::O_OPTM_LOCALIZE_DOMAINS	=> array(),
 
 		// Media
 		self::O_MEDIA_LAZY 							=> false,
@@ -527,6 +537,7 @@ class Base extends Root {
 		self::O_CACHE 					=> false,
 		self::NETWORK_O_USE_PRIMARY 	=> false,
 		self::O_AUTO_UPGRADE 			=> false,
+		self::O_GUEST 					=> false,
 
 		self::O_CACHE_FAVICON 			=> false,
 		self::O_CACHE_RES 				=> false,
@@ -805,10 +816,10 @@ class Base extends Root {
 			// self::O_OPTM_CSS_EXC		=> 'uri', // Need to comment out for inline & external CSS
 			// self::O_OPTM_JS_EXC			=> 'uri',
 			self::O_OPTM_EXC			=> 'relative',
+			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
 			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
-			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
 			// self::	=> '',
 			// self::	=> '',
 		);

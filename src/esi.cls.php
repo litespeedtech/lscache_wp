@@ -35,9 +35,10 @@ class ESI extends Root {
 	/**
 	 * Confructor of ESI
 	 *
-	 * @since    1.2.0
+	 * @since  1.2.0
+	 * @since  4.0 Change to be after Vary init in hook 'after_setup_theme'
 	 */
-	public function __construct() {
+	public function init() {
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 * @since  2.9.7.2
@@ -46,16 +47,21 @@ class ESI extends Root {
 			return;
 		}
 
+		// Guest mode, don't need to use ESI
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			return;
+		}
+
 		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
-		add_action( 'litespeed_initing', array( $this, 'esi_init' ) );
+		$this->_hooks();
 
 		/**
 		 * Overwrite wp_create_nonce func
 		 * @since  2.9.5
 		 */
-		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
-			$this->_transform_nonce();
-		}
+		$this->_transform_nonce();
+
+		! defined( 'LITESPEED_ESI_INITED' ) && define( 'LITESPEED_ESI_INITED', true );
 	}
 
 	/**
@@ -64,10 +70,11 @@ class ESI extends Root {
 	 * Load delayed by hook to give the ability to bypass by LITESPEED_DISABLE_ALL const
 	 *
 	 * @since 2.9.7.2
-	 * @access public
+	 * @since  4.0 Changed to private from public
+	 * @access private
 	 */
-	public function esi_init() {
-		add_action( 'template_include', array( $this, 'esi_template' ), 99999 );
+	private function _hooks() {
+		add_filter( 'template_include', array( $this, 'esi_template' ), 99999 );
 
 		add_action( 'load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'wp_update_comment_count', __NAMESPACE__ . '\Purge::purge_comment_widget' );
@@ -105,6 +112,10 @@ class ESI extends Root {
 	 * @since  2.9.5
 	 */
 	private function _transform_nonce() {
+		if ( is_admin() ) {
+			return;
+		}
+
 		// Load ESI nonces in conf
 		$nonces = $this->conf( Base::O_ESI_NONCE );
 		add_filter( 'litespeed_esi_nonces', array( $this->cls( 'Data' ), 'load_esi_nonces' ) );
@@ -115,9 +126,6 @@ class ESI extends Root {
 		}
 
 		add_action( 'litespeed_nonce', array( $this, 'nonce_action' ) );
-
-		Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
-		litespeed_define_nonce_func();
 	}
 
 	/**
@@ -149,6 +157,15 @@ class ESI extends Root {
 	 * @since 2.9.5
 	 */
 	public function is_nonce_action( $action ) {
+		// If GM not run yet, then ESI not init yet, then ESI nonce will not be allowed even nonce func replaced.
+		if ( ! defined( 'LITESPEED_ESI_INITED' ) ) {
+			return null;
+		}
+
+		if ( is_admin() ) {
+			return null;
+		}
+
 		foreach ( $this->_nonce_actions as $k => $v ) {
 			if ( strpos( $k, '*' ) !== false ) {
 				if( preg_match( '#' . $k . '#iU', $action ) ) {
