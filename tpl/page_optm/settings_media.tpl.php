@@ -6,6 +6,8 @@ $placeholder_summary = Placeholder::get_summary();
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
+$placeholder_queue = Placeholder::cls()->load_queue();
+
 ?>
 
 <h3 class="litespeed-title-short">
@@ -161,26 +163,35 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-lqip-in-background' ); ?>
 			</div>
 
-			<?php if ( $placeholder_summary ) : ?>
 			<div class="litespeed-desc">
-				<?php if ( ! empty( $placeholder_summary[ 'last_request' ] ) ) : ?>
-					<p>
-						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $placeholder_summary[ 'last_request' ] ) . '</code>'; ?>
-					</p>
+				<?php if ( $placeholder_summary ) : ?>
+					<?php if ( ! empty( $placeholder_summary[ 'last_request' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $placeholder_summary[ 'last_request' ] ) . '</code>'; ?>
+						</p>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<?php if ( $closest_server ) : ?>
 					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_LQIP ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
 				<?php endif; ?>
 
-				<?php if ( ! empty( $placeholder_summary[ 'queue' ] ) ) : ?>
+				<?php if ( ! empty( $placeholder_queue ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ); ?>
 							<a href="<?php echo Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
-							<?php echo implode( '<br>', $placeholder_summary[ 'queue' ] ); ?>
+						<?php foreach ( $placeholder_queue as $k => $v ) : ?>
+							<?php if ( $k > 20 ) : ?>
+								<?php echo '...'; ?>
+								<?php break; ?>
+							<?php endif; ?>
+
+							<?php echo $v; ?>
+							<br />
+						<?php endforeach; ?>
 						</p>
 					</div>
 					<a href="<?php echo Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ); ?>" class="button litespeed-btn-success">
@@ -188,7 +199,6 @@ $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 					</a>
 				<?php endif; ?>
 			</div>
-			<?php endif; ?>
 		</td>
 	</tr>
 

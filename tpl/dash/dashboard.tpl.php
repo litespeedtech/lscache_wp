@@ -31,6 +31,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 $ccss_count = count( CSS::cls()->load_queue( 'ccss' ) );
 $ucss_count = count( CSS::cls()->load_queue( 'ucss' ) );
+$placeholder_queue_count = count( Placeholder::cls()->load_queue() );
 ?>
 
 <div class="litespeed-dashboard">
@@ -478,8 +479,8 @@ $ucss_count = count( CSS::cls()->load_queue( 'ucss' ) );
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? count( $placeholder_summary[ 'queue' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $placeholder_summary[ 'queue' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $placeholder_queue_count ?: '-' ?></code>
+						<a href="<?php echo $placeholder_queue_count ? Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( ! $placeholder_queue_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
