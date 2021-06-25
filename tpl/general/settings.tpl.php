@@ -36,7 +36,6 @@ if ( ! $can_token ) {
 	$apply_ts_txt .= ' ' . sprintf( __( 'Next available request time: <code>After %s</code>', 'litespeed-cache' ), Utility::readable_time( $next_available_req, 0, true ) );
 }
 
-$this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
@@ -148,7 +147,7 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This option enables maximum optimization for Guest Mode users.', 'litespeed-cache' ); ?>
+				<?php echo __( 'This option enables maximum optimization for Guest Mode visitors.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization' ); ?>
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
@@ -165,6 +164,12 @@ $this->form_action();
 				<?php if ( ! $this->conf( Base::O_IMG_OPTM_WEBP ) ) : ?>
 				<br /><font class="litespeed-danger litespeed-left10">
 				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on and finish all WebP generation to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_IMG_OPTM_WEBP ) . '</code>' ); ?>
+				</font>
+				<?php endif; ?>
+
+				<?php if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) : ?>
+				<br /><font class="litespeed-danger litespeed-left10">
+				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_IMG_OPTM_WEBP_REPLACE ) . '</code>' ); ?>
 				</font>
 				<?php endif; ?>
 			</div>
@@ -203,7 +208,3 @@ $this->form_action();
 	</tr>
 
 </tbody></table>
-
-<?php
-$this->form_end();
-

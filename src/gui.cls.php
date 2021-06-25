@@ -16,12 +16,13 @@ class GUI extends Base {
 
 	// [ file_tag => [ days, litespeed_only ], ... ]
 	private $_promo_list = array(
-		'new_version'	=> array( 1, false ),
-		'score'			=> array( 5, false ),
+		'new_version'	=> array( 7, false ),
+		'score'			=> array( 14, false ),
 		// 'slack'		=> array( 3, false ),
 	);
 
 	const LIB_GUEST_JS = 'assets/js/guest.min.js';
+	const PHP_GUEST = 'guest.vary.php';
 
 	const TYPE_DISMISS_WHM = 'whm';
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault';
@@ -508,16 +509,6 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'	=> 'litespeed-menu',
-				'id'		=> 'litespeed-purge-localres',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES, false, '_ori' ),
-				'meta'		=> array( 'tabindex' => '0' ),
-			) );
-		}
-
 		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
@@ -659,16 +650,6 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->conf( self::O_OPTM_LOCALIZE ) ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'	=> 'litespeed-menu',
-				'id'		=> 'litespeed-purge-localres',
-				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
-				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES ),
-				'meta'		=> array( 'tabindex' => '0' ),
-			) );
-		}
-
 		if ( Placeholder::has_lqip_cache() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
@@ -779,8 +760,10 @@ class GUI extends Base {
 	 */
 	private function _enqueue_guest_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
-		$js_con = str_replace( 'litespeed_url', esc_url( add_query_arg( 'litespeed_guest', 1, home_url( '/' ) ) ), $js_con );
-		$buffer = str_replace( '</body>', '<script data-no-optimize="1" async>' . $js_con . '</script></body>', $buffer );
+		// $guest_update_url = add_query_arg( 'litespeed_guest', 1, home_url( '/' ) );
+		$guest_update_url = LSWCP_PLUGIN_URL . self::PHP_GUEST;
+		$js_con = str_replace( 'litespeed_url', esc_url( $guest_update_url ), $js_con );
+		$buffer = str_replace( '</body>', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer );
 		return $buffer;
 	}
 

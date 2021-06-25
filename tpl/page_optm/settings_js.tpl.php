@@ -75,8 +75,10 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'Deferred', 'litespeed-cache' ), __( 'Delayed', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Doing so can help reduce resource contention and improve performance causing a lower FID (Core Web Vitals metric).', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#load-js-deferred' ); ?><br />
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://web.dev/fid/#what-is-fid' ); ?>
 				<br /><font class="litespeed-danger">
 					🚨 <?php echo __( 'This option may result in JS error or layout issue on frontend pages on certain themes/plugins.', 'litespeed-cache' ); ?>
 				</font>

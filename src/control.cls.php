@@ -391,6 +391,11 @@ class Control extends Root {
 	 * @return bool True if is still cacheable, otherwise false.
 	 */
 	public static function is_cacheable() {
+		if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+			Debug2::debug( '[Ctrl] LSCACHE_NO_CACHE constant defined' );
+			return false;
+		}
+
 		// Guest mode always cacheable
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
 			return true;
@@ -529,8 +534,15 @@ class Control extends Root {
 
 		// Guest mode directly return cacheable result
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
-			$hdr .= 'public';
-			$hdr .= ',max-age=' . $this->get_ttl();
+			// If is POST, no cache
+			if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+				$hdr .= 'no-cache';
+			}
+			else {
+				$hdr .= 'public';
+				$hdr .= ',max-age=' . $this->get_ttl();
+			}
+
 			return $hdr;
 		}
 
@@ -606,11 +618,6 @@ class Control extends Root {
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
 			Debug2::debug( '[Ctrl] not cacheable before ctrl finalize' );
-			return;
-		}
-
-		if ( defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE ) {
-			self::set_nocache('LSCACHE_NO_CACHE constant defined');
 			return;
 		}
 

@@ -38,7 +38,7 @@ else {
 		<td>
 			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Use external object cache functionality.', 'litespeed-cache' ) ; ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#memcached-lsmcd-and-redis-object-cache-support-in-lscwp' ); ?>
 			</div>
 			<div class="litespeed-block">

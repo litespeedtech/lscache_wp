@@ -20,6 +20,11 @@ class Task extends Root {
 		Base::O_CRAWLER 						=> array( 'name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start' ), // Set crawler to last one to use above results
 	);
 
+	private static $_guest_options = array(
+		Base::O_OPTM_CSS_ASYNC,
+		Base::O_OPTM_UCSS,
+	);
+
 	const FITLER_CRAWLER = 'litespeed_crawl_filter';
 	const FITLER = 'litespeed_filter';
 
@@ -34,25 +39,31 @@ class Task extends Root {
 
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
 
+		$guest_optm = $this->conf( Base::O_GUEST ) && $this->conf( Base::O_GUEST_OPTM );
+
 		foreach ( self::$_triggers as $id => $trigger ) {
-			if ( $this->conf( $id ) ) {
-				// Special check for crawler
-				if ( $id == Base::O_CRAWLER ) {
-					if ( ! Router::can_crawl() ) {
-						continue;
-					}
-
-					add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) );
+			if ( ! $this->conf( $id ) ) {
+				if ( ! $guest_optm || ! in_array( $id, self::$_guest_options ) ) {
+					continue;
 				}
-
-				if( ! wp_next_scheduled( $trigger[ 'name' ] ) ) {
-					Debug2::debug( '⏰ Cron hook register [name] ' . $trigger[ 'name' ] );
-
-					wp_schedule_event( time(), $id == Base::O_CRAWLER ? self::FITLER_CRAWLER : self::FITLER, $trigger[ 'name' ] );
-				}
-
-				add_action( $trigger[ 'name' ], $trigger[ 'hook' ] );
 			}
+
+			// Special check for crawler
+			if ( $id == Base::O_CRAWLER ) {
+				if ( ! Router::can_crawl() ) {
+					continue;
+				}
+
+				add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) );
+			}
+
+			if( ! wp_next_scheduled( $trigger[ 'name' ] ) ) {
+				Debug2::debug( '⏰ Cron hook register [name] ' . $trigger[ 'name' ] );
+
+				wp_schedule_event( time(), $id == Base::O_CRAWLER ? self::FITLER_CRAWLER : self::FITLER, $trigger[ 'name' ] );
+			}
+
+			add_action( $trigger[ 'name' ], $trigger[ 'hook' ] );
 		}
 
 	}

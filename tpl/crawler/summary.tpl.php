@@ -175,8 +175,8 @@ if($seconds > 0):
 
 	<p>
 		<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __( 'Waiting to be Crawled', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __( 'Already Cached', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php echo __( 'Successfully Crawled', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
 	</p>
 

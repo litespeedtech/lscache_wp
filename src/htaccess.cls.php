@@ -90,7 +90,8 @@ class Htaccess extends Root {
 			self::REWRITE_ON,
 			"CacheLookup on",
 			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
-			"RewriteRule \.object-cache\.ini - [F,L]",
+			// "RewriteRule \.object-cache\.ini - [F,L]",
+			'RewriteRule ' . preg_quote( self::CONF_FILE ) . ' - [F,L]',
 		);
 
 		// backend .htaccess privilege
