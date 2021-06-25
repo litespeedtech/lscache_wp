@@ -62,7 +62,8 @@ $ucss_queue = CSS::cls()->load_queue( 'ucss' );
 				<?php endif; ?>
 
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
-				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?><br />
+				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-ucss' ); ?><br />
 				<?php echo __( 'Automatic generation of unused CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 			</div>
 
@@ -154,7 +155,8 @@ $ucss_queue = CSS::cls()->load_queue( 'ucss' );
 				<?php endif; ?>
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?><br />
-				<?php echo __( 'Use QUIC.cloud online service to generate critical CSS and load remaining CSS asynchronously.', 'litespeed-cache' ); ?><br />
+				<?php echo __( 'Use QUIC.cloud online service to generate critical CSS and load remaining CSS asynchronously.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#load-css-asynchronously' ); ?><br />
 				<?php echo __( 'Automatic generation of critical CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?><br />
 				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
 				<br /><font class="litespeed-success">
