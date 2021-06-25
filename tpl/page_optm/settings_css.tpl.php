@@ -62,7 +62,7 @@ $ucss_queue = CSS::cls()->load_queue( 'ucss' );
 				<?php endif; ?>
 
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
-				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
+				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?><br />
 				<?php echo __( 'Automatic generation of unused CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 			</div>
 
