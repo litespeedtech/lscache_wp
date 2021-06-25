@@ -1,8 +1,8 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
-Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
+Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Stable tag: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -39,7 +39,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * Load CSS/JS Asynchronously
 * Browser Cache Support<sup>+</sup>
 * Database Cleaner and Optimizer
-* PageSpeed score optimization
+* PageSpeed score (including Core Web Vitals) optimization
 * OPcode Cache Support<sup>+</sup>
 * HTTP/2 Push for CSS/JS (on web servers that support it)
 * DNS Prefetch
@@ -126,11 +126,11 @@ The vast majority of plugins and themes are compatible with LSCache. [Our API](h
 
 == Privacy ==
 
-This plugin includes a Privacy blurb that you can add to your site's Privacy Policy via the WordPress Privacy settings.
+This plugin includes some suggested text that you can add to your site's Privacy Policy via the Guide in the WordPress Privacy settings.
 
 **For your own information:** LiteSpeed Cache for WordPress potentially stores a duplicate copy of every web page on display on your site. The pages are stored locally on the system where LiteSpeed server software is installed and are not transferred to or accessed by LiteSpeed employees in any way, except as necessary in providing routine technical support if you request it. All cache files are temporary, and may easily be purged before their natural expiration, if necessary, via a Purge All command. It is up to individual site administrators to come up with their own cache expiration rules.
 
-In addition to caching, our WordPress plugin has an Image Optimization feature. When optimization is requested, images are transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. LiteSpeed keeps copies of optimized images for 7 days (in case of network stability issues) and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to our server so that we may better provide technical support. Neither of these features collects any visitor data. Only server and site data is involved.
+In addition to caching, our WordPress plugin has online features provided by QUIC.cloud for Image Optimization, CSS Optimization and Low Quality Image Placeholder services. When one of those optimizations are requested, data is transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. Now if using the QUIC.cloud CDN it uses LSCache technologies to access your site then host your site to others globally and also your data is not transferred to or accessed by QUIC.cloud employees in any way, except as necessary in providing maintenance or technical support. QUIC.cloud keeps copies of that data for up to 7 days and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to LiteSpeed so that we may better provide technical support. None of these features collects any visitor data. Only server and site data are involved.
 
 Please see the [QUIC.cloud Privacy Policy](https://quic.cloud/privacy-policy/) for our complete Privacy/GDPR statement.
 

@@ -89,7 +89,7 @@ ksort( $roles );
 			<div class="litespeed-desc">
 				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types_1' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -184,7 +184,7 @@ ksort( $roles );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Only optimize pages for guest visitors. If turned this OFF, CSS/JS/CCSS files will be doubled by each user group.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Only optimize pages for guest (not logged in) visitors. If turned this OFF, CSS/JS/CCSS files will be doubled by each user group.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
