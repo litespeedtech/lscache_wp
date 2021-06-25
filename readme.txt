@@ -289,7 +289,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Misc** Dropped `wp_assets` from distribution to reduce the package size. (@lowwebtech)
 * **Misc** Increased the new version and score detection intervals.
 * **Misc** Optimized WP Assets images. (#352 @lowwebtech)
-* **Debug** Dropped the redudant error_log debug info.
+* **Debug** Dropped the redundant error_log debug info.
 
 = 4.0 - Apr 30 2021 =
 * 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.
