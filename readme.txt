@@ -246,6 +246,51 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.1 - Jun 25 2021 =
+* 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
+* 🌱**3rd** Added an option to disable ESI for the WooCommerce Cart. (#358 @Anna Feng @Astrid Wang)
+* **ESI** Fixed an ESI nonce issue introduced in v4.0. (@Andrew Choi)
+* **Object** Used new `.litespeed_conf.dat` instead of `.object-cache.ini` for object cache configuration storage.
+* **Conf** Now updating related files after plugin upgrade and not just after activation.
+* 🌱**Guest** Added a Guest Mode JS Excludes option. (@Ankit @Mamac @Rcverma)
+* **Guest** Guest Mode now uses a lightweight script to update guest vary for reduced server load.
+* **Guest** Guest Mode now adds missing image dimensions.
+* **Guest** Guest vary will no longer update if there's already a vary in place to address the infinite loop caused by CloudFlare's incorrect cache control setting for PHP.
+* **Guest** Guest vary update request will no longer be sent if `lscache_vary` is already set.
+* **Guest** Added a Configurable Guest Mode UA/IP under the Tuning tab in the General menu.
+* **Guest** Guest Mode now allows cron to be hooked, even when UCSS/CCSS options are off. (#338437 @Stars)
+* **Guest** Simplified the vary generation process under Guest Mode.
+* **Guest** Added a Guest Mode HTML comment for easier debugging. (@Ruikai)
+* **Guest** Guest vary update ajax now bypasses potential POST cache.
+* **CCSS** Added back the options `Separate CCSS Cache Post Types` and `Separate CCSS Cache URIs`. (@Joshua @Ankit)
+* **CCSS** CCSS/UCSS queue is now limited to a maximum of 500 entries.
+* **Control** The cache control constant `LSCACHE_NO_CACHE` will now have a higher priority than the Forced Public Cache setting.
+* **Crawler** The Crawler can now crawl Guest Mode pages.
+* **Crawler** Fixed a potential XSS vulnerability in the Crawler settings. (#927355)
+* **Crawler** The Crawler now supports a cookie value of `_null`. (@Tobolo)
+* **Media** Updated the default value for the Responsive Placeholder SVG to be transparent.
+* **Media** WebP images in the background may now be served in Guest Mode.
+* **Media** WebP images in CSS may now be bypassed if the requesting Guest Mode client doesnt support WebP.
+* **Media** Fixed empty default image placeholder under Guest Mode.
+* 🐞**Image Optimize** Changed the missing `$_POST` to `$post_data` so the database status is properly updated. (#345 @Lucas)
+* **Import** Export file is now readable to allow importing of partial configurations. (@Ryan D @Joshua)
+* **Page Optimize** Fixed W3 validator errors in Guest Mode. (#61393817)
+* **3rd** A fatal WooCommerce error is no longer triggered by a custom theme reusing a previous LSCWP cache detection tag.
+* **3rd** AMP may now bypass Guest Mode automatically.
+* **Localize** Dropped the `Localize Resources` option as Guest Mode is a sufficient replacement. (Note: Due to user feedback during the development period, we have decided to reinstate this option in a future version.)
+* **Cloud** Changed the WP API url.
+* **Lang** Corrected a missing language folder.
+* **GUI** Added a CCSS/UCSS loading page visualization. (#360 @Astrid Wang @Anna Feng)
+* **GUI** Added a warning to indicate when Guest Mode CCSS/UCSS quota is in use. (#361 @Astrid Wang @Anna Feng)
+* **GUI** Added a `litespeed-info` text color. (@Astrid Wang)
+* **GUI** Implemented various UI/UX improvements. (@Joshua @Lisa)
+* **GUI** Duplicate cloud service messages with the same content will only display once now. (@Marc Dahl)
+* **GUI** Added a WebP replacement warning for Guest Mode Optimization if WebP replacement is off.
+* **Misc** Dropped `wp_assets` from distribution to reduce the package size. (@lowwebtech)
+* **Misc** Increased the new version and score detection intervals.
+* **Misc** Optimized WP Assets images. (#352 @lowwebtech)
+* **Debug** Dropped the redudant error_log debug info.
+
 = 4.0 - Apr 30 2021 =
 * 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.
 * 🌱**UCSS** Added a new service: `Unique CSS`, to drop unused CSS from elements from combined CSS

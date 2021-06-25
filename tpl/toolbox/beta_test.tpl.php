@@ -4,6 +4,7 @@ defined( 'WPINC' ) || exit;
 
 // Existing public version list
 $v_list = array(
+	'4.1',
 	'4.0',
 	'3.6.4',
 	'3.5.2',
