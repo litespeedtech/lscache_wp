@@ -53,3 +53,6 @@ data-vc-public-nonce
 rating_nonce
 timeline_nonce
 blog_feed_nonce
+
+# WS Form 
+wsf_nonce
