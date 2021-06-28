@@ -56,3 +56,10 @@ blog_feed_nonce
 
 # WS Form 
 wsf_nonce
+
+# Easy Digital Download (EDD)
+edd-* private
+edd_* private
+
+# WP Menu Cart
+wpmenucart private
