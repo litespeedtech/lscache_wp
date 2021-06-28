@@ -17,7 +17,7 @@
 	}
 
 	var init = function(){
-		console.log( '[LiteSpeed] Start Lazyload image' )
+		console.log( '[LiteSpeed] Start Lazy Load Images' )
 		instance = new LazyLoad( { elements_selector: "[data-lazyloaded]", callback_finish: litespeed_finish_callback } );
 
 		update_lazyload = function(){
