@@ -46,7 +46,7 @@ $this->form_action();
 			</script>
 
 			<div class="litespeed-desc">
-				<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line, and can include a blank line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
+				<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#cookie-simulation' ); ?>
 				<p><?php echo sprintf( __( 'Use %1$s in %2$s to indicate this cookie has not been set.', 'litespeed-cache' ), '<code>_null</code>', __( 'Cookie Values', 'litespeed-cache' ) ); ?></p>
 			</div>

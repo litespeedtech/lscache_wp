@@ -154,7 +154,10 @@ class Optimizer extends Root {
 
 			$content = $this->cls( 'CDN' )->finalize( $content );
 
-			$content = $this->cls( 'Media' )->replace_background_webp( $content );
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+				$content = $this->cls( 'Media' )->replace_background_webp( $content );
+			}
+
 		}
 		else {
 			if ( $minify ) {

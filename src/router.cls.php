@@ -708,10 +708,6 @@ class Router extends Base {
 				$this->cls( 'Avatar' )->serve_static( $path[ 1 ] );
 				break;
 
-			case 'localres':
-				$this->cls( 'Localization' )->serve_static( $path[ 1 ] );
-				break;
-
 			default :
 				break;
 		}

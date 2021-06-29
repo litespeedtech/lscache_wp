@@ -35,7 +35,7 @@ class Placeholder extends Base {
 	 */
 	public function __construct() {
 		$this->_conf_placeholder_resp = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP );
-		$this->_conf_placeholder_resp_svg 	= defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
+		$this->_conf_placeholder_resp_svg 	= $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_SVG );
 		$this->_conf_lqip 		= ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_MEDIA_LQIP );
 		$this->_conf_lqip_qual	= $this->conf( self::O_MEDIA_LQIP_QUAL );
 		$this->_conf_lqip_min_w	= $this->conf( self::O_MEDIA_LQIP_MIN_W );
@@ -250,28 +250,53 @@ class Placeholder extends Base {
 		$tmp_placeholder = $this->_generate_placeholder_locally( $size );
 
 		// Store it to prepare for cron
-		if ( empty( $this->_summary[ 'queue' ] ) ) {
-			$this->_summary[ 'queue' ] = array();
-		}
-		if ( in_array( $arr_key, $this->_summary[ 'queue' ] ) ) {
+		$queue = $this->load_queue();
+		if ( in_array( $arr_key, $queue ) ) {
 			Debug2::debug2( '[LQIP] already in queue' );
 
 			return $tmp_placeholder;
 		}
 
-		if ( count( $this->_summary[ 'queue' ] ) > 100 ) {
+		if ( count( $queue ) > 500 ) {
 			Debug2::debug2( '[LQIP] queue is full' );
 
 			return $tmp_placeholder;
 		}
 
-		$this->_summary[ 'queue' ][] = $arr_key;
-
+		$queue[] = $arr_key;
+		$this->save_queue( $queue );
 		Debug2::debug( '[LQIP] Added placeholder queue' );
 
-		self::save_summary();
 		return $tmp_placeholder;
+	}
 
+	/**
+	 * Load current queues from data file
+	 *
+	 * @since 4.1
+	 */
+	public function load_queue() {
+		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
+
+		$queue = array();
+		if ( file_exists( $static_path ) ) {
+			$queue = json_decode( file_get_contents( $static_path ), true );
+		}
+
+		return $queue;
+	}
+
+	/**
+	 * Save current queues to data file
+	 *
+	 * @since 4.1
+	 */
+	public function save_queue( $list ) {
+		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
+
+		$data = json_encode( $list );
+
+		File::save( $static_path, $data, true );
 	}
 
 	/**
@@ -338,7 +363,10 @@ class Placeholder extends Base {
 	 */
 	public static function cron( $continue = false ) {
 		$_instance = self::cls();
-		if ( empty( $_instance->_summary[ 'queue' ] ) ) {
+
+		$queue = $_instance->load_queue();
+
+		if ( empty( $queue ) ) {
 			return;
 		}
 
@@ -350,7 +378,7 @@ class Placeholder extends Base {
 			}
 		}
 
-		foreach ( $_instance->_summary[ 'queue' ] as $v ) {
+		foreach ( $queue as $v ) {
 			Debug2::debug( '[LQIP] cron job [size] ' . $v );
 
 			$_instance->_generate_placeholder( $v );
@@ -422,7 +450,7 @@ class Placeholder extends Base {
 
 			// CHeck if the image is 404 first
 			if ( File::is_404( $req_data[ 'url' ] ) ) {
-				$this->_popup_and_save( $raw_size_and_src );
+				$this->_popup_and_save( $raw_size_and_src, true );
 				$this->_append_exc( $src );
 				Debug2::debug( '[LQIP] 404 before request [src] ' . $req_data[ 'url' ] );
 				return $this->_generate_placeholder_locally( $size );
@@ -439,7 +467,7 @@ class Placeholder extends Base {
 
 			if ( empty( $json[ 'lqip' ] ) || strpos( $json[ 'lqip' ], 'data:image/svg+xml' ) !== 0 ) {
 				// image error, pop up the current queue
-				$this->_popup_and_save( $raw_size_and_src );
+				$this->_popup_and_save( $raw_size_and_src, true );
 				$this->_append_exc( $src );
 				Debug2::debug( '[LQIP] wrong response format', $json );
 
@@ -458,6 +486,7 @@ class Placeholder extends Base {
 		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ];
 		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ];
 		$this->_summary[ 'curr_request' ] = 0;
+		self::save_summary();
 		$this->_popup_and_save( $raw_size_and_src );
 
 		Debug2::debug( '[LQIP] saved LQIP ' . $file );
@@ -476,6 +505,8 @@ class Placeholder extends Base {
 			return true;
 		}
 
+		Debug2::debug2( '[LQIP] Size too small' );
+
 		return false;
 	}
 
@@ -489,25 +520,6 @@ class Placeholder extends Base {
 		$val[] = $src;
 		$this->cls( 'Conf' )->update( self::O_MEDIA_LQIP_EXC, $val );
 		Debug2::debug( '[LQIP] Appended to LQIP Excludes [URL] ' . $src );
-
-		if ( ! empty( $this->_summary[ 'queue' ] ) ) {
-			$changed = false;
-			foreach ( $this->_summary[ 'queue' ] as $k => $raw_size_and_src ) {
-				$size_and_src = explode( ' ', $raw_size_and_src, 2 );
-				if ( empty( $size_and_src[ 1 ] ) ) {
-					continue;
-				}
-
-				if ( $size_and_src[ 1 ] == $src ) {
-					unset( $this->_summary[ 'queue' ][ $k ] );
-					$changed = true;
-				}
-			}
-
-			if ( $changed ) {
-				self::save_summary();
-			}
-		}
 	}
 
 	/**
@@ -515,12 +527,35 @@ class Placeholder extends Base {
 	 *
 	 * @since  3.0
 	 */
-	private function _popup_and_save( $raw_size_and_src ) {
-		if ( ! empty( $this->_summary[ 'queue' ] ) && in_array( $raw_size_and_src, $this->_summary[ 'queue' ] ) ) {
-			unset( $this->_summary[ 'queue' ][ array_search( $raw_size_and_src, $this->_summary[ 'queue' ] ) ] );
+	private function _popup_and_save( $raw_size_and_src, $append_to_exc = false ) {
+		$queue = $this->load_queue();
+		if ( ! empty( $queue ) && in_array( $raw_size_and_src, $queue ) ) {
+			unset( $queue[ array_search( $raw_size_and_src, $queue ) ] );
 		}
 
-		self::save_summary();
+		if ( $append_to_exc ) {
+			$size_and_src = explode( ' ', $raw_size_and_src, 2 );
+			$this_src = $size_and_src[ 1 ];
+
+			// Append to lqip exc setting first
+			$this->_append_exc( $this_src );
+
+			// Check if other queues contain this src or not
+			if ( $queue ) {
+				foreach ( $queue as $k => $raw_size_and_src ) {
+					$size_and_src = explode( ' ', $raw_size_and_src, 2 );
+					if ( empty( $size_and_src[ 1 ] ) ) {
+						continue;
+					}
+
+					if ( $size_and_src[ 1 ] == $this_src ) {
+						unset( $queue[ $k ] );
+					}
+				}
+			}
+		}
+
+		$this->save_queue( $queue );
 	}
 
 	/**
@@ -529,12 +564,11 @@ class Placeholder extends Base {
 	 * @since  3.4
 	 */
 	public function clear_q() {
-		if ( empty( $this->_summary[ 'queue' ] ) ) {
-			return;
-		}
+		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
 
-		$this->_summary[ 'queue' ] = array();
-		self::save_summary();
+		if ( file_exists( $static_path ) ) {
+			unlink( $static_path );
+		}
 
 		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );

@@ -47,7 +47,7 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
-			<?php $this->build_textarea( $id, 30 ); ?>
+			<?php $this->build_textarea( $id, 50 ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Your IP', 'litespeed-cache' ); ?>: <code><?php echo Router::get_ip(); ?></code>

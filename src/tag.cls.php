@@ -29,7 +29,6 @@ class Tag extends Root {
 	const TYPE_REST = 'REST';
 	const TYPE_LIST = 'LIST';
 	const TYPE_MIN = 'MIN';
-	const TYPE_LOCALRES = 'LOCALRES';
 
 	const X_HEADER = 'X-LiteSpeed-Tag';
 
@@ -337,6 +336,10 @@ class Tag extends Root {
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
 	public function output( $no_finalize = false ) {
+		if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+			return;
+		}
+
 		if ( ! $no_finalize ) {
 			self::_finalize();
 		}

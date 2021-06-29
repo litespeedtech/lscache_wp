@@ -374,7 +374,7 @@ class Media extends Root {
 	 * @since  1.6.2
 	 * @access public
 	 */
-	private function webp_support() {
+	public function webp_support() {
 		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
 			return true;
 		}
@@ -491,7 +491,7 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$snippet = $cfg_trim_noscript ? '' : '<noscript>' . $v . '</noscript>';
 				if ( $cfg_js_delay ) {
-					$v = str_replace( ' src=', ' litespeed-src=', $v );
+					$v = str_replace( ' src=', ' data-litespeed-src=', $v );
 				}
 				else {
 					$v = str_replace( ' src=', ' data-src=', $v );
@@ -608,8 +608,9 @@ class Media extends Root {
 			}
 
 			// Add missing dimensions
-			if ( $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
+			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
 				if ( empty( $attrs[ 'width' ] ) || $attrs[ 'width' ] == 'auto' || empty( $attrs[ 'height' ] ) || $attrs[ 'height' ] == 'auto' ) {
+					Debug2::debug( '[Media] ⚠️ Missing sizes for image [src] ' . $attrs[ 'src' ] );
 					$dimensions = $this->_detect_dimensions( $attrs[ 'src' ] );
 					if ( $dimensions ) {
 						$ori_width = $dimensions[ 0 ];
@@ -791,12 +792,14 @@ class Media extends Root {
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
 		}
 
 		// Replace background-image
-		$content = $this->replace_background_webp( $content );
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+			$content = $this->replace_background_webp( $content );
+		}
 
 		return $content;
 	}
@@ -807,9 +810,7 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
-		if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
-			return $content;
-		}
+		Debug2::debug2( '[Media] Start replacing bakcground WebP.' );
 
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
@@ -844,7 +845,7 @@ class Media extends Root {
 	 * @access public
 	 */
 	public function replace_webp( $url ) {
-		Debug2::debug2( '[Media] webp replacing: ' . $url );
+		Debug2::debug2( '[Media] webp replacing: ' . substr( $url, 0, 200 ) );
 
 		if ( substr( $url, -5 ) == '.webp' ) {
 			Debug2::debug2( '[Media] already webp' );

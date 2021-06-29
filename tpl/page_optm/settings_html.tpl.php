@@ -4,8 +4,8 @@ defined( 'WPINC' ) || exit;
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Optimization Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#optimization-settings-tab' ); ?>
+	<?php echo __( 'HTML Settings', 'litespeed-cache' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
@@ -63,7 +63,7 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Delay rendering off-screen HTML elements by its selector.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazy' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazyload-selectors' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -98,7 +98,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use Web Font Loader library to load Google Fonts asynchronously while leaving other CSS intact.', 'litespeed-cache' ); ?>
-				<?php echo __( 'This will also add a preconnect to Google for faster Google Fonts downloading.', 'litespeed-cache' ); ?>
+				<?php echo __( 'This will also add a preconnect to Google Fonts to establish a connection earlier.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#load-google-fonts-asynchronously' ); ?>
 			</div>
 		</td>

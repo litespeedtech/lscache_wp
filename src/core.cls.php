@@ -90,6 +90,17 @@ class Core extends Root {
 		 * @since  2.9.4
 		 */
 		$this->cls( 'REST' );
+
+		/**
+		 * Hook wpnonce function
+		 *
+		 * Note: ESI nonce won't be available until hook after_setup_theme ESI init due to Guest Mode concern
+		 * @since v4.1
+		 */
+		if ( $this->cls( 'Router' )->esi_enabled() && ! function_exists( 'wp_create_nonce' ) ) {
+			Debug2::debug( '[ESI] Overwrite wp_create_nonce()' );
+			litespeed_define_nonce_func();
+		}
 	}
 
 	/**
@@ -577,6 +588,10 @@ class Core extends Root {
 		// Object cache comment
 		if ( $running_info_showing && defined( 'LSCWP_LOG' ) && defined( 'LSCWP_OBJECT_CACHE' ) && method_exists( 'WP_Object_Cache', 'debug' ) ) {
 			$this->footer_comment .= "\n<!-- Object Cache " . \WP_Object_Cache::get_instance()->debug() . " -->";
+		}
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && $running_info_showing ) {
+			$this->footer_comment .= "\n<!-- Guest Mode -->";
 		}
 
 		if ( $is_forced ) {

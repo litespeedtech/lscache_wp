@@ -84,13 +84,19 @@ class Optimize extends Base {
 			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 );
 		}
 
-		/**
-		 * Exclude js from deferred setting
-		 * @since 1.5
-		 */
-		if ( $this->cfg_js_defer && ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
-			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+		// GM JS exclude @since 4.1
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_gm_js_exc', $this->conf( self::O_OPTM_GM_JS_EXC ) );
+		}
+		else {
+			/**
+			 * Exclude js from deferred setting
+			 * @since 1.5
+			 */
+			if ( $this->cfg_js_defer ) {
+				add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
+				$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+			}
 		}
 
 		/**
@@ -256,6 +262,7 @@ class Optimize extends Base {
 		do_action( 'litespeed_optm' );
 
 		// Parse css from content
+		$src_list = false;
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
@@ -312,6 +319,7 @@ class Optimize extends Base {
 		}
 
 		// Parse js from buffer as needed
+		$src_list = false;
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
@@ -402,12 +410,6 @@ class Optimize extends Base {
 		$this->_maybe_js_delay();
 
 		/**
-		 * Localize GG/FB JS/Fonts
-		 * @since  3.3
-		 */
-		$this->content = $this->cls( 'Localization' )->finalize( $this->content );
-
-		/**
 		 * HTML Lazyload
 		 */
 		if ( $this->conf( self::O_OPTM_HTML_LAZY ) ) {
@@ -459,7 +461,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" type="litespeed/javascript" src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
@@ -655,13 +657,15 @@ class Optimize extends Base {
 	private function _src_queue_handler( $src_list, $html_list, $file_type = 'css' ) {
 		$html_list_ori = $html_list;
 
+		$can_webp = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE );
+
 		$tag = $file_type == 'css' ? 'link' : 'script';
 		foreach ( $src_list as $key => $src_info ) {
 			// Minify inline CSS/JS
 			if ( ! empty( $src_info[ 'inl' ] ) ) {
 				if ( $file_type == 'css' ) {
 					$code = Optimizer::minify_css( $src_info[ 'src' ] );
-					$code = $this->cls( 'Media' )->replace_background_webp( $code );
+					$can_webp && $code = $this->cls( 'Media' )->replace_background_webp( $code );
 					$snippet = str_replace( $src_info[ 'src' ], $code, $html_list[ $key ] );
 				}
 				else {
@@ -903,8 +907,8 @@ class Optimize extends Base {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
 			$this->i2++;
-			return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '">' . $con . '</script>';
-			// return '<script' . $attrs . ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '">' . $con . '</script>';
+			// return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
@@ -1140,7 +1144,7 @@ class Optimize extends Base {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
 			$this->i2++;
-			return str_replace( ' src=', ' type="litespeed/javascript" litespeed_i="' . $this->i2 . '" src=', $ori );
+			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . $this->i2 . '" data-src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );

@@ -18,6 +18,9 @@ class Data extends Root {
 		'4.0'	=> array(
 			'litespeed_update_4',
 		),
+		'4.1'	=> array(
+			'litespeed_update_4_1',
+		),
 	);
 
 	private $_db_site_updater = array(
@@ -120,6 +123,9 @@ class Data extends Root {
 		$this->cls( 'Conf' )->load_options();
 
 		$this->correct_tb_existance();
+
+		// Update related files
+		$this->cls( 'Activation' )->update_files();
 
 		// Update version to latest
 		Conf::delete_option( Base::_VER );

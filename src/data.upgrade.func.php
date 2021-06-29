@@ -14,6 +14,16 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Drop object cache data file
+ * @since 4.1
+ */
+function litespeed_update_4_1() {
+	if ( file_exists( WP_CONTENT_DIR . '/.object-cache.ini' ) ) {
+		unlink( WP_CONTENT_DIR . '/.object-cache.ini' );
+	}
+}
+
+/**
  * Drop cssjs table and rm cssjs folder
  * @since 4.0
  */
@@ -186,8 +196,8 @@ function litespeed_update_3_0( $ver ) {
 		'litespeed-media-webp_attribute' 			=> 'img_optm-webp_attr',
 		'litespeed-optm-css' 						=> 'optm-ccss_con',
 		'litespeed-optm_excludes' 					=> 'optm-exc',
-		// 'litespeed-optm-ccss-separate_posttype' 	=> 'optm-ccss_sep_posttype',
-		// 'litespeed-optm-css-separate_uri' 			=> 'optm-ccss_sep_uri',
+		'litespeed-optm-ccss-separate_posttype' 	=> 'optm-ccss_sep_posttype',
+		'litespeed-optm-css-separate_uri' 			=> 'optm-ccss_sep_uri',
 		'litespeed-optm-js-defer-excludes' 			=> 'optm-js_defer_exc',
 		'litespeed-cache-dns_prefetch' 				=> 'optm-dns_prefetch',
 		'litespeed-cache-exclude-optimization-roles' => 'optm-exc_roles',
