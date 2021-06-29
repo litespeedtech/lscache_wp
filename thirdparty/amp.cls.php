@@ -24,7 +24,7 @@ class AMP {
 	public static function disable_optimizations_on_amp() {
 
 		// Check if for AMP page.
-		if ( function_exists( 'amp_is_request' ) && amp_is_request() ) {
+		if ( ( function_exists( 'amp_is_request' ) && amp_is_request() ) || is_admin() || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() ) ) {
 
 			// Bypass all optimizations.
 			if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
