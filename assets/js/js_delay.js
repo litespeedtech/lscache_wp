@@ -16,7 +16,7 @@ litespeed_ui_events.forEach( function( e ) {
 } );
 
 function litespeed_load_delayed_js_forced() {
-	console.log( 'start delay load js' );
+	console.log( '[LiteSpeed] Start Load JS Delayed' );
 	// clearTimeout( litespeed_js_delay_timer );
 	litespeed_ui_events.forEach( function( e ) {
 		window.removeEventListener( e, litespeed_load_delayed_js_forced, { passive: true } );
@@ -30,7 +30,7 @@ function litespeed_load_delayed_js_forced() {
 
 function litespeed_load_delayed_js( is_forced ) {
 	if ( is_forced ) {
-		console.log( 'Force runing delay JS' );
+		console.log( 'Force running delayed JS' );
 	}
 
 	litespeed_load_one();
@@ -52,11 +52,11 @@ function litespeed_load_one() {
 	litespeed_delay_i ++;
 	var e = document.querySelector( 'script[type="litespeed/javascript"][data-i="'+litespeed_delay_i+'"]' );
 	if ( ! e ) {
-		console.log( 'all loaded!' );
+		console.log( 'All loaded!' );
 		return;
 	}
 
-	console.log( 'load i=' + e.getAttribute( 'data-i' ), '-----',e );
+	console.log( 'Load i=' + e.getAttribute( 'data-i' ), '-----',e );
 
 	var e2 = document.createElement( 'script' );
 

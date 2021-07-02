@@ -270,7 +270,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Crawler** The Crawler now supports a cookie value of `_null`. (@Tobolo)
 * **Media** Updated the default value for the Responsive Placeholder SVG to be transparent.
 * **Media** WebP images in the background may now be served in Guest Mode.
-* **Media** WebP images in CSS may now be bypassed if the requesting Guest Mode client doesnt support WebP.
+* **Media** WebP images in CSS may now be bypassed if the requesting Guest Mode client doesn't support WebP.
 * **Media** Fixed empty default image placeholder under Guest Mode.
 * 🐞**Image Optimize** Changed the missing `$_POST` to `$post_data` so the database status is properly updated. (#345 @Lucas)
 * **Import** Export file is now readable to allow importing of partial configurations. (@Ryan D @Joshua)
@@ -289,7 +289,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Misc** Dropped `wp_assets` from distribution to reduce the package size. (@lowwebtech)
 * **Misc** Increased the new version and score detection intervals.
 * **Misc** Optimized WP Assets images. (#352 @lowwebtech)
-* **Debug** Dropped the redudant error_log debug info.
+* **Debug** Dropped the redundant error_log debug info.
 
 = 4.0 - Apr 30 2021 =
 * 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.
