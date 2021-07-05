@@ -480,8 +480,8 @@ class Crawler_Map extends Root {
 				// parse multiple sitemaps
 				foreach ( $xml_array[ 'sitemap' ] as $val ) {
 					$val = (array) $val;
-					if ( ! empty( $val[ 'loc' ] ) ) {
-						$this->_parse( $val[ 'loc' ] ); // recursive parse sitemap
+					if ( ! empty( (string) $val[ 'loc' ] ) ) {
+						$this->_parse( (string) $val[ 'loc' ] ); // recursive parse sitemap
 					}
 				}
 			}
@@ -497,8 +497,8 @@ class Crawler_Map extends Root {
 			else {
 				foreach ( $xml_array[ 'url' ] as $val ) {
 					$val = (array) $val;
-					if ( ! empty( $val[ 'loc' ] ) ) {
-						$this->_urls[] = $val[ 'loc' ];
+					if ( ! empty( (string) $val[ 'loc' ] ) ) {
+						$this->_urls[] = (string) $val[ 'loc' ];
 					}
 				}
 			}
