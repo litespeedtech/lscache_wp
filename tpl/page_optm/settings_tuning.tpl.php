@@ -72,7 +72,13 @@ ksort( $roles );
 			<div class="litespeed-desc">
 				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
-				<br /><font class="litespeed-success">
+				<div class="litespeed-callout notice notice-warning inline">
+					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
+					<p>
+						<?php echo __( 'The selector must exist in the CSS. Parent classes in the HTML will not work.', 'litespeed-cache' ); ?>
+					</p>
+				</div>
+				<font class="litespeed-success">
 					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/ucss_whitelist.txt</a>
 				</font>
 			</div>
