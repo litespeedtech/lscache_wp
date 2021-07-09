@@ -175,7 +175,7 @@ class Core extends Root {
 		$this->cls( 'Tag' )->init();
 
 		// Load hooks that may be related to users
-		add_action( 'init', array( $this, 'after_user_init' ) );
+		add_action( 'init', array( $this, 'after_user_init' ), 5 );
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 );
