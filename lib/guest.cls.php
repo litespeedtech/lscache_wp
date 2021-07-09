@@ -116,13 +116,15 @@ class Guest {
 			return false;
 		}
 
-		$quoted_uas = array();
-		foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
-			$quoted_uas[] = preg_quote( $v, '#' );
-		}
-		$match = preg_match( '#' . implode( '|', $quoted_uas ) . '#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
-		if ( $match ) {
-			return true;
+		if ( $this->_conf[ self::O_GUEST_UAS ] ) {
+			$quoted_uas = array();
+			foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
+				$quoted_uas[] = preg_quote( $v, '#' );
+			}
+			$match = preg_match( '#' . implode( '|', $quoted_uas ) . '#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
+			if ( $match ) {
+				return true;
+			}
 		}
 
 		if ( $this->ip_access( $this->_conf[ self::O_GUEST_IPS ] ) ) {
