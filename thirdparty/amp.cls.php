@@ -26,7 +26,7 @@ class AMP {
 		}
 		! defined( 'LITESPEED_NO_PAGEOPTM' ) && define( 'LITESPEED_NO_PAGEOPTM', true );
 		! defined( 'LITESPEED_NO_LAZY' ) && define( 'LITESPEED_NO_LAZY', true );
-		! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', false );
+		! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
 		// ! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', false );
 	}
 
