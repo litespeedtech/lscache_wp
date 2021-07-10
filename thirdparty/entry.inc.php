@@ -24,6 +24,7 @@ $third_cls = array(
 	'Divi_Theme_Builder',
 	'Elementor',
 	'Facetwp',
+	'Gravity_Forms',
 	'Theme_My_Login',
 	'User_Switching',
 	'WCML',
@@ -48,3 +49,4 @@ add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Gravity_Forms::preload' );
