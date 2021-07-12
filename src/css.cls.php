@@ -52,7 +52,7 @@ class CSS extends Base {
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-optm-css-rules">' . $rules . '</style>';
+		return '<style id="litespeed-ccss">' . $rules . '</style>';
 	}
 
 	/**
