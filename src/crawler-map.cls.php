@@ -458,7 +458,7 @@ class Crawler_Map extends Root {
 			throw new \Exception( 'Failed to remote read ' . $sitemap );
 		}
 
-		$xml_object = simplexml_load_string( $response[ 'body' ] );
+		$xml_object = simplexml_load_string( $response[ 'body' ], null, LIBXML_NOCDATA );
 		if ( ! $xml_object ) {
 			if ( $this->_urls ) {
 				return;
@@ -473,6 +473,7 @@ class Crawler_Map extends Root {
 			if ( is_object( $xml_array[ 'sitemap' ] ) ) {
 				$xml_array[ 'sitemap' ] = (array) $xml_array[ 'sitemap' ];
 			}
+
 			if ( ! empty( $xml_array[ 'sitemap' ][ 'loc' ] ) ) { // is single sitemap
 				$this->_parse( $xml_array[ 'sitemap' ][ 'loc' ] );
 			}

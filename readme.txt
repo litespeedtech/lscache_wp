@@ -215,6 +215,7 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
 * [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [All in One SEO](https://wordpress.org/plugins/all-in-one-seo-pack/)
 * [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
 * [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
 * [Wordfence Security](https://wordpress.org/plugins/wordfence/)
@@ -245,6 +246,9 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.2 - Jul 2021 =
+* **3rd** All in One SEO plugin sitemap compatibility. (@arnaudbroes Issue#372)
 
 = 4.1 - Jun 25 2021 =
 * 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
