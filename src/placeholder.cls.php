@@ -250,7 +250,7 @@ class Placeholder extends Base {
 		$tmp_placeholder = $this->_generate_placeholder_locally( $size );
 
 		// Store it to prepare for cron
-		$queue = $this->load_queue();
+		$queue = $this->load_queue( 'lqip' );
 		if ( in_array( $arr_key, $queue ) ) {
 			Debug2::debug2( '[LQIP] already in queue' );
 
@@ -264,39 +264,10 @@ class Placeholder extends Base {
 		}
 
 		$queue[] = $arr_key;
-		$this->save_queue( $queue );
+		$this->save_queue( 'lqip', $queue );
 		Debug2::debug( '[LQIP] Added placeholder queue' );
 
 		return $tmp_placeholder;
-	}
-
-	/**
-	 * Load current queues from data file
-	 *
-	 * @since 4.1
-	 */
-	public function load_queue() {
-		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
-
-		$queue = array();
-		if ( file_exists( $static_path ) ) {
-			$queue = json_decode( file_get_contents( $static_path ), true );
-		}
-
-		return $queue;
-	}
-
-	/**
-	 * Save current queues to data file
-	 *
-	 * @since 4.1
-	 */
-	public function save_queue( $list ) {
-		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
-
-		$data = json_encode( $list );
-
-		File::save( $static_path, $data, true );
 	}
 
 	/**
@@ -364,7 +335,7 @@ class Placeholder extends Base {
 	public static function cron( $continue = false ) {
 		$_instance = self::cls();
 
-		$queue = $_instance->load_queue();
+		$queue = $_instance->load_queue( 'lqip' );
 
 		if ( empty( $queue ) ) {
 			return;
@@ -528,7 +499,7 @@ class Placeholder extends Base {
 	 * @since  3.0
 	 */
 	private function _popup_and_save( $raw_size_and_src, $append_to_exc = false ) {
-		$queue = $this->load_queue();
+		$queue = $this->load_queue( 'lqip' );
 		if ( ! empty( $queue ) && in_array( $raw_size_and_src, $queue ) ) {
 			unset( $queue[ array_search( $raw_size_and_src, $queue ) ] );
 		}
@@ -555,7 +526,7 @@ class Placeholder extends Base {
 			}
 		}
 
-		$this->save_queue( $queue );
+		$this->save_queue( 'lqip', $queue );
 	}
 
 	/**
