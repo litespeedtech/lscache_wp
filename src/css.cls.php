@@ -52,7 +52,7 @@ class CSS extends Base {
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-optm-css-rules">' . $rules . '</style>';
+		return '<style id="litespeed-ccss">' . $rules . '</style>';
 	}
 
 	/**
@@ -92,20 +92,6 @@ class CSS extends Base {
 		self::save_summary();
 
 		Debug2::debug2( '[CSS] Cleared ccss/ucss queue' );
-	}
-
-	/**
-	 * Build the static filepath
-	 *
-	 * @since  4.0
-	 */
-	private function _build_filepath_prefix( $type ) {
-		$filepath_prefix = '/' . $type . '/';
-		if ( is_multisite() ) {
-			$filepath_prefix .= get_current_blog_id() . '/';
-		}
-
-		return $filepath_prefix;
 	}
 
 	/**
@@ -149,7 +135,7 @@ class CSS extends Base {
 		global $wp;
 		$request_url = home_url( $wp->request );
 
-		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
+		$filepath_prefix = $this->build_filepath_prefix( 'ccss' );
 		$url_tag = $this->_gen_ccss_file_tag( $request_url );
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ccss' );
@@ -209,43 +195,12 @@ class CSS extends Base {
 	}
 
 	/**
-	 * Load current queues from data file
-	 *
-	 * @since 4.1
-	 */
-	public function load_queue( $type ) {
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
-		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
-
-		$queue = array();
-		if ( file_exists( $static_path ) ) {
-			$queue = json_decode( file_get_contents( $static_path ), true );
-		}
-
-		return $queue;
-	}
-
-	/**
-	 * Save current queues to data file
-	 *
-	 * @since 4.1
-	 */
-	public function save_queue( $type, $list ) {
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
-		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
-
-		$data = json_encode( $list );
-
-		File::save( $static_path, $data, true );
-	}
-
-	/**
 	 * Get UCSS path
 	 *
 	 * @since  4.0
 	 */
 	public function load_ucss( $request_url ) {
-		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
+		$filepath_prefix = $this->build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
@@ -425,7 +380,7 @@ class CSS extends Base {
 	 * @since  3.4
 	 */
 	public function clear_q( $type ) {
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$filepath_prefix = $this->build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		if ( file_exists( $static_path ) ) {
@@ -482,7 +437,7 @@ class CSS extends Base {
 		else {
 			list( , $html ) = $this->_prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
 			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
-			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
+			$filepath_prefix = $this->build_filepath_prefix( 'css' );
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 			if ( file_exists( $static_file ) ) {
 				$css = File::read( $static_file );
@@ -536,7 +491,7 @@ class CSS extends Base {
 		// Write to file
 		$filecon_md5 = md5( $css );
 
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$filepath_prefix = $this->build_filepath_prefix( $type );
 		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
 		File::save( $static_file, $css, true );

@@ -6,7 +6,7 @@ $placeholder_summary = Placeholder::get_summary();
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
-$placeholder_queue = Placeholder::cls()->load_queue();
+$placeholder_queue = $this->load_queue( 'lqip' );
 
 ?>
 
