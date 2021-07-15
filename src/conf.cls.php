@@ -633,19 +633,33 @@ class Conf extends Base {
 	 * @since 1.6
 	 * @access public
 	 * @param  string $role The user role
-	 * @return int       The set value if already set
+	 * @return boolean
 	 */
 	public function in_optm_exc_roles( $role = null ) {
-		// Get user role
-		if ( $role === null ) {
-			$role = Router::get_role();
-		}
-
 		if ( ! $role ) {
 			return false;
 		}
+		return in_array( $role, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? true : false;
+	}
 
-		return in_array( $role, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? $role : false;
+	/**
+	 * Check if the user has role(s) that should be excluded from optm
+	 *
+	 * @since 4.2 to support single user multiple roles scenarios
+	 * @access public
+	 * @param array $roles The roles of the current user
+	 * @return boolean
+	 */
+	public function has_optm_exc_role( $roles = null ) {
+		//Get user roles
+		if ( $roles == null ) {
+			$roles = Router::get_roles();
+		}
+
+		if ( ! $roles ) {
+			return false;
+		}
+		return array_intersect( $roles, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? true : false;
 	}
 
 	/**

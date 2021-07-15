@@ -79,19 +79,35 @@ class Control extends Root {
 	 * @since 3.0 Moved here from conf.cls
 	 * @access public
 	 * @param  string $role The user role
-	 * @return int       The set value if already set
+	 * @return boolean
 	 */
 	public function in_cache_exc_roles( $role = null ) {
-		// Get user role
-		if ( $role === null ) {
-			$role = Router::get_role();
-		}
-
 		if ( ! $role ) {
 			return false;
 		}
 
 		return in_array( $role, $this->conf( Base::O_CACHE_EXC_ROLES ) ) ? $role : false;
+	}
+
+	/**
+	 * Check if the user has role(s) that should be exluded from caching
+	 *
+	 * @since 4.2 to support single user multiple roles scenarios
+	 * @access public
+	 * @param array $roles The roles of the current user
+	 * @return boolean
+	 */
+	public function has_cache_exc_role( $role = null ) {
+		//Get user roles
+		if ( $roles == null) {
+			$roles = Router::get_roles();
+		}
+
+		if ( ! $roles ) {
+			return false;
+		}
+
+		return array_intersect( $roles, $this->conf( self::O_CACHE_EXC_ROLES ) ) ? true : false;
 	}
 
 	/**
@@ -769,8 +785,8 @@ class Control extends Root {
 			}
 
 			// Check if is exclude roles ( Need to set Vary too )
-			if ( $result = $this->in_cache_exc_roles() ) {
-				return $this->_no_cache_for( 'Role Excludes setting ' . $result );
+			if ( $this->in_cache_exc_roles() ) {
+				return $this->_no_cache_for( 'Role Excludes setting.' );
 			}
 		}
 

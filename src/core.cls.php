@@ -200,8 +200,8 @@ class Core extends Root {
 		 */
 		$this->cls( 'ESI' )->init();
 
-		if ( ! is_admin() && ! defined( 'LITESPEED_GUEST_OPTM' ) && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
-			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
+		if ( ! is_admin() && ! defined( 'LITESPEED_GUEST_OPTM' ) && $result = $this->cls( 'Conf' )->has_optm_exc_role() ) {
+			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting.' );
 			! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
 		}
 
