@@ -70,6 +70,30 @@ class REST extends Root {
 			'permission_callback'	=> '__return_true',
 		) );
 
+		register_rest_route( 'litespeed/v1', '/notify_ccss', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_ccss' ),
+			'permission_callback'	=> '__return_true',
+		) );
+
+		register_rest_route( 'litespeed/v1', '/notify_ucss', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_ucss' ),
+			'permission_callback'	=> '__return_true',
+		) );
+
+		register_rest_route( 'litespeed/v1', '/notify_lqip', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_lqip' ),
+			'permission_callback'	=> '__return_true',
+		) );
+
+		register_rest_route( 'litespeed/v1', '/notify_vpi', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_vpi' ),
+			'permission_callback'	=> '__return_true',
+		) );
+
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
@@ -140,6 +164,42 @@ class REST extends Root {
 	 */
 	public function apikey() {
 		return Cloud::cls()->save_apikey();
+	}
+
+	/**
+	 * Notify CCSS
+	 *
+	 * @since  4.2
+	 */
+	public function notify_ccss() {
+		return $this->cls( 'css' )->notify( 'ccss' );
+	}
+
+	/**
+	 * Notify UCSS
+	 *
+	 * @since  4.2
+	 */
+	public function notify_ucss() {
+		return $this->cls( 'css' )->notify( 'ucss' );
+	}
+
+	/**
+	 * Notify lqip
+	 *
+	 * @since  4.2
+	 */
+	public function notify_lqip() {
+		return $this->cls( 'placeholder' )->notify();
+	}
+
+	/**
+	 * Notify viewport images
+	 *
+	 * @since  4.2
+	 */
+	public function notify_vpi() {
+		return $this->cls( 'media' )->notify();
 	}
 
 	/**
