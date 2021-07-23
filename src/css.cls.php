@@ -56,45 +56,6 @@ class CSS extends Base {
 	}
 
 	/**
-	 * Detect if there is ccss/ucss folder or not
-	 *
-	 * @since  4.0
-	 */
-	public function has_ccss_folder() {
-		$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
-		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id ) ) {
-			return true;
-		}
-		if ( file_exists( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id ) ) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Delete file-based cache folder
-	 *
-	 * @since  2.3
-	 * @access public
-	 */
-	public function rm_cache_folder( $subsite_id = false ) {
-		if ( $subsite_id ) {
-			file_exists( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id );
-			file_exists( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id );
-		}
-		else {
-			file_exists( LITESPEED_STATIC_DIR . '/ccss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
-			file_exists( LITESPEED_STATIC_DIR . '/ucss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ucss' );
-		}
-
-		// Clear All summary data
-		$this->_summary = array();
-		self::save_summary();
-
-		Debug2::debug2( '[CSS] Cleared ccss/ucss queue' );
-	}
-
-	/**
 	 * Generate CCSS url tag
 	 *
 	 * @since 4.0
@@ -372,23 +333,6 @@ class CSS extends Base {
 				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS );
 			}
 		}
-	}
-
-	/**
-	 * Clear all waiting queues
-	 *
-	 * @since  3.4
-	 */
-	public function clear_q( $type ) {
-		$filepath_prefix = $this->build_filepath_prefix( $type );
-		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
-
-		if ( file_exists( $static_path ) ) {
-			unlink( $static_path );
-		}
-
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
 	}
 
 	/**

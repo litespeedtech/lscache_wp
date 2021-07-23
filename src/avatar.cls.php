@@ -125,16 +125,6 @@ class Avatar extends Base {
 	}
 
 	/**
-	 * Check if there is a cache folder
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function has_cache() {
-		return is_dir( LITESPEED_STATIC_DIR . '/avatar' );
-	}
-
-	/**
 	 * make cache folder
 	 *
 	 * @since  3.0
@@ -197,26 +187,6 @@ class Avatar extends Base {
 	}
 
 	/**
-	 * Delete file-based cache folder
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function rm_cache_folder( $subsite_id = false ) {
-		if ( $subsite_id ) {
-			file_exists( LITESPEED_STATIC_DIR . '/avatar' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/avatar/' . $subsite_id );
-		}
-		else {
-			file_exists( LITESPEED_STATIC_DIR . '/avatar' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/avatar' );
-		}
-
-		// Clear avatar summary
-		self::save_summary( array() );
-
-		Debug2::debug2( '[Avatar] Cleared avatar queue' );
-	}
-
-	/**
 	 * Cron generation
 	 *
 	 * @since  3.0
@@ -270,7 +240,7 @@ class Avatar extends Base {
 		self::save_summary();
 
 		// Generate
-		if ( ! self::has_cache() ) {
+		if ( ! $this->has_cache_folder( 'avatar', $this->_is_subsite_purge() ? get_current_blog_id() : false ) ) {
 			$this->_mkdir();
 		}
 		$response = wp_remote_get( $url, array( 'timeout' => 180, 'stream' => true, 'filename' => $file ) );

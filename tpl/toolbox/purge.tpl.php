@@ -2,6 +2,8 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
+$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
+
 $_panels = array(
 	array(
 		'title'	=> __( 'Purge Front Page', 'litespeed-cache' ),
@@ -65,7 +67,7 @@ if ( Router::opcache_enabled() ) {
 	) ;
 }
 
-if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
+if ( $this->has_cache_folder( 'ccss', $subsite_id ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
@@ -74,16 +76,16 @@ if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
 	) ;
 }
 
-if ( Placeholder::has_lqip_cache() ) {
+if ( $this->has_cache_folder( 'lqip', $subsite_id ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated image LQIP placeholder files', 'litespeed-cache' ),
-		'icon'	=> 'purge-placeholder',
+		'icon'	=> 'purge-front',
 		'append_url'	=> Purge::TYPE_PURGE_ALL_LQIP,
 	) ;
 }
 
-if ( Avatar::has_cache() ) {
+if ( $this->has_cache_folder( 'avatar', $subsite_id ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Gravatar Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all cached Gravatar files', 'litespeed-cache' ),

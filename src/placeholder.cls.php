@@ -271,16 +271,6 @@ class Placeholder extends Base {
 	}
 
 	/**
-	 * Check if there is a LQIP cache folder
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function has_lqip_cache() {
-		return is_dir( LITESPEED_STATIC_DIR . '/lqip' );
-	}
-
-	/**
 	 * Generate realpath of placeholder file
 	 *
 	 * @since  2.5.1
@@ -294,36 +284,21 @@ class Placeholder extends Base {
 			$src = substr( $src, 0, -5 );
 		}
 
+		$filepath_prefix = $this->build_filepath_prefix( 'lqip' );
+
 		// External images will use cache folder directly
 		$domain = parse_url( $src, PHP_URL_HOST );
 		if ( $domain && ! Utility::internal( $domain ) ) { // todo: need to improve `util:internal()` to include `CDN::internal()`
 			$md5 = md5( $src );
 
-			return LITESPEED_STATIC_DIR . '/lqip/remote/' . substr( $md5, 0, 1 ) . '/' . substr( $md5, 1, 1 ) . '/' . $md5 . '.' . $size;
+			return LITESPEED_STATIC_DIR . $filepath_prefix . 'remote/' . substr( $md5, 0, 1 ) . '/' . substr( $md5, 1, 1 ) . '/' . $md5 . '.' . $size;
 		}
 
 		// Drop domain
 		$short_path = Utility::att_short_path( $src );
 
-		return LITESPEED_STATIC_DIR . '/lqip/' . $short_path . '/' . $size;
+		return LITESPEED_STATIC_DIR . $filepath_prefix . $short_path . '/' . $size;
 
-	}
-
-	/**
-	 * Delete file-based cache folder for LQIP
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function rm_lqip_cache_folder() {
-		if ( self::has_lqip_cache() ) {
-			File::rrmdir( LITESPEED_STATIC_DIR . '/lqip' );
-		}
-
-		// Clear LQIP in queue too
-		self::save_summary( array() );
-
-		Debug2::debug( '[LQIP] Cleared LQIP queue' );
 	}
 
 	/**
@@ -530,22 +505,6 @@ class Placeholder extends Base {
 	}
 
 	/**
-	 * Clear all waiting queues
-	 *
-	 * @since  3.4
-	 */
-	public function clear_q() {
-		$static_path = LITESPEED_STATIC_DIR . '/lqip/.litespeed_conf.dat';
-
-		if ( file_exists( $static_path ) ) {
-			unlink( $static_path );
-		}
-
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
-	}
-
-	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.5.1
@@ -560,7 +519,7 @@ class Placeholder extends Base {
 				break;
 
 			case self::TYPE_CLEAR_Q :
-				$this->clear_q();
+				$this->clear_q( 'lqip' );
 				break;
 
 			default:

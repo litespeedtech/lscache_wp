@@ -150,23 +150,6 @@ class Optimize extends Base {
 	}
 
 	/**
-	 * Delete file-based cache folder
-	 *
-	 * @since  2.1
-	 * @access public
-	 */
-	public function rm_cache_folder( $subsite_id = false ) {
-		if ( $subsite_id ) {
-			file_exists( LITESPEED_STATIC_DIR . '/css/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/css/' . $subsite_id );
-			file_exists( LITESPEED_STATIC_DIR . '/js/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/js/' . $subsite_id );
-			return;
-		}
-
-		file_exists( LITESPEED_STATIC_DIR . '/css' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/css' );
-		file_exists( LITESPEED_STATIC_DIR . '/js' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/js' );
-	}
-
-	/**
 	 * Remove QS
 	 *
 	 * @since  1.3
