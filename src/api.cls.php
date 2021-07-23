@@ -81,6 +81,12 @@ class API extends Base {
 		 * Tag Hooks
 		 */
 		// Action `litespeed_tag_finalize` // @previous API::hook_tag( $hook )
+		add_action( 'litespeed_tag', __NAMESPACE__ . '\Tag::add' ); // Shorter alias of `litespeed_tag_add`
+		add_action( 'litespeed_tag_post', __NAMESPACE__ . '\Tag::add_post' ); // Shorter alias of `litespeed_tag_add_post`
+		add_action( 'litespeed_tag_widget', __NAMESPACE__ . '\Tag::add_widget' ); // Shorter alias of `litespeed_tag_add_widget`
+		add_action( 'litespeed_tag_private', __NAMESPACE__ . '\Tag::add_private' ); // Shorter alias of `litespeed_tag_add_private`
+		add_action( 'litespeed_tag_private_esi', __NAMESPACE__ . '\Tag::add_private_esi' ); // Shorter alias of `litespeed_tag_add_private_esi`
+
 		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // @previous API::tag_add( $tag )
 		add_action( 'litespeed_tag_add_post', __NAMESPACE__ . '\Tag::add_post' );
 		add_action( 'litespeed_tag_add_widget', __NAMESPACE__ . '\Tag::add_widget' );

@@ -248,7 +248,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.2 - Jul 2021 =
-* **3rd** All in One SEO plugin sitemap compatibility. (@arnaudbroes Issue#372)
+* **3rd** All in One SEO plugin sitemap compatibility. (@arnaudbroes @flschaves Issue#372)
 
 = 4.1 - Jun 25 2021 =
 * 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
