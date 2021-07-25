@@ -752,6 +752,20 @@ class Utility extends Root {
 			if ( defined( 'LITESPEED_WP_REALPATH' ) ) {
 				$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . LITESPEED_WP_REALPATH . $url_parsed[ 'path' ];
 			}
+			/**
+			* check if blogs.dir and multisite to handle webp replacement on legacy WP before 3.5 for files stored in /blog.dirs/x/files/
+		 	* @internal #946467
+		 	* @since  4.2
+		 	*/
+			elseif (file_exists( WP_CONTENT_DIR . '/blogs.dir') && is_multisite() ) {
+            			$upload_dir = wp_upload_dir();
+            			$upload_url =  set_url_scheme($upload_dir['baseurl']);
+            			$baseurl_length = strlen( $upload_url);
+            			if (substr($url, 0, $baseurl_length) == $upload_url ) {
+                		$trimed_uri = substr($url, $baseurl_length);
+            			}
+            			$file_path_ori = $upload_dir['basedir'] . $trimed_uri;
+			}
 			else {
 				$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ];
 			}
