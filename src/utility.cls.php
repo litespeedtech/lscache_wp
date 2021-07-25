@@ -761,8 +761,8 @@ class Utility extends Root {
             			$upload_dir = wp_upload_dir();
             			$upload_url =  set_url_scheme($upload_dir['baseurl']);
             			$baseurl_length = strlen( $upload_url);
-            			if (substr($url, 0, $baseurl_length) == $upload_url ) {
-                		$trimed_uri = substr($url, $baseurl_length);
+            			if (substr(set_url_scheme($url), 0, $baseurl_length) == $upload_url ) {
+                			$trimed_uri = substr(set_url_scheme($url), $baseurl_length);
             			}
             			$file_path_ori = $upload_dir['basedir'] . $trimed_uri;
 			}
