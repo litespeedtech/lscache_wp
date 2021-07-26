@@ -58,7 +58,7 @@ class LiteSpeed_Check {
 
 		foreach ($plugin_list as $plugin_check) {
     			if ( file_exists(WP_PLUGIN_DIR. '/' . $plugin_check) && is_plugin_active( $plugin_check )) {
-			#check file existance before is_plugin_active() to save resources.
+			#check file existence before is_plugin_active() to save resources.
     	    			$plugin_name = get_plugin_data ( WP_PLUGIN_DIR. '/' . $plugin_check );
 			}
 			if (!empty($plugin_name)) {
