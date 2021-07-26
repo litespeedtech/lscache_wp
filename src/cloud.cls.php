@@ -8,19 +8,22 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
-	const CLOUD_SERVER = 'https://api.quic.cloud';
-	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
+	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
+	const CLOUD_IPS = 'https://api.preview.quic.cloud/ips?json';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
+	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
 	const SVC_D_REGIONNODES		= 'd/regionnodes';
 	const SVC_D_USAGE 			= 'd/usage';
-	const SVC_CCSS 				= 'ccss' ;
-	const SVC_LQIP 				= 'lqip' ;
-	const SVC_IMG_OPTM			= 'img_optm' ;
-	const SVC_HEALTH			= 'health' ;
-	const SVC_CDN				= 'cdn' ;
+	const SVC_PAGE_OPTM 		= 'page_optm';
+	const SVC_CCSS 				= 'ccss';
+	const SVC_UCSS 				= 'ucss';
+	const SVC_LQIP 				= 'lqip';
+	const SVC_IMG_OPTM			= 'img_optm';
+	const SVC_HEALTH			= 'health';
+	const SVC_CDN				= 'cdn';
 
 	const BM_IMG_OPTM_PRIO = 16;
 	const BM_IMG_OPTM_JUMBO_GROUP = 32;
@@ -65,7 +68,9 @@ class Cloud extends Base {
 
 	public static $SERVICES = array(
 		self::SVC_IMG_OPTM,
+		self::SVC_PAGE_OPTM,
 		self::SVC_CCSS,
+		self::SVC_UCSS,
 		self::SVC_LQIP,
 		self::SVC_CDN,
 		self::SVC_HEALTH,
@@ -228,7 +233,12 @@ class Cloud extends Base {
 			$this->sync_usage();
 		}
 
-		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
+		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ) { // @since 4.2
+			$service = self::SVC_PAGE_OPTM;
+		}
+
+		$usage = $this->_summary[ 'usage.' . $service ];
+		if ( empty( $usage ) ) {
 			return 0;
 		}
 
@@ -236,30 +246,36 @@ class Cloud extends Base {
 		$allowance_max = 0;
 		if ( $service == self::SVC_IMG_OPTM ) {
 			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
-			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
+			if ( ! empty( $usage[ 'pkgs' ] ) && $usage[ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
 				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
 			}
 		}
 
-		$allowance = $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
+		$allowance = $usage[ 'quota' ] - $usage[ 'used' ];
 
 		if ( $allowance > 0 ) {
 			if ( $allowance_max && $allowance_max < $allowance ) {
-				return $allowance_max;
+				$allowance = $allowance_max;
 			}
+
+			// Daily limit @since 4.2
+			if ( isset( $usage[ 'remaining_daily_quota' ] ) && $usage[ 'remaining_daily_quota' ] >= 0 && $usage[ 'remaining_daily_quota' ] < $allowance ) {
+				$allowance = $usage[ 'remaining_daily_quota' ];
+			}
+
 			return $allowance;
 		}
 
 		// Check Pay As You Go balance
-		if ( empty( $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) ) {
+		if ( empty( $usage[ 'pag_bal' ] ) ) {
 			return $allowance_max;
 		}
 
-		if ( $allowance_max && $allowance_max < $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) {
+		if ( $allowance_max && $allowance_max < $usage[ 'pag_bal' ] ) {
 			return $allowance_max;
 		}
 
-		return $this->_summary[ 'usage.' . $service ][ 'pag_bal' ];
+		return $usage[ 'pag_bal' ];
 	}
 
 	/**
@@ -345,7 +361,7 @@ class Cloud extends Base {
 			Debug2::debug( '❄️  request cloud list failed: ', $json );
 
 			if ( $json ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . $json;
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . json_encode( $json );
 				Admin_Display::error( $msg );
 			}
 
@@ -1006,7 +1022,7 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	public static function is_from_cloud() {
-		$response = wp_remote_get( 'https://www.quic.cloud/ips?json' );
+		$response = wp_remote_get( self::CLOUD_IPS );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '[CLoud] failed to get ip whitelist: ' . $error_message );
@@ -1015,7 +1031,15 @@ class Cloud extends Base {
 
 		$json = json_decode( $response[ 'body' ], true );
 
-		return Router::cls()->ip_access( $json );
+		$res = Router::cls()->ip_access( $json );
+		if ( ! $res ) {
+			Debug2::debug( '❄️ ❌ Not our cloud IP' );
+		}
+		else {
+			Debug2::debug( '❄️ ✅ Passed Cloud IP verification' );
+		}
+
+		return $res;
 	}
 
 	/**

@@ -250,7 +250,7 @@ class Placeholder extends Base {
 		$tmp_placeholder = $this->_generate_placeholder_locally( $size );
 
 		// Store it to prepare for cron
-		$queue = $this->load_queue( 'lqip' );
+		$queue = $this->_load_queue( 'lqip' );
 		if ( in_array( $arr_key, $queue ) ) {
 			Debug2::debug2( '[LQIP] already in queue' );
 
@@ -264,7 +264,7 @@ class Placeholder extends Base {
 		}
 
 		$queue[] = $arr_key;
-		$this->save_queue( 'lqip', $queue );
+		$this->_save_queue( 'lqip', $queue );
 		Debug2::debug( '[LQIP] Added placeholder queue' );
 
 		return $tmp_placeholder;
@@ -335,7 +335,7 @@ class Placeholder extends Base {
 	public static function cron( $continue = false ) {
 		$_instance = self::cls();
 
-		$queue = $_instance->load_queue( 'lqip' );
+		$queue = $_instance->_load_queue( 'lqip' );
 
 		if ( empty( $queue ) ) {
 			return;
@@ -499,7 +499,7 @@ class Placeholder extends Base {
 	 * @since  3.0
 	 */
 	private function _popup_and_save( $raw_size_and_src, $append_to_exc = false ) {
-		$queue = $this->load_queue( 'lqip' );
+		$queue = $this->_load_queue( 'lqip' );
 		if ( ! empty( $queue ) && in_array( $raw_size_and_src, $queue ) ) {
 			unset( $queue[ array_search( $raw_size_and_src, $queue ) ] );
 		}
@@ -526,7 +526,7 @@ class Placeholder extends Base {
 			}
 		}
 
-		$this->save_queue( 'lqip', $queue );
+		$this->_save_queue( 'lqip', $queue );
 	}
 
 	/**
