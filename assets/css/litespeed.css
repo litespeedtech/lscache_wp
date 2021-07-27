@@ -512,6 +512,15 @@ h3 .litespeed-learn-more {
 	border-top: 1px solid #f1f1f1;
 }
 
+.litespeed-postbox .litespeed-title {
+	display: flex;
+}
+
+.litespeed-title-right-icon {
+	margin-left: auto;
+	font-weight: normal;
+}
+
 .litespeed-list li:before {
 	content: '>';
 	color: #cc3d6a;
@@ -2651,7 +2660,6 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding: 0px 20px 7px 20px;
 	border-bottom: 1px solid #eee;
 	font-size: 1.2em;
-	display: block;
 }
 
 .litespeed-postbox .inside.litespeed-postbox-footer {

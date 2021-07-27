@@ -273,6 +273,9 @@ class Purge extends Base {
 		$this->cls( 'Data' )->url_file_clean( 'css' );
 		$this->cls( 'Data' )->url_file_clean( 'js' );
 
+		// Clear UCSS queue as it used combined CSS to generate
+		$this->cls( 'CSS' )->clear_q( 'ucss' );
+
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );

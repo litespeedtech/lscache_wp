@@ -8,8 +8,8 @@ defined( 'WPINC' ) || exit;
 $css_summary = CSS::get_summary();
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
-$ccss_queue = $this->load_queue( 'ccss' );
-$ucss_queue = $this->load_queue( 'ucss' );
+$ccss_queue = $this->_load_queue( 'ccss' );
+$ucss_queue = $this->_load_queue( 'ucss' );
 ?>
 
 <h3 class="litespeed-title-short">
@@ -96,7 +96,9 @@ $ucss_queue = $this->load_queue( 'ucss' );
 								<?php break; ?>
 							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
+							<?php if ( ! empty( $v[ '_status' ] ) ) : ?><span class="litespeed-success"><?php endif; ?>
 							<?php echo $v[ 'url' ]; ?>
+							<?php if ( ! empty( $v[ '_status' ] ) ) : ?></span><?php endif; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>
@@ -195,7 +197,9 @@ $ucss_queue = $this->load_queue( 'ucss' );
 								<?php break; ?>
 							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
+							<?php if ( ! empty( $v[ '_status' ] ) ) : ?><span class="litespeed-success"><?php endif; ?>
 							<?php echo $v[ 'url' ]; ?>
+							<?php if ( ! empty( $v[ '_status' ] ) ) : ?></span><?php endif; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 							<?php if ( ! empty( $v[ 'is_webp' ] ) ) echo ' WebP'; ?>

@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.7.2
+Tested up to: 5.8
 Stable tag: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -247,7 +247,18 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.2 - Jul 2021 =
+= 4.2 - Aug 2021 =
+* **GUI** Dashboard added shortcut links to each section.
+* **GUEST** POST will not be cached under GM anymore.
+* **UCSS** Purge CSS will also purge UCSS queue to avoid failure when generating UCSS.
+* **Crawler** Reset position now will reset crawler running status too.
+* **CCSS** CCSS/UCSS Cloud request process can now be cancelled now.
+* **CCSS** CCSS/UCSS Cloud request allowed queued handling from realtime handling.
+* **CCSS** Saved failure info from request to css file.
+* **Cloud** Auto redirect Nodes if the current node is not available anymore.
+* **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
+* **Cloud** Added daily quota rate limit to avoid month free quota consumed fast in the beginning of month.
+* **REST** Cloud request to REST will detect IP in Cloud IP list or not for security concern.
 * **3rd** All in One SEO plugin sitemap compatibility. (@arnaudbroes @flschaves Issue#372)
 
 = 4.1 - Jun 25 2021 =

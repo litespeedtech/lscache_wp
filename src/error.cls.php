@@ -48,6 +48,10 @@ class Error {
 					Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
 				break;
 
+			case 'out_of_daily_quota':
+				$msg = __( 'You don\'t have enough daily quota for current service left today.', 'litespeed-cache' );
+				break;
+
 			case 'lack_of_quota':
 				$msg = __( 'You don\'t have enough quota for current service left this month.', 'litespeed-cache' );
 				break;
