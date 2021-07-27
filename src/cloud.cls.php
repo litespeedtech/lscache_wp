@@ -8,8 +8,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
-	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
-	const CLOUD_IPS = 'https://api.preview.quic.cloud/ips?json';
+	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_IPS = 'https://api.quic.cloud/ips?json';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 

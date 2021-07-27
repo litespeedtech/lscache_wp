@@ -332,7 +332,7 @@ class CSS extends Base {
 			$i ++;
 			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $type, $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
-				// unset( $this->_queue[ $k ] );
+				unset( $this->_queue[ $k ] );
 				$this->_save_queue( $type, $this->_queue );
 
 				if ( $i > 3 ) {
