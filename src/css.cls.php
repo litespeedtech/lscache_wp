@@ -436,7 +436,7 @@ class CSS extends Base {
 		// Old version compatibility
 		if ( empty( $json[ 'status' ] ) ) {
 			if ( ! empty( $json[ $type ] ) ) {
-				$this->_save_con( $type, $css, $queue_k );
+				$this->_save_con( $type, $json[ $type ], $queue_k );
 			}
 
 			// Delete the row
