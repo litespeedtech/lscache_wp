@@ -118,7 +118,7 @@ class REST extends Root {
 	 * @since 4.2
 	 */
 	public function is_from_cloud() {
-		return Cloud::is_from_cloud();
+		return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	/**
@@ -154,7 +154,7 @@ class REST extends Root {
 	 * @since  3.0
 	 */
 	public function ip_validate() {
-		return Cloud::cls()->ip_validate();
+		return $this->cls( 'Cloud' )->ip_validate();
 	}
 
 	/**
@@ -163,7 +163,7 @@ class REST extends Root {
 	 * @since  3.0
 	 */
 	public function token() {
-		return Cloud::cls()->token_validate();
+		return $this->cls( 'Cloud' )->token_validate();
 	}
 
 	/**
@@ -172,7 +172,7 @@ class REST extends Root {
 	 * @since  3.0
 	 */
 	public function apikey() {
-		return Cloud::cls()->save_apikey();
+		return $this->cls( 'Cloud' )->save_apikey();
 	}
 
 	/**

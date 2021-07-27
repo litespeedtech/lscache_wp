@@ -32,9 +32,10 @@ class Cloud extends Base {
 
 	const IMGOPTM_TAKEN         = 'img_optm-taken';
 
-	const EXPIRATION_NODE = 3; // Days before node expired
+	const TTL_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
+	const TTL_IPS = 3; // Days for node ip list cache
 
 	const API_REPORT		= 'wp/report' ;
 	const API_NEWS 			= 'news';
@@ -338,7 +339,7 @@ class Cloud extends Base {
 
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
-			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::EXPIRATION_NODE ) {
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::TTL_NODE ) {
 				return $this->_summary[ 'server.' . $service ];
 			}
 		}
@@ -1029,7 +1030,33 @@ class Cloud extends Base {
 	 *
 	 * @since  3.0
 	 */
-	public static function is_from_cloud() {
+	public function is_from_cloud() {
+		if ( empty( $this->_summary[ 'ips' ] ) || empty( $this->_summary[ 'ips_ts' ] ) || time() - $this->_summary[ 'ips_ts' ] > 86400 * self::TTL_IPS ) {
+			$this->_update_ips();
+		}
+
+		$res = $this->cls( 'Router' )->ip_access( $this->_summary[ 'ips' ] );
+		if ( ! $res ) {
+			Debug2::debug( '❄️ ❌ Not our cloud IP' );
+
+			// Refresh IP list for future detection
+			$this->_update_ips();
+		}
+		else {
+			Debug2::debug( '❄️ ✅ Passed Cloud IP verification' );
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Update Cloud IP list
+	 *
+	 * @since 4.2
+	 */
+	private function _update_ips() {
+		Debug2::debug( '❄️ Load remote Cloud IP list from ' . self::CLOUD_IPS );
+
 		$response = wp_remote_get( self::CLOUD_IPS );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
@@ -1039,15 +1066,9 @@ class Cloud extends Base {
 
 		$json = json_decode( $response[ 'body' ], true );
 
-		$res = Router::cls()->ip_access( $json );
-		if ( ! $res ) {
-			Debug2::debug( '❄️ ❌ Not our cloud IP' );
-		}
-		else {
-			Debug2::debug( '❄️ ✅ Passed Cloud IP verification' );
-		}
-
-		return $res;
+		$this->_summary[ 'ips_ts' ] = time();
+		$this->_summary[ 'ips' ] = $json;
+		self::save_summary();
 	}
 
 	/**

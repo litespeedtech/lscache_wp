@@ -139,7 +139,7 @@ class API extends Base {
 		/**
 		 * Cloud
 		 */
-		add_filter( 'litespeed_is_from_cloud', __NAMESPACE__ . '\Cloud::is_from_cloud' ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter( 'litespeed_is_from_cloud', array( $this, 'is_from_cloud' ) ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media
@@ -197,6 +197,15 @@ class API extends Base {
 	 */
 	public static function vary_append_commenter() {
 		Vary::cls()->append_commenter() ;
+	}
+
+	/**
+	 * Check if is from Cloud
+	 *
+	 * @since 4.2
+	 */
+	public function is_from_cloud() {
+		return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	public function purge_post( $pid ) {
