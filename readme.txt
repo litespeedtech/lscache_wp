@@ -249,6 +249,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.2 - Aug 2021 =
 * **GUI** Dashboard added shortcut links to each section.
+* **Crawler** Reset position now will reset crawler running status too.
+* **CCSS** CCSS/UCSS Cloud request process can now be cancelled now.
 * **CCSS** CCSS/UCSS Cloud request allowed queued handling from realtime handling.
 * **CCSS** Saved failure info from request to css file.
 * **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
