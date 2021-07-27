@@ -555,10 +555,11 @@ class CSS extends Base {
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		if ( file_exists( $static_path ) ) {
+			Debug2::debug( '[CSS] Unlinked static file LITESPEED_STATIC_DIR/' . $filepath_prefix . '.litespeed_conf.dat' );
 			unlink( $static_path );
 		}
 
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		$msg = __( 'Queue cleared successfully', 'litespeed-cache' ) . ': ' . strtoupper( $type );
 		Admin_Display::succeed( $msg );
 	}
 
