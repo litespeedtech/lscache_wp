@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CCSS** CCSS/UCSS Cloud request process can now be cancelled now.
 * **CCSS** CCSS/UCSS Cloud request allowed queued handling from realtime handling.
 * **CCSS** Saved failure info from request to css file.
+* **Cloud** Auto redirect Nodes if the current node is not available anymore.
 * **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
 * **Cloud** Added daily quota rate limit to avoid month free quota consumed fast in the beginning of month.
 * **REST** Cloud request to REST will detect IP in Cloud IP list or not for security concern.

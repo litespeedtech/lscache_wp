@@ -590,6 +590,10 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Force redetect node
+				Debug2::debug( '❄️  Node error, redetecting node [svc] ' . $service );
+				$this->detect_cloud( $service, true );
 			}
 			return;
 		}
@@ -602,6 +606,10 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Force redetect node
+				Debug2::debug( '❄️  Node error, redetecting node [svc] ' . $service );
+				$this->detect_cloud( $service, true );
 			}
 
 			return;
