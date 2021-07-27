@@ -22,6 +22,7 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache';
 	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs';
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
+	const TYPE_PURGE_ALL_UCSS = 'purge_all_ucss';
 	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip';
 	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar';
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object';
@@ -99,6 +100,10 @@ class Purge extends Base {
 				$this->_purge_all_ccss();
 				break;
 
+			case self::TYPE_PURGE_ALL_UCSS:
+				$this->_purge_all_ucss();
+				break;
+
 			case self::TYPE_PURGE_ALL_LQIP:
 				$this->_purge_all_lqip();
 				break;
@@ -158,6 +163,7 @@ class Purge extends Base {
 		$this->_purge_all_lscache( true );
 		$this->_purge_all_cssjs( true );
 		// $this->_purge_all_ccss( true );
+		// $this->_purge_all_ucss( true );
 		// $this->_purge_all_lqip( true );
 		$this->_purge_all_object( true );
 		$this->purge_all_opcache( true );
@@ -206,13 +212,30 @@ class Purge extends Base {
 		do_action( 'litespeed_purged_all_ccss' );
 
 		$this->rm_cache_folder( 'ccss', $this->_is_subsite_purge() ? get_current_blog_id() : false );
-		$this->rm_cache_folder( 'ucss', $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		$this->cls( 'Data' )->url_file_clean( 'ccss' );
-		$this->cls( 'Data' )->url_file_clean( 'ucss' );
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Critical CSS files.', 'litespeed-cache' );
+			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		}
+	}
+
+	/**
+	 * Delete all critical css
+	 *
+	 * @since    2.3
+	 * @access   private
+	 */
+	private function _purge_all_ucss( $silence = false ) {
+		do_action( 'litespeed_purged_all_ucss' );
+
+		$this->rm_cache_folder( 'ucss', $this->_is_subsite_purge() ? get_current_blog_id() : false );
+
+		$this->cls( 'Data' )->url_file_clean( 'ucss' );
+
+		if ( ! $silence ) {
+			$msg = __( 'Cleaned all Unique CSS files.', 'litespeed-cache' );
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
 		}
 	}

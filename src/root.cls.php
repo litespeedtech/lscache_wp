@@ -47,17 +47,7 @@ abstract class Root {
 		$this->_summary = array();
 		self::save_summary();
 
-		if ( $type == 'ccss' || $type == 'ucss') {
-			Debug2::debug( '[CSS] Cleared ' . $type .  ' queue' );
-		}
-		elseif ( $type == 'avatar' ) {
-			Debug2::debug( '[Avatar] Cleared ' . $type .  ' queue' );
-		}
-		elseif ( $type == 'css' || $type == 'js' ) {
-			return;
-		}
-		else {
-			Debug2::debug( '[' . strtoupper( $type ) . '] Cleared ' . $type .  ' queue' );
+		Debug2::debug( 'Cleared ' . $type .  ' queue' );
 		}
 	}
 
@@ -66,7 +56,7 @@ abstract class Root {
 	 *
 	 * @since 4.0
 	 */
-	protected function _build_filepath_prefix( $type ) {
+	protected function build_filepath_prefix( $type ) {
 		$filepath_prefix = '/' . $type . '/';
 		if ( is_multisite() ) {
 			$filepath_prefix .= get_current_blog_id() . '/';
@@ -80,8 +70,8 @@ abstract class Root {
 	 *
 	 * @since 4.1
 	 */
-	protected function _load_queue( $type ) {
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
+	public function load_queue( $type ) {
+		$filepath_prefix = $this->build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		$queue = array();
@@ -97,8 +87,8 @@ abstract class Root {
 	 *
 	 * @since 4.1
 	 */
-	protected function _save_queue( $type, $list ) {
-		$filepath_prefix = $this->_build_filepath_prefix( $type );
+	public function save_queue( $type, $list ) {
+		$filepath_prefix = $this->build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		$data = json_encode( $list );
@@ -116,10 +106,11 @@ abstract class Root {
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		if ( file_exists( $static_path ) ) {
+			Debug2::debug( '[CSS] Unlinked static file LITESPEED_STATIC_DIR/' . $filepath_prefix . '.litespeed_conf.dat' );
 			unlink( $static_path );
 		}
 
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		$msg = __( 'Queue cleared successfully', 'litespeed-cache' ) . ': ' . strtoupper( $type );
 		Admin_Display::succeed( $msg );
 	}
 
@@ -148,7 +139,6 @@ abstract class Root {
 				return;
 			}
 		}
-
 		return self::$_instances[ $cls_tag ];
 	}
 

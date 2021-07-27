@@ -511,6 +511,16 @@ class GUI extends Base {
 			) );
 		}
 
+		if ( $this->has_cache_folder( 'ucss', $subsite_id ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-ucss',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - UCSS',
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_UCSS, false, '_ori' ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
 		if ( $this->has_cache_folder( 'lqip', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
@@ -650,6 +660,16 @@ class GUI extends Base {
 				'id'		=> 'litespeed-purge-ccss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - CCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CCSS ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
+		if ( $this->has_cache_folder( 'ucss', $subsite_id ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-ucss',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - UCSS',
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_UCSS ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
