@@ -284,7 +284,7 @@ class Placeholder extends Base {
 			$src = substr( $src, 0, -5 );
 		}
 
-		$filepath_prefix = $this->build_filepath_prefix( 'lqip' );
+		$filepath_prefix = $this->_build_filepath_prefix( 'lqip' );
 
 		// External images will use cache folder directly
 		$domain = parse_url( $src, PHP_URL_HOST );

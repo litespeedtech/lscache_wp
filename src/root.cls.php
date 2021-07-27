@@ -56,7 +56,7 @@ abstract class Root {
 	 *
 	 * @since 4.0
 	 */
-	protected function build_filepath_prefix( $type ) {
+	protected function _build_filepath_prefix( $type ) {
 		$filepath_prefix = '/' . $type . '/';
 		if ( is_multisite() ) {
 			$filepath_prefix .= get_current_blog_id() . '/';
@@ -71,7 +71,7 @@ abstract class Root {
 	 * @since 4.1
 	 */
 	public function load_queue( $type ) {
-		$filepath_prefix = $this->build_filepath_prefix( $type );
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		$queue = array();
@@ -88,7 +88,7 @@ abstract class Root {
 	 * @since 4.1
 	 */
 	public function save_queue( $type, $list ) {
-		$filepath_prefix = $this->build_filepath_prefix( $type );
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		$data = json_encode( $list );
@@ -102,7 +102,7 @@ abstract class Root {
 	 * @since  3.4
 	 */
 	public function clear_q( $type ) {
-		$filepath_prefix = $this->build_filepath_prefix( $type );
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		if ( file_exists( $static_path ) ) {

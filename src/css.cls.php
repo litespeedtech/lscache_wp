@@ -96,7 +96,7 @@ class CSS extends Base {
 		global $wp;
 		$request_url = home_url( $wp->request );
 
-		$filepath_prefix = $this->build_filepath_prefix( 'ccss' );
+		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
 		$url_tag = $this->_gen_ccss_file_tag( $request_url );
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ccss' );
@@ -161,7 +161,7 @@ class CSS extends Base {
 	 * @since  4.0
 	 */
 	public function load_ucss( $request_url ) {
-		$filepath_prefix = $this->build_filepath_prefix( 'ucss' );
+		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
@@ -381,7 +381,7 @@ class CSS extends Base {
 		else {
 			list( , $html ) = $this->prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
 			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
-			$filepath_prefix = $this->build_filepath_prefix( 'css' );
+			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 			if ( file_exists( $static_file ) ) {
 				$css = File::read( $static_file );
@@ -435,7 +435,7 @@ class CSS extends Base {
 		// Write to file
 		$filecon_md5 = md5( $css );
 
-		$filepath_prefix = $this->build_filepath_prefix( $type );
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
 		File::save( $static_file, $css, true );
