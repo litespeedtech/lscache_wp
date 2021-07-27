@@ -538,6 +538,9 @@ class Control extends Root {
 			if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
 				$hdr .= 'no-cache';
 			}
+			else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
+				$hdr .= 'no-cache';
+			}
 			else {
 				$hdr .= 'public';
 				$hdr .= ',max-age=' . $this->get_ttl();
@@ -700,7 +703,7 @@ class Control extends Root {
 			return $this->_no_cache_for( 'Query String Action' );
 		}
 
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
+		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
 			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]);
 		}
 
