@@ -135,8 +135,9 @@ $placeholder_queue_count = count( $this->_load_queue( 'lqip' ) );
 					<?php if ( $svc == 'page_optm' ) : ?>
 						<?php if ( ! empty( $usage[ 'sub_svc' ] ) ) : ?>
 							<p class="litespeed-dashboard-stats-total">
-							<?php foreach ( $usage[ 'sub_svc' ] as $sub_svc => $sub_usage ) : ?>
-								<?php echo strtoupper( esc_html( $sub_svc ) ); ?>: <strong><?php echo (int)$sub_usage; ?></strong>
+							<?php $i=0;foreach ( $usage[ 'sub_svc' ] as $sub_svc => $sub_usage ) : ?>
+								<?php if ($sub_svc=='vpi') continue; ?>
+								<span class="<?php if ( $i++>0 ) echo 'litespeed-left10'; ?>"><?php echo strtoupper( esc_html( $sub_svc ) ); ?>: <strong><?php echo (int)$sub_usage; ?></strong></span>
 							<?php endforeach; ?>
 							</p>
 							<div class="clear"></div>
