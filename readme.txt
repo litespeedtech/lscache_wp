@@ -249,37 +249,37 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.2 - Jul 29 2021 =
-* **Cloud** Auto redirect Nodes if the current node is not available anymore.
+* **Cloud** Auto redirect to a new node if the current node is not available anymore.
 * **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
-* **Cloud** Added daily quota rate limit to avoid monthly free quota consumed fast in the beginning of month.
-* **Cloud** Node IP list cache w/ 1 day TTL to speed up security check. (@Lucas)
-* 🐞**GUEST** Fixed the issue that keeps on GM mode when Guest Mode UA setting is empty. (@Stars)
-* **GUEST** POST will not be cached under GM anymore.
-* **UCSS** Purge CSS/JS will also purge UCSS queue to avoid failure when generating UCSS.
+* **Cloud** Added a daily quota rate limit to help mitigate the heavy service load at the beginning of the month.
+* **Cloud** Cached the node IP list in order to speed up security check. (@Lucas)
+* 🐞**GUEST** Fixed an issue where Guest Mode remained enabled even when the UA setting is empty. (@Stars)
+* **GUEST** Guest Mode will no longer cache POST requests.
+* **UCSS** Purging CSS/JS now purges the UCSS queue as well, to avoid failure when generating UCSS.
 * **UCSS** Separated service entry `UCSS` from `CCSS`.
 * **CCSS** Simplified `load_queue/save_queue/build_filepath_prefix` functions. (⭐ Contributed by Alice Tang #PR373)
-* **CCSS** Saved failure info from request to CSS file.
+* **CCSS** If CCSS request fails, details are now saved in the CSS file.
 * **CCSS** Renamed CCSS ID in inline HTML from `litespeed-optm-css-rules` to `litespeed-ccss`. (@Alice)
-* **Page Optimize** CCSS/UCSS now can support Cloud queue/notify for async generation.
+* **Page Optimize** CCSS/UCSS now supports Cloud queue/notify for asynchronous generation.
 * **Page Optimize** Simplified CCSS/UCSS generation function.
-* **Page Optimize** CCSS/UCSS Cloud request process can now be cancelled now.
-* **Page Optimize** CSS/JS combined file dropped unnecessary Query Strings.
-* **Crawler** Reset position now will reset crawler running status too.
-* **REST** Cloud request to REST will detect IP in Cloud IP list or not for security concern.
-* **Object** Object Cache compatibility enhancement for `CONF_FILE` const detection.
-* **API** Shorter alais `litespeed_tag` and other aliases for Cache Tag API.
-* **API** Renamed `LITESPEED_BYPASS_OPTM` to `LITESPEED_NO_OPTM` for Page Optimize.
-* **Toolbox** Dropped v3.6.4- versions in Beta Test as they will cause fatal error in downgrade.
-* **GUI** Added shortcut links to each section under Dashboard.
+* **Page Optimize** Added the ability to cancel CCSS/UCSS Cloud requests.
+* **Page Optimize** Unnecessary quesry strings will now be dropped from CSS/JS combined files.
+* **Crawler** Reset position now resets crawler running status too.
+* **REST** Cloud request to REST will now detect whether an IP in in the Cloud IP list for security reasons.
+* **Object** Enhanced Object Cache compatibility for `CONF_FILE` constant detection.
+* **API** Added shorter alias `litespeed_tag` and other similar aliases for Cache Tag API.
+* **API** Renamed `LITESPEED_BYPASS_OPTM` to `LITESPEED_NO_OPTM` for Page Optimization.
+* **Toolbox** Dropped v3.6.4- versions in Beta Test as they will cause a fatal error in downgrade.
+* **GUI** Added shortcut links to each section on the Dashboard.
 * **GUI** Added UCSS whitelist usage description. (@wyb)
-* **GUI** Showed the default recommended values for GM UA/IPs.
-* **3rd** Fixed AMP plugins compatibility. (⭐ Contributed by Alice Tang #PR368)
-* **3rd** Bypassed all page optm including CDN/WebP for AMP pages.
-* **3rd** All in One SEO plugin sitemap compatibility. (@arnaudbroes @flschaves Issue#372)
-* **3rd** Add wsform nonce (#365 @cstrouse)
-* **3rd** Add Easy Digital Download (EDD) & WP Menu Cart nonce (#PR366 @AkramiPro)
-* **3rd** Compatibility w/ Restrict Content Pro (@Abe #PR370)
-* **3rd** Compatibility w/ Gravity Forms (@Ruikai #371)
+* **GUI** Showed the default recommended values for Guest Mode UA/IPs.
+* **3rd** Fixed AMP plugin compatibility. (⭐ Contributed by Alice Tang #PR368)
+* **3rd** Bypassed all page optimization including CDN/WebP for AMP pages.
+* **3rd** Improved compatibility with All in One SEO plugin sitemap. (@arnaudbroes @flschaves Issue#372)
+* **3rd** Added wsform nonce. (#365 @cstrouse)
+* **3rd** Added Easy Digital Download (EDD) & WP Menu Cart nonce. (#PR366 @AkramiPro)
+* **3rd** Improved compatibility w/ Restrict Content Pro. (@Abe #PR370)
+* **3rd** Improved compatibility w/ Gravity Forms. (@Ruikai #371)
 
 = 4.1 - Jun 25 2021 =
 * 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
