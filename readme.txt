@@ -242,6 +242,7 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * WpDiscuz
 * WP-Stateless
 * Elementor
+* WS Form
 
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
