@@ -34,8 +34,8 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'Combine all local JS files into a single file.', 'litespeed-cache' ); ?>
 				<a href="https://docs.litespeedtech.com/lscache/lscwp/ts-optimize/" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ); ?></a>
 				<br /><font class="litespeed-danger">
-					🚨 <?php echo __( 'This option may result in JS error or layout issue on frontend pages on certain themes/plugins.', 'litespeed-cache' ); ?>
-					<?php echo __( 'JS error can be found from the developer console of browser by right click and choose Inspect.', 'litespeed-cache' ); ?>
+					🚨 <?php echo __( 'This option may result in a JS error or layout issue on frontend pages with certain themes/plugins.', 'litespeed-cache' ); ?>
+					<?php echo __( 'JS error can be found from the developer console of browser by right clicking and choosing Inspect.', 'litespeed-cache' ); ?>
 				</font>
 			</div>
 		</td>
@@ -75,10 +75,12 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'Deferred', 'litespeed-cache' ), __( 'Delayed', 'litespeed-cache' ) ) ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Doing so can help reduce resource contention and improve performance causing a lower FID (Core Web Vitals metric).', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#load-js-deferred' ); ?><br />
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://web.dev/fid/#what-is-fid' ); ?>
 				<br /><font class="litespeed-danger">
-					🚨 <?php echo __( 'This option may result in JS error or layout issue on frontend pages on certain themes/plugins.', 'litespeed-cache' ); ?>
+					🚨 <?php echo __( 'This option may result in a JS error or layout issue on frontend pages with certain themes/plugins.', 'litespeed-cache' ); ?>
 				</font>
 			</div>
 		</td>

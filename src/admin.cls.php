@@ -89,7 +89,7 @@ class Admin extends Root {
 		// Add privacy policy
 		// @since 2.2.6
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			wp_add_privacy_policy_content( Core::PLUGIN_NAME, Doc::privacy_policy() );
+			wp_add_privacy_policy_content( Core::NAME, Doc::privacy_policy() );
 		}
 
 		$this->cls( 'Media' )->after_admin_init();

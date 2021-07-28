@@ -84,13 +84,19 @@ class Optimize extends Base {
 			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 );
 		}
 
-		/**
-		 * Exclude js from deferred setting
-		 * @since 1.5
-		 */
-		if ( $this->cfg_js_defer && ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
-			add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+		// GM JS exclude @since 4.1
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_gm_js_exc', $this->conf( self::O_OPTM_GM_JS_EXC ) );
+		}
+		else {
+			/**
+			 * Exclude js from deferred setting
+			 * @since 1.5
+			 */
+			if ( $this->cfg_js_defer ) {
+				add_filter( 'litespeed_optm_js_defer_exc', array( $this->cls( 'Data' ), 'load_js_defer_exc' ) );
+				$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', $this->conf( self::O_OPTM_JS_DEFER_EXC ) );
+			}
 		}
 
 		/**
@@ -256,6 +262,7 @@ class Optimize extends Base {
 		do_action( 'litespeed_optm' );
 
 		// Parse css from content
+		$src_list = false;
 		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
@@ -312,6 +319,7 @@ class Optimize extends Base {
 		}
 
 		// Parse js from buffer as needed
+		$src_list = false;
 		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
@@ -748,8 +756,9 @@ class Optimize extends Base {
 			return false; // Failed to generate
 		}
 
-		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
-		return LITESPEED_STATIC_URL . "$file_path?ver=$qs_hash";
+		// $qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+		// As filename is alreay realted to filecon md5, no need QS anymore
+		return LITESPEED_STATIC_URL . $file_path;
 	}
 
 	/**

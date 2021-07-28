@@ -26,7 +26,7 @@ class Guest {
 	 * @since 4.1
 	 */
 	public function __construct() {
-		! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', dirname( dirname( dirname( __DIR__ ) ) ) );error_log(LSCWP_CONTENT_FOLDER);
+		! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', dirname( dirname( dirname( __DIR__ ) ) ) );
 		// Load config
 		$this->_conf = file_get_contents( LSCWP_CONTENT_FOLDER . '/' . self::CONF_FILE );
 		if ( $this->_conf ) {
@@ -116,13 +116,15 @@ class Guest {
 			return false;
 		}
 
-		$quoted_uas = array();
-		foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
-			$quoted_uas[] = preg_quote( $v, '#' );
-		}
-		$match = preg_match( '#' . implode( '|', $quoted_uas ) . '#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
-		if ( $match ) {
-			return true;
+		if ( $this->_conf[ self::O_GUEST_UAS ] ) {
+			$quoted_uas = array();
+			foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
+				$quoted_uas[] = preg_quote( $v, '#' );
+			}
+			$match = preg_match( '#' . implode( '|', $quoted_uas ) . '#i', $_SERVER[ 'HTTP_USER_AGENT' ] );
+			if ( $match ) {
+				return true;
+			}
 		}
 
 		if ( $this->ip_access( $this->_conf[ self::O_GUEST_IPS ] ) ) {

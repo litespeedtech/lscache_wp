@@ -19,6 +19,52 @@ abstract class Root {
 	private static $_network_options = array();
 
 	/**
+
+	 * Build the static filepath
+	 *
+	 * @since  4.0
+	 */
+	protected function _build_filepath_prefix( $type ) {
+		$filepath_prefix = '/' . $type . '/';
+		if ( is_multisite() ) {
+			$filepath_prefix .= get_current_blog_id() . '/';
+		}
+
+		return $filepath_prefix;
+	}
+
+/**
+	 * Load current queues from data file
+	 *
+	 * @since 4.1
+	 */
+	protected function _load_queue( $type ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		$queue = array();
+		if ( file_exists( $static_path ) ) {
+			$queue = json_decode( file_get_contents( $static_path ), true );
+		}
+
+		return $queue;
+	}
+
+	/**
+	 * Save current queues to data file
+	 *
+	 * @since 4.1
+	 */
+	protected function _save_queue( $type, $list ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		$data = json_encode( $list );
+
+		File::save( $static_path, $data, true );
+	}
+
+	/**
 	 * Load an instance or create it if not existed
 	 * @since  4.0
 	 */

@@ -102,7 +102,7 @@ class Object_Cache extends Root {
 			}
 			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
 		}
-		elseif ( file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) { // Get cfg from _data_file
+		elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) { // Get cfg from _data_file
 			// Use self::const to avoid loading more classes
 			$cfg = json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
 			$this->_cfg_method = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;

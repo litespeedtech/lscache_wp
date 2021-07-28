@@ -33,6 +33,7 @@ $this->form_action();
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable %s CDN API functionality.', 'litespeed-cache' ), 'QUIC.cloud' ); ?>
+				<?php Doc::learn_more( 'https://quic.cloud/docs/cdn/getting-started/verify-quic-cloud-cdn-is-working/#check-lscache-wordpress-plugin' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -45,7 +46,12 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a Content Delivery Network (CDN). NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %2$s.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php echo sprintf( __( 'Turn this setting %1$s if you are using a traditional Content Delivery Network (CDN) or a subdomain for static content with QUIC.cloud CDN.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#use-cdn-mapping' ); ?>
+			</div>
+
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'NOTE: QUIC.cloud CDN and Cloudflare do not use CDN Mapping. If you are are only using QUIC.cloud or Cloudflare, leave this setting %1$s.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -189,23 +195,23 @@ $this->form_action();
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
-					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ); ?></label>
-
-					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ); ?>
-					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
-						<?php echo sprintf( __( 'Optional when API token used.', 'litespeed-cache' ) ); ?>
-					</div>
-				</div>
-
-				<div class='litespeed-col'>
 				<label class="litespeed-form-label"><?php echo __( 'Global API Key / API Token', 'litespeed-cache' ); ?></label>
 
 					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ); ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key / token is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"', 'Cloudflare' ); ?>
-						<?php echo sprintf( __( 'Recommend to generate  the token from Cloudflare  API token template "WordPress ".', 'litespeed-cache' ) ); ?>
+						<?php echo sprintf( __( 'Recommended to generate the token from Cloudflare API token template "WordPress".', 'litespeed-cache' ) ); ?>
+					</div>
+				</div>
+
+				<div class='litespeed-col'>
+					<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ); ?></label>
+
+					<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ); ?>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+						<?php echo sprintf( __( 'Optional when API token used.', 'litespeed-cache' ) ); ?>
 					</div>
 				</div>
 

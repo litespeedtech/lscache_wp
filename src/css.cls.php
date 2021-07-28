@@ -15,6 +15,7 @@ class CSS extends Base {
 
 	protected $_summary;
 	private $_ucss_whitelist;
+	private $_queue;
 
 	/**
 	 * Init
@@ -52,7 +53,7 @@ class CSS extends Base {
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-optm-css-rules">' . $rules . '</style>';
+		return '<style id="litespeed-ccss">' . $rules . '</style>';
 	}
 
 	/**
@@ -87,28 +88,11 @@ class CSS extends Base {
 			file_exists( LITESPEED_STATIC_DIR . '/ucss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ucss' );
 		}
 
-		// Clear CCSS in queue too
-		$this->_summary[ 'queue_ccss' ] = array();
-		$this->_summary[ 'queue_ucss' ] = array();
-		$this->_summary[ 'curr_request_ccss' ] = 0;
-		$this->_summary[ 'curr_request_ucss' ] = 0;
+		// Clear All summary data
+		$this->_summary = array();
 		self::save_summary();
 
 		Debug2::debug2( '[CSS] Cleared ccss/ucss queue' );
-	}
-
-	/**
-	 * Build the static filepath
-	 *
-	 * @since  4.0
-	 */
-	private function _build_filepath_prefix( $type ) {
-		$filepath_prefix = '/' . $type . '/';
-		if ( is_multisite() ) {
-			$filepath_prefix .= get_current_blog_id() . '/';
-		}
-
-		return $filepath_prefix;
 	}
 
 	/**
@@ -167,31 +151,47 @@ class CSS extends Base {
 
 		$uid = get_current_user_id();
 
+		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+
+
 		// Store it to prepare for cron
-		if ( empty( $this->_summary[ 'queue_ccss' ] ) ) {
-			$this->_summary[ 'queue_ccss' ] = array();
+		$this->_queue = $this->_load_queue( 'ccss' );
+
+		if ( count( $this->_queue ) > 500 ) {
+			Debug2::debug( '[CSS] CCSS Queue is full - 500' );
+			return null;
 		}
+
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_summary[ 'queue_ccss' ][ $queue_k ] = array(
+		$this->_queue[ $queue_k ] = array(
 			'url'			=> $request_url,
-			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
+			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
-		Debug2::debug( '[CSS] Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] . ' [vary] ' . $vary  . ' [uid] ' . $uid );
+		$this->_save_queue( 'ccss', $this->_queue );
+		Debug2::debug( '[CSS] Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'CCSS.' . md5( $queue_k ) );
 
-		// For v4.0- clean up
-		if ( isset( $this->_summary[ 'ccss_type_history' ] ) ) {
-			unset( $this->_summary[ 'ccss_type_history' ] );
+		// For v4.1- clean up
+		if ( isset( $this->_summary[ 'ccss_type_history' ] ) || isset( $this->_summary[ 'ccss_history' ] ) || isset( $this->_summary[ 'queue_ccss' ] ) ) {
+			if ( isset( $this->_summary[ 'ccss_type_history' ] ) ) {
+				unset( $this->_summary[ 'ccss_type_history' ] );
+			}
+			if ( isset( $this->_summary[ 'ccss_history' ] ) ) {
+				unset( $this->_summary[ 'ccss_history' ] );
+			}
+			if ( isset( $this->_summary[ 'queue_ccss' ] ) ) {
+				unset( $this->_summary[ 'queue_ccss' ] );
+			}
+			self::save_summary();
 		}
 
-		self::save_summary();
 		return null;
 	}
 
@@ -217,26 +217,42 @@ class CSS extends Base {
 
 		$uid = get_current_user_id();
 
+		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+
 		// Store it for cron
-		if ( empty( $this->_summary[ 'queue_ucss' ] ) ) {
-			$this->_summary[ 'queue_ucss' ] = array();
+		$this->_queue = $this->_load_queue( 'ucss' );
+
+		if ( count( $this->_queue ) > 500 ) {
+			Debug2::debug( '[CSS] UCSS Queue is full - 500' );
+			return false;
 		}
+
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_summary[ 'queue_ucss' ][ $queue_k ] = array(
+		$this->_queue[ $queue_k ] = array(
 			'url'			=> $request_url,
-			'user_agent'	=> substr( $_SERVER[ 'HTTP_USER_AGENT' ], 0, 200 ),
+			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
-		Debug2::debug( '[CSS] Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] . ' [vary] ' . $vary  . ' [uid] ' . $uid );
+		$this->_save_queue( 'ucss', $this->_queue );
+		Debug2::debug( '[CSS] Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'UCSS.' . md5( $queue_k ) );
 
-		self::save_summary();
+		// For v4.1- clean up
+		if ( isset( $this->_summary[ 'ucss_history' ] ) || isset( $this->_summary[ 'queue_ucss' ] ) ) {
+			if ( isset( $this->_summary[ 'ucss_history' ] ) ) {
+				unset( $this->_summary[ 'ucss_history' ] );
+			}
+			if ( isset( $this->_summary[ 'queue_ucss' ] ) ) {
+				unset( $this->_summary[ 'queue_ucss' ] );
+			}
+			self::save_summary();
+		}
 
 		return false;
 	}
@@ -259,49 +275,7 @@ class CSS extends Base {
 	 */
 	public static function cron_ccss( $continue = false ) {
 		$_instance = self::cls();
-		if ( empty( $_instance->_summary[ 'queue_ccss' ] ) ) {
-			return;
-		}
-
-		// For cron, need to check request interval too
-		if ( ! $continue ) {
-			if ( ! empty( $_instance->_summary[ 'curr_request_ccss' ] ) && time() - $_instance->_summary[ 'curr_request_ccss' ] < 300 && ! $_instance->conf( self::O_DEBUG ) ) {
-				Debug2::debug( '[CCSS] Last request not done' );
-				return;
-			}
-		}
-
-		$i = 0;
-		foreach ( $_instance->_summary[ 'queue_ccss' ] as $k => $v ) {
-			$_instance->_popup_and_save( 'ccss', $k, $v[ 'url' ] );
-			Debug2::debug( '[CCSS] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
-
-			if ( empty( $v[ 'url_tag' ] ) ) {
-				Debug2::debug( '[CCSS] wrong queue_ccss format' );
-				continue;
-			}
-
-			if ( ! isset( $v[ 'is_webp' ] ) ) {
-				$v[ 'is_webp' ] = false;
-			}
-
-			$i ++;
-			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ccss', $v[ 'is_mobile' ], $v[ 'is_webp' ] );
-
-			if ( $res ) {
-				Purge::add( 'CCSS.' . md5( $k ) );
-			}
-
-			// only request first one
-			if ( ! $continue ) {
-				return;
-			}
-
-			if ( $i > 3 ) {
-				$_instance->_print_loading( count( $_instance->_summary[ 'queue_ccss' ] ), 'CCSS' );
-				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS );
-			}
-		}
+		return $_instance->_cron_handler( 'ccss', $continue );
 	}
 
 	/**
@@ -311,33 +285,66 @@ class CSS extends Base {
 	 */
 	public static function cron_ucss( $continue = false ) {
 		$_instance = self::cls();
-		if ( empty( $_instance->_summary[ 'queue_ucss' ] ) ) {
+		return $_instance->_cron_handler( 'ucss', $continue );
+	}
+
+	/**
+	 * Handle UCSS/CCSS cron
+	 *
+	 * @since 4.2
+	 */
+	private function _cron_handler( $type, $continue ) {
+		$this->_queue = $this->_load_queue( $type );
+
+		if ( empty( $this->_queue ) ) {
 			return;
 		}
 
+		$type_tag = strtoupper( $type );
+
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( ! empty( $_instance->_summary[ 'curr_request_ucss' ] ) && time() - $_instance->_summary[ 'curr_request_ucss' ] < 300 && ! $_instance->conf( self::O_DEBUG ) ) {
-				Debug2::debug( '[UCSS] Last request not done' );
+			if ( ! empty( $this->_summary[ 'curr_request_' . $type ] ) && time() - $this->_summary[ 'curr_request_' . $type ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
+				Debug2::debug( '[' . $type_tag . '] Last request not done' );
 				return;
 			}
 		}
 
 		$i = 0;
-		foreach ( $_instance->_summary[ 'queue_ucss' ] as $k => $v ) {
-			$_instance->_popup_and_save( 'ucss', $k, $v[ 'url' ] );
-			Debug2::debug( '[UCSS] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
+		foreach ( $this->_queue as $k => $v ) {
+			if ( ! empty( $v[ '_status' ] ) ) {
+				continue;
+			}
+
+			Debug2::debug( '[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
+
+			if ( $type == 'ccss' && empty( $v[ 'url_tag' ] ) ) {
+				unset( $this->_queue[ $k ] );
+				$this->_save_queue( $type, $this->_queue );
+				Debug2::debug( '[CCSS] wrong queue_ccss format' );
+				continue;
+			}
 
 			if ( ! isset( $v[ 'is_webp' ] ) ) {
 				$v[ 'is_webp' ] = false;
 			}
 
 			$i ++;
-			$res = $_instance->_generate( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], 'ucss', $v[ 'is_mobile' ], $v[ 'is_webp' ] );
+			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $type, $v[ 'is_mobile' ], $v[ 'is_webp' ] );
+			if ( ! $res ) { // Status is wrong, drop this this->_queue
+				unset( $this->_queue[ $k ] );
+				$this->_save_queue( $type, $this->_queue );
 
-			if ( $res ) {
-				Purge::add( 'UCSS.' . md5( $k ) );
+				if ( $i > 3 ) {
+					$this->_print_loading( count( $this->_queue ), $type_tag );
+					return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
+				}
+
+				continue;
 			}
+
+			$this->_queue[ $k ][ '_status' ] = 'requested';
+			$this->_save_queue( $type, $this->_queue );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -345,20 +352,10 @@ class CSS extends Base {
 			}
 
 			if ( $i > 3 ) {
-				$_instance->_print_loading( count( $_instance->_summary[ 'queue_ucss' ] ), 'UCSS' );
-				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS );
+				$this->_print_loading( count( $this->_queue ), $type_tag );
+				return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
 			}
 		}
-	}
-
-	/**
-	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
-	*/
-	private function _print_loading( $counter, $type ) {
-		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
-		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
-		echo sprintf( __( '%1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
-		echo '</div>';
 	}
 
 	/**
@@ -367,16 +364,17 @@ class CSS extends Base {
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
-		set_time_limit( 120 );
-
-		// Check if has credit to push
-		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_CCSS );
+	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
+		$svc = $type == 'ccss' ? Cloud::SVC_CCSS : Cloud::SVC_UCSS;
+		// Check if has credit to push or not
+		$allowance = $this->cls( 'Cloud' )->allowance( $svc );
 		if ( ! $allowance ) {
 			Debug2::debug( '[CCSS] ❌ No credit' );
 			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
 			return false;
 		}
+
+		set_time_limit( 120 );
 
 		// Update css request status
 		$this->_summary[ 'curr_request_' . $type ] = time();
@@ -399,21 +397,22 @@ class CSS extends Base {
 			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
 			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
+			Debug2::debug( '[UCSS] Checking combined file ' . $static_file );
 			if ( file_exists( $static_file ) ) {
 				$css = File::read( $static_file );
 			}
 		}
 
 		if ( ! $css ) {
-			Debug2::debug( '[UCSS] no combined css' );
+			Debug2::debug( '[UCSS] ❌ No combined css' );
 			return false;
 		}
 
 		// Generate critical css
 		$data = array(
-			'type'			=> strtoupper( $type ),
+			// 'type'			=> strtoupper( $type ), // Backward compatibility for v4.1-
 			'url'			=> $request_url,
-			'ccss_type'		=> $queue_k,
+			'queue_k'		=> $queue_k,
 			'user_agent'	=> $user_agent,
 			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
 			'is_webp'		=> $is_webp ? 1 : 0,
@@ -429,23 +428,48 @@ class CSS extends Base {
 
 		Debug2::debug( '[CSS] Generating: ', $data );
 
-		$json = Cloud::post( Cloud::SVC_CCSS, $data, 30 );
+		$json = Cloud::post( $svc, $data, 30 );
 		if ( ! is_array( $json ) ) {
 			return false;
 		}
 
-		if ( empty( $json[ $type ] ) ) {
-			Debug2::debug( '[CSS] ❌ empty ' . $type );
+		// Old version compatibility
+		if ( empty( $json[ 'status' ] ) ) {
+			if ( ! empty( $json[ $type ] ) ) {
+				$this->_save_con( $type, $json[ $type ], $queue_k );
+			}
+
+			// Delete the row
 			return false;
 		}
 
+		// Unknown status, remove this line
+		if ( $json[ 'status' ] != 'queued' ) {
+			return false;
+		}
+
+		// Save summary data
+		$this->_summary[ 'last_spent_' . $type ] = time() - $this->_summary[ 'curr_request_' . $type ];
+		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
+		$this->_summary[ 'curr_request_' . $type ] = 0;
+		self::save_summary();
+
+		return true;
+	}
+
+	/**
+	 * Save CCSS/UCSS content
+	 *
+	 * @since 4.2
+	 */
+	private function _save_con( $type, $css, $queue_k ) {
 		// Add filters
-		$css = apply_filters( 'litespeed_' . $type, $json[ $type ], $queue_k );
+		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		Debug2::debug2( '[CSS] con: ' . $css );
 
 		if ( substr( $css, 0, 2 ) == '/*' && substr( $css, -2 ) == '*/' ) {
 			Debug2::debug( '[CSS] ❌ empty ' . $type . ' [content] ' . $css );
-			return false;
+			// continue; // Save the error info too
 		}
 
 		// Write to file
@@ -455,17 +479,99 @@ class CSS extends Base {
 		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
 		File::save( $static_file, $css, true );
+
+		$url_tag = $this->_queue[ $queue_k ][ 'url_tag' ];
+		$vary = $this->_queue[ $queue_k ][ 'vary' ];
 		Debug2::debug2( "[CSS] Save URL to file [file] $static_file [vary] $vary" );
 
 		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
 
-		// Save summary data
-		$this->_summary[ 'last_spent_' . $type ] = time() - $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'curr_request_' . $type ] = 0;
-		self::save_summary();
+		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
+	}
 
-		return true;
+	/**
+	 * Notify CCSS/UCSS
+	 *
+	 * @since 4.2
+	 */
+	public function notify( $type ) {
+		$post_data = json_decode( file_get_contents( 'php://input' ), true );
+		if( is_null( $post_data ) ) {
+			$post_data = $_POST;
+		}
+
+		if ( empty( $post_data[ 'data' ] ) ) {
+			Debug2::debug( '[CSS] ❌ empty data ' . $type );
+			return;
+		}
+
+		if ( empty( $post_data[ 'status' ] ) ) {
+			Debug2::debug( '[CSS] ❌ empty status' );
+			return;
+		}
+
+		Debug2::debug( '[CSS] Received notification [Type] ' . $type . ' [Count] ' . count( $post_data[ 'data' ] ) );
+
+		$this->_queue = $this->_load_queue( $type );
+
+		// Clear existing queues
+		$valid_count = 0;
+		if ( $post_data[ 'status' ] == 'clear' ) {
+			foreach ( $post_data[ 'data' ] as $queue_k ) {
+				if ( ! empty( $this->_queue[ $queue_k ] ) ) {
+					unset( $this->_queue[ $queue_k ] );
+				}
+			}
+		}
+		// Append done list
+		elseif ( $post_data[ 'status' ] == 'done' ) {
+			foreach ( $post_data[ 'data' ] as $queue_k => $css ) {
+				if ( empty( $this->_queue[ $queue_k ] ) ) {
+					continue;
+				}
+
+				$this->_save_con( $type, $css, $queue_k );
+
+				unset( $this->_queue[ $queue_k ] );
+
+				$valid_count++;
+			}
+		}
+
+		$this->_save_queue( $type, $this->_queue );
+
+		Debug2::debug( '[CSS] Saved result [valid count] ' . $valid_count );
+
+		return array( 'count' => $valid_count );
+	}
+
+	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  3.4
+	 */
+	public function clear_q( $type ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		if ( file_exists( $static_path ) ) {
+			Debug2::debug( '[CSS] Unlinked static file LITESPEED_STATIC_DIR/' . $filepath_prefix . '.litespeed_conf.dat' );
+			unlink( $static_path );
+		}
+
+		$msg = __( 'Queue cleared successfully', 'litespeed-cache' ) . ': ' . strtoupper( $type );
+		Admin_Display::succeed( $msg );
+	}
+
+	/**
+	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
+	*/
+	private function _print_loading( $counter, $type ) {
+		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
+		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
+		echo sprintf( __( '%1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
+		echo '<p><a href="' . admin_url( 'admin.php?page=litespeed-page_optm' ) . '">' . __( 'Cancel', 'litespeed-cache' ) . '</a></p>';
+		echo '</div>';
 	}
 
 	/**
@@ -625,43 +731,6 @@ class CSS extends Base {
 		}
 
 		return $whitelist;
-	}
-
-	/**
-	 * Pop up the current request and save
-	 *
-	 * @since  3.0
-	 */
-	private function _popup_and_save( $type, $queue_k, $request_url ) {
-		if ( empty( $this->_summary[ $type . '_history' ] ) ) {
-			$this->_summary[ $type . '_history' ] = array();
-		}
-		$this->_summary[ $type . '_history' ][ $queue_k ] = $request_url;
-
-		while ( count( $this->_summary[ $type . '_history' ] ) > 10 ) {
-			array_shift( $this->_summary[ $type . '_history' ] );
-		}
-
-		unset( $this->_summary[ 'queue_' . $type ][ $queue_k ] );
-
-		self::save_summary();
-	}
-
-	/**
-	 * Clear all waiting queues
-	 *
-	 * @since  3.4
-	 */
-	public function clear_q( $type ) {
-		if ( empty( $this->_summary[ 'queue_' . $type ] ) ) {
-			return;
-		}
-
-		$this->_summary[ 'queue_' . $type ] = array();
-		self::save_summary();
-
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
 	}
 
 	/**

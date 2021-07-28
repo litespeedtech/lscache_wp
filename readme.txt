@@ -1,8 +1,8 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
-Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
+Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.7.1
+Tested up to: 5.8
 Stable tag: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -39,7 +39,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * Load CSS/JS Asynchronously
 * Browser Cache Support<sup>+</sup>
 * Database Cleaner and Optimizer
-* PageSpeed score optimization
+* PageSpeed score (including Core Web Vitals) optimization
 * OPcode Cache Support<sup>+</sup>
 * HTTP/2 Push for CSS/JS (on web servers that support it)
 * DNS Prefetch
@@ -126,11 +126,11 @@ The vast majority of plugins and themes are compatible with LSCache. [Our API](h
 
 == Privacy ==
 
-This plugin includes a Privacy blurb that you can add to your site's Privacy Policy via the WordPress Privacy settings.
+This plugin includes some suggested text that you can add to your site's Privacy Policy via the Guide in the WordPress Privacy settings.
 
 **For your own information:** LiteSpeed Cache for WordPress potentially stores a duplicate copy of every web page on display on your site. The pages are stored locally on the system where LiteSpeed server software is installed and are not transferred to or accessed by LiteSpeed employees in any way, except as necessary in providing routine technical support if you request it. All cache files are temporary, and may easily be purged before their natural expiration, if necessary, via a Purge All command. It is up to individual site administrators to come up with their own cache expiration rules.
 
-In addition to caching, our WordPress plugin has an Image Optimization feature. When optimization is requested, images are transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. LiteSpeed keeps copies of optimized images for 7 days (in case of network stability issues) and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to our server so that we may better provide technical support. Neither of these features collects any visitor data. Only server and site data is involved.
+In addition to caching, our WordPress plugin has online features provided by QUIC.cloud for Image Optimization, CSS Optimization and Low Quality Image Placeholder services. When one of those optimizations are requested, data is transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. Now if using the QUIC.cloud CDN it uses LSCache technologies to access your site then host your site to others globally and also your data is not transferred to or accessed by QUIC.cloud employees in any way, except as necessary in providing maintenance or technical support. QUIC.cloud keeps copies of that data for up to 7 days and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to LiteSpeed so that we may better provide technical support. None of these features collects any visitor data. Only server and site data are involved.
 
 Please see the [QUIC.cloud Privacy Policy](https://quic.cloud/privacy-policy/) for our complete Privacy/GDPR statement.
 
@@ -215,6 +215,7 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
 * [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [All in One SEO](https://wordpress.org/plugins/all-in-one-seo-pack/)
 * [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
 * [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
 * [Wordfence Security](https://wordpress.org/plugins/wordfence/)
@@ -241,10 +242,89 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * WpDiscuz
 * WP-Stateless
 * Elementor
+* WS Form
 
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.2 - Jul 29 2021 =
+* **Cloud** Auto redirect to a new node if the current node is not available anymore.
+* **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
+* **Cloud** Added a daily quota rate limit to help mitigate the heavy service load at the beginning of the month.
+* **Cloud** Cached the node IP list in order to speed up security check. (@Lucas)
+* 🐞**GUEST** Fixed an issue where Guest Mode remained enabled even when the UA setting is empty. (@Stars)
+* **GUEST** Guest Mode will no longer cache POST requests.
+* **UCSS** Purging CSS/JS now purges the UCSS queue as well, to avoid failure when generating UCSS.
+* **UCSS** Separated service entry `UCSS` from `CCSS`.
+* **CCSS** Simplified `load_queue/save_queue/build_filepath_prefix` functions. (⭐ Contributed by Alice Tang #PR373)
+* **CCSS** If CCSS request fails, details are now saved in the CSS file.
+* **CCSS** Renamed CCSS ID in inline HTML from `litespeed-optm-css-rules` to `litespeed-ccss`. (@Alice)
+* **Page Optimize** CCSS/UCSS now supports Cloud queue/notify for asynchronous generation.
+* **Page Optimize** Simplified CCSS/UCSS generation function.
+* **Page Optimize** Added the ability to cancel CCSS/UCSS Cloud requests.
+* **Page Optimize** Unnecessary quesry strings will now be dropped from CSS/JS combined files.
+* **Crawler** Reset position now resets crawler running status too.
+* **REST** Cloud request to REST will now detect whether an IP in in the Cloud IP list for security reasons.
+* **Object** Enhanced Object Cache compatibility for `CONF_FILE` constant detection.
+* **API** Added shorter alias `litespeed_tag` and other similar aliases for Cache Tag API.
+* **API** Renamed `LITESPEED_BYPASS_OPTM` to `LITESPEED_NO_OPTM` for Page Optimization.
+* **Toolbox** Dropped v3.6.4- versions in Beta Test as they will cause a fatal error in downgrade.
+* **GUI** Added shortcut links to each section on the Dashboard.
+* **GUI** Added UCSS whitelist usage description. (@wyb)
+* **GUI** Showed the default recommended values for Guest Mode UA/IPs.
+* **3rd** Fixed AMP plugin compatibility. (⭐ Contributed by Alice Tang #PR368)
+* **3rd** Bypassed all page optimization including CDN/WebP for AMP pages.
+* **3rd** Improved compatibility with All in One SEO plugin sitemap. (@arnaudbroes @flschaves Issue#372)
+* **3rd** Added wsform nonce. (#365 @cstrouse)
+* **3rd** Added Easy Digital Download (EDD) & WP Menu Cart nonce. (#PR366 @AkramiPro)
+* **3rd** Improved compatibility w/ Restrict Content Pro. (@Abe #PR370)
+* **3rd** Improved compatibility w/ Gravity Forms. (@Ruikai #371)
+
+= 4.1 - Jun 25 2021 =
+* 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
+* 🌱**3rd** Added an option to disable ESI for the WooCommerce Cart. (#358 @Anna Feng @Astrid Wang)
+* **ESI** Fixed an ESI nonce issue introduced in v4.0. (@Andrew Choi)
+* **Object** Used new `.litespeed_conf.dat` instead of `.object-cache.ini` for object cache configuration storage.
+* **Conf** Now updating related files after plugin upgrade and not just after activation.
+* 🌱**Guest** Added a Guest Mode JS Excludes option. (@Ankit @Mamac @Rcverma)
+* **Guest** Guest Mode now uses a lightweight script to update guest vary for reduced server load.
+* **Guest** Guest Mode now adds missing image dimensions.
+* **Guest** Guest vary will no longer update if there's already a vary in place to address the infinite loop caused by CloudFlare's incorrect cache control setting for PHP.
+* **Guest** Guest vary update request will no longer be sent if `lscache_vary` is already set.
+* **Guest** Added a Configurable Guest Mode UA/IP under the Tuning tab in the General menu.
+* **Guest** Guest Mode now allows cron to be hooked, even when UCSS/CCSS options are off. (#338437 @Stars)
+* **Guest** Simplified the vary generation process under Guest Mode.
+* **Guest** Added a Guest Mode HTML comment for easier debugging. (@Ruikai)
+* **Guest** Guest vary update ajax now bypasses potential POST cache.
+* **CCSS** Added back the options `Separate CCSS Cache Post Types` and `Separate CCSS Cache URIs`. (@Joshua @Ankit)
+* **CCSS** CCSS/UCSS queue is now limited to a maximum of 500 entries.
+* **Control** The cache control constant `LSCACHE_NO_CACHE` will now have a higher priority than the Forced Public Cache setting.
+* **Crawler** The Crawler can now crawl Guest Mode pages.
+* **Crawler** Fixed a potential XSS vulnerability in the Crawler settings. (#927355)
+* **Crawler** The Crawler now supports a cookie value of `_null`. (@Tobolo)
+* **Media** Updated the default value for the Responsive Placeholder SVG to be transparent.
+* **Media** WebP images in the background may now be served in Guest Mode.
+* **Media** WebP images in CSS may now be bypassed if the requesting Guest Mode client doesn't support WebP.
+* **Media** Fixed empty default image placeholder under Guest Mode.
+* 🐞**Image Optimize** Changed the missing `$_POST` to `$post_data` so the database status is properly updated. (#345 @Lucas)
+* **Import** Export file is now readable to allow importing of partial configurations. (@Ryan D @Joshua)
+* **Page Optimize** Fixed W3 validator errors in Guest Mode. (#61393817)
+* **3rd** A fatal WooCommerce error is no longer triggered by a custom theme reusing a previous LSCWP cache detection tag.
+* **3rd** AMP may now bypass Guest Mode automatically.
+* **Localize** Dropped the `Localize Resources` option as Guest Mode is a sufficient replacement. (Note: Due to user feedback during the development period, we have decided to reinstate this option in a future version.)
+* **Cloud** Changed the WP API url.
+* **Lang** Corrected a missing language folder.
+* **GUI** Added a CCSS/UCSS loading page visualization. (⭐ Contributed by Astrid Wang & Anna Feng #PR360)
+* **GUI** Added a warning to indicate when Guest Mode CCSS/UCSS quota is in use. (Contributed by Astrid Wang & Anna Feng #PR361)
+* **GUI** Added a `litespeed-info` text color. (@Astrid Wang)
+* **GUI** Implemented various UI/UX improvements. (@Joshua @Lisa)
+* **GUI** Duplicate cloud service messages with the same content will only display once now. (@Marc Dahl)
+* **GUI** Added a WebP replacement warning for Guest Mode Optimization if WebP replacement is off.
+* **Misc** Dropped `wp_assets` from distribution to reduce the package size. (@lowwebtech)
+* **Misc** Increased the new version and score detection intervals.
+* **Misc** Optimized WP Assets images. (#352 @lowwebtech)
+* **Debug** Dropped the redundant error_log debug info.
 
 = 4.0 - Apr 30 2021 =
 * 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.

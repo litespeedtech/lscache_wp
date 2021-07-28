@@ -29,6 +29,9 @@ $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
 
+$ccss_count = count( $this->_load_queue( 'ccss' ) );
+$ucss_count = count( $this->_load_queue( 'ucss' ) );
+$placeholder_queue_count = count( $this->_load_queue( 'lqip' ) );
 ?>
 
 <div class="litespeed-dashboard">
@@ -50,7 +53,7 @@ $placeholder_summary = Placeholder::get_summary();
 		<?php
 		$cat_list = array(
 			'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
-			'ccss'		=> __( 'Critical CSS', 'litespeed-cache' ) . '/' . __( 'Unique CSS', 'litespeed-cache' ),
+			'page_optm'	=> __( 'Page Optimization', 'litespeed-cache' ),
 			'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
 			'lqip'		=> __( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 		);
@@ -61,16 +64,18 @@ $placeholder_summary = Placeholder::get_summary();
 			$pag_width = 0;
 			$percentage_bg = 'success';
 			$pag_txt_color = '';
+			$usage = false;
 
 			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
-				$finished_percentage = floor( $cloud_summary[ 'usage.' . $svc ][ 'used' ] * 100 / $cloud_summary[ 'usage.' . $svc ][ 'quota' ] );
-				$used = $cloud_summary[ 'usage.' . $svc ][ 'used' ];
-				$quota = $cloud_summary[ 'usage.' . $svc ][ 'quota' ];
-				$pag_used = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_used' ] : 0;
-				$pag_bal = ! empty( $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] ) ? $cloud_summary[ 'usage.' . $svc ][ 'pag_bal' ] : 0;
+				$usage = $cloud_summary[ 'usage.' . $svc ];
+				$finished_percentage = floor( $usage[ 'used' ] * 100 / $usage[ 'quota' ] );
+				$used = (int)$usage[ 'used' ];
+				$quota = (int)$usage[ 'quota' ];
+				$pag_used = ! empty( $usage[ 'pag_used' ] ) ? (int)$usage[ 'pag_used' ] : 0;
+				$pag_bal = ! empty( $usage[ 'pag_bal' ] ) ? (int)$usage[ 'pag_bal' ] : 0;
 				$pag_total = $pag_used + $pag_bal;
-				if ( ! empty( $cloud_summary[ 'usage.' . $svc ][ 'total_used' ] ) ) {
-					$total_used = $cloud_summary[ 'usage.' . $svc ][ 'total_used' ];
+				if ( ! empty( $usage[ 'total_used' ] ) ) {
+					$total_used = (int)$usage[ 'total_used' ];
 				}
 
 				if ( $pag_total ) {
@@ -126,6 +131,18 @@ $placeholder_summary = Placeholder::get_summary();
 							</button>
 						</p>
 					<?php } ?>
+
+					<?php if ( $svc == 'page_optm' ) : ?>
+						<?php if ( ! empty( $usage[ 'sub_svc' ] ) ) : ?>
+							<p class="litespeed-dashboard-stats-total">
+							<?php $i=0;foreach ( $usage[ 'sub_svc' ] as $sub_svc => $sub_usage ) : ?>
+								<?php if ($sub_svc=='vpi') continue; ?>
+								<span class="<?php if ( $i++>0 ) echo 'litespeed-left10'; ?>"><?php echo strtoupper( esc_html( $sub_svc ) ); ?>: <strong><?php echo (int)$sub_usage; ?></strong></span>
+							<?php endforeach; ?>
+							</p>
+							<div class="clear"></div>
+						<?php endif; ?>
+					<?php endif; ?>
 
 					<?php if ( $svc == 'img_optm' ) { ?>
 						<p class="litespeed-dashboard-stats-total">
@@ -212,6 +229,15 @@ $placeholder_summary = Placeholder::get_summary();
 							<span class="dashicons dashicons-update"></span>
 							<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
 						</a>
+
+						<?php $id = Base::O_GUEST; ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-general' ); ?>" class="litespeed-title-right-icon"><?php echo Lang::title( $id ); ?></a>
+						<?php if ( $this->conf( $id ) ) : ?>
+							<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
+						<?php else: ?>
+							<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+						<?php endif; ?>
+
 					</h3>
 
 					<div>
@@ -263,6 +289,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Image Optimization Summary', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-img_optm' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 					<div class="litespeed-postbox-double-content">
 						<div class="litespeed-postbox-double-col">
@@ -331,15 +358,14 @@ $placeholder_summary = Placeholder::get_summary();
 								Base::O_IMG_OPTM_CRON	=> Lang::title( Base::O_IMG_OPTM_CRON ),
 							);
 							foreach ( $cache_list as $id => $title ) :
-								$v = $this->conf( $id );
 							?>
 								<p>
-									<?php if ( $v ) : ?>
+									<?php if ( $this->conf( $id ) ) : ?>
 										<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
 									<?php else: ?>
 										<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
 									<?php endif; ?>
-									<?php echo $title; ?>
+									<a href="<?php echo admin_url( 'admin.php?page=litespeed-img_optm#settings' ); ?>"><?php echo $title; ?></a>
 								</p>
 							<?php endforeach; ?>
 						</div>
@@ -352,6 +378,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Cache Status', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-cache' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
 				<?php
@@ -362,10 +389,9 @@ $placeholder_summary = Placeholder::get_summary();
 						Base::O_CACHE_BROWSER	=> __( 'Browser Cache', 'litespeed-cache' ),
 					);
 					foreach ( $cache_list as $id => $title ) :
-						$v = $this->conf( $id );
 				?>
 						<p>
-							<?php if ( $v ) : ?>
+							<?php if ( $this->conf( $id ) ) : ?>
 								<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
 							<?php else: ?>
 								<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
@@ -373,11 +399,6 @@ $placeholder_summary = Placeholder::get_summary();
 							<?php echo $title; ?>
 						</p>
 					<?php endforeach; ?>
-				</div>
-				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-					<div>
-						<a href="<?php echo admin_url( 'admin.php?page=litespeed-cache' ); ?>">Manage Cache</a>
-					</div>
 				</div>
 			</div>
 
@@ -400,6 +421,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Critical CSS', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_css' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
 					<?php if ( ! empty( $css_summary[ 'last_request_ccss' ] ) ) : ?>
@@ -412,8 +434,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? count( $css_summary[ 'queue_ccss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ccss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ccss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ccss_count ?: '-'; ?></code>
+						<a href="<?php echo $ccss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ccss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
@@ -431,6 +454,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Unique CSS', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_css' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
 					<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
@@ -443,8 +467,9 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? count( $css_summary[ 'queue_ucss' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $css_summary[ 'queue_ucss' ] ) ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $css_summary[ 'queue_ucss' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ucss_count ?: '-' ?></code>
+						<a href="<?php echo $ucss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>"
+							class="button button-secondary button-small <?php if ( ! $ucss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
@@ -462,6 +487,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Low Quality Image Placeholder', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_media' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
 					<?php if ( ! empty( $placeholder_summary[ 'last_request' ] ) ) : ?>
@@ -474,8 +500,8 @@ $placeholder_summary = Placeholder::get_summary();
 					<?php endif; ?>
 
 					<p>
-						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? count( $placeholder_summary[ 'queue' ] ) : '-' ?></code>
-						<a href="<?php echo ! empty( $placeholder_summary[ 'queue' ] ) ? Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( empty( $placeholder_summary[ 'queue' ] ) ) echo 'disabled'; ?>">
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $placeholder_queue_count ?: '-' ?></code>
+						<a href="<?php echo $placeholder_queue_count ? Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( ! $placeholder_queue_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
@@ -493,6 +519,7 @@ $placeholder_summary = Placeholder::get_summary();
 				<div class="inside">
 					<h3 class="litespeed-title">
 						<?php echo __( 'Crawler Status', 'litespeed-cache' ); ?>
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
 					<p>
@@ -529,9 +556,6 @@ $placeholder_summary = Placeholder::get_summary();
 					</p>
 					<?php endif; ?>
 
-				</div>
-				<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-					<a href="<?php echo admin_url( 'admin.php?page=litespeed-crawler' ); ?>"><?php echo __( 'Manage Crawler', 'litespeed-cache' ); ?></a>
 				</div>
 			</div>
 

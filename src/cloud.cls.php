@@ -9,17 +9,21 @@ defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
 	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_IPS = 'https://api.quic.cloud/ips?json';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
+	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
 	const SVC_D_REGIONNODES		= 'd/regionnodes';
 	const SVC_D_USAGE 			= 'd/usage';
-	const SVC_CCSS 				= 'ccss' ;
-	const SVC_LQIP 				= 'lqip' ;
-	const SVC_IMG_OPTM			= 'img_optm' ;
-	const SVC_HEALTH			= 'health' ;
-	const SVC_CDN				= 'cdn' ;
+	const SVC_PAGE_OPTM 		= 'page_optm';
+	const SVC_CCSS 				= 'ccss';
+	const SVC_UCSS 				= 'ucss';
+	const SVC_LQIP 				= 'lqip';
+	const SVC_IMG_OPTM			= 'img_optm';
+	const SVC_HEALTH			= 'health';
+	const SVC_CDN				= 'cdn';
 
 	const BM_IMG_OPTM_PRIO = 16;
 	const BM_IMG_OPTM_JUMBO_GROUP = 32;
@@ -28,22 +32,29 @@ class Cloud extends Base {
 
 	const IMGOPTM_TAKEN         = 'img_optm-taken';
 
-	const EXPIRATION_NODE = 3; // Days before node expired
+	const TTL_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
 	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
+	const TTL_IPS = 3; // Days for node ip list cache
 
-	const API_NEWS 			= 'wp/news';
 	const API_REPORT		= 'wp/report' ;
-	const API_VER			= 'wp/ver' ;
-	const API_BETA_TEST		= 'wp/beta_test' ;
+	const API_NEWS 			= 'news';
+	const API_VER			= 'ver';
+	const API_BETA_TEST		= 'beta_test';
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
 		self::SVC_D_REGIONNODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
-		self::API_NEWS,
+		// self::API_NEWS,
 		self::API_REPORT,
+		// self::API_VER,
+		// self::API_BETA_TEST,
+	);
+
+	private static $WP_SVC_SET = array(
+		self::API_NEWS,
 		self::API_VER,
 		self::API_BETA_TEST,
 	);
@@ -58,7 +69,9 @@ class Cloud extends Base {
 
 	public static $SERVICES = array(
 		self::SVC_IMG_OPTM,
+		self::SVC_PAGE_OPTM,
 		self::SVC_CCSS,
+		self::SVC_UCSS,
 		self::SVC_LQIP,
 		self::SVC_CDN,
 		self::SVC_HEALTH,
@@ -221,7 +234,12 @@ class Cloud extends Base {
 			$this->sync_usage();
 		}
 
-		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
+		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ) { // @since 4.2
+			$service = self::SVC_PAGE_OPTM;
+		}
+
+		$usage = $this->_summary[ 'usage.' . $service ];
+		if ( empty( $usage ) ) {
 			return 0;
 		}
 
@@ -229,30 +247,36 @@ class Cloud extends Base {
 		$allowance_max = 0;
 		if ( $service == self::SVC_IMG_OPTM ) {
 			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
-			if ( ! empty( $this->_summary[ 'usage.' . $service ][ 'pkgs' ] ) && $this->_summary[ 'usage.' . $service ][ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
+			if ( ! empty( $usage[ 'pkgs' ] ) && $usage[ 'pkgs' ] & self::BM_IMG_OPTM_JUMBO_GROUP ) {
 				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
 			}
 		}
 
-		$allowance = $this->_summary[ 'usage.' . $service ][ 'quota' ] - $this->_summary[ 'usage.' . $service ][ 'used' ];
+		$allowance = $usage[ 'quota' ] - $usage[ 'used' ];
 
 		if ( $allowance > 0 ) {
 			if ( $allowance_max && $allowance_max < $allowance ) {
-				return $allowance_max;
+				$allowance = $allowance_max;
 			}
+
+			// Daily limit @since 4.2
+			if ( isset( $usage[ 'remaining_daily_quota' ] ) && $usage[ 'remaining_daily_quota' ] >= 0 && $usage[ 'remaining_daily_quota' ] < $allowance ) {
+				$allowance = $usage[ 'remaining_daily_quota' ];
+			}
+
 			return $allowance;
 		}
 
 		// Check Pay As You Go balance
-		if ( empty( $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) ) {
+		if ( empty( $usage[ 'pag_bal' ] ) ) {
 			return $allowance_max;
 		}
 
-		if ( $allowance_max && $allowance_max < $this->_summary[ 'usage.' . $service ][ 'pag_bal' ] ) {
+		if ( $allowance_max && $allowance_max < $usage[ 'pag_bal' ] ) {
 			return $allowance_max;
 		}
 
-		return $this->_summary[ 'usage.' . $service ][ 'pag_bal' ];
+		return $usage[ 'pag_bal' ];
 	}
 
 	/**
@@ -309,9 +333,13 @@ class Cloud extends Base {
 			return self::CLOUD_SERVER;
 		}
 
+		if ( in_array( $service, self::$WP_SVC_SET ) ) {
+			return self::CLOUD_SERVER_WP;
+		}
+
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
-			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::EXPIRATION_NODE ) {
+			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::TTL_NODE ) {
 				return $this->_summary[ 'server.' . $service ];
 			}
 		}
@@ -334,7 +362,7 @@ class Cloud extends Base {
 			Debug2::debug( '❄️  request cloud list failed: ', $json );
 
 			if ( $json ) {
-				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . $json;
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . json_encode( $json );
 				Admin_Display::error( $msg );
 			}
 
@@ -563,6 +591,10 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Force redetect node
+				Debug2::debug( '❄️  Node error, redetecting node [svc] ' . $service );
+				$this->detect_cloud( $service, true );
 			}
 			return;
 		}
@@ -575,6 +607,10 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Force redetect node
+				Debug2::debug( '❄️  Node error, redetecting node [svc] ' . $service );
+				$this->detect_cloud( $service, true );
 			}
 
 			return;
@@ -994,8 +1030,34 @@ class Cloud extends Base {
 	 *
 	 * @since  3.0
 	 */
-	public static function is_from_cloud() {
-		$response = wp_remote_get( 'https://www.quic.cloud/ips?json' );
+	public function is_from_cloud() {
+		if ( empty( $this->_summary[ 'ips' ] ) || empty( $this->_summary[ 'ips_ts' ] ) || time() - $this->_summary[ 'ips_ts' ] > 86400 * self::TTL_IPS ) {
+			$this->_update_ips();
+		}
+
+		$res = $this->cls( 'Router' )->ip_access( $this->_summary[ 'ips' ] );
+		if ( ! $res ) {
+			Debug2::debug( '❄️ ❌ Not our cloud IP' );
+
+			// Refresh IP list for future detection
+			$this->_update_ips();
+		}
+		else {
+			Debug2::debug( '❄️ ✅ Passed Cloud IP verification' );
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Update Cloud IP list
+	 *
+	 * @since 4.2
+	 */
+	private function _update_ips() {
+		Debug2::debug( '❄️ Load remote Cloud IP list from ' . self::CLOUD_IPS );
+
+		$response = wp_remote_get( self::CLOUD_IPS );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '[CLoud] failed to get ip whitelist: ' . $error_message );
@@ -1004,7 +1066,9 @@ class Cloud extends Base {
 
 		$json = json_decode( $response[ 'body' ], true );
 
-		return Router::cls()->ip_access( $json );
+		$this->_summary[ 'ips_ts' ] = time();
+		$this->_summary[ 'ips' ] = $json;
+		self::save_summary();
 	}
 
 	/**

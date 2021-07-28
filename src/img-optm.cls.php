@@ -1784,19 +1784,8 @@ class Img_Optm extends Base {
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public function check_img()
-	{
-		$ip = gethostbyname( 'my.quic.cloud' );
-		if ( $ip != Router::get_ip() ) {
-			return Cloud::err( 'wrong ip ' . $ip . '!=' . Router::get_ip() ) ;
-		}
-
-		// Validate key
-		if ( empty( $_POST[ 'auth_key' ] ) || $_POST[ 'auth_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
-			return Cloud::err( 'wrong_key' ) ;
-		}
-
-		global $wpdb ;
+	public function check_img() {
+		global $wpdb;
 
 		$pid = $_POST[ 'data' ] ;
 

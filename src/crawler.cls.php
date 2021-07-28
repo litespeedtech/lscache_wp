@@ -890,6 +890,9 @@ class Crawler extends Root {
 	 */
 	public function reset_pos() {
 		File::save( $this->_resetfile, time() , true );
+
+		$this->_summary[ 'is_running' ] = 0;
+		self::save_summary();
 	}
 
 	/**

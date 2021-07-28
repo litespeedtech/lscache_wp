@@ -156,7 +156,7 @@ class Core extends Root {
 		 */
 		if ( ! empty( $_GET[ Router::ACTION ] ) && $_GET[ Router::ACTION ] == 'before_optm' ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm due to QS CTRL' );
-			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
+			! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
 		}
 
 		/**
@@ -175,7 +175,7 @@ class Core extends Root {
 		$this->cls( 'Tag' )->init();
 
 		// Load hooks that may be related to users
-		add_action( 'init', array( $this, 'after_user_init' ) );
+		add_action( 'init', array( $this, 'after_user_init' ), 5 );
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 );
@@ -202,13 +202,21 @@ class Core extends Root {
 
 		if ( ! is_admin() && ! defined( 'LITESPEED_GUEST_OPTM' ) && $result = $this->cls( 'Conf' )->in_optm_exc_roles() ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result );
-			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true );
+			! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
 		}
 
 		// Heartbeat control
 		$this->cls( 'Tool' )->heartbeat();
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		/**
+		 * Backward compatibility for v4.2- @Ruikai
+		 * TODO: Will change to hook in future versions to make it revertable
+		 */
+		if ( defined( 'LITESPEED_BYPASS_OPTM' ) && ! defined( 'LITESPEED_NO_OPTM' ) ) {
+			defined( 'LITESPEED_NO_OPTM', LITESPEED_BYPASS_OPTM );
+		}
+
+		if ( ! defined( 'LITESPEED_NO_OPTM' ) || ! LITESPEED_NO_OPTM ) {
 			// Check missing static files
 			$this->cls( 'Router' )->serve_static();
 
@@ -397,7 +405,9 @@ class Core extends Root {
 		 * Optimize
 		 * CDN
 		 */
-		$buffer = apply_filters( 'litespeed_buffer_finalize', $buffer );
+		if ( ! defined( 'LITESPEED_NO_OPTM' ) || ! LITESPEED_NO_OPTM ) {
+			$buffer = apply_filters( 'litespeed_buffer_finalize', $buffer );
+		}
 
 		/**
 		 * Replace ESI preserved list

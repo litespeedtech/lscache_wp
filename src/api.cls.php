@@ -81,6 +81,12 @@ class API extends Base {
 		 * Tag Hooks
 		 */
 		// Action `litespeed_tag_finalize` // @previous API::hook_tag( $hook )
+		add_action( 'litespeed_tag', __NAMESPACE__ . '\Tag::add' ); // Shorter alias of `litespeed_tag_add`
+		add_action( 'litespeed_tag_post', __NAMESPACE__ . '\Tag::add_post' ); // Shorter alias of `litespeed_tag_add_post`
+		add_action( 'litespeed_tag_widget', __NAMESPACE__ . '\Tag::add_widget' ); // Shorter alias of `litespeed_tag_add_widget`
+		add_action( 'litespeed_tag_private', __NAMESPACE__ . '\Tag::add_private' ); // Shorter alias of `litespeed_tag_add_private`
+		add_action( 'litespeed_tag_private_esi', __NAMESPACE__ . '\Tag::add_private_esi' ); // Shorter alias of `litespeed_tag_add_private_esi`
+
 		add_action( 'litespeed_tag_add', __NAMESPACE__ . '\Tag::add' ); // @previous API::tag_add( $tag )
 		add_action( 'litespeed_tag_add_post', __NAMESPACE__ . '\Tag::add_post' );
 		add_action( 'litespeed_tag_add_widget', __NAMESPACE__ . '\Tag::add_widget' );
@@ -108,7 +114,7 @@ class API extends Base {
 		/**
 		 * ESI
 		 */
-		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true )
+		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) // NOTE: only available after `init` hook
 		add_filter( 'litespeed_esi_status', array( $this, 'esi_enabled' ) ); // Get ESI enable status // @previous API::esi_enabled()
 		add_filter( 'litespeed_esi_url', array( $this, 'sub_esi_block' ), 10, 8 ); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
@@ -133,7 +139,7 @@ class API extends Base {
 		/**
 		 * Cloud
 		 */
-		add_filter( 'litespeed_is_from_cloud', __NAMESPACE__ . '\Cloud::is_from_cloud' ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter( 'litespeed_is_from_cloud', array( $this, 'is_from_cloud' ) ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media
@@ -191,6 +197,15 @@ class API extends Base {
 	 */
 	public static function vary_append_commenter() {
 		Vary::cls()->append_commenter() ;
+	}
+
+	/**
+	 * Check if is from Cloud
+	 *
+	 * @since 4.2
+	 */
+	public function is_from_cloud() {
+		return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	public function purge_post( $pid ) {
