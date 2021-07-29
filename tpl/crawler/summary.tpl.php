@@ -122,6 +122,7 @@ if($seconds > 0):
 			<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
 			<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache'); ?></th>
 			<th scope="col"><?php echo __( 'Status', 'litespeed-cache' ); ?></th>
+			<th scope="col"><?php echo __( 'Activate', 'litespeed-cache' ); ?></th>
 			<th scope="col"><?php echo __( 'Running', 'litespeed-cache' ); ?></th>
 		</tr></thead>
 		<tbody>
@@ -157,6 +158,9 @@ if($seconds > 0):
 					<?php echo '<i class="litespeed-badge litespeed-bg-success" data-balloon-pos="up" aria-label="' . __( 'Hit', 'litespeed-cache' ) . '">' . ( $hit ?: '-' ) . '</i> '; ?>
 					<?php echo '<i class="litespeed-badge litespeed-bg-primary" data-balloon-pos="up" aria-label="' . __( 'Miss', 'litespeed-cache' ) . '">' . ( $miss ?: '-' ) . '</i> '; ?>
 					<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __( 'Blacklisted', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
+				</td>
+				<td>
+					<?php $this->build_toggle( 'litespeed-crawler-'.$i ,  $__crawler->is_active( $i ) ); ?>
 				</td>
 				<td>
 				<?php
