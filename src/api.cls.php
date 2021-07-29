@@ -114,7 +114,7 @@ class API extends Base {
 		/**
 		 * ESI
 		 */
-		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true )
+		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) // NOTE: only available after `init` hook
 		add_filter( 'litespeed_esi_status', array( $this, 'esi_enabled' ) ); // Get ESI enable status // @previous API::esi_enabled()
 		add_filter( 'litespeed_esi_url', array( $this, 'sub_esi_block' ), 10, 8 ); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
@@ -139,7 +139,7 @@ class API extends Base {
 		/**
 		 * Cloud
 		 */
-		add_filter( 'litespeed_is_from_cloud', __NAMESPACE__ . '\Cloud::is_from_cloud' ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter( 'litespeed_is_from_cloud', array( $this, 'is_from_cloud' ) ); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media
@@ -197,6 +197,15 @@ class API extends Base {
 	 */
 	public static function vary_append_commenter() {
 		Vary::cls()->append_commenter() ;
+	}
+
+	/**
+	 * Check if is from Cloud
+	 *
+	 * @since 4.2
+	 */
+	public function is_from_cloud() {
+		return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	public function purge_post( $pid ) {

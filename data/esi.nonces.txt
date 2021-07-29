@@ -55,7 +55,7 @@ timeline_nonce
 blog_feed_nonce
 
 # WS Form 
-wsf_nonce
+wsf_post
 
 # Easy Digital Download (EDD)
 edd-* private

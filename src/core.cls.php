@@ -208,6 +208,14 @@ class Core extends Root {
 		// Heartbeat control
 		$this->cls( 'Tool' )->heartbeat();
 
+		/**
+		 * Backward compatibility for v4.2- @Ruikai
+		 * TODO: Will change to hook in future versions to make it revertable
+		 */
+		if ( defined( 'LITESPEED_BYPASS_OPTM' ) && ! defined( 'LITESPEED_NO_OPTM' ) ) {
+			defined( 'LITESPEED_NO_OPTM', LITESPEED_BYPASS_OPTM );
+		}
+
 		if ( ! defined( 'LITESPEED_NO_OPTM' ) || ! LITESPEED_NO_OPTM ) {
 			// Check missing static files
 			$this->cls( 'Router' )->serve_static();

@@ -939,12 +939,12 @@ class Admin_Display extends Base {
 
 				$val = implode( "\n", $val );
 				$val = esc_textarea( $val );
-				$val = '<div class="litespeed-desc">' . __( 'Recommended value', 'litespeed-cache' ) . ':</div>' . "<textarea readonly rows='$rows' cols='$cols'>$val</textarea>";
+				$val = '<div class="litespeed-desc">' . __( 'Default value', 'litespeed-cache' ) . ':</div>' . "<textarea readonly rows='$rows' cols='$cols'>$val</textarea>";
 			}
 			else {
 				$val = esc_textarea( $val );
 				$val = "<code>$val</code>";
-				$val = __( 'Recommended value', 'litespeed-cache' ) . ': '.$val;
+				$val = __( 'Default value', 'litespeed-cache' ) . ': '.$val;
 			}
 			echo  $val;
 		}
