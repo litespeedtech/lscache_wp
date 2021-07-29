@@ -276,7 +276,7 @@ class Debug2 extends Root {
 	 * @param string $msg The log message to write.
 	 * @return string The formatted log message.
 	 */
-	private static function format_message( $msg ) {
+	private static function format_message( $msg, $class_tag = false ) {
 		// If call here without calling get_enabled() first, improve compatibility
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
 			return $msg . "\n";
@@ -301,7 +301,7 @@ class Debug2 extends Root {
 			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Str::rrand( 3 ) );
 		}
 		list( $usec, $sec ) = explode(' ', microtime() );
-		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n";
+		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $class_tag . $msg . "\n";
 	}
 
 	/**
@@ -315,6 +315,8 @@ class Debug2 extends Root {
 			return;
 		}
 
+		$class_tag = '[' . self::_backtrace_class_info() . '] ';
+
 		if ( $backtrace_limit !== false ) {
 			if ( ! is_numeric( $backtrace_limit ) ) {
 				$backtrace_limit = self::trim_longtext( $backtrace_limit );
@@ -324,15 +326,15 @@ class Debug2 extends Root {
 				else {
 					$msg .= ' --- ' . var_export( $backtrace_limit, true );
 				}
-				self::push( $msg );
+				self::push( $msg, false, $class_tag );
 				return;
 			}
 
-			self::push( $msg, $backtrace_limit + 1 );
+			self::push( $msg, $backtrace_limit + 1, $class_tag );
 			return;
 		}
 
-		self::push( $msg );
+		self::push( $msg, false, $class_tag );
 	}
 
 	/**
@@ -370,17 +372,38 @@ class Debug2 extends Root {
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	private static function push( $msg, $backtrace_limit = false ) {
+	private static function push( $msg, $backtrace_limit = false, $class_tag ) {
 		// backtrace handler
 		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
 			$msg .= self::_backtrace_info( $backtrace_limit );
 		}
 
-		File::append( self::$log_path, self::format_message( $msg ) );
+		File::append( self::$log_path, self::format_message( $msg, $class_tag ) );
 	}
 
 	/**
-	 * Backtrace info
+	 * Backtrace class info
+	 *
+	 * @since
+	 */
+	private static function _backtrace_class_info() {
+		$class_tag = '';
+		$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace() : debug_backtrace( false, 8 );
+		$index  = 0;
+		$class = $trace[ $index ][ 'class' ];
+
+		while ( $class == 'LiteSpeed\\Debug2' || $class == 'LiteSpeed\\Root' || $class == 'LiteSpeed\\Base' || $class == ''  ) {
+			$index ++;
+			$class = $trace[ $index ][ 'class' ];
+		}
+
+		$class_tag =  substr( $class, 10 );
+
+		return $class_tag;
+	}
+
+	/**
+	 * Backtrace general info
 	 *
 	 * @since 2.7
 	 */
