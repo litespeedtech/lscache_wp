@@ -30,13 +30,14 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * Object Cache (Memcached/LSMCD/Redis) Support<sup>+</sup>
 * Image Optimization (Lossless/Lossy)
 * Minify CSS, JavaScript, and HTML
-* Minify inline CSS/JS
+* Minify inline & external CSS/JS
 * Combine CSS/JS
 * Automatically generate Critical CSS
-* Lazyload images/iframes
+* Lazy-load images/iframes
 * Responsive Image Placeholders
 * Multiple CDN Support<sup>+</sup>
-* Load CSS/JS Asynchronously
+* Load CSS Asynchronously
+* Defer/delay JS loading
 * Browser Cache Support<sup>+</sup>
 * Database Cleaner and Optimizer
 * PageSpeed score (including Core Web Vitals) optimization
@@ -69,7 +70,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * HTTP/2 support
 * [HTTP/3 & QUIC](https://www.litespeedtech.com/http3-faq) support
 * ESI (Edge Side Includes) support<sup>*</sup>
-* Widgets and Shortcodes as ESI blocks<sup>*</sup>
+* Widgets and Shortcodes as ESI blocks<sup>*</sup> (requires Classic Widgets plugin with WP 5.8 currently)
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
 
@@ -91,8 +92,8 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * [Join our Slack community](https://litespeedtech.com/slack) to connect with other LiteSpeed users.
 * [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
 * [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/overview/).
-* [Read WordPress Wednesday tutorials on our blog](https://blog.litespeedtech.com/tag/wordpress-wednesday).
-* [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
+* [Read WordPress Wednesday tutorials on our blog](https://blog.litespeedtech.com/tag/wordpress-wednesday/).
+* [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache/).
 * [LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
 
 == Installation ==
@@ -145,7 +146,7 @@ A page cache allows the server to bypass PHP and database queries altogether. LS
 
 If all of that sounds complicated, no need to worry. LSCWP works right out of the box with default settings that are appropriate for most sites. [See the Beginner's Guide](https://docs.litespeedtech.com/lscache/lscwp/beginner/).
 
-**Don't have a LiteSpeed server?** Try our QUIC.cloud CDN service. It allows sites on *any server* (nginx and Apache included) to experience the power of LiteSpeed caching! [Click here](https://quic.cloud) to learn more or to give QUIC.cloud a try.
+**Don't have a LiteSpeed server?** Try our QUIC.cloud CDN service. It allows sites on *any server* (NGINX and Apache included) to experience the power of LiteSpeed caching! [Click here](https://quic.cloud) to learn more or to give QUIC.cloud a try.
 
 = What about the optimization features of LSCache? =
 
