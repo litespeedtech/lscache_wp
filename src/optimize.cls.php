@@ -237,7 +237,7 @@ class Optimize extends Base {
 	 */
 	private function _optimize() {
 		$this->cfg_http2_css =  defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_HTTP2 );
-		$this->cfg_http2_js = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_HTTP2 );
+		$this->cfg_http2_js = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_JS_HTTP2 );
 		$this->cfg_css_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_MIN );
 		$this->cfg_css_comb = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_COMB );
 		$this->cfg_js_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_MIN );

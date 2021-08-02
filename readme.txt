@@ -248,6 +248,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.3 - Auguest 2021 =
+* **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
+
 = 4.2 - Jul 29 2021 =
 * **Cloud** Auto redirect to a new node if the current node is not available anymore.
 * **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
