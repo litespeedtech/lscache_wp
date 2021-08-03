@@ -122,6 +122,7 @@ $placeholder_queue_count = count( $this->_load_queue( 'lqip' ) );
 							</div>
 						</div>
 					</div>
+
 					<?php if ( $pag_total > 0 ) { ?>
 						<p class="litespeed-dashboard-stats-payg <?php echo $pag_txt_color; ?>">
 							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
@@ -150,6 +151,13 @@ $placeholder_queue_count = count( $this->_load_queue( 'lqip' ) );
 							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>">
 								<span class="dashicons dashicons-info"></span>
 							</button>
+						</p>
+						<div class="clear"></div>
+					<?php } ?>
+
+					<?php if ( isset( $usage[ 'remaining_daily_quota' ] ) && $usage[ 'remaining_daily_quota' ] >= 0 && isset( $usage[ 'daily_quota' ] ) && $usage[ 'daily_quota' ] >= 0 ) { ?>
+						<p class="litespeed-dashboard-stats-total">
+							<?php echo __('Remaining Daily Quota','litespeed-cache'); ?>: <strong><?php echo $usage[ 'remaining_daily_quota' ]; ?> / <?php echo $usage[ 'daily_quota' ]; ?></strong>
 						</p>
 						<div class="clear"></div>
 					<?php } ?>
