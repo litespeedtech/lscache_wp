@@ -251,6 +251,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.3 - Auguest 2021 =
 * **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
 * **GUI** Added daily quota on dashboard.
+* **GUI** Added downgrade warning to Toolbox -> Beta Test.
+* **GUI** Tuned `.litespeed-desc` class to full width in CSS.
 * **Conf** Default `Preserve EXIF/XMP data` to ON for copyright concern. (@Tobolo)
 
 = 4.2 - Jul 29 2021 =
