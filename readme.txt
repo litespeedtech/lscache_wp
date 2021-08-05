@@ -250,6 +250,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.3 - Auguest 2021 =
 * **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
+* **GUI** Added daily quota on dashboard.
+* **Conf** Default `Preserve EXIF/XMP data` to ON for copyright concern. (@Tobolo)
 
 = 4.2 - Jul 29 2021 =
 * **Cloud** Auto redirect to a new node if the current node is not available anymore.
