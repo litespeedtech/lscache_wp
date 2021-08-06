@@ -5,7 +5,6 @@ defined( 'WPINC' ) || exit;
 // Existing public version list
 $v_list = array(
 	'4.1',
-	'3.6.4',
 );
 
 ?>
@@ -34,10 +33,17 @@ $v_list = array(
 		<a href="javascript:;" class="button litespeed-btn-success" onclick="document.getElementById('litespeed-beta-test').value='<?php echo $v; ?>';"><?php echo $v; ?></a>
 
 	<?php endforeach; ?>
+
+		<a href="javascript:;" class="button litespeed-btn-danger" onclick="document.getElementById('litespeed-beta-test').value='3.6.4';">3.6.4</a>
+		<span class="litespeed-danger">
+			🚨 <?php echo __( 'Downgrade not recommended. May cause fatal error due to refactored code.', 'litespeed-cache' ); ?>
+		</span>
 	</p>
 
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to use the most recent GitHub commit. Master is for release candidate & Dev is for experimental testing.', 'litespeed-cache' ), '<code>' . __( 'Use latest GitHub Dev/Master commit', 'litespeed-cache' ) . '</code>' ); ?></div>
 	<div class="litespeed-desc"><?php echo sprintf( __( 'Press the %s button to stop beta testing and go back to the current release from the WordPress Plugin Directory.', 'litespeed-cache' ), '<code>' . __( 'Use latest WordPress release version', 'litespeed-cache' ) . '</code>' ); ?></div>
+
+
 
 	<p class="litespeed-danger">
 		🚨 <?php echo sprintf( __( 'In order to avoid an upgrade error, you must be using %1$s or later before you can upgrade to %2$s versions.', 'litespeed-cache' ), '<code>v3.6.4</code>', '<code>dev/master/v4+</code>' ); ?>

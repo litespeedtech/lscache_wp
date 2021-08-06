@@ -12,10 +12,6 @@ defined( 'WPINC' ) || exit;
 class File {
 	const MARKER = 'LiteSpeed Operator';
 
-	function __construct() {
-		// nothing to do here
-	}
-
 	/**
 	 * Detect if an URL is 404
 	 *
@@ -165,7 +161,7 @@ class File {
 			}
 			restore_error_handler();
 		}
-		elseif ( ! is_writeable( $filename ) ) {
+		elseif ( ! is_writable( $filename ) ) {
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename );
 		}
 
@@ -349,7 +345,7 @@ class File {
 			}
 			restore_error_handler();
 		}
-		elseif ( ! is_writeable( $filename ) ) {
+		elseif ( ! is_writable( $filename ) ) {
 			Error::t( 'W', $filename );
 		}
 

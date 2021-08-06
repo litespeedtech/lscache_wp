@@ -398,7 +398,7 @@ button.litespeed-form-action:hover {
 	color: #7a919e;
 	margin: 10px 0;
 	line-height: 1.7;
-	max-width: 840px;
+	/*max-width: 840px;*/
 }
 
 .litespeed-desc+.litespeed-desc {

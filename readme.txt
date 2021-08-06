@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.8
+Tested up to: 5.7.2
 Stable tag: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -247,6 +247,13 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.3 - Auguest 2021 =
+* **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
+* **GUI** Added daily quota on dashboard.
+* **GUI** Added downgrade warning to Toolbox -> Beta Test.
+* **GUI** Tuned `.litespeed-desc` class to full width in CSS.
+* **Conf** Default `Preserve EXIF/XMP data` to ON for copyright concern. (@Tobolo)
 
 = 4.2 - Jul 29 2021 =
 * **Cloud** Auto redirect to a new node if the current node is not available anymore.
