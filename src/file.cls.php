@@ -12,10 +12,6 @@ defined( 'WPINC' ) || exit;
 class File {
 	const MARKER = 'LiteSpeed Operator';
 
-	function __construct() {
-		// nothing to do here
-	}
-
 	/**
 	 * Detect if an URL is 404
 	 *
