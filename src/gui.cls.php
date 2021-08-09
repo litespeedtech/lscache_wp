@@ -499,7 +499,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
+		if ( $this->has_cache_folder( 'ccss' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -509,7 +509,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Placeholder::has_lqip_cache() ) {
+		if ( $this->has_cache_folder( 'lqip' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
@@ -519,7 +519,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Avatar::has_cache() ) {
+		if ( $this->has_cache_folder( 'avatar' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
@@ -640,7 +640,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
+		if ( $this->has_cache_folder( 'ccss' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -650,7 +650,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Placeholder::has_lqip_cache() ) {
+		if ( $this->has_cache_folder( 'lqip' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
@@ -660,7 +660,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Avatar::has_cache() ) {
+		if ( $this->has_cache_folder( 'avatar' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
