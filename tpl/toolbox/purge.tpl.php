@@ -2,8 +2,6 @@
 namespace LiteSpeed ;
 defined( 'WPINC' ) || exit ;
 
-$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
-
 $_panels = array(
 	array(
 		'title'	=> __( 'Purge Front Page', 'litespeed-cache' ),
