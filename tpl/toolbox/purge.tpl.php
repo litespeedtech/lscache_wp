@@ -74,6 +74,15 @@ if ( $this->has_cache_folder( 'ccss' ) ) {
 	) ;
 }
 
+if ( $this->has_cache_folder( 'ucss' ) ) {
+	$_panels[] = array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Unique CSS', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all generated unique CSS files', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> Purge::TYPE_PURGE_ALL_UCSS,
+	) ;
+}
+
 if ( $this->has_cache_folder( 'lqip' ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
