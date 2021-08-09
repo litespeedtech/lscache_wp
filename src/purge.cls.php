@@ -205,8 +205,7 @@ class Purge extends Base {
 	private function _purge_all_ccss( $silence = false ) {
 		do_action( 'litespeed_purged_all_ccss' );
 
-		$this->rm_cache_folder( 'ccss', $this->_is_subsite_purge() ? get_current_blog_id() : false );
-		$this->rm_cache_folder( 'ucss', $this->_is_subsite_purge() ? get_current_blog_id() : false );
+		$this->cls( 'CSS' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		$this->cls( 'Data' )->url_file_clean( 'ccss' );
 		$this->cls( 'Data' )->url_file_clean( 'ucss' );
@@ -226,7 +225,7 @@ class Purge extends Base {
 	private function _purge_all_lqip( $silence = false ) {
 		do_action( 'litespeed_purged_all_lqip' );
 
-		$this->rm_cache_folder( 'lqip', $this->_is_subsite_purge() ? get_current_blog_id() : false );
+		Placeholder::cls()->rm_lqip_cache_folder();
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all LQIP files.', 'litespeed-cache' );
@@ -243,7 +242,7 @@ class Purge extends Base {
 	private function _purge_all_avatar( $silence = false ) {
 		do_action( 'litespeed_purged_all_avatar' );
 
-		$this->rm_cache_folder( 'avatar', $this->_is_subsite_purge() ? get_current_blog_id() : false );
+		Avatar::cls()->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Gravatar files.', 'litespeed-cache' );
@@ -266,8 +265,7 @@ class Purge extends Base {
 
 		$this->_add( Tag::TYPE_MIN );
 
-		$this->rm_cache_folder( 'css', $this->_is_subsite_purge() ? get_current_blog_id() : false );
-		$this->rm_cache_folder( 'js', $this->_is_subsite_purge() ? get_current_blog_id() : false );
+		$this->cls( 'Optimize' )->rm_cache_folder( $this->_is_subsite_purge() ? get_current_blog_id() : false );
 
 		$this->cls( 'Data' )->url_file_clean( 'css' );
 		$this->cls( 'Data' )->url_file_clean( 'js' );

@@ -57,6 +57,45 @@ class CSS extends Base {
 	}
 
 	/**
+	 * Detect if there is ccss/ucss folder or not
+	 *
+	 * @since  4.0
+	 */
+	public function has_ccss_folder() {
+		$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
+		if ( file_exists( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id ) ) {
+			return true;
+		}
+		if ( file_exists( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Delete file-based cache folder
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public function rm_cache_folder( $subsite_id = false ) {
+		if ( $subsite_id ) {
+			file_exists( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss/' . $subsite_id );
+			file_exists( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ucss/' . $subsite_id );
+		}
+		else {
+			file_exists( LITESPEED_STATIC_DIR . '/ccss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
+			file_exists( LITESPEED_STATIC_DIR . '/ucss' ) && File::rrmdir( LITESPEED_STATIC_DIR . '/ucss' );
+		}
+
+		// Clear All summary data
+		$this->_summary = array();
+		self::save_summary();
+
+		Debug2::debug2( '[CSS] Cleared ccss/ucss queue' );
+	}
+
+	/**
 	 * Generate CCSS url tag
 	 *
 	 * @since 4.0
@@ -116,7 +155,7 @@ class CSS extends Base {
 
 
 		// Store it to prepare for cron
-		$this->_queue = $this->load_queue( 'ccss' );
+		$this->_queue = $this->_load_queue( 'ccss' );
 
 		if ( count( $this->_queue ) > 500 ) {
 			Debug2::debug( '[CSS] CCSS Queue is full - 500' );
@@ -133,7 +172,7 @@ class CSS extends Base {
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
-		$this->save_queue( 'ccss', $this->_queue );
+		$this->_save_queue( 'ccss', $this->_queue );
 		Debug2::debug( '[CSS] Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
@@ -181,7 +220,7 @@ class CSS extends Base {
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 
 		// Store it for cron
-		$this->_queue = $this->load_queue( 'ucss' );
+		$this->_queue = $this->_load_queue( 'ucss' );
 
 		if ( count( $this->_queue ) > 500 ) {
 			Debug2::debug( '[CSS] UCSS Queue is full - 500' );
@@ -198,7 +237,7 @@ class CSS extends Base {
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
-		$this->save_queue( 'ucss', $this->_queue );
+		$this->_save_queue( 'ucss', $this->_queue );
 		Debug2::debug( '[CSS] Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
@@ -255,7 +294,7 @@ class CSS extends Base {
 	 * @since 4.2
 	 */
 	private function _cron_handler( $type, $continue ) {
-		$this->_queue = $this->load_queue( $type );
+		$this->_queue = $this->_load_queue( $type );
 
 		if ( empty( $this->_queue ) ) {
 			return;
@@ -281,7 +320,7 @@ class CSS extends Base {
 
 			if ( $type == 'ccss' && empty( $v[ 'url_tag' ] ) ) {
 				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
+				$this->_save_queue( $type, $this->_queue );
 				Debug2::debug( '[CCSS] wrong queue_ccss format' );
 				continue;
 			}
@@ -294,7 +333,7 @@ class CSS extends Base {
 			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $type, $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
 				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
+				$this->_save_queue( $type, $this->_queue );
 
 				if ( $i > 3 ) {
 					$this->_print_loading( count( $this->_queue ), $type_tag );
@@ -305,7 +344,7 @@ class CSS extends Base {
 			}
 
 			$this->_queue[ $k ][ '_status' ] = 'requested';
-			$this->save_queue( $type, $this->_queue );
+			$this->_save_queue( $type, $this->_queue );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -473,7 +512,7 @@ class CSS extends Base {
 
 		Debug2::debug( '[CSS] Received notification [Type] ' . $type . ' [Count] ' . count( $post_data[ 'data' ] ) );
 
-		$this->_queue = $this->load_queue( $type );
+		$this->_queue = $this->_load_queue( $type );
 
 		// Clear existing queues
 		$valid_count = 0;
@@ -499,11 +538,29 @@ class CSS extends Base {
 			}
 		}
 
-		$this->save_queue( $type, $this->_queue );
+		$this->_save_queue( $type, $this->_queue );
 
 		Debug2::debug( '[CSS] Saved result [valid count] ' . $valid_count );
 
 		return array( 'count' => $valid_count );
+	}
+
+	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  3.4
+	 */
+	public function clear_q( $type ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		if ( file_exists( $static_path ) ) {
+			Debug2::debug( '[CSS] Unlinked static file LITESPEED_STATIC_DIR/' . $filepath_prefix . '.litespeed_conf.dat' );
+			unlink( $static_path );
+		}
+
+		$msg = __( 'Queue cleared successfully', 'litespeed-cache' ) . ': ' . strtoupper( $type );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
