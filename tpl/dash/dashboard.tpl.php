@@ -29,9 +29,9 @@ $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
 
-$ccss_count = count( $this->_load_queue( 'ccss' ) );
-$ucss_count = count( $this->_load_queue( 'ucss' ) );
-$placeholder_queue_count = count( $this->_load_queue( 'lqip' ) );
+$ccss_count = count( $this->load_queue( 'ccss' ) );
+$ucss_count = count( $this->load_queue( 'ucss' ) );
+$placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 ?>
 
 <div class="litespeed-dashboard">

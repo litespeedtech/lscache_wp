@@ -8,8 +8,8 @@ defined( 'WPINC' ) || exit;
 $css_summary = CSS::get_summary();
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
-$ccss_queue = $this->_load_queue( 'ccss' );
-$ucss_queue = $this->_load_queue( 'ucss' );
+$ccss_queue = $this->load_queue( 'ccss' );
+$ucss_queue = $this->load_queue( 'ucss' );
 ?>
 
 <h3 class="litespeed-title-short">
