@@ -19,7 +19,48 @@ abstract class Root {
 	private static $_network_options = array();
 
 	/**
+	 * Check if there is cache folder for that type
+	 *
+	 * @since  3.0
+	 */
+	public function has_cache_folder( $type, $subsite_id ) {
+		if ( file_exists( LITESPEED_STATIC_DIR . '/' . $type . '/' . $subsite_id ) ) {
+			return true;
+		}
+		return false;
+	}
 
+	/**
+	 * Delete file-based cache folder for that type
+	 *
+	 * @since  3.0
+	 */
+	public function rm_cache_folder( $type, $subsite_id = false ) {
+		if ( ! $this->has_cache_folder( $type, $subsite_id ) ) {
+			return;
+		}
+
+		File::rrmdir( LITESPEED_STATIC_DIR . '/' . $type . '/' . $subsite_id );
+
+		// Clear All summary data
+		$this->_summary = array();
+		self::save_summary();
+
+		if ( $type == 'ccss' || $type == 'ucss') {
+			Debug2::debug( '[CSS] Cleared ' . $type .  ' queue' );
+		}
+		elseif ( $type == 'avatar' ) {
+			Debug2::debug( '[Avatar] Cleared ' . $type .  ' queue' );
+		}
+		elseif ( $type == 'css' || $type == 'js' ) {
+			return;
+		}
+		else {
+			Debug2::debug( '[' . strtoupper( $type ) . '] Cleared ' . $type .  ' queue' );
+		}
+	}
+
+	/**
 	 * Build the static filepath
 	 *
 	 * @since  4.0
@@ -33,12 +74,12 @@ abstract class Root {
 		return $filepath_prefix;
 	}
 
-/**
+	/**
 	 * Load current queues from data file
 	 *
 	 * @since 4.1
 	 */
-	protected function _load_queue( $type ) {
+	public function load_queue( $type ) {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
@@ -55,13 +96,30 @@ abstract class Root {
 	 *
 	 * @since 4.1
 	 */
-	protected function _save_queue( $type, $list ) {
+	public function save_queue( $type, $list ) {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
 		$data = json_encode( $list );
 
 		File::save( $static_path, $data, true );
+	}
+
+	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  3.4
+	 */
+	public function clear_q( $type ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		if ( file_exists( $static_path ) ) {
+			unlink( $static_path );
+		}
+
+		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
 	}
 
 	/**
