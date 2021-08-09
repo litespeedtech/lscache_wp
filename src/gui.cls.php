@@ -380,6 +380,8 @@ class GUI extends Base {
 	public function frontend_shortcut() {
 		global $wp_admin_bar;
 
+		$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
+
 		$wp_admin_bar->add_menu( array(
 			'id'	=> 'litespeed-menu',
 			'title'	=> '<span class="ab-icon"></span>',
@@ -499,7 +501,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
+		if ( $this->has_cache_folder( 'ccss', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -509,7 +511,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Placeholder::has_lqip_cache() ) {
+		if ( $this->has_cache_folder( 'lqip', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
@@ -519,7 +521,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Avatar::has_cache() ) {
+		if ( $this->has_cache_folder( 'avatar', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
@@ -543,6 +545,8 @@ class GUI extends Base {
 	 */
 	public function backend_shortcut() {
 		global $wp_admin_bar;
+
+		$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
 
 		// if ( defined( 'LITESPEED_ON' ) ) {
 		$wp_admin_bar->add_menu( array(
@@ -640,7 +644,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( $this->cls( 'CSS' )->has_ccss_folder() ) {
+		if ( $this->has_cache_folder( 'ccss', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-ccss',
@@ -650,7 +654,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Placeholder::has_lqip_cache() ) {
+		if ( $this->has_cache_folder( 'lqip', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-placeholder',
@@ -660,7 +664,7 @@ class GUI extends Base {
 			) );
 		}
 
-		if ( Avatar::has_cache() ) {
+		if ( $this->has_cache_folder( 'avatar', $subsite_id ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-avatar',
