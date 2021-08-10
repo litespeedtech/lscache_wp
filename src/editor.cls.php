@@ -1,6 +1,6 @@
 <?php
 /**
- * The Sidebar class
+ * The Editor class
  *
  * @since
  * @package     LiteSpeed
@@ -11,7 +11,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-class Sidebar extends Base {
+class Editor extends Base {
 
   /**
    * Add a post meta box into the sidebar of post editor.
@@ -19,11 +19,11 @@ class Sidebar extends Base {
    * @since    4.3
    */
   function add_meta_boxes() {
-    Debug2::debug( '[Sidebar] add_meta_boxes ');
+    Debug2::debug( '[Editor] add_meta_boxes ');
     add_meta_box(
       'litespeed_metabox',                      // Unique ID
       'Litespeed Cache',                        // Title
-      array( Sidebar::cls(), 'meta_box_html' ), // Callback function
+      array( Editor::cls(), 'meta_box_html' ), // Callback function
       null,                                     // Admin page (or post type)
       'side',                                   // Context
       'high'                                    // Priority
@@ -83,7 +83,7 @@ class Sidebar extends Base {
    * @since    4.3
    */
   function save_meta( $post_id, $post ) {
-    Debug2::debug( '[Sidebar] save_meta' );
+    Debug2::debug( '[Editor] save_meta' );
 
     /* Verify the nonce before proceeding. */
     if ( !isset( $_POST['litespeed_metabox_nonce'] ) || !wp_verify_nonce( $_POST['litespeed_metabox_nonce'], basename( __FILE__ ) ) )
@@ -110,7 +110,7 @@ class Sidebar extends Base {
     //meta_value is '', and both new_desktop_meta_value and new_desktop_meta_value is ''
     if ( ( $meta_value == $new_desktop_meta_value ) && ( $meta_value == $new_desktop_meta_value ) ) {
       // don't bother
-      Debug2::debug( '[Sidebar] no row added and changed' );
+      Debug2::debug( '[Editor] no row added and changed' );
       return;
     }
 
@@ -133,13 +133,13 @@ class Sidebar extends Base {
       $new_meta_value = $meta_value;
       if ( $new_desktop_meta_value != $meta_value['desktop'] ) {
         $new_meta_value['desktop'] = $new_desktop_meta_value;
-        Debug2::debug( '[Sidebar] changing desktop' );
+        Debug2::debug( '[Editor] changing desktop' );
         $new_meta_value['user_in_control_desktop'] = 'true';
         $new_meta_value['desktop_timestamp'] = time();
       }
       if ( $new_mobile_meta_value != $meta_value['mobile'] ) {
         $new_meta_value['mobile'] = $new_mobile_meta_value;
-        Debug2::debug( '[Sidebar] changing mobile' );
+        Debug2::debug( '[Editor] changing mobile' );
         $new_meta_value['user_in_control_mobile'] = 'true';
         $new_meta_value['mobile_timestamp'] = time();
       }
