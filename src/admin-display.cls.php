@@ -50,6 +50,14 @@ class Admin_Display extends Base {
 		// Main js
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
+		//sidebar meta box
+		/* Add meta boxes on the 'add_meta_boxes' hook. */
+		add_action( 'add_meta_boxes', array( Sidebar::cls(), 'add_meta_boxes' ) );
+		/* Save post meta on the 'save_post' hook. */
+		add_action( 'save_post', array( Sidebar::cls(), 'save_meta' ), 10, 2 );
+		/* Filter the post class hook with our custom post class function. */
+		add_filter( 'post_class', array( Sidebar::cls(), 'post_class' ) );
+
 		$this->_is_network_admin = is_network_admin();
 		$this->_is_multisite = is_multisite();
 
