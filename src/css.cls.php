@@ -342,7 +342,7 @@ class CSS extends Base {
 		self::save_summary();
 
 		// Gather guest HTML to send
-		$html = $this->_prepare_html( $request_url, $user_agent, $uid );
+		$html = $this->prepare_html( $request_url, $user_agent, $uid );
 
 		if ( ! $html ) {
 			return false;
@@ -351,10 +351,10 @@ class CSS extends Base {
 		// Parse HTML to gather all CSS content before requesting
 		$css = false;
 		if ( $type == 'ccss' ) {
-			list( $css, $html ) = $this->_prepare_css( $html, $is_webp );
+			list( $css, $html ) = $this->prepare_css( $html, $is_webp );
 		}
 		else {
-			list( , $html ) = $this->_prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
+			list( , $html ) = $this->prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
 			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
 			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
@@ -524,8 +524,8 @@ class CSS extends Base {
 	 */
 	public function test_url( $request_url ) {
 		$user_agent = $_SERVER[ 'HTTP_USER_AGENT' ];
-		$html = $this->_prepare_html( $request_url, $user_agent );
-		list( $css, $html ) = $this->_prepare_css( $html, true, true );
+		$html = $this->prepare_html( $request_url, $user_agent );
+		list( $css, $html ) = $this->prepare_css( $html, true, true );
 		// var_dump( $css );
 // 		$html = <<<EOT
 
@@ -556,7 +556,7 @@ class CSS extends Base {
 	 *
 	 * @since  3.4.3
 	 */
-	private function _prepare_html( $request_url, $user_agent, $uid = false ) {
+	public function prepare_html( $request_url, $user_agent, $uid = false ) {
 		$html = $this->cls( 'Crawler' )->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent, $uid );
 		Debug2::debug2( '[CSS] self_curl result....', $html );
 
@@ -574,7 +574,7 @@ class CSS extends Base {
 	 *
 	 * @since  3.4.3
 	 */
-	private function _prepare_css( $html, $is_webp = false, $dryrun = false ) {
+	public function prepare_css( $html, $is_webp = false, $dryrun = false ) {
 		$css = '';
 		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
