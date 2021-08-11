@@ -38,8 +38,8 @@ function litespeed_update_4() {
 	$q = 'DROP TABLE IF EXISTS ' . $tb;
 	$wpdb->query( $q );
 
-	if ( file_exists( LITESPEED_STATIC_DIR . '/ccss' ) ) {
-		File::rrmdir( LITESPEED_STATIC_DIR . '/ccss' );
+	if ( file_exists( LITESPEED_STATIC_DIR . '/ccsjs' ) ) {
+		File::rrmdir( LITESPEED_STATIC_DIR . '/ccsjs' );
 	}
 }
 
