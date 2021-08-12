@@ -65,6 +65,13 @@ class Cloud extends Base {
 		self::API_BETA_TEST,
 	);
 
+	public static $SERVICES_LOAD_CHECK = array(
+		self::SVC_CCSS,
+		self::SVC_UCSS,
+		self::SVC_LQIP,
+		self::SVC_HEALTH,
+	);
+
 	public static $SERVICES = array(
 		self::SVC_IMG_OPTM,
 		self::SVC_PAGE_OPTM,
@@ -389,6 +396,10 @@ class Cloud extends Base {
 			if ( strlen( $speed ) == $range_len && substr( $speed, 0, 1 ) == $range_num ) {
 				$valid_clouds[] = $node;
 			}
+			// Append the lower speed ones
+			else if ( $speed < $min * 2 ) {
+				$valid_clouds[] = $node;
+			}
 		}
 
 		if ( ! $valid_clouds ) {
@@ -399,7 +410,36 @@ class Cloud extends Base {
 
 		Debug2::debug( '❄️  Closest nodes list', $valid_clouds );
 
-		$closest = $valid_clouds[ array_rand( $valid_clouds ) ];
+		// Check server load
+		if ( in_array( $service, self::$SERVICES_LOAD_CHECK ) ) {
+			$valid_cloud_loads = array();
+			foreach ( $valid_clouds as $k => $v ) {
+				$response = wp_remote_get( $v, array( 'timeout' => 5, 'sslverify' => true ) );
+				if ( is_wp_error( $response ) ) {
+					$error_message = $response->get_error_message();
+					Debug2::debug( '❄️  failed to do load checker: ' . $error_message );
+				}
+				$curr_load = json_decode( $response[ 'body' ], true );
+				if ( ! empty( $curr_load[ '_res' ] ) && $curr_load[ '_res' ] == 'ok' && isset( $curr_load[ 'load' ] ) ) {
+					$valid_cloud_loads[ $v ] = $curr_load[ 'load' ];
+				}
+			}
+
+			if ( ! $valid_cloud_loads ) {
+				$msg = __( 'Cloud Error', 'litespeed-cache' ) . ": [Service] $service [Info] " . __( 'No available Cloud Node after checked server load.', 'litespeed-cache' );
+				Admin_Display::error( $msg );
+				return false;
+			}
+
+			Debug2::debug( '❄️  Closest nodes list after load check', $valid_cloud_loads );
+
+			$qualified_list = array_keys( $valid_cloud_loads, min( $valid_cloud_loads ) );
+		}
+		else {
+			$qualified_list = $valid_clouds;
+		}
+
+		$closest = $qualified_list[ array_rand( $qualified_list ) ];
 
 		Debug2::debug( '❄️  Chose node: ' . $closest );
 

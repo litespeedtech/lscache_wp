@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.3 - Aug 16 2021 =
 * **UCSS** Separate UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
 * 🐞**Cloud** Fixed CCSS/UCSS quota local data update failure.
+* **Cloud** Detecting node will now take the server load as a factor to choose the fastest lowest load server.
 * **Cloud** Faster daily quota check and show related error message.
 * **Cloud** Plugin will auto redetect available node if current node is responding w/ heavy load code.
 * **Cloud** CCSS/UCSS/LQIP queue will exit immediately once quota is out.
