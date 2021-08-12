@@ -37,11 +37,6 @@ class REST extends Root {
 			'callback' => array( $this, 'toggle_crawler_state' ),
 			'permission_callback'	=> '__return_true',
 		) );
-		register_rest_route( 'litespeed/v1', '/toggle_crawler_state', array(
-			'methods' => 'GET',
-			'callback' => array( $this, 'toggle_crawler_state' ),
-			'permission_callback'	=> '__return_true',
-		) );
 
 		register_rest_route( 'litespeed/v1', '/tool/check_ip', array(
 			'methods' => 'GET',
