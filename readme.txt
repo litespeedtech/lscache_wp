@@ -249,18 +249,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.3 - Aug 18 2021 =
+= 4.3 - Aug 16 2021 =
 * **UCSS** Separate UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
 * 🐞**Cloud** Fixed CCSS/UCSS quota local data update failure.
 * **Cloud** Faster daily quota check and show related error message.
 * **Cloud** Plugin will auto redetect available node if current node is responding w/ heavy load code.
 * **Cloud** CCSS/UCSS/LQIP queue will exit immediately once quota is out.
+* **Cloud** Uniformed node list API to `d/nodes` only instead of separate `d/regionnodes` for image optimization.
 * **LQIP** LQIP network compatibility fix. (⭐ Contributed by Alice Tang #PR387)
 * **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
 * **GUI** Added daily quota on dashboard.
 * **GUI** Added downgrade warning to Toolbox -> Beta Test.
 * **GUI** Tuned `.litespeed-desc` class to full width in CSS.
 * **Conf** Default `Preserve EXIF/XMP data` to ON for copyright concern. (@Tobolo)
+* 🐞**3rd** Fixed a PHP warning when using Google AMP w/ /amp as structure. (@thanhstran98)
 
 = 4.2 - Jul 29 2021 =
 * **Cloud** Auto redirect to a new node if the current node is not available anymore.

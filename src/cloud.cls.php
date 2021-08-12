@@ -15,7 +15,6 @@ class Cloud extends Base {
 
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
-	const SVC_D_REGIONNODES		= 'd/regionnodes';
 	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
@@ -44,7 +43,6 @@ class Cloud extends Base {
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_NODES,
-		self::SVC_D_REGIONNODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
 		// self::API_NEWS,
@@ -356,11 +354,7 @@ class Cloud extends Base {
 		}
 
 		// Send request to Quic Online Service
-		$cloud_endpoint = self::SVC_D_NODES;
-		if($service == self::SVC_IMG_OPTM) {
-			$cloud_endpoint = self::SVC_D_REGIONNODES;
-		}
-		$json = $this->_post( $cloud_endpoint, array( 'svc' => $service ) );
+		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $service ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
