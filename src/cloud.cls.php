@@ -621,6 +621,15 @@ class Cloud extends Base {
 			return;
 		}
 
+		if ( ! empty( $json[ '_code' ] ) ) {
+			if ( $json[ '_code' ] == 'heavy_load' || $json[ '_code' ] == 'redetect_node' ) {
+				// Force redetect node
+				Debug2::debug( '❄️  Node redetecting node [svc] ' . $service );
+				Admin_Display::info( __( 'Redetected node', 'litespeed-cache' ) . ': ' . Error::msg( $json[ '_code' ] ) );
+				$this->detect_cloud( $service, true );
+			}
+		}
+
 		if ( ! empty( $json[ '_503' ] ) ) {
 			Debug2::debug( '❄️  service 503 unavailable temporarily. ' . $json[ '_503' ] );
 
@@ -708,12 +717,6 @@ class Cloud extends Base {
 			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server [service] $service";
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
-
-			if ( $json_msg == 'heavy_load' || $json_msg == 'redetect_node' ) {
-				// Force redetect node
-				Debug2::debug( '❄️  Node redetecting node [svc] ' . $service );
-				$this->detect_cloud( $service, true );
-			}
 
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
