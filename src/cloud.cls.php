@@ -418,7 +418,9 @@ class Cloud extends Base {
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
 					Debug2::debug( '❄️  failed to do load checker: ' . $error_message );
+					continue;
 				}
+
 				$curr_load = json_decode( $response[ 'body' ], true );
 				if ( ! empty( $curr_load[ '_res' ] ) && $curr_load[ '_res' ] == 'ok' && isset( $curr_load[ 'load' ] ) ) {
 					$valid_cloud_loads[ $v ] = $curr_load[ 'load' ];
