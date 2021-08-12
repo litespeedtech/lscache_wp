@@ -9,7 +9,7 @@ defined( 'WPINC' ) || exit;
 
 class Cloud extends Base {
 	const CLOUD_SERVER = 'https://api.quic.cloud';
-	const CLOUD_IPS = 'https://api.quic.cloud/ips?json';
+	const CLOUD_IPS = 'https://quic.cloud/ips';
 	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
@@ -1112,7 +1112,7 @@ class Cloud extends Base {
 	private function _update_ips() {
 		Debug2::debug( '❄️ Load remote Cloud IP list from ' . self::CLOUD_IPS );
 
-		$response = wp_remote_get( self::CLOUD_IPS );
+		$response = wp_remote_get( self::CLOUD_IPS . '?json' );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			Debug2::debug( '[CLoud] failed to get ip whitelist: ' . $error_message );
