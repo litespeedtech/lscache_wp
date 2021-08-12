@@ -304,6 +304,11 @@ class CSS extends Base {
 				continue;
 			}
 
+			// Exit queue if out of quota
+			if ( $res == 'out_of_quota' ) {
+				return;
+			}
+
 			$this->_queue[ $k ][ '_status' ] = 'requested';
 			$this->save_queue( $type, $this->_queue );
 
@@ -328,11 +333,12 @@ class CSS extends Base {
 	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
 		$svc = $type == 'ccss' ? Cloud::SVC_CCSS : Cloud::SVC_UCSS;
 		// Check if has credit to push or not
-		$allowance = $this->cls( 'Cloud' )->allowance( $svc );
+		$err = false;
+		$allowance = $this->cls( 'Cloud' )->allowance( $svc, $err );
 		if ( ! $allowance ) {
-			Debug2::debug( '[CCSS] ❌ No credit' );
-			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
-			return false;
+			Debug2::debug( '[CCSS] ❌ No credit: ' . $err );
+			$err && Admin_Display::error( Error::msg( $err ) );
+			return 'out_of_quota';
 		}
 
 		set_time_limit( 120 );

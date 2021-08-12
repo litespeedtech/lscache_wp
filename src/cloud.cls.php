@@ -228,7 +228,7 @@ class Cloud extends Base {
 	 * @since  3.0
 	 * @access private
 	 */
-	public function allowance( $service ) {
+	public function allowance( $service, &$err = false ) {
 		// Only auto sync usage at most one time per day
 		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
 			$this->sync_usage();
@@ -254,6 +254,8 @@ class Cloud extends Base {
 
 		$allowance = $usage[ 'quota' ] - $usage[ 'used' ];
 
+		$err = 'out_of_quota';
+
 		if ( $allowance > 0 ) {
 			if ( $allowance_max && $allowance_max < $allowance ) {
 				$allowance = $allowance_max;
@@ -262,6 +264,9 @@ class Cloud extends Base {
 			// Daily limit @since 4.2
 			if ( isset( $usage[ 'remaining_daily_quota' ] ) && $usage[ 'remaining_daily_quota' ] >= 0 && $usage[ 'remaining_daily_quota' ] < $allowance ) {
 				$allowance = $usage[ 'remaining_daily_quota' ];
+				if ( ! $allowance ) {
+					$err = 'out_of_daily_quota';
+				}
 			}
 
 			return $allowance;

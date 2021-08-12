@@ -49,11 +49,11 @@ class Error {
 				break;
 
 			case 'out_of_daily_quota':
-				$msg = __( 'You don\'t have enough daily quota for current service left today.', 'litespeed-cache' );
+				$msg = __( 'You don\'t have enough daily quota left for current service today.', 'litespeed-cache' );
 				break;
 
-			case 'lack_of_quota':
-				$msg = __( 'You don\'t have enough quota for current service left this month.', 'litespeed-cache' );
+			case 'out_of_quota':
+				$msg = __( 'You don\'t have enough quota left for current service this month.', 'litespeed-cache' );
 				break;
 
 			case 'too_many_requested':

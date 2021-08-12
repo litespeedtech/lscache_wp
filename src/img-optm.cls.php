@@ -407,7 +407,7 @@ class Img_Optm extends Base {
 
 		if ( ! $allowance ) {
 			Debug2::debug( '[Img_Optm] ❌ No credit' );
-			Admin_Display::error( Error::msg( 'lack_of_quota' ) );
+			Admin_Display::error( Error::msg( 'out_of_quota' ) );
 			return;
 		}
 

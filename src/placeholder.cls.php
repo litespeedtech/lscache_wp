@@ -327,7 +327,12 @@ class Placeholder extends Base {
 		foreach ( $queue as $v ) {
 			Debug2::debug( '[LQIP] cron job [size] ' . $v );
 
-			$_instance->_generate_placeholder( $v );
+			$res = $_instance->_generate_placeholder( $v, true );
+
+			// Exit queue if out of quota
+			if ( $res == 'out_of_quota' ) {
+				return;
+			}
 
 			// only request first one
 			if ( ! $continue ) {
@@ -358,7 +363,7 @@ class Placeholder extends Base {
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _generate_placeholder( $raw_size_and_src ) {
+	private function _generate_placeholder( $raw_size_and_src, $from_cron = false ) {
 		// Parse containing size and src info
 		$size_and_src = explode( ' ', $raw_size_and_src, 2 );
 		$size = $size_and_src[ 0 ];
@@ -378,10 +383,16 @@ class Placeholder extends Base {
 			$data = $this->_generate_placeholder_locally( $size );
 		}
 		else {
-			$allowance = Cloud::cls()->allowance( Cloud::SVC_LQIP );
+			$err = false;
+			$allowance = Cloud::cls()->allowance( Cloud::SVC_LQIP, $err );
 			if ( ! $allowance ) {
-				Debug2::debug( '[LQIP] ❌ No credit' );
-				Admin_Display::error( Error::msg( 'lack_of_quota' ) );
+				Debug2::debug( '[LQIP] ❌ No credit: ' . $err );
+				$err && Admin_Display::error( Error::msg( $err ) );
+
+				if ( $from_cron ) {
+					return 'out_of_quota';
+				}
+
 				return $this->_generate_placeholder_locally( $size );
 			}
 
