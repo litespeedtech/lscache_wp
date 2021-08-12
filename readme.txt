@@ -249,8 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.3 - Auguest 2021 =
+= 4.3 - Aug 18 2021 =
 * **UCSS** Separate UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
+* **Cloud** Plugin will auto redetect available node if current node is responding w/ heavy load code.
 * **LQIP** LQIP network compatibility fix. (⭐ Contributed by Alice Tang #PR387)
 * **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
 * **GUI** Added daily quota on dashboard.

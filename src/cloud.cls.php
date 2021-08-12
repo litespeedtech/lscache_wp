@@ -623,6 +623,10 @@ class Cloud extends Base {
 			$msg .= ' ' . $json[ '_503' ] . " [server] $server [service] $service";
 			Admin_Display::error( $msg );
 
+			// Force redetect node
+			Debug2::debug( '❄️  Node error, redetecting node [svc] ' . $service );
+			$this->detect_cloud( $service, true );
+
 			return;
 		}
 
@@ -671,7 +675,8 @@ class Cloud extends Base {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
-							$this->_summary[ 'usage.' . $service ] = $json[ '_carry_on' ][ $v ];
+							$usage_svc_tag = in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ? self::SVC_PAGE_OPTM : $service;
+							$this->_summary[ 'usage.' . $usage_svc_tag ] = $json[ '_carry_on' ][ $v ];
 							break;
 
 						case 'promo':
@@ -698,6 +703,12 @@ class Cloud extends Base {
 			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server [service] $service";
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
+
+			if ( $json_msg == 'heavy_load' || $json_msg == 'redetect_node' ) {
+				// Force redetect node
+				Debug2::debug( '❄️  Node redetecting node [svc] ' . $service );
+				$this->detect_cloud( $service, true );
+			}
 
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {

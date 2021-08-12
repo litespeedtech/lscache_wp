@@ -88,6 +88,14 @@ class Error {
 				$msg = __( 'The domain key is not correct. Please try to sync your domain key again.', 'litespeed-cache' );
 				break;
 
+			case 'heavy_load':
+				$msg = __( 'The current server is under heavy load.', 'litespeed-cache' );
+				break;
+
+			case 'redetect_node':
+				$msg = __( 'Online node needs to be redetected.', 'litespeed-cache' );
+				break;
+
 			case 'err_overdraw':
 				$msg = __( 'Credits are not enough to proceed the current request.', 'litespeed-cache' );
 				break;
