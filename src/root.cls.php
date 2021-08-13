@@ -81,7 +81,8 @@ abstract class Root {
 	/**
 	 * Load current queues from data file
 	 *
-	 * @since 4.1
+	 * @since  4.1
+	 * @since  4.3 Elevated to root.cls
 	 */
 	public function load_queue( $type ) {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
@@ -98,7 +99,8 @@ abstract class Root {
 	/**
 	 * Save current queues to data file
 	 *
-	 * @since 4.1
+	 * @since  4.1
+	 * @since  4.3 Elevated to root.cls
 	 */
 	public function save_queue( $type, $list ) {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
@@ -113,6 +115,7 @@ abstract class Root {
 	 * Clear all waiting queues
 	 *
 	 * @since  3.4
+	 * @since  4.3 Elevated to root.cls
 	 */
 	public function clear_q( $type ) {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );

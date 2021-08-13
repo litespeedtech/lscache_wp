@@ -29,6 +29,39 @@ class CSS extends Base {
 	}
 
 	/**
+	 * Build the static filepath
+	 *
+	 * @since  4.3 Elevated to root.cls
+	 * @since  4.3 Have to keep till v4.5 for compatibility when upgrade from v4.2 to v4.3
+	 */
+	protected function _build_filepath_prefix( $type ) {
+		$filepath_prefix = '/' . $type . '/';
+		if ( is_multisite() ) {
+			$filepath_prefix .= get_current_blog_id() . '/';
+		}
+
+		return $filepath_prefix;
+	}
+
+	/**
+	 * Clear all waiting queues
+	 *
+	 * @since  4.3 Elevated to root.cls
+	 * @since  4.3 Have to keep till v4.5 for compatibility when upgrade from v4.2 to v4.3
+	 */
+	public function clear_q( $type ) {
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
+
+		if ( file_exists( $static_path ) ) {
+			unlink( $static_path );
+		}
+
+		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		Admin_Display::succeed( $msg );
+	}
+
+	/**
 	 * HTML lazyload CSS
 	 * @since 4.0
 	 */
