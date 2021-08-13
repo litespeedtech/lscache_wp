@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Uniformed node list API to `d/nodes` only instead of separate `d/regionnodes` for image optimization.
 * **LQIP** LQIP network compatibility fix. (⭐ Contributed by Alice Tang #PR387)
 * **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
+* **GUI** Fixed a potential dashboard PHP warning when no queue existed. (@jrmora)
 * **GUI** Added daily quota on dashboard.
 * **GUI** Added downgrade warning to Toolbox -> Beta Test.
 * **GUI** Tuned `.litespeed-desc` class to full width in CSS.

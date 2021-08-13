@@ -87,9 +87,12 @@ abstract class Root {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
-		$queue = array();
 		if ( file_exists( $static_path ) ) {
 			$queue = json_decode( file_get_contents( $static_path ), true );
+		}
+
+		if ( ! $queue ) {
+			$queue = array();
 		}
 
 		return $queue;
