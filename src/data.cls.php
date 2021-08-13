@@ -21,6 +21,9 @@ class Data extends Root {
 		'4.1'	=> array(
 			'litespeed_update_4_1',
 		),
+		'4.3'	=> array(
+			'litespeed_update_4_3',
+		),
 	);
 
 	private $_db_site_updater = array(

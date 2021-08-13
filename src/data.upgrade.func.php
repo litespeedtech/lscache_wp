@@ -14,6 +14,16 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Drop cssjs table and rm cssjs folder
+ * @since 4.3
+ */
+function litespeed_update_4_3() {
+	if ( file_exists( LITESPEED_STATIC_DIR . '/ccsjs' ) ) {
+		File::rrmdir( LITESPEED_STATIC_DIR . '/ccsjs' );
+	}
+}
+
+/**
  * Drop object cache data file
  * @since 4.1
  */
