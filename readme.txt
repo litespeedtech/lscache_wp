@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.7.2
-Stable tag: 4.3
+Stable tag: 4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,20 +250,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.3 - Aug 16 2021 =
-* **UCSS** Separated UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
-* 🐞**Cloud** Fixed an issue where CCSS/UCSS quota data failed to update locally.
-* **Cloud** Added server load as a factor when detecting node availability.
-* **Cloud** Improved the speed of checking daily quota and showing the related error message.
-* **Cloud** Added ability to re-detect node availability if the current node is responding w/ a heavy load code.
-* **Cloud** CCSS/UCSS/LQIP queue now exits immediately when quota is depleted.
-* **Cloud** Replaced separate `d/regionnodes` with a single `d/nodes` in the node list API for image optimization.
-* **LQIP** Fixed an issue with LQIP network compatibility. (⭐ Contributed by Alice Tang #PR387)
-* **GUEST** JS no longer preloads for Guest Optimization. (@Ankit)
+* **UCSS** Separate UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
+* 🐞**Cloud** Fixed CCSS/UCSS quota local data update failure.
+* **Cloud** Detecting node will now take the server load as a factor to choose the fastest lowest load server.
+* **Cloud** Faster daily quota check and show related error message.
+* **Cloud** Plugin will auto redetect available node if current node is responding w/ heavy load code.
+* **Cloud** CCSS/UCSS/LQIP queue will exit immediately once quota is out.
+* **Cloud** Uniformed node list API to `d/nodes` only instead of separate `d/regionnodes` for image optimization.
+* **LQIP** LQIP network compatibility fix. (⭐ Contributed by Alice Tang #PR387)
+* **GUEST** JS will not preload anymore for Guest Optimization. (@Ankit)
 * **GUI** Fixed a potential dashboard PHP warning when no queue existed. (@jrmora)
 * **GUI** Added daily quota on dashboard.
 * **GUI** Added downgrade warning to Toolbox -> Beta Test.
 * **GUI** Tuned `.litespeed-desc` class to full width in CSS.
-* **Conf** `Preserve EXIF/XMP data` now defaults to ON due to copyright concerns. (@Tobolo)
+* **Conf** Default `Preserve EXIF/XMP data` to ON for copyright concern. (@Tobolo)
 * 🐞**3rd** Fixed a PHP warning when using Google AMP w/ /amp as structure. (@thanhstran98)
 
 = 4.2 - Jul 29 2021 =
