@@ -15,6 +15,18 @@ class Doc {
 	// protected static $_instance;
 
 	/**
+	 * Changes affect crawler list warning
+	 *
+	 * @since  4.3
+	 * @access public
+	 */
+	public static function crawler_affected() {
+		echo '<font class="litespeed-primary">';
+		echo '⚠️ ' . __( 'This setting will regenerate crawler list and clear the disabled list!' , 'litespeed-cache' );
+		echo '</font>';
+	}
+
+	/**
 	 * Privacy policy
 	 *
 	 * @since 2.2.7

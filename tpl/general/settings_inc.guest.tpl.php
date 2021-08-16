@@ -14,6 +14,7 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'This option can help to correct the cache vary for certain advanced mobile or tablet visitors.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-mode' ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
+				<br /><?php Doc::crawler_affected(); ?>
 				<?php
 					$typeList = array();
 					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_UCSS ) ) {

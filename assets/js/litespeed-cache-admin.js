@@ -173,6 +173,37 @@ var _litespeed_dots ;
 		} ) ;
 
 		/**
+		 * Freeze or melt a specific crawler
+		 * @since  4.3
+		 */
+		if ( $( '.litespeed-toggle' ).length > 0 ) {
+			$( '.litespeed-toggle' ).on( 'click', function( e ) {
+				var crawler_id = $( this ).attr( "data-litespeed_crawler_id" );
+				var crawler_id = Number( crawler_id.split('-').pop() );
+				var that = this;
+				$.ajax( {
+					url: litespeed_data.ajax_url_crawler_switch,
+					dataType: 'json',
+					method: 'POST',
+					cache: false,
+					data:{ crawler_id: crawler_id },
+					beforeSend: function ( xhr ) {
+						xhr.setRequestHeader( 'X-WP-Nonce', litespeed_data.nonce ) ;
+					},
+					success: function( data ) {
+						$( that ).toggleClass( 'litespeed-toggle-btn-default litespeed-toggleoff' , data == 0 ).toggleClass( 'litespeed-toggle-btn-primary' , data == 1 );
+						console.log( 'litespeed-crawler-ajax: change Activate option' );
+					},
+					error: function( xhr, error ) {
+						console.log( xhr );
+	      				console.log( error );
+						console.log( 'litespeed-crawler-ajax: option failed to save due to some error' );
+					}
+				} ) ;
+			} ) ;
+		}
+
+		/**
 		 * Click only once
 		 */
 		if ( $( '[data-litespeed-onlyonce]' ).length > 0 ) {

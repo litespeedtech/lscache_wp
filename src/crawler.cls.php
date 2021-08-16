@@ -59,6 +59,50 @@ class Crawler extends Root {
 	}
 
 	/**
+	 * Check whether the current crawler is active/runable/useable/enabled/want it to work or not
+	 *
+	 * @since  4.3
+	 */
+	public function is_active( $curr ){
+		$bypass_list = self::get_option( 'bypass_list' , array() );
+		return ! in_array( $curr, $bypass_list );
+	}
+
+	/**
+	 * Toggle the current crawler's activeness state, i.e., runable/useable/enabled/want it to work or not, and return the updated state
+	 *
+	 * @since  4.3
+	 */
+	public function toggle_activeness( $curr ) { // param type: int
+		$bypass_list = self::get_option( 'bypass_list' , array() );
+		if ( in_array( $curr, $bypass_list ) ) { // when the ith opt was off / in the bypassed list, turn it on / remove it from the list
+		    unset( $bypass_list[ array_search( $curr, $bypass_list ) ] );
+			$bypass_list = array_values( $bypass_list );
+			self::update_option( 'bypass_list' , $bypass_list );
+			return true;
+		} else {        	// when the ith opt was on / not in the bypassed list, turn it off / add it to the list
+			$bypass_list[] = ( int ) $curr;
+			self::update_option( 'bypass_list' , $bypass_list );
+			return false;
+		}
+	}
+
+	/**
+	 * Clear bypassed list
+	 *
+	 * @since  4.3
+	 * @access public
+	 */
+	public function clear_disabled_list() {
+		self::delete_option( 'bypass_list' );
+
+		$msg = __( 'Crawler disabled list is cleared! All crawlers are set to active! ', 'litespeed-cache' );
+		Admin_Display::note( $msg );
+
+		Debug2::debug( '🐞 All crawlers are set to active...... ' );
+	}
+
+	/**
 	 * Overwride get_summary to init elements
 	 *
 	 * @since  3.0
@@ -165,6 +209,17 @@ class Crawler extends Root {
 		}
 
 		$this->list_crawlers();
+
+		// Skip the crawlers that in bypassed list
+		while ( ! $this->is_active( $this->_summary[ 'curr_crawler' ] ) && $this->_summary[ 'curr_crawler' ] < count( $this->_crawlers ) ) {
+			Debug2::debug( '🐞 Skipped the Crawler #' . $this->_summary[ 'curr_crawler' ] . ' ......' );
+			$this->_summary[ 'curr_crawler' ]++;
+		}
+		if ( $this->_summary[ 'curr_crawler' ] >= count( $this->_crawlers ) ) {
+			$this->_end_reason = 'end';
+			$this->_terminate_running();
+			return;
+		}
 
 		// In case crawlers are all done but not reload, reload it
 		if ( empty( $this->_summary[ 'curr_crawler' ] ) || empty( $this->_crawlers[ $this->_summary[ 'curr_crawler' ] ] ) ) {
