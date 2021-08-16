@@ -249,6 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4 - September 2021 =
+* to be continued...
+
 = 4.3 - Aug 16 2021 =
 * **UCSS** Separated UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
 * 🐞**Cloud** Fixed an issue where CCSS/UCSS quota data failed to update locally.
