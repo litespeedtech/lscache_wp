@@ -75,7 +75,7 @@ $this->form_action();
 			</script>
 
 			<div class="litespeed-warning">
-				<?php echo __('NOTE', 'litespeed-cache'); ?>:
+				<?php echo __( 'NOTE', 'litespeed-cache' ); ?>:
 				<?php echo __( 'To randomize CDN hostname, define multiple hostnames for the same resources.', 'litespeed-cache' ); ?>
 			</div>
 
@@ -99,7 +99,7 @@ $this->form_action();
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types', __( 'Default value', 'litespeed-cache' ) ); ?>
 
 				<br />
-				<?php echo sprintf( __( 'If you turn any of the above settings OFF, please remove the related file types from the %s box.' ), '<b>' . __( 'Include File Types', 'litespeed-cache' ) . '</b>' ); ?>
+				<?php echo sprintf( __( 'If you turn any of the above settings OFF, please remove the related file types from the %s box.', 'litespeed-cache' ), '<b>' . __( 'Include File Types', 'litespeed-cache' ) . '</b>' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types' ); ?>
 			</div>
 
