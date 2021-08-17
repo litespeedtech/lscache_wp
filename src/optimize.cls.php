@@ -376,8 +376,9 @@ class Optimize extends Base {
 		}
 
 		// Append JS inline var for preserved ESI
+		// Shouldn't give any optm (defer/delay) @since 4.4
 		if ( $this->_var_preserve_js ) {
-			$this->html_head .= $this->_build_js_inline( 'var ' . implode( ',', $this->_var_preserve_js ) . ';' );
+			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
 			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
 		}
 
@@ -932,6 +933,7 @@ class Optimize extends Base {
 			$con = str_replace( $esi_placeholder, $js_var, $con );
 			$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
 		}
+
 		return $con;
 	}
 
