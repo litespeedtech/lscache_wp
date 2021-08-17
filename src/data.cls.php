@@ -210,7 +210,7 @@ class Data extends Root {
 			return;
 		}
 
-		Admin_Display::info( sprintf( __( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ) . ' [LiteSpeed]', true );
+		Admin_Display::info( sprintf( __( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.', 'litespeed-cache' ), '<code>' . Utility::readable_time( $is_upgrading ) . '</code>' ) . ' [LiteSpeed]', true );
 	}
 
 	/**

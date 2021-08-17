@@ -873,8 +873,8 @@ class Utility extends Root {
 		$page_links = paginate_links( array(
 			'base' => add_query_arg( 'pagenum', '%#%' ),
 			'format' => '',
-			'prev_text' => __( '&laquo;', 'text-domain' ),
-			'next_text' => __( '&raquo;', 'text-domain' ),
+			'prev_text' => __( '&laquo;', 'litespeed-cache' ),
+			'next_text' => __( '&raquo;', 'litespeed-cache' ),
 			'total' => $num_of_pages,
 			'current' => $pagenum,
 		) );
