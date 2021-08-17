@@ -722,8 +722,8 @@ class GUI extends Base {
 			esc_url( $url ),
 			esc_attr( $name ),
 			esc_attr( $title ),
-			esc_attr( sprintf( __( 'Install %s' ), $title ) ),
-			__( 'Install Now' )
+			esc_attr( sprintf( __( 'Install %s', 'litespeed-cache' ), $title ) ),
+			__( 'Install Now', 'litespeed-cache' )
 		);
 
 		return $action;
@@ -742,15 +742,15 @@ class GUI extends Base {
 		$details_url = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $name . '&section=changelog&TB_iframe=true&width=600&height=800' );
 		$file = $name . '/' . $name . '.php';
 
-		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.' ),
+		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.', 'litespeed-cache' ),
 			esc_url( $details_url ),
 			sprintf( 'class="thickbox open-plugin-details-modal" aria-label="%s"',
-				esc_attr( sprintf( __( 'View %1$s version %2$s details' ), $title, $v ) )
+				esc_attr( sprintf( __( 'View %1$s version %2$s details', 'litespeed-cache' ), $title, $v ) )
 			),
 			$v,
 			wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $file, 'upgrade-plugin_' . $file ),
 			sprintf( 'class="update-link" aria-label="%s"',
-				esc_attr( sprintf( __( 'Update %s now' ), $title ) )
+				esc_attr( sprintf( __( 'Update %s now', 'litespeed-cache' ), $title ) )
 			)
 		);
 
