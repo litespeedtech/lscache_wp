@@ -397,7 +397,7 @@ class Cloud extends Base {
 				$valid_clouds[] = $node;
 			}
 			// Append the lower speed ones
-			else if ( $speed < $min * 2 ) {
+			else if ( $speed < $min * 4 ) {
 				$valid_clouds[] = $node;
 			}
 		}
