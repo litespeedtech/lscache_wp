@@ -19,6 +19,41 @@ abstract class Root {
 	private static $_network_options = array();
 
 	/**
+	 * Log a debug message.
+	 *
+	 * @since  4.4
+	 * @access public
+	 */
+	public static function debug( $msg, $backtrace_limit = false ) {
+		if ( ! defined( 'LSCWP_LOG' ) ) {
+			return;
+		}
+
+		if ( defined( 'static::LOG_TAG' )) {
+			$msg = static::LOG_TAG . '  ' . $msg;
+		}
+
+		Debug2::debug( $msg, $backtrace_limit );
+	}
+
+	/**
+	 * Log an advanced debug message.
+	 *
+	 * @since  4.4
+	 * @access public
+	 */
+	public static function debug2( $msg, $backtrace_limit = false ) {
+		if ( ! defined( 'LSCWP_LOG_MORE' ) ) {
+			return;
+		}
+
+		if ( defined( 'static::LOG_TAG' )) {
+			$msg = static::LOG_TAG . '  ' . $msg;
+		}
+		Debug2::debug2( $msg, $backtrace_limit );
+	}
+
+	/**
 	 * Check if there is cache folder for that type
 	 *
 	 * @since  3.0
