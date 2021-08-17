@@ -288,7 +288,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 
 				<?php if ( ! empty( $cloud_summary[ 'last_request.health-score' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.health-score' ] ) ?>
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.health-score' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -453,7 +453,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 
 				<?php if ( ! empty( $cloud_summary[ 'last_request.ccss' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -486,7 +486,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 
 				<?php if ( ! empty( $cloud_summary[ 'last_request.ccss' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -518,7 +518,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 
 				<?php if ( ! empty( $cloud_summary[ 'last_request.lqip' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php echo __( 'Last requested' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.lqip' ] ) ?>
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.lqip' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>
