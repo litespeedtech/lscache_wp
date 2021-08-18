@@ -810,7 +810,7 @@ class Media extends Root {
 	 * @since  4.0
 	 */
 	public function replace_background_webp( $content ) {
-		Debug2::debug2( '[Media] Start replacing bakcground WebP.' );
+		Debug2::debug2( '[Media] Start replacing background WebP.' );
 
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all( '#url\(([^)]+)\)#iU', $content, $matches );
