@@ -83,10 +83,15 @@ class CSS extends Base {
 			return null;
 		}
 
+		$error_tag = '';
+		if ( substr( $rules, 0, 2 ) == '/*' && substr( $rules, -2 ) == '*/' ) {
+			$error_tag = ' data-error="failed to generate"';
+		}
+
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-ccss">' . $rules . '</style>';
+		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
 	}
 
 	/**

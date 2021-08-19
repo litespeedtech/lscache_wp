@@ -257,6 +257,10 @@ class Optimize extends Base {
 				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to CCSS not generated yet' );
 				$this->cfg_css_async = false;
 			}
+			else if ( strpos( $this->_ccss, '<style id="litespeed-ccss" data-error' ) === 0 ) {
+				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to CCSS failed to generate' );
+				$this->cfg_css_async = false;
+			}
 		}
 
 		do_action( 'litespeed_optm' );
