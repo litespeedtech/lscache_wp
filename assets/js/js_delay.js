@@ -30,7 +30,7 @@ function litespeed_load_delayed_js_forced() {
 
 function litespeed_load_delayed_js( is_forced ) {
 	if ( is_forced ) {
-		console.log( 'Force running delayed JS' );
+		console.log( '[LiteSpeed] Force running delayed JS' );
 	}
 
 	litespeed_load_one();
@@ -52,16 +52,21 @@ function litespeed_load_one() {
 	litespeed_delay_i ++;
 	var e = document.querySelector( 'script[type="litespeed/javascript"][data-i="'+litespeed_delay_i+'"]' );
 	if ( ! e ) {
-		console.log( 'All loaded!' );
+		console.log( '[LiteSpeed] All loaded!' );
 		return;
 	}
 
-	console.log( 'Load i=' + e.getAttribute( 'data-i' ), '-----',e );
+	console.log( '[LiteSpeed] Load i=' + e.getAttribute( 'data-i' ), '-----',e );
 
 	var e2 = document.createElement( 'script' );
 
 	e2.addEventListener( 'load', function(){
-		console.log('loaded --- ' + e2.getAttribute('data-i'));
+		console.log('[LiteSpeed] loaded --- ' + e2.getAttribute('data-i'));
+		litespeed_load_one();
+	}, { passive: true } );
+
+	e2.addEventListener( 'error', function(){
+		console.log('[LiteSpeed] loaded error! --- ' + e2.getAttribute('data-i'));
 		litespeed_load_one();
 	}, { passive: true } );
 

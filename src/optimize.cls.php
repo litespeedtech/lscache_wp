@@ -908,8 +908,7 @@ class Optimize extends Base {
 			if ( strpos( $attrs, ' type=' ) !== false ) {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
-			$this->i2++;
-			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '">' . $con . '</script>';
+			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . ++$this->i2 . '">' . $con . '</script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
@@ -1146,8 +1145,7 @@ class Optimize extends Base {
 			if ( strpos( $ori, ' type=' ) !== false ) {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
-			$this->i2++;
-			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . $this->i2 . '" data-src=', $ori );
+			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );

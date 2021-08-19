@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Crawler** Crawler queue on/off feature: disable a specific crawler. (⭐ Contributed by Astrid Wang #PR390)
 * **JS** Fixed `litespeed_var_1_ is not defined` error when enabled JS defer w/ ESI options. (@Tobolo)
 * **JS** Fixed a bug that when `JS Combine` is enabled, `JS Delay` won't work for the combined JS. (Special thanks to @Joshua & @Ankit)
+* **JS** `JS Delay` will keep loading JS when meeting an error in current JS loading process.
 * **Log** Debug log used less code for prefix.
 
 = 4.3 - Aug 16 2021 =
