@@ -462,7 +462,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
