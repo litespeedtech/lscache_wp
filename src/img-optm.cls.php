@@ -933,7 +933,9 @@ class Img_Optm extends Base {
 				 * Use wp orignal get func to avoid allow_url_open off issue
 				 * @since  1.6.5
 				 */
-				$response = wp_remote_get( $server_info[ 'server' ] . '/' . $server_info[ 'ori' ], array( 'timeout' => 60 ) );
+				$image_url = $server_info[ 'server' ] . '/' . $server_info[ 'ori' ];
+				Debug2::debug( '[Img_Optm] Pulling image: ' . $image_url );
+				$response = wp_remote_get( $image_url, array( 'timeout' => 60 ) );
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
 					Debug2::debug( '[Img_Optm] ❌ failed to pull image: ' . $error_message );
