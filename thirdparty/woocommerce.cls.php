@@ -36,7 +36,7 @@ class WooCommerce extends Base {
 	const ESI_PARAM_LOCATED = 'wc_located' ;
 
 	private $cache_cart ;
-	private $esi_eanbled ;
+	private $esi_enabled ;
 
 	/**
 	 * Detects if WooCommerce is installed.
@@ -65,7 +65,7 @@ class WooCommerce extends Base {
 		$this->_option_append() ;
 
 		$this->cache_cart = apply_filters( 'litespeed_conf', self::O_WOO_CACHE_CART ) ;
-		$this->esi_eanbled = apply_filters( 'litespeed_esi_status', false );
+		$this->esi_enabled = apply_filters( 'litespeed_esi_status', false );
 
 		add_action( 'litespeed_control_finalize', array( $this, 'set_control' ) );
 		add_action( 'litespeed_tag_finalize', array( $this, 'set_tag' ) );
@@ -76,7 +76,7 @@ class WooCommerce extends Base {
 
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
 
-		if ( $this->esi_eanbled ) {
+		if ( $this->esi_enabled ) {
 			if ( function_exists( 'is_shop' ) && ! is_shop() ) {
 				add_action( 'litespeed_tpl_normal', array( $this, 'set_block_template' ) );
 				// No need for add-to-cart button
@@ -121,7 +121,7 @@ class WooCommerce extends Base {
 				'woocommerce_checkout_order_processed',
 			) ;
 			foreach ( $hooks_to_purge as $v ) {
-				if ( $this->esi_eanbled ) {
+				if ( $this->esi_enabled ) {
 					add_action( $v, array( $this, 'purge_esi' ) ) ;
 				}
 				else {
@@ -581,7 +581,7 @@ class WooCommerce extends Base {
 				elseif ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
-				elseif ( ! $this->esi_eanbled && $woocom->cart->get_cart_contents_count() !== 0 ) {
+				elseif ( ! $this->esi_enabled && $woocom->cart->get_cart_contents_count() !== 0 ) {
 					if ( $this->cache_cart ) {
 						do_action( 'litespeed_control_set_private', 'cache cart' );
 						/**
