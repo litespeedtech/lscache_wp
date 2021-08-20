@@ -25,7 +25,7 @@ defined( 'WPINC' ) || exit;
 			</div>
 
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed User Agents will be considered as Guest Mode visitors.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Listed User Agents will be considered as Guest Mode visitors every visit.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
@@ -47,7 +47,7 @@ defined( 'WPINC' ) || exit;
 			</div>
 
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed IPs will be considered as Guest Mode visitors.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Listed IPs will be considered as Guest Mode visitors every visit.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
