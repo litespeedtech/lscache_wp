@@ -210,6 +210,13 @@ class CSS extends Base {
 
 			if ( file_exists( $static_file ) ) {
 				Debug2::debug2( '[UCSS] existing ucss ' . $static_file );
+				// Check if is error comment inside only
+				$tmp = File::read( $static_file );
+				if ( substr( $tmp, 0, 2 ) == '/*' && substr( $tmp, -2 ) == '*/' ) {
+					Debug2::debug2( '[UCSS] existing ucss is error only: ' . $tmp );
+					return false;
+				}
+
 				return $filepath_prefix . $filename . '.css';
 			}
 		}
