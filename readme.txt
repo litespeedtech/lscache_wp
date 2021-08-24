@@ -251,6 +251,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4 - September 2021 =
 * 🌱**Crawler** Crawler queue on/off feature: disable a specific crawler. (⭐ Contributed by Astrid Wang #PR390)
+* **Conf** Conf upgrade safety to avoid new function not found in old codebase.
+* **Conf** Conf upgrade process will give a notice to admin pages and disabled Configuration save until upgraded. (@Lisa)
 * **JS** Fixed `litespeed_var_1_ is not defined` error when enabled JS defer w/ ESI options. (@Tobolo)
 * 🐞**JS** Fixed a bug that when `JS Combine` is enabled, `JS Delay` won't work for the combined JS. (Special thanks to @Joshua & @Ankit)
 * **JS** `JS Delay` will keep loading JS when meeting an error in current JS loading process.
