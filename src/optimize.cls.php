@@ -444,13 +444,14 @@ class Optimize extends Base {
 			$this->html_head = $this->cls( 'CSS' )->prepare_html_lazy() . $this->html_head;
 		}
 
+		// Maybe prepend inline UCSS
+		if ( $this->_ucss ) {
+			$this->html_head = '<style id="litespeed-ucss">' . $this->_ucss . '</style>' . $this->html_head;
+		}
+
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async && $this->_ccss ) {
 			$this->html_head = $this->_ccss . $this->html_head;
-		}
-
-		if ( $this->_ucss ) {
-			$this->html_head = '<style id="litespeed-ucss">' . $this->_ucss . '</style>' . $this->html_head;
 		}
 
 		// Replace html head part
