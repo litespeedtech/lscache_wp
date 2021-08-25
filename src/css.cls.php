@@ -199,7 +199,7 @@ class CSS extends Base {
 	 *
 	 * @since  4.0
 	 */
-	public function load_ucss( $request_url ) {
+	public function load_ucss( $request_url, $dry_run = false ) {
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 
@@ -219,6 +219,10 @@ class CSS extends Base {
 
 				return $filepath_prefix . $filename . '.css';
 			}
+		}
+
+		if ( $dry_run ) {
+			return false;
 		}
 
 		$uid = get_current_user_id();

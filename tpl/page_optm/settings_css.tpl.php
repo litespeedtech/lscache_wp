@@ -46,7 +46,7 @@ $ucss_queue = $this->load_queue( 'ucss' );
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide2">
+	<tr>
 		<th class="litespeed-padding-left">
 			<?php $id = Base::O_OPTM_UCSS; ?>
 			<?php $this->title( $id ); ?>
@@ -65,6 +65,13 @@ $ucss_queue = $this->load_queue( 'ucss' );
 				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-ucss' ); ?><br />
 				<?php echo __( 'Automatic generation of unique CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+
+				<?php if ( $this->conf( Base::O_OPTM_UCSS ) && ! $this->conf( Base::O_OPTM_CSS_COMB ) ) : ?>
+				<br /><font class="litespeed-warning">
+					<?php echo sprintf( __( 'This option is bypassed because %1$s option is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_CSS_COMB ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ); ?>
+				</font>
+				<?php endif; ?>
+
 			</div>
 
 			<div class="litespeed-desc litespeed-left20">
@@ -112,6 +119,22 @@ $ucss_queue = $this->load_queue( 'ucss' );
 				<?php endif; ?>
 			</div>
 
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_UCSS_INLINE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Inline UCSS to reduce the extra CSS file loading. This option will not be automatically turned on for %1$s pages. To use it on %1$s pages, please set it to ON.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+				<br /><font class="litespeed-info">
+					<?php echo sprintf( __( 'This option will automatically bypass %s option.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_CSS_ASYNC ) . '</code>' ); ?>
+				</font>
+			</div>
 		</td>
 	</tr>
 
@@ -165,6 +188,12 @@ $ucss_queue = $this->load_queue( 'ucss' );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in HTML code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ); ?>
 				</font>
+
+				<?php if ( $this->conf( Base::O_OPTM_CSS_ASYNC ) && $this->conf( Base::O_OPTM_CSS_COMB ) && $this->conf( Base::O_OPTM_UCSS ) && $this->conf( Base::O_OPTM_UCSS_INLINE ) ) : ?>
+				<br /><font class="litespeed-warning">
+					<?php echo sprintf( __( 'This option is bypassed due to %s option.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_UCSS_INLINE ) . '</code>' ); ?>
+				</font>
+				<?php endif; ?>
 
 			</div>
 
