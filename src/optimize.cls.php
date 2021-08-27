@@ -789,9 +789,9 @@ class Optimize extends Base {
 			return false; // Failed to generate
 		}
 
-		// $qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
 		// As filename is alreay realted to filecon md5, no need QS anymore
-		return LITESPEED_STATIC_URL . $file_path;
+		return LITESPEED_STATIC_URL . $file_path . '?ver=' . $qs_hash;
 	}
 
 	/**

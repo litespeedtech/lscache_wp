@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **JS** `JS Delay` will keep loading JS when meeting an error in current JS loading process.
 * 🐞**CCSS** CCSS generation failure will also turn CSS Async to OFF now. (@Stars #54074166)
 * 🐞**UCSS** UCSS generation failure will not serve the generated error inside only file anymore. (@Ryan D)
+* **Page Optimize** Improved potential 404 by query string when purged all.
 * **Page Optimize** Dropped redundant query string for minified CSS/JS files only.
 * **Log** Debug log used less code for prefix.
 
