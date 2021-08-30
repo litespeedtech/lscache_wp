@@ -200,6 +200,13 @@ class CSS extends Base {
 	 * @since  4.0
 	 */
 	public function load_ucss( $request_url, $dry_run = false ) {
+		// Check UCSS URI excludes
+		$ucss_exc = apply_filters( 'litespeed_ucss_exc', $this->conf( self::O_OPTM_UCSS_EXC ) );
+		if ( $ucss_exc && $hit = Utility::str_hit_array( $request_url, $ucss_exc ) ) {
+			Debug2::debug( '[CSS] UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
+			return false;
+		}
+
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 

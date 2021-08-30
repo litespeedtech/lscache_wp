@@ -251,14 +251,15 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4 - September 2021 =
 * 🌱**Crawler** Crawler queue on/off feature: disable a specific crawler. (⭐ Contributed by Astrid Wang #PR390)
-* 🌱**UCSS** Added `UCSS Inline` option. (@Ankit).
+* 🌱**UCSS** Added `UCSS Inline` option. (Ankit).
+* 🌱**UCSS** Added `UCSS URI Excludes` option. (RC Verma).
 * **Conf** Conf upgrade safety to avoid new function not found in old codebase.
-* **Conf** Conf upgrade process will give a notice to admin pages and disabled Configuration save until upgraded. (@Lisa)
-* **JS** Fixed `litespeed_var_1_ is not defined` error when enabled JS defer w/ ESI options. (@Tobolo)
-* 🐞**JS** Fixed a bug that when `JS Combine` is enabled, `JS Delay` won't work for the combined JS. (Special thanks to @Joshua & @Ankit)
+* **Conf** Conf upgrade process will give a notice to admin pages and disabled Configuration save until upgraded. (Lisa)
+* **JS** Fixed `litespeed_var_1_ is not defined` error when enabled JS defer w/ ESI options. (Tobolo)
+* 🐞**JS** Fixed a bug that when `JS Combine` is enabled, `JS Delay` won't work for the combined JS. (Special thanks to Joshua & Ankit)
 * **JS** `JS Delay` will keep loading JS when meeting an error in current JS loading process.
-* 🐞**CCSS** CCSS generation failure will also turn CSS Async to OFF now. (@Stars #54074166)
-* 🐞**UCSS** UCSS generation failure will not serve the generated error inside only file anymore. (@Ryan D)
+* 🐞**CCSS** CCSS generation failure will also turn CSS Async to OFF now. (Stars #54074166)
+* 🐞**UCSS** UCSS generation failure will not serve the generated error inside only file anymore. (Ryan D)
 * **Page Optimize** Improved potential 404 by query string when purged all.
 * **Page Optimize** Dropped redundant query string for minified CSS/JS files only.
 * **Log** Debug log used less code for prefix.
@@ -272,27 +273,27 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** CCSS/UCSS/LQIP queue now exits immediately when quota is depleted.
 * **Cloud** Replaced separate `d/regionnodes` with a single `d/nodes` in the node list API for image optimization.
 * **LQIP** Fixed an issue with LQIP network compatibility. (⭐ Contributed by Alice Tang #PR387)
-* **GUEST** JS no longer preloads for Guest Optimization. (@Ankit)
-* 🐞**Data** Fixed an issue where deleting the `cssjs` data folder causes a failure in the upgrade process. (@Joshua #PR391)
-* **GUI** Fixed a potential dashboard PHP warning when no queue existed. (@jrmora)
+* **GUEST** JS no longer preloads for Guest Optimization. (Ankit)
+* 🐞**Data** Fixed an issue where deleting the `cssjs` data folder causes a failure in the upgrade process. (Joshua #PR391)
+* **GUI** Fixed a potential dashboard PHP warning when no queue existed. (jrmora)
 * **GUI** Added daily quota on dashboard.
 * **GUI** Added downgrade warning to Toolbox -> Beta Test.
 * **GUI** Tuned `.litespeed-desc` class to full width in CSS.
-* **Conf** `Preserve EXIF/XMP data` now defaults to ON due to copyright concerns. (@Tobolo)
-* 🐞**3rd** Fixed a PHP warning when using Google AMP w/ /amp as structure. (@thanhstran98)
+* **Conf** `Preserve EXIF/XMP data` now defaults to ON due to copyright concerns. (Tobolo)
+* 🐞**3rd** Fixed a PHP warning when using Google AMP w/ /amp as structure. (thanhstran98)
 
 = 4.2 - Jul 29 2021 =
 * **Cloud** Auto redirect to a new node if the current node is not available anymore.
 * **Cloud** Combined CCSS/UCSS to sub services of Page Optimization.
 * **Cloud** Added a daily quota rate limit to help mitigate the heavy service load at the beginning of the month.
-* **Cloud** Cached the node IP list in order to speed up security check. (@Lucas)
-* 🐞**GUEST** Fixed an issue where Guest Mode remained enabled even when the UA setting is empty. (@Stars)
+* **Cloud** Cached the node IP list in order to speed up security check. (Lucas)
+* 🐞**GUEST** Fixed an issue where Guest Mode remained enabled even when the UA setting is empty. (Stars)
 * **GUEST** Guest Mode will no longer cache POST requests.
 * **UCSS** Purging CSS/JS now purges the UCSS queue as well, to avoid failure when generating UCSS.
 * **UCSS** Separated service entry `UCSS` from `CCSS`.
 * **CCSS** Simplified `load_queue/save_queue/build_filepath_prefix` functions. (⭐ Contributed by Alice Tang #PR373)
 * **CCSS** If CCSS request fails, details are now saved in the CSS file.
-* **CCSS** Renamed CCSS ID in inline HTML from `litespeed-optm-css-rules` to `litespeed-ccss`. (@Alice)
+* **CCSS** Renamed CCSS ID in inline HTML from `litespeed-optm-css-rules` to `litespeed-ccss`. (Alice)
 * **Page Optimize** CCSS/UCSS now supports Cloud queue/notify for asynchronous generation.
 * **Page Optimize** Simplified CCSS/UCSS generation function.
 * **Page Optimize** Added the ability to cancel CCSS/UCSS Cloud requests.
@@ -304,44 +305,44 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **API** Renamed `LITESPEED_BYPASS_OPTM` to `LITESPEED_NO_OPTM` for Page Optimization.
 * **Toolbox** Dropped v3.6.4- versions in Beta Test as they will cause a fatal error in downgrade.
 * **GUI** Added shortcut links to each section on the Dashboard.
-* **GUI** Added UCSS whitelist usage description. (@wyb)
+* **GUI** Added UCSS whitelist usage description. (wyb)
 * **GUI** Showed the default recommended values for Guest Mode UA/IPs.
 * **3rd** Fixed AMP plugin compatibility. (⭐ Contributed by Alice Tang #PR368)
 * **3rd** Bypassed all page optimization including CDN/WebP for AMP pages.
-* **3rd** Improved compatibility with All in One SEO plugin sitemap. (@arnaudbroes @flschaves Issue#372)
-* **3rd** Added wsform nonce. (#365 @cstrouse)
-* **3rd** Added Easy Digital Download (EDD) & WP Menu Cart nonce. (#PR366 @AkramiPro)
-* **3rd** Improved compatibility w/ Restrict Content Pro. (@Abe #PR370)
-* **3rd** Improved compatibility w/ Gravity Forms. (@Ruikai #371)
+* **3rd** Improved compatibility with All in One SEO plugin sitemap. (arnaudbroes/flschaves Issue#372)
+* **3rd** Added wsform nonce. (#365 cstrouse)
+* **3rd** Added Easy Digital Download (EDD) & WP Menu Cart nonce. (#PR366 AkramiPro)
+* **3rd** Improved compatibility w/ Restrict Content Pro. (Abe #PR370)
+* **3rd** Improved compatibility w/ Gravity Forms. (Ruikai #371)
 
 = 4.1 - Jun 25 2021 =
 * 🌱**UCSS/CCSS/LQIP** Moved queue storage to file system from database wp-options table to lessen the IO load. (#633504)
-* 🌱**3rd** Added an option to disable ESI for the WooCommerce Cart. (#358 @Anna Feng @Astrid Wang)
-* **ESI** Fixed an ESI nonce issue introduced in v4.0. (@Andrew Choi)
+* 🌱**3rd** Added an option to disable ESI for the WooCommerce Cart. (#358 Anna Feng/Astrid Wang)
+* **ESI** Fixed an ESI nonce issue introduced in v4.0. (Andrew Choi)
 * **Object** Used new `.litespeed_conf.dat` instead of `.object-cache.ini` for object cache configuration storage.
 * **Conf** Now updating related files after plugin upgrade and not just after activation.
-* 🌱**Guest** Added a Guest Mode JS Excludes option. (@Ankit @Mamac @Rcverma)
+* 🌱**Guest** Added a Guest Mode JS Excludes option. (Ankit/Mamac/Rcverma)
 * **Guest** Guest Mode now uses a lightweight script to update guest vary for reduced server load.
 * **Guest** Guest Mode now adds missing image dimensions.
 * **Guest** Guest vary will no longer update if there's already a vary in place to address the infinite loop caused by CloudFlare's incorrect cache control setting for PHP.
 * **Guest** Guest vary update request will no longer be sent if `lscache_vary` is already set.
 * **Guest** Added a Configurable Guest Mode UA/IP under the Tuning tab in the General menu.
-* **Guest** Guest Mode now allows cron to be hooked, even when UCSS/CCSS options are off. (#338437 @Stars)
+* **Guest** Guest Mode now allows cron to be hooked, even when UCSS/CCSS options are off. (#338437 Stars)
 * **Guest** Simplified the vary generation process under Guest Mode.
-* **Guest** Added a Guest Mode HTML comment for easier debugging. (@Ruikai)
+* **Guest** Added a Guest Mode HTML comment for easier debugging. (Ruikai)
 * **Guest** Guest vary update ajax now bypasses potential POST cache.
-* **CCSS** Added back the options `Separate CCSS Cache Post Types` and `Separate CCSS Cache URIs`. (@Joshua @Ankit)
+* **CCSS** Added back the options `Separate CCSS Cache Post Types` and `Separate CCSS Cache URIs`. (Joshua/Ankit)
 * **CCSS** CCSS/UCSS queue is now limited to a maximum of 500 entries.
 * **Control** The cache control constant `LSCACHE_NO_CACHE` will now have a higher priority than the Forced Public Cache setting.
 * **Crawler** The Crawler can now crawl Guest Mode pages.
 * **Crawler** Fixed a potential XSS vulnerability in the Crawler settings. (#927355)
-* **Crawler** The Crawler now supports a cookie value of `_null`. (@Tobolo)
+* **Crawler** The Crawler now supports a cookie value of `_null`. (Tobolo)
 * **Media** Updated the default value for the Responsive Placeholder SVG to be transparent.
 * **Media** WebP images in the background may now be served in Guest Mode.
 * **Media** WebP images in CSS may now be bypassed if the requesting Guest Mode client doesn't support WebP.
 * **Media** Fixed empty default image placeholder under Guest Mode.
-* 🐞**Image Optimize** Changed the missing `$_POST` to `$post_data` so the database status is properly updated. (#345 @Lucas)
-* **Import** Export file is now readable to allow importing of partial configurations. (@Ryan D @Joshua)
+* 🐞**Image Optimize** Changed the missing `$_POST` to `$post_data` so the database status is properly updated. (#345 Lucas)
+* **Import** Export file is now readable to allow importing of partial configurations. (Ryan D/Joshua)
 * **Page Optimize** Fixed W3 validator errors in Guest Mode. (#61393817)
 * **3rd** A fatal WooCommerce error is no longer triggered by a custom theme reusing a previous LSCWP cache detection tag.
 * **3rd** AMP may now bypass Guest Mode automatically.
@@ -350,53 +351,53 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Lang** Corrected a missing language folder.
 * **GUI** Added a CCSS/UCSS loading page visualization. (⭐ Contributed by Astrid Wang & Anna Feng #PR360)
 * **GUI** Added a warning to indicate when Guest Mode CCSS/UCSS quota is in use. (Contributed by Astrid Wang & Anna Feng #PR361)
-* **GUI** Added a `litespeed-info` text color. (@Astrid Wang)
-* **GUI** Implemented various UI/UX improvements. (@Joshua @Lisa)
-* **GUI** Duplicate cloud service messages with the same content will only display once now. (@Marc Dahl)
+* **GUI** Added a `litespeed-info` text color. (Astrid Wang)
+* **GUI** Implemented various UI/UX improvements. (Joshua/Lisa)
+* **GUI** Duplicate cloud service messages with the same content will only display once now. (Marc Dahl)
 * **GUI** Added a WebP replacement warning for Guest Mode Optimization if WebP replacement is off.
-* **Misc** Dropped `wp_assets` from distribution to reduce the package size. (@lowwebtech)
+* **Misc** Dropped `wp_assets` from distribution to reduce the package size. (lowwebtech)
 * **Misc** Increased the new version and score detection intervals.
-* **Misc** Optimized WP Assets images. (#352 @lowwebtech)
+* **Misc** Optimized WP Assets images. (#352 lowwebtech)
 * **Debug** Dropped the redundant error_log debug info.
 
 = 4.0 - Apr 30 2021 =
 * 🌱🌱🌱**Guest** Introduced `Guest Mode` for instantly cacheable content on the first visit.
 * 🌱**UCSS** Added a new service: `Unique CSS`, to drop unused CSS from elements from combined CSS
-* 🌱**CCSS** Added `HTML Lazyload` option. (@Ankit)
+* 🌱**CCSS** Added `HTML Lazyload` option. (Ankit)
 * 🌱**CCSS** Added `CCSS Per URL` option to allow Critical CSS to be generated for each page instead of for each Post Type.
-* 🌱**Media** Added `Add Missing Sizes` setting for improving Cumulative Layout Shift. (@Fahim)
-* 🌱**JS** Switched to new JS minification library for better compression and compatibility w/ template literals. (@LuminSol)
+* 🌱**Media** Added `Add Missing Sizes` setting for improving Cumulative Layout Shift. (Fahim)
+* 🌱**JS** Switched to new JS minification library for better compression and compatibility w/ template literals. (LuminSol)
 * **Media** WebP may now be replaced in CSS.
-* **Media** Can now drop image tags in noscript to avoid lazyload. (@Abe #314 @mattthomas-photography)
+* **Media** Can now drop image tags in noscript to avoid lazyload. (Abe #314 /mattthomas-photography)
 * **Media** Bypass optimization if a page is not cacheable.
-* **Image Optimize** Auto hook to `wp_update_attachment_metadata` to automate image gathering process, and to handle the new thumbnail generation after images are uploaded. (@smerriman).
+* **Image Optimize** Auto hook to `wp_update_attachment_metadata` to automate image gathering process, and to handle the new thumbnail generation after images are uploaded. (smerriman).
 * **Image Optimize** Repeated image thumbnails won't be gathered anymore.
 * **Image Optimize** Simplified the rescan/gather/upload_hook for existing image detection.
-* **Image Optimize** Fixed the duplicated optimize size records in the postmeta table. (@Abe #315)
-* **Image Optimize** Allow either JSON POST request or normal form request in `notify_img`. (@Lucas #313)
-* **Image Optimize** Optimized SQL query for better efficiency. (@lucas @lauren)
+* **Image Optimize** Fixed the duplicated optimize size records in the postmeta table. (Abe #315)
+* **Image Optimize** Allow either JSON POST request or normal form request in `notify_img`. (Lucas #313)
+* **Image Optimize** Optimized SQL query for better efficiency. (lucas/Lauren)
 * **Image Optimize** Fixed issue where rescan mass created duplicate images. (#954399)
 * **Image Optimize** Image optimization pie will not show 100% anymore if there is still a small amount in the unfinished queue.
 * **Image Optimize** WebP generation defaults to ON for Guest Mode.
 * **Image Optimize** `Priority Line` package now can have smaller request interval.
-* **ESI** Disable ESI when page is not cacheable. (@titsmaker)
-* **ESI** Fixed an issue where Divi was disabling all in edit mode, but couldn't disable ESI. (@Abe)
+* **ESI** Disable ESI when page is not cacheable. (titsmaker)
+* **ESI** Fixed an issue where Divi was disabling all in edit mode, but couldn't disable ESI. (Abe)
 * **ESI** ESI init moved under `init` hook from `plugin_loaded` hook.
-* **CDN** Add basic support for CloudFlare API Tokens (@Abe #320)
+* **CDN** Add basic support for CloudFlare API Tokens (Abe #320)
 * **CSS** Simplified `Font Display Optimization` option.
-* **CSS** Fixed manual cron timeout issue. (@jesse Distad)
-* **CSS** Inline CSS may now use `data-no-optimize` to be excluded from optimization. (@popaionut)
+* **CSS** Fixed manual cron timeout issue. (jesse Distad)
+* **CSS** Inline CSS may now use `data-no-optimize` to be excluded from optimization. (popaionut)
 * **JS** Combined `Load JS Defer` and `Load Inline JS Defer` options.
 * **JS** Forced async to defer.
 * **JS** Moved Google Analytics JS from constant default to setting default for removal.
-* **JS** Fixed potential JS parsing issue caused by JS src being changed to data-src by other plugins. (@ankit)
-* **JS** Excluded spotlight from JS optimize. (@tobolo)
+* **JS** Fixed potential JS parsing issue caused by JS src being changed to data-src by other plugins. (ankit)
+* **JS** Excluded spotlight from JS optimize. (tobolo)
 * **CCSS** Fixed CCSS/UCSS manual cron timeout issue.
 * **CCSS** Only 10 items will be kept for CCSS history.
 * **CCSS** The appearance of CCSS Purge in the topbar menu will be determined by the existance of CCSS cache, and not the setting only.
 * **CCSS** To avoid stuck queues when the current request keeps failing, the CCSS queue will always drop once requested.
 * **CCSS** CCSS will no longer hide adminbar.
-* **CCSS** CCSS may now be separate for network subsites. (@Joshua)
+* **CCSS** CCSS may now be separate for network subsites. (Joshua)
 * **CCSS** Gave CCSS a unique filename per URL per user role per subsite.
 * **CCSS** Dropped `Separate CCSS Cache Post Types` option.
 * **CCSS** Dropped `Separate CCSS Cache URIs` option.
@@ -420,7 +421,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Vary** 3rd party vary cookies will not append into .htaccess anymore but only present in response vary header if in use.
 * **Vary** Dropped function `append()`.
 * **Vary** Commenter cookie is now considered cacheable.
-* **Crawler** Minor update to crawler user agent to accommodate mobile_detect.php (@Abe #304)
+* **Crawler** Minor update to crawler user agent to accommodate mobile_detect.php (Abe #304)
 * **Data** Added a table truncate function.
 * **Data** Added new tables url & url_file.
 * **Data** Dropped cssjs table.
@@ -433,14 +434,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Bypass optimization if page not cacheable.
 * **Page Optimize** Purge CSS/JS will purge the `url_file` table too.
 * **Page Optimize** Optionally store a vary with a shorter value.
-* **Page Optimize** Removing query strings will no longer affect external assets. (@ankit)
+* **Page Optimize** Removing query strings will no longer affect external assets. (ankit)
 * **Page Optimize** Better regex for optimization parsing.
-* **Page Optimize** Eliminated w3 validator for DNS prefetch and duplicated ID errors. (@sumit Pandey)
+* **Page Optimize** Eliminated w3 validator for DNS prefetch and duplicated ID errors. (sumit Pandey)
 * **Page Optimize** New Optimization for Guest Only option under Tuning.
 * **Page Optimize** Now forbidding external link redirection for localization.
 * **Debug** Implemented a better debug format for the 2nd parameter in the log.
-* **GUI** Bypass page score banner when score is not detected (both 0). (@ankit)
-* **GUI** Fixed deprecated JQuery function warning in WP-Admin. (@krzxsiek)
+* **GUI** Bypass page score banner when score is not detected (both 0). (ankit)
+* **GUI** Fixed deprecated JQuery function warning in WP-Admin. (krzxsiek)
 
 = 3.6.4 - Mar 15 2021 =
 * **Toolbox** Fixed Beta Test upgrade error when upgrading to v3.7+.
@@ -453,14 +454,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Fixed an issue where network purge CSS/JS caused 404 errors for subsites.
 * **Page Optimize** Fixed an issue where purge CSS/JS only caused 404 errors.
 * **Page Optimize** Added a notice for CSS/JS data detection and potential random string issue.
-* **Page Optimize** Limited localization resources to specified .js only. (@closte #292 @ormonk)
-* **JS** Data src may now be bypassed from JS Combine. (@ankit)
-* **CLI** Fixed a message typo in Purge. (@flixwatchsupport)
-* **Browser** Added font/otf to Browser Cache expire list. (@ruikai)
+* **Page Optimize** Limited localization resources to specified .js only. (closte #292/ormonk)
+* **JS** Data src may now be bypassed from JS Combine. (ankit)
+* **CLI** Fixed a message typo in Purge. (flixwatchsupport)
+* **Browser** Added font/otf to Browser Cache expire list. (ruikai)
 * **Data** Updated data files to accept PR from dev branch only.
-* **3rd** Add data-view-breakpoint-pointer to js_excludes.txt for the Events Calendar plugin. (@therealgilles)
+* **3rd** Add data-view-breakpoint-pointer to js_excludes.txt for the Events Calendar plugin. (therealgilles)
 * **Cloud** Bypassed invalid requests.
-* **Doc** CDN Mapping description improvement. (@mihai A.)
+* **Doc** CDN Mapping description improvement. (mihai A.)
 
 = 3.6.1 - Dec 21 2020 =
 * **WP** Tested up to WP v5.6.
