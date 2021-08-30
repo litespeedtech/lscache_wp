@@ -64,9 +64,6 @@ class Optimize extends Base {
 	 * @access protected
 	 */
 	public function init() {
-		global $wp;
-		$this->_request_url = home_url( $wp->request );
-
 		$this->cfg_css_async = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_ASYNC );
 		if ( $this->cfg_css_async ) {
 			if ( ! $this->conf( self::O_API_KEY ) ) {
@@ -245,6 +242,9 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _optimize() {
+		global $wp;
+		$this->_request_url = home_url( $wp->request );
+
 		$this->cfg_http2_css =  defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_HTTP2 );
 		$this->cfg_http2_js = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_JS_HTTP2 );
 		$this->cfg_css_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_MIN );
