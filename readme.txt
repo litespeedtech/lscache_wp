@@ -253,6 +253,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Crawler** Added the ability to enable or disable specific crawlers. (⭐ Contributed by Astrid Wang #PR390)
 * 🌱**UCSS** Added `UCSS Inline` option. (Ankit).
 * 🌱**UCSS** Added `UCSS URI Excludes` option. (RC Verma).
+* 🐞**Page Optimize** Fixed potential 404 combined CSS/JS files for 1st page after purged all. (Abe)
+* **Page Optimize** Minimized the potential for 404 errors by query string when Purging All.
+* **Page Optimize** Dropped redundant query strings for minified CSS/JS files.
 * **Conf** Ugrade configuration safely to avoid the issue of new functions not being found in old codebase.
 * **Conf** Configuration upgrade process now adds a notification to admin pages and disables configuration save until upgrade is complete. (Lisa)
 * **JS** Fixed an issue where JS Defer caused a `litespeed_var_1_ is not defined` error when enabled w/ ESI options. (Tobolo)
@@ -260,8 +263,6 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **JS** `JS Delay` now will continue loading JS, even if there is an error in the current JS loading process.
 * 🐞**CCSS** If CCSS fails to generate, Load CSS Asynchronously will now be disabled. (Stars #54074166)
 * 🐞**UCSS** If UCSS generation fails the generated error will no longer be served inside the file. (Ryan D)
-* **Page Optimize** Minimized the potential for 404 errors by query string when Purging All.
-* **Page Optimize** Dropped redundant query strings for minified CSS/JS files.
 * **Log** Updated the Debug log to use less code for prefix.
 * **3rd** Always respect `DONOTCACHEPAGE` constant defination to fix DIVI dynamic css calculation process.
 

@@ -459,7 +459,8 @@ class Data extends Root {
 		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A );
 		if ( ! $url_row ) {
 			$q = "INSERT INTO `$tb_url` SET url=%s";
-			$url_id = $wpdb->query( $wpdb->prepare( $q, $request_url ) );
+			$wpdb->query( $wpdb->prepare( $q, $request_url ) );
+			$url_id = $wpdb->insert_id;
 		}
 		else {
 			$url_id = $url_row[ 'id' ];
