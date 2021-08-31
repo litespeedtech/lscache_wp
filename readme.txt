@@ -250,19 +250,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4 - September 2021 =
-* 🌱**Crawler** Crawler queue on/off feature: disable a specific crawler. (⭐ Contributed by Astrid Wang #PR390)
+* 🌱**Crawler** Added the ability to enable or disable specific crawlers. (⭐ Contributed by Astrid Wang #PR390)
 * 🌱**UCSS** Added `UCSS Inline` option. (Ankit).
 * 🌱**UCSS** Added `UCSS URI Excludes` option. (RC Verma).
-* **Conf** Conf upgrade safety to avoid new function not found in old codebase.
-* **Conf** Conf upgrade process will give a notice to admin pages and disabled Configuration save until upgraded. (Lisa)
-* **JS** Fixed `litespeed_var_1_ is not defined` error when enabled JS defer w/ ESI options. (Tobolo)
-* 🐞**JS** Fixed a bug that when `JS Combine` is enabled, `JS Delay` won't work for the combined JS. (Special thanks to Joshua & Ankit)
-* **JS** `JS Delay` will keep loading JS when meeting an error in current JS loading process.
-* 🐞**CCSS** CCSS generation failure will also turn CSS Async to OFF now. (Stars #54074166)
-* 🐞**UCSS** UCSS generation failure will not serve the generated error inside only file anymore. (Ryan D)
-* **Page Optimize** Improved potential 404 by query string when purged all.
-* **Page Optimize** Dropped redundant query string for minified CSS/JS files only.
-* **Log** Debug log used less code for prefix.
+* **Conf** Ugrade configuration safely to avoid the issue of new functions not being found in old codebase.
+* **Conf** Configuration upgrade process now adds a notification to admin pages and disables configuration save until upgrade is complete. (Lisa)
+* **JS** Fixed an issue where JS Defer caused a `litespeed_var_1_ is not defined` error when enabled w/ ESI options. (Tobolo)
+* 🐞**JS** Fixed an issue where `JS Delay` doesn't work for combined JS when `JS Combine` is enabled. (Special thanks to Joshua & Ankit)
+* **JS** `JS Delay` now will continue loading JS, even if there is an error in the current JS loading process.
+* 🐞**CCSS** If CCSS fails to generate, Load CSS Asynchronously will now be disabled. (Stars #54074166)
+* 🐞**UCSS** If UCSS generation fails the generated error will no longer be served inside the file. (Ryan D)
+* **Page Optimize** Minimized the potential for 404 errors by query string when Purging All.
+* **Page Optimize** Dropped redundant query strings for minified CSS/JS files.
+* **Log** Updated the Debug log to use less code for prefix.
+* **3rd** Always respect `DONOTCACHEPAGE` constant defination to fix DIVI dynamic css calculation process.
 
 = 4.3 - Aug 16 2021 =
 * **UCSS** Separated UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)

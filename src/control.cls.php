@@ -532,6 +532,11 @@ class Control extends Root {
 	public function output() {
 		$hdr = self::X_HEADER . ': ';
 
+		if ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) {
+			$hdr .= 'no-cache';
+			return $hdr;
+		}
+
 		// Guest mode directly return cacheable result
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
 			// If is POST, no cache
