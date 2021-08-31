@@ -83,10 +83,15 @@ class CSS extends Base {
 			return null;
 		}
 
+		$error_tag = '';
+		if ( substr( $rules, 0, 2 ) == '/*' && substr( $rules, -2 ) == '*/' ) {
+			$error_tag = ' data-error="failed to generate"';
+		}
+
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-ccss">' . $rules . '</style>';
+		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
 	}
 
 	/**
@@ -194,7 +199,14 @@ class CSS extends Base {
 	 *
 	 * @since  4.0
 	 */
-	public function load_ucss( $request_url ) {
+	public function load_ucss( $request_url, $dry_run = false ) {
+		// Check UCSS URI excludes
+		$ucss_exc = apply_filters( 'litespeed_ucss_exc', $this->conf( self::O_OPTM_UCSS_EXC ) );
+		if ( $ucss_exc && $hit = Utility::str_hit_array( $request_url, $ucss_exc ) ) {
+			Debug2::debug( '[CSS] UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
+			return false;
+		}
+
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 
@@ -205,8 +217,19 @@ class CSS extends Base {
 
 			if ( file_exists( $static_file ) ) {
 				Debug2::debug2( '[UCSS] existing ucss ' . $static_file );
+				// Check if is error comment inside only
+				$tmp = File::read( $static_file );
+				if ( substr( $tmp, 0, 2 ) == '/*' && substr( $tmp, -2 ) == '*/' ) {
+					Debug2::debug2( '[UCSS] existing ucss is error only: ' . $tmp );
+					return false;
+				}
+
 				return $filepath_prefix . $filename . '.css';
 			}
+		}
+
+		if ( $dry_run ) {
+			return false;
 		}
 
 		$uid = get_current_user_id();

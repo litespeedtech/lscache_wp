@@ -88,6 +88,25 @@ ksort( $roles );
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_UCSS_EXC; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Listed URI will not generate UCSS.', 'litespeed-cache' ); ?>
+				<?php Doc::full_or_partial_url(); ?>
+				<?php Doc::one_per_line(); ?>
+				<br /><span class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_ucss_exc</code>' ); ?>
+				</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_CCSS_SEP_POSTTYPE; ?>
 			<?php $this->title( $id ); ?>
 		</th>

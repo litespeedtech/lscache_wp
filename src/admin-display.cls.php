@@ -406,6 +406,10 @@ class Admin_Display extends Base {
 	 * @access public
 	 */
 	public function display_messages() {
+		if ( ! defined( 'LITESPEED_CONF_LOADED' ) ) {
+			$this->_in_upgrading();
+		}
+
 		if ( GUI::has_whm_msg() ) {
 			$this->show_display_installed();
 		}
@@ -642,6 +646,16 @@ class Admin_Display extends Base {
 	}
 
 	/**
+	 * Display conf data upgrading banner
+	 *
+	 * @since 2.1
+	 * @access private
+	 */
+	private function _in_upgrading() {
+		include LSCWP_DIR . "tpl/inc/in_upgrading.php";
+	}
+
+	/**
 	 * Output litespeed form info
 	 *
 	 * @since    3.0
@@ -654,7 +668,12 @@ class Admin_Display extends Base {
 
 		$has_upload = $has_upload ? 'enctype="multipart/form-data"' : '';
 
-		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>';
+		if ( ! defined( 'LITESPEED_CONF_LOADED' ) ) {
+			echo '<div class="litespeed-relative"';
+		}
+		else {
+			echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative" ' . $has_upload . '>';
+		}
 
 		echo '<input type="hidden" name="' . Router::ACTION . '" value="' . $action . '" />';
 		if ( $type ) {
@@ -671,9 +690,18 @@ class Admin_Display extends Base {
 	 */
 	public function form_end( $disable_reset = false ) {
 		echo "<div class='litespeed-top20'></div>";
-		submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit', true, array( 'id' => 'litespeed-submit-' . $this->_btn_i++ ) );
 
-		echo '</form>';
+		if ( ! defined( 'LITESPEED_CONF_LOADED' ) ) {
+			submit_button( __( 'Save Changes', 'litespeed-cache' ), 'secondary litespeed-duplicate-float', 'litespeed-submit', true, array( 'disabled' => 'disabled' ) );
+
+			echo '</div>';
+		}
+		else {
+			submit_button( __( 'Save Changes', 'litespeed-cache' ), 'primary litespeed-duplicate-float', 'litespeed-submit', true, array( 'id' => 'litespeed-submit-' . $this->_btn_i++ ) );
+
+			echo '</form>';
+		}
+
 	}
 
 	/**
