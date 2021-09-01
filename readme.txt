@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.7.2
-Stable tag: 4.3
+Stable tag: 4.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,11 +249,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4 - September 2021 =
+= 4.4 - Sep 8 2021 =
 * 🌱**Crawler** Added the ability to enable or disable specific crawlers. (⭐ Contributed by Astrid Wang #PR390)
 * 🌱**UCSS** Added `UCSS Inline` option. (Ankit).
 * 🌱**UCSS** Added `UCSS URI Excludes` option. (RC Verma).
-* 🐞**Page Optimize** Fixed potential 404 combined CSS/JS files for 1st page after purged all. (Abe)
+* 🐞**Page Optimize** Fixed an issue where combined CSS/JS files would potentially return 404 errors after a Purge All. (Special thanks to Abe & Ruikai)
 * **Page Optimize** Minimized the potential for 404 errors by query string when Purging All.
 * **Page Optimize** Dropped redundant query strings for minified CSS/JS files.
 * **Conf** Ugrade configuration safely to avoid the issue of new functions not being found in old codebase.
