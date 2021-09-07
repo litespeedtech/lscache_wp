@@ -532,7 +532,7 @@ class Cloud extends Base {
 		if ( $service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ ) {
 			$timestamp_tag = 'last_request.';
 			if ( $this->has_pkg( self::SVC_IMG_OPTM, self::BM_IMG_OPTM_PRIO ) ) {
-				$expiration_req /= 3;
+				$expiration_req /= 10;
 			}
 		}
 		else {
