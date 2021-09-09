@@ -29,6 +29,9 @@
 
 ## Predefined list of ESI nonces:
 
+# WordPress REST nonce
+wp_rest
+
 # CM Registration Pro
 cmreg_registration_nonce private
 role_nonce private
