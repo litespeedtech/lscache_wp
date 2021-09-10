@@ -533,6 +533,7 @@ class Control extends Root {
 		$hdr = self::X_HEADER . ': ';
 
 		if ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) {
+			Debug2::debug( "[Ctrl] ❌ forced no cache [reason] DONOTCACHEPAGE const" );
 			$hdr .= 'no-cache';
 			return $hdr;
 		}
@@ -541,9 +542,11 @@ class Control extends Root {
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
 			// If is POST, no cache
 			if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+				Debug2::debug( "[Ctrl] ❌ forced no cache [reason] LSCACHE_NO_CACHE const" );
 				$hdr .= 'no-cache';
 			}
 			else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
+				Debug2::debug( "[Ctrl] ❌ forced no cache [reason] req not GET" );
 				$hdr .= 'no-cache';
 			}
 			else {
