@@ -249,6 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4.1 - Oct 2021 =
+* **Page Optimize** Fixed CSS/JS combined file random 404 issue caused by visiting same URL w/ different QS. (Abe)
+
 = 4.4 - Sep 8 2021 =
 * 🌱**Crawler** Added the ability to enable or disable specific crawlers. (⭐ Contributed by Astrid Wang #PR390)
 * 🌱**UCSS** Added `UCSS Inline` option. (Ankit).

@@ -66,19 +66,17 @@ class Optimizer extends Root {
 		if ( $file_type == 'css' ) {
 			$content = false;
 			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_UCSS ) ) {
-				$final_file_path = $this->cls( 'CSS' )->load_ucss( $request_url );
+				$filename = $this->cls( 'CSS' )->load_ucss( $request_url );
 
-				if ( $final_file_path ) {
-					return $final_file_path;
+				if ( $filename ) {
+					return array( $filename, 'ucss' );
 				}
 			}
 		}
 
 		// Before generated, don't know the contented hash filename yet, so used url hash as tmp filename
-		$file_path_prefix = '/' . $file_type . '/';
-		if ( is_multisite() ) {
-			$file_path_prefix .= get_current_blog_id() . '/';
-		}
+		$file_path_prefix = $this->_build_filepath_prefix( $file_type );
+
 		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . ( is_404() ? '404' : md5( $request_url ) ) . '.' . $file_type;
 
 		// Create tmp file to avoid conflict
@@ -127,7 +125,7 @@ class Optimizer extends Root {
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
 		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
 
-		return $final_file_path;
+		return array( $filecon_md5 . '.' . $file_type, $file_type );
 	}
 
 	/**

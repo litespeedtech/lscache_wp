@@ -224,7 +224,7 @@ class CSS extends Base {
 					return false;
 				}
 
-				return $filepath_prefix . $filename . '.css';
+				return $filename . '.css';
 			}
 		}
 

@@ -484,10 +484,15 @@ class Data extends Root {
 
 		// Check if has other records used this file or not
 		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
+
 		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s LIMIT 1";
 		if ( file_exists( $file_to_del ) && ! $wpdb->get_var( $wpdb->prepare( $q, $file_row[ 'filename' ] ) ) ) {
 			// Safe to delete
 			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
+
+			// Clear related lscache first to avoid cache copy of same URL w/ diff QS
+			Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
+
 			unlink( $file_to_del );
 		}
 	}

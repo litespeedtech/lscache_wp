@@ -289,9 +289,10 @@ class Optimize extends Base {
 				if ( $this->cfg_css_comb ) {
 					// Check if has inline UCSS enabled or not
 					if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
-						$final_file_path = $this->cls( 'CSS' )->load_ucss( $this->_request_url, true );
-						if ( $final_file_path ) {
-							$this->_ucss = File::read( LITESPEED_STATIC_DIR . $final_file_path );
+						$filename = $this->cls( 'CSS' )->load_ucss( $this->_request_url, true );
+						if ( $filename ) {
+							$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
+							$this->_ucss = File::read( LITESPEED_STATIC_DIR . $filepath_prefix . $filename );
 
 							// Drop all css
 							$this->content = str_replace( $html_list, '', $this->content );
@@ -783,15 +784,21 @@ class Optimize extends Base {
 		}
 
 		$minify = $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min;
-		$file_path = $this->__optimizer->serve( $this->_request_url, $file_type, $minify, $src_list );
+		$filename_info = $this->__optimizer->serve( $this->_request_url, $file_type, $minify, $src_list );
 
-		if ( ! $file_path ) {
+		if ( ! $filename_info ) {
 			return false; // Failed to generate
 		}
 
+		list( $filename, $type ) = $filename_info;
+
+		// Add cache tag in case later file deleted to avoid lscache served stale non-existed files @since 4.4.1
+		Tag::add( Tag::TYPE_MIN . '.' . $filename );
+
 		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
 		// As filename is alreay realted to filecon md5, no need QS anymore
-		return LITESPEED_STATIC_URL . $file_path . '?ver=' . $qs_hash;
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		return LITESPEED_STATIC_URL . $filepath_prefix . $filename . '?ver=' . $qs_hash;
 	}
 
 	/**
