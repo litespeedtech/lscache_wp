@@ -532,7 +532,7 @@ class Control extends Root {
 	public function output() {
 		$hdr = self::X_HEADER . ': ';
 
-		if ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) {
+		if ( defined( 'DONOTCACHEPAGE' ) && apply_filters( 'litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE ) ) {
 			Debug2::debug( "[Ctrl] ❌ forced no cache [reason] DONOTCACHEPAGE const" );
 			$hdr .= 'no-cache';
 			return $hdr;
