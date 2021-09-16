@@ -494,7 +494,7 @@ class Data extends Root {
 			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
 
 			// Clear related lscache first to avoid cache copy of same URL w/ diff QS
-			Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
+			// Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
 
 			unlink( $file_to_del );
 		}

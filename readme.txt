@@ -250,10 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.1 - Sep 16 2021 =
-* 🐞**ESI** Fixed ESI failure on non-cached pages caused by constant `DONOTCACHEPAGE`.
-* 🐞**Page Optimize** Fixed CSS/JS minified file failed to update when file changed. (ceap80)
-* 🐞**Page Optimize** Fixed CSS/JS combined file random 404 issue caused by visiting same URL w/ different QS. (Abe)
-* **API** Hook `litespeed_const_DONOTCACHEPAGE` to control constant `DONOTCACHEPAGE` cache or not result.
+* 🐞**ESI** Fixed ESI failure on non-cached pages caused by `DONOTCACHEPAGE` constant.
+* 🐞**Page Optimize** Fixed an issue where the minified CSS/JS file failed to update when the file was changed. (ceap80)
+* 🐞**Page Optimize** Fixed an issue where the combined CSS/JS file randomly returned a 404 error when visiting the same URL with different query strings. (Abe)
+* **API** Added `litespeed_const_DONOTCACHEPAGE` hook to control the cache-or-not result of the `DONOTCACHEPAGE` constant.
 
 = 4.4 - Sep 8 2021 =
 * 🌱**Crawler** Added the ability to enable or disable specific crawlers. (⭐ Contributed by Astrid Wang #PR390)
