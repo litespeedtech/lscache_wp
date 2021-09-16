@@ -482,6 +482,9 @@ class Data extends Root {
 		$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
 		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
 
+		// Purge this URL to avoid cache copy of same URL w/ diff QS
+		Purge::purge_url( $request_url, true );
+
 		// Check if has other records used this file or not
 		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
 

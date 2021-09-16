@@ -84,6 +84,11 @@ class Core extends Root {
 			Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
 			Purge::delete_option( Purge::DB_QUEUE );
 		}
+		if ( $purge_queue = Purge::get_option( Purge::DB_QUEUE2 ) ) {
+			@header( $purge_queue );
+			Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
+			Purge::delete_option( Purge::DB_QUEUE2 );
+		}
 
 		/**
 		 * Hook internal REST

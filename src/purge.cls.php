@@ -11,13 +11,16 @@ defined( 'WPINC' ) || exit;
 
 class Purge extends Base {
 	protected $_pub_purge = array();
+	protected $_pub_purge2 = array();
 	protected $_priv_purge = array();
 	protected $_purge_related = false;
 	protected $_purge_single = false;
 
 
 	const X_HEADER = 'X-LiteSpeed-Purge';
+	const X_HEADER2 = 'X-LiteSpeed-Purge2';
 	const DB_QUEUE = 'queue';
+	const DB_QUEUE2 = 'queue2';
 
 	const TYPE_PURGE_ALL = 'purge_all';
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache';
@@ -382,8 +385,8 @@ class Purge extends Base {
 	 * @access public
 	 * @param mixed $tags Tags to add to the list.
 	 */
-	public static function add( $tags ) {
-		self::cls()->_add( $tags );
+	public static function add( $tags, $purge2 = false ) {
+		self::cls()->_add( $tags, $purge2 );
 	}
 
 	/**
@@ -392,26 +395,32 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _add( $tags ) {
+	private function _add( $tags, $purge2 = false ) {
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags );
 		}
 
 		$tags = $this->_prepend_bid( $tags );
 
-		if ( ! array_diff( $tags, $this->_pub_purge ) ) {
+		if ( ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
 			return;
 		}
 
-		$this->_pub_purge = array_merge( $this->_pub_purge, $tags );
-		$this->_pub_purge = array_unique( $this->_pub_purge );
-		Debug2::debug( '[Purge] added ' . implode( ',', $tags ), 8 );
+		if ( $purge2 ) {
+			$this->_pub_purge2 = array_merge( $this->_pub_purge2, $tags );
+			$this->_pub_purge2 = array_unique( $this->_pub_purge2 );
+		}
+		else {
+			$this->_pub_purge = array_merge( $this->_pub_purge, $tags );
+			$this->_pub_purge = array_unique( $this->_pub_purge );
+		}
+		Debug2::debug( '[Purge] added ' . implode( ',', $tags ) . ( $purge2 ? ' [Purge2]' : '' ), 8 );
 
 		// Send purge header immediately
-		$curr_built = $this->_build();
+		$curr_built = $this->_build( $purge2 );
 		if ( defined( 'LITESPEED_DID_send_headers' ) || defined( 'LITESPEED_CLI' ) ) {
 			// Can't send, already has output, need to save and wait for next run
-			self::update_option( self::DB_QUEUE, $curr_built );
+			self::update_option( $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built );
 			Debug2::debug( '[Purge] Output existed, queue stored: ' . $curr_built );
 		}
 		else {
@@ -646,7 +655,7 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_url( $url ) {
+	public function purge_url( $url, $purge2 = false ) {
 		$val = trim( $url );
 		if ( empty( $val ) ) {
 			return;
@@ -666,7 +675,7 @@ class Purge extends Base {
 			return;
 		}
 
-		self::add( $hash );
+		self::add( $hash, $purge2 );
 
 		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) );
 	}
@@ -884,12 +893,34 @@ class Purge extends Base {
 	 * @access private
 	 * @return string the built purge header
 	 */
-	private function _build() {
-		if ( empty( $this->_pub_purge ) && empty( $this->_priv_purge ) ) {
-			return;
+	private function _build( $purge2 = false ) {
+		if ( $purge2 ) {
+			if ( empty( $this->_pub_purge2 ) ) {
+				return;
+			}
+		}
+		else {
+			if ( empty( $this->_pub_purge ) && empty( $this->_priv_purge ) ) {
+				return;
+			}
 		}
 
 		$purge_header = '';
+
+		// Handle purge2 @since 4.4.1
+		if ( $purge2 ) {
+			$public_tags = $this->_append_prefix( $this->_pub_purge2 );
+			if ( empty( $public_tags ) ) {
+				return;
+			}
+			$purge_header = self::X_HEADER2 . ': public,';
+			if ( Control::is_stale() ) {
+				$purge_header .= 'stale,';
+			}
+			$purge_header .= implode( ',', $public_tags );
+			return $purge_header;
+		}
+
 		$private_prefix = self::X_HEADER . ': private,';
 
 		if ( ! empty( $this->_pub_purge ) ) {

@@ -167,6 +167,7 @@ var _litespeed_dots ;
 					xhr.setRequestHeader( 'X-WP-Nonce', litespeed_data.nonce ) ;
 				},
 				success: function( data ) {
+					console.log( '[litespeed] get server IP response: ' + data );
 					$( '#litespeed_server_ip' ).html( data ) ;
 				}
 			} ) ;
