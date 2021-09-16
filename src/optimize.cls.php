@@ -826,6 +826,9 @@ class Optimize extends Base {
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
 				continue;
 			}
+			if ( ! empty( $attrs[ 'data-cfasync' ] ) && $attrs[ 'data-cfasync' ] === 'false'  ) {
+				continue;
+			}
 			if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
 				continue;
 			}
