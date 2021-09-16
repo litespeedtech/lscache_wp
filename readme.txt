@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.1 - Oct 2021 =
+* **Page Optimize** Fixed CSS/JS minified file failed to update when file changed. (ceap80)
 * **Page Optimize** Fixed CSS/JS combined file random 404 issue caused by visiting same URL w/ different QS. (Abe)
 * **API** Hook `litespeed_const_DONOTCACHEPAGE` to control constant `DONOTCACHEPAGE` cache or not result.
 

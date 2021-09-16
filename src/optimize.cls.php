@@ -758,10 +758,9 @@ class Optimize extends Base {
 		$static_file = LITESPEED_STATIC_DIR . '/' . $filename;
 		File::save( $static_file, $content, true );
 
-		// $qs_hash = substr( md5( $src ), -5 );
-		// return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
-		// $qs_hash is from src, same as $filename, redundant
-		return LITESPEED_STATIC_URL . "/$filename";
+		// QS is required as $src may contains version info
+		$qs_hash = substr( md5( $src ), -5 );
+		return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
 	}
 
 	/**
