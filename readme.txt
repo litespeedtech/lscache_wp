@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.2 - Oct 2021 =
+* **Purge** Purge will always send header even it may need to be still delayed to clear pages containing 404 CSS/JS.
 * **Page Optimize** Purge caused by CSS/JS file delete will now be silent.
 
 = 4.4.1 - Sep 16 2021 =
