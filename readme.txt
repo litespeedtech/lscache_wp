@@ -249,6 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4.2 - Oct 2021 =
+* **Page Optimize** Purge caused by CSS/JS file delete will now be silent.
+
 = 4.4.1 - Sep 16 2021 =
 * 🐞**ESI** Fixed ESI failure on non-cached pages caused by `DONOTCACHEPAGE` constant.
 * 🐞**Page Optimize** Fixed an issue where the minified CSS/JS file failed to update when the file was changed. (ceap80)

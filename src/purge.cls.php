@@ -655,7 +655,7 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_url( $url, $purge2 = false ) {
+	public function purge_url( $url, $purge2 = false, $quite = false ) {
 		$val = trim( $url );
 		if ( empty( $val ) ) {
 			return;
@@ -677,7 +677,7 @@ class Purge extends Base {
 
 		self::add( $hash, $purge2 );
 
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) );
+		! $quite && ! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) );
 	}
 
 	/**

@@ -483,7 +483,7 @@ class Data extends Root {
 		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
 
 		// Purge this URL to avoid cache copy of same URL w/ diff QS
-		Purge::purge_url( $request_url, true );
+		Purge::purge_url( $request_url, true, true );
 
 		// Check if has other records used this file or not
 		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
