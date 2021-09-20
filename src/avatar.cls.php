@@ -125,16 +125,6 @@ class Avatar extends Base {
 	}
 
 	/**
-	 * make cache folder
-	 *
-	 * @since  3.0
-	 * @access private
-	 */
-	private function _mkdir() {
-		mkdir( LITESPEED_STATIC_DIR . '/avatar', 0755, true );
-	}
-
-	/**
 	 * Read last time generated info
 	 *
 	 * @since  3.0
@@ -240,9 +230,8 @@ class Avatar extends Base {
 		self::save_summary();
 
 		// Generate
-		if ( ! $this->has_cache_folder( 'avatar' ) ) {
-			$this->_mkdir();
-		}
+		$this->_maybe_mk_cache_folder( 'avatar' );
+
 		$response = wp_remote_get( $url, array( 'timeout' => 180, 'stream' => true, 'filename' => $file ) );
 
 		Debug2::debug( '[Avatar] _generate [url] ' . $url );

@@ -68,6 +68,19 @@ abstract class Root {
 	}
 
 	/**
+	 * Maybe make the cache folder if not existed
+	 *
+	 * @since 4.4.2
+	 */
+	protected function _maybe_mk_cache_folder( $type ) {
+		if ( ! $this->has_cache_folder( $type ) ) {
+			$subsite_id = is_multisite() && ! is_network_admin() ? get_current_blog_id() : '';
+			$path = LITESPEED_STATIC_DIR . '/' . $type . '/' . $subsite_id;
+			mkdir( $path, 0755, true );
+		}
+	}
+
+	/**
 	 * Delete file-based cache folder for that type
 	 *
 	 * @since  3.0
