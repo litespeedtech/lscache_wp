@@ -194,7 +194,10 @@ class Tag extends Root {
 		if ( $ori ) {
 			return $slashed;
 		}
-		// return self::TYPE_URL . ( $slashed );
+
+		if ( defined( 'LSCWP_LOG' ) ) {
+			return self::TYPE_URL . $slashed;
+		}
 		return self::TYPE_URL . md5( $slashed );
 	}
 

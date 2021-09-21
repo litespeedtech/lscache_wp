@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Purge caused by CSS/JS file delete will now be silent.
 * **Avatar** Fixed potential localized Avatar folder creation warning. (mattk0220/josebab)
 * **API** Added filter `litespeed_optm_html_after_head` to move all optimized code(UCSS/CCSS/Combined CSS/Combined JS) to be right before `</head>` tag. (ducpl/Kris Regmi)
+* **Debug** Under debug mode, cache/purge tag will be plaintext.
 
 = 4.4.1 - Sep 16 2021 =
 * 🐞**ESI** Fixed ESI failure on non-cached pages caused by `DONOTCACHEPAGE` constant.
