@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.7.2
-Stable tag: 4.4.1
+Stable tag: 4.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,15 +249,15 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4.2 - Oct 2021 =
-* **Purge** Purge will always send header even it may need to be still delayed to clear pages containing 404 CSS/JS.
-* 🐞**Purge** Fixed a potential PHP warning when generating different optimized filenames.
-* **Cron** Dropped unnecessary HTML response in cron which may result in wp-cron report email. (Gilles)
-* **Page Optimize** Purge caused by CSS/JS file delete will now be silent.
-* **Page Optimize** Fixed the failure to purge homepage when fixing 404 CSS/JS issue.
+= 4.4.2 - Sep 23 2021 =
+* **Purge** In order to clear pages containing 404 CSS/JS, the purge header will always be sent even in cases where purge must be delayed.
+* 🐞**Purge** Fixed a potential PHP warning caused when generating different optimized filenames.
+* **Cron** Dropped unnecessary HTML response in cron which sometimes resulted in wp-cron report email. (Gilles)
+* **Page Optimize** Purge caused by CSS/JS file deletion will now be silent.
+* **Page Optimize** Fixed an issue where the homepage failed to purge when addressing the 404 CSS/JS issue.
 * **Avatar** Fixed potential localized Avatar folder creation warning. (mattk0220/josebab)
-* **API** Added filter `litespeed_optm_html_after_head` to move all optimized code(UCSS/CCSS/Combined CSS/Combined JS) to be right before `</head>` tag. (ducpl/Kris Regmi)
-* **Debug** Under debug mode, cache/purge tag will be plaintext.
+* **API** Added filter `litespeed_optm_html_after_head` to move all optimized code(UCSS/CCSS/Combined CSS/Combined JS) to be right before the `</head>` tag. (ducpl/Kris Regmi)
+* **Debug** Under debug mode, cache/purge tags will be plaintext.
 
 = 4.4.1 - Sep 16 2021 =
 * 🐞**ESI** Fixed ESI failure on non-cached pages caused by `DONOTCACHEPAGE` constant.
