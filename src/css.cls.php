@@ -352,6 +352,10 @@ class CSS extends Base {
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( $type, $this->_queue );
 
+				if ( ! $continue ) {
+					return;
+				}
+
 				if ( $i > 3 ) {
 					$this->_print_loading( count( $this->_queue ), $type_tag );
 					return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );

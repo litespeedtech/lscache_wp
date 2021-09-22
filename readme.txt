@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.4.2 - Oct 2021 =
 * **Purge** Purge will always send header even it may need to be still delayed to clear pages containing 404 CSS/JS.
 * 🐞**Purge** Fixed a potential PHP warning when generating different optimized filenames.
+* **Cron** Dropped unnecessary HTML response in cron which may result in wp-cron report email. (Gilles)
 * **Page Optimize** Purge caused by CSS/JS file delete will now be silent.
 * **Page Optimize** Fixed the failure to purge homepage when fixing 404 CSS/JS issue.
 * **Avatar** Fixed potential localized Avatar folder creation warning. (mattk0220/josebab)
