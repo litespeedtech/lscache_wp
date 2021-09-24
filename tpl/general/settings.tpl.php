@@ -148,7 +148,7 @@ if ( ! $can_token ) {
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'This option enables maximum optimization for Guest Mode visitors.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization', __( 'Please read all warnings before enabling this option.', 'litespeed-cache' ), false, 'litespeed-warning' ); ?>
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
 					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
