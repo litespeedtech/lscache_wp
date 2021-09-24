@@ -105,23 +105,29 @@ class Object_Cache extends Root {
 		elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) { // Get cfg from _data_file
 			// Use self::const to avoid loading more classes
 			$cfg = json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
-			$this->_cfg_method = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
-			$this->_cfg_host = $cfg[ self::O_OBJECT_HOST ];
-			$this->_cfg_port = $cfg[ self::O_OBJECT_PORT ];
-			$this->_cfg_life = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
-			$this->_cfg_persistent = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
-			$this->_cfg_admin = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
-			$this->_cfg_transients = ! empty( $cfg[ self::O_OBJECT_TRANSIENTS ] ) ? $cfg[ self::O_OBJECT_TRANSIENTS ] : false;
-			$this->_cfg_db = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
-			$this->_cfg_user = ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : '';
-			$this->_cfg_pswd = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
-			$this->_global_groups = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : array();
-			$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : array();
+			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
+				$this->_cfg_method = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
+				$this->_cfg_host = $cfg[ self::O_OBJECT_HOST ];
+				$this->_cfg_port = $cfg[ self::O_OBJECT_PORT ];
+				$this->_cfg_life = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
+				$this->_cfg_persistent = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
+				$this->_cfg_admin = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
+				$this->_cfg_transients = ! empty( $cfg[ self::O_OBJECT_TRANSIENTS ] ) ? $cfg[ self::O_OBJECT_TRANSIENTS ] : false;
+				$this->_cfg_db = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
+				$this->_cfg_user = ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : '';
+				$this->_cfg_pswd = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
+				$this->_global_groups = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : array();
+				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : array();
 
-			if ( $this->_cfg_method ) {
-				$this->_oc_driver = 'Redis';
+				if ( $this->_cfg_method ) {
+					$this->_oc_driver = 'Redis';
+				}
+				$this->_cfg_enabled = class_exists( $this->_oc_driver ) && $this->_cfg_host;
 			}
-			$this->_cfg_enabled = class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			else {
+				$this->_cfg_enabled = false;
+			}
+
 		}
 		else {
 			$this->_cfg_enabled = false;
