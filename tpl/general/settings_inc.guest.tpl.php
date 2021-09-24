@@ -15,22 +15,6 @@ defined( 'WPINC' ) || exit;
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-mode' ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
 				<br /><?php Doc::crawler_affected(); ?>
-				<?php
-					$typeList = array();
-					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_UCSS ) ) {
-						$typeList[] = 'UCSS';
-					}
-					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_CSS_ASYNC ) ) {
-						$typeList[] = 'CCSS';
-					}
-					if ( ! empty( $typeList ) ) {
-						$theType = implode( '/', $typeList );
-						echo '<br />';
-						echo '<font class="litespeed-info">';
-						echo '⚠️ ' . sprintf( __( 'Your %1s quota on %2s will still be in use.', 'litespeed-cache' ), $theType, 'QUIC.cloud' );
-						echo '</font>';
-					}
-				?>
 			</div>
 		</td>
 	</tr>

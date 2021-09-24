@@ -250,7 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.3 - Oct 2021 =
+* **Conf** Default GO to OFF.
 * **GUI** Added GO detail warning. (n111)
+* **GUI** Moved quota wil be still in use warning from GM to GO section.
 
 = 4.4.2 - Sep 23 2021 =
 * **Purge** In order to clear pages containing 404 CSS/JS, the purge header will always be sent even in cases where purge must be delayed.

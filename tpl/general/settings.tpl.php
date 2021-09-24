@@ -149,6 +149,24 @@ if ( ! $can_token ) {
 			<div class="litespeed-desc">
 				<?php echo __( 'This option enables maximum optimization for Guest Mode visitors.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization', __( 'Please read all warnings before enabling this option.', 'litespeed-cache' ), false, 'litespeed-warning' ); ?>
+
+				<?php
+					$typeList = array();
+					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_UCSS ) ) {
+						$typeList[] = 'UCSS';
+					}
+					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_CSS_ASYNC ) ) {
+						$typeList[] = 'CCSS';
+					}
+					if ( ! empty( $typeList ) ) {
+						$theType = implode( '/', $typeList );
+						echo '<br />';
+						echo '<font class="litespeed-info">';
+						echo '⚠️ ' . sprintf( __( 'Your %1s quota on %2s will still be in use.', 'litespeed-cache' ), $theType, 'QUIC.cloud' );
+						echo '</font>';
+					}
+				?>
+
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
 					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
