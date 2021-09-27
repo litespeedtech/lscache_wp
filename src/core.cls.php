@@ -159,7 +159,7 @@ class Core extends Root {
 		 * Check if is non optm simulator
 		 * @since  2.9
 		 */
-		if ( ! empty( $_GET[ Router::ACTION ] ) && $_GET[ Router::ACTION ] == 'before_optm' ) {
+		if ( ! empty( $_GET[ Router::ACTION ] ) && $_GET[ Router::ACTION ] == 'before_optm' && ! apply_filters( 'litespeed_qs_forbidden', false ) ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm due to QS CTRL' );
 			! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
 		}

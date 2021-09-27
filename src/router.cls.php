@@ -499,6 +499,11 @@ class Router extends Base {
 				return;
 			}
 
+			if ( apply_filters( 'litespeed_qs_forbidden', false ) ) {
+				Debug2::debug( '[Router] LSCWP_CTRL forbidden by hook litespeed_qs_forbidden' );
+				return;
+			}
+
 			$_is_public_action = true;
 		}
 

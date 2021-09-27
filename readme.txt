@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
 * **GUI** Added GO detail warning. (n111)
 * **GUI** Moved quota wil be still in use warning from GM to GO section.
+* **API** Added `litespeed_qs_forbidden` API to bypass `?LSCWP_CTRL=` query string. (minhduc)
 
 = 4.4.2 - Sep 23 2021 =
 * **Purge** In order to clear pages containing 404 CSS/JS, the purge header will always be sent even in cases where purge must be delayed.
