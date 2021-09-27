@@ -250,7 +250,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.3 - Oct 2021 =
-* **Conf** Default GO to OFF.
+* **Conf** Default `Guest Optimization` to OFF.
+* **Conf** Default `CCSS Per URL` to OFF to avoid consuming more quota by default after upgrade to v4. (n111)
 * **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
 * **GUI** Added GO detail warning. (n111)
 * **GUI** Moved quota wil be still in use warning from GM to GO section.
