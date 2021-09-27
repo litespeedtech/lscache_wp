@@ -250,12 +250,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.3 - Oct 2021 =
+* **Purge** Disabled `Purge Delay` in optimization process by default.
 * **Conf** Default `Guest Optimization` to OFF.
 * **Conf** Default `CCSS Per URL` to OFF to avoid consuming more quota by default after upgrade to v4. (n111)
 * **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
 * **GUI** Added GO detail warning. (n111)
 * **GUI** Moved quota wil be still in use warning from GM to GO section.
 * **API** Added `litespeed_qs_forbidden` API to bypass `?LSCWP_CTRL=` query string. (minhduc)
+* **API** Added `litespeed_delay_purge` API to make the following Purge header to be delayed to next request.
 
 = 4.4.2 - Sep 23 2021 =
 * **Purge** In order to clear pages containing 404 CSS/JS, the purge header will always be sent even in cases where purge must be delayed.
