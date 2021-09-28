@@ -396,6 +396,10 @@ class Activation extends Base {
 				return false;
 		}
 
+		if ( apply_filters( 'litespeed_wpconfig_readonly', false ) ) {
+			throw new \Exception( 'wp-config file is forbidden to modify due to API hook: litespeed_wpconfig_readonly' );
+		}
+
 		/**
 		 * Follow WP's logic to locate wp-config file
 		 * @see wp-load.php
