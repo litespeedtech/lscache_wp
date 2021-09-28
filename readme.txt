@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Conf** Default `Guest Optimization` to OFF.
 * **Conf** Default `CCSS Per URL` to OFF to avoid consuming more quota by default after upgrade to v4. (n111)
 * **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
+* **Cloud** Fixed a potential PHP notice when not using a service yet when inquiring the quota usage.
 * **GUI** Added GO detail warning. (n111)
 * **GUI** Moved quota wil be still in use warning from GM to GO section.
 * **API** Added `litespeed_qs_forbidden` hook to bypass `?LSCWP_CTRL=` query string. (minhduc)

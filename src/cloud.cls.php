@@ -244,10 +244,10 @@ class Cloud extends Base {
 			$service = self::SVC_PAGE_OPTM;
 		}
 
-		$usage = $this->_summary[ 'usage.' . $service ];
-		if ( empty( $usage ) ) {
+		if ( empty( $this->_summary[ 'usage.' . $service ] ) ) {
 			return 0;
 		}
+		$usage = $this->_summary[ 'usage.' . $service ];
 
 		// Image optm is always free
 		$allowance_max = 0;
