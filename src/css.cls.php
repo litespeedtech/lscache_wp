@@ -699,7 +699,7 @@ class CSS extends Base {
 			}
 
 			$con = Optimizer::minify_css( $con );
-			if ( $is_webp ) {
+			if ( $is_webp && $this->cls( 'Media' )->webp_support() ) {
 				$con = $this->cls( 'Media' )->replace_background_webp( $con );
 			}
 
