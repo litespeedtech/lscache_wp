@@ -153,19 +153,6 @@ $ucss_queue = $this->load_queue( 'ucss' );
 
 	<tr>
 		<th>
-			<?php $id = Base::O_OPTM_CSS_HTTP2; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Pre-send internal CSS files to the browser before they are requested. (Requires the HTTP/2 protocol)', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
 			<?php $id = Base::O_OPTM_CSS_ASYNC; ?>
 			<?php $this->title( $id ); ?>
 		</th>

@@ -17,10 +17,7 @@ class Optimize extends Base {
 
 	private $content;
 	private $content_ori;
-	private $http2_headers = array();
 
-	private $cfg_http2_css;
-	private $cfg_http2_js;
 	private $cfg_css_min;
 	private $cfg_css_comb;
 	private $cfg_js_min;
@@ -245,8 +242,6 @@ class Optimize extends Base {
 		global $wp;
 		$this->_request_url = home_url( $wp->request );
 
-		$this->cfg_http2_css =  defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_HTTP2 );
-		$this->cfg_http2_js = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_JS_HTTP2 );
 		$this->cfg_css_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_MIN );
 		$this->cfg_css_comb = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_COMB );
 		$this->cfg_js_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_MIN );
@@ -276,13 +271,13 @@ class Optimize extends Base {
 
 		// Parse css from content
 		$src_list = false;
-		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
 		}
 
 		// css optimizer
-		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb ) {
 
 			if ( $src_list ) {
 				// IF combine
@@ -313,9 +308,6 @@ class Optimize extends Base {
 
 							// Move all css to top
 							$this->content = str_replace( $html_list, '', $this->content );
-
-							// Add to HTTP2
-							$this->append_http2( $url );
 						}
 					}
 				}
@@ -330,7 +322,6 @@ class Optimize extends Base {
 						if ( ! empty( $src_info[ 'inl' ] ) ) {
 							continue;
 						}
-						$this->append_http2( $src_info[ 'src' ] );
 					}
 				}
 			}
@@ -348,7 +339,7 @@ class Optimize extends Base {
 
 		// Parse js from buffer as needed
 		$src_list = false;
-		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
 		}
@@ -360,9 +351,6 @@ class Optimize extends Base {
 				$url = $this->_build_hash_url( $src_list, 'js' );
 				if ( $url ) {
 					$this->html_foot .= $this->_build_js_tag( $url );
-
-					// Add to HTTP2
-					$this->append_http2( $url, 'js' );
 
 					// Will move all JS to bottom combined one
 					$this->content = str_replace( $html_list, '', $this->content );
@@ -394,10 +382,6 @@ class Optimize extends Base {
 								$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
 							}
 						}
-						// HTTP2 push
-						if ( $this->cfg_http2_js ) {
-							$this->append_http2( $src_info[ 'src' ], 'js' );
-						}
 					}
 				}
 			}
@@ -419,7 +403,6 @@ class Optimize extends Base {
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
 				$this->html_head .= $this->_build_js_tag( $css_async_lib_url, 'litespeed-css-async-lib' ); // Don't exclude it from defer for now
-				$this->append_http2( $css_async_lib_url, 'js' ); // async lib will be http/2 pushed always
 			}
 		}
 
@@ -486,10 +469,6 @@ class Optimize extends Base {
 		// HTML minify
 		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_HTML_MIN ) ) {
 			$this->content = $this->__optimizer->html_min( $this->content );
-		}
-
-		if ( $this->http2_headers ) {
-			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
 		}
 	}
 
@@ -599,7 +578,6 @@ class Optimize extends Base {
 
 		// default async, if js defer set use defer
 		$html .= $this->_build_js_tag( $webfont_lib_url );
-		$this->append_http2( $webfont_lib_url, 'js' ); // async lib will be http/2 pushed always
 
 		// Put this in the very beginning for preconnect
 		$this->html_head = $html . $this->html_head;
@@ -725,8 +703,6 @@ class Optimize extends Base {
 				$url = $this->_build_single_hash_url( $src_info[ 'src' ], $file_type );
 				if ( $url ) {
 					$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
-					// Add to HTTP2
-					$this->append_http2( $url, $file_type );
 				}
 
 				// Handle css async load
@@ -856,25 +832,15 @@ class Optimize extends Base {
 						}
 					}
 
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
-
 					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js files excluded [hit] ' . $js_excluded : 'external js' ) );
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], 'instant_click' ) !== false ) {
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
 					continue;
 				}
 
@@ -1192,38 +1158,6 @@ class Optimize extends Base {
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
-	}
-
-	/**
-	 * Append to HTTP2 header
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 */
-	private function append_http2( $url, $file_type = 'css' ) {
-		if ( ! ( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
-			return;
-		}
-
-		/**
-		 * For CDN enabled ones, bypass http/2 push
-		 * @since  1.6.2.1
-		 */
-		if ( $this->cls( 'CDN' )->inc_type( $file_type ) ) {
-			return;
-		}
-
-		/**
-		 * Keep QS for constance by set 2nd param to true
-		 * @since  1.6.2.1
-		 */
-		$uri = Utility::url2uri( $url, true );
-
-		if ( ! $uri ) {
-			return;
-		}
-
-		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' );
 	}
 
 }

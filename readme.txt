@@ -249,9 +249,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4.3 - Oct 2021 =
+= 4.4.3 - Oct 13 2021 =
 * 🐞**Media** Fixed an issue that WebP is wrongly served on older safari under Guest Mode. (hash73)
 * **Purge** Disabled `Purge Delay` in optimization process by default.
+* **Conf** Dropped `CSS HTTP/2 Push`/`JS HTTP/2 Push` options. (Kevin)
 * **Conf** Default `Guest Optimization` to OFF.
 * **Conf** Default `CCSS Per URL` to OFF to avoid consuming more quota by default after upgrade to v4. (n111)
 * **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
