@@ -186,8 +186,6 @@ class Lang extends Base {
 			self::O_CACHE_LOGIN_COOKIE			=> __( 'Login Cookie', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_REPLACE		=> __( 'Image WebP Replacement', 'litespeed-cache' ),
 
-			self::O_MISC_HTACCESS_FRONT			=> __( 'Frontend .htaccess Path', 'litespeed-cache' ),
-			self::O_MISC_HTACCESS_BACK			=> __( 'Backend .htaccess Path', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_FRONT		=> __( 'Frontend Heartbeat Control', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_FRONT_TTL	=> __( 'Frontend Heartbeat TTL', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_BACK			=> __( 'Backend Heartbeat Control', 'litespeed-cache' ),

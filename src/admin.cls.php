@@ -119,12 +119,6 @@ class Admin extends Root {
 	private function _proceed_admin_action() {
 		// handle actions
 		switch ( Router::get_action() ) {
-
-			// Save htaccess
-			case Router::ACTION_SAVE_HTACCESS:
-				$this->cls( 'Htaccess' )->htaccess_editor_save();
-				break;
-
 			case Router::ACTION_SAVE_SETTINGS:
 				$this->cls( 'Admin_Settings' )->save( $_POST );
 				break;

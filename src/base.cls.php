@@ -237,8 +237,6 @@ class Base extends Root {
 	## -------------------------------------------------- ##
 	## --------------		 Misc 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MISC_HTACCESS_FRONT 		= 'misc-htaccess_front';
-	const O_MISC_HTACCESS_BACK 			= 'misc-htaccess_back';
 	const O_MISC_HEARTBEAT_FRONT		= 'misc-heartbeat_front';
 	const O_MISC_HEARTBEAT_FRONT_TTL	= 'misc-heartbeat_front_ttl';
 	const O_MISC_HEARTBEAT_BACK			= 'misc-heartbeat_back';
@@ -507,8 +505,6 @@ class Base extends Root {
 		self::O_CRAWLER_COOKIES 		=> array(),
 
 		// Misc
-		self::O_MISC_HTACCESS_FRONT 		=> '',
-		self::O_MISC_HTACCESS_BACK 			=> '',
 		self::O_MISC_HEARTBEAT_FRONT 		=> false,
 		self::O_MISC_HEARTBEAT_FRONT_TTL 	=> 0,
 		self::O_MISC_HEARTBEAT_BACK 		=> false,
@@ -577,9 +573,6 @@ class Base extends Root {
 		self::O_DEBUG_EXC 				=> array(),
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
-
-		self::O_MISC_HTACCESS_FRONT 	=> '',
-		self::O_MISC_HTACCESS_BACK		=> '',
 
 	);
 

@@ -2,8 +2,6 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$readonly = Htaccess::cls()->writable() ? '' : 'readonly';
-
 $content = null;
 try {
 	$content = Htaccess::cls()->htaccess_read();
@@ -35,75 +33,56 @@ if ( defined( 'LITESPEED_ON' ) ) {
 ?>
 
 <h3 class="litespeed-title">
-	<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
+	<?php echo __('LiteSpeed Cache View .htaccess', 'litespeed-cache'); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab' ); ?>
 </h3>
 
-<div class="litespeed-callout notice notice-error inline">
-	<h4>🚨 <?php echo __('This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
-	<p>
-		<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
-		<?php echo __('Please consult the host/server admin before making any changes.', 'litespeed-cache'); ?>
-	</p>
-</div>
-
-<?php $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETWORK : false ); ?>
-
 <h3 class="litespeed-title-short">
-	<?php echo __( '.htaccess Path Settings', 'litespeed-cache' ); ?>
+	<?php echo __( '.htaccess Path', 'litespeed-cache' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table"><tbody>
 	<tr>
 		<th>
-			<?php $id = Base::O_MISC_HTACCESS_FRONT; ?>
-			<?php $this->title( $id ); ?>
+			<?php echo __( 'Frontend .htaccess Path', 'litespeed-cache' ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
+			<code><?php echo $htaccess_path; ?></code>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the frontend .htaccess path.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ); ?></code>
-				<?php $this->_validate_htaccess_path( $id ); ?>
+				<?php echo __( 'Default path is', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ); ?></code>
+				<br /><font class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'PHP Constant %s is supported.', 'litespeed-cache' ), '<code>LITESPEED_CFG_HTACCESS</code>' ); ?>
+					<?php echo sprintf( __( 'You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache' ), '<code>defined("LITESPEED_CFG_HTACCESS") || define("LITESPEED_CFG_HTACCESS", "your path on server");</code>', '<code>wp-config.php</code>' ); ?>
+				</font>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
 		<th>
-			<?php $id = Base::O_MISC_HTACCESS_BACK; ?>
-			<?php $this->title( $id ); ?>
+			<?php echo __( 'Backend .htaccess Path', 'litespeed-cache' ); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
+			<?php echo Htaccess::get_backend_htaccess(); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the backend .htaccess path.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Leave empty to auto detect', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_backend_htaccess( true ); ?></code>
-				<?php $this->_validate_htaccess_path( $id ); ?>
+				<?php echo __( 'Default path is', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_backend_htaccess( true ); ?></code>
+				<br /><font class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'PHP Constant %s is supported.', 'litespeed-cache' ), '<code>LITESPEED_CFG_HTACCESS_BACKEND</code>' ); ?>
+					<?php echo sprintf( __( 'You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache' ), '<code>defined("LITESPEED_CFG_HTACCESS_BACKEND") || define("LITESPEED_CFG_HTACCESS_BACKEND", "your path on server");</code>', '<code>wp-config.php</code>' ); ?>
+				</font>
 			</div>
 		</td>
 	</tr>
 </tbody></table>
 
-<?php $this->form_end( $this->_is_network_admin ); ?>
-
-<?php if ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT ) : ?>
-<div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>
-
-<?php elseif( $content !== null ) : ?>
-
-<?php $this->form_action( Router::ACTION_SAVE_HTACCESS ); ?>
+<?php if( $content !== null ) : ?>
 
 	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 
-	<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . Htaccess::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
-
 	<h4><?php echo $htaccess_path; ?></h4>
 
-	<textarea name="<?php echo Htaccess::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="large-text"
-			<?php echo $readonly; ?>
-		><?php echo esc_textarea($content); ?></textarea>
-	<p><button type="submit" class="button button-primary"><?php echo __('Save .htaccess', 'litespeed-cache'); ?></button></p>
-</form>
+	<textarea readonly wrap="off" rows="50" class="large-text"><?php echo esc_textarea($content); ?></textarea>
 
 <?php endif; ?>

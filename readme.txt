@@ -250,18 +250,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.3 - Oct 13 2021 =
-* 🐞**Media** Fixed an issue that WebP is wrongly served on older safari under Guest Mode. (hash73)
-* **Purge** Disabled `Purge Delay` in optimization process by default.
+* 🐞**Media** Fixed an issue where WebP is served erroneously under Guest Mode on older versions of Safari. (hash73)
+* **Purge** Disabled `Purge Delay` in the optimization process by default.
+* **Conf** Dropped `.htaccess Path Settings` options. (WP)
 * **Conf** Dropped `CSS HTTP/2 Push`/`JS HTTP/2 Push` options. (Kevin)
-* **Conf** Default `Guest Optimization` to OFF.
-* **Conf** Default `CCSS Per URL` to OFF to avoid consuming more quota by default after upgrade to v4. (n111)
-* **Object** Fixed Object Cache may result in warning in upgrade process when having GM ON.
-* ☁️**Cloud** Fixed a potential PHP notice when not using a service yet when inquiring the quota usage.
+* **Conf** Set `Guest Optimization` default to OFF.
+* **Conf** Set `CCSS Per URL` default to OFF to avoid consuming more quota than intended after upgrade to v4. (n111)
+* **Object** Fixed an issue with Object Cache warnings during upgrade, when Guest Mode is enabled.
+* ☁️**Cloud** Fixed an issue with PHP notices when inquiring about quota usage for a service not currently in use.
 * **GUI** Added GO detail warning. (n111)
-* **GUI** Moved quota wil be still in use warning from GM to GO section.
+* **GUI** Moved "quota wil be still in use" warning from Guest Mode to Guest Optimization section.
+* **API** Added `LITESPEED_CFG_HTACCESS` PHP Constant to specify .htaccess path.
 * **API** Added `litespeed_qs_forbidden` hook to bypass `?LSCWP_CTRL=` query string. (minhduc)
-* **API** Added `litespeed_delay_purge` hook to make the following Purge header to be delayed to next request.
-* **API** Added `litespeed_wpconfig_readonly` hook to disable wp-config.php file `WP_CACHE` const update. (#633545)
+* **API** Added `litespeed_delay_purge` hook to delay the following Purge header until the next request.
+* **API** Added `litespeed_wpconfig_readonly` hook to disable `WP_CACHE` constant update based on the wp-config.php file. (#633545)
 
 = 4.4.2 - Sep 23 2021 =
 * **Purge** In order to clear pages containing 404 CSS/JS, the purge header will always be sent even in cases where purge must be delayed.

@@ -11,7 +11,7 @@ if ( ! $this->_is_network_admin ) {
 }
 
 if ( ! $this->_is_multisite || $this->_is_network_admin ) {
-	$menu_list[ 'edit_htaccess' ] = __( 'Edit .htaccess', 'litespeed-cache' );
+	$menu_list[ 'edit_htaccess' ] = __( 'View .htaccess', 'litespeed-cache' );
 }
 
 if ( ! $this->_is_network_admin ) {
