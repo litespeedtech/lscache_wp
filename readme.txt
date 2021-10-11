@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.7.2
+Tested up to: 5.8.1
 Stable tag: 4.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -70,7 +70,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * HTTP/2 support
 * [HTTP/3 & QUIC](https://www.litespeedtech.com/http3-faq) support
 * ESI (Edge Side Includes) support<sup>*</sup>
-* Widgets and Shortcodes as ESI blocks<sup>*</sup> (requires Classic Widgets plugin with WP 5.8 currently)
+* Widgets and Shortcodes as ESI blocks<sup>*</sup> (requires Classic Widgets plugin for WP 5.8+)
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
 
@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4.3 - Oct 13 2021 =
 * 🐞**Media** Fixed an issue where WebP is served erroneously under Guest Mode on older versions of Safari. (hash73)
+* 🐞**Media** Reverted regex change to fix `Lazy Load Image Parent Class Name Excludes` failure. (thpstock)
 * **Purge** Disabled `Purge Delay` in the optimization process by default.
 * **Conf** Dropped `.htaccess Path Settings` options for security concern. (WP)
 * **Conf** Dropped `CSS HTTP/2 Push`/`JS HTTP/2 Push` options. (Kevin)
