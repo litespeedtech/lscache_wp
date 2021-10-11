@@ -252,7 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.4.3 - Oct 13 2021 =
 * 🐞**Media** Fixed an issue where WebP is served erroneously under Guest Mode on older versions of Safari. (hash73)
 * **Purge** Disabled `Purge Delay` in the optimization process by default.
-* **Conf** Dropped `.htaccess Path Settings` options. (WP)
+* **Conf** Dropped `.htaccess Path Settings` options for security concern. (WP)
 * **Conf** Dropped `CSS HTTP/2 Push`/`JS HTTP/2 Push` options. (Kevin)
 * **Conf** Set `Guest Optimization` default to OFF.
 * **Conf** Set `CCSS Per URL` default to OFF to avoid consuming more quota than intended after upgrade to v4. (n111)

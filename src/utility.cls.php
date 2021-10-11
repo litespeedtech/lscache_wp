@@ -304,7 +304,7 @@ class Utility extends Root {
 	 */
 	public static function parse_attr( $str ) {
 		$attrs = array();
-		preg_match_all( '#([\w-]+)=(\'|")([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
+		preg_match_all( '#([\w-]+)=(["\'])([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs[ $match[ 1 ] ] = trim( $match[ 3 ] );
 		}
