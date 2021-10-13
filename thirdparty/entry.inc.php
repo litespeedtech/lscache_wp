@@ -24,6 +24,7 @@ $third_cls = array(
 	'Divi_Theme_Builder',
 	'Elementor',
 	'Facetwp',
+	'Real_Cookie_Banner',
 	'Theme_My_Login',
 	'User_Switching',
 	'WCML',
