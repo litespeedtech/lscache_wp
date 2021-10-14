@@ -163,7 +163,7 @@ class CSS extends Base {
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = array(
-			'url'			=> $request_url,
+			'url'			=> apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
@@ -246,7 +246,7 @@ class CSS extends Base {
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = array(
-			'url'			=> $request_url,
+			'url'			=> apply_filters( 'litespeed_ucss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
