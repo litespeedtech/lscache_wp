@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4.4 - Nov 2021 =
 * **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate request URL.
+* **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)
 
 = 4.4.3 - Oct 13 2021 =
 * 🐞**Media** Fixed an issue where WebP is served erroneously under Guest Mode on older versions of Safari. (hash73)
