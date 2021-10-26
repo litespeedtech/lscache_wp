@@ -72,7 +72,7 @@ class NextGenGallery
 	public static function update_image()
 	{
 		if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
+			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $_REQUEST[ 'gallery_id' ] ) );
 			return ;
 		}
 
@@ -81,19 +81,19 @@ class NextGenGallery
 			$task_list = json_decode( $task_list, true ) ;
 
 			if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
-				do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
+				do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $task_list[ 0 ][ 'query' ][ 'id' ] ) );
 				return ;
 			}
 		}
 
 		if ( isset($_POST['id']) ) {
-			$id = $_POST['id'] ;
+			$id = (int)$_POST['id'] ;
 		}
 		elseif ( isset($_POST['image']) ) {
-			$id = $_POST['image'] ;
+			$id = (int)$_POST['image'] ;
 		}
 		elseif ( isset($_GET['pid']) ) {
-			$id = $_GET['pid'] ;
+			$id = (int)$_GET['pid'] ;
 		}
 		else {
 			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.') ;
@@ -114,7 +114,7 @@ class NextGenGallery
 	public static function delete_image()
 	{
 		if ( isset($_GET['gid']) ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $_GET['gid'] );
+			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $_GET['gid'] ) );
 		}
 	}
 
