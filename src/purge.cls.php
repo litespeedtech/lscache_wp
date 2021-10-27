@@ -284,6 +284,10 @@ class Purge extends Base {
 	 * @access   private
 	 */
 	private function _purge_all_cssjs( $silence = false ) {
+		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
+			Debug2::debug( "❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail)" );
+			return;
+		}
 		$this->_purge_all_lscache( $silence ); // Purge CSSJS must purge lscache too to avoid 404
 
 		do_action( 'litespeed_purged_all_cssjs' );

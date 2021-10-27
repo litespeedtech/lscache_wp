@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.4 - Nov 2021 =
+* **Page Optm** Fixed a 404 issue when upgrade plugin by manually upload package or plugin manager. (Tobolo/Małgorzata/Abe)
 * **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate request URL.
 * **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)
 * **OLS** Fixed `COOKIEHASH` const undefined issue when used as MU plugin or network activation.
