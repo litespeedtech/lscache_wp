@@ -231,7 +231,11 @@ class GUI extends Base {
 	 * @return boolean
 	 */
 	public static function has_msg_ruleconflict() {
-		return self::get_option( Admin_Display::DB_DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON;
+		$db_dismiss_msg = self::get_option( Admin_Display::DB_DISMISS_MSG );
+		if ( ! $db_dismiss_msg ) {
+			self::update_option( Admin_Display::DB_DISMISS_MSG, -1 );
+		}
+		return $db_dismiss_msg == Admin_Display::RULECONFLICT_ON;
 	}
 
 	/**
@@ -242,7 +246,12 @@ class GUI extends Base {
 	 * @return boolean
 	 */
 	public static function has_whm_msg() {
-		return self::get_option( self::WHM_MSG ) == self::WHM_MSG_VAL;
+		$val = self::get_option( self::WHM_MSG );
+		if ( ! $val ) {
+			self::dismiss_whm();
+			return false;
+		}
+		return $val == self::WHM_MSG_VAL;
 	}
 
 	/**
@@ -252,7 +261,7 @@ class GUI extends Base {
 	 * @access public
 	 */
 	public static function dismiss_whm() {
-		self::delete_option( self::WHM_MSG );
+		self::update_option( self::WHM_MSG, -1 );
 	}
 
 	/**

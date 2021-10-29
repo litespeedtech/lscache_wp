@@ -385,7 +385,10 @@ class Admin_Display extends Base {
 
 		$msg_name = $irremovable ? self::DB_MSG_PIN : self::DB_MSG;
 
-		$messages = self::get_option( $msg_name, array() );
+		$messages = self::get_option( $msg_name );
+		if ( ! is_array( $messages ) ) {
+			$messages = array();
+		}
 
 		if ( is_array($msg) ) {
 			foreach ( $msg as $k => $str ) {
@@ -420,7 +423,7 @@ class Admin_Display extends Base {
 		Cloud::cls()->check_dev_version();
 
 		// One time msg
-		$messages = self::get_option( self::DB_MSG, array() );
+		$messages = self::get_option( self::DB_MSG );
 		$added_thickbox = false;
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $msg ) {
@@ -432,10 +435,12 @@ class Admin_Display extends Base {
 				echo $msg;
 			}
 		}
-		self::delete_option( self::DB_MSG );
+		if ( $messages != -1 ) {
+			self::update_option( self::DB_MSG, -1 );
+		}
 
 		// Pinned msg
-		$messages = self::get_option( self::DB_MSG_PIN, array() );
+		$messages = self::get_option( self::DB_MSG_PIN );
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $k => $msg ) {
 				// Added for popup links
@@ -451,6 +456,9 @@ class Admin_Display extends Base {
 				}
 				echo $msg;
 			}
+		}
+		if ( $messages != -1 ) {
+			self::update_option( self::DB_MSG_PIN, -1 );
 		}
 
 		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed' ) !== 0 ) {
@@ -493,18 +501,16 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG_PIN, array() );
-		if ( empty( $messages[ $_GET[ 'msgid' ] ] ) ) {
+		$messages = self::get_option( self::DB_MSG_PIN );
+		if ( ! is_array( $messages ) || empty( $messages[ $_GET[ 'msgid' ] ] ) ) {
 			return;
 		}
 
 		unset( $messages[ $_GET[ 'msgid' ] ] );
 		if ( ! $messages ) {
-			self::delete_option( self::DB_MSG_PIN );
+			$messages = -1;
 		}
-		else {
-			self::update_option( self::DB_MSG_PIN, $messages );
-		}
+		self::update_option( self::DB_MSG_PIN, $messages );
 	}
 
 	/**

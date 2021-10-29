@@ -192,6 +192,9 @@ class Data extends Root {
 	 */
 	private function _get_upgrade_lock() {
 		$is_upgrading = get_option( 'litespeed.data.upgrading' );
+		if ( ! $is_upgrading ) {
+			$this->_set_upgrade_lock( false ); // set option value to existed to avoid repeated db query next time
+		}
 		if ( $is_upgrading && time() - $is_upgrading < 3600 ) {
 			return $is_upgrading;
 		}
@@ -220,7 +223,7 @@ class Data extends Root {
 	 */
 	private function _set_upgrade_lock( $lock ) {
 		if ( ! $lock ) {
-			delete_option( 'litespeed.data.upgrading' );
+			update_option( 'litespeed.data.upgrading', -1 );
 		}
 		else {
 			update_option( 'litespeed.data.upgrading', time() );

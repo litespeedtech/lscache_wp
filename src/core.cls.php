@@ -79,15 +79,21 @@ class Core extends Root {
 		add_action( 'after_setup_theme', array( $this, 'init' ) );
 
 		// Check if there is a purge request in queue
-		if ( $purge_queue = Purge::get_option( Purge::DB_QUEUE ) ) {
+		$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+		if ( $purge_queue && $purge_queue != -1 ) {
 			@header( $purge_queue );
 			Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
-			Purge::delete_option( Purge::DB_QUEUE );
 		}
-		if ( $purge_queue = Purge::get_option( Purge::DB_QUEUE2 ) ) {
+		if ( $purge_queue != -1 ) {
+			Purge::update_option( Purge::DB_QUEUE, -1 ); // Use 0 to bypass purge while still enable db update as WP's update_option will check value===false to bypass update
+		}
+		$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+		if ( $purge_queue && $purge_queue != -1 ) {
 			@header( $purge_queue );
 			Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
-			Purge::delete_option( Purge::DB_QUEUE2 );
+		}
+		if ( $purge_queue != -1 ) {
+			Purge::update_option( Purge::DB_QUEUE2, -1 );
 		}
 
 		/**

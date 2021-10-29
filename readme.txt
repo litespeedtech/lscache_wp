@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.4 - Nov 2021 =
+* **Core** Reduced backend and frontend SQL queries by 7 queries on backend and 3 queries on frontend when missing couple option in autoload options. (#396425 Jackson)
 * **Page Optm** Fixed a 404 issue when upgrade plugin by manually upload package or plugin manager. (Tobolo/Małgorzata/Abe)
 * **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate request URL.
 * **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)

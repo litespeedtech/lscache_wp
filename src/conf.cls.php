@@ -68,8 +68,10 @@ class Conf extends Base {
 		 */
 		$has_delay_conf_tag = self::get_option( '__activation' );
 		if ( ! $ver || $ver != Core::VER ) {
-			if ( ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) || ! $has_delay_conf_tag ) { // Reuse __activation to control the delay conf update
-				$has_delay_conf_tag || self::update_option( '__activation', Core::VER );
+			if ( ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) || ( ! $has_delay_conf_tag || $has_delay_conf_tag == -1 ) ) { // Reuse __activation to control the delay conf update
+				if ( ! $has_delay_conf_tag || $has_delay_conf_tag == -1 ) {
+					self::update_option( '__activation', Core::VER );
+				}
 
 				$this->set_conf( $this->load_default_vals() );
 				$this->_try_load_site_options();
@@ -135,13 +137,14 @@ class Conf extends Base {
 		 * Pros: This is to avoid file correction script changed in new versions
 		 * Cons: Conf upgrade won't get file correction if there is new values that are used in file
 		 */
-		if ( $has_delay_conf_tag ) {
+		if ( $has_delay_conf_tag && $has_delay_conf_tag != -1 ) {
 			// Check new version @since 2.9.3
 			Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
 
 			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
-
-			self::delete_option( '__activation' );
+		}
+		if ( $has_delay_conf_tag != -1 ) {
+			self::update_option( '__activation', -1 );
 		}
 	}
 

@@ -94,7 +94,7 @@ class Crawler extends Root {
 	 * @access public
 	 */
 	public function clear_disabled_list() {
-		self::delete_option( 'bypass_list' );
+		self::update_option( 'bypass_list', array() );
 
 		$msg = __( 'Crawler disabled list is cleared! All crawlers are set to active! ', 'litespeed-cache' );
 		Admin_Display::note( $msg );
