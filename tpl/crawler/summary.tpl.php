@@ -97,7 +97,7 @@ if($seconds > 0):
 	<?php if ( $summary[ 'end_reason' ] ) : ?>
 	<p class='litespeed-desc'>
 		<b><?php echo __( 'Ended reason', 'litespeed-cache' ); ?>:</b>
-		<?php echo $summary[ 'end_reason' ]; ?>
+		<?php echo esc_html( $summary[ 'end_reason' ] ); ?>
 	</p>
 	<?php endif; ?>
 

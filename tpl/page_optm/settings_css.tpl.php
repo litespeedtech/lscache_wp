@@ -214,7 +214,7 @@ $ucss_queue = $this->load_queue( 'ucss' );
 							<?php endif; ?>
 							<?php if ( ! is_array( $v ) ) continue; ?>
 							<?php if ( ! empty( $v[ '_status' ] ) ) : ?><span class="litespeed-success"><?php endif; ?>
-							<?php echo $v[ 'url' ]; ?>
+							<?php echo esc_html( $v[ 'url' ] ); ?>
 							<?php if ( ! empty( $v[ '_status' ] ) ) : ?></span><?php endif; ?>
 							<?php if ( $pos = strpos( $k, ' ' ) ) echo ' (' . __( 'Vary Group', 'litespeed-cache' ) . ':' . substr( $k, 0, $pos ) . ')'; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>

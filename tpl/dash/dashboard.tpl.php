@@ -404,7 +404,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 							<?php else: ?>
 								<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
 							<?php endif; ?>
-							<?php echo $title; ?>
+							<?php echo esc_html( $title ); ?>
 						</p>
 					<?php endforeach; ?>
 				</div>

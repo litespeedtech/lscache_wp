@@ -37,7 +37,7 @@ if ( $reasons ) :
 		<ul class="litespeed-list">
 		<?php foreach ( $reasons as $v ) : ?>
 			<li>
-				<?php echo $v[ 'title' ] ; ?>
+				<?php echo esc_html( $v[ 'title' ] ); ?>
 
 				<a href="<?php echo $v[ 'link' ] ; ?>" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
 			</li>

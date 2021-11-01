@@ -185,7 +185,7 @@ class GUI extends Base {
 					break;
 				}
 
-				$promo_tag = $_GET[ 'promo_tag' ];
+				$promo_tag = sanitize_key( $_GET[ 'promo_tag' ] );
 
 				if ( empty( $_instance->_promo_list[ $promo_tag ] ) ) {
 					break;

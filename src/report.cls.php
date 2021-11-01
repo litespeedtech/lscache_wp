@@ -47,9 +47,9 @@ class Report extends Base {
 		$report_con = $this->generate_environment_report();
 
 		// Generate link
-		$link = ! empty( $_POST[ 'link' ] ) ? $_POST[ 'link' ] : '';
+		$link = ! empty( $_POST[ 'link' ] ) ? esc_url( $_POST[ 'link' ] ) : '';
 
-		$notes = ! empty( $_POST[ 'notes' ] ) ? $_POST[ 'notes' ] : '';
+		$notes = ! empty( $_POST[ 'notes' ] ) ? esc_html( $_POST[ 'notes' ] ) : '';
 
 		$data = array(
 			'env' => $report_con,
