@@ -437,7 +437,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ccss' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ccss' ] . 's</code>'; ?>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $css_summary[ 'last_spent_ccss' ] ) . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
@@ -470,7 +470,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $css_summary[ 'last_spent_ucss' ] ) . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
@@ -503,7 +503,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $placeholder_summary[ 'last_request' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . $placeholder_summary[ 'last_spent' ] . 's</code>'; ?>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $placeholder_summary[ 'last_spent' ] ) . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
@@ -534,7 +534,7 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 						<code><?php echo count( Crawler::cls()->list_crawlers() );?></code> <?php echo __( 'Crawler(s)', 'litespeed-cache' ); ?>
 					</p>
 					<p>
-						<?php echo __( 'Currently active crawler', 'litespeed-cache' ); ?>: <code><?php echo $crawler_summary[ 'curr_crawler' ] ?></code>
+						<?php echo __( 'Currently active crawler', 'litespeed-cache' ); ?>: <code><?php echo esc_html( $crawler_summary[ 'curr_crawler' ] ); ?></code>
 					</p>
 
 					<?php if ( $crawler_summary[ 'curr_crawler_beginning_time' ] ) : ?>
@@ -554,13 +554,13 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 					<?php if ( $crawler_summary[ 'end_reason' ] ) : ?>
 					<p class='litespeed-desc'>
 						<b><?php echo __( 'Ended reason', 'litespeed-cache' ); ?>:</b>
-						<?php echo $crawler_summary[ 'end_reason' ]; ?>
+						<?php echo esc_html( $crawler_summary[ 'end_reason' ] ); ?>
 					</p>
 					<?php endif; ?>
 
 					<?php if ( $crawler_summary[ 'last_crawled' ] ) : ?>
 					<p class='litespeed-desc'>
-						<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $crawler_summary[ 'last_crawled' ] ); ?>
+						<?php echo sprintf(__('<b>Last crawled:</b> %d item(s)', 'litespeed-cache'), $crawler_summary[ 'last_crawled' ] ); ?>
 					</p>
 					<?php endif; ?>
 

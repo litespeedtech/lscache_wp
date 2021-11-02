@@ -77,9 +77,9 @@ foreach ( $blogs as $blog_id ) {
 								<div class="litespeed-dashboard-stats">
 									<h3><?php echo ( $svc == 'img_optm' ? __('Fast Queue Usage','litespeed-cache') : __( 'Usage', 'litespeed-cache' ) ); ?></h3>
 									<p>
-										<strong><?php echo $used; ?></strong>
+										<strong><?php echo esc_html( $used ); ?></strong>
 										<?php if( $used != $quota ) { ?>
-											<span class="litespeed-desc"> of <?php echo $quota; ?></span>
+											<span class="litespeed-desc"> of <?php echo esc_html( $quota ); ?></span>
 										<?php } ?>
 									</p>
 								</div>
@@ -87,8 +87,8 @@ foreach ( $blogs as $blog_id ) {
 						</div>
 						<?php if ( $pag_total > 0 ) { ?>
 							<p class="litespeed-dashboard-stats-payg" data-balloon-pos="up" aria-label="<?php echo __('Pay as You Go','litespeed-cache'); ?>">
-								<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
-								<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>">
+								<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo esc_html( $pag_bal ); ?></strong>
+								<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo esc_html( $pag_used );?>">
 									<span class="dashicons dashicons-info"></span>
 									<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
 								</button>
@@ -97,7 +97,7 @@ foreach ( $blogs as $blog_id ) {
 
 						<?php if ( $svc == 'img_optm' ) { ?>
 							<p class="litespeed-dashboard-stats-total">
-								<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo $total_used; ?> / ∞</strong>
+								<?php echo __('Total Usage','litespeed-cache'); ?>: <strong><?php echo esc_html( $total_used ); ?> / ∞</strong>
 								<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('Total images optimized in this month','litespeed-cache'); ?>">
 									<span class="dashicons dashicons-info"></span>
 								</button>
