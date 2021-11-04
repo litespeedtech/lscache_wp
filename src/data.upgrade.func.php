@@ -14,6 +14,24 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Add expired to url_file table
+ * @since 4.4.4
+ */
+function litespeed_update_4_4_4() {
+	global $wpdb;
+	Debug2::debug( "[Data] Upgrade url_file table" );
+	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"' );
+	if ( $tb_exists ) {
+		$q = 'ALTER TABLE `' . $wpdb->prefix . 'litespeed_url_file`
+				ADD COLUMN `expired` int(11) NOT NULL DEFAULT 0,
+				ADD KEY `filename_2` (`filename`,`expired`),
+				ADD KEY `url_id` (`url_id`,`expired`)
+			';
+		$wpdb->query( $q );
+	}
+}
+
+/**
  * Drop cssjs table and rm cssjs folder
  * @since 4.3
  */

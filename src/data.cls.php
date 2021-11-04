@@ -24,6 +24,9 @@ class Data extends Root {
 		'4.3'	=> array(
 			'litespeed_update_4_3',
 		),
+		'4.4.4-b1'	=> array(
+			'litespeed_update_4_4_4',
+		),
 	);
 
 	private $_db_site_updater = array(
@@ -469,38 +472,60 @@ class Data extends Root {
 			$url_id = $url_row[ 'id' ];
 		}
 
-		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d";
+		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
 		$file_row = $wpdb->get_row( $wpdb->prepare( $q, array( $url_id, $vary, $type ) ), ARRAY_A );
-		if ( ! $file_row ) {
-			$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d";
-			$wpdb->query( $wpdb->prepare( $q, array( $url_id, $vary, $filecon_md5, $type ) ) );
-			return;
-		}
 
 		// Check if has previous file or not
 		if ( $file_row[ 'filename' ] == $filecon_md5 ) {
 			return;
 		}
 
-		$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
-		$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
+		// If the new $filecon_md5 is marked as expired by previous records, clear those records
+		$q = "DELETE FROM `$tb_url_file` WHERE filename = %s AND expired > 0";
+		$wpdb->query( $wpdb->prepare( $q, $filecon_md5 ) );
+
+		// Check if there is any other record used the same filename or not
+		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s AND expired = 0 AND id != %d LIMIT 1";
+		if ( $wpdb->get_var( $wpdb->prepare( $q, array( $file_row[ 'filename' ], $file_row[ 'id' ] ) ) ) ) {
+			$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
+			$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
+			return;
+		}
+
+		// New record needed
+		$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d, expired = 0";
+		$wpdb->query( $wpdb->prepare( $q, array( $url_id, $vary, $filecon_md5, $type ) ) );
+
+		// Mark existing rows as expired
+		if ( $file_row ) {
+			$q = "UPDATE `$tb_url_file` SET expired=%d WHERE id=%d";
+			$expired = time() + 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 );
+			$wpdb->query( $wpdb->prepare( $q, array( $expired, $file_row[ 'id' ] ) ) );
+
+			// Also check if has other files expired already to be deleted
+			$q = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+			$q = $wpdb->prepare( $q, array( $url_id, time() ) );
+			$list = $wpdb->get_results( $q, ARRAY_A );
+			if ( $list ) {
+				foreach ( $list as $v ) {
+					$file_to_del = $path . '/' . $v[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
+					if ( file_exists( $file_to_del ) ) {
+						// Safe to delete
+						Debug2::debug( '[Data] Delete expired unused file: ' . $file_to_del );
+
+						// Clear related lscache first to avoid cache copy of same URL w/ diff QS
+						// Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
+
+						unlink( $file_to_del );
+					}
+				}
+				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+				$wpdb->query( $wpdb->prepare( $q, array( $url_id, time() ) ) );
+			}
+		}
 
 		// Purge this URL to avoid cache copy of same URL w/ diff QS
-		$this->cls( 'Purge' )->purge_url( Utility::make_relative( $request_url ) ?: '/', true, true );
-
-		// Check if has other records used this file or not
-		$file_to_del = $path . '/' . $file_row[ 'filename' ] . '.' . ( $file_type == 'js' ? 'js' : 'css' );
-
-		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s LIMIT 1";
-		if ( file_exists( $file_to_del ) && ! $wpdb->get_var( $wpdb->prepare( $q, $file_row[ 'filename' ] ) ) ) {
-			// Safe to delete
-			Debug2::debug( '[Data] Delete no more used file ' . $file_to_del );
-
-			// Clear related lscache first to avoid cache copy of same URL w/ diff QS
-			// Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
-
-			unlink( $file_to_del );
-		}
+		// $this->cls( 'Purge' )->purge_url( Utility::make_relative( $request_url ) ?: '/', true, true );
 	}
 
 	/**
