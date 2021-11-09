@@ -249,15 +249,16 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4.4 - Nov 2021 =
-* **Page Optimize** Delay CSS/JS removal (default 20 days) to prevent files cached by vary places which caused 404.
-* **Cache** Purge won't be sent for CSS/JS removal anymore when caching to avoid cache engine conflicts.
-* 🐞**Core** Reduced backend and frontend SQL queries by 7 queries on backend and 3 queries on frontend when missing couple option in autoload options. (#396425 Jackson)
-* **Page Optm** Fixed a 404 issue when upgrade plugin by manually upload package or plugin manager. (Tobolo/Małgorzata/Abe)
-* **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate request URL.
+= 4.4.4 - Nov 23 2021 =
+* **Page Optimize** Delay deletion of outdated CSS/JS files for a default of 20 days to avoid 404 errors with cached search engine copies.
+* **Cache** When caching, no longer send a purge request for CSS/JS removal to avoid cache engine conflicts.
+* 🐞**Core** Optimized SQL queries while autoloading if expected options are missing; reduced by 7 and 3 queries on backend and frontend respectively. (#396425 Jackson)
+* **Page Optm** Fixed a 404 issue that occured when upgrading the plugin manually, with a package upload or through the plugin manager. (Tobolo/Małgorzata/Abe)
+* **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate the request URL for CCSS and UCSS.
 * **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)
-* **OLS** Fixed `COOKIEHASH` const undefined issue when used as MU plugin or network activation.
+* **OLS** Fixed an issue where the `COOKIEHASH` constant was undefined when used with OpenLiteSpeed as an MU plugin or with network activation.
 * **3rd** Sanitized POST data for nextgengallery.
+* **Cloud** Sanitized GET data when linking to QUIC.cloud. (#591762 WPScan)
 
 = 4.4.3 - Oct 13 2021 =
 * 🐞**Media** Fixed an issue where WebP is served erroneously under Guest Mode on older versions of Safari. (hash73)

@@ -1078,7 +1078,7 @@ class Cloud extends Base {
 		self::save_summary();
 
 		// Drop QS
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . $_GET[ 'qc_res' ] . "&domain_hash=" . $_GET[ 'domain_hash' ] . "', '' ) );</script>";
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] ) . "', '' ) );</script>";
 	}
 
 	/**
