@@ -52,6 +52,10 @@ class ESI extends Root {
 			return;
 		}
 
+		if ( defined( 'LITESPEED_ESI_OFF' ) ) {
+			return;
+		}
+
 		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
 		$this->_hooks();
 
@@ -163,6 +167,10 @@ class ESI extends Root {
 		}
 
 		if ( is_admin() ) {
+			return null;
+		}
+
+		if ( defined( 'LITESPEED_ESI_OFF' ) ) {
 			return null;
 		}
 
