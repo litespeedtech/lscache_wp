@@ -22,7 +22,6 @@ $third_cls = array(
 	'Beaver_Builder',
 	'Caldera_Forms',
 	'Divi_Theme_Builder',
-	'Elementor',
 	'Facetwp',
 	'Theme_My_Login',
 	'User_Switching',
