@@ -17,6 +17,10 @@ class Elementor
 			return;
 		}
 
+		if ( ! is_admin() ) {
+		    add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 );
+		}
+
 		if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] === 'elementor' ) {
 			do_action( 'litespeed_disable_all', 'elementor edit mode' );
 		}
@@ -33,27 +37,8 @@ class Elementor
 		}
 	}
 
-	/**
-	 * Detect if Elementor is installed and it's on ESI
-	 *
-	 * @since 2.9.8.8
-	 * @access public
-	 */
-	public static function detect()
+	public static function disable_litespeed_esi()
 	{
-		if ( ! defined( 'ELEMENTOR_VERSION' ) ) return;
-		if ( ! isset( $_GET[ 'lsesi' ] ) || $_GET[ 'lsesi' ] !== 'admin-bar' ) return;
-
-		add_action( 'admin_bar_menu', __CLASS__ . '::add_menu_in_admin_bar', 100 );
-	}
-
-	public static function add_menu_in_admin_bar()
-	{
-		/*
-		* As Elementor hook to the_contet filter to add the Edit with Elementor button,
-		* force apply the_content filter to run the hook,
-		* ESI itself can retrive the post data
-		*/
-		apply_filters( 'the_content', '' );
+		define( 'LITESPEED_ESI_OFF', true );
 	}
 }
