@@ -219,31 +219,41 @@ class Cloudflare extends Base {
 		Debug2::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" );
 
 		if ( 40 == strlen($this->conf( self::O_CDN_CLOUDFLARE_KEY ))){
-			$header = array(
-				'Content-Type: application/json',
-				'Authorization: Bearer ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
+			$headers = array(
+				'Content-Type' => 'application/json',
+				'Authorization' => 'Bearer ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
 			);
 		}
 		else {
-			$header = array(
-				'Content-Type: application/json',
-				'X-Auth-Email: ' . $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
-				'X-Auth-Key: ' . $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
+			$headers = array(
+				'Content-Type' => 'application/json',
+				'X-Auth-Email' => $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
+				'X-Auth-Key' => $this->conf( self::O_CDN_CLOUDFLARE_KEY ),
 			);
 		}
 
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		$wp_args = array(
+			'method' => $method,
+			'headers' => $headers,
+		);
+
 		if ( $data ) {
 			if ( is_array( $data ) ) {
 				$data = json_encode( $data );
 			}
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+			$wp_args[ 'body' ] = $data;
 		}
-		$result = curl_exec( $ch );
+		$resp = wp_remote_request( $url, $wp_args );
+		if ( is_wp_error( $resp ) ) {
+			Debug2::debug( '[Cloudflare] error in response' );
+			if ( $show_msg ) {
+				$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' );
+				Admin_Display::error( $msg );
+			}
+			return false;
+		}
+
+		$result = wp_remote_retrieve_body( $resp );
 
 		$json = json_decode( $result, true );
 

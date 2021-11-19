@@ -22,7 +22,6 @@ $third_cls = array(
 	'Beaver_Builder',
 	'Caldera_Forms',
 	'Divi_Theme_Builder',
-	'Elementor',
 	'Facetwp',
 	'Theme_My_Login',
 	'User_Switching',
@@ -49,3 +48,4 @@ add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload' );
 add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Gravity_Forms::preload' );
+add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Perfmatters::preload' );
