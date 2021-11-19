@@ -249,6 +249,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4.5 - Dec 1 2021 =
+* **API** `LITESPEED_ESI_OFF` const to disable ESI specially (Need to define before wp hook `init`).
+* **CDN** Used WP remote func to communicate w/ Cloudflare per WP Guidance.
+* **3rd** Add compatibility for Perfmatters plugin on its script manager (#417 Abe)
+* **3rd** Add compatibility for Elementor on Editor button when ESI on (#418 Abe)
+
 = 4.4.4 - Nov 23 2021 =
 * **Page Optimize** Delay deletion of outdated CSS/JS files for a default of 20 days to avoid 404 errors with cached search engine copies.
 * **Cache** When caching, no longer send a purge request for CSS/JS removal to avoid cache engine conflicts.
