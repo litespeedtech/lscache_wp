@@ -66,3 +66,7 @@ edd_* private
 
 # WP Menu Cart
 wpmenucart private
+
+# Mobile hamburger menu - jetMenu #306983 #163710
+tgmpa-*
+bulk-*
