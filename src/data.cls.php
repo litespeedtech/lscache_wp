@@ -476,7 +476,7 @@ class Data extends Root {
 		$file_row = $wpdb->get_row( $wpdb->prepare( $q, array( $url_id, $vary, $type ) ), ARRAY_A );
 
 		// Check if has previous file or not
-		if ( $file_row[ 'filename' ] == $filecon_md5 ) {
+		if ( $file_row && $file_row[ 'filename' ] == $filecon_md5 ) {
 			return;
 		}
 
@@ -486,7 +486,7 @@ class Data extends Root {
 
 		// Check if there is any other record used the same filename or not
 		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s AND expired = 0 AND id != %d LIMIT 1";
-		if ( $wpdb->get_var( $wpdb->prepare( $q, array( $file_row[ 'filename' ], $file_row[ 'id' ] ) ) ) ) {
+		if ( $file_row && $wpdb->get_var( $wpdb->prepare( $q, array( $file_row[ 'filename' ], $file_row[ 'id' ] ) ) ) ) {
 			$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
 			$wpdb->query( $wpdb->prepare( $q, array( $filecon_md5, $file_row[ 'id' ] ) ) );
 			return;

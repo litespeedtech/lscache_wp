@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.5 - Dec 1 2021 =
+* **Data** Fixed potential PHP notice when generating CSS/JS optimized files. (Sarah Richardson/silencedgd/slr1979)
 * **API** `LITESPEED_ESI_OFF` const to disable ESI specially (Need to define before wp hook `init`).
 * **CDN** Used WP remote func to communicate w/ Cloudflare per WP Guidance.
 * **3rd** Add compatibility for Perfmatters plugin on its script manager (#417 Abe)
