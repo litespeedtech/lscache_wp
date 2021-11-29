@@ -359,7 +359,7 @@ class Control extends Root {
 		if ( $reason ) {
 			$reason = "( $reason )";
 		}
-		Debug2::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 );
+		Debug2::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 5 );
 	}
 
 	/**
