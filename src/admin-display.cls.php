@@ -423,7 +423,7 @@ class Admin_Display extends Base {
 		Cloud::cls()->check_dev_version();
 
 		// One time msg
-		$messages = self::get_option( self::DB_MSG );
+		$messages = self::get_option( self::DB_MSG, array() );
 		$added_thickbox = false;
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $msg ) {
@@ -440,7 +440,7 @@ class Admin_Display extends Base {
 		}
 
 		// Pinned msg
-		$messages = self::get_option( self::DB_MSG_PIN );
+		$messages = self::get_option( self::DB_MSG_PIN, array() );
 		if( is_array( $messages ) ) {
 			foreach ( $messages as $k => $msg ) {
 				// Added for popup links
