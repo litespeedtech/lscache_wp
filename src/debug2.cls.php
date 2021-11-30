@@ -8,6 +8,7 @@ defined( 'WPINC' ) || exit;
 
 class Debug2 extends Root {
 	private static $log_path;
+	private static $log_path_prefix;
 	private static $_prefix;
 
 	const TYPE_CLEAR_LOG = 'clear_log';
@@ -26,9 +27,10 @@ class Debug2 extends Root {
 	 * @access public
 	 */
 	public function __construct() {
-		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log';
+		self::$log_path_prefix = defined( 'LSCWP_DEBUG_PATH' ) ? LSCWP_DEBUG_PATH : LSCWP_CONTENT_DIR;
+		self::$log_path = self::$log_path_prefix . '/debug.log';
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'lscache_' ) === 0 ) {
-			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log';
+			self::$log_path = self::$log_path_prefix . '/crawler.log';
 		}
 
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() );
@@ -121,7 +123,7 @@ class Debug2 extends Root {
 			return;
 		}
 
-		$purge_file = LSCWP_CONTENT_DIR . '/debug.purge.log';
+		$purge_file = self::$log_path_prefix . '/debug.purge.log';
 
 		self::cls()->_init_request( $purge_file );
 
@@ -433,7 +435,7 @@ class Debug2 extends Root {
 	 */
 	private function _clear_log() {
 		File::save( self::$log_path, '' );
-		File::save( LSCWP_CONTENT_DIR . '/debug.purge.log', '' );
+		File::save( self::$log_path_prefix . '/debug.purge.log', '' );
 	}
 
 	/**
