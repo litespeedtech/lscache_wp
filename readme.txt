@@ -249,6 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4.6 - Dec 27 2022 =
+* **3rd** Fixed potential PHP warning on ESI disabling when using `Perfmatters`. (Jeffrey Zhang)
+
 = 4.4.5 - Dec 1 2021 =
 * **Data** Fixed potential PHP notice when generating CSS/JS optimized files w/ PHP v7.4+. (Sarah Richardson/silencedgd/slr1979)
 * **API** `LITESPEED_ESI_OFF` const to disable ESI specially (Need to define before wp hook `init`).
