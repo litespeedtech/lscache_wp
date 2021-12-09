@@ -18,7 +18,7 @@ class Elementor
 		}
 
 		if ( ! is_admin() ) {
-		    add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 );
+//		    add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 );	// temporarily comment out this line for backward compatibility
 		}
 
 		if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] === 'elementor' ) {
