@@ -250,7 +250,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.6 - Dec 27 2022 =
+* **Image Optimize** Fixed a potential PHP notice when uploading images in WP w/ PHP7.4+. (titsmaker)
+* **ESI** Fixed the Customize-page-widget-esi-settings-can-not-update bug (#422 Abe)
+* **3rd** Reverted ESI adminbar change of Elementor front pages for backward compatibility (#423 Abe)
 * **3rd** Fixed potential PHP warning on ESI disabling when using `Perfmatters`. (Jeffrey Zhang)
+* **Misc** Check if HTTP_REFERER is set or not before using it in Router class. (#425 Abe)
 
 = 4.4.5 - Dec 1 2021 =
 * **Data** Fixed potential PHP notice when generating CSS/JS optimized files w/ PHP v7.4+. (Sarah Richardson/silencedgd/slr1979)
