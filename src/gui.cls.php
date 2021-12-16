@@ -22,6 +22,7 @@ class GUI extends Base {
 	);
 
 	const LIB_GUEST_JS = 'assets/js/guest.min.js';
+	const LIB_GUEST_DOCREF_JS = 'assets/js/guest.docref.min.js';
 	const PHP_GUEST = 'guest.vary.php';
 
 	const TYPE_DISMISS_WHM = 'whm';
@@ -775,10 +776,26 @@ class GUI extends Base {
 	public function finalize( $buffer ) {
 		$buffer = $this->_clean_wrapper( $buffer );
 
+		// Maybe restore doc.ref
+		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false ) {
+			$buffer = $this->_enqueue_guest_docref_js( $buffer );
+		}
+
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false ) {
 			$buffer = $this->_enqueue_guest_js( $buffer );
 		}
 
+		return $buffer;
+	}
+
+	/**
+	 * Append guest restore doc.ref JS for organic traffic count
+	 *
+	 * @since  4.4.6
+	 */
+	private function _enqueue_guest_docref_js( $buffer ) {
+		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_DOCREF_JS );
+		$buffer = preg_replace( '/<head>/', '<head><script data-no-optimize="1">' . $js_con . '</script>', $buffer, 1 );
 		return $buffer;
 	}
 
@@ -792,7 +809,7 @@ class GUI extends Base {
 		// $guest_update_url = add_query_arg( 'litespeed_guest', 1, home_url( '/' ) );
 		$guest_update_url = LSWCP_PLUGIN_URL . self::PHP_GUEST;
 		$js_con = str_replace( 'litespeed_url', esc_url( $guest_update_url ), $js_con );
-		$buffer = str_replace( '</body>', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer );
+		$buffer = preg_replace( '/<\/body>/', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer, 1 );
 		return $buffer;
 	}
 

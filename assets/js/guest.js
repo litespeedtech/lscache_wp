@@ -8,6 +8,9 @@ if ( ! litespeed_vary ) {
 	} ).then( response => response.json() ).then( data => {
 		console.log(data);
 		if ( data.hasOwnProperty( 'reload' ) && data.reload == 'yes' ) {
+			// Save doc.ref for organic traffic usage
+			sessionStorage.setItem( 'litespeed_docref', document.referrer );
+
 			window.location.reload( true );
 		}
 	} );
