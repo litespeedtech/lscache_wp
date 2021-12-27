@@ -1,0 +1,5 @@
+var litespeed_docref = sessionStorage.getItem( 'litespeed_docref' );
+if ( litespeed_docref ) {
+	document.referrer = litespeed_docref;
+	sessionStorage.removeItem( 'litespeed_docref' );
+}

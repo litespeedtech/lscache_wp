@@ -271,7 +271,7 @@ class Img_Optm extends Base {
 		}
 		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src' );
 
-		unset( $this->_img_in_queue_missed );
+		$this->_img_in_queue_missed = array();
 		return $count;
 	}
 
@@ -291,7 +291,7 @@ class Img_Optm extends Base {
 		$this->_insert_img_optm( $data );
 
 		$count = count( $this->_img_in_queue );
-		unset( $this->_img_in_queue );
+		$this->_img_in_queue = array();
 
 		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
 

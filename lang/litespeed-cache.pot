@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 4.4.5\n"
+"Project-Id-Version: LiteSpeed Cache 4.4.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2021-11-30 15:07:18+00:00\n"
+"POT-Creation-Date: 2021-12-27 13:11:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "CDN"
 msgstr ""
 
-#: src/admin-display.cls.php:123 src/gui.cls.php:602
+#: src/admin-display.cls.php:123 src/gui.cls.php:603
 #: tpl/dash/dashboard.tpl.php:55 tpl/dash/network_dash.tpl.php:27
 msgid "Image Optimization"
 msgstr ""
@@ -123,7 +123,7 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: src/admin-display.cls.php:281 src/gui.cls.php:593
+#: src/admin-display.cls.php:281 src/gui.cls.php:594
 msgid "Settings"
 msgstr ""
 
@@ -687,57 +687,57 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: src/gui.cls.php:80
+#: src/gui.cls.php:81
 msgid "Public Caches"
 msgstr ""
 
-#: src/gui.cls.php:81
+#: src/gui.cls.php:82
 msgid "Public Cache Hits"
 msgstr ""
 
-#: src/gui.cls.php:82
+#: src/gui.cls.php:83
 msgid "Private Caches"
 msgstr ""
 
-#: src/gui.cls.php:83
+#: src/gui.cls.php:84
 msgid "Private Cache Hits"
 msgstr ""
 
-#: src/gui.cls.php:402
+#: src/gui.cls.php:403
 msgid "Purge this page"
 msgstr ""
 
-#: src/gui.cls.php:410
+#: src/gui.cls.php:411
 msgid "Mark this page as "
 msgstr ""
 
-#: src/gui.cls.php:422
+#: src/gui.cls.php:423
 msgid "Forced cacheable"
 msgstr ""
 
-#: src/gui.cls.php:433
+#: src/gui.cls.php:434
 msgid "Non cacheable"
 msgstr ""
 
-#: src/gui.cls.php:444
+#: src/gui.cls.php:445
 msgid "Private cache"
 msgstr ""
 
-#: src/gui.cls.php:455
+#: src/gui.cls.php:456
 msgid "No optimization"
 msgstr ""
 
-#: src/gui.cls.php:463
+#: src/gui.cls.php:464
 msgid "More settings"
 msgstr ""
 
-#: src/gui.cls.php:470 src/gui.cls.php:478 src/gui.cls.php:486
-#: src/gui.cls.php:495 src/gui.cls.php:505 src/gui.cls.php:515
-#: src/gui.cls.php:525 src/gui.cls.php:535 src/gui.cls.php:545
-#: src/gui.cls.php:611 src/gui.cls.php:619 src/gui.cls.php:627
-#: src/gui.cls.php:636 src/gui.cls.php:646 src/gui.cls.php:656
-#: src/gui.cls.php:666 src/gui.cls.php:676 src/gui.cls.php:686
-#: src/gui.cls.php:696 tpl/page_optm/settings_media.tpl.php:125
+#: src/gui.cls.php:471 src/gui.cls.php:479 src/gui.cls.php:487
+#: src/gui.cls.php:496 src/gui.cls.php:506 src/gui.cls.php:516
+#: src/gui.cls.php:526 src/gui.cls.php:536 src/gui.cls.php:546
+#: src/gui.cls.php:612 src/gui.cls.php:620 src/gui.cls.php:628
+#: src/gui.cls.php:637 src/gui.cls.php:647 src/gui.cls.php:657
+#: src/gui.cls.php:667 src/gui.cls.php:677 src/gui.cls.php:687
+#: src/gui.cls.php:697 tpl/page_optm/settings_media.tpl.php:125
 #: tpl/toolbox/purge.tpl.php:37 tpl/toolbox/purge.tpl.php:43
 #: tpl/toolbox/purge.tpl.php:52 tpl/toolbox/purge.tpl.php:61
 #: tpl/toolbox/purge.tpl.php:70 tpl/toolbox/purge.tpl.php:79
@@ -746,73 +746,73 @@ msgstr ""
 msgid "Purge All"
 msgstr ""
 
-#: src/gui.cls.php:478 src/gui.cls.php:569 src/gui.cls.php:619
+#: src/gui.cls.php:479 src/gui.cls.php:570 src/gui.cls.php:620
 msgid "LSCache"
 msgstr ""
 
-#: src/gui.cls.php:486 src/gui.cls.php:627 tpl/toolbox/purge.tpl.php:43
+#: src/gui.cls.php:487 src/gui.cls.php:628 tpl/toolbox/purge.tpl.php:43
 msgid "CSS/JS Cache"
 msgstr ""
 
-#: src/gui.cls.php:495 src/gui.cls.php:646 src/lang.cls.php:82
+#: src/gui.cls.php:496 src/gui.cls.php:647 src/lang.cls.php:82
 #: tpl/dash/dashboard.tpl.php:396 tpl/toolbox/purge.tpl.php:52
 msgid "Object Cache"
 msgstr ""
 
-#: src/gui.cls.php:505 src/gui.cls.php:656 tpl/toolbox/purge.tpl.php:61
+#: src/gui.cls.php:506 src/gui.cls.php:657 tpl/toolbox/purge.tpl.php:61
 msgid "Opcode Cache"
 msgstr ""
 
-#: src/gui.cls.php:535 src/gui.cls.php:686
+#: src/gui.cls.php:536 src/gui.cls.php:687
 #: tpl/page_optm/settings_media.tpl.php:125 tpl/toolbox/purge.tpl.php:88
 msgid "LQIP Cache"
 msgstr ""
 
-#: src/gui.cls.php:545 src/gui.cls.php:696 src/lang.cls.php:142
+#: src/gui.cls.php:546 src/gui.cls.php:697 src/lang.cls.php:142
 #: tpl/toolbox/purge.tpl.php:97
 msgid "Gravatar Cache"
 msgstr ""
 
-#: src/gui.cls.php:569
+#: src/gui.cls.php:570
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: src/gui.cls.php:585 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:194
+#: src/gui.cls.php:586 tpl/cdn/entry.tpl.php:7 tpl/cdn/settings.tpl.php:194
 #: tpl/db_optm/entry.tpl.php:6
 msgid "Manage"
 msgstr ""
 
-#: src/gui.cls.php:636 tpl/cdn/manage.tpl.php:17
+#: src/gui.cls.php:637 tpl/cdn/manage.tpl.php:17
 msgid "Cloudflare"
 msgstr ""
 
-#: src/gui.cls.php:715 tpl/img_optm/summary.tpl.php:175
+#: src/gui.cls.php:716 tpl/img_optm/summary.tpl.php:175
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: src/gui.cls.php:716 tpl/img_optm/summary.tpl.php:177
+#: src/gui.cls.php:717 tpl/img_optm/summary.tpl.php:177
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: src/gui.cls.php:734
+#: src/gui.cls.php:735
 msgid "Install %s"
 msgstr ""
 
-#: src/gui.cls.php:735
+#: src/gui.cls.php:736
 msgid "Install Now"
 msgstr ""
 
-#: src/gui.cls.php:754
+#: src/gui.cls.php:755
 msgid ""
 "<a href=\"%1$s\" %2$s>View version %3$s details</a> or <a href=\"%4$s\" %5$s "
 "target=\"_blank\">update now</a>."
 msgstr ""
 
-#: src/gui.cls.php:757
+#: src/gui.cls.php:758
 msgid "View %1$s version %2$s details"
 msgstr ""
 
-#: src/gui.cls.php:762
+#: src/gui.cls.php:763
 msgid "Update %s now"
 msgstr ""
 
@@ -1960,7 +1960,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 4.4.5)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 4.4.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8

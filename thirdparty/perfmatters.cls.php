@@ -7,10 +7,8 @@
 namespace LiteSpeed\Thirdparty;
 defined( 'WPINC' ) || exit;
 
-class Perfmatters
-{
-	public static function preload()
-	{
+class Perfmatters {
+	public static function preload() {
 		if ( ! defined( 'PERFMATTERS_VERSION' ) ) return;
 
 		if ( is_admin() ) return;
@@ -20,8 +18,7 @@ class Perfmatters
 		}
 	}
 
-	public static function disable_litespeed_esi()
-	{
-		define( 'LITESPEED_ESI_OFF', true );
+	public static function disable_litespeed_esi() {
+		defined( 'LITESPEED_ESI_OFF' ) || define( 'LITESPEED_ESI_OFF', true );
 	}
 }
