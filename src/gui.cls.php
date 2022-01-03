@@ -781,7 +781,7 @@ class GUI extends Base {
 			$buffer = $this->_enqueue_guest_docref_js( $buffer );
 		}
 
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false ) {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
 			$buffer = $this->_enqueue_guest_js( $buffer );
 		}
 
