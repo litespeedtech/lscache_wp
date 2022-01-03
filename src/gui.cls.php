@@ -777,7 +777,7 @@ class GUI extends Base {
 		$buffer = $this->_clean_wrapper( $buffer );
 
 		// Maybe restore doc.ref
-		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false ) {
+		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
 			$buffer = $this->_enqueue_guest_docref_js( $buffer );
 		}
 
