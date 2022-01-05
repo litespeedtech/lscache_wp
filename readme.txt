@@ -249,8 +249,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4.7 - Jan 2022 =
+= 4.4.7 - Jan 11 2022 =
 * **3rd** Prevent from append JS for Rank Math SEO sitemap.
+* **Cloud** Dropped unused API calls.
 
 = 4.4.6 - Dec 27 2022 =
 * **Guest** Restored `document.referrer` for organic traffic purpose when enabled Guest Mode. (michelefns)
