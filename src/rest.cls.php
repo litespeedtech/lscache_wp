@@ -110,9 +110,11 @@ class REST extends Root {
 	 * Check if the request is from cloud nodes
 	 *
 	 * @since 4.2
+	 * @since 4.4.7 As there is always token/api key validation, ip validation is redundant
 	 */
 	public function is_from_cloud() {
-		return $this->cls( 'Cloud' )->is_from_cloud();
+		return true;
+		// return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	/**
