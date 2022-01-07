@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.4.7 - Jan 11 2022 =
+* **Page Optimize** Dropped `Inline Lazy Load Images Library` option. Always inline lazyload library. (Ankit)
 * **3rd** Prevent from append JS for Rank Math SEO sitemap.
 * **Purge** Dropped default stale purge when purging a post.
 * **Cloud** Dropped unused API calls.

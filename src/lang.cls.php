@@ -162,7 +162,6 @@ class Lang extends Base {
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> __( 'Generate LQIP In Background', 'litespeed-cache' ),
 			self::O_MEDIA_IFRAME_LAZY			=> __( 'Lazy Load Iframes', 'litespeed-cache' ),
 			self::O_MEDIA_ADD_MISSING_SIZES		=> __( 'Add Missing Sizes', 'litespeed-cache' ),
-			self::O_MEDIA_LAZYJS_INLINE			=> __( 'Inline Lazy Load Images Library', 'litespeed-cache' ),
 			self::O_IMG_OPTM_AUTO				=> __( 'Auto Request Cron', 'litespeed-cache' ),
 			self::O_IMG_OPTM_CRON				=> __( 'Auto Pull Cron', 'litespeed-cache' ),
 			self::O_IMG_OPTM_ORI				=> __( 'Optimize Original Images', 'litespeed-cache' ),

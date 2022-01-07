@@ -193,7 +193,6 @@ class Base extends Root {
 	const O_MEDIA_PLACEHOLDER_RESP_ASYNC		= 'media-placeholder_resp_async';
 	const O_MEDIA_IFRAME_LAZY 					= 'media-iframe_lazy';
 	const O_MEDIA_ADD_MISSING_SIZES 			= 'media-add_missing_sizes';
-	const O_MEDIA_LAZYJS_INLINE 				= 'media-lazyjs_inline';
 	const O_MEDIA_LAZY_EXC 						= 'media-lazy_exc';
 	const O_MEDIA_LAZY_CLS_EXC 					= 'media-lazy_cls_exc';
 	const O_MEDIA_LAZY_PARENT_CLS_EXC 			= 'media-lazy_parent_cls_exc';
@@ -467,7 +466,6 @@ class Base extends Root {
 		self::O_MEDIA_PLACEHOLDER_RESP_ASYNC		=> false,
 		self::O_MEDIA_IFRAME_LAZY 					=> false,
 		self::O_MEDIA_ADD_MISSING_SIZES 			=> false,
-		self::O_MEDIA_LAZYJS_INLINE 				=> false,
 		self::O_MEDIA_LAZY_EXC 						=> array(),
 		self::O_MEDIA_LAZY_CLS_EXC 					=> array(),
 		self::O_MEDIA_LAZY_PARENT_CLS_EXC 			=> array(),

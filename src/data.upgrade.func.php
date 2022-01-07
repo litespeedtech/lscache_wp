@@ -376,7 +376,7 @@ function litespeed_update_3_0( $ver ) {
 		'media_placeholder_resp_color'	=> 'media-placeholder_resp_color',
 		'media_placeholder_resp_async'	=> 'media-placeholder_resp_async',
 		'media_iframe_lazy'				=> 'media-iframe_lazy',
-		'media_img_lazyjs_inline'		=> 'media-lazyjs_inline',
+		// 'media_img_lazyjs_inline'		=> 'media-lazyjs_inline',
 
 		'media_optm_auto'			=> 'img_optm-auto',
 		'media_optm_cron'			=> 'img_optm-cron',
