@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Stable tag: 4.4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4.7 - Jan 11 2022 =
 * **3rd** Prevent from append JS for Rank Math SEO sitemap.
+* **Purge** Dropped default stale purge when purging a post.
 * **Cloud** Dropped unused API calls.
 * **Cloud** Dropped redundant IP validation in API calls.
 

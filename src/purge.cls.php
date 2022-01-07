@@ -772,7 +772,7 @@ class Purge extends Base {
 			self::add( Tag::TYPE_REST );
 		}
 
-		$this->cls( 'Control' )->set_stale();
+		// $this->cls( 'Control' )->set_stale();
 	}
 
 	/**
