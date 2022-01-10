@@ -777,11 +777,11 @@ class GUI extends Base {
 		$buffer = $this->_clean_wrapper( $buffer );
 
 		// Maybe restore doc.ref
-		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false ) {
+		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
 			$buffer = $this->_enqueue_guest_docref_js( $buffer );
 		}
 
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false ) {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
 			$buffer = $this->_enqueue_guest_js( $buffer );
 		}
 

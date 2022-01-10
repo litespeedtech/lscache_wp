@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.8.2
-Stable tag: 4.4.6
+Tested up to: 5.8.3
+Stable tag: 4.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,13 +249,20 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.4.7 - Jan 11 2022 =
+* **Page Optimize** Dropped `Inline Lazy Load Images Library` option. Now will always inline lazyload library. (Ankit)
+* **3rd** Prevented JavaScript files from being appended to Rank Math SEO sitemap.
+* **Purge** Dropped default stale purge when purging a post.
+* **Cloud** Dropped unused API calls.
+* **Cloud** Dropped redundant IP validation in API calls.
+
 = 4.4.6 - Dec 27 2022 =
-* **Guest** Restored `document.referrer` for organic traffic purpose when enabled Guest Mode. (michelefns)
+* **Guest** Restored `document.referrer` for organic traffic purposes when Guest Mode is enabled. (michelefns)
 * **Image Optimize** Fixed a potential PHP notice when uploading images in WP w/ PHP7.4+. (titsmaker)
-* **ESI** Fixed the Customize-page-widget-esi-settings-can-not-update bug (#422 Abe)
-* **3rd** Reverted ESI adminbar change of Elementor front pages for backward compatibility (#423 Abe)
-* **3rd** Fixed potential PHP warning on ESI disabling when using `Perfmatters`. (Jeffrey Zhang)
-* **Misc** Check if HTTP_REFERER is set or not before using it in Router class. (#425 Abe)
+* **ESI** Fixed an issue where ESI settings were not updated on customized widgets(#422 Abe)
+* **3rd** Reverted ESI Adminbar change on Elementor front pages for backward compatibility (#423 Abe)
+* **3rd** Fixed an issue where disabling ESI potential caused a PHP warning when using `Perfmatters`. (Jeffrey Zhang)
+* **Misc** Check whether HTTP_REFERER is set or not before using it in Router class. (#425 Abe)
 
 = 4.4.5 - Dec 1 2021 =
 * **Data** Fixed potential PHP notice when generating CSS/JS optimized files w/ PHP v7.4+. (Sarah Richardson/silencedgd/slr1979)

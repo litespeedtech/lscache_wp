@@ -231,19 +231,4 @@ $lqip_queue = $this->load_queue( 'lqip' );
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_MEDIA_LAZYJS_INLINE; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Include the lazy load image JavaScript library inline.', 'litespeed-cache' ); ?>
-				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#inline-lazy-load-images-library' ); ?>
-			</div>
-		</td>
-	</tr>
-
 </tbody></table>

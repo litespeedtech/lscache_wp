@@ -77,30 +77,6 @@ class REST extends Root {
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
-		register_rest_route( 'litespeed/v1', '/notify_ccss', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_ccss' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_ucss', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_ucss' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_lqip', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_lqip' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_vpi', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_vpi' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
@@ -134,9 +110,11 @@ class REST extends Root {
 	 * Check if the request is from cloud nodes
 	 *
 	 * @since 4.2
+	 * @since 4.4.7 As there is always token/api key validation, ip validation is redundant
 	 */
 	public function is_from_cloud() {
-		return $this->cls( 'Cloud' )->is_from_cloud();
+		return true;
+		// return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	/**
@@ -191,42 +169,6 @@ class REST extends Root {
 	 */
 	public function apikey() {
 		return $this->cls( 'Cloud' )->save_apikey();
-	}
-
-	/**
-	 * Notify CCSS
-	 *
-	 * @since  4.2
-	 */
-	public function notify_ccss() {
-		return $this->cls( 'css' )->notify( 'ccss' );
-	}
-
-	/**
-	 * Notify UCSS
-	 *
-	 * @since  4.2
-	 */
-	public function notify_ucss() {
-		return $this->cls( 'css' )->notify( 'ucss' );
-	}
-
-	/**
-	 * Notify lqip
-	 *
-	 * @since  4.2
-	 */
-	public function notify_lqip() {
-		return $this->cls( 'placeholder' )->notify();
-	}
-
-	/**
-	 * Notify viewport images
-	 *
-	 * @since  4.2
-	 */
-	public function notify_vpi() {
-		return $this->cls( 'media' )->notify();
 	}
 
 	/**
