@@ -1,14 +1,14 @@
-# Copyright (C) 2021 LiteSpeed Cache
+# Copyright (C) 2022 LiteSpeed Cache
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 4.4.6\n"
+"Project-Id-Version: LiteSpeed Cache 4.4.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2021-12-27 13:11:18+00:00\n"
+"POT-Creation-Date: 2022-01-10 15:45:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: src/admin-display.cls.php:129 src/lang.cls.php:209
+#: src/admin-display.cls.php:129 src/lang.cls.php:208
 msgid "Crawler"
 msgstr ""
 
@@ -401,11 +401,11 @@ msgstr ""
 msgid "Queue cleared successfully."
 msgstr ""
 
-#: src/css.cls.php:581
+#: src/css.cls.php:525
 msgid "%1$s %2$s files left in queue"
 msgstr ""
 
-#: src/css.cls.php:582
+#: src/css.cls.php:526
 msgid "Cancel"
 msgstr ""
 
@@ -1395,259 +1395,255 @@ msgid "Add Missing Sizes"
 msgstr ""
 
 #: src/lang.cls.php:165
-msgid "Inline Lazy Load Images Library"
-msgstr ""
-
-#: src/lang.cls.php:166
 msgid "Auto Request Cron"
 msgstr ""
 
-#: src/lang.cls.php:167
+#: src/lang.cls.php:166
 msgid "Auto Pull Cron"
 msgstr ""
 
-#: src/lang.cls.php:168
+#: src/lang.cls.php:167
 msgid "Optimize Original Images"
 msgstr ""
 
-#: src/lang.cls.php:169
+#: src/lang.cls.php:168
 msgid "Remove Original Backups"
 msgstr ""
 
-#: src/lang.cls.php:170
+#: src/lang.cls.php:169
 msgid "Create WebP Versions"
 msgstr ""
 
-#: src/lang.cls.php:171
+#: src/lang.cls.php:170
 msgid "Optimize Losslessly"
 msgstr ""
 
-#: src/lang.cls.php:172
+#: src/lang.cls.php:171
 msgid "Preserve EXIF/XMP data"
 msgstr ""
 
-#: src/lang.cls.php:173
+#: src/lang.cls.php:172
 msgid "WebP Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:174
+#: src/lang.cls.php:173
 msgid "WebP For Extra srcset"
 msgstr ""
 
-#: src/lang.cls.php:175
+#: src/lang.cls.php:174
 msgid "WordPress Image Quality Control"
 msgstr ""
 
-#: src/lang.cls.php:176 tpl/esi_widget_edit.php:36
+#: src/lang.cls.php:175 tpl/esi_widget_edit.php:36
 msgid "Enable ESI"
 msgstr ""
 
-#: src/lang.cls.php:177
+#: src/lang.cls.php:176
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: src/lang.cls.php:178
+#: src/lang.cls.php:177
 msgid "Cache Comment Form"
 msgstr ""
 
-#: src/lang.cls.php:179
+#: src/lang.cls.php:178
 msgid "ESI Nonces"
 msgstr ""
 
-#: src/lang.cls.php:180 tpl/page_optm/settings_css.tpl.php:109
+#: src/lang.cls.php:179 tpl/page_optm/settings_css.tpl.php:109
 #: tpl/page_optm/settings_css.tpl.php:219
 msgid "Vary Group"
 msgstr ""
 
-#: src/lang.cls.php:181
+#: src/lang.cls.php:180
 msgid "Purge All Hooks"
 msgstr ""
 
-#: src/lang.cls.php:182
+#: src/lang.cls.php:181
 msgid "Improve HTTP/HTTPS Compatibility"
 msgstr ""
 
-#: src/lang.cls.php:183
+#: src/lang.cls.php:182
 msgid "Instant Click"
 msgstr ""
 
-#: src/lang.cls.php:184
+#: src/lang.cls.php:183
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: src/lang.cls.php:185
+#: src/lang.cls.php:184
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: src/lang.cls.php:186
+#: src/lang.cls.php:185
 msgid "Login Cookie"
 msgstr ""
 
-#: src/lang.cls.php:187
+#: src/lang.cls.php:186
 msgid "Image WebP Replacement"
 msgstr ""
 
-#: src/lang.cls.php:189
+#: src/lang.cls.php:188
 msgid "Frontend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:190
+#: src/lang.cls.php:189
 msgid "Frontend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:191
+#: src/lang.cls.php:190
 msgid "Backend Heartbeat Control"
 msgstr ""
 
-#: src/lang.cls.php:192
+#: src/lang.cls.php:191
 msgid "Backend Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:193
+#: src/lang.cls.php:192
 msgid "Editor Heartbeat"
 msgstr ""
 
-#: src/lang.cls.php:194
+#: src/lang.cls.php:193
 msgid "Editor Heartbeat TTL"
 msgstr ""
 
-#: src/lang.cls.php:196
+#: src/lang.cls.php:195
 msgid "QUIC.cloud CDN"
 msgstr ""
 
-#: src/lang.cls.php:197
+#: src/lang.cls.php:196
 msgid "Use CDN Mapping"
 msgstr ""
 
-#: src/lang.cls.php:198
+#: src/lang.cls.php:197
 msgid "CDN URL"
 msgstr ""
 
-#: src/lang.cls.php:199
+#: src/lang.cls.php:198
 msgid "Include Images"
 msgstr ""
 
-#: src/lang.cls.php:200
+#: src/lang.cls.php:199
 msgid "Include CSS"
 msgstr ""
 
-#: src/lang.cls.php:201
+#: src/lang.cls.php:200
 msgid "Include JS"
 msgstr ""
 
-#: src/lang.cls.php:202 tpl/cdn/settings.tpl.php:102
+#: src/lang.cls.php:201 tpl/cdn/settings.tpl.php:102
 msgid "Include File Types"
 msgstr ""
 
-#: src/lang.cls.php:203
+#: src/lang.cls.php:202
 msgid "HTML Attribute To Replace"
 msgstr ""
 
-#: src/lang.cls.php:204
+#: src/lang.cls.php:203
 msgid "Original URLs"
 msgstr ""
 
-#: src/lang.cls.php:205
+#: src/lang.cls.php:204
 msgid "Included Directories"
 msgstr ""
 
-#: src/lang.cls.php:206
+#: src/lang.cls.php:205
 msgid "Exclude Path"
 msgstr ""
 
-#: src/lang.cls.php:207
+#: src/lang.cls.php:206
 msgid "Cloudflare API"
 msgstr ""
 
-#: src/lang.cls.php:210
+#: src/lang.cls.php:209
 msgid "Delay"
 msgstr ""
 
-#: src/lang.cls.php:211
+#: src/lang.cls.php:210
 msgid "Run Duration"
 msgstr ""
 
-#: src/lang.cls.php:212
+#: src/lang.cls.php:211
 msgid "Interval Between Runs"
 msgstr ""
 
-#: src/lang.cls.php:213
+#: src/lang.cls.php:212
 msgid "Crawl Interval"
 msgstr ""
 
-#: src/lang.cls.php:214
+#: src/lang.cls.php:213
 msgid "Threads"
 msgstr ""
 
-#: src/lang.cls.php:215
+#: src/lang.cls.php:214
 msgid "Timeout"
 msgstr ""
 
-#: src/lang.cls.php:216
+#: src/lang.cls.php:215
 msgid "Server Load Limit"
 msgstr ""
 
-#: src/lang.cls.php:217
+#: src/lang.cls.php:216
 msgid "Role Simulation"
 msgstr ""
 
-#: src/lang.cls.php:218
+#: src/lang.cls.php:217
 msgid "Cookie Simulation"
 msgstr ""
 
-#: src/lang.cls.php:219
+#: src/lang.cls.php:218
 msgid "Custom Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:220
+#: src/lang.cls.php:219
 msgid "Drop Domain from Sitemap"
 msgstr ""
 
-#: src/lang.cls.php:221
+#: src/lang.cls.php:220
 msgid "Sitemap Timeout"
 msgstr ""
 
-#: src/lang.cls.php:223 tpl/inc/disabled_all.php:5
+#: src/lang.cls.php:222 tpl/inc/disabled_all.php:5
 msgid "Disable All Features"
 msgstr ""
 
-#: src/lang.cls.php:224 tpl/toolbox/log_viewer.tpl.php:7
+#: src/lang.cls.php:223 tpl/toolbox/log_viewer.tpl.php:7
 msgid "Debug Log"
 msgstr ""
 
-#: src/lang.cls.php:225
+#: src/lang.cls.php:224
 msgid "Admin IPs"
 msgstr ""
 
-#: src/lang.cls.php:226
+#: src/lang.cls.php:225
 msgid "Debug Level"
 msgstr ""
 
-#: src/lang.cls.php:227
+#: src/lang.cls.php:226
 msgid "Log File Size Limit"
 msgstr ""
 
-#: src/lang.cls.php:228
+#: src/lang.cls.php:227
 msgid "Log Cookies"
 msgstr ""
 
-#: src/lang.cls.php:229
+#: src/lang.cls.php:228
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: src/lang.cls.php:230
+#: src/lang.cls.php:229
 msgid "Debug URI Includes"
 msgstr ""
 
-#: src/lang.cls.php:231
+#: src/lang.cls.php:230
 msgid "Debug URI Excludes"
 msgstr ""
 
-#: src/lang.cls.php:233
+#: src/lang.cls.php:232
 msgid "Revisions Max Number"
 msgstr ""
 
-#: src/lang.cls.php:234
+#: src/lang.cls.php:233
 msgid "Revisions Max Age"
 msgstr ""
 
@@ -1960,7 +1956,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 4.4.6)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 4.4.7)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:59 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -1976,7 +1972,7 @@ msgid "New release %s is available now."
 msgstr ""
 
 #: tpl/banner/new_version.php:71 tpl/banner/new_version_dev.tpl.php:24
-#: tpl/toolbox/beta_test.tpl.php:59
+#: tpl/toolbox/beta_test.tpl.php:60
 msgid "Upgrade"
 msgstr ""
 
@@ -4453,7 +4449,6 @@ msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:169
 #: tpl/page_optm/settings_html.tpl.php:129 tpl/page_optm/settings_js.tpl.php:67
-#: tpl/page_optm/settings_media.tpl.php:243
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
@@ -4789,10 +4784,6 @@ msgstr ""
 msgid "Note: this option only works when %1$s is %2$s."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:242
-msgid "Include the lazy load image JavaScript library inline."
-msgstr ""
-
 #: tpl/page_optm/settings_media_exc.tpl.php:21
 msgid "Listed images will not be lazy loaded."
 msgstr ""
@@ -4916,58 +4907,58 @@ msgstr ""
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:22
+#: tpl/toolbox/beta_test.tpl.php:23
 msgid "Try GitHub Version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:26
+#: tpl/toolbox/beta_test.tpl.php:27
 msgid ""
 "Use this section to switch plugin versions. To beta test a GitHub commit, "
 "enter the commit URL in the field below."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:27
+#: tpl/toolbox/beta_test.tpl.php:28
 msgid "Example"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:31
+#: tpl/toolbox/beta_test.tpl.php:32
 msgid "Use latest GitHub Dev commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:33
+#: tpl/toolbox/beta_test.tpl.php:34
 msgid "Use latest GitHub Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:35 tpl/toolbox/beta_test.tpl.php:51
+#: tpl/toolbox/beta_test.tpl.php:36 tpl/toolbox/beta_test.tpl.php:52
 msgid "Use latest WordPress release version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:35
+#: tpl/toolbox/beta_test.tpl.php:36
 msgid "OR"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:46
+#: tpl/toolbox/beta_test.tpl.php:47
 msgid ""
 "Downgrade not recommended. May cause fatal error due to refactored code."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:50
+#: tpl/toolbox/beta_test.tpl.php:51
 msgid ""
 "Press the %s button to use the most recent GitHub commit. Master is for "
 "release candidate & Dev is for experimental testing."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:50
+#: tpl/toolbox/beta_test.tpl.php:51
 msgid "Use latest GitHub Dev/Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:51
+#: tpl/toolbox/beta_test.tpl.php:52
 msgid ""
 "Press the %s button to stop beta testing and go back to the current release "
 "from the WordPress Plugin Directory."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:56
+#: tpl/toolbox/beta_test.tpl.php:57
 msgid ""
 "In order to avoid an upgrade error, you must be using %1$s or later before "
 "you can upgrade to %2$s versions."
