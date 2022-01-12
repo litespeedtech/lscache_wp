@@ -416,6 +416,12 @@ class ESI extends Root {
 			return false;
 		}
 
+		if ( defined( 'LITESPEED_ESI_OFF' ) ) {
+			Debug2::debug( '[ESI] ESI OFF so force loading [block_id] ' . $block_id );
+			do_action( 'litespeed_esi_load-' . $block_id, $params );
+			return;
+		}
+
 		if ( $silence ) {
 			// Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
 			$params[ '_ls_silence' ] = true;

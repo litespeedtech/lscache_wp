@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.8.3
-Stable tag: 4.4.7
+Stable tag: 4.4.8-a1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -248,6 +248,9 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.4.8 - Feb 2022 =
+* **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 
 = 4.4.7 - Jan 11 2022 =
 * **Page Optimize** Dropped `Inline Lazy Load Images Library` option. Now will always inline lazyload library. (Ankit)
