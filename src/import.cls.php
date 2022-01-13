@@ -70,7 +70,7 @@ class Import extends Base {
 	public function import( $file = false ) {
 		if ( ! $file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
-				Debug2::debug( 'Import: Failed to import, wront ls_file' );
+				Debug2::debug( 'Import: Failed to import, wrong ls_file' );
 
 				$msg = __( 'Import failed due to file error.', 'litespeed-cache' );
 				Admin_Display::error( $msg );

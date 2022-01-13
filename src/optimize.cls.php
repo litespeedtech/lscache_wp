@@ -391,7 +391,7 @@ class Optimize extends Base {
 		// Shouldn't give any optm (defer/delay) @since 4.4
 		if ( $this->_var_preserve_js ) {
 			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
-			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
+			Debug2::debug2( '[Optm] Inline JS vars', $this->_var_preserve_js );
 		}
 
 		// Append async compatibility lib to head

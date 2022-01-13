@@ -1189,7 +1189,7 @@ class Img_Optm extends Base {
 			return;
 		}
 
-		Debug2::debug( '[Img_Optm] excuting DESTROY process' ) ;
+		Debug2::debug( '[Img_Optm] executing DESTROY process' ) ;
 
 		/**
 		 * Limit images each time before redirection to fix Out of memory issue. #665465
@@ -1273,7 +1273,7 @@ class Img_Optm extends Base {
 		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit + 1 ) ); // last one is the seed for next batch
 
 		if ( ! $list ) {
-			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
+			$msg = __( 'Rescanned successfully.', 'litespeed-cache' );
 			Admin_Display::succeed( $msg );
 
 			Debug2::debug( '[Img_Optm] rescan bypass: no gathered image found' );
