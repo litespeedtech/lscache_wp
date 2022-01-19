@@ -269,12 +269,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.4.5 - Dec 1 2021 =
 * **Data** Fixed potential PHP notice when generating CSS/JS optimized files w/ PHP v7.4+. (Sarah Richardson/silencedgd/slr1979)
-* **API** `LITESPEED_ESI_OFF` const to disable ESI specially (Need to define before wp hook `init`).
-* **API** `LSCWP_DEBUG_PATH` const to specify debug log path. (khanh-nt)
-* 🐞**GUI** Fixed admin message not showing issue. (Daniel McD)
-* **CDN** Used WP remote func to communicate w/ Cloudflare per WP Guidance.
-* **3rd** Add compatibility for Perfmatters plugin on its script manager (#417 Abe)
-* **3rd** Add compatibility for Elementor on Editor button when ESI on (#418 Abe)
+* **API** Added `LITESPEED_ESI_OFF` constant to disable ESI, when defined before the WP `init` hook.
+* **API** Added `LSCWP_DEBUG_PATH` constant to specify debug log path. (khanh-nt)
+* 🐞**GUI** Fixed an issue where admin messages were not displayed. (Daniel McD)
+* **CDN** Used WP remote function to communicate w/ Cloudflare per WP guidance.
+* **3rd** Added compatibility for Perfmatters plugin's script manager (#417 Abe)
+* **3rd** Added compatibility for Elementor's Editor button when ESI is on (#418 Abe)
 
 = 4.4.4 - Nov 23 2021 =
 * **Page Optimize** Delay deletion of outdated CSS/JS files for a default of 20 days to avoid 404 errors with cached search engine copies.
