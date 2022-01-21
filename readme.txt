@@ -249,8 +249,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.4.8 - Feb 2022 =
+= 4.5 - Feb 2022 =
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
+* **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
+* **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
 
 = 4.4.7 - Jan 11 2022 =
 * **Page Optimize** Dropped `Inline Lazy Load Images Library` option. Now will always inline lazyload library. (Ankit)

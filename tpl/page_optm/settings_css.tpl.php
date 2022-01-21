@@ -63,8 +63,9 @@ $ucss_queue = $this->load_queue( 'ucss' );
 
 				<?php echo __( 'Use QUIC.cloud online service to generate unique CSS.', 'litespeed-cache' ); ?>
 				<?php echo __( 'This will drop the unused CSS on each page from the combined file.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-ucss' ); ?><br />
-				<?php echo __( 'Automatic generation of unique CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#generate-ucss' ); ?>
+				<br /><?php echo __( 'Automatic generation of unique CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
+				<br /><font class="litespeed-success"><?php echo sprintf( __( 'Filter %s available for UCSS per page type generation.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_ucss_per_pagetype', '__return_true' );</code>" ); ?></font>
 
 				<?php if ( $this->conf( Base::O_OPTM_UCSS ) && ! $this->conf( Base::O_OPTM_CSS_COMB ) ) : ?>
 				<br /><font class="litespeed-warning">

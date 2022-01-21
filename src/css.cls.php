@@ -208,7 +208,14 @@ class CSS extends Base {
 		}
 
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
-		$url_tag = is_404() ? '404' : $request_url;
+
+		$url_tag = $request_url;
+		if ( is_404() ) {
+			$url_tag = '404';
+		}
+		elseif ( apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
+			$url_tag = Utility::page_type();
+		}
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ucss' );
