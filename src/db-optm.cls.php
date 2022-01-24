@@ -50,7 +50,7 @@ class DB_Optm extends Root {
 				$num = 0;
 				$blogs = Activation::get_network_ids();
 				foreach ( $blogs as $k => $blog_id ) {
-					if ( $k > 10 ) {
+					if ( $k > 3 ) {
 						self::$_hide_more = true;
 						break;
 					}
