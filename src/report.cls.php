@@ -135,7 +135,11 @@ class Report extends Base {
 		if ( ! is_null($options) && is_multisite() ) {
 			$blogs = Activation::get_network_ids();
 			if ( ! empty($blogs) ) {
+				$i = 0;
 				foreach ( $blogs as $blog_id ) {
+					if ( ++$i > 3 ) { // Only log 3 subsites
+						break;
+					}
 					$opts = $this->cls( 'Conf' )->load_options( $blog_id, true );
 					if ( isset($opts[ self::O_CACHE ]) ) {
 						$options['blog ' . $blog_id . ' radio select'] = $opts[ self::O_CACHE ];
