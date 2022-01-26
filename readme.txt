@@ -250,6 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.5 - Feb 2022 =
+* **Guest** Fixed organiic traffic issue as different browsers may fail to set `document.referrer`.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
 * **Report** Network now can show Toolbox page when having a large number of subsites.
