@@ -551,7 +551,7 @@ class Data extends Root {
 		$url_id = $url_row[ 'id' ];
 
 		$tb_url_file = $this->tb( 'url_file' );
-		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d";
+		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
 		$file_row = $wpdb->get_row( $wpdb->prepare( $q, array( $url_id, $vary, $type ) ), ARRAY_A );
 		if ( ! $file_row ) {
 			return false;

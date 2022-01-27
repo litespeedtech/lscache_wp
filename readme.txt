@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.8.3
-Stable tag: 4.4.8-a1
+Tested up to: 5.9
+Stable tag: 4.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.5 - Feb 2022 =
 * **Guest** Fixed organiic traffic issue as different browsers may fail to set `document.referrer`.
+* 🐞**Page Optimize** Fixed a potential CSS/JS 404 issue when the record is existing but marked as expired.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
 * **Report** Network now can show Toolbox page when having a large number of subsites.
@@ -285,7 +286,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Delay deletion of outdated CSS/JS files for a default of 20 days to avoid 404 errors with cached search engine copies.
 * **Cache** When caching, no longer send a purge request for CSS/JS removal to avoid cache engine conflicts.
 * 🐞**Core** Optimized SQL queries while autoloading if expected options are missing; reduced by 7 and 3 queries on backend and frontend respectively. (#396425 Jackson)
-* **Page Optm** Fixed a 404 issue that occured when upgrading the plugin manually, with a package upload or through the plugin manager. (Tobolo/Małgorzata/Abe)
+* **Page Optimize** Fixed a 404 issue that occured when upgrading the plugin manually, with a package upload or through the plugin manager. (Tobolo/Małgorzata/Abe)
 * **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate the request URL for CCSS and UCSS.
 * **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)
 * **OLS** Fixed an issue where the `COOKIEHASH` constant was undefined when used with OpenLiteSpeed as an MU plugin or with network activation.
