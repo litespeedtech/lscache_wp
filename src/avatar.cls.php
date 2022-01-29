@@ -105,7 +105,7 @@ class Avatar extends Base {
 		$realpath = $this->_realpath( $url );
 		if ( file_exists( $realpath ) && time() - filemtime( $realpath ) <= $this->_conf_cache_ttl ) {
 			Debug2::debug2( '[Avatar] cache file exists [url] ' . $url );
-			return $this->_rewrite( $url );
+			return $this->_rewrite( $url, filemtime( $realpath ) );
 		}
 
 		if ( ! strpos( $url, 'gravatar.com' ) ) {
@@ -149,8 +149,8 @@ class Avatar extends Base {
 	 *
 	 * @since  3.0
 	 */
-	private function _rewrite( $url ) {
-		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath( $url );
+	private function _rewrite( $url, $time = null ) {
+		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath( $url ) . ( $time ? '?ver=' . $time : '' );
 	}
 
 	/**
