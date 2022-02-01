@@ -484,9 +484,9 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 
 				</div>
 
-				<?php if ( ! empty( $cloud_summary[ 'last_request.ccss' ] ) ) : ?>
+				<?php if ( ! empty( $cloud_summary[ 'last_request.ucss' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ccss' ] ) ?>
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.ucss' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>
