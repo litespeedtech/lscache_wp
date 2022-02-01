@@ -244,6 +244,23 @@ class Purge extends Base {
 	}
 
 	/**
+	 * Purge one UCSS by URL
+	 *
+	 * @since 4.5
+	 * @access public
+	 */
+	public static function purge_ucss( $post_id_or_url ) {
+		Debug2::debug( '[Purge] Purge a single UCSS: ' . $post_id_or_url );
+		// If is post_id, generate URL
+		if ( ! preg_match( '/\D/', $post_id_or_url ) ) {
+			$post_id_or_url = get_permalink( $post_id_or_url );
+		}
+		$post_id_or_url = untrailingslashit( $post_id_or_url );
+
+		Data::cls()->mark_as_expired( $post_id_or_url );
+	}
+
+	/**
 	 * Delete all LQIP images
 	 *
 	 * @since    3.0

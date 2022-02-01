@@ -561,6 +561,29 @@ class Data extends Root {
 	}
 
 	/**
+	 * Mark all entries of one URL to expired
+	 * @since 4.5
+	 */
+	public function mark_as_expired( $request_url ) {
+		global $wpdb;
+
+		Debug2::debug( '[Data] Try to mark as expired: ' . $request_url );
+		$tb_url = $this->tb( 'url' );
+		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A );
+		if ( ! $url_row ) {
+			return;
+		}
+
+		Debug2::debug( '[Data] Mark url_id=' . $url_row[ 'id' ] . ' as expired' );
+
+		$tb_url_file = $this->tb( 'url_file' );
+		$q = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=4 AND expired=0";
+		$expired = time() + 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 );
+		$wpdb->query( $wpdb->prepare( $q, array( $expired, $url_row[ 'id' ] ) ) );
+	}
+
+	/**
 	 * Get list from `data/css_excludes.txt`
 	 *
 	 * @since  3.6

@@ -250,12 +250,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.5 - Feb 2022 =
-* **Guest** Fixed organiic traffic issue as different browsers may fail to set `document.referrer`.
+* **Guest** Fixed organic traffic issue as different browsers may fail to set `document.referrer`.
 * 🐞**Page Optimize** Fixed a potential CSS/JS 404 issue when the record is existing but marked as expired.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
 * **Report** Network now can show Toolbox page when having a large number of subsites.
 * **DB Optimize** Reduced default subsites count from 10 to 3 under Network Admin -> DB Optimize page to avoid timeout.
+* **API** New filter `litespeed_purge_ucss` to purge a single page UCSS. (#376681)
 * **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
 
 = 4.4.7 - Jan 11 2022 =

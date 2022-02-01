@@ -110,6 +110,7 @@ class API extends Base {
 		// Action `litespeed_api_purge_post` // Triggered when purge a post // @previous API::hook_purge_post($hook)
 		// Action `litespeed_purged_all` // Triggered after purged all.
 		add_action( 'litespeed_purge_all_object', __NAMESPACE__ . '\Purge::purge_all_object' );
+		add_action( 'litespeed_purge_ucss', __NAMESPACE__ . '\Purge::purge_ucss' );
 
 		/**
 		 * ESI
