@@ -22,3 +22,5 @@ adsbygoogle
 block_tdi_ ## Theme: Newspaper by tagDiv.com
 
 data-view-breakpoint-pointer ## Plugin: The Events Calendar by Modern Tribe (https://theeventscalendar.com/)
+
+wp-json/wp-statistics ## WP Statistics
