@@ -244,6 +244,7 @@ For more detailed information about crawler setup, please see [the Crawler docum
 * WP-Stateless
 * Elementor
 * WS Form
+* WP Statistics
 
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
@@ -256,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
 * **Report** Network now can show Toolbox page when having a large number of subsites.
 * **DB Optimize** Reduced default subsites count from 10 to 3 under Network Admin -> DB Optimize page to avoid timeout.
+* **Cloud** Fixed potential `lack_of_token` error when requesting domain key when local summary value is not array due to historic reason.
 * **API** New filter `litespeed_purge_ucss` to purge a single page UCSS. (#376681)
 * **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
 * **3rd** Excluded `WP Statistics` from inline JS optimize. (Ryan D)

@@ -541,6 +541,10 @@ abstract class Root {
 	public static function get_summary( $field = false ) {
 		$summary = self::get_option( '_summary', array() );
 
+		if ( ! is_array( $summary ) ) {
+			$summary = array();
+		}
+
 		if ( ! $field ) {
 			return $summary;
 		}
