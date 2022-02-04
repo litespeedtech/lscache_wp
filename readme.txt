@@ -261,6 +261,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **API** New filter `litespeed_purge_ucss` to purge a single page UCSS. (#376681)
 * **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
 * **3rd** Excluded `WP Statistics` from inline JS optimize. (Ryan D)
+* **Media** Updated image lazyload library to 17.5.0.
 
 = 4.4.7 - Jan 11 2022 =
 * **Page Optimize** Dropped `Inline Lazy Load Images Library` option. Now will always inline lazyload library. (Ankit)
