@@ -29,6 +29,7 @@ class Tag extends Root {
 	const TYPE_REST = 'REST';
 	const TYPE_LIST = 'LIST';
 	const TYPE_MIN = 'MIN';
+	const TYPE_LOCALRES = 'LOCALRES';
 
 	const X_HEADER = 'X-LiteSpeed-Tag';
 

@@ -27,6 +27,7 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL = 'purge_all';
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache';
 	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs';
+	const TYPE_PURGE_ALL_LOCALRES = 'purge_all_localres';
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
 	const TYPE_PURGE_ALL_UCSS = 'purge_all_ucss';
 	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip';
@@ -102,6 +103,10 @@ class Purge extends Base {
 				$this->_purge_all_cssjs();
 				break;
 
+			case self::TYPE_PURGE_ALL_LOCALRES:
+				$this->_purge_all_localres();
+				break;
+
 			case self::TYPE_PURGE_ALL_CCSS:
 				$this->_purge_all_ccss();
 				break;
@@ -168,6 +173,7 @@ class Purge extends Base {
 	private function _purge_all( $reason = false ) {
 		$this->_purge_all_lscache( true );
 		$this->_purge_all_cssjs( true );
+		$this->_purge_all_localres( true );
 		// $this->_purge_all_ccss( true );
 		// $this->_purge_all_lqip( true );
 		$this->_purge_all_object( true );
@@ -292,6 +298,23 @@ class Purge extends Base {
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Gravatar files.', 'litespeed-cache' );
+			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		}
+	}
+
+	/**
+	 * Delete all localized JS
+	 *
+	 * @since    3.3
+	 * @access   private
+	 */
+	private function _purge_all_localres( $silence = false ) {
+		do_action( 'litespeed_purged_all_localres' );
+
+		$this->_add( Tag::TYPE_LOCALRES );
+
+		if ( ! $silence ) {
+			$msg = __( 'Cleaned all localized resource entries.', 'litespeed-cache' );
 			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
 		}
 	}

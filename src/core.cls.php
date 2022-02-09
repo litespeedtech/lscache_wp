@@ -237,6 +237,8 @@ class Core extends Root {
 
 			$this->cls( 'Router' )->can_optm() && $this->cls( 'Optimize' )->init();
 
+			$this->cls( 'Localization' )->init();
+
 			// Hook cdn for attachements
 			$this->cls( 'CDN' )->init();
 

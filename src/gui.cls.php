@@ -525,6 +525,15 @@ class GUI extends Base {
 				'id'		=> 'litespeed-purge-ucss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - UCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_UCSS, false, '_ori' ),
+			) );
+		}
+
+		if ( $this->has_cache_folder( 'localres' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-localres',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES, false, '_ori' ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -676,6 +685,15 @@ class GUI extends Base {
 				'id'		=> 'litespeed-purge-ucss',
 				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - UCSS',
 				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_UCSS ),
+			) );
+		}
+
+		if ( $this->has_cache_folder( 'localres' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-localres',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LOCALRES ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}

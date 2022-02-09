@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.5 - Feb 2022 =
+* 🌱**Page Optimize** Localization is back.
 * **Guest** Fixed organic traffic issue as different browsers may fail to set `document.referrer`.
 * 🐞**Page Optimize** Fixed a potential CSS/JS 404 issue when the record is existing but marked as expired.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
