@@ -256,6 +256,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🐞**Page Optimize** Fixed a potential CSS/JS 404 issue when the record is existing but marked as expired.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
+* **Guest** Guest Mode detection URL dropped domain to support multi domain in one WP.
 * **Report** Network now can show Toolbox page when having a large number of subsites.
 * **DB Optimize** Reduced default subsites count from 10 to 3 under Network Admin -> DB Optimize page to avoid timeout.
 * **Cloud** Fixed potential `lack_of_token` error when requesting domain key when local summary value is not array due to historic reason.

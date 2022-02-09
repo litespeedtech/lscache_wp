@@ -825,7 +825,7 @@ class GUI extends Base {
 	private function _enqueue_guest_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
 		// $guest_update_url = add_query_arg( 'litespeed_guest', 1, home_url( '/' ) );
-		$guest_update_url = LSWCP_PLUGIN_URL . self::PHP_GUEST;
+		$guest_update_url = parse_url( LSWCP_PLUGIN_URL . self::PHP_GUEST, PHP_URL_PATH );
 		$js_con = str_replace( 'litespeed_url', esc_url( $guest_update_url ), $js_con );
 		$buffer = preg_replace( '/<\/body>/', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer, 1 );
 		return $buffer;
