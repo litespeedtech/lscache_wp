@@ -367,12 +367,17 @@ class Admin_Display extends Base {
 		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
 			// WP CLI will show the info directly
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
-				$msg = strip_tags( $msg );
-				if ( $color == self::NOTICE_RED ) {
-					\WP_CLI::error( $msg, false );
+				if ( ! is_array( $msg ) ) {
+					$msg = array( $msg );
 				}
-				else {
-					\WP_CLI::success( $msg );
+				foreach ( $msg as $v ) {
+					$v = strip_tags( $v );
+					if ( $color == self::NOTICE_RED ) {
+						\WP_CLI::error( $v, false );
+					}
+					else {
+						\WP_CLI::success( $v );
+					}
 				}
 			}
 			return;

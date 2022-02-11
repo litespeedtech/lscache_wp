@@ -260,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Report** Network now can show Toolbox page when having a large number of subsites.
 * **DB Optimize** Reduced default subsites count from 10 to 3 under Network Admin -> DB Optimize page to avoid timeout.
 * **Cloud** Fixed potential `lack_of_token` error when requesting domain key when local summary value is not array due to historic reason.
+* **Cloud** Fixed PHP fatal error when meeting frequency issue under CLI. (Dean Taylor #Issue410)
 * **API** New filter `litespeed_purge_ucss` to purge a single page UCSS. (#376681)
 * **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
 * **3rd** Excluded `WP Statistics` from inline JS optimize. (Ryan D)
@@ -395,7 +396,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **GUI** Showed the default recommended values for Guest Mode UA/IPs.
 * **3rd** Fixed AMP plugin compatibility. (⭐ Contributed by Alice Tang #PR368)
 * **3rd** Bypassed all page optimization including CDN/WebP for AMP pages.
-* **3rd** Improved compatibility with All in One SEO plugin sitemap. (arnaudbroes/flschaves Issue#372)
+* **3rd** Improved compatibility with All in One SEO plugin sitemap. (arnaudbroes/flschaves #Issue372)
 * **3rd** Added wsform nonce. (#365 cstrouse)
 * **3rd** Added Easy Digital Download (EDD) & WP Menu Cart nonce. (#PR366 AkramiPro)
 * **3rd** Improved compatibility w/ Restrict Content Pro. (Abe #PR370)
