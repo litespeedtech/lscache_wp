@@ -12,13 +12,13 @@ $pagination = Utility::pagination( $count, 30 );
 
 ?>
 <p class="litespeed-right">
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blacklist?', 'litespeed-cache' ) ; ?>" >
-	<?php echo __( 'Empty blacklist', 'litespeed-cache' ); ?>
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing disallowed list items?', 'litespeed-cache' ) ; ?>" >
+	<?php echo __( 'Empty disallowed list', 'litespeed-cache' ); ?>
 </a>
 </p>
 
 <h3 class="litespeed-title">
-	<?php echo __( 'Blacklist', 'litespeed-cache' ); ?>
+	<?php echo __( 'Disallowed list', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab' ); ?>
 </h3>
 
@@ -43,7 +43,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blacklist', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from disallowed list', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>
@@ -52,7 +52,7 @@ $pagination = Utility::pagination( $count, 30 );
 <?php echo $pagination; ?>
 
 <p>
-	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not Blacklist', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blacklisted due to not cacheable', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not disallowed listed', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Disallowed listed due to not cacheable', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Disallowed listed', 'litespeed-cache' ); ?><br>
 </p>
