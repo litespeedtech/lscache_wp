@@ -12,13 +12,13 @@ $pagination = Utility::pagination( $count, 30 );
 
 ?>
 <p class="litespeed-right">
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing disallowed list items?', 'litespeed-cache' ) ; ?>" >
-	<?php echo __( 'Empty disallowed list', 'litespeed-cache' ); ?>
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blocklist items?', 'litespeed-cache' ) ; ?>" >
+	<?php echo __( 'Empty blocklist', 'litespeed-cache' ); ?>
 </a>
 </p>
 
 <h3 class="litespeed-title">
-	<?php echo __( 'Disallowed list', 'litespeed-cache' ); ?>
+	<?php echo __( 'Blocklist', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab' ); ?>
 </h3>
 
