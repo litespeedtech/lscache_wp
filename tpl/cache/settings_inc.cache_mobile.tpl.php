@@ -16,7 +16,7 @@ defined( 'WPINC' ) || exit;
 			?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Serve a separate cache copy for mobile visitors.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#cache-mobile', 'Learn more about when this is needed' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#cache-mobile', __( 'Learn more about when this is needed', 'litespeed-cache' ) ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
 				<br /><?php Doc::crawler_affected(); ?>
 			</div>

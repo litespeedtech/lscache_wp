@@ -20,7 +20,7 @@ defined( 'WPINC' ) || exit ;
 				. '</p>'
 				. '<p class="litespeed-desc">'
 					. sprintf(__('The default login cookie is %s.', 'litespeed-cache'), '<code>_lscache_vary</code>')
-					. ' ' . __('The server will determine if the user is logged in based on the existance of this cookie.', 'litespeed-cache')
+					. ' ' . __('The server will determine if the user is logged in based on the existence of this cookie.', 'litespeed-cache')
 					. ' ' . __('This setting is useful for those that have multiple web applications for the same domain.', 'litespeed-cache')
 					. ' ' . __('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache')
 					. ' ' . __('The cookie set here will be used for this WordPress installation.', 'litespeed-cache')

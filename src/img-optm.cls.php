@@ -1273,7 +1273,7 @@ class Img_Optm extends Base {
 		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit + 1 ) ); // last one is the seed for next batch
 
 		if ( ! $list ) {
-			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
+			$msg = __( 'Rescanned successfully.', 'litespeed-cache' );
 			Admin_Display::succeed( $msg );
 
 			Debug2::debug( '[Img_Optm] rescan bypass: no gathered image found' );
@@ -1338,7 +1338,7 @@ class Img_Optm extends Base {
 			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_RESCAN );
 		}
 
-		$msg = $count ? sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescaned successfully.', 'litespeed-cache' );
+		$msg = $count ? sprintf( __( 'Rescanned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescanned successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
 	}
 
