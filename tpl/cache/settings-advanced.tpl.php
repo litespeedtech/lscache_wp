@@ -43,7 +43,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'When a vistor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ); ?>
+				<?php echo __( 'When a visitor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#instant-click' ); ?>
 				<br /><font class="litespeed-danger">
 					⚠️

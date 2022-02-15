@@ -272,7 +272,7 @@ class Media extends Root {
 		}
 		elseif ( $size_meta && $size_meta[ 'ori_saved' ] === 0 ){
 			echo GUI::pie_tiny( 0, 24,
-				__( 'Congratulation! Your file was already optmized', 'litespeed-cache' ),
+				__( 'Congratulation! Your file was already optimized', 'litespeed-cache' ),
 				'left'
 			);
 			echo sprintf( __( 'Orig %s', 'litespeed-cache' ), '<span class="litespeed-desc">' . __( '(no savings)', 'litespeed-cache' ) . '</span>' );
