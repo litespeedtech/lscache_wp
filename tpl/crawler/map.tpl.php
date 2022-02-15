@@ -55,7 +55,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Add to blocklist', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Add to Blocklist', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>
