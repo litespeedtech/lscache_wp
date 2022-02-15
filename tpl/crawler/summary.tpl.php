@@ -181,7 +181,7 @@ if($seconds > 0):
 		<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __( 'Waiting to be Crawled', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __( 'Already Cached', 'litespeed-cache' ); ?><br>
 		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php echo __( 'Successfully Crawled', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php echo __( 'Disallowed listed', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php echo __( 'Blocklisted', 'litespeed-cache' ); ?><br>
 	</p>
 
 	<div class="litespeed-desc">
