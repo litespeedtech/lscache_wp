@@ -43,7 +43,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from disallowed list', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blocklist', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>
