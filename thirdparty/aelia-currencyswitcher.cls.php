@@ -31,6 +31,7 @@ class Aelia_CurrencySwitcher {
 	public static function detect() {
 		if ( defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher']) ) {
 			// Not all pages need to add vary, so need to use this API to set conditions
+			self::$_cookies = apply_filters( 'litespeed_3rd_aelia_cookies', self::$_cookies );
 			add_filter( 'litespeed_vary_curr_cookies', __CLASS__ . '::check_cookies' ); // this is for vary response headers, only add when needed
 			add_filter( 'litespeed_vary_cookies', __CLASS__ . '::register_cookies' ); // this is for rewrite rules, so always add
 		}
