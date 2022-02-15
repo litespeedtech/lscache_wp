@@ -67,5 +67,5 @@ $pagination = Utility::pagination( $count, 30 );
 	<i class="litespeed-dot litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'blocklist', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blocklisted', 'litespeed-cache' ); ?><br>
 </p>
