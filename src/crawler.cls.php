@@ -975,10 +975,10 @@ class Crawler extends Root {
 		foreach ( str_split( $status_row ) as $k => $v ) {
 			$reason = $reason_set[ $k ];
 			if ( $reason == 'Man' ) {
-				$reason = __( 'Manually added to blacklist', 'litespeed-cache' );
+				$reason = __( 'Manually added to blocklist', 'litespeed-cache' );
 			}
 			if ( $reason == 'Existed' ) {
-				$reason = __( 'Previously existed in blacklist', 'litespeed-cache' );
+				$reason = __( 'Previously existed in blocklist', 'litespeed-cache' );
 			}
 			if ( $reason ) {
 				$reason = 'data-balloon-pos="up" aria-label="' . $reason . '"';

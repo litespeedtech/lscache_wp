@@ -55,7 +55,7 @@ $pagination = Utility::pagination( $count, 30 );
 				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
 			</td>
 			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Add to Blacklist', 'litespeed-cache' ); ?></a>
+				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Add to Blocklist', 'litespeed-cache' ); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>
@@ -66,6 +66,6 @@ $pagination = Utility::pagination( $count, 30 );
 <p>
 	<i class="litespeed-dot litespeed-bg-success"></i> = <?php echo __( 'Cache Hit', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-primary"></i> = <?php echo __( 'Cache Miss', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blacklisted due to not cacheable', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blacklisted', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blocklisted', 'litespeed-cache' ); ?><br>
 </p>
