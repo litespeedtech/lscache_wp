@@ -52,7 +52,7 @@ $pagination = Utility::pagination( $count, 30 );
 <?php echo $pagination; ?>
 
 <p>
-	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not disallowed listed', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Disallowed listed due to not cacheable', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Disallowed listed', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not blocklisted', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php echo __( 'Blocklisted', 'litespeed-cache' ); ?><br>
 </p>
