@@ -157,7 +157,7 @@ if($seconds > 0):
 					<?php echo '<i class="litespeed-badge litespeed-bg-default" data-balloon-pos="up" aria-label="' . __( 'Waiting', 'litespeed-cache' ) . '">' . ( $waiting ?: '-' ) . '</i> '; ?>
 					<?php echo '<i class="litespeed-badge litespeed-bg-success" data-balloon-pos="up" aria-label="' . __( 'Hit', 'litespeed-cache' ) . '">' . ( $hit ?: '-' ) . '</i> '; ?>
 					<?php echo '<i class="litespeed-badge litespeed-bg-primary" data-balloon-pos="up" aria-label="' . __( 'Miss', 'litespeed-cache' ) . '">' . ( $miss ?: '-' ) . '</i> '; ?>
-					<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __( 'Disallowed listed', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
+					<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __( 'Blocklisted', 'litespeed-cache' ) . '">' . ( $blacklisted ?: '-' ) . '</i> '; ?>
 				</td>
 				<td>
 					<?php $this->build_toggle( 'litespeed-crawler-'.$i ,  $__crawler->is_active( $i ) ); ?>
