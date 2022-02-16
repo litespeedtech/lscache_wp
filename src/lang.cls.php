@@ -109,7 +109,7 @@ class Lang extends Base {
 			self::O_OPTM_CSS_COMB_EXT_INL		=> __( 'CSS Combine External and Inline', 'litespeed-cache' ),
 			self::O_OPTM_UCSS					=> __( 'Generate UCSS', 'litespeed-cache' ),
 			self::O_OPTM_UCSS_INLINE			=> __( 'UCSS Inline', 'litespeed-cache' ),
-			self::O_OPTM_UCSS_WHITELIST			=> __( 'UCSS Allowed List', 'litespeed-cache' ),
+			self::O_OPTM_UCSS_WHITELIST			=> __( 'UCSS Allowlist', 'litespeed-cache' ),
 			self::O_OPTM_UCSS_EXC				=> __( 'UCSS URI Excludes', 'litespeed-cache' ),
 			self::O_OPTM_JS_MIN					=> __( 'JS Minify', 'litespeed-cache' ),
 			self::O_OPTM_JS_COMB				=> __( 'JS Combine', 'litespeed-cache' ),
