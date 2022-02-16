@@ -83,8 +83,8 @@ if ( ! $can_token ) {
 					<p><?php echo sprintf( __( 'There was a problem with retrieving your Domain Key. Please click the %s button to retry.', 'litespeed-cache' ), '<code>' . $apply_btn_txt . '</code>' ); ?></p>
 					<p><?php echo __( 'There are two reasons why we might not be able to communicate with your domain:', 'litespeed-cache' ); ?>:</p>
 					<p>1) <?php echo sprintf( __( 'The POST callback to %s failed.', 'litespeed-cache' ), '<code>' . home_url() . '/' . ( function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ) ) . '/litespeed/v1/token</code>' ); ?> </p>
-					<p>2) <?php echo sprintf( __( 'Our %s was not whitelisted.', 'litespeed-cache' ), __( 'Current Online Server IPs', 'litespeed-cache' ) ); ?></p>
-					<p><?php echo __( 'Please verify that your other plugins are not blocking REST API calls, whitelist our server IPs, or contact your server admin for assistance.', 'litespeed-cache' ); ?>:</p>
+					<p>2) <?php echo sprintf( __( 'Our %s was not allowlisted.', 'litespeed-cache' ), __( 'Current Online Server IPs', 'litespeed-cache' ) ); ?></p>
+					<p><?php echo __( 'Please verify that your other plugins are not blocking REST API calls, allowlist our server IPs, or contact your server admin for assistance.', 'litespeed-cache' ); ?>:</p>
 				</div>
 			<?php endif; ?>
 
