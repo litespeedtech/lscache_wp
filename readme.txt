@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.5 - Feb 2022 =
 * 🌱**Page Optimize** Localization is back.
 * **Guest** Fixed organic traffic issue as different browsers may fail to set `document.referrer`.
+* **Image Optimize** Large wp_postmeta table compatibility when gathering images. (Thanks to Thomas Stroemme)
 * 🐞**Page Optimize** Fixed a potential CSS/JS 404 issue when the record is existing but marked as expired.
 * **ESI** `LITESPEED_ESI_OFF` will affect API `litespeed_esi_url` too.
 * **Guest** Guest Mode auto detection and show error on setting page if being blocked. (Ruikai)
@@ -261,8 +262,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **DB Optimize** Reduced default subsites count from 10 to 3 under Network Admin -> DB Optimize page to avoid timeout.
 * **Cloud** Fixed potential `lack_of_token` error when requesting domain key when local summary value is not array due to historic reason.
 * **Cloud** Fixed PHP fatal error when meeting frequency issue under CLI. (Dean Taylor #Issue410)
+* **Avatar** Force gravatar cache refresh in browsers and on CDN (rafaucau #PR430)
 * **API** New filter `litespeed_purge_ucss` to purge a single page UCSS. (#376681)
 * **API** New filter `litespeed_ucss_per_pagetype` for UCSS per page type generation. (Ankit)
+* **GUI** Updated wording. (kebbet #PR437 #PR435)
 * **3rd** Excluded `WP Statistics` from inline JS optimize. (Ryan D)
 * **3rd** API filter `litespeed_3rd_aelia_cookies` for Aelia CurrencySwitcher.
 * **Media** Updated image lazyload library to 17.5.0.

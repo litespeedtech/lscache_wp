@@ -131,12 +131,11 @@ class Img_Optm extends Base {
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND b.meta_key = '_wp_attachment_metadata'
 				AND c.id IS NULL
 			ORDER BY a.ID DESC
 			LIMIT %d
