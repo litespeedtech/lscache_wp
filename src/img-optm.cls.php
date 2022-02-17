@@ -1477,11 +1477,10 @@ class Img_Optm extends Base {
 
 		$q = "SELECT COUNT(*)
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND b.meta_key = '_wp_attachment_metadata'
 			";
 		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
 		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
@@ -1491,12 +1490,11 @@ class Img_Optm extends Base {
 		if ( $tb_existed ) {
 			$q = "SELECT COUNT(*)
 				FROM `$wpdb->posts` a
-				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 				LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 				WHERE a.post_type = 'attachment'
 					AND a.post_status = 'inherit'
 					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-					AND b.meta_key = '_wp_attachment_metadata'
 					AND c.id IS NULL
 				";
 			$groups_not_gathered = $wpdb->get_var( $q );
