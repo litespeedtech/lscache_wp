@@ -101,6 +101,9 @@ ksort( $roles );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_ucss_exc</code>' ); ?>
 				</span>
+				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to generate one single UCSS for the pages which page type is %2$s while other page types still per URL.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_ucss_per_pagetype', function(){return get_post_type() == 'page';} );</code>", '<code>page</code>' ); ?></font>
+				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to bypass UCSS for the pages which page type is %2$s.', 'litespeed-cache' ), "<code>add_action( 'litespeed_optm', function(){get_post_type() == 'page' && do_action( 'litespeed_conf_force', 'optm-ucss', false );});</code>", '<code>page</code>' ); ?></font>
+
 			</div>
 		</td>
 	</tr>
