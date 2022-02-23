@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.5 - Feb 24 2022 =
+= 4.5 - Feb 23 2022 =
 * 🌱**Page Optimize** Localization is back.
 * **Guest** Fixed organic traffic issue as different browsers may fail to set `document.referrer`.
 * **Image Optimize** Improved wp_postmeta table compatibility when gathering images. (Thanks to Thomas Stroemme)
