@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.9.1
-Stable tag: 4.5
+Stable tag: 4.5.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,6 +249,9 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.5.0.1 - Feb 24 2022 =
+* 🔥🐞**Media** Fixed an issue where lazy-loaded images would disappear when using custom CSS image loading effects.
 
 = 4.5 - Feb 23 2022 =
 * 🌱**Page Optimize** Localization is back.

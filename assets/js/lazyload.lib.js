@@ -43,7 +43,7 @@
     data_poster: "poster",
     class_applied: "applied",
     class_loading: "litespeed-loading",
-    class_loaded: "litespeed-loaded",
+    class_loaded: "litespeed-loaded", // https://docs.litespeedtech.com/lscache/lscwp/pageopt/#lazy-load-images
     class_error: "error",
     class_entered: "entered",
     class_exited: "exited",
