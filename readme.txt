@@ -250,6 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.6 - Mar 2022 =
+* 🐞**API** Filter `litespeed_ucss_per_pagetype` for UCSS will now apply to CSS Combine too to avoid UCSS failure. (Ankit)
+
 = 4.5.0.1 - Feb 24 2022 =
 * 🔥🐞**Media** Fixed an issue where lazy-loaded images would disappear when using custom CSS image loading effects.
 

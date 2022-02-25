@@ -77,7 +77,16 @@ class Optimizer extends Root {
 		// Before generated, don't know the contented hash filename yet, so used url hash as tmp filename
 		$file_path_prefix = $this->_build_filepath_prefix( $file_type );
 
-		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . ( is_404() ? '404' : md5( $request_url ) ) . '.' . $file_type;
+		$url_tag = $request_url;
+		$url_tag_for_file = md5( $request_url );
+		if ( is_404() ) {
+			$url_tag_for_file = $url_tag = '404';
+		}
+		elseif ( $file_type == 'css' && apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
+			$url_tag_for_file = $url_tag = Utility::page_type();
+		}
+
+		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . $url_tag_for_file . '.' . $file_type;
 
 		// Create tmp file to avoid conflict
 		$tmp_static_file = $static_file . '.tmp';
@@ -123,7 +132,7 @@ class Optimizer extends Root {
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
-		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
 
 		return array( $filecon_md5 . '.' . $file_type, $file_type );
 	}
