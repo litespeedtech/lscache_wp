@@ -53,6 +53,10 @@ class Media extends Root {
 			}
 		}
 
+		if ( $this->conf( Base::O_MEDIA_LAZY ) ) {
+			add_filter( 'wp_lazy_loading_enabled', '__return_false' );
+		}
+
 		/**
 		 * Replace gravatar
 		 * @since  3.0
