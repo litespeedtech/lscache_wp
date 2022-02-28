@@ -93,6 +93,10 @@ $avatar_queue = Avatar::cls()->queue_count();
 			<div class="litespeed-desc">
 				<?php echo __( 'Localize external resources.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
+
+				<br /><font class="litespeed-danger">
+					🚨 <?php echo sprintf( __( 'Please thoroughly test all items in %s to ensure they function as expected.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_LOCALIZE_DOMAINS ) . '</code>' ); ?>
+				</font>
 			</div>
 		</td>
 	</tr>
@@ -123,6 +127,10 @@ $avatar_queue = Avatar::cls()->queue_count();
 				<br /><?php echo __( 'Non-`.js` file extensions will be ignored.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-files' ); ?>
+
+				<br /><font class="litespeed-danger">
+					🚨 <?php echo __( 'Please thoroughly test each JS file you add to ensure it functions as expected.', 'litespeed-cache' ); ?>
+				</font>
 
 			</div>
 		</td>

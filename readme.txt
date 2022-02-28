@@ -251,6 +251,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.6 - Mar 2022 =
+* **GUI** Added warning to notice users when enabling `Localize Resources` feature, each localized JS will require a thorough test.
+* **Conf** Removed Google related scripts from default `Localization Files` value.
 * **Media** Auto disabled WP core lazyloading when enabled image lazyload option. (VR51 #Issue440)
 * 🐞**API** Filter `litespeed_ucss_per_pagetype` for UCSS will now apply to CSS Combine too to avoid UCSS failure. (Ankit)
 
