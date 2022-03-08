@@ -276,8 +276,9 @@ class Router extends Base {
 	 * Get user role
 	 *
 	 * @since  1.6.2
+	 * @since 4.2 update to support single user multiple roles scenarios
 	 */
-	public static function get_role( $uid = null ) {
+	public static function get_roles( $uid = null ) {
 		if ( defined( 'LITESPEED_WP_ROLE' ) ) {
 			return LITESPEED_WP_ROLE;
 		}
@@ -286,18 +287,17 @@ class Router extends Base {
 			$uid = get_current_user_id();
 		}
 
-		$role = false;
+		$roles = array();
 		if ( $uid ) {
 			$user = get_userdata( $uid );
 			if ( isset( $user->roles ) && is_array( $user->roles ) ) {
-				$tmp = array_values( $user->roles );
-				$role = array_shift( $tmp );
+				$roles = array_values( $user->roles );
 			}
 		}
-		Debug2::debug( '[Router] get_role: ' . $role );
+		Debug2::debug( '[Router] get_roles: ' . var_export( $roles, true ) );
 
-		if ( ! $role ) {
-			return $role;
+		if ( ! $roles ) {
+			return $roles;
 			// Guest user
 			Debug2::debug( '[Router] role: guest' );
 
@@ -308,11 +308,11 @@ class Router extends Base {
 			 * @since  2.9.8 Won't assign const if in login process
 			 */
 			if ( substr_compare( wp_login_url(), $GLOBALS[ 'pagenow' ], -strlen( $GLOBALS[ 'pagenow' ] ) ) === 0 ) {
-				return $role;
+				return $roles;
 			}
 		}
 
-		define( 'LITESPEED_WP_ROLE', $role );
+		define( 'LITESPEED_WP_ROLE', $roles );
 
 		return LITESPEED_WP_ROLE;
 	}

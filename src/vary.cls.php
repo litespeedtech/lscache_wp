@@ -468,16 +468,21 @@ class Vary extends Root {
 			Debug2::debug( '[Vary] uid: ' . $uid );
 		}
 
-		// get user's group id
-		$role = Router::get_role( $uid );
+		// get user's group ids
+		$roles = Router::get_roles( $uid );
 
-		if ( $uid > 0 && $role ) {
+		if ( $uid > 0 && $roles ) {
 			$vary[ 'logged-in' ] = 1;
 
-			// parse role group from settings
-			if ( $role_group = $this->in_vary_group( $role ) ) {
-				$vary[ 'role' ] = $role_group;
+			// parse roles groups from settings
+			$groups = array();
+			foreach ( $roles as $role ) {
+				if ( $role_group = $this->in_vary_group( $role ) ) {
+					$groups[] = $role_group;
+				}
 			}
+			asort( array_unique( $groups, SORT_NUMERIC ), SORT_NUMERIC );
+			$vary[ 'role' ] = implode(",", $groups );
 
 			// Get admin bar set
 			// see @_get_admin_bar_pref()
