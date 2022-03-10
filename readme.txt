@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.6 - Mar 2022 =
+* **Page Optimize** JS Delay now has better compatibility.
 * **Cache** Guest Mode will respect Cache excludes settings.
 * **GUI** Added warning to notice users when enabling `Localize Resources` feature, each localized JS will require a thorough test.
 * **Conf** Removed Google related scripts from default `Localization Files` value.
