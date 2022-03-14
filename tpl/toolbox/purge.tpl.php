@@ -113,7 +113,7 @@ if ( $this->has_cache_folder( 'avatar' ) ) {
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),
-	'desc'	=> __( 'Purge the cache entries created by this plugin except for Critical CSS & LQIP caches', 'litespeed-cache' ),
+	'desc'	=> __( 'Purge the cache entries created by this plugin except for Critical CSS & Unique CSS & LQIP caches', 'litespeed-cache' ),
 	'icon'	=> 'purge-all',
 	'title_cls'	=> 'litespeed-warning',
 	'newline'	=> true,
