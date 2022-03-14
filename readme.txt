@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.9.1
+Tested up to: 5.9.2
 Stable tag: 4.5.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** JS Delay now has better compatibility.
 * **Cache** Guest Mode will respect Cache excludes settings.
 * **GUI** Added warning to notice users when enabling `Localize Resources` feature, each localized JS will require a thorough test.
+* **GUI** Fixed a PHP Deprecated warning for Mobile Cache UA setting on PHP v8.1+. (jrmora)
 * **Conf** Removed Google related scripts from default `Localization Files` value.
 * **Media** Auto disabled WP core lazyloading when enabled image lazyload option. (VR51 #Issue440)
 * 🐞**API** Filter `litespeed_ucss_per_pagetype` for UCSS will now apply to CSS Combine too to avoid UCSS failure. (Ankit)

@@ -21,20 +21,7 @@ class Utility extends Root {
 	 * @return bool True for valid rules, false otherwise.
 	 */
 	public static function syntax_checker( $rules ) {
-		$success = true;
-
-		set_error_handler( 'litespeed_exception_handler' );
-
-		try {
-			preg_match( self::arr2regex( $rules ), null );
-		}
-		catch ( \ErrorException $e ) {
-			$success = false;
-		}
-
-		restore_error_handler();
-
-		return $success;
+		return preg_match( self::arr2regex( $rules ), '' ) !== false;
 	}
 
 	/**
