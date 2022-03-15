@@ -347,7 +347,7 @@ class Vary extends Root {
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
 		 * @since 1.6.5
 		 */
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
+		if ( isset( $_SERVER["REQUEST_METHOD"] ) && $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
 			Debug2::debug( '[Vary] can_change_vary bypassed due to method not get/post' );
 			return false;
 		}
