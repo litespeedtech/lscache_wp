@@ -74,6 +74,15 @@ class Optimize extends Base {
 		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$this->cfg_js_defer = 2;
 		}
+		if ( $this->cfg_js_defer == 2 ) {
+			add_filter( 'litespeed_optm_cssjs', function( $con, $file_type ){
+				if ( $file_type == 'js' ) {
+					$con = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con );
+					// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
+				}
+				return $con;
+			}, 20, 2 );
+		}
 
 		// To remove emoji from WP
 		if ( $this->conf( self::O_OPTM_EMOJI_RM ) ) {
@@ -732,14 +741,16 @@ class Optimize extends Base {
 
 		$content = $this->__optimizer->optm_snippet( $content, $file_type, ! $is_min, $src );
 
+		$filepath_prefix = $this->_build_filepath_prefix( $file_type );
+
 		// Save to file
-		$filename = $file_type . '/' . md5( $this->remove_query_strings( $src ) ) . '.' . $file_type;
-		$static_file = LITESPEED_STATIC_DIR . '/' . $filename;
+		$filename = $filepath_prefix . md5( $this->remove_query_strings( $src ) ) . '.' . $file_type;
+		$static_file = LITESPEED_STATIC_DIR . $filename;
 		File::save( $static_file, $content, true );
 
 		// QS is required as $src may contains version info
 		$qs_hash = substr( md5( $src ), -5 );
-		return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
+		return LITESPEED_STATIC_URL . "$filename?ver=$qs_hash";
 	}
 
 	/**
