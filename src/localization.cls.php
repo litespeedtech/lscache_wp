@@ -27,7 +27,7 @@ class Localization extends Base {
 	 * @since  3.3
 	 */
 	public function serve_static( $uri ) {
-		$url = 'https://' . $uri;
+		$url = base64_decode( $uri );
 
 		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			// wp_redirect( $url );
@@ -36,7 +36,7 @@ class Localization extends Base {
 
 		if ( substr( $url, -3 ) !== '.js' ) {
 			// wp_redirect( $url );
-			exit( 'Not supported' );
+			// exit( 'Not supported ' . $uri );
 		}
 
 		$match = false;
@@ -65,7 +65,8 @@ class Localization extends Base {
 				continue;
 			}
 
-			if ( strpos( $url, $domain ) !== 0 ) {
+			// if ( strpos( $url, $domain ) !== 0 ) {
+			if ( $url != $domain ) {
 				continue;
 			}
 
@@ -75,7 +76,7 @@ class Localization extends Base {
 
 		if ( ! $match ) {
 			// wp_redirect( $url );
-			exit( 'Not supported' );
+			exit( 'Not supported2' );
 		}
 
 		header( 'Content-Type: application/javascript' );
@@ -181,7 +182,7 @@ class Localization extends Base {
 				continue;
 			}
 
-			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . substr( $domain, 8 ), $content );
+			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode( $domain ), $content );
 		}
 
 		return $content;

@@ -124,8 +124,7 @@ $avatar_queue = Avatar::cls()->queue_count();
 
 				<br /><?php echo sprintf( __( 'Comments are supported. Start a line with a %s to turn it into a comment line.', 'litespeed-cache' ), '<code>#</code>' ); ?>
 
-				<br /><?php echo __( 'Non-`.js` file extensions will be ignored.', 'litespeed-cache' ); ?>
-				<?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
+				<br /><?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-files' ); ?>
 
 				<br /><font class="litespeed-danger">
