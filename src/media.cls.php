@@ -654,6 +654,9 @@ class Media extends Root {
 		if ( $pathinfo = Utility::is_internal_file( $src ) ) {
 			$src = $pathinfo[ 0 ];
 		}
+		elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
+			return false;
+		}
 
 		$sizes = getimagesize( $src );
 
