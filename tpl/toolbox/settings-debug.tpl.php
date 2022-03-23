@@ -5,6 +5,18 @@ defined( 'WPINC' ) || exit;
 $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETWORK : false );
 ?>
 
+<h3 class="litespeed-title-short">
+	<?php echo __('Debug Helpers', 'litespeed-cache'); ?>
+</h3>
+
+<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=before_optm'; ?>" class="button button-success" target="_blank">
+	<?php echo __( 'View Site Before Optimization', 'litespeed-cache' ); ?>
+</a>
+
+<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=' . Core::ACTION_QS_NOCACHE; ?>" class="button button-success" target="_blank">
+	<?php echo __( 'View Site Before Cache', 'litespeed-cache' ); ?>
+</a>
+
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Debug Settings', 'litespeed-cache'); ?>

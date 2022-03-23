@@ -250,6 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 4.7 - Apr 2022 =
+* **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
+
 = 4.6 - Mar 29 2022 =
 * **Page Optimize** Improved compatibility for JS Delay.
 * 🐞**Page Optimize** Fixed an issue for network subsites that occurred when only CSS/JS Minify are enabled.
