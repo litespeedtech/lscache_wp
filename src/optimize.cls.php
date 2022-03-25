@@ -784,7 +784,7 @@ class Optimize extends Base {
 		// Add cache tag in case later file deleted to avoid lscache served stale non-existed files @since 4.4.1
 		Tag::add( Tag::TYPE_MIN . '.' . $filename );
 
-		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS) ), -5 );//xx
+		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS) ), -5 );
 		// As filename is alreay realted to filecon md5, no need QS anymore
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		return LITESPEED_STATIC_URL . $filepath_prefix . $filename . '?ver=' . $qs_hash;
