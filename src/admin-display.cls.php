@@ -86,6 +86,29 @@ class Admin_Display extends Base {
 		else {
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		}
+
+		// Append meta box
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+
+	}
+
+	/**
+	 * Regsiter meta box
+	 * @since 4.7
+	 */
+	public function add_meta_boxes( $post_type ) {
+		if ( apply_filters( 'litespeed_bypass_metabox', false, $post_type ) ) {
+			return;
+		}
+		add_meta_box( 'litespeed_meta_boxes', __( 'LiteSpeed Options', 'litespeed-cache' ), array( $this, 'meta_box_options' ), $post_type, 'side', 'core' );
+	}
+
+	/**
+	 * Show meta box content
+	 * @since 4.7
+	 */
+	public function meta_box_options() {
+		require_once LSCWP_DIR . 'tpl/inc/metabox.php';
 	}
 
 	/**
@@ -838,7 +861,7 @@ class Admin_Display extends Base {
 			$title_off = __( 'OFF', 'litespeed-cache' );
 		}
 		$cls = $checked ? 'primary' : 'default litespeed-toggleoff';
-		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default' data-litespeed_crawler_id='$id' >
+		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default' data-litespeed_toggle_id='$id' >
 				<input name='$id' type='hidden' value='$checked' />
 				<div class='litespeed-toggle-group'>
 					<label class='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>$title_on</label>

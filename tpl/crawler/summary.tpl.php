@@ -116,7 +116,7 @@ if($seconds > 0):
 	</p>
 
 
-	<table class="wp-list-table widefat striped">
+	<table class="wp-list-table widefat striped" data-crawler-list>
 		<thead><tr >
 			<th scope="col">#</th>
 			<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
