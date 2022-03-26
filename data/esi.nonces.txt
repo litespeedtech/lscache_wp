@@ -25,6 +25,7 @@
 
 # Caldera Forms
 # caldera_forms_front_*
+# caldera_form_*
 
 
 ## Predefined list of ESI nonces:
