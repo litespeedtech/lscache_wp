@@ -128,7 +128,7 @@ $break_arr = array(
 			<?php $this->build_input( $id, null, null, 'time' ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify the time to purge the "%s" list.', 'litespeed-cache' ), __( 'Scheduled Purge URLs', 'litespeed-cache' ) ); ?>
-				<?php echo sprintf( __( 'Current server time is %s.', 'litespeed-cache' ), '<code>' . date( 'H:i:s' ) . '</code>' ); ?>
+				<?php echo sprintf( __( 'Current server time is %s.', 'litespeed-cache' ), '<code>' . date( 'H:i:s', time() + LITESPEED_TIME_OFFSET ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>
