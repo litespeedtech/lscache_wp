@@ -44,7 +44,7 @@ class Optimizer extends Root {
 			$obj = new Lib\HTML_MIN( $content, $options );
 			$content_final = $obj->process();
 			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
-				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->';
+				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ) . ' -->';
 			}
 			return $content_final;
 
