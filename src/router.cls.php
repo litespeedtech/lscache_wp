@@ -599,11 +599,11 @@ class Router extends Base {
 	 * Verify nonce
 	 *
 	 * @since 1.1.0
-	 * @access private
+	 * @access public
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function verify_nonce( $action ) {
+	public function verify_nonce( $action ) {
 		if ( ! isset( $_REQUEST[ Router::NONCE ] ) || ! wp_verify_nonce( $_REQUEST[ Router::NONCE ], $action ) ) {
 			return false;
 		}

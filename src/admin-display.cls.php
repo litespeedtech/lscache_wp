@@ -32,6 +32,8 @@ class Admin_Display extends Base {
 	const RULECONFLICT_ON = 'ExpiresDefault_1';
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0';
 
+	const POST_NONCE_ACTION = 'post_nonce_action';
+
 	protected $messages = array();
 	protected $default_settings = array();
 	protected $_is_network_admin = false;
@@ -89,6 +91,7 @@ class Admin_Display extends Base {
 
 		// Append meta box
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
 
 	}
 
@@ -109,6 +112,32 @@ class Admin_Display extends Base {
 	 */
 	public function meta_box_options() {
 		require_once LSCWP_DIR . 'tpl/inc/metabox.php';
+	}
+
+	/**
+	 * Save settings
+	 * @since 4.7
+	 */
+	public function save_meta_box_settings( $post_id, $post ) {
+		global $pagenow;
+
+		if ( $pagenow != 'post.php' || ! $post || ! is_object( $post ) ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! Router::verify_nonce( self::POST_NONCE_ACTION ) ) {
+			return;
+		}
+
+		if ( isset( $_POST[ 'litespeed_no_cache' ] ) )
+			update_post_meta( $post_id, 'litespeed_no_cache', true );
+		else
+			delete_post_meta( $post_id, 'litespeed_no_cache' );
+
 	}
 
 	/**
