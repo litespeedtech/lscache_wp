@@ -13,6 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin_Display extends Base {
+	const LOG_TAG = '👮';
+
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
@@ -40,6 +42,7 @@ class Admin_Display extends Base {
 	protected $_is_multisite = false;
 
 	private $_btn_i = 0;
+	private $_postmeta_settings = array();
 
 	/**
 	 * Initialize the class and set its properties.
@@ -90,9 +93,12 @@ class Admin_Display extends Base {
 		}
 
 		// Append meta box
+		$this->_postmeta_settings = array(
+			'litespeed_no_cache' => __( 'Disable Cache', 'litespeed-cache' ),
+			'litespeed_no_image_lazy' => __( 'Disable Image Lazyload', 'litespeed-cache' ),
+		);
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
-
 	}
 
 	/**
@@ -121,6 +127,8 @@ class Admin_Display extends Base {
 	public function save_meta_box_settings( $post_id, $post ) {
 		global $pagenow;
 
+		self::debug( 'Maybe save post [post_id] ' . $post_id );
+
 		if ( $pagenow != 'post.php' || ! $post || ! is_object( $post ) ) {
 			return;
 		}
@@ -133,10 +141,15 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		if ( isset( $_POST[ 'litespeed_no_cache' ] ) )
-			update_post_meta( $post_id, 'litespeed_no_cache', true );
-		else
-			delete_post_meta( $post_id, 'litespeed_no_cache' );
+		self::debug( 'Saving post [post_id] ' . $post_id );
+
+		foreach ( $this->_postmeta_settings as $k => $v ) {
+			if ( isset( $_POST[ $k ] ) )
+				update_post_meta( $post_id, $k, true );
+			else
+				delete_post_meta( $post_id, $k );
+		}
+
 
 	}
 

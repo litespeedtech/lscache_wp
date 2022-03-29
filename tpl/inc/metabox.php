@@ -4,16 +4,15 @@ defined( 'WPINC' ) || exit;
 
 wp_nonce_field( self::POST_NONCE_ACTION, Router::NONCE );
 
-$settings = array(
-	array( __( 'Disable Cache', 'litespeed-cache' ), 'litespeed_no_cache', true ),
-	array( __( 'Disable Image Lazyload', 'litespeed-cache' ), 'litespeed_no_image_lazy', true ),
-);
+$post_id = get_the_ID();
 
-foreach ( $settings as $v ) {
-	echo '<div style="display:flex;margin-bottom:10px;align-items: center;gap: 2ch;justify-content: space-between;"><label for="' . $v[ 1 ] . '">' . $v[ 0 ] . '</label>';
+foreach ( $this->_postmeta_settings as $k => $v ) {
+	$checked = get_post_meta( $post_id, $k, true );
+
+	echo '<div style="display:flex;margin-bottom:10px;align-items: center;gap: 2ch;justify-content: space-between;"><label for="' . $k . '">' . $v . '</label>';
 
 	echo '
-			<input class="litespeed-tiny-toggle" id="' . $v[ 1 ] . '" type="checkbox" value="1" ' . ( $v[ 2 ] ? 'checked' : '' ) . ' />
+			<input class="litespeed-tiny-toggle" id="' . $k . '" name="' . $k . '" type="checkbox" value="1" ' . ( $checked ? 'checked' : '' ) . ' />
 		';
 
 	echo '</div>';

@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 4.7 - Apr 2022 =
+* 🌱**Cache** Page cache control option in page editor. (@denisgomesfranco)
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 
 = 4.6 - Mar 29 2022 =

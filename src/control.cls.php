@@ -600,6 +600,20 @@ class Control extends Root {
 			// return;
 		}
 
+		if ( is_preview() ) {
+			self::set_nocache( 'preview page' );
+			return;
+		}
+
+		// Check if has metabox non-cacheable setting or not
+		if ( is_singular() ) {
+			$post_id = get_the_ID();
+			if ( $post_id && get_post_meta( $post_id, 'litespeed_no_cache', true ) ) {
+				self::set_nocache( 'per post metabox setting' );
+				return;
+			}
+		}
+
 		// Check if URI is forced public cache
 		$excludes = $this->conf( Base::O_CACHE_FORCE_PUB_URI );
 		$hit =  Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true );
@@ -642,11 +656,6 @@ class Control extends Root {
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
 			Debug2::debug( '[Ctrl] not cacheable after api_control' );
-			return;
-		}
-
-		if ( is_preview() ) {
-			self::set_nocache( 'preview page' );
 			return;
 		}
 
