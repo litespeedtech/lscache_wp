@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Cache** Page cache control option in page editor. (@denisgomesfranco)
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
+* **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
 
 = 4.6 - Mar 29 2022 =
 * **Page Optimize** Improved compatibility for JS Delay.
