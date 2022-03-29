@@ -465,7 +465,7 @@ class Core extends Root {
 		// Hook to modify buffer after
 		$buffer = apply_filters('litespeed_buffer_after', $buffer);
 
-		Debug2::debug( "End response\n--------------------------------------------------------------------------------\n" );
+		Debug2::ended();
 
 		return $buffer;
 	}

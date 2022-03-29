@@ -38,7 +38,16 @@ class Debug2 extends Root {
 		if ( $this->conf( Base::O_DEBUG_LEVEL ) ) {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true );
 		}
+	}
 
+	/**
+	 * End call of one request process
+	 * @since 4.7
+	 * @access public
+	 */
+	public static function ended() {
+		self::debug( 'Response headers', headers_list() );
+		self::debug( "End response\n--------------------------------------------------------------------------------\n" );
 	}
 
 	/**
