@@ -10,13 +10,11 @@ $settings = array(
 );
 
 foreach ( $settings as $v ) {
-	echo '<div class="components-panel__row"><label style="margin-right:10px;" for="' . $v[ 1 ] . '">' . $v[ 0 ] . '</label>';
+	echo '<div style="display:flex;margin-bottom:10px;align-items: center;gap: 2ch;justify-content: space-between;"><label for="' . $v[ 1 ] . '">' . $v[ 0 ] . '</label>';
 
-	echo '<span class="components-form-toggle is-checked">
-			<input class="components-form-toggle__input" id="' . $v[ 1 ] . '" type="checkbox" ' . ( $v[ 2 ] ? 'checked' : '' ) . ' />
-			<span class="components-form-toggle__track"></span>
-			<span class="components-form-toggle__thumb"></span>
-		</span>';
+	echo '
+			<input class="litespeed-tiny-toggle" id="' . $v[ 1 ] . '" type="checkbox" value="1" ' . ( $v[ 2 ] ? 'checked' : '' ) . ' />
+		';
 
 	echo '</div>';
 
