@@ -13,6 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin extends Root {
+	const LOG_TAG = '👮';
+
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
 
 	/**
@@ -63,7 +65,8 @@ class Admin extends Root {
 	 * @access public
 	 */
 	public function admin_init() {
-		Control::set_nocache( 'Admin page' );
+		self::debug( 'No cache due to Admin page' );
+		defined( 'DONOTCACHEPAGE' ) || define( 'DONOTCACHEPAGE', true );
 
 		// Hook attachment upload
 		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {

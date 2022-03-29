@@ -13,7 +13,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin_Display extends Base {
-	const LOG_TAG = '👮';
+	const LOG_TAG = '👮‍♀️';
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
