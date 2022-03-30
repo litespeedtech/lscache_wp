@@ -606,12 +606,9 @@ class Control extends Root {
 		}
 
 		// Check if has metabox non-cacheable setting or not
-		if ( is_singular() ) {
-			$post_id = get_the_ID();
-			if ( $post_id && get_post_meta( $post_id, 'litespeed_no_cache', true ) ) {
-				self::set_nocache( 'per post metabox setting' );
-				return;
-			}
+		if ( $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
+			self::set_nocache( 'per post metabox setting' );
+			return;
 		}
 
 		// Check if URI is forced public cache
