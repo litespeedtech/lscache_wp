@@ -255,6 +255,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
+* **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
+* **GUI** GUI added `litespeed_media_ignore_remote_missing_sizes` API description.
+* **CCSS** Fixed an unexpected CCSS bypassed bug when `CSS Combine` is OFF while `UCSS Inline` is ON. (Ruikai)
+* **Debug** Added resposne headers to debug log. (Kevin)
 
 = 4.6 - Mar 29 2022 =
 * **Page Optimize** Improved compatibility for JS Delay.
