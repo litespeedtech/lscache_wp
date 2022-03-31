@@ -641,6 +641,11 @@ class Crawler extends Root {
 		}
 
 		if ( stripos( $header, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
+			// If is from DIVI, taken as miss
+			if ( defined( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE' ) && LITESPEED_CRAWLER_IGNORE_NONCACHEABLE ) {
+				return 'M';
+			}
+
 			return 'N'; // Blacklist
 		}
 

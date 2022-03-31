@@ -258,6 +258,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
 * **GUI** GUI added `litespeed_media_ignore_remote_missing_sizes` API description.
+* **Crawler** Divi pages will not be added to non-cacheable pages anymore after 1st time visit due to DIVI generating CCSS purpose. (miketemby)
 * **CCSS** Fixed an unexpected CCSS bypassed bug when `CSS Combine` is OFF while `UCSS Inline` is ON. (Ruikai)
 * **Debug** Added resposne headers to debug log. (Kevin)
 

@@ -29,6 +29,10 @@ class Divi_Theme_Builder
 	public static function detect()
 	{
 		if ( ! defined( 'ET_CORE' ) ) return;
+
+		// As DIVI will set page to non-cacheable for the 1st visit to generate CCSS, will need to ignore that no-cache for crawler
+		defined( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE' ) || define( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE', true );
+
 		/**
 		 * Add contact form to nonce
 		 * @since  2.9.7.1 #475461
