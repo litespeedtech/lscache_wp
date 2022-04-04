@@ -210,7 +210,7 @@ class ESI extends Root {
 		}
 
 		$silence = false;
-		if ( ! empty( $atts[ '_ls_silence' ] ) && ( $atts[ '_ls_silence' ] ) ) {
+		if ( ! empty( $atts[ '_ls_silence' ] ) ) {
 			$silence = true;
 		}
 
