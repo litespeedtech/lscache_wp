@@ -469,6 +469,7 @@ class Media extends Root {
 		$cfg_trim_noscript = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_NOSCRIPT_RM );
 
 		if ( $cfg_lazy ) {
+			add_filter( 'litespeed_media_lazy_img_excludes', array( $this->cls( 'Metabox' ), 'lazy_img_excludes' ) );
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
 			$html_list_ori = $html_list;
 		}

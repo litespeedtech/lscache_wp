@@ -34,15 +34,12 @@ class Admin_Display extends Base {
 	const RULECONFLICT_ON = 'ExpiresDefault_1';
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0';
 
-	const POST_NONCE_ACTION = 'post_nonce_action';
-
 	protected $messages = array();
 	protected $default_settings = array();
 	protected $_is_network_admin = false;
 	protected $_is_multisite = false;
 
 	private $_btn_i = 0;
-	private $_postmeta_settings = array();
 
 	/**
 	 * Initialize the class and set its properties.
@@ -92,65 +89,7 @@ class Admin_Display extends Base {
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		}
 
-		// Append meta box
-		$this->_postmeta_settings = array(
-			'litespeed_no_cache' => __( 'Disable Cache', 'litespeed-cache' ),
-			'litespeed_no_image_lazy' => __( 'Disable Image Lazyload', 'litespeed-cache' ),
-		);
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
-	}
-
-	/**
-	 * Regsiter meta box
-	 * @since 4.7
-	 */
-	public function add_meta_boxes( $post_type ) {
-		if ( apply_filters( 'litespeed_bypass_metabox', false, $post_type ) ) {
-			return;
-		}
-		add_meta_box( 'litespeed_meta_boxes', __( 'LiteSpeed Options', 'litespeed-cache' ), array( $this, 'meta_box_options' ), $post_type, 'side', 'core' );
-	}
-
-	/**
-	 * Show meta box content
-	 * @since 4.7
-	 */
-	public function meta_box_options() {
-		require_once LSCWP_DIR . 'tpl/inc/metabox.php';
-	}
-
-	/**
-	 * Save settings
-	 * @since 4.7
-	 */
-	public function save_meta_box_settings( $post_id, $post ) {
-		global $pagenow;
-
-		self::debug( 'Maybe save post [post_id] ' . $post_id );
-
-		if ( $pagenow != 'post.php' || ! $post || ! is_object( $post ) ) {
-			return;
-		}
-
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		if ( ! Router::verify_nonce( self::POST_NONCE_ACTION ) ) {
-			return;
-		}
-
-		self::debug( 'Saving post [post_id] ' . $post_id );
-
-		foreach ( $this->_postmeta_settings as $k => $v ) {
-			if ( isset( $_POST[ $k ] ) )
-				update_post_meta( $post_id, $k, true );
-			else
-				delete_post_meta( $post_id, $k );
-		}
-
-
+		$this->cls( 'Metabox' )->register_settings();
 	}
 
 	/**
