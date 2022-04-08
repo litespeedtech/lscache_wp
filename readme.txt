@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 4.7 - Apr 2022 =
 * 🌱**VPI** Viewport Images feature in post editor metabox.
 * 🌱**Cache** Page cache control option in page editor. (@denisgomesfranco)
+* **Purge** Fixed a potential bug that purged frontend page when commenting in a post that is not public viewable. (Kevin)
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
 * **Media** Now can disable lazyload in page editor.
