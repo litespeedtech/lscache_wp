@@ -100,6 +100,7 @@ class ESI extends Root {
 		 *
 		 * 	1. `cache` attribute is optional, default to 'public,no-vary'.
 		 * 	2. `ttl` attribute is optional, default is your public TTL setting.
+		 *  3. `_ls_silence` attribute is optional, default is false.
 		 *
 		 * @since  2.8
 		 * @since  2.8.1 Check is_admin for Elementor compatibility #726013
@@ -208,10 +209,15 @@ class ESI extends Root {
 			unset( $atts[ 'cache' ] );
 		}
 
+		$silence = false;
+		if ( ! empty( $atts[ '_ls_silence' ] ) ) {
+			$silence = true;
+		}
+
 		do_action( 'litespeed_esi_shortcode-' . $atts[ 0 ] );
 
 		// Show ESI link
-		return $this->sub_esi_block( 'esi', 'esi-shortcode', $atts, $cache );
+		return $this->sub_esi_block( 'esi', 'esi-shortcode', $atts, $cache, $silence );
 	}
 
 	/**
@@ -423,7 +429,7 @@ class ESI extends Root {
 		}
 
 		if ( $silence ) {
-			// Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
+			// Don't add comment to esi block ( original for nonce used in tag property data-nonce='esi_block' )
 			$params[ '_ls_silence' ] = true;
 		}
 
