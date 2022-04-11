@@ -155,6 +155,19 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = Base::O_DEBUG_EXC_STRINGS; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent any debug log of certain strings.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
 
 <?php

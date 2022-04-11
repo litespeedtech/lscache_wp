@@ -109,6 +109,7 @@ class Base extends Root {
 	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs';
 	const O_DEBUG_INC 					= 'debug-inc';
 	const O_DEBUG_EXC 					= 'debug-exc';
+	const O_DEBUG_EXC_STRINGS 			= 'debug-exc_strings';
 
 	## -------------------------------------------------- ##
 	## --------------	   DB Optm  	----------------- ##
@@ -394,6 +395,7 @@ class Base extends Root {
 		self::O_DEBUG_COLLAPS_QS 		=> false,
 		self::O_DEBUG_INC 				=> array(),
 		self::O_DEBUG_EXC 				=> array(),
+		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
 		// DB Optm
 		self::O_DB_OPTM_REVISIONS_MAX 	=> 0,
@@ -573,6 +575,7 @@ class Base extends Root {
 		self::O_DEBUG_COLLAPS_QS 		=> false,
 		self::O_DEBUG_INC 				=> array(),
 		self::O_DEBUG_EXC 				=> array(),
+		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 
