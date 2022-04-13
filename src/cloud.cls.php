@@ -89,8 +89,12 @@ class Cloud extends Base {
 	const TYPE_GEN_KEY 			= 'gen_key';
 	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
+	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
+	const TYPE_CDN_SETUP 		= 'cdn_setup';
+	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
 
 	private $_api_key;
+	private $_setup_token;
 	protected $_summary;
 
 	/**
@@ -100,6 +104,7 @@ class Cloud extends Base {
 	 */
 	public function __construct() {
 		$this->_api_key = $this->conf( self::O_API_KEY );
+		$this->_setup_token = $this->conf( self::O_QC_TOKEN );
 		$this->_summary = self::get_summary();
 	}
 
@@ -1082,6 +1087,227 @@ class Cloud extends Base {
 	}
 
 	/**
+	 * Callback for approval of api key after validated token and gen key from QUIC.cloud
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function cdn_status() {
+		// Validate token hash first
+
+		if ( empty( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
+			$this->_summary[ 'cdn_setup_err' ] = __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' );
+			self::save_summary();
+			return self::err( 'lack_of_param' );
+		}
+
+		$this->_update_cdn_status($_POST[ 'success' ], $_POST[ 'result' ]);
+
+		return self::ok();
+	}
+
+	public function refresh_cdn_status() {
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot refresh CDN status, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+		];
+		$response = wp_remote_get(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnstatus', $req_args);
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to refresh cdn setup status: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		$isSuccess = 1;
+		$msg = '';
+		if (!$json['success']) {
+			$isSuccess = 0;
+		} else if (isset($json['info']['errors'])) {
+			$isSuccess = 0;
+			$errs = [];
+			foreach ($json['info']['errors'] as $err) {
+				$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+			}
+			$msg = implode('<br>', $errs);
+		} else if (isset($json['info']['messages'])) {
+			$msg = implode('<br>', $json['info']['messages']);
+		}
+
+		$this->_update_cdn_status($isSuccess, [ '_msg' => $msg ]);
+	}
+
+	private function _update_cdn_status($isSuccess, $result)
+	{
+
+		if ( 1 != $isSuccess ) {
+
+			$this->_summary[ 'cdn_setup_err' ] = $result[ '_msg' ];
+			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $result[ '_msg' ] );
+		} else if ( isset($result[ 'nameservers' ] ) ) {
+			if (isset($this->_summary['cdn_setup_err'])) {
+				unset($this->_summary['cdn_setup_err']);
+			}
+			$this->_summary[ 'is_linked' ] = 1;
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ] ) );
+			Admin_Display::succeed( '🎊 ' . __( 'Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache' ) . $result[ 'nameservers' ] );
+		} else if ( isset($result[ '_msg' ] ) ) {
+			Admin_Display::succeed( $result[ '_msg' ] );
+		} else {
+			Admin_Display::succeed( __( 'CDN Setup is running.', 'litespeed-cache' ) );
+		}
+		self::save_summary();
+	}
+
+	private function _reset_cdn_setup() {
+
+		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_ts' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+		if ( isset( $this->_summary[ 'is_linked' ] ) ) {
+			unset( $this->_summary[ 'is_linked' ] );
+		}
+		self::save_summary();
+
+		$this->_setup_token = '';
+		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '', self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
+		return self::ok();
+	}
+
+	/**
+	 * If can link the domain to QC user or not
+	 *
+	 * @since  3.0
+	 */
+	public function has_cdn_setup_token() {
+		return !empty( $this->_setup_token );
+	}
+
+	/**
+	 * Get QC user setup token
+	 *
+	 * @since  3.0
+	 */
+	private function _qc_setup_cdn_link() {
+		if ( $this->has_cdn_setup_token() ) {
+			return;
+		}
+
+		$data = array(
+			'site_url'		=> home_url(),
+			// XXX FIXME: how to forward tab?
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
+		);
+
+		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
+		exit;
+	}
+
+	/**
+	 * Update setup token status if is a redirected back from QC
+	 *
+	 * @since  3.0
+	 */
+	public function update_setup_token_status() {
+		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'token' ] ) ) {
+			return;
+		}
+
+		$this->_setup_token = $_GET[ 'token' ];
+		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
+
+		// Drop QS
+		unset($_GET['qc_res']);
+		unset($_GET['token']);
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&token=" . sanitize_key( $_GET[ 'token' ] ) . "', '' ) );</script>";
+	}
+
+	public function init_cdn_setup() {
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot set up CDN, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+			'body' => json_encode([
+				'site_url' => home_url(),
+				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+				'server_ip'	=> $this->conf( self::O_SERVER_IP ),
+			]),
+		];
+		$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdn', $req_args);
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to run cdn setup: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		if (1 != $json['success']) {
+			Admin_Display::error( __( 'Start CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
+			return;
+		}
+
+		$json = $json['result'];
+
+		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+
+		// Save token option
+		if ( ! empty( $json[ 'token' ] ) ) {
+			$this->_summary[ 'token' ] = $json[ 'token' ];
+			$this->_summary[ 'token_ts' ] = time();
+			$this->_summary[ 'cdn_setup_ts' ] = time();
+			if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
+				unset( $this->_summary[ 'apikey_ts' ] );
+			}
+		}
+		self::save_summary();
+
+		// This is a ok msg
+		if ( ! empty( $json[ 'messages' ] ) ) {
+			self::debug( '_msg: ' . $json[ 'messages' ] );
+
+			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json[ 'messages' ] );
+			Admin_Display::info( $msg );
+			return;
+		}
+
+		self::debug( '✅ Successfully init CDN setup.' );
+	}
+
+	/**
 	 * Check if this visit is from cloud or not
 	 *
 	 * @since  3.0
@@ -1176,6 +1402,18 @@ class Cloud extends Base {
 
 			case self::TYPE_LINK:
 				$this->_link_to_qc();
+				break;
+
+			case self::TYPE_CDN_SETUP_LINK:
+				$this->_qc_setup_cdn_link();
+				break;
+
+			case self::TYPE_CDN_SETUP:
+				$this->init_cdn_setup();
+				break;
+
+			case self::TYPE_CDN_SETUP_STATUS:
+				$this->refresh_cdn_status();
 				break;
 
 			case self::TYPE_SYNC_USAGE:
