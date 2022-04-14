@@ -531,6 +531,11 @@ class Cloud extends Base {
 			return true;
 		}
 
+		if ( $service_tag == self::SVC_D_SYNC_CONF && $this->_setup_token && ! $this->_api_key ) {
+			self::debug( "Skip sync conf if API key is not available yet." );
+			return false;
+		}
+
 		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
 		$timestamp_tag = 'curr_request.';
@@ -1135,7 +1140,7 @@ class Cloud extends Base {
 		$json = json_decode( $response[ 'body' ], true );
 
 		$isSuccess = 1;
-		$msg = '';
+		$result = [];
 		if (!$json['success']) {
 			$isSuccess = 0;
 		} else if (isset($json['info']['errors'])) {
@@ -1144,12 +1149,12 @@ class Cloud extends Base {
 			foreach ($json['info']['errors'] as $err) {
 				$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
 			}
-			$msg = implode('<br>', $errs);
+			$result['_msg'] = implode('<br>', $errs);
 		} else if (isset($json['info']['messages'])) {
-			$msg = implode('<br>', $json['info']['messages']);
+			$result['_msg'] = implode('<br>', $json['info']['messages']);
 		}
 
-		$this->_update_cdn_status($isSuccess, [ '_msg' => $msg ]);
+		$this->_update_cdn_status($isSuccess, $result);
 	}
 
 	private function _update_cdn_status($isSuccess, $result)
