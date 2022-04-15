@@ -1172,6 +1172,15 @@ class Cloud extends Base {
 			$this->_summary[ 'is_linked' ] = 1;
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ] ) );
 			Admin_Display::succeed( '🎊 ' . __( 'Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache' ) . $result[ 'nameservers' ] );
+		} else if ( isset($result[ 'done' ] ) ) {
+			if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+				unset( $this->_summary[ 'cdn_setup_err' ] );
+			}
+			$this->_summary[ 'cdn_setup_done_ts' ] = time();
+			self::save_summary();
+
+			$this->_setup_token = '';
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
 		} else if ( isset($result[ '_msg' ] ) ) {
 			Admin_Display::succeed( $result[ '_msg' ] );
 		} else {
@@ -1222,6 +1231,9 @@ class Cloud extends Base {
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_ts' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_done_ts' ] );
 		}
 		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_err' ] );
