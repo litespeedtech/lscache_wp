@@ -36,8 +36,11 @@ if ( ! $lscwp_dir || ! file_exists( $data_file ) || ( ! file_exists( $lib_file )
 	}
 }
 else {
+	if ( ! LSCWP_OBJECT_CACHE ) { // Disable cache
+		wp_using_ext_object_cache(false);
+	}
 	// Init object cache & LSCWP
-	if ( file_exists( $lib_file ) ) {
+	else if ( file_exists( $lib_file ) ) {
 		require_once $lib_file;
 	}
 }
