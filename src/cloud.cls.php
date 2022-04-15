@@ -92,6 +92,7 @@ class Cloud extends Base {
 	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
 	const TYPE_CDN_SETUP 		= 'cdn_setup';
 	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
+	const TYPE_CDN_RESET		= 'cdn_reset';
 
 	private $_api_key;
 	private $_setup_token;
@@ -1180,6 +1181,44 @@ class Cloud extends Base {
 	}
 
 	private function _reset_cdn_setup() {
+		$token = $this->_setup_token;
+
+		if (!empty($token)) {
+			$req_args = [
+				'headers' => [
+					'Authorization' => 'bearer ' . $token,
+					'Content-Type' => 'application/json',
+				],
+				'body' => json_encode([
+					'site_url' => home_url(),
+					'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+				]),
+			];
+			$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnreset', $req_args);
+			if ( is_wp_error( $response ) ) {
+
+				$error_message = $response->get_error_message();
+				self::debug( 'failed to reset cdn setup: ' . $error_message );
+				$this->_summary['cdn_setup_err'] = $error_message;
+				self::save_summary();
+				Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			} else {
+				$json = json_decode( $response[ 'body' ], true );
+
+				if (1 != $json['success']) {
+					Admin_Display::error( __( 'Reset CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
+				} else {
+					$json = $json['info'];
+					if (isset($json['errors'])) {
+						$errs = [];
+						foreach ($json['errors'] as $err) {
+							$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+						}
+						Admin_Display::error( __( 'CDN Setup Reset Error', 'litespeed-cache' ) . ': ' . implode('<br>', $errs) );
+					}
+				}
+			}
+		}
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_ts' ] );
@@ -1193,7 +1232,8 @@ class Cloud extends Base {
 		self::save_summary();
 
 		$this->_setup_token = '';
-		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '', self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
+		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '', self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
+		Admin_Display::succeed( __( 'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' ) );
 		return self::ok();
 	}
 
@@ -1419,6 +1459,10 @@ class Cloud extends Base {
 
 			case self::TYPE_CDN_SETUP_STATUS:
 				$this->refresh_cdn_status();
+				break;
+
+			case self::TYPE_CDN_RESET:
+				$this->_reset_cdn_setup();
 				break;
 
 			case self::TYPE_SYNC_USAGE:

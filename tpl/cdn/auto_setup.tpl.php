@@ -37,7 +37,6 @@ if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
 				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
 			<?php else: ?>
 				<?php echo __( 'Account is linked!', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success' ); ?>
 			<?php endif; ?>
 
 			<h3 class="litespeed-title-section">
@@ -82,6 +81,16 @@ if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
 					?>
 				</ul>
 			<?php } ?>
+
+			<h3 class="litespeed-title-section">
+				<?php echo __( 'Action', 'litespeed-cache' ); ?>
+			</h3>
+
+
+			<?php if ( $has_setup_token ) : ?>
+				<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success' ); ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_RESET ), __( 'Reset CDN Setup', 'litespeed-cache' ), true, 'button litespeed-btn-success ' ); ?>
+			<?php endif; ?>
 		</div>
 
 	</div>
