@@ -261,6 +261,8 @@ class Base extends Root {
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
 	const O_CDN_MAPPING 		= 'cdn-mapping';
 	const O_CDN_ATTR 			= 'cdn-attr';
+	const O_QC_TOKEN 			= 'qc-token';
+	const O_QC_NAMESERVERS		= 'qc-nameservers';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
@@ -311,6 +313,8 @@ class Base extends Root {
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
+		self::O_QC_TOKEN,
+		self::O_QC_NAMESERVERS,
 	);
 
 	protected static $_default_options = array(
@@ -529,6 +533,9 @@ class Base extends Root {
 		self::O_CDN_CLOUDFLARE_ZONE => '',
 		self::O_CDN_MAPPING 		=> array(),
 		self::O_CDN_ATTR 			=> array(),
+
+		self::O_QC_TOKEN 			=> '',
+		self::O_QC_NAMESERVERS		=> '',
 
 	);
 
@@ -875,6 +882,7 @@ class Base extends Root {
 			self::O_CDN_CLOUDFLARE_KEY,
 			self::O_OBJECT_PSWD,
 			self::O_API_KEY,
+			self::O_QC_TOKEN,
 		);
 
 		return in_array( $id, $check_ids );

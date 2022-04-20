@@ -77,6 +77,13 @@ class REST extends Root {
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
+		// CDN setup callback notification
+		register_rest_route( 'litespeed/v1', '/cdn_status', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'cdn_status' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
@@ -169,6 +176,15 @@ class REST extends Root {
 	 */
 	public function apikey() {
 		return $this->cls( 'Cloud' )->save_apikey();
+	}
+
+	/**
+	 * Endpoint for QC to notify plugin of CDN setup status update.
+	 *
+	 * @since  3.0
+	 */
+	public function cdn_status() {
+		return $this->cls( 'Cloud' )->cdn_status();
 	}
 
 	/**

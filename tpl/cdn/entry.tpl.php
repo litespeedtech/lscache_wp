@@ -5,6 +5,7 @@ defined( 'WPINC' ) || exit ;
 $menu_list = array(
 	'settings'			=> __( 'CDN Settings', 'litespeed-cache' ),
 	'manage'			=> __( 'Manage', 'litespeed-cache' ),
+	'auto_setup'		=> __( 'Auto QUIC.cloud Setup', 'litespeed-cache' ),
 ) ;
 
 ?>
