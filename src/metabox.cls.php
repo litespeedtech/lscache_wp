@@ -85,10 +85,8 @@ class Metabox extends Root {
 		self::debug( 'Saving post [post_id] ' . $post_id );
 
 		foreach ( $this->_postmeta_settings as $k => $v ) {
-			if ( isset( $_POST[ $k ] ) )
-				update_post_meta( $post_id, $k, $_POST[ $k ] );
-			else
-				delete_post_meta( $post_id, $k );
+			$val = isset( $_POST[ $k ] ) ? $_POST[ $k ] : false;
+			$this->save( $post_id, $k, $val );
 		}
 	}
 
@@ -96,16 +94,43 @@ class Metabox extends Root {
 	 * Load setting per post
 	 * @since 4.7
 	 */
-	public function setting( $conf ) {
+	public function setting( $conf, $post_id = false ) {
 		// Check if has metabox non-cacheable setting or not
-		if ( is_singular() ) {
-			$post_id = get_the_ID();
-			if ( $post_id && $val = get_post_meta( $post_id, $conf, true ) ) {
-				return $val;
+		if ( ! $post_id ) {
+			if ( is_singular() ) {
+				$post_id = get_the_ID();
+
 			}
 		}
 
-		return false;
+		if ( $post_id && $val = get_post_meta( $post_id, $conf, true ) ) {
+			return $val;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Save a metabox value
+	 * @since 4.7
+	 */
+	public function save( $post_id, $name, $val, $is_append = false ) {
+		// Load existing data if has set
+		if ( $is_append ) {
+			$existing_data = $this->setting( $name, $post_id );
+			if ( $existing_data ) {
+				$existing_data = Utility::sanitize_lines( $existing_data, 'uri' );
+				$val = Utility::sanitize_lines( $val, 'uri' );
+				$val = array_unique( array_merge( $val, $existing_data ) );
+			}
+		}
+
+		if ( $val ) {
+			update_post_meta( $post_id, $name, $val );
+		}
+		else {
+			delete_post_meta( $post_id, $k );
+		}
 	}
 
 	/**
@@ -113,14 +138,19 @@ class Metabox extends Root {
 	 * @since 4.7
 	 */
 	public function lazy_img_excludes( $list ) {
-		$is_mobile = wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false );
+		$is_mobile = $this->_separate_mobile();
 		$excludes = $this->setting( $is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list' );
-		$excludes = Utility::sanitize_lines( $excludes, 'uri' );
+		if ( $excludes !== null ) {
+			$excludes = Utility::sanitize_lines( $excludes, 'uri' );
+			if ( $excludes ) {
+				return array_merge( $list, $excludes );
+			}
 
-		if ( ! $excludes ) {
 			return $list;
 		}
 
-		return array_merge( $list, $excludes );
+		$this->cls( 'VPI' )->add_to_queue();
+
+		return $list;
 	}
 }
