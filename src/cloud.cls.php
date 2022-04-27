@@ -20,6 +20,7 @@ class Cloud extends Base {
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
 	const SVC_UCSS 				= 'ucss';
+	const SVC_VPI 				= 'vpi';
 	const SVC_LQIP 				= 'lqip';
 	const SVC_IMG_OPTM			= 'img_optm';
 	const SVC_HEALTH			= 'health';
@@ -69,6 +70,7 @@ class Cloud extends Base {
 	public static $SERVICES_LOAD_CHECK = array(
 		self::SVC_CCSS,
 		self::SVC_UCSS,
+		self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_HEALTH,
 	);
@@ -78,6 +80,7 @@ class Cloud extends Base {
 		self::SVC_PAGE_OPTM,
 		self::SVC_CCSS,
 		self::SVC_UCSS,
+		self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_CDN,
 		self::SVC_HEALTH,
@@ -246,7 +249,7 @@ class Cloud extends Base {
 			$this->sync_usage();
 		}
 
-		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ) { // @since 4.2
+		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ) ) ) { // @since 4.2
 			$service = self::SVC_PAGE_OPTM;
 		}
 
@@ -737,7 +740,7 @@ class Cloud extends Base {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
-							$usage_svc_tag = in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ? self::SVC_PAGE_OPTM : $service;
+							$usage_svc_tag = in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ) ) ? self::SVC_PAGE_OPTM : $service;
 							$this->_summary[ 'usage.' . $usage_svc_tag ] = $json[ '_carry_on' ][ $v ];
 							break;
 
