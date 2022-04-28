@@ -799,6 +799,66 @@ class Cloud extends Base {
 		return $json;
 	}
 
+	private function _req_rest_api($api, $body = [])
+	{
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot request REST API, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+		];
+		if (!empty($body)) {
+			$req_args['body'] = json_encode($body);
+
+			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
+		} else {
+			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
+		}
+
+		return $this->_parse_rest_response($response);
+	}
+
+	private function _parse_rest_response($response)
+	{
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to request REST API: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud REST Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		if (!$json['success']) {
+			if (isset($json['info']['errors'])) {
+				$errs = [];
+				foreach ($json['info']['errors'] as $err) {
+					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+				}
+				$error_message = implode('<br>', $errs);
+			} else {
+				$error_message = 'Unknown error, contact QUIC.cloud support.';
+			}
+			$this->_summary[ 'cdn_setup_err' ] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud REST API returned error: ', 'litespeed-cache' ) . $error_message );
+			return;
+		}
+
+		return $json;
+	}
+
 	/**
 	 * Show promo from cloud
 	 *
@@ -1101,71 +1161,42 @@ class Cloud extends Base {
 	public function cdn_status() {
 		// Validate token hash first
 
-		if ( empty( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
+		if ( !isset( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
 			$this->_summary[ 'cdn_setup_err' ] = __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' );
 			self::save_summary();
 			return self::err( 'lack_of_param' );
 		}
-
-		$this->_update_cdn_status($_POST[ 'success' ], $_POST[ 'result' ]);
+		if (!$_POST[ 'success' ])
+		{
+			$this->_summary[ 'cdn_setup_err' ] = $_POST[ 'result' ][ '_msg' ];
+			self::save_summary();
+			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $_POST[ 'result' ][ '_msg' ] );
+		} else {
+			$this->_update_cdn_status($_POST[ 'result' ]);
+		}
 
 		return self::ok();
 	}
 
 	public function refresh_cdn_status() {
 
-		$token = $this->_setup_token;
+		$json = $this->_req_rest_api('/user/cdn/status');
 
-		if (empty($token)) {
-
-			Admin_Display::error( __( 'Cannot refresh CDN status, no token saved.', 'litespeed-cache' ));
-			return;
-		}
-		$req_args = [
-			'headers' => [
-				'Authorization' => 'bearer ' . $token,
-				'Content-Type' => 'application/json',
-			],
-		];
-		$response = wp_remote_get(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnstatus', $req_args);
-		if ( is_wp_error( $response ) ) {
-
-			$error_message = $response->get_error_message();
-			self::debug( 'failed to refresh cdn setup status: ' . $error_message );
-			$this->_summary['cdn_setup_err'] = $error_message;
-			self::save_summary();
-			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+		if (!$json) {
 			return;
 		}
 
-		$json = json_decode( $response[ 'body' ], true );
-
-		$isSuccess = 1;
 		$result = [];
-		if (!$json['success']) {
-			$isSuccess = 0;
-		} else if (isset($json['info']['errors'])) {
-			$isSuccess = 0;
-			$errs = [];
-			foreach ($json['info']['errors'] as $err) {
-				$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
-			}
-			$result['_msg'] = implode('<br>', $errs);
-		} else if (isset($json['info']['messages'])) {
+		if (isset($json['info']['messages'])) {
 			$result['_msg'] = implode('<br>', $json['info']['messages']);
 		}
-
-		$this->_update_cdn_status($isSuccess, $result);
+		$this->_update_cdn_status($result);
 	}
 
-	private function _update_cdn_status($isSuccess, $result)
+	private function _update_cdn_status($result)
 	{
 
-		if ( 1 != $isSuccess ) {
-
-			$this->_summary[ 'cdn_setup_err' ] = $result[ '_msg' ];
-			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $result[ '_msg' ] );
-		} else if ( isset($result[ 'nameservers' ] ) ) {
+		if ( isset($result[ 'nameservers' ] ) ) {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);
 			}
@@ -1190,43 +1221,14 @@ class Cloud extends Base {
 	}
 
 	private function _reset_cdn_setup() {
-		$token = $this->_setup_token;
 
-		if (!empty($token)) {
-			$req_args = [
-				'headers' => [
-					'Authorization' => 'bearer ' . $token,
-					'Content-Type' => 'application/json',
-				],
-				'body' => json_encode([
-					'site_url' => home_url(),
-					'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
-				]),
+		if (!empty($this->_setup_token)) {
+			$data = [
+				'site_url' => home_url(),
+				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 			];
-			$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnreset', $req_args);
-			if ( is_wp_error( $response ) ) {
 
-				$error_message = $response->get_error_message();
-				self::debug( 'failed to reset cdn setup: ' . $error_message );
-				$this->_summary['cdn_setup_err'] = $error_message;
-				self::save_summary();
-				Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
-			} else {
-				$json = json_decode( $response[ 'body' ], true );
-
-				if (1 != $json['success']) {
-					Admin_Display::error( __( 'Reset CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
-				} else {
-					$json = $json['info'];
-					if (isset($json['errors'])) {
-						$errs = [];
-						foreach ($json['errors'] as $err) {
-							$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
-						}
-						Admin_Display::error( __( 'CDN Setup Reset Error', 'litespeed-cache' ) . ': ' . implode('<br>', $errs) );
-					}
-				}
-			}
+			$this->_req_rest_api('/user/cdn/reset', $data);
 		}
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
@@ -1270,8 +1272,7 @@ class Cloud extends Base {
 
 		$data = array(
 			'site_url'		=> home_url(),
-			// XXX FIXME: how to forward tab?
-			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-auto_cdn_setup' ),
 		);
 
 		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
@@ -1299,40 +1300,20 @@ class Cloud extends Base {
 
 	public function init_cdn_setup() {
 
-		$token = $this->_setup_token;
-
-		if (empty($token)) {
-
-			Admin_Display::error( __( 'Cannot set up CDN, no token saved.', 'litespeed-cache' ));
-			return;
-		}
-		$req_args = [
-			'headers' => [
-				'Authorization' => 'bearer ' . $token,
-				'Content-Type' => 'application/json',
-			],
-			'body' => json_encode([
-				'site_url' => home_url(),
-				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
-				'server_ip'	=> $this->conf( self::O_SERVER_IP ),
-			]),
+		$data = [
+			'site_url' => home_url(),
+			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
 		];
-		$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdn', $req_args);
-		if ( is_wp_error( $response ) ) {
+		$json = $this->_req_rest_api('/user/cdn/', $data);
 
-			$error_message = $response->get_error_message();
-			self::debug( 'failed to run cdn setup: ' . $error_message );
-			$this->_summary['cdn_setup_err'] = $error_message;
-			self::save_summary();
-			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+		if (!$json) {
 			return;
 		}
 
-		$json = json_decode( $response[ 'body' ], true );
-
-		if (1 != $json['success']) {
-			Admin_Display::error( __( 'Start CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
-			return;
+		$msg = '';
+		if (isset($json['info']['messages'])) {
+			$msg = implode('<br>', $json['info']['messages']);
 		}
 
 		$json = $json['result'];
@@ -1353,10 +1334,10 @@ class Cloud extends Base {
 		self::save_summary();
 
 		// This is a ok msg
-		if ( ! empty( $json[ 'messages' ] ) ) {
-			self::debug( '_msg: ' . $json[ 'messages' ] );
+		if ( ! empty( $msg ) ) {
+			self::debug( '_msg: ' . $msg );
 
-			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json[ 'messages' ] );
+			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $msg;
 			Admin_Display::info( $msg );
 			return;
 		}
