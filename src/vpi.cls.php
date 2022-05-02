@@ -8,6 +8,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class VPI extends Base {
+	const LOG_TAG = '[VPI]';
+
 	const TYPE_GEN = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
@@ -269,23 +271,6 @@ class VPI extends Base {
 		self::save_summary();
 
 		return true;
-	}
-
-	/**
-	 * Clear all waiting queues
-	 *
-	 * @since  4.7
-	 */
-	public function clear_q() {
-		$filepath_prefix = $this->_build_filepath_prefix( 'vpi' );
-		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
-
-		if ( file_exists( $static_path ) ) {
-			unlink( $static_path );
-		}
-
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
 	}
 
 	/**

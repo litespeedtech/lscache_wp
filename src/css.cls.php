@@ -165,7 +165,7 @@ class CSS extends Base {
 		$this->_queue[ $queue_k ] = array(
 			'url'			=> apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
-			'is_mobile'		=> $this->_separate_mobile_ccss(),
+			'is_mobile'		=> $this->_separate_mobile(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
@@ -255,7 +255,7 @@ class CSS extends Base {
 		$this->_queue[ $queue_k ] = array(
 			'url'			=> apply_filters( 'litespeed_ucss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
-			'is_mobile'		=> $this->_separate_mobile_ccss(),
+			'is_mobile'		=> $this->_separate_mobile(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
 			'uid'			=> $uid,
 			'vary'			=> $vary,
@@ -279,16 +279,6 @@ class CSS extends Base {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check if need to separate ccss for mobile
-	 *
-	 * @since  2.6.4
-	 * @access private
-	 */
-	private function _separate_mobile_ccss() {
-		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( self::O_CACHE_MOBILE );
 	}
 
 	/**

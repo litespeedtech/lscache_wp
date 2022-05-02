@@ -19,6 +19,16 @@ abstract class Root {
 	private static $_network_options = array();
 
 	/**
+	 * Check if need to separate ccss for mobile
+	 *
+	 * @since  4.7
+	 * @access protected
+	 */
+	protected function _separate_mobile() {
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( self::O_CACHE_MOBILE );
+	}
+
+	/**
 	 * Log a debug message.
 	 *
 	 * @since  4.4

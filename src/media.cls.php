@@ -467,9 +467,12 @@ class Media extends Root {
 		$cfg_iframe_lazy = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_IFRAME_LAZY );
 		$cfg_js_delay = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_JS_DEFER ) == 2;
 		$cfg_trim_noscript = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_NOSCRIPT_RM );
+		$cfg_vpi = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_VPI );
 
 		if ( $cfg_lazy ) {
-			add_filter( 'litespeed_media_lazy_img_excludes', array( $this->cls( 'Metabox' ), 'lazy_img_excludes' ) );
+			if ( $cfg_vpi ) {
+				add_filter( 'litespeed_media_lazy_img_excludes', array( $this->cls( 'Metabox' ), 'lazy_img_excludes' ) );
+			}
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
 			$html_list_ori = $html_list;
 		}

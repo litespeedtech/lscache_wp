@@ -203,6 +203,8 @@ class Base extends Root {
 	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc';
 	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc';
 	const O_MEDIA_LQIP_EXC						= 'media-lqip_exc';
+	const O_MEDIA_VPI							= 'media-vpi';
+	const O_MEDIA_VPI_CRON						= 'media-vpi_cron';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -483,6 +485,8 @@ class Base extends Root {
 		self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	=> array(),
 		self::O_MEDIA_LAZY_URI_EXC 					=> array(),
 		self::O_MEDIA_LQIP_EXC 						=> array(),
+		self::O_MEDIA_VPI 							=> false,
+		self::O_MEDIA_VPI_CRON						=> false,
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO 			=> false,
