@@ -38,10 +38,12 @@ if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
 				<?php echo __( 'Setup QUIC.cloud Account', 'litespeed-cache' ); ?>
 			</h3>
 
-			<?php if ( !$cdn_setup_done && !$has_setup_token ) : ?>
-				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
-			<?php else: ?>
+			<?php if ( $cdn_setup_done || $has_setup_token ) : ?>
 				<?php echo __( 'Account is linked!', 'litespeed-cache' ); ?>
+			<?php elseif ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
+			<?php else: ?>
+				<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
 			<?php endif; ?>
 
 			<h3 class="litespeed-title-section">

@@ -17,6 +17,7 @@ class Cloud extends Base {
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
 	const SVC_D_USAGE 			= 'd/usage';
+	const SVC_D_SETUP_TOKEN		= 'd/get_token';
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
 	const SVC_UCSS 				= 'ucss';
@@ -50,6 +51,7 @@ class Cloud extends Base {
 		self::API_REPORT,
 		// self::API_VER,
 		// self::API_BETA_TEST,
+		self::SVC_D_SETUP_TOKEN,
 	);
 
 	private static $WP_SVC_SET = array(
@@ -90,6 +92,7 @@ class Cloud extends Base {
 	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
+	const TYPE_CDN_SETUP_NOLINK	= 'cdn_setup_nolink';
 	const TYPE_CDN_SETUP 		= 'cdn_setup';
 	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
 	const TYPE_CDN_RESET		= 'cdn_reset';
@@ -1280,6 +1283,30 @@ class Cloud extends Base {
 	}
 
 	/**
+	 * Get QC user setup token
+	 *
+	 * @since  3.0
+	 */
+	private function _qc_setup_cdn_nolink() {
+		if ( $this->has_cdn_setup_token() ) {
+			return;
+		}
+
+		$data = array(
+			'site_url'		=> home_url(),
+		);
+
+		$json = self::post( self::SVC_D_SETUP_TOKEN, $data);
+
+		if (isset($json[ 'token' ])) {
+			$this->_summary[ 'cdn_setup_ts' ] = time();
+			self::save_summary();
+			$this->_setup_token = $json[ 'token' ];
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
+		}
+	}
+
+	/**
 	 * Update setup token status if is a redirected back from QC
 	 *
 	 * @since  3.0
@@ -1444,6 +1471,10 @@ class Cloud extends Base {
 
 			case self::TYPE_CDN_SETUP_LINK:
 				$this->_qc_setup_cdn_link();
+				break;
+
+			case self::TYPE_CDN_SETUP_NOLINK:
+				$this->_qc_setup_cdn_nolink();
 				break;
 
 			case self::TYPE_CDN_SETUP:
