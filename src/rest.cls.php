@@ -184,7 +184,7 @@ class REST extends Root {
 	 * @since  3.0
 	 */
 	public function cdn_status() {
-		return $this->cls( 'Cloud' )->cdn_status();
+		return $this->cls( 'Cloud' )->update_cdn_status();
 	}
 
 	/**

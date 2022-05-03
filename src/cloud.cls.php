@@ -93,9 +93,9 @@ class Cloud extends Base {
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
 	const TYPE_CDN_SETUP_NOLINK	= 'cdn_setup_nolink';
-	const TYPE_CDN_SETUP 		= 'cdn_setup';
+	const TYPE_CDN_SETUP_RUN	= 'cdn_setup';
 	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
-	const TYPE_CDN_RESET		= 'cdn_reset';
+	const TYPE_CDN_SETUP_RESET	= 'cdn_reset';
 
 	private $_api_key;
 	private $_setup_token;
@@ -1156,12 +1156,12 @@ class Cloud extends Base {
 	}
 
 	/**
-	 * Callback for approval of api key after validated token and gen key from QUIC.cloud
+	 * Callback for updating Auto CDN Setup status after run
 	 *
-	 * @since  3.0
+	 * @since  4.7
 	 * @access public
 	 */
-	public function cdn_status() {
+	public function update_cdn_status() {
 		// Validate token hash first
 
 		if ( !isset( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
@@ -1175,13 +1175,19 @@ class Cloud extends Base {
 			self::save_summary();
 			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $_POST[ 'result' ][ '_msg' ] );
 		} else {
-			$this->_update_cdn_status($_POST[ 'result' ]);
+			$this->_process_cdn_status($_POST[ 'result' ]);
 		}
 
 		return self::ok();
 	}
 
-	public function refresh_cdn_status() {
+	/**
+	 * Request an update on Auto CDN Setup status
+	 *
+	 * @since  4.7
+	 * @access private
+	 */
+	private function _qc_setup_cdn_refresh() {
 
 		$json = $this->_req_rest_api('/user/cdn/status');
 
@@ -1193,10 +1199,16 @@ class Cloud extends Base {
 		if (isset($json['info']['messages'])) {
 			$result['_msg'] = implode('<br>', $json['info']['messages']);
 		}
-		$this->_update_cdn_status($result);
+		$this->_process_cdn_status($result);
 	}
 
-	private function _update_cdn_status($result)
+	/**
+	 * Process the returned Auto CDN Setup status
+	 *
+	 * @since  4.7
+	 * @access private
+	 */
+	private function _process_cdn_status($result)
 	{
 
 		if ( isset($result[ 'nameservers' ] ) ) {
@@ -1204,7 +1216,7 @@ class Cloud extends Base {
 				unset($this->_summary['cdn_setup_err']);
 			}
 			$this->_summary[ 'is_linked' ] = 1;
-			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ] ) );
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ], self::O_CDN_QUIC => true ) );
 			Admin_Display::succeed( '🎊 ' . __( 'Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache' ) . $result[ 'nameservers' ] );
 		} else if ( isset($result[ 'done' ] ) ) {
 			if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
@@ -1223,7 +1235,13 @@ class Cloud extends Base {
 		self::save_summary();
 	}
 
-	private function _reset_cdn_setup() {
+	/**
+	 * Process the returned Auto CDN Setup status
+	 *
+	 * @since  4.7
+	 * @access private
+	 */
+	private function _qc_setup_cdn_reset() {
 
 		if (!empty($this->_setup_token)) {
 			$data = [
@@ -1249,15 +1267,15 @@ class Cloud extends Base {
 		self::save_summary();
 
 		$this->_setup_token = '';
-		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '', self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
+		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
 		Admin_Display::succeed( __( 'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' ) );
 		return self::ok();
 	}
 
 	/**
-	 * If can link the domain to QC user or not
+	 * If setup token already exists or not
 	 *
-	 * @since  3.0
+	 * @since  4.7
 	 */
 	public function has_cdn_setup_token() {
 		return !empty( $this->_setup_token );
@@ -1266,7 +1284,9 @@ class Cloud extends Base {
 	/**
 	 * Get QC user setup token
 	 *
-	 * @since  3.0
+	 * This method initiates a link to a QUIC.cloud account.
+	 *
+	 * @since  4.7
 	 */
 	private function _qc_setup_cdn_link() {
 		if ( $this->has_cdn_setup_token() ) {
@@ -1275,7 +1295,7 @@ class Cloud extends Base {
 
 		$data = array(
 			'site_url'		=> home_url(),
-			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-auto_cdn_setup' ),
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
 		);
 
 		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
@@ -1285,7 +1305,9 @@ class Cloud extends Base {
 	/**
 	 * Get QC user setup token
 	 *
-	 * @since  3.0
+	 * This method is used when the installation is already linked to an account.
+	 *
+	 * @since  4.7
 	 */
 	private function _qc_setup_cdn_nolink() {
 		if ( $this->has_cdn_setup_token() ) {
@@ -1309,9 +1331,9 @@ class Cloud extends Base {
 	/**
 	 * Update setup token status if is a redirected back from QC
 	 *
-	 * @since  3.0
+	 * @since  4.7
 	 */
-	public function update_setup_token_status() {
+	public function save_setuptoken() {
 		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'token' ] ) ) {
 			return;
 		}
@@ -1322,10 +1344,16 @@ class Cloud extends Base {
 		// Drop QS
 		unset($_GET['qc_res']);
 		unset($_GET['token']);
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&token=" . sanitize_key( $_GET[ 'token' ] ) . "', '' ) );</script>";
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&token=" . sanitize_key( $_GET[ 'token' ] ) . "', '' ) );
+		window.onload =  () => document.querySelector(\"a[href='#auto_setup']\").click()</script>";
 	}
 
-	public function init_cdn_setup() {
+	/**
+	 * Initiate or continue a QC CDN Setup.
+	 *
+	 * @since  4.7
+	 */
+	private function _qc_setup_cdn_run() {
 
 		$data = [
 			'site_url' => home_url(),
@@ -1369,7 +1397,7 @@ class Cloud extends Base {
 			return;
 		}
 
-		self::debug( '✅ Successfully init CDN setup.' );
+		self::debug( '✅ Successfully start CDN setup.' );
 	}
 
 	/**
@@ -1477,16 +1505,16 @@ class Cloud extends Base {
 				$this->_qc_setup_cdn_nolink();
 				break;
 
-			case self::TYPE_CDN_SETUP:
-				$this->init_cdn_setup();
+			case self::TYPE_CDN_SETUP_RUN:
+				$this->_qc_setup_cdn_run();
 				break;
 
 			case self::TYPE_CDN_SETUP_STATUS:
-				$this->refresh_cdn_status();
+				$this->_qc_setup_cdn_refresh();
 				break;
 
-			case self::TYPE_CDN_RESET:
-				$this->_reset_cdn_setup();
+			case self::TYPE_CDN_SETUP_RESET:
+				$this->_qc_setup_cdn_reset();
 				break;
 
 			case self::TYPE_SYNC_USAGE:

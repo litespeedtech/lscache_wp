@@ -120,8 +120,6 @@ class Admin_Display extends Base {
 
 			! $this->_is_network_admin && $this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' );
 
-			! $this->_is_network_admin && $this->_add_submenu( __( 'Auto QUIC.cloud CDN Setup', 'litespeed-cache' ), 'litespeed-auto_cdn_setup', 'show_menu_auto_cdn_setup' );
-
 			$this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' );
 
 			! $this->_is_network_admin && $this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' );
