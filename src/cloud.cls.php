@@ -1261,9 +1261,6 @@ class Cloud extends Base {
 		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_err' ] );
 		}
-		if ( isset( $this->_summary[ 'is_linked' ] ) ) {
-			unset( $this->_summary[ 'is_linked' ] );
-		}
 		self::save_summary();
 
 		$this->_setup_token = '';
