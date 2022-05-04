@@ -129,6 +129,10 @@ if ($cdn_setup_done_ts) {
 			<?php echo __( 'If it does not verify in 24 hours time, the CDN setup will mark the verification as failed.', 'litespeed-cache' ); ?>
 			<?php echo __( 'At that stage, you may re-start the verification process by pressing the Run CDN Setup button.', 'litespeed-cache' ); ?>
 		</p>
+	<?php } else { ?>
+		<p>
+			<?php echo __( 'This section will automatically populate once nameservers are configured for the site.', 'litespeed-cache' ); ?>
+		</p>
 	<?php } ?>
 
 <?php } ?>
