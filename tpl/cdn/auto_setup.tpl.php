@@ -71,8 +71,8 @@ if ($cdn_setup_done_ts) {
 </p>
 <ul>
 	<li>
-		<?php echo __( 'QUIC.cloud CDN/DNS does not support DNSSec.', 'litespeed-cache' ); ?>
-		<?php echo __( 'If you have this enabled for your domain, you must disable DNSSec to continue.', 'litespeed-cache' ); ?>
+		<?php echo __( 'QUIC.cloud CDN/DNS does not support DNSSEC.', 'litespeed-cache' ); ?>
+		<?php echo __( 'If you have this enabled for your domain, you must disable DNSSEC to continue.', 'litespeed-cache' ); ?>
 	</li>
 	<li>
 		<?php echo __( 'QUIC.cloud will detect most normal DNS entries.', 'litespeed-cache' ); ?>
