@@ -1225,6 +1225,9 @@ class Cloud extends Base {
 			if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
 				unset( $this->_summary[ 'cdn_setup_err' ] );
 			}
+			if ( isset( $this->_summary[ 'cdn_verify_msg' ] ) ) {
+				unset( $this->_summary[ 'cdn_verify_msg' ] );
+			}
 			$this->_summary[ 'cdn_setup_done_ts' ] = time();
 			self::save_summary();
 
@@ -1232,6 +1235,9 @@ class Cloud extends Base {
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
 		} else if ( isset($result[ '_msg' ] ) ) {
 			Admin_Display::succeed( $result[ '_msg' ] );
+			if ( $this->conf( Base::O_QC_NAMESERVERS )) {
+				$this->_summary[ 'cdn_verify_msg' ] = $result[ '_msg' ];
+			}
 		} else {
 			Admin_Display::succeed( __( 'CDN Setup is running.', 'litespeed-cache' ) );
 		}
@@ -1265,6 +1271,9 @@ class Cloud extends Base {
 		}
 		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_verify_msg' ] ) ) {
+			unset( $this->_summary[ 'cdn_verify_msg' ] );
 		}
 		self::save_summary();
 
@@ -1377,6 +1386,10 @@ class Cloud extends Base {
 
 		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
 			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+
+		if ( isset( $this->_summary[ 'cdn_verify_msg' ] ) ) {
+			unset( $this->_summary[ 'cdn_verify_msg' ] );
 		}
 
 		// Save token option

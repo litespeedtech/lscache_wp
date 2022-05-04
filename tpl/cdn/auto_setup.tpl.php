@@ -43,7 +43,14 @@ if ($cdn_setup_done_ts) {
 } else if ( ! empty( $cdn_setup_err ) ) {
 	$curr_status = '<span class="litespeed-label-danger litespeed-label-dashboard">' . __('PAUSED', 'litespeed-cache') . '</span>' . $cdn_setup_err;
 } else if ( $cdn_setup_ts > 0 ) {
-	$curr_status = '<span class="litespeed-label-info litespeed-label-dashboard">' . __('RUNNING', 'litespeed-cache') . '</span>';
+	if ( isset($nameservers) ) {
+		$curr_status = '<span class="litespeed-label-info litespeed-label-dashboard">' . __('VERIFYING', 'litespeed-cache') . '</span>';
+		if ( isset( $cloud_summary[ 'cdn_verify_msg' ])) {
+			$curr_status .= '<p>' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_verify_msg' ] . '</p>';
+		}
+	} else {
+		$curr_status = '<span class="litespeed-label-info litespeed-label-dashboard">' . __('RUNNING', 'litespeed-cache') . '</span>';
+	}
 	$apply_btn_txt = __( 'Refresh CDN Setup Status', 'litespeed-cache' );
 	$apply_btn_type = Cloud::TYPE_CDN_SETUP_STATUS;
 }
