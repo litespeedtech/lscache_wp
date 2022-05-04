@@ -772,6 +772,8 @@ class Cloud extends Base {
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
 				$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '' ) );
+				$this->_summary['is_linked'] = 0;
+				self::save_summary();
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
@@ -1140,6 +1142,8 @@ class Cloud extends Base {
 		}
 
 		if ( ! $this->_api_key ) {
+			$this->_summary[ 'is_linked' ] = 0;
+			self::save_summary();
 			return;
 		}
 
@@ -1162,7 +1166,6 @@ class Cloud extends Base {
 	 * @access public
 	 */
 	public function update_cdn_status() {
-		// Validate token hash first
 
 		if ( !isset( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
 			$this->_summary[ 'cdn_setup_err' ] = __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' );
@@ -1250,6 +1253,8 @@ class Cloud extends Base {
 			];
 
 			$this->_req_rest_api('/user/cdn/reset', $data);
+		} else {
+			Admin_Display::info( __( 'Notice: CDN Setup only reset locally. If resetting a successful setup, QUIC.cloud must be updated manually.', 'litespeed-cache'));;
 		}
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
