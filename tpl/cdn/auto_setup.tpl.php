@@ -146,7 +146,10 @@ if ($cdn_setup_done_ts) {
 </h3>
 
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) : ?>
-	<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
+	<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
 	<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
 	</a>
-	<?php endif; ?>
+	<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_DELETE ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
+	<?php echo __( 'Delete QUIC.cloud data', 'litespeed-cache' ); ?>
+	</a>
+<?php endif; ?>
