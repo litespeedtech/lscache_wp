@@ -30,26 +30,27 @@ if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
 	$cdn_setup_ts = 0;
 }
 
-$curr_status = '<span class="litespeed-label-warning litespeed-label-dashboard">' . __('NOT RUNNING', 'litespeed-cache') . '</span>';
+$curr_status = '<span class="litespeed-desc">' . __('Not running', 'litespeed-cache') . '</span>';
 $apply_btn_txt = __( 'Run CDN Setup', 'litespeed-cache' );
 $apply_btn_type = Cloud::TYPE_CDN_SETUP_RUN;
 $disabled = '';
 
 if ($cdn_setup_done_ts) {
-	$curr_status = '<span class="litespeed-label-success litespeed-label-dashboard">' . __('DONE', 'litespeed-cache') . '</span><p class="litespeed-description">Completed at ' . $cdn_setup_done_ts . '</p>';
+	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> ' . __('Done', 'litespeed-cache') . ' <span class="litespeed-desc litespeed-left10">Completed at ' . $cdn_setup_done_ts . '</span>';
 	$disabled = 'disabled';
 } else if (!$has_setup_token) {
 	$disabled = 'disabled';
 } else if ( ! empty( $cdn_setup_err ) ) {
-	$curr_status = '<span class="litespeed-label-danger litespeed-label-dashboard">' . __('PAUSED', 'litespeed-cache') . '</span>' . $cdn_setup_err;
+	$curr_status = '<span class="litespeed-warning dashicons dashicons-controls-pause"></span> ' . __('Paused', 'litespeed-cache');
+	$curr_status_subline = '<p class="litespeed-desc">' . $cdn_setup_err . '</p>';
 } else if ( $cdn_setup_ts > 0 ) {
 	if ( isset($nameservers) ) {
-		$curr_status = '<span class="litespeed-label-info litespeed-label-dashboard">' . __('VERIFYING', 'litespeed-cache') . '</span>';
+		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying', 'litespeed-cache');
 		if ( isset( $cloud_summary[ 'cdn_verify_msg' ])) {
-			$curr_status .= '<p>' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_verify_msg' ] . '</p>';
+			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_verify_msg' ] . '</p>';
 		}
 	} else {
-		$curr_status = '<span class="litespeed-label-info litespeed-label-dashboard">' . __('RUNNING', 'litespeed-cache') . '</span>';
+		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Running', 'litespeed-cache');
 	}
 	$apply_btn_txt = __( 'Refresh CDN Setup Status', 'litespeed-cache' );
 	$apply_btn_type = Cloud::TYPE_CDN_SETUP_STATUS;
@@ -71,7 +72,6 @@ if ($cdn_setup_done_ts) {
 <p>
 <?php echo __( 'After you set your nameservers, QUIC.cloud will detect the change and enable the CDN.', 'litespeed-cache' ); ?>
 </p>
-<br/>
 
 <p class="litespeed-desc">
 <?php echo __( 'Notes', 'litespeed-cache' ) . ':'; ?>
@@ -93,13 +93,15 @@ if ($cdn_setup_done_ts) {
 </h3>
 
 <?php if ( $cdn_setup_done_ts || $has_setup_token ) : ?>
-	<?php echo '<span class="litespeed-label-success litespeed-label-dashboard">' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
-	<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success' ); ?>
+	<p>
+		<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
+		<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Go to QUIC.cloud Dashboard', 'litespeed-cache' ), false, '' ); ?>
+	</p>
 <?php elseif ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
 	<p><?php echo __( 'Domain key and QUIC.cloud link detected.', 'litespeed-cache' ); ?></p>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?>
+	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
 <?php else: ?>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button button-primary' ); ?>
+	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
 <?php endif; ?>
 
 <h3 class="litespeed-title-section">
@@ -107,9 +109,16 @@ if ($cdn_setup_done_ts) {
 </h3>
 
 <p>
-	<?php echo $curr_status; ?>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
+	<span class="litespeed-inline"><?php echo $curr_status; ?></span>
 </p>
+
+<?php if ( isset ( $curr_status_subline ) ) { ?>
+	<?php echo $curr_status_subline; ?>
+<?php } ?>
+
+<div>
+	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
+</div>
 
 <?php if ( !$cdn_setup_done_ts ) { ?>
 
@@ -124,7 +133,7 @@ if ($cdn_setup_done_ts) {
 		<ul>
 			<?php
 			foreach ( $nameservers as $nameserver ) {
-				echo '<li>' . $nameserver . '</li>';
+				echo '<li><strong>' . $nameserver . '</strong></li>';
 			}
 			?>
 		</ul>
@@ -144,6 +153,15 @@ if ($cdn_setup_done_ts) {
 <h3 class="litespeed-title-section">
 	<?php echo __( 'Action', 'litespeed-cache' ); ?>
 </h3>
+-----------------------
+<div>
+	<?php if ( $has_setup_token || $cdn_setup_done_ts ) : ?>
+		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
+			<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
+		</a>
+	<?php endif; ?>
+</div>
+=======
 
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) : ?>
 	<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
@@ -153,3 +171,4 @@ if ($cdn_setup_done_ts) {
 	<?php echo __( 'Delete QUIC.cloud data', 'litespeed-cache' ); ?>
 	</a>
 <?php endif; ?>
+-----------------
