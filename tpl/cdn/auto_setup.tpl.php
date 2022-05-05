@@ -73,10 +73,10 @@ if ($cdn_setup_done_ts) {
 </p>
 <br/>
 
-<p>
+<p class="litespeed-desc">
 <?php echo __( 'Notes', 'litespeed-cache' ) . ':'; ?>
 </p>
-<ul>
+<ul class="litespeed-desc">
 	<li>
 		<?php echo __( 'QUIC.cloud CDN/DNS does not support DNSSEC.', 'litespeed-cache' ); ?>
 		<?php echo __( 'If you have this enabled for your domain, you must disable DNSSEC to continue.', 'litespeed-cache' ); ?>
@@ -94,24 +94,21 @@ if ($cdn_setup_done_ts) {
 
 <?php if ( $cdn_setup_done_ts || $has_setup_token ) : ?>
 	<?php echo '<span class="litespeed-label-success litespeed-label-dashboard">' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
+	<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success' ); ?>
 <?php elseif ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
 	<p><?php echo __( 'Domain key and QUIC.cloud link detected.', 'litespeed-cache' ); ?></p>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
+	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?>
 <?php else: ?>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button litespeed-btn-warning' ); ?>
+	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button button-primary' ); ?>
 <?php endif; ?>
 
 <h3 class="litespeed-title-section">
-	<?php echo __( 'Cdn Setup Status', 'litespeed-cache' ); ?>
+	<?php echo __( 'CDN Setup Status', 'litespeed-cache' ); ?>
 </h3>
 
-<?php
-?>
-<h4>
-	<?php echo __( 'Current Status', 'litespeed-cache' ); ?>
-</h4>
 <p>
 	<?php echo $curr_status; ?>
+	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
 </p>
 
 <?php if ( !$cdn_setup_done_ts ) { ?>
@@ -148,8 +145,8 @@ if ($cdn_setup_done_ts) {
 	<?php echo __( 'Action', 'litespeed-cache' ); ?>
 </h3>
 
-<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ), $apply_btn_txt, true, 'button litespeed-btn-primary ' . $disabled ); ?>
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) : ?>
-	<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Visit My Dashboard on QUIC.cloud', 'litespeed-cache' ), false, 'button litespeed-btn-success' ); ?>
-	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ), __( 'Reset CDN Setup', 'litespeed-cache' ), true, 'button litespeed-btn-success ' ); ?>
-<?php endif; ?>
+	<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
+	<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
+	</a>
+	<?php endif; ?>
