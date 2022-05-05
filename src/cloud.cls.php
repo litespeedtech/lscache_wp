@@ -96,6 +96,7 @@ class Cloud extends Base {
 	const TYPE_CDN_SETUP_RUN	= 'cdn_setup';
 	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
 	const TYPE_CDN_SETUP_RESET	= 'cdn_reset';
+	const TYPE_CDN_SETUP_DELETE	= 'cdn_delete';
 
 	private $_api_key;
 	private $_setup_token;
@@ -1250,7 +1251,7 @@ class Cloud extends Base {
 	 * @since  4.7
 	 * @access private
 	 */
-	private function _qc_setup_cdn_reset() {
+	private function _qc_setup_cdn_reset($delete) {
 
 		if (!empty($this->_setup_token)) {
 			$data = [
@@ -1258,7 +1259,15 @@ class Cloud extends Base {
 				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 			];
 
-			$this->_req_rest_api('/user/cdn/reset', $data);
+			if ($delete) {
+				$data['delete'] = 1;
+			}
+
+			$json = $this->_req_rest_api('/user/cdn/reset', $data);
+
+			if (!$json) {
+				return;
+			}
 		} else {
 			Admin_Display::info( __( 'Notice: CDN Setup only reset locally. If resetting a successful setup, QUIC.cloud must be updated manually.', 'litespeed-cache'));;
 		}
@@ -1529,7 +1538,11 @@ class Cloud extends Base {
 				break;
 
 			case self::TYPE_CDN_SETUP_RESET:
-				$this->_qc_setup_cdn_reset();
+				$this->_qc_setup_cdn_reset(false);
+				break;
+
+			case self::TYPE_CDN_SETUP_DELETE:
+				$this->_qc_setup_cdn_reset(true);
 				break;
 
 			case self::TYPE_SYNC_USAGE:
