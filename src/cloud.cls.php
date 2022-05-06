@@ -1219,6 +1219,9 @@ class Cloud extends Base {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);
 			}
+			if (isset($result[ 'summary' ])) {
+				$this->_summary[ 'cdn_dns_summary' ] = $result[ 'summary' ];
+			}
 			$this->_summary[ 'is_linked' ] = 1;
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ], self::O_CDN_QUIC => true ) );
 			Admin_Display::succeed( '🎊 ' . __( 'Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache' ) . $result[ 'nameservers' ] );
@@ -1283,6 +1286,9 @@ class Cloud extends Base {
 		}
 		if ( isset( $this->_summary[ 'cdn_verify_msg' ] ) ) {
 			unset( $this->_summary[ 'cdn_verify_msg' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_dns_summary' ] ) ) {
+			unset( $this->_summary[ 'cdn_dns_summary' ] );
 		}
 		self::save_summary();
 
