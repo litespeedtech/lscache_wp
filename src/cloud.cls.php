@@ -1269,7 +1269,7 @@ class Cloud extends Base {
 				return;
 			}
 		} else {
-			Admin_Display::info( __( 'Notice: CDN Setup only reset locally. If resetting a successful setup, QUIC.cloud must be updated manually.', 'litespeed-cache'));;
+			Admin_Display::info( __( 'Notice: CDN Setup only reset locally. If resetting a successful setup, QUIC.cloud must be updated manually.', 'litespeed-cache'));
 		}
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
