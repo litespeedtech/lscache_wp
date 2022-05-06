@@ -385,10 +385,20 @@ class Cloud extends Base {
 			return false;
 		}
 
+
 		// Ping closest cloud
 		$speed_list = array();
 		foreach ( $json[ 'list' ] as $v ) {
+			// Exclude possible failed 503 nodes
+			if ( ! empty( $this->_summary['disabled_node'] ) && ! empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400 ) {
+				continue;
+			}
 			$speed_list[ $v ] = Utility::ping( $v );
+		}
+
+		if ( ! $speed_list ) {
+			self::debug( 'nodes are in 503 failed nodes' );
+			return false;
 		}
 
 		$min = min( $speed_list );
@@ -648,6 +658,11 @@ class Cloud extends Base {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
 
+				// Tmp disabled this node from reusing in 1 day
+				if (empty($this->_summary['disabled_node'])) $this->_summary['disabled_node'] = array();
+				$this->_summary['disabled_node'][$server] = time();
+				self::save_summary();
+
 				// Force redetect node
 				self::debug( 'Node error, redetecting node [svc] ' . $service );
 				$this->detect_cloud( $service, true );
@@ -663,6 +678,11 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Tmp disabled this node from reusing in 1 day
+				if (empty($this->_summary['disabled_node'])) $this->_summary['disabled_node'] = array();
+				$this->_summary['disabled_node'][$server] = time();
+				self::save_summary();
 
 				// Force redetect node
 				self::debug( 'Node error, redetecting node [svc] ' . $service );

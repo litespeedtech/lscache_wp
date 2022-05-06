@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Stable tag: 4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 4.7 - Apr 2022 =
+= 4.7 - May 2022 =
 * 🌱**VPI** Viewport Images feature in post editor metabox.
 * 🌱**Cache** Page cache control option in page editor. (denisgomesfranco)
 * 🌱**Debug** New option under `Debug`: `Debug String Excludes`. (Hanna)
@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Purge** Fixed a potential bug that purged frontend page when commenting in a post that is not public viewable. (Kevin)
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
+* **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
 * **Media** Now can disable lazyload in page editor.
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
