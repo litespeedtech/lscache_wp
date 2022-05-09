@@ -260,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
 * **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
+* **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
 * **Media** Now can disable lazyload in page editor.
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
