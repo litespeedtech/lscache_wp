@@ -378,8 +378,8 @@ class Crawler extends Root {
 			return;
 		}
 
-		$load = sys_getloadavg();
-		$curload = 1;
+		$curload = sys_getloadavg();
+		// $curload = 1;
 
 		if ( $this->_cur_threads == -1 ) {
 			// init
