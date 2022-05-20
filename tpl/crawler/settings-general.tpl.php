@@ -145,9 +145,6 @@ $this->form_action();
 						<?php echo __('NOTE', 'litespeed-cache'); ?>:
 						<?php echo __( 'Server allowed max value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[ Base::ENV_CRAWLER_LOAD_LIMIT ]; ?></code>
 					</font>
-				<?php else : ?>
-					<?php $this->recommended($id); ?>
-
 				<?php endif; ?>
 
 				<br />
