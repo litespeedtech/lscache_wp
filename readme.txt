@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 4.7 - May 2022 =
 * 🌱**VPI** Viewport Images feature in post editor metabox.
+* 🌱**Page Optimize** Auto cache CSS/JS remote files when fetching in optimization (Lauren).
 * 🌱**Cache** Page cache control option in page editor. (denisgomesfranco)
 * 🌱**Debug** New option under `Debug`: `Debug String Excludes`. (Hanna)
 * **Object** Allow predefined `LSCWP_OBJECT_CACHE` to turn off Object Cache. (knutsp)
