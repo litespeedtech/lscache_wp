@@ -4,8 +4,8 @@ defined( 'WPINC' ) || exit;
 
 $__cloud = Cloud::cls();
 
-// This will drop QS param `qc_res` and `token` also
-$__cloud->save_setuptoken();
+// This will drop QS param `qc_res` `domain_hash` and `token` also
+$__cloud->update_is_linked_status();
 
 $cloud_summary = Cloud::get_summary();
 
@@ -92,11 +92,13 @@ if ($cdn_setup_done_ts) {
 	<?php echo __( 'Setup QUIC.cloud Account', 'litespeed-cache' ); ?>
 </h3>
 
-<?php if ( $cdn_setup_done_ts || $has_setup_token ) : ?>
+<?php if ( $cdn_setup_done_ts ) : ?>
 	<p>
 		<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
 		<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Go to QUIC.cloud Dashboard', 'litespeed-cache' ), false, '' ); ?>
 	</p>
+<?php elseif ( $has_setup_token ) : ?>
+	<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Ready to run CDN setup.', 'litespeed-cache' ) . '</span>'; ?>
 <?php elseif ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
 	<p><?php echo __( 'Domain key and QUIC.cloud link detected.', 'litespeed-cache' ); ?></p>
 	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>

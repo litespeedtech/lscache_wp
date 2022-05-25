@@ -1142,6 +1142,11 @@ class Cloud extends Base {
 			return;
 		}
 
+		if ( ! empty( $_GET[ 'token' ] ) ) {
+			$this->_setup_token = $_GET[ 'token' ];
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
+		}
+
 		if ( ! $this->_api_key ) {
 			$this->_summary[ 'is_linked' ] = 0;
 			self::save_summary();
@@ -1156,8 +1161,18 @@ class Cloud extends Base {
 		$this->_summary[ 'is_linked' ] = 1;
 		self::save_summary();
 
+		$qsDrop = [
+			"&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ),
+			"&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] )
+		] ;
+
+		if ( ! empty( $_GET[ 'token' ] ) ) {
+			$qsDrop[] = "&token=" . sanitize_key( $_GET[ 'token' ] );
+			unset($_GET['token']);
+		}
+
 		// Drop QS
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] ) . "', '' ) );</script>";
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '" . implode('', $qsDrop) . "', '' ) );</script>";
 	}
 
 	/**
@@ -1324,6 +1339,10 @@ class Cloud extends Base {
 			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
 		);
 
+		if ($this->_api_key) {
+			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		}
+
 		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
 		exit;
 	}
@@ -1355,26 +1374,6 @@ class Cloud extends Base {
 	}
 
 	/**
-	 * Update setup token status if is a redirected back from QC
-	 *
-	 * @since  4.7
-	 */
-	public function save_setuptoken() {
-		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'token' ] ) ) {
-			return;
-		}
-
-		$this->_setup_token = $_GET[ 'token' ];
-		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
-
-		// Drop QS
-		unset($_GET['qc_res']);
-		unset($_GET['token']);
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&token=" . sanitize_key( $_GET[ 'token' ] ) . "', '' ) );
-		window.onload =  () => document.querySelector(\"a[href='#auto_setup']\").click()</script>";
-	}
-
-	/**
 	 * Initiate or continue a QC CDN Setup.
 	 *
 	 * @since  4.7
@@ -1391,6 +1390,8 @@ class Cloud extends Base {
 		if (!$json) {
 			return;
 		}
+
+		$this->_summary[ 'cdn_setup_ts' ] = time();
 
 		$msg = '';
 		if (isset($json['info']['messages'])) {
@@ -1411,7 +1412,6 @@ class Cloud extends Base {
 		if ( ! empty( $json[ 'token' ] ) ) {
 			$this->_summary[ 'token' ] = $json[ 'token' ];
 			$this->_summary[ 'token_ts' ] = time();
-			$this->_summary[ 'cdn_setup_ts' ] = time();
 			if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
 				unset( $this->_summary[ 'apikey_ts' ] );
 			}
