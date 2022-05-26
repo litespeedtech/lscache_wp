@@ -1382,6 +1382,11 @@ class Cloud extends Base {
 			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
 		];
+
+		if ( $this->_api_key ) {
+			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		}
+
 		$json = $this->_req_rest_api('/user/cdn/', $data);
 
 		if (!$json) {
