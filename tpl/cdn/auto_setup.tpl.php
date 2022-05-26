@@ -45,7 +45,7 @@ if ($cdn_setup_done_ts) {
 	$curr_status_subline = '<p class="litespeed-desc">' . $cdn_setup_err . '</p>';
 } else if ( $cdn_setup_ts > 0 ) {
 	if ( isset($nameservers) ) {
-		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying', 'litespeed-cache');
+		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated', 'litespeed-cache');
 		if ( isset( $cloud_summary[ 'cdn_verify_msg' ])) {
 			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_verify_msg' ] . '</p>';
 		}
@@ -118,6 +118,39 @@ if ($cdn_setup_done_ts) {
 	<?php echo $curr_status_subline; ?>
 <?php } ?>
 
+<?php if ( !$cdn_setup_done_ts ) { ?>
+	<?php if ( isset( $cloud_summary[ 'cdn_dns_summary' ] ) ) { ?>
+		<h4>
+			<?php echo __( 'QUIC.cloud Detected Records Summary', 'litespeed-cache' ); ?>
+		</h4>
+		<table class="wp-list-table widefat striped litespeed-width-auto litespeed-table-compact">
+			<thead>
+				<tr>
+					<th>
+						<?php echo __( 'Record Type', 'litespeed-cache' ); ?>
+					</th>
+					<th>
+						<?php echo __( 'Count', 'litespeed-cache' ); ?>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $cloud_summary[ 'cdn_dns_summary' ]['types'] as $type => $cnt ) {
+					echo '<tr><td>' . $type . '</td><td>' . $cnt . '</td></tr>';
+				} ?>
+			</tbody>
+		</table>
+
+		<p>
+			<?php echo __( 'Record names found', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_dns_summary' ]['names'] ; ?>
+		</p>
+		<p>
+			<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/zones', __( 'Review DNS records', 'litespeed-cache' ), false, '' ); ?>
+		</p>
+	<?php } ?>
+<?php } ?>
+
 <div>
 	<?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
 </div>
@@ -129,38 +162,6 @@ if ($cdn_setup_done_ts) {
 	</h3>
 
 	<?php if ( isset( $nameservers ) ) { ?>
-		<?php if ( isset( $cloud_summary[ 'cdn_dns_summary' ] ) ) { ?>
-			<h4>
-				<?php echo __( 'QUIC.cloud Detected Records Summary', 'litespeed-cache' ); ?>
-			</h4>
-			<p>
-				<?php echo __( 'Record Types', 'litespeed-cache' ) . ':'; ?>
-			</p>
-			<table>
-				<tr>
-					<th>
-						<?php echo __( 'Record Type', 'litespeed-cache' ); ?>
-					</th>
-					<th>
-						<?php echo __( 'Count', 'litespeed-cache' ); ?>
-					</th>
-				</tr>
-				<?php
-				foreach ( $cloud_summary[ 'cdn_dns_summary' ]['types'] as $type => $cnt ) {
-					echo '<tr><td>' . $type . '</td><td>' . $cnt . '</td></tr>';
-				}
-				?>
-			</table>
-
-			<p>
-				<?php echo __( 'Record names found', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_dns_summary' ]['names'] ; ?>
-			</p>
-			<p>
-				<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
-				<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/zones', __( 'Review DNS records', 'litespeed-cache' ), false, '' ); ?>
-			</p>
-		<?php } ?>
-
 		<p>
 			<?php echo __( 'Please update your domain registrar to use these custom nameservers:', 'litespeed-cache' ); ?>
 		</p>
