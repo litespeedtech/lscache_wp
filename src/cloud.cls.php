@@ -1138,41 +1138,38 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	public function update_is_linked_status() {
-		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'domain_hash' ] ) ) {
+
+		if ( ! $this->_api_key && $this->_summary[ 'is_linked' ]) {
+			$this->_summary[ 'is_linked' ] = 0;
+			self::save_summary();
+		}
+
+		if ( empty( $_GET[ 'qc_res' ] ) ) {
 			return;
+		}
+		$qsDrop = "&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) ;
+
+		if ( ! empty( $_GET[ 'domain_hash' ] ) ) {
+
+			if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
+				Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
+				return;
+			}
+
+			$this->_summary[ 'is_linked' ] = 1;
+			self::save_summary();
+			$qsDrop .= "&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] );
 		}
 
 		if ( ! empty( $_GET[ 'token' ] ) ) {
 			$this->_setup_token = $_GET[ 'token' ];
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
-		}
-
-		if ( ! $this->_api_key ) {
-			$this->_summary[ 'is_linked' ] = 0;
-			self::save_summary();
-			return;
-		}
-
-		if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
-			Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
-			return;
-		}
-
-		$this->_summary[ 'is_linked' ] = 1;
-		self::save_summary();
-
-		$qsDrop = [
-			"&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ),
-			"&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] )
-		] ;
-
-		if ( ! empty( $_GET[ 'token' ] ) ) {
-			$qsDrop[] = "&token=" . sanitize_key( $_GET[ 'token' ] );
 			unset($_GET['token']);
+			$qsDrop. = "&token=" . sanitize_key( $_GET[ 'token' ] );
 		}
 
 		// Drop QS
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '" . implode('', $qsDrop) . "', '' ) );</script>";
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '" . $qsDrop . "', '' ) );</script>";
 	}
 
 	/**
