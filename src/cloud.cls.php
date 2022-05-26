@@ -1165,7 +1165,7 @@ class Cloud extends Base {
 			$this->_setup_token = $_GET[ 'token' ];
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
 			unset($_GET['token']);
-			$qsDrop. = "&token=" . sanitize_key( $_GET[ 'token' ] );
+			$qsDrop .= "&token=" . sanitize_key( $_GET[ 'token' ] );
 		}
 
 		// Drop QS
