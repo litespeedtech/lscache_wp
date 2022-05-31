@@ -18,6 +18,7 @@ class Cloud extends Base {
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
 	const SVC_D_USAGE 			= 'd/usage';
 	const SVC_D_SETUP_TOKEN		= 'd/get_token';
+	const SVC_D_DEL_CDN_DNS		= 'd/del_cdn_dns';
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
 	const SVC_UCSS 				= 'ucss';
@@ -52,6 +53,7 @@ class Cloud extends Base {
 		// self::API_VER,
 		// self::API_BETA_TEST,
 		self::SVC_D_SETUP_TOKEN,
+		self::SVC_D_DEL_CDN_DNS,
 	);
 
 	private static $WP_SVC_SET = array(
@@ -1281,6 +1283,16 @@ class Cloud extends Base {
 			$json = $this->_req_rest_api('/user/cdn/reset', $data);
 
 			if (!$json) {
+				return;
+			}
+		} else if ( isset( $this->_summary[ 'cdn_setup_done_ts' ] ) &&  0 != $this->_summary[ 'cdn_setup_done_ts' ]) {
+			$data = [
+				'site_url' => home_url(),
+			];
+
+			$json = self::post( self::SVC_D_DEL_CDN_DNS, $data);
+
+			if (!is_array($json)) {
 				return;
 			}
 		} else {

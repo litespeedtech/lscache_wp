@@ -36,7 +36,11 @@ $apply_btn_type = Cloud::TYPE_CDN_SETUP_RUN;
 $disabled = '';
 
 if ($cdn_setup_done_ts) {
-	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> ' . __('Done', 'litespeed-cache') . ' <span class="litespeed-desc litespeed-left10">Completed at ' . $cdn_setup_done_ts . '</span>';
+	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> '
+					. __('Done', 'litespeed-cache')
+					. ' <span class="litespeed-desc litespeed-left10">'
+					. sprintf( __('Completed at %s', 'litespeed-cache'), wp_date(get_option( 'date_format' ) . ' ' . get_option( 'time_format'), $cdn_setup_done_ts) )
+					. '</span>';
 	$disabled = 'disabled';
 } else if (!$has_setup_token) {
 	$disabled = 'disabled';
@@ -185,16 +189,18 @@ if ($cdn_setup_done_ts) {
 
 <?php } ?>
 
-<?php if ( $has_setup_token || $cdn_setup_done_ts ) : ?>
+<?php if ( $has_setup_token || $cdn_setup_done_ts ) { ?>
 	<h3 class="litespeed-title-section">
 		<?php echo __( 'Action', 'litespeed-cache' ); ?>
 	</h3>
 	<div>
-		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
-		<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
-		</a>
+		<?php if ( $has_setup_token ) : ?>
+			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
+			<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
+			</a>
+		<?php endif; ?>
 		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_DELETE ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
 		<?php echo __( 'Delete QUIC.cloud data', 'litespeed-cache' ); ?>
 		</a>
 	</div>
-<?php endif; ?>
+<?php } ?>
