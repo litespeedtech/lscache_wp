@@ -390,7 +390,7 @@ class Admin_Display extends Base {
 
 		$msg_name = $irremovable ? self::DB_MSG_PIN : self::DB_MSG;
 
-		$messages = self::get_option( $msg_name );
+		$messages = self::get_option( $msg_name, array() );
 		if ( ! is_array( $messages ) ) {
 			$messages = array();
 		}
