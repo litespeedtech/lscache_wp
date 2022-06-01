@@ -1285,7 +1285,14 @@ class Cloud extends Base {
 			if (!$json) {
 				return;
 			}
-		} else if ( isset( $this->_summary[ 'cdn_setup_done_ts' ] ) &&  0 != $this->_summary[ 'cdn_setup_done_ts' ]) {
+		} else if ( ! $delete || ! isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ||  ! $this->_summary[ 'cdn_setup_done_ts' ] ) {
+			Admin_Display::info( __( 'Notice: CDN Setup only reset locally.', 'litespeed-cache'));
+		} else if ( ! isset( $this->_summary[ 'is_linked' ] ) || ! $this->_summary[ 'is_linked' ] ) {
+
+			Admin_Display::error( __( 'Cannot delete, site is not linked.', 'litespeed-cache' ) );
+			return;
+
+		} else {
 			$data = [
 				'site_url' => home_url(),
 			];
@@ -1295,8 +1302,6 @@ class Cloud extends Base {
 			if (!is_array($json)) {
 				return;
 			}
-		} else {
-			Admin_Display::info( __( 'Notice: CDN Setup only reset locally. If resetting a successful setup, QUIC.cloud must be updated manually.', 'litespeed-cache'));
 		}
 
 		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {

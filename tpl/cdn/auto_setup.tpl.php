@@ -189,17 +189,44 @@ if ($cdn_setup_done_ts) {
 
 <?php } ?>
 
+<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
+		<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
+		</a>
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) { ?>
+	<?php $disabled = $cdn_setup_done_ts && ! empty( $cloud_summary[ 'is_linked' ] ) ? 'disabled' : ''; ?>
 	<h3 class="litespeed-title-section">
 		<?php echo __( 'Action', 'litespeed-cache' ); ?>
 	</h3>
 	<div>
-		<?php if ( $has_setup_token ) : ?>
-			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
-			<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
-			</a>
-		<?php endif; ?>
-		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_DELETE ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger">
+		<p>
+		<?php echo __( 'The below two actions are available.', 'litespeed-cache' ); ?>
+		</p>
+		<ul>
+			<li>
+				<?php echo __('Reset', 'litespeed-cache') . ': '; ?>
+				<?php echo __( 'Resets Auto CDN Setup to the initial state.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Allows one to try Auto CDN Setup again.', 'litespeed-cache' ); ?>
+				<?php if ( $cdn_setup_done_ts ) : ?>
+					<br/>
+					<?php echo __( 'NOTE', 'litespeed-cache' ) . ': '; ?>
+					<?php echo __( 'This action will not update anything on the QUIC.cloud servers.', 'litespeed-cache' ); ?>
+				<?php endif; ?>
+			</li>
+			<li>
+				<?php echo __('Delete', 'litespeed-cache') . ': '; ?>
+				<?php echo __( 'Resets Auto CDN Setup to the initial state and deletes the DNS Zone, if one exists for the domain.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Allows one to try Auto CDN Setup again.', 'litespeed-cache' ); ?>
+				<?php if ( ! empty( $disabled ) ) : ?>
+					<br/>
+					<?php echo __( 'NOTE', 'litespeed-cache' ) . ': '; ?>
+					<?php echo __( 'This action is not available if there is no domain key or the site is not linked.', 'litespeed-cache' ); ?>
+				<?php endif; ?>
+			</li>
+		</ul>
+		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
+		<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
+		</a>
+		<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_DELETE ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger <?php echo $disabled; ?>" >
 		<?php echo __( 'Delete QUIC.cloud data', 'litespeed-cache' ); ?>
 		</a>
 	</div>
