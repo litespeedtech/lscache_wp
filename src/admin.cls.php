@@ -29,6 +29,9 @@ class Admin extends Root {
 			define( 'LSCWP_MU_PLUGIN', true );
 		}
 
+		self::debug( 'No cache due to Admin page' );
+		defined( 'DONOTCACHEPAGE' ) || define( 'DONOTCACHEPAGE', true );
+
 		// Additional litespeed assets on admin display
 		// Also register menu
 		$this->cls( 'Admin_Display' );
@@ -65,9 +68,6 @@ class Admin extends Root {
 	 * @access public
 	 */
 	public function admin_init() {
-		self::debug( 'No cache due to Admin page' );
-		defined( 'DONOTCACHEPAGE' ) || define( 'DONOTCACHEPAGE', true );
-
 		// Hook attachment upload
 		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
 			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );

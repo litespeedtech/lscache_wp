@@ -260,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Purge** Fixed a potential bug that purged frontend page when commenting in a post that is not public viewable. (Kevin)
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
+* **Admin** Moved no-cache header to very beginning to avoid unexpected exit being cached.
 * **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
 * 🕸️**Crawler** Crawler now will detect the realtime load before crawling.
 * **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
