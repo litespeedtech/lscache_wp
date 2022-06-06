@@ -466,9 +466,9 @@ class Admin_Display extends Base {
 				echo $msg;
 			}
 		}
-		if ( $messages != -1 ) {
-			self::update_option( self::DB_MSG_PIN, -1 );
-		}
+		// if ( $messages != -1 ) {
+		// 	self::update_option( self::DB_MSG_PIN, -1 );
+		// }
 
 		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed' ) !== 0 ) {
 			global $pagenow;
