@@ -265,6 +265,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
 * **Media** Now can disable lazyload in page editor.
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
+* **GUI** Fixed a bug caused manual dismiss admin msg being onetime msg. (Tynan Beatty)
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
 * **GUI** GUI added `litespeed_media_ignore_remote_missing_sizes` API description.
 * **Crawler** Divi pages will not be added to non-cacheable pages anymore after 1st time visit due to DIVI generating CCSS purpose. (miketemby)
