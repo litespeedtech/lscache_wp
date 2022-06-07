@@ -1323,7 +1323,13 @@ class Cloud extends Base {
 
 		$this->_setup_token = '';
 		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
-		Admin_Display::succeed( __( 'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' ) );
+		$msg = '';
+		if ($delete) {
+			$msg = __( 'CDN Setup Token and DNS zone deleted. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' );
+		} else {
+			$msg = __( 'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' );
+		}
+		Admin_Display::succeed( $msg );
 		return self::ok();
 	}
 
