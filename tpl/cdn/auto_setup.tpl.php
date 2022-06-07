@@ -155,11 +155,11 @@ if ($cdn_setup_done_ts) {
 	<?php } ?>
 <?php } ?>
 ​
-<div>
-	<?php Doc::learn_more( ( $disabled ? '#' : Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ) ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
-</div>
-​
 <?php if ( !$cdn_setup_done_ts ) { ?>
+​
+	<div>
+		<?php Doc::learn_more( ( $disabled ? '#' : Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ) ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
+	</div>
 ​
 	<h3 class="litespeed-title-section">
 		<?php echo __( 'Nameservers', 'litespeed-cache' ); ?>
