@@ -1252,10 +1252,12 @@ class Cloud extends Base {
 			$this->_setup_token = '';
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
 		} else if ( isset($result[ '_msg' ] ) ) {
-			Admin_Display::succeed( $result[ '_msg' ] );
+			$notice = $result[ '_msg' ];
 			if ( $this->conf( Base::O_QC_NAMESERVERS )) {
 				$this->_summary[ 'cdn_verify_msg' ] = $result[ '_msg' ];
+				$notice = ['cdn_verify_msg' => $result[ '_msg' ]];
 			}
+			Admin_Display::succeed( $notice );
 		} else {
 			Admin_Display::succeed( __( 'CDN Setup is running.', 'litespeed-cache' ) );
 		}
