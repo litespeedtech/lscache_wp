@@ -22,6 +22,7 @@ class Cloud extends Base {
 	const SVC_UCSS 				= 'ucss';
 	const SVC_VPI 				= 'vpi';
 	const SVC_LQIP 				= 'lqip';
+	const SVC_QUEUE 			= 'queue';
 	const SVC_IMG_OPTM			= 'img_optm';
 	const SVC_HEALTH			= 'health';
 	const SVC_CDN				= 'cdn';
@@ -67,10 +68,14 @@ class Cloud extends Base {
 		self::API_BETA_TEST,
 	);
 
+	private static $_QUEUE_SVC_SET = array(
+		self::SVC_VPI,
+	);
+
 	public static $SERVICES_LOAD_CHECK = array(
 		self::SVC_CCSS,
 		self::SVC_UCSS,
-		self::SVC_VPI,
+		// self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_HEALTH,
 	);
@@ -124,7 +129,7 @@ class Cloud extends Base {
 
 		$last_check = empty( $this->_summary[ 'last_request.' . self::API_VER ] ) ? 0 : $this->_summary[ 'last_request.' . self::API_VER ] ;
 
-		if ( time() - $last_check > 600 ) {
+		if ( time() - $last_check > 86400 ) {
 			$auto_v = self::version_check( 'dev' );
 			if ( ! empty( $auto_v[ 'dev' ] ) ) {
 				$this->_summary[ 'version.dev' ] = $auto_v[ 'dev' ];
@@ -190,7 +195,7 @@ class Cloud extends Base {
 	 * @since 2.9.9.1
 	 */
 	private function _update_news() {
-		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 3 ) {
+		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 7 ) {
 			return;
 		}
 
@@ -357,6 +362,9 @@ class Cloud extends Base {
 			return self::CLOUD_SERVER_WP;
 		}
 
+		// Switch to queue service
+		$service = $this->_maybe_queue( $service );
+
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
 			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::TTL_NODE ) {
@@ -471,6 +479,14 @@ class Cloud extends Base {
 		self::save_summary();
 
 		return $this->_summary[ 'server.' . $service ];
+	}
+
+	/**
+	 * May need to convert to queue service
+	 */
+	private function _maybe_queue( $service ) {
+		if ( in_array( $service, self::$_QUEUE_SVC_SET ) ) return self::SVC_QUEUE;
+		return $service;
 	}
 
 	/**
@@ -624,7 +640,7 @@ class Cloud extends Base {
 			return;
 		}
 
-		$url = $server . '/' . $service;
+		$url = $server . '/' . $this->_maybe_queue( $service );
 
 		self::debug( 'posting to : ' . $url );
 

@@ -261,6 +261,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
 * **Admin** Moved no-cache header to very beginning to avoid unexpected exit being cached.
+* **Cloud** Added message queue service for VPI. (Abe)
 * **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
 * **Cloud** Fixed a failure to detect `out_of_quota`. (Lauren)
 * 🕸️**Crawler** Crawler now will detect the realtime load before crawling.
