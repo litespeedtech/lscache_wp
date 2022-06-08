@@ -257,7 +257,6 @@ class VPI extends Base {
 
 		// Generate critical css
 		$data = array(
-			'service_type' => 'vpi',
 			// 'type'			=> strtoupper( $type ), // Backward compatibility for v4.1-
 			'url'			=> $request_url,
 			'queue_k'		=> $queue_k,

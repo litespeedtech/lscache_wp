@@ -89,6 +89,7 @@ class Cloud extends Base {
 		self::SVC_LQIP,
 		self::SVC_CDN,
 		self::SVC_HEALTH,
+		// self::SVC_QUEUE,
 	);
 
 	const TYPE_CLEAR_PROMO 		= 'clear_promo';
@@ -362,9 +363,6 @@ class Cloud extends Base {
 			return self::CLOUD_SERVER_WP;
 		}
 
-		// Switch to queue service
-		$service = $this->_maybe_queue( $service );
-
 		// Check if the stored server needs to be refreshed
 		if ( ! $force ) {
 			if ( ! empty( $this->_summary[ 'server.' . $service ] ) && ! empty( $this->_summary[ 'server_date.' . $service ] ) && $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::TTL_NODE ) {
@@ -379,7 +377,7 @@ class Cloud extends Base {
 		}
 
 		// Send request to Quic Online Service
-		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $service ) );
+		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $this->_maybe_queue( $service ) ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
@@ -643,6 +641,10 @@ class Cloud extends Base {
 		$url = $server . '/' . $this->_maybe_queue( $service );
 
 		self::debug( 'posting to : ' . $url );
+
+		if ( $data ) {
+			$data[ 'service_type' ] = $service; // For queue distribution usage
+		}
 
 		$param = array(
 			'site_url'		=> home_url(),
