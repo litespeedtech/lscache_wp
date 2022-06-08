@@ -2,25 +2,26 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$__cloud = Cloud::cls();
+$__cdnsetup = Cdn_Setup::cls();
 
 // This will drop QS param `qc_res` `domain_hash` and `token` also
-$__cloud->update_is_linked_status();
+$__cdnsetup->maybe_extract_token();
 
-$cloud_summary = Cloud::get_summary();
+$cloud_linked = Cloud::get_summary( 'is_linked' );
+$setup_summary = Cdn_Setup::get_summary();
 
 $cdn_setup_done_ts = 0;
-if ( ! empty( $cloud_summary[ 'cdn_setup_done_ts' ] ) ) {
-	$cdn_setup_done_ts = $cloud_summary[ 'cdn_setup_done_ts' ];
+if ( ! empty( $setup_summary[ 'cdn_setup_done_ts' ] ) ) {
+	$cdn_setup_done_ts = $setup_summary[ 'cdn_setup_done_ts' ];
 }
 
-$has_setup_token = $__cloud->has_cdn_setup_token();
+$has_setup_token = $__cdnsetup->has_cdn_setup_token();
 
-if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
-	$cdn_setup_ts = $cloud_summary[ 'cdn_setup_ts' ];
+if ( ! empty( $setup_summary[ 'cdn_setup_ts' ] ) ) {
+	$cdn_setup_ts = $setup_summary[ 'cdn_setup_ts' ];
 
-	if ( !empty( $cloud_summary[ 'cdn_setup_err' ] ) ) {
-		$cdn_setup_err = $cloud_summary[ 'cdn_setup_err' ];
+	if ( !empty( $setup_summary[ 'cdn_setup_err' ] ) ) {
+		$cdn_setup_err = $setup_summary[ 'cdn_setup_err' ];
 	}
 
 	if ($this->conf( Base::O_QC_NAMESERVERS )) {
@@ -32,7 +33,7 @@ if ( ! empty( $cloud_summary[ 'cdn_setup_ts' ] ) ) {
 
 $curr_status = '<span class="litespeed-desc">' . __('Not running', 'litespeed-cache') . '</span>';
 $apply_btn_txt = __( 'Run CDN Setup', 'litespeed-cache' );
-$apply_btn_type = Cloud::TYPE_CDN_SETUP_RUN;
+$apply_btn_type = Cdn_Setup::TYPE_RUN;
 $disabled = '';
 
 if ($cdn_setup_done_ts) {
@@ -50,14 +51,14 @@ if ($cdn_setup_done_ts) {
 } else if ( $cdn_setup_ts > 0 ) {
 	if ( isset($nameservers) ) {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated', 'litespeed-cache');
-		if ( isset( $cloud_summary[ 'cdn_verify_msg' ])) {
-			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_verify_msg' ] . '</p>';
+		if ( isset( $setup_summary[ 'cdn_verify_msg' ])) {
+			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $setup_summary[ 'cdn_verify_msg' ] . '</p>';
 		}
 	} else {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('In Progress', 'litespeed-cache');
 	}
 	$apply_btn_txt = __( 'Refresh CDN Setup Status', 'litespeed-cache' );
-	$apply_btn_type = Cloud::TYPE_CDN_SETUP_STATUS;
+	$apply_btn_type = Cdn_Setup::TYPE_STATUS;
 }
 
 ?>
@@ -103,11 +104,11 @@ if ($cdn_setup_done_ts) {
 	</p>
 <?php elseif ( $has_setup_token ) : ?>
 	<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Ready to run CDN setup.', 'litespeed-cache' ) . '</span>'; ?>
-<?php elseif ( ! empty( $cloud_summary[ 'is_linked' ] ) ) : ?>
+<?php elseif ( $cloud_linked ) : ?>
 	<p><?php echo __( 'Domain key and QUIC.cloud link detected.', 'litespeed-cache' ); ?></p>
-	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
+	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CDN_SETUP, Cdn_Setup::TYPE_NOLINK ), __( 'Begin QUIC.cloud CDN Setup', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
 <?php else: ?>
-	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
+	<div><?php Doc::learn_more( Utility::build_url( Router::ACTION_CDN_SETUP, Cdn_Setup::TYPE_LINK ), __( 'Link to QUIC.cloud', 'litespeed-cache' ), true, 'button button-primary' ); ?></div>
 <?php endif; ?>
 
 <h3 class="litespeed-title-section">
@@ -123,7 +124,7 @@ if ($cdn_setup_done_ts) {
 <?php } ?>
 
 <?php if ( !$cdn_setup_done_ts ) { ?>
-	<?php if ( isset( $cloud_summary[ 'cdn_dns_summary' ] ) ) { ?>
+	<?php if ( isset( $setup_summary[ 'cdn_dns_summary' ] ) ) { ?>
 		<h4>
 			<?php echo __( 'QUIC.cloud Detected Records Summary', 'litespeed-cache' ); ?>
 		</h4>
@@ -139,14 +140,14 @@ if ($cdn_setup_done_ts) {
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $cloud_summary[ 'cdn_dns_summary' ]['types'] as $type => $cnt ) {
+				<?php foreach ( $setup_summary[ 'cdn_dns_summary' ]['types'] as $type => $cnt ) {
 					echo '<tr><td>' . $type . '</td><td>' . $cnt . '</td></tr>';
 				} ?>
 			</tbody>
 		</table>
 
 		<p>
-			<?php echo __( 'Record names found', 'litespeed-cache' ) . ': ' . $cloud_summary[ 'cdn_dns_summary' ]['names'] ; ?>
+			<?php echo __( 'Record names found', 'litespeed-cache' ) . ': ' . $setup_summary[ 'cdn_dns_summary' ]['names'] ; ?>
 		</p>
 		<p>
 			<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
@@ -158,7 +159,7 @@ if ($cdn_setup_done_ts) {
 <?php if ( !$cdn_setup_done_ts ) { ?>
 
 	<div>
-		<?php Doc::learn_more( ( $disabled ? '#' : Utility::build_url( Router::ACTION_CLOUD, $apply_btn_type ) ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
+		<?php Doc::learn_more( ( $disabled ? '#' : Utility::build_url( Router::ACTION_CDN_SETUP, $apply_btn_type ) ), $apply_btn_txt, true, 'button button-primary ' . $disabled ); ?>
 	</div>
 
 	<h3 class="litespeed-title-section">
@@ -190,7 +191,7 @@ if ($cdn_setup_done_ts) {
 <?php } ?>
 
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) { ?>
-	<?php $disabled = $cdn_setup_done_ts && empty( $cloud_summary[ 'is_linked' ] ) ? 'disabled' : ''; ?>
+	<?php $disabled = $cdn_setup_done_ts && $cloud_linked ? 'disabled' : ''; ?>
 	<h3 class="litespeed-title-section">
 		<?php echo __( 'Action', 'litespeed-cache' ); ?>
 	</h3>
@@ -221,10 +222,10 @@ if ($cdn_setup_done_ts) {
 			<?php endif; ?>
 		</p>
 		<div>
-			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
+			<a href="<?php echo Utility::build_url( Router::ACTION_CDN_SETUP, Cdn_Setup::TYPE_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
 			<?php echo __( 'Reset CDN Setup', 'litespeed-cache' ); ?>
 			</a>
-			<a href="<?php echo ( $disabled ? '#' : Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CDN_SETUP_DELETE ) ); ?>" <?php if (empty($disabled)) : ?> data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>"<?php endif; ?> class="button litespeed-btn-danger <?php echo $disabled; ?>" >
+			<a href="<?php echo ( $disabled ? '#' : Utility::build_url( Router::ACTION_CDN_SETUP, Cdn_Setup::TYPE_DELETE ) ); ?>" <?php if (empty($disabled)) : ?> data-litespeed-cfm="<?php echo __( 'Are you sure you want to delete QUIC.cloud data?', 'litespeed-cache' ); ?>"<?php endif; ?> class="button litespeed-btn-danger <?php echo $disabled; ?>" >
 				<?php echo __( 'Delete QUIC.cloud data', 'litespeed-cache' ); ?>
 			</a>
 		</div>
