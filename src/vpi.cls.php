@@ -80,6 +80,7 @@ class VPI extends Base {
 		if( is_null( $post_data ) ) {
 			$post_data = $_POST;
 		}
+		self::debug( 'notify data', $post_data );
 
 		// Validate key
 		if ( empty( $post_data[ 'domain_key' ] ) || $post_data[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
@@ -121,11 +122,22 @@ class VPI extends Base {
 	}
 
 	/**
-	 * Cron generation
+	 * Cron
 	 *
 	 * @since  4.7
 	 */
 	public static function cron( $continue = false ) {
+		$_instance = self::cls();
+		return $_instance->_cron_handler( $continue );
+	}
+
+	/**
+	 * Cron generation
+	 *
+	 * @since  4.7
+	 */
+	private function _cron_handler( $continue = false ) {
+		self::debug( 'cron start' );
 		$this->_queue = $this->load_queue( 'vpi' );
 
 		if ( empty( $this->_queue ) ) {
@@ -167,12 +179,13 @@ class VPI extends Base {
 			}
 
 			// Exit queue if out of quota
-			if ( $res == 'out_of_quota' ) {
+			if ( $res === 'out_of_quota' ) {
 				return;
 			}
 
 			$this->_queue[ $k ][ '_status' ] = 'requested';
 			$this->save_queue( 'vpi', $this->_queue );
+			self::debug( 'Saved to queue [k] ' . $k );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -244,6 +257,7 @@ class VPI extends Base {
 
 		// Generate critical css
 		$data = array(
+			'service_type' => 'vpi',
 			// 'type'			=> strtoupper( $type ), // Backward compatibility for v4.1-
 			'url'			=> $request_url,
 			'queue_k'		=> $queue_k,
@@ -283,7 +297,7 @@ class VPI extends Base {
 
 		switch ( $type ) {
 			case self::TYPE_GEN:
-				self::cron( true );
+				self::cron( 0 );
 				break;
 
 			case self::TYPE_CLEAR_Q:

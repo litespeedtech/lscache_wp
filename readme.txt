@@ -262,6 +262,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
 * **Admin** Moved no-cache header to very beginning to avoid unexpected exit being cached.
 * **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
+* **Cloud** Fixed a failure to detect `out_of_quota`. (Lauren)
 * 🕸️**Crawler** Crawler now will detect the realtime load before crawling.
 * **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
 * **Media** Now can disable lazyload in page editor.

@@ -9,6 +9,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class REST extends Root {
+	const LOG_TAG = '☎️';
 	private $_internal_rest_status = false;
 
 	/**
@@ -89,6 +90,12 @@ class REST extends Root {
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'notify_img' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
+		register_rest_route( 'litespeed/v1', '/notify_vpi', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_vpi' ),
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
@@ -194,6 +201,14 @@ class REST extends Root {
 	 */
 	public function notify_img() {
 		return Img_Optm::cls()->notify_img();
+	}
+
+	/**
+	 * @since  4.7
+	 */
+	public function notify_vpi() {
+		self::debug('notify_vpi');
+		return VPI::cls()->notify();
 	}
 
 	/**
