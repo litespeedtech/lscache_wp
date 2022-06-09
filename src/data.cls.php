@@ -11,6 +11,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Data extends Root {
+	const LOG_TAG = '[Data]';
+
 	private $_db_updater = array(
 		'3.5.0.3'	=> array(
 			'litespeed_update_3_5',
@@ -540,6 +542,8 @@ class Data extends Root {
 		}
 
 		$type = $this->_url_file_types[ $file_type ];
+
+		self::debug2( 'load url file: ' . $request_url );
 
 		$tb_url = $this->tb( 'url' );
 		$q = "SELECT * FROM `$tb_url` WHERE url=%s";

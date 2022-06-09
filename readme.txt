@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Page Optimize** Auto cache CSS/JS remote files when fetching in optimization (Lauren).
 * 🌱**Cache** Page cache control option in page editor. (denisgomesfranco)
 * 🌱**Debug** New option under `Debug`: `Debug String Excludes`. (Hanna)
+* 🌱**UCSS** New dropdown menu `Purge this page - UCSS`. (Ankit)
 * **Object** Allow predefined `LSCWP_OBJECT_CACHE` to turn off Object Cache. (knutsp)
 * **Data** Force correct version in case upgrade process caused version tag in DB exists but empty which caused upgrade banner keeps toggling and all settings are kept using default.
 * **Purge** Fixed a potential bug that purged frontend page when commenting in a post that is not public viewable. (Kevin)

@@ -8,6 +8,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class CSS extends Base {
+	const LOG_TAG = '[CSS]';
+
 	const TYPE_GEN_CCSS = 'gen_ccss';
 	const TYPE_GEN_UCSS = 'gen_ucss';
 	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
@@ -157,7 +159,7 @@ class CSS extends Base {
 		$this->_queue = $this->load_queue( 'ccss' );
 
 		if ( count( $this->_queue ) > 500 ) {
-			Debug2::debug( '[CSS] CCSS Queue is full - 500' );
+			self::debug( 'CCSS Queue is full - 500' );
 			return null;
 		}
 
@@ -172,7 +174,7 @@ class CSS extends Base {
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
 		$this->save_queue( 'ccss', $this->_queue );
-		Debug2::debug( '[CSS] Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
+		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'CCSS.' . md5( $queue_k ) );
@@ -195,6 +197,23 @@ class CSS extends Base {
 	}
 
 	/**
+	 * Uniform url tag for ucss usage
+	 * @since 4.7
+	 */
+	public static function get_url_tag( $request_url = false ) {
+		$url_tag = $request_url;
+		if ( is_404() ) {
+			$url_tag = '404';
+		}
+		elseif ( apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
+			$url_tag = Utility::page_type();
+			self::debug( 'litespeed_ucss_per_pagetype filter altered url to ' . $url_tag );
+		}
+
+		return $url_tag;
+	}
+
+	/**
 	 * Get UCSS path
 	 *
 	 * @since  4.0
@@ -203,19 +222,13 @@ class CSS extends Base {
 		// Check UCSS URI excludes
 		$ucss_exc = apply_filters( 'litespeed_ucss_exc', $this->conf( self::O_OPTM_UCSS_EXC ) );
 		if ( $ucss_exc && $hit = Utility::str_hit_array( $request_url, $ucss_exc ) ) {
-			Debug2::debug( '[CSS] UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
+			self::debug( 'UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
 			return false;
 		}
 
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 
-		$url_tag = $request_url;
-		if ( is_404() ) {
-			$url_tag = '404';
-		}
-		elseif ( apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
-			$url_tag = Utility::page_type();
-		}
+		$url_tag = self::get_url_tag( $request_url );
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ucss' );
@@ -247,7 +260,7 @@ class CSS extends Base {
 		$this->_queue = $this->load_queue( 'ucss' );
 
 		if ( count( $this->_queue ) > 500 ) {
-			Debug2::debug( '[CSS] UCSS Queue is full - 500' );
+			self::debug( 'UCSS Queue is full - 500' );
 			return false;
 		}
 
@@ -262,7 +275,7 @@ class CSS extends Base {
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
 		$this->save_queue( 'ucss', $this->_queue );
-		Debug2::debug( '[CSS] Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
+		self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'UCSS.' . md5( $queue_k ) );
@@ -450,7 +463,7 @@ class CSS extends Base {
 			$data[ 'whitelist' ] = $this->_ucss_whitelist;
 		}
 
-		Debug2::debug( '[CSS] Generating: ', $data );
+		self::debug( 'Generating: ', $data );
 
 		$json = Cloud::post( $svc, $data, 30 );
 		if ( ! is_array( $json ) ) {
@@ -492,7 +505,7 @@ class CSS extends Base {
 		Debug2::debug2( '[CSS] con: ' . $css );
 
 		if ( substr( $css, 0, 2 ) == '/*' && substr( $css, -2 ) == '*/' ) {
-			Debug2::debug( '[CSS] ❌ empty ' . $type . ' [content] ' . $css );
+			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
 			// continue; // Save the error info too
 		}
 
@@ -551,7 +564,7 @@ class CSS extends Base {
 			'type'			=> 'CCSS',
 		);
 
-		// Debug2::debug( '[CSS] Generating: ', $data );
+		// self::debug( 'Generating: ', $data );
 
 		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 );
 
