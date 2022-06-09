@@ -76,7 +76,7 @@ class Cdn_Setup extends Base {
 	 * @since  4.7
 	 * @access private
 	 */
-	private function _qc_setup_cdn_refresh() {
+	private function _qc_refresh() {
 
 		$json = $this->cls('Cloud')->req_rest_api('/user/cdn/status');
 
@@ -141,7 +141,7 @@ class Cdn_Setup extends Base {
 	 * @since  4.7
 	 * @access private
 	 */
-	private function _qc_setup_cdn_reset($delete) {
+	private function _qc_reset($delete) {
 
 		if (!empty($this->_setup_token)) {
 			$data = [
@@ -222,7 +222,7 @@ class Cdn_Setup extends Base {
 	 *
 	 * @since  4.7
 	 */
-	private function _qc_setup_cdn_link() {
+	private function _qc_link() {
 		if ( $this->has_cdn_setup_token() ) {
 			return;
 		}
@@ -247,7 +247,7 @@ class Cdn_Setup extends Base {
 	 *
 	 * @since  4.7
 	 */
-	private function _qc_setup_cdn_nolink() {
+	private function _qc_nolink() {
 		if ( $this->has_cdn_setup_token() ) {
 			return;
 		}
@@ -271,7 +271,7 @@ class Cdn_Setup extends Base {
 	 *
 	 * @since  4.7
 	 */
-	private function _qc_setup_cdn_run() {
+	private function _qc_run() {
 
 		$data = [
 			'site_url' => home_url(),
@@ -356,27 +356,27 @@ class Cdn_Setup extends Base {
 		switch ( $type ) {
 
 			case self::TYPE_LINK:
-				$this->_qc_setup_cdn_link();
+				$this->_qc_link();
 				break;
 
 			case self::TYPE_NOLINK:
-				$this->_qc_setup_cdn_nolink();
+				$this->_qc_nolink();
 				break;
 
 			case self::TYPE_RUN:
-				$this->_qc_setup_cdn_run();
+				$this->_qc_run();
 				break;
 
 			case self::TYPE_STATUS:
-				$this->_qc_setup_cdn_refresh();
+				$this->_qc_refresh();
 				break;
 
 			case self::TYPE_RESET:
-				$this->_qc_setup_cdn_reset(false);
+				$this->_qc_reset(false);
 				break;
 
 			case self::TYPE_DELETE:
-				$this->_qc_setup_cdn_reset(true);
+				$this->_qc_reset(true);
 				break;
 
 			default:
