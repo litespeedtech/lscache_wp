@@ -53,7 +53,7 @@ if ($cdn_setup_done_ts) {
 	if ( isset($nameservers) ) {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated', 'litespeed-cache');
 		if ( isset( $setup_summary[ 'cdn_verify_msg' ])) {
-			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verify Result', 'litespeed-cache' ) . ': ' . $setup_summary[ 'cdn_verify_msg' ] . '</p>';
+			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verification Result', 'litespeed-cache' ) . ': ' . $setup_summary[ 'cdn_verify_msg' ] . '</p>';
 		}
 	} else {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('In Progress', 'litespeed-cache');
@@ -72,12 +72,12 @@ if ($cdn_setup_done_ts) {
 </p>
 <ol>
 	<li><?php echo __( 'Set up a QUIC.cloud account.', 'litespeed-cache' ); ?></li>
-	<li><?php echo __( 'Prepares the site for QUIC.cloud CDN and detects the DNS and creates a DNS Zone.', 'litespeed-cache' ); ?></li>
-	<li><?php echo __( 'Provide the nameservers to use to enable the CDN.', 'litespeed-cache' ); ?></li>
+	<li><?php echo __( 'Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone.', 'litespeed-cache' ); ?></li>
+	<li><?php echo __( 'Provide the nameservers necessary to enable the CDN.', 'litespeed-cache' ); ?></li>
 </ol>
 
 <p>
-<?php echo __( 'After you set your nameservers, QUIC.cloud will detect the change and enable the CDN.', 'litespeed-cache' ); ?>
+<?php echo __( 'After you set your nameservers, QUIC.cloud will detect the change and automatically enable the CDN.', 'litespeed-cache' ); ?>
 </p>
 
 <p class="litespeed-desc">
@@ -90,12 +90,13 @@ if ($cdn_setup_done_ts) {
 	</li>
 	<li>
 		<?php echo __( 'This setup process will create a DNS zone on QUIC.cloud if one does not currently exist.', 'litespeed-cache' ); ?>
-		<?php echo __( 'If you prefer to use the CNAME setup, please set up the CDN on QUIC.cloud directly.', 'litespeed-cache' ); ?>
+		<?php printf(__( 'If you prefer to use the CNAME setup, please <a %s>set up the CDN on QUIC.cloud directly</a>.', 'litespeed-cache' ),
+					'href="https://quic.cloud/docs/onboarding/" target="_blank" class="litespeed-learn-more"'); ?>
 	</li>
 	<li>
 		<?php echo __( 'QUIC.cloud will detect most normal DNS entries.', 'litespeed-cache' ); ?>
 		<?php echo __( 'If you have custom DNS records, it is possible that they are not detected.', 'litespeed-cache' ); ?>
-		<?php echo __( 'Visit the my.quic.cloud dashboard to confirm your DNS Zone.', 'litespeed-cache' ); ?>
+		<?php echo __( 'Visit your QUIC.cloud dashboard after the DNS Zone is set up to confirm your DNS zone.', 'litespeed-cache' ); ?>
 	</li>
 </ul>
 
@@ -197,7 +198,7 @@ if ($cdn_setup_done_ts) {
 		</ul>
 		<p>
 			<?php echo __( 'QUIC.cloud will attempt to verify the DNS update.', 'litespeed-cache' ); ?>
-			<?php echo __( 'If it does not verify in 24 hours time, the CDN setup will mark the verification as failed.', 'litespeed-cache' ); ?>
+			<?php echo __( 'If it does not verify within 24 hours, the CDN setup will mark the verification as failed.', 'litespeed-cache' ); ?>
 			<?php echo __( 'At that stage, you may re-start the verification process by pressing the Run CDN Setup button.', 'litespeed-cache' ); ?>
 		</p>
 	<?php } else { ?>
@@ -214,11 +215,12 @@ if ($cdn_setup_done_ts) {
 		<?php echo __( 'Action', 'litespeed-cache' ); ?>
 	</h3>
 	<div>
-		<p><?php echo __( 'The below two actions are available.', 'litespeed-cache' ); ?></p>
+		<p><?php echo __( 'The following actions are available:', 'litespeed-cache' ); ?></p>
 		<p>
 			<strong><?php echo __('Reset CDN Setup', 'litespeed-cache') . ': '; ?></strong>
-			<?php echo __( 'Resets Auto CDN Setup to the initial state.', 'litespeed-cache' ); ?>
-			<?php echo __( 'Allows one to try Auto CDN Setup again.', 'litespeed-cache' ); ?>
+			<?php echo __( 'Resets all LiteSpeed Cache plugin settings related to CDN setup back to the initial state and disables the CDN.', 'litespeed-cache' ); ?>
+			<?php echo __( 'QUIC.cloud DNS settings are not changed.', 'litespeed-cache' ); ?>
+			<?php echo __( 'This allows you to try Auto CDN setup again.', 'litespeed-cache' ); ?>
 			<?php if ( $cdn_setup_done_ts ) : ?>
 				<br/>
 				<span class="litespeed-desc">
@@ -229,15 +231,14 @@ if ($cdn_setup_done_ts) {
 		</p>
 		<p>
 			<strong><?php echo __('Delete QUIC.cloud data', 'litespeed-cache') . ': '; ?></strong>
-			<?php echo __( 'Resets Auto CDN Setup to the initial state and deletes the DNS Zone, if one exists for the domain.', 'litespeed-cache' ); ?>
-			<?php echo __( 'Allows one to try Auto CDN Setup again.', 'litespeed-cache' ); ?>
-			<?php if ( ! empty( $disabled ) ) : ?>
-				<br/>
-				<span class="litespeed-desc">
-					<?php echo __( 'NOTE', 'litespeed-cache' ) . ': '; ?>
-					<?php echo __( 'This action is not available if there is no domain key or the site is not linked.', 'litespeed-cache' ); ?>
-				</span>
-			<?php endif; ?>
+			<?php echo __( 'Resets all LiteSpeed Cache plugin settings related to CDN setup back to the initial state and deletes the DNS Zone, if one exists for the domain.', 'litespeed-cache' ); ?>
+			<?php echo __( 'This allows you to try Auto CDN setup again, or abandon the setup entirely.', 'litespeed-cache' ); ?>
+			<br/>
+			<span class="litespeed-desc">
+				<?php echo __( 'NOTE', 'litespeed-cache' ) . ': '; ?>
+				<?php echo __( 'This action is not available if there is no domain key, the domain is not linked, or the DNS Zone is in active use.', 'litespeed-cache' ); ?>
+				<?php echo __( 'If you have not yet done so, please replace the QUIC.cloud nameservers at your domain registrar before proceeding. ', 'litespeed-cache' ); ?>
+			</span>
 		</p>
 		<div>
 			<a href="<?php echo Utility::build_url( Router::ACTION_CDN_SETUP, Cdn_Setup::TYPE_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset CDN Setup?', 'litespeed-cache' ); ?>" class="button litespeed-btn-warning">
