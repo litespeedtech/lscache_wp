@@ -39,6 +39,17 @@ class Debug2 extends Root {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true );
 		}
 
+		defined( 'LSCWP_DEBUG_EXC_STRINGS' ) || define( 'LSCWP_DEBUG_EXC_STRINGS', $this->conf( Base::O_DEBUG_EXC_STRINGS ) );
+	}
+
+	/**
+	 * End call of one request process
+	 * @since 4.7
+	 * @access public
+	 */
+	public static function ended() {
+		self::debug( 'Response headers', headers_list() );
+		self::debug( "End response\n--------------------------------------------------------------------------------\n" );
 	}
 
 	/**
@@ -314,6 +325,10 @@ class Debug2 extends Root {
 	 */
 	public static function debug( $msg, $backtrace_limit = false ) {
 		if ( ! defined( 'LSCWP_LOG' ) ) {
+			return;
+		}
+
+		if ( defined( 'LSCWP_DEBUG_EXC_STRINGS' ) && Utility::str_hit_array( $msg, LSCWP_DEBUG_EXC_STRINGS ) ) {
 			return;
 		}
 

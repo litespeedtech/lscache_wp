@@ -170,6 +170,11 @@ class Vary extends Root {
 			return;
 		}
 
+		/* @ref https://wordpress.org/support/topic/checkout-add-to-cart-executed-twice/ */
+		if ( ! empty( $_GET[ 'litespeed_guest_off' ] ) ) {
+			return;
+		}
+
 		Debug2::debug( '[Vary] 👒👒 Guest mode' );
 
 		! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );

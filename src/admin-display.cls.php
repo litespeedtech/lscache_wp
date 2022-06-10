@@ -13,6 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin_Display extends Base {
+	const LOG_TAG = '👮‍♀️';
+
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
@@ -86,6 +88,8 @@ class Admin_Display extends Base {
 		else {
 			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		}
+
+		$this->cls( 'Metabox' )->register_settings();
 	}
 
 	/**
@@ -462,9 +466,9 @@ class Admin_Display extends Base {
 				echo $msg;
 			}
 		}
-		if ( $messages != -1 ) {
-			self::update_option( self::DB_MSG_PIN, -1 );
-		}
+		// if ( $messages != -1 ) {
+		// 	self::update_option( self::DB_MSG_PIN, -1 );
+		// }
 
 		if( empty( $_GET[ 'page' ] ) || strpos( $_GET[ 'page' ], 'litespeed' ) !== 0 ) {
 			global $pagenow;
@@ -506,7 +510,7 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG_PIN );
+		$messages = self::get_option( self::DB_MSG_PIN, array() );
 		if ( ! is_array( $messages ) || empty( $messages[ $_GET[ 'msgid' ] ] ) ) {
 			return;
 		}
@@ -848,7 +852,7 @@ class Admin_Display extends Base {
 			$title_off = __( 'OFF', 'litespeed-cache' );
 		}
 		$cls = $checked ? 'primary' : 'default litespeed-toggleoff';
-		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default' data-litespeed_crawler_id='$id' >
+		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default' data-litespeed_toggle_id='$id' >
 				<input name='$id' type='hidden' value='$checked' />
 				<div class='litespeed-toggle-group'>
 					<label class='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>$title_on</label>

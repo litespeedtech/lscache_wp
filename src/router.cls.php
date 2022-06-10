@@ -28,6 +28,7 @@ class Router extends Base {
 	const ACTION_CONF = 'conf';
 	const ACTION_ACTIVATION = 'activation';
 	const ACTION_CSS = 'css';
+	const ACTION_VPI = 'vpi';
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
 	const ACTION_DEBUG2 = 'debug2';
@@ -43,6 +44,7 @@ class Router extends Base {
 		self::ACTION_CONF,
 		self::ACTION_CRAWLER,
 		self::ACTION_CSS,
+		self::ACTION_VPI,
 		self::ACTION_DB_OPTM,
 		self::ACTION_DEBUG2,
 		self::ACTION_HEALTH,
@@ -565,6 +567,7 @@ class Router extends Base {
 			case self::ACTION_IMPORT:
 			case self::ACTION_REPORT:
 			case self::ACTION_CSS:
+			case self::ACTION_VPI:
 			case self::ACTION_CONF:
 			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:
@@ -602,11 +605,11 @@ class Router extends Base {
 	 * Verify nonce
 	 *
 	 * @since 1.1.0
-	 * @access private
+	 * @access public
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function verify_nonce( $action ) {
+	public function verify_nonce( $action ) {
 		if ( ! isset( $_REQUEST[ Router::NONCE ] ) || ! wp_verify_nonce( $_REQUEST[ Router::NONCE ], $action ) ) {
 			return false;
 		}

@@ -14,6 +14,7 @@ class Task extends Root {
 		Base::O_IMG_OPTM_CRON			 		=> array( 'name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::cron_pull' ), // always fetch immediately
 		Base::O_OPTM_CSS_ASYNC			 		=> array( 'name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss' ),
 		Base::O_OPTM_UCSS			 			=> array( 'name' => 'litespeed_task_ucss', 'hook' => 'LiteSpeed\CSS::cron_ucss' ),
+		Base::O_MEDIA_VPI_CRON		 			=> array( 'name' => 'litespeed_task_vpi', 'hook' => 'LiteSpeed\VPI::cron' ),
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array( 'name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron' ),
 		Base::O_DISCUSS_AVATAR_CRON				=> array( 'name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron' ),
 		Base::O_IMG_OPTM_AUTO				 	=> array( 'name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request' ),
@@ -23,6 +24,7 @@ class Task extends Root {
 	private static $_guest_options = array(
 		Base::O_OPTM_CSS_ASYNC,
 		Base::O_OPTM_UCSS,
+		Base::O_MEDIA_VPI,
 	);
 
 	const FITLER_CRAWLER = 'litespeed_crawl_filter';

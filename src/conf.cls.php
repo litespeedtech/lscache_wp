@@ -120,6 +120,9 @@ class Conf extends Base {
 				// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
 				self::add_option( $k, $v );
 			}
+
+			// Force correct version in case a rare unexpected case that `_ver` exists but empty
+			self::update_option( Base::_VER, Core::VER );
 		}
 
 		/**

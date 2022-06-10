@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Stable tag: 4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -249,6 +249,34 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 4.7 - May 2022 =
+* 🌱**VPI** Viewport Images feature in post editor metabox.
+* 🌱**Page Optimize** Auto cache CSS/JS remote files when fetching in optimization (Lauren).
+* 🌱**Cache** Page cache control option in page editor. (denisgomesfranco)
+* 🌱**Debug** New option under `Debug`: `Debug String Excludes`. (Hanna)
+* 🌱**UCSS** New dropdown menu `Purge this page - UCSS`. (Ankit)
+* 🌱**Guest** New URL query string param `litespeed_guest_off=1` to bypass guest mode. (cbdfactum)
+* **Object** Allow predefined `LSCWP_OBJECT_CACHE` to turn off Object Cache. (knutsp)
+* **Data** Force correct version in case upgrade process caused version tag in DB exists but empty which caused upgrade banner keeps toggling and all settings are kept using default.
+* **Purge** Fixed a potential bug that purged frontend page when commenting in a post that is not public viewable. (Kevin)
+* **Toolbox** Added `View site before optimization` button under `Debug` tab. (Ryan D)
+* **Admin** Use const `DONOTCACHEPAGE` for admin page no-cacheable cache behavior.
+* **Admin** Moved no-cache header to very beginning to avoid unexpected exit being cached.
+* **Cloud** Added message queue service for VPI. (Abe)
+* **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
+* **Cloud** Fixed a failure to detect `out_of_quota`. (Lauren)
+* 🕸️**Crawler** Crawler now will detect the realtime load before crawling.
+* **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
+* **Media** Now can disable lazyload in page editor.
+* **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
+* **GUI** Fixed a bug caused manual dismiss admin msg being onetime msg. (Tynan Beatty)
+* **GUI** Fixed a bug that `dismiss` doesn't work on pinned admin msg. (Kevin/Tynan)
+* **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
+* **GUI** GUI added `litespeed_media_ignore_remote_missing_sizes` API description.
+* **Crawler** Divi pages will not be added to non-cacheable pages anymore after 1st time visit due to DIVI generating CCSS purpose. (miketemby)
+* **CCSS** Fixed an unexpected CCSS bypassed bug when `CSS Combine` is OFF while `UCSS Inline` is ON. (Ruikai)
+* **Debug** Added resposne headers to debug log. (Kevin)
 
 = 4.6 - Mar 29 2022 =
 * **Page Optimize** Improved compatibility for JS Delay.

@@ -330,7 +330,7 @@ class Placeholder extends Base {
 			$res = $_instance->_generate_placeholder( $v, true );
 
 			// Exit queue if out of quota
-			if ( $res == 'out_of_quota' ) {
+			if ( $res === 'out_of_quota' ) {
 				return;
 			}
 

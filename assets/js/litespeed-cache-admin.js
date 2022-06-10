@@ -177,9 +177,9 @@ var _litespeed_dots ;
 		 * Freeze or melt a specific crawler
 		 * @since  4.3
 		 */
-		if ( $( '.litespeed-toggle' ).length > 0 ) {
-			$( '.litespeed-toggle' ).on( 'click', function( e ) {
-				var crawler_id = $( this ).attr( "data-litespeed_crawler_id" );
+		if ( $( '[data-crawler-list] [data-litespeed_toggle_id]' ).length > 0 ) {
+			$( '[data-crawler-list] [data-litespeed_toggle_id]' ).on( 'click', function( e ) {
+				var crawler_id = $( this ).attr( "data-litespeed_toggle_id" );
 				var crawler_id = Number( crawler_id.split('-').pop() );
 				var that = this;
 				$.ajax( {

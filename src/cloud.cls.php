@@ -22,7 +22,9 @@ class Cloud extends Base {
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
 	const SVC_UCSS 				= 'ucss';
+	const SVC_VPI 				= 'vpi';
 	const SVC_LQIP 				= 'lqip';
+	const SVC_QUEUE 			= 'queue';
 	const SVC_IMG_OPTM			= 'img_optm';
 	const SVC_HEALTH			= 'health';
 	const SVC_CDN				= 'cdn';
@@ -70,9 +72,14 @@ class Cloud extends Base {
 		self::API_BETA_TEST,
 	);
 
+	private static $_QUEUE_SVC_SET = array(
+		self::SVC_VPI,
+	);
+
 	public static $SERVICES_LOAD_CHECK = array(
 		self::SVC_CCSS,
 		self::SVC_UCSS,
+		// self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_HEALTH,
 	);
@@ -82,9 +89,11 @@ class Cloud extends Base {
 		self::SVC_PAGE_OPTM,
 		self::SVC_CCSS,
 		self::SVC_UCSS,
+		self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_CDN,
 		self::SVC_HEALTH,
+		// self::SVC_QUEUE,
 	);
 
 	const TYPE_CLEAR_PROMO 		= 'clear_promo';
@@ -127,7 +136,7 @@ class Cloud extends Base {
 
 		$last_check = empty( $this->_summary[ 'last_request.' . self::API_VER ] ) ? 0 : $this->_summary[ 'last_request.' . self::API_VER ] ;
 
-		if ( time() - $last_check > 600 ) {
+		if ( time() - $last_check > 86400 ) {
 			$auto_v = self::version_check( 'dev' );
 			if ( ! empty( $auto_v[ 'dev' ] ) ) {
 				$this->_summary[ 'version.dev' ] = $auto_v[ 'dev' ];
@@ -193,7 +202,7 @@ class Cloud extends Base {
 	 * @since 2.9.9.1
 	 */
 	private function _update_news() {
-		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 3 ) {
+		if ( ! empty( $this->_summary[ 'news.utime' ] ) && time() - $this->_summary[ 'news.utime' ] < 86400 * 7 ) {
 			return;
 		}
 
@@ -252,7 +261,7 @@ class Cloud extends Base {
 			$this->sync_usage();
 		}
 
-		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ) { // @since 4.2
+		if ( in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ) ) ) { // @since 4.2
 			$service = self::SVC_PAGE_OPTM;
 		}
 
@@ -374,7 +383,7 @@ class Cloud extends Base {
 		}
 
 		// Send request to Quic Online Service
-		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $service ) );
+		$json = $this->_post( self::SVC_D_NODES, array( 'svc' => $this->_maybe_queue( $service ) ) );
 
 		// Check if get list correctly
 		if ( empty( $json[ 'list' ] ) || ! is_array( $json[ 'list' ] ) ) {
@@ -388,10 +397,20 @@ class Cloud extends Base {
 			return false;
 		}
 
+
 		// Ping closest cloud
 		$speed_list = array();
 		foreach ( $json[ 'list' ] as $v ) {
+			// Exclude possible failed 503 nodes
+			if ( ! empty( $this->_summary['disabled_node'] ) && ! empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400 ) {
+				continue;
+			}
 			$speed_list[ $v ] = Utility::ping( $v );
+		}
+
+		if ( ! $speed_list ) {
+			self::debug( 'nodes are in 503 failed nodes' );
+			return false;
 		}
 
 		$min = min( $speed_list );
@@ -464,6 +483,14 @@ class Cloud extends Base {
 		self::save_summary();
 
 		return $this->_summary[ 'server.' . $service ];
+	}
+
+	/**
+	 * May need to convert to queue service
+	 */
+	private function _maybe_queue( $service ) {
+		if ( in_array( $service, self::$_QUEUE_SVC_SET ) ) return self::SVC_QUEUE;
+		return $service;
 	}
 
 	/**
@@ -617,9 +644,13 @@ class Cloud extends Base {
 			return;
 		}
 
-		$url = $server . '/' . $service;
+		$url = $server . '/' . $this->_maybe_queue( $service );
 
 		self::debug( 'posting to : ' . $url );
+
+		if ( $data ) {
+			$data[ 'service_type' ] = $service; // For queue distribution usage
+		}
 
 		$param = array(
 			'site_url'		=> home_url(),
@@ -651,6 +682,11 @@ class Cloud extends Base {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $error_message . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
 
+				// Tmp disabled this node from reusing in 1 day
+				if (empty($this->_summary['disabled_node'])) $this->_summary['disabled_node'] = array();
+				$this->_summary['disabled_node'][$server] = time();
+				self::save_summary();
+
 				// Force redetect node
 				self::debug( 'Node error, redetecting node [svc] ' . $service );
 				$this->detect_cloud( $service, true );
@@ -666,6 +702,11 @@ class Cloud extends Base {
 			if ( $service !== self::API_VER ) {
 				$msg = __( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] . " [server] $server [service] $service";
 				Admin_Display::error( $msg );
+
+				// Tmp disabled this node from reusing in 1 day
+				if (empty($this->_summary['disabled_node'])) $this->_summary['disabled_node'] = array();
+				$this->_summary['disabled_node'][$server] = time();
+				self::save_summary();
 
 				// Force redetect node
 				self::debug( 'Node error, redetecting node [svc] ' . $service );
@@ -743,7 +784,7 @@ class Cloud extends Base {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
-							$usage_svc_tag = in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS ) ) ? self::SVC_PAGE_OPTM : $service;
+							$usage_svc_tag = in_array( $service, array( self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ) ) ? self::SVC_PAGE_OPTM : $service;
 							$this->_summary[ 'usage.' . $usage_svc_tag ] = $json[ '_carry_on' ][ $v ];
 							break;
 
@@ -1192,6 +1233,278 @@ class Cloud extends Base {
 	}
 
 	/**
+	 * Callback for approval of api key after validated token and gen key from QUIC.cloud
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function cdn_status() {
+		// Validate token hash first
+
+		if ( empty( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
+			$this->_summary[ 'cdn_setup_err' ] = __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' );
+			self::save_summary();
+			return self::err( 'lack_of_param' );
+		}
+
+		$this->_update_cdn_status($_POST[ 'success' ], $_POST[ 'result' ]);
+
+		return self::ok();
+	}
+
+	public function refresh_cdn_status() {
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot refresh CDN status, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+		];
+		$response = wp_remote_get(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnstatus', $req_args);
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to refresh cdn setup status: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		$isSuccess = 1;
+		$result = [];
+		if (!$json['success']) {
+			$isSuccess = 0;
+		} else if (isset($json['info']['errors'])) {
+			$isSuccess = 0;
+			$errs = [];
+			foreach ($json['info']['errors'] as $err) {
+				$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+			}
+			$result['_msg'] = implode('<br>', $errs);
+		} else if (isset($json['info']['messages'])) {
+			$result['_msg'] = implode('<br>', $json['info']['messages']);
+		}
+
+		$this->_update_cdn_status($isSuccess, $result);
+	}
+
+	private function _update_cdn_status($isSuccess, $result)
+	{
+
+		if ( 1 != $isSuccess ) {
+
+			$this->_summary[ 'cdn_setup_err' ] = $result[ '_msg' ];
+			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $result[ '_msg' ] );
+		} else if ( isset($result[ 'nameservers' ] ) ) {
+			if (isset($this->_summary['cdn_setup_err'])) {
+				unset($this->_summary['cdn_setup_err']);
+			}
+			$this->_summary[ 'is_linked' ] = 1;
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_NAMESERVERS => $result[ 'nameservers' ] ) );
+			Admin_Display::succeed( '🎊 ' . __( 'Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache' ) . $result[ 'nameservers' ] );
+		} else if ( isset($result[ 'done' ] ) ) {
+			if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+				unset( $this->_summary[ 'cdn_setup_err' ] );
+			}
+			$this->_summary[ 'cdn_setup_done_ts' ] = time();
+			self::save_summary();
+
+			$this->_setup_token = '';
+			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
+		} else if ( isset($result[ '_msg' ] ) ) {
+			Admin_Display::succeed( $result[ '_msg' ] );
+		} else {
+			Admin_Display::succeed( __( 'CDN Setup is running.', 'litespeed-cache' ) );
+		}
+		self::save_summary();
+	}
+
+	private function _reset_cdn_setup() {
+		$token = $this->_setup_token;
+
+		if (!empty($token)) {
+			$req_args = [
+				'headers' => [
+					'Authorization' => 'bearer ' . $token,
+					'Content-Type' => 'application/json',
+				],
+				'body' => json_encode([
+					'site_url' => home_url(),
+					'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+				]),
+			];
+			$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdnreset', $req_args);
+			if ( is_wp_error( $response ) ) {
+
+				$error_message = $response->get_error_message();
+				self::debug( 'failed to reset cdn setup: ' . $error_message );
+				$this->_summary['cdn_setup_err'] = $error_message;
+				self::save_summary();
+				Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			} else {
+				$json = json_decode( $response[ 'body' ], true );
+
+				if (1 != $json['success']) {
+					Admin_Display::error( __( 'Reset CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
+				} else {
+					$json = $json['info'];
+					if (isset($json['errors'])) {
+						$errs = [];
+						foreach ($json['errors'] as $err) {
+							$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+						}
+						Admin_Display::error( __( 'CDN Setup Reset Error', 'litespeed-cache' ) . ': ' . implode('<br>', $errs) );
+					}
+				}
+			}
+		}
+
+		if ( isset( $this->_summary[ 'cdn_setup_ts' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_ts' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_done_ts' ] );
+		}
+		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+		if ( isset( $this->_summary[ 'is_linked' ] ) ) {
+			unset( $this->_summary[ 'is_linked' ] );
+		}
+		self::save_summary();
+
+		$this->_setup_token = '';
+		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '', self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
+		Admin_Display::succeed( __( 'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache' ) );
+		return self::ok();
+	}
+
+	/**
+	 * If can link the domain to QC user or not
+	 *
+	 * @since  3.0
+	 */
+	public function has_cdn_setup_token() {
+		return !empty( $this->_setup_token );
+	}
+
+	/**
+	 * Get QC user setup token
+	 *
+	 * @since  3.0
+	 */
+	private function _qc_setup_cdn_link() {
+		if ( $this->has_cdn_setup_token() ) {
+			return;
+		}
+
+		$data = array(
+			'site_url'		=> home_url(),
+			// XXX FIXME: how to forward tab?
+			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
+		);
+
+		wp_redirect( self::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
+		exit;
+	}
+
+	/**
+	 * Update setup token status if is a redirected back from QC
+	 *
+	 * @since  3.0
+	 */
+	public function update_setup_token_status() {
+		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'token' ] ) ) {
+			return;
+		}
+
+		$this->_setup_token = $_GET[ 'token' ];
+		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
+
+		// Drop QS
+		unset($_GET['qc_res']);
+		unset($_GET['token']);
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&token=" . sanitize_key( $_GET[ 'token' ] ) . "', '' ) );</script>";
+	}
+
+	public function init_cdn_setup() {
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot set up CDN, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+			'body' => json_encode([
+				'site_url' => home_url(),
+				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+				'server_ip'	=> $this->conf( self::O_SERVER_IP ),
+			]),
+		];
+		$response = wp_remote_post(self::CLOUD_SERVER . '/v2/user/dmlinks/cdn', $req_args);
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to run cdn setup: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		if (1 != $json['success']) {
+			Admin_Display::error( __( 'Start CDN link failed: ', 'litespeed-cache' ) . print_r($json, true) );
+			return;
+		}
+
+		$json = $json['result'];
+
+		if ( isset( $this->_summary[ 'cdn_setup_err' ] ) ) {
+			unset( $this->_summary[ 'cdn_setup_err' ] );
+		}
+
+		// Save token option
+		if ( ! empty( $json[ 'token' ] ) ) {
+			$this->_summary[ 'token' ] = $json[ 'token' ];
+			$this->_summary[ 'token_ts' ] = time();
+			$this->_summary[ 'cdn_setup_ts' ] = time();
+			if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
+				unset( $this->_summary[ 'apikey_ts' ] );
+			}
+		}
+		self::save_summary();
+
+		// This is a ok msg
+		if ( ! empty( $json[ 'messages' ] ) ) {
+			self::debug( '_msg: ' . $json[ 'messages' ] );
+
+			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json[ 'messages' ] );
+			Admin_Display::info( $msg );
+			return;
+		}
+
+		self::debug( '✅ Successfully init CDN setup.' );
+	}
+
+	/**
 	 * Check if this visit is from cloud or not
 	 *
 	 * @since  3.0
@@ -1286,6 +1599,22 @@ class Cloud extends Base {
 
 			case self::TYPE_LINK:
 				$this->_link_to_qc();
+				break;
+
+			case self::TYPE_CDN_SETUP_LINK:
+				$this->_qc_setup_cdn_link();
+				break;
+
+			case self::TYPE_CDN_SETUP:
+				$this->init_cdn_setup();
+				break;
+
+			case self::TYPE_CDN_SETUP_STATUS:
+				$this->refresh_cdn_status();
+				break;
+
+			case self::TYPE_CDN_RESET:
+				$this->_reset_cdn_setup();
 				break;
 
 			case self::TYPE_SYNC_USAGE:

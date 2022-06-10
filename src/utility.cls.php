@@ -525,6 +525,8 @@ class Utility extends Root {
 	 * @return string
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
+		$types = $type ? explode( ',', $type ) : [];
+
 		if ( ! $arr ) {
 			if ( $type === 'string' ) {
 				return '';
@@ -538,21 +540,26 @@ class Utility extends Root {
 
 		$arr = array_map( 'trim', $arr );
 		$changed = false;
-		if ( $type === 'uri' ) {
+		if ( in_array( 'uri', $types ) ) {
 			$arr = array_map( __CLASS__ . '::url2uri', $arr );
 			$changed = true;
 		}
-		if ( $type === 'relative' ) {
+		if ( in_array( 'relative', $types ) ) {
 			$arr = array_map( __CLASS__ . '::make_relative', $arr );// Remove domain
 			$changed = true;
 		}
-		if ( $type === 'domain' ) {
+		if ( in_array( 'domain', $types ) ) {
 			$arr = array_map( __CLASS__ . '::parse_domain', $arr );// Only keep domain
 			$changed = true;
 		}
 
-		if ( $type === 'noprotocol' ) {
+		if ( in_array( 'noprotocol', $types ) ) {
 			$arr = array_map( __CLASS__ . '::noprotocol', $arr ); // Drop protocol, `https://example.com` -> `//example.com`
+			$changed = true;
+		}
+
+		if ( in_array( 'trailingslash', $types ) ) {
+			$arr = array_map( 'trailingslashit', $arr ); // Append trailing slach, `https://example.com` -> `https://example.com/`
 			$changed = true;
 		}
 
@@ -562,7 +569,7 @@ class Utility extends Root {
 		$arr = array_unique( $arr );
 		$arr = array_filter( $arr );
 
-		if ( $type === 'string' ) {
+		if ( in_array( 'string', $types ) ) {
 			return implode( "\n", $arr );
 		}
 
