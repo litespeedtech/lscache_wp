@@ -107,10 +107,14 @@ if ($cdn_setup_done_ts) {
 	<p>
 		<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
 		<p>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dm/' . $dom . '/cdn/', __( 'Manage CDN', 'litespeed-cache' ), false, '' ); ?>
-		</p>
-		<p>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.', __( 'Manage DNS Zone', 'litespeed-cache' ), false, '' ); ?>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dm/' . $dom . '/cdn/',
+									__( 'Manage CDN', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
+									false,
+									'litespeed-link-with-icon' ); ?>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.',
+									__( 'Manage DNS Zone', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
+									false,
+									'litespeed-link-with-icon', ); ?>
 		</p>
 	</p>
 <?php elseif ( $has_setup_token ) : ?>
@@ -162,7 +166,10 @@ if ($cdn_setup_done_ts) {
 		</p>
 		<p>
 			<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.', __( 'Review DNS records', 'litespeed-cache' ), false, '' ); ?>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.',
+									__( 'Review DNS records', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
+									false,
+									'litespeed-link-with-icon' ); ?>
 		</p>
 	<?php } ?>
 <?php } ?>
