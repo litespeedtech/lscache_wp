@@ -102,12 +102,6 @@ class Cloud extends Base {
 	const TYPE_GEN_KEY 			= 'gen_key';
 	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
-	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
-	const TYPE_CDN_SETUP_NOLINK	= 'cdn_setup_nolink';
-	const TYPE_CDN_SETUP_RUN	= 'cdn_setup';
-	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
-	const TYPE_CDN_SETUP_RESET	= 'cdn_reset';
-	const TYPE_CDN_SETUP_DELETE	= 'cdn_delete';
 
 	private $_api_key;
 	private $_setup_token;
