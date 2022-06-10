@@ -35,6 +35,7 @@ $curr_status = '<span class="litespeed-desc">' . __('Not running', 'litespeed-ca
 $apply_btn_txt = __( 'Run CDN Setup', 'litespeed-cache' );
 $apply_btn_type = Cdn_Setup::TYPE_RUN;
 $disabled = '';
+$dom = parse_url(home_url(), PHP_URL_HOST);
 
 if ($cdn_setup_done_ts) {
 	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> '
@@ -56,6 +57,7 @@ if ($cdn_setup_done_ts) {
 		}
 	} else {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('In Progress', 'litespeed-cache');
+		$curr_status_subline = '<p class="litespeed-desc">' .  __( 'You will receive an email upon status update.', 'litespeed-cache' ) . '</p>';
 	}
 	$apply_btn_txt = __( 'Refresh CDN Setup Status', 'litespeed-cache' );
 	$apply_btn_type = Cdn_Setup::TYPE_STATUS;
@@ -70,7 +72,7 @@ if ($cdn_setup_done_ts) {
 </p>
 <ol>
 	<li><?php echo __( 'Set up a QUIC.cloud account.', 'litespeed-cache' ); ?></li>
-	<li><?php echo __( 'Prepares the site for QUIC.cloud CDN and detects the DNS.', 'litespeed-cache' ); ?></li>
+	<li><?php echo __( 'Prepares the site for QUIC.cloud CDN and detects the DNS and creates a DNS Zone.', 'litespeed-cache' ); ?></li>
 	<li><?php echo __( 'Provide the nameservers to use to enable the CDN.', 'litespeed-cache' ); ?></li>
 </ol>
 
@@ -87,6 +89,10 @@ if ($cdn_setup_done_ts) {
 		<?php echo __( 'If you have this enabled for your domain, you must disable DNSSEC to continue.', 'litespeed-cache' ); ?>
 	</li>
 	<li>
+		<?php echo __( 'This setup process will create a DNS zone on QUIC.cloud if one does not currently exist.', 'litespeed-cache' ); ?>
+		<?php echo __( 'If you prefer to use the CNAME setup, please set up the CDN on QUIC.cloud directly.', 'litespeed-cache' ); ?>
+	</li>
+	<li>
 		<?php echo __( 'QUIC.cloud will detect most normal DNS entries.', 'litespeed-cache' ); ?>
 		<?php echo __( 'If you have custom DNS records, it is possible that they are not detected.', 'litespeed-cache' ); ?>
 		<?php echo __( 'Visit the my.quic.cloud dashboard to confirm your DNS Zone.', 'litespeed-cache' ); ?>
@@ -100,7 +106,12 @@ if ($cdn_setup_done_ts) {
 <?php if ( $cdn_setup_done_ts ) : ?>
 	<p>
 		<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Account is linked!', 'litespeed-cache' ) . '</span>'; ?>
-		<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH, __( 'Go to QUIC.cloud Dashboard', 'litespeed-cache' ), false, '' ); ?>
+		<p>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dm/' . $dom . '/cdn/', __( 'Manage CDN', 'litespeed-cache' ), false, '' ); ?>
+		</p>
+		<p>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.', __( 'Manage DNS Zone', 'litespeed-cache' ), false, '' ); ?>
+		</p>
 	</p>
 <?php elseif ( $has_setup_token ) : ?>
 	<?php echo '<span class="litespeed-right10"><span class="litespeed-success dashicons dashicons-yes"></span> ' . __( 'Ready to run CDN setup.', 'litespeed-cache' ) . '</span>'; ?>
@@ -151,7 +162,7 @@ if ($cdn_setup_done_ts) {
 		</p>
 		<p>
 			<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/zones', __( 'Review DNS records', 'litespeed-cache' ), false, '' ); ?>
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.', __( 'Review DNS records', 'litespeed-cache' ), false, '' ); ?>
 		</p>
 	<?php } ?>
 <?php } ?>
@@ -191,7 +202,7 @@ if ($cdn_setup_done_ts) {
 <?php } ?>
 
 <?php if ( $has_setup_token || $cdn_setup_done_ts ) { ?>
-	<?php $disabled = $cdn_setup_done_ts && $cloud_linked ? 'disabled' : ''; ?>
+	<?php $disabled = $cdn_setup_done_ts && ! $cloud_linked ? 'disabled' : ''; ?>
 	<h3 class="litespeed-title-section">
 		<?php echo __( 'Action', 'litespeed-cache' ); ?>
 	</h3>
