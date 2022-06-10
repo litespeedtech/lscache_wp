@@ -565,6 +565,16 @@ class Admin_Display extends Base {
 	}
 
 	/**
+	 * Displays the CDN page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_menu_auto_cdn_setup() {
+		require_once LSCWP_DIR . 'tpl/auto_cdn_setup/entry.tpl.php';
+	}
+
+	/**
 	 * Outputs the LiteSpeed Cache settings page.
 	 *
 	 * @since 1.0.0

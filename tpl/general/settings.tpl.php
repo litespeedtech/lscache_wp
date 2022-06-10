@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 $__cloud = Cloud::cls();
 
 // This will drop QS param `qc_res` and `domain_hash` also
-$__cloud->update_is_linked_status();
+$__cloud->parse_qc_redir();
 
 $cloud_summary = Cloud::get_summary();
 

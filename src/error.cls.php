@@ -169,6 +169,10 @@ class Error {
 				$msg = __( 'Your domain has been forbidden from using our services due to a previous policy violation.', 'litespeed-cache' );
 				break;
 
+			case 'err_dns_active':
+				$msg = __( 'You cannot remove this DNS zone, because it is still in use. Please update the domain\'s nameservers, then try to delete this zone again, otherwise your site will become inaccessible.', 'litespeed-cache' );
+				break;
+
 			default:
 				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
 				break;

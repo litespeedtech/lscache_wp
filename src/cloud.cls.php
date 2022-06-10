@@ -17,6 +17,8 @@ class Cloud extends Base {
 	const SVC_D_NODES 			= 'd/nodes';
 	const SVC_D_SYNC_CONF		= 'd/sync_conf';
 	const SVC_D_USAGE 			= 'd/usage';
+	const SVC_D_SETUP_TOKEN		= 'd/get_token';
+	const SVC_D_DEL_CDN_DNS		= 'd/del_cdn_dns';
 	const SVC_PAGE_OPTM 		= 'page_optm';
 	const SVC_CCSS 				= 'ccss';
 	const SVC_UCSS 				= 'ucss';
@@ -52,6 +54,8 @@ class Cloud extends Base {
 		self::API_REPORT,
 		// self::API_VER,
 		// self::API_BETA_TEST,
+		self::SVC_D_SETUP_TOKEN,
+		self::SVC_D_DEL_CDN_DNS,
 	);
 
 	private static $WP_SVC_SET = array(
@@ -98,10 +102,6 @@ class Cloud extends Base {
 	const TYPE_GEN_KEY 			= 'gen_key';
 	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
-	const TYPE_CDN_SETUP_LINK	= 'cdn_setup_link';
-	const TYPE_CDN_SETUP 		= 'cdn_setup';
-	const TYPE_CDN_SETUP_STATUS = 'cdn_status';
-	const TYPE_CDN_RESET		= 'cdn_reset';
 
 	private $_api_key;
 	private $_setup_token;
@@ -810,6 +810,8 @@ class Cloud extends Base {
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
 				$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '' ) );
+				$this->_summary['is_linked'] = 0;
+				self::save_summary();
 
 				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
 				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
@@ -837,6 +839,66 @@ class Cloud extends Base {
 		}
 
 		// Only successful request return Array
+		return $json;
+	}
+
+	public function req_rest_api($api, $body = [])
+	{
+
+		$token = $this->_setup_token;
+
+		if (empty($token)) {
+
+			Admin_Display::error( __( 'Cannot request REST API, no token saved.', 'litespeed-cache' ));
+			return;
+		}
+		$req_args = [
+			'headers' => [
+				'Authorization' => 'bearer ' . $token,
+				'Content-Type' => 'application/json',
+			],
+		];
+		if (!empty($body)) {
+			$req_args['body'] = json_encode($body);
+
+			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
+		} else {
+			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
+		}
+
+		return $this->_parse_rest_response($response);
+	}
+
+	private function _parse_rest_response($response)
+	{
+		if ( is_wp_error( $response ) ) {
+
+			$error_message = $response->get_error_message();
+			self::debug( 'failed to request REST API: ' . $error_message );
+			$this->_summary['cdn_setup_err'] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud REST Error', 'litespeed-cache' ) . ': ' . $error_message );
+			return;
+		}
+
+		$json = json_decode( $response[ 'body' ], true );
+
+		if (!$json['success']) {
+			if (isset($json['info']['errors'])) {
+				$errs = [];
+				foreach ($json['info']['errors'] as $err) {
+					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+				}
+				$error_message = implode('<br>', $errs);
+			} else {
+				$error_message = 'Unknown error, contact QUIC.cloud support.';
+			}
+			$this->_summary[ 'cdn_setup_err' ] = $error_message;
+			self::save_summary();
+			Admin_Display::error( __( 'Cloud REST API returned error: ', 'litespeed-cache' ) . $error_message );
+			return;
+		}
+
 		return $json;
 	}
 
@@ -936,6 +998,16 @@ class Cloud extends Base {
 		return empty( $this->_summary[ 'token_ts' ] ) || time() - $this->_summary[ 'token_ts' ] > self::EXPIRATION_TOKEN;
 	}
 
+	public function set_keygen_token($token)
+	{
+		$this->_summary[ 'token' ] = $token;
+		$this->_summary[ 'token_ts' ] = time();
+		if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
+			unset( $this->_summary[ 'apikey_ts' ] );
+		}
+		self::save_summary();
+	}
+
 	/**
 	 * Send request for domain key, get json [ 'token' => 'asdfasdf' ]
 	 *
@@ -964,12 +1036,7 @@ class Cloud extends Base {
 
 		// Save token option
 		if ( ! empty( $json[ 'token' ] ) ) {
-			$this->_summary[ 'token' ] = $json[ 'token' ];
-			$this->_summary[ 'token_ts' ] = time();
-			if ( ! empty( $this->_summary[ 'apikey_ts' ] ) ) {
-				unset( $this->_summary[ 'apikey_ts' ] );
-			}
-			self::save_summary();
+			$this->set_keygen_token( $json[ 'token' ] );
 		}
 
 		// Parse general error msg
@@ -1107,30 +1174,56 @@ class Cloud extends Base {
 		exit;
 	}
 
+	public function set_linked() {
+		$this->_summary[ 'is_linked' ] = 1;
+		self::save_summary();
+	}
+
 	/**
 	 * Update is_linked status if is a redirected back from QC
 	 *
 	 * @since  3.0
+	 * @since  4.7 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
 	 */
-	public function update_is_linked_status() {
-		if ( empty( $_GET[ 'qc_res' ] ) || empty( $_GET[ 'domain_hash' ] ) ) {
-			return;
+	public function parse_qc_redir($extra = []) {
+
+		$extraRet = [];
+		$qsDrop = [];
+		if ( ! $this->_api_key && $this->_summary[ 'is_linked' ]) {
+			$this->_summary[ 'is_linked' ] = 0;
+			self::save_summary();
 		}
 
-		if ( ! $this->_api_key ) {
-			return;
+		if ( empty( $_GET[ 'qc_res' ] ) ) {
+			return $extraRet;
+		}
+		$qsDrop[] = ".replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . ', \'\' )';
+
+		if ( ! empty( $_GET[ 'domain_hash' ] ) ) {
+
+			if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
+				Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
+				return $extraRet;
+			}
+
+			$this->set_linked();
+			$qsDrop[] = ".replace( '&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] ) . ', \'\' )';
 		}
 
-		if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
-			Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
-			return;
+		if ( ! empty( $extra ) ) {
+			foreach ( $extra as $key ) {
+				if ( ! empty( $_GET[ $key ] ) ) {
+					$extraRet[ $key ] = $_GET[ $key ];
+					$qsDrop[] = ".replace( '&$key=" . sanitize_key( $_GET[ $key ] ) . ', \'\' )';
+				}
+			}
 		}
 
-		$this->_summary[ 'is_linked' ] = 1;
-		self::save_summary();
+		$replaceStr = implode('', $qsDrop);
 
 		// Drop QS
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href.replace( '&qc_res=" . sanitize_key( $_GET[ 'qc_res' ] ) . "&domain_hash=" . sanitize_key( $_GET[ 'domain_hash' ] ) . "', '' ) );</script>";
+		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href" . $replaceStr . " );</script>";
+		return $extraRet;
 	}
 
 	/**
