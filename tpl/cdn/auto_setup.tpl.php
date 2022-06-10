@@ -90,7 +90,7 @@ if ($cdn_setup_done_ts) {
 	</li>
 	<li>
 		<?php echo __( 'This setup process will create a DNS zone on QUIC.cloud if one does not currently exist.', 'litespeed-cache' ); ?>
-		<?php printf(__( 'If you prefer to use the CNAME setup, please <a %s>set up the CDN on QUIC.cloud directly</a>.', 'litespeed-cache' ),
+		<?php printf(__( 'If you prefer to use the CNAME setup, please <a %s>set up the CDN manually at QUIC.cloud</a>.', 'litespeed-cache' ),
 					'href="https://quic.cloud/docs/onboarding/" target="_blank" class="litespeed-learn-more"'); ?>
 	</li>
 	<li>
