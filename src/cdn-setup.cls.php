@@ -41,6 +41,7 @@ class Cdn_Setup extends Base {
 		if ( isset( $params[ 'token' ] ) ) {
 			$this->_setup_token = $params[ 'token' ];
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
+			unset( $_GET[ 'token' ] );
 		}
 
 	}

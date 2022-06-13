@@ -1214,7 +1214,7 @@ class Cloud extends Base {
 			foreach ( $extra as $key ) {
 				if ( ! empty( $_GET[ $key ] ) ) {
 					$extraRet[ $key ] = $_GET[ $key ];
-					$qsDrop[] = ".replace( '&$key=" . sanitize_key( $_GET[ $key ] ) . ', \'\' )';
+					$qsDrop[] = ".replace( '&$key=" . urlencode( $_GET[ $key ] ) . ', \'\' )';
 				}
 			}
 		}
