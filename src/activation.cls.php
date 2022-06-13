@@ -69,11 +69,6 @@ class Activation extends Base {
 		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
 		}
-
-		Thirdparty\LiteSpeed_Check::activated_plugin(
-			basename( LSCWP_DIR ) . '/litespeed-cache.php',
-			null
-		);
 	}
 
 	/**

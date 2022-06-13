@@ -38,12 +38,29 @@ class LiteSpeed_Check {
 			'wp-super-cache/wp-cache.php',
 		);
 
+	private static $_option = 'thirdparty_litespeed_check';
 	private static $_msg_id = 'id="lscwp-incompatible-plugin-notice"';
 
 	public static function detect() {
 		if ( ! is_admin() ) {
 			return;
 		}
+
+		/**
+		 * Check for incompatible plugins when `litespeed-cache` is first activated.
+		 */
+		$plugin = basename( LSCWP_DIR ) . '/litespeed-cache.php';
+		register_deactivation_hook( $plugin, function( $_network_wide ) {
+			\LiteSpeed\Admin_Display::delete_option( self::$_option );
+		} );
+		if ( ! \LiteSpeed\Admin_Display::get_option( self::$_option ) ) {
+			self::activated_plugin( $plugin, null );
+			\LiteSpeed\Admin_Display::add_option( self::$_option, true );
+		}
+
+		/**
+		 * Check for incompatible plugins when any plugin is (de)activated.
+		 */
 		add_action( 'activated_plugin', __CLASS__ . '::activated_plugin', 10, 2 );
 		add_action( 'deactivated_plugin', __CLASS__ . '::deactivated_plugin', 10, 2 );
 	}
@@ -56,11 +73,17 @@ class LiteSpeed_Check {
 		self::incompatible_plugin_notice( $plugin, $network_wide, 'deactivated' );
 	}
 
+	/**
+	 * Detect any incompatible plugins that are currently `active` and `valid`.
+	 * Show a notification if there are any.
+	 */
 	public static function incompatible_plugin_notice( $plugin, $_network_wide, $action ) {
 		self::update_messages();
 
-		/* The 'deactivated_plugin' action fires before
-		 * `wp_get_active_and_valid_plugins` can see the change.
+		/**
+		 * The 'deactivated_plugin' action fires before
+		 * `wp_get_active_and_valid_plugins` can see the change, so we'll need to
+		 * remove `$plugin` from the list.
 		 */
 		$deactivated = 'deactivated' === $action ? array( $plugin ) : array();
 
@@ -98,6 +121,11 @@ class LiteSpeed_Check {
 		);
 	}
 
+	/**
+	 * Prevent multiple incompatible plugin notices, in case an admin (de)activates
+	 * a number of incompatible plugins in succession without dismissing the
+	 * notice(s).
+	 */
 	private static function update_messages() {
 		$messages =
 			\LiteSpeed\Admin_Display::get_option(
