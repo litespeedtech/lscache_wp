@@ -1,7 +1,7 @@
 <?php
 /**
  * Check if any plugins that could conflict with LiteSpeed Cache are active.
- * @since		4.6
+ * @since		4.7
  */
 
 namespace LiteSpeed\Thirdparty;
@@ -38,44 +38,43 @@ class LiteSpeed_Check {
 			'wp-super-cache/wp-cache.php',
 		);
 
-	private static $_meta_key = 'litespeed.conf_temp_warning_dismiss_plugin';
-
-	public static function on_plugins_changed( $_plugin, $_network_wide ) {
-		delete_user_meta( get_current_user_id(), self::$_meta_key );
-	}
+	private static $_msg_id = 'id="lscwp-incompatible-plugin-notice"';
 
 	public static function detect() {
 		if ( ! is_admin() ) {
 			return;
 		}
-
-		add_action( 'activated_plugin', __CLASS__ . '::on_plugins_changed', 10, 2 );
-		add_action( 'deactivated_plugin', __CLASS__ . '::on_plugins_changed', 10, 2 );
-
-		if ( isset( $_GET[ 'lscwp_incompatible_plugins' ] )
-		&& 'dismiss' === $_GET[ 'lscwp_incompatible_plugins' ]
-		&& check_admin_referer( 'lscwp_dismiss_incompatible_plugins' ) ) {
-			add_user_meta( get_current_user_id(), self::$_meta_key, 'true', true );
-			return;
-		}
-
-		if ( ! get_user_meta( get_current_user_id(), self::$_meta_key ) ) {
-			add_action( 'admin_notices', __CLASS__ . '::incompatible_plugin_notice' );
-		}
+		add_action( 'activated_plugin', __CLASS__ . '::activated_plugin', 10, 2 );
+		add_action( 'deactivated_plugin', __CLASS__ . '::deactivated_plugin', 10, 2 );
 	}
 
-	public static function incompatible_plugin_notice() {
+	public static function activated_plugin( $plugin, $network_wide ) {
+		self::incompatible_plugin_notice( $plugin, $network_wide, 'activated' );
+	}
+
+	public static function deactivated_plugin( $plugin, $network_wide ) {
+		self::incompatible_plugin_notice( $plugin, $network_wide, 'deactivated' );
+	}
+
+	public static function incompatible_plugin_notice( $plugin, $_network_wide, $action ) {
+		self::update_messages();
+
+		/* The 'deactivated_plugin' action fires before
+		 * `wp_get_active_and_valid_plugins` can see the change.
+		 */
+		$deactivated = 'deactivated' === $action ? array( $plugin ) : array();
+
 		$incompatible_plugins =
 			array_map(
 				function( $plugin ) { return WP_PLUGIN_DIR . '/' . $plugin; },
-				self::$_incompatible_plugins
+				array_diff( self::$_incompatible_plugins, $deactivated )
 			);
 
 		$active_incompatible_plugins =
 			array_map(
 				function( $plugin ) {
 					$plugin = get_plugin_data( $plugin, false, true );
-					return $plugin[ 'Name' ];
+					return $plugin['Name'];
 				},
 				array_intersect( $incompatible_plugins, wp_get_active_and_valid_plugins() )
 			);
@@ -84,29 +83,41 @@ class LiteSpeed_Check {
 			return;
 		}
 
-		?>
-		<div class="notice notice-error litespeed-irremovable">
-			<p>
-				<?php
-					esc_html_e(
-						'Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:',
-						'litespeed-cache'
+		\LiteSpeed\Admin_Display::error(
+			'<div ' . self::$_msg_id . '>'
+			. esc_html__(
+				'Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:',
+				'litespeed-cache'
+			)
+			. '<p style="color: red; font-weight: 700;">'
+			. implode( ', ', $active_incompatible_plugins )
+			. '</p>'
+			. '</div>',
+			false,
+			true
+		);
+	}
+
+	private static function update_messages() {
+		$messages =
+			\LiteSpeed\Admin_Display::get_option(
+				\LiteSpeed\Admin_Display::DB_MSG_PIN,
+				array()
+			);
+		if ( is_array( $messages ) ) {
+			foreach ( $messages as $index => $message ) {
+				if ( strpos( $message, self::$_msg_id ) !== false ) {
+					unset( $messages[ $index ] );
+					if ( ! $messages ) {
+						$messages = -1;
+					}
+					\LiteSpeed\Admin_Display::update_option(
+						\LiteSpeed\Admin_Display::DB_MSG_PIN,
+						$messages
 					);
-				?>
-				<br>
-				<p style="color: red; font-weight: 700;"><?php
-					echo implode( ', ', $active_incompatible_plugins );
-				?></p>
-				<a href="<?php
-					echo wp_nonce_url(
-						add_query_arg( 'lscwp_incompatible_plugins', 'dismiss' ),
-						'lscwp_dismiss_incompatible_plugins'
-					);
-				?>" class="button litespeed-btn-primary litespeed-btn-mini"><?php
-					esc_html_e( 'Dismiss', 'litespeed-cache' );
-				?></a>
-			</p>
-		</div>
-		<?php
+					break;
+				}
+			}
+		}
 	}
 }
