@@ -258,11 +258,6 @@ class Activation extends Base {
 
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();
-
-		Thirdparty\LiteSpeed_Check::deactivated_plugin(
-			basename( LSCWP_DIR ) . '/litespeed-cache.php',
-			null
-		);
 	}
 
 	/**
