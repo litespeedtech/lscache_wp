@@ -24,6 +24,13 @@ $queue = $this->load_queue( 'vpi' );
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable Viewport Images auto generation.', 'litespeed-cache' ); ?>
+
+				<?php if ( ! $this->conf( Base::O_MEDIA_LAZY ) ) : ?>
+					<br /><font class="litespeed-warning litespeed-left10">
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_MEDIA_LAZY ) . '</code>' ); ?>
+					</font>
+				<?php endif; ?>
+
 			</div>
 
 			<div class="litespeed-desc litespeed-left20">
