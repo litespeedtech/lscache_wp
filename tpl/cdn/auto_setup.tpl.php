@@ -101,7 +101,7 @@ if ($cdn_setup_done_ts) {
 </ul>
 
 <h3 class="litespeed-title-section">
-	<?php echo __( 'Setup QUIC.cloud Account', 'litespeed-cache' ); ?>
+	<?php echo __( 'Set up QUIC.cloud Account', 'litespeed-cache' ); ?>
 </h3>
 
 <?php if ( $cdn_setup_done_ts ) : ?>
