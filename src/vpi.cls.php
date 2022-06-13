@@ -300,7 +300,7 @@ class VPI extends Base {
 				break;
 
 			case self::TYPE_CLEAR_Q:
-				$this->clear_q();
+				$this->clear_q( 'vpi' );
 				break;
 
 			default:
