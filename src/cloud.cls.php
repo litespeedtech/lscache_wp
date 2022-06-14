@@ -733,6 +733,29 @@ class Cloud extends Base {
 			return;
 		}
 
+		list( $json, $return ) = $this->extract_msg( $json, $service, $server );
+		if ( $return ) return;
+
+		$this->_summary[ 'last_request.' . $service_tag ] = $this->_summary[ 'curr_request.' . $service_tag ];
+		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
+		self::save_summary();
+
+		if ( $json ) {
+			self::debug2( 'response ok', $json );
+		}
+		else {
+			self::debug2( 'response ok' );
+		}
+
+		// Only successful request return Array
+		return $json;
+	}
+
+	/**
+	 * Extract msg from json
+	 * @since 4.7
+	 */
+	public function extract_msg( $json, $service, $server = false ) {
 		if ( ! empty( $json[ '_info' ] ) ) {
 			self::debug( '_info: ' . $json[ '_info' ] );
 			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json[ '_info' ];
@@ -767,7 +790,7 @@ class Cloud extends Base {
 
 			$msg2 .= $this->_parse_link( $json );
 			Admin_Display::error( $msg . $msg2 );
-			return;
+			return array( $json, true );
 		}
 
 		// Parse _carry_on info
@@ -819,7 +842,7 @@ class Cloud extends Base {
 				Admin_Display::error( $msg, false, true );
 			}
 
-			return;
+			return array( $json, true );
 		}
 
 		unset( $json[ '_res' ] );
@@ -827,19 +850,7 @@ class Cloud extends Base {
 			unset( $json[ '_msg' ] );
 		}
 
-		$this->_summary[ 'last_request.' . $service_tag ] = $this->_summary[ 'curr_request.' . $service_tag ];
-		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
-		self::save_summary();
-
-		if ( $json ) {
-			self::debug2( 'response ok', $json );
-		}
-		else {
-			self::debug2( 'response ok' );
-		}
-
-		// Only successful request return Array
-		return $json;
+		return array( $json, false );
 	}
 
 	public function req_rest_api($api, $body = [])

@@ -89,6 +89,8 @@ class VPI extends Base {
 			return Cloud::err( 'wrong_key' );
 		}
 
+		list( $post_data ) = $this->cls( 'Cloud' )->extract_msg( $post_data, 'vpi' );
+
 		global $wpdb;
 
 		$notified_data = $post_data[ 'data' ];
