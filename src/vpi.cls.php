@@ -106,7 +106,10 @@ class VPI extends Base {
 			$is_mobile = !empty( $v[ 'is_mobile' ] );
 			$queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $v[ 'request_url' ];
 
-			if ( empty( $this->_queue[ $queue_k ] ) ) continue;
+			if ( empty( $this->_queue[ $queue_k ] ) ) {
+				self::debug( '❌ notify bypass: no this queue [q_k]' . $queue_k, array_keys( $this->_queue ) );
+				continue;
+			}
 
 			// Save data
 			if ( ! empty( $v[ 'data' ] ) ) {
@@ -118,6 +121,7 @@ class VPI extends Base {
 			}
 
 			unset( $this->_queue[ $queue_k ] );
+			self::debug( 'notify data handled, unset queue [q_k] ' . $queue_k );
 		}
 
 		return Cloud::ok( array( 'count' => $valid_i ) );
