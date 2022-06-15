@@ -1,65 +1,105 @@
 <?php
+
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
-$log_list = [
-	'debug' => [
-		'label' => __( 'Debug Log', 'litespeed-cache' ),
-		'accesskey' => 'A',
-	],
-	'debug.purge' => [
-		'label' => __( 'Purge Log', 'litespeed-cache' ),
-		'accesskey' => 'B',
-	],
-	'crawler' => [
-		'label' => __( 'Crawler Log', 'litespeed-cache' ),
-		'accesskey' => 'C',
-	],
-];
+$logs =
+	array(
+		array(
+			'name' => 'debug',
+			'label' => esc_html__( 'Debug Log', 'litespeed-cache' ),
+			'accesskey' => 'A',
+		),
+		array(
+			'name' => 'debug.purge',
+			'label' => esc_html__( 'Purge Log', 'litespeed-cache' ),
+			'accesskey' => 'B',
+		),
+		array(
+			'name' => 'crawler',
+			'label' => esc_html__( 'Crawler Log', 'litespeed-cache' ),
+			'accesskey' => 'C',
+		),
+	);
 
-foreach ( $log_list as $log => $meta ) :
+/**
+ * Return a subnav button (subtab)
+ * @since  4.7
+ */
+function subnav_link( $item ) {
+	$class = 'button ';
+	$subtab = '';
+
+	if ( ! isset( $item['url'] ) ) {
+		$class .= 'button-secondary';
+		$subtab_name = "{$item['name']}_log";
+		$subtab = "data-litespeed-subtab='{$subtab_name}'";
+		$url ="#{$subtab_name}";
+	}
+	else {
+		$class .= 'button-primary';
+		$url = $item['url'];
+	}
+
+	$accesskey =
+		isset( $item['accesskey'] )
+		? "litespeed-accesskey='{$item['accesskey']}'"
+		: '';
+	$label = isset( $item['label'] ) ? $item['label'] : $item['name'];
+
+	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey}>{$label}</a>";
+}
+
+/**
+ * Print a button to clear all logs
+ * @since  4.7
+ */
+function clear_logs_link( $accesskey = null ) {
+	$item =
+		array(
+			'label' => esc_html__( 'Clear Logs', 'litespeed-cache' ),
+			'url' => Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ),
+		);
+	if ( null !== $accesskey ) {
+		$item['accesskey'] = $accesskey;
+	}
+	echo subnav_link( $item );
+}
+
+$subnav_links = array();
+$log_views = array();
+
+foreach( $logs as $log ) {
+	$subnav_links[] = subnav_link( $log );
+
+	$file = LSCWP_CONTENT_DIR . "/{$log['name']}.log";
+	$lines = File::count_lines( $file );
+	$start = $lines > 1000 ? $lines - 1000 : 0;
+	$lines = File::read( $file, $start );
+	$lines = $lines ? trim( implode( "\n", $lines ) ) : '';
+
+	$log_views[] =
+		"<div class='litespeed-log-view-wrapper' data-litespeed-sublayout='{$log['name']}_log'>"
+			. "<h3 class='litespeed-title'>{$log['label']}</h3>"
+			. '<div class="litespeed-log-body">'
+				. nl2br( htmlspecialchars( $lines ) )
+			. '</div>'
+		. '</div>';
+}
 ?>
 
-<div class="litespeed-log-view-wrap">
-	<h3 class="litespeed-title">
-		<?php echo $meta['label']; ?>
-		<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#log-view-tab' ); ?>
+<h3 class="litespeed-title">
+	<?php esc_html_e( 'LiteSpeed Logs', 'litespeed-cache' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#log-view-tab' ); ?>
+</h3>
 
-		<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ); ?>" class="button button-primary" litespeed-accesskey="D">
-			<?php echo __( 'Clear Log', 'litespeed-cache' ); ?>
-		</a>
-
-		<div class="litespeed-log-tab-wrapper">
-			<?php
-				foreach ( $log_list as $inner_log => $inner_meta ) :
-			?>
-				<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ); ?>" class="litespeed-log-tab button button-secondary" litespeed-accesskey="<?php echo $inner_meta['accesskey']; ?>">
-					<?php echo $inner_meta['label']; ?>
-				</a>
-			<?php
-				endforeach;
-			?>
-		</div>
-	</h3>
-
-
-	<div class="litespeed-log-body">
-		<?php
-			$file = LSCWP_CONTENT_DIR . '/' . $log . '.log';
-			$lines = File::count_lines( $file );
-			$start = $lines > 1000 ? $lines - 1000 : 0;
-			$logs = File::read( $file, $start );
-			$logs = $logs ? implode( "\n", $logs ) : '';
-
-			echo nl2br( htmlspecialchars( $logs ) );
-		?>
-	</div>
-
-
-	<a href="<?php echo Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG ); ?>" class="button button-primary">
-		<?php echo __( 'Clear Log', 'litespeed-cache' ); ?>
-	</a>
+<div class="litespeed-log-subnav-wrapper">
+	<?php echo implode( "\n", $subnav_links ); ?>
+	<?php clear_logs_link( 'D' ); ?>
 </div>
 
+<?php echo implode( "\n", $log_views ); ?>
+
 <?php
-endforeach;
+clear_logs_link();

@@ -51,23 +51,32 @@ var _litespeed_dots ;
 
 		/************** LSWCP JS ****************/
 		// page tab switch functionality
-		if($('[data-litespeed-tab]').length > 0){
-			// display default tab
-			var litespeed_tab_current = document.cookie.replace(/(?:(?:^|.*;\s*)litespeed_tab\s*\=\s*([^;]*).*$)|^.*$/, "$1") ;
-			if(window.location.hash.substr(1)) {
-				litespeed_tab_current = window.location.hash.substr(1) ;
+		var litespeed_tab_setup = function ( subtab ) {
+			var type = 'tab' ;
+			if ( true === subtab ) {
+				type = 'sub'+type ;
 			}
-			if(!litespeed_tab_current || !$('[data-litespeed-tab="'+litespeed_tab_current+'"]').length) {
-				litespeed_tab_current = $('[data-litespeed-tab]').first().data('litespeed-tab') ;
+			if($('[data-litespeed-'+type+']').length > 0){
+				// display default tab
+				var re = new RegExp('(?:(?:^|.*;\s*)litespeed_'+type+'\s*\=\s*([^;]*).*$)|^.*$') ;
+				var litespeed_tab_current = document.cookie.replace(re, "$1") ;
+				if(window.location.hash.substr(1)) {
+					litespeed_tab_current = window.location.hash.substr(1) ;
+				}
+				if(!litespeed_tab_current || !$('[data-litespeed-'+type+'="'+litespeed_tab_current+'"]').length) {
+					litespeed_tab_current = $('[data-litespeed-'+type+']').first().data('litespeed-'+type) ;
+				}
+				litespeed_display_tab(litespeed_tab_current, subtab === true) ;
+				// tab switch
+				$('[data-litespeed-'+type+']').on( 'click', function(event) {
+					litespeed_display_tab($(this).data('litespeed-'+type), subtab === true) ;
+					document.cookie = 'litespeed_'+type+'='+$(this).data('litespeed-'+type) ;
+					$(this).blur() ;
+				}) ;
 			}
-			litespeed_display_tab(litespeed_tab_current) ;
-			// tab switch
-			$('[data-litespeed-tab]').on( 'click', function(event) {
-				litespeed_display_tab($(this).data('litespeed-tab')) ;
-				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab') ;
-				$(this).blur() ;
-			}) ;
-		}
+		} ;
+		litespeed_tab_setup() ;
+		litespeed_tab_setup( true ) ;
 
 		// Manage page -> purge by
 		$('[name=purgeby]').on( 'change', function(event) {
@@ -269,11 +278,19 @@ function litespeed_keycode( num ) {
 	return false ;
 }
 
-function litespeed_display_tab(tab) {
-	jQuery('[data-litespeed-tab]').removeClass('nav-tab-active') ;
-	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('nav-tab-active') ;
-	jQuery('[data-litespeed-layout]').hide() ;
-	jQuery('[data-litespeed-layout="'+tab+'"]').show() ;
+function litespeed_display_tab(tab, subtab) {
+	var type = 'tab' ;
+	var classname = 'nav-'+type+'-active' ;
+	var layout = 'layout' ;
+	if ( true === subtab ) {
+		type = 'sub'+type ;
+		classname = 'focus' ;
+		layout = 'sub'+layout ;
+	}
+	jQuery('[data-litespeed-'+type+']').removeClass(classname) ;
+	jQuery('[data-litespeed-'+type+'="'+tab+'"]').addClass(classname) ;
+	jQuery('[data-litespeed-'+layout+']').hide() ;
+	jQuery('[data-litespeed-'+layout+'="'+tab+'"]').show() ;
 }
 
 function lscwpEsiEnabled(the_checkbox, esi_ids) {
