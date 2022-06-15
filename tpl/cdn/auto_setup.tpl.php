@@ -74,6 +74,11 @@ if ($cdn_setup_done_ts) {
 	<li><?php echo __( 'Set up a QUIC.cloud account.', 'litespeed-cache' ); ?></li>
 	<li><?php echo __( 'Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone.', 'litespeed-cache' ); ?></li>
 	<li><?php echo __( 'Provide the nameservers necessary to enable the CDN.', 'litespeed-cache' ); ?></li>
+	<li>
+		<?php echo __( 'After successful DNS detection, QUIC.cloud will attempt to generate an SSL certificate and enable the CDN.', 'litespeed-cache' ); ?>
+		<?php echo __( 'This last stage could take 15 to 20 minutes.', 'litespeed-cache' ); ?>
+		<?php echo __( 'Your site will be available, but browsers may issue a "not secure" warning during this time.', 'litespeed-cache' ); ?>
+	</li>
 </ol>
 
 <p>
@@ -171,6 +176,9 @@ if ($cdn_setup_done_ts) {
 									__( 'Review DNS records', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
 									false,
 									'litespeed-link-with-icon' ); ?>
+		</p>
+		<p>
+		<?php echo __('Note: For 15 to 20 minutes after setup completes, browsers may issue a "not secure" warning for your site while QUIC.cloud generates your SSL certificate.', 'litespeed-cache'); ?>
 		</p>
 	<?php } ?>
 <?php } ?>
