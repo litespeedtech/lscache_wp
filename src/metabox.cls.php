@@ -115,12 +115,12 @@ class Metabox extends Root {
 	 * @since 4.7
 	 */
 	public function save( $post_id, $name, $val, $is_append = false ) {
+		$val = Utility::sanitize_lines( $val, 'basename' );
 		// Load existing data if has set
 		if ( $is_append ) {
 			$existing_data = $this->setting( $name, $post_id );
 			if ( $existing_data ) {
-				$existing_data = Utility::sanitize_lines( $existing_data, 'uri' );
-				$val = Utility::sanitize_lines( $val, 'uri' );
+				$existing_data = Utility::sanitize_lines( $existing_data, 'basename' );
 				$val = array_unique( array_merge( $val, $existing_data ) );
 			}
 		}
@@ -141,7 +141,7 @@ class Metabox extends Root {
 		$is_mobile = $this->_separate_mobile();
 		$excludes = $this->setting( $is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list' );
 		if ( $excludes !== null ) {
-			$excludes = Utility::sanitize_lines( $excludes, 'uri' );
+			$excludes = Utility::sanitize_lines( $excludes, 'basename' );
 			if ( $excludes ) {
 				return array_merge( $list, $excludes );
 			}

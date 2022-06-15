@@ -80,11 +80,14 @@ class VPI extends Base {
 		if( is_null( $post_data ) ) {
 			$post_data = $_POST;
 		}
-		self::debug( 'notify data', $post_data );
+		self::debug( 'notify() data', $post_data );
+
+		$this->_queue = $this->load_queue( 'vpi' );
 
 		// Validate key
 		if ( empty( $post_data[ 'domain_key' ] ) || $post_data[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
 			$this->_summary[ 'notify_ts_err' ] = time();
+			self::debug( '❌ notify wrong key' );
 			self::save_summary();
 			return Cloud::err( 'wrong_key' );
 		}
@@ -102,12 +105,15 @@ class VPI extends Base {
 		// Check if its in queue or not
 		$valid_i = 0;
 		foreach ( $notified_data as $v ) {
-			if ( empty( $v[ 'request_url' ] ) ) continue;
+			if ( empty( $v[ 'request_url' ] ) ) {
+				self::debug( '❌ notify bypass: no request_url', $v );
+				continue;
+			}
 			$is_mobile = !empty( $v[ 'is_mobile' ] );
 			$queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $v[ 'request_url' ];
 
 			if ( empty( $this->_queue[ $queue_k ] ) ) {
-				self::debug( '❌ notify bypass: no this queue [q_k]' . $queue_k, array_keys( $this->_queue ) );
+				self::debug( '❌ notify bypass: no this queue [q_k]' . $queue_k );
 				continue;
 			}
 
@@ -123,6 +129,9 @@ class VPI extends Base {
 			unset( $this->_queue[ $queue_k ] );
 			self::debug( 'notify data handled, unset queue [q_k] ' . $queue_k );
 		}
+		$this->save_queue( 'vpi', $this->_queue );
+
+		self::debug( 'notified' );
 
 		return Cloud::ok( array( 'count' => $valid_i ) );
 	}
@@ -302,7 +311,7 @@ class VPI extends Base {
 
 		switch ( $type ) {
 			case self::TYPE_GEN:
-				self::cron( 0 );
+				self::cron( true );
 				break;
 
 			case self::TYPE_CLEAR_Q:

@@ -403,6 +403,18 @@ class Utility extends Root {
 	}
 
 	/**
+	 * Convert URL to basename (filename)
+	 *
+	 * @since  4.7
+	 */
+	public static function basename( $url ) {
+		$url = trim( $url );
+		$uri = @parse_url( $url, PHP_URL_PATH );
+		$basename = pathinfo( $uri, PATHINFO_BASENAME );
+
+		return $basename;
+	}
+	/**
 	 * Convert URL to URI
 	 *
 	 * @since  1.2.2
@@ -542,6 +554,10 @@ class Utility extends Root {
 		$changed = false;
 		if ( in_array( 'uri', $types ) ) {
 			$arr = array_map( __CLASS__ . '::url2uri', $arr );
+			$changed = true;
+		}
+		if ( in_array( 'basename', $types ) ) {
+			$arr = array_map( __CLASS__ . '::basename', $arr );
 			$changed = true;
 		}
 		if ( in_array( 'relative', $types ) ) {
