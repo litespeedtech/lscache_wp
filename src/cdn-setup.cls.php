@@ -143,23 +143,24 @@ class Cdn_Setup extends Base {
 	 * @access private
 	 */
 	private function _qc_reset($delete) {
+		$data = [
+			'site_url' => home_url(),
+			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
+		];
+
+		if ($delete) {
+			$data['delete'] = 1;
+		}
 
 		if (!empty($this->_setup_token)) {
-			$data = [
-				'site_url' => home_url(),
-				'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
-			];
-
-			if ($delete) {
-				$data['delete'] = 1;
-			}
+			$data['rest'] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
 
 			$json = $this->cls('Cloud')->req_rest_api('/user/cdn/reset', $data);
 
 			if (!$json) {
 				return;
 			}
-		} else if ( ! $delete || ! isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ||  ! $this->_summary[ 'cdn_setup_done_ts' ] ) {
+		} else if ( ! isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ||  ! $this->_summary[ 'cdn_setup_done_ts' ] ) {
 			Admin_Display::info( __( 'Notice: CDN Setup only reset locally.', 'litespeed-cache'));
 		} else if ( ! Cloud::get_summary( 'is_linked' ) ) {
 
@@ -167,9 +168,6 @@ class Cdn_Setup extends Base {
 			return;
 
 		} else {
-			$data = [
-				'site_url' => home_url(),
-			];
 
 			$json = Cloud::post( Cloud::SVC_D_DEL_CDN_DNS, $data);
 
