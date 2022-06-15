@@ -268,6 +268,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Fixed a failure to detect `out_of_quota`. (Lauren)
 * 🕸️**Crawler** Crawler now will detect the realtime load before crawling.
 * **CDN** Auto patched trailing slash to `CDN URL` and `Original URLs` settings. (Lucas)
+* **Cache** Bypass no cache when query string is different. (Shivam)
 * **Media** Now can disable lazyload in page editor.
 * **Media** Added two more default WebP replacement for wpbakery and SliderRevolution. (JibsouX)
 * **GUI** Fixed a bug caused manual dismiss admin msg being onetime msg. (Tynan Beatty)

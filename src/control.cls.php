@@ -502,6 +502,7 @@ class Control extends Root {
 				PHP_URL_SCHEME,
 				PHP_URL_HOST,
 				PHP_URL_PATH,
+				PHP_URL_QUERY,
 			);
 
 			$is_same_redirect = true;
