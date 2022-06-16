@@ -68,7 +68,7 @@ class Metabox extends Root {
 	public function save_meta_box_settings( $post_id, $post ) {
 		global $pagenow;
 
-		self::debug( 'Maybe save post [post_id] ' . $post_id );
+		self::debug( 'Maybe save post2 [post_id] ' . $post_id );
 
 		if ( $pagenow != 'post.php' || ! $post || ! is_object( $post ) ) {
 			return;
@@ -78,7 +78,7 @@ class Metabox extends Root {
 			return;
 		}
 
-		if ( ! Router::verify_nonce( self::POST_NONCE_ACTION ) ) {
+		if ( ! $this->cls( 'Router' )->verify_nonce( self::POST_NONCE_ACTION ) ) {
 			return;
 		}
 
@@ -115,7 +115,10 @@ class Metabox extends Root {
 	 * @since 4.7
 	 */
 	public function save( $post_id, $name, $val, $is_append = false ) {
-		$val = Utility::sanitize_lines( $val, 'basename' );
+		if( strpos( $name, 'litespeed_vpi_list' ) !== false ) {
+			$val = Utility::sanitize_lines( $val, 'basename' );
+		}
+
 		// Load existing data if has set
 		if ( $is_append ) {
 			$existing_data = $this->setting( $name, $post_id );
@@ -129,7 +132,7 @@ class Metabox extends Root {
 			update_post_meta( $post_id, $name, $val );
 		}
 		else {
-			delete_post_meta( $post_id, $k );
+			delete_post_meta( $post_id, $name );
 		}
 	}
 
