@@ -186,7 +186,7 @@ class VPI extends Base {
 				}
 
 				if ( $i > 3 ) {
-					$this->_print_loading( count( $this->_queue ), 'VPI' );
+					GUI::print_loading( count( $this->_queue ), 'VPI' );
 					return Router::self_redirect( Router::ACTION_VPI, self::TYPE_GEN );
 				}
 
@@ -208,7 +208,7 @@ class VPI extends Base {
 			}
 
 			if ( $i > 3 ) {
-				$this->_print_loading( count( $this->_queue ), 'VPI' );
+				GUI::print_loading( count( $this->_queue ), 'VPI' );
 				return Router::self_redirect( Router::ACTION_VPI, self::TYPE_GEN );
 			}
 		}

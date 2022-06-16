@@ -367,7 +367,7 @@ class CSS extends Base {
 				}
 
 				if ( $i > 3 ) {
-					$this->_print_loading( count( $this->_queue ), $type_tag );
+					GUI::print_loading( count( $this->_queue ), $type_tag );
 					return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
 				}
 
@@ -388,7 +388,7 @@ class CSS extends Base {
 			}
 
 			if ( $i > 3 ) {
-				$this->_print_loading( count( $this->_queue ), $type_tag );
+				GUI::print_loading( count( $this->_queue ), $type_tag );
 				return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
 			}
 		}
@@ -524,17 +524,6 @@ class CSS extends Base {
 		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
-	}
-
-	/**
-	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
-	*/
-	private function _print_loading( $counter, $type ) {
-		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
-		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
-		echo sprintf( __( '%1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
-		echo '<p><a href="' . admin_url( 'admin.php?page=litespeed-page_optm' ) . '">' . __( 'Cancel', 'litespeed-cache' ) . '</a></p>';
-		echo '</div>';
 	}
 
 	/**

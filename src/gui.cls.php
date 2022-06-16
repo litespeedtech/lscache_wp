@@ -96,6 +96,17 @@ class GUI extends Base {
 	}
 
 	/**
+	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
+	*/
+	public static function print_loading( $counter, $type ) {
+		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
+		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
+		echo sprintf( __( '%1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
+		echo '<p><a href="' . admin_url( 'admin.php?page=litespeed-page_optm' ) . '">' . __( 'Cancel', 'litespeed-cache' ) . '</a></p>';
+		echo '</div>';
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6
