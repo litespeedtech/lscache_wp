@@ -169,7 +169,7 @@ if ( ! $can_token ) {
 
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
-					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( '%s must be turned ON for this setting to work.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
 					</font>
 				<?php endif; ?>
 
