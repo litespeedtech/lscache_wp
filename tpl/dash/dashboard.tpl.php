@@ -543,7 +543,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 
 					<p>
 						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $vpi_queue_count ?: '-' ?></code>
-						<a href="<?php echo $vpi_queue_count ? Utility::build_url( Router::ACTION_VPI, Placeholder::TYPE_GENERATE ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( ! $vpi_queue_count ) echo 'disabled'; ?>">
+						<a href="<?php echo $vpi_queue_count ? Utility::build_url( Router::ACTION_VPI, VPI::TYPE_GEN ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( ! $vpi_queue_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
 					</p>
