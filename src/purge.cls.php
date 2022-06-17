@@ -1117,9 +1117,11 @@ class Purge extends Base {
 		// post
 		$purge_tags[] = Tag::TYPE_POST . $post_id;
 		$post_status = get_post_status($post_id);
-		$viewable = is_post_status_viewable($post_status);
-		if ($viewable) {
-			$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+		if ( function_exists( 'is_post_status_viewable' ) ) {
+			$viewable = is_post_status_viewable($post_status);
+			if ($viewable) {
+				$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+			}
 		}
 
 		// for archive of categories|tags|custom tax
