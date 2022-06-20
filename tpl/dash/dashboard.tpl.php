@@ -527,7 +527,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 			<div class="postbox litespeed-postbox litespeed-postbox-vpi">
 				<div class="inside">
 					<h3 class="litespeed-title">
-						<?php echo __( 'ViewPort Image', 'litespeed-cache' ); ?>
+						<?php echo __( 'Viewport Image', 'litespeed-cache' ); ?> (VPI)
 						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_vpi' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
