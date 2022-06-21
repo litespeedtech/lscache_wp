@@ -163,7 +163,8 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prevent any debug log of certain strings.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Prevent writing log entries that include listed strings.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>
