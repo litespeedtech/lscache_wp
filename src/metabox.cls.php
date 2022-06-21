@@ -116,7 +116,7 @@ class Metabox extends Root {
 	 */
 	public function save( $post_id, $name, $val, $is_append = false ) {
 		if( strpos( $name, 'litespeed_vpi_list' ) !== false ) {
-			$val = Utility::sanitize_lines( $val, 'basename' );
+			$val = Utility::sanitize_lines( $val, 'basename,drop_webp' );
 		}
 
 		// Load existing data if has set

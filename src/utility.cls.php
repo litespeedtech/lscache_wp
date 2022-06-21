@@ -414,6 +414,18 @@ class Utility extends Root {
 
 		return $basename;
 	}
+
+	/**
+	 * Drop .webp if existed in filename
+	 *
+	 * @since  4.7
+	 */
+	public static function drop_webp( $filename ) {
+		if ( substr($filename, -5 ) === '.webp' ) $filename = substr( $filename, 0, -5 );
+
+		return $filename;
+	}
+
 	/**
 	 * Convert URL to URI
 	 *
@@ -558,6 +570,10 @@ class Utility extends Root {
 		}
 		if ( in_array( 'basename', $types ) ) {
 			$arr = array_map( __CLASS__ . '::basename', $arr );
+			$changed = true;
+		}
+		if ( in_array( 'drop_webp', $types ) ) {
+			$arr = array_map( __CLASS__ . '::drop_webp', $arr );
 			$changed = true;
 		}
 		if ( in_array( 'relative', $types ) ) {
