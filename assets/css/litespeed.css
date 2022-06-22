@@ -100,6 +100,13 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
     background-color: #2271b1;
 }
 
+.block-editor__container .litespeed-tiny-toggle {
+	border: 0;
+}
+.block-editor__container .litespeed-tiny-toggle:before {
+	top: 5px;
+	left: 7px;
+}
 
 /* =======================================
    		  UTILITIES - structure
