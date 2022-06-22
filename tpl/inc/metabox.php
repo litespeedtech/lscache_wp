@@ -22,3 +22,7 @@ foreach ( $this->_postmeta_settings as $k => $v ) {
 		echo '</div>';
 	}
 }
+
+echo '<div style="text-align:right;">';
+Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/metabox/' );
+echo '</div>';
