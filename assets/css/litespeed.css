@@ -83,11 +83,13 @@ input[type="checkbox"].litespeed-tiny-toggle:before {
     border-radius: 50%;
     background-color: #ffffff;
 }
+
 input[type="checkbox"].litespeed-tiny-toggle:checked:before {
     left: 20px;
     margin: 0;
     background-color: #ffffff;
 }
+
 input[type="checkbox"].litespeed-tiny-toggle,
 input[type="checkbox"].litespeed-tiny-toggle:before,
 input[type="checkbox"].litespeed-tiny-toggle:after,
@@ -100,12 +102,15 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
     background-color: #2271b1;
 }
 
-.block-editor__container .litespeed-tiny-toggle {
-	border: 0;
+.block-editor__container input[type="checkbox"].litespeed-tiny-toggle {
+	border: 0 !important;
 }
-.block-editor__container .litespeed-tiny-toggle:before {
+.block-editor__container input[type="checkbox"].litespeed-tiny-toggle:before {
 	top: 5px;
 	left: 7px;
+}
+.block-editor__container input[type="checkbox"].litespeed-tiny-toggle:checked:before {
+	left: 23px;
 }
 
 /* =======================================
