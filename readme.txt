@@ -272,6 +272,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cache** When a URL redirects to a URL with a query string, consider these as different for caching purposes. (Shivam)
 * **Media** Added ability to disable lazyload from the LiteSpeed Options metabox on Post Edit page.
 * **Media** Added new default values to `WebP Attribute to Replace` setting for WPBakery and Slider Revolution. (JibsouX)
+* **Image Optimize** Dropped redundant `Page Speed` user agent when serving WebP images. (serpentdriver)
 * **GUI** Fixed an issue where manually dismissable admin messages were instead being treated as one-time messages. (Tynan Beatty)
 * **GUI** Fixed an issue where subsequent admin alerts would overwrite existing alerts in the queue. (Kevin/Tynan)
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
