@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**CDN** Added Auto CDN Setup feature for simple QUIC.cloud CDN setup. (Kevin)
 * 🌱**Page Optimize** Automatically cache remote CSS/JS files when fetching for optimization (Lauren)
 * 🌱**Cache** Added LiteSpeed Options for page-level cache control on Post Edit page. (denisgomesfranco)
+* 🌱**Cloud** Auto Alias feature.
 * 🌱**Debug** Added `Debug String Excludes` option. (Hanna)
 * 🌱**UCSS** Added `Purge this page - UCSS` option to Admin Bar dropdown menu. (Ankit)
 * 🌱**Guest** Added `litespeed_guest_off=1` URL query string parameter to bypass Guest Mode. (cbdfactum)
@@ -267,6 +268,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Added message queue service for VPI. (Abe)
 * **Cloud** Bypassed 503 error nodes from node redetection process. (Abe)
 * **Cloud** Fixed a failure to detect `out_of_quota`. (Lauren)
+* **Cloud** Allow carry on msg to show manual dismissable banner.
 * 🕸️**Crawler** Added realtime load detection before crawl.
 * **CDN** Automatically add a trailing slash to `CDN URL` and `Original URLs` if user didn't provide one. (Lucas)
 * **Cache** When a URL redirects to a URL with a query string, consider these as different for caching purposes. (Shivam)

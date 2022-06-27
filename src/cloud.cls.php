@@ -524,6 +524,7 @@ class Cloud extends Base {
 		$param = array(
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
+			'main_domain'	=> ! empty( $this->_summary[ 'main_domain' ] ) ? $this->_summary[ 'main_domain' ] : '',
 			'ver'			=> Core::VER,
 		);
 
@@ -550,7 +551,13 @@ class Cloud extends Base {
 	 * @access private
 	 */
 	private function _maybe_cloud( $service_tag ) {
-		if ( ! wp_http_validate_url( home_url() ) ) {
+		$home_url = home_url();
+		if ( ! wp_http_validate_url( $home_url ) ) {
+			return false;
+		}
+
+		/** @since 5.0 If in valid err_domains, bypass request */
+		if ( $this->_is_err_domain( $home_url ) ) {
 			return false;
 		}
 
@@ -649,6 +656,7 @@ class Cloud extends Base {
 		$param = array(
 			'site_url'		=> home_url(),
 			'domain_key'	=> $this->_api_key,
+			'main_domain'	=> ! empty( $this->_summary[ 'main_domain' ] ) ? $this->_summary[ 'main_domain' ] : '',
 			'ver'			=> Core::VER,
 			'data' 			=> $data,
 		);
@@ -753,7 +761,7 @@ class Cloud extends Base {
 
 	/**
 	 * Extract msg from json
-	 * @since 4.7
+	 * @since 5.0
 	 */
 	public function extract_msg( $json, $service, $server = false ) {
 		if ( ! empty( $json[ '_info' ] ) ) {
@@ -797,7 +805,7 @@ class Cloud extends Base {
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
 			self::debug( 'Carry_on usage', $json[ '_carry_on' ] );
 			// Store generic info
-			foreach ( array( 'usage', 'promo' ) as $v ) {
+			foreach ( array( 'usage', 'promo', '_err', '_info', '_note', '_success' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
@@ -810,6 +818,15 @@ class Cloud extends Base {
 								$this->_summary[ $v ] = array();
 							}
 							$this->_summary[ $v ][] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						case '_error':
+						case '_info':
+						case '_note':
+						case '_success':
+							$color_mode = substr( $v, 1 );
+							$msgs = $json[ '_carry_on' ][ $v ];
+							Admin_Display::add_unique_notice( $color_mode, $msgs, true );
 							break;
 
 						default:
@@ -830,16 +847,21 @@ class Cloud extends Base {
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
+			// QC may try auto alias
+			/** @since 5.0 Store the domain as `err_domains` only for QC auto alias feature */
+			if ( $json_msg == 'auto_alias_pending' ) {
+				if ( empty( $this->_summary[ 'err_domains' ] ) ) {
+					$this->_summary[ 'err_domains' ] = array();
+				}
+				if ( ! array_key_exists( $home_url, $this->_summary[ 'err_domains' ] ) ) {
+					$this->_summary[ 'err_domains' ][ $home_url ] = time();
+				}
+				self::save_summary();
+			}
+
 			// Site not on QC, delete invalid domain key
 			if ( $json_msg == 'site_not_registered' || $json_msg == 'err_key' ) {
-				$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '' ) );
-				$this->_summary['is_linked'] = 0;
-				self::save_summary();
-
-				$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
-				$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
-				$msg .= Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true );
-				Admin_Display::error( $msg, false, true );
+				$this->_clean_api_key();
 			}
 
 			return array( $json, true );
@@ -851,6 +873,69 @@ class Cloud extends Base {
 		}
 
 		return array( $json, false );
+	}
+
+	/**
+	 * Clear API key and QC linked status
+	 * @since 5.0
+	 */
+	private function _clean_api_key() {
+		$this->cls( 'Conf' )->update_confs( array( self::O_API_KEY => '' ) );
+		$this->_summary['is_linked'] = 0;
+		self::save_summary();
+
+		$msg = __( 'Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache' );
+		$msg .= Doc::learn_more( admin_url( 'admin.php?page=litespeed-general' ), __( 'Click here to set.', 'litespeed-cache' ), true, false, true );
+		$msg .= Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true );
+		Admin_Display::error( $msg, false, true );
+	}
+
+	/**
+	 * REST call: check if the error domain is valid call for auto alias purpose
+	 * @since 5.0
+	 */
+	public function rest_err_domains() {
+		// Validate token hash first
+		if ( empty( $_POST[ 'hash' ] ) || empty( $_POST[ 'main_domain' ] ) || empty( $_POST[ 'alias' ] ) ) {
+			return self::err( 'lack_of_param' );
+		}
+
+		if ( ! $this->_api_key || $_POST[ 'hash' ] !== md5( substr( $this->_api_key, 1, 8 ) ) ) {
+			return self::err( 'wrong_hash' );
+		}
+
+		list( $post_data ) = $this->extract_msg( $_POST, 'Quic.cloud' );
+
+		if ( $this->_is_err_domain( $_POST[ 'alias' ] ) ) {
+			$this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
+			return self::ok();
+		}
+
+		return self::err();
+	}
+
+	/**
+	 * Remove a domain from err domain
+	 * @since 5.0
+	 */
+	private function _remove_domain_from_err_list( $url ) {
+		unset( $this->_summary[ 'main_domain' ][ $url ] );
+		self::save_summary();
+	}
+
+	/**
+	 * Check if is err domain
+	 * @since 5.0
+	 */
+	private function _is_err_domain( $home_url ) {
+		if ( empty( $this->_summary[ 'main_domain' ] ) ) return false;
+		if ( ! array_key_exists( $home_url, $this->_summary[ 'main_domain' ] ) ) return false;
+		// Auto delete if too long ago
+		if ( time() - $this->_summary[ 'main_domain' ][ $home_url ] > 86400 * 10 ) {
+			$this->_remove_domain_from_err_list( $home_url );
+		}
+		if ( time() - $this->_summary[ 'main_domain' ][ $home_url ] > 86400 ) return false;
+		return true;
 	}
 
 	public function req_rest_api($api, $body = [])
@@ -1124,6 +1209,9 @@ class Cloud extends Base {
 
 		$this->_summary[ 'is_linked' ] = $_POST[ 'is_linked' ] ? 1 : 0;
 		$this->_summary[ 'apikey_ts' ] = time();
+		if ( ! empty( $_POST[ 'main_domain' ] ) ) {
+			$this->_summary[ 'main_domain' ] = $_POST[ 'main_domain' ];
+		}
 		// Clear token
 		unset( $this->_summary[ 'token' ] );
 		self::save_summary();
@@ -1194,7 +1282,7 @@ class Cloud extends Base {
 	 * Update is_linked status if is a redirected back from QC
 	 *
 	 * @since  3.0
-	 * @since  4.7 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
+	 * @since  5.0 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
 	 */
 	public function parse_qc_redir($extra = []) {
 

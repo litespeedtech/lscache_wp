@@ -99,6 +99,12 @@ class REST extends Root {
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
+		register_rest_route( 'litespeed/v1', '/err_domains', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'err_domains' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
 		// Image optm check_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/check_img', array(
@@ -209,6 +215,14 @@ class REST extends Root {
 	public function notify_vpi() {
 		self::debug('notify_vpi');
 		return VPI::cls()->notify();
+	}
+
+	/**
+	 * @since  4.7
+	 */
+	public function err_domains() {
+		self::debug('err_domains');
+		return $this->cls( 'Cloud' )->rest_err_domains();
 	}
 
 	/**
