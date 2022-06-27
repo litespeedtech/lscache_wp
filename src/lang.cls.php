@@ -42,6 +42,33 @@ class Lang extends Base {
 	}
 
 	/**
+	 * Try translating a string
+	 *
+	 * @since  4.7
+	 */
+	public static function maybe_translate( $raw_string ) {
+		$map = array(
+			'auto_alias_failed_cdn' => __( 'Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache' ) . ' ' . Doc::learn_more( 'https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true ),
+		);
+
+		// Maybe has placeholder
+		if ( strpos( $raw_string, '::' ) ) {
+			$replacements = explode( '::', $raw_string );
+			if ( empty( $map[ $replacements[0] ] ) ) {
+				return $raw_string;
+			}
+			$tpl = $map[ $replacements[0] ];
+			unset($replacements[0]);
+			return vsprintf( $tpl, array_values( $replacements ) );
+		}
+
+		// Direct translation only
+		if ( empty( $map[ $raw_string ] ) ) return $raw_string;
+
+		return $map[ $raw_string ];
+	}
+
+	/**
 	 * Get the title of id
 	 *
 	 * @since  3.0

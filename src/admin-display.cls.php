@@ -317,6 +317,10 @@ class Admin_Display extends Base {
 		else {
 			$cls .= ' is-dismissible';
 		}
+
+		// possible translation
+		$str = Lang::maybe_translate( $str );
+
 		return '<div class="' . $cls . '"><p>'. $str . '</p></div>';
 	}
 
@@ -346,8 +350,12 @@ class Admin_Display extends Base {
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function succeed( $msg, $echo = false, $irremovable = false ) {
+	public static function success( $msg, $echo = false, $irremovable = false ) {
 		self::add_notice( self::NOTICE_GREEN, $msg, $echo, $irremovable );
+	}
+	/** @deprecated 4.7 */
+	public static function succeed( $msg, $echo = false, $irremovable = false ) {
+		self::success( $msg, $echo, $irremovable );
 	}
 
 	/**
@@ -358,6 +366,35 @@ class Admin_Display extends Base {
 	 */
 	public static function error( $msg, $echo = false, $irremovable = false ) {
 		self::add_notice( self::NOTICE_RED, $msg, $echo, $irremovable );
+	}
+
+	/**
+	 * Add irremovable msg
+	 * @since 4.7
+	 */
+	public static function add_unique_notice( $color_mode, $msgs, $irremovable = false ) {
+		if ( ! is_array( $msgs ) ) $msgs = array( $msgs );
+
+		$color_map = array(
+			'info' => self::NOTICE_BLUE,
+			'note' => self::NOTICE_YELLOW,
+			'success' => self::NOTICE_GREEN,
+			'error' => self::NOTICE_RED,
+		);
+		if ( empty( $color_map[ $color_mode ] ) ) {
+			self::debug( 'Wrong admin display color mode!' );
+			return;
+		}
+		$color = $color_map[ $color_mode ];
+
+		// Go through to make sure unique
+		$filtered_msgs = array();
+		foreach ( $msgs as $k => $str ) {
+			if( is_numeric( $k ) ) $k = md5( $str ); // Use key to make it overwriteable to previous same msg
+			$filtered_msgs[ $k ] = $str;
+		}
+
+		self::add_notice( $color, $filtered_msgs, false, $irremovable );
 	}
 
 	/**
