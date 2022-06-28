@@ -50,7 +50,12 @@ $pagination = Utility::pagination( $count, 30 );
 	</tbody>
 </table>
 <?php echo $pagination; ?>
-
+<p>
+<font class="litespeed-success">API: <?php echo sprintf( __( 'PHP Constant %s available to disable blocklist.', 'litespeed-cache' ), "<code>LITESPEED_CRAWLER_DISABLE_BLOCKLIST</code>" ); ?></font>
+</p>
+<p>
+<font class="litespeed-success">API: <?php echo sprintf( __( 'Filter %s available to disable blocklist.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_crawler_disable_blocklist', '__return_true' );</code>" ); ?></font>
+</p>
 <p>
 	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not blocklisted', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php echo __( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>

@@ -495,7 +495,7 @@ class Crawler extends Root {
 						return;
 					}
 
-					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'header' ], $rets[ $row[ 'id' ] ][ 'code' ] ); // B or H or M or N(nocache)
+					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'header' ], $rets[ $row[ 'id' ] ][ 'code' ], $row[ 'url' ] ); // B or H or M or N(nocache)
 					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = array(
 						'url'	=> $row[ 'url' ],
 						'code' 	=> $rets[ $row[ 'id' ] ][ 'code' ], // 201 or 200 or 404
@@ -648,7 +648,7 @@ class Crawler extends Root {
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _status_parse( $header, $code ) {
+	private function _status_parse( $header, $code, $url ) {
 		if ( $code == 201 ) {
 			return 'H';
 		}
@@ -656,6 +656,11 @@ class Crawler extends Root {
 		if ( stripos( $header, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
 			// If is from DIVI, taken as miss
 			if ( defined( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE' ) && LITESPEED_CRAWLER_IGNORE_NONCACHEABLE ) {
+				return 'M';
+			}
+
+			// If blacklist is disabled
+			if ( ( defined( 'LITESPEED_CRAWLER_DISABLE_BLOCKLIST' ) && LITESPEED_CRAWLER_DISABLE_BLOCKLIST ) || apply_filters( 'litespeed_crawler_disable_blocklist', '__return_false', $url ) ) {
 				return 'M';
 			}
 
