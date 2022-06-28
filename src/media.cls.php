@@ -668,6 +668,8 @@ class Media extends Root {
 			return false;
 		}
 
+		if ( substr( $src, 0, 2 ) == '//' ) $src = 'https:' . $src;
+
 		$sizes = getimagesize( $src );
 
 		if ( ! empty( $sizes[ 0 ] ) && ! empty( $sizes[ 1 ] ) ) {
