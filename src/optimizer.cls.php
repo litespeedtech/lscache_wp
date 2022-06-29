@@ -203,7 +203,7 @@ class Optimizer extends Root {
 		// Write file
 		$res = wp_remote_get( $url );
 		$res_code = wp_remote_retrieve_response_code( $res );
-		if ( is_wp_error( $res ) || $res_code == 404 ) {
+		if ( is_wp_error( $res ) || $res_code != 200 ) {
 			Debug2::debug2( '[Optimizer] ❌ Load Remote error [code] ' . $res_code );
 			return false;
 		}
