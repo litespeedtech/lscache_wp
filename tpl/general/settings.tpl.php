@@ -110,7 +110,18 @@ if ( ! $can_token ) {
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Domain Key is required for QUIC.cloud online services.', 'litespeed-cache' ); ?>
-				<br /><?php Doc::notice_ips(); ?>
+
+				<br />
+				<?php if ( ! empty( $cloud_summary[ 'main_domain' ] ) ) : ?>
+					<?php echo __( 'Main domain', 'litespeed-cache' ); ?>: <code><?php echo $cloud_summary[ 'main_domain' ]; ?></code>
+				<?php else: ?>
+					<font class="litespeed-warning">
+						⚠️ <?php echo __( 'Main domain not generated yet', 'litespeed-cache' ); ?>
+					</font>
+				<?php endif; ?>
+
+				<br />
+				<?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
 						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
@@ -130,7 +141,6 @@ if ( ! $can_token ) {
 						?>
 					</p>
 				</div>
-
 			</div>
 		</td>
 	</tr>
