@@ -849,7 +849,7 @@ class Cloud extends Base {
 
 			// QC may try auto alias
 			/** @since 5.0 Store the domain as `err_domains` only for QC auto alias feature */
-			if ( $json_msg == 'auto_alias_pending' ) {
+			if ( $json_msg == 'err_alias' ) {
 				if ( empty( $this->_summary[ 'err_domains' ] ) ) {
 					$this->_summary[ 'err_domains' ] = array();
 				}
