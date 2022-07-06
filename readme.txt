@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Debug** Added `Debug String Excludes` option. (Hanna)
 * 🌱**UCSS** Added `Purge this page - UCSS` option to Admin Bar dropdown menu. (Ankit)
 * 🌱**Guest** Added `litespeed_guest_off=1` URL query string parameter to bypass Guest Mode. (cbdfactum)
+* 🐞**Page Optimize** Fixed an issue where CSS anchors could be wrongly converted to a full path when minifying. (Tynan)
 * **Object** Allow `LSCWP_OBJECT_CACHE` predefined to turn off Object Cache. (knutsp)
 * **Data** Fixed an issue where empty version tags in the database repeatedly toggled the upgrade banner and reset settings to default.
 * **Purge** Fixed an issue where the site's index page could be purged upon deletion of an unviewable post. (Kevin)
