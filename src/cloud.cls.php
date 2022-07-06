@@ -908,7 +908,12 @@ class Cloud extends Base {
 
 		if ( $this->_is_err_domain( $_POST[ 'alias' ] ) ) {
 			$this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
-			return self::ok();
+
+			$res_hash = substr( $this->_api_key, 2, 4 );
+
+			self::debug( '__callback IP request hash: md5(' . $res_hash . ')' );
+
+			return self::ok( array( 'hash' => md5( $res_hash ) ) );
 		}
 
 		return self::err();
