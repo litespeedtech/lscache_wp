@@ -13,6 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Media extends Root {
+	const LOG_TAG = '📺';
+
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
 
 	private $content;
@@ -53,7 +55,8 @@ class Media extends Root {
 			}
 		}
 
-		if ( $this->conf( Base::O_MEDIA_LAZY ) ) {
+		if ( $this->conf( Base::O_MEDIA_LAZY ) && ! $this->cls( 'Metabox' )->setting( 'litespeed_no_image_lazy' ) ) {
+			self::debug( 'Suppress default WP lazyload' );
 			add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 		}
 
@@ -115,7 +118,7 @@ class Media extends Root {
 			return;
 		}
 
-		Debug2::debug( '[Media] delete_attachment [pid] ' . $post_id );
+		self::debug( 'delete_attachment [pid] ' . $post_id );
 		Img_Optm::cls()->reset_row( $post_id );
 	}
 
@@ -162,7 +165,7 @@ class Media extends Root {
 
 		if ( file_exists( $real_file ) ) {
 			unlink( $real_file );
-			Debug2::debug( '[Media] deleted ' . $real_file );
+			self::debug( 'deleted ' . $real_file );
 		}
 
 		do_action( 'litespeed_media_del', $short_file_path, $post_id );
@@ -180,7 +183,7 @@ class Media extends Root {
 
 		if ( file_exists( $real_file ) ) {
 			rename( $real_file, $real_file_new );
-			Debug2::debug( '[Media] renamed ' . $real_file . ' to ' . $real_file_new );
+			self::debug( 'renamed ' . $real_file . ' to ' . $real_file_new );
 		}
 
 		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
@@ -421,11 +424,11 @@ class Media extends Root {
 		}
 
 		if ( ! Control::is_cacheable() ) {
-			Debug2::debug( '[Media] bypass: Not cacheable' );
+			self::debug( 'bypass: Not cacheable' );
 			return $content;
 		}
 
-		Debug2::debug( '[Media] finalize' );
+		self::debug( 'finalize' );
 
 		$this->content = $content;
 		$this->_finalize();
@@ -455,19 +458,26 @@ class Media extends Root {
 		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
-				Debug2::debug( '[Media] bypass lazyload: hit URI Excludes setting: ' . $result );
+				self::debug( 'bypass lazyload: hit URI Excludes setting: ' . $result );
 				return;
 			}
 		}
 
-		$cfg_lazy = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_LAZY );
+		$cfg_lazy = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_LAZY ) ) && ! $this->cls( 'Metabox' )->setting( 'litespeed_no_image_lazy' );
 		$cfg_iframe_lazy = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_IFRAME_LAZY );
 		$cfg_js_delay = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_JS_DEFER ) == 2;
 		$cfg_trim_noscript = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_NOSCRIPT_RM );
+		$cfg_vpi = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_VPI );
 
 		if ( $cfg_lazy ) {
+			if ( $cfg_vpi ) {
+				add_filter( 'litespeed_media_lazy_img_excludes', array( $this->cls( 'Metabox' ), 'lazy_img_excludes' ) );
+			}
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
 			$html_list_ori = $html_list;
+		}
+		else {
+			self::debug( 'lazyload disabled' );
 		}
 
 		// image lazy load
@@ -608,7 +618,7 @@ class Media extends Root {
 			// Add missing dimensions
 			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
 				if ( empty( $attrs[ 'width' ] ) || $attrs[ 'width' ] == 'auto' || empty( $attrs[ 'height' ] ) || $attrs[ 'height' ] == 'auto' ) {
-					Debug2::debug( '[Media] ⚠️ Missing sizes for image [src] ' . $attrs[ 'src' ] );
+					self::debug( '⚠️ Missing sizes for image [src] ' . $attrs[ 'src' ] );
 					$dimensions = $this->_detect_dimensions( $attrs[ 'src' ] );
 					if ( $dimensions ) {
 						$ori_width = $dimensions[ 0 ];
@@ -625,7 +635,7 @@ class Media extends Root {
 						$attrs[ 'height' ] = $ori_height;
 						$new_html = preg_replace( '#(width|height)=(["\'])[^\2]*\2#', '', $match[ 0 ] );
 						$new_html = str_replace( '<img ', '<img width="' . $attrs[ 'width' ] . '" height="' . $attrs[ 'height' ] . '" ', $new_html );
-						Debug2::debug( '[Media] Add missing sizes ' . $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] . ' to ' . $attrs[ 'src' ] );
+						self::debug( 'Add missing sizes ' . $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] . ' to ' . $attrs[ 'src' ] );
 						$this->content = str_replace( $match[ 0 ], $new_html, $this->content );
 						$match[ 0 ] = $new_html;
 					}
@@ -657,6 +667,8 @@ class Media extends Root {
 		elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
 			return false;
 		}
+
+		if ( substr( $src, 0, 2 ) == '//' ) $src = 'https:' . $src;
 
 		$sizes = getimagesize( $src );
 

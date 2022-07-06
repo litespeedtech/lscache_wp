@@ -44,7 +44,7 @@ class Optimizer extends Root {
 			$obj = new Lib\HTML_MIN( $content, $options );
 			$content_final = $obj->process();
 			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
-				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->';
+				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ) . ' -->';
 			}
 			return $content_final;
 
@@ -184,6 +184,41 @@ class Optimizer extends Root {
 	}
 
 	/**
+	 * Load remote resource from cache if existed
+	 *
+	 * @since  4.7
+	 */
+	private function load_cached_file( $url, $file_type ) {
+		$file_path_prefix = $this->_build_filepath_prefix( $file_type );
+		$folder_name = LITESPEED_STATIC_DIR . $file_path_prefix;
+		$to_be_deleted_folder = $folder_name . date( 'Ymd', strtotime( '-2 days') );
+		if ( file_exists( $to_be_deleted_folder ) ) {
+			Debug2::debug( '[Optimizer] ❌ Clearning folder [name] ' . $to_be_deleted_folder );
+			File::rrmdir( $to_be_deleted_folder );
+		}
+
+		$today_file = $folder_name . date( 'Ymd' ) . '/' . md5( $url );
+		if( file_exists( $today_file ) ) return File::read( $today_file );
+
+		// Write file
+		$res = wp_remote_get( $url );
+		$res_code = wp_remote_retrieve_response_code( $res );
+		if ( is_wp_error( $res ) || $res_code != 200 ) {
+			Debug2::debug2( '[Optimizer] ❌ Load Remote error [code] ' . $res_code );
+			return false;
+		}
+		$con = wp_remote_retrieve_body( $res );
+		if ( ! $con ) {
+			return false;
+		}
+
+		Debug2::debug( '[Optimizer] ✅ Save remote file to cache [name] ' . $today_file );
+		File::save( $today_file, $con, true );
+
+		return $con;
+	}
+
+	/**
 	 * Load remote/local resource
 	 *
 	 * @since  3.5
@@ -194,16 +229,7 @@ class Optimizer extends Root {
 		if ( ! $real_file || $postfix != $file_type ) {
 			Debug2::debug2( '[CSS] Load Remote [' . $file_type . '] ' . $src );
 			$this_url = substr( $src, 0, 2 ) == '//' ? set_url_scheme( $src ) : $src;
-			$res = wp_remote_get( $this_url );
-			$res_code = wp_remote_retrieve_response_code( $res );
-			if ( is_wp_error( $res ) || $res_code == 404 ) {
-				Debug2::debug2( '[CSS] ❌ Load Remote error [code] ' . $res_code );
-				return false;
-			}
-			$con = wp_remote_retrieve_body( $res );
-			if ( ! $con ) {
-				return false;
-			}
+			$con = $this->load_cached_file($this_url, $file_type);
 
 			if ( $file_type == 'css' ) {
 				$dirname = dirname( $this_url ) . '/';

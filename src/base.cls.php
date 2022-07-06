@@ -109,6 +109,7 @@ class Base extends Root {
 	const O_DEBUG_COLLAPS_QS 			= 'debug-collaps_qs';
 	const O_DEBUG_INC 					= 'debug-inc';
 	const O_DEBUG_EXC 					= 'debug-exc';
+	const O_DEBUG_EXC_STRINGS 			= 'debug-exc_strings';
 
 	## -------------------------------------------------- ##
 	## --------------	   DB Optm  	----------------- ##
@@ -202,6 +203,8 @@ class Base extends Root {
 	const O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	= 'media-iframe_lazy_parent_cls_exc';
 	const O_MEDIA_LAZY_URI_EXC					= 'media-lazy_uri_exc';
 	const O_MEDIA_LQIP_EXC						= 'media-lqip_exc';
+	const O_MEDIA_VPI							= 'media-vpi';
+	const O_MEDIA_VPI_CRON						= 'media-vpi_cron';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -260,6 +263,8 @@ class Base extends Root {
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
 	const O_CDN_MAPPING 		= 'cdn-mapping';
 	const O_CDN_ATTR 			= 'cdn-attr';
+	const O_QC_TOKEN 			= 'qc-token';
+	const O_QC_NAMESERVERS		= 'qc-nameservers';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
@@ -310,6 +315,8 @@ class Base extends Root {
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
+		self::O_QC_TOKEN,
+		self::O_QC_NAMESERVERS,
 	);
 
 	protected static $_default_options = array(
@@ -394,6 +401,7 @@ class Base extends Root {
 		self::O_DEBUG_COLLAPS_QS 		=> false,
 		self::O_DEBUG_INC 				=> array(),
 		self::O_DEBUG_EXC 				=> array(),
+		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
 		// DB Optm
 		self::O_DB_OPTM_REVISIONS_MAX 	=> 0,
@@ -477,6 +485,8 @@ class Base extends Root {
 		self::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC 	=> array(),
 		self::O_MEDIA_LAZY_URI_EXC 					=> array(),
 		self::O_MEDIA_LQIP_EXC 						=> array(),
+		self::O_MEDIA_VPI 							=> false,
+		self::O_MEDIA_VPI_CRON						=> false,
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO 			=> false,
@@ -528,6 +538,9 @@ class Base extends Root {
 		self::O_CDN_MAPPING 		=> array(),
 		self::O_CDN_ATTR 			=> array(),
 
+		self::O_QC_TOKEN 			=> '',
+		self::O_QC_NAMESERVERS		=> '',
+
 	);
 
 	protected static $_default_site_options = array(
@@ -573,6 +586,7 @@ class Base extends Root {
 		self::O_DEBUG_COLLAPS_QS 		=> false,
 		self::O_DEBUG_INC 				=> array(),
 		self::O_DEBUG_EXC 				=> array(),
+		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
 		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 
@@ -814,7 +828,7 @@ class Base extends Root {
 			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
 			self::O_OPTM_DNS_PREFETCH	=> 'domain',
-			self::O_CDN_ORI				=> 'noprotocol', // `Original URLs`
+			self::O_CDN_ORI				=> 'noprotocol,trailingslash', // `Original URLs`
 			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
 			// self::	=> '',
 			// self::	=> '',
@@ -872,6 +886,7 @@ class Base extends Root {
 			self::O_CDN_CLOUDFLARE_KEY,
 			self::O_OBJECT_PSWD,
 			self::O_API_KEY,
+			self::O_QC_TOKEN,
 		);
 
 		return in_array( $id, $check_ids );

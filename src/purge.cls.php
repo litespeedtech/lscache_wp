@@ -36,6 +36,7 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache';
 
 	const TYPE_PURGE_FRONT = 'purge_front';
+	const TYPE_PURGE_UCSS = 'purge_ucss';
 	const TYPE_PURGE_FRONTPAGE = 'purge_frontpage';
 	const TYPE_PURGE_PAGES = 'purge_pages';
 	const TYPE_PURGE_ERROR = 'purge_error';
@@ -133,6 +134,10 @@ class Purge extends Base {
 
 			case self::TYPE_PURGE_FRONT:
 				$this->_purge_front();
+				break;
+
+			case self::TYPE_PURGE_UCSS:
+				$this->_purge_ucss();
 				break;
 
 			case self::TYPE_PURGE_FRONTPAGE:
@@ -591,6 +596,26 @@ class Purge extends Base {
 			exit( 'no referer' );
 		}
 
+		$this->purge_url( $_SERVER[ 'HTTP_REFERER' ] );
+
+		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
+		exit();
+	}
+
+	/**
+	 * Purge single UCSS
+	 * @since 4.7
+	 */
+	private function _purge_ucss() {
+		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			exit( 'no referer' );
+		}
+
+		$url_tag = empty( $_GET[ 'url_tag' ] ) ? $_SERVER[ 'HTTP_REFERER' ] : $_GET[ 'url_tag' ];
+
+		self::debug( 'Purge ucss [url_tag] ' . $url_tag );
+
+		do_action( 'litespeed_purge_ucss', $url_tag );
 		$this->purge_url( $_SERVER[ 'HTTP_REFERER' ] );
 
 		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
@@ -1091,7 +1116,13 @@ class Purge extends Base {
 
 		// post
 		$purge_tags[] = Tag::TYPE_POST . $post_id;
-		$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+		$post_status = get_post_status($post_id);
+		if ( function_exists( 'is_post_status_viewable' ) ) {
+			$viewable = is_post_status_viewable($post_status);
+			if ($viewable) {
+				$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+			}
+		}
 
 		// for archive of categories|tags|custom tax
 		global $post;

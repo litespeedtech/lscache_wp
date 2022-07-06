@@ -13,6 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Admin extends Root {
+	const LOG_TAG = '👮';
+
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
 
 	/**
@@ -26,6 +28,9 @@ class Admin extends Root {
 		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
 			define( 'LSCWP_MU_PLUGIN', true );
 		}
+
+		self::debug( 'No cache due to Admin page' );
+		defined( 'DONOTCACHEPAGE' ) || define( 'DONOTCACHEPAGE', true );
 
 		// Additional litespeed assets on admin display
 		// Also register menu
@@ -63,8 +68,6 @@ class Admin extends Root {
 	 * @access public
 	 */
 	public function admin_init() {
-		Control::set_nocache( 'Admin page' );
-
 		// Hook attachment upload
 		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
 			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );

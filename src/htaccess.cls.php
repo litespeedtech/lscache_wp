@@ -565,8 +565,7 @@ class Htaccess extends Root {
 		$id = Base::O_IMG_OPTM_WEBP_REPLACE;
 		if ( ! empty( $cfg[ $id ] ) || ! empty( $cfg[ Base::O_GUEST ] ) ) {
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START;
-			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]';
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} "Page Speed"';
+			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"';
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone.*Version/(\d{2}).*Safari';
 			$new_rules[] = 'RewriteCond %1 >13';

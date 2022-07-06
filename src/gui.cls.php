@@ -96,6 +96,17 @@ class GUI extends Base {
 	}
 
 	/**
+	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
+	*/
+	public static function print_loading( $counter, $type ) {
+		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
+		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
+		echo sprintf( __( '%1$s %2$s files left in queue', 'litespeed-cache' ), $counter, $type );
+		echo '<p><a href="' . admin_url( 'admin.php?page=litespeed-page_optm' ) . '">' . __( 'Cancel', 'litespeed-cache' ) . '</a></p>';
+		echo '</div>';
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6
@@ -400,10 +411,26 @@ class GUI extends Base {
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
-			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
+			'title'		=> __( 'Purge this page', 'litespeed-cache' ) . ' - LSCache',
 			'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_FRONT, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
+
+		if ( $this->has_cache_folder( 'ucss' ) ) {
+			$possible_url_tag = CSS::get_url_tag();
+			$append_arr = array();
+			if ( $possible_url_tag ) {
+				$append_arr[ 'url_tag' ] = $possible_url_tag;
+			}
+
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-single-ucss',
+				'title'		=> __( 'Purge this page', 'litespeed-cache' ) . ' - UCSS',
+				'href'		=> Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_UCSS, false, true, $append_arr ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',

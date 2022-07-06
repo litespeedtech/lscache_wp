@@ -5,6 +5,18 @@ defined( 'WPINC' ) || exit;
 $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETWORK : false );
 ?>
 
+<h3 class="litespeed-title-short">
+	<?php echo __('Debug Helpers', 'litespeed-cache'); ?>
+</h3>
+
+<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=before_optm'; ?>" class="button button-success" target="_blank">
+	<?php echo __( 'View Site Before Optimization', 'litespeed-cache' ); ?>
+</a>
+
+<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=' . Core::ACTION_QS_NOCACHE; ?>" class="button button-success" target="_blank">
+	<?php echo __( 'View Site Before Cache', 'litespeed-cache' ); ?>
+</a>
+
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Debug Settings', 'litespeed-cache'); ?>
@@ -139,6 +151,20 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any debug log of listed pages.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_DEBUG_EXC_STRINGS; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent writing log entries that include listed strings.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

@@ -28,10 +28,12 @@ else {
 $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
+$vpi_summary = VPI::get_summary();
 
 $ccss_count = count( $this->load_queue( 'ccss' ) );
 $ucss_count = count( $this->load_queue( 'ucss' ) );
 $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
+$vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 ?>
 
 <div class="litespeed-dashboard">
@@ -137,7 +139,6 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 						<?php if ( ! empty( $usage[ 'sub_svc' ] ) ) : ?>
 							<p class="litespeed-dashboard-stats-total">
 							<?php $i=0;foreach ( $usage[ 'sub_svc' ] as $sub_svc => $sub_usage ) : ?>
-								<?php if ($sub_svc=='vpi') continue; ?>
 								<span class="<?php if ( $i++>0 ) echo 'litespeed-left10'; ?>"><?php echo strtoupper( esc_html( $sub_svc ) ); ?>: <strong><?php echo (int)$sub_usage; ?></strong></span>
 							<?php endforeach; ?>
 							</p>
@@ -519,6 +520,38 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 				<?php if ( ! empty( $cloud_summary[ 'last_request.lqip' ] ) ) : ?>
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.lqip' ] ) ?>
+					</div>
+				<?php endif; ?>
+			</div>
+
+			<div class="postbox litespeed-postbox litespeed-postbox-vpi">
+				<div class="inside">
+					<h3 class="litespeed-title">
+						<?php echo __( 'Viewport Image', 'litespeed-cache' ); ?> (VPI)
+						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_vpi' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
+					</h3>
+
+					<?php if ( ! empty( $vpi_summary[ 'last_request' ] ) ) : ?>
+						<p>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $vpi_summary[ 'last_request' ] ) . '</code>'; ?>
+						</p>
+						<p>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $vpi_summary[ 'last_spent' ] ) . 's</code>'; ?>
+						</p>
+					<?php endif; ?>
+
+					<p>
+						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $vpi_queue_count ?: '-' ?></code>
+						<a href="<?php echo $vpi_queue_count ? Utility::build_url( Router::ACTION_VPI, VPI::TYPE_GEN ) : 'javascript:;'; ?>" class="button button-secondary button-small <?php if ( ! $vpi_queue_count ) echo 'disabled'; ?>">
+							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
+						</a>
+					</p>
+
+				</div>
+
+				<?php if ( ! empty( $cloud_summary[ 'last_request.vpi' ] ) ) : ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php echo __( 'Last requested', 'litespeed-cache' ) . ': ' . Utility::readable_time( $cloud_summary[ 'last_request.vpi' ] ) ?>
 					</div>
 				<?php endif; ?>
 			</div>

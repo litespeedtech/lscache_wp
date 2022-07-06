@@ -9,6 +9,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class REST extends Root {
+	const LOG_TAG = '☎️';
 	private $_internal_rest_status = false;
 
 	/**
@@ -77,11 +78,30 @@ class REST extends Root {
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
+		// CDN setup callback notification
+		register_rest_route( 'litespeed/v1', '/cdn_status', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'cdn_status' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
 			'methods' => 'POST',
 			'callback' => array( $this, 'notify_img' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
+		register_rest_route( 'litespeed/v1', '/notify_vpi', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'notify_vpi' ),
+			'permission_callback'	=> array( $this, 'is_from_cloud' ),
+		) );
+
+		register_rest_route( 'litespeed/v1', '/err_domains', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'err_domains' ),
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
@@ -172,12 +192,37 @@ class REST extends Root {
 	}
 
 	/**
+	 * Endpoint for QC to notify plugin of CDN setup status update.
+	 *
+	 * @since  3.0
+	 */
+	public function cdn_status() {
+		return $this->cls( 'Cdn_Setup' )->update_cdn_status();
+	}
+
+	/**
 	 * Launch api call
 	 *
 	 * @since  3.0
 	 */
 	public function notify_img() {
 		return Img_Optm::cls()->notify_img();
+	}
+
+	/**
+	 * @since  4.7
+	 */
+	public function notify_vpi() {
+		self::debug('notify_vpi');
+		return VPI::cls()->notify();
+	}
+
+	/**
+	 * @since  4.7
+	 */
+	public function err_domains() {
+		self::debug('err_domains');
+		return $this->cls( 'Cloud' )->rest_err_domains();
 	}
 
 	/**

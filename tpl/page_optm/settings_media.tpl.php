@@ -226,7 +226,15 @@ $lqip_queue = $this->load_queue( 'lqip' );
 			<div class="litespeed-desc">
 				<?php echo __( 'Set an explicit width and height on image elements to reduce layout shifts and improve CLS (a Core Web Vitals metric).', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://web.dev/optimize-cls/#images-without-dimensions' ); ?>
-				<br /><?php echo sprintf( __( 'Note: this option only works when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_MEDIA_LAZY ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ); ?>
+
+				<br /><font class="litespeed-warning litespeed-left10">
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( '%s must be turned ON for this setting to work.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_MEDIA_LAZY ) . '</code>' ); ?>
+				</font>
+
+				<br /><font class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'Use %1$s to bypass remote image dimension check when %2$s is ON.', 'litespeed-cache' ), '<code>add_filter( "litespeed_media_ignore_remote_missing_sizes", "__return_true" );</code>', '<code>' . Lang::title( Base::O_MEDIA_ADD_MISSING_SIZES ) . '</code>' ); ?>
+				</font>
 			</div>
 		</td>
 	</tr>
