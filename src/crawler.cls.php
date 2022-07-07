@@ -797,7 +797,13 @@ class Crawler extends Root {
 		curl_setopt_array( $ch, $options );
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		$result = curl_exec( $ch );
+		$code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		curl_close( $ch );
+
+		if ( $code != 200 ) {
+			self::debug('❌ Response code is not 200 in self_curl() [code] ' . var_export( $code, true ) );
+			return false;
+		}
 
 		return $result;
 	}
