@@ -154,7 +154,7 @@ class Debug2 extends Root {
 		$debug = $this->conf( Base::O_DEBUG );
 		if ( $debug == Base::VAL_ON2 ) {
 			if ( ! $this->cls( 'Router' )->is_admin_ip() ) {
-				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
+				defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) || define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
 				return;
 			}
 		}
