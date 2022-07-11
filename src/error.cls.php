@@ -80,6 +80,10 @@ class Error {
 				$msg = sprintf( __( 'There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache' ), '<code>' . substr( $code, strlen( 'unfinished_queue ' ) ) . '</code>' );
 				break;
 
+			case 'err_alias':
+				$msg = __( 'The site is not a valid alias on QUIC.cloud.', 'litespeed-cache' );
+				break;
+
 			case 'site_not_registered':
 				$msg = __( 'The site is not registered on QUIC.cloud.', 'litespeed-cache' );
 				break;

@@ -763,7 +763,7 @@ class Cloud extends Base {
 	 * Extract msg from json
 	 * @since 5.0
 	 */
-	public function extract_msg( $json, $service, $server = false ) {
+	public function extract_msg( $json, $service, $server = false, $is_callback = false ) {
 		if ( ! empty( $json[ '_info' ] ) ) {
 			self::debug( '_info: ' . $json[ '_info' ] );
 			$msg = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json[ '_info' ];
@@ -839,11 +839,12 @@ class Cloud extends Base {
 		}
 
 		// Parse general error msg
-		if ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) {
+		if ( !$is_callback && ( empty( $json[ '_res' ] ) || $json[ '_res' ] !== 'ok' ) ) {
 			$json_msg = ! empty( $json[ '_msg' ] ) ? $json[ '_msg' ] : 'unknown';
-			self::debug( '❌ _err: ' . $json_msg );
+			self::debug( '❌ _err: ' . $json_msg, $json );
 
-			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . Error::msg( $json_msg ) . " [server] $server [service] $service";
+			$str_translated = Error::msg( $json_msg );
+			$msg = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . $str_translated . " [server] $server [service] $service";
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::error( $msg );
 
@@ -853,6 +854,7 @@ class Cloud extends Base {
 				if ( empty( $this->_summary[ 'err_domains' ] ) ) {
 					$this->_summary[ 'err_domains' ] = array();
 				}
+				$home_url = home_url();
 				if ( ! array_key_exists( $home_url, $this->_summary[ 'err_domains' ] ) ) {
 					$this->_summary[ 'err_domains' ][ $home_url ] = time();
 				}
@@ -904,7 +906,7 @@ class Cloud extends Base {
 			return self::err( 'wrong_hash' );
 		}
 
-		list( $post_data ) = $this->extract_msg( $_POST, 'Quic.cloud' );
+		list( $post_data ) = $this->extract_msg( $_POST, 'Quic.cloud', false, true );
 
 		if ( $this->_is_err_domain( $_POST[ 'alias' ] ) ) {
 			$this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
@@ -916,7 +918,7 @@ class Cloud extends Base {
 			return self::ok( array( 'hash' => md5( $res_hash ) ) );
 		}
 
-		return self::err();
+		return self::err( 'Not an alias req from here' );
 	}
 
 	/**
@@ -924,7 +926,7 @@ class Cloud extends Base {
 	 * @since 5.0
 	 */
 	private function _remove_domain_from_err_list( $url ) {
-		unset( $this->_summary[ 'main_domain' ][ $url ] );
+		unset( $this->_summary[ 'err_domains' ][ $url ] );
 		self::save_summary();
 	}
 
@@ -933,13 +935,13 @@ class Cloud extends Base {
 	 * @since 5.0
 	 */
 	private function _is_err_domain( $home_url ) {
-		if ( empty( $this->_summary[ 'main_domain' ] ) ) return false;
-		if ( ! array_key_exists( $home_url, $this->_summary[ 'main_domain' ] ) ) return false;
+		if ( empty( $this->_summary[ 'err_domains' ] ) ) return false;
+		if ( ! array_key_exists( $home_url, $this->_summary[ 'err_domains' ] ) ) return false;
 		// Auto delete if too long ago
-		if ( time() - $this->_summary[ 'main_domain' ][ $home_url ] > 86400 * 10 ) {
+		if ( time() - $this->_summary[ 'err_domains' ][ $home_url ] > 86400 * 10 ) {
 			$this->_remove_domain_from_err_list( $home_url );
 		}
-		if ( time() - $this->_summary[ 'main_domain' ][ $home_url ] > 86400 ) return false;
+		if ( time() - $this->_summary[ 'err_domains' ][ $home_url ] > 86400 ) return false;
 		return true;
 	}
 
