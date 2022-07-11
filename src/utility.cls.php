@@ -549,7 +549,7 @@ class Utility extends Root {
 	 * @return string
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
-		$types = $type ? explode( ',', $type ) : [];
+		$types = $type ? explode( ',', $type ) : array();
 
 		if ( ! $arr ) {
 			if ( $type === 'string' ) {
