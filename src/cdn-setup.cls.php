@@ -83,6 +83,10 @@ class Cdn_Setup extends Base {
 
 		if (!$json) {
 			return;
+		} else if (is_string($json)) {
+			$this->_summary[ 'cdn_setup_err' ] = $json;
+			self::save_summary();
+			return;
 		}
 
 		$result = [];
@@ -158,6 +162,10 @@ class Cdn_Setup extends Base {
 			$json = $this->cls('Cloud')->req_rest_api('/user/cdn/reset', $data);
 
 			if (!$json) {
+				return;
+			} else if (is_string($json)) {
+				$this->_summary[ 'cdn_setup_err' ] = $json;
+				self::save_summary();
 				return;
 			}
 		} else if ( ! isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ||  ! $this->_summary[ 'cdn_setup_done_ts' ] ) {
@@ -286,6 +294,10 @@ class Cdn_Setup extends Base {
 		$json = $__cloud->req_rest_api('/user/cdn/', $data);
 
 		if (!$json) {
+			return;
+		} else if (is_string($json)) {
+			$this->_summary[ 'cdn_setup_err' ] = $json;
+			self::save_summary();
 			return;
 		}
 

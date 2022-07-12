@@ -978,10 +978,8 @@ class Cloud extends Base {
 
 			$error_message = $response->get_error_message();
 			self::debug( 'failed to request REST API: ' . $error_message );
-			$this->_summary['cdn_setup_err'] = $error_message;
-			self::save_summary();
 			Admin_Display::error( __( 'Cloud REST Error', 'litespeed-cache' ) . ': ' . $error_message );
-			return;
+			return $error_message;
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
@@ -996,10 +994,8 @@ class Cloud extends Base {
 			} else {
 				$error_message = 'Unknown error, contact QUIC.cloud support.';
 			}
-			$this->_summary[ 'cdn_setup_err' ] = $error_message;
-			self::save_summary();
 			Admin_Display::error( __( 'Cloud REST API returned error: ', 'litespeed-cache' ) . $error_message );
-			return;
+			return $error_message;
 		}
 
 		return $json;
