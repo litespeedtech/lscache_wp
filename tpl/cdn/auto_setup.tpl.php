@@ -51,13 +51,13 @@ if ($cdn_setup_done_ts) {
 	$curr_status_subline = '<p class="litespeed-desc">' . $cdn_setup_err . '</p>';
 } else if ( $cdn_setup_ts > 0 ) {
 	if ( isset($nameservers) ) {
-		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated', 'litespeed-cache');
+		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated.', 'litespeed-cache') . ' ' . __('Click the refresh button below to refresh status.', 'litespeed-cache');
 		if ( isset( $setup_summary[ 'cdn_verify_msg' ])) {
 			$curr_status_subline = '<p class="litespeed-desc">' .  __( 'Last Verification Result', 'litespeed-cache' ) . ': ' . $setup_summary[ 'cdn_verify_msg' ] . '</p>';
 		}
 	} else {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('In Progress', 'litespeed-cache');
-		$curr_status_subline = '<p class="litespeed-desc">' .  __( 'You will receive an email upon status update.', 'litespeed-cache' ) . '</p>';
+		$curr_status_subline = '<p class="litespeed-desc">' . __( 'You will receive an email upon status update.', 'litespeed-cache' ) . ' ' . __( 'This process may take several minutes.', 'litespeed-cache' ) . '</p>';
 	}
 	$apply_btn_txt = __( 'Refresh CDN Setup Status', 'litespeed-cache' );
 	$apply_btn_type = Cdn_Setup::TYPE_STATUS;
@@ -68,7 +68,7 @@ if ($cdn_setup_done_ts) {
 	<?php echo __( 'Auto QUIC.cloud CDN Setup', 'litespeed-cache' ); ?>
 </h3>
 <p>
-<?php echo __( 'This is a three step process for configuring your site to use QUIC.cloud CDN. This setup will perform the following actions', 'litespeed-cache' ) . ':'; ?>
+<?php echo __( 'This is a three step process for configuring your site to use QUIC.cloud CDN with QUIC.cloud DNS. This setup will perform the following actions', 'litespeed-cache' ) . ':'; ?>
 </p>
 <ol>
 	<li><?php echo __( 'Set up a QUIC.cloud account.', 'litespeed-cache' ); ?></li>
