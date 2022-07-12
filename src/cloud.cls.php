@@ -945,7 +945,7 @@ class Cloud extends Base {
 		return true;
 	}
 
-	public function req_rest_api($api, $body = [])
+	public function req_rest_api($api, $body = array())
 	{
 
 		$token = $this->_setup_token;
@@ -986,7 +986,7 @@ class Cloud extends Base {
 
 		if (!$json['success']) {
 			if (isset($json['info']['errors'])) {
-				$errs = [];
+				$errs = array();
 				foreach ($json['info']['errors'] as $err) {
 					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
 				}
@@ -1287,10 +1287,10 @@ class Cloud extends Base {
 	 * @since  3.0
 	 * @since  5.0 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
 	 */
-	public function parse_qc_redir($extra = []) {
+	public function parse_qc_redir($extra = array()) {
 
-		$extraRet = [];
-		$qsDrop = [];
+		$extraRet = array();
+		$qsDrop = array();
 		if ( ! $this->_api_key && $this->_summary[ 'is_linked' ]) {
 			$this->_summary[ 'is_linked' ] = 0;
 			self::save_summary();

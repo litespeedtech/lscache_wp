@@ -89,7 +89,7 @@ class Cdn_Setup extends Base {
 			return;
 		}
 
-		$result = [];
+		$result = array();
 		if (isset($json['info']['messages'])) {
 			$result['_msg'] = implode('<br>', $json['info']['messages']);
 		}
