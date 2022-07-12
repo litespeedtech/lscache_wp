@@ -149,7 +149,6 @@ class Cdn_Setup extends Base {
 	private function _qc_reset($delete) {
 		$data = [
 			'site_url' => home_url(),
-			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 		];
 
 		if ($delete) {
