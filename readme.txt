@@ -250,10 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.1 - Auguest 2022 =
-* **Page Optimize** Bypassed generating CCSS/UCSS if the self crawled CSS failed to avoid 404 HTML wrongly taken as CSS content. (Abe)
-
-= 5.0 - Jul 14 2022 =
+= 5.0 - Jul 18 2022 =
 * 🌱**VPI** Added Viewport Images feature to LiteSpeed Options metabox on Post Edit page.
 * 🌱**CDN** Added Auto CDN Setup feature for simple QUIC.cloud CDN setup. (Kevin)
 * 🌱**Page Optimize** Automatically cache remote CSS/JS files when fetching for optimization (Lauren)
@@ -263,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**UCSS** Added `Purge this page - UCSS` option to Admin Bar dropdown menu. (Ankit)
 * 🌱**Guest** Added `litespeed_guest_off=1` URL query string parameter to bypass Guest Mode. (cbdfactum)
 * 🐞**Page Optimize** Fixed an issue where CSS anchors could be wrongly converted to a full path when minifying. (Tynan)
+* **Page Optimize** Bypass CCSS/UCSS generation when a self-crawled CSS resource returns a 404 code. (Abe)
 * **Object** Allow `LSCWP_OBJECT_CACHE` predefined to turn off Object Cache. (knutsp)
 * **Data** Fixed an issue where empty version tags in the database repeatedly toggled the upgrade banner and reset settings to default.
 * **Purge** Fixed an issue where the site's index page could be purged upon deletion of an unviewable post. (Kevin)
