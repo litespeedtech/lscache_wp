@@ -131,7 +131,7 @@ class Cdn_Setup extends Base {
 			$notice = $result[ '_msg' ];
 			if ( $this->conf( Base::O_QC_NAMESERVERS )) {
 				$this->_summary[ 'cdn_verify_msg' ] = $result[ '_msg' ];
-				$notice = ['cdn_verify_msg' => $result[ '_msg' ]];
+				$notice = array('cdn_verify_msg' => $result[ '_msg' ]);
 			}
 			Admin_Display::succeed( $notice );
 		} else {
@@ -147,9 +147,9 @@ class Cdn_Setup extends Base {
 	 * @access private
 	 */
 	private function _qc_reset($delete) {
-		$data = [
+		$data = array(
 			'site_url' => home_url(),
-		];
+		);
 
 		if ($delete) {
 			$data['delete'] = 1;
@@ -279,11 +279,11 @@ class Cdn_Setup extends Base {
 	 */
 	private function _qc_run() {
 
-		$data = [
+		$data = array(
 			'site_url' => home_url(),
 			'rest'		=> function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ),
 			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
-		];
+		);
 
 		if ( $this->_api_key ) {
 			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );

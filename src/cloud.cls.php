@@ -955,12 +955,12 @@ class Cloud extends Base {
 			Admin_Display::error( __( 'Cannot request REST API, no token saved.', 'litespeed-cache' ));
 			return;
 		}
-		$req_args = [
-			'headers' => [
+		$req_args = array(
+			'headers' => array(
 				'Authorization' => 'bearer ' . $token,
 				'Content-Type' => 'application/json',
-			],
-		];
+			),
+		);
 		if (!empty($body)) {
 			$req_args['body'] = json_encode($body);
 
