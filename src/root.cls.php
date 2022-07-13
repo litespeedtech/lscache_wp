@@ -25,7 +25,7 @@ abstract class Root {
 	 * @access protected
 	 */
 	protected function _separate_mobile() {
-		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( self::O_CACHE_MOBILE );
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( Base::O_CACHE_MOBILE );
 	}
 
 	/**
