@@ -23,7 +23,9 @@ $queue = $this->load_queue( 'vpi' );
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Enable Viewport Images auto generation.', 'litespeed-cache' ); ?>
+				<?php echo __( 'When you use Lazy Load, it will delay the loading of all images on a page.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'The Viewport Images service detects which images appear above the fold, and excludes them from lazy load.', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'This enables the page\'s initial screenful of imagery to be fully displayed without delay.', 'litespeed-cache' ); ?>
 
 				<?php if ( ! $this->conf( Base::O_MEDIA_LAZY ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
