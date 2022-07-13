@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 5.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2022-07-11 20:01:31+00:00\n"
+"POT-Creation-Date: 2022-07-13 18:53:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -288,44 +288,44 @@ msgstr ""
 msgid "There was an error during CDN setup: "
 msgstr ""
 
-#: src/cdn-setup.cls.php:113
+#: src/cdn-setup.cls.php:117
 msgid ""
 "Congratulations, QUIC.cloud successfully set this domain up for the CDN. "
 "Please update your nameservers to:"
 msgstr ""
 
-#: src/cdn-setup.cls.php:134
+#: src/cdn-setup.cls.php:138
 msgid "CDN Setup is running."
 msgstr ""
 
-#: src/cdn-setup.cls.php:164
+#: src/cdn-setup.cls.php:171
 msgid "Notice: CDN Setup only reset locally."
 msgstr ""
 
-#: src/cdn-setup.cls.php:167
+#: src/cdn-setup.cls.php:174
 msgid "Cannot delete, site is not linked."
 msgstr ""
 
-#: src/cdn-setup.cls.php:200
+#: src/cdn-setup.cls.php:207
 msgid ""
 "CDN Setup Token and DNS zone deleted. Note: if my.quic.cloud account "
 "deletion is desired, that the account still exists and must be deleted "
 "separately."
 msgstr ""
 
-#: src/cdn-setup.cls.php:202
+#: src/cdn-setup.cls.php:209
 msgid ""
 "CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, "
 "that the account still exists and must be deleted separately."
 msgstr ""
 
-#: src/cdn-setup.cls.php:319 src/cloud.cls.php:769 src/cloud.cls.php:777
-#: src/cloud.cls.php:1165
+#: src/cdn-setup.cls.php:330 src/cloud.cls.php:769 src/cloud.cls.php:777
+#: src/cloud.cls.php:1161
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
 #: src/cloud.cls.php:374 src/cloud.cls.php:387 src/cloud.cls.php:432
-#: src/cloud.cls.php:457 src/cloud.cls.php:596 src/cloud.cls.php:1134
+#: src/cloud.cls.php:457 src/cloud.cls.php:596 src/cloud.cls.php:1130
 msgid "Cloud Error"
 msgstr ""
 
@@ -363,7 +363,7 @@ msgstr ""
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:847 src/cloud.cls.php:1154
+#: src/cloud.cls.php:847 src/cloud.cls.php:1150
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
@@ -381,31 +381,31 @@ msgstr ""
 msgid "Cannot request REST API, no token saved."
 msgstr ""
 
-#: src/cloud.cls.php:983
+#: src/cloud.cls.php:981
 msgid "Cloud REST Error"
 msgstr ""
 
-#: src/cloud.cls.php:1001
+#: src/cloud.cls.php:997
 msgid "Cloud REST API returned error: "
 msgstr ""
 
-#: src/cloud.cls.php:1173
+#: src/cloud.cls.php:1169
 msgid ""
 "Applied for Domain Key successfully. Please wait for result. Domain Key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:1227
+#: src/cloud.cls.php:1223
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:1311
+#: src/cloud.cls.php:1307
 msgid "Domain Key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1435
+#: src/cloud.cls.php:1431
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -437,15 +437,15 @@ msgstr ""
 msgid "Crawler disabled list is cleared! All crawlers are set to active! "
 msgstr ""
 
-#: src/crawler.cls.php:849
+#: src/crawler.cls.php:855
 msgid "Guest"
 msgstr ""
 
-#: src/crawler.cls.php:1001
+#: src/crawler.cls.php:1007
 msgid "Manually added to blocklist"
 msgstr ""
 
-#: src/crawler.cls.php:1004
+#: src/crawler.cls.php:1010
 msgid "Previously existed in blocklist"
 msgstr ""
 
@@ -1551,7 +1551,7 @@ msgid "ESI Nonces"
 msgstr ""
 
 #: src/lang.cls.php:216 tpl/page_optm/settings_css.tpl.php:111
-#: tpl/page_optm/settings_css.tpl.php:221 tpl/page_optm/settings_vpi.tpl.php:65
+#: tpl/page_optm/settings_css.tpl.php:221 tpl/page_optm/settings_vpi.tpl.php:67
 msgid "Vary Group"
 msgstr ""
 
@@ -2945,7 +2945,11 @@ msgid "Paused"
 msgstr ""
 
 #: tpl/cdn/auto_setup.tpl.php:54
-msgid "Verifying, waiting for nameservers to be updated"
+msgid "Verifying, waiting for nameservers to be updated."
+msgstr ""
+
+#: tpl/cdn/auto_setup.tpl.php:54
+msgid "Click the refresh button below to refresh status."
 msgstr ""
 
 #: tpl/cdn/auto_setup.tpl.php:56
@@ -2960,6 +2964,10 @@ msgstr ""
 msgid "You will receive an email upon status update."
 msgstr ""
 
+#: tpl/cdn/auto_setup.tpl.php:60
+msgid "This process may take several minutes."
+msgstr ""
+
 #: tpl/cdn/auto_setup.tpl.php:62
 msgid "Refresh CDN Setup Status"
 msgstr ""
@@ -2970,8 +2978,8 @@ msgstr ""
 
 #: tpl/cdn/auto_setup.tpl.php:71
 msgid ""
-"This is a three step process for configuring your site to use QUIC.cloud "
-"CDN. This setup will perform the following actions"
+"This is a three step process for configuring your site to use QUIC.cloud CDN "
+"with QUIC.cloud DNS. This setup will perform the following actions"
 msgstr ""
 
 #: tpl/cdn/auto_setup.tpl.php:74
@@ -3863,7 +3871,7 @@ msgstr ""
 #: tpl/dash/dashboard.tpl.php:228 tpl/img_optm/summary.tpl.php:57
 #: tpl/page_optm/settings_css.tpl.php:92 tpl/page_optm/settings_css.tpl.php:202
 #: tpl/page_optm/settings_media.tpl.php:176
-#: tpl/page_optm/settings_vpi.tpl.php:46
+#: tpl/page_optm/settings_vpi.tpl.php:48
 msgid ""
 "Are you sure you want to redetect the closest cloud server for this service?"
 msgstr ""
@@ -3923,7 +3931,7 @@ msgstr ""
 #: tpl/dash/dashboard.tpl.php:504 tpl/dash/dashboard.tpl.php:536
 #: tpl/page_optm/settings_css.tpl.php:83 tpl/page_optm/settings_css.tpl.php:193
 #: tpl/page_optm/settings_media.tpl.php:170
-#: tpl/page_optm/settings_vpi.tpl.php:40
+#: tpl/page_optm/settings_vpi.tpl.php:42
 msgid "Last generated"
 msgstr ""
 
@@ -4206,7 +4214,7 @@ msgstr ""
 #: tpl/general/settings.tpl.php:188 tpl/general/settings.tpl.php:194
 #: tpl/general/settings.tpl.php:200 tpl/general/settings.tpl.php:217
 #: tpl/page_optm/settings_media.tpl.php:231
-#: tpl/page_optm/settings_vpi.tpl.php:30
+#: tpl/page_optm/settings_vpi.tpl.php:32
 msgid "Notice"
 msgstr ""
 
@@ -4301,7 +4309,7 @@ msgid "Your %1s quota on %2s will still be in use."
 msgstr ""
 
 #: tpl/general/settings.tpl.php:182 tpl/page_optm/settings_media.tpl.php:231
-#: tpl/page_optm/settings_vpi.tpl.php:30
+#: tpl/page_optm/settings_vpi.tpl.php:32
 msgid "%s must be turned ON for this setting to work."
 msgstr ""
 
@@ -4475,7 +4483,7 @@ msgstr ""
 #: tpl/img_optm/summary.tpl.php:57 tpl/page_optm/settings_css.tpl.php:92
 #: tpl/page_optm/settings_css.tpl.php:202
 #: tpl/page_optm/settings_media.tpl.php:176
-#: tpl/page_optm/settings_vpi.tpl.php:46
+#: tpl/page_optm/settings_vpi.tpl.php:48
 msgid "Current closest Cloud server is %s.&#10; Click to redetect."
 msgstr ""
 
@@ -4896,12 +4904,12 @@ msgid "Last requested cost"
 msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:98 tpl/page_optm/settings_css.tpl.php:208
-#: tpl/page_optm/settings_vpi.tpl.php:52
+#: tpl/page_optm/settings_vpi.tpl.php:54
 msgid "URL list in %s queue waiting for cron"
 msgstr ""
 
 #: tpl/page_optm/settings_css.tpl.php:119
-#: tpl/page_optm/settings_css.tpl.php:229 tpl/page_optm/settings_vpi.tpl.php:72
+#: tpl/page_optm/settings_css.tpl.php:229 tpl/page_optm/settings_vpi.tpl.php:74
 msgid "Run %s Queue Manually"
 msgstr ""
 
@@ -5432,10 +5440,23 @@ msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
 #: tpl/page_optm/settings_vpi.tpl.php:26
-msgid "Enable Viewport Images auto generation."
+msgid ""
+"When you use Lazy Load, it will delay the loading of all images on a page."
 msgstr ""
 
-#: tpl/page_optm/settings_vpi.tpl.php:88
+#: tpl/page_optm/settings_vpi.tpl.php:27
+msgid ""
+"The Viewport Images service detects which images appear above the fold, and "
+"excludes them from lazy load."
+msgstr ""
+
+#: tpl/page_optm/settings_vpi.tpl.php:28
+msgid ""
+"This enables the page's initial screenful of imagery to be fully displayed "
+"without delay."
+msgstr ""
+
+#: tpl/page_optm/settings_vpi.tpl.php:90
 msgid "Enable Viewport Images auto generation cron."
 msgstr ""
 
