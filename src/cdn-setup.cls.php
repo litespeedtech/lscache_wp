@@ -55,14 +55,11 @@ class Cdn_Setup extends Base {
 	public function update_cdn_status() {
 
 		if ( !isset( $_POST[ 'success' ] ) || !isset( $_POST[ 'result' ] ) ) {
-			$this->_summary[ 'cdn_setup_err' ] = __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' );
-			self::save_summary();
+			self::save_summary( array( 'cdn_setup_err' => __( 'Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache' ) ) );
 			return self::err( 'lack_of_param' );
 		}
-		if (!$_POST[ 'success' ])
-		{
-			$this->_summary[ 'cdn_setup_err' ] = $_POST[ 'result' ][ '_msg' ];
-			self::save_summary();
+		if (!$_POST[ 'success' ]) {
+			self::save_summary( array( 'cdn_setup_err' => $_POST[ 'result' ][ '_msg' ] ) );
 			Admin_Display::error( __( 'There was an error during CDN setup: ', 'litespeed-cache' ) . $_POST[ 'result' ][ '_msg' ] );
 		} else {
 			$this->_process_cdn_status($_POST[ 'result' ]);
@@ -84,8 +81,7 @@ class Cdn_Setup extends Base {
 		if (!$json) {
 			return;
 		} else if (is_string($json)) {
-			$this->_summary[ 'cdn_setup_err' ] = $json;
-			self::save_summary();
+			self::save_summary( array( 'cdn_setup_err' => $json ) );
 			return;
 		}
 
@@ -102,8 +98,7 @@ class Cdn_Setup extends Base {
 	 * @since  4.7
 	 * @access private
 	 */
-	private function _process_cdn_status($result)
-	{
+	private function _process_cdn_status($result) {
 
 		if ( isset($result[ 'nameservers' ] ) ) {
 			if (isset($this->_summary['cdn_setup_err'])) {
@@ -123,7 +118,6 @@ class Cdn_Setup extends Base {
 				unset( $this->_summary[ 'cdn_verify_msg' ] );
 			}
 			$this->_summary[ 'cdn_setup_done_ts' ] = time();
-			self::save_summary();
 
 			$this->_setup_token = '';
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '' ) );
@@ -163,8 +157,7 @@ class Cdn_Setup extends Base {
 			if (!$json) {
 				return;
 			} else if (is_string($json)) {
-				$this->_summary[ 'cdn_setup_err' ] = $json;
-				self::save_summary();
+				self::save_summary( array( 'cdn_setup_err' => $json ) );
 				return;
 			}
 		} else if ( ! isset( $this->_summary[ 'cdn_setup_done_ts' ] ) ||  ! $this->_summary[ 'cdn_setup_done_ts' ] ) {
@@ -265,8 +258,7 @@ class Cdn_Setup extends Base {
 		$json = Cloud::post( Cloud::SVC_D_SETUP_TOKEN, $data);
 
 		if (isset($json[ 'token' ])) {
-			$this->_summary[ 'cdn_setup_ts' ] = time();
-			self::save_summary();
+			self::save_summary( array( 'cdn_setup_ts' => time() ) );
 			$this->_setup_token = $json[ 'token' ];
 			$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => $this->_setup_token ) );
 		}
@@ -295,8 +287,7 @@ class Cdn_Setup extends Base {
 		if (!$json) {
 			return;
 		} else if (is_string($json)) {
-			$this->_summary[ 'cdn_setup_err' ] = $json;
-			self::save_summary();
+			self::save_summary( array( 'cdn_setup_err' => $json ) );
 			return;
 		}
 

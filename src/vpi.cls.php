@@ -86,9 +86,8 @@ class VPI extends Base {
 
 		// Validate key
 		if ( empty( $post_data[ 'domain_key' ] ) || $post_data[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
-			$this->_summary[ 'notify_ts_err' ] = time();
 			self::debug( '❌ notify wrong key' );
-			self::save_summary();
+			self::save_summary( array( 'notify_ts_err' => time() ) );
 			return Cloud::err( 'wrong_key' );
 		}
 
@@ -251,8 +250,7 @@ class VPI extends Base {
 		set_time_limit( 120 );
 
 		// Update css request status
-		$this->_summary[ 'curr_request_vpi' ] = time();
-		self::save_summary();
+		self::save_summary( array( 'curr_request_vpi' => time() ), true );
 
 		// Gather guest HTML to send
 		$html = $this->prepare_html( $request_url, $user_agent );
@@ -293,6 +291,7 @@ class VPI extends Base {
 		}
 
 		// Save summary data
+		self::reload_summary();
 		$this->_summary[ 'last_spent_vpi' ] = time() - $this->_summary[ 'curr_request_vpi' ];
 		$this->_summary[ 'last_request_vpi' ] = $this->_summary[ 'curr_request_vpi' ];
 		$this->_summary[ 'curr_request_vpi' ] = 0;

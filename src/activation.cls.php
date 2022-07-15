@@ -614,16 +614,15 @@ class Activation extends Base {
 				break;
 
 			case self::TYPE_DISMISS_RECOMMENDED:
-				$summary = Cloud::get_summary();
-				$summary[ 'news.new' ] = 0;
-				Cloud::save_summary( $summary );
+				Cloud::reload_summary();
+				Cloud::save_summary( array( 'news.new' => 0 ) );
 				break;
 
 			case self::TYPE_INSTALL_ZIP:
+				Cloud::reload_summary();
 				$summary = Cloud::get_summary();
 				if ( ! empty( $summary[ 'news.zip' ] ) ) {
-					$summary[ 'news.new' ] = 0;
-					Cloud::save_summary( $summary );
+					Cloud::save_summary( array( 'news.new' => 0 ) );
 
 					$this->cls( 'Debug2' )->beta_test( $summary[ 'zip' ] );
 				}

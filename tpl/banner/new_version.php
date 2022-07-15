@@ -21,14 +21,12 @@ if ( ! isset( $current->response[ Core::PLUGIN_FILE ] ) ) {
 $last_check = empty( $this->_summary[ 'new_version.last_check' ] ) ? 0 : $this->_summary[ 'new_version.last_check' ];
 // Check once in a half day
 if ( time() - $last_check > 43200 ) {
-	$this->_summary[ 'new_version.last_check' ] = time();
-	Admin_Display::save_summary( $this->_summary );
+	Admin_Display::save_summary( array( 'new_version.last_check' => time() ) );
 
 	// Detect version
 	$auto_v = Cloud::version_check( 'new_version_banner' );
 	if ( ! empty( $auto_v[ 'latest' ] ) ) {
-		$this->_summary[ 'new_version.v' ] = $auto_v[ 'latest' ];
-		Admin_Display::save_summary( $this->_summary );
+		Admin_Display::save_summary( array( 'new_version.v' => $auto_v[ 'latest' ] ) );
 	}
 	// After detect, don't show, just return and show next time
 	return;

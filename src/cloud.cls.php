@@ -133,8 +133,7 @@ class Cloud extends Base {
 		if ( time() - $last_check > 86400 ) {
 			$auto_v = self::version_check( 'dev' );
 			if ( ! empty( $auto_v[ 'dev' ] ) ) {
-				$this->_summary[ 'version.dev' ] = $auto_v[ 'dev' ];
-				self::save_summary( $this->_summary );
+				self::save_summary( array( 'version.dev' => $auto_v[ 'dev' ] ) );
 			}
 		}
 
@@ -200,8 +199,7 @@ class Cloud extends Base {
 			return;
 		}
 
-		$this->_summary[ 'news.utime' ] = time();
-		self::save_summary();
+		self::save_summary( array( 'news.utime' => time() ) );
 
 		$data = self::get( self::API_NEWS );
 		if ( empty( $data[ 'id' ] ) ) {
@@ -536,8 +534,7 @@ class Cloud extends Base {
 
 		self::debug( 'getting from : ' . $url );
 
-		$this->_summary[ 'curr_request.' . $service_tag ] = time();
-		self::save_summary();
+		self::save_summary( array( 'curr_request.' . $service_tag => time() ) );
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15, 'sslverify' => true ) );
 
@@ -661,8 +658,7 @@ class Cloud extends Base {
 			'data' 			=> $data,
 		);
 
-		$this->_summary[ 'curr_request.' . $service_tag ] = time();
-		self::save_summary();
+		self::save_summary( array( 'curr_request.' . $service_tag => time() ) );
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => true ) );
 
@@ -744,9 +740,10 @@ class Cloud extends Base {
 		list( $json, $return ) = $this->extract_msg( $json, $service, $server );
 		if ( $return ) return;
 
-		$this->_summary[ 'last_request.' . $service_tag ] = $this->_summary[ 'curr_request.' . $service_tag ];
-		$this->_summary[ 'curr_request.' . $service_tag ] = 0;
-		self::save_summary();
+		self::save_summary( array(
+			'last_request.' . $service_tag => $this->_summary[ 'curr_request.' . $service_tag ],
+			'curr_request.' . $service_tag => 0
+		));
 
 		if ( $json ) {
 			self::debug2( 'response ok', $json );
@@ -1369,9 +1366,7 @@ class Cloud extends Base {
 
 		$json = json_decode( $response[ 'body' ], true );
 
-		$this->_summary[ 'ips_ts' ] = time();
-		$this->_summary[ 'ips' ] = $json;
-		self::save_summary();
+		self::save_summary( array( 'ips_ts' => time(), 'ips' => $json ) );
 	}
 
 	/**

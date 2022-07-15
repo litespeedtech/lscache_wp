@@ -226,8 +226,7 @@ class Avatar extends Base {
 		$file = $this->_realpath( $url );
 
 		// Update request status
-		$this->_summary[ 'curr_request' ] = time();
-		self::save_summary();
+		self::save_summary( array( 'curr_request' => time() ) );
 
 		// Generate
 		$this->_maybe_mk_cache_folder( 'avatar' );
@@ -245,10 +244,11 @@ class Avatar extends Base {
 		}
 
 		// Save summary data
-		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ];
-		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ];
-		$this->_summary[ 'curr_request' ] = 0;
-		self::save_summary();
+		self::save_summary( array(
+			'last_spent' => time() - $this->_summary[ 'curr_request' ],
+			'last_request' => $this->_summary[ 'curr_request' ],
+			'curr_request' => 0,
+		) );
 
 		// Update DB
 		$md5 = md5( $url );
