@@ -159,15 +159,15 @@ class Crawler extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function save_summary( $data = null ) {
+	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
 		$instance = self::cls();
 		$instance->_summary[ 'meta_save_time' ] = time();
 
-		if ( $data === null ) {
+		if ( ! $data ) {
 			$data = $instance->_summary;
 		}
 
-		parent::save_summary( $data );
+		parent::save_summary( $data, $reload, $overwrite );
 
 		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode( $data ), true );
 	}
@@ -340,8 +340,7 @@ class Crawler extends Root {
 		}
 
 		// log started time
-		$this->_summary['last_start_time'] = time();
-		self::save_summary();
+		self::save_summary( array( 'last_start_time' => time() ) );
 
 		// set time limit
 		$maxTime = (int) ini_get( 'max_execution_time' );
@@ -975,8 +974,7 @@ class Crawler extends Root {
 	public function reset_pos() {
 		File::save( $this->_resetfile, time() , true );
 
-		$this->_summary[ 'is_running' ] = 0;
-		self::save_summary();
+		self::save_summary( array( 'is_running' => 0 ) );
 	}
 
 	/**
