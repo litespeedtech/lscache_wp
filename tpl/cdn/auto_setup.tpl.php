@@ -120,7 +120,7 @@ if ($cdn_setup_done_ts) {
 			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.',
 									__( 'Manage DNS Zone', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
 									false,
-									'litespeed-link-with-icon', ); ?>
+									'litespeed-link-with-icon' ); ?>
 		</p>
 	</p>
 <?php elseif ( $has_setup_token ) : ?>
