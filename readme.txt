@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.0 - Jul 21 2022 =
+= 5.0 - Jul 25 2022 =
 * 🌱**VPI** Added Viewport Images feature to LiteSpeed Options metabox on Post Edit page.
 * 🌱**CDN** Added Auto CDN Setup feature for simple QUIC.cloud CDN setup. (Kevin)
 * 🌱**Page Optimize** Automatically cache remote CSS/JS files when fetching for optimization (Lauren)
