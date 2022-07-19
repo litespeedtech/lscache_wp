@@ -177,6 +177,7 @@ class VPI extends Base {
 			$i ++;
 			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] );
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
+				$this->_queue = $this->load_queue( 'vpi' );
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( 'vpi', $this->_queue );
 
@@ -184,10 +185,10 @@ class VPI extends Base {
 					return;
 				}
 
-				if ( $i > 3 ) {
+				// if ( $i > 3 ) {
 					GUI::print_loading( count( $this->_queue ), 'VPI' );
 					return Router::self_redirect( Router::ACTION_VPI, self::TYPE_GEN );
-				}
+				// }
 
 				continue;
 			}
@@ -197,6 +198,7 @@ class VPI extends Base {
 				return;
 			}
 
+			$this->_queue = $this->load_queue( 'vpi' );
 			$this->_queue[ $k ][ '_status' ] = 'requested';
 			$this->save_queue( 'vpi', $this->_queue );
 			self::debug( 'Saved to queue [k] ' . $k );
@@ -206,10 +208,10 @@ class VPI extends Base {
 				return;
 			}
 
-			if ( $i > 3 ) {
+			// if ( $i > 3 ) {
 				GUI::print_loading( count( $this->_queue ), 'VPI' );
 				return Router::self_redirect( Router::ACTION_VPI, self::TYPE_GEN );
-			}
+			// }
 		}
 	}
 
