@@ -2,6 +2,14 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
+$profiles = array(
+	'essentials',
+	'basic',
+	'advanced',
+	'aggressive',
+	'extreme'
+);
+
 $summary = Profiles::get_summary();
 
 function apply_url( $profile ) {
@@ -14,9 +22,20 @@ function apply_url( $profile ) {
 	);
 }
 
-function apply_label() {
-	esc_html_e( 'Apply Profile', 'litespeed-cache' );
+function profile( $name ) {
+	if ( ! is_readable( Profiles::builtin( $name ) ) ) {
+		return;
+	}
+	?>
+	<div>
+		<h4><?php echo ucwords( $name ); ?></h4>
+		<a href="<?php apply_url( $name ); ?>" class="button button-primary">
+			<?php esc_html_e( 'Apply Profile', 'litespeed-cache' ); ?>
+		</a>
+	</div>
+	<?php
 }
+
 ?>
 
 <h3 class="litespeed-title">
@@ -24,9 +43,11 @@ function apply_label() {
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#profiles-tab' ); ?>
 </h3>
 
-<div><a href="<?php apply_url( 'essentials' ); ?>" class="button button-primary">
-	<?php apply_label(); ?>
-</a></div>
+<?php
+	foreach ( $profiles as $name ) {
+		profile( $name );
+	}
+?>
 
 <h3 class="litespeed-title">
 	<?php esc_html_e( 'History', 'litespeed-cache' ); ?>
@@ -50,41 +71,3 @@ function apply_label() {
 	>
 	<?php esc_html_e( 'Revert', 'litespeed-cache' ); ?>
 </a></div>
-
-
-
-<!--
-<div class="litespeed-desc">
-	<?php echo __( 'This will export all current LiteSpeed Cache settings and save them as a file.', 'litespeed-cache' ); ?>
-</div>
-
-<h3 class="litespeed-title"><?php echo __('Import Settings', 'litespeed-cache'); ?></h3>
-
-<?php $this->form_action( Router::ACTION_IMPORT, Import::TYPE_IMPORT, true ); ?>
-
-	<div class="litespeed-div">
-		<input type="file" name="ls_file" class="litespeed-input" />
-	</div>
-	<div class="litespeed-div">
-		<?php submit_button(__('Import', 'litespeed-cache'), 'button button-primary', 'litespeed-submit'); ?>
-	</div>
-</form>
-
-<?php if ( ! empty( $summary[ 'import_file' ] ) ) : ?>
-<div class="litespeed-desc">
-	<?php echo __( 'Last imported', 'litespeed-cache' ); ?>: <code><?php echo $summary[ 'import_file' ]; ?></code> <?php echo Utility::readable_time( $summary[ 'import_time' ]); ?>
-</div>
-<?php endif; ?>
-
-<div class="litespeed-desc">
-	<?php echo __( 'This will import settings from a file and override all current LiteSpeed Cache settings.', 'litespeed-cache' ); ?>
-</div>
-
-<h3 class="litespeed-title"><?php echo __('Reset All Settings', 'litespeed-cache'); ?></h3>
-<div><p>🚨 <?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ); ?></p>
-</div>
-<div><a href="<?php echo Utility::build_url( Router::ACTION_IMPORT, Import::TYPE_RESET ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to reset all settings back to the default settings?', 'litespeed-cache' ); ?>" class="button litespeed-btn-danger-bg">
-	<?php echo __( 'Reset Settings', 'litespeed-cache' ); ?>
-</a></div>
-
--->
