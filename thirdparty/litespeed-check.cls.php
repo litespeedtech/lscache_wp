@@ -12,7 +12,7 @@ class LiteSpeed_Check {
 
 	public static $_incompatible_plugins =
 		array(
-			'autoptimize/autoptimize.php',
+			// 'autoptimize/autoptimize.php',
 			'breeze/breeze.php',
 			'cache-enabler/cache-enabler.php',
 			'cachify/cachify.php',
