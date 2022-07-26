@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.0.1
-Stable tag: 5.0
+Stable tag: 5.0.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,6 +249,9 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 5.0.0.1 - Jul 26 2022 =
+* 🔥🐞**Cloud** Fixed an issue with the cloud request timestamp update which causes a usage sync failure. (Great thanks to Kevin)
 
 = 5.0 - Jul 25 2022 =
 * 🌱**VPI** Added Viewport Images feature to LiteSpeed Options metabox on Post Edit page.
