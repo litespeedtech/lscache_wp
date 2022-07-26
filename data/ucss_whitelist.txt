@@ -8,3 +8,7 @@
 
 ############# DIVI ################
 .et_pb_number_counter.active
+
+############# AVADA ################
+.fusion-mobile*
+.fusion-open-submenu*
