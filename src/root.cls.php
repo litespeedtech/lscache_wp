@@ -582,6 +582,7 @@ abstract class Root {
 		}
 		$new_summary = array_merge( $existing_summary, $data ?: array() );
 // self::debug2( 'Save after Reloaded summary', $new_summary );
+		static::cls()->_summary = $new_summary;
 
 		self::update_option( '_summary', $new_summary );
 	}
