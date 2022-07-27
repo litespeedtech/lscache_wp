@@ -577,7 +577,7 @@ abstract class Root {
 		}
 
 		$existing_summary = static::cls()->_summary;
-		if ( $overwrite ) {
+		if ( $overwrite || !is_array($existing_summary)) {
 			$existing_summary = array();
 		}
 		$new_summary = array_merge( $existing_summary, $data ?: array() );
