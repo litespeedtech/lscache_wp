@@ -572,7 +572,7 @@ abstract class Root {
 	 * @access public
 	 */
 	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
-		if ( $reload ) {
+		if ( $reload || empty( static::cls()->_summary ) ) {
 			self::reload_summary();
 		}
 

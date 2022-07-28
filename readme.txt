@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.1 - Auguest 2022 =
 * **3rd** Add 3rd party support for WC PDF Product Vouchers. (Tynan)
+* **Core** Fixed potential PHP warning when saving a summary data. (Sarah Richardson)
 
 = 5.0.1 - Jul 27 2022 =
 * 🐞**Cloud** Fixed a potential PHP error that could occur with the cloud service summary. (Bruno Cantuaria)
