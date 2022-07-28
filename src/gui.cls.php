@@ -70,32 +70,6 @@ class GUI extends Base {
 	}
 
 	/**
-	 * Get the lscache stats
-	 *
-	 * @since  3.0
-	 */
-	public function lscache_stats() {
-		return false;
-
-		$stat_titles = array(
-			'PUB_CREATES'		=> __( 'Public Caches', 'litespeed-cache' ),
-			'PUB_HITS'			=> __( 'Public Cache Hits', 'litespeed-cache' ),
-			'PVT_CREATES'		=> __( 'Private Caches', 'litespeed-cache' ),
-			'PVT_HITS'			=> __( 'Private Cache Hits', 'litespeed-cache' ),
-		);
-
-		// Build the readable format
-		$data = array();
-		foreach ( $stat_titles as $k => $v ) {
-			if ( array_key_exists( $k, $stats ) ) {
-				$data[ $v ] = number_format( $stats[ $k ] );
-			}
-		}
-
-		return $data;
-	}
-
-	/**
 	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
 	*/
 	public static function print_loading( $counter, $type ) {

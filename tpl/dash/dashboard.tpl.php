@@ -2,8 +2,6 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-$lscache_stats = GUI::cls()->lscache_stats();
-
 $health_scores = Health::cls()->scores();
 
 $crawler_summary = Crawler::get_summary();
@@ -411,21 +409,6 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 					<?php endforeach; ?>
 				</div>
 			</div>
-
-			<?php if ( $lscache_stats ) : ?>
-			<div class="postbox litespeed-postbox litespeed-postbox-cache-stats">
-				<div class="inside">
-					<h3 class="litespeed-title">
-						<?php echo __( 'Cache Stats', 'litespeed-cache' ); ?>
-					</h3>
-
-				<?php foreach ( $lscache_stats as $title => $val ) : ?>
-					<p><?php echo $title; ?>: <?php echo $val ? "<code>$val</code>" : '-'; ?></p>
-				<?php endforeach; ?>
-
-				</div>
-			</div>
-			<?php endif; ?>
 
 			<div class="postbox litespeed-postbox litespeed-postbox-ccss">
 				<div class="inside">

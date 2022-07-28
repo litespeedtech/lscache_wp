@@ -222,7 +222,7 @@ class CSS extends Base {
 
 				if ( $i > 3 ) {
 					GUI::print_loading( count( $this->_queue ), $type_tag );
-					return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
+					return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS );
 				}
 
 				continue;
@@ -243,7 +243,7 @@ class CSS extends Base {
 
 			if ( $i > 3 ) {
 				GUI::print_loading( count( $this->_queue ), $type_tag );
-				return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
+				return Router::self_redirect( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS );
 			}
 		}
 	}
