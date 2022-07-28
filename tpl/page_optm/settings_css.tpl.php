@@ -6,6 +6,7 @@ defined( 'WPINC' ) || exit;
 // exit;
 
 $css_summary = CSS::get_summary();
+$ucss_summary = UCSS::get_summary();
 $closest_server_ucss = Cloud::get_summary( 'server.' . Cloud::SVC_UCSS );
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 
@@ -77,26 +78,26 @@ $ucss_queue = $this->load_queue( 'ucss' );
 			</div>
 
 			<div class="litespeed-desc litespeed-left20">
-				<?php if ( $css_summary ) : ?>
-					<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
+				<?php if ( $ucss_summary ) : ?>
+					<?php if ( ! empty( $ucss_summary[ 'last_request' ] ) ) : ?>
 						<p>
-							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $ucss_summary[ 'last_request' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $css_summary[ 'last_spent_ucss' ] . 's</code>'; ?>
+							<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $ucss_summary[ 'last_spent' ] . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 				<?php endif; ?>
 
 				<?php if ( $closest_server_ucss ) : ?>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_CCSS ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server_ucss ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_UCSS ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server_ucss ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $ucss_queue ) ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
 							<?php echo sprintf( __( 'URL list in %s queue waiting for cron', 'litespeed-cache' ), 'UCSS' ); ?> ( <?php echo count( $ucss_queue ); ?> )
-							<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_CLEAR_Q_UCSS ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
+							<a href="<?php echo Utility::build_url( Router::ACTION_UCSS, UCSS::TYPE_CLEAR_Q ); ?>" class="button litespeed-btn-warning litespeed-right">Clear</a>
 						</h4>
 						<p>
 						<?php $i=0; foreach ( $ucss_queue as $k => $v ) : ?>
@@ -115,7 +116,7 @@ $ucss_queue = $this->load_queue( 'ucss' );
 						<?php endforeach; ?>
 						</p>
 					</div>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ); ?>" class="button litespeed-btn-success">
+					<a href="<?php echo Utility::build_url( Router::ACTION_UCSS, UCSS::TYPE_GEN ); ?>" class="button litespeed-btn-success">
 						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'UCSS' ); ?>
 					</a>
 				<?php endif; ?>

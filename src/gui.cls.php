@@ -417,7 +417,7 @@ class GUI extends Base {
 		) );
 
 		if ( $this->has_cache_folder( 'ucss' ) ) {
-			$possible_url_tag = CSS::get_url_tag();
+			$possible_url_tag = UCSS::get_url_tag();
 			$append_arr = array();
 			if ( $possible_url_tag ) {
 				$append_arr[ 'url_tag' ] = $possible_url_tag;

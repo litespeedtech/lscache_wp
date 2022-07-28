@@ -291,7 +291,7 @@ class Optimize extends Base {
 				if ( $this->cfg_css_comb ) {
 					// Check if has inline UCSS enabled or not
 					if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
-						$filename = $this->cls( 'CSS' )->load_ucss( $this->_request_url, true );
+						$filename = $this->cls( 'UCSS' )->load( $this->_request_url, true );
 						if ( $filename ) {
 							$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 							$this->_ucss = File::read( LITESPEED_STATIC_DIR . $filepath_prefix . $filename );

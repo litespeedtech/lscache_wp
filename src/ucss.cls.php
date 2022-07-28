@@ -1,19 +1,20 @@
 <?php
 /**
- * The optimize css class.
+ * The ucss class.
  *
- * @since      	2.3
+ * @since      	5.1
  */
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
-class CSS extends Base {
-	const LOG_TAG = '[CSS]';
+class UCSS extends Base {
+	const LOG_TAG = '[UCSS]';
 
-	const TYPE_GEN_CCSS = 'gen_ccss';
-	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
+	const TYPE_GEN = 'gen';
+	const TYPE_CLEAR_Q = 'clear_q';
 
 	protected $_summary;
+	private $_ucss_whitelist;
 	private $_queue;
 
 	/**
@@ -23,111 +24,81 @@ class CSS extends Base {
 	 */
 	public function __construct() {
 		$this->_summary = self::get_summary();
+
+		add_filter( 'litespeed_ucss_whitelist', array( $this->cls( 'Data' ), 'load_ucss_whitelist' ) );
 	}
 
 	/**
-	 * HTML lazyload CSS
-	 * @since 4.0
+	 * Uniform url tag for ucss usage
+	 * @since 4.7
 	 */
-	public function prepare_html_lazy() {
-		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
-	}
-
-	/**
-	 * Output critical css
-	 *
-	 * @since  1.3
-	 * @access public
-	 */
-	public function prepare_ccss() {
-		// Get critical css for current page
-		// Note: need to consider mobile
-		$rules = $this->_ccss();
-		if ( ! $rules ) {
-			return null;
-		}
-
-		$error_tag = '';
-		if ( substr( $rules, 0, 2 ) == '/*' && substr( $rules, -2 ) == '*/' ) {
-			$error_tag = ' data-error="failed to generate"';
-		}
-
-		// Append default critical css
-		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
-
-		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
-	}
-
-	/**
-	 * Generate CCSS url tag
-	 *
-	 * @since 4.0
-	 */
-	private function _gen_ccss_file_tag( $request_url ) {
+	public static function get_url_tag( $request_url = false ) {
+		$url_tag = $request_url;
 		if ( is_404() ) {
-			return '404';
+			$url_tag = '404';
+		}
+		elseif ( apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
+			$url_tag = Utility::page_type();
+			self::debug( 'litespeed_ucss_per_pagetype filter altered url to ' . $url_tag );
 		}
 
-		if ( $this->conf( self::O_OPTM_CCSS_PER_URL ) ) {
-			return $request_url;
-		}
-
-		$sep_uri = $this->conf( self::O_OPTM_CCSS_SEP_URI );
-		if ( $sep_uri && $hit = Utility::str_hit_array( $request_url, $sep_uri ) ) {
-			Debug2::debug( '[CCSS] Separate CCSS due to separate URI setting: ' . $hit );
-			return $request_url;
-		}
-
-		$pt = Utility::page_type();
-
-		$sep_pt = $this->conf( self::O_OPTM_CCSS_SEP_POSTTYPE );
-		if ( in_array( $pt, $sep_pt ) ) {
-			Debug2::debug( '[CCSS] Separate CCSS due to posttype setting: ' . $pt );
-			return $request_url;
-		}
-
-		// Per posttype
-		return $pt;
+		return $url_tag;
 	}
 
 	/**
-	 * The critical css content of the current page
+	 * Get UCSS path
 	 *
-	 * @since  2.3
+	 * @since  4.0
 	 */
-	private function _ccss() {
-		global $wp;
-		$request_url = home_url( $wp->request );
+	public function load( $request_url, $dry_run = false ) {
+		// Check UCSS URI excludes
+		$ucss_exc = apply_filters( 'litespeed_ucss_exc', $this->conf( self::O_OPTM_UCSS_EXC ) );
+		if ( $ucss_exc && $hit = Utility::str_hit_array( $request_url, $ucss_exc ) ) {
+			self::debug( 'UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
+			return false;
+		}
 
-		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
-		$url_tag = $this->_gen_ccss_file_tag( $request_url );
+		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
+
+		$url_tag = self::get_url_tag( $request_url );
+
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
-		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ccss' );
+		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'ucss' );
 		if ( $filename ) {
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 
 			if ( file_exists( $static_file ) ) {
-				Debug2::debug2( '[CSS] existing ccss ' . $static_file );
-				return File::read( $static_file );
+				self::debug2( 'existing ucss ' . $static_file );
+				// Check if is error comment inside only
+				$tmp = File::read( $static_file );
+				if ( substr( $tmp, 0, 2 ) == '/*' && substr( $tmp, -2 ) == '*/' ) {
+					self::debug2( 'existing ucss is error only: ' . $tmp );
+					return false;
+				}
+
+				return $filename . '.css';
 			}
+		}
+
+		if ( $dry_run ) {
+			return false;
 		}
 
 		$uid = get_current_user_id();
 
 		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
 
-
-		// Store it to prepare for cron
-		$this->_queue = $this->load_queue( 'ccss' );
+		// Store it for cron
+		$this->_queue = $this->load_queue( 'ucss' );
 
 		if ( count( $this->_queue ) > 500 ) {
-			self::debug( 'CCSS Queue is full - 500' );
-			return null;
+			self::debug( 'UCSS Queue is full - 500' );
+			return false;
 		}
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = array(
-			'url'			=> apply_filters( 'litespeed_ccss_url', $request_url ),
+			'url'			=> apply_filters( 'litespeed_ucss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
@@ -135,58 +106,41 @@ class CSS extends Base {
 			'vary'			=> $vary,
 			'url_tag'		=> $url_tag,
 		); // Current UA will be used to request
-		$this->save_queue( 'ccss', $this->_queue );
-		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
+		$this->save_queue( 'ucss', $this->_queue );
+		self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid );
 
 		// Prepare cache tag for later purge
-		Tag::add( 'CCSS.' . md5( $queue_k ) );
+		Tag::add( 'UCSS.' . md5( $queue_k ) );
 
-		// For v4.1- clean up
-		if ( isset( $this->_summary[ 'ccss_type_history' ] ) || isset( $this->_summary[ 'ccss_history' ] ) || isset( $this->_summary[ 'queue_ccss' ] ) ) {
-			if ( isset( $this->_summary[ 'ccss_type_history' ] ) ) {
-				unset( $this->_summary[ 'ccss_type_history' ] );
-			}
-			if ( isset( $this->_summary[ 'ccss_history' ] ) ) {
-				unset( $this->_summary[ 'ccss_history' ] );
-			}
-			if ( isset( $this->_summary[ 'queue_ccss' ] ) ) {
-				unset( $this->_summary[ 'queue_ccss' ] );
-			}
-			self::save_summary();
-		}
-
-		return null;
+		return false;
 	}
 
 	/**
-	 * Cron ccss generation
+	 * Generate UCSS
 	 *
-	 * @since  2.3
-	 * @access private
+	 * @since  4.0
 	 */
-	public static function cron_ccss( $continue = false ) {
+	public static function cron( $continue = false ) {
 		$_instance = self::cls();
-		return $_instance->_cron_handler( 'ccss', $continue );
+		return $_instance->_cron_handler( $continue );
 	}
 
 	/**
-	 * Handle UCSS/CCSS cron
+	 * Handle UCSS cron
 	 *
 	 * @since 4.2
 	 */
-	private function _cron_handler( $type, $continue ) {
-		$this->_queue = $this->load_queue( $type );
+	private function _cron_handler( $continue ) {
+		$this->_queue = $this->load_queue( 'ucss' );
 
 		if ( empty( $this->_queue ) ) {
 			return;
 		}
 
-		$type_tag = strtoupper( $type );
-
 		// For cron, need to check request interval too
 		if ( ! $continue ) {
-			if ( ! empty( $this->_summary[ 'curr_request_' . $type ] ) && time() - $this->_summary[ 'curr_request_' . $type ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
-				Debug2::debug( '[' . $type_tag . '] Last request not done' );
+			if ( ! empty( $this->_summary[ 'curr_request' ] ) && time() - $this->_summary[ 'curr_request' ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
+				self::debug( 'Last request not done' );
 				return;
 			}
 		}
@@ -197,32 +151,25 @@ class CSS extends Base {
 				continue;
 			}
 
-			Debug2::debug( '[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
-
-			if ( $type == 'ccss' && empty( $v[ 'url_tag' ] ) ) {
-				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
-				Debug2::debug( '[CCSS] wrong queue_ccss format' );
-				continue;
-			}
+			self::debug( 'cron job [tag] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] );
 
 			if ( ! isset( $v[ 'is_webp' ] ) ) {
 				$v[ 'is_webp' ] = false;
 			}
 
 			$i ++;
-			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $type, $v[ 'is_mobile' ], $v[ 'is_webp' ] );
+			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
 				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
+				$this->save_queue( 'ucss', $this->_queue );
 
 				if ( ! $continue ) {
 					return;
 				}
 
 				if ( $i > 3 ) {
-					GUI::print_loading( count( $this->_queue ), $type_tag );
-					return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
+					GUI::print_loading( count( $this->_queue ), 'UCSS' );
+					return Router::self_redirect( Router::ACTION_UCSS, self::TYPE_GEN );
 				}
 
 				continue;
@@ -234,7 +181,7 @@ class CSS extends Base {
 			}
 
 			$this->_queue[ $k ][ '_status' ] = 'requested';
-			$this->save_queue( $type, $this->_queue );
+			$this->save_queue( 'ucss', $this->_queue );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -242,24 +189,24 @@ class CSS extends Base {
 			}
 
 			if ( $i > 3 ) {
-				GUI::print_loading( count( $this->_queue ), $type_tag );
-				return Router::self_redirect( Router::ACTION_CSS, $type == 'ccss' ? CSS::TYPE_GEN_CCSS : CSS::TYPE_GEN_UCSS );
+				GUI::print_loading( count( $this->_queue ), 'UCSS' );
+				return Router::self_redirect( Router::ACTION_UCSS, self::TYPE_GEN );
 			}
 		}
 	}
 
 	/**
-	 * Send to QC API to generate CCSS/UCSS
+	 * Send to QC API to generate UCSS
 	 *
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
+	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $is_mobile, $is_webp ) {
 		// Check if has credit to push or not
 		$err = false;
-		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_CCSS, $err );
+		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_UCSS, $err );
 		if ( ! $allowance ) {
-			Debug2::debug( '[CCSS] ❌ No credit: ' . $err );
+			self::debug( '❌ No credit: ' . $err );
 			$err && Admin_Display::error( Error::msg( $err ) );
 			return 'out_of_quota';
 		}
@@ -267,7 +214,7 @@ class CSS extends Base {
 		set_time_limit( 120 );
 
 		// Update css request status
-		$this->_summary[ 'curr_request_' . $type ] = time();
+		$this->_summary[ 'curr_request' ] = time();
 		self::save_summary();
 
 		// Gather guest HTML to send
@@ -279,22 +226,17 @@ class CSS extends Base {
 
 		// Parse HTML to gather all CSS content before requesting
 		$css = false;
-		if ( $type == 'ccss' ) {
-			list( $css, $html ) = $this->prepare_css( $html, $is_webp );
-		}
-		else {
-			list( , $html ) = $this->prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
-			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
-			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
-			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
-			Debug2::debug( '[UCSS] Checking combined file ' . $static_file );
-			if ( file_exists( $static_file ) ) {
-				$css = File::read( $static_file );
-			}
+		list( , $html ) = $this->prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
+		$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
+		$filepath_prefix = $this->_build_filepath_prefix( 'css' );
+		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
+		self::debug( 'Checking combined file ' . $static_file );
+		if ( file_exists( $static_file ) ) {
+			$css = File::read( $static_file );
 		}
 
 		if ( ! $css ) {
-			Debug2::debug( '[UCSS] ❌ No combined css' );
+			self::debug( '❌ No combined css' );
 			return false;
 		}
 
@@ -308,18 +250,22 @@ class CSS extends Base {
 			'html'			=> $html,
 			'css'			=> $css,
 		);
+		if ( ! isset( $this->_ucss_whitelist ) ) {
+			$this->_ucss_whitelist = $this->_filter_whitelist();
+		}
+		$data[ 'whitelist' ] = $this->_ucss_whitelist;
 
 		self::debug( 'Generating: ', $data );
 
-		$json = Cloud::post( Cloud::SVC_CCSS, $data, 30 );
+		$json = Cloud::post( Cloud::SVC_UCSS, $data, 30 );
 		if ( ! is_array( $json ) ) {
 			return false;
 		}
 
 		// Old version compatibility
 		if ( empty( $json[ 'status' ] ) ) {
-			if ( ! empty( $json[ $type ] ) ) {
-				$this->_save_con( $type, $json[ $type ], $queue_k );
+			if ( ! empty( $json[ 'ucss' ] ) ) {
+				$this->_save_con( 'ucss', $json[ 'ucss' ], $queue_k );
 			}
 
 			// Delete the row
@@ -332,23 +278,23 @@ class CSS extends Base {
 		}
 
 		// Save summary data
-		$this->_summary[ 'last_spent_' . $type ] = time() - $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'curr_request_' . $type ] = 0;
+		$this->_summary[ 'last_spent' ] = time() - $this->_summary[ 'curr_request' ];
+		$this->_summary[ 'last_request' ] = $this->_summary[ 'curr_request' ];
+		$this->_summary[ 'curr_request' ] = 0;
 		self::save_summary();
 
 		return true;
 	}
 
 	/**
-	 * Save CCSS/UCSS content
+	 * Save UCSS content
 	 *
 	 * @since 4.2
 	 */
 	private function _save_con( $type, $css, $queue_k ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
-		Debug2::debug2( '[CSS] con: ' . $css );
+		self::debug2( 'con: ' . $css );
 
 		if ( substr( $css, 0, 2 ) == '/*' && substr( $css, -2 ) == '*/' ) {
 			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
@@ -365,45 +311,11 @@ class CSS extends Base {
 
 		$url_tag = $this->_queue[ $queue_k ][ 'url_tag' ];
 		$vary = $this->_queue[ $queue_k ][ 'vary' ];
-		Debug2::debug2( "[CSS] Save URL to file [file] $static_file [vary] $vary" );
+		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
 
 		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
-	}
-
-	/**
-	 * Play for fun
-	 *
-	 * @since  3.4.3
-	 */
-	public function test_url( $request_url ) {
-		$user_agent = $_SERVER[ 'HTTP_USER_AGENT' ];
-		$html = $this->prepare_html( $request_url, $user_agent );
-		list( $css, $html ) = $this->prepare_css( $html, true, true );
-		// var_dump( $css );
-// 		$html = <<<EOT
-
-// EOT;
-
-// 		$css = <<<EOT
-
-// EOT;
-		$data = array(
-			'url'			=> $request_url,
-			'ccss_type'		=> 'test',
-			'user_agent'	=> $user_agent,
-			'is_mobile'		=> 0,
-			'html'			=> $html,
-			'css'			=> $css,
-			'type'			=> 'CCSS',
-		);
-
-		// self::debug( 'Generating: ', $data );
-
-		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 );
-
-		var_dump($json);
 	}
 
 	/**
@@ -508,6 +420,29 @@ class CSS extends Base {
 		return array( $css, $html );
 	}
 
+
+	/**
+	 * Filter the comment content, add quotes to selector from whitelist. Return the json
+	 *
+	 * @since 3.3
+	 */
+	private function _filter_whitelist() {
+		$whitelist = array();
+		$list = apply_filters( 'litespeed_ucss_whitelist', $this->conf( self::O_OPTM_UCSS_WHITELIST ) );
+		foreach ( $list as $k => $v ) {
+			if ( substr( $v, 0, 2 ) === '//' ) {
+				continue;
+			}
+			// Wrap in quotes for selectors
+			if ( substr( $v, 0, 1 ) !== '/' && strpos( $v, '"' ) === false && strpos( $v, "'" ) === false ) {
+				// $v = "'$v'";
+			}
+			$whitelist[] = $v;
+		}
+
+		return $whitelist;
+	}
+
 	/**
 	 * Handle all request actions from main cls
 	 *
@@ -518,12 +453,12 @@ class CSS extends Base {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
-			case self::TYPE_GEN_CCSS:
-				self::cron_ccss( true );
+			case self::TYPE_GEN:
+				self::cron( true );
 				break;
 
-			case self::TYPE_CLEAR_Q_CCSS:
-				$this->clear_q( 'ccss' );
+			case self::TYPE_CLEAR_Q:
+				$this->clear_q( 'ucss' );
 				break;
 
 			default:

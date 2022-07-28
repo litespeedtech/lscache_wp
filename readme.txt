@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.1 - Auguest 2022 =
 * 🌱**Toolbox** Debug log can now show Purge/Crawler logs as well. (Tynan)
+* **UCSS** Separeted UCSS class.
 * **3rd** Add 3rd party support for WC PDF Product Vouchers. (Tynan)
 * **Core** Fixed potential PHP warning when saving a summary data. (Sarah Richardson)
 * **Purge** Purge can now clear the summary correctly. (Kevin)

@@ -27,6 +27,7 @@ else {
 
 $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
+$ucss_summary = UCSS::get_summary();
 $placeholder_summary = Placeholder::get_summary();
 $vpi_summary = VPI::get_summary();
 
@@ -466,18 +467,18 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 						<a href="<?php echo admin_url( 'admin.php?page=litespeed-page_optm#settings_css' ); ?>" class="litespeed-title-right-icon"><?php echo __( 'More', 'litespeed-cache' ); ?></a>
 					</h3>
 
-					<?php if ( ! empty( $css_summary[ 'last_request_ucss' ] ) ) : ?>
+					<?php if ( ! empty( $ucss_summary[ 'last_request' ] ) ) : ?>
 						<p>
-							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $css_summary[ 'last_request_ucss' ] ) . '</code>'; ?>
+							<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $ucss_summary[ 'last_request' ] ) . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $css_summary[ 'last_spent_ucss' ] ) . 's</code>'; ?>
+							<?php echo __( 'Time to execute previous request', 'litespeed-cache' ) . ': <code>' . esc_html( $ucss_summary[ 'last_spent' ] ) . 's</code>'; ?>
 						</p>
 					<?php endif; ?>
 
 					<p>
 						<?php echo __( 'Requests in queue', 'litespeed-cache' ); ?>: <code><?php echo $ucss_count ?: '-' ?></code>
-						<a href="<?php echo $ucss_count ? Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_UCSS ) : 'javascript:;'; ?>"
+						<a href="<?php echo $ucss_count ? Utility::build_url( Router::ACTION_UCSS, UCSS::TYPE_GEN ) : 'javascript:;'; ?>"
 							class="button button-secondary button-small <?php if ( ! $ucss_count ) echo 'disabled'; ?>">
 							<?php echo __( 'Force cron', 'litespeed-cache' ); ?>
 						</a>
