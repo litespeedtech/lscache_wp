@@ -449,8 +449,10 @@ class Debug2 extends Root {
 	 * @access private
 	 */
 	private function _clear_log() {
-		File::save( self::$log_path, '' );
-		File::save( self::$log_path_prefix . '/debug.purge.log', '' );
+		$logs = array( 'debug', 'debug.purge', 'crawler' );
+		foreach ( $logs as $log ) {
+			File::save( self::$log_path_prefix . "/{$log}.log", '' );
+		}
 	}
 
 	/**
