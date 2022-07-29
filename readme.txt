@@ -250,12 +250,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.1 - Auguest 2022 =
-* 🌱**UCSS** Message queue feature for UCSS generation to significantly reduce the realtime waiting in UCSS generation process.
+= 5.1 - Aug 1 2022 =
 * 🌱**Toolbox** Debug log can now show Purge/Crawler logs as well. (Tynan)
-* **UCSS** Separeted UCSS class.
-* **3rd** Add 3rd party support for WC PDF Product Vouchers. (Tynan)
-* **Core** Fixed potential PHP warning when saving a summary data. (Sarah Richardson)
+* **UCSS** Prepared for future message queue.
+* **UCSS** Moved UCSS class to its own file.
+* **3rd** Added 3rd-party support for WC PDF Product Vouchers. (Tynan)
+* **Core** Fixed potential PHP warning when saving summary data. (Sarah Richardson)
 * **Purge** Purge can now clear the summary correctly. (Kevin)
 * **VPI** Added `queue_k` to API notification.
 
