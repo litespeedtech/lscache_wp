@@ -93,8 +93,6 @@ class VPI extends Base {
 
 		list( $post_data ) = $this->cls( 'Cloud' )->extract_msg( $post_data, 'vpi' );
 
-		global $wpdb;
-
 		$notified_data = $post_data[ 'data' ];
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
 			self::debug( '❌ notify exit: no notified data' );
@@ -108,8 +106,13 @@ class VPI extends Base {
 				self::debug( '❌ notify bypass: no request_url', $v );
 				continue;
 			}
+			if ( empty( $v[ 'queue_k' ] ) ) {
+				self::debug( '❌ notify bypass: no queue_k', $v );
+				continue;
+			}
 			$is_mobile = !empty( $v[ 'is_mobile' ] );
-			$queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $v[ 'request_url' ];
+			// $queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $v[ 'request_url' ];
+			$queue_k = $v[ 'queue_k' ];
 
 			if ( empty( $this->_queue[ $queue_k ] ) ) {
 				self::debug( '❌ notify bypass: no this queue [q_k]' . $queue_k );
@@ -270,9 +273,7 @@ class VPI extends Base {
 			return false;
 		}
 
-		// Generate critical css
 		$data = array(
-			// 'type'			=> strtoupper( $type ), // Backward compatibility for v4.1-
 			'url'			=> $request_url,
 			'queue_k'		=> $queue_k,
 			'user_agent'	=> $user_agent,
