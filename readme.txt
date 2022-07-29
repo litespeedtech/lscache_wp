@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.1 - Auguest 2022 =
+* 🌱**UCSS** Message queue feature for UCSS generation to significantly reduce the realtime waiting in UCSS generation process.
 * 🌱**Toolbox** Debug log can now show Purge/Crawler logs as well. (Tynan)
 * **UCSS** Separeted UCSS class.
 * **3rd** Add 3rd party support for WC PDF Product Vouchers. (Tynan)

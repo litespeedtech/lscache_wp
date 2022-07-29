@@ -160,6 +160,7 @@ class UCSS extends Base {
 			$i ++;
 			$res = $this->_send_req( $v[ 'url' ], $k, $v[ 'uid' ], $v[ 'user_agent' ], $v[ 'vary' ], $v[ 'url_tag' ], $v[ 'is_mobile' ], $v[ 'is_webp' ] );
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
+				$this->_queue = $this->load_queue( 'ucss' );
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( 'ucss', $this->_queue );
 
@@ -180,8 +181,10 @@ class UCSS extends Base {
 				return;
 			}
 
+			$this->_queue = $this->load_queue( 'ucss' );
 			$this->_queue[ $k ][ '_status' ] = 'requested';
 			$this->save_queue( 'ucss', $this->_queue );
+			self::debug( 'Saved to queue [k] ' . $k );
 
 			// only request first one
 			if ( ! $continue ) {
@@ -240,7 +243,6 @@ class UCSS extends Base {
 			return false;
 		}
 
-		// Generate critical css
 		$data = array(
 			'url'			=> $request_url,
 			'queue_k'		=> $queue_k,
@@ -441,6 +443,68 @@ class UCSS extends Base {
 		}
 
 		return $whitelist;
+	}
+
+	/**
+	 * Notify finished from server
+	 * @since 5.1
+	 */
+	public function notify() {
+		$post_data = json_decode(file_get_contents('php://input'), true);
+		if( is_null( $post_data ) ) {
+			$post_data = $_POST;
+		}
+		self::debug( 'notify() data', $post_data );
+
+		$this->_queue = $this->load_queue( 'ucss' );
+
+		// Validate key
+		if ( empty( $post_data[ 'domain_key' ] ) || $post_data[ 'domain_key' ] !== md5( $this->conf( self::O_API_KEY ) ) ) {
+			self::debug( '❌ notify wrong key' );
+			self::save_summary( array( 'notify_ts_err' => time() ) );
+			return Cloud::err( 'wrong_key' );
+		}
+
+		list( $post_data ) = $this->cls( 'Cloud' )->extract_msg( $post_data, 'ucss' );
+
+		$notified_data = $post_data[ 'data' ];
+		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
+			self::debug( '❌ notify exit: no notified data' );
+			return Cloud::err( 'no notified data' );
+		}
+
+		// Check if its in queue or not
+		$valid_i = 0;
+		foreach ( $notified_data as $v ) {
+			if ( empty( $v[ 'request_url' ] ) ) {
+				self::debug( '❌ notify bypass: no request_url', $v );
+				continue;
+			}
+			if ( empty( $v[ 'queue_k' ] ) ) {
+				self::debug( '❌ notify bypass: no queue_k', $v );
+				continue;
+			}
+
+			if ( empty( $this->_queue[ $v[ 'queue_k' ] ] ) ) {
+				self::debug( '❌ notify bypass: no this queue [q_k]' . $v[ 'queue_k' ] );
+				continue;
+			}
+
+			// Save data
+			if ( ! empty( $v[ 'data_ucss' ] ) ) {
+				$this->_save_con( 'ucss', $v[ 'data_ucss' ], $v[ 'queue_k' ] );
+
+				$valid_i ++;
+			}
+
+			unset( $this->_queue[ $v[ 'queue_k' ] ] );
+			self::debug( 'notify data handled, unset queue [q_k] ' . $v[ 'queue_k' ] );
+		}
+		$this->save_queue( 'ucss', $this->_queue );
+
+		self::debug( 'notified' );
+
+		return Cloud::ok( array( 'count' => $valid_i ) );
 	}
 
 	/**
