@@ -110,7 +110,6 @@ class VPI extends Base {
 				self::debug( '❌ notify bypass: no queue_k', $v );
 				continue;
 			}
-			$is_mobile = !empty( $v[ 'is_mobile' ] );
 			// $queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $v[ 'request_url' ];
 			$queue_k = $v[ 'queue_k' ];
 
@@ -120,10 +119,10 @@ class VPI extends Base {
 			}
 
 			// Save data
-			if ( ! empty( $v[ 'data' ] ) ) {
+			if ( ! empty( $v[ 'data_vpi' ] ) ) {
 				$post_id = $this->_queue[ $queue_k ][ 'post_id' ];
-				$name = $is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
-				$this->cls( 'Metabox' )->save( $post_id, $name, $v[ 'data' ], true );
+				$name = !empty( $v[ 'is_mobile' ] ) ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
+				$this->cls( 'Metabox' )->save( $post_id, $name, $v[ 'data_vpi' ], true );
 
 				$valid_i ++;
 			}
