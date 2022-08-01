@@ -58,7 +58,7 @@ class Crawler extends Root {
 
 		$this->_summary = self::get_summary();
 
-		if(is_file('/proc/cpuinfo')) {
+		if(@is_file('/proc/cpuinfo')) {
 			$cpuinfo = file_get_contents('/proc/cpuinfo');
 			preg_match_all('/^processor/m', $cpuinfo, $matches);
 			$this->_ncpu = count($matches[0]) ?: 1;
