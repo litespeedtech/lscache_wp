@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.2 - Aug 15 2022 =
 * **VPI** Default VPI Cron set to OFF.
+* 🕸️**Crawler** Compatibility w/ server `open_basedir` PHP setting limit when detecting load before crawling. (Tom Robak/mmieszalski)
 
 = 5.1 - Aug 1 2022 =
 * 🌱**Toolbox** Debug log can now show Purge/Crawler logs as well. (Tynan)

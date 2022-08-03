@@ -58,13 +58,30 @@ class Crawler extends Root {
 
 		$this->_summary = self::get_summary();
 
-		if(@is_file('/proc/cpuinfo')) {
-			$cpuinfo = file_get_contents('/proc/cpuinfo');
-			preg_match_all('/^processor/m', $cpuinfo, $matches);
-			$this->_ncpu = count($matches[0]) ?: 1;
-		}
+		$this->_ncpu = $this->_get_server_cpu();
 
 		self::debug( 'Init w/ CPU cores=' . $this->_ncpu );
+	}
+
+	/**
+	 * Try get server CPUs
+	 * @since 5.2
+	 */
+	private function _get_server_cpu(){
+		$cpuinfo_file = '/proc/cpuinfo';
+		$setting_open_dir = ini_get('open_basedir');
+		if ( $setting_open_dir ) return 1; // Server has limit
+
+		try {
+			if ( ! @is_file( $cpuinfo_file ) ) return 1;
+		}
+		catch ( \Exception $e ) {
+			return 1;
+		}
+
+		$cpuinfo = file_get_contents( $cpuinfo_file );
+		preg_match_all('/^processor/m', $cpuinfo, $matches);
+		return count($matches[0]) ?: 1;
 	}
 
 	/**
