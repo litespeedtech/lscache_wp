@@ -278,20 +278,7 @@ class CSS extends Base {
 		}
 
 		// Parse HTML to gather all CSS content before requesting
-		$css = false;
-		if ( $type == 'ccss' ) {
-			list( $css, $html ) = $this->prepare_css( $html, $is_webp );
-		}
-		else {
-			list( , $html ) = $this->prepare_css( $html, $is_webp, true ); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
-			$filename = $this->cls( 'Data' )->load_url_file( $url_tag, $vary, 'css' );
-			$filepath_prefix = $this->_build_filepath_prefix( 'css' );
-			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
-			Debug2::debug( '[UCSS] Checking combined file ' . $static_file );
-			if ( file_exists( $static_file ) ) {
-				$css = File::read( $static_file );
-			}
-		}
+		list( $css, $html ) = $this->prepare_css( $html, $is_webp );
 
 		if ( ! $css ) {
 			Debug2::debug( '[UCSS] ❌ No combined css' );

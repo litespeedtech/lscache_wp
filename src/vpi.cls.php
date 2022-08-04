@@ -218,23 +218,6 @@ class VPI extends Base {
 	}
 
 	/**
-	 * Prepare HTML from URL
-	 *
-	 * @since  4.7
-	 */
-	public function prepare_html( $request_url, $user_agent ) {
-		$html = $this->cls( 'Crawler' )->self_curl( $request_url, $user_agent );
-		self::debug2( 'self_curl result....', $html );
-
-
-		$html = $this->cls( 'Optimizer' )->html_min( $html, true );
-		// Drop <noscript>xxx</noscript>
-		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
-
-		return $html;
-	}
-
-	/**
 	 * Send to QC API to generate VPI
 	 *
 	 * @since  4.7
@@ -257,7 +240,7 @@ class VPI extends Base {
 		self::save_summary( array( 'curr_request_vpi' => time() ), true );
 
 		// Gather guest HTML to send
-		$html = $this->prepare_html( $request_url, $user_agent );
+		$html = $this->cls('CSS')->prepare_html( $request_url, $user_agent );
 
 		if ( ! $html ) {
 			return false;
