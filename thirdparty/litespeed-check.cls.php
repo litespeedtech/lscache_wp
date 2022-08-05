@@ -27,7 +27,7 @@ class LiteSpeed_Check {
 			'powered-cache/powered-cache.php',
 			'sg-cachepress/sg-cachepress.php',
 			'simple-cache/simple-cache.php',
-			'redis-cache/redis-cache.php',
+			// 'redis-cache/redis-cache.php',
 			'w3-total-cache/w3-total-cache.php',
 			'wp-cloudflare-page-cache/wp-cloudflare-page-cache.php',
 			'wp-fastest-cache/wpFastestCache.php',
