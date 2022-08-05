@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 5.2 - Aug 15 2022 =
 * 🐞**VPI** Fixed conflict w/ image lazyload. Used HTML before image lazyload to avoid invalid `data:base64` results.
 * **VPI** Default VPI Cron set to OFF.
+* **VPI** Auto resend requests when VPI result contains invalid image value `data:`.
 * 🕸️**Crawler** Compatibility w/ server `open_basedir` PHP setting limit when detecting load before crawling. (Tom Robak/mmieszalski)
 
 = 5.1 - Aug 1 2022 =

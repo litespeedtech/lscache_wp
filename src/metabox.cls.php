@@ -146,7 +146,13 @@ class Metabox extends Root {
 		if ( $excludes !== null ) {
 			$excludes = Utility::sanitize_lines( $excludes, 'basename' );
 			if ( $excludes ) {
-				return array_merge( $list, $excludes );
+				// Check if contains `data:` (invalid result, need to clear existing result) or not
+				if ( Utility::str_hit_array( 'data:', $excludes ) ) {
+					$this->cls( 'VPI' )->add_to_queue();
+				}
+				else {
+					return array_merge( $list, $excludes );
+				}
 			}
 
 			return $list;
