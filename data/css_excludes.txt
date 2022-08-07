@@ -4,7 +4,8 @@
 
 # CSS file URL excludes
 
-
+/elementor/css/
+/xstore/css/modules/builders/elementor/
 
 # Inline CSS excludes
 
