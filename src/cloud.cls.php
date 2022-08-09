@@ -73,12 +73,13 @@ class Cloud extends Base {
 	);
 
 	private static $_QUEUE_SVC_SET = array(
+		self::SVC_UCSS,
 		self::SVC_VPI,
 	);
 
 	public static $SERVICES_LOAD_CHECK = array(
 		self::SVC_CCSS,
-		self::SVC_UCSS,
+		// self::SVC_UCSS,
 		// self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_HEALTH,
