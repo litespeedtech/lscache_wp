@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.2 - Aug 15 2022 =
+* 🌱**UCSS** UCSS message queue.
 * 🐞**VPI** Fixed conflict w/ image lazyload. Used HTML before image lazyload to avoid invalid `data:base64` results.
 * **VPI** Default VPI Cron set to OFF.
 * **VPI** Auto resend requests when VPI result contains invalid image value `data:`.
