@@ -296,7 +296,7 @@ class UCSS extends Base {
 	private function _save_con( $type, $css, $queue_k ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
-		self::debug2( 'con: ' . $css );
+		self::debug2( 'con: ', $css );
 
 		if ( substr( $css, 0, 2 ) == '/*' && substr( $css, -2 ) == '*/' ) {
 			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
