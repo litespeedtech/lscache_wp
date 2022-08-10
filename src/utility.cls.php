@@ -339,9 +339,16 @@ class Utility extends Root {
 				$item = $item[ 0 ];
 			}
 
-			if ( substr( $item, -1 ) === '$' ) {
+			if ( substr( $item, 0, 1 ) === '^' && substr( $item, -1 ) === '$' ) {
 				// do exact match
-				if ( substr( $item, 0, -1 ) === $needle ) {
+				if ( substr( $item, 1, -1 ) === $needle ) {
+					$hit = $item;
+					break;
+				}
+			}
+			elseif ( substr( $item, -1 ) === '$' ) {
+				// match end
+				if ( substr( $item, 0, -1 ) === substr($needle, -strlen( $item ) + 1 ) ) {
 					$hit = $item;
 					break;
 				}
