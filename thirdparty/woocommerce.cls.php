@@ -623,7 +623,7 @@ class WooCommerce extends Base {
 			return ;
 		}
 
-		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) {
+		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) { // why contains `product`?
 			do_action( 'litespeed_control_set_nocache', 'uri in cart/account/user pages' );
 			return ;
 		}

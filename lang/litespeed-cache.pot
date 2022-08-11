@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 5.1\n"
+"Project-Id-Version: LiteSpeed Cache 5.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2022-07-29 19:54:50+00:00\n"
+"POT-Creation-Date: 2022-08-11 18:57:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -319,93 +319,93 @@ msgid ""
 "that the account still exists and must be deleted separately."
 msgstr ""
 
-#: src/cdn-setup.cls.php:321 src/cloud.cls.php:766 src/cloud.cls.php:774
-#: src/cloud.cls.php:1158
+#: src/cdn-setup.cls.php:321 src/cloud.cls.php:767 src/cloud.cls.php:775
+#: src/cloud.cls.php:1159
 msgid "Message from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:372 src/cloud.cls.php:385 src/cloud.cls.php:430
-#: src/cloud.cls.php:455 src/cloud.cls.php:593 src/cloud.cls.php:1127
+#: src/cloud.cls.php:373 src/cloud.cls.php:386 src/cloud.cls.php:431
+#: src/cloud.cls.php:456 src/cloud.cls.php:594 src/cloud.cls.php:1128
 msgid "Cloud Error"
 msgstr ""
 
-#: src/cloud.cls.php:430
+#: src/cloud.cls.php:431
 msgid "No available Cloud Node."
 msgstr ""
 
-#: src/cloud.cls.php:455
+#: src/cloud.cls.php:456
 msgid "No available Cloud Node after checked server load."
 msgstr ""
 
-#: src/cloud.cls.php:593
+#: src/cloud.cls.php:594
 msgid "Please try after %1$s for service %2$s."
 msgstr ""
 
-#: src/cloud.cls.php:680 src/cloud.cls.php:701
+#: src/cloud.cls.php:681 src/cloud.cls.php:702
 msgid "Failed to request via WordPress"
 msgstr ""
 
-#: src/cloud.cls.php:721
+#: src/cloud.cls.php:722
 msgid "Redetected node"
 msgstr ""
 
-#: src/cloud.cls.php:729
+#: src/cloud.cls.php:730
 msgid ""
 "We are working hard to improve your online service experience. The service "
 "will be unavailable while we work. We apologize for any inconvenience."
 msgstr ""
 
-#: src/cloud.cls.php:782
+#: src/cloud.cls.php:783
 msgid "Good news from QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:791
+#: src/cloud.cls.php:792
 msgid "%1$s plugin version %2$s required for this action."
 msgstr ""
 
-#: src/cloud.cls.php:844 src/cloud.cls.php:1147
+#: src/cloud.cls.php:845 src/cloud.cls.php:1148
 msgid "Failed to communicate with QUIC.cloud server"
 msgstr ""
 
-#: src/cloud.cls.php:886
+#: src/cloud.cls.php:887
 msgid ""
 "Site not recognized. Domain Key has been automatically removed. Please "
 "request a new one."
 msgstr ""
 
-#: src/cloud.cls.php:887 src/error.cls.php:48
+#: src/cloud.cls.php:888 src/error.cls.php:48
 msgid "Click here to set."
 msgstr ""
 
-#: src/cloud.cls.php:952
+#: src/cloud.cls.php:953
 msgid "Cannot request REST API, no token saved."
 msgstr ""
 
-#: src/cloud.cls.php:978
+#: src/cloud.cls.php:979
 msgid "Cloud REST Error"
 msgstr ""
 
-#: src/cloud.cls.php:994
+#: src/cloud.cls.php:995
 msgid "Cloud REST API returned error: "
 msgstr ""
 
-#: src/cloud.cls.php:1166
+#: src/cloud.cls.php:1167
 msgid ""
 "Applied for Domain Key successfully. Please wait for result. Domain Key will "
 "be automatically sent to your WordPress."
 msgstr ""
 
-#: src/cloud.cls.php:1220
+#: src/cloud.cls.php:1221
 msgid ""
 "Congratulations, your Domain Key has been approved! The setting has been "
 "updated accordingly."
 msgstr ""
 
-#: src/cloud.cls.php:1304
+#: src/cloud.cls.php:1305
 msgid "Domain Key hash mismatch"
 msgstr ""
 
-#: src/cloud.cls.php:1426
+#: src/cloud.cls.php:1427
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
@@ -433,19 +433,19 @@ msgstr ""
 msgid "Sitemap created successfully: %d items"
 msgstr ""
 
-#: src/crawler.cls.php:108
+#: src/crawler.cls.php:125
 msgid "Crawler disabled list is cleared! All crawlers are set to active! "
 msgstr ""
 
-#: src/crawler.cls.php:854
+#: src/crawler.cls.php:871
 msgid "Guest"
 msgstr ""
 
-#: src/crawler.cls.php:1005
+#: src/crawler.cls.php:1022
 msgid "Manually added to blocklist"
 msgstr ""
 
-#: src/crawler.cls.php:1008
+#: src/crawler.cls.php:1025
 msgid "Previously existed in blocklist"
 msgstr ""
 
@@ -2074,7 +2074,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 5.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 5.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:57 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8

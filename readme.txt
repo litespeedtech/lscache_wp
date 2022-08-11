@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.0.1
-Stable tag: 5.1
+Stable tag: 5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -251,12 +251,12 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.2 - Aug 15 2022 =
-* 🌱**UCSS** UCSS message queue.
-* 🐞**VPI** Fixed conflict w/ image lazyload. Used HTML before image lazyload to avoid invalid `data:base64` results.
-* **VPI** Default VPI Cron set to OFF.
-* **VPI** Auto resend requests when VPI result contains invalid image value `data:`.
-* **Conf** Fix a bug in URI exclude settings that path not work when using both ^ and $ (Eric/Abe)
-* 🕸️**Crawler** Compatibility w/ server `open_basedir` PHP setting limit when detecting load before crawling. (Tom Robak/mmieszalski)
+* 🌱**UCSS** Added UCSS message queue to improve service quality and reliability
+* 🐞**VPI** Fixed conflict w/ image lazyload; used HTML before image lazyload to avoid invalid `data:base64` results.
+* **VPI** Changed VPI Cron default setting to OFF.
+* **VPI** Automatically resend requests when VPI result contains invalid `data:` image value.
+* **Conf** Fixed an issue with URI Excludes, where paths using both ^ and $ were not correctly excluded (Eric/Abe)
+* 🕸️**Crawler** Improved compatibility with server `open_basedir` PHP setting limit when detecting load before crawling. (Tom Robak/mmieszalski)
 
 = 5.1 - Aug 1 2022 =
 * 🌱**Toolbox** Debug log can now show Purge/Crawler logs as well. (Tynan)
