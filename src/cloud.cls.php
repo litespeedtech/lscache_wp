@@ -1289,7 +1289,7 @@ class Cloud extends Base {
 
 		$extraRet = array();
 		$qsDrop = array();
-		if ( ! $this->_api_key && $this->_summary[ 'is_linked' ]) {
+		if ( ! $this->_api_key && ! empty( $this->_summary[ 'is_linked' ] ) ) {
 			$this->_summary[ 'is_linked' ] = 0;
 			self::save_summary();
 		}
