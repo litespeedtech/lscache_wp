@@ -511,7 +511,7 @@ class Conf extends Base {
 		 * CDN related actions - QUIC.cloud
 		 * @since 2.3
 		 */
-		CDN\Quic::try_sync_config();
+		$this->cls( 'CDN\Quic' )->try_sync_conf();
 
 	}
 

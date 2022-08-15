@@ -9,17 +9,20 @@
  */
 namespace LiteSpeed\CDN;
 
-use LiteSpeed\Core;
 use LiteSpeed\Cloud;
-use LiteSpeed\Debug2;
 use LiteSpeed\Base;
 
 defined( 'WPINC' ) || exit;
 
 class Quic extends Base {
-	private $_api_key;
+	const LOG_TAG = '☁️';
 
 	const TYPE_REG = 'reg';
+
+	protected $_summary;
+	public function __construct() {
+		$this->_summary = self::get_summary();
+	}
 
 	/**
 	 * Notify CDN new config updated
@@ -27,7 +30,11 @@ class Quic extends Base {
 	 * @access public
 	 */
 	public static function try_sync_config() {
-		$options = self::cls()->get_options();
+		self::cls()->try_sync_conf();
+	}
+
+	public function try_sync_conf() {
+		$options = $this->get_options();
 
 		if ( ! $options[ self::O_CDN_QUIC ] ) {
 			return false;
@@ -47,12 +54,22 @@ class Quic extends Base {
 
 		// Rest url
 		$options[ '_rest' ] = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
+		$options[ '_home_url' ] = home_url( '/' );
 
 		// Add server env vars
-		$options[ '_server' ] = self::cls()->server_vars();
+		$options[ '_server' ] = $this->server_vars();
 
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_vary_cookies', array() );
+
+		$conf_md5 = md5( json_encode( $options ) );
+		if ( ! empty( $this->_summary[ 'conf_md5' ] ) && $conf_md5 == $this->_summary[ 'conf_md5' ] ) {
+			self::debug( 'Bypass sync conf to QC due to same md5', $conf_md5 );
+			return;
+		}
+
+		self::save_summary( array( 'conf_md5' => $conf_md5 ) );
+		self::debug('sync conf to QC', $options);
 
 		Cloud::post( Cloud::SVC_D_SYNC_CONF, $options );
 	}
