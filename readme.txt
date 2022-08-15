@@ -256,6 +256,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **VPI** Changed VPI Cron default setting to OFF.
 * **VPI** Automatically resend requests when VPI result contains invalid `data:` image value.
 * **Conf** Fixed an issue with URI Excludes, where paths using both ^ and $ were not correctly excluded (Eric/Abe)
+* **Conf** Auto corrected `WP_CONTENT_URL` protocol if it was explicitly set to `http://`.
 * **Cloud** No longer sync the configuration to QUIC.cloud if configuration is unchanged.
 * **Cloud** Appended home_url value into synced configuration data for wp-content folder path correction.
 * 🕸️**Crawler** Improved compatibility with server `open_basedir` PHP setting limit when detecting load before crawling. (Tom Robak/mmieszalski)

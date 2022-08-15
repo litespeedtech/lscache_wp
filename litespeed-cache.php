@@ -3,7 +3,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           5.2-rc1
+ * Version:           5.2-rc2
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -33,7 +33,7 @@ if ( defined( 'LSCWP_V' ) ) {
 	return;
 }
 
-! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '5.2-rc1' );
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '5.2-rc2' );
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', __DIR__ . '/' ) ;// Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -42,17 +42,19 @@ if ( defined( 'LSCWP_V' ) ) {
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
  * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`
- * @since  1.9.1 Moved up
- * @since  2.2.1 Moved up from core.cls
+ * @since  5.2 Auto correct protocol for CONTENT URL
  */
-! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
+$WP_CONTENT_URL = WP_CONTENT_URL;
+$home_url = home_url( '/' );
+if ( substr( $WP_CONTENT_URL, 0, 5 ) == 'http:' && substr( $home_url, 0, 5 ) == 'https' ) $WP_CONTENT_URL = str_replace( 'http://', 'https://', $WP_CONTENT_URL );
+! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', str_replace( $home_url, '', $WP_CONTENT_URL ) ) ; // `wp-content`
 ! defined( 'LSWCP_PLUGIN_URL' ) && define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 /**
  * Static cache files consts
  * @since  3.0
  */
-! defined( 'LITESPEED_STATIC_URL' ) && define( 'LITESPEED_STATIC_URL', WP_CONTENT_URL . '/litespeed' ) ;// Full static cache folder URL '//example.com/wp-content/litespeed'
+! defined( 'LITESPEED_STATIC_URL' ) && define( 'LITESPEED_STATIC_URL', $WP_CONTENT_URL . '/litespeed' ) ;// Full static cache folder URL '//example.com/wp-content/litespeed'
 ! defined( 'LITESPEED_STATIC_DIR' ) && define( 'LITESPEED_STATIC_DIR', LSCWP_CONTENT_DIR . '/litespeed' ) ;// Full static cache folder path '/var/www/html/***/wp-content/litespeed'
 
 ! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
