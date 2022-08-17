@@ -275,7 +275,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **3rd** Added Autoptimize back to compatibility list.
 
 = 5.0.0.1 - Jul 26 2022 =
-* 🔥🐞**Cloud** Fixed an issue with the cloud request timestamp update which causes a usage sync failure. (Great thanks to Kevin)
+* 🔥🐞**Cloud** Fixed an issue with the cloud request timestamp update which causes a usage sync failure. (great thanks to Kevin)
 
 = 5.0 - Jul 25 2022 =
 * 🌱**VPI** Added Viewport Images feature to LiteSpeed Options metabox on Post Edit page.
