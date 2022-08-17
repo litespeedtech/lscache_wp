@@ -30,7 +30,7 @@ class Router extends Base {
 	const ACTION_CSS = 'css';
 	const ACTION_UCSS = 'ucss';
 	const ACTION_VPI = 'vpi';
-	const ACTION_PROFILES = 'profiles';
+	const ACTION_PRESET = 'preset';
 	const ACTION_IMPORT = 'import';
 	const ACTION_REPORT = 'report';
 	const ACTION_DEBUG2 = 'debug2';
@@ -52,7 +52,7 @@ class Router extends Base {
 		self::ACTION_DEBUG2,
 		self::ACTION_HEALTH,
 		self::ACTION_IMG_OPTM,
-		self::ACTION_PROFILES,
+		self::ACTION_PRESET,
 		self::ACTION_IMPORT,
 		self::ACTION_PLACEHOLDER,
 		self::ACTION_PURGE,
@@ -568,7 +568,7 @@ class Router extends Base {
 			case self::ACTION_CDN_SETUP:
 			case self::ACTION_CDN_CLOUDFLARE:
 			case self::ACTION_CRAWLER:
-			case self::ACTION_PROFILES:
+			case self::ACTION_PRESET:
 			case self::ACTION_IMPORT:
 			case self::ACTION_REPORT:
 			case self::ACTION_CSS:
