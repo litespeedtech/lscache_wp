@@ -2677,6 +2677,33 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-bottom: -0.55em !important;
 }
 
+.litespeed-postbox.litespeed-postbox-partner .inside {
+	margin: 11px 0;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox.litespeed-postbox-partner h3.litespeed-title {
+	color: #777;
+	font-weight: normal;
+	font-size: 13px;
+}
+
+.litespeed-postbox.litespeed-postbox-partner a {
+	font-size: 1.35rem;
+	font-weight: bold;
+	text-decoration: none;
+	margin-top: 5px;
+	max-width: 100%;
+	display: inline-block;
+}
+
+.litespeed-postbox.litespeed-postbox-partner a:hover {
+	text-decoration: underline;
+}
+
+.litespeed-postbox.litespeed-postbox-partner img {
+	max-width: 12rem;
+}
+
 .litespeed-dashboard-group .litespeed-postbox {
 	width: calc(25% - 20px);
 	display: flex;
