@@ -164,6 +164,17 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 				</div>
 			</div>
 		<?php endforeach; ?>
+
+		<div class="litespeed-postbox litespeed-postbox-partner">
+			<div class="inside">
+				<h3 class="litespeed-title"><?php echo __('Partner Benefits Provided by','litespeed-cache') ; ?></h3>
+				<div>
+					<a href="%url"><span class="postbox-partner-name">%name</span></a>
+					<a href="%url"><img src="%logo" alt="%name"></a>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="<?php echo Cloud::CLOUD_SERVER_DASH; ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __( 'Go to QUIC.cloud dashboard', 'litespeed-cache' ) ;?> <span class="dashicons dashicons-external"></span></a></p>
