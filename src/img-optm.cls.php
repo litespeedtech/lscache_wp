@@ -152,6 +152,8 @@ class Img_Optm extends Base {
 		}
 
 		foreach ( $list as $v ) {
+			if ( ! $v->post_id ) continue;
+
 			$meta_value = $this->_parse_wp_meta_value( $v );
 			if ( ! $meta_value ) {
 				$this->_save_err_meta( $v->post_id );
