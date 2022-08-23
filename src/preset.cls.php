@@ -14,7 +14,7 @@ class Preset extends Import {
 	const MAX_BACKUPS = 10;
 
 	const TYPE_APPLY = 'apply';
-	const TYPE_REVERT = 'revert';
+	const TYPE_RESTORE = 'restore';
 
 	const STANDARD_DIR = LSCWP_DIR . 'data/preset';
 	const BACKUP_DIR = LITESPEED_STATIC_DIR . '/auto-backup';
@@ -114,7 +114,7 @@ class Preset extends Import {
 	 * @access public
 	 */
 	public function apply( $preset ) {
-		$this->make_backup();
+		$this->make_backup( $preset );
 
 		$path = self::get_standard( $preset );
 		$result = $this->import_file( $path ) ? $preset : 'error';
@@ -123,13 +123,18 @@ class Preset extends Import {
 	}
 
 	/**
-	 * Reverts settings to those from the most recent backup, then deletes the file
+	 * Restores settings from the backup file with the given timestamp, then deletes the file
 	 *
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function revert() {
-		$backups = self::get_backups();
+	public function restore( $timestamp ) {
+		$backups = array();
+		foreach ( self::get_backups() as $backup ) {
+			if ( preg_match( '/^backup-' . $timestamp . '(-|$)/', $backup ) === 1 ) {
+				$backups[] = $backup;
+			}
+		};
 
 		if ( empty( $backups ) ) {
 			$this->log( 'error' );
@@ -159,8 +164,8 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function make_backup() {
-		$backup = 'backup-' . time();
+	public function make_backup( $preset ) {
+		$backup = 'backup-' . time() . '-before-' . $preset;
 		$data = $this->export( true );
 
 		$path = self::get_backup( $backup );
@@ -228,7 +233,7 @@ class Preset extends Import {
 	 */
 	function log( $preset ) {
 		$this->_summary[ 'preset' ] = $preset;
-		$this->_summary[ 'preset_time' ] = time();
+		$this->_summary[ 'preset_timestamp' ] = time();
 		self::save_summary();
 	}
 
@@ -246,8 +251,8 @@ class Preset extends Import {
 				$this->apply( ! empty( $_GET['preset'] ) ? $_GET['preset'] : false );
 				break;
 
-			case self::TYPE_REVERT:
-				$this->revert();
+			case self::TYPE_RESTORE:
+				$this->restore( ! empty( $_GET['timestamp'] ) ? $_GET['timestamp'] : false );
 				break;
 
 			default:

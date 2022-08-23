@@ -134,56 +134,61 @@ $presets['extreme'] = array(
 
 <?php
 $summary = Preset::get_summary();
-$backups = array_map(
-	function( $backup ) {
-		$time = str_replace( 'backup-', '', $backup );
-		return Utility::readable_time( $time );
-	},
-	Preset::get_backups()
-);
+$backups = array();
+foreach ( Preset::get_backups() as $backup ) {
+	$backup = explode( '-', $backup );
+	if ( empty( $backup[1] ) ) {
+		continue;
+	}
+	$timestamp = $backup[1];
+	$time = trim( Utility::readable_time( $timestamp ) );
+	$name = empty( $backup[3] ) ? null : $backup[3];
+	$title = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
+	$title = null === $title ? __( 'unknown', 'litespeed-cache' ) : $title;
+	$backups[] = array(
+		'timestamp' => $timestamp,
+		'time' => $time,
+		'title' => $title
+	);
+}
 
 if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 ?>
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'History', 'litespeed-cache' ); ?>
 </h3>
+<?php endif; ?>
 
-<ol>
-	<?php foreach ( array_reverse( $backups ) as $backup ) : ?>
-	<li>
-		<?php printf( esc_html__( 'Backup created %1$s', 'litespeed-cache' ), $backup ); ?>
-	</li>
-	<?php endforeach; ?>
-	<?php if ( ! empty( $summary['preset'] ) ) : ?>
-	<li>
-		<?php
-		$name = strtolower( $summary['preset'] );
-		$time = Utility::readable_time( $summary['preset_time'] );
-		if ( 'error' === $name ) {
-			printf( esc_html__( 'Error: Failed to apply the settings %1$s', 'litespeed-cache' ), $time );
-		} elseif ( 'backup' === $name ) {
-			printf( esc_html__( 'Reverted the settings %1$s', 'litespeed-cache' ), $time );
-		} else {
-			printf(
-				esc_html__( 'Applied the %1$s preset %2$s', 'litespeed-cache' ),
-				'<strong>' . esc_html( $presets[ $name ]['title'] ) . '</strong>',
-				$time
-			);
-		}
-		?>
-	</li>
-	<?php endif; ?>
-</ol>
-	<?php if ( ! empty( $backups ) ) : ?>
-<div>
+<?php if ( ! empty( $summary['preset'] ) ) : ?>
+<p>
+	<?php
+	$name = strtolower( $summary['preset'] );
+	$time = trim( Utility::readable_time( $summary['preset_timestamp'] ) );
+	if ( 'error' === $name ) {
+		printf( esc_html__( 'Error: Failed to apply the settings %1$s', 'litespeed-cache' ), $time );
+	} elseif ( 'backup' === $name ) {
+		printf( esc_html__( 'Restored backup settings %1$s', 'litespeed-cache' ), $time );
+	} else {
+		printf(
+			esc_html__( 'Applied the %1$s preset %2$s', 'litespeed-cache' ),
+			'<strong>' . esc_html( $presets[ $name ]['title'] ) . '</strong>',
+			$time
+		);
+	}
+	?>
+</p>
+<?php endif; ?>
+
+<?php foreach ( $backups as $backup ) : ?>
+<p>
+	<?php printf( esc_html__( 'Backup created %1$s before applying the %2$s preset', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>
 	<a
-		href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_REVERT ); ?>"
+		href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_RESTORE, false, null, array( 'timestamp' => $backup['timestamp'] ) ); ?>"
 		class="button button-secondary"
-		data-litespeed-cfm="<?php printf( esc_html__( 'This will revert to the backup settings created %1$s. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backups[0] ); ?>"
+		data-litespeed-cfm="<?php printf( esc_html__( 'This will restore the backup settings created %1$s before applying the %2$s preset. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>"
 	>
-		<?php esc_html_e( 'Revert to Most Recent Backup Settings', 'litespeed-cache' ); ?>
+		<?php esc_html_e( 'Restore Settings', 'litespeed-cache' ); ?>
 	</a>
-</div>
-	<?php endif; ?>
+</p>
 <?php
-endif;
+endforeach;
