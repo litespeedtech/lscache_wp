@@ -803,7 +803,7 @@ class Cloud extends Base {
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
 			self::debug( 'Carry_on usage', $json[ '_carry_on' ] );
 			// Store generic info
-			foreach ( array( 'usage', 'promo', '_err', '_info', '_note', '_success' ) as $v ) {
+			foreach ( array( 'usage', 'promo', 'partner', '_err', '_info', '_note', '_success' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
@@ -816,6 +816,10 @@ class Cloud extends Base {
 								$this->_summary[ $v ] = array();
 							}
 							$this->_summary[ $v ][] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						case 'partner':
+							$this->_summary[ $v ] = $json[ '_carry_on' ][ $v ];
 							break;
 
 						case '_error':

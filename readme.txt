@@ -250,6 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 5.3 - September 2022 =
+* **Dash** dashboad shows partner info if the QC account is on a partner tier.
+
 = 5.2 - Aug 17 2022 =
 * 🌱**UCSS** Added UCSS message queue to improve service quality and reliability
 * 🐞**VPI** Fixed conflict w/ image lazyload; used HTML before image lazyload to avoid invalid `data:base64` results.
