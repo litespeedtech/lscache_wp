@@ -698,6 +698,11 @@ class Crawler extends Root {
 			}
 		}
 
+		// If blacklist is disabled
+		if ( ( defined( 'LITESPEED_CRAWLER_DISABLE_BLOCKLIST' ) && LITESPEED_CRAWLER_DISABLE_BLOCKLIST ) || apply_filters( 'litespeed_crawler_disable_blocklist', '__return_false', $url ) ) {
+			return 'M';
+		}
+
 		return 'B'; // Blacklist
 	}
 
