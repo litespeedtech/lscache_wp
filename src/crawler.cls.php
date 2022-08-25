@@ -593,6 +593,7 @@ class Crawler extends Root {
 	 * @access private
 	 */
 	private function _multi_request( $rows, $options ) {
+		if (!function_exists('curl_multi_init')) exit('curl_multi_init disabled');
 		$mh = curl_multi_init();
 		$curls = array();
 		foreach ( $rows as $row ) {
@@ -602,6 +603,9 @@ class Crawler extends Root {
 			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'N' ) {
 				continue;
 			}
+
+			if (!function_exists('curl_init')) exit('curl_init disabled');
+
 			$curls[ $row[ 'id' ] ] = curl_init();
 
 			// Append URL
