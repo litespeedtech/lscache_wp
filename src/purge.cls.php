@@ -66,6 +66,7 @@ class Purge extends Base {
 
 		add_action( 'wp_update_comment_count', array( $this, 'purge_feeds' ) );
 
+		if ($this->conf(self::O_OPTM_UCSS)) add_action('edit_post', __NAMESPACE__ . '\Purge::purge_ucss');
 	}
 
 	/**

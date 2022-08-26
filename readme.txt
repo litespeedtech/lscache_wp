@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.3 - September 2022 =
 * **Dash** dashboad shows partner info if the QC account is on a partner tier.
+* **UCSS** Auto purge the UCSS once the post is updated. (Ankit)
 * 🕸️**Crawler** Respect `LITESPEED_CRAWLER_DISABLE_BLOCKLIST` const when encountering unexpected error. (Abe)
 
 = 5.2 - Aug 17 2022 =
