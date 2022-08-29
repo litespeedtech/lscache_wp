@@ -607,7 +607,7 @@ class Control extends Root {
 		}
 
 		// Check if has metabox non-cacheable setting or not
-		if ( $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
+		if ( file_exists( LSCWP_DIR . 'src/metabox.cls.php' ) && $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
 			self::set_nocache( 'per post metabox setting' );
 			return;
 		}
