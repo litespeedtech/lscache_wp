@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 Stable tag: 5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.3 - September 2022 =
+= 5.3 - Sep 7 2022 =
 * 🐞**Core** Fixed a fatal error in uninstallation progress. (#894556 Hostinger)
 * **Dash** dashboad shows partner info if the QC account is on a partner tier.
 * **UCSS** Auto purge the UCSS once the post is updated. (Ankit)
