@@ -271,7 +271,11 @@ class Purge extends Base {
 		}
 		$post_id_or_url = untrailingslashit( $post_id_or_url );
 
-		Data::cls()->mark_as_expired( $post_id_or_url );
+		$existing_url_files = Data::cls()->mark_as_expired( $post_id_or_url, true );
+		if ( $existing_url_files ) {
+			// Add to UCSS Q
+			self::cls( 'UCSS' )->add_to_q($existing_url_files);
+		}
 	}
 
 	/**

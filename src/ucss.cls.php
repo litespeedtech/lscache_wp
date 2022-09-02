@@ -86,7 +86,7 @@ class UCSS extends Base {
 
 		$uid = get_current_user_id();
 
-		$ua = ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+		$ua = $this->_get_ua();
 
 		// Store it for cron
 		$this->_queue = $this->load_queue( 'ucss' );
@@ -113,6 +113,58 @@ class UCSS extends Base {
 		Tag::add( 'UCSS.' . md5( $queue_k ) );
 
 		return false;
+	}
+
+	/**
+	 * Get User Agent
+	 *
+	 * @since  5.3
+	 */
+	private function _get_ua() {
+		return ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ? $_SERVER[ 'HTTP_USER_AGENT' ] : '';
+	}
+
+	/**
+	 * Add rows to q
+	 *
+	 * @since  5.3
+	 */
+	public function add_to_q($url_files) {
+		return; // will enable in v5.4
+		// Store it for cron
+		$this->_queue = $this->load_queue( 'ucss' );
+
+		if ( count( $this->_queue ) > 500 ) {
+			self::debug( 'UCSS Queue is full - 500' );
+			return false;
+		}
+
+		$ua = $this->_get_ua();
+		foreach ( $url_files as $url_file ) {
+			$vary = $url_file[ 'vary' ];
+			$request_url = $url_file[ 'url' ];
+			$is_mobile = $url_file[ 'is_mobile' ];
+			$is_webp = $url_file[ 'is_webp' ];
+			$request_url = $url_file[ 'url' ];
+			$url_tag = self::get_url_tag( $request_url );
+
+			$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+			$q = array(
+				'url'			=> apply_filters( 'litespeed_ucss_url', $request_url ),
+				'user_agent'	=> substr( $ua, 0, 200 ),
+				'is_mobile'		=> $is_mobile,
+				'is_webp'		=> $is_webp,
+				'uid'			=> false,
+				'vary'			=> $vary,
+				'url_tag'		=> $url_tag,
+			); // Current UA will be used to request
+
+			$this->_queue[ $queue_k ] = $q;
+		}
+		$this->save_queue( 'ucss', $this->_queue );
+		self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] false' );
+
+
 	}
 
 	/**
@@ -267,7 +319,7 @@ class UCSS extends Base {
 		// Old version compatibility
 		if ( empty( $json[ 'status' ] ) ) {
 			if ( ! empty( $json[ 'ucss' ] ) ) {
-				$this->_save_con( 'ucss', $json[ 'ucss' ], $queue_k );
+				$this->_save_con( 'ucss', $json[ 'ucss' ], $queue_k, $is_mobile, $is_webp );
 			}
 
 			// Delete the row
@@ -293,7 +345,7 @@ class UCSS extends Base {
 	 *
 	 * @since 4.2
 	 */
-	private function _save_con( $type, $css, $queue_k ) {
+	private function _save_con( $type, $css, $queue_k, $is_mobile, $is_webp ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		self::debug2( 'con: ', $css );
@@ -315,7 +367,7 @@ class UCSS extends Base {
 		$vary = $this->_queue[ $queue_k ][ 'vary' ];
 		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
 
-		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $is_mobile, $is_webp );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
 	}
@@ -475,7 +527,9 @@ class UCSS extends Base {
 
 			// Save data
 			if ( ! empty( $v[ 'data_ucss' ] ) ) {
-				$this->_save_con( 'ucss', $v[ 'data_ucss' ], $v[ 'queue_k' ] );
+				$is_mobile = $this->_queue[ $v[ 'queue_k' ] ][ 'is_mobile' ];
+				$is_webp = $this->_queue[ $v[ 'queue_k' ] ][ 'is_webp' ];
+				$this->_save_con( 'ucss', $v[ 'data_ucss' ], $v[ 'queue_k' ], $is_mobile, $is_webp );
 
 				$valid_i ++;
 			}

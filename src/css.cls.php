@@ -306,7 +306,7 @@ class CSS extends Base {
 		// Old version compatibility
 		if ( empty( $json[ 'status' ] ) ) {
 			if ( ! empty( $json[ $type ] ) ) {
-				$this->_save_con( $type, $json[ $type ], $queue_k );
+				$this->_save_con( $type, $json[ $type ], $queue_k, $is_mobile, $is_webp );
 			}
 
 			// Delete the row
@@ -332,7 +332,7 @@ class CSS extends Base {
 	 *
 	 * @since 4.2
 	 */
-	private function _save_con( $type, $css, $queue_k ) {
+	private function _save_con( $type, $css, $queue_k, $mobile, $webp ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		Debug2::debug2( '[CSS] con: ' . $css );
@@ -354,7 +354,7 @@ class CSS extends Base {
 		$vary = $this->_queue[ $queue_k ][ 'vary' ];
 		Debug2::debug2( "[CSS] Save URL to file [file] $static_file [vary] $vary" );
 
-		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $mobile, $webp );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
 	}

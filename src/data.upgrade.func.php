@@ -14,6 +14,23 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Append webp/mobile to url_file
+ * @since 5.3
+ */
+function litespeed_update_5_3() {
+	global $wpdb;
+	Debug2::debug( "[Data] Upgrade url_file table" );
+	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"' );
+	if ( $tb_exists ) {
+		$q = 'ALTER TABLE `' . $wpdb->prefix . 'litespeed_url_file`
+				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
+				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
+			';
+		$wpdb->query( $q );
+	}
+}
+
+/**
  * Add expired to url_file table
  * @since 4.4.4
  */
