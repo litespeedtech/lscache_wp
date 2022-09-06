@@ -184,7 +184,7 @@ if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 	<?php printf( esc_html__( 'Backup created %1$s before applying the %2$s preset', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>
 	<a
 		href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_RESTORE, false, null, array( 'timestamp' => $backup['timestamp'] ) ); ?>"
-		class="button button-secondary"
+		class="litespeed-left10"
 		data-litespeed-cfm="<?php printf( esc_html__( 'This will restore the backup settings created %1$s before applying the %2$s preset. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>"
 	>
 		<?php esc_html_e( 'Restore Settings', 'litespeed-cache' ); ?>
