@@ -130,7 +130,6 @@ class UCSS extends Base {
 	 * @since  5.3
 	 */
 	public function add_to_q($url_files) {
-		return; // will enable in v5.4
 		// Store it for cron
 		$this->_queue = $this->load_queue( 'ucss' );
 
@@ -159,10 +158,10 @@ class UCSS extends Base {
 				'url_tag'		=> $url_tag,
 			); // Current UA will be used to request
 
+			self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] false' );
 			$this->_queue[ $queue_k ] = $q;
 		}
 		$this->save_queue( 'ucss', $this->_queue );
-		self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] false' );
 
 
 	}
