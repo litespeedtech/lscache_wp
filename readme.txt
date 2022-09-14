@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.3 - Oct 2022 =
 * **UCSS** Auto append to queue after purged UCSS. (Ankit)
+* **CLI** Added doc to how to add multi lines for setting. (xLukii)
 
 = 5.2.1 - Sep 7 2022 =
 * 🐞**Core** Fixed a fatal error that occurred when uninstalling. (#894556 Hostinger)

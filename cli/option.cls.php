@@ -28,6 +28,7 @@ class Option extends Base {
 	 *     # Set to not cache the login page
 	 *     $ wp litespeed-option set cache-priv false
 	 *     $ wp litespeed-option set 'cdn-mapping[url][0]' https://cdn.EXAMPLE.com
+	 *     $ wp litespeed-option set media-lqip_exc $'line1\nline2'
 	 *
 	 */
 	public function set( $args, $assoc_args ) {
@@ -55,6 +56,9 @@ class Option extends Base {
 		 * For Crawler cookies:
 		 * 		`set 'crawler-cookies[name][0]' my_currency`
 		 * 		`set 'crawler-cookies[vals][0]' "USD\nTWD"`
+		 *
+		 * For multi lines setting:
+		 * 		`set media-lqip_exc $'img1.jpg\nimg2.jpg'`
 		 */
 
 		// Build raw data
