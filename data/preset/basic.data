@@ -20,81 +20,7 @@
 
 ["cache-mobile",true]
 
-["cache-mobile_rules",["Mobile","Android","Silk\/","Kindle","BlackBerry","Opera Mini","Opera Mobi"]]
-
 ["cache-browser",true]
-
-["cache-exc_useragents",[]]
-
-["cache-exc_cookies",[]]
-
-["cache-exc_qs",[]]
-
-["cache-exc_cat",[]]
-
-["cache-exc_tag",[]]
-
-["cache-force_uri",[]]
-
-["cache-force_pub_uri",[]]
-
-["cache-priv_uri",[]]
-
-["cache-exc",[]]
-
-["cache-exc_roles",[]]
-
-["cache-drop_qs",["fbclid","gclid","utm*","_ga"]]
-
-["cache-ttl_pub",2629746]
-
-["cache-ttl_priv",3600]
-
-["cache-ttl_frontpage",2629746]
-
-["cache-ttl_feed",2629746]
-
-["cache-ttl_rest",2629746]
-
-["cache-ttl_browser",31557600]
-
-["cache-ttl_status",["403 10800","404 10800","500 10800"]]
-
-["cache-login_cookie",""]
-
-["cache-vary_group",{"administrator":"99","author":"0","contributor":"0","editor":"0","subscriber":"0"}]
-
-["purge-upgrade",true]
-
-["purge-stale",false]
-
-["purge-post_all",false]
-
-["purge-post_f",true]
-
-["purge-post_h",true]
-
-["purge-post_p",true]
-
-["purge-post_pwrp",true]
-
-["purge-post_a",true]
-
-["purge-post_y",false]
-
-["purge-post_m",true]
-
-["purge-post_d",false]
-
-["purge-post_t",true]
-
-["purge-post_pt",true]
-
-["purge-timed_urls",[]]
-
-["purge-timed_urls_time",""]
-
-["purge-hook_all",["switch_theme","wp_create_nav_menu","wp_update_nav_menu","wp_delete_nav_menu","create_term","edit_terms","delete_term","add_link","edit_link","delete_link"]]
 
 ["esi",false]
 
@@ -102,15 +28,9 @@
 
 ["esi-cache_commform",true]
 
-["esi-nonce",["stats_nonce","subscribe_nonce"]]
-
 ["util-instant_click",false]
 
 ["util-no_https_vary",false]
-
-["db_optm-revisions_max",0]
-
-["db_optm-revisions_age",0]
 
 ["optm-css_min",false]
 
@@ -122,23 +42,13 @@
 
 ["optm-ucss_inline",false]
 
-["optm-ucss_whitelist",[]]
-
-["optm-ucss_exc",[]]
-
-["optm-css_exc",[]]
-
 ["optm-js_min",false]
 
 ["optm-js_comb",false]
 
 ["optm-js_comb_ext_inl",true]
 
-["optm-js_exc",["jquery.js","jquery.min.js"]]
-
 ["optm-html_min",false]
-
-["optm-html_lazy",[]]
 
 ["optm-qs_rm",false]
 
@@ -147,10 +57,6 @@
 ["optm-css_async",false]
 
 ["optm-ccss_per_url",false]
-
-["optm-ccss_sep_posttype",["page"]]
-
-["optm-ccss_sep_uri",[]]
 
 ["optm-css_async_inline",true]
 
@@ -164,57 +70,15 @@
 
 ["optm-ggfonts_async",false]
 
-["optm-exc_roles",[]]
-
-["optm-ccss_con",""]
-
-["optm-js_defer_exc",["jquery.js","jquery.min.js","gtm.js","analytics.js"]]
-
-["optm-gm_js_exc",[]]
-
-["optm-dns_prefetch",[]]
-
 ["optm-dns_prefetch_ctrl",false]
 
-["optm-exc",[]]
-
 ["optm-guest_only",true]
-
-["object",false]
-
-["object-kind",false]
-
-["object-host","localhost"]
-
-["object-port",11211]
-
-["object-life",360]
-
-["object-persistent",true]
-
-["object-admin",true]
-
-["object-transients",true]
-
-["object-db_id",0]
-
-["object-user",""]
-
-["object-pswd",""]
-
-["object-global_groups",["users","userlogins","useremail","userslugs","usermeta","user_meta","site-transient","site-options","site-lookup","site-details","blog-lookup","blog-details","blog-id-cache","rss","global-posts","global-cache-test"]]
-
-["object-non_persistent_groups",["comment","counts","plugins","wc_session_id"]]
 
 ["discuss-avatar_cache",false]
 
 ["discuss-avatar_cron",false]
 
-["discuss-avatar_cache_ttl",604800]
-
 ["optm-localize",false]
-
-["optm-localize_domains",["### Popular scripts ###","https:\/\/platform.twitter.com\/widgets.js","https:\/\/connect.facebook.net\/en_US\/fbevents.js"]]
 
 ["media-lazy",false]
 
@@ -222,37 +86,13 @@
 
 ["media-placeholder_resp",false]
 
-["media-placeholder_resp_color","#cfd4db"]
-
-["media-placeholder_resp_svg","<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"{width}\" height=\"{height}\" viewBox=\"0 0 {width} {height}\"><rect width=\"100%\" height=\"100%\" style=\"fill:{color};fill-opacity: 0.1;\"\/><\/svg>"]
-
 ["media-lqip",false]
-
-["media-lqip_qual",4]
-
-["media-lqip_min_w",150]
-
-["media-lqip_min_h",150]
 
 ["media-placeholder_resp_async",true]
 
 ["media-iframe_lazy",false]
 
 ["media-add_missing_sizes",false]
-
-["media-lazy_exc",[]]
-
-["media-lazy_cls_exc",["wmu-preview-img"]]
-
-["media-lazy_parent_cls_exc",[]]
-
-["media-iframe_lazy_cls_exc",[]]
-
-["media-iframe_lazy_parent_cls_exc",[]]
-
-["media-lazy_uri_exc",[]]
-
-["media-lqip_exc",[]]
 
 ["media-vpi",false]
 
@@ -274,68 +114,4 @@
 
 ["img_optm-webp_replace",true]
 
-["img_optm-webp_attr",["img.src","div.data-thumb","img.data-src","div.data-large_image","img.retina_logo_url","div.data-parallax-image","video.poster"]]
-
 ["img_optm-webp_replace_srcset",true]
-
-["img_optm-jpg_quality",82]
-
-["crawler",false]
-
-["crawler-usleep",500]
-
-["crawler-run_duration",400]
-
-["crawler-run_interval",600]
-
-["crawler-crawl_interval",302400]
-
-["crawler-threads",3]
-
-["crawler-timeout",30]
-
-["crawler-load_limit",1]
-
-["crawler-sitemap",""]
-
-["crawler-drop_domain",true]
-
-["crawler-map_timeout",120]
-
-["crawler-roles",[]]
-
-["crawler-cookies",[]]
-
-["misc-heartbeat_front",false]
-
-["misc-heartbeat_front_ttl",60]
-
-["misc-heartbeat_back",false]
-
-["misc-heartbeat_back_ttl",60]
-
-["misc-heartbeat_editor",false]
-
-["misc-heartbeat_editor_ttl",15]
-
-["cdn",false]
-
-["cdn-ori_dir",["wp-content","wp-includes"]]
-
-["cdn-exc",[]]
-
-["cdn-quic",false]
-
-["cdn-cloudflare",false]
-
-["cdn-cloudflare_email",""]
-
-["cdn-cloudflare_key",""]
-
-["cdn-cloudflare_name",""]
-
-["cdn-cloudflare_zone",""]
-
-["cdn-mapping",[{"url":"","inc_img":"1","inc_css":"1","inc_js":"1","filetype":[".aac",".css",".eot",".gif",".jpeg",".jpg",".js",".less",".mp3",".mp4",".ogg",".otf",".pdf",".png",".svg",".ttf",".webp",".woff",".woff2"]}]]
-
-["cdn-attr",[".src",".data-src",".href",".poster","source.srcset"]]
