@@ -45,7 +45,7 @@ $presets['advanced'] = array(
 		__( 'Remove Noscript Tags', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools. ' ),
+		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools.' ),
 		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
@@ -60,7 +60,7 @@ $presets['aggressive'] = array(
 		__( 'Lazy Load for Iframes', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset might work out of the box in some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning. ' ),
+		__( 'This preset might work out of the box for some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning.' ),
 		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
