@@ -123,7 +123,7 @@ $presets['extreme'] = array(
 			<a
 				href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_APPLY, false, null, array( 'preset' => $name ) ); ?>"
 				class="button <?php echo $button_class; ?>"
-				data-litespeed-cfm="<?php printf( esc_html__( 'This will back up your current settings and apply the %1$s preset. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
+				data-litespeed-cfm="<?php printf( esc_html__( 'This will back up your current settings and replace them with the %1$s preset settings. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
 			>
 				<?php esc_html_e( 'Apply Preset', 'litespeed-cache' ); ?>
 			</a>
