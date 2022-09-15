@@ -125,7 +125,8 @@ class Base extends Root {
 	const O_OPTM_CSS_COMB_EXT_INL	= 'optm-css_comb_ext_inl';
 	const O_OPTM_UCSS 				= 'optm-ucss';
 	const O_OPTM_UCSS_INLINE 		= 'optm-ucss_inline';
-	const O_OPTM_UCSS_WHITELIST 	= 'optm-ucss_whitelist';
+	const O_OPTM_UCSS_SELECTOR_WHITELIST 	= 'optm-ucss_whitelist';
+	const O_OPTM_UCSS_FILE_EXC_INLINE 		= 'optm-ucss_file_exc_inline';
 	const O_OPTM_UCSS_EXC 			= 'optm-ucss_exc';
 	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
@@ -413,7 +414,8 @@ class Base extends Root {
 		self::O_OPTM_CSS_COMB_EXT_INL	=> false,
 		self::O_OPTM_UCSS 				=> false,
 		self::O_OPTM_UCSS_INLINE 		=> false,
-		self::O_OPTM_UCSS_WHITELIST		=> array(),
+		self::O_OPTM_UCSS_SELECTOR_WHITELIST		=> array(),
+		self::O_OPTM_UCSS_FILE_EXC_INLINE			=> array(),
 		self::O_OPTM_UCSS_EXC			=> array(),
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,

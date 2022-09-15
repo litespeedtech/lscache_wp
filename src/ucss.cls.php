@@ -464,7 +464,7 @@ class UCSS extends Base {
 	 */
 	private function _filter_whitelist() {
 		$whitelist = array();
-		$list = apply_filters( 'litespeed_ucss_whitelist', $this->conf( self::O_OPTM_UCSS_WHITELIST ) );
+		$list = apply_filters( 'litespeed_ucss_whitelist', $this->conf( self::O_OPTM_UCSS_SELECTOR_WHITELIST ) );
 		foreach ( $list as $k => $v ) {
 			if ( substr( $v, 0, 2 ) === '//' ) {
 				continue;

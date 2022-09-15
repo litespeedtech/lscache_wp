@@ -251,6 +251,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.3 - Oct 2022 =
+* 🌱**UCSS** `UCSS File Excludes and Inline` to increase page score. (Ankit)
 * **UCSS** Auto append to queue after purged UCSS. (Ankit)
 * **CLI** Added doc to how to add multi lines for setting. (xLukii)
 
