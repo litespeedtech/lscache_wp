@@ -12,8 +12,8 @@ $presets['essentials'] = array(
 		__( 'Browser Cache', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset has just the most basic number of features enabled, and is good for any website.', 'litespeed-cache' ),
-		__( 'This preset can be utilized without a Domain key, Good for cache-oriented development aswell.', 'litespeed-cache' )
+		__( 'This no-risk preset is appropriate for all websites. Good for new users, simple websites, or cache-oriented development.', 'litespeed-cache' ),
+		__( 'A Domain key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' )
 	)
 );
 
@@ -21,20 +21,20 @@ $presets['basic'] = array(
 	'title' => __( 'Basic', 'litespeed-cache' ),
 	'body' => array(
 		__( 'Everything in Essentials, Plus', 'litespeed-cache' ),
-		__( 'Guest Mode and Optimization', 'litespeed-cache' ),
 		__( 'Image Optimization', 'litespeed-cache' ),
 		__( 'Mobile Cache', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset enables the very essentials, plus some basic optimizations which will improve Google Pagespeed Score, and also not hamper user experience on website.', 'litespeed-cache' ),
-		__( 'It is good for any website, with a LSCWP Domain key.', 'litespeed-cache' )
+		__( 'This low-risk preset introduces basic optimizations for speed and user experience. Appropriate for enthusiastic beginners.', 'litespeed-cache' ),
+		__( 'A Domain Key is required to use this preset. Includes optimizations known to improve site score in page speed measurement tools.', 'litespeed-cache' )
 	)
 );
 
 $presets['advanced'] = array(
-	'title' => __( 'Advanced', 'litespeed-cache' ),
+	'title' => __( 'Advanced (Recommended)', 'litespeed-cache' ),
 	'body' => array(
 		__( 'Everything in Basic, Plus', 'litespeed-cache' ),
+		__( 'Guest Mode and Guest Optimization', 'litespeed-cache' ),
 		__( 'CSS, JS and HTML Minification', 'litespeed-cache' ),
 		__( 'Font Display Optimization', 'litespeed-cache' ),
 		__( 'JS Defer for both external and inline JS', 'litespeed-cache' ),
@@ -45,8 +45,8 @@ $presets['advanced'] = array(
 		__( 'Remove Noscript Tags', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset is the most recommended one, and is enabled with most non-conflicting options, and is good for most websites.' ),
-		__( 'Domain Key must be set to use this preset. Also improves your Pagespeed Score.', 'litespeed-cache' )
+		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools. ' ),
+		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
 
@@ -60,8 +60,8 @@ $presets['aggressive'] = array(
 		__( 'Lazy Load for Iframes', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset while might work out of box in some websites, but might require some excludes in the Page Optimization >> Tuning section. ' ),
-		__( 'Domain Key must be set to use this preset. Also improves your Pagespeed Score.', 'litespeed-cache' )
+		__( 'This preset might work out of the box in some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning. ' ),
+		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
 
@@ -76,8 +76,8 @@ $presets['extreme'] = array(
 		__( 'Inline CSS added to Combine', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset will most likely require the website owner to work with Lazy Load Exclusions specially for images such as Logo, or HTML based Slider Images on Top.' ),
-		__( 'Domain Key must be set to use this preset. Also improves your Pagespeed Score.', 'litespeed-cache' )
+		__( 'This preset almost certainly will require testing and exclusions for some CSS, JS and Lazy Loaded images. Pay special attention to logos, or HTML-based slider images.' ),
+		__( 'A Domain Key is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' )
 	)
 );
 
@@ -88,7 +88,7 @@ $presets['extreme'] = array(
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/presets/#standard-tab' ); ?>
 </h3>
 
-<p><?php esc_html_e( 'LiteSpeed Cache Presets can be used for easily optimizing any website using LiteSpeed Cache.', 'litespeed-cache' ); ?></p>
+<p><?php esc_html_e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
 
 <div class="litespeed-comparison-cards">
 	<?php
@@ -113,7 +113,7 @@ $presets['extreme'] = array(
 				</ul>
 			</div>
 			<div class="litespeed-card-footer">
-				<h4><?php esc_html_e( 'For whom is this preset good?', 'litespeed-cache' ); ?></h4>
+				<h4><?php esc_html_e( 'Who should use this preset?', 'litespeed-cache' ); ?></h4>
 				<?php foreach ( $presets[ $name ]['footer'] as $line ) : ?>
 				<p><?php echo esc_html( $line ); ?></p>
 				<?php endforeach; ?>
@@ -123,7 +123,7 @@ $presets['extreme'] = array(
 			<a
 				href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_APPLY, false, null, array( 'preset' => $name ) ); ?>"
 				class="button <?php echo $button_class; ?>"
-				data-litespeed-cfm="<?php printf( esc_html__( 'This will replace your current settings and apply the %1$s preset. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
+				data-litespeed-cfm="<?php printf( esc_html__( 'This will back up your current settings and apply the %1$s preset. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
 			>
 				<?php esc_html_e( 'Apply Preset', 'litespeed-cache' ); ?>
 			</a>
