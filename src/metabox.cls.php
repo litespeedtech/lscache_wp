@@ -97,9 +97,11 @@ class Metabox extends Root {
 	public function setting( $conf, $post_id = false ) {
 		// Check if has metabox non-cacheable setting or not
 		if ( ! $post_id ) {
+			$home_id = get_option( 'page_for_posts' );
 			if ( is_singular() ) {
 				$post_id = get_the_ID();
-
+			} elseif ( $home_id > 0 && is_home() ) {
+				$post_id = $home_id;
 			}
 		}
 
