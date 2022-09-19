@@ -43,12 +43,14 @@ class VPI extends Base {
 			return;
 		}
 
-		if ( ! is_singular() ) {
+		$home_id = get_option( 'page_for_posts' );
+
+		if ( ! is_singular() && ! ( $home_id > 0 && is_home() ) ) {
 			self::debug( 'not single post ID' );
 			return;
 		}
 
-		$post_id = get_the_ID();
+		$post_id = is_home() ? $home_id : get_the_ID();
 
 		$queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $request_url;
 		if ( ! empty( $this->_queue[ $queue_k ] ) ) {
