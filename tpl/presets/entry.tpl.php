@@ -3,21 +3,15 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'settings'	=> __( 'General Settings', 'litespeed-cache' ),
-	'settings_tuning' => __( 'Tuning', 'litespeed-cache' ),
+	'standard' => __( 'Standard Presets', 'litespeed-cache' ),
+	'import_export' => __( 'Import / Export', 'litespeed-cache' ),
 );
-
-if ( $this->_is_network_admin ) {
-	$menu_list = array(
-		'network_settings' => __( 'General Settings', 'litespeed-cache' ),
-	);
-}
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache General Settings', 'litespeed-cache' ); ?>
+		<?php echo __( 'LiteSpeed Cache Configuration Presets', 'litespeed-cache' ); ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo Core::VER; ?>
@@ -43,7 +37,11 @@ if ( $this->_is_network_admin ) {
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>";
-			require LSCWP_DIR . "tpl/general/$tab.tpl.php";
+			if ('import_export' === $tab) {
+				require LSCWP_DIR . "tpl/toolbox/$tab.tpl.php";
+			} else {
+				require LSCWP_DIR . "tpl/presets/$tab.tpl.php";
+			}
 			echo "</div>";
 		}
 

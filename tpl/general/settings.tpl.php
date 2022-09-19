@@ -36,6 +36,7 @@ if ( ! $can_token ) {
 	$apply_ts_txt .= ' ' . sprintf( __( 'Next available request time: <code>After %s</code>', 'litespeed-cache' ), Utility::readable_time( $next_available_req, 0, true ) );
 }
 
+$this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
@@ -236,3 +237,5 @@ if ( ! $can_token ) {
 	</tr>
 
 </tbody></table>
+
+<?php $this->form_end(); ?>

@@ -3350,6 +3350,161 @@ a.litespeed-media-href svg:hover {
 
 
 /* =======================================
+	Comparison Cards - Presets
+======================================= */
+
+.litespeed-comparison-card {
+	box-sizing: border-box;
+}
+
+.litespeed-comparison-card-rec .litespeed-card-content>div.litespeed-card-body {
+	font-size: 14px;
+}
+
+.litespeed-comparison-card-rec .litespeed-card-action {
+	margin-bottom: 0.25rem;
+}
+
+.litespeed-comparison-card-rec h3 {
+	font-size: 20px;
+}
+
+.litespeed-card-content>div,
+.litespeed-card-action {
+	padding: 0.85rem 1.25rem;
+}
+
+.litespeed-card-header {
+	border-bottom: 1px solid #eee;
+	background: #f9fafc;
+}
+
+.litespeed-card-content>div.litespeed-card-body {
+	align-self: stretch;
+	justify-content: flex-end;
+	font-size: 15px;
+	padding-bottom: 0.5rem;
+	padding-top: 1rem;
+}
+
+.litespeed-card-content>div.litespeed-card-footer {
+	align-self: stretch;
+	justify-content: flex-end;
+	padding-bottom: 0;
+	padding-top: 0.25rem;
+
+}
+
+.litespeed-card-action {
+	justify-content: flex-end;
+}
+
+.litespeed-comparison-card ul {
+	padding-left: 20px;
+	list-style: none;
+	list-style-position: outside;
+	margin: 0;
+}
+
+.litespeed-comparison-card li {
+	margin-bottom: 0.5em;
+	line-height: 1.4;
+}
+
+.litespeed-comparison-card li:last-child {
+	margin-bottom: 0;
+}
+
+.litespeed-comparison-card ul li:before {
+	content: '✓';
+	margin-left: -1em;
+	margin-right: .350em;
+	color: #329c74;
+}
+
+@media screen and (max-width: 1279px) {
+	.litespeed-comparison-card {
+		margin: 0 0 -1px 0;
+	}
+}
+
+@media screen and (min-width: 640px) and (max-width: 1280px) {
+	.litespeed-comparison-cards {
+		max-width: 740px;
+	}
+
+	.litespeed-card-content {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.litespeed-card-content .litespeed-card-header {
+		width: 100%;
+	}
+
+	.litespeed-card-content>div.litespeed-card-body {
+		align-self: initial;
+		width: 50%;
+		box-sizing: border-box;
+	}
+
+	.litespeed-card-content>div.litespeed-card-footer {
+		width: 50%;
+		align-self: initial;
+		box-sizing: border-box;
+	}
+
+	.litespeed-card-content>div.litespeed-card-footer h4 {
+		margin-top: 1rem;
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	.litespeed-comparison-cards {
+		display: flex;
+		margin: 3rem 0 2rem 0;
+		max-width: 1720px;
+	}
+
+	.litespeed-comparison-card {
+		width: 19%;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		margin-right: -1px;
+		justify-content: space-between;
+	}
+
+	.litespeed-comparison-card:first-child {
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		overflow: hidden;
+	}
+
+	.litespeed-comparison-card:last-child {
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		overflow: hidden;
+	}
+
+	.litespeed-comparison-card-rec {
+		width: 23%;
+		padding-top: 1rem;
+		padding-bottom: .75rem;
+		margin-top: -1rem;
+		margin-bottom: 0.25rem;
+		border-radius: 5px;
+		overflow: hidden;
+	}
+
+	.litespeed-comparison-card-rec .litespeed-card-header {
+		margin-top: -1rem;
+		padding-top: 1.75rem;
+		padding-bottom: 0.95rem;
+	}
+}
+
+/* =======================================
 		BALLOON PURE CSS TOOLTIPS
 ======================================= */
 
