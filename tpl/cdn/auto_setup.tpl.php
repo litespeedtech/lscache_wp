@@ -117,7 +117,7 @@ if ($cdn_setup_done_ts) {
 									__( 'Manage CDN', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
 									false,
 									'litespeed-link-with-icon' ); ?>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.',
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/find/' . $dom,
 									__( 'Manage DNS Zone', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
 									false,
 									'litespeed-link-with-icon' ); ?>
@@ -172,7 +172,7 @@ if ($cdn_setup_done_ts) {
 		</p>
 		<p>
 			<?php echo __( 'Is something missing?', 'litespeed-cache' ) ; ?>
-			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/records/' . $dom . '.',
+			<?php Doc::learn_more( Cloud::CLOUD_SERVER_DASH . '/dns/find/' . $dom,
 									__( 'Review DNS records', 'litespeed-cache' ) . ' <span class="dashicons dashicons-external"></span>',
 									false,
 									'litespeed-link-with-icon' ); ?>
