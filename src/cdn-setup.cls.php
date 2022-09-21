@@ -230,9 +230,9 @@ class Cdn_Setup extends Base {
 			'site_url'		=> home_url(),
 			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
 		);
-
-		if ($this->_api_key) {
-			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		$api_key = $this->conf( self::O_API_KEY );
+		if ($api_key) {
+			$data['domain_hash'] = md5( substr( $api_key, 0, 8 ) );
 		}
 
 		wp_redirect( Cloud::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
@@ -277,8 +277,9 @@ class Cdn_Setup extends Base {
 			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
 		);
 
-		if ( $this->_api_key ) {
-			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		$api_key = $this->conf( self::O_API_KEY );
+		if ($api_key) {
+			$data['domain_hash'] = md5( substr( $api_key, 0, 8 ) );
 		}
 
         $__cloud = $this->cls( 'Cloud' );
