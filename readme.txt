@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Presets** New menu `Presets`.
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)
 * **UCSS** Auto append to queue after purged UCSS. (Ankit)
+* **Page Optimize** Removed redundant defer from image lazyload library usage. (#928019)
 * **Cloud** Fixed an API key intertnal update delay issue.
 * **CLI** Added doc to how to add multi lines for setting. (xLukii)
 
