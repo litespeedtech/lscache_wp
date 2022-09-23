@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.0.2
-Stable tag: 5.2.1
+Stable tag: 5.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,13 +250,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.3 - Oct 2022 =
-* 🌱**Presets** New menu `Presets`.
+= 5.3 - Oct 3 2022 =
+* 🌱**Presets** New `Presets` feature and menu item.
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)
-* **UCSS** Auto append to queue after purged UCSS. (Ankit)
-* **Page Optimize** Removed redundant defer from image lazyload library usage. (#928019)
-* **Cloud** Fixed an API key intertnal update delay issue.
-* **CLI** Added doc to how to add multi lines for setting. (xLukii)
+* **UCSS** Auto append to queue after UCSS is purged. (Ankit)
+* **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
+* **Cloud** Fixed a bug where internal updates were delayed for API keys.
+* **CLI** Added a doc for how to add multiple lines to settings. (xLukii)
 
 = 5.2.1 - Sep 7 2022 =
 * 🐞**Core** Fixed a fatal error that occurred when uninstalling. (#894556 Hostinger)
