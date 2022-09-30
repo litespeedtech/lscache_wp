@@ -429,10 +429,16 @@ class Vary extends Root {
 	public function in_vary_group( $role ) {
 		$group = 0;
 		$vary_groups = $this->conf( Base::O_CACHE_VARY_GROUP );
-		if ( array_key_exists( $role, $vary_groups ) ) {
-			$group = $vary_groups[ $role ];
+
+		$roles = explode( ',', $role );
+		if ( $found = array_intersect( $roles, array_keys( $vary_groups ) ) ) {
+			$groups = array();
+			foreach ( $found as $curr_role ) {
+				$groups[] = $vary_groups[ $curr_role ];
+			}
+			$group = implode( ',', array_unique( $groups ) );
 		}
-		elseif ( $role === 'administrator' ) {
+		elseif ( in_array( 'administrator', $roles ) ) {
 			$group = 99;
 		}
 

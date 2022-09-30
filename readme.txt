@@ -250,6 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 5.4 - Nov 2022 =
+* **ESI** Check all user roles for cache vary/page optm excludes.
+
 = 5.3 - Oct 3 2022 =
 * 🌱**Presets** New `Presets` feature and menu item.
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)

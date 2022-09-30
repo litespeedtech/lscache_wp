@@ -659,7 +659,10 @@ class Conf extends Base {
 			return false;
 		}
 
-		return in_array( $role, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? $role : false;
+		$roles = explode( ',', $role );
+		$found = array_intersect( $roles, $this->conf( self::O_OPTM_EXC_ROLES ) );
+
+		return $found ? implode(',', $found) : false;
 	}
 
 	/**
