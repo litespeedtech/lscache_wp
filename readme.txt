@@ -258,6 +258,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
 * **CLI** Added a doc for how to add multiple lines to settings. (xLukii)
 * **ESI** Check all user roles for cache vary/page optm excludes.
+* **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
 
 = 5.2.1 - Sep 7 2022 =
 * 🐞**Core** Fixed a fatal error that occurred when uninstalling. (#894556 Hostinger)
