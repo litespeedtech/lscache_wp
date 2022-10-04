@@ -250,16 +250,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.4 - Nov 2022 =
-* **ESI** Check all user roles for cache vary/page optm excludes.
-
-= 5.3 - Oct 3 2022 =
+= 5.3 - Oct 2022 =
 * 🌱**Presets** New `Presets` feature and menu item.
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)
 * **UCSS** Auto append to queue after UCSS is purged. (Ankit)
 * **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
 * **CLI** Added a doc for how to add multiple lines to settings. (xLukii)
+* **ESI** Check all user roles for cache vary/page optm excludes.
 
 = 5.2.1 - Sep 7 2022 =
 * 🐞**Core** Fixed a fatal error that occurred when uninstalling. (#894556 Hostinger)
