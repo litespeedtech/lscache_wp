@@ -299,7 +299,7 @@ class Router extends Base {
 			$user = get_userdata( $uid );
 			if ( isset( $user->roles ) && is_array( $user->roles ) ) {
 				$tmp = array_values( $user->roles );
-				$role = array_shift( $tmp );
+				$role = implode( ',', $tmp ); // Combine for PHP5.3 const comaptibility
 			}
 		}
 		Debug2::debug( '[Router] get_role: ' . $role );

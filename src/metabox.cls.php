@@ -50,6 +50,11 @@ class Metabox extends Root {
 		if ( apply_filters( 'litespeed_bypass_metabox', false, $post_type ) ) {
 			return;
 		}
+		$post_type_obj = get_post_type_object( $post_type );
+		if ( !$post_type_obj->public ) {
+			self::debug('post type public=false, bypass add_meta_boxes');
+			return;
+		}
 		add_meta_box( 'litespeed_meta_boxes', __( 'LiteSpeed Options', 'litespeed-cache' ), array( $this, 'meta_box_options' ), $post_type, 'side', 'core' );
 	}
 

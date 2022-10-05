@@ -13,7 +13,7 @@ $presets['essentials'] = array(
 	),
 	'footer' => array(
 		__( 'This no-risk preset is appropriate for all websites. Good for new users, simple websites, or cache-oriented development.', 'litespeed-cache' ),
-		__( 'A Domain key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' )
+		__( 'A Domain Key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' )
 	)
 );
 
