@@ -156,7 +156,7 @@ class Cdn_Setup extends Base {
 
 			if (!$json) {
 				return;
-			} else if (is_string($json)) {
+			} else if (is_string($json) && $json != 'unauthorized access to REST API.') {
 				self::save_summary( array( 'cdn_setup_err' => $json ) );
 				return;
 			}

@@ -982,6 +982,8 @@ class Cloud extends Base {
 			self::debug( 'failed to request REST API: ' . $error_message );
 			Admin_Display::error( __( 'Cloud REST Error', 'litespeed-cache' ) . ': ' . $error_message );
 			return $error_message;
+		} else if ( wp_remote_retrieve_response_code( $response ) == '401' ) {
+			return 'unauthorized access to REST API.';
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
