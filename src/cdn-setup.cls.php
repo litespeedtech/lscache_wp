@@ -191,7 +191,7 @@ class Cdn_Setup extends Base {
 		if ( isset( $this->_summary[ 'cdn_dns_summary' ] ) ) {
 			unset( $this->_summary[ 'cdn_dns_summary' ] );
 		}
-		self::save_summary();
+		self::save_summary($this->_summary, false, true);
 
 		$this->_setup_token = '';
 		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
