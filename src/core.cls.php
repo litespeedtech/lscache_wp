@@ -76,6 +76,27 @@ class Core extends Root {
 		// }
 
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+
+		if ( defined( 'LITESPEED_ON' ) ) {
+			// register purge_all actions
+			$purge_all_events = $this->conf( Base::O_PURGE_HOOK_ALL );
+
+			// purge all on upgrade
+			if ( $this->conf( Base::O_PURGE_ON_UPGRADE ) ) {
+				$purge_all_events[] = 'automatic_updates_complete';
+				$purge_all_events[] = 'upgrader_process_complete';
+				$purge_all_events[] = 'admin_action_do-plugin-upgrade';
+			}
+			foreach ( $purge_all_events as $event ) {
+				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
+				if ( in_array( $event, array( 'update_option' ) ) ) {
+					continue;
+				}
+				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
+			}
+			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' );
+		}
+
 		add_action( 'after_setup_theme', array( $this, 'init' ) );
 
 		// Check if there is a purge request in queue

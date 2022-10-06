@@ -256,7 +256,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **UCSS** Auto append to queue after UCSS is purged. (Ankit)
 * **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
-* **CLI** Added a doc for how to add multiple lines to settings. (xLukii)
+* **Purge** Auto purge all when plugin auto update is done.
+* **CLI** Added syntax examples for values that include line breaks (xLukii)
 * **ESI** Check all user roles for cache vary/page optm excludes.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
 

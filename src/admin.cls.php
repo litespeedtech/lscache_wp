@@ -41,24 +41,6 @@ class Admin extends Root {
 		// add link to plugin list page
 		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->cls( 'Admin_Display' ), 'add_plugin_links' ) );
 
-		if ( defined( 'LITESPEED_ON' ) ) {
-			// register purge_all actions
-			$purge_all_events = $this->conf( Base::O_PURGE_HOOK_ALL );
-
-			// purge all on upgrade
-			if ( $this->conf( Base::O_PURGE_ON_UPGRADE ) ) {
-				$purge_all_events[] = 'upgrader_process_complete';
-				$purge_all_events[] = 'admin_action_do-plugin-upgrade';
-			}
-			foreach ( $purge_all_events as $event ) {
-				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
-				if ( in_array( $event, array( 'update_option' ) ) ) {
-					continue;
-				}
-				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
-			}
-			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' );
-		}
 	}
 
 	/**
