@@ -83,8 +83,6 @@ class Core extends Root {
 
 			// purge all on upgrade
 			if ( $this->conf( Base::O_PURGE_ON_UPGRADE ) ) {
-				$purge_all_events[] = 'delete_site_transient_update_plugins';
-				$purge_all_events[] = 'delete_site_transient_update_themes';
 				$purge_all_events[] = 'automatic_updates_complete';
 				$purge_all_events[] = 'upgrader_process_complete';
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade';
