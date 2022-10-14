@@ -511,7 +511,9 @@ class Control extends Root {
 			$is_same_redirect = true;
 
 			foreach ( $to_check as $v ) {
-				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
+				$target = parse_url( $location, $v );
+				if($v==PHP_URL_QUERY) $target = urldecode($target);
+				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != $target ) {
 					$is_same_redirect = false;
 					Debug2::debug( "[Ctrl] 301 different redirection" );
 					break;

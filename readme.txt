@@ -257,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
 * **Purge** Auto purge all when plugin auto update is done.
+* **Cache** Fixed a infinite 301 redirection caused by utm encoded link.
 * **CLI** Added syntax examples for values that include line breaks (xLukii)
 * **ESI** Check all user roles for cache vary/page optm excludes.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
