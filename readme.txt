@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Purge** Auto purge all when plugin auto update is done.
 * **Cache** Fixed a infinite 301 redirection caused by utm encoded link.
 * **CLI** Added syntax examples for values that include line breaks (xLukii)
+* **CLI** CLI now will bypass all lscache HTTP releated header sending.
 * **ESI** Check all user roles for cache vary/page optm excludes.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
 

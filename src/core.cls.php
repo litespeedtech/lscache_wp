@@ -103,7 +103,7 @@ class Core extends Root {
 		if (!defined( 'LITESPEED_CLI' )) {
 			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
 			if ( $purge_queue && $purge_queue != -1 ) {
-				@header( $purge_queue );
+				$this->_http_header( $purge_queue );
 				Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
 			}
 			if ( $purge_queue != -1 ) {
@@ -112,7 +112,7 @@ class Core extends Root {
 
 			$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
 			if ( $purge_queue && $purge_queue != -1 ) {
-				@header( $purge_queue );
+				$this->_http_header( $purge_queue );
 				Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
 			}
 			if ( $purge_queue != -1 ) {
@@ -570,34 +570,25 @@ class Core extends Root {
 
 		// send Control header
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
-			@header( $control_header );
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $control_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $control_header . " -->";
-				}
+			$this->_http_header( $control_header );
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing) {
+				$this->footer_comment .= "\n<!-- " . $control_header . " -->";
 			}
 		}
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
-			@header( $purge_header );
+			$this->_http_header( $purge_header );
 			Debug2::log_purge( $purge_header );
 
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $purge_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
-				}
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing) {
+				$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
 			}
 		}
 		// send Vary header
 		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
-			@header( $vary_header );
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $vary_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
-				}
+			$this->_http_header( $vary_header );
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing ) {
+				$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
 			}
 		}
 
@@ -616,18 +607,14 @@ class Core extends Root {
 			if ( $vary_header ) {
 				$debug_header .= $vary_header . '; ';
 			}
-			@header( $debug_header );
-			Debug2::debug( $debug_header );
+			$this->_http_header( $debug_header );
 		}
 		else {
 			// Control header
 			if ( defined( 'LITESPEED_ON' ) && Control::is_cacheable() && $tag_header ) {
-				@header( $tag_header );
-				if ( defined( 'LSCWP_LOG' ) ) {
-					Debug2::debug( '💰 ' . $tag_header );
-					if ( $running_info_showing ) {
-						$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
-					}
+				$this->_http_header( $tag_header );
+				if ( defined( 'LSCWP_LOG' ) && $running_info_showing ) {
+					$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
 				}
 			}
 		}
@@ -645,6 +632,44 @@ class Core extends Root {
 			Debug2::debug( '--forced--' );
 		}
 
+		/**
+		 * If is CLI and contains Purge Header, then issue a HTTP req to Purge
+		 * @since v5.3
+		 */
+		// if (defined( 'LITESPEED_CLI' )) {
+		// 	$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+		// 	if ( $purge_queue && $purge_queue != -1 ) {
+		// 		Debug2::debug( '[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue );
+		// 		// Kick off HTTP req
+		// 		WP_CLI\Utils\http_request()
+		// 	}
+		// 	if ( $purge_queue != -1 ) {
+		// 		Purge::update_option( Purge::DB_QUEUE, -1 ); // Use 0 to bypass purge while still enable db update as WP's update_option will check value===false to bypass update
+		// 	}
+
+		// 	$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+		// 	if ( $purge_queue && $purge_queue != -1 ) {
+		// 		@header( $purge_queue );
+		// 		Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
+		// 	}
+		// 	if ( $purge_queue != -1 ) {
+		// 		Purge::update_option( Purge::DB_QUEUE2, -1 );
+		// 	}
+		// }
+
+	}
+
+	/**
+	 * Send HTTP header
+	 * @since 5.3
+	 */
+	private function _http_header( $header ) {
+		if ( defined( 'LITESPEED_CLI' ) ) return;
+
+		@header( $header );
+
+		if ( ! defined( 'LSCWP_LOG' ) ) return;
+		Debug2::debug( '💰 ' . $header );
 	}
 
 }
