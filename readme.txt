@@ -261,6 +261,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CLI** Added syntax examples for values that include line breaks (xLukii)
 * **CLI** CLI now will bypass all lscache HTTP releated header sending.
 * **ESI** Check all user roles for cache vary/page optm excludes.
+* **Crawler** Fixed the cache missing issue when Guest Mode is ON while WebP Replacement is OFF.
 * **3rd** Remove WooCommerce private cache.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
 
