@@ -214,6 +214,10 @@ class Core extends Root {
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 );
+
+		// test: Simulate a purge all
+		// if (defined( 'LITESPEED_CLI' )) Purge::add('test'.date('Ymd.His'));
+
 	}
 
 	/**
@@ -636,27 +640,26 @@ class Core extends Root {
 		 * If is CLI and contains Purge Header, then issue a HTTP req to Purge
 		 * @since v5.3
 		 */
-		// if (defined( 'LITESPEED_CLI' )) {
-		// 	$purge_queue = Purge::get_option( Purge::DB_QUEUE );
-		// 	if ( $purge_queue && $purge_queue != -1 ) {
-		// 		Debug2::debug( '[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue );
-		// 		// Kick off HTTP req
-		// 		WP_CLI\Utils\http_request()
-		// 	}
-		// 	if ( $purge_queue != -1 ) {
-		// 		Purge::update_option( Purge::DB_QUEUE, -1 ); // Use 0 to bypass purge while still enable db update as WP's update_option will check value===false to bypass update
-		// 	}
-
-		// 	$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
-		// 	if ( $purge_queue && $purge_queue != -1 ) {
-		// 		@header( $purge_queue );
-		// 		Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
-		// 	}
-		// 	if ( $purge_queue != -1 ) {
-		// 		Purge::update_option( Purge::DB_QUEUE2, -1 );
-		// 	}
-		// }
-
+		if (defined( 'LITESPEED_CLI' )) {
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+			if ( ! $purge_queue || $purge_queue == -1 ) {
+				$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+			}
+			if ( $purge_queue && $purge_queue != -1 ) {
+				self::debug( '[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue );
+				// Kick off HTTP req
+				$url = admin_url( 'admin-ajax.php' );
+				$resp = wp_remote_get($url);
+				if ( is_wp_error( $resp ) ) {
+					$error_message = $resp->get_error_message();
+					self::debug( '[URL]' . $url );
+					self::debug( 'failed to request: ' . $error_message );
+				}
+				else {
+					self::debug('HTTP req res: ' . $resp['body']);
+				}
+			}
+		}
 	}
 
 	/**
