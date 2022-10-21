@@ -881,7 +881,7 @@ class Crawler extends Root {
 		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) );
 
 		// WebP on/off
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) || $this->conf( Base::O_GUEST ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 

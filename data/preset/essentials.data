@@ -106,12 +106,10 @@
 
 ["img_optm-rm_bkup",false]
 
-["img_optm-webp",true]
+["img_optm-webp",false]
 
 ["img_optm-lossless",false]
 
 ["img_optm-exif",false]
-
-["img_optm-webp_replace",false]
 
 ["img_optm-webp_replace_srcset",false]
