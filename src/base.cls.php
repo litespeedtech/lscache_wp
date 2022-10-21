@@ -217,7 +217,6 @@ class Base extends Root {
 	const O_IMG_OPTM_WEBP 				= 'img_optm-webp';
 	const O_IMG_OPTM_LOSSLESS 			= 'img_optm-lossless';
 	const O_IMG_OPTM_EXIF 				= 'img_optm-exif';
-	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm-webp_replace';
 	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
 	const O_IMG_OPTM_JPG_QUALITY 		= 'img_optm-jpg_quality';
@@ -498,7 +497,6 @@ class Base extends Root {
 		self::O_IMG_OPTM_WEBP 			=> false,
 		self::O_IMG_OPTM_LOSSLESS 		=> false,
 		self::O_IMG_OPTM_EXIF 			=> false,
-		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 		self::O_IMG_OPTM_WEBP_ATTR		=> array(),
 		self::O_IMG_OPTM_WEBP_REPLACE_SRCSET 	=> false,
 		self::O_IMG_OPTM_JPG_QUALITY 	=> 0,
@@ -590,7 +588,7 @@ class Base extends Root {
 		self::O_DEBUG_EXC 				=> array(),
 		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
-		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
+		self::O_IMG_OPTM_WEBP 			=> false,
 
 	);
 

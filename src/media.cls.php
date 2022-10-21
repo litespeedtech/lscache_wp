@@ -43,7 +43,7 @@ class Media extends Root {
 		}
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			if ( $this->webp_support() ) {
 				// Hook to srcset
 				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
@@ -446,7 +446,7 @@ class Media extends Root {
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) && $this->webp_support() ) {
 			$this->content = $this->_replace_buffer_img_webp( $this->content );
 		}
 
@@ -810,7 +810,7 @@ class Media extends Root {
 		}
 
 		// Replace background-image
-		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) && $this->webp_support() ) {
 			$content = $this->replace_background_webp( $content );
 		}
 

@@ -204,7 +204,7 @@ class Lang extends Base {
 			self::O_IMG_OPTM_CRON				=> __( 'Auto Pull Cron', 'litespeed-cache' ),
 			self::O_IMG_OPTM_ORI				=> __( 'Optimize Original Images', 'litespeed-cache' ),
 			self::O_IMG_OPTM_RM_BKUP			=> __( 'Remove Original Backups', 'litespeed-cache' ),
-			self::O_IMG_OPTM_WEBP				=> __( 'Create WebP Versions', 'litespeed-cache' ),
+			self::O_IMG_OPTM_WEBP				=> __( 'Image WebP Replacement', 'litespeed-cache' ),
 			self::O_IMG_OPTM_LOSSLESS			=> __( 'Optimize Losslessly', 'litespeed-cache' ),
 			self::O_IMG_OPTM_EXIF				=> __( 'Preserve EXIF/XMP data', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_ATTR			=> __( 'WebP Attribute To Replace', 'litespeed-cache' ),
@@ -221,7 +221,6 @@ class Lang extends Base {
 			self::O_CACHE_EXC_COOKIES			=> __( 'Do Not Cache Cookies', 'litespeed-cache' ),
 			self::O_CACHE_EXC_USERAGENTS		=> __( 'Do Not Cache User Agents', 'litespeed-cache' ),
 			self::O_CACHE_LOGIN_COOKIE			=> __( 'Login Cookie', 'litespeed-cache' ),
-			self::O_IMG_OPTM_WEBP_REPLACE		=> __( 'Image WebP Replacement', 'litespeed-cache' ),
 
 			self::O_MISC_HEARTBEAT_FRONT		=> __( 'Frontend Heartbeat Control', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_FRONT_TTL	=> __( 'Frontend Heartbeat TTL', 'litespeed-cache' ),

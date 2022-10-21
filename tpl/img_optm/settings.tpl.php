@@ -98,19 +98,6 @@ $this->form_action();
 		</td>
 	</tr>
 
-	<tr>
-		<th>
-			<?php $id = Base::O_IMG_OPTM_WEBP; ?>
-			<?php $this->title( $id ); ?>
-		</th>
-		<td>
-			<?php $this->build_switch( $id ); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ); ?>
-			</div>
-		</td>
-	</tr>
-
 	<?php
 		if ( ! is_multisite() ) :
 			// webp
