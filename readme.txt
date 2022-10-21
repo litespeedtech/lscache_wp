@@ -257,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
 * **Purge** Auto purge all when plugin auto update is done.
+* **Purge** Fixed an potential PHP8 error when removed unused widgets. (acsnaterse)
 * **Cache** Fixed a infinite 301 redirection caused by utm encoded link.
 * **CLI** Added syntax examples for values that include line breaks (xLukii)
 * **CLI** CLI will now send purge requests right away in the same request to avoid potential 404 CSS/JS.

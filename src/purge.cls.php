@@ -1143,9 +1143,9 @@ class Purge extends Base {
 		$post_type = $post->post_type;
 
 		global $wp_widget_factory;
-		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'];
-		if ( ! is_null($recent_posts) ) {
-			$purge_tags[] = Tag::TYPE_WIDGET . $recent_posts->id;
+		// recent_posts
+		if ( ! is_null( $wp_widget_factory->widgets['WP_Widget_Recent_Posts'] ) ) {
+			$purge_tags[] = Tag::TYPE_WIDGET . $wp_widget_factory->widgets['WP_Widget_Recent_Posts']->id;
 		}
 
 		// get adjacent posts id as related post tag
