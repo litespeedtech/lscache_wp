@@ -302,7 +302,7 @@ class Debug2 extends Root {
 				if ( isset( $_SERVER[ 'USER' ] ) ) {
 					$addr .= $_SERVER[ 'USER' ];
 				}
-				elseif ( $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] ) {
+				elseif ( !empty($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ) {
 					$addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
 				}
 			}
