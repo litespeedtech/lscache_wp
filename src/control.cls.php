@@ -515,9 +515,13 @@ class Control extends Root {
 			foreach ( $to_check as $v ) {
 				$url_parsed = $v == PHP_URL_QUERY ? $_SERVER[ 'QUERY_STRING' ] : parse_url( $_SERVER[ 'SCRIPT_URI' ], $v );
 				$target = parse_url( $location, $v );
-				if($v==PHP_URL_QUERY) $target = urldecode($target);
 
 				self::debug("Compare [from] $url_parsed [to] $target");
+
+				if($v==PHP_URL_QUERY) {
+					$url_parsed = urldecode($url_parsed);
+					$target = urldecode($target);
+				}
 
 				if ( $url_parsed != $target ) {
 					$is_same_redirect = false;
