@@ -513,7 +513,7 @@ class Control extends Root {
 			$is_same_redirect = true;
 
 			foreach ( $to_check as $v ) {
-				$url_parsed = parse_url( $_SERVER[ 'SCRIPT_URI' ], $v );
+				$url_parsed = $v == PHP_URL_QUERY ? $_SERVER[ 'QUERY_STRING' ] : parse_url( $_SERVER[ 'SCRIPT_URI' ], $v );
 				$target = parse_url( $location, $v );
 				if($v==PHP_URL_QUERY) $target = urldecode($target);
 
