@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)
 * **UCSS** Auto append to queue after UCSS is purged. (Ankit)
 * **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
+* **Cache** Fixed an infinite loop issue caused by redirection w/ encoded query string.
 * **Image Optimize** Merge webp and webp_replace settings.
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
 * **Purge** Auto purge all when plugin auto update is done.
