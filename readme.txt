@@ -258,6 +258,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cache** Fixed an infinite loop issue caused by redirection w/ encoded query string.
 * **Image Optimize** Merge webp and webp_replace settings.
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
+* **Cloud** Only remove pending alias when meeting the 2nd request from alias domain validation to improve auto alias feature.
 * **Purge** Auto purge all when plugin auto update is done.
 * **Purge** Fixed an potential PHP8 error when removed unused widgets. (acsnaterse)
 * **Cache** Fixed a infinite 301 redirection caused by utm encoded link.

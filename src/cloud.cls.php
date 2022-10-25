@@ -917,7 +917,7 @@ class Cloud extends Base {
 		list( $post_data ) = $this->extract_msg( $_POST, 'Quic.cloud', false, true );
 
 		if ( $this->_is_err_domain( $_POST[ 'alias' ] ) ) {
-			$this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
+			if ( $_POST[ 'alias' ] == home_url() ) $this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
 
 			$res_hash = substr( $this->_api_key(), 2, 4 );
 
