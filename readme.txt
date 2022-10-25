@@ -266,6 +266,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CLI** CLI will now send purge requests right away in the same request to avoid potential 404 CSS/JS.
 * **CLI** CLI now will bypass all lscache HTTP releated header sending.
 * **ESI** Check all user roles for cache vary/page optm excludes.
+* **GUI** Show a LiteSpeed icon to admin message banner to state this banner is from our plugin.
 * **Crawler** Fixed the cache missing issue when Guest Mode is ON while WebP Replacement is OFF.
 * **3rd** Remove WooCommerce private cache.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)

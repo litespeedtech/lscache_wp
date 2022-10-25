@@ -117,6 +117,23 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
    		  UTILITIES - structure
 ======================================= */
 
+.litespeed_icon:before {
+	content: '';
+	background-image:url('../img/Litespeed.icon.svg');
+	background-repeat: no-repeat;
+	width: 32px;
+	height: 32px;
+	vertical-align: middle;
+	display: inline-block;
+	position: absolute;
+	left:5px;
+	top:5px;
+}
+
+.litespeed_icon {
+	padding-left: 40px;
+}
+
 .litespeed-quic-icon {
 	background-image: url('../img/quic-cloud-icon-16x16.svg');
 	background-repeat: no-repeat;
