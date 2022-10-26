@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.0.2
+Tested up to: 6.0.3
 Stable tag: 5.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,24 +250,22 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.3 - Oct 2022 =
+= 5.3 - Oct 31 2022 =
 * 🌱**Presets** New `Presets` feature and menu item.
 * 🌱**UCSS** New option `UCSS File Excludes and Inline` to increase page score. (Ankit)
-* **UCSS** Auto append to queue after UCSS is purged. (Ankit)
-* **Page Optimize** Removed a redundant defer from lazy load image library usage. (#928019)
-* **Cache** Fixed an infinite loop issue caused by redirection w/ encoded query string.
-* **Image Optimize** Merge webp and webp_replace settings.
+* **UCSS** When UCSS is purged, automatically append URL to UCSS generation queue. (Ankit)
+* **Page Optimize** Removed a redundant `defer` attribute from Lazy Load image library usage. (#928019)
+* **Image Optimize** Dropped `Create WebP Versions` setting. Will automatically enable when `Image WebP Replacement` is activated.
 * **Cloud** Fixed a bug where internal updates were delayed for API keys.
-* **Cloud** Only remove pending alias when meeting the 2nd request from alias domain validation to improve auto alias feature.
-* **Purge** Auto purge all when plugin auto update is done.
-* **Purge** Fixed an potential PHP8 error when removed unused widgets. (acsnaterse)
-* **Cache** Fixed a infinite 301 redirection caused by utm encoded link.
+* **Cloud** Improved auto alias feature by waiting for second request from alias domain validation before removing a pending alias.
+* **Purge** Automatically Purge All when plugin auto update is done.
+* **Purge** Fixed a potential PHP8 error that occurred when removing unused widgets. (acsnaterse)
+* **Cache** Fixed an infinite 301 redirection caused by UTM-encoded link.
 * **CLI** Added syntax examples for values that include line breaks (xLukii)
-* **CLI** CLI will now send purge requests right away in the same request to avoid potential 404 CSS/JS.
-* **CLI** CLI now will bypass all lscache HTTP releated header sending.
-* **ESI** Check all user roles for cache vary/page optm excludes.
-* **GUI** Show a LiteSpeed icon to admin message banner to state this banner is from our plugin. (Michael D)
-* **Crawler** Fixed the cache missing issue when Guest Mode is ON while WebP Replacement is OFF.
+* **CLI** Purge requests will now be included with the original request to avoid potential CSS/JS 404 issues.
+* **ESI** Check all user roles for cache vary and page optimization excludes.
+* **GUI** Added a LiteSpeed icon to admin message banners to indicate the banners are from our plugin. (Michael D)
+* **Crawler** Fixed a cache-miss issue that occurred when Guest Mode was ON and WebP Replacement was OFF.
 * **3rd** Remove WooCommerce private cache.
 * **3rd** Removed LiteSpeed metabox from ACF field group edit page. (keepmovingdk)
 
