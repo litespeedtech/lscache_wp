@@ -120,4 +120,21 @@ class Doc {
 		echo '</div>';
 	}
 
+	/**
+	 * Gentle reminder that web services run asynchronously
+	 *
+	 * @since  5.3.1
+	 * @access public
+	 */
+	public static function queue_issues( $return = false ) {
+		$str = '<div class="litespeed-desc">'
+		  . esc_html__( 'The queue is processed asynchronously. It may take time.', 'litespeed-cache' )
+		  . self::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/troubleshoot/#quiccloud-queue-issues', false, false, false, true )
+  		. '</div>';
+		if ( $return ) {
+			return $str;
+		}
+		echo $str;
+	}
+
 }
