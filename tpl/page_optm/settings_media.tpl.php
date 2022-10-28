@@ -197,6 +197,7 @@ $lqip_queue = $this->load_queue( 'lqip' );
 					<a href="<?php echo Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ); ?>" class="button litespeed-btn-success">
 						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ); ?>
 					</a>
+					<?php Doc::queue_issues(); ?>
 				<?php endif; ?>
 			</div>
 		</td>
