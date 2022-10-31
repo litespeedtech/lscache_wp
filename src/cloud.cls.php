@@ -560,6 +560,14 @@ class Cloud extends Base {
 			return false;
 		}
 
+		// Deny if is IP
+		if ( preg_match( '#^(([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)\.){3}([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)$#', Utility::parse_url_safe($home_url, PHP_URL_HOST) ) ) {
+			self::debug( "IP home url is not allowed for cloud service." );
+			$msg = __( 'In order to use QC services, need a real domain name, cannot use an IP.', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return false;
+		}
+
 		/** @since 5.0 If in valid err_domains, bypass request */
 		if ( $this->_is_err_domain( $home_url ) ) {
 			return false;
