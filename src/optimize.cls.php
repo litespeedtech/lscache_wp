@@ -224,7 +224,9 @@ class Optimize extends Base {
 			}
 
 			// Check if hit URI excludes
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $this->conf( self::O_OPTM_EXC ) );
+			add_filter( 'litespeed_optm_uri_exc', array( $this->cls( 'Data' ), 'load_optm_uri_exc' ) );
+			$excludes = apply_filters( 'litespeed_optm_uri_exc', $this->conf( self::O_OPTM_EXC ) );
+			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes );
 			if ( $result ) {
 				Debug2::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result );
 				return $content;

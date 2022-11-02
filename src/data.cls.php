@@ -657,6 +657,20 @@ class Data extends Root {
 	}
 
 	/**
+	 * Get list from `data/optm_uri_exc.txt`
+	 *
+	 * @since  5.4
+	 */
+	public function load_optm_uri_exc( $list ) {
+		$data = $this->_load_per_line( 'optm_uri_exc.txt' );
+		if ( $data ) {
+			$list = array_unique( array_filter( array_merge( $list, $data ) ) );
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get list from `data/esi.nonces.txt`
 	 *
 	 * @since  3.5

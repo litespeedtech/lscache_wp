@@ -92,6 +92,10 @@ ksort( $roles );
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
+				<br /><span class="litespeed-success">
+					<?php echo __( 'API', 'litespeed-cache' ); ?>:
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_uri_exc</code>' ); ?>
+				</span>
 			</div>
 		</td>
 	</tr>
