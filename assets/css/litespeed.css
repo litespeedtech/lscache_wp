@@ -450,6 +450,18 @@ button.litespeed-form-action:hover {
 	margin: 10px 20px 0 2px;
 }
 
+.litespeed-wrap .nav-tab-wrapper {
+	display: flex;
+	flex-wrap: wrap-reverse;
+}
+
+.litespeed-wrap .nav-tab {
+	border-bottom-color: inherit;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	margin: 11px 10px -1px 0;
+}
+
 .litespeed-wrap .nav-tab-active {
 	background: #fff;
 	border-bottom-color: #fff;
@@ -3445,7 +3457,7 @@ a.litespeed-media-href svg:hover {
 	}
 }
 
-@media screen and (min-width: 640px) and (max-width: 1280px) {
+@media screen and (min-width: 640px) and (max-width: 1279px) {
 	.litespeed-comparison-cards {
 		max-width: 740px;
 	}
