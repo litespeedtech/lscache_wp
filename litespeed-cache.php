@@ -76,6 +76,7 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 		WP_CLI::add_command( 'litespeed-online', 'LiteSpeed\CLI\Online' );
 		WP_CLI::add_command( 'litespeed-image', 'LiteSpeed\CLI\Image' );
 		WP_CLI::add_command( 'litespeed-debug', 'LiteSpeed\CLI\Debug' );
+		WP_CLI::add_command( 'litespeed-presets', 'LiteSpeed\CLI\Presets' );
 	}
 }
 
