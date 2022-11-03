@@ -251,9 +251,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.4 - 2022 =
+* **CLI** Preset feature supported in CLI. (xLukii)
 * **GUI** Adjust the message banner icon to a grayscale one to avoid distraction. (martinsauter)
 * **API** New hook `litespeed_optm_uri_exc` to exclude URI from page optimization.
-* **API** Excluded .well-known path from page optimization.
+* **API** Excluded `.well-known` path from page optimization.
 
 = 5.3 - Oct 31 2022 =
 * 🌱**Presets** New `Presets` feature and menu item.
