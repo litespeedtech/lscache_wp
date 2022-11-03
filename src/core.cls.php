@@ -95,6 +95,18 @@ class Core extends Root {
 				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
 			}
 			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' );
+
+			// Add headers to site health check for full page cache
+			// @since 5.4
+			add_filter( 'site_status_page_cache_supported_cache_headers', function( $cache_headers ) {
+				$is_cache_hit = function( $header_value ) {
+					return false !== strpos( strtolower( $header_value ), 'hit' );
+				};
+				$cache_headers['x-litespeed-cache'] = $is_cache_hit;
+				$cache_headers['x-lsadc-cache'] = $is_cache_hit;
+				$cache_headers['x-qc-cache'] = $is_cache_hit;
+				return $cache_headers;
+			});
 		}
 
 		add_action( 'after_setup_theme', array( $this, 'init' ) );
