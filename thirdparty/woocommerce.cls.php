@@ -511,7 +511,7 @@ class WooCommerce extends Base {
 		}
 
 		$woocom = WC() ;
-		if ( ! isset($woocom) ) {
+		if ( ! $woocom ) {
 			return ;
 		}
 
