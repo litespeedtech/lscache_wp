@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.4 - 2022 =
 * **CLI** Preset feature supported in CLI. (xLukii)
+* **CLI** Added 'import_remote' in litespeed-option to be able to import options with URLs remotely. (xLukii)
 * **Cache** Add headers to site health check for full page cache.
 * **GUI** Adjust the message banner icon to a grayscale one to avoid distraction. (martinsauter)
 * **API** New hook `litespeed_optm_uri_exc` to exclude URI from page optimization.
