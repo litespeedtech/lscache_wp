@@ -166,7 +166,7 @@ class WooCommerce extends Base {
 		}
 
 		$woocom = WC() ;
-		if ( ! $woocom ) {
+		if ( ! $woocom || empty( $woocom->session ) ) {
 			return false ;
 		}
 
@@ -511,7 +511,7 @@ class WooCommerce extends Base {
 		}
 
 		$woocom = WC() ;
-		if ( ! $woocom ) {
+		if ( ! $woocom || empty( $woocom->session ) ) {
 			return ;
 		}
 
