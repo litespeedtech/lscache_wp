@@ -130,8 +130,17 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
 	top:5px;
 }
 
+.rtl .litespeed_icon:before {
+	left: initial;
+	right: 5px;
+}
+
 .litespeed_icon {
 	padding-left: 40px;
+}
+
+.rtl .litespeed_icon {
+	padding-right: 40px;
 }
 
 .litespeed-quic-icon {
