@@ -254,7 +254,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CLI** Preset feature supported in CLI. (xLukii)
 * **CLI** Added 'import_remote' in litespeed-option to be able to import options with URLs remotely. (xLukii)
 * **Cache** Add headers to site health check for full page cache.
+* **3rd** Ensure WooCommerce session before checking cart, notices (Jason Levy/Gilles)
 * **GUI** Adjust the message banner icon to a grayscale one to avoid distraction. (martinsauter)
+* **GUI** Fixed RTL style for notification icon.
 * **API** New hook `litespeed_optm_uri_exc` to exclude URI from page optimization.
 * **API** Excluded `.well-known` path from page optimization.
 
