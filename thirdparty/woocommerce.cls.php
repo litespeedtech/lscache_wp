@@ -166,7 +166,7 @@ class WooCommerce extends Base {
 		}
 
 		$woocom = WC() ;
-		if ( ! $woocom || empty( $woocom->session ) ) {
+		if ( ! $woocom ) {
 			return false ;
 		}
 
@@ -532,12 +532,9 @@ class WooCommerce extends Base {
 				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
 				 * @since  1.4
 				 */
-				$page_ids = array_filter( array( wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
+				$page_ids = array_filter( array( wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
 				if ( isset( $_GET['download_file'] ) || isset( $_GET['add-to-cart'] ) || is_page( $page_ids ) ) {
 					$err = 'woo non cacheable pages' ;
-				}
-				elseif ( is_page( wc_get_page_id( 'cart' ) ) && $woocom->cart->get_cart_contents_count() !== 0 ) {
-					$err = 'cart is not empty' ;
 				}
 				elseif ( function_exists( 'wc_notice_count' ) && wc_notice_count() > 0 ) {
 					$err = 'has wc notice' ;
