@@ -80,6 +80,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 				}
 
 				if ( $pag_total ) {
+					// $finished_percentage = floor( ($pag_used+$usage[ 'used' ]) * 100 / ($usage[ 'quota' ]+$pag_total) );
 					$pag_width = round( $pag_used / $pag_total * 100 ) . '%';
 				}
 
@@ -127,7 +128,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 					<?php if ( $pag_total > 0 ) { ?>
 						<p class="litespeed-dashboard-stats-payg <?php echo $pag_txt_color; ?>">
 							<?php echo __('PAYG Balance','litespeed-cache'); ?>: <strong><?php echo $pag_bal; ?></strong>
-							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('This Month Usage','litespeed-cache'); ?>: <?php echo $pag_used;?>">
+							<button class="litespeed-info-button" data-balloon-pos="up" aria-label="<?php echo __('PAYG used this month','litespeed-cache'); ?>: <?php echo $pag_used;?>. <?php echo __('PAYG balance and usage not included in above quota calculation.','litespeed-cache'); ?>">
 								<span class="dashicons dashicons-info"></span>
 								<span class="screen-reader-text"><?php echo __( 'Pay as You Go Usage Statistics', 'litespeed-cache' );?></span>
 							</button>
