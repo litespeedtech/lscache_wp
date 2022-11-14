@@ -681,7 +681,7 @@ class Optimize extends Base {
 	private function _src_queue_handler( $src_list, $html_list, $file_type = 'css' ) {
 		$html_list_ori = $html_list;
 
-		$can_webp = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->cls( 'Media' )->webp_support();
+		$can_webp = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) && $this->cls( 'Media' )->webp_support();
 
 		$tag = $file_type == 'css' ? 'link' : 'script';
 		foreach ( $src_list as $key => $src_info ) {

@@ -49,7 +49,7 @@ ksort( $roles );
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed JS files or inline JS code will not be deferred.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Listed JS files or inline JS code will not be deferred or delayed.', 'litespeed-cache' ); ?>
 				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
 				<br /><span class="litespeed-success">

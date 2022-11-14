@@ -117,6 +117,32 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
    		  UTILITIES - structure
 ======================================= */
 
+.litespeed_icon:before {
+	content: '';
+	background-image:url('../img/Litespeed.icon.svg');
+	background-repeat: no-repeat;
+	width: 32px;
+	height: 32px;
+	vertical-align: middle;
+	display: inline-block;
+	position: absolute;
+	left:5px;
+	top:5px;
+}
+
+.rtl .litespeed_icon:before {
+	left: initial;
+	right: 5px;
+}
+
+.litespeed_icon {
+	padding-left: 40px;
+}
+
+.rtl .litespeed_icon {
+	padding-right: 40px;
+}
+
 .litespeed-quic-icon {
 	background-image: url('../img/quic-cloud-icon-16x16.svg');
 	background-repeat: no-repeat;
@@ -431,6 +457,18 @@ button.litespeed-form-action:hover {
 
 .litespeed-wrap {
 	margin: 10px 20px 0 2px;
+}
+
+.litespeed-wrap .nav-tab-wrapper {
+	display: flex;
+	flex-wrap: wrap-reverse;
+}
+
+.litespeed-wrap .nav-tab {
+	border-bottom-color: inherit;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	margin: 11px 10px -1px 0;
 }
 
 .litespeed-wrap .nav-tab-active {
@@ -3428,7 +3466,7 @@ a.litespeed-media-href svg:hover {
 	}
 }
 
-@media screen and (min-width: 640px) and (max-width: 1280px) {
+@media screen and (min-width: 640px) and (max-width: 1279px) {
 	.litespeed-comparison-cards {
 		max-width: 740px;
 	}

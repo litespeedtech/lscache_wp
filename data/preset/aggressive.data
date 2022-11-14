@@ -112,6 +112,4 @@
 
 ["img_optm-exif",false]
 
-["img_optm-webp_replace",true]
-
 ["img_optm-webp_replace_srcset",true]

@@ -177,13 +177,20 @@ class Purge extends Base {
 	 * @access private
 	 */
 	private function _purge_all( $reason = false ) {
-		$this->_purge_all_lscache( true );
-		$this->_purge_all_cssjs( true );
-		$this->_purge_all_localres( true );
-		// $this->_purge_all_ccss( true );
-		// $this->_purge_all_lqip( true );
-		$this->_purge_all_object( true );
-		$this->purge_all_opcache( true );
+		// if ( defined( 'LITESPEED_CLI' ) ) {
+		// 	// Can't send, already has output, need to save and wait for next run
+		// 	self::update_option( self::DB_QUEUE, $curr_built );
+		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
+		// }
+		// else {
+			$this->_purge_all_lscache( true );
+			$this->_purge_all_cssjs( true );
+			$this->_purge_all_localres( true );
+			// $this->_purge_all_ccss( true );
+			// $this->_purge_all_lqip( true );
+			$this->_purge_all_object( true );
+			$this->purge_all_opcache( true );
+		// }
 
 		if ( ! is_string( $reason ) ) {
 			$reason = false;
@@ -1136,9 +1143,9 @@ class Purge extends Base {
 		$post_type = $post->post_type;
 
 		global $wp_widget_factory;
-		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'];
-		if ( ! is_null($recent_posts) ) {
-			$purge_tags[] = Tag::TYPE_WIDGET . $recent_posts->id;
+		// recent_posts
+		if ( ! is_null( $wp_widget_factory->widgets['WP_Widget_Recent_Posts'] ) ) {
+			$purge_tags[] = Tag::TYPE_WIDGET . $wp_widget_factory->widgets['WP_Widget_Recent_Posts']->id;
 		}
 
 		// get adjacent posts id as related post tag

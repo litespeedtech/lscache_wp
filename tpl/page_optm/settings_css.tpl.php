@@ -119,6 +119,7 @@ $ucss_queue = $this->load_queue( 'ucss' );
 					<a href="<?php echo Utility::build_url( Router::ACTION_UCSS, UCSS::TYPE_GEN ); ?>" class="button litespeed-btn-success">
 						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'UCSS' ); ?>
 					</a>
+					<?php Doc::queue_issues(); ?>
 				<?php endif; ?>
 			</div>
 
@@ -229,6 +230,7 @@ $ucss_queue = $this->load_queue( 'ucss' );
 					<a href="<?php echo Utility::build_url( Router::ACTION_CSS, CSS::TYPE_GEN_CCSS ); ?>" class="button litespeed-btn-success">
 						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'CCSS' ); ?>
 					</a>
+					<?php Doc::queue_issues(); ?>
 				<?php endif; ?>
 			</div>
 		</td>

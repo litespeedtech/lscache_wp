@@ -73,6 +73,7 @@ $queue = $this->load_queue( 'vpi' );
 					<a href="<?php echo Utility::build_url( Router::ACTION_VPI, VPI::TYPE_GEN ); ?>" class="button litespeed-btn-success">
 						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'VPI' ); ?>
 					</a>
+					<?php Doc::queue_issues(); ?>
 				<?php endif; ?>
 			</div>
 

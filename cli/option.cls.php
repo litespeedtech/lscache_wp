@@ -331,6 +331,46 @@ class Option extends Base {
 	}
 
 	/**
+	 * Import plugin options from a remote file.
+	 *
+	 * The file must be formatted as such:
+	 * option_key=option_value
+	 * One per line.
+	 * A Semicolon at the beginning of the line indicates a comment and will be skipped.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <url>
+	 * : The URL to import options from.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Import options from https://domain.com/options.txt
+	 *     $ wp litespeed-option import_remote https://domain.com/options.txt
+	 *
+	 */
+
+	public function import_remote( $args, $assoc_args ) {
+		$file = $args[0];
+	
+		$tmp_file = download_url( $file );
+
+		if ( is_wp_error( $tmp_file ) ) {
+			WP_CLI::error( 'Failed to download file.' );
+			return;
+		}
+
+		$res = $this->cls( 'Import' )->import( $tmp_file );
+
+		if ( ! $res ) {
+			WP_CLI::error( 'Failed to parse serialized data from file.' );
+		}
+
+		WP_CLI::success( 'Options imported. [File] ' . $file );
+	}
+
+
+	/**
 	 * Reset all options to default.
 	 *
 	 * ## EXAMPLES

@@ -12,6 +12,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Control extends Root {
+	const LOG_TAG = '💵';
+
 	const BM_CACHEABLE = 1;
 	const BM_PRIVATE = 2;
 	const BM_SHARED = 4;
@@ -498,8 +500,8 @@ class Control extends Root {
 	 */
 	public function check_redirect( $location, $status ) { // TODO: some env don't have SCRIPT_URI but only REQUEST_URI, need to be compatible
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] );
-			Debug2::debug( "[Ctrl] 301 to $location" );
+			self::debug( "301 from " . $_SERVER[ 'SCRIPT_URI' ] );
+			self::debug( "301 to $location" );
 
 			$to_check = array(
 				PHP_URL_SCHEME,
@@ -511,9 +513,19 @@ class Control extends Root {
 			$is_same_redirect = true;
 
 			foreach ( $to_check as $v ) {
-				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
+				$url_parsed = $v == PHP_URL_QUERY ? $_SERVER[ 'QUERY_STRING' ] : parse_url( $_SERVER[ 'SCRIPT_URI' ], $v );
+				$target = parse_url( $location, $v );
+
+				self::debug("Compare [from] $url_parsed [to] $target");
+
+				if($v==PHP_URL_QUERY) {
+					$url_parsed = urldecode($url_parsed);
+					$target = urldecode($target);
+				}
+
+				if ( $url_parsed != $target ) {
 					$is_same_redirect = false;
-					Debug2::debug( "[Ctrl] 301 different redirection" );
+					self::debug( "301 different redirection" );
 					break;
 				}
 			}

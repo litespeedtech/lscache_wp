@@ -156,6 +156,7 @@ class Crawler extends Root {
 			'crawler_stats'		=> array(), // this will store all crawlers hit/miss crawl status
 		);
 
+		wp_cache_delete( 'alloptions', 'options' ); // ensure the summary is current
 		$summary = parent::get_summary();
 		$summary = array_merge( $_default, $summary );
 
@@ -880,7 +881,7 @@ class Crawler extends Root {
 		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) );
 
 		// WebP on/off
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( $this->conf( Base::O_GUEST ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 

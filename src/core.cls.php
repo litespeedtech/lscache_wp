@@ -76,24 +76,60 @@ class Core extends Root {
 		// }
 
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+
+		if ( defined( 'LITESPEED_ON' ) ) {
+			// register purge_all actions
+			$purge_all_events = $this->conf( Base::O_PURGE_HOOK_ALL );
+
+			// purge all on upgrade
+			if ( $this->conf( Base::O_PURGE_ON_UPGRADE ) ) {
+				$purge_all_events[] = 'automatic_updates_complete';
+				$purge_all_events[] = 'upgrader_process_complete';
+				$purge_all_events[] = 'admin_action_do-plugin-upgrade';
+			}
+			foreach ( $purge_all_events as $event ) {
+				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
+				if ( in_array( $event, array( 'update_option' ) ) ) {
+					continue;
+				}
+				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
+			}
+			// add_filter( 'upgrader_pre_download', 'Purge::filter_with_purge_all' );
+
+			// Add headers to site health check for full page cache
+			// @since 5.4
+			add_filter( 'site_status_page_cache_supported_cache_headers', function( $cache_headers ) {
+				$is_cache_hit = function( $header_value ) {
+					return false !== strpos( strtolower( $header_value ), 'hit' );
+				};
+				$cache_headers['x-litespeed-cache'] = $is_cache_hit;
+				$cache_headers['x-lsadc-cache'] = $is_cache_hit;
+				$cache_headers['x-qc-cache'] = $is_cache_hit;
+				return $cache_headers;
+			});
+		}
+
 		add_action( 'after_setup_theme', array( $this, 'init' ) );
 
 		// Check if there is a purge request in queue
-		$purge_queue = Purge::get_option( Purge::DB_QUEUE );
-		if ( $purge_queue && $purge_queue != -1 ) {
-			@header( $purge_queue );
-			Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
-		}
-		if ( $purge_queue != -1 ) {
-			Purge::update_option( Purge::DB_QUEUE, -1 ); // Use 0 to bypass purge while still enable db update as WP's update_option will check value===false to bypass update
-		}
-		$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
-		if ( $purge_queue && $purge_queue != -1 ) {
-			@header( $purge_queue );
-			Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
-		}
-		if ( $purge_queue != -1 ) {
-			Purge::update_option( Purge::DB_QUEUE2, -1 );
+		if (!defined( 'LITESPEED_CLI' )) {
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+			if ( $purge_queue && $purge_queue != -1 ) {
+				$this->_http_header( $purge_queue );
+				Debug2::debug( '[Core] Purge Queue found&sent: ' . $purge_queue );
+			}
+			if ( $purge_queue != -1 ) {
+				Purge::update_option( Purge::DB_QUEUE, -1 ); // Use 0 to bypass purge while still enable db update as WP's update_option will check value===false to bypass update
+			}
+
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+			if ( $purge_queue && $purge_queue != -1 ) {
+				$this->_http_header( $purge_queue );
+				Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
+			}
+			if ( $purge_queue != -1 ) {
+				Purge::update_option( Purge::DB_QUEUE2, -1 );
+			}
 		}
 
 		/**
@@ -190,6 +226,10 @@ class Core extends Root {
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 );
+
+		// test: Simulate a purge all
+		// if (defined( 'LITESPEED_CLI' )) Purge::add('test'.date('Ymd.His'));
+
 	}
 
 	/**
@@ -546,34 +586,25 @@ class Core extends Root {
 
 		// send Control header
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
-			@header( $control_header );
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $control_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $control_header . " -->";
-				}
+			$this->_http_header( $control_header );
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing) {
+				$this->footer_comment .= "\n<!-- " . $control_header . " -->";
 			}
 		}
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
-			@header( $purge_header );
+			$this->_http_header( $purge_header );
 			Debug2::log_purge( $purge_header );
 
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $purge_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
-				}
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing) {
+				$this->footer_comment .= "\n<!-- " . $purge_header . " -->";
 			}
 		}
 		// send Vary header
 		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
-			@header( $vary_header );
-			if ( defined( 'LSCWP_LOG' ) ) {
-				Debug2::debug( '💰 ' . $vary_header );
-				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
-				}
+			$this->_http_header( $vary_header );
+			if ( defined( 'LSCWP_LOG' ) && $running_info_showing ) {
+				$this->footer_comment .= "\n<!-- " . $vary_header . " -->";
 			}
 		}
 
@@ -592,18 +623,14 @@ class Core extends Root {
 			if ( $vary_header ) {
 				$debug_header .= $vary_header . '; ';
 			}
-			@header( $debug_header );
-			Debug2::debug( $debug_header );
+			$this->_http_header( $debug_header );
 		}
 		else {
 			// Control header
 			if ( defined( 'LITESPEED_ON' ) && Control::is_cacheable() && $tag_header ) {
-				@header( $tag_header );
-				if ( defined( 'LSCWP_LOG' ) ) {
-					Debug2::debug( '💰 ' . $tag_header );
-					if ( $running_info_showing ) {
-						$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
-					}
+				$this->_http_header( $tag_header );
+				if ( defined( 'LSCWP_LOG' ) && $running_info_showing ) {
+					$this->footer_comment .= "\n<!-- " . $tag_header . " -->";
 				}
 			}
 		}
@@ -621,6 +648,43 @@ class Core extends Root {
 			Debug2::debug( '--forced--' );
 		}
 
+		/**
+		 * If is CLI and contains Purge Header, then issue a HTTP req to Purge
+		 * @since v5.3
+		 */
+		if (defined( 'LITESPEED_CLI' )) {
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+			if ( ! $purge_queue || $purge_queue == -1 ) {
+				$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+			}
+			if ( $purge_queue && $purge_queue != -1 ) {
+				self::debug( '[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue );
+				// Kick off HTTP req
+				$url = admin_url( 'admin-ajax.php' );
+				$resp = wp_remote_get($url);
+				if ( is_wp_error( $resp ) ) {
+					$error_message = $resp->get_error_message();
+					self::debug( '[URL]' . $url );
+					self::debug( 'failed to request: ' . $error_message );
+				}
+				else {
+					self::debug('HTTP req res: ' . $resp['body']);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Send HTTP header
+	 * @since 5.3
+	 */
+	private function _http_header( $header ) {
+		if ( defined( 'LITESPEED_CLI' ) ) return;
+
+		@header( $header );
+
+		if ( ! defined( 'LSCWP_LOG' ) ) return;
+		Debug2::debug( '💰 ' . $header );
 	}
 
 }
