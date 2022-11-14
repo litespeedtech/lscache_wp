@@ -80,6 +80,10 @@ class Purge extends Base {
 			return;
 		}
 
+		if ( 'future' === $old_status ) {
+			add_filter( 'litespeed_delay_purge', function() { return true; } );
+		}
+
 		$this->purge_post( $post->ID );
 	}
 
@@ -488,7 +492,7 @@ class Purge extends Base {
 		}
 		else {
 			@header( $curr_built );
-			if ( defined( 'LITESPEED_DID_send_headers' ) && apply_filters( 'litespeed_delay_purge', false ) ) {
+			if ( defined( 'LITESPEED_DID_send_headers' ) || apply_filters( 'litespeed_delay_purge', false ) ) {
 				self::update_option( $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built );
 				self::debug( 'Output existed, queue stored: ' . $curr_built );
 			}
