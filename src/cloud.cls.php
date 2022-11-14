@@ -995,14 +995,22 @@ class Cloud extends Base {
 		$json = json_decode( $response[ 'body' ], true );
 
 		if (!$json['success']) {
+			$contactSupport = false;
 			if (isset($json['info']['errors'])) {
 				$errs = array();
 				foreach ($json['info']['errors'] as $err) {
 					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+					if ($err['code'] == 1113) {
+						$contactSupport = true;
+					}
 				}
 				$error_message = implode('<br>', $errs);
 			} else {
-				$error_message = 'Unknown error, contact QUIC.cloud support.';
+				$error_message = __('Unknown error.', 'litespeed-cache');
+				$contactSupport = true;
+			}
+			if ($contactSupport) {
+				$error_message .= ' <a href="https://www.quic.cloud/support/" target="_blank">' . __( 'Contact QUIC.cloud support', 'litespeed-cache' ) . '</a>';
 			}
 			Admin_Display::error( __( 'Cloud REST API returned error: ', 'litespeed-cache' ) . $error_message );
 			return $error_message;
