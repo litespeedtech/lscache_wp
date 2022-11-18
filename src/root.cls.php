@@ -182,7 +182,7 @@ abstract class Root {
 			unlink( $static_path );
 		}
 
-		$msg = __( 'Queue cleared successfully.', 'litespeed-cache' );
+		$msg = __( 'All QUIC.cloud service queues have been cleared.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
 	}
 
