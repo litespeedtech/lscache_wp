@@ -94,7 +94,7 @@ class Control extends Root {
 		}
 
 		$roles = explode( ',', $role );
-		$found = array_intersect( $roles, array_keys( $this->conf( Base::O_CACHE_EXC_ROLES ) ) );
+		$found = array_intersect( $roles, $this->conf( Base::O_CACHE_EXC_ROLES ) );
 
 		return $found ? implode( ',', $found ) : false;
 	}
