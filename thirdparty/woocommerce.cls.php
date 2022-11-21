@@ -445,8 +445,8 @@ class WooCommerce extends Base {
 		}
 
 		// Check if product has a cache ttl limit or not
-		$sale_from = get_post_meta( $id, '_sale_price_dates_from', true ) ;
-		$sale_to = get_post_meta( $id, '_sale_price_dates_to', true ) ;
+		$sale_from = (int) get_post_meta( $id, '_sale_price_dates_from', true ) ;
+		$sale_to = (int) get_post_meta( $id, '_sale_price_dates_to', true ) ;
 		$now = current_time( 'timestamp' ) ;
 		$ttl = false ;
 		if ( $sale_from && $now < $sale_from ) {
