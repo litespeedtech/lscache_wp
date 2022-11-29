@@ -142,9 +142,8 @@ class UCSS extends Base {
 		foreach ( $url_files as $url_file ) {
 			$vary = $url_file[ 'vary' ];
 			$request_url = $url_file[ 'url' ];
-			$is_mobile = $url_file[ 'is_mobile' ];
-			$is_webp = $url_file[ 'is_webp' ];
-			$request_url = $url_file[ 'url' ];
+			$is_mobile = $url_file[ 'mobile' ];
+			$is_webp = $url_file[ 'webp' ];
 			$url_tag = self::get_url_tag( $request_url );
 
 			$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
