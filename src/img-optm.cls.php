@@ -66,10 +66,9 @@ class Img_Optm extends Base {
 
 		$this->wp_upload_dir = wp_upload_dir();
 		$this->__media = $this->cls( 'Media' );
-		$this->_table_img_optm = $this->cls( 'Data' )->tb( 'img_optm' );
 		$this->_table_img_optming = $this->cls( 'Data' )->tb( 'img_optming' );
 
-		$this->_summary = self::get_summary();
+		$this->_summary = self::get_summary(); //
 	}
 
 	/**
@@ -117,30 +116,28 @@ class Img_Optm extends Base {
 	}
 
 	/**
-	 * This will gather latest certain images from wp_posts to litespeed_img_optm
+	 * This will send next images from wp_posts to litespeed_img_optm
 	 *
-	 * @since  3.0
+	 * @since  5.4
 	 * @access private
 	 */
-	private function _gather_images() {
+	private function _send_images() {
 		global $wpdb;
 
-		$this->cls( 'Data' )->tb_create( 'img_optm' );
 		$this->cls( 'Data' )->tb_create( 'img_optming' );
 
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
 			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
+				AND a.ID>%d
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND c.id IS NULL
 			ORDER BY a.ID DESC
 			LIMIT %d
 			";
-		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_gather_max_rows', 200 ) );
+		$q = $wpdb->prepare( $q, array( $this->_summary['next_post_id'], apply_filters( 'litespeed_img_gather_max_rows', 200 ) ) );
 		$list = $wpdb->get_results( $q );
 
 		if ( ! $list ) {
@@ -563,8 +560,7 @@ class Img_Optm extends Base {
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _send_request()
-	{
+	private function _send_request() {
 		global $wpdb;
 
 		$list = array();
@@ -1470,41 +1466,19 @@ class Img_Optm extends Base {
 	 * @since 1.6
 	 * @access public
 	 */
-	public function img_count()
-	{
+	public function img_count() {
 		global $wpdb;
 
-		$tb_existed = Data::cls()->tb_exist( 'img_optm' );
+		if ( $this->_summary['total'] ) {
+
+		}
+		$total_img = $this->_summary['total'];
+
 		$tb_existed2 = Data::cls()->tb_exist( 'img_optming' );
 
-		$q = "SELECT COUNT(*)
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-			";
-		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
-		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
+		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
+		$groups_raw = $groups_all = $wpdb->get_var( $q );
 		$imgs_raw = 0;
-		$imgs_gathered = 0;
-
-		if ( $tb_existed ) {
-			$q = "SELECT COUNT(*)
-				FROM `$wpdb->posts` a
-				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-				LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
-				WHERE a.post_type = 'attachment'
-					AND a.post_status = 'inherit'
-					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-					AND c.id IS NULL
-				";
-			$groups_not_gathered = $wpdb->get_var( $q );
-
-			$q = $wpdb->prepare( "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d", self::STATUS_RAW );
-			list( $groups_raw, $imgs_raw ) = $wpdb->get_row( $q, ARRAY_N );
-			$imgs_gathered = $wpdb->get_var( "SELECT COUNT(*) FROM `$this->_table_img_optm`" );
-		}
 
 		$count_list = array(
 			'groups_all'	=> $groups_all,
@@ -1604,8 +1578,7 @@ class Img_Optm extends Base {
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function _batch_switch( $type )
-	{
+	private function _batch_switch( $type ) {
 		global $wpdb;
 
 		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
