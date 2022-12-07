@@ -76,6 +76,7 @@ else {
 			<?php $this->build_input( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Your %s Hostname or IP address.', 'litespeed-cache' ), 'Memcached/<a href="https://docs.litespeedtech.com/products/lsmcd/" target="_blank">LSMCD</a>/Redis' ) ; ?>
+				<br /><?php echo sprintf( __( 'If you are using a %1$s socket, %2$s should be set to %3$s', 'litespeed-cache' ), 'UNIX', Lang::title( $id ), '<code>/path/to/memcached.sock</code>' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -90,6 +91,7 @@ else {
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Default port for %1$s is %2$s.', 'litespeed-cache' ), 'Memcached', '<code>11211</code>' ) ; ?>
 				<?php echo sprintf( __( 'Default port for %1$s is %2$s.', 'litespeed-cache' ), 'Redis', '<code>6379</code>' ) ; ?>
+				<br /><?php echo sprintf( __( 'If you are using a %1$s socket, %2$s should be set to %3$s', 'litespeed-cache' ), 'UNIX', Lang::title( $id ), '<code>0</code>' ); ?>
 			</div>
 		</td>
 	</tr>
