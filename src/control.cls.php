@@ -150,6 +150,11 @@ class Control extends Root {
 			// Set TTL
 			self::set_custom_ttl( $this->_response_header_ttls[ $code ] );
 		}
+		elseif (self::is_cacheable()) {
+			if ( substr($code, 0, 1)==4 || substr($code, 0, 1)==5 ) {
+				self::set_nocache( '[Ctrl] 4xx/5xx default to no cache [status_header] ' . $code );
+			}
+		}
 
 		// Set cache tag
 		Tag::add( Tag::TYPE_HTTP . $code );
