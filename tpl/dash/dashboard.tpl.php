@@ -42,7 +42,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 		<h3 class="litespeed-dashboard-title">
 			<?php echo __( 'QUIC.cloud Service Usage Statistics', 'litespeed-cache' ); ?>
 			<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_SYNC_USAGE ); ?>">
-				<span class="dashicons dashicons-update"></span>
+				<span class="dashicons dashicons-update"></span> <?php echo __( 'Sync', 'litespeed-cache' ); ?>
 				<span class="screen-reader-text"><?php echo __( 'Sync data from Cloud', 'litespeed-cache' ); ?></span>
 			</a>
 		</h3>
@@ -204,6 +204,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 						<?php echo __( 'Page Load Time', 'litespeed-cache' ); ?>
 						<a href="<?php echo Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED ); ?>">
 							<span class="dashicons dashicons-update"></span>
+							<?php echo __( 'Sync', 'litespeed-cache' ); ?>
 							<span class="screen-reader-text"><?php echo __('Refresh page load time', 'litespeed-cache'); ?></span>
 						</a>
 					</h3>
@@ -261,6 +262,7 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 						<?php echo __( 'PageSpeed Score', 'litespeed-cache' ); ?>
 						<a href="<?php echo Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SCORE ); ?>">
 							<span class="dashicons dashicons-update"></span>
+							<?php echo __( 'Sync', 'litespeed-cache' ); ?>
 							<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
 						</a>
 
