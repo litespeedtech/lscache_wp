@@ -2828,6 +2828,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 0;
 }
 
+.litespeed-postbox-footer a, a.litespeed-redetect {
+	text-decoration: none;
+}
+
 .litespeed-postbox .inside.litespeed-postbox-footer--compact {
 	padding: 7px 20px 8px 20px;
 	font-size: 12px;

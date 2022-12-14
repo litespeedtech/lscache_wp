@@ -125,7 +125,7 @@ $this->form_action();
 				<?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
-						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
+						<a class="litespeed-right litespeed-redetect" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i> <?php echo __( 'Redetect', 'litespeed-cache' ); ?></a>
 					</h4>
 					<p>
 						<?php

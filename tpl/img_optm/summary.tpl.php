@@ -54,9 +54,9 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<h3>
 				<?php if ( $closest_server ) : ?>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ); ?>" class="litespeed-info-button" data-balloon-pos="right" data-balloon-break aria-label="<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ); ?>"><span class="litespeed-quic-icon"></span></a>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_IMG_OPTM ) ); ?>" class="litespeed-info-button  litespeed-redetect" data-balloon-pos="right" data-balloon-break aria-label="<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ); ?>"><span class="litespeed-quic-icon"></span> <?php echo __( 'Redetect', 'litespeed-cache' ); ?></a>
 				<?php else : ?>
-					<span class="litespeed-quic-icon"></span>
+					<span class="litespeed-quic-icon"></span> <?php echo __( 'Redetect', 'litespeed-cache' ); ?>
 				<?php endif; ?>
 				<?php echo __('Optimize images with our QUIC.cloud server', 'litespeed-cache' );?>
 				<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-summary-tab" target="_blank" class="litespeed-right litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
