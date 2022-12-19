@@ -912,7 +912,7 @@ class WP_Object_Cache {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function incr( $key, $offset = 1, $group = 'default' ) {
-		return incr_desr( $key, $offset, $group, true );
+		return $this->incr_desr( $key, $offset, $group, true );
 	}
 
 	/**
@@ -927,7 +927,7 @@ class WP_Object_Cache {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function decr( $key, $offset = 1, $group = 'default' ) {
-		return incr_desr( $key, $offset, $group, false );
+		return $this->incr_desr( $key, $offset, $group, false );
 	}
 
 	/**
