@@ -250,6 +250,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 5.3.2 - 2023 =
+* Fix object cache lib incr, decr functions (thanks bdrbros) #516
+* Database optimizer now handles postmeta when cleaning revisions #515
+* **Cache** Default to nocache if response code is 4xx/5xx
+* **GUI** Redetect nodes desc
+* **GUI** Added sync desc to refresh btn
+
 = 5.3.1 - Dec 12 2022 =
 * **CLI** Presets feature is now usable from the CLI. (xLukii)
 * **CLI** Added 'import_remote' for litespeed-option to enable importing options from URLs. (xLukii)
