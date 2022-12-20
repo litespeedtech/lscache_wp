@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * Fix object cache lib incr, decr functions (thanks bdrbros) #516
 * Database optimizer now handles postmeta when cleaning revisions #515
 * **Cache** Default to nocache if response code is 4xx/5xx
+* **Cache** Removed 403 default cache TTL setting. Error 500 set to 10mins.
 * **GUI** Redetect nodes desc
 * **GUI** Added sync desc to refresh btn
 
