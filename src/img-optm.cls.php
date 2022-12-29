@@ -103,9 +103,6 @@ class Img_Optm extends Base {
 			array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
 		}
 
-		// Save missed images into img_optm
-		$this->_save_err_missed();
-
 		if ( ! $this->_img_in_queue ) {
 			Debug2::debug( '[Img_Optm] auto update attachment meta 2 bypass: empty _img_in_queue' );
 			return;
@@ -153,7 +150,6 @@ class Img_Optm extends Base {
 
 			$meta_value = $this->_parse_wp_meta_value( $v );
 			if ( ! $meta_value ) {
-				$this->_save_err_meta( $v->post_id );
 				continue;
 			}
 
@@ -164,9 +160,6 @@ class Img_Optm extends Base {
 				array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
 			}
 		}
-
-		// Save missed images into img_optm
-		$this->_save_err_missed();
 
 		if ( ! $this->_img_in_queue ) {
 			Debug2::debug( '[Img_Optm] gather_images bypass: empty _img_in_queue' );
@@ -233,47 +226,6 @@ class Img_Optm extends Base {
 	}
 
 	/**
-	 * Save failed to parse meta info
-	 *
-	 * @since 2.1.1
-	 * @access private
-	 */
-	private function _save_err_meta( $pid ) {
-		$data = array(
-			$pid,
-			self::STATUS_XMETA,
-		);
-		$this->_insert_img_optm( $data, 'post_id, optm_status' );
-		Debug2::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid );
-	}
-
-	/**
-	 * Saved non-existed images into img_optm
-	 *
-	 * @since 2.0
-	 * @access private
-	 */
-	private function _save_err_missed() {
-		if ( ! $this->_img_in_queue_missed ) {
-			return;
-		}
-
-		$count = count( $this->_img_in_queue_missed );
-		Debug2::debug( '[Img_Optm] Missed img need to save [total] ' . $count );
-
-		$data_to_add = array();
-		foreach ( $this->_img_in_queue_missed as $src_data ) {
-			$data_to_add[] = $src_data[ 'pid' ];
-			$data_to_add[] = self::STATUS_MISS;
-			$data_to_add[] = $src_data[ 'src' ];
-		}
-		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src' );
-
-		$this->_img_in_queue_missed = array();
-		return $count;
-	}
-
-	/**
 	 * Save gathered image raw data
 	 *
 	 * @since  3.0
@@ -286,7 +238,16 @@ class Img_Optm extends Base {
 			$data[] = $v[ 'src' ];
 			$data[] = $v[ 'src_filesize' ];
 		}
-		$this->_insert_img_optm( $data );
+
+		global $wpdb;
+		$fields = 'post_id, optm_status, src, src_filesize';
+		$q = "INSERT INTO `$this->_table_img_optming` ( $fields ) VALUES ";
+
+		// Add placeholder
+		$q .= Utility::chunk_placeholder( $data, $fields );
+
+		// Store data
+		$wpdb->query( $wpdb->prepare( $q, $data ) );
 
 		$count = count( $this->_img_in_queue );
 		$this->_img_in_queue = array();
@@ -297,35 +258,12 @@ class Img_Optm extends Base {
 	}
 
 	/**
-	 * Insert data into table img_optm
-	 *
-	 * @since 2.0
-	 * @access private
-	 */
-	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, src_filesize' ) {
-		if ( empty( $data ) ) {
-			return;
-		}
-
-		global $wpdb;
-
-		$q = "INSERT INTO `$this->_table_img_optm` ( $fields ) VALUES ";
-
-		// Add placeholder
-		$q .= Utility::chunk_placeholder( $data, $fields );
-
-		// Store data
-		$wpdb->query( $wpdb->prepare( $q, $data ) );
-	}
-
-	/**
 	 * Auto send optm request
 	 *
 	 * @since  2.4.1
 	 * @access public
 	 */
-	public static function cron_auto_request()
-	{
+	public static function cron_auto_request(){
 		if ( ! defined( 'DOING_CRON' ) ) {
 			return false;
 		}
@@ -339,8 +277,7 @@ class Img_Optm extends Base {
 	 *
 	 * @since 3.0
 	 */
-	public function wet_limit()
-	{
+	public function wet_limit(){
 		$wet_limit = 1;
 		if ( ! empty( $this->_summary[ 'img_taken' ] ) ) {
 			$wet_limit = pow( $this->_summary[ 'img_taken' ], 2 );
@@ -359,38 +296,12 @@ class Img_Optm extends Base {
 	}
 
 	/**
-	 * Check if need to gather at this moment
-	 *
-	 * @since  3.0
-	 */
-	public function need_gather()
-	{
-		global $wpdb;
-
-		if ( ! Data::cls()->tb_exist( 'img_optm' ) || ! Data::cls()->tb_exist( 'img_optming' ) ) {
-			Debug2::debug( '[Img_Optm] need gather due to no db tables' );
-			return true;
-		}
-
-		$q = "SELECT * FROM `$this->_table_img_optm` WHERE optm_status = %d LIMIT 1";
-		$q = $wpdb->prepare( $q, self::STATUS_RAW );
-
-		if ( ! $wpdb->get_row( $q ) ) {
-			Debug2::debug( '[Img_Optm] need gather due to no new raw image found' );
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Push raw img to image optm server
 	 *
 	 * @since 1.6
 	 * @access public
 	 */
-	public function new_req()
-	{
+	public function new_req(){
 		global $wpdb;
 
 		// Check if has credit to push
@@ -398,37 +309,28 @@ class Img_Optm extends Base {
 
 		$wet_limit = $this->wet_limit();
 
-		Debug2::debug( "[Img_Optm] allowance_max $allowance wet_limit $wet_limit" );
+		self::debug( "allowance_max $allowance wet_limit $wet_limit" );
 		if ( $wet_limit && $wet_limit < $allowance ) {
 			$allowance = $wet_limit;
 		}
 
 		if ( ! $allowance ) {
-			Debug2::debug( '[Img_Optm] ❌ No credit' );
+			self::debug( '❌ No credit' );
 			Admin_Display::error( Error::msg( 'out_of_quota' ) );
 			return;
 		}
 
-		Debug2::debug( '[Img_Optm] preparing images to push' );
+		self::debug( 'preparing images to push' );
 
-		if ( $this->need_gather() ) {
-			$this->_gather_images();
-			return;
-		}
+		$this->cls( 'Data' )->tb_create( 'img_optming' );
 
-		$q = "SELECT * FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d";
-		$q = $wpdb->prepare( $q, array( self::STATUS_RAW, $allowance ) );
-
-		$this->_img_in_queue = $wpdb->get_results( $q, ARRAY_A );
-
-		// Limit maximum number of items waiting (status requested) to the allowance
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare( $q, array( self::STATUS_REQUESTED) );
 		$total_requested = $wpdb->get_var( $q );
 		$max_requested = $allowance * 1;
 
 		if ( $total_requested > $max_requested ) {
-			Debug2::debug( '[Img_Optm] ❌ Too many queued images ('.$total_requested.' > '.$max_requested.')' );
+			self::debug( '❌ Too many queued images ('.$total_requested.' > '.$max_requested.')' );
 			Admin_Display::error( Error::msg( 'too_many_requested' ) );
 			return;
 		}
@@ -440,24 +342,84 @@ class Img_Optm extends Base {
 		$max_notified = $allowance * 5;
 
 		if ( $total_notified > $max_notified ) {
-			Debug2::debug( '[Img_Optm] ❌ Too many notified images ('.$total_notified.' > '.$max_notified.')' );
+			self::debug( '❌ Too many notified images ('.$total_notified.' > '.$max_notified.')' );
 			Admin_Display::error( Error::msg( 'too_many_notified' ) );
 			return;
 		}
 
+		// Get images
+		$q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.ID>%d
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			ORDER BY a.ID DESC
+			LIMIT %d
+			";
+		$q = $wpdb->prepare( $q, array( $this->_summary['next_post_id'], $allowance ) );
+		$list = $wpdb->get_results( $q );
+
+		if ( ! $list ) {
+			$msg = __( 'No new image gathered.', 'litespeed-cache' );
+			Admin_Display::succeed( $msg );
+
+			self::debug( 'gather_images bypass: no new image found' );
+			return;
+		}
+
+		foreach ( $list as $v ) {
+			if ( ! $v->post_id ) continue;
+
+			$meta_value = $this->_parse_wp_meta_value( $v );
+			if ( ! $meta_value ) {
+				continue;
+			}
+
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
+			$this->_append_img_queue( $meta_value, true );
+			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+				array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
+			}
+		}
+
+		if ( ! $this->_img_in_queue ) {
+			self::debug( 'gather_images bypass: empty _img_in_queue' );
+			return;
+		}
+
 		$num_a = count( $this->_img_in_queue );
-		Debug2::debug( '[Img_Optm] Images found: ' . $num_a );
+		self::debug( 'Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
 		$this->_filter_invalid_src();
 		$num_b = count( $this->_img_in_queue );
 		if ( $num_b != $num_a ) {
-			Debug2::debug( '[Img_Optm] Images after filtered duplicated/invalid src: ' . $num_b );
+			self::debug( 'Images after filtered duplicated/invalid src: ' . $num_b );
 		}
 
 		if ( ! $num_b ) {
-			Debug2::debug( '[Img_Optm] No image in queue' );
+			self::debug( 'No image in queue' );
 			return;
 		}
+
+		// Save to DB
+		$count = $this->_save_raw();
+
+		$msg = sprintf( __( 'Gathered %d images successfully.', 'litespeed-cache' ), $count );
+		Admin_Display::succeed( $msg );
+
+
+
+
+
+
+
+
+
+
+
 
 		// Push to Cloud server
 		$accepted_imgs = $this->_send_request();
@@ -478,8 +440,7 @@ class Img_Optm extends Base {
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _filter_duplicated_src()
-	{
+	private function _filter_duplicated_src(){
 		global $wpdb;
 
 		$srcpath_list = array();
@@ -499,21 +460,6 @@ class Img_Optm extends Base {
 
 			$srcpath_list[] = $v[ 'src' ];
 		}
-
-		if ( ! $img_in_queue_duplicated ) {
-			return;
-		}
-
-		$count = count( $img_in_queue_duplicated );
-		$msg = sprintf( __( 'Bypassed %1$s duplicated images.', 'litespeed-cache' ), $count );
-		Admin_Display::succeed( $msg );
-
-		Debug2::debug( '[Img_Optm] Found duplicated src [total_img_duplicated] ' . $count );
-
-		// Update img table
-		$ids = implode( ',', $img_in_queue_duplicated );
-		$q = "UPDATE `$this->_table_img_optm` SET optm_status = '" . self::STATUS_DUPLICATED . "' WHERE id IN ( $ids )";
-		$wpdb->query( $q );
 	}
 
 	/**
@@ -522,10 +468,7 @@ class Img_Optm extends Base {
 	 * @since 3.0.8.3
 	 * @access private
 	 */
-	private function _filter_invalid_src()
-	{
-		global $wpdb;
-
+	private function _filter_invalid_src(){
 		$img_in_queue_invalid = array();
 		foreach ( $this->_img_in_queue as $k => $v ) {
 			if ( $v[ 'src' ] ) {
@@ -547,11 +490,6 @@ class Img_Optm extends Base {
 		Admin_Display::succeed( $msg );
 
 		Debug2::debug( '[Img_Optm] Found invalid src [total] ' . $count );
-
-		// Update img table
-		$ids = implode( ',', $img_in_queue_invalid );
-		$q = "DELETE FROM `$this->_table_img_optm` WHERE id IN ( $ids )";
-		$wpdb->query( $q );
 	}
 
 	/**
