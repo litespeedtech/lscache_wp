@@ -113,151 +113,6 @@ class Img_Optm extends Base {
 	}
 
 	/**
-	 * This will send next images from wp_posts to litespeed_img_optm
-	 *
-	 * @since  5.4
-	 * @access private
-	 */
-	private function _send_images() {
-		global $wpdb;
-
-		$this->cls( 'Data' )->tb_create( 'img_optming' );
-
-		// Get images
-		$q = "SELECT b.post_id, b.meta_value
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.ID>%d
-				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-			ORDER BY a.ID DESC
-			LIMIT %d
-			";
-		$q = $wpdb->prepare( $q, array( $this->_summary['next_post_id'], apply_filters( 'litespeed_img_gather_max_rows', 200 ) ) );
-		$list = $wpdb->get_results( $q );
-
-		if ( ! $list ) {
-			$msg = __( 'No new image gathered.', 'litespeed-cache' );
-			Admin_Display::succeed( $msg );
-
-			Debug2::debug( '[Img_Optm] gather_images bypass: no new image found' );
-			return;
-		}
-
-		foreach ( $list as $v ) {
-			if ( ! $v->post_id ) continue;
-
-			$meta_value = $this->_parse_wp_meta_value( $v );
-			if ( ! $meta_value ) {
-				continue;
-			}
-
-			$this->tmp_pid = $v->post_id;
-			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
-			$this->_append_img_queue( $meta_value, true );
-			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
-				array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
-			}
-		}
-
-		if ( ! $this->_img_in_queue ) {
-			Debug2::debug( '[Img_Optm] gather_images bypass: empty _img_in_queue' );
-			return;
-		}
-
-		// Save to DB
-		$count = $this->_save_raw();
-
-		$msg = sprintf( __( 'Gathered %d images successfully.', 'litespeed-cache' ), $count );
-		Admin_Display::succeed( $msg );
-	}
-
-	/**
-	 * Add a new img to queue which will be pushed to request
-	 *
-	 * @since 1.6
-	 * @access private
-	 */
-	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
-		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
-			Debug2::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value );
-			return;
-		}
-
-		$short_file_path = $meta_value[ 'file' ];
-
-		if ( ! $is_ori_file ) {
-			$short_file_path = $this->tmp_path . $short_file_path;
-		}
-
-		// Check if src is gathered already or not
-		if ( in_array( $this->tmp_pid . '.' . $short_file_path, $this->_existed_src_list ) ) {
-			// Debug2::debug2( '[Img_Optm] bypass image due to gathered: pid ' . $this->tmp_pid . ' ' . $short_file_path );
-			return;
-		}
-		else {
-			// Append handled images
-			$this->_existed_src_list[] = $this->tmp_pid . '.' . $short_file_path;
-		}
-
-		// check file exists or not
-		$_img_info = $this->__media->info( $short_file_path, $this->tmp_pid );
-
-		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png', 'gif' ) ) ) {
-			$this->_img_in_queue_missed[] = array(
-				'pid'	=> $this->tmp_pid,
-				'src'	=> $short_file_path,
-			);
-			Debug2::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path );
-			return;
-		}
-
-		// Debug2::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid );
-
-		$this->_img_in_queue[] = array(
-			'pid'	=> $this->tmp_pid,
-			'md5'	=> $_img_info[ 'md5' ],
-			'url'	=> $_img_info[ 'url' ],
-			'src'	=> $short_file_path, // not needed in LiteSpeed IAPI, just leave for local storage after post
-			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
-			'src_filesize'	=> $_img_info[ 'size' ], // Only used for local storage and calculation
-		);
-	}
-
-	/**
-	 * Save gathered image raw data
-	 *
-	 * @since  3.0
-	 */
-	private function _save_raw() {
-		$data = array();
-		foreach ( $this->_img_in_queue as $v ) {
-			$data[] = $v[ 'pid' ];
-			$data[] = self::STATUS_RAW;
-			$data[] = $v[ 'src' ];
-			$data[] = $v[ 'src_filesize' ];
-		}
-
-		global $wpdb;
-		$fields = 'post_id, optm_status, src, src_filesize';
-		$q = "INSERT INTO `$this->_table_img_optming` ( $fields ) VALUES ";
-
-		// Add placeholder
-		$q .= Utility::chunk_placeholder( $data, $fields );
-
-		// Store data
-		$wpdb->query( $wpdb->prepare( $q, $data ) );
-
-		$count = count( $this->_img_in_queue );
-		$this->_img_in_queue = array();
-
-		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
-
-		return $count;
-	}
-
-	/**
 	 * Auto send optm request
 	 *
 	 * @since  2.4.1
@@ -407,20 +262,6 @@ class Img_Optm extends Base {
 		// Save to DB
 		$count = $this->_save_raw();
 
-		$msg = sprintf( __( 'Gathered %d images successfully.', 'litespeed-cache' ), $count );
-		Admin_Display::succeed( $msg );
-
-
-
-
-
-
-
-
-
-
-
-
 		// Push to Cloud server
 		$accepted_imgs = $this->_send_request();
 
@@ -432,6 +273,90 @@ class Img_Optm extends Base {
 		$placeholder2 = Admin_Display::print_plural( $accepted_imgs, 'image' );
 		$msg = sprintf( __( 'Pushed %1$s to Cloud server, accepted %2$s.', 'litespeed-cache' ), $placeholder1, $placeholder2 );
 		Admin_Display::succeed( $msg );
+	}
+
+	/**
+	 * Add a new img to queue which will be pushed to request
+	 *
+	 * @since 1.6
+	 * @access private
+	 */
+	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
+		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
+			Debug2::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value );
+			return;
+		}
+
+		$short_file_path = $meta_value[ 'file' ];
+
+		if ( ! $is_ori_file ) {
+			$short_file_path = $this->tmp_path . $short_file_path;
+		}
+
+		// Check if src is gathered already or not
+		if ( in_array( $this->tmp_pid . '.' . $short_file_path, $this->_existed_src_list ) ) {
+			// Debug2::debug2( '[Img_Optm] bypass image due to gathered: pid ' . $this->tmp_pid . ' ' . $short_file_path );
+			return;
+		}
+		else {
+			// Append handled images
+			$this->_existed_src_list[] = $this->tmp_pid . '.' . $short_file_path;
+		}
+
+		// check file exists or not
+		$_img_info = $this->__media->info( $short_file_path, $this->tmp_pid );
+
+		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png', 'gif' ) ) ) {
+			$this->_img_in_queue_missed[] = array(
+				'pid'	=> $this->tmp_pid,
+				'src'	=> $short_file_path,
+			);
+			Debug2::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path );
+			return;
+		}
+
+		// Debug2::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid );
+
+		$this->_img_in_queue[] = array(
+			'pid'	=> $this->tmp_pid,
+			'md5'	=> $_img_info[ 'md5' ],
+			'url'	=> $_img_info[ 'url' ],
+			'src'	=> $short_file_path, // not needed in LiteSpeed IAPI, just leave for local storage after post
+			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
+			'src_filesize'	=> $_img_info[ 'size' ], // Only used for local storage and calculation
+		);
+	}
+
+	/**
+	 * Save gathered image raw data
+	 *
+	 * @since  3.0
+	 */
+	private function _save_raw() {
+		$data = array();
+		foreach ( $this->_img_in_queue as $v ) {
+			$data[] = $v[ 'pid' ];
+			$data[] = self::STATUS_RAW;
+			$data[] = $v[ 'src' ];
+			$data[] = $v[ 'src_filesize' ];
+		}
+
+		global $wpdb;
+		$fields = 'post_id, optm_status, src, src_filesize';
+		$q = "INSERT INTO `$this->_table_img_optming` ( $fields ) VALUES ";
+
+		// Add placeholder
+		$q .= Utility::chunk_placeholder( $data, $fields );
+
+		// Store data
+		$wpdb->query( $wpdb->prepare( $q, $data ) );
+
+		$count = count( $this->_img_in_queue );
+		$this->_img_in_queue = array();
+
+		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
+
+		return $count;
 	}
 
 	/**
@@ -517,32 +442,10 @@ class Img_Optm extends Base {
 			 * @since 2.4.2
 			 */
 			/**
-			 * To use the filter `litespeed_img_optm_options_per_image` to manipulate `optm_options`, do below:
-			 *
-			 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $optm_options, $file ){
-			 * 			// To add optimize original image
-			 * 			if ( Your conditions ) {
 			 * 				$optm_options |= API::IMG_OPTM_BM_ORI;
-			 * 			}
-			 *
-			 * 			// To add optimize webp image
-			 * 			if ( Your conditions ) {
 			 * 				$optm_options |= API::IMG_OPTM_BM_WEBP;
-			 * 			}
-			 *
-			 * 			// To turn on lossless optimize for this image e.g. if filename contains `magzine`
-			 * 			if ( strpos( $file, 'magzine' ) !== false ) {
 			 * 				$optm_options |= API::IMG_OPTM_BM_LOSSLESS;
-			 * 			}
-			 *
-			 * 			// To set keep exif info for this image
-			 * 			if ( Your conditions ) {
 			 * 				$optm_options |= API::IMG_OPTM_BM_EXIF;
-			 * 			}
-			 *
-			 *			return $optm_options;
-			 *   	} );
-			 *
 			 */
 			$optm_options = apply_filters( 'litespeed_img_optm_options_per_image', 0, $v[ 'src' ] );
 
