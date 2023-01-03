@@ -145,30 +145,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						</p>
 					<?php endif; ?>
 
-					<div class="litespeed-silence">
-						<?php
-							$list = array(
-								Img_Optm::STATUS_ERR_FETCH,
-								Img_Optm::STATUS_ERR_404,
-								Img_Optm::STATUS_ERR_OPTM,
-								Img_Optm::STATUS_ERR,
-								Img_Optm::STATUS_MISS,
-								Img_Optm::STATUS_DUPLICATED,
-								Img_Optm::STATUS_XMETA,
-							);
-						?>
-						<?php foreach ( $list as $v ): ?>
-							<?php if ( empty( $img_count[ 'group.' . $v ] ) ) continue; ?>
-							<p>
-								<?php echo Lang::img_status( $v ); ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . $v ] ); ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . $v ], 'image' ); ?>)
-								</code>
-							</p>
-						<?php endforeach; ?>
-					</div>
-
 					<p><?php echo sprintf(
 							'<a href="%1$s" class="button button-secondary" data-balloon-pos="right" aria-label="%2$s" %3$s><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%4$s</a>',
 							($unfinished_num ? Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN ) : 'javascript:;'),

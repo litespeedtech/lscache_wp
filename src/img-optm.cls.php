@@ -47,8 +47,6 @@ class Img_Optm extends Base {
 	private $tmp_pid;
 	private $tmp_path;
 	private $_img_in_queue = array();
-	private $_img_in_queue_missed = array();
-	private $_existed_src_list = array();
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
@@ -307,10 +305,6 @@ class Img_Optm extends Base {
 		$_img_info = $this->__media->info( $short_file_path, $this->tmp_pid );
 
 		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png', 'gif' ) ) ) {
-			$this->_img_in_queue_missed[] = array(
-				'pid'	=> $this->tmp_pid,
-				'src'	=> $short_file_path,
-			);
 			Debug2::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path );
 			return;
 		}
@@ -548,10 +542,6 @@ class Img_Optm extends Base {
 
 		$_allowed_status = array(
 			self::STATUS_NOTIFIED, 		// 6 -> 'notified';
-			self::STATUS_ERR_FETCH, 	// -5 -> 'err_fetch';
-			self::STATUS_ERR_404, 		// -6 -> 'err_404';
-			self::STATUS_ERR_OPTM, 		// -7 -> 'err_optm';
-			self::STATUS_ERR, 			// -9 -> 'err';
 		);
 
 		if ( empty( $post_data[ 'status' ] ) || ! in_array( $post_data[ 'status' ], $_allowed_status ) ) {
@@ -1161,10 +1151,7 @@ class Img_Optm extends Base {
 			}
 		}
 
-		Debug2::debug( '[Img_Optm] rescaned [img_missed] ' . count( $this->_img_in_queue_missed ) . ' [img] ' . count( $this->_img_in_queue ) );
-
-		// Save missed images into img_optm
-		$this->_save_err_missed();
+		Debug2::debug( '[Img_Optm] rescaned [img] ' . count( $this->_img_in_queue ) );
 
 		$count = count( $this->_img_in_queue );
 		if ( $count > 0 ) {
