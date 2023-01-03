@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.1.1
-Stable tag: 5.3.1
+Stable tag: 5.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,13 +250,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.3.2 - 2023 =
-* Fix object cache lib incr, decr functions (thanks bdrbros) #516
-* Database optimizer now handles postmeta when cleaning revisions #515
-* **Cache** Default to nocache if response code is 4xx/5xx
-* **Cache** Removed 403 default cache TTL setting. Error 500 set to 10mins.
-* **GUI** Redetect nodes desc
-* **GUI** Added sync desc to refresh btn
+= 5.3.2 - Jan 10 2023 =
+* **Object** Fixed object cache lib incr, decr functions (thanks bdrbros/DANIEL) #516
+* **Database Optimize** Database optimizer now handles postmeta when cleaning revisions #515
+* **Cache** Made nocache the default for 4xx/5xx response codes.
+* **Cache** Default cache TTL settings removed for 403 response code, changed to 10 mins for 500 response code.
+* **GUI** Added a description for the redetect nodes function.
+* **GUI** Added a description for the refresh button sync function.
 
 = 5.3.1 - Dec 12 2022 =
 * **CLI** Presets feature is now usable from the CLI. (xLukii)
