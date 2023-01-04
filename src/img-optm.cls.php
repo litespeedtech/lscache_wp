@@ -504,12 +504,9 @@ class Img_Optm extends Base {
 	/**
 	 * Cloud server notify Client img status changed
 	 *
-	 * @since  1.6
-	 * @since  1.6.5 Added err/request status free switch
 	 * @access public
 	 */
-	public function notify_img()
-	{
+	public function notify_img() {
 		// Interval validation to avoid hacking domain_key
 		if ( ! empty( $this->_summary[ 'notify_ts_err' ] ) && time() - $this->_summary[ 'notify_ts_err' ] < 3 ) {
 			return Cloud::err( 'too_often' );
@@ -540,13 +537,9 @@ class Img_Optm extends Base {
 			return Cloud::err( 'no/wrong server' );
 		}
 
-		$_allowed_status = array(
-			self::STATUS_NOTIFIED, 		// 6 -> 'notified';
-		);
-
-		if ( empty( $post_data[ 'status' ] ) || ! in_array( $post_data[ 'status' ], $_allowed_status ) ) {
-			Debug2::debug( '[Img_Optm] notify exit: no/wrong status', $post_data );
-			return Cloud::err( 'no/wrong status' );
+		if ( empty( $post_data[ 'status' ] ) ) {
+			Debug2::debug( '[Img_Optm] notify missing status' );
+			return Cloud::err( 'no status' );
 		}
 
 		$status = $post_data[ 'status' ];
@@ -645,32 +638,11 @@ class Img_Optm extends Base {
 			// Mark need_pull tag for cron
 			self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED );
 		}
-		elseif ( $status == self::STATUS_ERR_FETCH ) {
-			// Only update working table
-			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
-			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
-		}
-		else { // Other errors will directly update img_optm table and remove the working records
-
+		else { // Other errors will directly remove the working records
 			// Delete from working table
 			$q = "DELETE FROM `$this->_table_img_optming` WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
 			$wpdb->query( $wpdb->prepare( $q, $notified_data ) );
-
-			// Update img_optm
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $notified_data ), '%d' ) ) . " ) ";
-			$wpdb->query( $wpdb->prepare( $q, array_merge( array( $status ), $notified_data ) ) );
-
-			// Log the failed optm to summary, to be counted in wet_limit
-			if ( $status == self::STATUS_ERR_OPTM ) {
-				if ( empty( $this->_summary[ 'img_status.' . $status ] ) ) {
-					$this->_summary[ 'img_status.' . $status ] = 0;
-				}
-				$this->_summary[ 'img_status.' . $status ] += count( $notified_data );
-				self::save_summary();
-			}
 		}
-
-		// redo count err
 
 		return Cloud::ok( array( 'count' => count( $notified_data ) ) );
 	}
@@ -681,8 +653,7 @@ class Img_Optm extends Base {
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function cron_pull()
-	{
+	public static function cron_pull() {
 		if ( ! defined( 'DOING_CRON' ) ) {
 			return;
 		}
@@ -705,8 +676,7 @@ class Img_Optm extends Base {
 	 * @since  1.6
 	 * @access public
 	 */
-	public function pull( $manual = false )
-	{
+	public function pull( $manual = false ) {
 		global $wpdb;
 
 		Debug2::debug( '[Img_Optm] ' . ( $manual ? 'Manually' : 'Cron' ) . ' pull started' );
@@ -933,8 +903,7 @@ class Img_Optm extends Base {
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _step_back_image( $id )
-	{
+	private function _step_back_image( $id ) {
 		global $wpdb;
 
 		// Reset the image to gathered status
@@ -951,8 +920,7 @@ class Img_Optm extends Base {
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _parse_wp_meta_value( $v )
-	{
+	private function _parse_wp_meta_value( $v ) {
 		if ( ! $v->meta_value ) {
 			Debug2::debug( '[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
 			return false ;
@@ -978,8 +946,7 @@ class Img_Optm extends Base {
 	 * @since 2.1.2
 	 * @access public
 	 */
-	public function clean()
-	{
+	public function clean() {
 		global $wpdb ;
 
 		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
@@ -1008,8 +975,7 @@ class Img_Optm extends Base {
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _destroy()
-	{
+	private function _destroy() {
 		global $wpdb ;
 
 		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
@@ -1173,8 +1139,7 @@ class Img_Optm extends Base {
 	 * @since 2.2.6
 	 * @access private
 	 */
-	private function _calc_bkup()
-	{
+	private function _calc_bkup() {
 		global $wpdb;
 
 		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
@@ -1528,8 +1493,7 @@ class Img_Optm extends Base {
 	 * @since 2.4.2
 	 * @access public
 	 */
-	public function reset_row( $post_id )
-	{
+	public function reset_row( $post_id ) {
 		global $wpdb;
 
 		if ( ! $post_id ) {
