@@ -324,9 +324,9 @@ function wp_cache_supports( $feature ) {
 		case 'get_multiple':
 		case 'delete_multiple':
 		case 'flush_runtime':
-		case 'flush_group':
 			return true;
 
+		case 'flush_group':
 		default:
 			return false;
 	}
@@ -987,6 +987,20 @@ class WP_Object_Cache {
 // error_log("oc: flush " );
 
 		$this->_object_cache->flush();
+
+		return true;
+	}
+
+	/**
+	 * Removes all cache items in a group.
+	 *
+	 * @since 5.3.2
+	 *
+	 * @param string $group Name of group to remove from cache.
+	 * @return true Always returns true.
+	 */
+	public function flush_group( $group ) {
+		// unset( $this->cache[ $group ] );
 
 		return true;
 	}
