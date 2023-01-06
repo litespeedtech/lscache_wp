@@ -1262,27 +1262,19 @@ class Img_Optm extends Base {
 	public function img_count() {
 		global $wpdb;
 
-		if ( $this->_summary['total'] ) {
-
-		}
-		$total_img = $this->_summary['total'];
-
-		$tb_existed2 = Data::cls()->tb_exist( 'img_optming' );
-
-		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
-		$groups_raw = $groups_all = $wpdb->get_var( $q );
-		$imgs_raw = 0;
+		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
+		$groups_all = $wpdb->get_var($q);
+		$groups_raw = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id']);
+		$groups_done = $wpdb->get_var($q.' AND ID<'.(int)$this->_summary['next_post_id']);
 
 		$count_list = array(
 			'groups_all'	=> $groups_all,
-			'groups_not_gathered'	=> $groups_not_gathered,
-			'group.' . self::STATUS_RAW	=> $groups_raw,
-			'img.' . self::STATUS_RAW	=> $imgs_raw,
-			'imgs_gathered'	=> $imgs_gathered,
+			'groups_raw'	=> $groups_raw,
+			'groups_done'	=> $groups_done,
 		);
 
 		// images count from work table
-		if ( $tb_existed2 ) {
+		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
 			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 			$groups_to_check = array(
 				self::STATUS_REQUESTED,
@@ -1291,29 +1283,7 @@ class Img_Optm extends Base {
 			);
 			foreach ( $groups_to_check as $v ) {
 				$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
-				if ( $tb_existed ) {
-					list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
-				}
-			}
-		}
-
-		// images count from image table
-		if ( $tb_existed ) {
-			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d";
-			$groups_to_check = array(
-				self::STATUS_DUPLICATED,
-				self::STATUS_PULLED,
-				self::STATUS_FAILED,
-				self::STATUS_MISS,
-				self::STATUS_ERR_OPTM,
-				self::STATUS_XMETA,
-				self::STATUS_ERR,
-			);
-			foreach ( $groups_to_check as $v ) {
-				$count_list[ 'img.' . $v ] = $count_list[ 'group.' . $v ] = 0;
-				if ( $tb_existed ) {
-					list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
-				}
+				list( $count_list[ 'group.' . $v ], $count_list[ 'img.' . $v ] ) = $wpdb->get_row( $wpdb->prepare( $q, $v ), ARRAY_N );
 			}
 		}
 
