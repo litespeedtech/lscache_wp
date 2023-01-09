@@ -59,7 +59,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<div class="litespeed-img-optim-actions">
 				<a data-litespeed-onlyonce class="button button-primary"
-					<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) ) : ?>
+					<?php if ($img_count['groups_raw']) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ); ?>"
 					<?php else : ?>
 						href='javascript:;' disabled
@@ -82,9 +82,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 			<div>
 				<h3 class="litespeed-title-section">
 					<?php echo __( 'Optimization Status', 'litespeed-cache' ); ?>
-					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
-						<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#optimization-summary" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
-					<?php endif; ?>
 				</h3>
 
 				<div class="litespeed-light-code">
@@ -233,22 +230,18 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					</div>
 					<div>
 						<p>
-							<?php echo __( 'Images total', 'litespeed-cache'); ?>:
+							<?php echo __( 'Image groups total', 'litespeed-cache'); ?>:
 
-							<code><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ); ?></code>
+							<?php if ($img_count['groups_raw']) : ?>
+								<code><?php echo Admin_Display::print_plural( $img_count['groups_raw'], 'group' ); ?></code>
+							<?php else : ?>
+								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
+							<?php endif; ?>
 
 							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache'); ?>">
 								<span class="dashicons dashicons-editor-help"></span>
 								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
 							</a>
-						</p>
-						<p>
-							<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) ) : ?>
-								<?php echo __('Images not yet requested', 'litespeed-cache'); ?>:
-								<code><?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_RAW ], 'image' ); ?></code>
-							<?php else : ?>
-								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
-							<?php endif; ?>
 						</p>
 					</div>
 				</div>

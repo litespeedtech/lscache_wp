@@ -215,10 +215,10 @@ class Img_Optm extends Base {
 		$list = $wpdb->get_results( $q );
 
 		if ( ! $list ) {
-			$msg = __( 'No new image gathered.', 'litespeed-cache' );
+			$msg = __( 'No new image to send.', 'litespeed-cache' );
 			Admin_Display::succeed( $msg );
 
-			self::debug( 'gather_images bypass: no new image found' );
+			self::debug( 'new_req() bypass: no new image found' );
 			return;
 		}
 
@@ -408,7 +408,7 @@ class Img_Optm extends Base {
 		$msg = sprintf( __( 'Cleared %1$s invalid images.', 'litespeed-cache' ), $count );
 		Admin_Display::succeed( $msg );
 
-		Debug2::debug( '[Img_Optm] Found invalid src [total] ' . $count );
+		self::debug( 'Found invalid src [total] ' . $count );
 	}
 
 	/**
