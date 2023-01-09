@@ -279,12 +279,14 @@ function wp_cache_flush() {
  *
  * @since 5.4
  *
- * @see WP_Object_Cache::flush()
+ * @see WP_Object_Cache::flush_runtime()
  *
  * @return bool True on success, false on failure.
  */
 function wp_cache_flush_runtime() {
-	return wp_cache_flush();
+	global $wp_object_cache;
+
+	return $wp_object_cache->flush_runtime();
 }
 
 /**
@@ -982,9 +984,7 @@ class WP_Object_Cache {
 	 * @return true Always returns true.
 	 */
 	public function flush() {
-		$this->_cache = array();
-		$this->_cache_404 = array();
-// error_log("oc: flush " );
+		$this->flush_runtime();
 
 		$this->_object_cache->flush();
 
@@ -992,9 +992,25 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Removes all cache items from the in-memory runtime cache.
+	 *
+	 * @since 5.4
+	 * @access public
+	 *
+	 * @return true Always returns true.
+	 */
+	public function flush_runtime() {
+		$this->_cache = array();
+		$this->_cache_404 = array();
+
+		return true;
+	}
+
+	/**
 	 * Removes all cache items in a group.
 	 *
-	 * @since 5.3.2
+	 * @since 5.4
+	 * @access public
 	 *
 	 * @param string $group Name of group to remove from cache.
 	 * @return true Always returns true.
