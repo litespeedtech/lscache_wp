@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 5.3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2023-01-03 17:31:09+00:00\n"
+"POT-Creation-Date: 2023-01-10 18:03:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1859,16 +1859,16 @@ msgstr ""
 msgid "Mobile"
 msgstr ""
 
-#: src/metabox.cls.php:58
+#: src/metabox.cls.php:59
 msgid "LiteSpeed Options"
 msgstr ""
 
-#: src/object.lib.php:515
+#: src/object.lib.php:517
 msgid "Cache key must not be an empty string."
 msgstr ""
 
 #. translators: %s: The type of the given cache key.
-#: src/object.lib.php:517
+#: src/object.lib.php:519
 msgid "Cache key must be integer or non-empty string, %s given."
 msgstr ""
 
