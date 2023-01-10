@@ -40,6 +40,7 @@ class Metabox extends Root {
 	public function register_settings() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
+		add_action( 'attachment_updated', array( $this, 'save_meta_box_settings' ), 15, 2 );
 	}
 
 	/**
