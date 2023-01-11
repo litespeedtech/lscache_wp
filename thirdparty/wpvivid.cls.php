@@ -10,6 +10,9 @@ defined( 'WPINC' ) || exit;
 
 class WPvivid {
 	public static function preload() {
+		if ( ! defined( 'WPVIVID_PLUGIN_VERSION' ) ) {
+			return;
+		}
 		$is_wpvivid_request = strpos( $_SERVER['REQUEST_URI'], 'wpvivid' ) !== false;
 		$is_wpvivid_referer = wp_doing_ajax() && ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'wpvivid' ) !== false; 
 		if ( $is_wpvivid_request || $is_wpvivid_referer ) {
