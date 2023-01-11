@@ -10,9 +10,9 @@ defined( 'WPINC' ) || exit;
 
 class WPvivid {
 	public static function preload() {
-		$is_pvivid_request = strpos( $_SERVER['REQUEST_URI'], 'wpvivid' ) !== false;
-		$is_pvivid_referer = ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'wpvivid' ) !== false;
-		if ( $is_pvivid_request || $is_pvivid_referer ) {
+		$is_wpvivid_request = strpos( $_SERVER['REQUEST_URI'], 'wpvivid' ) !== false;
+		$is_wpvivid_referer = wp_doing_ajax() && ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'wpvivid' ) !== false; 
+		if ( $is_wpvivid_request || $is_wpvivid_referer ) {
 			do_action( 'litespeed_disable_all', 'disable for wpvivid' );
 		}
 	}
