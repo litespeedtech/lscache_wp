@@ -247,6 +247,8 @@ class Img_Optm extends Base {
 		self::debug( 'Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
 		$this->_filter_invalid_src();
+// TODO: check w/ legacy imgoptm table, bypass finished images
+
 		$num_b = count( $this->_img_in_queue );
 		if ( $num_b != $num_a ) {
 			self::debug( 'Images after filtered duplicated/invalid src: ' . $num_b );
