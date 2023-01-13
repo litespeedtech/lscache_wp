@@ -10,30 +10,14 @@ $__img_optm = Img_Optm::cls();
 
 $wet_limit = $__img_optm->wet_limit();
 $img_count = $__img_optm->img_count();
-$need_gather = $__img_optm->need_gather();
 
 $optm_summary = Img_Optm::get_summary();
 
 list( $last_run, $is_running ) = $__img_optm->cron_running( false );
 
-if ( ! empty( $img_count[ 'groups_all' ] ) ) {
-	$gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] );
-	if ( $gathered_percentage == 100 && $img_count[ 'groups_not_gathered' ] ) {
-		$gathered_percentage = 99;
-	}
-}
-else {
-	$gathered_percentage = 0;
-}
-
-if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
-	$finished_percentage = 100 - floor( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] * 100 / $img_count[ 'imgs_gathered' ] );
-	if ( $finished_percentage == 100 && $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) {
-		$finished_percentage = 99;
-	}
-}
-else {
-	$finished_percentage = 0;
+$finished_percentage = 100 - floor( $img_count[ 'groups_raw' ] * 100 / $img_count[ 'groups_all' ] );
+if ( $finished_percentage == 100 && $img_count[ 'groups_raw' ] ) {
+	$finished_percentage = 99;
 }
 
 $unfinished_num = 0;
@@ -75,13 +59,13 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<div class="litespeed-img-optim-actions">
 				<a data-litespeed-onlyonce class="button button-primary"
-					<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) || ! empty( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) ) : ?>
+					<?php if ($img_count['groups_raw']) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ); ?>"
 					<?php else : ?>
 						href='javascript:;' disabled
 					<?php endif; ?>
 					>
-					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo $need_gather ? __( 'Gather Image Data', 'litespeed-cache' ) : __( 'Send Optimization Request', 'litespeed-cache' ); ?>
+					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __( 'Send Optimization Request', 'litespeed-cache' ); ?>
 				</a>
 
 				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ); ?> <?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ); ?>"
@@ -98,9 +82,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 			<div>
 				<h3 class="litespeed-title-section">
 					<?php echo __( 'Optimization Status', 'litespeed-cache' ); ?>
-					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
-						<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#optimization-summary" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
-					<?php endif; ?>
 				</h3>
 
 				<div class="litespeed-light-code">
@@ -144,30 +125,6 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 							</code>
 						</p>
 					<?php endif; ?>
-
-					<div class="litespeed-silence">
-						<?php
-							$list = array(
-								Img_Optm::STATUS_ERR_FETCH,
-								Img_Optm::STATUS_ERR_404,
-								Img_Optm::STATUS_ERR_OPTM,
-								Img_Optm::STATUS_ERR,
-								Img_Optm::STATUS_MISS,
-								Img_Optm::STATUS_DUPLICATED,
-								Img_Optm::STATUS_XMETA,
-							);
-						?>
-						<?php foreach ( $list as $v ): ?>
-							<?php if ( empty( $img_count[ 'group.' . $v ] ) ) continue; ?>
-							<p>
-								<?php echo Lang::img_status( $v ); ?>:
-								<code>
-									<?php echo Admin_Display::print_plural( $img_count[ 'group.' . $v ] ); ?>
-									(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . $v ], 'image' ); ?>)
-								</code>
-							</p>
-						<?php endforeach; ?>
-					</div>
 
 					<p><?php echo sprintf(
 							'<a href="%1$s" class="button button-secondary" data-balloon-pos="right" aria-label="%2$s" %3$s><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%4$s</a>',
@@ -269,53 +226,22 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 				<div class="litespeed-flex-container">
 					<div class="litespeed-icon-vertical-middle">
-						<?php echo GUI::pie( $gathered_percentage, 70, true ); ?>
-					</div>
-					<div>
-						<p>
-							<?php echo __( 'Images total', 'litespeed-cache'); ?>:
-
-							<code><?php echo Admin_Display::print_plural( $img_count[ 'groups_all' ] ); ?></code>
-
-							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache'); ?>">
-								<span class="dashicons dashicons-editor-help"></span>
-								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
-							</a>
-						</p>
-						<p>
-							<?php if ( ! empty( $img_count[ 'groups_not_gathered' ] ) ) : ?>
-								<?php echo __('Images not yet gathered', 'litespeed-cache'); ?>:
-								<code><?php echo Admin_Display::print_plural( $img_count[ 'groups_not_gathered' ] ); ?></code>
-							<?php else : ?>
-								<font class="litespeed-congratulate"><?php echo __('Congratulations, all gathered!', 'litespeed-cache'); ?></font>
-							<?php endif; ?>
-						</p>
-
-					</div>
-				</div>
-
-				<div class="litespeed-flex-container">
-					<div class="litespeed-icon-vertical-middle">
 						<?php echo GUI::pie( $finished_percentage, 70, true ); ?>
 					</div>
 					<div>
 						<p>
-							<?php echo __( 'Images total', 'litespeed-cache'); ?>:
+							<?php echo __( 'Image groups total', 'litespeed-cache'); ?>:
 
-							<code><?php echo Admin_Display::print_plural( $img_count[ 'imgs_gathered' ], 'image' ); ?></code>
+							<?php if ($img_count['groups_raw']) : ?>
+								<code><?php echo Admin_Display::print_plural( $img_count['groups_raw'], 'group' ); ?></code>
+							<?php else : ?>
+								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
+							<?php endif; ?>
 
 							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __( 'What is a group?', 'litespeed-cache'); ?>">
 								<span class="dashicons dashicons-editor-help"></span>
 								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
 							</a>
-						</p>
-						<p>
-							<?php if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] ) ) : ?>
-								<?php echo __('Images not yet requested', 'litespeed-cache'); ?>:
-								<code><?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_RAW ], 'image' ); ?></code>
-							<?php else : ?>
-								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
-							<?php endif; ?>
 						</p>
 					</div>
 				</div>
@@ -381,4 +307,3 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 		</div>
 	</div>
 </div>
-
