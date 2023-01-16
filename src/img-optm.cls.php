@@ -247,11 +247,12 @@ class Img_Optm extends Base {
 		self::debug( 'Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
 		$this->_filter_invalid_src();
-// TODO: check w/ legacy imgoptm table, bypass finished images
+		// Check w/ legacy imgoptm table, bypass finished images
+		$this->_filter_legacy_src();
 
 		$num_b = count( $this->_img_in_queue );
 		if ( $num_b != $num_a ) {
-			self::debug( 'Images after filtered duplicated/invalid src: ' . $num_b );
+			self::debug( 'Images after filtered duplicated/invalid/legacy src: ' . $num_b );
 		}
 
 		if ( ! $num_b ) {
@@ -371,15 +372,38 @@ class Img_Optm extends Base {
 			$srcpath_list[] = $v->src;
 		}
 
-		$img_in_queue_duplicated = array();
 		foreach ( $this->_img_in_queue as $k => $v ) {
 			if ( in_array( $v[ 'src' ], $srcpath_list ) ) {
-				$img_in_queue_duplicated[] = $v[ 'id' ];
 				unset( $this->_img_in_queue[ $k ] );
 				continue;
 			}
 
 			$srcpath_list[] = $v[ 'src' ];
+		}
+	}
+
+	/**
+	 * Filter legacy finished ones
+	 *
+	 * @since 5.4
+	 */
+	private function _filter_legacy_src(){
+		global $wpdb;
+
+		$finished_ids = array();
+
+		Utility::compatibility();
+		$post_ids = array_unique(array_column($this->_img_in_queue, 'pid'));
+		$list = $wpdb->get_results( "SELECT post_id FROM $this->_table_img_optm WHERE post_id in (".implode(',', $post_ids).") GROUP BY post_id" );
+		foreach ( $list as $v ) {
+			$finished_ids[] = $v->post_id;
+		}
+
+		foreach ( $this->_img_in_queue as $k => $v ) {
+			if ( in_array( $v[ 'pid' ], $finished_ids ) ) {
+				unset( $this->_img_in_queue[ $k ] );
+				continue;
+			}
 		}
 	}
 
