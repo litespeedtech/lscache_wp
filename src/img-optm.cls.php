@@ -47,6 +47,7 @@ class Img_Optm extends Base {
 	private $tmp_pid;
 	private $tmp_path;
 	private $_img_in_queue = array();
+	private $_existed_src_list = array();
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
@@ -64,9 +65,11 @@ class Img_Optm extends Base {
 
 		$this->wp_upload_dir = wp_upload_dir();
 		$this->__media = $this->cls( 'Media' );
+		$this->_table_img_optm = $this->cls( 'Data' )->tb( 'img_optm' );
 		$this->_table_img_optming = $this->cls( 'Data' )->tb( 'img_optming' );
 
-		$this->_summary = self::get_summary(); //
+		$this->_summary = self::get_summary();$this->_summary['next_post_id'] = 0;
+		if (empty($this->_summary['next_post_id'])) $this->_summary['next_post_id'] = 0;
 	}
 
 	/**
@@ -238,6 +241,9 @@ class Img_Optm extends Base {
 			}
 		}
 
+		$this->_summary['next_post_id'] = $this->tmp_pid;
+		self::save_summary();
+
 		if ( ! $this->_img_in_queue ) {
 			self::debug( 'gather_images bypass: empty _img_in_queue' );
 			return;
@@ -247,6 +253,7 @@ class Img_Optm extends Base {
 		self::debug( 'Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
 		$this->_filter_invalid_src();
+		self::debug( 'Images after duplicated/invalid: ' . count( $this->_img_in_queue ) );
 		// Check w/ legacy imgoptm table, bypass finished images
 		$this->_filter_legacy_src();
 
@@ -320,7 +327,6 @@ class Img_Optm extends Base {
 			'url'	=> $_img_info[ 'url' ],
 			'src'	=> $short_file_path, // not needed in LiteSpeed IAPI, just leave for local storage after post
 			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
-			'src_filesize'	=> $_img_info[ 'size' ], // Only used for local storage and calculation
 		);
 	}
 
@@ -331,15 +337,22 @@ class Img_Optm extends Base {
 	 */
 	private function _save_raw() {
 		$data = array();
-		foreach ( $this->_img_in_queue as $v ) {
+		foreach ( $this->_img_in_queue as $k => $v ) {
+			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
+
+			// attachment doesn't exist, delete the record
+			if ( empty( $_img_info[ 'url' ] ) || empty( $_img_info[ 'md5' ] ) ) {
+				unset( $this->_img_in_queue[ $k ] );
+				continue;
+			}
+
 			$data[] = $v[ 'pid' ];
 			$data[] = self::STATUS_RAW;
 			$data[] = $v[ 'src' ];
-			$data[] = $v[ 'src_filesize' ];
 		}
 
 		global $wpdb;
-		$fields = 'post_id, optm_status, src, src_filesize';
+		$fields = 'post_id, optm_status, src';
 		$q = "INSERT INTO `$this->_table_img_optming` ( $fields ) VALUES ";
 
 		// Add placeholder
@@ -390,6 +403,8 @@ class Img_Optm extends Base {
 	private function _filter_legacy_src(){
 		global $wpdb;
 
+		if (!$this->_img_in_queue) return;
+
 		$finished_ids = array();
 
 		Utility::compatibility();
@@ -401,6 +416,7 @@ class Img_Optm extends Base {
 
 		foreach ( $this->_img_in_queue as $k => $v ) {
 			if ( in_array( $v[ 'pid' ], $finished_ids ) ) {
+				self::debug('Legacy image optimized [pid] '.$v['pid']);
 				unset( $this->_img_in_queue[ $k ] );
 				continue;
 			}
@@ -448,15 +464,6 @@ class Img_Optm extends Base {
 
 		$list = array();
 		foreach ( $this->_img_in_queue as $v ) {
-			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
-
-			if ( empty( $_img_info[ 'url' ] ) || empty( $_img_info[ 'md5' ] ) ) {
-				// attachment doesn't exist, delete the record
-				$q = "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d";
-				$wpdb->query( $wpdb->prepare( $q, $v[ 'post_id' ] ) );
-				continue;
-			}
-
 			/**
 			 * Filter `litespeed_img_optm_options_per_image`
 			 * @since 2.4.2
@@ -469,6 +476,7 @@ class Img_Optm extends Base {
 			 */
 			$optm_options = apply_filters( 'litespeed_img_optm_options_per_image', 0, $v[ 'src' ] );
 
+			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
 			$img = array(
 				'id'	=> $v[ 'id' ],
 				'url'	=> $_img_info[ 'url' ],
