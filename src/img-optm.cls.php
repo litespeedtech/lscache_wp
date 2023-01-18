@@ -252,8 +252,9 @@ class Img_Optm extends Base {
 		$num_a = count( $this->_img_in_queue );
 		self::debug( 'Images found: ' . $num_a );
 		$this->_filter_duplicated_src();
+		self::debug( 'Images after duplicated: ' . count( $this->_img_in_queue ) );
 		$this->_filter_invalid_src();
-		self::debug( 'Images after duplicated/invalid: ' . count( $this->_img_in_queue ) );
+		self::debug( 'Images after invalid: ' . count( $this->_img_in_queue ) );
 		// Check w/ legacy imgoptm table, bypass finished images
 		$this->_filter_legacy_src();
 
@@ -262,13 +263,8 @@ class Img_Optm extends Base {
 			self::debug( 'Images after filtered duplicated/invalid/legacy src: ' . $num_b );
 		}
 
-		if ( ! $num_b ) {
-			self::debug( 'No image in queue' );
-			return;
-		}
-
 		// Save to DB
-		$count = $this->_save_raw();
+		$this->_save_raw();
 
 		// Push to Cloud server
 		$accepted_imgs = $this->_send_request();
@@ -336,9 +332,10 @@ class Img_Optm extends Base {
 	 * @since  3.0
 	 */
 	private function _save_raw() {
+		if (empty($this->_img_in_queue)) return;
 		$data = array();
 		foreach ( $this->_img_in_queue as $k => $v ) {
-			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
+			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'pid' ] );
 
 			// attachment doesn't exist, delete the record
 			if ( empty( $_img_info[ 'url' ] ) || empty( $_img_info[ 'md5' ] ) ) {
@@ -362,8 +359,6 @@ class Img_Optm extends Base {
 		$wpdb->query( $wpdb->prepare( $q, $data ) );
 
 		$count = count( $this->_img_in_queue );
-		$this->_img_in_queue = array();
-
 		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
 
 		return $count;
@@ -462,8 +457,13 @@ class Img_Optm extends Base {
 	private function _send_request() {
 		global $wpdb;
 
+		$_img_in_queue = $wpdb->get_results( "SELECT id,src,post_id FROM $this->_table_img_optming WHERE optm_status=".self::STATUS_RAW );
+		if (!$_img_in_queue) return;
+
+		self::debug('Load img in queue [total] '.count($_img_in_queue));
+
 		$list = array();
-		foreach ( $this->_img_in_queue as $v ) {
+		foreach ( $_img_in_queue as $v ) {
 			/**
 			 * Filter `litespeed_img_optm_options_per_image`
 			 * @since 2.4.2
@@ -474,11 +474,11 @@ class Img_Optm extends Base {
 			 * 				$optm_options |= API::IMG_OPTM_BM_LOSSLESS;
 			 * 				$optm_options |= API::IMG_OPTM_BM_EXIF;
 			 */
-			$optm_options = apply_filters( 'litespeed_img_optm_options_per_image', 0, $v[ 'src' ] );
+			$optm_options = apply_filters( 'litespeed_img_optm_options_per_image', 0, $v->src );
 
-			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'post_id' ] );
+			$_img_info = $this->__media->info( $v->src, $v->post_id );
 			$img = array(
-				'id'	=> $v[ 'id' ],
+				'id'	=> $v->id,
 				'url'	=> $_img_info[ 'url' ],
 				'md5'	=> $_img_info[ 'md5' ],
 			);
@@ -573,6 +573,7 @@ class Img_Optm extends Base {
 		}
 
 		$status = $post_data[ 'status' ];
+		self::debug('notified status='.$status);
 
 		$last_log_pid = 0;
 
