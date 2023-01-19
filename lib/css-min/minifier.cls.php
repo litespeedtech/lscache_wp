@@ -320,8 +320,10 @@ class Minifier
         );
 
         // Process strings so their content doesn't get accidentally minified
+        $double_quoted = '"(?:[^"\\\\]|\\\\.)*"';
+        $single_quoted = "'(?:[^'\\\\]|\\\\.)*'";
         $css = preg_replace_callback(
-            '/(?:"(?:[^\\\\"]|\\\\.|\\\\)*")|'."(?:'(?:[^\\\\']|\\\\.|\\\\)*')/S",
+            "/(?<!\\\\)(?:$double_quoted|$single_quoted)/S",
             array($this, 'processStringsCallback'),
             $css
         );
