@@ -68,7 +68,7 @@ class Img_Optm extends Base {
 		$this->_table_img_optm = $this->cls( 'Data' )->tb( 'img_optm' );
 		$this->_table_img_optming = $this->cls( 'Data' )->tb( 'img_optming' );
 
-		$this->_summary = self::get_summary();$this->_summary['next_post_id'] = 0;
+		$this->_summary = self::get_summary();
 		if (empty($this->_summary['next_post_id'])) $this->_summary['next_post_id'] = 0;
 	}
 
@@ -211,7 +211,7 @@ class Img_Optm extends Base {
 				AND a.post_status = 'inherit'
 				AND a.ID>%d
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-			ORDER BY a.ID DESC
+			ORDER BY a.ID
 			LIMIT %d
 			";
 		$q = $wpdb->prepare( $q, array( $this->_summary['next_post_id'], $allowance ) );
@@ -784,9 +784,6 @@ class Img_Optm extends Base {
 				if ( ! file_exists( $local_file . '.tmp' ) || ! filesize( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
 					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info[ 'server' ] . '/' . $server_info[ 'ori' ] . ' [server_md5] ' . $server_info[ 'ori_md5' ] );
 
-					// Update status to failed
-					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
@@ -845,9 +842,6 @@ class Img_Optm extends Base {
 				if ( ! file_exists( $local_file . '.webp' ) || ! filesize( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
 					Debug2::debug( '[Img_Optm] ❌ Failed to pull optimized webp img: file md5 mismatch, server md5: ' . $server_info[ 'webp_md5' ] );
 
-					// update status to failed
-					$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
-					$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_FAILED, $row_img->id ) ) );
 					// Delete working table
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
@@ -874,9 +868,6 @@ class Img_Optm extends Base {
 
 			Debug2::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id );
 
-			// Update pulled status
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d, target_filesize = %d, webp_filesize = %d WHERE id = %d ";
-			$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) );
 			// Delete working table
 			$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 			$wpdb->query( $wpdb->prepare( $q, $row_img->id ) );
@@ -938,11 +929,8 @@ class Img_Optm extends Base {
 		global $wpdb;
 
 		// Reset the image to gathered status
-		$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE id = %d ";
+		$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d WHERE id = %d ";
 		$wpdb->query( $wpdb->prepare( $q, array( self::STATUS_RAW, $id ) ) );
-		// Delete working table
-		$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-		$wpdb->query( $wpdb->prepare( $q, $id ) );
 	}
 
 	/**
@@ -978,21 +966,11 @@ class Img_Optm extends Base {
 	 * @access public
 	 */
 	public function clean() {
-		global $wpdb ;
-
-		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
-			return;
-		}
-
-		// Clear local working table queue
-		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
-			$q = "TRUNCATE `$this->_table_img_optming`";
-			$wpdb->query( $q );
-		}
+		global $wpdb;
 
 		// Reset img_optm table's queue
-		if ( Data::cls()->tb_exist( 'img_optm' ) ) {
-			$q = "UPDATE `$this->_table_img_optm` SET optm_status = %d WHERE optm_status = %d" ;
+		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
+			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d WHERE optm_status = %d" ;
 			$wpdb->query( $wpdb->prepare( $q, self::STATUS_RAW, self::STATUS_REQUESTED ) ) ;
 		}
 
@@ -1295,8 +1273,8 @@ class Img_Optm extends Base {
 
 		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
 		$groups_all = $wpdb->get_var($q);
-		$groups_raw = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id']);
-		$groups_done = $wpdb->get_var($q.' AND ID<'.(int)$this->_summary['next_post_id']);
+		$groups_raw = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
+		$groups_done = $wpdb->get_var($q.' AND ID<'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
 
 		$count_list = array(
 			'groups_all'	=> $groups_all,

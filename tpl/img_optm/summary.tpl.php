@@ -14,7 +14,7 @@ $img_count = $__img_optm->img_count();
 $optm_summary = Img_Optm::get_summary();
 
 list( $last_run, $is_running ) = $__img_optm->cron_running( false );
-
+var_dump($img_count);
 $finished_percentage = 100 - floor( $img_count[ 'groups_raw' ] * 100 / $img_count[ 'groups_all' ] );
 if ( $finished_percentage == 100 && $img_count[ 'groups_raw' ] ) {
 	$finished_percentage = 99;
@@ -242,6 +242,9 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 								<span class="dashicons dashicons-editor-help"></span>
 								<span class="screen-reader-text"><?php echo __( 'What is an image group?', 'litespeed-cache' );?></span>
 							</a>
+						</p>
+						<p>
+							<?php echo __( 'Image post id position', 'litespeed-cache'); ?>: <?php echo $optm_summary['next_post_id']; ?>
 						</p>
 					</div>
 				</div>
