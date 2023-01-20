@@ -969,9 +969,15 @@ class Img_Optm extends Base {
 		global $wpdb;
 
 		// Reset img_optm table's queue
-		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
-			$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d WHERE optm_status = %d" ;
-			$wpdb->query( $wpdb->prepare( $q, self::STATUS_RAW, self::STATUS_REQUESTED ) ) ;
+		if (Data::cls()->tb_exist('img_optming')) {
+			// Get min post id to mark
+			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
+			$min_pid = $wpdb->get_var($q);
+			$this->_summary['next_post_id'] = $min_pid;
+			self::save_summary();
+
+			$q = "TRUNCATE `$this->_table_img_optming`";
+			$wpdb->query($q);
 		}
 
 		$msg = __( 'Cleaned up unfinished data successfully.', 'litespeed-cache' ) ;
@@ -1276,7 +1282,11 @@ class Img_Optm extends Base {
 		$groups_raw = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
 		$groups_done = $wpdb->get_var($q.' AND ID<'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
 
+		$q = "SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY ID DESC LIMIT 1";
+		$max_id = $wpdb->get_var($q);
+
 		$count_list = array(
+			'max_id'	=> $max_id,
 			'groups_all'	=> $groups_all,
 			'groups_raw'	=> $groups_raw,
 			'groups_done'	=> $groups_done,
