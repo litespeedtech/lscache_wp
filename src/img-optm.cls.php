@@ -1172,38 +1172,69 @@ class Img_Optm extends Base {
 			);
 		}
 
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, $limit ) ) );
-
+		$img_q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			ORDER BY a.ID
+			LIMIT %d,%d
+			";
+		$q = $wpdb->prepare($img_q, array($offset*$limit, $limit));
+		$list = $wpdb->get_results($q);
 		foreach ( $list as $v ) {
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION );
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 );
-			$bk_file = $local_filename . '.bk.' . $extension;
+			if ( ! $v->post_id ) continue;
 
-			$img_info = $this->__media->info( $bk_file, $v->post_id );
-			if ( ! $img_info ) {
+			$meta_value = $this->_parse_wp_meta_value( $v );
+			if ( ! $meta_value ) {
 				continue;
 			}
 
-			$this->_summary[ 'bk_summary' ][ 'count' ] ++;
-			$this->_summary[ 'bk_summary' ][ 'sum' ] += $img_info[ 'size' ];
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME).'/';
+			$this->_get_bk_size($meta_value, true);
+			if (!empty($meta_value['sizes'])) {
+				array_map(array($this, '_get_bk_size'), $meta_value['sizes']);
+			}
 		}
 
-		$this->_summary[ 'bk_summary' ][ 'date' ] = time();
+		$this->_summary['bk_summary']['date'] = time();
 		self::save_summary();
 
-		Debug2::debug( '[Img_Optm] _calc_bkup total: ' . $this->_summary[ 'bk_summary' ][ 'count' ] . ' [size] ' . $this->_summary[ 'bk_summary' ][ 'sum' ] );
+		Debug2::debug('[Img_Optm] _calc_bkup total: '.$this->_summary['bk_summary']['count'].' [size] '.$this->_summary['bk_summary']['sum']);
 
-		$offset ++;
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d, %d";
-		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $q, array( self::STATUS_PULLED, $offset * $limit, 1 ) ) );
+		$offset++;
+		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset*$limit, 1)));
 
 		if ( $to_be_continued ) {
-			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_CALC_BKUP );
+			return Router::self_redirect(Router::ACTION_IMG_OPTM, self::TYPE_CALC_BKUP);
 		}
 
-		$msg = __( 'Calculated backups successfully.', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
+		$msg = __('Calculated backups successfully.', 'litespeed-cache');
+		Admin_Display::succeed($msg);
+	}
+
+	/**
+	 * Calculate single size
+	 */
+	private function _get_bk_size($meta_value, $is_ori_file=false) {
+		$short_file_path = $meta_value['file'];
+		if (!$is_ori_file) {
+			$short_file_path = $this->tmp_path.$short_file_path;
+		}
+
+		$extension = pathinfo($short_file_path, PATHINFO_EXTENSION);
+		$local_filename = substr($short_file_path, 0, -strlen($extension)-1);
+		$bk_file = $local_filename.'.bk.'.$extension;
+
+		$img_info = $this->__media->info($bk_file, $this->tmp_pid);
+		if (!$img_info) {
+			return;
+		}
+
+		$this->_summary['bk_summary']['count'] ++;
+		$this->_summary['bk_summary']['sum'] += $img_info['size'];
 	}
 
 	/**
