@@ -1485,7 +1485,7 @@ class Img_Optm extends Base {
 		// switch to ori
 		if ($this->tmp_type === self::TYPE_BATCH_SWITCH_ORI) {
 			if (!$this->__media->info($bk_file, $this->tmp_pid)) {
-				continue;
+				return;
 			}
 			$this->__media->rename($local_filename.'.'.$extension, $bk_optm_file, $this->tmp_pid);
 			$this->__media->rename($bk_file, $local_filename.'.'.$extension, $this->tmp_pid);
@@ -1493,7 +1493,7 @@ class Img_Optm extends Base {
 		// switch to optm
 		elseif ($this->tmp_type === self::TYPE_BATCH_SWITCH_OPTM) {
 			if (!$this->__media->info($bk_optm_file, $this->tmp_pid)) {
-				continue;
+				return;
 			}
 			$this->__media->rename( $local_filename.'.'.$extension, $bk_file, $this->tmp_pid);
 			$this->__media->rename( $bk_optm_file, $local_filename.'.'.$extension, $this->tmp_pid);
