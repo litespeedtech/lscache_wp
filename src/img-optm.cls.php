@@ -992,67 +992,96 @@ class Img_Optm extends Base {
 	 * @access private
 	 */
 	private function _destroy() {
-		global $wpdb ;
+		global $wpdb;
 
-		if ( ! Data::cls()->tb_exist( 'img_optm' ) ) {
-			Debug2::debug( '[Img_Optm] DESTROY bypassed due to table not exist' ) ;
-			return;
-		}
+		self::debug('excuting DESTROY process');
 
-		Debug2::debug( '[Img_Optm] excuting DESTROY process' ) ;
-
+		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
 		/**
 		 * Limit images each time before redirection to fix Out of memory issue. #665465
 		 * @since  2.9.8
 		 */
 		// Start deleting files
 		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 500 ) ;
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
-		foreach ( $list as $v ) {
-			// del webp
-			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
-			$this->__media->info( $v->src . '.optm.webp', $v->post_id ) && $this->__media->del( $v->src . '.optm.webp', $v->post_id ) ;
 
-			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
-			$bk_file = $local_filename . '.bk.' . $extension ;
-			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+		$img_q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			ORDER BY a.ID
+			LIMIT %d,%d
+			";
+		$q = $wpdb->prepare($img_q, array($offset*$limit, $limit));
+		$list = $wpdb->get_results($q);
+		$i = 0;
+		foreach ($list as $v) {
+			if (!$v->post_id) continue;
 
-			// del optimized ori
-			if ( $this->__media->info( $bk_file, $v->post_id ) ) {
-				$this->__media->del( $v->src, $v->post_id ) ;
-				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
+			$meta_value = $this->_parse_wp_meta_value($v);
+			if (!$meta_value) {
+				continue;
 			}
-			$this->__media->info( $bk_optm_file, $v->post_id ) && $this->__media->del( $bk_optm_file, $v->post_id ) ;
+
+			$i++;
+
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME).'/';
+			$this->_destroy_optm_file($meta_value, true);
+			if (!empty($meta_value['sizes'])) {
+				array_map(array($this, '_destroy_optm_file'), $meta_value['sizes']);
+			}
 		}
 
-		// Check if there are more images, then return `to_be_continued` code
-		$q = "SELECT COUNT(*) FROM `$this->_table_img_optm` WHERE optm_status = %d" ;
-		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::STATUS_PULLED ) ) ;
-		if ( $total_img > $limit ) {
-			$q = "DELETE FROM `$this->_table_img_optm` WHERE optm_status = %d ORDER BY id LIMIT %d" ;
-			$wpdb->query( $wpdb->prepare( $q, self::STATUS_PULLED, $limit ) ) ;
+		Debug2::debug('[Img_Optm] batch switched images total: '.$i);
 
-			Debug2::debug( '[Img_Optm] To be continued 🚦' ) ;
-
-			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_DESTROY );
+		$offset ++;
+		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset*$limit, 1)));
+		if ($to_be_continued) {
+			return Router::self_redirect(Router::ACTION_IMG_OPTM, self::TYPE_DESTROY);
 		}
 
 		// Delete postmeta info
-		$q = "DELETE FROM `$wpdb->postmeta` WHERE meta_key = %s" ;
-		$wpdb->query( $wpdb->prepare( $q, self::DB_SIZE ) ) ;
+		$q = "DELETE FROM `$wpdb->postmeta` WHERE meta_key = %s";
+		$wpdb->query($wpdb->prepare($q, self::DB_SIZE));
 
 		// Delete img_optm table
-		Data::cls()->tb_del( 'img_optm' ) ;
-		Data::cls()->tb_del( 'img_optming' ) ;
+		Data::cls()->tb_del('img_optm');
+		Data::cls()->tb_del('img_optming');
 
 		// Clear options table summary info
-		self::delete_option( '_summary' ) ;
-		self::delete_option( self::DB_NEED_PULL ) ;
+		self::delete_option('_summary');
+		self::delete_option(self::DB_NEED_PULL);
 
-		$msg = __( 'Destroy all optimization data successfully.', 'litespeed-cache' ) ;
-		Admin_Display::succeed( $msg ) ;
+		$msg = __('Destroy all optimization data successfully.', 'litespeed-cache');
+		Admin_Display::succeed($msg);
+	}
+
+	/**
+	 * Destroy optm file
+	 */
+	private function _destroy_optm_file($meta_value, $is_ori_file=false) {
+		$short_file_path = $meta_value['file'];
+		if (!$is_ori_file) {
+			$short_file_path = $this->tmp_path.$short_file_path;
+		}
+
+		// del webp
+		$this->__media->info($short_file_path.'.webp', $this->tmp_pid) && $this->__media->del($short_file_path.'.webp', $this->tmp_pid);
+		$this->__media->info($short_file_path.'.optm.webp', $this->tmp_pid) && $this->__media->del($short_file_path.'.optm.webp', $this->tmp_pid);
+
+		$extension = pathinfo($short_file_path, PATHINFO_EXTENSION);
+		$local_filename = substr($short_file_path, 0, -strlen($extension)-1);
+		$bk_file = $local_filename.'.bk.'.$extension;
+		$bk_optm_file = $local_filename.'.bk.optm.'.$extension;
+
+		// del optimized ori
+		if ($this->__media->info($bk_file, $this->tmp_pid)) {
+			$this->__media->del($short_file_path, $this->tmp_pid);
+			$this->__media->rename($bk_file, $short_file_path, $this->tmp_pid);
+		}
+		$this->__media->info($bk_optm_file, $this->tmp_pid) && $this->__media->del($bk_optm_file, $this->tmp_pid);
 	}
 
 	/**
