@@ -528,6 +528,12 @@ class Core extends Root {
 			return;
 		}
 
+		// Avoid PHP warning for header sent out already
+		if (headers_sent()) {
+			self::debug('❌ !!! Err: Header sent out already');
+			return;
+		}
+
 		$this->_check_is_html();
 
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_api_control`.
