@@ -249,7 +249,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 					</div>
 				</div>
 			</div>
-			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact" style="display: none;">
 				<a href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESCAN ); ?>" class="" data-balloon-pos="up" data-balloon-length="large" aria-label="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ); ?>">
 					<?php echo __( 'Rescan New Thumbnails', 'litespeed-cache' ); ?>
 				</a>

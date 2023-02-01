@@ -405,7 +405,7 @@ class Img_Optm extends Base {
 
 		Utility::compatibility();
 		$post_ids = array_unique(array_column($this->_img_in_queue, 'pid'));
-		$list = $wpdb->get_results( "SELECT post_id FROM $this->_table_img_optm WHERE post_id in (".implode(',', $post_ids).") GROUP BY post_id" );
+		$list = $wpdb->get_results("SELECT post_id FROM $this->_table_img_optm WHERE post_id in (".implode(',', $post_ids).") GROUP BY post_id");
 		foreach ( $list as $v ) {
 			$finished_ids[] = $v->post_id;
 		}
@@ -417,6 +417,9 @@ class Img_Optm extends Base {
 				continue;
 			}
 		}
+
+		// Drop all existing legacy records
+		$wpdb->query("DELETE FROM $this->_table_img_optm WHERE post_id in (".implode(',', $post_ids).")");
 	}
 
 	/**
@@ -867,7 +870,7 @@ class Img_Optm extends Base {
 				$total_pulled_webp ++;
 			}
 
-			Debug2::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id );
+			Debug2::debug2('[Img_Optm] Remove _table_img_optming record [id] '.$row_img->id);
 
 			// Delete working table
 			$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
@@ -1092,6 +1095,7 @@ class Img_Optm extends Base {
 	 */
 	private function _rescan() {
 		global $wpdb;
+		exit('tobedone');
 
 		$offset = ! empty( $_GET[ 'litespeed_i' ] ) ? $_GET[ 'litespeed_i' ] : 0;
 		$limit = 500;
