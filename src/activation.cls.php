@@ -455,7 +455,7 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function auto_update_hook( $update, $item ) {
-		if ( $item->slug == 'litespeed-cache' ) {
+		if ( ! empty( $item->slug ) && 'litespeed-cache' === $item->slug ) {
 			$auto_v = Cloud::version_check( 'auto_update_plugin' );
 
 			if ( ! empty( $auto_v[ 'latest' ] ) && ! empty( $item->new_version ) && $auto_v[ 'latest' ] === $item->new_version ) {
