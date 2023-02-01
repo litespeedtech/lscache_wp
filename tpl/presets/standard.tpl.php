@@ -45,7 +45,7 @@ $presets['advanced'] = array(
 		__( 'Remove Noscript Tags', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools.' ),
+		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools.', 'litespeed-cache' ),
 		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
@@ -60,7 +60,7 @@ $presets['aggressive'] = array(
 		__( 'Lazy Load for Iframes', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset might work out of the box for some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning.' ),
+		__( 'This preset might work out of the box for some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning.', 'litespeed-cache' ),
 		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
 	)
 );
@@ -76,7 +76,7 @@ $presets['extreme'] = array(
 		__( 'Inline CSS added to Combine', 'litespeed-cache' )
 	),
 	'footer' => array(
-		__( 'This preset almost certainly will require testing and exclusions for some CSS, JS and Lazy Loaded images. Pay special attention to logos, or HTML-based slider images.' ),
+		__( 'This preset almost certainly will require testing and exclusions for some CSS, JS and Lazy Loaded images. Pay special attention to logos, or HTML-based slider images.', 'litespeed-cache' ),
 		__( 'A Domain Key is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' )
 	)
 );
