@@ -133,29 +133,31 @@ class DB_Optm extends Root {
 				$rev_max = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
 				$rev_age = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
 
+				$postmeta = "`$wpdb->postmeta`";
+				$posts = "`$wpdb->posts`";
+
 				$sql_postmeta = "
-					`$wpdb->postmeta`
-					LEFT JOIN `$wpdb->posts`
-					ON `$wpdb->posts`.ID = `$wpdb->postmeta`.post_id
+					$postmeta
+					LEFT JOIN $posts
+					ON $posts.ID = $postmeta.post_id
 				";
 
-				$sql_where = "WHERE `$wpdb->posts`.post_type = 'revision'";
+				$sql_where = "WHERE $posts.post_type = 'revision'";
 
-				$sql_add =
-					$rev_age
-					? "AND `$wpdb->posts`.post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY )"
+				$sql_add = $rev_age
+					? "AND $posts.post_modified < DATE_SUB( NOW(), INTERVAL $rev_age DAY )"
 					: '';
 
 				if ( ! $rev_max ) {
 					$sql_where = "$sql_where $sql_add";
-					$wpdb->query( "DELETE FROM $sql_postmeta $sql_where" );
-					$wpdb->query( "DELETE FROM `$wpdb->posts` $sql_where" );
-				}
-				else { // Has count limit
+					$wpdb->query( "DELETE $postmeta FROM $sql_postmeta $sql_where" );
+					$wpdb->query( "DELETE FROM $posts $sql_where" );
+				} else {
+					// Has count limit
 					$sql = "
 						SELECT COUNT(*) - $rev_max
 						AS del_max, post_parent
-						FROM `$wpdb->posts`
+						FROM $posts
 						WHERE post_type = 'revision'
 						$sql_add
 						GROUP BY post_parent
@@ -164,15 +166,16 @@ class DB_Optm extends Root {
 					$res = $wpdb->get_results( $sql );
 					$sql_where = "
 						$sql_where
-						AND `$wpdb->posts`.post_parent = %d
-						ORDER BY `$wpdb->posts`.ID
+						AND $posts.post_parent = %d
+						ORDER BY $posts.ID
 						LIMIT %d
 					";
 					foreach ( $res as $v ) {
-						$sql = "DELETE FROM $sql_postmeta $sql_where";
-						$wpdb->query( $wpdb->prepare( $sql, array( $v->post_parent, $v->del_max ) ) );
-						$sql = "DELETE FROM `$wpdb->posts` $sql_where";
-						$wpdb->query( $wpdb->prepare( $sql, array( $v->post_parent, $v->del_max ) ) );
+						$args = array( $v->post_parent, $v->del_max );
+						$sql = $wpdb->prepare( "DELETE $postmeta FROM $sql_postmeta $sql_where", $args );
+						$wpdb->query( $sql );
+						$sql = $wpdb->prepare( "DELETE FROM $posts $sql_where", $args );
+						$wpdb->query( $sql );
 					}
 				}
 
