@@ -75,43 +75,46 @@ class Img_Optm extends Base {
 
 	/**
 	 * Gather images auto when update attachment meta
+	 * This is to optimize new uploaded images first. Stored in img_optm table.
+	 * Later normal process will auto remove these records when trying to optimize these images again
 	 *
 	 * @since  4.0
 	 */
-	public function wp_update_attachment_metadata( $meta_value, $post_id ) {
+	public function wp_update_attachment_metadata($meta_value, $post_id) {
 		global $wpdb;
 
-		Debug2::debug2( '[ImgOptm] 🖌️ Auto update attachment meta [id] ' . $post_id );
-
-		if ( empty( $meta_value[ 'file' ] ) ) {
+		self::debug2('🖌️ Auto update attachment meta [id] '.$post_id);
+		if (empty($meta_value['file'])) {
 			return;
 		}
 
 		// Load gathered images
-		if ( ! $this->_existed_src_list ) { // To aavoid extra query when recalling this function
-			Debug2::debug( '[Img_Optm] SELECT src from img_optm table' );
+		if (!$this->_existed_src_list) { // To aavoid extra query when recalling this function
+			self::debug('SELECT src from img_optm table');
 			$q = "SELECT src FROM `$this->_table_img_optm` WHERE post_id = %d";
-			$list = $wpdb->get_results( $wpdb->prepare( $q, $post_id ) );
-			foreach ( $list as $v ) {
-				$this->_existed_src_list[] = $post_id . '.' . $v->src;
+			$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
+			foreach ($list as $v) {
+				$this->_existed_src_list[] = $post_id.'.'.$v->src;
 			}
 		}
 
 		// Prepare images
 		$this->tmp_pid = $post_id;
-		$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/';
-		$this->_append_img_queue( $meta_value, true );
-		if ( ! empty( $meta_value[ 'sizes' ] ) ) {
-			array_map( array( $this, '_append_img_queue' ), $meta_value[ 'sizes' ] );
+		$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME).'/';
+		$this->_append_img_queue($meta_value, true);
+		if (!empty($meta_value['sizes'])) {
+			array_map(array($this, '_append_img_queue'), $meta_value['sizes']);
 		}
 
-		if ( ! $this->_img_in_queue ) {
-			Debug2::debug( '[Img_Optm] auto update attachment meta 2 bypass: empty _img_in_queue' );
+		if (!$this->_img_in_queue) {
+			self::debug('auto update attachment meta 2 bypass: empty _img_in_queue');
 			return;
 		}
 
 		// Save to DB
 		$this->_save_raw();
+
+		// $this->_send_request();
 	}
 
 	/**
