@@ -14,8 +14,8 @@ $img_count = $__img_optm->img_count();
 $optm_summary = Img_Optm::get_summary();
 
 list( $last_run, $is_running ) = $__img_optm->cron_running( false );
-$finished_percentage = 100 - floor( $img_count[ 'groups_raw' ] * 100 / $img_count[ 'groups_all' ] );
-if ( $finished_percentage == 100 && $img_count[ 'groups_raw' ] ) {
+$finished_percentage = 100 - floor( $img_count[ 'groups_new' ] * 100 / $img_count[ 'groups_all' ] );
+if ( $finished_percentage == 100 && $img_count[ 'groups_new' ] ) {
 	$finished_percentage = 99;
 }
 
@@ -58,7 +58,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 
 			<div class="litespeed-img-optim-actions">
 				<a data-litespeed-onlyonce class="button button-primary"
-					<?php if ($img_count['groups_raw']) : ?>
+					<?php if ($img_count['groups_new'] || $img_count['groups.'.Img_Optm::STATUS_RAW]) : ?>
 						href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ); ?>"
 					<?php else : ?>
 						href='javascript:;' disabled
@@ -84,6 +84,25 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 				</h3>
 
 				<div class="litespeed-light-code">
+
+					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_NEW ] ) ) : ?>
+						<p class="litespeed-success">
+							<?php echo Lang::img_status( Img_Optm::STATUS_NEW ); ?>:
+							<code>
+								<?php echo Admin_Display::print_plural($img_count['group_new']); ?>
+							</code>
+						</p>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
+						<p class="litespeed-success">
+							<?php echo Lang::img_status( Img_Optm::STATUS_RAW ); ?>:
+							<code>
+								<?php echo Admin_Display::print_plural( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ); ?>
+								(<?php echo Admin_Display::print_plural( $img_count[ 'img.' . Img_Optm::STATUS_RAW ], 'image' ); ?>)
+							</code>
+						</p>
+					<?php endif; ?>
 
 					<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
 						<p class="litespeed-success">
@@ -231,8 +250,8 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 						<p>
 							<?php echo __( 'Image groups total', 'litespeed-cache'); ?>:
 
-							<?php if ($img_count['groups_raw']) : ?>
-								<code><?php echo Admin_Display::print_plural( $img_count['groups_raw'], 'group' ); ?></code>
+							<?php if ($img_count['groups_new']) : ?>
+								<code><?php echo Admin_Display::print_plural( $img_count['groups_new'], 'group' ); ?></code>
 							<?php else : ?>
 								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
 							<?php endif; ?>

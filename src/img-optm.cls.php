@@ -27,7 +27,8 @@ class Img_Optm extends Base {
 	const TYPE_RESET_ROW = 'reset_row';
 	const TYPE_RM_BKUP = 'rm_bkup';
 
-	const STATUS_RAW 		= 0; // 'raw';
+	const STATUS_NEW 		= 0; // 'new';
+	const STATUS_RAW 		= 1; // 'raw';
 	const STATUS_REQUESTED 	= 3; // 'requested';
 	const STATUS_NOTIFIED 	= 6; // 'notified';
 	const STATUS_DUPLICATED 	= 8; // 'duplicated';
@@ -92,6 +93,11 @@ class Img_Optm extends Base {
 		if (!$this->_existed_src_list) { // To aavoid extra query when recalling this function
 			self::debug('SELECT src from img_optm table');
 			$q = "SELECT src FROM `$this->_table_img_optm` WHERE post_id = %d";
+			$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
+			foreach ($list as $v) {
+				$this->_existed_src_list[] = $post_id.'.'.$v->src;
+			}
+			$q = "SELECT src FROM `$this->_table_img_optming` WHERE post_id = %d";
 			$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
 			foreach ($list as $v) {
 				$this->_existed_src_list[] = $post_id.'.'.$v->src;
@@ -1376,7 +1382,7 @@ class Img_Optm extends Base {
 
 		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
 		$groups_all = $wpdb->get_var($q);
-		$groups_raw = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
+		$groups_new = $wpdb->get_var($q.' AND ID>'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
 		$groups_done = $wpdb->get_var($q.' AND ID<'.(int)$this->_summary['next_post_id'].' ORDER BY ID');
 
 		$q = "SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY ID DESC LIMIT 1";
@@ -1385,7 +1391,7 @@ class Img_Optm extends Base {
 		$count_list = array(
 			'max_id'	=> $max_id,
 			'groups_all'	=> $groups_all,
-			'groups_raw'	=> $groups_raw,
+			'groups_new'	=> $groups_new,
 			'groups_done'	=> $groups_done,
 		);
 
@@ -1393,6 +1399,7 @@ class Img_Optm extends Base {
 		if ( Data::cls()->tb_exist( 'img_optming' ) ) {
 			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 			$groups_to_check = array(
+				self::STATUS_RAW,
 				self::STATUS_REQUESTED,
 				self::STATUS_NOTIFIED,
 				self::STATUS_ERR_FETCH,
