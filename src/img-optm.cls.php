@@ -987,9 +987,11 @@ class Img_Optm extends Base {
 		if (Data::cls()->tb_exist('img_optming')) {
 			// Get min post id to mark
 			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
-			$min_pid = $wpdb->get_var($q);
-			$this->_summary['next_post_id'] = $min_pid;
-			self::save_summary();
+			$min_pid = $wpdb->get_var($q)-1;
+			if ($this->_summary['next_post_id']>$min_pid) {
+				$this->_summary['next_post_id'] = $min_pid;
+				self::save_summary();
+			}
 
 			$q = "TRUNCATE `$this->_table_img_optming`";
 			$wpdb->query($q);
