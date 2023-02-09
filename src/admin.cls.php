@@ -140,6 +140,8 @@ class Admin extends Root {
 	 * After a LSCWP_CTRL action, need to redirect back to the same page
 	 * without the nonce and action in the query string.
 	 *
+	 * If the redirect url cannot be determined, redirects to the homepage.
+	 *
 	 * @since 1.0.12
 	 * @access public
 	 * @global string $pagenow
@@ -148,7 +150,7 @@ class Admin extends Root {
 		global $pagenow;
 
 		if ( ! empty( $_GET[ '_litespeed_ori' ] ) ) {
-			wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
+			wp_safe_redirect( wp_get_referer() ?: get_home_url() );
 			exit;
 		}
 
