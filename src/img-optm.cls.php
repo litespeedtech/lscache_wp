@@ -371,6 +371,8 @@ class Img_Optm extends Base {
 		$count = count( $this->_img_in_queue );
 		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
 
+		$this->_img_in_queue = array();
+
 		return $count;
 	}
 
