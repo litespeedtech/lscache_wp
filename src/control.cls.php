@@ -741,8 +741,9 @@ class Control extends Root {
 			return $this->_no_cache_for( 'Query String Action' );
 		}
 
-		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]);
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : 'unknown';
+		if ( 'GET' !== $method ) {
+			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
 
 		if ( is_feed() && $this->conf( Base::O_CACHE_TTL_FEED ) == 0 ) {
