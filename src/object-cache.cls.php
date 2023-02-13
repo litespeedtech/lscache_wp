@@ -32,6 +32,7 @@ class Object_Cache extends Root {
 	private $_cfg_method;
 	private $_cfg_host;
 	private $_cfg_port;
+	private $_cfg_life;
 	private $_cfg_persistent;
 	private $_cfg_admin;
 	private $_cfg_transients;
