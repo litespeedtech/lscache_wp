@@ -41,6 +41,7 @@ class Img_Optm extends Base {
 	const STATUS_XMETA 		= -8; // 'xmeta';
 	const STATUS_ERR 		= -9; // 'err';
 	const DB_SIZE = 'litespeed-optimize-size';
+	const DB_SET = 'litespeed-optimize-set';
 
 	const DB_NEED_PULL = 'need_pull';
 
@@ -50,6 +51,7 @@ class Img_Optm extends Base {
 	private $tmp_path;
 	private $_img_in_queue = array();
 	private $_existed_src_list = array();
+	private $_thumbnail_set = '';
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
@@ -344,6 +346,7 @@ class Img_Optm extends Base {
 	private function _save_raw() {
 		if (empty($this->_img_in_queue)) return;
 		$data = array();
+		$pid_list = array();
 		foreach ( $this->_img_in_queue as $k => $v ) {
 			$_img_info = $this->__media->info( $v[ 'src' ], $v[ 'pid' ] );
 
@@ -352,6 +355,7 @@ class Img_Optm extends Base {
 				unset( $this->_img_in_queue[ $k ] );
 				continue;
 			}
+			$pid_list[] = (int)$v[ 'pid' ];
 
 			$data[] = $v[ 'pid' ];
 			$data[] = self::STATUS_RAW;
@@ -373,7 +377,45 @@ class Img_Optm extends Base {
 
 		$this->_img_in_queue = array();
 
-		return $count;
+		// Save thumbnail groups for future rescan index
+		$this->_gen_thumbnail_set();
+
+		$existed_meta = $wpdb->get_results("SELECT * FROM `$wpdb->postmeta` WHERE post_id IN ('".implode("','", $pid_list)."') AND meta_key='".self::DB_SET."'");
+		$existed_pid = array();
+		if ($existed_meta) {
+			foreach ($existed_meta as $v) {
+				$existed_pid[] = $v->post_id;
+			}
+			$wpdb->query($wpdb->prepare("UPDATE `$wpdb->postmeta` SET meta_value=%s WHERE post_id IN ('".implode("','", $existed_pid)."') AND meta_key=%s", array($this->_thumbnail_set, self::DB_SET)));
+		}
+
+		# Add new meta
+		$new_pids = $existed_pid ? array_diff($pid_list, $existed_pid) : $pid_list;
+		if ($new_pids) {
+			foreach ($new_pids as $v) {
+				Debug2::debug('[Img_Optm] New group set info [pid] '.$v);
+				$q = "INSERT INTO `$wpdb->postmeta` (post_id, meta_key, meta_value) VALUES (%d, %s, %s)";
+				$wpdb->query($wpdb->prepare($q, array($v, self::DB_SET, $this->_thumbnail_set)));
+			}
+		}
+	}
+
+	/**
+	 * Generate thumbnail sets of current image group
+	 *
+	 * @since 5.4
+	 */
+	private function _gen_thumbnail_set() {
+		if ($this->_thumbnail_set) {
+			return;
+		}
+		$set = array();
+		foreach (Media::cls()->get_image_sizes() as $size) {
+			$curr_size = $size['width'].'x'.$size['height'];
+			if (in_array($curr_size, $set)) continue;
+			$set[] = $curr_size;
+		}
+		$this->_thumbnail_set = implode(PHP_EOL, $set);
 	}
 
 	/**
@@ -1061,6 +1103,7 @@ class Img_Optm extends Base {
 		// Delete postmeta info
 		$q = "DELETE FROM `$wpdb->postmeta` WHERE meta_key = %s";
 		$wpdb->query($wpdb->prepare($q, self::DB_SIZE));
+		$wpdb->query($wpdb->prepare($q, self::DB_SET));
 
 		// Delete img_optm table
 		Data::cls()->tb_del('img_optm');
@@ -1661,6 +1704,7 @@ class Img_Optm extends Base {
 		$wpdb->query( $wpdb->prepare( $q, $post_id ) );
 
 		delete_post_meta( $post_id, self::DB_SIZE );
+		delete_post_meta( $post_id, self::DB_SET );
 
 		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
