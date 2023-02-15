@@ -5,3 +5,6 @@
 
 # JS file URL excludes
 
+stats.wp.com/e-
+_stq
+## JetPack Stats
