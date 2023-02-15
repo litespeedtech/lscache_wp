@@ -51,6 +51,7 @@ class Img_Optm extends Base {
 	private $tmp_path;
 	private $_img_in_queue = array();
 	private $_existed_src_list = array();
+	private $_pids_set = array();
 	private $_thumbnail_set = '';
 	private $_table_img_optm;
 	private $_table_img_optming;
@@ -373,12 +374,17 @@ class Img_Optm extends Base {
 		$wpdb->query( $wpdb->prepare( $q, $data ) );
 
 		$count = count( $this->_img_in_queue );
-		Debug2::debug( '[Img_Optm] Added raw images [total] ' . $count );
+		self::debug('Added raw images [total] '.$count);
 
 		$this->_img_in_queue = array();
 
 		// Save thumbnail groups for future rescan index
 		$this->_gen_thumbnail_set();
+
+		$pid_list = array_unique($pid_list);
+		self::debug('pid list to append to postmeta', $pid_list);
+		$pid_list = array_diff($pid_list, $this->_pids_set);
+		$this->_pids_set = array_merge($this->_pids_set, $pid_list);
 
 		$existed_meta = $wpdb->get_results("SELECT * FROM `$wpdb->postmeta` WHERE post_id IN ('".implode("','", $pid_list)."') AND meta_key='".self::DB_SET."'");
 		$existed_pid = array();
@@ -386,14 +392,16 @@ class Img_Optm extends Base {
 			foreach ($existed_meta as $v) {
 				$existed_pid[] = $v->post_id;
 			}
+			self::debug('pid list to update postmeta', $existed_pid);
 			$wpdb->query($wpdb->prepare("UPDATE `$wpdb->postmeta` SET meta_value=%s WHERE post_id IN ('".implode("','", $existed_pid)."') AND meta_key=%s", array($this->_thumbnail_set, self::DB_SET)));
 		}
 
 		# Add new meta
 		$new_pids = $existed_pid ? array_diff($pid_list, $existed_pid) : $pid_list;
 		if ($new_pids) {
+			self::debug('pid list to update postmeta', $new_pids);
 			foreach ($new_pids as $v) {
-				Debug2::debug('[Img_Optm] New group set info [pid] '.$v);
+				self::debug('New group set info [pid] '.$v);
 				$q = "INSERT INTO `$wpdb->postmeta` (post_id, meta_key, meta_value) VALUES (%d, %s, %s)";
 				$wpdb->query($wpdb->prepare($q, array($v, self::DB_SET, $this->_thumbnail_set)));
 			}
