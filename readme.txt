@@ -250,6 +250,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 5.4 - Mar 28 2023 =
+* **Image Optimize** Refactored optimization DB storage.
+* **Image Optimize** Reduced the table size.
+* **Image Optimize** Phased out `imgoptm` table gradually.
+
 = 5.3.3 - Feb 22 2023 =
 * **Page Optimize** Excluded Jetpack stats JS.
 * **DB Optimize** Fixed DB Optm SQL for revision postmeta.
