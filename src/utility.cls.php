@@ -553,7 +553,7 @@ class Utility extends Root {
 	 * @access public
 	 * @param  string $content
 	 * @param  bool $type String handler type
-	 * @return string
+	 * @return string|array
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
 		$types = $type ? explode( ',', $type ) : array();
