@@ -14,12 +14,13 @@ $this->form_action();
 	<tr>
 		<th>
 			<?php $id = Base::O_CRAWLER_SITEMAP; ?>
-			<?php $this->title( $id ); ?>
+			<?php $this->title($id); ?>
 		</th>
 		<td>
-			<?php $this->build_input( $id, 'litespeed-input-long' ); ?>
+			<?php $this->build_textarea($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __('The crawler will use your XML sitemap or sitemap index. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>
