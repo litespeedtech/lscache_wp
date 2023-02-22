@@ -7,20 +7,11 @@ $health_scores = Health::cls()->scores();
 $crawler_summary = Crawler::get_summary();
 
 // Image related info
-$optm_summary = Img_Optm::get_summary();
+$img_optm_summary = Img_Optm::get_summary();
 $img_count = Img_Optm::cls()->img_count();
-if ( ! empty( $img_count[ 'groups_all' ] ) ) {
-	$img_gathered_percentage = 100 - floor( $img_count[ 'groups_not_gathered' ] * 100 / $img_count[ 'groups_all' ] );
-}
-else {
-	$img_gathered_percentage = 0;
-}
-
-if ( ! empty( $img_count[ 'imgs_gathered' ] ) ) {
-	$img_finished_percentage = 100 - floor( $img_count[ 'img.' . Img_Optm::STATUS_RAW ] * 100 / $img_count[ 'imgs_gathered' ] );
-}
-else {
-	$img_finished_percentage = 0;
+$img_finished_percentage = 100-floor($img_count['groups_new']*100/$img_count['groups_all']);
+if ( $img_finished_percentage == 100 && $img_count['groups_new']) {
+	$img_finished_percentage = 99;
 }
 
 $cloud_summary = Cloud::get_summary();
@@ -331,33 +322,30 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 						<div class="litespeed-postbox-double-col">
 							<div class="litespeed-flex-container">
 								<div class="litespeed-icon-vertical-middle">
-									<?php echo GUI::pie( $img_gathered_percentage, 70, true ); ?>
+									<?php echo GUI::pie($img_finished_percentage, 70, true); ?>
 								</div>
 								<div>
 									<div class="litespeed-dashboard-stats">
-										<h3><?php echo __('Image Groups Prepared','litespeed-cache'); ?></h3>
-										<p>
-											<strong><?php echo ( $img_count[ 'groups_all' ] - $img_count[ 'groups_not_gathered' ] ); ?></strong>
-											<span class="litespeed-desc">of <?php echo $img_count[ 'groups_all' ]; ?></span>
-										</p>
+										<a data-litespeed-onlyonce class="button button-primary"
+											<?php if ($img_count['groups_new'] || $img_count['groups.'.Img_Optm::STATUS_RAW]) : ?>
+												href="<?php echo Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ); ?>"
+											<?php else : ?>
+												href='javascript:;' disabled
+											<?php endif; ?>
+											>
+											<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __( 'Send Optimization Request', 'litespeed-cache' ); ?>
+										</a>
 									</div>
 								</div>
 							</div>
+							<p>
+								<?php echo __( 'Total Reduction', 'litespeed-cache' ); ?>: <code><?php echo isset( $img_optm_summary[ 'reduced' ] ) ? Utility::real_size( $img_optm_summary[ 'reduced' ] ) : '-'; ?></code>
+							</p>
+							<p>
+								<?php echo __( 'Images Pulled', 'litespeed-cache' ); ?>: <code><?php echo isset( $img_optm_summary[ 'img_taken' ] ) ? $img_optm_summary[ 'img_taken' ] : '-'; ?></code>
+							</p>
 
-							<div class="litespeed-flex-container">
-								<div class="litespeed-icon-vertical-middle">
-									<?php echo GUI::pie( $img_finished_percentage, 70, true ); ?>
-								</div>
-								<div>
-									<div class="litespeed-dashboard-stats">
-										<h3><?php echo __('Images Requested','litespeed-cache'); ?></h3>
-										<p>
-											<strong><?php echo ( $img_count[ 'imgs_gathered' ] - $img_count[ 'img.' . Img_Optm::STATUS_RAW ]); ?></strong>
-											<span class="litespeed-desc">of <?php echo $img_count[ 'imgs_gathered' ]; ?></span>
-										</p>
-									</div>
-								</div>
-							</div>
+
 						</div>
 						<div class="litespeed-postbox-double-col">
 							<?php if ( ! empty( $img_count[ 'group.' . Img_Optm::STATUS_REQUESTED ] ) ) : ?>
@@ -382,10 +370,10 @@ $vpi_queue_count = count( $this->load_queue( 'vpi' ) );
 							<?php endif; ?>
 
 							<p>
-								<?php echo __( 'Last Request', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $optm_summary[ 'last_requested' ] ) : '-'; ?></code>
+								<?php echo __( 'Last Request', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $img_optm_summary[ 'last_requested' ] ) ? Utility::readable_time( $img_optm_summary[ 'last_requested' ] ) : '-'; ?></code>
 							</p>
 							<p>
-								<?php echo __( 'Last Pull', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $optm_summary[ 'last_pull' ] ) ? Utility::readable_time( $optm_summary[ 'last_pull' ] ) : '-'; ?></code>
+								<?php echo __( 'Last Pull', 'litespeed-cache' ); ?>: <code><?php echo ! empty( $img_optm_summary[ 'last_pull' ] ) ? Utility::readable_time( $img_optm_summary[ 'last_pull' ] ) : '-'; ?></code>
 							</p>
 
 							<?php
