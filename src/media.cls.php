@@ -624,14 +624,14 @@ class Media extends Root {
 					self::debug( '⚠️ Missing sizes for image [src] ' . $attrs[ 'src' ] );
 					$dimensions = $this->_detect_dimensions( $attrs[ 'src' ] );
 					if ( $dimensions ) {
-						$ori_width = $dimensions[ 0 ];
-						$ori_height = $dimensions[ 1 ];
+						$ori_width = (int)$dimensions[ 0 ];
+						$ori_height = (int)$dimensions[ 1 ];
 						// Calculate height based on width
-						if ( ! empty( $attrs[ 'width' ] ) && $attrs[ 'width' ] != 'auto' ) {
-							$ori_height = intval( $ori_height * $attrs[ 'width' ] / $ori_width );
+						if (!empty($attrs['width']) && $attrs['width'] != 'auto') {
+							$ori_height = intval($ori_height * (int)$attrs['width'] / $ori_width);
 						}
-						elseif ( ! empty( $attrs[ 'height' ] ) && $attrs[ 'height' ] != 'auto' ) {
-							$ori_width = intval( $ori_width * $attrs[ 'height' ] / $ori_height );
+						elseif (!empty($attrs['height']) && $attrs['height'] != 'auto') {
+							$ori_width = intval($ori_width * (int)$attrs['height'] / $ori_height);
 						}
 
 						$attrs[ 'width' ] = $ori_width;
