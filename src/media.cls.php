@@ -387,8 +387,10 @@ class Media extends Root {
 		}
 
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-			if ( strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
-				return true;
+			foreach ( array( 'Chrome-Lighthouse', 'Page Speed' ) as $needle ) {
+				if ( stripos( $_SERVER[ 'HTTP_USER_AGENT' ], $needle ) !== false ) {
+					return true;
+				}
 			}
 
 			if ( preg_match( "/iPhone OS (\d+)_/i", $_SERVER[ 'HTTP_USER_AGENT' ], $matches ) ) {
