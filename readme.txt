@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.1.1
-Stable tag: 5.3.3
+Stable tag: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -251,9 +251,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.4 - Mar 28 2023 =
-* **Image Optimize** Refactored optimization DB storage.
-* **Image Optimize** Reduced the table size.
-* **Image Optimize** Phased out `imgoptm` table gradually.
+* **Image Optimize** Refactored DB storage for this feature.
+* **Image Optimize** Reduced DB table size.
+* **Image Optimize** Existing `img_optm` DB tables will have their data gradually transitioned to the new storage format with this update. Once an `img_optm` table is empty, it won't be used anymore.
 
 = 5.3.3 - Feb 22 2023 =
 * **Page Optimize** Excluded Jetpack stats JS.
