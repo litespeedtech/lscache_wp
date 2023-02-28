@@ -387,8 +387,9 @@ class Media extends Root {
 		}
 
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-			foreach ( array( 'Chrome-Lighthouse', 'Page Speed' ) as $needle ) {
-				if ( stripos( $_SERVER[ 'HTTP_USER_AGENT' ], $needle ) !== false ) {
+			$user_agents = array( 'chrome-lighthouse', 'googlebot', 'page speed' );
+			foreach ( $user_agents as $user_agent ) {
+				if ( stripos( $_SERVER[ 'HTTP_USER_AGENT' ], $user_agent ) !== false ) {
 					return true;
 				}
 			}
