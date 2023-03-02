@@ -533,6 +533,14 @@ class Conf extends Base {
 			return;
 		}
 
+		if ($id==self::O_SERVER_IP) {
+			if (!Utility::valid_ipv4($val)) {
+				$msg = sprintf(__('Saving option failed. IPv4 only for %s.', 'litespeed-cache'), Lang::title(Base::O_SERVER_IP));
+				Admin_Display::error($msg);
+				return;
+			}
+		}
+
 		if ( ! array_key_exists( $id, self::$_default_options ) ) {
 			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Conf] Invalid option ID ' . $id );
 			return;
