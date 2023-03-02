@@ -526,6 +526,14 @@ class Utility extends Root {
 	}
 
 	/**
+	 * Validate ip v4
+	 * @since 5.5
+	 */
+	public static function valid_ipv4($ip) {
+		return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+	}
+
+	/**
 	 * Generate domain const
 	 *
 	 * This will generate http://www.example.com even there is a subfolder in home_url setting
