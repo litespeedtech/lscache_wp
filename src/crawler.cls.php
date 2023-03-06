@@ -190,6 +190,28 @@ class Crawler extends Root {
 		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode( $data ), true );
 	}
 
+	public static function start_async(){
+		$args = array(
+			'timeout'   => 0.01,
+			'blocking'  => false,
+			'sslverify' => false,
+		);
+		$url = add_query_arg(array('action'=>'async_crawler','nonce'  => wp_create_nonce('async_crawler'),), admin_url( 'admin-ajax.php' ));
+		wp_remote_post( esc_url_raw( $url ), $args );
+
+
+		$msg = __( 'Started async crawling', 'litespeed-cache' );
+		Admin_Display::note( $msg );
+	}
+
+	public static function start_async_handler(){
+		self::debug('start_async_handler');
+		// Don't lock up other requests while processing
+		session_write_close();
+		check_ajax_referer( 'async_crawler', 'nonce' );
+		self::start(true);
+	}
+
 	/**
 	 * Proceed crawling
 	 *
@@ -1097,7 +1119,7 @@ class Crawler extends Root {
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
-				self::start( true );
+				self::start_async();
 				break;
 
 			case self::TYPE_RESET:

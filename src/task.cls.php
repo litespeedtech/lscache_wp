@@ -38,6 +38,8 @@ class Task extends Root {
 	 */
 	public function init() {
 		Debug2::debug2( '⏰ Task init' );
+		add_action( 'wp_ajax_async_crawler', 'LiteSpeed\Crawler::start_async_handler' );
+		add_action( 'wp_ajax_nopriv_async_crawler', 'LiteSpeed\Crawler::start_async_handler' );
 
 		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
 
