@@ -200,6 +200,11 @@ class Crawler extends Root
 		File::save(LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode($data), true);
 	}
 
+	/**
+	 * Manually start async crawling
+	 *
+	 * @since 5.5
+	 */
 	public static function start_async()
 	{
 		$args = array(
@@ -208,19 +213,26 @@ class Crawler extends Root
 			'sslverify' => false,
 		);
 		$url = add_query_arg(array('action' => 'async_crawler', 'nonce'  => wp_create_nonce('async_crawler'),), admin_url('admin-ajax.php'));
-		wp_remote_post(esc_url_raw($url), $args);
-
+		$res = wp_remote_post(esc_url_raw($url), $args);
+		self::debug('----main---req---ajax wp_remote_post', $res);
 
 		$msg = __('Started async crawling', 'litespeed-cache');
-		Admin_Display::note($msg);
+		Admin_Display::success($msg);
 	}
 
+	/**
+	 * Ajax crawl handler
+	 *
+	 * @since 5.5
+	 */
 	public static function start_async_handler()
 	{
-		self::debug('start_async_handler');
+		self::debug('------------async-------------start_async_handler');
 		// Don't lock up other requests while processing
 		session_write_close();
+		self::debug('-------------async------------ check_ajax_referer');
 		check_ajax_referer('async_crawler', 'nonce');
+		self::debug('--------------async----------- start async crawling');
 		self::start(true);
 	}
 
