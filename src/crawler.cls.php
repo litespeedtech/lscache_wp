@@ -214,8 +214,8 @@ class Crawler extends Root
 			// 'cookies'   => $_COOKIE,
 		);
 		$url = add_query_arg(array('action' => 'async_crawler', 'nonce'  => wp_create_nonce('async_crawler'),), admin_url('admin-ajax.php'));
-		$res = wp_remote_post(esc_url_raw($url), $args);
-		self::debug('----main---req---ajax wp_remote_post', $res);
+		wp_remote_post(esc_url_raw($url), $args);
+		// self::debug('----main---req---ajax wp_remote_post', $res);
 
 		$msg = __('Started async crawling', 'litespeed-cache');
 		Admin_Display::success($msg);
