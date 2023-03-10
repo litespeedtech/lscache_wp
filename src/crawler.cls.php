@@ -211,6 +211,7 @@ class Crawler extends Root
 			'timeout'   => 0.01,
 			'blocking'  => false,
 			'sslverify' => false,
+			// 'cookies'   => $_COOKIE,
 		);
 		$url = add_query_arg(array('action' => 'async_crawler', 'nonce'  => wp_create_nonce('async_crawler'),), admin_url('admin-ajax.php'));
 		$res = wp_remote_post(esc_url_raw($url), $args);
@@ -230,9 +231,12 @@ class Crawler extends Root
 		self::debug('------------async-------------start_async_handler');
 		// Don't lock up other requests while processing
 		session_write_close();
-		self::debug('-------------async------------ check_ajax_referer');
-		check_ajax_referer('async_crawler', 'nonce');
-		self::debug('--------------async----------- start async crawling');
+		// self::debug('-------------async------------ check_ajax_referer');
+		// add_action('check_ajax_referer', function ($a, $b) {
+		// 	\LiteSpeed\Crawler::debug('---------------' . $a . $b);
+		// });
+		// check_ajax_referer('async_crawler', 'nonce');
+		// self::debug('--------------async----------- start async crawling');
 		self::start(true);
 	}
 
