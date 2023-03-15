@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.5 - Apr 2023 =
 * **Crawler** Sitemap allow multi maps. (Tobolo/Tim Nolte)
+* **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
 * **General** `Server IP` option only allowed IPv4 format. (Ruikai)
 
