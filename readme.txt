@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
 * **General** `Server IP` option only allowed IPv4 format. (Ruikai)
+* **Misc** HTML Comment now can show UCSS status.
 
 = 5.4 - Mar 28 2023 =
 * **Image Optimize** Refactored DB storage for this feature.
