@@ -1282,10 +1282,6 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if (!Data::cls()->tb_exist('img_optm')) {
-			return;
-		}
-
 		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
 		$limit = 500;
 
