@@ -59,7 +59,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 			<?php endif; ?>
 
 			<div class="litespeed-img-optim-actions">
-				<a data-litespeed-onlyonce class="button button-primary" <?php if ($img_count['groups_new'] || $img_count['groups.' . Img_Optm::STATUS_RAW]) : ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ); ?>" <?php else : ?> href='javascript:;' disabled <?php endif; ?>>
+				<a data-litespeed-onlyonce class="button button-primary" <?php if (!empty($img_count['groups_new']) || !empty($img_count['groups.' . Img_Optm::STATUS_RAW])) : ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ); ?>" <?php else : ?> href='javascript:;' disabled <?php endif; ?>>
 					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __('Send Optimization Request', 'litespeed-cache'); ?>
 				</a>
 
