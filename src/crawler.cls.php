@@ -257,7 +257,7 @@ class Crawler extends Root
 			self::debug('......crawler manually ran......');
 		}
 		$i = 0;
-		while (1) {
+		while ($i < 100) {
 			self::debug('......sleep ' . ($i++) . '......' . time());
 			sleep(1);
 		}
