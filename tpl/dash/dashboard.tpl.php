@@ -11,7 +11,8 @@ $crawler_summary = Crawler::get_summary();
 // Image related info
 $img_optm_summary = Img_Optm::get_summary();
 $img_count = Img_Optm::cls()->img_count();
-$img_finished_percentage = 100 - floor($img_count['groups_new'] * 100 / $img_count['groups_all']);
+$img_finished_percentage = 0;
+if ($img_count['groups_all']) $img_finished_percentage = 100 - floor($img_count['groups_new'] * 100 / $img_count['groups_all']);
 if ($img_finished_percentage == 100 && $img_count['groups_new']) {
 	$img_finished_percentage = 99;
 }
