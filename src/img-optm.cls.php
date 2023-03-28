@@ -62,6 +62,7 @@ class Img_Optm extends Base
 	private $_cron_ran = false;
 
 	private $__media;
+	private $__data;
 	protected $_summary;
 
 	/**
@@ -75,8 +76,9 @@ class Img_Optm extends Base
 
 		$this->wp_upload_dir = wp_upload_dir();
 		$this->__media = $this->cls('Media');
-		$this->_table_img_optm = $this->cls('Data')->tb('img_optm');
-		$this->_table_img_optming = $this->cls('Data')->tb('img_optming');
+		$this->__data = $this->cls('Data');
+		$this->_table_img_optm = $this->__data->tb('img_optm');
+		$this->_table_img_optming = $this->__data->tb('img_optming');
 
 		$this->_summary = self::get_summary();
 		if (empty($this->_summary['next_post_id'])) $this->_summary['next_post_id'] = 0;
@@ -101,17 +103,21 @@ class Img_Optm extends Base
 		// Load gathered images
 		if (!$this->_existed_src_list) { // To aavoid extra query when recalling this function
 			self::debug('SELECT src from img_optm table');
-			if (Data::cls()->tb_exist('img_optm')) {
+			if ($this->__data->tb_exist('img_optm')) {
 				$q = "SELECT src FROM `$this->_table_img_optm` WHERE post_id = %d";
 				$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
 				foreach ($list as $v) {
 					$this->_existed_src_list[] = $post_id . '.' . $v->src;
 				}
 			}
-			$q = "SELECT src FROM `$this->_table_img_optming` WHERE post_id = %d";
-			$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
-			foreach ($list as $v) {
-				$this->_existed_src_list[] = $post_id . '.' . $v->src;
+			if ($this->__data->tb_exist('img_optming')) {
+				$q = "SELECT src FROM `$this->_table_img_optming` WHERE post_id = %d";
+				$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
+				foreach ($list as $v) {
+					$this->_existed_src_list[] = $post_id . '.' . $v->src;
+				}
+			} else {
+				$this->__data->tb_create('img_optming');
 			}
 		}
 
@@ -202,7 +208,7 @@ class Img_Optm extends Base
 
 		self::debug('preparing images to push');
 
-		$this->cls('Data')->tb_create('img_optming');
+		$this->__data->tb_create('img_optming');
 
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare($q, array(self::STATUS_REQUESTED));
@@ -475,7 +481,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if (!Data::cls()->tb_exist('img_optm')) return;
+		if (!$this->__data->tb_exist('img_optm')) return;
 
 		if (!$this->_img_in_queue) return;
 
@@ -1057,7 +1063,7 @@ class Img_Optm extends Base
 		global $wpdb;
 
 		// Reset img_optm table's queue
-		if (Data::cls()->tb_exist('img_optming')) {
+		if ($this->__data->tb_exist('img_optming')) {
 			// Get min post id to mark
 			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
 			$min_pid = $wpdb->get_var($q) - 1;
@@ -1138,8 +1144,8 @@ class Img_Optm extends Base
 		$wpdb->query($wpdb->prepare($q, self::DB_SET));
 
 		// Delete img_optm table
-		Data::cls()->tb_del('img_optm');
-		Data::cls()->tb_del('img_optming');
+		$this->__data->tb_del('img_optm');
+		$this->__data->tb_del('img_optming');
 
 		// Clear options table summary info
 		self::delete_option('_summary');
@@ -1369,7 +1375,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if (!Data::cls()->tb_exist('img_optming')) {
+		if (!$this->__data->tb_exist('img_optming')) {
 			return;
 		}
 
@@ -1478,7 +1484,7 @@ class Img_Optm extends Base
 		);
 
 		// images count from work table
-		if (Data::cls()->tb_exist('img_optming')) {
+		if ($this->__data->tb_exist('img_optming')) {
 			$q = "SELECT COUNT(DISTINCT post_id),COUNT(*) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 			$groups_to_check = array(
 				self::STATUS_RAW,
