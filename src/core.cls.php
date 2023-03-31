@@ -471,6 +471,7 @@ class Core extends Root
 		 * CDN
 		 */
 		if (!defined('LITESPEED_NO_OPTM') || !LITESPEED_NO_OPTM) {
+			Debug2::debug('[Core] run hook litespeed_buffer_finalize');
 			$buffer = apply_filters('litespeed_buffer_finalize', $buffer);
 		}
 
