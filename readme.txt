@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Image Optimize** Refactored DB storage for this feature.
 * **Image Optimize** Reduced DB table size.
 * **Image Optimize** Existing `img_optm` DB tables will have their data gradually transitioned to the new storage format with this update. Once an `img_optm` table is empty, it won't be used anymore.
+* **Media** Fixed PHP8 potential warning. (rafaelmcd)
 * **Page Optimize** Enabled WebP support for Googlebot User Agent.
 
 = 5.3.3 - Feb 22 2023 =
