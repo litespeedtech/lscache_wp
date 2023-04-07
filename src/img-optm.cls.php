@@ -1642,6 +1642,8 @@ class Img_Optm extends Base
 	 */
 	private function _switch_optm_file($type)
 	{
+		Admin_Display::succeed(__('Switched to optimized file successfully.', 'litespeed-cache'));
+		return;
 		global $wpdb;
 
 		$pid = substr($type, 4);
@@ -1717,33 +1719,22 @@ class Img_Optm extends Base
 
 		Debug2::debug('[Img_Optm] _reset_row [pid] ' . $post_id);
 
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE post_id = %d";
-		$list = $wpdb->get_results($wpdb->prepare($q, $post_id));
-		if (!$list) {
-			return;
-		}
+		# TODO: Load image sub files
+		$img_q = "SELECT b.post_id, b.meta_value
+			FROM `$wpdb->postmeta` b
+			WHERE b.post_id =%d  AND b.meta_key = '_wp_attachment_metadata'";
+		$q = $wpdb->prepare($img_q, array($post_id));
+		$v = $wpdb->get_row($q);
 
-		foreach ($list as $v) {
-			$this->__media->info($v->src . '.webp', $v->post_id) && $this->__media->del($v->src . '.webp', $v->post_id);
-			$this->__media->info($v->src . '.optm.webp', $v->post_id) && $this->__media->del($v->src . '.optm.webp', $v->post_id);
-
-			$extension = pathinfo($v->src, PATHINFO_EXTENSION);
-			$local_filename = substr($v->src, 0, -strlen($extension) - 1);
-			$bk_file = $local_filename . '.bk.' . $extension;
-			$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
-
-			if ($this->__media->info($bk_file, $v->post_id)) {
-				Debug2::debug('[Img_Optm] _reset_row Revert ori file' . $bk_file);
-				$this->__media->del($v->src, $v->post_id);
-				$this->__media->rename($bk_file, $v->src, $v->post_id);
-			} elseif ($this->__media->info($bk_optm_file, $v->post_id)) {
-				Debug2::debug('[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file);
-				$this->__media->del($bk_optm_file, $v->post_id);
+		$meta_value = $this->_parse_wp_meta_value($v);
+		if ($meta_value) {
+			$this->tmp_pid = $v->post_id;
+			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
+			$this->_destroy_optm_file($meta_value, true);
+			if (!empty($meta_value['sizes'])) {
+				array_map(array($this, '_destroy_optm_file'), $meta_value['sizes']);
 			}
 		}
-
-		$q = "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d";
-		$wpdb->query($wpdb->prepare($q, $post_id));
 
 		delete_post_meta($post_id, self::DB_SIZE);
 		delete_post_meta($post_id, self::DB_SET);
