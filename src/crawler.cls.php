@@ -256,12 +256,12 @@ class Crawler extends Root
 		if ($force) {
 			self::debug('......crawler manually ran......');
 		}
-		$i = 0;
-		while ($i < 100) {
-			self::debug('......sleep ' . ($i++) . '......' . time());
-			sleep(1);
-		}
-		return;
+		// $i = 0;
+		// while ($i < 100) {
+		// 	self::debug('......sleep ' . ($i++) . '......' . time());
+		// 	sleep(1);
+		// }
+		// return;
 
 		self::cls()->_crawl_data($force);
 	}
@@ -550,17 +550,17 @@ class Crawler extends Root
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads);
 			foreach ($urlChunks as $rows) {
-				self::debug('chunk fetching', $rows);
+				// self::debug('chunk fetching', $rows);
 				// multi curl
 				$rets = $this->_multi_request($rows, $options);
 
 				// check result headers
 				foreach ($rows as $row) {
-					self::debug('chunk fetching 553');
+					// self::debug('chunk fetching 553');
 					if (empty($rets[$row['id']])) { // If already in blacklist, no curl happened, no corresponding record
 						continue;
 					}
-					self::debug('chunk fetching 557');
+					// self::debug('chunk fetching 557');
 					// check response
 					if ($rets[$row['id']]['code'] == 428) { // HTTP/1.1 428 Precondition Required (need to test)
 						$this->_end_reason = 'crawler_disabled';
@@ -586,7 +586,7 @@ class Crawler extends Root
 				$this->_summary['last_crawled'] += $this->_cur_threads;
 				$this->_summary['last_update_time'] = $_time;
 				$this->_summary['last_status'] = 'updated position';
-				self::debug('chunk fetching 583');
+				// self::debug('chunk fetching 583');
 				// check duration
 				if ($this->_summary['last_update_time'] > $this->_max_run_time) {
 					$this->_end_reason = 'stopped_maxtime';
@@ -600,7 +600,7 @@ class Crawler extends Root
 					$this->_map_status_list = $this->cls('Crawler_Map')->save_map_status($this->_map_status_list, $this->_summary['curr_crawler']);
 					self::save_summary();
 				}
-				self::debug('chunk fetching 597');
+				// self::debug('chunk fetching 597');
 				// check if need to reset pos each 5s
 				if ($_time > $this->_summary['pos_reset_check']) {
 					$this->_summary['pos_reset_check'] = $_time + 5;
@@ -618,7 +618,7 @@ class Crawler extends Root
 						// return __('Stopped due to reset meta position', 'litespeed-cache');
 					}
 				}
-				self::debug('chunk fetching 615');
+				// self::debug('chunk fetching 615');
 				// check loads
 				if ($this->_summary['last_update_time'] - $this->_cur_thread_time > 60) {
 					$this->_adjust_current_threads();
@@ -634,7 +634,7 @@ class Crawler extends Root
 
 				usleep($this->_crawler_conf['run_delay']);
 			}
-			self::debug('chunk fetching done');
+			// self::debug('chunk fetching done');
 		}
 
 		// All URLs are done for current crawler
@@ -679,7 +679,7 @@ class Crawler extends Root
 
 			curl_multi_add_handle($mh, $curls[$row['id']]);
 		}
-		self::debug('-----debug1');
+		// self::debug('-----debug1');
 		// execute curl
 		if ($curls) {
 			do {
@@ -689,7 +689,7 @@ class Crawler extends Root
 				}
 			} while ($active && $status == CURLM_OK);
 		}
-		self::debug('-----debug2');
+		// self::debug('-----debug2');
 		// curl done
 		$ret = array();
 		foreach ($rows as $row) {
@@ -699,7 +699,7 @@ class Crawler extends Root
 			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'N') {
 				continue;
 			}
-			self::debug('-----debug3');
+			// self::debug('-----debug3');
 			$ch = $curls[$row['id']];
 
 			// Parse header
@@ -711,13 +711,13 @@ class Crawler extends Root
 				'header' => $header,
 				'code'	=> curl_getinfo($ch, CURLINFO_HTTP_CODE),
 			);
-			self::debug('-----debug4');
+			// self::debug('-----debug4');
 			curl_multi_remove_handle($mh, $ch);
 			curl_close($ch);
 		}
-		self::debug('-----debug5');
+		// self::debug('-----debug5');
 		curl_multi_close($mh);
-		self::debug('-----debug6');
+		// self::debug('-----debug6');
 		return $ret;
 	}
 
