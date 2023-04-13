@@ -38,6 +38,7 @@ class Htaccess extends Root
 	const MARKER = 'LSCACHE';
 	const MARKER_NONLS = 'NON_LSCACHE';
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE';
+	const MARKER_CRAWLER = '### marker CRAWLER';
 	const MARKER_MOBILE = '### marker MOBILE';
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES';
 	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS';
@@ -499,6 +500,17 @@ class Htaccess extends Root
 		$new_rules_nonls = array();
 		$new_rules_backend = array();
 		$new_rules_backend_nonls = array();
+
+		# continual crawler
+		$id = Base::O_CRAWLER;
+		if (!empty($cfg[$id])) {
+			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_START;
+			$new_rules[] = 'RewriteCond %{REQUEST_URI} ^/wp-admin/admin-ajax\.php$';
+			$new_rules[] = 'RewriteCond %{QUERY_STRING} (^|&)action=async_crawler(&|$)';
+			$new_rules[] = 'RewriteRule .* - [E=noabort:1]';
+			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_END;
+			$new_rules[] = '';
+		}
 
 		// mobile agents
 		$id = Base::O_CACHE_MOBILE_RULES;
