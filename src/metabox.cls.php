@@ -52,7 +52,7 @@ class Metabox extends Root {
 			return;
 		}
 		$post_type_obj = get_post_type_object( $post_type );
-		if ( !$post_type_obj->public ) {
+		if ( ! empty( $post_type_obj ) && ! $post_type_obj->public ) {
 			self::debug('post type public=false, bypass add_meta_boxes');
 			return;
 		}
