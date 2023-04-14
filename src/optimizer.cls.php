@@ -30,6 +30,11 @@ class Optimizer extends Root {
 	 * @access public
 	 */
 	public function html_min( $content, $force_inline_minify = false ) {
+		if ( ! apply_filters( 'litespeed_html_min', true ) ) {
+			Debug2::debug2( '[Optmer] html_min bypassed via litespeed_html_min filter' );
+			return $content;
+		}
+
 		$options = array();
 
 		if ( $force_inline_minify ) {
