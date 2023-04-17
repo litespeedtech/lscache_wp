@@ -505,8 +505,8 @@ class Htaccess extends Root
 		$id = Base::O_CRAWLER;
 		if (!empty($cfg[$id])) {
 			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_START;
-			$new_rules[] = 'RewriteCond %{REQUEST_URI} ^/wp-admin/admin-ajax\.php$';
-			$new_rules[] = 'RewriteCond %{QUERY_STRING} (^|&)action=async_crawler(&|$)';
+			$new_rules[] = 'RewriteCond %{REQUEST_URI} /wp-admin/admin-ajax\.php';
+			$new_rules[] = 'RewriteCond %{QUERY_STRING} action=async_crawler';
 			$new_rules[] = 'RewriteRule .* - [E=noabort:1]';
 			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_END;
 			$new_rules[] = '';
