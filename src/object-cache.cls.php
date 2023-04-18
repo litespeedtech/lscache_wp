@@ -516,7 +516,7 @@ class Object_Cache extends Root {
 			$res = $this->_conn->delete( $key );
 		}
 
-		return $res;
+		return (bool) $res;
 	}
 
 	/**
