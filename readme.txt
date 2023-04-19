@@ -257,8 +257,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
 * **General** `Server IP` option only allowed IPv4 format. (Ruikai)
 * **Misc** HTML Comment now can show UCSS/CCSS status.
+* **Object** Fixed a warning for null get_post_type_object.
+* **Object** Ensure Object_Cache::delete returns a bool.
+* **Cache** Fixed advanced-cache file warnings for WP < v5.3.
+* **Guest** Fixed guest mode JS console error.
+* **API** Added bypass filter `litespeed_html_min`.
 
-= 5.4 - Apr 17 2023 =
+= 5.4 - Apr 19 2023 =
 * **Image Optimize** Refactored DB storage for this feature.
 * **Image Optimize** Reduced DB table size.
 * **Image Optimize** Existing `img_optm` DB tables will have their data gradually transitioned to the new storage format with this update. Once an `img_optm` table is empty, it won't be used anymore.
