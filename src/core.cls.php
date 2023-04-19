@@ -183,8 +183,8 @@ class Core extends Root
 		 * @since  2.6 	Added filter to all config values in Conf
 		 */
 		do_action('litespeed_init');
-		add_action('wp_ajax_async_crawler', 'LiteSpeed\Crawler::start_async_handler');
-		add_action('wp_ajax_nopriv_async_crawler', 'LiteSpeed\Crawler::start_async_handler');
+		add_action('wp_ajax_async_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler');
+		add_action('wp_ajax_nopriv_async_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler');
 
 		// in `after_setup_theme`, before `init` hook
 		if (!defined('LITESPEED_BYPASS_AUTO_V')) {
