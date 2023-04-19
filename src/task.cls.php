@@ -21,7 +21,7 @@ class Task extends Root
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array('name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron'),
 		Base::O_DISCUSS_AVATAR_CRON				=> array('name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron'),
 		Base::O_IMG_OPTM_AUTO				 	=> array('name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request'),
-		Base::O_CRAWLER 						=> array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start'), // Set crawler to last one to use above results
+		Base::O_CRAWLER 						=> array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::cron_start'), // Set crawler to last one to use above results
 	);
 
 	private static $_guest_options = array(
@@ -70,6 +70,43 @@ class Task extends Root
 
 			add_action($trigger['name'], $trigger['hook']);
 		}
+	}
+
+	/**
+	 * Async caller wrapper func
+	 *
+	 * @since 5.5
+	 */
+	public static function async_call($type)
+	{
+		$args = array(
+			'timeout'   => 0.01,
+			'blocking'  => false,
+			'sslverify' => false,
+			// 'cookies'   => $_COOKIE,
+		);
+		$qs = array(
+			'action' => 'async_litespeed',
+			'nonce'  => wp_create_nonce('async_litespeed'),
+			'type' => $type,
+		);
+		$url = add_query_arg($qs, admin_url('admin-ajax.php'));
+		wp_remote_post(esc_url_raw($url), $args);
+	}
+
+	/**
+	 * Handle all async noabort requests
+	 *
+	 * @since 5.5
+	 */
+	public static function async_litespeed_handler()
+	{
+		$type = Router::verify_type();
+
+		// Don't lock up other requests while processing
+		session_write_close();
+		if ($type == 'crawler')
+			Crawler::start_async_handler();
 	}
 
 	/**
