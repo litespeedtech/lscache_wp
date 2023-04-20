@@ -201,13 +201,23 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Cron start async crawling
+	 *
+	 * @since 5.5
+	 */
+	public static function start_async_cron()
+	{
+		Task::async_call('crawler');
+	}
+
+	/**
 	 * Manually start async crawling
 	 *
 	 * @since 5.5
 	 */
 	public static function start_async()
 	{
-		Task::async_call('crawler');
+		Task::async_call('crawler_force');
 
 		$msg = __('Started async crawling', 'litespeed-cache');
 		Admin_Display::success($msg);
@@ -218,18 +228,16 @@ class Crawler extends Root
 	 *
 	 * @since 5.5
 	 */
-	public static function start_async_handler()
+	public static function async_handler($force = false)
 	{
 		self::debug('------------async-------------start_async_handler');
-		// Don't lock up other requests while processing
-		session_write_close();
 		// self::debug('-------------async------------ check_ajax_referer');
 		// add_action('check_ajax_referer', function ($a, $b) {
 		// 	\LiteSpeed\Crawler::debug('---------------' . $a . $b);
 		// });
 		// check_ajax_referer('async_crawler', 'nonce');
 		// self::debug('--------------async----------- start async crawling');
-		self::start(true);
+		self::start($force);
 	}
 
 	/**
