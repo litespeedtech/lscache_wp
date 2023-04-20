@@ -17,7 +17,8 @@ elseif ( $mem_conn ) {
 	$mem_conn_desc = '<font class="litespeed-success">' . __( 'Passed', 'litespeed-cache' ) . '</font>' ;
 }
 else {
-	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
+	$severity = $this->conf( Base::O_OBJECT, true ) ? "danger" : "warning";
+	$mem_conn_desc = '<font class="litespeed-' . $severity . '">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
 
 ?>
