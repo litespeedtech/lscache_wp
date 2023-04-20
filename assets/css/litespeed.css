@@ -141,6 +141,7 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
 
 .litespeed_icon {
 	padding-left: 30px !important;
+	position: relative;
 }
 
 .rtl .litespeed_icon {
