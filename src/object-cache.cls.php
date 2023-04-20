@@ -469,7 +469,13 @@ class Object_Cache extends Root {
 			try {
 				$res = $this->_conn->setEx( $key, $ttl, $data );
 			} catch ( \RedisException $ex ) {
-				throw new \Exception( $ex->getMessage(), $ex->getCode(), $ex );
+				$msg = sprintf(
+					__( 'Redis encountered a fatal error: %s (code: %d)', 'litespeed-cache' ),
+					$ex->getMessage(),
+					$ex->getCode()
+				);
+				Debug2::debug( '[Object] ' . $msg );
+				Admin_Display::error( $msg );
 			}
 		}
 		else {
