@@ -252,6 +252,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.5 - May 2023 =
 * **Crawler** Sitemap allow multi maps. (Tobolo/Tim Nolte)
+* **Crawler** Manually starting crawler used async call.
+* **Crawler** Crawler cron used async call.
 * **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Cralwer async noabort rule.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
