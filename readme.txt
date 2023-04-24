@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Crawler** Sitemap allow multi maps. (Tobolo/Tim Nolte)
 * **Crawler** Manually starting crawler used async call.
 * **Crawler** Crawler cron used async call.
+* **Crawler** Show server load on crawler page. (Ruikai)
 * **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Cralwer async noabort rule.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)

@@ -444,6 +444,27 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Get server load
+	 *
+	 * @since 5.5
+	 */
+	public function get_server_load()
+	{
+		/**
+		 * If server is windows, exit
+		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
+		 */
+		if (!function_exists('sys_getloadavg')) {
+			return -1;
+		}
+
+		$curload = sys_getloadavg();
+		$curload = $curload[0];
+		self::debug('Server load: ' . $curload);
+		return $curload;
+	}
+
+	/**
 	 * Adjust threads dynamically
 	 *
 	 * @since  1.1.0
@@ -451,21 +472,14 @@ class Crawler extends Root
 	 */
 	private function _adjust_current_threads()
 	{
-		/**
-		 * If server is windows, exit
-		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
-		 */
-		if (!function_exists('sys_getloadavg')) {
+		$curload = $this->get_server_load();
+		if ($curload == -1) {
 			self::debug('set threads=0 due to func sys_getloadavg not exist!');
 			$this->_cur_threads = 0;
 			return;
 		}
 
-		$curload = sys_getloadavg();
-		$curload = $curload[0];
-		self::debug('Server load: ' . $curload);
 		$curload /= $this->_ncpu;
-
 		// $curload = 1;
 
 		if ($this->_cur_threads == -1) {
