@@ -54,7 +54,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 
 			<?php if ($wet_limit) : ?>
 				<p class="litespeed-desc">
-					<?php echo __('To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the number of images allowed in a single request is limited.', 'litespeed-cache'); ?>
+					<?php echo __('To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the number of image groups allowed in a single request is limited.', 'litespeed-cache'); ?>
 					<?php echo __('Current limit is', 'litespeed-cache') . ': <strong>' . $wet_limit . '</strong>'; ?>
 				</p>
 			<?php endif; ?>
