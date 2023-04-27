@@ -15,7 +15,7 @@ class Task extends Root
 {
 	const LOG_TAG = '⏰';
 	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON			 		=> array('name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::cron_pull'), // always fetch immediately
+		Base::O_IMG_OPTM_CRON			 		=> array('name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::start_async_cron'), // always fetch immediately
 		Base::O_OPTM_CSS_ASYNC			 		=> array('name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss'),
 		Base::O_OPTM_UCSS			 			=> array('name' => 'litespeed_task_ucss', 'hook' => 'LiteSpeed\UCSS::cron'),
 		Base::O_MEDIA_VPI_CRON		 			=> array('name' => 'litespeed_task_vpi', 'hook' => 'LiteSpeed\VPI::cron'),
@@ -86,10 +86,21 @@ class Task extends Root
 
 		// Don't lock up other requests while processing
 		session_write_close();
-		if ($type == 'crawler')
-			Crawler::async_handler();
-		if ($type == 'crawler_force')
-			Crawler::async_handler(true);
+		switch ($type) {
+			case 'crawler':
+				Crawler::async_handler();
+				break;
+			case 'crawler_force':
+				Crawler::async_handler(true);
+				break;
+			case 'imgoptm':
+				Img_Optm::async_handler();
+				break;
+			case 'imgoptm_force':
+				Img_Optm::async_handler(true);
+				break;
+			default:
+		}
 	}
 
 	/**
