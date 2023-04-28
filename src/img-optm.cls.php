@@ -1033,6 +1033,11 @@ class Img_Optm extends Base
 	 */
 	private function _parse_wp_meta_value($v)
 	{
+		if (empty($v)) {
+			Debug2::debug('[Img_Optm] bypassed parsing meta due to null value');
+			return false;
+		}
+
 		if (!$v->meta_value) {
 			Debug2::debug('[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id);
 			return false;
