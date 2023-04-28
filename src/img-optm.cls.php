@@ -1044,7 +1044,7 @@ class Img_Optm extends Base
 	private function _parse_wp_meta_value($v)
 	{
 		if (empty($v)) {
-			Debug2::debug('[Img_Optm] bypassed parsing meta due to null value');
+			self::debug('bypassed parsing meta due to null value');
 			return false;
 		}
 
