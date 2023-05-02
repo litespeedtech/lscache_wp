@@ -273,8 +273,10 @@ class Img_Optm extends Base
 			}
 		}
 
-		$this->_summary['next_post_id'] = $this->tmp_pid;
-		self::save_summary();
+		if ($this->tmp_pid) {
+			$this->_summary['next_post_id'] = $this->tmp_pid;
+			self::save_summary();
+		}
 
 		if (!$this->_img_in_queue) {
 			self::debug('gather_images bypass: empty _img_in_queue');
