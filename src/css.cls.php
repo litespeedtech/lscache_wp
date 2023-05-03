@@ -420,6 +420,9 @@ class CSS extends Base
 		$html = $this->cls('Crawler')->self_curl(add_query_arg('LSCWP_CTRL', 'before_optm', $request_url), $user_agent, $uid);
 		Debug2::debug2('[CSS] self_curl result....', $html);
 
+		if ( ! $html ) {
+			return false;
+		}
 
 		$html = $this->cls('Optimizer')->html_min($html, true);
 		// Drop <noscript>xxx</noscript>
