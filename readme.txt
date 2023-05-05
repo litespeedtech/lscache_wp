@@ -265,6 +265,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Object** Fixed a warning for null get_post_type_object.
 * **Object** Ensure Object_Cache::delete returns a bool.
 * **Cache** Fixed advanced-cache file warnings for WP < v5.3.
+* **Debug** Run duration debug info.
 * **Guest** Fixed guest mode JS console error.
 * **API** Added bypass filter `litespeed_html_min`.
 
