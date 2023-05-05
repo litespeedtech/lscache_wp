@@ -46,6 +46,7 @@ class Core extends Root
 	 */
 	public function __construct()
 	{
+		!defined('LSCWP_TS_0') && define('LSCWP_TS_0', microtime(true));
 		$this->cls('Conf')->init();
 
 		// Check if debug is on

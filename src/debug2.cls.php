@@ -1,12 +1,15 @@
 <?php
+
 /**
  * The plugin logging class.
  */
+
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit;
 
-class Debug2 extends Root {
+class Debug2 extends Root
+{
 	private static $log_path;
 	private static $log_path_prefix;
 	private static $_prefix;
@@ -26,20 +29,21 @@ class Debug2 extends Root {
 	 * @since 1.1.2
 	 * @access public
 	 */
-	public function __construct() {
-		self::$log_path_prefix = defined( 'LSCWP_DEBUG_PATH' ) ? LSCWP_DEBUG_PATH : LSCWP_CONTENT_DIR;
+	public function __construct()
+	{
+		self::$log_path_prefix = defined('LSCWP_DEBUG_PATH') ? LSCWP_DEBUG_PATH : LSCWP_CONTENT_DIR;
 		self::$log_path = self::$log_path_prefix . '/debug.log';
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'lscache_' ) === 0 ) {
+		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'lscache_') === 0) {
 			self::$log_path = self::$log_path_prefix . '/crawler.log';
 		}
 
-		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() );
+		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', get_current_blog_id());
 
-		if ( $this->conf( Base::O_DEBUG_LEVEL ) ) {
-			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true );
+		if ($this->conf(Base::O_DEBUG_LEVEL)) {
+			!defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true);
 		}
 
-		defined( 'LSCWP_DEBUG_EXC_STRINGS' ) || define( 'LSCWP_DEBUG_EXC_STRINGS', $this->conf( Base::O_DEBUG_EXC_STRINGS ) );
+		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf(Base::O_DEBUG_EXC_STRINGS));
 	}
 
 	/**
@@ -47,9 +51,12 @@ class Debug2 extends Root {
 	 * @since 4.7
 	 * @access public
 	 */
-	public static function ended() {
-		self::debug( 'Response headers', headers_list() );
-		self::debug( "End response\n--------------------------------------------------------------------------------\n" );
+	public static function ended()
+	{
+		self::debug('Response headers', headers_list());
+
+		$elapsed_time = number_format((microtime(true) - LSCWP_TS_0) * 1000, 2);
+		self::debug("End response\n--------------------------------------------------Duration: " . $elapsed_time . " ms------------------------------\n");
 	}
 
 	/**
@@ -58,33 +65,33 @@ class Debug2 extends Root {
 	 * @since 2.9.5
 	 * @access public
 	 */
-	public function beta_test( $zip = false ) {
-		if ( ! $zip ) {
-			if ( empty( $_REQUEST[ self::BETA_TEST_URL ] ) ) {
+	public function beta_test($zip = false)
+	{
+		if (!$zip) {
+			if (empty($_REQUEST[self::BETA_TEST_URL])) {
 				return;
 			}
 
-			$zip = $_REQUEST[ self::BETA_TEST_URL ];
-			if ( $zip !== Debug2::BETA_TEST_URL_WP ) {
-				if ( $zip === 'latest' ) {
+			$zip = $_REQUEST[self::BETA_TEST_URL];
+			if ($zip !== Debug2::BETA_TEST_URL_WP) {
+				if ($zip === 'latest') {
 					$zip = Debug2::BETA_TEST_URL_WP;
-				}
-				else {
+				} else {
 					// Generate zip url
-					$zip = $this->_package_zip( $zip );
+					$zip = $this->_package_zip($zip);
 				}
 			}
 		}
 
-		if ( ! $zip ) {
-			Debug2::debug( '[Debug2] ❌  No ZIP file' );
+		if (!$zip) {
+			Debug2::debug('[Debug2] ❌  No ZIP file');
 			return;
 		}
 
-		Debug2::debug( '[Debug2] ZIP file ' . $zip );
+		Debug2::debug('[Debug2] ZIP file ' . $zip);
 
-		$update_plugins = get_site_transient( 'update_plugins' );
-		if ( ! is_object( $update_plugins ) ) {
+		$update_plugins = get_site_transient('update_plugins');
+		if (!is_object($update_plugins)) {
 			$update_plugins = new \stdClass();
 		}
 
@@ -95,9 +102,9 @@ class Debug2 extends Root {
 		$plugin_info->package = $zip;
 		$plugin_info->url = 'https://wordpress.org/plugins/litespeed-cache/';
 
-		$update_plugins->response[ Core::PLUGIN_FILE ] = $plugin_info;
+		$update_plugins->response[Core::PLUGIN_FILE] = $plugin_info;
 
-		set_site_transient( 'update_plugins', $update_plugins );
+		set_site_transient('update_plugins', $update_plugins);
 
 		// Run upgrade
 		Activation::cls()->upgrade();
@@ -109,17 +116,18 @@ class Debug2 extends Root {
 	 * @since  2.9.5
 	 * @access private
 	 */
-	private function _package_zip( $commit ) {
+	private function _package_zip($commit)
+	{
 		$data = array(
 			'commit'	=> $commit,
 		);
-		$res = Cloud::get( Cloud::API_BETA_TEST, $data );
+		$res = Cloud::get(Cloud::API_BETA_TEST, $data);
 
-		if ( empty( $res[ 'zip' ] ) ) {
+		if (empty($res['zip'])) {
 			return false;
 		}
 
-		return $res[ 'zip' ];
+		return $res['zip'];
 	}
 
 	/**
@@ -128,20 +136,20 @@ class Debug2 extends Root {
 	 * @since 2.7
 	 * @access public
 	 */
-	public static function log_purge( $purge_header ) {
+	public static function log_purge($purge_header)
+	{
 		// Check if debug is ON
-		if ( ! defined( 'LSCWP_LOG' ) && ! defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) ) {
+		if (!defined('LSCWP_LOG') && !defined('LSCWP_LOG_BYPASS_NOTADMIN')) {
 			return;
 		}
 
 		$purge_file = self::$log_path_prefix . '/debug.purge.log';
 
-		self::cls()->_init_request( $purge_file );
+		self::cls()->_init_request($purge_file);
 
-		$msg = $purge_header . self::_backtrace_info( 6 );
+		$msg = $purge_header . self::_backtrace_info(6);
 
-		File::append( $purge_file, self::format_message( $msg ) );
-
+		File::append($purge_file, self::format_message($msg));
 	}
 
 	/**
@@ -150,11 +158,12 @@ class Debug2 extends Root {
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function init() {
-		$debug = $this->conf( Base::O_DEBUG );
-		if ( $debug == Base::VAL_ON2 ) {
-			if ( ! $this->cls( 'Router' )->is_admin_ip() ) {
-				defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) || define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
+	public function init()
+	{
+		$debug = $this->conf(Base::O_DEBUG);
+		if ($debug == Base::VAL_ON2) {
+			if (!$this->cls('Router')->is_admin_ip()) {
+				defined('LSCWP_LOG_BYPASS_NOTADMIN') || define('LSCWP_LOG_BYPASS_NOTADMIN', true);
 				return;
 			}
 		}
@@ -164,26 +173,25 @@ class Debug2 extends Root {
 		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
 		 * @since  3.0
 		 */
-		$list = $this->conf( Base::O_DEBUG_INC );
-		if ( $list ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list );
-			if ( ! $result ) {
+		$list = $this->conf(Base::O_DEBUG_INC);
+		if ($list) {
+			$result = Utility::str_hit_array($_SERVER['REQUEST_URI'], $list);
+			if (!$result) {
 				return;
 			}
 		}
 
-		$list = $this->conf( Base::O_DEBUG_EXC );
-		if ( $list ) {
-			$result = Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $list );
-			if ( $result ) {
+		$list = $this->conf(Base::O_DEBUG_EXC);
+		if ($list) {
+			$result = Utility::str_hit_array($_SERVER['REQUEST_URI'], $list);
+			if ($result) {
 				return;
 			}
 		}
 
-		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
+		if (!defined('LSCWP_LOG')) { // If not initialized, do it now
 			$this->_init_request();
-			define( 'LSCWP_LOG', true );
-
+			define('LSCWP_LOG', true);
 		}
 	}
 
@@ -193,23 +201,24 @@ class Debug2 extends Root {
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private function _init_request( $log_file = null ) {
-		if ( ! $log_file ) {
+	private function _init_request($log_file = null)
+	{
+		if (!$log_file) {
 			$log_file = self::$log_path;
 		}
 
 		// Check log file size
-		$log_file_size = $this->conf( Base::O_DEBUG_FILESIZE );
-		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
-			File::save( $log_file, '' );
+		$log_file_size = $this->conf(Base::O_DEBUG_FILESIZE);
+		if (file_exists($log_file) && filesize($log_file) > $log_file_size * 1000000) {
+			File::save($log_file, '');
 		}
 
 		// For more than 2s's requests, add more break
-		if ( file_exists( $log_file ) && time() - filemtime( $log_file ) > 2 ) {
-			File::append( $log_file, "\n\n\n\n" );
+		if (file_exists($log_file) && time() - filemtime($log_file) > 2) {
+			File::append($log_file, "\n\n\n\n");
 		}
 
-		if ( PHP_SAPI == 'cli' ) {
+		if (PHP_SAPI == 'cli') {
 			return;
 		}
 
@@ -226,61 +235,60 @@ class Debug2 extends Root {
 			'LSCACHE_VARY_VALUE' => '',
 			'ESI_CONTENT_TYPE' => '',
 		);
-		$server = array_merge( $servervars, $_SERVER );
+		$server = array_merge($servervars, $_SERVER);
 		$params = array();
 
-		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ';
 		}
 
-		$param = sprintf( '💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) );
+		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
-		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '';
-		if ( $this->conf( Base::O_DEBUG_COLLAPS_QS ) ) {
-			if ( strlen( $qs ) > 53 ) {
-				$qs = substr( $qs, 0, 53 ) . '...';
+		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+		if ($this->conf(Base::O_DEBUG_COLLAPS_QS)) {
+			if (strlen($qs) > 53) {
+				$qs = substr($qs, 0, 53) . '...';
 			}
-			if ( $qs ) {
+			if ($qs) {
 				$param .= ' ? ' . $qs;
 			}
 			$params[] = $param;
-		}
-		else {
+		} else {
 			$params[] = $param;
 			$params[] = 'Query String: ' . $qs;
 		}
 
-		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			$params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ];
+		if (!empty($_SERVER['HTTP_REFERER'])) {
+			$params[] = 'HTTP_REFERER: ' . $server['HTTP_REFERER'];
 		}
 
-		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ];
+		if (defined('LSCWP_LOG_MORE')) {
+			$params[] = 'User Agent: ' . $server['HTTP_USER_AGENT'];
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
 		}
-		if ( $this->conf( Base::O_DEBUG_COOKIE ) ) {
+		if ($this->conf(Base::O_DEBUG_COOKIE)) {
 			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
 		}
-		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
-			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ];
+		if (isset($_COOKIE['_lscache_vary'])) {
+			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE['_lscache_vary'];
 		}
-		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'X-LSCACHE: ' . ( ! empty( $server[ 'X-LSCACHE' ] ) ? 'true' : 'false' );
+		if (defined('LSCWP_LOG_MORE')) {
+			$params[] = 'X-LSCACHE: ' . (!empty($server['X-LSCACHE']) ? 'true' : 'false');
 		}
-		if( $server['LSCACHE_VARY_COOKIE'] ) {
+		if ($server['LSCACHE_VARY_COOKIE']) {
 			$params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'];
 		}
-		if( $server['LSCACHE_VARY_VALUE'] ) {
+		if ($server['LSCACHE_VARY_VALUE']) {
 			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'];
 		}
-		if( $server['ESI_CONTENT_TYPE'] ) {
+		if ($server['ESI_CONTENT_TYPE']) {
 			$params[] = 'ESI_CONTENT_TYPE: ' . $server['ESI_CONTENT_TYPE'];
 		}
 
-		$request = array_map( __CLASS__ . '::format_message', $params );
+		$request = array_map(__CLASS__ . '::format_message', $params);
 
-		File::append( $log_file, $request );
+		File::append($log_file, $request);
 	}
 
 	/**
@@ -291,34 +299,33 @@ class Debug2 extends Root {
 	 * @param string $msg The log message to write.
 	 * @return string The formatted log message.
 	 */
-	private static function format_message( $msg ) {
+	private static function format_message($msg)
+	{
 		// If call here without calling get_enabled() first, improve compatibility
-		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
+		if (!defined('LSCWP_LOG_TAG')) {
 			return $msg . "\n";
 		}
 
-		if ( ! isset( self::$_prefix ) ) {
+		if (!isset(self::$_prefix)) {
 			// address
-			if ( PHP_SAPI == 'cli' ) {
+			if (PHP_SAPI == 'cli') {
 				$addr = '=CLI=';
-				if ( isset( $_SERVER[ 'USER' ] ) ) {
-					$addr .= $_SERVER[ 'USER' ];
+				if (isset($_SERVER['USER'])) {
+					$addr .= $_SERVER['USER'];
+				} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+					$addr .= $_SERVER['HTTP_X_FORWARDED_FOR'];
 				}
-				elseif ( !empty($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ) {
-					$addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
-				}
-			}
-			else {
-				$addr = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '';
-				$port = isset( $_SERVER['REMOTE_PORT'] ) ? $_SERVER['REMOTE_PORT'] : '';
+			} else {
+				$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+				$port = isset($_SERVER['REMOTE_PORT']) ? $_SERVER['REMOTE_PORT'] : '';
 				$addr = "$addr:$port";
 			}
 
 			// Generate a unique string per request
-			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Str::rrand( 3 ) );
+			self::$_prefix = sprintf(" [%s %s %s] ", $addr, LSCWP_LOG_TAG, Str::rrand(3));
 		}
-		list( $usec, $sec ) = explode(' ', microtime() );
-		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n";
+		list($usec, $sec) = explode(' ', microtime());
+		return date('m/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET) . substr($usec, 1, 4) . self::$_prefix . $msg . "\n";
 	}
 
 	/**
@@ -327,45 +334,46 @@ class Debug2 extends Root {
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function debug( $msg, $backtrace_limit = false ) {
-		if ( ! defined( 'LSCWP_LOG' ) ) {
+	public static function debug($msg, $backtrace_limit = false)
+	{
+		if (!defined('LSCWP_LOG')) {
 			return;
 		}
 
-		if ( defined( 'LSCWP_DEBUG_EXC_STRINGS' ) && Utility::str_hit_array( $msg, LSCWP_DEBUG_EXC_STRINGS ) ) {
+		if (defined('LSCWP_DEBUG_EXC_STRINGS') && Utility::str_hit_array($msg, LSCWP_DEBUG_EXC_STRINGS)) {
 			return;
 		}
 
-		if ( $backtrace_limit !== false ) {
-			if ( ! is_numeric( $backtrace_limit ) ) {
-				$backtrace_limit = self::trim_longtext( $backtrace_limit );
-				if ( is_array( $backtrace_limit ) && count( $backtrace_limit ) == 1 && ! empty( $backtrace_limit[ 0 ] ) ) {
-					$msg .= ' --- ' . $backtrace_limit[ 0 ];
+		if ($backtrace_limit !== false) {
+			if (!is_numeric($backtrace_limit)) {
+				$backtrace_limit = self::trim_longtext($backtrace_limit);
+				if (is_array($backtrace_limit) && count($backtrace_limit) == 1 && !empty($backtrace_limit[0])) {
+					$msg .= ' --- ' . $backtrace_limit[0];
+				} else {
+					$msg .= ' --- ' . var_export($backtrace_limit, true);
 				}
-				else {
-					$msg .= ' --- ' . var_export( $backtrace_limit, true );
-				}
-				self::push( $msg );
+				self::push($msg);
 				return;
 			}
 
-			self::push( $msg, $backtrace_limit + 1 );
+			self::push($msg, $backtrace_limit + 1);
 			return;
 		}
 
-		self::push( $msg );
+		self::push($msg);
 	}
 
 	/**
 	 * Trim long string before array dump
 	 * @since  3.3
 	 */
-	public static function trim_longtext( $backtrace_limit ) {
-		if ( is_array( $backtrace_limit ) ) {
-			$backtrace_limit = array_map( __CLASS__ . '::trim_longtext', $backtrace_limit );
+	public static function trim_longtext($backtrace_limit)
+	{
+		if (is_array($backtrace_limit)) {
+			$backtrace_limit = array_map(__CLASS__ . '::trim_longtext', $backtrace_limit);
 		}
-		if ( is_string( $backtrace_limit ) && strlen( $backtrace_limit ) > 500 ) {
-			$backtrace_limit = substr( $backtrace_limit, 0, 1000 ) . '...';
+		if (is_string($backtrace_limit) && strlen($backtrace_limit) > 500) {
+			$backtrace_limit = substr($backtrace_limit, 0, 1000) . '...';
 		}
 		return $backtrace_limit;
 	}
@@ -376,11 +384,12 @@ class Debug2 extends Root {
 	 * @since 1.2.0
 	 * @access public
 	 */
-	public static function debug2( $msg, $backtrace_limit = false ) {
-		if ( ! defined( 'LSCWP_LOG_MORE' ) ) {
+	public static function debug2($msg, $backtrace_limit = false)
+	{
+		if (!defined('LSCWP_LOG_MORE')) {
 			return;
 		}
-		self::debug( $msg, $backtrace_limit );
+		self::debug($msg, $backtrace_limit);
 	}
 
 	/**
@@ -391,13 +400,14 @@ class Debug2 extends Root {
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	private static function push( $msg, $backtrace_limit = false ) {
+	private static function push($msg, $backtrace_limit = false)
+	{
 		// backtrace handler
-		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
-			$msg .= self::_backtrace_info( $backtrace_limit );
+		if (defined('LSCWP_LOG_MORE') && $backtrace_limit !== false) {
+			$msg .= self::_backtrace_info($backtrace_limit);
 		}
 
-		File::append( self::$log_path, self::format_message( $msg ) );
+		File::append(self::$log_path, self::format_message($msg));
 	}
 
 	/**
@@ -405,40 +415,40 @@ class Debug2 extends Root {
 	 *
 	 * @since 2.7
 	 */
-	private static function _backtrace_info( $backtrace_limit ) {
+	private static function _backtrace_info($backtrace_limit)
+	{
 		$msg = '';
 
-		$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace() : debug_backtrace( false, $backtrace_limit + 3 );
-		for ( $i=2; $i <= $backtrace_limit + 2; $i++ ) {// 0st => _backtrace_info(), 1st => push()
-			if ( empty( $trace[ $i ][ 'class' ] ) ) {
-				if ( empty( $trace[ $i ][ 'file' ] ) ) {
+		$trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace() : debug_backtrace(false, $backtrace_limit + 3);
+		for ($i = 2; $i <= $backtrace_limit + 2; $i++) { // 0st => _backtrace_info(), 1st => push()
+			if (empty($trace[$i]['class'])) {
+				if (empty($trace[$i]['file'])) {
 					break;
 				}
-				$log = "\n" . $trace[ $i ][ 'file' ];
-			}
-			else {
-				if ( $trace[$i]['class'] == __CLASS__ ) {
+				$log = "\n" . $trace[$i]['file'];
+			} else {
+				if ($trace[$i]['class'] == __CLASS__) {
 					continue;
 				}
 
 				$args = '';
-				if ( ! empty( $trace[ $i ][ 'args' ] ) ) {
-					foreach ( $trace[ $i ][ 'args' ] as $v ) {
-						if ( is_array( $v ) ) {
+				if (!empty($trace[$i]['args'])) {
+					foreach ($trace[$i]['args'] as $v) {
+						if (is_array($v)) {
 							$v = 'ARRAY';
 						}
-						if ( is_string( $v ) || is_numeric( $v ) ) {
+						if (is_string($v) || is_numeric($v)) {
 							$args .= $v . ',';
 						}
 					}
 
-					$args = substr( $args, 0, strlen( $args ) > 100 ? 100 : -1 );
+					$args = substr($args, 0, strlen($args) > 100 ? 100 : -1);
 				}
 
 				$log = str_replace('Core', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '(' . $args . ')';
 			}
-			if ( ! empty( $trace[$i-1]['line'] ) ) {
-				$log .= '@' . $trace[$i-1]['line'];
+			if (!empty($trace[$i - 1]['line'])) {
+				$log .= '@' . $trace[$i - 1]['line'];
 			}
 			$msg .= " => $log";
 		}
@@ -452,10 +462,11 @@ class Debug2 extends Root {
 	 * @since 1.6.6
 	 * @access private
 	 */
-	private function _clear_log() {
-		$logs = array( 'debug', 'debug.purge', 'crawler' );
-		foreach ( $logs as $log ) {
-			File::save( self::$log_path_prefix . "/{$log}.log", '' );
+	private function _clear_log()
+	{
+		$logs = array('debug', 'debug.purge', 'crawler');
+		foreach ($logs as $log) {
+			File::save(self::$log_path_prefix . "/{$log}.log", '');
 		}
 	}
 
@@ -465,15 +476,16 @@ class Debug2 extends Root {
 	 * @since  1.6.6
 	 * @access public
 	 */
-	public function handler() {
+	public function handler()
+	{
 		$type = Router::verify_type();
 
-		switch ( $type ) {
-			case self::TYPE_CLEAR_LOG :
+		switch ($type) {
+			case self::TYPE_CLEAR_LOG:
 				$this->_clear_log();
 				break;
 
-			case self::TYPE_BETA_TEST :
+			case self::TYPE_BETA_TEST:
 				$this->beta_test();
 				break;
 
