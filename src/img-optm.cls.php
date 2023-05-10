@@ -192,6 +192,14 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
+		// check if is running
+		if (!empty($this->_summary['is_running']) && time() - $this->_summary['is_running'] < apply_filters('litespeed_imgoptm_new_req_interval', 3600)) {
+			self::debug('The previous req was in 3600s.');
+			return;
+		}
+		$this->_summary['is_running'] = time();
+		self::save_summary();
+
 		// Check if has credit to push
 		$allowance = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM);
 
@@ -205,6 +213,7 @@ class Img_Optm extends Base
 		if (!$allowance) {
 			self::debug('❌ No credit');
 			Admin_Display::error(Error::msg('out_of_quota'));
+			$this->_finished_running();
 			return;
 		}
 
@@ -220,6 +229,7 @@ class Img_Optm extends Base
 		if ($total_requested > $max_requested) {
 			self::debug('❌ Too many queued images (' . $total_requested . ' > ' . $max_requested . ')');
 			Admin_Display::error(Error::msg('too_many_requested'));
+			$this->_finished_running();
 			return;
 		}
 
@@ -232,6 +242,7 @@ class Img_Optm extends Base
 		if ($total_notified > $max_notified) {
 			self::debug('❌ Too many notified images (' . $total_notified . ' > ' . $max_notified . ')');
 			Admin_Display::error(Error::msg('too_many_notified'));
+			$this->_finished_running();
 			return;
 		}
 
@@ -254,6 +265,7 @@ class Img_Optm extends Base
 			Admin_Display::succeed($msg);
 
 			self::debug('new_req() bypass: no new image found');
+			$this->_finished_running();
 			return;
 		}
 
@@ -280,6 +292,7 @@ class Img_Optm extends Base
 
 		if (!$this->_img_in_queue) {
 			self::debug('gather_images bypass: empty _img_in_queue');
+			$this->_finished_running();
 			return;
 		}
 
@@ -303,6 +316,7 @@ class Img_Optm extends Base
 		// Push to Cloud server
 		$accepted_imgs = $this->_send_request();
 
+		$this->_finished_running();
 		if (!$accepted_imgs) {
 			return;
 		}
@@ -311,6 +325,15 @@ class Img_Optm extends Base
 		$placeholder2 = Admin_Display::print_plural($accepted_imgs, 'image');
 		$msg = sprintf(__('Pushed %1$s to Cloud server, accepted %2$s.', 'litespeed-cache'), $placeholder1, $placeholder2);
 		Admin_Display::succeed($msg);
+	}
+
+	/**
+	 * Set running to done
+	 */
+	private function _finished_running()
+	{
+		$this->_summary['is_running'] = 0;
+		self::save_summary();
 	}
 
 	/**
