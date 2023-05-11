@@ -261,57 +261,59 @@ class Img_Optm extends Base
 		$list = $wpdb->get_results($q);
 
 		if (!$list) {
-			$msg = __('No new image to send.', 'litespeed-cache');
-			Admin_Display::succeed($msg);
+			// $msg = __('No new image to send.', 'litespeed-cache');
+			// Admin_Display::succeed($msg);
 
-			self::debug('new_req() bypass: no new image found');
-			$this->_finished_running();
-			return;
+			// self::debug('new_req() bypass: no new image found');
+			// $this->_finished_running();
+			// return;
 		}
 
-		foreach ($list as $v) {
-			if (!$v->post_id) continue;
+		if ($list) {
+			foreach ($list as $v) {
+				if (!$v->post_id) continue;
 
-			$meta_value = $this->_parse_wp_meta_value($v);
-			if (!$meta_value) {
-				continue;
+				$meta_value = $this->_parse_wp_meta_value($v);
+				if (!$meta_value) {
+					continue;
+				}
+
+				$this->tmp_pid = $v->post_id;
+				$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
+				$this->_append_img_queue($meta_value, true);
+				if (!empty($meta_value['sizes'])) {
+					array_map(array($this, '_append_img_queue'), $meta_value['sizes']);
+				}
 			}
 
-			$this->tmp_pid = $v->post_id;
-			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
-			$this->_append_img_queue($meta_value, true);
-			if (!empty($meta_value['sizes'])) {
-				array_map(array($this, '_append_img_queue'), $meta_value['sizes']);
+			if ($this->tmp_pid) {
+				$this->_summary['next_post_id'] = $this->tmp_pid;
+				self::save_summary();
 			}
+
+			if (!$this->_img_in_queue) {
+				self::debug('gather_images bypass: empty _img_in_queue');
+				$this->_finished_running();
+				return;
+			}
+
+			$num_a = count($this->_img_in_queue);
+			self::debug('Images found: ' . $num_a);
+			$this->_filter_duplicated_src();
+			self::debug('Images after duplicated: ' . count($this->_img_in_queue));
+			$this->_filter_invalid_src();
+			self::debug('Images after invalid: ' . count($this->_img_in_queue));
+			// Check w/ legacy imgoptm table, bypass finished images
+			$this->_filter_legacy_src();
+
+			$num_b = count($this->_img_in_queue);
+			if ($num_b != $num_a) {
+				self::debug('Images after filtered duplicated/invalid/legacy src: ' . $num_b);
+			}
+
+			// Save to DB
+			$this->_save_raw();
 		}
-
-		if ($this->tmp_pid) {
-			$this->_summary['next_post_id'] = $this->tmp_pid;
-			self::save_summary();
-		}
-
-		if (!$this->_img_in_queue) {
-			self::debug('gather_images bypass: empty _img_in_queue');
-			$this->_finished_running();
-			return;
-		}
-
-		$num_a = count($this->_img_in_queue);
-		self::debug('Images found: ' . $num_a);
-		$this->_filter_duplicated_src();
-		self::debug('Images after duplicated: ' . count($this->_img_in_queue));
-		$this->_filter_invalid_src();
-		self::debug('Images after invalid: ' . count($this->_img_in_queue));
-		// Check w/ legacy imgoptm table, bypass finished images
-		$this->_filter_legacy_src();
-
-		$num_b = count($this->_img_in_queue);
-		if ($num_b != $num_a) {
-			self::debug('Images after filtered duplicated/invalid/legacy src: ' . $num_b);
-		}
-
-		// Save to DB
-		$this->_save_raw();
 
 		// Push to Cloud server
 		$accepted_imgs = $this->_send_request();
@@ -321,8 +323,8 @@ class Img_Optm extends Base
 			return;
 		}
 
-		$placeholder1 = Admin_Display::print_plural($num_b, 'image');
-		$placeholder2 = Admin_Display::print_plural($accepted_imgs, 'image');
+		$placeholder1 = Admin_Display::print_plural($accepted_imgs[0], 'image');
+		$placeholder2 = Admin_Display::print_plural($accepted_imgs[1], 'image');
 		$msg = sprintf(__('Pushed %1$s to Cloud server, accepted %2$s.', 'litespeed-cache'), $placeholder1, $placeholder2);
 		Admin_Display::succeed($msg);
 	}
@@ -645,7 +647,7 @@ class Img_Optm extends Base
 		$this->_summary['last_requested'] = time();
 		self::save_summary();
 
-		return count($json['ids']);
+		return array(count($list), count($json['ids']));
 	}
 
 	/**
