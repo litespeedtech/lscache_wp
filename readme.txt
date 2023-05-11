@@ -258,6 +258,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🐞**Page Optimize** Fix generate UCSS for error page. (james58899) #556
 * 🌱**Image Optimize** Image pull used async call.
 * **Image Optimize** Image request concurrency lock.
+* 🐞**Image Optimize** Images ready to request can be sent now for the end round.
 * **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Cralwer async noabort rule.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
