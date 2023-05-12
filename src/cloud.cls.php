@@ -730,6 +730,13 @@ class Cloud extends Base {
 		}
 
 		if ( ! empty( $json[ '_code' ] ) ) {
+			if ( $json[ '_code' ] == 'rate_limit' ) {
+				self::debug( 'Cloud server rate limit exceeded.' );
+				$msg = __( 'Cloud server refused the current request due to rate limiting. Please try again later.', 'litespeed-cache' );
+				Admin_Display::error( $msg );
+				return;
+			}
+
 			if ( $json[ '_code' ] == 'heavy_load' || $json[ '_code' ] == 'redetect_node' ) {
 				// Force redetect node
 				self::debug( 'Node redetecting node [svc] ' . $service );
