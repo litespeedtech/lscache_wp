@@ -259,6 +259,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Image Optimize** Image pull used async call.
 * **Image Optimize** Image request concurrency lock.
 * 🐞**Image Optimize** Images ready to request can be sent now for the end round.
+* **Cloud** Appended linked info to my Quic Cloud link.
 * **GUI** Added passively On notice when certain options are on by Guest Mode.
 * **Htaccess** Cralwer async noabort rule.
 * **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)

@@ -187,7 +187,7 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 		<?php endif; ?>
 	</div>
 
-	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="<?php echo Cloud::CLOUD_SERVER_DASH; ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="<?php echo Cloud::cls()->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
 
 	<div class="litespeed-dashboard-group">
 		<hr>

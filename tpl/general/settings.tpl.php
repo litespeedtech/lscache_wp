@@ -73,7 +73,7 @@ $this->form_action();
 				<?php endif; ?>
 
 				<?php if (!empty($cloud_summary['is_linked'])) : ?>
-					<?php Doc::learn_more(Cloud::CLOUD_SERVER_DASH, __('Visit My Dashboard on QUIC.cloud', 'litespeed-cache'), false, 'button litespeed-btn-success litespeed-right'); ?>
+					<?php Doc::learn_more(Cloud::cls()->qc_link(), __('Visit My Dashboard on QUIC.cloud', 'litespeed-cache'), false, 'button litespeed-btn-success litespeed-right'); ?>
 				<?php elseif ($__cloud->can_link_qc()) : ?>
 					<?php Doc::learn_more(Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK), __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button litespeed-btn-warning litespeed-right'); ?>
 				<?php else : ?>
