@@ -5,7 +5,7 @@ if ( ! litespeed_vary ) {
 		method: 'POST',
 		cache: 'no-cache',
 		redirect: 'follow',
-	} ).then( response => response.json() ).catch(error => undefined).then( data => {
+	} ).then( response => response.json() ).then( data => {
 		console.log(data);
 		if ( data.hasOwnProperty( 'reload' ) && data.reload == 'yes' ) {
 			// Save doc.ref for organic traffic usage
