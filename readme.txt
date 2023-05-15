@@ -250,27 +250,26 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.5 - May 2023 =
-* 🌱**Crawler** Sitemap allow multi maps. (Tobolo/Tim Nolte)
-* 🌱**Crawler** Manually starting crawler used async call.
-* 🌱**Crawler** Crawler cron used async call.
-* **Crawler** Show server load on crawler page. (Ruikai)
-* 🐞**Page Optimize** Fix generate UCSS for error page. (james58899) #556
-* 🌱**Image Optimize** Image pull used async call.
-* **Image Optimize** Image request concurrency lock.
-* 🐞**Image Optimize** Images ready to request can be sent now for the end round.
-* **Cloud** Appended linked info to my Quic Cloud link.
-* **GUI** Added passively On notice when certain options are on by Guest Mode.
-* **Htaccess** Cralwer async noabort rule.
-* **Htaccess** Case insensitive for Exclude Caching of User Agents Option. (Ellen Dabo)
-* **General** `Server IP` option only allowed IPv4 format. (Ruikai)
-* **Misc** HTML Comment now can show UCSS/CCSS status.
+= 5.5 - Jun 6 2023 =
+* 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
+* 🌱**Crawler** Now runs asynchronously when manually invoked.
+* 🌱**Crawler** Now runs asynchronously when invoked from cron.
+* **Crawler** Summary page now displays server load. (Ruikai)
+* 🐞**Page Optimize** Fixed an issue where UCSS could not be generated for error pages. (james58899) #556
+* 🌱**Image Optimize** Now pulls images asynchronously.
+* **Image Optimize** Now prevents concurrent requests via a locking mechanism.
+* 🐞**Image Optimize** Fixed an issue where images ready for optimization might have to wait for new images to be added before sending the request.
+* **Cloud** Replaced dashboard links with login/link to my.quic.cloud actions.
+* **GUI** Added indicators to show when certain options are passively enabled by Guest Mode.
+* **Htaccess** Added a noabort rule to support asynchronous crawling.
+* **Htaccess** The "Do Not Cache User Agents" option is now case-insensitive. (Ellen Dabo)
+* **General** The "Server IP" option now allows IPv4 format only. (Ruikai)
+* **Misc** Every page's closing HTML comments now displays UCSS/CCSS status.
 * **Object** Fixed a warning for null get_post_type_object.
-* **Object** Ensure Object_Cache::delete returns a bool.
-* **Cache** Fixed advanced-cache file warnings for WP < v5.3.
-* **Debug** Run duration debug info.
-* **Guest** Fixed guest mode JS console error.
-* **API** Added bypass filter `litespeed_html_min`.
+* **Object** Object_Cache::delete now always returns a boolean value.
+* **Cache** Fixed advanced-cache.php file warnings for WordPress versions less than 5.3.
+* **Debug** Added debug logging to record the plugin's total processing time.
+* **API** HTML minification can now be bypassed via the litespeed_html_min filter.
 
 = 5.4 - Apr 19 2023 =
 * **Image Optimize** Refactored DB storage for this feature.

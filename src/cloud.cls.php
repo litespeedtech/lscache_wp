@@ -1345,7 +1345,12 @@ class Cloud extends Base
 
 	public function qc_link()
 	{
-		return self::CLOUD_SERVER_DASH . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
+		$data = array(
+			'site_url'		=> home_url(),
+			'domain_hash'	=> md5(substr($this->_api_key(), 0, 8)),
+			'ver'			=> LSCWP_V,
+		);
+		return self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str($data); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
 
 	public function set_linked()
