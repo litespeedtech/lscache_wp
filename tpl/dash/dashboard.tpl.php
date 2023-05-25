@@ -17,6 +17,8 @@ if ($img_finished_percentage == 100 && $img_count['groups_new']) {
 	$img_finished_percentage = 99;
 }
 
+$__cloud = Cloud::cls();
+
 $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
 $ucss_summary = UCSS::get_summary();
@@ -187,7 +189,15 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 		<?php endif; ?>
 	</div>
 
-	<p class="litespeed-right litespeed-qc-dashboard-link"><a href="<?php echo Cloud::cls()->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+	<p class="litespeed-right litespeed-qc-dashboard-link">
+		<?php if (!empty($cloud_summary['is_linked'])) : ?>
+			<a href="<?php echo Cloud::cls()->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
+		<?php elseif ($__cloud->can_link_qc()) : ?>
+			<?php Doc::learn_more(Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK), __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button litespeed-btn-warning'); ?>
+		<?php else : ?>
+			<?php Doc::learn_more('javascript:;', __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button disabled litespeed-btn-warning'); ?>
+		<?php endif; ?>
+	</p>
 
 	<div class="litespeed-dashboard-group">
 		<hr>

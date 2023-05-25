@@ -1378,6 +1378,12 @@ class Cloud extends Base
 		if (empty($_GET['qc_res'])) {
 			return $extraRet;
 		}
+
+		if ($_GET['qc_res'] == 'registered') {
+			if (!empty($_GET['qc_new'])) Admin_Display::succeed(__('QUIC.cloud account has been created and successfully linked.', 'litespeed-cache'), true);
+			else Admin_Display::succeed(__('QUIC.cloud account has been successfully linked.', 'litespeed-cache'), true);
+		}
+
 		$qsDrop[] = ".replace( '&qc_res=" . sanitize_key($_GET['qc_res']) . ', \'\' )';
 
 		if (!empty($_GET['domain_hash'])) {
