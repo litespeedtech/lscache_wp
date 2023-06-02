@@ -561,10 +561,11 @@ class Crawler extends Root
 		$options = $this->_get_curl_options(true);
 
 		while ($urlChunks = $this->cls('Crawler_Map')->list_map(self::CHUNKS, $this->_summary['last_pos'])) {
+			self::debug('$urlChunks ' . $urlChunks . ' $this->_cur_threads=' . $this->_cur_threads);
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads);
 			foreach ($urlChunks as $rows) {
-				// self::debug('chunk fetching', $rows);
+				self::debug('chunk fetching count($rows)= ' . count($rows));
 				// multi curl
 				$rets = $this->_multi_request($rows, $options);
 
@@ -600,7 +601,7 @@ class Crawler extends Root
 				$this->_summary['last_crawled'] += $this->_cur_threads;
 				$this->_summary['last_update_time'] = $_time;
 				$this->_summary['last_status'] = 'updated position';
-				// self::debug('chunk fetching 583');
+				self::debug("chunk fetching 604 last_pos:{$this->_summary['last_pos']} last_count:{$this->_summary['last_count']} last_crawled:{$this->_summary['last_crawled']}");
 				// check duration
 				if ($this->_summary['last_update_time'] > $this->_max_run_time) {
 					$this->_end_reason = 'stopped_maxtime';
