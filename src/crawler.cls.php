@@ -561,7 +561,7 @@ class Crawler extends Root
 		$options = $this->_get_curl_options(true);
 
 		while ($urlChunks = $this->cls('Crawler_Map')->list_map(self::CHUNKS, $this->_summary['last_pos'])) {
-			self::debug('$urlChunks ' . $urlChunks . ' $this->_cur_threads=' . $this->_cur_threads);
+			self::debug('$urlChunks=' . count($urlChunks) . ' $this->_cur_threads=' . $this->_cur_threads);
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads);
 			foreach ($urlChunks as $rows) {
