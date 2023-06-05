@@ -290,7 +290,7 @@ class Crawler_Map extends Root
 
 
 		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT %d, %d";
-		self::debug("q=$q offset=$offset, limit=$limit");
+		// self::debug("q=$q offset=$offset, limit=$limit");
 		return $wpdb->get_results($wpdb->prepare($q, $offset, $limit), ARRAY_A);
 	}
 
