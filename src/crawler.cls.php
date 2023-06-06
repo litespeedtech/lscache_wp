@@ -597,9 +597,9 @@ class Crawler extends Root
 
 				// update offset position
 				$_time = time();
-				$this->_summary['last_pos'] += $this->_cur_threads;
-				$this->_summary['last_count'] = $this->_cur_threads;
-				$this->_summary['last_crawled'] += $this->_cur_threads;
+				$this->_summary['last_count'] = count($rows);
+				$this->_summary['last_pos'] += $this->_summary['last_count'];
+				$this->_summary['last_crawled'] += $this->_summary['last_count'];
 				$this->_summary['last_update_time'] = $_time;
 				$this->_summary['last_status'] = 'updated position';
 				// self::debug("chunk fetching 604 last_pos:{$this->_summary['last_pos']} last_count:{$this->_summary['last_count']} last_crawled:{$this->_summary['last_crawled']}");
