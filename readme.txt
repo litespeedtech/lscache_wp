@@ -250,10 +250,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.5 - Jun 6 2023 =
+= 5.5 - Jun 7 2023 =
 * 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
 * 🌱**Crawler** Now runs asynchronously when manually invoked.
 * 🌱**Crawler** Now runs asynchronously when invoked from cron.
+* 🐞**Crawler** Fixed the realtime status bug when crawling.
 * **Crawler** Summary page now displays server load. (Ruikai)
 * 🐞**Page Optimize** Fixed an issue where UCSS could not be generated for error pages. (james58899) #556
 * 🌱**Image Optimize** Now pulls images asynchronously.
