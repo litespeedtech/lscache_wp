@@ -140,7 +140,13 @@ class Media extends Root
 	 */
 	public function info($short_file_path, $post_id)
 	{
-		$real_file = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
+		$short_file_path = wp_normalize_path( $short_file_path );
+		$basedir = $this->_wp_upload_dir['basedir'] . '/';
+		if ( str_starts_with( $short_file_path, $basedir ) ) {
+			$short_file_path = substr( $short_file_path, strlen( $basedir ) );
+		}
+
+		$real_file = $basedir . $short_file_path;
 
 		if (file_exists($real_file)) {
 			return array(

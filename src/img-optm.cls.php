@@ -277,6 +277,11 @@ class Img_Optm extends Base
 				if (!$meta_value) {
 					continue;
 				}
+				$meta_value['file'] = wp_normalize_path( $meta_value['file'] );
+				$basedir = $this->wp_upload_dir['basedir'] . '/';
+				if ( str_starts_with( $meta_value['file'], $basedir ) ) {
+					$meta_value['file'] = substr( $meta_value['file'], strlen( $basedir ) );
+				}
 
 				$this->tmp_pid = $v->post_id;
 				$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
