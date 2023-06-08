@@ -274,6 +274,8 @@ class Img_Optm extends Base
 			foreach ($list as $v) {
 				if (!$v->post_id) continue;
 
+				$this->_summary['next_post_id'] = $v->post_id;
+
 				$meta_value = $this->_parse_wp_meta_value($v);
 				if (!$meta_value) {
 					continue;
@@ -287,10 +289,7 @@ class Img_Optm extends Base
 				}
 			}
 
-			if ($this->tmp_pid) {
-				$this->_summary['next_post_id'] = $this->tmp_pid;
-				self::save_summary();
-			}
+			self::save_summary();
 
 			if (!$this->_img_in_queue) {
 				self::debug('gather_images bypass: empty _img_in_queue');
