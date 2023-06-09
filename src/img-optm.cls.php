@@ -486,7 +486,7 @@ class Img_Optm extends Base
 
 		$srcpath_list = array();
 
-		$list = $wpdb->get_results("SELECT src FROM $this->_table_img_optming");
+		$list = $wpdb->get_results("SELECT src FROM `$this->_table_img_optming`");
 		foreach ($list as $v) {
 			$srcpath_list[] = $v->src;
 		}
@@ -518,7 +518,7 @@ class Img_Optm extends Base
 
 		Utility::compatibility();
 		$post_ids = array_unique(array_column($this->_img_in_queue, 'pid'));
-		$list = $wpdb->get_results("SELECT post_id FROM $this->_table_img_optm WHERE post_id in (" . implode(',', $post_ids) . ") GROUP BY post_id");
+		$list = $wpdb->get_results("SELECT post_id FROM `$this->_table_img_optm` WHERE post_id in (" . implode(',', $post_ids) . ") GROUP BY post_id");
 		foreach ($list as $v) {
 			$finished_ids[] = $v->post_id;
 		}
@@ -532,7 +532,7 @@ class Img_Optm extends Base
 		}
 
 		// Drop all existing legacy records
-		$wpdb->query("DELETE FROM $this->_table_img_optm WHERE post_id in (" . implode(',', $post_ids) . ")");
+		$wpdb->query("DELETE FROM `$this->_table_img_optm` WHERE post_id in (" . implode(',', $post_ids) . ")");
 	}
 
 	/**
@@ -576,7 +576,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		$_img_in_queue = $wpdb->get_results("SELECT id,src,post_id FROM $this->_table_img_optming WHERE optm_status=" . self::STATUS_RAW);
+		$_img_in_queue = $wpdb->get_results("SELECT id,src,post_id FROM `$this->_table_img_optming` WHERE optm_status=" . self::STATUS_RAW);
 		if (!$_img_in_queue) return;
 
 		self::debug('Load img in queue [total] ' . count($_img_in_queue));
@@ -1144,8 +1144,9 @@ class Img_Optm extends Base
 
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 			ORDER BY a.ID
@@ -1343,8 +1344,9 @@ class Img_Optm extends Base
 
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 			ORDER BY a.ID
@@ -1434,8 +1436,9 @@ class Img_Optm extends Base
 
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 			ORDER BY a.ID
@@ -1510,12 +1513,28 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		$q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
+		$q = "SELECT count(*)
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			";
 		$groups_all = $wpdb->get_var($q);
 		$groups_new = $wpdb->get_var($q . ' AND ID>' . (int)$this->_summary['next_post_id'] . ' ORDER BY ID');
 		$groups_done = $wpdb->get_var($q . ' AND ID<' . (int)$this->_summary['next_post_id'] . ' ORDER BY ID');
 
-		$q = "SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY ID DESC LIMIT 1";
+		$q = "SELECT b.post_id
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			ORDER BY a.ID DESC
+			LIMIT 1
+			";
 		$max_id = $wpdb->get_var($q);
 
 		$count_list = array(
@@ -1603,8 +1622,9 @@ class Img_Optm extends Base
 
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
-			WHERE a.post_type = 'attachment'
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 			ORDER BY a.ID
