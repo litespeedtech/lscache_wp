@@ -142,7 +142,7 @@ class Media extends Root
 	{
 		$short_file_path = wp_normalize_path( $short_file_path );
 		$basedir = $this->_wp_upload_dir['basedir'] . '/';
-		if ( str_starts_with( $short_file_path, $basedir ) ) {
+		if ( strpos( $short_file_path, $basedir ) === 0 ) {
 			$short_file_path = substr( $short_file_path, strlen( $basedir ) );
 		}
 

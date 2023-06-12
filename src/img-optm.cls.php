@@ -279,7 +279,7 @@ class Img_Optm extends Base
 				}
 				$meta_value['file'] = wp_normalize_path( $meta_value['file'] );
 				$basedir = $this->wp_upload_dir['basedir'] . '/';
-				if ( str_starts_with( $meta_value['file'], $basedir ) ) {
+				if ( strpos( $meta_value['file'], $basedir ) === 0 ) {
 					$meta_value['file'] = substr( $meta_value['file'], strlen( $basedir ) );
 				}
 
