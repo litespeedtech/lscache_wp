@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.5 - Jun 13 2023 =
+= 5.5 - Jun 20 2023 =
 * 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
 * 🌱**Crawler** Now runs asynchronously when manually invoked.
 * 🌱**Crawler** Now runs asynchronously when invoked from cron.
