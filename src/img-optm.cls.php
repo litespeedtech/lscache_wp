@@ -246,20 +246,28 @@ class Img_Optm extends Base
 			return;
 		}
 
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status IN (%d, %d)";
+		$q = $wpdb->prepare($q, array(self::STATUS_NEW, self::STATUS_RAW));
+		$total_new = $wpdb->get_var($q);
+		$allowance -= $total_new;
+
 		// Get images
-		$q = "SELECT b.post_id, b.meta_value
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
-			WHERE b.meta_key = '_wp_attachment_metadata'
-				AND a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.ID>%d
-				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-			ORDER BY a.ID
-			LIMIT %d
-			";
-		$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
-		$list = $wpdb->get_results($q);
+		$list = array();
+		if ($allowance > 0) {
+			$q = "SELECT b.post_id, b.meta_value
+				FROM `$wpdb->posts` a
+				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+				WHERE b.meta_key = '_wp_attachment_metadata'
+					AND a.post_type = 'attachment'
+					AND a.post_status = 'inherit'
+					AND a.ID>%d
+					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+				ORDER BY a.ID
+				LIMIT %d
+				";
+			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
+			$list = $wpdb->get_results($q);
+		}
 
 		if (!$list) {
 			// $msg = __('No new image to send.', 'litespeed-cache');
@@ -1119,7 +1127,7 @@ class Img_Optm extends Base
 				self::save_summary();
 			}
 
-			$q = "TRUNCATE `$this->_table_img_optming`";
+			$q = "DELETE FROM `$this->_table_img_optming`";
 			$wpdb->query($q);
 		}
 
