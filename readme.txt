@@ -250,6 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 5.6 - Aug 2023 =
+* **Crawler** Sitemap can use search for url now.
+
+
 = 5.5 - Jun 20 2023 =
 * 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
 * 🌱**Crawler** Now runs asynchronously when manually invoked.
