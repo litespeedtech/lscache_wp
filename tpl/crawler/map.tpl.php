@@ -40,8 +40,8 @@ $pagination = Utility::pagination($count, 30);
 
 <div style="display: flex; justify-content: space-between;">
 	<div style="margin-top:10px;">
-		<form action="<?php echo Utility::build_url(Router::ACTION_CRAWLER); ?>" method="post">
-			<input type="text" name="kw" value="<?php echo !empty($_POST['kw']) ? $_POST['kw'] : ''; ?>" placeholder="<?php echo __('URL Search'); ?>" style="width: 600px;" />
+		<form action="<?php echo admin_url('admin.php?page=litespeed-crawler'); ?>" method="post">
+			<input type="text" name="kw" value="<?php echo !empty($_POST['kw']) ? esc_html($_POST['kw']) : ''; ?>" placeholder="<?php echo __('URL Search'); ?>" style="width: 600px;" />
 		</form>
 	</div>
 

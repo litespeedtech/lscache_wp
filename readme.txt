@@ -250,10 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.5.1 - Jul 19 2023 =
-* 🐞**Image Optimization** Fixed a bug where WebP replacements couldn't be pulled without optimizing the original images.
-* 🐞**Image Optimization** Invalid images will now be removed when sending requests to the server. (#138993)
-* **Cloud** Added support for error codes `unpulled_images` and `blocklisted`. (Tynan)
+= 5.6 - Aug 2023 =
+* **Crawler** Sitemap can use search for url now.
+
 
 = 5.5 - Jun 20 2023 =
 * 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
