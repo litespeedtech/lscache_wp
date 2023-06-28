@@ -1,14 +1,17 @@
 <?php
+
 /**
  * The base consts
  *
  * @since      	3.7
  */
+
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit;
 
-class Base extends Root {
+class Base extends Root
+{
 	// This is redundant since v3.0
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf';
@@ -132,6 +135,7 @@ class Base extends Root {
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
 	const O_OPTM_JS_COMB 			= 'optm-js_comb';
 	const O_OPTM_JS_COMB_EXT_INL	= 'optm-js_comb_ext_inl';
+	const O_OPTM_JS_DELAY_INC 		= 'optm-js_delay_inc';
 	const O_OPTM_JS_EXC 			= 'optm-js_exc';
 	const O_OPTM_HTML_MIN 			= 'optm-html_min';
 	const O_OPTM_HTML_LAZY 			= 'optm-html_lazy';
@@ -257,7 +261,7 @@ class Base extends Root {
 	const O_CDN_EXC 			= 'cdn-exc';
 	const O_CDN_QUIC 			= 'cdn-quic';
 	const O_CDN_CLOUDFLARE 		= 'cdn-cloudflare';
-	const O_CDN_CLOUDFLARE_EMAIL= 'cdn-cloudflare_email';
+	const O_CDN_CLOUDFLARE_EMAIL = 'cdn-cloudflare_email';
 	const O_CDN_CLOUDFLARE_KEY 	= 'cdn-cloudflare_key';
 	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name';
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
@@ -420,6 +424,7 @@ class Base extends Root {
 		self::O_OPTM_JS_MIN 			=> false,
 		self::O_OPTM_JS_COMB 			=> false,
 		self::O_OPTM_JS_COMB_EXT_INL	=> false,
+		self::O_OPTM_JS_DELAY_INC 			=> array(),
 		self::O_OPTM_JS_EXC 			=> array(),
 		self::O_OPTM_HTML_MIN 			=> false,
 		self::O_OPTM_HTML_LAZY 			=> array(),
@@ -606,37 +611,34 @@ class Base extends Root {
 	 *
 	 * @since  3.0.3
 	 */
-	protected function type_casting( $val, $id, $is_site_conf = false ) {
-		$default_v = ! $is_site_conf ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
-		if ( is_bool( $default_v ) ) {
-			if ( $val === 'true' ) {
+	protected function type_casting($val, $id, $is_site_conf = false)
+	{
+		$default_v = !$is_site_conf ? self::$_default_options[$id] : self::$_default_site_options[$id];
+		if (is_bool($default_v)) {
+			if ($val === 'true') {
 				$val = true;
 			}
-			if ( $val === 'false' ) {
+			if ($val === 'false') {
 				$val = false;
 			}
 
-			$max = $this->_conf_multi_switch( $id );
-			if ( $max ) {
+			$max = $this->_conf_multi_switch($id);
+			if ($max) {
 				$val = (int) $val;
 				$val %= $max + 1;
-			}
-			else {
+			} else {
 				$val = (bool) $val;
 			}
-		}
-		elseif ( is_array( $default_v ) ) {
+		} elseif (is_array($default_v)) {
 			// from textarea input
-			if ( ! is_array( $val ) ) {
-				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
+			if (!is_array($val)) {
+				$val = Utility::sanitize_lines($val, $this->_conf_filter($id));
 			}
-		}
-		elseif ( ! is_string( $default_v ) ) {
+		} elseif (!is_string($default_v)) {
 			$val = (int) $val;
-		}
-		else {
+		} else {
 			// Check if the string has a limit set
-			$val = $this->_conf_string_val( $id, $val );
+			$val = $this->_conf_string_val($id, $val);
 		}
 
 		return $val;
@@ -647,28 +649,28 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	public function load_default_site_vals() {
+	public function load_default_site_vals()
+	{
 		// Load network_default.ini
-		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true );
-			foreach ( self::$_default_site_options as $k => $v ) {
-				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+		if (file_exists(LSCWP_DIR . 'data/const.network_default.ini')) {
+			$default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.network_default.ini', true);
+			foreach (self::$_default_site_options as $k => $v) {
+				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
 				}
 
 				// Parse value in ini file
-				$ini_v = $this->type_casting( $default_ini_cfg[ $k ], $k, true );
+				$ini_v = $this->type_casting($default_ini_cfg[$k], $k, true);
 
-				if ( $ini_v == $v ) {
+				if ($ini_v == $v) {
 					continue;
 				}
 
-				self::$_default_site_options[ $k ] = $ini_v;
-
+				self::$_default_site_options[$k] = $ini_v;
 			}
 		}
 
-		self::$_default_site_options[ self::_VER ] = Core::VER;
+		self::$_default_site_options[self::_VER] = Core::VER;
 
 		return self::$_default_site_options;
 	}
@@ -679,17 +681,18 @@ class Base extends Root {
 	 * @since 3.0
 	 * @access public
 	 */
-	public function load_default_vals() {
+	public function load_default_vals()
+	{
 		// Load default.ini
-		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true );
-			foreach ( self::$_default_options as $k => $v ) {
-				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+		if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
+			$default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.default.ini', true);
+			foreach (self::$_default_options as $k => $v) {
+				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
 				}
 
 				// Parse value in ini file
-				$ini_v = $this->type_casting( $default_ini_cfg[ $k ], $k );
+				$ini_v = $this->type_casting($default_ini_cfg[$k], $k);
 
 				// NOTE: Multiple lines value must be stored as array
 				/**
@@ -706,7 +709,7 @@ class Base extends Root {
 				 * format out:
 				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
 				 */
-				if ( $k == self::O_CDN_MAPPING ) {
+				if ($k == self::O_CDN_MAPPING) {
 					$mapping_fields = array(
 						self::CDN_MAPPING_URL,
 						self::CDN_MAPPING_INC_IMG,
@@ -715,49 +718,48 @@ class Base extends Root {
 						self::CDN_MAPPING_FILETYPE, // Array
 					);
 					$ini_v2 = array();
-					foreach ( $ini_v[ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
+					foreach ($ini_v[self::CDN_MAPPING_URL] as $k2 => $v2) { // $k2 is numeric
 						$this_row = array();
-						foreach ( $mapping_fields as $v3 ) {
-							$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false;
-							if ( $v3 == self::CDN_MAPPING_URL ) {
-								$this_v = $this_v ? : '';
+						foreach ($mapping_fields as $v3) {
+							$this_v = !empty($ini_v[$v3][$k2]) ? $ini_v[$v3][$k2] : false;
+							if ($v3 == self::CDN_MAPPING_URL) {
+								$this_v = $this_v ?: '';
 							}
-							if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
-								$this_v = $this_v ? Utility::sanitize_lines( $this_v ) : array(); // Note: Since v3.0 its already an array
+							if ($v3 == self::CDN_MAPPING_FILETYPE) {
+								$this_v = $this_v ? Utility::sanitize_lines($this_v) : array(); // Note: Since v3.0 its already an array
 							}
-							$this_row[ $v3 ] = $this_v;
+							$this_row[$v3] = $this_v;
 						}
-						$ini_v2[ $k2 ] = $this_row;
+						$ini_v2[$k2] = $this_row;
 					}
 					$ini_v = $ini_v2;
 				}
 
-				if ( $ini_v == $v ) {
+				if ($ini_v == $v) {
 					continue;
 				}
 
-				self::$_default_options[ $k ] = $ini_v;
+				self::$_default_options[$k] = $ini_v;
 			}
-
 		}
 
 		// Load internal default vals
 		// Setting the default bool to int is also to avoid type casting override it back to bool
-		self::$_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+		self::$_default_options[self::O_CACHE] = is_multisite() ? self::VAL_ON2 : self::VAL_ON; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 
 		// Load default vals containing variables
-		if ( ! self::$_default_options[ self::O_CDN_ORI_DIR ] ) {
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes";
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", self::$_default_options[ self::O_CDN_ORI_DIR ] );
-			self::$_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', self::$_default_options[ self::O_CDN_ORI_DIR ] );
+		if (!self::$_default_options[self::O_CDN_ORI_DIR]) {
+			self::$_default_options[self::O_CDN_ORI_DIR] = LSCWP_CONTENT_FOLDER . "\nwp-includes";
+			self::$_default_options[self::O_CDN_ORI_DIR] = explode("\n", self::$_default_options[self::O_CDN_ORI_DIR]);
+			self::$_default_options[self::O_CDN_ORI_DIR] = array_map('trim', self::$_default_options[self::O_CDN_ORI_DIR]);
 		}
 
 		// Set security key if not initialized yet
-		if ( ! self::$_default_options[ self::HASH ] ) {
-			self::$_default_options[ self::HASH ] = Str::rrand( 32 );
+		if (!self::$_default_options[self::HASH]) {
+			self::$_default_options[self::HASH] = Str::rrand(32);
 		}
 
-		self::$_default_options[ self::_VER ] = Core::VER;
+		self::$_default_options[self::_VER] = Core::VER;
 
 		return self::$_default_options;
 	}
@@ -767,7 +769,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_string_val( $id, $val ) {
+	protected function _conf_string_val($id, $val)
+	{
 		return $val;
 	}
 
@@ -776,12 +779,13 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_multi_switch( $id ) {
-		if ( ! empty( self::$_multi_switch_list[ $id ] ) ) {
-			return self::$_multi_switch_list[ $id ];
+	protected function _conf_multi_switch($id)
+	{
+		if (!empty(self::$_multi_switch_list[$id])) {
+			return self::$_multi_switch_list[$id];
 		}
 
-		if ( $id == self::O_CACHE && is_multisite() ) {
+		if ($id == self::O_CACHE && is_multisite()) {
 			return self::VAL_ON2;
 		}
 
@@ -793,8 +797,9 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	public static function set_multi_switch( $id, $v ) {
-		self::$_multi_switch_list[ $id ] = $v;
+	public static function set_multi_switch($id, $v)
+	{
+		self::$_multi_switch_list[$id] = $v;
 	}
 
 	/**
@@ -802,8 +807,9 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	public static function conf_const( $id ) {
-		return 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $id ) );
+	public static function conf_const($id)
+	{
+		return 'LITESPEED_CONF__' . strtoupper(str_replace('-', '__', $id));
 	}
 
 	/**
@@ -811,7 +817,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_filter( $id ) {
+	protected function _conf_filter($id)
+	{
 		$filters = array(
 			self::O_MEDIA_LAZY_EXC		=> 'uri',
 			self::O_DEBUG_INC			=> 'relative',
@@ -834,8 +841,8 @@ class Base extends Root {
 			// self::	=> '',
 		);
 
-		if ( ! empty( $filters[ $id ] ) ) {
-			return $filters[ $id ];
+		if (!empty($filters[$id])) {
+			return $filters[$id];
 		}
 
 		return false;
@@ -846,7 +853,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge( $id ) {
+	protected function _conf_purge($id)
+	{
 		$check_ids = array(
 			self::O_MEDIA_LAZY_URI_EXC,
 			self::O_OPTM_EXC,
@@ -857,7 +865,7 @@ class Base extends Root {
 			self::O_CACHE_EXC,
 		);
 
-		return in_array( $id, $check_ids );
+		return in_array($id, $check_ids);
 	}
 
 	/**
@@ -865,7 +873,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge_all( $id ) {
+	protected function _conf_purge_all($id)
+	{
 		$check_ids = array(
 			self::O_CACHE,
 			self::O_ESI,
@@ -873,7 +882,7 @@ class Base extends Root {
 			self::NETWORK_O_USE_PRIMARY,
 		);
 
-		return in_array( $id, $check_ids );
+		return in_array($id, $check_ids);
 	}
 
 	/**
@@ -881,7 +890,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_pswd( $id ) {
+	protected function _conf_pswd($id)
+	{
 		$check_ids = array(
 			self::O_CDN_CLOUDFLARE_KEY,
 			self::O_OBJECT_PSWD,
@@ -889,7 +899,7 @@ class Base extends Root {
 			self::O_QC_TOKEN,
 		);
 
-		return in_array( $id, $check_ids );
+		return in_array($id, $check_ids);
 	}
 
 	/**
@@ -897,7 +907,8 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_cron( $id ) {
+	protected function _conf_cron($id)
+	{
 		$check_ids = array(
 			self::O_IMG_OPTM_CRON,
 			self::O_OPTM_CSS_ASYNC,
@@ -907,7 +918,7 @@ class Base extends Root {
 			self::O_CRAWLER,
 		);
 
-		return in_array( $id, $check_ids );
+		return in_array($id, $check_ids);
 	}
 
 	/**
@@ -915,13 +926,14 @@ class Base extends Root {
 	 *
 	 * @since  3.0
 	 */
-	protected function _conf_purge_tag( $id ) {
+	protected function _conf_purge_tag($id)
+	{
 		$check_ids = array(
 			self::O_CACHE_PAGE_LOGIN	=> Tag::TYPE_LOGIN,
 		);
 
-		if ( ! empty( $check_ids[ $id ] ) ) {
-			return $check_ids[ $id ];
+		if (!empty($check_ids[$id])) {
+			return $check_ids[$id];
 		}
 
 		return false;
@@ -932,7 +944,8 @@ class Base extends Root {
 	 *
 	 * @since 2.4.1
 	 */
-	public function server_vars() {
+	public function server_vars()
+	{
 		$consts = array(
 			'WP_SITEURL',
 			'WP_HOME',
@@ -950,11 +963,10 @@ class Base extends Root {
 			'COOKIEHASH',
 		);
 		$server_vars = array();
-		foreach ( $consts as $v ) {
-			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL;
+		foreach ($consts as $v) {
+			$server_vars[$v] = defined($v) ? constant($v) : NULL;
 		}
 
 		return $server_vars;
 	}
-
 }
