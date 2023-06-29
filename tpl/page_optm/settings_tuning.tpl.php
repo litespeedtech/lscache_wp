@@ -37,7 +37,7 @@ ksort($roles);
 					<br />
 					<font class="litespeed-success">
 						<?php echo __('API', 'litespeed-cache'); ?>:
-						<?php echo sprintf(__('Filter %s is supported.', 'litespeed-cache'), '<code>litespeed_optimize_js_delay_includes</code>'); ?>
+						<?php echo sprintf(__('Filter %s is supported.', 'litespeed-cache'), '<code>litespeed_optm_js_delay_inc</code>'); ?>
 					</font>
 				</div>
 			</td>
