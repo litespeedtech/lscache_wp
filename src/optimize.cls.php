@@ -26,6 +26,7 @@ class Optimize extends Base
 	private $cfg_js_min;
 	private $cfg_js_comb;
 	private $cfg_css_async;
+	private $cfg_js_delay_inc;
 	private $cfg_js_defer;
 	private $cfg_js_defer_exc = false;
 	private $cfg_ggfonts_async;
@@ -110,6 +111,8 @@ class Optimize extends Base
 			if ($this->cfg_js_defer) {
 				add_filter('litespeed_optm_js_defer_exc', array($this->cls('Data'), 'load_js_defer_exc'));
 				$this->cfg_js_defer_exc = apply_filters('litespeed_optm_js_defer_exc', $this->conf(self::O_OPTM_JS_DEFER_EXC));
+
+				$this->cfg_js_delay_inc = apply_filters('litespeed_optm_js_delay_inc', $this->conf(self::O_OPTM_JS_DELAY_INC));
 			}
 		}
 
@@ -355,7 +358,7 @@ class Optimize extends Base
 
 		// Parse js from buffer as needed
 		$src_list = false;
-		if ($this->cfg_js_min || $this->cfg_js_comb || $this->cfg_js_defer) {
+		if ($this->cfg_js_min || $this->cfg_js_comb || $this->cfg_js_defer || $this->cfg_js_delay_inc) {
 			add_filter('litespeed_optimize_js_excludes', array($this->cls('Data'), 'load_js_exc'));
 			list($src_list, $html_list) = $this->_parse_js();
 		}
@@ -394,6 +397,11 @@ class Optimize extends Base
 					else {
 						if ($this->cfg_js_defer) {
 							$deferred = $this->_js_defer($html_list[$k], $src_info['src']);
+							if ($deferred) {
+								$this->content = str_replace($html_list[$k], $deferred, $this->content);
+							}
+						} else if ($this->cfg_js_delay_inc) {
+							$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
 							if ($deferred) {
 								$this->content = str_replace($html_list[$k], $deferred, $this->content);
 							}
@@ -527,7 +535,7 @@ class Optimize extends Base
 	 */
 	private function _maybe_js_delay()
 	{
-		if ($this->cfg_js_defer !== 2) {
+		if ($this->cfg_js_defer !== 2 && !$this->cfg_js_delay_inc) {
 			return;
 		}
 
@@ -1200,5 +1208,38 @@ class Optimize extends Base
 		}
 
 		return str_replace('></script>', ' defer data-deferred="1"></script>', $ori);
+	}
+
+	/**
+	 * Delay JS for included setting
+	 *
+	 * @since 5.6
+	 */
+	private function _js_delay($ori, $src)
+	{
+		if (strpos($ori, ' async') !== false) {
+			$ori = str_replace(' async', '', $ori);
+		}
+
+		if (strpos($ori, 'defer') !== false) {
+			return false;
+		}
+		if (strpos($ori, 'data-deferred') !== false) {
+			Debug2::debug2('[Optm] bypass: attr data-deferred exist');
+			return false;
+		}
+		if (strpos($ori, 'data-no-defer') !== false) {
+			Debug2::debug2('[Optm] bypass: attr api data-no-defer');
+			return false;
+		}
+
+		if (!Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
+			return;
+		}
+
+		if (strpos($ori, ' type=') !== false) {
+			$ori = preg_replace('# type=([\'"])([^\1]+)\1#isU', '', $ori);
+		}
+		return str_replace(' src=', ' type="litespeed/javascript" data-src=', $ori);
 	}
 }
