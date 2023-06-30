@@ -26,7 +26,7 @@ class Optimize extends Base
 	private $cfg_js_min;
 	private $cfg_js_comb;
 	private $cfg_css_async;
-	private $cfg_js_delay_inc;
+	private $cfg_js_delay_inc = array();
 	private $cfg_js_defer;
 	private $cfg_js_defer_exc = false;
 	private $cfg_ggfonts_async;
@@ -500,7 +500,7 @@ class Optimize extends Base
 	 */
 	private function _build_js_tag($src)
 	{
-		if ($this->cfg_js_defer === 2) {
+		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
 			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
 		}
 
@@ -1200,7 +1200,7 @@ class Optimize extends Base
 			return false;
 		}
 
-		if ($this->cfg_js_defer === 2) {
+		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
 			if (strpos($ori, ' type=') !== false) {
 				$ori = preg_replace('# type=([\'"])([^\1]+)\1#isU', '', $ori);
 			}
