@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 5.6 - Aug 2023 =
 * 🌱**Page Optimize** JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
 * **Crawler** Sitemap can use search for url now.
+* **Image Optimization** Removed invalid images when sending requests to the server. (#138993)
 
 
 = 5.5 - Jun 20 2023 =

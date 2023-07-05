@@ -609,6 +609,12 @@ class Img_Optm extends Base
 			$optm_options = apply_filters('litespeed_img_optm_options_per_image', 0, $v->src);
 
 			$_img_info = $this->__media->info($v->src, $v->post_id);
+
+			# If record is invalid, remove from img_optming table
+			if (empty($_img_info['url']) || empty($_img_info['md5'])) {
+				$wpdb->query($wpdb->prepare("DELETE FROM `$this->_table_img_optming` WHERE id=%d", $v->id));
+				continue;
+			}
 			$img = array(
 				'id'	=> $v->id,
 				'url'	=> $_img_info['url'],
