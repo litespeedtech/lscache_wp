@@ -250,9 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.6 - Aug 2023 =
+= 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
 * **Crawler** Sitemap can use search for url now.
+* 🐞**Image Optimization** Fix a bug where WebP replacements can't be pulled without optimizing original images
 * **Image Optimization** Removed invalid images when sending requests to the server. (#138993)
 * **GUI** Restrict the scope of balloon CSS rules to avoid conflicts. (#567)
 * **Object Cache** Detect Memcached in more situations. (#568)
