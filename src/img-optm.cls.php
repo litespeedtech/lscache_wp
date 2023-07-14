@@ -893,73 +893,66 @@ class Img_Optm extends Base
 			$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
 
 			$server_info = json_decode($row_img->server_info, true);
-			if (empty($server_info['ori'])) {
-				// Delete working table
-				$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, $row_img->id));
+			if (!empty($server_info['ori'])) {
+				/**
+				 * Use wp original get func to avoid allow_url_open off issue
+				 * @since  1.6.5
+				 */
+				$image_url = $server_info['server'] . '/' . $server_info['ori'];
+				self::debug('Pulling image: ' . $image_url);
+				$response = wp_remote_get($image_url, array('timeout' => 60));
+				if (is_wp_error($response)) {
+					$error_message = $response->get_error_message();
+					self::debug('❌ failed to pull image: ' . $error_message);
+					return;
+				}
 
-				continue;
+				if ($response['response']['code'] == 404) {
+					$this->_step_back_image($row_img->id);
+
+					$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
+					Admin_Display::error($msg);
+					continue;
+				}
+
+				file_put_contents($local_file . '.tmp', $response['body']);
+
+				if (!file_exists($local_file . '.tmp') || !filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
+					self::debug('❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info['server'] . '/' . $server_info['ori'] . ' [server_md5] ' . $server_info['ori_md5']);
+
+					// Delete working table
+					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+					$wpdb->query($wpdb->prepare($q, $row_img->id));
+
+					$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
+					Admin_Display::error($msg);
+					continue;
+				}
+
+				// Backup ori img
+				if (!$rm_ori_bkup) {
+					$extension = pathinfo($local_file, PATHINFO_EXTENSION);
+					$bk_file = substr($local_file, 0, -strlen($extension)) . 'bk.' . $extension;
+					file_exists($local_file) && rename($local_file, $bk_file);
+				}
+
+				// Replace ori img
+				rename($local_file . '.tmp', $local_file);
+
+				self::debug('Pulled optimized img: ' . $local_file);
+
+				/**
+				 * API Hook
+				 * @since  2.9.5
+				 * @since  3.0 $row_img has less elements now. Most useful ones are `post_id`/`src`
+				 */
+				do_action('litespeed_img_pull_ori', $row_img, $local_file);
+
+				$total_pulled_ori++;
 			}
-			/**
-			 * Use wp orignal get func to avoid allow_url_open off issue
-			 * @since  1.6.5
-			 */
-			$image_url = $server_info['server'] . '/' . $server_info['ori'];
-			self::debug('Pulling image: ' . $image_url);
-			$response = wp_remote_get($image_url, array('timeout' => 60));
-			if (is_wp_error($response)) {
-				$error_message = $response->get_error_message();
-				self::debug('❌ failed to pull image: ' . $error_message);
-				return;
-			}
 
-			if ($response['response']['code'] == 404) {
-				$this->_step_back_image($row_img->id);
-
-				$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
-				Admin_Display::error($msg);
-				continue;
-			}
-
-			file_put_contents($local_file . '.tmp', $response['body']);
-
-			if (!file_exists($local_file . '.tmp') || !filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
-				self::debug('❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info['server'] . '/' . $server_info['ori'] . ' [server_md5] ' . $server_info['ori_md5']);
-
-				// Delete working table
-				$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, $row_img->id));
-
-				$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
-				Admin_Display::error($msg);
-				continue;
-			}
-
-			// Backup ori img
-			if (!$rm_ori_bkup) {
-				$extension = pathinfo($local_file, PATHINFO_EXTENSION);
-				$bk_file = substr($local_file, 0, -strlen($extension)) . 'bk.' . $extension;
-				file_exists($local_file) && rename($local_file, $bk_file);
-			}
-
-			// Replace ori img
-			rename($local_file . '.tmp', $local_file);
-
-			self::debug('Pulled optimized img: ' . $local_file);
-
-			/**
-			 * API Hook
-			 * @since  2.9.5
-			 * @since  3.0 $row_img has less elements now. Most useful ones are `post_id`/`src`
-			 */
-			do_action('litespeed_img_pull_ori', $row_img, $local_file);
-
-			$total_pulled_ori++;
-			// }
-
-			// Save webp image
-			$webp_size = 0;
-
+				// Save webp image
+				$webp_size = 0;
 			if (!empty($server_info['webp'])) {
 				// Fetch
 				$response = wp_remote_get($server_info['server'] . '/' . $server_info['webp'], array('timeout' => 60));
