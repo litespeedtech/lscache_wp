@@ -957,8 +957,8 @@ class Img_Optm extends Base
 				$total_pulled_ori++;
 			}
 
-				// Save webp image
-				$webp_size = 0;
+			// Save webp image
+			$webp_size = 0;
 			if (!empty($server_info['webp'])) {
 				// Fetch
 				$response = wp_remote_get($server_info['server'] . '/' . $server_info['webp'], array('timeout' => 60));
