@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.2.2
-Stable tag: 5.5
+Stable tag: 5.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,14 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.6 - Aug 1 2023 =
-* 🌱**Page Optimize** JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
-* **Crawler** Sitemap can use search for url now.
-* 🐞**Image Optimization** Fix a bug where WebP replacements can't be pulled without optimizing original images
-* **Image Optimization** Removed invalid images when sending requests to the server. (#138993)
-* **GUI** Restrict the scope of balloon CSS rules to avoid conflicts. (#567)
-* **Object Cache** Detect Memcached in more situations. (#568)
-* **Cloud** Added error code `unpulled_images` and `blocklisted` supports. (Tynan)
+= 5.5.1 - Jul 19 2023 =
+* 🐞**Image Optimization** Fixed a bug where WebP replacements couldn't be pulled without optimizing the original images.
+* 🐞**Image Optimization** Invalid images will now be removed when sending requests to the server. (#138993)
+* **Cloud** Added support for error codes `unpulled_images` and `blocklisted`. (Tynan)
 
 = 5.5 - Jun 20 2023 =
 * 🌱**Crawler** Can now use multiple sitemaps. (Tobolo/Tim Nolte)
