@@ -610,6 +610,7 @@ class Purge extends Base {
 
 		$this->purge_url( $_SERVER[ 'HTTP_REFERER' ] );
 
+		do_action( 'litespeed_purged_front', $_SERVER['HTTP_REFERER'] );
 		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
 		exit();
 	}
