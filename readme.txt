@@ -250,7 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.6 - Aug 15 2023 =
+= 5.6.1 - Oct 2023 =
+* 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
+
+= 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
 * **Crawler** Sitemap can use search for URL now.
 * **GUI** Restrict the scope of balloon CSS rules to avoid conflicts. (#567)

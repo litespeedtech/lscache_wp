@@ -159,6 +159,7 @@ class Base extends Root
 	const O_OPTM_GM_JS_EXC 			= 'optm-gm_js_exc';
 	const O_OPTM_DNS_PREFETCH		= 'optm-dns_prefetch';
 	const O_OPTM_DNS_PREFETCH_CTRL	= 'optm-dns_prefetch_ctrl';
+	const O_OPTM_DNS_PRECONNECT		= 'optm-dns_preconnect';
 	const O_OPTM_EXC 				= 'optm-exc';
 	const O_OPTM_GUEST_ONLY 		= 'optm-guest_only';
 
@@ -446,6 +447,7 @@ class Base extends Root
 		self::O_OPTM_GM_JS_EXC			=> array(),
 		self::O_OPTM_DNS_PREFETCH		=> array(),
 		self::O_OPTM_DNS_PREFETCH_CTRL	=> false,
+		self::O_OPTM_DNS_PRECONNECT		=> array(),
 		self::O_OPTM_EXC				=> array(),
 		self::O_OPTM_GUEST_ONLY			=> false,
 

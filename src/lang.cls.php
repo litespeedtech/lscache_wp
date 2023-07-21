@@ -155,6 +155,7 @@ class Lang extends Base
 			self::O_OPTM_LOCALIZE_DOMAINS		=> __('Localization Files', 'litespeed-cache'),
 			self::O_OPTM_DNS_PREFETCH			=> __('DNS Prefetch', 'litespeed-cache'),
 			self::O_OPTM_DNS_PREFETCH_CTRL		=> __('DNS Prefetch Control', 'litespeed-cache'),
+			self::O_OPTM_DNS_PRECONNECT			=> __('DNS Preconnect', 'litespeed-cache'),
 			self::O_OPTM_CSS_EXC				=> __('CSS Excludes', 'litespeed-cache'),
 			self::O_OPTM_JS_DELAY_INC			=> __('JS Delayed Includes', 'litespeed-cache'),
 			self::O_OPTM_JS_EXC					=> __('JS Excludes', 'litespeed-cache'),
