@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.2.2
-Stable tag: 5.5.1
+Tested up to: 6.3
+Stable tag: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.6 - Aug 1 2023 =
+= 5.6 - Aug 15 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
 * **Crawler** Sitemap can use search for URL now.
 * **GUI** Restrict the scope of balloon CSS rules to avoid conflicts. (#567)
