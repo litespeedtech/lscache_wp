@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 5.6.1 - Oct 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
 * **Cloud** Force syncing the configuration to QUIC.cloud if CDN is reenabled.
+* **Cloud** Force syncing the configuration to QUIC.cloud if domain key is readded.
 
 = 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)

@@ -38,7 +38,7 @@ class Quic extends Base
 		self::cls()->try_sync_conf();
 	}
 
-	public function try_sync_conf()
+	public function try_sync_conf($force = false)
 	{
 		$options = $this->get_options();
 
@@ -71,8 +71,11 @@ class Quic extends Base
 
 		$conf_md5 = md5(json_encode($options));
 		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {
-			self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
-			return;
+			if (!$force) {
+				self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
+				return;
+			}
+			self::debug('!!!Force sync conf even same md5');
 		}
 
 		self::save_summary(array('conf_md5' => $conf_md5));

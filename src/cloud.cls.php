@@ -1371,6 +1371,9 @@ class Cloud extends Base
 	{
 		$this->_summary['is_linked'] = 1;
 		self::save_summary();
+
+		# Force resync qc conf
+		$this->cls('CDN\Quic')->try_sync_conf(true);
 	}
 
 	/**
