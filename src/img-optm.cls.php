@@ -1190,7 +1190,13 @@ class Img_Optm extends Base
 		$offset++;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 		if ($to_be_continued) {
-			return Router::self_redirect(Router::ACTION_IMG_OPTM, self::TYPE_DESTROY);
+			# Check if post_id is beyond next_post_id
+			self::debug('[next_post_id] ' . $this->_summary['next_post_id'] . ' [cursor post id] ' . $to_be_continued->post_id);
+			if ($to_be_continued->post_id <= $this->_summary['next_post_id']) {
+				self::debug('redirecting to next');
+				return Router::self_redirect(Router::ACTION_IMG_OPTM, self::TYPE_DESTROY);
+			}
+			self::debug('🎊 Finished destroying');
 		}
 
 		// Delete postmeta info
