@@ -644,7 +644,9 @@ class Media extends Root
 
 			// Add missing dimensions
 			if (defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_MEDIA_ADD_MISSING_SIZES)) {
-				if (empty($attrs['width']) || $attrs['width'] == 'auto' || empty($attrs['height']) || $attrs['height'] == 'auto') {
+				if (!apply_filters('litespeed_media_add_missing_sizes', true)) {
+					Debug2::debug2('[Media] add_missing_sizes bypassed via litespeed_media_add_missing_sizes filter');
+				} elseif (empty($attrs['width']) || $attrs['width'] == 'auto' || empty($attrs['height']) || $attrs['height'] == 'auto') {
 					self::debug('⚠️ Missing sizes for image [src] ' . $attrs['src']);
 					$dimensions = $this->_detect_dimensions($attrs['src']);
 					if ($dimensions) {
