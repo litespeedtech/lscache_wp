@@ -6,22 +6,14 @@ defined('WPINC') || exit;
 
 // Existing public version list
 $v_list = array(
+	'5.6',
+	'5.5.1',
+	'5.5',
 	'5.4',
 	'5.3.2',
-	'5.3.1',
-	'5.3',
 	'5.2.1',
 	'5.1',
 	'4.6',
-	'4.5.0.1',
-	'4.4.7',
-	'4.4.5',
-	'4.4.4',
-	'4.4.3',
-	'4.4.2',
-	'4.4.1',
-	'4.3',
-	'4.2',
 	'4.1',
 );
 
@@ -35,7 +27,7 @@ $v_list = array(
 </h3>
 
 <div class="litespeed-desc"><?php echo __('Use this section to switch plugin versions. To beta test a GitHub commit, enter the commit URL in the field below.', 'litespeed-cache'); ?></div>
-<div class="litespeed-desc"><?php echo __('Example', 'litespeed-cache'); ?>: <code>https://github.com/litespeedtech/lscache_wp/commit/e9cb446dfb66d133264d3ebec0535aaed5c932c0</code></div>
+<div class="litespeed-desc"><?php echo __('Example', 'litespeed-cache'); ?>: <code>https://github.com/litespeedtech/lscache_wp/commit/example_comment_hash_d3ebec0535aaed5c932c0</code></div>
 
 <input type="text" name="<?php echo Debug2::BETA_TEST_URL; ?>" class="litespeed-input-long" id='litespeed-beta-test'>
 

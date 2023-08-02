@@ -288,6 +288,12 @@ class Crawler_Map extends Root
 			$offset = Utility::pagination($total, $limit, true);
 		}
 
+		$where = '';
+		if (!empty($_POST['kw'])) {
+			$q = "SELECT * FROM `$this->_tb` WHERE url LIKE %s ORDER BY id LIMIT %d, %d";
+			$where = '%' . $wpdb->esc_like($_POST['kw']) . '%';
+			return $wpdb->get_results($wpdb->prepare($q, $where, $offset, $limit), ARRAY_A);
+		}
 
 		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT %d, %d";
 		// self::debug("q=$q offset=$offset, limit=$limit");

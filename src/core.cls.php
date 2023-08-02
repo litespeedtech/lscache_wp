@@ -627,6 +627,11 @@ class Core extends Root
 			}
 		}
 
+		if (defined('LITESPEED_ON') && defined('LSCWP_LOG')) {
+			$vary = $this->cls('Vary')->finalize_full_varies();
+			if ($vary) $this->_comment('Full varies: ' . $vary);
+		}
+
 		// Admin QS show header action
 		if (self::$_debug_show_header) {
 			$debug_header = self::HEADER_DEBUG . ': ';

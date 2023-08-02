@@ -387,7 +387,7 @@ class Object_Cache extends Root {
 			if ( substr( $k, 0, strlen( $this->_cfg_host ) ) != $this->_cfg_host ) {
 				continue;
 			}
-			if ( $v[ 'pid' ] > 0 ) {
+			if ( !empty($v['pid']) || !empty($v['curr_connections']) ) {
 				return true;
 			}
 		}

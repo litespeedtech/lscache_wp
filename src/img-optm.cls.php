@@ -246,20 +246,28 @@ class Img_Optm extends Base
 			return;
 		}
 
+		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status IN (%d, %d)";
+		$q = $wpdb->prepare($q, array(self::STATUS_NEW, self::STATUS_RAW));
+		$total_new = $wpdb->get_var($q);
+		$allowance -= $total_new;
+
 		// Get images
-		$q = "SELECT b.post_id, b.meta_value
-			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
-			WHERE b.meta_key = '_wp_attachment_metadata'
-				AND a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.ID>%d
-				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-			ORDER BY a.ID
-			LIMIT %d
-			";
-		$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
-		$list = $wpdb->get_results($q);
+		$list = array();
+		if ($allowance > 0) {
+			$q = "SELECT b.post_id, b.meta_value
+				FROM `$wpdb->posts` a
+				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+				WHERE b.meta_key = '_wp_attachment_metadata'
+					AND a.post_type = 'attachment'
+					AND a.post_status = 'inherit'
+					AND a.ID>%d
+					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+				ORDER BY a.ID
+				LIMIT %d
+				";
+			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
+			$list = $wpdb->get_results($q);
+		}
 
 		if (!$list) {
 			// $msg = __('No new image to send.', 'litespeed-cache');
@@ -280,10 +288,10 @@ class Img_Optm extends Base
 				if (!$meta_value) {
 					continue;
 				}
-				$meta_value['file'] = wp_normalize_path( $meta_value['file'] );
+				$meta_value['file'] = wp_normalize_path($meta_value['file']);
 				$basedir = $this->wp_upload_dir['basedir'] . '/';
-				if ( strpos( $meta_value['file'], $basedir ) === 0 ) {
-					$meta_value['file'] = substr( $meta_value['file'], strlen( $basedir ) );
+				if (strpos($meta_value['file'], $basedir) === 0) {
+					$meta_value['file'] = substr($meta_value['file'], strlen($basedir));
 				}
 
 				$this->tmp_pid = $v->post_id;
@@ -601,6 +609,12 @@ class Img_Optm extends Base
 			$optm_options = apply_filters('litespeed_img_optm_options_per_image', 0, $v->src);
 
 			$_img_info = $this->__media->info($v->src, $v->post_id);
+
+			# If record is invalid, remove from img_optming table
+			if (empty($_img_info['url']) || empty($_img_info['md5'])) {
+				$wpdb->query($wpdb->prepare("DELETE FROM `$this->_table_img_optming` WHERE id=%d", $v->id));
+				continue;
+			}
 			$img = array(
 				'id'	=> $v->id,
 				'url'	=> $_img_info['url'],
@@ -885,73 +899,66 @@ class Img_Optm extends Base
 			$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
 
 			$server_info = json_decode($row_img->server_info, true);
-			if (empty($server_info['ori'])) {
-				// Delete working table
-				$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, $row_img->id));
+			if (!empty($server_info['ori'])) {
+				/**
+				 * Use wp original get func to avoid allow_url_open off issue
+				 * @since  1.6.5
+				 */
+				$image_url = $server_info['server'] . '/' . $server_info['ori'];
+				self::debug('Pulling image: ' . $image_url);
+				$response = wp_remote_get($image_url, array('timeout' => 60));
+				if (is_wp_error($response)) {
+					$error_message = $response->get_error_message();
+					self::debug('❌ failed to pull image: ' . $error_message);
+					return;
+				}
 
-				continue;
+				if ($response['response']['code'] == 404) {
+					$this->_step_back_image($row_img->id);
+
+					$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
+					Admin_Display::error($msg);
+					continue;
+				}
+
+				file_put_contents($local_file . '.tmp', $response['body']);
+
+				if (!file_exists($local_file . '.tmp') || !filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
+					self::debug('❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info['server'] . '/' . $server_info['ori'] . ' [server_md5] ' . $server_info['ori_md5']);
+
+					// Delete working table
+					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+					$wpdb->query($wpdb->prepare($q, $row_img->id));
+
+					$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
+					Admin_Display::error($msg);
+					continue;
+				}
+
+				// Backup ori img
+				if (!$rm_ori_bkup) {
+					$extension = pathinfo($local_file, PATHINFO_EXTENSION);
+					$bk_file = substr($local_file, 0, -strlen($extension)) . 'bk.' . $extension;
+					file_exists($local_file) && rename($local_file, $bk_file);
+				}
+
+				// Replace ori img
+				rename($local_file . '.tmp', $local_file);
+
+				self::debug('Pulled optimized img: ' . $local_file);
+
+				/**
+				 * API Hook
+				 * @since  2.9.5
+				 * @since  3.0 $row_img has less elements now. Most useful ones are `post_id`/`src`
+				 */
+				do_action('litespeed_img_pull_ori', $row_img, $local_file);
+
+				$total_pulled_ori++;
 			}
-			/**
-			 * Use wp orignal get func to avoid allow_url_open off issue
-			 * @since  1.6.5
-			 */
-			$image_url = $server_info['server'] . '/' . $server_info['ori'];
-			self::debug('Pulling image: ' . $image_url);
-			$response = wp_remote_get($image_url, array('timeout' => 60));
-			if (is_wp_error($response)) {
-				$error_message = $response->get_error_message();
-				self::debug('❌ failed to pull image: ' . $error_message);
-				return;
-			}
-
-			if ($response['response']['code'] == 404) {
-				$this->_step_back_image($row_img->id);
-
-				$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
-				Admin_Display::error($msg);
-				continue;
-			}
-
-			file_put_contents($local_file . '.tmp', $response['body']);
-
-			if (!file_exists($local_file . '.tmp') || !filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
-				self::debug('❌ Failed to pull optimized img: file md5 mismatch [url] ' . $server_info['server'] . '/' . $server_info['ori'] . ' [server_md5] ' . $server_info['ori_md5']);
-
-				// Delete working table
-				$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, $row_img->id));
-
-				$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
-				Admin_Display::error($msg);
-				continue;
-			}
-
-			// Backup ori img
-			if (!$rm_ori_bkup) {
-				$extension = pathinfo($local_file, PATHINFO_EXTENSION);
-				$bk_file = substr($local_file, 0, -strlen($extension)) . 'bk.' . $extension;
-				file_exists($local_file) && rename($local_file, $bk_file);
-			}
-
-			// Replace ori img
-			rename($local_file . '.tmp', $local_file);
-
-			self::debug('Pulled optimized img: ' . $local_file);
-
-			/**
-			 * API Hook
-			 * @since  2.9.5
-			 * @since  3.0 $row_img has less elements now. Most useful ones are `post_id`/`src`
-			 */
-			do_action('litespeed_img_pull_ori', $row_img, $local_file);
-
-			$total_pulled_ori++;
-			// }
 
 			// Save webp image
 			$webp_size = 0;
-
 			if (!empty($server_info['webp'])) {
 				// Fetch
 				$response = wp_remote_get($server_info['server'] . '/' . $server_info['webp'], array('timeout' => 60));
@@ -1119,7 +1126,7 @@ class Img_Optm extends Base
 				self::save_summary();
 			}
 
-			$q = "TRUNCATE `$this->_table_img_optming`";
+			$q = "DELETE FROM `$this->_table_img_optming`";
 			$wpdb->query($q);
 		}
 
