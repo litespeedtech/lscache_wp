@@ -256,6 +256,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Force syncing the configuration to QUIC.cloud if domain key is readded.
 * 🐞**Image Optimize** Bypass unnecessary image processing when images were only partially optimized. (Ruikai)
 * **CDN** Auto disabled CDN if CDN URL is invalid. (Ruikai)
+* **API** A third filter `litespeed_media_add_missing_sizes` allows bypassing Media's "add missing sizes" option (for Guest Optimization and otherwise). (PR #564)
 
 = 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)
