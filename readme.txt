@@ -258,6 +258,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CDN** Auto disabled CDN if CDN URL is invalid. (Ruikai)
 * **API** A third filter `litespeed_media_add_missing_sizes` allows bypassing Media's "add missing sizes" option (for Guest Optimization and otherwise). (PR #564)
 * **Guest** Fixed soft 404 and robots.txt report for guest.vary.php.
+* **Vary** Enabled `litespeed_vary_cookies` for LSWS enterprise.
+* **Vary** OLS password protected page removed the legacy beginning comma.
 
 = 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)

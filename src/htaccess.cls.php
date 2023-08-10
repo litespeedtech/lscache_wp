@@ -556,10 +556,10 @@ class Htaccess extends Root
 		$vary_cookies = $cfg[$id] ? array($cfg[$id]) : array();
 		if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') { // Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
 			if (defined('COOKIEHASH')) {
-				$vary_cookies[] = ',wp-postpass_' . COOKIEHASH;
+				$vary_cookies[] = 'wp-postpass_' . COOKIEHASH;
 			}
-			$vary_cookies = apply_filters('litespeed_vary_cookies', $vary_cookies); // todo: test if response vary header can work in latest OLS, drop the above two lines
 		}
+		$vary_cookies = apply_filters('litespeed_vary_cookies', $vary_cookies); // todo: test if response vary header can work in latest OLS, drop the above two lines
 		// frontend and backend
 		if ($vary_cookies) {
 			$env = 'Cache-Vary:' . implode(',', $vary_cookies);
