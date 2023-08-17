@@ -261,6 +261,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Guest** Fixed soft 404 and robots.txt report for guest.vary.php.
 * **Vary** Enabled `litespeed_vary_cookies` for LSWS enterprise.
 * **Vary** OLS password protected page removed the legacy beginning comma.
+* **GUI** Fixed wrongly WebP tip when GM is off.
 
 = 5.6 - Aug 1 2023 =
 * 🌱**Page Optimize** New JS Delay Includes option. (Mitchell Krog/Gerard Reches/Ignacy Hołoga)

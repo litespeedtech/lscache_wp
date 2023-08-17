@@ -26,6 +26,7 @@ class Doc
 	public static function maybe_on_by_gm($id)
 	{
 		if (apply_filters('litespeed_conf', $id)) return;
+		if (!apply_filters('litespeed_conf', Base::O_GUEST)) return;
 		if (!apply_filters('litespeed_conf', Base::O_GUEST_OPTM)) return;
 		echo '<font class="litespeed-warning">';
 		echo '⚠️ ' . sprintf(__('This setting is %1$s for bots and first-time visitors due to %2$s!', 'litespeed-cache'), '<code>' . __('ON', 'litespeed-cache') . '</code>', Lang::title(Base::O_GUEST_OPTM));
