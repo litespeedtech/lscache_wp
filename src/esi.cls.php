@@ -412,7 +412,11 @@ class ESI extends Root
 			return '';
 		}
 
-		return "<esi:inline name='$url' cache-control='" . $inline_param['control'] . "' cache-tag='" . $inline_param['tag'] . "'>" . $inline_param['val'] . "</esi:inline>";
+		$url = esc_attr($url);
+		$control = esc_attr($inline_param['control']);
+		$tag = esc_attr($inline_param['tag']);
+
+		return "<esi:inline name='$url' cache-control='" . $control . "' cache-tag='" . $tag . "'>" . $inline_param['val'] . "</esi:inline>";
 	}
 
 	/**
