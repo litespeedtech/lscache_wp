@@ -593,7 +593,7 @@ class Htaccess extends Root
 
 		// webp support
 		$id = Base::O_IMG_OPTM_WEBP;
-		if (!empty($cfg[$id]) || !empty($cfg[Base::O_GUEST])) {
+		if (!empty($cfg[$id]) || (!empty($cfg[Base::O_GUEST]) && !empty($cfg[Base::O_GUEST_OPTM]))) {
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START;
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"';
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';

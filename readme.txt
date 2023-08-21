@@ -256,6 +256,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Force syncing the configuration to QUIC.cloud if domain key is readded.
 * 🐞**ESI** Patched a possible vulnerability issue. (István Márton@Wordfence #841011)
 * 🐞**Image Optimize** Bypass unnecessary image processing when images were only partially optimized. (Ruikai)
+* 🐞**Guest** Guest mode will not enable WebP directly anymore. (Michael Heymann)
 * **CDN** Auto disabled CDN if CDN URL is invalid. (Ruikai)
 * **API** A third filter `litespeed_media_add_missing_sizes` allows bypassing Media's "add missing sizes" option (for Guest Optimization and otherwise). (PR #564)
 * **Guest** Fixed soft 404 and robots.txt report for guest.vary.php.
