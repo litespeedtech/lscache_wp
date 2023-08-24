@@ -245,6 +245,23 @@ class Admin_Settings extends Base
 
 			// CDN mapping allow URL values repeated
 			// if ( $id == self::O_CDN_MAPPING ) {}
+
+			// tmp fix the 3rd part woo update hook issue when enabling vary cookie
+			if ($id == 'wc_cart_vary') {
+				if ($data)
+					add_filter('litespeed_vary_cookies', function ($list) {
+						$list[] = 'woocommerce_cart_hash';
+						return array_unique($list);
+					});
+				else {
+					add_filter('litespeed_vary_cookies', function ($list) {
+						if (in_array('woocommerce_cart_hash', $list)) {
+							unset($list[array_search('woocommerce_cart_hash', $list)]);
+						}
+						return array_unique($list);
+					});
+				}
+			}
 		}
 
 		// id validation will be inside
