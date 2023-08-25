@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**3rd** New Vary for Mini Cart option for Woocommerce. (Ruikai)
 * **Cloud** Force syncing the configuration to QUIC.cloud if CDN is reenabled.
 * **Cloud** Force syncing the configuration to QUIC.cloud if domain key is readded.
+* **Cloud** Limit multi lines fields when posting to QC.
 * 🐞**ESI** Patched a possible vulnerability issue. (István Márton@Wordfence #841011)
 * 🐞**Image Optimize** Bypass unnecessary image processing when images were only partially optimized. (Ruikai)
 * 🐞**Guest** Guest mode will not enable WebP directly anymore. (Michael Heymann)

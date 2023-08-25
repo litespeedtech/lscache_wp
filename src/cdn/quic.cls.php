@@ -59,6 +59,14 @@ class Quic extends Base
 		}
 		unset($options[self::O_MEDIA_LQIP_EXC]);
 
+		// Remove overflow multi lines fields
+		foreach ($options as $k => $v) {
+			if (is_array($v) && count($v) > 30) {
+				$v = array_slice($v, 0, 30);
+				$options[$k] = $v;
+			}
+		}
+
 		// Rest url
 		$options['_rest'] = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
 		$options['_home_url'] = home_url('/');
