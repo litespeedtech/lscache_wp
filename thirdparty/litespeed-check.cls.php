@@ -67,6 +67,22 @@ class LiteSpeed_Check
 		 */
 		add_action('activated_plugin', __CLASS__ . '::activated_plugin', 10, 2);
 		add_action('deactivated_plugin', __CLASS__ . '::deactivated_plugin', 10, 2);
+
+		if (class_exists('PagespeedNinja')) {
+			\LiteSpeed\Admin_Display::error(
+				'<div ' . self::$_msg_id . '>'
+					. esc_html__(
+						'Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:',
+						'litespeed-cache'
+					)
+					. '<p style="color: red; font-weight: 700;">'
+					. 'PageSpeed Ninja'
+					. '</p>'
+					. '</div>',
+				false,
+				true
+			);
+		}
 	}
 
 	public static function activated_plugin($plugin, $network_wide)
