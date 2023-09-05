@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.6.1 - Oct 2023 =
+= 5.7 - Oct 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
 * 🌱**3rd** New Vary for Mini Cart option for Woocommerce. (Ruikai)
 * **Cloud** Force syncing the configuration to QUIC.cloud if CDN is reenabled.
@@ -265,6 +265,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Vary** Enabled `litespeed_vary_cookies` for LSWS enterprise.
 * **Vary** OLS password protected page removed the legacy beginning comma.
 * **GUI** Fixed wrongly WebP tip when GM is off.
+* **GUI** Quic.cloud promotion postbox on dashboard page.
 * **3rd** Added `pagespeed ninja` to blocklist due to its bad bahavior.
 
 = 5.6 - Aug 1 2023 =

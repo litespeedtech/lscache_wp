@@ -606,6 +606,35 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 				</div>
 			</div>
 
+			<div class="postbox litespeed-postbox litespeed-postbox-quiccloud ">
+				<div class="inside litespeed-bg-quic-cloud">
+					<h3 class="litespeed-title">
+						QUIC.cloud
+						<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon">Learn More</a>
+					</h3>
+
+					<div class="litespeed-row-flex">
+						<div class="litespeed-width-auto litespeed-padding-remove litespeed-right50">
+							<div class="litespeed-text-small">
+								Best available WordPress performance
+							</div>
+							<div class="litespeed-top5 litespeed-text-small">
+								Globally fast TTFB, easy setup, and <a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/">more</a>!
+							</div>
+							<div class="litespeed-top10 litespeed-text-left litespeed-text-bold litespeed-margin-bottom10">
+								<a href="https://www.quic.cloud/docs/onboarding/" class="litespeed-text-malibu litespeed-text-large">Try QUIC.cloud CDN!</a>
+							</div>
+						</div>
+
+						<div class="litespeed-width-auto">
+							<img src="<?php echo LSWCP_PLUGIN_URL; ?>assets/img/quic-cloud-logo.svg" alt="QUIC.cloud" width="100px" height="auto">
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
 		</div>
 
 	</div>
