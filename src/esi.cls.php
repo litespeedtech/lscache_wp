@@ -95,7 +95,7 @@ class ESI extends Root
 		 * @since  1.8.1
 		 */
 		if (!empty($_GET[self::QS_ACTION])) {
-			self::debug('not ESI req');
+			self::debug('ESI req');
 			$this->_register_esi_actions();
 		}
 
