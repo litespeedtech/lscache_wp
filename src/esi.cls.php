@@ -17,7 +17,7 @@ defined('WPINC') || exit;
 
 class ESI extends Root
 {
-	const LOG_TAG = '⚆';
+	const LOG_TAG = '⏺';
 
 	private static $has_esi = false;
 	private static $_combine_ids = array();
