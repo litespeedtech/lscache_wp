@@ -17,6 +17,8 @@ defined('WPINC') || exit;
 
 class ESI extends Root
 {
+	const LOG_TAG = '⚆';
+
 	private static $has_esi = false;
 	private static $_combine_ids = array();
 	private $esi_args = null;
@@ -93,6 +95,7 @@ class ESI extends Root
 		 * @since  1.8.1
 		 */
 		if (!empty($_GET[self::QS_ACTION])) {
+			self::debug('not ESI req');
 			$this->_register_esi_actions();
 		}
 
@@ -307,10 +310,11 @@ class ESI extends Root
 	{
 		// Check if is an ESI request
 		if (defined('LSCACHE_IS_ESI')) {
-			Debug2::debug('[ESI] calling template');
+			self::debug('calling ESI template');
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php';
 		}
+		self::debug('calling default template');
 		$this->_register_not_esi_actions();
 		return $template;
 	}
@@ -514,8 +518,8 @@ class ESI extends Root
 			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->";
 		}
 
-		Debug2::debug("[ESI] 💕  [BLock_ID] $block_id \t[wrapper] $wrapper \t\t[Control] $control");
-		Debug2::debug2($output);
+		self::debug("💕  [BLock_ID] $block_id \t[wrapper] $wrapper \t\t[Control] $control");
+		self::debug2($output);
 
 		self::set_has_esi();
 
@@ -524,7 +528,7 @@ class ESI extends Root
 		if ($preserved) {
 			$hash = md5($output);
 			$this->_esi_preserve_list[$hash] = $output;
-			Debug2::debug("[ESI] Preserved to $hash");
+			self::debug("Preserved to $hash");
 
 			return $hash;
 		}
