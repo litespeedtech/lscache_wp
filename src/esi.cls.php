@@ -263,6 +263,10 @@ class ESI extends Root
 	 */
 	private function _register_esi_actions()
 	{
+		/**
+		 * This hook is in `init`
+		 * For any plugin need to check if page is ESI, use `LSCACHE_IS_ESI` check after `init` hook
+		 */
 		!defined('LSCACHE_IS_ESI') && define('LSCACHE_IS_ESI', $_GET[self::QS_ACTION]); // Reused this to ESI block ID
 
 		!empty($_SERVER['ESI_REFERER']) && defined('LSCWP_LOG') && Debug2::debug('[ESI] ESI_REFERER: ' . $_SERVER['ESI_REFERER']);

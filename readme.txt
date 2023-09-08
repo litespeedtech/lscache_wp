@@ -257,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Force syncing the configuration to QUIC.cloud if domain key is readded.
 * **Cloud** Limit multi lines fields when posting to QC.
 * 🐞**ESI** Patched a possible vulnerability issue. (István Márton@Wordfence #841011)
+* 🐞**ESI** Overwrite SCRIPT_URI to prevent ESI sub request resulting in redirections. (Tobolo)
 * 🐞**Image Optimize** Bypass unnecessary image processing when images were only partially optimized. (Ruikai)
 * 🐞**Guest** Guest mode will not enable WebP directly anymore. (Michael Heymann)
 * **CDN** Auto disabled CDN if CDN URL is invalid. (Ruikai)
