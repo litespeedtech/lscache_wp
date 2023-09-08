@@ -299,6 +299,10 @@ input[type="checkbox"].litespeed-tiny-toggle:checked:after {
 	margin-left: 20px;
 }
 
+.litespeed-wrap .litespeed-bg-quic-cloud {
+	background: linear-gradient(rgba(230,242,242,1) 10%, rgba(250,255,255,1) 30%);
+}
+
 .litespeed-left50 {
 	margin-left: 50px;
 }
