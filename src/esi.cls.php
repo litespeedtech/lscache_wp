@@ -273,11 +273,11 @@ class ESI extends Root
 		 */
 		if (!empty($_SERVER['ESI_REFERER']) && !$this->cls('REST')->is_rest($_SERVER['ESI_REFERER'])) {
 			self::debug('overwrite REQUEST_URI to ESI_REFERER [from] ' . $_SERVER['REQUEST_URI'] . ' [to] ' . $_SERVER['ESI_REFERER']);
-			$_SERVER['REQUEST_URI'] = $_SERVER['ESI_REFERER'];
+			$_SERVER['REQUEST_URI'] = trailingslashit($_SERVER['ESI_REFERER']);
 			# Prevent from 301 redirecting
 			if (!empty($_SERVER['SCRIPT_URI'])) {
 				$SCRIPT_URI = parse_url($_SERVER['SCRIPT_URI']);
-				$SCRIPT_URI['path'] = $_SERVER['ESI_REFERER'];
+				$SCRIPT_URI['path'] = $_SERVER['REQUEST_URI'];
 				Utility::compatibility();
 				$_SERVER['SCRIPT_URI'] = http_build_url($SCRIPT_URI);
 			}
