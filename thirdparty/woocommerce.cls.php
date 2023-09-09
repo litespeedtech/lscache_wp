@@ -600,6 +600,17 @@ class WooCommerce extends Base
 		if ($product->is_type('variation')) {
 			do_action('litespeed_purge_post', $product->get_parent_id());
 		}
+
+		// Check if WPML enabled , need to purge other language's product #972971
+		if (  defined( 'WPML_PLUGIN_BASENAME' ) ) {
+		    $type = apply_filters( 'wpml_element_type', get_post_type( $product->get_id() ) );
+		    $trid = apply_filters( 'wpml_element_trid', false, $product->get_id(), $type );
+		    $translations = apply_filters( 'wpml_get_element_translations', array(), $trid, $type );
+		    foreach ( $translations as $lang => $translation ) {
+		        do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ', post ID: ' . $translation->element_id);
+		        do_action( 'litespeed_purge_post', $translation->element_id );
+		    }
+		}
 	}
 
 	/**
