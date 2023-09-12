@@ -600,6 +600,20 @@ class WooCommerce extends Base
 		if ($product->is_type('variation')) {
 			do_action('litespeed_purge_post', $product->get_parent_id());
 		}
+
+		// Check if WPML is enabled ##972971
+		if (  defined( 'WPML_PLUGIN_BASENAME' ) ) {
+			// Check if it is a variable product and get post/parent ID
+			$wpml_purge_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+			$type = apply_filters( 'wpml_element_type', get_post_type( $wpml_purge_id ) );
+			$trid = apply_filters( 'wpml_element_trid', false, $wpml_purge_id, $type );
+			$translations = apply_filters( 'wpml_get_element_translations', array(), $trid, $type );
+			foreach ( $translations as $lang => $translation ) {
+			do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
+			do_action( 'litespeed_purge_post', $translation->element_id );
+			// use the $translation->element_id as it is post ID of other languages
+			}
+		}
 	}
 
 	/**
