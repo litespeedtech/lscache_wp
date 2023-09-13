@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.7 - Oct 2023 =
+= 5.7 - Oct 10 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
 * 🌱**3rd** New Vary for Mini Cart option for Woocommerce. (Ruikai)
 * **Cloud** Force syncing the configuration to QUIC.cloud if CDN is reenabled.
