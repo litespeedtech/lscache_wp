@@ -606,8 +606,8 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 				</div>
 			</div>
 
-			<div class="postbox litespeed-postbox litespeed-postbox-quiccloud ">
-				<div class="inside litespeed-bg-quic-cloud litespeed-text-center">
+			<div class="postbox litespeed-postbox litespeed-postbox-quiccloud litespeed-bg-quic-cloud">
+				<div class="inside litespeed-text-center">
 					<h3 class="litespeed-title">
 						QUIC.cloud
 						<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon">Learn More</a>
