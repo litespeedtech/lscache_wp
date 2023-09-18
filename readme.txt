@@ -250,10 +250,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.7.0.1 - Oct 25 2023 =
-* **GUI** Improvements to admin banner messaging. (#694622)
-* **CDN** Improvements to CDN Setup. (#694622)
-* **Image Optimize** Improvements to the process of checking image identification. (#694622)
+= 5.7.1 - Dec 2023 =
+* **Crawler** Suppressed sitemap generation msg when running by cron.
 
 = 5.7 - Oct 10 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
