@@ -219,7 +219,7 @@ class Lang extends Base
 			self::O_UTIL_INSTANT_CLICK			=> __('Instant Click', 'litespeed-cache'),
 			self::O_CACHE_EXC_COOKIES			=> __('Do Not Cache Cookies', 'litespeed-cache'),
 			self::O_CACHE_EXC_USERAGENTS		=> __('Do Not Cache User Agents', 'litespeed-cache'),
-			self::O_CACHE_LOGIN_COOKIE			=> __('Login Cookie', 'litespeed-cache'),
+			self::O_CACHE_LOGIN_COOKIE			=> __('Vary Cookie', 'litespeed-cache'),
 
 			self::O_MISC_HEARTBEAT_FRONT		=> __('Frontend Heartbeat Control', 'litespeed-cache'),
 			self::O_MISC_HEARTBEAT_FRONT_TTL	=> __('Frontend Heartbeat TTL', 'litespeed-cache'),
