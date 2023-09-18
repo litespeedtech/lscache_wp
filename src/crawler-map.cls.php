@@ -330,8 +330,10 @@ class Crawler_Map extends Root
 			return;
 		}
 
-		$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
-		Admin_Display::succeed($msg);
+		if (!defined('DOING_CRON')) {
+			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
+			Admin_Display::succeed($msg);
+		}
 	}
 
 	/**
