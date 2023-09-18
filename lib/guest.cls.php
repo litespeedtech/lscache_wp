@@ -37,7 +37,7 @@ class Guest
 		}
 
 		if (!empty($this->_conf[self::O_CACHE_LOGIN_COOKIE])) {
-			self::$_vary_name = $this->_conf[self::O_CACHE_LOGIN_COOKIE];
+			self::$_vary_name = $this->_conf[self::O_CACHE_LOGIN_COOKIE][0];
 		}
 	}
 

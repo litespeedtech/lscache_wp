@@ -365,7 +365,7 @@ class Base extends Root
 		self::O_CACHE_TTL_REST 			=> 0,
 		self::O_CACHE_TTL_BROWSER 		=> 0,
 		self::O_CACHE_TTL_STATUS 		=> array(),
-		self::O_CACHE_LOGIN_COOKIE 		=> '',
+		self::O_CACHE_LOGIN_COOKIE 		=> array(),
 		self::O_CACHE_VARY_GROUP		=> array(),
 
 		// Purge
@@ -562,7 +562,7 @@ class Base extends Root
 		self::O_CACHE_BROWSER 			=> false,
 		self::O_CACHE_MOBILE 			=> false,
 		self::O_CACHE_MOBILE_RULES 		=> array(),
-		self::O_CACHE_LOGIN_COOKIE 		=> '',
+		self::O_CACHE_LOGIN_COOKIE 		=> array(),
 		self::O_CACHE_EXC_COOKIES 		=> array(),
 		self::O_CACHE_EXC_USERAGENTS 	=> array(),
 		self::O_CACHE_TTL_BROWSER 		=> 0,
