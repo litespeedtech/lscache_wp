@@ -609,9 +609,35 @@ class WooCommerce extends Base
 			$trid = apply_filters( 'wpml_element_trid', false, $wpml_purge_id, $type );
 			$translations = apply_filters( 'wpml_get_element_translations', array(), $trid, $type );
 			foreach ( $translations as $lang => $translation ) {
-			do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
-			do_action( 'litespeed_purge_post', $translation->element_id );
-			// use the $translation->element_id as it is post ID of other languages
+				do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
+				do_action( 'litespeed_purge_post', $translation->element_id );
+				// use the $translation->element_id as it is post ID of other languages
+			}
+			
+			// Check other languages category and purge if configured.
+			// wp_get_post_terms() only returns default language category ID 
+			$default_cats = wp_get_post_terms($wpml_purge_id, 'product_cat');
+			$languages = apply_filters('wpml_active_languages', NULL);
+			
+			foreach ($default_cats as $default_cat) {
+				foreach ($languages as $language) {
+					$tr_cat_id = icl_object_id($default_cat->term_id, 'product_cat', false, $language['code']);
+					$config = apply_filters('litespeed_conf', self::O_UPDATE_INTERVAL);
+					if (is_null($config)) {
+						$config = self::O_PQS_CS;
+					}
+			
+					if ($config === self::O_PQS_CQS) {
+						do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
+						do_action( 'litespeed_debug', '[3rd] Woo WPML category purge language: ' . $language['code'] . ' , cat ID: ' . $tr_cat_id);
+					} elseif ($config !== self::O_PQS_CS && $product->is_in_stock()) {
+						do_action('litespeed_debug', '[3rd] Woo No purge needed [option] ' . $config);
+						return;
+					} elseif ($config !== self::O_PS_CN && !$product->is_in_stock()) {
+						do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
+						do_action( 'litespeed_debug', '[3rd] Woo WPML category purge language: ' . $language['code'] . ' , cat ID: ' . $tr_cat_id);
+					}
+				}
 			}
 		}
 	}
