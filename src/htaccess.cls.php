@@ -563,9 +563,9 @@ class Htaccess extends Root
 		// frontend and backend
 		if ($vary_cookies) {
 			$env = 'Cache-Vary:' . implode(',', $vary_cookies);
-			if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
-				$env = '"' . $env . '"';
-			}
+			// if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
+			// }
+			$env = '"' . $env . '"';
 			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START;
 			$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']';
 			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END;
