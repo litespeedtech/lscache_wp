@@ -576,57 +576,70 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param WC_Product $product
 	 */
-	public function purge_product($product) {
+	public function purge_product($product)
+	{
 		do_action('litespeed_debug', '[3rd] Woo Purge [pid] ' . $product->get_id());
-		
-		$do_purge = function($action, $debug = '') use ($product) {
+
+		$do_purge = function ($action, $debug = '') use ($product) {
 			$config = apply_filters('litespeed_conf', self::O_UPDATE_INTERVAL);
 			if (is_null($config)) {
 				$config = self::O_PQS_CS;
 			}
-			if (self::O_PQS_CQS === $config || (self::O_PS_CN !== $config && !$product->is_in_stock())) {
+
+			if ($config === self::O_PQS_CQS) {
 				$action();
 				if ($debug) {
-					do_action( 'litespeed_debug', $debug);
+					do_action('litespeed_debug', $debug);
 				}
 			} elseif ($config !== self::O_PQS_CS && $product->is_in_stock()) {
 				do_action('litespeed_debug', '[3rd] Woo No purge needed [option] ' . $config);
+				return false;
+			} elseif ($config !== self::O_PS_CN && !$product->is_in_stock()) {
+				$action();
+				if ($debug) {
+					do_action('litespeed_debug', $debug);
+				}
 			}
+			return true;
 		};
-	
-		$do_purge(function() use ($product) { $this->backend_purge($product->get_id()); });
-	
+
+		if (!$do_purge(function () use ($product) { $this->backend_purge($product->get_id()); })) {
+			return;
+		}
+
 		do_action('litespeed_purge_post', $product->get_id());
-	
+
 		// Check if is variation, purge stock too #984479
 		if ($product->is_type('variation')) {
 			do_action('litespeed_purge_post', $product->get_parent_id());
 		}
-	
+
 		// Check if WPML is enabled ##972971
-		if (defined('WPML_PLUGIN_BASENAME')) {
+		if (  defined( 'WPML_PLUGIN_BASENAME' ) ) {
 			// Check if it is a variable product and get post/parent ID
 			$wpml_purge_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
 			$type = apply_filters( 'wpml_element_type', get_post_type( $wpml_purge_id ) );
 			$trid = apply_filters( 'wpml_element_trid', false, $wpml_purge_id, $type );
 			$translations = apply_filters( 'wpml_get_element_translations', array(), $trid, $type );
 			foreach ( $translations as $lang => $translation ) {
-				do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
-				do_action( 'litespeed_purge_post', $translation->element_id );
-				// use the $translation->element_id as it is post ID of other languages
+			do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
+			do_action( 'litespeed_purge_post', $translation->element_id );
+			// use the $translation->element_id as it is post ID of other languages
 			}
-	
+
 			// Check other languages category and purge if configured.
 			// wp_get_post_terms() only returns default language category ID
-			$default_cats = wp_get_post_terms( $wpml_purge_id, 'product_cat' );
-			$languages = apply_filters( 'wpml_active_languages', NULL ); 
-	
-			foreach ( $default_cats as $default_cat ) {
-				foreach ( $languages as $language ) {
-					$tr_cat_id = icl_object_id( $default_cat->term_id, 'product_cat', false, $language['code'] );
+			$default_cats = wp_get_post_terms($wpml_purge_id, 'product_cat');
+			$languages = apply_filters('wpml_active_languages', NULL); 
+
+			foreach ($default_cats as $default_cat) {
+				foreach ($languages as $language) {
+					$tr_cat_id = icl_object_id($default_cat->term_id, 'product_cat', false, $language['code']);
 					$do_purge(
-						function() use ( $tr_cat_id ) { do_action( 'litespeed_purge', self::CACHETAG_TERM . $tr_cat_id); },
-						'[3rd] Woo WPML category purge language: ' . $language['code'] . ', cat ID: ' . $tr_cat_id
+						function () use ($tr_cat_id) {
+							do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
+						},
+						'[3rd] Woo Purge WPML category [language] ' . $language['code'] . ' [cat] ' . $tr_cat_id
 					);
 				}
 			}
