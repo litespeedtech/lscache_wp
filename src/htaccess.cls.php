@@ -553,7 +553,7 @@ class Htaccess extends Root
 
 		// check login cookie
 		$id = Base::O_CACHE_LOGIN_COOKIE;
-		$vary_cookies = $cfg[$id] ? array($cfg[$id]) : array();
+		$vary_cookies = $cfg[$id];
 		if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') { // Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
 			if (defined('COOKIEHASH')) {
 				$vary_cookies[] = ',wp-postpass_' . COOKIEHASH;
