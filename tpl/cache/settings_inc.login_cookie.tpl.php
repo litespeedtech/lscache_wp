@@ -12,7 +12,7 @@ defined('WPINC') || exit;
 	</th>
 	<td>
 		<?php
-		$this->build_textarea($id, 50);
+		$this->build_input($id);
 
 		$this->_validate_syntax($id);
 
@@ -60,5 +60,28 @@ defined('WPINC') || exit;
 		}
 
 		?>
+	</td>
+</tr>
+
+<tr>
+	<th>
+		<?php $id = Base::O_CACHE_VARY_COOKIES; ?>
+		<?php $this->title($id); ?>
+	</th>
+	<td>
+		<?php
+		$this->build_textarea($id, 50);
+
+		$this->_validate_syntax($id);
+
+		echo '<p class="litespeed-desc">' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
+			. ' ' . __('No spaces and case sensitive.', 'litespeed-cache')
+			. '</p>'
+			. '<p class="litespeed-desc">'
+			. ' ' . __('You can list the 3rd party vary cookies here.', 'litespeed-cache')
+			. '</p>'
+			. '<p class="litespeed-desc">'; ?>
+		<?php Doc::notice_htaccess();
+		echo '</p>'; ?>
 	</td>
 </tr>
