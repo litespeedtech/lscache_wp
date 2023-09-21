@@ -17,6 +17,9 @@ class VPI extends Base
 	const TYPE_GEN = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
+	protected $_summary;
+	private $_queue;
+
 	/**
 	 * Init
 	 *
