@@ -254,6 +254,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Crawler** Suppressed sitemap generation msg when running by cron.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
 * **Network** Correct `Disable All Features` link for Multisite.
+* 🐞**Image Optimize** Removing original image will also remove optimized images.
 
 = 5.7 - Oct 10 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)
