@@ -251,6 +251,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.7.1 - Dec 2023 =
+* 🌱**Cache** New Vary Cookies option.
+* **Purge** Purge will not show QC message if no queue is cleared.
 * **Crawler** Suppressed sitemap generation msg when running by cron.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
 * **Network** Correct `Disable All Features` link for Multisite.
