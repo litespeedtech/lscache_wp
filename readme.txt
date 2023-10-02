@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 5.7.1 - Dec 2023 =
+= 5.8 - Dec 2023 =
 * 🌱**Cache** New Vary Cookies option.
 * **VPI** VPI can now support non-alphabet filenames.
 * **Purge** Purge will not show QC message if no queue is cleared.
