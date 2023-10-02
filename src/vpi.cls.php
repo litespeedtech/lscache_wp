@@ -134,7 +134,9 @@ class VPI extends Base
 			if (!empty($v['data_vpi'])) {
 				$post_id = $this->_queue[$queue_k]['post_id'];
 				$name = !empty($v['is_mobile']) ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
-				$this->cls('Metabox')->save($post_id, $name, $v['data_vpi']);
+				$urldecode = is_array($v['data_vpi']) ? array_map('urldecode', $v['data_vpi']) : urldecode($v['data_vpi']);
+				self::debug('save data_vpi', $urldecode);
+				$this->cls('Metabox')->save($post_id, $name, $urldecode);
 
 				$valid_i++;
 			}
