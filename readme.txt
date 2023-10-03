@@ -252,13 +252,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 5.8 - Dec 2023 =
 * 🌱**Cache** New Vary Cookies option.
-* **VPI** VPI can now support non-alphabet filenames.
 * **Purge** Purge will not show QC message if no queue is cleared.
 * **Conf** Server IP field can now be emptiable. (#111647)
 * **Crawler** Suppressed sitemap generation msg when running by cron.
+* **VPI** VPI can now support non-alphabet filenames.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
+* **Image Optimize** Last pull time and cron tag now can show in optimization summary.
 
 = 5.7 - Oct 10 2023 =
 * 🌱**Page Optimize** New option available: Preconnect. (xguiboy/Mukesh Patel)

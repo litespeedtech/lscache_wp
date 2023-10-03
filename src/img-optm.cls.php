@@ -876,6 +876,10 @@ class Img_Optm extends Base
 			return;
 		}
 
+		$this->_summary['last_pulled'] = time();
+		$this->_summary['last_pulled_by_cron'] = !$manual;
+		self::save_summary();
+
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT 1";
 		$_q = $wpdb->prepare($q, self::STATUS_NOTIFIED);
 
