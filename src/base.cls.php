@@ -64,6 +64,7 @@ class Base extends Root
 	const O_CACHE_TTL_STATUS 		= 'cache-ttl_status';
 	const O_CACHE_TTL_BROWSER 		= 'cache-ttl_browser';
 	const O_CACHE_LOGIN_COOKIE 		= 'cache-login_cookie';
+	const O_CACHE_VARY_COOKIES 		= 'cache-vary_cookies';
 	const O_CACHE_VARY_GROUP 		= 'cache-vary_group';
 
 	## -------------------------------------------------- ##
@@ -366,6 +367,7 @@ class Base extends Root
 		self::O_CACHE_TTL_BROWSER 		=> 0,
 		self::O_CACHE_TTL_STATUS 		=> array(),
 		self::O_CACHE_LOGIN_COOKIE 		=> '',
+		self::O_CACHE_VARY_COOKIES 		=> array(),
 		self::O_CACHE_VARY_GROUP		=> array(),
 
 		// Purge
@@ -563,6 +565,7 @@ class Base extends Root
 		self::O_CACHE_MOBILE 			=> false,
 		self::O_CACHE_MOBILE_RULES 		=> array(),
 		self::O_CACHE_LOGIN_COOKIE 		=> '',
+		self::O_CACHE_VARY_COOKIES 		=> array(),
 		self::O_CACHE_EXC_COOKIES 		=> array(),
 		self::O_CACHE_EXC_USERAGENTS 	=> array(),
 		self::O_CACHE_TTL_BROWSER 		=> 0,

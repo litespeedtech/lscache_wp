@@ -122,9 +122,9 @@ class Media extends Root
 	 */
 	public static function delete_attachment($post_id)
 	{
-		if (!Data::cls()->tb_exist('img_optm')) {
-			return;
-		}
+		// if (!Data::cls()->tb_exist('img_optm')) {
+		// return;
+		// }
 
 		self::debug('delete_attachment [pid] ' . $post_id);
 		Img_Optm::cls()->reset_row($post_id);
@@ -140,10 +140,10 @@ class Media extends Root
 	 */
 	public function info($short_file_path, $post_id)
 	{
-		$short_file_path = wp_normalize_path( $short_file_path );
+		$short_file_path = wp_normalize_path($short_file_path);
 		$basedir = $this->_wp_upload_dir['basedir'] . '/';
-		if ( strpos( $short_file_path, $basedir ) === 0 ) {
-			$short_file_path = substr( $short_file_path, strlen( $basedir ) );
+		if (strpos($short_file_path, $basedir) === 0) {
+			$short_file_path = substr($short_file_path, strlen($basedir));
 		}
 
 		$real_file = $basedir . $short_file_path;

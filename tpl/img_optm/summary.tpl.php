@@ -274,6 +274,10 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 				<p>
 					<?php echo __('Last Request', 'litespeed-cache'); ?>: <code><?php echo isset($optm_summary['last_requested']) ? Utility::readable_time($optm_summary['last_requested']) : '-'; ?></code>
 				</p>
+				<p>
+					<?php echo __('Last Pulled', 'litespeed-cache'); ?>: <code><?php echo isset($optm_summary['last_pulled']) ? Utility::readable_time($optm_summary['last_pulled']) : '-'; ?></code>
+					<?php if (isset($optm_summary['last_pulled_by_cron']) && $optm_summary['last_pulled_by_cron']) echo '(Cron)'; ?>
+				</p>
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact litespeed-desc">
 				<?php echo sprintf(__('Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache'), 'href="upload.php?mode=list"'); ?>

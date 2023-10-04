@@ -910,6 +910,10 @@ class Img_Optm extends Base
 		$imgs_per_req = min( 50, $imgs_per_req );
 
 		self::debug('Pulling images at rate: '.$imgs_per_req.' Images per request.');
+    
+    $this->_summary['last_pulled'] = time();
+		$this->_summary['last_pulled_by_cron'] = !$manual;
+		self::save_summary();
 
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT %d";
 		$_q = $wpdb->prepare($q, array( self::STATUS_NOTIFIED, $imgs_per_req) );
@@ -922,7 +926,7 @@ class Img_Optm extends Base
 		$total_pulled_webp = 0;
 
 		$server_list = array();
-		
+
 		while ( $img_rows = $wpdb->get_results($_q) ) {
 			/**
 			 * Update cron timestamp to avoid duplicated running
