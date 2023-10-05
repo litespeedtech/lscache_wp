@@ -53,7 +53,7 @@ class Img_Optm extends Base
 	const DB_SET = 'litespeed-optimize-set';
 
 	const DB_NEED_PULL = 'need_pull';
-	
+
 	const JUMBO_REQUEST_BONUS = 10;
 	const PRIO_REQUEST_BONUS = 5;
 
@@ -887,32 +887,36 @@ class Img_Optm extends Base
 
 		// Ramp up the request rate based on how many images are waiting
 		$c = "SELECT count(id) FROM `$this->_table_img_optming` WHERE optm_status = %d";
-		$_c = $wpdb->prepare($c, array( self::STATUS_NOTIFIED ) );
-		$images_waiting = $wpdb->get_var( $_c );
-		if( $images_waiting && $images_waiting > 0 ){
-			$imgs_per_req = ceil( $images_waiting / 1000 ); //ie. download 5/request if 5000 images are waiting
+		$_c = $wpdb->prepare($c, array(self::STATUS_NOTIFIED));
+		$images_waiting = $wpdb->get_var($_c);
+		if ($images_waiting && $images_waiting > 0) {
+			$imgs_per_req = ceil($images_waiting / 1000); //ie. download 5/request if 5000 images are waiting
 		}
 
 		// Increase the request rate if the user has purchased addon packages
 		$has_jumbo_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_JUMBO_GROUP);
 		$has_prio_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_PRIO);
 
-		if( $has_jumbo_pkg ){
+		if ($has_jumbo_pkg) {
 			self::debug('Jumbo package detected.');
 			$imgs_per_req += self::JUMBO_REQUEST_BONUS;
 		}
-		if( $has_prio_pkg ){
+		if ($has_prio_pkg) {
 			self::debug('Priority Line package detected.');
 			$imgs_per_req += self::PRIO_REQUEST_BONUS;
 		}
 
 		// Cap the request rate at 50 images per request
-		$imgs_per_req = min( 50, $imgs_per_req );
+		$imgs_per_req = min(50, $imgs_per_req);
 
-		self::debug('Pulling images at rate: '.$imgs_per_req.' Images per request.');
+		self::debug('Pulling images at rate: ' . $imgs_per_req . ' Images per request.');
+
+		$this->_summary['last_pulled'] = time();
+		$this->_summary['last_pulled_by_cron'] = !$manual;
+		self::save_summary();
 
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT %d";
-		$_q = $wpdb->prepare($q, array( self::STATUS_NOTIFIED, $imgs_per_req) );
+		$_q = $wpdb->prepare($q, array(self::STATUS_NOTIFIED, $imgs_per_req));
 
 		$optm_ori = $this->conf(self::O_IMG_OPTM_ORI);
 		$rm_ori_bkup = $this->conf(self::O_IMG_OPTM_RM_BKUP);
@@ -922,8 +926,8 @@ class Img_Optm extends Base
 		$total_pulled_webp = 0;
 
 		$server_list = array();
-		
-		while ( $img_rows = $wpdb->get_results($_q) ) {
+
+		while ($img_rows = $wpdb->get_results($_q)) {
 			/**
 			 * Update cron timestamp to avoid duplicated running
 			 * @since  1.6.2
@@ -934,17 +938,17 @@ class Img_Optm extends Base
 			$requests = array(); // store each request URL for Requests::request_multiple()
 			$imgs_by_req = array(); // store original request data so that we can reference it in the response
 			$req_counter = 0;
-			foreach ( $img_rows as $row_img ) {
+			foreach ($img_rows as $row_img) {
 				// request original image
 				$server_info = json_decode($row_img->server_info, true);
 				if (!empty($server_info['ori'])) {
 					$image_url = $server_info['server'] . '/' . $server_info['ori'];
 					self::debug('Queueing pull: ' . $image_url);
-					$requests[ $req_counter ] = array(
+					$requests[$req_counter] = array(
 						'url' => $image_url,
 						'type' => 'GET'
 					);
-					$imgs_by_req[ $req_counter++ ] = array(
+					$imgs_by_req[$req_counter++] = array(
 						'type' => 'ori',
 						'data' => $row_img
 					);
@@ -955,32 +959,31 @@ class Img_Optm extends Base
 				if (!empty($server_info['webp'])) {
 					$image_url = $server_info['server'] . '/' . $server_info['webp'];
 					self::debug('Queueing pull WebP: ' . $image_url);
-					$requests[ $req_counter ] = array(
+					$requests[$req_counter] = array(
 						'url' => $image_url,
 						'type' => 'GET'
 					);
-					$imgs_by_req[ $req_counter++ ] = array(
+					$imgs_by_req[$req_counter++] = array(
 						'type' => 'webp',
 						'data' => $row_img
 					);
 				}
-
 			}
-			
-			$complete_action = function( $response, $req_count ) use ( $imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list ) {
+
+			$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list) {
 				global $wpdb;
-				$row_data = isset( $imgs_by_req[$req_count] ) ? $imgs_by_req[$req_count] : false;
-				if( false === $row_data ){
+				$row_data = isset($imgs_by_req[$req_count]) ? $imgs_by_req[$req_count] : false;
+				if (false === $row_data) {
 					self::debug('❌ failed to pull image: Request not found in lookup variable.');
 					return;
 				}
-				$row_type = isset( $row_data['type'] ) ? $row_data['type'] : 'ori';
+				$row_type = isset($row_data['type']) ? $row_data['type'] : 'ori';
 				$row_img = $row_data['data'];
 				$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
 				$server_info = json_decode($row_img->server_info, true);
 
-				if (! $response->success ) {
-					if( 404 == $response->status_code ){
+				if (!$response->success) {
+					if (404 == $response->status_code) {
 						$this->_step_back_image($row_img->id);
 
 						$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
@@ -989,21 +992,21 @@ class Img_Optm extends Base
 					} else {
 						// handle error
 						$image_url = $server_info['server'] . '/' . $server_info[$row_type];
-						self::debug('❌ failed to pull image ('.$row_type.'): ' . $response->status_code . ' [Local: '.$row_img->src.'] / [remote: '.$image_url.']');
+						self::debug('❌ failed to pull image (' . $row_type . '): ' . $response->status_code . ' [Local: ' . $row_img->src . '] / [remote: ' . $image_url . ']');
 						return;
 					}
 				}
 
-				if( 'webp' === $row_type ){
+				if ('webp' === $row_type) {
 					file_put_contents($local_file . '.webp', $response->body);
 
 					if (!file_exists($local_file . '.webp') || !filesize($local_file . '.webp') || md5_file($local_file . '.webp') !== $server_info['webp_md5']) {
 						self::debug('❌ Failed to pull optimized webp img: file md5 mismatch, server md5: ' . $server_info['webp_md5']);
-	
+
 						// Delete working table
 						$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 						$wpdb->query($wpdb->prepare($q, $row_img->id));
-	
+
 						$msg = __('Pulled WebP image md5 does not match the notified WebP image md5.', 'litespeed-cache');
 						Admin_Display::error($msg);
 						return;
@@ -1032,7 +1035,7 @@ class Img_Optm extends Base
 						// Delete working table
 						$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 						$wpdb->query($wpdb->prepare($q, $row_img->id));
-		
+
 						$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
 						Admin_Display::error($msg);
 						return;
@@ -1074,8 +1077,8 @@ class Img_Optm extends Base
 
 				$total_pulled_ori++;
 			};
-			
-			if( class_exists('Requests') ){
+
+			if (class_exists('Requests')) {
 				// Make sure Requests can load internal classes.
 				Autoload::register();
 
@@ -1089,14 +1092,14 @@ class Img_Optm extends Base
 					)
 				);
 			} else {
-				foreach( $requests as $cnt => $req ){
-					$wp_response = wp_remote_get( $req['url'], array('timeout' => 60) );
+				foreach ($requests as $cnt => $req) {
+					$wp_response = wp_remote_get($req['url'], array('timeout' => 60));
 					$request_response = array(
 						'success' => false,
 						'status_code' => 0,
 						'body' => null
 					);
-					if ( is_wp_error($wp_response)) {
+					if (is_wp_error($wp_response)) {
 						$error_message = $wp_response->get_error_message();
 						self::debug('❌ failed to pull image: ' . $error_message);
 					} else {
@@ -1104,10 +1107,10 @@ class Img_Optm extends Base
 						$request_response['status_code'] = $wp_response['response']['code'];
 						$request_response['body'] = $wp_response['body'];
 					}
-					
+
 					$request_response = (object) $request_response;
-					
-					$complete_action( $request_response, $cnt );
+
+					$complete_action($request_response, $cnt);
 				}
 			}
 
