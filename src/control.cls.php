@@ -742,7 +742,7 @@ class Control extends Root {
 		}
 
 		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : 'unknown';
-		if ( 'GET' !== $method ) {
+		if ( 'GET' !== $method && 'HEAD' !== $method ) {
 			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
 
