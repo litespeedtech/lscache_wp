@@ -863,24 +863,14 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Pull optimized img
+	 * Calculate pull theads
 	 *
-	 * @since  1.6
-	 * @access public
+	 * @since  5.8
+	 * @access private
 	 */
-	public function pull($manual = false)
+	private function _calc_pull_threads()
 	{
 		global $wpdb;
-
-		self::debug('' . ($manual ? 'Manually' : 'Cron') . ' pull started');
-
-		if ($this->cron_running()) {
-			self::debug('Pull cron is running');
-
-			$msg = __('Pull Cron is running', 'litespeed-cache');
-			Admin_Display::note($msg);
-			return;
-		}
 
 		// Tune number of images per request based on number of images waiting and cloud packages
 		$imgs_per_req = 1; // base 1, ramp up to ~50 max
@@ -911,16 +901,38 @@ class Img_Optm extends Base
 
 		self::debug('Pulling images at rate: ' . $imgs_per_req . ' Images per request.');
 
+		return $imgs_per_req;
+	}
+
+	/**
+	 * Pull optimized img
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public function pull($manual = false)
+	{
+		global $wpdb;
+
+		self::debug('' . ($manual ? 'Manually' : 'Cron') . ' pull started');
+
+		if ($this->cron_running()) {
+			self::debug('Pull cron is running');
+
+			$msg = __('Pull Cron is running', 'litespeed-cache');
+			Admin_Display::note($msg);
+			return;
+		}
+
 		$this->_summary['last_pulled'] = time();
 		$this->_summary['last_pulled_by_cron'] = !$manual;
 		self::save_summary();
 
+		$imgs_per_req = $this->_calc_pull_threads();
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d ORDER BY id LIMIT %d";
 		$_q = $wpdb->prepare($q, array(self::STATUS_NOTIFIED, $imgs_per_req));
 
-		$optm_ori = $this->conf(self::O_IMG_OPTM_ORI);
 		$rm_ori_bkup = $this->conf(self::O_IMG_OPTM_RM_BKUP);
-		$optm_webp = $this->conf(self::O_IMG_OPTM_WEBP);
 
 		$total_pulled_ori = 0;
 		$total_pulled_webp = 0;

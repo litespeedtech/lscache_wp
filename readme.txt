@@ -251,8 +251,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 5.8 - Dec 2023 =
+* 🌱**Image Optimize** Parallel pull. (⭐ Contributed by Peter Wells #581)
 * 🌱**Cache** New Vary Cookies option.
 * **Purge** Purge will not show QC message if no queue is cleared.
+* **Purge** Fixed an possible warning when post type is not as expected. (victorzink)
 * **Conf** Server IP field can now be emptiable. (#111647)
 * **Crawler** Suppressed sitemap generation msg when running by cron.
 * **VPI** VPI can now support non-alphabet filenames.
