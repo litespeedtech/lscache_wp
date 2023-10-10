@@ -66,8 +66,8 @@ use \LiteSpeed\Base;
 					$conf = (int) apply_filters('litespeed_conf', $id);
 					$this->cls('Admin_Display')->build_switch($id); ?>
 					<div class="litespeed-desc">
-						<?php echo __('Generate separate vary cache copy for mini cart when cart is not empty.', 'litespeed-cache'); ?>
-						<?php echo __('If your theme does not using JS to update mini cart, please enable this option to keep cart number updated.', 'litespeed-cache'); ?>
+						<?php echo __('Generate a separate vary cache copy for the mini cart when the cart is not empty.', 'litespeed-cache'); ?>
+						<?php echo __('If your theme does not use JS to update the mini cart, you must enable this option to display the correct cart contents.', 'litespeed-cache'); ?>
 						<br /><?php Doc::notice_htaccess(); ?>
 					</div>
 				</td>
