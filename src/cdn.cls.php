@@ -247,7 +247,7 @@ class CDN extends Root {
 
 			foreach ( $matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url ) {
 				// Debug2::debug2( '[CDN] check ' . $url );
-				$postfix = '.' . pathinfo( parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION );
+				$postfix = '.' . pathinfo( (string) parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION );
 				if ( ! array_key_exists( $postfix, $this->_cfg_cdn_mapping ) ) {
 					// Debug2::debug2( '[CDN] non-existed postfix ' . $postfix );
 					continue;
