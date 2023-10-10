@@ -262,6 +262,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🐞**Image Optimize** Bypass unnecessary image processing when images were only partially optimized. (Ruikai)
 * 🐞**Guest** Guest mode will not enable WebP directly anymore. (Michael Heymann)
 * **CDN** Auto disable CDN if CDN URL is invalid. (Ruikai)
+* **CDN** Fixed a null parameter warning for PHP v8.1 (#584)
 * **API** Added `litespeed_media_add_missing_sizes` filter to allow bypassing Media's "add missing sizes" option (for Guest Optimization and otherwise). (PR #564)
 * **Guest** Fixed soft 404 and robots.txt report for guest.vary.php.
 * **Vary** Enabled `litespeed_vary_cookies` for LSWS Enterprise.
