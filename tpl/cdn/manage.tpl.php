@@ -27,8 +27,8 @@ $curr_status = CDN\Cloudflare::get_option(CDN\Cloudflare::ITEM_STATUS, array());
 	</div>
 <?php endif; ?>
 
-<p><?php echo __('Cloudflare Domain', 'litespeed-cache'); ?>: <code><?php echo $cf_domain; ?></code></p>
-<p><?php echo __('Cloudflare Zone', 'litespeed-cache'); ?>: <code><?php echo $cf_zone; ?></code></p>
+<p><?php echo __('Cloudflare Domain', 'litespeed-cache'); ?>: <code><?php echo esc_textarea($cf_domain); ?></code></p>
+<p><?php echo __('Cloudflare Zone', 'litespeed-cache'); ?>: <code><?php echo esc_textarea($cf_zone); ?></code></p>
 
 <p>
 	<b><?php echo __('Development Mode', 'litespeed-cache'); ?>:</b>
