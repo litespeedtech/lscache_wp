@@ -867,6 +867,11 @@ class Media extends Root
 			 */
 			$url = trim($url, '\'"');
 
+			// Fix Elementors Slideshow unusal background images like  style="background-image: url(&quot;https://xxxx.png&quot;);"
+			if (strpos($url, '&quot;') === 0 && substr($url, -6) == '&quot;') {
+				$url = substr($url, 6, -6);
+			}
+
 			if (!$url2 = $this->replace_webp($url)) {
 				continue;
 			}

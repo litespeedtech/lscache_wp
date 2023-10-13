@@ -263,6 +263,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
 * **Image Optimize** Last pull time and cron tag now can show in optimization summary.
+* **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
 
 = 5.7 - Oct 10 2023 =
