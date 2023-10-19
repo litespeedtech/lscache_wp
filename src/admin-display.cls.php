@@ -323,7 +323,7 @@ class Admin_Display extends Base {
 		// possible translation
 		$str = Lang::maybe_translate( $str );
 
-		return '<div class="litespeed_icon ' . $cls . '"><p>'. $str . '</p></div>';
+		return '<div class="litespeed_icon ' . $cls . '"><p>' . wp_kses_post($str) . '</p></div>';
 	}
 
 	/**

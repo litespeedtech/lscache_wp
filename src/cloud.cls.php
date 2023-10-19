@@ -1254,7 +1254,7 @@ class Cloud extends Base
 	public function token_validate()
 	{
 		try {
-			$this->_validate_hash();
+			$this->validate_hash();
 		} catch (\Exception $e) {
 			return self::err($e->getMessage());
 		}
@@ -1280,7 +1280,7 @@ class Cloud extends Base
 		}
 
 		try {
-			$this->_validate_hash(1);
+			$this->validate_hash(1);
 		} catch (\Exception $e) {
 			return self::err($e->getMessage());
 		}
@@ -1308,7 +1308,7 @@ class Cloud extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _validate_hash($offset = 0)
+	public function validate_hash($offset = 0)
 	{
 		if (empty($_POST['hash'])) {
 			self::debug('Lack of hash param');
