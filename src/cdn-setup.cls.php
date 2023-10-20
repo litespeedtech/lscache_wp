@@ -59,10 +59,14 @@ class Cdn_Setup extends Base
 	 */
 	public function update_cdn_status()
 	{
-		try {
-			$this->cls('Cloud')->validate_hash(3);
-		} catch (\Exception $e) {
-			return self::err($e->getMessage());
+		if (empty($_POST['hash'])) {
+			self::debug('Lack of hash param');
+			return self::err('lack_of_param');
+		}
+
+		if ($_POST['hash'] !== md5(substr($this->conf(self::O_API_KEY), 3, 8))) {
+			self::debug('token validate failed: token mismatch hash !== ' . $_POST['hash']);
+			return self::err('callback_fail_hash');
 		}
 
 		if (!isset($_POST['success']) || !isset($_POST['result'])) {
