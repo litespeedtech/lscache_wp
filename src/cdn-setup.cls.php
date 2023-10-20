@@ -69,9 +69,10 @@ class Cdn_Setup extends Base
 			self::save_summary(array('cdn_setup_err' => __('Received invalid message from the cloud server. Please submit a ticket.', 'litespeed-cache')));
 			return self::err('lack_of_param');
 		}
-		if (!$_POST['success']) {
-			self::save_summary(array('cdn_setup_err' => $_POST['result']['_msg']));
-			Admin_Display::error(__('There was an error during CDN setup: ', 'litespeed-cache') . $_POST['result']['_msg']);
+		if (!$_POST['success'] && !empty($_POST['result']['_msg'])) {
+			$msg = wp_kses_post($_POST['result']['_msg']);
+			self::save_summary(array('cdn_setup_err' => $msg));
+			Admin_Display::error(__('There was an error during CDN setup: ', 'litespeed-cache') . $msg);
 		} else {
 			$this->_process_cdn_status($_POST['result']);
 		}
@@ -121,8 +122,9 @@ class Cdn_Setup extends Base
 				$this->_summary['cdn_dns_summary'] = $result['summary'];
 			}
 			$this->cls('Cloud')->set_linked();
-			$this->cls('Conf')->update_confs(array(self::O_QC_NAMESERVERS => $result['nameservers'], self::O_CDN_QUIC => true));
-			Admin_Display::succeed('🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache') . $result['nameservers']);
+			$nameservers = esc_html($result['nameservers']);
+			$this->cls('Conf')->update_confs(array(self::O_QC_NAMESERVERS => $nameservers, self::O_CDN_QUIC => true));
+			Admin_Display::succeed('🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache') . $nameservers);
 		} else if (isset($result['done'])) {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);
@@ -135,10 +137,10 @@ class Cdn_Setup extends Base
 			$this->_setup_token = '';
 			$this->cls('Conf')->update_confs(array(self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => ''));
 		} else if (isset($result['_msg'])) {
-			$notice = $result['_msg'];
+			$notice = esc_html($result['_msg']);
 			if ($this->conf(Base::O_QC_NAMESERVERS)) {
-				$this->_summary['cdn_verify_msg'] = $result['_msg'];
-				$notice = array('cdn_verify_msg' => $result['_msg']);
+				$this->_summary['cdn_verify_msg'] = $notice;
+				$notice = array('cdn_verify_msg' => $notice);
 			}
 			Admin_Display::succeed($notice);
 		} else {
