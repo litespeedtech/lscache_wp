@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 5.7\n"
+"Project-Id-Version: LiteSpeed Cache 5.7.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2023-10-10 13:10:37+00:00\n"
+"POT-Creation-Date: 2023-10-23 20:20:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -287,46 +287,46 @@ msgstr ""
 msgid "Communicated with Cloudflare successfully."
 msgstr ""
 
-#: src/cdn-setup.cls.php:58
+#: src/cdn-setup.cls.php:73
 msgid "Received invalid message from the cloud server. Please submit a ticket."
 msgstr ""
 
-#: src/cdn-setup.cls.php:63
+#: src/cdn-setup.cls.php:79
 msgid "There was an error during CDN setup: "
 msgstr ""
 
-#: src/cdn-setup.cls.php:112
+#: src/cdn-setup.cls.php:131
 msgid ""
 "Congratulations, QUIC.cloud successfully set this domain up for the CDN. "
 "Please update your nameservers to:"
 msgstr ""
 
-#: src/cdn-setup.cls.php:132
+#: src/cdn-setup.cls.php:151
 msgid "CDN Setup is running."
 msgstr ""
 
-#: src/cdn-setup.cls.php:164
+#: src/cdn-setup.cls.php:184
 msgid "Notice: CDN Setup only reset locally."
 msgstr ""
 
-#: src/cdn-setup.cls.php:167
+#: src/cdn-setup.cls.php:187
 msgid "Cannot delete, site is not linked."
 msgstr ""
 
-#: src/cdn-setup.cls.php:200
+#: src/cdn-setup.cls.php:219
 msgid ""
 "CDN Setup Token and DNS zone deleted. Note: if my.quic.cloud account "
 "deletion is desired, that the account still exists and must be deleted "
 "separately."
 msgstr ""
 
-#: src/cdn-setup.cls.php:202
+#: src/cdn-setup.cls.php:221
 msgid ""
 "CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, "
 "that the account still exists and must be deleted separately."
 msgstr ""
 
-#: src/cdn-setup.cls.php:322 src/cloud.cls.php:822 src/cloud.cls.php:830
+#: src/cdn-setup.cls.php:345 src/cloud.cls.php:822 src/cloud.cls.php:830
 #: src/cloud.cls.php:1237
 msgid "Message from QUIC.cloud server"
 msgstr ""
@@ -2103,7 +2103,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 5.7)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 5.7.0.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:57 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:8
@@ -2119,7 +2119,7 @@ msgid "New release %s is available now."
 msgstr ""
 
 #: tpl/banner/new_version.php:69 tpl/banner/new_version_dev.tpl.php:24
-#: tpl/toolbox/beta_test.tpl.php:62
+#: tpl/toolbox/beta_test.tpl.php:63
 msgid "Upgrade"
 msgstr ""
 
@@ -2242,8 +2242,8 @@ msgstr ""
 
 #: tpl/cache/more_settings_tip.tpl.php:12
 #: tpl/cache/settings-excludes.tpl.php:61
-#: tpl/cache/settings-excludes.tpl.php:94 tpl/cdn/auto_setup.tpl.php:235
-#: tpl/cdn/auto_setup.tpl.php:246 tpl/cdn/settings.tpl.php:78
+#: tpl/cache/settings-excludes.tpl.php:94 tpl/cdn/auto_setup.tpl.php:245
+#: tpl/cdn/auto_setup.tpl.php:256 tpl/cdn/settings.tpl.php:78
 #: tpl/crawler/settings-general.tpl.php:43
 #: tpl/crawler/settings-general.tpl.php:144
 #: tpl/crawler/settings-general.tpl.php:149
@@ -2944,301 +2944,301 @@ msgid ""
 "the WordPress core is upgraded."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:34
+#: tpl/cdn/auto_setup.tpl.php:36
 msgid "Not running"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:35
+#: tpl/cdn/auto_setup.tpl.php:37
 msgid "Run CDN Setup"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:42
+#: tpl/cdn/auto_setup.tpl.php:44
 msgid "Done"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:44
+#: tpl/cdn/auto_setup.tpl.php:46
 msgid "Completed at %s"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:50
+#: tpl/cdn/auto_setup.tpl.php:52
 msgid "Paused"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:54
+#: tpl/cdn/auto_setup.tpl.php:56
 msgid "Verifying, waiting for nameservers to be updated."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:54
+#: tpl/cdn/auto_setup.tpl.php:56
 msgid "Click the refresh button below to refresh status."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:56
+#: tpl/cdn/auto_setup.tpl.php:58
 msgid "Last Verification Result"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:59
+#: tpl/cdn/auto_setup.tpl.php:61
 msgid "In Progress"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:60
+#: tpl/cdn/auto_setup.tpl.php:62
 msgid "You will receive an email upon status update."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:60
+#: tpl/cdn/auto_setup.tpl.php:62
 msgid "This process may take several minutes."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:62
+#: tpl/cdn/auto_setup.tpl.php:64
 msgid "Refresh CDN Setup Status"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:68
+#: tpl/cdn/auto_setup.tpl.php:70
 msgid "Auto QUIC.cloud CDN Setup"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:71
+#: tpl/cdn/auto_setup.tpl.php:73
 msgid ""
 "This is a three step process for configuring your site to use QUIC.cloud CDN "
 "with QUIC.cloud DNS. This setup will perform the following actions"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:74
+#: tpl/cdn/auto_setup.tpl.php:76
 msgid "Set up a QUIC.cloud account."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:75
+#: tpl/cdn/auto_setup.tpl.php:77
 msgid ""
 "Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:76
+#: tpl/cdn/auto_setup.tpl.php:78
 msgid "Provide the nameservers necessary to enable the CDN."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:78
+#: tpl/cdn/auto_setup.tpl.php:80
 msgid ""
 "After successful DNS detection, QUIC.cloud will attempt to generate an SSL "
 "certificate and enable the CDN."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:79
+#: tpl/cdn/auto_setup.tpl.php:81
 msgid "This last stage could take 15 to 20 minutes."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:80
+#: tpl/cdn/auto_setup.tpl.php:82
 msgid ""
 "Your site will be available, but browsers may issue a \"not secure\" warning "
 "during this time."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:85
+#: tpl/cdn/auto_setup.tpl.php:87
 msgid ""
 "After you set your nameservers, QUIC.cloud will detect the change and "
 "automatically enable the CDN."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:89 tpl/toolbox/report.tpl.php:81
+#: tpl/cdn/auto_setup.tpl.php:91 tpl/toolbox/report.tpl.php:81
 msgid "Notes"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:93
+#: tpl/cdn/auto_setup.tpl.php:95
 msgid "QUIC.cloud CDN/DNS does not support DNSSEC."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:94
+#: tpl/cdn/auto_setup.tpl.php:96
 msgid ""
 "If you have this enabled for your domain, you must disable DNSSEC to "
 "continue."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:97
+#: tpl/cdn/auto_setup.tpl.php:99
 msgid ""
 "This setup process will create a DNS zone on QUIC.cloud if one does not "
 "currently exist."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:98
+#: tpl/cdn/auto_setup.tpl.php:101
 msgid ""
 "If you prefer to use the CNAME setup, please <a %s>set up the CDN manually "
 "at QUIC.cloud</a>."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:102
+#: tpl/cdn/auto_setup.tpl.php:106
 msgid "QUIC.cloud will detect most normal DNS entries."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:103
+#: tpl/cdn/auto_setup.tpl.php:107
 msgid ""
 "If you have custom DNS records, it is possible that they are not detected."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:104
+#: tpl/cdn/auto_setup.tpl.php:108
 msgid ""
 "Visit your QUIC.cloud dashboard after the DNS Zone is set up to confirm your "
 "DNS zone."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:109
+#: tpl/cdn/auto_setup.tpl.php:113
 msgid "Set up QUIC.cloud Account"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:114
+#: tpl/cdn/auto_setup.tpl.php:118
 msgid "Account is linked!"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:117
+#: tpl/cdn/auto_setup.tpl.php:122
 msgid "Manage CDN"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:121
+#: tpl/cdn/auto_setup.tpl.php:128
 msgid "Manage DNS Zone"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:127
+#: tpl/cdn/auto_setup.tpl.php:135
 msgid "Ready to run CDN setup."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:129
+#: tpl/cdn/auto_setup.tpl.php:137
 msgid "Domain key and QUIC.cloud link detected."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:130
+#: tpl/cdn/auto_setup.tpl.php:138
 msgid "Begin QUIC.cloud CDN Setup"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:132 tpl/dash/dashboard.tpl.php:196
+#: tpl/cdn/auto_setup.tpl.php:140 tpl/dash/dashboard.tpl.php:196
 #: tpl/dash/dashboard.tpl.php:198 tpl/general/settings.tpl.php:78
 #: tpl/general/settings.tpl.php:80 tpl/general/settings.tpl.php:109
 msgid "Link to QUIC.cloud"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:136
+#: tpl/cdn/auto_setup.tpl.php:144
 msgid "CDN Setup Status"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:150
+#: tpl/cdn/auto_setup.tpl.php:158
 msgid "QUIC.cloud Detected Records Summary"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:156
+#: tpl/cdn/auto_setup.tpl.php:164
 msgid "Record Type"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:159
+#: tpl/cdn/auto_setup.tpl.php:167
 msgid "Count"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:171
+#: tpl/cdn/auto_setup.tpl.php:179
 msgid "Record names found"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:174
+#: tpl/cdn/auto_setup.tpl.php:182
 msgid "Is something missing?"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:176
+#: tpl/cdn/auto_setup.tpl.php:185
 msgid "Review DNS records"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:181
+#: tpl/cdn/auto_setup.tpl.php:191
 msgid ""
 "Note: For 15 to 20 minutes after setup completes, browsers may issue a \"not "
 "secure\" warning for your site while QUIC.cloud generates your SSL "
 "certificate."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:193
+#: tpl/cdn/auto_setup.tpl.php:203
 msgid "Nameservers"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:198
+#: tpl/cdn/auto_setup.tpl.php:208
 msgid "Please update your domain registrar to use these custom nameservers:"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:208
+#: tpl/cdn/auto_setup.tpl.php:218
 msgid "QUIC.cloud will attempt to verify the DNS update."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:209
+#: tpl/cdn/auto_setup.tpl.php:219
 msgid ""
 "If it does not verify within 24 hours, the CDN setup will mark the "
 "verification as failed."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:210
+#: tpl/cdn/auto_setup.tpl.php:220
 msgid ""
 "At that stage, you may re-start the verification process by pressing the Run "
 "CDN Setup button."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:214
+#: tpl/cdn/auto_setup.tpl.php:224
 msgid ""
 "This section will automatically populate once nameservers are configured for "
 "the site."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:223
+#: tpl/cdn/auto_setup.tpl.php:233
 msgid "Action"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:226
+#: tpl/cdn/auto_setup.tpl.php:236
 msgid "The following actions are available:"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:228 tpl/cdn/auto_setup.tpl.php:253
+#: tpl/cdn/auto_setup.tpl.php:238 tpl/cdn/auto_setup.tpl.php:263
 msgid "Reset CDN Setup"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:229
+#: tpl/cdn/auto_setup.tpl.php:239
 msgid ""
 "Resets all LiteSpeed Cache plugin settings related to CDN setup back to the "
 "initial state and disables the CDN."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:230
+#: tpl/cdn/auto_setup.tpl.php:240
 msgid "QUIC.cloud DNS settings are not changed."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:231
+#: tpl/cdn/auto_setup.tpl.php:241
 msgid "This allows you to try Auto CDN setup again."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:236
+#: tpl/cdn/auto_setup.tpl.php:246
 msgid "This action will not update anything on the QUIC.cloud servers."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:241 tpl/cdn/auto_setup.tpl.php:256
+#: tpl/cdn/auto_setup.tpl.php:251 tpl/cdn/auto_setup.tpl.php:266
 msgid "Delete QUIC.cloud data"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:242
+#: tpl/cdn/auto_setup.tpl.php:252
 msgid ""
 "Resets all LiteSpeed Cache plugin settings related to CDN setup back to the "
 "initial state and deletes the DNS Zone, if one exists for the domain."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:243
+#: tpl/cdn/auto_setup.tpl.php:253
 msgid ""
 "This allows you to try Auto CDN setup again, or abandon the setup entirely."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:247
+#: tpl/cdn/auto_setup.tpl.php:257
 msgid ""
 "This action is not available if there is no domain key, the domain is not "
 "linked, or the DNS Zone is in active use."
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:248
+#: tpl/cdn/auto_setup.tpl.php:258
 msgid ""
 "If you have not yet done so, please replace the QUIC.cloud nameservers at "
 "your domain registrar before proceeding. "
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:252
+#: tpl/cdn/auto_setup.tpl.php:262
 msgid "Are you sure you want to reset CDN Setup?"
 msgstr ""
 
-#: tpl/cdn/auto_setup.tpl.php:255
+#: tpl/cdn/auto_setup.tpl.php:265
 msgid "Are you sure you want to delete QUIC.cloud data?"
 msgstr ""
 
@@ -5204,7 +5204,7 @@ msgid ""
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:127
-#: tpl/toolbox/beta_test.tpl.php:30
+#: tpl/toolbox/beta_test.tpl.php:31
 msgid "Example"
 msgstr ""
 
@@ -5742,54 +5742,54 @@ msgstr ""
 msgid "Restore Settings"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:25
+#: tpl/toolbox/beta_test.tpl.php:26
 msgid "Try GitHub Version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:29
+#: tpl/toolbox/beta_test.tpl.php:30
 msgid ""
 "Use this section to switch plugin versions. To beta test a GitHub commit, "
 "enter the commit URL in the field below."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:34
+#: tpl/toolbox/beta_test.tpl.php:35
 msgid "Use latest GitHub Dev commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:36
+#: tpl/toolbox/beta_test.tpl.php:37
 msgid "Use latest GitHub Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:38 tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:39 tpl/toolbox/beta_test.tpl.php:55
 msgid "Use latest WordPress release version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:38
+#: tpl/toolbox/beta_test.tpl.php:39
 msgid "OR"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:49
+#: tpl/toolbox/beta_test.tpl.php:50
 msgid ""
 "Downgrade not recommended. May cause fatal error due to refactored code."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:53
+#: tpl/toolbox/beta_test.tpl.php:54
 msgid ""
 "Press the %s button to use the most recent GitHub commit. Master is for "
 "release candidate & Dev is for experimental testing."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:53
+#: tpl/toolbox/beta_test.tpl.php:54
 msgid "Use latest GitHub Dev/Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:55
 msgid ""
 "Press the %s button to stop beta testing and go back to the current release "
 "from the WordPress Plugin Directory."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:59
+#: tpl/toolbox/beta_test.tpl.php:60
 msgid ""
 "In order to avoid an upgrade error, you must be using %1$s or later before "
 "you can upgrade to %2$s versions."
