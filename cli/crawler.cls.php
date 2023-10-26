@@ -5,7 +5,8 @@ namespace LiteSpeed\CLI;
 defined('WPINC') || exit;
 
 use LiteSpeed\Debug2;
-use LiteSpeed\Crawler;
+use LiteSpeed\Base;
+use LiteSpeed\Crawler as Crawler2;
 use WP_CLI;
 
 /**
@@ -19,7 +20,7 @@ class Crawler extends Base
     {
         Debug2::debug('CLI_Crawler init');
 
-        $this->__crawler = Crawler::cls();
+        $this->__crawler = Crawler2::cls();
     }
 
     /**
@@ -36,10 +37,11 @@ class Crawler extends Base
     public function list()
     {
         $crawler_list = $this->__crawler->list_crawlers();
-        $summary = Crawler::get_summary();
+        $summary = Crawler2::get_summary();
         if ($summary['curr_crawler'] >= count($crawler_list)) {
             $summary['curr_crawler'] = 0;
         }
+        $is_running = time() - $summary['is_running'] <= $this->conf(Base::O_CRAWLER_RUN_DURATION);
 
         $seconds = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
         if ($seconds > 0) {
@@ -78,9 +80,9 @@ class Crawler extends Base
             }
 
             $status = 'Waiting: ' . $waiting;
-            $status .= ' Hit: ' . $hit;
-            $status .= ' Miss: ' . $miss;
-            $status .= ' Blocked: ' . $blacklisted;
+            $status .= '     Hit: ' . $hit;
+            $status .= '     Miss: ' . $miss;
+            $status .= '     Blocked: ' . $blacklisted;
 
             $running = '';
             if ($i == $summary['curr_crawler']) {
@@ -91,14 +93,14 @@ class Crawler extends Base
             }
 
             $list[] = array(
-                'key' => $i + 1,
-                'title' => $v['title'],
-                'freuency' => $recurrence,
-                'status' => $status,
-                'running' => $running,
+                'ID' => $i + 1,
+                'Name' => wp_strip_all_tags($v['title']),
+                'Frequency' => $recurrence,
+                'Status' => $status,
+                'Running' => $running,
             );
         }
 
-        WP_CLI\Utils\format_items('table', $list, array('#', 'Name', 'Frequency', 'Status', 'Running'));
+        WP_CLI\Utils\format_items('table', $list, array('ID', 'Name', 'Frequency', 'Status', 'Running'));
     }
 }
