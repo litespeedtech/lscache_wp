@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.0 - Dec 2023 =
 * 🌱**Image Optimize** Parallel pull. (⭐ Contributed by Peter Wells #581)
+* 🌱**Cache** CLI Crawler.
 * 🌱**Cache** New Vary Cookies option.
 * **Core** Codebase safety review. (Special thanks to Rafie Muhammad @ Patchstack)
 * **Purge** Purge will not show QC message if no queue is cleared.
