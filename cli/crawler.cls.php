@@ -6,6 +6,7 @@ defined('WPINC') || exit;
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Base;
+use LiteSpeed\Task;
 use LiteSpeed\Crawler as Crawler2;
 use WP_CLI;
 
@@ -161,10 +162,15 @@ class Crawler extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Start crawling
-	 *     $ wp litespeed-crawler go
+	 *     $ wp litespeed-crawler start
 	 *
 	 */
-	public function go()
+	public function start()
 	{
+		Task::async_call('crawler');
+
+		$summary = Crawler2::get_summary();
+
+		WP_CLI::success('Start crawling. Current crawler #' . ($summary['curr_crawler'] + 1) . ' [position] ' . $summary['last_pos'] . ' [total] ' . $summary['list_size']);
 	}
 }
