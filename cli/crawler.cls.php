@@ -32,6 +32,22 @@ class Crawler extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # List all crawlers
+	 *     $ wp litespeed-crawler l
+	 *
+	 */
+	public function l()
+	{
+		$this->list();
+	}
+
+	/**
+	 * List all crawler
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # List all crawlers
 	 *     $ wp litespeed-crawler list
 	 *
 	 */
@@ -162,15 +178,51 @@ class Crawler extends Base
 	 * ## EXAMPLES
 	 *
 	 *     # Start crawling
-	 *     $ wp litespeed-crawler start
+	 *     $ wp litespeed-crawler r
 	 *
 	 */
-	public function start()
+	public function r()
+	{
+		$this->run();
+	}
+
+	/**
+	 * Run crawling
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Start crawling
+	 *     $ wp litespeed-crawler run
+	 *
+	 */
+	public function run()
 	{
 		Task::async_call('crawler');
 
 		$summary = Crawler2::get_summary();
 
 		WP_CLI::success('Start crawling. Current crawler #' . ($summary['curr_crawler'] + 1) . ' [position] ' . $summary['last_pos'] . ' [total] ' . $summary['list_size']);
+	}
+
+	/**
+	 * Reset position
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Reset crawler position
+	 *     $ wp litespeed-crawler reset
+	 *
+	 */
+	public function reset()
+	{
+		$this->__crawler->reset_pos();
+
+		$summary = Crawler2::get_summary();
+
+		WP_CLI::success('Reset position. Current crawler #' . ($summary['curr_crawler'] + 1) . ' [position] ' . $summary['last_pos'] . ' [total] ' . $summary['list_size']);
 	}
 }
