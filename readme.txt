@@ -260,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Conf** Server IP field can now be emptiable. (#111647)
 * **Conf** CloudFlare CDN setting vulnerability patch. (Gulshan Kumar #541805)
 * **Crawler** Suppressed sitemap generation msg when running by cron.
+* **Crawler** PHP v8.2 Dynamic property creation warning fix. (oldrup #586)
 * **VPI** VPI can now support non-alphabet filenames.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
 * **Network** Correct `Disable All Features` link for Multisite.

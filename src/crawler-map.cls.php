@@ -20,6 +20,7 @@ class Crawler_Map extends Root
 
 	private $_home_url; // Used to simplify urls
 	private $_tb;
+	private $_tb_blacklist;
 	private $__data;
 	private $_conf_map_timeout;
 	private $_urls = array();
