@@ -263,7 +263,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Crawler** PHP v8.2 Dynamic property creation warning fix. (oldrup #586)
 * **VPI** VPI can now support non-alphabet filenames.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
-* **ESI** Fixed ESI nonce showing only HTML comment issue.
+* **ESI** Fixed ESI nonce showing only HTML comment issue. (Giorgos K.)
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
 * **Image Optimize** Last pull time and cron tag now can show in optimization summary.
