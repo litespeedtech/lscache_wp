@@ -22,7 +22,7 @@ class Divi_Theme_Builder
 	{
 		if ( ! function_exists( 'et_setup_theme' ) ) return;
 		if ( ! empty( $_GET[ 'et_fb' ] ) || ! empty( $_GET[ 'et_pb_preview' ] ) || (! empty($_GET[ 'p' ] ) && ! empty( $_GET[ 'preview' ] ) && $_GET[ 'preview' ] === 'true' ) ) {
-		      	do_action( 'litespeed_disable_all', 'divi edit mode' );
+			do_action( 'litespeed_disable_all', 'divi edit mode' );
 		}
 	}
 
