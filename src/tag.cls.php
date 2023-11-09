@@ -250,36 +250,39 @@ class Tag extends Root
 			$tags[] = self::TYPE_HOME;
 		}
 
-		$queried_obj_id = get_queried_object_id();
-		if (is_archive()) {
-			//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
-			if (is_category() || is_tag() || is_tax()) {
-				$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
-			} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
-				$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
-			} elseif (is_author()) {
-				$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
-			} elseif (is_date()) {
-				global $post;
-				$date = $post->post_date;
-				$date = strtotime($date);
-				if (is_day()) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
-				} elseif (is_month()) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
-				} elseif (is_year()) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+		global $wp_query;
+		if (isset($wp_query)) {
+			$queried_obj_id = get_queried_object_id();
+			if (is_archive()) {
+				//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
+				if (is_category() || is_tag() || is_tax()) {
+					$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
+				} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
+					$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
+				} elseif (is_author()) {
+					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
+				} elseif (is_date()) {
+					global $post;
+					$date = $post->post_date;
+					$date = strtotime($date);
+					if (is_day()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
+					} elseif (is_month()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
+					} elseif (is_year()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+					}
 				}
-			}
-		} elseif (is_singular()) {
-			//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
-			$tags[] = self::TYPE_POST . $queried_obj_id;
+			} elseif (is_singular()) {
+				//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
+				$tags[] = self::TYPE_POST . $queried_obj_id;
 
-			if (is_page()) {
-				$tags[] = self::TYPE_PAGES;
+				if (is_page()) {
+					$tags[] = self::TYPE_PAGES;
+				}
+			} elseif (is_feed()) {
+				$tags[] = self::TYPE_FEED;
 			}
-		} elseif (is_feed()) {
-			$tags[] = self::TYPE_FEED;
 		}
 
 		// Check REST API
