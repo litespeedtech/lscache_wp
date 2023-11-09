@@ -940,6 +940,8 @@ class Img_Optm extends Base
 		$server_list = array();
 
 		while ($img_rows = $wpdb->get_results($_q)) {
+			set_time_limit(600);
+
 			/**
 			 * Update cron timestamp to avoid duplicated running
 			 * @since  1.6.2
@@ -981,6 +983,7 @@ class Img_Optm extends Base
 					);
 				}
 			}
+			self::debug('Loaded images count: ' . $req_counter);
 
 			$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list) {
 				global $wpdb;

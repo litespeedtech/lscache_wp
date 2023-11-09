@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.3.2
+Tested up to: 6.4.1
 Stable tag: 5.7.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.0 - Dec 2023 =
+= 6.0 - Dec 12 2023 =
 * 🌱**Image Optimize** Parallel pull. (⭐ Contributed by Peter Wells #581)
 * 🌱**Cache** CLI Crawler.
 * 🌱**Cache** New Vary Cookies option.
@@ -266,6 +266,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **ESI** Fixed ESI nonce showing only HTML comment issue. (Giorgos K.)
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
+* **Image Optimize** Increased time limit for pull process.
 * **Image Optimize** Last pull time and cron tag now can show in optimization summary.
 * **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
