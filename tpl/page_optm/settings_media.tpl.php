@@ -21,6 +21,19 @@ $lqip_queue = $this->load_queue('lqip');
 	<tbody>
 		<tr>
 			<th>
+				<?php $id = Base::O_MEDIA_PRELOAD_FEATURED; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_switch($id); ?>
+				<div class="litespeed-desc">
+					<?php echo __('Preload featured image/image above the fold.', 'litespeed-cache'); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
 				<?php $id = Base::O_MEDIA_LAZY; ?>
 				<?php $this->title($id); ?>
 			</th>

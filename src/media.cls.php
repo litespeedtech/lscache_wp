@@ -72,6 +72,30 @@ class Media extends Root
 		$this->cls('Avatar');
 
 		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 4);
+
+		add_filter('litespeed_optm_html_head', array($this, 'finalize_head'));
+	}
+
+	/**
+	 * Add featured image to head
+	 */
+	public function finalize_head($content)
+	{
+		global $wp_query;
+
+		// <link rel="preload" as="image" href="xx">
+		if ($this->conf(Base::O_MEDIA_PRELOAD_FEATURED) && $wp_query->is_single) {
+			$featured_image_url = get_the_post_thumbnail_url();
+			if ($featured_image_url) {
+				self::debug('Append featured image to head: ' . $featured_image_url);
+				if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
+					$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
+				}
+				$content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">';
+			}
+		}
+
+		return $content;
 	}
 
 	/**

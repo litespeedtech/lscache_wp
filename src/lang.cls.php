@@ -177,6 +177,7 @@ class Lang extends Base
 			self::O_DISCUSS_AVATAR_CRON			=> __('Gravatar Cache Cron', 'litespeed-cache'),
 			self::O_DISCUSS_AVATAR_CACHE_TTL	=> __('Gravatar Cache TTL', 'litespeed-cache'),
 
+			self::O_MEDIA_PRELOAD_FEATURED		=> __('Preload Featured Image', 'litespeed-cache'),
 			self::O_MEDIA_LAZY					=> __('Lazy Load Images', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_EXC				=> __('Lazy Load Image Excludes', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_CLS_EXC			=> __('Lazy Load Image Class Name Excludes', 'litespeed-cache'),
