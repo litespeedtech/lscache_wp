@@ -1,10 +1,16 @@
 {
+	"plugins": [
+		"@prettier/plugin-php"
+	],
+	"arrowParens": "avoid",
+	"braceStyle": "per-cs",
 	"endOfLine": "auto",
-	"tabWidth": 4,
+	"phpVersion": "5.3",
 	"printWidth": 180,
-	"useTabs": true,
 	"semi": true,
 	"singleQuote": true,
+	"tabWidth": 4,
 	"trailingComma": "all",
-	"arrowParens": "avoid"
+	"trailingCommaPHP": false,
+	"useTabs": true
 }
