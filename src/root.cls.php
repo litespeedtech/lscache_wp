@@ -318,7 +318,7 @@ abstract class Root
 	public function get_options($ori = false)
 	{
 		if (!$ori) {
-			return array_merge(self::$_options, self::$_primary_options, self::$_const_options);
+			return array_merge(self::$_options, self::$_primary_options, self::$_network_options, self::$_const_options);
 		}
 
 		return self::$_options;
