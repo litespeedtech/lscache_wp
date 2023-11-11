@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class UCSS extends Base
 {
@@ -59,7 +59,7 @@ class UCSS extends Base
 	{
 		// Check UCSS URI excludes
 		$ucss_exc = apply_filters('litespeed_ucss_exc', $this->conf(self::O_OPTM_UCSS_EXC));
-		if ($ucss_exc && $hit = Utility::str_hit_array($request_url, $ucss_exc)) {
+		if ($ucss_exc && ($hit = Utility::str_hit_array($request_url, $ucss_exc))) {
 			self::debug('UCSS bypassed due to UCSS URI Exclude setting: ' . $hit);
 			Core::comment('QUIC.cloud UCSS bypassed by setting');
 			return false;
@@ -110,16 +110,16 @@ class UCSS extends Base
 
 		$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
 		$this->_queue[$queue_k] = array(
-			'url'			=> apply_filters('litespeed_ucss_url', $request_url),
-			'user_agent'	=> substr($ua, 0, 200),
-			'is_mobile'		=> $this->_separate_mobile(),
-			'is_webp'		=> $this->cls('Media')->webp_support() ? 1 : 0,
-			'uid'			=> $uid,
-			'vary'			=> $vary,
-			'url_tag'		=> $url_tag,
+			'url' => apply_filters('litespeed_ucss_url', $request_url),
+			'user_agent' => substr($ua, 0, 200),
+			'is_mobile' => $this->_separate_mobile(),
+			'is_webp' => $this->cls('Media')->webp_support() ? 1 : 0,
+			'uid' => $uid,
+			'vary' => $vary,
+			'url_tag' => $url_tag,
 		); // Current UA will be used to request
 		$this->save_queue('ucss', $this->_queue);
-		self::debug('Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid);
+		self::debug('Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid);
 
 		// Prepare cache tag for later purge
 		Tag::add('UCSS.' . md5($queue_k));
@@ -162,16 +162,16 @@ class UCSS extends Base
 
 			$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
 			$q = array(
-				'url'			=> apply_filters('litespeed_ucss_url', $request_url),
-				'user_agent'	=> substr($ua, 0, 200),
-				'is_mobile'		=> $is_mobile,
-				'is_webp'		=> $is_webp,
-				'uid'			=> false,
-				'vary'			=> $vary,
-				'url_tag'		=> $url_tag,
+				'url' => apply_filters('litespeed_ucss_url', $request_url),
+				'user_agent' => substr($ua, 0, 200),
+				'is_mobile' => $is_mobile,
+				'is_webp' => $is_webp,
+				'uid' => false,
+				'vary' => $vary,
+				'url_tag' => $url_tag,
 			); // Current UA will be used to request
 
-			self::debug('Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] false');
+			self::debug('Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] false');
 			$this->_queue[$queue_k] = $q;
 		}
 		$this->save_queue('ucss', $this->_queue);
@@ -223,7 +223,8 @@ class UCSS extends Base
 
 			$i++;
 			$res = $this->_send_req($v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $v['is_mobile'], $v['is_webp']);
-			if (!$res) { // Status is wrong, drop this this->_queue
+			if (!$res) {
+				// Status is wrong, drop this this->_queue
 				$this->_queue = $this->load_queue('ucss');
 				unset($this->_queue[$k]);
 				$this->save_queue('ucss', $this->_queue);
@@ -309,13 +310,13 @@ class UCSS extends Base
 		}
 
 		$data = array(
-			'url'			=> $request_url,
-			'queue_k'		=> $queue_k,
-			'user_agent'	=> $user_agent,
-			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
-			'is_webp'		=> $is_webp ? 1 : 0,
-			'html'			=> $html,
-			'css'			=> $css,
+			'url' => $request_url,
+			'queue_k' => $queue_k,
+			'user_agent' => $user_agent,
+			'is_mobile' => $is_mobile ? 1 : 0, // todo:compatible w/ tablet
+			'is_webp' => $is_webp ? 1 : 0,
+			'html' => $html,
+			'css' => $css,
 		);
 		if (!isset($this->_ucss_whitelist)) {
 			$this->_ucss_whitelist = $this->_filter_whitelist();
@@ -428,7 +429,8 @@ class UCSS extends Base
 				$debug_info = $attrs['href'];
 
 				// Load CSS content
-				if (!$dryrun) { // Dryrun will not load CSS but just drop them
+				if (!$dryrun) {
+					// Dryrun will not load CSS but just drop them
 					$con = $this->cls('Optimizer')->load_file($attrs['href']);
 					if (!$con) {
 						continue;
@@ -436,7 +438,8 @@ class UCSS extends Base
 				} else {
 					$con = '';
 				}
-			} else { // Inline style
+			} else {
+				// Inline style
 				$attrs = Utility::parse_attr($match[2]);
 
 				if (!empty($attrs['media']) && strpos($attrs['media'], 'print') !== false) {
@@ -468,7 +471,6 @@ class UCSS extends Base
 
 		return array($css, $html);
 	}
-
 
 	/**
 	 * Filter the comment content, add quotes to selector from whitelist. Return the json

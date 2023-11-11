@@ -1,19 +1,17 @@
-.litespeed-wrap h2.nav-tab-wrapper, .litespeed-wrap h3.nav-tab-wrapper{
-	margin-bottom:0;
+.litespeed-wrap h2.nav-tab-wrapper,
+.litespeed-wrap h3.nav-tab-wrapper {
+	margin-bottom: 0;
 }
 
-.litespeed-wrap h2 .nav-tab{
-	font-size:14px;
+.litespeed-wrap h2 .nav-tab {
+	font-size: 14px;
 }
-
 
 .litespeed-wrap .striped > tbody > :nth-child(odd),
 .litespeed-wrap ul.striped > :nth-child(odd),
 .litespeed-wrap .alternate {
 	background-color: #f9f9f9;
 }
-
-
 
 .litespeed-wrap .notice,
 .litespeed-wrap div.updated,

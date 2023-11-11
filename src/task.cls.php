@@ -9,27 +9,23 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Task extends Root
 {
 	const LOG_TAG = '⏰';
 	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON			 		=> array('name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::start_async_cron'), // always fetch immediately
-		Base::O_OPTM_CSS_ASYNC			 		=> array('name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss'),
-		Base::O_OPTM_UCSS			 			=> array('name' => 'litespeed_task_ucss', 'hook' => 'LiteSpeed\UCSS::cron'),
-		Base::O_MEDIA_VPI_CRON		 			=> array('name' => 'litespeed_task_vpi', 'hook' => 'LiteSpeed\VPI::cron'),
-		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> array('name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron'),
-		Base::O_DISCUSS_AVATAR_CRON				=> array('name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron'),
-		Base::O_IMG_OPTM_AUTO				 	=> array('name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request'),
-		Base::O_CRAWLER 						=> array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start_async_cron'), // Set crawler to last one to use above results
+		Base::O_IMG_OPTM_CRON => array('name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::start_async_cron'), // always fetch immediately
+		Base::O_OPTM_CSS_ASYNC => array('name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss'),
+		Base::O_OPTM_UCSS => array('name' => 'litespeed_task_ucss', 'hook' => 'LiteSpeed\UCSS::cron'),
+		Base::O_MEDIA_VPI_CRON => array('name' => 'litespeed_task_vpi', 'hook' => 'LiteSpeed\VPI::cron'),
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => array('name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron'),
+		Base::O_DISCUSS_AVATAR_CRON => array('name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron'),
+		Base::O_IMG_OPTM_AUTO => array('name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request'),
+		Base::O_CRAWLER => array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start_async_cron'), // Set crawler to last one to use above results
 	);
 
-	private static $_guest_options = array(
-		Base::O_OPTM_CSS_ASYNC,
-		Base::O_OPTM_UCSS,
-		Base::O_MEDIA_VPI,
-	);
+	private static $_guest_options = array(Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI);
 
 	const FITLER_CRAWLER = 'litespeed_crawl_filter';
 	const FITLER = 'litespeed_filter';
@@ -111,14 +107,14 @@ class Task extends Root
 	public static function async_call($type)
 	{
 		$args = array(
-			'timeout'   => 0.01,
-			'blocking'  => false,
+			'timeout' => 0.01,
+			'blocking' => false,
 			'sslverify' => false,
 			// 'cookies'   => $_COOKIE,
 		);
 		$qs = array(
 			'action' => 'async_litespeed',
-			'nonce'  => wp_create_nonce('async_litespeed'),
+			'nonce' => wp_create_nonce('async_litespeed'),
 			Router::TYPE => $type,
 		);
 		$url = add_query_arg($qs, admin_url('admin-ajax.php'));
@@ -177,7 +173,7 @@ class Task extends Root
 		if (!array_key_exists(self::FITLER, $schedules)) {
 			$schedules[self::FITLER] = array(
 				'interval' => 60,
-				'display'  => __('Every Minute', 'litespeed-cache'),
+				'display' => __('Every Minute', 'litespeed-cache'),
 			);
 		}
 		return $schedules;
@@ -197,7 +193,7 @@ class Task extends Root
 			// 	self::debug('Crawler cron log: cron filter '.$interval.' added');
 			$schedules[self::FITLER_CRAWLER] = array(
 				'interval' => $interval,
-				'display'  => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
+				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
 			);
 		}
 		return $schedules;

@@ -12,7 +12,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Admin_Display extends Base
 {
@@ -81,7 +81,7 @@ class Admin_Display extends Base
 		 * @since  2.0
 		 */
 		if (!function_exists('is_plugin_active_for_network')) {
-			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		// add menus ( Also check for mu-plugins)
@@ -115,7 +115,6 @@ class Admin_Display extends Base
 	{
 		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options';
 		if (current_user_can($capability)) {
-
 			// root menu
 			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed');
 
@@ -220,7 +219,7 @@ class Admin_Display extends Base
 				$localize_data['lang']['one_per_line'] = Doc::one_per_line(true);
 				$localize_data['lang']['remove_cookie_simulation'] = __('Remove cookie simulation', 'litespeed-cache');
 				$localize_data['lang']['add_cookie_simulation_row'] = __('Add new cookie to simulate', 'litespeed-cache');
-				empty($localize_data['ids']) && $localize_data['ids'] = array();
+				empty($localize_data['ids']) && ($localize_data['ids'] = array());
 				$localize_data['ids']['crawler_cookies'] = self::O_CRAWLER_COOKIES;
 			}
 
@@ -244,7 +243,7 @@ class Admin_Display extends Base
 				$localize_data['lang']['add_cdn_mapping_row'] = __('Add new CDN URL', 'litespeed-cache');
 				$localize_data['lang']['on'] = __('ON', 'litespeed-cache');
 				$localize_data['lang']['off'] = __('OFF', 'litespeed-cache');
-				empty($localize_data['ids']) && $localize_data['ids'] = array();
+				empty($localize_data['ids']) && ($localize_data['ids'] = array());
 				$localize_data['ids']['cdn_mapping'] = self::O_CDN_MAPPING;
 			}
 
@@ -391,7 +390,9 @@ class Admin_Display extends Base
 	 */
 	public static function add_unique_notice($color_mode, $msgs, $irremovable = false)
 	{
-		if (!is_array($msgs)) $msgs = array($msgs);
+		if (!is_array($msgs)) {
+			$msgs = array($msgs);
+		}
 
 		$color_map = array(
 			'info' => self::NOTICE_BLUE,
@@ -408,7 +409,9 @@ class Admin_Display extends Base
 		// Go through to make sure unique
 		$filtered_msgs = array();
 		foreach ($msgs as $k => $str) {
-			if (is_numeric($k)) $k = md5($str); // Use key to make it overwriteable to previous same msg
+			if (is_numeric($k)) {
+				$k = md5($str);
+			} // Use key to make it overwriteable to previous same msg
 			$filtered_msgs[$k] = $str;
 		}
 
@@ -516,7 +519,14 @@ class Admin_Display extends Base
 				// Append close btn
 				if (substr($msg, -6) == '</div>') {
 					$link = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PIN, false, null, array('msgid' => $k));
-					$msg = substr($msg, 0, -6) . '<p><a href="' . $link . '" class="button litespeed-btn-primary litespeed-btn-mini">' . __('Dismiss', 'litespeed-cache') . '</a>' . '</p></div>';
+					$msg =
+						substr($msg, 0, -6) .
+						'<p><a href="' .
+						$link .
+						'" class="button litespeed-btn-primary litespeed-btn-mini">' .
+						__('Dismiss', 'litespeed-cache') .
+						'</a>' .
+						'</p></div>';
 				}
 				echo $msg;
 			}
@@ -527,7 +537,8 @@ class Admin_Display extends Base
 
 		if (empty($_GET['page']) || strpos($_GET['page'], 'litespeed') !== 0) {
 			global $pagenow;
-			if ($pagenow != 'plugins.php') { // && $pagenow != 'index.php'
+			if ($pagenow != 'plugins.php') {
+				// && $pagenow != 'index.php'
 				return;
 			}
 		}
@@ -747,7 +758,7 @@ class Admin_Display extends Base
 	 */
 	public function cache_disabled_warning()
 	{
-		include LSCWP_DIR . "tpl/inc/check_cache_disabled.php";
+		include LSCWP_DIR . 'tpl/inc/check_cache_disabled.php';
 	}
 
 	/**
@@ -758,7 +769,7 @@ class Admin_Display extends Base
 	 */
 	private function _in_upgrading()
 	{
-		include LSCWP_DIR . "tpl/inc/in_upgrading.php";
+		include LSCWP_DIR . 'tpl/inc/in_upgrading.php';
 	}
 
 	/**
@@ -803,7 +814,9 @@ class Admin_Display extends Base
 
 			echo '</div>';
 		} else {
-			submit_button(__('Save Changes', 'litespeed-cache'), 'primary litespeed-duplicate-float', 'litespeed-submit', true, array('id' => 'litespeed-submit-' . $this->_btn_i++));
+			submit_button(__('Save Changes', 'litespeed-cache'), 'primary litespeed-duplicate-float', 'litespeed-submit', true, array(
+				'id' => 'litespeed-submit-' . $this->_btn_i++,
+			));
 
 			echo '</form>';
 		}
@@ -851,7 +864,7 @@ class Admin_Display extends Base
 
 		$this->enroll($id);
 
-		echo "<textarea name='$id' rows='$rows' cols='$cols'>" . esc_textarea($val) . "</textarea>";
+		echo "<textarea name='$id' rows='$rows' cols='$cols'>" . esc_textarea($val) . '</textarea>';
 
 		$this->_check_overwritten($id);
 	}
@@ -960,10 +973,7 @@ class Admin_Display extends Base
 		echo '<div class="litespeed-switch">';
 
 		if (!$title_list) {
-			$title_list = array(
-				__('OFF', 'litespeed-cache'),
-				__('ON', 'litespeed-cache'),
-			);
+			$title_list = array(__('OFF', 'litespeed-cache'), __('ON', 'litespeed-cache'));
 		}
 
 		foreach ($title_list as $k => $v) {
@@ -1083,7 +1093,7 @@ class Admin_Display extends Base
 				$val = "<code>$val</code>";
 				$val = __('Default value', 'litespeed-cache') . ': ' . $val;
 			}
-			echo  $val;
+			echo $val;
 		}
 	}
 
@@ -1215,9 +1225,10 @@ class Admin_Display extends Base
 		$args = func_get_args();
 		$s = '<code>' . implode('</code>, <code>', $args) . '</code>';
 
-		echo '<font class="litespeed-success"> '
-			. __('API', 'litespeed-cache') . ': '
-			. sprintf(__('Server variable(s) %s available to override this setting.', 'litespeed-cache'), $s);
+		echo '<font class="litespeed-success"> ' .
+			__('API', 'litespeed-cache') .
+			': ' .
+			sprintf(__('Server variable(s) %s available to override this setting.', 'litespeed-cache'), $s);
 
 		Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/admin/#limiting-the-crawler');
 	}
@@ -1284,11 +1295,9 @@ class Admin_Display extends Base
 			$current_step = count($steps) + 1;
 		}
 
-		$percentage = ' (' . floor(($current_step - 1) * 100 / count($steps)) . '%)';
+		$percentage = ' (' . floor((($current_step - 1) * 100) / count($steps)) . '%)';
 
-		$html = '<div class="litespeed-guide">'
-			. '<h2>' . $title . $percentage . '</h2>'
-			. '<ol>';
+		$html = '<div class="litespeed-guide">' . '<h2>' . $title . $percentage . '</h2>' . '<ol>';
 		foreach ($steps as $k => $v) {
 			$step = $k + 1;
 			if ($current_step > $step) {

@@ -6,13 +6,17 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class Caldera_Forms {
-	public static function detect() {
-		if ( ! defined( 'CFCORE_VER' ) ) return;
+class Caldera_Forms
+{
+	public static function detect()
+	{
+		if (!defined('CFCORE_VER')) {
+			return;
+		}
 
 		// plugins/caldera-forms/classes/render/nonce.php -> class Caldera_Forms_Render_Nonce
-		do_action( 'litespeed_nonce', 'caldera_forms_front_*' );
+		do_action('litespeed_nonce', 'caldera_forms_front_*');
 	}
 }

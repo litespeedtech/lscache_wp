@@ -9,7 +9,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Purge extends Base
 {
@@ -20,7 +20,6 @@ class Purge extends Base
 	protected $_priv_purge = array();
 	protected $_purge_related = false;
 	protected $_purge_single = false;
-
 
 	const X_HEADER = 'X-LiteSpeed-Purge';
 	const X_HEADER2 = 'X-LiteSpeed-Purge2';
@@ -33,7 +32,7 @@ class Purge extends Base
 	const TYPE_PURGE_ALL_LOCALRES = 'purge_all_localres';
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
 	const TYPE_PURGE_ALL_UCSS = 'purge_all_ucss';
-	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip';
+	const TYPE_PURGE_ALL_LQIP = 'purge_all_lqip';
 	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar';
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object';
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache';
@@ -70,7 +69,9 @@ class Purge extends Base
 
 		add_action('wp_update_comment_count', array($this, 'purge_feeds'));
 
-		if ($this->conf(self::O_OPTM_UCSS)) add_action('edit_post', __NAMESPACE__ . '\Purge::purge_ucss');
+		if ($this->conf(self::O_OPTM_UCSS)) {
+			add_action('edit_post', __NAMESPACE__ . '\Purge::purge_ucss');
+		}
 	}
 
 	/**
@@ -360,7 +361,7 @@ class Purge extends Base
 	private function _purge_all_cssjs($silence = false)
 	{
 		if (defined('DOING_CRON') || defined('LITESPEED_DID_send_headers')) {
-			self::debug("❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail) or doing cron");
+			self::debug('❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail) or doing cron');
 			return;
 		}
 		$this->_purge_all_lscache($silence); // Purge CSSJS must purge lscache too to avoid 404
@@ -576,7 +577,6 @@ class Purge extends Base
 		@header($this->_build());
 	}
 
-
 	/**
 	 * Incorporate blog_id into purge tags for multisite
 	 *
@@ -597,7 +597,6 @@ class Purge extends Base
 		}
 		return $tags;
 	}
-
 
 	/**
 	 * Activate `purge related tags` for Admin QS.
@@ -741,7 +740,6 @@ class Purge extends Base
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 	}
 
-
 	/**
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
@@ -817,7 +815,7 @@ class Purge extends Base
 		if (empty($list_buf)) {
 			return;
 		}
-		$list_buf = str_replace(",", "\n", $list_buf); // for cli
+		$list_buf = str_replace(',', "\n", $list_buf); // for cli
 		$list = explode("\n", $list_buf);
 		switch ($sel) {
 			case Admin_Display::PURGEBY_CAT:
@@ -1189,9 +1187,7 @@ class Purge extends Base
 
 		global $wp_widget_factory;
 		// recent_posts
-		$recent_posts = isset($wp_widget_factory->widgets['WP_Widget_Recent_Posts'])
-			? $wp_widget_factory->widgets['WP_Widget_Recent_Posts']
-			: null;
+		$recent_posts = isset($wp_widget_factory->widgets['WP_Widget_Recent_Posts']) ? $wp_widget_factory->widgets['WP_Widget_Recent_Posts'] : null;
 		if (!is_null($recent_posts)) {
 			$purge_tags[] = Tag::TYPE_WIDGET . $recent_posts->id;
 		}

@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 if (defined('LSCWP_V')) {
 	return;
@@ -47,7 +47,9 @@ if (defined('LSCWP_V')) {
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
 $home_url = home_url('/');
-if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'https') $WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
+if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'https') {
+	$WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
+}
 !defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($home_url, '', $WP_CONTENT_URL)); // `wp-content`
 !defined('LSWCP_PLUGIN_URL') && define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)); // Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
@@ -68,7 +70,7 @@ require_once LSCWP_DIR . 'autoload.php';
 
 // Define CLI
 if ((defined('WP_CLI') && WP_CLI) || PHP_SAPI == 'cli') {
-	!defined('LITESPEED_CLI') &&  define('LITESPEED_CLI', true);
+	!defined('LITESPEED_CLI') && define('LITESPEED_CLI', true);
 
 	// Register CLI cmd
 	if (method_exists('WP_CLI', 'add_command')) {
@@ -96,8 +98,8 @@ if (!defined('LITESPEED_SERVER_TYPE')) {
 }
 
 // Checks if caching is allowed via server variable
-if (!empty($_SERVER['X-LSCACHE']) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined('LITESPEED_CLI')) {
-	!defined('LITESPEED_ALLOWED') &&  define('LITESPEED_ALLOWED', true);
+if (!empty($_SERVER['X-LSCACHE']) || LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined('LITESPEED_CLI')) {
+	!defined('LITESPEED_ALLOWED') && define('LITESPEED_ALLOWED', true);
 }
 
 // ESI const defination
@@ -135,7 +137,7 @@ if (!function_exists('litespeed_define_nonce_func')) {
 				$control = \LiteSpeed\ESI::cls()->is_nonce_action($action);
 				if ($control !== null) {
 					$params = array(
-						'action'	=> $action,
+						'action' => $action,
 					);
 					return \LiteSpeed\ESI::cls()->sub_esi_block('nonce', 'wp_create_nonce ' . $action, $params, $control, true, true, true);
 				}
@@ -149,14 +151,14 @@ if (!function_exists('litespeed_define_nonce_func')) {
 		 */
 		function wp_create_nonce_litespeed_esi($action = -1)
 		{
-			$uid  = get_current_user_id();
+			$uid = get_current_user_id();
 			if (!$uid) {
 				/** This filter is documented in wp-includes/pluggable.php */
 				$uid = apply_filters('nonce_user_logged_out', $uid, $action);
 			}
 
 			$token = wp_get_session_token();
-			$i     = wp_nonce_tick();
+			$i = wp_nonce_tick();
 
 			return substr(wp_hash($i . '|' . $action . '|' . $uid . '|' . $token, 'nonce'), -12, 10);
 		}

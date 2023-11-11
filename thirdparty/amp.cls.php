@@ -7,29 +7,31 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined('WPINC') || exit();
 
-use \LiteSpeed\API ;
+use LiteSpeed\API;
 
-class AMP {
+class AMP
+{
 	/**
 	 * @since 4.2
 	 */
-	private static function _maybe_amp( $amp_function ) {
-		if ( is_admin() ) {
+	private static function _maybe_amp($amp_function)
+	{
+		if (is_admin()) {
 			return;
 		}
-		if ( ! isset( $_GET[ 'amp' ] ) && ( ! function_exists( $amp_function ) || ! $amp_function() ) ) {
+		if (!isset($_GET['amp']) && (!function_exists($amp_function) || !$amp_function())) {
 			return;
 		}
 
-		do_action( 'litespeed_debug', '[3rd] ❌ AMP disabled page optm/lazy' );
+		do_action('litespeed_debug', '[3rd] ❌ AMP disabled page optm/lazy');
 
-		! defined( 'LITESPEED_NO_PAGEOPTM' ) && define( 'LITESPEED_NO_PAGEOPTM', true );
-		! defined( 'LITESPEED_NO_LAZY' ) && define( 'LITESPEED_NO_LAZY', true );
-		! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
+		!defined('LITESPEED_NO_PAGEOPTM') && define('LITESPEED_NO_PAGEOPTM', true);
+		!defined('LITESPEED_NO_LAZY') && define('LITESPEED_NO_LAZY', true);
+		!defined('LITESPEED_NO_OPTM') && define('LITESPEED_NO_OPTM', true);
 		// ! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', false );
 	}
 
@@ -38,8 +40,9 @@ class AMP {
 	 *
 	 * @since 4.2
 	 */
-	public static function maybe_acc_mob_pages() {
-		self::_maybe_amp( 'ampforwp_is_amp_endpoint' );
+	public static function maybe_acc_mob_pages()
+	{
+		self::_maybe_amp('ampforwp_is_amp_endpoint');
 	}
 
 	/**
@@ -47,8 +50,9 @@ class AMP {
 	 *
 	 * @since 4.2.0.1
 	 */
-	public static function maybe_google_amp() {
-		self::_maybe_amp( 'amp_is_request' );
+	public static function maybe_google_amp()
+	{
+		self::_maybe_amp('amp_is_request');
 	}
 
 	/**
@@ -59,9 +63,10 @@ class AMP {
 	 * @since 2.9.8.6
 	 * @access public
 	 */
-	public static function preload() {
-		add_action( 'wp', __CLASS__ . '::maybe_acc_mob_pages' );
-		add_action( 'wp', __CLASS__ . '::maybe_google_amp' );
+	public static function preload()
+	{
+		add_action('wp', __CLASS__ . '::maybe_acc_mob_pages');
+		add_action('wp', __CLASS__ . '::maybe_google_amp');
 
 		// amp_is_request() from AMP
 		// self::maybe_amp( 'amp_is_request' );

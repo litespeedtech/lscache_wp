@@ -14,8 +14,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
-
+defined('WPINC') || exit();
 
 class Conf extends Base
 {
@@ -41,7 +40,7 @@ class Conf extends Base
 		 * @since  2.9.7
 		 */
 		if ($this->conf(self::O_CDN_QUIC)) {
-			!defined('LITESPEED_ALLOWED') &&  define('LITESPEED_ALLOWED', true);
+			!defined('LITESPEED_ALLOWED') && define('LITESPEED_ALLOWED', true);
 		}
 
 		add_action('litespeed_conf_append', array($this, 'option_append'), 10, 2);
@@ -73,7 +72,8 @@ class Conf extends Base
 		 */
 		$has_delay_conf_tag = self::get_option('__activation');
 		if (!$ver || $ver != Core::VER) {
-			if ((!is_admin() && !defined('LITESPEED_CLI')) || (!$has_delay_conf_tag || $has_delay_conf_tag == -1)) { // Reuse __activation to control the delay conf update
+			if ((!is_admin() && !defined('LITESPEED_CLI')) || (!$has_delay_conf_tag || $has_delay_conf_tag == -1)) {
+				// Reuse __activation to control the delay conf update
 				if (!$has_delay_conf_tag || $has_delay_conf_tag == -1) {
 					self::update_option('__activation', Core::VER);
 				}
@@ -114,7 +114,8 @@ class Conf extends Base
 		if (!$ver || $ver != Core::VER) {
 			// Load default values
 			$this->load_default_vals();
-			if (!$ver) { // New install
+			if (!$ver) {
+				// New install
 				$this->set_conf(self::$_default_options);
 			}
 
@@ -180,7 +181,8 @@ class Conf extends Base
 		}
 
 		// Bypass site special settings
-		if ($blog_id !== null) { // This is to load the primary settings ONLY
+		if ($blog_id !== null) {
+			// This is to load the primary settings ONLY
 			// These options are the ones that can be overwritten by primary
 			$options = array_diff_key($options, array_flip(self::$SINGLE_SITE_OPTIONS));
 
@@ -188,7 +190,6 @@ class Conf extends Base
 		} else {
 			$this->set_conf($options);
 		}
-
 
 		// Append const options
 		if (defined('LITESPEED_CONF') && LITESPEED_CONF) {
@@ -218,7 +219,8 @@ class Conf extends Base
 		$this->_is_primary = get_current_blog_id() == BLOG_ID_CURRENT_SITE;
 
 		// If network set to use primary setting
-		if ($this->network_conf(self::NETWORK_O_USE_PRIMARY) && !$this->_is_primary) { // subsites or network admin
+		if ($this->network_conf(self::NETWORK_O_USE_PRIMARY) && !$this->_is_primary) {
+			// subsites or network admin
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->load_options(BLOG_ID_CURRENT_SITE);
@@ -241,7 +243,8 @@ class Conf extends Base
 					}
 				} else {
 					if ($this->network_conf(self::NETWORK_O_USE_PRIMARY)) {
-						if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) { // This case will use primary_options override always
+						if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) {
+							// This case will use primary_options override always
 							continue;
 						}
 					} else {
@@ -279,11 +282,12 @@ class Conf extends Base
 		 * @since  2.0
 		 */
 		if (!function_exists('is_plugin_active_for_network')) {
-			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 		// If is not activated on network, it will not have site options
 		if (!is_plugin_active_for_network(Core::PLUGIN_FILE)) {
-			if ((int)$this->conf(self::O_CACHE) == self::VAL_ON2) { // Default to cache on
+			if ((int) $this->conf(self::O_CACHE) == self::VAL_ON2) {
+				// Default to cache on
 				$this->set_conf(self::_CACHE, true);
 			}
 			return false;
@@ -650,7 +654,6 @@ class Conf extends Base
 		}
 
 		// No need to update cron here, Cron will register in each init
-
 
 		if ($this->has_conf($id)) {
 			$this->set_conf($id, $val);

@@ -12,7 +12,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Media extends Root
 {
@@ -174,9 +174,9 @@ class Media extends Root
 
 		if (file_exists($real_file)) {
 			return array(
-				'url'	=> $this->_wp_upload_dir['baseurl'] . '/' . $short_file_path,
-				'md5'	=> md5_file($real_file),
-				'size'	=> filesize($real_file),
+				'url' => $this->_wp_upload_dir['baseurl'] . '/' . $short_file_path,
+				'md5' => md5_file($real_file),
+				'size' => filesize($real_file),
 			);
 		}
 
@@ -277,7 +277,7 @@ class Media extends Root
 		echo '<p>';
 		// Original image info
 		if ($size_meta && !empty($size_meta['ori_saved'])) {
-			$percent = ceil($size_meta['ori_saved'] * 100 / $size_meta['ori_total']);
+			$percent = ceil(($size_meta['ori_saved'] * 100) / $size_meta['ori_total']);
 
 			$extension = pathinfo($short_path, PATHINFO_EXTENSION);
 			$bk_file = substr($short_path, 0, -strlen($extension)) . 'bk.' . $extension;
@@ -300,18 +300,20 @@ class Media extends Root
 			echo GUI::pie_tiny(
 				$percent,
 				24,
-				sprintf(
-					__('Original file reduced by %1$s (%2$s)', 'litespeed-cache'),
-					$percent . '%',
-					Utility::real_size($size_meta['ori_saved'])
-				),
+				sprintf(__('Original file reduced by %1$s (%2$s)', 'litespeed-cache'), $percent . '%', Utility::real_size($size_meta['ori_saved'])),
 				'left'
 			);
 
 			echo sprintf(__('Orig saved %s', 'litespeed-cache'), $percent . '%');
 
 			if ($desc) {
-				echo sprintf(' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status);
+				echo sprintf(
+					' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>',
+					$link,
+					$cls,
+					$desc,
+					$curr_status
+				);
 			} else {
 				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
@@ -320,12 +322,7 @@ class Media extends Root
 				);
 			}
 		} elseif ($size_meta && $size_meta['ori_saved'] === 0) {
-			echo GUI::pie_tiny(
-				0,
-				24,
-				__('Congratulation! Your file was already optimized', 'litespeed-cache'),
-				'left'
-			);
+			echo GUI::pie_tiny(0, 24, __('Congratulation! Your file was already optimized', 'litespeed-cache'), 'left');
 			echo sprintf(__('Orig %s', 'litespeed-cache'), '<span class="litespeed-desc">' . __('(no savings)', 'litespeed-cache') . '</span>');
 		} else {
 			echo __('Orig', 'litespeed-cache') . '<span class="litespeed-left10">—</span>';
@@ -335,7 +332,7 @@ class Media extends Root
 		echo '<p>';
 		// WebP info
 		if ($size_meta && !empty($size_meta['webp_saved'])) {
-			$percent = ceil($size_meta['webp_saved'] * 100 / $size_meta['webp_total']);
+			$percent = ceil(($size_meta['webp_saved'] * 100) / $size_meta['webp_total']);
 
 			$link = Utility::build_url(Router::ACTION_IMG_OPTM, 'webp' . $post_id);
 			$desc = false;
@@ -344,27 +341,35 @@ class Media extends Root
 
 			if ($this->info($short_path . '.webp', $post_id)) {
 				$curr_status = __('(optm)', 'litespeed-cache');
-				$desc = __('Currently using optimized version of WebP file.', 'litespeed-cache') . '&#10;' . __('Click to switch to original (unoptimized) version.', 'litespeed-cache');
+				$desc =
+					__('Currently using optimized version of WebP file.', 'litespeed-cache') .
+					'&#10;' .
+					__('Click to switch to original (unoptimized) version.', 'litespeed-cache');
 			} elseif ($this->info($short_path . '.optm.webp', $post_id)) {
 				$cls .= ' litespeed-warning';
 				$curr_status = __('(non-optm)', 'litespeed-cache');
-				$desc = __('Currently using original (unoptimized) version of WebP file.', 'litespeed-cache') . '&#10;' . __('Click to switch to optimized version.', 'litespeed-cache');
+				$desc =
+					__('Currently using original (unoptimized) version of WebP file.', 'litespeed-cache') .
+					'&#10;' .
+					__('Click to switch to optimized version.', 'litespeed-cache');
 			}
 
 			echo GUI::pie_tiny(
 				$percent,
 				24,
-				sprintf(
-					__('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'),
-					$percent . '%',
-					Utility::real_size($size_meta['webp_saved'])
-				),
+				sprintf(__('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'), $percent . '%', Utility::real_size($size_meta['webp_saved'])),
 				'left'
 			);
 			echo sprintf(__('WebP saved %s', 'litespeed-cache'), $percent . '%');
 
 			if ($desc) {
-				echo sprintf(' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status);
+				echo sprintf(
+					' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>',
+					$link,
+					$cls,
+					$desc,
+					$curr_status
+				);
 			} else {
 				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
@@ -380,7 +385,6 @@ class Media extends Root
 
 		// Delete row btn
 		if ($size_meta) {
-
 			echo sprintf(
 				'<div class="row-actions"><span class="delete"><a href="%1$s" class="">%2$s</a></span></div>',
 				Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array('id' => $post_id)),
@@ -412,14 +416,13 @@ class Media extends Root
 				$sizes[$_size] = array(
 					'width' => $_wp_additional_image_sizes[$_size]['width'],
 					'height' => $_wp_additional_image_sizes[$_size]['height'],
-					'crop' =>  $_wp_additional_image_sizes[$_size]['crop']
+					'crop' => $_wp_additional_image_sizes[$_size]['crop'],
 				);
 			}
 		}
 
 		return $sizes;
 	}
-
 
 	/**
 	 * Exclude role from optimization filter
@@ -441,7 +444,7 @@ class Media extends Root
 				}
 			}
 
-			if (preg_match("/iPhone OS (\d+)_/i", $_SERVER['HTTP_USER_AGENT'], $matches)) {
+			if (preg_match('/iPhone OS (\d+)_/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
 				$lscwp_ios_version = $matches[1];
 				if ($lscwp_ios_version >= 14) {
 					return true;
@@ -533,7 +536,6 @@ class Media extends Root
 
 		// image lazy load
 		if ($cfg_lazy) {
-
 			$__placeholder = Placeholder::cls();
 
 			foreach ($html_list as $k => $v) {
@@ -575,7 +577,6 @@ class Media extends Root
 			$this->content = str_replace('</body>', $lazy_lib . '</body>', $this->content);
 		}
 	}
-
 
 	/**
 	 * Parse img src
@@ -632,12 +633,18 @@ class Media extends Root
 
 			Debug2::debug2('[Media] lazyload found: ' . $attrs['src']);
 
-			if (!empty($attrs['data-no-lazy']) || !empty($attrs['data-skip-lazy']) || !empty($attrs['data-lazyloaded']) || !empty($attrs['data-src']) || !empty($attrs['data-srcset'])) {
+			if (
+				!empty($attrs['data-no-lazy']) ||
+				!empty($attrs['data-skip-lazy']) ||
+				!empty($attrs['data-lazyloaded']) ||
+				!empty($attrs['data-src']) ||
+				!empty($attrs['data-srcset'])
+			) {
 				Debug2::debug2('[Media] bypassed');
 				continue;
 			}
 
-			if (!empty($attrs['class']) && $hit = Utility::str_hit_array($attrs['class'], $cls_excludes)) {
+			if (!empty($attrs['class']) && ($hit = Utility::str_hit_array($attrs['class'], $cls_excludes))) {
 				Debug2::debug2('[Media] lazyload image cls excludes [hit] ' . $hit);
 				continue;
 			}
@@ -678,9 +685,9 @@ class Media extends Root
 						$ori_height = $dimensions[1];
 						// Calculate height based on width
 						if (!empty($attrs['width']) && $attrs['width'] != 'auto') {
-							$ori_height = intval($ori_height * $attrs['width'] / $ori_width);
+							$ori_height = intval(($ori_height * $attrs['width']) / $ori_width);
 						} elseif (!empty($attrs['height']) && $attrs['height'] != 'auto') {
-							$ori_width = intval($ori_width * $attrs['height'] / $ori_height);
+							$ori_width = intval(($ori_width * $attrs['height']) / $ori_height);
 						}
 
 						$attrs['width'] = $ori_width;
@@ -720,7 +727,9 @@ class Media extends Root
 			return false;
 		}
 
-		if (substr($src, 0, 2) == '//') $src = 'https:' . $src;
+		if (substr($src, 0, 2) == '//') {
+			$src = 'https:' . $src;
+		}
 
 		$sizes = getimagesize($src);
 
@@ -769,12 +778,12 @@ class Media extends Root
 
 			Debug2::debug2('[Media] found iframe: ' . $attrs['src']);
 
-			if (!empty($attrs['data-no-lazy']) ||  !empty($attrs['data-skip-lazy']) || !empty($attrs['data-lazyloaded']) || !empty($attrs['data-src'])) {
+			if (!empty($attrs['data-no-lazy']) || !empty($attrs['data-skip-lazy']) || !empty($attrs['data-lazyloaded']) || !empty($attrs['data-src'])) {
 				Debug2::debug2('[Media] bypassed');
 				continue;
 			}
 
-			if (!empty($attrs['class']) && $hit = Utility::str_hit_array($attrs['class'], $cls_excludes)) {
+			if (!empty($attrs['class']) && ($hit = Utility::str_hit_array($attrs['class'], $cls_excludes))) {
 				Debug2::debug2('[Media] iframe lazyload cls excludes [hit] ' . $hit);
 				continue;
 			}
@@ -833,21 +842,14 @@ class Media extends Root
 					continue;
 				}
 
-				if (!$url2 = $this->replace_webp($url)) {
+				if (!($url2 = $this->replace_webp($url))) {
 					continue;
 				}
 
 				if ($v[0]) {
-					$html_snippet = sprintf(
-						'<' . $v[0] . '%1$s' . $v[1] . '=%2$s',
-						$matches[1][$k2],
-						$matches[2][$k2] . $url2 . $matches[2][$k2]
-					);
+					$html_snippet = sprintf('<' . $v[0] . '%1$s' . $v[1] . '=%2$s', $matches[1][$k2], $matches[2][$k2] . $url2 . $matches[2][$k2]);
 				} else {
-					$html_snippet = sprintf(
-						' ' . $v[1] . '=%1$s',
-						$matches[1][$k2] . $url2 . $matches[1][$k2]
-					);
+					$html_snippet = sprintf(' ' . $v[1] . '=%1$s', $matches[1][$k2] . $url2 . $matches[1][$k2]);
 				}
 
 				$content = str_replace($matches[0][$k2], $html_snippet, $content);
@@ -896,7 +898,7 @@ class Media extends Root
 				$url = substr($url, 6, -6);
 			}
 
-			if (!$url2 = $this->replace_webp($url)) {
+			if (!($url2 = $this->replace_webp($url))) {
 				continue;
 			}
 
@@ -958,7 +960,7 @@ class Media extends Root
 	public function webp_attach_img_src($img)
 	{
 		Debug2::debug2('[Media] changing attach src: ' . $img[0]);
-		if ($img && $url = $this->replace_webp($img[0])) {
+		if ($img && ($url = $this->replace_webp($img[0]))) {
 			$img[0] = $url;
 		}
 		return $img;
@@ -974,7 +976,7 @@ class Media extends Root
 	 */
 	public function webp_url($url)
 	{
-		if ($url && $url2 = $this->replace_webp($url)) {
+		if ($url && ($url2 = $this->replace_webp($url))) {
 			$url = $url2;
 		}
 		return $url;
@@ -992,7 +994,7 @@ class Media extends Root
 	{
 		if ($srcs) {
 			foreach ($srcs as $w => $data) {
-				if (!$url = $this->replace_webp($data['url'])) {
+				if (!($url = $this->replace_webp($data['url']))) {
 					continue;
 				}
 				$srcs[$w]['url'] = $url;

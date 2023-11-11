@@ -12,10 +12,10 @@
 
 namespace LiteSpeed\Thirdparty;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
-use \LiteSpeed\API;
-use \LiteSpeed\Base;
+use LiteSpeed\API;
+use LiteSpeed\Base;
 
 class WooCommerce extends Base
 {
@@ -236,9 +236,6 @@ class WooCommerce extends Base
 		}
 		return;
 
-
-
-
 		// todo: wny not use?
 
 		global $post;
@@ -247,7 +244,7 @@ class WooCommerce extends Base
 			self::ESI_PARAM_NAME => $template_name,
 			self::ESI_PARAM_POSTID => $post->ID,
 			self::ESI_PARAM_PATH => $template_path,
-			self::ESI_PARAM_LOCATED => $located
+			self::ESI_PARAM_LOCATED => $located,
 		);
 		add_action('woocommerce_after_add_to_cart_form', array($this, 'end_form'));
 		add_action('woocommerce_after_template_part', array($this, 'end_form'), 999);
@@ -470,7 +467,8 @@ class WooCommerce extends Base
 		if (function_exists('is_product_taxonomy') && !is_product_taxonomy()) {
 			return;
 		}
-		if (isset($GLOBALS['product_cat']) && is_string($GLOBALS['product_cat'])) { // todo: need to check previous woo version to find if its from old woo versions or not!
+		if (isset($GLOBALS['product_cat']) && is_string($GLOBALS['product_cat'])) {
+			// todo: need to check previous woo version to find if its from old woo versions or not!
 			$term = get_term_by('slug', $GLOBALS['product_cat'], 'product_cat');
 		} elseif (isset($GLOBALS['product_tag']) && is_string($GLOBALS['product_tag'])) {
 			$term = get_term_by('slug', $GLOBALS['product_tag'], 'product_tag');
@@ -549,18 +547,19 @@ class WooCommerce extends Base
 			return;
 		}
 
-		$uri = esc_url($_SERVER["REQUEST_URI"]);
+		$uri = esc_url($_SERVER['REQUEST_URI']);
 		$uri_len = strlen($uri);
 		if ($uri_len < 5) {
 			return;
 		}
 
-		if (in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/'))) { // why contains `product`?
+		if (in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/'))) {
+			// why contains `product`?
 			do_action('litespeed_control_set_nocache', 'uri in cart/account/user pages');
 			return;
 		}
 
-		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]);
+		$qs = sanitize_text_field($_SERVER['QUERY_STRING']);
 		$qs_len = strlen($qs);
 		if (!empty($qs) && $qs_len >= 12 && strpos($qs, 'add-to-cart=') === 0) {
 			do_action('litespeed_control_set_nocache', 'qs contains add-to-cart');
@@ -603,7 +602,11 @@ class WooCommerce extends Base
 			return true;
 		};
 
-		if (!$do_purge(function () use ($product) { $this->backend_purge($product->get_id()); })) {
+		if (
+			!$do_purge(function () use ($product) {
+				$this->backend_purge($product->get_id());
+			})
+		) {
 			return;
 		}
 
@@ -615,32 +618,29 @@ class WooCommerce extends Base
 		}
 
 		// Check if WPML is enabled ##972971
-		if (  defined( 'WPML_PLUGIN_BASENAME' ) ) {
+		if (defined('WPML_PLUGIN_BASENAME')) {
 			// Check if it is a variable product and get post/parent ID
-			$wpml_purge_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
-			$type = apply_filters( 'wpml_element_type', get_post_type( $wpml_purge_id ) );
-			$trid = apply_filters( 'wpml_element_trid', false, $wpml_purge_id, $type );
-			$translations = apply_filters( 'wpml_get_element_translations', array(), $trid, $type );
-			foreach ( $translations as $lang => $translation ) {
-			do_action( 'litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
-			do_action( 'litespeed_purge_post', $translation->element_id );
-			// use the $translation->element_id as it is post ID of other languages
+			$wpml_purge_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
+			$type = apply_filters('wpml_element_type', get_post_type($wpml_purge_id));
+			$trid = apply_filters('wpml_element_trid', false, $wpml_purge_id, $type);
+			$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
+			foreach ($translations as $lang => $translation) {
+				do_action('litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
+				do_action('litespeed_purge_post', $translation->element_id);
+				// use the $translation->element_id as it is post ID of other languages
 			}
 
 			// Check other languages category and purge if configured.
 			// wp_get_post_terms() only returns default language category ID
 			$default_cats = wp_get_post_terms($wpml_purge_id, 'product_cat');
-			$languages = apply_filters('wpml_active_languages', NULL); 
+			$languages = apply_filters('wpml_active_languages', null);
 
 			foreach ($default_cats as $default_cat) {
 				foreach ($languages as $language) {
 					$tr_cat_id = icl_object_id($default_cat->term_id, 'product_cat', false, $language['code']);
-					$do_purge(
-						function () use ($tr_cat_id) {
-							do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
-						},
-						'[3rd] Woo Purge WPML category [language] ' . $language['code'] . ' [cat] ' . $tr_cat_id
-					);
+					$do_purge(function () use ($tr_cat_id) {
+						do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
+					}, '[3rd] Woo Purge WPML category [language] ' . $language['code'] . ' [cat] ' . $tr_cat_id);
 				}
 			}
 		}
@@ -799,7 +799,7 @@ class WooCommerce extends Base
 		if (isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') && function_exists('wc_get_product_cat_ids')) {
 			return wc_get_product_cat_ids($product_id);
 		}
-		$product_cats = wp_get_post_terms($product_id, 'product_cat', array("fields" => "ids"));
+		$product_cats = wp_get_post_terms($product_id, 'product_cat', array('fields' => 'ids'));
 		foreach ($product_cats as $product_cat) {
 			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat'));
 		}
@@ -828,18 +828,20 @@ class WooCommerce extends Base
 	 */
 	public static function bulk_edit_purge()
 	{
-		if (empty($_POST['type']) || $_POST['type'] != 'saveproducts' || empty($_POST['data'])) return;
+		if (empty($_POST['type']) || $_POST['type'] != 'saveproducts' || empty($_POST['data'])) {
+			return;
+		}
 
 		/*
-		* admin-ajax form-data structure
-		* array(
-		*		"type" => "saveproducts",
-		*		"data" => array(
-		*			"column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
-		*			"column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
-		*		)
-		*	)
-		*/
+		 * admin-ajax form-data structure
+		 * array(
+		 *		"type" => "saveproducts",
+		 *		"data" => array(
+		 *			"column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
+		 *			"column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
+		 *		)
+		 *	)
+		 */
 		$stock_string_arr = array();
 		foreach ($_POST['data'] as $stock_value) {
 			$stock_string_arr = array_merge($stock_string_arr, explode('#^#', $stock_value));

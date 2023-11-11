@@ -11,7 +11,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Placeholder extends Base
 {
@@ -40,11 +40,11 @@ class Placeholder extends Base
 	public function __construct()
 	{
 		$this->_conf_placeholder_resp = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_MEDIA_PLACEHOLDER_RESP);
-		$this->_conf_placeholder_resp_svg 	= $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_SVG);
-		$this->_conf_lqip 		= !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_MEDIA_LQIP);
-		$this->_conf_lqip_qual	= $this->conf(self::O_MEDIA_LQIP_QUAL);
-		$this->_conf_lqip_min_w	= $this->conf(self::O_MEDIA_LQIP_MIN_W);
-		$this->_conf_lqip_min_h	= $this->conf(self::O_MEDIA_LQIP_MIN_H);
+		$this->_conf_placeholder_resp_svg = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_SVG);
+		$this->_conf_lqip = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_MEDIA_LQIP);
+		$this->_conf_lqip_qual = $this->conf(self::O_MEDIA_LQIP_QUAL);
+		$this->_conf_lqip_min_w = $this->conf(self::O_MEDIA_LQIP_MIN_W);
+		$this->_conf_lqip_min_h = $this->conf(self::O_MEDIA_LQIP_MIN_H);
 		$this->_conf_placeholder_resp_async = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_ASYNC);
 		$this->_conf_placeholder_resp_color = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_COLOR);
 		$this->_conf_ph_default = $this->conf(self::O_MEDIA_LAZY_PLACEHOLDER) ?: LITESPEED_PLACEHOLDER;
@@ -105,7 +105,6 @@ class Placeholder extends Base
 		do_action('litespeed_media_row_lqip', $post_id);
 	}
 
-
 	/**
 	 * Display LQIP column
 	 *
@@ -135,8 +134,6 @@ class Placeholder extends Base
 			if (is_dir($lqip_folder)) {
 				Debug2::debug('[LQIP] Found folder: ' . $short_path);
 
-
-
 				// List all files
 				foreach (scandir($lqip_folder) as $v) {
 					if ($v == '.' || $v == '..') {
@@ -144,7 +141,11 @@ class Placeholder extends Base
 					}
 
 					if ($total_files == 0) {
-						echo '<div class="litespeed-media-lqip"><img src="' . File::read($lqip_folder . '/' . $v) . '" alt="' . sprintf(__('LQIP image preview for size %s', 'litespeed-cache'), $v) . '"></div>';
+						echo '<div class="litespeed-media-lqip"><img src="' .
+							File::read($lqip_folder . '/' . $v) .
+							'" alt="' .
+							sprintf(__('LQIP image preview for size %s', 'litespeed-cache'), $v) .
+							'"></div>';
 					}
 
 					echo '<div class="litespeed-media-size"><a href="' . File::read($lqip_folder . '/' . $v) . '" target="_blank">' . $v . '</a></div>';
@@ -298,7 +299,8 @@ class Placeholder extends Base
 
 		// External images will use cache folder directly
 		$domain = parse_url($src, PHP_URL_HOST);
-		if ($domain && !Utility::internal($domain)) { // todo: need to improve `util:internal()` to include `CDN::internal()`
+		if ($domain && !Utility::internal($domain)) {
+			// todo: need to improve `util:internal()` to include `CDN::internal()`
 			$md5 = md5($src);
 
 			return LITESPEED_STATIC_DIR . $filepath_prefix . 'remote/' . substr($md5, 0, 1) . '/' . substr($md5, 1, 1) . '/' . $md5 . '.' . $size;
@@ -410,10 +412,10 @@ class Placeholder extends Base
 			// Generate LQIP
 			list($width, $height) = explode('x', $size);
 			$req_data = array(
-				'width'		=> $width,
-				'height'	=> $height,
-				'url'		=> substr($src, -5) === '.webp' ? substr($src, 0, -5) : $src,
-				'quality'	=> $this->_conf_lqip_qual,
+				'width' => $width,
+				'height' => $height,
+				'url' => substr($src, -5) === '.webp' ? substr($src, 0, -5) : $src,
+				'quality' => $this->_conf_lqip_qual,
 			);
 
 			// CHeck if the image is 404 first

@@ -7,34 +7,35 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined('WPINC') || exit();
 
-use \LiteSpeed\API ;
+use LiteSpeed\API;
 
 class Wpdiscuz
 {
 	public static function detect()
 	{
-		if ( ! defined( 'WPDISCUZ_DS' ) ) return ;
+		if (!defined('WPDISCUZ_DS')) {
+			return;
+		}
 
-		self::check_commenter() ;
-		add_action( 'wpdiscuz_add_comment', __CLASS__ . '::add_comment' ) ;
-
+		self::check_commenter();
+		add_action('wpdiscuz_add_comment', __CLASS__ . '::add_comment');
 	}
 
 	public static function add_comment()
 	{
-		API::vary_append_commenter() ;
+		API::vary_append_commenter();
 	}
 
 	public static function check_commenter()
 	{
-		$commentor = wp_get_current_commenter() ;
+		$commentor = wp_get_current_commenter();
 
-		if ( strlen( $commentor[ 'comment_author' ] ) > 0 ) {
-			add_filter( 'litespeed_vary_check_commenter_pending', '__return_false' ) ;
+		if (strlen($commentor['comment_author']) > 0) {
+			add_filter('litespeed_vary_check_commenter_pending', '__return_false');
 		}
 	}
 }

@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Crawler_Map extends Root
 {
@@ -55,7 +55,8 @@ class Crawler_Map extends Root
 
 		// Replace current crawler's position
 		$curr_crawler = (int) $curr_crawler;
-		foreach ($list as $bit => $ids) { // $ids = [ id => [ url, code ], ... ]
+		foreach ($list as $bit => $ids) {
+			// $ids = [ id => [ url, code ], ... ]
 			if (!$ids) {
 				continue;
 			}
@@ -75,7 +76,7 @@ class Crawler_Map extends Root
 				$existing = $wpdb->get_results($q, ARRAY_A);
 				// Update current crawler status tag in existing blacklist
 				if ($existing) {
-					$count = $wpdb->query("UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode(',', array_column($existing, 'id')) . " )");
+					$count = $wpdb->query("UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode(',', array_column($existing, 'id')) . ' )');
 					self::debug('Update blacklist [count] ' . $count);
 				}
 
@@ -103,11 +104,11 @@ class Crawler_Map extends Root
 			// Update sitemap reason w/ HTTP code
 			$reason_array = array();
 			foreach ($ids as $id => $v2) {
-				$code = (int)$v2['code'];
+				$code = (int) $v2['code'];
 				if (empty($reason_array[$code])) {
 					$reason_array[$code] = array();
 				}
-				$reason_array[$code][] = (int)$id;
+				$reason_array[$code][] = (int) $id;
 			}
 
 			foreach ($reason_array as $code => $v2) {
@@ -119,13 +120,21 @@ class Crawler_Map extends Root
 					$code .= ',';
 				}
 
-				$count = $wpdb->query("UPDATE `$this->_tb` SET reason=CONCAT(SUBSTRING_INDEX(reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(reason, ',', -$right_pos)) WHERE id IN (" . implode(',', $v2) . ")");
+				$count = $wpdb->query(
+					"UPDATE `$this->_tb` SET reason=CONCAT(SUBSTRING_INDEX(reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(reason, ',', -$right_pos)) WHERE id IN (" .
+						implode(',', $v2) .
+						')'
+				);
 
 				self::debug("Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count");
 
 				// Update blacklist reason
 				if ($bit == 'B' || $bit == 'N') {
-					$count = $wpdb->query("UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason=CONCAT(SUBSTRING_INDEX(a.reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(a.reason, ',', -$right_pos)) WHERE b.id IN (" . implode(',', $v2) . ")");
+					$count = $wpdb->query(
+						"UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason=CONCAT(SUBSTRING_INDEX(a.reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(a.reason, ',', -$right_pos)) WHERE b.id IN (" .
+							implode(',', $v2) .
+							')'
+					);
 
 					self::debug("Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count");
 				}
@@ -148,7 +157,7 @@ class Crawler_Map extends Root
 	{
 		global $wpdb;
 
-		$id = (int)$id;
+		$id = (int) $id;
 
 		// Build res&reason
 		$total_crawler = count(Crawler::cls()->list_crawlers());
@@ -188,7 +197,7 @@ class Crawler_Map extends Root
 			return;
 		}
 
-		$id = (int)$id;
+		$id = (int) $id;
 		self::debug('blacklist delete [id] ' . $id);
 
 		$wpdb->query("UPDATE `$this->_tb` SET res=REPLACE(REPLACE(res, 'N', '-'), 'B', '-') WHERE url=(SELECT url FROM `$this->_tb_blacklist` WHERE id='$id')");
@@ -235,7 +244,7 @@ class Crawler_Map extends Root
 				$total = $this->count_blacklist();
 				$offset = Utility::pagination($total, $limit, true);
 			}
-			$q .= " LIMIT %d, %d";
+			$q .= ' LIMIT %d, %d';
 			$q = $wpdb->prepare($q, $offset, $limit);
 		}
 		return $wpdb->get_results($q, ARRAY_A);
@@ -356,7 +365,7 @@ class Crawler_Map extends Root
 		}
 
 		// use custom sitemap
-		if (!$sitemap = $this->conf(Base::O_CRAWLER_SITEMAP)) {
+		if (!($sitemap = $this->conf(Base::O_CRAWLER_SITEMAP))) {
 			return false;
 		}
 
@@ -396,7 +405,8 @@ class Crawler_Map extends Root
 		$full_blacklisted = array();
 		$partial_blacklisted = array();
 		foreach ($blacklist as $v) {
-			if (strpos($v['res'], '-') === false) { // Full blacklisted
+			if (strpos($v['res'], '-') === false) {
+				// Full blacklisted
 				$full_blacklisted[] = $v['url'];
 			} else {
 				// Replace existing reason
@@ -488,13 +498,15 @@ class Crawler_Map extends Root
 		}
 
 		// start parsing
-		$xml_array = (array)$xml_object;
-		if (!empty($xml_array['sitemap'])) { // parse sitemap set
+		$xml_array = (array) $xml_object;
+		if (!empty($xml_array['sitemap'])) {
+			// parse sitemap set
 			if (is_object($xml_array['sitemap'])) {
-				$xml_array['sitemap'] = (array)$xml_array['sitemap'];
+				$xml_array['sitemap'] = (array) $xml_array['sitemap'];
 			}
 
-			if (!empty($xml_array['sitemap']['loc'])) { // is single sitemap
+			if (!empty($xml_array['sitemap']['loc'])) {
+				// is single sitemap
 				$this->_parse($xml_array['sitemap']['loc']);
 			} else {
 				// parse multiple sitemaps
@@ -505,7 +517,8 @@ class Crawler_Map extends Root
 					}
 				}
 			}
-		} elseif (!empty($xml_array['url'])) { // parse url set
+		} elseif (!empty($xml_array['url'])) {
+			// parse url set
 			if (is_object($xml_array['url'])) {
 				$xml_array['url'] = (array) $xml_array['url'];
 			}

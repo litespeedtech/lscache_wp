@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Vary extends Root
 {
@@ -128,7 +128,8 @@ class Vary extends Root
 		 * Don't change for REST call because they don't carry on user info usually
 		 * @since 1.6.7
 		 */
-		add_action('rest_api_init', function () { // this hook is fired in `init` hook
+		add_action('rest_api_init', function () {
+			// this hook is fired in `init` hook
 			Debug2::debug('[Vary] Rest API init disabled vary change');
 			add_filter('litespeed_can_change_vary', '__return_false');
 		});
@@ -201,18 +202,19 @@ class Vary extends Root
 		!defined('LSCACHE_NO_CACHE') && define('LSCACHE_NO_CACHE', true);
 
 		$_guest = new Lib\Guest();
-		if ($_guest->always_guest() || self::has_vary()) { // If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
+		if ($_guest->always_guest() || self::has_vary()) {
+			// If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 			!defined('LITESPEED_GUEST') && define('LITESPEED_GUEST', true); // Reuse this const to bypass set vary in vary finalize
 			Debug2::debug('[Vary] 🤠🤠 Guest');
 			echo '[]';
-			exit;
+			exit();
 		}
 
-		Debug2::debug("[Vary] Will update guest vary in finalize");
+		Debug2::debug('[Vary] Will update guest vary in finalize');
 
 		// return json
 		echo json_encode(array('reload' => 'yes'));
-		exit;
+		exit();
 	}
 
 	/**
@@ -239,7 +241,8 @@ class Vary extends Root
 		if (apply_filters('litespeed_vary_check_commenter_pending', true)) {
 			$pending = false;
 			foreach ($comments as $comment) {
-				if (!$comment->comment_approved) { // current user has pending comment
+				if (!$comment->comment_approved) {
+					// current user has pending comment
 					$pending = true;
 					break;
 				}
@@ -363,7 +366,7 @@ class Vary extends Root
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
 		 * @since 1.6.5
 		 */
-		if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST') {
+		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
 			Debug2::debug('[Vary] can_change_vary bypassed due to method not get/post');
 			return false;
 		}
@@ -398,7 +401,7 @@ class Vary extends Root
 		if (!defined('LITESPEED_DID_' . __FUNCTION__)) {
 			define('LITESPEED_DID_' . __FUNCTION__, true);
 		} else {
-			Debug2::debug2("[Vary] _update_default_vary bypassed due to run already");
+			Debug2::debug2('[Vary] _update_default_vary bypassed due to run already');
 			return;
 		}
 

@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 abstract class Root
 {
@@ -117,13 +117,13 @@ abstract class Root
 		self::save_summary(false, false, true);
 
 		if ($type == 'ccss' || $type == 'ucss') {
-			Debug2::debug('[CSS] Cleared ' . $type .  ' queue');
+			Debug2::debug('[CSS] Cleared ' . $type . ' queue');
 		} elseif ($type == 'avatar') {
-			Debug2::debug('[Avatar] Cleared ' . $type .  ' queue');
+			Debug2::debug('[Avatar] Cleared ' . $type . ' queue');
 		} elseif ($type == 'css' || $type == 'js') {
 			return;
 		} else {
-			Debug2::debug('[' . strtoupper($type) . '] Cleared ' . $type .  ' queue');
+			Debug2::debug('[' . strtoupper($type) . '] Cleared ' . $type . ' queue');
 		}
 	}
 
@@ -418,7 +418,8 @@ abstract class Root
 		$cls = new \ReflectionClass(get_called_class());
 		$shortname = $cls->getShortName();
 		$namespace = str_replace(__NAMESPACE__ . '\\', '', $cls->getNamespaceName() . '\\');
-		if ($namespace) { // the left namespace after dropped LiteSpeed
+		if ($namespace) {
+			// the left namespace after dropped LiteSpeed
 			$shortname = $namespace . $shortname;
 		}
 
@@ -433,7 +434,8 @@ abstract class Root
 	public static function name($id)
 	{
 		$name = strtolower(self::ori_cls());
-		if ($name == 'conf2') { // For a certain 3.7rc correction, can be dropped after v4
+		if ($name == 'conf2') {
+			// For a certain 3.7rc correction, can be dropped after v4
 			$name = 'conf';
 		}
 		return 'litespeed.' . $name . '.' . $id;

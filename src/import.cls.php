@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Import extends Base
 {
@@ -63,7 +63,7 @@ class Import extends Base
 		@header('Content-Disposition: attachment; filename=' . $filename);
 		echo $data;
 
-		exit;
+		exit();
 	}
 
 	/**
@@ -127,7 +127,6 @@ class Import extends Base
 		}
 
 		$this->cls('Conf')->update_confs($ori_data);
-
 
 		if (!$file) {
 			Debug2::debug('Import: Imported ' . $_FILES['ls_file']['name']);
