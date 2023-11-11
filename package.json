@@ -3,9 +3,8 @@
 	"description": "High-performance page caching and site optimization from LiteSpeed",
 	"license": "GPLv3",
 	"scripts": {
-		"format": "npm run prettier -- --write",
-		"format-check": "npm run prettier -- --check",
-		"prettier": "prettier *.php cli/*.php cli/**/*.php inc/*.php inc/**/*.php src/*.php src/**/*.php thirdparty/*.php thirdparty/**/*.php tpl/*.php tpl/**/*.php"
+		"format": "prettier --write . '**/*.php'",
+		"format-check": "prettier --check . '**/*.php'"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.21.0",
