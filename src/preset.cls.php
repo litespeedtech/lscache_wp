@@ -6,9 +6,10 @@
  */
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class Preset extends Import {
+class Preset extends Import
+{
 	protected $_summary;
 
 	const MAX_BACKUPS = 10;
@@ -25,15 +26,18 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_backups() {
+	public static function get_backups()
+	{
 		self::init_filesystem();
 		global $wp_filesystem;
 
 		$backups = array_map(
-			function( $path ) { return self::basename( $path['name'] ); },
-			$wp_filesystem->dirlist( self::BACKUP_DIR ) ?: []
+			function ($path) {
+				return self::basename($path['name']);
+			},
+			$wp_filesystem->dirlist(self::BACKUP_DIR) ?: array()
 		);
-		rsort( $backups );
+		rsort($backups);
 
 		return $backups;
 	}
@@ -44,14 +48,15 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function prune_backups() {
+	public static function prune_backups()
+	{
 		$backups = self::get_backups();
 		global $wp_filesystem;
 
-		foreach ( array_slice( $backups, self::MAX_BACKUPS ) as $backup ) {
-			$path = self::get_backup( $backup );
-			$wp_filesystem->delete( $path );
-			Debug2::debug('[Preset] Deleted old backup from ' . $backup );
+		foreach (array_slice($backups, self::MAX_BACKUPS) as $backup) {
+			$path = self::get_backup($backup);
+			$wp_filesystem->delete($path);
+			Debug2::debug('[Preset] Deleted old backup from ' . $backup);
 		}
 	}
 
@@ -61,8 +66,9 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function basename( $path ) {
-		return basename( $path, '.data' );
+	public static function basename($path)
+	{
+		return basename($path, '.data');
 	}
 
 	/**
@@ -71,8 +77,9 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_standard( $name ) {
-		return path_join( self::STANDARD_DIR, $name . '.data' );
+	public static function get_standard($name)
+	{
+		return path_join(self::STANDARD_DIR, $name . '.data');
 	}
 
 	/**
@@ -81,8 +88,9 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_backup( $name ) {
-		return path_join( self::BACKUP_DIR, $name . '.data' );
+	public static function get_backup($name)
+	{
+		return path_join(self::BACKUP_DIR, $name . '.data');
 	}
 
 	/**
@@ -90,20 +98,21 @@ class Preset extends Import {
 	 *
 	 * @since  5.3.0
 	 */
-	static function init_filesystem() {
-		require_once ( ABSPATH . '/wp-admin/includes/file.php' );
+	static function init_filesystem()
+	{
+		require_once ABSPATH . '/wp-admin/includes/file.php';
 		\WP_Filesystem();
 		clearstatcache();
 	}
-
 
 	/**
 	 * Init
 	 *
 	 * @since  5.3.0
 	 */
-	public function __construct() {
-		Debug2::debug( '[Preset] Init' );
+	public function __construct()
+	{
+		Debug2::debug('[Preset] Init');
 		$this->_summary = self::get_summary();
 	}
 
@@ -113,13 +122,14 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function apply( $preset ) {
-		$this->make_backup( $preset );
+	public function apply($preset)
+	{
+		$this->make_backup($preset);
 
-		$path = self::get_standard( $preset );
-		$result = $this->import_file( $path ) ? $preset : 'error';
+		$path = self::get_standard($preset);
+		$result = $this->import_file($path) ? $preset : 'error';
 
-		$this->log( $result );
+		$this->log($result);
 	}
 
 	/**
@@ -128,34 +138,35 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function restore( $timestamp ) {
+	public function restore($timestamp)
+	{
 		$backups = array();
-		foreach ( self::get_backups() as $backup ) {
-			if ( preg_match( '/^backup-' . $timestamp . '(-|$)/', $backup ) === 1 ) {
+		foreach (self::get_backups() as $backup) {
+			if (preg_match('/^backup-' . $timestamp . '(-|$)/', $backup) === 1) {
 				$backups[] = $backup;
 			}
-		};
+		}
 
-		if ( empty( $backups ) ) {
-			$this->log( 'error' );
+		if (empty($backups)) {
+			$this->log('error');
 			return;
 		}
 
 		$backup = $backups[0];
-		$path = self::get_backup( $backup );
+		$path = self::get_backup($backup);
 
-		if ( ! $this->import_file( $path ) ) {
-			$this->log( 'error' );
+		if (!$this->import_file($path)) {
+			$this->log('error');
 			return;
 		}
 
 		self::init_filesystem();
 		global $wp_filesystem;
 
-		$wp_filesystem->delete( $path );
-		Debug2::debug('[Preset] Deleted most recent backup from ' . $backup );
+		$wp_filesystem->delete($path);
+		Debug2::debug('[Preset] Deleted most recent backup from ' . $backup);
 
-		$this->log( 'backup' );
+		$this->log('backup');
 	}
 
 	/**
@@ -164,13 +175,14 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function make_backup( $preset ) {
+	public function make_backup($preset)
+	{
 		$backup = 'backup-' . time() . '-before-' . $preset;
-		$data = $this->export( true );
+		$data = $this->export(true);
 
-		$path = self::get_backup( $backup );
-		File::save( $path, $data, true );
-		Debug2::debug( '[Preset] Backup saved to ' . $backup );
+		$path = self::get_backup($backup);
+		File::save($path, $data, true);
+		Debug2::debug('[Preset] Backup saved to ' . $backup);
 
 		self::prune_backups();
 	}
@@ -180,50 +192,51 @@ class Preset extends Import {
 	 *
 	 * @since  5.3.0
 	 */
-	function import_file( $path ) {
-		$debug = function( $result, $name ) {
+	function import_file($path)
+	{
+		$debug = function ($result, $name) {
 			$action = $result ? 'Applied' : 'Failed to apply';
-			Debug2::debug( '[Preset] ' . $action . ' settings from ' . $name );
+			Debug2::debug('[Preset] ' . $action . ' settings from ' . $name);
 			return $result;
 		};
 
-		$name = self::basename( $path );
-		$contents = file_get_contents( $path );
+		$name = self::basename($path);
+		$contents = file_get_contents($path);
 
-		if ( false === $contents ) {
-			Debug2::debug( '[Preset] ❌ Failed to get file contents' );
-			return $debug( false, $name );
+		if (false === $contents) {
+			Debug2::debug('[Preset] ❌ Failed to get file contents');
+			return $debug(false, $name);
 		}
 
 		$parsed = array();
 		try {
 			// Check if the data is v4+
-			if ( strpos( $contents, '["_version",' ) === 0 ) {
-				$contents = explode( "\n", $contents );
-				foreach ( $contents as $line ) {
-					$line = trim( $line );
-					if ( empty( $line ) ) {
+			if (strpos($contents, '["_version",') === 0) {
+				$contents = explode("\n", $contents);
+				foreach ($contents as $line) {
+					$line = trim($line);
+					if (empty($line)) {
 						continue;
 					}
-					list( $key, $value ) = json_decode( $line, true );
-					$parsed[ $key ] = $value;
+					list($key, $value) = json_decode($line, true);
+					$parsed[$key] = $value;
 				}
 			} else {
-				$parsed = json_decode( base64_decode( $contents ), true );
+				$parsed = json_decode(base64_decode($contents), true);
 			}
-		} catch ( \Exception $ex ) {
-			Debug2::debug( '[Preset] ❌ Failed to parse serialized data' );
-			return $debug( false, $name );
+		} catch (\Exception $ex) {
+			Debug2::debug('[Preset] ❌ Failed to parse serialized data');
+			return $debug(false, $name);
 		}
 
-		if ( empty( $parsed ) ) {
-			Debug2::debug( '[Preset] ❌ Nothing to apply' );
-			return $debug( false, $name );
+		if (empty($parsed)) {
+			Debug2::debug('[Preset] ❌ Nothing to apply');
+			return $debug(false, $name);
 		}
 
-		$this->cls( 'Conf' )->update_confs( $parsed );
+		$this->cls('Conf')->update_confs($parsed);
 
-		return $debug( true, $name );
+		return $debug(true, $name);
 	}
 
 	/**
@@ -231,9 +244,10 @@ class Preset extends Import {
 	 *
 	 * @since  5.3.0
 	 */
-	function log( $preset ) {
-		$this->_summary[ 'preset' ] = $preset;
-		$this->_summary[ 'preset_timestamp' ] = time();
+	function log($preset)
+	{
+		$this->_summary['preset'] = $preset;
+		$this->_summary['preset_timestamp'] = time();
 		self::save_summary();
 	}
 
@@ -243,16 +257,17 @@ class Preset extends Import {
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function handler() {
+	public function handler()
+	{
 		$type = Router::verify_type();
 
-		switch ( $type ) {
+		switch ($type) {
 			case self::TYPE_APPLY:
-				$this->apply( ! empty( $_GET['preset'] ) ? $_GET['preset'] : false );
+				$this->apply(!empty($_GET['preset']) ? $_GET['preset'] : false);
 				break;
 
 			case self::TYPE_RESTORE:
-				$this->restore( ! empty( $_GET['timestamp'] ) ? $_GET['timestamp'] : false );
+				$this->restore(!empty($_GET['timestamp']) ? $_GET['timestamp'] : false);
 				break;
 
 			default:

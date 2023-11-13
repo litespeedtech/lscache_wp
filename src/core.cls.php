@@ -10,7 +10,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Core extends Root
 {
@@ -239,7 +239,6 @@ class Core extends Root
 
 		// test: Simulate a purge all
 		// if (defined( 'LITESPEED_CLI' )) Purge::add('test'.date('Ymd.His'));
-
 	}
 
 	/**
@@ -262,7 +261,7 @@ class Core extends Root
 		 */
 		$this->cls('ESI')->init();
 
-		if (!is_admin() && !defined('LITESPEED_GUEST_OPTM') && $result = $this->cls('Conf')->in_optm_exc_roles()) {
+		if (!is_admin() && !defined('LITESPEED_GUEST_OPTM') && ($result = $this->cls('Conf')->in_optm_exc_roles())) {
 			Debug2::debug('[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result);
 			!defined('LITESPEED_NO_OPTM') && define('LITESPEED_NO_OPTM', true);
 		}
@@ -362,7 +361,7 @@ class Core extends Root
 		}
 
 		if (Router::is_ajax()) {
-			exit;
+			exit();
 		}
 	}
 
@@ -486,7 +485,6 @@ class Core extends Root
 
 		$this->send_headers(true);
 
-
 		// Init comment info
 		$running_info_showing = defined('LITESPEED_IS_HTML') || defined('LSCACHE_IS_ESI');
 		if (defined('LSCACHE_ESI_SILENCE')) {
@@ -525,7 +523,7 @@ class Core extends Root
 		}
 
 		if (apply_filters('litespeed_is_json', false)) {
-			if (json_decode($buffer, true) == NULL) {
+			if (json_decode($buffer, true) == null) {
 				Debug2::debug('[Core] Buffer converting to JSON');
 				$buffer = json_encode($buffer);
 				$buffer = trim($buffer, '"');
@@ -595,13 +593,15 @@ class Core extends Root
 			$cache_support = Control::is_cacheable() ? 'cached' : 'uncached';
 		}
 
-		$this->_comment(sprintf(
-			'%1$s %2$s by LiteSpeed Cache %4$s on %3$s',
-			defined('LSCACHE_IS_ESI') ? 'Block' : 'Page',
-			$cache_support,
-			date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET),
-			self::VER
-		));
+		$this->_comment(
+			sprintf(
+				'%1$s %2$s by LiteSpeed Cache %4$s on %3$s',
+				defined('LSCACHE_IS_ESI') ? 'Block' : 'Page',
+				$cache_support,
+				date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET),
+				self::VER
+			)
+		);
 
 		// send Control header
 		if (defined('LITESPEED_ON') && $control_header) {
@@ -629,7 +629,9 @@ class Core extends Root
 
 		if (defined('LITESPEED_ON') && defined('LSCWP_LOG')) {
 			$vary = $this->cls('Vary')->finalize_full_varies();
-			if ($vary) $this->_comment('Full varies: ' . $vary);
+			if ($vary) {
+				$this->_comment('Full varies: ' . $vary);
+			}
 		}
 
 		// Admin QS show header action
@@ -707,7 +709,7 @@ class Core extends Root
 
 	private function _comment($data)
 	{
-		$this->_footer_comment .= "\n<!-- " . $data . " -->";
+		$this->_footer_comment .= "\n<!-- " . $data . ' -->';
 	}
 
 	/**
@@ -716,11 +718,15 @@ class Core extends Root
 	 */
 	private function _http_header($header)
 	{
-		if (defined('LITESPEED_CLI')) return;
+		if (defined('LITESPEED_CLI')) {
+			return;
+		}
 
 		@header($header);
 
-		if (!defined('LSCWP_LOG')) return;
+		if (!defined('LSCWP_LOG')) {
+			return;
+		}
 		Debug2::debug('💰 ' . $header);
 	}
 }

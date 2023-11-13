@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - dev
-      - "v*.*"
+      - 'v*.*'
   pull_request:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20'
           check-latest: true
           cache: npm
           cache-dependency-path: package-lock.json

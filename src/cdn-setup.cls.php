@@ -8,18 +8,18 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Cdn_Setup extends Base
 {
 	const LOG_TAG = '👷';
 
-	const TYPE_LINK	    = 'link';
-	const TYPE_NOLINK	= 'nolink';
-	const TYPE_RUN	    = 'setup';
-	const TYPE_STATUS   = 'status';
-	const TYPE_RESET	= 'reset';
-	const TYPE_DELETE	= 'delete';
+	const TYPE_LINK = 'link';
+	const TYPE_NOLINK = 'nolink';
+	const TYPE_RUN = 'setup';
+	const TYPE_STATUS = 'status';
+	const TYPE_RESET = 'reset';
+	const TYPE_DELETE = 'delete';
 
 	private $_setup_token;
 	protected $_summary;
@@ -42,7 +42,7 @@ class Cdn_Setup extends Base
 	 */
 	public function maybe_extract_token()
 	{
-		$params = $this->cls('Cloud')->parse_qc_redir(['token']);
+		$params = $this->cls('Cloud')->parse_qc_redir(array('token'));
 
 		if (isset($params['token'])) {
 			$this->_setup_token = $params['token'];
@@ -92,12 +92,11 @@ class Cdn_Setup extends Base
 	 */
 	private function _qc_refresh()
 	{
-
 		$json = $this->cls('Cloud')->req_rest_api('/user/cdn/status');
 
 		if (!$json) {
 			return;
-		} else if (is_string($json)) {
+		} elseif (is_string($json)) {
 			self::save_summary(array('cdn_setup_err' => $json));
 			return;
 		}
@@ -117,7 +116,6 @@ class Cdn_Setup extends Base
 	 */
 	private function _process_cdn_status($result)
 	{
-
 		if (isset($result['nameservers'])) {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);
@@ -128,8 +126,10 @@ class Cdn_Setup extends Base
 			$this->cls('Cloud')->set_linked();
 			$nameservers = esc_html($result['nameservers']);
 			$this->cls('Conf')->update_confs(array(self::O_QC_NAMESERVERS => $nameservers, self::O_CDN_QUIC => true));
-			Admin_Display::succeed('🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache') . $nameservers);
-		} else if (isset($result['done'])) {
+			Admin_Display::succeed(
+				'🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache') . $nameservers
+			);
+		} elseif (isset($result['done'])) {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);
 			}
@@ -140,7 +140,7 @@ class Cdn_Setup extends Base
 
 			$this->_setup_token = '';
 			$this->cls('Conf')->update_confs(array(self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => ''));
-		} else if (isset($result['_msg'])) {
+		} elseif (isset($result['_msg'])) {
 			$notice = esc_html($result['_msg']);
 			if ($this->conf(Base::O_QC_NAMESERVERS)) {
 				$this->_summary['cdn_verify_msg'] = $notice;
@@ -176,18 +176,16 @@ class Cdn_Setup extends Base
 
 			if (!$json) {
 				return;
-			} else if (is_string($json) && $json != 'unauthorized access to REST API.') {
+			} elseif (is_string($json) && $json != 'unauthorized access to REST API.') {
 				self::save_summary(array('cdn_setup_err' => $json));
 				return;
 			}
-		} else if (!isset($this->_summary['cdn_setup_done_ts']) ||  !$this->_summary['cdn_setup_done_ts']) {
+		} elseif (!isset($this->_summary['cdn_setup_done_ts']) || !$this->_summary['cdn_setup_done_ts']) {
 			Admin_Display::info(__('Notice: CDN Setup only reset locally.', 'litespeed-cache'));
-		} else if (!Cloud::get_summary('is_linked')) {
-
+		} elseif (!Cloud::get_summary('is_linked')) {
 			Admin_Display::error(__('Cannot delete, site is not linked.', 'litespeed-cache'));
 			return;
 		} else {
-
 			$json = Cloud::post(Cloud::SVC_D_DEL_CDN_DNS, $data);
 
 			if (!is_array($json)) {
@@ -216,9 +214,15 @@ class Cdn_Setup extends Base
 		$this->cls('Conf')->update_confs(array(self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false));
 		$msg = '';
 		if ($delete) {
-			$msg = __('CDN Setup Token and DNS zone deleted. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache');
+			$msg = __(
+				'CDN Setup Token and DNS zone deleted. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.',
+				'litespeed-cache'
+			);
 		} else {
-			$msg = __('CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.', 'litespeed-cache');
+			$msg = __(
+				'CDN Setup Token reset. Note: if my.quic.cloud account deletion is desired, that the account still exists and must be deleted separately.',
+				'litespeed-cache'
+			);
 		}
 		Admin_Display::succeed($msg);
 		return self::ok();
@@ -248,8 +252,8 @@ class Cdn_Setup extends Base
 		}
 
 		$data = array(
-			'site_url'		=> home_url(),
-			'ref'			=> get_admin_url(null, 'admin.php?page=litespeed-cdn'),
+			'site_url' => home_url(),
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed-cdn'),
 		);
 		$api_key = $this->conf(self::O_API_KEY);
 		if ($api_key) {
@@ -257,7 +261,7 @@ class Cdn_Setup extends Base
 		}
 
 		wp_redirect(Cloud::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str($data));
-		exit;
+		exit();
 	}
 
 	/**
@@ -274,7 +278,7 @@ class Cdn_Setup extends Base
 		}
 
 		$data = array(
-			'site_url'		=> home_url(),
+			'site_url' => home_url(),
 		);
 
 		$json = Cloud::post(Cloud::SVC_D_SETUP_TOKEN, $data);
@@ -293,11 +297,10 @@ class Cdn_Setup extends Base
 	 */
 	private function _qc_run()
 	{
-
 		$data = array(
 			'site_url' => home_url(),
-			'rest'		=> function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json'),
-			'server_ip'	=> $this->conf(self::O_SERVER_IP),
+			'rest' => function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json'),
+			'server_ip' => $this->conf(self::O_SERVER_IP),
 		);
 
 		$api_key = $this->conf(self::O_API_KEY);
@@ -310,7 +313,7 @@ class Cdn_Setup extends Base
 
 		if (!$json) {
 			return;
-		} else if (is_string($json)) {
+		} elseif (is_string($json)) {
 			self::save_summary(array('cdn_setup_err' => $json));
 			return;
 		}
@@ -382,7 +385,6 @@ class Cdn_Setup extends Base
 		$type = Router::verify_type();
 
 		switch ($type) {
-
 			case self::TYPE_LINK:
 				$this->_qc_link();
 				break;

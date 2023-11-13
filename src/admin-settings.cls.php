@@ -12,7 +12,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Admin_Settings extends Base
 {
@@ -44,7 +44,8 @@ class Admin_Settings extends Base
 			$child = false;
 			// Drop array format
 			if (strpos($id, '[') !== false) {
-				if (strpos($id, self::O_CDN_MAPPING) === 0 || strpos($id, self::O_CRAWLER_COOKIES) === 0) { // CDN child | Cookie Crawler settings
+				if (strpos($id, self::O_CDN_MAPPING) === 0 || strpos($id, self::O_CRAWLER_COOKIES) === 0) {
+					// CDN child | Cookie Crawler settings
 					$child = substr($id, strpos($id, '[') + 1, strpos($id, ']') - strpos($id, '[') - 1);
 					$id = substr($id, 0, strpos($id, '[')); // Drop ending []; Compatible with xx[0] way from CLI
 				} else {
@@ -58,21 +59,12 @@ class Admin_Settings extends Base
 
 			// Validate $child
 			if ($id == self::O_CDN_MAPPING) {
-				if (!in_array($child, array(
-					self::CDN_MAPPING_URL,
-					self::CDN_MAPPING_INC_IMG,
-					self::CDN_MAPPING_INC_CSS,
-					self::CDN_MAPPING_INC_JS,
-					self::CDN_MAPPING_FILETYPE,
-				))) {
+				if (!in_array($child, array(self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE))) {
 					continue;
 				}
 			}
 			if ($id == self::O_CRAWLER_COOKIES) {
-				if (!in_array($child, array(
-					self::CRWL_COOKIE_NAME,
-					self::CRWL_COOKIE_VALS,
-				))) {
+				if (!in_array($child, array(self::CRWL_COOKIE_NAME, self::CRWL_COOKIE_VALS))) {
 					continue;
 				}
 			}
@@ -106,32 +98,30 @@ class Admin_Settings extends Base
 					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
-					if ($data) foreach ($data as $k => $v) {
-						if ($child == self::CDN_MAPPING_FILETYPE) {
-							$v = Utility::sanitize_lines($v);
-						}
-						if ($child == self::CDN_MAPPING_URL) {
-							# If not a valid URL, turn off CDN
-							if (strpos($v, 'https://') !== 0) {
-								self::debug('❌ CDN mapping set to OFF due to invalid URL');
-								$the_matrix[self::O_CDN] = false;
+					if ($data) {
+						foreach ($data as $k => $v) {
+							if ($child == self::CDN_MAPPING_FILETYPE) {
+								$v = Utility::sanitize_lines($v);
 							}
-							$v = trailingslashit($v);
-						}
-						if (in_array($child, array(
-							self::CDN_MAPPING_INC_IMG,
-							self::CDN_MAPPING_INC_CSS,
-							self::CDN_MAPPING_INC_JS,
-						))) {
-							// Because these can't be auto detected in `config->update()`, need to format here
-							$v = $v === 'false' ? 0 : (bool) $v;
-						}
+							if ($child == self::CDN_MAPPING_URL) {
+								# If not a valid URL, turn off CDN
+								if (strpos($v, 'https://') !== 0) {
+									self::debug('❌ CDN mapping set to OFF due to invalid URL');
+									$the_matrix[self::O_CDN] = false;
+								}
+								$v = trailingslashit($v);
+							}
+							if (in_array($child, array(self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS))) {
+								// Because these can't be auto detected in `config->update()`, need to format here
+								$v = $v === 'false' ? 0 : (bool) $v;
+							}
 
-						if (empty($data2[$k])) {
-							$data2[$k] = array();
-						}
+							if (empty($data2[$k])) {
+								$data2[$k] = array();
+							}
 
-						$data2[$k][$child] = $v;
+							$data2[$k][$child] = $v;
+						}
 					}
 
 					$data = $data2;
@@ -154,22 +144,24 @@ class Admin_Settings extends Base
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
-					if ($data) foreach ($data as $k => $v) {
-						if ($child == self::CRWL_COOKIE_VALS) {
-							$v = Utility::sanitize_lines($v);
-						}
+					if ($data) {
+						foreach ($data as $k => $v) {
+							if ($child == self::CRWL_COOKIE_VALS) {
+								$v = Utility::sanitize_lines($v);
+							}
 
-						if (empty($data2[$k])) {
-							$data2[$k] = array();
-						}
+							if (empty($data2[$k])) {
+								$data2[$k] = array();
+							}
 
-						$data2[$k][$child] = $v;
+							$data2[$k][$child] = $v;
+						}
 					}
 
 					$data = $data2;
 					break;
 
-					// Cache exclude cat
+				// Cache exclude cat
 				case self::O_CACHE_EXC_CAT:
 					$data2 = array();
 					$data = Utility::sanitize_lines($data);
@@ -184,7 +176,7 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-					// Cache exclude tag
+				// Cache exclude tag
 				case self::O_CACHE_EXC_TAG:
 					$data2 = array();
 					$data = Utility::sanitize_lines($data);
@@ -234,7 +226,8 @@ class Admin_Settings extends Base
 			if ($id == self::O_CRAWLER_COOKIES) {
 				$existed = array();
 				foreach ($the_matrix[$id] as $k => $v) {
-					if (!$v[self::CRWL_COOKIE_NAME] || in_array($v[self::CRWL_COOKIE_NAME], $existed)) { // Filter repeated or empty name
+					if (!$v[self::CRWL_COOKIE_NAME] || in_array($v[self::CRWL_COOKIE_NAME], $existed)) {
+						// Filter repeated or empty name
 						unset($the_matrix[$id][$k]);
 						continue;
 					}
@@ -248,12 +241,12 @@ class Admin_Settings extends Base
 
 			// tmp fix the 3rd part woo update hook issue when enabling vary cookie
 			if ($id == 'wc_cart_vary') {
-				if ($data)
+				if ($data) {
 					add_filter('litespeed_vary_cookies', function ($list) {
 						$list[] = 'woocommerce_cart_hash';
 						return array_unique($list);
 					});
-				else {
+				} else {
 					add_filter('litespeed_vary_cookies', function ($list) {
 						if (in_array('woocommerce_cart_hash', $list)) {
 							unset($list[array_search('woocommerce_cart_hash', $list)]);
@@ -350,7 +343,8 @@ class Admin_Settings extends Base
 			return false; // invalid ttl.
 		}
 
-		if (empty($instance[Conf::OPTION_NAME])) { // todo: to be removed
+		if (empty($instance[Conf::OPTION_NAME])) {
+			// todo: to be removed
 			$instance[Conf::OPTION_NAME] = array();
 		}
 		$instance[Conf::OPTION_NAME][ESI::WIDGET_O_ESIENABLE] = $esi;

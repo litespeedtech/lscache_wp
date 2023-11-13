@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class VPI extends Base
 {
@@ -68,10 +68,10 @@ class VPI extends Base
 		}
 
 		$this->_queue[$queue_k] = array(
-			'url'			=> apply_filters('litespeed_vpi_url', $request_url),
-			'post_id' 		=> $post_id,
-			'user_agent'	=> substr($ua, 0, 200),
-			'is_mobile'		=> $this->_separate_mobile(),
+			'url' => apply_filters('litespeed_vpi_url', $request_url),
+			'post_id' => $post_id,
+			'user_agent' => substr($ua, 0, 200),
+			'is_mobile' => $this->_separate_mobile(),
 		); // Current UA will be used to request
 		$this->save_queue('vpi', $this->_queue);
 		self::debug('Added queue_vpi [url] ' . $queue_k . ' [UA] ' . $ua);
@@ -194,7 +194,8 @@ class VPI extends Base
 
 			$i++;
 			$res = $this->_send_req($v['url'], $k, $v['user_agent'], $v['is_mobile']);
-			if (!$res) { // Status is wrong, drop this this->_queue
+			if (!$res) {
+				// Status is wrong, drop this this->_queue
 				$this->_queue = $this->load_queue('vpi');
 				unset($this->_queue[$k]);
 				$this->save_queue('vpi', $this->_queue);
@@ -273,12 +274,12 @@ class VPI extends Base
 		}
 
 		$data = array(
-			'url'			=> $request_url,
-			'queue_k'		=> $queue_k,
-			'user_agent'	=> $user_agent,
-			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
-			'html'			=> $html,
-			'css'			=> $css,
+			'url' => $request_url,
+			'queue_k' => $queue_k,
+			'user_agent' => $user_agent,
+			'is_mobile' => $is_mobile ? 1 : 0, // todo:compatible w/ tablet
+			'html' => $html,
+			'css' => $css,
 		);
 		self::debug('Generating: ', $data);
 

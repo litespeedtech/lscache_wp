@@ -11,7 +11,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Doc
 {
@@ -25,11 +25,22 @@ class Doc
 	 */
 	public static function maybe_on_by_gm($id)
 	{
-		if (apply_filters('litespeed_conf', $id)) return;
-		if (!apply_filters('litespeed_conf', Base::O_GUEST)) return;
-		if (!apply_filters('litespeed_conf', Base::O_GUEST_OPTM)) return;
+		if (apply_filters('litespeed_conf', $id)) {
+			return;
+		}
+		if (!apply_filters('litespeed_conf', Base::O_GUEST)) {
+			return;
+		}
+		if (!apply_filters('litespeed_conf', Base::O_GUEST_OPTM)) {
+			return;
+		}
 		echo '<font class="litespeed-warning">';
-		echo '⚠️ ' . sprintf(__('This setting is %1$s for certain qualifying requests due to %2$s!', 'litespeed-cache'), '<code>' . __('ON', 'litespeed-cache') . '</code>', Lang::title(Base::O_GUEST_OPTM));
+		echo '⚠️ ' .
+			sprintf(
+				__('This setting is %1$s for certain qualifying requests due to %2$s!', 'litespeed-cache'),
+				'<code>' . __('ON', 'litespeed-cache') . '</code>',
+				Lang::title(Base::O_GUEST_OPTM)
+			);
 		self::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/#guest-optimization');
 		echo '</font>';
 	}
@@ -55,10 +66,15 @@ class Doc
 	 */
 	public static function privacy_policy()
 	{
-		return __('This site utilizes caching in order to facilitate a faster response time and better user experience. Caching potentially stores a duplicate copy of every web page that is on display on this site. All cache files are temporary, and are never accessed by any third party, except as necessary to obtain technical support from the cache plugin vendor. Cache files expire on a schedule set by the site administrator, but may easily be purged by the admin before their natural expiration, if necessary. We may use QUIC.cloud services to process & cache your data temporarily.', 'litespeed-cache')
-			. sprintf(__('Please see %s for more details.', 'litespeed-cache'), '<a href="https://quic.cloud/privacy-policy/" target="_blank">https://quic.cloud/privacy-policy/</a>');
+		return __(
+			'This site utilizes caching in order to facilitate a faster response time and better user experience. Caching potentially stores a duplicate copy of every web page that is on display on this site. All cache files are temporary, and are never accessed by any third party, except as necessary to obtain technical support from the cache plugin vendor. Cache files expire on a schedule set by the site administrator, but may easily be purged by the admin before their natural expiration, if necessary. We may use QUIC.cloud services to process & cache your data temporarily.',
+			'litespeed-cache'
+		) .
+			sprintf(
+				__('Please see %s for more details.', 'litespeed-cache'),
+				'<a href="https://quic.cloud/privacy-policy/" target="_blank">https://quic.cloud/privacy-policy/</a>'
+			);
 	}
-
 
 	/**
 	 * Learn more link
@@ -127,7 +143,9 @@ class Doc
 	{
 		echo '<font class="litespeed-primary">';
 		echo '⚠️ ' . __('This setting will edit the .htaccess file.', 'litespeed-cache');
-		echo ' <a href="https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab" target="_blank" class="litespeed-learn-more">' . __('Learn More', 'litespeed-cache') . '</a>';
+		echo ' <a href="https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab" target="_blank" class="litespeed-learn-more">' .
+			__('Learn More', 'litespeed-cache') .
+			'</a>';
 		echo '</font>';
 	}
 
@@ -154,10 +172,11 @@ class Doc
 	 */
 	public static function queue_issues($return = false)
 	{
-		$str = '<div class="litespeed-desc">'
-			. esc_html__('The queue is processed asynchronously. It may take time.', 'litespeed-cache')
-			. self::learn_more('https://docs.litespeedtech.com/lscache/lscwp/troubleshoot/#quiccloud-queue-issues', false, false, false, true)
-			. '</div>';
+		$str =
+			'<div class="litespeed-desc">' .
+			esc_html__('The queue is processed asynchronously. It may take time.', 'litespeed-cache') .
+			self::learn_more('https://docs.litespeedtech.com/lscache/lscwp/troubleshoot/#quiccloud-queue-issues', false, false, false, true) .
+			'</div>';
 		if ($return) {
 			return $str;
 		}

@@ -1,7 +1,15 @@
 {
-	"plugins": [
-		"@prettier/plugin-php"
+	"overrides": [
+		{
+			"files": ".prettierrc",
+			"options": { "parser": "json" }
+		},
+		{
+			"files": "**/*.{yml,yaml}",
+			"options": { "tabWidth": 2 }
+		}
 	],
+	"plugins": ["@prettier/plugin-php"],
 	"arrowParens": "avoid",
 	"braceStyle": "per-cs",
 	"endOfLine": "auto",
@@ -11,6 +19,6 @@
 	"singleQuote": true,
 	"tabWidth": 4,
 	"trailingComma": "all",
-	"trailingCommaPHP": false,
+	"trailingCommaPHP": true,
 	"useTabs": true
 }

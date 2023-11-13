@@ -6,9 +6,9 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-use \LiteSpeed\Router;
+use LiteSpeed\Router;
 
 class BBPress
 {
@@ -20,10 +20,11 @@ class BBPress
 	 */
 	public static function detect()
 	{
-		if ( function_exists( 'is_bbpress' ) ) {
-			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge' );//todo
-			if ( apply_filters( 'litespeed_esi_status', false ) ) {// don't consider private cache yet (will do if any feedback)
-				add_action( 'litespeed_control_finalize', __CLASS__ . '::set_control' );
+		if (function_exists('is_bbpress')) {
+			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge'); //todo
+			if (apply_filters('litespeed_esi_status', false)) {
+				// don't consider private cache yet (will do if any feedback)
+				add_action('litespeed_control_finalize', __CLASS__ . '::set_control');
 			}
 		}
 	}
@@ -36,13 +37,13 @@ class BBPress
 	 */
 	public static function set_control()
 	{
-		if ( ! apply_filters( 'litespeed_control_cacheable', false ) ) {
+		if (!apply_filters('litespeed_control_cacheable', false)) {
 			return;
 		}
 
 		// set non ESI public
-		if ( is_bbpress() && Router::is_logged_in() ) {
-			do_action( 'litespeed_control_set_nocache', 'bbpress nocache due to loggedin' );
+		if (is_bbpress() && Router::is_logged_in()) {
+			do_action('litespeed_control_set_nocache', 'bbpress nocache due to loggedin');
 		}
 	}
 
@@ -56,33 +57,32 @@ class BBPress
 	 */
 	public static function on_purge($post_id)
 	{
-		if ( ! is_bbpress() ) {
-			if ( ! function_exists( 'bbp_is_forum' ) || ! function_exists( 'bbp_is_topic' ) || ! function_exists( 'bbp_is_reply' ) ) {
+		if (!is_bbpress()) {
+			if (!function_exists('bbp_is_forum') || !function_exists('bbp_is_topic') || !function_exists('bbp_is_reply')) {
 				return;
 			}
-			if ( ! bbp_is_forum( $post_id ) && ! bbp_is_topic( $post_id ) && ! bbp_is_reply( $post_id ) ) {
+			if (!bbp_is_forum($post_id) && !bbp_is_topic($post_id) && !bbp_is_reply($post_id)) {
 				return;
 			}
 		}
 
 		// Need to purge base forums page, bbPress page was updated.
-		do_action( 'litespeed_purge_posttype', bbp_get_forum_post_type() );
-		$ancestors = get_post_ancestors( $post_id );
+		do_action('litespeed_purge_posttype', bbp_get_forum_post_type());
+		$ancestors = get_post_ancestors($post_id);
 
 		// If there are ancestors, need to purge them as well.
-		if ( ! empty( $ancestors ) ) {
-			foreach ( $ancestors as $ancestor ) {
-				do_action( 'litespeed_purge_post', $ancestor );
+		if (!empty($ancestors)) {
+			foreach ($ancestors as $ancestor) {
+				do_action('litespeed_purge_post', $ancestor);
 			}
 		}
 
 		global $wp_widget_factory;
-		if ( bbp_is_reply( $post_id ) && ! is_null( $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ] ) ) {
-			do_action( 'litespeed_purge_widget', $wp_widget_factory->widgets[ 'BBP_Replies_Widget' ]->id );
+		if (bbp_is_reply($post_id) && !is_null($wp_widget_factory->widgets['BBP_Replies_Widget'])) {
+			do_action('litespeed_purge_widget', $wp_widget_factory->widgets['BBP_Replies_Widget']->id);
 		}
-		if ( bbp_is_topic( $post_id ) && ! is_null( $wp_widget_factory->widgets[ 'BBP_Topics_Widget' ] ) ) {
-			do_action( 'litespeed_purge_widget', $wp_widget_factory->widgets[ 'BBP_Topics_Widget' ]->id );
+		if (bbp_is_topic($post_id) && !is_null($wp_widget_factory->widgets['BBP_Topics_Widget'])) {
+			do_action('litespeed_purge_widget', $wp_widget_factory->widgets['BBP_Topics_Widget']->id);
 		}
 	}
 }
-

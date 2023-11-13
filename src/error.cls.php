@@ -11,17 +11,17 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Error
 {
 	private static $CODE_SET = array(
 		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
-		'HTA_DNF'		 => 4500, // .htaccess did not find.
-		'HTA_BK'		 => 9010, // backup
-		'HTA_R'			 => 9041, // read htaccess
-		'HTA_W'			 => 9042, // write
-		'HTA_GET'		 => 9030, // failed to get
+		'HTA_DNF' => 4500, // .htaccess did not find.
+		'HTA_BK' => 9010, // backup
+		'HTA_R' => 9041, // read htaccess
+		'HTA_W' => 9042, // write
+		'HTA_GET' => 9030, // failed to get
 	);
 
 	/**
@@ -42,14 +42,21 @@ class Error
 	public static function msg($code, $args = null)
 	{
 		switch ($code) {
-
 			case 'disabled_all':
-				$msg = sprintf(__('The setting %s is currently enabled.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_DEBUG_DISABLE_ALL) . '</strong>') .
-					Doc::learn_more(is_network_admin() ? network_admin_url('admin.php?page=litespeed-toolbox') : admin_url('admin.php?page=litespeed-toolbox'), __('Click here to change.', 'litespeed-cache'), true, false, true);
+				$msg =
+					sprintf(__('The setting %s is currently enabled.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_DEBUG_DISABLE_ALL) . '</strong>') .
+					Doc::learn_more(
+						is_network_admin() ? network_admin_url('admin.php?page=litespeed-toolbox') : admin_url('admin.php?page=litespeed-toolbox'),
+						__('Click here to change.', 'litespeed-cache'),
+						true,
+						false,
+						true
+					);
 				break;
 
 			case 'lack_of_api_key':
-				$msg = sprintf(__('You will need to set %s to use the online services.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_API_KEY) . '</strong>') .
+				$msg =
+					sprintf(__('You will need to set %s to use the online services.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_API_KEY) . '</strong>') .
 					Doc::learn_more(admin_url('admin.php?page=litespeed-general'), __('Click here to set.', 'litespeed-cache'), true, false, true);
 				break;
 
@@ -82,7 +89,10 @@ class Error
 				break;
 
 			case strpos($code, 'unfinished_queue ') === 0:
-				$msg = sprintf(__('There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache'), '<code>' . substr($code, strlen('unfinished_queue ')) . '</code>');
+				$msg = sprintf(
+					__('There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache'),
+					'<code>' . substr($code, strlen('unfinished_queue ')) . '</code>'
+				);
 				break;
 
 			case 'err_alias':
@@ -149,13 +159,16 @@ class Error
 				$msg = __('Crawler disabled by the server admin.', 'litespeed-cache');
 				break;
 
-				/*** QC error code ***/
+			/*** QC error code ***/
 			case 'try_later':
 				$msg = __('Previous request too recent. Please try again later.', 'litespeed-cache');
 				break;
 
 			case strpos($code, 'try_later ') === 0:
-				$msg = sprintf(__('Previous request too recent. Please try again after %s.', 'litespeed-cache'), '<code>' . Utility::readable_time(substr($code, strlen('try_later ')), 3600, true) . '</code>');
+				$msg = sprintf(
+					__('Previous request too recent. Please try again after %s.', 'litespeed-cache'),
+					'<code>' . Utility::readable_time(substr($code, strlen('try_later ')), 3600, true) . '</code>'
+				);
 				break;
 
 			case 'waiting_for_approval':
@@ -171,7 +184,9 @@ class Error
 				break;
 
 			case substr($code, 0, 14) === 'callback_fail ':
-				$msg = __('The callback validation to your domain failed. Please make sure there is no firewall blocking our servers. Response code: ', 'litespeed-cache') . substr($code, 14);
+				$msg =
+					__('The callback validation to your domain failed. Please make sure there is no firewall blocking our servers. Response code: ', 'litespeed-cache') .
+					substr($code, 14);
 				break;
 
 			case 'forbidden':
@@ -179,7 +194,10 @@ class Error
 				break;
 
 			case 'err_dns_active':
-				$msg = __('You cannot remove this DNS zone, because it is still in use. Please update the domain\'s nameservers, then try to delete this zone again, otherwise your site will become inaccessible.', 'litespeed-cache');
+				$msg = __(
+					'You cannot remove this DNS zone, because it is still in use. Please update the domain\'s nameservers, then try to delete this zone again, otherwise your site will become inaccessible.',
+					'litespeed-cache'
+				);
 				break;
 
 			default:

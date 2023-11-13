@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class REST extends Root
 {
@@ -41,55 +41,55 @@ class REST extends Root
 		register_rest_route('litespeed/v1', '/toggle_crawler_state', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'toggle_crawler_state'),
-			'permission_callback'	=> function () {
+			'permission_callback' => function () {
 				return current_user_can('manage_network_options') || current_user_can('manage_options');
-			}
+			},
 		));
 
 		register_rest_route('litespeed/v1', '/tool/check_ip', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'check_ip'),
-			'permission_callback'	=> function () {
+			'permission_callback' => function () {
 				return current_user_can('manage_network_options') || current_user_can('manage_options');
-			}
+			},
 		));
 
 		// IP callback validate
 		register_rest_route('litespeed/v1', '/ip_validate', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'ip_validate'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// Token callback validate
 		register_rest_route('litespeed/v1', '/token', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'token'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 		register_rest_route('litespeed/v1', '/token', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'token_get'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 		register_rest_route('litespeed/v1', '/ping', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'ping'),
-			'permission_callback'	=> '__return_true',
+			'permission_callback' => '__return_true',
 		));
 
 		// API key callback notification
 		register_rest_route('litespeed/v1', '/apikey', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'apikey'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// CDN setup callback notification
 		register_rest_route('litespeed/v1', '/cdn_status', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'cdn_status'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// Image optm notify_img
@@ -97,25 +97,25 @@ class REST extends Root
 		register_rest_route('litespeed/v1', '/notify_img', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'notify_img'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		register_rest_route('litespeed/v1', '/notify_ucss', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'notify_ucss'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		register_rest_route('litespeed/v1', '/notify_vpi', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'notify_vpi'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		register_rest_route('litespeed/v1', '/err_domains', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'err_domains'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// Image optm check_img
@@ -123,7 +123,7 @@ class REST extends Root
 		register_rest_route('litespeed/v1', '/check_img', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'check_img'),
-			'permission_callback'	=> array($this, 'is_from_cloud'),
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 	}
 

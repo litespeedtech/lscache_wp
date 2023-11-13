@@ -7,13 +7,11 @@
 
 namespace LiteSpeed\Thirdparty;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class LiteSpeed_Check
 {
-
-	public static $_incompatible_plugins =
-	array(
+	public static $_incompatible_plugins = array(
 		// 'autoptimize/autoptimize.php',
 		'breeze/breeze.php',
 		'cache-enabler/cache-enabler.php',
@@ -70,15 +68,14 @@ class LiteSpeed_Check
 
 		if (class_exists('PagespeedNinja')) {
 			\LiteSpeed\Admin_Display::error(
-				'<div ' . self::$_msg_id . '>'
-					. esc_html__(
-						'Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:',
-						'litespeed-cache'
-					)
-					. '<p style="color: red; font-weight: 700;">'
-					. 'PageSpeed Ninja'
-					. '</p>'
-					. '</div>',
+				'<div ' .
+					self::$_msg_id .
+					'>' .
+					esc_html__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
+					'<p style="color: red; font-weight: 700;">' .
+					'PageSpeed Ninja' .
+					'</p>' .
+					'</div>',
 				false,
 				true
 			);
@@ -110,37 +107,28 @@ class LiteSpeed_Check
 		 */
 		$deactivated = 'deactivated' === $action ? array($plugin) : array();
 
-		$incompatible_plugins =
-			array_map(
-				function ($plugin) {
-					return WP_PLUGIN_DIR . '/' . $plugin;
-				},
-				array_diff(self::$_incompatible_plugins, $deactivated)
-			);
+		$incompatible_plugins = array_map(function ($plugin) {
+			return WP_PLUGIN_DIR . '/' . $plugin;
+		}, array_diff(self::$_incompatible_plugins, $deactivated));
 
-		$active_incompatible_plugins =
-			array_map(
-				function ($plugin) {
-					$plugin = get_plugin_data($plugin, false, true);
-					return $plugin['Name'];
-				},
-				array_intersect($incompatible_plugins, wp_get_active_and_valid_plugins())
-			);
+		$active_incompatible_plugins = array_map(function ($plugin) {
+			$plugin = get_plugin_data($plugin, false, true);
+			return $plugin['Name'];
+		}, array_intersect($incompatible_plugins, wp_get_active_and_valid_plugins()));
 
 		if (empty($active_incompatible_plugins)) {
 			return;
 		}
 
 		\LiteSpeed\Admin_Display::error(
-			'<div ' . self::$_msg_id . '>'
-				. esc_html__(
-					'Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:',
-					'litespeed-cache'
-				)
-				. '<p style="color: red; font-weight: 700;">'
-				. implode(', ', $active_incompatible_plugins)
-				. '</p>'
-				. '</div>',
+			'<div ' .
+				self::$_msg_id .
+				'>' .
+				esc_html__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
+				'<p style="color: red; font-weight: 700;">' .
+				implode(', ', $active_incompatible_plugins) .
+				'</p>' .
+				'</div>',
 			false,
 			true
 		);
@@ -153,11 +141,7 @@ class LiteSpeed_Check
 	 */
 	private static function update_messages()
 	{
-		$messages =
-			\LiteSpeed\Admin_Display::get_option(
-				\LiteSpeed\Admin_Display::DB_MSG_PIN,
-				array()
-			);
+		$messages = \LiteSpeed\Admin_Display::get_option(\LiteSpeed\Admin_Display::DB_MSG_PIN, array());
 		if (is_array($messages)) {
 			foreach ($messages as $index => $message) {
 				if (strpos($message, self::$_msg_id) !== false) {
@@ -165,10 +149,7 @@ class LiteSpeed_Check
 					if (!$messages) {
 						$messages = -1;
 					}
-					\LiteSpeed\Admin_Display::update_option(
-						\LiteSpeed\Admin_Display::DB_MSG_PIN,
-						$messages
-					);
+					\LiteSpeed\Admin_Display::update_option(\LiteSpeed\Admin_Display::DB_MSG_PIN, $messages);
 					break;
 				}
 			}

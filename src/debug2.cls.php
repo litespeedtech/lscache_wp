@@ -6,7 +6,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Debug2 extends Root
 {
@@ -119,7 +119,7 @@ class Debug2 extends Root
 	private function _package_zip($commit)
 	{
 		$data = array(
-			'commit'	=> $commit,
+			'commit' => $commit,
 		);
 		$res = Cloud::get(Cloud::API_BETA_TEST, $data);
 
@@ -189,7 +189,8 @@ class Debug2 extends Root
 			}
 		}
 
-		if (!defined('LSCWP_LOG')) { // If not initialized, do it now
+		if (!defined('LSCWP_LOG')) {
+			// If not initialized, do it now
 			$this->_init_request();
 			define('LSCWP_LOG', true);
 		}
@@ -322,7 +323,7 @@ class Debug2 extends Root
 			}
 
 			// Generate a unique string per request
-			self::$_prefix = sprintf(" [%s %s %s] ", $addr, LSCWP_LOG_TAG, Str::rrand(3));
+			self::$_prefix = sprintf(' [%s %s %s] ', $addr, LSCWP_LOG_TAG, Str::rrand(3));
 		}
 		list($usec, $sec) = explode(' ', microtime());
 		return date('m/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET) . substr($usec, 1, 4) . self::$_prefix . $msg . "\n";
@@ -420,7 +421,8 @@ class Debug2 extends Root
 		$msg = '';
 
 		$trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace() : debug_backtrace(false, $backtrace_limit + 3);
-		for ($i = 2; $i <= $backtrace_limit + 2; $i++) { // 0st => _backtrace_info(), 1st => push()
+		for ($i = 2; $i <= $backtrace_limit + 2; $i++) {
+			// 0st => _backtrace_info(), 1st => push()
 			if (empty($trace[$i]['class'])) {
 				if (empty($trace[$i]['file'])) {
 					break;

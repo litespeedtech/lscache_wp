@@ -14,7 +14,7 @@ namespace LiteSpeed\CDN;
 use LiteSpeed\Cloud;
 use LiteSpeed\Base;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Quic extends Base
 {
@@ -43,15 +43,14 @@ class Quic extends Base
 		$options = $this->get_options();
 
 		if (!$options[self::O_CDN_QUIC]) {
-			if (!empty($this->_summary['conf_md5'])) self::save_summary(array('conf_md5' => ''));
+			if (!empty($this->_summary['conf_md5'])) {
+				self::save_summary(array('conf_md5' => ''));
+			}
 			return false;
 		}
 
 		// Security: Remove cf key in report
-		$secure_fields = array(
-			self::O_CDN_CLOUDFLARE_KEY,
-			self::O_OBJECT_PSWD,
-		);
+		$secure_fields = array(self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD);
 		foreach ($secure_fields as $v) {
 			if (!empty($options[$v])) {
 				$options[$v] = str_repeat('*', strlen($options[$v]));

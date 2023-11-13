@@ -4,9 +4,9 @@
  *
  * @since		1.0.5
  */
-namespace LiteSpeed\Thirdparty ;
+namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit ;
+defined('WPINC') || exit();
 
 // Try preload instead
 // todo: need test
@@ -14,9 +14,9 @@ defined( 'WPINC' ) || exit ;
 
 class NextGenGallery
 {
-	const CACHETAG_ALBUMS = 'NGG_A.' ;
-	const CACHETAG_GALLERIES = 'NGG_G.' ;
-	const CACHETAG_TAGS = 'NGG_T.' ;
+	const CACHETAG_ALBUMS = 'NGG_A.';
+	const CACHETAG_GALLERIES = 'NGG_G.';
+	const CACHETAG_TAGS = 'NGG_T.';
 
 	/**
 	 * Detect is triggered at the load_nextgen_gallery_modules action.
@@ -28,21 +28,21 @@ class NextGenGallery
 	 */
 	public static function preload()
 	{
-		add_action( 'ngg_added_new_image', __CLASS__ . '::add_image' ) ;
-		add_action( 'ngg_ajax_image_save', __CLASS__ . '::update_image' ) ;
-		add_action( 'ngg_delete_picture', __CLASS__ . '::delete_image' ) ;
-		add_action( 'ngg_moved_images', __CLASS__ . '::move_image', 10, 3 ) ;
-		add_action( 'ngg_copied_images', __CLASS__ . '::copy_image', 10, 3 ) ;
-		add_action( 'ngg_generated_image', __CLASS__ . '::gen_image' ) ;
-		add_action( 'ngg_recovered_image', __CLASS__ . '::gen_image' ) ;
+		add_action('ngg_added_new_image', __CLASS__ . '::add_image');
+		add_action('ngg_ajax_image_save', __CLASS__ . '::update_image');
+		add_action('ngg_delete_picture', __CLASS__ . '::delete_image');
+		add_action('ngg_moved_images', __CLASS__ . '::move_image', 10, 3);
+		add_action('ngg_copied_images', __CLASS__ . '::copy_image', 10, 3);
+		add_action('ngg_generated_image', __CLASS__ . '::gen_image');
+		add_action('ngg_recovered_image', __CLASS__ . '::gen_image');
 
-		add_action( 'ngg_gallery_sort', __CLASS__ . '::update_gallery' ) ;
-		add_action( 'ngg_delete_gallery', __CLASS__ . '::update_gallery' ) ;
+		add_action('ngg_gallery_sort', __CLASS__ . '::update_gallery');
+		add_action('ngg_delete_gallery', __CLASS__ . '::update_gallery');
 
-		add_action( 'ngg_update_album', __CLASS__ . '::update_album' ) ;
-		add_action( 'ngg_delete_album', __CLASS__ . '::update_album' ) ;
+		add_action('ngg_update_album', __CLASS__ . '::update_album');
+		add_action('ngg_delete_album', __CLASS__ . '::update_album');
 
-		add_filter( 'ngg_displayed_gallery_cache_params', __CLASS__ . '::add_container' ) ;
+		add_filter('ngg_displayed_gallery_cache_params', __CLASS__ . '::add_container');
 	}
 
 	/**
@@ -54,12 +54,12 @@ class NextGenGallery
 	 */
 	public static function add_image($image)
 	{
-		if ( ! $image || ! method_exists( $image, 'get_gallery' ) ) {
-			return ;
+		if (!$image || !method_exists($image, 'get_gallery')) {
+			return;
 		}
-		$gallery = $image->get_gallery() ;
-		if ( $gallery && $gallery->pageid ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $gallery->pageid ) ;
+		$gallery = $image->get_gallery();
+		if ($gallery && $gallery->pageid) {
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . $gallery->pageid);
 		}
 	}
 
@@ -71,37 +71,34 @@ class NextGenGallery
 	 */
 	public static function update_image()
 	{
-		if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $_REQUEST[ 'gallery_id' ] ) );
-			return ;
+		if (isset($_REQUEST['gallery_id'])) {
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($_REQUEST['gallery_id']));
+			return;
 		}
 
-		if ( isset( $_POST[ 'task_list' ] ) ) {
-			$task_list = str_replace( '\\', '', $_POST[ 'task_list' ] ) ;
-			$task_list = json_decode( $task_list, true ) ;
+		if (isset($_POST['task_list'])) {
+			$task_list = str_replace('\\', '', $_POST['task_list']);
+			$task_list = json_decode($task_list, true);
 
-			if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
-				do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $task_list[ 0 ][ 'query' ][ 'id' ] ) );
-				return ;
+			if (!empty($task_list[0]['query']['id'])) {
+				do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($task_list[0]['query']['id']));
+				return;
 			}
 		}
 
-		if ( isset($_POST['id']) ) {
-			$id = (int)$_POST['id'] ;
+		if (isset($_POST['id'])) {
+			$id = (int) $_POST['id'];
+		} elseif (isset($_POST['image'])) {
+			$id = (int) $_POST['image'];
+		} elseif (isset($_GET['pid'])) {
+			$id = (int) $_GET['pid'];
+		} else {
+			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.');
+			return;
 		}
-		elseif ( isset($_POST['image']) ) {
-			$id = (int)$_POST['image'] ;
-		}
-		elseif ( isset($_GET['pid']) ) {
-			$id = (int)$_GET['pid'] ;
-		}
-		else {
-			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.') ;
-			return ;
-		}
-		$image = \C_Image_Mapper::get_instance()->find($id) ;
-		if ( $image ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid );
+		$image = \C_Image_Mapper::get_instance()->find($id);
+		if ($image) {
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid);
 		}
 	}
 
@@ -113,8 +110,8 @@ class NextGenGallery
 	 */
 	public static function delete_image()
 	{
-		if ( isset($_GET['gid']) ) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $_GET['gid'] ) );
+		if (isset($_GET['gid'])) {
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($_GET['gid']));
 		}
 	}
 
@@ -130,9 +127,9 @@ class NextGenGallery
 	public static function move_image($images, $old_gallery_ids, $new_gallery_id)
 	{
 		foreach ($old_gallery_ids as $gid) {
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $gid );
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . $gid);
 		}
-		do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $new_gallery_id );
+		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $new_gallery_id);
 	}
 
 	/**
@@ -144,7 +141,7 @@ class NextGenGallery
 	 */
 	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
 	{
-		do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $new_gallery_id );
+		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $new_gallery_id);
 	}
 
 	/**
@@ -155,7 +152,7 @@ class NextGenGallery
 	 */
 	public static function gen_image($image)
 	{
-		do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid );
+		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid);
 	}
 
 	/**
@@ -168,11 +165,11 @@ class NextGenGallery
 	public static function update_gallery($gid)
 	{
 		// New version input will be an object with gid value
-		if ( is_object( $gid ) && ! empty( $gid->gid ) ) {
-			$gid = $gid->gid ;
+		if (is_object($gid) && !empty($gid->gid)) {
+			$gid = $gid->gid;
 		}
 
-		do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $gid );
+		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $gid);
 	}
 
 	/**
@@ -184,7 +181,7 @@ class NextGenGallery
 	 */
 	public static function update_album($aid)
 	{
-		do_action( 'litespeed_purge', self::CACHETAG_ALBUMS . $aid );
+		do_action('litespeed_purge', self::CACHETAG_ALBUMS . $aid);
 	}
 
 	/**
@@ -199,31 +196,30 @@ class NextGenGallery
 	public static function add_container($render_parms)
 	{
 		// Check if null. If it is null, can't continue.
-		if ( is_null($render_parms) ) {
-			return null ;
+		if (is_null($render_parms)) {
+			return null;
 		}
-		$src = $render_parms[0]->source ;
-		$container_ids = $render_parms[0]->container_ids ;
+		$src = $render_parms[0]->source;
+		$container_ids = $render_parms[0]->container_ids;
 		// Can switch on first char if we end up with more sources.
 		switch ($src) {
 			case 'albums':
-				$tag = self::CACHETAG_ALBUMS ;
-				break ;
+				$tag = self::CACHETAG_ALBUMS;
+				break;
 			case 'galleries':
-				$tag = self::CACHETAG_GALLERIES ;
-				break ;
+				$tag = self::CACHETAG_GALLERIES;
+				break;
 			case 'tags':
-				$tag = self::CACHETAG_TAGS ;
-				break ;
+				$tag = self::CACHETAG_TAGS;
+				break;
 			default:
-				return $render_parms ;
+				return $render_parms;
 		}
 
 		foreach ($container_ids as $id) {
-			do_action( 'litespeed_tag_add', $tag . $id );
+			do_action('litespeed_tag_add', $tag . $id);
 		}
 
-		return $render_parms ;
+		return $render_parms;
 	}
 }
-
