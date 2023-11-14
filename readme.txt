@@ -257,8 +257,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**Media** New Preload Featured Image option. (Ankit)
 * **Core** Codebase safety review. (Special thanks to Rafie Muhammad @ Patchstack)
 * **Purge** Purge will not show QC message if no queue is cleared.
-* **Purge** Fixed an possible warning when post type is not as expected. (victorzink)
-* **Conf** Server IP field can now be emptiable. (#111647)
+* **Purge** Fixed a potential warning when post type is not as expected. (victorzink)
+* **Conf** Server IP field may now be emptied. (#111647)
 * **Conf** CloudFlare CDN setting vulnerability patch. (Gulshan Kumar #541805)
 * **Crawler** Suppressed sitemap generation msg when running by cron.
 * **Crawler** PHP v8.2 Dynamic property creation warning fix. (oldrup #586)
@@ -269,7 +269,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
 * **Image Optimize** Increased time limit for pull process.
-* **Image Optimize** Last pull time and cron tag now can show in optimization summary.
+* **Image Optimize** Last pull time and cron tag now included in optimization summary.
 * **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
 
