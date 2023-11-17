@@ -594,6 +594,7 @@ class Crawler extends Root
 					}
 
 					$status = $this->_status_parse($rets[$row['id']]['header'], $rets[$row['id']]['code'], $row['url']); // B or H or M or N(nocache)
+					self::debug('[status] ' . $this->_status2title($status) . "\t\t [url] " . $row['url']);
 					$this->_map_status_list[$status][$row['id']] = array(
 						'url' => $row['url'],
 						'code' => $rets[$row['id']]['code'], // 201 or 200 or 404
@@ -748,6 +749,19 @@ class Crawler extends Root
 		curl_multi_close($mh);
 		// self::debug('-----debug6');
 		return $ret;
+	}
+
+	/**
+	 * Translate the status to title
+	 * @since 6.0
+	 */
+	private function _status2title($status)
+	{
+		if ($status == 'H') return '✅ Hit';
+		if ($status == 'M') return '😊 Miss';
+		if ($status == 'B') return '😅 Blacklisted';
+		if ($status == 'N') return '😅 Blacklisted';
+		return '🛸 Unknown';
 	}
 
 	/**
@@ -1193,7 +1207,7 @@ class Crawler extends Root
 				}
 				break;
 
-			// Handle the ajax request to proceed crawler manually by admin
+				// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
 				self::start_async();
 				break;

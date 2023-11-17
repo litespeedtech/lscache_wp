@@ -271,6 +271,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Image Optimize** Increased time limit for pull process.
 * **Image Optimize** Last pull time and cron tag now included in optimization summary.
 * **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
+* **Crawler** Added status updates to CLI. (Lars)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
 
 = 5.7.0.1 - Oct 25 2023 =
