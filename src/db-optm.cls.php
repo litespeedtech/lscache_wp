@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The admin optimize tool
  *
@@ -8,6 +9,7 @@
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -18,6 +20,7 @@ class DB_Optm extends Root
 
 	private static $TYPES = array(
 		'revision',
+		'orphaned_post_meta',
 		'auto_draft',
 		'trash_post',
 		'spam_comment',
@@ -96,6 +99,9 @@ class DB_Optm extends Root
 
 				Utility::compatibility();
 				return array_sum(array_column($res, 0));
+
+			case 'orphaned_post_meta':
+				return $wpdb->get_var("SELECT COUNT(a.*) FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL");
 
 			case 'auto_draft':
 				return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'");
@@ -196,6 +202,10 @@ class DB_Optm extends Root
 				}
 
 				return __('Clean post revisions successfully.', 'litespeed-cache');
+
+			case 'orphaned_post_meta':
+				$wpdb->query("DELETE a FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL");
+				return __('Clean orphaned post meta successfully.', 'litespeed-cache');
 
 			case 'auto_draft':
 				$wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'");

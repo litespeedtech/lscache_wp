@@ -824,6 +824,10 @@ h3 .litespeed-learn-more {
 	background-image: url('../img/icons/revision.svg');
 }
 
+.litespeed-panel-icon-orphaned_post_meta {
+	background-image: url('../img/icons/revision.svg');
+}
+
 .litespeed-panel-icon-auto_draft {
 	background-image: url('../img/icons/auto_draft.svg');
 }
