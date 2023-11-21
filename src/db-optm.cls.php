@@ -101,7 +101,7 @@ class DB_Optm extends Root
 				return array_sum(array_column($res, 0));
 
 			case 'orphaned_post_meta':
-				return $wpdb->get_var("SELECT COUNT(a.*) FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL");
+				return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL");
 
 			case 'auto_draft':
 				return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'");
