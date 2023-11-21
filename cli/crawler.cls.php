@@ -139,7 +139,7 @@ class Crawler extends Base
 	{
 		$id = $args[0] - 1;
 		if ($this->__crawler->is_active($id)) {
-			WP_CLI::error('ID #' . $id . ' has been enabled');
+			WP_CLI::error('ID #' . $id . ' had been enabled');
 			return;
 		}
 
