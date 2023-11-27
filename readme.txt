@@ -265,6 +265,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **VPI** VPI can now support non-alphabet filenames.
 * **VPI** Fixed PHP8.2 deprecated warning. (Ryan D)
 * **ESI** Fixed ESI nonce showing only HTML comment issue. (Giorgos K.)
+* 🐞**Page Optimize** Fixed a fatal PHP error caused by the WHM plugin's Mass Enable for services not in use. (Michael)
 * 🐞**Network** Fix in-memory options for multisites. (Tynan #588)
 * **Network** Correct `Disable All Features` link for Multisite.
 * 🐞**Image Optimize** Removing original image will also remove optimized images.

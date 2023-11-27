@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The class to store and manage litespeed db data.
  *
@@ -7,7 +8,9 @@
  * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 class Data extends Root
@@ -454,6 +457,11 @@ class Data extends Root
 	public function url_file_clean($file_type)
 	{
 		global $wpdb;
+
+		if (!$this->tb_exist('url_file')) {
+			return;
+		}
+
 		$type = $this->_url_file_types[$file_type];
 		$q = 'DELETE FROM ' . $this->tb('url_file') . ' WHERE `type` = %d';
 		$wpdb->query($wpdb->prepare($q, $type));
