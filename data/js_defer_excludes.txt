@@ -8,3 +8,9 @@
 stats.wp.com/e-
 _stq
 ## JetPack Stats
+
+##Divi
+scripts.min.js
+et_pb_custom
+salvattore
+easypiechart.js
