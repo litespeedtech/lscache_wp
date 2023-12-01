@@ -8,3 +8,5 @@
 
 ############# DIVI ################
 .et_pb_number_counter.active
+.et_pb_blog
+.et_mobile_menu
