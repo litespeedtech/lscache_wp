@@ -150,11 +150,13 @@ class DB_Optm extends Root
 				$postmeta = "`$wpdb->postmeta`";
 				$posts = "`$wpdb->posts`";
 
-				$sql_postmeta = "
-					$postmeta
-					LEFT JOIN $posts
-					ON $posts.ID = $postmeta.post_id
-				";
+				$sql_postmeta_join = function ($table) use ($postmeta, $posts) {
+					return "
+						$postmeta
+						CROSS JOIN $table
+						ON $posts.ID = $postmeta.post_id
+					";
+				};
 
 				$sql_where = "WHERE $posts.post_type = 'revision'";
 
@@ -162,6 +164,7 @@ class DB_Optm extends Root
 
 				if (!$rev_max) {
 					$sql_where = "$sql_where $sql_add";
+					$sql_postmeta = $sql_postmeta_join($posts);
 					$wpdb->query("DELETE $postmeta FROM $sql_postmeta $sql_where");
 					$wpdb->query("DELETE FROM $posts $sql_where");
 				} else {
@@ -178,13 +181,14 @@ class DB_Optm extends Root
 					$res = $wpdb->get_results($sql);
 					$sql_where = "
 						$sql_where
-						AND $posts.post_parent = %d
-						ORDER BY $posts.ID
+						AND post_parent = %d
+						ORDER BY ID
 						LIMIT %d
 					";
+					$sql_postmeta = $sql_postmeta_join("(SELECT ID FROM $posts $sql_where) AS $posts");
 					foreach ($res as $v) {
 						$args = array($v->post_parent, $v->del_max);
-						$sql = $wpdb->prepare("DELETE $postmeta FROM $sql_postmeta $sql_where", $args);
+						$sql = $wpdb->prepare("DELETE $postmeta FROM $sql_postmeta", $args);
 						$wpdb->query($sql);
 						$sql = $wpdb->prepare("DELETE FROM $posts $sql_where", $args);
 						$wpdb->query($sql);
