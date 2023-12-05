@@ -282,6 +282,22 @@ class Crawler extends Root
 	private function _crawl_data($force)
 	{
 		self::debug('......crawler started......');
+		if ($force) {
+			// Log pid to prevent from multi running
+			if (!defined('LITESPEED_LANE_HASH')) {
+				define('LITESPEED_LANE_HASH', Str::rrand(8));
+			}
+			if (!$this->_check_valid_lane()) {
+				// Take over lane
+				$this->_take_over_lane();
+			}
+		} else {
+			if ($this->_check_valid_lane()) {
+				// Take over lane
+				$this->_take_over_lane();
+			}
+		}
+
 		// for the first time running
 		if (!$this->_summary || !Data::cls()->tb_exist('crawler') || !Data::cls()->tb_exist('crawler_blacklist')) {
 			$this->cls('Crawler_Map')->gen();
@@ -294,6 +310,7 @@ class Crawler extends Root
 			if (!$force && time() - $last_fnished_at < $this->conf(Base::O_CRAWLER_CRAWL_INTERVAL)) {
 				self::debug('Cron abort: cache warmed already.');
 				// if not reach whole crawling interval, exit
+				$this->_release_lane();
 				return;
 			}
 			self::debug('TouchedEnd. regenerate sitemap....');
@@ -310,6 +327,7 @@ class Crawler extends Root
 		if ($this->_summary['curr_crawler'] >= count($this->_crawlers)) {
 			$this->_end_reason = 'end';
 			$this->_terminate_running();
+			$this->_release_lane();
 			return;
 		}
 
@@ -322,6 +340,8 @@ class Crawler extends Root
 		$this->load_conf();
 
 		$this->_engine_start();
+
+		$this->_release_lane();
 	}
 
 	/**
@@ -558,6 +578,47 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Take over lane
+	 * @since 6.1
+	 */
+	private function _take_over_lane()
+	{
+		file::save($this->json_path() . '.pid', LITESPEED_LANE_HASH);
+	}
+
+	/**
+	 * Update lane file
+	 * @since 6.1
+	 */
+	private function _touch_lane()
+	{
+		touch($this->json_path() . '.pid');
+	}
+
+	/**
+	 * Release lane file
+	 * @since 6.1
+	 */
+	private function _release_lane()
+	{
+		unlink($this->json_path() . '.pid');
+	}
+
+	/**
+	 * Check if lane is used by other crawlers
+	 * @since 6.1
+	 */
+	private function _check_valid_lane()
+	{
+		// Check lane hash
+		$pid = file::read($this->json_path() . '.pid');
+		if ($pid && LITESPEED_LANE_HASH != $pid) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Run crawler
 	 *
 	 * @since  1.1.0
@@ -573,6 +634,14 @@ class Crawler extends Root
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads);
 			// self::debug('$urlChunks after array_chunk: ' . count($urlChunks));
 			foreach ($urlChunks as $rows) {
+				if (!$this->_check_valid_lane()) {
+					$this->_end_reason = 'lane_invalid';
+					self::debug('The crawler lane is used by newer crawler.');
+					return;
+				}
+				// Update time
+				$this->_touch_lane();
+
 				// self::debug('chunk fetching count($rows)= ' . count($rows));
 				// multi curl
 				$rets = $this->_multi_request($rows, $options);
