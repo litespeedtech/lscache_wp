@@ -281,20 +281,24 @@ class Crawler extends Root
 	 */
 	private function _crawl_data($force)
 	{
-		self::debug('......crawler started......');
-		if ($force) {
-			// Log pid to prevent from multi running
-			if (!defined('LITESPEED_LANE_HASH')) {
-				define('LITESPEED_LANE_HASH', Str::rrand(8));
-			}
-			if (!$this->_check_valid_lane()) {
-				// Take over lane
-				$this->_take_over_lane();
-			}
+		if (!defined('LITESPEED_LANE_HASH')) {
+			define('LITESPEED_LANE_HASH', Str::rrand(8));
+		}
+		if ($this->_check_valid_lane()) {
+			// Take over lane
+			self::debug('Take over lane as lane is free');
+			$this->_take_over_lane();
 		} else {
-			if ($this->_check_valid_lane()) {
-				// Take over lane
-				$this->_take_over_lane();
+			if ($force) {
+				self::debug('......crawler started (forced)......');
+				// Log pid to prevent from multi running
+				if (defined('LITESPEED_CLI')) {
+					// Take over lane
+					self::debug('Forced take over lane (CLI)');
+					$this->_take_over_lane();
+				}
+			} else {
+				self::debug('......crawler started......');
 			}
 		}
 
