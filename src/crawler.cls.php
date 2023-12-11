@@ -587,7 +587,7 @@ class Crawler extends Root
 	 */
 	private function _take_over_lane()
 	{
-		file::save($this->json_path() . '.pid', LITESPEED_LANE_HASH);
+		file::save($this->json_local_path() . '.pid', LITESPEED_LANE_HASH);
 	}
 
 	/**
@@ -596,7 +596,7 @@ class Crawler extends Root
 	 */
 	private function _touch_lane()
 	{
-		touch($this->json_path() . '.pid');
+		touch($this->json_local_path() . '.pid');
 	}
 
 	/**
@@ -605,7 +605,7 @@ class Crawler extends Root
 	 */
 	private function _release_lane()
 	{
-		unlink($this->json_path() . '.pid');
+		unlink($this->json_local_path() . '.pid');
 	}
 
 	/**
@@ -615,8 +615,15 @@ class Crawler extends Root
 	private function _check_valid_lane()
 	{
 		// Check lane hash
-		$pid = file::read($this->json_path() . '.pid');
+		$lane_file = $this->json_local_path() . '.pid';
+		$pid = file::read($lane_file);
 		if ($pid && LITESPEED_LANE_HASH != $pid) {
+			// If lane file is older than 1h, ignore
+			if (time() - filemtime($lane_file) > 3600) {
+				self::debug("Lane file is older than 1h, releasing lane");
+				$this->_release_lane();
+				return true;
+			}
 			return false;
 		}
 		return true;
@@ -1157,6 +1164,21 @@ class Crawler extends Root
 		}
 
 		return $final_list;
+	}
+
+	/**
+	 * Return crawler meta file local path
+	 *
+	 * @since    6.1
+	 * @access public
+	 */
+	public function json_local_path()
+	{
+		if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
+			return false;
+		}
+
+		return LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta;
 	}
 
 	/**
