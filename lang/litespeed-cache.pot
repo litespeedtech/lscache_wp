@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 6.0-rc1\n"
+"Project-Id-Version: LiteSpeed Cache 6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2023-11-16 19:28:05+00:00\n"
+"POT-Creation-Date: 2023-12-12 15:41:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -128,7 +128,7 @@ msgstr ""
 #: src/doc.cls.php:41 tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.cache_mobile.tpl.php:71 tpl/cdn/settings.tpl.php:49
 #: tpl/page_optm/settings_css.tpl.php:189
-#: tpl/page_optm/settings_media.tpl.php:178
+#: tpl/page_optm/settings_media.tpl.php:179
 #: tpl/toolbox/settings-debug.tpl.php:46
 msgid "ON"
 msgstr ""
@@ -138,7 +138,7 @@ msgstr ""
 #: tpl/cache/settings-cache.tpl.php:19
 #: tpl/cache/settings_inc.object.tpl.php:213 tpl/cdn/settings.tpl.php:54
 #: tpl/page_optm/settings_css.tpl.php:82 tpl/page_optm/settings_js.tpl.php:69
-#: tpl/page_optm/settings_media.tpl.php:181
+#: tpl/page_optm/settings_media.tpl.php:182
 #: tpl/toolbox/settings-debug.tpl.php:46
 msgid "OFF"
 msgstr ""
@@ -222,7 +222,7 @@ msgstr ""
 #: src/admin-display.cls.php:1229 tpl/cache/settings-esi.tpl.php:95
 #: tpl/page_optm/settings_css.tpl.php:192
 #: tpl/page_optm/settings_html.tpl.php:106
-#: tpl/page_optm/settings_media.tpl.php:258
+#: tpl/page_optm/settings_media.tpl.php:259
 #: tpl/page_optm/settings_media_exc.tpl.php:26
 #: tpl/page_optm/settings_tuning.tpl.php:39
 #: tpl/page_optm/settings_tuning.tpl.php:59
@@ -506,19 +506,19 @@ msgstr ""
 msgid "Started async crawling"
 msgstr ""
 
-#: src/crawler.cls.php:977
+#: src/crawler.cls.php:991
 msgid "Guest"
 msgstr ""
 
-#: src/crawler.cls.php:1129
+#: src/crawler.cls.php:1143
 msgid "Manually added to blocklist"
 msgstr ""
 
-#: src/crawler.cls.php:1132
+#: src/crawler.cls.php:1146
 msgid "Previously existed in blocklist"
 msgstr ""
 
-#: src/data.cls.php:221
+#: src/data.cls.php:224
 msgid ""
 "The database has been upgrading in the background since %s. This message "
 "will disappear once upgrade is complete."
@@ -548,43 +548,43 @@ msgstr ""
 msgid "Clean all successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:194
+#: src/db-optm.cls.php:198
 msgid "Clean post revisions successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:198
+#: src/db-optm.cls.php:202
 msgid "Clean auto drafts successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:202
+#: src/db-optm.cls.php:206
 msgid "Clean trashed posts and pages successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:206
+#: src/db-optm.cls.php:210
 msgid "Clean spam comments successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:210
+#: src/db-optm.cls.php:214
 msgid "Clean trashed comments successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:214
+#: src/db-optm.cls.php:218
 msgid "Clean trackbacks and pingbacks successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:218
+#: src/db-optm.cls.php:222
 msgid "Clean expired transients successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:222
+#: src/db-optm.cls.php:226
 msgid "Clean all transients successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:232
+#: src/db-optm.cls.php:236
 msgid "Optimized all tables."
 msgstr ""
 
-#: src/db-optm.cls.php:284
+#: src/db-optm.cls.php:288
 msgid "Converted to InnoDB successfully."
 msgstr ""
 
@@ -858,7 +858,7 @@ msgstr ""
 #: src/gui.cls.php:650 src/gui.cls.php:659 src/gui.cls.php:669
 #: src/gui.cls.php:679 src/gui.cls.php:689 src/gui.cls.php:699
 #: src/gui.cls.php:708 src/gui.cls.php:718 src/gui.cls.php:728
-#: tpl/page_optm/settings_media.tpl.php:144 tpl/toolbox/purge.tpl.php:37
+#: tpl/page_optm/settings_media.tpl.php:145 tpl/toolbox/purge.tpl.php:37
 #: tpl/toolbox/purge.tpl.php:43 tpl/toolbox/purge.tpl.php:52
 #: tpl/toolbox/purge.tpl.php:61 tpl/toolbox/purge.tpl.php:70
 #: tpl/toolbox/purge.tpl.php:79 tpl/toolbox/purge.tpl.php:88
@@ -889,7 +889,7 @@ msgid "Localized Resources"
 msgstr ""
 
 #: src/gui.cls.php:558 src/gui.cls.php:718
-#: tpl/page_optm/settings_media.tpl.php:144 tpl/toolbox/purge.tpl.php:97
+#: tpl/page_optm/settings_media.tpl.php:145 tpl/toolbox/purge.tpl.php:97
 msgid "LQIP Cache"
 msgstr ""
 
@@ -2123,7 +2123,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 6.0-rc1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 6.0)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:57 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:10
@@ -3923,7 +3923,7 @@ msgstr ""
 #: tpl/dash/dashboard.tpl.php:259 tpl/img_optm/summary.tpl.php:43
 #: tpl/page_optm/settings_css.tpl.php:101
 #: tpl/page_optm/settings_css.tpl.php:218
-#: tpl/page_optm/settings_media.tpl.php:195
+#: tpl/page_optm/settings_media.tpl.php:196
 #: tpl/page_optm/settings_vpi.tpl.php:48
 msgid ""
 "Are you sure you want to redetect the closest cloud server for this service?"
@@ -3933,7 +3933,7 @@ msgstr ""
 #: tpl/img_optm/summary.tpl.php:43 tpl/img_optm/summary.tpl.php:45
 #: tpl/page_optm/settings_css.tpl.php:101
 #: tpl/page_optm/settings_css.tpl.php:218
-#: tpl/page_optm/settings_media.tpl.php:195
+#: tpl/page_optm/settings_media.tpl.php:196
 #: tpl/page_optm/settings_vpi.tpl.php:48
 msgid "Redetect"
 msgstr ""
@@ -3992,7 +3992,7 @@ msgstr ""
 #: tpl/dash/dashboard.tpl.php:446 tpl/dash/dashboard.tpl.php:478
 #: tpl/dash/dashboard.tpl.php:510 tpl/dash/dashboard.tpl.php:542
 #: tpl/page_optm/settings_css.tpl.php:92 tpl/page_optm/settings_css.tpl.php:209
-#: tpl/page_optm/settings_media.tpl.php:189
+#: tpl/page_optm/settings_media.tpl.php:190
 #: tpl/page_optm/settings_vpi.tpl.php:42
 msgid "Last generated"
 msgstr ""
@@ -4279,7 +4279,7 @@ msgstr ""
 #: tpl/general/settings.tpl.php:85 tpl/general/settings.tpl.php:96
 #: tpl/general/settings.tpl.php:108 tpl/general/settings.tpl.php:189
 #: tpl/general/settings.tpl.php:196 tpl/general/settings.tpl.php:203
-#: tpl/general/settings.tpl.php:220 tpl/page_optm/settings_media.tpl.php:253
+#: tpl/general/settings.tpl.php:220 tpl/page_optm/settings_media.tpl.php:254
 #: tpl/page_optm/settings_vpi.tpl.php:32
 msgid "Notice"
 msgstr ""
@@ -4374,7 +4374,7 @@ msgstr ""
 msgid "Your %1s quota on %2s will still be in use."
 msgstr ""
 
-#: tpl/general/settings.tpl.php:189 tpl/page_optm/settings_media.tpl.php:253
+#: tpl/general/settings.tpl.php:189 tpl/page_optm/settings_media.tpl.php:254
 #: tpl/page_optm/settings_vpi.tpl.php:32
 msgid "%s must be turned ON for this setting to work."
 msgstr ""
@@ -4549,7 +4549,7 @@ msgstr ""
 
 #: tpl/img_optm/summary.tpl.php:43 tpl/page_optm/settings_css.tpl.php:101
 #: tpl/page_optm/settings_css.tpl.php:218
-#: tpl/page_optm/settings_media.tpl.php:195
+#: tpl/page_optm/settings_media.tpl.php:196
 #: tpl/page_optm/settings_vpi.tpl.php:48
 msgid "Current closest Cloud server is %s.&#10; Click to redetect."
 msgstr ""
@@ -5186,7 +5186,7 @@ msgid "Avatar list in queue waiting for update"
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:62
-#: tpl/page_optm/settings_media.tpl.php:218
+#: tpl/page_optm/settings_media.tpl.php:219
 msgid "Run Queue Manually"
 msgstr ""
 
@@ -5229,140 +5229,143 @@ msgid ""
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:30
-msgid "Preload featured image/image above the fold."
-msgstr ""
-
-#: tpl/page_optm/settings_media.tpl.php:43
-msgid "Load images only when they enter the viewport."
+msgid ""
+"Load a post's Featured Image first, before the page begins to render. Leads "
+"to performance improvements and minimizes the risk of render blocking by "
+"Featured Images."
 msgstr ""
 
 #: tpl/page_optm/settings_media.tpl.php:44
-#: tpl/page_optm/settings_media.tpl.php:235
+msgid "Load images only when they enter the viewport."
+msgstr ""
+
+#: tpl/page_optm/settings_media.tpl.php:45
+#: tpl/page_optm/settings_media.tpl.php:236
 msgid "This can improve page loading time by reducing initial HTTP requests."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:48
+#: tpl/page_optm/settings_media.tpl.php:49
 msgid "Adding Style to Your Lazy-Loaded Images"
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:62
+#: tpl/page_optm/settings_media.tpl.php:63
 msgid ""
 "Specify a base64 image to be used as a simple placeholder while images "
 "finish loading."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:63
+#: tpl/page_optm/settings_media.tpl.php:64
 msgid ""
 "This can be predefined in %2$s as well using constant %1$s, with this "
 "setting taking priority."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:64
+#: tpl/page_optm/settings_media.tpl.php:65
 msgid "By default a gray image placeholder %s will be used."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:65
+#: tpl/page_optm/settings_media.tpl.php:66
 msgid "For example, %s can be used for a transparent placeholder."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:79
+#: tpl/page_optm/settings_media.tpl.php:80
 msgid ""
 "Responsive image placeholders can help to reduce layout reshuffle when "
 "images are loaded."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:80
+#: tpl/page_optm/settings_media.tpl.php:81
 msgid ""
 "This will generate the placeholder with same dimensions as the image if it "
 "has the width and height attributes."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:93
+#: tpl/page_optm/settings_media.tpl.php:94
 msgid "Specify an SVG to be used as a placeholder when generating locally."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:94
+#: tpl/page_optm/settings_media.tpl.php:95
 msgid "It will be converted to a base64 SVG placeholder on-the-fly."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:95
+#: tpl/page_optm/settings_media.tpl.php:96
 msgid "Variables %s will be replaced with the corresponding image properties."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:96
+#: tpl/page_optm/settings_media.tpl.php:97
 msgid "Variables %s will be replaced with the configured background color."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:110
+#: tpl/page_optm/settings_media.tpl.php:111
 msgid "Specify the responsive placeholder SVG color."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:125
+#: tpl/page_optm/settings_media.tpl.php:126
 msgid ""
 "Use QUIC.cloud LQIP (Low Quality Image Placeholder) generator service for "
 "responsive image previews while loading."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:126
+#: tpl/page_optm/settings_media.tpl.php:127
 msgid "Keep this off to use plain color placeholders."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:140
+#: tpl/page_optm/settings_media.tpl.php:141
 msgid "Specify the quality when generating LQIP."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:141
+#: tpl/page_optm/settings_media.tpl.php:142
 msgid ""
 "Larger number will generate higher resolution quality placeholder, but will "
 "result in larger files which will increase page size and consume more points."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:144
+#: tpl/page_optm/settings_media.tpl.php:145
 msgid ""
 "Changes to this setting do not apply to already-generated LQIPs. To "
 "regenerate existing LQIPs, please %s first from the admin bar menu."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:157
+#: tpl/page_optm/settings_media.tpl.php:158
 msgid "pixels"
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:159
+#: tpl/page_optm/settings_media.tpl.php:160
 msgid ""
 "LQIP requests will not be sent for images where both width and height are "
 "smaller than these dimensions."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:175
+#: tpl/page_optm/settings_media.tpl.php:176
 msgid "Automatically generate LQIP in the background via a cron-based queue."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:177
+#: tpl/page_optm/settings_media.tpl.php:178
 msgid ""
 "If set to %1$s, before the placeholder is localized, the %2$s configuration "
 "will be used."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:181
+#: tpl/page_optm/settings_media.tpl.php:182
 msgid ""
 "If set to %s this is done in the foreground, which may slow down page load."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:201
+#: tpl/page_optm/settings_media.tpl.php:202
 msgid "Size list in queue waiting for cron"
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:234
+#: tpl/page_optm/settings_media.tpl.php:235
 msgid "Load iframes only when they enter the viewport."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:248
+#: tpl/page_optm/settings_media.tpl.php:249
 msgid ""
 "Set an explicit width and height on image elements to reduce layout shifts "
 "and improve CLS (a Core Web Vitals metric)."
 msgstr ""
 
-#: tpl/page_optm/settings_media.tpl.php:259
+#: tpl/page_optm/settings_media.tpl.php:260
 msgid "Use %1$s to bypass remote image dimension check when %2$s is ON."
 msgstr ""
 

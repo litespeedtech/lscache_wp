@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.4.1
-Stable tag: 5.7.0.1
+Tested up to: 6.4.2
+Stable tag: 6.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -272,6 +272,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Image Optimize** Increased time limit for pull process.
 * **Image Optimize** Last pull time and cron tag now included in optimization summary.
 * **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
+* 🐞**Database Optimize** Fix an issue where cleaning post revisions would fail while cleaning postmeta. (Tynan #596)
 * **Crawler** Added status updates to CLI. (Lars)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
 

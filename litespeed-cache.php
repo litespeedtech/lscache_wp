@@ -4,7 +4,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           6.0-rc3
+ * Version:           6.0
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -12,7 +12,7 @@
  * Text Domain:       litespeed-cache
  * Domain Path:       /lang
  *
- * Copyright (C) 2015-2017 LiteSpeed Technologies, Inc.
+ * Copyright (C) 2015-2024 LiteSpeed Technologies, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ if (defined('LSCWP_V')) {
 	return;
 }
 
-!defined('LSCWP_V') && define('LSCWP_V', '6.0-rc3');
+!defined('LSCWP_V') && define('LSCWP_V', '6.0');
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
