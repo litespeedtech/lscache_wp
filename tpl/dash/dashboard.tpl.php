@@ -610,16 +610,16 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 				<div class="inside litespeed-text-center">
 					<h3 class="litespeed-title">
 						QUIC.cloud
-						<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon">Learn More</a>
+						<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon" target="_blank"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
 					</h3>
 					<p class="litespeed-top20 litespeed-text-bold litespeed-margin-bottom20">
-						<a href="https://www.quic.cloud/docs/onboarding/" class="">Try QUIC.cloud CDN!</a>
+						<a href="https://www.quic.cloud/docs/onboarding/" class="" target="_blank"><?php echo __('Try QUIC.cloud CDN!', 'litespeed-cache'); ?></a>
 					</p>
 					<p class="litespeed-margin-y5">
-						Best available WordPress performance
+						<?php echo __('Best available WordPress performance', 'litespeed-cache'); ?>
 					</p>
 					<p class="litespeed-margin-y5">
-						Globally fast TTFB, easy setup, and <a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/">more</a>!
+						<?php echo sprintf(__('Globally fast TTFB, easy setup, and <a %s>more</a>!', 'litespeed-cache'), ' href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" target="_blank"'); ?>
 					</p>
 					<div class="litespeed-top10">
 						<img src="<?php echo LSWCP_PLUGIN_URL; ?>assets/img/quic-cloud-logo.svg" alt="QUIC.cloud" width="45%" height="auto">
