@@ -825,6 +825,8 @@ class ESI extends Root
 				}
 			}
 		}
+		// Needed when permalink structure is "Plain"
+		wp();
 
 		wp_admin_bar_render();
 		if (!$this->conf(Base::O_ESI_CACHE_ADMBAR)) {
