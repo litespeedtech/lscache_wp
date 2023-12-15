@@ -1155,17 +1155,17 @@ class Img_Optm extends Base
 					$complete_action($request_response, $cnt);
 				}
 			}
+		}
 
-			// Notify IAPI images taken
-			foreach ($server_list as $server => $img_list) {
-				$data = array(
-					'action' => self::CLOUD_ACTION_TAKEN,
-					'list' => $img_list,
-					'server' => $server,
-				);
-				// TODO: improve this so we do not call once per server, but just once and then filter on the server side
-				Cloud::post(Cloud::SVC_IMG_OPTM, $data);
-			}
+		// Notify IAPI images taken
+		foreach ($server_list as $server => $img_list) {
+			$data = array(
+				'action'	=> self::CLOUD_ACTION_TAKEN,
+				'list' 		=> $img_list,
+				'server'	=> $server,
+			);
+			// TODO: improve this so we do not call once per server, but just once and then filter on the server side
+			Cloud::post(Cloud::SVC_IMG_OPTM, $data);
 		}
 
 		if (empty($this->_summary['img_taken'])) {
@@ -2051,10 +2051,10 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-			/**
-			 * Batch switch
-			 * @since 1.6.3
-			 */
+				/**
+				 * Batch switch
+				 * @since 1.6.3
+				 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->_batch_switch($type);
