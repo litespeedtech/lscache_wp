@@ -1162,6 +1162,7 @@ h3 .litespeed-learn-more {
 	margin: 0 0 0;
 	display: inline-flex;
 	position: relative;
+	direction: ltr;
 }
 
 .litespeed-switch input:checked:active + label {
