@@ -1020,8 +1020,8 @@ class Img_Optm extends Base
 				$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
 				$server_info = json_decode($row_img->server_info, true);
 
-				if (!$response->success) {
-					if (404 == $response->status_code) {
+				if (empty($response->success)) {
+					if (!empty($response->status_code) && 404 == $response->status_code) {
 						$this->_step_back_image($row_img->id);
 
 						$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
@@ -1030,7 +1030,7 @@ class Img_Optm extends Base
 					} else {
 						// handle error
 						$image_url = $server_info['server'] . '/' . $server_info[$row_type];
-						self::debug('❌ failed to pull image (' . $row_type . '): ' . $response->status_code . ' [Local: ' . $row_img->src . '] / [remote: ' . $image_url . ']');
+						self::debug('❌ failed to pull image (' . $row_type . '): ' . (!empty($response->status_code) ? $response->status_code : '') . ' [Local: ' . $row_img->src . '] / [remote: ' . $image_url . ']');
 						return;
 					}
 				}
