@@ -731,7 +731,11 @@ class Media extends Root
 			$src = 'https:' . $src;
 		}
 
-		$sizes = getimagesize($src);
+		try {
+			$sizes = getimagesize($src);
+		} catch (\Exception $e) {
+			return false;
+		}
 
 		if (!empty($sizes[0]) && !empty($sizes[1])) {
 			return $sizes;
