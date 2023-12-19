@@ -199,6 +199,9 @@ class Crawler extends Base
 	 */
 	public function run()
 	{
+		self::debug('⚠️⚠️⚠️ Forced take over lane (CLI)');
+		$this->__crawler->Release_lane();
+
 		Task::async_call('crawler');
 
 		$summary = Crawler2::get_summary();

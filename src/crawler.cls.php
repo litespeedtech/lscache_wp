@@ -235,7 +235,7 @@ class Crawler extends Root
 	 *
 	 * @since 5.5
 	 */
-	public static function async_handler($force = false)
+	public static function async_handler($manually_run = false)
 	{
 		self::debug('------------async-------------start_async_handler');
 		// self::debug('-------------async------------ check_ajax_referer');
@@ -244,7 +244,7 @@ class Crawler extends Root
 		// });
 		// check_ajax_referer('async_crawler', 'nonce');
 		// self::debug('--------------async----------- start async crawling');
-		self::start($force);
+		self::start($manually_run);
 	}
 
 	/**
@@ -253,14 +253,14 @@ class Crawler extends Root
 	 * @since    1.1.0
 	 * @access public
 	 */
-	public static function start($force = false)
+	public static function start($manually_run = false)
 	{
 		if (!Router::can_crawl()) {
 			self::debug('......crawler is NOT allowed by the server admin......');
 			return false;
 		}
 
-		if ($force) {
+		if ($manually_run) {
 			self::debug('......crawler manually ran......');
 		}
 		// $i = 0;
@@ -270,7 +270,7 @@ class Crawler extends Root
 		// }
 		// return;
 
-		self::cls()->_crawl_data($force);
+		self::cls()->_crawl_data($manually_run);
 	}
 
 	/**
@@ -279,28 +279,27 @@ class Crawler extends Root
 	 * @since    1.1.0
 	 * @access   private
 	 */
-	private function _crawl_data($force)
+	private function _crawl_data($manually_run)
 	{
 		if (!defined('LITESPEED_LANE_HASH')) {
 			define('LITESPEED_LANE_HASH', Str::rrand(8));
 		}
 		if ($this->_check_valid_lane()) {
-			// Take over lane
-			self::debug('Take over lane as lane is free');
 			$this->_take_over_lane();
 		} else {
-			if ($force) {
-				self::debug('......crawler started (forced)......');
-				// Log pid to prevent from multi running
-				if (defined('LITESPEED_CLI')) {
-					// Take over lane
-					self::debug('Forced take over lane (CLI)');
-					$this->_take_over_lane();
-				}
-			} else {
-				self::debug('......crawler started......');
-			}
+			self::debug('⚠️ lane in use');
+			return;
+			// if ($manually_run) {
+			// 	self::debug('......crawler started (manually_rund)......');
+			// 	// Log pid to prevent from multi running
+			// 	if (defined('LITESPEED_CLI')) {
+			// 		// Take over lane
+			// 		self::debug('⚠️⚠️⚠️ Forced take over lane (CLI)');
+			// 		$this->_take_over_lane();
+			// 	}
+			// }
 		}
+		self::debug('......crawler started......');
 
 		// for the first time running
 		if (!$this->_summary || !Data::cls()->tb_exist('crawler') || !Data::cls()->tb_exist('crawler_blacklist')) {
@@ -311,10 +310,10 @@ class Crawler extends Root
 		if ($this->_summary['done'] === 'touchedEnd') {
 			// check whole crawling interval
 			$last_fnished_at = $this->_summary['last_full_time_cost'] + $this->_summary['this_full_beginning_time'];
-			if (!$force && time() - $last_fnished_at < $this->conf(Base::O_CRAWLER_CRAWL_INTERVAL)) {
+			if (!$manually_run && time() - $last_fnished_at < $this->conf(Base::O_CRAWLER_CRAWL_INTERVAL)) {
 				self::debug('Cron abort: cache warmed already.');
 				// if not reach whole crawling interval, exit
-				$this->_release_lane();
+				$this->Release_lane();
 				return;
 			}
 			self::debug('TouchedEnd. regenerate sitemap....');
@@ -331,7 +330,7 @@ class Crawler extends Root
 		if ($this->_summary['curr_crawler'] >= count($this->_crawlers)) {
 			$this->_end_reason = 'end';
 			$this->_terminate_running();
-			$this->_release_lane();
+			$this->Release_lane();
 			return;
 		}
 
@@ -345,7 +344,7 @@ class Crawler extends Root
 
 		$this->_engine_start();
 
-		$this->_release_lane();
+		$this->Release_lane();
 	}
 
 	/**
@@ -432,11 +431,11 @@ class Crawler extends Root
 	private function _engine_start()
 	{
 		// check if is running
-		if ($this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf['run_duration']) {
-			$this->_end_reason = 'stopped';
-			self::debug('The crawler is running.');
-			return;
-		}
+		// if ($this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf['run_duration']) {
+		// 	$this->_end_reason = 'stopped';
+		// 	self::debug('The crawler is running.');
+		// 	return;
+		// }
 
 		// check current load
 		$this->_adjust_current_threads();
@@ -587,6 +586,7 @@ class Crawler extends Root
 	 */
 	private function _take_over_lane()
 	{
+		self::debug('Take over lane as lane is free: ' . $this->json_local_path() . '.pid');
 		file::save($this->json_local_path() . '.pid', LITESPEED_LANE_HASH);
 	}
 
@@ -603,7 +603,7 @@ class Crawler extends Root
 	 * Release lane file
 	 * @since 6.1
 	 */
-	private function _release_lane()
+	public function Release_lane()
 	{
 		unlink($this->json_local_path() . '.pid');
 	}
@@ -612,16 +612,22 @@ class Crawler extends Root
 	 * Check if lane is used by other crawlers
 	 * @since 6.1
 	 */
-	private function _check_valid_lane()
+	private function _check_valid_lane($strict_mode = false)
 	{
 		// Check lane hash
 		$lane_file = $this->json_local_path() . '.pid';
+		if ($strict_mode) {
+			if (!file_exists($lane_file)) {
+				self::debug("lane file not existed, strict mode is false [file] $lane_file");
+				return false;
+			}
+		}
 		$pid = file::read($lane_file);
 		if ($pid && LITESPEED_LANE_HASH != $pid) {
 			// If lane file is older than 1h, ignore
 			if (time() - filemtime($lane_file) > 3600) {
 				self::debug("Lane file is older than 1h, releasing lane");
-				$this->_release_lane();
+				$this->Release_lane();
 				return true;
 			}
 			return false;
@@ -645,9 +651,9 @@ class Crawler extends Root
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads);
 			// self::debug('$urlChunks after array_chunk: ' . count($urlChunks));
 			foreach ($urlChunks as $rows) {
-				if (!$this->_check_valid_lane()) {
+				if (!$this->_check_valid_lane(true)) {
 					$this->_end_reason = 'lane_invalid';
-					self::debug('The crawler lane is used by newer crawler.');
+					self::debug('🛑 The crawler lane is used by newer crawler.');
 					return;
 				}
 				// Update time
@@ -730,7 +736,7 @@ class Crawler extends Root
 					$this->_adjust_current_threads();
 					if ($this->_cur_threads == 0) {
 						$this->_end_reason = 'stopped_highload';
-						self::debug('Terminated due to highload');
+						self::debug('🛑 Terminated due to highload');
 						return;
 						// return __('Stopped due to load over limit', 'litespeed-cache');
 					}
