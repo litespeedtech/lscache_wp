@@ -342,9 +342,12 @@ class Crawler extends Root
 
 		$this->load_conf();
 
-		$this->_engine_start();
-
-		$this->Release_lane();
+		try {
+			$this->_engine_start();
+			$this->Release_lane();
+		} catch (\Exception $e) {
+			self::debug('🛑 ' . $e->getMessage());
+		}
 	}
 
 	/**
@@ -605,6 +608,7 @@ class Crawler extends Root
 	 */
 	public function Release_lane()
 	{
+		self::debug("Release lane");
 		unlink($this->json_local_path() . '.pid');
 	}
 
@@ -654,7 +658,7 @@ class Crawler extends Root
 				if (!$this->_check_valid_lane(true)) {
 					$this->_end_reason = 'lane_invalid';
 					self::debug('🛑 The crawler lane is used by newer crawler.');
-					return;
+					throw new \Exception("invalid crawler lane");
 				}
 				// Update time
 				$this->_touch_lane();

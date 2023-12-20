@@ -253,6 +253,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 6.1 - Feb 2024 =
 * 🌱**Database** Clear Orphaned Post Meta.
 * **Image Optimize** Fixed possible PHP warning for WP requests library response.
+* **Crawler** CLI will now be able to force crawling even browser operation was fired shortly.
 
 = 6.0.0.1 - Dec 15 2023 =
 * 🐞**Image Optimize** Grouped the taken notification to regional center servers to reduce the load after image pulled.
