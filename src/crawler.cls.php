@@ -608,8 +608,11 @@ class Crawler extends Root
 	 */
 	public function Release_lane()
 	{
+		$lane_file = $this->json_local_path() . '.pid';
+		if (!file_exists($lane_file)) return;
+
 		self::debug("Release lane");
-		unlink($this->json_local_path() . '.pid');
+		unlink($lane_file);
 	}
 
 	/**
