@@ -936,8 +936,9 @@ class Img_Optm extends Base
 	public function pull($manual = false)
 	{
 		global $wpdb;
+		$timeoutLimit = ini_get('max_execution_time');
 
-		self::debug('' . ($manual ? 'Manually' : 'Cron') . ' pull started');
+		self::debug('' . ($manual ? 'Manually' : 'Cron') . ' pull started [timeout: ' . $timeoutLimit . 's]');
 
 		if ($this->cron_running()) {
 			self::debug('Pull cron is running');

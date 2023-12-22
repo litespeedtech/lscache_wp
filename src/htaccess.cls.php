@@ -38,6 +38,7 @@ class Htaccess extends Root
 	const MARKER = 'LSCACHE';
 	const MARKER_NONLS = 'NON_LSCACHE';
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE';
+	const MARKER_ASYNC = '### marker ASYNC';
 	const MARKER_CRAWLER = '### marker CRAWLER';
 	const MARKER_MOBILE = '### marker MOBILE';
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES';
@@ -502,15 +503,15 @@ class Htaccess extends Root
 		$new_rules_backend_nonls = array();
 
 		# continual crawler
-		$id = Base::O_CRAWLER;
-		if (!empty($cfg[$id])) {
-			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_START;
-			$new_rules[] = 'RewriteCond %{REQUEST_URI} /wp-admin/admin-ajax\.php';
-			$new_rules[] = 'RewriteCond %{QUERY_STRING} action=async_litespeed';
-			$new_rules[] = 'RewriteRule .* - [E=noabort:1]';
-			$new_rules[] = self::MARKER_CRAWLER . self::MARKER_END;
-			$new_rules[] = '';
-		}
+		// $id = Base::O_CRAWLER;
+		// if (!empty($cfg[$id])) {
+		$new_rules[] = self::MARKER_ASYNC . self::MARKER_START;
+		$new_rules[] = 'RewriteCond %{REQUEST_URI} /wp-admin/admin-ajax\.php';
+		$new_rules[] = 'RewriteCond %{QUERY_STRING} action=async_litespeed';
+		$new_rules[] = 'RewriteRule .* - [E=noabort:1]';
+		$new_rules[] = self::MARKER_ASYNC . self::MARKER_END;
+		$new_rules[] = '';
+		// }
 
 		// mobile agents
 		$id = Base::O_CACHE_MOBILE_RULES;
