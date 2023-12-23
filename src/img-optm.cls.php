@@ -1134,7 +1134,7 @@ class Img_Optm extends Base
 				$total_pulled_ori++;
 			};
 
-			if (class_exists('Requests')) {
+			if (class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload')) {
 				// Make sure Requests can load internal classes.
 				Autoload::register();
 
