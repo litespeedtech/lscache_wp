@@ -937,6 +937,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 		$timeoutLimit = ini_get('max_execution_time');
+		$endts = time() + $timeoutLimit;
 
 		self::debug('' . ($manual ? 'Manually' : 'Cron') . ' pull started [timeout: ' . $timeoutLimit . 's]');
 
@@ -964,7 +965,14 @@ class Img_Optm extends Base
 		$server_list = array();
 
 		while ($img_rows = $wpdb->get_results($_q)) {
-			set_time_limit(600);
+			if (function_exists('set_time_limit')) {
+				$endts += 600;
+				set_time_limit(600);
+			}
+			if ($endts - time() < 10) {
+				self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				break;
+			}
 
 			/**
 			 * Update cron timestamp to avoid duplicated running
