@@ -519,7 +519,6 @@ class Core extends Root
 				Debug2::debug($buffer);
 			}
 			Debug2::debug('[Core] ESI End 👆');
-			Debug2::debug($buffer);
 		}
 
 		if (apply_filters('litespeed_is_json', false)) {
