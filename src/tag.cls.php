@@ -255,9 +255,7 @@ class Tag extends Root
 			//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
 			if (is_category() || is_tag() || is_tax()) {
 				$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
-			} elseif (is_post_type_archive()) {
-				global $wp_query;
-				$post_type = (string) $wp_query->get('post_type');
+			} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
 				$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
 			} elseif (is_author()) {
 				$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
