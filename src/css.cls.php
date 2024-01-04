@@ -19,6 +19,7 @@ class CSS extends Base
 
 	protected $_summary;
 	private $_queue;
+	private $_endts;
 
 	/**
 	 * Init
@@ -205,9 +206,20 @@ class CSS extends Base
 		}
 
 		$i = 0;
+		$timeoutLimit = ini_get('max_execution_time');
+		$this->_endts = time() + $timeoutLimit;
 		foreach ($this->_queue as $k => $v) {
 			if (!empty($v['_status'])) {
 				continue;
+			}
+
+			if (function_exists('set_time_limit')) {
+				$this->_endts += 120;
+				set_time_limit(120);
+			}
+			if ($this->_endts - time() < 10) {
+				self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				return;
 			}
 
 			Debug2::debug('[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
@@ -278,8 +290,6 @@ class CSS extends Base
 			$err && Admin_Display::error(Error::msg($err));
 			return 'out_of_quota';
 		}
-
-		set_time_limit(120);
 
 		// Update css request status
 		$this->_summary['curr_request_' . $type] = time();

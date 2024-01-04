@@ -255,6 +255,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Image Optimize** Fixed possible PHP warning for WP requests library response.
 * **Image Optimize** Unlocked `noabort` to all async tasks to avoid image optimization timeout. (Peter Wells)
 * **Crawler** CLI will now be able to force crawling even browser operation was fired shortly.
+* **Page Optimize** Fixed a dynamic property creation warning in PHP8. (PR#606)
+* **Page Optimize** Fixed an issue where getimagesize could cause page optimization to fail. (PR#607)
+* **Tag** Fixed an array to string conversion warning. (PR#604)
 
 = 6.0.0.1 - Dec 15 2023 =
 * 🐞**Image Optimize** Grouped the taken notification to regional center servers to reduce the load after image pulled.

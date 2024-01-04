@@ -967,6 +967,7 @@ class Img_Optm extends Base
 		while ($img_rows = $wpdb->get_results($_q)) {
 			if (function_exists('set_time_limit')) {
 				$endts += 600;
+				self::debug("Endtime extended to " . date("Ymd H:i:s", $endts));
 				set_time_limit(600);
 			}
 			if ($endts - time() < 10) {
