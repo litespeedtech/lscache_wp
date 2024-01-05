@@ -68,4 +68,4 @@ edd_* private
 wpmenucart private
 
 # Woo nonce
-woocommerce-login-nonce
+woocommerce-login
