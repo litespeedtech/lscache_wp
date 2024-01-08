@@ -965,6 +965,7 @@ class Img_Optm extends Base
 		$server_list = array();
 
 		while ($img_rows = $wpdb->get_results($_q)) {
+			self::debug("timeout left: " . ($endts - time()) . 's');
 			if (function_exists('set_time_limit')) {
 				$endts += 600;
 				self::debug("Endtime extended to " . date("Ymd H:i:s", $endts));
@@ -1165,6 +1166,7 @@ class Img_Optm extends Base
 					$complete_action($request_response, $cnt);
 				}
 			}
+			self::debug("Current batch pull finished");
 		}
 
 		// Notify IAPI images taken

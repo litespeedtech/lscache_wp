@@ -1,10 +1,12 @@
 <?php
+
 /**
  * The utility class.
  *
  * @since      	1.1.5
  * @since  		1.5 Moved into /inc
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();

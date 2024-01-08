@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.1 - Feb 2024 =
+= 6.1 - Jan 24 2024 =
 * 🌱**Database** Clear Orphaned Post Meta.
 * **Image Optimize** Fixed possible PHP warning for WP requests library response.
 * **Image Optimize** Unlocked `noabort` to all async tasks to avoid image optimization timeout. (Peter Wells)
