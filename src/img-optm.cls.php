@@ -1041,7 +1041,17 @@ class Img_Optm extends Base
 					} else {
 						// handle error
 						$image_url = $server_info['server'] . '/' . $server_info[$row_type];
-						self::debug('❌ failed to pull image (' . $row_type . '): ' . (!empty($response->status_code) ? $response->status_code : '') . ' [Local: ' . $row_img->src . '] / [remote: ' . $image_url . ']');
+						self::debug(
+							'❌ failed to pull image (' .
+								$row_type .
+								'): ' .
+								(!empty($response->status_code) ? $response->status_code : '') .
+								' [Local: ' .
+								$row_img->src .
+								'] / [remote: ' .
+								$image_url .
+								']'
+						);
 						return;
 					}
 				}
@@ -1134,7 +1144,7 @@ class Img_Optm extends Base
 				$total_pulled_ori++;
 			};
 
-			if (class_exists('Requests')) {
+			if (class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload') && version_compare(PHP_VERSION, '5.6.0', '>=')) {
 				// Make sure Requests can load internal classes.
 				Autoload::register();
 
@@ -1172,9 +1182,9 @@ class Img_Optm extends Base
 		// Notify IAPI images taken
 		foreach ($server_list as $server => $img_list) {
 			$data = array(
-				'action'	=> self::CLOUD_ACTION_TAKEN,
-				'list' 		=> $img_list,
-				'server'	=> $server,
+				'action' => self::CLOUD_ACTION_TAKEN,
+				'list' => $img_list,
+				'server' => $server,
 			);
 			// TODO: improve this so we do not call once per server, but just once and then filter on the server side
 			Cloud::post(Cloud::SVC_IMG_OPTM, $data);
@@ -2063,10 +2073,10 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-				/**
-				 * Batch switch
-				 * @since 1.6.3
-				 */
+			/**
+			 * Batch switch
+			 * @since 1.6.3
+			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->_batch_switch($type);
