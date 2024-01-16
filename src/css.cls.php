@@ -218,8 +218,8 @@ class CSS extends Base
 				set_time_limit(120);
 			}
 			if ($this->_endts - time() < 10) {
-				self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
-				return;
+				// self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				// return;
 			}
 
 			Debug2::debug('[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);

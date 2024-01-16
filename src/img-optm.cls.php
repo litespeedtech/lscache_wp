@@ -970,12 +970,13 @@ class Img_Optm extends Base
 				if (function_exists('set_time_limit')) {
 					$endts += 600;
 					self::debug("Endtime extended to " . date("Ymd H:i:s", $endts));
-					set_time_limit(600);
+					set_time_limit(600); // This will be no more important as we use noabort now
 				}
-				if ($endts - time() < 10) {
-					self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
-					break;
-				}
+				// Disabled as we use noabort
+				// if ($endts - time() < 10) {
+				// 	self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				// 	break;
+				// }
 
 				/**
 				 * Update cron timestamp to avoid duplicated running

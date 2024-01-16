@@ -91,7 +91,7 @@ class Media extends Root
 				if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
 					$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
 				}
-				$content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">';
+				$content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">'; // TODO: use imagesrcset
 			}
 		}
 
