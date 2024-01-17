@@ -251,13 +251,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 6.1 - Feb 1 2024 =
-* 🌱**Database** Clear Orphaned Post Meta.
+* 🌱**Database** New Clear Orphaned Post Meta optimizer function.
 * **Image Optimize** Fixed possible PHP warning for WP requests library response.
 * **Image Optimize** Unlocked `noabort` to all async tasks to avoid image optimization timeout. (Peter Wells)
-* **Image Optimize** Fixed an issue where images won't be pulled with older versions of WordPress. (PR#608)
-* **Image Optimize** Improved exception handling when node server cert expired.
-* 🐞**Image Optimize** The failed to pull images due to 404 expiry will now be able to send request again.
-* **Crawler** CLI will now be able to force crawling even browser operation was fired shortly.
+* **Image Optimize** Fixed an issue where images weren't being pulled with older versions of WordPress. (PR#608)
+* **Image Optimize** Improved exception handling when node server cert expire.
+* 🐞**Image Optimize** The failed to pull images due to 404 expiry will now be able to send the request again.
+* **Crawler** CLI will now be able to force crawling even if a crawl was recently initiated within the plugin GUI.
 * **Page Optimize** Fixed a dynamic property creation warning in PHP8. (PR#606)
 * **Page Optimize** Fixed an issue where getimagesize could cause page optimization to fail. (PR#607)
 * **Tag** Fixed an array to string conversion warning. (PR#604)
