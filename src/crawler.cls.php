@@ -609,9 +609,11 @@ class Crawler extends Root
 	public function Release_lane()
 	{
 		$lane_file = $this->json_local_path() . '.pid';
-		if (!file_exists($lane_file)) return;
+		if (!file_exists($lane_file)) {
+			return;
+		}
 
-		self::debug("Release lane");
+		self::debug('Release lane');
 		unlink($lane_file);
 	}
 
@@ -633,7 +635,7 @@ class Crawler extends Root
 		if ($pid && LITESPEED_LANE_HASH != $pid) {
 			// If lane file is older than 1h, ignore
 			if (time() - filemtime($lane_file) > 3600) {
-				self::debug("Lane file is older than 1h, releasing lane");
+				self::debug('Lane file is older than 1h, releasing lane');
 				$this->Release_lane();
 				return true;
 			}
@@ -661,7 +663,7 @@ class Crawler extends Root
 				if (!$this->_check_valid_lane(true)) {
 					$this->_end_reason = 'lane_invalid';
 					self::debug('🛑 The crawler lane is used by newer crawler.');
-					throw new \Exception("invalid crawler lane");
+					throw new \Exception('invalid crawler lane');
 				}
 				// Update time
 				$this->_touch_lane();
@@ -850,10 +852,18 @@ class Crawler extends Root
 	 */
 	private function _status2title($status)
 	{
-		if ($status == 'H') return '✅ Hit';
-		if ($status == 'M') return '😊 Miss';
-		if ($status == 'B') return '😅 Blacklisted';
-		if ($status == 'N') return '😅 Blacklisted';
+		if ($status == 'H') {
+			return '✅ Hit';
+		}
+		if ($status == 'M') {
+			return '😊 Miss';
+		}
+		if ($status == 'B') {
+			return '😅 Blacklisted';
+		}
+		if ($status == 'N') {
+			return '😅 Blacklisted';
+		}
 		return '🛸 Unknown';
 	}
 
@@ -1315,7 +1325,7 @@ class Crawler extends Root
 				}
 				break;
 
-				// Handle the ajax request to proceed crawler manually by admin
+			// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
 				self::start_async();
 				break;

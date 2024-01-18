@@ -966,10 +966,10 @@ class Img_Optm extends Base
 
 		try {
 			while ($img_rows = $wpdb->get_results($_q)) {
-				self::debug("timeout left: " . ($endts - time()) . 's');
+				self::debug('timeout left: ' . ($endts - time()) . 's');
 				if (function_exists('set_time_limit')) {
 					$endts += 600;
-					self::debug("Endtime extended to " . date("Ymd H:i:s", $endts));
+					self::debug('Endtime extended to ' . date('Ymd H:i:s', $endts));
 					set_time_limit(600); // This will be no more important as we use noabort now
 				}
 				// Disabled as we use noabort
@@ -1054,7 +1054,7 @@ class Img_Optm extends Base
 									$image_url .
 									']'
 							);
-							throw new \Exception("Failed to pull image " . (!empty($response->status_code) ? $response->status_code : '') . " [url] " . $image_url);
+							throw new \Exception('Failed to pull image ' . (!empty($response->status_code) ? $response->status_code : '') . ' [url] ' . $image_url);
 							return;
 						}
 					}
@@ -1191,10 +1191,10 @@ class Img_Optm extends Base
 						$complete_action($request_response, $cnt);
 					}
 				}
-				self::debug("Current batch pull finished");
+				self::debug('Current batch pull finished');
 			}
 		} catch (\Exception $e) {
-			Admin_Display::error("Image pull process failure: " . $e->getMessage());
+			Admin_Display::error('Image pull process failure: ' . $e->getMessage());
 		}
 
 		// Notify IAPI images taken
@@ -2093,10 +2093,10 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-				/**
-				 * Batch switch
-				 * @since 1.6.3
-				 */
+			/**
+			 * Batch switch
+			 * @since 1.6.3
+			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->_batch_switch($type);
