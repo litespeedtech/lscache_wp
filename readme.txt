@@ -261,6 +261,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Fixed a dynamic property creation warning in PHP8. (PR#606)
 * **Page Optimize** Fixed an issue where getimagesize could cause page optimization to fail. (PR#607)
 * **Tag** Fixed an array to string conversion warning. (PR#604)
+* **Object Cache** Return false to prevent PHP warning when Redis fails to set a value. (PR#612)
+* **Cache Tag** Fixed an issue where $wp_query is null when getting cache tags. (PR#589)
 
 = 6.0.0.1 - Dec 15 2023 =
 * 🐞**Image Optimize** Grouped the taken notification to regional center servers to reduce the load after image pulled.
