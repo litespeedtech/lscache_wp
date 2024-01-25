@@ -486,8 +486,9 @@ class Core extends Root
 		$this->send_headers(true);
 
 		// Log ESI nonce buffer empty issue
-		if (defined('LSCACHE_IS_ESI') && strlen($buffer) == 0) {
-			// TODO: log ref somewhere
+		if (defined('LSCACHE_IS_ESI') && strlen($buffer) != 0) {
+			// log ref for debug purpose
+			error_log("ESI buffer empty " . $_SERVER['REQUEST_URI']);
 		}
 
 		// Init comment info
