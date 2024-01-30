@@ -13,6 +13,7 @@ $count = $__map->count_map();
 $pagination = Utility::pagination($count, 30);
 
 ?>
+
 <p class="litespeed-right">
 	<a href="<?php echo Utility::build_url(Router::ACTION_CRAWLER, Crawler::TYPE_EMPTY); ?>" class="button litespeed-btn-warning">
 		<?php echo __('Clean Crawler Map', 'litespeed-cache'); ?>
@@ -43,6 +44,14 @@ $pagination = Utility::pagination($count, 30);
 		<form action="<?php echo admin_url('admin.php?page=litespeed-crawler'); ?>" method="post">
 			<input type="text" name="kw" value="<?php echo !empty($_POST['kw']) ? esc_html($_POST['kw']) : ''; ?>" placeholder="<?php echo __('URL Search'); ?>" style="width: 600px;" />
 		</form>
+	</div>
+
+	<div class="">
+
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=hit'); ?>"><?php echo __('Cache Hit', 'litespeed-cache'); ?></a>
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=miss'); ?>"><?php echo __('Cache Miss', 'litespeed-cache'); ?></a>
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=blacklisted'); ?>"><?php echo __('Blocklisted', 'litespeed-cache'); ?></a>
+
 	</div>
 
 	<div class="">

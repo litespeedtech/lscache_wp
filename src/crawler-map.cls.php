@@ -298,14 +298,36 @@ class Crawler_Map extends Root
 			$offset = Utility::pagination($total, $limit, true);
 		}
 
+		$type = Router::verify_type();
+
 		$where = '';
 		if (!empty($_POST['kw'])) {
-			$q = "SELECT * FROM `$this->_tb` WHERE url LIKE %s ORDER BY id LIMIT %d, %d";
+			$q = "SELECT * FROM `$this->_tb` WHERE url LIKE %s";
+			if ($type == 'hit') {
+				$q .= " AND res LIKE '%H%'";
+			}
+			if ($type == 'miss') {
+				$q .= " AND res LIKE '%M%'";
+			}
+			if ($type == 'blacklisted') {
+				$q .= " AND res LIKE '%B%'";
+			}
+			$q .= ' ORDER BY id LIMIT %d, %d';
 			$where = '%' . $wpdb->esc_like($_POST['kw']) . '%';
 			return $wpdb->get_results($wpdb->prepare($q, $where, $offset, $limit), ARRAY_A);
 		}
 
-		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT %d, %d";
+		$q = "SELECT * FROM `$this->_tb`";
+		if ($type == 'hit') {
+			$q .= " WHERE res LIKE '%H%'";
+		}
+		if ($type == 'miss') {
+			$q .= " WHERE res LIKE '%M%'";
+		}
+		if ($type == 'blacklisted') {
+			$q .= " WHERE res LIKE '%B%'";
+		}
+		$q .= ' ORDER BY id LIMIT %d, %d';
 		// self::debug("q=$q offset=$offset, limit=$limit");
 		return $wpdb->get_results($wpdb->prepare($q, $offset, $limit), ARRAY_A);
 	}
@@ -322,6 +344,18 @@ class Crawler_Map extends Root
 		}
 
 		$q = "SELECT COUNT(*) FROM `$this->_tb`";
+
+		$type = Router::verify_type();
+		if ($type == 'hit') {
+			$q .= " WHERE res LIKE '%H%'";
+		}
+		if ($type == 'miss') {
+			$q .= " WHERE res LIKE '%M%'";
+		}
+		if ($type == 'blacklisted') {
+			$q .= " WHERE res LIKE '%B%'";
+		}
+
 		return $wpdb->get_var($q);
 	}
 
