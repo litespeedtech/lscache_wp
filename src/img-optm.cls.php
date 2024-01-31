@@ -727,7 +727,7 @@ class Img_Optm extends Base
 			return Cloud::err('no notified data');
 		}
 
-		if (empty($post_data['server']) || substr($post_data['server'], -11) !== '.quic.cloud') {
+		if (empty($post_data['server']) || (substr($post_data['server'], -11) !== '.quic.cloud' && substr($post_data['server'], -15) !== '.quicserver.com')) {
 			self::debug('notify exit: no/wrong server');
 			return Cloud::err('no/wrong server');
 		}
@@ -2093,10 +2093,10 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-			/**
-			 * Batch switch
-			 * @since 1.6.3
-			 */
+				/**
+				 * Batch switch
+				 * @since 1.6.3
+				 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->_batch_switch($type);
