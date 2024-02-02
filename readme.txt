@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.2 - Apr 2024 =
 * 🌱**Crawler** Cralwer hit/miss filter. (#328853)
+* **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
 
 = 6.1 - Feb 1 2024 =
 * 🌱**Database** New Clear Orphaned Post Meta optimizer function.

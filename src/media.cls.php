@@ -883,6 +883,9 @@ class Media extends Root
 	{
 		Debug2::debug2('[Media] Start replacing bakcground WebP.');
 
+		// Handle Elementors data-settings json encode background-images
+		$content = $this->replace_urls_in_json($content);
+
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all('#url\(([^)]+)\)#iU', $content, $matches);
 		foreach ($matches[1] as $k => $url) {
@@ -909,6 +912,49 @@ class Media extends Root
 			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 );
 			$html_snippet = str_replace($url, $url2, $matches[0][$k]);
 			$content = str_replace($matches[0][$k], $html_snippet, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Replace images in json data settings attributes
+	 *
+	 * @since  6.2
+	 */
+	public function replace_urls_in_json($content)
+	{
+		$pattern = '/data-settings="(.*?)"/i';
+
+		preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
+
+		foreach ($matches as $match) {
+			// Check if the string contains HTML entities
+			$isEncoded = preg_match('/&quot;|&lt;|&gt;|&amp;|&apos;/', $match[1]);
+
+			// Decode HTML entities in the JSON string
+			$jsonString = html_entity_decode($match[1]);
+
+			$jsonData = json_decode($jsonString, true);
+
+			if (json_last_error() === JSON_ERROR_NONE) {
+				array_walk_recursive($jsonData, function (&$item, $key) {
+					if ($key == 'url') {
+						$item = $this->replace_webp($item);
+					}
+				});
+
+				// Re-encode the modified array back to a JSON string
+				$newJsonString = json_encode($jsonData);
+
+				// Re-encode the JSON string to HTML entities only if it was originally encoded
+				if ($isEncoded) {
+					$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+				}
+
+				// Replace the old JSON string in the content with the new, modified JSON string
+				$content = str_replace($match[1], $newJsonString, $content);
+			}
 		}
 
 		return $content;
