@@ -1,14 +1,14 @@
-# Copyright (C) 2023 LiteSpeed Cache
+# Copyright (C) 2024 LiteSpeed Cache
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 6.0\n"
+"Project-Id-Version: LiteSpeed Cache 6.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2023-12-12 15:41:15+00:00\n"
+"POT-Creation-Date: 2024-02-05 14:52:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -506,15 +506,15 @@ msgstr ""
 msgid "Started async crawling"
 msgstr ""
 
-#: src/crawler.cls.php:991
+#: src/crawler.cls.php:1094
 msgid "Guest"
 msgstr ""
 
-#: src/crawler.cls.php:1143
+#: src/crawler.cls.php:1261
 msgid "Manually added to blocklist"
 msgstr ""
 
-#: src/crawler.cls.php:1146
+#: src/crawler.cls.php:1264
 msgid "Previously existed in blocklist"
 msgstr ""
 
@@ -544,47 +544,51 @@ msgstr ""
 msgid "Click here to settings"
 msgstr ""
 
-#: src/db-optm.cls.php:141
+#: src/db-optm.cls.php:147
 msgid "Clean all successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:198
+#: src/db-optm.cls.php:204
 msgid "Clean post revisions successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:202
+#: src/db-optm.cls.php:208
+msgid "Clean orphaned post meta successfully."
+msgstr ""
+
+#: src/db-optm.cls.php:212
 msgid "Clean auto drafts successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:206
+#: src/db-optm.cls.php:216
 msgid "Clean trashed posts and pages successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:210
+#: src/db-optm.cls.php:220
 msgid "Clean spam comments successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:214
+#: src/db-optm.cls.php:224
 msgid "Clean trashed comments successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:218
+#: src/db-optm.cls.php:228
 msgid "Clean trackbacks and pingbacks successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:222
+#: src/db-optm.cls.php:232
 msgid "Clean expired transients successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:226
+#: src/db-optm.cls.php:236
 msgid "Clean all transients successfully."
 msgstr ""
 
-#: src/db-optm.cls.php:236
+#: src/db-optm.cls.php:246
 msgid "Optimized all tables."
 msgstr ""
 
-#: src/db-optm.cls.php:288
+#: src/db-optm.cls.php:298
 msgid "Converted to InnoDB successfully."
 msgstr ""
 
@@ -613,8 +617,8 @@ msgid "Please see %s for more details."
 msgstr ""
 
 #: src/doc.cls.php:92 src/doc.cls.php:147 tpl/cdn/manage.tpl.php:67
-#: tpl/dash/dashboard.tpl.php:46 tpl/img_optm/summary.tpl.php:48
-#: tpl/inc/check_cache_disabled.php:42
+#: tpl/dash/dashboard.tpl.php:46 tpl/dash/dashboard.tpl.php:613
+#: tpl/img_optm/summary.tpl.php:48 tpl/inc/check_cache_disabled.php:42
 msgid "Learn More"
 msgstr ""
 
@@ -941,11 +945,11 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: src/htaccess.cls.php:340
+#: src/htaccess.cls.php:341
 msgid "Mobile Agent Rules"
 msgstr ""
 
-#: src/htaccess.cls.php:818
+#: src/htaccess.cls.php:819
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
@@ -971,67 +975,67 @@ msgstr ""
 msgid "Started async image optimization request"
 msgstr ""
 
-#: src/img-optm.cls.php:945
+#: src/img-optm.cls.php:947
 msgid "Pull Cron is running"
 msgstr ""
 
-#: src/img-optm.cls.php:1027
+#: src/img-optm.cls.php:1040 src/img-optm.cls.php:1066
 msgid "Some optimized image file(s) has expired and was cleared."
 msgstr ""
 
-#: src/img-optm.cls.php:1048
+#: src/img-optm.cls.php:1083
 msgid "Pulled WebP image md5 does not match the notified WebP image md5."
 msgstr ""
 
-#: src/img-optm.cls.php:1084
+#: src/img-optm.cls.php:1119
 msgid "One or more pulled images does not match with the notified image md5"
 msgstr ""
 
-#: src/img-optm.cls.php:1270
+#: src/img-optm.cls.php:1312
 msgid "Cleaned up unfinished data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1354
+#: src/img-optm.cls.php:1396
 msgid "Destroy all optimization data successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1417 src/img-optm.cls.php:1479
+#: src/img-optm.cls.php:1459 src/img-optm.cls.php:1521
 msgid "Rescanned successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1479
+#: src/img-optm.cls.php:1521
 msgid "Rescanned %d images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1546
+#: src/img-optm.cls.php:1588
 msgid "Calculated backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1640
+#: src/img-optm.cls.php:1682
 msgid "Removed backups successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1822
+#: src/img-optm.cls.php:1864
 msgid "Switched images successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1867 src/img-optm.cls.php:1913
+#: src/img-optm.cls.php:1909 src/img-optm.cls.php:1955
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1886
+#: src/img-optm.cls.php:1928
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1891
+#: src/img-optm.cls.php:1933
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1907
+#: src/img-optm.cls.php:1949
 msgid "Restored original file successfully."
 msgstr ""
 
-#: src/img-optm.cls.php:1964
+#: src/img-optm.cls.php:2006
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -1894,7 +1898,7 @@ msgstr ""
 msgid "LiteSpeed Options"
 msgstr ""
 
-#: src/object-cache.cls.php:472
+#: src/object-cache.cls.php:473
 msgid "Redis encountered a fatal error: %s (code: %d)"
 msgstr ""
 
@@ -1991,23 +1995,23 @@ msgstr ""
 msgid "All QUIC.cloud service queues have been cleared."
 msgstr ""
 
-#: src/task.cls.php:176
+#: src/task.cls.php:177
 msgid "Every Minute"
 msgstr ""
 
-#: src/task.cls.php:196
+#: src/task.cls.php:197
 msgid "LiteSpeed Crawler Cron"
 msgstr ""
 
-#: src/utility.cls.php:233
+#: src/utility.cls.php:235
 msgid "right now"
 msgstr ""
 
-#: src/utility.cls.php:233
+#: src/utility.cls.php:235
 msgid "just now"
 msgstr ""
 
-#: src/utility.cls.php:236
+#: src/utility.cls.php:238
 msgid " %s ago"
 msgstr ""
 
@@ -2123,7 +2127,7 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 6.0)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 6.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: tpl/banner/new_version.php:57 tpl/banner/new_version_dev.tpl.php:12
 #: tpl/cache/more_settings_tip.tpl.php:15 tpl/inc/admin_footer.php:10
@@ -2139,7 +2143,7 @@ msgid "New release %s is available now."
 msgstr ""
 
 #: tpl/banner/new_version.php:69 tpl/banner/new_version_dev.tpl.php:24
-#: tpl/toolbox/beta_test.tpl.php:63
+#: tpl/toolbox/beta_test.tpl.php:64
 msgid "Upgrade"
 msgstr ""
 
@@ -4032,6 +4036,18 @@ msgstr ""
 msgid "<b>Last crawled:</b> %d item(s)"
 msgstr ""
 
+#: tpl/dash/dashboard.tpl.php:616
+msgid "Try QUIC.cloud CDN!"
+msgstr ""
+
+#: tpl/dash/dashboard.tpl.php:619
+msgid "Best available WordPress performance"
+msgstr ""
+
+#: tpl/dash/dashboard.tpl.php:622
+msgid "Globally fast TTFB, easy setup, and <a %s>more</a>!"
+msgstr ""
+
 #: tpl/dash/entry.tpl.php:11
 msgid "Network Dashboard"
 msgstr ""
@@ -4064,123 +4080,131 @@ msgstr ""
 msgid "LiteSpeed Cache Database Optimization"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:7
+#: tpl/db_optm/manage.tpl.php:9
 msgid "Clean All"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:11
+#: tpl/db_optm/manage.tpl.php:13
 msgid "Post Revisions"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:12
+#: tpl/db_optm/manage.tpl.php:14
 msgid "Clean all post revisions"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:15
+#: tpl/db_optm/manage.tpl.php:17
+msgid "Orphaned Post Meta"
+msgstr ""
+
+#: tpl/db_optm/manage.tpl.php:18
+msgid "Clean all orphaned post meta records"
+msgstr ""
+
+#: tpl/db_optm/manage.tpl.php:21
 msgid "Auto Drafts"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:16
+#: tpl/db_optm/manage.tpl.php:22
 msgid "Clean all auto saved drafts"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:19
+#: tpl/db_optm/manage.tpl.php:25
 msgid "Trashed Posts"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:20
+#: tpl/db_optm/manage.tpl.php:26
 msgid "Clean all trashed posts and pages"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:23
+#: tpl/db_optm/manage.tpl.php:29
 msgid "Spam Comments"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:24
+#: tpl/db_optm/manage.tpl.php:30
 msgid "Clean all spam comments"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:27
+#: tpl/db_optm/manage.tpl.php:33
 msgid "Trashed Comments"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:28
+#: tpl/db_optm/manage.tpl.php:34
 msgid "Clean all trashed comments"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:31
+#: tpl/db_optm/manage.tpl.php:37
 msgid "Trackbacks/Pingbacks"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:32
+#: tpl/db_optm/manage.tpl.php:38
 msgid "Clean all trackbacks and pingbacks"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:35
+#: tpl/db_optm/manage.tpl.php:41
 msgid "Expired Transients"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:36
+#: tpl/db_optm/manage.tpl.php:42
 msgid "Clean expired transient options"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:39
+#: tpl/db_optm/manage.tpl.php:45
 msgid "All Transients"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:40
+#: tpl/db_optm/manage.tpl.php:46
 msgid "Clean all transient options"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:43
+#: tpl/db_optm/manage.tpl.php:49
 msgid "Optimize Tables"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:44
+#: tpl/db_optm/manage.tpl.php:50
 msgid "Optimize all tables in your database"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:51
+#: tpl/db_optm/manage.tpl.php:57
 msgid "Clean revisions older than %1$s day(s), excluding %2$s latest revisions"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:72
+#: tpl/db_optm/manage.tpl.php:78
 msgid "Database Optimizer"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:99
+#: tpl/db_optm/manage.tpl.php:105
 msgid "Database Table Engine Converter"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:106
+#: tpl/db_optm/manage.tpl.php:113
 msgid "Table"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:107
+#: tpl/db_optm/manage.tpl.php:114
 msgid "Engine"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:108
+#: tpl/db_optm/manage.tpl.php:115
 msgid "Tool"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:122
+#: tpl/db_optm/manage.tpl.php:130
 msgid "Convert to InnoDB"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:130
+#: tpl/db_optm/manage.tpl.php:138
 msgid "We are good. No table uses MyISAM engine."
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:151
+#: tpl/db_optm/manage.tpl.php:160
 msgid "Database Summary"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:166
+#: tpl/db_optm/manage.tpl.php:176
 msgid "Option Name"
 msgstr ""
 
-#: tpl/db_optm/manage.tpl.php:167
+#: tpl/db_optm/manage.tpl.php:177
 msgid "Size"
 msgstr ""
 
@@ -5218,7 +5242,7 @@ msgid ""
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:127
-#: tpl/toolbox/beta_test.tpl.php:31
+#: tpl/toolbox/beta_test.tpl.php:32
 msgid "Example"
 msgstr ""
 
@@ -5763,54 +5787,54 @@ msgstr ""
 msgid "Restore Settings"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:26
+#: tpl/toolbox/beta_test.tpl.php:27
 msgid "Try GitHub Version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:30
+#: tpl/toolbox/beta_test.tpl.php:31
 msgid ""
 "Use this section to switch plugin versions. To beta test a GitHub commit, "
 "enter the commit URL in the field below."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:35
+#: tpl/toolbox/beta_test.tpl.php:36
 msgid "Use latest GitHub Dev commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:37
+#: tpl/toolbox/beta_test.tpl.php:38
 msgid "Use latest GitHub Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:39 tpl/toolbox/beta_test.tpl.php:55
+#: tpl/toolbox/beta_test.tpl.php:40 tpl/toolbox/beta_test.tpl.php:56
 msgid "Use latest WordPress release version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:39
+#: tpl/toolbox/beta_test.tpl.php:40
 msgid "OR"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:50
+#: tpl/toolbox/beta_test.tpl.php:51
 msgid ""
 "Downgrade not recommended. May cause fatal error due to refactored code."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:55
 msgid ""
 "Press the %s button to use the most recent GitHub commit. Master is for "
 "release candidate & Dev is for experimental testing."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:55
 msgid "Use latest GitHub Dev/Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:55
+#: tpl/toolbox/beta_test.tpl.php:56
 msgid ""
 "Press the %s button to stop beta testing and go back to the current release "
 "from the WordPress Plugin Directory."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:60
+#: tpl/toolbox/beta_test.tpl.php:61
 msgid ""
 "In order to avoid an upgrade error, you must be using %1$s or later before "
 "you can upgrade to %2$s versions."
