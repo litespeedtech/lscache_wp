@@ -1227,7 +1227,7 @@ class Optimize extends Base
 	private function _js_defer($ori, $src)
 	{
 		if (strpos($ori, ' async') !== false) {
-			$ori = str_replace(' async', '', $ori);
+			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]+)\1)?#isU', '', $ori);
 		}
 
 		if (strpos($ori, 'defer') !== false) {
