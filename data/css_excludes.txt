@@ -9,19 +9,31 @@
 # Inline CSS excludes
 
 ########## Flatsome theme random string excludes ############
-#row-
-#col-
-#cats-
-#stack-
-#timer-
-#gap-
-#portfolio-
-#image_
-#banner-
-#map-
-#text-box-
-#page-header-
-#section_
+accordion-
+row-
+col-
+cats-
+stack-
+timer-
+gap-
+gallery-
+portfolio-
+image_
+instagram-
+banner-
+banner-grid-
+map-
+text-
+text-box-
+title-
+pages-
+page-header-
+panel-
+portfolio-
+product-flip-
+product-grid-
+section_
+slider-
 
 .tdi_ # Theme: Newspaper by tagDiv.com 2020
 
