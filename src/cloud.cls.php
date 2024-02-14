@@ -164,6 +164,7 @@ class Cloud extends Base
 		$req_data = array(
 			'v' => defined('LSCWP_CUR_V') ? LSCWP_CUR_V : '',
 			'src' => $src,
+			'php' => phpversion(),
 		);
 		if (defined('LITESPEED_ERR')) {
 			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
