@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin activation class.
  *
@@ -8,6 +9,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -45,7 +47,7 @@ class Activation extends Base
 		$advanced_cache = LSCWP_CONTENT_DIR . '/advanced-cache.php';
 		if (version_compare($wp_version, '5.3', '<') && !file_exists($advanced_cache)) {
 			$file_pointer = fopen($advanced_cache, 'w');
-			fwrite($file_pointer, "<?php\n\n// A compatibility placeholder for WordPress < v5.3\n");
+			fwrite($file_pointer, "<?php\n\n// A compatibility placeholder for WordPress < v5.3\n// Created by LSCWP v6.1+");
 			fclose($file_pointer);
 		}
 
