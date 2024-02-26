@@ -83,17 +83,24 @@ class Media extends Root
 	{
 		global $wp_query;
 
-		// <link rel="preload" as="image" href="xx">
-		if ($this->conf(Base::O_MEDIA_PRELOAD_FEATURED) && $wp_query->is_single) {
-			$featured_image_url = get_the_post_thumbnail_url();
-			if ($featured_image_url) {
-				self::debug('Append featured image to head: ' . $featured_image_url);
-				if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
-					$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
-				}
-				$content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">'; // TODO: use imagesrcset
+		$cfg_vpi = defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_MEDIA_VPI);
+		if ($cfg_vpi) {
+			$is_mobile = $this->_separate_mobile();
+			$vpi_list = $this->cls('Metabox')->setting($is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list');
+			if ($vpi_list !== null) {
 			}
 		}
+		// <link rel="preload" as="image" href="xx">
+		// if ($wp_query->is_single) {
+		// 	$featured_image_url = get_the_post_thumbnail_url();
+		// 	if ($featured_image_url) {
+		// 		self::debug('Append featured image to head: ' . $featured_image_url);
+		// 		if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
+		// 			$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
+		// 		}
+		// 		// $content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">'; // TODO: use imagesrcset
+		// 	}
+		// }
 
 		return $content;
 	}

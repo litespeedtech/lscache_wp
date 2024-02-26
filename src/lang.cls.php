@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -184,7 +184,6 @@ class Lang extends Base
 			self::O_DISCUSS_AVATAR_CRON => __('Gravatar Cache Cron', 'litespeed-cache'),
 			self::O_DISCUSS_AVATAR_CACHE_TTL => __('Gravatar Cache TTL', 'litespeed-cache'),
 
-			self::O_MEDIA_PRELOAD_FEATURED => __('Preload Featured Image', 'litespeed-cache'),
 			self::O_MEDIA_LAZY => __('Lazy Load Images', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_EXC => __('Lazy Load Image Excludes', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_CLS_EXC => __('Lazy Load Image Class Name Excludes', 'litespeed-cache'),

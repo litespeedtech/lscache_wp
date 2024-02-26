@@ -191,7 +191,7 @@ class Base extends Root
 	## -------------------------------------------------- ##
 	## --------------		 Media 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MEDIA_PRELOAD_FEATURED = 'media-preload_featured';
+	const O_MEDIA_PRELOAD_FEATURED = 'media-preload_featured'; // Deprecated since v6.2. TODO: Will drop after v6.5
 	const O_MEDIA_LAZY = 'media-lazy';
 	const O_MEDIA_LAZY_PLACEHOLDER = 'media-lazy_placeholder';
 	const O_MEDIA_PLACEHOLDER_RESP = 'media-placeholder_resp';
@@ -477,7 +477,6 @@ class Base extends Root
 		self::O_OPTM_LOCALIZE_DOMAINS => array(),
 
 		// Media
-		self::O_MEDIA_PRELOAD_FEATURED => false,
 		self::O_MEDIA_LAZY => false,
 		self::O_MEDIA_LAZY_PLACEHOLDER => '',
 		self::O_MEDIA_PLACEHOLDER_RESP => false,

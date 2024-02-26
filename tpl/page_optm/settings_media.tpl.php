@@ -21,20 +21,6 @@ $lqip_queue = $this->load_queue('lqip');
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_MEDIA_PRELOAD_FEATURED; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php $this->build_switch($id); ?>
-				<div class="litespeed-desc">
-					<?php echo __('Load a post\'s Featured Image first, before the page begins to render. Leads to performance improvements and minimizes the risk of render blocking by Featured Images.', 'litespeed-cache'); ?>
-					<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/pageopt/#preload-featured-image'); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th>
 				<?php $id = Base::O_MEDIA_LAZY; ?>
 				<?php $this->title($id); ?>
 			</th>
