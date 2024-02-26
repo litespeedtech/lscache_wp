@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin cache-control class for X-Litespeed-Cache-Control
  *
@@ -7,6 +8,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -543,8 +545,8 @@ class Control extends Root
 				self::debug("Compare [from] $url_parsed [to] $target");
 
 				if ($v == PHP_URL_QUERY) {
-					$url_parsed = urldecode($url_parsed);
-					$target = urldecode($target);
+					$url_parsed = $url_parsed ? urldecode($url_parsed) : '';
+					$target = $target ? urldecode($target) : '';
 				}
 
 				if ($url_parsed != $target) {

@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
 * **Cache** Specified LSCWP in adv-cache compatible file.
 * **Cloud** Carried on PHP ver for better version detection purpose.
+* **Cache** PHP v8 warning in page redirection cache ablitity fix. (Issue#617 dcx15)
 
 = 6.1 - Feb 1 2024 =
 * 🌱**Database** New Clear Orphaned Post Meta optimizer function.
