@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.2 - Apr 2024 =
 * 🌱**Crawler** Cralwer hit/miss filter. (#328853)
+* **Object** Add support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
 * **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
 * **Cache** Specified LSCWP in adv-cache compatible file.
 * **Cloud** Carried on PHP ver for better version detection purpose.

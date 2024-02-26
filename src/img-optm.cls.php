@@ -2093,10 +2093,10 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-				/**
-				 * Batch switch
-				 * @since 1.6.3
-				 */
+			/**
+			 * Batch switch
+			 * @since 1.6.3
+			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->_batch_switch($type);

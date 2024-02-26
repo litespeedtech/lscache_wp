@@ -293,10 +293,11 @@ class Object_Cache extends Root
 				}
 
 				if ($this->_cfg_pswd) {
-					if ($this->_cfg_user)
-						$this->_conn->auth([$this->_cfg_user, $this->_cfg_pswd]);
-					else
+					if ($this->_cfg_user) {
+						$this->_conn->auth(array($this->_cfg_user, $this->_cfg_pswd));
+					} else {
 						$this->_conn->auth($this->_cfg_pswd);
+					}
 				}
 
 				if ($this->_cfg_db) {
