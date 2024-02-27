@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Object** Add support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
 * **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
 * **Cache** Specified LSCWP in adv-cache compatible file.
+* **Cache** Fixed redirection loop if query string has tailing ampersand (#389629)
 * **Cloud** Carried on PHP ver for better version detection purpose.
 * **Cache** PHP v8 warning in page redirection cache ablitity fix. (Issue#617 dcx15)
 

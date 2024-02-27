@@ -547,6 +547,9 @@ class Control extends Root
 				if ($v == PHP_URL_QUERY) {
 					$url_parsed = $url_parsed ? urldecode($url_parsed) : '';
 					$target = $target ? urldecode($target) : '';
+					if (substr($url_parsed, -1) == '&') {
+						$url_parsed = substr($url_parsed, 0, -1);
+					}
 				}
 
 				if ($url_parsed != $target) {
