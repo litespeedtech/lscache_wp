@@ -108,7 +108,6 @@ class Lang extends Base
 			self::O_CACHE_COMMENTER => __('Cache Commenters', 'litespeed-cache'),
 			self::O_CACHE_REST => __('Cache REST API', 'litespeed-cache'),
 			self::O_CACHE_PAGE_LOGIN => __('Cache Login Page', 'litespeed-cache'),
-			self::O_CACHE_FAVICON => __('Cache favicon.ico', 'litespeed-cache'),
 			self::O_CACHE_RES => __('Cache PHP Resources', 'litespeed-cache'),
 			self::O_CACHE_MOBILE => __('Cache Mobile', 'litespeed-cache'),
 			self::O_CACHE_MOBILE_RULES => __('List of Mobile User Agents', 'litespeed-cache'),

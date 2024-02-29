@@ -40,7 +40,7 @@ class Base extends Root
 	const O_CACHE_COMMENTER = 'cache-commenter';
 	const O_CACHE_REST = 'cache-rest';
 	const O_CACHE_PAGE_LOGIN = 'cache-page_login';
-	const O_CACHE_FAVICON = 'cache-favicon';
+	const O_CACHE_FAVICON = 'cache-favicon'; // Deprecated since v6.2. TODO: Will drop after v6.5
 	const O_CACHE_RES = 'cache-resources';
 	const O_CACHE_MOBILE = 'cache-mobile';
 	const O_CACHE_MOBILE_RULES = 'cache-mobile_rules';
@@ -283,8 +283,6 @@ class Base extends Root
 	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT';
 	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE';
 
-	// const O_FAVICON = 'litespeed-cache-favicon';
-
 	const CRWL_COOKIE_NAME = 'name';
 	const CRWL_COOKIE_VALS = 'vals';
 
@@ -344,7 +342,6 @@ class Base extends Root
 		self::O_CACHE_COMMENTER => false,
 		self::O_CACHE_REST => false,
 		self::O_CACHE_PAGE_LOGIN => false,
-		self::O_CACHE_FAVICON => false,
 		self::O_CACHE_RES => false,
 		self::O_CACHE_MOBILE => false,
 		self::O_CACHE_MOBILE_RULES => array(),
@@ -559,7 +556,6 @@ class Base extends Root
 		self::O_AUTO_UPGRADE => false,
 		self::O_GUEST => false,
 
-		self::O_CACHE_FAVICON => false,
 		self::O_CACHE_RES => false,
 		self::O_CACHE_BROWSER => false,
 		self::O_CACHE_MOBILE => false,

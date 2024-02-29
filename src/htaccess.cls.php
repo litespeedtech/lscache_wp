@@ -44,7 +44,6 @@ class Htaccess extends Root
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES';
 	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS';
 	const MARKER_CACHE_RESOURCE = '### marker CACHE RESOURCE';
-	const MARKER_FAVICON = '### marker FAVICON';
 	const MARKER_BROWSER_CACHE = '### marker BROWSER CACHE';
 	const MARKER_MINIFY = '### marker MINIFY';
 	const MARKER_CORS = '### marker CORS';
@@ -574,16 +573,6 @@ class Htaccess extends Root
 			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START;
 			$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']';
 			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END;
-			$new_rules[] = '';
-		}
-
-		// favicon
-		// frontend and backend
-		$id = Base::O_CACHE_FAVICON;
-		if (!empty($cfg[$id])) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]';
-			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END;
 			$new_rules[] = '';
 		}
 
