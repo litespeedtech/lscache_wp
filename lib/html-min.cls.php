@@ -26,6 +26,7 @@ class HTML_MIN
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;
+	protected $_skipComments = true;
 
 	/**
 	 * "Minify" an HTML page
@@ -84,6 +85,9 @@ class HTML_MIN
 		}
 		if (isset($options['jsCleanComments'])) {
 			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
+		}
+		if (isset($options['skipComments'])) {
+			$this->_skipComments = (string)$options['skipComments'];
 		}
 	}
 
@@ -168,7 +172,19 @@ class HTML_MIN
 
 	protected function _commentCB($m)
 	{
-		return (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['))
+		// Is IE conditional comment
+		$is_ie_comment = (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['));
+
+		// Skip comments from settings list
+		$is_skip_comment = false;
+		$skip_comments_array = explode(PHP_EOL, $this->_skipComments);
+		foreach ($skip_comments_array as $comment) {
+			if (strpos($m[1], $comment) !== false) {
+				$is_skip_comment = true;
+			}
+		}
+
+		return ($is_ie_comment || $is_skip_comment)
 			? $m[0]
 			: '';
 	}
