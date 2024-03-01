@@ -247,6 +247,34 @@ class Crawler extends Root
 		self::start($manually_run);
 	}
 
+	
+	/**
+	 * Check if crawler can run in the choosen time period
+	 *
+	 * @since 6.1
+	 */
+	public static  function _crawler_in_schedule_time()
+	{
+		$now = new DateTime();
+		$class_settings = self::cls();
+		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
+		$schedule_times = explode(',', $schedule_times);
+
+		foreach ($schedule_times as $time) {
+			if ($time !== '') {
+				$hours = explode('-', $time);
+				$start = new DateTime($hours[0] . ":00");
+				$end = new DateTime($hours[1] . ":00");
+				
+				if ($now < $end && $now > $start) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Proceed crawling
 	 *
@@ -255,8 +283,15 @@ class Crawler extends Root
 	 */
 	public static function start($manually_run = false)
 	{
+		$crawler_is_in_time = self::_crawler_in_schedule_time();
+
 		if (!Router::can_crawl()) {
 			self::debug('......crawler is NOT allowed by the server admin......');
+			return false;
+		}
+
+		if (!$manually_run && !$crawler_is_in_time) {
+			self::debug('......crawler is NOT allowed in this time slot......');
 			return false;
 		}
 
