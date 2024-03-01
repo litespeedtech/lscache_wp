@@ -8,6 +8,8 @@
 
 namespace LiteSpeed;
 
+use DateTime;
+
 defined('WPINC') || exit();
 
 class Crawler extends Root
@@ -237,6 +239,7 @@ class Crawler extends Root
 	 */
 	public static function async_handler($manually_run = false)
 	{
+
 		self::debug('------------async-------------start_async_handler');
 		// self::debug('-------------async------------ check_ajax_referer');
 		// add_action('check_ajax_referer', function ($a, $b) {
@@ -248,6 +251,32 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Check if crawler can run in the choosen time period
+	 *
+	 * @since 6.1
+	 */
+	public static  function _crawler_in_schedule_time()
+	{
+		$now = new DateTime();
+		$class_settings = self::cls();
+		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
+		$schedule_times = explode(',', $schedule_times);
+
+		foreach ($schedule_times as $time) {
+			if ($time !== '') {
+				$hours = explode('-', $time);
+				$start = new DateTime($hours[0] . ":00");
+				$end = new DateTime($hours[1] . ":00");
+				if ($now < $end && $now > $start) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Proceed crawling
 	 *
 	 * @since    1.1.0
@@ -255,8 +284,15 @@ class Crawler extends Root
 	 */
 	public static function start($manually_run = false)
 	{
+
+		$crawler_is_in_time = self::_crawler_in_schedule_time();
 		if (!Router::can_crawl()) {
 			self::debug('......crawler is NOT allowed by the server admin......');
+			return false;
+		}
+
+		if (!$manually_run && !$crawler_is_in_time) {
+			self::debug('......crawler is NOT allowed in this time slot......');
 			return false;
 		}
 
@@ -1325,7 +1361,7 @@ class Crawler extends Root
 				}
 				break;
 
-			// Handle the ajax request to proceed crawler manually by admin
+				// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
 				self::start_async();
 				break;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The optimize4 class.
  *
@@ -7,6 +8,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -44,22 +46,27 @@ class Optimizer extends Root
 			$options['jsMinifier'] = __CLASS__ . '::minify_js';
 		}
 
+		$skip_comments = $this->conf(Base::O_OPTM_HTML_SKIP_COMMENTS, '');
+		if (!empty($skip_comments)) {
+			$options['skipComments'] = $skip_comments;
+		}
+
 		/**
 		 * Added exception capture when minify
 		 * @since  2.2.3
 		 */
-		try {
-			$obj = new Lib\HTML_MIN($content, $options);
-			$content_final = $obj->process();
-			if (!defined('LSCACHE_ESI_SILENCE')) {
-				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
-			}
-			return $content_final;
-		} catch (\Exception $e) {
-			Debug2::debug('******[Optmer] html_min failed: ' . $e->getMessage());
-			error_log('****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage());
-			return $content;
+		//try {
+		$obj = new Lib\HTML_MIN($content, $options);
+		$content_final = $obj->process();
+		if (!defined('LSCACHE_ESI_SILENCE')) {
+			$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
 		}
+		return $content_final;
+		// } catch (\Exception $e) {
+		// 	Debug2::debug('******[Optmer] html_min failed: ' . $e->getMessage());
+		// 	error_log('****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage());
+		// 	return $content;
+		// }
 	}
 
 	/**

@@ -192,7 +192,22 @@ class Purge extends Base
 		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
 		// }
 		// else {
-		$this->_purge_all_lscache(true);
+
+		$purge_guest = $this->conf(BASE::O_PURGE_GUEST_PAGES);
+		if ($purge_guest) {
+			$this->_purge_all_lscache(true);
+		}
+		//  else {
+		// 	$this->_add(Tag::TYPE_LOCALRES);
+		// 	$this->_add(Tag::TYPE_HTTP);
+		// 	$this->_add(Tag::TYPE_MIN);
+		// 	// $this->_add(Tag::TYPE_FRONTPAGE);
+		// 	// if (LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS') {
+		// 	// 	$this->_add_private(Tag::TYPE_FRONTPAGE);
+		// 	// }
+		// 	// $this->_add(Tag::TYPE_PAGES);
+		// }
+
 		$this->_purge_all_cssjs(true);
 		$this->_purge_all_localres(true);
 		// $this->_purge_all_ccss( true );

@@ -71,6 +71,7 @@ class Base extends Root
 	## --------------		Purge 		----------------- ##
 	## -------------------------------------------------- ##
 	const O_PURGE_ON_UPGRADE = 'purge-upgrade';
+	const O_PURGE_GUEST_PAGES = 'purge-guest_pages';
 	const O_PURGE_STALE = 'purge-stale';
 	const O_PURGE_POST_ALL = 'purge-post_all';
 	const O_PURGE_POST_FRONTPAGE = 'purge-post_f';
@@ -140,6 +141,7 @@ class Base extends Root
 	const O_OPTM_JS_EXC = 'optm-js_exc';
 	const O_OPTM_HTML_MIN = 'optm-html_min';
 	const O_OPTM_HTML_LAZY = 'optm-html_lazy';
+	const O_OPTM_HTML_SKIP_COMMENTS = 'optm-html_skip_comment';
 	const O_OPTM_QS_RM = 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM = 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC = 'optm-css_async';
@@ -232,6 +234,7 @@ class Base extends Root
 	## --------------		Crawler		----------------- ##
 	## -------------------------------------------------- ##
 	const O_CRAWLER = 'crawler';
+	const O_CRAWLER_SCHEDULE_TIME = 'crawler-schedule_time';
 	const O_CRAWLER_USLEEP = 'crawler-usleep';
 	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration';
 	const O_CRAWLER_RUN_INTERVAL = 'crawler-run_interval';
@@ -308,6 +311,7 @@ class Base extends Root
 	protected static $SINGLE_SITE_OPTIONS = array(
 		self::O_API_KEY,
 		self::O_CRAWLER,
+		self::O_CRAWLER_SCHEDULE_TIME,
 		self::O_CRAWLER_SITEMAP,
 		self::O_CRAWLER_DROP_DOMAIN,
 		self::O_CDN,
@@ -373,6 +377,7 @@ class Base extends Root
 
 		// Purge
 		self::O_PURGE_ON_UPGRADE => false,
+		self::O_PURGE_GUEST_PAGES => true,
 		self::O_PURGE_STALE => false,
 		self::O_PURGE_POST_ALL => false,
 		self::O_PURGE_POST_FRONTPAGE => false,
@@ -432,6 +437,7 @@ class Base extends Root
 		self::O_OPTM_JS_EXC => array(),
 		self::O_OPTM_HTML_MIN => false,
 		self::O_OPTM_HTML_LAZY => array(),
+		self::O_OPTM_HTML_SKIP_COMMENTS => '',
 		self::O_OPTM_QS_RM => false,
 		self::O_OPTM_GGFONTS_RM => false,
 		self::O_OPTM_CSS_ASYNC => false,
@@ -514,6 +520,7 @@ class Base extends Root
 
 		// Crawler
 		self::O_CRAWLER => false,
+		self::O_CRAWLER_SCHEDULE_TIME => '00:00-23:59',
 		self::O_CRAWLER_USLEEP => 0,
 		self::O_CRAWLER_RUN_DURATION => 0,
 		self::O_CRAWLER_RUN_INTERVAL => 0,

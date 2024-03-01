@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Compress HTML
  *
@@ -11,9 +12,10 @@
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
  */
-namespace LiteSpeed\Lib ;
 
-defined( 'WPINC' ) || exit ;
+namespace LiteSpeed\Lib;
+
+defined('WPINC') || exit;
 
 class HTML_MIN
 {
@@ -26,6 +28,7 @@ class HTML_MIN
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;
+	protected $_skipComments = true;
 
 	/**
 	 * "Minify" an HTML page
@@ -85,6 +88,12 @@ class HTML_MIN
 		if (isset($options['jsCleanComments'])) {
 			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
 		}
+		if (isset($options['jsCleanComments'])) {
+			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
+		}
+		if (isset($options['skipComments'])) {
+			$this->_skipComments = (string)$options['skipComments'];
+		}
 	}
 
 	/**
@@ -103,32 +112,38 @@ class HTML_MIN
 
 		// replace SCRIPTs (and minify) with placeholders
 		$this->_html = preg_replace_callback(
-			'/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i'
-			,array($this, '_removeScriptCB')
-			,$this->_html);
+			'/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i',
+			array($this, '_removeScriptCB'),
+			$this->_html
+		);
 
 		// replace STYLEs (and minify) with placeholders
 		$this->_html = preg_replace_callback(
-			'/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i'
-			,array($this, '_removeStyleCB')
-			,$this->_html);
+			'/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i',
+			array($this, '_removeStyleCB'),
+			$this->_html
+		);
 
 		// remove HTML comments (not containing IE conditional comments).
 		$this->_html = preg_replace_callback(
-			'/<!--([\\s\\S]*?)-->/'
-			,array($this, '_commentCB')
-			,$this->_html);
+			'/<!--([\\s\\S]*?)-->/',
+			array($this, '_commentCB'),
+			$this->_html
+		);
 
 		// replace PREs with placeholders
-		$this->_html = preg_replace_callback('/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i'
-			,array($this, '_removePreCB')
-			,$this->_html);
+		$this->_html = preg_replace_callback(
+			'/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i',
+			array($this, '_removePreCB'),
+			$this->_html
+		);
 
 		// replace TEXTAREAs with placeholders
 		$this->_html = preg_replace_callback(
-			'/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i'
-			,array($this, '_removeTextareaCB')
-			,$this->_html);
+			'/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i',
+			array($this, '_removeTextareaCB'),
+			$this->_html
+		);
 
 		// trim each line.
 		// @todo take into account attribute values that span multiple lines.
@@ -136,31 +151,32 @@ class HTML_MIN
 
 		// remove ws around block/undisplayed elements
 		$this->_html = preg_replace('/\\s+(<\\/?(?:area|article|aside|base(?:font)?|blockquote|body'
-			.'|canvas|caption|center|col(?:group)?|dd|dir|div|dl|dt|fieldset|figcaption|figure|footer|form'
-			.'|frame(?:set)?|h[1-6]|head|header|hgroup|hr|html|legend|li|link|main|map|menu|meta|nav'
-			.'|ol|opt(?:group|ion)|output|p|param|section|t(?:able|body|head|d|h||r|foot|itle)'
-			.'|ul|video)\\b[^>]*>)/i', '$1', $this->_html);
+			. '|canvas|caption|center|col(?:group)?|dd|dir|div|dl|dt|fieldset|figcaption|figure|footer|form'
+			. '|frame(?:set)?|h[1-6]|head|header|hgroup|hr|html|legend|li|link|main|map|menu|meta|nav'
+			. '|ol|opt(?:group|ion)|output|p|param|section|t(?:able|body|head|d|h||r|foot|itle)'
+			. '|ul|video)\\b[^>]*>)/i', '$1', $this->_html);
 
 		// remove ws outside of all elements
 		$this->_html = preg_replace(
-			'/>(\\s(?:\\s*))?([^<]+)(\\s(?:\s*))?</'
-			,'>$1$2$3<'
-			,$this->_html);
+			'/>(\\s(?:\\s*))?([^<]+)(\\s(?:\s*))?</',
+			'>$1$2$3<',
+			$this->_html
+		);
 
 		// use newlines before 1st attribute in open tags (to limit line lengths)
 		// $this->_html = preg_replace('/(<[a-z\\-]+)\\s+([^>]+>)/i', "$1\n$2", $this->_html);
 
 		// fill placeholders
 		$this->_html = str_replace(
-			array_keys($this->_placeholders)
-			,array_values($this->_placeholders)
-			,$this->_html
+			array_keys($this->_placeholders),
+			array_values($this->_placeholders),
+			$this->_html
 		);
 		// issue 229: multi-pass to catch scripts that didn't get replaced in textareas
 		$this->_html = str_replace(
-			array_keys($this->_placeholders)
-			,array_values($this->_placeholders)
-			,$this->_html
+			array_keys($this->_placeholders),
+			array_values($this->_placeholders),
+			$this->_html
 		);
 
 		return $this->_html;
@@ -168,7 +184,19 @@ class HTML_MIN
 
 	protected function _commentCB($m)
 	{
-		return (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['))
+		// Is IE conditional comment
+		$is_ie_comment = (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['));
+
+		// Skip comments from settings list
+		$is_skip_comment = false;
+		$skip_comments_array = explode(PHP_EOL, $this->_skipComments);
+		foreach ($skip_comments_array as $comment) {
+			if (strpos($m[1], $comment) !== false) {
+				$is_skip_comment = true;
+			}
+		}
+
+		return ($is_ie_comment || $is_skip_comment)
 			? $m[0]
 			: '';
 	}
@@ -213,9 +241,10 @@ class HTML_MIN
 			: 'trim';
 		$css = call_user_func($minifier, $css);
 
-		return $this->_reservePlace($this->_needsCdata($css)
-			? "{$openStyle}/*<![CDATA[*/{$css}/*]]>*/</style>"
-			: "{$openStyle}{$css}</style>"
+		return $this->_reservePlace(
+			$this->_needsCdata($css)
+				? "{$openStyle}/*<![CDATA[*/{$css}/*]]>*/</style>"
+				: "{$openStyle}{$css}</style>"
 		);
 	}
 
@@ -242,16 +271,16 @@ class HTML_MIN
 		 *
 		 * @since  2.2.3
 		 */
-		if ( $this->_jsMinifier ) {
-			$js = call_user_func( $this->_jsMinifier, $js, trim( $m[ 2 ] ) ) ;
-		}
-		else {
-			$js = trim( $js ) ;
+		if ($this->_jsMinifier) {
+			$js = call_user_func($this->_jsMinifier, $js, trim($m[2]));
+		} else {
+			$js = trim($js);
 		}
 
-		return $this->_reservePlace($this->_needsCdata($js)
-			? "{$ws1}{$openScript}/*<![CDATA[*/{$js}/*]]>*/</script>{$ws2}"
-			: "{$ws1}{$openScript}{$js}</script>{$ws2}"
+		return $this->_reservePlace(
+			$this->_needsCdata($js)
+				? "{$ws1}{$openScript}/*<![CDATA[*/{$js}/*]]>*/</script>{$ws2}"
+				: "{$ws1}{$openScript}{$js}</script>{$ws2}"
 		);
 	}
 

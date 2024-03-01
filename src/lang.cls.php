@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -130,6 +130,7 @@ class Lang extends Base
 			self::O_OBJECT_TRANSIENTS => __('Store Transients', 'litespeed-cache'),
 
 			self::O_PURGE_ON_UPGRADE => __('Purge All On Upgrade', 'litespeed-cache'),
+			self::O_PURGE_GUEST_PAGES => __('Purge guest pages on Purge all', 'litespeed-cache'),
 			self::O_PURGE_STALE => __('Serve Stale', 'litespeed-cache'),
 			self::O_PURGE_TIMED_URLS => __('Scheduled Purge URLs', 'litespeed-cache'),
 			self::O_PURGE_TIMED_URLS_TIME => __('Scheduled Purge Time', 'litespeed-cache'),
@@ -153,6 +154,7 @@ class Lang extends Base
 			self::O_OPTM_JS_COMB_EXT_INL => __('JS Combine External and Inline', 'litespeed-cache'),
 			self::O_OPTM_HTML_MIN => __('HTML Minify', 'litespeed-cache'),
 			self::O_OPTM_HTML_LAZY => __('HTML Lazy Load Selectors', 'litespeed-cache'),
+			self::O_OPTM_HTML_SKIP_COMMENTS => __('HTML Keep commnents', 'litespeed-cache'),
 			self::O_OPTM_CSS_ASYNC => __('Load CSS Asynchronously', 'litespeed-cache'),
 			self::O_OPTM_CCSS_PER_URL => __('CCSS Per URL', 'litespeed-cache'),
 			self::O_OPTM_CSS_ASYNC_INLINE => __('Inline CSS Async Lib', 'litespeed-cache'),
@@ -251,6 +253,7 @@ class Lang extends Base
 			self::O_CDN_CLOUDFLARE => __('Cloudflare API', 'litespeed-cache'),
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
+			self::O_CRAWLER_SCHEDULE_TIME => __('Running time', 'litespeed-cache'),
 			self::O_CRAWLER_USLEEP => __('Delay', 'litespeed-cache'),
 			self::O_CRAWLER_RUN_DURATION => __('Run Duration', 'litespeed-cache'),
 			self::O_CRAWLER_RUN_INTERVAL => __('Interval Between Runs', 'litespeed-cache'),

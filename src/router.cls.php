@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The core plugin router class.
  *
@@ -7,7 +8,9 @@
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 class Router extends Base
@@ -540,7 +543,7 @@ class Router extends Base
 		$_can_option = current_user_can('manage_options');
 
 		switch ($action) {
-			// Save network settings
+				// Save network settings
 			case self::ACTION_SAVE_SETTINGS_NETWORK:
 				if ($_can_network_option) {
 					self::$_action = $action;
