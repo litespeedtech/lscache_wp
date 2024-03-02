@@ -4,6 +4,7 @@
 
 
 # JS file URL excludes
+adsbygoogle
 
 stats.wp.com/e-
 _stq
