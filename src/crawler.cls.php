@@ -257,20 +257,25 @@ class Crawler extends Root
 		$now = new DateTime();
 		$class_settings = self::cls();
 		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
-		$schedule_times = explode(',', $schedule_times);
+		if($schedule_times!== ''){
+			$schedule_times = explode(',', $schedule_times);
 
-		foreach ($schedule_times as $time) {
-			if ($time !== '') {
-				$hours = explode('-', $time);
-				$start = new DateTime($hours[0] . ":00");
-				$end = new DateTime($hours[1] . ":00");
-				if ($now < $end && $now > $start) {
-					return true;
+			foreach ($schedule_times as $time) {
+				if ($time !== '') {
+					$hours = explode('-', $time);
+					$start = new DateTime($hours[0] . ":00");
+					$end = new DateTime($hours[1] . ":00");
+					if ($now < $end && $now > $start) {
+						return true;
+					}
 				}
 			}
+			
+			return false;
 		}
-
-		return false;
+		else{
+			return true;
+		}
 	}
 
 	/**
@@ -281,13 +286,12 @@ class Crawler extends Root
 	 */
 	public static function start($manually_run = false)
 	{
-		$crawler_is_in_time = self::_crawler_in_schedule_time();
-
 		if (!Router::can_crawl()) {
 			self::debug('......crawler is NOT allowed by the server admin......');
 			return false;
 		}
 		
+		$crawler_is_in_time = self::cls()->_crawler_in_schedule_time();
 		if (!$manually_run && !$crawler_is_in_time) {
 			self::debug('......crawler is NOT allowed in this time slot......');
 			return false;

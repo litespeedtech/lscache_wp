@@ -515,7 +515,7 @@ class Base extends Root
 
 		// Crawler
 		self::O_CRAWLER => false,
-		self::O_CRAWLER_SCHEDULE_TIME => '00:00-23:59',
+		self::O_CRAWLER_SCHEDULE_TIME => '',
 		self::O_CRAWLER_USLEEP => 0,
 		self::O_CRAWLER_RUN_DURATION => 0,
 		self::O_CRAWLER_RUN_INTERVAL => 0,
