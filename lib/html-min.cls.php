@@ -177,10 +177,12 @@ class HTML_MIN
 
 		// Skip comments from settings list
 		$is_skip_comment = false;
-		$skip_comments_array = explode(PHP_EOL, $this->_skipComments);
-		foreach ($skip_comments_array as $comment) {
-			if (strpos($m[1], $comment) !== false) {
-				$is_skip_comment = true;
+		if($this->_skipComments !== ''){
+			$skip_comments_array = explode(PHP_EOL, $this->_skipComments);
+			foreach ($skip_comments_array as $comment) {
+				if (strpos($m[1], $comment) !== false) {
+					$is_skip_comment = true;
+				}
 			}
 		}
 
