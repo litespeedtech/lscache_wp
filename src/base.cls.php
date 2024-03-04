@@ -374,7 +374,7 @@ class Base extends Root
 
 		// Purge
 		self::O_PURGE_ON_UPGRADE => false,
-		self::O_PURGE_GUEST_PAGES => true,
+		self::O_PURGE_GUEST_PAGES => false,
 		self::O_PURGE_STALE => false,
 		self::O_PURGE_POST_ALL => false,
 		self::O_PURGE_POST_FRONTPAGE => false,
