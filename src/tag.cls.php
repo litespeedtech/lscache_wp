@@ -312,6 +312,10 @@ class Tag extends Root
 		return $tags;
 	}
 
+	private static function _is_visitor_guest(){
+		return is_user_logged_in();
+	}
+
 	/**
 	 * Generate all cache tags before output
 	 *
@@ -328,7 +332,7 @@ class Tag extends Root
 			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
-		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST) {
+		if((defined('LITESPEED_GUEST') && LITESPEED_GUEST) || (self::cls()->conf(BASE::O_GUEST) && !self::_is_visitor_guest())){
 			self::$_tags[] = 'guest';
 		}
 

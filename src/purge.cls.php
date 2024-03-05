@@ -192,12 +192,12 @@ class Purge extends Base
 		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
 		// }
 		// else {
-			
 		$purge_guest = $this->conf(BASE::O_PURGE_GUEST_PAGES);
 		if ($purge_guest) {
-			$this->_purge_all_lscache(true);
+			$this->_add('guest');
 		}
 		
+		$this->_purge_all_lscache(true);
 		$this->_purge_all_cssjs(true);
 		$this->_purge_all_localres(true);
 		// $this->_purge_all_ccss( true );
