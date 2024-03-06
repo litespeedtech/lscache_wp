@@ -192,11 +192,6 @@ class Purge extends Base
 		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
 		// }
 		// else {
-		$purge_guest = $this->conf(BASE::O_PURGE_GUEST_PAGES);
-		if ($purge_guest) {
-			$this->_add('guest');
-		}
-		
 		$this->_purge_all_lscache(true);
 		$this->_purge_all_cssjs(true);
 		$this->_purge_all_localres(true);
@@ -233,7 +228,13 @@ class Purge extends Base
 	 */
 	private function _purge_all_lscache($silence = false)
 	{
-		$this->_add('*');
+		$tags = ['*'];
+		$skip_purge_guest = $this->conf(BASE::O_PURGE_SKIP_GUEST_PAGES);
+		if ($skip_purge_guest) {
+			$tags = ['non-guest'];
+		}
+
+		$this->_add($tags, false);
 
 		if (!$silence) {
 			$msg = __('Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache');

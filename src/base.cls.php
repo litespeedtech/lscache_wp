@@ -71,7 +71,7 @@ class Base extends Root
 	## --------------		Purge 		----------------- ##
 	## -------------------------------------------------- ##
 	const O_PURGE_ON_UPGRADE = 'purge-upgrade';
-	const O_PURGE_GUEST_PAGES = 'purge-guest_pages';
+	const O_PURGE_SKIP_GUEST_PAGES = 'purge-skip_guest_pages';
 	const O_PURGE_STALE = 'purge-stale';
 	const O_PURGE_POST_ALL = 'purge-post_all';
 	const O_PURGE_POST_FRONTPAGE = 'purge-post_f';
@@ -374,7 +374,7 @@ class Base extends Root
 
 		// Purge
 		self::O_PURGE_ON_UPGRADE => false,
-		self::O_PURGE_GUEST_PAGES => false,
+		self::O_PURGE_SKIP_GUEST_PAGES => false,
 		self::O_PURGE_STALE => false,
 		self::O_PURGE_POST_ALL => false,
 		self::O_PURGE_POST_FRONTPAGE => false,

@@ -45,7 +45,7 @@ $break_arr = array(
 
 	<tr>
 		<th>
-			<?php $id = Base::O_PURGE_GUEST_PAGES; ?>
+			<?php $id = Base::O_PURGE_SKIP_GUEST_PAGES; ?>
 			<?php $this->title($id); ?>
 		</th>
 		<td>

@@ -313,7 +313,7 @@ class Tag extends Root
 	}
 
 	private static function _is_visitor_guest(){
-		return is_user_logged_in();
+		return !is_user_logged_in();
 	}
 
 	/**
@@ -332,8 +332,12 @@ class Tag extends Root
 			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
-		if((defined('LITESPEED_GUEST') && LITESPEED_GUEST) || (self::cls()->conf(BASE::O_GUEST) && !self::_is_visitor_guest())){
+		if((defined('LITESPEED_GUEST') && LITESPEED_GUEST) || (self::cls()->conf(BASE::O_GUEST) && self::_is_visitor_guest())){
 			self::$_tags[] = 'guest';
+		}
+		
+		if((defined('LITESPEED_GUEST') && !LITESPEED_GUEST) || !self::_is_visitor_guest()){
+			self::$_tags[] = 'non-guest';
 		}
 
 		// append blog main tag
