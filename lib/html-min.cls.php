@@ -26,7 +26,7 @@ class HTML_MIN
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;
-	protected $_skipComments = true;
+	protected $_skipComments = [];
 
 	/**
 	 * "Minify" an HTML page
@@ -87,7 +87,7 @@ class HTML_MIN
 			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
 		}
 		if (isset($options['skipComments'])) {
-			$this->_skipComments = (string)$options['skipComments'];
+			$this->_skipComments = $options['skipComments'];
 		}
 	}
 
@@ -170,22 +170,26 @@ class HTML_MIN
 		return $this->_html;
 	}
 
+	/**
+	 * From LSCWP 6.2: Changed the function to test for special comments that will be skipped. See: https://github.com/litespeedtech/lscache_wp/pull/622
+	 */
 	protected function _commentCB($m)
 	{
-		// Is IE conditional comment
+		// Check if is IE conditional comment
 		$is_ie_comment = (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['));
 
-		// Skip comments from settings list
+		// Check if comment text is present in Page Optimization -> HTML Settings -> HTML Keep comments
 		$is_skip_comment = false;
-		if($this->_skipComments !== ''){
-			$skip_comments_array = explode(PHP_EOL, $this->_skipComments);
-			foreach ($skip_comments_array as $comment) {
-				if (strpos($m[1], $comment) !== false) {
+		if(count($this->_skipComments) > 0){
+			foreach ($this->_skipComments as $comment) {
+				if (!empty($comment) && strpos($m[1], $comment) !== false && $is_skip_comment === false) {
 					$is_skip_comment = true;
+					break;
 				}
 			}
 		}
 
+		// If comment is IE Conditional OR Comment that need to be kept, it will return the comment. Else it will be removed.
 		return ($is_ie_comment || $is_skip_comment)
 			? $m[0]
 			: '';

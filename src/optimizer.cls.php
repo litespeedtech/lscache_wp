@@ -44,9 +44,9 @@ class Optimizer extends Root
 			$options['jsMinifier'] = __CLASS__ . '::minify_js';
 		}
 		
-		$skip_comments = $this->conf(Base::O_OPTM_HTML_SKIP_COMMENTS, '');
+		$skip_comments = $this->conf(Base::O_OPTM_HTML_SKIP_COMMENTS);
 		if (!empty($skip_comments)) {
-			$options['skipComments'] = $skip_comments;
+			$options['skipComments'] = preg_split('/\r\n|\r|\n/', $skip_comments);
 		}
 
 		/**
