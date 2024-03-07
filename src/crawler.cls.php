@@ -281,8 +281,8 @@ class Crawler extends Root
 								str_pad((string)$time_from_match[4], 2, "0", STR_PAD_LEFT) . ":00"
 							);
 
-							// Test start < now < end
-							if ($now < $end && $now > $start) {
+							// Test start <= now <= end
+							if ($now <= $end && $now >= $start) {
 								return true;
 							}
 						}
