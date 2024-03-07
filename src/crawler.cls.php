@@ -7,6 +7,7 @@
  */
 
 namespace LiteSpeed;
+use \DateTime;
 
 defined('WPINC') || exit();
 
@@ -257,20 +258,39 @@ class Crawler extends Root
 		$now = new DateTime();
 		$class_settings = self::cls();
 		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
+
 		if($schedule_times!== ''){
 			$schedule_times = explode(',', $schedule_times);
-
 			foreach ($schedule_times as $time) {
-				if ($time !== '') {
-					$hours = explode('-', $time);
-					$start = new DateTime($hours[0] . ":00");
-					$end = new DateTime($hours[1] . ":00");
-					if ($now < $end && $now > $start) {
-						return true;
+				// match only correct format time period: 0:00-23:00  OR 00:00-23:00
+				$time_parse_ok = preg_match('/(\d{1,2}):(\d{1,2})\-(\d{1,2}):(\d{1,2})/', $time, $time_from_match);
+				if($time !== '' && $time_parse_ok){
+					$count_colon = substr_count($time, ":");
+					$count_minus = substr_count($time, "-");
+					// Time periods must have 5 array parts, 2 colons, 1 minus sign
+					if (count($time_from_match) === 5 && $count_colon == 2 && $count_minus == 1){
+						// Check if second hour is higher than first one
+						if((int)$time_from_match[3] > (int) $time_from_match[1]){
+							// Create DateTime for start and end time and zerofill the number
+							$start = new DateTime(
+								str_pad((string)$time_from_match[1], 2, "0", STR_PAD_LEFT). ":" . 
+								str_pad((string)$time_from_match[2], 2, "0", STR_PAD_LEFT) . ":00"
+							);
+							$end = new DateTime(
+								str_pad((string)$time_from_match[3], 2, "0", STR_PAD_LEFT). ":" . 
+								str_pad((string)$time_from_match[4], 2, "0", STR_PAD_LEFT) . ":00"
+							);
+
+							// Test start < now < end
+							if ($now < $end && $now > $start) {
+								return true;
+							}
+						}
 					}
 				}
 			}
 			
+			self::debug('------------crawler schedule time-------------no time period found');
 			return false;
 		}
 		else{
@@ -293,7 +313,7 @@ class Crawler extends Root
 		
 		$crawler_is_in_time = self::cls()->_crawler_in_schedule_time();
 		if (!$manually_run && !$crawler_is_in_time) {
-			self::debug('......crawler is NOT allowed in this time slot......');
+			self::debug('......crawler is NOT allowed at this time......');
 			return false;
 		}
 
