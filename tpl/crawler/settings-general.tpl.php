@@ -38,9 +38,9 @@ $this->form_action();
 				<div class="litespeed-desc">
 					<?php echo __('Change the crawler running time.', 'litespeed-cache'); ?>
 					<br />
-					<?php echo __('You can add multiple times delimited by', 'litespeed-cache'); ?> <code>,</code>
+					<?php echo sprintf( __('You can add multiple times delimited by %s', 'litespeed-cache'), '<code>,</code>'); ?>
 					<br />
-					<?php echo __('Server time:', 'litespeed-cache'); ?> <code><?php echo date('H:m'); ?></code>
+					<?php echo sprintf( __('Server time: %s', 'litespeed-cache'), '<code>'. date('H:m') . '</code>'); ?> 
 					<br />
 					<code>00:00-06:00,20:00-23:59</code>
 				</div>
