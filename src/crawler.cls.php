@@ -7,6 +7,7 @@
  */
 
 namespace LiteSpeed;
+
 use \DateTime;
 
 defined('WPINC') || exit();
@@ -253,47 +254,62 @@ class Crawler extends Root
 	 *
 	 * @since 6.1
 	 */
-	public static  function _crawler_in_schedule_time()
+	public static function _crawler_in_schedule_time()
 	{
-		$now = new DateTime();
 		$class_settings = self::cls();
 		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
 
-		if($schedule_times!== ''){
+		if ($schedule_times !== '') {
 			$schedule_times = explode(',', $schedule_times);
-			foreach ($schedule_times as $time) {
-				// match only correct format time period: 0:00-23:00  OR 00:00-23:00
-				$time_parse_ok = preg_match('/(\d{1,2}):(\d{1,2})\-(\d{1,2}):(\d{1,2})/', $time, $time_from_match);
-				if($time !== '' && $time_parse_ok){
-					$count_colon = substr_count($time, ":");
-					$count_minus = substr_count($time, "-");
-					// Time periods must have 5 array parts, 2 colons, 1 minus sign
-					if (count($time_from_match) === 5 && $count_colon == 2 && $count_minus == 1){
-						// Check if second hour is higher than first one
-						if((int)$time_from_match[3] > (int) $time_from_match[1]){
-							// Create DateTime for start and end time and zerofill the number
-							$start = new DateTime(
-								str_pad((string)$time_from_match[1], 2, "0", STR_PAD_LEFT). ":" . 
-								str_pad((string)$time_from_match[2], 2, "0", STR_PAD_LEFT) . ":00"
-							);
-							$end = new DateTime(
-								str_pad((string)$time_from_match[3], 2, "0", STR_PAD_LEFT). ":" . 
-								str_pad((string)$time_from_match[4], 2, "0", STR_PAD_LEFT) . ":00"
-							);
 
-							// Test start <= now <= end
-							if ($now <= $end && $now >= $start) {
-								return true;
-							}
+			if (count($schedule_times) > 0) {
+				$now = time();
+
+				// A single time: e.g. 1, 01, 1:1, 1:01, 1:01:1, or 1:01:01, etc.
+				$time_re = '(\d{1,2}(?::\d{1,2}){0,2}(?i:[AP]M)?)';
+				$re = '/^' . $time_re . '[-]' . $time_re . '$/';
+
+				// Allow parsing times like 1-3, 1AM-3PM, 1aM-3Pm
+				$with_minutes = function ($time) {
+					$has_meridian = stripos($time, 'm');
+					if (preg_match('/:\d/', $time)) {
+						return $time;
+					} else {
+						if ($has_meridian !== false) {
+							$meridian = strtoupper(substr($time, -2));
+							$time_only = substr($time, 0, -2);
+
+							return $time_only . ':00' . $meridian;
+						} else {
+							return $time . ':00';
 						}
+					}
+				};
+
+				foreach ($schedule_times as $time) {
+					preg_match($re, $time, $matches);
+
+					if (!$matches) {
+						continue;
+					}
+
+					$start = strtotime($with_minutes($matches[1]));
+					$end = strtotime($with_minutes($matches[2]));
+
+					if (false === $start || false === $end || $start > $end) {
+						continue;
+					}
+
+					// Test start <= now <= end
+					if ($now <= $end && $now >= $start) {
+						return true;
 					}
 				}
 			}
-			
+
 			self::debug('------------crawler schedule time-------------no time period found');
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
@@ -310,7 +326,7 @@ class Crawler extends Root
 			self::debug('......crawler is NOT allowed by the server admin......');
 			return false;
 		}
-		
+
 		$crawler_is_in_time = self::cls()->_crawler_in_schedule_time();
 		if (!$manually_run && !$crawler_is_in_time) {
 			self::debug('......crawler is NOT allowed at this time......');
