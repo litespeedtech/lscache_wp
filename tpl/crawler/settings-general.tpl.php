@@ -42,7 +42,7 @@ $this->form_action();
 					<br />
 					<?php echo __('Server time:', 'litespeed-cache'); ?> <code><?php echo date('H:m'); ?></code>
 					<br />
-					<code>00:00-06:00,20:00-23:59,1AM-15:00</code>
+					<code>00:00-06:00,20:00-23:59</code>
 				</div>
 			</td>
 		</tr>
