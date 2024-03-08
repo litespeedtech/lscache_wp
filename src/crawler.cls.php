@@ -287,6 +287,7 @@ class Crawler extends Root
 				};
 
 				foreach ($schedule_times as $time) {
+					$time = trim($time);
 					preg_match($re, $time, $matches);
 
 					if (!$matches) {
