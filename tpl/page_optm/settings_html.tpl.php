@@ -102,7 +102,7 @@ defined('WPINC') || exit;
 					<?php echo __('write:', 'litespeed-cache'); ?>
 					<code>A comment that needs to be here</code>
 					<br />
-					<?php echo __('List patterns one per line.', 'litespeed-cache'); ?>
+					<?php Doc::one_per_line(); ?>
 				</div>
 			</td>
 		</tr>
