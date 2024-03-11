@@ -36,9 +36,9 @@ $this->form_action();
 			<td>
 				<?php $this->build_input($id); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Change the crawler running time.', 'litespeed-cache'); ?>
+					<?php echo __('Specify the crawler running times.', 'litespeed-cache'); ?>
 					<br />
-					<?php echo sprintf( __('You can add multiple times delimited by %s', 'litespeed-cache'), '<code>,</code>'); ?>
+					<?php echo sprintf( __('You can add multiple ranges in 24-hour format <code>HH:mm-HH:mm</code> delimited by %s', 'litespeed-cache'), '<code>,</code>'); ?>
 					<br />
 					<?php echo sprintf( __('Server time: %s', 'litespeed-cache'), '<code>'. date('H:m') . '</code>'); ?> 
 					<br />
