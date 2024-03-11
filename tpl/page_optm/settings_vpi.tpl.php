@@ -45,7 +45,7 @@ $queue = $this->load_queue( 'vpi' );
 				<?php endif; ?>
 
 				<?php if ( $closest_server ) : ?>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_VPI ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i></a>
+					<a class='litespeed-redetect' href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array( 'svc' => Cloud::SVC_VPI ) ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf( __( 'Current closest Cloud server is %s.&#10; Click to redetect.', 'litespeed-cache' ), $closest_server ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache' ) ; ?>"><i class='litespeed-quic-icon'></i> <?php echo __( 'Redetect', 'litespeed-cache' ); ?></a>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $queue ) ) : ?>
@@ -73,6 +73,7 @@ $queue = $this->load_queue( 'vpi' );
 					<a href="<?php echo Utility::build_url( Router::ACTION_VPI, VPI::TYPE_GEN ); ?>" class="button litespeed-btn-success">
 						<?php echo sprintf( __( 'Run %s Queue Manually', 'litespeed-cache' ), 'VPI' ); ?>
 					</a>
+					<?php Doc::queue_issues(); ?>
 				<?php endif; ?>
 			</div>
 

@@ -10,9 +10,9 @@
  * a common place for plugin authors to append their file to.
  *
  */
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-use \LiteSpeed\API;
+use LiteSpeed\API;
 
 $third_cls = array(
 	'Aelia_CurrencySwitcher',
@@ -39,15 +39,15 @@ $third_cls = array(
 	'Yith_Wishlist',
 );
 
-foreach ( $third_cls as $cls ) {
-	add_action( 'litespeed_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect' ) ;
+foreach ($third_cls as $cls) {
+	add_action('litespeed_load_thirdparty', 'LiteSpeed\Thirdparty\\' . $cls . '::detect');
 }
 
 // Preload needed for certain thirdparty
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Gravity_Forms::preload' );
-add_action( 'litespeed_init', 'LiteSpeed\Thirdparty\Perfmatters::preload' );
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\Divi_Theme_Builder::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\Gravity_Forms::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\Perfmatters::preload');

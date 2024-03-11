@@ -6,7 +6,7 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 class Avada
 {
@@ -18,12 +18,12 @@ class Avada
 	 */
 	public static function detect()
 	{
-		if ( ! defined( 'AVADA_VERSION' ) ) {
+		if (!defined('AVADA_VERSION')) {
 			return;
 		}
 
-		add_action( 'update_option_avada_dynamic_css_posts', __CLASS__ . '::flush' );
-		add_action( 'update_option_fusion_options', __CLASS__ . '::flush' );
+		add_action('update_option_avada_dynamic_css_posts', __CLASS__ . '::flush');
+		add_action('update_option_fusion_options', __CLASS__ . '::flush');
 	}
 
 	/**
@@ -34,8 +34,6 @@ class Avada
 	 */
 	public static function flush()
 	{
-		do_action( 'litespeed_purge_all', '3rd avada' );
+		do_action('litespeed_purge_all', '3rd avada');
 	}
-
 }
-

@@ -6,7 +6,7 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 class Divi_Theme_Builder
 {
@@ -20,31 +20,35 @@ class Divi_Theme_Builder
 	 */
 	public static function preload()
 	{
-		if ( ! function_exists( 'et_setup_theme' ) ) return;
-		if ( ! empty( $_GET[ 'et_fb' ] ) || ! empty( $_GET[ 'et_pb_preview' ] ) ) {
-			do_action( 'litespeed_disable_all', 'divi edit mode' );
+		if (!function_exists('et_setup_theme')) {
+			return;
+		}
+		if (!empty($_GET['et_fb']) || !empty($_GET['et_pb_preview']) || (!empty($_GET['p']) && !empty($_GET['preview']) && $_GET['preview'] === 'true')) {
+			do_action('litespeed_disable_all', 'divi edit mode');
 		}
 	}
 
 	public static function detect()
 	{
-		if ( ! defined( 'ET_CORE' ) ) return;
+		if (!defined('ET_CORE')) {
+			return;
+		}
 
 		// As DIVI will set page to non-cacheable for the 1st visit to generate CCSS, will need to ignore that no-cache for crawler
-		defined( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE' ) || define( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE', true );
+		defined('LITESPEED_CRAWLER_IGNORE_NONCACHEABLE') || define('LITESPEED_CRAWLER_IGNORE_NONCACHEABLE', true);
 
 		/**
 		 * Add contact form to nonce
 		 * @since  2.9.7.1 #475461
 		 */
-		do_action( 'litespeed_nonce', 'et-pb-contact-form-submit' );
+		do_action('litespeed_nonce', 'et-pb-contact-form-submit');
 
 		/**
 		 * Subscribe module and A/B logging
 		 * @since  3.0 @Robert Staddon
 		 */
-		do_action( 'litespeed_nonce', 'et_frontend_nonce' );
-		do_action( 'litespeed_nonce', 'et_ab_log_nonce' );
+		do_action('litespeed_nonce', 'et_frontend_nonce');
+		do_action('litespeed_nonce', 'et_ab_log_nonce');
 
 		/*
 		// the comment box fix is for user using theme builder, ESI will load the wrong json string

@@ -18,6 +18,11 @@ defined( 'WPINC' ) || exit ;
 class HTML_MIN
 {
 	/**
+	 * @var string
+	 */
+	protected $_html = '';
+
+	/**
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;

@@ -2,6 +2,7 @@
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
+$this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">

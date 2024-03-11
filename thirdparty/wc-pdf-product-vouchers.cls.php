@@ -6,28 +6,26 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class WC_PDF_Product_Vouchers {
+class WC_PDF_Product_Vouchers
+{
 	/**
 	 * Do not cache generated vouchers
 	 *
 	 * @since 5.1.0
 	 */
-	public static function detect() {
-		if ( ! class_exists( '\WC_PDF_Product_Vouchers_Loader' ) ) {
+	public static function detect()
+	{
+		if (!class_exists('\WC_PDF_Product_Vouchers_Loader')) {
 			return;
 		}
 
-		$is_voucher =
-			! empty( $_GET['post_type'] )
-			&& 'wc_voucher' === $_GET['post_type'];
-		$has_key =
-			! empty( $_GET['voucher_key'] )
-			|| ! empty( $_GET['key'] );
+		$is_voucher = !empty($_GET['post_type']) && 'wc_voucher' === $_GET['post_type'];
+		$has_key = !empty($_GET['voucher_key']) || !empty($_GET['key']);
 
-		if ( $is_voucher && $has_key ) {
-			do_action( 'litespeed_control_set_nocache', '3rd WC PDF Product Voucher' );
+		if ($is_voucher && $has_key) {
+			do_action('litespeed_control_set_nocache', '3rd WC PDF Product Voucher');
 		}
 	}
 }

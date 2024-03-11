@@ -6,11 +6,10 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 class WP_PostRatings
 {
-
 	/**
 	 * Detects if plugin is installed.
 	 *
@@ -19,8 +18,8 @@ class WP_PostRatings
 	 */
 	public static function detect()
 	{
-		if ( defined( 'WP_POSTRATINGS_VERSION' ) ) {
-			add_action( 'rate_post', __CLASS__ . '::flush', 10, 3 );
+		if (defined('WP_POSTRATINGS_VERSION')) {
+			add_action('rate_post', __CLASS__ . '::flush', 10, 3);
 		}
 	}
 
@@ -30,9 +29,8 @@ class WP_PostRatings
 	 * @since 1.1.1
 	 * @access public
 	 */
-	public static function flush( $uid, $post_id, $post_ratings_score )
+	public static function flush($uid, $post_id, $post_ratings_score)
 	{
-		do_action( 'litespeed_purge_post', $post_id );
+		do_action('litespeed_purge_post', $post_id);
 	}
-
 }

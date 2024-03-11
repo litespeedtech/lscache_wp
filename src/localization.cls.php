@@ -6,9 +6,10 @@
  */
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class Localization extends Base {
+class Localization extends Base
+{
 	const LOG_TAG = '🛍️';
 
 	/**
@@ -17,8 +18,9 @@ class Localization extends Base {
 	 * @since  3.0
 	 * @access protected
 	 */
-	public function init() {
-		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 23 ); // After page optm
+	public function init()
+	{
+		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 23); // After page optm
 	}
 
 	/**
@@ -26,47 +28,48 @@ class Localization extends Base {
 	 *
 	 * @since  3.3
 	 */
-	public function serve_static( $uri ) {
-		$url = base64_decode( $uri );
+	public function serve_static($uri)
+	{
+		$url = base64_decode($uri);
 
-		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
+		if (!$this->conf(self::O_OPTM_LOCALIZE)) {
 			// wp_redirect( $url );
-			exit( 'Not supported' );
+			exit('Not supported');
 		}
 
-		if ( substr( $url, -3 ) !== '.js' ) {
+		if (substr($url, -3) !== '.js') {
 			// wp_redirect( $url );
 			// exit( 'Not supported ' . $uri );
 		}
 
 		$match = false;
-		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
-		foreach ( $domains as $v ) {
-			if ( ! $v || strpos( $v, '#' ) === 0 ) {
+		$domains = $this->conf(self::O_OPTM_LOCALIZE_DOMAINS);
+		foreach ($domains as $v) {
+			if (!$v || strpos($v, '#') === 0) {
 				continue;
 			}
 
 			$type = 'js';
 			$domain = $v;
 			// Try to parse space splitted value
-			if ( strpos( $v, ' ' ) ) {
-				$v = explode( ' ', $v );
-				if ( ! empty( $v[ 1 ] ) ) {
-					$type = strtolower( $v[ 0 ] );
-					$domain = $v[ 1 ];
+			if (strpos($v, ' ')) {
+				$v = explode(' ', $v);
+				if (!empty($v[1])) {
+					$type = strtolower($v[0]);
+					$domain = $v[1];
 				}
 			}
 
-			if ( strpos( $domain, 'https://' ) !== 0 ) {
+			if (strpos($domain, 'https://') !== 0) {
 				continue;
 			}
 
-			if ( $type != 'js' ) {
+			if ($type != 'js') {
 				continue;
 			}
 
 			// if ( strpos( $url, $domain ) !== 0 ) {
-			if ( $url != $domain ) {
+			if ($url != $domain) {
 				continue;
 			}
 
@@ -74,44 +77,44 @@ class Localization extends Base {
 			break;
 		}
 
-		if ( ! $match ) {
+		if (!$match) {
 			// wp_redirect( $url );
-			exit( 'Not supported2' );
+			exit('Not supported2');
 		}
 
-		header( 'Content-Type: application/javascript' );
+		header('Content-Type: application/javascript');
 
 		// Generate
-		$this->_maybe_mk_cache_folder( 'localres' );
+		$this->_maybe_mk_cache_folder('localres');
 
-		$file = $this->_realpath( $url );
+		$file = $this->_realpath($url);
 
-		self::debug( 'localize [url] ' . $url );
-		$response = wp_remote_get( $url, array( 'timeout' => 180, 'stream' => true, 'filename' => $file ) );
+		self::debug('localize [url] ' . $url);
+		$response = wp_remote_get($url, array('timeout' => 180, 'stream' => true, 'filename' => $file));
 
 		// Parse response data
-		if ( is_wp_error( $response ) ) {
+		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
-			file_exists( $file ) && unlink( $file );
-			self::debug( 'failed to get: ' . $error_message );
-			wp_redirect( $url );
-			exit;
+			file_exists($file) && unlink($file);
+			self::debug('failed to get: ' . $error_message);
+			wp_redirect($url);
+			exit();
 		}
 
-		$url = $this->_rewrite( $url );
+		$url = $this->_rewrite($url);
 
-		wp_redirect( $url );
-		exit;
+		wp_redirect($url);
+		exit();
 	}
-
 
 	/**
 	 * Get the final URL of local avatar
 	 *
 	 * @since  4.5
 	 */
-	private function _rewrite( $url ) {
-		return LITESPEED_STATIC_URL . '/localres/' . $this->_filepath( $url );
+	private function _rewrite($url)
+	{
+		return LITESPEED_STATIC_URL . '/localres/' . $this->_filepath($url);
 	}
 
 	/**
@@ -120,8 +123,9 @@ class Localization extends Base {
 	 * @since  4.5
 	 * @access private
 	 */
-	private function _realpath( $url ) {
-		return LITESPEED_STATIC_DIR . '/localres/' . $this->_filepath( $url );
+	private function _realpath($url)
+	{
+		return LITESPEED_STATIC_DIR . '/localres/' . $this->_filepath($url);
 	}
 
 	/**
@@ -129,14 +133,14 @@ class Localization extends Base {
 	 *
 	 * @since  4.5
 	 */
-	private function _filepath( $url ) {
-		$filename = md5( $url ) . '.js';
-		if ( is_multisite() ) {
+	private function _filepath($url)
+	{
+		$filename = md5($url) . '.js';
+		if (is_multisite()) {
 			$filename = get_current_blog_id() . '/' . $filename;
 		}
 		return $filename;
 	}
-
 
 	/**
 	 * Localize JS/Fonts
@@ -144,48 +148,48 @@ class Localization extends Base {
 	 * @since 3.3
 	 * @access public
 	 */
-	public function finalize( $content ) {
-		if ( is_admin() ) {
+	public function finalize($content)
+	{
+		if (is_admin()) {
 			return $content;
 		}
 
-		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
+		if (!$this->conf(self::O_OPTM_LOCALIZE)) {
 			return $content;
 		}
 
-		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
-		if ( ! $domains ) {
+		$domains = $this->conf(self::O_OPTM_LOCALIZE_DOMAINS);
+		if (!$domains) {
 			return $content;
 		}
 
-		foreach ( $domains as $v ) {
-			if ( ! $v || strpos( $v, '#' ) === 0 ) {
+		foreach ($domains as $v) {
+			if (!$v || strpos($v, '#') === 0) {
 				continue;
 			}
 
 			$type = 'js';
 			$domain = $v;
 			// Try to parse space splitted value
-			if ( strpos( $v, ' ' ) ) {
-				$v = explode( ' ', $v );
-				if ( ! empty( $v[ 1 ] ) ) {
-					$type = strtolower( $v[ 0 ] );
-					$domain = $v[ 1 ];
+			if (strpos($v, ' ')) {
+				$v = explode(' ', $v);
+				if (!empty($v[1])) {
+					$type = strtolower($v[0]);
+					$domain = $v[1];
 				}
 			}
 
-			if ( strpos( $domain, 'https://' ) !== 0 ) {
+			if (strpos($domain, 'https://') !== 0) {
 				continue;
 			}
 
-			if ( $type != 'js' ) {
+			if ($type != 'js') {
 				continue;
 			}
 
-			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode( $domain ), $content );
+			$content = str_replace($domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode($domain), $content);
 		}
 
 		return $content;
 	}
-
 }

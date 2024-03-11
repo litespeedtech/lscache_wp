@@ -57,7 +57,7 @@ rating_nonce
 timeline_nonce
 blog_feed_nonce
 
-# WS Form 
+# WS Form
 wsf_post
 
 # Easy Digital Download (EDD)
@@ -66,3 +66,6 @@ edd_* private
 
 # WP Menu Cart
 wpmenucart private
+
+# Woo nonce
+woocommerce-login

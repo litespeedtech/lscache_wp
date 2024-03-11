@@ -1,0 +1,16 @@
+**/*.min.*
+**/*.ori.*
+**/*.tpl.php
+assets/js/css_async.js
+assets/js/webfontloader.js
+lib
+tpl/banner
+tpl/esi_widget_edit.php
+tpl/inc/api_key.php
+tpl/inc/check_cache_disabled.php
+tpl/inc/check_if_network_disable_all.php
+tpl/inc/modal.header.php
+!tpl/cache/network_settings-browser.tpl.php
+!tpl/cache/network_settings-object.tpl.php
+!tpl/cache/settings-browser.tpl.php
+!tpl/cache/settings-object.tpl.php

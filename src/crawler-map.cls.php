@@ -1,19 +1,26 @@
 <?php
+
 /**
  * The Crawler Sitemap Class
  *
  * @since      	1.1.0
  */
-namespace LiteSpeed;
-defined( 'WPINC' ) || exit;
 
-class Crawler_Map extends Root {
+namespace LiteSpeed;
+
+defined('WPINC') || exit();
+
+class Crawler_Map extends Root
+{
+	const LOG_TAG = '🐞🗺️';
+
 	const BM_MISS = 1;
 	const BM_HIT = 2;
 	const BM_BLACKLIST = 4;
 
 	private $_home_url; // Used to simplify urls
 	private $_tb;
+	private $_tb_blacklist;
 	private $__data;
 	private $_conf_map_timeout;
 	private $_urls = array();
@@ -23,12 +30,13 @@ class Crawler_Map extends Root {
 	 *
 	 * @since 1.1.0
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->_home_url = get_home_url();
 		$this->__data = Data::cls();
-		$this->_tb = $this->__data->tb( 'crawler' );
-		$this->_tb_blacklist = $this->__data->tb( 'crawler_blacklist' );
-		$this->_conf_map_timeout = $this->conf( Base::O_CRAWLER_MAP_TIMEOUT );
+		$this->_tb = $this->__data->tb('crawler');
+		$this->_tb_blacklist = $this->__data->tb('crawler_blacklist');
+		$this->_conf_map_timeout = $this->conf(Base::O_CRAWLER_MAP_TIMEOUT);
 	}
 
 	/**
@@ -37,94 +45,102 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save_map_status( $list, $curr_crawler ) {
+	public function save_map_status($list, $curr_crawler)
+	{
 		global $wpdb;
 		Utility::compatibility();
 
-		$total_crawler = count( Crawler::cls()->list_crawlers() );
+		$total_crawler = count(Crawler::cls()->list_crawlers());
 		$total_crawler_pos = $total_crawler - 1;
 
 		// Replace current crawler's position
 		$curr_crawler = (int) $curr_crawler;
-		foreach ( $list as $bit => $ids ) { // $ids = [ id => [ url, code ], ... ]
-			if ( ! $ids ) {
+		foreach ($list as $bit => $ids) {
+			// $ids = [ id => [ url, code ], ... ]
+			if (!$ids) {
 				continue;
 			}
-			Debug2::debug( "🐞🗺️ Update map [crawler] $curr_crawler [bit] $bit [count] " . count( $ids ) );
+			self::debug("Update map [crawler] $curr_crawler [bit] $bit [count] " . count($ids));
 
 			// Update res first, then reason
 			$right_pos = $total_crawler_pos - $curr_crawler;
 			$sql_res = "CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, $right_pos ) )";
 
-			$id_all = implode( ',', array_map( 'intval', array_keys( $ids ) ) );
+			$id_all = implode(',', array_map('intval', array_keys($ids)));
 
-			$wpdb->query( "UPDATE `$this->_tb` SET res = $sql_res WHERE id IN ( $id_all )" );
+			$wpdb->query("UPDATE `$this->_tb` SET res = $sql_res WHERE id IN ( $id_all )");
 
 			// Add blacklist
-			if ( $bit == 'B' || $bit == 'N' ) {
+			if ($bit == 'B' || $bit == 'N') {
 				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
-				$existing = $wpdb->get_results( $q, ARRAY_A );
+				$existing = $wpdb->get_results($q, ARRAY_A);
 				// Update current crawler status tag in existing blacklist
-				if ( $existing ) {
-					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode( ',', array_column( $existing, 'id' ) ) . " )" );
-					Debug2::debug( '🐞🗺️ Update blacklist [count] ' . $count );
+				if ($existing) {
+					$count = $wpdb->query("UPDATE `$this->_tb_blacklist` SET res = $sql_res WHERE id IN ( " . implode(',', array_column($existing, 'id')) . ' )');
+					self::debug('Update blacklist [count] ' . $count);
 				}
 
 				// Append new blacklist
-				if ( count( $ids ) > count( $existing ) ) {
-					$new_urls = array_diff( array_column( $ids, 'url' ), array_column( $existing, 'url') );
+				if (count($ids) > count($existing)) {
+					$new_urls = array_diff(array_column($ids, 'url'), array_column($existing, 'url'));
 
-					Debug2::debug( '🐞🗺️ Insert into blacklist [count] ' . count( $new_urls ) );
+					self::debug('Insert into blacklist [count] ' . count($new_urls));
 
-					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode( ',', array_fill( 0, count( $new_urls ), '( %s, %s, %s )' ) );
+					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode(',', array_fill(0, count($new_urls), '( %s, %s, %s )'));
 					$data = array();
-					$res = array_fill( 0, $total_crawler, '-' );
-					$res[ $curr_crawler ] = $bit;
-					$res = implode( '', $res );
-					$default_reason = $total_crawler > 1 ? str_repeat( ',', $total_crawler - 1 ) : ''; // Pre-populate default reason value first, update later
-					foreach ( $new_urls as $url ) {
+					$res = array_fill(0, $total_crawler, '-');
+					$res[$curr_crawler] = $bit;
+					$res = implode('', $res);
+					$default_reason = $total_crawler > 1 ? str_repeat(',', $total_crawler - 1) : ''; // Pre-populate default reason value first, update later
+					foreach ($new_urls as $url) {
 						$data[] = $url;
 						$data[] = $res;
 						$data[] = $default_reason;
 					}
-					$wpdb->query( $wpdb->prepare( $q, $data ) );
+					$wpdb->query($wpdb->prepare($q, $data));
 				}
 			}
 
 			// Update sitemap reason w/ HTTP code
 			$reason_array = array();
-			foreach ( $ids as $id => $v2 ) {
-				$code = (int)$v2[ 'code' ];
-				if ( empty( $reason_array[ $code ] ) ) {
-					$reason_array[ $code ] = array();
+			foreach ($ids as $id => $v2) {
+				$code = (int) $v2['code'];
+				if (empty($reason_array[$code])) {
+					$reason_array[$code] = array();
 				}
-				$reason_array[ $code ][] = (int)$id;
+				$reason_array[$code][] = (int) $id;
 			}
 
-			foreach ( $reason_array as $code => $v2 ) {
+			foreach ($reason_array as $code => $v2) {
 				// Complement comma
-				if ( $curr_crawler ) {
+				if ($curr_crawler) {
 					$code = ',' . $code;
 				}
-				if ( $curr_crawler < $total_crawler_pos ) {
+				if ($curr_crawler < $total_crawler_pos) {
 					$code .= ',';
 				}
 
-				$count = $wpdb->query( "UPDATE `$this->_tb` SET reason = CONCAT( SUBSTRING_INDEX( reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( reason, ',', -$right_pos ) ) WHERE id IN (" . implode( ',', $v2 ) . ")" );
+				$count = $wpdb->query(
+					"UPDATE `$this->_tb` SET reason=CONCAT(SUBSTRING_INDEX(reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(reason, ',', -$right_pos)) WHERE id IN (" .
+						implode(',', $v2) .
+						')'
+				);
 
-				Debug2::debug( "🐞🗺️ Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
+				self::debug("Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count");
 
 				// Update blacklist reason
-				if ( $bit == 'B' || $bit == 'N' ) {
-					$count = $wpdb->query( "UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason = CONCAT( SUBSTRING_INDEX( a.reason, ',', $curr_crawler ), '$code', SUBSTRING_INDEX( a.reason, ',', -$right_pos ) ) WHERE b.id IN (" . implode( ',', $v2 ) . ")" );
+				if ($bit == 'B' || $bit == 'N') {
+					$count = $wpdb->query(
+						"UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason=CONCAT(SUBSTRING_INDEX(a.reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(a.reason, ',', -$right_pos)) WHERE b.id IN (" .
+							implode(',', $v2) .
+							')'
+					);
 
-					Debug2::debug( "🐞🗺️ Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count" );
+					self::debug("Update blacklist [code] $code [pos] left $curr_crawler right -$right_pos [count] $count");
 				}
 			}
-
-
 			// Reset list
-			$list[ $bit ] = array();
+			$list[$bit] = array();
 		}
 
 		return $list;
@@ -137,37 +153,35 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_add( $id ) {
+	public function blacklist_add($id)
+	{
 		global $wpdb;
 
-		$id = (int)$id;
+		$id = (int) $id;
 
 		// Build res&reason
-		$total_crawler = count( Crawler::cls()->list_crawlers() );
-		$res = str_repeat( 'B', $total_crawler );
-		$reason = implode( ',', array_fill( 0, $total_crawler, 'Man' ) );
+		$total_crawler = count(Crawler::cls()->list_crawlers());
+		$res = str_repeat('B', $total_crawler);
+		$reason = implode(',', array_fill(0, $total_crawler, 'Man'));
 
-		$row = $wpdb->get_row( "SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A );
-
-		if ( ! $row ) {
-			Debug2::debug( '🐞🗺️ blacklist failed to add [id] ' . $id );
+		$row = $wpdb->get_row("SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A);
+		if (!$row) {
+			self::debug('blacklist failed to add [id] ' . $id);
 			return;
 		}
 
-		Debug2::debug( '🐞🗺️ Add to blacklist [url] ' . $row[ 'url' ] );
+		self::debug('Add to blacklist [url] ' . $row['url']);
 
 		$q = "UPDATE `$this->_tb` SET res = %s, reason = %s WHERE id = %d";
-		$wpdb->query( $wpdb->prepare( $q, array( $res, $reason, $id ) ) );
+		$wpdb->query($wpdb->prepare($q, array($res, $reason, $id)));
 
-		if ( $row[ 'id' ] ) {
+		if ($row['id']) {
 			$q = "UPDATE `$this->_tb_blacklist` SET res = %s, reason = %s WHERE id = %d";
-			$wpdb->query( $wpdb->prepare( $q, array( $res, $reason, $row[ 'id' ] ) ) );
-		}
-		else {
+			$wpdb->query($wpdb->prepare($q, array($res, $reason, $row['id'])));
+		} else {
 			$q = "INSERT INTO `$this->_tb_blacklist` (url, res, reason) VALUES (%s, %s, %s)";
-			$wpdb->query( $wpdb->prepare( $q, array( $row[ 'url' ], $res, $reason ) ) );
+			$wpdb->query($wpdb->prepare($q, array($row['url'], $res, $reason)));
 		}
-
 	}
 
 	/**
@@ -176,20 +190,18 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_del( $id ) {
+	public function blacklist_del($id)
+	{
 		global $wpdb;
-
-		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+		if (!$this->__data->tb_exist('crawler_blacklist')) {
 			return;
 		}
 
-		$id = (int)$id;
+		$id = (int) $id;
+		self::debug('blacklist delete [id] ' . $id);
 
-		Debug2::debug( '🐞🗺️ blacklist delete [id] ' . $id );
-
-		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' ) WHERE url = ( SELECT url FROM `$this->_tb_blacklist` WHERE id = '$id' )" );
-
-		$wpdb->query( "DELETE FROM `$this->_tb_blacklist` WHERE id = '$id'" );
+		$wpdb->query("UPDATE `$this->_tb` SET res=REPLACE(REPLACE(res, 'N', '-'), 'B', '-') WHERE url=(SELECT url FROM `$this->_tb_blacklist` WHERE id='$id')");
+		$wpdb->query("DELETE FROM `$this->_tb_blacklist` WHERE id='$id'");
 	}
 
 	/**
@@ -198,18 +210,17 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_empty() {
+	public function blacklist_empty()
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+		if (!$this->__data->tb_exist('crawler_blacklist')) {
 			return;
 		}
 
-		Debug2::debug( '🐞🗺️ Truncate blacklist' );
-
-		$wpdb->query( "UPDATE `$this->_tb` SET res = REPLACE( REPLACE( res, 'N', '-' ), 'B', '-' )" );
-
-		$wpdb->query( "TRUNCATE `$this->_tb_blacklist`" );
+		self::debug('Truncate blacklist');
+		$wpdb->query("UPDATE `$this->_tb` SET res=REPLACE(REPLACE(res, 'N', '-'), 'B', '-')");
+		$wpdb->query("TRUNCATE `$this->_tb_blacklist`");
 	}
 
 	/**
@@ -218,39 +229,40 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list_blacklist( $limit = false, $offset = false ) {
+	public function list_blacklist($limit = false, $offset = false)
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+		if (!$this->__data->tb_exist('crawler_blacklist')) {
 			return array();
 		}
 
 		$q = "SELECT * FROM `$this->_tb_blacklist` ORDER BY id DESC";
 
-		if ( $limit !== false ) {
-			if ( $offset === false ) {
+		if ($limit !== false) {
+			if ($offset === false) {
 				$total = $this->count_blacklist();
-				$offset = Utility::pagination( $total, $limit, true );
+				$offset = Utility::pagination($total, $limit, true);
 			}
-			$q .= " LIMIT %d, %d";
-			$q = $wpdb->prepare( $q, $offset, $limit );
+			$q .= ' LIMIT %d, %d';
+			$q = $wpdb->prepare($q, $offset, $limit);
 		}
-		return $wpdb->get_results( $q, ARRAY_A );
-
+		return $wpdb->get_results($q, ARRAY_A);
 	}
 
 	/**
 	 * Count blacklist
 	 */
-	public function count_blacklist() {
+	public function count_blacklist()
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
+		if (!$this->__data->tb_exist('crawler_blacklist')) {
 			return false;
 		}
 
 		$q = "SELECT COUNT(*) FROM `$this->_tb_blacklist`";
-		return $wpdb->get_var( $q );
+		return $wpdb->get_var($q);
 	}
 
 	/**
@@ -259,11 +271,12 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function empty_map() {
-		Data::cls()->tb_del( 'crawler' );
+	public function empty_map()
+	{
+		Data::cls()->tb_del('crawler');
 
-		$msg = __( 'Sitemap cleaned successfully', 'litespeed-cache' );
-		Admin_Display::succeed( $msg );
+		$msg = __('Sitemap cleaned successfully', 'litespeed-cache');
+		Admin_Display::succeed($msg);
 	}
 
 	/**
@@ -272,36 +285,44 @@ class Crawler_Map extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list_map( $limit, $offset = false ) {
+	public function list_map($limit, $offset = false)
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
+		if (!$this->__data->tb_exist('crawler')) {
 			return array();
 		}
 
-		if ( $offset === false ) {
+		if ($offset === false) {
 			$total = $this->count_map();
-			$offset = Utility::pagination( $total, $limit, true );
+			$offset = Utility::pagination($total, $limit, true);
 		}
 
+		$where = '';
+		if (!empty($_POST['kw'])) {
+			$q = "SELECT * FROM `$this->_tb` WHERE url LIKE %s ORDER BY id LIMIT %d, %d";
+			$where = '%' . $wpdb->esc_like($_POST['kw']) . '%';
+			return $wpdb->get_results($wpdb->prepare($q, $where, $offset, $limit), ARRAY_A);
+		}
 
 		$q = "SELECT * FROM `$this->_tb` ORDER BY id LIMIT %d, %d";
-		return $wpdb->get_results( $wpdb->prepare( $q, $offset, $limit ), ARRAY_A );
-
+		// self::debug("q=$q offset=$offset, limit=$limit");
+		return $wpdb->get_results($wpdb->prepare($q, $offset, $limit), ARRAY_A);
 	}
 
 	/**
 	 * Count sitemap
 	 */
-	public function count_map() {
+	public function count_map()
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
+		if (!$this->__data->tb_exist('crawler')) {
 			return false;
 		}
 
 		$q = "SELECT COUNT(*) FROM `$this->_tb`";
-		return $wpdb->get_var( $q );
+		return $wpdb->get_var($q);
 	}
 
 	/**
@@ -310,16 +331,19 @@ class Crawler_Map extends Root {
 	 * @since    1.1.0
 	 * @access public
 	 */
-	public function gen() {
+	public function gen()
+	{
 		$count = $this->_gen();
 
-		if ( ! $count ) {
-			Admin_Display::error( __( 'No valid sitemap parsed for crawler.', 'litespeed-cache' ) );
+		if (!$count) {
+			Admin_Display::error(__('No valid sitemap parsed for crawler.', 'litespeed-cache'));
 			return;
 		}
 
-		$msg = sprintf( __( 'Sitemap created successfully: %d items', 'litespeed-cache' ), $count );
-		Admin_Display::succeed( $msg );
+		if (!defined('DOING_CRON')) {
+			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
+			Admin_Display::succeed($msg);
+		}
 	}
 
 	/**
@@ -328,93 +352,99 @@ class Crawler_Map extends Root {
 	 * @since    1.1.0
 	 * @access private
 	 */
-	private function _gen() {
+	private function _gen()
+	{
 		global $wpdb;
 
-		if ( ! $this->__data->tb_exist( 'crawler' ) ) {
-			$this->__data->tb_create( 'crawler' );
+		if (!$this->__data->tb_exist('crawler')) {
+			$this->__data->tb_create('crawler');
 		}
 
-		if ( ! $this->__data->tb_exist( 'crawler_blacklist' ) ) {
-			$this->__data->tb_create( 'crawler_blacklist' );
+		if (!$this->__data->tb_exist('crawler_blacklist')) {
+			$this->__data->tb_create('crawler_blacklist');
 		}
 
 		// use custom sitemap
-		if ( ! $sitemap = $this->conf( Base::O_CRAWLER_SITEMAP ) ) {
+		if (!($sitemap = $this->conf(Base::O_CRAWLER_SITEMAP))) {
 			return false;
 		}
 
-		$offset = strlen( $this->_home_url );
+		$offset = strlen($this->_home_url);
+		$sitemap = Utility::sanitize_lines($sitemap);
 
 		try {
-			$this->_parse( $sitemap );
-		} catch( \Exception $e ) {
-			Debug2::debug( '🐞🗺️ ❌ failed to parse custom sitemap: ' . $e->getMessage() );
+			foreach ($sitemap as $this_map) {
+				$this->_parse($this_map);
+			}
+		} catch (\Exception $e) {
+			self::debug('❌ failed to parse custom sitemap: ' . $e->getMessage());
 		}
 
-		if ( is_array( $this->_urls ) && ! empty( $this->_urls ) ) {
-			if ( $this->conf( Base::O_CRAWLER_DROP_DOMAIN ) ) {
-				foreach ( $this->_urls as $k => $v ) {
-					if ( stripos( $v, $this->_home_url ) !== 0 ) {
-						unset( $this->_urls[ $k ] );
+		if (is_array($this->_urls) && !empty($this->_urls)) {
+			if ($this->conf(Base::O_CRAWLER_DROP_DOMAIN)) {
+				foreach ($this->_urls as $k => $v) {
+					if (stripos($v, $this->_home_url) !== 0) {
+						unset($this->_urls[$k]);
 						continue;
 					}
-					$this->_urls[ $k ] = substr( $v, $offset );
+					$this->_urls[$k] = substr($v, $offset);
 				}
 			}
 
-			$this->_urls = array_unique( $this->_urls );
+			$this->_urls = array_unique($this->_urls);
 		}
 
-		Debug2::debug( '🐞🗺️ Truncate sitemap' );
-		$wpdb->query( "TRUNCATE `$this->_tb`" );
+		self::debug('Truncate sitemap');
+		$wpdb->query("TRUNCATE `$this->_tb`");
 
-		Debug2::debug( '🐞🗺️ Generate sitemap' );
+		self::debug('Generate sitemap');
 
 		// Filter URLs in blacklist
 		$blacklist = $this->list_blacklist();
 
 		$full_blacklisted = array();
 		$partial_blacklisted = array();
-		foreach ( $blacklist as $v ) {
-			if ( strpos( $v[ 'res' ], '-' ) === false ) { // Full blacklisted
-				$full_blacklisted[] = $v[ 'url' ];
-			}
-			else {
+		foreach ($blacklist as $v) {
+			if (strpos($v['res'], '-') === false) {
+				// Full blacklisted
+				$full_blacklisted[] = $v['url'];
+			} else {
 				// Replace existing reason
-				$v[ 'reason' ] = explode( ',', $v[ 'reason' ] );
-				$v[ 'reason' ] = array_map( function( $element ){ return $element ? 'Existed' : ''; }, $v[ 'reason' ] );
-				$v[ 'reason' ] = implode( ',', $v[ 'reason' ] );
-				$partial_blacklisted[ $v[ 'url' ] ] = array(
-					'res' => $v[ 'res' ],
-					'reason' => $v[ 'reason' ],
+				$v['reason'] = explode(',', $v['reason']);
+				$v['reason'] = array_map(function ($element) {
+					return $element ? 'Existed' : '';
+				}, $v['reason']);
+				$v['reason'] = implode(',', $v['reason']);
+				$partial_blacklisted[$v['url']] = array(
+					'res' => $v['res'],
+					'reason' => $v['reason'],
 				);
 			}
 		}
 
 		// Drop all blacklisted URLs
-		$this->_urls = array_diff( $this->_urls, $full_blacklisted );
+		$this->_urls = array_diff($this->_urls, $full_blacklisted);
 
 		// Default res & reason
-		$crawler_count = count( Crawler::cls()->list_crawlers() );
-		$default_res = str_repeat( '-', $crawler_count );
-		$default_reason = $crawler_count > 1 ? str_repeat( ',', $crawler_count - 1 ) : '';
+		$crawler_count = count(Crawler::cls()->list_crawlers());
+		$default_res = str_repeat('-', $crawler_count);
+		$default_reason = $crawler_count > 1 ? str_repeat(',', $crawler_count - 1) : '';
 
 		$data = array();
-		foreach ( $this->_urls as $url ) {
+		foreach ($this->_urls as $url) {
 			$data[] = $url;
-			$data[] = array_key_exists( $url, $partial_blacklisted ) ? $partial_blacklisted[ $url ][ 'res' ] : $default_res;
-			$data[] = array_key_exists( $url, $partial_blacklisted ) ? $partial_blacklisted[ $url ][ 'reason' ] : $default_reason;
+			$data[] = array_key_exists($url, $partial_blacklisted) ? $partial_blacklisted[$url]['res'] : $default_res;
+			$data[] = array_key_exists($url, $partial_blacklisted) ? $partial_blacklisted[$url]['reason'] : $default_reason;
 		}
 
-		foreach ( array_chunk( $data, 300 ) as $data2 ) {
-			$this->_save( $data2 );
+		foreach (array_chunk($data, 300) as $data2) {
+			$this->_save($data2);
 		}
 
 		// Reset crawler
 		Crawler::cls()->reset_pos();
 
-		return count( $this->_urls );
+		return count($this->_urls);
 	}
 
 	/**
@@ -423,20 +453,21 @@ class Crawler_Map extends Root {
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _save( $data, $fields = 'url,res,reason' ) {
+	private function _save($data, $fields = 'url,res,reason')
+	{
 		global $wpdb;
 
-		if ( empty( $data ) ) {
+		if (empty($data)) {
 			return;
 		}
 
 		$q = "INSERT INTO `$this->_tb` ( $fields ) VALUES ";
 
 		// Add placeholder
-		$q .= Utility::chunk_placeholder( $data, $fields );
+		$q .= Utility::chunk_placeholder($data, $fields);
 
 		// Store data
-		$wpdb->query( $wpdb->prepare( $q, $data ) );
+		$wpdb->query($wpdb->prepare($q, $data));
 	}
 
 	/**
@@ -445,61 +476,60 @@ class Crawler_Map extends Root {
 	 * @since    1.1.1
 	 * @access private
 	 */
-	private function _parse( $sitemap ) {
+	private function _parse($sitemap)
+	{
 		/**
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get( $sitemap, array( 'timeout' => $this->_conf_map_timeout ) );
-		if ( is_wp_error( $response ) ) {
+		$response = wp_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
+		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
-			Debug2::debug( '🐞🗺️ failed to read sitemap: ' . $error_message );
-
-			throw new \Exception( 'Failed to remote read ' . $sitemap );
+			self::debug('failed to read sitemap: ' . $error_message);
+			throw new \Exception('Failed to remote read ' . $sitemap);
 		}
 
-		$xml_object = simplexml_load_string( $response[ 'body' ], null, LIBXML_NOCDATA );
-		if ( ! $xml_object ) {
-			if ( $this->_urls ) {
+		$xml_object = simplexml_load_string($response['body'], null, LIBXML_NOCDATA);
+		if (!$xml_object) {
+			if ($this->_urls) {
 				return;
 			}
-
-			throw new \Exception( 'Failed to parse xml ' . $sitemap );
+			throw new \Exception('Failed to parse xml ' . $sitemap);
 		}
 
 		// start parsing
 		$xml_array = (array) $xml_object;
-		if ( ! empty( $xml_array[ 'sitemap' ] ) ) { // parse sitemap set
-			if ( is_object( $xml_array[ 'sitemap' ] ) ) {
-				$xml_array[ 'sitemap' ] = (array) $xml_array[ 'sitemap' ];
+		if (!empty($xml_array['sitemap'])) {
+			// parse sitemap set
+			if (is_object($xml_array['sitemap'])) {
+				$xml_array['sitemap'] = (array) $xml_array['sitemap'];
 			}
 
-			if ( ! empty( $xml_array[ 'sitemap' ][ 'loc' ] ) ) { // is single sitemap
-				$this->_parse( $xml_array[ 'sitemap' ][ 'loc' ] );
-			}
-			else {
+			if (!empty($xml_array['sitemap']['loc'])) {
+				// is single sitemap
+				$this->_parse($xml_array['sitemap']['loc']);
+			} else {
 				// parse multiple sitemaps
-				foreach ( $xml_array[ 'sitemap' ] as $val ) {
+				foreach ($xml_array['sitemap'] as $val) {
 					$val = (array) $val;
-					if ( ! empty( $val[ 'loc' ] ) ) {
-						$this->_parse( $val[ 'loc' ] ); // recursive parse sitemap
+					if (!empty($val['loc'])) {
+						$this->_parse($val['loc']); // recursive parse sitemap
 					}
 				}
 			}
-		}
-		elseif ( ! empty( $xml_array[ 'url' ] ) ) { // parse url set
-			if ( is_object( $xml_array[ 'url' ] ) ) {
-				$xml_array[ 'url' ] = (array) $xml_array[ 'url' ];
+		} elseif (!empty($xml_array['url'])) {
+			// parse url set
+			if (is_object($xml_array['url'])) {
+				$xml_array['url'] = (array) $xml_array['url'];
 			}
 			// if only 1 element
-			if ( ! empty( $xml_array[ 'url' ][ 'loc' ] ) ) {
-				$this->_urls[] = $xml_array[ 'url' ][ 'loc' ];
-			}
-			else {
-				foreach ( $xml_array[ 'url' ] as $val ) {
+			if (!empty($xml_array['url']['loc'])) {
+				$this->_urls[] = $xml_array['url']['loc'];
+			} else {
+				foreach ($xml_array['url'] as $val) {
 					$val = (array) $val;
-					if ( ! empty( $val[ 'loc' ] ) ) {
-						$this->_urls[] = $val[ 'loc' ];
+					if (!empty($val['loc'])) {
+						$this->_urls[] = $val['loc'];
 					}
 				}
 			}

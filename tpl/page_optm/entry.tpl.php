@@ -11,6 +11,7 @@ $menu_list = array(
 	'settings_media_exc'		=> __( 'Media Excludes', 'litespeed-cache' ),
 	'settings_localization'		=> __( 'Localization', 'litespeed-cache' ),
 	'settings_tuning' 			=> __( 'Tuning', 'litespeed-cache' ),
+	'settings_tuning_css' 			=> __( 'Tuning', 'litespeed-cache' ) . ' - CSS',
 );
 
 ?>

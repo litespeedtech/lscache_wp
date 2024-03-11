@@ -1,15 +1,18 @@
 <?php
+
 /**
  * The plugin cache-tag class for X-LiteSpeed-Tag
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
  */
+
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class Tag extends Root {
+class Tag extends Root
+{
 	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F';
 	const TYPE_HOME = 'H';
@@ -34,17 +37,17 @@ class Tag extends Root {
 	const X_HEADER = 'X-LiteSpeed-Tag';
 
 	private static $_tags = array();
-	private static $_tags_priv = array( 'tag_priv' );
+	private static $_tags_priv = array('tag_priv');
 
 	/**
 	 * Initialize
 	 *
 	 * @since 4.0
 	 */
-	public function init() {
+	public function init()
+	{
 		// register recent posts widget tag before theme renders it to make it work
-		add_filter( 'widget_posts_args', array( $this, 'add_widget_recent_posts' ) );
-
+		add_filter('widget_posts_args', array($this, 'add_widget_recent_posts'));
 	}
 
 	/**
@@ -56,32 +59,33 @@ class Tag extends Root {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function check_login_cacheable() {
-		if ( ! $this->conf( Base::O_CACHE_PAGE_LOGIN ) ) {
+	public function check_login_cacheable()
+	{
+		if (!$this->conf(Base::O_CACHE_PAGE_LOGIN)) {
 			return;
 		}
-		if ( Control::isset_notcacheable() ) {
-			return;
-		}
-
-		if ( ! empty( $_GET ) ) {
-			Control::set_nocache( 'has GET request' );
+		if (Control::isset_notcacheable()) {
 			return;
 		}
 
-		$this->cls( 'Control' )->set_cacheable();
+		if (!empty($_GET)) {
+			Control::set_nocache('has GET request');
+			return;
+		}
 
-		self::add( self::TYPE_LOGIN );
+		$this->cls('Control')->set_cacheable();
+
+		self::add(self::TYPE_LOGIN);
 
 		// we need to send lsc-cookie manually to make it be sent to all other users when is cacheable
 		$list = headers_list();
-		if ( empty( $list ) ) {
+		if (empty($list)) {
 			return;
 		}
-		foreach ( $list as $hdr ) {
-			if ( strncasecmp( $hdr, 'set-cookie:', 11 ) == 0 ) {
-				$cookie = substr( $hdr, 12 );
-				@header( 'lsc-cookie: ' . $cookie, false );
+		foreach ($list as $hdr) {
+			if (strncasecmp($hdr, 'set-cookie:', 11) == 0) {
+				$cookie = substr($hdr, 12);
+				@header('lsc-cookie: ' . $cookie, false);
 			}
 		}
 	}
@@ -94,8 +98,9 @@ class Tag extends Root {
 	 * @access   public
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
-	public function add_widget_recent_posts( $params ) {
-		self::add( self::TYPE_PAGES_WITH_RECENT_POSTS );
+	public function add_widget_recent_posts($params)
+	{
+		self::add(self::TYPE_PAGES_WITH_RECENT_POSTS);
 		return $params;
 	}
 
@@ -106,18 +111,19 @@ class Tag extends Root {
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add( $tags ) {
-		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags );
+	public static function add($tags)
+	{
+		if (!is_array($tags)) {
+			$tags = array($tags);
 		}
 
-		Debug2::debug( '💰 [Tag] Add ', $tags );
+		Debug2::debug('💰 [Tag] Add ', $tags);
 
-		self::$_tags = array_merge( self::$_tags, $tags );
+		self::$_tags = array_merge(self::$_tags, $tags);
 
 		// Send purge header immediately
-		$tag_header = self::cls()->output( true );
-		@header( $tag_header );
+		$tag_header = self::cls()->output(true);
+		@header($tag_header);
 	}
 
 	/**
@@ -126,8 +132,9 @@ class Tag extends Root {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_post( $pid ) {
-		self::add( self::TYPE_POST . $pid );
+	public static function add_post($pid)
+	{
+		self::add(self::TYPE_POST . $pid);
 	}
 
 	/**
@@ -136,8 +143,9 @@ class Tag extends Root {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_widget( $id ) {
-		self::add( self::TYPE_WIDGET . $id );
+	public static function add_widget($id)
+	{
+		self::add(self::TYPE_WIDGET . $id);
 	}
 
 	/**
@@ -146,8 +154,9 @@ class Tag extends Root {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_private_esi( $tag ) {
-		self::add_private( self::TYPE_ESI . $tag );
+	public static function add_private_esi($tag)
+	{
+		self::add_private(self::TYPE_ESI . $tag);
 	}
 
 	/**
@@ -157,12 +166,13 @@ class Tag extends Root {
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add_private( $tags ) {
-		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags );
+	public static function add_private($tags)
+	{
+		if (!is_array($tags)) {
+			$tags = array($tags);
 		}
 
-		self::$_tags_priv = array_merge( self::$_tags_priv, $tags );
+		self::$_tags_priv = array_merge(self::$_tags_priv, $tags);
 	}
 
 	/**
@@ -171,7 +181,8 @@ class Tag extends Root {
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function output_tags() {
+	public static function output_tags()
+	{
 		return self::$_tags;
 	}
 
@@ -184,22 +195,23 @@ class Tag extends Root {
 	 * @param boolean $ori Return the original url or not
 	 * @return bool|string False on input error, hash otherwise.
 	 */
-	public static function get_uri_tag( $uri, $ori = false ) {
-		$no_qs = strtok( $uri, '?' );
-		if ( empty( $no_qs ) ) {
+	public static function get_uri_tag($uri, $ori = false)
+	{
+		$no_qs = strtok($uri, '?');
+		if (empty($no_qs)) {
 			return false;
 		}
-		$slashed = trailingslashit( $no_qs );
+		$slashed = trailingslashit($no_qs);
 
 		// If only needs uri tag
-		if ( $ori ) {
+		if ($ori) {
 			return $slashed;
 		}
 
-		if ( defined( 'LSCWP_LOG' ) ) {
+		if (defined('LSCWP_LOG')) {
 			return self::TYPE_URL . $slashed;
 		}
-		return self::TYPE_URL . md5( $slashed );
+		return self::TYPE_URL . md5($slashed);
 	}
 
 	/**
@@ -209,8 +221,9 @@ class Tag extends Root {
 	 * @access public
 	 * @param boolean $ori Return the original url or not
 	 */
-	public static function build_uri_tag( $ori = false ) {
-		return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ), $ori );
+	public static function build_uri_tag($ori = false)
+	{
+		return self::get_uri_tag(urldecode($_SERVER['REQUEST_URI']), $ori);
 	}
 
 	/**
@@ -223,84 +236,77 @@ class Tag extends Root {
 	 * @access private
 	 * @return array The list of cache tags to set.
 	 */
-	private static function _build_type_tags() {
+	private static function _build_type_tags()
+	{
 		$tags = array();
 
 		$tags[] = Utility::page_type();
 
 		$tags[] = self::build_uri_tag();
 
-		if ( is_front_page() ) {
+		if (is_front_page()) {
 			$tags[] = self::TYPE_FRONTPAGE;
-		}
-		elseif ( is_home() ) {
+		} elseif (is_home()) {
 			$tags[] = self::TYPE_HOME;
 		}
 
-		$queried_obj_id = get_queried_object_id();
-		if ( is_archive() ) {
-			//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
-			if ( is_category() || is_tag() || is_tax() ) {
-				$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
-			}
-			elseif ( is_post_type_archive() ) {
-				global $wp_query;
-				$post_type = $wp_query->get( 'post_type' );
-				$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
-			}
-			elseif ( is_author() ) {
-				$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
-			}
-			elseif ( is_date() ) {
-				global $post;
-				$date = $post->post_date;
-				$date = strtotime( $date );
-				if ( is_day() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ymd', $date );
+		global $wp_query;
+		if (isset($wp_query)) {
+			$queried_obj_id = get_queried_object_id();
+			if (is_archive()) {
+				//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
+				if (is_category() || is_tag() || is_tax()) {
+					$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
+				} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
+					$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
+				} elseif (is_author()) {
+					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
+				} elseif (is_date()) {
+					global $post;
+					$date = $post->post_date;
+					$date = strtotime($date);
+					if (is_day()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
+					} elseif (is_month()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
+					} elseif (is_year()) {
+						$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+					}
 				}
-				elseif ( is_month() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ym', $date );
-				}
-				elseif ( is_year() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Y', $date );
-				}
-			}
-		}
-		elseif ( is_singular() ) {
-			//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
-			$tags[] = self::TYPE_POST . $queried_obj_id;
+			} elseif (is_singular()) {
+				//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
+				$tags[] = self::TYPE_POST . $queried_obj_id;
 
-			if ( is_page() ) {
-				$tags[] = self::TYPE_PAGES;
+				if (is_page()) {
+					$tags[] = self::TYPE_PAGES;
+				}
+			} elseif (is_feed()) {
+				$tags[] = self::TYPE_FEED;
 			}
-		}
-		elseif ( is_feed() ) {
-			$tags[] = self::TYPE_FEED;
 		}
 
 		// Check REST API
-		if ( REST::cls()->is_rest() ) {
+		if (REST::cls()->is_rest()) {
 			$tags[] = self::TYPE_REST;
 
-			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false;
-			if ( $path ) {
+			$path = !empty($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : false;
+			if ($path) {
 				// posts collections tag
-				if ( substr( $path, -6 ) == '/posts' ) {
-					$tags[] = self::TYPE_LIST;// Not used for purge yet
+				if (substr($path, -6) == '/posts') {
+					$tags[] = self::TYPE_LIST; // Not used for purge yet
 				}
 
 				// single post tag
 				global $post;
-				if ( ! empty( $post->ID ) && substr( $path, - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
+				if (!empty($post->ID) && substr($path, -strlen($post->ID) - 1) === '/' . $post->ID) {
 					$tags[] = self::TYPE_POST . $post->ID;
 				}
 
 				// pages collections & single page tag
-				if ( stripos( $path, '/pages' ) !== false ) {
+				if (stripos($path, '/pages') !== false) {
 					$tags[] = self::TYPE_PAGES;
 				}
 			}
-
 		}
 
 		return $tags;
@@ -312,23 +318,24 @@ class Tag extends Root {
 	 * @access private
 	 * @since 1.1.3
 	 */
-	private static function _finalize() {
+	private static function _finalize()
+	{
 		// run 3rdparty hooks to tag
-		do_action( 'litespeed_tag_finalize' );
+		do_action('litespeed_tag_finalize');
 		// generate wp tags
-		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+		if (!defined('LSCACHE_IS_ESI')) {
 			$type_tags = self::_build_type_tags();
-			self::$_tags = array_merge( self::$_tags, $type_tags );
+			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST) {
 			self::$_tags[] = 'guest';
 		}
 
 		// append blog main tag
 		self::$_tags[] = '';
 		// removed duplicates
-		self::$_tags = array_unique( self::$_tags );
+		self::$_tags = array_unique(self::$_tags);
 	}
 
 	/**
@@ -339,12 +346,13 @@ class Tag extends Root {
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
-	public function output( $no_finalize = false ) {
-		if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+	public function output($no_finalize = false)
+	{
+		if (defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE) {
 			return;
 		}
 
-		if ( ! $no_finalize ) {
+		if (!$no_finalize) {
 			self::_finalize();
 		}
 
@@ -353,23 +361,22 @@ class Tag extends Root {
 		 * Only append blog_id when is multisite
 		 * @since 2.9.3
 		 */
-		$prefix = LSWCP_TAG_PREFIX . ( is_multisite() ? get_current_blog_id() : '' ) . '_';
+		$prefix = LSWCP_TAG_PREFIX . (is_multisite() ? get_current_blog_id() : '') . '_';
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags
-		if ( Control::is_private() ) {
-			foreach ( self::$_tags_priv as $priv_tag ) {
+		if (Control::is_private()) {
+			foreach (self::$_tags_priv as $priv_tag) {
 				$prefix_tags[] = $prefix . $priv_tag;
 			}
 			$prefix = 'public:' . $prefix;
 		}
 
-		foreach ( self::$_tags as $tag ) {
+		foreach (self::$_tags as $tag) {
 			$prefix_tags[] = $prefix . $tag;
 		}
 
-		$hdr = self::X_HEADER . ': ' . implode( ',', $prefix_tags );
+		$hdr = self::X_HEADER . ': ' . implode(',', $prefix_tags);
 
 		return $hdr;
 	}
-
 }
