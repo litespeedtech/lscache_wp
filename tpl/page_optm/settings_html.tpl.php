@@ -95,14 +95,14 @@ defined('WPINC') || exit;
 			<td>
 				<?php $this->build_textarea($id); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Keep html comments.', 'litespeed-cache'); ?>
+					<?php echo __('When minifying HTML do not discard comments that match a specified pattern.', 'litespeed-cache'); ?>
 					<br />
 					<?php echo __('If comment to be kept is like:', 'litespeed-cache'); ?>
-					<code>&lt;!-- A comment that need to be here --&gt;</code>
+					<code>&lt;!-- A comment that needs to be here --&gt;</code>
 					<?php echo __('write:', 'litespeed-cache'); ?>
-					<code>A comment that need to be here</code>
+					<code>A comment that needs to be here</code>
 					<br />
-					<?php Doc::one_per_line(); ?>
+					<?php echo __('List patterns one per line.', 'litespeed-cache'); ?>
 				</div>
 			</td>
 		</tr>
