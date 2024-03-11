@@ -251,6 +251,7 @@ class Lang extends Base
 			self::O_CDN_CLOUDFLARE => __('Cloudflare API', 'litespeed-cache'),
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
+			self::O_CRAWLER_SCHEDULE_TIME => __('Running time', 'litespeed-cache'),
 			self::O_CRAWLER_USLEEP => __('Delay', 'litespeed-cache'),
 			self::O_CRAWLER_RUN_DURATION => __('Run Duration', 'litespeed-cache'),
 			self::O_CRAWLER_RUN_INTERVAL => __('Interval Between Runs', 'litespeed-cache'),
