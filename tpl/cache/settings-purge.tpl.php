@@ -44,6 +44,16 @@ $break_arr = array(
 	<?php endif; ?>
 
 	<tr>
+		<th>
+			<?php $id = Base::O_PURGE_SKIP_GUEST_PAGES; ?>
+			<?php $this->title($id); ?>
+		</th>
+		<td>
+			<?php $this->build_switch($id); ?>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Auto Purge Rules For Publish/Update', 'litespeed-cache' ); ?></th>
 		<td>
 			<div class="litespeed-callout notice notice-warning inline">
