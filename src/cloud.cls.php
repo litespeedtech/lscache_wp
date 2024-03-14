@@ -867,7 +867,7 @@ class Cloud extends Base
 		if (!empty($json['_carry_on'])) {
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
-			foreach (array('usage', 'promo', 'partner', '_err', '_info', '_note', '_success') as $v) {
+			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
 				if (!empty($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':

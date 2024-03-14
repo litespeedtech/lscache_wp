@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The frontend GUI class.
  *
@@ -6,7 +7,9 @@
  * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 class GUI extends Base
