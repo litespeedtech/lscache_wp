@@ -426,6 +426,7 @@ class Admin_Display extends Base
 	 */
 	public static function add_notice($color, $msg, $echo = false, $irremovable = false)
 	{
+		// self::debug("add_notice msg", $msg);
 		// Bypass adding for CLI or cron
 		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
 			// WP CLI will show the info directly
@@ -499,7 +500,7 @@ class Admin_Display extends Base
 					add_thickbox();
 					$added_thickbox = true;
 				}
-				echo $msg;
+				echo wp_kses_post($msg);
 			}
 		}
 		if ($messages != -1) {
@@ -528,7 +529,7 @@ class Admin_Display extends Base
 						'</a>' .
 						'</p></div>';
 				}
-				echo $msg;
+				echo wp_kses_post($msg);
 			}
 		}
 		// if ( $messages != -1 ) {
