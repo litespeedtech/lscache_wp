@@ -362,8 +362,7 @@ class REST extends Root
 		if($current_url!==false && !empty($current_url['path']) && $rest_url!==false && !empty($rest_url['path'])){
 			return strpos($current_url['path'], $rest_url['path']) === 0;
 		}
-		else{
-			return false;
-		}
+		
+		return false;
 	}
 }
