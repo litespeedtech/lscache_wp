@@ -260,6 +260,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cache** PHP v8 warning in page redirection cache ablitity fix. (Issue#617 dcx15)
 * **Cloud** Fixed a typo in parsing cloud msg which prevented error messages to show.
 * **Cloud** Carried on PHP ver for better version detection purpose.
+* 🐞**Cloud** Fixed a continual new version detection.
 * **CDN** Auto CDN setup compatibility with WP v5.3-.
 * **GUI** Further filtered admin banner messages to prevent from existing danger code in database.
 * **REST** Fixed a potential PHP warning in REST check when param is empty. (metikar)
