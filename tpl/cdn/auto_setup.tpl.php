@@ -40,11 +40,11 @@ $disabled = '';
 $dom = parse_url(home_url(), PHP_URL_HOST);
 
 if ($cdn_setup_done_ts) {
-	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> '
-		. __('Done', 'litespeed-cache')
-		. ' <span class="litespeed-desc litespeed-left10">'
-		. sprintf(__('Completed at %s', 'litespeed-cache'), wp_date(get_option('date_format') . ' ' . get_option('time_format'), $cdn_setup_done_ts))
-		. '</span>';
+	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> '. __('Done', 'litespeed-cache');
+	// wp_date requires WP v5.3+
+	if (function_exists('wp_date')) {
+		$curr_status .= ' <span class="litespeed-desc litespeed-left10">'. sprintf(__('Completed at %s', 'litespeed-cache'), wp_date(get_option('date_format') . ' ' . get_option('time_format'), $cdn_setup_done_ts)). '</span>';
+	}
 	$disabled = 'disabled';
 } else if (!$has_setup_token) {
 	$disabled = 'disabled';
