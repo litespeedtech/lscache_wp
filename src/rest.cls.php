@@ -359,6 +359,11 @@ class REST extends Root
 		// Debug2::debug( '[Util] is_rest check [base] ', $rest_url );
 		// Debug2::debug( '[Util] is_rest check [curr] ', $current_url );
 		// Debug2::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) );
-		return strpos($current_url['path'], $rest_url['path']) === 0;
+		if($current_url!==false && $rest_url!==false){
+			return strpos($current_url['path'], $rest_url['path']) === 0;
+		}
+		else{
+			return false;
+		}
 	}
 }
