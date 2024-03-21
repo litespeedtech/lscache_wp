@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🌱**VPI** Auto preload VPI images. (Ankit)
 * **Object** Add support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
 * **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
+* **Cache** Cache control will respect `X-Http-Method-Override` now. (George)
 * **Cache** Specified LSCWP in adv-cache compatible file.
 * **Cache** Fixed redirection loop if query string has tailing ampersand (#389629)
 * **Cache** Dropped "Cache Favicon.ico" option as it will auto fallback into 404 cache. (Lauren)

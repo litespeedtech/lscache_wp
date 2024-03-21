@@ -751,6 +751,23 @@ class Control extends Root
 	}
 
 	/**
+	 * Get request method w/ compatibility to X-Http-Method-Override
+	 *
+	 * @since 6.2
+	 */
+	private function _get_req_method()
+	{
+		if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+			self::debug("X-Http-Method-Override -> " . $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+			return $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		}
+		if (isset($_SERVER['REQUEST_METHOD'])) {
+			return $_SERVER['REQUEST_METHOD'];
+		}
+		return 'unknown';
+	}
+
+	/**
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0
@@ -765,7 +782,7 @@ class Control extends Root
 			return $this->_no_cache_for('Query String Action');
 		}
 
-		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'unknown';
+		$method = $this->_get_req_method();
 		if ('GET' !== $method && 'HEAD' !== $method) {
 			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
