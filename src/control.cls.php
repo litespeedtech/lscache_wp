@@ -759,6 +759,7 @@ class Control extends Root
 	{
 		if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
 			self::debug("X-Http-Method-Override -> " . $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+			defined('LITESPEED_X_HTTP_METHOD_OVERRIDE') || define('LITESPEED_X_HTTP_METHOD_OVERRIDE', true);
 			return $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
 		}
 		if (isset($_SERVER['REQUEST_METHOD'])) {
@@ -783,6 +784,9 @@ class Control extends Root
 		}
 
 		$method = $this->_get_req_method();
+		if (defined('LITESPEED_X_HTTP_METHOD_OVERRIDE') && LITESPEED_X_HTTP_METHOD_OVERRIDE && $method == 'HEAD') {
+			return $this->_no_cache_for('HEAD method from override');
+		}
 		if ('GET' !== $method && 'HEAD' !== $method) {
 			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
