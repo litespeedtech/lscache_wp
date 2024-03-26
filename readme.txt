@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.2 - Apr 2024 =
 * 🌱**Crawler** Cralwer hit/miss filter. (#328853)
+* 🌱**CLI** Image optimization now supports `wp litespeed-image batch_switch orig/optm`. (A2)
 * 🌱**VPI** Auto preload VPI images. (Ankit)
 * **Object** Add support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
 * **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)

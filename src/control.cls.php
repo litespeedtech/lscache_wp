@@ -758,7 +758,7 @@ class Control extends Root
 	private function _get_req_method()
 	{
 		if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
-			self::debug("X-Http-Method-Override -> " . $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+			self::debug('X-Http-Method-Override -> ' . $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
 			defined('LITESPEED_X_HTTP_METHOD_OVERRIDE') || define('LITESPEED_X_HTTP_METHOD_OVERRIDE', true);
 			return $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
 		}

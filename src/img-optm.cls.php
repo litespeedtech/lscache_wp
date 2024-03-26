@@ -1810,13 +1810,37 @@ class Img_Optm extends Base
 	 * Batch switch images to ori/optm version
 	 *
 	 * @since  1.6.2
-	 * @access private
+	 * @access public
 	 */
-	private function _batch_switch($type)
+	public function batch_switch($type)
 	{
 		global $wpdb;
 
-		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
+		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+			$offset = 0;
+			while ($offset !== 'done') {
+				Admin_Display::info("Starting switch to $type [offset] $offset");
+				$offset = $this->_batch_switch($type, $offset);
+			}
+		} else {
+			$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
+
+			$newOffset = $this->_batch_switch($type, $offset);
+			if ($newOffset !== 'done') {
+				return Router::self_redirect(Router::ACTION_IMG_OPTM, $type);
+			}
+		}
+
+		$msg = __('Switched images successfully.', 'litespeed-cache');
+		Admin_Display::succeed($msg);
+	}
+
+	/**
+	 * Switch images per offset
+	 */
+	private function _batch_switch($type, $offset)
+	{
+		global $wpdb;
 		$limit = 500;
 		$this->tmp_type = $type;
 
@@ -1853,16 +1877,14 @@ class Img_Optm extends Base
 			}
 		}
 
-		self::debug('batch switched images total: ' . $i);
+		self::debug('batch switched images total: ' . $i . ' [type] ' . $type);
 
 		$offset++;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 		if ($to_be_continued) {
-			return Router::self_redirect(Router::ACTION_IMG_OPTM, $type);
+			return $offset;
 		}
-
-		$msg = __('Switched images successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		return 'done';
 	}
 
 	/**
@@ -1880,8 +1902,10 @@ class Img_Optm extends Base
 		$bk_file = $local_filename . '.bk.' . $extension;
 		$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
 
+		// self::debug('_switch_bk_file ' . $bk_file . ' [type] ' . $this->tmp_type);
 		// switch to ori
-		if ($this->tmp_type === self::TYPE_BATCH_SWITCH_ORI) {
+		if ($this->tmp_type === self::TYPE_BATCH_SWITCH_ORI || $this->tmp_type == 'orig') {
+			// self::debug('switch to orig ' . $bk_file);
 			if (!$this->__media->info($bk_file, $this->tmp_pid)) {
 				return;
 			}
@@ -1889,7 +1913,8 @@ class Img_Optm extends Base
 			$this->__media->rename($bk_file, $local_filename . '.' . $extension, $this->tmp_pid);
 		}
 		// switch to optm
-		elseif ($this->tmp_type === self::TYPE_BATCH_SWITCH_OPTM) {
+		elseif ($this->tmp_type === self::TYPE_BATCH_SWITCH_OPTM || $this->tmp_type == 'optm') {
+			// self::debug('switch to optm ' . $bk_file);
 			if (!$this->__media->info($bk_optm_file, $this->tmp_pid)) {
 				return;
 			}
@@ -2099,7 +2124,7 @@ class Img_Optm extends Base
 			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
-				$this->_batch_switch($type);
+				$this->batch_switch($type);
 				break;
 
 			case substr($type, 0, 4) === 'webp':

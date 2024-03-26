@@ -223,6 +223,7 @@ class Media extends Root
 	 */
 	public function rename($short_file_path, $short_file_path_new, $post_id)
 	{
+		// self::debug('renaming ' . $short_file_path . ' -> ' . $short_file_path_new);
 		$real_file = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
 		$real_file_new = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path_new;
 
