@@ -69,3 +69,6 @@ wpmenucart private
 
 # Woo nonce
 woocommerce-login
+
+# Premium Addons for Elementor
+pa-blog-widget-nonce
