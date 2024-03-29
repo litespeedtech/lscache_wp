@@ -147,8 +147,8 @@ class REST extends Root
 	 */
 	public function is_from_cloud()
 	{
-		return true;
-		// return $this->cls( 'Cloud' )->is_from_cloud();
+		// return true;
+		return $this->cls('Cloud')->is_from_cloud();
 	}
 
 	/**

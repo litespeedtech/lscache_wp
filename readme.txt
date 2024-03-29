@@ -262,6 +262,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cache** Fixed redirection loop if query string has tailing ampersand (#389629)
 * **Cache** Dropped "Cache Favicon.ico" option as it will auto fallback into 404 cache. (Lauren)
 * **Cache** PHP v8 warning in page redirection cache ablitity fix. (Issue#617 dcx15)
+* **Cloud** REST callback used ACL for QC ips validation.
 * **Cloud** Fixed a typo in parsing cloud msg which prevented error messages to show.
 * **Cloud** Carried on PHP ver for better version detection purpose.
 * 🐞**Cloud** Fixed a continual new version detection.
