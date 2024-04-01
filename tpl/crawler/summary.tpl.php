@@ -120,69 +120,70 @@ if ($seconds > 0) :
 			?>
 		</p>
 
-
-		<table class="wp-list-table widefat striped" data-crawler-list>
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
-					<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache'); ?></th>
-					<th scope="col"><?php echo __('Status', 'litespeed-cache'); ?></th>
-					<th scope="col"><?php echo __('Activate', 'litespeed-cache'); ?></th>
-					<th scope="col"><?php echo __('Running', 'litespeed-cache'); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($crawler_list as $i => $v) :
-					$hit = !empty($summary['crawler_stats'][$i]['H']) ? $summary['crawler_stats'][$i]['H'] : 0;
-					$miss = !empty($summary['crawler_stats'][$i]['M']) ? $summary['crawler_stats'][$i]['M'] : 0;
-
-					$blacklisted = !empty($summary['crawler_stats'][$i]['B']) ? $summary['crawler_stats'][$i]['B'] : 0;
-					$blacklisted += !empty($summary['crawler_stats'][$i]['N']) ? $summary['crawler_stats'][$i]['N'] : 0;
-
-					if (isset($summary['crawler_stats'][$i]['W'])) {
-						$waiting = $summary['crawler_stats'][$i]['W'] ?: 0;
-					} else {
-						$waiting = $summary['list_size'] - $hit - $miss - $blacklisted;
-					}
-				?>
+		<div class="litespeed-table-responsive">
+			<table class="wp-list-table widefat striped" data-crawler-list>
+				<thead>
 					<tr>
-						<td>
-							<?php
-							echo $i + 1;
-							if ($i == $summary['curr_crawler']) {
-								echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />";
-							}
-							?>
-						</td>
-						<td>
-							<?php echo $v['title']; ?>
-						</td>
-						<td><?php echo $recurrence; ?></td>
-						<td>
-							<?php echo '<i class="litespeed-badge litespeed-bg-default" data-balloon-pos="up" aria-label="' . __('Waiting', 'litespeed-cache') . '">' . ($waiting ?: '-') . '</i> '; ?>
-							<?php echo '<i class="litespeed-badge litespeed-bg-success" data-balloon-pos="up" aria-label="' . __('Hit', 'litespeed-cache') . '">' . ($hit ?: '-') . '</i> '; ?>
-							<?php echo '<i class="litespeed-badge litespeed-bg-primary" data-balloon-pos="up" aria-label="' . __('Miss', 'litespeed-cache') . '">' . ($miss ?: '-') . '</i> '; ?>
-							<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __('Blocklisted', 'litespeed-cache') . '">' . ($blacklisted ?: '-') . '</i> '; ?>
-						</td>
-						<td>
-							<?php $this->build_toggle('litespeed-crawler-' . $i,  $__crawler->is_active($i)); ?>
-						</td>
-						<td>
-							<?php
-							if ($i == $summary['curr_crawler']) {
-								echo "Position: " . ($summary['last_pos'] + 1);
-								if ($is_running) {
-									echo " <span class='litespeed-label-success'>" . __('running', 'litespeed-cache') . "</span>";
-								}
-							}
-							?>
-						</td>
+						<th scope="col">#</th>
+						<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
+						<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache'); ?></th>
+						<th scope="col"><?php echo __('Status', 'litespeed-cache'); ?></th>
+						<th scope="col"><?php echo __('Activate', 'litespeed-cache'); ?></th>
+						<th scope="col"><?php echo __('Running', 'litespeed-cache'); ?></th>
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					<?php foreach ($crawler_list as $i => $v) :
+						$hit = !empty($summary['crawler_stats'][$i]['H']) ? $summary['crawler_stats'][$i]['H'] : 0;
+						$miss = !empty($summary['crawler_stats'][$i]['M']) ? $summary['crawler_stats'][$i]['M'] : 0;
 
+						$blacklisted = !empty($summary['crawler_stats'][$i]['B']) ? $summary['crawler_stats'][$i]['B'] : 0;
+						$blacklisted += !empty($summary['crawler_stats'][$i]['N']) ? $summary['crawler_stats'][$i]['N'] : 0;
+
+						if (isset($summary['crawler_stats'][$i]['W'])) {
+							$waiting = $summary['crawler_stats'][$i]['W'] ?: 0;
+						} else {
+							$waiting = $summary['list_size'] - $hit - $miss - $blacklisted;
+						}
+					?>
+						<tr>
+							<td>
+								<?php
+								echo $i + 1;
+								if ($i == $summary['curr_crawler']) {
+									echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />";
+								}
+								?>
+							</td>
+							<td>
+								<?php echo $v['title']; ?>
+							</td>
+							<td><?php echo $recurrence; ?></td>
+							<td>
+								<?php echo '<i class="litespeed-badge litespeed-bg-default" data-balloon-pos="up" aria-label="' . __('Waiting', 'litespeed-cache') . '">' . ($waiting ?: '-') . '</i> '; ?>
+								<?php echo '<i class="litespeed-badge litespeed-bg-success" data-balloon-pos="up" aria-label="' . __('Hit', 'litespeed-cache') . '">' . ($hit ?: '-') . '</i> '; ?>
+								<?php echo '<i class="litespeed-badge litespeed-bg-primary" data-balloon-pos="up" aria-label="' . __('Miss', 'litespeed-cache') . '">' . ($miss ?: '-') . '</i> '; ?>
+								<?php echo '<i class="litespeed-badge litespeed-bg-danger" data-balloon-pos="up" aria-label="' . __('Blocklisted', 'litespeed-cache') . '">' . ($blacklisted ?: '-') . '</i> '; ?>
+							</td>
+							<td>
+								<?php $this->build_toggle('litespeed-crawler-' . $i,  $__crawler->is_active($i)); ?>
+							</td>
+							<td>
+								<?php
+								if ($i == $summary['curr_crawler']) {
+									echo "Position: " . ($summary['last_pos'] + 1);
+									if ($is_running) {
+										echo " <span class='litespeed-label-success'>" . __('running', 'litespeed-cache') . "</span>";
+									}
+								}
+								?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+		
 		<p>
 			<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __('Waiting to be Crawled', 'litespeed-cache'); ?><br>
 			<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __('Already Cached', 'litespeed-cache'); ?><br>

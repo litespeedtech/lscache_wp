@@ -2437,9 +2437,23 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 5px;
 }
 
+.litespeed-crawler-sitemap-nav {
+	display: flex; 
+	justify-content: space-between;
+}
+
+.litespeed-crawler-sitemap-nav > div {
+	margin-top: 10px;
+}
+
 @media screen and (max-width: 680px) {
 
+	.litespeed-crawler-sitemap-nav {
+		display: block;
+	}
+
 	.litespeed-table-responsive {
+		clear: both;
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 	}
