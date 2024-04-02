@@ -611,6 +611,9 @@ class Core extends Root
 		// send Control header
 		if (defined('LITESPEED_ON') && $control_header) {
 			$this->_http_header($control_header);
+			if (!Control::is_cacheable()) {
+				$this->_http_header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0'); // @ref: https://wordpress.org/support/topic/apply_filterslitespeed_control_cacheable-returns-false-for-cacheable/
+			}
 			if (defined('LSCWP_LOG')) {
 				$this->_comment($control_header);
 			}
