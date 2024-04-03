@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The CDN class.
  *
@@ -8,6 +9,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -315,15 +317,19 @@ class CDN extends Root
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_FILETYPE, $postfix))) {
 					continue;
 				}
-			} else {
+			} elseif (in_array($postfix, array('jpg', 'jpeg', 'png', 'gif'))) {
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_IMG))) {
 					continue;
 				}
+			} else {
+				continue;
 			}
 
 			$attr = str_replace($matches[1][$k], $url2, $matches[0][$k]);
 			$this->content = str_replace($matches[0][$k], $attr, $this->content);
 		}
+
+		Debug2::debug2('[CDN] _replace_inline_css done');
 	}
 
 	/**

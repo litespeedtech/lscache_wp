@@ -268,6 +268,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Carried on PHP ver for better version detection purpose.
 * 🐞**Cloud** Fixed a continual new version detection.
 * **CDN** Auto CDN setup compatibility with WP v5.3-.
+* **CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
 * **GUI** Further filtered admin banner messages to prevent from existing danger code in database.
 * **REST** Fixed a potential PHP warning in REST check when param is empty. (metikar)
 
