@@ -317,7 +317,7 @@ class CDN extends Root
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_FILETYPE, $postfix))) {
 					continue;
 				}
-			} elseif (in_array($postfix, array('jpg', 'jpeg', 'png', 'gif'))) {
+			} elseif (in_array($postfix, array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif'))) {
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_IMG))) {
 					continue;
 				}

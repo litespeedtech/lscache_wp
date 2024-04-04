@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.4.3
-Stable tag: 6.1
+Tested up to: 6.5
+Stable tag: 6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,24 +250,24 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.2 - Apr 2024 =
-* 🌱**Crawler** Cralwer hit/miss filter. (#328853)
+= 6.2 - Apr 23 2024 =
+* 🌱**Crawler** Added Crawler hit/miss filter. (#328853)
 * 🌱**CLI** Image optimization now supports `wp litespeed-image batch_switch orig/optm`. (A2)
 * 🌱**VPI** Auto preload VPI images. (Ankit)
-* **Object** Add support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
-* **Page Optimize** Supported Elementors data-settings WebP replacement. (Thanks to Ryan D)
+* **Object** Added support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
+* **Page Optimize** Now supporting Elementors data-settings WebP replacement. (Thanks to Ryan D)
 * **Cache** Send `Cache-Control: no-cache, no-store, must-revalidate, max-age=0` when page is not cacheable. (asafm7/Ruikai)
 * **Cache** Cache control will respect `X-Http-Method-Override` now. (George)
 * **Cache** No cache for `X-Http-Method-Override: HEAD`. (George)
 * **Cache** Specified LSCWP in adv-cache compatible file.
 * **Cache** Fixed redirection loop if query string has tailing ampersand (#389629)
-* **Cache** Dropped "Cache Favicon.ico" option as it will auto fallback into 404 cache. (Lauren)
-* **Cache** PHP v8 warning in page redirection cache ablitity fix. (Issue#617 dcx15)
+* **Cache** Dropped "Cache Favicon.ico" option as it is redundant with 404 cache. (Lauren)
+* **Cache** Fixed deprecated PHP v8 warning in page redirection. (Issue#617 dcx15)
 * **Cloud** REST callback used ACL for QC ips validation.
 * **Cloud** Fixed a typo in parsing cloud msg which prevented error messages to show.
 * **Cloud** Carried on PHP ver for better version detection purpose.
 * 🐞**Cloud** Fixed a continual new version detection.
-* **CDN** Auto CDN setup compatibility with WP v5.3-.
+* **CDN** Auto CDN setup compatibility with WP versions less than 5.3.
 * **CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
 * **GUI** Further filtered admin banner messages to prevent from existing danger code in database.
 * **REST** Fixed a potential PHP warning in REST check when param is empty. (metikar)
