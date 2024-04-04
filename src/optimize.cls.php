@@ -217,7 +217,7 @@ class Optimize extends Base
 			$is_not_cached = DONOTCACHEPAGE;
 		}
 
-		if ($is_not_cached===true || (strpos($src, '_litespeed_rm_qs=0') || strpos($src, '/recaptcha'))) {
+		if ($is_not_cached || (strpos($src, '_litespeed_rm_qs=0') || strpos($src, '/recaptcha'))) {
 			return $src;
 		}
 
