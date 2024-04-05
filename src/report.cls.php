@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The report class
  *
@@ -8,6 +9,7 @@
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -230,6 +232,8 @@ class Report extends Base
 
 			if (!is_string($v)) {
 				$v = var_export($v, true);
+			} else {
+				$v = esc_html($v);
 			}
 
 			$buf .= $v;

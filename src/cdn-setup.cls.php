@@ -45,7 +45,7 @@ class Cdn_Setup extends Base
 		$params = $this->cls('Cloud')->parse_qc_redir(array('token'));
 
 		if (isset($params['token'])) {
-			$this->_setup_token = $params['token'];
+			$this->_setup_token = esc_html($params['token']);
 			$this->cls('Conf')->update_confs(array(self::O_QC_TOKEN => $this->_setup_token));
 			unset($_GET['token']);
 		}

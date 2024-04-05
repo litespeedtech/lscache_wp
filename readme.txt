@@ -266,9 +266,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** REST callback used ACL for QC ips validation.
 * **Cloud** Fixed a typo in parsing cloud msg which prevented error messages to show.
 * **Cloud** Carried on PHP ver for better version detection purpose.
+* **Cloud** Escaped token to show correctly in report.
 * 🐞**Cloud** Fixed a continual new version detection.
 * **CDN** Auto CDN setup compatibility with WP versions less than 5.3.
-* **CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
+* 🐞**CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
 * **GUI** Further filtered admin banner messages to prevent from existing danger code in database.
 * **REST** Fixed a potential PHP warning in REST check when param is empty. (metikar)
 
