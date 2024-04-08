@@ -103,6 +103,13 @@ class WooCommerce extends Base
 				return array_unique($list);
 			});
 		}
+
+		// #612331 - remove Woocommerce geolocation redirect on ESI page
+		$link_action = $this->cls('ESI')::QS_ACTION;
+		$link_param = $this->cls('ESI')::QS_PARAMS;
+		if (!empty($_GET[$link_action]) && !empty($_GET[$link_param])) {
+            remove_action( 'template_redirect', array( 'WC_Cache_Helper', 'geolocation_ajax_redirect' ), 10 );
+		}
 	}
 
 	/**
