@@ -1155,7 +1155,8 @@ class Cloud extends Base
 			return self::err('lack_of_param');
 		}
 
-		if (empty($this->_api_key())) {
+		// Note: Using empty here throws a fatal error in PHP v5.3
+		if (!$this->_api_key()) {
 			self::debug('Lack of API key');
 			return self::err('lack_of_api_key');
 		}
