@@ -122,6 +122,74 @@ if (!function_exists('litespeed_exception_handler')) {
 }
 
 /**
+ * Override the WP verify nonce function
+ * @since  6.3
+ */
+if (!function_exists('litespeed_define_verify_nonce_func')) {
+	function litespeed_define_verify_nonce_func()
+	{
+		/**
+		 * If the nonce is in none_actions filter, convert it to ESI
+		 */
+		function wp_verify_nonce( $nonce, $action = -1 ) {
+			if (strlen($nonce) > 10) {
+				$nonce = \LiteSpeed\ESI::cls()->esi_hash_to_wp_nonce($nonce);
+			}
+			/* Reminder of this function is copied from wp-includes/pluggable.php (WP v6.4) */
+			
+			$nonce = (string) $nonce;
+			$user  = wp_get_current_user();
+			$uid   = (int) $user->ID;
+			if ( !$uid ) {
+				/**
+				 * Filters whether the user who generated the nonce is logged out.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param int        $uid    ID of the nonce-owning user.
+				 * @param string|int $action The nonce action, or -1 if none was provided.
+				 */
+				$uid = apply_filters( 'nonce_user_logged_out', $uid, $action );
+			}
+		
+			if ( empty( $nonce ) ) {
+				return false;
+			}
+		
+			$token = wp_get_session_token();
+			$i     = wp_nonce_tick( $action );
+		
+			// Nonce generated 0-12 hours ago.
+			$expected = substr( wp_hash( $i . '|' . $action . '|' . $uid . '|' . $token, 'nonce' ), -12, 10 );
+			if ( hash_equals( $expected, $nonce ) ) {
+				return 1;
+			}
+		
+			// Nonce generated 12-24 hours ago.
+			$expected = substr( wp_hash( ( $i - 1 ) . '|' . $action . '|' . $uid . '|' . $token, 'nonce' ), -12, 10 );
+			if ( hash_equals( $expected, $nonce ) ) {
+				return 2;
+			}
+		
+			/**
+			 * Fires when nonce verification fails.
+			 *
+			 * @since 4.4.0
+			 *
+			 * @param string     $nonce  The invalid nonce.
+			 * @param string|int $action The nonce action.
+			 * @param WP_User    $user   The current user object.
+			 * @param string     $token  The user's session token.
+			 */
+			do_action( 'wp_verify_nonce_failed', $nonce, $action, $user, $token );
+		
+			// Invalid nonce.
+			return false;
+		}
+	}
+}
+
+/**
  * Overwride the WP nonce funcs outside of LiteSpeed namespace
  * @since  3.0
  */

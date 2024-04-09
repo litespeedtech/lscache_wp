@@ -153,6 +153,8 @@ class Core extends Root
 		if ($this->cls('Router')->esi_enabled() && !function_exists('wp_create_nonce')) {
 			Debug2::debug('[ESI] Overwrite wp_create_nonce()');
 			litespeed_define_nonce_func();
+			Debug2::debug('[ESI] Overwrite wp_verify_nonce()');
+			litespeed_define_verify_nonce_func();
 		}
 	}
 
