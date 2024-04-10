@@ -43,7 +43,8 @@ class Debug2 extends Root
 			!defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true);
 		}
 
-		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf(Base::O_DEBUG_EXC_STRINGS));
+        // Fix PHP 5: "Warning: Constants may only evaluate to scalar values in" -> https://www.hashbangcode.com/article/php-question-defining-constants-php5
+		!defined('LSCWP_DEBUG_EXC_STRINGS') && define('LSCWP_DEBUG_EXC_STRINGS', serialize($this->conf(Base::O_DEBUG_EXC_STRINGS)));
 	}
 
 	/**
@@ -341,7 +342,7 @@ class Debug2 extends Root
 			return;
 		}
 
-		if (defined('LSCWP_DEBUG_EXC_STRINGS') && Utility::str_hit_array($msg, LSCWP_DEBUG_EXC_STRINGS)) {
+		if (defined('LSCWP_DEBUG_EXC_STRINGS') && Utility::str_hit_array($msg, unserialize(LSCWP_DEBUG_EXC_STRINGS))) {
 			return;
 		}
 
