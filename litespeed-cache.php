@@ -65,6 +65,10 @@ if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'http
 // Placeholder for lazyload img
 !defined('LITESPEED_PLACEHOLDER') && define('LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=');
 
+// Presets constants
+!defined('LITESPEED_PRESET_STANDARD_DIR') && define('LITESPEED_PRESET_STANDARD_DIR', LSCWP_DIR . 'data/preset');
+!defined('LITESPEED_PRESET_BACKUP_DIR') && define('LITESPEED_PRESET_BACKUP_DIR', LITESPEED_STATIC_DIR . 'auto-backup');
+
 // Auto register LiteSpeed classes
 require_once LSCWP_DIR . 'autoload.php';
 

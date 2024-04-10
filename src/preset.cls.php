@@ -16,9 +16,10 @@ class Preset extends Import
 
 	const TYPE_APPLY = 'apply';
 	const TYPE_RESTORE = 'restore';
-
-	const STANDARD_DIR = LSCWP_DIR . 'data/preset';
-	const BACKUP_DIR = LITESPEED_STATIC_DIR . '/auto-backup';
+	
+	private function array_map_get_backups($path){
+	    return self::basename($path['name']);
+	}
 
 	/**
 	 * Returns sorted backup names
@@ -32,10 +33,8 @@ class Preset extends Import
 		global $wp_filesystem;
 
 		$backups = array_map(
-			function ($path) {
-				return self::basename($path['name']);
-			},
-			$wp_filesystem->dirlist(self::BACKUP_DIR) ?: array()
+			'array_map_get_backups',
+			$wp_filesystem->dirlist(LITESPEED_PRESET_BACKUP_DIR) ?: array()
 		);
 		rsort($backups);
 
@@ -79,7 +78,7 @@ class Preset extends Import
 	 */
 	public static function get_standard($name)
 	{
-		return path_join(self::STANDARD_DIR, $name . '.data');
+		return path_join(LITESPEED_PRESET_STANDARD_DIR, $name . '.data');
 	}
 
 	/**
@@ -90,7 +89,7 @@ class Preset extends Import
 	 */
 	public static function get_backup($name)
 	{
-		return path_join(self::BACKUP_DIR, $name . '.data');
+		return path_join(LITESPEED_PRESET_BACKUP_DIR, $name . '.data');
 	}
 
 	/**
