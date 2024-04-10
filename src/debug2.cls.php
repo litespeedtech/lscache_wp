@@ -43,7 +43,8 @@ class Debug2 extends Root
 			!defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true);
 		}
 
-		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf(Base::O_DEBUG_EXC_STRINGS));
+        $temp = Base::O_DEBUG_EXC_STRINGS;
+		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf($temp));
 	}
 
 	/**

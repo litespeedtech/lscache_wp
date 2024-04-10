@@ -17,7 +17,7 @@ class Preset extends Import
 	const TYPE_APPLY = 'apply';
 	const TYPE_RESTORE = 'restore';
 	
-	private function array_map_get_backups($path){
+	public static function array_map_get_backups($path){
 	    return self::basename($path['name']);
 	}
 
@@ -33,7 +33,7 @@ class Preset extends Import
 		global $wp_filesystem;
 
 		$backups = array_map(
-			'array_map_get_backups',
+			'self::array_map_get_backups',
 			$wp_filesystem->dirlist(LITESPEED_PRESET_BACKUP_DIR) ?: array()
 		);
 		rsort($backups);
