@@ -267,6 +267,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Fixed a typo in parsing cloud msg which prevented error messages to show.
 * **Cloud** Carried on PHP ver for better version detection purpose.
 * **Cloud** Escaped token to show correctly in report.
+* **Cloud** Fixed a QC cloud ip verification setup failure in PHP 5.3.
 * 🐞**Cloud** Fixed a continual new version detection.
 * **CDN** Auto CDN setup compatibility with WP versions less than 5.3.
 * 🐞**CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
