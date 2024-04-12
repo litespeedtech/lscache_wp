@@ -252,7 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.2 - Apr 23 2024 =
 * 🌱**Crawler** Added Crawler hit/miss filter. (#328853)
-* 🌱**CLI** Image optimization now supports `wp litespeed-image batch_switch orig/optm`. (A2)
+* 🌱**CLI** Image optimization now supports `wp litespeed-image batch_switch orig/optm`. (A2Hosting)
 * 🌱**VPI** Auto preload VPI images. (Ankit)
 * **Object** Added support for username/password authentication for Redis (PR#616 Donatas Abraitis/hostinger)
 * **Page Optimize** Now supporting Elementors data-settings WebP replacement. (Thanks to Ryan D)
@@ -269,6 +269,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Cloud** Escaped token to show correctly in report.
 * **Cloud** Fixed a QC cloud ip verification setup failure in PHP 5.3.
 * 🐞**Cloud** Fixed a continual new version detection.
+* 🐞**Image Optimize** Fixed a summary counter mismatch for finished images. (A2Hosting)
 * **CDN** Auto CDN setup compatibility with WP versions less than 5.3.
 * 🐞**CDN** Fixed wrong replacement of non image files in image replacement. (Lucas)
 * **GUI** Further filtered admin banner messages to prevent from existing danger code in database.

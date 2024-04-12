@@ -1728,7 +1728,7 @@ class Img_Optm extends Base
 			";
 		$groups_all = $wpdb->get_var($q);
 		$groups_new = $wpdb->get_var($q . ' AND ID>' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
-		$groups_done = $wpdb->get_var($q . ' AND ID<' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
+		$groups_done = $wpdb->get_var($q . ' AND ID<=' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
 
 		$q = "SELECT b.post_id
 			FROM `$wpdb->posts` a
