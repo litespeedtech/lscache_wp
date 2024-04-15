@@ -210,7 +210,8 @@ class Img_Optm extends Base
 		self::save_summary();
 
 		// Check if has credit to push
-		$allowance = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM);
+		$err = false;
+		$allowance = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM, $err);
 
 		$wet_limit = $this->wet_limit();
 
@@ -221,7 +222,7 @@ class Img_Optm extends Base
 
 		if (!$allowance) {
 			self::debug('❌ No credit');
-			Admin_Display::error(Error::msg('out_of_quota'));
+			Admin_Display::error(Error::msg($err));
 			$this->_finished_running();
 			return;
 		}
