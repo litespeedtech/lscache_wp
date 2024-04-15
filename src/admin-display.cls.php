@@ -90,6 +90,8 @@ class Admin_Display extends Base
 		} else {
 			add_action('admin_menu', array($this, 'register_admin_menu'));
 		}
+
+		// Show disable all warning
 		if (defined('LITESPEED_DISABLE_ALL')) {
 			Admin_Display::error(Error::msg('disabled_all'), false);
 		}
@@ -546,11 +548,6 @@ class Admin_Display extends Base
 				return;
 			}
 		}
-
-		// Show disable all warning
-// 		if (defined('LITESPEED_DISABLE_ALL')) {
-// 			Admin_Display::error(Error::msg('disabled_all'), true);
-// 		}
 
 		if (!$this->conf(self::O_NEWS)) {
 			return;
