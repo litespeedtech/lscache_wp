@@ -45,6 +45,10 @@ seopress_cookies_user_consent_nonce
 # SearchWP Metrics
 swpmtxnonce
 
+# The Events Calendar
+_tec_view_rest_nonce_primary
+_tec_view_rest_nonce_secondary
+
 # wpDataTables #986128
 wdt*
 
