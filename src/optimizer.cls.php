@@ -24,6 +24,15 @@ class Optimizer extends Root
 	{
 		$this->_conf_css_font_display = $this->conf(Base::O_OPTM_CSS_FONT_DISPLAY);
 	}
+	
+	/**
+	 * Exception to throw when html content is empty
+	 *
+	 * @return void
+	 */
+	private function html_min_exception(){
+		throw new \Exception('HTML minification encountered an error');
+	}
 
 	/**
 	 * Run HTML minify process and return final content
@@ -51,9 +60,15 @@ class Optimizer extends Root
 		try {
 			$obj = new Lib\HTML_MIN($content, $options);
 			$content_final = $obj->process();
+			// check if content from minification is empty
+			if($content_final === ''){
+				// throw exception
+				$this->html_min_exception();
+			}
 			if (!defined('LSCACHE_ESI_SILENCE')) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
 			}
+			
 			return $content_final;
 		} catch (\Exception $e) {
 			Debug2::debug('******[Optmer] html_min failed: ' . $e->getMessage());
