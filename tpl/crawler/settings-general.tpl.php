@@ -38,9 +38,9 @@ $this->form_action();
 				<div class="litespeed-desc">
 					<?php echo __('Specify the crawler running periods.', 'litespeed-cache'); ?>
 					<br />
-					<?php echo sprintf( __('You can add multiple ranges in 24-hour format <code>%s</code> delimited by %s', 'litespeed-cache'), 'HH:mm-HH:mm', '<code>,</code>'); ?>
+					<?php echo sprintf( __('You can add multiple ranges in 24-hour format %s delimited by %s', 'litespeed-cache'), '<code>HH:mm-HH:mm</code>', '<code>,</code>'); ?>
 					<br />
-					<?php echo __('Server time:', 'litespeed-cache') . ' <code>'. date('H:m') . '</code>'; ?> 
+					<?php echo __('Server time', 'litespeed-cache') . ': <code>'. date('H:m') . '</code>'; ?> 
 					<br />
 					<code>00:00-06:00 , 20:00-23:59, 01:00-05:00</code>
 				</div>
