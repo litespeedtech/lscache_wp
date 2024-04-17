@@ -19,7 +19,7 @@
 #image_
 #banner-
 #map-
-#text-box-
+#text-
 #page-header-
 #section_
 
