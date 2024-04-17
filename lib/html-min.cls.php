@@ -26,7 +26,7 @@ class HTML_MIN
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;
-	protected $_skipComments = [];
+	protected $_skipComments = array();
 
 	/**
 	 * "Minify" an HTML page
