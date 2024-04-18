@@ -177,12 +177,13 @@ class HTML_MIN
 	{
 		// Check if is IE conditional comment
 		$is_ie_comment = (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['));
+		if($is_ie_comment) return $m[0];
 
 		// Check if comment text is present in Page Optimization -> HTML Settings -> HTML Keep comments
 		$is_skip_comment = false;
 		if(count($this->_skipComments) > 0){
 			foreach ($this->_skipComments as $comment) {
-				if (!empty($comment) && strpos($m[1], $comment) !== false && $is_skip_comment === false) {
+				if ($comment && strpos($m[1], $comment) !== false) {
 					$is_skip_comment = true;
 					break;
 				}
@@ -190,9 +191,7 @@ class HTML_MIN
 		}
 
 		// If comment is IE Conditional OR Comment that need to be kept, it will return the comment. Else it will be removed.
-		return ($is_ie_comment || $is_skip_comment)
-			? $m[0]
-			: '';
+		return $is_skip_comment ? $m[0] : '';
 	}
 
 	protected function _reservePlace($content)
