@@ -97,10 +97,7 @@ defined('WPINC') || exit;
 				<div class="litespeed-desc">
 					<?php echo __('When minifying HTML do not discard comments that match a specified pattern.', 'litespeed-cache'); ?>
 					<br />
-					<?php echo __('If comment to be kept is like:', 'litespeed-cache'); ?>
-					<code>&lt;!-- A comment that needs to be here --&gt;</code>
-					<?php echo __('write:', 'litespeed-cache'); ?>
-					<code>A comment that needs to be here</code>
+					<?php echo sprintf( __('If comment to be kept is like: %s write: %s', 'litespeed-cache'), '<code>&lt;!-- A comment that needs to be here --&gt;</code>', '<code>A comment that needs to be here</code>'); ?>
 					<br />
 					<?php Doc::one_per_line(); ?>
 				</div>
