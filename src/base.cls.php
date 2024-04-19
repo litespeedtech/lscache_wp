@@ -433,7 +433,7 @@ class Base extends Root
 		self::O_OPTM_JS_EXC => array(),
 		self::O_OPTM_HTML_MIN => false,
 		self::O_OPTM_HTML_LAZY => array(),
-		self::O_OPTM_HTML_SKIP_COMMENTS => '',
+		self::O_OPTM_HTML_SKIP_COMMENTS => array(),
 		self::O_OPTM_QS_RM => false,
 		self::O_OPTM_GGFONTS_RM => false,
 		self::O_OPTM_CSS_ASYNC => false,
