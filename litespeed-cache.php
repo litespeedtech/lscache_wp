@@ -132,6 +132,7 @@ if (!function_exists('litespeed_define_verify_nonce_func')) {
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
 		function wp_verify_nonce( $nonce, $action = -1 ) {
+			// If nonce length > 10 then render ESI to nonce value.
 			if (strlen($nonce) > 10) {
 				$nonce = \LiteSpeed\ESI::cls()->esi_hash_to_wp_nonce($nonce);
 			}

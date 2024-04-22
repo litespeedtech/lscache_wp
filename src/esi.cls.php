@@ -1061,30 +1061,35 @@ class ESI extends Root
 	 */
 	public function esi_hash_to_wp_nonce($nonce){
 		// Search the nonce in preserved list. If found return the content.
-		$preserved_found = $this->get_preserve_content($nonce);
+		$preserved_found = $this->get_preserve_content( $nonce );
 		$nonce = $preserved_found ?: $nonce;
 	    
-		// if nonce has <esi in content
-		if(strpos($nonce, '<esi')!==false){
-			// search for <esi> with attribute "as-var=1"  -> Is to have as-var important?
-			preg_match('/<esi.+src=["\'](.+)["\'].+as-var=["\']1["\']/mU', $nonce, $src);
-			if(!empty($src[1])){
-				$parsedUrl = parse_url($src[1]);
-				if($parsedUrl!==false && isset($parsedUrl['query'])){
-					parse_str($parsedUrl['query'], $variables);
+		// if nonce has <esi in content.
+		if( strpos( $nonce, '<esi' )!==false ){
+			// search for esi src data.
+			preg_match( '/<esi.+src=["\'](.+)["\']/mU', $nonce, $src );
 
+			if( !empty( $src[1] ) ){
+				$parsedUrl = parse_url( $src[1] );
+
+				if( $parsedUrl && isset($parsedUrl['query']) ){
+					parse_str( $parsedUrl['query'], $variables );
 					$query_qs_param = $this::QS_PARAMS;
-					if($variables[$query_qs_param]){
-						$req_params = $variables[$query_qs_param];
-						$unencrypted = base64_decode($req_params);
-						if ($unencrypted !== false) {
-							$params_esi = json_decode($unencrypted, true);
+					$is_esi_nonce = ( $variables[$this::QS_ACTION] ? $variables[$this::QS_ACTION]=='nonce' : false );
 
-							if(!empty($params_esi['action'])){
-								if (function_exists('wp_create_nonce_litespeed_esi')) {
-									$nonce = wp_create_nonce_litespeed_esi($params_esi['action']);
+					if( $is_esi_nonce && $variables[$query_qs_param] ){
+					    // Unecrypt esi url parameter.
+						$unencrypt = base64_decode( $variables[$query_qs_param] );
+						
+						if ( $unencrypt ) {
+						    // JSON decode parameter.
+							$params_esi = json_decode( $unencrypt, true );
+
+							if( $params_esi['action'] && !empty( $params_esi['action'] ) ){
+								if ( function_exists( 'wp_create_nonce_litespeed_esi' ) ) {
+									$nonce = wp_create_nonce_litespeed_esi( $params_esi['action'] );
 								} else {
-									$nonce = wp_create_nonce($params_esi['action']);
+									$nonce = wp_create_nonce( $params_esi['action'] );
 								}
 							}
 						}
@@ -1103,9 +1108,9 @@ class ESI extends Root
 	public function get_preserve_content($hash){
 		$return = false;
 
-		foreach ($this->_esi_preserve_list as $k => $v) {
-		if($k === $hash){
-			$return = $v;
+		foreach ( $this->_esi_preserve_list as $k => $v ) {
+			if( $k === $hash ){
+				$return = $v;
 				break;
 			}
 		}
