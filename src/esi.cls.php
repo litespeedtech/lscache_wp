@@ -63,7 +63,7 @@ class ESI extends Root
 		}
 
 		// If page is not cacheable
-		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
+		if (defined('DONOTCACHEPAGE') && apply_filters('litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE)) {
 			return;
 		}
 
