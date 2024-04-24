@@ -62,6 +62,11 @@ class ESI extends Root
 			return;
 		}
 
+		// If page is not cacheable
+		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
+			return;
+		}
+
 		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
 		$this->_hooks();
 
