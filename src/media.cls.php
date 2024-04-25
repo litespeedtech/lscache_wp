@@ -983,6 +983,7 @@ class Media extends Root
 	public function replace_urls_in_json($content)
 	{
 		$pattern = '/data-settings="(.*?)"/i';
+		$parent_class = $this;
 
 		preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
 
@@ -997,7 +998,6 @@ class Media extends Root
 
 			if (json_last_error() === JSON_ERROR_NONE) {
 				$did_webp_replace = false;
-				$parent_class = $this;
 
 				array_walk_recursive($jsonData, function (&$item, $key) use(&$did_webp_replace, $parent_class) {
 					if ($key == 'url') {
