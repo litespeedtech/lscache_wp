@@ -250,6 +250,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 6.2.0.1 - Apr 25 2024 =
+* 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementors `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)
+
 = 6.2 - Apr 23 2024 =
 * 🌱**Crawler** Added Crawler hit/miss filter. (#328853)
 * 🌱**CLI** Image optimization now supports `wp litespeed-image batch_switch orig/optm`. (A2Hosting)
