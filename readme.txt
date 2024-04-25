@@ -250,6 +250,14 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 6.3 - Jun 2024 =
+* 🌱**Page Optimize** New option: HTML Keep Comments. (#328853)
+* **CLoud** Fixed an message error for daily quota.
+* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
+* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
+* **Page Optimize** Updated Instant Click library to version 5.2.0.
+* **Page Optimize** Flatsome theme random string excludes. (PR#415)
+
 = 6.2.0.1 - Apr 25 2024 =
 * 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementor's `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)
 

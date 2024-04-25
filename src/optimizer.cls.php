@@ -43,9 +43,9 @@ class Optimizer extends Root
 		if ($force_inline_minify) {
 			$options['jsMinifier'] = __CLASS__ . '::minify_js';
 		}
-		
+
 		$skip_comments = $this->conf(Base::O_OPTM_HTML_SKIP_COMMENTS);
-		if( $skip_comments ){
+		if ($skip_comments) {
 			$options['skipComments'] = $skip_comments;
 		}
 
