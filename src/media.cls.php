@@ -996,22 +996,30 @@ class Media extends Root
 			$jsonData = json_decode($jsonString, true);
 
 			if (json_last_error() === JSON_ERROR_NONE) {
-				array_walk_recursive($jsonData, function (&$item, $key) {
+				$replace_webp_image = false;
+
+				array_walk_recursive($jsonData, function (&$item, $key) use(&$replace_webp_image) {
 					if ($key == 'url') {
-						$item = $this->replace_webp($item);
+						$replace_webp_image = $this->replace_webp($item);
+						if( $replace_webp_image ){
+							$item = $replace_webp_image;
+						}
 					}
 				});
 
-				// Re-encode the modified array back to a JSON string
-				$newJsonString = json_encode($jsonData);
 
-				// Re-encode the JSON string to HTML entities only if it was originally encoded
-				if ($isEncoded) {
-					$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+				if( $replace_webp_image ){
+					// Re-encode the modified array back to a JSON string
+					$newJsonString = json_encode($jsonData);
+
+					// Re-encode the JSON string to HTML entities only if it was originally encoded
+					if ($isEncoded) {
+						$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+					}
+
+					// Replace the old JSON string in the content with the new, modified JSON string
+					$content = str_replace($match[1], $newJsonString, $content);
 				}
-
-				// Replace the old JSON string in the content with the new, modified JSON string
-				$content = str_replace($match[1], $newJsonString, $content);
 			}
 		}
 
