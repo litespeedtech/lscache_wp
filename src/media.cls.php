@@ -1003,7 +1003,7 @@ class Media extends Root
 						$item_image = $this->replace_webp($item);
 						if( $item_image ){
 							$item = $item_image;
-
+							
 							!$make_webp_replace && $make_webp_replace = true;
 						}
 					}
