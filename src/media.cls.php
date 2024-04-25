@@ -997,10 +997,11 @@ class Media extends Root
 
 			if (json_last_error() === JSON_ERROR_NONE) {
 				$did_webp_replace = false;
+				$parent_class = $this;
 
-				array_walk_recursive($jsonData, function (&$item, $key) use(&$did_webp_replace) {
+				array_walk_recursive($jsonData, function (&$item, $key) use(&$did_webp_replace, $parent_class) {
 					if ($key == 'url') {
-						$item_image = $this->replace_webp($item);
+						$item_image = $parent_class->replace_webp($item);
 						if( $item_image ){
 							$item = $item_image;
 							
