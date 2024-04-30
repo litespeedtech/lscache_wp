@@ -228,6 +228,8 @@ class Base extends Root
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
 	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
+	const O_IMG_OPTM_RESIZE = 'img_optm-resize';
+	const O_IMG_OPTM_RESIZE_SIZE = 'img_optm-resize_size';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
@@ -509,6 +511,8 @@ class Base extends Root
 		self::O_IMG_OPTM_WEBP_ATTR => array(),
 		self::O_IMG_OPTM_WEBP_REPLACE_SRCSET => false,
 		self::O_IMG_OPTM_JPG_QUALITY => 0,
+		self::O_IMG_OPTM_RESIZE => false,
+		self::O_IMG_OPTM_RESIZE_SIZE => '',
 
 		// Crawler
 		self::O_CRAWLER => false,

@@ -159,6 +159,56 @@ $this->form_action();
 			</div>
 		</td>
 	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_IMG_OPTM_RESIZE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Enable resize of original image.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php echo __('Image resize status', 'litespeed-cache' );  ?>
+		</th>
+		<td>
+			<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press the button if the pull cron job is disabled.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_START); ?>">
+				<?php echo __('Start optimizing', 'litespeed-cache'); ?>
+			</a>
+			<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Pause image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_PAUSE); ?>">
+				<?php echo __('Pause optimizing', 'litespeed-cache'); ?>
+			</a>
+			<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Continue image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_CONTINUE); ?>">
+				<?php echo __('Continue optimizing', 'litespeed-cache'); ?>
+			</a>
+			<br />
+			<div class="litespeed-desc">
+				<span>Latest id: <code>#1</code></span>
+				<br />
+				<span>Progress: <code>1/2222</code></span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_IMG_OPTM_RESIZE_SIZE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_input( $id, 'litespeed-input-medium' ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Resize image to this maximum size.', 'litespeed-cache' ); ?>
+				<br /><?php echo sprintf( __( 'Example: %1$s or %2$s.', 'litespeed-cache' ), '<code>2048x2048</code>', '<code>2100x1000</code>' ); ?>
+			</div>
+		</td>
+	</tr>
 </tbody></table>
 
 <?php

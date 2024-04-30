@@ -23,6 +23,7 @@ class Router extends Base
 	const ACTION_CLOUD = 'cloud';
 	const ACTION_CDN_SETUP = 'cdn_setup';
 	const ACTION_IMG_OPTM = 'img_optm';
+	const ACTION_IMG_RESIZE = 'img_resize';
 	const ACTION_HEALTH = 'health';
 	const ACTION_CRAWLER = 'crawler';
 	const ACTION_PURGE = 'purge';
@@ -53,6 +54,7 @@ class Router extends Base
 		self::ACTION_DEBUG2,
 		self::ACTION_HEALTH,
 		self::ACTION_IMG_OPTM,
+		self::ACTION_IMG_RESIZE,
 		self::ACTION_PRESET,
 		self::ACTION_IMPORT,
 		self::ACTION_PLACEHOLDER,
@@ -594,6 +596,12 @@ class Router extends Base
 			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
+				if ($_can_option && !$_is_network_admin) {
+					self::$_action = $action;
+				}
+				return;
+
+			case self::ACTION_IMG_RESIZE:
 				if ($_can_option && !$_is_network_admin) {
 					self::$_action = $action;
 				}
