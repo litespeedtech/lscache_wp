@@ -1,7 +1,7 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
-Requires at least: 4.0
+Requires at least: 4.6
 Tested up to: 6.5.2
 Stable tag: 6.2.0.1
 License: GPLv3
