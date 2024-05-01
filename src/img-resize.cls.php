@@ -20,16 +20,14 @@ class Img_Resize extends Base
 {
 	const LOG_TAG = '📐';
 
-	const TYPE_START = 'start';
-	const TYPE_PAUSE = 'pause';
-	const TYPE_CONTINUE = 'continue';
-	const TYPE_RESTART = 'restart';
+	const TYPE_NEXT = 'next';
 
 	const DB_NEED_PULL = 'need_pull';
 
 	private $bk_add = '_res_bk';
 	private $meta_bk = 'lsc_resize_bk';
 	private $meta_done = 'lsc_resize';
+	private $mime_images = array( 'image/jpeg', 'image/png', 'image/gif' );
 	
 	protected $_summary;
 	
@@ -43,102 +41,35 @@ class Img_Resize extends Base
 		Debug2::debug2('[Img Processing] init');
 
 		$this->_summary = self::get_summary();
-		if (empty($this->_summary['next_post_id'])) {
-			$this->_summary['next_post_id'] = 0;
+		if (empty($this->_summary['current_post_id'])) {
+			$this->_summary['current_post_id'] = 0;
 		}
-		if (empty($this->_summary['is_running'])) {
-			$this->_summary['is_running'] = 0;
+		if (empty($this->_summary['current'])) {
+			$this->_summary['current'] = 0;
 		}
-		if (empty($this->_summary['ended'])) {
-			$this->_summary['ended'] = 0;
+		if (empty($this->_summary['total'])) {
+			$this->_summary['total'] = 0;
 		}
 
 		// Hooks
 	    $this->add_upload_hooks();
 	}
 
-
-	/**
-	 * Cron start async req
-	 */
-	public static function start_async_cron()
-	{
-		Task::async_call('imgresize');
-	}
-
-	/**
-	 * Manually start async req
-	 */
-	public static function start_async()
-	{
-		Task::async_call('imgresize_force');
-
-		$msg = __('Started async image processing request', 'litespeed-cache');
-		Admin_Display::success($msg);
-	}
-
-	/**
-	 * Ajax req handler
-	 */
-	public static function async_handler()
-	{
-		self::start();
-	}
-
-	/**
-	 * Set running to done
-	 */
-	private static function start(){
-
-	}
-	
-	/**
-	 * Break cron operation.
-	 *
-	 * @return void
-	 */
-	public function do_break(){
-		$this->_summary['is_running'] = 0;
-		$this->_summary['ended'] = 0;
-		self::save_summary();
-	}
-	
-	/**
-	 * Continue cron operation.
-	 *
-	 * @return void
-	 */
-	public function do_continue(){
-		$this->_summary['is_running'] = time();
-		$this->_summary['ended'] = 0;
-		self::save_summary();
-	}
-	
-	/**
-	 * Break cron operation.
-	 *
-	 * @return void
-	 */
-	public function do_restart(){
-		$this->_summary['next_post_id'] = 0;
-		$this->_summary['is_running'] = time();
-		$this->_summary['ended'] = 0;
+	public function update_summary_data(){
+		
 		self::save_summary();
 	}
 
-	/**
-	 * Set running to done
-	 */
-	private function _finished_running()
-	{
-		$this->_summary['next_post_id'] = 0;
-		$this->_summary['is_running'] = 0;
-		$this->_summary['ended'] = 1;
-		self::save_summary();
+	public function optimize_next(){
+		$summary = $this->get_summary();
+
+		if($summary['current'] <= $summary['total']){
+			$params = $this->prepare_parameters_from_id($summary['current_post_id']);
+			$this->resize_image($params);
+
+			$this->update_summary_data();
+		}
 	}
-	
-
-
 
 	/**
 	 * Add upload file hooks.
@@ -147,83 +78,49 @@ class Img_Resize extends Base
 	 */
 	public function add_upload_hooks(){
 		// Wordpress default upload filter.
-		add_filter('wp_handle_upload', array($this, 'wp_upload_resize_image'));
+		add_filter('wp_handle_upload', array($this, 'resize_image'));
 		add_filter('wp_generate_attachment_metadata', array($this, 'generate_attachment_metadata'), 10, 2);
 
 		// Some plugins will need custom upload adjustment
 	}
 
-		
 	/**
-	 * Generate metas for images.
+	 * Resize functionality.
 	 *
-	 * @param  mixed $meta
-	 * @param  mixed $id
+	 * @param array $params File with path. Expected keys: type(mime type format), url, file(path to file)
 	 * @return void
 	 */
-	public function generate_attachment_metadata($meta, $id = null){
-		$file_path = wp_get_original_image_path( $id );
-		$mime = wp_get_image_mime( $file_path );
-
-		if(
-			$file_path && 
-			in_array( $mime, array( 'image/jpeg', 'image/png', 'image/gif' ), true )
-		){
-			$path_info = pathinfo($file_path);
-			$backup_name = $this->get_resize_bk_name($file_path);
-
-			if(is_file($path_info['dirname'].'/'.$backup_name)){
-				$meta[$this->meta_bk] = true;
-			}
-
-			if(filesize($file_path) > filesize($backup_name)){
-				$meta[$this->meta_done] = true;
-			}
-		}
-
-		return $meta;
-	}
-	
-	/**
-	 * Get image backup name.
-	 *
-	 * @param  string $file_path File with path.
-	 * @param  array $path_info Path info of file.
-	 * @return string
-	 */
-	private function get_resize_bk_name($file_path, $path_info = null){
-		// If not sent, get new pathinfo.
-		!$path_info && $path_info = pathinfo($file_path);
-
-		return $path_info['filename'] . $this->bk_add . '.' . $path_info['extension'];
-	}
-
-	/**
-	 * WP upload hooks - add resize functionality.
-	 *
-	 * @return void
-	 */
-	public function wp_upload_resize_image($params){
+	public function resize_image($params){
 		// Return if the file is not an image.
-		if ( ! in_array( $params['type'], array( 'image/jpeg', 'image/png', 'image/gif' ), true ) ) {
+		if ( ! in_array( $params['type'], $this->mime_images, true ) ) {
 			return $params;
 		}
 
-		// If need a backup.
-		if(apply_filters('litespeed_img_resize_original_backup', true)){ // Possible values: true - make backup ; false - do not make backup
-			$path_info = pathinfo($params['file']);
-			$to = str_replace(
-				$path_info['basename'],
-				$this->get_resize_bk_name($params['file'], $path_info),
-				$params['file']
-			);
-
-			if (!copy($params['file'], $to)) {
-				self::debug('Image Resize: cannot make backup to file: ' . $params['file'] );
-			}
-		}
-
 		try{
+			if(!$params['file']){
+				throw( new \Exception( 'No image sent to resize.' ) );
+			}
+
+			// If need a backup.
+			if(apply_filters('litespeed_img_resize_original_backup', true)){ // Possible values: true - make backup ; false - do not make backup
+				$path_info = pathinfo($params['file']);
+				$to = str_replace(
+					$path_info['basename'],
+					$this->get_backup_name($params['file'], $path_info),
+					$params['file']
+				);
+				
+				// Check if backup was done.
+				if (!is_file($to)){
+					if(!copy($params['file'], $to)) {
+						self::debug('[Image Resize] Cannot make backup to file: ' . $params['file'] );
+					}
+				}
+				else {
+					self::debug('[Image Resize] Backup exists for file: ' . $params['file'] );
+				}
+			}
+
 			$resize_style = apply_filters('litespeed_img_resize_style', 0); // Possible values: 0 - keep width ; 1 - keep height.
 			$resize_crop = apply_filters('litespeed_img_resize_crop', false); // Possible values: see https://developer.wordpress.org/reference/classes/wp_image_editor/resize/
 
@@ -267,6 +164,76 @@ class Img_Resize extends Base
 
 		return $params;
 	}
+		
+	/**
+	 * Generate custom metas for image.
+	 *
+	 * @param  mixed $meta
+	 * @param  mixed $id
+	 * @return void
+	 */
+	public function generate_attachment_metadata($meta, $id = null){
+		$params = $this->prepare_parameters_from_id($id);
+
+		if(
+			$params['file'] && 
+			in_array( $params['type'], $this->mime_images, true )
+		){
+			$path_info = pathinfo($params['file']);
+			$backup_name = $this->get_backup_name($params['file'], $path_info);
+			$backup_path = $path_info['dirname'] . '/' . $backup_name;
+
+			if(is_file($backup_path)){
+				$meta[$this->meta_bk] = true;
+			}
+
+			if(filesize($params['file']) > filesize($backup_path)){
+				$meta[$this->meta_done] = true;
+			}
+		}
+
+		return $meta;
+	}
+	
+	/**
+	 * Get image backup name.
+	 *
+	 * @param  string $file_path File with path.
+	 * @param  array $path_info Path info of file.
+	 * @return string
+	 */
+	private function get_backup_name($file_path, $path_info = null){
+		// If null sent, get pathinfo from file path.
+		!$path_info && $path_info = pathinfo($file_path);
+
+		return $path_info['filename'] . $this->bk_add . '.' . $path_info['extension'];
+	}
+	
+	/**
+	 * Prepare parameters from attachment id.
+	 *
+	 * @param  string|int $id Attachment id.
+	 * @return string
+	 */
+	private function prepare_parameters_from_id( $id ){
+		$params = array(
+			'file' => null,
+			'url' => null,
+			'type' => null
+		);
+
+		$file_path = wp_get_original_image_path( $id );
+		if( $file_path ){
+			$url = wp_get_attachment_image_url($id, 'full');
+			$type = wp_get_image_mime( $file_path );
+
+			$params['file'] = $file_path;
+			$params['url']  = $url ? $url : null;
+			$params['type'] = $type ? $type : null;
+		}
+
+		return $params;
+	}
 
 	/**
 	 * Handle all request actions from main cls
@@ -278,17 +245,8 @@ class Img_Resize extends Base
 		$type = Router::verify_type();
 
 		switch ($type) {
-			case self::TYPE_START:
-				self::start_async();
-				break;
-			case self::TYPE_PAUSE:
-				$this->do_break();
-				break;
-			case self::TYPE_CONTINUE:
-				self::do_continue();
-				break;
-			case self::TYPE_RESTART:
-				$this->do_restart();
+			case self::TYPE_NEXT:
+				$this->optimize_next();
 				break;
 
 			default:

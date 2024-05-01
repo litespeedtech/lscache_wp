@@ -3,7 +3,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $this->form_action();
-$proc_summary = Img_Resize::get_summary();
 ?>
 
 <h3 class="litespeed-title-short">
@@ -171,39 +170,6 @@ $proc_summary = Img_Resize::get_summary();
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable resize of original image.', 'litespeed-cache' ); ?>
 			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th>
-			<?php echo __('Image resize status', 'litespeed-cache' );  ?>
-		</th>
-		<td>
-			<?php if($proc_summary['ended']): ?>
-				<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Restart image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTART); ?>">
-					<?php echo __('Restart', 'litespeed-cache'); ?>
-				</a>
-			<?php else: ?>
-				<?php if(!$proc_summary['is_running']): ?>
-					<?php if($proc_summary['next_post_id'] == 0): ?>
-						<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press once.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_START); ?>">
-							<?php echo __('Start', 'litespeed-cache'); ?>
-						</a>
-					<?php else: ?>
-						<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press once.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_CONTINUE); ?>">
-							<?php echo __('Continue', 'litespeed-cache'); ?>
-						</a>
-					<?php endif; ?>
-				<?php else: ?>
-					<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Pause image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_PAUSE); ?>">
-						<?php echo __('Pause', 'litespeed-cache'); ?>
-					</a>
-					<br />
-					<div class="litespeed-desc">
-						<span><?php echo __('Next id', 'litespeed-cache') ?>: <code><?php echo $proc_summary['next_post_id'] ? '#' . $proc_summary['next_post_id'] : '-'; ?></code></span>
-					</div>
-				<?php endif; ?>
-			<?php endif; ?>
 		</td>
 	</tr>
 

@@ -220,6 +220,44 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 	</div>
 
 	<div class="litespeed-width-3-10">
+		<div class="postbox litespeed-postbox litespeed-postbox-imgresize-info">
+			<div class="inside">
+
+				<h3 class="litespeed-title">
+					<?php echo __('Image resize', 'litespeed-cache'); ?>
+				</h3>
+
+				<div class="litespeed-flex-container">
+					<?php
+						$id = Base::O_IMG_OPTM_RESIZE;	
+						$resize_summary = Img_Resize::get_summary();
+					?>
+					<div>
+						<p>
+							<?php echo __('Status', 'litespeed-cache'); ?>:
+							<code><?php echo ($this->conf($id) ? __('ON', 'litespeed-cache') : __('OFF', 'litespeed-cache')); ?></code>
+						</p>
+						<?php if ($this->conf($id)) : ?>
+							<p>
+								<?php echo __( 'Current image', 'litespeed-cache' ); ?>:
+								<code><?php echo '#' . $resize_summary['current_post_id']; ?></code>
+							</p>
+							<p>
+								<?php echo __( 'Progress', 'litespeed-cache' ); ?>:
+								<code><?php echo $resize_summary['current']; ?>/<?php echo $resize_summary['total']; ?></code>
+							</p>
+							<p>
+								<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" <?php ( $resize_summary['current'] == $resize_summary['total'] && $resize_summary['total'] > 0 ) ? 'disabled="disabled" ' : ''; ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_NEXT); ?>">
+									<?php echo __('Optimize image', 'litespeed-cache'); ?>
+								</a>
+							</p>
+						<?php endif; ?>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="postbox litespeed-postbox litespeed-postbox-imgopt-info">
 			<div class="inside">
 
