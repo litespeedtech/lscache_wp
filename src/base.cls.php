@@ -230,6 +230,7 @@ class Base extends Root
 	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 	const O_IMG_OPTM_RESIZE = 'img_optm-resize';
 	const O_IMG_OPTM_RESIZE_SIZE = 'img_optm-resize_size';
+	const O_IMG_OPTM_RESIZE_STYLE = 'img_optm-resize_style';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##

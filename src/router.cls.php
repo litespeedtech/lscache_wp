@@ -582,6 +582,7 @@ class Router extends Base
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case self::ACTION_IMG_OPTM:
+			case self::ACTION_IMG_RESIZE:
 			case self::ACTION_CLOUD:
 			case self::ACTION_CDN_SETUP:
 			case self::ACTION_CDN_CLOUDFLARE:
@@ -596,12 +597,6 @@ class Router extends Base
 			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
-				if ($_can_option && !$_is_network_admin) {
-					self::$_action = $action;
-				}
-				return;
-
-			case self::ACTION_IMG_RESIZE:
 				if ($_can_option && !$_is_network_admin) {
 					self::$_action = $action;
 				}

@@ -3,6 +3,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $this->form_action();
+$proc_summary = Img_Resize::get_summary();
 ?>
 
 <h3 class="litespeed-title-short">
@@ -178,21 +179,31 @@ $this->form_action();
 			<?php echo __('Image resize status', 'litespeed-cache' );  ?>
 		</th>
 		<td>
-			<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press the button if the pull cron job is disabled.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_START); ?>">
-				<?php echo __('Start optimizing', 'litespeed-cache'); ?>
-			</a>
-			<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Pause image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_PAUSE); ?>">
-				<?php echo __('Pause optimizing', 'litespeed-cache'); ?>
-			</a>
-			<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Continue image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Optm::TYPE_RESIZE_CONTINUE); ?>">
-				<?php echo __('Continue optimizing', 'litespeed-cache'); ?>
-			</a>
-			<br />
-			<div class="litespeed-desc">
-				<span>Latest id: <code>#1</code></span>
-				<br />
-				<span>Progress: <code>1/2222</code></span>
-			</div>
+			<?php if($proc_summary['ended']): ?>
+				<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Restart image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTART); ?>">
+					<?php echo __('Restart', 'litespeed-cache'); ?>
+				</a>
+			<?php else: ?>
+				<?php if(!$proc_summary['is_running']): ?>
+					<?php if($proc_summary['next_post_id'] == 0): ?>
+						<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press once.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_START); ?>">
+							<?php echo __('Start', 'litespeed-cache'); ?>
+						</a>
+					<?php else: ?>
+						<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press once.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_CONTINUE); ?>">
+							<?php echo __('Continue', 'litespeed-cache'); ?>
+						</a>
+					<?php endif; ?>
+				<?php else: ?>
+					<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Pause image resize.', 'litespeed-cache'); ?>" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_PAUSE); ?>">
+						<?php echo __('Pause', 'litespeed-cache'); ?>
+					</a>
+					<br />
+					<div class="litespeed-desc">
+						<span><?php echo __('Next id', 'litespeed-cache') ?>: <code><?php echo $proc_summary['next_post_id'] ? '#' . $proc_summary['next_post_id'] : '-'; ?></code></span>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
 		</td>
 	</tr>
 

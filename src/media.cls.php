@@ -23,8 +23,6 @@ class Media extends Root
 	private $content;
 	private $_wp_upload_dir;
 	private $_vpi_preload_list = array();
-	
-	protected $_summary;
 
 	/**
 	 * Init
@@ -39,23 +37,6 @@ class Media extends Root
 	}
 
 	/**
-	 * Add upload file hooks.
-	 *
-	 * @return void
-	 */
-	public function add_upload_hooks(){
-		// Wordpress default upload filter.
-		add_filter('wp_handle_upload', array($this, 'wp_upload_changes'));
-
-		// Some plugins will need custom upload adjustment
-	}
-
-	public function wp_upload_changes($params){
-		var_dump($params);
-		// die();
-	}
-
-	/**
 	 * Init optm features
 	 *
 	 * @since  3.0
@@ -63,8 +44,6 @@ class Media extends Root
 	 */
 	public function init()
 	{
-	    $this->add_upload_hooks();
-
 		if (is_admin()) {
 			return;
 		}
