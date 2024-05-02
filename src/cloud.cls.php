@@ -47,7 +47,7 @@ class Cloud extends Base
 
 	const API_REPORT = 'wp/report';
 	const API_NEWS = 'news';
-	const API_VER = 'ver';
+	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
 
 	private static $CENTER_SVC_SET = array(
@@ -169,7 +169,7 @@ class Cloud extends Base
 		if (defined('LITESPEED_ERR')) {
 			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
 		}
-		$data = self::get(self::API_VER, $req_data);
+		$data = self::post(self::API_VER, $req_data);
 
 		return $data;
 	}
