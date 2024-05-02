@@ -178,8 +178,8 @@ if (!function_exists('run_litespeed_cache')) {
 			return;
 		}
 
-		//Check minimum WP requirements, which is 4.0 at the moment.
-		if (version_compare($GLOBALS['wp_version'], '4.0', '<')) {
+		//Check minimum WP requirements, which is 4.6 at the moment.
+		if (version_compare($GLOBALS['wp_version'], '4.6', '<')) {
 			return;
 		}
 
