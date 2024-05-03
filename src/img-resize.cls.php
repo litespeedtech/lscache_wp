@@ -11,9 +11,6 @@
 
 namespace LiteSpeed;
 
-use WpOrg\Requests\Autoload;
-use WpOrg\Requests\Requests;
-
 defined('WPINC') || exit();
 
 class Img_Resize extends Base
@@ -41,6 +38,12 @@ class Img_Resize extends Base
 	private $mime_images = array( 'image/jpeg', 'image/png', 'image/gif' );
 	
 	protected $_summary;
+
+	// TODO: Under image lib, could have two buttons: 1. resize. 2. switch backup/resized imag 3. details about resize
+	// TODO: Refresh -> Recalculate or rescan
+	// TODO: You can also give it a horizontal bar for percentage
+	// TODO: Remove Original Backups - for future images
+	// TODO: Image Opt Dashborad add a button for clear backups
 	
 	/**
 	 * Init
@@ -62,48 +65,78 @@ class Img_Resize extends Base
 			$this->_summary[self::S_TOTAL] = 0;
 		}
 
-		// add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
 		// Hooks
 	    $this->add_upload_hooks();
 	}
 
+	/**
+	 * Add upload file hooks.
+	 *
+	 * @return void
+	 */
+	public function add_upload_hooks(){
+		// If image resize optimization is ON, do resize.
+		if($this->conf( self::O_IMG_OPTM_RESIZE )){
+			if ( version_compare( get_bloginfo( 'version' ), '5.3.0', '>=' ) ) {
+				add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
+			}
+
+			// TODO: on delete image, delete extra.
+			
+			// Wordpress default upload filter.
+			add_filter( 'wp_handle_upload', array( $this, 'wp_resize_image' ));
+			// TODO: find better filter?!
+			add_filter( 'wp_generate_attachment_metadata', array( $this, 'generate_attachment_metadata' ), 10, 2);
+	
+			// Some plugins will need custom upload adjustment
+		}
+	}
+	
+	/**
+	 * Update summary with necessary data.
+	 *
+	 * @param  bool $go_to_next
+	 * @return void
+	 */
 	public function update_summary_data($go_to_next = true){
 		global $wpdb;
 		$meta_name_data = $this->get_meta_name();
 
-		// Next image will become Current image.
-		$select_is_attachment = $wpdb->prepare(
-			'SELECT ID FROM %i WHERE post_type = %s', 
-			$wpdb->posts,
-			'attachment'
-		);
-		$select_with_meta_resize = $wpdb->prepare(
-			'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
-			'meta_id',
-			$wpdb->postmeta,
-			'meta_key',
-			$meta_name_data,
-			'post_id',
-			'post_id',
-		);
-		$sql = "SELECT a.%i
-			FROM %i AS a
-			WHERE
-				a.%i IN (" . $select_is_attachment . ") AND
-				NOT EXISTS (" . $select_with_meta_resize . ")
-			ORDER BY a.%i ASC
-			LIMIT 1";
-		$prepare_sql = $wpdb->prepare(
-			$sql,
-			'post_id',
-			$wpdb->postmeta,
-			'post_id',
-			'post_id'
-		);
-		// var_dump('--<br />', $prepare_sql);
-		$current_image = $wpdb->get_var( $prepare_sql );
-		if($current_image){
-			$this->_summary[self::S_CURRENT_POST] = $current_image;
+		if($go_to_next){
+			// Next image will become Current image.
+			$select_is_attachment = $wpdb->prepare(
+				'SELECT ID FROM %i WHERE post_type = %s', 
+				$wpdb->posts,
+				'attachment'
+			);
+			$select_with_meta_resize = $wpdb->prepare(
+				'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
+				'meta_id',
+				$wpdb->postmeta,
+				'meta_key',
+				$meta_name_data,
+				'post_id',
+				'post_id',
+			);
+			$sql = "SELECT a.%i
+				FROM %i AS a
+				WHERE
+					a.%i IN (" . $select_is_attachment . ") AND
+					NOT EXISTS (" . $select_with_meta_resize . ")
+				ORDER BY a.%i ASC
+				LIMIT 1";
+			$prepare_sql = $wpdb->prepare(
+				$sql,
+				'post_id',
+				$wpdb->postmeta,
+				'post_id',
+				'post_id'
+			);
+			// var_dump('--<br />', $prepare_sql);
+			$current_image = $wpdb->get_var( $prepare_sql );
+			if($current_image){
+				$this->_summary[self::S_CURRENT_POST] = $current_image;
+			}
 		}
 
 		// Get totals
@@ -142,15 +175,27 @@ class Img_Resize extends Base
 		// die();
 		self::save_summary();
 	}
-
+	
+	/**
+	 * Get meta name.
+	 *
+	 * @return string
+	 */
 	public function get_meta_name(){
 		return self::DB_PREFIX . '-' . self::DB_DATA;
 	}
-
-	public function optimize_next($update_summary_first = false){
+	
+	/**
+	 * Resize image from button
+	 *
+	 * @param  mixed $update_summary_first
+	 * @return void
+	 */
+	public function resize_next($update_summary_first = false){
 		if($this->conf( self::O_IMG_OPTM_RESIZE )){
 			// Do summary before resize. Eg: for first run.
 			$update_summary_first && $this->update_summary_data();
+			// Get summary.
 			$summary = $this->get_summary();
 
 			if($summary['current'] <= $summary['total']){
@@ -187,32 +232,9 @@ class Img_Resize extends Base
 			Admin_Display::error($msg);
 		}
 	}
-
-	/**
-	 * Add upload file hooks.
-	 *
-	 * @return void
-	 */
-	public function add_upload_hooks(){
-		// If image resize optimization is ON, do resize.
-		if($this->conf( self::O_IMG_OPTM_RESIZE )){
-			if ( version_compare( get_bloginfo( 'version' ), '5.3.0', '>=' ) ) {
-				add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
-			}
-
-			// TODO: on delete image, delete extra.
-			
-			// Wordpress default upload filter.
-			add_filter( 'wp_handle_upload', array( $this, 'wp_resize_image' ));
-			// TODO: find better filter?!
-			add_filter( 'wp_generate_attachment_metadata', array( $this, 'generate_attachment_metadata' ), 10, 2);
-	
-			// Some plugins will need custom upload adjustment
-		}
-	}
 	
 	/**
-	 * Set big image size threshold
+	 * Set big image size threshold in WP > 5.3.0
 	 *
 	 * @param  mixed $size Current size.
 	 * @return int
@@ -322,7 +344,12 @@ class Img_Resize extends Base
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Ensure the resize from settings is formatted correctly and return it.
+	 *
+	 * @return array
+	 */
 	public function get_formatted_resize_size(){
 		// Get sizes.
 		$resize_size = $this->conf( self::O_IMG_OPTM_RESIZE_SIZE );
@@ -371,7 +398,7 @@ class Img_Resize extends Base
 	}
 	
 	/**
-	 * Generate post metas.
+	 * Generate post metas from parameters.
 	 *
 	 * @param  array $params Image data.
 	 * @param  mixed $id Post id.
@@ -404,7 +431,7 @@ class Img_Resize extends Base
 	}
 	
 	/**
-	 * Get image backup name.
+	 * Get image backup name from image path.
 	 *
 	 * @param  string $file_path File with path.
 	 * @param  array $path_info Path info of file.
@@ -418,7 +445,7 @@ class Img_Resize extends Base
 	}
 
 	/**
-	 * Get image backup path.
+	 * Get image backup path from image path.
 	 *
 	 * @param  string $file_path File with path.
 	 * @param  array $path_info Path info of file.
@@ -434,7 +461,7 @@ class Img_Resize extends Base
 	}
 	
 	/**
-	 * Prepare parameters from attachment id.
+	 * Prepare parameters for resize from attachment id.
 	 *
 	 * @param  string|int $id Attachment id.
 	 * @return string
@@ -463,7 +490,13 @@ class Img_Resize extends Base
 
 		return $params;
 	}
-
+	
+	/**
+	 * Recalculate summary.
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	private function recalculate_summary( $id ){
 		$this->update_summary_data(false);
 	}
@@ -479,10 +512,10 @@ class Img_Resize extends Base
 
 		switch ($type) {
 			case self::TYPE_NEXT:
-				$this->optimize_next();
+				$this->resize_next();
 				break;
 			case self::TYPE_START:
-				$this->optimize_next(true);
+				$this->resize_next(true);
 				break;
 			case self::TYPE_RECALCULATE:
 				$this->recalculate_summary(true);
