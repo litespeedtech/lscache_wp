@@ -22,7 +22,6 @@ class Task extends Root
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => array('name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron'),
 		Base::O_DISCUSS_AVATAR_CRON => array('name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron'),
 		Base::O_IMG_OPTM_AUTO => array('name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request'),
-		Base::O_IMG_OPTM_RESIZE => array('name' => 'litespeed_task_imgresize_req', 'hook' => 'LiteSpeed\Img_Resize::start_async_cron'),
 		Base::O_CRAWLER => array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start_async_cron'), // Set crawler to last one to use above results
 	);
 

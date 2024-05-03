@@ -230,25 +230,52 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 				<div class="litespeed-flex-container">
 					<?php
 						$id = Base::O_IMG_OPTM_RESIZE;	
-						$resize_summary = Img_Resize::get_summary();
+						$resize_class = Img_Resize::cls();
+						$resize_summary = $resize_class::get_summary();
 					?>
 					<div>
 						<p>
-							<?php echo __('Status', 'litespeed-cache'); ?>:
+							<?php _e('Status', 'litespeed-cache'); ?>:
 							<code><?php echo ($this->conf($id) ? __('ON', 'litespeed-cache') : __('OFF', 'litespeed-cache')); ?></code>
 						</p>
 						<?php if ($this->conf($id)) : ?>
+							<?php 
+								if ( 
+									$resize_summary[$resize_class::S_CURRENT] < $resize_summary[$resize_class::S_TOTAL] &&
+									$resize_summary[$resize_class::S_CURRENT_POST] !== 0
+								) : ?>
+								<p>
+									<?php _e( 'Current image', 'litespeed-cache' ); ?>:
+									<code><?php echo '#' . $resize_summary[$resize_class::S_CURRENT_POST]; ?></code>
+									<?php
+										$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
+										if($image){
+											echo '<p><img src="'.$image.'" style="width: 100px;"/></p>';
+										}
+									?>
+									
+								</p>
+								<p>
+									<?php _e( 'Progress', 'litespeed-cache' ); ?>:
+									<code><?php echo $resize_summary[$resize_class::S_CURRENT]; ?>/<?php echo $resize_summary[$resize_class::S_TOTAL]; ?></code>
+								</p>
+								<p>
+									<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" <?php ( $resize_summary[$resize_class::S_CURRENT] == $resize_summary[$resize_class::S_TOTAL] && $resize_summary[$resize_class::S_TOTAL] > 0 ) ? 'disabled="disabled" ' : ''; ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_NEXT); ?>">
+										<?php _e('Optimize image', 'litespeed-cache'); ?>
+									</a>
+								</p>
+							<?php elseif($resize_summary[$resize_class::S_CURRENT_POST] == 0): ?>
+								<p>
+									<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_START); ?>">
+										<?php _e('Start Optimize image', 'litespeed-cache'); ?>
+									</a>
+								</p>
+							<?php else: ?>
+								<p>🌟 <?php _e('All done! No images found to resize.', ''); ?></p>
+							<?php endif; ?>
 							<p>
-								<?php echo __( 'Current image', 'litespeed-cache' ); ?>:
-								<code><?php echo '#' . $resize_summary['current_post_id']; ?></code>
-							</p>
-							<p>
-								<?php echo __( 'Progress', 'litespeed-cache' ); ?>:
-								<code><?php echo $resize_summary['current']; ?>/<?php echo $resize_summary['total']; ?></code>
-							</p>
-							<p>
-								<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" <?php ( $resize_summary['current'] == $resize_summary['total'] && $resize_summary['total'] > 0 ) ? 'disabled="disabled" ' : ''; ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_NEXT); ?>">
-									<?php echo __('Optimize image', 'litespeed-cache'); ?>
+								<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RECALCULATE); ?>">
+									<?php _e('Refresh', 'litespeed-cache'); ?>
 								</a>
 							</p>
 						<?php endif; ?>

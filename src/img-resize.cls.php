@@ -21,20 +21,23 @@ class Img_Resize extends Base
 	const LOG_TAG = '📐';
 
 	const TYPE_NEXT = 'next';
+	const TYPE_START = 'start';
+	const TYPE_RECALCULATE = 'recalculate';
 
-	const DB_NEED_PULL = 'need_pull';
-
-	private $bk_add = '_res_bk';
-
-	private $db_prefix = 'litespeed-resize';
-	private $db_status = 'status';
-	private $db_data = 'data';
+	const DB_PREFIX = 'litespeed-resize';
+	const DB_DATA = 'data';
 	
-	private $res_need = 'need';
-	private $res_done = 'done';
-	private $res_bk = 'has_bk';
-	private $res_orig_size = 'orig_size';
-	private $res_new_size = 'new_size';
+	const BK_ADD = '_res_bk';
+
+	const RES_DONE = 'done';
+	const RES_BK = 'has_bk';
+	const RES_ORIGINAL_SIZE = 'orig_size';
+	const RES_NEW_SIZE = 'new_size';
+
+	const S_CURRENT_POST = 'current_post';
+	const S_CURRENT = 'current';
+	const S_TOTAL = 'total';
+
 	private $mime_images = array( 'image/jpeg', 'image/png', 'image/gif' );
 	
 	protected $_summary;
@@ -49,14 +52,14 @@ class Img_Resize extends Base
 		Debug2::debug2('[Img Processing] init');
 
 		$this->_summary = self::get_summary();
-		if (empty($this->_summary['current_post_id'])) {
-			$this->_summary['current_post_id'] = 0;
+		if (empty($this->_summary[self::S_CURRENT_POST])) {
+			$this->_summary[self::S_CURRENT_POST] = 0;
 		}
-		if (empty($this->_summary['current'])) {
-			$this->_summary['current'] = 0;
+		if (empty($this->_summary[self::S_CURRENT])) {
+			$this->_summary[self::S_CURRENT] = 0;
 		}
-		if (empty($this->_summary['total'])) {
-			$this->_summary['total'] = 0;
+		if (empty($this->_summary[self::S_TOTAL])) {
+			$this->_summary[self::S_TOTAL] = 0;
 		}
 
 		// add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
@@ -64,22 +67,124 @@ class Img_Resize extends Base
 	    $this->add_upload_hooks();
 	}
 
-	public function update_summary_data(){
-		$sql = 'aaa';
-		var_dump($sql);
-		die();
-		//self::save_summary();
+	public function update_summary_data($go_to_next = true){
+		global $wpdb;
+		$meta_name_data = $this->get_meta_name();
+
+		// Next image will become Current image.
+		$select_is_attachment = $wpdb->prepare(
+			'SELECT ID FROM %i WHERE post_type = %s', 
+			$wpdb->posts,
+			'attachment'
+		);
+		$select_with_meta_resize = $wpdb->prepare(
+			'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
+			'meta_id',
+			$wpdb->postmeta,
+			'meta_key',
+			$meta_name_data,
+			'post_id',
+			'post_id',
+		);
+		$sql = "SELECT a.%i
+			FROM %i AS a
+			WHERE
+				a.%i IN (" . $select_is_attachment . ") AND
+				NOT EXISTS (" . $select_with_meta_resize . ")
+			ORDER BY a.%i ASC
+			LIMIT 1";
+		$prepare_sql = $wpdb->prepare(
+			$sql,
+			'post_id',
+			$wpdb->postmeta,
+			'post_id',
+			'post_id'
+		);
+		// var_dump('--<br />', $prepare_sql);
+		$current_image = $wpdb->get_var( $prepare_sql );
+		if($current_image){
+			$this->_summary[self::S_CURRENT_POST] = $current_image;
+		}
+
+		// Get totals
+		$sql = "SELECT COUNT(%i) FROM %i WHERE %i = %s AND %i LIKE %s";
+		$prepare_sql = $wpdb->prepare(
+			$sql,
+			'ID',
+			$wpdb->posts,
+			'post_type',
+			'attachment',
+			'post_mime_type',
+			'%image/%'
+		);
+		// var_dump('--<br />', $prepare_sql);
+		$total_posts = $wpdb->get_var( $prepare_sql );
+		if($total_posts){
+			$this->_summary[self::S_TOTAL] = $total_posts;
+		}
+
+		// Get current
+		$sql = "SELECT COUNT(a.%i) FROM %i AS a WHERE %i = %s";
+		$prepare_sql = $wpdb->prepare(
+			$sql,
+			'post_id',
+			$wpdb->postmeta,
+			'meta_key',
+			$meta_name_data
+		);
+		// var_dump('--<br />', $prepare_sql);
+		$current_posts = $wpdb->get_var( $prepare_sql );
+		if($current_posts){
+			$this->_summary[self::S_CURRENT] = $current_posts;
+		}
+
+		// var_dump('--<br />', $this->_summary);
+		// die();
+		self::save_summary();
 	}
 
-	public function optimize_next(){
-		$this->update_summary_data();
-		$summary = $this->get_summary();
+	public function get_meta_name(){
+		return self::DB_PREFIX . '-' . self::DB_DATA;
+	}
 
-		if($summary['current'] <= $summary['total']){
-			$params = $this->prepare_parameters_from_id($summary['current_post_id']);
-			$this->resize_image($params);
+	public function optimize_next($update_summary_first = false){
+		if($this->conf( self::O_IMG_OPTM_RESIZE )){
+			// Do summary before resize. Eg: for first run.
+			$update_summary_first && $this->update_summary_data();
+			$summary = $this->get_summary();
 
-			$this->update_summary_data();
+			if($summary['current'] <= $summary['total']){
+				$params = $this->prepare_parameters_from_id($summary[self::S_CURRENT_POST]);
+				$result = $this->resize_image($params);
+
+				if($result){
+					$this->generate_attachment_metadata(array(), $summary[self::S_CURRENT_POST]);
+				
+					$msg = __('Done resizing current image.', 'litespeed-cache');
+					Admin_Display::success($msg);
+				}
+				else{
+					add_post_meta(
+						$summary[self::S_CURRENT_POST], 
+						$this->get_meta_name(),
+						array(
+							self::RES_NEW_SIZE => 0,
+							self::RES_ORIGINAL_SIZE => 0,
+							self::RES_BK   => 0,
+						)
+					);
+					$msg = sprintf(
+						__('Cannot resize image #%s. Skipping this image.', 'litespeed-cache'),
+						$summary[self::S_CURRENT_POST]
+					);
+					Admin_Display::error($msg);
+				}
+				$this->update_summary_data();
+			}
+		}
+		else{
+			$msg = __('Image resize is turned off.', 'litespeed-cache');
+			Admin_Display::error($msg);
 		}
 	}
 
@@ -98,7 +203,7 @@ class Img_Resize extends Base
 			// TODO: on delete image, delete extra.
 			
 			// Wordpress default upload filter.
-			add_filter( 'wp_handle_upload', array( $this, 'resize_image' ));
+			add_filter( 'wp_handle_upload', array( $this, 'wp_resize_image' ));
 			// TODO: find better filter?!
 			add_filter( 'wp_generate_attachment_metadata', array( $this, 'generate_attachment_metadata' ), 10, 2);
 	
@@ -123,6 +228,18 @@ class Img_Resize extends Base
 	}
 
 	/**
+	 * WP Resize functionality.
+	 *
+	 * @param array $params File with path. Expected keys: type(mime type format), url, file(path to file)
+	 * @return void
+	 */
+	public function wp_resize_image($params){
+		$this->resize_image($params);
+
+		return $params;
+	}
+
+	/**
 	 * Resize functionality.
 	 *
 	 * @param array $params File with path. Expected keys: type(mime type format), url, file(path to file)
@@ -131,7 +248,7 @@ class Img_Resize extends Base
 	public function resize_image($params){
 		// Return if the file is not an image.
 		if ( ! in_array( $params['type'], $this->mime_images, true ) ) {
-			return $params;
+			return false;
 		}
 
 		try{
@@ -140,32 +257,32 @@ class Img_Resize extends Base
 			}
 			$path_info = pathinfo($params['file']);
 			$meta_add = array(
-				$this->res_done => 1,
-				$this->res_need => 1,
+				self::RES_DONE => 0,
 			);
 			
-			// Get sizes.
+			// Get resize size.
 			$resize_size = $this->get_formatted_resize_size();
 
-			// Image editor.
+			// Image editor for current image.
 			$editor = wp_get_image_editor( $params['file'] );
 			if ( is_wp_error( $editor ) ) {
 				throw( new \Exception( 'Editor cannot be created. ' . $editor->get_error_message() ) );
 			}
 			$current_sizes = $editor->get_size();
 
-			// Test if resize is needed.
+			// Do resize if needed.
 			if($current_sizes['width'] > $resize_size[0] || $current_sizes['width'] > $resize_size[1]){
 				$backup_path = $this->get_backup_path($params['file'], $path_info);
 
 				// If need a backup.
-				$meta_add[ $this->res_bk ] = 1;
-				if(apply_filters('litespeed_img_resize_original_backup', true)){ // Possible values: true - make backup ; false - do not make backup
+				$meta_add[ self::RES_BK ] = 1;
+				$make_backup = apply_filters('litespeed_img_resize_original_backup', true);
+				if($make_backup){ // Possible values: true - make backup ; false - do not make backup
 					// Check if backup was done.
 					if ( ! is_file($backup_path) ){
 						if( ! copy( $params['file'], $backup_path ) ) {
 							self::debug('[Image Resize] Cannot make backup to file: ' . $params['file'] );
-							$meta_add[ $this->res_bk ] = 0;
+							$meta_add[ self::RES_BK ] = 0;
 						}
 					}
 					else {
@@ -173,37 +290,37 @@ class Img_Resize extends Base
 					}
 				}
 
-				// Resize image.
+				// Add crop image data.
 				$resize_crop = apply_filters('litespeed_img_resize_crop', false); // Possible values: see https://developer.wordpress.org/reference/classes/wp_image_editor/resize/
 
 				// Prepare what to do.
 				$editor->resize( $resize_size[0], $resize_size[1], $resize_crop );
 				$editor->set_quality( 100 );
 
-				// Save new file.
+				// Save resized image.
 				$saved = $editor->save( $params['file'] );
 				if ( is_wp_error( $saved ) ) {
-					throw( new \Exception( 'Error resizing. ' . $saved->get_error_message() ) );
+					throw( new \Exception( 'Error resizing: ' . $saved->get_error_message() ) );
 				}
 
 				// Done.
 				self::debug('[Image Resize] Done: ' . $params['url'] );
-				$meta_add[$this->res_orig_size] = filesize( $backup_path );
-				$meta_add[$this->res_new_size] = filesize( $params['file'] );
+				$meta_add[self::RES_ORIGINAL_SIZE] = filesize( $backup_path );
+				$meta_add[self::RES_NEW_SIZE] = filesize( $params['file'] );
+				$meta_add[self::RES_DONE] = 1;
 			}
 			else{
-				$meta_add[$this->res_done] = 0;
-				$meta_add[$this->res_need] = 0;
+				$meta_add[self::RES_DONE] = 1;
 			}
 
 			// Save status of image upload. Temp to send data for meta.
 			file::save( $path_info['dirname'] . '/' . $path_info['filename'] . '.lsc', json_encode($meta_add) );
+			return true;
 		}
 		catch(\Exception $e){
 			self::debug('[Image Resize] Cannot change file: ' . $params['url'] . ': ' . $e );
+			return false;
 		}
-
-		return $params;
 	}
 
 	public function get_formatted_resize_size(){
@@ -262,32 +379,26 @@ class Img_Resize extends Base
 	 */
 	public function generate_post_meta($params, $id){
 		$post_meta_attachment = get_post_meta($id);
-		$meta_name_status = $this->db_prefix.'-'.$this->db_status;
+		$meta_name_data = $this->get_meta_name();
 
-		// Create if meta do not exist.
-		if( !$post_meta_attachment[$meta_name_status] ){
+		// Create metas if do not exist.
+		if( ! isset( $post_meta_attachment[$meta_name_data] ) ){
 			$path_info = pathinfo($params['file']);
-			$lsc_file = $path_info['dirname'] . '/' . $path_info['filename'] . '3.lsc';
+			$lsc_file  = $path_info['dirname'] . '/' . $path_info['filename'] . '.lsc';
 
-			if(is_file($lsc_file)){
+			if( is_file( $lsc_file ) ){
 				$data = file::read($lsc_file);
 				$data = json_decode($data, true);
 				
-				add_post_meta($id, $this->db_prefix.'-'.$this->db_status, array(
-					$this->res_done => $data[$this->res_done],
-					$this->res_need => $data[$this->res_need],
-					$this->res_bk   => $data[$this->res_bk],
+				// Add data meta.
+				add_post_meta($id, $meta_name_data, array(
+					self::RES_NEW_SIZE => $data[self::RES_NEW_SIZE],
+					self::RES_ORIGINAL_SIZE => $data[self::RES_ORIGINAL_SIZE],
+					self::RES_BK   => $data[self::RES_BK],
 				));
-				add_post_meta($id, $this->db_prefix.'-'.$this->db_data, array(
-					$this->res_new_size => $data[$this->res_new_size],
-					$this->res_orig_size => $data[$this->res_orig_size],
-				));
-			}
-			else{
-				add_post_meta($id, $this->db_prefix.'-'.$this->db_status, array(
-					$this->res_done => true,
-					$this->res_need => false,
-				));
+
+				// Delete file.
+				unlink( $lsc_file );
 			}
 		}
 	}
@@ -303,7 +414,7 @@ class Img_Resize extends Base
 		// If null sent, get pathinfo from file path.
 		!$path_info && $path_info = pathinfo($file_path);
 
-		return $path_info['filename'] . $this->bk_add . '.' . $path_info['extension'];
+		return $path_info['filename'] . self::BK_ADD . '.' . $path_info['extension'];
 	}
 
 	/**
@@ -353,6 +464,10 @@ class Img_Resize extends Base
 		return $params;
 	}
 
+	private function recalculate_summary( $id ){
+		$this->update_summary_data(false);
+	}
+
 	/**
 	 * Handle all request actions from main cls
 	 *
@@ -365,6 +480,12 @@ class Img_Resize extends Base
 		switch ($type) {
 			case self::TYPE_NEXT:
 				$this->optimize_next();
+				break;
+			case self::TYPE_START:
+				$this->optimize_next(true);
+				break;
+			case self::TYPE_RECALCULATE:
+				$this->recalculate_summary(true);
 				break;
 
 			default:
