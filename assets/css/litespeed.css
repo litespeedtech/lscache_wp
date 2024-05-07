@@ -2296,6 +2296,38 @@ p.litespeed-txt-disabled {
 }
 
 /* =======================================
+			 Progress bar
+======================================= */
+
+.litespeed-progressbar {
+	position: relative;
+	margin: 5px 5px 5px 0;
+	height: 25px;
+	width: 100%;
+	background-color: #efefef;
+}
+
+.litespeed-progressbar .progress {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 25px;
+	background-color: #28a745;
+}
+
+.litespeed-progressbar .text {
+	position: absolute;
+    text-align: center;
+    width: 100%;
+    padding-top: 3px;
+	color: #000000;
+}
+
+.litespeed-progressbar .text.text_white {
+	color: #FFFFFF;
+}
+
+/* =======================================
 			 PIE chart
 ======================================= */
 

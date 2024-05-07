@@ -175,6 +175,19 @@ $this->form_action();
 
 	<tr>
 		<th>
+			<?php $id = Base::O_IMG_OPTM_STOP_BK; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Stop doing backup to original image.', 'litespeed-cache' ); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_IMG_OPTM_RESIZE_SIZE; ?>
 			<?php $this->title( $id ); ?>
 		</th>

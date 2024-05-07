@@ -138,6 +138,11 @@ class Media extends Root
 
 		add_action('litespeed_media_row', array($this, 'media_row_con'));
 
+		if ($this->conf(Base::O_IMG_OPTM_RESIZE)){
+			add_filter('manage_media_custom_column', array($this, 'media_row_resize_actions'), 10, 2);
+			add_action('litespeed_media_resize_row', array($this, 'media_row_resize_con'));
+		}
+
 		// Hook to attachment delete action
 		add_action('delete_attachment', __CLASS__ . '::delete_attachment');
 	}
@@ -156,6 +161,7 @@ class Media extends Root
 
 		self::debug('delete_attachment [pid] ' . $post_id);
 		Img_Optm::cls()->reset_row($post_id);
+		Img_Resize::cls()->reset_row($post_id);
 	}
 
 	/**
@@ -244,6 +250,7 @@ class Media extends Root
 	public function media_row_title($posts_columns)
 	{
 		$posts_columns['imgoptm'] = __('LiteSpeed Optimization', 'litespeed-cache');
+		$posts_columns['imgresize'] = __('LiteSpeed Resize', 'litespeed-cache');
 
 		return $posts_columns;
 	}
@@ -261,6 +268,21 @@ class Media extends Root
 		}
 
 		do_action('litespeed_media_row', $post_id);
+	}
+
+	/**
+	 * Media Admin Menu -> Image Resize Column
+	 *
+	 * @since 6.3.0
+	 * @access public
+	 */
+	public function media_row_resize_actions($column_name, $post_id)
+	{
+		if ($column_name !== 'imgresize') {
+			return;
+		}
+
+		do_action('litespeed_media_resize_row', $post_id);
 	}
 
 	/**
@@ -396,6 +418,19 @@ class Media extends Root
 				__('Restore from backup', 'litespeed-cache')
 			);
 			echo '</div>';
+		}
+	}
+
+	/**
+	 * Display image resize info
+	 *
+	 * @since  6.3.0
+	 */
+	public function media_row_resize_con($post_id)
+	{
+		$att_info = wp_get_attachment_metadata($post_id);
+		if (empty($att_info['file'])) {
+			return;
 		}
 	}
 

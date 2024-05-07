@@ -20,6 +20,7 @@ class Img_Resize extends Base
 	const TYPE_NEXT = 'next';
 	const TYPE_START = 'start';
 	const TYPE_RECALCULATE = 'recalculate';
+	const TYPE_DELETE_BK = 'delete_bk';
 
 	const DB_PREFIX = 'litespeed-resize';
 	const DB_DATA = 'data';
@@ -40,10 +41,6 @@ class Img_Resize extends Base
 	protected $_summary;
 
 	// TODO: Under image lib, could have two buttons: 1. resize. 2. switch backup/resized imag 3. details about resize
-	// TODO: Refresh -> Recalculate or rescan
-	// TODO: You can also give it a horizontal bar for percentage
-	// TODO: Remove Original Backups - for future images
-	// TODO: Image Opt Dashborad add a button for clear backups
 	
 	/**
 	 * Init
@@ -81,7 +78,7 @@ class Img_Resize extends Base
 				add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
 			}
 
-			// TODO: on delete image, delete extra.
+			// TODO: on delete image, delete extra: file
 			
 			// Wordpress default upload filter.
 			add_filter( 'wp_handle_upload', array( $this, 'wp_resize_image' ));
@@ -90,6 +87,45 @@ class Img_Resize extends Base
 	
 			// Some plugins will need custom upload adjustment
 		}
+	}
+
+	/**
+	 * Delete resize data.
+	 *
+	 * @access public
+	 */
+	public function reset_row($post_id)
+	{
+		global $wpdb;
+
+		if (!$post_id) {
+			return;
+		}
+
+		// self::debug('_reset_row [pid] ' . $post_id);
+
+		// # TODO: Load image sub files
+		// $img_q = "SELECT b.post_id, b.meta_value
+		// 	FROM `$wpdb->postmeta` b
+		// 	WHERE b.post_id =%d  AND b.meta_key = '_wp_attachment_metadata'";
+		// $q = $wpdb->prepare($img_q, array($post_id));
+		// $v = $wpdb->get_row($q);
+
+		// $meta_value = $this->_parse_wp_meta_value($v);
+		// if ($meta_value) {
+		// 	$this->tmp_pid = $v->post_id;
+		// 	$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
+		// 	$this->_destroy_optm_file($meta_value, true);
+		// 	if (!empty($meta_value['sizes'])) {
+		// 		array_map(array($this, '_destroy_optm_file'), $meta_value['sizes']);
+		// 	}
+		// }
+
+		// delete_post_meta($post_id, self::DB_SIZE);
+		// delete_post_meta($post_id, self::DB_SET);
+
+		// $msg = __('Reset the optimized data successfully.', 'litespeed-cache');
+		// Admin_Display::succeed($msg);
 	}
 	
 	/**
@@ -101,38 +137,39 @@ class Img_Resize extends Base
 	public function update_summary_data($go_to_next = true){
 		global $wpdb;
 		$meta_name_data = $this->get_meta_name();
+		$select_is_attachment = $wpdb->prepare(
+			'SELECT ID FROM %i WHERE post_type = %s AND %i LIKE %s', 
+			array(
+				$wpdb->posts,
+				'attachment',
+				'post_mime_type',
+				'%image/%'
+			)
+		);
 
 		if($go_to_next){
 			// Next image will become Current image.
-			$select_is_attachment = $wpdb->prepare(
-				'SELECT ID FROM %i WHERE post_type = %s', 
-				$wpdb->posts,
-				'attachment'
-			);
 			$select_with_meta_resize = $wpdb->prepare(
 				'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
-				'meta_id',
-				$wpdb->postmeta,
-				'meta_key',
-				$meta_name_data,
-				'post_id',
-				'post_id',
+				array(
+					'meta_id',
+					$wpdb->postmeta,
+					'meta_key',
+					$meta_name_data,
+					'post_id',
+					'post_id',
+				)
 			);
-			$sql = "SELECT a.%i
-				FROM %i AS a
-				WHERE
-					a.%i IN (" . $select_is_attachment . ") AND
-					NOT EXISTS (" . $select_with_meta_resize . ")
-				ORDER BY a.%i ASC
-				LIMIT 1";
+			$sql = "SELECT a.%i FROM %i AS a WHERE a.%i IN (" . $select_is_attachment . ") AND NOT EXISTS (" . $select_with_meta_resize . ") ORDER BY a.%i ASC LIMIT 1";
 			$prepare_sql = $wpdb->prepare(
 				$sql,
-				'post_id',
-				$wpdb->postmeta,
-				'post_id',
-				'post_id'
+				array(
+					'post_id',
+					$wpdb->postmeta,
+					'post_id',
+					'post_id'
+				)
 			);
-			// var_dump('--<br />', $prepare_sql);
 			$current_image = $wpdb->get_var( $prepare_sql );
 			if($current_image){
 				$this->_summary[self::S_CURRENT_POST] = $current_image;
@@ -140,17 +177,7 @@ class Img_Resize extends Base
 		}
 
 		// Get totals
-		$sql = "SELECT COUNT(%i) FROM %i WHERE %i = %s AND %i LIKE %s";
-		$prepare_sql = $wpdb->prepare(
-			$sql,
-			'ID',
-			$wpdb->posts,
-			'post_type',
-			'attachment',
-			'post_mime_type',
-			'%image/%'
-		);
-		// var_dump('--<br />', $prepare_sql);
+		$prepare_sql = $select_is_attachment;
 		$total_posts = $wpdb->get_var( $prepare_sql );
 		if($total_posts){
 			$this->_summary[self::S_TOTAL] = $total_posts;
@@ -160,19 +187,18 @@ class Img_Resize extends Base
 		$sql = "SELECT COUNT(a.%i) FROM %i AS a WHERE %i = %s";
 		$prepare_sql = $wpdb->prepare(
 			$sql,
-			'post_id',
-			$wpdb->postmeta,
-			'meta_key',
-			$meta_name_data
+			array(
+				'post_id',
+				$wpdb->postmeta,
+				'meta_key',
+				$meta_name_data
+			)
 		);
-		// var_dump('--<br />', $prepare_sql);
 		$current_posts = $wpdb->get_var( $prepare_sql );
 		if($current_posts){
 			$this->_summary[self::S_CURRENT] = $current_posts;
 		}
 
-		// var_dump('--<br />', $this->_summary);
-		// die();
 		self::save_summary();
 	}
 	
@@ -193,7 +219,7 @@ class Img_Resize extends Base
 	 */
 	public function resize_next($update_summary_first = false){
 		if($this->conf( self::O_IMG_OPTM_RESIZE )){
-			// Do summary before resize. Eg: for first run.
+			// Do summary before resize + go to next. Eg: for first run.
 			$update_summary_first && $this->update_summary_data();
 			// Get summary.
 			$summary = $this->get_summary();
@@ -260,6 +286,15 @@ class Img_Resize extends Base
 
 		return $params;
 	}
+		
+	/**
+	 * Resize style. Possible values: 0 - keep width ; 1 - keep height.
+	 *
+	 * @return void
+	 */
+	public function resize_style(){
+		return apply_filters('litespeed_img_resize_style', 1);
+	}
 
 	/**
 	 * Resize functionality.
@@ -293,15 +328,19 @@ class Img_Resize extends Base
 			$current_sizes = $editor->get_size();
 
 			// Do resize if needed.
-			if($current_sizes['width'] > $resize_size[0] || $current_sizes['width'] > $resize_size[1]){
-				$backup_path = $this->get_backup_path($params['file'], $path_info);
+			if(
+				$current_sizes['width'] > $resize_size[0] ||
+				$current_sizes['height'] > $resize_size[1]
+			){
+				$backup_path = $this->get_backup_path( $params['file'], $path_info);
 
 				// If need a backup.
-				$meta_add[ self::RES_BK ] = 1;
-				$make_backup = apply_filters('litespeed_img_resize_original_backup', true);
-				if($make_backup){ // Possible values: true - make backup ; false - do not make backup
+				$upload_dir = wp_upload_dir();
+				$meta_add[ self::RES_BK ] = str_replace($upload_dir['basedir'], '', $backup_path);
+				if( apply_filters( 'litespeed_img_resize_original_backup', !$this->conf( self::O_IMG_OPTM_STOP_BK ) ) ){ // Possible values: true - make backup ; false - do not make backup
 					// Check if backup was done.
 					if ( ! is_file($backup_path) ){
+						// Cannot make backup.
 						if( ! copy( $params['file'], $backup_path ) ) {
 							self::debug('[Image Resize] Cannot make backup to file: ' . $params['file'] );
 							$meta_add[ self::RES_BK ] = 0;
@@ -354,22 +393,18 @@ class Img_Resize extends Base
 		// Get sizes.
 		$resize_size = $this->conf( self::O_IMG_OPTM_RESIZE_SIZE );
 
-		// Ensure correct size format.
-		if( strstr( 'x', $resize_size ) === false ){
-			$resize_style = apply_filters('litespeed_img_resize_style', 0); // Possible values: 0 - keep width ; 1 - keep height.
+		$resize = explode( 'x', $resize_size );
+		// Ensure correct size format. Null is used in resize function to get auto value for the missing size.
+		if( strstr( $resize_size, 'x' ) === false ){
+			$resize_style = $this->resize_style();
 
 			// If resize to keep width.
-			if($resize_style === 0) $resize_size .= 'xnull';
+			if($resize_style === 0) $resize = [ $resize_size, null ];
 			// If resize to keep height.
-			else if($resize_style === 1) $resize_size = 'nullx' . $resize_size;
+			if($resize_style === 1) $resize = [ null, $resize_size ];
 		}
-		$resize_size = explode( 'x', $resize_size );
 
-		// Ensure there is null NOT 'null'. Needed for resize function.
-		$resize_size[0] = $resize_size[0] === 'null' ? null : $resize_size[0];
-		$resize_size[1] = $resize_size[1] === 'null' ? null : $resize_size[1];
-
-		return $resize_size;
+		return $resize;
 	}
 		
 	/**
@@ -380,6 +415,7 @@ class Img_Resize extends Base
 	 * @return void
 	 */
 	public function generate_attachment_metadata($meta, $id = null){
+		// Get file info from post id.
 		$params = $this->prepare_parameters_from_id($id);
 
 		try{
@@ -419,8 +455,8 @@ class Img_Resize extends Base
 				
 				// Add data meta.
 				add_post_meta($id, $meta_name_data, array(
-					self::RES_NEW_SIZE => $data[self::RES_NEW_SIZE],
-					self::RES_ORIGINAL_SIZE => $data[self::RES_ORIGINAL_SIZE],
+					self::RES_NEW_SIZE => $data[self::RES_NEW_SIZE] ? $data[self::RES_NEW_SIZE] : 0,
+					self::RES_ORIGINAL_SIZE => $data[self::RES_ORIGINAL_SIZE] ? $data[self::RES_ORIGINAL_SIZE] : 0,
 					self::RES_BK   => $data[self::RES_BK],
 				));
 
@@ -479,8 +515,8 @@ class Img_Resize extends Base
 			$file_path = $upload_dir['basedir'] . '/' . $metas['file'];
 
 			if( $file_path ){
-				$url = wp_get_attachment_image_url( $id, 'full' ); // TODO: WP 4.6
-				$type = wp_get_image_mime( $file_path ); // TODO: WP 4.7.1
+				$url = wp_get_attachment_image_url( $id, 'full' );
+				$type = wp_get_image_mime( $file_path );
 
 				$params['file'] = $file_path;
 				$params['url']  = $url ? $url : null;
@@ -494,11 +530,88 @@ class Img_Resize extends Base
 	/**
 	 * Recalculate summary.
 	 *
-	 * @param  mixed $id
 	 * @return void
 	 */
-	private function recalculate_summary( $id ){
-		$this->update_summary_data(false);
+	private function recalculate_summary( $go_to_next ){
+		$this->update_summary_data( $go_to_next );
+	}
+	
+	/**
+	 * Delete backups.
+	 *
+	 * @return void
+	 */
+	private function delete_backups(){
+		global $wpdb;
+		$meta_name_data = $this->get_meta_name();
+		$errors = 0;
+		$dones = 0;
+		
+		$select_with_meta_resize = $wpdb->prepare(
+			'SELECT %i, %i, %i FROM %i WHERE %i = %s',
+			array(
+				'meta_id',
+				'post_id',
+				'meta_value',
+				$wpdb->postmeta,
+				'meta_key',
+				$meta_name_data
+			)
+		);
+		$attachments = $wpdb->get_results($select_with_meta_resize);
+
+		if( $attachments && count( $attachments ) > 0 ){
+			try{
+				$upload_dir = wp_upload_dir();
+				foreach( $attachments as $attachment ){
+					if( $attachment->meta_value ){
+						$meta = unserialize( $attachment->meta_value );
+						if($meta[self::RES_BK]){
+							$path = $upload_dir['basedir'] . $meta[self::RES_BK];
+							if( !unlink($path) ){
+								$errors++;
+								self::debug( '[Image Resize] Cannot delete backup image: ' . $path );
+							}
+
+							$meta[self::RES_BK] = 0;
+							update_post_meta( $attachment->post_id, $meta_name_data, $meta );
+							$dones++;
+						}
+					}
+				}
+
+				if($dones > 0){
+					$msg = sprintf(
+						__('Backup images(%s) have been deleted.', 'litespeed-cache'),
+						$dones
+					);
+					if($errors){
+						$msg .= ' ' . sprintf(
+							__('There were some errors(%s). You can check debug log to see the error.', 'litespeed-cache'),
+							$errors
+						);
+						Admin_Display::error($msg);
+					}
+					else{
+						Admin_Display::success($msg);
+					}
+				}
+				else{
+					$msg = __('No backup images found.', 'litespeed-cache');
+					Admin_Display::info($msg);
+				}
+			}
+			catch( \Exception $e ){
+				self::debug( '[Image Resize] Cannot delete all backup images: ' . $e );
+				
+				$msg = __('Error deleting backups.', 'litespeed-cache');
+				Admin_Display::error($msg);
+			}
+		}
+		else{
+			$msg = __('No backups found.', 'litespeed-cache');
+			Admin_Display::info($msg);
+		}
 	}
 
 	/**
@@ -518,9 +631,11 @@ class Img_Resize extends Base
 				$this->resize_next(true);
 				break;
 			case self::TYPE_RECALCULATE:
-				$this->recalculate_summary(true);
+				$this->recalculate_summary(false);
 				break;
-
+			case self::TYPE_DELETE_BK:
+				$this->delete_backups();
+				break;
 			default:
 				break;
 		}

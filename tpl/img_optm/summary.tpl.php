@@ -257,7 +257,10 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 								</p>
 								<p>
 									<?php _e( 'Progress', 'litespeed-cache' ); ?>:
-									<code><?php echo $resize_summary[$resize_class::S_CURRENT]; ?>/<?php echo $resize_summary[$resize_class::S_TOTAL]; ?></code>
+									<?php
+										$finished_percentage = floor(( $resize_summary[$resize_class::S_CURRENT] * 100 ) / $resize_summary[$resize_class::S_TOTAL]);
+										echo GUI::progressbar($finished_percentage);
+									?>
 								</p>
 								<p>
 									<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" <?php ( $resize_summary[$resize_class::S_CURRENT] == $resize_summary[$resize_class::S_TOTAL] && $resize_summary[$resize_class::S_TOTAL] > 0 ) ? 'disabled="disabled" ' : ''; ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_NEXT); ?>">
@@ -273,13 +276,18 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 							<?php else: ?>
 								<p>🌟 <?php _e('All done! No images found to resize.', ''); ?></p>
 							<?php endif; ?>
+							
+							<!-- Actions -->
 							<p>
 								<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RECALCULATE); ?>">
-									<?php _e('Refresh', 'litespeed-cache'); ?>
+									<?php _e('Recalculate', 'litespeed-cache'); ?>
+								</a>
+
+								<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_DELETE_BK); ?>" onClick="return confirm('<?php _e('Do you want to delete all backup images?', 'litespeed-cache'); ?>');">
+									<?php _e('Delete backups', 'litespeed-cache'); ?>
 								</a>
 							</p>
 						<?php endif; ?>
-
 					</div>
 				</div>
 			</div>

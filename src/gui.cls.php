@@ -87,6 +87,27 @@ class GUI extends Base
 	}
 
 	/**
+	 * Display a progressbar
+	 *
+	 * @since 6.3.0
+	 */
+	public static function progressbar($percent, $finished = false, $without_percentage = false, $width = '100%', $append_cls = false)
+	{
+		$percentage = $percent . ($without_percentage ? '' : '%');
+
+		if ($percent == 100 && $finished) {
+			$percentage = __('Done', 'litespeed-cache');
+		}
+
+		return "
+		<div class='litespeed-progressbar " . $append_cls . "' style='width: " . $width . ";'>
+			<div class='progress' style='width: " . ( $finished ? '100' : $percent ) . "%;'>&nbsp</div>
+			<div class='text" . ( $percent >= 52 ? ' text_white' : '' ) . "'>" . $percentage . "</div>
+		</div>
+		";
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6
