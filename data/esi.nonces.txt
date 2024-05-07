@@ -72,3 +72,6 @@ woocommerce-login
 
 # Premium Addons for Elementor
 pa-blog-widget-nonce
+
+## MetForm
+#form_nonce
