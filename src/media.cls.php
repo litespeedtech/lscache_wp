@@ -983,6 +983,7 @@ class Media extends Root
 	public function replace_urls_in_json($content)
 	{
 		$pattern = '/data-settings="(.*?)"/i';
+		$parent_class = $this;
 
 		preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
 
@@ -996,22 +997,31 @@ class Media extends Root
 			$jsonData = json_decode($jsonString, true);
 
 			if (json_last_error() === JSON_ERROR_NONE) {
-				array_walk_recursive($jsonData, function (&$item, $key) {
+				$did_webp_replace = false;
+
+				array_walk_recursive($jsonData, function (&$item, $key) use (&$did_webp_replace, $parent_class) {
 					if ($key == 'url') {
-						$item = $this->replace_webp($item);
+						$item_image = $parent_class->replace_webp($item);
+						if ($item_image) {
+							$item = $item_image;
+
+							$did_webp_replace = true;
+						}
 					}
 				});
 
-				// Re-encode the modified array back to a JSON string
-				$newJsonString = json_encode($jsonData);
+				if ($did_webp_replace) {
+					// Re-encode the modified array back to a JSON string
+					$newJsonString = json_encode($jsonData);
 
-				// Re-encode the JSON string to HTML entities only if it was originally encoded
-				if ($isEncoded) {
-					$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+					// Re-encode the JSON string to HTML entities only if it was originally encoded
+					if ($isEncoded) {
+						$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+					}
+
+					// Replace the old JSON string in the content with the new, modified JSON string
+					$content = str_replace($match[1], $newJsonString, $content);
 				}
-
-				// Replace the old JSON string in the content with the new, modified JSON string
-				$content = str_replace($match[1], $newJsonString, $content);
 			}
 		}
 
