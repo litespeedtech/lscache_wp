@@ -77,6 +77,10 @@ woocommerce-login
 # Premium Addons for Elementor
 pa-blog-widget-nonce
 
+# MetForm
+form_nonce
+
 # Mobile hamburger menu - jetMenu #306983 #163710 PR#419
 tgmpa-*
 bulk-*
+
