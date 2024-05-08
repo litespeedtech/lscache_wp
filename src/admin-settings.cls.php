@@ -353,12 +353,12 @@ class Admin_Settings extends Base
 		$current = !empty($old_instance[Conf::OPTION_NAME]) ? $old_instance[Conf::OPTION_NAME] : false;
 		if (!strpos($_SERVER['HTTP_REFERER'], '/wp-admin/customize.php')) {
 			if (!$current || $esi != $current[ESI::WIDGET_O_ESIENABLE]) {
-				Purge::purge_all('Wdiget ESI_enable changed');
+				Purge::purge_all('Widget ESI_enable changed');
 			} elseif ($ttl != 0 && $ttl != $current[ESI::WIDGET_O_TTL]) {
 				Purge::add(Tag::TYPE_WIDGET . $widget->id);
 			}
 
-			Purge::purge_all('Wdiget saved');
+			Purge::purge_all('Widget saved');
 		}
 		return $instance;
 	}
