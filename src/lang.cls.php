@@ -217,7 +217,7 @@ class Lang extends Base
 			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET => __('WebP For Extra srcset', 'litespeed-cache'),
 			self::O_IMG_OPTM_JPG_QUALITY => __('WordPress Image Quality Control', 'litespeed-cache'),
 			self::O_IMG_OPTM_RESIZE => __('Resize original image', 'litespeed-cache'),
-			self::O_IMG_OPTM_STOP_BK => __('Remove Original image', 'litespeed-cache'),
+			self::O_IMG_OPTM_STOP_BK => __('Stop backup', 'litespeed-cache'),
 			self::O_IMG_OPTM_RESIZE_SIZE => __('Maximum original size', 'litespeed-cache'),
 			
 			self::O_ESI => __('Enable ESI', 'litespeed-cache'),

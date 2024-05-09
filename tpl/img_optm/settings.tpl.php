@@ -181,7 +181,7 @@ $this->form_action();
 		<td>
 			<?php $this->build_switch( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Stop doing backup to original image.', 'litespeed-cache' ); ?>
+				<?php echo __( 'Stop doing backup for original image.', 'litespeed-cache' ); ?>
 			</div>
 		</td>
 	</tr>
@@ -194,8 +194,9 @@ $this->form_action();
 		<td>
 			<?php $this->build_input( $id, 'litespeed-input-medium' ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Resize image to this maximum size.', 'litespeed-cache' ); ?>
-				<br /><?php echo sprintf( __( 'Example: %1$s or %2$s.', 'litespeed-cache' ), '<code>2048x2048</code>', '<code>2100x1000</code>' ); ?>
+				<?php echo __( 'Resize image to this maximum size.', 'litespeed-cache' ); ?><br />
+				<?php echo __( 'By default resize is on the width of image. If one size is sent it will keep the resize it will match resize style.', 'litespeed-cache' ); ?>
+				<br /><?php echo sprintf( __( 'Example: %1$s, %2$s or %3$s.', 'litespeed-cache' ), '<code>1000x1000</code>', '<code>800x500</code>', '<code>1000</code>' ); ?>
 			</div>
 		</td>
 	</tr>

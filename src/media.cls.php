@@ -138,11 +138,6 @@ class Media extends Root
 
 		add_action('litespeed_media_row', array($this, 'media_row_con'));
 
-		if ($this->conf(Base::O_IMG_OPTM_RESIZE)){
-			add_filter('manage_media_custom_column', array($this, 'media_row_resize_actions'), 10, 2);
-			add_action('litespeed_media_resize_row', array($this, 'media_row_resize_con'));
-		}
-
 		// Hook to attachment delete action
 		add_action('delete_attachment', __CLASS__ . '::delete_attachment');
 	}
@@ -249,8 +244,7 @@ class Media extends Root
 	 */
 	public function media_row_title($posts_columns)
 	{
-		$posts_columns['imgoptm'] = __('LiteSpeed Optimization', 'litespeed-cache');
-		$posts_columns['imgresize'] = __('LiteSpeed Resize', 'litespeed-cache');
+		$posts_columns['imgoptm'] = __('LiteSpeed', 'litespeed-cache');
 
 		return $posts_columns;
 	}
@@ -263,7 +257,7 @@ class Media extends Root
 	 */
 	public function media_row_actions($column_name, $post_id)
 	{
-		if ($column_name !== 'imgoptm') {
+		if ( !in_array( $column_name, array( 'imgoptm', 'imgresize' ) ) ) {
 			return;
 		}
 
@@ -271,24 +265,10 @@ class Media extends Root
 	}
 
 	/**
-	 * Media Admin Menu -> Image Resize Column
-	 *
-	 * @since 6.3.0
-	 * @access public
-	 */
-	public function media_row_resize_actions($column_name, $post_id)
-	{
-		if ($column_name !== 'imgresize') {
-			return;
-		}
-
-		do_action('litespeed_media_resize_row', $post_id);
-	}
-
-	/**
 	 * Display image optm info
 	 *
 	 * @since  3.0
+	 * @since  6.3.0 Added Image resize data
 	 */
 	public function media_row_con($post_id)
 	{
@@ -301,7 +281,10 @@ class Media extends Root
 
 		$size_meta = get_post_meta($post_id, Img_Optm::DB_SIZE, true);
 
-		echo '<p>';
+		// Optimize data.
+		echo '<div id="litespeed-media-optimize" class="litespeed-media-data">
+			<span class="litespeed-media-title">' . __( 'Optimization', 'litespeed-cache' ) . '</span>
+			<p>';
 		// Original image info
 		if ($size_meta && !empty($size_meta['ori_saved'])) {
 			$percent = ceil(($size_meta['ori_saved'] * 100) / $size_meta['ori_total']);
@@ -419,18 +402,56 @@ class Media extends Root
 			);
 			echo '</div>';
 		}
-	}
 
-	/**
-	 * Display image resize info
-	 *
-	 * @since  6.3.0
-	 */
-	public function media_row_resize_con($post_id)
-	{
-		$att_info = wp_get_attachment_metadata($post_id);
-		if (empty($att_info['file'])) {
-			return;
+		echo '</div>';
+
+		// If resize is ON
+		if($this->conf(Base::O_IMG_OPTM_RESIZE)){
+			$__resize = Img_Resize::cls();
+			$resize_meta = get_post_meta($post_id, Img_Resize::get_meta_name(), true);
+
+			// TODO: Under image lib, could have two buttons: 1. resize. 2. switch backup/resized imag
+
+			echo '<div id="litespeed-media-resize" class="litespeed-media-data litespeed-top10">';
+
+			// If has resize meta.
+			if($resize_meta){
+				echo '<span class="litespeed-media-title">' . __( 'Resize', 'litespeed-cache' ) . '</span>';
+
+				// Resize data.
+				$original_data = ( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ? $__resize->filesize_formatted( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ) : '—' );
+				$resize_data = ( $resize_meta[Img_Resize::RES_NEW_SIZE] ? $__resize->filesize_formatted( $resize_meta[Img_Resize::RES_NEW_SIZE] ) : '—' );
+				$percentage_saved = ( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] > 0 ) ? 100 - ( $resize_meta[Img_Resize::RES_NEW_SIZE] * 100 ) / $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] : 0;
+				$saved = $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] > 0 ? number_format( $percentage_saved, 2 ) : 0;
+				$saved_data = $saved > 0 ? $saved . '%' : '—';
+
+				echo '<p>' . __('Orig', 'litespeed-cache') . '<span class="litespeed-left10">' . $original_data . '</span></p>';
+				echo '<p>' . __('Resized', 'litespeed-cache') . '<span class="litespeed-left10">' . $resize_data . '</span></p>';
+				echo '<p><strong>' . __('Saved', 'litespeed-cache') . '<span class="litespeed-left10">' . $saved_data . '</span></strong></p>';
+
+				echo '<p class="litespeed-actions">';
+					$has_backup = isset( $resize_meta[Img_Resize::RES_BK] ) &&  $resize_meta[Img_Resize::RES_BK];
+					if( 
+						$has_backup && 
+						$resize_meta[Img_Resize::RES_ORIGINAL_SIZE] >  $resize_meta[Img_Resize::RES_NEW_SIZE]
+					){
+						echo '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTORE_BK, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Restore backup', 'litespeed-cache') . '</a>';
+					}
+
+					if( $resize_meta[Img_Resize::RES_NEW_SIZE] >= $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ){
+						echo '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
+					}
+
+					$text_confirm = __('This will delete resize data.', 'litespeed-cache');
+					if( $has_backup ) $text_confirm = __('This will delete resize data, restore the image from backup and delete the backup.', 'litespeed-cache');
+					echo '<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESET, false, null, array( 'id' => $post_id ) ) . '" onClick="return confirm(\''. $text_confirm .'\');">' . __ ('Reset', 'litespeed-cache') . '</a>';
+				echo '</p>';
+			}
+			else{
+				echo '<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
+			}
+			
+			echo '</div>';
 		}
 	}
 

@@ -2231,6 +2231,11 @@ a.litespeed-btn-xs.litespeed-banner-promo-slack-btn {
 /* =======================================
 		admin -> media lib icon
 ======================================= */
+.litespeed-media-data .litespeed-media-title{ font-weight: bold; }
+
+/* =======================================
+		admin -> media lib icon
+======================================= */
 
 .litespeed-media-href {
 	display: inline-table;

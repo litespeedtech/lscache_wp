@@ -258,8 +258,8 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 								<p>
 									<?php _e( 'Progress', 'litespeed-cache' ); ?>:
 									<?php
-										$finished_percentage = floor(( $resize_summary[$resize_class::S_CURRENT] * 100 ) / $resize_summary[$resize_class::S_TOTAL]);
-										echo GUI::progressbar($finished_percentage);
+										$resize_percentage = floor(( $resize_summary[$resize_class::S_CURRENT] * 100 ) / $resize_summary[$resize_class::S_TOTAL]);
+										echo GUI::progressbar($resize_percentage);
 									?>
 								</p>
 								<p>

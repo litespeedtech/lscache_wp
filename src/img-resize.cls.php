@@ -21,13 +21,15 @@ class Img_Resize extends Base
 	const TYPE_START = 'start';
 	const TYPE_RECALCULATE = 'recalculate';
 	const TYPE_DELETE_BK = 'delete_bk';
+	const TYPE_IMAGE = 'image';
+	const TYPE_RESTORE_BK = 'restore_bk';
+	const TYPE_RESET = 'reset';
 
 	const DB_PREFIX = 'litespeed-resize';
 	const DB_DATA = 'data';
 	
 	const BK_ADD = '_res_bk';
 
-	const RES_DONE = 'done';
 	const RES_BK = 'has_bk';
 	const RES_ORIGINAL_SIZE = 'orig_size';
 	const RES_NEW_SIZE = 'new_size';
@@ -39,8 +41,6 @@ class Img_Resize extends Base
 	private $mime_images = array( 'image/jpeg', 'image/png', 'image/gif' );
 	
 	protected $_summary;
-
-	// TODO: Under image lib, could have two buttons: 1. resize. 2. switch backup/resized imag 3. details about resize
 	
 	/**
 	 * Init
@@ -52,14 +52,17 @@ class Img_Resize extends Base
 		Debug2::debug2('[Img Processing] init');
 
 		$this->_summary = self::get_summary();
-		if (empty($this->_summary[self::S_CURRENT_POST])) {
+		if ( !isset( $this->_summary[self::S_CURRENT_POST] ) ) {
 			$this->_summary[self::S_CURRENT_POST] = 0;
+			self::save_summary();
 		}
-		if (empty($this->_summary[self::S_CURRENT])) {
+		if ( !isset( $this->_summary[self::S_CURRENT] ) ) {
 			$this->_summary[self::S_CURRENT] = 0;
+			self::save_summary();
 		}
-		if (empty($this->_summary[self::S_TOTAL])) {
+		if ( !isset( $this->_summary[self::S_TOTAL] ) ) {
 			$this->_summary[self::S_TOTAL] = 0;
+			self::save_summary();
 		}
 
 		// Hooks
@@ -77,55 +80,14 @@ class Img_Resize extends Base
 			if ( version_compare( get_bloginfo( 'version' ), '5.3.0', '>=' ) ) {
 				add_filter( 'big_image_size_threshold', array( $this, 'set_big_image_size_threshold'), 10, 1 );
 			}
-
-			// TODO: on delete image, delete extra: file
 			
 			// Wordpress default upload filter.
 			add_filter( 'wp_handle_upload', array( $this, 'wp_resize_image' ));
 			// TODO: find better filter?!
-			add_filter( 'wp_generate_attachment_metadata', array( $this, 'generate_attachment_metadata' ), 10, 2);
+			add_filter( 'wp_generate_attachment_metadata', array( $this, 'wp_resize_metadata' ), 10, 2);
 	
 			// Some plugins will need custom upload adjustment
 		}
-	}
-
-	/**
-	 * Delete resize data.
-	 *
-	 * @access public
-	 */
-	public function reset_row($post_id)
-	{
-		global $wpdb;
-
-		if (!$post_id) {
-			return;
-		}
-
-		// self::debug('_reset_row [pid] ' . $post_id);
-
-		// # TODO: Load image sub files
-		// $img_q = "SELECT b.post_id, b.meta_value
-		// 	FROM `$wpdb->postmeta` b
-		// 	WHERE b.post_id =%d  AND b.meta_key = '_wp_attachment_metadata'";
-		// $q = $wpdb->prepare($img_q, array($post_id));
-		// $v = $wpdb->get_row($q);
-
-		// $meta_value = $this->_parse_wp_meta_value($v);
-		// if ($meta_value) {
-		// 	$this->tmp_pid = $v->post_id;
-		// 	$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
-		// 	$this->_destroy_optm_file($meta_value, true);
-		// 	if (!empty($meta_value['sizes'])) {
-		// 		array_map(array($this, '_destroy_optm_file'), $meta_value['sizes']);
-		// 	}
-		// }
-
-		// delete_post_meta($post_id, self::DB_SIZE);
-		// delete_post_meta($post_id, self::DB_SET);
-
-		// $msg = __('Reset the optimized data successfully.', 'litespeed-cache');
-		// Admin_Display::succeed($msg);
 	}
 	
 	/**
@@ -137,29 +99,41 @@ class Img_Resize extends Base
 	public function update_summary_data($go_to_next = true){
 		global $wpdb;
 		$meta_name_data = $this->get_meta_name();
-		$select_is_attachment = $wpdb->prepare(
-			'SELECT ID FROM %i WHERE post_type = %s AND %i LIKE %s', 
-			array(
+
+		// Select is attachment
+		$select_attachment = array(
+			'sql' => 'FROM %i WHERE post_type = %s AND %i LIKE %s',
+			'vars' => array(
 				$wpdb->posts,
 				'attachment',
 				'post_mime_type',
 				'%image/%'
+			),
+		);
+		$select_is_attachment = $wpdb->prepare(
+			'SELECT ID ' . $select_attachment['sql'], 
+			$select_attachment['vars']
+		);
+		$select_count_is_attachment = $wpdb->prepare(
+			'SELECT count(1) ' . $select_attachment['sql'], 
+			$select_attachment['vars']
+		);
+
+		// Select posts with resize meta
+		$select_with_meta_resize = $wpdb->prepare(
+			'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
+			array(
+				'meta_id',
+				$wpdb->postmeta,
+				'meta_key',
+				$meta_name_data,
+				'post_id',
+				'post_id',
 			)
 		);
 
 		if($go_to_next){
 			// Next image will become Current image.
-			$select_with_meta_resize = $wpdb->prepare(
-				'SELECT b.%i FROM %i AS b WHERE b.%i = %s AND b.%i = a.%i',
-				array(
-					'meta_id',
-					$wpdb->postmeta,
-					'meta_key',
-					$meta_name_data,
-					'post_id',
-					'post_id',
-				)
-			);
 			$sql = "SELECT a.%i FROM %i AS a WHERE a.%i IN (" . $select_is_attachment . ") AND NOT EXISTS (" . $select_with_meta_resize . ") ORDER BY a.%i ASC LIMIT 1";
 			$prepare_sql = $wpdb->prepare(
 				$sql,
@@ -177,16 +151,14 @@ class Img_Resize extends Base
 		}
 
 		// Get totals
-		$prepare_sql = $select_is_attachment;
-		$total_posts = $wpdb->get_var( $prepare_sql );
+		$total_posts = $wpdb->get_var( $select_count_is_attachment );
 		if($total_posts){
 			$this->_summary[self::S_TOTAL] = $total_posts;
 		}
 
 		// Get current
-		$sql = "SELECT COUNT(a.%i) FROM %i AS a WHERE %i = %s";
 		$prepare_sql = $wpdb->prepare(
-			$sql,
+			"SELECT COUNT(a.%i) FROM %i AS a WHERE %i = %s",
 			array(
 				'post_id',
 				$wpdb->postmeta,
@@ -198,17 +170,50 @@ class Img_Resize extends Base
 		if($current_posts){
 			$this->_summary[self::S_CURRENT] = $current_posts;
 		}
+		// var_dump($this->_summary);
+		// die();
 
 		self::save_summary();
 	}
 	
 	/**
-	 * Get meta name.
+	 * Resize image by id
 	 *
-	 * @return string
+	 * @param  mixed $id Post id.
+	 * @return void
 	 */
-	public function get_meta_name(){
-		return self::DB_PREFIX . '-' . self::DB_DATA;
+	public function resize_image_by_id($id){
+		// Get summary.
+		$summary = $this->get_summary();
+		$params = $this->prepare_parameters_from_id($id);
+		$result = $this->resize_image_func($params, $id);
+
+		if($result){
+			$this->generate_attachment_metadata(array(), $summary[self::S_CURRENT_POST]);
+		
+			$msg = sprintf(
+				__('Done resizing image #%s.', 'litespeed-cache'),
+				$id
+			);
+			Admin_Display::success($msg);
+		}
+		else{
+			add_post_meta(
+				$summary[self::S_CURRENT_POST], 
+				$this->get_meta_name(),
+				array(
+					self::RES_NEW_SIZE => 0,
+					self::RES_ORIGINAL_SIZE => 0,
+					self::RES_BK   => 0,
+				)
+			);
+			$msg = sprintf(
+				__('Cannot resize image #%s. Skipping this image.', 'litespeed-cache'),
+				$summary[self::S_CURRENT_POST]
+			);
+			Admin_Display::error($msg);
+		}
+		$this->update_summary_data();
 	}
 	
 	/**
@@ -225,32 +230,7 @@ class Img_Resize extends Base
 			$summary = $this->get_summary();
 
 			if($summary['current'] <= $summary['total']){
-				$params = $this->prepare_parameters_from_id($summary[self::S_CURRENT_POST]);
-				$result = $this->resize_image($params);
-
-				if($result){
-					$this->generate_attachment_metadata(array(), $summary[self::S_CURRENT_POST]);
-				
-					$msg = __('Done resizing current image.', 'litespeed-cache');
-					Admin_Display::success($msg);
-				}
-				else{
-					add_post_meta(
-						$summary[self::S_CURRENT_POST], 
-						$this->get_meta_name(),
-						array(
-							self::RES_NEW_SIZE => 0,
-							self::RES_ORIGINAL_SIZE => 0,
-							self::RES_BK   => 0,
-						)
-					);
-					$msg = sprintf(
-						__('Cannot resize image #%s. Skipping this image.', 'litespeed-cache'),
-						$summary[self::S_CURRENT_POST]
-					);
-					Admin_Display::error($msg);
-				}
-				$this->update_summary_data();
+				$this->resize_image_by_id($summary[self::S_CURRENT_POST]);
 			}
 		}
 		else{
@@ -274,6 +254,15 @@ class Img_Resize extends Base
 			(int) $size
 		) + 1;
 	}
+	
+	/**
+	 * Get meta name.
+	 *
+	 * @return string
+	 */
+	public static function get_meta_name(){
+		return self::DB_PREFIX . '-' . self::DB_DATA;
+	}
 
 	/**
 	 * WP Resize functionality.
@@ -282,18 +271,35 @@ class Img_Resize extends Base
 	 * @return void
 	 */
 	public function wp_resize_image($params){
-		$this->resize_image($params);
+		$this->resize_image_func($params);
 
 		return $params;
 	}
 		
 	/**
-	 * Resize style. Possible values: 0 - keep width ; 1 - keep height.
+	 * Hook wp generate attachment metadata.
 	 *
+	 * @param  mixed $meta
+	 * @param  mixed $id
 	 * @return void
 	 */
-	public function resize_style(){
-		return apply_filters('litespeed_img_resize_style', 1);
+	public function wp_resize_metadata($meta, $id = null){
+		// Get file info from post id.
+		$params = $this->prepare_parameters_from_id($id);
+
+		try{
+			if(
+				$params['file'] && 
+				in_array( $params['type'], $this->mime_images, true )
+			){
+				$this->generate_post_meta($params, $id);
+			}
+		}
+		catch(\Exception $e){
+			return $meta;
+		}
+
+		return $meta;
 	}
 
 	/**
@@ -302,7 +308,7 @@ class Img_Resize extends Base
 	 * @param array $params File with path. Expected keys: type(mime type format), url, file(path to file)
 	 * @return void
 	 */
-	public function resize_image($params){
+	public function resize_image_func($params, $post_id = false){
 		// Return if the file is not an image.
 		if ( ! in_array( $params['type'], $this->mime_images, true ) ) {
 			return false;
@@ -314,7 +320,7 @@ class Img_Resize extends Base
 			}
 			$path_info = pathinfo($params['file']);
 			$meta_add = array(
-				self::RES_DONE => 0,
+				self::RES_BK => 0
 			);
 			
 			// Get resize size.
@@ -332,18 +338,20 @@ class Img_Resize extends Base
 				$current_sizes['width'] > $resize_size[0] ||
 				$current_sizes['height'] > $resize_size[1]
 			){
-				$backup_path = $this->get_backup_path( $params['file'], $path_info);
+				$backup_path = $this->get_backup_path_from_file( $params['file'], $path_info);
 
 				// If need a backup.
 				$upload_dir = wp_upload_dir();
-				$meta_add[ self::RES_BK ] = str_replace($upload_dir['basedir'], '', $backup_path);
-				if( apply_filters( 'litespeed_img_resize_original_backup', !$this->conf( self::O_IMG_OPTM_STOP_BK ) ) ){ // Possible values: true - make backup ; false - do not make backup
+				$do_backup = apply_filters( 'litespeed_img_resize_original_backup', !$this->conf( self::O_IMG_OPTM_STOP_BK ) );
+				if( $do_backup ){ // Possible values: true - make backup ; false - do not make backup
+					$backup_gallery_path = str_replace( $upload_dir['basedir'], '', $backup_path );
+					$meta_add[self::RES_BK] = $backup_gallery_path;
 					// Check if backup was done.
-					if ( ! is_file($backup_path) ){
+					if ( !is_file( $backup_path ) ){
 						// Cannot make backup.
-						if( ! copy( $params['file'], $backup_path ) ) {
+						if( !copy( $params['file'], $backup_path ) ) {
 							self::debug('[Image Resize] Cannot make backup to file: ' . $params['file'] );
-							$meta_add[ self::RES_BK ] = 0;
+							$meta_add[self::RES_BK] = 0;
 						}
 					}
 					else {
@@ -365,23 +373,43 @@ class Img_Resize extends Base
 				}
 
 				// Done.
-				self::debug('[Image Resize] Done: ' . $params['url'] );
-				$meta_add[self::RES_ORIGINAL_SIZE] = filesize( $backup_path );
+				self::debug( '[Image Resize] Done: ' . $params['url'] );
+				$meta_add[self::RES_ORIGINAL_SIZE] = $do_backup ? filesize( $backup_path ) : filesize( $params['file'] );
 				$meta_add[self::RES_NEW_SIZE] = filesize( $params['file'] );
-				$meta_add[self::RES_DONE] = 1;
-			}
-			else{
-				$meta_add[self::RES_DONE] = 1;
 			}
 
-			// Save status of image upload. Temp to send data for meta.
-			file::save( $path_info['dirname'] . '/' . $path_info['filename'] . '.lsc', json_encode($meta_add) );
+			if(!$post_id){
+				// Save status of image upload. Temp to send data for meta.
+				file::save( $path_info['dirname'] . '/' . $path_info['filename'] . '.lsc', json_encode($meta_add) );
+			}
+			else{
+				// If meta do not exist, add it
+				if( !metadata_exists( 'post', $post_id, $this->get_meta_name() ) ){
+					add_post_meta( $post_id, $this->get_meta_name(), $meta_add );
+				}
+				// else update data.
+				else{
+					update_post_meta( $post_id, $this->get_meta_name(), $meta_add );
+				}
+			}
+
 			return true;
 		}
 		catch(\Exception $e){
-			self::debug('[Image Resize] Cannot change file: ' . $params['url'] . ': ' . $e );
+			self::debug( '[Image Resize] Cannot resize file ' . $params['url'] . ': ' . $e );
+
 			return false;
 		}
+	}
+		
+	/**
+	 * Get resize style(by width or by height). Possible values: 0 - keep width ; 1 - keep height.
+	 * Used in get_formatted_resize_size().
+	 *
+	 * @return void
+	 */
+	public function resize_style(){
+		return apply_filters('litespeed_img_resize_style', 0);
 	}
 	
 	/**
@@ -392,45 +420,24 @@ class Img_Resize extends Base
 	public function get_formatted_resize_size(){
 		// Get sizes.
 		$resize_size = $this->conf( self::O_IMG_OPTM_RESIZE_SIZE );
-
 		$resize = explode( 'x', $resize_size );
+
 		// Ensure correct size format. Null is used in resize function to get auto value for the missing size.
 		if( strstr( $resize_size, 'x' ) === false ){
 			$resize_style = $this->resize_style();
 
 			// If resize to keep width.
-			if($resize_style === 0) $resize = [ $resize_size, null ];
+			if($resize_style === 0) $resize = [$resize_size, null];
 			// If resize to keep height.
-			if($resize_style === 1) $resize = [ null, $resize_size ];
+			if($resize_style === 1) $resize = [null, $resize_size];
+		}
+		else{
+			foreach($resize as &$res){
+				if($res === '') $res = null;
+			}
 		}
 
 		return $resize;
-	}
-		
-	/**
-	 * Generate custom metas for image.
-	 *
-	 * @param  mixed $meta
-	 * @param  mixed $id
-	 * @return void
-	 */
-	public function generate_attachment_metadata($meta, $id = null){
-		// Get file info from post id.
-		$params = $this->prepare_parameters_from_id($id);
-
-		try{
-			if(
-				$params['file'] && 
-				in_array( $params['type'], $this->mime_images, true )
-			){
-				$this->generate_post_meta($params, $id);
-			}
-		}
-		catch(\Exception $e){
-			return $meta;
-		}
-
-		return $meta;
 	}
 	
 	/**
@@ -462,8 +469,12 @@ class Img_Resize extends Base
 
 				// Delete file.
 				unlink( $lsc_file );
+
+				return true;
 			}
 		}
+		
+		return true;
 	}
 	
 	/**
@@ -473,7 +484,7 @@ class Img_Resize extends Base
 	 * @param  array $path_info Path info of file.
 	 * @return string
 	 */
-	private function get_backup_name($file_path, $path_info = null){
+	private function get_backup_name_from_file($file_path, $path_info = null){
 		// If null sent, get pathinfo from file path.
 		!$path_info && $path_info = pathinfo($file_path);
 
@@ -487,11 +498,11 @@ class Img_Resize extends Base
 	 * @param  array $path_info Path info of file.
 	 * @return string
 	 */
-	private function get_backup_path($file_path, $path_info = null){
+	private function get_backup_path_from_file($file_path, $path_info = null){
 		// If null sent, get pathinfo from file path.
 		!$path_info && $path_info = pathinfo($file_path);
 
-		$backup_name = $this->get_backup_name( $file_path, $path_info );
+		$backup_name = $this->get_backup_name_from_file( $file_path, $path_info );
 		
 		return $path_info['dirname'] . '/' . $backup_name;
 	}
@@ -532,8 +543,22 @@ class Img_Resize extends Base
 	 *
 	 * @return void
 	 */
-	private function recalculate_summary( $go_to_next ){
-		$this->update_summary_data( $go_to_next );
+	private function recalculate_summary(){
+		$this->update_summary_data( false );
+	}
+
+	/**
+	 * Convert size to units.
+	 * https://stackoverflow.com/a/11860664
+	 *
+	 * @return string
+	 */
+	public function filesize_formatted($size)
+	{
+		$units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+		$power = $size > 0 ? floor(log($size, 1024)) : 0;
+
+		return number_format($size / pow(1024, $power), 2, '.', ',') . '' . $units[$power];
 	}
 	
 	/**
@@ -541,7 +566,7 @@ class Img_Resize extends Base
 	 *
 	 * @return void
 	 */
-	private function delete_backups(){
+	private function delete_all_backups(){
 		global $wpdb;
 		$meta_name_data = $this->get_meta_name();
 		$errors = 0;
@@ -613,6 +638,123 @@ class Img_Resize extends Base
 			Admin_Display::info($msg);
 		}
 	}
+	
+	/**
+	 * Restore original from backup.
+	 *
+	 * @param array $id Post id to restore from backup.
+	 * @return void
+	 */
+	private function restore_funct( $id, $udpate_meta = true ){
+		$return_val = false;
+		$meta_name_data = $this->get_meta_name();
+		$meta = get_post_meta( $id, $meta_name_data, true );
+
+		if( $meta ){
+			try{
+				$upload_dir = wp_upload_dir();
+				$bk_path = $upload_dir['basedir'] . $meta[self::RES_BK];
+				$file_path = get_attached_file(  $id );
+				
+				if( !copy($bk_path, $file_path ) ){
+					$return_val = false;
+				}
+				else{
+					$return_val = true;
+					if( $udpate_meta ){
+						$meta[self::RES_NEW_SIZE] = $meta[self::RES_ORIGINAL_SIZE];
+						update_post_meta( $id, $meta_name_data, $meta );
+					}
+				}
+			}
+			catch( \Exception $e ){
+				$return_val = false;
+			}
+		}
+
+		return $return_val;
+	}
+	
+	/**
+	 * Restore original from backup.
+	 *
+	 * @param array $id Post id to restore from backup.
+	 * @return void
+	 */
+	private function restore_from_bk( $id, $udpate_meta = true ){
+		$result = $this->restore_funct($id, $udpate_meta);
+		if( $result ){
+			self::debug( '[Image Resize] Image #' . $id . ' restored from backup.' );
+				
+			$msg = __('Image restored from backup.', 'litespeed-cache');
+			Admin_Display::success($msg);
+		}
+		else{
+			self::debug( '[Image Resize] Error restore backup for #' . $id . '.' );
+				
+			$msg = __('Error restoring backup.', 'litespeed-cache');
+			Admin_Display::error($msg);
+		}
+	}
+	
+	/**
+	 * Generate/Regenerate attachment metadata.
+	 *
+	 * @param array $id Post id to restore from backup.
+	 * @return void
+	 */
+	private function generate_attachment_metadata( $id ){
+		$params = $this->prepare_parameters_from_id($id);
+
+		if(
+			$params['file'] && 
+			in_array( $params['type'], $this->mime_images, true )
+		){
+			$this->generate_post_meta($params, $id);
+		}
+	}
+
+	/**
+	 * Delete resize data.
+	 *
+	 * @access public
+	 */
+	public function reset_row($post_id)
+	{
+
+		if (!$post_id) {
+			return;
+		}
+
+		self::debug('_reset_row [pid] ' . $post_id);
+		$error = false;
+
+		$meta = get_post_meta($post_id, $this->get_meta_name(), true);
+		if($meta[self::RES_BK]){
+			// Restore image from backup.
+			$this->restore_funct($post_id, false);
+
+			// Delete backup file.
+			$upload_dir = wp_upload_dir();
+			$backup_path = $upload_dir['basedir'] . $meta[self::RES_BK];
+
+			if(!unlink($backup_path)){
+				$error = true;
+			}
+		}
+
+		// Delete post meta.
+		delete_post_meta($post_id, $this->get_meta_name());
+
+		if(!$error){
+			$msg = __('Reset the resize data successfully.', 'litespeed-cache');
+			Admin_Display::success($msg);
+		}
+		else{
+			$msg = __('Cannot reset resize data.', 'litespeed-cache');
+			Admin_Display::error($msg);
+		}
+	}
 
 	/**
 	 * Handle all request actions from main cls
@@ -634,7 +776,20 @@ class Img_Resize extends Base
 				$this->recalculate_summary(false);
 				break;
 			case self::TYPE_DELETE_BK:
-				$this->delete_backups();
+				$this->delete_all_backups();
+				break;
+			case self::TYPE_IMAGE:
+				$id = $_GET['id'] ? $_GET['id'] : null;
+				$this->resize_image_by_id( $id );
+				$this->generate_attachment_metadata(array(), $id);
+				break;
+			case self::TYPE_RESTORE_BK:
+				$id = $_GET['id'] ? $_GET['id'] : null;
+				$this->restore_from_bk( $id );
+				break;
+			case self::TYPE_RESET:
+				$id = $_GET['id'] ? $_GET['id'] : null;
+				$this->reset_row( $id );
 				break;
 			default:
 				break;
