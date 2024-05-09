@@ -663,7 +663,7 @@ class Media extends Root
 			array(
 				'#<!--.*-->#sU',
 				'#<noscript([^>]*)>.*</noscript>#isU',
-				'#<script([^>]*)>.*</script>#isU',
+				'#<script([^>]*)>.*</script>#isU', // Added to remove warning of file not found when image size detection is turned ON.
 			),
 			'',
 			$this->content
