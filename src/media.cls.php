@@ -659,7 +659,15 @@ class Media extends Root
 		$html_list = array();
 		$placeholder_list = array();
 
-		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		$content = preg_replace(
+			array(
+				'#<!--.*-->#sU',
+				'#<noscript([^>]*)>.*</noscript>#isU',
+				'#<script([^>]*)>.*</script>#isU',
+			),
+			'',
+			$this->content
+		);
 		/**
 		 * Exclude parent classes
 		 * @since  3.0
