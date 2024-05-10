@@ -93,7 +93,7 @@ class GUI extends Base
 	 */
 	public static function progressbar($percent, $finished = false, $without_percentage = false, $percentage_decimals = 0, $width = '100%', $append_cls = false)
 	{
-		$percentage = $percent . ($without_percentage ? '' : '%');
+		$percentage = number_format( $percent, $percentage_decimals ) . ($without_percentage ? '' : '%');
 
 		if ($percent == 100 && $finished) {
 			$percentage = __('Done', 'litespeed-cache');
@@ -102,7 +102,7 @@ class GUI extends Base
 		return "
 		<div class='litespeed-progressbar " . $append_cls . "' style='width: " . $width . ";'>
 			<div class='progress' style='width: " . ( $finished ? '100' : $percent ) . "%;'>&nbsp</div>
-			<div class='text" . ( $percent >= 51 ? ' text_white' : '' ) . "'>" . number_format( $percentage, $percentage_decimals ) . "</div>
+			<div class='text" . ( $percent >= 51 ? ' text_white' : '' ) . "'>" . $percentage . "</div>
 		</div>
 		";
 	}

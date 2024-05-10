@@ -405,54 +405,66 @@ class Media extends Root
 
 		echo '</div>';
 
+		echo $this->get_resize_html($post_id);
+	}
+	
+	/**
+	 * Get resize html.
+	 *
+	 * @param  mixed $post_id Post to show data.
+	 * @return string
+	 */
+	public function get_resize_html($post_id){
+		$html = '';
+
 		// If resize is ON
 		if($this->conf(Base::O_IMG_OPTM_RESIZE)){
 			$__resize = Img_Resize::cls();
 			$resize_meta = get_post_meta($post_id, Img_Resize::get_meta_name(), true);
 
-			// TODO: Under image lib, could have two buttons: 1. resize. 2. switch backup/resized imag
-
-			echo '<div id="litespeed-media-resize" class="litespeed-media-data litespeed-top10">';
+			$html .= '<div id="litespeed-media-resize" class="litespeed-media-data litespeed-top10">';
 
 			// If has resize meta.
-			if($resize_meta){
-				echo '<span class="litespeed-media-title">' . __( 'Resize', 'litespeed-cache' ) . '</span>';
+			if( $resize_meta ){
+				$html .= '<span class="litespeed-media-title">' . __( 'Resize', 'litespeed-cache' ) . '</span>';
 
 				// Resize data.
-				$original_data = ( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ? $__resize->filesize_formatted( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ) : '—' );
-				$resize_data = ( $resize_meta[Img_Resize::RES_NEW_SIZE] ? $__resize->filesize_formatted( $resize_meta[Img_Resize::RES_NEW_SIZE] ) : '—' );
-				$percentage_saved = ( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] > 0 ) ? 100 - ( $resize_meta[Img_Resize::RES_NEW_SIZE] * 100 ) / $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] : 0;
-				$saved = $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] > 0 ? number_format( $percentage_saved, 2 ) : 0;
+				$original_size = isset( $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ) ? $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] : 0 ;
+				$resized_size = isset( $resize_meta[Img_Resize::RES_NEW_SIZE] ) ? $resize_meta[Img_Resize::RES_NEW_SIZE] : 0 ;
+				$has_backup = isset( $resize_meta[Img_Resize::RES_BK] ) &&  $resize_meta[Img_Resize::RES_BK];
+
+				$percentage_saved = ( $original_size > 0 ) ? 100 - ( $resized_size * 100 ) / $original_size : 0;
+				$saved = $original_size > 0 ? number_format( $percentage_saved, 2 ) : 0;
 				$saved_data = $saved > 0 ? $saved . '%' : '—';
 
-				echo '<p>' . __('Orig', 'litespeed-cache') . '<span class="litespeed-left10">' . $original_data . '</span></p>';
-				echo '<p>' . __('Resized', 'litespeed-cache') . '<span class="litespeed-left10">' . $resize_data . '</span></p>';
-				echo '<p><strong>' . __('Saved', 'litespeed-cache') . '<span class="litespeed-left10">' . $saved_data . '</span></strong></p>';
+				$html .= '<p>' . __('Orig', 'litespeed-cache') . '<span class="litespeed-left10">' . ( $original_size ? $__resize->filesize_formatted( $original_size ) : '—' ) . '</span></p>';
+				$html .= '<p>' . __('Resized', 'litespeed-cache') . '<span class="litespeed-left10">' . ( $resized_size ? $__resize->filesize_formatted( $resized_size ) : '—' ) . '</span></p>';
+				$html .= '<p><strong>' . __('Saved', 'litespeed-cache') . '<span class="litespeed-left10">' . $saved_data . '</span></strong></p>';
 
-				echo '<p class="litespeed-actions">';
-					$has_backup = isset( $resize_meta[Img_Resize::RES_BK] ) &&  $resize_meta[Img_Resize::RES_BK];
-					if( 
-						$has_backup && 
-						$resize_meta[Img_Resize::RES_ORIGINAL_SIZE] >  $resize_meta[Img_Resize::RES_NEW_SIZE]
-					){
-						echo '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTORE_BK, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Restore backup', 'litespeed-cache') . '</a>';
+				$html .= '<p class="litespeed-actions">';
+					if( $resized_size >= $original_size ){
+						$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
 					}
 
-					if( $resize_meta[Img_Resize::RES_NEW_SIZE] >= $resize_meta[Img_Resize::RES_ORIGINAL_SIZE] ){
-						echo '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
-					}
+					if( $has_backup ) {
+						if( $original_size > $resized_size ){
+							$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTORE_BK, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Restore backup', 'litespeed-cache') . '</a>';
+						}
 
-					$text_confirm = __('This will delete resize data.', 'litespeed-cache');
-					if( $has_backup ) $text_confirm = __('This will delete resize data, restore the image from backup and delete the backup.', 'litespeed-cache');
-					echo '<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESET, false, null, array( 'id' => $post_id ) ) . '" onClick="return confirm(\''. $text_confirm .'\');">' . __ ('Reset', 'litespeed-cache') . '</a>';
-				echo '</p>';
+						$text_confirm = __('This will delete resize data, restore the image from backup.', 'litespeed-cache');
+						$html .= '<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESET, false, null, array( 'id' => $post_id ) ) . '" onClick="return confirm(\''. $text_confirm .'\');">' . __ ('Reset', 'litespeed-cache') . '</
+						a>';
+					}
+					$html .= '</p>';
 			}
 			else{
-				echo '<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
+				$html .= '<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
 			}
 			
-			echo '</div>';
+			$html .= '</div>';
 		}
+
+		return $html;
 	}
 
 	/**
