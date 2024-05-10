@@ -121,7 +121,7 @@ class Admin_Display extends Base
 			// sub menus
 			$this->_add_submenu(__('Dashboard', 'litespeed-cache'), 'litespeed', 'show_menu_dash');
 
-			$this->_add_submenu(__('Presets', 'litespeed-cache'), 'litespeed-presets', 'show_menu_presets');
+			!$this->_is_network_admin && $this->_add_submenu(__('Presets', 'litespeed-cache'), 'litespeed-presets', 'show_menu_presets');
 
 			$this->_add_submenu(__('General', 'litespeed-cache'), 'litespeed-general', 'show_menu_general');
 

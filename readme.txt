@@ -255,6 +255,8 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **CLoud** Fixed an message error for daily quota.
 * **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
 * **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
+* **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
+* **GUI** Removed Preset menu from network admin panel.
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
 * **Page Optimize** Flatsome theme random string excludes. (PR#415)
 
