@@ -240,6 +240,13 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 						</p>
 						<?php if ($this->conf($id)) : ?>
 							<?php 
+								$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
+								if(!$image){
+									$resize_class->recalculate_summary();
+									$resize_summary = $resize_class::get_summary();
+									$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
+								}
+
 								if ( 
 									$resize_summary[$resize_class::S_CURRENT] < $resize_summary[$resize_class::S_TOTAL] &&
 									$resize_summary[$resize_class::S_CURRENT_POST] !== 0
@@ -247,12 +254,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 								<p>
 									<?php _e( 'Current image', 'litespeed-cache' ); ?>:
 									<code><?php echo '#' . $resize_summary[$resize_class::S_CURRENT_POST]; ?></code>
-									<?php
-										$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
-										if($image){
-											echo '<p><img src="'.$image.'" style="width: 100px;"/></p>';
-										}
-									?>
+									<?php echo '<p><img src="'.$image.'" style="width: 100px;"/></p>'; ?>
 									
 								</p>
 								<p>

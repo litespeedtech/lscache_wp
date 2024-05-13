@@ -160,6 +160,7 @@ $this->form_action();
 		</td>
 	</tr>
 
+	<!-- Image Resize settings START -->
 	<tr>
 		<th>
 			<?php $id = Base::O_IMG_OPTM_RESIZE; ?>
@@ -200,6 +201,7 @@ $this->form_action();
 			</div>
 		</td>
 	</tr>
+	<!-- Image Resize settings END -->
 </tbody></table>
 
 <?php

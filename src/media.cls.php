@@ -405,6 +405,7 @@ class Media extends Root
 
 		echo '</div>';
 
+		// Show resize info.
 		echo $this->get_resize_html($post_id);
 	}
 	
@@ -443,22 +444,22 @@ class Media extends Root
 
 				$html .= '<p class="litespeed-actions">';
 					if( $resized_size >= $original_size ){
-						$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
+						$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url( Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ( 'Resize', 'litespeed-cache' ) . '</a>';
 					}
 
 					if( $has_backup ) {
 						if( $original_size > $resized_size ){
-							$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTORE_BK, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Restore backup', 'litespeed-cache') . '</a>';
+							$html .= '<a data-litespeed-onlyonce class="button button-primary litespeed-right10" data-balloon-length="large" href="' . Utility::build_url( Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESTORE_BK, false, null, array( 'id' => $post_id ) ) . '">' . __ ( 'Restore backup', 'litespeed-cache' ) . '</a>';
 						}
 
-						$text_confirm = __('This will delete resize data, restore the image from backup.', 'litespeed-cache');
-						$html .= '<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESET, false, null, array( 'id' => $post_id ) ) . '" onClick="return confirm(\''. $text_confirm .'\');">' . __ ('Reset', 'litespeed-cache') . '</
+						$text_confirm = __('This will delete resize data, restore the image from backup and delete the backup.', 'litespeed-cache');
+						$html .= '<a class="button button-secondary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RESET, false, null, array( 'id' => $post_id ) ) . '" onClick="return confirm(\''. $text_confirm .'\');">' . __ ( 'Reset', 'litespeed-cache' ) . '</
 						a>';
 					}
 					$html .= '</p>';
 			}
 			else{
-				$html .= '<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="' . Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ('Resize', 'litespeed-cache') . '</a>';
+				$html .= '<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="' . Utility::build_url( Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_IMAGE, false, null, array( 'id' => $post_id ) ) . '">' . __ ( 'Resize', 'litespeed-cache' ) . '</a>';
 			}
 			
 			$html .= '</div>';
