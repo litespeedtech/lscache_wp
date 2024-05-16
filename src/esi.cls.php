@@ -917,8 +917,12 @@ class ESI extends Root
 
 		// Clear registered styles and scripts
 		global $wp_scripts, $wp_styles;
-		foreach($wp_styles->registered as $registered) wp_deregister_style($registered->handle);
-		foreach($wp_scripts->registered as $registered) wp_deregister_script($registered->handle);
+		if($wp_scripts){
+			foreach($wp_styles->registered as $registered) wp_deregister_style($registered->handle);
+		}
+		if($wp_styles){
+			foreach($wp_scripts->registered as $registered) wp_deregister_script($registered->handle);
+		}
 
 		Tag::add(Tag::TYPE_ESI . "esi.$shortcode");
 
