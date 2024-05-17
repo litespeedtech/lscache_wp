@@ -594,7 +594,6 @@ class Data extends Root
 		$tb_url = $this->tb('url');
 
 		Debug2::debug('[Data] Try to mark as expired: ' . $request_url);
-		$tb_url = $this->tb('url');
 		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
 		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
@@ -602,7 +601,7 @@ class Data extends Root
 		}
 
 		Debug2::debug('[Data] Mark url_id=' . $url_row['id'] . ' as expired');
-		
+
 		$tb_url_file = $this->tb('url_file');
 
 		$existing_url_files = array();
