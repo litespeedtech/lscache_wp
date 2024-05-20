@@ -450,22 +450,6 @@ class Data extends Root
 	}
 
 	/**
-	 * Cleanup the table url
-	 *
-	 * @since  6.3
-	 */
-	public function table_url_cleanup()
-	{
-		global $wpdb;
-		
-		$q = 'DELETE d
-			FROM `' . $this->tb('url') . '` AS d
-			LEFT JOIN `' . $this->tb('url_file') . '` AS f ON d.`id` = f.`url_id`
-			WHERE f.`url_id` IS NULL';
-		$wpdb->query($q);
-	}
-
-	/**
 	 * Clean certain type of url_file
 	 *
 	 * @since  4.0
@@ -483,7 +467,11 @@ class Data extends Root
 		$wpdb->query($wpdb->prepare($q, $type));
 		
 		// Added to cleanup url table. See issue: https://wordpress.org/support/topic/wp_litespeed_url-1-1-gb-in-db-huge-big/
-		$this->table_url_cleanup();
+		$q = 'DELETE d
+			FROM `' . $this->tb('url') . '` AS d
+			LEFT JOIN `' . $this->tb('url_file') . '` AS f ON d.`id` = f.`url_id`
+			WHERE f.`url_id` IS NULL';
+		$wpdb->query($q);
 	}
 
 	/**
