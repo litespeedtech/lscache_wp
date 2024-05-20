@@ -467,11 +467,12 @@ class Data extends Root
 		$wpdb->query($wpdb->prepare($q, $type));
 		
 		// Added to cleanup url table. See issue: https://wordpress.org/support/topic/wp_litespeed_url-1-1-gb-in-db-huge-big/
-		$q = 'DELETE d
+		$wpdb->query(
+			'DELETE d
 			FROM `' . $this->tb('url') . '` AS d
 			LEFT JOIN `' . $this->tb('url_file') . '` AS f ON d.`id` = f.`url_id`
-			WHERE f.`url_id` IS NULL';
-		$wpdb->query($q);
+			WHERE f.`url_id` IS NULL'
+		);
 	}
 
 	/**
