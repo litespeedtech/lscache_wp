@@ -87,7 +87,6 @@ class Optimize extends Base
 				function ($con, $file_type) {
 					if ($file_type == 'js') {
 						$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
-						// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
 					}
 					return $con;
 				},
@@ -441,6 +440,9 @@ class Optimize extends Base
 			}
 		}
 
+		// Inject JS Delay lib
+		$this->_maybe_js_delay();
+
 		/**
 		 * Handle google fonts async
 		 * This will result in a JS snippet in head, so need to put it in the end to avoid being replaced by JS parser
@@ -452,9 +454,6 @@ class Optimize extends Base
 		 * @since  3.0
 		 */
 		$this->_font_optm();
-
-		// Inject JS Delay lib
-		$this->_maybe_js_delay();
 
 		/**
 		 * HTML Lazyload
@@ -479,12 +478,18 @@ class Optimize extends Base
 			if (apply_filters('litespeed_optm_html_after_head', false)) {
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
-				// Put header content to be after charset
-				if (strpos($this->content, '<meta charset') !== false) {
-					$this->content = preg_replace('#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head, $this->content, 1);
-				} else {
-					$this->content = preg_replace('#<head([^>]*)>#isU', '<head$1>' . $this->html_head, $this->content, 1);
-				}
+				// Put header content after charset
+				$meta_charset = '<meta\s+charset';
+				$re = preg_match( '/' . $meta_charset . '/isU', $this->content ) === 1
+					? $meta_charset
+					: '<head';
+				$re_suffix = '[^>]*>';
+				$this->content = preg_match(
+					'/^(.*)(' . $re . $re_suffix . ')(.*)$/isU',
+					$this->content,
+					$matches
+				);
+				$this->content = $matches[1] . $matches[2] . $this->html_head . $matches[3];
 			}
 		}
 
@@ -551,7 +556,7 @@ class Optimize extends Base
 			return;
 		}
 
-		$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		$this->html_head .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
 	}
 
 	/**
