@@ -257,6 +257,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
 * **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
 * **GUI** Removed Preset menu from network admin panel.
+* **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
 * **Page Optimize** Flatsome theme random string excludes. (PR#415)
 
