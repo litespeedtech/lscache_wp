@@ -84,3 +84,5 @@ form_nonce
 tgmpa-*
 bulk-*
 
+# WP Data Access
+wpda-*
