@@ -1089,7 +1089,7 @@ class Optimize extends Base
 				}
 
 				// Check if need to inline this css file
-				if (Utility::str_hit_array($attrs['href'], $ucss_file_exc_inline)) {
+				if ($this->conf(self::O_OPTM_UCSS) && Utility::str_hit_array($attrs['href'], $ucss_file_exc_inline)) {
 					Debug2::debug('[Optm] ucss_file_exc_inline hit ' . $attrs['href']);
 					// Replace this css to inline from orig html
 					$inline_script = '<style>' . $this->__optimizer->load_file($attrs['href']) . '</style>';
