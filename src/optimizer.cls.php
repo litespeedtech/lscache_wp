@@ -26,6 +26,15 @@ class Optimizer extends Root
 	}
 
 	/**
+	 * Exception to throw when html content is empty
+	 *
+	 * @return void
+	 */
+	private function html_min_exception(){
+		throw new \Exception('HTML minification encountered an error');
+	}
+
+	/**
 	 * Run HTML minify process and return final content
 	 *
 	 * @since  1.9
@@ -56,6 +65,11 @@ class Optimizer extends Root
 		try {
 			$obj = new Lib\HTML_MIN($content, $options);
 			$content_final = $obj->process();
+			// check if content from minification is empty
+			if($content_final === ''){
+				// throw exception
+				$this->html_min_exception();
+			}
 			if (!defined('LSCACHE_ESI_SILENCE')) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
 			}
