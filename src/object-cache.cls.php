@@ -147,14 +147,15 @@ class Object_Cache extends Root
 	 * @since  6.3
 	 * @access private
 	 */
-	private function debug_oc( $text, $error = false ){
+	private function debug_oc( $text, $show_error = false ){
 	    if( defined('LSCWP_LOG') ){
 	        Debug2::debug( $text );
+			return;
 	    }
-	    else{
-	        $show = $error ? true : (bool) $this->_cfg_debug;
-	        $show && error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/obj_debug.log' );
-	    }
+
+		if (!$show_error && !$this->_cfg_debug) return;
+
+		error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/obj_debug.log' );
 	}
 
 	/**
