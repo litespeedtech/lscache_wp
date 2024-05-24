@@ -280,8 +280,7 @@ class Object_Cache extends Root
 			return false;
 		}
 
-
-        $this->debug_function('[Object] Init ' . $this->_oc_driver . ' connection');
+		$this->debug_function('[Object] Init ' . $this->_oc_driver . ' connection');
 		$this->debug_function('[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port);
 
 		$failed = false;
