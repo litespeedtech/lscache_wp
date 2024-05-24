@@ -14,6 +14,7 @@ require_once dirname(__DIR__) . '/autoload.php';
 
 class Object_Cache extends Root
 {
+	const O_DEBUG = 'debug';
 	const O_OBJECT = 'object';
 	const O_OBJECT_KIND = 'object-kind';
 	const O_OBJECT_HOST = 'object-host';
@@ -29,6 +30,7 @@ class Object_Cache extends Root
 	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups';
 
 	private $_conn;
+	private $_cfg_debug;
 	private $_cfg_enabled;
 	private $_cfg_method;
 	private $_cfg_host;
@@ -56,8 +58,8 @@ class Object_Cache extends Root
 	 */
 	public function __construct($cfg = false)
 	{
-		$this->debug_function('-------------');
-		$this->debug_function('[Object] init');
+		$this->debug_oc('-------------');
+		$this->debug_oc('init');
 
 		if ($cfg) {
 			if (!is_array($cfg[Base::O_OBJECT_GLOBAL_GROUPS])) {
@@ -66,6 +68,7 @@ class Object_Cache extends Root
 			if (!is_array($cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS])) {
 				$cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS] = explode("\n", $cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS]);
 			}
+			$this->_cfg_debug = $cfg[Base::O_DEBUG] ? $cfg[Base::O_DEBUG] : false;
 			$this->_cfg_method = $cfg[Base::O_OBJECT_KIND] ? true : false;
 			$this->_cfg_host = $cfg[Base::O_OBJECT_HOST];
 			$this->_cfg_port = $cfg[Base::O_OBJECT_PORT];
@@ -84,10 +87,12 @@ class Object_Cache extends Root
 			}
 			$this->_cfg_enabled = $cfg[Base::O_OBJECT] && class_exists($this->_oc_driver) && $this->_cfg_host;
 
-			$this->debug_function('[Object] init with cfg result : ', $this->_cfg_enabled);
+			$this->debug_oc('init with cfg result : ', $this->_cfg_enabled);
 		}
 		// If OC is OFF, will hit here to init OC after conf initialized
 		elseif (defined('LITESPEED_CONF_LOADED')) {
+		    
+		    $this->_cfg_debug = $this->conf(Base::O_DEBUG) ? $this->conf(Base::O_DEBUG) : false;
 			$this->_cfg_method = $this->conf(Base::O_OBJECT_KIND) ? true : false;
 			$this->_cfg_host = $this->conf(Base::O_OBJECT_HOST);
 			$this->_cfg_port = $this->conf(Base::O_OBJECT_PORT);
@@ -110,6 +115,7 @@ class Object_Cache extends Root
 			// Use self::const to avoid loading more classes
 			$cfg = json_decode(file_get_contents(WP_CONTENT_DIR . '/' . self::CONF_FILE), true);
 			if (!empty($cfg[self::O_OBJECT_HOST])) {
+			    $this->_cfg_debug = !empty($cfg[Base::O_DEBUG]) ? $cfg[Base::O_DEBUG] : false;
 				$this->_cfg_method = !empty($cfg[self::O_OBJECT_KIND]) ? $cfg[self::O_OBJECT_KIND] : false;
 				$this->_cfg_host = $cfg[self::O_OBJECT_HOST];
 				$this->_cfg_port = $cfg[self::O_OBJECT_PORT];
@@ -141,17 +147,13 @@ class Object_Cache extends Root
 	 * @since  6.3
 	 * @access private
 	 */
-	private function debug_function( $text, $error = false ){
+	private function debug_oc( $text, $error = false ){
 	    if( defined('LSCWP_LOG') ){
 	        Debug2::debug( $text );
 	    }
 	    else{
-	        // Show messages if WP_DEBUG is on.
-	        $show = defined('WP_DEBUG') ? WP_DEBUG : false;
-	        // Show if text is error.
-	        $error && $show = true;
-	        
-	        $show && error_log( $text . PHP_EOL, 3, WP_CONTENT_DIR . '/obj_debug.log' );
+	        $show = $error ? true : (bool) $this->_cfg_debug;
+	        $show && error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/obj_debug.log' );
 	    }
 	}
 
@@ -193,7 +195,7 @@ class Object_Cache extends Root
 
 		// Update cls file
 		if (!file_exists($_oc_wp_file) || md5_file($_oc_wp_file) !== md5_file($_oc_ori_file)) {
-			$this->debug_function('[Object] copying object-cache.php file to ' . $_oc_wp_file);
+			$this->debug_oc('copying object-cache.php file to ' . $_oc_wp_file);
 			copy($_oc_ori_file, $_oc_wp_file);
 
 			$changed = true;
@@ -220,7 +222,7 @@ class Object_Cache extends Root
 		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php';
 
 		if (file_exists($_oc_wp_file) && md5_file($_oc_wp_file) === md5_file($_oc_ori_file)) {
-			$this->debug_function('[Object] removing ' . $_oc_wp_file);
+			$this->debug_oc('removing ' . $_oc_wp_file);
 			unlink($_oc_wp_file);
 		}
 	}
@@ -244,9 +246,9 @@ class Object_Cache extends Root
 	 */
 	private function _reconnect($cfg)
 	{
-		$this->debug_function('[Object] Reconnecting');
+		$this->debug_oc('Reconnecting');
 		if (isset($this->_conn)) {
-			$this->debug_function('[Object] Quiting existing connection');
+			$this->debug_oc('Quiting existing connection');
 			$this->flush();
 			$this->_conn = null;
 			$this->cls(false, true);
@@ -280,8 +282,8 @@ class Object_Cache extends Root
 			return false;
 		}
 
-		$this->debug_function('[Object] Init ' . $this->_oc_driver . ' connection');
-		$this->debug_function('[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port);
+		$this->debug_oc('Init ' . $this->_oc_driver . ' connection');
+		$this->debug_oc('connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port);
 
 		$failed = false;
 		/**
@@ -328,10 +330,10 @@ class Object_Cache extends Root
 					$failed = true;
 				}
 			} catch (\Exception $e) {
-				$this->debug_function( '[Object] Redis connect exception: ' . $e->getMessage(), true );
+				$this->debug_oc( 'Redis connect exception: ' . $e->getMessage(), true );
 				$failed = true;
 			} catch (\ErrorException $e) {
-				$this->debug_function( '[Object] Redis connect error: ' . $e->getMessage(), true );
+				$this->debug_oc( 'Redis connect error: ' . $e->getMessage(), true );
 				$failed = true;
 			}
 			restore_error_handler();
@@ -344,11 +346,11 @@ class Object_Cache extends Root
 				// Check memcached persistent connection
 				if ($this->_validate_mem_server()) {
 					// error_log( 'Object: _validate_mem_server' );
-					$this->debug_function('[Object] Got persistent ' . $this->_oc_driver . ' connection');
+					$this->debug_oc('Got persistent ' . $this->_oc_driver . ' connection');
 					return true;
 				}
 
-				$this->debug_function('[Object] No persistent ' . $this->_oc_driver . ' server list!');
+				$this->debug_oc('No persistent ' . $this->_oc_driver . ' server list!');
 			} else {
 				// error_log( 'Object: new memcached!' );
 				$this->_conn = new \Memcached();
@@ -375,7 +377,7 @@ class Object_Cache extends Root
 
 		// If failed to connect
 		if ($failed) {
-			$this->debug_function('[Object] ❌ Failed to connect ' . $this->_oc_driver . ' server!', true);
+			$this->debug_oc('❌ Failed to connect ' . $this->_oc_driver . ' server!', true);
 			$this->_conn = null;
 			$this->_cfg_enabled = false;
 			!defined('LITESPEED_OC_FAILURE') && define('LITESPEED_OC_FAILURE', true);
@@ -383,7 +385,7 @@ class Object_Cache extends Root
 			return false;
 		}
 
-		$this->debug_function('[Object] Connected');
+		$this->debug_oc('Connected');
 
 		return true;
 	}
@@ -485,7 +487,7 @@ class Object_Cache extends Root
 			} catch (\RedisException $ex) {
 				$res = false;
 				$msg = sprintf(__('Redis encountered a fatal error: %s (code: %d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
-				Debug2::debug('[Object] ' . $msg);
+				Debug2::debug('' . $msg);
 				Admin_Display::error($msg);
 			}
 		} else {
@@ -543,7 +545,7 @@ class Object_Cache extends Root
 	public function flush()
 	{
 		if (!$this->_cfg_enabled) {
-			$this->debug_function('[Object] bypass flushing');
+			$this->debug_oc('bypass flushing');
 			return null;
 		}
 
@@ -551,7 +553,7 @@ class Object_Cache extends Root
 			return null;
 		}
 
-		$this->debug_function('[Object] flush!');
+		$this->debug_oc('flush!');
 
 		if ($this->_oc_driver == 'Redis') {
 			$res = $this->_conn->flushDb();
