@@ -291,7 +291,7 @@ class Img_Optm extends Base
 		if ($list) {
 			$hard_images_limit = is_bool($allowance) ? 200 : $allowance; // Not sure here: Is allowance the good variable? Sometimes is bool(false) and I added the 200 limi, but?!
 			foreach ($list as $v) {
-				if($hard_images_limit <= 0) break;
+				if($hard_images_limit < 1) break;
 				if (!$v->post_id) {
 					continue;
 				}
@@ -1502,7 +1502,7 @@ class Img_Optm extends Base
 		// Find new images
 		$hard_images_limit = $limit;
 		foreach ($scanned_list as $v) {
-			if($hard_images_limit <= 0) break;
+			if($hard_images_limit < 1) break;
 			$meta_value = $v['meta'];
 			// Parse all child src and put them into $this->_img_in_queue, missing ones to $this->_img_in_queue_missed
 			$this->tmp_pid = $v['pid'];
