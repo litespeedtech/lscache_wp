@@ -82,6 +82,7 @@ class Optimize extends Base
 			$this->cfg_js_defer = 2;
 		}
 		if ($this->cfg_js_defer == 2) {
+			$this->cfg_js_comb = false;
 			add_filter(
 				'litespeed_optm_cssjs',
 				function ($con, $file_type) {
@@ -479,17 +480,12 @@ class Optimize extends Base
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
 				// Put header content after charset
-				$meta_charset = '<meta\s+charset';
-				$re = preg_match( '/' . $meta_charset . '/isU', $this->content ) === 1
-					? $meta_charset
-					: '<head';
-				$re_suffix = '[^>]*>';
-				$this->content = preg_match(
-					'/^(.*)(' . $re . $re_suffix . ')(.*)$/isU',
-					$this->content,
-					$matches
-				);
-				$this->content = $matches[1] . $matches[2] . $this->html_head . $matches[3];
+				$replacement = '${0}' . $this->html_head;
+				$success = 0;
+				$this->content = preg_replace('/<meta\s+charset[^>]*>/i', $replacement, $this->content, 1, $success);
+				if (!$success) {
+					$text = preg_replace('/<head[^>]*>/i', $replacement, $this->content, 1);
+				}
 			}
 		}
 
@@ -908,7 +904,7 @@ class Optimize extends Base
 				$ext_excluded = !$combine_ext_inl && !$is_internal;
 				if ($js_excluded || $ext_excluded || !$is_file) {
 					// Maybe defer
-					if ($this->cfg_js_defer) {
+					if ($this->cfg_js_defer===1) {
 						$deferred = $this->_js_defer($match[0], $attrs['src']);
 						if ($deferred) {
 							$this->content = str_replace($match[0], $deferred, $this->content);
@@ -1236,7 +1232,9 @@ class Optimize extends Base
 		}
 
 		if (strpos($ori, 'defer') !== false) {
-			return false;
+			if ($this->cfg_js_defer !== 2 ){
+				return false;
+			}
 		}
 		if (strpos($ori, 'data-deferred') !== false) {
 			Debug2::debug2('[Optm] bypass: attr data-deferred exist');

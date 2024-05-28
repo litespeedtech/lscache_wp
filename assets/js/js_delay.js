@@ -1,5 +1,13 @@
 (() => {
-    const lsc_triggerEvents = ["keydown", "mousedown", "mousemove", "touchmove", "touchstart", "touchend", "wheel"];
+    const lsc_triggerEvents = [
+        "keydown",
+        "mousedown",
+        "mousemove",
+        "touchmove",
+        "touchstart",
+        "touchend",
+        "wheel",
+    ];
     let lsc_everythingLoaded = false;
     let lsc_interceptedClicks = [];
     let lsc_interceptedClickListeners = [];
@@ -22,16 +30,36 @@
 
     // Setup event listeners based on specified trigger events
     function lscSetupEventListeners() {
-        lsc_triggerEvents.forEach((event) => window.addEventListener(event, eventHandlers.userInteractionHandler, { passive: true }));
-        window.addEventListener("touchstart", eventHandlers.touchStartHandler, { passive: true });
+        lsc_triggerEvents.forEach((event) =>
+            window.addEventListener(
+                event,
+                eventHandlers.userInteractionHandler,
+                { passive: true }
+            )
+        );
+        window.addEventListener("touchstart", eventHandlers.touchStartHandler, {
+            passive: true,
+        });
         window.addEventListener("mousedown", eventHandlers.touchStartHandler);
-        document.addEventListener("visibilitychange", eventHandlers.userInteractionHandler);
+        document.addEventListener(
+            "visibilitychange",
+            eventHandlers.userInteractionHandler
+        );
     }
 
     // Remove all event listeners to prepare for the next action
     function lscRemoveEventListeners() {
-        lsc_triggerEvents.forEach((event) => window.removeEventListener(event, eventHandlers.userInteractionHandler, { passive: true }));
-        document.removeEventListener("visibilitychange", eventHandlers.userInteractionHandler);
+        lsc_triggerEvents.forEach((event) =>
+            window.removeEventListener(
+                event,
+                eventHandlers.userInteractionHandler,
+                { passive: true }
+            )
+        );
+        document.removeEventListener(
+            "visibilitychange",
+            eventHandlers.userInteractionHandler
+        );
     }
 
     // Main function to handle user interaction events
@@ -49,8 +77,15 @@
         if (e.target.tagName !== "HTML") {
             window.addEventListener("touchend", eventHandlers.touchEndHandler);
             window.addEventListener("mouseup", eventHandlers.touchEndHandler);
-            window.addEventListener("touchmove", eventHandlers.touchMoveHandler, { passive: true });
-            window.addEventListener("mousemove", eventHandlers.touchMoveHandler);
+            window.addEventListener(
+                "touchmove",
+                eventHandlers.touchMoveHandler,
+                { passive: true }
+            );
+            window.addEventListener(
+                "mousemove",
+                eventHandlers.touchMoveHandler
+            );
             e.target.addEventListener("click", eventHandlers.clickHandler);
             lscToggleInterceptedClickListeners(e.target, true);
             lscMoveAttribute(e.target, "onclick", "onclick-lsc");
@@ -62,7 +97,11 @@
     function lscInitiateTouchMove(e) {
         window.removeEventListener("touchend", eventHandlers.touchEndHandler);
         window.removeEventListener("mouseup", eventHandlers.touchEndHandler);
-        window.removeEventListener("touchmove", eventHandlers.touchMoveHandler, { passive: true });
+        window.removeEventListener(
+            "touchmove",
+            eventHandlers.touchMoveHandler,
+            { passive: true }
+        );
         window.removeEventListener("mousemove", eventHandlers.touchMoveHandler);
         e.target.removeEventListener("click", eventHandlers.clickHandler);
         lscToggleInterceptedClickListeners(e.target, false);
@@ -74,7 +113,11 @@
     function lscInitiateTouchEnd() {
         window.removeEventListener("touchend", eventHandlers.touchEndHandler);
         window.removeEventListener("mouseup", eventHandlers.touchEndHandler);
-        window.removeEventListener("touchmove", eventHandlers.touchMoveHandler, { passive: true });
+        window.removeEventListener(
+            "touchmove",
+            eventHandlers.touchMoveHandler,
+            { passive: true }
+        );
         window.removeEventListener("mousemove", eventHandlers.touchMoveHandler);
     }
 
@@ -83,21 +126,24 @@
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-    
+
         if (e.target) {
             const targetElement = e.target;
             lscToggleInterceptedClickListeners(targetElement, false);
-            targetElement.removeEventListener("click", eventHandlers.clickHandler); 
+            targetElement.removeEventListener(
+                "click",
+                eventHandlers.clickHandler
+            );
             lscMoveAttribute(targetElement, "onclick-lsc", "onclick");
-    
+
             // Trigger the click event programmatically
             const clickEvent = new MouseEvent("click", {
                 view: window,
                 bubbles: true,
-                cancelable: true
+                cancelable: true,
             });
             targetElement.dispatchEvent(clickEvent);
-    
+
             // Store the intercepted click for future reference if needed
             lsc_interceptedClicks.push(e);
         }
@@ -106,10 +152,23 @@
 
     // Dispatch intercepted clicks events
     function lscDispatchInterceptedClicks() {
-        window.removeEventListener("touchstart", eventHandlers.touchStartHandler, { passive: true });
-        window.removeEventListener("mousedown", eventHandlers.touchStartHandler);
+        window.removeEventListener(
+            "touchstart",
+            eventHandlers.touchStartHandler,
+            { passive: true }
+        );
+        window.removeEventListener(
+            "mousedown",
+            eventHandlers.touchStartHandler
+        );
         lsc_interceptedClicks.forEach((e) => {
-            e.target.dispatchEvent(new MouseEvent("click", { view: e.view, bubbles: true, cancelable: true }));
+            e.target.dispatchEvent(
+                new MouseEvent("click", {
+                    view: e.view,
+                    bubbles: true,
+                    cancelable: true,
+                })
+            );
         });
     }
 
@@ -117,11 +176,18 @@
     function lscToggleInterceptedClickListeners(target, bind) {
         lsc_interceptedClickListeners.forEach((listener) => {
             if (listener.target === target) {
-                if(bind){
-                    target.removeEventListener("click", listener.func, listener.options)
-                }
-                else{
-                    target.addEventListener("click", listener.func, listener.options);
+                if (bind) {
+                    target.removeEventListener(
+                        "click",
+                        listener.func,
+                        listener.options
+                    );
+                } else {
+                    target.addEventListener(
+                        "click",
+                        listener.func,
+                        listener.options
+                    );
                 }
             }
         });
@@ -146,7 +212,7 @@
 
     // Process document ready event and start loading delayed scripts
     async function lscConDocumentReady() {
-        console.log('[LiteSpeed] Start Load JS Delayed')
+        console.log("[LiteSpeed] Start Load JS Delayed");
         lsc_lastBreath = Date.now();
         lscRewriteEventListeners();
         lscRewritejQuery();
@@ -172,44 +238,68 @@
     // Process DOMContentLoaded event
     function lscProcessDOMContentLoaded() {
         let scriptsToPreconnect = [];
-        document.querySelectorAll("script[type^=\"litespeed/javascript\"][data-src]").forEach((script) => {
-            let src = script.getAttribute("data-src");
-            if (src && src.indexOf("data:") !== 0) {
-                if (src.indexOf("//") === 0) {
-                    src = location.protocol + src;
-                }
-                try {
-                    const origin = new URL(src).origin;
-                    if (origin !== location.origin) {
-                        scriptsToPreconnect.push({ src: origin, crossOrigin: script.crossOrigin || script.getAttribute("data-lsc-type") === "module" });
+        document
+            .querySelectorAll('script[type^="litespeed/javascript"][data-src]')
+            .forEach((script) => {
+                let src = script.getAttribute("data-src");
+                if (src && src.indexOf("data:") !== 0) {
+                    if (src.indexOf("//") === 0) {
+                        src = location.protocol + src;
                     }
-                } catch (error) { }
-            }
-        });
-        scriptsToPreconnect = [...new Map(scriptsToPreconnect.map((item) => [JSON.stringify(item), item])).values()];
+                    try {
+                        const origin = new URL(src).origin;
+                        if (origin !== location.origin) {
+                            scriptsToPreconnect.push({
+                                src: origin,
+                                crossOrigin:
+                                    script.crossOrigin ||
+                                    script.getAttribute("data-lsc-type") ===
+                                        "module",
+                            });
+                        }
+                    } catch (error) {}
+                }
+            });
+        scriptsToPreconnect = [
+            ...new Map(
+                scriptsToPreconnect.map((item) => [JSON.stringify(item), item])
+            ).values(),
+        ];
         lscPreconnectResources(scriptsToPreconnect, "preconnect");
     }
 
     // Collect delayed scripts based on type for execution
     function lscCollectDelayedScripts() {
-        document.querySelectorAll("script[type^=\"litespeed/javascript\"]").forEach((script) => {
-            if (script.hasAttribute("data-src")) {
-                if (script.hasAttribute("async") && script.async !== false) {
-                    lsc_delayedScripts.async.push(script);
-                } else if (script.hasAttribute("defer") && script.defer !== false || script.getAttribute("data-lsc-type") === "module") {
-                    lsc_delayedScripts.defer.push(script);
+        document
+            .querySelectorAll('script[type^="litespeed/javascript"]')
+            .forEach((script) => {
+                if (script.hasAttribute("data-src")) {
+                    if (
+                        script.hasAttribute("async") &&
+                        script.async !== false
+                    ) {
+                        lsc_delayedScripts.async.push(script);
+                    } else if (
+                        (script.hasAttribute("defer") &&
+                            script.defer !== false) ||
+                        script.getAttribute("data-lsc-type") === "module"
+                    ) {
+                        lsc_delayedScripts.defer.push(script);
+                    } else {
+                        lsc_delayedScripts.normal.push(script);
+                    }
                 } else {
                     lsc_delayedScripts.normal.push(script);
                 }
-            } else {
-                lsc_delayedScripts.normal.push(script);
-            }
-        });
+            });
     }
 
     // Execute a single script with additional functionality
     async function lscExecuteScript(script) {
-        if (await lscThrottleExecution(), script.noModule && !('noModule' in HTMLScriptElement.prototype)) {
+        if (
+            (await lscThrottleExecution(),
+            script.noModule && !("noModule" in HTMLScriptElement.prototype))
+        ) {
             return;
         }
 
@@ -222,64 +312,74 @@
             }
 
             function onload() {
-                (newScript || script).setAttribute("data-lsc-status", "executed");
+                (newScript || script).setAttribute(
+                    "data-lsc-status",
+                    "executed"
+                );
                 resolve();
             }
 
             try {
-                if (navigator.userAgent.indexOf("Firefox/") > 0 || navigator.vendor === "") {
-                    newScript = document.createElement("script");
-                    [...script.attributes].forEach((attr) => {
-                        let name = attr.nodeName;
-                        if (name !== "type") {
-                            if (name === "data-lsc-type") {
-                                name = "type";
-                            }
-                            if (name === "data-src") {
-                                name = "src";
-                            }
-                            newScript.setAttribute(name, attr.nodeValue);
-                        }
-                    });
-                    if (script.text) {
-                        newScript.text = script.text;
-                    }
+                // if (navigator.userAgent.indexOf("Firefox/") > 0 || navigator.vendor === "") {
+                //     newScript = document.createElement("script");
+                //     [...script.attributes].forEach((attr) => {
+                //         let name = attr.nodeName;
+                //         if (name !== "type") {
+                //             if (name === "data-lsc-type") {
+                //                 name = "type";
+                //             }
+                //             if (name === "data-src") {
+                //                 name = "src";
+                //             }
+                //             newScript.setAttribute(name, attr.nodeValue);
+                //         }
+                //     });
+                //     if (script.text) {
+                //         newScript.text = script.text;
+                //     }
 
-                    if (newScript.hasAttribute("src")) {
-                        console.log('[LiteSpeed] Load ', newScript.attribute("src"));
-                        newScript.addEventListener("load", onload);
-                        newScript.addEventListener("error", onError);
-                        setTimeout(() => {
-                            if (!newScript.isConnected) {
-                                resolve();
-                            }
-                        }, 1);
-                    } else {
-                        newScript.text = script.text;
-                        onload();
-                    }
-                    script.parentNode.replaceChild(newScript, script);
+                //     if (newScript.hasAttribute("src")) {
+                //         console.log('[LiteSpeed] Load ', newScript.attribute("src"));
+                //         newScript.addEventListener("load", onload);
+                //         newScript.addEventListener("error", onError);
+                //         setTimeout(() => {
+                //             if (!newScript.isConnected) {
+                //                 resolve();
+                //             }
+                //         }, 1);
+                //     } else {
+                //         newScript.text = script.text;
+                //         onload();
+                //     }
+                //     script.parentNode.replaceChild(newScript, script);
+                // } else {
+                const scriptType = script.getAttribute("data-lsc-type");
+                const scriptSrc = script.getAttribute("data-src");
+                if (scriptType) {
+                    script.type = scriptType;
+                    script.removeAttribute("data-lsc-type");
                 } else {
-                    const scriptType = script.getAttribute("data-lsc-type");
-                    const scriptSrc = script.getAttribute("data-src");
-                    if (scriptType) {
-                        script.type = scriptType;
-                        script.removeAttribute("data-lsc-type");
-                    } else {
-                        script.removeAttribute("type");
-                    }
-                    script.addEventListener("load", onload);
-                    script.addEventListener("error", onError);
-
-                    if (scriptSrc) {
-                        console.log('[LiteSpeed] Load ', scriptSrc);
-                        script.removeAttribute("data-src");
-                        script.src = scriptSrc;
-                    } else {
-                        console.log('[LiteSpeed] Load inline JS' + ( newScript.attribute("id") ? ' '+newScript.attribute("id") : '' ));
-                        script.src = "data:text/javascript;base64," + window.btoa(unescape(encodeURIComponent(script.text)));
-                    }
+                    script.removeAttribute("type");
                 }
+                script.addEventListener("load", onload);
+                script.addEventListener("error", onError);
+
+                if (scriptSrc) {
+                    console.log("[LiteSpeed] Load ", scriptSrc);
+                    script.removeAttribute("data-src");
+                    script.src = scriptSrc;
+                } else {
+                    console.log(
+                        "[LiteSpeed] Load inline JS" +
+                            (script.getAttribute("id")
+                                ? " #" + script.getAttribute("id")
+                                : " No id added")
+                    );
+                    script.src =
+                        "data:text/javascript;base64," +
+                        window.btoa(unescape(encodeURIComponent(script.text)));
+                }
+                // }
             } catch (error) {
                 onError();
             }
@@ -299,14 +399,23 @@
 
     // Preload scripts for faster load times
     function lscPreloadScripts() {
-        lscPreconnectResources([...lsc_delayedScripts.normal, ...lsc_delayedScripts.defer, ...lsc_delayedScripts.async], "preload");
+        lscPreconnectResources(
+            [
+                ...lsc_delayedScripts.normal,
+                ...lsc_delayedScripts.defer,
+                ...lsc_delayedScripts.async,
+            ],
+            "preload"
+        );
     }
 
     // Preconnect resources for improved performance
     function lscPreconnectResources(scripts, rel) {
         const fragment = document.createDocumentFragment();
         scripts.forEach((script) => {
-            const src = script.getAttribute && script.getAttribute("data-src") || script.src;
+            const src =
+                (script.getAttribute && script.getAttribute("data-src")) ||
+                script.src;
             if (src) {
                 const link = document.createElement("link");
                 link.href = src;
@@ -314,7 +423,10 @@
                 if (rel !== "preconnect") {
                     link.as = "script";
                 }
-                if (script.getAttribute && script.getAttribute("data-lsc-type") === "module") {
+                if (
+                    script.getAttribute &&
+                    script.getAttribute("data-lsc-type") === "module"
+                ) {
                     link.crossOrigin = true;
                 }
                 if (script.crossOrigin) {
@@ -339,10 +451,13 @@
             if (!element.eventsToRewrite) {
                 return event;
             }
-            if (element.eventsToRewrite.includes(event) && !lsc_everythingLoaded) {
+            if (
+                element.eventsToRewrite.includes(event) &&
+                !lsc_everythingLoaded
+            ) {
                 return eventPrefix + event;
             }
-            
+
             return event;
         }
 
@@ -363,7 +478,7 @@
             element[property] = null;
             if (!element.hasOwnProperty(property)) {
                 Object.defineProperty(element, property, {
-                    get: () => original || function () { },
+                    get: () => original || function () {},
                     set(fn) {
                         if (lsc_everythingLoaded) {
                             original = fn;
@@ -394,7 +509,12 @@
                 return eventType;
             }
 
-            return eventType.split(" ").map((name) => (name.startsWith("load") ? "lsc-jquery-load" : name)).join(" ");
+            return eventType
+                .split(" ")
+                .map((name) =>
+                    name.startsWith("load") ? "lsc-jquery-load" : name
+                )
+                .join(" ");
         }
 
         function interceptjQuery($) {
@@ -403,7 +523,10 @@
                     if (lsc_domReadyFired) {
                         fn.bind(document)($);
                     } else {
-                        document.addEventListener("DOMContentLiteSpeedLoaded", () => fn.bind(document)($));
+                        document.addEventListener(
+                            "DOMContentLiteSpeedLoaded",
+                            () => fn.bind(document)($)
+                        );
                     }
                     return $([]);
                 };
@@ -427,11 +550,11 @@
         }
 
         // Check if jQuery is already loaded
-        if (typeof jQuery !== 'undefined') {
+        if (typeof jQuery !== "undefined") {
             Promise.resolve().then(() => interceptjQuery(jQuery));
         } else {
             const checkJQuery = () => {
-                if (typeof jQuery !== 'undefined') {
+                if (typeof jQuery !== "undefined") {
                     interceptjQuery(jQuery);
                 } else {
                     setTimeout(checkJQuery, 50);
@@ -466,7 +589,7 @@
         await lscThrottleExecution();
         window.dispatchEvent(new Event("DOMContentLiteSpeedLoaded"));
     }
-    
+
     // Broadcast events to trigger actions based on script execution
     async function lscBroadcastEvents() {
         await lscThrottleExecution();
@@ -484,7 +607,8 @@
         pageshowEvent.persisted = lsc_persisted;
         window.dispatchEvent(pageshowEvent);
         await lscThrottleExecution();
-        window.lscOnpageshow && window.lscOnpageshow({ persisted: lsc_persisted });
+        window.lscOnpageshow &&
+            window.lscOnpageshow({ persisted: lsc_persisted });
         lsc_windowLoaded = true;
     }
 
@@ -492,7 +616,8 @@
     function lscRunPersistedCallbacks() {
         if (document.lsconreadystatechange) document.lsconreadystatechange();
         if (window.lscOnload) window.lscOnload();
-        if (window.lscOnpageshow) window.lscOnpageshow({ persisted: lsc_persisted });
+        if (window.lscOnpageshow)
+            window.lscOnpageshow({ persisted: lsc_persisted });
     }
 
     // Intercept document write calls to manage dynamic content
@@ -528,7 +653,9 @@
 
     // Async wait function for certain conditions before moving forward
     async function lscWait() {
-        return document.hidden ? new Promise((resolve) => setTimeout(resolve)) : new Promise((resolve) => requestAnimationFrame(resolve));
+        return document.hidden
+            ? new Promise((resolve) => setTimeout(resolve))
+            : new Promise((resolve) => requestAnimationFrame(resolve));
     }
 
     // Clean up resources and elements after execution
@@ -550,7 +677,10 @@
                 lscRunPersistedCallbacks();
             }
         });
-        document.addEventListener("DOMContentLoaded", lscProcessDOMContentLoaded);
+        document.addEventListener(
+            "DOMContentLoaded",
+            lscProcessDOMContentLoaded
+        );
     }
 
     lscInit();
