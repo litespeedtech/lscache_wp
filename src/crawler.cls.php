@@ -1302,7 +1302,7 @@ class Crawler extends Root
 
 		switch ($type) {
 			case self::TYPE_REFRESH_MAP:
-				$this->cls('Crawler_Map')->gen();
+				$this->cls('Crawler_Map')->gen(true);
 				break;
 
 			case self::TYPE_EMPTY:
@@ -1325,7 +1325,7 @@ class Crawler extends Root
 				}
 				break;
 
-			// Handle the ajax request to proceed crawler manually by admin
+				// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
 				self::start_async();
 				break;

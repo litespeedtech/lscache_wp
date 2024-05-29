@@ -365,7 +365,7 @@ class Crawler_Map extends Root
 	 * @since    1.1.0
 	 * @access public
 	 */
-	public function gen()
+	public function gen($manual = false)
 	{
 		$count = $this->_gen();
 
@@ -374,7 +374,7 @@ class Crawler_Map extends Root
 			return;
 		}
 
-		if (!defined('DOING_CRON')) {
+		if (!defined('DOING_CRON') && $manual) {
 			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
 			Admin_Display::succeed($msg);
 		}
