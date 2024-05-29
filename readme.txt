@@ -263,6 +263,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
 * **Page Optimize** Flatsome theme random string excludes. (PR#415)
+* **Page Optimize** Exclude Cloudflare turnstile from JS optimizations. (Tobolo)
 
 = 6.2.0.1 - Apr 25 2024 =
 * 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementor's `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)
