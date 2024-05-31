@@ -352,6 +352,7 @@ class Activation extends Base
 		$ids = array();
 		if ($options[self::O_OBJECT]) {
 			$this_ids = array(
+				self::O_DEBUG,
 				self::O_OBJECT_KIND,
 				self::O_OBJECT_HOST,
 				self::O_OBJECT_PORT,
@@ -369,7 +370,7 @@ class Activation extends Base
 		}
 
 		if ($options[self::O_GUEST]) {
-			$this_ids = array(self::HASH, self::O_CACHE_LOGIN_COOKIE, self::O_DEBUG, self::O_DEBUG_IPS, self::O_UTIL_NO_HTTPS_VARY, self::O_GUEST_UAS, self::O_GUEST_IPS);
+			$this_ids = array(self::HASH, self::O_CACHE_LOGIN_COOKIE, self::O_DEBUG_IPS, self::O_UTIL_NO_HTTPS_VARY, self::O_GUEST_UAS, self::O_GUEST_IPS);
 			$ids = array_merge($ids, $this_ids);
 		}
 
