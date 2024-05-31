@@ -150,10 +150,12 @@ class Object_Cache extends Root
 	private function debug_oc( $text, $show_error = false ){
 	    if( defined('LSCWP_LOG') ){
 	        Debug2::debug( $text );
+
 			return;
 	    }
 
-		if (!$show_error && $this->_cfg_debug!=1) return;
+		if (!$show_error && $this->_cfg_debug==0) return;
+
 
 		error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log' );
 	}
@@ -488,7 +490,7 @@ class Object_Cache extends Root
 			} catch (\RedisException $ex) {
 				$res = false;
 				$msg = sprintf(__('Redis encountered a fatal error: %s (code: %d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
-				Debug2::debug('' . $msg);
+				$this->debug_oc($msg);
 				Admin_Display::error($msg);
 			}
 		} else {
