@@ -154,7 +154,7 @@ class Object_Cache extends Root
 			return;
 	    }
 
-		if (!$show_error && $this->_cfg_debug==0) return;
+		if (!$show_error && !$this->_cfg_debug) return;
 
 
 		error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log' );
