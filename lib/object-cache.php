@@ -1,4 +1,12 @@
 <?php
+/*
+ * Plugin Name: LiteSpeed Cache (Drop-In)
+ * Description: Object cache drop-in from LiteSpeed.
+ * Version:     1.0
+ * Plugin URI:  https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
+ * Author:      LiteSpeed Technologies
+ * Author URI:  https://www.litespeedtech.com
+ */
 defined( 'WPINC' ) || exit;
 /**
  * LiteSpeed Object Cache
