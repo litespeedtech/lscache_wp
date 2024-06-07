@@ -77,6 +77,9 @@ woocommerce-login
 # Premium Addons for Elementor
 pa-blog-widget-nonce
 
+# WPUF User Frontend
+wpuf* private
+
 # MetForm
 form_nonce
 
@@ -86,3 +89,4 @@ bulk-*
 
 # WP Data Access
 wpda-*
+
