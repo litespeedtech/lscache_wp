@@ -47,7 +47,7 @@ class Cloud extends Base
 
 	const API_REPORT = 'wp/report';
 	const API_NEWS = 'news';
-	const API_VER = 'ver';
+	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
 
 	private static $CENTER_SVC_SET = array(
@@ -169,7 +169,7 @@ class Cloud extends Base
 		if (defined('LITESPEED_ERR')) {
 			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
 		}
-		$data = self::get(self::API_VER, $req_data);
+		$data = self::post(self::API_VER, $req_data);
 
 		return $data;
 	}
@@ -1399,15 +1399,13 @@ class Cloud extends Base
 	 */
 	public function parse_qc_redir($extra = array())
 	{
-		$extraRet = array();
-		$qsDrop = array();
 		if (!$this->_api_key() && !empty($this->_summary['is_linked'])) {
 			$this->_summary['is_linked'] = 0;
 			self::save_summary();
 		}
 
 		if (empty($_GET['qc_res'])) {
-			return $extraRet;
+			return array();
 		}
 
 		if ($_GET['qc_res'] == 'registered') {
@@ -1418,22 +1416,37 @@ class Cloud extends Base
 			}
 		}
 
+		$qsDrop = array();
 		$qsDrop[] = ".replace( '&qc_res=" . sanitize_key($_GET['qc_res']) . ', \'\' )';
 
 		if (!empty($_GET['domain_hash'])) {
+			if (empty($_GET['domain_hash_nonce'])) {
+				Admin_Display::error(__('Domain Key hash nonce missing.', 'litespeed-cache'), true);
+				return array();
+			}
+			$salt = substr($this->_api_key(), 3, 8);
+			$tick = ceil(time() / 43200);
+			$nonce = md5($salt . $tick);
+			$nonce2 = md5($salt . ($tick - 1));
+			if ($_GET['domain_hash_nonce'] != $nonce && $_GET['domain_hash_nonce'] != $nonce2) {
+				Admin_Display::error(__('Domain Key hash nonce mismatch. Please correct your server clock.', 'litespeed-cache'), true);
+				return array();
+			}
+
 			if (md5(substr($this->_api_key(), 2, 8)) !== $_GET['domain_hash']) {
 				Admin_Display::error(__('Domain Key hash mismatch', 'litespeed-cache'), true);
-				return $extraRet;
+				return array();
 			}
 
 			$this->set_linked();
 			$qsDrop[] = ".replace( '&domain_hash=" . sanitize_key($_GET['domain_hash']) . ', \'\' )';
 		}
 
+		$extraRet = array();
 		if (!empty($extra)) {
 			foreach ($extra as $key) {
 				if (!empty($_GET[$key])) {
-					$extraRet[$key] = $_GET[$key];
+					$extraRet[$key] = sanitize_key($_GET[$key]);
 					$qsDrop[] = ".replace( '&$key=" . urlencode($_GET[$key]) . ', \'\' )';
 				}
 			}
