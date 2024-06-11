@@ -192,7 +192,7 @@ class Core extends Root
 			$this->cls('Activation')->auto_update();
 		}
 
-		if (is_admin()) {
+		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
 			$this->cls('Admin');
 		}
 

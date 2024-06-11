@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.5.3
+Tested up to: 6.5.4
 Stable tag: 6.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -253,11 +253,13 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 = 6.3 - Jun 2024 =
 * 🌱**Page Optimize** New option: HTML Keep Comments. (#328853)
 * **CLoud** Fixed an message error for daily quota.
-* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
-* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
-* **ESI** Add WP Data Access nonce (PR#665)
-* **Media** Ignored images from JS in image size detection (PR#660)
+* **Cache** Bypassed admin initialization when doing ajax call. (Tim)
 * **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
+* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
+* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
+* **ESI** Added WP Data Access nonce (PR#665)
+* **ESI** Added WP User Frontend ESI nonce (PR#675)
+* **Media** Ignored images from JS in image size detection (PR#660)
 * **GUI** Removed Preset menu from network admin panel.
 * **GUI** Suppressed sitemap generation message if not triggered manually.
 * **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
