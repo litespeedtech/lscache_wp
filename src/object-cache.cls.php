@@ -91,8 +91,7 @@ class Object_Cache extends Root
 		}
 		// If OC is OFF, will hit here to init OC after conf initialized
 		elseif (defined('LITESPEED_CONF_LOADED')) {
-		    
-		    $this->_cfg_debug = $this->conf(Base::O_DEBUG) ? $this->conf(Base::O_DEBUG) : false;
+			$this->_cfg_debug = $this->conf(Base::O_DEBUG) ? $this->conf(Base::O_DEBUG) : false;
 			$this->_cfg_method = $this->conf(Base::O_OBJECT_KIND) ? true : false;
 			$this->_cfg_host = $this->conf(Base::O_OBJECT_HOST);
 			$this->_cfg_port = $this->conf(Base::O_OBJECT_PORT);
@@ -115,7 +114,7 @@ class Object_Cache extends Root
 			// Use self::const to avoid loading more classes
 			$cfg = json_decode(file_get_contents(WP_CONTENT_DIR . '/' . self::CONF_FILE), true);
 			if (!empty($cfg[self::O_OBJECT_HOST])) {
-			    $this->_cfg_debug = !empty($cfg[Base::O_DEBUG]) ? $cfg[Base::O_DEBUG] : false;
+				$this->_cfg_debug = !empty($cfg[Base::O_DEBUG]) ? $cfg[Base::O_DEBUG] : false;
 				$this->_cfg_method = !empty($cfg[self::O_OBJECT_KIND]) ? $cfg[self::O_OBJECT_KIND] : false;
 				$this->_cfg_host = $cfg[self::O_OBJECT_HOST];
 				$this->_cfg_port = $cfg[self::O_OBJECT_PORT];
@@ -140,24 +139,26 @@ class Object_Cache extends Root
 			$this->_cfg_enabled = false;
 		}
 	}
-	
+
 	/**
 	 * Add debug.
 	 *
 	 * @since  6.3
 	 * @access private
 	 */
-	private function debug_oc( $text, $show_error = false ){
-	    if( defined('LSCWP_LOG') ){
-	        Debug2::debug( $text );
+	private function debug_oc($text, $show_error = false)
+	{
+		if (defined('LSCWP_LOG')) {
+			Debug2::debug($text);
 
 			return;
-	    }
+		}
 
-		if (!$show_error && !$this->_cfg_debug) return;
+		if (!$show_error && !$this->_cfg_debug) {
+			return;
+		}
 
-
-		error_log( gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log' );
+		error_log(gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log');
 	}
 
 	/**
@@ -333,10 +334,10 @@ class Object_Cache extends Root
 					$failed = true;
 				}
 			} catch (\Exception $e) {
-				$this->debug_oc( 'Redis connect exception: ' . $e->getMessage(), true );
+				$this->debug_oc('Redis connect exception: ' . $e->getMessage(), true);
 				$failed = true;
 			} catch (\ErrorException $e) {
-				$this->debug_oc( 'Redis connect error: ' . $e->getMessage(), true );
+				$this->debug_oc('Redis connect error: ' . $e->getMessage(), true);
 				$failed = true;
 			}
 			restore_error_handler();
