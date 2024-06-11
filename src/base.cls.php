@@ -63,7 +63,7 @@ class Base extends Root
 	const O_CACHE_TTL_REST = 'cache-ttl_rest';
 	const O_CACHE_TTL_STATUS = 'cache-ttl_status';
 	const O_CACHE_TTL_BROWSER = 'cache-ttl_browser';
-	const O_CACHE_POST_TTL = 'cache-post_ttl';
+	const O_CACHE_AJAX_TTL = 'cache-ajax_ttl';
 	const O_CACHE_LOGIN_COOKIE = 'cache-login_cookie';
 	const O_CACHE_VARY_COOKIES = 'cache-vary_cookies';
 	const O_CACHE_VARY_GROUP = 'cache-vary_group';
@@ -367,7 +367,7 @@ class Base extends Root
 		self::O_CACHE_TTL_BROWSER => 0,
 		self::O_CACHE_TTL_STATUS => array(),
 		self::O_CACHE_LOGIN_COOKIE => '',
-		self::O_CACHE_POST_TTL => array(),
+		self::O_CACHE_AJAX_TTL => array(),
 		self::O_CACHE_VARY_COOKIES => array(),
 		self::O_CACHE_VARY_GROUP => array(),
 

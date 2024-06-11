@@ -375,41 +375,6 @@ class Core extends Root
 	 */
 	public function load_thirdparty()
 	{
-		add_action('wp_ajax_my_ajax_action', function () {
-			$response = array(
-				'message' => 'AJAX time ' . date('Y-m-d H:i:s'),
-			);
-			wp_send_json_success($response);
-		});
-		add_action('wp_ajax_nopriv_my_ajax_action', function () {
-			$response = array(
-				'message' => 'AJAX time ' . date('Y-m-d H:i:s'),
-			);
-			wp_send_json_success($response);
-		});
-		add_action('wp_enqueue_scripts', function () {
-			wp_enqueue_script('jquery');
-			wp_add_inline_script('jquery', 'var ajaxurl = "' . admin_url('admin-ajax.php') . '";');
-		});
-		add_filter('litespeed_buffer_finalize', function ($body) {
-			return str_replace(
-				'</html>',
-				"<script>
-		jQuery.ajax({
-			url: ajaxurl,
-			type: 'GET',
-			data: {
-				action: 'llllll_action',
-			},
-			success: function(response) {
-				console.log(response);
-			},
-		});
-	</script></html>",
-				$body
-			);
-		});
-
 		do_action('litespeed_load_thirdparty');
 	}
 

@@ -20,18 +20,17 @@ defined('WPINC') || exit;
 
 		<tr>
 			<th>
-				<?php $id = Base::O_CACHE_POST_TTL; ?>
+				<?php $id = Base::O_CACHE_AJAX_TTL; ?>
 				<?php $this->title($id); ?>
 			</th>
 			<td>
-
 				<div class="litespeed-textarea-recommended">
 					<div>
 						<?php $this->build_textarea($id, 60); ?>
 					</div>
 				</div>
 				<div class="litespeed-desc">
-					<?php echo __('Specify an AJAX action in POST and the number of seconds to cache that request, separated by a space.', 'litespeed-cache'); ?>
+					<?php echo __('Specify an AJAX action in POST/GET and the number of seconds to cache that request, separated by a space.', 'litespeed-cache'); ?>
 					<?php Doc::one_per_line(); ?>
 				</div>
 			</td>

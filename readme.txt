@@ -251,10 +251,11 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 6.3 - Jun 2024 =
-* 🌱**Page Optimize** New option: HTML Keep Comments. (#328853)
-* **CLoud** Fixed an message error for daily quota.
+* 🌱**Page Optimize** HTML Keep Comments. (#328853)
+* 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)
 * **Cache** Bypassed admin initialization when doing ajax call. (Tim)
 * **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
+* **CLoud** Fixed an message error for daily quota.
 * **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
 * **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
 * **ESI** Added WP Data Access nonce (PR#665)

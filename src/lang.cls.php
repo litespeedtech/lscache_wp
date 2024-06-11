@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -100,7 +100,7 @@ class Lang extends Base
 			self::O_CACHE_TTL_REST => __('Default REST TTL', 'litespeed-cache'),
 			self::O_CACHE_TTL_STATUS => __('Default HTTP Status Code Page TTL', 'litespeed-cache'),
 			self::O_CACHE_TTL_BROWSER => __('Browser Cache TTL', 'litespeed-cache'),
-			self::O_CACHE_POST_TTL => __('POST Cache TTL', 'litespeed-cache'),
+			self::O_CACHE_AJAX_TTL => __('AJAX Cache TTL', 'litespeed-cache'),
 			self::O_AUTO_UPGRADE => __('Automatically Upgrade', 'litespeed-cache'),
 			self::O_GUEST => __('Guest Mode', 'litespeed-cache'),
 			self::O_GUEST_OPTM => __('Guest Optimization', 'litespeed-cache'),
