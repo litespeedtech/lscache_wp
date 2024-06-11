@@ -501,24 +501,27 @@ class Router extends Base
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
 		if (!$this->verify_nonce($action)) {
-			// check if it is from admin ip
-			if (!$this->is_admin_ip()) {
-				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action);
-				return;
-			}
-
-			// check if it is public action
-			if (
-				!in_array($action, array(
+			$public_action = in_array(
+				$action, 
+				array(
 					Core::ACTION_QS_NOCACHE,
 					Core::ACTION_QS_PURGE,
 					Core::ACTION_QS_PURGE_SINGLE,
 					Core::ACTION_QS_SHOW_HEADERS,
 					Core::ACTION_QS_PURGE_ALL,
 					Core::ACTION_QS_PURGE_EMPTYCACHE,
-				))
-			) {
-				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action);
+				)
+			);
+			
+			// check if it is from admin ip
+			if ( !$public_action && !$this->is_admin_ip() ) {
+				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action);
+				return;
+			}
+
+			// check if it is public action
+			if ( !$public_action ) {
+				Debug2::debug('[Router] LSCWP_CTRL query string ' . $action . ' did not match public action.');
 				return;
 			}
 

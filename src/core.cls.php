@@ -320,6 +320,9 @@ class Core extends Root
 		switch ($action) {
 			case self::ACTION_QS_PURGE:
 				Purge::set_purge_related();
+				$full_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+				$full_url_no_query = strtok($full_url, '?');
+				$this->cls('Purge')->purge_url( $full_url_no_query, false, true );
 				break;
 
 			case self::ACTION_QS_SHOW_HEADERS:
