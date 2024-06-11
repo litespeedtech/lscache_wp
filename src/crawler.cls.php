@@ -1325,7 +1325,7 @@ class Crawler extends Root
 				}
 				break;
 
-				// Handle the ajax request to proceed crawler manually by admin
+			// Handle the ajax request to proceed crawler manually by admin
 			case self::TYPE_START:
 				self::start_async();
 				break;
