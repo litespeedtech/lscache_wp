@@ -1021,8 +1021,13 @@ class Img_Optm extends Base
 					}
 				}
 				self::debug('Loaded images count: ' . $req_counter);
+				
+				// PHP 5 compatbility
+				$upload_dir_base_dir = $this->wp_upload_dir['basedir'];
+				$table_name_img_optming = $this->_table_img_optming;
+				$this_class = $this;
 
-				$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list) {
+				$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list, $upload_dir_base_dir, $table_name_img_optming, &$this_class) {
 					global $wpdb;
 					$row_data = isset($imgs_by_req[$req_count]) ? $imgs_by_req[$req_count] : false;
 					if (false === $row_data) {
@@ -1031,12 +1036,12 @@ class Img_Optm extends Base
 					}
 					$row_type = isset($row_data['type']) ? $row_data['type'] : 'ori';
 					$row_img = $row_data['data'];
-					$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
+					$local_file = $upload_dir_base_dir . '/' . $row_img->src;
 					$server_info = json_decode($row_img->server_info, true);
 
 					if (empty($response->success)) {
 						if (!empty($response->status_code) && 404 == $response->status_code) {
-							$this->_step_back_image($row_img->id);
+							$this_class->_step_back_image($row_img->id);
 
 							$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
 							Admin_Display::error($msg);
@@ -1044,7 +1049,7 @@ class Img_Optm extends Base
 						} else {
 							// handle error
 							$image_url = $server_info['server'] . '/' . $server_info[$row_type];
-							self::debug(
+							$this_class->debug(
 								'❌ failed to pull image (' .
 									$row_type .
 									'): ' .
@@ -1062,7 +1067,7 @@ class Img_Optm extends Base
 					// Handle wp_remote_get 404 as its success=true
 					if (!empty($response->status_code)) {
 						if ($response->status_code == 404) {
-							$this->_step_back_image($row_img->id);
+							$this_class->_step_back_image($row_img->id);
 
 							$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
 							Admin_Display::error($msg);
@@ -1075,10 +1080,10 @@ class Img_Optm extends Base
 						file_put_contents($local_file . '.webp', $response->body);
 
 						if (!file_exists($local_file . '.webp') || !filesize($local_file . '.webp') || md5_file($local_file . '.webp') !== $server_info['webp_md5']) {
-							self::debug('❌ Failed to pull optimized webp img: file md5 mismatch, server md5: ' . $server_info['webp_md5']);
+							$this_class->debug('❌ Failed to pull optimized webp img: file md5 mismatch, server md5: ' . $server_info['webp_md5']);
 
 							// Delete working table
-							$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+							$q = "DELETE FROM `$table_name_img_optming` WHERE id = %d ";
 							$wpdb->query($wpdb->prepare($q, $row_img->id));
 
 							$msg = __('Pulled WebP image md5 does not match the notified WebP image md5.', 'litespeed-cache');
@@ -1086,7 +1091,7 @@ class Img_Optm extends Base
 							return;
 						}
 
-						self::debug('Pulled optimized img WebP: ' . $local_file . '.webp');
+						$this_class->debug('Pulled optimized img WebP: ' . $local_file . '.webp');
 
 						$webp_size = filesize($local_file . '.webp');
 
@@ -1104,7 +1109,7 @@ class Img_Optm extends Base
 						file_put_contents($local_file . '.tmp', $response->body);
 
 						if (!file_exists($local_file . '.tmp') || !filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
-							self::debug(
+							$this_class->debug(
 								'❌ Failed to pull optimized img: file md5 mismatch [url] ' .
 									$server_info['server'] .
 									'/' .
@@ -1114,7 +1119,7 @@ class Img_Optm extends Base
 							);
 
 							// Delete working table
-							$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+							$q = "DELETE FROM `$table_name_img_optming` WHERE id = %d ";
 							$wpdb->query($wpdb->prepare($q, $row_img->id));
 
 							$msg = __('One or more pulled images does not match with the notified image md5', 'litespeed-cache');
@@ -1132,7 +1137,7 @@ class Img_Optm extends Base
 						// Replace ori img
 						rename($local_file . '.tmp', $local_file);
 
-						self::debug('Pulled optimized img: ' . $local_file);
+						$this_class->debug('Pulled optimized img: ' . $local_file);
 
 						/**
 						 * API Hook
@@ -1141,11 +1146,11 @@ class Img_Optm extends Base
 						 */
 						do_action('litespeed_img_pull_ori', $row_img, $local_file);
 
-						self::debug2('Remove _table_img_optming record [id] ' . $row_img->id);
+						$this_class->debug2('Remove _table_img_optming record [id] ' . $row_img->id);
 					}
 
 					// Delete working table
-					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+					$q = "DELETE FROM `$table_name_img_optming` WHERE id = %d ";
 					$wpdb->query($wpdb->prepare($q, $row_img->id));
 
 					// Save server_list to notify taken
@@ -1179,20 +1184,20 @@ class Img_Optm extends Base
 						);
 						if (is_wp_error($wp_response)) {
 							$error_message = $wp_response->get_error_message();
-							self::debug('❌ failed to pull image: ' . $error_message);
+							$this_class->debug('❌ failed to pull image: ' . $error_message);
 						} else {
 							$request_response['success'] = true;
 							$request_response['status_code'] = $wp_response['response']['code'];
 							$request_response['body'] = $wp_response['body'];
 						}
-						self::debug('response code [code] ' . $wp_response['response']['code'] . ' [url] ' . $req['url']);
+						$this_class->debug('response code [code] ' . $wp_response['response']['code'] . ' [url] ' . $req['url']);
 
 						$request_response = (object) $request_response;
 
 						$complete_action($request_response, $cnt);
 					}
 				}
-				self::debug('Current batch pull finished');
+				$this_class->debug('Current batch pull finished');
 			}
 		} catch (\Exception $e) {
 			Admin_Display::error('Image pull process failure: ' . $e->getMessage());
