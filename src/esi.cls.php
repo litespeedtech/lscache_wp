@@ -1057,4 +1057,69 @@ class ESI extends Root
 		}
 		return $hit_list;
 	}
+
+	/**
+	 * Convert nonce that has "<esi..." as content to nonce.
+	 * Fix ESI nonce in PHP code.
+	 * 
+	 * @since  6.3
+	 */
+	public function esi_hash_to_wp_nonce($nonce){
+		// Search the nonce in preserved list. If found return the content.
+		$preserved_found = $this->get_preserve_content( $nonce );
+		$nonce = $preserved_found ?: $nonce;
+	    
+		// if nonce has <esi in content.
+		if( strpos( $nonce, '<esi' )!==false ){
+			// search for esi src data.
+			preg_match( '/<esi.+src=["\'](.+)["\']/mU', $nonce, $src );
+
+			if( !empty( $src[1] ) ){
+				$parsedUrl = parse_url( $src[1] );
+
+				if( $parsedUrl && isset($parsedUrl['query']) ){
+					parse_str( $parsedUrl['query'], $variables );
+					$query_qs_param = $this::QS_PARAMS;
+					$is_esi_nonce = ( $variables[$this::QS_ACTION] ? $variables[$this::QS_ACTION]=='nonce' : false );
+
+					if( $is_esi_nonce && $variables[$query_qs_param] ){
+					    // Unecrypt esi url parameter.
+						$unencrypt = base64_decode( $variables[$query_qs_param] );
+						
+						if ( $unencrypt ) {
+						    // JSON decode parameter.
+							$params_esi = json_decode( $unencrypt, true );
+
+							if( $params_esi['action'] && !empty( $params_esi['action'] ) ){
+								if ( function_exists( 'wp_create_nonce_litespeed_esi' ) ) {
+									$nonce = wp_create_nonce_litespeed_esi( $params_esi['action'] );
+								} else {
+									$nonce = wp_create_nonce( $params_esi['action'] );
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+        
+		return $nonce;
+	}
+
+	/**
+	 * Test if hash is in preserved list
+	 * @since  6.3
+	 */
+	public function get_preserve_content($hash){
+		$return = false;
+
+		foreach ( $this->_esi_preserve_list as $k => $v ) {
+			if( $k === $hash ){
+				$return = $v;
+				break;
+			}
+		}
+
+		return $return;
+	}
 }
