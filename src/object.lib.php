@@ -455,7 +455,7 @@ class WP_Object_Cache
 		 * Fix multiple instance using same oc issue
 		 * @since  1.8.2
 		 */
-		!defined('LSOC_PREFIX') && define('LSOC_PREFIX', substr(md5(__FILE__), -5));
+		!defined('LSOC_PREFIX') && define('LSOC_PREFIX', substr(md5(__FILE__ . time() . str_shuffle(__FILE__)), -8));
 	}
 
 	/**
