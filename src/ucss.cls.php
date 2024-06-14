@@ -361,30 +361,39 @@ class UCSS extends Base
 	 */
 	private function _save_con($type, $css, $queue_k, $is_mobile, $is_webp)
 	{
-		// Add filters
-		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
-		self::debug2('con: ', $css);
+		if( !empty($this->_queue[$queue_k]['url_tag']) && !empty($this->_queue[$queue_k]['vary']) ){
+			// Add filters
+			$css = apply_filters('litespeed_' . $type, $css, $queue_k);
+			self::debug2('con: ', $css);
 
-		if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
-			self::debug('❌ empty ' . $type . ' [content] ' . $css);
-			// continue; // Save the error info too
+			if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
+				self::debug('❌ empty ' . $type . ' [content] ' . $css);
+				// continue; // Save the error info too
+			}
+
+			// Write to file
+			$filecon_md5 = md5($css);
+
+			$filepath_prefix = $this->_build_filepath_prefix($type);
+			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+
+			File::save($static_file, $css, true);
+
+			$url_tag = $this->_queue[$queue_k]['url_tag'];
+			$vary = $this->_queue[$queue_k]['vary'];
+			self::debug2("Save URL to file [file] $static_file [vary] $vary");
+
+			$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
+
+			Purge::add(strtoupper($type) . '.' . md5($queue_k));
 		}
+		else{
+			$not_found = array();
+			if( !isset($this->_queue[$queue_k]['url_tag']) ) $not_found[] = '[url_tag]';
+			if( !isset($this->_queue[$queue_k]['vary']) ) $not_found[] = '[vary]';
 
-		// Write to file
-		$filecon_md5 = md5($css);
-
-		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
-
-		File::save($static_file, $css, true);
-
-		$url_tag = $this->_queue[$queue_k]['url_tag'];
-		$vary = $this->_queue[$queue_k]['vary'];
-		self::debug2("Save URL to file [file] $static_file [vary] $vary");
-
-		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
-
-		Purge::add(strtoupper($type) . '.' . md5($queue_k));
+			self::debug('No ' . implode( ' and ', $not_found ) . ' found in UCSS queque for key ' . $queue_k );
+		}
 	}
 
 	/**
@@ -543,11 +552,20 @@ class UCSS extends Base
 
 			// Save data
 			if (!empty($v['data_ucss'])) {
-				$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
-				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
-				$this->_save_con('ucss', $v['data_ucss'], $v['queue_k'], $is_mobile, $is_webp);
+				if(!empty( $this->_queue[$v['queue_k']]['is_mobile'] ) && !empty( $this->_queue[$v['queue_k']]['is_webp'] ) ){
+					$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
+					$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
+					$this->_save_con('ucss', $v['data_ucss'], $v['queue_k'], $is_mobile, $is_webp);
 
-				$valid_i++;
+					$valid_i++;
+				}
+				else{
+					$not_found = array();
+					if( !isset($this->_queue[$v['queue_k']]['is_mobile']) ) $not_found[] = '[is_mobile]';
+					if( !isset($this->_queue[$v['queue_k']]['is_webp']) ) $not_found[] = '[is_webp]';
+
+					self::debug('No ' . implode( ' and ', $not_found ) . ' found in UCSS queque for key ' . $v['queue_k'] );
+				}
 			}
 
 			unset($this->_queue[$v['queue_k']]);
