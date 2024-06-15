@@ -289,9 +289,11 @@ class Img_Optm extends Base
 		}
 
 		if ($list) {
-			$hard_images_limit = is_bool($allowance) ? Cloud::IMG_OPTM_DEFAULT_GROUP : $allowance;
 			foreach ($list as $v) {
-				if($hard_images_limit < 1) break;
+				if ($allowance <= count($this->_img_in_queue)) {
+					break;
+				}
+
 				if (!$v->post_id) {
 					continue;
 				}
@@ -310,11 +312,9 @@ class Img_Optm extends Base
 
 				$this->tmp_pid = $v->post_id;
 				$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
-				$hard_images_limit--;
 				$this->_append_img_queue($meta_value, true);
 				if (!empty($meta_value['sizes'])) {
 					array_map(array($this, '_append_img_queue'), $meta_value['sizes']);
-					$hard_images_limit -= count($meta_value['sizes']);
 				}
 			}
 
@@ -345,7 +345,7 @@ class Img_Optm extends Base
 		}
 
 		// Push to Cloud server
-		$accepted_imgs = $this->_send_request();
+		$accepted_imgs = $this->_send_request($allowance === 1 ? count($this->_img_in_queue) : $allowance);
 
 		$this->_finished_running();
 		if (!$accepted_imgs) {
@@ -614,11 +614,16 @@ class Img_Optm extends Base
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _send_request()
+	private function _send_request($limit = 0)
 	{
 		global $wpdb;
 
-		$_img_in_queue = $wpdb->get_results("SELECT id,src,post_id FROM `$this->_table_img_optming` WHERE optm_status=" . self::STATUS_RAW);
+		if ($limit < 1) {
+			$limit = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM);
+		}
+		$q = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d LIMIT %d";
+		$q = $wpdb->prepare($q, array(self::STATUS_RAW, $limit));
+		$_img_in_queue = $wpdb->get_results($q);
 		if (!$_img_in_queue) {
 			return;
 		}
@@ -1500,18 +1505,14 @@ class Img_Optm extends Base
 		}
 
 		// Find new images
-		$hard_images_limit = $limit;
 		foreach ($scanned_list as $v) {
-			if($hard_images_limit < 1) break;
 			$meta_value = $v['meta'];
 			// Parse all child src and put them into $this->_img_in_queue, missing ones to $this->_img_in_queue_missed
 			$this->tmp_pid = $v['pid'];
 			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 			$this->_append_img_queue($meta_value, true);
-			$hard_images_limit--;
 			if (!empty($meta_value['sizes'])) {
 				array_map(array($this, '_append_img_queue'), $meta_value['sizes']);
-				$hard_images_limit -= count($meta_value['sizes']);
 			}
 		}
 
