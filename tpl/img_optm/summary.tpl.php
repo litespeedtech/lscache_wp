@@ -220,6 +220,81 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 	</div>
 
 	<div class="litespeed-width-3-10">
+		<div class="postbox litespeed-postbox litespeed-postbox-imgresize-info">
+			<div class="inside">
+
+				<h3 class="litespeed-title">
+					<?php echo __('Image resize', 'litespeed-cache'); ?>
+				</h3>
+
+				<div class="litespeed-flex-container">
+					<?php
+						$id = Base::O_IMG_OPTM_RESIZE;	
+						$resize_class = Img_Resize::cls();
+						$resize_summary = $resize_class::get_summary();
+					?>
+					<div>
+						<p>
+							<?php _e('Status', 'litespeed-cache'); ?>:
+							<code><?php echo ($this->conf($id) ? __('ON', 'litespeed-cache') : __('OFF', 'litespeed-cache')); ?></code>
+						</p>
+						<?php if ($this->conf($id)) : ?>
+							<?php 
+								$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
+								if(!$image){
+									$resize_class->recalculate_summary();
+									$resize_summary = $resize_class::get_summary();
+									$image = wp_get_attachment_url($resize_summary[$resize_class::S_CURRENT_POST]);
+								}
+
+								if ( 
+									$resize_summary[$resize_class::S_CURRENT] < $resize_summary[$resize_class::S_TOTAL] &&
+									$resize_summary[$resize_class::S_CURRENT_POST] !== 0
+								) : ?>
+								<p>
+									<?php _e( 'Current image', 'litespeed-cache' ); ?>:
+									<code><?php echo '#' . $resize_summary[$resize_class::S_CURRENT_POST]; ?></code>
+									<?php echo '<p><img src="'.$image.'" style="width: 100px;"/></p>'; ?>
+									
+								</p>
+								<p>
+									<?php _e( 'Progress', 'litespeed-cache' ); ?>:
+									<?php
+										$resize_percentage = floor(( $resize_summary[$resize_class::S_CURRENT] * 100 ) / $resize_summary[$resize_class::S_TOTAL]);
+										echo GUI::progressbar($resize_percentage);
+									?>
+								</p>
+								<p>
+									<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" <?php ( $resize_summary[$resize_class::S_CURRENT] == $resize_summary[$resize_class::S_TOTAL] && $resize_summary[$resize_class::S_TOTAL] > 0 ) ? 'disabled="disabled" ' : ''; ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_NEXT); ?>">
+										<?php _e('Optimize image', 'litespeed-cache'); ?>
+									</a>
+								</p>
+							<?php elseif($resize_summary[$resize_class::S_CURRENT_POST] == 0): ?>
+								<p>
+									<a data-litespeed-onlyonce class="button button-primary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_START); ?>">
+										<?php _e('Start Optimize image', 'litespeed-cache'); ?>
+									</a>
+								</p>
+							<?php else: ?>
+								<p>🌟 <?php _e('All done! No images found to resize.', ''); ?></p>
+							<?php endif; ?>
+							
+							<!-- Actions -->
+							<p>
+								<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_RECALCULATE); ?>">
+									<?php _e('Recalculate', 'litespeed-cache'); ?>
+								</a>
+
+								<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" href="<?php echo Utility::build_url(Router::ACTION_IMG_RESIZE, Img_Resize::TYPE_DELETE_BK); ?>" onClick="return confirm('<?php _e('Do you want to delete all backup images?', 'litespeed-cache'); ?>');">
+									<?php _e('Delete backups', 'litespeed-cache'); ?>
+								</a>
+							</p>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="postbox litespeed-postbox litespeed-postbox-imgopt-info">
 			<div class="inside">
 

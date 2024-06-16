@@ -95,6 +95,12 @@ class Task extends Root
 			case 'imgoptm_force':
 				Img_Optm::async_handler(true);
 				break;
+			case 'imgresize':
+				Img_Resize::async_handler();
+				break;
+			case 'imgresize_force':
+				Img_Resize::async_handler(true);
+				break;
 			default:
 		}
 	}

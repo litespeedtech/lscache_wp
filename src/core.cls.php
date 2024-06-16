@@ -283,6 +283,13 @@ class Core extends Root
 
 			$this->cls('Media')->init();
 
+			/**
+			 * Hook image processing functions.
+			 * 
+			 * since 6.3
+			 */
+			$this->cls('Img_Resize')->init();
+
 			$this->cls('Placeholder')->init();
 
 			$this->cls('Router')->can_optm() && $this->cls('Optimize')->init();
