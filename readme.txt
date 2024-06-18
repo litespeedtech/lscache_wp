@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.3 - Jun 2024 =
+= 6.3 - Jul 2024 =
 * 🌱**Page Optimize** HTML Keep Comments. (#328853)
 * 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)
 * **Cache** Bypassed admin initialization when doing ajax call. (Tim)
