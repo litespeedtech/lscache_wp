@@ -142,10 +142,14 @@ class Control extends Root
 				continue;
 			}
 			// self::debug("Initializing cacheable status for wp_ajax_nopriv_" . $v[0]);
-			add_action("wp_ajax_nopriv_" . $v[0], function () use ($v) {
-				self::set_custom_ttl($v[1]);
-				self::force_cacheable("ajax Cache setting for action " . $v[0]);
-			}, 4);
+			add_action(
+				'wp_ajax_nopriv_' . $v[0],
+				function () use ($v) {
+					self::set_custom_ttl($v[1]);
+					self::force_cacheable('ajax Cache setting for action ' . $v[0]);
+				},
+				4
+			);
 		}
 
 		// Check error page
