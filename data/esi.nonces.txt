@@ -45,6 +45,10 @@ seopress_cookies_user_consent_nonce
 # SearchWP Metrics
 swpmtxnonce
 
+# The Events Calendar
+_tec_view_rest_nonce_primary
+_tec_view_rest_nonce_secondary
+
 # wpDataTables #986128
 wdt*
 
@@ -72,3 +76,17 @@ woocommerce-login
 
 # Premium Addons for Elementor
 pa-blog-widget-nonce
+
+# WPUF User Frontend
+wpuf* private
+
+# MetForm
+form_nonce
+
+# Mobile hamburger menu - jetMenu #306983 #163710 PR#419
+tgmpa-*
+bulk-*
+
+# WP Data Access
+wpda-*
+

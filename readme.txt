@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.5.2
+Tested up to: 6.5.4
 Stable tag: 6.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -249,6 +249,28 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 6.3 - Jul 2024 =
+* 🌱**Page Optimize** HTML Keep Comments. (#328853)
+* 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)
+* **Cache** Bypassed admin initialization when doing ajax call. (Tim)
+* **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
+* **CLoud** Fixed an message error for daily quota.
+* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
+* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
+* **ESI** Added WP Data Access nonce (PR#665)
+* **ESI** Added WP User Frontend ESI nonce (PR#675)
+* **Media** Ignored images from JS in image size detection (PR#660)
+* **GUI** Removed Preset menu from network admin panel.
+* **GUI** Suppressed sitemap generation message if not triggered manually.
+* **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
+* **Page Optimize** Updated Instant Click library to version 5.2.0.
+* **Page Optimize** Flatsome theme random string excludes. (PR#415)
+* **Page Optimize** Exclude Cloudflare turnstile from JS optimizations. (Tobolo)
+* **Page Optimize** Fixes Cloudflare Turnstile issues. (Contributolo PR#671/672)
+* **Object** More debug log for objectr cache status. (PR#669)
+* **Object** Added brief parseable header comments to the drop-in file. (OllieJones)
+* **Debug** Trim debug log.
 
 = 6.2.0.1 - Apr 25 2024 =
 * 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementor's `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)

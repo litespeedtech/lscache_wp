@@ -465,6 +465,18 @@ class Data extends Root
 		$type = $this->_url_file_types[$file_type];
 		$q = 'DELETE FROM ' . $this->tb('url_file') . ' WHERE `type` = %d';
 		$wpdb->query($wpdb->prepare($q, $type));
+
+		// Added to cleanup url table. See issue: https://wordpress.org/support/topic/wp_litespeed_url-1-1-gb-in-db-huge-big/
+		$wpdb->query(
+			'DELETE d
+			FROM `' .
+				$this->tb('url') .
+				'` AS d
+			LEFT JOIN `' .
+				$this->tb('url_file') .
+				'` AS f ON d.`id` = f.`url_id`
+			WHERE f.`url_id` IS NULL'
+		);
 	}
 
 	/**
@@ -591,9 +603,9 @@ class Data extends Root
 	public function mark_as_expired($request_url, $auto_q = false)
 	{
 		global $wpdb;
+		$tb_url = $this->tb('url');
 
 		Debug2::debug('[Data] Try to mark as expired: ' . $request_url);
-		$tb_url = $this->tb('url');
 		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
 		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
@@ -602,7 +614,6 @@ class Data extends Root
 
 		Debug2::debug('[Data] Mark url_id=' . $url_row['id'] . ' as expired');
 
-		$tb_url = $this->tb('url');
 		$tb_url_file = $this->tb('url_file');
 
 		$existing_url_files = array();

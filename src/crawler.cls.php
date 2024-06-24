@@ -1302,7 +1302,7 @@ class Crawler extends Root
 
 		switch ($type) {
 			case self::TYPE_REFRESH_MAP:
-				$this->cls('Crawler_Map')->gen();
+				$this->cls('Crawler_Map')->gen(true);
 				break;
 
 			case self::TYPE_EMPTY:

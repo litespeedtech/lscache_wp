@@ -11,6 +11,7 @@ maps.google.com/maps
 cse.google.com/cse.js
 /syntaxhighlighter/
 spotlight-social-photo-feeds ## https://docs.spotlightwp.com/article/757-autoptimize-compatibility @Tobolo
+challenges.cloudflare.com
 
 # Inline JS excludes
 document.write
@@ -18,6 +19,7 @@ gtag
 gtm
 dataLayer
 adsbygoogle
+turnstile
 
 block_tdi_ ## Theme: Newspaper by tagDiv.com
 
@@ -28,3 +30,7 @@ wp-json/wp-statistics ## WP Statistics
 stats.wp.com/e-
 _stq
 ## JetPack Stats
+
+# Cloudflare turnstile - Tobolo
+turnstile
+challenges.cloudflare.com

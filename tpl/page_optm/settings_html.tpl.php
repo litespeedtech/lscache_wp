@@ -89,6 +89,23 @@ defined('WPINC') || exit;
 
 		<tr>
 			<th>
+				<?php $id = Base::O_OPTM_HTML_SKIP_COMMENTS; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_textarea($id); ?>
+				<div class="litespeed-desc">
+					<?php echo __('When minifying HTML do not discard comments that match a specified pattern.', 'litespeed-cache'); ?>
+					<br />
+					<?php echo sprintf( __('If comment to be kept is like: %s write: %s', 'litespeed-cache'), '<code>&lt;!-- A comment that needs to be here --&gt;</code>', '<code>A comment that needs to be here</code>'); ?>
+					<br />
+					<?php Doc::one_per_line(); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
 				<?php $id = Base::O_OPTM_QS_RM; ?>
 				<?php $this->title($id); ?>
 			</th>

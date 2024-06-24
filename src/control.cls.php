@@ -134,6 +134,20 @@ class Control extends Root
 			}
 		}
 
+		// AJAX cache
+		$ajax_cache = $this->conf(Base::O_CACHE_AJAX_TTL);
+		foreach ($ajax_cache as $v) {
+			$v = explode(' ', $v);
+			if (empty($v[0]) || empty($v[1])) {
+				continue;
+			}
+			// self::debug("Initializing cacheable status for wp_ajax_nopriv_" . $v[0]);
+			add_action("wp_ajax_nopriv_" . $v[0], function () use ($v) {
+				self::set_custom_ttl($v[1]);
+				self::force_cacheable("ajax Cache setting for action " . $v[0]);
+			}, 4);
+		}
+
 		// Check error page
 		add_filter('status_header', array($this, 'check_error_codes'), 10, 2);
 	}
