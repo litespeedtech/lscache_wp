@@ -252,7 +252,8 @@ class Object_Cache extends Root
 	{
 		$this->debug_oc('Reconnecting');
 		if (isset($this->_conn)) {
-			$this->debug_oc('Quiting existing connection');
+			// error_log( 'Object: Quitting existing connection!' );
+			$this->debug_oc('Quitting existing connection');
 			$this->flush();
 			$this->_conn = null;
 			$this->cls(false, true);

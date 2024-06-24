@@ -75,7 +75,7 @@ class GUI extends Base
 	}
 
 	/**
-	 * Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
+	 * Print a loading message when redirecting CCSS/UCSS page to avoid whiteboard confusion
 	 */
 	public static function print_loading($counter, $type)
 	{

@@ -338,7 +338,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
 * **Image Optimize** Increased time limit for pull process.
 * **Image Optimize** Last pull time and cron tag now included in optimization summary.
-* **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
+* **Image Optimize** Fixed Elementors Slideshow unusual background images. (Ryan D)
 * 🐞**Database Optimize** Fix an issue where cleaning post revisions would fail while cleaning postmeta. (Tynan #596)
 * **Crawler** Added status updates to CLI. (Lars)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
@@ -366,4 +366,4 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Vary** Enabled `litespeed_vary_cookies` for LSWS Enterprise.
 * **GUI** Stopped WebP tip from wrongly displaying when Guest Mode is off.
 * **GUI** Added QUIC.cloud promotion postbox on dashboard page.
-* **3rd** Added `pagespeed ninja` to blocklist due to its bad bahavior.
+* **3rd** Added `pagespeed ninja` to blocklist due to its bad behavior.

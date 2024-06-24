@@ -18,8 +18,9 @@ defined('WPINC') || exit;
 
 !defined('LSCWP_OBJECT_CACHE') && define('LSCWP_OBJECT_CACHE', true);
 
-// Initialize const `LSCWP_DIR` and locate LSCWP plugin foder
+// Initialize const `LSCWP_DIR` and locate LSCWP plugin folder
 $lscwp_dir = (defined('WP_PLUGIN_DIR') ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/plugins') . '/litespeed-cache/';
+
 // Use plugin as higher priority than MU plugin
 if (!file_exists($lscwp_dir . 'litespeed-cache.php')) {
 	// Check if is mu plugin or not

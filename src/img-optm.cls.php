@@ -1324,7 +1324,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		self::debug('excuting DESTROY process');
+		self::debug('executing DESTROY process');
 
 		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
 		/**
@@ -1507,7 +1507,7 @@ class Img_Optm extends Base
 			}
 		}
 
-		self::debug('rescaned [img] ' . count($this->_img_in_queue));
+		self::debug('rescanned [img] ' . count($this->_img_in_queue));
 
 		$count = count($this->_img_in_queue);
 		if ($count > 0) {

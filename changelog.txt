@@ -160,7 +160,7 @@
 * **GUI** Updated time offset in log. (Ruikai #PR444 #PR445)
 * **GUI** Added `litespeed_media_ignore_remote_missing_sizes` API description.
 * **CCSS** Fixed an issue where CCSS was unexpectedly bypassed if `CSS Combine` was OFF and `UCSS Inline` was ON. (Ruikai)
-* **Debug** Added resposne headers to debug log. (Kevin)
+* **Debug** Added response headers to debug log. (Kevin)
 
 = 4.6 - Mar 29 2022 =
 * **Page Optimize** Improved compatibility for JS Delay.
@@ -226,7 +226,7 @@
 * **Page Optimize** Delay deletion of outdated CSS/JS files for a default of 20 days to avoid 404 errors with cached search engine copies.
 * **Cache** When caching, no longer send a purge request for CSS/JS removal to avoid cache engine conflicts.
 * 🐞**Core** Optimized SQL queries while autoloading if expected options are missing; reduced by 7 and 3 queries on backend and frontend respectively. (#396425 Jackson)
-* **Page Optimize** Fixed a 404 issue that occured when upgrading the plugin manually, with a package upload or through the plugin manager. (Tobolo/Małgorzata/Abe)
+* **Page Optimize** Fixed a 404 issue that occurred when upgrading the plugin manually, with a package upload or through the plugin manager. (Tobolo/Małgorzata/Abe)
 * **API** Added `litespeed_ccss_url` and `litespeed_ucss_url` API to manipulate the request URL for CCSS and UCSS.
 * **REST** Fixed a potential warning when detecting cacheable status on REST call. (rafaucau)
 * **OLS** Fixed an issue where the `COOKIEHASH` constant was undefined when used with OpenLiteSpeed as an MU plugin or with network activation.
@@ -244,7 +244,7 @@
 * **Object** Fixed an issue with Object Cache warnings during upgrade, when Guest Mode is enabled.
 * ☁️**Cloud** Fixed an issue with PHP notices when inquiring about quota usage for a service not currently in use.
 * **GUI** Added GO detail warning. (n111)
-* **GUI** Moved "quota wil be still in use" warning from Guest Mode to Guest Optimization section.
+* **GUI** Moved "quota will be still in use" warning from Guest Mode to Guest Optimization section.
 * **API** Added `LITESPEED_CFG_HTACCESS` PHP Constant to specify .htaccess path.
 * **API** Added `litespeed_qs_forbidden` hook to bypass `?LSCWP_CTRL=` query string. (minhduc)
 * **API** Added `litespeed_delay_purge` hook to delay the following Purge header until the next request.
@@ -281,7 +281,7 @@
 * 🐞**CCSS** If CCSS fails to generate, Load CSS Asynchronously will now be disabled. (Stars #54074166)
 * 🐞**UCSS** If UCSS generation fails the generated error will no longer be served inside the file. (Ryan D)
 * **Log** Updated the Debug log to use less code for prefix.
-* **3rd** Always respect `DONOTCACHEPAGE` constant defination to fix DIVI dynamic css calculation process.
+* **3rd** Always respect `DONOTCACHEPAGE` constant definition to fix DIVI dynamic css calculation process.
 
 = 4.3 - Aug 16 2021 =
 * **UCSS** Separated UCSS Purge from CCSS Purge. (⭐ Contributed by Alice Tang #PR388)
@@ -413,7 +413,7 @@
 * **JS** Excluded spotlight from JS optimize. (tobolo)
 * **CCSS** Fixed CCSS/UCSS manual cron timeout issue.
 * **CCSS** Only 10 items will be kept for CCSS history.
-* **CCSS** The appearance of CCSS Purge in the topbar menu will be determined by the existance of CCSS cache, and not the setting only.
+* **CCSS** The appearance of CCSS Purge in the topbar menu will be determined by the existence of CCSS cache, and not the setting only.
 * **CCSS** To avoid stuck queues when the current request keeps failing, the CCSS queue will always drop once requested.
 * **CCSS** CCSS will no longer hide adminbar.
 * **CCSS** CCSS may now be separate for network subsites. (Joshua)
@@ -548,7 +548,7 @@
 = 3.5 - Sep 29 2020 =
 * **Page Optimize** Refactored CSS/JS optimization.
 * **Page Optimize** CSS and JS Combine now each save to a single file without memory usage issues.
-* **CSS** Inline CSS Minify is now a part of CSS Minify, and will respect thr original priorities. (thanks to @galbaras)
+* **CSS** Inline CSS Minify is now a part of CSS Minify, and will respect the original priorities. (thanks to @galbaras)
 * **JS** JS Combine now generates a single JS file in the footer. (Special thanks to @ankit)
 * **JS** JS Combine now combines external JS files, too. (Thanks to @ankit)
 * **JS** JS Deferred Excludes now uses the original path/filename as keywords instead of the minified path/filename, when JS Minify is enabled.
@@ -588,7 +588,7 @@
 * 🐞**CCSS** Fixed an issue where dynamically generated CSS failed with `TypeError: Cannot read property type of undefined`.
 * 🐞**Page Optimize** Fixed CSS optimization compatibility for CSS dynamically generated with PHP.
 * **Page Optimize** Added the ability to defer JS even when the resource is excluded from other JS optimizations. (@slr1979)
-* **ESI** Added support for ESI last paramater inline value.
+* **ESI** Added support for ESI last parameter inline value.
 * **3rd** YITH Wishlist, when cached for the first time, will no longer send sub requests.
 
 = 3.4 - Aug 26 2020 =
@@ -811,7 +811,7 @@
 * 🌱**Conf** Supported consts overwritten of `LITESPEED_CONF__` for all settings. (@menathor)
 * 🌱**REST** New REST TTL setting.  (@thekendog)
 * 🌱**CDN** New setting `HTML Attribute To Replace`. CDN can now support any HTML attribute to be replaced. (@danushkaj91)
-* 🌱**Debug** Debug URI includes/excludes setings.
+* 🌱**Debug** Debug URI includes/excludes settings.
 * 🌱**Crawler** 🐞 Support for multiple domains in custom sitemap. (@alchem)
 * 🌱**Crawler** New Crawler dashboard. New sitemap w/ crawler status. New blacklist w/ reason.
 * 🌱**Media** LQIP minimum dimensions setting. (@Lukasz Szmigiel)
@@ -839,7 +839,7 @@
 * **CDN** settings will not be overwritten by primary settings in network anymore. (@rudi Khoury)
 * **OPcache** Purged all opcache when updating cache file. (@closte #170)
 * **CLI** CLI cmd renamed.
-* **CLI** Well-formated table to show all options.
+* **CLI** Well-formatted table to show all options.
 * **Purge** Only purge related posts that have a status of "published" to avoid unnecessary "draft" purges. (@Jakub Knytl)
 * **GUI** Removed basic/adv mode for settings. Moved non-cache settings to its own menu.
 * **Htaccess** Protected .htaccess.bk file. Only kept one backup. (@teflonmann)
@@ -850,7 +850,7 @@
 * **Conf** New preset default data file `data/consts.default.ini`.
 * **Conf** Config setting renamed and uniformed.
 * **Conf** Dropped `Conf::option()`. Used `Conf::val()` instead.
-* **Conf** Improved conf initialization and upgrade convertion workflow.
+* **Conf** Improved conf initialization and upgrade conversion workflow.
 * **Core** Code base refactored. New namespace LiteSpeed.
 * **API** New API: iframe lazyload exclude filter.
 * **GUI** human readable seconds. (@MarkCanada)
@@ -1241,7 +1241,7 @@
 
 = 2.4 - Jul 2 2018 =
 * [NEW FEATURE] <strong>Media</strong> Added lossless optimization.
-* [NEW FEATURE] <strong>Media</strong> Added Request Orignal Images ON/OFF.
+* [NEW FEATURE] <strong>Media</strong> Added Request Original Images ON/OFF.
 * [NEW FEATURE] <strong>Media</strong> Added Request WebP ON/OFF. (@JMCA2)
 * [IMPROVEMENT] <strong>Media</strong> Improved optimization tools to archive maximum compression and score.
 * [IMPROVEMENT] <strong>Media</strong> Improved speed of image pull.

@@ -302,7 +302,7 @@ class CDN extends Root
 
 		/**
 		 * Excludes `\` from URL matching
-		 * @see  #959152 - Wordpress LSCache CDN Mapping causing malformed URLS
+		 * @see  #959152 - WordPress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
 		 */
@@ -495,7 +495,7 @@ class CDN extends Root
 	}
 
 	/**
-	 * Check if is orignal URL of CDN or not
+	 * Check if is original URL of CDN or not
 	 *
 	 * @since  2.1
 	 * @access private

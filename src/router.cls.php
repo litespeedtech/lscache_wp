@@ -617,7 +617,7 @@ class Router extends Base
 				return;
 
 			default:
-				Debug2::debug('[Router] LSCWP_CTRL match falied: ' . $action);
+				Debug2::debug('[Router] LSCWP_CTRL match failed: ' . $action);
 				return;
 		}
 	}

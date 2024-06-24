@@ -159,7 +159,7 @@ class Control extends Root
 	 * @access public
 	 * @param $status_header
 	 * @param $code
-	 * @return $eror_status
+	 * @return $error_status
 	 */
 	public function check_error_codes($status_header, $code)
 	{

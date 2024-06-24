@@ -111,7 +111,7 @@ class Base extends Root
 	const O_DEBUG_LEVEL = 'debug-level';
 	const O_DEBUG_FILESIZE = 'debug-filesize';
 	const O_DEBUG_COOKIE = 'debug-cookie';
-	const O_DEBUG_COLLAPS_QS = 'debug-collaps_qs';
+	const O_DEBUG_COLLAPSE_QS = 'debug-collapse_qs';
 	const O_DEBUG_INC = 'debug-inc';
 	const O_DEBUG_EXC = 'debug-exc';
 	const O_DEBUG_EXC_STRINGS = 'debug-exc_strings';
@@ -406,7 +406,7 @@ class Base extends Root
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
 		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -593,7 +593,7 @@ class Base extends Root
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
 		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -797,7 +797,7 @@ class Base extends Root
 	}
 
 	/**
-	 * Append a new multi swith max limit for the bool option
+	 * Append a new multi switch max limit for the bool option
 	 *
 	 * @since  3.0
 	 */

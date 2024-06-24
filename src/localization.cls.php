@@ -51,7 +51,7 @@ class Localization extends Base
 
 			$type = 'js';
 			$domain = $v;
-			// Try to parse space splitted value
+			// Try to parse space split value
 			if (strpos($v, ' ')) {
 				$v = explode(' ', $v);
 				if (!empty($v[1])) {
@@ -170,7 +170,7 @@ class Localization extends Base
 
 			$type = 'js';
 			$domain = $v;
-			// Try to parse space splitted value
+			// Try to parse space split value
 			if (strpos($v, ' ')) {
 				$v = explode(' ', $v);
 				if (!empty($v[1])) {

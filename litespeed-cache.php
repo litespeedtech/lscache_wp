@@ -103,7 +103,7 @@ if (!empty($_SERVER['X-LSCACHE']) || LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER
 	!defined('LITESPEED_ALLOWED') && define('LITESPEED_ALLOWED', true);
 }
 
-// ESI const defination
+// ESI const definition
 if (!defined('LSWCP_ESI_SUPPORT')) {
 	define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false);
 }
@@ -123,7 +123,7 @@ if (!function_exists('litespeed_exception_handler')) {
 }
 
 /**
- * Overwride the WP nonce funcs outside of LiteSpeed namespace
+ * Overwrite the WP nonce funcs outside of LiteSpeed namespace
  * @since  3.0
  */
 if (!function_exists('litespeed_define_nonce_func')) {
