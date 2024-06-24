@@ -204,7 +204,7 @@ class Admin_Display extends Base
 
 			if ($_GET['page'] == 'litespeed-crawler' || $_GET['page'] == 'litespeed-cdn') {
 				// Babel JS type correction
-				add_filter('script_loader_tag', array($this, 'bable_type'), 10, 3);
+				add_filter('script_loader_tag', array($this, 'babel_type'), 10, 3);
 
 				wp_enqueue_script(Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false);
 				wp_enqueue_script(Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false);
@@ -272,7 +272,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.6
 	 */
-	public function bable_type($tag, $handle, $src)
+	public function babel_type($tag, $handle, $src)
 	{
 		if ($handle != Core::PLUGIN_NAME . '-crawler' && $handle != Core::PLUGIN_NAME . '-cdn') {
 			return $tag;
@@ -411,7 +411,7 @@ class Admin_Display extends Base
 		foreach ($msgs as $k => $str) {
 			if (is_numeric($k)) {
 				$k = md5($str);
-			} // Use key to make it overwriteable to previous same msg
+			} // Use key to make it overwritable to previous same msg
 			$filtered_msgs[$k] = $str;
 		}
 

@@ -226,8 +226,8 @@ class Object_Cache extends Root
 		defined('LSCWP_LOG') && Debug2::debug('[Object] Reconnecting');
 		// error_log( 'Object: reconnect !' );
 		if (isset($this->_conn)) {
-			// error_log( 'Object: Quiting existing connection!' );
-			defined('LSCWP_LOG') && Debug2::debug('[Object] Quiting existing connection');
+			// error_log( 'Object: Quitting existing connection!' );
+			defined('LSCWP_LOG') && Debug2::debug('[Object] Quitting existing connection');
 			$this->flush();
 			$this->_conn = null;
 			$this->cls(false, true);

@@ -357,7 +357,7 @@ function litespeed_update_3_0($ver)
 		'debug_level' => 'debug-level',
 		'log_file_size' => 'debug-filesize',
 		'debug_cookie' => 'debug-cookie',
-		'collaps_qs' => 'debug-collaps_qs',
+		'collapse_qs' => 'debug-collapse_qs',
 		// 'log_filters' 				=> 'debug-log_filters',
 
 		'crawler_cron_active' => 'crawler',
@@ -447,7 +447,7 @@ function litespeed_update_3_0($ver)
 		if (!isset($previous_options[$k])) {
 			continue;
 		}
-		// The folllowing values must be array
+		// The following values must be array
 		if (!is_array($previous_options[$k])) {
 			if (in_array($v, array('cdn-ori', 'cache-exc_cat', 'cache-exc_tag'))) {
 				$previous_options[$k] = explode(',', $previous_options[$k]);
@@ -605,7 +605,7 @@ function litespeed_update_3_0($ver)
 				if (!isset($previous_site_options[$k])) {
 					continue;
 				}
-				// The folllowing values must be array
+				// The following values must be array
 				if (!is_array($previous_site_options[$k])) {
 					if (in_array($v, array('cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies'))) {
 						$previous_site_options[$k] = explode('|', str_replace('\\ ', ' ', $previous_site_options[$k]));

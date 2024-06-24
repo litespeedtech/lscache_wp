@@ -246,7 +246,7 @@ class Debug2 extends Root
 		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
 		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
-		if ($this->conf(Base::O_DEBUG_COLLAPS_QS)) {
+		if ($this->conf(Base::O_DEBUG_COLLAPSE_QS)) {
 			if (strlen($qs) > 53) {
 				$qs = substr($qs, 0, 53) . '...';
 			}

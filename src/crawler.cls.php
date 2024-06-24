@@ -144,7 +144,7 @@ class Crawler extends Root
 	}
 
 	/**
-	 * Overwride get_summary to init elements
+	 * Overwrite get_summary to init elements
 	 *
 	 * @since  3.0
 	 * @access public
@@ -188,7 +188,7 @@ class Crawler extends Root
 	}
 
 	/**
-	 * Overwride save_summary
+	 * Overwrite save_summary
 	 *
 	 * @since  3.0
 	 * @access public

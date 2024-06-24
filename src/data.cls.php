@@ -58,15 +58,15 @@ class Data extends Root
 	}
 
 	/**
-	 * Correct table existance
+	 * Correct table existence
 	 *
-	 * Call when activate -> upadte_confs()
-	 * Call when upadte_confs()
+	 * Call when activate -> update_confs()
+	 * Call when update_confs()
 	 *
 	 * @since  3.0
 	 * @access public
 	 */
-	public function correct_tb_existance()
+	public function correct_tb_existence()
 	{
 		// Gravatar
 		if ($this->conf(Base::O_DISCUSS_AVATAR_CACHE)) {
@@ -128,7 +128,7 @@ class Data extends Root
 		// Reload options
 		$this->cls('Conf')->load_options();
 
-		$this->correct_tb_existance();
+		$this->correct_tb_existence();
 
 		// Update related files
 		$this->cls('Activation')->update_files();
@@ -291,7 +291,7 @@ class Data extends Root
 			// Reload options
 			$this->cls('Conf')->load_options();
 
-			$this->correct_tb_existance();
+			$this->correct_tb_existence();
 
 			!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
 			Purge::purge_all();

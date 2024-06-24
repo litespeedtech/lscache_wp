@@ -171,7 +171,7 @@ class Vary extends Root
 
 		// If is the request to update vary, then no guest
 		// Don't need anymore as it is always ajax call
-		// Still keep it in case some WP blocked the lightweigh guest vary update script, WP can still update the vary
+		// Still keep it in case some WP blocked the lightweight guest vary update script, WP can still update the vary
 		if (!empty($_GET['litespeed_guest'])) {
 			return;
 		}

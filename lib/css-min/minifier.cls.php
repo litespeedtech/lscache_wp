@@ -123,7 +123,7 @@ class Minifier
     }
 
     /**
-     * Sets the approximate column after which long lines will be splitted in the output
+     * Sets the approximate column after which long lines will be split in the output
      * with a linebreak.
      * @param int $position
      */
@@ -312,7 +312,7 @@ class Minifier
         );
 
         // Process quoted unquotable attribute selectors to unquote them. Covers most common cases.
-        // Likelyhood of a quoted attribute selector being a substring in a string: Very very low.
+        // Likelihood of a quoted attribute selector being a substring in a string: Very very low.
         $css = preg_replace(
             '/\[\s*([a-z][a-z-]+)\s*([\*\|\^\$~]?=)\s*[\'"](-?[a-z_][a-z0-9-_]+)[\'"]\s*\]/Ssi',
             '[$1$2$3]',

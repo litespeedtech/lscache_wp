@@ -268,7 +268,7 @@ class Lang extends Base
 			self::O_DEBUG_LEVEL => __('Debug Level', 'litespeed-cache'),
 			self::O_DEBUG_FILESIZE => __('Log File Size Limit', 'litespeed-cache'),
 			self::O_DEBUG_COOKIE => __('Log Cookies', 'litespeed-cache'),
-			self::O_DEBUG_COLLAPS_QS => __('Collapse Query Strings', 'litespeed-cache'),
+			self::O_DEBUG_COLLAPSE_QS => __('Collapse Query Strings', 'litespeed-cache'),
 			self::O_DEBUG_INC => __('Debug URI Includes', 'litespeed-cache'),
 			self::O_DEBUG_EXC => __('Debug URI Excludes', 'litespeed-cache'),
 			self::O_DEBUG_EXC_STRINGS => __('Debug String Excludes', 'litespeed-cache'),
