@@ -271,6 +271,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Object** More debug log for objectr cache status. (PR#669)
 * **Object** Added brief parseable header comments to the drop-in file. (OllieJones)
 * **Debug** Trim debug log.
+* **Misc** Fixed typos in params and comments. (szepeviktor #688)
 
 = 6.2.0.1 - Apr 25 2024 =
 * 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementor's `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)
