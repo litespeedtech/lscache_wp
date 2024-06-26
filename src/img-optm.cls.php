@@ -243,14 +243,14 @@ class Img_Optm extends Base
 			return;
 		}
 
+		$allowance -= $total_requested;
+
 		// Limit maximum number of items waiting to be pulled
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare($q, array(self::STATUS_NOTIFIED));
 		$total_notified = $wpdb->get_var($q);
-		$max_notified = $allowance * 5;
-
-		if ($total_notified > $max_notified) {
-			self::debug('❌ Too many notified images (' . $total_notified . ' > ' . $max_notified . ')');
+		if ($total_notified > 0) {
+			self::debug('❌ Too many notified images (' . $total_notified . ')');
 			Admin_Display::error(Error::msg('too_many_notified'));
 			$this->_finished_running();
 			return;
@@ -259,11 +259,12 @@ class Img_Optm extends Base
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status IN (%d, %d)";
 		$q = $wpdb->prepare($q, array(self::STATUS_NEW, self::STATUS_RAW));
 		$total_new = $wpdb->get_var($q);
-		$allowance -= $total_new;
+		// $allowance -= $total_new;
 
-		// Get images
+		// May need to get more images
 		$list = array();
-		if ($allowance > 0) {
+		$more = $allowance - $total_new;
+		if ($more > 0) {
 			$q = "SELECT b.post_id, b.meta_value
 				FROM `$wpdb->posts` a
 				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
@@ -275,20 +276,8 @@ class Img_Optm extends Base
 				ORDER BY a.ID
 				LIMIT %d
 				";
-			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
+			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $more));
 			$list = $wpdb->get_results($q);
-		}
-
-		if (!$list) {
-			// $msg = __('No new image to send.', 'litespeed-cache');
-			// Admin_Display::succeed($msg);
-
-			// self::debug('new_req() bypass: no new image found');
-			// $this->_finished_running();
-			// return;
-		}
-
-		if ($list) {
 			foreach ($list as $v) {
 				if (!$v->post_id) {
 					continue;
@@ -316,12 +305,6 @@ class Img_Optm extends Base
 
 			self::save_summary();
 
-			if (!$this->_img_in_queue) {
-				self::debug('gather_images bypass: empty _img_in_queue');
-				$this->_finished_running();
-				return;
-			}
-
 			$num_a = count($this->_img_in_queue);
 			self::debug('Images found: ' . $num_a);
 			$this->_filter_duplicated_src();
@@ -341,7 +324,7 @@ class Img_Optm extends Base
 		}
 
 		// Push to Cloud server
-		$accepted_imgs = $this->_send_request();
+		$accepted_imgs = $this->_send_request($allowance);
 
 		$this->_finished_running();
 		if (!$accepted_imgs) {
@@ -610,11 +593,13 @@ class Img_Optm extends Base
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _send_request()
+	private function _send_request($allowance)
 	{
 		global $wpdb;
 
-		$_img_in_queue = $wpdb->get_results("SELECT id,src,post_id FROM `$this->_table_img_optming` WHERE optm_status=" . self::STATUS_RAW);
+		$q = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d LIMIT %d";
+		$q = $wpdb->prepare($q, array(self::STATUS_RAW, $allowance));
+		$_img_in_queue = $wpdb->get_results($q);
 		if (!$_img_in_queue) {
 			return;
 		}
@@ -2119,10 +2104,6 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-			/**
-			 * Batch switch
-			 * @since 1.6.3
-			 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
 				$this->batch_switch($type);
