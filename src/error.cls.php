@@ -159,8 +159,7 @@ class Error
 				$msg = __('Crawler disabled by the server admin.', 'litespeed-cache');
 				break;
 
-			/*** QC error code ***/
-			case 'try_later':
+			case 'try_later': // QC error code
 				$msg = __('Previous request too recent. Please try again later.', 'litespeed-cache');
 				break;
 
