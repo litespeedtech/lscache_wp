@@ -184,7 +184,7 @@ class Report extends Base
 
 		$buf = $this->_format_report_section('Server Variables', $server_vars);
 
-		$buf .= $this->_format_report_section('Wordpress Specific Extras', $extras);
+		$buf .= $this->_format_report_section('WordPress Specific Extras', $extras);
 
 		$buf .= $this->_format_report_section('LSCache Plugin Options', $options);
 

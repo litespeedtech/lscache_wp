@@ -73,7 +73,7 @@ class Error
 				break;
 
 			case 'too_many_notified':
-				$msg = __('You have too many notified images, please pull down notified images first.', 'litespeed-cache');
+				$msg = __('You have images waiting to be pulled. Please wait for the automatic pull to complete, or pull them down manually now.', 'litespeed-cache');
 				break;
 
 			case 'empty_list':
@@ -159,8 +159,7 @@ class Error
 				$msg = __('Crawler disabled by the server admin.', 'litespeed-cache');
 				break;
 
-			/*** QC error code ***/
-			case 'try_later':
+			case 'try_later': // QC error code
 				$msg = __('Previous request too recent. Please try again later.', 'litespeed-cache');
 				break;
 

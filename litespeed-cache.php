@@ -4,7 +4,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           6.3-a3
+ * Version:           6.3-b5
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -34,7 +34,7 @@ if (defined('LSCWP_V')) {
 	return;
 }
 
-!defined('LSCWP_V') && define('LSCWP_V', '6.3-a3');
+!defined('LSCWP_V') && define('LSCWP_V', '6.3-b5');
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -103,7 +103,7 @@ if (!empty($_SERVER['X-LSCACHE']) || LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER
 	!defined('LITESPEED_ALLOWED') && define('LITESPEED_ALLOWED', true);
 }
 
-// ESI const defination
+// ESI const definition
 if (!defined('LSWCP_ESI_SUPPORT')) {
 	define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false);
 }
@@ -123,7 +123,7 @@ if (!function_exists('litespeed_exception_handler')) {
 }
 
 /**
- * Overwride the WP nonce funcs outside of LiteSpeed namespace
+ * Overwrite the WP nonce funcs outside of LiteSpeed namespace
  * @since  3.0
  */
 if (!function_exists('litespeed_define_nonce_func')) {

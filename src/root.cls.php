@@ -367,7 +367,7 @@ abstract class Root
 				}
 			}
 
-			// Network orignal value will be in _network_options
+			// Network original value will be in _network_options
 			if (!is_network_admin() || !$this->has_network_conf($id)) {
 				return self::$_options[$id];
 			}

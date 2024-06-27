@@ -323,7 +323,7 @@ class Conf extends Base
 		 * Upgrade conf
 		 */
 		if ($ver && $ver != Core::VER) {
-			// Site plugin versin will change inside
+			// Site plugin version will change inside
 			Data::cls()->conf_site_upgrade($ver);
 		}
 
@@ -512,7 +512,7 @@ class Conf extends Base
 		do_action('litespeed_update_confs', $the_matrix);
 
 		// Update related tables
-		$this->cls('Data')->correct_tb_existance();
+		$this->cls('Data')->correct_tb_existence();
 
 		// Update related files
 		$this->cls('Activation')->update_files();

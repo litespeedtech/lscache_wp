@@ -246,10 +246,8 @@ class Debug2 extends Root
 		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
 		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
-		if ($this->conf(Base::O_DEBUG_COLLAPS_QS)) {
-			if (strlen($qs) > 53) {
-				$qs = substr($qs, 0, 53) . '...';
-			}
+		if ($this->conf(Base::O_DEBUG_COLLAPSE_QS)) {
+			$qs = $this->_omit_long_message($qs);
 			if ($qs) {
 				$param .= ' ? ' . $qs;
 			}
@@ -260,11 +258,11 @@ class Debug2 extends Root
 		}
 
 		if (!empty($_SERVER['HTTP_REFERER'])) {
-			$params[] = 'HTTP_REFERER: ' . $server['HTTP_REFERER'];
+			$params[] = 'HTTP_REFERER: ' . $this->_omit_long_message($server['HTTP_REFERER']);
 		}
 
 		if (defined('LSCWP_LOG_MORE')) {
-			$params[] = 'User Agent: ' . $server['HTTP_USER_AGENT'];
+			$params[] = 'User Agent: ' . $this->_omit_long_message($server['HTTP_USER_AGENT']);
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
 		}
@@ -290,6 +288,18 @@ class Debug2 extends Root
 		$request = array_map(__CLASS__ . '::format_message', $params);
 
 		File::append($log_file, $request);
+	}
+
+	/**
+	 * Trim long msg to keep log neat
+	 * @since 6.3
+	 */
+	private function _omit_long_message($msg)
+	{
+		if (strlen($msg) > 53) {
+			$msg = substr($msg, 0, 53) . '...';
+		}
+		return $msg;
 	}
 
 	/**

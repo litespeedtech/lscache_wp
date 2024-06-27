@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.5.3
+Tested up to: 6.5.5
 Stable tag: 6.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -250,20 +250,30 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.3 - Jun 2024 =
-* 🌱**Page Optimize** New option: HTML Keep Comments. (#328853)
-* **CLoud** Fixed an message error for daily quota.
-* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
-* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
-* **ESI** Add WP Data Access nonce (PR#665)
-* **Media** Ignored images from JS in image size detection (PR#660)
+= 6.3 - Jul 2024 =
+* 🌱**Page Optimize** HTML Keep Comments. (#328853)
+* 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)
+* **Cache** Bypassed admin initialization when doing ajax call. (Tim)
 * **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
+* **CLoud** Fixed an message error for daily quota.
+* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
+* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
+* **ESI** Added WP Data Access nonce (PR#665)
+* **ESI** Added WP User Frontend ESI nonce (PR#675)
+* **Media** Ignored images from JS in image size detection (PR#660)
 * **GUI** Removed Preset menu from network admin panel.
 * **GUI** Suppressed sitemap generation message if not triggered manually.
 * **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
 * **Page Optimize** Flatsome theme random string excludes. (PR#415)
 * **Page Optimize** Exclude Cloudflare turnstile from JS optimizations. (Tobolo)
+* **Page Optimize** Fixes Cloudflare Turnstile issues. (Contributolo PR#671/672)
+* **Object** More debug log for objectr cache status. (PR#669)
+* **Object** Added brief parseable header comments to the drop-in file. (OllieJones)
+* **Debug** Trimmed debug log.
+* **Misc** Fixed typos in params and comments. (szepeviktor #688)
+* **Image Optimization** Fixed an issue which suppresses new requests when no new images in library but existed in queue to send.
+* **Image Optimization** Improved Cloud side quota check by disallowing new requests if notified but not pulled.
 
 = 6.2.0.1 - Apr 25 2024 =
 * 🔥🐞**Page Optimize** Fixed the image display issue that occurs with Elementor's `data-settings` attribute when the WebP image is not yet ready. (kanten/cbwwebmaster/reedock #132840 #680939 #326525)
@@ -331,7 +341,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * 🐞**Image Optimize** Removing original image will also remove optimized images.
 * **Image Optimize** Increased time limit for pull process.
 * **Image Optimize** Last pull time and cron tag now included in optimization summary.
-* **Image Optimize** Fixed Elementors Slideshow unusal background images. (Ryan D)
+* **Image Optimize** Fixed Elementors Slideshow unusual background images. (Ryan D)
 * 🐞**Database Optimize** Fix an issue where cleaning post revisions would fail while cleaning postmeta. (Tynan #596)
 * **Crawler** Added status updates to CLI. (Lars)
 * **3rd** WPML product category purge for WooCommerce. (Tynan #577)
@@ -359,4 +369,4 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Vary** Enabled `litespeed_vary_cookies` for LSWS Enterprise.
 * **GUI** Stopped WebP tip from wrongly displaying when Guest Mode is off.
 * **GUI** Added QUIC.cloud promotion postbox on dashboard page.
-* **3rd** Added `pagespeed ninja` to blocklist due to its bad bahavior.
+* **3rd** Added `pagespeed ninja` to blocklist due to its bad behavior.

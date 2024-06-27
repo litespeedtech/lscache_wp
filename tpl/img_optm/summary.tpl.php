@@ -238,7 +238,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 							<?php if ($img_count['groups_new']) : ?>
 								<code><?php echo Admin_Display::print_plural($img_count['groups_new'], 'group'); ?></code>
 							<?php else : ?>
-								<font class="litespeed-congratulate"><?php echo __('Congratulations, all requested!', 'litespeed-cache'); ?></font>
+								<font class="litespeed-congratulate"><?php echo __('Congratulations, all gathered!', 'litespeed-cache'); ?></font>
 							<?php endif; ?>
 
 							<a href="https://docs.litespeedtech.com/lscache/lscwp/imageopt/#what-is-an-image-group" target="_blank" class="litespeed-desc litespeed-help-btn-icon" data-balloon-pos="up" aria-label="<?php echo __('What is a group?', 'litespeed-cache'); ?>">

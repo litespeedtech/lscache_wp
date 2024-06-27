@@ -107,7 +107,7 @@ class ESI extends Root
 		/**
 		 * Shortcode ESI
 		 *
-		 * To use it, just change the origianl shortcode as below:
+		 * To use it, just change the original shortcode as below:
 		 * 		old: [someshortcode aa='bb']
 		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
 		 *
@@ -458,7 +458,7 @@ class ESI extends Root
 	 * @param string $control The cache control attribute if any.
 	 * @param bool $silence If generate wrapper comment or not
 	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
-	 * @param bool $svar  		If store the value in memory or not, in memory wil be faster
+	 * @param bool $svar  		If store the value in memory or not, in memory will be faster
 	 * @param array $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
 	 */
 	public function sub_esi_block(
@@ -1011,7 +1011,7 @@ class ESI extends Root
 	}
 
 	/**
-	 * Replace preseved blocks
+	 * Replace preserved blocks
 	 *
 	 * @since  2.6
 	 * @access public

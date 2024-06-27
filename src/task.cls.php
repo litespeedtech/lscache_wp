@@ -27,8 +27,8 @@ class Task extends Root
 
 	private static $_guest_options = array(Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI);
 
-	const FITLER_CRAWLER = 'litespeed_crawl_filter';
-	const FITLER = 'litespeed_filter';
+	const FILTER_CRAWLER = 'litespeed_crawl_filter';
+	const FILTER = 'litespeed_filter';
 
 	/**
 	 * Keep all tasks in cron
@@ -62,7 +62,7 @@ class Task extends Root
 			if (!wp_next_scheduled($trigger['name'])) {
 				self::debug('Cron hook register [name] ' . $trigger['name']);
 
-				wp_schedule_event(time(), $id == Base::O_CRAWLER ? self::FITLER_CRAWLER : self::FITLER, $trigger['name']);
+				wp_schedule_event(time(), $id == Base::O_CRAWLER ? self::FILTER_CRAWLER : self::FILTER, $trigger['name']);
 			}
 
 			add_action($trigger['name'], $trigger['hook']);
@@ -171,8 +171,8 @@ class Task extends Root
 	 */
 	public function lscache_cron_filter($schedules)
 	{
-		if (!array_key_exists(self::FITLER, $schedules)) {
-			$schedules[self::FITLER] = array(
+		if (!array_key_exists(self::FILTER, $schedules)) {
+			$schedules[self::FILTER] = array(
 				'interval' => 60,
 				'display' => __('Every Minute', 'litespeed-cache'),
 			);
@@ -190,9 +190,9 @@ class Task extends Root
 	{
 		$interval = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
 		// $wp_schedules = wp_get_schedules();
-		if (!array_key_exists(self::FITLER_CRAWLER, $schedules)) {
+		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
 			// 	self::debug('Crawler cron log: cron filter '.$interval.' added');
-			$schedules[self::FITLER_CRAWLER] = array(
+			$schedules[self::FILTER_CRAWLER] = array(
 				'interval' => $interval,
 				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
 			);

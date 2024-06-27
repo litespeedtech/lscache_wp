@@ -59,7 +59,7 @@ if ($check_only) {
 		<h3 class="litespeed-banner-title litespeed-top15"><?php echo __('LiteSpeed Cache', 'litespeed-cache'); ?>: <?php echo __('New Version Available!', 'litespeed-cache'); ?></h3>
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
-				<p class="litespeed-banner-desciption-content">
+				<p class="litespeed-banner-description-content">
 					<?php echo sprintf(__('New release %s is available now.', 'litespeed-cache'), 'v' . $this->_summary['new_version.v']); ?>
 				</p>
 			</div>

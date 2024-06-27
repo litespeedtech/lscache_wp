@@ -116,7 +116,7 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 	<tr>
 		<th>
-			<?php $id = Base::O_DEBUG_COLLAPS_QS; ?>
+			<?php $id = Base::O_DEBUG_COLLAPSE_QS; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
