@@ -14,6 +14,7 @@ class Router extends Base
 {
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
+	const VALIDATE_PURGE = 'VALIDATE_PURGE';
 
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
 	const ACTION_DB_OPTM = 'db_optm';
@@ -270,16 +271,20 @@ class Router extends Base
 	 *
 	 * @since  3.3
 	 */
-	public static function get_hash()
+	public static function get_hash($item_name = null)
 	{
+		if(!$item_name){
+			$item_name = self::ITEM_HASH;
+		}
+
 		// Reuse previous hash if existed
-		$hash = self::get_option(self::ITEM_HASH);
+		$hash = self::get_option($item_name);
 		if ($hash) {
 			return $hash;
 		}
 
 		$hash = Str::rrand(6);
-		self::update_option(self::ITEM_HASH, $hash);
+		self::update_option($item_name, $hash);
 		return $hash;
 	}
 
@@ -501,9 +506,27 @@ class Router extends Base
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
 		if (!$this->verify_nonce($action)) {
-			// check if it is from admin ip
-			if (!$this->is_admin_ip()) {
+			// check if action is from admin ip. skip test for action Core::ACTION_QS_PURGE.
+			if ( $action != Core::ACTION_QS_PURGE && !$this->is_admin_ip()) {
 				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action);
+				return;
+			}
+
+			$save_blog = get_current_blog_id();
+			if ($_REQUEST['switch_blog']) {
+				// If request parameter "switch_blog", switch to correct blog to generate hash.
+				switch_to_blog($_REQUEST['switch_blog']);
+			}
+			$hash = Router::get_hash(self::VALIDATE_PURGE);
+			if ($_REQUEST['switch_blog']) {
+				// Restore blog if needed.
+				switch_to_blog($save_blog);
+			}
+			
+
+			// Validate request for action Core::ACTION_QS_PURGE. test if request parameter isset and is correct.
+			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != $hash ) ){
+				Debug2::debug('[Router] LSCWP_CTRL query string - could not validate request for: ' . $action);
 				return;
 			}
 
@@ -518,7 +541,7 @@ class Router extends Base
 					Core::ACTION_QS_PURGE_EMPTYCACHE,
 				))
 			) {
-				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action);
+				Debug2::debug('[Router] LSCWP_CTRL query string - did not match public action: ' . $action);
 				return;
 			}
 

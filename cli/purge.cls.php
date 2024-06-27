@@ -157,6 +157,7 @@ class Purge
 	{
 		$data = array(
 			Router::ACTION => Core::ACTION_QS_PURGE,
+			Router::VALIDATE_PURGE => Router::get_hash(Router::VALIDATE_PURGE),
 		);
 		$url = $args[0];
 		$deconstructed = wp_parse_url($url);
@@ -166,6 +167,8 @@ class Purge
 		}
 
 		if (is_multisite()) {
+			$data['switch_blog'] = get_current_blog_id();
+			
 			if (get_blog_id_from_url($deconstructed['host'], '/') === 0) {
 				WP_CLI::error('Multisite url passed in is invalid.');
 				return;
