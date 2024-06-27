@@ -14,6 +14,7 @@ class Router extends Base
 {
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
+	const VALIDATE_PURGE = 'VALIDATE_PURGE';
 
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
 	const ACTION_DB_OPTM = 'db_optm';
@@ -501,9 +502,15 @@ class Router extends Base
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
 		if (!$this->verify_nonce($action)) {
-			// check if it is from admin ip
-			if (!$this->is_admin_ip()) {
+			// check if action is from admin ip. skip test for action Core::ACTION_QS_PURGE.
+			if ( $action != Core::ACTION_QS_PURGE && !$this->is_admin_ip()) {
 				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action);
+				return;
+			}
+
+			// Validate request for action Core::ACTION_QS_PURGE. test if request parameter isset and is correct.
+			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != Router::get_hash() ) ){
+				Debug2::debug('[Router] LSCWP_CTRL query string - could not validate request for: ' . $action);
 				return;
 			}
 
@@ -518,7 +525,7 @@ class Router extends Base
 					Core::ACTION_QS_PURGE_EMPTYCACHE,
 				))
 			) {
-				Debug2::debug('[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action);
+				Debug2::debug('[Router] LSCWP_CTRL query string - did not match public action: ' . $action);
 				return;
 			}
 

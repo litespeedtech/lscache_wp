@@ -157,6 +157,7 @@ class Purge
 	{
 		$data = array(
 			Router::ACTION => Core::ACTION_QS_PURGE,
+			Router::VALIDATE_PURGE => Router::get_hash(),
 		);
 		$url = $args[0];
 		$deconstructed = wp_parse_url($url);
