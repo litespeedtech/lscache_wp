@@ -245,6 +245,13 @@ class Img_Optm extends Base
 
 		$allowance -= $total_requested;
 
+		if ($allowance < 1) {
+			self::debug('❌ Too many equested images ' . $total_requested);
+			Admin_Display::error(Error::msg('too_many_requested'));
+			$this->_finished_running();
+			return;
+		}
+
 		// Limit maximum number of items waiting to be pulled
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare($q, array(self::STATUS_NOTIFIED));
