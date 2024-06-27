@@ -246,7 +246,7 @@ class Img_Optm extends Base
 		$allowance -= $total_requested;
 
 		if ($allowance < 1) {
-			self::debug('❌ Too many equested images ' . $total_requested);
+			self::debug('❌ Too many requested images ' . $total_requested);
 			Admin_Display::error(Error::msg('too_many_requested'));
 			$this->_finished_running();
 			return;
