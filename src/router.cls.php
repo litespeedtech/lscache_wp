@@ -64,6 +64,7 @@ class Router extends Base
 	const TYPE = 'litespeed_type';
 
 	const ITEM_HASH = 'hash';
+	const QS_PURGE_HASH = 'qs_purge_hash';
 
 	private static $_esi_enabled;
 	private static $_is_ajax;
@@ -271,16 +272,20 @@ class Router extends Base
 	 *
 	 * @since  3.3
 	 */
-	public static function get_hash()
+	public static function get_hash($item_name = null)
 	{
+		if(!$item_name){
+			$item_name = self::ITEM_HASH;
+		}
+
 		// Reuse previous hash if existed
-		$hash = self::get_option(self::ITEM_HASH);
+		$hash = self::get_option($item_name);
 		if ($hash) {
 			return $hash;
 		}
 
 		$hash = Str::rrand(6);
-		self::update_option(self::ITEM_HASH, $hash);
+		self::update_option($item_name, $hash);
 		return $hash;
 	}
 
@@ -509,7 +514,7 @@ class Router extends Base
 			}
 
 			// Validate request for action Core::ACTION_QS_PURGE. test if request parameter isset and is correct.
-			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != Router::get_hash() ) ){
+			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != Router::get_hash(self::QS_PURGE_HASH) ) ){
 				Debug2::debug('[Router] LSCWP_CTRL query string - could not validate request for: ' . $action);
 				return;
 			}
