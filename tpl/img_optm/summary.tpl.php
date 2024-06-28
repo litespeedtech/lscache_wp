@@ -136,7 +136,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 					<?php endif; ?>
 
 					<p><?php echo sprintf(
-							'<a href="%1$s" class="button button-secondary" data-balloon-pos="right" aria-label="%2$s" %3$s><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%4$s</a>',
+							'<a href="%1$s" class="button button-secondary litespeed-btn-warning" data-balloon-pos="right" aria-label="%2$s" %3$s><span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;%4$s</a>',
 							($unfinished_num ? Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_CLEAN) : 'javascript:;'),
 							__('Remove all previous unfinished image optimization requests.', 'litespeed-cache'),
 							($unfinished_num ? '' : ' disabled'),
