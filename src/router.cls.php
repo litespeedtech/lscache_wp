@@ -512,13 +512,13 @@ class Router extends Base
 				return;
 			}
 
-			// If cli switch to correct blog to generate hash.
 			if ($_REQUEST['switch_blog']) {
+				// If request parameter "switch_blog", switch to correct blog to generate hash.
 				switch_to_blog($_REQUEST['switch_blog']);
 			}
 			$hash = Router::get_hash(self::VALIDATE_PURGE);
-			// Restore blog.
 			if ($_REQUEST['switch_blog']) {
+				// Restore blog if needed.
 				restore_current_blog();
 			}
 			
