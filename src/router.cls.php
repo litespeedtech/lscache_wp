@@ -512,8 +512,19 @@ class Router extends Base
 				return;
 			}
 
+			// If cli switch to correct blog to generate hash.
+			if ($_REQUEST['switch_blog']) {
+				switch_to_blog($_REQUEST['switch_blog']);
+			}
+			$hash = Router::get_hash(self::VALIDATE_PURGE);
+			// Restore blog.
+			if ($_REQUEST['switch_blog']) {
+				restore_current_blog();
+			}
+			
+
 			// Validate request for action Core::ACTION_QS_PURGE. test if request parameter isset and is correct.
-			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != Router::get_hash(self::VALIDATE_PURGE) ) ){
+			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != $hash ) ){
 				Debug2::debug('[Router] LSCWP_CTRL query string - could not validate request for: ' . $action);
 				return;
 			}

@@ -167,6 +167,7 @@ class Purge
 		}
 
 		if (is_multisite()) {
+			$data['switch_blog'] = get_current_blog_id();
 			if (get_blog_id_from_url($deconstructed['host'], '/') === 0) {
 				WP_CLI::error('Multisite url passed in is invalid.');
 				return;
