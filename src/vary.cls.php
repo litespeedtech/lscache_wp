@@ -667,7 +667,7 @@ class Vary extends Root
 		$tp_cookies = $this->_finalize_curr_vary_cookies();
 
 		if (!$tp_cookies) {
-			Debug2::debug2('[Vary] no custimzed vary');
+			Debug2::debug2('[Vary] no customized vary');
 			return;
 		}
 
