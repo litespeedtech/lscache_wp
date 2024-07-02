@@ -88,7 +88,7 @@ class VPI extends Base
 	 */
 	public function notify()
 	{
-		$post_data = json_decode(file_get_contents('php://input'), true);
+		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
 		}

@@ -502,7 +502,7 @@ class ESI extends Root
 			$appended_params['_control'] = $control;
 		}
 		if ($params) {
-			$appended_params[self::QS_PARAMS] = base64_encode(json_encode($params));
+			$appended_params[self::QS_PARAMS] = base64_encode(\json_encode($params));
 			Debug2::debug2('[ESI] param ', $params);
 		}
 
@@ -608,7 +608,7 @@ class ESI extends Root
 
 		Debug2::debug2('[ESI] parms', $unencrypted);
 		// $unencoded = urldecode($unencrypted); no need to do this as $_GET is already parsed
-		$params = json_decode($unencrypted, true);
+		$params = \json_decode($unencrypted, true);
 
 		return $params;
 	}

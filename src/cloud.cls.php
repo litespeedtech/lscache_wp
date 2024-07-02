@@ -167,7 +167,7 @@ class Cloud extends Base
 			'php' => phpversion(),
 		);
 		if (defined('LITESPEED_ERR')) {
-			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
+			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? \json_encode(LITESPEED_ERR) : LITESPEED_ERR);
 		}
 		$data = self::get(self::API_VER, $req_data);
 
@@ -325,7 +325,7 @@ class Cloud extends Base
 			return;
 		}
 
-		self::debug('sync_usage ' . json_encode($usage));
+		self::debug('sync_usage ' . \json_encode($usage));
 
 		foreach (self::$SERVICES as $v) {
 			$this->_summary['usage.' . $v] = !empty($usage[$v]) ? $usage[$v] : false;
@@ -398,7 +398,7 @@ class Cloud extends Base
 			self::debug('request cloud list failed: ', $json);
 
 			if ($json) {
-				$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . json_encode($json);
+				$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . \json_encode($json);
 				Admin_Display::error($msg);
 			}
 
@@ -460,7 +460,7 @@ class Cloud extends Base
 					continue;
 				}
 
-				$curr_load = json_decode($response['body'], true);
+				$curr_load = \json_decode($response['body'], true);
 				if (!empty($curr_load['_res']) && $curr_load['_res'] == 'ok' && isset($curr_load['load'])) {
 					$valid_cloud_loads[$v] = $curr_load['load'];
 				}
@@ -729,7 +729,7 @@ class Cloud extends Base
 			return;
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		if (!is_array($json)) {
 			self::debug('failed to decode response json: ' . $response['body']);
@@ -1038,7 +1038,7 @@ class Cloud extends Base
 			),
 		);
 		if (!empty($body)) {
-			$req_args['body'] = json_encode($body);
+			$req_args['body'] = \json_encode($body);
 
 			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
 		} else {
@@ -1059,7 +1059,7 @@ class Cloud extends Base
 			return 'unauthorized access to REST API.';
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		if (!$json['success']) {
 			$contactSupport = false;
@@ -1222,7 +1222,7 @@ class Cloud extends Base
 			return;
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		// Save token option
 		if (!empty($json['token'])) {
@@ -1501,7 +1501,7 @@ class Cloud extends Base
 			throw new \Exception('Failed to fetch QUIC.cloud whitelist ' . $error_message);
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		self::debug('Load ips', $json);
 		self::save_summary(array('ips' => $json));
