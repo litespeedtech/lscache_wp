@@ -112,6 +112,7 @@ class Base extends Root
 	const O_DEBUG_FILESIZE = 'debug-filesize';
 	const O_DEBUG_COOKIE = 'debug-cookie';
 	const O_DEBUG_COLLAPSE_QS = 'debug-collapse_qs';
+	const O_DEBUG_COLLAPS_QS = 'debug-collapse_qs'; // For backwards compatibility, will drop after v6.5
 	const O_DEBUG_INC = 'debug-inc';
 	const O_DEBUG_EXC = 'debug-exc';
 	const O_DEBUG_EXC_STRINGS = 'debug-exc_strings';
