@@ -252,7 +252,7 @@ class Utility extends Root
 			return $arr;
 		}
 
-		return base64_encode(json_encode($arr));
+		return base64_encode(\json_encode($arr));
 	}
 
 	/**

@@ -204,7 +204,7 @@ class Crawler extends Root
 
 		parent::save_summary($data, $reload, $overwrite);
 
-		File::save(LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode($data), true);
+		File::save(LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, \json_encode($data), true);
 	}
 
 	/**

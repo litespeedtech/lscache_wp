@@ -654,7 +654,7 @@ class Img_Optm extends Base
 
 		$data = array(
 			'action' => self::CLOUD_ACTION_NEW_REQ,
-			'list' => json_encode($list),
+			'list' => \json_encode($list),
 			'optm_ori' => $this->conf(self::O_IMG_OPTM_ORI) ? 1 : 0,
 			'optm_webp' => $this->conf(self::O_IMG_OPTM_WEBP) ? 1 : 0,
 			'optm_lossless' => $this->conf(self::O_IMG_OPTM_LOSSLESS) ? 1 : 0,
@@ -700,7 +700,7 @@ class Img_Optm extends Base
 			return Cloud::err('too_often');
 		}
 
-		$post_data = json_decode(file_get_contents('php://input'), true);
+		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
 		}
@@ -803,7 +803,7 @@ class Img_Optm extends Base
 
 				// Update status and data in working table
 				$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d, server_info = %s WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, array($status, json_encode($server_info), $v->id)));
+				$wpdb->query($wpdb->prepare($q, array($status, \json_encode($server_info), $v->id)));
 
 				// Update postmeta for optm summary
 				$postmeta_info = serialize($postmeta_info);
@@ -983,7 +983,7 @@ class Img_Optm extends Base
 				$req_counter = 0;
 				foreach ($img_rows as $row_img) {
 					// request original image
-					$server_info = json_decode($row_img->server_info, true);
+					$server_info = \json_decode($row_img->server_info, true);
 					if (!empty($server_info['ori'])) {
 						$image_url = $server_info['server'] . '/' . $server_info['ori'];
 						self::debug('Queueing pull: ' . $image_url);
@@ -1024,7 +1024,7 @@ class Img_Optm extends Base
 					$row_type = isset($row_data['type']) ? $row_data['type'] : 'ori';
 					$row_img = $row_data['data'];
 					$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
-					$server_info = json_decode($row_img->server_info, true);
+					$server_info = \json_decode($row_img->server_info, true);
 
 					if (empty($response->success)) {
 						if (!empty($response->status_code) && 404 == $response->status_code) {

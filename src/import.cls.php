@@ -42,7 +42,7 @@ class Import extends Base
 
 		$data = array();
 		foreach ($raw_data as $k => $v) {
-			$data[] = json_encode(array($k, $v));
+			$data[] = \json_encode(array($k, $v));
 		}
 
 		$data = implode("\n\n", $data);
@@ -108,11 +108,11 @@ class Import extends Base
 					if (!$v) {
 						continue;
 					}
-					list($k, $v) = json_decode($v, true);
+					list($k, $v) = \json_decode($v, true);
 					$ori_data[$k] = $v;
 				}
 			} else {
-				$ori_data = json_decode(base64_decode($data), true);
+				$ori_data = \json_decode(base64_decode($data), true);
 			}
 		} catch (\Exception $ex) {
 			Debug2::debug('[Import] ❌ Failed to parse serialized data');

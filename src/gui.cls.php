@@ -209,7 +209,7 @@ class GUI extends Base
 
 		if (Router::is_ajax()) {
 			// All dismiss actions are considered as ajax call, so just exit
-			exit(json_encode(array('success' => 1)));
+			exit(\json_encode(array('success' => 1)));
 		}
 
 		// Plain click link, redirect to referral url

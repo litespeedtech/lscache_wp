@@ -213,7 +213,7 @@ class Vary extends Root
 		Debug2::debug('[Vary] Will update guest vary in finalize');
 
 		// return json
-		echo json_encode(array('reload' => 'yes'));
+		echo \json_encode(array('reload' => 'yes'));
 		exit();
 	}
 
@@ -714,7 +714,7 @@ class Vary extends Root
 			$cookies[$k] = $values_json ? $this->_get_cookie_val($v) : 'cookie=' . $v;
 		}
 
-		return $values_json ? json_encode($cookies) : $cookies;
+		return $values_json ? \json_encode($cookies) : $cookies;
 	}
 
 	/**

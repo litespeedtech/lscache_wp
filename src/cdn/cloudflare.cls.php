@@ -242,7 +242,7 @@ class Cloudflare extends Base
 
 		if ($data) {
 			if (is_array($data)) {
-				$data = json_encode($data);
+				$data = \json_encode($data);
 			}
 			$wp_args['body'] = $data;
 		}
@@ -258,7 +258,7 @@ class Cloudflare extends Base
 
 		$result = wp_remote_retrieve_body($resp);
 
-		$json = json_decode($result, true);
+		$json = \json_decode($result, true);
 
 		if ($json && $json['success'] && $json['result']) {
 			Debug2::debug('[Cloudflare] _cloudflare_call called successfully');
