@@ -505,6 +505,16 @@ class GUI extends Base
 			'meta' => array('tabindex' => '0'),
 		));
 
+		if ($this->conf(self::O_CDN_CLOUDFLARE)) {
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-purge-cloudflare',
+				'title' => __('Purge All', 'litespeed-cache') . ' - ' . __('Cloudflare', 'litespeed-cache'),
+				'href' => Utility::build_url(Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL),
+				'meta' => array('tabindex' => '0'),
+			));
+		}
+
 		if (defined('LSCWP_OBJECT_CACHE')) {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'litespeed-menu',
