@@ -1397,7 +1397,7 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @since  5.0 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
 	 */
-	public function parse_qc_redir($extra = array())
+	public function parse_qc_redir($check_token = false)
 	{
 		if (!$this->_api_key() && !empty($this->_summary['is_linked'])) {
 			$this->_summary['is_linked'] = 0;
@@ -1405,7 +1405,7 @@ class Cloud extends Base
 		}
 
 		if (empty($_GET['qc_res'])) {
-			return array();
+			return false;
 		}
 
 		if ($_GET['qc_res'] == 'registered') {
@@ -1422,7 +1422,7 @@ class Cloud extends Base
 		if (!empty($_GET['domain_hash'])) {
 			if (empty($_GET['domain_hash_nonce'])) {
 				Admin_Display::error(__('Domain Key hash nonce missing.', 'litespeed-cache'), true);
-				return array();
+				return false;
 			}
 			$salt = substr($this->_api_key(), 3, 8);
 			$tick = ceil(time() / 43200);
@@ -1430,33 +1430,35 @@ class Cloud extends Base
 			$nonce2 = md5($salt . ($tick - 1));
 			if ($_GET['domain_hash_nonce'] != $nonce && $_GET['domain_hash_nonce'] != $nonce2) {
 				Admin_Display::error(__('Domain Key hash nonce mismatch. Please correct your server clock.', 'litespeed-cache'), true);
-				return array();
+				return false;
 			}
 
 			if (md5(substr($this->_api_key(), 2, 8)) !== $_GET['domain_hash']) {
 				Admin_Display::error(__('Domain Key hash mismatch', 'litespeed-cache'), true);
-				return array();
+				return false;
 			}
 
 			$this->set_linked();
 			$qsDrop[] = ".replace( '&domain_hash=" . sanitize_key($_GET['domain_hash']) . ', \'\' )';
 		}
 
-		$extraRet = array();
-		if (!empty($extra)) {
-			foreach ($extra as $key) {
-				if (!empty($_GET[$key])) {
-					$extraRet[$key] = sanitize_key($_GET[$key]);
-					$qsDrop[] = ".replace( '&$key=" . urlencode($_GET[$key]) . ', \'\' )';
-				}
+		$token = '';
+		if ($check_token && !empty($_GET['token'])) {
+			// Validate nonce `litespeed_qc_link`
+			if (empty($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], "litespeed_qc_link")) {
+				Admin_Display::error(__('Failed to verify domain nonce.', 'litespeed-cache'), true);
+				return false;
 			}
+
+			$token = sanitize_key($_GET['token']);
+			$qsDrop[] = ".replace( '&token=" . urlencode($_GET['token']) . ', \'\' )';
 		}
 
 		$replaceStr = implode('', $qsDrop);
 
 		// Drop QS
 		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href" . $replaceStr . ' );</script>';
-		return $extraRet;
+		return $token;
 	}
 
 	/**
