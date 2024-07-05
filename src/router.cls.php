@@ -269,10 +269,18 @@ class Router extends Base
 	/**
 	 * Get a security hash
 	 *
+	 * @since  6.3 - Added parameters $item_name and $blog_id.
 	 * @since  3.3
 	 */
-	public static function get_hash($item_name = null)
+	public static function get_hash($item_name = null, $blog_id = null)
 	{
+		$save_blog = get_current_blog_id();
+		// Switch to blog if sent.
+		if($blog_id && $save_blog != $blog_id ){
+			switch_to_blog($blog_id);
+		}
+
+		// Change item name if sent.
 		if(!$item_name){
 			$item_name = self::ITEM_HASH;
 		}
@@ -285,6 +293,11 @@ class Router extends Base
 
 		$hash = Str::rrand(6);
 		self::update_option($item_name, $hash);
+		// If needed shitch back to the saved blog.
+		if($blog_id && $save_blog != $blog_id ){
+			switch_to_blog($save_blog);
+		}
+
 		return $hash;
 	}
 
@@ -512,17 +525,7 @@ class Router extends Base
 				return;
 			}
 
-			$save_blog = get_current_blog_id();
-			if ($_REQUEST['switch_blog']) {
-				// If request parameter "switch_blog", switch to correct blog to generate hash.
-				switch_to_blog($_REQUEST['switch_blog']);
-			}
 			$hash = Router::get_hash(self::VALIDATE_PURGE);
-			if ($_REQUEST['switch_blog']) {
-				// Restore blog if needed.
-				switch_to_blog($save_blog);
-			}
-			
 
 			// Validate request for action Core::ACTION_QS_PURGE. test if request parameter isset and is correct.
 			if( $action == Core::ACTION_QS_PURGE && ( !isset($_REQUEST[Router::VALIDATE_PURGE]) || $_REQUEST[Router::VALIDATE_PURGE] != $hash ) ){
