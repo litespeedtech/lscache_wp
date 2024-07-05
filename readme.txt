@@ -265,6 +265,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **GUI** Removed Preset menu from network admin panel.
 * **GUI** Suppressed sitemap generation message if not triggered manually.
 * **GUI** Added CloudFlare purge to front end menu.
+* **GUI** Allowed custimized partner CDN login link on dash.
 * **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
 * **Page Optimize** Flatsome theme random string excludes. (PR#415)
