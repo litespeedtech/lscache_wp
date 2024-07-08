@@ -274,6 +274,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **Object** More debug log for objectr cache status. (PR#669)
 * **Object** Added brief parseable header comments to the drop-in file. (OllieJones)
 * **Debug** Trimmed debug log.
+* **Misc** JSON functions `json_encode/json_decode` invocation compatibility update to fix and speed up resolving. (hosni/szepeviktor #693)
 * **Misc** Fixed typos in params and comments. (szepeviktor #688)
 * **Image Optimization** Fixed an issue which suppresses new requests when no new images in library but existed in queue to send.
 * **Image Optimization** Improved Cloud side quota check by disallowing new requests if notified but not pulled.
