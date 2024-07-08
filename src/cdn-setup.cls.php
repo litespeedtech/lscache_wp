@@ -76,7 +76,7 @@ class Cdn_Setup extends Base
 		if (!$_POST['success'] && !empty($_POST['result']['_msg'])) {
 			$msg = wp_kses_post($_POST['result']['_msg']);
 			self::save_summary(array('cdn_setup_err' => $msg));
-			Admin_Display::error(__('There was an error during CDN setup: ', 'litespeed-cache') . $msg);
+			Admin_Display::error(__('There was an error during QUIC.cloud CDN auto setup: ', 'litespeed-cache') . $msg);
 		} else {
 			$this->_process_cdn_status($_POST['result']);
 		}
