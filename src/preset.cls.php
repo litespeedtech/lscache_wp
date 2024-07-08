@@ -218,11 +218,11 @@ class Preset extends Import
 					if (empty($line)) {
 						continue;
 					}
-					list($key, $value) = json_decode($line, true);
+					list($key, $value) = \json_decode($line, true);
 					$parsed[$key] = $value;
 				}
 			} else {
-				$parsed = json_decode(base64_decode($contents), true);
+				$parsed = \json_decode(base64_decode($contents), true);
 			}
 		} catch (\Exception $ex) {
 			Debug2::debug('[Preset] ❌ Failed to parse serialized data');

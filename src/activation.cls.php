@@ -378,7 +378,7 @@ class Activation extends Base
 		foreach ($ids as $v) {
 			$data[$v] = $options[$v];
 		}
-		$data = json_encode($data);
+		$data = \json_encode($data);
 
 		$old_data = File::read(self::$_data_file);
 		if ($old_data != $data) {

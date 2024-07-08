@@ -1002,7 +1002,7 @@ class Media extends Root
 			// Decode HTML entities in the JSON string
 			$jsonString = html_entity_decode($match[1]);
 
-			$jsonData = json_decode($jsonString, true);
+			$jsonData = \json_decode($jsonString, true);
 
 			if (json_last_error() === JSON_ERROR_NONE) {
 				$did_webp_replace = false;
@@ -1020,7 +1020,7 @@ class Media extends Root
 
 				if ($did_webp_replace) {
 					// Re-encode the modified array back to a JSON string
-					$newJsonString = json_encode($jsonData);
+					$newJsonString = \json_encode($jsonData);
 
 					// Re-encode the JSON string to HTML entities only if it was originally encoded
 					if ($isEncoded) {

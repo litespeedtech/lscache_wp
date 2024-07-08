@@ -528,9 +528,9 @@ class Core extends Root
 		}
 
 		if (apply_filters('litespeed_is_json', false)) {
-			if (json_decode($buffer, true) == null) {
+			if (\json_decode($buffer, true) == null) {
 				Debug2::debug('[Core] Buffer converting to JSON');
-				$buffer = json_encode($buffer);
+				$buffer = \json_encode($buffer);
 				$buffer = trim($buffer, '"');
 			} else {
 				Debug2::debug('[Core] JSON Buffer');
