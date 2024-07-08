@@ -170,7 +170,7 @@ class Purge
 			$path = '/';
 			// If subfolder install test if we can identify the blog from url.
 			// If subdomain install: $path needs to remain '/'.
-			if(!SUBDOMAIN_INSTALL){
+			if(!is_subdomain_install()){
 				// Get subfolder blog link. Try to match to a blog id.
 				$temp_path = explode('/', $deconstructed['path']);
 				if(!empty($temp_path[1])){
