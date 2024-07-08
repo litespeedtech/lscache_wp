@@ -101,7 +101,7 @@ class Preset extends Import
 	static function init_filesystem()
 	{
 		require_once ABSPATH . '/wp-admin/includes/file.php';
-		WP_Filesystem();
+		\WP_Filesystem();
 		clearstatcache();
 	}
 
