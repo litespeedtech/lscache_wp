@@ -1450,7 +1450,7 @@ class Cloud extends Base
 				return false;
 			}
 
-			$token = sanitize_key($_GET['token']);
+			$token = preg_replace('/[^0-9a-zA-Z]/', '', $_GET['token']);
 			$qsDrop[] = ".replace( '&token=" . urlencode($_GET['token']) . ', \'\' )';
 		}
 
