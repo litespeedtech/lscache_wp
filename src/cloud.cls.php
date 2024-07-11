@@ -1046,7 +1046,6 @@ class Cloud extends Base
 			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
 		}
 
-
 		return $this->_parse_rest_response($response);
 	}
 
@@ -1449,7 +1448,7 @@ class Cloud extends Base
 		$token = '';
 		if ($check_token && !empty($_GET['token'])) {
 			// Validate nonce `litespeed_qc_link`
-			if (empty($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], "litespeed_qc_link")) {
+			if (empty($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'litespeed_qc_link')) {
 				Admin_Display::error(__('Failed to verify domain nonce.', 'litespeed-cache'), true);
 				return false;
 			}

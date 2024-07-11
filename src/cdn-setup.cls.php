@@ -254,13 +254,13 @@ class Cdn_Setup extends Base
 		$data = array(
 			'site_url' => home_url(),
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed-cdn'),
-			'nonce' => wp_create_nonce("litespeed_qc_link"),
+			'nonce' => wp_create_nonce('litespeed_qc_link'),
 		);
 		$api_key = $this->conf(self::O_API_KEY);
 		if ($api_key) {
 			$data['domain_hash'] = md5(substr($api_key, 0, 8));
 		}
-		self::debug2("qc link created", $data);
+		self::debug2('qc link created', $data);
 		wp_redirect(Cloud::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str($data));
 		exit();
 	}
