@@ -1037,6 +1037,7 @@ class Cloud extends Base
 				'Content-Type' => 'application/json',
 			),
 		);
+		self::debug('Req rest api to QC [api] ' . $api);
 		if (!empty($body)) {
 			$req_args['body'] = \json_encode($body);
 
@@ -1044,6 +1045,7 @@ class Cloud extends Base
 		} else {
 			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
 		}
+
 
 		return $this->_parse_rest_response($response);
 	}
@@ -1056,10 +1058,12 @@ class Cloud extends Base
 			Admin_Display::error(__('Cloud REST Error', 'litespeed-cache') . ': ' . $error_message);
 			return $error_message;
 		} elseif (wp_remote_retrieve_response_code($response) == '401') {
+			Admin_Display::error(__('Unauthorized access to REST API. Your token has expired.', 'litespeed-cache'));
 			return 'unauthorized access to REST API.';
 		}
 
 		$json = \json_decode($response['body'], true);
+		self::debug('QC response', $json);
 
 		if (!$json['success']) {
 			$contactSupport = false;

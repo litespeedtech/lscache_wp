@@ -19,12 +19,12 @@ if (!empty($setup_summary['cdn_setup_done_ts'])) {
 
 $has_setup_token = $__cdnsetup->has_cdn_setup_token();
 
+if (!empty($setup_summary['cdn_setup_err'])) {
+	$cdn_setup_err = $setup_summary['cdn_setup_err'];
+}
+
 if (!empty($setup_summary['cdn_setup_ts'])) {
 	$cdn_setup_ts = $setup_summary['cdn_setup_ts'];
-
-	if (!empty($setup_summary['cdn_setup_err'])) {
-		$cdn_setup_err = $setup_summary['cdn_setup_err'];
-	}
 
 	if ($this->conf(Base::O_QC_NAMESERVERS)) {
 		$nameservers = explode(',', $this->conf(Base::O_QC_NAMESERVERS));
@@ -40,10 +40,10 @@ $disabled = '';
 $dom = parse_url(home_url(), PHP_URL_HOST);
 
 if ($cdn_setup_done_ts) {
-	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> '. __('Done', 'litespeed-cache');
+	$curr_status = '<span class="litespeed-success dashicons dashicons-yes"></span> ' . __('Done', 'litespeed-cache');
 	// wp_date requires WP v5.3+
 	if (function_exists('wp_date')) {
-		$curr_status .= ' <span class="litespeed-desc litespeed-left10">'. sprintf(__('Completed at %s', 'litespeed-cache'), wp_date(get_option('date_format') . ' ' . get_option('time_format'), $cdn_setup_done_ts)). '</span>';
+		$curr_status .= ' <span class="litespeed-desc litespeed-left10">' . sprintf(__('Completed at %s', 'litespeed-cache'), wp_date(get_option('date_format') . ' ' . get_option('time_format'), $cdn_setup_done_ts)) . '</span>';
 	}
 	$disabled = 'disabled';
 } else if (!$has_setup_token) {
