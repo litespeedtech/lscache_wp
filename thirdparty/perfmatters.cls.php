@@ -1,10 +1,13 @@
 <?php
+
 /**
  * The Third Party integration with the Perfmatters plugin.
  *
  * @since		4.4.5
  */
+
 namespace LiteSpeed\Thirdparty;
+
 defined('WPINC') || exit();
 
 class Perfmatters
@@ -27,5 +30,6 @@ class Perfmatters
 	public static function disable_litespeed_esi()
 	{
 		defined('LITESPEED_ESI_OFF') || define('LITESPEED_ESI_OFF', true);
+		do_action('litespeed_debug', 'Disable ESI due to Perfmatters script manager');
 	}
 }
