@@ -4,6 +4,42 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit;
 
+$this->form_action();
+?>
+
+<h3 class="litespeed-title-short">
+	<?php echo __('CDN Settings', 'litespeed-cache'); ?>
+	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/cdn/'); ?>
+</h3>
+
+<table class="wp-list-table striped litespeed-table">
+	<tbody>
+
+		<tr>
+			<th>
+				<?php $id = Base::O_CDN_QUIC; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_switch($id); ?>
+				<div class="litespeed-desc">
+					<?php echo sprintf(__('Enable %s CDN API functionality.', 'litespeed-cache'), 'QUIC.cloud'); ?>
+					<?php Doc::learn_more('https://quic.cloud/docs/cdn/getting-started/verify-quic-cloud-cdn-is-working/#check-lscache-wordpress-plugin'); ?>
+				</div>
+			</td>
+		</tr>
+
+	</tbody>
+</table>
+
+<?php
+$this->form_end();
+?>
+<h3 class="litespeed-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
+
+<p><?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="<?php echo Cloud::cls()->qc_link(); ?>" target="_blank" class="button litespeed-btn-warning">My QUIC.cloud</a></p>
+
+<?php
 $__cdnsetup = Cdn_Setup::cls();
 
 // This will drop QS param `qc_res` `domain_hash` and `token` also
