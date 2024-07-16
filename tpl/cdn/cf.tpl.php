@@ -4,6 +4,71 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit;
 
+$this->form_action();
+?>
+
+<h3 class="litespeed-title-short">
+	<?php echo __('CDN Settings', 'litespeed-cache'); ?>
+	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/cdn/'); ?>
+</h3>
+
+<table class="wp-list-table striped litespeed-table">
+	<tbody>
+		<tr>
+			<th>
+				<?php $id = Base::O_CDN_CLOUDFLARE; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_switch($id); ?>
+				<div class="litespeed-desc">
+					<?php echo sprintf(__('Use %s API functionality.', 'litespeed-cache'), 'Cloudflare'); ?>
+					<?php echo sprintf(__('This can be managed from %1$s%2$s tab.', 'litespeed-cache'), '<b>' . __('CDN', 'litespeed-cache') . '</b> -&gt; <b>', __('Manage', 'litespeed-cache') . '</b>'); ?>
+				</div>
+				<div class="litespeed-block">
+					<div class='litespeed-col'>
+						<label class="litespeed-form-label"><?php echo __('Global API Key / API Token', 'litespeed-cache'); ?></label>
+
+						<?php $this->build_input(Base::O_CDN_CLOUDFLARE_KEY); ?>
+						<div class="litespeed-desc">
+							<?php echo sprintf(__('Your API key / token is used to access %s APIs.', 'litespeed-cache'), 'Cloudflare'); ?>
+							<?php echo sprintf(__('Get it from <a %1$s>%2$s</a>.', 'litespeed-cache'), 'href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"', 'Cloudflare'); ?>
+							<?php echo sprintf(__('Recommended to generate the token from Cloudflare API token template "WordPress".', 'litespeed-cache')); ?>
+						</div>
+					</div>
+
+					<div class='litespeed-col'>
+						<label class="litespeed-form-label"><?php echo __('Email Address', 'litespeed-cache'); ?></label>
+
+						<?php $this->build_input(Base::O_CDN_CLOUDFLARE_EMAIL); ?>
+						<div class="litespeed-desc">
+							<?php echo sprintf(__('Your Email address on %s.', 'litespeed-cache'), 'Cloudflare'); ?>
+							<?php echo sprintf(__('Optional when API token used.', 'litespeed-cache')); ?>
+						</div>
+					</div>
+
+					<div class='litespeed-col'>
+						<label class="litespeed-form-label"><?php echo __('Domain', 'litespeed-cache'); ?></label>
+
+						<?php
+						$cf_zone = $this->conf(Base::O_CDN_CLOUDFLARE_ZONE);
+						$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning';
+						$this->build_input(Base::O_CDN_CLOUDFLARE_NAME, $cls);
+						?>
+						<div class="litespeed-desc">
+							<?php echo __('You can just type part of the domain.', 'litespeed-cache'); ?>
+							<?php echo __('Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache'); ?>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+
+	</tbody>
+</table>
+
+<?php
+$this->form_end();
 $cf_on = $this->conf(Base::O_CDN_CLOUDFLARE);
 $cf_domain = $this->conf(Base::O_CDN_CLOUDFLARE_NAME) ?: '-';
 $cf_zone = $this->conf(Base::O_CDN_CLOUDFLARE_ZONE) ?: '-';
@@ -11,10 +76,6 @@ $cf_zone = $this->conf(Base::O_CDN_CLOUDFLARE_ZONE) ?: '-';
 $curr_status = CDN\Cloudflare::get_option(CDN\Cloudflare::ITEM_STATUS, array());
 
 ?>
-<h3 class="litespeed-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
-
-<p><?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="<?php echo Cloud::cls()->qc_link(); ?>" target="_blank"><?php echo Cloud::cls()->qc_link(); ?></a></p>
-
 
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>
 
