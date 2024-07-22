@@ -59,6 +59,8 @@ if (!empty($setup_summary['cdn_setup_err'])) {
 	$cdn_setup_err = $setup_summary['cdn_setup_err'];
 }
 
+$nameservers = array();
+$cname = $this->conf(Base::O_QC_CNAME);
 if (!empty($setup_summary['cdn_setup_ts'])) {
 	$cdn_setup_ts = $setup_summary['cdn_setup_ts'];
 
@@ -88,8 +90,13 @@ if ($cdn_setup_done_ts) {
 	$curr_status = '<span class="litespeed-warning dashicons dashicons-controls-pause"></span> ' . __('Paused', 'litespeed-cache');
 	$curr_status_subline = '<p class="litespeed-desc">' . $cdn_setup_err . '</p>';
 } else if ($cdn_setup_ts > 0) {
-	if (isset($nameservers)) {
+	if ($nameservers) {
 		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for nameservers to be updated.', 'litespeed-cache') . ' ' . __('Click the refresh button below to refresh status.', 'litespeed-cache');
+		if (isset($setup_summary['cdn_verify_msg'])) {
+			$curr_status_subline = '<p class="litespeed-desc">' .  __('Last Verification Result', 'litespeed-cache') . ': ' . $setup_summary['cdn_verify_msg'] . '</p>';
+		}
+	} elseif ($cname) {
+		$curr_status = '<span class="litespeed-primary dashicons dashicons-hourglass"></span> ' . __('Verifying, waiting for cname to be updated.', 'litespeed-cache') . ' ' . __('Click the refresh button below to refresh status.', 'litespeed-cache');
 		if (isset($setup_summary['cdn_verify_msg'])) {
 			$curr_status_subline = '<p class="litespeed-desc">' .  __('Last Verification Result', 'litespeed-cache') . ': ' . $setup_summary['cdn_verify_msg'] . '</p>';
 		}
@@ -111,7 +118,7 @@ if ($cdn_setup_done_ts) {
 <ol>
 	<li><?php echo __('Set up a QUIC.cloud account.', 'litespeed-cache'); ?></li>
 	<li><?php echo __('Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone.', 'litespeed-cache'); ?></li>
-	<li><?php echo __('Provide the nameservers necessary to enable the CDN.', 'litespeed-cache'); ?></li>
+	<li><?php echo __('Provide the nameservers/cname necessary to enable the CDN.', 'litespeed-cache'); ?></li>
 	<li>
 		<?php echo __('After successful DNS detection, QUIC.cloud will attempt to generate an SSL certificate and enable the CDN.', 'litespeed-cache'); ?>
 		<?php echo __('This last stage could take 15 to 20 minutes.', 'litespeed-cache'); ?>
@@ -120,7 +127,7 @@ if ($cdn_setup_done_ts) {
 </ol>
 
 <p>
-	<?php echo __('After you set your nameservers, QUIC.cloud will detect the change and automatically enable the CDN.', 'litespeed-cache'); ?>
+	<?php echo __('After you set your nameservers/cname, QUIC.cloud will detect the change and automatically enable the CDN.', 'litespeed-cache'); ?>
 </p>
 
 <p class="litespeed-desc">
