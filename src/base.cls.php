@@ -275,6 +275,7 @@ class Base extends Root
 	const O_CDN_ATTR = 'cdn-attr';
 	const O_QC_TOKEN = 'qc-token';
 	const O_QC_NAMESERVERS = 'qc-nameservers';
+	const O_QC_CNAME = 'qc-cname';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
@@ -325,6 +326,7 @@ class Base extends Root
 		self::O_CDN_ATTR,
 		self::O_QC_TOKEN,
 		self::O_QC_NAMESERVERS,
+		self::O_QC_CNAME,
 	);
 
 	protected static $_default_options = array(
@@ -551,6 +553,7 @@ class Base extends Root
 
 		self::O_QC_TOKEN => '',
 		self::O_QC_NAMESERVERS => '',
+		self::O_QC_CNAME => '',
 	);
 
 	protected static $_default_site_options = array(
