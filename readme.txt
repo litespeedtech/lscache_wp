@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.5.5
-Stable tag: 6.2.0.1
+Tested up to: 6.6
+Stable tag: 6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -251,33 +251,33 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 == Changelog ==
 
 = 6.3 - Jul 22 2024 =
-* 🌱**Page Optimize** HTML Keep Comments. (#328853)
+* 🌱**Page Optimize** HTML Keep Comments: When minifying HTML do not discard comments that match a specified pattern. (#328853)
 * 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)
-* **Cache** Bypassed admin initialization when doing ajax call. (Tim)
+* **Cache** Bypass admin initialization when doing ajax call. (Tim)
 * **Cache** Better control over the cache location #541 (Gal Baras/Tanvir Israq)
 * **Cloud** Added nonce for callback validation to enhance security. (Chloe@Wordfence)
-* **Cloud** Fixed an message error for daily quota.
-* **Cloud** Token error when communicates with QUIC.cloud will show the error message.
-* **ESI** Bypassed ESI at early stage when getting `DONOTCACHEPAGE`.
-* **ESI** Added ESI nonce for Events Calendar and Mobile hamburger menu - jetMenu. (#306983 #163710 PR#419)
+* **Cloud** Fixed an error message for daily quota.
+* **Cloud** Display error message when communicating with QUIC.cloud causes a token error.
+* **ESI** Bypass ESI at an earlier stage when getting `DONOTCACHEPAGE`.
+* **ESI** Added ESI nonce for Events Calendar and jetMenu mobile hamburger menu. (#306983 #163710 PR#419)
 * **ESI** Added WP Data Access nonce (PR#665)
 * **ESI** Added WP User Frontend ESI nonce (PR#675)
 * **Media** Ignored images from JS in image size detection (PR#660)
-* **GUI** Removed Preset menu from network admin panel.
+* **GUI** Moved Preset menu from network level to site level for multisite networks.
 * **GUI** Suppressed sitemap generation message if not triggered manually.
 * **GUI** Added CloudFlare purge to front end menu.
-* **GUI** Allowed custimized partner CDN login link on dash.
+* **GUI** Allowed customized partner CDN login link on dash.
 * **Page Optimize** Cleaned up litespeed_url table when clearing url files. (PR#664)
 * **Page Optimize** Updated Instant Click library to version 5.2.0.
-* **Page Optimize** Flatsome theme random string excludes. (PR#415)
+* **Page Optimize** Added Flatsome theme random string excludes. (PR#415)
 * **Page Optimize** Exclude Cloudflare turnstile from JS optimizations. (Tobolo)
-* **Page Optimize** Fixes Cloudflare Turnstile issues. (Contributolo PR#671/672)
-* **Object** More debug log for objectr cache status. (PR#669)
+* **Page Optimize** Fixed Cloudflare Turnstile issues. (Contributolo PR#671/672)
+* **Object** Improved debug log for object cache status. (PR#669)
 * **Object** Added brief parseable header comments to the drop-in file. (OllieJones)
 * **Debug** Trimmed debug log.
-* **Misc** JSON functions `json_encode/json_decode` invocation compatibility update to fix and speed up resolving. (hosni/szepeviktor #693)
+* **Misc** Improved compatibility and sped up resolving for JSON functions `json_encode/json_decode`. (hosni/szepeviktor #693)
 * **Misc** Fixed typos in params and comments. (szepeviktor #688)
-* **Image Optimization** Fixed an issue which suppresses new requests when no new images in library but existed in queue to send.
+* **Image Optimization** Fixed an issue which suppressed new requests when there were no new images in the library but there were unprocessed images in the send queue.
 * **Image Optimization** Improved Cloud side quota check by disallowing new requests if notified but not pulled.
 * **Image Optimization** Keep image attributes when replacing dimensions. (PR#686 #381779)
 
