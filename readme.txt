@@ -250,6 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 6.4 - Sep 2024 =
+* **Cache** Corrected QC and LSADC cache hit status.
+* **GUI** Regrouped CDN menu.
+
 = 6.3 - Jul 22 2024 =
 * 🌱**Page Optimize** HTML Keep Comments: When minifying HTML do not discard comments that match a specified pattern. (#328853)
 * 🌱**Cache** Cache POST requests. Now can configure POST/GET AJAX requests to be cached. (#647300)

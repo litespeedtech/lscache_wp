@@ -896,7 +896,7 @@ class Crawler extends Root
 			return 'N'; // Blacklist
 		}
 
-		$_cache_headers = array('x-litespeed-cache', 'x-lsadc-cache', 'x-qc-cache');
+		$_cache_headers = array('x-qc-cache', 'x-lsadc-cache', 'x-litespeed-cache');
 
 		foreach ($_cache_headers as $_header) {
 			if (stripos($header, $_header) !== false) {
