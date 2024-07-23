@@ -129,6 +129,17 @@ class Cdn_Setup extends Base
 			Admin_Display::succeed(
 				'🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your nameservers to:', 'litespeed-cache') . $nameservers
 			);
+		} elseif (isset($result['cname'])) {
+			if (isset($this->_summary['cdn_setup_err'])) {
+				unset($this->_summary['cdn_setup_err']);
+			}
+			if (isset($result['summary'])) {
+				$this->_summary['cdn_dns_summary'] = $result['summary'];
+			}
+			$this->cls('Cloud')->set_linked();
+			$cname = esc_html($result['cname']);
+			$this->cls('Conf')->update_confs(array(self::O_QC_CNAME => $cname, self::O_CDN_QUIC => true));
+			Admin_Display::succeed('🎊 ' . __('Congratulations, QUIC.cloud successfully set this domain up for the CDN. Please update your cname to:', 'litespeed-cache') . $cname);
 		} elseif (isset($result['done'])) {
 			if (isset($this->_summary['cdn_setup_err'])) {
 				unset($this->_summary['cdn_setup_err']);

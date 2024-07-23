@@ -250,6 +250,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
+= 6.4 - Sep 2024 =
+* **Cache** Corrected QC and LSADC cache hit status.
+* **GUI** Regrouped CDN menu.
+
 = 6.3.0.1 - Jul 29 2024 =
 * 🔥🐞**Rest** Disabled WP default Editor cache for REST requests to fix editor errors. (Shivam)
 * **Cache** Supported `cache_nocacheable.txt` predefined settings.
