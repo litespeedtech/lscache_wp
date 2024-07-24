@@ -21,6 +21,7 @@ class ESI extends Root
 
 	private static $has_esi = false;
 	private static $_combine_ids = array();
+	private $admin_rendered = false;
 	private $esi_args = null;
 	private $_esi_preserve_list = array();
 	private $_nonce_actions = array(-1 => ''); // val is cache control
@@ -763,9 +764,8 @@ class ESI extends Root
 	public function sub_admin_bar_block()
 	{
 		global $wp_admin_bar;
-		static $rendered = false;
 
-		if ( $rendered ) {
+		if ( $this->admin_rendered ) {
 			return;
 		}
 	
@@ -780,7 +780,7 @@ class ESI extends Root
 
 		echo $this->sub_esi_block('admin-bar', 'adminbar', $params);
 		
-		$rendered = true;
+		$this->admin_rendered = true;
 	}
 
 	/**
