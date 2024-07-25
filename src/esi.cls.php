@@ -778,9 +778,8 @@ class ESI extends Root
 			'ref' => $_SERVER['REQUEST_URI'],
 		);
 
-		echo $this->sub_esi_block('admin-bar', 'adminbar', $params);
-		
 		$this->admin_rendered = true;
+		echo $this->sub_esi_block('admin-bar', 'adminbar', $params);
 	}
 
 	/**
