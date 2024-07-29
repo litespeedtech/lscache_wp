@@ -720,6 +720,21 @@ class Data extends Root
 	}
 
 	/**
+	 * Get list from `data/cache_nocacheable.txt`
+	 *
+	 * @since  6.3.0.1
+	 */
+	public function load_cache_nocacheable($list)
+	{
+		$data = $this->_load_per_line('cache_nocacheable.txt');
+		if ($data) {
+			$list = array_unique(array_filter(array_merge($list, $data)));
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Load file per line
 	 *
 	 * Support two kinds of comments:

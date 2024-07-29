@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 6.6
-Stable tag: 6.3
+Stable tag: 6.3.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,6 +249,10 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 6.3.0.1 - Jul 29 2024 =
+* 🔥🐞**Rest** Disabled WP default Editor cache for REST requests to fix editor errors. (Shivam)
+* **Cache** Supported `cache_nocacheable.txt` predefined settings.
 
 = 6.3 - Jul 22 2024 =
 * 🌱**Page Optimize** HTML Keep Comments: When minifying HTML do not discard comments that match a specified pattern. (#328853)

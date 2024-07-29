@@ -834,7 +834,7 @@ class Control extends Root
 
 		if (!self::is_forced_cacheable()) {
 			// Check if URI is excluded from cache
-			$excludes = $this->conf(Base::O_CACHE_EXC);
+			$excludes = $this->cls('Data')->load_cache_nocacheable($this->conf(Base::O_CACHE_EXC));
 			$result = Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
 			if ($result) {
 				return $this->_no_cache_for('Admin configured URI Do not cache: ' . $result);
