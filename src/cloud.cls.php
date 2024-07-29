@@ -868,7 +868,7 @@ class Cloud extends Base
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
 			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
-				if (!empty($json['_carry_on'][$v])) {
+				if (isset($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':
 							$usage_svc_tag = in_array($service, array(self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI)) ? self::SVC_PAGE_OPTM : $service;
