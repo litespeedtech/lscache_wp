@@ -1,7 +1,7 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
-Requires at least: 4.0
+Requires at least: 5.3
 Tested up to: 6.6.1
 Stable tag: 6.3.0.1
 License: GPLv3
@@ -255,6 +255,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 * **GUI** Regrouped CDN menu.
 * **3rd** Add Elementor Edit button back in ESI. (PR#635)
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
+* **Core** Minimum required WP version escalated to WP v5.3.
 
 = 6.3.0.1 - Jul 29 2024 =
 * 🔥🐞**Rest** Disabled WP default Editor cache for REST requests to fix editor errors. (Shivam)
