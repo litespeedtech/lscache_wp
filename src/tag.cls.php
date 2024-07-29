@@ -4,7 +4,7 @@
  * The plugin cache-tag class for X-LiteSpeed-Tag
  *
  * @since      	1.1.3
- * @since  		1.5 Moved into /inc
+ * @since  		1.5 Moved into /src
  */
 
 namespace LiteSpeed;
@@ -263,14 +263,17 @@ class Tag extends Root
 					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
 				} elseif (is_date()) {
 					global $post;
-					$date = $post->post_date;
-					$date = strtotime($date);
-					if (is_day()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
-					} elseif (is_month()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
-					} elseif (is_year()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+					global $post;
+					if($post && isset($post->post_date)){
+						$date = $post->post_date;
+						$date = strtotime($date);
+						if (is_day()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
+						} elseif (is_month()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
+						} elseif (is_year()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+						}
 					}
 				}
 			} elseif (is_singular()) {
