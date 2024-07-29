@@ -252,6 +252,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 = 6.4 - Sep 2024 =
 * **Cache** Corrected QC and LSADC cache hit status.
+* **Cloud** Allow partner info removal in QUIC.cloud notification.
 * **GUI** Regrouped CDN menu.
 * **3rd** Add Elementor Edit button back in ESI. (PR#635)
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
