@@ -216,6 +216,7 @@ class Base extends Root
 	const O_MEDIA_LQIP_EXC = 'media-lqip_exc';
 	const O_MEDIA_VPI = 'media-vpi';
 	const O_MEDIA_VPI_CRON = 'media-vpi_cron';
+	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -229,7 +230,6 @@ class Base extends Root
 	const O_IMG_OPTM_EXIF = 'img_optm-exif';
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
-	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
