@@ -720,6 +720,9 @@ class WooCommerce extends Base
 	 */
 	public function add_review($unused, $comment_approved, $commentdata)
 	{
+		if (!isset($wp_widget_factory->widgets['WC_Widget_Recent_Reviews'])) {
+			return;
+		}
 		if (!function_exists('wc_get_product')) {
 			return;
 		}
