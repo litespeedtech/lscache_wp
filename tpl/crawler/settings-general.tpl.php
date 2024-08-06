@@ -30,6 +30,25 @@ $this->form_action();
 
 		<tr>
 			<th>
+				<?php $id = Base::O_CRAWLER_SCHEDULE_TIME; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_input($id); ?>
+				<div class="litespeed-desc">
+					<?php echo __('Specify the crawler running periods.', 'litespeed-cache'); ?>
+					<br />
+					<?php echo sprintf( __('You can add multiple ranges in 24-hour format %s delimited by %s', 'litespeed-cache'), '<code>HH:mm-HH:mm</code>', '<code>,</code>'); ?>
+					<br />
+					<?php echo __('Server time', 'litespeed-cache') . ': <code>'. date('H:m') . '</code>'; ?> 
+					<br />
+					<code>00:00-06:00 , 20:00-23:59, 01:00-05:00</code>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
 				<?php $id = Base::O_CRAWLER_USLEEP; ?>
 				<?php $this->title($id); ?>
 			</th>
