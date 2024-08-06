@@ -174,13 +174,13 @@ if (!function_exists('litespeed_define_nonce_func')) {
 if (!function_exists('run_litespeed_cache')) {
 	function run_litespeed_cache()
 	{
-		//Check minimum PHP requirements, which is 7.2 at the moment.
-		if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+		//Check minimum PHP requirements, which is 5.3 at the moment.
+		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 			return;
 		}
 
 		//Check minimum WP requirements, which is 4.0 at the moment.
-		if (version_compare($GLOBALS['wp_version'], '5.3', '<')) {
+		if (version_compare($GLOBALS['wp_version'], '4.0', '<')) {
 			return;
 		}
 
