@@ -76,8 +76,12 @@ class Task extends Root
 	 */
 	public static function async_litespeed_handler()
 	{
-		$type = Router::verify_type();
+		if (!check_ajax_referer('async_litespeed', 'nonce')) {
+			self::debug('WARNING: invalid async_litespeed call');
+			return;
+		}
 
+		$type = Router::verify_type();
 		self::debug('type=' . $type);
 
 		// Don't lock up other requests while processing
