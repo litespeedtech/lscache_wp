@@ -359,30 +359,39 @@ class CSS extends Base
 	 */
 	private function _save_con($type, $css, $queue_k, $mobile, $webp)
 	{
-		// Add filters
-		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
-		Debug2::debug2('[CSS] con: ' . $css);
+		if( !empty($this->_queue[$queue_k]['url_tag']) && !empty($this->_queue[$queue_k]['vary']) ){
+			// Add filters
+			$css = apply_filters('litespeed_' . $type, $css, $queue_k);
+			Debug2::debug2('[CSS] con: ' . $css);
 
-		if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
-			self::debug('❌ empty ' . $type . ' [content] ' . $css);
-			// continue; // Save the error info too
+			if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
+				self::debug('❌ empty ' . $type . ' [content] ' . $css);
+				// continue; // Save the error info too
+			}
+
+			// Write to file
+			$filecon_md5 = md5($css);
+
+			$filepath_prefix = $this->_build_filepath_prefix($type);
+			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+
+			File::save($static_file, $css, true);
+
+			$url_tag = $this->_queue[$queue_k]['url_tag'];
+			$vary = $this->_queue[$queue_k]['vary'];
+			Debug2::debug2("[CSS] Save URL to file [file] $static_file [vary] $vary");
+
+			$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $mobile, $webp);
+
+			Purge::add(strtoupper($type) . '.' . md5($queue_k));
 		}
+		else{
+			$not_found = array();
+			if( !isset($this->_queue[$queue_k]['url_tag']) ) $not_found[] = '[url_tag]';
+			if( !isset($this->_queue[$queue_k]['vary']) ) $not_found[] = '[vary]';
 
-		// Write to file
-		$filecon_md5 = md5($css);
-
-		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
-
-		File::save($static_file, $css, true);
-
-		$url_tag = $this->_queue[$queue_k]['url_tag'];
-		$vary = $this->_queue[$queue_k]['vary'];
-		Debug2::debug2("[CSS] Save URL to file [file] $static_file [vary] $vary");
-
-		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $mobile, $webp);
-
-		Purge::add(strtoupper($type) . '.' . md5($queue_k));
+			self::debug('No ' . implode( ' and ', $not_found ) . ' found in CCSS queque for key ' . $queue_k );
+		}
 	}
 
 	/**
