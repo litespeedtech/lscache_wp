@@ -770,10 +770,10 @@ class ESI extends Root
 	{
 		global $wp_admin_bar;
 
-		if ( $this->admin_rendered ) {
+		if ($this->admin_rendered) {
 			return;
 		}
-	
+
 		if (!is_admin_bar_showing() || !is_object($wp_admin_bar)) {
 			return;
 		}
