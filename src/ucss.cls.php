@@ -509,13 +509,6 @@ class UCSS extends Base
 
 		$this->_queue = $this->load_queue('ucss');
 
-		// Validate key
-		if (empty($post_data['domain_key']) || $post_data['domain_key'] !== md5($this->conf(self::O_API_KEY))) {
-			self::debug('❌ notify wrong key');
-			self::save_summary(array('notify_ts_err' => time()));
-			return Cloud::err('wrong_key');
-		}
-
 		list($post_data) = $this->cls('Cloud')->extract_msg($post_data, 'ucss');
 
 		$notified_data = $post_data['data'];
