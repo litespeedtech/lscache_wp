@@ -133,6 +133,12 @@ class Optimize extends Base
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init();
+		
+		/**
+		 * Prefetch resources
+		 * @since 6.3
+		 */
+		$this->_prefetch_init();
 
 		/**
 		 * Preconnect
@@ -206,7 +212,12 @@ class Optimize extends Base
 	 */
 	public function remove_query_strings($src)
 	{
-		if (strpos($src, '_litespeed_rm_qs=0') || strpos($src, '/recaptcha')) {
+		$is_not_cached = false;
+		if(defined('DONOTCACHEPAGE')){
+			$is_not_cached = DONOTCACHEPAGE;
+		}
+
+		if ($is_not_cached || (strpos($src, '_litespeed_rm_qs=0') || strpos($src, '/recaptcha'))) {
 			return $src;
 		}
 
@@ -670,6 +681,19 @@ class Optimize extends Base
 	}
 
 	/**
+	 * Prefetch resources
+	 *
+	 * @since 6.3
+	 * @access private
+	 */
+	private function _prefetch_init()
+	{
+		if (function_exists('wp_resource_hints')) {
+			add_filter('wp_resource_hints', array($this, 'prefetch_filter'), 11, 2);
+		}
+	}
+
+	/**
 	 * Preconnect init
 	 *
 	 * @since 5.6.1
@@ -716,6 +740,34 @@ class Optimize extends Base
 				$this->html_head .= '<link rel="dns-prefetch" href="' . $v . '" />';
 			}
 		}
+	}
+
+	/**
+	 * Prefetch hook for WP
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function prefetch_filter($urls, $relation_type)
+	{
+		if ($relation_type === 'dns-prefetch') {
+			return $urls;
+		}
+    	
+		$is_not_cached = false;
+		if(defined('DONOTCACHEPAGE')){
+			$is_not_cached = DONOTCACHEPAGE;
+		}
+	    
+		if($is_not_cached===false && $this->conf(self::O_OPTM_QS_RM)){
+			foreach ($urls as &$v) {
+				if (!empty($v['href'])) {
+					$v['href'] = $this->remove_query_strings($v['href']);
+				}
+			}
+		}
+        
+		return $urls;
 	}
 
 	/**
