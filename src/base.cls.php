@@ -216,6 +216,7 @@ class Base extends Root
 	const O_MEDIA_LQIP_EXC = 'media-lqip_exc';
 	const O_MEDIA_VPI = 'media-vpi';
 	const O_MEDIA_VPI_CRON = 'media-vpi_cron';
+	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -229,7 +230,6 @@ class Base extends Root
 	const O_IMG_OPTM_EXIF = 'img_optm-exif';
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
-	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
@@ -275,6 +275,7 @@ class Base extends Root
 	const O_CDN_ATTR = 'cdn-attr';
 	const O_QC_TOKEN = 'qc-token';
 	const O_QC_NAMESERVERS = 'qc-nameservers';
+	const O_QC_CNAME = 'qc-cname';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
@@ -325,6 +326,7 @@ class Base extends Root
 		self::O_CDN_ATTR,
 		self::O_QC_TOKEN,
 		self::O_QC_NAMESERVERS,
+		self::O_QC_CNAME,
 	);
 
 	protected static $_default_options = array(
@@ -552,6 +554,7 @@ class Base extends Root
 
 		self::O_QC_TOKEN => '',
 		self::O_QC_NAMESERVERS => '',
+		self::O_QC_CNAME => '',
 	);
 
 	protected static $_default_site_options = array(

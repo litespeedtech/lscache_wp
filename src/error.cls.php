@@ -61,11 +61,29 @@ class Error
 				break;
 
 			case 'out_of_daily_quota':
-				$msg = __('You don\'t have enough daily quota left for current service today.', 'litespeed-cache');
+				$msg = __('You have used all of your daily quota for today.', 'litespeed-cache');
+				$msg .=
+					' ' .
+					Doc::learn_more(
+						'https://docs.quic.cloud/billing/services/#daily-limits-on-free-quota-usage',
+						__('Learn more or purchase additional quota.', 'litespeed-cache'),
+						false,
+						false,
+						true
+					);
 				break;
 
 			case 'out_of_quota':
-				$msg = __('You don\'t have enough quota left for current service this month.', 'litespeed-cache');
+				$msg = __('You have used all of your quota left for current service this month.', 'litespeed-cache');
+				$msg .=
+					' ' .
+					Doc::learn_more(
+						'https://docs.quic.cloud/billing/services/#daily-limits-on-free-quota-usage',
+						__('Learn more or purchase additional quota.', 'litespeed-cache'),
+						false,
+						false,
+						true
+					);
 				break;
 
 			case 'too_many_requested':

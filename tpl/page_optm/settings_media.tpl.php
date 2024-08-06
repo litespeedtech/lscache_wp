@@ -249,5 +249,19 @@ $lqip_queue = $this->load_queue('lqip');
 			</td>
 		</tr>
 
+		<tr>
+			<th>
+				<?php $id = Base::O_IMG_OPTM_JPG_QUALITY; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_input($id, 'litespeed-input-short'); ?>
+				<div class="litespeed-desc">
+					<?php echo __('The image compression quality setting of WordPress out of 100.', 'litespeed-cache'); ?>
+					<?php $this->recommended($id); ?>
+					<?php $this->_validate_ttl($id, 0, 100); ?>
+				</div>
+			</td>
+		</tr>
 	</tbody>
 </table>
