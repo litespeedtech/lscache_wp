@@ -477,11 +477,6 @@ class Conf extends Base
 
 		if ($this->_updated_ids) {
 			foreach ($this->_updated_ids as $id) {
-				// Special handler for QUIC.cloud domain key to clear all existing nodes
-				if ($id == self::O_API_KEY) {
-					$this->cls('Cloud')->clear_cloud();
-				}
-
 				// Special handler for crawler: reset sitemap when drop_domain setting changed
 				if ($id == self::O_CRAWLER_DROP_DOMAIN) {
 					$this->cls('Crawler_Map')->empty_map();
