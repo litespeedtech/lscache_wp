@@ -87,7 +87,6 @@ class Lang extends Base
 	{
 		$_lang_list = array(
 			self::O_SERVER_IP => __('Server IP', 'litespeed-cache'),
-			self::O_API_KEY => __('Domain Key', 'litespeed-cache'),
 			self::O_GUEST_UAS => __('Guest Mode User Agents', 'litespeed-cache'),
 			self::O_GUEST_IPS => __('Guest Mode IPs', 'litespeed-cache'),
 

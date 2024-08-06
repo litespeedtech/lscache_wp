@@ -18,6 +18,7 @@ if ($img_finished_percentage == 100 && $img_count['groups_new']) {
 }
 
 $__cloud = Cloud::cls();
+$__cloud->finish_qc_activation();
 
 $cloud_summary = Cloud::get_summary();
 $css_summary = CSS::get_summary();
@@ -164,6 +165,13 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 		<?php endforeach; ?>
 
 		<?php if (!empty($cloud_summary['partner'])) : ?>
+			<div style="position: absolute;z-index:2;left:0;bottom:0;">
+				<a class="litespeed-btn-success">Click here to enable QC service</a>
+
+			</div>
+		<?php endif; ?>
+
+		<?php if (!empty($cloud_summary['partner'])) : ?>
 			<div class="litespeed-postbox litespeed-postbox-partner">
 				<div class="inside">
 					<h3 class="litespeed-title"><?php echo __('Partner Benefits Provided by', 'litespeed-cache'); ?></h3>
@@ -194,12 +202,15 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 			<?php Doc::learn_more($cloud_summary['partner']['login_link'], $cloud_summary['partner']['login_title'], true, 'button litespeed-btn-warning'); ?>
 		<?php elseif (!empty($cloud_summary['partner']) && !empty($cloud_summary['partner']['disable_qc_login'])) : ?>
 		<?php else : ?>
-			<?php if (!empty($cloud_summary['is_linked'])) : ?>
-				<a href="<?php echo Cloud::cls()->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
-			<?php elseif ($__cloud->can_link_qc()) : ?>
-				<?php Doc::learn_more(Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK), __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button litespeed-btn-warning'); ?>
+			<?php if (!empty($cloud_summary['qc_activated']) && $cloud_summary['qc_activated'] != 'anonymouse') : ?>
+				<a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
 			<?php else : ?>
-				<?php Doc::learn_more('javascript:;', __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button disabled litespeed-btn-warning'); ?>
+				<?php Doc::learn_more(
+					Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE),
+					!empty($cloud_summary['qc_activated']) ? __('Link to QUIC.cloud', 'litespeed-cache') : __('Activate QUIC.cloud', 'litespeed-cache'),
+					true,
+					'button litespeed-btn-warning'
+				); ?>
 			<?php endif; ?>
 		<?php endif; ?>
 	</p>

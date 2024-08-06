@@ -62,10 +62,10 @@ $ucss_queue = $this->load_queue('ucss');
 				<?php $this->build_switch($id); ?>
 				<?php Doc::maybe_on_by_gm($id); ?>
 				<div class="litespeed-desc">
-					<?php if (!$this->conf(Base::O_API_KEY)) : ?>
+					<?php if (!$this->cls('Cloud')->activate()) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
-							<?php echo Error::msg('lack_of_api_key'); ?>
+							<?php echo Error::msg('qc_setup_required'); ?>
 						</div>
 					<?php endif; ?>
 
@@ -175,10 +175,10 @@ $ucss_queue = $this->load_queue('ucss');
 				<?php $this->build_switch($id); ?>
 				<?php Doc::maybe_on_by_gm($id); ?>
 				<div class="litespeed-desc">
-					<?php if (!$this->conf(Base::O_API_KEY)) : ?>
+					<?php if (!$this->cls('Cloud')->activate()) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
-							<?php echo Error::msg('lack_of_api_key'); ?>
+							<?php echo Error::msg('qc_setup_required'); ?>
 						</div>
 					<?php endif; ?>
 					<?php echo __('Optimize CSS delivery.', 'litespeed-cache'); ?>

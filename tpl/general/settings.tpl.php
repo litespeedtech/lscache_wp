@@ -6,36 +6,7 @@ defined('WPINC') || exit;
 
 $__cloud = Cloud::cls();
 
-// This will drop QS param `qc_res` and `domain_hash` also
-$__cloud->parse_qc_redir();
-
 $cloud_summary = Cloud::get_summary();
-
-$can_token = $__cloud->can_token();
-
-$is_requesting = !empty($cloud_summary['token_ts']) && (empty($cloud_summary['apikey_ts']) || $cloud_summary['token_ts'] > $cloud_summary['apikey_ts']);
-
-$apply_btn_txt = __('Request Domain Key', 'litespeed-cache');
-if ($this->conf(Base::O_API_KEY)) {
-	$apply_btn_txt = __('Refresh Domain Key', 'litespeed-cache');
-	if ($is_requesting) {
-		$apply_btn_txt = __('Waiting for Refresh', 'litespeed-cache');
-	}
-} elseif ($is_requesting) {
-	$apply_btn_txt = __('Waiting for Approval', 'litespeed-cache');
-}
-
-$apply_ts_txt = '';
-if (!empty($cloud_summary['token_ts'])) {
-	$apply_ts_txt .= ' ' . __('Requested', 'litespeed-cache') . ': <code>' . Utility::readable_time($cloud_summary['token_ts']) . '</code>';
-}
-if (!empty($cloud_summary['apikey_ts'])) {
-	$apply_ts_txt .= ' ' . __('Approved', 'litespeed-cache') . ': <code>' . Utility::readable_time($cloud_summary['apikey_ts']) . '</code>';
-}
-if (!$can_token) {
-	$next_available_req = $cloud_summary['token_ts'] + Cloud::EXPIRATION_TOKEN - time();
-	$apply_ts_txt .= ' ' . sprintf(__('Next available request time: <code>After %s</code>', 'litespeed-cache'), Utility::readable_time($next_available_req, 0, true));
-}
 
 $this->form_action();
 ?>
@@ -45,108 +16,31 @@ $this->form_action();
 	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/'); ?>
 </h3>
 
+<div class="litespeed-callout notice notice-success inline">
+	<h4><?php echo __('Current Cloud Nodes in Service', 'litespeed-cache'); ?>
+		<a class="litespeed-right litespeed-redetect" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __('Click to clear all nodes for further redetection.', 'litespeed-cache'); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to clear all cloud nodes?', 'litespeed-cache'); ?>"><i class='litespeed-quic-icon'></i> <?php echo __('Redetect', 'litespeed-cache'); ?></a>
+	</h4>
+	<p>
+		<?php
+		$has_service = false;
+		foreach (Cloud::$SERVICES as $svc) {
+			if (isset($cloud_summary['server.' . $svc])) {
+				$has_service = true;
+				echo '<p><b>Service:</b> <code>' . $svc . '</code> <b>Node:</b> <code>' . $cloud_summary['server.' . $svc] . '</code> <b>Connected Date:</b> <code>' . Utility::readable_time($cloud_summary['server_date.' . $svc]) . '</code></p>';
+			}
+		}
+		if (!$has_service) {
+			echo __('No cloud services currently in use', 'litespeed-cache');
+		}
+		?>
+	</p>
+</div>
+
 <table class="wp-list-table striped litespeed-table">
 	<tbody>
 		<?php if (!$this->_is_multisite) : ?>
 			<?php require LSCWP_DIR . 'tpl/general/settings_inc.auto_upgrade.tpl.php'; ?>
 		<?php endif; ?>
-
-		<tr>
-			<th>
-				<?php $id = Base::O_API_KEY; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php if (!$is_requesting || $can_token) : ?>
-					<?php $this->build_input($id); ?>
-				<?php else : ?>
-					<?php $this->build_input($id, null, null, 'text', true); ?>
-				<?php endif; ?>
-
-				<?php if ($can_token) : ?>
-					<?php Doc::learn_more(Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_GEN_KEY), $apply_btn_txt, true, 'button litespeed-btn-success'); ?>
-				<?php else : ?>
-					<?php Doc::learn_more('javascript:;', $apply_btn_txt, true, 'button disabled'); ?>
-				<?php endif; ?>
-				<?php if ($apply_ts_txt) : ?>
-					<span class="litespeed-desc"><?php echo $apply_ts_txt; ?></span>
-				<?php endif; ?>
-
-				<?php if (!empty($cloud_summary['is_linked'])) : ?>
-					<?php Doc::learn_more(Cloud::cls()->qc_link(), __('Visit My Dashboard on QUIC.cloud', 'litespeed-cache'), false, 'button litespeed-btn-success litespeed-right'); ?>
-				<?php elseif ($__cloud->can_link_qc()) : ?>
-					<?php Doc::learn_more(Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK), __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button litespeed-btn-warning litespeed-right'); ?>
-				<?php else : ?>
-					<?php Doc::learn_more('javascript:;', __('Link to QUIC.cloud', 'litespeed-cache'), true, 'button disabled litespeed-btn-warning litespeed-right'); ?>
-				<?php endif; ?>
-
-				<?php if ($is_requesting && $can_token) : ?>
-					<div class="litespeed-callout notice notice-error inline">
-						<h4><?php echo __('Notice', 'litespeed-cache'); ?>:</h4>
-						<p><?php echo sprintf(__('There was a problem with retrieving your Domain Key. Please click the %s button to retry.', 'litespeed-cache'), '<code>' . $apply_btn_txt . '</code>'); ?></p>
-						<p><?php echo __('There are two reasons why we might not be able to communicate with your domain', 'litespeed-cache'); ?>:</p>
-						<p>1) <?php echo sprintf(__('The POST callback to %s failed.', 'litespeed-cache'), '<code>' . home_url() . '/' . (function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json')) . '/litespeed/v1/token</code>'); ?> </p>
-						<p>2) <?php echo sprintf(__('Our %s was not allowlisted.', 'litespeed-cache'), __('Current Online Server IPs', 'litespeed-cache')); ?></p>
-						<p><?php echo __('Please verify that your other plugins are not blocking REST API calls, allowlist our server IPs, or contact your server admin for assistance.', 'litespeed-cache'); ?>:</p>
-					</div>
-				<?php endif; ?>
-
-				<?php if ($is_requesting) : ?>
-					<div class="litespeed-callout notice notice-warning inline">
-						<h4><?php echo __('Notice', 'litespeed-cache'); ?>:</h4>
-						<p><?php echo __('Request submitted. Please wait, then refresh the page to see approval notification.', 'litespeed-cache'); ?></p>
-					</div>
-				<?php endif; ?>
-
-				<?php if (!$this->conf(Base::O_API_KEY)) : ?>
-					<div class="litespeed-callout notice notice-error inline">
-						<h4><?php echo __('Warning', 'litespeed-cache'); ?>:</h4>
-						<p><?php echo sprintf(__('You must have %1$s first before linking to QUIC.cloud.', 'litespeed-cache'), '<code>' . Lang::title(Base::O_API_KEY) . '</code>') . ' See <a href="https://quic.cloud/terms/">Terms</a>.'; ?></p>
-					</div>
-				<?php elseif (empty($cloud_summary['is_linked'])) : ?>
-					<div class="litespeed-callout notice notice-warning inline">
-						<h4><?php echo __('Notice', 'litespeed-cache'); ?>:</h4>
-						<p><?php echo sprintf(__('You must click the %s button if you wish to associate this site with a QUIC.cloud account.', 'litespeed-cache'), '<code>' . __('Link to QUIC.cloud', 'litespeed-cache') . '</code>'); ?></p>
-						<p><?php Doc::learn_more('https://www.quic.cloud/faq/#do-i-need-to-register-on-quic-cloud-to-use-the-online-services', __('Benefits of linking to a QUIC.cloud account', 'litespeed-cache')); ?></p>
-					</div>
-				<?php endif; ?>
-
-				<div class="litespeed-desc">
-					<?php echo __('A Domain Key is required for QUIC.cloud online services.', 'litespeed-cache'); ?>
-
-					<br />
-					<?php if (!empty($cloud_summary['main_domain'])) : ?>
-						<?php echo __('Main domain', 'litespeed-cache'); ?>: <code><?php echo $cloud_summary['main_domain']; ?></code>
-					<?php else : ?>
-						<font class="litespeed-warning">
-							⚠️ <?php echo __('Main domain not generated yet', 'litespeed-cache'); ?>
-						</font>
-					<?php endif; ?>
-
-					<br />
-					<?php Doc::notice_ips(); ?>
-					<div class="litespeed-callout notice notice-success inline">
-						<h4><?php echo __('Current Cloud Nodes in Service', 'litespeed-cache'); ?>
-							<a class="litespeed-right litespeed-redetect" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __('Click to clear all nodes for further redetection.', 'litespeed-cache'); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to clear all cloud nodes?', 'litespeed-cache'); ?>"><i class='litespeed-quic-icon'></i> <?php echo __('Redetect', 'litespeed-cache'); ?></a>
-						</h4>
-						<p>
-							<?php
-							$has_service = false;
-							foreach (Cloud::$SERVICES as $svc) {
-								if (isset($cloud_summary['server.' . $svc])) {
-									$has_service = true;
-									echo '<p><b>Service:</b> <code>' . $svc . '</code> <b>Node:</b> <code>' . $cloud_summary['server.' . $svc] . '</code> <b>Connected Date:</b> <code>' . Utility::readable_time($cloud_summary['server_date.' . $svc]) . '</code></p>';
-								}
-							}
-							if (!$has_service) {
-								echo __('No cloud services currently in use', 'litespeed-cache');
-							}
-							?>
-						</p>
-					</div>
-				</div>
-			</td>
-		</tr>
 
 		<?php if (!$this->_is_multisite) : ?>
 			<?php require LSCWP_DIR . 'tpl/general/settings_inc.guest.tpl.php'; ?>
