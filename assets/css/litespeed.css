@@ -2805,6 +2805,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 
 .litespeed-dashboard-stats-wrapper {
 	display: flex;
+	position: relative;
 }
 
 .litespeed-dashboard-stats-wrapper .litespeed-postbox {
