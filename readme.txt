@@ -248,11 +248,16 @@ For more detailed information about crawler setup, please see [the Crawler docum
 
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
+= How can I report security bugs? =
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/litespeed-cache)
+
 == Changelog ==
 
-= 6.4 - Sep 2024 =
+= 6.4 - Aug 12 2024 =
 * **Cache** Corrected QC and LSADC cache hit status.
 * **Cloud** Allow partner info removal in QUIC.cloud notification.
+* **Crawler** Separated CSS preparation validation from crawler validation.
 * **GUI** Regrouped CDN menu.
 * **GUI** Moved `WordPress Image Quality Control` setting from `Image Optimization` menu to `Page Optimization` menu.
 * **3rd** Add Elementor Edit button back in ESI. (PR#635)
