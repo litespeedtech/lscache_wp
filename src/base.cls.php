@@ -24,7 +24,7 @@ class Base extends Root
 	const _VER = '_version'; // Not set-able
 	const HASH = 'hash'; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade';
-	const O_API_KEY = 'api_key';
+	const O_API_KEY = 'api_key'; // Deprecated since v6.4. TODO: Will drop after v6.5
 	const O_SERVER_IP = 'server_ip';
 	const O_GUEST = 'guest';
 	const O_GUEST_OPTM = 'guest_optm';
@@ -273,7 +273,6 @@ class Base extends Root
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
 	const O_CDN_MAPPING = 'cdn-mapping';
 	const O_CDN_ATTR = 'cdn-attr';
-	const O_QC_TOKEN = 'qc-token';
 	const O_QC_NAMESERVERS = 'qc-nameservers';
 	const O_QC_CNAME = 'qc-cname';
 
@@ -308,7 +307,6 @@ class Base extends Root
 
 	/* Site related options (Will not overwrite other sites' config) */
 	protected static $SINGLE_SITE_OPTIONS = array(
-		self::O_API_KEY,
 		self::O_CRAWLER,
 		self::O_CRAWLER_SITEMAP,
 		self::O_CRAWLER_DROP_DOMAIN,
@@ -324,7 +322,6 @@ class Base extends Root
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
-		self::O_QC_TOKEN,
 		self::O_QC_NAMESERVERS,
 		self::O_QC_CNAME,
 	);
@@ -333,7 +330,6 @@ class Base extends Root
 		self::_VER => '',
 		self::HASH => '',
 		self::O_AUTO_UPGRADE => false,
-		self::O_API_KEY => '',
 		self::O_SERVER_IP => '',
 		self::O_GUEST => false,
 		self::O_GUEST_OPTM => false,
@@ -551,7 +547,6 @@ class Base extends Root
 		self::O_CDN_MAPPING => array(),
 		self::O_CDN_ATTR => array(),
 
-		self::O_QC_TOKEN => '',
 		self::O_QC_NAMESERVERS => '',
 		self::O_QC_CNAME => '',
 	);
@@ -893,7 +888,7 @@ class Base extends Root
 	 */
 	protected function _conf_pswd($id)
 	{
-		$check_ids = array(self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD, self::O_API_KEY, self::O_QC_TOKEN);
+		$check_ids = array(self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD);
 
 		return in_array($id, $check_ids);
 	}

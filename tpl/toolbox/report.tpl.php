@@ -103,5 +103,3 @@ $install_link = Utility::build_url(Router::ACTION_ACTIVATION, Activation::TYPE_I
 		<?php echo __('Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache'); ?>
 	</p>
 </form>
-
-<?php include_once LSCWP_DIR . "tpl/inc/api_key.php"; ?>

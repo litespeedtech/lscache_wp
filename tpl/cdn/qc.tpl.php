@@ -35,9 +35,11 @@ $this->form_action();
 <?php
 $this->form_end();
 ?>
-<h3 class="litespeed-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
-
-<p><?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="<?php echo Cloud::cls()->qc_link(); ?>" target="_blank" class="button litespeed-btn-warning">My QUIC.cloud</a></p>
+<div class="litespeed-dashboard-header">
+	<h3 class="litespeed-dashboard-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
+	<hr>
+	<?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="<?php echo Cloud::cls()->qc_link(); ?>" target="_blank" class="button litespeed-btn-warning">My QUIC.cloud</a>
+</div>
 
 <?php
 $__cdnsetup = Cdn_Setup::cls();
@@ -109,52 +111,7 @@ if ($cdn_setup_done_ts) {
 }
 
 ?>
-<h3 class="litespeed-title">
-	<?php echo __('Auto QUIC.cloud CDN Setup', 'litespeed-cache'); ?>
-</h3>
-<p>
-	<?php echo __('This is a three step process for configuring your site to use QUIC.cloud CDN with QUIC.cloud DNS. This setup will perform the following actions', 'litespeed-cache') . ':'; ?>
-</p>
-<ol>
-	<li><?php echo __('Set up a QUIC.cloud account.', 'litespeed-cache'); ?></li>
-	<li><?php echo __('Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone.', 'litespeed-cache'); ?></li>
-	<li><?php echo __('Provide the nameservers/cname necessary to enable the CDN.', 'litespeed-cache'); ?></li>
-	<li>
-		<?php echo __('After successful DNS detection, QUIC.cloud will attempt to generate an SSL certificate and enable the CDN.', 'litespeed-cache'); ?>
-		<?php echo __('This last stage could take 15 to 20 minutes.', 'litespeed-cache'); ?>
-		<?php echo __('Your site will be available, but browsers may issue a "not secure" warning during this time.', 'litespeed-cache'); ?>
-	</li>
-</ol>
 
-<p>
-	<?php echo __('After you set your nameservers/cname, QUIC.cloud will detect the change and automatically enable the CDN.', 'litespeed-cache'); ?>
-</p>
-
-<p class="litespeed-desc">
-	<?php echo __('Notes', 'litespeed-cache') . ':'; ?>
-</p>
-<ul class="litespeed-desc">
-	<li>
-		<?php echo __('QUIC.cloud CDN/DNS does not support DNSSEC.', 'litespeed-cache'); ?>
-		<?php echo __('If you have this enabled for your domain, you must disable DNSSEC to continue.', 'litespeed-cache'); ?>
-	</li>
-	<li>
-		<?php echo __('This setup process will create a DNS zone on QUIC.cloud if one does not currently exist.', 'litespeed-cache'); ?>
-		<?php printf(
-			__('If you prefer to use the CNAME setup, please <a %s>set up the CDN manually at QUIC.cloud</a>.', 'litespeed-cache'),
-			'href="https://quic.cloud/docs/onboarding/" target="_blank" class="litespeed-learn-more"'
-		); ?>
-	</li>
-	<li>
-		<?php echo __('QUIC.cloud will detect most normal DNS entries.', 'litespeed-cache'); ?>
-		<?php echo __('If you have custom DNS records, it is possible that they are not detected.', 'litespeed-cache'); ?>
-		<?php echo __('Visit your QUIC.cloud dashboard after the DNS Zone is set up to confirm your DNS zone.', 'litespeed-cache'); ?>
-	</li>
-</ul>
-
-<h3 class="litespeed-title-section">
-	<?php echo __('Set up QUIC.cloud Account', 'litespeed-cache'); ?>
-</h3>
 
 <?php if ($cdn_setup_done_ts) : ?>
 	<p>
@@ -184,7 +141,7 @@ if ($cdn_setup_done_ts) {
 <?php endif; ?>
 
 <h3 class="litespeed-title-section">
-	<?php echo __('CDN Setup Status', 'litespeed-cache'); ?>
+	<?php echo __('Auto QUIC.cloud CDN Setup Status', 'litespeed-cache'); ?>
 </h3>
 
 <p>
@@ -236,7 +193,7 @@ if ($cdn_setup_done_ts) {
 	<?php } ?>
 <?php } ?>
 
-<?php if (!$cdn_setup_done_ts) { ?>
+<?php if ($nameservers) { ?>
 
 	<div>
 		<?php Doc::learn_more(($disabled ? '#' : Utility::build_url(Router::ACTION_CDN_SETUP, $apply_btn_type)), $apply_btn_txt, true, 'button button-primary ' . $disabled); ?>
@@ -246,28 +203,21 @@ if ($cdn_setup_done_ts) {
 		<?php echo __('Nameservers', 'litespeed-cache'); ?>
 	</h3>
 
-	<?php if (isset($nameservers)) { ?>
-		<p>
-			<?php echo __('Please update your domain registrar to use these custom nameservers:', 'litespeed-cache'); ?>
-		</p>
-		<ul>
-			<?php
-			foreach ($nameservers as $nameserver) {
-				echo '<li><strong>' . $nameserver . '</strong></li>';
-			}
-			?>
-		</ul>
-		<p>
-			<?php echo __('QUIC.cloud will attempt to verify the DNS update.', 'litespeed-cache'); ?>
-			<?php echo __('If it does not verify within 24 hours, the CDN setup will mark the verification as failed.', 'litespeed-cache'); ?>
-			<?php echo __('At that stage, you may re-start the verification process by pressing the Run CDN Setup button.', 'litespeed-cache'); ?>
-		</p>
-	<?php } else { ?>
-		<p>
-			<?php echo __('This section will automatically populate once nameservers are configured for the site.', 'litespeed-cache'); ?>
-		</p>
-	<?php } ?>
-
+	<p>
+		<?php echo __('Please update your domain registrar to use these custom nameservers:', 'litespeed-cache'); ?>
+	</p>
+	<ul>
+		<?php
+		foreach ($nameservers as $nameserver) {
+			echo '<li><strong>' . $nameserver . '</strong></li>';
+		}
+		?>
+	</ul>
+	<p>
+		<?php echo __('QUIC.cloud will attempt to verify the DNS update.', 'litespeed-cache'); ?>
+		<?php echo __('If it does not verify within 24 hours, the CDN setup will mark the verification as failed.', 'litespeed-cache'); ?>
+		<?php echo __('At that stage, you may re-start the verification process by pressing the Run CDN Setup button.', 'litespeed-cache'); ?>
+	</p>
 <?php } ?>
 
 <?php if ($has_setup_token || $cdn_setup_done_ts) { ?>
@@ -311,3 +261,52 @@ if ($cdn_setup_done_ts) {
 		</div>
 	</div>
 <?php } ?>
+
+
+
+
+
+
+
+<h3 class="litespeed-title">
+	<?php echo __('About Auto QUIC.cloud CDN Setup', 'litespeed-cache'); ?>
+</h3>
+<p>
+	<?php echo __('This is a three step process for configuring your site to use QUIC.cloud CDN with QUIC.cloud DNS. This setup will perform the following actions', 'litespeed-cache') . ':'; ?>
+</p>
+<ol>
+	<li><?php echo __('Set up a QUIC.cloud account.', 'litespeed-cache'); ?></li>
+	<li><?php echo __('Prepare the site for QUIC.cloud CDN, detect the DNS, and create a DNS Zone.', 'litespeed-cache'); ?></li>
+	<li><?php echo __('Provide the nameservers/cname necessary to enable the CDN.', 'litespeed-cache'); ?></li>
+	<li>
+		<?php echo __('After successful DNS detection, QUIC.cloud will attempt to generate an SSL certificate and enable the CDN.', 'litespeed-cache'); ?>
+		<?php echo __('This last stage could take 15 to 20 minutes.', 'litespeed-cache'); ?>
+		<?php echo __('Your site will be available, but browsers may issue a "not secure" warning during this time.', 'litespeed-cache'); ?>
+	</li>
+</ol>
+
+<p>
+	<?php echo __('After you set your nameservers/cname, QUIC.cloud will detect the change and automatically enable the CDN.', 'litespeed-cache'); ?>
+</p>
+
+<p class="litespeed-desc">
+	<?php echo __('Notes', 'litespeed-cache') . ':'; ?>
+</p>
+<ul class="litespeed-desc">
+	<li>
+		<?php echo __('QUIC.cloud CDN/DNS does not support DNSSEC.', 'litespeed-cache'); ?>
+		<?php echo __('If you have this enabled for your domain, you must disable DNSSEC to continue.', 'litespeed-cache'); ?>
+	</li>
+	<li>
+		<?php echo __('This setup process will create a DNS zone on QUIC.cloud if one does not currently exist.', 'litespeed-cache'); ?>
+		<?php printf(
+			__('If you prefer to use the CNAME setup, please <a %s>set up the CDN manually at QUIC.cloud</a>.', 'litespeed-cache'),
+			'href="https://quic.cloud/docs/onboarding/" target="_blank" class="litespeed-learn-more"'
+		); ?>
+	</li>
+	<li>
+		<?php echo __('QUIC.cloud will detect most normal DNS entries.', 'litespeed-cache'); ?>
+		<?php echo __('If you have custom DNS records, it is possible that they are not detected.', 'litespeed-cache'); ?>
+		<?php echo __('Visit your QUIC.cloud dashboard after the DNS Zone is set up to confirm your DNS zone.', 'litespeed-cache'); ?>
+	</li>
+</ul>

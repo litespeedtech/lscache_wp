@@ -705,13 +705,6 @@ class Img_Optm extends Base
 			$post_data = $_POST;
 		}
 
-		// Validate key
-		if (empty($post_data['domain_key']) || $post_data['domain_key'] !== md5($this->conf(self::O_API_KEY))) {
-			$this->_summary['notify_ts_err'] = time();
-			self::save_summary();
-			return Cloud::err('wrong_key');
-		}
-
 		global $wpdb;
 
 		$notified_data = $post_data['data'];

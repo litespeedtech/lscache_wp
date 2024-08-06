@@ -61,15 +61,10 @@ class REST extends Root
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
-		// Token callback validate
-		register_rest_route('litespeed/v1', '/token', array(
+		## 1.2. WP REST Dryrun Callback
+		register_rest_route('litespeed/v3', '/wp_rest_echo', array(
 			'methods' => 'POST',
-			'callback' => array($this, 'token'),
-			'permission_callback' => array($this, 'is_from_cloud'),
-		));
-		register_rest_route('litespeed/v1', '/token', array(
-			'methods' => 'GET',
-			'callback' => array($this, 'token_get'),
+			'callback' => array($this, 'wp_rest_echo'),
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 		register_rest_route('litespeed/v3', '/ping', array(
@@ -78,15 +73,8 @@ class REST extends Root
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
-		// API key callback notification
-		register_rest_route('litespeed/v1', '/apikey', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'apikey'),
-			'permission_callback' => array($this, 'is_from_cloud'),
-		));
-
 		// CDN setup callback notification
-		register_rest_route('litespeed/v1', '/cdn_status', array(
+		register_rest_route('litespeed/v3', '/cdn_status', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'cdn_status'),
 			'permission_callback' => array($this, 'is_from_cloud'),
@@ -152,16 +140,6 @@ class REST extends Root
 	}
 
 	/**
-	 * Token get for
-	 *
-	 * @since  3.0.4
-	 */
-	public function token_get()
-	{
-		return Cloud::ok();
-	}
-
-	/**
 	 * Ping pong
 	 *
 	 * @since  3.0.4
@@ -196,19 +174,9 @@ class REST extends Root
 	 *
 	 * @since  3.0
 	 */
-	public function token()
+	public function wp_rest_echo()
 	{
-		return $this->cls('Cloud')->token_validate();
-	}
-
-	/**
-	 * Launch api call
-	 *
-	 * @since  3.0
-	 */
-	public function apikey()
-	{
-		return $this->cls('Cloud')->save_apikey();
+		return $this->cls('Cloud')->wp_rest_echo();
 	}
 
 	/**
@@ -265,12 +233,6 @@ class REST extends Root
 	 */
 	public function check_img()
 	{
-		try {
-			$this->cls('Cloud')->validate_hash(4);
-		} catch (\Exception $e) {
-			return self::err($e->getMessage());
-		}
-
 		return Img_Optm::cls()->check_img();
 	}
 
