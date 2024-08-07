@@ -250,7 +250,7 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 == Changelog ==
 
-= 6.4 - Sep 2024 =
+= 6.4 - Aug 13 2024 =
 * **Cache** Corrected QC and LSADC cache hit status.
 * **Cloud** Allow partner info removal in QUIC.cloud notification.
 * **GUI** Moved `WordPress Image Quality Control` setting from `Image Optimization` menu to `Page Optimization` menu.
