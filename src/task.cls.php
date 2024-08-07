@@ -76,10 +76,16 @@ class Task extends Root
 	 */
 	public static function async_litespeed_handler()
 	{
-		if (!check_ajax_referer('async_litespeed', 'nonce')) {
-			self::debug('WARNING: invalid async_litespeed call');
+		$hash_data = self::get_option('async_call-hash', array());
+		if (!$hash_data || !is_array($hash_data) || empty($hash_data['hash']) || empty($hash_data['ts'])) {
+			self::debug('async_litespeed_handler no hash data', $hash_data);
 			return;
 		}
+		if (time() - $hash_data['ts'] > 120 || empty($_GET['nonce']) || $_GET['nonce'] != $hash_data['hash']) {
+			self::debug('async_litespeed_handler nonce mismatch');
+			return;
+		}
+		self::delete_option('async_call-hash');
 
 		$type = Router::verify_type();
 		self::debug('type=' . $type);
@@ -110,6 +116,8 @@ class Task extends Root
 	 */
 	public static function async_call($type)
 	{
+		$hash = Str::rrand(32);
+		self::update_option('async_call-hash', array('hash' => $hash, 'ts' => time()));
 		$args = array(
 			'timeout' => 0.01,
 			'blocking' => false,
@@ -118,7 +126,7 @@ class Task extends Root
 		);
 		$qs = array(
 			'action' => 'async_litespeed',
-			'nonce' => wp_create_nonce('async_litespeed'),
+			'nonce' => $hash,
 			Router::TYPE => $type,
 		);
 		$url = add_query_arg($qs, admin_url('admin-ajax.php'));

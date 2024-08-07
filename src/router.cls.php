@@ -260,7 +260,7 @@ class Router extends Base
 
 		// Flash hash validation
 		if (!empty($_COOKIE['litespeed_flash_hash'])) {
-			$hash_data = self::get_option(self::ITEM_FLASH_HASH);
+			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
 					self::debug('role simulate uid ' . $hash_data['uid']);
@@ -272,7 +272,7 @@ class Router extends Base
 		}
 		// Hash validation
 		if (!empty($_COOKIE['litespeed_hash'])) {
-			$hash_data = self::get_option(self::ITEM_HASH);
+			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
 					if (empty($hash_data['ip'])) {
@@ -301,7 +301,7 @@ class Router extends Base
 	 */
 	public function get_flash_hash($uid)
 	{
-		$hash_data = self::get_option(self::ITEM_FLASH_HASH);
+		$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 		if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts'])) {
 			if (time() - $hash_data['ts'] < 60) {
 				return $hash_data['hash'];
