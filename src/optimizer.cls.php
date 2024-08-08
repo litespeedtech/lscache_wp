@@ -56,6 +56,11 @@ class Optimizer extends Root
 		try {
 			$obj = new Lib\HTML_MIN($content, $options);
 			$content_final = $obj->process();
+			// check if content from minification is empty
+			if($content_final == ''){
+				Debug2::debug('Failed to minify HTML: HTML minification resulted in empty HTML');
+				return $content;
+			}
 			if (!defined('LSCACHE_ESI_SILENCE')) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
 			}
