@@ -263,14 +263,17 @@ class Tag extends Root
 					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
 				} elseif (is_date()) {
 					global $post;
-					$date = $post->post_date;
-					$date = strtotime($date);
-					if (is_day()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
-					} elseif (is_month()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
-					} elseif (is_year()) {
-						$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+					
+					if($post && isset($post->post_date)){
+						$date = $post->post_date;
+						$date = strtotime($date);
+						if (is_day()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
+						} elseif (is_month()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
+						} elseif (is_year()) {
+							$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+						}
 					}
 				}
 			} elseif (is_singular()) {
