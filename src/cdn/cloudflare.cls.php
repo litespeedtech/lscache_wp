@@ -75,7 +75,8 @@ class Cloudflare extends Base
 		}
 		Debug2::debug('[Cloudflare] _get_devmode result ', $res);
 
-		$curr_status = self::get_option(self::ITEM_STATUS, array());
+		// Make sure is array: #992174
+		$curr_status = self::get_option(self::ITEM_STATUS, array()) ?: array();
 		$curr_status['devmode'] = $res['value'];
 		$curr_status['devmode_expired'] = $res['time_remaining'] + time();
 
