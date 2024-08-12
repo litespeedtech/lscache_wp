@@ -54,9 +54,6 @@ class Img_Optm extends Base
 
 	const DB_NEED_PULL = 'need_pull';
 
-	const JUMBO_REQUEST_BONUS = 10;
-	const PRIO_REQUEST_BONUS = 5;
-
 	private $wp_upload_dir;
 	private $tmp_pid;
 	private $tmp_type;
@@ -890,19 +887,6 @@ class Img_Optm extends Base
 		$images_waiting = $wpdb->get_var($_c);
 		if ($images_waiting && $images_waiting > 0) {
 			$imgs_per_req = ceil($images_waiting / 1000); //ie. download 5/request if 5000 images are waiting
-		}
-
-		// Increase the request rate if the user has purchased addon packages
-		$has_jumbo_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_JUMBO_GROUP);
-		$has_prio_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_PRIO);
-
-		if ($has_jumbo_pkg) {
-			self::debug('Jumbo package detected.');
-			$imgs_per_req += self::JUMBO_REQUEST_BONUS;
-		}
-		if ($has_prio_pkg) {
-			self::debug('Priority Line package detected.');
-			$imgs_per_req += self::PRIO_REQUEST_BONUS;
 		}
 
 		// Cap the request rate at 50 images per request
