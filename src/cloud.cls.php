@@ -34,9 +34,6 @@ class Cloud extends Base
 	const SVC_HEALTH = 'health';
 	const SVC_CDN = 'cdn';
 
-	const BM_IMG_OPTM_PRIO = 16;
-	const BM_IMG_OPTM_JUMBO_GROUP = 32;
-	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
 	const IMGOPTM_TAKEN = 'img_optm-taken';
@@ -336,9 +333,6 @@ class Cloud extends Base
 		$allowance_max = 0;
 		if ($service == self::SVC_IMG_OPTM) {
 			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
-			if (!empty($usage['pkgs']) && $usage['pkgs'] & self::BM_IMG_OPTM_JUMBO_GROUP) {
-				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
-			}
 		}
 
 		$allowance = $usage['quota'] - $usage['used'];
@@ -664,9 +658,6 @@ class Cloud extends Base
 		$timestamp_tag = 'curr_request.';
 		if ($service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ) {
 			$timestamp_tag = 'last_request.';
-			if ($this->has_pkg(self::SVC_IMG_OPTM, self::BM_IMG_OPTM_PRIO)) {
-				$expiration_req /= 10;
-			}
 		} else {
 			// For all other requests, if is under debug mode, will always allow
 			if ($this->conf(self::O_DEBUG)) {
