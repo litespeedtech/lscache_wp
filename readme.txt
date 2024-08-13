@@ -254,6 +254,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 6.4.1 - Aug 19 2024 =
+* 🐞**Page Optimize** Fixed HTML minification returning blank page issue. (#706)
+* 🐞**CDN** Fixed a bug when Cloudflare status option is empty. (#684 #992174)
+* **Core** Minimum required WP version escalated to WP v4.9.
+
 = 6.4 - Aug 13 2024 =
 * **Cache** Corrected QC and LSADC cache hit status.
 * **Cloud** Allow partner info removal in QUIC.cloud notification.
