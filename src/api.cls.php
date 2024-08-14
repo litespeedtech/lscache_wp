@@ -102,6 +102,7 @@ class API extends Base
 		// Action `litespeed_purge_finalize` // @previous API::hook_purge($tags)
 		add_action('litespeed_purge', __NAMESPACE__ . '\Purge::add'); // @previous API::purge($tags)
 		add_action('litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all');
+		add_action('litespeed_purge_cloudflare', __NAMESPACE__ . '\Purge::purge_cloudflare');
 		add_action('litespeed_purge_post', array($this, 'purge_post')); // @previous API::purge_post( $pid )
 		add_action('litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype');
 		add_action('litespeed_purge_url', array($this, 'purge_url'));
