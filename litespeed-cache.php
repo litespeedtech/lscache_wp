@@ -5,6 +5,9 @@
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
  * Version:           6.4-a8
+ * Requires PHP:      7.2
+ * Requires at least: 5.3
+ * Tested up to:      6.6
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
