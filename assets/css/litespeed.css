@@ -2752,6 +2752,27 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-left: 0.25rem;
 }
 
+
+.litespeed-dashboard-title--w-btn {
+	display: flex;
+	align-items: center;
+}
+
+.litespeed-dashboard-title--w-btn .button {
+	font-weight: normal;
+}
+
+.litespeed-postbox-footer .button-small {
+	vertical-align: middle;
+}
+
+.litespeed-postbox .button.button-small .dashicons, .litespeed-dashboard-title--w-btn .button.button-small .dashicons {
+	font-size: 1rem;
+	top: 0.05em;
+	vertical-align: middle;
+	margin-left: -5px;
+}
+
 .litespeed-dashboard-header {
 	display: flex;
 	align-items: center;
@@ -2861,6 +2882,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-left: -20px;
 	margin-right: -20px;
 	margin-bottom: -0.55em !important;
+}
+
+.litespeed-postbox p.litespeed-dashboard-stats-total + p.litespeed-dashboard-stats-total {
+	margin-top: 1.2em;
 }
 
 .litespeed-postbox.litespeed-postbox-partner .inside {
@@ -3158,6 +3183,121 @@ a.litespeed-redetect {
 
 	.litespeed-postbox-double-content {
 		flex-wrap: wrap;
+	}
+}
+
+/* =======================================
+			VIEW - dashboard QC services
+======================================= */
+
+.litespeed-dashboard-qc {
+    position: relative;
+}
+
+.litespeed-dashboard-unlock {
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 .125rem .4rem -.0625rem rgba(0, 0, 0, .03), 0px 3px 0px 0px rgba(0, 0, 0, .07);
+    border-radius: .5rem;
+    padding: 2rem;
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    transform: translate(-50%, 25%);
+    top: 0;
+    max-width: 96%;
+    width: 540px;
+}
+
+.litespeed-dashboard-unlock-title {
+    font-size: 28px;
+}
+
+.litespeed-dashboard-unlock-desc {
+    font-size: 17px;
+    color: #000;
+}
+
+.litespeed-dashboard-unlock-desc span {
+    font-size: 14px;
+    color: #666;
+}
+
+p.litespeed-dashboard-unlock-footer{
+	margin-top: 3em;
+    margin-bottom: 0;
+}
+
+.litespeed-qc-text-gradient {
+    background: -webkit-linear-gradient(130deg, #ff2a91, #2295d8 60%, #161f29);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.litespeed-dashboard-unlock a.button.button-primary {
+    font-size: 1.2em;
+    padding: 0.35em 1em 0.35em 0.85em;
+    min-width: 210px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.litespeed-dashboard-unlock a.button.button-primary .dashicons {
+	vertical-align: baseline;
+	top: 0.25em;
+	margin-right: 0.5em;
+}
+
+.litespeed-dashboard-unlock+.litespeed-dashboard-qc-enable {
+    opacity: 0.75;
+    filter: blur(2px);
+}
+
+.litespeed-dashboard-unlock+.litespeed-dashboard-qc-enable:before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: -5px;
+    width: calc(100% + 20px);
+    height: calc(100% + 10px);
+    background: #161e29;
+    z-index: 2;
+    opacity: 0.55;
+    filter: blur(2px);
+}
+
+@media screen and (min-width: 1400px) {
+	.litespeed-dashboard-unlock { 
+		width:800px;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	.litespeed-dashboard-unlock { 
+		max-width: 80%;
+		padding: 1rem 1.5rem 2rem 1.5rem;
+		transform: translate(-50%, 10%);
+	}
+
+	.litespeed-dashboard-unlock-title {
+		font-size: 22px;
+		line-height: 1.2;
+	}
+
+}
+
+@media screen and (max-width: 340px) {
+	.litespeed-dashboard-unlock a.button.button-primary {
+		padding: 0.35em 1em 0.35em 1em;
+	}
+
+	.litespeed-dashboard-unlock a.button.button-primary .dashicons {
+		display: none;
+	}
+
+	p.litespeed-dashboard-unlock-footer{
+		margin-top: 2em;
 	}
 }
 
