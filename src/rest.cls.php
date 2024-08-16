@@ -55,7 +55,7 @@ class REST extends Root
 		));
 
 		// IP callback validate
-		register_rest_route('litespeed/v1', '/ip_validate', array(
+		register_rest_route('litespeed/v3', '/ip_validate', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'ip_validate'),
 			'permission_callback' => array($this, 'is_from_cloud'),
@@ -100,7 +100,7 @@ class REST extends Root
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
-		register_rest_route('litespeed/v1', '/err_domains', array(
+		register_rest_route('litespeed/v3', '/err_domains', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'err_domains'),
 			'permission_callback' => array($this, 'is_from_cloud'),
