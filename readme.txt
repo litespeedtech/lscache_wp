@@ -1,7 +1,7 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
-Requires at least: 4.9
+Requires at least: 5.3
 Tested up to: 6.6.1
 Stable tag: 6.4.1
 License: GPLv3
@@ -253,6 +253,10 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/litespeed-cache)
 
 == Changelog ==
+
+= 7.0 Nov 2024 =
+* **Core** Minimum required PHP version escalated to PHP v7.2.0.
+* **Core** Minimum required WP version escalated to WP v5.3.
 
 = 6.4.1 - Aug 19 2024 =
 * ❗**Security** This release patches a security issue that may affect previous LSCWP versions since v1.9.
