@@ -254,9 +254,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.0 Nov 2024 =
+= 7.0 - Nov 2024 =
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
+* **3rd** Correct the integration with User Switching (John Blackbourn #725)
 
 = 6.5.0.2 - Sep 6 2024 =
 * **Debug** Compatibility improvement for WP installations w/o `AUTH_KEY` defined in `wp-config.php`.
