@@ -13,12 +13,12 @@ defined('WPINC') || exit();
 class Cloud extends Base
 {
 	const LOG_TAG = '❄️';
-	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
 	const CLOUD_IPS = 'https://quic.cloud/ips';
-	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
+	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
-	const SVC_U_ACTIVATE = 'u/activate';
+	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -47,6 +47,7 @@ class Cloud extends Base
 	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
 	const API_REST_ECHO = 'tool/wp_rest_echo';
+	const API_SERVER_KEY = 'server_key';
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_U_ACTIVATE,
@@ -61,10 +62,10 @@ class Cloud extends Base
 		self::SVC_D_DEL_CDN_DNS,
 	);
 
-	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
+	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::API_SERVER_KEY);
 
 	// No api key needed for these services
-	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
+	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::API_SERVER_KEY);
 
 	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
 
@@ -109,14 +110,14 @@ class Cloud extends Base
 	/**
 	 * Init QC setup
 	 *
-	 * @since 6.4
+	 * @since 7.0
 	 */
 	public function init_qc()
 	{
-		if (!empty($this->_summary['sk'])) {
+		if (empty($this->_summary['sk'])) {
 			$keypair = sodium_crypto_box_keypair();
-			$pk = sodium_crypto_box_publickey($keypair);
-			$sk = sodium_crypto_box_secretkey($keypair);
+			$pk = bin2hex(sodium_crypto_box_publickey($keypair));
+			$sk = bin2hex(sodium_crypto_box_secretkey($keypair));
 			$this->_summary['pk'] = $pk;
 			$this->_summary['sk'] = $sk;
 			$this->save_summary();
@@ -125,15 +126,37 @@ class Cloud extends Base
 
 		// WPAPI REST echo dryrun
 		$req_data = array(
-			'wp_pk' => $pk,
+			'wp_pk' => $this->_summary['pk'],
 		);
 		$data = self::post(self::API_REST_ECHO, $req_data);
-		if (empty($data['sealed_encrypted']) || empty($data['sealed_encrypted_nonce'])) {
+		if (empty($data['_res']) || $data['_res'] != 'ok') {
 			self::debug('REST Echo Failed!');
 			$msg = __('Your WP REST API seems blocked our QIUC.cloud server calls.', 'litespeed-cache');
+			if (!empty($data['code'])) {
+				$msg .= ' (' . $data['code'] . ')';
+			}
 			Admin_Display::error($msg);
 			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
 			return;
+		}
+
+		self::debug("echo succeeded");
+
+		// Load seperate thread echoed data from storage
+		$echobox = self::get_option('echobox', array());
+		if (empty($echobox['data_encrypted']) || empty($echobox['data_encrypted_nonce'])) {
+			Admin_Display::error(__('Failed to load sealed box data from WPAPI', 'litespeed-cache'));
+			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
+			return;
+		}
+
+		$data = array(
+			'data_encrypted' => $echobox['data_encrypted'],
+			'data_encrypted_nonce' => $echobox['data_encrypted_nonce'],
+		);
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if ($server_ip) {
+			$data['server_ip'] = $server_ip;
 		}
 
 		// Activation redirect
@@ -148,9 +171,94 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Encrypt data for cloud req
+	 *
+	 * @since 7.0
+	 */
+	private function _encrypt($data, $from_wpapi = false)
+	{
+		$keypair = $this->_load_server_pk_pair($from_wpapi);
+		$nonce = random_bytes(SODIUM_CRYPTO_BOX_NONCEBYTES);
+		return sodium_crypto_box($data, $nonce, $keypair);
+	}
+
+	/**
+	 * Load server pk from cloud
+	 *
+	 * @since 7.0
+	 */
+	private function _load_server_pk_pair($from_wpapi = false)
+	{
+		// Load cloud pk
+		$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY;
+		if ($from_wpapi) {
+			$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY;
+		}
+		$resp = wp_remote_get($server_key_url);
+		if (is_wp_error($resp)) {
+			self::debug('Failed to load key: ' . $resp->get_error_message());
+			return false;
+		}
+		self::debug('Loaded key from ' . $server_key_url . ': ' . $resp['body']);
+		$cloud_pk = base64_decode($resp['body']);
+		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey(hex2bin($this->_summary['sk']), $cloud_pk);
+		return $keypair;
+	}
+
+	/**
+	 * Decrypt cloud response encrypted box
+	 *
+	 * @since 7.0
+	 */
+	private function _decrypt($data, $nonce, $from_wpapi = false)
+	{
+		// Try decryption
+		try {
+			$keypair = $this->_load_server_pk_pair($from_wpapi);
+			$databox_raw = sodium_crypto_box_open($data, $nonce, $keypair);
+		} catch (\SodiumException $e) {
+			return false;
+		}
+		self::debug('Decrypted info: ', $databox_raw);
+		return $databox_raw;
+	}
+
+	/**
+	 * WPAPI echo back to notify the sealed databox
+	 *
+	 * @since 7.0
+	 */
+	public function wp_rest_echo()
+	{
+		self::debug('Parsing echo', $_POST);
+
+		if (empty($_POST['sealed_encrypted']) || empty($_POST['sealed_encrypted_nonce'])) {
+			return self::err('No sealed data');
+		}
+
+		// open sealed box
+		try {
+			$databox_raw = $this->_decrypt($_POST['sealed_encrypted'], $_POST['sealed_encrypted_nonce'], true);
+			$databox = \json_decode($databox_raw, true);
+		} catch (\SodiumException $e) {
+			self::debug("❌ Decryption failed: " . $e->getMessage());
+			return self::err('Decryption failed: ' . $e->getMessage());
+		}
+
+		self::debug("sealed box ", $databox_raw);
+
+		if (empty($databox['data_encrypted']) || empty($databox['data_encrypted_nonce'])) {
+			return self::err('Missing data_encrypted or nonce');
+		}
+
+		self::update_option('echobox', $databox);
+		return self::err('nonoo');
+	}
+
+	/**
 	 * Finish qc activation after redirection back from QC
 	 *
-	 * @since 6.4
+	 * @since 7.0
 	 */
 	public function finish_qc_activation()
 	{
@@ -595,7 +703,6 @@ class Cloud extends Base
 
 		$param = array(
 			'site_url' => home_url(),
-			'domain_key' => $this->_api_key(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'ver' => Core::VER,
 		);
@@ -648,7 +755,7 @@ class Cloud extends Base
 			return true;
 		}
 
-		if ($service_tag == self::SVC_D_SYNC_CONF && $this->_setup_token && !$this->_api_key()) {
+		if ($service_tag == self::SVC_D_SYNC_CONF && !$this->activated()) {
 			self::debug('Skip sync conf if API key is not available yet.');
 			return false;
 		}
@@ -697,7 +804,7 @@ class Cloud extends Base
 	/**
 	 * Check if activated QUIC.cloud service or not
 	 *
-	 * @since  6.4
+	 * @since  7.0
 	 * @access public
 	 */
 	public function activated()
@@ -759,9 +866,16 @@ class Cloud extends Base
 			$data['service_type'] = $service; // For queue distribution usage
 		}
 
+		// Encrypt service as signature
+		$signature = $this->_encrypt($service_tag);
+		$data['signature'] = array(
+			'service_tag' => $service_tag,
+			'ts' => time(),
+			'signature' => $signature,
+		);
+
 		$param = array(
 			'site_url' => home_url(),
-			// 'domain_key' => $this->_api_key(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'ver' => Core::VER,
 			'data' => $data,
@@ -1039,27 +1153,17 @@ class Cloud extends Base
 	 */
 	public function rest_err_domains()
 	{
-		// Validate token hash first
-		if (empty($_POST['hash']) || empty($_POST['main_domain']) || empty($_POST['alias'])) {
+		if (empty($_POST['main_domain']) || empty($_POST['alias'])) {
 			return self::err('lack_of_param');
 		}
 
-		if (!$this->_api_key() || $_POST['hash'] !== md5(substr($this->_api_key(), 1, 8))) {
-			return self::err('wrong_hash');
-		}
-
-		list($post_data) = $this->extract_msg($_POST, 'Quic.cloud', false, true);
+		$this->extract_msg($_POST, 'Quic.cloud', false, true);
 
 		if ($this->_is_err_domain($_POST['alias'])) {
 			if ($_POST['alias'] == home_url()) {
 				$this->_remove_domain_from_err_list($_POST['alias']);
 			}
-
-			$res_hash = substr($this->_api_key(), 2, 4);
-
-			self::debug('__callback IP request hash: md5(' . $res_hash . ')');
-
-			return self::ok(array('hash' => md5($res_hash)));
+			return self::ok();
 		}
 
 		return self::err('Not an alias req from here');
@@ -1095,72 +1199,6 @@ class Cloud extends Base
 			return false;
 		}
 		return true;
-	}
-
-	public function req_rest_api($api, $body = array())
-	{
-		$token = $this->_setup_token;
-
-		if (empty($token)) {
-			Admin_Display::error(__('Cannot request REST API, no token saved.', 'litespeed-cache'));
-			return;
-		}
-		$req_args = array(
-			'headers' => array(
-				'Authorization' => 'bearer ' . $token,
-				'Content-Type' => 'application/json',
-			),
-		);
-		self::debug('Req rest api to QC [api] ' . $api);
-		if (!empty($body)) {
-			$req_args['body'] = \json_encode($body);
-
-			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
-		} else {
-			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
-		}
-
-		return $this->_parse_rest_response($response);
-	}
-
-	private function _parse_rest_response($response)
-	{
-		if (is_wp_error($response)) {
-			$error_message = $response->get_error_message();
-			self::debug('failed to request REST API: ' . $error_message);
-			Admin_Display::error(__('Cloud REST Error', 'litespeed-cache') . ': ' . $error_message);
-			return $error_message;
-		} elseif (wp_remote_retrieve_response_code($response) == '401') {
-			Admin_Display::error(__('Unauthorized access to REST API. Your token has expired.', 'litespeed-cache'));
-			return 'unauthorized access to REST API.';
-		}
-
-		$json = \json_decode($response['body'], true);
-		self::debug('QC response', $json);
-
-		if (!$json['success']) {
-			$contactSupport = false;
-			if (isset($json['info']['errors'])) {
-				$errs = array();
-				foreach ($json['info']['errors'] as $err) {
-					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
-					if ($err['code'] == 1113) {
-						$contactSupport = true;
-					}
-				}
-				$error_message = implode('<br>', $errs);
-			} else {
-				$error_message = __('Unknown error.', 'litespeed-cache');
-				$contactSupport = true;
-			}
-			if ($contactSupport) {
-				$error_message .= ' <a href="https://www.quic.cloud/support/" target="_blank">' . __('Contact QUIC.cloud support', 'litespeed-cache') . '</a>';
-			}
-			Admin_Display::error(__('Cloud REST API returned error: ', 'litespeed-cache') . $error_message);
-			return $error_message;
-		}
-
-		return $json;
 	}
 
 	/**
@@ -1224,30 +1262,28 @@ class Cloud extends Base
 	 */
 	public function ip_validate()
 	{
-		if (empty($_POST['hash'])) {
-			self::debug('Lack of hash param');
-			return self::err('lack_of_param');
-		}
-
-		// Note: Using empty here throws a fatal error in PHP v5.3
-		if (!$this->_api_key()) {
-			self::debug('Lack of API key');
+		if (!$this->activated()) {
+			self::debug('Not activated QC yet');
 			return self::err('setup_required');
 		}
 
-		$to_validate = substr($this->_api_key(), 0, 4);
-		if ($_POST['hash'] !== md5($to_validate)) {
-			self::debug('__callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST['hash']);
+		if (empty($_POST['data']) || empty($_POST['nonce'])) {
+			return self::err('lack_of_params');
+		}
+
+		// Decrypt the data_orig and respond
+		$data_orig = $this->_decrypt($_POST['data'], $_POST['nonce']);
+
+		if (!$data_orig) {
+			self::debug('__callback IP request decryption failed');
 			return self::err('err_hash');
 		}
 
 		Control::set_nocache('Cloud IP hash validation');
 
-		$res_hash = substr($this->_api_key(), 2, 4);
+		self::debug('__callback IP request hash: ' . $data_orig);
 
-		self::debug('__callback IP request hash: md5(' . $res_hash . ')');
-
-		return self::ok(array('hash' => md5($res_hash)));
+		return self::ok(array('data_orig' => $data_orig));
 	}
 
 	/**
@@ -1329,6 +1365,7 @@ class Cloud extends Base
 	 */
 	public static function err($code)
 	{
+		self::debug("❌ Error response code: $code");
 		return array('_res' => 'err', '_msg' => $code);
 	}
 
