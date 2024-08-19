@@ -190,9 +190,9 @@ class Cloud extends Base
 	private function _load_server_pk_pair($from_wpapi = false)
 	{
 		// Load cloud pk
-		$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY;
+		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY;
 		if ($from_wpapi) {
-			$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY;
+			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY;
 		}
 		$resp = wp_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
