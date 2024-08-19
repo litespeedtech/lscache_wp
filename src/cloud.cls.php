@@ -196,12 +196,30 @@ class Cloud extends Base
 		}
 		$resp = wp_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
-			self::debug('Failed to load key: ' . $resp->get_error_message());
+			self::debugErr('Failed to load key: ' . $resp->get_error_message());
 			return false;
 		}
-		self::debug('Loaded key from ' . $server_key_url . ': ' . $resp['body']);
-		$cloud_pk = base64_decode($resp['body']);
-		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey(hex2bin($this->_summary['sk']), $cloud_pk);
+		$pk = trim($resp['body']);
+		self::debug('Loaded key from ' . $server_key_url . ': ' . $pk);
+		$cloud_pk = base64_decode($pk);
+		if (strlen($cloud_pk) !== SODIUM_CRYPTO_BOX_PUBLICKEYBYTES) {
+			self::debugErr('Invalid cloud public key length.');
+			return false;
+		}
+
+		$sk = hex2bin($this->_summary['sk']);
+		if (strlen($sk) !== SODIUM_CRYPTO_BOX_SECRETKEYBYTES) {
+			self::debugErr('Invalid local secret key length.');
+			// Reset local pk/sk
+			unset($this->_summary['pk']);
+			unset($this->_summary['sk']);
+			$this->save_summary();
+			self::debug('Unset local pk/sk pair.');
+
+			return false;
+		}
+
+		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey($sk, $cloud_pk);
 		return $keypair;
 	}
 
@@ -215,8 +233,12 @@ class Cloud extends Base
 		// Try decryption
 		try {
 			$keypair = $this->_load_server_pk_pair($from_wpapi);
+			if ($keypair == false) {
+				return false;
+			}
 			$databox_raw = sodium_crypto_box_open($data, $nonce, $keypair);
 		} catch (\SodiumException $e) {
+			self::debugErr("Decryption failed: " . $e->getMessage());
 			return false;
 		}
 		self::debug('Decrypted info: ', $databox_raw);
@@ -237,14 +259,12 @@ class Cloud extends Base
 		}
 
 		// open sealed box
-		try {
-			$databox_raw = $this->_decrypt($_POST['sealed_encrypted'], $_POST['sealed_encrypted_nonce'], true);
-			$databox = \json_decode($databox_raw, true);
-		} catch (\SodiumException $e) {
-			self::debug("❌ Decryption failed: " . $e->getMessage());
-			return self::err('Decryption failed: ' . $e->getMessage());
+		$databox_raw = $this->_decrypt($_POST['sealed_encrypted'], $_POST['sealed_encrypted_nonce'], true);
+		if ($databox_raw == false) {
+			return self::err('Opening sealed data from WPAPI REST echo failed');
 		}
 
+		$databox = \json_decode($databox_raw, true);
 		self::debug("sealed box ", $databox_raw);
 
 		if (empty($databox['data_encrypted']) || empty($databox['data_encrypted_nonce'])) {
