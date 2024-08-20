@@ -62,7 +62,7 @@ $ucss_queue = $this->load_queue('ucss');
 				<?php $this->build_switch($id); ?>
 				<?php Doc::maybe_on_by_gm($id); ?>
 				<div class="litespeed-desc">
-					<?php if (!$this->cls('Cloud')->activate()) : ?>
+					<?php if (!$this->cls('Cloud')->activated()) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 							<?php echo Error::msg('qc_setup_required'); ?>
@@ -175,7 +175,7 @@ $ucss_queue = $this->load_queue('ucss');
 				<?php $this->build_switch($id); ?>
 				<?php Doc::maybe_on_by_gm($id); ?>
 				<div class="litespeed-desc">
-					<?php if (!$this->cls('Cloud')->activate()) : ?>
+					<?php if (!$this->cls('Cloud')->activated()) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 							<?php echo Error::msg('qc_setup_required'); ?>
