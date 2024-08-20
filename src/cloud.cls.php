@@ -114,27 +114,24 @@ class Cloud extends Base
 	 */
 	public function init_qc()
 	{
-		if (empty($this->_summary['sk'])) {
+		if (empty($this->_summary['sk_b64'])) {
 			$keypair = sodium_crypto_box_keypair();
-			$pk = bin2hex(sodium_crypto_box_publickey($keypair));
-			$sk = bin2hex(sodium_crypto_box_secretkey($keypair));
-			$this->_summary['pk'] = $pk;
-			$this->_summary['sk'] = $sk;
+			$pk = base64_encode(sodium_crypto_box_publickey($keypair));
+			$sk = base64_encode(sodium_crypto_box_secretkey($keypair));
+			$this->_summary['pk_b64'] = $pk;
+			$this->_summary['sk_b64'] = $sk;
 			$this->save_summary();
 			// ATM `qc_activated` = null
 		}
 
 		// WPAPI REST echo dryrun
 		$req_data = array(
-			'wp_pk' => $this->_summary['pk'],
+			'wp_pk_b64' => $this->_summary['pk_b64'],
 		);
-		$data = self::post(self::API_REST_ECHO, $req_data);
-		if (empty($data['_res']) || $data['_res'] != 'ok') {
-			self::debug('REST Echo Failed!');
+		$res = self::post(self::API_REST_ECHO, $req_data);
+		if ($res === false) {
+			self::debugErr('REST Echo Failed!');
 			$msg = __('Your WP REST API seems blocked our QIUC.cloud server calls.', 'litespeed-cache');
-			if (!empty($data['code'])) {
-				$msg .= ' (' . $data['code'] . ')';
-			}
 			Admin_Display::error($msg);
 			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
 			return;
@@ -144,15 +141,15 @@ class Cloud extends Base
 
 		// Load seperate thread echoed data from storage
 		$echobox = self::get_option('echobox', array());
-		if (empty($echobox['data_encrypted']) || empty($echobox['data_encrypted_nonce'])) {
+		if (empty($echobox['data_encrypted_b64']) || empty($echobox['data_encrypted_nonce_b64'])) {
 			Admin_Display::error(__('Failed to load sealed box data from WPAPI', 'litespeed-cache'));
 			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
 			return;
 		}
 
 		$data = array(
-			'data_encrypted' => $echobox['data_encrypted'],
-			'data_encrypted_nonce' => $echobox['data_encrypted_nonce'],
+			'data_encrypted_b64' => $echobox['data_encrypted_b64'],
+			'data_encrypted_nonce_b64' => $echobox['data_encrypted_nonce_b64'],
 		);
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if ($server_ip) {
@@ -167,7 +164,7 @@ class Cloud extends Base
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed-general'),
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . Utility::arr2str($param));
-		return;
+		exit();
 	}
 
 	/**
@@ -178,6 +175,9 @@ class Cloud extends Base
 	private function _encrypt($data, $from_wpapi = false)
 	{
 		$keypair = $this->_load_server_pk_pair($from_wpapi);
+		if (strlen($keypair) !== SODIUM_CRYPTO_BOX_KEYPAIRBYTES) {
+			return false;
+		}
 		$nonce = random_bytes(SODIUM_CRYPTO_BOX_NONCEBYTES);
 		return sodium_crypto_box($data, $nonce, $keypair);
 	}
@@ -207,12 +207,12 @@ class Cloud extends Base
 			return false;
 		}
 
-		$sk = hex2bin($this->_summary['sk']);
+		$sk = base64_decode($this->_summary['sk_b64']);
 		if (strlen($sk) !== SODIUM_CRYPTO_BOX_SECRETKEYBYTES) {
 			self::debugErr('Invalid local secret key length.');
 			// Reset local pk/sk
-			unset($this->_summary['pk']);
-			unset($this->_summary['sk']);
+			unset($this->_summary['pk_b64']);
+			unset($this->_summary['sk_b64']);
 			$this->save_summary();
 			self::debug('Unset local pk/sk pair.');
 
@@ -254,12 +254,19 @@ class Cloud extends Base
 	{
 		self::debug('Parsing echo', $_POST);
 
-		if (empty($_POST['sealed_encrypted']) || empty($_POST['sealed_encrypted_nonce'])) {
+		if (empty($_POST['sealed_encrypted_b64']) || empty($_POST['sealed_encrypted_nonce_b64'])) {
 			return self::err('No sealed data');
 		}
 
+		$sealed_encrypted = base64_decode($_POST['sealed_encrypted_b64'], true);
+		$sealed_encrypted_nonce = base64_decode($_POST['sealed_encrypted_nonce_b64'], true);
+
+		if (strlen($sealed_encrypted_nonce) !== SODIUM_CRYPTO_BOX_NONCEBYTES) {
+			return self::err('Invalid nonce size');
+		}
+
 		// open sealed box
-		$databox_raw = $this->_decrypt($_POST['sealed_encrypted'], $_POST['sealed_encrypted_nonce'], true);
+		$databox_raw = $this->_decrypt($sealed_encrypted, $sealed_encrypted_nonce, true);
 		if ($databox_raw == false) {
 			return self::err('Opening sealed data from WPAPI REST echo failed');
 		}
@@ -267,12 +274,12 @@ class Cloud extends Base
 		$databox = \json_decode($databox_raw, true);
 		self::debug("sealed box ", $databox_raw);
 
-		if (empty($databox['data_encrypted']) || empty($databox['data_encrypted_nonce'])) {
+		if (empty($databox['data_encrypted_b64']) || empty($databox['data_encrypted_nonce_b64'])) {
 			return self::err('Missing data_encrypted or nonce');
 		}
 
 		self::update_option('echobox', $databox);
-		return self::err('nonoo');
+		return self::ok(array('sealed_md5' => md5($databox_raw)));
 	}
 
 	/**
@@ -737,7 +744,11 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_get($url, array('timeout' => 15, 'sslverify' => true));
+		$response = wp_remote_get($url, array(
+			'timeout' => 15,
+			'sslverify' => true,
+			'headers' => array('Accept' => 'application/json'),
+		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
 	}
@@ -829,7 +840,7 @@ class Cloud extends Base
 	 */
 	public function activated()
 	{
-		return !empty($this->_summary['sk']) && !empty($this->_summary['qc_activated']);
+		return !empty($this->_summary['sk_b64']) && !empty($this->_summary['qc_activated']);
 	}
 
 	/**
@@ -903,7 +914,12 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_post($url, array('body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => true));
+		$response = wp_remote_post($url, array(
+			'body' => $param,
+			'timeout' => $time_out ?: 15,
+			'sslverify' => true,
+			'headers' => array('Accept' => 'application/json'),
+		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
 	}
@@ -935,13 +951,13 @@ class Cloud extends Base
 				self::debug('Node error, redetecting node [svc] ' . $service);
 				$this->detect_cloud($service, true);
 			}
-			return;
+			return false;
 		}
 
 		$json = \json_decode($response['body'], true);
 
 		if (!is_array($json)) {
-			self::debug('failed to decode response json: ' . $response['body']);
+			self::debugErr('failed to decode response json: ' . $response['body']);
 
 			if ($service !== self::API_VER) {
 				$msg = __('Failed to request via WordPress', 'litespeed-cache') . ': ' . $response['body'] . " [server] $server [service] $service";
@@ -955,43 +971,43 @@ class Cloud extends Base
 				self::save_summary();
 
 				// Force redetect node
-				self::debug('Node error, redetecting node [svc] ' . $service);
+				self::debugErr('Node error, redetecting node [svc] ' . $service);
 				$this->detect_cloud($service, true);
 			}
 
-			return;
+			return false;
 		}
 
 		if (!empty($json['_code'])) {
-			self::debug('Hit err _code: ' . $json['_code']);
+			self::debugErr('Hit err _code: ' . $json['_code']);
 			if ($json['_code'] == 'unpulled_images') {
 				$msg = __('Cloud server refused the current request due to unpulled images. Please pull the images first.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 			if ($json['_code'] == 'blocklisted') {
 				$msg = __('Your domain_key has been temporarily blocklisted to prevent abuse. You may contact support at QUIC.cloud to learn more.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 
 			if ($json['_code'] == 'rate_limit') {
-				self::debug('Cloud server rate limit exceeded.');
+				self::debugErr('Cloud server rate limit exceeded.');
 				$msg = __('Cloud server refused the current request due to rate limiting. Please try again later.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 
 			if ($json['_code'] == 'heavy_load' || $json['_code'] == 'redetect_node') {
 				// Force redetect node
-				self::debug('Node redetecting node [svc] ' . $service);
+				self::debugErr('Node redetecting node [svc] ' . $service);
 				Admin_Display::info(__('Redetected node', 'litespeed-cache') . ': ' . Error::msg($json['_code']));
 				$this->detect_cloud($service, true);
 			}
 		}
 
 		if (!empty($json['_503'])) {
-			self::debug('service 503 unavailable temporarily. ' . $json['_503']);
+			self::debugErr('service 503 unavailable temporarily. ' . $json['_503']);
 
 			$msg = __(
 				'We are working hard to improve your online service experience. The service will be unavailable while we work. We apologize for any inconvenience.',
@@ -1001,15 +1017,15 @@ class Cloud extends Base
 			Admin_Display::error($msg);
 
 			// Force redetect node
-			self::debug('Node error, redetecting node [svc] ' . $service);
+			self::debugErr('Node error, redetecting node [svc] ' . $service);
 			$this->detect_cloud($service, true);
 
-			return;
+			return false;
 		}
 
 		list($json, $return) = $this->extract_msg($json, $service, $server);
 		if ($return) {
-			return;
+			return false;
 		}
 
 		self::save_summary(array(
@@ -1287,12 +1303,12 @@ class Cloud extends Base
 			return self::err('setup_required');
 		}
 
-		if (empty($_POST['data']) || empty($_POST['nonce'])) {
+		if (empty($_POST['data_b64']) || empty($_POST['data_b64_nonce'])) {
 			return self::err('lack_of_params');
 		}
 
 		// Decrypt the data_orig and respond
-		$data_orig = $this->_decrypt($_POST['data'], $_POST['nonce']);
+		$data_orig = $this->_decrypt($_POST['data_b64'], $_POST['data_b64_nonce']);
 
 		if (!$data_orig) {
 			self::debug('__callback IP request decryption failed');
