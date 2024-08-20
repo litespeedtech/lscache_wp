@@ -68,7 +68,7 @@ class Optimize extends Base
 	{
 		$this->cfg_css_async = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_ASYNC);
 		if ($this->cfg_css_async) {
-			if (!$this->cls('Cloud')->activate()) {
+			if (!$this->cls('Cloud')->activated()) {
 				Debug2::debug('[Optm] ❌ CCSS set to OFF due to missing domain key');
 				$this->cfg_css_async = false;
 			}
