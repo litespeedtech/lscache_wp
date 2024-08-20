@@ -257,6 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.0 - Nov 2024 =
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
+* **Cloud** Dropped domain key. Used sodium encryption for authentication and validation.
 * **3rd** Correct the integration with User Switching (John Blackbourn #725)
 
 = 6.4.1 - Aug 19 2024 =
