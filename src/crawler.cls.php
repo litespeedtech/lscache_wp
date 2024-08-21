@@ -254,7 +254,7 @@ class Crawler extends Root
 	 *
 	 * @since 6.1
 	 */
-	public static function _crawler_in_schedule_time()
+	public function _crawler_in_schedule_time()
 	{
 		$class_settings = self::cls();
 		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
