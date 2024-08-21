@@ -1208,6 +1208,10 @@ h3 .litespeed-learn-more {
 	position: relative;
 }
 
+.rtl .litespeed-switch {
+    flex-direction: row-reverse;
+}
+
 .litespeed-switch input:checked:active + label {
 	box-shadow:
 		0 2px 0 rgba(27, 146, 146, 0.7),
