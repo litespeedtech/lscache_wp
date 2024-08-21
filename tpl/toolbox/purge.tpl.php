@@ -83,6 +83,15 @@ if ( $this->has_cache_folder( 'ucss' ) ) {
 	) ;
 }
 
+if ( $this->has_cache_folder( 'localres' ) ) {
+	$_panels[] = array(
+		'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Localized Resources', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all localized resources', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> Purge::TYPE_PURGE_ALL_LOCALRES,
+	);
+}
+
 if ( $this->has_cache_folder( 'lqip' ) ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LQIP Cache', 'litespeed-cache' ),
@@ -104,7 +113,7 @@ if ( $this->has_cache_folder( 'avatar' ) ) {
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),
-	'desc'	=> __( 'Purge the cache entries created by this plugin except for Critical CSS & LQIP caches', 'litespeed-cache' ),
+	'desc'	=> __( 'Purge the cache entries created by this plugin except for Critical CSS & Unique CSS & LQIP caches', 'litespeed-cache' ),
 	'icon'	=> 'purge-all',
 	'title_cls'	=> 'litespeed-warning',
 	'newline'	=> true,

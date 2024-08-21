@@ -1,7 +1,8 @@
 <?php
+
 namespace LiteSpeed\CLI;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 use LiteSpeed\Lang;
 use LiteSpeed\Debug2;
@@ -18,9 +19,29 @@ class Image
 
 	public function __construct()
 	{
-		Debug2::debug( 'CLI_Cloud init' );
+		Debug2::debug('CLI_Cloud init');
 
 		$this->__img_optm = Img_Optm::cls();
+	}
+
+	/**
+	 * Batch toggle optimized images w/ original images
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Switch to original images
+	 *     $ wp litespeed-image batch_switch orig
+	 *
+	 *     # Switch to optimized images
+	 *     $ wp litespeed-image batch_switch optm
+	 *
+	 */
+	public function batch_switch($param)
+	{
+		$type = $param[0];
+		$this->__img_optm->batch_switch($type);
 	}
 
 	/**
@@ -52,7 +73,7 @@ class Image
 	 */
 	public function pull()
 	{
-		$this->__img_optm->pull( true );
+		$this->__img_optm->pull(true);
 	}
 
 	/**
@@ -86,44 +107,44 @@ class Image
 	{
 		$summary = Img_Optm::get_summary();
 		$img_count = $this->__img_optm->img_count();
-		foreach ( Lang::img_status() as $k => $v ) {
-			if ( isset( $img_count[ "img.$k" ] )) {
-				$img_count[ "$v - images" ] = $img_count[ "img.$k" ];
-				unset( $img_count[ "img.$k" ] );
+		foreach (Lang::img_status() as $k => $v) {
+			if (isset($img_count["img.$k"])) {
+				$img_count["$v - images"] = $img_count["img.$k"];
+				unset($img_count["img.$k"]);
 			}
-			if ( isset( $img_count[ "group.$k" ] )) {
-				$img_count[ "$v - groups" ] = $img_count[ "group.$k" ];
-				unset( $img_count[ "group.$k" ] );
-			}
-		}
-
-		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
-			if ( ! empty( $summary[ $v ] ) ) {
-				$summary[ $v ] = Utility::real_size( $summary[ $v ] );
+			if (isset($img_count["group.$k"])) {
+				$img_count["$v - groups"] = $img_count["group.$k"];
+				unset($img_count["group.$k"]);
 			}
 		}
 
-		if ( ! empty( $summary[ 'last_requested' ] ) ) {
-			$summary[ 'last_requested' ] = date( 'm/d/y H:i:s', $summary[ 'last_requested' ] );
+		foreach (array('reduced', 'reduced_webp') as $v) {
+			if (!empty($summary[$v])) {
+				$summary[$v] = Utility::real_size($summary[$v]);
+			}
+		}
+
+		if (!empty($summary['last_requested'])) {
+			$summary['last_requested'] = date('m/d/y H:i:s', $summary['last_requested']);
 		}
 
 		$list = array();
-		foreach ( $summary as $k => $v ) {
-			$list[] = array( 'key' => $k, 'value' => $v );
+		foreach ($summary as $k => $v) {
+			$list[] = array('key' => $k, 'value' => $v);
 		}
 
 		$list2 = array();
-		foreach ( $img_count as $k => $v ) {
-			if ( ! $v ) {
+		foreach ($img_count as $k => $v) {
+			if (!$v) {
 				continue;
 			}
-			$list2[] = array( 'key' => $k, 'value' => $v );
+			$list2[] = array('key' => $k, 'value' => $v);
 		}
 
-		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) );
+		WP_CLI\Utils\format_items('table', $list, array('key', 'value'));
 
-		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) );
-		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) );
+		WP_CLI::line(WP_CLI::colorize('%CImages in database summary:%n'));
+		WP_CLI\Utils\format_items('table', $list2, array('key', 'value'));
 	}
 
 	/**
@@ -141,7 +162,7 @@ class Image
 	{
 		$this->__img_optm->clean();
 
-		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) );
+		WP_CLI::line(WP_CLI::colorize('%CLatest status:%n'));
 
 		$this->status();
 	}
@@ -161,6 +182,4 @@ class Image
 	{
 		$this->__img_optm->rm_bkup();
 	}
-
-
 }

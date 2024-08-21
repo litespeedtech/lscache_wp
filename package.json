@@ -1,0 +1,13 @@
+{
+	"name": "litespeed-cache",
+	"description": "High-performance page caching and site optimization from LiteSpeed",
+	"license": "GPLv3",
+	"scripts": {
+		"format": "prettier --write . '**/*.php'",
+		"format-check": "prettier --check . '**/*.php'"
+	},
+	"devDependencies": {
+		"@prettier/plugin-php": "^0.21.0",
+		"prettier": "^3.0.3"
+	}
+}

@@ -1,6 +1,9 @@
 <?php
 namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
+
+$guest_update_url = parse_url( LSWCP_PLUGIN_URL . GUI::PHP_GUEST, PHP_URL_PATH );
+
 ?>
 	<tr>
 		<th>
@@ -16,6 +19,28 @@ defined( 'WPINC' ) || exit;
 				<br /><?php Doc::notice_htaccess(); ?>
 				<br /><?php Doc::crawler_affected(); ?>
 			</div>
+			<?php if ( $this->conf( $id ) ) : ?>
+				<div class="litespeed-desc">
+					<?php echo __( 'Guest Mode testing result', 'litespeed-cache' ); ?>:
+					<font id='litespeed_gm_status'><?php echo __( 'Testing', 'litespeed-cache' ); ?>...</font>
+				</div>
+				<script>
+					(function ($) {
+						jQuery(document).ready(function () {
+							$.post( '<?php echo $guest_update_url; ?>', function(data){
+								if ( data == '[]' || $data == '{"reload":"yes"}' ) {
+									$('#litespeed_gm_status').html('<font class="litespeed-success"><?php echo __( 'Guest Mode passed testing.', 'litespeed-cache' ); ?></font>');
+								}
+								else {
+									$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php echo __( 'Guest Mode failed to test.', 'litespeed-cache' ); ?></font>');
+								}
+							}).fail( function(){
+								$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php echo __( 'Guest Mode failed to test.', 'litespeed-cache' ); ?></font>');
+							})
+						});
+					})(jQuery);
+				</script>
+			<?php endif; ?>
 		</td>
 	</tr>
 

@@ -1,13 +1,12 @@
 <?php
 namespace LiteSpeed\CLI;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 use LiteSpeed\Core;
 use LiteSpeed\Router;
 use LiteSpeed\Admin_Display;
 use WP_CLI;
-
 
 /**
  * LiteSpeed Cache Purge Interface
@@ -24,22 +23,21 @@ class Purge
 	 *     # List all the site domains and ids in a table.
 	 *     $ wp litespeed-purge network_list
 	 */
-	public function network_list( $args )
+	public function network_list($args)
 	{
-		if ( ! is_multisite() ) {
+		if (!is_multisite()) {
 			WP_CLI::error('This is not a multisite installation!');
 
 			return;
 		}
 		$buf = WP_CLI::colorize("%CThe list of installs:%n\n");
 
-		if ( version_compare($GLOBALS['wp_version'], '4.6', '<') ) {
+		if (version_compare($GLOBALS['wp_version'], '4.6', '<')) {
 			$sites = wp_get_sites();
 			foreach ($sites as $site) {
 				$buf .= WP_CLI::colorize('%Y' . $site['domain'] . $site['path'] . ':%n ID ' . $site['blog_id']) . "\n";
 			}
-		}
-		else {
+		} else {
 			$sites = get_sites();
 			foreach ($sites as $site) {
 				$buf .= WP_CLI::colorize('%Y' . $site->domain . $site->path . ':%n ID ' . $site->blog_id) . "\n";
@@ -54,20 +52,20 @@ class Purge
 	 *
 	 * @since 1.0.14
 	 */
-	private function _send_request( $action, $extra = array() )
+	private function _send_request($action, $extra = array())
 	{
 		$data = array(
 			Router::ACTION => $action,
 			Router::NONCE => wp_create_nonce($action),
 		);
-		if ( ! empty( $extra ) ) {
-			$data = array_merge( $data, $extra );
+		if (!empty($extra)) {
+			$data = array_merge($data, $extra);
 		}
 
-		$url = admin_url( 'admin-ajax.php' );
-		WP_CLI::debug( 'URL is ' . $url );
+		$url = admin_url('admin-ajax.php');
+		WP_CLI::debug('URL is ' . $url);
 
-		$out = WP_CLI\Utils\http_request( 'GET', $url, $data );
+		$out = WP_CLI\Utils\http_request('GET', $url, $data);
 		return $out;
 	}
 
@@ -80,21 +78,19 @@ class Purge
 	 *     $ wp litespeed-purge all
 	 *
 	 */
-	public function all( $args )
+	public function all($args)
 	{
-		if ( is_multisite() ) {
+		if (is_multisite()) {
 			$action = Core::ACTION_QS_PURGE_EMPTYCACHE;
-		}
-		else {
+		} else {
 			$action = Core::ACTION_QS_PURGE_ALL;
 		}
 
-		$purge_ret = $this->_send_request( $action );
+		$purge_ret = $this->_send_request($action);
 
-		if ( $purge_ret->success ) {
+		if ($purge_ret->success) {
 			WP_CLI::success(__('Purged All!', 'litespeed-cache'));
-		}
-		else {
+		} else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
 		}
 	}
@@ -113,21 +109,21 @@ class Purge
 	 *     $ wp litespeed-purge blog 2
 	 *
 	 */
-	public function blog( $args )
+	public function blog($args)
 	{
-		if ( ! is_multisite() ) {
+		if (!is_multisite()) {
 			WP_CLI::error('Not a multisite installation.');
 			return;
 		}
 		$blogid = $args[0];
-		if ( ! is_numeric($blogid) ) {
+		if (!is_numeric($blogid)) {
 			$error = WP_CLI::colorize('%RError: invalid blog id entered.%n');
 			WP_CLI::line($error);
 			$this->network_list($args);
 			return;
 		}
 		$site = get_blog_details($blogid);
-		if ( $site === false ) {
+		if ($site === false) {
 			$error = WP_CLI::colorize('%RError: invalid blog id entered.%n');
 			WP_CLI::line($error);
 			$this->network_list($args);
@@ -136,10 +132,9 @@ class Purge
 		switch_to_blog($blogid);
 
 		$purge_ret = $this->_send_request(Core::ACTION_QS_PURGE_ALL);
-		if ( $purge_ret->success ) {
+		if ($purge_ret->success) {
 			WP_CLI::success(__('Purged the blog!', 'litespeed-cache'));
-		}
-		else {
+		} else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
 		}
 	}
@@ -158,27 +153,26 @@ class Purge
 	 *     $ wp litespeed-purge url https://mysite.com/
 	 *
 	 */
-	public function url( $args )
+	public function url($args)
 	{
 		$data = array(
 			Router::ACTION => Core::ACTION_QS_PURGE,
 		);
 		$url = $args[0];
 		$deconstructed = wp_parse_url($url);
-		if ( empty($deconstructed) ) {
+		if (empty($deconstructed)) {
 			WP_CLI::error('url passed in is invalid.');
 			return;
 		}
 
-		if ( is_multisite() ) {
-			if ( get_blog_id_from_url($deconstructed['host'], '/') === 0 ) {
+		if (is_multisite()) {
+			if (get_blog_id_from_url($deconstructed['host'], '/') === 0) {
 				WP_CLI::error('Multisite url passed in is invalid.');
 				return;
 			}
-		}
-		else {
-			$deconstructed_site = wp_parse_url( get_home_url() );
-			if ( $deconstructed['host'] !== $deconstructed_site['host'] ) {
+		} else {
+			$deconstructed_site = wp_parse_url(get_home_url());
+			if ($deconstructed['host'] !== $deconstructed_site['host']) {
 				WP_CLI::error('Single site url passed in is invalid.');
 				return;
 			}
@@ -187,10 +181,9 @@ class Purge
 		WP_CLI::debug('url is ' . $url);
 
 		$purge_ret = WP_CLI\Utils\http_request('GET', $url, $data);
-		if ( $purge_ret->success ) {
+		if ($purge_ret->success) {
 			WP_CLI::success(__('Purged the url!', 'litespeed-cache'));
-		}
-		else {
+		} else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
 		}
 	}
@@ -204,24 +197,24 @@ class Purge
 	 * @param string $select The purge by kind
 	 * @param function(int $id) $callback The callback function to check the id.
 	 */
-	private function _purgeby( $args, $select, $callback )
+	private function _purgeby($args, $select, $callback)
 	{
 		$filtered = array();
 		foreach ($args as $val) {
-			if ( ! ctype_digit($val) ) {
+			if (!ctype_digit($val)) {
 				WP_CLI::debug('[LSCACHE] Skip val, not a number. ' . $val);
 				continue;
 			}
 			$term = $callback($val);
-			if ( ! empty($term) ) {WP_CLI::line($term->name);
-				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ) ) ? $term->name : $val;
-			}
-			else {
+			if (!empty($term)) {
+				WP_CLI::line($term->name);
+				$filtered[] = in_array($callback, array('get_tag', 'get_category')) ? $term->name : $val;
+			} else {
 				WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val);
 			}
 		}
 
-		if ( empty($filtered) ) {
+		if (empty($filtered)) {
 			WP_CLI::error('Arguments must be integer ids.');
 			return;
 		}
@@ -235,21 +228,19 @@ class Purge
 			3 => 'URL',
 		);
 
-		WP_CLI::line('Will purge the following: [' . $purge_titles[ $select ] . '] ' . $str);
+		WP_CLI::line('Will purge the following: [' . $purge_titles[$select] . '] ' . $str);
 
 		$data = array(
-			Admin_Display::PURGEBYOPT_SELECT	=> $select,
-			Admin_Display::PURGEBYOPT_LIST		=> $str,
+			Admin_Display::PURGEBYOPT_SELECT => $select,
+			Admin_Display::PURGEBYOPT_LIST => $str,
 		);
 
-		$purge_ret = $this->_send_request( Core::ACTION_PURGE_BY, $data );
-		if ( $purge_ret->success ) {
+		$purge_ret = $this->_send_request(Core::ACTION_PURGE_BY, $data);
+		if ($purge_ret->success) {
 			WP_CLI::success(__('Purged!', 'litespeed-cache'));
-		}
-		else {
+		} else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
 		}
-
 	}
 
 	/**
@@ -306,9 +297,8 @@ class Purge
 	 *     $ wp litespeed-purge post_id 1 3 5
 	 *
 	 */
-	public function post_id( $args )
+	public function post_id($args)
 	{
 		$this->_purgeby($args, Admin_Display::PURGEBY_PID, 'get_post');
 	}
-
 }

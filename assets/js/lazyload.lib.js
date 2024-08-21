@@ -1,221 +1,186 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 (function (global, factory) {
-	(typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.LazyLoad = factory();
+	typeof exports === 'object' && typeof module !== 'undefined'
+		? (module.exports = factory())
+		: typeof define === 'function' && define.amd
+		? define(factory)
+		: ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.LazyLoad = factory()));
 })(this, function () {
 	'use strict';
 
+	function _extends() {
+		_extends =
+			Object.assign ||
+			function (target) {
+				for (var i = 1; i < arguments.length; i++) {
+					var source = arguments[i];
+
+					for (var key in source) {
+						if (Object.prototype.hasOwnProperty.call(source, key)) {
+							target[key] = source[key];
+						}
+					}
+				}
+
+				return target;
+			};
+
+		return _extends.apply(this, arguments);
+	}
+
+	var runningOnBrowser = typeof window !== 'undefined';
+	var isBot = (runningOnBrowser && !('onscroll' in window)) || (typeof navigator !== 'undefined' && /(gle|ing|ro)bot|crawl|spider/i.test(navigator.userAgent));
+	var supportsIntersectionObserver = runningOnBrowser && 'IntersectionObserver' in window;
+	var supportsClassList = runningOnBrowser && 'classList' in document.createElement('p');
+	var isHiDpi = runningOnBrowser && window.devicePixelRatio > 1;
+
 	var defaultSettings = {
-		elements_selector: "img",
-		container: document,
+		elements_selector: '.lazy',
+		container: isBot || runningOnBrowser ? document : null,
 		threshold: 300,
 		thresholds: null,
-		data_src: "src",
-		data_srcset: "srcset",
-		data_sizes: "sizes",
-		data_bg: "bg",
-		class_loading: "litespeed-loading",
-		class_loaded: "litespeed-loaded",
-		class_error: "error",
-		load_delay: 0,
-		callback_load: null,
-		callback_error: null,
-		callback_set: null,
+		data_src: 'src',
+		data_srcset: 'srcset',
+		data_sizes: 'sizes',
+		data_bg: 'bg',
+		data_bg_hidpi: 'bg-hidpi',
+		data_bg_multi: 'bg-multi',
+		data_bg_multi_hidpi: 'bg-multi-hidpi',
+		data_poster: 'poster',
+		class_applied: 'applied',
+		class_loading: 'litespeed-loading',
+		class_loaded: 'litespeed-loaded', // https://docs.litespeedtech.com/lscache/lscwp/pageopt/#lazy-load-images
+		class_error: 'error',
+		class_entered: 'entered',
+		class_exited: 'exited',
+		unobserve_completed: true,
+		unobserve_entered: false,
+		cancel_on_exit: true,
 		callback_enter: null,
+		callback_exit: null,
+		callback_applied: null,
+		callback_loading: null,
+		callback_loaded: null,
+		callback_error: null,
 		callback_finish: null,
-		to_webp: false
+		callback_cancel: null,
+		use_native: false,
 	};
-
-	var getInstanceSettings = function getInstanceSettings(customSettings) {
+	var getExtendedSettings = function getExtendedSettings(customSettings) {
 		return _extends({}, defaultSettings, customSettings);
-	};
-
-	var dataPrefix = "data-";
-	var processedDataName = "was-processed";
-	var timeoutDataName = "ll-timeout";
-	var trueString = "true";
-
-	var getData = function getData(element, attribute) {
-		return element.getAttribute(dataPrefix + attribute);
-	};
-
-	var setData = function setData(element, attribute, value) {
-		var attrName = dataPrefix + attribute;
-		if (value === null) {
-			element.removeAttribute(attrName);
-			return;
-		}
-		element.setAttribute(attrName, value);
-	};
-
-	var setWasProcessedData = function setWasProcessedData(element) {
-		return setData(element, processedDataName, trueString);
-	};
-
-	var getWasProcessedData = function getWasProcessedData(element) {
-		return getData(element, processedDataName) === trueString;
-	};
-
-	var setTimeoutData = function setTimeoutData(element, value) {
-		return setData(element, timeoutDataName, value);
-	};
-
-	var getTimeoutData = function getTimeoutData(element) {
-		return getData(element, timeoutDataName);
-	};
-
-	var purgeProcessedElements = function purgeProcessedElements(elements) {
-		return elements.filter(function (element) {
-			return !getWasProcessedData(element);
-		});
-	};
-
-	var purgeOneElement = function purgeOneElement(elements, elementToPurge) {
-		return elements.filter(function (element) {
-			return element !== elementToPurge;
-		});
 	};
 
 	/* Creates instance and notifies it through the window element */
 	var createInstance = function createInstance(classObj, options) {
 		var event;
-		var eventString = "LazyLoad::Initialized";
+		var eventString = 'LazyLoad::Initialized';
 		var instance = new classObj(options);
+
 		try {
 			// Works in modern browsers
-			event = new CustomEvent(eventString, { detail: { instance: instance } });
+			event = new CustomEvent(eventString, {
+				detail: {
+					instance: instance,
+				},
+			});
 		} catch (err) {
 			// Works in Internet Explorer (all versions)
-			event = document.createEvent("CustomEvent");
-			event.initCustomEvent(eventString, false, false, { instance: instance });
+			event = document.createEvent('CustomEvent');
+			event.initCustomEvent(eventString, false, false, {
+				instance: instance,
+			});
 		}
+
 		window.dispatchEvent(event);
 	};
-
 	/* Auto initialization of one or more instances of lazyload, depending on the
-     options passed in (plain object or an array) */
-	function autoInitialize(classObj, options) {
+      options passed in (plain object or an array) */
+
+	var autoInitialize = function autoInitialize(classObj, options) {
 		if (!options) {
 			return;
 		}
+
 		if (!options.length) {
 			// Plain object
 			createInstance(classObj, options);
 		} else {
 			// Array of objects
-			for (var i = 0, optionsItem; optionsItem = options[i]; i += 1) {
+			for (var i = 0, optionsItem; (optionsItem = options[i]); i += 1) {
 				createInstance(classObj, optionsItem);
 			}
 		}
-	}
-
-	var replaceExtToWebp = function replaceExtToWebp(value, condition) {
-		return condition ? value.replace(/\.(jpe?g|png)/gi, ".webp") : value;
 	};
 
-	var detectWebp = function detectWebp() {
-		// var webpString = "image/webp";
-		// var canvas = document.createElement("canvas");
+	var SRC = 'src';
+	var SRCSET = 'srcset';
+	var SIZES = 'sizes';
+	var POSTER = 'poster';
+	var ORIGINALS = 'llOriginalAttrs';
 
-		// if (canvas.getContext && canvas.getContext("2d")) {
-		// 	return canvas.toDataURL(webpString).indexOf('data:' + webpString) === 0;
-		// }
+	var statusLoading = 'loading';
+	var statusLoaded = 'loaded';
+	var statusApplied = 'applied';
+	var statusEntered = 'entered';
+	var statusError = 'error';
+	var statusNative = 'native';
 
-		return false;
+	var dataPrefix = 'data-';
+	var statusDataName = 'll-status';
+	var getData = function getData(element, attribute) {
+		return element.getAttribute(dataPrefix + attribute);
 	};
+	var setData = function setData(element, attribute, value) {
+		var attrName = dataPrefix + attribute;
 
-	var runningOnBrowser = typeof window !== "undefined";
-
-	var isBot = runningOnBrowser && !("onscroll" in window) || /(gle|ing|ro)bot|crawl|spider/i.test(navigator.userAgent);
-
-	var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
-
-	var supportsClassList = runningOnBrowser && "classList" in document.createElement("p");
-
-	var supportsWebp = runningOnBrowser && detectWebp();
-
-	var setSourcesInChildren = function setSourcesInChildren(parentTag, attrName, dataAttrName, toWebpFlag) {
-		for (var i = 0, childTag; childTag = parentTag.children[i]; i += 1) {
-			if (childTag.tagName === "SOURCE") {
-				var attrValue = getData(childTag, dataAttrName);
-				setAttributeIfValue(childTag, attrName, attrValue, toWebpFlag);
-			}
-		}
-	};
-
-	var setAttributeIfValue = function setAttributeIfValue(element, attrName, value, toWebpFlag) {
-		if (!value) {
+		if (value === null) {
+			element.removeAttribute(attrName);
 			return;
 		}
-		element.setAttribute(attrName, replaceExtToWebp(value, toWebpFlag));
+
+		element.setAttribute(attrName, value);
+	};
+	var getStatus = function getStatus(element) {
+		return getData(element, statusDataName);
+	};
+	var setStatus = function setStatus(element, status) {
+		return setData(element, statusDataName, status);
+	};
+	var resetStatus = function resetStatus(element) {
+		return setStatus(element, null);
+	};
+	var hasEmptyStatus = function hasEmptyStatus(element) {
+		return getStatus(element) === null;
+	};
+	var hasStatusLoading = function hasStatusLoading(element) {
+		return getStatus(element) === statusLoading;
+	};
+	var hasStatusError = function hasStatusError(element) {
+		return getStatus(element) === statusError;
+	};
+	var hasStatusNative = function hasStatusNative(element) {
+		return getStatus(element) === statusNative;
+	};
+	var statusesAfterLoading = [statusLoading, statusLoaded, statusApplied, statusError];
+	var hadStartedLoading = function hadStartedLoading(element) {
+		return statusesAfterLoading.indexOf(getStatus(element)) >= 0;
 	};
 
-	var setSourcesImg = function setSourcesImg(element, settings) {
-		var toWebpFlag = supportsWebp && settings.to_webp;
-		var srcsetDataName = settings.data_srcset;
-		var parent = element.parentNode;
-
-		if (parent && parent.tagName === "PICTURE") {
-			setSourcesInChildren(parent, "srcset", srcsetDataName, toWebpFlag);
-		}
-		var sizesDataValue = getData(element, settings.data_sizes);
-		setAttributeIfValue(element, "sizes", sizesDataValue);
-		var srcsetDataValue = getData(element, srcsetDataName);
-		setAttributeIfValue(element, "srcset", srcsetDataValue, toWebpFlag);
-		var srcDataValue = getData(element, settings.data_src);
-		setAttributeIfValue(element, "src", srcDataValue, toWebpFlag);
-	};
-
-	var setSourcesIframe = function setSourcesIframe(element, settings) {
-		var srcDataValue = getData(element, settings.data_src);
-
-		setAttributeIfValue(element, "src", srcDataValue);
-	};
-
-	var setSourcesVideo = function setSourcesVideo(element, settings) {
-		var srcDataName = settings.data_src;
-		var srcDataValue = getData(element, srcDataName);
-
-		setSourcesInChildren(element, "src", srcDataName);
-		setAttributeIfValue(element, "src", srcDataValue);
-		element.load();
-	};
-
-	var setSourcesBgImage = function setSourcesBgImage(element, settings) {
-		var toWebpFlag = supportsWebp && settings.to_webp;
-		var srcDataValue = getData(element, settings.data_src);
-		var bgDataValue = getData(element, settings.data_bg);
-
-		if (srcDataValue) {
-			var setValue = replaceExtToWebp(srcDataValue, toWebpFlag);
-			element.style.backgroundImage = 'url("' + setValue + '")';
-		}
-
-		if (bgDataValue) {
-			var _setValue = replaceExtToWebp(bgDataValue, toWebpFlag);
-			element.style.backgroundImage = _setValue;
-		}
-	};
-
-	var setSourcesFunctions = {
-		IMG: setSourcesImg,
-		IFRAME: setSourcesIframe,
-		VIDEO: setSourcesVideo
-	};
-
-	var setSources = function setSources(element, instance) {
-		var settings = instance._settings;
-		var tagName = element.tagName;
-		var setSourcesFunction = setSourcesFunctions[tagName];
-		if (setSourcesFunction) {
-			setSourcesFunction(element, settings);
-			instance._updateLoadingCount(1);
-			instance._elements = purgeOneElement(instance._elements, element);
+	var safeCallback = function safeCallback(callback, arg1, arg2, arg3) {
+		if (!callback) {
 			return;
 		}
-		setSourcesBgImage(element, settings);
+
+		if (arg3 !== undefined) {
+			callback(arg1, arg2, arg3);
+			return;
+		}
+
+		if (arg2 !== undefined) {
+			callback(arg1, arg2);
+			return;
+		}
+
+		callback(arg1);
 	};
 
 	var addClass = function addClass(element, className) {
@@ -223,118 +188,485 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			element.classList.add(className);
 			return;
 		}
-		element.className += (element.className ? " " : "") + className;
-	};
 
+		element.className += (element.className ? ' ' : '') + className;
+	};
 	var removeClass = function removeClass(element, className) {
 		if (supportsClassList) {
 			element.classList.remove(className);
 			return;
 		}
-		element.className = element.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), " ").replace(/^\s+/, "").replace(/\s+$/, "");
+
+		element.className = element.className
+			.replace(new RegExp('(^|\\s+)' + className + '(\\s+|$)'), ' ')
+			.replace(/^\s+/, '')
+			.replace(/\s+$/, '');
 	};
 
-	var callbackIfSet = function callbackIfSet(callback, argument) {
-		if (callback) {
-			callback(argument);
+	var addTempImage = function addTempImage(element) {
+		element.llTempImage = document.createElement('IMG');
+	};
+	var deleteTempImage = function deleteTempImage(element) {
+		delete element.llTempImage;
+	};
+	var getTempImage = function getTempImage(element) {
+		return element.llTempImage;
+	};
+
+	var unobserve = function unobserve(element, instance) {
+		if (!instance) return;
+		var observer = instance._observer;
+		if (!observer) return;
+		observer.unobserve(element);
+	};
+	var resetObserver = function resetObserver(observer) {
+		observer.disconnect();
+	};
+	var unobserveEntered = function unobserveEntered(element, settings, instance) {
+		if (settings.unobserve_entered) unobserve(element, instance);
+	};
+
+	var updateLoadingCount = function updateLoadingCount(instance, delta) {
+		if (!instance) return;
+		instance.loadingCount += delta;
+	};
+	var decreaseToLoadCount = function decreaseToLoadCount(instance) {
+		if (!instance) return;
+		instance.toLoadCount -= 1;
+	};
+	var setToLoadCount = function setToLoadCount(instance, value) {
+		if (!instance) return;
+		instance.toLoadCount = value;
+	};
+	var isSomethingLoading = function isSomethingLoading(instance) {
+		return instance.loadingCount > 0;
+	};
+	var haveElementsToLoad = function haveElementsToLoad(instance) {
+		return instance.toLoadCount > 0;
+	};
+
+	var getSourceTags = function getSourceTags(parentTag) {
+		var sourceTags = [];
+
+		for (var i = 0, childTag; (childTag = parentTag.children[i]); i += 1) {
+			if (childTag.tagName === 'SOURCE') {
+				sourceTags.push(childTag);
+			}
+		}
+
+		return sourceTags;
+	};
+
+	var forEachPictureSource = function forEachPictureSource(element, fn) {
+		var parent = element.parentNode;
+
+		if (!parent || parent.tagName !== 'PICTURE') {
+			return;
+		}
+
+		var sourceTags = getSourceTags(parent);
+		sourceTags.forEach(fn);
+	};
+	var forEachVideoSource = function forEachVideoSource(element, fn) {
+		var sourceTags = getSourceTags(element);
+		sourceTags.forEach(fn);
+	};
+
+	var attrsSrc = [SRC];
+	var attrsSrcPoster = [SRC, POSTER];
+	var attrsSrcSrcsetSizes = [SRC, SRCSET, SIZES];
+	var hasOriginalAttrs = function hasOriginalAttrs(element) {
+		return !!element[ORIGINALS];
+	};
+	var getOriginalAttrs = function getOriginalAttrs(element) {
+		return element[ORIGINALS];
+	};
+	var deleteOriginalAttrs = function deleteOriginalAttrs(element) {
+		return delete element[ORIGINALS];
+	}; // ## SAVE ##
+
+	var setOriginalsObject = function setOriginalsObject(element, attributes) {
+		if (hasOriginalAttrs(element)) {
+			return;
+		}
+
+		var originals = {};
+		attributes.forEach(function (attribute) {
+			originals[attribute] = element.getAttribute(attribute);
+		});
+		element[ORIGINALS] = originals;
+	};
+	var saveOriginalBackgroundStyle = function saveOriginalBackgroundStyle(element) {
+		if (hasOriginalAttrs(element)) {
+			return;
+		}
+
+		element[ORIGINALS] = {
+			backgroundImage: element.style.backgroundImage,
+		};
+	}; // ## RESTORE ##
+
+	var setOrResetAttribute = function setOrResetAttribute(element, attrName, value) {
+		if (!value) {
+			element.removeAttribute(attrName);
+			return;
+		}
+
+		element.setAttribute(attrName, value);
+	};
+
+	var restoreOriginalAttrs = function restoreOriginalAttrs(element, attributes) {
+		if (!hasOriginalAttrs(element)) {
+			return;
+		}
+
+		var originals = getOriginalAttrs(element);
+		attributes.forEach(function (attribute) {
+			setOrResetAttribute(element, attribute, originals[attribute]);
+		});
+	};
+	var restoreOriginalBgImage = function restoreOriginalBgImage(element) {
+		if (!hasOriginalAttrs(element)) {
+			return;
+		}
+
+		var originals = getOriginalAttrs(element);
+		element.style.backgroundImage = originals.backgroundImage;
+	};
+
+	var manageApplied = function manageApplied(element, settings, instance) {
+		addClass(element, settings.class_applied);
+		setStatus(element, statusApplied); // Instance is not provided when loading is called from static class
+
+		if (!instance) return;
+
+		if (settings.unobserve_completed) {
+			// Unobserve now because we can't do it on load
+			unobserve(element, settings);
+		}
+
+		safeCallback(settings.callback_applied, element, instance);
+	};
+	var manageLoading = function manageLoading(element, settings, instance) {
+		addClass(element, settings.class_loading);
+		setStatus(element, statusLoading); // Instance is not provided when loading is called from static class
+
+		if (!instance) return;
+		updateLoadingCount(instance, +1);
+		safeCallback(settings.callback_loading, element, instance);
+	};
+	var setAttributeIfValue = function setAttributeIfValue(element, attrName, value) {
+		if (!value) {
+			return;
+		}
+
+		element.setAttribute(attrName, value);
+	};
+	var setImageAttributes = function setImageAttributes(element, settings) {
+		setAttributeIfValue(element, SIZES, getData(element, settings.data_sizes));
+		setAttributeIfValue(element, SRCSET, getData(element, settings.data_srcset));
+		setAttributeIfValue(element, SRC, getData(element, settings.data_src));
+	};
+	var setSourcesImg = function setSourcesImg(imgEl, settings) {
+		forEachPictureSource(imgEl, function (sourceTag) {
+			setOriginalsObject(sourceTag, attrsSrcSrcsetSizes);
+			setImageAttributes(sourceTag, settings);
+		});
+		setOriginalsObject(imgEl, attrsSrcSrcsetSizes);
+		setImageAttributes(imgEl, settings);
+	};
+	var setSourcesIframe = function setSourcesIframe(iframe, settings) {
+		setOriginalsObject(iframe, attrsSrc);
+		setAttributeIfValue(iframe, SRC, getData(iframe, settings.data_src));
+	};
+	var setSourcesVideo = function setSourcesVideo(videoEl, settings) {
+		forEachVideoSource(videoEl, function (sourceEl) {
+			setOriginalsObject(sourceEl, attrsSrc);
+			setAttributeIfValue(sourceEl, SRC, getData(sourceEl, settings.data_src));
+		});
+		setOriginalsObject(videoEl, attrsSrcPoster);
+		setAttributeIfValue(videoEl, POSTER, getData(videoEl, settings.data_poster));
+		setAttributeIfValue(videoEl, SRC, getData(videoEl, settings.data_src));
+		videoEl.load();
+	};
+	var setBackground = function setBackground(element, settings, instance) {
+		var bg1xValue = getData(element, settings.data_bg);
+		var bgHiDpiValue = getData(element, settings.data_bg_hidpi);
+		var bgDataValue = isHiDpi && bgHiDpiValue ? bgHiDpiValue : bg1xValue;
+		if (!bgDataValue) return;
+		element.style.backgroundImage = 'url("'.concat(bgDataValue, '")');
+		getTempImage(element).setAttribute(SRC, bgDataValue);
+		manageLoading(element, settings, instance);
+	}; // NOTE: THE TEMP IMAGE TRICK CANNOT BE DONE WITH data-multi-bg
+	// BECAUSE INSIDE ITS VALUES MUST BE WRAPPED WITH URL() AND ONE OF THEM
+	// COULD BE A GRADIENT BACKGROUND IMAGE
+
+	var setMultiBackground = function setMultiBackground(element, settings, instance) {
+		var bg1xValue = getData(element, settings.data_bg_multi);
+		var bgHiDpiValue = getData(element, settings.data_bg_multi_hidpi);
+		var bgDataValue = isHiDpi && bgHiDpiValue ? bgHiDpiValue : bg1xValue;
+
+		if (!bgDataValue) {
+			return;
+		}
+
+		element.style.backgroundImage = bgDataValue;
+		manageApplied(element, settings, instance);
+	};
+	var setSourcesFunctions = {
+		IMG: setSourcesImg,
+		IFRAME: setSourcesIframe,
+		VIDEO: setSourcesVideo,
+	};
+	var setSourcesNative = function setSourcesNative(element, settings) {
+		var setSourcesFunction = setSourcesFunctions[element.tagName];
+
+		if (!setSourcesFunction) {
+			return;
+		}
+
+		setSourcesFunction(element, settings);
+	};
+	var setSources = function setSources(element, settings, instance) {
+		var setSourcesFunction = setSourcesFunctions[element.tagName];
+
+		if (!setSourcesFunction) {
+			return;
+		}
+
+		setSourcesFunction(element, settings);
+		manageLoading(element, settings, instance);
+	};
+
+	var elementsWithLoadEvent = ['IMG', 'IFRAME', 'VIDEO'];
+	var hasLoadEvent = function hasLoadEvent(element) {
+		return elementsWithLoadEvent.indexOf(element.tagName) > -1;
+	};
+	var checkFinish = function checkFinish(settings, instance) {
+		if (instance && !isSomethingLoading(instance) && !haveElementsToLoad(instance)) {
+			safeCallback(settings.callback_finish, instance);
 		}
 	};
-
-	var genericLoadEventName = "load";
-	var mediaLoadEventName = "loadeddata";
-	var errorEventName = "error";
-
 	var addEventListener = function addEventListener(element, eventName, handler) {
 		element.addEventListener(eventName, handler);
+		element.llEvLisnrs[eventName] = handler;
 	};
-
 	var removeEventListener = function removeEventListener(element, eventName, handler) {
 		element.removeEventListener(eventName, handler);
 	};
-
+	var hasEventListeners = function hasEventListeners(element) {
+		return !!element.llEvLisnrs;
+	};
 	var addEventListeners = function addEventListeners(element, loadHandler, errorHandler) {
-		addEventListener(element, genericLoadEventName, loadHandler);
-		addEventListener(element, mediaLoadEventName, loadHandler);
-		addEventListener(element, errorEventName, errorHandler);
+		if (!hasEventListeners(element)) element.llEvLisnrs = {};
+		var loadEventName = element.tagName === 'VIDEO' ? 'loadeddata' : 'load';
+		addEventListener(element, loadEventName, loadHandler);
+		addEventListener(element, 'error', errorHandler);
 	};
+	var removeEventListeners = function removeEventListeners(element) {
+		if (!hasEventListeners(element)) {
+			return;
+		}
 
-	var removeEventListeners = function removeEventListeners(element, loadHandler, errorHandler) {
-		removeEventListener(element, genericLoadEventName, loadHandler);
-		removeEventListener(element, mediaLoadEventName, loadHandler);
-		removeEventListener(element, errorEventName, errorHandler);
+		var eventListeners = element.llEvLisnrs;
+
+		for (var eventName in eventListeners) {
+			var handler = eventListeners[eventName];
+			removeEventListener(element, eventName, handler);
+		}
+
+		delete element.llEvLisnrs;
 	};
-
-	var eventHandler = function eventHandler(event, success, instance) {
-		var settings = instance._settings;
-		var className = success ? settings.class_loaded : settings.class_error;
-		var callback = success ? settings.callback_load : settings.callback_error;
-		var element = event.target;
-
+	var doneHandler = function doneHandler(element, settings, instance) {
+		deleteTempImage(element);
+		updateLoadingCount(instance, -1);
+		decreaseToLoadCount(instance);
 		removeClass(element, settings.class_loading);
-		addClass(element, className);
-		callbackIfSet(callback, element);
 
-		instance._updateLoadingCount(-1);
+		if (settings.unobserve_completed) {
+			unobserve(element, instance);
+		}
 	};
+	var loadHandler = function loadHandler(event, element, settings, instance) {
+		var goingNative = hasStatusNative(element);
+		doneHandler(element, settings, instance);
+		addClass(element, settings.class_loaded);
+		setStatus(element, statusLoaded);
+		safeCallback(settings.callback_loaded, element, instance);
+		if (!goingNative) checkFinish(settings, instance);
+	};
+	var errorHandler = function errorHandler(event, element, settings, instance) {
+		var goingNative = hasStatusNative(element);
+		doneHandler(element, settings, instance);
+		addClass(element, settings.class_error);
+		setStatus(element, statusError);
+		safeCallback(settings.callback_error, element, instance);
+		if (!goingNative) checkFinish(settings, instance);
+	};
+	var addOneShotEventListeners = function addOneShotEventListeners(element, settings, instance) {
+		var elementToListenTo = getTempImage(element) || element;
 
-	var addOneShotEventListeners = function addOneShotEventListeners(element, instance) {
-		var loadHandler = function loadHandler(event) {
-			eventHandler(event, true, instance);
-			removeEventListeners(element, loadHandler, errorHandler);
+		if (hasEventListeners(elementToListenTo)) {
+			// This happens when loading is retried twice
+			return;
+		}
+
+		var _loadHandler = function _loadHandler(event) {
+			loadHandler(event, element, settings, instance);
+			removeEventListeners(elementToListenTo);
 		};
-		var errorHandler = function errorHandler(event) {
-			eventHandler(event, false, instance);
-			removeEventListeners(element, loadHandler, errorHandler);
+
+		var _errorHandler = function _errorHandler(event) {
+			errorHandler(event, element, settings, instance);
+			removeEventListeners(elementToListenTo);
 		};
-		addEventListeners(element, loadHandler, errorHandler);
+
+		addEventListeners(elementToListenTo, _loadHandler, _errorHandler);
 	};
 
-	var managedTags = ["IMG", "IFRAME", "VIDEO"];
-
-	var loadAndUnobserve = function loadAndUnobserve(element, observer, instance) {
-		revealElement(element, instance);
-		observer.unobserve(element);
+	var loadBackground = function loadBackground(element, settings, instance) {
+		addTempImage(element);
+		addOneShotEventListeners(element, settings, instance);
+		saveOriginalBackgroundStyle(element);
+		setBackground(element, settings, instance);
+		setMultiBackground(element, settings, instance);
 	};
 
-	var cancelDelayLoad = function cancelDelayLoad(element) {
-		var timeoutId = getTimeoutData(element);
-		if (!timeoutId) {
-			return; // do nothing if timeout doesn't exist
-		}
-		clearTimeout(timeoutId);
-		setTimeoutData(element, null);
+	var loadRegular = function loadRegular(element, settings, instance) {
+		addOneShotEventListeners(element, settings, instance);
+		setSources(element, settings, instance);
 	};
 
-	var delayLoad = function delayLoad(element, observer, instance) {
-		var loadDelay = instance._settings.load_delay;
-		var timeoutId = getTimeoutData(element);
-		if (timeoutId) {
-			return; // do nothing if timeout already set
+	var load = function load(element, settings, instance) {
+		if (hasLoadEvent(element)) {
+			loadRegular(element, settings, instance);
+		} else {
+			loadBackground(element, settings, instance);
 		}
-		timeoutId = setTimeout(function () {
-			loadAndUnobserve(element, observer, instance);
-			cancelDelayLoad(element);
-		}, loadDelay);
-		setTimeoutData(element, timeoutId);
+	};
+	var loadNative = function loadNative(element, settings, instance) {
+		element.setAttribute('loading', 'lazy');
+		addOneShotEventListeners(element, settings, instance);
+		setSourcesNative(element, settings);
+		setStatus(element, statusNative);
 	};
 
-	function revealElement(element, instance, force) {
-		var settings = instance._settings;
-		if (!force && getWasProcessedData(element)) {
-			return; // element has already been processed and force wasn't true
-		}
-		callbackIfSet(settings.callback_enter, element);
-		if (managedTags.indexOf(element.tagName) > -1) {
-			addOneShotEventListeners(element, instance);
-			addClass(element, settings.class_loading);
-		}
-		setSources(element, instance);
-		setWasProcessedData(element);
-		callbackIfSet(settings.callback_set, element);
-	}
+	var removeImageAttributes = function removeImageAttributes(element) {
+		element.removeAttribute(SRC);
+		element.removeAttribute(SRCSET);
+		element.removeAttribute(SIZES);
+	};
 
-	/* entry.isIntersecting needs fallback because is null on some versions of MS Edge, and
-    entry.intersectionRatio is not enough alone because it could be 0 on some intersecting elements */
+	var resetSourcesImg = function resetSourcesImg(element) {
+		forEachPictureSource(element, function (sourceTag) {
+			removeImageAttributes(sourceTag);
+		});
+		removeImageAttributes(element);
+	};
+
+	var restoreImg = function restoreImg(imgEl) {
+		forEachPictureSource(imgEl, function (sourceEl) {
+			restoreOriginalAttrs(sourceEl, attrsSrcSrcsetSizes);
+		});
+		restoreOriginalAttrs(imgEl, attrsSrcSrcsetSizes);
+	};
+	var restoreVideo = function restoreVideo(videoEl) {
+		forEachVideoSource(videoEl, function (sourceEl) {
+			restoreOriginalAttrs(sourceEl, attrsSrc);
+		});
+		restoreOriginalAttrs(videoEl, attrsSrcPoster);
+		videoEl.load();
+	};
+	var restoreIframe = function restoreIframe(iframeEl) {
+		restoreOriginalAttrs(iframeEl, attrsSrc);
+	};
+	var restoreFunctions = {
+		IMG: restoreImg,
+		IFRAME: restoreIframe,
+		VIDEO: restoreVideo,
+	};
+
+	var restoreAttributes = function restoreAttributes(element) {
+		var restoreFunction = restoreFunctions[element.tagName];
+
+		if (!restoreFunction) {
+			restoreOriginalBgImage(element);
+			return;
+		}
+
+		restoreFunction(element);
+	};
+
+	var resetClasses = function resetClasses(element, settings) {
+		if (hasEmptyStatus(element) || hasStatusNative(element)) {
+			return;
+		}
+
+		removeClass(element, settings.class_entered);
+		removeClass(element, settings.class_exited);
+		removeClass(element, settings.class_applied);
+		removeClass(element, settings.class_loading);
+		removeClass(element, settings.class_loaded);
+		removeClass(element, settings.class_error);
+	};
+
+	var restore = function restore(element, settings) {
+		restoreAttributes(element);
+		resetClasses(element, settings);
+		resetStatus(element);
+		deleteOriginalAttrs(element);
+	};
+
+	var cancelLoading = function cancelLoading(element, entry, settings, instance) {
+		if (!settings.cancel_on_exit) return;
+		if (!hasStatusLoading(element)) return;
+		if (element.tagName !== 'IMG') return; //Works only on images
+
+		removeEventListeners(element);
+		resetSourcesImg(element);
+		restoreImg(element);
+		removeClass(element, settings.class_loading);
+		updateLoadingCount(instance, -1);
+		resetStatus(element);
+		safeCallback(settings.callback_cancel, element, entry, instance);
+	};
+
+	var onEnter = function onEnter(element, entry, settings, instance) {
+		var dontLoad = hadStartedLoading(element);
+		/* Save status
+    before setting it, to prevent loading it again. Fixes #526. */
+
+		setStatus(element, statusEntered);
+		addClass(element, settings.class_entered);
+		removeClass(element, settings.class_exited);
+		unobserveEntered(element, settings, instance);
+		safeCallback(settings.callback_enter, element, entry, instance);
+		if (dontLoad) return;
+		load(element, settings, instance);
+	};
+	var onExit = function onExit(element, entry, settings, instance) {
+		if (hasEmptyStatus(element)) return; //Ignore the first pass, at landing
+
+		addClass(element, settings.class_exited);
+		cancelLoading(element, entry, settings, instance);
+		safeCallback(settings.callback_exit, element, entry, instance);
+	};
+
+	var tagsWithNativeLazy = ['IMG', 'IFRAME', 'VIDEO'];
+	var shouldUseNative = function shouldUseNative(settings) {
+		return settings.use_native && 'loading' in HTMLImageElement.prototype;
+	};
+	var loadAllNative = function loadAllNative(elements, settings, instance) {
+		elements.forEach(function (element) {
+			if (tagsWithNativeLazy.indexOf(element.tagName) === -1) {
+				return;
+			}
+
+			loadNative(element, settings, instance);
+		});
+		setToLoadCount(instance, 0);
+	};
+
 	var isIntersecting = function isIntersecting(entry) {
 		return entry.isIntersecting || entry.intersectionRatio > 0;
 	};
@@ -342,104 +674,141 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	var getObserverSettings = function getObserverSettings(settings) {
 		return {
 			root: settings.container === document ? null : settings.container,
-			rootMargin: settings.thresholds || settings.threshold + "px"
+			rootMargin: settings.thresholds || settings.threshold + 'px',
 		};
 	};
 
+	var intersectionHandler = function intersectionHandler(entries, settings, instance) {
+		entries.forEach(function (entry) {
+			return isIntersecting(entry) ? onEnter(entry.target, entry, settings, instance) : onExit(entry.target, entry, settings, instance);
+		});
+	};
+
+	var observeElements = function observeElements(observer, elements) {
+		elements.forEach(function (element) {
+			observer.observe(element);
+		});
+	};
+	var updateObserver = function updateObserver(observer, elementsToObserve) {
+		resetObserver(observer);
+		observeElements(observer, elementsToObserve);
+	};
+	var setObserver = function setObserver(settings, instance) {
+		if (!supportsIntersectionObserver || shouldUseNative(settings)) {
+			return;
+		}
+
+		instance._observer = new IntersectionObserver(function (entries) {
+			intersectionHandler(entries, settings, instance);
+		}, getObserverSettings(settings));
+	};
+
+	var toArray = function toArray(nodeSet) {
+		return Array.prototype.slice.call(nodeSet);
+	};
+	var queryElements = function queryElements(settings) {
+		return settings.container.querySelectorAll(settings.elements_selector);
+	};
+	var excludeManagedElements = function excludeManagedElements(elements) {
+		return toArray(elements).filter(hasEmptyStatus);
+	};
+	var hasError = function hasError(element) {
+		return hasStatusError(element);
+	};
+	var filterErrorElements = function filterErrorElements(elements) {
+		return toArray(elements).filter(hasError);
+	};
+	var getElementsToLoad = function getElementsToLoad(elements, settings) {
+		return excludeManagedElements(elements || queryElements(settings));
+	};
+
+	var retryLazyLoad = function retryLazyLoad(settings, instance) {
+		var errorElements = filterErrorElements(queryElements(settings));
+		errorElements.forEach(function (element) {
+			removeClass(element, settings.class_error);
+			resetStatus(element);
+		});
+		instance.update();
+	};
+	var setOnlineCheck = function setOnlineCheck(settings, instance) {
+		if (!runningOnBrowser) {
+			return;
+		}
+
+		window.addEventListener('online', function () {
+			retryLazyLoad(settings, instance);
+		});
+	};
+
 	var LazyLoad = function LazyLoad(customSettings, elements) {
-		this._settings = getInstanceSettings(customSettings);
-		this._setObserver();
-		this._loadingCount = 0;
+		var settings = getExtendedSettings(customSettings);
+		this._settings = settings;
+		this.loadingCount = 0;
+		setObserver(settings, this);
+		setOnlineCheck(settings, this);
 		this.update(elements);
 	};
 
 	LazyLoad.prototype = {
-		_manageIntersection: function _manageIntersection(entry) {
-			var observer = this._observer;
-			var loadDelay = this._settings.load_delay;
-			var element = entry.target;
+		update: function update(givenNodeset) {
+			var settings = this._settings;
+			var elementsToLoad = getElementsToLoad(givenNodeset, settings);
+			setToLoadCount(this, elementsToLoad.length);
 
-			// WITHOUT LOAD DELAY
-			if (!loadDelay) {
-				if (isIntersecting(entry)) {
-					loadAndUnobserve(element, observer, this);
-				}
+			if (isBot || !supportsIntersectionObserver) {
+				this.loadAll(elementsToLoad);
 				return;
 			}
 
-			// WITH LOAD DELAY
-			if (isIntersecting(entry)) {
-				delayLoad(element, observer, this);
-			} else {
-				cancelDelayLoad(element);
-			}
-		},
-
-		_onIntersection: function _onIntersection(entries) {
-			entries.forEach(this._manageIntersection.bind(this));
-		},
-
-		_setObserver: function _setObserver() {
-			if (!supportsIntersectionObserver) {
+			if (shouldUseNative(settings)) {
+				loadAllNative(elementsToLoad, settings, this);
 				return;
 			}
-			this._observer = new IntersectionObserver(this._onIntersection.bind(this), getObserverSettings(this._settings));
-		},
 
-		_updateLoadingCount: function _updateLoadingCount(plusMinus) {
-			this._loadingCount += plusMinus;
-			if (this._elements.length === 0 && this._loadingCount === 0) {
-				callbackIfSet(this._settings.callback_finish);
-			}
+			updateObserver(this._observer, elementsToLoad);
 		},
+		destroy: function destroy() {
+			// Observer
+			if (this._observer) {
+				this._observer.disconnect();
+			} // Clean custom attributes on elements
 
-		update: function update(elements) {
+			queryElements(this._settings).forEach(function (element) {
+				deleteOriginalAttrs(element);
+			}); // Delete all internal props
+
+			delete this._observer;
+			delete this._settings;
+			delete this.loadingCount;
+			delete this.toLoadCount;
+		},
+		loadAll: function loadAll(elements) {
 			var _this = this;
 
 			var settings = this._settings;
-			var nodeSet = elements || settings.container.querySelectorAll(settings.elements_selector);
-
-			this._elements = purgeProcessedElements(Array.prototype.slice.call(nodeSet) // NOTE: nodeset to array for IE compatibility
-			);
-
-			if (isBot || !this._observer) {
-				this.loadAll();
-				return;
-			}
-
-			this._elements.forEach(function (element) {
-				_this._observer.observe(element);
+			var elementsToLoad = getElementsToLoad(elements, settings);
+			elementsToLoad.forEach(function (element) {
+				unobserve(element, _this);
+				load(element, settings, _this);
 			});
 		},
-
-		destroy: function destroy() {
-			var _this2 = this;
-
-			if (this._observer) {
-				this._elements.forEach(function (element) {
-					_this2._observer.unobserve(element);
-				});
-				this._observer = null;
-			}
-			this._elements = null;
-			this._settings = null;
-		},
-
-		load: function load(element, force) {
-			revealElement(element, this, force);
-		},
-
-		loadAll: function loadAll() {
-			var _this3 = this;
-
-			var elements = this._elements;
-			elements.forEach(function (element) {
-				_this3.load(element);
+		restoreAll: function restoreAll() {
+			var settings = this._settings;
+			queryElements(settings).forEach(function (element) {
+				restore(element, settings);
 			});
-		}
+		},
 	};
 
-	/* Automatic instances creation if required (useful for async script loading) */
+	LazyLoad.load = function (element, customSettings) {
+		var settings = getExtendedSettings(customSettings);
+		load(element, settings);
+	};
+
+	LazyLoad.resetStatus = function (element) {
+		resetStatus(element);
+	}; // Automatic instances creation if required (useful for async script loading)
+
 	if (runningOnBrowser) {
 		autoInitialize(LazyLoad, window.lazyLoadOptions);
 	}

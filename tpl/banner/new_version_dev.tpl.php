@@ -12,7 +12,7 @@ defined( 'WPINC' ) || exit;
 		<h3 class="litespeed-banner-title litespeed-top15"><?php echo __( 'LiteSpeed Cache', 'litespeed-cache' ) ; ?>: <?php echo __( 'New Developer Version Available!', 'litespeed-cache' ) ; ?></h3>
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
-				<p class="litespeed-banner-desciption-content">
+				<p class="litespeed-banner-description-content">
 					<?php echo sprintf( __( 'New developer version %s is available now.', 'litespeed-cache' ), 'v' . $this->_summary[ 'version.dev' ] ) ; ?>
 				</p>
 			</div>

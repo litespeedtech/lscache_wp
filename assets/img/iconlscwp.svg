@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>LiteSpeed Technologies</metadata>
+<defs>
+<font id="iconlscwp" horiz-adv-x="1000" >
+<font-face font-family="iconlscwp" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="848" descent="-152" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="lscwp_font-icon" unicode="&#xe800;" d="M590 467l-69-88 36-52c1-2 2-4 3-6 3-11 0-20-7-26l-118-91c-3-2-7-4-13-4-6 0-12 3-15 9-2 5-3 12 3 20l69 88-37 53c-6 10-4 24 5 31l118 91c3 2 7 4 13 4 6 0 12-3 15-9 2-5 3-12-3-20z m407-119c0-6-2-11-6-15l-476-476c-4-4-9-6-15-6-6 0-11 2-15 6l-476 476c-4 4-6 9-6 15s2 11 6 15l476 476c4 4 9 6 15 6 6 0 11-2 15-6l476-476c4-4 6-9 6-15z m-478 427v-138l270-270c1 0 2 0 2 0h137l-409 408z m-19-176l-251-251 251-251 251 251-251 251z m-427-232h138l270 270v139l-408-409z m408-447v139l-270 270h-138l408-409z m447 409h-137c0 0-1 0-2 0l-270-269v-139l409 408z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

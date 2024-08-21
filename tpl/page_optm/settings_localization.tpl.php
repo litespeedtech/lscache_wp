@@ -83,4 +83,56 @@ $avatar_queue = Avatar::cls()->queue_count();
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_LOCALIZE; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_switch( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Localize external resources.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
+
+				<br /><font class="litespeed-danger">
+					🚨 <?php echo sprintf( __( 'Please thoroughly test all items in %s to ensure they function as expected.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_LOCALIZE_DOMAINS ) . '</code>' ); ?>
+				</font>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left">
+			<?php $id = Base::O_OPTM_LOCALIZE_DOMAINS; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<div class="litespeed-textarea-recommended">
+				<div>
+					<?php $this->build_textarea( $id ); ?>
+				</div>
+				<div>
+					<?php $this->recommended( $id, true ); ?>
+				</div>
+			</div>
+
+			<div class="litespeed-desc">
+				<?php echo __( 'Resources listed here will be copied and replaced with local URLs.', 'litespeed-cache' ); ?>
+				<?php echo __( 'HTTPS sources only.', 'litespeed-cache' ); ?>
+
+				<?php Doc::one_per_line(); ?>
+
+				<br /><?php echo sprintf( __( 'Comments are supported. Start a line with a %s to turn it into a comment line.', 'litespeed-cache' ), '<code>#</code>' ); ?>
+
+				<br /><?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-files' ); ?>
+
+				<br /><font class="litespeed-danger">
+					🚨 <?php echo __( 'Please thoroughly test each JS file you add to ensure it functions as expected.', 'litespeed-cache' ); ?>
+				</font>
+
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
