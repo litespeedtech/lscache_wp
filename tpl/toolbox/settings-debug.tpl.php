@@ -116,7 +116,7 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 	<tr>
 		<th>
-			<?php $id = Base::O_DEBUG_COLLAPS_QS; ?>
+			<?php $id = Base::O_DEBUG_COLLAPSE_QS; ?>
 			<?php $this->title( $id ); ?>
 		</th>
 		<td>
@@ -151,6 +151,20 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any debug log of listed pages.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_DEBUG_EXC_STRINGS; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent writing log entries that include listed strings.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
 			</div>
 		</td>
 	</tr>

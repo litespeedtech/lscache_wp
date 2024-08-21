@@ -1,15 +1,18 @@
 <?php
+
 /**
  * The plugin purge class for X-LiteSpeed-Purge
  *
  * @since      	1.1.3
  * @since  		2.2 Refactored. Changed access from public to private for most func and class variables.
  */
+
 namespace LiteSpeed;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
-class Purge extends Base {
+class Purge extends Base
+{
 	const LOG_TAG = '🧹';
 
 	protected $_pub_purge = array();
@@ -17,7 +20,6 @@ class Purge extends Base {
 	protected $_priv_purge = array();
 	protected $_purge_related = false;
 	protected $_purge_single = false;
-
 
 	const X_HEADER = 'X-LiteSpeed-Purge';
 	const X_HEADER2 = 'X-LiteSpeed-Purge2';
@@ -30,12 +32,13 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL_LOCALRES = 'purge_all_localres';
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
 	const TYPE_PURGE_ALL_UCSS = 'purge_all_ucss';
-	const TYPE_PURGE_ALL_LQIP 			= 'purge_all_lqip';
+	const TYPE_PURGE_ALL_LQIP = 'purge_all_lqip';
 	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar';
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object';
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache';
 
 	const TYPE_PURGE_FRONT = 'purge_front';
+	const TYPE_PURGE_UCSS = 'purge_ucss';
 	const TYPE_PURGE_FRONTPAGE = 'purge_frontpage';
 	const TYPE_PURGE_PAGES = 'purge_pages';
 	const TYPE_PURGE_ERROR = 'purge_error';
@@ -45,7 +48,8 @@ class Purge extends Base {
 	 *
 	 * @since  3.0
 	 */
-	public function init() {
+	public function init()
+	{
 		//register purge actions
 		$purge_post_events = array(
 			// 'edit_post',
@@ -55,16 +59,19 @@ class Purge extends Base {
 			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
 			'wp_update_comment_count', // TODO: check if needed for non ESI
 		);
-		foreach ( $purge_post_events as $event ) {
+		foreach ($purge_post_events as $event) {
 			// this will purge all related tags
-			add_action( $event, array( $this, 'purge_post' ) );
+			add_action($event, array($this, 'purge_post'));
 		}
 
 		// Purge post only when status is/was publish
-		add_action( 'transition_post_status', array( $this, 'purge_publish' ), 10, 3 );
+		add_action('transition_post_status', array($this, 'purge_publish'), 10, 3);
 
-		add_action( 'wp_update_comment_count', array( $this, 'purge_feeds' ) );
+		add_action('wp_update_comment_count', array($this, 'purge_feeds'));
 
+		if ($this->conf(self::O_OPTM_UCSS)) {
+			add_action('edit_post', __NAMESPACE__ . '\Purge::purge_ucss');
+		}
 	}
 
 	/**
@@ -73,12 +80,13 @@ class Purge extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public function purge_publish( $new_status, $old_status, $post ) {
-		if ( $new_status != 'publish' && $old_status != 'publish' ) {
+	public function purge_publish($new_status, $old_status, $post)
+	{
+		if ($new_status != 'publish' && $old_status != 'publish') {
 			return;
 		}
 
-		$this->purge_post( $post->ID );
+		$this->purge_post($post->ID);
 	}
 
 	/**
@@ -87,10 +95,11 @@ class Purge extends Base {
 	 * @since  1.8
 	 * @access public
 	 */
-	public function handler() {
+	public function handler()
+	{
 		$type = Router::verify_type();
 
-		switch ( $type ) {
+		switch ($type) {
 			case self::TYPE_PURGE_ALL:
 				$this->_purge_all();
 				break;
@@ -135,6 +144,10 @@ class Purge extends Base {
 				$this->_purge_front();
 				break;
 
+			case self::TYPE_PURGE_UCSS:
+				$this->_purge_ucss();
+				break;
+
 			case self::TYPE_PURGE_FRONTPAGE:
 				$this->_purge_frontpage();
 				break;
@@ -143,8 +156,8 @@ class Purge extends Base {
 				$this->_purge_pages();
 				break;
 
-			case strpos( $type, self::TYPE_PURGE_ERROR ) === 0:
-				$this->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
+			case strpos($type, self::TYPE_PURGE_ERROR) === 0:
+				$this->_purge_error(substr($type, strlen(self::TYPE_PURGE_ERROR)));
 				break;
 
 			default:
@@ -160,8 +173,9 @@ class Purge extends Base {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function purge_all( $reason = false ) {
-		self::cls()->_purge_all( $reason );
+	public static function purge_all($reason = false)
+	{
+		self::cls()->_purge_all($reason);
 	}
 
 	/**
@@ -170,29 +184,37 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _purge_all( $reason = false ) {
-		$this->_purge_all_lscache( true );
-		$this->_purge_all_cssjs( true );
-		$this->_purge_all_localres( true );
+	private function _purge_all($reason = false)
+	{
+		// if ( defined( 'LITESPEED_CLI' ) ) {
+		// 	// Can't send, already has output, need to save and wait for next run
+		// 	self::update_option( self::DB_QUEUE, $curr_built );
+		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
+		// }
+		// else {
+		$this->_purge_all_lscache(true);
+		$this->_purge_all_cssjs(true);
+		$this->_purge_all_localres(true);
 		// $this->_purge_all_ccss( true );
 		// $this->_purge_all_lqip( true );
-		$this->_purge_all_object( true );
-		$this->purge_all_opcache( true );
+		$this->_purge_all_object(true);
+		$this->purge_all_opcache(true);
+		// }
 
-		if ( ! is_string( $reason ) ) {
+		if (!is_string($reason)) {
 			$reason = false;
 		}
 
-		if ( $reason ) {
+		if ($reason) {
 			$reason = "( $reason )";
 		}
 
-		self::debug( 'Purge all ' . $reason, 3 );
+		self::debug('Purge all ' . $reason, 3);
 
-		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' );
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		$msg = __('Purged all caches successfully.', 'litespeed-cache');
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 
-		do_action( 'litespeed_purged_all' );
+		do_action('litespeed_purged_all');
 	}
 
 	/**
@@ -204,12 +226,13 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access public
 	 */
-	private function _purge_all_lscache( $silence = false ) {
-		$this->_add( '*' );
+	private function _purge_all_lscache($silence = false)
+	{
+		$this->_add('*');
 
-		if ( ! $silence ) {
-			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -219,16 +242,17 @@ class Purge extends Base {
 	 * @since    2.3
 	 * @access   private
 	 */
-	private function _purge_all_ccss( $silence = false ) {
-		do_action( 'litespeed_purged_all_ccss' );
+	private function _purge_all_ccss($silence = false)
+	{
+		do_action('litespeed_purged_all_ccss');
 
-		$this->rm_cache_folder( 'ccss' );
+		$this->cls('CSS')->rm_cache_folder('ccss');
 
-		$this->cls( 'Data' )->url_file_clean( 'ccss' );
+		$this->cls('Data')->url_file_clean('ccss');
 
-		if ( ! $silence ) {
-			$msg = __( 'Cleaned all Critical CSS files.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Cleaned all Critical CSS files.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -238,16 +262,17 @@ class Purge extends Base {
 	 * @since    2.3
 	 * @access   private
 	 */
-	private function _purge_all_ucss( $silence = false ) {
-		do_action( 'litespeed_purged_all_ucss' );
+	private function _purge_all_ucss($silence = false)
+	{
+		do_action('litespeed_purged_all_ucss');
 
-		$this->rm_cache_folder( 'ucss' );
+		$this->cls('CSS')->rm_cache_folder('ucss');
 
-		$this->cls( 'Data' )->url_file_clean( 'ucss' );
+		$this->cls('Data')->url_file_clean('ucss');
 
-		if ( ! $silence ) {
-			$msg = __( 'Cleaned all Unique CSS files.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Cleaned all Unique CSS files.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -257,15 +282,20 @@ class Purge extends Base {
 	 * @since 4.5
 	 * @access public
 	 */
-	public static function purge_ucss( $post_id_or_url ) {
-		self::debug( 'Purge a single UCSS: ' . $post_id_or_url );
+	public static function purge_ucss($post_id_or_url)
+	{
+		self::debug('Purge a single UCSS: ' . $post_id_or_url);
 		// If is post_id, generate URL
-		if ( ! preg_match( '/\D/', $post_id_or_url ) ) {
-			$post_id_or_url = get_permalink( $post_id_or_url );
+		if (!preg_match('/\D/', $post_id_or_url)) {
+			$post_id_or_url = get_permalink($post_id_or_url);
 		}
-		$post_id_or_url = untrailingslashit( $post_id_or_url );
+		$post_id_or_url = untrailingslashit($post_id_or_url);
 
-		Data::cls()->mark_as_expired( $post_id_or_url );
+		$existing_url_files = Data::cls()->mark_as_expired($post_id_or_url, true);
+		if ($existing_url_files) {
+			// Add to UCSS Q
+			self::cls('UCSS')->add_to_q($existing_url_files);
+		}
 	}
 
 	/**
@@ -274,14 +304,15 @@ class Purge extends Base {
 	 * @since    3.0
 	 * @access   private
 	 */
-	private function _purge_all_lqip( $silence = false ) {
-		do_action( 'litespeed_purged_all_lqip' );
+	private function _purge_all_lqip($silence = false)
+	{
+		do_action('litespeed_purged_all_lqip');
 
-		$this->rm_cache_folder( 'lqip' );
+		$this->cls('Placeholder')->rm_cache_folder('lqip');
 
-		if ( ! $silence ) {
-			$msg = __( 'Cleaned all LQIP files.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Cleaned all LQIP files.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -291,14 +322,15 @@ class Purge extends Base {
 	 * @since    3.0
 	 * @access   private
 	 */
-	private function _purge_all_avatar( $silence = false ) {
-		do_action( 'litespeed_purged_all_avatar' );
+	private function _purge_all_avatar($silence = false)
+	{
+		do_action('litespeed_purged_all_avatar');
 
-		$this->rm_cache_folder( 'avatar' );
+		$this->cls('Avatar')->rm_cache_folder('avatar');
 
-		if ( ! $silence ) {
-			$msg = __( 'Cleaned all Gravatar files.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Cleaned all Gravatar files.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -308,14 +340,15 @@ class Purge extends Base {
 	 * @since    3.3
 	 * @access   private
 	 */
-	private function _purge_all_localres( $silence = false ) {
-		do_action( 'litespeed_purged_all_localres' );
+	private function _purge_all_localres($silence = false)
+	{
+		do_action('litespeed_purged_all_localres');
 
-		$this->_add( Tag::TYPE_LOCALRES );
+		$this->_add(Tag::TYPE_LOCALRES);
 
-		if ( ! $silence ) {
-			$msg = __( 'Cleaned all localized resource entries.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Cleaned all localized resource entries.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -325,31 +358,32 @@ class Purge extends Base {
 	 * @since    1.2.2
 	 * @access   private
 	 */
-	private function _purge_all_cssjs( $silence = false ) {
-		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
-			self::debug( "❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail)" );
+	private function _purge_all_cssjs($silence = false)
+	{
+		if (defined('DOING_CRON') || defined('LITESPEED_DID_send_headers')) {
+			self::debug('❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail) or doing cron');
 			return;
 		}
-		$this->_purge_all_lscache( $silence ); // Purge CSSJS must purge lscache too to avoid 404
+		$this->_purge_all_lscache($silence); // Purge CSSJS must purge lscache too to avoid 404
 
-		do_action( 'litespeed_purged_all_cssjs' );
+		do_action('litespeed_purged_all_cssjs');
 
-		Optimize::update_option( Optimize::ITEM_TIMESTAMP_PURGE_CSS, time() );
+		Optimize::update_option(Optimize::ITEM_TIMESTAMP_PURGE_CSS, time());
 
-		$this->_add( Tag::TYPE_MIN );
+		$this->_add(Tag::TYPE_MIN);
 
-		$this->rm_cache_folder( 'css' );
-		$this->rm_cache_folder( 'js' );
+		$this->cls('CSS')->rm_cache_folder('css');
+		$this->cls('CSS')->rm_cache_folder('js');
 
-		$this->cls( 'Data' )->url_file_clean( 'css' );
-		$this->cls( 'Data' )->url_file_clean( 'js' );
+		$this->cls('Data')->url_file_clean('css');
+		$this->cls('Data')->url_file_clean('js');
 
 		// Clear UCSS queue as it used combined CSS to generate
-		$this->clear_q( 'ucss' );
+		$this->clear_q('ucss', true);
 
-		if ( ! $silence ) {
-			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 	}
 
@@ -359,13 +393,14 @@ class Purge extends Base {
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function purge_all_opcache( $silence = false ) {
-		if ( ! Router::opcache_enabled() ) {
-			self::debug( 'Failed to reset opcode cache due to opcache not enabled' );
+	public function purge_all_opcache($silence = false)
+	{
+		if (!Router::opcache_enabled()) {
+			self::debug('Failed to reset opcode cache due to opcache not enabled');
 
-			if ( ! $silence ) {
-				$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' );
-				Admin_Display::error( $msg );
+			if (!$silence) {
+				$msg = __('Opcode cache is not enabled.', 'litespeed-cache');
+				Admin_Display::error($msg);
 			}
 
 			return false;
@@ -373,11 +408,11 @@ class Purge extends Base {
 
 		// Purge opcode cache
 		opcache_reset();
-		self::debug( 'Reset opcode cache' );
+		self::debug('Reset opcode cache');
 
-		if ( ! $silence ) {
-			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Reset the entire opcode cache successfully.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 
 		return true;
@@ -389,8 +424,9 @@ class Purge extends Base {
 	 * @since  3.4
 	 * @access public
 	 */
-	public static function purge_all_object( $silence = true ) {
-		self::cls()->_purge_all_object( $silence );
+	public static function purge_all_object($silence = true)
+	{
+		self::cls()->_purge_all_object($silence);
 	}
 
 	/**
@@ -399,26 +435,27 @@ class Purge extends Base {
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _purge_all_object( $silence = false ) {
-		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
-			self::debug( 'Failed to flush object cache due to object cache not enabled' );
+	private function _purge_all_object($silence = false)
+	{
+		if (!defined('LSCWP_OBJECT_CACHE')) {
+			self::debug('Failed to flush object cache due to object cache not enabled');
 
-			if ( ! $silence ) {
-				$msg = __( 'Object cache is not enabled.', 'litespeed-cache' );
-				Admin_Display::error( $msg );
+			if (!$silence) {
+				$msg = __('Object cache is not enabled.', 'litespeed-cache');
+				Admin_Display::error($msg);
 			}
 
 			return false;
 		}
 
-		do_action( 'litespeed_purged_all_object' );
+		do_action('litespeed_purged_all_object');
 
-		$this->cls( 'Object_Cache' )->flush();
-		self::debug( 'Flushed object cache' );
+		$this->cls('Object_Cache')->flush();
+		self::debug('Flushed object cache');
 
-		if ( ! $silence ) {
-			$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' );
-			! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		if (!$silence) {
+			$msg = __('Purge all object caches successfully.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 		}
 
 		return true;
@@ -431,8 +468,9 @@ class Purge extends Base {
 	 * @access public
 	 * @param mixed $tags Tags to add to the list.
 	 */
-	public static function add( $tags, $purge2 = false ) {
-		self::cls()->_add( $tags, $purge2 );
+	public static function add($tags, $purge2 = false)
+	{
+		self::cls()->_add($tags, $purge2);
 	}
 
 	/**
@@ -441,43 +479,41 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _add( $tags, $purge2 = false ) {
-		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags );
+	private function _add($tags, $purge2 = false)
+	{
+		if (!is_array($tags)) {
+			$tags = array($tags);
 		}
 
-		$tags = $this->_prepend_bid( $tags );
+		$tags = $this->_prepend_bid($tags);
 
-		if ( ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
+		if (!array_diff($tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge)) {
 			return;
 		}
 
-		if ( $purge2 ) {
-			$this->_pub_purge2 = array_merge( $this->_pub_purge2, $tags );
-			$this->_pub_purge2 = array_unique( $this->_pub_purge2 );
+		if ($purge2) {
+			$this->_pub_purge2 = array_merge($this->_pub_purge2, $tags);
+			$this->_pub_purge2 = array_unique($this->_pub_purge2);
+		} else {
+			$this->_pub_purge = array_merge($this->_pub_purge, $tags);
+			$this->_pub_purge = array_unique($this->_pub_purge);
 		}
-		else {
-			$this->_pub_purge = array_merge( $this->_pub_purge, $tags );
-			$this->_pub_purge = array_unique( $this->_pub_purge );
-		}
-		self::debug( 'added ' . implode( ',', $tags ) . ( $purge2 ? ' [Purge2]' : '' ), 8 );
+		self::debug('added ' . implode(',', $tags) . ($purge2 ? ' [Purge2]' : ''), 8);
 
 		// Send purge header immediately
-		$curr_built = $this->_build( $purge2 );
-		if ( defined( 'LITESPEED_CLI' ) ) {
+		$curr_built = $this->_build($purge2);
+		if (defined('LITESPEED_CLI')) {
 			// Can't send, already has output, need to save and wait for next run
-			self::update_option( $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built );
-			self::debug( 'CLI request, queue stored: ' . $curr_built );
-		}
-		else {
-			@header( $curr_built );
-			if ( defined( 'LITESPEED_DID_send_headers' ) && apply_filters( 'litespeed_delay_purge', false ) ) {
-				self::update_option( $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built );
-				self::debug( 'Output existed, queue stored: ' . $curr_built );
+			self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
+			self::debug('CLI request, queue stored: ' . $curr_built);
+		} else {
+			@header($curr_built);
+			if (defined('DOING_CRON') || defined('LITESPEED_DID_send_headers') || apply_filters('litespeed_delay_purge', false)) {
+				self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
+				self::debug('Output existed, queue stored: ' . $curr_built);
 			}
-			self::debug( $curr_built );
+			self::debug($curr_built);
 		}
-
 	}
 
 	/**
@@ -487,8 +523,9 @@ class Purge extends Base {
 	 * @access public
 	 * @param mixed $tags Tags to add to the list.
 	 */
-	public static function add_private( $tags ) {
-		self::cls()->_add_private( $tags );
+	public static function add_private($tags)
+	{
+		self::cls()->_add_private($tags);
 	}
 
 	/**
@@ -497,8 +534,9 @@ class Purge extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_private_esi( $tag ) {
-		self::add_private( Tag::TYPE_ESI . $tag );
+	public static function add_private_esi($tag)
+	{
+		self::add_private(Tag::TYPE_ESI . $tag);
 	}
 
 	/**
@@ -507,8 +545,9 @@ class Purge extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_private_all() {
-		self::add_private( '*' );
+	public static function add_private_all()
+	{
+		self::add_private('*');
 	}
 
 	/**
@@ -517,26 +556,26 @@ class Purge extends Base {
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _add_private( $tags ) {
-		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags );
+	private function _add_private($tags)
+	{
+		if (!is_array($tags)) {
+			$tags = array($tags);
 		}
 
-		$tags = $this->_prepend_bid( $tags );
+		$tags = $this->_prepend_bid($tags);
 
-		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
+		if (!array_diff($tags, $this->_priv_purge)) {
 			return;
 		}
 
-		self::debug( 'added [private] ' . implode( ',', $tags ), 3 );
+		self::debug('added [private] ' . implode(',', $tags), 3);
 
-		$this->_priv_purge = array_merge( $this->_priv_purge, $tags );
-		$this->_priv_purge = array_unique( $this->_priv_purge );
+		$this->_priv_purge = array_merge($this->_priv_purge, $tags);
+		$this->_priv_purge = array_unique($this->_priv_purge);
 
 		// Send purge header immediately
-		@header( $this->_build() );
+		@header($this->_build());
 	}
-
 
 	/**
 	 * Incorporate blog_id into purge tags for multisite
@@ -544,20 +583,20 @@ class Purge extends Base {
 	 * @since 4.0
 	 * @access private
 	 * @param mixed $tags Tags to add to the list.
-	*/
-	private function _prepend_bid( $tags ){
-		if ( in_array('*', $tags ) ){
-			return array( '*' );
+	 */
+	private function _prepend_bid($tags)
+	{
+		if (in_array('*', $tags)) {
+			return array('*');
 		}
 
 		$curr_bid = is_multisite() ? get_current_blog_id() : '';
 
-		foreach ( $tags as $k => $v ) {
-			$tags[ $k ] = $curr_bid. '_' .$v;
+		foreach ($tags as $k => $v) {
+			$tags[$k] = $curr_bid . '_' . $v;
 		}
 		return $tags;
 	}
-
 
 	/**
 	 * Activate `purge related tags` for Admin QS.
@@ -565,7 +604,8 @@ class Purge extends Base {
 	 * @since    1.1.3
 	 * @access   public
 	 */
-	public static function set_purge_related() {
+	public static function set_purge_related()
+	{
 		self::cls()->_purge_related = true;
 	}
 
@@ -575,7 +615,8 @@ class Purge extends Base {
 	 * @since    1.1.3
 	 * @access   public
 	 */
-	public static function set_purge_single() {
+	public static function set_purge_single()
+	{
 		self::cls()->_purge_single = true;
 	}
 
@@ -586,14 +627,37 @@ class Purge extends Base {
 	 * @since 2.2 Renamed from `frontend_purge`; Access changed from public
 	 * @access private
 	 */
-	private function _purge_front() {
-		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			exit( 'no referer' );
+	private function _purge_front()
+	{
+		if (empty($_SERVER['HTTP_REFERER'])) {
+			exit('no referer');
 		}
 
-		$this->purge_url( $_SERVER[ 'HTTP_REFERER' ] );
+		$this->purge_url($_SERVER['HTTP_REFERER']);
 
-		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
+		do_action('litespeed_purged_front', $_SERVER['HTTP_REFERER']);
+		wp_redirect($_SERVER['HTTP_REFERER']);
+		exit();
+	}
+
+	/**
+	 * Purge single UCSS
+	 * @since 4.7
+	 */
+	private function _purge_ucss()
+	{
+		if (empty($_SERVER['HTTP_REFERER'])) {
+			exit('no referer');
+		}
+
+		$url_tag = empty($_GET['url_tag']) ? $_SERVER['HTTP_REFERER'] : $_GET['url_tag'];
+
+		self::debug('Purge ucss [url_tag] ' . $url_tag);
+
+		do_action('litespeed_purge_ucss', $url_tag);
+		$this->purge_url($_SERVER['HTTP_REFERER']);
+
+		wp_redirect($_SERVER['HTTP_REFERER']);
 		exit();
 	}
 
@@ -604,14 +668,15 @@ class Purge extends Base {
 	 * @since  	 2.2 	Access changed from public to private, renamed from `_purge_front`
 	 * @access   private
 	 */
-	private function _purge_frontpage() {
-		$this->_add( Tag::TYPE_FRONTPAGE );
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			$this->_add_private( Tag::TYPE_FRONTPAGE );
+	private function _purge_frontpage()
+	{
+		$this->_add(Tag::TYPE_FRONTPAGE);
+		if (LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS') {
+			$this->_add_private(Tag::TYPE_FRONTPAGE);
 		}
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache' );
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 	}
 
 	/**
@@ -620,11 +685,12 @@ class Purge extends Base {
 	 * @since    1.0.15
 	 * @access   private
 	 */
-	private function _purge_pages() {
-		$this->_add( Tag::TYPE_PAGES );
+	private function _purge_pages()
+	{
+		$this->_add(Tag::TYPE_PAGES);
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge all pages.', 'litespeed-cache' );
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		$msg = __('Notified LiteSpeed Web Server to purge all pages.', 'litespeed-cache');
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 	}
 
 	/**
@@ -633,17 +699,18 @@ class Purge extends Base {
 	 * @since    1.0.14
 	 * @access   private
 	 */
-	private function _purge_error( $type = false ) {
-		$this->_add( Tag::TYPE_HTTP );
+	private function _purge_error($type = false)
+	{
+		$this->_add(Tag::TYPE_HTTP);
 
-		if ( ! $type || ! in_array( $type, array( '403', '404', '500' ) ) ) {
+		if (!$type || !in_array($type, array('403', '404', '500'))) {
 			return;
 		}
 
-		$this->_add( Tag::TYPE_HTTP . $type );
+		$this->_add(Tag::TYPE_HTTP . $type);
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' );
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( $msg );
+		$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
 	}
 
 	/**
@@ -652,26 +719,26 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_cat( $value ) {
-		$val = trim( $value );
-		if ( empty( $val ) ) {
+	public function purge_cat($value)
+	{
+		$val = trim($value);
+		if (empty($val)) {
 			return;
 		}
-		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			self::debug( "$val cat invalid" );
+		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
+			self::debug("$val cat invalid");
 			return;
 		}
-		$cat = get_category_by_slug( $val );
-		if ( $cat == false ) {
-			self::debug( "$val cat not existed/published" );
+		$cat = get_category_by_slug($val);
+		if ($cat == false) {
+			self::debug("$val cat not existed/published");
 			return;
 		}
 
-		self::add( Tag::TYPE_ARCHIVE_TERM . $cat->term_id );
+		self::add(Tag::TYPE_ARCHIVE_TERM . $cat->term_id);
 
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge category %s', 'litespeed-cache' ), $val ) );
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 	}
-
 
 	/**
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
@@ -679,24 +746,25 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_tag( $val ) {
-		$val = trim( $val );
-		if ( empty( $val ) ) {
+	public function purge_tag($val)
+	{
+		$val = trim($val);
+		if (empty($val)) {
 			return;
 		}
-		if ( preg_match( '/^[a-zA-Z0-9-]+$/', $val ) == 0 ) {
-			self::debug( "$val tag invalid" );
+		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
+			self::debug("$val tag invalid");
 			return;
 		}
-		$term = get_term_by( 'slug', $val, 'post_tag' );
-		if ( $term == 0 ) {
-			self::debug( "$val tag not exist" );
+		$term = get_term_by('slug', $val, 'post_tag');
+		if ($term == 0) {
+			self::debug("$val tag not exist");
 			return;
 		}
 
-		self::add( Tag::TYPE_ARCHIVE_TERM . $term->term_id );
+		self::add(Tag::TYPE_ARCHIVE_TERM . $term->term_id);
 
-		! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge tag %s', 'litespeed-cache' ), $val ) );
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
 	}
 
 	/**
@@ -705,29 +773,30 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_url( $url, $purge2 = false, $quite = false ) {
-		$val = trim( $url );
-		if ( empty( $val ) ) {
+	public function purge_url($url, $purge2 = false, $quite = false)
+	{
+		$val = trim($url);
+		if (empty($val)) {
 			return;
 		}
 
-		if ( strpos( $val, '<' ) !== false ) {
-			self::debug( "$val url contains <" );
+		if (strpos($val, '<') !== false) {
+			self::debug("$val url contains <");
 			return;
 		}
 
-		$val = Utility::make_relative( $val );
+		$val = Utility::make_relative($val);
 
-		$hash = Tag::get_uri_tag( $val );
+		$hash = Tag::get_uri_tag($val);
 
-		if ( $hash === false ) {
-			self::debug( "$val url invalid" );
+		if ($hash === false) {
+			self::debug("$val url invalid");
 			return;
 		}
 
-		self::add( $hash, $purge2 );
+		self::add($hash, $purge2);
 
-		! $quite && ! defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) );
+		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 	}
 
 	/**
@@ -736,18 +805,19 @@ class Purge extends Base {
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public function purge_list() {
-		if ( ! isset($_REQUEST[Admin_Display::PURGEBYOPT_SELECT]) || ! isset($_REQUEST[Admin_Display::PURGEBYOPT_LIST]) ) {
+	public function purge_list()
+	{
+		if (!isset($_REQUEST[Admin_Display::PURGEBYOPT_SELECT]) || !isset($_REQUEST[Admin_Display::PURGEBYOPT_LIST])) {
 			return;
 		}
 		$sel = $_REQUEST[Admin_Display::PURGEBYOPT_SELECT];
 		$list_buf = $_REQUEST[Admin_Display::PURGEBYOPT_LIST];
-		if ( empty($list_buf) ) {
+		if (empty($list_buf)) {
 			return;
 		}
-		$list_buf = str_replace(",", "\n", $list_buf);// for cli
+		$list_buf = str_replace(',', "\n", $list_buf); // for cli
 		$list = explode("\n", $list_buf);
-		switch($sel) {
+		switch ($sel) {
 			case Admin_Display::PURGEBY_CAT:
 				$cb = 'purge_cat';
 				break;
@@ -764,10 +834,10 @@ class Purge extends Base {
 			default:
 				return;
 		}
-		array_map( array( $this, $cb ), $list );
+		array_map(array($this, $cb), $list);
 
 		// for redirection
-		$_GET[ Admin_Display::PURGEBYOPT_SELECT ] = $sel;
+		$_GET[Admin_Display::PURGEBYOPT_SELECT] = $sel;
 	}
 
 	/**
@@ -776,8 +846,9 @@ class Purge extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function purge_esi( $tag ) {
-		self::add( Tag::TYPE_ESI . $tag );
+	public static function purge_esi($tag)
+	{
+		self::add(Tag::TYPE_ESI . $tag);
 	}
 
 	/**
@@ -786,9 +857,10 @@ class Purge extends Base {
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function purge_posttype( $post_type ) {
-		self::add( Tag::TYPE_ARCHIVE_POSTTYPE . $post_type );
-		self::add( $post_type );
+	public static function purge_posttype($post_type)
+	{
+		self::add(Tag::TYPE_ARCHIVE_POSTTYPE . $post_type);
+		self::add($post_type);
 	}
 
 	/**
@@ -797,21 +869,22 @@ class Purge extends Base {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function purge_post( $pid ) {
-		$pid = intval( $pid );
+	public function purge_post($pid)
+	{
+		$pid = intval($pid);
 		// ignore the status we don't care
-		if ( ! $pid || ! in_array( get_post_status( $pid ), array( 'publish', 'trash', 'private', 'draft' ) ) ) {
+		if (!$pid || !in_array(get_post_status($pid), array('publish', 'trash', 'private', 'draft'))) {
 			return;
 		}
 
-		$purge_tags = $this->_get_purge_tags_by_post( $pid );
-		if ( ! $purge_tags ) {
+		$purge_tags = $this->_get_purge_tags_by_post($pid);
+		if (!$purge_tags) {
 			return;
 		}
 
-		self::add( $purge_tags );
-		if ( $this->conf( self::O_CACHE_REST ) ) {
-			self::add( Tag::TYPE_REST );
+		self::add($purge_tags);
+		if ($this->conf(self::O_CACHE_REST)) {
+			self::add(Tag::TYPE_REST);
 		}
 
 		// $this->cls( 'Control' )->set_stale();
@@ -825,10 +898,11 @@ class Purge extends Base {
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function purge_widget( $widget_id = null ) {
-		if ( is_null($widget_id) ) {
+	public static function purge_widget($widget_id = null)
+	{
+		if (is_null($widget_id)) {
 			$widget_id = $_POST['widget-id'];
-			if ( is_null($widget_id) ) {
+			if (is_null($widget_id)) {
 				return;
 			}
 		}
@@ -844,13 +918,14 @@ class Purge extends Base {
 	 * @since 1.1.3
 	 * @global type $wp_widget_factory
 	 */
-	public static function purge_comment_widget() {
+	public static function purge_comment_widget()
+	{
 		global $wp_widget_factory;
-		if ( ! isset( $wp_widget_factory->widgets[ 'WP_Widget_Recent_Comments' ] ) ) {
+		if (!isset($wp_widget_factory->widgets['WP_Widget_Recent_Comments'])) {
 			return;
 		}
 		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'];
-		if ( !is_null($recent_comments) ) {
+		if (!is_null($recent_comments)) {
 			self::add(Tag::TYPE_WIDGET . $recent_comments->id);
 			self::add_private(Tag::TYPE_WIDGET . $recent_comments->id);
 		}
@@ -862,9 +937,10 @@ class Purge extends Base {
 	 * @since 1.0.9
 	 * @access public
 	 */
-	public function purge_feeds() {
-		if ( $this->conf( self::O_CACHE_TTL_FEED ) > 0 ) {
-			self::add( Tag::TYPE_FEED );
+	public function purge_feeds()
+	{
+		if ($this->conf(self::O_CACHE_TTL_FEED) > 0) {
+			self::add(Tag::TYPE_FEED);
 		}
 	}
 
@@ -874,7 +950,8 @@ class Purge extends Base {
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function purge_on_logout() {
+	public static function purge_on_logout()
+	{
 		self::add_private('*');
 	}
 
@@ -884,37 +961,37 @@ class Purge extends Base {
 	 * @access private
 	 * @since 1.1.3
 	 */
-	private function _finalize() {
+	private function _finalize()
+	{
 		// Make sure header output only run once
-		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
-			define( 'LITESPEED_DID_' . __FUNCTION__, true );
-		}
-		else {
+		if (!defined('LITESPEED_DID_' . __FUNCTION__)) {
+			define('LITESPEED_DID_' . __FUNCTION__, true);
+		} else {
 			return;
 		}
 
 		do_action('litespeed_purge_finalize');
 
 		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
-		if ( $this->_purge_single ) {
+		if ($this->_purge_single) {
 			$this->_pub_purge[] = Tag::build_uri_tag(); // TODO: add private tag too
 		}
 		// Append related purge tags if Admin QS is `PURGE`
-		if ( $this->_purge_related ) {
+		if ($this->_purge_related) {
 			// Before this, tags need to be finalized
 			$tags_related = Tag::output_tags();
 			// NOTE: need to remove the empty item `B1_` to avoid purging all
 			$tags_related = array_filter($tags_related);
-			if ( $tags_related ) {
+			if ($tags_related) {
 				$this->_pub_purge = array_merge($this->_pub_purge, $tags_related);
 			}
 		}
 
-		if ( ! empty($this->_pub_purge) ) {
+		if (!empty($this->_pub_purge)) {
 			$this->_pub_purge = array_unique($this->_pub_purge);
 		}
 
-		if ( ! empty($this->_priv_purge) ) {
+		if (!empty($this->_priv_purge)) {
 			$this->_priv_purge = array_unique($this->_priv_purge);
 		}
 	}
@@ -928,7 +1005,8 @@ class Purge extends Base {
 	 * @access public
 	 * @return string the built purge header
 	 */
-	public static function output() {
+	public static function output()
+	{
 		$instance = self::cls();
 
 		$instance->_finalize();
@@ -943,14 +1021,14 @@ class Purge extends Base {
 	 * @access private
 	 * @return string the built purge header
 	 */
-	private function _build( $purge2 = false ) {
-		if ( $purge2 ) {
-			if ( empty( $this->_pub_purge2 ) ) {
+	private function _build($purge2 = false)
+	{
+		if ($purge2) {
+			if (empty($this->_pub_purge2)) {
 				return;
 			}
-		}
-		else {
-			if ( empty( $this->_pub_purge ) && empty( $this->_priv_purge ) ) {
+		} else {
+			if (empty($this->_pub_purge) && empty($this->_priv_purge)) {
 				return;
 			}
 		}
@@ -958,39 +1036,39 @@ class Purge extends Base {
 		$purge_header = '';
 
 		// Handle purge2 @since 4.4.1
-		if ( $purge2 ) {
-			$public_tags = $this->_append_prefix( $this->_pub_purge2 );
-			if ( empty( $public_tags ) ) {
+		if ($purge2) {
+			$public_tags = $this->_append_prefix($this->_pub_purge2);
+			if (empty($public_tags)) {
 				return;
 			}
 			$purge_header = self::X_HEADER2 . ': public,';
-			if ( Control::is_stale() ) {
+			if (Control::is_stale()) {
 				$purge_header .= 'stale,';
 			}
-			$purge_header .= implode( ',', $public_tags );
+			$purge_header .= implode(',', $public_tags);
 			return $purge_header;
 		}
 
 		$private_prefix = self::X_HEADER . ': private,';
 
-		if ( ! empty( $this->_pub_purge ) ) {
-			$public_tags = $this->_append_prefix( $this->_pub_purge );
-			if ( empty( $public_tags ) ) {
+		if (!empty($this->_pub_purge)) {
+			$public_tags = $this->_append_prefix($this->_pub_purge);
+			if (empty($public_tags)) {
 				// If this ends up empty, private will also end up empty
 				return;
 			}
 			$purge_header = self::X_HEADER . ': public,';
-			if ( Control::is_stale() ) {
+			if (Control::is_stale()) {
 				$purge_header .= 'stale,';
 			}
-			$purge_header .= implode( ',', $public_tags );
+			$purge_header .= implode(',', $public_tags);
 			$private_prefix = ';private,';
 		}
 
 		// Handle priv purge tags
-		if ( ! empty( $this->_priv_purge ) ) {
-			$private_tags = $this->_append_prefix( $this->_priv_purge, true );
-			$purge_header .= $private_prefix . implode( ',', $private_tags );
+		if (!empty($this->_priv_purge)) {
+			$private_tags = $this->_append_prefix($this->_priv_purge, true);
+			$purge_header .= $private_prefix . implode(',', $private_tags);
 		}
 
 		return $purge_header;
@@ -1002,29 +1080,30 @@ class Purge extends Base {
 	 * @since 1.1.0
 	 * @access private
 	 */
-	private function _append_prefix( $purge_tags, $is_private = false ) {
+	private function _append_prefix($purge_tags, $is_private = false)
+	{
 		$curr_bid = is_multisite() ? get_current_blog_id() : '';
 
-		if ( ! in_array( '*', $purge_tags ) ) {
+		if (!in_array('*', $purge_tags)) {
 			$tags = array();
-			foreach ( $purge_tags as $val ) {
+			foreach ($purge_tags as $val) {
 				$tags[] = LSWCP_TAG_PREFIX . $val;
 			}
 			return $tags;
 		}
 
 		// Purge All need to check if need to reset crawler or not
-		if ( ! $is_private && $this->conf( self::O_CRAWLER ) ) {
+		if (!$is_private && $this->conf(self::O_CRAWLER)) {
 			Crawler::cls()->reset_pos();
 		}
 
-		if ( defined( 'LSWCP_EMPTYCACHE' ) || $is_private ) {
-			return array( '*' );
+		if (defined('LSWCP_EMPTYCACHE') || $is_private) {
+			return array('*');
 		}
 
-		if ( is_multisite() && ! $this->_is_subsite_purge() ) {
+		if (is_multisite() && !$this->_is_subsite_purge()) {
 			$blogs = Activation::get_network_ids();
-			if ( empty($blogs) ) {
+			if (empty($blogs)) {
 				self::debug('build_purge_headers: blog list is empty');
 				return '';
 			}
@@ -1033,32 +1112,32 @@ class Purge extends Base {
 				$tags[] = LSWCP_TAG_PREFIX . $blog_id . '_';
 			}
 			return $tags;
-		}
-		else {
+		} else {
 			return array(LSWCP_TAG_PREFIX . $curr_bid . '_');
 		}
 	}
 
 	/**
-	 * Check if this purge blongs to a subsite purge
+	 * Check if this purge belongs to a subsite purge
 	 *
 	 * @since  4.0
 	 */
-	private function _is_subsite_purge() {
-		if ( ! is_multisite() ) {
+	private function _is_subsite_purge()
+	{
+		if (!is_multisite()) {
 			return false;
 		}
 
-		if ( is_network_admin() ) {
+		if (is_network_admin()) {
 			return false;
 		}
 
-		if ( defined( 'LSWCP_EMPTYCACHE' ) ) {
+		if (defined('LSWCP_EMPTYCACHE')) {
 			return false;
 		}
 
 		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by wordpress updates v4.6+
-		if ( Router::is_ajax() && ( check_ajax_referer( 'updates', false, false ) || check_ajax_referer( 'litespeed-purgeall-network', false, false ) ) ) {
+		if (Router::is_ajax() && (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false))) {
 			return false;
 		}
 
@@ -1075,15 +1154,16 @@ class Purge extends Base {
 	 * @since 1.0.0
 	 * @access private
 	 */
-	private function _get_purge_tags_by_post( $post_id ) {
+	private function _get_purge_tags_by_post($post_id)
+	{
 		// If this is a valid post we want to purge the post, the home page and any associated tags & cats
 		// If not, purge everything on the site.
 
 		$purge_tags = array();
 
-		if ( $this->conf( self::O_PURGE_POST_ALL ) ) {
+		if ($this->conf(self::O_PURGE_POST_ALL)) {
 			// ignore the rest if purge all
-			return array( '*' );
+			return array('*');
 		}
 
 		// now do API hook action for post purge
@@ -1091,7 +1171,13 @@ class Purge extends Base {
 
 		// post
 		$purge_tags[] = Tag::TYPE_POST . $post_id;
-		$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+		$post_status = get_post_status($post_id);
+		if (function_exists('is_post_status_viewable')) {
+			$viewable = is_post_status_viewable($post_status);
+			if ($viewable) {
+				$purge_tags[] = Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id)));
+			}
+		}
 
 		// for archive of categories|tags|custom tax
 		global $post;
@@ -1100,69 +1186,70 @@ class Purge extends Base {
 		$post_type = $post->post_type;
 
 		global $wp_widget_factory;
-		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'];
-		if ( ! is_null($recent_posts) ) {
+		// recent_posts
+		$recent_posts = isset($wp_widget_factory->widgets['WP_Widget_Recent_Posts']) ? $wp_widget_factory->widgets['WP_Widget_Recent_Posts'] : null;
+		if (!is_null($recent_posts)) {
 			$purge_tags[] = Tag::TYPE_WIDGET . $recent_posts->id;
 		}
 
 		// get adjacent posts id as related post tag
-		if( $post_type == 'post' ){
+		if ($post_type == 'post') {
 			$prev_post = get_previous_post();
 			$next_post = get_next_post();
-			if( ! empty($prev_post->ID) ) {
+			if (!empty($prev_post->ID)) {
 				$purge_tags[] = Tag::TYPE_POST . $prev_post->ID;
-				self::debug('--------purge_tags prev is: '.$prev_post->ID);
+				self::debug('--------purge_tags prev is: ' . $prev_post->ID);
 			}
-			if( ! empty($next_post->ID) ) {
+			if (!empty($next_post->ID)) {
 				$purge_tags[] = Tag::TYPE_POST . $next_post->ID;
-				self::debug('--------purge_tags next is: '.$next_post->ID);
+				self::debug('--------purge_tags next is: ' . $next_post->ID);
 			}
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_TERM ) ) {
+		if ($this->conf(self::O_PURGE_POST_TERM)) {
 			$taxonomies = get_object_taxonomies($post_type);
 			//self::debug('purge by post, check tax = ' . var_export($taxonomies, true));
-			foreach ( $taxonomies as $tax ) {
+			foreach ($taxonomies as $tax) {
 				$terms = get_the_terms($post_id, $tax);
-				if ( ! empty($terms) ) {
-					foreach ( $terms as $term ) {
+				if (!empty($terms)) {
+					foreach ($terms as $term) {
 						$purge_tags[] = Tag::TYPE_ARCHIVE_TERM . $term->term_id;
 					}
 				}
 			}
 		}
 
-		if ( $this->conf( self::O_CACHE_TTL_FEED ) ) {
+		if ($this->conf(self::O_CACHE_TTL_FEED)) {
 			$purge_tags[] = Tag::TYPE_FEED;
 		}
 
 		// author, for author posts and feed list
-		if ( $this->conf( self::O_PURGE_POST_AUTHOR) ) {
+		if ($this->conf(self::O_PURGE_POST_AUTHOR)) {
 			$purge_tags[] = Tag::TYPE_AUTHOR . get_post_field('post_author', $post_id);
 		}
 
 		// archive and feed of post type
 		// todo: check if type contains space
-		if ( $this->conf( self::O_PURGE_POST_POSTTYPE) ) {
-			if ( get_post_type_archive_link($post_type) ) {
+		if ($this->conf(self::O_PURGE_POST_POSTTYPE)) {
+			if (get_post_type_archive_link($post_type)) {
 				$purge_tags[] = Tag::TYPE_ARCHIVE_POSTTYPE . $post_type;
 				$purge_tags[] = $post_type;
 			}
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_FRONTPAGE) ) {
+		if ($this->conf(self::O_PURGE_POST_FRONTPAGE)) {
 			$purge_tags[] = Tag::TYPE_FRONTPAGE;
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_HOMEPAGE) ) {
+		if ($this->conf(self::O_PURGE_POST_HOMEPAGE)) {
 			$purge_tags[] = Tag::TYPE_HOME;
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_PAGES) ) {
+		if ($this->conf(self::O_PURGE_POST_PAGES)) {
 			$purge_tags[] = Tag::TYPE_PAGES;
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_PAGES_WITH_RECENT_POSTS) ) {
+		if ($this->conf(self::O_PURGE_POST_PAGES_WITH_RECENT_POSTS)) {
 			$purge_tags[] = Tag::TYPE_PAGES_WITH_RECENT_POSTS;
 		}
 
@@ -1170,15 +1257,15 @@ class Purge extends Base {
 		$date = $post->post_date;
 		$date = strtotime($date);
 
-		if ( $this->conf( self::O_PURGE_POST_DATE) ) {
+		if ($this->conf(self::O_PURGE_POST_DATE)) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Ymd', $date);
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_MONTH) ) {
+		if ($this->conf(self::O_PURGE_POST_MONTH)) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Ym', $date);
 		}
 
-		if ( $this->conf( self::O_PURGE_POST_YEAR) ) {
+		if ($this->conf(self::O_PURGE_POST_YEAR)) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . date('Y', $date);
 		}
 
@@ -1196,7 +1283,8 @@ class Purge extends Base {
 	 * @param string $val The filter value
 	 * @return string     The filter value
 	 */
-	public static function filter_with_purge_all( $val ) {
+	public static function filter_with_purge_all($val)
+	{
 		self::purge_all();
 		return $val;
 	}

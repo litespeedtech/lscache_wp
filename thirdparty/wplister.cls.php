@@ -6,7 +6,7 @@
  */
 namespace LiteSpeed\Thirdparty;
 
-defined( 'WPINC' ) || exit;
+defined('WPINC') || exit();
 
 class WPLister
 {
@@ -18,12 +18,11 @@ class WPLister
 	 */
 	public static function detect()
 	{
-		if ( defined( 'WOOCOMMERCE_VERSION' ) && defined( 'WPLISTER_VERSION' ) ) {
+		if (defined('WOOCOMMERCE_VERSION') && defined('WPLISTER_VERSION')) {
 			// User reported this will sync correctly.
-			add_action( 'wplister_revise_inventory_status', array( WooCommerce::cls(), 'backend_purge' ) );
+			add_action('wplister_revise_inventory_status', array(WooCommerce::cls(), 'backend_purge'));
 			// Added as a safety measure for WPLister Pro only.
-			add_action( 'wplister_inventory_status_changed', array( WooCommerce::cls(), 'backend_purge' ) );
+			add_action('wplister_inventory_status_changed', array(WooCommerce::cls(), 'backend_purge'));
 		}
 	}
-
 }
