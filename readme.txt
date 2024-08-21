@@ -258,6 +258,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped domain key. Used sodium encryption for authentication and validation.
+* **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
+* **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin (Philip #453).
+* **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
 * **3rd** Correct the integration with User Switching (John Blackbourn #725)
 
 = 6.5.0.2 - Sep 6 2024 =
