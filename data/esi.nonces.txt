@@ -71,6 +71,11 @@ edd_* private
 # WP Menu Cart
 wpmenucart private
 
+# Advanced Custom Fields + Advanced Forms
+acf_nonce
+af_form_nonce
+af_submission_*
+
 # Woo nonce
 woocommerce-login
 
