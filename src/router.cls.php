@@ -603,7 +603,7 @@ class Router extends Base
 				return;
 
 			case Core::ACTION_PURGE_EMPTYCACHE: // todo: moved to purge.cls type action
-				if (defined('LITESPEED_ON') && ($_can_network_option || (!$_is_multisite && $_can_option))) {
+				if ((defined('LITESPEED_ON') || $_is_network_admin) && ($_can_network_option || (!$_is_multisite && $_can_option))) {
 					self::$_action = $action;
 				}
 				return;
