@@ -257,6 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.0 - Nov 2024 =
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
+* **Core** Added rewrite rule to disable visits to `.log` files.
 * **Cloud** Dropped domain key. Used sodium encryption for authentication and validation.
 * **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
 * **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin (Philip #453).
