@@ -31,10 +31,13 @@ class Debug2 extends Root
 	 */
 	public function __construct()
 	{
-		self::$log_path_prefix = defined('LSCWP_DEBUG_PATH') ? LSCWP_DEBUG_PATH : LSCWP_CONTENT_DIR;
-		self::$log_path = self::$log_path_prefix . '/debug.log';
+		self::$log_path_prefix = LITESPEED_STATIC_DIR . '/debug/';
+		// Maybe move legacy log files
+		$this->_maybe_init_folder();
+
+		self::$log_path = $this->path('debug');
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'lscache_') === 0) {
-			self::$log_path = self::$log_path_prefix . '/crawler.log';
+			self::$log_path = $this->path('crawler');
 		}
 
 		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', get_current_blog_id());
@@ -44,6 +47,40 @@ class Debug2 extends Root
 		}
 
 		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf(Base::O_DEBUG_EXC_STRINGS));
+	}
+
+	/**
+	 * Try moving legacy logs into /litespeed/debug/ folder
+	 *
+	 * @since 6.4.2
+	 */
+	private function _maybe_init_folder()
+	{
+		if (file_exists(self::$log_path_prefix . 'index.php')) {
+			return;
+		}
+		file::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
+
+		$logs = array('debug', 'debug.purge', 'crawler');
+		foreach ($logs as $log) {
+			if (file_exists(LSCWP_CONTENT_DIR . '/' . $log . '.log')) {
+				rename(LSCWP_CONTENT_DIR . '/' . $log . '.log', $this->path($log));
+			}
+		}
+	}
+
+	/**
+	 * Generate log file path
+	 *
+	 * @since 6.4.2
+	 */
+	public function path($type)
+	{
+		if ($type == 'debug.purge') {
+			$type = 'purge';
+		}
+		$rand = substr(md5(substr(AUTH_KEY, -16)), -16);
+		return self::$log_path_prefix . $type . $rand . '.log';
 	}
 
 	/**
@@ -143,7 +180,7 @@ class Debug2 extends Root
 			return;
 		}
 
-		$purge_file = self::$log_path_prefix . '/debug.purge.log';
+		$purge_file = self::cls()->path('purge');
 
 		self::cls()->_init_request($purge_file);
 
@@ -476,9 +513,9 @@ class Debug2 extends Root
 	 */
 	private function _clear_log()
 	{
-		$logs = array('debug', 'debug.purge', 'crawler');
+		$logs = array('debug', 'purge', 'crawler');
 		foreach ($logs as $log) {
-			File::save(self::$log_path_prefix . "/{$log}.log", '');
+			File::save($this->path($log), '');
 		}
 	}
 

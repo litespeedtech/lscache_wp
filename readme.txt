@@ -254,6 +254,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 6.4.2 - Sep 3 2024 =
+* **Debug** Moved debug log to litespeed individual folder `/wp-content/litespeed/debug/`.
+* **Debug** Dropped const `LSCWP_DEBUG_PATH` support.
+* **Debug** Renamed `debug.purge.log` to `purge.log`.
+* **Debug** Added dummy `index.php` for debug folder.
+* **Debug** Used random string for log filenames.
+* **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
+* **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin (Philip #453).
+* **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
+* **3rd** Correct the integration with User Switching (John Blackbourn #725)
+
 = 6.4.1 - Aug 19 2024 =
 * ❗**Security** This release patches a security issue that may affect previous LSCWP versions since v1.9.
 * 🐞**Page Optimize** Fixed HTML minification returning blank page issue. (#706)
