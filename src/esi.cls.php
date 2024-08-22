@@ -365,9 +365,7 @@ class ESI extends Root
 
 		// Add admin_bar esi
 		if (Router::is_logged_in()) {
-			// Remove default Admin bar. Fix https://github.com/elementor/elementor/issues/25198
-			remove_action('wp_body_open', 'wp_admin_bar_render', 0);
-			add_action('wp_body_open', array($this, 'sub_admin_bar_block'), 0);
+			remove_action('wp_body_open', 'wp_admin_bar_render', 0); // Remove default Admin bar. Fix https://github.com/elementor/elementor/issues/25198
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000);
 		}
@@ -769,11 +767,7 @@ class ESI extends Root
 	public function sub_admin_bar_block()
 	{
 		global $wp_admin_bar;
-
-		if ($this->admin_rendered) {
-			return;
-		}
-
+		
 		if (!is_admin_bar_showing() || !is_object($wp_admin_bar)) {
 			return;
 		}
@@ -783,7 +777,6 @@ class ESI extends Root
 			'ref' => $_SERVER['REQUEST_URI'],
 		);
 
-		$this->admin_rendered = true;
 		echo $this->sub_esi_block('admin-bar', 'adminbar', $params);
 	}
 
