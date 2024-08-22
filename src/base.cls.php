@@ -110,7 +110,7 @@ class Base extends Root
 	const O_DEBUG_IPS = 'debug-ips';
 	const O_DEBUG_LEVEL = 'debug-level';
 	const O_DEBUG_FILESIZE = 'debug-filesize';
-	const O_DEBUG_COOKIE = 'debug-cookie';
+	const O_DEBUG_COOKIE = 'debug-cookie'; // For backwards compatibility, will drop after v7.0
 	const O_DEBUG_COLLAPSE_QS = 'debug-collapse_qs';
 	const O_DEBUG_COLLAPS_QS = 'debug-collapse_qs'; // For backwards compatibility, will drop after v6.5
 	const O_DEBUG_INC = 'debug-inc';
@@ -406,7 +406,6 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
 		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
@@ -593,7 +592,6 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
 		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),

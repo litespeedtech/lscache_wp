@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -269,7 +269,6 @@ class Lang extends Base
 			self::O_DEBUG_IPS => __('Admin IPs', 'litespeed-cache'),
 			self::O_DEBUG_LEVEL => __('Debug Level', 'litespeed-cache'),
 			self::O_DEBUG_FILESIZE => __('Log File Size Limit', 'litespeed-cache'),
-			self::O_DEBUG_COOKIE => __('Log Cookies', 'litespeed-cache'),
 			self::O_DEBUG_COLLAPSE_QS => __('Collapse Query Strings', 'litespeed-cache'),
 			self::O_DEBUG_INC => __('Debug URI Includes', 'litespeed-cache'),
 			self::O_DEBUG_EXC => __('Debug URI Excludes', 'litespeed-cache'),

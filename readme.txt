@@ -260,6 +260,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Debug** Renamed `debug.purge.log` to `purge.log`.
 * **Debug** Added dummy `index.php` for debug folder.
 * **Debug** Used random string for log filenames.
+* **Debug** Dropped `Log Cookies` option.
 * **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
 * **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin (Philip #453).
 * **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)

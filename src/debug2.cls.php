@@ -303,9 +303,7 @@ class Debug2 extends Root
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
 		}
-		if ($this->conf(Base::O_DEBUG_COOKIE)) {
-			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
-		}
+		// $params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
 		if (isset($_COOKIE['_lscache_vary'])) {
 			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE['_lscache_vary'];
 		}
