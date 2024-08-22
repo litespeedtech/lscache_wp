@@ -57,7 +57,7 @@ class Optimizer extends Root
 			$obj = new Lib\HTML_MIN($content, $options);
 			$content_final = $obj->process();
 			// check if content from minification is empty
-			if($content_final == ''){
+			if ($content_final == '') {
 				Debug2::debug('Failed to minify HTML: HTML minification resulted in empty HTML');
 				return $content;
 			}
