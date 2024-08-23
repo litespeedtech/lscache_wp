@@ -152,13 +152,12 @@ class Object_Cache extends Root
 			return;
 		}
 
-		if (defined('LSCWP_LOG')) {
-			Debug2::debug($text);
+		// For initiate Debug2 class
+		!defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
+		!defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', WP_CONTENT_DIR . '/'. LITESPEED_DATA_FOLDER);
+		$debug2 = new Debug2();
 
-			return;
-		}
-
-		error_log(gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log');
+		error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $debug2->path('debug'));
 	}
 
 	/**
