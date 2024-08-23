@@ -90,7 +90,13 @@ class Debug2 extends Root
 	 */
 	public static function ended()
 	{
-		self::debug('Response headers', headers_list());
+		$headers = headers_list();
+		foreach ($headers as $key => $header) {
+			if (stripos($header, 'Set-Cookie') === 0) {
+				unset($headers[$key]);
+			}
+		}
+		self::debug('Response headers', $headers);
 
 		$elapsed_time = number_format((microtime(true) - LSCWP_TS_0) * 1000, 2);
 		self::debug("End response\n--------------------------------------------------Duration: " . $elapsed_time . " ms------------------------------\n");
