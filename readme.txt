@@ -264,10 +264,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Debug** Removed cookies-related info. (Thanks to Rafie)
 * **Debug** Dropped `Log Cookies` option.
 * **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
-* **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin (Philip #453).
+* **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin. (Philip #453)
 * **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
 * **3rd** Fixed undefined warning in WooCommerce Widgets. (Lolosan #719)
-* **3rd** Correct the integration with User Switching (John Blackbourn #725)
+* **3rd** Correct the integration with User Switching. (John Blackbourn #725)
 
 = 6.4.1 - Aug 19 2024 =
 * ❗**Security** This release patches a security issue that may affect previous LSCWP versions since v1.9.
