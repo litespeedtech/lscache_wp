@@ -268,6 +268,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
 * **3rd** Fixed undefined warning in WooCommerce Widgets. (Lolosan #719)
 * **3rd** Correct the integration with User Switching. (John Blackbourn #725)
+* **3rd** Fixed Admin Bar Missing issue on DIVI + Elementor frontend. (thyran/robertstaddon PR#727)
 
 = 6.4.1 - Aug 19 2024 =
 * ❗**Security** This release patches a security issue that may affect previous LSCWP versions since v1.9.
