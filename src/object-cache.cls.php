@@ -148,13 +148,13 @@ class Object_Cache extends Root
 	 */
 	private function debug_oc($text, $show_error = false)
 	{
-		if (defined('LSCWP_LOG')) {
-			Debug2::debug($text);
-
+		if (!$show_error && !$this->_cfg_debug) {
 			return;
 		}
 
-		if (!$show_error && !$this->_cfg_debug) {
+		if (defined('LSCWP_LOG')) {
+			Debug2::debug($text);
+
 			return;
 		}
 
