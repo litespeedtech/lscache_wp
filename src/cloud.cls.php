@@ -133,7 +133,7 @@ class Cloud extends Base
 			self::debugErr('REST Echo Failed!');
 			$msg = __('Your WP REST API seems blocked our QIUC.cloud server calls.', 'litespeed-cache');
 			Admin_Display::error($msg);
-			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
+			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
 			return;
 		}
 
@@ -143,7 +143,7 @@ class Cloud extends Base
 		$echobox = self::get_option('echobox', array());
 		if (empty($echobox['data_encrypted_b64']) || empty($echobox['data_encrypted_nonce_b64'])) {
 			Admin_Display::error(__('Failed to load sealed box data from WPAPI', 'litespeed-cache'));
-			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
+			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
 			return;
 		}
 
@@ -161,7 +161,7 @@ class Cloud extends Base
 			'site_url' => home_url(),
 			'ver' => Core::VER,
 			'data' => $data,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed-general'),
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . Utility::arr2str($param));
 		exit();
@@ -309,7 +309,7 @@ class Cloud extends Base
 
 		$this->clear_cloud();
 
-		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed-general'));
+		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ class Cloud extends Base
 		self::save_summary();
 
 		$msg = __('Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache');
-		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed-general'), __('Click here to set.', 'litespeed-cache'), true, false, true);
+		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed'), __('Click here to set.', 'litespeed-cache'), true, false, true);
 		$msg .= Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true);
 		Admin_Display::error($msg, false, true);
 	}
