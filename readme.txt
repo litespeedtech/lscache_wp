@@ -256,13 +256,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 6.5 - Sep 3 2024 =
 * **Debug** Moved debug log to litespeed individual folder `/wp-content/litespeed/debug/`.
-* **Debug** Disallowed visits to `/debug/` folder log files in .htaccess.
+* **Debug** Disallowed visits to `/litespeed/debug/` folder log files in .htaccess.
 * **Debug** Dropped const `LSCWP_DEBUG_PATH` support.
 * **Debug** Renamed `debug.purge.log` to `purge.log`.
 * **Debug** Added dummy `index.php` for debug folder.
 * **Debug** Used random string for log filenames.
 * **Debug** Removed cookies-related info. (Thanks to Rafie)
 * **Debug** Dropped `Log Cookies` option.
+* **Report** Escaped report content to protect it from potential XSS attack. (Islam R alsaid #505746)
 * **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
 * **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin. (Philip #453)
 * **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
