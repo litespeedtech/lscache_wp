@@ -254,7 +254,7 @@ class Optimizer extends Root
 			if ($file_type == 'css') {
 				$dirname = dirname($this_url) . '/';
 
-				$con = Lib\CSS_MIN\UriRewriter::prepend($con, $dirname);
+				$con = Lib\UriRewriter::prepend($con, $dirname);
 			}
 		} else {
 			Debug2::debug2('[CSS] Load local [' . $file_type . '] ' . $real_file[0]);
@@ -263,7 +263,7 @@ class Optimizer extends Root
 			if ($file_type == 'css') {
 				$dirname = dirname($real_file[0]);
 
-				$con = Lib\CSS_MIN\UriRewriter::rewrite($con, $dirname);
+				$con = Lib\UriRewriter::rewrite($con, $dirname);
 			}
 		}
 
