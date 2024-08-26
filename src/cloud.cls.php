@@ -289,18 +289,42 @@ class Cloud extends Base
 	 */
 	public function finish_qc_activation()
 	{
-		if (empty($_GET['qc_activated']) || !in_array($_GET['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+		if (empty($_GET['data_encrypted_b64']) || empty($_GET['data_encrypted_nonce_b64'])) {
 			return;
 		}
 
-		$this->_summary['qc_activated'] = $_GET['qc_activated'];
+		$data_enc = base64_decode($_GET['data_encrypted_b64']);
+		$data_enc_nonce = base64_decode($_GET['data_encrypted_nonce_b64']);
+		$databox_raw = $this->_decrypt($data_enc, $data_enc_nonce);
+		if ($databox_raw == false) {
+			self::debugErr("Failed to decrypt qc activation data");
+			Admin_Display::error(sprintf(__('Failed to decrypt %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		$databox = \json_decode($databox_raw, true);
+		self::debug("sealed box from finish_qc_activation", $databox_raw);
+
+		if (empty($databox['qc_activated']) || !in_array($databox['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+			self::debugErr("Failed to parse qc activation data", $databox);
+			Admin_Display::error(sprintf(__('Failed to parse %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		if (empty($databox['ts']) || abs(time() - $databox['ts']) > 86400) {
+			self::debugErr("QC activation data timeout", $databox);
+			Admin_Display::error(sprintf(__('%s activation data expired.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		$this->_summary['qc_activated'] = $databox['qc_activated'];
 		$this->save_summary();
 
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
-		if ($_GET['qc_activated'] == 'linked') {
+		if ($databox['qc_activated'] == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
 		}
-		if ($_GET['qc_activated'] == 'cdn') {
+		if ($databox['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
