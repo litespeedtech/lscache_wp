@@ -72,10 +72,10 @@ class REST extends Root
 			'callback' => array($this, 'token_get'),
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
-		register_rest_route('litespeed/v1', '/ping', array(
-			'methods' => 'GET',
+		register_rest_route('litespeed/v3', '/ping', array(
+			'methods' => 'POST',
 			'callback' => array($this, 'ping'),
-			'permission_callback' => '__return_true',
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// API key callback notification
@@ -168,7 +168,7 @@ class REST extends Root
 	 */
 	public function ping()
 	{
-		return Cloud::ok(array('ver' => Core::VER));
+		return $this->cls('Cloud')->ping();
 	}
 
 	/**

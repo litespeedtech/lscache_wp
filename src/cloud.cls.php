@@ -1547,6 +1547,30 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Return pong for ping to check PHP function availability
+	 * @since 6.5
+	 */
+	public function ping()
+	{
+		$resp = array(
+			'v_lscwp' => Core::VER,
+			'v_php' => PHP_VERSION,
+			'v_wp' => $GLOBALS['wp_version'],
+		);
+		if (!empty($_POST['funcs'])) {
+			foreach ($_POST['funcs'] as $func) {
+				$resp[$func] = function_exists($func) ? 'y' : 'n';
+			}
+		}
+		if (!empty($_POST['classes'])) {
+			foreach ($_POST['classes'] as $cls) {
+				$resp[$cls] = class_exists($cls) ? 'y' : 'n';
+			}
+		}
+		return self::ok($resp);
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  3.0
