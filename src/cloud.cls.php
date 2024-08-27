@@ -19,6 +19,7 @@ class Cloud extends Base
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
+	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -93,6 +94,7 @@ class Cloud extends Base
 	const TYPE_REDETECT_CLOUD = 'redetect_cloud';
 	const TYPE_CLEAR_CLOUD = 'clear_cloud';
 	const TYPE_ACTIVATE = 'activate';
+	const TYPE_LINK = 'link';
 	const TYPE_SYNC_USAGE = 'sync_usage';
 
 	protected $_summary;
@@ -115,9 +117,9 @@ class Cloud extends Base
 	public function init_qc()
 	{
 		if (empty($this->_summary['sk_b64'])) {
-			$keypair = sodium_crypto_box_keypair();
-			$pk = base64_encode(sodium_crypto_box_publickey($keypair));
-			$sk = base64_encode(sodium_crypto_box_secretkey($keypair));
+			$keypair = sodium_crypto_sign_keypair();
+			$pk = base64_encode(sodium_crypto_sign_publickey($keypair));
+			$sk = base64_encode(sodium_crypto_sign_secretkey($keypair));
 			$this->_summary['pk_b64'] = $pk;
 			$this->_summary['sk_b64'] = $sk;
 			$this->save_summary();
@@ -128,8 +130,8 @@ class Cloud extends Base
 		$req_data = array(
 			'wp_pk_b64' => $this->_summary['pk_b64'],
 		);
-		$res = self::post(self::API_REST_ECHO, $req_data);
-		if ($res === false) {
+		$echobox = self::post(self::API_REST_ECHO, $req_data);
+		if ($echobox === false) {
 			self::debugErr('REST Echo Failed!');
 			$msg = __('Your WP REST API seems blocked our QIUC.cloud server calls.', 'litespeed-cache');
 			Admin_Display::error($msg);
@@ -140,16 +142,16 @@ class Cloud extends Base
 		self::debug("echo succeeded");
 
 		// Load seperate thread echoed data from storage
-		$echobox = self::get_option('echobox', array());
-		if (empty($echobox['data_encrypted_b64']) || empty($echobox['data_encrypted_nonce_b64'])) {
-			Admin_Display::error(__('Failed to load sealed box data from WPAPI', 'litespeed-cache'));
+		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
+			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
 			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
 			return;
 		}
 
 		$data = array(
-			'data_encrypted_b64' => $echobox['data_encrypted_b64'],
-			'data_encrypted_nonce_b64' => $echobox['data_encrypted_nonce_b64'],
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+			'wpapi_ts' => $echobox['wpapi_ts'],
+			'wpapi_signature_b64' => $echobox['wpapi_signature_b64'],
 		);
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if ($server_ip) {
@@ -163,7 +165,36 @@ class Cloud extends Base
 			'data' => $data,
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . Utility::arr2str($param));
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		exit();
+	}
+
+	/**
+	 * Link to QC setup
+	 *
+	 * @since 7.0
+	 */
+	public function link_qc()
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+
+		$data = array(
+			'wp_ts' => time(),
+		);
+		$data['wp_signature_b64'] = $this->_sign_b64($data['wp_ts']);
+
+		// Activation redirect
+		$param = array(
+			'site_url' => home_url(),
+			'ver' => Core::VER,
+			'data' => $data,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -172,14 +203,13 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	private function _encrypt($data, $from_wpapi = false)
+	private function _sign_b64($data)
 	{
-		$keypair = $this->_load_server_pk_pair($from_wpapi);
-		if (strlen($keypair) !== SODIUM_CRYPTO_BOX_KEYPAIRBYTES) {
-			return false;
+		if (!$this->activated()) {
+			return '';
 		}
-		$nonce = random_bytes(SODIUM_CRYPTO_BOX_NONCEBYTES);
-		return sodium_crypto_box($data, $nonce, $keypair);
+		$signature = sodium_crypto_sign_detached($data, base64_decode($this->_summary['sk_b64']));
+		return base64_encode($signature);
 	}
 
 	/**
@@ -187,12 +217,12 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	private function _load_server_pk_pair($from_wpapi = false)
+	private function _load_server_pk($from_wpapi = false)
 	{
 		// Load cloud pk
-		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY;
+		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY . '?type=sign';
 		if ($from_wpapi) {
-			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY;
+			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY . '?type=sign';
 		}
 		$resp = wp_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
@@ -202,13 +232,13 @@ class Cloud extends Base
 		$pk = trim($resp['body']);
 		self::debug('Loaded key from ' . $server_key_url . ': ' . $pk);
 		$cloud_pk = base64_decode($pk);
-		if (strlen($cloud_pk) !== SODIUM_CRYPTO_BOX_PUBLICKEYBYTES) {
+		if (strlen($cloud_pk) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
 			self::debugErr('Invalid cloud public key length.');
 			return false;
 		}
 
 		$sk = base64_decode($this->_summary['sk_b64']);
-		if (strlen($sk) !== SODIUM_CRYPTO_BOX_SECRETKEYBYTES) {
+		if (strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
 			self::debugErr('Invalid local secret key length.');
 			// Reset local pk/sk
 			unset($this->_summary['pk_b64']);
@@ -219,30 +249,7 @@ class Cloud extends Base
 			return false;
 		}
 
-		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey($sk, $cloud_pk);
-		return $keypair;
-	}
-
-	/**
-	 * Decrypt cloud response encrypted box
-	 *
-	 * @since 7.0
-	 */
-	private function _decrypt($data, $nonce, $from_wpapi = false)
-	{
-		// Try decryption
-		try {
-			$keypair = $this->_load_server_pk_pair($from_wpapi);
-			if ($keypair == false) {
-				return false;
-			}
-			$databox_raw = sodium_crypto_box_open($data, $nonce, $keypair);
-		} catch (\SodiumException $e) {
-			self::debugErr("Decryption failed: " . $e->getMessage());
-			return false;
-		}
-		self::debug('Decrypted info: ', $databox_raw);
-		return $databox_raw;
+		return $cloud_pk;
 	}
 
 	/**
@@ -254,32 +261,44 @@ class Cloud extends Base
 	{
 		self::debug('Parsing echo', $_POST);
 
-		if (empty($_POST['sealed_encrypted_b64']) || empty($_POST['sealed_encrypted_nonce_b64'])) {
-			return self::err('No sealed data');
+		if (empty($_POST['wpapi_ts']) || empty($_POST['wpapi_signature_b64'])) {
+			return self::err('No echo data');
 		}
 
-		$sealed_encrypted = base64_decode($_POST['sealed_encrypted_b64'], true);
-		$sealed_encrypted_nonce = base64_decode($_POST['sealed_encrypted_nonce_b64'], true);
-
-		if (strlen($sealed_encrypted_nonce) !== SODIUM_CRYPTO_BOX_NONCEBYTES) {
-			return self::err('Invalid nonce size');
+		$is_valid = $this->_validate_signature($_POST['wpapi_signature_b64'], $_POST['wpapi_ts'], true);
+		if (!$is_valid) {
+			return self::err('Data validation from WPAPI REST Echo failed');
 		}
 
-		// open sealed box
-		$databox_raw = $this->_decrypt($sealed_encrypted, $sealed_encrypted_nonce, true);
-		if ($databox_raw == false) {
-			return self::err('Opening sealed data from WPAPI REST echo failed');
+		$diff = time() - $_POST['wpapi_ts'];
+		if (abs($diff) > 86400) {
+			self::debugErr("WPAPI echo data timeout [diff] " . $diff);
+			return self::err('Echo data expired');
 		}
+		return self::ok(array('signature_b64' => $this->_sign_b64($_POST['wpapi_ts'])));
+	}
 
-		$databox = \json_decode($databox_raw, true);
-		self::debug("sealed box ", $databox_raw);
-
-		if (empty($databox['data_encrypted_b64']) || empty($databox['data_encrypted_nonce_b64'])) {
-			return self::err('Missing data_encrypted or nonce');
+	/**
+	 * Validate cloud data
+	 *
+	 * @since 7.0
+	 */
+	private function _validate_signature($signature_b64, $data, $from_wpapi = false)
+	{
+		// Try validation
+		try {
+			$cloud_pk = $this->_load_server_pk($from_wpapi);
+			if (!$cloud_pk) {
+				return false;
+			}
+			$signature = base64_decode($signature_b64);
+			$is_valid = sodium_crypto_sign_verify_detached($signature, $data, $cloud_pk);
+		} catch (\SodiumException $e) {
+			self::debugErr("Decryption failed: " . $e->getMessage());
+			return false;
 		}
-
-		self::update_option('echobox', $databox);
-		return self::ok(array('sealed_md5' => md5($databox_raw)));
+		self::debug('Signature validation result: ' . ($is_valid ? 'true' : 'false'));
+		return $is_valid;
 	}
 
 	/**
@@ -289,42 +308,43 @@ class Cloud extends Base
 	 */
 	public function finish_qc_activation()
 	{
-		if (empty($_GET['data_encrypted_b64']) || empty($_GET['data_encrypted_nonce_b64'])) {
+		if (empty($_GET['qc_activated']) || empty($_GET['qc_ts']) || empty($_GET['qc_signature_b64'])) {
 			return;
 		}
 
-		$data_enc = base64_decode($_GET['data_encrypted_b64']);
-		$data_enc_nonce = base64_decode($_GET['data_encrypted_nonce_b64']);
-		$databox_raw = $this->_decrypt($data_enc, $data_enc_nonce);
-		if ($databox_raw == false) {
-			self::debugErr("Failed to decrypt qc activation data");
-			Admin_Display::error(sprintf(__('Failed to decrypt %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
+		$data_to_validate_signature = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+			'qc_ts' => $_GET['qc_ts'],
+		);
+		$is_valid = $this->_validate_signature($_GET['qc_signature_b64'], json_encode($data_to_validate_signature));
+		if (!$is_valid) {
+			self::debugErr("Failed to validate qc activation data");
+			Admin_Display::error(sprintf(__('Failed to validate %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
 
-		$databox = \json_decode($databox_raw, true);
-		self::debug("sealed box from finish_qc_activation", $databox_raw);
-
-		if (empty($databox['qc_activated']) || !in_array($databox['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
-			self::debugErr("Failed to parse qc activation data", $databox);
-			Admin_Display::error(sprintf(__('Failed to parse %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
+		self::debug("QC activation status: " . $_GET['qc_activated']);
+		if (!in_array($_GET['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+			self::debugErr("Failed to parse qc activation status");
+			Admin_Display::error(sprintf(__('Failed to parse %s activation status.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
 
-		if (empty($databox['ts']) || abs(time() - $databox['ts']) > 86400) {
-			self::debugErr("QC activation data timeout", $databox);
+		$diff = time() - $_GET['qc_ts'];
+		if (abs($diff) > 86400) {
+			self::debugErr("QC activation data timeout [diff] " . $diff);
 			Admin_Display::error(sprintf(__('%s activation data expired.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
 
-		$this->_summary['qc_activated'] = $databox['qc_activated'];
+		$this->_summary['qc_activated'] = $_GET['qc_activated'];
 		$this->save_summary();
 
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
-		if ($databox['qc_activated'] == 'linked') {
+		if ($_GET['qc_activated'] == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
 		}
-		if ($databox['qc_activated'] == 'cdn') {
+		if ($_GET['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
@@ -922,7 +942,7 @@ class Cloud extends Base
 		}
 
 		// Encrypt service as signature
-		$signature = $this->_encrypt($service_tag);
+		$signature = $this->_sign($service_tag);
 		$data['signature'] = array(
 			'service_tag' => $service_tag,
 			'ts' => time(),
@@ -1485,6 +1505,10 @@ class Cloud extends Base
 
 			case self::TYPE_ACTIVATE:
 				$this->init_qc();
+				break;
+
+			case self::TYPE_LINK:
+				$this->link_qc();
 				break;
 
 			case self::TYPE_SYNC_USAGE:
