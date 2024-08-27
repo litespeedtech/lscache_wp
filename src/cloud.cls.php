@@ -907,7 +907,7 @@ class Cloud extends Base
 			'site_url' => home_url(),
 			'ver' => LSCWP_V,
 		);
-		return self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str($data); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
+		return self::CLOUD_SERVER_DASH . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
 
 	/**
