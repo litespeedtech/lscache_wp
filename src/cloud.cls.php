@@ -96,6 +96,7 @@ class Cloud extends Base
 	const TYPE_ACTIVATE = 'activate';
 	const TYPE_LINK = 'link';
 	const TYPE_SYNC_USAGE = 'sync_usage';
+	const TYPE_RESET = 'reset';
 
 	protected $_summary;
 
@@ -360,11 +361,31 @@ class Cloud extends Base
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 		}
-		Admin_Display::succeed('🎊 ' . $msg);
+		Admin_Display::success('🎊 ' . $msg);
 
 		$this->clear_cloud();
 
 		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+	}
+
+	/**
+	 * Reset QC setup
+	 *
+	 * @since 7.0
+	 */
+	public function reset_qc()
+	{
+		unset($this->_summary['pk_b64']);
+		unset($this->_summary['sk_b64']);
+		unset($this->_summary['qc_activated']);
+		$this->save_summary();
+		self::debug('Clear local QC activation.');
+
+		$this->clear_cloud();
+
+		Admin_Display::success(sprintf(__('Reset %s activation successfully.', 'litespeed-cache'), 'QUIC.cloud'));
+		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+		exit;
 	}
 
 	/**
@@ -1125,7 +1146,7 @@ class Cloud extends Base
 			self::debug('_success: ' . $json['_success']);
 			$msg = __('Good news from QUIC.cloud server', 'litespeed-cache') . ': ' . $json['_success'];
 			$msg .= $this->_parse_link($json);
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 			unset($json['_success']);
 		}
 
@@ -1515,6 +1536,10 @@ class Cloud extends Base
 				$this->_clear_promo();
 				break;
 
+			case self::TYPE_RESET:
+				$this->reset_qc();
+				break;
+
 			case self::TYPE_ACTIVATE:
 				$this->init_qc();
 				break;
@@ -1527,7 +1552,7 @@ class Cloud extends Base
 				$this->sync_usage();
 
 				$msg = __('Sync credit allowance with Cloud Server successfully.', 'litespeed-cache');
-				Admin_Display::succeed($msg);
+				Admin_Display::success($msg);
 				break;
 
 			default:
