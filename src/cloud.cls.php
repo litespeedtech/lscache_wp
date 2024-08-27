@@ -206,9 +206,20 @@ class Cloud extends Base
 	private function _sign_b64($data)
 	{
 		if (!$this->activated()) {
-			return '';
+			return false;
 		}
-		$signature = sodium_crypto_sign_detached($data, base64_decode($this->_summary['sk_b64']));
+		$sk = base64_decode($this->_summary['sk_b64']);
+		if (strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
+			self::debugErr('Invalid local sign sk length.');
+			// Reset local pk/sk
+			unset($this->_summary['pk_b64']);
+			unset($this->_summary['sk_b64']);
+			$this->save_summary();
+			self::debug('Clear local sign pk/sk pair.');
+
+			return false;
+		}
+		$signature = sodium_crypto_sign_detached($data, $sk);
 		return base64_encode($signature);
 	}
 
@@ -942,12 +953,13 @@ class Cloud extends Base
 		}
 
 		// Encrypt service as signature
-		$signature = $this->_sign($service_tag);
-		$data['signature'] = array(
+		$signature_ts = time();
+		$sign_data = array(
 			'service_tag' => $service_tag,
-			'ts' => time(),
-			'signature' => $signature,
+			'ts' => $signature_ts,
 		);
+		$data['signature_b64'] = $this->_sign_b64(json_encode($sign_data));
+		$data['signature_ts'] = $signature_ts;
 
 		$param = array(
 			'site_url' => home_url(),
