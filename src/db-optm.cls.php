@@ -309,10 +309,15 @@ class DB_Optm extends Root
 	{
 		global $wpdb;
 
-		$summary = $wpdb->get_row("SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload='yes'");
+		$autoloads = version_compare( get_bloginfo( 'version' ), '6.6.0', '>=' ) ? 
+						wp_autoload_values_to_autoload() : 
+						array( 'yes', 'on', 'auto-on', 'auto' );
+		$autoloads = '("' . implode('","', $autoloads) . '")';
+
+		$summary = $wpdb->get_row("SELECT SUM(LENGTH(option_value)) AS autoload_size,COUNT(*) AS autload_entries FROM `$wpdb->options` WHERE autoload IN " . $autoloads);
 
 		$summary->autoload_toplist = $wpdb->get_results(
-			"SELECT option_name, LENGTH(option_value) AS option_value_length FROM `$wpdb->options` WHERE autoload='yes' ORDER BY option_value_length DESC LIMIT 20"
+			"SELECT option_name, LENGTH(option_value) AS option_value_length FROM `$wpdb->options` WHERE autoload IN " . $autoloads . " ORDER BY option_value_length DESC LIMIT 20"
 		);
 
 		return $summary;
