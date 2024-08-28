@@ -211,12 +211,19 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 			<?php Doc::learn_more($cloud_summary['partner']['login_link'], $cloud_summary['partner']['login_title'], true, 'button litespeed-btn-warning'); ?>
 		<?php elseif (!empty($cloud_summary['partner']) && !empty($cloud_summary['partner']['disable_qc_login'])) : ?>
 		<?php else : ?>
-			<?php if (!empty($cloud_summary['qc_activated']) && $cloud_summary['qc_activated'] != 'anonymous') : ?>
+			<?php if (!$__cloud->activated()) : ?>
+				<?php Doc::learn_more(
+					Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE),
+					__('Activate QUIC.cloud', 'litespeed-cache'),
+					true,
+					'button litespeed-btn-warning'
+				); ?>
+			<?php elseif (!empty($cloud_summary['qc_activated']) && $cloud_summary['qc_activated'] != 'anonymous') : ?>
 				<a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
 			<?php else : ?>
 				<?php Doc::learn_more(
 					Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK),
-					!empty($cloud_summary['qc_activated']) ? __('Link to QUIC.cloud', 'litespeed-cache') : __('Activate QUIC.cloud', 'litespeed-cache'),
+					__('Link to QUIC.cloud', 'litespeed-cache'),
 					true,
 					'button litespeed-btn-warning'
 				); ?>
