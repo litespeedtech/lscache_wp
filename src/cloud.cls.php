@@ -206,7 +206,8 @@ class Cloud extends Base
 	 */
 	private function _sign_b64($data)
 	{
-		if (!$this->activated()) {
+		if (empty($this->_summary['sk_b64'])) {
+			self::debugErr('No sk to sign.');
 			return false;
 		}
 		$sk = base64_decode($this->_summary['sk_b64']);
@@ -287,7 +288,10 @@ class Cloud extends Base
 			self::debugErr("WPAPI echo data timeout [diff] " . $diff);
 			return self::err('Echo data expired');
 		}
-		return self::ok(array('signature_b64' => $this->_sign_b64($_POST['wpapi_ts'])));
+
+		$signature_b64 = $this->_sign_b64($_POST['wpapi_ts']);
+		self::debug("Response to echo [signature_b64] " . $signature_b64);
+		return self::ok(array('signature_b64' => $signature_b64));
 	}
 
 	/**
