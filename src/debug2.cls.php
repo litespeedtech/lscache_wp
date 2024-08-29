@@ -52,7 +52,7 @@ class Debug2 extends Root
 	/**
 	 * Try moving legacy logs into /litespeed/debug/ folder
 	 *
-	 * @since 6.4.2
+	 * @since 6.5
 	 */
 	private function _maybe_init_folder()
 	{
@@ -72,15 +72,25 @@ class Debug2 extends Root
 	/**
 	 * Generate log file path
 	 *
-	 * @since 6.4.2
+	 * @since 6.5
 	 */
 	public function path($type)
+	{
+		return self::$log_path_prefix . self::FilePath($type);
+	}
+
+	/**
+	 * Generate the fixed log filename
+	 *
+	 * @since 6.5
+	 */
+	public static function FilePath($type)
 	{
 		if ($type == 'debug.purge') {
 			$type = 'purge';
 		}
 		$rand = substr(md5(substr(AUTH_KEY, -16)), -16);
-		return self::$log_path_prefix . $type . $rand . '.log';
+		return $type . $rand . '.log';
 	}
 
 	/**
