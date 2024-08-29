@@ -332,7 +332,7 @@ class Cloud extends Base
 			'wp_pk_b64' => $this->_summary['pk_b64'],
 			'qc_ts' => $_GET['qc_ts'],
 		);
-		$is_valid = $this->_validate_signature($_GET['qc_signature_b64'], json_encode($data_to_validate_signature));
+		$is_valid = $this->_validate_signature($_GET['qc_signature_b64'], implode('', $data_to_validate_signature));
 		if (!$is_valid) {
 			self::debugErr("Failed to validate qc activation data");
 			Admin_Display::error(sprintf(__('Failed to validate %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
@@ -983,7 +983,7 @@ class Cloud extends Base
 			'service_tag' => $service_tag,
 			'ts' => $signature_ts,
 		);
-		$data['signature_b64'] = $this->_sign_b64(json_encode($sign_data));
+		$data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
 		$data['signature_ts'] = $signature_ts;
 
 		$param = array(
