@@ -168,8 +168,7 @@ class Object_Cache extends Root
 		}
 
 		// For initiate Debug2 class
-		!defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
-		!defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', WP_CONTENT_DIR . '/'. LITESPEED_DATA_FOLDER);
+		!defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', WP_CONTENT_DIR . '/litespeed');
 		$this->debug = new Debug2();
 	}
 
