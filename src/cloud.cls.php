@@ -48,7 +48,7 @@ class Cloud extends Base
 	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
 	const API_REST_ECHO = 'tool/wp_rest_echo';
-	const API_SERVER_KEY = 'server_key';
+	const API_SERVER_KEY_SIGN = 'key_sign';
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_U_ACTIVATE,
@@ -63,10 +63,10 @@ class Cloud extends Base
 		self::SVC_D_DEL_CDN_DNS,
 	);
 
-	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::API_SERVER_KEY);
+	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	// No api key needed for these services
-	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::API_SERVER_KEY);
+	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
 
@@ -233,9 +233,9 @@ class Cloud extends Base
 	private function _load_server_pk($from_wpapi = false)
 	{
 		// Load cloud pk
-		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY . '?type=sign';
+		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY_SIGN;
 		if ($from_wpapi) {
-			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY . '?type=sign';
+			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY_SIGN;
 		}
 		$resp = wp_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
