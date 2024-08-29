@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The object cache class
  *
@@ -7,7 +8,9 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 require_once dirname(__DIR__) . '/autoload.php';
@@ -58,9 +61,6 @@ class Object_Cache extends Root
 	 */
 	public function __construct($cfg = false)
 	{
-		$this->debug_oc('-------------');
-		$this->debug_oc('init');
-
 		if ($cfg) {
 			if (!is_array($cfg[Base::O_OBJECT_GLOBAL_GROUPS])) {
 				$cfg[Base::O_OBJECT_GLOBAL_GROUPS] = explode("\n", $cfg[Base::O_OBJECT_GLOBAL_GROUPS]);
@@ -158,7 +158,12 @@ class Object_Cache extends Root
 			return;
 		}
 
-		error_log(gmdate('m/d/y H:i:s') . ' - ' . $text . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log');
+		$LITESPEED_DATA_FOLDER = defined('LITESPEED_DATA_FOLDER') ? LITESPEED_DATA_FOLDER : 'litespeed';
+		$LSCWP_CONTENT_DIR = defined('LSCWP_CONTENT_DIR') ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
+		$LITESPEED_STATIC_DIR = $LSCWP_CONTENT_DIR . '/' . $LITESPEED_DATA_FOLDER;
+		$log_path_prefix = $LITESPEED_STATIC_DIR . '/debug/';
+
+		error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $log_path_prefix . Debug2::FilePath('debug'));
 	}
 
 	/**
@@ -342,9 +347,11 @@ class Object_Cache extends Root
 				$failed = true;
 			}
 			restore_error_handler();
-		} /**
+		}
+		/**
 		 * Connect to Memcached
-		 */ else {
+		 */
+		else {
 			if ($this->_cfg_persistent) {
 				$this->_conn = new \Memcached($this->_get_mem_id());
 
