@@ -29,6 +29,7 @@ class Object_Cache extends Root
 	const O_OBJECT_GLOBAL_GROUPS = 'object-global_groups';
 	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups';
 
+	private $debug;
 	private $_conn;
 	private $_cfg_debug;
 	private $_cfg_enabled;
@@ -58,9 +59,6 @@ class Object_Cache extends Root
 	 */
 	public function __construct($cfg = false)
 	{
-		$this->debug_oc('-------------');
-		$this->debug_oc('init');
-
 		if ($cfg) {
 			if (!is_array($cfg[Base::O_OBJECT_GLOBAL_GROUPS])) {
 				$cfg[Base::O_OBJECT_GLOBAL_GROUPS] = explode("\n", $cfg[Base::O_OBJECT_GLOBAL_GROUPS]);
@@ -138,6 +136,8 @@ class Object_Cache extends Root
 		} else {
 			$this->_cfg_enabled = false;
 		}
+
+		$this->init_debug();
 	}
 
 	/**
@@ -148,6 +148,21 @@ class Object_Cache extends Root
 	 */
 	private function debug_oc($text)
 	{
+		if (!$this->_cfg_debug || null === $this->debug) {
+			return;
+		}
+
+		error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $this->debug->path('debug'));
+	}
+
+	/**
+	 * Init debug.
+	 *
+	 * @since  6.5
+	 * @access private
+	 */
+	private function init_debug()
+	{
 		if (!$this->_cfg_debug) {
 			return;
 		}
@@ -155,9 +170,7 @@ class Object_Cache extends Root
 		// For initiate Debug2 class
 		!defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
 		!defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', WP_CONTENT_DIR . '/'. LITESPEED_DATA_FOLDER);
-		$debug2 = new Debug2();
-
-		error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $debug2->path('debug'));
+		$this->debug = new Debug2();
 	}
 
 	/**
@@ -286,7 +299,7 @@ class Object_Cache extends Root
 			return false;
 		}
 
-		$this->debug_oc('Init ' . $this->_oc_driver . ' connection to ' . $this->_cfg_host . ':' . $this->_cfg_port);
+		$this->debug_oc('Initializing ' . $this->_oc_driver . ' connection to ' . $this->_cfg_host . ':' . $this->_cfg_port);
 
 		$failed = false;
 		/**
