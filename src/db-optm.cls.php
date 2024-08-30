@@ -240,7 +240,9 @@ class DB_Optm extends Root
 				$result = $wpdb->get_results($sql);
 				if ($result) {
 					foreach ($result as $row) {
-						$wpdb->query('OPTIMIZE TABLE ' . $row->table_name);
+						if(property_exists($row, 'table_name')){
+							$wpdb->query('OPTIMIZE TABLE ' . $row->table_name);
+						}
 					}
 				}
 				return __('Optimized all tables.', 'litespeed-cache');
