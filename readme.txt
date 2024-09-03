@@ -254,7 +254,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 6.5 - Sep 3 2024 =
+= 6.5 - Sep 4 2024 =
 * **Debug** Moved debug log to litespeed individual folder `/wp-content/litespeed/debug/`.
 * **Debug** Disallowed visits to `/litespeed/debug/` folder log files in .htaccess.
 * **Debug** Dropped const `LSCWP_DEBUG_PATH` support.
