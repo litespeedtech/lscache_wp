@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 4.9
 Tested up to: 6.6.1
-Stable tag: 6.4.1
+Stable tag: 6.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
