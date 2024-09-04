@@ -63,7 +63,7 @@ class Debug2 extends Root
 
 		$logs = array('debug', 'debug.purge', 'crawler');
 		foreach ($logs as $log) {
-			if (file_exists(LSCWP_CONTENT_DIR . '/' . $log . '.log')) {
+			if (file_exists(LSCWP_CONTENT_DIR . '/' . $log . '.log') && !file_exists($this->path($log))) {
 				rename(LSCWP_CONTENT_DIR . '/' . $log . '.log', $this->path($log));
 			}
 		}

@@ -162,8 +162,11 @@ class Object_Cache extends Root
 		$LSCWP_CONTENT_DIR = defined('LSCWP_CONTENT_DIR') ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
 		$LITESPEED_STATIC_DIR = $LSCWP_CONTENT_DIR . '/' . $LITESPEED_DATA_FOLDER;
 		$log_path_prefix = $LITESPEED_STATIC_DIR . '/debug/';
+		$log_file = $log_path_prefix . Debug2::FilePath('debug');
 
-		error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $log_path_prefix . Debug2::FilePath('debug'));
+		if (file_exists($log_path_prefix . 'index.php') && file_exists($log_file)) {
+			error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $log_file);
+		}
 	}
 
 	/**
