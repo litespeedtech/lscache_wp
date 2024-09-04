@@ -766,7 +766,7 @@ class ESI extends Root
 	public function sub_admin_bar_block()
 	{
 		global $wp_admin_bar;
-		
+
 		if (!is_admin_bar_showing() || !is_object($wp_admin_bar)) {
 			return;
 		}

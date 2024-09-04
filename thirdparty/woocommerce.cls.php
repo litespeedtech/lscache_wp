@@ -733,7 +733,7 @@ class WooCommerce extends Base
 		if (!isset($wp_widget_factory->widgets['WC_Widget_Recent_Reviews'])) {
 			return;
 		}
-	
+
 		$recent_reviews = $wp_widget_factory->widgets['WC_Widget_Recent_Reviews'];
 		if (!is_null($recent_reviews)) {
 			do_action('litespeed_tag_add_widget', $recent_reviews->id);
