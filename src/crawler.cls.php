@@ -8,6 +8,8 @@
 
 namespace LiteSpeed;
 
+use \DateTime;
+
 defined('WPINC') || exit();
 
 class Crawler extends Root
@@ -243,6 +245,72 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Check if crawler can run in the choosen time period
+	 *
+	 * @since 6.1
+	 */
+	public function _crawler_in_schedule_time()
+	{
+		$class_settings = self::cls();
+		$schedule_times = $class_settings->conf(Base::O_CRAWLER_SCHEDULE_TIME, '');
+
+		if ($schedule_times !== '') {
+			$schedule_times = explode(',', $schedule_times);
+
+			if (count($schedule_times) > 0) {
+				$now = time();
+
+				// A single time: e.g. 1, 01, 1:1, 1:01, 1:01:1, or 1:01:01, etc.
+				$time_re = '(\d{1,2}(?::\d{1,2}){0,2}(?i:[AP]M)?)';
+				$re = '/^' . $time_re . '[-]' . $time_re . '$/';
+
+				// Allow parsing times like 1-3, 1AM-3PM, 1aM-3Pm
+				$with_minutes = function ($time) {
+					$has_meridian = stripos($time, 'm');
+					if (preg_match('/:\d/', $time)) {
+						return $time;
+					} else {
+						if ($has_meridian !== false) {
+							$meridian = strtoupper(substr($time, -2));
+							$time_only = substr($time, 0, -2);
+
+							return $time_only . ':00' . $meridian;
+						} else {
+							return $time . ':00';
+						}
+					}
+				};
+
+				foreach ($schedule_times as $time) {
+					$time = trim($time);
+					preg_match($re, $time, $matches);
+
+					if (!$matches) {
+						continue;
+					}
+
+					$start = strtotime($with_minutes($matches[1]));
+					$end = strtotime($with_minutes($matches[2]));
+
+					if (false === $start || false === $end || $start > $end) {
+						continue;
+					}
+
+					// Test start <= now <= end
+					if ($now <= $end && $now >= $start) {
+						return true;
+					}
+				}
+			}
+
+			self::debug('------------crawler schedule time-------------no time period found');
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
 	 * Proceed crawling
 	 *
 	 * @since    1.1.0
@@ -252,6 +320,12 @@ class Crawler extends Root
 	{
 		if (!Router::can_crawl()) {
 			self::debug('......crawler is NOT allowed by the server admin......');
+			return false;
+		}
+
+		$crawler_is_in_time = self::cls()->_crawler_in_schedule_time();
+		if (!$manually_run && !$crawler_is_in_time) {
+			self::debug('......crawler is NOT allowed at this time......');
 			return false;
 		}
 
