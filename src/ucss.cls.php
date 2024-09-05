@@ -361,30 +361,37 @@ class UCSS extends Base
 	 */
 	private function _save_con($type, $css, $queue_k, $is_mobile, $is_webp)
 	{
-		// Add filters
-		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
-		self::debug2('con: ', $css);
+		if( !empty($this->_queue[$queue_k]['url_tag']) && !empty($this->_queue[$queue_k]['vary']) ){
+			// Add filters
+			$css = apply_filters('litespeed_' . $type, $css, $queue_k);
+			self::debug2('con: ', $css);
 
-		if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
-			self::debug('❌ empty ' . $type . ' [content] ' . $css);
-			// continue; // Save the error info too
+			if (substr($css, 0, 2) == '/*' && substr($css, -2) == '*/') {
+				self::debug('❌ empty ' . $type . ' [content] ' . $css);
+				// continue; // Save the error info too
+			}
+
+			// Write to file
+			$filecon_md5 = md5($css);
+
+			$filepath_prefix = $this->_build_filepath_prefix($type);
+			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+
+			File::save($static_file, $css, true);
+
+			$url_tag = $this->_queue[$queue_k]['url_tag'];
+			$vary = $this->_queue[$queue_k]['vary'];
+			self::debug2("Save URL to file [file] $static_file [vary] $vary");
+
+			$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
+
+			Purge::add(strtoupper($type) . '.' . md5($queue_k));
 		}
-
-		// Write to file
-		$filecon_md5 = md5($css);
-
-		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
-
-		File::save($static_file, $css, true);
-
-		$url_tag = $this->_queue[$queue_k]['url_tag'];
-		$vary = $this->_queue[$queue_k]['vary'];
-		self::debug2("Save URL to file [file] $static_file [vary] $vary");
-
-		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
-
-		Purge::add(strtoupper($type) . '.' . md5($queue_k));
+		else{
+			$not_found = array();
+			if( !isset($this->_queue[$queue_k]['url_tag']) ) $not_found[] = '[url_tag]';
+			if( !isset($this->_queue[$queue_k]['vary']) ) $not_found[] = '[vary]';
+		}
 	}
 
 	/**
