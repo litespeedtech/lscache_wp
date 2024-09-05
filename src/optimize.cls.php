@@ -82,12 +82,12 @@ class Optimize extends Base
 			$this->cfg_js_defer = 2;
 		}
 		if ($this->cfg_js_defer == 2) {
+			$this->cfg_js_comb = false;
 			add_filter(
 				'litespeed_optm_cssjs',
 				function ($con, $file_type) {
 					if ($file_type == 'js') {
 						$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
-						// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
 					}
 					return $con;
 				},
@@ -441,6 +441,9 @@ class Optimize extends Base
 			}
 		}
 
+		// Inject JS Delay lib
+		$this->_maybe_js_delay();
+
 		/**
 		 * Handle google fonts async
 		 * This will result in a JS snippet in head, so need to put it in the end to avoid being replaced by JS parser
@@ -452,9 +455,6 @@ class Optimize extends Base
 		 * @since  3.0
 		 */
 		$this->_font_optm();
-
-		// Inject JS Delay lib
-		$this->_maybe_js_delay();
 
 		/**
 		 * HTML Lazyload
@@ -479,11 +479,12 @@ class Optimize extends Base
 			if (apply_filters('litespeed_optm_html_after_head', false)) {
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
-				// Put header content to be after charset
-				if (strpos($this->content, '<meta charset') !== false) {
-					$this->content = preg_replace('#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head, $this->content, 1);
-				} else {
-					$this->content = preg_replace('#<head([^>]*)>#isU', '<head$1>' . $this->html_head, $this->content, 1);
+				// Put header content after charset
+				$replacement = '${0}' . $this->html_head;
+				$success = 0;
+				$this->content = preg_replace('/<meta\s+charset[^>]*>/i', $replacement, $this->content, 1, $success);
+				if (!$success) {
+					$text = preg_replace('/<head[^>]*>/i', $replacement, $this->content, 1);
 				}
 			}
 		}
@@ -551,7 +552,7 @@ class Optimize extends Base
 			return;
 		}
 
-		$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		$this->html_head .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
 	}
 
 	/**
@@ -903,7 +904,7 @@ class Optimize extends Base
 				$ext_excluded = !$combine_ext_inl && !$is_internal;
 				if ($js_excluded || $ext_excluded || !$is_file) {
 					// Maybe defer
-					if ($this->cfg_js_defer) {
+					if ($this->cfg_js_defer===1) {
 						$deferred = $this->_js_defer($match[0], $attrs['src']);
 						if ($deferred) {
 							$this->content = str_replace($match[0], $deferred, $this->content);
@@ -1231,7 +1232,9 @@ class Optimize extends Base
 		}
 
 		if (strpos($ori, 'defer') !== false) {
-			return false;
+			if ($this->cfg_js_defer !== 2 ){
+				return false;
+			}
 		}
 		if (strpos($ori, 'data-deferred') !== false) {
 			Debug2::debug2('[Optm] bypass: attr data-deferred exist');
