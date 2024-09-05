@@ -51,7 +51,7 @@ $this->form_action($this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETWO
 					<?php echo __('Outputs to WordPress debug log.', 'litespeed-cache'); ?>
 					<?php echo __('To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache'); ?>
 					<?php echo __('The Admin IP option will only output log messages on requests from admin IPs.', 'litespeed-cache'); ?>
-					<?php echo sprintf(__('The logs will be output to %s.', 'litespeed-cache'), '<code>wp-content/debug.log</code>'); ?>
+					<?php echo sprintf(__('The logs will be output to %s.', 'litespeed-cache'), '<code>wp-content/litespeed/debug/</code>'); ?>
 				</div>
 			</td>
 		</tr>
