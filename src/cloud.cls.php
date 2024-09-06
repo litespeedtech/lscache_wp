@@ -1558,13 +1558,18 @@ class Cloud extends Base
 			'v_wp' => $GLOBALS['wp_version'],
 		);
 		if (!empty($_POST['funcs'])) {
-			foreach ($_POST['funcs'] as $func) {
-				$resp[$func] = function_exists($func) ? 'y' : 'n';
+			foreach ($_POST['funcs'] as $v) {
+				$resp[$v] = function_exists($v) ? 'y' : 'n';
 			}
 		}
 		if (!empty($_POST['classes'])) {
-			foreach ($_POST['classes'] as $cls) {
-				$resp[$cls] = class_exists($cls) ? 'y' : 'n';
+			foreach ($_POST['classes'] as $v) {
+				$resp[$v] = class_exists($v) ? 'y' : 'n';
+			}
+		}
+		if (!empty($_POST['consts'])) {
+			foreach ($_POST['consts'] as $v) {
+				$resp[$v] = defined($v) ? 'y' : 'n';
 			}
 		}
 		return self::ok($resp);
