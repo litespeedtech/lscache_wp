@@ -89,7 +89,7 @@ class Debug2 extends Root
 		if ($type == 'debug.purge') {
 			$type = 'purge';
 		}
-		$rand = defined('AUTH_KEY') ? substr(md5(substr(AUTH_KEY, -16)), -16) : '';
+		$rand = substr(md5(substr(defined('AUTH_KEY') ? AUTH_KEY : md5(__FILE__), -16)), -16);
 		return $type . $rand . '.log';
 	}
 
