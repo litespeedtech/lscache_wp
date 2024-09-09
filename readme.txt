@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 5.3
 Requires PHP: 7.2
-Tested up to: 6.6.1
+Tested up to: 6.6
 Stable tag: 6.5.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
