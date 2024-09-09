@@ -260,6 +260,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
+* **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 
 = 6.5.1 - Sep 25 2024 =
 * **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
