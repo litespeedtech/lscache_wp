@@ -11,7 +11,7 @@ defined('WPINC') || exit;
 		<?php $this->title($id); ?>
 	</th>
 	<td>
-		<?php $this->build_switch($id); ?>
+		<?php $this->build_switch($id, array(__('OFF', 'litespeed-cache'), __('WebP', 'litespeed-cache'), __('AVIF', 'litespeed-cache'))); ?>
 		<?php Doc::maybe_on_by_gm($id); ?>
 		<div class="litespeed-desc">
 			<?php echo __('Request WebP versions of original images when doing optimization.', 'litespeed-cache'); ?>
