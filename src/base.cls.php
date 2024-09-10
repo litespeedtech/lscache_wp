@@ -602,6 +602,7 @@ class Base extends Root
 	protected static $_multi_switch_list = array(
 		self::O_DEBUG => 2,
 		self::O_OPTM_JS_DEFER => 2,
+		self::O_IMG_OPTM_WEBP => 2,
 	);
 
 	/**

@@ -1075,7 +1075,7 @@ class Crawler extends Root
 
 		// WebP on/off
 		if (($this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM)) || $this->conf(Base::O_IMG_OPTM_WEBP)) {
-			$crawler_factors['webp'] = array(1 => 'WebP', 0 => '');
+			$crawler_factors['webp'] = array(1 => 'WebP/AVIF', 0 => '');
 		}
 
 		// Guest Mode on/off

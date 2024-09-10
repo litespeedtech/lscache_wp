@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -210,7 +210,7 @@ class Lang extends Base
 			self::O_IMG_OPTM_CRON => __('Auto Pull Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
-			self::O_IMG_OPTM_WEBP => __('Image WebP Replacement', 'litespeed-cache'),
+			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
 			self::O_IMG_OPTM_LOSSLESS => __('Optimize Losslessly', 'litespeed-cache'),
 			self::O_IMG_OPTM_EXIF => __('Preserve EXIF/XMP data', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_ATTR => __('WebP Attribute To Replace', 'litespeed-cache'),
