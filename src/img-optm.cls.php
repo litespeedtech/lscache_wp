@@ -653,10 +653,14 @@ class Img_Optm extends Base
 			'action' => self::CLOUD_ACTION_NEW_REQ,
 			'list' => \json_encode($list),
 			'optm_ori' => $this->conf(self::O_IMG_OPTM_ORI) ? 1 : 0,
-			'optm_webp' => $this->conf(self::O_IMG_OPTM_WEBP) ? 1 : 0,
 			'optm_lossless' => $this->conf(self::O_IMG_OPTM_LOSSLESS) ? 1 : 0,
 			'keep_exif' => $this->conf(self::O_IMG_OPTM_EXIF) ? 1 : 0,
 		);
+		if ($this->conf(self::O_IMG_OPTM_WEBP) == 2) {
+			$data['optm_avif'] = 1;
+		} elseif ($this->conf(self::O_IMG_OPTM_WEBP) == 1) {
+			$data['optm_webp'] = 1;
+		}
 
 		// Push to Cloud server
 		$json = Cloud::post(Cloud::SVC_IMG_OPTM, $data);
