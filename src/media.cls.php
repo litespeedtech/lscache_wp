@@ -23,6 +23,7 @@ class Media extends Root
 	private $content;
 	private $_wp_upload_dir;
 	private $_vpi_preload_list = array();
+	private $_format = '';
 
 	/**
 	 * Init
@@ -34,6 +35,12 @@ class Media extends Root
 		Debug2::debug2('[Media] init');
 
 		$this->_wp_upload_dir = wp_upload_dir();
+		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
+			$this->_format = 'webp';
+			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
+				$this->_format = 'avif';
+			}
+		}
 	}
 
 	/**
@@ -49,7 +56,7 @@ class Media extends Root
 		}
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if (defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) {
+		if (defined('LITESPEED_GUEST_OPTM') || $this->_format) {
 			if ($this->webp_support()) {
 				// Hook to srcset
 				if (function_exists('wp_calculate_image_srcset')) {
@@ -93,7 +100,7 @@ class Media extends Root
 		// 	$featured_image_url = get_the_post_thumbnail_url();
 		// 	if ($featured_image_url) {
 		// 		self::debug('Append featured image to head: ' . $featured_image_url);
-		// 		if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
+		// 		if ((defined('LITESPEED_GUEST_OPTM') || $this->_format) && $this->webp_support()) {
 		// 			$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
 		// 		}
 		// 	}
@@ -437,8 +444,10 @@ class Media extends Root
 	 */
 	public function webp_support()
 	{
-		if (!empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false) {
-			return true;
+		if (!empty($_SERVER['HTTP_ACCEPT'])) {
+			if (strpos($_SERVER['HTTP_ACCEPT'], 'image/' . $this->_format) !== false) {
+				return true;
+			}
 		}
 
 		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
@@ -506,7 +515,7 @@ class Media extends Root
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
+		if ((defined('LITESPEED_GUEST_OPTM') || $this->_format) && $this->webp_support()) {
 			$this->content = $this->_replace_buffer_img_webp($this->content);
 		}
 
