@@ -6,3 +6,4 @@
 .env*
 .vscode
 node_modules
+/vendor

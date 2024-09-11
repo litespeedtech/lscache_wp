@@ -2,14 +2,20 @@
 	"overrides": [
 		{
 			"files": ".prettierrc",
-			"options": { "parser": "json" }
+			"options": {
+				"parser": "json"
+			}
 		},
 		{
 			"files": "**/*.{yml,yaml}",
-			"options": { "tabWidth": 2 }
+			"options": {
+				"tabWidth": 2
+			}
 		}
 	],
-	"plugins": ["@prettier/plugin-php"],
+	"plugins": [
+		"@prettier/plugin-php"
+	],
 	"arrowParens": "avoid",
 	"braceStyle": "per-cs",
 	"endOfLine": "auto",
