@@ -212,7 +212,7 @@ class Purge extends Base
 		self::debug('Purge all ' . $reason, 3);
 
 		$msg = __('Purged all caches successfully.', 'litespeed-cache');
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 
 		do_action('litespeed_purged_all');
 	}
@@ -232,7 +232,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -252,7 +252,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all Critical CSS files.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -272,7 +272,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all Unique CSS files.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -312,7 +312,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all LQIP files.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -330,7 +330,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all Gravatar files.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -348,7 +348,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all localized resource entries.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -383,7 +383,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
 
@@ -412,7 +412,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Reset the entire opcode cache successfully.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 
 		return true;
@@ -455,7 +455,7 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Purge all object caches successfully.', 'litespeed-cache');
-			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 
 		return true;
@@ -676,7 +676,7 @@ class Purge extends Base
 		}
 
 		$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 	}
 
 	/**
@@ -690,7 +690,7 @@ class Purge extends Base
 		$this->_add(Tag::TYPE_PAGES);
 
 		$msg = __('Notified LiteSpeed Web Server to purge all pages.', 'litespeed-cache');
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 	}
 
 	/**
@@ -710,7 +710,7 @@ class Purge extends Base
 		$this->_add(Tag::TYPE_HTTP . $type);
 
 		$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 	}
 
 	/**
@@ -737,7 +737,7 @@ class Purge extends Base
 
 		self::add(Tag::TYPE_ARCHIVE_TERM . $cat->term_id);
 
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 	}
 
 	/**
@@ -764,7 +764,7 @@ class Purge extends Base
 
 		self::add(Tag::TYPE_ARCHIVE_TERM . $term->term_id);
 
-		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
 	}
 
 	/**
@@ -796,7 +796,7 @@ class Purge extends Base
 
 		self::add($hash, $purge2);
 
-		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
+		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 	}
 
 	/**

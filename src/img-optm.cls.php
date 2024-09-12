@@ -338,7 +338,7 @@ class Img_Optm extends Base
 		$placeholder1 = Admin_Display::print_plural($accepted_imgs[0], 'image');
 		$placeholder2 = Admin_Display::print_plural($accepted_imgs[1], 'image');
 		$msg = sprintf(__('Pushed %1$s to Cloud server, accepted %2$s.', 'litespeed-cache'), $placeholder1, $placeholder2);
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -586,7 +586,7 @@ class Img_Optm extends Base
 
 		$count = count($img_in_queue_invalid);
 		$msg = sprintf(__('Cleared %1$s invalid images.', 'litespeed-cache'), $count);
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 
 		self::debug('Found invalid src [total] ' . $count);
 	}
@@ -1194,7 +1194,7 @@ class Img_Optm extends Base
 		}
 
 		// $msg = sprintf(__('Pulled %d image(s)', 'litespeed-cache'), $total_pulled_ori + $total_pulled_webp);
-		// Admin_Display::succeed($msg);
+		// Admin_Display::success($msg);
 
 		// Check if there is still task in queue
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d LIMIT 1";
@@ -1284,7 +1284,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Cleaned up unfinished data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1368,7 +1368,7 @@ class Img_Optm extends Base
 		self::delete_option(self::DB_NEED_PULL);
 
 		$msg = __('Destroy all optimization data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1431,7 +1431,7 @@ class Img_Optm extends Base
 
 		if (!$list) {
 			$msg = __('Rescanned successfully.', 'litespeed-cache');
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 
 			self::debug('rescan bypass: no gathered image found');
 			return;
@@ -1493,7 +1493,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = $count ? sprintf(__('Rescanned %d images successfully.', 'litespeed-cache'), $count) : __('Rescanned successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1560,7 +1560,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Calculated backups successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1654,7 +1654,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Removed backups successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1806,7 +1806,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Switched images successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1905,7 +1905,7 @@ class Img_Optm extends Base
 	 */
 	private function _switch_optm_file($type)
 	{
-		Admin_Display::succeed(__('Switched to optimized file successfully.', 'litespeed-cache'));
+		Admin_Display::success(__('Switched to optimized file successfully.', 'litespeed-cache'));
 		return;
 		global $wpdb;
 
@@ -1956,7 +1956,7 @@ class Img_Optm extends Base
 			}
 		}
 
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -2003,7 +2003,7 @@ class Img_Optm extends Base
 		delete_post_meta($post_id, self::DB_SET);
 
 		$msg = __('Reset the optimized data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**

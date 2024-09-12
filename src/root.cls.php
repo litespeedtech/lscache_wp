@@ -206,7 +206,7 @@ abstract class Root
 
 		if (!$silent) {
 			$msg = __('All QUIC.cloud service queues have been cleared.', 'litespeed-cache');
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 		}
 	}
 

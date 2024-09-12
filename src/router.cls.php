@@ -89,7 +89,7 @@ class Router extends Base
 	public static function self_redirect($action, $type)
 	{
 		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
-			Admin_Display::succeed('To be continued'); // Show for CLI
+			Admin_Display::success('To be continued'); // Show for CLI
 			return;
 		}
 

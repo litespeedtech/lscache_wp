@@ -515,7 +515,7 @@ class Activation extends Base
 			return;
 		}
 
-		Admin_Display::succeed(__('Upgraded successfully.', 'litespeed-cache'));
+		Admin_Display::success(__('Upgraded successfully.', 'litespeed-cache'));
 	}
 
 	/**

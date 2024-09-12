@@ -276,7 +276,7 @@ class Crawler_Map extends Root
 		Data::cls()->tb_del('crawler');
 
 		$msg = __('Sitemap cleaned successfully', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -376,7 +376,7 @@ class Crawler_Map extends Root
 
 		if (!defined('DOING_CRON') && $manual) {
 			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 		}
 	}
 
