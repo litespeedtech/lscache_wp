@@ -769,7 +769,7 @@ class Media extends Root
 
 			$placeholder = false;
 			if (!empty($attrs['width']) && $attrs['width'] != 'auto' && !empty($attrs['height']) && $attrs['height'] != 'auto') {
-				$placeholder = $attrs['width'] . 'x' . $attrs['height'];
+				$placeholder = intval($attrs['width']) . 'x' . intval($attrs['height']);
 			}
 
 			$src_list[] = $attrs['src'];

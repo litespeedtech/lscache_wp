@@ -254,6 +254,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 6.5.1 - Sep 25 2024 =
+* **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
+
 = 6.5.0.2 - Sep 6 2024 =
 * **Debug** Compatibility improvement for WP installations w/o `AUTH_KEY` defined in `wp-config.php`.
 

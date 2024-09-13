@@ -174,6 +174,7 @@ class Placeholder extends Base
 		$additional_attr = '';
 		if ($this->_conf_lqip && $this_placeholder != $this->_conf_ph_default) {
 			Debug2::debug2('[LQIP] Use resp LQIP [size] ' . $size);
+			$size = str_replace('"', '', $size);
 			$additional_attr = ' data-placeholder-resp="' . $size . '"';
 		}
 
