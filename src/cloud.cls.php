@@ -931,6 +931,7 @@ class Cloud extends Base
 		$data = array(
 			'site_url' => home_url(),
 			'ver' => LSCWP_V,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
 		return self::CLOUD_SERVER_DASH . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
