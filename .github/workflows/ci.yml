@@ -8,19 +8,36 @@ on:
       - 'v*.*'
   pull_request:
 
+# Cancels all previous workflow runs for pull requests that have not completed.
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+#   cancel-in-progress: true
+
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      # Initialize Cache Composer
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: .cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      # Initialize Node.js
       - uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '22'
           check-latest: true
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      # Start actions
+      - run: mkdir -p .cache
+      - run: composer install
+      - run: composer run sniff-check
 
+      - run: npm ci
       - run: npm run format-check
