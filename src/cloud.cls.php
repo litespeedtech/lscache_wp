@@ -990,7 +990,7 @@ class Cloud extends Base
 		$param = array(
 			'site_url' => home_url(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
-			'wp_pk' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
+			'wp_pk_b64' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
 			'ver' => Core::VER,
 			'data' => $data,
 		);
