@@ -265,7 +265,7 @@ class Base extends Root
 	const O_CDN_ORI = 'cdn-ori';
 	const O_CDN_ORI_DIR = 'cdn-ori_dir';
 	const O_CDN_EXC = 'cdn-exc';
-	const O_CDN_QUIC = 'cdn-quic';
+	const O_CDN_QUIC = 'cdn-quic'; // No more a visible setting since v7
 	const O_CDN_CLOUDFLARE = 'cdn-cloudflare';
 	const O_CDN_CLOUDFLARE_EMAIL = 'cdn-cloudflare_email';
 	const O_CDN_CLOUDFLARE_KEY = 'cdn-cloudflare_key';
@@ -314,7 +314,6 @@ class Base extends Root
 		self::O_CDN_ORI,
 		self::O_CDN_ORI_DIR,
 		self::O_CDN_EXC,
-		self::O_CDN_QUIC,
 		self::O_CDN_CLOUDFLARE,
 		self::O_CDN_CLOUDFLARE_EMAIL,
 		self::O_CDN_CLOUDFLARE_KEY,

@@ -236,7 +236,6 @@ class Lang extends Base
 			self::O_MISC_HEARTBEAT_EDITOR => __('Editor Heartbeat', 'litespeed-cache'),
 			self::O_MISC_HEARTBEAT_EDITOR_TTL => __('Editor Heartbeat TTL', 'litespeed-cache'),
 
-			self::O_CDN_QUIC => __('QUIC.cloud CDN', 'litespeed-cache'),
 			self::O_CDN => __('Use CDN Mapping', 'litespeed-cache'),
 			self::CDN_MAPPING_URL => __('CDN URL', 'litespeed-cache'),
 			self::CDN_MAPPING_INC_IMG => __('Include Images', 'litespeed-cache'),
