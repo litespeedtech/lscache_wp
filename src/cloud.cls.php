@@ -978,17 +978,18 @@ class Cloud extends Base
 		}
 
 		// Encrypt service as signature
-		$signature_ts = time();
-		$sign_data = array(
-			'service_tag' => $service_tag,
-			'ts' => $signature_ts,
-		);
-		$data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
-		$data['signature_ts'] = $signature_ts;
+		// $signature_ts = time();
+		// $sign_data = array(
+		// 	'service_tag' => $service_tag,
+		// 	'ts' => $signature_ts,
+		// );
+		// $data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
+		// $data['signature_ts'] = $signature_ts;
 
 		$param = array(
 			'site_url' => home_url(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
+			'wp_pk' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
 			'ver' => Core::VER,
 			'data' => $data,
 		);
