@@ -26,10 +26,6 @@ jobs:
           path: .cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
-      # Initialize Composer
-      - name: Setup and install composer
-        run: composer install
-
       # Initialize Node.js
       - uses: actions/setup-node@v3
         with:
@@ -40,6 +36,7 @@ jobs:
 
       # Start actions
       - run: mkdir -p .cache
+      - run: composer install
       - run: composer run sniff-check
 
       - run: npm ci
