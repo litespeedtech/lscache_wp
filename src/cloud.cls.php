@@ -134,7 +134,7 @@ class Cloud extends Base
 		$echobox = self::post(self::API_REST_ECHO, $req_data);
 		if ($echobox === false) {
 			self::debugErr('REST Echo Failed!');
-			$msg = __('Your WP REST API seems blocked our QIUC.cloud server calls.', 'litespeed-cache');
+			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
 			Admin_Display::error($msg);
 			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
 			return;
