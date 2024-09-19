@@ -723,7 +723,7 @@ class Conf extends Base
 		$this->update_confs($the_matrix);
 
 		$msg = __('Changed setting successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 
 		// Redirect if changed frontend URL
 		if (!empty($_GET['redirect'])) {
