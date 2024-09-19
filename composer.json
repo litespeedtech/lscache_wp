@@ -1,0 +1,13 @@
+{
+	"name": "litespeedtech/lscache_wp",
+	"require-dev": {
+		"squizlabs/php_codesniffer": "*",
+		"phpcompatibility/php-compatibility": "*"
+	},
+	"prefer-stable": true,
+	"scripts": {
+		"post-install-cmd": "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+		"post-update-cmd": "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+		"sniff-check": "phpcs"
+	}
+}
