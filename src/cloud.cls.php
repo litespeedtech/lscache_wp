@@ -358,6 +358,8 @@ class Cloud extends Base
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
 		if ($_GET['qc_activated'] == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
+			// Sync possible partner info
+			$this->sync_usage();
 		}
 		if ($_GET['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
