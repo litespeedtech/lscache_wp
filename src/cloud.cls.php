@@ -140,7 +140,7 @@ class Cloud extends Base
 			return;
 		}
 
-		self::debug("echo succeeded");
+		self::debug('echo succeeded');
 
 		// Load seperate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
@@ -181,7 +181,6 @@ class Cloud extends Base
 			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
 			return;
 		}
-
 
 		$data = array(
 			'wp_ts' => time(),
@@ -285,12 +284,12 @@ class Cloud extends Base
 
 		$diff = time() - $_POST['wpapi_ts'];
 		if (abs($diff) > 86400) {
-			self::debugErr("WPAPI echo data timeout [diff] " . $diff);
+			self::debugErr('WPAPI echo data timeout [diff] ' . $diff);
 			return self::err('Echo data expired');
 		}
 
 		$signature_b64 = $this->_sign_b64($_POST['wpapi_ts']);
-		self::debug("Response to echo [signature_b64] " . $signature_b64);
+		self::debug('Response to echo [signature_b64] ' . $signature_b64);
 		return self::ok(array('signature_b64' => $signature_b64));
 	}
 
@@ -310,7 +309,7 @@ class Cloud extends Base
 			$signature = base64_decode($signature_b64);
 			$is_valid = sodium_crypto_sign_verify_detached($signature, $data, $cloud_pk);
 		} catch (\SodiumException $e) {
-			self::debugErr("Decryption failed: " . $e->getMessage());
+			self::debugErr('Decryption failed: ' . $e->getMessage());
 			return false;
 		}
 		self::debug('Signature validation result: ' . ($is_valid ? 'true' : 'false'));
@@ -334,21 +333,21 @@ class Cloud extends Base
 		);
 		$is_valid = $this->_validate_signature($_GET['qc_signature_b64'], implode('', $data_to_validate_signature));
 		if (!$is_valid) {
-			self::debugErr("Failed to validate qc activation data");
+			self::debugErr('Failed to validate qc activation data');
 			Admin_Display::error(sprintf(__('Failed to validate %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
 
-		self::debug("QC activation status: " . $_GET['qc_activated']);
+		self::debug('QC activation status: ' . $_GET['qc_activated']);
 		if (!in_array($_GET['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
-			self::debugErr("Failed to parse qc activation status");
+			self::debugErr('Failed to parse qc activation status');
 			Admin_Display::error(sprintf(__('Failed to parse %s activation status.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
 
 		$diff = time() - $_GET['qc_ts'];
 		if (abs($diff) > 86400) {
-			self::debugErr("QC activation data timeout [diff] " . $diff);
+			self::debugErr('QC activation data timeout [diff] ' . $diff);
 			Admin_Display::error(sprintf(__('%s activation data expired.', 'litespeed-cache'), 'QUIC.cloud'));
 			return;
 		}
@@ -389,7 +388,7 @@ class Cloud extends Base
 
 		Admin_Display::success(sprintf(__('Reset %s activation successfully.', 'litespeed-cache'), 'QUIC.cloud'));
 		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
-		exit;
+		exit();
 	}
 
 	/**
