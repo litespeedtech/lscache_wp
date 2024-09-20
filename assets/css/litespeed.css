@@ -1209,7 +1209,7 @@ h3 .litespeed-learn-more {
 }
 
 .rtl .litespeed-switch {
-    flex-direction: row-reverse;
+	flex-direction: row-reverse;
 }
 
 .litespeed-switch input:checked:active + label {
