@@ -1381,28 +1381,22 @@ class Cloud extends Base
 	 */
 	public function ip_validate()
 	{
-		if (!$this->activated()) {
-			self::debug('Not activated QC yet');
-			return self::err('setup_required');
-		}
-
-		if (empty($_POST['data_b64']) || empty($_POST['data_b64_nonce'])) {
+		if (empty($_POST['hash'])) {
 			return self::err('lack_of_params');
 		}
 
-		// Decrypt the data_orig and respond
-		$data_orig = $this->_decrypt($_POST['data_b64'], $_POST['data_b64_nonce']);
-
-		if (!$data_orig) {
+		if ($_POST['hash'] != md5(substr($this->_summary['pk_b64'], 0, 4))) {
 			self::debug('__callback IP request decryption failed');
 			return self::err('err_hash');
 		}
 
 		Control::set_nocache('Cloud IP hash validation');
 
-		self::debug('__callback IP request hash: ' . $data_orig);
+		$resp_hash = md5(substr($this->_summary['pk_b64'], 2, 4));
 
-		return self::ok(array('data_orig' => $data_orig));
+		self::debug('__callback IP request hash: ' . $resp_hash);
+
+		return self::ok(array('hash' => $resp_hash));
 	}
 
 	/**
