@@ -296,7 +296,7 @@ class DB_Optm extends Root
 		Debug2::debug("[DB] Converted $tb to InnoDB");
 
 		$msg = __('Converted to InnoDB successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -341,7 +341,7 @@ class DB_Optm extends Root
 				} else {
 					$msg = $this->_db_clean($type);
 				}
-				Admin_Display::succeed($msg);
+				Admin_Display::success($msg);
 				break;
 
 			case self::TYPE_CONV_TB:
