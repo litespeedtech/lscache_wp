@@ -312,7 +312,9 @@ class CDN extends Root
 
 			// Parse file postfix
 			$parsed_url = parse_url($url, PHP_URL_PATH);
-			if(is_null($parsed_url)) continue;
+			if (!$parsed_url) {
+				continue;
+			}
 
 			$postfix = '.' . pathinfo($parsed_url, PATHINFO_EXTENSION);
 			if (array_key_exists($postfix, $this->_cfg_cdn_mapping)) {
