@@ -118,7 +118,7 @@ $ucss_queue = $this->load_queue('ucss');
 									<?php if (!empty($v['_status'])) : ?><span class="litespeed-success"><?php endif; ?>
 										<?php echo esc_html($v['url']); ?>
 										<?php if (!empty($v['_status'])) : ?></span><?php endif; ?>
-									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . substr($k, 0, $pos) . ')'; ?>
+									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . esc_html(substr($k, 0, $pos)) . ')'; ?>
 									<?php if ($v['is_mobile']) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 									<?php if (!empty($v['is_webp'])) echo ' WebP'; ?>
 									<br />
@@ -235,7 +235,7 @@ $ucss_queue = $this->load_queue('ucss');
 									<?php if (!empty($v['_status'])) : ?><span class="litespeed-success"><?php endif; ?>
 										<?php echo esc_html($v['url']); ?>
 										<?php if (!empty($v['_status'])) : ?></span><?php endif; ?>
-									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . substr($k, 0, $pos) . ')'; ?>
+									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . esc_html(substr($k, 0, $pos)) . ')'; ?>
 									<?php if ($v['is_mobile']) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
 									<?php if (!empty($v['is_webp'])) echo ' WebP'; ?>
 									<br />

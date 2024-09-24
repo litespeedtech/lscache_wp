@@ -256,6 +256,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 6.5.1 - Sep 25 2024 =
 * **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
+* **Page Optimize** Sanitized vary value in queue list. (TaiYou)
 * **Cloud** Silent API error when failing to retrieve news updates.
 
 = 6.5.0.2 - Sep 6 2024 =
