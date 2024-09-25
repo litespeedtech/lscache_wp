@@ -58,7 +58,7 @@ class Avatar extends Base
 		return false;
 	}
 	/**
-	 * Get gravatar URL from DB and regenarate
+	 * Get gravatar URL from DB and regenerate
 	 *
 	 * @since  3.0
 	 * @access public

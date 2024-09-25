@@ -72,10 +72,10 @@ class REST extends Root
 			'callback' => array($this, 'token_get'),
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
-		register_rest_route('litespeed/v1', '/ping', array(
-			'methods' => 'GET',
+		register_rest_route('litespeed/v3', '/ping', array(
+			'methods' => 'POST',
 			'callback' => array($this, 'ping'),
-			'permission_callback' => '__return_true',
+			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
 		// API key callback notification
@@ -147,8 +147,8 @@ class REST extends Root
 	 */
 	public function is_from_cloud()
 	{
-		return true;
-		// return $this->cls( 'Cloud' )->is_from_cloud();
+		// return true;
+		return $this->cls('Cloud')->is_from_cloud();
 	}
 
 	/**
@@ -168,7 +168,7 @@ class REST extends Root
 	 */
 	public function ping()
 	{
-		return Cloud::ok(array('ver' => Core::VER));
+		return $this->cls('Cloud')->ping();
 	}
 
 	/**
@@ -359,6 +359,10 @@ class REST extends Root
 		// Debug2::debug( '[Util] is_rest check [base] ', $rest_url );
 		// Debug2::debug( '[Util] is_rest check [curr] ', $current_url );
 		// Debug2::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) );
-		return strpos($current_url['path'], $rest_url['path']) === 0;
+		if ($current_url !== false && !empty($current_url['path']) && $rest_url !== false && !empty($rest_url['path'])) {
+			return strpos($current_url['path'], $rest_url['path']) === 0;
+		}
+
+		return false;
 	}
 }

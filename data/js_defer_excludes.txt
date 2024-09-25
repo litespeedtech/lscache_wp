@@ -4,7 +4,14 @@
 
 
 # JS file URL excludes
+adsbygoogle
+turnstile
+challenges.cloudflare.com
 
 stats.wp.com/e-
 _stq
 ## JetPack Stats
+
+# Cloudflare turnstile - Tobolo
+turnstile
+challenges.cloudflare.com

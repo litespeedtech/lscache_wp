@@ -1,4 +1,5 @@
 <?php
+
 namespace LiteSpeed\CLI;
 
 defined('WPINC') || exit();
@@ -21,6 +22,26 @@ class Image
 		Debug2::debug('CLI_Cloud init');
 
 		$this->__img_optm = Img_Optm::cls();
+	}
+
+	/**
+	 * Batch toggle optimized images w/ original images
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Switch to original images
+	 *     $ wp litespeed-image batch_switch orig
+	 *
+	 *     # Switch to optimized images
+	 *     $ wp litespeed-image batch_switch optm
+	 *
+	 */
+	public function batch_switch($param)
+	{
+		$type = $param[0];
+		$this->__img_optm->batch_switch($type);
 	}
 
 	/**

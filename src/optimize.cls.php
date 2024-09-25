@@ -846,7 +846,7 @@ class Optimize extends Base
 		Tag::add(Tag::TYPE_MIN . '.' . $filename);
 
 		$qs_hash = substr(md5(self::get_option(self::ITEM_TIMESTAMP_PURGE_CSS)), -5);
-		// As filename is alreay realted to filecon md5, no need QS anymore
+		// As filename is already related to filecon md5, no need QS anymore
 		$filepath_prefix = $this->_build_filepath_prefix($type);
 		return LITESPEED_STATIC_URL . $filepath_prefix . $filename . '?ver=' . $qs_hash;
 	}
@@ -1089,7 +1089,7 @@ class Optimize extends Base
 				}
 
 				// Check if need to inline this css file
-				if (Utility::str_hit_array($attrs['href'], $ucss_file_exc_inline)) {
+				if ($this->conf(self::O_OPTM_UCSS) && Utility::str_hit_array($attrs['href'], $ucss_file_exc_inline)) {
 					Debug2::debug('[Optm] ucss_file_exc_inline hit ' . $attrs['href']);
 					// Replace this css to inline from orig html
 					$inline_script = '<style>' . $this->__optimizer->load_file($attrs['href']) . '</style>';
@@ -1227,7 +1227,7 @@ class Optimize extends Base
 	private function _js_defer($ori, $src)
 	{
 		if (strpos($ori, ' async') !== false) {
-			$ori = str_replace(' async', '', $ori);
+			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]+)\1)?#isU', '', $ori);
 		}
 
 		if (strpos($ori, 'defer') !== false) {

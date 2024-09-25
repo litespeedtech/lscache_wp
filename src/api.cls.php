@@ -48,7 +48,7 @@ class API extends Base
 	/**
 	 * Define hooks to be used in other plugins.
 	 *
-	 * The benefit to use hooks other than functions is no need to detech if LSCWP enabled and function existed or not anymore
+	 * The benefit to use hooks other than functions is no need to detach if LSCWP enabled and function existed or not anymore
 	 *
 	 * @since  3.0
 	 */
@@ -143,7 +143,7 @@ class API extends Base
 		/**
 		 * Cloud
 		 */
-		add_filter('litespeed_is_from_cloud', array($this, 'is_from_cloud')); // Check if current request is from QC (usally its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter('litespeed_is_from_cloud', array($this, 'is_from_cloud')); // Check if current request is from QC (usually its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media

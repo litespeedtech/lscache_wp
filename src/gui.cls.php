@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The frontend GUI class.
  *
@@ -6,7 +7,9 @@
  * @subpackage 	LiteSpeed/src
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 class GUI extends Base
@@ -72,7 +75,7 @@ class GUI extends Base
 	}
 
 	/**
-	 * Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
+	 * Print a loading message when redirecting CCSS/UCSS page to avoid whiteboard confusion
 	 */
 	public static function print_loading($counter, $type)
 	{
@@ -206,7 +209,7 @@ class GUI extends Base
 
 		if (Router::is_ajax()) {
 			// All dismiss actions are considered as ajax call, so just exit
-			exit(json_encode(array('success' => 1)));
+			exit(\json_encode(array('success' => 1)));
 		}
 
 		// Plain click link, redirect to referral url
@@ -501,6 +504,16 @@ class GUI extends Base
 			'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_CSSJS, false, '_ori'),
 			'meta' => array('tabindex' => '0'),
 		));
+
+		if ($this->conf(self::O_CDN_CLOUDFLARE)) {
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-purge-cloudflare',
+				'title' => __('Purge All', 'litespeed-cache') . ' - ' . __('Cloudflare', 'litespeed-cache'),
+				'href' => Utility::build_url(Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL),
+				'meta' => array('tabindex' => '0'),
+			));
+		}
 
 		if (defined('LSCWP_OBJECT_CACHE')) {
 			$wp_admin_bar->add_menu(array(

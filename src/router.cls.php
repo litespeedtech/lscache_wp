@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The core plugin router class.
  *
@@ -7,11 +8,15 @@
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
  */
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 class Router extends Base
 {
+	const LOG_TAG = '[Router]';
+
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
@@ -63,6 +68,7 @@ class Router extends Base
 	const TYPE = 'litespeed_type';
 
 	const ITEM_HASH = 'hash';
+	const ITEM_FLASH_HASH = 'flash_hash';
 
 	private static $_esi_enabled;
 	private static $_is_ajax;
@@ -240,11 +246,11 @@ class Router extends Base
 			return;
 		}
 
-		if (empty($_COOKIE['litespeed_role']) || empty($_COOKIE['litespeed_hash'])) {
+		if (empty($_COOKIE['litespeed_hash']) && empty($_COOKIE['litespeed_flash_hash'])) {
 			return;
 		}
 
-		Debug2::debug('[Router] starting role validation');
+		self::debug('starting role validation');
 
 		// Check if is from crawler
 		// if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
@@ -252,17 +258,59 @@ class Router extends Base
 		// 	return;
 		// }
 
+		// Flash hash validation
+		if (!empty($_COOKIE['litespeed_flash_hash'])) {
+			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
+			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
+				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
+					self::debug('role simulate uid ' . $hash_data['uid']);
+					self::delete_option(self::ITEM_FLASH_HASH);
+					wp_set_current_user($hash_data['uid']);
+					return;
+				}
+			}
+		}
 		// Hash validation
-		$hash = self::get_option(self::ITEM_HASH);
-		if (!$hash || $_COOKIE['litespeed_hash'] != $hash) {
-			Debug2::debug('[Router] hash not match ' . $_COOKIE['litespeed_hash'] . ' != ' . $hash);
-			return;
+		if (!empty($_COOKIE['litespeed_hash'])) {
+			$hash_data = self::get_option(self::ITEM_HASH, array());
+			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
+				if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
+					if (empty($hash_data['ip'])) {
+						$hash_data['ip'] = self::get_ip();
+						self::update_option(self::ITEM_HASH, $hash_data);
+					} else {
+						$server_ips = apply_filters('litespeed_server_ips', array($hash_data['ip']));
+						if (!self::ip_access($server_ips)) {
+							self::debug('WARNING: role simulator ip check failed [db ip] ' . $hash_data['ip'], $server_ips);
+							return;
+						}
+					}
+					wp_set_current_user($hash_data['uid']);
+					return;
+				}
+			}
 		}
 
-		$role_uid = $_COOKIE['litespeed_role'];
-		Debug2::debug('[Router] role simulate litespeed_role uid ' . $role_uid);
+		self::debug('WARNING: role simulator hash not match');
+	}
 
-		wp_set_current_user($role_uid);
+	/**
+	 * Get a short ttl hash (2mins)
+	 *
+	 * @since  6.4
+	 */
+	public function get_flash_hash($uid)
+	{
+		$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
+		if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts'])) {
+			if (time() - $hash_data['ts'] < 60) {
+				return $hash_data['hash'];
+			}
+		}
+
+		$hash = Str::rrand(32);
+		self::update_option(self::ITEM_FLASH_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
+		return $hash;
 	}
 
 	/**
@@ -270,16 +318,11 @@ class Router extends Base
 	 *
 	 * @since  3.3
 	 */
-	public static function get_hash()
+	public function get_hash($uid)
 	{
-		// Reuse previous hash if existed
-		$hash = self::get_option(self::ITEM_HASH);
-		if ($hash) {
-			return $hash;
-		}
-
-		$hash = Str::rrand(6);
-		self::update_option(self::ITEM_HASH, $hash);
+		// As this is called only when starting crawling, not per page, no need to reuse
+		$hash = Str::rrand(32);
+		self::update_option(self::ITEM_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
 		return $hash;
 	}
 
@@ -540,8 +583,7 @@ class Router extends Base
 		$_can_option = current_user_can('manage_options');
 
 		switch ($action) {
-			// Save network settings
-			case self::ACTION_SAVE_SETTINGS_NETWORK:
+			case self::ACTION_SAVE_SETTINGS_NETWORK: // Save network settings
 				if ($_can_network_option) {
 					self::$_action = $action;
 				}
@@ -561,7 +603,7 @@ class Router extends Base
 				return;
 
 			case Core::ACTION_PURGE_EMPTYCACHE: // todo: moved to purge.cls type action
-				if (defined('LITESPEED_ON') && ($_can_network_option || (!$_is_multisite && $_can_option))) {
+				if ((defined('LITESPEED_ON') || $_is_network_admin) && ($_can_network_option || (!$_is_multisite && $_can_option))) {
 					self::$_action = $action;
 				}
 				return;
@@ -617,7 +659,7 @@ class Router extends Base
 				return;
 
 			default:
-				Debug2::debug('[Router] LSCWP_CTRL match falied: ' . $action);
+				Debug2::debug('[Router] LSCWP_CTRL match failed: ' . $action);
 				return;
 		}
 	}

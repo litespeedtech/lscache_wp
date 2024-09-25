@@ -1,0 +1,7 @@
+# Predefined list for Do Not Cache URIs #
+# Comment can use `# `(there is a space following), or `##`, can use both as a new line or end of one line
+# If you want to predefine new items, please send a Pull Request to https://github.com/litespeedtech/lscache_wp/blob/dev/data/cache_nocacheable.txt We will merge into next plugin release
+
+
+# WP v6.6 Official Site Editor (Appearance >> Editor)
+^/wp-json/wp/v2

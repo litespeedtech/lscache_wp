@@ -61,11 +61,29 @@ class Error
 				break;
 
 			case 'out_of_daily_quota':
-				$msg = __('You don\'t have enough daily quota left for current service today.', 'litespeed-cache');
+				$msg = __('You have used all of your daily quota for today.', 'litespeed-cache');
+				$msg .=
+					' ' .
+					Doc::learn_more(
+						'https://docs.quic.cloud/billing/services/#daily-limits-on-free-quota-usage',
+						__('Learn more or purchase additional quota.', 'litespeed-cache'),
+						false,
+						false,
+						true
+					);
 				break;
 
 			case 'out_of_quota':
-				$msg = __('You don\'t have enough quota left for current service this month.', 'litespeed-cache');
+				$msg = __('You have used all of your quota left for current service this month.', 'litespeed-cache');
+				$msg .=
+					' ' .
+					Doc::learn_more(
+						'https://docs.quic.cloud/billing/services/#daily-limits-on-free-quota-usage',
+						__('Learn more or purchase additional quota.', 'litespeed-cache'),
+						false,
+						false,
+						true
+					);
 				break;
 
 			case 'too_many_requested':
@@ -73,7 +91,7 @@ class Error
 				break;
 
 			case 'too_many_notified':
-				$msg = __('You have too many notified images, please pull down notified images first.', 'litespeed-cache');
+				$msg = __('You have images waiting to be pulled. Please wait for the automatic pull to complete, or pull them down manually now.', 'litespeed-cache');
 				break;
 
 			case 'empty_list':
@@ -159,8 +177,7 @@ class Error
 				$msg = __('Crawler disabled by the server admin.', 'litespeed-cache');
 				break;
 
-			/*** QC error code ***/
-			case 'try_later':
+			case 'try_later': // QC error code
 				$msg = __('Previous request too recent. Please try again later.', 'litespeed-cache');
 				break;
 

@@ -21,20 +21,6 @@ $lqip_queue = $this->load_queue('lqip');
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_MEDIA_PRELOAD_FEATURED; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php $this->build_switch($id); ?>
-				<div class="litespeed-desc">
-					<?php echo __('Load a post\'s Featured Image first, before the page begins to render. Leads to performance improvements and minimizes the risk of render blocking by Featured Images.', 'litespeed-cache'); ?>
-					<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/pageopt/#preload-featured-image'); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th>
 				<?php $id = Base::O_MEDIA_LAZY; ?>
 				<?php $this->title($id); ?>
 			</th>
@@ -263,5 +249,19 @@ $lqip_queue = $this->load_queue('lqip');
 			</td>
 		</tr>
 
+		<tr>
+			<th>
+				<?php $id = Base::O_IMG_OPTM_JPG_QUALITY; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_input($id, 'litespeed-input-short'); ?>
+				<div class="litespeed-desc">
+					<?php echo __('The image compression quality setting of WordPress out of 100.', 'litespeed-cache'); ?>
+					<?php $this->recommended($id); ?>
+					<?php $this->_validate_ttl($id, 0, 100); ?>
+				</div>
+			</td>
+		</tr>
 	</tbody>
 </table>

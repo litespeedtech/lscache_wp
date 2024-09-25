@@ -47,7 +47,7 @@ class Metabox extends Root
 	}
 
 	/**
-	 * Regsiter meta box
+	 * Register meta box
 	 * @since 4.7
 	 */
 	public function add_meta_boxes($post_type)

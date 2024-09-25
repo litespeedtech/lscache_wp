@@ -40,7 +40,7 @@ class Base extends Root
 	const O_CACHE_COMMENTER = 'cache-commenter';
 	const O_CACHE_REST = 'cache-rest';
 	const O_CACHE_PAGE_LOGIN = 'cache-page_login';
-	const O_CACHE_FAVICON = 'cache-favicon';
+	const O_CACHE_FAVICON = 'cache-favicon'; // Deprecated since v6.2. TODO: Will drop after v6.5
 	const O_CACHE_RES = 'cache-resources';
 	const O_CACHE_MOBILE = 'cache-mobile';
 	const O_CACHE_MOBILE_RULES = 'cache-mobile_rules';
@@ -63,6 +63,7 @@ class Base extends Root
 	const O_CACHE_TTL_REST = 'cache-ttl_rest';
 	const O_CACHE_TTL_STATUS = 'cache-ttl_status';
 	const O_CACHE_TTL_BROWSER = 'cache-ttl_browser';
+	const O_CACHE_AJAX_TTL = 'cache-ajax_ttl';
 	const O_CACHE_LOGIN_COOKIE = 'cache-login_cookie';
 	const O_CACHE_VARY_COOKIES = 'cache-vary_cookies';
 	const O_CACHE_VARY_GROUP = 'cache-vary_group';
@@ -109,8 +110,9 @@ class Base extends Root
 	const O_DEBUG_IPS = 'debug-ips';
 	const O_DEBUG_LEVEL = 'debug-level';
 	const O_DEBUG_FILESIZE = 'debug-filesize';
-	const O_DEBUG_COOKIE = 'debug-cookie';
-	const O_DEBUG_COLLAPS_QS = 'debug-collaps_qs';
+	const O_DEBUG_COOKIE = 'debug-cookie'; // For backwards compatibility, will drop after v7.0
+	const O_DEBUG_COLLAPSE_QS = 'debug-collapse_qs';
+	const O_DEBUG_COLLAPS_QS = 'debug-collapse_qs'; // For backwards compatibility, will drop after v6.5
 	const O_DEBUG_INC = 'debug-inc';
 	const O_DEBUG_EXC = 'debug-exc';
 	const O_DEBUG_EXC_STRINGS = 'debug-exc_strings';
@@ -140,6 +142,7 @@ class Base extends Root
 	const O_OPTM_JS_EXC = 'optm-js_exc';
 	const O_OPTM_HTML_MIN = 'optm-html_min';
 	const O_OPTM_HTML_LAZY = 'optm-html_lazy';
+	const O_OPTM_HTML_SKIP_COMMENTS = 'optm-html_skip_comment';
 	const O_OPTM_QS_RM = 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM = 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC = 'optm-css_async';
@@ -191,7 +194,7 @@ class Base extends Root
 	## -------------------------------------------------- ##
 	## --------------		 Media 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_MEDIA_PRELOAD_FEATURED = 'media-preload_featured';
+	const O_MEDIA_PRELOAD_FEATURED = 'media-preload_featured'; // Deprecated since v6.2. TODO: Will drop after v6.5
 	const O_MEDIA_LAZY = 'media-lazy';
 	const O_MEDIA_LAZY_PLACEHOLDER = 'media-lazy_placeholder';
 	const O_MEDIA_PLACEHOLDER_RESP = 'media-placeholder_resp';
@@ -213,6 +216,7 @@ class Base extends Root
 	const O_MEDIA_LQIP_EXC = 'media-lqip_exc';
 	const O_MEDIA_VPI = 'media-vpi';
 	const O_MEDIA_VPI_CRON = 'media-vpi_cron';
+	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -226,7 +230,6 @@ class Base extends Root
 	const O_IMG_OPTM_EXIF = 'img_optm-exif';
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
-	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
@@ -282,8 +285,6 @@ class Base extends Root
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP';
 	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT';
 	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE';
-
-	// const O_FAVICON = 'litespeed-cache-favicon';
 
 	const CRWL_COOKIE_NAME = 'name';
 	const CRWL_COOKIE_VALS = 'vals';
@@ -344,7 +345,6 @@ class Base extends Root
 		self::O_CACHE_COMMENTER => false,
 		self::O_CACHE_REST => false,
 		self::O_CACHE_PAGE_LOGIN => false,
-		self::O_CACHE_FAVICON => false,
 		self::O_CACHE_RES => false,
 		self::O_CACHE_MOBILE => false,
 		self::O_CACHE_MOBILE_RULES => array(),
@@ -368,6 +368,7 @@ class Base extends Root
 		self::O_CACHE_TTL_BROWSER => 0,
 		self::O_CACHE_TTL_STATUS => array(),
 		self::O_CACHE_LOGIN_COOKIE => '',
+		self::O_CACHE_AJAX_TTL => array(),
 		self::O_CACHE_VARY_COOKIES => array(),
 		self::O_CACHE_VARY_GROUP => array(),
 
@@ -405,8 +406,7 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -432,6 +432,7 @@ class Base extends Root
 		self::O_OPTM_JS_EXC => array(),
 		self::O_OPTM_HTML_MIN => false,
 		self::O_OPTM_HTML_LAZY => array(),
+		self::O_OPTM_HTML_SKIP_COMMENTS => array(),
 		self::O_OPTM_QS_RM => false,
 		self::O_OPTM_GGFONTS_RM => false,
 		self::O_OPTM_CSS_ASYNC => false,
@@ -477,7 +478,6 @@ class Base extends Root
 		self::O_OPTM_LOCALIZE_DOMAINS => array(),
 
 		// Media
-		self::O_MEDIA_PRELOAD_FEATURED => false,
 		self::O_MEDIA_LAZY => false,
 		self::O_MEDIA_LAZY_PLACEHOLDER => '',
 		self::O_MEDIA_PLACEHOLDER_RESP => false,
@@ -560,7 +560,6 @@ class Base extends Root
 		self::O_AUTO_UPGRADE => false,
 		self::O_GUEST => false,
 
-		self::O_CACHE_FAVICON => false,
 		self::O_CACHE_RES => false,
 		self::O_CACHE_BROWSER => false,
 		self::O_CACHE_MOBILE => false,
@@ -593,8 +592,7 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -798,7 +796,7 @@ class Base extends Root
 	}
 
 	/**
-	 * Append a new multi swith max limit for the bool option
+	 * Append a new multi switch max limit for the bool option
 	 *
 	 * @since  3.0
 	 */

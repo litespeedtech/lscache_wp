@@ -23,7 +23,7 @@ class Guest
 	private $_conf = false;
 
 	/**
-	 * Construtor
+	 * Constructor
 	 *
 	 * @since 4.1
 	 */

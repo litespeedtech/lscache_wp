@@ -31,10 +31,13 @@ class Debug2 extends Root
 	 */
 	public function __construct()
 	{
-		self::$log_path_prefix = defined('LSCWP_DEBUG_PATH') ? LSCWP_DEBUG_PATH : LSCWP_CONTENT_DIR;
-		self::$log_path = self::$log_path_prefix . '/debug.log';
+		self::$log_path_prefix = LITESPEED_STATIC_DIR . '/debug/';
+		// Maybe move legacy log files
+		$this->_maybe_init_folder();
+
+		self::$log_path = $this->path('debug');
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'lscache_') === 0) {
-			self::$log_path = self::$log_path_prefix . '/crawler.log';
+			self::$log_path = $this->path('crawler');
 		}
 
 		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', get_current_blog_id());
@@ -47,13 +50,64 @@ class Debug2 extends Root
 	}
 
 	/**
+	 * Try moving legacy logs into /litespeed/debug/ folder
+	 *
+	 * @since 6.5
+	 */
+	private function _maybe_init_folder()
+	{
+		if (file_exists(self::$log_path_prefix . 'index.php')) {
+			return;
+		}
+		file::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
+
+		$logs = array('debug', 'debug.purge', 'crawler');
+		foreach ($logs as $log) {
+			if (file_exists(LSCWP_CONTENT_DIR . '/' . $log . '.log') && !file_exists($this->path($log))) {
+				rename(LSCWP_CONTENT_DIR . '/' . $log . '.log', $this->path($log));
+			}
+		}
+	}
+
+	/**
+	 * Generate log file path
+	 *
+	 * @since 6.5
+	 */
+	public function path($type)
+	{
+		return self::$log_path_prefix . self::FilePath($type);
+	}
+
+	/**
+	 * Generate the fixed log filename
+	 *
+	 * @since 6.5
+	 */
+	public static function FilePath($type)
+	{
+		if ($type == 'debug.purge') {
+			$type = 'purge';
+		}
+                $key = defined('AUTH_KEY') ? AUTH_KEY : md5(__FILE__);
+		$rand = substr(md5(substr($key, -16)), -16);
+		return $type . $rand . '.log';
+	}
+
+	/**
 	 * End call of one request process
 	 * @since 4.7
 	 * @access public
 	 */
 	public static function ended()
 	{
-		self::debug('Response headers', headers_list());
+		$headers = headers_list();
+		foreach ($headers as $key => $header) {
+			if (stripos($header, 'Set-Cookie') === 0) {
+				unset($headers[$key]);
+			}
+		}
+		self::debug('Response headers', $headers);
 
 		$elapsed_time = number_format((microtime(true) - LSCWP_TS_0) * 1000, 2);
 		self::debug("End response\n--------------------------------------------------Duration: " . $elapsed_time . " ms------------------------------\n");
@@ -143,7 +197,7 @@ class Debug2 extends Root
 			return;
 		}
 
-		$purge_file = self::$log_path_prefix . '/debug.purge.log';
+		$purge_file = self::cls()->path('purge');
 
 		self::cls()->_init_request($purge_file);
 
@@ -246,10 +300,8 @@ class Debug2 extends Root
 		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
 		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
-		if ($this->conf(Base::O_DEBUG_COLLAPS_QS)) {
-			if (strlen($qs) > 53) {
-				$qs = substr($qs, 0, 53) . '...';
-			}
+		if ($this->conf(Base::O_DEBUG_COLLAPSE_QS)) {
+			$qs = $this->_omit_long_message($qs);
 			if ($qs) {
 				$param .= ' ? ' . $qs;
 			}
@@ -260,17 +312,15 @@ class Debug2 extends Root
 		}
 
 		if (!empty($_SERVER['HTTP_REFERER'])) {
-			$params[] = 'HTTP_REFERER: ' . $server['HTTP_REFERER'];
+			$params[] = 'HTTP_REFERER: ' . $this->_omit_long_message($server['HTTP_REFERER']);
 		}
 
 		if (defined('LSCWP_LOG_MORE')) {
-			$params[] = 'User Agent: ' . $server['HTTP_USER_AGENT'];
+			$params[] = 'User Agent: ' . $this->_omit_long_message($server['HTTP_USER_AGENT']);
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
 		}
-		if ($this->conf(Base::O_DEBUG_COOKIE)) {
-			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
-		}
+		// $params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
 		if (isset($_COOKIE['_lscache_vary'])) {
 			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE['_lscache_vary'];
 		}
@@ -290,6 +340,18 @@ class Debug2 extends Root
 		$request = array_map(__CLASS__ . '::format_message', $params);
 
 		File::append($log_file, $request);
+	}
+
+	/**
+	 * Trim long msg to keep log neat
+	 * @since 6.3
+	 */
+	private function _omit_long_message($msg)
+	{
+		if (strlen($msg) > 53) {
+			$msg = substr($msg, 0, 53) . '...';
+		}
+		return $msg;
 	}
 
 	/**
@@ -466,9 +528,9 @@ class Debug2 extends Root
 	 */
 	private function _clear_log()
 	{
-		$logs = array('debug', 'debug.purge', 'crawler');
+		$logs = array('debug', 'purge', 'crawler');
 		foreach ($logs as $log) {
-			File::save(self::$log_path_prefix . "/{$log}.log", '');
+			File::save($this->path($log), '');
 		}
 	}
 

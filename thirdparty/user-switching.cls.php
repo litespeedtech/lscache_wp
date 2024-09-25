@@ -12,7 +12,7 @@ class User_Switching
 {
 	public static function detect()
 	{
-		if (!defined('user_switching')) {
+		if (!class_exists('user_switching')) {
 			return;
 		}
 

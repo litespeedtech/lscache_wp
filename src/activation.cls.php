@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin activation class.
  *
@@ -8,6 +9,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -45,7 +47,7 @@ class Activation extends Base
 		$advanced_cache = LSCWP_CONTENT_DIR . '/advanced-cache.php';
 		if (version_compare($wp_version, '5.3', '<') && !file_exists($advanced_cache)) {
 			$file_pointer = fopen($advanced_cache, 'w');
-			fwrite($file_pointer, "<?php\n\n// A compatibility placeholder for WordPress < v5.3\n");
+			fwrite($file_pointer, "<?php\n\n// A compatibility placeholder for WordPress < v5.3\n// Created by LSCWP v6.1+");
 			fclose($file_pointer);
 		}
 
@@ -350,6 +352,7 @@ class Activation extends Base
 		$ids = array();
 		if ($options[self::O_OBJECT]) {
 			$this_ids = array(
+				self::O_DEBUG,
 				self::O_OBJECT_KIND,
 				self::O_OBJECT_HOST,
 				self::O_OBJECT_PORT,
@@ -367,7 +370,7 @@ class Activation extends Base
 		}
 
 		if ($options[self::O_GUEST]) {
-			$this_ids = array(self::HASH, self::O_CACHE_LOGIN_COOKIE, self::O_DEBUG, self::O_DEBUG_IPS, self::O_UTIL_NO_HTTPS_VARY, self::O_GUEST_UAS, self::O_GUEST_IPS);
+			$this_ids = array(self::HASH, self::O_CACHE_LOGIN_COOKIE, self::O_DEBUG_IPS, self::O_UTIL_NO_HTTPS_VARY, self::O_GUEST_UAS, self::O_GUEST_IPS);
 			$ids = array_merge($ids, $this_ids);
 		}
 
@@ -375,7 +378,7 @@ class Activation extends Base
 		foreach ($ids as $v) {
 			$data[$v] = $options[$v];
 		}
-		$data = json_encode($data);
+		$data = \json_encode($data);
 
 		$old_data = File::read(self::$_data_file);
 		if ($old_data != $data) {

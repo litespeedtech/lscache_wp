@@ -62,6 +62,11 @@ class ESI extends Root
 			return;
 		}
 
+		// If page is not cacheable
+		if (defined('DONOTCACHEPAGE') && apply_filters('litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE)) {
+			return;
+		}
+
 		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
 		$this->_hooks();
 
@@ -102,7 +107,7 @@ class ESI extends Root
 		/**
 		 * Shortcode ESI
 		 *
-		 * To use it, just change the origianl shortcode as below:
+		 * To use it, just change the original shortcode as below:
 		 * 		old: [someshortcode aa='bb']
 		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
 		 *
@@ -359,6 +364,7 @@ class ESI extends Root
 
 		// Add admin_bar esi
 		if (Router::is_logged_in()) {
+			remove_action('wp_body_open', 'wp_admin_bar_render', 0); // Remove default Admin bar. Fix https://github.com/elementor/elementor/issues/25198
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000);
 		}
@@ -453,7 +459,7 @@ class ESI extends Root
 	 * @param string $control The cache control attribute if any.
 	 * @param bool $silence If generate wrapper comment or not
 	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
-	 * @param bool $svar  		If store the value in memory or not, in memory wil be faster
+	 * @param bool $svar  		If store the value in memory or not, in memory will be faster
 	 * @param array $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
 	 */
 	public function sub_esi_block(
@@ -502,7 +508,7 @@ class ESI extends Root
 			$appended_params['_control'] = $control;
 		}
 		if ($params) {
-			$appended_params[self::QS_PARAMS] = base64_encode(json_encode($params));
+			$appended_params[self::QS_PARAMS] = base64_encode(\json_encode($params));
 			Debug2::debug2('[ESI] param ', $params);
 		}
 
@@ -608,7 +614,7 @@ class ESI extends Root
 
 		Debug2::debug2('[ESI] parms', $unencrypted);
 		// $unencoded = urldecode($unencrypted); no need to do this as $_GET is already parsed
-		$params = json_decode($unencrypted, true);
+		$params = \json_decode($unencrypted, true);
 
 		return $params;
 	}
@@ -1006,7 +1012,7 @@ class ESI extends Root
 	}
 
 	/**
-	 * Replace preseved blocks
+	 * Replace preserved blocks
 	 *
 	 * @since  2.6
 	 * @access public

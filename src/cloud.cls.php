@@ -47,7 +47,7 @@ class Cloud extends Base
 
 	const API_REPORT = 'wp/report';
 	const API_NEWS = 'news';
-	const API_VER = 'ver';
+	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
 
 	private static $CENTER_SVC_SET = array(
@@ -164,11 +164,12 @@ class Cloud extends Base
 		$req_data = array(
 			'v' => defined('LSCWP_CUR_V') ? LSCWP_CUR_V : '',
 			'src' => $src,
+			'php' => phpversion(),
 		);
 		if (defined('LITESPEED_ERR')) {
-			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
+			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? \json_encode(LITESPEED_ERR) : LITESPEED_ERR);
 		}
-		$data = self::get(self::API_VER, $req_data);
+		$data = self::post(self::API_VER, $req_data);
 
 		return $data;
 	}
@@ -324,7 +325,7 @@ class Cloud extends Base
 			return;
 		}
 
-		self::debug('sync_usage ' . json_encode($usage));
+		self::debug('sync_usage ' . \json_encode($usage));
 
 		foreach (self::$SERVICES as $v) {
 			$this->_summary['usage.' . $v] = !empty($usage[$v]) ? $usage[$v] : false;
@@ -397,7 +398,7 @@ class Cloud extends Base
 			self::debug('request cloud list failed: ', $json);
 
 			if ($json) {
-				$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . json_encode($json);
+				$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . \json_encode($json);
 				Admin_Display::error($msg);
 			}
 
@@ -459,7 +460,7 @@ class Cloud extends Base
 					continue;
 				}
 
-				$curr_load = json_decode($response['body'], true);
+				$curr_load = \json_decode($response['body'], true);
 				if (!empty($curr_load['_res']) && $curr_load['_res'] == 'ok' && isset($curr_load['load'])) {
 					$valid_cloud_loads[$v] = $curr_load['load'];
 				}
@@ -728,7 +729,7 @@ class Cloud extends Base
 			return;
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		if (!is_array($json)) {
 			self::debug('failed to decode response json: ' . $response['body']);
@@ -866,8 +867,8 @@ class Cloud extends Base
 		if (!empty($json['_carry_on'])) {
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
-			foreach (array('usage', 'promo', 'partner', '_err', '_info', '_note', '_success') as $v) {
-				if (!empty($json['_carry_on'][$v])) {
+			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
+				if (isset($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':
 							$usage_svc_tag = in_array($service, array(self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI)) ? self::SVC_PAGE_OPTM : $service;
@@ -1036,8 +1037,9 @@ class Cloud extends Base
 				'Content-Type' => 'application/json',
 			),
 		);
+		self::debug('Req rest api to QC [api] ' . $api);
 		if (!empty($body)) {
-			$req_args['body'] = json_encode($body);
+			$req_args['body'] = \json_encode($body);
 
 			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
 		} else {
@@ -1055,10 +1057,12 @@ class Cloud extends Base
 			Admin_Display::error(__('Cloud REST Error', 'litespeed-cache') . ': ' . $error_message);
 			return $error_message;
 		} elseif (wp_remote_retrieve_response_code($response) == '401') {
+			Admin_Display::error(__('Unauthorized access to REST API. Your token has expired.', 'litespeed-cache'));
 			return 'unauthorized access to REST API.';
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
+		self::debug('QC response', $json);
 
 		if (!$json['success']) {
 			$contactSupport = false;
@@ -1155,7 +1159,8 @@ class Cloud extends Base
 			return self::err('lack_of_param');
 		}
 
-		if (empty($this->_api_key())) {
+		// Note: Using empty here throws a fatal error in PHP v5.3
+		if (!$this->_api_key()) {
 			self::debug('Lack of API key');
 			return self::err('lack_of_api_key');
 		}
@@ -1220,7 +1225,7 @@ class Cloud extends Base
 			return;
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
 		// Save token option
 		if (!empty($json['token'])) {
@@ -1395,17 +1400,15 @@ class Cloud extends Base
 	 * @since  3.0
 	 * @since  5.0 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
 	 */
-	public function parse_qc_redir($extra = array())
+	public function parse_qc_redir($check_token = false)
 	{
-		$extraRet = array();
-		$qsDrop = array();
 		if (!$this->_api_key() && !empty($this->_summary['is_linked'])) {
 			$this->_summary['is_linked'] = 0;
 			self::save_summary();
 		}
 
 		if (empty($_GET['qc_res'])) {
-			return $extraRet;
+			return false;
 		}
 
 		if ($_GET['qc_res'] == 'registered') {
@@ -1416,32 +1419,49 @@ class Cloud extends Base
 			}
 		}
 
+		$qsDrop = array();
 		$qsDrop[] = ".replace( '&qc_res=" . sanitize_key($_GET['qc_res']) . ', \'\' )';
 
 		if (!empty($_GET['domain_hash'])) {
+			if (empty($_GET['domain_hash_nonce'])) {
+				Admin_Display::error(__('Domain Key hash nonce missing.', 'litespeed-cache'), true);
+				return false;
+			}
+			$salt = substr($this->_api_key(), 3, 8);
+			$tick = ceil(time() / 43200);
+			$nonce = md5($salt . $tick);
+			$nonce2 = md5($salt . ($tick - 1));
+			if ($_GET['domain_hash_nonce'] != $nonce && $_GET['domain_hash_nonce'] != $nonce2) {
+				Admin_Display::error(__('Domain Key hash nonce mismatch. Please correct your server clock.', 'litespeed-cache'), true);
+				return false;
+			}
+
 			if (md5(substr($this->_api_key(), 2, 8)) !== $_GET['domain_hash']) {
 				Admin_Display::error(__('Domain Key hash mismatch', 'litespeed-cache'), true);
-				return $extraRet;
+				return false;
 			}
 
 			$this->set_linked();
 			$qsDrop[] = ".replace( '&domain_hash=" . sanitize_key($_GET['domain_hash']) . ', \'\' )';
 		}
 
-		if (!empty($extra)) {
-			foreach ($extra as $key) {
-				if (!empty($_GET[$key])) {
-					$extraRet[$key] = $_GET[$key];
-					$qsDrop[] = ".replace( '&$key=" . urlencode($_GET[$key]) . ', \'\' )';
-				}
+		$token = '';
+		if ($check_token && !empty($_GET['token'])) {
+			// Validate nonce `litespeed_qc_link`
+			if (empty($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'litespeed_qc_link')) {
+				Admin_Display::error(__('Failed to verify domain nonce.', 'litespeed-cache'), true);
+				return false;
 			}
+
+			$token = preg_replace('/[^0-9a-zA-Z]/', '', $_GET['token']);
+			$qsDrop[] = ".replace( '&token=" . urlencode($_GET['token']) . ', \'\' )';
 		}
 
 		$replaceStr = implode('', $qsDrop);
 
 		// Drop QS
 		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href" . $replaceStr . ' );</script>';
-		return $extraRet;
+		return $token;
 	}
 
 	/**
@@ -1451,7 +1471,9 @@ class Cloud extends Base
 	 */
 	public function is_from_cloud()
 	{
-		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || time() - $this->_summary['ips_ts'] > 86400 * self::TTL_IPS) {
+		$check_point = time() - 86400 * self::TTL_IPS;
+		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || $this->_summary['ips_ts'] < $check_point) {
+			self::debug('Force updating ip as ips_ts is older than ' . self::TTL_IPS . ' days');
 			$this->_update_ips();
 		}
 
@@ -1459,8 +1481,19 @@ class Cloud extends Base
 		if (!$res) {
 			self::debug('❌ Not our cloud IP');
 
-			// Refresh IP list for future detection
-			$this->_update_ips();
+			// Auto check ip list again but need an interval limit safety.
+			if (empty($this->_summary['ips_ts_runner']) || time() - $this->_summary['ips_ts_runner'] > 600) {
+				self::debug('Force updating ip as ips_ts_runner is older than 10mins');
+				// Refresh IP list for future detection
+				$this->_update_ips();
+				$res = $this->cls('Router')->ip_access($this->_summary['ips']);
+				if (!$res) {
+					self::debug('❌ 2nd time: Not our cloud IP');
+				} else {
+					self::debug('✅ Passed Cloud IP verification');
+				}
+				return $res;
+			}
 		} else {
 			self::debug('✅ Passed Cloud IP verification');
 		}
@@ -1476,6 +1509,8 @@ class Cloud extends Base
 	private function _update_ips()
 	{
 		self::debug('Load remote Cloud IP list from ' . self::CLOUD_IPS);
+		// Prevent multiple call in a short period
+		self::save_summary(array('ips_ts' => time(), 'ips_ts_runner' => time()));
 
 		$response = wp_remote_get(self::CLOUD_IPS . '?json');
 		if (is_wp_error($response)) {
@@ -1484,9 +1519,10 @@ class Cloud extends Base
 			throw new \Exception('Failed to fetch QUIC.cloud whitelist ' . $error_message);
 		}
 
-		$json = json_decode($response['body'], true);
+		$json = \json_decode($response['body'], true);
 
-		self::save_summary(array('ips_ts' => time(), 'ips' => $json));
+		self::debug('Load ips', $json);
+		self::save_summary(array('ips' => $json));
 	}
 
 	/**
@@ -1508,6 +1544,35 @@ class Cloud extends Base
 	public static function err($code)
 	{
 		return array('_res' => 'err', '_msg' => $code);
+	}
+
+	/**
+	 * Return pong for ping to check PHP function availability
+	 * @since 6.5
+	 */
+	public function ping()
+	{
+		$resp = array(
+			'v_lscwp' => Core::VER,
+			'v_php' => PHP_VERSION,
+			'v_wp' => $GLOBALS['wp_version'],
+		);
+		if (!empty($_POST['funcs'])) {
+			foreach ($_POST['funcs'] as $v) {
+				$resp[$v] = function_exists($v) ? 'y' : 'n';
+			}
+		}
+		if (!empty($_POST['classes'])) {
+			foreach ($_POST['classes'] as $v) {
+				$resp[$v] = class_exists($v) ? 'y' : 'n';
+			}
+		}
+		if (!empty($_POST['consts'])) {
+			foreach ($_POST['consts'] as $v) {
+				$resp[$v] = defined($v) ? 'y' : 'n';
+			}
+		}
+		return self::ok($resp);
 	}
 
 	/**

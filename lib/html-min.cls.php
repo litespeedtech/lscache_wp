@@ -26,6 +26,7 @@ class HTML_MIN
 	 * @var boolean
 	 */
 	protected $_jsCleanComments = true;
+	protected $_skipComments = array();
 
 	/**
 	 * "Minify" an HTML page
@@ -84,6 +85,9 @@ class HTML_MIN
 		}
 		if (isset($options['jsCleanComments'])) {
 			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
+		}
+		if (isset($options['skipComments'])) {
+			$this->_skipComments = $options['skipComments'];
 		}
 	}
 
@@ -166,11 +170,25 @@ class HTML_MIN
 		return $this->_html;
 	}
 
+	/**
+	 * From LSCWP 6.2: Changed the function to test for special comments that will be skipped. See: https://github.com/litespeedtech/lscache_wp/pull/622
+	 */
 	protected function _commentCB($m)
 	{
-		return (0 === strpos($m[1], '[') || false !== strpos($m[1], '<!['))
-			? $m[0]
-			: '';
+		// If is IE conditional comment return it.
+		if(0 === strpos($m[1], '[') || false !== strpos($m[1], '<![')) return $m[0];
+
+		// Check if comment text is present in Page Optimization -> HTML Settings -> HTML Keep comments
+		if(count($this->_skipComments) > 0){
+			foreach ($this->_skipComments as $comment) {
+				if ($comment && strpos($m[1], $comment) !== false) {
+					return $m[0];
+				}
+			}
+		}
+
+		// Comment can be removed.
+		return '';
 	}
 
 	protected function _reservePlace($content)

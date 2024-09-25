@@ -25,30 +25,34 @@ $pagination = Utility::pagination( $count, 30 );
 <?php echo __( 'Total', 'litespeed-cache' ) . ': ' . $count; ?>
 
 <?php echo $pagination; ?>
-<table class="wp-list-table widefat striped">
-	<thead><tr >
-		<th scope="col">#</th>
-		<th scope="col"><?php echo __( 'URL', 'litespeed-cache' ); ?></th>
-		<th scope="col"><?php echo __( 'Status', 'litespeed-cache' ); ?></th>
-		<th scope="col"><?php echo __( 'Operation', 'litespeed-cache' ); ?></th>
-	</tr></thead>
-	<tbody>
-		<?php foreach ( $list as $i => $v ) : ?>
-		<tr>
-			<td><?php echo $i + 1; ?></td>
-			<td>
-				<?php echo $v[ 'url' ]; ?>
-			</td>
-			<td>
-				<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
-			</td>
-			<td>
-				<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blocklist', 'litespeed-cache' ); ?></a>
-			</td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
+
+<div class="litespeed-table-responsive">
+	<table class="wp-list-table widefat striped">
+		<thead><tr >
+			<th scope="col">#</th>
+			<th scope="col"><?php echo __( 'URL', 'litespeed-cache' ); ?></th>
+			<th scope="col"><?php echo __( 'Status', 'litespeed-cache' ); ?></th>
+			<th scope="col"><?php echo __( 'Operation', 'litespeed-cache' ); ?></th>
+		</tr></thead>
+		<tbody>
+			<?php foreach ( $list as $i => $v ) : ?>
+			<tr>
+				<td><?php echo $i + 1; ?></td>
+				<td>
+					<?php echo $v[ 'url' ]; ?>
+				</td>
+				<td>
+					<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
+				</td>
+				<td>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blocklist', 'litespeed-cache' ); ?></a>
+				</td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+
 <?php echo $pagination; ?>
 <p>
 <font class="litespeed-success">API: <?php echo sprintf( __( 'PHP Constant %s available to disable blocklist.', 'litespeed-cache' ), "<code>LITESPEED_CRAWLER_DISABLE_BLOCKLIST</code>" ); ?></font>

@@ -27,8 +27,8 @@ class Task extends Root
 
 	private static $_guest_options = array(Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI);
 
-	const FITLER_CRAWLER = 'litespeed_crawl_filter';
-	const FITLER = 'litespeed_filter';
+	const FILTER_CRAWLER = 'litespeed_crawl_filter';
+	const FILTER = 'litespeed_filter';
 
 	/**
 	 * Keep all tasks in cron
@@ -62,7 +62,7 @@ class Task extends Root
 			if (!wp_next_scheduled($trigger['name'])) {
 				self::debug('Cron hook register [name] ' . $trigger['name']);
 
-				wp_schedule_event(time(), $id == Base::O_CRAWLER ? self::FITLER_CRAWLER : self::FITLER, $trigger['name']);
+				wp_schedule_event(time(), $id == Base::O_CRAWLER ? self::FILTER_CRAWLER : self::FILTER, $trigger['name']);
 			}
 
 			add_action($trigger['name'], $trigger['hook']);
@@ -76,8 +76,18 @@ class Task extends Root
 	 */
 	public static function async_litespeed_handler()
 	{
-		$type = Router::verify_type();
+		$hash_data = self::get_option('async_call-hash', array());
+		if (!$hash_data || !is_array($hash_data) || empty($hash_data['hash']) || empty($hash_data['ts'])) {
+			self::debug('async_litespeed_handler no hash data', $hash_data);
+			return;
+		}
+		if (time() - $hash_data['ts'] > 120 || empty($_GET['nonce']) || $_GET['nonce'] != $hash_data['hash']) {
+			self::debug('async_litespeed_handler nonce mismatch');
+			return;
+		}
+		self::delete_option('async_call-hash');
 
+		$type = Router::verify_type();
 		self::debug('type=' . $type);
 
 		// Don't lock up other requests while processing
@@ -106,6 +116,8 @@ class Task extends Root
 	 */
 	public static function async_call($type)
 	{
+		$hash = Str::rrand(32);
+		self::update_option('async_call-hash', array('hash' => $hash, 'ts' => time()));
 		$args = array(
 			'timeout' => 0.01,
 			'blocking' => false,
@@ -114,7 +126,7 @@ class Task extends Root
 		);
 		$qs = array(
 			'action' => 'async_litespeed',
-			'nonce' => wp_create_nonce('async_litespeed'),
+			'nonce' => $hash,
 			Router::TYPE => $type,
 		);
 		$url = add_query_arg($qs, admin_url('admin-ajax.php'));
@@ -171,8 +183,8 @@ class Task extends Root
 	 */
 	public function lscache_cron_filter($schedules)
 	{
-		if (!array_key_exists(self::FITLER, $schedules)) {
-			$schedules[self::FITLER] = array(
+		if (!array_key_exists(self::FILTER, $schedules)) {
+			$schedules[self::FILTER] = array(
 				'interval' => 60,
 				'display' => __('Every Minute', 'litespeed-cache'),
 			);
@@ -190,9 +202,9 @@ class Task extends Root
 	{
 		$interval = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
 		// $wp_schedules = wp_get_schedules();
-		if (!array_key_exists(self::FITLER_CRAWLER, $schedules)) {
+		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
 			// 	self::debug('Crawler cron log: cron filter '.$interval.' added');
-			$schedules[self::FITLER_CRAWLER] = array(
+			$schedules[self::FILTER_CRAWLER] = array(
 				'interval' => $interval,
 				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
 			);

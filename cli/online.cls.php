@@ -1,5 +1,7 @@
 <?php
+
 namespace LiteSpeed\CLI;
+
 defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;

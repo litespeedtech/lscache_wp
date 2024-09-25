@@ -9,7 +9,7 @@ defined( 'WPINC' ) || exit ;
 		<h3 class="litespeed-banner-title"><?php echo __( 'Welcome to LiteSpeed', 'litespeed-cache' ) ; ?></h3>
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
-				<p class="litespeed-banner-desciption-content">
+				<p class="litespeed-banner-description-content">
 					<?php echo __( 'Want to connect with other LiteSpeed users?', 'litespeed-cache' ) ; ?>
 					<?php echo sprintf( __( 'Join the %s community.', 'litespeed-cache' ), '<a href="https://join.slack.com/t/golitespeed/shared_invite/enQtMzE5ODgxMTUyNTgzLTNiNWQ1MWZlYmI4YjEzNTM4NjdiODY2YTQ0OWVlMzBlNGZkY2E3Y2E4MjIzNmNmZmU0ZjIyNWM1ZmNmMWRlOTk" target="_blank" class="litespeed-banner-promo-slack-textlink">LiteSpeed Slack</a>' ) ; ?>
 				</p>

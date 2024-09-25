@@ -11,7 +11,7 @@ defined( 'WPINC' ) || exit;
 		<h3 class="litespeed-banner-title litespeed-top15"><?php echo $this->_summary[ 'news.title' ] ; ?></h3>
 		<div class="litespeed-banner-description" style="flex-direction: column;">
 			<div class="litespeed-banner-description-padding-right-15">
-				<p class="litespeed-banner-desciption-content">
+				<p class="litespeed-banner-description-content">
 					<?php echo $this->_summary[ 'news.content' ]; ?>
 				</p>
 			</div>

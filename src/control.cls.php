@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin cache-control class for X-Litespeed-Cache-Control
  *
@@ -7,6 +8,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -132,6 +134,24 @@ class Control extends Root
 			}
 		}
 
+		// AJAX cache
+		$ajax_cache = $this->conf(Base::O_CACHE_AJAX_TTL);
+		foreach ($ajax_cache as $v) {
+			$v = explode(' ', $v);
+			if (empty($v[0]) || empty($v[1])) {
+				continue;
+			}
+			// self::debug("Initializing cacheable status for wp_ajax_nopriv_" . $v[0]);
+			add_action(
+				'wp_ajax_nopriv_' . $v[0],
+				function () use ($v) {
+					self::set_custom_ttl($v[1]);
+					self::force_cacheable('ajax Cache setting for action ' . $v[0]);
+				},
+				4
+			);
+		}
+
 		// Check error page
 		add_filter('status_header', array($this, 'check_error_codes'), 10, 2);
 	}
@@ -143,7 +163,7 @@ class Control extends Root
 	 * @access public
 	 * @param $status_header
 	 * @param $code
-	 * @return $eror_status
+	 * @return $error_status
 	 */
 	public function check_error_codes($status_header, $code)
 	{
@@ -543,8 +563,11 @@ class Control extends Root
 				self::debug("Compare [from] $url_parsed [to] $target");
 
 				if ($v == PHP_URL_QUERY) {
-					$url_parsed = urldecode($url_parsed);
-					$target = urldecode($target);
+					$url_parsed = $url_parsed ? urldecode($url_parsed) : '';
+					$target = $target ? urldecode($target) : '';
+					if (substr($url_parsed, -1) == '&') {
+						$url_parsed = substr($url_parsed, 0, -1);
+					}
 				}
 
 				if ($url_parsed != $target) {
@@ -746,6 +769,24 @@ class Control extends Root
 	}
 
 	/**
+	 * Get request method w/ compatibility to X-Http-Method-Override
+	 *
+	 * @since 6.2
+	 */
+	private function _get_req_method()
+	{
+		if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+			self::debug('X-Http-Method-Override -> ' . $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+			defined('LITESPEED_X_HTTP_METHOD_OVERRIDE') || define('LITESPEED_X_HTTP_METHOD_OVERRIDE', true);
+			return $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		}
+		if (isset($_SERVER['REQUEST_METHOD'])) {
+			return $_SERVER['REQUEST_METHOD'];
+		}
+		return 'unknown';
+	}
+
+	/**
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0
@@ -760,7 +801,10 @@ class Control extends Root
 			return $this->_no_cache_for('Query String Action');
 		}
 
-		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'unknown';
+		$method = $this->_get_req_method();
+		if (defined('LITESPEED_X_HTTP_METHOD_OVERRIDE') && LITESPEED_X_HTTP_METHOD_OVERRIDE && $method == 'HEAD') {
+			return $this->_no_cache_for('HEAD method from override');
+		}
 		if ('GET' !== $method && 'HEAD' !== $method) {
 			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
@@ -790,7 +834,7 @@ class Control extends Root
 
 		if (!self::is_forced_cacheable()) {
 			// Check if URI is excluded from cache
-			$excludes = $this->conf(Base::O_CACHE_EXC);
+			$excludes = $this->cls('Data')->load_cache_nocacheable($this->conf(Base::O_CACHE_EXC));
 			$result = Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
 			if ($result) {
 				return $this->_no_cache_for('Admin configured URI Do not cache: ' . $result);

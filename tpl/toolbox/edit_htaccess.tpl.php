@@ -1,24 +1,26 @@
 <?php
+
 namespace LiteSpeed;
-defined( 'WPINC' ) || exit;
+
+defined('WPINC') || exit;
 
 $content = null;
 try {
 	$content = Htaccess::cls()->htaccess_read();
-} catch( \Exception $e ) {
-	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>';
+} catch (\Exception $e) {
+	echo '<div class="notice notice-error is-dismissible"><p>' . $e->getMessage() . '</p></div>';
 }
 
 $htaccess_path = Htaccess::get_frontend_htaccess();
 
 // Check if there is `ExpiresDefault` in .htaccess
-if ( defined( 'LITESPEED_ON' ) ) {
-	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
-		$is_dismissed = GUI::get_option( self::DB_DISMISS_MSG );
-		if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
+if (defined('LITESPEED_ON')) {
+	if ($content && stripos($content, "\nExpiresDefault") !== false) {
+		$is_dismissed = GUI::get_option(self::DB_DISMISS_MSG);
+		if ($is_dismissed !== self::RULECONFLICT_DISMISSED) {
 			// Need to add a notice for browser cache compatibility
-			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
-				GUI::update_option( self::DB_DISMISS_MSG, self::RULECONFLICT_ON );
+			if ($is_dismissed !== self::RULECONFLICT_ON) {
+				GUI::update_option(self::DB_DISMISS_MSG, self::RULECONFLICT_ON);
 			}
 			require_once LSCWP_DIR . 'tpl/inc/show_rule_conflict.php';
 		}
@@ -34,50 +36,54 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 <h3 class="litespeed-title">
 	<?php echo __('LiteSpeed Cache View .htaccess', 'litespeed-cache'); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab' ); ?>
+	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/toolbox/#view-htaccess-tab'); ?>
 </h3>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( '.htaccess Path', 'litespeed-cache' ); ?>
+	<?php echo __('.htaccess Path', 'litespeed-cache'); ?>
 </h3>
 
-<table class="wp-list-table striped litespeed-table"><tbody>
-	<tr>
-		<th>
-			<?php echo __( 'Frontend .htaccess Path', 'litespeed-cache' ); ?>
-		</th>
-		<td>
-			<code><?php echo $htaccess_path; ?></code>
-			<div class="litespeed-desc">
-				<?php echo __( 'Default path is', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_frontend_htaccess( true ); ?></code>
-				<br /><font class="litespeed-success">
-					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'PHP Constant %s is supported.', 'litespeed-cache' ), '<code>LITESPEED_CFG_HTACCESS</code>' ); ?>
-					<?php echo sprintf( __( 'You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache' ), '<code>defined("LITESPEED_CFG_HTACCESS") || define("LITESPEED_CFG_HTACCESS", "your path on server");</code>', '<code>wp-config.php</code>' ); ?>
-				</font>
-			</div>
-		</td>
-	</tr>
+<table class="wp-list-table striped litespeed-table">
+	<tbody>
+		<tr>
+			<th>
+				<?php echo __('Frontend .htaccess Path', 'litespeed-cache'); ?>
+			</th>
+			<td>
+				<code><?php echo $htaccess_path; ?></code>
+				<div class="litespeed-desc">
+					<?php echo __('Default path is', 'litespeed-cache'); ?>: <code><?php echo Htaccess::get_frontend_htaccess(true); ?></code>
+					<br />
+					<font class="litespeed-success">
+						<?php echo __('API', 'litespeed-cache'); ?>:
+						<?php echo sprintf(__('PHP Constant %s is supported.', 'litespeed-cache'), '<code>LITESPEED_CFG_HTACCESS</code>'); ?>
+						<?php echo sprintf(__('You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache'), '<code>defined("LITESPEED_CFG_HTACCESS") || define("LITESPEED_CFG_HTACCESS", "your path on server");</code>', '<code>wp-config.php</code>'); ?>
+					</font>
+				</div>
+			</td>
+		</tr>
 
-	<tr>
-		<th>
-			<?php echo __( 'Backend .htaccess Path', 'litespeed-cache' ); ?>
-		</th>
-		<td>
-			<?php echo Htaccess::get_backend_htaccess(); ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Default path is', 'litespeed-cache' ); ?>: <code><?php echo Htaccess::get_backend_htaccess( true ); ?></code>
-				<br /><font class="litespeed-success">
-					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'PHP Constant %s is supported.', 'litespeed-cache' ), '<code>LITESPEED_CFG_HTACCESS_BACKEND</code>' ); ?>
-					<?php echo sprintf( __( 'You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache' ), '<code>defined("LITESPEED_CFG_HTACCESS_BACKEND") || define("LITESPEED_CFG_HTACCESS_BACKEND", "your path on server");</code>', '<code>wp-config.php</code>' ); ?>
-				</font>
-			</div>
-		</td>
-	</tr>
-</tbody></table>
+		<tr>
+			<th>
+				<?php echo __('Backend .htaccess Path', 'litespeed-cache'); ?>
+			</th>
+			<td>
+				<?php echo Htaccess::get_backend_htaccess(); ?>
+				<div class="litespeed-desc">
+					<?php echo __('Default path is', 'litespeed-cache'); ?>: <code><?php echo Htaccess::get_backend_htaccess(true); ?></code>
+					<br />
+					<font class="litespeed-success">
+						<?php echo __('API', 'litespeed-cache'); ?>:
+						<?php echo sprintf(__('PHP Constant %s is supported.', 'litespeed-cache'), '<code>LITESPEED_CFG_HTACCESS_BACKEND</code>'); ?>
+						<?php echo sprintf(__('You can use this code %1$s in %2$s to specify the htaccess file path.', 'litespeed-cache'), '<code>defined("LITESPEED_CFG_HTACCESS_BACKEND") || define("LITESPEED_CFG_HTACCESS_BACKEND", "your path on server");</code>', '<code>wp-config.php</code>'); ?>
+					</font>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
-<?php if( $content !== null ) : ?>
+<?php if ($content !== null) : ?>
 
 	<h3 class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></h3>
 

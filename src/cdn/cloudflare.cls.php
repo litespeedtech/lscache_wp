@@ -75,7 +75,8 @@ class Cloudflare extends Base
 		}
 		Debug2::debug('[Cloudflare] _get_devmode result ', $res);
 
-		$curr_status = self::get_option(self::ITEM_STATUS, array());
+		// Make sure is array: #992174
+		$curr_status = self::get_option(self::ITEM_STATUS, array()) ?: array();
 		$curr_status['devmode'] = $res['value'];
 		$curr_status['devmode_expired'] = $res['time_remaining'] + time();
 
@@ -242,7 +243,7 @@ class Cloudflare extends Base
 
 		if ($data) {
 			if (is_array($data)) {
-				$data = json_encode($data);
+				$data = \json_encode($data);
 			}
 			$wp_args['body'] = $data;
 		}
@@ -258,7 +259,7 @@ class Cloudflare extends Base
 
 		$result = wp_remote_retrieve_body($resp);
 
-		$json = json_decode($result, true);
+		$json = \json_decode($result, true);
 
 		if ($json && $json['success'] && $json['result']) {
 			Debug2::debug('[Cloudflare] _cloudflare_call called successfully');

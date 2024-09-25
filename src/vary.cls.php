@@ -171,7 +171,7 @@ class Vary extends Root
 
 		// If is the request to update vary, then no guest
 		// Don't need anymore as it is always ajax call
-		// Still keep it in case some WP blocked the lightweigh guest vary update script, WP can still update the vary
+		// Still keep it in case some WP blocked the lightweight guest vary update script, WP can still update the vary
 		if (!empty($_GET['litespeed_guest'])) {
 			return;
 		}
@@ -213,7 +213,7 @@ class Vary extends Root
 		Debug2::debug('[Vary] Will update guest vary in finalize');
 
 		// return json
-		echo json_encode(array('reload' => 'yes'));
+		echo \json_encode(array('reload' => 'yes'));
 		exit();
 	}
 
@@ -714,7 +714,7 @@ class Vary extends Root
 			$cookies[$k] = $values_json ? $this->_get_cookie_val($v) : 'cookie=' . $v;
 		}
 
-		return $values_json ? json_encode($cookies) : $cookies;
+		return $values_json ? \json_encode($cookies) : $cookies;
 	}
 
 	/**

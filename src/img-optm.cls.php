@@ -210,7 +210,8 @@ class Img_Optm extends Base
 		self::save_summary();
 
 		// Check if has credit to push
-		$allowance = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM);
+		$err = false;
+		$allowance = Cloud::cls()->allowance(Cloud::SVC_IMG_OPTM, $err);
 
 		$wet_limit = $this->wet_limit();
 
@@ -221,7 +222,7 @@ class Img_Optm extends Base
 
 		if (!$allowance) {
 			self::debug('❌ No credit');
-			Admin_Display::error(Error::msg('out_of_quota'));
+			Admin_Display::error(Error::msg($err));
 			$this->_finished_running();
 			return;
 		}
@@ -242,14 +243,21 @@ class Img_Optm extends Base
 			return;
 		}
 
+		$allowance -= $total_requested;
+
+		if ($allowance < 1) {
+			self::debug('❌ Too many requested images ' . $total_requested);
+			Admin_Display::error(Error::msg('too_many_requested'));
+			$this->_finished_running();
+			return;
+		}
+
 		// Limit maximum number of items waiting to be pulled
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status = %d";
 		$q = $wpdb->prepare($q, array(self::STATUS_NOTIFIED));
 		$total_notified = $wpdb->get_var($q);
-		$max_notified = $allowance * 5;
-
-		if ($total_notified > $max_notified) {
-			self::debug('❌ Too many notified images (' . $total_notified . ' > ' . $max_notified . ')');
+		if ($total_notified > 0) {
+			self::debug('❌ Too many notified images (' . $total_notified . ')');
 			Admin_Display::error(Error::msg('too_many_notified'));
 			$this->_finished_running();
 			return;
@@ -258,11 +266,12 @@ class Img_Optm extends Base
 		$q = "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE optm_status IN (%d, %d)";
 		$q = $wpdb->prepare($q, array(self::STATUS_NEW, self::STATUS_RAW));
 		$total_new = $wpdb->get_var($q);
-		$allowance -= $total_new;
+		// $allowance -= $total_new;
 
-		// Get images
+		// May need to get more images
 		$list = array();
-		if ($allowance > 0) {
+		$more = $allowance - $total_new;
+		if ($more > 0) {
 			$q = "SELECT b.post_id, b.meta_value
 				FROM `$wpdb->posts` a
 				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
@@ -274,20 +283,8 @@ class Img_Optm extends Base
 				ORDER BY a.ID
 				LIMIT %d
 				";
-			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $allowance));
+			$q = $wpdb->prepare($q, array($this->_summary['next_post_id'], $more));
 			$list = $wpdb->get_results($q);
-		}
-
-		if (!$list) {
-			// $msg = __('No new image to send.', 'litespeed-cache');
-			// Admin_Display::succeed($msg);
-
-			// self::debug('new_req() bypass: no new image found');
-			// $this->_finished_running();
-			// return;
-		}
-
-		if ($list) {
 			foreach ($list as $v) {
 				if (!$v->post_id) {
 					continue;
@@ -315,12 +312,6 @@ class Img_Optm extends Base
 
 			self::save_summary();
 
-			if (!$this->_img_in_queue) {
-				self::debug('gather_images bypass: empty _img_in_queue');
-				$this->_finished_running();
-				return;
-			}
-
 			$num_a = count($this->_img_in_queue);
 			self::debug('Images found: ' . $num_a);
 			$this->_filter_duplicated_src();
@@ -340,7 +331,7 @@ class Img_Optm extends Base
 		}
 
 		// Push to Cloud server
-		$accepted_imgs = $this->_send_request();
+		$accepted_imgs = $this->_send_request($allowance);
 
 		$this->_finished_running();
 		if (!$accepted_imgs) {
@@ -609,11 +600,13 @@ class Img_Optm extends Base
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _send_request()
+	private function _send_request($allowance)
 	{
 		global $wpdb;
 
-		$_img_in_queue = $wpdb->get_results("SELECT id,src,post_id FROM `$this->_table_img_optming` WHERE optm_status=" . self::STATUS_RAW);
+		$q = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d LIMIT %d";
+		$q = $wpdb->prepare($q, array(self::STATUS_RAW, $allowance));
+		$_img_in_queue = $wpdb->get_results($q);
 		if (!$_img_in_queue) {
 			return;
 		}
@@ -661,7 +654,7 @@ class Img_Optm extends Base
 
 		$data = array(
 			'action' => self::CLOUD_ACTION_NEW_REQ,
-			'list' => json_encode($list),
+			'list' => \json_encode($list),
 			'optm_ori' => $this->conf(self::O_IMG_OPTM_ORI) ? 1 : 0,
 			'optm_webp' => $this->conf(self::O_IMG_OPTM_WEBP) ? 1 : 0,
 			'optm_lossless' => $this->conf(self::O_IMG_OPTM_LOSSLESS) ? 1 : 0,
@@ -707,7 +700,7 @@ class Img_Optm extends Base
 			return Cloud::err('too_often');
 		}
 
-		$post_data = json_decode(file_get_contents('php://input'), true);
+		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
 		}
@@ -810,7 +803,7 @@ class Img_Optm extends Base
 
 				// Update status and data in working table
 				$q = "UPDATE `$this->_table_img_optming` SET optm_status = %d, server_info = %s WHERE id = %d ";
-				$wpdb->query($wpdb->prepare($q, array($status, json_encode($server_info), $v->id)));
+				$wpdb->query($wpdb->prepare($q, array($status, \json_encode($server_info), $v->id)));
 
 				// Update postmeta for optm summary
 				$postmeta_info = serialize($postmeta_info);
@@ -990,7 +983,7 @@ class Img_Optm extends Base
 				$req_counter = 0;
 				foreach ($img_rows as $row_img) {
 					// request original image
-					$server_info = json_decode($row_img->server_info, true);
+					$server_info = \json_decode($row_img->server_info, true);
 					if (!empty($server_info['ori'])) {
 						$image_url = $server_info['server'] . '/' . $server_info['ori'];
 						self::debug('Queueing pull: ' . $image_url);
@@ -1031,7 +1024,7 @@ class Img_Optm extends Base
 					$row_type = isset($row_data['type']) ? $row_data['type'] : 'ori';
 					$row_img = $row_data['data'];
 					$local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
-					$server_info = json_decode($row_img->server_info, true);
+					$server_info = \json_decode($row_img->server_info, true);
 
 					if (empty($response->success)) {
 						if (!empty($response->status_code) && 404 == $response->status_code) {
@@ -1323,7 +1316,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		self::debug('excuting DESTROY process');
+		self::debug('executing DESTROY process');
 
 		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
 		/**
@@ -1506,7 +1499,7 @@ class Img_Optm extends Base
 			}
 		}
 
-		self::debug('rescaned [img] ' . count($this->_img_in_queue));
+		self::debug('rescanned [img] ' . count($this->_img_in_queue));
 
 		$count = count($this->_img_in_queue);
 		if ($count > 0) {
@@ -1728,7 +1721,7 @@ class Img_Optm extends Base
 			";
 		$groups_all = $wpdb->get_var($q);
 		$groups_new = $wpdb->get_var($q . ' AND ID>' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
-		$groups_done = $wpdb->get_var($q . ' AND ID<' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
+		$groups_done = $wpdb->get_var($q . ' AND ID<=' . (int) $this->_summary['next_post_id'] . ' ORDER BY ID');
 
 		$q = "SELECT b.post_id
 			FROM `$wpdb->posts` a
@@ -1810,13 +1803,37 @@ class Img_Optm extends Base
 	 * Batch switch images to ori/optm version
 	 *
 	 * @since  1.6.2
-	 * @access private
+	 * @access public
 	 */
-	private function _batch_switch($type)
+	public function batch_switch($type)
 	{
 		global $wpdb;
 
-		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
+		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+			$offset = 0;
+			while ($offset !== 'done') {
+				Admin_Display::info("Starting switch to $type [offset] $offset");
+				$offset = $this->_batch_switch($type, $offset);
+			}
+		} else {
+			$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
+
+			$newOffset = $this->_batch_switch($type, $offset);
+			if ($newOffset !== 'done') {
+				return Router::self_redirect(Router::ACTION_IMG_OPTM, $type);
+			}
+		}
+
+		$msg = __('Switched images successfully.', 'litespeed-cache');
+		Admin_Display::succeed($msg);
+	}
+
+	/**
+	 * Switch images per offset
+	 */
+	private function _batch_switch($type, $offset)
+	{
+		global $wpdb;
 		$limit = 500;
 		$this->tmp_type = $type;
 
@@ -1853,16 +1870,14 @@ class Img_Optm extends Base
 			}
 		}
 
-		self::debug('batch switched images total: ' . $i);
+		self::debug('batch switched images total: ' . $i . ' [type] ' . $type);
 
 		$offset++;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 		if ($to_be_continued) {
-			return Router::self_redirect(Router::ACTION_IMG_OPTM, $type);
+			return $offset;
 		}
-
-		$msg = __('Switched images successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		return 'done';
 	}
 
 	/**
@@ -1880,8 +1895,10 @@ class Img_Optm extends Base
 		$bk_file = $local_filename . '.bk.' . $extension;
 		$bk_optm_file = $local_filename . '.bk.optm.' . $extension;
 
+		// self::debug('_switch_bk_file ' . $bk_file . ' [type] ' . $this->tmp_type);
 		// switch to ori
-		if ($this->tmp_type === self::TYPE_BATCH_SWITCH_ORI) {
+		if ($this->tmp_type === self::TYPE_BATCH_SWITCH_ORI || $this->tmp_type == 'orig') {
+			// self::debug('switch to orig ' . $bk_file);
 			if (!$this->__media->info($bk_file, $this->tmp_pid)) {
 				return;
 			}
@@ -1889,7 +1906,8 @@ class Img_Optm extends Base
 			$this->__media->rename($bk_file, $local_filename . '.' . $extension, $this->tmp_pid);
 		}
 		// switch to optm
-		elseif ($this->tmp_type === self::TYPE_BATCH_SWITCH_OPTM) {
+		elseif ($this->tmp_type === self::TYPE_BATCH_SWITCH_OPTM || $this->tmp_type == 'optm') {
+			// self::debug('switch to optm ' . $bk_file);
 			if (!$this->__media->info($bk_optm_file, $this->tmp_pid)) {
 				return;
 			}
@@ -2093,13 +2111,9 @@ class Img_Optm extends Base
 				self::start_async();
 				break;
 
-				/**
-				 * Batch switch
-				 * @since 1.6.3
-				 */
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
-				$this->_batch_switch($type);
+				$this->batch_switch($type);
 				break;
 
 			case substr($type, 0, 4) === 'webp':

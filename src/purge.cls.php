@@ -1118,7 +1118,7 @@ class Purge extends Base
 	}
 
 	/**
-	 * Check if this purge blongs to a subsite purge
+	 * Check if this purge belongs to a subsite purge
 	 *
 	 * @since  4.0
 	 */

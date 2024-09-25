@@ -22,6 +22,7 @@ class Media extends Root
 
 	private $content;
 	private $_wp_upload_dir;
+	private $_vpi_preload_list = array();
 
 	/**
 	 * Init
@@ -84,16 +85,19 @@ class Media extends Root
 		global $wp_query;
 
 		// <link rel="preload" as="image" href="xx">
-		if ($this->conf(Base::O_MEDIA_PRELOAD_FEATURED) && $wp_query->is_single) {
-			$featured_image_url = get_the_post_thumbnail_url();
-			if ($featured_image_url) {
-				self::debug('Append featured image to head: ' . $featured_image_url);
-				if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
-					$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
-				}
-				$content .= '<link rel="preload" as="image" href="' . $featured_image_url . '">'; // TODO: use imagesrcset
+		if ($this->_vpi_preload_list) {
+			foreach ($this->_vpi_preload_list as $v) {
+				$content .= '<link rel="preload" as="image" href="' . $v . '">';
 			}
 		}
+		// 	$featured_image_url = get_the_post_thumbnail_url();
+		// 	if ($featured_image_url) {
+		// 		self::debug('Append featured image to head: ' . $featured_image_url);
+		// 		if ((defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->webp_support()) {
+		// 			$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
+		// 		}
+		// 	}
+		// }
 
 		return $content;
 	}
@@ -219,6 +223,7 @@ class Media extends Root
 	 */
 	public function rename($short_file_path, $short_file_path_new, $post_id)
 	{
+		// self::debug('renaming ' . $short_file_path . ' -> ' . $short_file_path_new);
 		$real_file = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
 		$real_file_new = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path_new;
 
@@ -524,6 +529,11 @@ class Media extends Root
 		$cfg_trim_noscript = defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_OPTM_NOSCRIPT_RM);
 		$cfg_vpi = defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_MEDIA_VPI);
 
+		// Preload VPI
+		if ($cfg_vpi) {
+			$this->_parse_img_for_preload();
+		}
+
 		if ($cfg_lazy) {
 			if ($cfg_vpi) {
 				add_filter('litespeed_media_lazy_img_excludes', array($this->cls('Metabox'), 'lazy_img_excludes'));
@@ -579,6 +589,54 @@ class Media extends Root
 	}
 
 	/**
+	 * Parse img src for VPI preload only
+	 * Note: Didn't reuse the _parse_img() bcoz it contains parent cls replacement and other logic which is not needed for preload
+	 *
+	 * @since 6.2
+	 */
+	private function _parse_img_for_preload()
+	{
+		// Load VPI setting
+		$is_mobile = $this->_separate_mobile();
+		$vpi_files = $this->cls('Metabox')->setting($is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list');
+		if ($vpi_files) {
+			$vpi_files = Utility::sanitize_lines($vpi_files, 'basename');
+		}
+		if (!$vpi_files) {
+			return;
+		}
+
+		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			$attrs = Utility::parse_attr($match[1]);
+
+			if (empty($attrs['src'])) {
+				continue;
+			}
+
+			if (strpos($attrs['src'], 'base64') !== false || substr($attrs['src'], 0, 5) === 'data:') {
+				Debug2::debug2('[Media] lazyload bypassed base64 img');
+				continue;
+			}
+
+			if (strpos($attrs['src'], '{') !== false) {
+				Debug2::debug2('[Media] image src has {} ' . $attrs['src']);
+				continue;
+			}
+
+			// If the src contains VPI filename, then preload it
+			if (!Utility::str_hit_array($attrs['src'], $vpi_files)) {
+				continue;
+			}
+
+			Debug2::debug2('[Media] VPI preload found and matched: ' . $attrs['src']);
+
+			$this->_vpi_preload_list[] = $attrs['src'];
+		}
+	}
+
+	/**
 	 * Parse img src
 	 *
 	 * @since  1.4
@@ -601,7 +659,15 @@ class Media extends Root
 		$html_list = array();
 		$placeholder_list = array();
 
-		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		$content = preg_replace(
+			array(
+				'#<!--.*-->#sU',
+				'#<noscript([^>]*)>.*</noscript>#isU',
+				'#<script([^>]*)>.*</script>#isU', // Added to remove warning of file not found when image size detection is turned ON.
+			),
+			'',
+			$this->content
+		);
 		/**
 		 * Exclude parent classes
 		 * @since  3.0
@@ -692,7 +758,7 @@ class Media extends Root
 
 						$attrs['width'] = $ori_width;
 						$attrs['height'] = $ori_height;
-						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*\2#', '', $match[0]);
+						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0]);
 						$new_html = preg_replace('#<img\s+#i', '<img width="' . $attrs['width'] . '" height="' . $attrs['height'] . '" ', $new_html);
 						self::debug('Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src']);
 						$this->content = str_replace($match[0], $new_html, $this->content);
@@ -883,6 +949,9 @@ class Media extends Root
 	{
 		Debug2::debug2('[Media] Start replacing bakcground WebP.');
 
+		// Handle Elementors data-settings json encode background-images
+		$content = $this->replace_urls_in_json($content);
+
 		// preg_match_all( '#background-image:(\s*)url\((.*)\)#iU', $content, $matches );
 		preg_match_all('#url\(([^)]+)\)#iU', $content, $matches);
 		foreach ($matches[1] as $k => $url) {
@@ -897,7 +966,7 @@ class Media extends Root
 			 */
 			$url = trim($url, '\'"');
 
-			// Fix Elementors Slideshow unusal background images like  style="background-image: url(&quot;https://xxxx.png&quot;);"
+			// Fix Elementors Slideshow unusual background images like  style="background-image: url(&quot;https://xxxx.png&quot;);"
 			if (strpos($url, '&quot;') === 0 && substr($url, -6) == '&quot;') {
 				$url = substr($url, 6, -6);
 			}
@@ -909,6 +978,59 @@ class Media extends Root
 			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 );
 			$html_snippet = str_replace($url, $url2, $matches[0][$k]);
 			$content = str_replace($matches[0][$k], $html_snippet, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Replace images in json data settings attributes
+	 *
+	 * @since  6.2
+	 */
+	public function replace_urls_in_json($content)
+	{
+		$pattern = '/data-settings="(.*?)"/i';
+		$parent_class = $this;
+
+		preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
+
+		foreach ($matches as $match) {
+			// Check if the string contains HTML entities
+			$isEncoded = preg_match('/&quot;|&lt;|&gt;|&amp;|&apos;/', $match[1]);
+
+			// Decode HTML entities in the JSON string
+			$jsonString = html_entity_decode($match[1]);
+
+			$jsonData = \json_decode($jsonString, true);
+
+			if (json_last_error() === JSON_ERROR_NONE) {
+				$did_webp_replace = false;
+
+				array_walk_recursive($jsonData, function (&$item, $key) use (&$did_webp_replace, $parent_class) {
+					if ($key == 'url') {
+						$item_image = $parent_class->replace_webp($item);
+						if ($item_image) {
+							$item = $item_image;
+
+							$did_webp_replace = true;
+						}
+					}
+				});
+
+				if ($did_webp_replace) {
+					// Re-encode the modified array back to a JSON string
+					$newJsonString = \json_encode($jsonData);
+
+					// Re-encode the JSON string to HTML entities only if it was originally encoded
+					if ($isEncoded) {
+						$newJsonString = htmlspecialchars($newJsonString, ENT_QUOTES | 0); // ENT_HTML401 is for PHPv5.4+
+					}
+
+					// Replace the old JSON string in the content with the new, modified JSON string
+					$content = str_replace($match[1], $newJsonString, $content);
+				}
+			}
 		}
 
 		return $content;

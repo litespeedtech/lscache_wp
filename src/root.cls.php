@@ -155,7 +155,7 @@ abstract class Root
 
 		$queue = array();
 		if (file_exists($static_path)) {
-			$queue = json_decode(file_get_contents($static_path), true) ?: array();
+			$queue = \json_decode(file_get_contents($static_path), true) ?: array();
 		}
 
 		return $queue;
@@ -172,7 +172,7 @@ abstract class Root
 		$filepath_prefix = $this->_build_filepath_prefix($type);
 		$static_path = LITESPEED_STATIC_DIR . $filepath_prefix . '.litespeed_conf.dat';
 
-		$data = json_encode($list);
+		$data = \json_encode($list);
 
 		File::save($static_path, $data, true);
 	}
@@ -367,7 +367,7 @@ abstract class Root
 				}
 			}
 
-			// Network orignal value will be in _network_options
+			// Network original value will be in _network_options
 			if (!is_network_admin() || !$this->has_network_conf($id)) {
 				return self::$_options[$id];
 			}
@@ -540,7 +540,7 @@ abstract class Root
 	private static function _maybe_decode($v)
 	{
 		if (!is_array($v)) {
-			$v2 = json_decode($v, true);
+			$v2 = \json_decode($v, true);
 			if ($v2 !== null) {
 				$v = $v2;
 			}
@@ -556,7 +556,7 @@ abstract class Root
 	private static function _maybe_encode($v)
 	{
 		if (is_array($v)) {
-			$v = json_encode($v) ?: $v; // Non utf-8 encoded value will get failed, then used ori value
+			$v = \json_encode($v) ?: $v; // Non utf-8 encoded value will get failed, then used ori value
 		}
 		return $v;
 	}

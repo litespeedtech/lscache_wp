@@ -121,7 +121,7 @@ class Admin_Display extends Base
 			// sub menus
 			$this->_add_submenu(__('Dashboard', 'litespeed-cache'), 'litespeed', 'show_menu_dash');
 
-			$this->_add_submenu(__('Presets', 'litespeed-cache'), 'litespeed-presets', 'show_menu_presets');
+			!$this->_is_network_admin && $this->_add_submenu(__('Presets', 'litespeed-cache'), 'litespeed-presets', 'show_menu_presets');
 
 			$this->_add_submenu(__('General', 'litespeed-cache'), 'litespeed-general', 'show_menu_general');
 
@@ -204,7 +204,7 @@ class Admin_Display extends Base
 
 			if ($_GET['page'] == 'litespeed-crawler' || $_GET['page'] == 'litespeed-cdn') {
 				// Babel JS type correction
-				add_filter('script_loader_tag', array($this, 'bable_type'), 10, 3);
+				add_filter('script_loader_tag', array($this, 'babel_type'), 10, 3);
 
 				wp_enqueue_script(Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false);
 				wp_enqueue_script(Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false);
@@ -272,7 +272,7 @@ class Admin_Display extends Base
 	 *
 	 * @since  3.6
 	 */
-	public function bable_type($tag, $handle, $src)
+	public function babel_type($tag, $handle, $src)
 	{
 		if ($handle != Core::PLUGIN_NAME . '-crawler' && $handle != Core::PLUGIN_NAME . '-cdn') {
 			return $tag;
@@ -411,7 +411,7 @@ class Admin_Display extends Base
 		foreach ($msgs as $k => $str) {
 			if (is_numeric($k)) {
 				$k = md5($str);
-			} // Use key to make it overwriteable to previous same msg
+			} // Use key to make it overwritable to previous same msg
 			$filtered_msgs[$k] = $str;
 		}
 
@@ -426,6 +426,7 @@ class Admin_Display extends Base
 	 */
 	public static function add_notice($color, $msg, $echo = false, $irremovable = false)
 	{
+		// self::debug("add_notice msg", $msg);
 		// Bypass adding for CLI or cron
 		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
 			// WP CLI will show the info directly
@@ -499,7 +500,7 @@ class Admin_Display extends Base
 					add_thickbox();
 					$added_thickbox = true;
 				}
-				echo $msg;
+				echo wp_kses_post($msg);
 			}
 		}
 		if ($messages != -1) {
@@ -528,7 +529,7 @@ class Admin_Display extends Base
 						'</a>' .
 						'</p></div>';
 				}
-				echo $msg;
+				echo wp_kses_post($msg);
 			}
 		}
 		// if ( $messages != -1 ) {

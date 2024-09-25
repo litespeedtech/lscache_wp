@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The CDN class.
  *
@@ -8,6 +9,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -300,7 +302,7 @@ class CDN extends Root
 
 		/**
 		 * Excludes `\` from URL matching
-		 * @see  #959152 - Wordpress LSCache CDN Mapping causing malformed URLS
+		 * @see  #959152 - WordPress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
 		 */
@@ -315,15 +317,19 @@ class CDN extends Root
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_FILETYPE, $postfix))) {
 					continue;
 				}
-			} else {
+			} elseif (in_array($postfix, array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif'))) {
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_IMG))) {
 					continue;
 				}
+			} else {
+				continue;
 			}
 
 			$attr = str_replace($matches[1][$k], $url2, $matches[0][$k]);
 			$this->content = str_replace($matches[0][$k], $attr, $this->content);
 		}
+
+		Debug2::debug2('[CDN] _replace_inline_css done');
 	}
 
 	/**
@@ -489,7 +495,7 @@ class CDN extends Root
 	}
 
 	/**
-	 * Check if is orignal URL of CDN or not
+	 * Check if is original URL of CDN or not
 	 *
 	 * @since  2.1
 	 * @access private

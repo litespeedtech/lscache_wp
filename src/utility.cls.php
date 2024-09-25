@@ -188,7 +188,7 @@ class Utility extends Root
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function readable_time($seconds_or_timestamp, $timeout = 3600, $forword = false)
+	public static function readable_time($seconds_or_timestamp, $timeout = 3600, $forward = false)
 	{
 		if (strlen($seconds_or_timestamp) == 10) {
 			$seconds = time() - $seconds_or_timestamp;
@@ -232,10 +232,10 @@ class Utility extends Root
 		}
 
 		if (!$res) {
-			return $forword ? __('right now', 'litespeed-cache') : __('just now', 'litespeed-cache');
+			return $forward ? __('right now', 'litespeed-cache') : __('just now', 'litespeed-cache');
 		}
 
-		$res = $forword ? $res : sprintf(__(' %s ago', 'litespeed-cache'), $res);
+		$res = $forward ? $res : sprintf(__(' %s ago', 'litespeed-cache'), $res);
 
 		return $res;
 	}
@@ -252,7 +252,7 @@ class Utility extends Root
 			return $arr;
 		}
 
-		return base64_encode(json_encode($arr));
+		return base64_encode(\json_encode($arr));
 	}
 
 	/**
@@ -615,7 +615,7 @@ class Utility extends Root
 		}
 
 		if (in_array('trailingslash', $types)) {
-			$arr = array_map('trailingslashit', $arr); // Append trailing slach, `https://example.com` -> `https://example.com/`
+			$arr = array_map('trailingslashit', $arr); // Append trailing slash, `https://example.com` -> `https://example.com/`
 			$changed = true;
 		}
 

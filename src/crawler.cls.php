@@ -144,7 +144,7 @@ class Crawler extends Root
 	}
 
 	/**
-	 * Overwride get_summary to init elements
+	 * Overwrite get_summary to init elements
 	 *
 	 * @since  3.0
 	 * @access public
@@ -188,7 +188,7 @@ class Crawler extends Root
 	}
 
 	/**
-	 * Overwride save_summary
+	 * Overwrite save_summary
 	 *
 	 * @since  3.0
 	 * @access public
@@ -204,7 +204,7 @@ class Crawler extends Root
 
 		parent::save_summary($data, $reload, $overwrite);
 
-		File::save(LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode($data), true);
+		File::save(LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, \json_encode($data), true);
 	}
 
 	/**
@@ -238,12 +238,7 @@ class Crawler extends Root
 	public static function async_handler($manually_run = false)
 	{
 		self::debug('------------async-------------start_async_handler');
-		// self::debug('-------------async------------ check_ajax_referer');
-		// add_action('check_ajax_referer', function ($a, $b) {
-		// 	\LiteSpeed\Crawler::debug('---------------' . $a . $b);
-		// });
 		// check_ajax_referer('async_crawler', 'nonce');
-		// self::debug('--------------async----------- start async crawling');
 		self::start($manually_run);
 	}
 
@@ -263,12 +258,6 @@ class Crawler extends Root
 		if ($manually_run) {
 			self::debug('......crawler manually ran......');
 		}
-		// $i = 0;
-		// while ($i < 100) {
-		// 	self::debug('......sleep ' . ($i++) . '......' . time());
-		// 	sleep(1);
-		// }
-		// return;
 
 		self::cls()->_crawl_data($manually_run);
 	}
@@ -371,7 +360,7 @@ class Crawler extends Root
 			$vary_name = $this->cls('Vary')->get_vary_name();
 			$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
 			$this->_crawler_conf['cookies'][$vary_name] = $vary_val;
-			$this->_crawler_conf['cookies']['litespeed_role'] = $current_crawler['uid'];
+			$this->_crawler_conf['cookies']['litespeed_hash'] = Router::cls()->get_hash($current_crawler['uid']);
 		}
 
 		/**
@@ -896,7 +885,7 @@ class Crawler extends Root
 			return 'N'; // Blacklist
 		}
 
-		$_cache_headers = array('x-litespeed-cache', 'x-lsadc-cache', 'x-qc-cache');
+		$_cache_headers = array('x-qc-cache', 'x-lsadc-cache', 'x-litespeed-cache');
 
 		foreach ($_cache_headers as $_header) {
 			if (stripos($header, $_header) !== false) {
@@ -984,14 +973,6 @@ class Crawler extends Root
 		}
 		$options[CURLOPT_USERAGENT] = $this->_crawler_conf['ua'];
 
-		/**
-		 * Append hash to cookie for validation
-		 * @since  1.9.1
-		 */
-		if ($crawler_only) {
-			$this->_crawler_conf['cookies']['litespeed_hash'] = Router::get_hash();
-		}
-
 		// Cookies
 		$cookies = array();
 		foreach ($this->_crawler_conf['cookies'] as $k => $v) {
@@ -1021,8 +1002,7 @@ class Crawler extends Root
 			$this->_crawler_conf['headers'] = array('Accept: ' . $accept);
 		}
 		if ($uid) {
-			$this->_crawler_conf['cookies']['litespeed_role'] = $uid;
-			$this->_crawler_conf['cookies']['litespeed_hash'] = Router::get_hash();
+			$this->_crawler_conf['cookies']['litespeed_flash_hash'] = Router::cls()->get_flash_hash($uid);
 		}
 
 		$options = $this->_get_curl_options();
@@ -1302,7 +1282,7 @@ class Crawler extends Root
 
 		switch ($type) {
 			case self::TYPE_REFRESH_MAP:
-				$this->cls('Crawler_Map')->gen();
+				$this->cls('Crawler_Map')->gen(true);
 				break;
 
 			case self::TYPE_EMPTY:
@@ -1325,8 +1305,7 @@ class Crawler extends Root
 				}
 				break;
 
-			// Handle the ajax request to proceed crawler manually by admin
-			case self::TYPE_START:
+			case self::TYPE_START: // Handle the ajax request to proceed crawler manually by admin
 				self::start_async();
 				break;
 

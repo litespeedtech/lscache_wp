@@ -13,6 +13,7 @@ $count = $__map->count_map();
 $pagination = Utility::pagination($count, 30);
 
 ?>
+
 <p class="litespeed-right">
 	<a href="<?php echo Utility::build_url(Router::ACTION_CRAWLER, Crawler::TYPE_EMPTY); ?>" class="button litespeed-btn-warning">
 		<?php echo __('Clean Crawler Map', 'litespeed-cache'); ?>
@@ -46,36 +47,47 @@ $pagination = Utility::pagination($count, 30);
 	</div>
 
 	<div class="">
+
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=hit'); ?>"><?php echo __('Cache Hit', 'litespeed-cache'); ?></a>
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=miss'); ?>"><?php echo __('Cache Miss', 'litespeed-cache'); ?></a>
+		<a style="padding-right:10px;" href="<?php echo admin_url('admin.php?page=litespeed-crawler&' . Router::TYPE . '=blacklisted'); ?>"><?php echo __('Blocklisted', 'litespeed-cache'); ?></a>
+
+	</div>
+
+	<div class="">
 		<?php echo $pagination; ?>
 	</div>
 </div>
 
-<table class="wp-list-table widefat striped">
-	<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col"><?php echo __('URL', 'litespeed-cache'); ?></th>
-			<th scope="col"><?php echo __('Crawler Status', 'litespeed-cache'); ?></th>
-			<th scope="col"><?php echo __('Operation', 'litespeed-cache'); ?></th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach ($list as $i => $v) : ?>
+<div class="litespeed-table-responsive">
+	<table class="wp-list-table widefat striped">
+		<thead>
 			<tr>
-				<td><?php echo $i + 1; ?></td>
-				<td>
-					<?php echo $v['url']; ?>
-				</td>
-				<td>
-					<?php echo Crawler::cls()->display_status($v['res'], $v['reason']); ?>
-				</td>
-				<td>
-					<a href="<?php echo Utility::build_url(Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array('id' => $v['id'])); ?>" class="button button-secondary"><?php echo __('Add to Blocklist', 'litespeed-cache'); ?></a>
-				</td>
+				<th scope="col">#</th>
+				<th scope="col"><?php echo __('URL', 'litespeed-cache'); ?></th>
+				<th scope="col"><?php echo __('Crawler Status', 'litespeed-cache'); ?></th>
+				<th scope="col"><?php echo __('Operation', 'litespeed-cache'); ?></th>
 			</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			<?php foreach ($list as $i => $v) : ?>
+				<tr>
+					<td><?php echo $i + 1; ?></td>
+					<td>
+						<?php echo $v['url']; ?>
+					</td>
+					<td>
+						<?php echo Crawler::cls()->display_status($v['res'], $v['reason']); ?>
+					</td>
+					<td>
+						<a href="<?php echo Utility::build_url(Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_ADD, false, null, array('id' => $v['id'])); ?>" class="button button-secondary"><?php echo __('Add to Blocklist', 'litespeed-cache'); ?></a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+</div> 
+
 <?php echo $pagination; ?>
 
 <p>

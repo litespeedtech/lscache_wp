@@ -24,10 +24,10 @@ foreach ( $blogs as $blog_id ) {
 	<div class="litespeed-dashboard-stats-wrapper">
 		<?php
 			$cat_list = array(
-				'img_optm'	=> __( 'Image Optimization', 'litespeed-cache' ),
-				'ccss'		=> __( 'CCSS', 'litespeed-cache' ),
-				'cdn'		=> __( 'CDN Bandwidth', 'litespeed-cache' ),
-				'lqip'		=> __( 'LQIP', 'litespeed-cache' ),
+				'img_optm'	=> __('Image Optimization', 'litespeed-cache'),
+				'page_optm'	=> __('Page Optimization', 'litespeed-cache'),
+				'cdn'		=> __('CDN Bandwidth', 'litespeed-cache'),
+				'lqip'		=> __('Low Quality Image Placeholder', 'litespeed-cache'),
 			);
 
 			foreach ( $cat_list as $svc => $title ) :
