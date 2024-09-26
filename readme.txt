@@ -92,10 +92,10 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 == LSCWP Resources ==
 * [Join our Slack community](https://litespeedtech.com/slack) to connect with other LiteSpeed users.
 * [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
-* [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/overview/).
-* [Read WordPress Wednesday tutorials on our blog](https://blog.litespeedtech.com/tag/wordpress-wednesday/).
+* [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/).
+* [Read about LSCWP and WordPress on our blog](https://blog.litespeedtech.com/tag/wordpress/).
 * [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache/).
-* [LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
+* [Contribute to the LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
 
 == Installation ==
 
