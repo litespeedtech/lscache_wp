@@ -148,6 +148,37 @@ class Cloudflare extends Base
 			Admin_Display::succeed($msg);
 		}
 	}
+	
+	/**
+	 * Purge Cloudflare cache
+	 *
+	 * @access public
+	 */
+	private function purge_all()
+	{
+		Debug2::debug('[Cloudflare] purge_all');
+
+		$cf_on = $this->conf(self::O_CDN_CLOUDFLARE);
+		if (!$cf_on) {
+			Debug2::debug('[Cloudflare] purge_all : Cloudflare API is set to off');
+			return;
+		}
+		
+		$this->try_refresh_zone();
+		$zone = $this->_zone();
+		if (!$zone) {
+			return;
+		}
+
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
+		$data = array('purge_everything' => true);
+
+		$res = $this->_cloudflare_call($url, 'DELETE', $data);
+
+		if ($res) {
+			Debug2::debug('[Cloudflare] purge_all : Notified Cloudflare to purge all successfully');
+		}
+	}
 
 	/**
 	 * Get current Cloudflare zone from cfg
