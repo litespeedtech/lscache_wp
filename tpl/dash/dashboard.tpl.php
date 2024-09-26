@@ -744,7 +744,12 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 								<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon" target="_blank"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
 							</h3>
 							<p class="litespeed-top20 litespeed-text-bold litespeed-margin-bottom20">
-								<a href="https://www.quic.cloud/docs/onboarding/" class="" target="_blank"><?php echo __('Try QUIC.cloud CDN!', 'litespeed-cache'); ?></a>
+								<?php Doc::learn_more(
+									Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ENABLE_CDN),
+									__('Enable QUIC.cloud CDN', 'litespeed-cache'),
+									true,
+									'button litespeed-btn-success'
+								); ?>
 							</p>
 							<p class="litespeed-margin-y5">
 								<?php echo __('Best available WordPress performance', 'litespeed-cache'); ?>

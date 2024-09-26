@@ -4,18 +4,6 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit;
 
-$this->form_action();
-?>
-
-<h3 class="litespeed-title-short">
-	<?php echo __('CDN Settings', 'litespeed-cache'); ?>
-	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/cdn/'); ?>
-</h3>
-
-<h2>Here will show info html from QC carry-on.</h2>
-
-<?php
-$this->form_end();
 ?>
 <div class="litespeed-dashboard-header">
 	<h3 class="litespeed-dashboard-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>

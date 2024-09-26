@@ -20,6 +20,7 @@ class Cloud extends Base
 
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_U_LINK = 'u/wp3/link';
+	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -95,6 +96,7 @@ class Cloud extends Base
 	const TYPE_CLEAR_CLOUD = 'clear_cloud';
 	const TYPE_ACTIVATE = 'activate';
 	const TYPE_LINK = 'link';
+	const TYPE_ENABLE_CDN = 'enablecdn';
 	const TYPE_SYNC_USAGE = 'sync_usage';
 	const TYPE_RESET = 'reset';
 
@@ -195,6 +197,34 @@ class Cloud extends Base
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
+		exit();
+	}
+
+	/**
+	 * Enable QC CDN
+	 *
+	 * @since 7.0
+	 */
+	public function enable_cdn()
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'wp_ts' => time(),
+		);
+		$data['wp_signature_b64'] = $this->_sign_b64($data['wp_ts']);
+
+		// Activation redirect
+		$param = array(
+			'site_url' => home_url(),
+			'ver' => Core::VER,
+			'data' => $data,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ENABLE_CDN . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -1548,6 +1578,10 @@ class Cloud extends Base
 
 			case self::TYPE_LINK:
 				$this->link_qc();
+				break;
+
+			case self::TYPE_ENABLE_CDN:
+				$this->enable_cdn();
 				break;
 
 			case self::TYPE_SYNC_USAGE:
