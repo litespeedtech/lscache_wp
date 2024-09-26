@@ -35,76 +35,80 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 <div class="litespeed-dashboard">
 
 	<?php if (!$__cloud->activated()) : ?>
+		<div class="litespeed-dashboard-group">
+			<div class="litespeed-flex-container">
 
-		<div class="postbox litespeed-postbox litespeed-postbox-cache">
-			<div class="inside">
-				<h3 class="litespeed-title">
-					<?php echo __('Cache Status', 'litespeed-cache'); ?>
-					<a href="<?php echo admin_url('admin.php?page=litespeed-cache'); ?>" class="litespeed-title-right-icon"><?php echo __('More', 'litespeed-cache'); ?></a>
-				</h3>
+				<div class="postbox litespeed-postbox litespeed-postbox-cache">
+					<div class="inside">
+						<h3 class="litespeed-title">
+							<?php echo __('Cache Status', 'litespeed-cache'); ?>
+							<a href="<?php echo admin_url('admin.php?page=litespeed-cache'); ?>" class="litespeed-title-right-icon"><?php echo __('More', 'litespeed-cache'); ?></a>
+						</h3>
 
-				<?php
-				$cache_list = array(
-					Base::O_CACHE			=> __('Public Cache', 'litespeed-cache'),
-					Base::O_CACHE_PRIV		=> __('Private Cache', 'litespeed-cache'),
-					Base::O_OBJECT			=> __('Object Cache', 'litespeed-cache'),
-					Base::O_CACHE_BROWSER	=> __('Browser Cache', 'litespeed-cache'),
-				);
-				foreach ($cache_list as $id => $title) :
-				?>
-					<p>
-						<?php if ($this->conf($id)) : ?>
-							<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
-						<?php else : ?>
-							<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+						<?php
+						$cache_list = array(
+							Base::O_CACHE			=> __('Public Cache', 'litespeed-cache'),
+							Base::O_CACHE_PRIV		=> __('Private Cache', 'litespeed-cache'),
+							Base::O_OBJECT			=> __('Object Cache', 'litespeed-cache'),
+							Base::O_CACHE_BROWSER	=> __('Browser Cache', 'litespeed-cache'),
+						);
+						foreach ($cache_list as $id => $title) :
+						?>
+							<p>
+								<?php if ($this->conf($id)) : ?>
+									<span class="litespeed-label-success litespeed-label-dashboard">ON</span>
+								<?php else : ?>
+									<span class="litespeed-label-danger litespeed-label-dashboard">OFF</span>
+								<?php endif; ?>
+								<?php echo esc_html($title); ?>
+							</p>
+						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<div class="postbox litespeed-postbox litespeed-postbox-crawler">
+					<div class="inside">
+						<h3 class="litespeed-title">
+							<?php echo __('Crawler Status', 'litespeed-cache'); ?>
+							<a href="<?php echo admin_url('admin.php?page=litespeed-crawler'); ?>" class="litespeed-title-right-icon"><?php echo __('More', 'litespeed-cache'); ?></a>
+						</h3>
+
+						<p>
+							<code><?php echo count(Crawler::cls()->list_crawlers()); ?></code> <?php echo __('Crawler(s)', 'litespeed-cache'); ?>
+						</p>
+						<p>
+							<?php echo __('Currently active crawler', 'litespeed-cache'); ?>: <code><?php echo esc_html($crawler_summary['curr_crawler']); ?></code>
+						</p>
+
+						<?php if ($crawler_summary['curr_crawler_beginning_time']) : ?>
+							<p>
+								<b><?php echo __('Current crawler started at', 'litespeed-cache'); ?>:</b>
+								<?php echo Utility::readable_time($crawler_summary['curr_crawler_beginning_time']); ?>
+							</p>
 						<?php endif; ?>
-						<?php echo esc_html($title); ?>
-					</p>
-				<?php endforeach; ?>
-			</div>
-		</div>
 
-		<div class="postbox litespeed-postbox litespeed-postbox-crawler">
-			<div class="inside">
-				<h3 class="litespeed-title">
-					<?php echo __('Crawler Status', 'litespeed-cache'); ?>
-					<a href="<?php echo admin_url('admin.php?page=litespeed-crawler'); ?>" class="litespeed-title-right-icon"><?php echo __('More', 'litespeed-cache'); ?></a>
-				</h3>
+						<?php if ($crawler_summary['last_start_time']) : ?>
+							<p class='litespeed-desc'>
+								<b><?php echo __('Last interval', 'litespeed-cache'); ?>:</b>
+								<?php echo Utility::readable_time($crawler_summary['last_start_time']); ?>
+							</p>
+						<?php endif; ?>
 
-				<p>
-					<code><?php echo count(Crawler::cls()->list_crawlers()); ?></code> <?php echo __('Crawler(s)', 'litespeed-cache'); ?>
-				</p>
-				<p>
-					<?php echo __('Currently active crawler', 'litespeed-cache'); ?>: <code><?php echo esc_html($crawler_summary['curr_crawler']); ?></code>
-				</p>
+						<?php if ($crawler_summary['end_reason']) : ?>
+							<p class='litespeed-desc'>
+								<b><?php echo __('Ended reason', 'litespeed-cache'); ?>:</b>
+								<?php echo esc_html($crawler_summary['end_reason']); ?>
+							</p>
+						<?php endif; ?>
 
-				<?php if ($crawler_summary['curr_crawler_beginning_time']) : ?>
-					<p>
-						<b><?php echo __('Current crawler started at', 'litespeed-cache'); ?>:</b>
-						<?php echo Utility::readable_time($crawler_summary['curr_crawler_beginning_time']); ?>
-					</p>
-				<?php endif; ?>
+						<?php if ($crawler_summary['last_crawled']) : ?>
+							<p class='litespeed-desc'>
+								<?php echo sprintf(__('<b>Last crawled:</b> %d item(s)', 'litespeed-cache'), $crawler_summary['last_crawled']); ?>
+							</p>
+						<?php endif; ?>
 
-				<?php if ($crawler_summary['last_start_time']) : ?>
-					<p class='litespeed-desc'>
-						<b><?php echo __('Last interval', 'litespeed-cache'); ?>:</b>
-						<?php echo Utility::readable_time($crawler_summary['last_start_time']); ?>
-					</p>
-				<?php endif; ?>
-
-				<?php if ($crawler_summary['end_reason']) : ?>
-					<p class='litespeed-desc'>
-						<b><?php echo __('Ended reason', 'litespeed-cache'); ?>:</b>
-						<?php echo esc_html($crawler_summary['end_reason']); ?>
-					</p>
-				<?php endif; ?>
-
-				<?php if ($crawler_summary['last_crawled']) : ?>
-					<p class='litespeed-desc'>
-						<?php echo sprintf(__('<b>Last crawled:</b> %d item(s)', 'litespeed-cache'), $crawler_summary['last_crawled']); ?>
-					</p>
-				<?php endif; ?>
-
+					</div>
+				</div>
 			</div>
 		</div>
 
