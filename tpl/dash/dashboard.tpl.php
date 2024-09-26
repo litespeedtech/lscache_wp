@@ -121,7 +121,7 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient">Accelerate, Optimize, Protect</strong></h3>
 					<p class="litespeed-dashboard-unlock-desc">Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.</p>
 					<p>Free monthly quota available.</p>
-					<p><a class="button button-primary" href="#"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
+					<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE); ?>"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
 					<p class="litespeed-dashboard-unlock-footer">
 						<a href="https://www.quic.cloud/" target="_blank">Learn More about QUIC.cloud</a><br>
 						QUIC.cloud services are not required
