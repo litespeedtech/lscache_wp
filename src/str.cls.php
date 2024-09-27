@@ -1,15 +1,40 @@
 <?php
+
 /**
  * LiteSpeed String Operator Library Class
  *
  * @since 1.3
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
 class Str
 {
+	/**
+	 * Return safe HTML
+	 *
+	 * @since 7.0
+	 */
+	public static function safe_html($html)
+	{
+		$allowed_tags = array(
+			'p'      => array('style' => array()),
+			'span'   => array('style' => array()),
+			'img'    => array(
+				'style' => array(),
+				'src' => array(),
+				'alt' => array(),
+			),
+			'a'      => array('href' => array()),
+			'div'    => array('style' => array()),
+			'font'   => array('color' => array()),
+		);
+
+		return wp_kses($html, $allowed_tags);
+	}
+
 	/**
 	 * Generate random string
 	 *

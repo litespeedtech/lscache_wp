@@ -21,6 +21,7 @@ class Cloud extends Base
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
+	const SVC_U_STATUS = 'u/wp3/status/';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -99,6 +100,7 @@ class Cloud extends Base
 	const TYPE_ENABLE_CDN = 'enablecdn';
 	const TYPE_SYNC_USAGE = 'sync_usage';
 	const TYPE_RESET = 'reset';
+	const TYPE_SYNC_STATUS = 'sync_status';
 
 	protected $_summary;
 
@@ -404,6 +406,46 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Load QC status for dash usage
+	 *
+	 * @since 7.0
+	 */
+	public function load_qc_status_for_dash($type, $force = false)
+	{
+		$col = 'body';
+		if ($type == 'cdn_dash_mini') {
+			$type = 'cdn_dash';
+			$col = 'body_mini';
+		}
+
+		if (!$force && !empty($this->_summary['next_call_ttl' . $type]) && $this->_summary['next_call_ttl' . $type] > time()) {
+			if ($col == 'body_mini') {
+				return $this->_summary['cdn_dash_mini'];
+			}
+			return $this->_summary[$type];
+		}
+
+		// Try to update dash content
+		$data = self::post(self::SVC_U_STATUS . $type);
+		if (empty($data['next_call_ttl'])) {
+			return;
+		}
+
+		// Store the info
+		$this->_summary['next_call_ttl.' . $type] = time() + intval($data['next_call_ttl']);
+		if (!empty($data['body'])) {
+			$this->_summary[$type] = Str::safe_html($data['body']);
+		}
+		if ($type == 'cdn_dash') { // Also save the mini content
+			$this->_summary['cdn_dash_mini'] = Str::safe_html($data['body_mini']);
+		}
+		$this->save_summary();
+
+		// Show the info
+		return Str::safe_html($data[$col]);
+	}
+
+	/**
 	 * Reset QC setup
 	 *
 	 * @since 7.0
@@ -669,6 +711,9 @@ class Cloud extends Base
 		if (in_array($service, self::$CENTER_SVC_SET)) {
 			return self::CLOUD_SERVER;
 		}
+		if (strpos($service, self::SVC_U_STATUS) === 0) {
+			return self::CLOUD_SERVER;
+		}
 
 		if (in_array($service, self::$WP_SVC_SET)) {
 			return self::CLOUD_SERVER_WP;
@@ -754,7 +799,7 @@ class Cloud extends Base
 		if (in_array($service, self::$SERVICES_LOAD_CHECK)) {
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
-				$response = wp_remote_get($v, array('timeout' => 5, 'sslverify' => true));
+				$response = wp_remote_get($v, array('timeout' => 5));
 				if (is_wp_error($response)) {
 					$error_message = $response->get_error_message();
 					self::debug('failed to do load checker: ' . $error_message);
@@ -857,7 +902,6 @@ class Cloud extends Base
 
 		$response = wp_remote_get($url, array(
 			'timeout' => 15,
-			'sslverify' => true,
 			'headers' => array('Accept' => 'application/json'),
 		));
 
@@ -1031,7 +1075,6 @@ class Cloud extends Base
 		$response = wp_remote_post($url, array(
 			'body' => $param,
 			'timeout' => $time_out ?: 15,
-			'sslverify' => true,
 			'headers' => array('Accept' => 'application/json'),
 		));
 
@@ -1046,11 +1089,14 @@ class Cloud extends Base
 	 */
 	private function _parse_response($response, $service, $service_tag, $server)
 	{
+		// If show the error or not if failed
+		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_U_STATUS) !== 0;
+
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to request: ' . $error_message);
 
-			if ($service !== self::API_VER && $service !== self::API_NEWS) {
+			if ($visible_err) {
 				$msg = __('Failed to request via WordPress', 'litespeed-cache') . ': ' . $error_message . " [server] $server [service] $service";
 				Admin_Display::error($msg);
 
@@ -1073,7 +1119,7 @@ class Cloud extends Base
 		if (!is_array($json)) {
 			self::debugErr('failed to decode response json: ' . $response['body']);
 
-			if ($service !== self::API_VER && $service !== self::API_NEWS) {
+			if ($visible_err) {
 				$msg = __('Failed to request via WordPress', 'litespeed-cache') . ': ' . $response['body'] . " [server] $server [service] $service";
 				Admin_Display::error($msg);
 
@@ -1251,7 +1297,10 @@ class Cloud extends Base
 			$str_translated = Error::msg($json_msg);
 			$msg = __('Failed to communicate with QUIC.cloud server', 'litespeed-cache') . ': ' . $str_translated . " [server] $server [service] $service";
 			$msg .= $this->_parse_link($json);
-			Admin_Display::error($msg);
+			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_U_STATUS) !== 0;
+			if ($visible_err) {
+				Admin_Display::error($msg);
+			}
 
 			// QC may try auto alias
 			/** @since 5.0 Store the domain as `err_domains` only for QC auto alias feature */
@@ -1582,6 +1631,12 @@ class Cloud extends Base
 
 			case self::TYPE_ENABLE_CDN:
 				$this->enable_cdn();
+				break;
+
+			case self::TYPE_SYNC_STATUS:
+				$this->load_qc_status_for_dash('cdn_dash');
+				$msg = __('Sync QUIC.cloud status successfully.', 'litespeed-cache');
+				Admin_Display::success($msg);
 				break;
 
 			case self::TYPE_SYNC_USAGE:
