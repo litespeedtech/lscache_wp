@@ -260,6 +260,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
+* **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
+* **GUI** New QUIC.cloud CDN tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
