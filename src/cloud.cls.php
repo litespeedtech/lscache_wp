@@ -19,6 +19,7 @@ class Cloud extends Base
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
+	const SVC_D_ACTIVATE = 'd/wp3/activate';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
 	const SVC_U_STATUS = 'u/wp3/status/';
@@ -230,7 +231,7 @@ class Cloud extends Base
 			'data' => $data,
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
-		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		return $res;
 	}
 
