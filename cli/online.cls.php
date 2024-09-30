@@ -35,9 +35,11 @@ class Online
 	 */
 	public function init()
 	{
-		$key = $this->__cloud->gen_key();
-		if ($key) {
-			WP_CLI::success('key = ' . $key);
+		$resp = $this->__cloud->init_qc_cli();
+		if (!empty($resp['qc_activated'])) {
+			WP_CLI::success('Init successfully. Activated type: ' . $resp['qc_activated']);
+		} else {
+			WP_CLI::error('Init failed!');
 		}
 	}
 

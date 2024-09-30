@@ -115,11 +115,11 @@ class Cloud extends Base
 	}
 
 	/**
-	 * Init QC setup
+	 * Init QC setup preparation
 	 *
 	 * @since 7.0
 	 */
-	public function init_qc()
+	private function _init_qc_prepare()
 	{
 		if (empty($this->_summary['sk_b64'])) {
 			$keypair = sodium_crypto_sign_keypair();
@@ -130,6 +130,16 @@ class Cloud extends Base
 			$this->save_summary();
 			// ATM `qc_activated` = null
 		}
+	}
+
+	/**
+	 * Init QC setup
+	 *
+	 * @since 7.0
+	 */
+	public function init_qc()
+	{
+		$this->_init_qc_prepare();
 
 		// WPAPI REST echo dryrun
 		$req_data = array(
@@ -172,6 +182,56 @@ class Cloud extends Base
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
+	}
+
+	/**
+	 * Init QC setup (CLI)
+	 *
+	 * @since 7.0
+	 */
+	public function init_qc_cli()
+	{
+		$this->_init_qc_prepare();
+
+		// WPAPI REST echo dryrun
+		$req_data = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+		);
+		$echobox = self::post(self::API_REST_ECHO, $req_data);
+		if ($echobox === false) {
+			self::debugErr('REST Echo Failed!');
+			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
+			Admin_Display::error($msg);
+			return;
+		}
+
+		self::debug('echo succeeded');
+
+		// Load seperate thread echoed data from storage
+		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
+			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+			'wpapi_ts' => $echobox['wpapi_ts'],
+			'wpapi_signature_b64' => $echobox['wpapi_signature_b64'],
+		);
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if ($server_ip) {
+			$data['server_ip'] = $server_ip;
+		}
+
+		// Activation redirect
+		$param = array(
+			'site_url' => home_url(),
+			'ver' => Core::VER,
+			'data' => $data,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		return $res;
 	}
 
 	/**
