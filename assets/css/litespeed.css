@@ -3228,8 +3228,8 @@ a.litespeed-redetect {
 }
 
 p.litespeed-dashboard-unlock-footer{
-	margin-top: 3em;
-    margin-bottom: 0;
+	margin: 3em auto 0 auto;
+	max-width: 500px;
 }
 
 .litespeed-qc-text-gradient {

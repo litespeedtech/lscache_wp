@@ -139,8 +139,8 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 				<p>Free monthly quota available.</p>
 				<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE); ?>"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
 				<p class="litespeed-dashboard-unlock-footer">
+					QUIC.cloud provides CDN and online optimization services, and is not required. You may use many features of this plugin without QUIC.cloud.
 					<a href="https://www.quic.cloud/" target="_blank">Learn More about QUIC.cloud</a><br>
-					QUIC.cloud services are not required
 				</p>
 			</div>
 		</div>
