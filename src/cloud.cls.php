@@ -18,11 +18,11 @@ class Cloud extends Base
 	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
-	const SVC_U_ACTIVATE = 'u/wp3/activate';
-	const SVC_D_ACTIVATE = 'd/wp3/activate';
+	const SVC_D_ACTIVATE = 'd/activate';
+	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
-	const SVC_U_STATUS = 'u/wp3/status/';
+	const SVC_D_STATUS = 'd/status/';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -54,7 +54,8 @@ class Cloud extends Base
 	const API_SERVER_KEY_SIGN = 'key_sign';
 
 	private static $CENTER_SVC_SET = array(
-		self::SVC_U_ACTIVATE,
+		self::SVC_D_ACTIVATE,
+		self::SVC_D_ENABLE_CDN,
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
@@ -181,7 +182,7 @@ class Cloud extends Base
 			'data' => $data,
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_D_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -224,14 +225,39 @@ class Cloud extends Base
 			$data['server_ip'] = $server_ip;
 		}
 
-		// Activation redirect
-		$param = array(
-			'site_url' => home_url(),
-			'ver' => Core::VER,
-			'data' => $data,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ACTIVATE, $data);
+		return $res;
+	}
+
+	/**
+	 * Init QC CDN setup (CLI)
+	 *
+	 * @since 7.0
+	 */
+	public function init_qc_cdn_cli($cert, $key, $method)
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		if (!file_exists($cert) || !file_exists($key)) {
+			Admin_Display::error(__('Cert or key file does not exist.', 'litespeed-cache'));
+			return;
+		}
+
+
+		$data = array(
+			'cert' => File::read($cert),
+			'key' => File::read($key),
+			'methode' => $method,
 		);
-		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if ($server_ip) {
+			$data['server_ip'] = $server_ip;
+		}
+
+		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ENABLE_CDN, $data);
 		return $res;
 	}
 
@@ -487,7 +513,7 @@ class Cloud extends Base
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_U_STATUS . $type);
+		$data = self::post(self::SVC_D_STATUS . $type);
 		if (empty($data['next_call_ttl'])) {
 			return;
 		}
@@ -772,7 +798,7 @@ class Cloud extends Base
 		if (in_array($service, self::$CENTER_SVC_SET)) {
 			return self::CLOUD_SERVER;
 		}
-		if (strpos($service, self::SVC_U_STATUS) === 0) {
+		if (strpos($service, self::SVC_D_STATUS) === 0) {
 			return self::CLOUD_SERVER;
 		}
 
@@ -857,7 +883,7 @@ class Cloud extends Base
 		self::debug('Closest nodes list', $valid_clouds);
 
 		// Check server load
-		if (in_array($service, self::$SERVICES_LOAD_CHECK)) {
+		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
 				$response = wp_remote_get($v, array('timeout' => 5));
@@ -1040,7 +1066,7 @@ class Cloud extends Base
 			return true;
 		}
 
-		if (!$this->activated() && $service_tag != self::SVC_U_ACTIVATE) {
+		if (!$this->activated() && $service_tag != self::SVC_D_ACTIVATE) {
 			Admin_Display::error(Error::msg('setup_required'));
 			return false;
 		}
@@ -1151,7 +1177,7 @@ class Cloud extends Base
 	private function _parse_response($response, $service, $service_tag, $server)
 	{
 		// If show the error or not if failed
-		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_U_STATUS) !== 0;
+		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
 
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
@@ -1358,7 +1384,7 @@ class Cloud extends Base
 			$str_translated = Error::msg($json_msg);
 			$msg = __('Failed to communicate with QUIC.cloud server', 'litespeed-cache') . ': ' . $str_translated . " [server] $server [service] $service";
 			$msg .= $this->_parse_link($json);
-			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_U_STATUS) !== 0;
+			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
 			if ($visible_err) {
 				Admin_Display::error($msg);
 			}

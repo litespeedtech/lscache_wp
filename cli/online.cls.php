@@ -23,13 +23,13 @@ class Online
 	}
 
 	/**
-	 * Generate domain key from QUIC.cloud server (See https://quic.cloud/terms/)
+	 * Init domain on QUIC.cloud server (See https://quic.cloud/terms/)
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Generate domain API key from QUIC.cloud
+	 *     # Activate domain on QUIC.cloud
 	 *     $ wp litespeed-online init
 	 *
 	 */
@@ -40,6 +40,32 @@ class Online
 			WP_CLI::success('Init successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
 			WP_CLI::error('Init failed!');
+		}
+	}
+
+	/**
+	 * Init domain CDN service on QUIC.cloud server (See https://quic.cloud/terms/)
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Activate domain CDN on QUIC.cloud
+	 *     $ wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi
+	 *
+	 */
+	public function cdn_init($args, $assoc_args)
+	{
+		if (empty($assoc_args['ssl-cert']) || empty($assoc_args['ssl-key']) || empty($assoc_args['method'])) {
+			WP_CLI::error('Init CDN failed! Missing parameters.');
+			return;
+		}
+
+		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['ssl-cert'], $assoc_args['ssl-key'], $assoc_args['method']);
+		if (!empty($resp['qc_activated'])) {
+			WP_CLI::success('Init QC CDN successfully. Activated type: ' . $resp['qc_activated']);
+		} else {
+			WP_CLI::error('Init QC CDN failed!');
 		}
 	}
 
