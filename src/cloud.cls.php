@@ -19,6 +19,7 @@ class Cloud extends Base
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_D_ACTIVATE = 'd/activate';
+	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
@@ -55,6 +56,7 @@ class Cloud extends Base
 
 	private static $CENTER_SVC_SET = array(
 		self::SVC_D_ACTIVATE,
+		self::SVC_U_ACTIVATE,
 		self::SVC_D_ENABLE_CDN,
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
@@ -182,7 +184,7 @@ class Cloud extends Base
 			'data' => $data,
 			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_D_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -1156,6 +1158,7 @@ class Cloud extends Base
 			'ver' => Core::VER,
 			'data' => $data,
 		);
+		self::debug('data', $param);
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
@@ -1427,9 +1430,9 @@ class Cloud extends Base
 		unset($this->_summary['qc_activated']);
 		self::save_summary();
 
-		$msg = __('Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache');
-		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed'), __('Click here to set.', 'litespeed-cache'), true, false, true);
-		$msg .= Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true);
+		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');
+		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed'), __('Click here to proceed.', 'litespeed-cache'), true, false, true);
+		$msg .= Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/', false, false, false, true);
 		Admin_Display::error($msg, false, true);
 	}
 
