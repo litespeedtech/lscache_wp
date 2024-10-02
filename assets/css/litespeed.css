@@ -168,6 +168,10 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	display: inline-block;
 }
 
+.litespeed-flex {
+	display: flex;
+}
+
 .litespeed-flex-container {
 	display: flex;
 	flex-wrap: wrap;
@@ -189,6 +193,10 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 
 .litespeed-flex-wrap {
 	flex-wrap: wrap;
+}
+
+.litespeed-align-right {
+	margin-left: auto !important;
 }
 
 .litespeed-width-1-2 {

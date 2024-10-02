@@ -67,3 +67,15 @@ $cloud_summary = Cloud::get_summary();
 <?php else : ?>
 	<?php echo $__cloud->load_qc_status_for_dash('cdn_dash'); ?>
 <?php endif; ?>
+
+
+<?php if ($__cloud->activated()) : ?>
+	<div class="litespeed-top20 litespeed-flex">
+		<?php Doc::learn_more(
+			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET),
+			__('Clear QUIC.cloud activation', 'litespeed-cache'),
+			true,
+			'button litespeed-btn-danger litespeed-align-right'
+		); ?>
+	</div>
+<?php endif; ?>

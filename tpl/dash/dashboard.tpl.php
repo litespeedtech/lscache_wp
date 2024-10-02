@@ -334,16 +334,6 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					); ?>
 				<?php endif; ?>
 			<?php endif; ?>
-
-			<?php if ($__cloud->activated()) : ?>
-				<?php Doc::learn_more(
-					Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET),
-					__('Clear QUIC.cloud activation', 'litespeed-cache'),
-					true,
-					'button litespeed-btn-danger'
-				); ?>
-			<?php endif; ?>
-
 		</p>
 
 		<div class="litespeed-dashboard-group">
