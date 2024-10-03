@@ -81,8 +81,6 @@ class Core extends Root
 		register_uninstall_hook($plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache');
 		// }
 
-		add_action('plugins_loaded', array($this, 'plugins_loaded'));
-
 		if (defined('LITESPEED_ON')) {
 			// register purge_all actions
 			$purge_all_events = $this->conf(Base::O_PURGE_HOOK_ALL);
@@ -154,15 +152,6 @@ class Core extends Root
 			Debug2::debug('[ESI] Overwrite wp_create_nonce()');
 			litespeed_define_nonce_func();
 		}
-	}
-
-	/**
-	 * Plugin loaded hooks
-	 * @since 3.0
-	 */
-	public function plugins_loaded()
-	{
-		load_plugin_textdomain(Core::PLUGIN_NAME, false, 'litespeed-cache/lang/');
 	}
 
 	/**
