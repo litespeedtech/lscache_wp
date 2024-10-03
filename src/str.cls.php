@@ -19,17 +19,21 @@ class Str
 	 */
 	public static function safe_html($html)
 	{
+		$common_attrs = array(
+			'style' => array(),
+			'class' => array(),
+			'target' => array(),
+			'src' => array(),
+			'color' => array(),
+			'href' => array(),
+		);
 		$allowed_tags = array(
-			'p'      => array('style' => array()),
-			'span'   => array('style' => array()),
-			'img'    => array(
-				'style' => array(),
-				'src' => array(),
-				'alt' => array(),
-			),
-			'a'      => array('href' => array()),
-			'div'    => array('style' => array()),
-			'font'   => array('color' => array()),
+			'p'      => $common_attrs,
+			'span'   => $common_attrs,
+			'img'    => $common_attrs,
+			'a'      => $common_attrs,
+			'div'    => $common_attrs,
+			'font'   => $common_attrs,
 		);
 
 		return wp_kses($html, $allowed_tags);
