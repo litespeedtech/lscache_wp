@@ -27,14 +27,25 @@ class Str
 			'color' => array(),
 			'href' => array(),
 		);
-		$allowed_tags = array(
-			'p'      => $common_attrs,
-			'span'   => $common_attrs,
-			'img'    => $common_attrs,
-			'a'      => $common_attrs,
-			'div'    => $common_attrs,
-			'font'   => $common_attrs,
+		$tags = array(
+			"h3",
+			"h4",
+			"h5",
+			"ul",
+			"li",
+			"br",
+			"strong",
+			"p",
+			"span",
+			"img",
+			"a",
+			"div",
+			"font",
 		);
+		$allowed_tags = array();
+		foreach ($tags as $tag) {
+			$allowed_tags[$tag] = $common_attrs;
+		}
 
 		return wp_kses($html, $allowed_tags);
 	}
