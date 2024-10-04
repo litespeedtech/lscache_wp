@@ -535,6 +535,33 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Update QC status
+	 *
+	 * @since 7.0
+	 */
+	public function update_cdn_status()
+	{
+		if (empty($_POST['qc_activated']) || !in_array($_POST['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+			return self::err('lack_of_params');
+		}
+
+		self::debug('update_cdn_status request hash: ' . $_POST['qc_activated']);
+
+		$this->_summary['qc_activated'] = $_POST['qc_activated'];
+		$this->save_summary();
+
+		if ($_POST['qc_activated'] == 'cdn') {
+			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
+			Admin_Display::success('🎊 ' . $msg);
+			// Turn on CDN option
+			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
+			$this->cls('CDN\Quic')->try_sync_conf(true);
+		}
+
+		return self::ok(array('qc_activated' => $_POST['qc_activated']));
+	}
+
+	/**
 	 * Reset QC setup
 	 *
 	 * @since 7.0

@@ -180,13 +180,13 @@ class REST extends Root
 	}
 
 	/**
-	 * Endpoint for QC to notify plugin of CDN setup status update.
+	 * Endpoint for QC to notify plugin of CDN status update.
 	 *
-	 * @since  3.0
+	 * @since  7.0
 	 */
 	public function cdn_status()
 	{
-		return $this->cls('Cdn_Setup')->update_cdn_status();
+		return $this->cls('Cloud')->update_cdn_status();
 	}
 
 	/**
