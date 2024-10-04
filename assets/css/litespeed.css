@@ -4231,3 +4231,30 @@ a.litespeed-media-href svg:hover {
 .litespeed-wrap .litespeed-redetect[aria-label][data-balloon-pos][data-balloon-pos='up'][data-balloon-visible]:after {
 	transform: translate(0, 0);
 }
+
+/* =======================================
+	   Deactivate modal
+======================================= */
+#litespeed-modal-deactivate{
+	padding: 20px;
+}
+
+#litespeed-modal-deactivate h2{
+	margin: 0px;
+}
+
+#litespeed-modal-deactivate .litespeed-wrap{
+	margin: 10px 0px;
+}
+
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper,
+#litespeed-modal-deactivate .deactivate-actions{
+	margin-top: 30px;
+}
+
+#litespeed-modal-deactivate .deactivate-reason-wrapper label,
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper label{
+	width: 100%;
+    display: block;
+	margin-bottom: 5px;
+}

@@ -268,6 +268,65 @@ var _litespeed_dots;
 				$(this).addClass('disabled');
 			});
 		}
+
+		/**
+		 * Deactivate link
+		 */
+		if ($('#deactivate-litespeed-cache').length > 0) {
+			// Variables
+			var modal_element = $('#litespeed-deactivation');
+			var formElement = $('#litespeed-deactivation-form');
+
+			$('#deactivate-litespeed-cache').on('click', function (e) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				formElement.attr('action', decodeURI($(this).attr('href')));
+				modal_element.iziModal({
+					radius: '.5rem',
+					width: 550,
+					autoOpen: true,
+				});
+			});
+
+			$(document).on('submit', '#litespeed-deactivation-form', function (e) {
+				e.preventDefault();
+				$('#litespeed-deactivation-form-submit').attr('disabled', true);
+				var container = $('#litespeed-deactivation-form');
+				let deleteSite = $(container).find('#litespeed-deactivate-clear').is(':checked');
+				let deleteNetwork = $(container).find('#litespeed-deactivate-network').is(':checked');
+
+				// Save selected data
+				var data = {
+					id: window.lscId,
+					siteLink: window.location.hostname,
+					reason: $(container).find('[name=litespeed-reason]:checked').val(),
+					deleteSite: deleteSite,
+					deleteNetwork: deleteNetwork,
+				};
+
+				$.ajax({
+					url: 'https://wpapi.quic.cloud/surveyy',
+					dataType: 'json',
+					method: 'POST',
+					cache: false,
+					data: data,
+					beforeSend: function (xhr) {
+						//xhr.setRequestHeader('X-WP-Nonce', litespeed_data.nonce);
+					},
+					success: function (data) {
+						console.log('QC data sent.');
+					},
+					error: function (xhr, error) {
+						console.log('Error sending data to QC.');
+					},
+				});
+
+				$('#litespeed-deactivation-form')[0].submit();
+			});
+			$(document).on('click', '#litespeed-deactivation-form-cancel', function (e) {
+				modal_element.iziModal('close');
+			});
+		}
 	});
 })(jQuery);
 
