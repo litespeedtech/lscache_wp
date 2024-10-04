@@ -260,11 +260,30 @@ class Admin_Display extends Base
 			}
 		}
 
+		// Load iziModal JS and CSS
+		if ($pagenow == 'plugins.php') {
+			wp_enqueue_script(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/js/iziModal.min.js', array(), Core::VER, 'all');
+			wp_enqueue_style(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/css/iziModal.min.css', array(), Core::VER, 'all');
+			add_action('admin_footer', array($this, 'add_deactivation_html'));
+		}
+
 		if ($localize_data) {
 			wp_localize_script(Core::PLUGIN_NAME, 'litespeed_data', $localize_data);
 		}
 
 		wp_enqueue_script(Core::PLUGIN_NAME);
+	}
+
+	/**
+	 * Add .
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function add_deactivation_html()
+	{
+		require LSCWP_DIR . 'tpl/inc/modal.deactivation.php';
 	}
 
 	/**
@@ -291,7 +310,6 @@ class Admin_Display extends Base
 	 */
 	public function add_plugin_links($links)
 	{
-		// $links[] = '<a href="' . admin_url('options-general.php?page=litespeed-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>';
 		$links[] = '<a href="' . admin_url('admin.php?page=litespeed-cache') . '">' . __('Settings', 'litespeed-cache') . '</a>';
 
 		return $links;

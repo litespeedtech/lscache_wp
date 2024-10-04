@@ -89,18 +89,6 @@ class Activation extends Base
 	{
 		Task::destroy();
 
-		// Delete options
-		foreach (Conf::cls()->load_default_vals() as $k => $v) {
-			Base::delete_option($k);
-		}
-
-		// Delete site options
-		if (is_multisite()) {
-			foreach (Conf::cls()->load_default_site_vals() as $k => $v) {
-				Base::delete_site_option($k);
-			}
-		}
-
 		// Delete avatar table
 		Data::cls()->tables_del();
 
@@ -109,8 +97,6 @@ class Activation extends Base
 		}
 
 		Cloud::version_check('uninstall');
-
-		// Files has been deleted when deactivated
 	}
 
 	/**
@@ -222,6 +208,46 @@ class Activation extends Base
 
 		Purge::purge_all();
 
+		// 0. Delete all sites data on request from modal
+		// If clear current blog
+		if (isset($_POST['lsc-clear']) && $_POST['lsc-clear'] == 'true') {
+			// Delete options
+			self::delete_site_settings();
+
+			// Delete avatar table
+			self::delete_site_tables();
+
+			// Cloud uninstall
+			Cloud::version_check('uninstall');
+		}
+
+		// if clear network wide settings
+		if (is_multisite() && isset($_POST['lsc-clear-network']) && $_POST['lsc-clear-network'] == 'true') {
+			$current_blog = get_current_blog_id();
+			// get all sites
+			$subsites = get_sites();
+
+			// clear foreach site
+			foreach ($subsites as $subsite) {
+				$sub_blog_id = (int) $subsite->blog_id;
+				if (isset($sub_blog_id) && $sub_blog_id != $current_blog) {
+					// Switch to blog
+					switch_to_blog($sub_blog_id);
+
+					// Delete site options
+					self::delete_site_settings();
+
+					// Delete avatar table
+					self::delete_site_tables();
+
+					// Cloud uninstall
+					Cloud::version_check('uninstall');
+				}
+			}
+
+			switch_to_blog($current_blog);
+		}
+
 		if (is_multisite()) {
 			if (!self::is_deactivate_last()) {
 				if (is_network_admin()) {
@@ -264,8 +290,22 @@ class Activation extends Base
 
 		self::_del_conf_data_file();
 
+		/* 6) delete option lscwp_whm_install */
+
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();
+	}
+
+	private static function delete_site_settings()
+	{
+		global $wpdb;
+
+		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'", array('litespeed.%')));
+	}
+
+	private static function delete_site_tables()
+	{
+		Data::cls()->tables_del();
 	}
 
 	/**
