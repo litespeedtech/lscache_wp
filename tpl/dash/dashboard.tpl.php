@@ -781,18 +781,20 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					</div>
 				</div>
 
-				<?php $news = $__cloud->load_qc_status_for_dash('news_dash'); ?>
-				<?php if ($news) : ?>
-					<div class="postbox litespeed-postbox">
-						<div class="inside litespeed-text-center">
-							<h3 class="litespeed-title">
-								<?php echo __('News', 'litespeed-cache'); ?>
-							</h3>
-							<div class="litespeed-top20">
-								<?php echo $news; ?>
+				<?php if ($__cloud->activated()) : ?>
+					<?php $news = $__cloud->load_qc_status_for_dash('news_dash'); ?>
+					<?php if ($news) : ?>
+						<div class="postbox litespeed-postbox">
+							<div class="inside litespeed-text-center">
+								<h3 class="litespeed-title">
+									<?php echo __('News', 'litespeed-cache'); ?>
+								</h3>
+								<div class="litespeed-top20">
+									<?php echo $news; ?>
+								</div>
 							</div>
 						</div>
-					</div>
+					<?php endif; ?>
 				<?php endif; ?>
 
 			</div>
