@@ -257,6 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.0 - Nov 2024 =
 * 🌱**Image Optimization** Added AVIF format.
+* **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
