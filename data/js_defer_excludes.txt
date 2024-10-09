@@ -2,15 +2,12 @@
 # Comment can use `# `(there is a space following), or `##`, can use both as a new line or end of one line
 # If you want to predefine new items, please send a Pull Request to https://github.com/litespeedtech/lscache_wp/blob/dev/data/js_defer_excludes.txt We will merge into next plugin release
 
-
 # JS file URL excludes
 adsbygoogle
-turnstile
-challenges.cloudflare.com
 
+## JetPack Stats
 stats.wp.com/e-
 _stq
-## JetPack Stats
 
 # Cloudflare turnstile - Tobolo
 turnstile
