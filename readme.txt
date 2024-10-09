@@ -272,6 +272,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 
 = 6.5.1 - Sep 25 2024 =
+* **Security** This release includes a minor security update to enhance the post validation of the editor.
 * **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
 * **Page Optimize** Sanitized vary value in queue list. (TaiYou)
 * **Cloud** Silent API error when failing to retrieve news updates.
