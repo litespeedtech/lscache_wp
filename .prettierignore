@@ -1,6 +1,12 @@
 **/*.min.*
 **/*.ori.*
 **/*.tpl.php
+composer.json
+composer.lock
+package.json
+package-lock.json
+vendor
+.cache
 assets/js/css_async.js
 assets/js/webfontloader.js
 lib

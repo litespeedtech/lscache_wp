@@ -1,9 +1,10 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
-Requires at least: 4.9
-Tested up to: 6.6.1
-Stable tag: 6.5.1
+Requires at least: 5.3
+Requires PHP: 7.2
+Tested up to: 6.6
+Stable tag: 6.5.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -48,7 +49,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * Single Site and Multisite (Network) support
 * Import/Export settings
 * Attractive, easy-to-understand interface
-* WebP image format support
+* AVIF/WebP image format support
 * Heartbeat control
 
 <sup>+</sup> This service is not provided by the LSCache plugin, nor is it guaranteed to be installed by your service provider. However, the plugin is compatible with the service if it is in use on your site.
@@ -91,10 +92,10 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 == LSCWP Resources ==
 * [Join our Slack community](https://litespeedtech.com/slack) to connect with other LiteSpeed users.
 * [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
-* [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/overview/).
-* [Read WordPress Wednesday tutorials on our blog](https://blog.litespeedtech.com/tag/wordpress-wednesday/).
+* [View detailed documentation](https://docs.litespeedtech.com/lscache/lscwp/).
+* [Read about LSCWP and WordPress on our blog](https://blog.litespeedtech.com/tag/wordpress/).
 * [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache/).
-* [LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
+* [Contribute to the LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
 
 == Installation ==
 
@@ -254,6 +255,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.0 - Nov 2024 =
+* 🌱**Image Optimization** Added AVIF format.
+* **Core** Minimum required PHP version escalated to PHP v7.2.0.
+* **Core** Minimum required WP version escalated to WP v5.3.
+* **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
+* **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
+* **Tag** Fixed a potential warning in tags. (ikiterder)
+* **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
+
 = 6.5.1 - Sep 25 2024 =
 * **Security** This release includes a minor security update to enhance the post validation of the editor.
 * **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
@@ -268,6 +278,23 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 6.5 - Sep 4 2024 =
 *❗**Security** This release includes several debug log improvements for improved security, as listed below. Update strongly recommended.
+* **Debug** Moved debug log to litespeed individual folder `/wp-content/litespeed/debug/`.
+* **Debug** Disallowed visits to `/litespeed/debug/` folder log files in .htaccess.
+* **Debug** Dropped const `LSCWP_DEBUG_PATH` support.
+* **Debug** Renamed `debug.purge.log` to `purge.log`.
+* **Debug** Added dummy `index.php` for debug folder.
+* **Debug** Used random string for log filenames.
+* **Debug** Removed cookies-related info. (Thanks to Rafie)
+* **Debug** Dropped `Log Cookies` option.
+* **Report** Escaped report content to protect it from potential XSS attack. (Islam R alsaid #505746)
+* **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
+* **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin. (Philip #453)
+* **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
+* **3rd** Fixed undefined warning in WooCommerce Widgets. (Lolosan #719)
+* **3rd** Correct the integration with User Switching. (John Blackbourn #725)
+* **3rd** Fixed Admin Bar Missing issue on DIVI + Elementor frontend. (thyran/robertstaddon PR#727)
+
+= 6.4.2 - Sep 3 2024 =
 * **Debug** Moved debug log to litespeed individual folder `/wp-content/litespeed/debug/`.
 * **Debug** Disallowed visits to `/litespeed/debug/` folder log files in .htaccess.
 * **Debug** Dropped const `LSCWP_DEBUG_PATH` support.

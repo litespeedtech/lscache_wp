@@ -54,9 +54,6 @@ class Img_Optm extends Base
 
 	const DB_NEED_PULL = 'need_pull';
 
-	const JUMBO_REQUEST_BONUS = 10;
-	const PRIO_REQUEST_BONUS = 5;
-
 	private $wp_upload_dir;
 	private $tmp_pid;
 	private $tmp_type;
@@ -341,7 +338,7 @@ class Img_Optm extends Base
 		$placeholder1 = Admin_Display::print_plural($accepted_imgs[0], 'image');
 		$placeholder2 = Admin_Display::print_plural($accepted_imgs[1], 'image');
 		$msg = sprintf(__('Pushed %1$s to Cloud server, accepted %2$s.', 'litespeed-cache'), $placeholder1, $placeholder2);
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -589,7 +586,7 @@ class Img_Optm extends Base
 
 		$count = count($img_in_queue_invalid);
 		$msg = sprintf(__('Cleared %1$s invalid images.', 'litespeed-cache'), $count);
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 
 		self::debug('Found invalid src [total] ' . $count);
 	}
@@ -656,10 +653,14 @@ class Img_Optm extends Base
 			'action' => self::CLOUD_ACTION_NEW_REQ,
 			'list' => \json_encode($list),
 			'optm_ori' => $this->conf(self::O_IMG_OPTM_ORI) ? 1 : 0,
-			'optm_webp' => $this->conf(self::O_IMG_OPTM_WEBP) ? 1 : 0,
 			'optm_lossless' => $this->conf(self::O_IMG_OPTM_LOSSLESS) ? 1 : 0,
 			'keep_exif' => $this->conf(self::O_IMG_OPTM_EXIF) ? 1 : 0,
 		);
+		if ($this->conf(self::O_IMG_OPTM_WEBP) == 2) {
+			$data['optm_avif'] = 1;
+		} elseif ($this->conf(self::O_IMG_OPTM_WEBP) == 1) {
+			$data['optm_webp'] = 1;
+		}
 
 		// Push to Cloud server
 		$json = Cloud::post(Cloud::SVC_IMG_OPTM, $data);
@@ -703,13 +704,6 @@ class Img_Optm extends Base
 		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
-		}
-
-		// Validate key
-		if (empty($post_data['domain_key']) || $post_data['domain_key'] !== md5($this->conf(self::O_API_KEY))) {
-			$this->_summary['notify_ts_err'] = time();
-			self::save_summary();
-			return Cloud::err('wrong_key');
 		}
 
 		global $wpdb;
@@ -897,19 +891,6 @@ class Img_Optm extends Base
 		$images_waiting = $wpdb->get_var($_c);
 		if ($images_waiting && $images_waiting > 0) {
 			$imgs_per_req = ceil($images_waiting / 1000); //ie. download 5/request if 5000 images are waiting
-		}
-
-		// Increase the request rate if the user has purchased addon packages
-		$has_jumbo_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_JUMBO_GROUP);
-		$has_prio_pkg = Cloud::cls()->has_pkg(Cloud::SVC_IMG_OPTM, Cloud::BM_IMG_OPTM_PRIO);
-
-		if ($has_jumbo_pkg) {
-			self::debug('Jumbo package detected.');
-			$imgs_per_req += self::JUMBO_REQUEST_BONUS;
-		}
-		if ($has_prio_pkg) {
-			self::debug('Priority Line package detected.');
-			$imgs_per_req += self::PRIO_REQUEST_BONUS;
 		}
 
 		// Cap the request rate at 50 images per request
@@ -1213,7 +1194,7 @@ class Img_Optm extends Base
 		}
 
 		// $msg = sprintf(__('Pulled %d image(s)', 'litespeed-cache'), $total_pulled_ori + $total_pulled_webp);
-		// Admin_Display::succeed($msg);
+		// Admin_Display::success($msg);
 
 		// Check if there is still task in queue
 		$q = "SELECT * FROM `$this->_table_img_optming` WHERE optm_status = %d LIMIT 1";
@@ -1303,7 +1284,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Cleaned up unfinished data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1387,7 +1368,7 @@ class Img_Optm extends Base
 		self::delete_option(self::DB_NEED_PULL);
 
 		$msg = __('Destroy all optimization data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1450,7 +1431,7 @@ class Img_Optm extends Base
 
 		if (!$list) {
 			$msg = __('Rescanned successfully.', 'litespeed-cache');
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 
 			self::debug('rescan bypass: no gathered image found');
 			return;
@@ -1512,7 +1493,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = $count ? sprintf(__('Rescanned %d images successfully.', 'litespeed-cache'), $count) : __('Rescanned successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1579,7 +1560,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Calculated backups successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1673,7 +1654,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Removed backups successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1825,7 +1806,7 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Switched images successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -1924,7 +1905,7 @@ class Img_Optm extends Base
 	 */
 	private function _switch_optm_file($type)
 	{
-		Admin_Display::succeed(__('Switched to optimized file successfully.', 'litespeed-cache'));
+		Admin_Display::success(__('Switched to optimized file successfully.', 'litespeed-cache'));
 		return;
 		global $wpdb;
 
@@ -1975,7 +1956,7 @@ class Img_Optm extends Base
 			}
 		}
 
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -2022,7 +2003,7 @@ class Img_Optm extends Base
 		delete_post_meta($post_id, self::DB_SET);
 
 		$msg = __('Reset the optimized data successfully.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**

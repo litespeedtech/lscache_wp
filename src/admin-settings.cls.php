@@ -261,7 +261,7 @@ class Admin_Settings extends Base
 		$this->cls('Conf')->update_confs($the_matrix);
 
 		$msg = __('Options saved.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**
@@ -296,7 +296,7 @@ class Admin_Settings extends Base
 		Activation::cls()->update_files();
 
 		$msg = __('Options saved.', 'litespeed-cache');
-		Admin_Display::succeed($msg);
+		Admin_Display::success($msg);
 	}
 
 	/**

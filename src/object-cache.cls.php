@@ -350,7 +350,8 @@ class Object_Cache extends Root
 				$failed = true;
 			}
 			restore_error_handler();
-		} else { // Connect to Memcached
+		} else {
+			// Connect to Memcached
 			if ($this->_cfg_persistent) {
 				$this->_conn = new \Memcached($this->_get_mem_id());
 

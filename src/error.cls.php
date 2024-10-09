@@ -54,9 +54,9 @@ class Error
 					);
 				break;
 
-			case 'lack_of_api_key':
+			case 'qc_setup_required':
 				$msg =
-					sprintf(__('You will need to set %s to use the online services.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_API_KEY) . '</strong>') .
+					sprintf(__('You will need to finish %s setup to use the online services.', 'litespeed-cache'), '<strong>QUIC.cloud</strong>') .
 					Doc::learn_more(admin_url('admin.php?page=litespeed-general'), __('Click here to set.', 'litespeed-cache'), true, false, true);
 				break;
 

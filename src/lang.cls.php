@@ -87,7 +87,6 @@ class Lang extends Base
 	{
 		$_lang_list = array(
 			self::O_SERVER_IP => __('Server IP', 'litespeed-cache'),
-			self::O_API_KEY => __('Domain Key', 'litespeed-cache'),
 			self::O_GUEST_UAS => __('Guest Mode User Agents', 'litespeed-cache'),
 			self::O_GUEST_IPS => __('Guest Mode IPs', 'litespeed-cache'),
 
@@ -211,7 +210,7 @@ class Lang extends Base
 			self::O_IMG_OPTM_CRON => __('Auto Pull Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
-			self::O_IMG_OPTM_WEBP => __('Image WebP Replacement', 'litespeed-cache'),
+			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
 			self::O_IMG_OPTM_LOSSLESS => __('Optimize Losslessly', 'litespeed-cache'),
 			self::O_IMG_OPTM_EXIF => __('Preserve EXIF/XMP data', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_ATTR => __('WebP Attribute To Replace', 'litespeed-cache'),
@@ -237,7 +236,6 @@ class Lang extends Base
 			self::O_MISC_HEARTBEAT_EDITOR => __('Editor Heartbeat', 'litespeed-cache'),
 			self::O_MISC_HEARTBEAT_EDITOR_TTL => __('Editor Heartbeat TTL', 'litespeed-cache'),
 
-			self::O_CDN_QUIC => __('QUIC.cloud CDN', 'litespeed-cache'),
 			self::O_CDN => __('Use CDN Mapping', 'litespeed-cache'),
 			self::CDN_MAPPING_URL => __('CDN URL', 'litespeed-cache'),
 			self::CDN_MAPPING_INC_IMG => __('Include Images', 'litespeed-cache'),

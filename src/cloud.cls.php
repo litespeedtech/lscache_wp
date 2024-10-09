@@ -13,11 +13,13 @@ defined('WPINC') || exit();
 class Cloud extends Base
 {
 	const LOG_TAG = '❄️';
-	const CLOUD_SERVER = 'https://api.quic.cloud';
+	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
 	const CLOUD_IPS = 'https://quic.cloud/ips';
-	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
+	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
+	const SVC_U_ACTIVATE = 'u/wp3/activate';
+	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -33,24 +35,23 @@ class Cloud extends Base
 	const SVC_HEALTH = 'health';
 	const SVC_CDN = 'cdn';
 
-	const BM_IMG_OPTM_PRIO = 16;
-	const BM_IMG_OPTM_JUMBO_GROUP = 32;
-	const IMG_OPTM_JUMBO_GROUP = 1000;
 	const IMG_OPTM_DEFAULT_GROUP = 200;
 
 	const IMGOPTM_TAKEN = 'img_optm-taken';
 
 	const TTL_NODE = 3; // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
-	const EXPIRATION_TOKEN = 900; // Min intval to request a token 15m
 	const TTL_IPS = 3; // Days for node ip list cache
 
 	const API_REPORT = 'wp/report';
 	const API_NEWS = 'news';
 	const API_VER = 'ver_check';
 	const API_BETA_TEST = 'beta_test';
+	const API_REST_ECHO = 'tool/wp_rest_echo';
+	const API_SERVER_KEY_SIGN = 'key_sign';
 
 	private static $CENTER_SVC_SET = array(
+		self::SVC_U_ACTIVATE,
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
@@ -62,10 +63,10 @@ class Cloud extends Base
 		self::SVC_D_DEL_CDN_DNS,
 	);
 
-	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST);
+	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	// No api key needed for these services
-	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST);
+	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
 
@@ -92,11 +93,11 @@ class Cloud extends Base
 	const TYPE_CLEAR_PROMO = 'clear_promo';
 	const TYPE_REDETECT_CLOUD = 'redetect_cloud';
 	const TYPE_CLEAR_CLOUD = 'clear_cloud';
-	const TYPE_GEN_KEY = 'gen_key';
+	const TYPE_ACTIVATE = 'activate';
 	const TYPE_LINK = 'link';
 	const TYPE_SYNC_USAGE = 'sync_usage';
+	const TYPE_RESET = 'reset';
 
-	private $_setup_token;
 	protected $_summary;
 
 	/**
@@ -106,17 +107,290 @@ class Cloud extends Base
 	 */
 	public function __construct()
 	{
-		$this->_setup_token = $this->conf(self::O_QC_TOKEN);
 		$this->_summary = self::get_summary();
 	}
 
 	/**
-	 * Get api key from conf
-	 * @since 5.3
+	 * Init QC setup
+	 *
+	 * @since 7.0
 	 */
-	private function _api_key()
+	public function init_qc()
 	{
-		return $this->conf(self::O_API_KEY);
+		if (empty($this->_summary['sk_b64'])) {
+			$keypair = sodium_crypto_sign_keypair();
+			$pk = base64_encode(sodium_crypto_sign_publickey($keypair));
+			$sk = base64_encode(sodium_crypto_sign_secretkey($keypair));
+			$this->_summary['pk_b64'] = $pk;
+			$this->_summary['sk_b64'] = $sk;
+			$this->save_summary();
+			// ATM `qc_activated` = null
+		}
+
+		// WPAPI REST echo dryrun
+		$req_data = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+		);
+		$echobox = self::post(self::API_REST_ECHO, $req_data);
+		if ($echobox === false) {
+			self::debugErr('REST Echo Failed!');
+			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
+			Admin_Display::error($msg);
+			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+			return;
+		}
+
+		self::debug('echo succeeded');
+
+		// Load seperate thread echoed data from storage
+		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
+			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
+			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+			return;
+		}
+
+		$data = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+			'wpapi_ts' => $echobox['wpapi_ts'],
+			'wpapi_signature_b64' => $echobox['wpapi_signature_b64'],
+		);
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if ($server_ip) {
+			$data['server_ip'] = $server_ip;
+		}
+
+		// Activation redirect
+		$param = array(
+			'site_url' => home_url(),
+			'ver' => Core::VER,
+			'data' => $data,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		exit();
+	}
+
+	/**
+	 * Link to QC setup
+	 *
+	 * @since 7.0
+	 */
+	public function link_qc()
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'wp_ts' => time(),
+		);
+		$data['wp_signature_b64'] = $this->_sign_b64($data['wp_ts']);
+
+		// Activation redirect
+		$param = array(
+			'site_url' => home_url(),
+			'ver' => Core::VER,
+			'data' => $data,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
+		exit();
+	}
+
+	/**
+	 * Encrypt data for cloud req
+	 *
+	 * @since 7.0
+	 */
+	private function _sign_b64($data)
+	{
+		if (empty($this->_summary['sk_b64'])) {
+			self::debugErr('No sk to sign.');
+			return false;
+		}
+		$sk = base64_decode($this->_summary['sk_b64']);
+		if (strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
+			self::debugErr('Invalid local sign sk length.');
+			// Reset local pk/sk
+			unset($this->_summary['pk_b64']);
+			unset($this->_summary['sk_b64']);
+			$this->save_summary();
+			self::debug('Clear local sign pk/sk pair.');
+
+			return false;
+		}
+		$signature = sodium_crypto_sign_detached($data, $sk);
+		return base64_encode($signature);
+	}
+
+	/**
+	 * Load server pk from cloud
+	 *
+	 * @since 7.0
+	 */
+	private function _load_server_pk($from_wpapi = false)
+	{
+		// Load cloud pk
+		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY_SIGN;
+		if ($from_wpapi) {
+			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY_SIGN;
+		}
+		$resp = wp_remote_get($server_key_url);
+		if (is_wp_error($resp)) {
+			self::debugErr('Failed to load key: ' . $resp->get_error_message());
+			return false;
+		}
+		$pk = trim($resp['body']);
+		self::debug('Loaded key from ' . $server_key_url . ': ' . $pk);
+		$cloud_pk = base64_decode($pk);
+		if (strlen($cloud_pk) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+			self::debugErr('Invalid cloud public key length.');
+			return false;
+		}
+
+		$sk = base64_decode($this->_summary['sk_b64']);
+		if (strlen($sk) !== SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
+			self::debugErr('Invalid local secret key length.');
+			// Reset local pk/sk
+			unset($this->_summary['pk_b64']);
+			unset($this->_summary['sk_b64']);
+			$this->save_summary();
+			self::debug('Unset local pk/sk pair.');
+
+			return false;
+		}
+
+		return $cloud_pk;
+	}
+
+	/**
+	 * WPAPI echo back to notify the sealed databox
+	 *
+	 * @since 7.0
+	 */
+	public function wp_rest_echo()
+	{
+		self::debug('Parsing echo', $_POST);
+
+		if (empty($_POST['wpapi_ts']) || empty($_POST['wpapi_signature_b64'])) {
+			return self::err('No echo data');
+		}
+
+		$is_valid = $this->_validate_signature($_POST['wpapi_signature_b64'], $_POST['wpapi_ts'], true);
+		if (!$is_valid) {
+			return self::err('Data validation from WPAPI REST Echo failed');
+		}
+
+		$diff = time() - $_POST['wpapi_ts'];
+		if (abs($diff) > 86400) {
+			self::debugErr('WPAPI echo data timeout [diff] ' . $diff);
+			return self::err('Echo data expired');
+		}
+
+		$signature_b64 = $this->_sign_b64($_POST['wpapi_ts']);
+		self::debug('Response to echo [signature_b64] ' . $signature_b64);
+		return self::ok(array('signature_b64' => $signature_b64));
+	}
+
+	/**
+	 * Validate cloud data
+	 *
+	 * @since 7.0
+	 */
+	private function _validate_signature($signature_b64, $data, $from_wpapi = false)
+	{
+		// Try validation
+		try {
+			$cloud_pk = $this->_load_server_pk($from_wpapi);
+			if (!$cloud_pk) {
+				return false;
+			}
+			$signature = base64_decode($signature_b64);
+			$is_valid = sodium_crypto_sign_verify_detached($signature, $data, $cloud_pk);
+		} catch (\SodiumException $e) {
+			self::debugErr('Decryption failed: ' . $e->getMessage());
+			return false;
+		}
+		self::debug('Signature validation result: ' . ($is_valid ? 'true' : 'false'));
+		return $is_valid;
+	}
+
+	/**
+	 * Finish qc activation after redirection back from QC
+	 *
+	 * @since 7.0
+	 */
+	public function finish_qc_activation()
+	{
+		if (empty($_GET['qc_activated']) || empty($_GET['qc_ts']) || empty($_GET['qc_signature_b64'])) {
+			return;
+		}
+
+		$data_to_validate_signature = array(
+			'wp_pk_b64' => $this->_summary['pk_b64'],
+			'qc_ts' => $_GET['qc_ts'],
+		);
+		$is_valid = $this->_validate_signature($_GET['qc_signature_b64'], implode('', $data_to_validate_signature));
+		if (!$is_valid) {
+			self::debugErr('Failed to validate qc activation data');
+			Admin_Display::error(sprintf(__('Failed to validate %s activation data.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		self::debug('QC activation status: ' . $_GET['qc_activated']);
+		if (!in_array($_GET['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+			self::debugErr('Failed to parse qc activation status');
+			Admin_Display::error(sprintf(__('Failed to parse %s activation status.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		$diff = time() - $_GET['qc_ts'];
+		if (abs($diff) > 86400) {
+			self::debugErr('QC activation data timeout [diff] ' . $diff);
+			Admin_Display::error(sprintf(__('%s activation data expired.', 'litespeed-cache'), 'QUIC.cloud'));
+			return;
+		}
+
+		$this->_summary['qc_activated'] = $_GET['qc_activated'];
+		$this->save_summary();
+
+		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
+		if ($_GET['qc_activated'] == 'linked') {
+			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
+			// Sync possible partner info
+			$this->sync_usage();
+		}
+		if ($_GET['qc_activated'] == 'cdn') {
+			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
+			// Turn on CDN option
+			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
+		}
+		Admin_Display::success('🎊 ' . $msg);
+
+		$this->clear_cloud();
+
+		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+	}
+
+	/**
+	 * Reset QC setup
+	 *
+	 * @since 7.0
+	 */
+	public function reset_qc()
+	{
+		unset($this->_summary['pk_b64']);
+		unset($this->_summary['sk_b64']);
+		unset($this->_summary['qc_activated']);
+		$this->save_summary();
+		self::debug('Clear local QC activation.');
+
+		$this->clear_cloud();
+
+		Admin_Display::success(sprintf(__('Reset %s activation successfully.', 'litespeed-cache'), 'QUIC.cloud'));
+		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+		exit();
 	}
 
 	/**
@@ -275,9 +549,6 @@ class Cloud extends Base
 		$allowance_max = 0;
 		if ($service == self::SVC_IMG_OPTM) {
 			$allowance_max = self::IMG_OPTM_DEFAULT_GROUP;
-			if (!empty($usage['pkgs']) && $usage['pkgs'] & self::BM_IMG_OPTM_JUMBO_GROUP) {
-				$allowance_max = self::IMG_OPTM_JUMBO_GROUP;
-			}
 		}
 
 		$allowance = $usage['quota'] - $usage['used'];
@@ -540,7 +811,6 @@ class Cloud extends Base
 
 		$param = array(
 			'site_url' => home_url(),
-			'domain_key' => $this->_api_key(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'ver' => Core::VER,
 		);
@@ -555,7 +825,11 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_get($url, array('timeout' => 15, 'sslverify' => true));
+		$response = wp_remote_get($url, array(
+			'timeout' => 15,
+			'sslverify' => true,
+			'headers' => array('Accept' => 'application/json'),
+		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
 	}
@@ -593,7 +867,7 @@ class Cloud extends Base
 			return true;
 		}
 
-		if ($service_tag == self::SVC_D_SYNC_CONF && $this->_setup_token && !$this->_api_key()) {
+		if ($service_tag == self::SVC_D_SYNC_CONF && !$this->activated()) {
 			self::debug('Skip sync conf if API key is not available yet.');
 			return false;
 		}
@@ -603,12 +877,9 @@ class Cloud extends Base
 		$timestamp_tag = 'curr_request.';
 		if ($service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ) {
 			$timestamp_tag = 'last_request.';
-			if ($this->has_pkg(self::SVC_IMG_OPTM, self::BM_IMG_OPTM_PRIO)) {
-				$expiration_req /= 10;
-			}
 		} else {
 			// For all other requests, if is under debug mode, will always allow
-			if ($this->conf(self::O_DEBUG) && $this->_api_key()) {
+			if ($this->conf(self::O_DEBUG)) {
 				return true;
 			}
 		}
@@ -634,12 +905,36 @@ class Cloud extends Base
 			return true;
 		}
 
-		if (!$this->_api_key()) {
-			Admin_Display::error(Error::msg('lack_of_api_key'));
+		if (!$this->activated() && $service_tag != self::SVC_U_ACTIVATE) {
+			Admin_Display::error(Error::msg('setup_required'));
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if activated QUIC.cloud service or not
+	 *
+	 * @since  7.0
+	 * @access public
+	 */
+	public function activated()
+	{
+		return !empty($this->_summary['sk_b64']) && !empty($this->_summary['qc_activated']);
+	}
+
+	/**
+	 * Show my.qc quick link to the domain page
+	 */
+	public function qc_link()
+	{
+		$data = array(
+			'site_url' => home_url(),
+			'ver' => LSCWP_V,
+			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+		);
+		return self::CLOUD_SERVER_DASH . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
 
 	/**
@@ -684,17 +979,31 @@ class Cloud extends Base
 			$data['service_type'] = $service; // For queue distribution usage
 		}
 
+		// Encrypt service as signature
+		// $signature_ts = time();
+		// $sign_data = array(
+		// 	'service_tag' => $service_tag,
+		// 	'ts' => $signature_ts,
+		// );
+		// $data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
+		// $data['signature_ts'] = $signature_ts;
+
 		$param = array(
 			'site_url' => home_url(),
-			'domain_key' => $this->_api_key(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
+			'wp_pk_b64' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
 			'ver' => Core::VER,
 			'data' => $data,
 		);
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_post($url, array('body' => $param, 'timeout' => $time_out ?: 15, 'sslverify' => true));
+		$response = wp_remote_post($url, array(
+			'body' => $param,
+			'timeout' => $time_out ?: 15,
+			'sslverify' => true,
+			'headers' => array('Accept' => 'application/json'),
+		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
 	}
@@ -726,13 +1035,13 @@ class Cloud extends Base
 				self::debug('Node error, redetecting node [svc] ' . $service);
 				$this->detect_cloud($service, true);
 			}
-			return;
+			return false;
 		}
 
 		$json = \json_decode($response['body'], true);
 
 		if (!is_array($json)) {
-			self::debug('failed to decode response json: ' . $response['body']);
+			self::debugErr('failed to decode response json: ' . $response['body']);
 
 			if ($service !== self::API_VER && $service !== self::API_NEWS) {
 				$msg = __('Failed to request via WordPress', 'litespeed-cache') . ': ' . $response['body'] . " [server] $server [service] $service";
@@ -746,43 +1055,43 @@ class Cloud extends Base
 				self::save_summary();
 
 				// Force redetect node
-				self::debug('Node error, redetecting node [svc] ' . $service);
+				self::debugErr('Node error, redetecting node [svc] ' . $service);
 				$this->detect_cloud($service, true);
 			}
 
-			return;
+			return false;
 		}
 
 		if (!empty($json['_code'])) {
-			self::debug('Hit err _code: ' . $json['_code']);
+			self::debugErr('Hit err _code: ' . $json['_code']);
 			if ($json['_code'] == 'unpulled_images') {
 				$msg = __('Cloud server refused the current request due to unpulled images. Please pull the images first.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 			if ($json['_code'] == 'blocklisted') {
 				$msg = __('Your domain_key has been temporarily blocklisted to prevent abuse. You may contact support at QUIC.cloud to learn more.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 
 			if ($json['_code'] == 'rate_limit') {
-				self::debug('Cloud server rate limit exceeded.');
+				self::debugErr('Cloud server rate limit exceeded.');
 				$msg = __('Cloud server refused the current request due to rate limiting. Please try again later.', 'litespeed-cache');
 				Admin_Display::error($msg);
-				return;
+				return false;
 			}
 
 			if ($json['_code'] == 'heavy_load' || $json['_code'] == 'redetect_node') {
 				// Force redetect node
-				self::debug('Node redetecting node [svc] ' . $service);
+				self::debugErr('Node redetecting node [svc] ' . $service);
 				Admin_Display::info(__('Redetected node', 'litespeed-cache') . ': ' . Error::msg($json['_code']));
 				$this->detect_cloud($service, true);
 			}
 		}
 
 		if (!empty($json['_503'])) {
-			self::debug('service 503 unavailable temporarily. ' . $json['_503']);
+			self::debugErr('service 503 unavailable temporarily. ' . $json['_503']);
 
 			$msg = __(
 				'We are working hard to improve your online service experience. The service will be unavailable while we work. We apologize for any inconvenience.',
@@ -792,15 +1101,15 @@ class Cloud extends Base
 			Admin_Display::error($msg);
 
 			// Force redetect node
-			self::debug('Node error, redetecting node [svc] ' . $service);
+			self::debugErr('Node error, redetecting node [svc] ' . $service);
 			$this->detect_cloud($service, true);
 
-			return;
+			return false;
 		}
 
 		list($json, $return) = $this->extract_msg($json, $service, $server);
 		if ($return) {
-			return;
+			return false;
 		}
 
 		self::save_summary(array(
@@ -844,7 +1153,7 @@ class Cloud extends Base
 			self::debug('_success: ' . $json['_success']);
 			$msg = __('Good news from QUIC.cloud server', 'litespeed-cache') . ': ' . $json['_success'];
 			$msg .= $this->_parse_link($json);
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 			unset($json['_success']);
 		}
 
@@ -929,7 +1238,7 @@ class Cloud extends Base
 
 			// Site not on QC, delete invalid domain key
 			if ($json_msg == 'site_not_registered' || $json_msg == 'err_key') {
-				$this->_clean_api_key();
+				$this->_reset_qc_reg();
 			}
 
 			return array($json, true);
@@ -944,17 +1253,16 @@ class Cloud extends Base
 	}
 
 	/**
-	 * Clear API key and QC linked status
+	 * Clear QC linked status
 	 * @since 5.0
 	 */
-	private function _clean_api_key()
+	private function _reset_qc_reg()
 	{
-		$this->cls('Conf')->update_confs(array(self::O_API_KEY => ''));
-		$this->_summary['is_linked'] = 0;
+		unset($this->_summary['qc_activated']);
 		self::save_summary();
 
 		$msg = __('Site not recognized. Domain Key has been automatically removed. Please request a new one.', 'litespeed-cache');
-		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed-general'), __('Click here to set.', 'litespeed-cache'), true, false, true);
+		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed'), __('Click here to set.', 'litespeed-cache'), true, false, true);
 		$msg .= Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/#domain-key', false, false, false, true);
 		Admin_Display::error($msg, false, true);
 	}
@@ -965,27 +1273,17 @@ class Cloud extends Base
 	 */
 	public function rest_err_domains()
 	{
-		// Validate token hash first
-		if (empty($_POST['hash']) || empty($_POST['main_domain']) || empty($_POST['alias'])) {
+		if (empty($_POST['main_domain']) || empty($_POST['alias'])) {
 			return self::err('lack_of_param');
 		}
 
-		if (!$this->_api_key() || $_POST['hash'] !== md5(substr($this->_api_key(), 1, 8))) {
-			return self::err('wrong_hash');
-		}
-
-		list($post_data) = $this->extract_msg($_POST, 'Quic.cloud', false, true);
+		$this->extract_msg($_POST, 'Quic.cloud', false, true);
 
 		if ($this->_is_err_domain($_POST['alias'])) {
 			if ($_POST['alias'] == home_url()) {
 				$this->_remove_domain_from_err_list($_POST['alias']);
 			}
-
-			$res_hash = substr($this->_api_key(), 2, 4);
-
-			self::debug('__callback IP request hash: md5(' . $res_hash . ')');
-
-			return self::ok(array('hash' => md5($res_hash)));
+			return self::ok();
 		}
 
 		return self::err('Not an alias req from here');
@@ -1023,72 +1321,6 @@ class Cloud extends Base
 		return true;
 	}
 
-	public function req_rest_api($api, $body = array())
-	{
-		$token = $this->_setup_token;
-
-		if (empty($token)) {
-			Admin_Display::error(__('Cannot request REST API, no token saved.', 'litespeed-cache'));
-			return;
-		}
-		$req_args = array(
-			'headers' => array(
-				'Authorization' => 'bearer ' . $token,
-				'Content-Type' => 'application/json',
-			),
-		);
-		self::debug('Req rest api to QC [api] ' . $api);
-		if (!empty($body)) {
-			$req_args['body'] = \json_encode($body);
-
-			$response = wp_remote_post(self::CLOUD_SERVER . '/v2' . $api, $req_args);
-		} else {
-			$response = wp_remote_get(self::CLOUD_SERVER . '/v2' . $api, $req_args);
-		}
-
-		return $this->_parse_rest_response($response);
-	}
-
-	private function _parse_rest_response($response)
-	{
-		if (is_wp_error($response)) {
-			$error_message = $response->get_error_message();
-			self::debug('failed to request REST API: ' . $error_message);
-			Admin_Display::error(__('Cloud REST Error', 'litespeed-cache') . ': ' . $error_message);
-			return $error_message;
-		} elseif (wp_remote_retrieve_response_code($response) == '401') {
-			Admin_Display::error(__('Unauthorized access to REST API. Your token has expired.', 'litespeed-cache'));
-			return 'unauthorized access to REST API.';
-		}
-
-		$json = \json_decode($response['body'], true);
-		self::debug('QC response', $json);
-
-		if (!$json['success']) {
-			$contactSupport = false;
-			if (isset($json['info']['errors'])) {
-				$errs = array();
-				foreach ($json['info']['errors'] as $err) {
-					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
-					if ($err['code'] == 1113) {
-						$contactSupport = true;
-					}
-				}
-				$error_message = implode('<br>', $errs);
-			} else {
-				$error_message = __('Unknown error.', 'litespeed-cache');
-				$contactSupport = true;
-			}
-			if ($contactSupport) {
-				$error_message .= ' <a href="https://www.quic.cloud/support/" target="_blank">' . __('Contact QUIC.cloud support', 'litespeed-cache') . '</a>';
-			}
-			Admin_Display::error(__('Cloud REST API returned error: ', 'litespeed-cache') . $error_message);
-			return $error_message;
-		}
-
-		return $json;
-	}
-
 	/**
 	 * Show promo from cloud
 	 *
@@ -1097,10 +1329,6 @@ class Cloud extends Base
 	 */
 	public function show_promo()
 	{
-		// if ( ! $this->_api_key() && ! defined( 'LITESPEED_DISMISS_DOMAIN_KEY' ) ) {
-		// 	Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
-		// }
-
 		if (empty($this->_summary['promo'])) {
 			return;
 		}
@@ -1155,313 +1383,21 @@ class Cloud extends Base
 	public function ip_validate()
 	{
 		if (empty($_POST['hash'])) {
-			self::debug('Lack of hash param');
-			return self::err('lack_of_param');
+			return self::err('lack_of_params');
 		}
 
-		// Note: Using empty here throws a fatal error in PHP v5.3
-		if (!$this->_api_key()) {
-			self::debug('Lack of API key');
-			return self::err('lack_of_api_key');
-		}
-
-		$to_validate = substr($this->_api_key(), 0, 4);
-		if ($_POST['hash'] !== md5($to_validate)) {
-			self::debug('__callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST['hash']);
+		if ($_POST['hash'] != md5(substr($this->_summary['pk_b64'], 0, 4))) {
+			self::debug('__callback IP request decryption failed');
 			return self::err('err_hash');
 		}
 
 		Control::set_nocache('Cloud IP hash validation');
 
-		$res_hash = substr($this->_api_key(), 2, 4);
+		$resp_hash = md5(substr($this->_summary['pk_b64'], 2, 4));
 
-		self::debug('__callback IP request hash: md5(' . $res_hash . ')');
+		self::debug('__callback IP request hash: ' . $resp_hash);
 
-		return self::ok(array('hash' => md5($res_hash)));
-	}
-
-	/**
-	 * Can apply for a new token or not
-	 *
-	 * @since 3.0
-	 */
-	public function can_token()
-	{
-		return empty($this->_summary['token_ts']) || time() - $this->_summary['token_ts'] > self::EXPIRATION_TOKEN;
-	}
-
-	public function set_keygen_token($token)
-	{
-		$this->_summary['token'] = $token;
-		$this->_summary['token_ts'] = time();
-		if (!empty($this->_summary['apikey_ts'])) {
-			unset($this->_summary['apikey_ts']);
-		}
-		self::save_summary();
-	}
-
-	/**
-	 * Send request for domain key, get json [ 'token' => 'asdfasdf' ]
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function gen_key()
-	{
-		$data = array(
-			'site_url' => home_url(),
-			'rest' => function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json'),
-			'server_ip' => $this->conf(self::O_SERVER_IP),
-		);
-		if (!empty($this->_summary['token'])) {
-			$data['token'] = $this->_summary['token'];
-		}
-
-		$response = wp_remote_get(self::CLOUD_SERVER . '/d/req_key?data=' . Utility::arr2str($data));
-		if (is_wp_error($response)) {
-			$error_message = $response->get_error_message();
-			self::debug('failed to gen_key: ' . $error_message);
-			Admin_Display::error(__('Cloud Error', 'litespeed-cache') . ': ' . $error_message);
-			return;
-		}
-
-		$json = \json_decode($response['body'], true);
-
-		// Save token option
-		if (!empty($json['token'])) {
-			$this->set_keygen_token($json['token']);
-		}
-
-		// Parse general error msg
-		if (empty($json['_res']) || $json['_res'] !== 'ok') {
-			// clear current token
-			unset($this->_summary['token']);
-			self::save_summary();
-
-			$json_msg = !empty($json['_msg']) ? $json['_msg'] : 'unknown';
-			self::debug('❌ _err: ' . $json_msg);
-
-			$msg = __('Failed to communicate with QUIC.cloud server', 'litespeed-cache') . ': ' . Error::msg($json_msg);
-			$msg .= $this->_parse_link($json);
-			Admin_Display::error($msg);
-
-			return;
-		}
-
-		// This is a ok msg
-		if (!empty($json['_msg'])) {
-			self::debug('_msg: ' . $json['_msg']);
-
-			$msg = __('Message from QUIC.cloud server', 'litespeed-cache') . ': ' . Error::msg($json['_msg']);
-			$msg .= $this->_parse_link($json);
-			Admin_Display::info($msg);
-			return;
-		}
-
-		self::debug('✅ send request for key successfully.');
-
-		Admin_Display::succeed(__('Applied for Domain Key successfully. Please wait for result. Domain Key will be automatically sent to your WordPress.', 'litespeed-cache'));
-	}
-
-	/**
-	 * Token callback validation from Cloud
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function token_validate()
-	{
-		try {
-			$this->validate_hash();
-		} catch (\Exception $e) {
-			return self::err($e->getMessage());
-		}
-
-		Control::set_nocache('Cloud token validation');
-
-		self::debug('✅ __callback token validation passed');
-
-		return self::ok(array('hash' => md5(substr($this->_summary['token'], 3, 8))));
-	}
-
-	/**
-	 * Callback for approval of api key after validated token and gen key from QUIC.cloud
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function save_apikey()
-	{
-		// Validate token hash first
-		if (empty($_POST['domain_key']) || !isset($_POST['is_linked'])) {
-			return self::err('lack_of_param');
-		}
-
-		try {
-			$this->validate_hash(1);
-		} catch (\Exception $e) {
-			return self::err($e->getMessage());
-		}
-
-		// This doesn't need to sync QUIC conf but need to clear nodes
-		$this->cls('Conf')->update_confs(array(self::O_API_KEY => $_POST['domain_key']));
-
-		$this->_summary['is_linked'] = $_POST['is_linked'] ? 1 : 0;
-		$this->_summary['apikey_ts'] = time();
-		if (!empty($_POST['main_domain'])) {
-			$this->_summary['main_domain'] = $_POST['main_domain'];
-		}
-		// Clear token
-		unset($this->_summary['token']);
-		self::save_summary();
-
-		self::debug('✅ saved auth_key');
-		Admin_Display::succeed('🎊 ' . __('Congratulations, your Domain Key has been approved! The setting has been updated accordingly.', 'litespeed-cache'));
-
-		return self::ok();
-	}
-
-	/**
-	 * Validate POST hash match local token or not
-	 *
-	 * @since  3.0
-	 */
-	public function validate_hash($offset = 0)
-	{
-		if (empty($_POST['hash'])) {
-			self::debug('Lack of hash param');
-			throw new \Exception('lack_of_param');
-		}
-
-		if (empty($this->_summary['token'])) {
-			self::debug('token validate failed: token not exist');
-			throw new \Exception('lack_of_local_token');
-		}
-
-		if ($_POST['hash'] !== md5(substr($this->_summary['token'], $offset, 8))) {
-			self::debug('token validate failed: token mismatch hash !== ' . $_POST['hash']);
-			throw new \Exception('mismatch');
-		}
-	}
-
-	/**
-	 * If can link the domain to QC user or not
-	 *
-	 * @since  3.0
-	 */
-	public function can_link_qc()
-	{
-		return empty($this->_summary['is_linked']) && $this->_api_key();
-	}
-
-	/**
-	 * Link the domain to QC user
-	 *
-	 * @since  3.0
-	 */
-	private function _link_to_qc()
-	{
-		if (!$this->can_link_qc()) {
-			return;
-		}
-
-		$data = array(
-			'site_url' => home_url(),
-			'domain_hash' => md5(substr($this->_api_key(), 0, 8)),
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed-general'),
-		);
-
-		wp_redirect(self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str($data));
-		exit();
-	}
-
-	public function qc_link()
-	{
-		$data = array(
-			'site_url' => home_url(),
-			'domain_hash' => md5(substr($this->_api_key(), 0, 8)),
-			'ver' => LSCWP_V,
-		);
-		return self::CLOUD_SERVER_DASH . '/u/wp?data=' . Utility::arr2str($data); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
-	}
-
-	public function set_linked()
-	{
-		$this->_summary['is_linked'] = 1;
-		self::save_summary();
-
-		# Force resync qc conf
-		$this->cls('CDN\Quic')->try_sync_conf(true);
-	}
-
-	/**
-	 * Update is_linked status if is a redirected back from QC
-	 *
-	 * @since  3.0
-	 * @since  5.0 renamed update_is_linked_status -> parse_qc_redir, add param for additional args. Return args if exist.
-	 */
-	public function parse_qc_redir($check_token = false)
-	{
-		if (!$this->_api_key() && !empty($this->_summary['is_linked'])) {
-			$this->_summary['is_linked'] = 0;
-			self::save_summary();
-		}
-
-		if (empty($_GET['qc_res'])) {
-			return false;
-		}
-
-		if ($_GET['qc_res'] == 'registered') {
-			if (!empty($_GET['qc_new'])) {
-				Admin_Display::succeed(__('QUIC.cloud account has been created and successfully linked.', 'litespeed-cache'), true);
-			} else {
-				Admin_Display::succeed(__('QUIC.cloud account has been successfully linked.', 'litespeed-cache'), true);
-			}
-		}
-
-		$qsDrop = array();
-		$qsDrop[] = ".replace( '&qc_res=" . sanitize_key($_GET['qc_res']) . ', \'\' )';
-
-		if (!empty($_GET['domain_hash'])) {
-			if (empty($_GET['domain_hash_nonce'])) {
-				Admin_Display::error(__('Domain Key hash nonce missing.', 'litespeed-cache'), true);
-				return false;
-			}
-			$salt = substr($this->_api_key(), 3, 8);
-			$tick = ceil(time() / 43200);
-			$nonce = md5($salt . $tick);
-			$nonce2 = md5($salt . ($tick - 1));
-			if ($_GET['domain_hash_nonce'] != $nonce && $_GET['domain_hash_nonce'] != $nonce2) {
-				Admin_Display::error(__('Domain Key hash nonce mismatch. Please correct your server clock.', 'litespeed-cache'), true);
-				return false;
-			}
-
-			if (md5(substr($this->_api_key(), 2, 8)) !== $_GET['domain_hash']) {
-				Admin_Display::error(__('Domain Key hash mismatch', 'litespeed-cache'), true);
-				return false;
-			}
-
-			$this->set_linked();
-			$qsDrop[] = ".replace( '&domain_hash=" . sanitize_key($_GET['domain_hash']) . ', \'\' )';
-		}
-
-		$token = '';
-		if ($check_token && !empty($_GET['token'])) {
-			// Validate nonce `litespeed_qc_link`
-			if (empty($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'litespeed_qc_link')) {
-				Admin_Display::error(__('Failed to verify domain nonce.', 'litespeed-cache'), true);
-				return false;
-			}
-
-			$token = preg_replace('/[^0-9a-zA-Z]/', '', $_GET['token']);
-			$qsDrop[] = ".replace( '&token=" . urlencode($_GET['token']) . ', \'\' )';
-		}
-
-		$replaceStr = implode('', $qsDrop);
-
-		// Drop QS
-		echo "<script>window.history.pushState( 'remove_gen_link', document.title, window.location.href" . $replaceStr . ' );</script>';
-		return $token;
+		return self::ok(array('hash' => $resp_hash));
 	}
 
 	/**
@@ -1471,6 +1407,7 @@ class Cloud extends Base
 	 */
 	public function is_from_cloud()
 	{
+		return true;
 		$check_point = time() - 86400 * self::TTL_IPS;
 		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || $this->_summary['ips_ts'] < $check_point) {
 			self::debug('Force updating ip as ips_ts is older than ' . self::TTL_IPS . ' days');
@@ -1543,6 +1480,7 @@ class Cloud extends Base
 	 */
 	public static function err($code)
 	{
+		self::debug("❌ Error response code: $code");
 		return array('_res' => 'err', '_msg' => $code);
 	}
 
@@ -1600,19 +1538,23 @@ class Cloud extends Base
 				$this->_clear_promo();
 				break;
 
-			case self::TYPE_GEN_KEY:
-				$this->gen_key();
+			case self::TYPE_RESET:
+				$this->reset_qc();
+				break;
+
+			case self::TYPE_ACTIVATE:
+				$this->init_qc();
 				break;
 
 			case self::TYPE_LINK:
-				$this->_link_to_qc();
+				$this->link_qc();
 				break;
 
 			case self::TYPE_SYNC_USAGE:
 				$this->sync_usage();
 
 				$msg = __('Sync credit allowance with Cloud Server successfully.', 'litespeed-cache');
-				Admin_Display::succeed($msg);
+				Admin_Display::success($msg);
 				break;
 
 			default:

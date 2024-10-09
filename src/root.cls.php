@@ -33,6 +33,17 @@ abstract class Root
 	}
 
 	/**
+	 * Log an error message
+	 *
+	 * @since 7.0
+	 */
+	public static function debugErr($msg, $backtrace_limit = false)
+	{
+		$msg = '❌ ' . $msg;
+		self::debug($msg, $backtrace_limit);
+	}
+
+	/**
 	 * Log a debug message.
 	 *
 	 * @since  4.4
@@ -195,7 +206,7 @@ abstract class Root
 
 		if (!$silent) {
 			$msg = __('All QUIC.cloud service queues have been cleared.', 'litespeed-cache');
-			Admin_Display::succeed($msg);
+			Admin_Display::success($msg);
 		}
 	}
 

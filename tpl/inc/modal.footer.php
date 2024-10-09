@@ -1,3 +1,2 @@
-
-</div>
-
+<?php
+echo '</div>';
