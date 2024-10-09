@@ -46,12 +46,12 @@ class Lang extends Base
 	{
 		$map = array(
 			'auto_alias_failed_cdn' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
 				' ' .
 				Doc::learn_more('https://quic.cloud/docs/cdn/dns/how-to-setup-domain-alias/', false, false, false, true),
 
 			'auto_alias_failed_uid' =>
-				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
+			__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain.', 'litespeed-cache') .
 				' ' .
 				__('Alias is in use by another QUIC.cloud account.', 'litespeed-cache') .
 				' ' .
@@ -250,7 +250,6 @@ class Lang extends Base
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
 			self::O_CRAWLER_USLEEP => __('Delay', 'litespeed-cache'),
-			self::O_CRAWLER_RUN_DURATION => __('Run Duration', 'litespeed-cache'),
 			self::O_CRAWLER_RUN_INTERVAL => __('Interval Between Runs', 'litespeed-cache'),
 			self::O_CRAWLER_CRAWL_INTERVAL => __('Crawl Interval', 'litespeed-cache'),
 			self::O_CRAWLER_THREADS => __('Threads', 'litespeed-cache'),

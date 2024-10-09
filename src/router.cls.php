@@ -272,7 +272,7 @@ class Router extends Base
 		if (!empty($_COOKIE['litespeed_hash'])) {
 			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
-				if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
+				if (time() - $hash_data['ts'] < 900 && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
 					if (empty($hash_data['ip'])) {
 						$hash_data['ip'] = self::get_ip();
 						self::update_option(self::ITEM_HASH, $hash_data);

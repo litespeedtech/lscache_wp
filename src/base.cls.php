@@ -236,7 +236,7 @@ class Base extends Root
 	## -------------------------------------------------- ##
 	const O_CRAWLER = 'crawler';
 	const O_CRAWLER_USLEEP = 'crawler-usleep';
-	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration';
+	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration';  // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_CRAWLER_RUN_INTERVAL = 'crawler-run_interval';
 	const O_CRAWLER_CRAWL_INTERVAL = 'crawler-crawl_interval';
 	const O_CRAWLER_THREADS = 'crawler-threads';
@@ -512,7 +512,6 @@ class Base extends Root
 		// Crawler
 		self::O_CRAWLER => false,
 		self::O_CRAWLER_USLEEP => 0,
-		self::O_CRAWLER_RUN_DURATION => 0,
 		self::O_CRAWLER_RUN_INTERVAL => 0,
 		self::O_CRAWLER_CRAWL_INTERVAL => 0,
 		self::O_CRAWLER_THREADS => 0,

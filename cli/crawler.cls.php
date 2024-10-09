@@ -58,7 +58,7 @@ class Crawler extends Base
 		if ($summary['curr_crawler'] >= count($crawler_list)) {
 			$summary['curr_crawler'] = 0;
 		}
-		$is_running = time() - $summary['is_running'] <= $this->conf(Base::O_CRAWLER_RUN_DURATION);
+		$is_running = time() - $summary['is_running'] <= 900;
 
 		$seconds = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
 		if ($seconds > 0) {

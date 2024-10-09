@@ -264,6 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
 * **Database Optimize** Fixed Autoload summary for WP6.6+. (Mukesh Panchal/Viktor Szépe)
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi`.
+* **Crawler** Default crawler `Run Duration` to 900 seconds and dropped the setting.
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
 * **Tag** Fixed a potential warning in tags. (ikiterder)

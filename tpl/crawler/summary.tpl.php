@@ -12,7 +12,7 @@ if ($summary['curr_crawler'] >= count($crawler_list)) {
 	$summary['curr_crawler'] = 0;
 }
 
-$is_running = time() - $summary['is_running'] <= $this->conf(Base::O_CRAWLER_RUN_DURATION);
+$is_running = time() - $summary['is_running'] <= 900;
 
 $disabled = Router::can_crawl() ? '' : 'disabled';
 
@@ -183,7 +183,7 @@ if ($seconds > 0) :
 				</tbody>
 			</table>
 		</div>
-		
+
 		<p>
 			<i class="litespeed-badge litespeed-bg-default"></i> = <?php echo __('Waiting to be Crawled', 'litespeed-cache'); ?><br>
 			<i class="litespeed-badge litespeed-bg-success"></i> = <?php echo __('Already Cached', 'litespeed-cache'); ?><br>

@@ -57,20 +57,6 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_CRAWLER_RUN_DURATION; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-				<div class="litespeed-desc">
-					<?php echo __('Specify time in seconds for the duration of the crawl interval.', 'litespeed-cache'); ?>
-					<?php $this->recommended($id); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th>
 				<?php $id = Base::O_CRAWLER_RUN_INTERVAL; ?>
 				<?php $this->title($id); ?>
 			</th>
