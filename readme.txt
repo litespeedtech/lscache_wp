@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.6
-Stable tag: 6.5.0.2
+Stable tag: 6.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -258,6 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.0 - Nov 2024 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
+* **Core** Refactored config data init method to realtime update instead of delay update in plugin upgrade phase.
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.

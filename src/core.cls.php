@@ -177,9 +177,7 @@ class Core extends Root
 		add_action('wp_ajax_nopriv_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler');
 
 		// in `after_setup_theme`, before `init` hook
-		if (!defined('LITESPEED_BYPASS_AUTO_V')) {
-			$this->cls('Activation')->auto_update();
-		}
+		$this->cls('Activation')->auto_update();
 
 		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
 			$this->cls('Admin');
