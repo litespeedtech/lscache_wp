@@ -35,7 +35,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
-	<div class="litespeed-width-7-10 litespeed-image-optim-summary-wrapper">
+	<div class="litespeed-width-7-10 litespeed-column-left litespeed-image-optim-summary-wrapper">
 		<div class="litespeed-image-optim-summary">
 
 			<h3>
@@ -219,7 +219,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 		</div>
 	</div>
 
-	<div class="litespeed-width-3-10">
+	<div class="litespeed-width-3-10 litespeed-column-right">
 		<div class="postbox litespeed-postbox litespeed-postbox-imgopt-info">
 			<div class="inside">
 
