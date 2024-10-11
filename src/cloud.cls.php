@@ -227,7 +227,7 @@ class Cloud extends Base
 			$data['server_ip'] = $server_ip;
 		}
 
-		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ACTIVATE, $data);
+		$res = $this->get(self::SVC_D_ACTIVATE, $data);
 		return $res;
 	}
 
@@ -259,7 +259,7 @@ class Cloud extends Base
 			$data['server_ip'] = $server_ip;
 		}
 
-		$res = $this->get(self::CLOUD_SERVER . '/' . self::SVC_D_ENABLE_CDN, $data);
+		$res = $this->get(self::SVC_D_ENABLE_CDN, $data);
 		return $res;
 	}
 
