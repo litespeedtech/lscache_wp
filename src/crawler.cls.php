@@ -355,13 +355,13 @@ class Crawler extends Root
 		 * Set role simulation
 		 * @since 1.9.1
 		 */
-		if (!empty($current_crawler['uid'])) {
-			// Get role simulation vary name
-			$vary_name = $this->cls('Vary')->get_vary_name();
-			$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
-			$this->_crawler_conf['cookies'][$vary_name] = $vary_val;
-			$this->_crawler_conf['cookies']['litespeed_hash'] = Router::cls()->get_hash($current_crawler['uid']);
-		}
+		// if (!empty($current_crawler['uid'])) {
+		// 	// Get role simulation vary name
+		// 	$vary_name = $this->cls('Vary')->get_vary_name();
+		// 	$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
+		// 	$this->_crawler_conf['cookies'][$vary_name] = $vary_val;
+		// 	$this->_crawler_conf['cookies']['litespeed_hash'] = Router::cls()->get_hash($current_crawler['uid']);
+		// }
 
 		/**
 		 * Check cookie crawler
@@ -1095,19 +1095,19 @@ class Crawler extends Root
 
 		// Get roles set
 		// List all roles
-		foreach ($this->conf(Base::O_CRAWLER_ROLES) as $v) {
-			$role_title = '';
-			$udata = get_userdata($v);
-			if (isset($udata->roles) && is_array($udata->roles)) {
-				$tmp = array_values($udata->roles);
-				$role_title = array_shift($tmp);
-			}
-			if (!$role_title) {
-				continue;
-			}
+		// foreach ($this->conf(Base::O_CRAWLER_ROLES) as $v) {
+		// 	$role_title = '';
+		// 	$udata = get_userdata($v);
+		// 	if (isset($udata->roles) && is_array($udata->roles)) {
+		// 		$tmp = array_values($udata->roles);
+		// 		$role_title = array_shift($tmp);
+		// 	}
+		// 	if (!$role_title) {
+		// 		continue;
+		// 	}
 
-			$crawler_factors['uid'][$v] = ucfirst($role_title);
-		}
+		// 	$crawler_factors['uid'][$v] = ucfirst($role_title);
+		// }
 
 		// Cookie crawler
 		foreach ($this->conf(Base::O_CRAWLER_COOKIES) as $v) {
