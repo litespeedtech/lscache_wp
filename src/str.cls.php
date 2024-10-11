@@ -61,7 +61,7 @@ class Str
 	 */
 	public static function rrand($len, $type = 7)
 	{
-		mt_srand((int) ((float) microtime() * 1000000));
+		// mt_srand((int) ((float) microtime() * 1000000));
 
 		switch ($type) {
 			case 0:
