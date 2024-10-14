@@ -267,7 +267,6 @@ class Activation extends Base
 			}
 		}
 
-
 		/* 1) wp-config.php; */
 
 		try {
@@ -306,14 +305,7 @@ class Activation extends Base
 	{
 		global $wpdb;
 
-		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'",
-				array(
-					'litespeed.%'
-				)
-			)
-		);
+		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'", array('litespeed.%')));
 	}
 
 	private static function delete_site_tables()

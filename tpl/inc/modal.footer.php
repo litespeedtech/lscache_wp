@@ -1,5 +1,4 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
-?>
+namespace LiteSpeed;
+defined('WPINC') || exit(); ?>
 </div>

@@ -2,58 +2,66 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 // Modal data
 $_title = __('Deactivate LiteSpeed Cache', 'litespeed');
 $_id = 'litespeed-modal-deactivate';
 
-$reasons = [
-    [
-        'value' => 'Temporary',
-        'text' => __('I deactivate it temporary', 'litespeed-cache'),
-        'id' => 'temp',
-        'selected' => true
-    ],
-    [
-        'value' => 'Performance worse',
-        'text' => __('Site performance is worse', 'litespeed-cache'),
-        'id' => 'performance'
-    ],
-    [
-        'value' => 'Plugin complicated',
-        'text' => __('Plugin is too complicated', 'litespeed-cache'),
-        'id' => 'complicated'
-    ],
-    [
-        'value' => 'Other',
-        'text' => __('Other', 'litespeed-cache'),
-        'id' => 'other'
-    ]
-];
+$reasons = array(
+	array(
+		'value' => 'Temporary',
+		'text' => __('I deactivate it temporary', 'litespeed-cache'),
+		'id' => 'temp',
+		'selected' => true,
+	),
+	array(
+		'value' => 'Performance worse',
+		'text' => __('Site performance is worse', 'litespeed-cache'),
+		'id' => 'performance',
+	),
+	array(
+		'value' => 'Plugin complicated',
+		'text' => __('Plugin is too complicated', 'litespeed-cache'),
+		'id' => 'complicated',
+	),
+	array(
+		'value' => 'Other',
+		'text' => __('Other', 'litespeed-cache'),
+		'id' => 'other',
+	),
+);
 ?>
 <script>
     window.lscId = '<?php echo 'aaaaaaaaa'; ?>'; // TODO: How we identify the site?
 </script>
 <div style="display: none">
     <div id="litespeed-deactivation" class="iziModal">
-        <?php require LSCWP_DIR . "tpl/inc/modal.header.php"; ?>
+        <?php require LSCWP_DIR . 'tpl/inc/modal.header.php'; ?>
         <form id="litespeed-deactivation-form" method="post">
             <p><?php _e('Why do you deactivate the plugin?', 'litespeed-cache'); ?></p>
             <div class="deactivate-reason-wrapper">
-                <?php
-                foreach ($reasons as $reason) {
-                    echo '<label for="litespeed-deactivate-reason-' . $reason['id'] . '">
+                <?php foreach ($reasons as $reason) {
+                	echo '<label for="litespeed-deactivate-reason-' .
+                		$reason['id'] .
+                		'">
                         <input type="radio" 
-                            id="litespeed-deactivate-reason-' . $reason['id'] . '" 
-                            value="' . $reason['value'] . '" 
-                            ' . (isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : '') . '
+                            id="litespeed-deactivate-reason-' .
+                		$reason['id'] .
+                		'" 
+                            value="' .
+                		$reason['value'] .
+                		'" 
+                            ' .
+                		(isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : '') .
+                		'
                             name="litespeed-reason" 
                         />
-                        ' . $reason['text'] . '
+                        ' .
+                		$reason['text'] .
+                		'
                     </label>';
-                }
-                ?>
+                } ?>
             </div>
             <div class="deactivate-clear-settings-wrapper">
                 <label for="litespeed-deactivate-clear">
@@ -75,15 +83,13 @@ $reasons = [
                     </label>
                 <?php } ?>
                 <i style="font-size: 0.9em;">
-                    <?php
-                    /* translators: %s: <a href="admin.php?page=litespeed-img_optm" target="_blank"> */
+                    <?php /* translators: %s: <a href="admin.php?page=litespeed-img_optm" target="_blank"> */
                     /* translators: %s: </a> */
                     echo sprintf(
-                        __('If you have Image Optimization used, you need to destroy all optm first, go to this %spage%s'),
-                        '<a href="admin.php?page=litespeed-img_optm#litespeed-imageopt-destroy" target="_blank">',
-                        '</a>'
-                    );
-                    ?>
+                    	__('If you have Image Optimization used, you need to destroy all optm first, go to this %spage%s'),
+                    	'<a href="admin.php?page=litespeed-img_optm#litespeed-imageopt-destroy" target="_blank">',
+                    	'</a>'
+                    ); ?>
                 </i>
             </div>
             <div class="deactivate-actions">
@@ -102,6 +108,6 @@ $reasons = [
                 <br />
             </div>
         </form>
-        <?php require LSCWP_DIR . "tpl/inc/modal.footer.php"; ?>
+        <?php require LSCWP_DIR . 'tpl/inc/modal.footer.php'; ?>
     </div>
 </div>
