@@ -51,7 +51,7 @@ class Online
 	 * ## EXAMPLES
 	 *
 	 *     # Activate domain CDN on QUIC.cloud
-	 *     $ wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi
+	 *     $ wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx --method=cname|ns|cfi
 	 *
 	 */
 	public function cdn_init($args, $assoc_args)

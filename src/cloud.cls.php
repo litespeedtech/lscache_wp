@@ -252,7 +252,7 @@ class Cloud extends Base
 		$data = array(
 			'cert' => File::read($cert),
 			'key' => File::read($key),
-			'methode' => $method,
+			'method' => $method,
 		);
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if ($server_ip) {
