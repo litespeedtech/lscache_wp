@@ -197,6 +197,18 @@ class Cloud extends Base
 	{
 		$this->_init_qc_prepare();
 
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if (!$server_ip) {
+			self::debugErr('Server IP needs to be set first!');
+			$msg = sprintf(
+				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
+				'`' . __('Server IP', 'litespeed-cache') . '`',
+				'`wp litespeed-option set server_ip __your_ip_value__`',
+			);
+			Admin_Display::error($msg);
+			return;
+		}
+
 		// WPAPI REST echo dryrun
 		$req_data = array(
 			'wp_pk_b64' => $this->_summary['pk_b64'],
@@ -221,11 +233,8 @@ class Cloud extends Base
 			'wp_pk_b64' => $this->_summary['pk_b64'],
 			'wpapi_ts' => $echobox['wpapi_ts'],
 			'wpapi_signature_b64' => $echobox['wpapi_signature_b64'],
+			'server_ip' => $server_ip,
 		);
-		$server_ip = $this->conf(self::O_SERVER_IP);
-		if ($server_ip) {
-			$data['server_ip'] = $server_ip;
-		}
 
 		$res = $this->post(self::SVC_D_ACTIVATE, $data);
 		return $res;
