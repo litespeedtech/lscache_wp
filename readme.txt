@@ -254,7 +254,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 6.5.2 - Oct 18 2024 =
+= 6.5.2 - Oct 17 2024 =
 * **Crawler** Removed barely used Role Simulator from Crawler, to prevent potential security issues.
 * **Misc** Removed `mt_srand` function in random hash generation to slightly improve the hash result.
 
