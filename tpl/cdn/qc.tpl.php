@@ -5,6 +5,7 @@ namespace LiteSpeed;
 defined('WPINC') || exit;
 
 $__cloud = Cloud::cls();
+$__cloud->finish_qc_activation(true);
 $cloud_summary = Cloud::get_summary();
 
 ?>
@@ -27,7 +28,7 @@ $cloud_summary = Cloud::get_summary();
 				<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient">Accelerate, Optimize, Protect</strong></h3>
 				<p class="litespeed-dashboard-unlock-desc">Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.</p>
 				<p>Free monthly quota available.</p>
-				<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE); ?>"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
+				<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array('ref' => 'cdn')); ?>"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
 				<p class="litespeed-dashboard-unlock-footer">
 					<a href="https://www.quic.cloud/" target="_blank">Learn More about QUIC.cloud</a><br>
 					QUIC.cloud services are not required
@@ -38,7 +39,7 @@ $cloud_summary = Cloud::get_summary();
 
 	<div class="litespeed-top20">
 		<?php Doc::learn_more(
-			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE),
+			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array('ref' => 'cdn')),
 			__('Activate QUIC.cloud', 'litespeed-cache'),
 			true,
 			'button litespeed-btn-warning'
@@ -72,7 +73,7 @@ $cloud_summary = Cloud::get_summary();
 <?php if ($__cloud->activated()) : ?>
 	<div class="litespeed-top20 litespeed-flex">
 		<?php Doc::learn_more(
-			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET),
+			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET, false, null, array('ref' => 'cdn')),
 			__('Clear QUIC.cloud activation', 'litespeed-cache'),
 			true,
 			'button litespeed-btn-danger litespeed-align-right'

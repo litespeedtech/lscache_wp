@@ -145,6 +145,8 @@ class Cloud extends Base
 	{
 		$this->_init_qc_prepare();
 
+		$ref = $this->_get_ref_url();
+
 		// WPAPI REST echo dryrun
 		$req_data = array(
 			'wp_pk_b64' => $this->_summary['pk_b64'],
@@ -154,7 +156,7 @@ class Cloud extends Base
 			self::debugErr('REST Echo Failed!');
 			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
 			Admin_Display::error($msg);
-			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+			wp_redirect($ref);
 			return;
 		}
 
@@ -163,7 +165,7 @@ class Cloud extends Base
 		// Load seperate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
 			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
-			wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+			wp_redirect($ref);
 			return;
 		}
 
@@ -182,10 +184,25 @@ class Cloud extends Base
 			'site_url' => home_url(),
 			'ver' => Core::VER,
 			'data' => $data,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+			'ref' => $ref,
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
+	}
+
+	/**
+	 * Decide the ref
+	 */
+	private function _get_ref_url($cdn = false)
+	{
+		$ref = 'admin.php?page=litespeed';
+		if ($cdn) {
+			$ref = 'admin.php?page=litespeed-cdn';
+		}
+		if (!empty($_GET['ref']) && $_GET['ref'] == 'cdn') {
+			$ref = 'admin.php?page=litespeed-cdn';
+		}
+		return get_admin_url(null, $ref);
 	}
 
 	/**
@@ -294,7 +311,7 @@ class Cloud extends Base
 			'site_url' => home_url(),
 			'ver' => Core::VER,
 			'data' => $data,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+			'ref' => $this->_get_ref_url(),
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
@@ -322,7 +339,7 @@ class Cloud extends Base
 			'site_url' => home_url(),
 			'ver' => Core::VER,
 			'data' => $data,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+			'ref' => $this->_get_ref_url(),
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ENABLE_CDN . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
@@ -451,7 +468,7 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	public function finish_qc_activation()
+	public function finish_qc_activation($ref = false)
 	{
 		if (empty($_GET['qc_activated']) || empty($_GET['qc_ts']) || empty($_GET['qc_signature_b64'])) {
 			return;
@@ -500,7 +517,7 @@ class Cloud extends Base
 
 		$this->clear_cloud();
 
-		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+		wp_redirect($this->_get_ref_url($ref));
 	}
 
 	/**
@@ -586,7 +603,7 @@ class Cloud extends Base
 		$this->clear_cloud();
 
 		Admin_Display::success(sprintf(__('Reset %s activation successfully.', 'litespeed-cache'), 'QUIC.cloud'));
-		wp_redirect(get_admin_url(null, 'admin.php?page=litespeed'));
+		wp_redirect($this->_get_ref_url());
 		exit();
 	}
 
@@ -1131,7 +1148,7 @@ class Cloud extends Base
 		$data = array(
 			'site_url' => home_url(),
 			'ver' => LSCWP_V,
-			'ref' => get_admin_url(null, 'admin.php?page=litespeed'),
+			'ref' => $this->_get_ref_url(),
 		);
 		return self::CLOUD_SERVER_DASH . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
