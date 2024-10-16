@@ -329,7 +329,13 @@ class Crawler extends Root
 			$this->_summary['crawler_stats'][$this->_summary['curr_crawler']] = array();
 		}
 
-		$this->load_conf();
+		$res = $this->load_conf();
+		if (!$res) {
+			self::debug('Load conf failed');
+			$this->_terminate_running();
+			$this->Release_lane();
+			return;
+		}
 
 		try {
 			$this->_engine_start();
@@ -350,18 +356,6 @@ class Crawler extends Root
 		$this->_crawler_conf['base'] = home_url();
 
 		$current_crawler = $this->_crawlers[$this->_summary['curr_crawler']];
-
-		/**
-		 * Set role simulation
-		 * @since 1.9.1
-		 */
-		// if (!empty($current_crawler['uid'])) {
-		// 	// Get role simulation vary name
-		// 	$vary_name = $this->cls('Vary')->get_vary_name();
-		// 	$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
-		// 	$this->_crawler_conf['cookies'][$vary_name] = $vary_val;
-		// 	$this->_crawler_conf['cookies']['litespeed_hash'] = Router::cls()->get_hash($current_crawler['uid']);
-		// }
 
 		/**
 		 * Check cookie crawler
@@ -412,6 +406,24 @@ class Crawler extends Root
 		} elseif (!empty($_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT]) && $_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT] < $this->_crawler_conf['load_limit']) {
 			$this->_crawler_conf['load_limit'] = $_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT];
 		}
+		if ($this->_crawler_conf['load_limit'] != 0) {
+			self::debug('🛑 Terminated cralwer due to load limit set to 0');
+			return false;
+		}
+
+		/**
+		 * Set role simulation
+		 * @since 1.9.1
+		 */
+		// if (!empty($current_crawler['uid'])) {
+		// 	// Get role simulation vary name
+		// 	$vary_name = $this->cls('Vary')->get_vary_name();
+		// 	$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
+		// 	$this->_crawler_conf['cookies'][$vary_name] = $vary_val;
+		// 	$this->_crawler_conf['cookies']['litespeed_hash'] = Router::cls()->get_hash($current_crawler['uid']);
+		// }
+
+		return true;
 	}
 
 	/**
