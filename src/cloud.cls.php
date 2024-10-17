@@ -262,27 +262,42 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	public function init_qc_cdn_cli($cert, $key, $method)
+	public function init_qc_cdn_cli($method, $cert = false, $key = false, $cf_token = false)
 	{
 		if (!$this->activated()) {
 			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
 			return;
 		}
 
-		if (!file_exists($cert) || !file_exists($key)) {
-			Admin_Display::error(__('Cert or key file does not exist.', 'litespeed-cache'));
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if (!$server_ip) {
+			self::debugErr('Server IP needs to be set first!');
+			$msg = sprintf(
+				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
+				'`' . __('Server IP', 'litespeed-cache') . '`',
+				'`wp litespeed-option set server_ip __your_ip_value__`',
+			);
+			Admin_Display::error($msg);
 			return;
 		}
 
+		if ($cert) {
+			if (!file_exists($cert) || !file_exists($key)) {
+				Admin_Display::error(__('Cert or key file does not exist.', 'litespeed-cache'));
+				return;
+			}
+		}
 
 		$data = array(
-			'cert' => File::read($cert),
-			'key' => File::read($key),
 			'method' => $method,
+			'server_ip' => $server_ip,
 		);
-		$server_ip = $this->conf(self::O_SERVER_IP);
-		if ($server_ip) {
-			$data['server_ip'] = $server_ip;
+		if ($cert) {
+			$data['cert'] = File::read($cert);
+			$data['key'] = File::read($key);
+		}
+		if ($cf_token) {
+			$data['cf_token'] = $cf_token;
 		}
 
 		$res = $this->post(self::SVC_D_ENABLE_CDN, $data);

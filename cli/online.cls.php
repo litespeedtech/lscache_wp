@@ -29,7 +29,7 @@ class Online
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Activate domain on QUIC.cloud
+	 *     # Activate domain on QUIC.cloud (! Require SERVER IP setting to be set first)
 	 *     $ wp litespeed-online init
 	 *
 	 */
@@ -51,17 +51,33 @@ class Online
 	 * ## EXAMPLES
 	 *
 	 *     # Activate domain CDN on QUIC.cloud
-	 *     $ wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx --method=cname|ns|cfi
+	 *	   $ wp litespeed-online cdn_init --method=cname|ns
+	 *     $ wp litespeed-online cdn_init --method=cname|ns --ssl-cert=xxx.pem --ssl-key=xxx
+	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx
+	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx  --ssl-cert=xxx.pem --ssl-key=xxx
 	 *
 	 */
 	public function cdn_init($args, $assoc_args)
 	{
-		if (empty($assoc_args['ssl-cert']) || empty($assoc_args['ssl-key']) || empty($assoc_args['method'])) {
-			WP_CLI::error('Init CDN failed! Missing parameters.');
+		if (empty($assoc_args['method'])) {
+			WP_CLI::error('Init CDN failed! Missing parameters `--method`.');
+			return;
+		}
+		if ((!empty($assoc_args['ssl-cert']) && empty($assoc_args['ssl-key'])) || (empty($assoc_args['ssl-cert']) && !empty($assoc_args['ssl-key']))) {
+			WP_CLI::error('Init CDN failed! SSL cert must be present together w/ SSL key.');
 			return;
 		}
 
-		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['ssl-cert'], $assoc_args['ssl-key'], $assoc_args['method']);
+		if ($assoc_args['method'] == 'cfi' && empty($assoc_args['cf-token'])) {
+			WP_CLI::error('Init CDN failed! CFI must set `--cf-token`.');
+			return;
+		}
+
+		$cert = !empty($assoc_args['ssl-cert']) ? $assoc_args['ssl-cert'] : '';
+		$key = !empty($assoc_args['ssl-key']) ? $assoc_args['ssl-key'] : '';
+		$cf_token = !empty($assoc_args['cf-token']) ? $assoc_args['cf-token'] : '';
+
+		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['method'], $cert, $key, $cf_token);
 		if (!empty($resp['qc_activated'])) {
 			WP_CLI::success('Init QC CDN successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
