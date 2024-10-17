@@ -72,10 +72,9 @@ $install_link = Utility::build_url(Router::ACTION_ACTIVATION, Activation::TYPE_I
 						'attach_php',
 						sprintf(
 							__(
-								'Attach PHP info to report. Check this box to insert the %1$s sections from %2$s.',
+								'Attach PHP info to report. Check this box to insert the data from %s.',
 								'litespeed-cache'
 							),
-							'<code>INFO_GENERAL</code>, <code>INFO_CONFIGURATION</code> and <code>INFO_MODULES</code>',
 							'<a href="https://www.php.net/manual/en/function.phpinfo.php" target="__blank">phpinfo()</a>'
 						),
 						false
