@@ -274,7 +274,6 @@ class Cloud extends Base
 			return;
 		}
 
-
 		$data = array(
 			'cert' => File::read($cert),
 			'key' => File::read($key),
@@ -551,7 +550,8 @@ class Cloud extends Base
 		if (!empty($data['body'])) {
 			$this->_summary[$type] = Str::safe_html($data['body']);
 		}
-		if ($type == 'cdn_dash') { // Also save the mini content
+		if ($type == 'cdn_dash') {
+			// Also save the mini content
 			$this->_summary['cdn_dash_mini'] = Str::safe_html($data['body_mini']);
 		}
 		$this->save_summary();
@@ -938,7 +938,8 @@ class Cloud extends Base
 		self::debug('Closest nodes list', $valid_clouds);
 
 		// Check server load
-		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
+		if (in_array($service, self::$SERVICES_LOAD_CHECK)) {
+			// TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
 				$response = wp_remote_get($v, array('timeout' => 5));

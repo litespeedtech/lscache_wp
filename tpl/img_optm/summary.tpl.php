@@ -307,7 +307,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 
-				<p><a href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY); ?>" class="litespeed-link-with-icon litespeed-danger" data-litespeed-cfm="<?php echo __('Are you sure to destroy all optimized images?', 'litespeed-cache'); ?>">
+				<p><a href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY); ?>" class="litespeed-link-with-icon litespeed-danger" data-litespeed-cfm="<?php echo __('Are you sure to destroy all optimized images?', 'litespeed-cache'); ?>" id="litespeed-imageopt-destroy">
 						<span class="dashicons dashicons-dismiss"></span><?php echo __('Destroy All Optimization Data', 'litespeed-cache'); ?>
 					</a></p>
 

@@ -27,21 +27,7 @@ class Str
 			'color' => array(),
 			'href' => array(),
 		);
-		$tags = array(
-			"h3",
-			"h4",
-			"h5",
-			"ul",
-			"li",
-			"br",
-			"strong",
-			"p",
-			"span",
-			"img",
-			"a",
-			"div",
-			"font",
-		);
+		$tags = array('h3', 'h4', 'h5', 'ul', 'li', 'br', 'strong', 'p', 'span', 'img', 'a', 'div', 'font');
 		$allowed_tags = array();
 		foreach ($tags as $tag) {
 			$allowed_tags[$tag] = $common_attrs;

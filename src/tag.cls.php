@@ -263,8 +263,8 @@ class Tag extends Root
 					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
 				} elseif (is_date()) {
 					global $post;
-					
-					if($post && isset($post->post_date)){
+
+					if ($post && isset($post->post_date)) {
 						$date = $post->post_date;
 						$date = strtotime($date);
 						if (is_day()) {
