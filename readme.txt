@@ -273,6 +273,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 
+= 6.5.2 - Oct 17 2024 =
+* **Crawler** Removed barely used Role Simulator from Crawler, to prevent potential security issues.
+* **Misc** Removed `mt_srand` function in random hash generation to slightly improve the hash result.
+
 = 6.5.1 - Sep 25 2024 =
 * **Security** This release includes two security updates to enhance the post validation of the editor (CVE-2024-47373), and to secure the GUI queue display from malicious vary input (CVE-2024-47374).
 * **Media** Sanitized dimensions for the images when replacing with placeholders. (TaiYou)
