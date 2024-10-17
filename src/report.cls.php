@@ -55,10 +55,14 @@ class Report extends Base
 
 		$notes = !empty($_POST['notes']) ? esc_html($_POST['notes']) : '';
 
+		$php_info = !empty($_POST['attach_php']) ? esc_html($_POST['attach_php']) : '';
+		$report_php = ($php_info === '1') ? $this->generate_php_report() : '';
+
 		$data = array(
 			'env' => $report_con,
 			'link' => $link,
 			'notes' => $notes,
+			'php_info' => $report_php,
 		);
 
 		$json = Cloud::post(Cloud::API_REPORT, $data);
@@ -75,6 +79,24 @@ class Report extends Base
 		self::save_summary($summary);
 
 		return $num;
+	}
+
+	/**
+	 * Gathers the PHP information.
+	 *
+	 * @since 7.0
+	 * @access public
+	 */
+	public function generate_php_report($flags = INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES) // INFO_ENVIRONMENT
+	{
+		$report = '';
+
+		ob_start();
+		phpinfo($flags);
+		$report = ob_get_contents();
+		ob_end_clean();
+
+		return $report;
 	}
 
 	/**
@@ -128,7 +150,7 @@ class Report extends Base
 			if (is_multisite()) {
 				$options2 = $this->get_options();
 				foreach ($options2 as $k => $v) {
-					if ($options[$k] !== $v) {
+					if (isset($options[$k]) && $options[$k] !== $v) {
 						$options['[Overwritten] ' . $k] = $v;
 					}
 				}

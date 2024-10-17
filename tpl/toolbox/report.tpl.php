@@ -65,6 +65,25 @@ $install_link = Utility::build_url(Router::ACTION_ACTIVATION, Activation::TYPE_I
 				</td>
 			</tr>
 			<tr>
+				<th>&nbsp;</th>
+				<td>
+					<?php
+					$this->build_checkbox(
+						'attach_php',
+						sprintf(
+							__(
+								'Attach PHP info to report. It will use data returned by function %1$s, sections %2$s.',
+								'litespeed-cache'
+							),
+							'<a href="https://www.php.net/manual/en/function.phpinfo.php" traget="__blank">phpinfo()</a>',
+							'<code>INFO_GENERAL, INFO_CONFIGURATION, INFO_MODULES</code>'
+						),
+						false
+					);
+					?>
+				</td>
+			</tr>
+			<tr>
 				<th><?php echo __('Passwordless Link', 'litespeed-cache'); ?></th>
 				<td>
 					<input type="text" class="litespeed-regular-text" id="litespeed-report-link" name="link" value="<?php echo $link; ?>" style="width:500px;" />
