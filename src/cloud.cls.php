@@ -514,16 +514,29 @@ class Cloud extends Base
 			return;
 		}
 
-		$this->_summary['qc_activated'] = $_GET['qc_activated'];
+		$this->update_qc_activation($_GET['qc_activated']);
+
+		wp_redirect($this->_get_ref_url($ref));
+	}
+
+	/**
+	 * Finish qc activation process
+	 *
+	 * @since 7.0
+	 */
+	public function update_qc_activation($qc_activated)
+	{
+		$this->_summary['qc_activated'] = $qc_activated;
 		$this->save_summary();
 
+
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
-		if ($_GET['qc_activated'] == 'linked') {
+		if ($qc_activated == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
 			// Sync possible partner info
 			$this->sync_usage();
 		}
-		if ($_GET['qc_activated'] == 'cdn') {
+		if ($qc_activated == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
@@ -531,8 +544,6 @@ class Cloud extends Base
 		Admin_Display::success('🎊 ' . $msg);
 
 		$this->clear_cloud();
-
-		wp_redirect($this->_get_ref_url($ref));
 	}
 
 	/**

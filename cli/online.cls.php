@@ -37,6 +37,7 @@ class Online
 	{
 		$resp = $this->__cloud->init_qc_cli();
 		if (!empty($resp['qc_activated'])) {
+			$this->__cloud->update_qc_activation($resp['qc_activated']);
 			WP_CLI::success('Init successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
 			WP_CLI::error('Init failed!');
@@ -79,6 +80,7 @@ class Online
 
 		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['method'], $cert, $key, $cf_token);
 		if (!empty($resp['qc_activated'])) {
+			$this->__cloud->update_qc_activation($resp['qc_activated']);
 			WP_CLI::success('Init QC CDN successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
 			WP_CLI::error('Init QC CDN failed!');
