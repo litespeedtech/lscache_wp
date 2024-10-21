@@ -82,6 +82,7 @@ if ((defined('WP_CLI') && WP_CLI) || PHP_SAPI == 'cli') {
 		WP_CLI::add_command('litespeed-debug', 'LiteSpeed\CLI\Debug');
 		WP_CLI::add_command('litespeed-presets', 'LiteSpeed\CLI\Presets');
 		WP_CLI::add_command('litespeed-crawler', 'LiteSpeed\CLI\Crawler');
+		WP_CLI::add_command('litespeed-database', 'LiteSpeed\CLI\Database');
 	}
 }
 

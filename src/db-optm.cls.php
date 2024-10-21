@@ -359,4 +359,20 @@ class DB_Optm extends Root
 
 		Admin::redirect();
 	}
+
+	/**
+	 * Clean DB
+	 *
+	 * @since  7.0
+	 * @access public
+	 */
+	public function handler_clean_db_cli($args)
+	{
+		if (defined('WP_CLI') && WP_CLI) {
+			return $this->_db_clean($args);
+		}
+
+		return false;
+	}
 }
+=
