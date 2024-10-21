@@ -132,6 +132,10 @@ class File
 	 */
 	public static function save($filename, $data, $mkdir = false, $append = false, $silence = true)
 	{
+		if(is_null($filename)) {
+			return $silence ? false : __('Filename is empty!', 'litespeed-cache');
+		}
+		
 		$error = false;
 		$folder = dirname($filename);
 
