@@ -51,7 +51,7 @@ class Online
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Activate domain CDN on QUIC.cloud
+	 *     # Activate domain CDN on QUIC.cloud (support --format=json)
 	 *	   $ wp litespeed-online cdn_init --method=cname|ns
 	 *     $ wp litespeed-online cdn_init --method=cname|ns --ssl-cert=xxx.pem --ssl-key=xxx
 	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx
@@ -80,10 +80,23 @@ class Online
 
 		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['method'], $cert, $key, $cf_token);
 		if (!empty($resp['qc_activated'])) {
-			$this->__cloud->update_qc_activation($resp['qc_activated']);
+			$this->__cloud->update_qc_activation($resp['qc_activated'], true);
+		}
+		if (!empty($assoc_args['format']) && $assoc_args['format'] == 'json') {
+			WP_CLI::log(json_encode($resp));
+			return;
+		}
+		if (!empty($resp['qc_activated'])) {
 			WP_CLI::success('Init QC CDN successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
 			WP_CLI::error('Init QC CDN failed!');
+		}
+
+		if (!empty($resp['cname'])) {
+			WP_CLI::success('cname: ' . $resp['cname']);
+		}
+		if (!empty($resp['msgs'])) {
+			WP_CLI::success('msgs: ' . var_export($resp['msgs'], true));
 		}
 	}
 

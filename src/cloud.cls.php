@@ -524,7 +524,7 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	public function update_qc_activation($qc_activated)
+	public function update_qc_activation($qc_activated, $quite = false)
 	{
 		$this->_summary['qc_activated'] = $qc_activated;
 		$this->save_summary();
@@ -541,7 +541,7 @@ class Cloud extends Base
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 		}
-		Admin_Display::success('🎊 ' . $msg);
+		if (!$quite) Admin_Display::success('🎊 ' . $msg);
 
 		$this->clear_cloud();
 	}

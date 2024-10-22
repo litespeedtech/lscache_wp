@@ -76,7 +76,10 @@ class Quic extends Base
 		// Append hooks
 		$options['_tp_cookies'] = apply_filters('litespeed_vary_cookies', array());
 
-		$conf_md5 = md5(\json_encode($options));
+		$options_for_md5 = $options;
+		unset($options_for_md5['LITESPEED_SERVER_TYPE']);
+
+		$conf_md5 = md5(\json_encode($options_for_md5));
 		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {
 			if (!$force) {
 				self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
