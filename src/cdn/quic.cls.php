@@ -77,7 +77,7 @@ class Quic extends Base
 		$options['_tp_cookies'] = apply_filters('litespeed_vary_cookies', array());
 
 		$options_for_md5 = $options;
-		unset($options_for_md5['LITESPEED_SERVER_TYPE']);
+		unset($options_for_md5['_server']['LITESPEED_SERVER_TYPE']);
 
 		$conf_md5 = md5(\json_encode($options_for_md5));
 		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {
