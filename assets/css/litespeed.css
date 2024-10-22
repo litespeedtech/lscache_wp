@@ -1,13 +1,8 @@
 @font-face {
-	font-family: 'litespeedfont';
-	src: url('fonts/litespeedfont.eot?rs8ttq');
-	src:
-		url('fonts/litespeedfont.eot?rs8ttq#iefix') format('embedded-opentype'),
-		url('fonts/litespeedfont.ttf?rs8ttq') format('truetype'),
-		url('fonts/litespeedfont.woff?rs8ttq') format('woff'),
-		url('fonts/litespeedfont.svg?rs8ttq#litespeedfont') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'litespeedfont';
+    src: url('data:font/woff2;charset=utf-8;base64,d09GMgABAAAAAAOYAA0AAAAACNAAAANEAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGh4GYACCXhEICoYghm0LDgABNgIkAxgEIAWDYwdFGyYIUZQOyhiyLw5scD1NiKHFMYaIGBaxzrYyzWm+S/Po343n6ff739rn3He/2PuoRWiS8ERTryqNZl5JVPHQmG4StTE/MuTn81zu3227F9iBrI2tAXxjNacl1PO4QNIiTGDnwu4//EfHun+RHEBHUIBdAjlPd3QD8WBfpcLVmtr9AMB4IqXj1EEIVUrMnlDVVahkfIk0oJN1lfW2h3Ym9xJmFx77IAT+PFyyHuDb9h/klw6GMQ0UER3RoKDWHbmvQ3lQ3uIeOk0mLMsA2Ve68q5D/FXf9N5YV8EIwuW6AIH6znMQYDdKMAdtFRjUryhiwV+9/wOCv6T3nN5RxSCAqKQlFUhBAf+Z0EAfHulNAC0YxhC5Qh4DGkAQ0V9rzTGzUaNOSaU8b0AG50LI6Ek+LecKcYDuxDJEQwzGLDoB7wRbiA/QgxQcC41xQXvSoSgcCBMCKNCLpC0ogGLIRXNVBoneY72iLoEOOcZEogOX8M3SENoY4skD9GUM0WVVFtRdd1rOoGoeSRYth12WlQVPgA9ntUg0pDXDycQxYD1JqXutSoQCNOPay/kYJNsUZx5jhXy5/GrCRMtESeo3nxeVp928+3r07lppqYfPAMDa13cRBEmYmMD4FqpuGQfC2SQXxKJO1yDZjUejT7YFbCrdjhRCvKE+zKNHQIQQZE2mKX1AN+lmt78sQj8r+PcPdMfJMt6NLE7+iSGpEQrViJSZoGxCOgrC5R9e2phcgKKdtfQYlzSq2VYm9S1K63CtSdVjFBPTNee58/vlG7r/1t9vB6npkc1V2P+/q/9q2zEACMKdj/uvBsKq/7zGgnsrvUf91dCvgFgkO2pAwQZC1bQNdXb4OQUNHUGbi3hQoLNGvRAQI+YEpqLPClM14iDTcK/XdQxpxrTc77kHzcoslDQDgqVgKkYtNlWzlJmGOzZ1THMytWa5Pc+g5Z6OG1jLrMxlMqnczNQajh9ZZ7sj2ejPBrbKFDbGIkv4Fd/aoPGcVRq+U2ZpZVA0WqSRqXCJv2OarHaUWJ/VXVTITLuNRc2ulRLFDkQtiZmemWpFMjzdmHRFWNRKZn+N8RhAoV6+JUVJVdO0h44f5n2Nu3ByoCLqVNU8VQU=') format('woff2');
+    font-weight: normal;
+    font-style: normal;
 }
 
 #adminmenu #toplevel_page_lscache-settings .menu-icon-generic div.wp-menu-image:before,
