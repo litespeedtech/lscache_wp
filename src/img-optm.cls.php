@@ -287,7 +287,8 @@ class Img_Optm extends Base
 					continue;
 				}
 
-				$this->_summary['next_post_id'] = $v->post_id;
+				// Change next image on image pull
+				// $this->_summary['next_post_id'] = $v->post_id;
 
 				$meta_value = $this->_parse_wp_meta_value($v);
 				if (!$meta_value) {
@@ -307,7 +308,7 @@ class Img_Optm extends Base
 				}
 			}
 
-			self::save_summary();
+			// self::save_summary();
 
 			$num_a = count($this->_img_in_queue);
 			self::debug('Images found: ' . $num_a);
@@ -1117,9 +1118,19 @@ class Img_Optm extends Base
 						self::debug2('Remove _table_img_optming record [id] ' . $row_img->id);
 					}
 
+					// Get current image post id.
+					$q = "SELECT post_id FROM `$this->_table_img_optming` WHERE id = %d ORDER BY id DESC LIMIT 1";
+					$image_post_id = $wpdb->get_var($wpdb->prepare($q, $row_img->id));
+
 					// Delete working table
 					$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
 					$wpdb->query($wpdb->prepare($q, $row_img->id));
+
+					// Save latest image pulled as next in summary.
+					if ($image_post_id && $this->_summary['next_post_id'] != $image_post_id) {
+						$this->_summary['next_post_id'] = $image_post_id;
+						self::save_summary();
+					}
 
 					// Save server_list to notify taken
 					if (empty($server_list[$server_info['server']])) {
