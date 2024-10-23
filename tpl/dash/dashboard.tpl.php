@@ -149,10 +149,10 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 	<div class="litespeed-dashboard-qc-enable">
 
 		<div class="litespeed-dashboard-header">
-			<h3 class="litespeed-dashboard-title">
-				<?php echo __('QUIC.cloud Service Usage Statistics', 'litespeed-cache'); ?>
-				<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_USAGE); ?>">
-					<span class="dashicons dashicons-update"></span> <?php echo __('Sync', 'litespeed-cache'); ?>
+			<h3 class="litespeed-dashboard-title litespeed-dashboard-title--w-btn">
+				<span class="litespeed-right10"><?php echo __('QUIC.cloud Service Usage Statistics', 'litespeed-cache'); ?></span>
+				<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_USAGE); ?>" class="button button-secondary button-small">
+					<span class="dashicons dashicons-update"></span> <?php echo __('Refresh Usage', 'litespeed-cache'); ?>
 					<span class="screen-reader-text"><?php echo __('Sync data from Cloud', 'litespeed-cache'); ?></span>
 				</a>
 			</h3>
@@ -253,7 +253,6 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 										<span class="<?php if ($i++ > 0) echo 'litespeed-left10'; ?>"><?php echo strtoupper(esc_html($sub_svc)); ?>: <strong><?php echo (int)$sub_usage; ?></strong></span>
 									<?php endforeach; ?>
 								</p>
-								<div class="clear"></div>
 							<?php endif; ?>
 						<?php endif; ?>
 
@@ -344,11 +343,11 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					<div class="inside">
 						<h3 class="litespeed-title">
 							<?php echo __('Page Load Time', 'litespeed-cache'); ?>
-							<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SPEED); ?>">
-								<span class="dashicons dashicons-update"></span>
-								<?php echo __('Sync', 'litespeed-cache'); ?>
-								<span class="screen-reader-text"><?php echo __('Refresh page load time', 'litespeed-cache'); ?></span>
-							</a>
+
+							<?php $closest_server = Cloud::get_summary('server.' . CLoud::SVC_HEALTH); ?>
+							<?php if ($closest_server) : ?>
+								<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array('svc' => Cloud::SVC_HEALTH)); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf(__('Current closest Cloud server is %s.&#10;Click to redetect.', 'litespeed-cache'), $closest_server); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache'); ?>" class="litespeed-title-right-icon"><i class='litespeed-quic-icon'></i> <small><?php echo __('Redetect', 'litespeed-cache'); ?></small></a>
+							<?php endif; ?>
 						</h3>
 
 						<div>
@@ -388,13 +387,16 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 
 					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 						<?php if (!empty($cloud_summary['last_request.health-speed'])) : ?>
-							<?php echo __('Last requested', 'litespeed-cache') . ': ' . Utility::readable_time($cloud_summary['last_request.health-speed']) ?>
+							<span class="litespeed-right10">
+								<?php echo __('Last requested', 'litespeed-cache') . ': <span data-balloon-pos="up" aria-label="' . Utility::readable_time($cloud_summary['last_request.health-speed']) . '">' . sprintf(__(' %s ago', 'litespeed-cache'), human_time_diff($cloud_summary['last_request.health-speed'])) . '</span>'; ?>
+							</span>
 						<?php endif; ?>
 
-						<?php $closest_server = Cloud::get_summary('server.' . CLoud::SVC_HEALTH); ?>
-						<?php if ($closest_server) : ?>
-							<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array('svc' => Cloud::SVC_HEALTH)); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf(__('Current closest Cloud server is %s.&#10;Click to redetect.', 'litespeed-cache'), $closest_server); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache'); ?>" class="litespeed-right"><i class='litespeed-quic-icon'></i> <?php echo __('Redetect', 'litespeed-cache'); ?></a>
-						<?php endif; ?>
+						<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SPEED); ?>" class="button button-secondary button-small">
+							<span class="dashicons dashicons-update"></span>
+							<?php echo __('Refresh', 'litespeed-cache'); ?>
+							<span class="screen-reader-text"><?php echo __('Refresh page load time', 'litespeed-cache'); ?></span>
+						</a>
 					</div>
 				</div>
 
@@ -402,11 +404,6 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					<div class="inside">
 						<h3 class="litespeed-title">
 							<?php echo __('PageSpeed Score', 'litespeed-cache'); ?>
-							<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SCORE); ?>">
-								<span class="dashicons dashicons-update"></span>
-								<?php echo __('Sync', 'litespeed-cache'); ?>
-								<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
-							</a>
 
 							<?php $id = Base::O_GUEST; ?>
 							<a href="<?php echo admin_url('admin.php?page=litespeed-general'); ?>" class="litespeed-title-right-icon"><?php echo Lang::title($id); ?></a>
@@ -456,11 +453,19 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 						</div>
 					</div>
 
-					<?php if (!empty($cloud_summary['last_request.health-score'])) : ?>
-						<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-							<?php echo __('Last requested', 'litespeed-cache') . ': ' . Utility::readable_time($cloud_summary['last_request.health-score']) ?>
-						</div>
-					<?php endif; ?>
+					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+						<?php if (!empty($cloud_summary['last_request.health-score'])) : ?>
+							<span class="litespeed-right10">
+								<?php echo __('Last requested', 'litespeed-cache') . ': <span data-balloon-pos="up" aria-label="' . Utility::readable_time($cloud_summary['last_request.health-score']) . '">' . sprintf(__(' %s ago', 'litespeed-cache'), human_time_diff($cloud_summary['last_request.health-score'])) . '</span>'; ?>
+							</span>
+						<?php endif; ?>
+						<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SCORE); ?>" class="button button-secondary button-small">
+							<span class="dashicons dashicons-update"></span>
+							<?php echo __('Refresh', 'litespeed-cache'); ?>
+							<span class="screen-reader-text"><?php echo __('Refresh page score', 'litespeed-cache'); ?></span>
+						</a>
+					</div>
+
 				</div>
 
 				<div class="postbox litespeed-postbox litespeed-postbox-double litespeed-postbox-imgopt">
@@ -743,42 +748,44 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					</div>
 				</div>
 
-				<div class="postbox litespeed-postbox litespeed-postbox-quiccloud litespeed-bg-quic-cloud">
-					<div class="inside litespeed-text-center">
-						<h3 class="litespeed-title">
-							QUIC.cloud
-							<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_STATUS); ?>">
-								<span class="dashicons dashicons-update"></span>
-								<?php echo __('Sync', 'litespeed-cache'); ?>
-								<span class="screen-reader-text"><?php echo __('Refresh QUIC.cloud status', 'litespeed-cache'); ?></span>
-							</a>
-
+				<div class="postbox litespeed-postbox litespeed-postbox-quiccloud<?php if (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?> litespeed-postbox--quiccloud<?php endif; ?>">
+					<div class="inside">
+						<h3 class="litespeed-title litespeed-dashboard-title--w-btn">
+							<span class="litespeed-quic-icon"></span>QUIC.cloud CDN
 							<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon" target="_blank"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
 						</h3>
-						<div class="litespeed-top20">
-							<?php if (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
-								<p class="litespeed-text-bold litespeed-margin-bottom20">
+						<?php if (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
+							<div class="litespeed-text-center litespeed-empty-space-medium">
+								<p class="litespeed-margin-bottom20">
 									<?php Doc::learn_more(
 										Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ENABLE_CDN),
-										__('Enable QUIC.cloud CDN', 'litespeed-cache'),
+										'<span class="dashicons dashicons-saved"></span>' . __('Enable QUIC.cloud CDN', 'litespeed-cache'),
 										true,
-										'button litespeed-btn-success'
+										'button button-primary litespeed-button-cta'
 									); ?>
 								</p>
-								<p class="litespeed-margin-y5">
-									<?php echo __('Best available WordPress performance', 'litespeed-cache'); ?>
+								<p class="litespeed-margin-bottom10 litespeed-top20 litespeed-text-md">
+									<strong class="litespeed-qc-text-gradient"><?php echo __('Best available WordPress performance', 'litespeed-cache'); ?></strong>
 								</p>
-								<p class="litespeed-margin-y5">
+								<p class="litespeed-margin-bottom20 litespeed-margin-top-remove">
 									<?php echo sprintf(__('Globally fast TTFB, easy setup, and <a %s>more</a>!', 'litespeed-cache'), ' href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" target="_blank"'); ?>
 								</p>
-								<div class="litespeed-top10">
-									<img src="<?php echo LSWCP_PLUGIN_URL; ?>assets/img/quic-cloud-logo.svg" alt="QUIC.cloud" width="45%" height="auto">
-								</div>
-							<?php else : ?>
-								<?php echo $__cloud->load_qc_status_for_dash('cdn_dash_mini'); ?>
-							<?php endif; ?>
-						</div>
+							</div>
+						<?php else : ?>
+							<?php echo $__cloud->load_qc_status_for_dash('cdn_dash_mini'); ?>
+						<?php endif; ?>
 					</div>
+					<?php if ($__cloud->activated()) : ?>
+						<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+							<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_STATUS); ?>" class="button button-<?php echo ($cloud_summary['qc_activated'] != 'cdn' ? 'link' : 'secondary'); ?> button-small">
+								<?php if ($cloud_summary['qc_activated'] == 'cdn') : ?>
+									<span class="dashicons dashicons-update"></span>
+								<?php endif; ?>
+								<?php echo __('Refresh Status', 'litespeed-cache'); ?>
+								<span class="screen-reader-text"><?php echo __('Refresh QUIC.cloud status', 'litespeed-cache'); ?></span>
+							</a>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<?php if ($__cloud->activated()) : ?>

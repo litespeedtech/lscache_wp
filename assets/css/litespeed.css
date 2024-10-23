@@ -179,8 +179,16 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	height: auto;
 }
 
+.litespeed-flex-align-center {
+	align-items: center;
+}
+
 .litespeed-flex-container > * {
 	box-sizing: border-box;
+}
+
+.litespeed-flex-container--reverse {
+	flex-direction: row-reverse;
 }
 
 .litespeed-flex-container .litespeed-icon-vertical-middle {
@@ -323,7 +331,7 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 }
 
 .litespeed-margin-bottom20 {
-	margin-bottom: 20px;
+	margin-bottom: 20px !important;
 }
 
 .litespeed-margin-bottom-remove {
@@ -651,8 +659,8 @@ h3 .litespeed-learn-more {
 	vertical-align: middle;
 }
 
-.litespeed-title a .dashicons {
-	/* vertical-align: text-bottom; */
+.litespeed-title .litespeed-quic-icon {
+	margin-right:6px;
 }
 
 .litespeed-title a,
@@ -675,6 +683,7 @@ h3 .litespeed-learn-more {
 
 .litespeed-postbox .litespeed-title {
 	display: flex;
+	align-items: center;
 }
 
 .litespeed-title-right-icon {
@@ -1128,7 +1137,8 @@ h3 .litespeed-learn-more {
 
 .litespeed-wrap .button:not(.litespeed-btn-large) .dashicons {
 	position: relative;
-	top: 0.125em;
+	top: -0.075em;
+	vertical-align: middle;
 }
 
 .litespeed-wrap .button:not(:first-child) {
@@ -2583,46 +2593,61 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding: 0;
 }
 
-.litespeed-cache_page_litespeed-img_optm .nav-tab-wrapper {
-	border-bottom: none;
+.litespeed-cache_page_litespeed-img_optm .nav-tab-wrapper, .litespeed-cache_page_litespeed-cdn .nav-tab-wrapper {
+	border-bottom-color: #e5e5e5;
+}
+
+.litespeed-cache_page_litespeed-img_optm .litespeed-body, .litespeed-cache_page_litespeed-cdn .litespeed-body {
+	box-shadow: none;
+}
+
+.litespeed-cache_page_litespeed-img_optm .litespeed-wrap .nav-tab:not(.nav-tab-active), .litespeed-cache_page_litespeed-cdn .litespeed-wrap .nav-tab:not(.nav-tab-active) {
+	border-bottom-color: #e5e5e5;
+}
+
+.litespeed-cache_page_litespeed-img_optm .nav-tab-active, .litespeed-cache_page_litespeed-cdn .nav-tab-active {
+	border-left-color: #e5e5e5;
+	border-right-color: #e5e5e5;
+	border-top-color: #e5e5e5;
 	position: relative;
 	z-index: 2;
 }
 
-.litespeed-cache_page_litespeed-img_optm .litespeed-body {
-	box-shadow: none;
-	border: none;
-	background: none;
-	padding: 0;
-}
-
-.litespeed-cache_page_litespeed-img_optm [data-litespeed-layout]:not([data-litespeed-layout='summary']) {
-	background: #fff;
-	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	padding: 1px 20px 20px 20px;
+.litespeed-cache_page_litespeed-img_optm [data-litespeed-layout='summary'], .litespeed-cache_page_litespeed-cdn [data-litespeed-layout='qc'] {
+	margin: -2px -21px -21px -21px;
+	background: #f0f0f1;
 }
 
 .litespeed-column-secondary {
 	background: #f9fafc;
 }
 
-.litespeed-column-with-boxes > div:first-child {
-	padding-right: 25px;
+.litespeed-column-with-boxes .postbox {
+	border-color: #e5e5e5;
 }
 
-.litespeed-column-with-boxes > div:last-child {
+.litespeed-column-with-boxes .litespeed-width-7-10 {
+	padding: 0;
+}
+
+@media screen and (min-width: 815px) {
+	.litespeed-column-with-boxes > div.litespeed-column-left {
+		padding-right: 25px;
+	}
+}
+
+.litespeed-column-with-boxes > div.litespeed-column-right {
 	background: #f1f1f1;
 	padding-top: 0;
 	padding-right: 0;
 	padding-left: 0;
 }
 
-.litespeed-column-with-boxes > div:last-child .litespeed-postbox:last-child {
+.litespeed-column-with-boxes > div.litespeed-column-right .litespeed-postbox:last-child {
 	margin-bottom: 0;
 }
 
-.litespeed-image-optim-summary {
+.litespeed-image-optim-summary, .litespeed-column-left-inside {
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	position: relative;
 	padding: 1px 20px 20px 20px;
@@ -2630,7 +2655,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 	border: 1px solid #e5e5e5;
 }
 
-.litespeed-image-optim-summary-footer {
+.litespeed-image-optim-summary-footer, .litespeed-column-with-boxes-footer {
 	border-top: 1px solid #efefef;
 	background: #f9f9f9;
 	padding: 20px;
@@ -2655,12 +2680,12 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 0;
 }
 
-.litespeed-image-optim-summary > h3:first-child {
+.litespeed-image-optim-summary > h3:first-child , .litespeed-column-left-inside > h3:first-child {
 	margin-top: 1.6em;
 	font-size: 1.2em;
 }
 
-.litespeed-image-optim-summary > h3:first-child .litespeed-quic-icon {
+.litespeed-image-optim-summary > h3:first-child .litespeed-quic-icon, .litespeed-column-left-inside > h3:first-child .litespeed-quic-icon {
 	width: 1.2em;
 	height: 1.4em;
 	background-size: contain;
@@ -2854,6 +2879,10 @@ g.litespeed-pie_info .litespeed-pie-done {
 	font-size: 14px;
 }
 
+.litespeed-postbox .inside .litespeed-title a {
+	font-size: 13px;
+}
+
 .litespeed-dashboard-stats-wrapper .litespeed-postbox:not(:last-child) {
 	margin-right: -1px;
 }
@@ -2981,7 +3010,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 	padding: 0.3em 0.6em 0.35em 0.6em;
 	font-weight: normal;
 	display: inline-block;
-	margin-left: 0.2em;
+	margin-left: 8px;
 	min-width: 2em;
 }
 
@@ -3123,6 +3152,26 @@ a.litespeed-redetect {
 	cursor: default;
 }
 
+.litespeed-postbox--quiccloud {
+	border-color: #253545;
+}
+
+.litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title {
+	background: #253545;
+	color: #e2e4e5;
+	margin-top: -11px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a {
+	color: #8abff8;
+}
+
+.litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a:hover {
+	color: #a5caf2;
+}
+
 @media screen and (max-width: 1400px) and (min-width: 1024px) {
 	.litespeed-dashboard-stats-wrapper .litespeed-postbox {
 		flex-grow: 1;
@@ -3207,18 +3256,29 @@ a.litespeed-redetect {
 }
 
 .litespeed-dashboard-unlock {
-    text-align: center;
-    background-color: #fff;
-    box-shadow: 0 .125rem .4rem -.0625rem rgba(0, 0, 0, .03), 0px 3px 0px 0px rgba(0, 0, 0, .07);
-    border-radius: .5rem;
-    padding: 2rem;
-    position: absolute;
-    z-index: 5;
-    left: 50%;
-    transform: translate(-50%, 25%);
-    top: 0;
-    max-width: 96%;
-    width: 540px;
+	text-align: center;
+	background-color: #fff;
+	box-shadow: 0 .125rem .4rem -.0625rem rgba(0, 0, 0, .03), 0px 3px 0px 0px rgba(0, 0, 0, .07);
+	border-radius: .5rem;
+	padding: 2rem;
+	position: absolute;
+	z-index: 5;
+	left: 50%;
+	transform: translate(-50%, 25%);
+	top: 0;
+	max-width: 96%;
+	width: 540px;
+}
+
+.litespeed-dashboard-unlock.litespeed-dashboard-unlock--inline {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%, 0);
+	border: 1px solid #e5e5e5;
+	background: #fafafa;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	max-width: calc(100% - 4rem);
 }
 
 .litespeed-dashboard-unlock-title {
@@ -3241,21 +3301,23 @@ p.litespeed-dashboard-unlock-footer{
 }
 
 .litespeed-qc-text-gradient {
-    background: -webkit-linear-gradient(130deg, #ff2a91, #2295d8 60%, #161f29);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
+	background: -webkit-linear-gradient(130deg, #ff2a91, #2295d8 60%, #161f29);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	font-weight: 800;
 }
+
+.litespeed-dashboard-unlock a.button.button-primary, .litespeed-wrap .button.litespeed-button-cta {
+	font-size: 1.2em;
+	padding: 0.35em 1em 0.35em 0.85em;
+	min-width: 210px;
+	text-align: center;}
 
 .litespeed-dashboard-unlock a.button.button-primary {
-    font-size: 1.2em;
-    padding: 0.35em 1em 0.35em 0.85em;
-    min-width: 210px;
-    text-align: center;
-    margin-top: 10px;
+	margin-top:10px;
 }
 
-.litespeed-dashboard-unlock a.button.button-primary .dashicons {
+.litespeed-dashboard-unlock a.button.button-primary .dashicons, .litespeed-wrap .button.litespeed-button-cta .dashicons {
 	vertical-align: baseline;
 	top: 0.25em;
 	margin-right: 0.5em;
@@ -3300,11 +3362,11 @@ p.litespeed-dashboard-unlock-footer{
 }
 
 @media screen and (max-width: 340px) {
-	.litespeed-dashboard-unlock a.button.button-primary {
+	.litespeed-dashboard-unlock a.button.button-primary, .litespeed-wrap .button.litespeed-button-cta {
 		padding: 0.35em 1em 0.35em 1em;
 	}
 
-	.litespeed-dashboard-unlock a.button.button-primary .dashicons {
+	.litespeed-dashboard-unlock a.button.button-primary .dashicons, .litespeed-wrap .button.litespeed-button-cta .dashicons {
 		display: none;
 	}
 
@@ -4230,4 +4292,88 @@ a.litespeed-media-href svg:hover {
 .litespeed-wrap .litespeed-redetect[aria-label][data-balloon-pos][data-balloon-pos='up']:hover:after,
 .litespeed-wrap .litespeed-redetect[aria-label][data-balloon-pos][data-balloon-pos='up'][data-balloon-visible]:after {
 	transform: translate(0, 0);
+}
+
+/* =======================================
+					QC
+======================================= */
+
+.litespeed-col-status-data h3,
+.litespeed-col-status-data h4 {
+	margin-bottom: 0;
+	margin-top: 20px;
+}
+
+.litespeed-col-status-data h3 .dashicons {
+	vertical-align: bottom;
+}
+
+.litespeed-col-status-data h4 .dashicons {
+	vertical-align: sub;
+}
+
+/* To use on dark bg */
+.litespeed-wrap .litespeed-qc-button {
+	background-color: #5efffc;
+	border: 1px solid #00d0cb;
+	box-shadow: 0px 2px 0px 0px #00d0cb;
+	color: #161f29;
+	font-weight: 600;
+	font-size: 15px;
+	padding: 12px 24px;
+	border-radius: 3px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	transition: .25s;
+}
+
+.litespeed-wrap .litespeed-qc-button:hover {
+	background: #21a29f21;
+	color: #5efffc;
+	border-color: #00d0cb;
+}
+
+.litespeed-wrap .litespeed-qc-button .dashicons {
+	top: auto;
+}
+
+.litespeed-postbox.litespeed-qc-promo-box {
+	background: #161e29 linear-gradient(110deg, #171c2fbd, #252766ab);
+	border-radius: 5px;
+	box-shadow: 0px 4px 0px 0px #161d2e;
+	border: none;
+}
+
+.litespeed-postbox.litespeed-qc-promo-box .inside {
+	padding: 25px;
+	margin: 0;
+}
+
+.litespeed-dashboard-group .litespeed-postbox.litespeed-qc-promo-box {
+	box-shadow: none;
+}
+
+.litespeed-dashboard-group .litespeed-postbox.litespeed-qc-promo-box .inside {
+	padding: 20px 25px;
+}
+
+.litespeed-postbox.litespeed-qc-promo-box h3 {
+	margin-top: 0;
+	color: #fff;
+	font-size: 24px;
+	font-weight: 800;
+	line-height: 1.4em;
+}
+
+.litespeed-postbox.litespeed-qc-promo-box h3 .litespeed-quic-icon {
+	width: 24px;
+	height: 28px;
+	background-size: contain;
+	margin-right: 10px;
+}
+
+.litespeed-postbox.litespeed-qc-promo-box p {
+	color: #dbdbdb;
+	font-size: 1rem;
 }

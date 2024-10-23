@@ -10,73 +10,81 @@ $cloud_summary = Cloud::get_summary();
 
 ?>
 
-<div class="litespeed-dashboard-header">
-	<h3 class="litespeed-dashboard-title"><?php echo __('QUIC.cloud', 'litespeed-cache'); ?></h3>
-	<hr>
-	<a class="button litespeed-btn-success litespeed-right10" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_STATUS); ?>">
-		<span class="dashicons dashicons-update"></span>
-		<?php echo __('Sync', 'litespeed-cache'); ?>
-		<span class="screen-reader-text"><?php echo __('Refresh QUIC.cloud status', 'litespeed-cache'); ?></span>
-	</a>
-	<?php echo __('To manage QUIC.cloud options, please visit', 'litespeed-cache'); ?>: <a href="<?php echo $__cloud->qc_link(); ?>" target="_blank" class="button litespeed-btn-warning">My QUIC.cloud</a>
-</div>
+<div class="litespeed-flex-container litespeed-column-with-boxes">
 
-<?php if (!$__cloud->activated()) : ?>
-	<div class="litespeed-top20 litespeed-relative">
-		<div class="litespeed-dashboard-unlock">
-			<div>
-				<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient">Accelerate, Optimize, Protect</strong></h3>
-				<p class="litespeed-dashboard-unlock-desc">Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.</p>
-				<p>Free monthly quota available.</p>
-				<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array('ref' => 'cdn')); ?>"><span class="dashicons dashicons-yes"></span>Enable QUIC.cloud services</a></p>
-				<p class="litespeed-dashboard-unlock-footer">
-					<a href="https://www.quic.cloud/" target="_blank">Learn More about QUIC.cloud</a><br>
-					QUIC.cloud services are not required
-				</p>
+	<div class="litespeed-width-7-10 litespeed-column-left litespeed-cdn-summary-wrapper">
+		<div class="litespeed-column-left-inside">
+
+			<h3>
+				<?php if ($__cloud->activated()) : ?>
+					<a class="button button-small litespeed-right litespeed-learn-more" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_SYNC_STATUS); ?>">
+						<span class="dashicons dashicons-update"></span> <?php echo __('Refresh Status', 'litespeed-cache'); ?>
+					</a>
+				<?php endif; ?>
+				<span class="litespeed-quic-icon"></span> <?php echo __('QUIC.cloud CDN Status Overview', 'litespeed-cache'); ?>
+			</h3>
+			<p class="litespeed-desc"><?php echo __('Check the status of your most important settings and the health of your CDN setup here.', 'litespeed-cache'); ?></p>
+
+			<?php if (!$__cloud->activated()) : ?>
+				<div class="litespeed-dashboard-unlock litespeed-dashboard-unlock--inline">
+					<div>
+						<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient"><?php echo __('Accelerate, Optimize, Protect', 'litespeed-cache'); ?></strong></h3>
+						<p class="litespeed-dashboard-unlock-desc"><?php echo __('Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache'); ?></p>
+						<p><?php echo __('Free monthly quota available.', 'litespeed-cache'); ?></p>
+						<p><a class="button button-primary" href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array('ref' => 'cdn')); ?>"><span class="dashicons dashicons-yes"></span><?php echo __('Enable QUIC.cloud services', 'litespeed-cache'); ?></a></p>
+						<p class="litespeed-dashboard-unlock-footer">
+							<?php echo __('QUIC.cloud provides CDN and online optimization services, and is not required. You may use many features of this plugin without QUIC.cloud.', 'litespeed-cache'); ?><br>
+							<a href="https://www.quic.cloud/" target="_blank"><?php echo __('Learn More about QUIC.cloud', 'litespeed-cache'); ?></a>
+						</p>
+					</div>
+				</div>
+			<?php elseif (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
+				<div class="litespeed-top20">
+					<p><?php echo __('QUIC.cloud CDN is currently <strong>fully disabled</strong>.', 'litespeed-cache'); ?></p>
+					<p>
+						<?php Doc::learn_more(
+							Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ENABLE_CDN, false, null, array('ref' => 'cdn')),
+							'<span class="dashicons dashicons-yes"></span>' . __('Enable QUIC.cloud CDN', 'litespeed-cache'),
+							true,
+							'button button-primary litespeed-button-cta'
+						); ?>
+					</p>
+					<h3 class="litespeed-title-section"><?php echo __('Content Delivery Network Service', 'litespeed-cache'); ?></h3>
+					<p class="litespeed-text-md">Serve your visitors fast <strong class="litespeed-qc-text-gradient"><?php echo __('no matter where they live.', 'litespeed-cache'); ?></strong>
+					<p>
+						<?php echo sprintf(__('Best available WordPress performance, globally fast TTFB, easy setup, and <a %s>more</a>!', 'litespeed-cache'), ' href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" target="_blank"'); ?>
+					</p>
+				</div>
+			<?php else : ?>
+				<?php echo $__cloud->load_qc_status_for_dash('cdn_dash'); ?>
+			<?php endif; ?>
+
+			<?php if ($__cloud->activated()) : ?>
+				<div class="litespeed-column-with-boxes-footer">
+					<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET, false, null, array('ref' => 'cdn')); ?>" class="litespeed-right litespeed-danger" data-litespeed-cfm="<?php echo __('Are you sure you want to disconnect from QUIC.cloud? This will not remove any data from the QUIC.cloud dashboard.', 'litespeed-cache'); ?>"><?php echo __('Disconnect from QUIC.cloud', 'litespeed-cache'); ?></a>
+					<div class="clear"></div>
+				</div>
+			<?php endif; ?>
+
+		</div>
+	</div>
+
+	<div class="litespeed-width-3-10 litespeed-column-right">
+
+		<div class="postbox litespeed-postbox">
+			<div class="inside">
+				<h3 class="litespeed-title">
+					<?php echo __('QUIC.cloud CDN Options', 'litespeed-cache'); ?>
+				</h3>
+				<p><?php echo __('To manage your QUIC.cloud options, go to QUIC.cloud Dashboard.', 'litespeed-cache'); ?></p>
+				<?php if (!$__cloud->activated()) : ?>
+					<p class="litespeed-top20"><button type="button" class="button button-primary disabled"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></button></p>
+				<?php else : ?>
+					<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="_blank" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+				<?php endif; ?>
 			</div>
 		</div>
+
 	</div>
 
-	<div class="litespeed-top20">
-		<?php Doc::learn_more(
-			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array('ref' => 'cdn')),
-			__('Activate QUIC.cloud', 'litespeed-cache'),
-			true,
-			'button litespeed-btn-warning'
-		); ?>
-	</div>
-<?php elseif (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
-	<div class="litespeed-top20">
-		<p class="litespeed-text-bold litespeed-margin-bottom20">
-			<?php Doc::learn_more(
-				Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ENABLE_CDN),
-				__('Enable QUIC.cloud CDN', 'litespeed-cache'),
-				true,
-				'button litespeed-btn-success'
-			); ?>
-		</p>
-		<p class="litespeed-margin-y5">
-			<?php echo __('Best available WordPress performance', 'litespeed-cache'); ?>
-		</p>
-		<p class="litespeed-margin-y5">
-			<?php echo sprintf(__('Globally fast TTFB, easy setup, and <a %s>more</a>!', 'litespeed-cache'), ' href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" target="_blank"'); ?>
-		</p>
-		<div class="litespeed-top10">
-			<img src="<?php echo LSWCP_PLUGIN_URL; ?>assets/img/quic-cloud-logo.svg" alt="QUIC.cloud" width="45%" height="auto">
-		</div>
-	</div>
-<?php else : ?>
-	<?php echo $__cloud->load_qc_status_for_dash('cdn_dash'); ?>
-<?php endif; ?>
-
-
-<?php if ($__cloud->activated()) : ?>
-	<div class="litespeed-top20 litespeed-flex">
-		<?php Doc::learn_more(
-			Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET, false, null, array('ref' => 'cdn')),
-			__('Clear QUIC.cloud activation', 'litespeed-cache'),
-			true,
-			'button litespeed-btn-danger litespeed-align-right'
-		); ?>
-	</div>
-<?php endif; ?>
+</div>
