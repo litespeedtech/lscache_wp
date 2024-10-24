@@ -21,9 +21,11 @@ class Cloud extends Base
 	const SVC_D_ACTIVATE = 'd/activate';
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
+	const SVC_D_LINK = 'd/link';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
 	const SVC_D_STATUS = 'd/status/';
+	const SVC_D_STATUS_CDN_CLI = 'd/status/cdn_cli';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
 	const SVC_D_USAGE = 'd/usage';
@@ -58,9 +60,11 @@ class Cloud extends Base
 		self::SVC_D_ACTIVATE,
 		self::SVC_U_ACTIVATE,
 		self::SVC_D_ENABLE_CDN,
+		self::SVC_D_LINK,
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
+		self::SVC_D_STATUS_CDN_CLI,
 		// self::API_NEWS,
 		self::API_REPORT,
 		// self::API_VER,
@@ -330,6 +334,43 @@ class Cloud extends Base
 		);
 		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
+	}
+
+	/**
+	 * Show QC Account CDN status
+	 *
+	 * @since 7.0
+	 */
+	public function cdn_status_cli()
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array();
+		$res = $this->post(self::SVC_D_STATUS_CDN_CLI, $data);
+		return $res;
+	}
+
+	/**
+	 * Link to QC Account for CLI
+	 *
+	 * @since 7.0
+	 */
+	public function link_qc_cli($email, $key)
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'qc_acct_email' => $email,
+			'qc_acct_apikey' => $key,
+		);
+		$res = $this->post(self::SVC_D_LINK, $data);
+		return $res;
 	}
 
 	/**

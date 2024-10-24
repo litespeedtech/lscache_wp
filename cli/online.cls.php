@@ -101,6 +101,32 @@ class Online
 	}
 
 	/**
+	 * Link user account by api key
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Link user account by api key
+	 *     $ wp litespeed-online link --email=xxx@example.com --api-key=xxxx
+	 *
+	 */
+	public function link($args, $assoc_args)
+	{
+		if (empty($assoc_args['email']) || empty($assoc_args['api-key'])) {
+			WP_CLI::error('Init CDN failed! Missing parameters `--email` or `--api-key`.');
+			return;
+		}
+
+		$resp = $this->__cloud->link_qc_cli($assoc_args['email'], $assoc_args['api-key']);
+		if (!empty($resp['qc_activated'])) {
+			$this->__cloud->update_qc_activation($resp['qc_activated'], true);
+		} else {
+			WP_CLI::error('Link failed!');
+		}
+	}
+
+	/**
 	 * Sync usage data from QUIC.cloud
 	 *
 	 * ## OPTIONS
@@ -134,6 +160,23 @@ class Online
 		}
 
 		WP_CLI\Utils\format_items('table', $list, array('key', 'used', 'quota', 'PayAsYouGo_Used', 'PayAsYouGo_Balance'));
+	}
+
+	/**
+	 * Check QC account status
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Check QC account status
+	 *     $ wp litespeed-online cdn_status
+	 *
+	 */
+	public function cdn_status($args, $assoc_args)
+	{
+		$resp = $this->__cloud->cdn_status_cli();
+		WP_CLI::log(json_encode($resp));
 	}
 
 	/**
