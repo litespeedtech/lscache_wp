@@ -1,10 +1,12 @@
 <?php
+
 /**
  * LiteSpeed File Operator Library Class
  * Append/Replace content to a file
  *
  * @since 1.1.0
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -132,6 +134,10 @@ class File
 	 */
 	public static function save($filename, $data, $mkdir = false, $append = false, $silence = true)
 	{
+		if (is_null($filename)) {
+			return $silence ? false : __('Filename is empty!', 'litespeed-cache');
+		}
+
 		$error = false;
 		$folder = dirname($filename);
 

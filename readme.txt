@@ -274,6 +274,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
+* **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
 
 = 6.5.2 - Oct 17 2024 =
 * **Crawler** Removed barely used Role Simulator from Crawler, to prevent potential security issues.
