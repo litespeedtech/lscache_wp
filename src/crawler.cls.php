@@ -407,7 +407,7 @@ class Crawler extends Root
 			$this->_crawler_conf['load_limit'] = $_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT];
 		}
 		if ($this->_crawler_conf['load_limit'] == 0) {
-			self::debug('🛑 Terminated cralwer due to load limit set to 0');
+			self::debug('🛑 Terminated crawler due to load limit set to 0');
 			return false;
 		}
 
