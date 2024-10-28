@@ -406,7 +406,7 @@ class Crawler extends Root
 		} elseif (!empty($_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT]) && $_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT] < $this->_crawler_conf['load_limit']) {
 			$this->_crawler_conf['load_limit'] = $_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT];
 		}
-		if ($this->_crawler_conf['load_limit'] != 0) {
+		if ($this->_crawler_conf['load_limit'] == 0) {
 			self::debug('🛑 Terminated cralwer due to load limit set to 0');
 			return false;
 		}
