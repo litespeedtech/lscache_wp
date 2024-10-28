@@ -269,6 +269,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
 * **Crawler** Default crawler `Run Duration` to 900 seconds and dropped the setting.
 * **Crawler** Crawler will be stopped when load limit setting is 0.
+* **Crawler** Used `127.0.0.1` instead of server IP setting for DNS resolve when crawling.
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
 * **Tag** Fixed a potential warning in tags. (ikiterder)

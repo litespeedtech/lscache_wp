@@ -952,22 +952,22 @@ class Crawler extends Root
 		// 	$options[ CURL_HTTP_VERSION_2 ] = 1;
 
 		// IP resolve
-		if ($this->conf(Base::O_SERVER_IP)) {
-			Utility::compatibility();
-			if (($this->conf(Base::O_CRAWLER_DROP_DOMAIN) || !$crawler_only) && $this->_crawler_conf['base']) {
-				// Resolve URL to IP
-				$parsed_url = parse_url($this->_crawler_conf['base']);
+		// if ($this->conf(Base::O_SERVER_IP)) {
+		Utility::compatibility();
+		if (($this->conf(Base::O_CRAWLER_DROP_DOMAIN) || !$crawler_only) && $this->_crawler_conf['base']) {
+			// Resolve URL to IP
+			$parsed_url = parse_url($this->_crawler_conf['base']);
 
-				if (!empty($parsed_url['host'])) {
-					$dom = $parsed_url['host'];
-					$port = $parsed_url['scheme'] == 'https' ? '443' : '80';
-					$url = $dom . ':' . $port . ':' . $this->conf(Base::O_SERVER_IP);
+			if (!empty($parsed_url['host'])) {
+				$dom = $parsed_url['host'];
+				$port = $parsed_url['scheme'] == 'https' ? '443' : '80';
+				$url = $dom . ':' . $port . ':127.0.0.1'; // . $this->conf(Base::O_SERVER_IP);
 
-					$options[CURLOPT_RESOLVE] = array($url);
-					$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
-				}
+				$options[CURLOPT_RESOLVE] = array($url);
+				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
 			}
 		}
+		// }
 
 		// if is walker
 		// $options[ CURLOPT_FRESH_CONNECT ] = true;
