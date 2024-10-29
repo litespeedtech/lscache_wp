@@ -255,13 +255,17 @@ class Router extends Base
 		// 	Debug2::debug( '[Router] user agent not match' );
 		// 	return;
 		// }
+		if (self::get_ip() !== '127.0.0.1') {
+			self::debug('❌ Role simulate uid denied! Not localhost visit!');
+			return;
+		}
 
 		// Flash hash validation
 		if (!empty($_COOKIE['litespeed_flash_hash'])) {
 			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
-					self::debug('role simulate uid ' . $hash_data['uid']);
+					self::debug('Role simulator flash hash matched, escalating user to be uid=' . $hash_data['uid']);
 					self::delete_option(self::ITEM_FLASH_HASH);
 					wp_set_current_user($hash_data['uid']);
 					return;
@@ -269,25 +273,16 @@ class Router extends Base
 			}
 		}
 		// Hash validation
-		// if (!empty($_COOKIE['litespeed_hash'])) {
-		// 	$hash_data = self::get_option(self::ITEM_HASH, array());
-		// 	if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
-		// 		if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
-		// 			if (empty($hash_data['ip'])) {
-		// 				$hash_data['ip'] = self::get_ip();
-		// 				self::update_option(self::ITEM_HASH, $hash_data);
-		// 			} else {
-		// 				$server_ips = apply_filters('litespeed_server_ips', array($hash_data['ip']));
-		// 				if (!self::ip_access($server_ips)) {
-		// 					self::debug('WARNING: role simulator ip check failed [db ip] ' . $hash_data['ip'], $server_ips);
-		// 					return;
-		// 				}
-		// 			}
-		// 			wp_set_current_user($hash_data['uid']);
-		// 			return;
-		// 		}
-		// 	}
-		// }
+		if (!empty($_COOKIE['litespeed_hash'])) {
+			$hash_data = self::get_option(self::ITEM_HASH, array());
+			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
+				if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
+					self::debug('Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
+					wp_set_current_user($hash_data['uid']);
+					return;
+				}
+			}
+		}
 
 		self::debug('WARNING: role simulator hash not match');
 	}
