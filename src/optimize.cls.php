@@ -274,7 +274,11 @@ class Optimize extends Base
 	private function _optimize()
 	{
 		global $wp;
-		$this->_request_url = home_url($wp->request);
+		$this->_request_url = get_permalink();
+		// Backup, in case get_permalink() fails.
+		if (!$this->_request_url) {
+			$this->_request_url = home_url($wp->request);
+		}
 
 		$this->cfg_css_min = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_MIN);
 		$this->cfg_css_comb = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_COMB);
