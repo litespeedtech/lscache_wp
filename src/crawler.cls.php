@@ -393,7 +393,10 @@ class Crawler extends Root
 		 * Limit delay to use server setting
 		 * @since 1.8.3
 		 */
-		$this->_crawler_conf['run_delay'] = $this->conf(Base::O_CRAWLER_USLEEP); // microseconds
+		$this->_crawler_conf['run_delay'] = 500; // microseconds
+		if (defined('LITESPEED_CRAWLER_USLEEP') && LITESPEED_CRAWLER_USLEEP > $this->_crawler_conf['run_delay']) {
+			$this->_crawler_conf['run_delay'] = LITESPEED_CRAWLER_USLEEP;
+		}
 		if (!empty($_SERVER[Base::ENV_CRAWLER_USLEEP]) && $_SERVER[Base::ENV_CRAWLER_USLEEP] > $this->_crawler_conf['run_delay']) {
 			$this->_crawler_conf['run_delay'] = $_SERVER[Base::ENV_CRAWLER_USLEEP];
 		}
@@ -927,6 +930,7 @@ class Crawler extends Root
 	 */
 	private function _get_curl_options($crawler_only = false)
 	{
+		$CRAWLER_TIMEOUT = defined('LITESPEED_CRAWLER_TIMEOUT') ? LITESPEED_CRAWLER_TIMEOUT : 30;
 		$options = array(
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_HEADER => true,
@@ -934,7 +938,7 @@ class Crawler extends Root
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
-			CURLOPT_TIMEOUT => $this->conf(Base::O_CRAWLER_TIMEOUT), // Larger timeout to avoid incorrect blacklist addition #900171
+			CURLOPT_TIMEOUT => $CRAWLER_TIMEOUT, // Larger timeout to avoid incorrect blacklist addition #900171
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
