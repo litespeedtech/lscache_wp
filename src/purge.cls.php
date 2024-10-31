@@ -51,14 +51,17 @@ class Purge extends Base
 	public function init()
 	{
 		//register purge actions
-		$purge_post_events = array(
-			// 'edit_post',
-			// 'save_post',
-			'delete_post',
-			'wp_trash_post',
-			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-			'wp_update_comment_count', // TODO: check if needed for non ESI
+		// Mostly used values: edit_post, save_post, delete_post, wp_trash_post, clean_post_cache, wp_update_comment_count
+		$purge_post_events = add_filter(
+			'litespeed_purge_post_events',
+			array(
+				'delete_post',
+				'wp_trash_post',
+				// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+				'wp_update_comment_count', // TODO: check if needed for non ESI
+			)
 		);
+
 		foreach ($purge_post_events as $event) {
 			// this will purge all related tags
 			add_action($event, array($this, 'purge_post'));
@@ -229,6 +232,8 @@ class Purge extends Base
 	private function _purge_all_lscache($silence = false)
 	{
 		$this->_add('*');
+
+		do_action('litespeed_purged_all_lscache');
 
 		if (!$silence) {
 			$msg = __('Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache');
@@ -405,6 +410,8 @@ class Purge extends Base
 
 			return false;
 		}
+
+		do_action('litespeed_purged_all_opcache');
 
 		// Purge opcode cache
 		opcache_reset();
@@ -607,6 +614,7 @@ class Purge extends Base
 	public static function set_purge_related()
 	{
 		self::cls()->_purge_related = true;
+		do_action('litespeed_purged_related');
 	}
 
 	/**
@@ -618,6 +626,7 @@ class Purge extends Base
 	public static function set_purge_single()
 	{
 		self::cls()->_purge_single = true;
+		do_action('litespeed_purged_single');
 	}
 
 	/**
@@ -677,6 +686,7 @@ class Purge extends Base
 
 		$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
+		do_action('litespeed_purged_frontpage');
 	}
 
 	/**
@@ -691,6 +701,7 @@ class Purge extends Base
 
 		$msg = __('Notified LiteSpeed Web Server to purge all pages.', 'litespeed-cache');
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
+		do_action('litespeed_purged_pages');
 	}
 
 	/**
@@ -738,6 +749,7 @@ class Purge extends Base
 		self::add(Tag::TYPE_ARCHIVE_TERM . $cat->term_id);
 
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
+		do_action('litespeed_purged_cat');
 	}
 
 	/**
@@ -765,6 +777,7 @@ class Purge extends Base
 		self::add(Tag::TYPE_ARCHIVE_TERM . $term->term_id);
 
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
+		do_action('litespeed_purged_tag');
 	}
 
 	/**
@@ -797,6 +810,7 @@ class Purge extends Base
 		self::add($hash, $purge2);
 
 		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
+		do_action('litespeed_purged_link');
 	}
 
 	/**
@@ -849,6 +863,7 @@ class Purge extends Base
 	public static function purge_esi($tag)
 	{
 		self::add(Tag::TYPE_ESI . $tag);
+		do_action('litespeed_purged_esi');
 	}
 
 	/**
@@ -861,6 +876,8 @@ class Purge extends Base
 	{
 		self::add(Tag::TYPE_ARCHIVE_POSTTYPE . $post_type);
 		self::add($post_type);
+
+		do_action('litespeed_purged_posttype', $post_type);
 	}
 
 	/**
@@ -888,6 +905,7 @@ class Purge extends Base
 		}
 
 		// $this->cls( 'Control' )->set_stale();
+		do_action('litespeed_purged_post', $pid);
 	}
 
 	/**
@@ -906,8 +924,11 @@ class Purge extends Base
 				return;
 			}
 		}
+
 		self::add(Tag::TYPE_WIDGET . $widget_id);
 		self::add_private(Tag::TYPE_WIDGET . $widget_id);
+
+		do_action('litespeed_purged_widget', $widget_id);
 	}
 
 	/**
@@ -924,11 +945,14 @@ class Purge extends Base
 		if (!isset($wp_widget_factory->widgets['WP_Widget_Recent_Comments'])) {
 			return;
 		}
+
 		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'];
 		if (!is_null($recent_comments)) {
 			self::add(Tag::TYPE_WIDGET . $recent_comments->id);
 			self::add_private(Tag::TYPE_WIDGET . $recent_comments->id);
 		}
+
+		do_action('litespeed_purged_comment_widget', $recent_comments->id);
 	}
 
 	/**
@@ -942,6 +966,7 @@ class Purge extends Base
 		if ($this->conf(self::O_CACHE_TTL_FEED) > 0) {
 			self::add(Tag::TYPE_FEED);
 		}
+		do_action('litespeed_purged_feeds');
 	}
 
 	/**
@@ -953,6 +978,7 @@ class Purge extends Base
 	public static function purge_on_logout()
 	{
 		self::add_private('*');
+		do_action('litespeed_purged_on_logout');
 	}
 
 	/**
