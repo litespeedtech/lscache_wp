@@ -256,8 +256,8 @@ class Online
 	{
 		$svc = $param[0];
 		$json = $this->__cloud->detect_cloud($svc);
-		WP_CLI::success('Updated closest server.');
+		if ($json) WP_CLI::success('Updated closest server.');
 		WP_CLI::log('svc = ' . $svc);
-		WP_CLI::log('node = ' . $json);
+		WP_CLI::log('node = ' . ($json ?: '-'));
 	}
 }
