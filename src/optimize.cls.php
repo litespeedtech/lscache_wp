@@ -554,6 +554,120 @@ class Optimize extends Base
 		$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
 	}
 
+	private function round_to_hundred($number, $min = true){
+		return round($number, -2, ( $min ? PHP_ROUND_HALF_DOWN : PHP_ROUND_HALF_UP ) );
+	}
+
+	private function convert_to_api_v1($qs){
+		// Replace css2? withs css?.
+		$args = str_replace('css2?', 'css?', $qs);
+		// Save if has display and remove it.
+		$has_display = strpos($args, '&display=swap');
+		$args = str_replace('&display=swap', '', $args);
+		// Get families.
+		$args = explode('?', $args);
+		// Prepare new QS.
+		$new_qs = $args[0].'?family=';
+		// Work with families list.
+		$args = $args[1];
+		// Replace family= with ''.
+		$args = str_replace('family=', '', $args);
+		// Families to array.
+		$args = explode('&', $args);
+		// New families.
+		$families = array();
+		
+		// Work on each family.
+		foreach($args as $arg){
+			// Family does not have options.
+			if(!strpos($arg, ':')){
+				$families[] = $arg;
+			}
+			// Family have options.
+			else{
+				$add_data = '';
+				$options = explode(':', $arg);
+				// Convert font name.
+				$add_data .= $options[0];
+				
+				
+				// Convert font options.
+				if(isset($options[1])){
+					$add_values_array = [];
+					$add_data .= ':';
+
+					// Has italic only.
+					if($options[1] == 'ital'){
+						foreach( [100,200,300,400,500,600,700,800,900] as $weight ){
+							$add_values_array[] = $weight;
+							$add_values_array[] = $weight.'italic';
+						}
+					}
+					else{
+						// Font_modifier and Font_modifier_values.
+						$options = explode('@', $options[1]);
+
+						// Font modifiers and values
+						$font_modifier = explode(',', $options[0]);
+						$font_modifier_values = explode(';', $options[1]);
+
+						// Go through each values.
+						foreach($font_modifier_values as $k => &$modifier_value){
+							// Get array of values for each combination.
+							$modifier_value_array = explode(',', $modifier_value);
+
+							// Italic key.
+							$italic_key = array_search('ital', $font_modifier);
+
+							foreach($font_modifier as $k_mod => $value_modifier){
+								if($value_modifier === 'wght'){
+									// Weight setting. 
+									$value = $modifier_value_array[$k_mod];
+
+									// If height has "..".
+									if( strpos($value, '..' )){
+										$limits = explode('..', $value);
+										$limits[0] = $this->round_to_hundred($limits[0]);
+										$limits[1] = $this->round_to_hundred($limits[1], false);
+
+										$value = [];
+										for($i = $limits[0]; $i <= $limits[1]; $i = $i + 100 ){
+											$value[] = $i;
+										}
+									}
+									else{
+										// If single value.
+										$value = array($value);
+									}
+
+
+									foreach($value as $weight){
+										// Test if italic is set to 1.
+										$italic = ( $italic_key && $modifier_value_array[$italic_key] ? 'italic' : '' );
+
+										// Add value to family parameters.
+										$add_values_array[] = $weight.$italic;
+									}
+								}
+							}
+						}
+					}
+
+					$add_data .= implode(',', $add_values_array);
+				}
+
+				$families[] = $add_data;
+			}
+		}
+
+		$new_qs .= implode('|', $families);
+		if($has_display){
+			$new_qs .= '&display=swap';
+		}
+		
+		return $new_qs;
+	}
+
 	/**
 	 * Google font async
 	 *
@@ -575,10 +689,16 @@ class Optimize extends Base
 		 *
 		 * Could be multiple fonts
 		 *
+		 * CSS API V1
 		 * 	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C600%2C700%2C800%2C300&#038;ver=4.9.8' type='text/css' media='all' />
 		 *	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%7CPT+Sans+Narrow%3A400%7CMontserrat%3A600&#038;subset=latin&#038;ver=4.9.8' type='text/css' media='all' />
 		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
 		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
+		 *
+		 * CSS API V2
+		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap' />
+		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' />
+		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Honk&family=Playwrite+DK+Uloopet:wght@100..400&family=Playwrite+HR:wght@100..400&family=Playwrite+HU:wght@100..400&display=swap' />
 		 */
 		$script = 'WebFontConfig={google:{families:[';
 
@@ -586,6 +706,12 @@ class Optimize extends Base
 		foreach ($this->_ggfonts_urls as $v) {
 			$qs = wp_specialchars_decode($v);
 			$qs = urldecode($qs);
+
+			// Try to convert API V2 to V1.
+			if( strpos($qs, '/css2?') ){
+				$qs = $this->convert_to_api_v1($qs);
+			}
+
 			$qs = parse_url($qs, PHP_URL_QUERY);
 			parse_str($qs, $qs);
 
