@@ -279,6 +279,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
 * **GUI** New QUIC.cloud CDN tab.
+* **GUI** Combined all Crawler settings to a single setting tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
