@@ -30,21 +30,6 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_CRAWLER_RUN_INTERVAL; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-				<div class="litespeed-desc">
-					<?php echo __('Specify time in seconds for the time between each run interval.', 'litespeed-cache'); ?>
-					<?php $this->recommended($id); ?>
-					<?php $this->_validate_ttl($id, 60); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th>
 				<?php $id = Base::O_CRAWLER_CRAWL_INTERVAL; ?>
 				<?php $this->title($id); ?>
 			</th>
@@ -59,15 +44,14 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_CRAWLER_THREADS; ?>
+				<?php $id = Base::O_CRAWLER_SITEMAP; ?>
 				<?php $this->title($id); ?>
 			</th>
 			<td>
-				<?php $this->build_input($id, 'litespeed-input-short'); ?>
+				<?php $this->build_textarea($id); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
-					<?php $this->recommended($id); ?>
-					<?php $this->_validate_ttl($id, 1, 16); ?>
+					<?php echo __('The crawler will use your XML sitemap or sitemap index. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
+					<?php Doc::one_per_line(); ?>
 				</div>
 			</td>
 		</tr>
@@ -100,6 +84,50 @@ $this->form_action();
 				</div>
 			</td>
 		</tr>
+
+		<tr>
+			<th>
+				<?php $id = Base::O_CRAWLER_ROLES; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_textarea($id, 20); ?>
+
+				<div class="litespeed-desc">
+					<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>
+					<?php Doc::one_per_line(); ?>
+				</div>
+
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				<?php $id = Base::O_CRAWLER_COOKIES; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->enroll($id . '[name][]'); ?>
+				<?php $this->enroll($id . '[vals][]'); ?>
+
+				<div id="litespeed_crawler_simulation_div"></div>
+
+				<script type="text/babel">
+					ReactDOM.render(
+					<CrawlerSimulate list={ <?php echo json_encode($this->conf($id)); ?> } />,
+					document.getElementById( 'litespeed_crawler_simulation_div' )
+				);
+			</script>
+
+				<div class="litespeed-desc">
+					<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
+					<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/crawler/#cookie-simulation'); ?>
+					<p><?php echo sprintf(__('Use %1$s in %2$s to indicate this cookie has not been set.', 'litespeed-cache'), '<code>_null</code>', __('Cookie Values', 'litespeed-cache')); ?></p>
+				</div>
+
+			</td>
+		</tr>
+
 
 	</tbody>
 </table>

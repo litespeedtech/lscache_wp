@@ -249,15 +249,11 @@ class Lang extends Base
 			self::O_CDN_CLOUDFLARE => __('Cloudflare API', 'litespeed-cache'),
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
-			self::O_CRAWLER_RUN_INTERVAL => __('Interval Between Runs', 'litespeed-cache'),
 			self::O_CRAWLER_CRAWL_INTERVAL => __('Crawl Interval', 'litespeed-cache'),
-			self::O_CRAWLER_THREADS => __('Threads', 'litespeed-cache'),
 			self::O_CRAWLER_LOAD_LIMIT => __('Server Load Limit', 'litespeed-cache'),
 			self::O_CRAWLER_ROLES => __('Role Simulation', 'litespeed-cache'),
 			self::O_CRAWLER_COOKIES => __('Cookie Simulation', 'litespeed-cache'),
 			self::O_CRAWLER_SITEMAP => __('Custom Sitemap', 'litespeed-cache'),
-			self::O_CRAWLER_DROP_DOMAIN => __('Drop Domain from Sitemap', 'litespeed-cache'),
-			self::O_CRAWLER_MAP_TIMEOUT => __('Sitemap Timeout', 'litespeed-cache'),
 
 			self::O_DEBUG_DISABLE_ALL => __('Disable All Features', 'litespeed-cache'),
 			self::O_DEBUG => __('Debug Log', 'litespeed-cache'),

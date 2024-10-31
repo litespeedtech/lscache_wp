@@ -60,10 +60,10 @@ class Crawler extends Base
 		}
 		$is_running = time() - $summary['is_running'] <= 900;
 
-		$seconds = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
-		if ($seconds > 0) {
+		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600; // Specify time in seconds for the time between each run interval
+		if ($CRAWLER_RUN_INTERVAL > 0) {
 			$recurrence = '';
-			$hours = (int) floor($seconds / 3600);
+			$hours = (int) floor($CRAWLER_RUN_INTERVAL / 3600);
 			if ($hours) {
 				if ($hours > 1) {
 					$recurrence .= sprintf(__('%d hours', 'litespeed-cache'), $hours);
@@ -71,7 +71,7 @@ class Crawler extends Base
 					$recurrence .= sprintf(__('%d hour', 'litespeed-cache'), $hours);
 				}
 			}
-			$minutes = (int) floor(($seconds % 3600) / 60);
+			$minutes = (int) floor(($CRAWLER_RUN_INTERVAL % 3600) / 60);
 			if ($minutes) {
 				$recurrence .= ' ';
 				if ($minutes > 1) {

@@ -518,6 +518,7 @@ class Crawler extends Root
 
 		$curload /= $this->_ncpu;
 		// $curload = 1;
+		$CRAWLER_THREADS = defined('LITESPEED_CRAWLER_THREADS') ? LITESPEED_CRAWLER_THREADS : 3;
 
 		if ($this->_cur_threads == -1) {
 			// init
@@ -527,8 +528,8 @@ class Crawler extends Root
 				$curthreads = 1;
 			} else {
 				$curthreads = intval($this->_crawler_conf['load_limit'] - $curload);
-				if ($curthreads > $this->conf(Base::O_CRAWLER_THREADS)) {
-					$curthreads = $this->conf(Base::O_CRAWLER_THREADS);
+				if ($curthreads > $CRAWLER_THREADS) {
+					$curthreads = $CRAWLER_THREADS;
 				}
 			}
 		} else {
@@ -544,14 +545,14 @@ class Crawler extends Root
 				$curthreads--;
 				// }
 			} elseif ($curload + 1 < $this->_crawler_conf['load_limit']) {
-				if ($curthreads < $this->conf(Base::O_CRAWLER_THREADS)) {
+				if ($curthreads < $CRAWLER_THREADS) {
 					$curthreads++;
 				}
 			}
 		}
 
 		// $log = 'set current threads = ' . $curthreads . ' previous=' . $this->_cur_threads
-		// 	. ' max_allowed=' . $this->conf( Base::O_CRAWLER_THREADS ) . ' load_limit=' . $this->_crawler_conf[ 'load_limit' ] . ' current_load=' . $curload;
+		// 	. ' max_allowed=' . $CRAWLER_THREADS . ' load_limit=' . $this->_crawler_conf[ 'load_limit' ] . ' current_load=' . $curload;
 
 		$this->_cur_threads = $curthreads;
 		$this->_cur_thread_time = time();
@@ -781,6 +782,7 @@ class Crawler extends Root
 			exit('curl_multi_init disabled');
 		}
 		$mh = curl_multi_init();
+		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
 		$curls = array();
 		foreach ($rows as $row) {
 			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'B') {
@@ -798,7 +800,7 @@ class Crawler extends Root
 
 			// Append URL
 			$url = $row['url'];
-			if ($this->conf(Base::O_CRAWLER_DROP_DOMAIN)) {
+			if ($CRAWLER_DROP_DOMAIN) {
 				$url = $this->_crawler_conf['base'] . $row['url'];
 			}
 			curl_setopt($curls[$row['id']], CURLOPT_URL, $url);
@@ -958,7 +960,8 @@ class Crawler extends Root
 		// IP resolve
 		// if ($this->conf(Base::O_SERVER_IP)) {
 		Utility::compatibility();
-		if (($this->conf(Base::O_CRAWLER_DROP_DOMAIN) || !$crawler_only) && $this->_crawler_conf['base']) {
+		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
+		if (($CRAWLER_DROP_DOMAIN || !$crawler_only) && $this->_crawler_conf['base']) {
 			// Resolve URL to IP
 			$parsed_url = parse_url($this->_crawler_conf['base']);
 

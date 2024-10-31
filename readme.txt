@@ -273,6 +273,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Used `127.0.0.1` instead of server IP setting for DNS resolve when crawling.
 * **Crawler** Dropped `Delay` setting. Added PHP const `LITESPEED_CRAWLER_USLEEP` support.
 * **Crawler** Dropped `Timeout` setting. Added PHP const `LITESPEED_CRAWLER_TIMEOUT` support.
+* **Crawler** Dropped `Threads` setting. Added PHP const `LITESPEED_CRAWLER_THREADS` support.
+* **Crawler** Dropped `Interval Between Runs` setting. Added PHP const `LITESPEED_CRAWLER_RUN_INTERVAL` support.
+* **Crawler** Dropped `Sitemap Timeout` setting. Added PHP const `LITESPEED_CRAWLER_MAP_TIMEOUT` support.
+* **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)

@@ -200,12 +200,12 @@ class Task extends Root
 	 */
 	public function lscache_cron_filter_crawler($schedules)
 	{
-		$interval = $this->conf(Base::O_CRAWLER_RUN_INTERVAL);
+		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
 		// $wp_schedules = wp_get_schedules();
 		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
 			// 	self::debug('Crawler cron log: cron filter '.$interval.' added');
 			$schedules[self::FILTER_CRAWLER] = array(
-				'interval' => $interval,
+				'interval' => $CRAWLER_RUN_INTERVAL,
 				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
 			);
 		}

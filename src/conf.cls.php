@@ -444,11 +444,6 @@ class Conf extends Base
 
 		if ($this->_updated_ids) {
 			foreach ($this->_updated_ids as $id) {
-				// Special handler for crawler: reset sitemap when drop_domain setting changed
-				if ($id == self::O_CRAWLER_DROP_DOMAIN) {
-					$this->cls('Crawler_Map')->empty_map();
-				}
-
 				// Check if need to do a purge all or not
 				if ($this->_conf_purge_all($id)) {
 					Purge::purge_all('conf changed [id] ' . $id);
