@@ -277,13 +277,6 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 			<?php endforeach; ?>
 
 			<?php if (!empty($cloud_summary['partner'])) : ?>
-				<div style="position: absolute;z-index:2;left:0;bottom:0;">
-					<a class="litespeed-btn-success">Click here to enable QC service</a>
-
-				</div>
-			<?php endif; ?>
-
-			<?php if (!empty($cloud_summary['partner'])) : ?>
 				<div class="litespeed-postbox litespeed-postbox-partner">
 					<div class="inside">
 						<h3 class="litespeed-title"><?php echo __('Partner Benefits Provided by', 'litespeed-cache'); ?></h3>
