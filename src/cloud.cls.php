@@ -613,6 +613,19 @@ class Cloud extends Base
 			return;
 		}
 
+		if (!empty($data['qc_activated'])) {
+			// Sync conf as changed
+			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
+				$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
+				Admin_Display::success('🎊 ' . $msg);
+				// Turn on CDN option
+				$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
+				$this->cls('CDN\Quic')->try_sync_conf(true);
+			}
+
+			$this->_summary['qc_activated'] = $data['qc_activated'];
+		}
+
 		// Store the info
 		$this->_summary['next_call_ttl.' . $type] = time() + intval($data['next_call_ttl']);
 		if (!empty($data['body'])) {
