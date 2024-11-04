@@ -114,7 +114,7 @@ class Online
 	public function link($args, $assoc_args)
 	{
 		if (empty($assoc_args['email']) || empty($assoc_args['api-key'])) {
-			WP_CLI::error('Init CDN failed! Missing parameters `--email` or `--api-key`.');
+			WP_CLI::error('Link to QUIC.cloud failed! Missing parameters `--email` or `--api-key`.');
 			return;
 		}
 
