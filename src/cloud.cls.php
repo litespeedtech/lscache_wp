@@ -647,14 +647,18 @@ class Cloud extends Base
 	 */
 	public function update_cdn_status()
 	{
-		if (empty($_POST['qc_activated']) || !in_array($_POST['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+		if (empty($_POST['qc_activated']) || !in_array($_POST['qc_activated'], array('anonymous', 'linked', 'cdn', 'deleted'))) {
 			return self::err('lack_of_params');
 		}
 
 		self::debug('update_cdn_status request hash: ' . $_POST['qc_activated']);
 
-		$this->_summary['qc_activated'] = $_POST['qc_activated'];
-		$this->save_summary();
+		if ($_POST['qc_activated'] == 'deleted') {
+			$this->_reset_qc_reg();
+		} else {
+			$this->_summary['qc_activated'] = $_POST['qc_activated'];
+			$this->save_summary();
+		}
 
 		if ($_POST['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
