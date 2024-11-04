@@ -677,6 +677,7 @@ class Cloud extends Base
 		unset($this->_summary['pk_b64']);
 		unset($this->_summary['sk_b64']);
 		unset($this->_summary['qc_activated']);
+		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
 		$this->save_summary();
 		self::debug('Clear local QC activation.');
 
@@ -1561,6 +1562,7 @@ class Cloud extends Base
 	private function _reset_qc_reg()
 	{
 		unset($this->_summary['qc_activated']);
+		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
 		self::save_summary();
 
 		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');
