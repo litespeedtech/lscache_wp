@@ -222,7 +222,7 @@ class Base extends Root
 	## --------------	  Image Optm 	----------------- ##
 	## -------------------------------------------------- ##
 	const O_IMG_OPTM_AUTO = 'img_optm-auto';
-	const O_IMG_OPTM_CRON = 'img_optm-cron';
+	const O_IMG_OPTM_CRON = 'img_optm-cron'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_IMG_OPTM_ORI = 'img_optm-ori';
 	const O_IMG_OPTM_RM_BKUP = 'img_optm-rm_bkup';
 	const O_IMG_OPTM_WEBP = 'img_optm-webp';
@@ -498,7 +498,6 @@ class Base extends Root
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO => false,
-		self::O_IMG_OPTM_CRON => false,
 		self::O_IMG_OPTM_ORI => false,
 		self::O_IMG_OPTM_RM_BKUP => false,
 		self::O_IMG_OPTM_WEBP => false,
@@ -893,7 +892,6 @@ class Base extends Root
 	protected function _conf_cron($id)
 	{
 		$check_ids = array(
-			self::O_IMG_OPTM_CRON,
 			self::O_OPTM_CSS_ASYNC,
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
 			self::O_DISCUSS_AVATAR_CRON,

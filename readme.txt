@@ -267,6 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online link --email=xxx@example.com --api-key=xxxx`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
+* **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_ORI` support.
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
 * **Crawler** Default crawler `Run Duration` to 900 seconds and dropped the setting.
