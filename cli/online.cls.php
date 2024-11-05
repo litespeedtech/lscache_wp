@@ -250,12 +250,15 @@ class Online
 	 *
 	 *     # Detect closest node for one service
 	 *     $ wp litespeed-online ping img_optm
+	 *     $ wp litespeed-online ping img_optm --force
 	 *
 	 */
-	public function ping($param)
+	public function ping($param, $assoc_args)
 	{
 		$svc = $param[0];
-		$json = $this->__cloud->detect_cloud($svc);
+		$force = !empty($assoc_args['force']);
+
+		$json = $this->__cloud->detect_cloud($svc, $force);
 		if ($json) WP_CLI::success('Updated closest server.');
 		WP_CLI::log('svc = ' . $svc);
 		WP_CLI::log('node = ' . ($json ?: '-'));
