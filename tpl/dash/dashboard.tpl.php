@@ -30,6 +30,8 @@ $ccss_count = count($this->load_queue('ccss'));
 $ucss_count = count($this->load_queue('ucss'));
 $placeholder_queue_count = count($this->load_queue('lqip'));
 $vpi_queue_count = count($this->load_queue('vpi'));
+
+$can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE != 'NONE' ? true : false;
 ?>
 
 <div class="litespeed-dashboard">
@@ -344,60 +346,75 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 						<h3 class="litespeed-title">
 							<?php echo __('Page Load Time', 'litespeed-cache'); ?>
 
-							<?php $closest_server = Cloud::get_summary('server.' . CLoud::SVC_HEALTH); ?>
-							<?php if ($closest_server) : ?>
-								<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array('svc' => Cloud::SVC_HEALTH)); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf(__('Current closest Cloud server is %s.&#10;Click to redetect.', 'litespeed-cache'), $closest_server); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache'); ?>" class="litespeed-title-right-icon"><i class='litespeed-quic-icon'></i> <small><?php echo __('Redetect', 'litespeed-cache'); ?></small></a>
+							<?php if ($can_page_load_time) : ?>
+								<?php $closest_server = Cloud::get_summary('server.' . CLoud::SVC_HEALTH); ?>
+								<?php if ($closest_server) : ?>
+									<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_REDETECT_CLOUD, false, null, array('svc' => Cloud::SVC_HEALTH)); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo sprintf(__('Current closest Cloud server is %s.&#10;Click to redetect.', 'litespeed-cache'), $closest_server); ?>' data-litespeed-cfm="<?php echo __('Are you sure you want to redetect the closest cloud server for this service?', 'litespeed-cache'); ?>" class="litespeed-title-right-icon"><i class='litespeed-quic-icon'></i> <small><?php echo __('Redetect', 'litespeed-cache'); ?></small></a>
+								<?php endif; ?>
 							<?php endif; ?>
 						</h3>
 
 						<div>
 							<div class="litespeed-flex-container">
+								<?php if ($can_page_load_time) : ?>
+									<?php if ($health_scores['speed_before']) : ?>
+										<div class="litespeed-score-col">
+											<p class="litespeed-text-grey">
+												<?php echo __('Before', 'litespeed-cache'); ?>
+											</p>
+											<div class="litespeed-text-md litespeed-text-grey">
+												<?php echo $health_scores['speed_before']; ?><span class="litespeed-text-large">s</span>
+											</div>
 
-								<?php if ($health_scores['speed_before']) : ?>
-									<div class="litespeed-score-col">
-										<p class="litespeed-text-grey">
-											<?php echo __('Before', 'litespeed-cache'); ?>
-										</p>
-										<div class="litespeed-text-md litespeed-text-grey">
-											<?php echo $health_scores['speed_before']; ?><span class="litespeed-text-large">s</span>
 										</div>
-
-									</div>
-									<div class="litespeed-score-col">
-										<p class="litespeed-text-grey">
-											<?php echo __('After', 'litespeed-cache'); ?>
-										</p>
-										<div class="litespeed-text-md litespeed-text-success">
-											<?php echo $health_scores['speed_after']; ?><span class="litespeed-text-large">s</span>
+										<div class="litespeed-score-col">
+											<p class="litespeed-text-grey">
+												<?php echo __('After', 'litespeed-cache'); ?>
+											</p>
+											<div class="litespeed-text-md litespeed-text-success">
+												<?php echo $health_scores['speed_after']; ?><span class="litespeed-text-large">s</span>
+											</div>
 										</div>
-									</div>
-									<div class="litespeed-score-col litespeed-score-col--imp">
-										<p class="litespeed-text-grey" style="white-space: nowrap;">
-											<?php echo __('Improved by', 'litespeed-cache'); ?>
-										</p>
-										<div class="litespeed-text-jumbo litespeed-text-success">
-											<?php echo $health_scores['speed_improved']; ?><span class="litespeed-text-large">%</span>
+										<div class="litespeed-score-col litespeed-score-col--imp">
+											<p class="litespeed-text-grey" style="white-space: nowrap;">
+												<?php echo __('Improved by', 'litespeed-cache'); ?>
+											</p>
+											<div class="litespeed-text-jumbo litespeed-text-success">
+												<?php echo $health_scores['speed_improved']; ?><span class="litespeed-text-large">%</span>
+											</div>
 										</div>
+									<?php endif; ?>
+								<?php else: ?>
+									<div>
+										<p><?php _e('You must be using one of the following products in order to measure Page Load Time:', 'litespeed-cache'); ?></p>
+										<a href="https://www.litespeedtech.com/products/litespeed-web-server" target="_blank">LiteSpeed Web Server</a>
+										<br />
+										<a href="https://openlitespeed.org/" target="_blank">OpenLiteSpeed Web Server</a>
+										<br />
+										<a href="https://www.litespeedtech.com/products/litespeed-web-adc" target="_blank">LiteSpeed Web ADC</a>
+										<br />
+										<a href="https://quic.cloud" target="_blank">QUIC.cloud CDN</a>
 									</div>
 								<?php endif; ?>
-
 							</div>
 						</div>
 					</div>
 
-					<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
-						<?php if (!empty($cloud_summary['last_request.health-speed'])) : ?>
-							<span class="litespeed-right10">
-								<?php echo __('Last requested', 'litespeed-cache') . ': <span data-balloon-pos="up" aria-label="' . Utility::readable_time($cloud_summary['last_request.health-speed']) . '">' . sprintf(__(' %s ago', 'litespeed-cache'), human_time_diff($cloud_summary['last_request.health-speed'])) . '</span>'; ?>
-							</span>
-						<?php endif; ?>
+					<?php if ($can_page_load_time) : ?>
+						<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+							<?php if (!empty($cloud_summary['last_request.health-speed'])) : ?>
+								<span class="litespeed-right10">
+									<?php echo __('Last requested', 'litespeed-cache') . ': <span data-balloon-pos="up" aria-label="' . Utility::readable_time($cloud_summary['last_request.health-speed']) . '">' . sprintf(__(' %s ago', 'litespeed-cache'), human_time_diff($cloud_summary['last_request.health-speed'])) . '</span>'; ?>
+								</span>
+							<?php endif; ?>
 
-						<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SPEED); ?>" class="button button-secondary button-small">
-							<span class="dashicons dashicons-update"></span>
-							<?php echo __('Refresh', 'litespeed-cache'); ?>
-							<span class="screen-reader-text"><?php echo __('Refresh page load time', 'litespeed-cache'); ?></span>
-						</a>
-					</div>
+							<a href="<?php echo Utility::build_url(Router::ACTION_HEALTH, Health::TYPE_SPEED); ?>" class="button button-secondary button-small">
+								<span class="dashicons dashicons-update"></span>
+								<?php echo __('Refresh', 'litespeed-cache'); ?>
+								<span class="screen-reader-text"><?php echo __('Refresh page load time', 'litespeed-cache'); ?></span>
+							</a>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<div class="postbox litespeed-postbox litespeed-postbox-pagespeed">
