@@ -139,15 +139,7 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 						<?php _e('Accelerate, Optimize, Protect', 'litespeed-cache'); ?>
 					</strong>
 				</h3>
-				<p class="litespeed-dashboard-unlock-desc">
-					<?php
-					sprintf(
-						__('Speed up your WordPress site even further with %sQUIC.cloud Online Services and CDN%s.', 'litespeed-cache'),
-						'<strong>',
-						'</strong>'
-					);
-					?>
-				</p>
+				<p class="litespeed-dashboard-unlock-desc"><?php _e('Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache'); ?></p>
 				<p>
 					<?php _e('Free monthly quota available.', 'litespeed-cache'); ?>
 				</p>
