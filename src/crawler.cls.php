@@ -401,7 +401,8 @@ class Crawler extends Root
 			$this->_crawler_conf['run_delay'] = $_SERVER[Base::ENV_CRAWLER_USLEEP];
 		}
 
-		$this->_crawler_conf['run_duration'] = 900;
+		$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? LITESPEED_CRAWLER_DURATION : 900;
+		$this->_crawler_conf['run_duration'] = $RUN_DURATION;
 
 		$this->_crawler_conf['load_limit'] = $this->conf(Base::O_CRAWLER_LOAD_LIMIT);
 		if (!empty($_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE])) {

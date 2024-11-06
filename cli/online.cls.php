@@ -114,7 +114,7 @@ class Online
 	public function link($args, $assoc_args)
 	{
 		if (empty($assoc_args['email']) || empty($assoc_args['api-key'])) {
-			WP_CLI::error('Init CDN failed! Missing parameters `--email` or `--api-key`.');
+			WP_CLI::error('Link to QUIC.cloud failed! Missing parameters `--email` or `--api-key`.');
 			return;
 		}
 
@@ -250,12 +250,15 @@ class Online
 	 *
 	 *     # Detect closest node for one service
 	 *     $ wp litespeed-online ping img_optm
+	 *     $ wp litespeed-online ping img_optm --force
 	 *
 	 */
-	public function ping($param)
+	public function ping($param, $assoc_args)
 	{
 		$svc = $param[0];
-		$json = $this->__cloud->detect_cloud($svc);
+		$force = !empty($assoc_args['force']);
+
+		$json = $this->__cloud->detect_cloud($svc, $force);
 		if ($json) WP_CLI::success('Updated closest server.');
 		WP_CLI::log('svc = ' . $svc);
 		WP_CLI::log('node = ' . ($json ?: '-'));

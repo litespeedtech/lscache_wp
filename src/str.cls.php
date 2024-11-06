@@ -61,8 +61,6 @@ class Str
 	 */
 	public static function rrand($len, $type = 7)
 	{
-		// mt_srand((int) ((float) microtime() * 1000000));
-
 		switch ($type) {
 			case 0:
 				$charlist = '012';
@@ -101,7 +99,7 @@ class Str
 
 		$max = strlen($charlist) - 1;
 		for ($i = 0; $i < $len; $i++) {
-			$str .= $charlist[mt_rand(0, $max)];
+			$str .= $charlist[random_int(0, $max)];
 		}
 
 		return $str;

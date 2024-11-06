@@ -613,6 +613,19 @@ class Cloud extends Base
 			return;
 		}
 
+		if (!empty($data['qc_activated'])) {
+			// Sync conf as changed
+			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
+				$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
+				Admin_Display::success('🎊 ' . $msg);
+				// Turn on CDN option
+				$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
+				$this->cls('CDN\Quic')->try_sync_conf(true);
+			}
+
+			$this->_summary['qc_activated'] = $data['qc_activated'];
+		}
+
 		// Store the info
 		$this->_summary['next_call_ttl.' . $type] = time() + intval($data['next_call_ttl']);
 		if (!empty($data['body'])) {
@@ -634,14 +647,18 @@ class Cloud extends Base
 	 */
 	public function update_cdn_status()
 	{
-		if (empty($_POST['qc_activated']) || !in_array($_POST['qc_activated'], array('anonymous', 'linked', 'cdn'))) {
+		if (empty($_POST['qc_activated']) || !in_array($_POST['qc_activated'], array('anonymous', 'linked', 'cdn', 'deleted'))) {
 			return self::err('lack_of_params');
 		}
 
 		self::debug('update_cdn_status request hash: ' . $_POST['qc_activated']);
 
-		$this->_summary['qc_activated'] = $_POST['qc_activated'];
-		$this->save_summary();
+		if ($_POST['qc_activated'] == 'deleted') {
+			$this->_reset_qc_reg();
+		} else {
+			$this->_summary['qc_activated'] = $_POST['qc_activated'];
+			$this->save_summary();
+		}
 
 		if ($_POST['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
@@ -664,6 +681,7 @@ class Cloud extends Base
 		unset($this->_summary['pk_b64']);
 		unset($this->_summary['sk_b64']);
 		unset($this->_summary['qc_activated']);
+		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
 		$this->save_summary();
 		self::debug('Clear local QC activation.');
 
@@ -961,48 +979,16 @@ class Cloud extends Base
 		}
 
 		// Ping closest cloud
-		$speed_list = array();
-		foreach ($json['list'] as $v) {
-			// Exclude possible failed 503 nodes
-			if (!empty($this->_summary['disabled_node']) && !empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400) {
-				continue;
-			}
-			$speed_list[$v] = Utility::ping($v);
+		$valid_clouds = false;
+		if (!empty($json['list_preferred'])) {
+			$valid_clouds = $this->_get_closest_nodes($json['list_preferred'], $service);
 		}
-
-		if (!$speed_list) {
-			self::debug('nodes are in 503 failed nodes');
-			return false;
-		}
-
-		$min = min($speed_list);
-
-		if ($min == 99999) {
-			self::debug('failed to ping all clouds');
-			return false;
-		}
-
-		// Random pick same time range ip (230ms 250ms)
-		$range_len = strlen($min);
-		$range_num = substr($min, 0, 1);
-		$valid_clouds = array();
-		foreach ($speed_list as $node => $speed) {
-			if (strlen($speed) == $range_len && substr($speed, 0, 1) == $range_num) {
-				$valid_clouds[] = $node;
-			}
-			// Append the lower speed ones
-			elseif ($speed < $min * 4) {
-				$valid_clouds[] = $node;
-			}
-		}
-
 		if (!$valid_clouds) {
-			$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . __('No available Cloud Node.', 'litespeed-cache');
-			Admin_Display::error($msg);
+			$valid_clouds = $this->_get_closest_nodes($json['list'], $service);
+		}
+		if (!$valid_clouds) {
 			return false;
 		}
-
-		self::debug('Closest nodes list', $valid_clouds);
 
 		// Check server load
 		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
@@ -1044,6 +1030,57 @@ class Cloud extends Base
 		self::save_summary();
 
 		return $this->_summary['server.' . $service];
+	}
+
+	/**
+	 * Ping to choose the closest nodes
+	 * @since 7.0
+	 */
+	private function _get_closest_nodes($list, $service)
+	{
+		$speed_list = array();
+		foreach ($list as $v) {
+			// Exclude possible failed 503 nodes
+			if (!empty($this->_summary['disabled_node']) && !empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400) {
+				continue;
+			}
+			$speed_list[$v] = Utility::ping($v);
+		}
+
+		if (!$speed_list) {
+			self::debug('nodes are in 503 failed nodes');
+			return false;
+		}
+
+		$min = min($speed_list);
+
+		if ($min == 99999) {
+			self::debug('failed to ping all clouds');
+			return false;
+		}
+
+		// Random pick same time range ip (230ms 250ms)
+		$range_len = strlen($min);
+		$range_num = substr($min, 0, 1);
+		$valid_clouds = array();
+		foreach ($speed_list as $node => $speed) {
+			if (strlen($speed) == $range_len && substr($speed, 0, 1) == $range_num) {
+				$valid_clouds[] = $node;
+			}
+			// Append the lower speed ones
+			elseif ($speed < $min * 4) {
+				$valid_clouds[] = $node;
+			}
+		}
+
+		if (!$valid_clouds) {
+			$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . __('No available Cloud Node.', 'litespeed-cache');
+			Admin_Display::error($msg);
+			return false;
+		}
+
+		self::debug('Closest nodes list', $valid_clouds);
+		return $valid_clouds;
 	}
 
 	/**
@@ -1548,6 +1585,7 @@ class Cloud extends Base
 	private function _reset_qc_reg()
 	{
 		unset($this->_summary['qc_activated']);
+		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
 		self::save_summary();
 
 		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');

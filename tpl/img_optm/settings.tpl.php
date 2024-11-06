@@ -30,19 +30,6 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_CRON; ?>
-				<?php $this->title($id); ?>
-			</th>
-			<td>
-				<?php $this->build_switch($id); ?>
-				<div class="litespeed-desc">
-					<?php echo __('Disabling this will stop the cron job responsible for pulling optimized images back from QUIC.cloud Image Server.', 'litespeed-cache'); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th>
 				<?php $id = Base::O_IMG_OPTM_ORI; ?>
 				<?php $this->title($id); ?>
 			</th>
