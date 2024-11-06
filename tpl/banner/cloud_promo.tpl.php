@@ -18,7 +18,14 @@ defined( 'WPINC' ) || exit;
 					'<strong>' . $this->_summary['promo'][0]['quota'] . '</strong>'
 				); ?></p>
 			<p>
-				<a class="button button-primary" href="<?php echo $this->_summary['promo'][0]['url']; ?>" target="_blank">Send to twitter to get <?php echo $this->_summary['promo'][0]['quota']; ?> bonus</a>
+				<a class="button button-primary" href="<?php echo $this->_summary['promo'][0]['url']; ?>" target="_blank">
+					<?php
+					sprintf(
+						__('Send to twitter to get %s bonus', 'litespeed-cache')
+						$this->_summary['promo'][0]['quota']
+					);
+					?>
+				</a>
 				<a href="https://www.quic.cloud/faq/#credit" target="_blank"><?php echo __('Learn more', 'litespeed-cache'); ?></a>
 			</p>
 		</div>
