@@ -979,48 +979,16 @@ class Cloud extends Base
 		}
 
 		// Ping closest cloud
-		$speed_list = array();
-		foreach ($json['list'] as $v) {
-			// Exclude possible failed 503 nodes
-			if (!empty($this->_summary['disabled_node']) && !empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400) {
-				continue;
-			}
-			$speed_list[$v] = Utility::ping($v);
+		$valid_clouds = false;
+		if (!empty($json['list_preferred'])) {
+			$valid_clouds = $this->_get_closest_nodes($json['list_preferred'], $service);
 		}
-
-		if (!$speed_list) {
-			self::debug('nodes are in 503 failed nodes');
-			return false;
-		}
-
-		$min = min($speed_list);
-
-		if ($min == 99999) {
-			self::debug('failed to ping all clouds');
-			return false;
-		}
-
-		// Random pick same time range ip (230ms 250ms)
-		$range_len = strlen($min);
-		$range_num = substr($min, 0, 1);
-		$valid_clouds = array();
-		foreach ($speed_list as $node => $speed) {
-			if (strlen($speed) == $range_len && substr($speed, 0, 1) == $range_num) {
-				$valid_clouds[] = $node;
-			}
-			// Append the lower speed ones
-			elseif ($speed < $min * 4) {
-				$valid_clouds[] = $node;
-			}
-		}
-
 		if (!$valid_clouds) {
-			$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . __('No available Cloud Node.', 'litespeed-cache');
-			Admin_Display::error($msg);
+			$valid_clouds = $this->_get_closest_nodes($json['list'], $service);
+		}
+		if (!$valid_clouds) {
 			return false;
 		}
-
-		self::debug('Closest nodes list', $valid_clouds);
 
 		// Check server load
 		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
@@ -1062,6 +1030,57 @@ class Cloud extends Base
 		self::save_summary();
 
 		return $this->_summary['server.' . $service];
+	}
+
+	/**
+	 * Ping to choose the closest nodes
+	 * @since 7.0
+	 */
+	private function _get_closest_nodes($list, $service)
+	{
+		$speed_list = array();
+		foreach ($list as $v) {
+			// Exclude possible failed 503 nodes
+			if (!empty($this->_summary['disabled_node']) && !empty($this->_summary['disabled_node'][$v]) && time() - $this->_summary['disabled_node'][$v] < 86400) {
+				continue;
+			}
+			$speed_list[$v] = Utility::ping($v);
+		}
+
+		if (!$speed_list) {
+			self::debug('nodes are in 503 failed nodes');
+			return false;
+		}
+
+		$min = min($speed_list);
+
+		if ($min == 99999) {
+			self::debug('failed to ping all clouds');
+			return false;
+		}
+
+		// Random pick same time range ip (230ms 250ms)
+		$range_len = strlen($min);
+		$range_num = substr($min, 0, 1);
+		$valid_clouds = array();
+		foreach ($speed_list as $node => $speed) {
+			if (strlen($speed) == $range_len && substr($speed, 0, 1) == $range_num) {
+				$valid_clouds[] = $node;
+			}
+			// Append the lower speed ones
+			elseif ($speed < $min * 4) {
+				$valid_clouds[] = $node;
+			}
+		}
+
+		if (!$valid_clouds) {
+			$msg = __('Cloud Error', 'litespeed-cache') . ": [Service] $service [Info] " . __('No available Cloud Node.', 'litespeed-cache');
+			Admin_Display::error($msg);
+			return false;
+		}
+
+		self::debug('Closest nodes list', $valid_clouds);
+		return $valid_clouds;
 	}
 
 	/**

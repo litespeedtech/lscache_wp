@@ -262,12 +262,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
+* **Cloud** Supported `list_preferred` in online service node detection.
 * **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
 * **Database Optimize** Fixed Autoload summary for WP6.6+. (Mukesh Panchal/Viktor Szépe)
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online link --email=xxx@example.com --api-key=xxxx`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
-* **CLI** QUIC.cloud CDN CLI `wp litespeed-online ping` supports `--force` args now.
+* **CLI** QUIC.cloud CLI `wp litespeed-online ping` supports `--force` args now.
 * **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_ORI` support.
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
