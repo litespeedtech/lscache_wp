@@ -93,7 +93,7 @@ if ($check_only) {
 
 	<div>
 		<?php $dismiss_url = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array('promo_tag' => 'new_version', 'later' => 1)); ?>
-		<span class="screen-reader-text">Dismiss this notice.</span>
+		<span class="screen-reader-text"><?php _e('Dismiss this notice.', 'litespeed-cache'); ?></span>
 		<a href="<?php echo $dismiss_url; ?>" class="litespeed-notice-dismiss">X</a>
 	</div>
 </div>

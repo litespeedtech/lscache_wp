@@ -10,11 +10,23 @@ defined( 'WPINC' ) || exit;
 	<div class="litespeed-banner-promo-qc-content">
 
 		<div class="litespeed-banner-promo-qc-description">
-			<h2><?php echo __( 'You just unlocked a promotion from QUIC.cloud!', 'litespeed-cache' );?></h2>
-			<p>Spread the love and earn <strong><?php echo $this->_summary[ 'promo' ][ 0 ][ 'quota' ]; ?></strong> credits to use in our QUIC.cloud online services.</p>
+			<h2><?php echo __('You just unlocked a promotion from QUIC.cloud!', 'litespeed-cache'); ?></h2>
 			<p>
-				<a class="button button-primary" href="<?php echo $this->_summary[ 'promo' ][ 0 ][ 'url' ]; ?>" target="_blank">Send to twitter to get <?php echo $this->_summary[ 'promo' ][ 0 ][ 'quota' ]; ?> bonus</a>
-				<a href="https://www.quic.cloud/faq/#credit" target="_blank"><?php echo __( 'Learn more', 'litespeed-cache' );?></a>
+				<?php
+				sprintf(
+					_e('Spread the love and earn %s credits to use in our QUIC.cloud online services.', 'litespeed-cache'),
+					'<strong>' . $this->_summary['promo'][0]['quota'] . '</strong>'
+				); ?></p>
+			<p>
+				<a class="button button-primary" href="<?php echo $this->_summary['promo'][0]['url']; ?>" target="_blank">
+					<?php
+					sprintf(
+						__('Send to twitter to get %s bonus', 'litespeed-cache')
+						$this->_summary['promo'][0]['quota']
+					);
+					?>
+				</a>
+				<a href="https://www.quic.cloud/faq/#credit" target="_blank"><?php echo __('Learn more', 'litespeed-cache'); ?></a>
 			</p>
 		</div>
 

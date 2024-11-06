@@ -29,8 +29,8 @@ defined( 'WPINC' ) || exit ;
 	<div>
 		<?php $dismiss_url = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'slack' ) ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
-		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">
-			Dismiss
+		<a href="<?php echo $dismiss_url; ?>" class="litespeed-notice-dismiss">
+			<?php _e('Dismiss', 'litespeed-cache'); ?>
 		</a>
 	</div>
 </div>
