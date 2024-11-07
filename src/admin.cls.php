@@ -81,11 +81,6 @@ class Admin extends Root
 		$this->cls('Media')->after_admin_init();
 
 		do_action('litspeed_after_admin_init');
-
-		if ($this->cls('Router')->esi_enabled()) {
-			add_action('in_widget_form', array($this->cls('Admin_Display'), 'show_widget_edit'), 100, 3);
-			add_filter('widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4);
-		}
 	}
 
 	/**
