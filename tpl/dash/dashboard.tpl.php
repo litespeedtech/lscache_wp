@@ -31,7 +31,7 @@ $ucss_count = count($this->load_queue('ucss'));
 $placeholder_queue_count = count($this->load_queue('lqip'));
 $vpi_queue_count = count($this->load_queue('vpi'));
 
-$can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE != 'NONE' ? true : false;
+$can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE !== 'NONE';
 ?>
 
 <div class="litespeed-dashboard">
