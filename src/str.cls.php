@@ -68,4 +68,13 @@ class Str
 
 		return $str;
 	}
+
+	/**
+	 * Trim double quotes from a string to be used as a preformatted src in HTML.
+	 * @since 6.5.3
+	 */
+	public static function trim_quotes($string)
+	{
+		return str_replace('"', '', $string);
+	}
 }

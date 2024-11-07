@@ -87,7 +87,7 @@ class Media extends Root
 		// <link rel="preload" as="image" href="xx">
 		if ($this->_vpi_preload_list) {
 			foreach ($this->_vpi_preload_list as $v) {
-				$content .= '<link rel="preload" as="image" href="' . $v . '">';
+				$content .= '<link rel="preload" as="image" href="' . Str::trim_quotes($v) . '">';
 			}
 		}
 		// 	$featured_image_url = get_the_post_thumbnail_url();
@@ -759,7 +759,7 @@ class Media extends Root
 						$attrs['width'] = $ori_width;
 						$attrs['height'] = $ori_height;
 						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0]);
-						$new_html = preg_replace('#<img\s+#i', '<img width="' . $attrs['width'] . '" height="' . $attrs['height'] . '" ', $new_html);
+						$new_html = preg_replace('#<img\s+#i', '<img width="' . Str::trim_quotes($attrs['width']) . '" height="' . Str::trim_quotes($attrs['height']) . '" ', $new_html);
 						self::debug('Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src']);
 						$this->content = str_replace($match[0], $new_html, $this->content);
 						$match[0] = $new_html;

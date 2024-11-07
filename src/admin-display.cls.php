@@ -278,7 +278,7 @@ class Admin_Display extends Base
 			return $tag;
 		}
 
-		return '<script src="' . $src . '" type="text/babel"></script>';
+		return '<script src="' . Str::trim_quotes($src) . '" type="text/babel"></script>';
 	}
 
 	/**
