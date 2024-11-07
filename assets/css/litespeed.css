@@ -3044,7 +3044,7 @@ a.litespeed-redetect {
 }
 
 .litespeed-postbox .inside.litespeed-postbox-footer--compact {
-	padding: 7px 20px 8px 20px;
+	padding: 7px 15px 8px 15px;
 	font-size: 12px;
 }
 
@@ -3160,8 +3160,9 @@ a.litespeed-redetect {
 	background: #253545;
 	color: #e2e4e5;
 	margin-top: -11px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding: 10px 15px;
+	margin-left: -15px;
+	margin-right: -15px;
 }
 
 .litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a {
@@ -3172,7 +3173,22 @@ a.litespeed-redetect {
 	color: #a5caf2;
 }
 
+@media screen and (min-width: 1401px) {
+	.litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title {
+		padding-left: 20px;
+		padding-right: 20px;
+		margin-left: -20px;
+		margin-right: -20px;
+	}
+
+	.litespeed-postbox .inside.litespeed-postbox-footer--compact {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
 @media screen and (max-width: 1400px) and (min-width: 1024px) {
+
 	.litespeed-dashboard-stats-wrapper .litespeed-postbox {
 		flex-grow: 1;
 	}

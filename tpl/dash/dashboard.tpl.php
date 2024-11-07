@@ -150,7 +150,7 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					</a>
 				</p>
 				<p class="litespeed-dashboard-unlock-footer">
-					<?php _e('QUIC.cloud provides CDN and online optimization services, and is not required. You may use many features of this plugin without QUIC.cloud.', 'litespeed-cache'); ?>
+					<?php _e('QUIC.cloud provides CDN and online optimization services, and is not required. You may use many features of this plugin without QUIC.cloud.', 'litespeed-cache'); ?><br>
 					<a href="https://www.quic.cloud/" target="_blank">
 						<?php _e('Learn More about QUIC.cloud', 'litespeed-cache'); ?>
 					</a>
@@ -759,7 +759,11 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 					<div class="inside">
 						<h3 class="litespeed-title litespeed-dashboard-title--w-btn">
 							<span class="litespeed-quic-icon"></span>QUIC.cloud CDN
-							<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon" target="_blank"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
+							<?php if (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
+								<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" class="litespeed-title-right-icon" target="_blank"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
+							<?php else: ?>
+								<a href="<?php echo admin_url('admin.php?page=litespeed-cdn'); ?>" class="litespeed-title-right-icon"><?php echo __('More', 'litespeed-cache'); ?></a>
+							<?php endif; ?>
 						</h3>
 						<?php if (empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') : ?>
 							<div class="litespeed-text-center litespeed-empty-space-medium">
