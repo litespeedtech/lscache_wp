@@ -155,7 +155,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 	<a 	class="litespeed-panel postbox"
 		href="<?php echo Utility::build_url( $tag, $append_url ) ; ?>"
-		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
+		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . Str::trim_quotes($v[ 'cfm' ]) . '"' ; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">
 			<span class="litespeed-panel-icon-<?php echo $v[ 'icon' ] ; ?>"></span>

@@ -142,13 +142,13 @@ class Placeholder extends Base
 
 					if ($total_files == 0) {
 						echo '<div class="litespeed-media-lqip"><img src="' .
-							File::read($lqip_folder . '/' . $v) .
+							Str::trim_quotes(File::read($lqip_folder . '/' . $v)) .
 							'" alt="' .
 							sprintf(__('LQIP image preview for size %s', 'litespeed-cache'), $v) .
 							'"></div>';
 					}
 
-					echo '<div class="litespeed-media-size"><a href="' . File::read($lqip_folder . '/' . $v) . '" target="_blank">' . $v . '</a></div>';
+					echo '<div class="litespeed-media-size"><a href="' . Str::trim_quotes(File::read($lqip_folder . '/' . $v)) . '" target="_blank">' . $v . '</a></div>';
 
 					$total_files++;
 				}
@@ -174,13 +174,12 @@ class Placeholder extends Base
 		$additional_attr = '';
 		if ($this->_conf_lqip && $this_placeholder != $this->_conf_ph_default) {
 			Debug2::debug2('[LQIP] Use resp LQIP [size] ' . $size);
-			$size = str_replace('"', '', $size);
-			$additional_attr = ' data-placeholder-resp="' . $size . '"';
+			$additional_attr = ' data-placeholder-resp="' . Str::trim_quotes($size) . '"';
 		}
 
 		$snippet = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_NOSCRIPT_RM) ? '' : '<noscript>' . $html . '</noscript>';
 		$html = str_replace(array(' src=', ' srcset=', ' sizes='), array(' data-src=', ' data-srcset=', ' data-sizes='), $html);
-		$html = str_replace('<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $html);
+		$html = str_replace('<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ', $html);
 		$snippet = $html . $snippet;
 
 		return $snippet;
