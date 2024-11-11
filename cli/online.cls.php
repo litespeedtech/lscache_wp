@@ -121,6 +121,8 @@ class Online
 		$resp = $this->__cloud->link_qc_cli($assoc_args['email'], $assoc_args['api-key']);
 		if (!empty($resp['qc_activated'])) {
 			$this->__cloud->update_qc_activation($resp['qc_activated'], true);
+			WP_CLI::success('Link successfully!');
+			WP_CLI::log(json_encode($resp));
 		} else {
 			WP_CLI::error('Link failed!');
 		}
