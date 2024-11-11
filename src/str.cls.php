@@ -13,6 +13,23 @@ defined('WPINC') || exit();
 class Str
 {
 	/**
+	 * Translate QC HTML links from html. Convert `<a href="{{xxx}}">xxxx</a>` to `<a href="xxx">xxxx</a>`
+	 *
+	 * @since 7.0
+	 */
+	public static function translate_qc_apis($html)
+	{
+		preg_match_all('/<a href="{{(\w+)}}"/U', $html, $matches);
+		if (!$matches) return $html;
+
+		foreach ($matches[0] as $k => $html_to_be_replaced) {
+			$link = '<a href="' . Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_API, false, null, array('action2' => $matches[1][$k])) . '"';
+			$html = str_replace($html_to_be_replaced, $link, $html);
+		}
+		return $html;
+	}
+
+	/**
 	 * Return safe HTML
 	 *
 	 * @since 7.0

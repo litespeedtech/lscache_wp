@@ -22,6 +22,7 @@ class Cloud extends Base
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
 	const SVC_D_LINK = 'd/link';
+	const SVC_D_API = 'd/api';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
 	const SVC_D_STATUS = 'd/status/';
@@ -106,6 +107,7 @@ class Cloud extends Base
 	const TYPE_ACTIVATE = 'activate';
 	const TYPE_LINK = 'link';
 	const TYPE_ENABLE_CDN = 'enablecdn';
+	const TYPE_API = 'api';
 	const TYPE_SYNC_USAGE = 'sync_usage';
 	const TYPE_RESET = 'reset';
 	const TYPE_SYNC_STATUS = 'sync_status';
@@ -374,6 +376,25 @@ class Cloud extends Base
 	}
 
 	/**
+	 * API link parsed call to QC
+	 *
+	 * @since 7.0
+	 */
+	public function api_link_call($action2)
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'action2' => $action2,
+		);
+		$res = $this->post(self::SVC_D_API, $data);
+		self::debug("API link call result: ", $res);
+	}
+
+	/**
 	 * Enable QC CDN
 	 *
 	 * @since 7.0
@@ -589,10 +610,15 @@ class Cloud extends Base
 
 	/**
 	 * Load QC status for dash usage
+	 * Format to translate: `<a href="{{xxx}}" class="button button-primary">xxxx</a><a href="{{xxx}}">xxxx2</a>`
 	 *
 	 * @since 7.0
 	 */
 	public function load_qc_status_for_dash($type, $force = false)
+	{
+		return Str::translate_qc_apis($this->_load_qc_status_for_dash($type, $force));
+	}
+	private function _load_qc_status_for_dash($type, $force = false)
 	{
 		$col = 'body';
 		if ($type == 'cdn_dash_mini') {
@@ -1879,6 +1905,12 @@ class Cloud extends Base
 
 			case self::TYPE_ENABLE_CDN:
 				$this->enable_cdn();
+				break;
+
+			case self::TYPE_API:
+				if (!empty($_GET['action2'])) {
+					$this->api_link_call($_GET['action2']);
+				}
 				break;
 
 			case self::TYPE_SYNC_STATUS:

@@ -1,5 +1,7 @@
 <?php
+
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 wp_nonce_field(self::POST_NONCE_ACTION, Router::NONCE);
