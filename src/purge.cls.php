@@ -1097,7 +1097,7 @@ class Purge extends Base
 			Crawler::cls()->reset_pos();
 		}
 
-		if (defined('LSWCP_EMPTYCACHE') || $is_private) {
+		if ((defined('LSWCP_EMPTYCACHE') && LSWCP_EMPTYCACHE) || $is_private) {
 			return array('*');
 		}
 
@@ -1132,7 +1132,7 @@ class Purge extends Base
 			return false;
 		}
 
-		if (defined('LSWCP_EMPTYCACHE')) {
+		if (defined('LSWCP_EMPTYCACHE') && LSWCP_EMPTYCACHE) {
 			return false;
 		}
 

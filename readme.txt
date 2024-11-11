@@ -270,6 +270,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
 * **CLI** QUIC.cloud CLI `wp litespeed-online ping` supports `--force` args now.
 * **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_ORI` support.
+* **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
 * **Crawler** Default crawler `Run Duration` to 900 seconds and dropped the setting.
