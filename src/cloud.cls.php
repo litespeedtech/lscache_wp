@@ -610,7 +610,7 @@ class Cloud extends Base
 
 	/**
 	 * Load QC status for dash usage
-	 * Format to translate: `<a href="{{xxx}}" class="button button-primary">xxxx</a><a href="{{xxx}}">xxxx2</a>`
+	 * Format to translate: `<a href="{#xxx#}" class="button button-primary">xxxx</a><a href="{#xxx#}">xxxx2</a>`
 	 *
 	 * @since 7.0
 	 */

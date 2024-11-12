@@ -13,13 +13,13 @@ defined('WPINC') || exit();
 class Str
 {
 	/**
-	 * Translate QC HTML links from html. Convert `<a href="{{xxx}}">xxxx</a>` to `<a href="xxx">xxxx</a>`
+	 * Translate QC HTML links from html. Convert `<a href="{#xxx#}">xxxx</a>` to `<a href="xxx">xxxx</a>`
 	 *
 	 * @since 7.0
 	 */
 	public static function translate_qc_apis($html)
 	{
-		preg_match_all('/<a href="{{(\w+)}}"/U', $html, $matches);
+		preg_match_all('/<a href="{#(\w+)#}"/U', $html, $matches);
 		if (!$matches) return $html;
 
 		foreach ($matches[0] as $k => $html_to_be_replaced) {
