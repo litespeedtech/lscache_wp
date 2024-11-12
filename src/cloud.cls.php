@@ -444,7 +444,7 @@ class Cloud extends Base
 
 			return false;
 		}
-		$signature = sodium_crypto_sign_detached($data, $sk);
+		$signature = sodium_crypto_sign_detached((string)$data, $sk);
 		return base64_encode($signature);
 	}
 
