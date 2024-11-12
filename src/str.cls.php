@@ -45,6 +45,7 @@ class Str
 			'href' => array(),
 		);
 		$tags = array(
+			"hr",
 			"h3",
 			"h4",
 			"h5",
