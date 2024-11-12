@@ -798,6 +798,11 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 						<?php endif; ?>
 					</div>
 
+					<?php $promo_mini = $__cloud->load_qc_status_for_dash('promo_mini'); ?>
+					<?php if ($promo_mini) : ?>
+						<?php echo $promo_mini; ?>
+					<?php endif; ?>
+
 					<?php if ($__cloud->activated()) : ?>
 						<?php $news = $__cloud->load_qc_status_for_dash('news_dash'); ?>
 						<?php if ($news) : ?>

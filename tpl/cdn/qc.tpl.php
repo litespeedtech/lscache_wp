@@ -107,6 +107,13 @@ $cloud_summary = Cloud::get_summary();
 			</div>
 		</div>
 
+
+		<?php $promo_mini = $__cloud->load_qc_status_for_dash('promo_mini'); ?>
+		<?php if ($promo_mini) : ?>
+			<?php echo $promo_mini; ?>
+		<?php endif; ?>
+
+
 	</div>
 
 </div>
