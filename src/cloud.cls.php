@@ -23,9 +23,9 @@ class Cloud extends Base
 	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
 	const SVC_D_LINK = 'd/link';
 	const SVC_D_API = 'd/api';
+	const SVC_D_DASH = 'd/dash';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
-	const SVC_D_STATUS = 'd/status/';
 	const SVC_D_STATUS_CDN_CLI = 'd/status/cdn_cli';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
@@ -65,6 +65,8 @@ class Cloud extends Base
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
+		self::SVC_D_API,
+		self::SVC_D_DASH,
 		self::SVC_D_STATUS_CDN_CLI,
 		// self::API_NEWS,
 		self::API_REPORT,
@@ -620,25 +622,12 @@ class Cloud extends Base
 	}
 	private function _load_qc_status_for_dash($type, $force = false)
 	{
-		$col = 'body';
-		if ($type == 'cdn_dash_mini') {
-			$type = 'cdn_dash';
-			$col = 'body_mini';
-		}
-
-		if (!$force && !empty($this->_summary['next_call_ttl' . $type]) && $this->_summary['next_call_ttl' . $type] > time()) {
-			if ($col == 'body_mini') {
-				return $this->_summary['cdn_dash_mini'];
-			}
-			return $this->_summary[$type];
+		if (!$force && !empty($this->_summary['mini_html']) && isset($this->_summary['mini_html'][$type]) && !empty($this->_summary['mini_html']['ttl.' . $type]) && $this->_summary['mini_html']['ttl.' . $type] > time()) {
+			return Str::safe_html($this->_summary['mini_html'][$type]);
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_D_STATUS . $type);
-		if (empty($data['next_call_ttl'])) {
-			return;
-		}
-
+		$data = self::post(self::SVC_D_DASH, array('action2' => $type));
 		if (!empty($data['qc_activated'])) {
 			// Sync conf as changed
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
@@ -652,18 +641,12 @@ class Cloud extends Base
 			$this->_summary['qc_activated'] = $data['qc_activated'];
 		}
 
-		// Store the info
-		$this->_summary['next_call_ttl.' . $type] = time() + intval($data['next_call_ttl']);
-		if (!empty($data['body'])) {
-			$this->_summary[$type] = Str::safe_html($data['body']);
-		}
-		if ($type == 'cdn_dash') { // Also save the mini content
-			$this->_summary['cdn_dash_mini'] = Str::safe_html($data['body_mini']);
-		}
-		$this->save_summary();
-
 		// Show the info
-		return Str::safe_html($data[$col]);
+		if (isset($this->_summary['mini_html'][$type])) {
+			return Str::safe_html($this->_summary['mini_html'][$type]);
+		}
+
+		return '';
 	}
 
 	/**
@@ -962,9 +945,6 @@ class Cloud extends Base
 	public function detect_cloud($service, $force = false)
 	{
 		if (in_array($service, self::$CENTER_SVC_SET)) {
-			return self::CLOUD_SERVER;
-		}
-		if (strpos($service, self::SVC_D_STATUS) === 0) {
 			return self::CLOUD_SERVER;
 		}
 
@@ -1363,7 +1343,7 @@ class Cloud extends Base
 	private function _parse_response($response, $service, $service_tag, $server)
 	{
 		// If show the error or not if failed
-		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
+		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && $service !== self::SVC_D_DASH;
 
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
@@ -1525,7 +1505,7 @@ class Cloud extends Base
 		if (!empty($json['_carry_on'])) {
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
-			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
+			foreach (array('usage', 'promo', 'mini_html', 'partner', '_error', '_info', '_note', '_success') as $v) {
 				if (isset($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':
@@ -1538,6 +1518,12 @@ class Cloud extends Base
 								$this->_summary[$v] = array();
 							}
 							$this->_summary[$v][] = $json['_carry_on'][$v];
+							break;
+
+						case 'mini_html':
+							foreach ($json['_carry_on'][$v] as $k2 => $v2) {
+								$this->_summary[$v][$k2] = $v2;
+							}
 							break;
 
 						case 'partner':
