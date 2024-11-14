@@ -1556,7 +1556,7 @@ class Cloud extends Base
 			$str_translated = Error::msg($json_msg);
 			$msg = __('Failed to communicate with QUIC.cloud server', 'litespeed-cache') . ': ' . $str_translated . " [server] $server [service] $service";
 			$msg .= $this->_parse_link($json);
-			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
+			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && $service !== self::SVC_D_DASH;
 			if ($visible_err) {
 				Admin_Display::error($msg);
 			}
