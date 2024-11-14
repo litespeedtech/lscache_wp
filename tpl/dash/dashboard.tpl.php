@@ -295,14 +295,14 @@ $vpi_queue_count = count($this->load_queue('vpi'));
 							<h3 class="litespeed-title"><?php echo __('Partner Benefits Provided by', 'litespeed-cache'); ?></h3>
 							<div>
 
-								<?php if ($cloud_summary['partner']['logo']) : ?>
-									<?php if ($cloud_summary['partner']['url']) : ?>
+								<?php if (!empty($cloud_summary['partner']['logo'])) : ?>
+									<?php if (!empty($cloud_summary['partner']['url'])) : ?>
 										<a href="<?php echo $cloud_summary['partner']['url']; ?>" target="_blank"><img src="<?php echo $cloud_summary['partner']['logo']; ?>" alt="<?php echo $cloud_summary['partner']['name']; ?>"></a>
 									<?php else : ?>
 										<img src="<?php echo $cloud_summary['partner']['logo']; ?>" alt="<?php echo $cloud_summary['partner']['name']; ?>">
 									<?php endif; ?>
-								<?php elseif ($cloud_summary['partner']['name']) : ?>
-									<?php if ($cloud_summary['partner']['url']) : ?>
+								<?php elseif (!empty($cloud_summary['partner']['name'])) : ?>
+									<?php if (!empty($cloud_summary['partner']['url'])) : ?>
 										<a href="<?php echo $cloud_summary['partner']['url']; ?>" target="_blank"><span class="postbox-partner-name"><?php echo $cloud_summary['partner']['name']; ?></span></a>
 									<?php else : ?>
 										<span class="postbox-partner-name"><?php echo $cloud_summary['partner']['name']; ?></span>
