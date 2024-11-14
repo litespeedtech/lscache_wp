@@ -810,7 +810,7 @@ class Purge extends Base
 		self::add($hash, $purge2);
 
 		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
-		do_action('litespeed_purged_link');
+		do_action('litespeed_purged_link', $url);
 	}
 
 	/**
@@ -863,7 +863,7 @@ class Purge extends Base
 	public static function purge_esi($tag)
 	{
 		self::add(Tag::TYPE_ESI . $tag);
-		do_action('litespeed_purged_esi');
+		do_action('litespeed_purged_esi', $tag);
 	}
 
 	/**
@@ -977,7 +977,7 @@ class Purge extends Base
 	 */
 	public static function purge_on_logout()
 	{
-		self::add_private('*');
+		self::add_private_all();
 		do_action('litespeed_purged_on_logout');
 	}
 
