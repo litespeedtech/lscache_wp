@@ -50,17 +50,14 @@ class Purge extends Base
 	 */
 	public function init()
 	{
-		//register purge actions
-		// Mostly used values: edit_post, save_post, delete_post, wp_trash_post, clean_post_cache, wp_update_comment_count
-		$purge_post_events = add_filter(
-			'litespeed_purge_post_events',
-			array(
-				'delete_post',
-				'wp_trash_post',
-				// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-				'wp_update_comment_count', // TODO: check if needed for non ESI
-			)
-		);
+		// Register purge actions.
+		// Most used values: edit_post, save_post, delete_post, wp_trash_post, clean_post_cache, wp_update_comment_count
+		$purge_post_events = add_filter('litespeed_purge_post_events', array(
+			'delete_post',
+			'wp_trash_post',
+			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+			'wp_update_comment_count', // TODO: check if needed for non ESI
+		));
 
 		foreach ($purge_post_events as $event) {
 			// this will purge all related tags
@@ -233,6 +230,7 @@ class Purge extends Base
 	{
 		$this->_add('*');
 
+		// Action to run after server was notified to delete LSCache entries.
 		do_action('litespeed_purged_all_lscache');
 
 		if (!$silence) {
@@ -411,6 +409,7 @@ class Purge extends Base
 			return false;
 		}
 
+		// Action to run after opcache purge.
 		do_action('litespeed_purged_all_opcache');
 
 		// Purge opcode cache
@@ -749,7 +748,9 @@ class Purge extends Base
 		self::add(Tag::TYPE_ARCHIVE_TERM . $cat->term_id);
 
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge category %s', 'litespeed-cache'), $val));
-		do_action('litespeed_purged_cat');
+
+		// Action to run after category purge.
+		do_action('litespeed_purged_cat', $value);
 	}
 
 	/**
@@ -777,7 +778,9 @@ class Purge extends Base
 		self::add(Tag::TYPE_ARCHIVE_TERM . $term->term_id);
 
 		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
-		do_action('litespeed_purged_tag');
+
+		// Action to run after tag purge.
+		do_action('litespeed_purged_tag', $val);
 	}
 
 	/**
@@ -810,6 +813,8 @@ class Purge extends Base
 		self::add($hash, $purge2);
 
 		!$quite && !defined('LITESPEED_PURGE_SILENT') && Admin_Display::success(sprintf(__('Purge url %s', 'litespeed-cache'), $val));
+
+		// Action to run after url purge.
 		do_action('litespeed_purged_link', $url);
 	}
 
@@ -950,9 +955,9 @@ class Purge extends Base
 		if (!is_null($recent_comments)) {
 			self::add(Tag::TYPE_WIDGET . $recent_comments->id);
 			self::add_private(Tag::TYPE_WIDGET . $recent_comments->id);
-		}
 
-		do_action('litespeed_purged_comment_widget', $recent_comments->id);
+			do_action('litespeed_purged_comment_widget', $recent_comments->id);
+		}
 	}
 
 	/**
