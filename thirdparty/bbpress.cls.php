@@ -78,10 +78,10 @@ class BBPress
 		}
 
 		global $wp_widget_factory;
-		if (bbp_is_reply($post_id) && !is_null($wp_widget_factory->widgets['BBP_Replies_Widget'])) {
+		if (bbp_is_reply($post_id) && isset($wp_widget_factory->widgets['BBP_Replies_Widget']) && !is_null($wp_widget_factory->widgets['BBP_Replies_Widget'])) {
 			do_action('litespeed_purge_widget', $wp_widget_factory->widgets['BBP_Replies_Widget']->id);
 		}
-		if (bbp_is_topic($post_id) && !is_null($wp_widget_factory->widgets['BBP_Topics_Widget'])) {
+		if (bbp_is_topic($post_id) && isset($wp_widget_factory->widgets['BBP_Topics_Widget']) && !is_null($wp_widget_factory->widgets['BBP_Topics_Widget'])) {
 			do_action('litespeed_purge_widget', $wp_widget_factory->widgets['BBP_Topics_Widget']->id);
 		}
 	}
