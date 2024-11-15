@@ -627,7 +627,7 @@ class Cloud extends Base
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_D_DASH, array('action2' => $type));
+		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ?  'cdn_dash' : $type));
 		if (!empty($data['qc_activated'])) {
 			// Sync conf as changed
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
