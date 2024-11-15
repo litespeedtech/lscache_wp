@@ -1522,6 +1522,9 @@ class Cloud extends Base
 
 						case 'mini_html':
 							foreach ($json['_carry_on'][$v] as $k2 => $v2) {
+								if (strpos($k2, 'ttl.') === 0) {
+									$v2 += time();
+								}
 								$this->_summary[$v][$k2] = $v2;
 							}
 							break;
