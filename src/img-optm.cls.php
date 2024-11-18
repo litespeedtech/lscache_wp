@@ -882,6 +882,10 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
+		if (defined('LITESPEED_IMG_OPTM_PULL_THREADS')) {
+			return LITESPEED_IMG_OPTM_PULL_THREADS;
+		}
+
 		// Tune number of images per request based on number of images waiting and cloud packages
 		$imgs_per_req = 1; // base 1, ramp up to ~50 max
 
@@ -897,6 +901,7 @@ class Img_Optm extends Base
 		$imgs_per_req = min(50, $imgs_per_req);
 
 		self::debug('Pulling images at rate: ' . $imgs_per_req . ' Images per request.');
+
 
 		return $imgs_per_req;
 	}
