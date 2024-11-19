@@ -6,7 +6,7 @@
  * @author Stephen Clay <steve@mrclay.org>
  */
 
-namespace LiteSpeed\Lib\CSS_MIN ;
+namespace LiteSpeed\Lib;
 
 defined( 'WPINC' ) || exit ;
 

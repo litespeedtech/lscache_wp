@@ -874,6 +874,7 @@ class Optimize extends Base
 		$src_list = array();
 		$html_list = array();
 
+		// TODO: fix replacement will leave new line
 		$content = preg_replace('#<!--.*-->#sU', '', $this->content);
 		preg_match_all('#<script([^>]*)>(.*)</script>#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -1059,6 +1060,7 @@ class Optimize extends Base
 		// $dom->load( $content );return $val;
 		// $items = $dom->find( 'link' );
 
+		// TODO: fix replacement will leave new line
 		$content = preg_replace(array('#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
 		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER);
 

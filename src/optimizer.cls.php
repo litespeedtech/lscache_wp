@@ -136,6 +136,16 @@ class Optimizer extends Root
 			File::save($tmp_static_file, $content, true, true);
 		}
 
+		// if CSS - run the minification on the saved file.
+		// Will move imports to the top of file and remove extra spaces.
+		if ($file_type == 'css') { 
+			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
+			$obj->add(File::read($tmp_static_file));
+			$css = $obj->minify();
+
+			File::save($tmp_static_file, $css);
+		}
+
 		// validate md5
 		$filecon_md5 = md5_file($tmp_static_file);
 
@@ -254,7 +264,7 @@ class Optimizer extends Root
 			if ($file_type == 'css') {
 				$dirname = dirname($this_url) . '/';
 
-				$con = Lib\CSS_MIN\UriRewriter::prepend($con, $dirname);
+				$con = Lib\UriRewriter::prepend($con, $dirname);
 			}
 		} else {
 			Debug2::debug2('[CSS] Load local [' . $file_type . '] ' . $real_file[0]);
@@ -263,7 +273,7 @@ class Optimizer extends Root
 			if ($file_type == 'css') {
 				$dirname = dirname($real_file[0]);
 
-				$con = Lib\CSS_MIN\UriRewriter::rewrite($con, $dirname);
+				$con = Lib\UriRewriter::rewrite($con, $dirname);
 			}
 		}
 
@@ -279,8 +289,10 @@ class Optimizer extends Root
 	public static function minify_css($data)
 	{
 		try {
-			$obj = new Lib\CSS_MIN\Minifier();
-			return $obj->run($data);
+			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
+			$obj->add($data);
+
+			return $obj->minify();
 		} catch (\Exception $e) {
 			Debug2::debug('******[Optmer] minify_css failed: ' . $e->getMessage());
 			error_log('****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage());
@@ -308,8 +320,10 @@ class Optimizer extends Root
 		}
 
 		try {
-			$data = Lib\JSMin::minify($data);
-			return $data;
+			$obj = new Lib\CSS_JS_MIN\Minify\JS();
+			$obj->add($data);
+
+			return $obj->minify();
 		} catch (\Exception $e) {
 			Debug2::debug('******[Optmer] minify_js failed: ' . $e->getMessage());
 			// error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() );
