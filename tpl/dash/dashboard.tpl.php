@@ -30,6 +30,8 @@ $ccss_count = count($this->load_queue('ccss'));
 $ucss_count = count($this->load_queue('ucss'));
 $placeholder_queue_count = count($this->load_queue('lqip'));
 $vpi_queue_count = count($this->load_queue('vpi'));
+
+$__cloud->maybe_preview_banner();
 ?>
 
 <div class="litespeed-dashboard">

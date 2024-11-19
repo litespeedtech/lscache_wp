@@ -1856,6 +1856,17 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Display a banner for dev env if using preview QC node.
+	 * @since 7.0
+	 */
+	public function maybe_preview_banner()
+	{
+		if (strpos(self::CLOUD_SERVER, 'preview.')) {
+			Admin_Display::note(__('Linked to QUIC.cloud preview environment, for testing purpose only.', 'litespeed-cache'), true, true);
+		}
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  3.0
@@ -1903,7 +1914,7 @@ class Cloud extends Base
 				break;
 
 			case self::TYPE_SYNC_STATUS:
-				$this->load_qc_status_for_dash('cdn_dash');
+				$this->load_qc_status_for_dash('cdn_dash', true);
 				$msg = __('Sync QUIC.cloud status successfully.', 'litespeed-cache');
 				Admin_Display::success($msg);
 				break;

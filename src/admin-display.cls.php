@@ -447,7 +447,7 @@ class Admin_Display extends Base
 		}
 
 		if ($echo) {
-			echo self::build_notice($color, $msg);
+			echo self::build_notice($color, $msg, $irremovable);
 			return;
 		}
 
