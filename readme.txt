@@ -286,6 +286,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Sitemap Timeout` setting. Added PHP const `LITESPEED_CRAWLER_MAP_TIMEOUT` support.
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
+* **GUI** New Online Service tab under General menu.
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Combined all Crawler settings to a single setting tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
