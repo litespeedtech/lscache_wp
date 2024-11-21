@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 4.9
-Tested up to: 6.6.1
+Tested up to: 6.7
 Stable tag: 6.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -254,7 +254,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 6.5.3 - Nov 25 2024 =
+= 6.5.3 - Dec 2 2024 =
 * **Misc** Quote escaped in attributes when building HTML.
 
 = 6.5.2 - Oct 17 2024 =
