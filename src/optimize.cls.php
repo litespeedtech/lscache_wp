@@ -874,9 +874,9 @@ class Optimize extends Base
 		$src_list = array();
 		$html_list = array();
 
-		// TODO: fix replacement will leave new line
-		$content = preg_replace('#<!--.*-->#sU', '', $this->content);
-		preg_match_all('#<script([^>]*)>(.*)</script>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace('#<!--.*-->(?:\r\n?|\n?)#sU', '', $this->content);
+		preg_match_all('#<script([^>]*)>(.*)</script>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = empty($match[1]) ? array() : Utility::parse_attr($match[1]);
 
@@ -1060,9 +1060,9 @@ class Optimize extends Base
 		// $dom->load( $content );return $val;
 		// $items = $dom->find( 'link' );
 
-		// TODO: fix replacement will leave new line
-		$content = preg_replace(array('#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
-		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace(array('#<!--.*-->(?:\r\n?|\n?)#sU', '#<script([^>]*)>.*</script>(?:\r\n?|\n?)#isU', '#<noscript([^>]*)>.*</noscript>(?:\r\n?|\n?)#isU'), '', $this->content);
+		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			// to avoid multiple replacement
