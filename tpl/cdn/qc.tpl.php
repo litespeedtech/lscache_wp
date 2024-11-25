@@ -69,14 +69,6 @@ $__cloud->maybe_preview_banner();
 			<?php else : ?>
 				<?php echo $__cloud->load_qc_status_for_dash('cdn_dash'); ?>
 			<?php endif; ?>
-
-			<?php if ($__cloud->activated()) : ?>
-				<div class="litespeed-column-with-boxes-footer">
-					<a href="<?php echo Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_RESET, false, null, array('ref' => 'cdn')); ?>" class="litespeed-right litespeed-danger" data-litespeed-cfm="<?php echo __('Are you sure you want to disconnect from QUIC.cloud? This will not remove any data from the QUIC.cloud dashboard.', 'litespeed-cache'); ?>"><?php echo __('Disconnect from QUIC.cloud', 'litespeed-cache'); ?></a>
-					<div class="clear"></div>
-				</div>
-			<?php endif; ?>
-
 		</div>
 	</div>
 
