@@ -201,16 +201,22 @@ class Cloud extends Base
 	/**
 	 * Decide the ref
 	 */
-	private function _get_ref_url($cdn = false)
+	private function _get_ref_url($ref = false)
 	{
-		$ref = 'admin.php?page=litespeed';
-		if ($cdn) {
-			$ref = 'admin.php?page=litespeed-cdn';
+		$link = 'admin.php?page=litespeed';
+		if ($ref == 'cdn') {
+			$link = 'admin.php?page=litespeed-cdn';
+		}
+		if ($ref == 'online') {
+			$link = 'admin.php?page=litespeed-general';
 		}
 		if (!empty($_GET['ref']) && $_GET['ref'] == 'cdn') {
-			$ref = 'admin.php?page=litespeed-cdn';
+			$link = 'admin.php?page=litespeed-cdn';
 		}
-		return get_admin_url(null, $ref);
+		if (!empty($_GET['ref']) && $_GET['ref'] == 'online') {
+			$link = 'admin.php?page=litespeed-general';
+		}
+		return get_admin_url(null, $link);
 	}
 
 	/**
