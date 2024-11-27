@@ -5,7 +5,7 @@ namespace LiteSpeed;
 defined('WPINC') || exit;
 
 $__cloud = Cloud::cls();
-$__cloud->finish_qc_activation(true);
+$__cloud->finish_qc_activation('cdn');
 $cloud_summary = Cloud::get_summary();
 
 $__cloud->maybe_preview_banner();
