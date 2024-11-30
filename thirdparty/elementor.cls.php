@@ -46,4 +46,13 @@ class Elementor
 	{
 		define('LITESPEED_ESI_OFF', true);
 	}
+
+	public static function detect()
+	{
+		/**
+		 * Add elementor nonces: https://wordpress.org/support/topic/page-caching-including-nonces/
+		 */
+		do_action('litespeed_nonce', 'elementor-pro-frontend');
+		do_action('litespeed_nonce', 'elementor-conversion-center-click');
+	}
 }
