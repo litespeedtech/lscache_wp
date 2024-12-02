@@ -1868,7 +1868,7 @@ class Cloud extends Base
 	public function maybe_preview_banner()
 	{
 		if (strpos(self::CLOUD_SERVER, 'preview.')) {
-			Admin_Display::note(__('Linked to QUIC.cloud preview environment, for testing purpose only.', 'litespeed-cache'), true, true);
+			Admin_Display::note(__('Linked to QUIC.cloud preview environment, for testing purpose only.', 'litespeed-cache'), true, true, 'litespeed-warning-bg');
 		}
 	}
 
