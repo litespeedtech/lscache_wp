@@ -1210,9 +1210,9 @@ class Crawler extends Root
 	 */
 	public function json_local_path()
 	{
-		if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
-			return false;
-		}
+		// if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
+		// 	return false;
+		// }
 
 		return LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta;
 	}
