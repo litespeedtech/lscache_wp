@@ -1662,6 +1662,8 @@ class Cloud extends Base
 		// Auto delete if too long ago
 		if (time() - $this->_summary['err_domains'][$home_url] > 86400 * 10) {
 			$this->_remove_domain_from_err_list($home_url);
+
+			return false;
 		}
 		if (time() - $this->_summary['err_domains'][$home_url] > 86400) {
 			return false;
