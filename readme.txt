@@ -285,6 +285,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Interval Between Runs` setting. Added PHP const `LITESPEED_CRAWLER_RUN_INTERVAL` support.
 * **Crawler** Dropped `Sitemap Timeout` setting. Added PHP const `LITESPEED_CRAWLER_MAP_TIMEOUT` support.
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
+* **Crawler** Fixed wrong path of .pid file under wp-admin folder in certain case. (igobybus)
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
 * **GUI** New Online Service tab under General menu.
 * **GUI** New QUIC.cloud CDN tab.
