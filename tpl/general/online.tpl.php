@@ -111,7 +111,11 @@ $__cloud->finish_qc_activation('online');
 
 <?php elseif (!empty($cloud_summary['qc_activated']) && ($cloud_summary['qc_activated'] == 'linked' || $cloud_summary['qc_activated'] == 'cdn')) : ?>
 	<h4 class="litespeed-text-md litespeed-top30"><span class="dashicons dashicons-saved litespeed-success"></span>&nbsp;<?php echo __('QUIC.cloud Integration Enabled', 'litespeed-cache'); ?></h4>
-	<p><?php echo __('Your site is connected and ready to use QUIC.cloud Online Services.', 'litespeed-cache'); ?> <a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+	<p><?php echo __('Your site is connected and ready to use QUIC.cloud Online Services.', 'litespeed-cache'); ?>
+		<?php if (empty($cloud_summary['partner'])) : ?>
+			<a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
+		<?php endif; ?>
+	</p>
 
 	<ul>
 		<li><span class="dashicons dashicons-yes litespeed-success"></span> <?php echo __('Page Optimization', 'litespeed-cache'); ?></li>
