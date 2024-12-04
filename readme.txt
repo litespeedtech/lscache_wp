@@ -255,7 +255,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.0 - Nov 2024 =
+= 7.0 - Feb 2025 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
 * **Core** Refactored config data init method to realtime update instead of delay update in plugin upgrade phase.
