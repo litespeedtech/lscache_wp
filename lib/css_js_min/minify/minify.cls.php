@@ -10,7 +10,6 @@
 namespace LiteSpeed\Lib\CSS_JS_MIN\Minify;
 
 use LiteSpeed\Lib\CSS_JS_MIN\Minify\Exception\IOException;
-use Psr\Cache\CacheItemInterface;
 
 defined( 'WPINC' ) || exit ;
 
@@ -170,20 +169,6 @@ abstract class Minify
         return $content;
     }
 
-    /**
-     * Minify the data & write it to a CacheItemInterface object.
-     *
-     * @param CacheItemInterface $item Cache item to write the data to
-     *
-     * @return CacheItemInterface Cache item with the minifier data
-     */
-    public function cache(CacheItemInterface $item)
-    {
-        $content = $this->execute();
-        $item->set($content);
-
-        return $item;
-    }
 
     /**
      * Minify the data.
