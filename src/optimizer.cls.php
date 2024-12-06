@@ -140,10 +140,9 @@ class Optimizer extends Root
 		// Will move imports to the top of file and remove extra spaces.
 		if ($file_type == 'css') { 
 			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
-			$obj->add(File::read($tmp_static_file));
-			$css = $obj->minify();
+			$file_content_combined = $obj->moveImportsToTop(File::read($tmp_static_file));
 
-			File::save($tmp_static_file, $css);
+			File::save($tmp_static_file, $file_content_combined);
 		}
 
 		// validate md5

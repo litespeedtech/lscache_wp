@@ -78,7 +78,7 @@ class CSS extends Minify
      *
      * @return string
      */
-    protected function moveImportsToTop($content)
+    public function moveImportsToTop($content)
     {
         if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)));?/', $content, $matches)) {
             // remove from content
