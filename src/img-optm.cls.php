@@ -765,6 +765,8 @@ class Img_Optm extends Base
 					'ori_saved' => 0,
 					'webp_total' => 0,
 					'webp_saved' => 0,
+					'avif_total' => 0,
+					'avif_saved' => 0,
 				);
 				// Init postmeta_info for the first one
 				if (!empty($v->b_meta_id)) {
@@ -793,6 +795,17 @@ class Img_Optm extends Base
 					$postmeta_info['webp_saved'] += $json['webp_reduced'];
 
 					$this->_summary['reduced'] += $json['webp_reduced'];
+				}
+
+				if (!empty($json['avif'])) {
+					$server_info['avif_md5'] = $json['avif_md5'];
+					$server_info['avif'] = $json['avif'];
+
+					// Append meta info
+					$postmeta_info['avif_total'] += $json['src_size'];
+					$postmeta_info['avif_saved'] += $json['avif_reduced'];
+
+					$this->_summary['reduced'] += $json['avif_reduced'];
 				}
 
 				// Update status and data in working table
@@ -940,6 +953,7 @@ class Img_Optm extends Base
 
 		$total_pulled_ori = 0;
 		$total_pulled_webp = 0;
+		$total_pulled_avif = 0;
 
 		$server_list = array();
 
@@ -997,10 +1011,25 @@ class Img_Optm extends Base
 							'data' => $row_img,
 						);
 					}
+
+					// request avif image
+					$avif_size = 0;
+					if (!empty($server_info['avif'])) {
+						$image_url = $server_info['server'] . '/' . $server_info['avif'];
+						self::debug('Queueing pull AVIF: ' . $image_url);
+						$requests[$req_counter] = array(
+							'url' => $image_url,
+							'type' => 'GET',
+						);
+						$imgs_by_req[$req_counter++] = array(
+							'type' => 'avif',
+							'data' => $row_img,
+						);
+					}
 				}
 				self::debug('Loaded images count: ' . $req_counter);
 
-				$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$server_list) {
+				$complete_action = function ($response, $req_count) use ($imgs_by_req, $rm_ori_bkup, &$total_pulled_ori, &$total_pulled_webp, &$total_pulled_avif, &$server_list) {
 					global $wpdb;
 					$row_data = isset($imgs_by_req[$req_count]) ? $imgs_by_req[$req_count] : false;
 					if (false === $row_data) {
@@ -1077,6 +1106,32 @@ class Img_Optm extends Base
 						do_action('litespeed_img_pull_webp', $row_img, $local_file . '.webp');
 
 						$total_pulled_webp++;
+					} elseif ('avif' === $row_type) {
+						file_put_contents($local_file . '.avif', $response->body);
+
+						if (!file_exists($local_file . '.avif') || !filesize($local_file . '.avif') || md5_file($local_file . '.avif') !== $server_info['avif_md5']) {
+							self::debug('❌ Failed to pull optimized avif img: file md5 mismatch, server md5: ' . $server_info['avif_md5']);
+
+							// Delete working table
+							$q = "DELETE FROM `$this->_table_img_optming` WHERE id = %d ";
+							$wpdb->query($wpdb->prepare($q, $row_img->id));
+
+							$msg = __('Pulled AVIF image md5 does not match the notified AVIF image md5.', 'litespeed-cache');
+							Admin_Display::error($msg);
+							return;
+						}
+
+						self::debug('Pulled optimized img AVIF: ' . $local_file . '.avif');
+
+						$avif_size = filesize($local_file . '.avif');
+
+						/**
+						 * API for AVIF
+						 * @since 7.0
+						 */
+						do_action('litespeed_img_pull_avif', $row_img, $local_file . '.avif');
+
+						$total_pulled_avif++;
 					} else {
 						// "ori" image type
 						file_put_contents($local_file . '.tmp', $response->body);
@@ -1190,7 +1245,7 @@ class Img_Optm extends Base
 		if (empty($this->_summary['img_taken'])) {
 			$this->_summary['img_taken'] = 0;
 		}
-		$this->_summary['img_taken'] += $total_pulled_ori + $total_pulled_webp;
+		$this->_summary['img_taken'] += $total_pulled_ori + $total_pulled_webp + $total_pulled_avif;
 		self::save_summary();
 
 		// Manually running needs to roll back timestamp for next running
@@ -1390,6 +1445,10 @@ class Img_Optm extends Base
 		// del webp
 		$this->__media->info($short_file_path . '.webp', $this->tmp_pid) && $this->__media->del($short_file_path . '.webp', $this->tmp_pid);
 		$this->__media->info($short_file_path . '.optm.webp', $this->tmp_pid) && $this->__media->del($short_file_path . '.optm.webp', $this->tmp_pid);
+
+		// del avif
+		$this->__media->info($short_file_path . '.avif', $this->tmp_pid) && $this->__media->del($short_file_path . '.avif', $this->tmp_pid);
+		$this->__media->info($short_file_path . '.optm.avif', $this->tmp_pid) && $this->__media->del($short_file_path . '.optm.avif', $this->tmp_pid);
 
 		$extension = pathinfo($short_file_path, PATHINFO_EXTENSION);
 		$local_filename = substr($short_file_path, 0, -strlen($extension) - 1);
@@ -1937,6 +1996,20 @@ class Img_Optm extends Base
 					$msg = __('Enabled WebP file successfully.', 'litespeed-cache');
 				}
 			}
+			// to switch avif file
+			elseif ($switch_type === 'avif') {
+				if ($this->__media->info($v->src . '.avif', $v->post_id)) {
+					$this->__media->rename($v->src . '.avif', $v->src . '.optm.avif', $v->post_id);
+					self::debug('Disabled AVIF: ' . $v->src);
+
+					$msg = __('Disabled AVIF file successfully.', 'litespeed-cache');
+				} elseif ($this->__media->info($v->src . '.optm.avif', $v->post_id)) {
+					$this->__media->rename($v->src . '.optm.avif', $v->src . '.avif', $v->post_id);
+					self::debug('Enable AVIF: ' . $v->src);
+
+					$msg = __('Enabled AVIF file successfully.', 'litespeed-cache');
+				}
+			}
 			// to switch original file
 			else {
 				$extension = pathinfo($v->src, PATHINFO_EXTENSION);
@@ -2102,6 +2175,7 @@ class Img_Optm extends Base
 				$this->batch_switch($type);
 				break;
 
+			case substr($type, 0, 4) === 'avif':
 			case substr($type, 0, 4) === 'webp':
 			case substr($type, 0, 4) === 'orig':
 				$this->_switch_optm_file($type);
