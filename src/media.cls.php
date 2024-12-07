@@ -342,37 +342,52 @@ class Media extends Root
 		echo '</p>';
 
 		echo '<p>';
-		// WebP info
-		if ($size_meta && !empty($size_meta['webp_saved'])) {
-			$percent = ceil(($size_meta['webp_saved'] * 100) / $size_meta['webp_total']);
+		// WebP/AVIF info
+		if ($size_meta && !empty($size_meta[$this->_format . '_saved'])) {
+			$is_avif = 'avif' === $this->_format;
+			$size_meta_saved = $size_meta[$this->_format . '_saved'];
+			$size_meta_total = $size_meta[$this->_format . '_total'];
 
-			$link = Utility::build_url(Router::ACTION_IMG_OPTM, 'webp' . $post_id);
+			$percent = ceil(($size_meta_saved * 100) / $size_meta_total);
+
+			$link = Utility::build_url(Router::ACTION_IMG_OPTM, $this->_format . $post_id);
 			$desc = false;
 
 			$cls = '';
 
-			if ($this->info($short_path . '.webp', $post_id)) {
+			if ($this->info($short_path . '.' . $this->_format, $post_id)) {
 				$curr_status = __('(optm)', 'litespeed-cache');
-				$desc =
-					__('Currently using optimized version of WebP file.', 'litespeed-cache') .
-					'&#10;' .
-					__('Click to switch to original (unoptimized) version.', 'litespeed-cache');
-			} elseif ($this->info($short_path . '.optm.webp', $post_id)) {
+				$desc = $is_avif
+					? __('Currently using optimized version of AVIF file.', 'litespeed-cache')
+					: __('Currently using optimized version of WebP file.', 'litespeed-cache');
+				$desc .= '&#10;' . __('Click to switch to original (unoptimized) version.', 'litespeed-cache');
+			} elseif ($this->info($short_path . '.optm.' . $this->_format, $post_id)) {
 				$cls .= ' litespeed-warning';
 				$curr_status = __('(non-optm)', 'litespeed-cache');
-				$desc =
-					__('Currently using original (unoptimized) version of WebP file.', 'litespeed-cache') .
-					'&#10;' .
-					__('Click to switch to optimized version.', 'litespeed-cache');
+				$desc = $is_avif
+					? __('Currently using original (unoptimized) version of AVIF file.', 'litespeed-cache')
+					: __('Currently using original (unoptimized) version of WebP file.', 'litespeed-cache');
+				$desc .= '&#10;' . __('Click to switch to optimized version.', 'litespeed-cache');
 			}
 
 			echo GUI::pie_tiny(
 				$percent,
 				24,
-				sprintf(__('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'), $percent . '%', Utility::real_size($size_meta['webp_saved'])),
+				sprintf(
+					$is_avif
+						? __('AVIF file reduced by %1$s (%2$s)', 'litespeed-cache')
+						: __('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'),
+					$percent . '%',
+					Utility::real_size($size_meta_saved)
+				),
 				'left'
 			);
-			echo sprintf(__('WebP saved %s', 'litespeed-cache'), $percent . '%');
+			echo sprintf(
+				$is_avif
+					? __('AVIF saved %s', 'litespeed-cache')
+					: __('WebP saved %s', 'litespeed-cache'),
+				$percent . '%'
+			);
 
 			if ($desc) {
 				echo sprintf(
@@ -384,13 +399,16 @@ class Media extends Root
 				);
 			} else {
 				echo sprintf(
-					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
-					__('Using optimized version of file. ', 'litespeed-cache') . '&#10;' . __('No backup of unoptimized WebP file exists.', 'litespeed-cache'),
+					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s&#10;%2$s">%3$s</span>',
+					__('Using optimized version of file. ', 'litespeed-cache'),
+					$is_avif
+						? __('No backup of unoptimized AVIF file exists.', 'litespeed-cache')
+						: __('No backup of unoptimized WebP file exists.', 'litespeed-cache'),
 					__('(optm)', 'litespeed-cache')
 				);
 			}
 		} else {
-			echo __('WebP', 'litespeed-cache') . '<span class="litespeed-left10">—</span>';
+			echo __('WebP/AVIF', 'litespeed-cache') . '<span class="litespeed-left10">—</span>';
 		}
 
 		echo '</p>';
@@ -956,7 +974,7 @@ class Media extends Root
 	 */
 	public function replace_background_webp($content)
 	{
-		Debug2::debug2('[Media] Start replacing bakcground WebP.');
+		Debug2::debug2('[Media] Start replacing background WebP/AVIF.');
 
 		// Handle Elementors data-settings json encode background-images
 		$content = $this->replace_urls_in_json($content);
@@ -1046,17 +1064,17 @@ class Media extends Root
 	}
 
 	/**
-	 * Replace internal image src to webp
+	 * Replace internal image src to webp or avif
 	 *
 	 * @since  1.6.2
 	 * @access public
 	 */
 	public function replace_webp($url)
 	{
-		Debug2::debug2('[Media] webp replacing: ' . substr($url, 0, 200));
+		Debug2::debug2('[Media] ' . $this->_format . ' replacing: ' . substr($url, 0, 200));
 
-		if (substr($url, -5) == '.webp') {
-			Debug2::debug2('[Media] already webp');
+		if (substr($url, -5) === '.' . $this->_format) {
+			Debug2::debug2('[Media] already ' . $this->_format);
 			return false;
 		}
 
@@ -1068,10 +1086,10 @@ class Media extends Root
 		 */
 		if (apply_filters('litespeed_media_check_ori', Utility::is_internal_file($url), $url)) {
 			// check if has webp file
-			if (apply_filters('litespeed_media_check_webp', Utility::is_internal_file($url, 'webp'), $url)) {
-				$url .= '.webp';
+			if (apply_filters('litespeed_media_check_webp', Utility::is_internal_file($url, $this->_format), $url)) {
+				$url .= '.' . $this->_format;
 			} else {
-				Debug2::debug2('[Media] -no WebP file, bypassed');
+				Debug2::debug2('[Media] -no WebP or AVIF file, bypassed');
 				return false;
 			}
 		} else {

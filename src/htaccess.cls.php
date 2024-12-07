@@ -441,6 +441,7 @@ class Htaccess extends Root
 			'ExpiresByType image/png A' . $ttl,
 			'ExpiresByType image/gif A' . $ttl,
 			'ExpiresByType image/webp A' . $ttl,
+			'ExpiresByType image/avif A' . $ttl,
 			'',
 			'ExpiresByType video/ogg A' . $ttl,
 			'ExpiresByType audio/ogg A' . $ttl,

@@ -421,13 +421,13 @@ class Utility extends Root
 	}
 
 	/**
-	 * Drop .webp if existed in filename
+	 * Drop .webp and .avif if existed in filename
 	 *
 	 * @since  4.7
 	 */
 	public static function drop_webp($filename)
 	{
-		if (substr($filename, -5) === '.webp') {
+		if (in_array(substr($filename, -5), array('.webp', '.avif'))) {
 			$filename = substr($filename, 0, -5);
 		}
 
