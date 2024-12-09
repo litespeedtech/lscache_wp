@@ -288,6 +288,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
 * **Crawler** Fixed wrong path of .pid file under wp-admin folder in certain case. (igobybus)
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
+* **Page Optimize** Updated latest CSS/JS optimization library to fix the CSS color optimization issue.
 * **GUI** New Online Service tab under General menu.
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Combined all Crawler settings to a single setting tab.
@@ -297,6 +298,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 * **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
+* **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
 
 = 6.5.3 - Dec 4 2024 =
 * **Misc** Quote escaped in attributes when building HTML. (CVE-2024-51915)
