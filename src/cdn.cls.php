@@ -308,7 +308,7 @@ class CDN extends Root
 		 */
 		preg_match_all('/url\((?![\'"]?data)[\'"]?(.*?)[\'"]?\)/i', $this->content, $matches);
 		foreach ($matches[1] as $k => $url) {
-			if ($url == null) {
+			if (!$url) {
 				continue;
 			}
 
