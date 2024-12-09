@@ -401,8 +401,7 @@ class Crawler extends Root
 			$this->_crawler_conf['run_delay'] = $_SERVER[Base::ENV_CRAWLER_USLEEP];
 		}
 
-		$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? LITESPEED_CRAWLER_DURATION : 900;
-		$this->_crawler_conf['run_duration'] = $RUN_DURATION;
+		$this->_crawler_conf['run_duration'] = $this->get_crawler_duration();
 
 		$this->_crawler_conf['load_limit'] = $this->conf(Base::O_CRAWLER_LOAD_LIMIT);
 		if (!empty($_SERVER[Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE])) {
@@ -428,6 +427,20 @@ class Crawler extends Root
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get crawler duration allowance
+	 *
+	 * @since 7.0
+	 */
+	public function get_crawler_duration()
+	{
+		$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? LITESPEED_CRAWLER_DURATION : 900;
+		if ($RUN_DURATION > 900) {
+			$RUN_DURATION = 900; // reset to default value if defined in conf file is higher than 900 seconds for security enhancement
+		}
+		return $RUN_DURATION;
 	}
 
 	/**
@@ -1197,9 +1210,9 @@ class Crawler extends Root
 	 */
 	public function json_local_path()
 	{
-		if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
-			return false;
-		}
+		// if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
+		// 	return false;
+		// }
 
 		return LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta;
 	}

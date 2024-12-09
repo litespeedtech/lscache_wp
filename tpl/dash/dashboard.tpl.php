@@ -32,6 +32,7 @@ $placeholder_queue_count = count($this->load_queue('lqip'));
 $vpi_queue_count = count($this->load_queue('vpi'));
 
 $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE !== 'NONE';
+$__cloud->maybe_preview_banner();
 ?>
 
 <div class="litespeed-dashboard">
@@ -297,14 +298,14 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 							<h3 class="litespeed-title"><?php echo __('Partner Benefits Provided by', 'litespeed-cache'); ?></h3>
 							<div>
 
-								<?php if ($cloud_summary['partner']['logo']) : ?>
-									<?php if ($cloud_summary['partner']['url']) : ?>
+								<?php if (!empty($cloud_summary['partner']['logo'])) : ?>
+									<?php if (!empty($cloud_summary['partner']['url'])) : ?>
 										<a href="<?php echo $cloud_summary['partner']['url']; ?>" target="_blank"><img src="<?php echo $cloud_summary['partner']['logo']; ?>" alt="<?php echo $cloud_summary['partner']['name']; ?>"></a>
 									<?php else : ?>
 										<img src="<?php echo $cloud_summary['partner']['logo']; ?>" alt="<?php echo $cloud_summary['partner']['name']; ?>">
 									<?php endif; ?>
-								<?php elseif ($cloud_summary['partner']['name']) : ?>
-									<?php if ($cloud_summary['partner']['url']) : ?>
+								<?php elseif (!empty($cloud_summary['partner']['name'])) : ?>
+									<?php if (!empty($cloud_summary['partner']['url'])) : ?>
 										<a href="<?php echo $cloud_summary['partner']['url']; ?>" target="_blank"><span class="postbox-partner-name"><?php echo $cloud_summary['partner']['name']; ?></span></a>
 									<?php else : ?>
 										<span class="postbox-partner-name"><?php echo $cloud_summary['partner']['name']; ?></span>
@@ -815,6 +816,11 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 							</div>
 						<?php endif; ?>
 					</div>
+
+					<?php $promo_mini = $__cloud->load_qc_status_for_dash('promo_mini'); ?>
+					<?php if ($promo_mini) : ?>
+						<?php echo $promo_mini; ?>
+					<?php endif; ?>
 
 					<?php if ($__cloud->activated()) : ?>
 						<?php $news = $__cloud->load_qc_status_for_dash('news_dash'); ?>

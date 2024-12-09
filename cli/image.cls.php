@@ -118,7 +118,7 @@ class Image
 			}
 		}
 
-		foreach (array('reduced', 'reduced_webp') as $v) {
+		foreach (array('reduced', 'reduced_webp', 'reduced_avif') as $v) {
 			if (!empty($summary[$v])) {
 				$summary[$v] = Utility::real_size($summary[$v]);
 			}

@@ -278,7 +278,7 @@ class Admin_Display extends Base
 			return $tag;
 		}
 
-		return '<script src="' . $src . '" type="text/babel"></script>';
+		return '<script src="' . Str::trim_quotes($src) . '" type="text/babel"></script>';
 	}
 
 	/**
@@ -320,13 +320,16 @@ class Admin_Display extends Base
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	public static function build_notice($color, $str, $irremovable = false)
+	public static function build_notice($color, $str, $irremovable = false, $additional_classes = '')
 	{
 		$cls = $color;
 		if ($irremovable) {
 			$cls .= ' litespeed-irremovable';
 		} else {
 			$cls .= ' is-dismissible';
+		}
+		if ($additional_classes) {
+			$cls .= ' ' . $additional_classes;
 		}
 
 		// possible translation
@@ -341,9 +344,9 @@ class Admin_Display extends Base
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function info($msg, $echo = false, $irremovable = false)
+	public static function info($msg, $echo = false, $irremovable = false, $additional_classes = '')
 	{
-		self::add_notice(self::NOTICE_BLUE, $msg, $echo, $irremovable);
+		self::add_notice(self::NOTICE_BLUE, $msg, $echo, $irremovable, $additional_classes);
 	}
 
 	/**
@@ -352,9 +355,9 @@ class Admin_Display extends Base
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function note($msg, $echo = false, $irremovable = false)
+	public static function note($msg, $echo = false, $irremovable = false, $additional_classes = '')
 	{
-		self::add_notice(self::NOTICE_YELLOW, $msg, $echo, $irremovable);
+		self::add_notice(self::NOTICE_YELLOW, $msg, $echo, $irremovable, $additional_classes);
 	}
 
 	/**
@@ -363,14 +366,9 @@ class Admin_Display extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function success($msg, $echo = false, $irremovable = false)
+	public static function success($msg, $echo = false, $irremovable = false, $additional_classes = '')
 	{
-		self::add_notice(self::NOTICE_GREEN, $msg, $echo, $irremovable);
-	}
-	/** @deprecated 4.7 */
-	public static function succeed($msg, $echo = false, $irremovable = false)
-	{
-		self::success($msg, $echo, $irremovable);
+		self::add_notice(self::NOTICE_GREEN, $msg, $echo, $irremovable, $additional_classes);
 	}
 
 	/**
@@ -379,9 +377,9 @@ class Admin_Display extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function error($msg, $echo = false, $irremovable = false)
+	public static function error($msg, $echo = false, $irremovable = false, $additional_classes = '')
 	{
-		self::add_notice(self::NOTICE_RED, $msg, $echo, $irremovable);
+		self::add_notice(self::NOTICE_RED, $msg, $echo, $irremovable, $additional_classes);
 	}
 
 	/**
@@ -424,7 +422,7 @@ class Admin_Display extends Base
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public static function add_notice($color, $msg, $echo = false, $irremovable = false)
+	public static function add_notice($color, $msg, $echo = false, $irremovable = false, $additional_classes = '')
 	{
 		// self::debug("add_notice msg", $msg);
 		// Bypass adding for CLI or cron
@@ -447,7 +445,7 @@ class Admin_Display extends Base
 		}
 
 		if ($echo) {
-			echo self::build_notice($color, $msg);
+			echo self::build_notice($color, $msg, $irremovable, $additional_classes);
 			return;
 		}
 
@@ -460,10 +458,10 @@ class Admin_Display extends Base
 
 		if (is_array($msg)) {
 			foreach ($msg as $k => $str) {
-				$messages[$k] = self::build_notice($color, $str, $irremovable);
+				$messages[$k] = self::build_notice($color, $str, $irremovable, $additional_classes);
 			}
 		} else {
-			$messages[] = self::build_notice($color, $msg, $irremovable);
+			$messages[] = self::build_notice($color, $msg, $irremovable, $additional_classes);
 		}
 		$messages = array_unique($messages);
 		self::update_option($msg_name, $messages);

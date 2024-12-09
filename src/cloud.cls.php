@@ -22,9 +22,10 @@ class Cloud extends Base
 	const SVC_U_ACTIVATE = 'u/wp3/activate';
 	const SVC_D_ENABLE_CDN = 'd/enable_cdn';
 	const SVC_D_LINK = 'd/link';
+	const SVC_D_API = 'd/api';
+	const SVC_D_DASH = 'd/dash';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
-	const SVC_D_STATUS = 'd/status/';
 	const SVC_D_STATUS_CDN_CLI = 'd/status/cdn_cli';
 	const SVC_D_NODES = 'd/nodes';
 	const SVC_D_SYNC_CONF = 'd/sync_conf';
@@ -64,6 +65,8 @@ class Cloud extends Base
 		self::SVC_D_NODES,
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
+		self::SVC_D_API,
+		self::SVC_D_DASH,
 		self::SVC_D_STATUS_CDN_CLI,
 		// self::API_NEWS,
 		self::API_REPORT,
@@ -106,6 +109,7 @@ class Cloud extends Base
 	const TYPE_ACTIVATE = 'activate';
 	const TYPE_LINK = 'link';
 	const TYPE_ENABLE_CDN = 'enablecdn';
+	const TYPE_API = 'api';
 	const TYPE_SYNC_USAGE = 'sync_usage';
 	const TYPE_RESET = 'reset';
 	const TYPE_SYNC_STATUS = 'sync_status';
@@ -197,16 +201,22 @@ class Cloud extends Base
 	/**
 	 * Decide the ref
 	 */
-	private function _get_ref_url($cdn = false)
+	private function _get_ref_url($ref = false)
 	{
-		$ref = 'admin.php?page=litespeed';
-		if ($cdn) {
-			$ref = 'admin.php?page=litespeed-cdn';
+		$link = 'admin.php?page=litespeed';
+		if ($ref == 'cdn') {
+			$link = 'admin.php?page=litespeed-cdn';
+		}
+		if ($ref == 'online') {
+			$link = 'admin.php?page=litespeed-general';
 		}
 		if (!empty($_GET['ref']) && $_GET['ref'] == 'cdn') {
-			$ref = 'admin.php?page=litespeed-cdn';
+			$link = 'admin.php?page=litespeed-cdn';
 		}
-		return get_admin_url(null, $ref);
+		if (!empty($_GET['ref']) && $_GET['ref'] == 'online') {
+			$link = 'admin.php?page=litespeed-general';
+		}
+		return get_admin_url(null, $link);
 	}
 
 	/**
@@ -224,7 +234,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
@@ -279,7 +289,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
@@ -374,6 +384,25 @@ class Cloud extends Base
 	}
 
 	/**
+	 * API link parsed call to QC
+	 *
+	 * @since 7.0
+	 */
+	public function api_link_call($action2)
+	{
+		if (!$this->activated()) {
+			Admin_Display::error(__('You need to activate QC first.', 'litespeed-cache'));
+			return;
+		}
+
+		$data = array(
+			'action2' => $action2,
+		);
+		$res = $this->post(self::SVC_D_API, $data);
+		self::debug("API link call result: ", $res);
+	}
+
+	/**
 	 * Enable QC CDN
 	 *
 	 * @since 7.0
@@ -423,7 +452,7 @@ class Cloud extends Base
 
 			return false;
 		}
-		$signature = sodium_crypto_sign_detached($data, $sk);
+		$signature = sodium_crypto_sign_detached((string)$data, $sk);
 		return base64_encode($signature);
 	}
 
@@ -589,30 +618,22 @@ class Cloud extends Base
 
 	/**
 	 * Load QC status for dash usage
+	 * Format to translate: `<a href="{#xxx#}" class="button button-primary">xxxx</a><a href="{#xxx#}">xxxx2</a>`
 	 *
 	 * @since 7.0
 	 */
 	public function load_qc_status_for_dash($type, $force = false)
 	{
-		$col = 'body';
-		if ($type == 'cdn_dash_mini') {
-			$type = 'cdn_dash';
-			$col = 'body_mini';
-		}
-
-		if (!$force && !empty($this->_summary['next_call_ttl' . $type]) && $this->_summary['next_call_ttl' . $type] > time()) {
-			if ($col == 'body_mini') {
-				return $this->_summary['cdn_dash_mini'];
-			}
-			return $this->_summary[$type];
+		return Str::translate_qc_apis($this->_load_qc_status_for_dash($type, $force));
+	}
+	private function _load_qc_status_for_dash($type, $force = false)
+	{
+		if (!$force && !empty($this->_summary['mini_html']) && isset($this->_summary['mini_html'][$type]) && !empty($this->_summary['mini_html']['ttl.' . $type]) && $this->_summary['mini_html']['ttl.' . $type] > time()) {
+			return Str::safe_html($this->_summary['mini_html'][$type]);
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_D_STATUS . $type);
-		if (empty($data['next_call_ttl'])) {
-			return;
-		}
-
+		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ?  'cdn_dash' : $type));
 		if (!empty($data['qc_activated'])) {
 			// Sync conf as changed
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
@@ -626,18 +647,12 @@ class Cloud extends Base
 			$this->_summary['qc_activated'] = $data['qc_activated'];
 		}
 
-		// Store the info
-		$this->_summary['next_call_ttl.' . $type] = time() + intval($data['next_call_ttl']);
-		if (!empty($data['body'])) {
-			$this->_summary[$type] = Str::safe_html($data['body']);
-		}
-		if ($type == 'cdn_dash') { // Also save the mini content
-			$this->_summary['cdn_dash_mini'] = Str::safe_html($data['body_mini']);
-		}
-		$this->save_summary();
-
 		// Show the info
-		return Str::safe_html($data[$col]);
+		if (isset($this->_summary['mini_html'][$type])) {
+			return Str::safe_html($this->_summary['mini_html'][$type]);
+		}
+
+		return '';
 	}
 
 	/**
@@ -936,9 +951,6 @@ class Cloud extends Base
 	public function detect_cloud($service, $force = false)
 	{
 		if (in_array($service, self::$CENTER_SVC_SET)) {
-			return self::CLOUD_SERVER;
-		}
-		if (strpos($service, self::SVC_D_STATUS) === 0) {
 			return self::CLOUD_SERVER;
 		}
 
@@ -1337,7 +1349,7 @@ class Cloud extends Base
 	private function _parse_response($response, $service, $service_tag, $server)
 	{
 		// If show the error or not if failed
-		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
+		$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && $service !== self::SVC_D_DASH;
 
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
@@ -1499,7 +1511,7 @@ class Cloud extends Base
 		if (!empty($json['_carry_on'])) {
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
-			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
+			foreach (array('usage', 'promo', 'mini_html', 'partner', '_error', '_info', '_note', '_success') as $v) {
 				if (isset($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':
@@ -1512,6 +1524,15 @@ class Cloud extends Base
 								$this->_summary[$v] = array();
 							}
 							$this->_summary[$v][] = $json['_carry_on'][$v];
+							break;
+
+						case 'mini_html':
+							foreach ($json['_carry_on'][$v] as $k2 => $v2) {
+								if (strpos($k2, 'ttl.') === 0) {
+									$v2 += time();
+								}
+								$this->_summary[$v][$k2] = $v2;
+							}
 							break;
 
 						case 'partner':
@@ -1544,7 +1565,7 @@ class Cloud extends Base
 			$str_translated = Error::msg($json_msg);
 			$msg = __('Failed to communicate with QUIC.cloud server', 'litespeed-cache') . ': ' . $str_translated . " [server] $server [service] $service";
 			$msg .= $this->_parse_link($json);
-			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && strpos($service, self::SVC_D_STATUS) !== 0;
+			$visible_err = $service !== self::API_VER && $service !== self::API_NEWS && $service !== self::SVC_D_DASH;
 			if ($visible_err) {
 				Admin_Display::error($msg);
 			}
@@ -1641,6 +1662,8 @@ class Cloud extends Base
 		// Auto delete if too long ago
 		if (time() - $this->_summary['err_domains'][$home_url] > 86400 * 10) {
 			$this->_remove_domain_from_err_list($home_url);
+
+			return false;
 		}
 		if (time() - $this->_summary['err_domains'][$home_url] > 86400) {
 			return false;
@@ -1841,6 +1864,17 @@ class Cloud extends Base
 	}
 
 	/**
+	 * Display a banner for dev env if using preview QC node.
+	 * @since 7.0
+	 */
+	public function maybe_preview_banner()
+	{
+		if (strpos(self::CLOUD_SERVER, 'preview.')) {
+			Admin_Display::note(__('Linked to QUIC.cloud preview environment, for testing purpose only.', 'litespeed-cache'), true, true, 'litespeed-warning-bg');
+		}
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  3.0
@@ -1881,8 +1915,14 @@ class Cloud extends Base
 				$this->enable_cdn();
 				break;
 
+			case self::TYPE_API:
+				if (!empty($_GET['action2'])) {
+					$this->api_link_call($_GET['action2']);
+				}
+				break;
+
 			case self::TYPE_SYNC_STATUS:
-				$this->load_qc_status_for_dash('cdn_dash');
+				$this->load_qc_status_for_dash('cdn_dash', true);
 				$msg = __('Sync QUIC.cloud status successfully.', 'litespeed-cache');
 				Admin_Display::success($msg);
 				break;
