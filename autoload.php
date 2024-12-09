@@ -80,19 +80,19 @@ $litespeed_php_files = array(
 	'cli/purge.cls.php',
 
 	// 3rd party libraries
-	'lib/css-min/colors.cls.php',
-	'lib/css-min/minifier.cls.php',
-	'lib/css-min/urirewriter.cls.php',
-	'lib/css-min/utils.cls.php',
+	'lib/css_js_min/pathconverter/converter.cls.php',
+	'lib/css_js_min/minify/exception.cls.php',
+	'lib/css_js_min/minify/minify.cls.php',
+	'lib/css_js_min/minify/css.cls.php',
+	'lib/css_js_min/minify/js.cls.php',
+	'lib/urirewriter.cls.php',
 	'lib/guest.cls.php',
 	'lib/html-min.cls.php',
-	'lib/jsmin.cls.php',
 	// 'lib/object-cache.php',
 	// 'lib/php-compatibility.func.php',
 
 	// upgrade purpose delay loaded funcs
 	// 'src/data.upgrade.func.php',
-
 );
 foreach ($litespeed_php_files as $class) {
 	$file = LSCWP_DIR . $class;
