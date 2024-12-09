@@ -234,7 +234,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
@@ -289,7 +289,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
