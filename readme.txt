@@ -294,6 +294,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **GUI** Combined all Crawler settings to a single setting tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
 * **GUI** Fixed an issue that irremovable banner can't be echoed directly.
+* **GUI** Page speed chart is limited to cacheable Servers only.
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
