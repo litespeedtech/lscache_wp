@@ -49,6 +49,10 @@ class Elementor
 
 	public static function detect()
 	{
+		if (!defined('ELEMENTOR_VERSION')) {
+			return;
+		}
+
 		/**
 		 * Add elementor nonces: https://wordpress.org/support/topic/page-caching-including-nonces/
 		 */
