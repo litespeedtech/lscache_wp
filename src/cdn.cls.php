@@ -308,10 +308,6 @@ class CDN extends Root
 		 */
 		preg_match_all('/url\((?![\'"]?data)[\'"]?(.+?)[\'"]?\)/i', $this->content, $matches);
 		foreach ($matches[1] as $k => $url) {
-			if (!$url) {
-				continue;
-			}
-
 			$url = str_replace(array(' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;'), '', $url);
 
 			// Parse file postfix
