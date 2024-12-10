@@ -275,6 +275,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
+* **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
 * **Crawler** Defaulted and limited crawler `Run Duration` maximum to 900 seconds and dropped the setting.
