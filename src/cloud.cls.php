@@ -24,6 +24,7 @@ class Cloud extends Base
 	const SVC_D_LINK = 'd/link';
 	const SVC_D_API = 'd/api';
 	const SVC_D_DASH = 'd/dash';
+	const SVC_D_V3UPGRADE = 'd/v3upgrade';
 	const SVC_U_LINK = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN = 'u/wp3/enablecdn';
 	const SVC_D_STATUS_CDN_CLI = 'd/status/cdn_cli';
@@ -66,6 +67,7 @@ class Cloud extends Base
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
 		self::SVC_D_API,
+		self::SVC_D_V3UPGRADE,
 		self::SVC_D_DASH,
 		self::SVC_D_STATUS_CDN_CLI,
 		// self::API_NEWS,
@@ -79,7 +81,7 @@ class Cloud extends Base
 	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	// No api key needed for these services
-	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
+	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE);
 
 	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
 
@@ -131,7 +133,7 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	private function _init_qc_prepare()
+	public function init_qc_prepare()
 	{
 		if (empty($this->_summary['sk_b64'])) {
 			$keypair = sodium_crypto_sign_keypair();
@@ -141,7 +143,10 @@ class Cloud extends Base
 			$this->_summary['sk_b64'] = $sk;
 			$this->save_summary();
 			// ATM `qc_activated` = null
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -151,7 +156,7 @@ class Cloud extends Base
 	 */
 	public function init_qc()
 	{
-		$this->_init_qc_prepare();
+		$this->init_qc_prepare();
 
 		$ref = $this->_get_ref_url();
 
@@ -226,7 +231,7 @@ class Cloud extends Base
 	 */
 	public function init_qc_cli()
 	{
-		$this->_init_qc_prepare();
+		$this->init_qc_prepare();
 
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if (!$server_ip) {
