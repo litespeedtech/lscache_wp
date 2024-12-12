@@ -296,7 +296,7 @@ class GUI extends Base
 		$is_litespeed_page = $this->_is_litespeed_page();
 
 		// Bypass showing info banner if disabled all in debug
-		if (defined('LITESPEED_DISABLE_ALL')) {
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			if ($is_litespeed_page && !$check_only) {
 				include_once LSCWP_DIR . 'tpl/inc/disabled_all.php';
 			}

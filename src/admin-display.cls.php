@@ -66,7 +66,7 @@ class Admin_Display extends Base
 			$manage = 'manage_options';
 		}
 		if (current_user_can($manage)) {
-			if (!defined('LITESPEED_DISABLE_ALL')) {
+			if (!defined('LITESPEED_DISABLE_ALL') || !LITESPEED_DISABLE_ALL) {
 				add_action('wp_before_admin_bar_render', array(GUI::cls(), 'backend_shortcut'));
 			}
 
@@ -543,7 +543,7 @@ class Admin_Display extends Base
 		}
 
 		// Show disable all warning
-		if (defined('LITESPEED_DISABLE_ALL')) {
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			Admin_Display::error(Error::msg('disabled_all'), true);
 		}
 

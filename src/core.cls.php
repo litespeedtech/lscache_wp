@@ -183,7 +183,7 @@ class Core extends Root
 			$this->cls('Admin');
 		}
 
-		if (defined('LITESPEED_DISABLE_ALL')) {
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			Debug2::debug('[Core] Bypassed due to debug disable all setting');
 			return;
 		}
