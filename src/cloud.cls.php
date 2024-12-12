@@ -1205,7 +1205,7 @@ class Cloud extends Base
 		}
 
 		if ($service_tag == self::SVC_D_SYNC_CONF && !$this->activated()) {
-			self::debug('Skip sync conf if API key is not available yet.');
+			self::debug('Skip sync conf as QC not activated yet.');
 			return false;
 		}
 

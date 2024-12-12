@@ -57,6 +57,8 @@ class Quic extends Base
 			}
 		}
 		unset($options[self::O_MEDIA_LQIP_EXC]);
+		unset($options[self::O_API_KEY]);
+		unset($options[self::_VER]);
 
 		// Remove overflow multi lines fields
 		foreach ($options as $k => $v) {

@@ -21,7 +21,6 @@ use LiteSpeed\Cloud;
  */
 function litespeed_update_7()
 {
-	global $wpdb;
 	Debug2::debug('[Data] v7 upgrade started');
 
 	$__cloud = Cloud::cls();
@@ -33,7 +32,6 @@ function litespeed_update_7()
 	}
 
 	$new_prepared = $__cloud->init_qc_prepare();
-	$cloud_summary = Cloud::get_summary();
 	if (!$new_prepared && $__cloud->activated()) {
 		Debug2::debug('[Data] QC previously activated in v7, bypassed migration');
 		return;

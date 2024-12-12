@@ -265,6 +265,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Supported `list_preferred` in online service node detection.
 * **Cloud** Fixed an error domain expiry removal PHP warning. (cheekymate06)
 * **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
+* **Config** Dropped ver info when comparing md5 to decide if sync conf or not in plugin upgrade process.
 * **Database Optimize** Fixed Autoload summary for WP6.6+. (Mukesh Panchal/Viktor Szépe)
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online link --email=xxx@example.com --api-key=xxxx`.

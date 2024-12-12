@@ -327,6 +327,7 @@ class Base extends Root
 	protected static $_default_options = array(
 		self::_VER => '',
 		self::HASH => '',
+		self::O_API_KEY => '',
 		self::O_AUTO_UPGRADE => false,
 		self::O_SERVER_IP => '',
 		self::O_GUEST => false,
