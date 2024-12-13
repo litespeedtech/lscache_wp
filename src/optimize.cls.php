@@ -597,11 +597,11 @@ class Optimize extends Base
 			$subset = empty($qs['subset']) ? '' : ':' . $qs['subset'];
 
 			foreach (array_filter(explode('|', $qs['family'])) as $v2) {
-				$families[] = $v2 . $subset;
+				$families[] = Str::trim_quotes($v2 . $subset);
 			}
 		}
 
-		$script .= '"' . Str::trim_quotes(implode('","', $families)) . ($this->_conf_css_font_display ? '&display=swap' : '') . '"';
+		$script .= '"' . implode('","', $families) . ($this->_conf_css_font_display ? '&display=swap' : '') . '"';
 
 		$script .= ']}};';
 
