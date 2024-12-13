@@ -477,8 +477,13 @@ class Media extends Root
 			}
 
 			if (preg_match('/iPhone OS (\d+)_/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
-				$lscwp_ios_version = $matches[1];
-				if ($lscwp_ios_version >= 14) {
+				if ($matches[1] >= 14) {
+					return true;
+				}
+			}
+
+			if (preg_match('/Firefox\/(\d+)/iU', $_SERVER['HTTP_USER_AGENT'], $matches)) { // TODO: Test if needs `/U`
+				if ($matches[1] >= 65) {
 					return true;
 				}
 			}
