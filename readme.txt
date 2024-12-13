@@ -274,6 +274,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** QUIC.cloud CLI `wp litespeed-online ping` supports `--force` args now.
 * **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_ORI` support.
 * **Image Optimization** Supported `LITESPEED_IMG_OPTM_PULL_THREADS` to adjust the threads to avoid PHP max connection limits.
+* **Image Optimization** Supported latest firefox WebP Accept header change for serving WebP.
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
