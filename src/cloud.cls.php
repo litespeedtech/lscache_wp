@@ -1325,6 +1325,7 @@ class Cloud extends Base
 		// $data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
 		// $data['signature_ts'] = $signature_ts;
 
+		self::debug('data', $data);
 		$param = array(
 			'site_url' => home_url(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
@@ -1332,7 +1333,6 @@ class Cloud extends Base
 			'ver' => Core::VER,
 			'data' => $data,
 		);
-		self::debug('data', $param);
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
