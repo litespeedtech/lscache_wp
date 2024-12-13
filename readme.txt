@@ -305,6 +305,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 * **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
 * **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
+* **Misc** Incompatibility warning banner for third party plugins is now dismissible.
 
 = 6.5.3 - Dec 4 2024 =
 * **Misc** Quote escaped in attributes when building HTML. (CVE-2024-51915)
