@@ -30,6 +30,7 @@ class Tag extends Root
 	const TYPE_WIDGET = 'W.';
 	const TYPE_ESI = 'ESI.';
 	const TYPE_REST = 'REST';
+	const TYPE_AJAX = 'AJAX.';
 	const TYPE_LIST = 'LIST';
 	const TYPE_MIN = 'MIN';
 	const TYPE_LOCALRES = 'LOCALRES';
@@ -263,8 +264,8 @@ class Tag extends Root
 					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
 				} elseif (is_date()) {
 					global $post;
-					
-					if($post && isset($post->post_date)){
+
+					if ($post && isset($post->post_date)) {
 						$date = $post->post_date;
 						$date = strtotime($date);
 						if (is_day()) {
@@ -310,6 +311,11 @@ class Tag extends Root
 					$tags[] = self::TYPE_PAGES;
 				}
 			}
+		}
+
+		// Append AJAX action tag
+		if (Router::is_ajax() && !empty($_REQUEST['action'])) {
+			$tags[] = self::TYPE_AJAX . $_REQUEST['action'];
 		}
 
 		return $tags;
