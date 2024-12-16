@@ -254,7 +254,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 6.5.4 - Dec 17 2024 =
+= 6.5.4 - Dec 16 2024 =
 * **Page Optimize** Fixed Google Fonts broken with the Async option. (HivePress #787)
 
 = 6.5.3 - Dec 4 2024 =
