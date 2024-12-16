@@ -309,7 +309,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
 * **Misc** Incompatibility warning banner for third party plugins is now dismissible.
 
-= 6.5.4 - Dec 17 2024 =
+= 6.5.4 - Dec 16 2024 =
 * **Page Optimize** Fixed Google Fonts broken with the Async option. (HivePress #787)
 
 = 6.5.3 - Dec 4 2024 =
