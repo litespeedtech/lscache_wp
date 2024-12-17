@@ -482,7 +482,7 @@ class Media extends Root
 				}
 			}
 
-			if (preg_match('/Firefox\/(\d+)/iU', $_SERVER['HTTP_USER_AGENT'], $matches)) { // TODO: Test if needs `/U`
+			if (preg_match('/Firefox\/(\d+)/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
 				if ($matches[1] >= 65) {
 					return true;
 				}
