@@ -51,8 +51,8 @@ if (!empty($env_ref['num'])) {
 	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/toolbox/#report-tab'); ?>
 </h3>
 
-<p><?php echo __('Last Report number', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['num']) ? $env_ref['num'] : '-'; ?></b></p>
-<p><?php echo __('Last Report date', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['dateline']) ? date('m/d/Y H:i:s', $env_ref['dateline']) : '-'; ?></b></p>
+<p><?php echo __('Last Report Number', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['num']) ? $env_ref['num'] : '-'; ?></b></p>
+<p><?php echo __('Last Report Date', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['dateline']) ? date('m/d/Y H:i:s', $env_ref['dateline']) : '-'; ?></b></p>
 
 <p class="litespeed-desc">
 	<?php echo __('The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache'); ?>
