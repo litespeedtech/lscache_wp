@@ -882,6 +882,11 @@ class Img_Optm extends Base
 			return;
 		}
 
+		if (defined('LITESPEED_IMG_OPTM_PULL_CRON') && !LITESPEED_IMG_OPTM_PULL_CRON) {
+			self::debug('Cron disabled [define] LITESPEED_IMG_OPTM_PULL_CRON');
+			return;
+		}
+
 		self::cls()->pull($force);
 	}
 
