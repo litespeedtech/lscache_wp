@@ -609,6 +609,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_dash()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/dash/entry.tpl.php';
 	}
 
@@ -631,6 +632,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_general()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/general/entry.tpl.php';
 	}
 
@@ -642,6 +644,7 @@ class Admin_Display extends Base
 	 */
 	public function show_menu_cdn()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/cdn/entry.tpl.php';
 	}
 
@@ -668,6 +671,7 @@ class Admin_Display extends Base
 	 */
 	public function show_toolbox()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/toolbox/entry.tpl.php';
 	}
 
@@ -679,6 +683,7 @@ class Admin_Display extends Base
 	 */
 	public function show_crawler()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/crawler/entry.tpl.php';
 	}
 
@@ -690,6 +695,7 @@ class Admin_Display extends Base
 	 */
 	public function show_img_optm()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/img_optm/entry.tpl.php';
 	}
 
@@ -701,6 +707,7 @@ class Admin_Display extends Base
 	 */
 	public function show_page_optm()
 	{
+		$this->cls('Cloud')->maybe_preview_banner();
 		require_once LSCWP_DIR . 'tpl/page_optm/entry.tpl.php';
 	}
 

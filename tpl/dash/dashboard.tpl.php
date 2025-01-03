@@ -32,7 +32,6 @@ $placeholder_queue_count = count($this->load_queue('lqip'));
 $vpi_queue_count = count($this->load_queue('vpi'));
 
 $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE !== 'NONE';
-$__cloud->maybe_preview_banner();
 ?>
 
 <div class="litespeed-dashboard">
@@ -391,7 +390,7 @@ $__cloud->maybe_preview_banner();
 												</div>
 											</div>
 										<?php endif; ?>
-									<?php else: ?>
+									<?php else : ?>
 										<div>
 											<p><?php _e('You must be using one of the following products in order to measure Page Load Time:', 'litespeed-cache'); ?></p>
 											<a href="https://www.litespeedtech.com/products/litespeed-web-server" target="_blank">LiteSpeed Web Server</a>

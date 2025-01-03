@@ -7,8 +7,6 @@ defined('WPINC') || exit;
 $__cloud = Cloud::cls();
 $__cloud->finish_qc_activation('cdn');
 $cloud_summary = Cloud::get_summary();
-
-$__cloud->maybe_preview_banner();
 ?>
 
 <div class="litespeed-flex-container litespeed-column-with-boxes">

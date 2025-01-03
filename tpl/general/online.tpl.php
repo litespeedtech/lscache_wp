@@ -7,7 +7,6 @@ defined('WPINC') || exit;
 $cloud_summary = Cloud::get_summary();
 
 $__cloud = Cloud::cls();
-$__cloud->maybe_preview_banner();
 $__cloud->finish_qc_activation('online');
 
 ?>
