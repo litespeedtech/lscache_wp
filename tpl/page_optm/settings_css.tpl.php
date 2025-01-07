@@ -14,6 +14,8 @@ $closest_server = Cloud::get_summary('server.' . Cloud::SVC_CCSS);
 
 $ccss_queue = $this->load_queue('ccss');
 $ucss_queue = $this->load_queue('ucss');
+
+$next_gen = '<code class="litespeed-success">' . $this->cls('Media')->next_gen_image_title() . '</code>';
 ?>
 
 <h3 class="litespeed-title-short">
@@ -120,7 +122,7 @@ $ucss_queue = $this->load_queue('ucss');
 										<?php if (!empty($v['_status'])) : ?></span><?php endif; ?>
 									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . esc_html(substr($k, 0, $pos)) . ')'; ?>
 									<?php if ($v['is_mobile']) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
-									<?php if (!empty($v['is_webp'])) echo ' WebP'; ?>
+									<?php if (!empty($v['is_webp'])) echo ' ' . $next_gen; ?>
 									<br />
 								<?php endforeach; ?>
 							</p>
@@ -237,7 +239,7 @@ $ucss_queue = $this->load_queue('ucss');
 										<?php if (!empty($v['_status'])) : ?></span><?php endif; ?>
 									<?php if ($pos = strpos($k, ' ')) echo ' (' . __('Vary Group', 'litespeed-cache') . ':' . esc_html(substr($k, 0, $pos)) . ')'; ?>
 									<?php if ($v['is_mobile']) echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>'; ?>
-									<?php if (!empty($v['is_webp'])) echo ' WebP'; ?>
+									<?php if (!empty($v['is_webp'])) echo ' ' . $next_gen; ?>
 									<br />
 								<?php endforeach; ?>
 							</p>

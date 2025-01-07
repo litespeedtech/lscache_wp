@@ -378,7 +378,7 @@ class Crawler extends Root
 		 * @since  1.9.1
 		 */
 		if (!empty($current_crawler['webp'])) {
-			$this->_crawler_conf['headers'][] = 'Accept: image/webp,*/*';
+			$this->_crawler_conf['headers'][] = 'Accept: image/' . ($this->conf(Base::O_IMG_OPTM_WEBP) == 2 ? 'avif' : 'webp') . ',*/*';
 		}
 
 		/**
@@ -1108,7 +1108,7 @@ class Crawler extends Root
 
 		// WebP on/off
 		if (($this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM)) || $this->conf(Base::O_IMG_OPTM_WEBP)) {
-			$crawler_factors['webp'] = array(1 => 'WebP/AVIF', 0 => '');
+			$crawler_factors['webp'] = array(1 => $this->cls('Media')->next_gen_image_title(), 0 => '');
 		}
 
 		// Guest Mode on/off

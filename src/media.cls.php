@@ -408,7 +408,7 @@ class Media extends Root
 				);
 			}
 		} else {
-			echo __('WebP/AVIF', 'litespeed-cache') . '<span class="litespeed-left10">—</span>';
+			echo $this->next_gen_image_title() . '<span class="litespeed-left10">—</span>';
 		}
 
 		echo '</p>';
@@ -490,6 +490,18 @@ class Media extends Root
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get next gen image title
+	 *
+	 * @since 7.0
+	 */
+	public function next_gen_image_title()
+	{
+		$next_gen_img = 'WebP';
+		if ($this->_format == 'avif') $next_gen_img = 'AVIF';
+		return $next_gen_img;
 	}
 
 	/**
