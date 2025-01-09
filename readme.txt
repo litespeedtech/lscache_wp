@@ -308,6 +308,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
 * **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
 * **Misc** Incompatibility warning banner for third party plugins is now dismissible.
+* **Misc** Generated robots.txt file under litespeed folder to prevent from search engine indexing of static resource files. (djwilko12)
 
 = 6.5.4 - Dec 16 2024 =
 * **Page Optimize** Fixed Google Fonts broken with the Async option. (HivePress #787)

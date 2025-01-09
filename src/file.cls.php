@@ -151,6 +151,10 @@ class File
 
 			try {
 				mkdir($folder, 0755, true);
+				// Create robots.txt file to forbid search engine indexes
+				if (!file_exists(LITESPEED_STATIC_DIR . '/robots.txt')) {
+					file_put_contents(LITESPEED_STATIC_DIR . '/robots.txt', "User-agent: *\nDisallow: /\n");
+				}
 			} catch (\ErrorException $ex) {
 				return $silence ? false : sprintf(__('Can not create folder: %1$s. Error: %2$s', 'litespeed-cache'), $folder, $ex->getMessage());
 			}
