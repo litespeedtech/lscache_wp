@@ -15,6 +15,11 @@ if ($summary['curr_crawler'] >= count($crawler_list)) {
 $is_running = time() - $summary['is_running'] <= 900;
 
 $disabled = Router::can_crawl() ? '' : 'disabled';
+$disabled_tip = '';
+if (!$this->conf(Base::O_CRAWLER_SITEMAP)) {
+	$disabled = 'disabled';
+	$disabled_tip = '<span class="litespeed-callout notice notice-error inline litespeed-left20">' . sprintf(__('You need to set the %s in Settings first before using the crawler', 'litespeed-cache'), '<code>' . Lang::title(Base::O_CRAWLER_SITEMAP) . '</code>') . '</span>';
+}
 
 $CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
 if ($CRAWLER_RUN_INTERVAL > 0) :
@@ -117,6 +122,8 @@ if ($CRAWLER_RUN_INTERVAL > 0) :
 
 			$href = Router::can_crawl() ? Utility::build_url(Router::ACTION_CRAWLER, Crawler::TYPE_START) : 'javascript:;';
 			echo " <a href='$href' id='litespeed_manual_trigger' class='button litespeed-btn-success' litespeed-accesskey='R' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>";
+
+			echo $disabled_tip;
 			?>
 		</p>
 

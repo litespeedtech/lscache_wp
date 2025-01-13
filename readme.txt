@@ -291,6 +291,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Sitemap Timeout` setting. Added PHP const `LITESPEED_CRAWLER_MAP_TIMEOUT` support.
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
 * **Crawler** Fixed wrong path of .pid file under wp-admin folder in certain case. (igobybus)
+* **Crawler** Show an empty map error and disabled crawler when the map is not set yet.
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
 * **Page Optimize** Updated latest CSS/JS optimization library to fix issues for RGB minification and external imports when combining CSS.
 * **Page Optimize** Excludes Google Analytics from JS optimization. (James M. Joyce #269 PR#726)
