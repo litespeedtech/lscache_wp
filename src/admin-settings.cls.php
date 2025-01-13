@@ -85,6 +85,18 @@ class Admin_Settings extends Base
 				$data2 = array_key_exists($id, $the_matrix) ? $the_matrix[$id] : (defined('WP_CLI') && WP_CLI ? $this->conf($id) : array());
 			}
 			switch ($id) {
+				case self::O_CRAWLER_ROLES: // Don't allow Editor/admin to be used in crawler role simulator
+					$data = Utility::sanitize_lines($data);
+					if ($data) {
+						foreach ($data as $k => $v) {
+							if (user_can($v, 'edit_posts')) {
+								$msg = sprintf(__('The user id %s has the editor access, it is not allowed to be used as role simulator.', 'litespeed-cache'), '<code>' . $v . '</code>');
+								Admin_Display::error($msg);
+								unset($data[$k]);
+							}
+						}
+					}
+					break;
 				case self::O_CDN_MAPPING:
 					/**
 					 * CDN setting
@@ -161,8 +173,7 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-				// Cache exclude cat
-				case self::O_CACHE_EXC_CAT:
+				case self::O_CACHE_EXC_CAT: // Cache exclude cat
 					$data2 = array();
 					$data = Utility::sanitize_lines($data);
 					foreach ($data as $v) {
@@ -176,8 +187,7 @@ class Admin_Settings extends Base
 					$data = $data2;
 					break;
 
-				// Cache exclude tag
-				case self::O_CACHE_EXC_TAG:
+				case self::O_CACHE_EXC_TAG: // Cache exclude tag
 					$data2 = array();
 					$data = Utility::sanitize_lines($data);
 					foreach ($data as $v) {

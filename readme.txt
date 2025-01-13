@@ -281,6 +281,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
+* **Crawler** Enhanced Role Simulator security by disallowing editor or above access in settings.
 * **Crawler** Defaulted and limited crawler `Run Duration` maximum to 900 seconds and dropped the setting.
 * **Crawler** Crawler will be stopped when load limit setting is 0.
 * **Crawler** Used `127.0.0.1` instead of server IP setting for DNS resolve when crawling.
