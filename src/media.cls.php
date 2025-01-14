@@ -649,8 +649,15 @@ class Media extends Root
 		if (!$vpi_files) {
 			return;
 		}
+		if(!$this->content) {
+			return;
+		}
 
 		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		if(!$content) {
+			return;
+		}
+
 		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = Utility::parse_attr($match[1]);
