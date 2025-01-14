@@ -645,7 +645,7 @@ class Base extends Root
 	{
 		// Load network_default.ini
 		if (file_exists(LSCWP_DIR . 'data/const.network_default.ini')) {
-			$default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.network_default.ini', true);
+			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.network_default.ini'), true);
 			foreach (self::$_default_site_options as $k => $v) {
 				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
@@ -677,7 +677,7 @@ class Base extends Root
 	{
 		// Load default.ini
 		if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
-			$default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.default.ini', true);
+			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.default.ini'), true);
 			foreach (self::$_default_options as $k => $v) {
 				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
