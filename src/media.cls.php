@@ -649,38 +649,41 @@ class Media extends Root
 		if (!$vpi_files) {
 			return;
 		}
+		if(!$this->content) {
+			return;
+		}
 
-		if($this->content){
-			$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
-			if($content){
-				preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
-				foreach ($matches as $match) {
-					$attrs = Utility::parse_attr($match[1]);
+		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		if(!$content) {
+			return;
+		}
 
-					if (empty($attrs['src'])) {
-						continue;
-					}
+		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			$attrs = Utility::parse_attr($match[1]);
 
-					if (strpos($attrs['src'], 'base64') !== false || substr($attrs['src'], 0, 5) === 'data:') {
-						Debug2::debug2('[Media] lazyload bypassed base64 img');
-						continue;
-					}
-
-					if (strpos($attrs['src'], '{') !== false) {
-						Debug2::debug2('[Media] image src has {} ' . $attrs['src']);
-						continue;
-					}
-
-					// If the src contains VPI filename, then preload it
-					if (!Utility::str_hit_array($attrs['src'], $vpi_files)) {
-						continue;
-					}
-
-					Debug2::debug2('[Media] VPI preload found and matched: ' . $attrs['src']);
-
-					$this->_vpi_preload_list[] = $attrs['src'];
-				}
+			if (empty($attrs['src'])) {
+				continue;
 			}
+
+			if (strpos($attrs['src'], 'base64') !== false || substr($attrs['src'], 0, 5) === 'data:') {
+				Debug2::debug2('[Media] lazyload bypassed base64 img');
+				continue;
+			}
+
+			if (strpos($attrs['src'], '{') !== false) {
+				Debug2::debug2('[Media] image src has {} ' . $attrs['src']);
+				continue;
+			}
+
+			// If the src contains VPI filename, then preload it
+			if (!Utility::str_hit_array($attrs['src'], $vpi_files)) {
+				continue;
+			}
+
+			Debug2::debug2('[Media] VPI preload found and matched: ' . $attrs['src']);
+
+			$this->_vpi_preload_list[] = $attrs['src'];
 		}
 	}
 
