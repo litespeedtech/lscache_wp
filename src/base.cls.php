@@ -643,9 +643,9 @@ class Base extends Root
 	 */
 	public function load_default_site_vals()
 	{
-		// Load network_default.ini
-		if (file_exists(LSCWP_DIR . 'data/const.network_default.ini')) {
-			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.network_default.ini'), true);
+		// Load network_default.json
+		if (file_exists(LSCWP_DIR . 'data/const.network_default.json')) {
+			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.network_default.json'), true);
 			foreach (self::$_default_site_options as $k => $v) {
 				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
@@ -668,16 +668,16 @@ class Base extends Root
 	}
 
 	/**
-	 * Load default values from default.ini
+	 * Load default values from default.json
 	 *
 	 * @since 3.0
 	 * @access public
 	 */
 	public function load_default_vals()
 	{
-		// Load default.ini
-		if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
-			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.default.ini'), true);
+		// Load default.json
+		if (file_exists(LSCWP_DIR . 'data/const.default.json')) {
+			$default_ini_cfg = json_decode(File::read(LSCWP_DIR . 'data/const.default.json'), true);
 			foreach (self::$_default_options as $k => $v) {
 				if (!array_key_exists($k, $default_ini_cfg)) {
 					continue;
