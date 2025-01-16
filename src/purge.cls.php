@@ -1005,7 +1005,8 @@ class Purge extends Base
 
 		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
 		if ($this->_purge_single) {
-			$this->_pub_purge[] = Tag::build_uri_tag(); // TODO: add private tag too
+			$tags = $this->_prepend_bid(array(Tag::build_uri_tag()));
+			$this->_pub_purge = array_merge($this->_pub_purge, $tags);
 		}
 		// Append related purge tags if Admin QS is `PURGE`
 		if ($this->_purge_related) {
