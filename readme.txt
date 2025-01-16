@@ -306,6 +306,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **GUI** Page speed chart is limited to cacheable Servers only.
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Tag** Appended AJAX action to cache tags.
+* **Tag** Dropped normal HTTP code, only error code ones (403/404/500) will be only used for tags.
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 * **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)

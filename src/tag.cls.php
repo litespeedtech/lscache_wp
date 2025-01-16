@@ -39,6 +39,7 @@ class Tag extends Root
 
 	private static $_tags = array();
 	private static $_tags_priv = array('tag_priv');
+	public static $error_code_tags = array(403, 404, 500);
 
 	/**
 	 * Initialize
