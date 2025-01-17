@@ -92,7 +92,6 @@ $litespeed_php_files = array(
 
 	// upgrade purpose delay loaded funcs
 	// 'src/data.upgrade.func.php',
-
 );
 foreach ($litespeed_php_files as $class) {
 	$file = LSCWP_DIR . $class;

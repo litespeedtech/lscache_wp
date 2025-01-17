@@ -224,7 +224,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
@@ -279,7 +279,7 @@ class Cloud extends Base
 			$msg = sprintf(
 				__('You need to set the %1$s first. Please use the command %2$s to set.', 'litespeed-cache'),
 				'`' . __('Server IP', 'litespeed-cache') . '`',
-				'`wp litespeed-option set server_ip __your_ip_value__`',
+				'`wp litespeed-option set server_ip __your_ip_value__`'
 			);
 			Admin_Display::error($msg);
 			return;
@@ -570,7 +570,6 @@ class Cloud extends Base
 		$this->_summary['qc_activated'] = $qc_activated;
 		$this->save_summary();
 
-
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
 		if ($qc_activated == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
@@ -582,7 +581,9 @@ class Cloud extends Base
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 		}
-		if (!$quite) Admin_Display::success('🎊 ' . $msg);
+		if (!$quite) {
+			Admin_Display::success('🎊 ' . $msg);
+		}
 
 		$this->clear_cloud();
 	}
@@ -631,7 +632,8 @@ class Cloud extends Base
 		if (!empty($data['body'])) {
 			$this->_summary[$type] = Str::safe_html($data['body']);
 		}
-		if ($type == 'cdn_dash') { // Also save the mini content
+		if ($type == 'cdn_dash') {
+			// Also save the mini content
 			$this->_summary['cdn_dash_mini'] = Str::safe_html($data['body_mini']);
 		}
 		$this->save_summary();
@@ -681,7 +683,9 @@ class Cloud extends Base
 		unset($this->_summary['pk_b64']);
 		unset($this->_summary['sk_b64']);
 		unset($this->_summary['qc_activated']);
-		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
+		if (!empty($this->_summary['partner'])) {
+			unset($this->_summary['partner']);
+		}
 		$this->save_summary();
 		self::debug('Clear local QC activation.');
 
@@ -991,7 +995,8 @@ class Cloud extends Base
 		}
 
 		// Check server load
-		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
+		if (in_array($service, self::$SERVICES_LOAD_CHECK)) {
+			// TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
 				$response = wp_remote_get($v, array('timeout' => 5));
@@ -1585,7 +1590,9 @@ class Cloud extends Base
 	private function _reset_qc_reg()
 	{
 		unset($this->_summary['qc_activated']);
-		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
+		if (!empty($this->_summary['partner'])) {
+			unset($this->_summary['partner']);
+		}
 		self::save_summary();
 
 		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');

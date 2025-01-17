@@ -235,9 +235,9 @@ class Base extends Root
 	## --------------		Crawler		----------------- ##
 	## -------------------------------------------------- ##
 	const O_CRAWLER = 'crawler';
-	const O_CRAWLER_USLEEP = 'crawler-usleep';  // @Deprecated since v7.0 TODO: remove after v7.5
-	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration';  // @Deprecated since v7.0 TODO: remove after v7.5
-	const O_CRAWLER_RUN_INTERVAL = 'crawler-run_interval';  // @Deprecated since v7.0 TODO: remove after v7.5
+	const O_CRAWLER_USLEEP = 'crawler-usleep'; // @Deprecated since v7.0 TODO: remove after v7.5
+	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration'; // @Deprecated since v7.0 TODO: remove after v7.5
+	const O_CRAWLER_RUN_INTERVAL = 'crawler-run_interval'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_CRAWLER_CRAWL_INTERVAL = 'crawler-crawl_interval';
 	const O_CRAWLER_THREADS = 'crawler-threads'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_CRAWLER_TIMEOUT = 'crawler-timeout'; // @Deprecated since v7.0 TODO: remove after v7.5
@@ -891,13 +891,7 @@ class Base extends Root
 	 */
 	protected function _conf_cron($id)
 	{
-		$check_ids = array(
-			self::O_OPTM_CSS_ASYNC,
-			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
-			self::O_DISCUSS_AVATAR_CRON,
-			self::O_IMG_OPTM_AUTO,
-			self::O_CRAWLER,
-		);
+		$check_ids = array(self::O_OPTM_CSS_ASYNC, self::O_MEDIA_PLACEHOLDER_RESP_ASYNC, self::O_DISCUSS_AVATAR_CRON, self::O_IMG_OPTM_AUTO, self::O_CRAWLER);
 
 		return in_array($id, $check_ids);
 	}
