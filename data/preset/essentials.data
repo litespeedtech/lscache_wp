@@ -98,8 +98,6 @@
 
 ["img_optm-auto",false]
 
-["img_optm-cron",true]
-
 ["img_optm-ori",true]
 
 ["img_optm-rm_bkup",false]
