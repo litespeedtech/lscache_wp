@@ -279,6 +279,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimization** Allow PHP Const `LITESPEED_FORCE_WP_REMOTE_GET` to force using `wp_remote_get()` to pull images.
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
+* **Purge** Fixed `PURGESINGLE` and `PURGE` query string purge tag bug.
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
 * **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.

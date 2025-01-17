@@ -1005,8 +1005,8 @@ class Purge extends Base
 
 		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
 		if ($this->_purge_single) {
-			$tags = $this->_prepend_bid(array(Tag::build_uri_tag()));
-			$this->_pub_purge = array_merge($this->_pub_purge, $tags);
+			$tags = array(Tag::build_uri_tag());
+			$this->_pub_purge = array_merge($this->_pub_purge, $this->_prepend_bid($tags));
 		}
 		// Append related purge tags if Admin QS is `PURGE`
 		if ($this->_purge_related) {
@@ -1015,7 +1015,7 @@ class Purge extends Base
 			// NOTE: need to remove the empty item `B1_` to avoid purging all
 			$tags_related = array_filter($tags_related);
 			if ($tags_related) {
-				$this->_pub_purge = array_merge($this->_pub_purge, $tags_related);
+				$this->_pub_purge = array_merge($this->_pub_purge, $this->_prepend_bid($tags_related));
 			}
 		}
 
