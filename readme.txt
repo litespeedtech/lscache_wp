@@ -276,6 +276,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_PULL_CRON` support.
 * **Image Optimization** Supported `LITESPEED_IMG_OPTM_PULL_THREADS` to adjust the threads to avoid PHP max connection limits.
 * **Image Optimization** Supported latest firefox WebP Accept header change for serving WebP.
+* **Image Optimization** Allow PHP Const `LITESPEED_FORCE_WP_REMOTE_GET` to force using `wp_remote_get()` to pull images.
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
 * **ESI** Fixed a log logic failure when ESI buffer is empty.

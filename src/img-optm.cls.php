@@ -1197,7 +1197,8 @@ class Img_Optm extends Base
 					$total_pulled_ori++;
 				};
 
-				if (class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload') && version_compare(PHP_VERSION, '5.6.0', '>=')) {
+				$force_wp_remote_get = defined('LITESPEED_FORCE_WP_REMOTE_GET') && LITESPEED_FORCE_WP_REMOTE_GET;
+				if (!$force_wp_remote_get && class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload') && version_compare(PHP_VERSION, '5.6.0', '>=')) {
 					// Make sure Requests can load internal classes.
 					Autoload::register();
 
