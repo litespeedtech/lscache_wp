@@ -44,7 +44,7 @@ class Task extends Root
 		$guest_optm = $this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM);
 
 		foreach (self::$_triggers as $id => $trigger) {
-			if (!$this->conf($id)) {
+			if (!$this->conf($id) && $id !== 'img_optm-cron' ) {  // @Deprecated since v7.0 TODO: remove after v7.5
 				if (!$guest_optm || !in_array($id, self::$_guest_options)) {
 					continue;
 				}
