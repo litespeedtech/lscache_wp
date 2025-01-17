@@ -280,6 +280,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
 * **Purge** Fixed `PURGESINGLE` and `PURGE` query string purge tag bug.
+* **Purge** `PURGE` will purge the single URL only like `PURGESINGLE`.
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
 * **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.

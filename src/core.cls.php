@@ -23,7 +23,7 @@ class Core extends Root
 	const ACTION_PURGE_BY = 'PURGE_BY';
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE';
 	const ACTION_QS_PURGE = 'PURGE';
-	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE';
+	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE'; // This will be same as `ACTION_QS_PURGE` (purge single url only)
 	const ACTION_QS_SHOW_HEADERS = 'SHOWHEADERS';
 	const ACTION_QS_PURGE_ALL = 'purge_all';
 	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all';
@@ -305,14 +305,11 @@ class Core extends Root
 		$msg = false;
 		// handle actions
 		switch ($action) {
-			case self::ACTION_QS_PURGE:
-				Purge::set_purge_related();
-				break;
-
 			case self::ACTION_QS_SHOW_HEADERS:
 				self::$_debug_show_header = true;
 				break;
 
+			case self::ACTION_QS_PURGE:
 			case self::ACTION_QS_PURGE_SINGLE:
 				Purge::set_purge_single();
 				break;

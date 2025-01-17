@@ -18,7 +18,6 @@ class Purge extends Base
 	protected $_pub_purge = array();
 	protected $_pub_purge2 = array();
 	protected $_priv_purge = array();
-	protected $_purge_related = false;
 	protected $_purge_single = false;
 
 	const X_HEADER = 'X-LiteSpeed-Purge';
@@ -609,11 +608,10 @@ class Purge extends Base
 	 *
 	 * @since    1.1.3
 	 * @access   public
+	 * @deprecated @7.0 Drop @v7.5
 	 */
 	public static function set_purge_related()
 	{
-		self::cls()->_purge_related = true;
-		do_action('litespeed_purged_related');
 	}
 
 	/**
@@ -1003,20 +1001,10 @@ class Purge extends Base
 
 		do_action('litespeed_purge_finalize');
 
-		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
+		// Append unique uri purge tags if Admin QS is `PURGESINGLE` or `PURGE`
 		if ($this->_purge_single) {
 			$tags = array(Tag::build_uri_tag());
 			$this->_pub_purge = array_merge($this->_pub_purge, $this->_prepend_bid($tags));
-		}
-		// Append related purge tags if Admin QS is `PURGE`
-		if ($this->_purge_related) {
-			// Before this, tags need to be finalized
-			$tags_related = Tag::output_tags();
-			// NOTE: need to remove the empty item `B1_` to avoid purging all
-			$tags_related = array_filter($tags_related);
-			if ($tags_related) {
-				$this->_pub_purge = array_merge($this->_pub_purge, $this->_prepend_bid($tags_related));
-			}
 		}
 
 		if (!empty($this->_pub_purge)) {
