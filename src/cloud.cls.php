@@ -404,7 +404,7 @@ class Cloud extends Base
 			'action2' => $action2,
 		);
 		$res = $this->post(self::SVC_D_API, $data);
-		self::debug("API link call result: ", $res);
+		self::debug('API link call result: ', $res);
 	}
 
 	/**
@@ -457,7 +457,7 @@ class Cloud extends Base
 
 			return false;
 		}
-		$signature = sodium_crypto_sign_detached((string)$data, $sk);
+		$signature = sodium_crypto_sign_detached((string) $data, $sk);
 		return base64_encode($signature);
 	}
 
@@ -634,12 +634,18 @@ class Cloud extends Base
 	}
 	private function _load_qc_status_for_dash($type, $force = false)
 	{
-		if (!$force && !empty($this->_summary['mini_html']) && isset($this->_summary['mini_html'][$type]) && !empty($this->_summary['mini_html']['ttl.' . $type]) && $this->_summary['mini_html']['ttl.' . $type] > time()) {
+		if (
+			!$force &&
+			!empty($this->_summary['mini_html']) &&
+			isset($this->_summary['mini_html'][$type]) &&
+			!empty($this->_summary['mini_html']['ttl.' . $type]) &&
+			$this->_summary['mini_html']['ttl.' . $type] > time()
+		) {
 			return Str::safe_html($this->_summary['mini_html'][$type]);
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ?  'cdn_dash' : $type));
+		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ? 'cdn_dash' : $type));
 		if (!empty($data['qc_activated'])) {
 			// Sync conf as changed
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {

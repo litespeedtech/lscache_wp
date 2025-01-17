@@ -20,7 +20,9 @@ class Str
 	public static function translate_qc_apis($html)
 	{
 		preg_match_all('/<a href="{#(\w+)#}"/U', $html, $matches);
-		if (!$matches) return $html;
+		if (!$matches) {
+			return $html;
+		}
 
 		foreach ($matches[0] as $k => $html_to_be_replaced) {
 			$link = '<a href="' . Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_API, false, null, array('action2' => $matches[1][$k])) . '"';
@@ -44,22 +46,7 @@ class Str
 			'color' => array(),
 			'href' => array(),
 		);
-		$tags = array(
-			"hr",
-			"h3",
-			"h4",
-			"h5",
-			"ul",
-			"li",
-			"br",
-			"strong",
-			"p",
-			"span",
-			"img",
-			"a",
-			"div",
-			"font",
-		);
+		$tags = array('hr', 'h3', 'h4', 'h5', 'ul', 'li', 'br', 'strong', 'p', 'span', 'img', 'a', 'div', 'font');
 		$allowed_tags = array();
 		foreach ($tags as $tag) {
 			$allowed_tags[$tag] = $common_attrs;

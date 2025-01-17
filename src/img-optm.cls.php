@@ -920,7 +920,6 @@ class Img_Optm extends Base
 
 		self::debug('Pulling images at rate: ' . $imgs_per_req . ' Images per request.');
 
-
 		return $imgs_per_req;
 	}
 

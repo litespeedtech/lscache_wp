@@ -20,7 +20,13 @@ foreach ($this->_postmeta_settings as $k => $v) {
 		echo '</div>';
 	} else {
 		echo '<div style="display:flex;margin-bottom:10px;align-items: center;gap: 2ch;justify-content: space-between;"><label for="' . $k . '">' . $v . '</label>';
-		echo '<input class="litespeed-tiny-toggle" id="' . Str::trim_quotes($k) . '" name="' . Str::trim_quotes($k) . '" type="checkbox" value="1" ' . ($existing_val ? 'checked' : '') . ' />';
+		echo '<input class="litespeed-tiny-toggle" id="' .
+			Str::trim_quotes($k) .
+			'" name="' .
+			Str::trim_quotes($k) .
+			'" type="checkbox" value="1" ' .
+			($existing_val ? 'checked' : '') .
+			' />';
 		echo '</div>';
 	}
 }

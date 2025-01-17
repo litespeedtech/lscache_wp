@@ -3116,9 +3116,9 @@ a.litespeed-redetect {
 	margin-right: 0;
 }
 
-.litespeed-warning-bg{
+.litespeed-warning-bg {
 	background-color: #b58a09 !important;
-    color: white;
+	color: white;
 }
 
 .litespeed-links-group:not(:last-child) {
@@ -3203,7 +3203,6 @@ a.litespeed-redetect {
 }
 
 @media screen and (max-width: 1400px) and (min-width: 1024px) {
-
 	.litespeed-dashboard-stats-wrapper .litespeed-postbox {
 		flex-grow: 1;
 	}
