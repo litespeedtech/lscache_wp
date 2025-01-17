@@ -144,6 +144,11 @@ class Report extends Base
 
 		$extras['active plugins'] = $active_plugins;
 		$extras['cloud'] = Cloud::get_summary();
+		foreach (array('mini_html', 'pk_b64', 'sk_b64', 'cdn_dash', 'ips') as $v) {
+			if (!empty($extras['cloud'][$v])) {
+				unset($extras['cloud'][$v]);
+			}
+		}
 
 		if (is_null($options)) {
 			$options = $this->get_options(true);

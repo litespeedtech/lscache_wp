@@ -183,7 +183,7 @@ class Core extends Root
 			$this->cls('Admin');
 		}
 
-		if (defined('LITESPEED_DISABLE_ALL')) {
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			Debug2::debug('[Core] Bypassed due to debug disable all setting');
 			return;
 		}
@@ -473,7 +473,7 @@ class Core extends Root
 		$this->send_headers(true);
 
 		// Log ESI nonce buffer empty issue
-		if (defined('LSCACHE_IS_ESI') && strlen($buffer) != 0) {
+		if (defined('LSCACHE_IS_ESI') && strlen($buffer) == 0) {
 			// log ref for debug purpose
 			error_log('ESI buffer empty ' . $_SERVER['REQUEST_URI']);
 		}

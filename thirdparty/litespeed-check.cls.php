@@ -75,9 +75,7 @@ class LiteSpeed_Check
 					'<p style="color: red; font-weight: 700;">' .
 					'PageSpeed Ninja' .
 					'</p>' .
-					'</div>',
-				false,
-				true
+					'</div>'
 			);
 		}
 	}

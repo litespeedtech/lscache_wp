@@ -4,7 +4,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           7.0-b9
+ * Version:           7.0-b34
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -34,7 +34,7 @@ if (defined('LSCWP_V')) {
 	return;
 }
 
-!defined('LSCWP_V') && define('LSCWP_V', '7.0-b9');
+!defined('LSCWP_V') && define('LSCWP_V', '7.0-b34');
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -134,7 +134,7 @@ if (!function_exists('litespeed_define_nonce_func')) {
 		 */
 		function wp_create_nonce($action = -1)
 		{
-			if (!defined('LITESPEED_DISABLE_ALL')) {
+			if (!defined('LITESPEED_DISABLE_ALL') || !LITESPEED_DISABLE_ALL) {
 				$control = \LiteSpeed\ESI::cls()->is_nonce_action($action);
 				if ($control !== null) {
 					$params = array(

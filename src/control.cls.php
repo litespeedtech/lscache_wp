@@ -181,7 +181,7 @@ class Control extends Root
 		}
 
 		// Set cache tag
-		Tag::add(Tag::TYPE_HTTP . $code);
+		if (in_array($code, Tag::$error_code_tags)) Tag::add(Tag::TYPE_HTTP . $code);
 
 		// Give the default status_header back
 		return $status_header;

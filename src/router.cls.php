@@ -276,7 +276,7 @@ class Router extends Base
 		if (!empty($_COOKIE['litespeed_hash'])) {
 			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
-				$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? LITESPEED_CRAWLER_DURATION : 900;
+				$RUN_DURATION = $this->cls('Crawler')->get_crawler_duration();
 				if (time() - $hash_data['ts'] < $RUN_DURATION && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
 					self::debug('Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
 					wp_set_current_user($hash_data['uid']);

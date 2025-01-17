@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Database upgrade funcs
  *
@@ -12,6 +13,40 @@ use LiteSpeed\Debug2;
 use LiteSpeed\Conf;
 use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
+use LiteSpeed\Cloud;
+
+/**
+ * Migrate from domain key to pk/sk for QC
+ * @since 7.0
+ */
+function litespeed_update_7()
+{
+	Debug2::debug('[Data] v7 upgrade started');
+
+	$__cloud = Cloud::cls();
+
+	$domain_key = $__cloud->conf('api_key');
+	if (!$domain_key) {
+		Debug2::debug('[Data] No domain key, bypassed migration');
+		return;
+	}
+
+	$new_prepared = $__cloud->init_qc_prepare();
+	if (!$new_prepared && $__cloud->activated()) {
+		Debug2::debug('[Data] QC previously activated in v7, bypassed migration');
+		return;
+	}
+	$data = array(
+		'domain_key' => $domain_key,
+	);
+	$res = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
+	if (!empty($res['qc_activated'])) {
+		if ($res['qc_activated'] != 'deleted') {
+			Cloud::save_summary(array('qc_activated' => $res['qc_activated']));
+			Debug2::debug('[Data] Updated QC activated status to ' . $res['qc_activated']);
+		}
+	}
+}
 
 /**
  * Append webp/mobile to url_file

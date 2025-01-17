@@ -57,6 +57,8 @@ class Quic extends Base
 			}
 		}
 		unset($options[self::O_MEDIA_LQIP_EXC]);
+		unset($options[self::O_API_KEY]);
+		unset($options[self::_VER]);
 
 		// Remove overflow multi lines fields
 		foreach ($options as $k => $v) {
@@ -78,6 +80,8 @@ class Quic extends Base
 
 		$options_for_md5 = $options;
 		unset($options_for_md5['_server']['LITESPEED_SERVER_TYPE']);
+		unset($options_for_md5['_server']['LITESPEED_ALLOWED']);
+		unset($options_for_md5['_server']['LITESPEED_ON']);
 
 		$conf_md5 = md5(\json_encode($options_for_md5));
 		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {

@@ -13,6 +13,23 @@ defined('WPINC') || exit();
 class Str
 {
 	/**
+	 * Translate QC HTML links from html. Convert `<a href="{#xxx#}">xxxx</a>` to `<a href="xxx">xxxx</a>`
+	 *
+	 * @since 7.0
+	 */
+	public static function translate_qc_apis($html)
+	{
+		preg_match_all('/<a href="{#(\w+)#}"/U', $html, $matches);
+		if (!$matches) return $html;
+
+		foreach ($matches[0] as $k => $html_to_be_replaced) {
+			$link = '<a href="' . Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_API, false, null, array('action2' => $matches[1][$k])) . '"';
+			$html = str_replace($html_to_be_replaced, $link, $html);
+		}
+		return $html;
+	}
+
+	/**
 	 * Return safe HTML
 	 *
 	 * @since 7.0
@@ -27,7 +44,22 @@ class Str
 			'color' => array(),
 			'href' => array(),
 		);
-		$tags = array('h3', 'h4', 'h5', 'ul', 'li', 'br', 'strong', 'p', 'span', 'img', 'a', 'div', 'font');
+		$tags = array(
+			"hr",
+			"h3",
+			"h4",
+			"h5",
+			"ul",
+			"li",
+			"br",
+			"strong",
+			"p",
+			"span",
+			"img",
+			"a",
+			"div",
+			"font",
+		);
 		$allowed_tags = array();
 		foreach ($tags as $tag) {
 			$allowed_tags[$tag] = $common_attrs;
@@ -89,5 +121,14 @@ class Str
 		}
 
 		return $str;
+	}
+
+	/**
+	 * Trim double quotes from a string to be used as a preformatted src in HTML.
+	 * @since 6.5.3
+	 */
+	public static function trim_quotes($string)
+	{
+		return str_replace('"', '', $string);
 	}
 }

@@ -15,7 +15,7 @@ defined('WPINC') || exit();
 
 class Data extends Root
 {
-	const LOG_TAG = '[Data]';
+	const LOG_TAG = '🚀';
 
 	private $_db_updater = array(
 		'3.5.0.3' => array('litespeed_update_3_5'),
@@ -24,6 +24,7 @@ class Data extends Root
 		'4.3' => array('litespeed_update_4_3'),
 		'4.4.4-b1' => array('litespeed_update_4_4_4'),
 		'5.3-a5' => array('litespeed_update_5_3'),
+		'7.0-b26' => array('litespeed_update_7'),
 	);
 
 	private $_db_site_updater = array(
@@ -119,7 +120,7 @@ class Data extends Root
 			if (version_compare($ver, $k, '<')) {
 				// run each callback
 				foreach ($v as $v2) {
-					Debug2::debug("[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2");
+					self::debug("Updating [ori_v] $ver \t[to] $k \t[func] $v2");
 					call_user_func($v2);
 				}
 			}
@@ -137,7 +138,7 @@ class Data extends Root
 		Conf::delete_option(Base::_VER);
 		Conf::add_option(Base::_VER, Core::VER);
 
-		Debug2::debug('[Data] Updated version to ' . Core::VER);
+		self::debug('Updated version to ' . Core::VER);
 
 		$this->_set_upgrade_lock(false);
 
@@ -169,7 +170,7 @@ class Data extends Root
 			if (version_compare($ver, $k, '<')) {
 				// run each callback
 				foreach ($v as $v2) {
-					Debug2::debug("[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2");
+					self::debug("Updating site [ori_v] $ver \t[to] $k \t[func] $v2");
 					call_user_func($v2);
 				}
 			}
@@ -181,7 +182,7 @@ class Data extends Root
 		Conf::delete_site_option(Base::_VER);
 		Conf::add_site_option(Base::_VER, Core::VER);
 
-		Debug2::debug('[Data] Updated site_version to ' . Core::VER);
+		self::debug('Updated site_version to ' . Core::VER);
 
 		$this->_set_upgrade_lock(false);
 
@@ -266,7 +267,7 @@ class Data extends Root
 		if ($this->conf(Base::O_DEBUG)) {
 			$this->cls('Debug2')->init();
 		}
-		Debug2::debug('[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0');
+		self::debug('Upgrading previous settings [from] ' . $ver . ' [to] v3.0');
 
 		if ($this->_get_upgrade_lock()) {
 			return;
@@ -281,7 +282,7 @@ class Data extends Root
 
 		$this->_set_upgrade_lock(false);
 
-		Debug2::debug('[Data] Upgraded to v3.0');
+		self::debug('Upgraded to v3.0');
 
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0';
@@ -377,15 +378,15 @@ class Data extends Root
 	{
 		global $wpdb;
 
-		Debug2::debug2('[Data] Checking table ' . $tb);
+		self::debug2('[Data] Checking table ' . $tb);
 
 		// Check if table exists first
 		if ($this->tb_exist($tb)) {
-			Debug2::debug2('[Data] Existed');
+			self::debug2('[Data] Existed');
 			return;
 		}
 
-		Debug2::debug('[Data] Creating ' . $tb);
+		self::debug('Creating ' . $tb);
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure($tb) . ') %2$s;',
@@ -395,7 +396,7 @@ class Data extends Root
 
 		$res = $wpdb->query($sql);
 		if ($res !== true) {
-			Debug2::debug('[Data] Warning! Creating table failed!', $sql);
+			self::debug('Warning! Creating table failed!', $sql);
 			Admin_Display::error(Error::msg('failed_tb_creation', array('<code>' . $tb . '</code>', '<code>' . $sql . '</code>')));
 		}
 	}
@@ -414,7 +415,7 @@ class Data extends Root
 			return;
 		}
 
-		Debug2::debug('[Data] Deleting table ' . $tb);
+		self::debug('Deleting table ' . $tb);
 
 		$q = 'DROP TABLE IF EXISTS ' . $this->tb($tb);
 		$wpdb->query($q);
@@ -544,7 +545,7 @@ class Data extends Root
 					$file_to_del = $path . '/' . $v['filename'] . '.' . ($file_type == 'js' ? 'js' : 'css');
 					if (file_exists($file_to_del)) {
 						// Safe to delete
-						Debug2::debug('[Data] Delete expired unused file: ' . $file_to_del);
+						self::debug('Delete expired unused file: ' . $file_to_del);
 
 						// Clear related lscache first to avoid cache copy of same URL w/ diff QS
 						// Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
@@ -605,14 +606,14 @@ class Data extends Root
 		global $wpdb;
 		$tb_url = $this->tb('url');
 
-		Debug2::debug('[Data] Try to mark as expired: ' . $request_url);
+		self::debug('Try to mark as expired: ' . $request_url);
 		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
 		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
 			return;
 		}
 
-		Debug2::debug('[Data] Mark url_id=' . $url_row['id'] . ' as expired');
+		self::debug('Mark url_id=' . $url_row['id'] . ' as expired');
 
 		$tb_url_file = $this->tb('url_file');
 

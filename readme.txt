@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 5.3
 Requires PHP: 7.2
-Tested up to: 6.6
+Tested up to: 6.7
 Stable tag: 6.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -255,24 +255,36 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.0 - Nov 2024 =
+= 7.0 - Feb 2025 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
 * **Core** Refactored config data init method to realtime update instead of delay update in plugin upgrade phase.
+* **Core** Used `const.default.json` instead of `const.default.ini` for better compatibility in case `parse_ini_file()` is disabled.
 * **Core** Minimum required PHP version escalated to PHP v7.2.0.
 * **Core** Minimum required WP version escalated to WP v5.3.
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
 * **Cloud** Supported `list_preferred` in online service node detection.
+* **Cloud** Fixed an error domain expiry removal PHP warning. (cheekymate06)
 * **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
+* **Config** Dropped ver info when comparing md5 to decide if sync conf or not in plugin upgrade process.
+* **Config** `LITESPEED_DISABLE_ALL` will now check value to decide if applied or not.
 * **Database Optimize** Fixed Autoload summary for WP6.6+. (Mukesh Panchal/Viktor Szépe)
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_init --ssl-cert=xxx.pem --ssl-key=xxx -method=cname|ns|cfi`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online link --email=xxx@example.com --api-key=xxxx`.
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
 * **CLI** QUIC.cloud CLI `wp litespeed-online ping` supports `--force` args now.
-* **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_ORI` support.
+* **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_PULL_CRON` support.
+* **Image Optimization** Supported `LITESPEED_IMG_OPTM_PULL_THREADS` to adjust the threads to avoid PHP max connection limits.
+* **Image Optimization** Supported latest firefox WebP Accept header change for serving WebP.
+* **Image Optimization** Allow PHP Const `LITESPEED_FORCE_WP_REMOTE_GET` to force using `wp_remote_get()` to pull images.
+* **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
+* **Purge** Each purge action now has a hook.
+* **ESI** Fixed a log logic failure when ESI buffer is empty.
+* **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
-* **Crawler** Default crawler `Run Duration` to 900 seconds and dropped the setting.
+* **Crawler** Enhanced Role Simulator security by disallowing editor or above access in settings.
+* **Crawler** Defaulted and limited crawler `Run Duration` maximum to 900 seconds and dropped the setting.
 * **Crawler** Crawler will be stopped when load limit setting is 0.
 * **Crawler** Used `127.0.0.1` instead of server IP setting for DNS resolve when crawling.
 * **Crawler** Dropped `Delay` setting. Added PHP const `LITESPEED_CRAWLER_USLEEP` support.
@@ -281,14 +293,33 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped `Interval Between Runs` setting. Added PHP const `LITESPEED_CRAWLER_RUN_INTERVAL` support.
 * **Crawler** Dropped `Sitemap Timeout` setting. Added PHP const `LITESPEED_CRAWLER_MAP_TIMEOUT` support.
 * **Crawler** Dropped `Drop Domain from Sitemap` setting. Added PHP const `LITESPEED_CRAWLER_DROP_DOMAIN` support.
+* **Crawler** Fixed wrong path of .pid file under wp-admin folder in certain case. (igobybus)
+* **Crawler** Show an empty map error and disabled crawler when the map is not set yet.
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
+* **Page Optimize** Updated latest CSS/JS optimization library to fix issues for RGB minification and external imports when combining CSS.
+* **Page Optimize** Excludes Google Analytics from JS optimization. (James M. Joyce #269 PR#726)
+* **CDN** Fixed CDN replacement for inline CSS url with round brackets case. (agodbu)
+* **GUI** New Online Service tab under General menu.
 * **GUI** New QUIC.cloud CDN tab.
 * **GUI** Combined all Crawler settings to a single setting tab.
 * **GUI** Switch buttons rtl compatibility. (Eliza/Mehrshad Darzi #603)
+* **GUI** Fixed an issue that irremovable banner can't be echoed directly.
+* **GUI** Page speed chart is limited to cacheable Servers only.
 * **Tag** Fixed a potential warning in tags. (ikiterder)
+* **Tag** Appended AJAX action to cache tags.
+* **Tag** Dropped normal HTTP code, only error code ones (403/404/500) will be only used for tags.
 * **Misc** Improved readme file by adding min supported PHP/WP versions. (Viktor Szépe)
 * **Misc** Rely on just-in-time translation loading. (Pascal Birchler #738)
 * **Misc** Check filename is valid or not before saving file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
+* **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
+* **Misc** Incompatibility warning banner for third party plugins is now dismissible.
+* **Misc** Generated robots.txt file under litespeed folder to prevent from search engine indexing of static resource files. (djwilko12)
+
+= 6.5.4 - Dec 16 2024 =
+* **Page Optimize** Fixed Google Fonts broken with the Async option. (HivePress #787)
+
+= 6.5.3 - Dec 4 2024 =
+* **Misc** Quote escaped in attributes when building HTML. (CVE-2024-51915)
 
 = 6.5.2 - Oct 17 2024 =
 * **Crawler** Removed barely used Role Simulator from Crawler, to prevent potential security issues.

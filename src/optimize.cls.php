@@ -337,9 +337,9 @@ class Optimize extends Base
 							// Handle css async load
 							if ($this->cfg_css_async) {
 								$this->html_head .=
-									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . Str::trim_quotes($url) . '" />'; // todo: How to use " in attr wrapper "
 							} else {
-								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />'; // use 2 as combined
+								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . Str::trim_quotes($url) . '" />'; // use 2 as combined
 							}
 
 							// Move all css to top
@@ -517,14 +517,14 @@ class Optimize extends Base
 	private function _build_js_tag($src)
 	{
 		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
-			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . Str::trim_quotes($src) . '"></script>';
 		}
 
 		if ($this->cfg_js_defer) {
-			return '<script data-optimized="1" src="' . $src . '" defer></script>';
+			return '<script data-optimized="1" src="' . Str::trim_quotes($src) . '" defer></script>';
 		}
 
-		return '<script data-optimized="1" src="' . $src . '"></script>';
+		return '<script data-optimized="1" src="' . Str::trim_quotes($src) . '"></script>';
 	}
 
 	/**
@@ -601,7 +601,7 @@ class Optimize extends Base
 			$subset = empty($qs['subset']) ? '' : ':' . $qs['subset'];
 
 			foreach (array_filter(explode('|', $qs['family'])) as $v2) {
-				$families[] = $v2 . $subset;
+				$families[] = Str::trim_quotes($v2 . $subset);
 			}
 		}
 
@@ -717,7 +717,7 @@ class Optimize extends Base
 	{
 		foreach ($this->dns_prefetch as $v) {
 			if ($v) {
-				$this->html_head .= '<link rel="dns-prefetch" href="' . $v . '" />';
+				$this->html_head .= '<link rel="dns-prefetch" href="' . Str::trim_quotes($v) . '" />';
 			}
 		}
 	}
@@ -732,7 +732,7 @@ class Optimize extends Base
 	{
 		foreach ($this->dns_preconnect as $v) {
 			if ($v) {
-				$this->html_head .= '<link rel="preconnect" href="' . $v . '" />';
+				$this->html_head .= '<link rel="preconnect" href="' . Str::trim_quotes($v) . '" />';
 			}
 		}
 	}
@@ -874,8 +874,9 @@ class Optimize extends Base
 		$src_list = array();
 		$html_list = array();
 
-		$content = preg_replace('#<!--.*-->#sU', '', $this->content);
-		preg_match_all('#<script([^>]*)>(.*)</script>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace('#<!--.*-->(?:\r\n?|\n?)#sU', '', $this->content);
+		preg_match_all('#<script([^>]*)>(.*)</script>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = empty($match[1]) ? array() : Utility::parse_attr($match[1]);
 
@@ -1059,8 +1060,9 @@ class Optimize extends Base
 		// $dom->load( $content );return $val;
 		// $items = $dom->find( 'link' );
 
-		$content = preg_replace(array('#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
-		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace(array('#<!--.*-->(?:\r\n?|\n?)#sU', '#<script([^>]*)>.*</script>(?:\r\n?|\n?)#isU', '#<noscript([^>]*)>.*</noscript>(?:\r\n?|\n?)#isU'), '', $this->content);
+		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			// to avoid multiple replacement
