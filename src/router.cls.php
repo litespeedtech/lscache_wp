@@ -302,6 +302,12 @@ class Router extends Base
 			}
 		}
 
+		// Check if this user has editor access or not
+		if (user_can($uid, 'edit_posts')) {
+			self::debug('🛑 The user with id ' . $uid . ' has editor access, which is not allowed for the role simulator.');
+			return '';
+		}
+
 		$hash = Str::rrand(32);
 		self::update_option(self::ITEM_FLASH_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
 		return $hash;
@@ -314,6 +320,12 @@ class Router extends Base
 	 */
 	public function get_hash($uid)
 	{
+		// Check if this user has editor access or not
+		if (user_can($uid, 'edit_posts')) {
+			self::debug('🛑 The user with id ' . $uid . ' has editor access, which is not allowed for the role simulator.');
+			return '';
+		}
+
 		// As this is called only when starting crawling, not per page, no need to reuse
 		$hash = Str::rrand(32);
 		self::update_option(self::ITEM_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
