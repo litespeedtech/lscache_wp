@@ -56,7 +56,7 @@ class Report extends Base
 		$notes = !empty($_POST['notes']) ? esc_html($_POST['notes']) : '';
 
 		$php_info = !empty($_POST['attach_php']) ? esc_html($_POST['attach_php']) : '';
-		$report_php = ($php_info === '1') ? $this->generate_php_report() : '';
+		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
 
 		$data = array(
 			'env' => $report_con,
@@ -87,8 +87,9 @@ class Report extends Base
 	 * @since 7.0
 	 * @access public
 	 */
-	public function generate_php_report($flags = INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES) // INFO_ENVIRONMENT
+	public function generate_php_report($flags = INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES)
 	{
+		// INFO_ENVIRONMENT
 		$report = '';
 
 		ob_start();

@@ -337,7 +337,9 @@ class Optimize extends Base
 							// Handle css async load
 							if ($this->cfg_css_async) {
 								$this->html_head .=
-									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . Str::trim_quotes($url) . '" />'; // todo: How to use " in attr wrapper "
+									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' .
+									Str::trim_quotes($url) .
+									'" />'; // todo: How to use " in attr wrapper "
 							} else {
 								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . Str::trim_quotes($url) . '" />'; // use 2 as combined
 							}
@@ -1061,7 +1063,11 @@ class Optimize extends Base
 		// $items = $dom->find( 'link' );
 
 		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
-		$content = preg_replace(array('#<!--.*-->(?:\r\n?|\n?)#sU', '#<script([^>]*)>.*</script>(?:\r\n?|\n?)#isU', '#<noscript([^>]*)>.*</noscript>(?:\r\n?|\n?)#isU'), '', $this->content);
+		$content = preg_replace(
+			array('#<!--.*-->(?:\r\n?|\n?)#sU', '#<script([^>]*)>.*</script>(?:\r\n?|\n?)#isU', '#<noscript([^>]*)>.*</noscript>(?:\r\n?|\n?)#isU'),
+			'',
+			$this->content
+		);
 		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {

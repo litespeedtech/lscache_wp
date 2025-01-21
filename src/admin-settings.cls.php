@@ -90,7 +90,10 @@ class Admin_Settings extends Base
 					if ($data) {
 						foreach ($data as $k => $v) {
 							if (user_can($v, 'edit_posts')) {
-								$msg = sprintf(__('The user with id %s has editor access, which is not allowed for the role simulator.', 'litespeed-cache'), '<code>' . $v . '</code>');
+								$msg = sprintf(
+									__('The user with id %s has editor access, which is not allowed for the role simulator.', 'litespeed-cache'),
+									'<code>' . $v . '</code>'
+								);
 								Admin_Display::error($msg);
 								unset($data[$k]);
 							}

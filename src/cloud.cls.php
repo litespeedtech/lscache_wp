@@ -404,7 +404,7 @@ class Cloud extends Base
 			'action2' => $action2,
 		);
 		$res = $this->post(self::SVC_D_API, $data);
-		self::debug("API link call result: ", $res);
+		self::debug('API link call result: ', $res);
 	}
 
 	/**
@@ -457,7 +457,7 @@ class Cloud extends Base
 
 			return false;
 		}
-		$signature = sodium_crypto_sign_detached((string)$data, $sk);
+		$signature = sodium_crypto_sign_detached((string) $data, $sk);
 		return base64_encode($signature);
 	}
 
@@ -604,7 +604,6 @@ class Cloud extends Base
 		$this->_summary['qc_activated'] = $qc_activated;
 		$this->save_summary();
 
-
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
 		if ($qc_activated == 'linked') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services.', 'litespeed-cache'), 'QUIC.cloud');
@@ -616,7 +615,9 @@ class Cloud extends Base
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 		}
-		if (!$quite) Admin_Display::success('🎊 ' . $msg);
+		if (!$quite) {
+			Admin_Display::success('🎊 ' . $msg);
+		}
 
 		$this->clear_cloud();
 	}
@@ -633,12 +634,18 @@ class Cloud extends Base
 	}
 	private function _load_qc_status_for_dash($type, $force = false)
 	{
-		if (!$force && !empty($this->_summary['mini_html']) && isset($this->_summary['mini_html'][$type]) && !empty($this->_summary['mini_html']['ttl.' . $type]) && $this->_summary['mini_html']['ttl.' . $type] > time()) {
+		if (
+			!$force &&
+			!empty($this->_summary['mini_html']) &&
+			isset($this->_summary['mini_html'][$type]) &&
+			!empty($this->_summary['mini_html']['ttl.' . $type]) &&
+			$this->_summary['mini_html']['ttl.' . $type] > time()
+		) {
 			return Str::safe_html($this->_summary['mini_html'][$type]);
 		}
 
 		// Try to update dash content
-		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ?  'cdn_dash' : $type));
+		$data = self::post(self::SVC_D_DASH, array('action2' => $type == 'cdn_dash_mini' ? 'cdn_dash' : $type));
 		if (!empty($data['qc_activated'])) {
 			// Sync conf as changed
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
@@ -701,7 +708,9 @@ class Cloud extends Base
 		unset($this->_summary['pk_b64']);
 		unset($this->_summary['sk_b64']);
 		unset($this->_summary['qc_activated']);
-		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
+		if (!empty($this->_summary['partner'])) {
+			unset($this->_summary['partner']);
+		}
 		$this->save_summary();
 		self::debug('Clear local QC activation.');
 
@@ -1008,7 +1017,8 @@ class Cloud extends Base
 		}
 
 		// Check server load
-		if (in_array($service, self::$SERVICES_LOAD_CHECK)) { // TODO
+		if (in_array($service, self::$SERVICES_LOAD_CHECK)) {
+			// TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
 				$response = wp_remote_get($v, array('timeout' => 5));
@@ -1611,7 +1621,9 @@ class Cloud extends Base
 	private function _reset_qc_reg()
 	{
 		unset($this->_summary['qc_activated']);
-		if (!empty($this->_summary['partner'])) unset($this->_summary['partner']);
+		if (!empty($this->_summary['partner'])) {
+			unset($this->_summary['partner']);
+		}
 		self::save_summary();
 
 		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');

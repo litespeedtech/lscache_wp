@@ -374,20 +374,13 @@ class Media extends Root
 				$percent,
 				24,
 				sprintf(
-					$is_avif
-						? __('AVIF file reduced by %1$s (%2$s)', 'litespeed-cache')
-						: __('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'),
+					$is_avif ? __('AVIF file reduced by %1$s (%2$s)', 'litespeed-cache') : __('WebP file reduced by %1$s (%2$s)', 'litespeed-cache'),
 					$percent . '%',
 					Utility::real_size($size_meta_saved)
 				),
 				'left'
 			);
-			echo sprintf(
-				$is_avif
-					? __('AVIF saved %s', 'litespeed-cache')
-					: __('WebP saved %s', 'litespeed-cache'),
-				$percent . '%'
-			);
+			echo sprintf($is_avif ? __('AVIF saved %s', 'litespeed-cache') : __('WebP saved %s', 'litespeed-cache'), $percent . '%');
 
 			if ($desc) {
 				echo sprintf(
@@ -401,9 +394,7 @@ class Media extends Root
 				echo sprintf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s&#10;%2$s">%3$s</span>',
 					__('Using optimized version of file. ', 'litespeed-cache'),
-					$is_avif
-						? __('No backup of unoptimized AVIF file exists.', 'litespeed-cache')
-						: __('No backup of unoptimized WebP file exists.', 'litespeed-cache'),
+					$is_avif ? __('No backup of unoptimized AVIF file exists.', 'litespeed-cache') : __('No backup of unoptimized WebP file exists.', 'litespeed-cache'),
 					__('(optm)', 'litespeed-cache')
 				);
 			}
@@ -500,7 +491,9 @@ class Media extends Root
 	public function next_gen_image_title()
 	{
 		$next_gen_img = 'WebP';
-		if ($this->_format == 'avif') $next_gen_img = 'AVIF';
+		if ($this->_format == 'avif') {
+			$next_gen_img = 'AVIF';
+		}
 		return $next_gen_img;
 	}
 
@@ -649,12 +642,12 @@ class Media extends Root
 		if (!$vpi_files) {
 			return;
 		}
-		if(!$this->content) {
+		if (!$this->content) {
 			return;
 		}
 
 		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
-		if(!$content) {
+		if (!$content) {
 			return;
 		}
 
@@ -810,7 +803,11 @@ class Media extends Root
 						$attrs['width'] = $ori_width;
 						$attrs['height'] = $ori_height;
 						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0]);
-						$new_html = preg_replace('#<img\s+#i', '<img width="' . Str::trim_quotes($attrs['width']) . '" height="' . Str::trim_quotes($attrs['height']) . '" ', $new_html);
+						$new_html = preg_replace(
+							'#<img\s+#i',
+							'<img width="' . Str::trim_quotes($attrs['width']) . '" height="' . Str::trim_quotes($attrs['height']) . '" ',
+							$new_html
+						);
 						self::debug('Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src']);
 						$this->content = str_replace($match[0], $new_html, $this->content);
 						$match[0] = $new_html;

@@ -138,7 +138,7 @@ class Optimizer extends Root
 
 		// if CSS - run the minification on the saved file.
 		// Will move imports to the top of file and remove extra spaces.
-		if ($file_type == 'css') { 
+		if ($file_type == 'css') {
 			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
 			$file_content_combined = $obj->moveImportsToTop(File::read($tmp_static_file));
 
