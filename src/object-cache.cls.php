@@ -86,8 +86,6 @@ class Object_Cache extends Root
 				$this->_oc_driver = 'Redis';
 			}
 			$this->_cfg_enabled = $cfg[Base::O_OBJECT] && class_exists($this->_oc_driver) && $this->_cfg_host;
-
-			$this->debug_oc('init with cfg result : ', $this->_cfg_enabled);
 		}
 		// If OC is OFF, will hit here to init OC after conf initialized
 		elseif (defined('LITESPEED_CONF_LOADED')) {
@@ -154,7 +152,7 @@ class Object_Cache extends Root
 			return;
 		}
 
-		if (!$show_error && !$this->_cfg_debug) {
+		if (!$show_error && $this->_cfg_debug!=BASE::VAL_ON2) {
 			return;
 		}
 
@@ -295,8 +293,7 @@ class Object_Cache extends Root
 			return false;
 		}
 
-		$this->debug_oc('Init ' . $this->_oc_driver . ' connection');
-		$this->debug_oc('connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port);
+		$this->debug_oc('Init ' . $this->_oc_driver . ' connection to ' . $this->_cfg_host . ':' . $this->_cfg_port);
 
 		$failed = false;
 		/**
