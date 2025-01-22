@@ -284,11 +284,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
 * **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **Crawler** Enhanced hash generation function for cryptographic security.
-* **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only.
+* **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only. Use `LITESPEED_CRAWLER_LOCAL_PORT` to use 80 if original server does not support 443.
 * **Crawler** Enhanced Role Simulator security by disallowing editor or above access in settings.
 * **Crawler** Defaulted and limited crawler `Run Duration` maximum to 900 seconds and dropped the setting.
 * **Crawler** Crawler will be stopped when load limit setting is 0.
-* **Crawler** Used `127.0.0.1` instead of server IP setting for DNS resolve when crawling.
 * **Crawler** Dropped `Delay` setting. Added PHP const `LITESPEED_CRAWLER_USLEEP` support.
 * **Crawler** Dropped `Timeout` setting. Added PHP const `LITESPEED_CRAWLER_TIMEOUT` support.
 * **Crawler** Dropped `Threads` setting. Added PHP const `LITESPEED_CRAWLER_THREADS` support.

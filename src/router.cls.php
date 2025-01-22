@@ -248,7 +248,7 @@ class Router extends Base
 			return;
 		}
 
-		self::debug('starting role validation');
+		self::debug('🪪 starting role validation');
 
 		// Check if is from crawler
 		// if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
@@ -256,7 +256,7 @@ class Router extends Base
 		// 	return;
 		// }
 		if (self::get_ip() !== '127.0.0.1') {
-			self::debug('❌ Role simulate uid denied! Not localhost visit!');
+			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
 			return;
 		}
 
@@ -265,7 +265,7 @@ class Router extends Base
 			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
-					self::debug('Role simulator flash hash matched, escalating user to be uid=' . $hash_data['uid']);
+					self::debug('🪪 Role simulator flash hash matched, escalating user to be uid=' . $hash_data['uid']);
 					self::delete_option(self::ITEM_FLASH_HASH);
 					wp_set_current_user($hash_data['uid']);
 					return;
@@ -278,14 +278,14 @@ class Router extends Base
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				$RUN_DURATION = $this->cls('Crawler')->get_crawler_duration();
 				if (time() - $hash_data['ts'] < $RUN_DURATION && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
-					self::debug('Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
+					self::debug('🪪 Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
 					wp_set_current_user($hash_data['uid']);
 					return;
 				}
 			}
 		}
 
-		self::debug('WARNING: role simulator hash not match');
+		self::debug('❌ WARNING: role simulator hash not match');
 	}
 
 	/**

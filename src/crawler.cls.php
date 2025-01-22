@@ -820,11 +820,26 @@ class Crawler extends Root
 			curl_setopt($curls[$row['id']], CURLOPT_URL, $url);
 			self::debug('Crawling [url] ' . $url . ($url == $row['url'] ? '' : ' [ori] ' . $row['url']));
 
+			// IP resolve
+			if (!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
+				$parsed_url = parse_url($url);
+				// self::debug('Crawl role simulator, required to use localhost for resolve');
+
+				if (!empty($parsed_url['host'])) {
+					$dom = $parsed_url['host'];
+					$port = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
+					$resolved = $dom . ':' . $port . ':127.0.0.1';
+					$options[CURLOPT_RESOLVE] = array($resolved);
+					$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+					self::debug('Resolved DNS for ' . $resolved);
+				}
+			}
+
 			curl_setopt_array($curls[$row['id']], $options);
 
 			curl_multi_add_handle($mh, $curls[$row['id']]);
 		}
-		// self::debug('-----debug1');
+
 		// execute curl
 		if ($curls) {
 			do {
@@ -834,7 +849,7 @@ class Crawler extends Root
 				}
 			} while ($active && $status == CURLM_OK);
 		}
-		// self::debug('-----debug2');
+
 		// curl done
 		$ret = array();
 		foreach ($rows as $row) {
@@ -971,25 +986,6 @@ class Crawler extends Root
 		$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
 		// 	$options[ CURL_HTTP_VERSION_2 ] = 1;
 
-		// IP resolve
-		// if ($this->conf(Base::O_SERVER_IP)) {
-		Utility::compatibility();
-		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
-		if (($CRAWLER_DROP_DOMAIN || !$crawler_only) && $this->_crawler_conf['base']) {
-			// Resolve URL to IP
-			$parsed_url = parse_url($this->_crawler_conf['base']);
-
-			if (!empty($parsed_url['host'])) {
-				$dom = $parsed_url['host'];
-				$port = $parsed_url['scheme'] == 'https' ? '443' : '80';
-				$url = $dom . ':' . $port . ':127.0.0.1'; // . $this->conf(Base::O_SERVER_IP);
-
-				$options[CURLOPT_RESOLVE] = array($url);
-				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
-			}
-		}
-		// }
-
 		// if is walker
 		// $options[ CURLOPT_FRESH_CONNECT ] = true;
 
@@ -1034,11 +1030,22 @@ class Crawler extends Root
 		if ($accept) {
 			$this->_crawler_conf['headers'] = array('Accept: ' . $accept);
 		}
+		$options = $this->_get_curl_options();
+
 		if ($uid) {
 			$this->_crawler_conf['cookies']['litespeed_flash_hash'] = Router::cls()->get_flash_hash($uid);
+			$parsed_url = parse_url($url);
+
+			if (!empty($parsed_url['host'])) {
+				$dom = $parsed_url['host'];
+				$port = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
+				$resolved = $dom . ':' . $port . ':127.0.0.1';
+				$options[CURLOPT_RESOLVE] = array($resolved);
+				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+				self::debug('Resolved DNS for ' . $resolved);
+			}
 		}
 
-		$options = $this->_get_curl_options();
 		$options[CURLOPT_HEADER] = false;
 		$options[CURLOPT_FOLLOWLOCATION] = true;
 
