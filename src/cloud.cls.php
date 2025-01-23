@@ -657,6 +657,7 @@ class Cloud extends Base
 			}
 
 			$this->_summary['qc_activated'] = $data['qc_activated'];
+			$this->save_summary();
 		}
 
 		// Show the info
