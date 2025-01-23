@@ -13,9 +13,9 @@ defined('WPINC') || exit();
 class Cloud extends Base
 {
 	const LOG_TAG = '❄️';
-	const CLOUD_SERVER = 'https://api.preview.quic.cloud';
+	const CLOUD_SERVER = 'https://api.quic.cloud';
 	const CLOUD_IPS = 'https://quic.cloud/ips';
-	const CLOUD_SERVER_DASH = 'https://my.preview.quic.cloud';
+	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
 	const CLOUD_SERVER_WP = 'https://wpapi.quic.cloud';
 
 	const SVC_D_ACTIVATE = 'd/activate';
@@ -1774,7 +1774,7 @@ class Cloud extends Base
 	 */
 	public function is_from_cloud()
 	{
-		return true;
+		// return true;
 		$check_point = time() - 86400 * self::TTL_IPS;
 		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || $this->_summary['ips_ts'] < $check_point) {
 			self::debug('Force updating ip as ips_ts is older than ' . self::TTL_IPS . ' days');
