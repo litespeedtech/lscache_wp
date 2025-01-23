@@ -1349,7 +1349,7 @@ class Cloud extends Base
 		$response = wp_remote_post($url, array(
 			'body' => $param,
 			'timeout' => $time_out ?: 15,
-			'headers' => array('Accept' => 'application/json'),
+			'headers' => array('Accept' => 'application/json', 'Expect' => ''),
 		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
