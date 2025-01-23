@@ -299,6 +299,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Updated request link parser to follow the site permalink. (Mijnheer Eetpraat #766)
 * **Page Optimize** Updated latest CSS/JS optimization library to fix issues for RGB minification and external imports when combining CSS.
 * **Page Optimize** Excludes Google Analytics from JS optimization. (James M. Joyce #269 PR#726)
+* **Page Optimize** Typo fix for `LITESPEED_NO_OPTM` constant defination. (Roy Orbitson PR#796)
 * **CDN** Fixed CDN replacement for inline CSS url with round brackets case. (agodbu)
 * **GUI** New Online Service tab under General menu.
 * **GUI** New QUIC.cloud CDN tab.
