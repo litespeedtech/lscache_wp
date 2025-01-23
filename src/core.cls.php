@@ -261,7 +261,7 @@ class Core extends Root
 		 * TODO: Will change to hook in future versions to make it revertable
 		 */
 		if (defined('LITESPEED_BYPASS_OPTM') && !defined('LITESPEED_NO_OPTM')) {
-			defined('LITESPEED_NO_OPTM', LITESPEED_BYPASS_OPTM);
+			define('LITESPEED_NO_OPTM', LITESPEED_BYPASS_OPTM);
 		}
 
 		if (!defined('LITESPEED_NO_OPTM') || !LITESPEED_NO_OPTM) {
