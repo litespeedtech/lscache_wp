@@ -483,7 +483,7 @@ class CDN extends Root
 
 		// If filetype to url is one to many, need to random one
 		if (is_array($final_url)) {
-			$final_url = $final_url[mt_rand(0, count($final_url) - 1)];
+			$final_url = $final_url[array_rand($final_url)];
 		}
 
 		// Now lets replace CDN url
