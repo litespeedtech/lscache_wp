@@ -118,34 +118,21 @@ class Admin_Settings extends Base
 							if ($child == self::CDN_MAPPING_FILETYPE) {
 								$v = Utility::sanitize_lines($v);
 
-								// Remove from MAPPING FILETYPE IMAGES/CSS/JS if settings are disabled
-								$remove_type = array();
-								if (empty($data2[$k][self::CDN_MAPPING_INC_IMG])) {
-									$remove_type = array_merge($remove_type, array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif'));
-								}
-								if (empty($data2[$k][self::CDN_MAPPING_INC_CSS])) {
-									$remove_type[] = 'css';
-								}
-								if (empty($data2[$k][self::CDN_MAPPING_INC_JS])) {
-									$remove_type[] = 'js';
-								}
+								// Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
+								$remove_type = array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif', 'css', 'js');
+								$temp = array_filter($v, function ($i_v) use ($remove_type) {
+									$leave_value = true;
 
-								if (count($remove_type) > 0) {
-									$temp = array_filter($v, function ($i_v) use ($remove_type) {
-										$leave_value = true;
-
-										foreach ($remove_type as $remove) {
-											if (strpos($i_v, $remove) !== false) {
-												$leave_value = false;
-												break;
-											}
+									foreach ($remove_type as $remove) {
+										if (strpos($i_v, $remove) !== false) {
+											$leave_value = false;
+											break;
 										}
+									}
 
-										return $leave_value;
-									});
-
-									$v = array_values($temp);
-								}
+									return $leave_value;
+								});
+								$v = array_values($temp);
 							}
 							if ($child == self::CDN_MAPPING_URL) {
 								# If not a valid URL, turn off CDN
