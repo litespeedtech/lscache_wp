@@ -94,6 +94,16 @@ class CDN extends Root
 				Debug2::debug2('[CDN] mapping ' . implode(',', $v[Base::CDN_MAPPING_FILETYPE]) . ' -> ' . $this_url);
 			}
 		}
+		
+		// Add CSS to rewrite if CDN Mapping setting is enabled
+		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
+		    $this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
+		}
+		
+		// Add JS to rewrite if CDN Mapping setting is enabled
+		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
+			$this->_cfg_cdn_mapping['.js'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS];
+		}
 
 		if (!$this->_cfg_url_ori || !$this->_cfg_cdn_mapping) {
 			if (!defined(self::BYPASS)) {
@@ -209,27 +219,8 @@ class CDN extends Root
 			$this->_replace_inline_css();
 		}
 
-		// Temporary add file types to mapping filetype rewrite
-		//  Add CSS
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-			$this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
-		}
-
-		//  Add JS
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
-			$this->_cfg_cdn_mapping['.js'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS];
-		}
-
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_FILETYPE])) {
 			$this->_replace_file_types();
-		}
-
-		// Remove temporary file types added to mapping filetype rewrite
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-			unset($this->_cfg_cdn_mapping['.css']);
-		}
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
-			unset($this->_cfg_cdn_mapping['.js']);
 		}
 	}
 
