@@ -119,7 +119,17 @@ class Admin_Settings extends Base
 								$v = Utility::sanitize_lines($v);
 
 								// Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
-								$remove_type = array('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif', '.css', '.js');
+								$remove_type = apply_filters('litespeed_cdn_save_filetypes_remove', array(
+									'.jpg',
+									'.jpeg',
+									'.png',
+									'.gif',
+									'.svg',
+									'.webp',
+									'.avif',
+									'.css',
+									'.js',
+								));
 								$v = array_diff($v, $remove_type);
 							}
 							if ($child == self::CDN_MAPPING_URL) {

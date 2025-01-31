@@ -94,12 +94,12 @@ class CDN extends Root
 				Debug2::debug2('[CDN] mapping ' . implode(',', $v[Base::CDN_MAPPING_FILETYPE]) . ' -> ' . $this_url);
 			}
 		}
-		
+
 		// Add CSS to rewrite if CDN Mapping setting is enabled
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-		    $this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
+			$this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
 		}
-		
+
 		// Add JS to rewrite if CDN Mapping setting is enabled
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
 			$this->_cfg_cdn_mapping['.js'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS];
