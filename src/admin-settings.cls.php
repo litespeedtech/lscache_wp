@@ -119,20 +119,8 @@ class Admin_Settings extends Base
 								$v = Utility::sanitize_lines($v);
 
 								// Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
-								$remove_type = array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif', 'css', 'js');
-								$temp = array_filter($v, function ($i_v) use ($remove_type) {
-									$leave_value = true;
-
-									foreach ($remove_type as $remove) {
-										if (strpos($i_v, $remove) !== false) {
-											$leave_value = false;
-											break;
-										}
-									}
-
-									return $leave_value;
-								});
-								$v = array_values($temp);
+								$remove_type = array('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif', '.css', '.js');
+								$v = array_diff($v, $remove_type);
 							}
 							if ($child == self::CDN_MAPPING_URL) {
 								# If not a valid URL, turn off CDN
