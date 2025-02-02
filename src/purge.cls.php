@@ -228,7 +228,13 @@ class Purge extends Base
 	 */
 	private function _purge_all_lscache($silence = false)
 	{
-		$this->_add('*');
+		$tags = ['*'];
+		$skip_purge_guest = $this->conf(BASE::O_PURGE_SKIP_GUEST_PAGES);
+		if ($skip_purge_guest) {
+			$tags = ['non-guest'];
+		}
+
+		$this->_add($tags, false);
 
 		if (!$silence) {
 			$msg = __('Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache');
