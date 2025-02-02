@@ -921,10 +921,35 @@ class ESI extends Root
 			$atts_ori[] = is_string($k) ? "$k='" . addslashes($v) . "'" : $v;
 		}
 
+		// Clear registered styles and scripts
+		global $wp_scripts, $wp_styles;
+		if($wp_scripts){
+			foreach($wp_styles->registered as $registered) wp_deregister_style($registered->handle);
+		}
+		if($wp_styles){
+			foreach($wp_scripts->registered as $registered) wp_deregister_script($registered->handle);
+		}
+
 		Tag::add(Tag::TYPE_ESI . "esi.$shortcode");
 
 		// Output original shortcode final content
 		echo do_shortcode("[$shortcode " . implode(' ', $atts_ori) . ' ]');
+
+		// Add registered styles and scripts from shortcode.
+		if(count($wp_styles->registered) > 0){
+			foreach($wp_styles->registered as $style_tag){
+				if( !is_bool($style_tag->src) && !empty($style_tag->src)){
+					echo '<style rel="stylesheet" href="'.$style_tag->src.'" id="'.$style_tag->handle.'">';
+				}
+			}
+		}
+		if(count($wp_scripts->registered) > 0){
+			foreach($wp_scripts->registered as $script_tag){
+				if(!empty($script_tag->src)){
+					echo '<script src="'.$script_tag->src.'" id="'.$script_tag->handle.'"></script>';
+				}
+			}
+		}
 	}
 
 	/**
