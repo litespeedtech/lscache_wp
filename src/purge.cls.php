@@ -218,6 +218,42 @@ class Purge extends Base
 	}
 
 	/**
+	 * Shortcut to purge cloudflare cache
+	 *
+	 * @access public
+	 */
+	public static function purge_cloudflare($reason = false)
+	{
+		self::cls()->_purge_cloudflare($reason);
+	}
+
+	/**
+	 * Purge cloudflare caches
+	 *
+	 * @access private
+	 */
+	private function _purge_cloudflare($reason = false)
+	{
+
+		$this->cls('CDN\\Cloudflare')->purge_all();
+
+		if (!is_string($reason)) {
+			$reason = false;
+		}
+
+		if ($reason) {
+			$reason = "( $reason )";
+		}
+
+		self::debug('Purge cloudflare ' . $reason, 3);
+
+		$msg = __('Purged cloudflare caches successfully.', 'litespeed-cache');
+		!defined('LITESPEED_PURGE_SILENT') && Admin_Display::succeed($msg);
+
+		do_action('litespeed_purged_cloudflare');
+	}
+
+	/**
 	 * Alerts LiteSpeed Web Server to purge all pages.
 	 *
 	 * For multisite installs, if this is called by a site admin (not network admin),
