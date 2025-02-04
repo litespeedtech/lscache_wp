@@ -265,6 +265,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Dropped `Domain Key`. Used sodium encryption for authentication and validation.
 * **Cloud** Supported `list_preferred` in online service node detection.
 * **Cloud** Fixed an error domain expiry removal PHP warning. (cheekymate06)
+* **Cloud** Auto dropped Cloud error message banner when successfully reconnected.
 * **Config** Improved QUIC.cloud CDN config to auto turn ON after activiated online service.
 * **Config** Dropped ver info when comparing md5 to decide if sync conf or not in plugin upgrade process.
 * **Config** `LITESPEED_DISABLE_ALL` will now check value to decide if applied or not.

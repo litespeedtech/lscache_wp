@@ -619,6 +619,8 @@ class Cloud extends Base
 			Admin_Display::success('🎊 ' . $msg);
 		}
 
+		$this->_clear_reset_qc_reg_msg();
+
 		$this->clear_cloud();
 	}
 
@@ -651,6 +653,7 @@ class Cloud extends Base
 			if (empty($this->_summary['qc_activated']) || $this->_summary['qc_activated'] != $data['qc_activated']) {
 				$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
 				Admin_Display::success('🎊 ' . $msg);
+				$this->_clear_reset_qc_reg_msg();
 				// Turn on CDN option
 				$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 				$this->cls('CDN\Quic')->try_sync_conf(true);
@@ -691,6 +694,7 @@ class Cloud extends Base
 		if ($_POST['qc_activated'] == 'cdn') {
 			$msg = sprintf(__('Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache'), 'QUIC.cloud');
 			Admin_Display::success('🎊 ' . $msg);
+			$this->_clear_reset_qc_reg_msg();
 			// Turn on CDN option
 			$this->cls('Conf')->update_confs(array(self::O_CDN_QUIC => true));
 			$this->cls('CDN\Quic')->try_sync_conf(true);
@@ -1627,10 +1631,23 @@ class Cloud extends Base
 		}
 		self::save_summary();
 
+		$msg = $this->_reset_qc_reg_content();
+		Admin_Display::error($msg, false, true);
+	}
+
+	private function _reset_qc_reg_content()
+	{
 		$msg = __('Site not recognized. QUIC.cloud deactivated automatically. Please reactivate your QUIC.cloud account.', 'litespeed-cache');
 		$msg .= Doc::learn_more(admin_url('admin.php?page=litespeed'), __('Click here to proceed.', 'litespeed-cache'), true, false, true);
 		$msg .= Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/general/', false, false, false, true);
-		Admin_Display::error($msg, false, true);
+		return $msg;
+	}
+
+	private function _clear_reset_qc_reg_msg()
+	{
+		self::debug('Removed pinned reset QC reg content msg');
+		$msg = $this->_reset_qc_reg_content();
+		Admin_Display::dismiss_pin_by_content($msg, Admin_Display::NOTICE_RED, true);
 	}
 
 	/**

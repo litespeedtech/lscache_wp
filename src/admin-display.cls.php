@@ -589,6 +589,35 @@ class Admin_Display extends Base
 	}
 
 	/**
+	 * Dismiss pinned msg by msg content
+	 *
+	 * @since 7.0
+	 * @access public
+	 */
+	public static function dismiss_pin_by_content($content, $color, $irremovable)
+	{
+		$content = self::build_notice($color, $content, $irremovable);
+		$messages = self::get_option(self::DB_MSG_PIN, array());
+		$hit = false;
+		foreach ($messages as $k => $v) {
+			if ($v == $content) {
+				unset($messages[$k]);
+				$hit = true;
+				self::debug('✅ pinned msg content hit. Removed');
+				break;
+			}
+		}
+		if ($hit) {
+			if (!$messages) {
+				$messages = -1;
+			}
+			self::update_option(self::DB_MSG_PIN, $messages);
+		} else {
+			self::debug('❌ No pinned msg content hit');
+		}
+	}
+
+	/**
 	 * Hooked to the in_widget_form action.
 	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
 	 * This will append the esi on/off selector and ttl text.
