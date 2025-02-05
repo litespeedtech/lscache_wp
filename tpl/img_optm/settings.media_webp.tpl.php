@@ -21,6 +21,10 @@ defined('WPINC') || exit;
 			<br />
 			<font class="litespeed-warning">
 				⚠️ <?php echo sprintf(__('%1$s is a %2$s paid feature.', 'litespeed-cache'), 'AVIF', 'QUIC.cloud'); ?></font>
+			<br />
+			<font class="litespeed-warning">
+				⚠️ <?php echo sprintf(__('When switching formats, please %1$s or %2$s to apply this new choice to previously optimized images.', 'litespeed-cache'), __('Destroy All Optimization Data', 'litespeed-cache'), __('Soft Reset Optimization Counter', 'litespeed-cache')); ?></font>
+			<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/imageopt/#soft-reset-optimization-counter'); ?>
 		</div>
 	</td>
 </tr>
