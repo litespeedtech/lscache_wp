@@ -1389,6 +1389,8 @@ class Img_Optm extends Base
 		$this->_summary['next_post_id'] = 0;
 		self::save_summary();
 
+		$this->clean();
+
 		$msg = __('Reset image optimization counter successfully.', 'litespeed-cache');
 		Admin_Display::success($msg);
 	}
