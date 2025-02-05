@@ -28,6 +28,7 @@ class Img_Optm extends Base
 	const TYPE_NEW_REQ = 'new_req';
 	const TYPE_RESCAN = 'rescan';
 	const TYPE_DESTROY = 'destroy';
+	const TYPE_RESET_COUNTER = 'reset_counter';
 	const TYPE_CLEAN = 'clean';
 	const TYPE_PULL = 'pull';
 	const TYPE_BATCH_SWITCH_ORI = 'batch_switch_ori';
@@ -69,6 +70,7 @@ class Img_Optm extends Base
 	private $__media;
 	private $__data;
 	protected $_summary;
+	private $_format = '';
 
 	/**
 	 * Init
@@ -88,6 +90,12 @@ class Img_Optm extends Base
 		$this->_summary = self::get_summary();
 		if (empty($this->_summary['next_post_id'])) {
 			$this->_summary['next_post_id'] = 0;
+		}
+		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
+			$this->_format = 'webp';
+			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
+				$this->_format = 'avif';
+			}
 		}
 	}
 
@@ -381,8 +389,28 @@ class Img_Optm extends Base
 		// check file exists or not
 		$_img_info = $this->__media->info($short_file_path, $this->tmp_pid);
 
-		if (!$_img_info || !in_array(pathinfo($short_file_path, PATHINFO_EXTENSION), array('jpg', 'jpeg', 'png', 'gif'))) {
+		$extension = pathinfo($short_file_path, PATHINFO_EXTENSION);
+		if (!$_img_info || !in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) {
 			self::debug2('bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path);
+			return;
+		}
+
+		// Check if optimized file exists or not
+		$target_needed = false;
+		if ($this->_format) {
+			$target_file_path = $short_file_path . '.' . $this->_format;
+			if (!$this->__media->info($target_file_path, $this->tmp_pid)) {
+				$target_needed = true;
+			}
+		}
+		if ($this->conf(self::O_IMG_OPTM_ORI)) {
+			$target_file_path = substr($short_file_path, 0, -strlen($extension)) . 'bk.' . $extension;
+			if (!$this->__media->info($target_file_path, $this->tmp_pid)) {
+				$target_needed = true;
+			}
+		}
+		if (!$target_needed) {
+			self::debug2('bypass image due to optimized file exists: pid ' . $this->tmp_pid . ' ' . $short_file_path);
 			return;
 		}
 
@@ -612,32 +640,31 @@ class Img_Optm extends Base
 
 		$list = array();
 		foreach ($_img_in_queue as $v) {
-			/**
-			 * Filter `litespeed_img_optm_options_per_image`
-			 * @since 2.4.2
-			 */
-			/**
-			 * 				$optm_options |= API::IMG_OPTM_BM_ORI;
-			 * 				$optm_options |= API::IMG_OPTM_BM_WEBP;
-			 * 				$optm_options |= API::IMG_OPTM_BM_LOSSLESS;
-			 * 				$optm_options |= API::IMG_OPTM_BM_EXIF;
-			 */
-			$optm_options = apply_filters('litespeed_img_optm_options_per_image', 0, $v->src);
-
 			$_img_info = $this->__media->info($v->src, $v->post_id);
-
 			# If record is invalid, remove from img_optming table
 			if (empty($_img_info['url']) || empty($_img_info['md5'])) {
 				$wpdb->query($wpdb->prepare("DELETE FROM `$this->_table_img_optming` WHERE id=%d", $v->id));
 				continue;
 			}
+
 			$img = array(
 				'id' => $v->id,
 				'url' => $_img_info['url'],
 				'md5' => $_img_info['md5'],
 			);
-			if ($optm_options) {
-				$img['optm_options'] = $optm_options;
+			// Build the needed image types for request as we now support soft reset counter
+			if ($this->_format) {
+				$target_file_path = $v->src . '.' . $this->_format;
+				if ($this->__media->info($target_file_path, $v->post_id)) {
+					$img['optm_' . $this->_format] = 0;
+				}
+			}
+			if ($this->conf(self::O_IMG_OPTM_ORI)) {
+				$extension = pathinfo($v->src, PATHINFO_EXTENSION);
+				$target_file_path = substr($v->src, 0, -strlen($extension)) . 'bk.' . $extension;
+				if ($this->__media->info($target_file_path, $v->post_id)) {
+					$img['optm_ori'] = 0;
+				}
 			}
 
 			$list[] = $img;
@@ -656,10 +683,8 @@ class Img_Optm extends Base
 			'optm_lossless' => $this->conf(self::O_IMG_OPTM_LOSSLESS) ? 1 : 0,
 			'keep_exif' => $this->conf(self::O_IMG_OPTM_EXIF) ? 1 : 0,
 		);
-		if ($this->conf(self::O_IMG_OPTM_WEBP) == 2) {
-			$data['optm_avif'] = 1;
-		} elseif ($this->conf(self::O_IMG_OPTM_WEBP) == 1) {
-			$data['optm_webp'] = 1;
+		if ($this->_format) {
+			$data['optm_' . $this->_format] = 1;
 		}
 
 		// Push to Cloud server
@@ -1349,6 +1374,22 @@ class Img_Optm extends Base
 		}
 
 		$msg = __('Cleaned up unfinished data successfully.', 'litespeed-cache');
+		Admin_Display::success($msg);
+	}
+
+	/**
+	 * Reset image counter
+	 *
+	 * @since 7.0
+	 * @access private
+	 */
+	private function _reset_counter()
+	{
+		self::debug('reset image optm counter');
+		$this->_summary['next_post_id'] = 0;
+		self::save_summary();
+
+		$msg = __('Reset image optimization counter successfully.', 'litespeed-cache');
 		Admin_Display::success($msg);
 	}
 
@@ -2161,6 +2202,10 @@ class Img_Optm extends Base
 
 			case self::TYPE_RESCAN:
 				$this->_rescan();
+				break;
+
+			case self::TYPE_RESET_COUNTER:
+				$this->_reset_counter();
 				break;
 
 			case self::TYPE_DESTROY:

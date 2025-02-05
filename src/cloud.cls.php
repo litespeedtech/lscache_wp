@@ -984,7 +984,13 @@ class Cloud extends Base
 				!empty($this->_summary['server_date.' . $service]) &&
 				$this->_summary['server_date.' . $service] > time() - 86400 * self::TTL_NODE
 			) {
-				return $this->_summary['server.' . $service];
+				$server = $this->_summary['server.' . $service];
+				if (!strpos(self::CLOUD_SERVER, 'preview.') && !strpos($server, 'preview.')) {
+					return $server;
+				}
+				if (strpos(self::CLOUD_SERVER, 'preview.') && strpos($server, 'preview.')) {
+					return $server;
+				}
 			}
 		}
 

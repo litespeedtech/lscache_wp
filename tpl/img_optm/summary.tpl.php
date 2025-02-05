@@ -306,7 +306,15 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
+				<p><a href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_COUNTER); ?>" class="litespeed-link-with-icon litespeed-warning">
+						<span class="dashicons dashicons-dismiss"></span><?php echo __('Soft Reset Optimization Counter', 'litespeed-cache'); ?>
+					</a></p>
 
+				<div class="litespeed-desc">
+					<?php echo sprintf(__('This will reset the %s. If you changed WebP/AVIF settings and want to generate for the previous optimized images, use this action.', 'litespeed-cache'), '<code>' . __('Current image post id position', 'litespeed-cache') . '</code>'); ?>
+				</div>
+			</div>
+			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 				<p><a href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY); ?>" class="litespeed-link-with-icon litespeed-danger" data-litespeed-cfm="<?php echo __('Are you sure to destroy all optimized images?', 'litespeed-cache'); ?>">
 						<span class="dashicons dashicons-dismiss"></span><?php echo __('Destroy All Optimization Data', 'litespeed-cache'); ?>
 					</a></p>

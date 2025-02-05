@@ -300,10 +300,11 @@ class Base extends Root
 	const VAL_ON2 = 2;
 
 	/* This is for API hook usage */
-	const IMG_OPTM_BM_ORI = 1;
-	const IMG_OPTM_BM_WEBP = 2;
-	const IMG_OPTM_BM_LOSSLESS = 4;
-	const IMG_OPTM_BM_EXIF = 8;
+	const IMG_OPTM_BM_ORI = 1; // @Deprecated since v7.0
+	const IMG_OPTM_BM_WEBP = 2; // @Deprecated since v7.0
+	const IMG_OPTM_BM_LOSSLESS = 4; // @Deprecated since v7.0
+	const IMG_OPTM_BM_EXIF = 8; // @Deprecated since v7.0
+	const IMG_OPTM_BM_AVIF = 16; // @Deprecated since v7.0
 
 	/* Site related options (Will not overwrite other sites' config) */
 	protected static $SINGLE_SITE_OPTIONS = array(

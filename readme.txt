@@ -275,9 +275,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** New QUIC.cloud CDN CLI `wp litespeed-online cdn_status`.
 * **CLI** QUIC.cloud CLI `wp litespeed-online ping` supports `--force` args now.
 * **Image Optimization** Dropped `Auto Pull Cron` setting. Added PHP const `LITESPEED_IMG_OPTM_PULL_CRON` support.
+* **Image Optimization** Soft reset counter button to allow restarting all images optimization when setting changed w/o destroy.
 * **Image Optimization** Supported `LITESPEED_IMG_OPTM_PULL_THREADS` to adjust the threads to avoid PHP max connection limits.
 * **Image Optimization** Supported latest firefox WebP Accept header change for serving WebP.
 * **Image Optimization** Allow PHP Const `LITESPEED_FORCE_WP_REMOTE_GET` to force using `wp_remote_get()` to pull images.
+* **Image Optimization** Dropped API filter `litespeed_img_optm_options_per_image`.
+* **Image Optimization** Auto redirect nodes if switched server environment between Preview and Production.
 * **Purge** Allowed `LSWCP_EMPTYCACHE` defined to false to disable Purge all sites.
 * **Purge** Each purge action now has a hook.
 * **Purge** Fixed `PURGESINGLE` and `PURGE` query string purge tag bug.
