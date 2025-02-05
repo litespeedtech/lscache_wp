@@ -186,7 +186,6 @@ class CDN extends Root
 
 		$this->_finalize();
 
-		Debug2::debug2('[TIMMM] mapping ' . print_r($this->content, true));
 		return $this->content;
 	}
 
