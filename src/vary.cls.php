@@ -733,7 +733,7 @@ class Vary extends Root
 
 	private function test_cookie_path($path)
 	{
-		if ($path[0] != '/') {
+		if (substr($path, 0, 1) != '/') {
 			return false;
 		}
 
