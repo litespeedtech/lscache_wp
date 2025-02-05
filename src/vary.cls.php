@@ -731,19 +731,6 @@ class Vary extends Root
 		return false;
 	}
 
-	private function test_cookie_path($path)
-	{
-		if (substr($path, 0, 1) != '/') {
-			return false;
-		}
-
-		if (preg_match('/[\x00-\x1F\x7F]/', $path)) {
-			return false;
-		}
-
-		return true;
-	}
-
 	/**
 	 * Set the vary cookie.
 	 *
@@ -757,11 +744,6 @@ class Vary extends Root
 	 */
 	private function _cookie($val = false, $expire = false, $path = false)
 	{
-		if (!$this->test_cookie_path($path)) {
-			Debug2::debug('[Vary] Cannot set cookie: ' . self::$_vary_name . '. Incorrect path: ' . $path);
-			return;
-		}
-
 		if (!$val) {
 			$expire = 1;
 		}
@@ -772,6 +754,9 @@ class Vary extends Root
 		 */
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();
 
-		setcookie(self::$_vary_name, $val, $expire, $path ?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true);
+		// Fix https://wordpress.org/support/topic/fatal-error-in-litespeed-cache-setcookie-path-issue/
+		$encoded_path = urlencode( $path ?: COOKIEPATH, COOKIE_DOMAIN );
+
+		setcookie(self::$_vary_name, $val, $expire, $encoded_path, $is_ssl, true);
 	}
 }
