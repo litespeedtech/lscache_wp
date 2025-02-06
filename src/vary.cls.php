@@ -755,7 +755,7 @@ class Vary extends Root
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();
 
 		// Fix https://wordpress.org/support/topic/fatal-error-in-litespeed-cache-setcookie-path-issue/
-		$encoded_path = urlencode( $path ?: COOKIEPATH, COOKIE_DOMAIN );
+		$encoded_path = urlencode( $path ?: COOKIEPATH);
 
 		setcookie(self::$_vary_name, $val, $expire, $encoded_path, $is_ssl, true);
 	}
