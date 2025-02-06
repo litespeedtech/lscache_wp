@@ -553,7 +553,6 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 									<?php
 									$cache_list = array(
 										Base::O_IMG_OPTM_AUTO	=> Lang::title(Base::O_IMG_OPTM_AUTO),
-										Base::O_IMG_OPTM_CRON	=> Lang::title(Base::O_IMG_OPTM_CRON),
 									);
 									foreach ($cache_list as $id => $title) :
 									?>
