@@ -784,6 +784,31 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Test open port for crawler.
+	 * If LITESPEED_CRAWLER_LOCAL_PORT not open set alternate.
+	 *
+	 * @since  7.0
+	 * @access private
+	 */
+	private function test_port_crawler($url)
+	{
+		$alternate_port = apply_filters('litespeed_crawler_alternate_port', 80);
+		$parsed_url = parse_url($url);
+
+		if (!empty($parsed_url['host'])) {
+			$port = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
+			$test_url = $parsed_url['host'] . ':' . $port . ':127.0.0.1';
+			$curl_port = curl_init($test_url);
+			curl_setopt($curl_port, CURLOPT_RETURNTRANSFER, true);
+			curl_exec($curl_port);
+			if (curl_errno($curl_port)) {
+				define('LITESPEED_CRAWLER_LOCAL_PORT', $alternate_port);
+			}
+			curl_close($curl_port);
+		}
+	}
+
+	/**
 	 * Send multi curl requests
 	 * If res=B, bypass request and won't return
 	 *
@@ -798,6 +823,10 @@ class Crawler extends Root
 		$mh = curl_multi_init();
 		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
 		$curls = array();
+
+		// Test if LITESPEED_CRAWLER_LOCAL_PORT is open port
+		$this->test_port_crawler($rows[0]['url']);
+
 		foreach ($rows as $row) {
 			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'B') {
 				continue;
@@ -1031,6 +1060,9 @@ class Crawler extends Root
 			$this->_crawler_conf['headers'] = array('Accept: ' . $accept);
 		}
 		$options = $this->_get_curl_options();
+
+		// Test if LITESPEED_CRAWLER_LOCAL_PORT is open port
+		$this->test_port_crawler($url);
 
 		if ($uid) {
 			$this->_crawler_conf['cookies']['litespeed_flash_hash'] = Router::cls()->get_flash_hash($uid);
