@@ -93,7 +93,8 @@ foreach ($logs as $log) {
 
 	$file = $this->cls('Debug2')->path($log['name']);
 	$lines = File::count_lines($file);
-	$start = $lines > 1000 ? $lines - 1000 : 0;
+	$max_lines = apply_filters('litespeed_debug_show_max_lines', 1000);
+	$start = $lines > $max_lines ? $lines - $max_lines : 0;
 	$lines = File::read($file, $start);
 	$lines = $lines ? trim(implode("\n", $lines)) : '';
 	
