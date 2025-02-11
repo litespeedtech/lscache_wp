@@ -37,6 +37,7 @@ $third_cls = array(
 	'WPML',
 	'WpTouch',
 	'Yith_Wishlist',
+	'WP_Consent_API',
 );
 
 foreach ($third_cls as $cls) {
