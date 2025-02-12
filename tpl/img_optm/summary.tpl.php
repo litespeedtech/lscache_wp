@@ -311,7 +311,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 					</a></p>
 
 				<div class="litespeed-desc">
-					<?php echo sprintf(__('This will reset the %s. If you changed WebP/AVIF settings and want to generate for the previous optimized images, use this action.', 'litespeed-cache'), '<code>' . __('Current image post id position', 'litespeed-cache') . '</code>'); ?>
+					<?php echo sprintf(__('This will reset the %1$s. If you changed WebP/AVIF settings and want to generate %2$s for the previously optimized images, use this action.', 'litespeed-cache'), '<code>' . __('Current image post id position', 'litespeed-cache') . '</code>', 'WebP/AVIF'); ?>
 				</div>
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">

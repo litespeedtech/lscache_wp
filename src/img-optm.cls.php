@@ -771,6 +771,7 @@ class Img_Optm extends Base
 			$ls_optm_size_row_exists_postids = array();
 			foreach ($list as $v) {
 				$json = $notified_data[$v->id];
+				// self::debug('Notified data for [id] ' . $v->id, $json);
 
 				$server = !empty($json['server']) ? $json['server'] : $post_data['server'];
 

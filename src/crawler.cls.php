@@ -664,6 +664,55 @@ class Crawler extends Root
 	}
 
 	/**
+	 * Test port for simulator
+	 *
+	 * @since  7.0
+	 * @access private
+	 */
+	private function _test_port()
+	{
+		if (empty($this->_crawler_conf['cookies']) || empty($this->_crawler_conf['cookies']['litespeed_hash']) || defined('LITESPEED_CRAWLER_LOCAL_PORT')) {
+			return;
+		}
+		// Don't repeat testing in 120s
+		if (!empty($this->_summary['test_port_tts']) && time() - $this->_summary['test_port_tts'] < 120) {
+			if (!empty($this->_summary['test_port'])) {
+				self::debug('✅ Use tested local port: ' . $this->_summary['test_port']);
+				define('LITESPEED_CRAWLER_LOCAL_PORT', $this->_summary['test_port']);
+			}
+			return;
+		}
+		$this->_summary['test_port_tts'] = time();
+		self::save_summary();
+
+		$options = $this->_get_curl_options();
+		$url = home_url();
+		$parsed_url = parse_url($url);
+		if (empty($parsed_url['host'])) {
+			return;
+		}
+		$resolved = $parsed_url['host'] . ':443:127.0.0.1';
+		$options[CURLOPT_RESOLVE] = array($resolved);
+		$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+		self::debug('Test local 443 port for ' . $resolved);
+
+		$ch = curl_init();
+		curl_setopt_array($ch, $options);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$result = curl_exec($ch);
+		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if (curl_errno($ch)) {
+			self::debug('❌ Test local 443 port failed, set port to 80: ' . curl_error($ch));
+			define('LITESPEED_CRAWLER_LOCAL_PORT', 80);
+			$this->_summary['test_port'] = 80;
+			self::save_summary();
+		} else {
+			self::debug('✅ Tested local 443 port successfully');
+		}
+		curl_close($ch);
+	}
+
+	/**
 	 * Run crawler
 	 *
 	 * @since  1.1.0
@@ -672,6 +721,9 @@ class Crawler extends Root
 	private function _do_running()
 	{
 		$options = $this->_get_curl_options(true);
+
+		// If is role simulator and not defined local port, check port once
+		$this->_test_port();
 
 		while ($urlChunks = $this->cls('Crawler_Map')->list_map(self::CHUNKS, $this->_summary['last_pos'])) {
 			// self::debug('$urlChunks=' . count($urlChunks) . ' $this->_cur_threads=' . $this->_cur_threads);
@@ -910,6 +962,7 @@ class Crawler extends Root
 	 */
 	private function _status_parse($header, $code, $url)
 	{
+		// self::debug('http status code: ' . $code . ' [headers]', $header);
 		if ($code == 201) {
 			return 'H';
 		}
