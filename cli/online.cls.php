@@ -37,7 +37,8 @@ class Online
 	{
 		$resp = $this->__cloud->init_qc_cli();
 		if (!empty($resp['qc_activated'])) {
-			$this->__cloud->update_qc_activation($resp['qc_activated']);
+			$main_domain = !empty($resp['main_domain']) ? $resp['main_domain'] : false;
+			$this->__cloud->update_qc_activation($resp['qc_activated'], $main_domain);
 			WP_CLI::success('Init successfully. Activated type: ' . $resp['qc_activated']);
 		} else {
 			WP_CLI::error('Init failed!');
@@ -80,7 +81,8 @@ class Online
 
 		$resp = $this->__cloud->init_qc_cdn_cli($assoc_args['method'], $cert, $key, $cf_token);
 		if (!empty($resp['qc_activated'])) {
-			$this->__cloud->update_qc_activation($resp['qc_activated'], true);
+			$main_domain = !empty($resp['main_domain']) ? $resp['main_domain'] : false;
+			$this->__cloud->update_qc_activation($resp['qc_activated'], $main_domain, true);
 		}
 		if (!empty($assoc_args['format']) && $assoc_args['format'] == 'json') {
 			WP_CLI::log(json_encode($resp));
@@ -120,7 +122,8 @@ class Online
 
 		$resp = $this->__cloud->link_qc_cli($assoc_args['email'], $assoc_args['api-key']);
 		if (!empty($resp['qc_activated'])) {
-			$this->__cloud->update_qc_activation($resp['qc_activated'], true);
+			$main_domain = !empty($resp['main_domain']) ? $resp['main_domain'] : false;
+			$this->__cloud->update_qc_activation($resp['qc_activated'], $main_domain, true);
 			WP_CLI::success('Link successfully!');
 			WP_CLI::log(json_encode($resp));
 		} else {

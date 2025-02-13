@@ -589,7 +589,8 @@ class Cloud extends Base
 			return;
 		}
 
-		$this->update_qc_activation($_GET['qc_activated']);
+		$main_domain = !empty($_GET['main_domain']) ? $_GET['main_domain'] : false;
+		$this->update_qc_activation($_GET['qc_activated'], $main_domain);
 
 		wp_redirect($this->_get_ref_url($ref));
 	}
@@ -599,9 +600,12 @@ class Cloud extends Base
 	 *
 	 * @since 7.0
 	 */
-	public function update_qc_activation($qc_activated, $quite = false)
+	public function update_qc_activation($qc_activated, $main_domain = false, $quite = false)
 	{
 		$this->_summary['qc_activated'] = $qc_activated;
+		if ($main_domain) {
+			$this->_summary['main_domain'] = $main_domain;
+		}
 		$this->save_summary();
 
 		$msg = sprintf(__('Congratulations, %s successfully set this domain up for the anonymous online services.', 'litespeed-cache'), 'QUIC.cloud');
