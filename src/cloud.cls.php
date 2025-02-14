@@ -83,10 +83,10 @@ class Cloud extends Base
 	// No api key needed for these services
 	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE);
 
-	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
+	private static $_QUEUE_SVC_SET = array(self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI);
 
 	public static $SERVICES_LOAD_CHECK = array(
-		self::SVC_CCSS,
+		// self::SVC_CCSS,
 		// self::SVC_UCSS,
 		// self::SVC_VPI,
 		self::SVC_LQIP,
