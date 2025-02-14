@@ -39,11 +39,15 @@ function litespeed_update_7()
 	$data = array(
 		'domain_key' => $domain_key,
 	);
-	$res = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
-	if (!empty($res['qc_activated'])) {
-		if ($res['qc_activated'] != 'deleted') {
-			Cloud::save_summary(array('qc_activated' => $res['qc_activated']));
-			Debug2::debug('[Data] Updated QC activated status to ' . $res['qc_activated']);
+	$resp = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
+	if (!empty($resp['qc_activated'])) {
+		if ($resp['qc_activated'] != 'deleted') {
+			$cloud_summary_updates = array('qc_activated' => $resp['qc_activated']);
+			if (!empty($resp['main_domain'])) {
+				$cloud_summary_updates['main_domain'] = $resp['main_domain'];
+			}
+			Cloud::save_summary($cloud_summary_updates);
+			Debug2::debug('[Data] Updated QC activated status to ' . $resp['qc_activated']);
 		}
 	}
 }
