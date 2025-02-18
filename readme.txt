@@ -314,6 +314,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Tag** Fixed a potential warning in tags. (ikiterder)
 * **Tag** Appended AJAX action to cache tags.
 * **Tag** Dropped normal HTTP code. Only error codes (403/404/500) will be used for tags.
+* **Misc** Fixed fatal activation error on Network installation when no other plugins are active. (PR#808 #9496550)
 * **Misc** Improved README file by adding minimum supported PHP/WordPress versions. (Viktor Szépe)
 * **Misc** Added reliance on just-in-time translation loading. (Pascal Birchler #738)
 * **Misc** Will now check whether the filename is valid before saving a file to fix the possible Object Cache log issue. (Mahdi Akrami #761)
