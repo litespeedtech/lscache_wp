@@ -163,7 +163,7 @@ class Activation extends Base
 		foreach ($sites as $site) {
 			$bid = is_object($site) && property_exists($site, 'blog_id') ? $site->blog_id : $site;
 			$plugins = get_blog_option($bid, 'active_plugins', $default);
-			if (in_array(LSCWP_BASENAME, $plugins, true)) {
+			if (!empty($plugins) && in_array(LSCWP_BASENAME, $plugins, true)) {
 				$count++;
 			}
 		}
