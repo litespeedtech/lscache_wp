@@ -285,8 +285,8 @@ class ESI extends Root
 			if (!empty($_SERVER['ESI_REFERER'])) {
 				$_SERVER['REQUEST_URI'] =
 					substr(get_option('permalink_structure'), -1) === '/' && strpos($_SERVER['ESI_REFERER'], '?') === false
-					? trailingslashit($_SERVER['ESI_REFERER'])
-					: $_SERVER['ESI_REFERER'];
+						? trailingslashit($_SERVER['ESI_REFERER'])
+						: $_SERVER['ESI_REFERER'];
 			}
 			# Prevent from 301 redirecting
 			if (!empty($_SERVER['SCRIPT_URI'])) {
