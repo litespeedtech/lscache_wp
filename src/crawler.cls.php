@@ -702,7 +702,7 @@ class Crawler extends Root
 		$result = curl_exec($ch);
 		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if (curl_errno($ch)) {
-			self::debug('❌ Test local 443 port failed, set port to 80: ' . curl_errno($ch));
+			self::debug('❌ Test local 443 port failed, set port to 80: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
 			define('LITESPEED_CRAWLER_LOCAL_PORT', 80);
 			$this->_summary['test_port'] = 80;
 			self::save_summary();
