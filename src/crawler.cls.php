@@ -883,6 +883,7 @@ class Crawler extends Root
 					$resolved = $dom . ':' . $port . ':127.0.0.1';
 					$options[CURLOPT_RESOLVE] = array($resolved);
 					$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+					$options[CURLOPT_PORT] = $port;
 					self::debug('Resolved DNS for ' . $resolved);
 				}
 			}
@@ -1095,6 +1096,7 @@ class Crawler extends Root
 				$resolved = $dom . ':' . $port . ':127.0.0.1';
 				$options[CURLOPT_RESOLVE] = array($resolved);
 				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+				$options[CURLOPT_PORT] = $port;
 				self::debug('Resolved DNS for ' . $resolved);
 			}
 		}
