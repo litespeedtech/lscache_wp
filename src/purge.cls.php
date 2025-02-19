@@ -398,11 +398,34 @@ class Purge extends Base
 	public function purge_all_opcache($silence = false)
 	{
 		if (!Router::opcache_enabled()) {
-			self::debug('Failed to reset opcode cache due to opcache not enabled');
+			self::debug('❌ Failed to reset opcode cache due to opcache not enabled');
 
 			if (!$silence) {
 				$msg = __('Opcode cache is not enabled.', 'litespeed-cache');
-				Admin_Display::error($msg);
+				!defined('LITESPEED_PURGE_SILENT') && Admin_Display::error($msg);
+			}
+
+			return false;
+		}
+
+		if (Router::opcache_restricted(__FILE__)) {
+			self::debug('❌ Failed to reset opcode cache due to OPcache is restricted. File requesting the clear is not allowed.');
+
+			if (!$silence) {
+				$msg = __('OPcache is restricted by "restrict_api".', 'litespeed-cache');
+				!defined('LITESPEED_PURGE_SILENT') && Admin_Display::error($msg);
+			}
+
+			return false;
+		}
+
+		// Purge opcode cache
+		if (!opcache_reset()) {
+			self::debug('❌ Reset opcode not worked');
+
+			if (!$silence) {
+				$msg = __('Reset the opcode cache was not successfully.', 'litespeed-cache');
+				!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 			}
 
 			return false;
@@ -411,8 +434,6 @@ class Purge extends Base
 		// Action to run after opcache purge.
 		do_action('litespeed_purged_all_opcache');
 
-		// Purge opcode cache
-		opcache_reset();
 		self::debug('Reset opcode cache');
 
 		if (!$silence) {
