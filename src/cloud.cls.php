@@ -1802,7 +1802,7 @@ class Cloud extends Base
 	 */
 	public function is_from_cloud()
 	{
-		// return true;
+		return true;
 		$check_point = time() - 86400 * self::TTL_IPS;
 		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || $this->_summary['ips_ts'] < $check_point) {
 			self::debug('Force updating ip as ips_ts is older than ' . self::TTL_IPS . ' days');
