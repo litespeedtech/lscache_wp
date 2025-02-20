@@ -707,7 +707,9 @@ class Crawler extends Root
 			$this->_summary['test_port'] = 80;
 		} else {
 			self::debug('✅ Tested local 443 port successfully');
-			unset($this->_summary['test_port']);
+			if (!empty($this->_summary['test_port'])) {
+				unset($this->_summary['test_port']);
+			}
 		}
 		self::save_summary();
 		curl_close($ch);
