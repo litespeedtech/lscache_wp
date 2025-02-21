@@ -257,6 +257,7 @@ class Router extends Base
 		// }
 		if (self::get_ip() !== '127.0.0.1') {
 			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
+			Control::set_nocache('Role simulate uid denied');
 			return;
 		}
 
