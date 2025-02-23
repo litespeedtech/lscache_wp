@@ -255,7 +255,8 @@ class Router extends Base
 		// 	Debug2::debug( '[Router] user agent not match' );
 		// 	return;
 		// }
-		if (self::get_ip() !== '127.0.0.1') {
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if (!$server_ip || self::get_ip() !== $server_ip) {
 			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
 			Control::set_nocache('Role simulate uid denied');
 			return;

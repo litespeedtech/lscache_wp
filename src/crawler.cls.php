@@ -30,6 +30,7 @@ class Crawler extends Root
 	private $_resetfile;
 	private $_end_reason;
 	private $_ncpu = 1;
+	private $_server_ip;
 
 	private $_crawler_conf = array(
 		'cookies' => array(),
@@ -64,6 +65,7 @@ class Crawler extends Root
 		$this->_summary = self::get_summary();
 
 		$this->_ncpu = $this->_get_server_cpu();
+		$this->_server_ip = $this->conf(Base::O_SERVER_IP);
 
 		self::debug('Init w/ CPU cores=' . $this->_ncpu);
 	}
@@ -419,6 +421,10 @@ class Crawler extends Root
 		 * @since 1.9.1
 		 */
 		if (!empty($current_crawler['uid'])) {
+			if (!$this->_server_ip) {
+				self::debug('🛑 Terminated crawler due to Server IP not set');
+				return false;
+			}
 			// Get role simulation vary name
 			$vary_name = $this->cls('Vary')->get_vary_name();
 			$vary_val = $this->cls('Vary')->finalize_default_vary($current_crawler['uid']);
@@ -668,51 +674,96 @@ class Crawler extends Root
 	 *
 	 * @since  7.0
 	 * @access private
+	 * @return bool true if success and can continue crawling, false if failed and need to stop
 	 */
 	private function _test_port()
 	{
-		if (empty($this->_crawler_conf['cookies']) || empty($this->_crawler_conf['cookies']['litespeed_hash']) || defined('LITESPEED_CRAWLER_LOCAL_PORT')) {
-			return;
+		if (empty($this->_crawler_conf['cookies']) || empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
+			return true;
+		}
+		if (!$this->_server_ip) {
+			self::debug('❌ Server IP not set');
+			return false;
+		}
+		if (defined('LITESPEED_CRAWLER_LOCAL_PORT')) {
+			self::debug('✅ LITESPEED_CRAWLER_LOCAL_PORT already defined');
+			return true;
 		}
 		// Don't repeat testing in 120s
 		if (!empty($this->_summary['test_port_tts']) && time() - $this->_summary['test_port_tts'] < 120) {
 			if (!empty($this->_summary['test_port'])) {
 				self::debug('✅ Use tested local port: ' . $this->_summary['test_port']);
 				define('LITESPEED_CRAWLER_LOCAL_PORT', $this->_summary['test_port']);
+				return true;
 			}
-			return;
+			return false;
 		}
 		$this->_summary['test_port_tts'] = time();
 		self::save_summary();
 
 		$options = $this->_get_curl_options();
-		$url = home_url();
+		$home = home_url();
+		File::save(LITESPEED_STATIC_DIR . '/crawler/test_port.txt', $home, true);
+		$url = LITESPEED_STATIC_URL . '/crawler/test_port.txt';
 		$parsed_url = parse_url($url);
 		if (empty($parsed_url['host'])) {
-			return;
+			self::debug('❌ Test port failed, invalid URL: ' . $url);
+			return false;
 		}
-		$resolved = $parsed_url['host'] . ':443:127.0.0.1';
+		$resolved = $parsed_url['host'] . ':443:' . $this->_server_ip;
 		$options[CURLOPT_RESOLVE] = array($resolved);
 		$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
+		$options[CURLOPT_HEADER] = false;
 		self::debug('Test local 443 port for ' . $resolved);
 
 		$ch = curl_init();
 		curl_setopt_array($ch, $options);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		$result = curl_exec($ch);
-		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if (curl_errno($ch)) {
-			self::debug('❌ Test local 443 port failed, set port to 80: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
-			define('LITESPEED_CRAWLER_LOCAL_PORT', 80);
-			$this->_summary['test_port'] = 80;
+		$test_result = false;
+		if (curl_errno($ch) || $result !== $home) {
+			if (curl_errno($ch)) {
+				self::debug('❌ Test port curl error: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
+			} else if ($result !== $home) {
+				self::debug('❌ Test port response is wrong: ' . $result);
+			}
+			self::debug('❌ Test local 443 port failed, try port 80');
+
+			// Try port 80
+			$resolved = $parsed_url['host'] . ':80:' . $this->_server_ip;
+			$options[CURLOPT_RESOLVE] = array($resolved);
+			if (!in_array('X-Forwarded-Proto: https', $options[CURLOPT_HTTPHEADER])) {
+				$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https'; // TODO: test if this can prevent WP http->https redirection or not
+			}
+			// $options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-SSL: on';
+			$ch = curl_init();
+			curl_setopt_array($ch, $options);
+			$url = str_replace("https://", "http://", $url);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			$result = curl_exec($ch);
+			if (curl_errno($ch)) {
+				self::debug('❌ Test port curl error: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
+			} else if ($result !== $home) {
+				self::debug('❌ Test port response is wrong: ' . $result);
+			} else {
+				self::debug('✅ Test local 80 port successfully');
+				define('LITESPEED_CRAWLER_LOCAL_PORT', 80);
+				$this->_summary['test_port'] = 80;
+				$test_result = true;
+			}
+			// self::debug('Response data: ' . $result);
+			// $this->Release_lane();
+			// exit($result);
+
 		} else {
 			self::debug('✅ Tested local 443 port successfully');
-			if (!empty($this->_summary['test_port'])) {
-				unset($this->_summary['test_port']);
-			}
+			define('LITESPEED_CRAWLER_LOCAL_PORT', 443);
+			$this->_summary['test_port'] = 443;
+			$test_result = true;
 		}
 		self::save_summary();
 		curl_close($ch);
+		return $test_result;
 	}
 
 	/**
@@ -726,7 +777,12 @@ class Crawler extends Root
 		$options = $this->_get_curl_options(true);
 
 		// If is role simulator and not defined local port, check port once
-		$this->_test_port();
+		$test_result = $this->_test_port();
+		if (!$test_result) {
+			$this->_end_reason = 'port_test_failed';
+			self::debug('❌ Test port failed, crawler stopped.');
+			return;
+		}
 
 		while ($urlChunks = $this->cls('Crawler_Map')->list_map(self::CHUNKS, $this->_summary['last_pos'])) {
 			// self::debug('$urlChunks=' . count($urlChunks) . ' $this->_cur_threads=' . $this->_cur_threads);
@@ -872,8 +928,6 @@ class Crawler extends Root
 			if ($CRAWLER_DROP_DOMAIN) {
 				$url = $this->_crawler_conf['base'] . $row['url'];
 			}
-			curl_setopt($curls[$row['id']], CURLOPT_URL, $url);
-			self::debug('Crawling [url] ' . $url . ($url == $row['url'] ? '' : ' [ori] ' . $row['url']));
 
 			// IP resolve
 			if (!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
@@ -883,13 +937,22 @@ class Crawler extends Root
 				if (!empty($parsed_url['host'])) {
 					$dom = $parsed_url['host'];
 					$port = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
-					$resolved = $dom . ':' . $port . ':127.0.0.1';
+					$resolved = $dom . ':' . $port . ':' . $this->_server_ip;
 					$options[CURLOPT_RESOLVE] = array($resolved);
 					$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
-					$options[CURLOPT_PORT] = $port;
+					// $options[CURLOPT_PORT] = $port;
+					if ($port == 80) {
+						$url = str_replace("https://", "http://", $url);
+						if (!in_array('X-Forwarded-Proto: https', $options[CURLOPT_HTTPHEADER])) {
+							$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https'; // TODO: test if this can warm up https cache or not
+						}
+					}
 					self::debug('Resolved DNS for ' . $resolved);
 				}
 			}
+
+			curl_setopt($curls[$row['id']], CURLOPT_URL, $url);
+			self::debug('Crawling [url] ' . $url . ($url == $row['url'] ? '' : ' [ori] ' . $row['url']));
 
 			curl_setopt_array($curls[$row['id']], $options);
 
@@ -1096,7 +1159,7 @@ class Crawler extends Root
 			if (!empty($parsed_url['host'])) {
 				$dom = $parsed_url['host'];
 				$port = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
-				$resolved = $dom . ':' . $port . ':127.0.0.1';
+				$resolved = $dom . ':' . $port . ':' . $this->_server_ip;
 				$options[CURLOPT_RESOLVE] = array($resolved);
 				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
 				$options[CURLOPT_PORT] = $port;
