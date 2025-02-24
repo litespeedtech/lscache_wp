@@ -1889,6 +1889,7 @@ class Cloud extends Base
 			'v_lscwp' => Core::VER,
 			'v_php' => PHP_VERSION,
 			'v_wp' => $GLOBALS['wp_version'],
+			'home_url' => home_url(),
 		);
 		if (!empty($_POST['funcs'])) {
 			foreach ($_POST['funcs'] as $v) {
