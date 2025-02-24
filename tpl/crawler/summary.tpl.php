@@ -174,6 +174,16 @@ if ($CRAWLER_RUN_INTERVAL > 0) :
 							</td>
 							<td>
 								<?php $this->build_toggle('litespeed-crawler-' . $i,  $__crawler->is_active($i)); ?>
+
+								<?php if (!empty($v['uid']) && empty($this->conf(Base::O_SERVER_IP))) : ?>
+									<div class="litespeed-danger litespeed-text-bold">
+										🚨
+										<?php echo __('NOTICE', 'litespeed-cache'); ?>:
+										<?php echo sprintf(__('You must set %s before using this feature.', 'litespeed-cache'), Lang::title(Base::O_SERVER_IP)); ?>
+										<?php echo Doc::learn_more(admin_url('admin.php?page=litespeed-general#settings'), __('Click here to set.', 'litespeed-cache'), true, false, true); ?>
+									</div>
+								<?php endif; ?>
+
 							</td>
 							<td>
 								<?php

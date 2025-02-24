@@ -96,6 +96,15 @@ $this->form_action();
 				<div class="litespeed-desc">
 					<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>
 					<?php Doc::one_per_line(); ?>
+
+					<?php if (empty($this->conf(Base::O_SERVER_IP))) : ?>
+						<div class="litespeed-danger litespeed-text-bold">
+							🚨
+							<?php echo __('NOTICE', 'litespeed-cache'); ?>:
+							<?php echo sprintf(__('You must set %s before using this feature.', 'litespeed-cache'), Lang::title(Base::O_SERVER_IP)); ?>
+							<?php echo Doc::learn_more(admin_url('admin.php?page=litespeed-general#settings'), __('Click here to set.', 'litespeed-cache'), true, false, true); ?>
+						</div>
+					<?php endif; ?>
 				</div>
 
 			</td>
