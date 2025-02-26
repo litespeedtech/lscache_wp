@@ -73,7 +73,7 @@ class Optimize extends Base
 				$this->cfg_css_async = false;
 			}
 			if ((defined('LITESPEED_GUEST_OPTM') || ($this->conf(self::O_OPTM_UCSS) && $this->conf(self::O_OPTM_CSS_COMB))) && $this->conf(self::O_OPTM_UCSS_INLINE)) {
-				Debug2::debug('[Optm] ❌ CCSS set to OFF due to UCSS Inline');
+				Debug2::debug('[Optm] ⚠️ CCSS set to OFF due to UCSS Inline');
 				$this->cfg_css_async = false;
 			}
 		}

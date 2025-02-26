@@ -211,7 +211,7 @@ class Core extends Root
 
 		// 1. Init vary
 		// 2. Init cacheable status
-		$this->cls('Vary')->init();
+		// $this->cls('Vary')->init();
 
 		// Init Purge hooks
 		$this->cls('Purge')->init();

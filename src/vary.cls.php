@@ -24,15 +24,16 @@ class Vary extends Root
 	 *
 	 * @since 1.0.4
 	 */
-	public function init()
-	{
-		$this->_update_vary_name();
-	}
+	// public function init()
+	// {
+	// 	$this->_update_vary_name();
+	// }
 
 	/**
 	 * Update the default vary name if changed
 	 *
 	 * @since  4.0
+	 * @since 7.0 Moved to after_user_init to allow ESI no-vary no conflict w/ LSCACHE_VARY_COOKIE/O_CACHE_LOGIN_COOKIE
 	 */
 	private function _update_vary_name()
 	{
@@ -41,12 +42,22 @@ class Vary extends Root
 		// If no vary set in rewrite rule
 		if (!isset($_SERVER['LSCACHE_VARY_COOKIE'])) {
 			if ($db_cookie) {
-				// Display cookie error msg to admin
-				if (is_multisite() ? is_network_admin() : is_admin()) {
-					Admin_Display::show_error_cookie();
+				// Check if is from ESI req or not. If from ESI no-vary, no need to set no-cache
+				$something_wrong = true;
+				if (!empty($_GET[ESI::QS_ACTION]) && !empty($_GET['_control'])) { // Have to manually build this checker bcoz ESI is not init yet.
+					$control = explode(',', $_GET['_control']);
+					if (in_array('no-vary', $control)) {
+						$something_wrong = false;
+					}
 				}
-				Control::set_nocache('vary cookie setting error');
-				return;
+
+				if ($something_wrong) {
+					// Display cookie error msg to admin
+					if (is_multisite() ? is_network_admin() : is_admin()) {
+						Admin_Display::show_error_cookie();
+					}
+					Control::set_nocache('❌❌ vary cookie setting error');
+				}
 			}
 			return;
 		}
@@ -76,6 +87,8 @@ class Vary extends Root
 	 */
 	public function after_user_init()
 	{
+		$this->_update_vary_name();
+
 		// logged in user
 		if (Router::is_logged_in()) {
 			// If not esi, check cache logged-in user setting
@@ -102,6 +115,7 @@ class Vary extends Root
 			add_action('clear_auth_cookie', array($this, 'remove_logged_in'));
 		} else {
 			// Only after vary init, can detect if is Guest mode or not
+			// Here need `self::$_vary_name` to be set first.
 			$this->_maybe_guest_mode();
 
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
