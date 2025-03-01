@@ -12,6 +12,7 @@ defined('WPINC') || exit();
 
 class Vary extends Root
 {
+	const LOG_TAG = '🔱';
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
@@ -38,7 +39,6 @@ class Vary extends Root
 	private function _update_vary_name()
 	{
 		$db_cookie = $this->conf(Base::O_CACHE_LOGIN_COOKIE); // [3.0] todo: check if works in network's sites
-
 		// If no vary set in rewrite rule
 		if (!isset($_SERVER['LSCACHE_VARY_COOKIE'])) {
 			if ($db_cookie) {
@@ -47,7 +47,9 @@ class Vary extends Root
 				if (!empty($_GET[ESI::QS_ACTION]) && !empty($_GET['_control'])) { // Have to manually build this checker bcoz ESI is not init yet.
 					$control = explode(',', $_GET['_control']);
 					if (in_array('no-vary', $control)) {
+						self::debug('no-vary control existed, bypass vary_name update');
 						$something_wrong = false;
+						self::$_vary_name = $db_cookie;
 					}
 				}
 
@@ -144,7 +146,7 @@ class Vary extends Root
 		 */
 		add_action('rest_api_init', function () {
 			// this hook is fired in `init` hook
-			Debug2::debug('[Vary] Rest API init disabled vary change');
+			self::debug('Rest API init disabled vary change');
 			add_filter('litespeed_can_change_vary', '__return_false');
 		});
 	}
@@ -157,7 +159,7 @@ class Vary extends Root
 	private function _maybe_guest_mode()
 	{
 		if (defined('LITESPEED_GUEST')) {
-			Debug2::debug('[Vary] 👒👒 Guest mode ' . (LITESPEED_GUEST ? 'predefined' : 'turned off'));
+			self::debug('👒👒 Guest mode ' . (LITESPEED_GUEST ? 'predefined' : 'turned off'));
 			return;
 		}
 
@@ -195,7 +197,7 @@ class Vary extends Root
 			return;
 		}
 
-		Debug2::debug('[Vary] 👒👒 Guest mode');
+		self::debug('👒👒 Guest mode');
 
 		!defined('LITESPEED_GUEST') && define('LITESPEED_GUEST', true);
 
@@ -219,12 +221,12 @@ class Vary extends Root
 		if ($_guest->always_guest() || self::has_vary()) {
 			// If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 			!defined('LITESPEED_GUEST') && define('LITESPEED_GUEST', true); // Reuse this const to bypass set vary in vary finalize
-			Debug2::debug('[Vary] 🤠🤠 Guest');
+			self::debug('🤠🤠 Guest');
 			echo '[]';
 			exit();
 		}
 
-		Debug2::debug('[Vary] Will update guest vary in finalize');
+		self::debug('Will update guest vary in finalize');
 
 		// return json
 		echo \json_encode(array('reload' => 'yes'));
@@ -264,7 +266,7 @@ class Vary extends Root
 
 			// No pending comments, don't need to add private cache
 			if (!$pending) {
-				Debug2::debug('[Vary] No pending comment');
+				self::debug('No pending comment');
 				$this->remove_commenter();
 
 				// Remove commenter prefilled info if exists, for public cache
@@ -314,7 +316,7 @@ class Vary extends Root
 	 */
 	public function add_logged_in($logged_in_cookie = false, $expire = false, $expiration = false, $uid = false)
 	{
-		Debug2::debug('[Vary] add_logged_in');
+		self::debug('add_logged_in');
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
@@ -335,7 +337,7 @@ class Vary extends Root
 	 */
 	public function remove_logged_in()
 	{
-		Debug2::debug('[Vary] remove_logged_in');
+		self::debug('remove_logged_in');
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
@@ -356,7 +358,7 @@ class Vary extends Root
 	 */
 	public static function can_ajax_vary()
 	{
-		Debug2::debug('[Vary] _can_change_vary -> true');
+		self::debug('_can_change_vary -> true');
 		self::$_can_change_vary = true;
 	}
 
@@ -371,7 +373,7 @@ class Vary extends Root
 		// Don't change for ajax due to ajax not sending webp header
 		if (Router::is_ajax()) {
 			if (!self::$_can_change_vary) {
-				Debug2::debug('[Vary] can_change_vary bypassed due to ajax call');
+				self::debug('can_change_vary bypassed due to ajax call');
 				return false;
 			}
 		}
@@ -381,7 +383,7 @@ class Vary extends Root
 		 * @since 1.6.5
 		 */
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-			Debug2::debug('[Vary] can_change_vary bypassed due to method not get/post');
+			self::debug('can_change_vary bypassed due to method not get/post');
 			return false;
 		}
 
@@ -390,12 +392,12 @@ class Vary extends Root
 		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
 		 */
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], Crawler::FAST_USER_AGENT) === 0) {
-			Debug2::debug('[Vary] can_change_vary bypassed due to crawler');
+			self::debug('can_change_vary bypassed due to crawler');
 			return false;
 		}
 
 		if (!apply_filters('litespeed_can_change_vary', true)) {
-			Debug2::debug('[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook');
+			self::debug('can_change_vary bypassed due to litespeed_can_change_vary hook');
 			return false;
 		}
 
@@ -415,7 +417,13 @@ class Vary extends Root
 		if (!defined('LITESPEED_DID_' . __FUNCTION__)) {
 			define('LITESPEED_DID_' . __FUNCTION__, true);
 		} else {
-			Debug2::debug2('[Vary] _update_default_vary bypassed due to run already');
+			self::debug2('_update_default_vary bypassed due to run already');
+			return;
+		}
+
+		// ESI shouldn't change vary (Let main page do only)
+		if (defined('LSCACHE_IS_ESI') && LSCACHE_IS_ESI) {
+			self::debug2('_update_default_vary bypassed due to ESI');
 			return;
 		}
 
@@ -430,7 +438,6 @@ class Vary extends Root
 				$expire = time() + 2 * DAY_IN_SECONDS;
 			}
 			$this->_cookie($vary, $expire);
-			Debug2::debug("[Vary] set_cookie ---> $vary");
 			// Control::set_nocache( 'changing default vary' . " $current_vary => $vary" );
 		}
 	}
@@ -472,7 +479,7 @@ class Vary extends Root
 		}
 
 		if ($group) {
-			Debug2::debug2('[Vary] role in vary_group [group] ' . $group);
+			self::debug2('role in vary_group [group] ' . $group);
 		}
 
 		return $group;
@@ -505,7 +512,7 @@ class Vary extends Root
 		if (!$uid) {
 			$uid = get_current_user_id();
 		} else {
-			Debug2::debug('[Vary] uid: ' . $uid);
+			self::debug('uid: ' . $uid);
 		}
 
 		// get user's group id
@@ -522,16 +529,16 @@ class Vary extends Root
 			// Get admin bar set
 			// see @_get_admin_bar_pref()
 			$pref = get_user_option('show_admin_bar_front', $uid);
-			Debug2::debug2('[Vary] show_admin_bar_front: ' . $pref);
+			self::debug2('show_admin_bar_front: ' . $pref);
 			$admin_bar = $pref === false || $pref === 'true';
 
 			if ($admin_bar) {
 				$vary['admin_bar'] = 1;
-				Debug2::debug2('[Vary] admin bar : true');
+				self::debug2('admin bar : true');
 			}
 		} else {
 			// Guest user
-			Debug2::debug('[Vary] role id: failed, guest');
+			self::debug('role id: failed, guest');
 		}
 
 		/**
@@ -611,7 +618,7 @@ class Vary extends Root
 	{
 		// If the cookie is lost somehow, set it
 		if (self::has_vary() !== 'commenter') {
-			Debug2::debug('[Vary] Add commenter');
+			self::debug('Add commenter');
 			// $_COOKIE[ self::$_vary_name ] = 'commenter'; // not needed
 
 			// save it
@@ -630,7 +637,7 @@ class Vary extends Root
 	private function remove_commenter()
 	{
 		if (self::has_vary() === 'commenter') {
-			Debug2::debug('[Vary] Remove commenter');
+			self::debug('Remove commenter');
 			// remove logged in status from global var
 			// unset( $_COOKIE[ self::$_vary_name ] ); // not needed
 
@@ -654,7 +661,7 @@ class Vary extends Root
 		if (!empty($_SERVER[$tag])) {
 			$path = parse_url($_SERVER[$tag]);
 			$path = !empty($path['path']) ? $path['path'] : false;
-			Debug2::debug('[Vary] Cookie Vary path: ' . $path);
+			self::debug('Cookie Vary path: ' . $path);
 		}
 		return $path;
 	}
@@ -681,9 +688,11 @@ class Vary extends Root
 		$tp_cookies = $this->_finalize_curr_vary_cookies();
 
 		if (!$tp_cookies) {
-			Debug2::debug2('[Vary] no custimzed vary');
+			self::debug2('no custimzed vary');
 			return;
 		}
+
+		self::debug('finalized 3rd party cookies', $tp_cookies);
 
 		return self::X_HEADER . ': ' . implode(',', $tp_cookies);
 	}
@@ -704,7 +713,7 @@ class Vary extends Root
 		if (!empty($post->post_password)) {
 			$postpass_key = 'wp-postpass_' . COOKIEHASH;
 			if ($this->_get_cookie_val($postpass_key)) {
-				Debug2::debug('[Vary] finalize bypassed due to password protected vary ');
+				self::debug('finalize bypassed due to password protected vary ');
 				// If user has password cookie, do not cache & ignore existing vary cookies
 				Control::set_nocache('password protected vary');
 				return false;
@@ -716,7 +725,7 @@ class Vary extends Root
 		$cookies = apply_filters('litespeed_vary_curr_cookies', $cookies);
 		if ($cookies) {
 			$cookies = array_filter(array_unique($cookies));
-			Debug2::debug('[Vary] vary cookies changed by filter litespeed_vary_curr_cookies', $cookies);
+			self::debug('vary cookies changed by filter litespeed_vary_curr_cookies', $cookies);
 		}
 
 		if (!$cookies) {
@@ -769,5 +778,6 @@ class Vary extends Root
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();
 
 		setcookie(self::$_vary_name, $val, $expire, $path ?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true);
+		self::debug("set_cookie ---> [k] " . self::$_vary_name . " [v] $val [ttl] " . ($expire - time()));
 	}
 }

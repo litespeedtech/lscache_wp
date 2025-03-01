@@ -661,6 +661,10 @@ class Core extends Root
 			$this->_comment('Guest Mode');
 		}
 
+		if (!empty($this->_footer_comment)) {
+			self::debug('[footer comment] ' . $this->_footer_comment);
+		}
+
 		if ($is_forced) {
 			Debug2::debug('--forced--');
 		}
