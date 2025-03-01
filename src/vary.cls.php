@@ -44,7 +44,8 @@ class Vary extends Root
 			if ($db_cookie) {
 				// Check if is from ESI req or not. If from ESI no-vary, no need to set no-cache
 				$something_wrong = true;
-				if (!empty($_GET[ESI::QS_ACTION]) && !empty($_GET['_control'])) { // Have to manually build this checker bcoz ESI is not init yet.
+				if (!empty($_GET[ESI::QS_ACTION]) && !empty($_GET['_control'])) {
+					// Have to manually build this checker bcoz ESI is not init yet.
 					$control = explode(',', $_GET['_control']);
 					if (in_array('no-vary', $control)) {
 						self::debug('no-vary control existed, bypass vary_name update');
@@ -778,6 +779,6 @@ class Vary extends Root
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();
 
 		setcookie(self::$_vary_name, $val, $expire, $path ?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true);
-		self::debug("set_cookie ---> [k] " . self::$_vary_name . " [v] $val [ttl] " . ($expire - time()));
+		self::debug('set_cookie ---> [k] ' . self::$_vary_name . " [v] $val [ttl] " . ($expire - time()));
 	}
 }

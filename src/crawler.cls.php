@@ -754,7 +754,6 @@ class Crawler extends Root
 			// self::debug('Response data: ' . $result);
 			// $this->Release_lane();
 			// exit($result);
-
 		} else {
 			self::debug('✅ Tested local 443 port successfully');
 			define('LITESPEED_CRAWLER_LOCAL_PORT', 443);
@@ -942,7 +941,7 @@ class Crawler extends Root
 					$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
 					// $options[CURLOPT_PORT] = $port;
 					if ($port == 80) {
-						$url = str_replace("https://", "http://", $url);
+						$url = str_replace('https://', 'http://', $url);
 						if (!in_array('X-Forwarded-Proto: https', $options[CURLOPT_HTTPHEADER])) {
 							$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https'; // TODO: test if this can warm up https cache or not
 						}
