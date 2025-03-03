@@ -288,6 +288,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **ESI** Fixed a log logic failure when ESI buffer is empty.
 * **ESI** Added Elementor nonces (jujube0ajluxl PR#736)
 * **ESI** Fixed a no-cache issue in no-vary ESI requests that occurred when `Login Cookie` was set.
+* **ESI** ESI will no longer send cookie update headers.
+* **Vary** Vary name correction, which used to happen in the `after_setup_theme` hook, now happens later in the `init` hook.
 * **Crawler** Enhanced hash generation function for cryptographic security.
 * **Crawler** Added back `Role Simulator` w/ IP limited to `127.0.0.1` only. Use `LITESPEED_CRAWLER_LOCAL_PORT` to use 80 if original server does not support 443.
 * **Crawler** Enhanced Role Simulator security by disallowing editor or above access in settings.
