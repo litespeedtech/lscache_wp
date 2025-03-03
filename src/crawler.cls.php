@@ -724,7 +724,7 @@ class Crawler extends Root
 		if (curl_errno($ch) || $result !== $home) {
 			if (curl_errno($ch)) {
 				self::debug('❌ Test port curl error: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
-			} else if ($result !== $home) {
+			} elseif ($result !== $home) {
 				self::debug('❌ Test port response is wrong: ' . $result);
 			}
 			self::debug('❌ Test local 443 port failed, try port 80');
@@ -738,12 +738,12 @@ class Crawler extends Root
 			// $options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-SSL: on';
 			$ch = curl_init();
 			curl_setopt_array($ch, $options);
-			$url = str_replace("https://", "http://", $url);
+			$url = str_replace('https://', 'http://', $url);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			$result = curl_exec($ch);
 			if (curl_errno($ch)) {
 				self::debug('❌ Test port curl error: [errNo] ' . curl_errno($ch) . ' [err] ' . curl_error($ch));
-			} else if ($result !== $home) {
+			} elseif ($result !== $home) {
 				self::debug('❌ Test port response is wrong: ' . $result);
 			} else {
 				self::debug('✅ Test local 80 port successfully');
@@ -1040,10 +1040,7 @@ class Crawler extends Root
 			}
 
 			// If blacklist is disabled
-			if (
-				(defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) ||
-				apply_filters('litespeed_crawler_disable_blocklist', '__return_false', $url)
-			) {
+			if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
 				return 'M';
 			}
 
@@ -1062,10 +1059,7 @@ class Crawler extends Root
 		}
 
 		// If blacklist is disabled
-		if (
-			(defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) ||
-			apply_filters('litespeed_crawler_disable_blocklist', '__return_false', $url)
-		) {
+		if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
 			return 'M';
 		}
 
