@@ -732,13 +732,13 @@ class Crawler extends Root
 			// Try port 80
 			$resolved = $parsed_url['host'] . ':80:' . $this->_server_ip;
 			$options[CURLOPT_RESOLVE] = array($resolved);
+			$url = str_replace('https://', 'http://', $url);
 			if (!in_array('X-Forwarded-Proto: https', $options[CURLOPT_HTTPHEADER])) {
-				$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https'; // TODO: test if this can prevent WP http->https redirection or not
+				$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https';
 			}
 			// $options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-SSL: on';
 			$ch = curl_init();
 			curl_setopt_array($ch, $options);
-			$url = str_replace('https://', 'http://', $url);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			$result = curl_exec($ch);
 			if (curl_errno($ch)) {
@@ -943,7 +943,7 @@ class Crawler extends Root
 					if ($port == 80) {
 						$url = str_replace('https://', 'http://', $url);
 						if (!in_array('X-Forwarded-Proto: https', $options[CURLOPT_HTTPHEADER])) {
-							$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https'; // TODO: test if this can warm up https cache or not
+							$options[CURLOPT_HTTPHEADER][] = 'X-Forwarded-Proto: https';
 						}
 					}
 					self::debug('Resolved DNS for ' . $resolved);
