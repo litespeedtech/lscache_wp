@@ -37,9 +37,8 @@ class Media extends Root
 		$this->_wp_upload_dir = wp_upload_dir();
 		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
 			$this->_format = 'webp';
-			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
-				$this->_format = 'avif';
-			}
+			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) $this->_format = 'avif';
+			if (!$this->_browser_support_next_gen()) $this->_format = '';
 		}
 	}
 
@@ -56,16 +55,14 @@ class Media extends Root
 		}
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if (defined('LITESPEED_GUEST_OPTM') || $this->_format) {
-			if ($this->webp_support()) {
-				// Hook to srcset
-				if (function_exists('wp_calculate_image_srcset')) {
-					add_filter('wp_calculate_image_srcset', array($this, 'webp_srcset'), 988);
-				}
-				// Hook to mime icon
-				// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
-				// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
+		if ($this->webp_support()) {
+			// Hook to srcset
+			if (function_exists('wp_calculate_image_srcset')) {
+				add_filter('wp_calculate_image_srcset', array($this, 'webp_srcset'), 988);
 			}
+			// Hook to mime icon
+			// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
+			// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
 		}
 
 		if ($this->conf(Base::O_MEDIA_LAZY) && !$this->cls('Metabox')->setting('litespeed_no_image_lazy')) {
@@ -100,7 +97,7 @@ class Media extends Root
 		// 	$featured_image_url = get_the_post_thumbnail_url();
 		// 	if ($featured_image_url) {
 		// 		self::debug('Append featured image to head: ' . $featured_image_url);
-		// 		if ((defined('LITESPEED_GUEST_OPTM') || $this->_format) && $this->webp_support()) {
+		// 		if ($this->webp_support()) {
 		// 			$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
 		// 		}
 		// 	}
@@ -343,7 +340,7 @@ class Media extends Root
 
 		echo '<p>';
 		// WebP/AVIF info
-		if ($size_meta && !empty($size_meta[$this->_format . '_saved'])) {
+		if ($size_meta && $this->webp_support() && !empty($size_meta[$this->_format . '_saved'])) {
 			$is_avif = 'avif' === $this->_format;
 			$size_meta_saved = $size_meta[$this->_format . '_saved'];
 			$size_meta_total = $size_meta[$this->_format . '_total'];
@@ -453,6 +450,10 @@ class Media extends Root
 	 */
 	public function webp_support()
 	{
+		return $this->_format;
+	}
+	private function _browser_support_next_gen()
+	{
 		if (!empty($_SERVER['HTTP_ACCEPT'])) {
 			if (strpos($_SERVER['HTTP_ACCEPT'], 'image/' . $this->_format) !== false) {
 				return true;
@@ -543,7 +544,7 @@ class Media extends Root
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ((defined('LITESPEED_GUEST_OPTM') || $this->_format) && $this->webp_support()) {
+		if ($this->webp_support()) {
 			$this->content = $this->_replace_buffer_img_webp($this->content);
 		}
 
@@ -1092,6 +1093,10 @@ class Media extends Root
 	 */
 	public function replace_webp($url)
 	{
+		if (!$this->webp_support()) {
+			self::debug2('No next generation format chosen in setting, bypassed');
+			return false;
+		}
 		Debug2::debug2('[Media] ' . $this->_format . ' replacing: ' . substr($url, 0, 200));
 
 		if (substr($url, -5) === '.' . $this->_format) {

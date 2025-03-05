@@ -749,7 +749,7 @@ class Optimize extends Base
 	{
 		$html_list_ori = $html_list;
 
-		$can_webp = (defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->cls('Media')->webp_support();
+		$can_webp = $this->cls('Media')->webp_support();
 
 		$tag = $file_type == 'css' ? 'link' : 'script';
 		foreach ($src_list as $key => $src_info) {
