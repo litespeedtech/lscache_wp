@@ -105,6 +105,15 @@ $this->form_action();
 							<?php echo Doc::learn_more(admin_url('admin.php?page=litespeed-general#settings'), __('Click here to set.', 'litespeed-cache'), true, false, true); ?>
 						</div>
 					<?php endif; ?>
+
+					<?php if (empty($this->conf(Base::O_ESI))) : ?>
+						<div class="litespeed-danger litespeed-text-bold">
+							🚨
+							<?php echo __('NOTICE', 'litespeed-cache'); ?>:
+							<?php echo sprintf(__('You must set %1$s to %2$s before using this feature.', 'litespeed-cache'), Lang::title(Base::O_ESI), __('ON', 'litespeed-cache')); ?>
+							<?php echo Doc::learn_more(admin_url('admin.php?page=litespeed-cache#esi'), __('Click here to set.', 'litespeed-cache'), true, false, true); ?>
+						</div>
+					<?php endif; ?>
 				</div>
 
 			</td>
