@@ -149,6 +149,7 @@ class Base extends Root
 	const O_OPTM_CCSS_PER_URL = 'optm-ccss_per_url';
 	const O_OPTM_CCSS_SEP_POSTTYPE = 'optm-ccss_sep_posttype';
 	const O_OPTM_CCSS_SEP_URI = 'optm-ccss_sep_uri';
+	const O_OPTM_CCSS_SELECTOR_WHITELIST = 'optm-ccss_whitelist';
 	const O_OPTM_CSS_ASYNC_INLINE = 'optm-css_async_inline';
 	const O_OPTM_CSS_FONT_DISPLAY = 'optm-css_font_display';
 	const O_OPTM_JS_DEFER = 'optm-js_defer';
@@ -437,6 +438,7 @@ class Base extends Root
 		self::O_OPTM_CCSS_PER_URL => false,
 		self::O_OPTM_CCSS_SEP_POSTTYPE => array(),
 		self::O_OPTM_CCSS_SEP_URI => array(),
+		self::O_OPTM_CCSS_SELECTOR_WHITELIST => array(),
 		self::O_OPTM_CSS_ASYNC_INLINE => false,
 		self::O_OPTM_CSS_FONT_DISPLAY => false,
 		self::O_OPTM_JS_DEFER => false,

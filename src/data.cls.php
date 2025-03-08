@@ -646,6 +646,21 @@ class Data extends Root
 	}
 
 	/**
+	 * Get list from `data/ccss_whitelist.txt`
+	 *
+	 * @since  7.1
+	 */
+	public function load_ccss_whitelist($list)
+	{
+		$data = $this->_load_per_line('ccss_whitelist.txt');
+		if ($data) {
+			$list = array_unique(array_filter(array_merge($list, $data)));
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get list from `data/ucss_whitelist.txt`
 	 *
 	 * @since  4.0
