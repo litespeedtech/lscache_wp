@@ -37,8 +37,12 @@ class Media extends Root
 		$this->_wp_upload_dir = wp_upload_dir();
 		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
 			$this->_format = 'webp';
-			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) $this->_format = 'avif';
-			if (!$this->_browser_support_next_gen()) $this->_format = '';
+			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
+				$this->_format = 'avif';
+			}
+			if (!$this->_browser_support_next_gen()) {
+				$this->_format = '';
+			}
 		}
 	}
 
