@@ -101,9 +101,8 @@ class Report extends Base
 		ob_end_clean();
 
 		preg_match('%<style type="text/css">(.*?)</style>.*?<body>(.*?)</body>%s', $report, $report);
-		$report = $report[2];
 
-		return $report;
+		return $report[2];
 	}
 
 	/**
