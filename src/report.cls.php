@@ -59,10 +59,9 @@ class Report extends Base
 		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
 
 		$data = array(
-			'env' => $report_con,
+			'env' => $report_con . ($report_php ? "\n" . $report_php : ''),
 			'link' => $link,
 			'notes' => $notes,
-			'php_info' => $report_php,
 		);
 
 		$json = Cloud::post(Cloud::API_REPORT, $data);
@@ -96,6 +95,9 @@ class Report extends Base
 		phpinfo($flags);
 		$report = ob_get_contents();
 		ob_end_clean();
+
+		preg_match('%<style type="text/css">(.*?)</style>.*?<body>(.*?)</body>%s', $report, $report);
+		$report = $report[2];
 
 		return $report;
 	}
