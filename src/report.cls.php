@@ -58,11 +58,14 @@ class Report extends Base
 		$php_info = !empty($_POST['attach_php']) ? esc_html($_POST['attach_php']) : '';
 		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
 
+		if ($report_php) {
+			$report_con .= "\n" . $report_php;
+		}
+
 		$data = array(
 			'env' => $report_con,
 			'link' => $link,
 			'notes' => $notes,
-			'php_info' => $report_php,
 		);
 
 		$json = Cloud::post(Cloud::API_REPORT, $data);
@@ -97,7 +100,9 @@ class Report extends Base
 		$report = ob_get_contents();
 		ob_end_clean();
 
-		return $report;
+		preg_match('%<style type="text/css">(.*?)</style>.*?<body>(.*?)</body>%s', $report, $report);
+
+		return $report[2];
 	}
 
 	/**
