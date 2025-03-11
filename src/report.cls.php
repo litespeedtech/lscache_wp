@@ -58,8 +58,12 @@ class Report extends Base
 		$php_info = !empty($_POST['attach_php']) ? esc_html($_POST['attach_php']) : '';
 		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
 
+		if ($report_php) {
+			$report_con .= "\n" . $report_php;
+		}
+
 		$data = array(
-			'env' => $report_con . ($report_php ? "\n" . $report_php : ''),
+			'env' => $report_con,
 			'link' => $link,
 			'notes' => $notes,
 		);
