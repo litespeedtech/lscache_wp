@@ -103,7 +103,7 @@ class Quic extends Base
 		$server_vars = $this->server_vars();
 		foreach ($consts_needed as $v) {
 			if (isset($server_vars[$v])) {
-				if (!isset($options_for_md5['_server']) || !is_array($options_for_md5['_server'])) {
+				if (empty($options_for_md5['_server'])) {
 					$options_for_md5['_server'] = array();
 				}
 				$options_for_md5['_server'][$v] = $server_vars[$v];
