@@ -255,7 +255,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.0 - Mar 5 2025 =
+= 7.0 - Mar 18 2025 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
 * **Core** Refactored configuration data initialization method to realtime update instead of delayed update in plugin upgrade phase.
@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Added support for `list_preferred` in online service node detection.
 * **Cloud** Fixed a domain expiry removal PHP warning. (cheekymate06)
 * **Cloud** Auto dropped Cloud error message banner when successfully reconnected.
+* **Cloud** Simplified the configure sync parameters to only compare and post the necessary settings.
 * **Config** Simplified QUIC.cloud CDN Setup. CDN service is now automatically detected when activated in the QUIC.cloud Dashboard.
 * **Config** Dropped the initial version check when comparing md5 to decide if whether to sync the configuration when upgrading the plugin.
 * **Config** `LITESPEED_DISABLE_ALL` will now check the value to determine whether it's been applied.

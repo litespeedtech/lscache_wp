@@ -203,18 +203,6 @@ function litespeed_update_2_0($ver)
 		if ($meta_value_list) {
 			$max_k = count($meta_value_list) - 1;
 			foreach ($meta_value_list as $k => $v) {
-				$md52src_list = maybe_unserialize($v->meta_value);
-				foreach ($md52src_list as $md5 => $v2) {
-					$f = array(
-						'post_id' => $v->post_id,
-						'optm_status' => $v2[1],
-						'src' => $v2[0],
-						'srcpath_md5' => md5($v2[0]),
-						'src_md5' => $md5,
-						'server' => $v2[2],
-					);
-					$wpdb->replace($wpdb->prefix . 'litespeed_img_optm', $f);
-				}
 				$mids_to_del[] = $v->meta_id;
 
 				// Delete from postmeta

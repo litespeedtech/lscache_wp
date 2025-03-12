@@ -72,29 +72,65 @@ class Quic extends Base
 		$options['_rest'] = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
 		$options['_home_url'] = home_url('/');
 
-		// Add server env vars
-		$options['_server'] = $this->server_vars();
-
 		// Append hooks
 		$options['_tp_cookies'] = apply_filters('litespeed_vary_cookies', array());
 
-		$options_for_md5 = $options;
-		unset($options_for_md5['_server']['LITESPEED_SERVER_TYPE']);
-		unset($options_for_md5['_server']['LITESPEED_ALLOWED']);
-		unset($options_for_md5['_server']['LITESPEED_ON']);
+		// Build necessary options only
+		$options_needed = array(
+			self::O_CACHE_DROP_QS,
+			self::O_CACHE_EXC_COOKIES,
+			self::O_CACHE_EXC_USERAGENTS,
+			self::O_CACHE_FAVICON,
+			self::O_CACHE_LOGIN_COOKIE,
+			self::O_CACHE_VARY_COOKIES,
+			self::O_CACHE_MOBILE_RULES,
+			self::O_CACHE_MOBILE,
+			self::O_CACHE_RES,
+			self::O_CACHE_BROWSER,
+			self::O_CACHE_TTL_BROWSER,
+			self::O_IMG_OPTM_WEBP,
+			self::O_GUEST,
+			self::O_GUEST_OPTM,
+			'_tp_cookies',
+		);
+		$consts_needed = array(
+			'WP_CONTENT_DIR',
+			'LSCWP_CONTENT_DIR',
+			'LSCWP_CONTENT_FOLDER',
+			'LSWCP_TAG_PREFIX',
+		);
+		$options_for_md5 = array();
+		foreach ($options_needed as $v) {
+			if (isset($options[$v])) {
+				$options_for_md5[$v] = $options[$v];
+			}
+		}
+		$server_vars = $this->server_vars();
+		foreach ($consts_needed as $v) {
+			if (isset($server_vars[$v])) {
+				if (!is_array($options_for_md5['_server'])) {
+					$options_for_md5['_server'] = array();
+				}
+				$options_for_md5['_server'][$v] = $server_vars[$v];
+			}
+		}
 
 		$conf_md5 = md5(\json_encode($options_for_md5));
-		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {
-			if (!$force) {
-				self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
-				return;
+		if (!empty($this->_summary['conf_md5'])) {
+			if ($conf_md5 == $this->_summary['conf_md5']) {
+				if (!$force) {
+					self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
+					return;
+				}
+				self::debug('!!!Force sync conf even same md5');
+			} else {
+				self::debug('[conf_md5] ' . $conf_md5 . ' [existing_conf_md5] ' . $this->_summary['conf_md5']);
 			}
-			self::debug('!!!Force sync conf even same md5');
 		}
 
 		self::save_summary(array('conf_md5' => $conf_md5));
-		self::debug('sync conf to QC', $options);
+		self::debug('sync conf to QC', $options_for_md5);
 
-		Cloud::post(Cloud::SVC_D_SYNC_CONF, $options);
+		Cloud::post(Cloud::SVC_D_SYNC_CONF, $options_for_md5);
 	}
 }
