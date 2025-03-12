@@ -59,7 +59,7 @@ class Report extends Base
 		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
 
 		if ($report_php) {
-			$report_con .= "\n" . $report_php;
+			$report_con .= "\nPHPINFO\n" . $report_php;
 		}
 
 		$data = array(
