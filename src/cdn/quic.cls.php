@@ -93,12 +93,7 @@ class Quic extends Base
 			self::O_GUEST_OPTM,
 			'_tp_cookies',
 		);
-		$consts_needed = array(
-			'WP_CONTENT_DIR',
-			'LSCWP_CONTENT_DIR',
-			'LSCWP_CONTENT_FOLDER',
-			'LSWCP_TAG_PREFIX',
-		);
+		$consts_needed = array('WP_CONTENT_DIR', 'LSCWP_CONTENT_DIR', 'LSCWP_CONTENT_FOLDER', 'LSWCP_TAG_PREFIX');
 		$options_for_md5 = array();
 		foreach ($options_needed as $v) {
 			if (isset($options[$v])) {
