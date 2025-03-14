@@ -24,6 +24,7 @@ class Media extends Root
 	private $_wp_upload_dir;
 	private $_vpi_preload_list = array();
 	private $_format = '';
+	private $_sys_format = '';
 
 	/**
 	 * Init
@@ -36,8 +37,10 @@ class Media extends Root
 
 		$this->_wp_upload_dir = wp_upload_dir();
 		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
+			$this->_sys_format = 'webp';
 			$this->_format = 'webp';
 			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
+				$this->_sys_format = 'avif';
 				$this->_format = 'avif';
 			}
 			if (!$this->_browser_support_next_gen()) {
@@ -344,25 +347,25 @@ class Media extends Root
 
 		echo '<p>';
 		// WebP/AVIF info
-		if ($size_meta && $this->webp_support() && !empty($size_meta[$this->_format . '_saved'])) {
-			$is_avif = 'avif' === $this->_format;
-			$size_meta_saved = $size_meta[$this->_format . '_saved'];
-			$size_meta_total = $size_meta[$this->_format . '_total'];
+		if ($size_meta && $this->webp_support(true) && !empty($size_meta[$this->_sys_format . '_saved'])) {
+			$is_avif = 'avif' === $this->_sys_format;
+			$size_meta_saved = $size_meta[$this->_sys_format . '_saved'];
+			$size_meta_total = $size_meta[$this->_sys_format . '_total'];
 
 			$percent = ceil(($size_meta_saved * 100) / $size_meta_total);
 
-			$link = Utility::build_url(Router::ACTION_IMG_OPTM, $this->_format . $post_id);
+			$link = Utility::build_url(Router::ACTION_IMG_OPTM, $this->_sys_format . $post_id);
 			$desc = false;
 
 			$cls = '';
 
-			if ($this->info($short_path . '.' . $this->_format, $post_id)) {
+			if ($this->info($short_path . '.' . $this->_sys_format, $post_id)) {
 				$curr_status = __('(optm)', 'litespeed-cache');
 				$desc = $is_avif
 					? __('Currently using optimized version of AVIF file.', 'litespeed-cache')
 					: __('Currently using optimized version of WebP file.', 'litespeed-cache');
 				$desc .= '&#10;' . __('Click to switch to original (unoptimized) version.', 'litespeed-cache');
-			} elseif ($this->info($short_path . '.optm.' . $this->_format, $post_id)) {
+			} elseif ($this->info($short_path . '.optm.' . $this->_sys_format, $post_id)) {
 				$cls .= ' litespeed-warning';
 				$curr_status = __('(non-optm)', 'litespeed-cache');
 				$desc = $is_avif
@@ -452,14 +455,17 @@ class Media extends Root
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function webp_support()
+	public function webp_support($sys_level = false)
 	{
-		return $this->_format;
+		if ($sys_level) {
+			return $this->_sys_format;
+		}
+		return $this->_format; // User level next gen support
 	}
 	private function _browser_support_next_gen()
 	{
 		if (!empty($_SERVER['HTTP_ACCEPT'])) {
-			if (strpos($_SERVER['HTTP_ACCEPT'], 'image/' . $this->_format) !== false) {
+			if (strpos($_SERVER['HTTP_ACCEPT'], 'image/' . $this->_sys_format) !== false) {
 				return true;
 			}
 		}
@@ -496,7 +502,7 @@ class Media extends Root
 	public function next_gen_image_title()
 	{
 		$next_gen_img = 'WebP';
-		if ($this->_format == 'avif') {
+		if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
 			$next_gen_img = 'AVIF';
 		}
 		return $next_gen_img;
@@ -1101,10 +1107,10 @@ class Media extends Root
 			self::debug2('No next generation format chosen in setting, bypassed');
 			return false;
 		}
-		Debug2::debug2('[Media] ' . $this->_format . ' replacing: ' . substr($url, 0, 200));
+		Debug2::debug2('[Media] ' . $this->_sys_format . ' replacing: ' . substr($url, 0, 200));
 
-		if (substr($url, -5) === '.' . $this->_format) {
-			Debug2::debug2('[Media] already ' . $this->_format);
+		if (substr($url, -5) === '.' . $this->_sys_format) {
+			Debug2::debug2('[Media] already ' . $this->_sys_format);
 			return false;
 		}
 
@@ -1116,8 +1122,8 @@ class Media extends Root
 		 */
 		if (apply_filters('litespeed_media_check_ori', Utility::is_internal_file($url), $url)) {
 			// check if has webp file
-			if (apply_filters('litespeed_media_check_webp', Utility::is_internal_file($url, $this->_format), $url)) {
-				$url .= '.' . $this->_format;
+			if (apply_filters('litespeed_media_check_webp', Utility::is_internal_file($url, $this->_sys_format), $url)) {
+				$url .= '.' . $this->_sys_format;
 			} else {
 				Debug2::debug2('[Media] -no WebP or AVIF file, bypassed');
 				return false;
