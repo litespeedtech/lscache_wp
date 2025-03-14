@@ -49,11 +49,6 @@ class Core extends Root
 		!defined('LSCWP_TS_0') && define('LSCWP_TS_0', microtime(true));
 		$this->cls('Conf')->init();
 
-		// Check if debug is on
-		if ($this->conf(Base::O_DEBUG)) {
-			$this->cls('Debug2')->init();
-		}
-
 		/**
 		 * Load API hooks
 		 * @since  3.0

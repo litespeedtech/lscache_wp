@@ -255,7 +255,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.0 - Mar 18 2025 =
+= 7.0 - Mar 25 2025 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
 * **Core** Refactored configuration data initialization method to realtime update instead of delayed update in plugin upgrade phase.
@@ -325,6 +325,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Fixed PHP 7.2 compatibility in cloud message. (Viktor Szépe #771)
 * **Misc** Incompatibility warning banner for third party plugins is now dismissible.
 * **Misc** Generated robots.txt file under litespeed folder to discourage search engine indexing of static resource files. (djwilko12)
+* **Debug** Escalated debug initialization to as early as possible to allow log more information about configurations.
 * **3rd** Fixed warning in Buddy Press code integration. (Viktor Szépe/antipole PR#778)
 
 = 6.5.4 - Dec 16 2024 =

@@ -64,6 +64,12 @@ class Conf extends Base
 		 */
 		$this->load_options();
 
+		// Check if debug is on
+		// Init debug as early as possible
+		if ($this->conf(Base::O_DEBUG)) {
+			$this->cls('Debug2')->init();
+		}
+
 		$ver = $this->conf(self::_VER);
 
 		/**
