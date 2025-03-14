@@ -1228,7 +1228,7 @@ class Crawler extends Root
 		$crawler_factors['uid'] = array(0 => __('Guest', 'litespeed-cache'));
 
 		// WebP on/off
-		if (($this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM)) || $this->conf(Base::O_IMG_OPTM_WEBP)) {
+		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
 			$crawler_factors['webp'] = array(1 => $this->cls('Media')->next_gen_image_title(), 0 => '');
 		}
 
