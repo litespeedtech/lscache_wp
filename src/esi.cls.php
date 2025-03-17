@@ -45,11 +45,19 @@ class ESI extends Root
 	 */
 	public function init()
 	{
+		$esi_enabled = $this->cls('Router')->esi_enabled();
+
+		if ($esi_enabled) {
+			// Show add/save widget form data
+			add_action('in_widget_form', array($this->cls('Admin_Display'), 'show_widget_edit'), 100, 3);
+			add_filter('widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4);
+		}
+
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 * @since  2.9.7.2
 		 */
-		if (Router::is_ajax() || !$this->cls('Router')->esi_enabled()) {
+		if (Router::is_ajax() || !$esi_enabled) {
 			return;
 		}
 
