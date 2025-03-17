@@ -51,12 +51,14 @@ class Purge extends Base
 	{
 		// Register purge actions.
 		// Most used values: edit_post, save_post, delete_post, wp_trash_post, clean_post_cache, wp_update_comment_count
-		$purge_post_events = apply_filters('litespeed_purge_post_events', array(
-			'delete_post',
-			'wp_trash_post',
-			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-			'wp_update_comment_count', // TODO: check if needed for non ESI
-		));
+		$purge_post_events = array_unique(
+			apply_filters('litespeed_purge_post_events', array(
+				'delete_post',
+				'wp_trash_post',
+				// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+				'wp_update_comment_count', // TODO: check if needed for non ESI
+			))
+		);
 
 		foreach ($purge_post_events as $event) {
 			// this will purge all related tags
