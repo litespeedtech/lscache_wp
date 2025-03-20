@@ -1229,7 +1229,10 @@ class Crawler extends Root
 
 		// WebP on/off
 		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
-			$crawler_factors['webp'] = array(1 => $this->cls('Media')->next_gen_image_title(), 0 => '');
+			$crawler_factors['webp'] = array(1 => $this->cls('Media')->next_gen_image_title());
+			if (apply_filters('litespeed_crawler_webp', false)) {
+				$crawler_factors['webp'][0] = '';
+			}
 		}
 
 		// Guest Mode on/off
