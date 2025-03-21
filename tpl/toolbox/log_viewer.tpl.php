@@ -48,7 +48,9 @@ function subnav_link($item)
 		: '';
 	$label = isset($item['label']) ? $item['label'] : $item['name'];
 
-	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey}>{$label}</a>";
+	$on_click = isset($item['onClick']) ? ' onClick="' . $item['onClick'].'"' : '';
+
+	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey} {$on_click}>{$label}</a>";
 }
 
 /**
@@ -68,6 +70,21 @@ function clear_logs_link($accesskey = null)
 	echo subnav_link($item);
 }
 
+/**
+ * Print a button to copy current log
+ * @since  7.0
+ */
+function copy_logs_link($id_to_copy)
+{
+	$item = array(
+			'name' => 'copy_links',
+			'label' => esc_html__('Copy Log', 'litespeed-cache'),
+			'cssClass' => 'litespeed-info-button',
+			'onClick' => "litespeed_copy_to_clipboard('".$id_to_copy."')"
+		);
+	return subnav_link($item);
+}
+
 $subnav_links = array();
 $log_views = array();
 
@@ -76,14 +93,17 @@ foreach ($logs as $log) {
 
 	$file = $this->cls('Debug2')->path($log['name']);
 	$lines = File::count_lines($file);
-	$start = $lines > 1000 ? $lines - 1000 : 0;
+	$max_lines = apply_filters('litespeed_debug_show_max_lines', 1000);
+	$start = $lines > $max_lines ? $lines - $max_lines : 0;
 	$lines = File::read($file, $start);
 	$lines = $lines ? trim(implode("\n", $lines)) : '';
+	
+	$log_body_id = 'litespeed-log-' . $log['name'];
 
 	$log_views[] =
 		"<div class='litespeed-log-view-wrapper' data-litespeed-sublayout='{$log['name']}_log'>"
-		. "<h3 class='litespeed-title'>{$log['label']}</h3>"
-		. '<div class="litespeed-log-body">'
+		. "<h3 class='litespeed-title'>{$log['label']}" . copy_logs_link($log_body_id) ."</h3>"
+		. '<div class="litespeed-log-body" id="' . $log_body_id . '">'
 		. nl2br(htmlspecialchars($lines))
 		. '</div>'
 		. '</div>';
