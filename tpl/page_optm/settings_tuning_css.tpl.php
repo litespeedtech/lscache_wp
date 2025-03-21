@@ -122,6 +122,30 @@ defined( 'WPINC' ) || exit;
 
 	<tr>
 		<th>
+			<?php $id = Base::O_OPTM_CCSS_SELECTOR_WHITELIST; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'List CSS selectors that should always have their styles contained in critical CSS.', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ccss-whitelist', __( 'How to choose a CCSS allowlist selector?', 'litespeed-cache' ) ); ?>
+				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
+				<div class="litespeed-callout notice notice-warning inline">
+					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
+					<p>
+						<?php echo __( 'Selectors must exist in the CSS. Parent classes in the HTML will not work.', 'litespeed-cache' ); ?>
+					</p>
+				</div>
+				<font class="litespeed-success">
+					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/ccss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/ccss_whitelist.txt</a>
+				</font>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
 			<?php $id = Base::O_OPTM_CCSS_CON; ?>
 			<?php $this->title( $id ); ?>
 		</th>

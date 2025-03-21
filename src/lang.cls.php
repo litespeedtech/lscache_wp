@@ -172,6 +172,7 @@ class Lang extends Base
 			self::O_OPTM_CCSS_CON => __('Critical CSS Rules', 'litespeed-cache'),
 			self::O_OPTM_CCSS_SEP_POSTTYPE => __('Separate CCSS Cache Post Types', 'litespeed-cache'),
 			self::O_OPTM_CCSS_SEP_URI => __('Separate CCSS Cache URIs', 'litespeed-cache'),
+			self::O_OPTM_CCSS_SELECTOR_WHITELIST => __('CCSS Selector Allowlist', 'litespeed-cache'),
 			self::O_OPTM_JS_DEFER_EXC => __('JS Deferred / Delayed Excludes', 'litespeed-cache'),
 			self::O_OPTM_GM_JS_EXC => __('Guest Mode JS Excludes', 'litespeed-cache'),
 			self::O_OPTM_EMOJI_RM => __('Remove WordPress Emoji', 'litespeed-cache'),
