@@ -255,9 +255,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= Unreleased =
+= 7.1 - Unreleased =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
 * **Cloud** CCSS results are now posted via API notification.
+* **Crawler** Dropped non-WebP/AVIF crawler if user turned on Next Gen Image.
 
 = 7.0 - Mar 25 2025 =
 * 🌱**Image Optimization** Added AVIF format.
