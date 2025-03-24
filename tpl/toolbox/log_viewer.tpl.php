@@ -8,17 +8,17 @@ $logs =
 	array(
 		array(
 			'name' => 'debug',
-			'label' => esc_html__('Debug Log', 'litespeed-cache'),
+			'label' => __('Debug Log', 'litespeed-cache'),
 			'accesskey' => 'A',
 		),
 		array(
 			'name' => 'purge',
-			'label' => esc_html__('Purge Log', 'litespeed-cache'),
+			'label' => __('Purge Log', 'litespeed-cache'),
 			'accesskey' => 'B',
 		),
 		array(
 			'name' => 'crawler',
-			'label' => esc_html__('Crawler Log', 'litespeed-cache'),
+			'label' => __('Crawler Log', 'litespeed-cache'),
 			'accesskey' => 'C',
 		),
 	);
@@ -61,7 +61,7 @@ function clear_logs_link($accesskey = null)
 {
 	$item =
 		array(
-			'label' => esc_html__('Clear Logs', 'litespeed-cache'),
+			'label' => __('Clear Logs', 'litespeed-cache'),
 			'url' => Utility::build_url(Router::ACTION_DEBUG2, Debug2::TYPE_CLEAR_LOG),
 		);
 	if (null !== $accesskey) {
@@ -78,7 +78,7 @@ function copy_logs_link($id_to_copy)
 {
 	$item = array(
 			'name' => 'copy_links',
-			'label' => esc_html__('Copy Log', 'litespeed-cache'),
+			'label' => __('Copy Log', 'litespeed-cache'),
 			'cssClass' => 'litespeed-info-button',
 			'onClick' => "litespeed_copy_to_clipboard('".$id_to_copy."')"
 		);
@@ -111,7 +111,7 @@ foreach ($logs as $log) {
 ?>
 
 <h3 class="litespeed-title">
-	<?php esc_html_e('LiteSpeed Logs', 'litespeed-cache'); ?>
+	<?php _e('LiteSpeed Logs', 'litespeed-cache'); ?>
 	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/toolbox/#log-view-tab'); ?>
 </h3>
 

@@ -71,7 +71,7 @@ class LiteSpeed_Check
 				'<div ' .
 					self::$_msg_id .
 					'>' .
-					esc_html__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
+					__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
 					'<p style="color: red; font-weight: 700;">' .
 					'PageSpeed Ninja' .
 					'</p>' .
@@ -122,7 +122,7 @@ class LiteSpeed_Check
 			'<div ' .
 				self::$_msg_id .
 				'>' .
-				esc_html__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
+				__('Please consider disabling the following detected plugins, as they may conflict with LiteSpeed Cache:', 'litespeed-cache') .
 				'<p style="color: red; font-weight: 700;">' .
 				implode(', ', $active_incompatible_plugins) .
 				'</p>' .
