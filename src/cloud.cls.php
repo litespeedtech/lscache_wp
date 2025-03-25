@@ -81,7 +81,7 @@ class Cloud extends Base
 	private static $WP_SVC_SET = array(self::API_NEWS, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO);
 
 	// No api key needed for these services
-	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE);
+	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE, self::SVC_D_DASH);
 
 	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
 
@@ -1268,7 +1268,7 @@ class Cloud extends Base
 		}
 
 		if (!$this->activated() && $service_tag != self::SVC_D_ACTIVATE) {
-			Admin_Display::error(Error::msg('setup_required'));
+			Admin_Display::error(Error::msg('qc_setup_required'));
 			return false;
 		}
 
