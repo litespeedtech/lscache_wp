@@ -95,6 +95,24 @@ class CDN extends Root
 			}
 		}
 
+		// Add IMAGES to rewrite if CDN Mapping setting is enabled
+		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG])) {
+			$add_images_type = apply_filters('litespeed_cdn_add_filetypes_image', array('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif'));
+			foreach ($add_images_type as $ext) {
+				$this->_cfg_cdn_mapping[$ext] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG];
+			}
+		}
+
+		// Add CSS to rewrite if CDN Mapping setting is enabled
+		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
+			$this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
+		}
+
+		// Add JS to rewrite if CDN Mapping setting is enabled
+		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
+			$this->_cfg_cdn_mapping['.js'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS];
+		}
+
 		if (!$this->_cfg_url_ori || !$this->_cfg_cdn_mapping) {
 			if (!defined(self::BYPASS)) {
 				define(self::BYPASS, true);
@@ -155,25 +173,6 @@ class CDN extends Root
 	}
 
 	/**
-	 * If include css/js in CDN
-	 *
-	 * @since  1.6.2.1
-	 * @return bool true if included in CDN
-	 */
-	public function inc_type($type)
-	{
-		if ($type == 'css' && !empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-			return true;
-		}
-
-		if ($type == 'js' && !empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Run CDN process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
@@ -186,6 +185,7 @@ class CDN extends Root
 		$this->content = $content;
 
 		$this->_finalize();
+
 		return $this->content;
 	}
 
