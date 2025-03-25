@@ -100,6 +100,9 @@ class Conf extends Base
 			if (!$ver) {
 				// New install
 				$this->set_conf(self::$_default_options);
+
+				// Check new version @since 2.9.3
+				Cloud::version_check('activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : ''));
 			}
 
 			// Init new default/missing options
@@ -122,9 +125,6 @@ class Conf extends Base
 
 		// Mark as conf loaded
 		defined('LITESPEED_CONF_LOADED') || define('LITESPEED_CONF_LOADED', true);
-
-		// Check new version @since 2.9.3
-		Cloud::version_check('activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : ''));
 
 		$this->update_confs(); // Files only get corrected in activation or saving settings actions.
 	}
