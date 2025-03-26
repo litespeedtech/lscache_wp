@@ -370,6 +370,12 @@ class Admin_Display extends Base
 	{
 		self::add_notice(self::NOTICE_GREEN, $msg, $echo, $irremovable, $additional_classes);
 	}
+	/** @deprecated 4.7 */
+	/** will drop in v7.5 */
+	public static function succeed($msg, $echo = false, $irremovable = false, $additional_classes = '')
+	{
+		self::success($msg, $echo, $irremovable, $additional_classes);
+	}
 
 	/**
 	 * Display error notice
