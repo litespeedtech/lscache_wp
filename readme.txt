@@ -257,11 +257,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.1 - Unreleased =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
-* **Config** Fixed a continual CDN sync_conf/purge check issue after upgraded to v7.0.
 * **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
 * **Crawler** Dropped non-WebP/AVIF crawler if user turned on Next Gen Image.
 * **Debug** Click to copy logs button under Debug tab.
+
+= 7.0.0.1 - Mar 27 2025 =
 * **GUI** Resolved a banner message display error in certain old version cases.
+* **GUI** Fixed a continual error banner when site doesn't use QC.
+* **Config** Fixed a continual CDN sync_conf/purge check issue after upgraded to v7.0.
+* **3rd** Improved WPML multi lang sync_conf compatibility.
 
 = 7.0 - Mar 25 2025 =
 * 🌱**Image Optimization** Added AVIF format.
