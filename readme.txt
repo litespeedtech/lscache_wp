@@ -257,6 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.1 - Unreleased =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
+* **Config** Fixed a continual CDN sync_conf/purge check issue after upgraded to v7.0.
 * **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
 * **Crawler** Dropped non-WebP/AVIF crawler if user turned on Next Gen Image.
 * **Debug** Click to copy logs button under Debug tab.
