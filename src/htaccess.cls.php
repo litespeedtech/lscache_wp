@@ -543,7 +543,7 @@ class Htaccess extends Root
 			$new_rules[] = '';
 		}
 
-		// caching php resource
+		// caching php resource TODO: consider drop
 		$id = Base::O_CACHE_RES;
 		if (!empty($cfg[$id])) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
