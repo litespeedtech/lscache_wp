@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.7
-Stable tag: 7.0
+Stable tag: 7.0.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -255,12 +255,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.1 - Unreleased =
-* 🌱**Page Optimize** Added allowlist support for CCSS.
-* **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
-* **Crawler** Dropped non-WebP/AVIF crawler if user turned on Next Gen Image.
-* **Debug** Click to copy logs button under Debug tab.
-* **GUI** Resolved a banner message display error in certain old version cases.
+= 7.0.0.1 - Mar 26 2025 =
+* **GUI** Resolved a banner message display error that occurred in certain old version cases.
+* **GUI** Fixed a continual error banner that appeared when sites weren't using QUIC.cloud.
+* **Config** Fixed a continual CDN sync_conf/purge check issue that occured after v7.0 upgrade.
+* **3rd** Improved WPML multi language sync_conf compatibility.
 
 = 7.0 - Mar 25 2025 =
 * 🌱**Image Optimization** Added AVIF format.
