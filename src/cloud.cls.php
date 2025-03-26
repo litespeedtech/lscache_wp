@@ -1352,7 +1352,7 @@ class Cloud extends Base
 
 		self::debug('data', $data);
 		$param = array(
-			'site_url' => home_url(),
+			'site_url' => home_url(), // Need to use home_url() as WPML case may change it for diff langs, therefore we can do auto alias
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'wp_pk_b64' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
 			'ver' => Core::VER,
