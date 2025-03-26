@@ -262,12 +262,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Debug** Click to copy logs button under Debug tab.
 * **GUI** Resolved a banner message display error in certain old version cases.
 
-= 7.0.0.1 - Mar 27 2025 =
-* **GUI** Resolved a banner message display error in certain old version cases.
-* **GUI** Fixed a continual error banner when site doesn't use QC.
-* **Config** Fixed a continual CDN sync_conf/purge check issue after upgraded to v7.0.
-* **3rd** Improved WPML multi lang sync_conf compatibility.
-
 = 7.0 - Mar 25 2025 =
 * 🌱**Image Optimization** Added AVIF format.
 * **Core** Changed plugin classes auto load to preload all to prevent upgrade problems.
