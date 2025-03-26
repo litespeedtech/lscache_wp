@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 7.0\n"
+"Project-Id-Version: LiteSpeed Cache 7.0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-25T15:47:25+00:00\n"
+"POT-Creation-Date: 2025-03-26T20:12:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: litespeed-cache\n"
@@ -173,9 +173,9 @@ msgid "Add new CDN URL"
 msgstr ""
 
 #: src/admin-display.cls.php:244
-#: src/admin-display.cls.php:972
-#: src/admin-display.cls.php:1000
-#: src/admin-display.cls.php:1051
+#: src/admin-display.cls.php:978
+#: src/admin-display.cls.php:1006
+#: src/admin-display.cls.php:1057
 #: src/doc.cls.php:41
 #: tpl/cache/settings-cache.tpl.php:22
 #: tpl/cache/settings_inc.cache_mobile.tpl.php:71
@@ -188,9 +188,9 @@ msgid "ON"
 msgstr ""
 
 #: src/admin-display.cls.php:245
-#: src/admin-display.cls.php:973
-#: src/admin-display.cls.php:1000
-#: src/admin-display.cls.php:1051
+#: src/admin-display.cls.php:979
+#: src/admin-display.cls.php:1006
+#: src/admin-display.cls.php:1057
 #: tpl/cache/settings-cache.tpl.php:22
 #: tpl/cache/settings_inc.object.tpl.php:213
 #: tpl/cdn/other.tpl.php:39
@@ -208,82 +208,82 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/admin-display.cls.php:526
+#: src/admin-display.cls.php:532
 #: tpl/banner/slack.php:33
 msgid "Dismiss"
 msgstr ""
 
-#: src/admin-display.cls.php:837
-#: src/admin-display.cls.php:841
+#: src/admin-display.cls.php:843
+#: src/admin-display.cls.php:847
 msgid "Save Changes"
 msgstr ""
 
-#: src/admin-display.cls.php:1062
+#: src/admin-display.cls.php:1068
 msgid "This setting is overwritten by the PHP constant %s"
 msgstr ""
 
-#: src/admin-display.cls.php:1065
+#: src/admin-display.cls.php:1071
 msgid "This setting is overwritten by the primary site setting"
 msgstr ""
 
-#: src/admin-display.cls.php:1067
+#: src/admin-display.cls.php:1073
 msgid "This setting is overwritten by the Network setting"
 msgstr ""
 
-#: src/admin-display.cls.php:1071
+#: src/admin-display.cls.php:1077
 msgid "currently set to %s"
 msgstr ""
 
-#: src/admin-display.cls.php:1082
+#: src/admin-display.cls.php:1088
 #: tpl/cache/settings_inc.object.tpl.php:106
 #: tpl/crawler/settings.tpl.php:37
 #: tpl/esi_widget_edit.php:70
 msgid "seconds"
 msgstr ""
 
-#: src/admin-display.cls.php:1114
-#: src/admin-display.cls.php:1118
+#: src/admin-display.cls.php:1120
+#: src/admin-display.cls.php:1124
 #: tpl/cdn/other.tpl.php:84
 msgid "Default value"
 msgstr ""
 
-#: src/admin-display.cls.php:1143
+#: src/admin-display.cls.php:1149
 msgid "Invalid rewrite rule"
 msgstr ""
 
-#: src/admin-display.cls.php:1161
+#: src/admin-display.cls.php:1167
 msgid "Path must end with %s"
 msgstr ""
 
-#: src/admin-display.cls.php:1180
+#: src/admin-display.cls.php:1186
 msgid "Minimum value"
 msgstr ""
 
-#: src/admin-display.cls.php:1183
+#: src/admin-display.cls.php:1189
 msgid "Maximum value"
 msgstr ""
 
-#: src/admin-display.cls.php:1195
+#: src/admin-display.cls.php:1201
 msgid "Zero, or"
 msgstr ""
 
-#: src/admin-display.cls.php:1201
+#: src/admin-display.cls.php:1207
 msgid "Larger than"
 msgstr ""
 
-#: src/admin-display.cls.php:1203
+#: src/admin-display.cls.php:1209
 msgid "Smaller than"
 msgstr ""
 
-#: src/admin-display.cls.php:1206
+#: src/admin-display.cls.php:1212
 msgid "Value range"
 msgstr ""
 
-#: src/admin-display.cls.php:1232
+#: src/admin-display.cls.php:1238
 msgid "Invalid IP"
 msgstr ""
 
-#: src/admin-display.cls.php:1253
+#: src/admin-display.cls.php:1259
 #: tpl/cache/settings-esi.tpl.php:95
 #: tpl/page_optm/settings_css.tpl.php:194
 #: tpl/page_optm/settings_html.tpl.php:123
@@ -301,44 +301,44 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: src/admin-display.cls.php:1255
+#: src/admin-display.cls.php:1261
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: src/admin-display.cls.php:1268
+#: src/admin-display.cls.php:1274
 msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: src/admin-display.cls.php:1269
+#: src/admin-display.cls.php:1275
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
-#: src/admin-display.cls.php:1271
+#: src/admin-display.cls.php:1277
 msgid "To match the beginning, add %s to the beginning of the item."
 msgstr ""
 
-#: src/admin-display.cls.php:1272
+#: src/admin-display.cls.php:1278
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: src/admin-display.cls.php:1273
+#: src/admin-display.cls.php:1279
 #: src/doc.cls.php:114
 msgid "One per line."
 msgstr ""
 
-#: src/admin-display.cls.php:1288
+#: src/admin-display.cls.php:1294
 msgid "%s groups"
 msgstr ""
 
-#: src/admin-display.cls.php:1291
+#: src/admin-display.cls.php:1297
 msgid "%s images"
 msgstr ""
 
-#: src/admin-display.cls.php:1300
+#: src/admin-display.cls.php:1306
 msgid "%s group"
 msgstr ""
 
-#: src/admin-display.cls.php:1303
+#: src/admin-display.cls.php:1309
 msgid "%s image"
 msgstr ""
 
@@ -526,11 +526,11 @@ msgstr ""
 msgid "Sync credit allowance with Cloud Server successfully."
 msgstr ""
 
-#: src/conf.cls.php:516
+#: src/conf.cls.php:519
 msgid "Saving option failed. IPv4 only for %s."
 msgstr ""
 
-#: src/conf.cls.php:693
+#: src/conf.cls.php:696
 msgid "Changed setting successfully."
 msgstr ""
 
@@ -2195,23 +2195,23 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: tpl/banner/cloud_promo.tpl.php:13
+#: tpl/banner/cloud_promo.tpl.php:14
 msgid "You just unlocked a promotion from QUIC.cloud!"
 msgstr ""
 
-#: tpl/banner/cloud_promo.tpl.php:17
+#: tpl/banner/cloud_promo.tpl.php:18
 msgid "Spread the love and earn %s credits to use in our QUIC.cloud online services."
 msgstr ""
 
-#: tpl/banner/cloud_promo.tpl.php:24
+#: tpl/banner/cloud_promo.tpl.php:25
 msgid "Send to twitter to get %s bonus"
 msgstr ""
 
-#: tpl/banner/cloud_promo.tpl.php:29
+#: tpl/banner/cloud_promo.tpl.php:30
 msgid "Learn more"
 msgstr ""
 
-#: tpl/banner/cloud_promo.tpl.php:34
+#: tpl/banner/cloud_promo.tpl.php:35
 msgid "Tweet preview"
 msgstr ""
 

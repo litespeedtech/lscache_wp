@@ -4,7 +4,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           7.1-a4
+ * Version:           7.0.0.1
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -34,7 +34,7 @@ if (defined('LSCWP_V')) {
 	return;
 }
 
-!defined('LSCWP_V') && define('LSCWP_V', '7.1-a4');
+!defined('LSCWP_V') && define('LSCWP_V', '7.0.0.1');
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -46,11 +46,11 @@ if (defined('LSCWP_V')) {
  * @since  5.2 Auto correct protocol for CONTENT URL
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
-$home_url = home_url('/');
-if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'https') {
+$site_url = site_url('/');
+if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($site_url, 0, 5) == 'https') {
 	$WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
 }
-!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($home_url, '', $WP_CONTENT_URL)); // `wp-content`
+!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($site_url, '', $WP_CONTENT_URL)); // `wp-content`
 !defined('LSWCP_PLUGIN_URL') && define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)); // Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 /**
