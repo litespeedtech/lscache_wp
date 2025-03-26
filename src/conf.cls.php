@@ -126,7 +126,10 @@ class Conf extends Base
 		// Mark as conf loaded
 		defined('LITESPEED_CONF_LOADED') || define('LITESPEED_CONF_LOADED', true);
 
-		$this->update_confs(); // Files only get corrected in activation or saving settings actions.
+		if (!$ver || $ver != Core::VER) {
+			// Only trigger once in upgrade progress, don't run always
+			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
+		}
 	}
 
 	/**
