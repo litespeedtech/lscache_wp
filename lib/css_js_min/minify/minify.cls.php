@@ -458,6 +458,43 @@ abstract class Minify
     }
 
     /**
+     * Check if the input is a file path.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    protected function detectUrlType(string $input) {
+        // Is CSS
+        if (strpos($input, '{') !== false && strpos($input, '}') !== false && strpos($input, ';') !== false) {
+            return false;
+        }
+
+        // Is JS
+        if (strpos($input, 'function') !== false ||
+            strpos($input, 'var ') !== false ||
+            strpos($input, 'let ') !== false ||
+            strpos($input, 'const ') !== false ||
+            strpos($input, '=>') !== false ||
+            strpos($input, ';') !== false ||
+            strpos($input, '(') !== false && strpos($input, ')') !== false ||
+            strpos($input, '{') !== false && strpos($input, '}') !== false) {
+            return false;
+        }
+
+        // Is file path
+        if (preg_match('/^(https?:\/\/|www\.|[a-z0-9]+\.[a-z]+)/i', $input) ||
+            strpos($input, '/') === 0 ||
+            strpos($input, './') === 0 ||
+            strpos($input, '../') === 0 ||
+            strpos($input, 'data:') === 0) {
+            return true;
+        }
+    
+        return false;
+    }
+
+    /**
      * Check if the path is a regular file and can be read.
      *
      * @param string $path
@@ -466,6 +503,16 @@ abstract class Minify
      */
     protected function canImportFile($path)
     {
+        // Not file if path is empty
+        if(empty($path)){
+            return false;
+        }
+
+        // Not file? Return false
+        if (!$this->detectUrlType($path)) {
+            return false;
+        }
+
         $parsed = parse_url($path);
         if (
             // file is elsewhere

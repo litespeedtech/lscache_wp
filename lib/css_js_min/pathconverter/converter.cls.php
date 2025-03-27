@@ -48,25 +48,27 @@ class Converter implements ConverterInterface
      */
     public function __construct($from, $to, $root = '')
     {
-        $shared = $this->shared($from, $to);
-        if ($shared === '') {
-            // when both paths have nothing in common, one of them is probably
-            // absolute while the other is relative
-            $root = $root ?: getcwd();
-            $from = strpos($from, $root) === 0 ? $from : preg_replace('/\/+/', '/', $root.'/'.$from);
-            $to = strpos($to, $root) === 0 ? $to : preg_replace('/\/+/', '/', $root.'/'.$to);
+        if(!empty($from)){
+            $shared = $this->shared($from, $to);
+            if ($shared === '') {
+                // when both paths have nothing in common, one of them is probably
+                // absolute while the other is relative
+                $root = $root ?: getcwd();
+                $from = strpos($from, $root) === 0 ? $from : preg_replace('/\/+/', '/', $root.'/'.$from);
+                $to = strpos($to, $root) === 0 ? $to : preg_replace('/\/+/', '/', $root.'/'.$to);
 
-            // or traveling the tree via `..`
-            // attempt to resolve path, or assume it's fine if it doesn't exist
-            $from = @realpath($from) ?: $from;
-            $to = @realpath($to) ?: $to;
+                // or traveling the tree via `..`
+                // attempt to resolve path, or assume it's fine if it doesn't exist
+                $from = @realpath($from) ?: $from;
+                $to = @realpath($to) ?: $to;
+            }
+
+            $from = $this->dirname($from);
+            $to = $this->dirname($to);
+
+            $from = $this->normalize($from);
+            $to = $this->normalize($to);
         }
-
-        $from = $this->dirname($from);
-        $to = $this->dirname($to);
-
-        $from = $this->normalize($from);
-        $to = $this->normalize($to);
 
         $this->from = $from;
         $this->to = $to;
@@ -191,6 +193,10 @@ class Converter implements ConverterInterface
      */
     protected function dirname($path)
     {
+        if(empty($path)){
+            return $path;
+        }
+
         if (@is_file($path)) {
             return dirname($path);
         }
