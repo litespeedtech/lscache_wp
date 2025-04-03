@@ -26,6 +26,12 @@ class Crawler extends Root
 	const FAST_USER_AGENT = 'lscache_runner';
 	const CHUNKS = 10000;
 
+	const STATUS_WAIT = 'W';
+	const STATUS_HIT = 'H';
+	const STATUS_MISS = 'M';
+	const STATUS_BLACKLIST = 'B';
+	const STATUS_NOCACHE = 'N';
+
 	private $_sitemeta = 'meta.data';
 	private $_resetfile;
 	private $_end_reason;
@@ -909,10 +915,10 @@ class Crawler extends Root
 		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
 		$curls = array();
 		foreach ($rows as $row) {
-			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'B') {
+			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == self::STATUS_BLACKLIST) {
 				continue;
 			}
-			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'N') {
+			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == self::STATUS_NOCACHE) {
 				continue;
 			}
 
@@ -971,10 +977,10 @@ class Crawler extends Root
 		// curl done
 		$ret = array();
 		foreach ($rows as $row) {
-			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'B') {
+			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == self::STATUS_BLACKLIST) {
 				continue;
 			}
-			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == 'N') {
+			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == self::STATUS_NOCACHE) {
 				continue;
 			}
 			// self::debug('-----debug3');
@@ -1005,16 +1011,16 @@ class Crawler extends Root
 	 */
 	private function _status2title($status)
 	{
-		if ($status == 'H') {
+		if ($status == self::STATUS_HIT) {
 			return '✅ Hit';
 		}
-		if ($status == 'M') {
+		if ($status == self::STATUS_MISS) {
 			return '😊 Miss';
 		}
-		if ($status == 'B') {
+		if ($status == self::STATUS_BLACKLIST) {
 			return '😅 Blacklisted';
 		}
-		if ($status == 'N') {
+		if ($status == self::STATUS_NOCACHE) {
 			return '😅 Blacklisted';
 		}
 		return '🛸 Unknown';
@@ -1030,21 +1036,21 @@ class Crawler extends Root
 	{
 		// self::debug('http status code: ' . $code . ' [headers]', $header);
 		if ($code == 201) {
-			return 'H';
+			return self::STATUS_HIT;
 		}
 
 		if (stripos($header, 'X-Litespeed-Cache-Control: no-cache') !== false) {
 			// If is from DIVI, taken as miss
 			if (defined('LITESPEED_CRAWLER_IGNORE_NONCACHEABLE') && LITESPEED_CRAWLER_IGNORE_NONCACHEABLE) {
-				return 'M';
+				return self::STATUS_MISS;
 			}
 
 			// If blacklist is disabled
 			if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
-				return 'M';
+				return self::STATUS_MISS;
 			}
 
-			return 'N'; // Blacklist
+			return self::STATUS_NOCACHE; // Blacklist
 		}
 
 		$_cache_headers = array('x-qc-cache', 'x-lsadc-cache', 'x-litespeed-cache');
@@ -1052,18 +1058,18 @@ class Crawler extends Root
 		foreach ($_cache_headers as $_header) {
 			if (stripos($header, $_header) !== false) {
 				if (stripos($header, $_header . ': miss') !== false) {
-					return 'M'; // Miss
+					return self::STATUS_MISS; // Miss
 				}
-				return 'H'; // Hit
+				return self::STATUS_HIT; // Hit
 			}
 		}
 
 		// If blacklist is disabled
 		if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
-			return 'M';
+			return self::STATUS_MISS;
 		}
 
-		return 'B'; // Blacklist
+		return self::STATUS_BLACKLIST; // Blacklist
 	}
 
 	/**
@@ -1383,10 +1389,10 @@ class Crawler extends Root
 
 		$_status_list = array(
 			'-' => 'default',
-			'M' => 'primary',
-			'H' => 'success',
-			'B' => 'danger',
-			'N' => 'warning',
+			self::STATUS_MISS => 'primary',
+			self::STATUS_HIT => 'success',
+			self::STATUS_BLACKLIST => 'danger',
+			self::STATUS_NOCACHE => 'warning',
 		);
 
 		$reason_set = explode(',', $reason_set);
