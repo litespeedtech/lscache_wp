@@ -261,6 +261,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped non-WebP/AVIF crawler if Next Gen Images are being used.
 * **Debug** Added a Click to copy logs button under Debug tab.
 
+= 7.0.1 - Apr 8 2025 =
+* **Page Optimize** Migrate legacy data to append trailing slash for better compatibility with v7.0-optimized UCSS/CCSS data.
+
 = 7.0.0.1 - Mar 27 2025 =
 * **GUI** Resolved a banner message display error in certain old version cases.
 * **GUI** Fixed a continual error banner when site doesn't use QC.

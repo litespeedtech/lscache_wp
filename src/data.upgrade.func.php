@@ -17,12 +17,12 @@ use LiteSpeed\Cloud;
 
 /**
  * Migrate v7.0- url_files URL from no trailing slash to trailing slash
- * @since 7.1
+ * @since 7.0.1
  */
-function litespeed_update_7_1()
+function litespeed_update_7_0_1()
 {
 	global $wpdb;
-	Debug2::debug('[Data] v7.1 upgrade started');
+	Debug2::debug('[Data] v7.0.1 upgrade started');
 
 	$tb_url = $wpdb->prefix . 'litespeed_url';
 	$tb_exists = $wpdb->get_var("SHOW TABLES LIKE '" . $tb_url . "'");
