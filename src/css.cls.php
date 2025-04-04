@@ -110,7 +110,11 @@ class CSS extends Base
 	private function _ccss()
 	{
 		global $wp;
-		$request_url = home_url($wp->request);
+		$request_url = get_permalink();
+		// Backup, in case get_permalink() fails.
+		if (!$request_url) {
+			$request_url = home_url($wp->request);
+		}
 
 		$filepath_prefix = $this->_build_filepath_prefix('ccss');
 		$url_tag = $this->_gen_ccss_file_tag($request_url);
