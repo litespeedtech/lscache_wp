@@ -78,6 +78,7 @@ $litespeed_php_files = array(
 	'cli/option.cls.php',
 	'cli/presets.cls.php',
 	'cli/purge.cls.php',
+	'cli/database.cls.php',
 
 	// 3rd party libraries
 	'lib/css_js_min/pathconverter/converter.cls.php',
