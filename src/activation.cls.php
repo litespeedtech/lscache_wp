@@ -54,16 +54,14 @@ class Activation extends Base
 		$count = 0;
 		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id());
 
+		/* Network file handler */
 		if (is_multisite()) {
 			$count = self::get_network_count();
 			if ($count !== false) {
 				$count = intval($count) + 1;
 				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
 			}
-		}
 
-		/* Network file handler */
-		if (is_multisite()) {
 			if (!is_network_admin()) {
 				if ($count === 1) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
@@ -74,6 +72,8 @@ class Activation extends Base
 					}
 				}
 			}
+		} else {
+			self::cls('Activation')->update_files();
 		}
 
 		if (defined('LSCWP_REF') && LSCWP_REF == 'whm') {
