@@ -605,12 +605,14 @@ class Admin_Display extends Base
 		$content = self::build_notice($color, $content, $irremovable);
 		$messages = self::get_option(self::DB_MSG_PIN, array());
 		$hit = false;
-		foreach ($messages as $k => $v) {
-			if ($v == $content) {
-				unset($messages[$k]);
-				$hit = true;
-				self::debug('✅ pinned msg content hit. Removed');
-				break;
+		if ($messages != -1) {
+			foreach ($messages as $k => $v) {
+				if ($v == $content) {
+					unset($messages[$k]);
+					$hit = true;
+					self::debug('✅ pinned msg content hit. Removed');
+					break;
+				}
 			}
 		}
 		if ($hit) {
