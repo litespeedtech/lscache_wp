@@ -53,9 +53,11 @@ input[type='checkbox'].litespeed-tiny-toggle {
 	background: none;
 	box-shadow: none;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:focus {
 	box-shadow: none;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:after {
 	content: '';
 	font-size: 8px;
@@ -70,6 +72,7 @@ input[type='checkbox'].litespeed-tiny-toggle:after {
 	border-radius: 72px;
 	box-shadow: 0 0 12px rgb(0 0 0 / 15%) inset;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:before {
 	content: '';
 	width: 14px;
@@ -96,6 +99,7 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:before,
 input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	transition: ease 0.15s;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	/*content: 'ON';*/
 	background-color: #2271b1;
@@ -104,10 +108,12 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle {
 	border: 0 !important;
 }
+
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:before {
 	top: 5px;
 	left: 7px;
 }
+
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:checked:before {
 	left: 23px;
 }
@@ -3659,6 +3665,7 @@ p.litespeed-dashboard-unlock-footer {
 .litespeed-body tbody > tr > th.litespeed-padding-left {
 	padding-left: 3em;
 }
+
 @media screen and (max-width: 680px) {
 	.litespeed-body tbody > tr > th.litespeed-padding-left {
 		padding-left: 10px;
@@ -4412,4 +4419,31 @@ a.litespeed-media-href svg:hover {
 .litespeed-postbox.litespeed-qc-promo-box p {
 	color: #dbdbdb;
 	font-size: 1rem;
+}
+
+/* =======================================
+	   Deactivate modal
+======================================= */
+#litespeed-modal-deactivate {
+	padding: 20px;
+}
+
+#litespeed-modal-deactivate h2 {
+	margin: 0px;
+}
+
+#litespeed-modal-deactivate .litespeed-wrap {
+	margin: 10px 0px;
+}
+
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper,
+#litespeed-modal-deactivate .deactivate-actions {
+	margin-top: 30px;
+}
+
+#litespeed-modal-deactivate .deactivate-reason-wrapper label,
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper label {
+	width: 100%;
+	display: block;
+	margin-bottom: 5px;
 }
