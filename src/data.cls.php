@@ -146,7 +146,7 @@ class Data extends Root
 		!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
 		Purge::purge_all();
 
-		Cloud::version_check('upgrade');
+		return 'upgrade';
 	}
 
 	/**
@@ -256,8 +256,7 @@ class Data extends Root
 	{
 		$previous_options = get_option('litespeed-cache-conf');
 		if (!$previous_options) {
-			Cloud::version_check('new');
-			return;
+			return 'new';
 		}
 
 		$ver = $previous_options['version'];
@@ -288,7 +287,7 @@ class Data extends Root
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0';
 		if (Core::VER != $ver) {
-			$this->conf_upgrade($ver);
+			return $this->conf_upgrade($ver);
 		} else {
 			// Reload options
 			$this->cls('Conf')->load_options();
@@ -298,7 +297,7 @@ class Data extends Root
 			!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
 			Purge::purge_all();
 
-			Cloud::version_check('upgrade');
+			return 'upgrade';
 		}
 	}
 
