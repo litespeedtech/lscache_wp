@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 7.0.0.1\n"
+"Project-Id-Version: LiteSpeed Cache 7.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-26T20:12:41+00:00\n"
+"POT-Creation-Date: 2025-04-08T18:55:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: litespeed-cache\n"
@@ -574,24 +574,24 @@ msgstr ""
 msgid "Previously existed in blocklist"
 msgstr ""
 
-#: src/data.cls.php:225
+#: src/data.cls.php:226
 msgid "The database has been upgrading in the background since %s. This message will disappear once upgrade is complete."
 msgstr ""
 
-#: src/data.upgrade.func.php:170
+#: src/data.upgrade.func.php:216
 msgid "LiteSpeed Cache upgraded successfully. NOTE: Due to changes in this version, the settings %1$s and %2$s have been turned OFF. Please turn them back on manually and verify that your site layout is correct, and you have no JS errors."
 msgstr ""
 
-#: src/data.upgrade.func.php:174
+#: src/data.upgrade.func.php:220
 #: src/lang.cls.php:151
 msgid "JS Combine"
 msgstr ""
 
-#: src/data.upgrade.func.php:175
+#: src/data.upgrade.func.php:221
 msgid "JS Defer"
 msgstr ""
 
-#: src/data.upgrade.func.php:177
+#: src/data.upgrade.func.php:223
 msgid "Click here to settings"
 msgstr ""
 
@@ -2233,7 +2233,7 @@ msgstr ""
 
 #: tpl/banner/new_version.php:71
 #: tpl/banner/new_version_dev.tpl.php:24
-#: tpl/toolbox/beta_test.tpl.php:62
+#: tpl/toolbox/beta_test.tpl.php:63
 msgid "Upgrade"
 msgstr ""
 
@@ -5027,7 +5027,7 @@ msgid "Comments are supported. Start a line with a %s to turn it into a comment 
 msgstr ""
 
 #: tpl/page_optm/settings_localization.tpl.php:127
-#: tpl/toolbox/beta_test.tpl.php:30
+#: tpl/toolbox/beta_test.tpl.php:31
 msgid "Example"
 msgstr ""
 
@@ -5495,48 +5495,48 @@ msgstr ""
 msgid "Restore Settings"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:25
+#: tpl/toolbox/beta_test.tpl.php:26
 msgid "Try GitHub Version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:29
+#: tpl/toolbox/beta_test.tpl.php:30
 msgid "Use this section to switch plugin versions. To beta test a GitHub commit, enter the commit URL in the field below."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:34
+#: tpl/toolbox/beta_test.tpl.php:35
 msgid "Use latest GitHub Dev commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:36
+#: tpl/toolbox/beta_test.tpl.php:37
 msgid "Use latest GitHub Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:38
-#: tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:39
+#: tpl/toolbox/beta_test.tpl.php:55
 msgid "Use latest WordPress release version"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:38
+#: tpl/toolbox/beta_test.tpl.php:39
 msgid "OR"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:49
+#: tpl/toolbox/beta_test.tpl.php:50
 msgid "Downgrade not recommended. May cause fatal error due to refactored code."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:53
+#: tpl/toolbox/beta_test.tpl.php:54
 msgid "Press the %s button to use the most recent GitHub commit. Master is for release candidate & Dev is for experimental testing."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:53
+#: tpl/toolbox/beta_test.tpl.php:54
 msgid "Use latest GitHub Dev/Master commit"
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:54
+#: tpl/toolbox/beta_test.tpl.php:55
 msgid "Press the %s button to stop beta testing and go back to the current release from the WordPress Plugin Directory."
 msgstr ""
 
-#: tpl/toolbox/beta_test.tpl.php:59
+#: tpl/toolbox/beta_test.tpl.php:60
 msgid "In order to avoid an upgrade error, you must be using %1$s or later before you can upgrade to %2$s versions."
 msgstr ""
 
