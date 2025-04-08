@@ -71,7 +71,7 @@ $this->form_action();
 			<td>
 				<?php $this->build_switch($id); ?>
 				<div class="litespeed-desc">
-					<?php echo sprintf(__('Clear %s cache when Purge All is run.', 'litespeed-cache'), 'Cloudflare'); ?>
+					<?php echo sprintf(__('Clear %s cache when "Purge All" is run.', 'litespeed-cache'), 'Cloudflare'); ?>
 				</div>
 			</td>
 		</tr>
