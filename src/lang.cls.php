@@ -247,6 +247,7 @@ class Lang extends Base
 			self::O_CDN_ORI_DIR => __('Included Directories', 'litespeed-cache'),
 			self::O_CDN_EXC => __('Exclude Path', 'litespeed-cache'),
 			self::O_CDN_CLOUDFLARE => __('Cloudflare API', 'litespeed-cache'),
+			self::O_CDN_CLOUDFLARE_CLEAR => __('Clear Cloudflare cache', 'litespeed-cache'),
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
 			self::O_CRAWLER_CRAWL_INTERVAL => __('Crawl Interval', 'litespeed-cache'),
