@@ -473,7 +473,7 @@ class Cloud extends Base
 		if ($from_wpapi) {
 			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY_SIGN;
 		}
-		$resp = wp_remote_get($server_key_url);
+		$resp = wp_safe_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
 			self::debugErr('Failed to load key: ' . $resp->get_error_message());
 			return false;
@@ -1036,7 +1036,7 @@ class Cloud extends Base
 			// TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
-				$response = wp_remote_get($v, array('timeout' => 5));
+				$response = wp_safe_remote_get($v, array('timeout' => 5));
 				if (is_wp_error($response)) {
 					$error_message = $response->get_error_message();
 					self::debug('failed to do load checker: ' . $error_message);
@@ -1188,7 +1188,7 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_get($url, array(
+		$response = wp_safe_remote_get($url, array(
 			'timeout' => 15,
 			'headers' => array('Accept' => 'application/json'),
 		));
@@ -1361,7 +1361,7 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_post($url, array(
+		$response = wp_safe_remote_post($url, array(
 			'body' => $param,
 			'timeout' => $time_out ?: 15,
 			'headers' => array('Accept' => 'application/json', 'Expect' => ''),
@@ -1844,7 +1844,7 @@ class Cloud extends Base
 		// Prevent multiple call in a short period
 		self::save_summary(array('ips_ts' => time(), 'ips_ts_runner' => time()));
 
-		$response = wp_remote_get(self::CLOUD_IPS . '?json');
+		$response = wp_safe_remote_get(self::CLOUD_IPS . '?json');
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to get ip whitelist: ' . $error_message);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The optimize4 class.
  *
@@ -7,6 +8,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -229,7 +231,7 @@ class Optimizer extends Root
 		}
 
 		// Write file
-		$res = wp_remote_get($url);
+		$res = wp_safe_remote_get($url);
 		$res_code = wp_remote_retrieve_response_code($res);
 		if (is_wp_error($res) || $res_code != 200) {
 			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $res_code);

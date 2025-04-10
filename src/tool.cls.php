@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The tools
  *
@@ -7,6 +8,7 @@
  * @subpackage 	LiteSpeed/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
@@ -23,7 +25,7 @@ class Tool extends Root
 	{
 		Debug2::debug('[Tool] ✅ check_ip');
 
-		$response = wp_remote_get('https://www.doapi.us/ip');
+		$response = wp_safe_remote_get('https://www.doapi.us/ip');
 
 		if (is_wp_error($response)) {
 			return new \WP_Error('remote_get_fail', 'Failed to fetch from https://www.doapi.us/ip', array('status' => 404));

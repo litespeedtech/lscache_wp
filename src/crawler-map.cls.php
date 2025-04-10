@@ -525,7 +525,7 @@ class Crawler_Map extends Root
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
+		$response = wp_safe_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to read sitemap: ' . $error_message);
