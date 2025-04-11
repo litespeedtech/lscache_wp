@@ -32,6 +32,7 @@ class Purge extends Base
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss';
 	const TYPE_PURGE_ALL_UCSS = 'purge_all_ucss';
 	const TYPE_PURGE_ALL_LQIP = 'purge_all_lqip';
+	const TYPE_PURGE_ALL_VPI = 'purge_all_vpi';
 	const TYPE_PURGE_ALL_AVATAR = 'purge_all_avatar';
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object';
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache';
@@ -125,6 +126,10 @@ class Purge extends Base
 
 			case self::TYPE_PURGE_ALL_LQIP:
 				$this->_purge_all_lqip();
+				break;
+
+			case self::TYPE_PURGE_ALL_VPI:
+				$this->_purge_all_vpi();
 				break;
 
 			case self::TYPE_PURGE_ALL_AVATAR:
@@ -314,6 +319,27 @@ class Purge extends Base
 
 		if (!$silence) {
 			$msg = __('Cleaned all LQIP files.', 'litespeed-cache');
+			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
+		}
+	}
+
+	/**
+	 * Delete all VPI data generated
+	 *
+	 * @since    7.1
+	 * @access   private
+	 */
+	private function _purge_all_vpi($silence = false)
+	{
+		global $wpdb;
+		do_action('litespeed_purged_all_vpi');
+
+		$wpdb->query("DELETE FROM `$wpdb->postmeta` WHERE meta_key = '" . $this->cls('Vpi')::POST_META . "'");
+		$wpdb->query("DELETE FROM `$wpdb->postmeta` WHERE meta_key = '" . $this->cls('Vpi')::POST_META_MOBILE . "'");
+		$this->cls('Placeholder')->rm_cache_folder('vpi');
+
+		if (!$silence) {
+			$msg = __('Cleaned all VPI data.', 'litespeed-cache');
 			!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 		}
 	}
