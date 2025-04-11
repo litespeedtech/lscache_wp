@@ -1161,8 +1161,9 @@ class Cloud extends Base
 			$service_tag .= '-' . $data['action'];
 		}
 
-		if (!$this->_maybe_cloud($service_tag)) {
-			return;
+		$maybe_cloud = $this->_maybe_cloud($service_tag);
+		if (!$maybe_cloud || $maybe_cloud == 'svc_hot') {
+			return $maybe_cloud;
 		}
 
 		$server = $this->detect_cloud($service);
@@ -1234,6 +1235,15 @@ class Cloud extends Base
 			return false;
 		}
 
+		// Check TTL
+		if (!empty($this->_summary['ttl.' . $service_tag])) {
+			$ttl = $this->_summary['ttl.' . $service_tag] - time();
+			if ($ttl > 0) {
+				self::debug('❌ TTL limit. [srv] ' . $service_tag . ' [TTL cool down] ' . $ttl . ' seconds');
+				return 'svc_hot';
+			}
+		}
+
 		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
 		$timestamp_tag = 'curr_request.';
@@ -1273,6 +1283,24 @@ class Cloud extends Base
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if a service tag ttl is valid or not
+	 * @since 7.1
+	 */
+	public function service_hot($service_tag)
+	{
+		if (empty($this->_summary['ttl.' . $service_tag])) {
+			return false;
+		}
+
+		$ttl = $this->_summary['ttl.' . $service_tag] - time();
+		if ($ttl <= 0) {
+			return false;
+		}
+
+		return $ttl;
 	}
 
 	/**
@@ -1324,8 +1352,9 @@ class Cloud extends Base
 			$service_tag .= '-' . $data['action'];
 		}
 
-		if (!$this->_maybe_cloud($service_tag)) {
-			return;
+		$maybe_cloud = $this->_maybe_cloud($service_tag);
+		if (!$maybe_cloud || $maybe_cloud == 'svc_hot') {
+			return $maybe_cloud;
 		}
 
 		$server = $this->detect_cloud($service);
@@ -1425,6 +1454,17 @@ class Cloud extends Base
 			}
 
 			return false;
+		}
+
+		// Check and save TTL data
+		if (!empty($json['_ttl'])) {
+			$ttl = intval($json['_ttl']);
+			self::debug('Service TTL to save: ' . $ttl);
+			if ($ttl > 0 && $ttl < 86400) {
+				self::save_summary(array(
+					'ttl.' . $service_tag => $ttl + time(),
+				));
+			}
 		}
 
 		if (!empty($json['_code'])) {

@@ -205,8 +205,8 @@ class VPI extends Base
 				continue;
 			}
 
-			// Exit queue if out of quota
-			if ($res === 'out_of_quota') {
+			// Exit queue if out of quota or service is hot
+			if ($res === 'out_of_quota' || $res === 'svc_hot') {
 				return;
 			}
 
@@ -278,7 +278,7 @@ class VPI extends Base
 
 		$json = Cloud::post($svc, $data, 30);
 		if (!is_array($json)) {
-			return false;
+			return $json;
 		}
 
 		// Unknown status, remove this line

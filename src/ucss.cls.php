@@ -241,8 +241,8 @@ class UCSS extends Base
 				continue;
 			}
 
-			// Exit queue if out of quota
-			if ($res === 'out_of_quota') {
+			// Exit queue if out of quota or service is hot
+			if ($res === 'out_of_quota' || $res === 'svc_hot') {
 				return;
 			}
 
@@ -327,7 +327,7 @@ class UCSS extends Base
 
 		$json = Cloud::post(Cloud::SVC_UCSS, $data, 30);
 		if (!is_array($json)) {
-			return false;
+			return $json;
 		}
 
 		// Old version compatibility

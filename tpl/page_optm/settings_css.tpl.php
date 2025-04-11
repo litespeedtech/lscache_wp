@@ -16,6 +16,9 @@ $ccss_queue = $this->load_queue('ccss');
 $ucss_queue = $this->load_queue('ucss');
 
 $next_gen = '<code class="litespeed-success">' . $this->cls('Media')->next_gen_image_title() . '</code>';
+
+$ucss_service_hot = $this->cls('Cloud')->service_hot(Cloud::SVC_UCSS);
+$ccss_service_hot = $this->cls('Cloud')->service_hot(Cloud::SVC_CCSS);
 ?>
 
 <h3 class="litespeed-title-short">
@@ -127,9 +130,16 @@ $next_gen = '<code class="litespeed-success">' . $this->cls('Media')->next_gen_i
 								<?php endforeach; ?>
 							</p>
 						</div>
-						<a href="<?php echo Utility::build_url(Router::ACTION_UCSS, UCSS::TYPE_GEN); ?>" class="button litespeed-btn-success">
-							<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'UCSS'); ?>
-						</a>
+						<?php if ($ucss_service_hot) : ?>
+							<button class="button button-secondary" disabled>
+								<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'UCSS'); ?>
+								- <?php echo sprintf(__('Available after %d second(s)', 'litespeed-cache'), $ucss_service_hot); ?>
+							</button>
+						<?php else : ?>
+							<a href="<?php echo Utility::build_url(Router::ACTION_UCSS, UCSS::TYPE_GEN); ?>" class="button litespeed-btn-success">
+								<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'UCSS'); ?>
+							</a>
+						<?php endif; ?>
 						<?php Doc::queue_issues(); ?>
 					<?php endif; ?>
 				</div>
@@ -244,9 +254,16 @@ $next_gen = '<code class="litespeed-success">' . $this->cls('Media')->next_gen_i
 								<?php endforeach; ?>
 							</p>
 						</div>
-						<a href="<?php echo Utility::build_url(Router::ACTION_CSS, CSS::TYPE_GEN_CCSS); ?>" class="button litespeed-btn-success">
-							<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'CCSS'); ?>
-						</a>
+						<?php if ($ccss_service_hot) : ?>
+							<button class="button button-secondary" disabled>
+								<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'CCSS'); ?>
+								- <?php echo sprintf(__('Available after %d second(s)', 'litespeed-cache'), $ccss_service_hot); ?>
+							</button>
+						<?php else : ?>
+							<a href="<?php echo Utility::build_url(Router::ACTION_CSS, CSS::TYPE_GEN_CCSS); ?>" class="button litespeed-btn-success">
+								<?php echo sprintf(__('Run %s Queue Manually', 'litespeed-cache'), 'CCSS'); ?>
+							</a>
+						<?php endif; ?>
 						<?php Doc::queue_issues(); ?>
 					<?php endif; ?>
 				</div>
