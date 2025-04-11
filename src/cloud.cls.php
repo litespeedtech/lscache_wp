@@ -261,6 +261,7 @@ class Cloud extends Base
 
 		// Load seperate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
+			self::debug('Resp: ', $echobox);
 			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
 			return;
 		}
@@ -1162,7 +1163,7 @@ class Cloud extends Base
 		}
 
 		$maybe_cloud = $this->_maybe_cloud($service_tag);
-		if (!$maybe_cloud || $maybe_cloud == 'svc_hot') {
+		if (!$maybe_cloud || $maybe_cloud === 'svc_hot') {
 			return $maybe_cloud;
 		}
 
@@ -1353,7 +1354,8 @@ class Cloud extends Base
 		}
 
 		$maybe_cloud = $this->_maybe_cloud($service_tag);
-		if (!$maybe_cloud || $maybe_cloud == 'svc_hot') {
+		if (!$maybe_cloud || $maybe_cloud === 'svc_hot') {
+			self::debug('Maybe cloud failed: ' . var_export($maybe_cloud, true));
 			return $maybe_cloud;
 		}
 
