@@ -53,8 +53,9 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-whitelist', __( 'How to choose an UCSS allowlist selector?', 'litespeed-cache' ) ); ?>
+				<?php echo __( 'List the CSS selectors whose styles should always be included in UCSS.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -128,8 +129,9 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'List CSS selectors that should always have their styles contained in critical CSS.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ccss-whitelist', __( 'How to choose a CCSS allowlist selector?', 'litespeed-cache' ) ); ?>
+				<?php echo __( 'List the CSS selectors whose styles should always be included in CCSS.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ccss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
