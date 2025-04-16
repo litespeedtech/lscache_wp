@@ -37,6 +37,9 @@ class Admin_Display extends Base
 	const RULECONFLICT_ON = 'ExpiresDefault_1';
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0';
 
+	const TYPE_QC_HIDE_BANNER = 'qc_hide_banner';
+	const COOKIE_QC_HIDE_BANNER = 'litespeed_qc_hide_banner';
+
 	protected $messages = array();
 	protected $default_settings = array();
 	protected $_is_network_admin = false;
@@ -1343,5 +1346,47 @@ class Admin_Display extends Base
 		$html .= '</ol></div>';
 
 		return $html;
+	}
+
+	/**
+	 * Check if has qc hide banner cookie or not
+	 * @since 7.1
+	 */
+	public static function has_qc_hide_banner()
+	{
+		return isset($_COOKIE[self::COOKIE_QC_HIDE_BANNER]);
+	}
+
+	/**
+	 * Set qc hide banner cookie
+	 * @since 7.1
+	 */
+	public static function set_qc_hide_banner()
+	{
+		$expire = time() + 86400 * 365;
+		self::debug('Set qc hide banner cookie');
+		setcookie(self::COOKIE_QC_HIDE_BANNER, time(), $expire, COOKIEPATH, COOKIE_DOMAIN);
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  7.1
+	 * @access public
+	 */
+	public function handler()
+	{
+		$type = Router::verify_type();
+
+		switch ($type) {
+			case self::TYPE_QC_HIDE_BANNER:
+				self::set_qc_hide_banner();
+				break;
+
+			default:
+				break;
+		}
+
+		Admin::redirect();
 	}
 }

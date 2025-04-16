@@ -36,7 +36,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 
 <div class="litespeed-dashboard">
 
-	<?php if (!$__cloud->activated()) : ?>
+	<?php if (!$__cloud->activated() && !Admin_Display::has_qc_hide_banner()) : ?>
 		<div class="litespeed-dashboard-group">
 			<div class="litespeed-flex-container">
 
@@ -132,7 +132,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 	<?php endif; ?>
 
 	<div class="litespeed-dashboard-qc">
-		<?php if (!$__cloud->activated() && !isset($_COOKIE['litespeed_qc_hidebanner'])) : ?>
+		<?php if (!$__cloud->activated() && !Admin_Display::has_qc_hide_banner()) : ?>
 			<div class="litespeed-dashboard-unlock">
 				<div>
 					<h3 class="litespeed-dashboard-unlock-title">
@@ -149,7 +149,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 							<span class="dashicons dashicons-yes"></span>
 							<?php _e('Enable QUIC.cloud services', 'litespeed-cache'); ?>
 						</a>
-						<br><a class="button button-link litespeed-top10" href="#"><?php _e('Do not show this again', 'litespeed-cache'); ?></a>
+						<br><a class="button button-link litespeed-top10" href="<?php echo Utility::build_url(Router::ACTION_ADMIN_DISPLAY, Admin_Display::TYPE_QC_HIDE_BANNER); ?>"><?php _e('Do not show this again', 'litespeed-cache'); ?></a>
 
 					</p>
 					<p class="litespeed-dashboard-unlock-footer">
@@ -177,7 +177,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 				<a href="https://docs.litespeedtech.com/lscache/lscwp/dashboard/#usage-statistics" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
 			</div>
 
-			<?php if (!$__cloud->activated() && isset($_COOKIE['litespeed_qc_hidebanner'])) : ?>
+			<?php if (!$__cloud->activated() && Admin_Display::has_qc_hide_banner()) : ?>
 				<p class="litespeed-desc litespeed-margin-top-remove"><?php echo __('The features below are provided by', 'litespeed-cache'); ?> <a href="<?php echo admin_url('admin.php?page=litespeed-general'); ?>">QUIC.cloud</a></p>
 			<?php endif; ?>
 
@@ -792,7 +792,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 								<div class="litespeed-text-center litespeed-empty-space-medium">
 									<p class="litespeed-margin-bottom20">
 										<?php Doc::learn_more(
-											Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_ENABLE_CDN),
+											Utility::build_url(Router::ACTION_CLOUD, $__cloud->activated() ? Cloud::TYPE_ENABLE_CDN : Cloud::TYPE_ACTIVATE),
 											'<span class="dashicons dashicons-saved"></span>' . __('Enable QUIC.cloud CDN', 'litespeed-cache'),
 											true,
 											'button button-primary litespeed-button-cta'

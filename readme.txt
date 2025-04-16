@@ -3,8 +3,8 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 5.3
 Requires PHP: 7.2
-Tested up to: 6.7
-Stable tag: 7.0
+Tested up to: 6.8
+Stable tag: 7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -255,11 +255,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.1 - Unreleased =
+= 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
 * **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
+* **Cloud** Added TTL control to QUIC.cloud services to make next requests more flexible.
 * **Crawler** Dropped non-WebP/AVIF crawler if Next Gen Images are being used.
+* 🐞**Config** Fixed an .htaccess generation bug that occurred when reactivating after previous deactivation. (PR#825)
+* **GUI** Improved the QC registration notice banner for online services thanks to user feedback.
+* **Page Optimization** Enhanced URL fetch validation to avoid exposing possible local info.
 * **Debug** Added a Click to copy logs button under Debug tab.
+* **CLI** Removed a vary warning log in CLI for QC activation process with a customized login cookie.
+* **CLI** Removed a log failure in CLI in QC activation process when no existing admin message.
+* **Misc** Check version only after upgrade to reduce the requests.
 
 = 7.0.1 - Apr 8 2025 =
 * **Page Optimize** Migrate legacy data to append trailing slash for better compatibility with v7.0-optimized UCSS/CCSS data.
