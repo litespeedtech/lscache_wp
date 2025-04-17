@@ -53,9 +53,11 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
+
 				<?php echo __( 'List the CSS selectors whose styles should always be included in UCSS.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
+        
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -102,7 +104,7 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types_1' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
 			</div>
 		</td>
 	</tr>

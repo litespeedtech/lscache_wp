@@ -255,6 +255,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.0.0.1 - Mar 26 2025 =
+* **GUI** Resolved a banner message display error that occurred in certain old version cases.
+* **GUI** Fixed a continual error banner that appeared when sites weren't using QUIC.cloud.
+* **Config** Fixed a continual CDN sync_conf/purge check issue that occured after v7.0 upgrade.
+* **3rd** Improved WPML multi language sync_conf compatibility.
+
 = 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
 * **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
