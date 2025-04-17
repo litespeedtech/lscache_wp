@@ -211,6 +211,7 @@ var _litespeed_dots;
 		 * @since  3.0
 		 */
 		$('#litespeed_get_ip').on('click', function (e) {
+			console.log('[litespeed] get server IP');
 			$.ajax({
 				url: litespeed_data.ajax_url_getIP,
 				dataType: 'json',
@@ -220,6 +221,9 @@ var _litespeed_dots;
 				success: function (data) {
 					console.log('[litespeed] get server IP response: ' + data);
 					$('#litespeed_server_ip').html(data);
+				},
+				error: function (xhr, error) {
+					console.log('[litespeed] get server IP error',error);
 				},
 			});
 		});
