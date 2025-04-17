@@ -16,6 +16,52 @@ use LiteSpeed\File;
 use LiteSpeed\Cloud;
 
 /**
+ * Migrate v7.0- url_files URL from no trailing slash to trailing slash
+ * @since 7.0.1
+ */
+function litespeed_update_7_0_1()
+{
+	global $wpdb;
+	Debug2::debug('[Data] v7.0.1 upgrade started');
+
+	$tb_url = $wpdb->prefix . 'litespeed_url';
+	$tb_exists = $wpdb->get_var("SHOW TABLES LIKE '" . $tb_url . "'");
+	if (!$tb_exists) {
+		Debug2::debug('[Data] Table `litespeed_url` not found, bypassed migration');
+		return;
+	}
+
+	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
+	$q = $wpdb->prepare($q);
+	$list = $wpdb->get_results($q, ARRAY_A);
+	$existing_urls = array();
+	if ($list) {
+		foreach ($list as $v) {
+			$existing_urls[] = $v['url'];
+		}
+	}
+
+	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
+	$q = $wpdb->prepare($q);
+	$list = $wpdb->get_results($q, ARRAY_A);
+	if (!$list) {
+		return;
+	}
+	foreach ($list as $v) {
+		if (substr($v['url'], -1) == '/') {
+			continue;
+		}
+		$new_url = $v['url'] . '/';
+		if (in_array($new_url, $existing_urls)) {
+			continue;
+		}
+		$q = "UPDATE `$tb_url` SET url = %s WHERE id = %d";
+		$q = $wpdb->prepare($q, $new_url, $v['id']);
+		$wpdb->query($q);
+	}
+}
+
+/**
  * Migrate from domain key to pk/sk for QC
  * @since 7.0
  */

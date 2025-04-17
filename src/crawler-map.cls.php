@@ -71,7 +71,7 @@ class Crawler_Map extends Root
 			$wpdb->query("UPDATE `$this->_tb` SET res = $sql_res WHERE id IN ( $id_all )");
 
 			// Add blacklist
-			if ($bit == 'B' || $bit == 'N') {
+			if ($bit == Crawler::STATUS_BLACKLIST || $bit == Crawler::STATUS_NOCACHE) {
 				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
 				$existing = $wpdb->get_results($q, ARRAY_A);
 				// Update current crawler status tag in existing blacklist
@@ -129,7 +129,7 @@ class Crawler_Map extends Root
 				self::debug("Update map reason [code] $code [pos] left $curr_crawler right -$right_pos [count] $count");
 
 				// Update blacklist reason
-				if ($bit == 'B' || $bit == 'N') {
+				if ($bit == Crawler::STATUS_BLACKLIST || $bit == Crawler::STATUS_NOCACHE) {
 					$count = $wpdb->query(
 						"UPDATE `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url = a.url SET a.reason=CONCAT(SUBSTRING_INDEX(a.reason, ',', $curr_crawler), '$code', SUBSTRING_INDEX(a.reason, ',', -$right_pos)) WHERE b.id IN (" .
 							implode(',', $v2) .
@@ -161,7 +161,7 @@ class Crawler_Map extends Root
 
 		// Build res&reason
 		$total_crawler = count(Crawler::cls()->list_crawlers());
-		$res = str_repeat('B', $total_crawler);
+		$res = str_repeat(Crawler::STATUS_BLACKLIST, $total_crawler);
 		$reason = implode(',', array_fill(0, $total_crawler, 'Man'));
 
 		$row = $wpdb->get_row("SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A);
@@ -200,7 +200,15 @@ class Crawler_Map extends Root
 		$id = (int) $id;
 		self::debug('blacklist delete [id] ' . $id);
 
-		$wpdb->query("UPDATE `$this->_tb` SET res=REPLACE(REPLACE(res, 'N', '-'), 'B', '-') WHERE url=(SELECT url FROM `$this->_tb_blacklist` WHERE id='$id')");
+		$sql = sprintf(
+			"UPDATE `%s` SET res=REPLACE(REPLACE(res, '%s', '-'), '%s', '-') WHERE url=(SELECT url FROM `%s` WHERE id=%d)",
+			$this->_tb,
+			Crawler::STATUS_NOCACHE,
+			Crawler::STATUS_BLACKLIST,
+			$this->_tb_blacklist,
+			$id
+		);
+		$wpdb->query($sql);
 		$wpdb->query("DELETE FROM `$this->_tb_blacklist` WHERE id='$id'");
 	}
 
@@ -219,7 +227,8 @@ class Crawler_Map extends Root
 		}
 
 		self::debug('Truncate blacklist');
-		$wpdb->query("UPDATE `$this->_tb` SET res=REPLACE(REPLACE(res, 'N', '-'), 'B', '-')");
+		$sql = sprintf("UPDATE `%s` SET res=REPLACE(REPLACE(res, '%s', '-'), '%s', '-')", $this->_tb, Crawler::STATUS_NOCACHE, Crawler::STATUS_BLACKLIST);
+		$wpdb->query($sql);
 		$wpdb->query("TRUNCATE `$this->_tb_blacklist`");
 	}
 
@@ -304,13 +313,13 @@ class Crawler_Map extends Root
 		if (!empty($_POST['kw'])) {
 			$q = "SELECT * FROM `$this->_tb` WHERE url LIKE %s";
 			if ($type == 'hit') {
-				$q .= " AND res LIKE '%H%'";
+				$q .= " AND res LIKE '%" . Crawler::STATUS_HIT . "%'";
 			}
 			if ($type == 'miss') {
-				$q .= " AND res LIKE '%M%'";
+				$q .= " AND res LIKE '%" . Crawler::STATUS_MISS . "%'";
 			}
 			if ($type == 'blacklisted') {
-				$q .= " AND res LIKE '%B%'";
+				$q .= " AND res LIKE '%" . Crawler::STATUS_BLACKLIST . "%'";
 			}
 			$q .= ' ORDER BY id LIMIT %d, %d';
 			$where = '%' . $wpdb->esc_like($_POST['kw']) . '%';
@@ -319,13 +328,13 @@ class Crawler_Map extends Root
 
 		$q = "SELECT * FROM `$this->_tb`";
 		if ($type == 'hit') {
-			$q .= " WHERE res LIKE '%H%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_HIT . "%'";
 		}
 		if ($type == 'miss') {
-			$q .= " WHERE res LIKE '%M%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_MISS . "%'";
 		}
 		if ($type == 'blacklisted') {
-			$q .= " WHERE res LIKE '%B%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_BLACKLIST . "%'";
 		}
 		$q .= ' ORDER BY id LIMIT %d, %d';
 		// self::debug("q=$q offset=$offset, limit=$limit");
@@ -347,13 +356,13 @@ class Crawler_Map extends Root
 
 		$type = Router::verify_type();
 		if ($type == 'hit') {
-			$q .= " WHERE res LIKE '%H%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_HIT . "%'";
 		}
 		if ($type == 'miss') {
-			$q .= " WHERE res LIKE '%M%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_MISS . "%'";
 		}
 		if ($type == 'blacklisted') {
-			$q .= " WHERE res LIKE '%B%'";
+			$q .= " WHERE res LIKE '%" . Crawler::STATUS_BLACKLIST . "%'";
 		}
 
 		return $wpdb->get_var($q);
@@ -516,7 +525,7 @@ class Crawler_Map extends Root
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
+		$response = wp_safe_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to read sitemap: ' . $error_message);

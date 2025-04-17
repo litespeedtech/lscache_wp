@@ -22,7 +22,7 @@ class File
 	 */
 	public static function is_404($url)
 	{
-		$response = wp_remote_get($url);
+		$response = wp_safe_remote_get($url);
 		$code = wp_remote_retrieve_response_code($response);
 		if ($code == 404) {
 			return true;

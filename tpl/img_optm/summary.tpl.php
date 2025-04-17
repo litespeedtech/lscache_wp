@@ -33,6 +33,7 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 	$unfinished_num += $img_count['img.' . Img_Optm::STATUS_ERR_FETCH];
 }
 
+$imgoptm_service_hot = $this->cls('Cloud')->service_hot(Cloud::SVC_IMG_OPTM . '-' . Img_Optm::CLOUD_ACTION_NEW_REQ);
 ?>
 <div class="litespeed-flex-container litespeed-column-with-boxes">
 	<div class="litespeed-width-7-10 litespeed-column-left litespeed-image-optim-summary-wrapper">
@@ -60,9 +61,16 @@ if (!empty($img_count['img.' . Img_Optm::STATUS_ERR_FETCH])) {
 			<?php endif; ?>
 
 			<div class="litespeed-img-optim-actions">
-				<a data-litespeed-onlyonce class="button button-primary" <?php if (!empty($img_count['groups_new']) || !empty($img_count['group.' . Img_Optm::STATUS_RAW])) : ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ); ?>" <?php else : ?> href='javascript:;' disabled <?php endif; ?>>
-					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __('Send Optimization Request', 'litespeed-cache'); ?>
-				</a>
+				<?php if ($imgoptm_service_hot) : ?>
+					<button class="button button-secondary" disabled>
+						<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __('Send Optimization Request', 'litespeed-cache'); ?>
+						- <?php echo sprintf(__('Available after %d second(s)', 'litespeed-cache'), $imgoptm_service_hot); ?>
+					</button>
+				<?php else : ?>
+					<a data-litespeed-onlyonce class="button button-primary" <?php if (!empty($img_count['groups_new']) || !empty($img_count['group.' . Img_Optm::STATUS_RAW])) : ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ); ?>" <?php else : ?> href='javascript:;' disabled <?php endif; ?>>
+						<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __('Send Optimization Request', 'litespeed-cache'); ?>
+					</a>
+				<?php endif; ?>
 
 				<a data-litespeed-onlyonce class="button button-secondary" data-balloon-length="large" data-balloon-pos="right" aria-label="<?php echo __('Only press the button if the pull cron job is disabled.', 'litespeed-cache'); ?> <?php echo __('Images will be pulled automatically if the cron job is running.', 'litespeed-cache'); ?>" <?php if (!empty($img_count['img.' . Img_Optm::STATUS_NOTIFIED]) && !$is_running) : ?> href="<?php echo Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_PULL); ?>" <?php else : ?> href='javascript:;' disabled <?php endif; ?>>
 					<?php echo __('Pull Images', 'litespeed-cache'); ?>

@@ -83,10 +83,10 @@ class Cloud extends Base
 	// No api key needed for these services
 	private static $_PUB_SVC_SET = array(self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE, self::SVC_D_DASH);
 
-	private static $_QUEUE_SVC_SET = array(self::SVC_UCSS, self::SVC_VPI);
+	private static $_QUEUE_SVC_SET = array(self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI);
 
 	public static $SERVICES_LOAD_CHECK = array(
-		self::SVC_CCSS,
+		// self::SVC_CCSS,
 		// self::SVC_UCSS,
 		// self::SVC_VPI,
 		self::SVC_LQIP,
@@ -261,6 +261,7 @@ class Cloud extends Base
 
 		// Load seperate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
+			self::debug('Resp: ', $echobox);
 			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
 			return;
 		}
@@ -473,7 +474,7 @@ class Cloud extends Base
 		if ($from_wpapi) {
 			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY_SIGN;
 		}
-		$resp = wp_remote_get($server_key_url);
+		$resp = wp_safe_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
 			self::debugErr('Failed to load key: ' . $resp->get_error_message());
 			return false;
@@ -1036,7 +1037,7 @@ class Cloud extends Base
 			// TODO
 			$valid_cloud_loads = array();
 			foreach ($valid_clouds as $k => $v) {
-				$response = wp_remote_get($v, array('timeout' => 5));
+				$response = wp_safe_remote_get($v, array('timeout' => 5));
 				if (is_wp_error($response)) {
 					$error_message = $response->get_error_message();
 					self::debug('failed to do load checker: ' . $error_message);
@@ -1161,8 +1162,9 @@ class Cloud extends Base
 			$service_tag .= '-' . $data['action'];
 		}
 
-		if (!$this->_maybe_cloud($service_tag)) {
-			return;
+		$maybe_cloud = $this->_maybe_cloud($service_tag);
+		if (!$maybe_cloud || $maybe_cloud === 'svc_hot') {
+			return $maybe_cloud;
 		}
 
 		$server = $this->detect_cloud($service);
@@ -1188,7 +1190,7 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_get($url, array(
+		$response = wp_safe_remote_get($url, array(
 			'timeout' => 15,
 			'headers' => array('Accept' => 'application/json'),
 		));
@@ -1234,6 +1236,15 @@ class Cloud extends Base
 			return false;
 		}
 
+		// Check TTL
+		if (!empty($this->_summary['ttl.' . $service_tag])) {
+			$ttl = $this->_summary['ttl.' . $service_tag] - time();
+			if ($ttl > 0) {
+				self::debug('❌ TTL limit. [srv] ' . $service_tag . ' [TTL cool down] ' . $ttl . ' seconds');
+				return 'svc_hot';
+			}
+		}
+
 		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
 		$timestamp_tag = 'curr_request.';
@@ -1273,6 +1284,24 @@ class Cloud extends Base
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if a service tag ttl is valid or not
+	 * @since 7.1
+	 */
+	public function service_hot($service_tag)
+	{
+		if (empty($this->_summary['ttl.' . $service_tag])) {
+			return false;
+		}
+
+		$ttl = $this->_summary['ttl.' . $service_tag] - time();
+		if ($ttl <= 0) {
+			return false;
+		}
+
+		return $ttl;
 	}
 
 	/**
@@ -1324,8 +1353,10 @@ class Cloud extends Base
 			$service_tag .= '-' . $data['action'];
 		}
 
-		if (!$this->_maybe_cloud($service_tag)) {
-			return;
+		$maybe_cloud = $this->_maybe_cloud($service_tag);
+		if (!$maybe_cloud || $maybe_cloud === 'svc_hot') {
+			self::debug('Maybe cloud failed: ' . var_export($maybe_cloud, true));
+			return $maybe_cloud;
 		}
 
 		$server = $this->detect_cloud($service);
@@ -1361,7 +1392,7 @@ class Cloud extends Base
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
 
-		$response = wp_remote_post($url, array(
+		$response = wp_safe_remote_post($url, array(
 			'body' => $param,
 			'timeout' => $time_out ?: 15,
 			'headers' => array('Accept' => 'application/json', 'Expect' => ''),
@@ -1425,6 +1456,17 @@ class Cloud extends Base
 			}
 
 			return false;
+		}
+
+		// Check and save TTL data
+		if (!empty($json['_ttl'])) {
+			$ttl = intval($json['_ttl']);
+			self::debug('Service TTL to save: ' . $ttl);
+			if ($ttl > 0 && $ttl < 86400) {
+				self::save_summary(array(
+					'ttl.' . $service_tag => $ttl + time(),
+				));
+			}
 		}
 
 		if (!empty($json['_code'])) {
@@ -1844,7 +1886,7 @@ class Cloud extends Base
 		// Prevent multiple call in a short period
 		self::save_summary(array('ips_ts' => time(), 'ips_ts_runner' => time()));
 
-		$response = wp_remote_get(self::CLOUD_IPS . '?json');
+		$response = wp_safe_remote_get(self::CLOUD_IPS . '?json');
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to get ip whitelist: ' . $error_message);

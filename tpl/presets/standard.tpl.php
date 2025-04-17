@@ -84,11 +84,11 @@ $presets['extreme'] = array(
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php esc_html_e( 'LiteSpeed Cache Standard Presets', 'litespeed-cache' ); ?>
+	<?php _e( 'LiteSpeed Cache Standard Presets', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/presets/#standard-tab' ); ?>
 </h3>
 
-<p><?php esc_html_e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
+<p><?php _e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
 
 <div class="litespeed-comparison-cards">
 	<?php
@@ -113,7 +113,7 @@ $presets['extreme'] = array(
 				</ul>
 			</div>
 			<div class="litespeed-card-footer">
-				<h4><?php esc_html_e( 'Who should use this preset?', 'litespeed-cache' ); ?></h4>
+				<h4><?php _e( 'Who should use this preset?', 'litespeed-cache' ); ?></h4>
 				<?php foreach ( $presets[ $name ]['footer'] as $line ) : ?>
 				<p><?php echo esc_html( $line ); ?></p>
 				<?php endforeach; ?>
@@ -123,9 +123,9 @@ $presets['extreme'] = array(
 			<a
 				href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_APPLY, false, null, array( 'preset' => $name ) ); ?>"
 				class="button <?php echo $button_class; ?>"
-				data-litespeed-cfm="<?php printf( esc_html__( 'This will back up your current settings and replace them with the %1$s preset settings. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
+				data-litespeed-cfm="<?php printf( __( 'This will back up your current settings and replace them with the %1$s preset settings. Do you want to continue?', 'litespeed-cache' ), $title ); ?>"
 			>
-				<?php esc_html_e( 'Apply Preset', 'litespeed-cache' ); ?>
+				<?php _e( 'Apply Preset', 'litespeed-cache' ); ?>
 			</a>
 		</div>
 	</div>
@@ -155,7 +155,7 @@ foreach ( Preset::get_backups() as $backup ) {
 if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 ?>
 <h3 class="litespeed-title-short">
-	<?php esc_html_e( 'History', 'litespeed-cache' ); ?>
+	<?php _e( 'History', 'litespeed-cache' ); ?>
 </h3>
 <?php endif; ?>
 
@@ -165,12 +165,12 @@ if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 	$name = strtolower( $summary['preset'] );
 	$time = trim( Utility::readable_time( $summary['preset_timestamp'] ) );
 	if ( 'error' === $name ) {
-		printf( esc_html__( 'Error: Failed to apply the settings %1$s', 'litespeed-cache' ), $time );
+		printf( __( 'Error: Failed to apply the settings %1$s', 'litespeed-cache' ), $time );
 	} elseif ( 'backup' === $name ) {
-		printf( esc_html__( 'Restored backup settings %1$s', 'litespeed-cache' ), $time );
+		printf( __( 'Restored backup settings %1$s', 'litespeed-cache' ), $time );
 	} else {
 		printf(
-			esc_html__( 'Applied the %1$s preset %2$s', 'litespeed-cache' ),
+			__( 'Applied the %1$s preset %2$s', 'litespeed-cache' ),
 			'<strong>' . esc_html( $presets[ $name ]['title'] ) . '</strong>',
 			$time
 		);
@@ -181,13 +181,13 @@ if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 
 <?php foreach ( $backups as $backup ) : ?>
 <p>
-	<?php printf( esc_html__( 'Backup created %1$s before applying the %2$s preset', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>
+	<?php printf( __( 'Backup created %1$s before applying the %2$s preset', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>
 	<a
 		href="<?php echo Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_RESTORE, false, null, array( 'timestamp' => $backup['timestamp'] ) ); ?>"
 		class="litespeed-left10"
-		data-litespeed-cfm="<?php printf( esc_html__( 'This will restore the backup settings created %1$s before applying the %2$s preset. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>"
+		data-litespeed-cfm="<?php printf( __( 'This will restore the backup settings created %1$s before applying the %2$s preset. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backup['time'], $backup['title'] ); ?>"
 	>
-		<?php esc_html_e( 'Restore Settings', 'litespeed-cache' ); ?>
+		<?php _e( 'Restore Settings', 'litespeed-cache' ); ?>
 	</a>
 </p>
 <?php

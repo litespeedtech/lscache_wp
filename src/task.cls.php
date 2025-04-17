@@ -131,7 +131,7 @@ class Task extends Root
 		);
 		$url = add_query_arg($qs, admin_url('admin-ajax.php'));
 		self::debug('async call to ' . $url);
-		wp_remote_post(esc_url_raw($url), $args);
+		wp_safe_remote_post(esc_url_raw($url), $args);
 	}
 
 	/**

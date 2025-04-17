@@ -25,6 +25,7 @@ class Data extends Root
 		'4.4.4-b1' => array('litespeed_update_4_4_4'),
 		'5.3-a5' => array('litespeed_update_5_3'),
 		'7.0-b26' => array('litespeed_update_7'),
+		'7.0.1-b1' => array('litespeed_update_7_0_1'),
 	);
 
 	private $_db_site_updater = array(
@@ -145,7 +146,7 @@ class Data extends Root
 		!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
 		Purge::purge_all();
 
-		Cloud::version_check('upgrade');
+		return 'upgrade';
 	}
 
 	/**
@@ -255,8 +256,7 @@ class Data extends Root
 	{
 		$previous_options = get_option('litespeed-cache-conf');
 		if (!$previous_options) {
-			Cloud::version_check('new');
-			return;
+			return 'new';
 		}
 
 		$ver = $previous_options['version'];
@@ -287,7 +287,7 @@ class Data extends Root
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0';
 		if (Core::VER != $ver) {
-			$this->conf_upgrade($ver);
+			return $this->conf_upgrade($ver);
 		} else {
 			// Reload options
 			$this->cls('Conf')->load_options();
@@ -297,7 +297,7 @@ class Data extends Root
 			!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
 			Purge::purge_all();
 
-			Cloud::version_check('upgrade');
+			return 'upgrade';
 		}
 	}
 
@@ -638,6 +638,21 @@ class Data extends Root
 	public function load_css_exc($list)
 	{
 		$data = $this->_load_per_line('css_excludes.txt');
+		if ($data) {
+			$list = array_unique(array_filter(array_merge($list, $data)));
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Get list from `data/ccss_whitelist.txt`
+	 *
+	 * @since  7.1
+	 */
+	public function load_ccss_whitelist($list)
+	{
+		$data = $this->_load_per_line('ccss_whitelist.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
 		}

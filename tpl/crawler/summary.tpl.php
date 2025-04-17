@@ -141,14 +141,14 @@ if ($CRAWLER_RUN_INTERVAL > 0) :
 				</thead>
 				<tbody>
 					<?php foreach ($crawler_list as $i => $v) :
-						$hit = !empty($summary['crawler_stats'][$i]['H']) ? $summary['crawler_stats'][$i]['H'] : 0;
-						$miss = !empty($summary['crawler_stats'][$i]['M']) ? $summary['crawler_stats'][$i]['M'] : 0;
+						$hit = !empty($summary['crawler_stats'][$i][Crawler::STATUS_HIT]) ? $summary['crawler_stats'][$i][Crawler::STATUS_HIT] : 0;
+						$miss = !empty($summary['crawler_stats'][$i][Crawler::STATUS_MISS]) ? $summary['crawler_stats'][$i][Crawler::STATUS_MISS] : 0;
 
-						$blacklisted = !empty($summary['crawler_stats'][$i]['B']) ? $summary['crawler_stats'][$i]['B'] : 0;
-						$blacklisted += !empty($summary['crawler_stats'][$i]['N']) ? $summary['crawler_stats'][$i]['N'] : 0;
+						$blacklisted = !empty($summary['crawler_stats'][$i][Crawler::STATUS_BLACKLIST]) ? $summary['crawler_stats'][$i][Crawler::STATUS_BLACKLIST] : 0;
+						$blacklisted += !empty($summary['crawler_stats'][$i][Crawler::STATUS_NOCACHE]) ? $summary['crawler_stats'][$i][Crawler::STATUS_NOCACHE] : 0;
 
-						if (isset($summary['crawler_stats'][$i]['W'])) {
-							$waiting = $summary['crawler_stats'][$i]['W'] ?: 0;
+						if (isset($summary['crawler_stats'][$i][Crawler::STATUS_WAIT])) {
+							$waiting = $summary['crawler_stats'][$i][Crawler::STATUS_WAIT] ?: 0;
 						} else {
 							$waiting = $summary['list_size'] - $hit - $miss - $blacklisted;
 						}

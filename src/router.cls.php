@@ -40,9 +40,11 @@ class Router extends Base
 	const ACTION_REPORT = 'report';
 	const ACTION_DEBUG2 = 'debug2';
 	const ACTION_CDN_CLOUDFLARE = 'CDN\Cloudflare';
+	const ACTION_ADMIN_DISPLAY = 'admin_display';
 
 	// List all handlers here
 	private static $_HANDLERS = array(
+		self::ACTION_ADMIN_DISPLAY,
 		self::ACTION_ACTIVATION,
 		self::ACTION_AVATAR,
 		self::ACTION_CDN_CLOUDFLARE,
@@ -627,6 +629,7 @@ class Router extends Base
 				}
 				return;
 
+			case self::ACTION_ADMIN_DISPLAY:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case self::ACTION_IMG_OPTM:

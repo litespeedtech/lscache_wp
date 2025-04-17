@@ -54,6 +54,10 @@ class Vary extends Root
 					}
 				}
 
+				if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+					$something_wrong = false;
+				}
+
 				if ($something_wrong) {
 					// Display cookie error msg to admin
 					if (is_multisite() ? is_network_admin() : is_admin()) {

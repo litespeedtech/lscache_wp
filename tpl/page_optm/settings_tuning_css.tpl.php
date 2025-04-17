@@ -53,8 +53,11 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-selector-allowlist', __( 'How to choose an UCSS allowlist selector?', 'litespeed-cache' ) ); ?>
+
+				<?php echo __( 'List the CSS selectors whose styles should always be included in UCSS.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
+        
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -116,6 +119,31 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ); ?>
 				<?php $this->_uri_usage_example(); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th>
+			<?php $id = Base::O_OPTM_CCSS_SELECTOR_WHITELIST; ?>
+			<?php $this->title( $id ); ?>
+		</th>
+		<td>
+			<?php $this->build_textarea( $id ); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'List the CSS selectors whose styles should always be included in CCSS.', 'litespeed-cache' ); ?>
+				<?php Doc::one_per_line(); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ccss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
+				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
+				<div class="litespeed-callout notice notice-warning inline">
+					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
+					<p>
+						<?php echo __( 'Selectors must exist in the CSS. Parent classes in the HTML will not work.', 'litespeed-cache' ); ?>
+					</p>
+				</div>
+				<font class="litespeed-success">
+					<?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/ccss_whitelist.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/ccss_whitelist.txt</a>
+				</font>
 			</div>
 		</td>
 	</tr>

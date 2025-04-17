@@ -18,8 +18,8 @@ class CSS extends Base
 	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
 
 	protected $_summary;
+	private $_ccss_whitelist;
 	private $_queue;
-	private $_endts;
 
 	/**
 	 * Init
@@ -29,6 +29,8 @@ class CSS extends Base
 	public function __construct()
 	{
 		$this->_summary = self::get_summary();
+
+		add_filter('litespeed_ccss_whitelist', array($this->cls('Data'), 'load_ccss_whitelist'));
 	}
 
 	/**
@@ -108,7 +110,11 @@ class CSS extends Base
 	private function _ccss()
 	{
 		global $wp;
-		$request_url = home_url($wp->request);
+		$request_url = get_permalink();
+		// Backup, in case get_permalink() fails.
+		if (!$request_url) {
+			$request_url = home_url($wp->request);
+		}
 
 		$filepath_prefix = $this->_build_filepath_prefix('ccss');
 		$url_tag = $this->_gen_ccss_file_tag($request_url);
@@ -206,20 +212,9 @@ class CSS extends Base
 		}
 
 		$i = 0;
-		$timeoutLimit = ini_get('max_execution_time');
-		$this->_endts = time() + $timeoutLimit;
 		foreach ($this->_queue as $k => $v) {
 			if (!empty($v['_status'])) {
 				continue;
-			}
-
-			if (function_exists('set_time_limit')) {
-				$this->_endts += 120;
-				set_time_limit(120);
-			}
-			if ($this->_endts - time() < 10) {
-				// self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
-				// return;
 			}
 
 			Debug2::debug('[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
@@ -254,8 +249,8 @@ class CSS extends Base
 				continue;
 			}
 
-			// Exit queue if out of quota
-			if ($res === 'out_of_quota') {
+			// Exit queue if out of quota or service is hot
+			if ($res === 'out_of_quota' || $res === 'svc_hot') {
 				return;
 			}
 
@@ -291,6 +286,8 @@ class CSS extends Base
 			return 'out_of_quota';
 		}
 
+		set_time_limit(120);
+
 		// Update css request status
 		$this->_summary['curr_request_' . $type] = time();
 		self::save_summary();
@@ -306,7 +303,8 @@ class CSS extends Base
 		list($css, $html) = $this->prepare_css($html, $is_webp);
 
 		if (!$css) {
-			Debug2::debug('[UCSS] ❌ No combined css');
+			$type_tag = strtoupper($type);
+			Debug2::debug('[' . $type_tag . '] ❌ No combined css');
 			return false;
 		}
 
@@ -320,12 +318,16 @@ class CSS extends Base
 			'html' => $html,
 			'css' => $css,
 		);
+		if (!isset($this->_ccss_whitelist)) {
+			$this->_ccss_whitelist = $this->_filter_whitelist();
+		}
+		$data['whitelist'] = $this->_ccss_whitelist;
 
 		self::debug('Generating: ', $data);
 
 		$json = Cloud::post(Cloud::SVC_CCSS, $data, 30);
 		if (!is_array($json)) {
-			return false;
+			return $json;
 		}
 
 		// Old version compatibility
@@ -524,6 +526,83 @@ class CSS extends Base
 		}
 
 		return array($css, $html);
+	}
+
+	/**
+	 * Filter the comment content, add quotes to selector from whitelist. Return the json
+	 *
+	 * @since 7.1
+	 */
+	private function _filter_whitelist()
+	{
+		$whitelist = array();
+		$list = apply_filters('litespeed_ccss_whitelist', $this->conf(self::O_OPTM_CCSS_SELECTOR_WHITELIST));
+		foreach ($list as $v) {
+			if (substr($v, 0, 2) === '//') {
+				continue;
+			}
+			$whitelist[] = $v;
+		}
+
+		return $whitelist;
+	}
+
+	/**
+	 * Notify finished from server
+	 * @since 7.1
+	 */
+	public function notify()
+	{
+		$post_data = \json_decode(file_get_contents('php://input'), true);
+		if (is_null($post_data)) {
+			$post_data = $_POST;
+		}
+		self::debug('notify() data', $post_data);
+
+		$this->_queue = $this->load_queue('ccss');
+
+		list($post_data) = $this->cls('Cloud')->extract_msg($post_data, 'ccss');
+
+		$notified_data = $post_data['data'];
+		if (empty($notified_data) || !is_array($notified_data)) {
+			self::debug('❌ notify exit: no notified data');
+			return Cloud::err('no notified data');
+		}
+
+		// Check if its in queue or not
+		$valid_i = 0;
+		foreach ($notified_data as $v) {
+			if (empty($v['request_url'])) {
+				self::debug('❌ notify bypass: no request_url', $v);
+				continue;
+			}
+			if (empty($v['queue_k'])) {
+				self::debug('❌ notify bypass: no queue_k', $v);
+				continue;
+			}
+
+			if (empty($this->_queue[$v['queue_k']])) {
+				self::debug('❌ notify bypass: no this queue [q_k]' . $v['queue_k']);
+				continue;
+			}
+
+			// Save data
+			if (!empty($v['data_ccss'])) {
+				$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
+				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
+				$this->_save_con('ccss', $v['data_ccss'], $v['queue_k'], $is_mobile, $is_webp);
+
+				$valid_i++;
+			}
+
+			unset($this->_queue[$v['queue_k']]);
+			self::debug('notify data handled, unset queue [q_k] ' . $v['queue_k']);
+		}
+		$this->save_queue('ccss', $this->_queue);
+
+		self::debug('notified');
+
+		return Cloud::ok(array('count' => $valid_i));
 	}
 
 	/**

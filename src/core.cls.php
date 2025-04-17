@@ -677,7 +677,7 @@ class Core extends Root
 				self::debug('[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue);
 				// Kick off HTTP req
 				$url = admin_url('admin-ajax.php');
-				$resp = wp_remote_get($url);
+				$resp = wp_safe_remote_get($url);
 				if (is_wp_error($resp)) {
 					$error_message = $resp->get_error_message();
 					self::debug('[URL]' . $url);

@@ -581,3 +581,12 @@ function litespeed_add_zero(i) {
 	}
 	return i;
 }
+
+function litespeed_copy_to_clipboard(elementId) {
+	var range = document.createRange();
+	range.selectNode(document.getElementById(elementId));
+	window.getSelection().removeAllRanges();
+	window.getSelection().addRange(range);
+	document.execCommand('copy');
+	window.getSelection().removeAllRanges();
+}

@@ -75,9 +75,10 @@ class Conf extends Base
 		/**
 		 * Version is less than v3.0, or, is a new installation
 		 */
+		$ver_check_tag = '';
 		if (!$ver) {
 			// Try upgrade first (network will upgrade inside too)
-			Data::cls()->try_upgrade_conf_3_0();
+			$ver_check_tag = Data::cls()->try_upgrade_conf_3_0();
 		} else {
 			defined('LSCWP_CUR_V') || define('LSCWP_CUR_V', $ver);
 
@@ -87,7 +88,7 @@ class Conf extends Base
 			if ($ver != Core::VER) {
 				// Plugin version will be set inside
 				// Site plugin upgrade & version change will do in load_site_conf
-				Data::cls()->conf_upgrade($ver);
+				$ver_check_tag = Data::cls()->conf_upgrade($ver);
 			}
 		}
 
@@ -101,8 +102,7 @@ class Conf extends Base
 				// New install
 				$this->set_conf(self::$_default_options);
 
-				// Check new version @since 2.9.3
-				Cloud::version_check('activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : ''));
+				$ver_check_tag .= ' activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : '');
 			}
 
 			// Init new default/missing options
@@ -114,6 +114,10 @@ class Conf extends Base
 
 			// Force correct version in case a rare unexpected case that `_ver` exists but empty
 			self::update_option(Base::_VER, Core::VER);
+
+			if ($ver_check_tag) {
+				Cloud::version_check($ver_check_tag);
+			}
 		}
 
 		/**
