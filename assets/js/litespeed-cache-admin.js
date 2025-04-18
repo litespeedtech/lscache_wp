@@ -223,7 +223,7 @@ var _litespeed_dots;
 					$('#litespeed_server_ip').html(data);
 				},
 				error: function (xhr, error) {
-					console.log('[litespeed] get server IP error',error);
+					console.log('[litespeed] get server IP error', error);
 				},
 			});
 		});

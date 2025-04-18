@@ -27,11 +27,7 @@ class Tool extends Root
 	{
 		self::debug('✅ check_ip');
 
-		$response = wp_safe_remote_get('https://ip.me', array(
-			'headers' => array(
-				'User-Agent' => 'curl/8.7.1',
-			),
-		));
+		$response = wp_safe_remote_get('https://api.ipify.org');
 
 		if (is_wp_error($response)) {
 			return __('Failed to detect IP', 'litespeed-cache');
@@ -43,6 +39,8 @@ class Tool extends Root
 
 		if (Utility::valid_ipv4($ip)) {
 			return $ip;
+		} else {
+			self::debug('invalid IPV4 [ip] ' . $ip);
 		}
 
 		return '';
