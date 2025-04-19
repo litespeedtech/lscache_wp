@@ -117,6 +117,19 @@ class Cloudflare extends Base
 	}
 
 	/**
+	 * Shortcut to purge Cloudflare
+	 *
+	 * @since  7.1
+	 */
+	public static function purge_all($reason = false)
+	{
+		if ($reason) {
+			Debug2::debug('[Cloudflare] purge call because: ' . $reason);
+		}
+		self::cls()->_purge_all();
+	}
+
+	/**
 	 * Purge Cloudflare cache
 	 *
 	 * @since  1.7.2

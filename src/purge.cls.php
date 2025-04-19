@@ -200,6 +200,10 @@ class Purge extends Base
 		$this->purge_all_opcache(true);
 		// }
 
+		if ($this->conf(self::O_CDN_CLOUDFLARE_CLEAR)) {
+			CDN\Cloudflare::purge_all('Purge All');
+		}
+
 		if (!is_string($reason)) {
 			$reason = false;
 		}
