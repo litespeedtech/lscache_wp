@@ -62,6 +62,18 @@ $this->form_action();
 				</div>
 			</td>
 		</tr>
+		<tr>
+			<th>
+				<?php $id = Base::O_CDN_CLOUDFLARE_CLEAR; ?>
+				<?php $this->title($id); ?>
+			</th>
+			<td>
+				<?php $this->build_switch($id); ?>
+				<div class="litespeed-desc">
+					<?php echo sprintf(__('Clear %s cache when "Purge All" is run.', 'litespeed-cache'), 'Cloudflare'); ?>
+				</div>
+			</td>
+		</tr>
 
 	</tbody>
 </table>

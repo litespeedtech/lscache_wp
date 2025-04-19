@@ -272,6 +272,7 @@ class Base extends Root
 	const O_CDN_CLOUDFLARE_KEY = 'cdn-cloudflare_key';
 	const O_CDN_CLOUDFLARE_NAME = 'cdn-cloudflare_name';
 	const O_CDN_CLOUDFLARE_ZONE = 'cdn-cloudflare_zone';
+	const O_CDN_CLOUDFLARE_CLEAR = 'cdn-cloudflare_clear';
 	const O_CDN_MAPPING = 'cdn-mapping';
 	const O_CDN_ATTR = 'cdn-attr';
 	const O_QC_NAMESERVERS = 'qc-nameservers';
@@ -320,6 +321,7 @@ class Base extends Root
 		self::O_CDN_CLOUDFLARE_KEY,
 		self::O_CDN_CLOUDFLARE_NAME,
 		self::O_CDN_CLOUDFLARE_ZONE,
+		self::O_CDN_CLOUDFLARE_CLEAR,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
 		self::O_QC_NAMESERVERS,
@@ -538,6 +540,7 @@ class Base extends Root
 		self::O_CDN_CLOUDFLARE_KEY => '',
 		self::O_CDN_CLOUDFLARE_NAME => '',
 		self::O_CDN_CLOUDFLARE_ZONE => '',
+		self::O_CDN_CLOUDFLARE_CLEAR => false,
 		self::O_CDN_MAPPING => array(),
 		self::O_CDN_ATTR => array(),
 
