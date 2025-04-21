@@ -45,7 +45,7 @@ class Tool extends Root
 			return $ip;
 		}
 
-		return '';
+		return __('Failed to detect IP', 'litespeed-cache');
 	}
 
 	/**

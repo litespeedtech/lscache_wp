@@ -217,14 +217,20 @@ var _litespeed_dots;
 				dataType: 'json',
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', litespeed_data.nonce);
+					$('#litespeed_server_ip').html('Detecting...');
 				},
 				success: function (data) {
+					$('#litespeed_server_ip').html('Done');
 					console.log('[litespeed] get server IP response: ' + data);
 					$('#litespeed_server_ip').html(data);
 				},
 				error: function (xhr, error) {
 					console.log('[litespeed] get server IP error',error);
+					$('#litespeed_server_ip').html('Failed to detect IP');
 				},
+				complete: function (xhr, status) {
+					console.log('[litespeed] AJAX complete', status, xhr);
+				}
 			});
 		});
 
