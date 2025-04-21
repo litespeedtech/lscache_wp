@@ -267,7 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **CLI** Removed a vary warning log in CLI for QC activation process with a customized login cookie.
 * **CLI** Removed a log failure in CLI in QC activation process when no existing admin message.
 * **Misc** Check version only after upgrade to reduce the requests.
-* **Misc** Used CyberPanel.sh to detect public IP.
+* **Misc** Switched to CyberPanel.sh to detect public IP for dash tool.
 
 = 7.0.1 - Apr 8 2025 =
 * **Page Optimize** Migrate legacy data to append trailing slash for better compatibility with v7.0-optimized UCSS/CCSS data.
