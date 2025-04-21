@@ -27,7 +27,7 @@ class Tool extends Root
 	{
 		self::debug('✅ check_ip');
 
-		$response = wp_safe_remote_get('https://ip.me', array(
+		$response = wp_safe_remote_get('https://cyberpanel.sh/?ip', array(
 			'headers' => array(
 				'User-Agent' => 'curl/8.7.1',
 			),
