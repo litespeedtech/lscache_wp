@@ -746,8 +746,8 @@ class GUI extends Base
 		if ($this->has_cache_folder('vpi')) {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'litespeed-menu',
-				'id' => 'litespeed-purge-placeholder',
-				'title' => __('Purge All', 'litespeed-cache') . ' - ' . __('VPI data', 'litespeed-cache'),
+				'id' => 'litespeed-purge-vpi',
+				'title' => __('Purge All', 'litespeed-cache') . ' - VPI',
 				'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI),
 				'meta' => array('tabindex' => '0'),
 			));

@@ -95,7 +95,7 @@ if ($this->has_cache_folder('lqip')) {
 
 if ($this->has_cache_folder('vpi')) {
 	$_panels[] = array(
-		'title'	=> __('Purge All', 'litespeed-cache') . ' - ' . __('VPI', 'litespeed-cache'),
+		'title'	=> __('Purge All', 'litespeed-cache') . ' - VPI',
 		'desc'	=> __('This will delete all generated Viewport Images', 'litespeed-cache'),
 		'icon'	=> 'purge-front',
 		'append_url'	=> Purge::TYPE_PURGE_ALL_VPI,
