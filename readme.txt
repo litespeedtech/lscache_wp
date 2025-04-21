@@ -263,7 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Config** Fixed an .htaccess generation bug that occurred when reactivating after previous deactivation. (PR#825)
 * **GUI** Improved the QC registration notice banner for online services thanks to user feedback.
 * **Page Optimization** Enhanced URL fetch validation to avoid exposing possible local info.
-* **Debug** Added a Click to copy logs button under Debug tab.
+* **Debug** Added a Click to copy logs button under `Log View` tab.
 * **CLI** Removed a vary warning log in CLI for QC activation process with a customized login cookie.
 * **CLI** Removed a log failure in CLI in QC activation process when no existing admin message.
 * **Misc** Check version only after upgrade to reduce the requests.
