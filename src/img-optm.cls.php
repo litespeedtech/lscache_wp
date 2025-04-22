@@ -894,6 +894,19 @@ class Img_Optm extends Base
 	}
 
 	/**
+	 * Check if need to pull or not
+	 * @since 7.2
+	 */
+	public static function need_pull()
+	{
+		$tag = self::get_option(self::DB_NEED_PULL);
+		if (!$tag || $tag != self::STATUS_NOTIFIED) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Ajax req handler
 	 *
 	 * @since 5.5
@@ -902,9 +915,8 @@ class Img_Optm extends Base
 	{
 		self::debug('------------async-------------start_async_handler');
 
-		$tag = self::get_option(self::DB_NEED_PULL);
-		if (!$tag || $tag != self::STATUS_NOTIFIED) {
-			self::debug('❌ no need pull [tag] ' . $tag);
+		if (!self::need_pull()) {
+			self::debug('❌ no need pull');
 			return;
 		}
 
