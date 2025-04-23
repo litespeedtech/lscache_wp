@@ -103,12 +103,12 @@ $cloud_summary = Cloud::get_summary();
 						<p class="litespeed-top20"><button type="button" class="button button-primary disabled"><?php echo __('Link to QUIC.cloud', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></button></p>
 					<?php elseif ($cloud_summary['qc_activated'] == 'anonymous') : ?>
 						<p><?php echo __('You are currently using services as an anonymous user. To manage your QUIC.cloud options, use the button below to create an account and link to the QUIC.cloud Dashboard.', 'litespeed-cache'); ?></p>
-						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="_blank" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('Link to QUIC.cloud', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="qc" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('Link to QUIC.cloud', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
 					<?php elseif ($cloud_summary['qc_activated'] == 'linked') : ?>
-						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="_blank" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="qc" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
 					<?php else : ?>
 						<p><?php echo __('To manage your QUIC.cloud options, go to QUIC.cloud Dashboard.', 'litespeed-cache'); ?></p>
-						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="_blank" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
+						<p class="litespeed-top20"><a href="<?php echo $__cloud->qc_link(); ?>" target="qc" class="button button-<?php echo ((empty($cloud_summary['qc_activated']) || $cloud_summary['qc_activated'] != 'cdn') ? 'secondary' : 'primary'); ?>"><?php echo __('My QUIC.cloud Dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a></p>
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>

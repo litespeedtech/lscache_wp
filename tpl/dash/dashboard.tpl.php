@@ -338,7 +338,7 @@ $can_page_load_time = defined('LITESPEED_SERVER_TYPE') && LITESPEED_SERVER_TYPE 
 							'button litespeed-btn-warning'
 						); ?>
 					<?php elseif (!empty($cloud_summary['qc_activated']) && $cloud_summary['qc_activated'] != 'anonymous') : ?>
-						<a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="_blank"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
+						<a href="<?php echo $__cloud->qc_link(); ?>" class="litespeed-link-with-icon" target="qc"><?php echo __('Go to QUIC.cloud dashboard', 'litespeed-cache'); ?> <span class="dashicons dashicons-external"></span></a>
 					<?php else : ?>
 						<?php Doc::learn_more(
 							Utility::build_url(Router::ACTION_CLOUD, Cloud::TYPE_LINK),

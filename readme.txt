@@ -262,6 +262,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Crawler** Dropped non-WebP/AVIF crawler if Next Gen Images are being used.
 * 🐞**Config** Fixed an .htaccess generation bug that occurred when reactivating after previous deactivation. (PR#825)
 * **GUI** Improved the QC registration notice banner for online services thanks to user feedback.
+* **GUI** QC management links will be opened in a single dedicated new window to prevent multiple sessions.
 * **Page Optimization** Enhanced URL fetch validation to avoid exposing possible local info.
 * **Debug** Added a Click to copy logs button under `Log View` tab.
 * **CLI** Removed a vary warning log in CLI for QC activation process with a customized login cookie.
