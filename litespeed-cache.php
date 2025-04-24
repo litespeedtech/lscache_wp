@@ -8,7 +8,7 @@
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
- * License URI:       http://www.gnu.org/licenses/gpl.html
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       litespeed-cache
  * Domain Path:       /lang
  *
@@ -26,13 +26,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
+
 defined('WPINC') || exit();
 
-if (defined('LSCWP_V')) {
-	return;
-}
+defined('LSCWP_V') && return;
 
 !defined('LSCWP_V') && define('LSCWP_V', '7.1');
 
@@ -46,11 +44,10 @@ if (defined('LSCWP_V')) {
  * @since  5.2 Auto correct protocol for CONTENT URL
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
-$home_url = home_url('/');
-if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'https') {
+if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr(home_url('/'), 0, 5) == 'https') {
 	$WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
 }
-!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($home_url, '', $WP_CONTENT_URL)); // `wp-content`
+!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace(home_url('/'), '', $WP_CONTENT_URL)); // `wp-content`
 !defined('LSWCP_PLUGIN_URL') && define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)); // Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 /**
