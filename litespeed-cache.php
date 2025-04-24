@@ -30,7 +30,7 @@
 
 defined('WPINC') || exit();
 
-defined('LSCWP_V') && return;
+if (defined('LSCWP_V')) return;
 
 !defined('LSCWP_V') && define('LSCWP_V', '7.1');
 
