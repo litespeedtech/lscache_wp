@@ -8,7 +8,7 @@ $this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('CDN Settings', 'litespeed-cache'); ?>
+	<?php echo __('Cloudflare Settings', 'litespeed-cache'); ?>
 	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/cdn/'); ?>
 </h3>
 
@@ -23,7 +23,6 @@ $this->form_action();
 				<?php $this->build_switch($id); ?>
 				<div class="litespeed-desc">
 					<?php echo sprintf(__('Use %s API functionality.', 'litespeed-cache'), 'Cloudflare'); ?>
-					<?php echo sprintf(__('This can be managed from %1$s%2$s tab.', 'litespeed-cache'), '<b>' . __('CDN', 'litespeed-cache') . '</b> -&gt; <b>', __('Manage', 'litespeed-cache') . '</b>'); ?>
 				</div>
 				<div class="litespeed-block">
 					<div class='litespeed-col'>
