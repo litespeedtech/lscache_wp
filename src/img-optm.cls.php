@@ -917,7 +917,7 @@ class Img_Optm extends Base
 	}
 
 	/**
-	 * Calculate pull theads
+	 * Calculate pull threads
 	 *
 	 * @since  5.8
 	 * @access private

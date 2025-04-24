@@ -175,7 +175,7 @@ class Cloud extends Base
 
 		self::debug('echo succeeded');
 
-		// Load seperate thread echoed data from storage
+		// Load separate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
 			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));
 			wp_redirect($ref);
@@ -259,7 +259,7 @@ class Cloud extends Base
 
 		self::debug('echo succeeded');
 
-		// Load seperate thread echoed data from storage
+		// Load separate thread echoed data from storage
 		if (empty($echobox['wpapi_ts']) || empty($echobox['wpapi_signature_b64'])) {
 			self::debug('Resp: ', $echobox);
 			Admin_Display::error(__('Failed to get echo data from WPAPI', 'litespeed-cache'));

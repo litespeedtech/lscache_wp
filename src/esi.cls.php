@@ -612,7 +612,7 @@ class ESI extends Root
 			return false;
 		}
 
-		Debug2::debug2('[ESI] parms', $unencrypted);
+		Debug2::debug2('[ESI] params', $unencrypted);
 		// $unencoded = urldecode($unencrypted); no need to do this as $_GET is already parsed
 		$params = \json_decode($unencrypted, true);
 

@@ -306,8 +306,8 @@ class Crawler extends Root
 		// if finished last time, regenerate sitemap
 		if ($this->_summary['done'] === 'touchedEnd') {
 			// check whole crawling interval
-			$last_fnished_at = $this->_summary['last_full_time_cost'] + $this->_summary['this_full_beginning_time'];
-			if (!$manually_run && time() - $last_fnished_at < $this->conf(Base::O_CRAWLER_CRAWL_INTERVAL)) {
+			$last_finished_at = $this->_summary['last_full_time_cost'] + $this->_summary['this_full_beginning_time'];
+			if (!$manually_run && time() - $last_finished_at < $this->conf(Base::O_CRAWLER_CRAWL_INTERVAL)) {
 				self::debug('Cron abort: cache warmed already.');
 				// if not reach whole crawling interval, exit
 				$this->Release_lane();
@@ -501,7 +501,7 @@ class Crawler extends Root
 
 		// mark running
 		$this->_prepare_running();
-		// run cralwer
+		// run crawler
 		$this->_do_running();
 		$this->_terminate_running();
 	}
@@ -1197,7 +1197,7 @@ class Crawler extends Root
 		if ($this->_end_reason == 'end') {
 			// Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
-			$this->_summary['curr_crawler']++; // Jump to next cralwer
+			$this->_summary['curr_crawler']++; // Jump to next crawler
 			// $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array(); // reset this at next crawl time
 			$this->_summary['last_pos'] = 0; // reset last position
 			$this->_summary['last_crawler_total_cost'] = time() - $this->_summary['curr_crawler_beginning_time'];
