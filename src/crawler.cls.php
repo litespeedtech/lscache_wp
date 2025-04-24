@@ -621,7 +621,7 @@ class Crawler extends Root
 	private function _take_over_lane()
 	{
 		self::debug('Take over lane as lane is free: ' . $this->json_local_path() . '.pid');
-		file::save($this->json_local_path() . '.pid', LITESPEED_LANE_HASH);
+		File::save($this->json_local_path() . '.pid', LITESPEED_LANE_HASH);
 	}
 
 	/**
@@ -662,7 +662,7 @@ class Crawler extends Root
 				return false;
 			}
 		}
-		$pid = file::read($lane_file);
+		$pid = File::read($lane_file);
 		if ($pid && LITESPEED_LANE_HASH != $pid) {
 			// If lane file is older than 1h, ignore
 			if (time() - filemtime($lane_file) > 3600) {
@@ -1420,7 +1420,7 @@ class Crawler extends Root
 	 *
 	 * @since    1.1.0
 	 * @access protected
-	 * @param  string $error Error info
+	 * @param  string $msg Error info
 	 */
 	protected function output($msg)
 	{

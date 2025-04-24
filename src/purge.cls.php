@@ -768,7 +768,7 @@ class Purge extends Base
 			return;
 		}
 		$term = get_term_by('slug', $val, 'post_tag');
-		if ($term == 0) {
+		if ($term === false) {
 			self::debug("$val tag not exist");
 			return;
 		}

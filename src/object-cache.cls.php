@@ -152,7 +152,7 @@ class Object_Cache extends Root
 			return;
 		}
 
-		if (!$show_error && $this->_cfg_debug != BASE::VAL_ON2) {
+		if (!$show_error && $this->_cfg_debug != Base::VAL_ON2) {
 			return;
 		}
 

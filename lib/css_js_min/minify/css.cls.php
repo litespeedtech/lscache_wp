@@ -230,9 +230,9 @@ class CSS extends Minify
     }
 
     /**
-     * Import files into the CSS, base64-ized.
+     * Import files into the CSS, base64 enoded.
      *
-     * @url(image.jpg) images will be loaded and their content merged into the
+     * Included image @url(image.jpg) will be loaded and their content merged into the
      * original file, to save HTTP requests.
      *
      * @param string $source  The file to import files for
@@ -282,7 +282,7 @@ class CSS extends Minify
      * Minify the data.
      * Perform CSS optimizations.
      *
-     * @param string[optional] $path    Path to write the data to
+     * @param string|null $path Path to write the data to [optional]
      * @param string[] $parents Parent paths, for circular reference checks
      *
      * @return string The minified data

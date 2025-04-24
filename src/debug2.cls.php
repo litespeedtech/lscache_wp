@@ -59,7 +59,7 @@ class Debug2 extends Root
 		if (file_exists(self::$log_path_prefix . 'index.php')) {
 			return;
 		}
-		file::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
+		File::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
 
 		$logs = array('debug', 'debug.purge', 'crawler');
 		foreach ($logs as $log) {
