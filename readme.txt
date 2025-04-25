@@ -255,6 +255,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.2 - Unreleased =
+* 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
+* **Image Optimize** Disable image pull cron if no image notified.
+* **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
+* **Config** Purge All On Upgrade default to OFF.
+
 = 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
 * **Cloud** CCSS results are now generated asynchronously via QUIC.cloud queue services.
