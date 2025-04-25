@@ -178,6 +178,7 @@
 	"cdn-cloudflare_key": "",
 	"cdn-cloudflare_name": "",
 	"cdn-cloudflare_zone": "",
+	"cdn-cloudflare_clear": "",
 	"cdn-mapping": {
 		"url": [""],
 		"inc_js": ["1"],
