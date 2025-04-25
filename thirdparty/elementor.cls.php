@@ -40,10 +40,18 @@ class Elementor
 			}
 			do_action('litespeed_disable_all', 'elementor edit mode in HTTP_REFERER');
 		}
+
+		// Clear LSC cache on Elementor Regenerate CSS & Data
+		add_action('elementor/core/files/clear_cache', __CLASS__ . '::regenerate_litespeed_cache');
 	}
 
 	public static function disable_litespeed_esi()
 	{
 		define('LITESPEED_ESI_OFF', true);
+	}
+
+	public static function regenerate_litespeed_cache()
+	{
+		do_action('litespeed_purge_all', 'Elementor - Regenerate CSS & Data');
 	}
 }
