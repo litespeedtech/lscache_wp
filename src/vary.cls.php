@@ -101,7 +101,7 @@ class Vary extends Root
 			// If not esi, check cache logged-in user setting
 			if (!$this->cls('Router')->esi_enabled()) {
 				// If cache logged-in, then init cacheable to private
-				if ($this->conf(Base::O_CACHE_PRIV)) {
+				if ($this->conf(Base::O_CACHE_PRIV) && !is_admin()) {
 					add_action('wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout');
 
 					$this->cls('Control')->init_cacheable();
@@ -114,8 +114,10 @@ class Vary extends Root
 			}
 			// ESI is on, can be public cache
 			else {
-				// Need to make sure vary is using group id
-				$this->cls('Control')->init_cacheable();
+				if (!is_admin()) {
+					// Need to make sure vary is using group id
+					$this->cls('Control')->init_cacheable();
+				}
 			}
 
 			// register logout hook to clear login status
