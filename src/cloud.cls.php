@@ -194,7 +194,7 @@ class Cloud extends Base
 
 		// Activation redirect
 		$param = array(
-			'site_url' => home_url(),
+			'site_url' => site_url(),
 			'ver' => Core::VER,
 			'data' => $data,
 			'ref' => $ref,
@@ -343,7 +343,7 @@ class Cloud extends Base
 
 		// Activation redirect
 		$param = array(
-			'site_url' => home_url(),
+			'site_url' => site_url(),
 			'ver' => Core::VER,
 			'data' => $data,
 			'ref' => $this->_get_ref_url(),
@@ -427,7 +427,7 @@ class Cloud extends Base
 
 		// Activation redirect
 		$param = array(
-			'site_url' => home_url(),
+			'site_url' => site_url(),
 			'ver' => Core::VER,
 			'data' => $data,
 			'ref' => $this->_get_ref_url(),
@@ -1175,7 +1175,7 @@ class Cloud extends Base
 		$url = $server . '/' . $service;
 
 		$param = array(
-			'site_url' => home_url(),
+			'site_url' => site_url(),
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'ver' => Core::VER,
 		);
@@ -1206,14 +1206,14 @@ class Cloud extends Base
 	 */
 	private function _maybe_cloud($service_tag)
 	{
-		$home_url = home_url();
-		if (!wp_http_validate_url($home_url)) {
-			self::debug('wp_http_validate_url failed: ' . $home_url);
+		$site_url = site_url();
+		if (!wp_http_validate_url($site_url)) {
+			self::debug('wp_http_validate_url failed: ' . $site_url);
 			return false;
 		}
 
 		// Deny if is IP
-		if (preg_match('#^(([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)\.){3}([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)$#', Utility::parse_url_safe($home_url, PHP_URL_HOST))) {
+		if (preg_match('#^(([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)\.){3}([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)$#', Utility::parse_url_safe($site_url, PHP_URL_HOST))) {
 			self::debug('IP home url is not allowed for cloud service.');
 			$msg = __('In order to use QC services, need a real domain name, cannot use an IP.', 'litespeed-cache');
 			Admin_Display::error($msg);
@@ -1221,8 +1221,8 @@ class Cloud extends Base
 		}
 
 		/** @since 5.0 If in valid err_domains, bypass request */
-		if ($this->_is_err_domain($home_url)) {
-			self::debug('home url is in err_domains, bypass request: ' . $home_url);
+		if ($this->_is_err_domain($site_url)) {
+			self::debug('home url is in err_domains, bypass request: ' . $site_url);
 			return false;
 		}
 
@@ -1321,7 +1321,7 @@ class Cloud extends Base
 	public function qc_link()
 	{
 		$data = array(
-			'site_url' => home_url(),
+			'site_url' => site_url(),
 			'ver' => LSCWP_V,
 			'ref' => $this->_get_ref_url(),
 		);
@@ -1383,7 +1383,7 @@ class Cloud extends Base
 
 		self::debug('data', $data);
 		$param = array(
-			'site_url' => home_url(), // Need to use home_url() as WPML case may change it for diff langs, therefore we can do auto alias
+			'site_url' => site_url(), // Need to use site_url() as WPML case may change home_url() for diff langs (no need to treat as alias for multi langs)
 			'main_domain' => !empty($this->_summary['main_domain']) ? $this->_summary['main_domain'] : '',
 			'wp_pk_b64' => !empty($this->_summary['pk_b64']) ? $this->_summary['pk_b64'] : '',
 			'ver' => Core::VER,
@@ -1648,9 +1648,9 @@ class Cloud extends Base
 				if (empty($this->_summary['err_domains'])) {
 					$this->_summary['err_domains'] = array();
 				}
-				$home_url = home_url();
-				if (!array_key_exists($home_url, $this->_summary['err_domains'])) {
-					$this->_summary['err_domains'][$home_url] = time();
+				$site_url = site_url();
+				if (!array_key_exists($site_url, $this->_summary['err_domains'])) {
+					$this->_summary['err_domains'][$site_url] = time();
 				}
 				self::save_summary();
 			}
@@ -1715,7 +1715,7 @@ class Cloud extends Base
 		$this->extract_msg($_POST, 'Quic.cloud', false, true);
 
 		if ($this->_is_err_domain($_POST['alias'])) {
-			if ($_POST['alias'] == home_url()) {
+			if ($_POST['alias'] == site_url()) {
 				$this->_remove_domain_from_err_list($_POST['alias']);
 			}
 			return self::ok();
@@ -1738,21 +1738,21 @@ class Cloud extends Base
 	 * Check if is err domain
 	 * @since 5.0
 	 */
-	private function _is_err_domain($home_url)
+	private function _is_err_domain($site_url)
 	{
 		if (empty($this->_summary['err_domains'])) {
 			return false;
 		}
-		if (!array_key_exists($home_url, $this->_summary['err_domains'])) {
+		if (!array_key_exists($site_url, $this->_summary['err_domains'])) {
 			return false;
 		}
 		// Auto delete if too long ago
-		if (time() - $this->_summary['err_domains'][$home_url] > 86400 * 10) {
-			$this->_remove_domain_from_err_list($home_url);
+		if (time() - $this->_summary['err_domains'][$site_url] > 86400 * 10) {
+			$this->_remove_domain_from_err_list($site_url);
 
 			return false;
 		}
-		if (time() - $this->_summary['err_domains'][$home_url] > 86400) {
+		if (time() - $this->_summary['err_domains'][$site_url] > 86400) {
 			return false;
 		}
 		return true;
@@ -1932,6 +1932,7 @@ class Cloud extends Base
 			'v_php' => PHP_VERSION,
 			'v_wp' => $GLOBALS['wp_version'],
 			'home_url' => home_url(),
+			'site_url' => site_url(),
 		);
 		if (!empty($_POST['funcs'])) {
 			foreach ($_POST['funcs'] as $v) {

@@ -537,11 +537,11 @@ class Conf extends Base
 
 		// Special handler for CDN Original URLs
 		if ($id == self::O_CDN_ORI && !$val) {
-			$home_url = home_url('/');
-			$parsed = parse_url($home_url);
-			$home_url = str_replace($parsed['scheme'] . ':', '', $home_url);
+			$site_url = site_url('/');
+			$parsed = parse_url($site_url);
+			$site_url = str_replace($parsed['scheme'] . ':', '', $site_url);
 
-			$val = $home_url;
+			$val = $site_url;
 		}
 
 		// Validate type

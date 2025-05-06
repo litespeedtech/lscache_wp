@@ -361,7 +361,7 @@ class Crawler extends Root
 	 */
 	private function load_conf()
 	{
-		$this->_crawler_conf['base'] = home_url();
+		$this->_crawler_conf['base'] = site_url();
 
 		$current_crawler = $this->_crawlers[$this->_summary['curr_crawler']];
 
@@ -1144,7 +1144,7 @@ class Crawler extends Root
 	public function self_curl($url, $ua, $uid = false, $accept = false)
 	{
 		// $accept not in use yet
-		$this->_crawler_conf['base'] = home_url();
+		$this->_crawler_conf['base'] = site_url();
 		$this->_crawler_conf['ua'] = $ua;
 		if ($accept) {
 			$this->_crawler_conf['headers'] = array('Accept: ' . $accept);

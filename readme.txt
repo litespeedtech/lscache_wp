@@ -257,6 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.2 - Unreleased =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
+* **Core** Used `site_url` instead of `home_url` to fix the content folder parsing and QUIC.cloud calls.
 * **Image Optimize** Disable image pull cron if no image notified.
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.

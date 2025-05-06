@@ -18,7 +18,7 @@ class Crawler_Map extends Root
 	const BM_HIT = 2;
 	const BM_BLACKLIST = 4;
 
-	private $_home_url; // Used to simplify urls
+	private $_site_url; // Used to simplify urls
 	private $_tb;
 	private $_tb_blacklist;
 	private $__data;
@@ -32,7 +32,7 @@ class Crawler_Map extends Root
 	 */
 	public function __construct()
 	{
-		$this->_home_url = get_home_url();
+		$this->_site_url = get_site_url();
 		$this->__data = Data::cls();
 		$this->_tb = $this->__data->tb('crawler');
 		$this->_tb_blacklist = $this->__data->tb('crawler_blacklist');
@@ -412,7 +412,7 @@ class Crawler_Map extends Root
 			return false;
 		}
 
-		$offset = strlen($this->_home_url);
+		$offset = strlen($this->_site_url);
 		$sitemap = Utility::sanitize_lines($sitemap);
 
 		try {
@@ -426,7 +426,7 @@ class Crawler_Map extends Root
 		if (is_array($this->_urls) && !empty($this->_urls)) {
 			if (defined('LITESPEED_CRAWLER_DROP_DOMAIN') && LITESPEED_CRAWLER_DROP_DOMAIN) {
 				foreach ($this->_urls as $k => $v) {
-					if (stripos($v, $this->_home_url) !== 0) {
+					if (stripos($v, $this->_site_url) !== 0) {
 						unset($this->_urls[$k]);
 						continue;
 					}
