@@ -1250,27 +1250,25 @@ class Cloud extends Base
 		$timestamp_tag = 'curr_request.';
 		if ($service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ) {
 			$timestamp_tag = 'last_request.';
-		} else {
-			// For all other requests, if is under debug mode, will always allow
-			if ($this->conf(self::O_DEBUG)) {
-				return true;
-			}
 		}
 
-		if (!empty($this->_summary[$timestamp_tag . $service_tag])) {
-			$expired = $this->_summary[$timestamp_tag . $service_tag] + $expiration_req - time();
-			if ($expired > 0) {
-				self::debug("❌ try [$service_tag] after $expired seconds");
+		// For all other requests, if is under debug mode, will always allow
+		if (!$this->conf(self::O_DEBUG)) {
+			if (!empty($this->_summary[$timestamp_tag . $service_tag])) {
+				$expired = $this->_summary[$timestamp_tag . $service_tag] + $expiration_req - time();
+				if ($expired > 0) {
+					self::debug("❌ try [$service_tag] after $expired seconds");
 
-				if ($service_tag !== self::API_VER) {
-					$msg =
-						__('Cloud Error', 'litespeed-cache') .
-						': ' .
-						sprintf(__('Please try after %1$s for service %2$s.', 'litespeed-cache'), Utility::readable_time($expired, 0, true), '<code>' . $service_tag . '</code>');
-					Admin_Display::error(array('cloud_trylater' => $msg));
+					if ($service_tag !== self::API_VER) {
+						$msg =
+							__('Cloud Error', 'litespeed-cache') .
+							': ' .
+							sprintf(__('Please try after %1$s for service %2$s.', 'litespeed-cache'), Utility::readable_time($expired, 0, true), '<code>' . $service_tag . '</code>');
+						Admin_Display::error(array('cloud_trylater' => $msg));
+					}
+
+					return false;
 				}
-
-				return false;
 			}
 		}
 
