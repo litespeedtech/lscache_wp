@@ -543,15 +543,6 @@ class Htaccess extends Root
 			$new_rules[] = '';
 		}
 
-		// caching php resource TODO: consider drop
-		$id = Base::O_CACHE_RES;
-		if (!empty($cfg[$id])) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]';
-			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END;
-			$new_rules[] = $new_rules_backend[] = '';
-		}
-
 		// check login cookie
 		$vary_cookies = $cfg[Base::O_CACHE_VARY_COOKIES];
 		$id = Base::O_CACHE_LOGIN_COOKIE;

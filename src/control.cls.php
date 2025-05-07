@@ -123,17 +123,6 @@ class Control extends Root
 			add_action('rest_api_init', array($this, 'set_cacheable'), 5);
 		}
 
-		// Cache resources
-		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = $this->conf(Base::O_CACHE_RES);
-		if ($cache_res) {
-			$uri = esc_url($_SERVER['REQUEST_URI']); // todo: check if need esc_url()
-			$pattern = '!' . LSCWP_CONTENT_FOLDER . Htaccess::RW_PATTERN_RES . '!';
-			if (preg_match($pattern, $uri)) {
-				add_action('wp_loaded', array($this, 'set_cacheable'), 5);
-			}
-		}
-
 		// AJAX cache
 		$ajax_cache = $this->conf(Base::O_CACHE_AJAX_TTL);
 		foreach ($ajax_cache as $v) {

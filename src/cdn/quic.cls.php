@@ -67,14 +67,13 @@ class Quic extends Base
 			self::O_CACHE_VARY_COOKIES,
 			self::O_CACHE_MOBILE_RULES,
 			self::O_CACHE_MOBILE,
-			self::O_CACHE_RES,
 			self::O_CACHE_BROWSER,
 			self::O_CACHE_TTL_BROWSER,
 			self::O_IMG_OPTM_WEBP,
 			self::O_GUEST,
 			'_tp_cookies',
 		);
-		$consts_needed = array('WP_CONTENT_DIR', 'LSCWP_CONTENT_DIR', 'LSCWP_CONTENT_FOLDER', 'LSWCP_TAG_PREFIX');
+		$consts_needed = array('LSWCP_TAG_PREFIX');
 		$options_for_md5 = array();
 		foreach ($options_needed as $v) {
 			if (isset($options[$v])) {

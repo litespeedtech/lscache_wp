@@ -1263,7 +1263,11 @@ class Cloud extends Base
 						$msg =
 							__('Cloud Error', 'litespeed-cache') .
 							': ' .
-							sprintf(__('Please try after %1$s for service %2$s.', 'litespeed-cache'), Utility::readable_time($expired, 0, true), '<code>' . $service_tag . '</code>');
+							sprintf(
+								__('Please try after %1$s for service %2$s.', 'litespeed-cache'),
+								Utility::readable_time($expired, 0, true),
+								'<code>' . $service_tag . '</code>'
+							);
 						Admin_Display::error(array('cloud_trylater' => $msg));
 					}
 

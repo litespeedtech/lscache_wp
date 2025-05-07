@@ -41,7 +41,7 @@ class Base extends Root
 	const O_CACHE_REST = 'cache-rest';
 	const O_CACHE_PAGE_LOGIN = 'cache-page_login';
 	const O_CACHE_FAVICON = 'cache-favicon'; // Deprecated since v6.2. TODO: Will drop after v6.5
-	const O_CACHE_RES = 'cache-resources';
+	const O_CACHE_RES = 'cache-resources'; // Deprecated since v7.2. TODO: Drop after v7.5
 	const O_CACHE_MOBILE = 'cache-mobile';
 	const O_CACHE_MOBILE_RULES = 'cache-mobile_rules';
 	const O_CACHE_BROWSER = 'cache-browser';
@@ -346,7 +346,6 @@ class Base extends Root
 		self::O_CACHE_COMMENTER => false,
 		self::O_CACHE_REST => false,
 		self::O_CACHE_PAGE_LOGIN => false,
-		self::O_CACHE_RES => false,
 		self::O_CACHE_MOBILE => false,
 		self::O_CACHE_MOBILE_RULES => array(),
 		self::O_CACHE_BROWSER => false,
@@ -555,7 +554,6 @@ class Base extends Root
 		self::O_AUTO_UPGRADE => false,
 		self::O_GUEST => false,
 
-		self::O_CACHE_RES => false,
 		self::O_CACHE_BROWSER => false,
 		self::O_CACHE_MOBILE => false,
 		self::O_CACHE_MOBILE_RULES => array(),

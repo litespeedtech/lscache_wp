@@ -97,7 +97,6 @@ defined('WPINC') || exit;
 
 		<?php
 		if (!$this->_is_multisite) :
-			require LSCWP_DIR . 'tpl/cache/settings_inc.cache_resources.tpl.php';
 			require LSCWP_DIR . 'tpl/cache/settings_inc.cache_mobile.tpl.php';
 		endif;
 		?>
