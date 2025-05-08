@@ -150,7 +150,7 @@ class Media extends Root
 		add_action('litespeed_media_row', array($this, 'media_row_con'));
 
 		// Hook to attachment delete action
-		add_action('delete_attachment', __CLASS__ . '::delete_attachment');
+		// add_action('delete_attachment', __CLASS__ . '::delete_attachment');
 	}
 
 	/**

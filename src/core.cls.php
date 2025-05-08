@@ -178,6 +178,9 @@ class Core extends Root
 			$this->cls('Admin');
 		}
 
+		// Hook to attachment delete action
+		add_action('delete_attachment', 'LiteSpeed\Media::delete_attachment', 11, 2);
+
 		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			Debug2::debug('[Core] Bypassed due to debug disable all setting');
 			return;
