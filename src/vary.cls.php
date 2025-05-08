@@ -182,7 +182,7 @@ class Vary extends Root
 			return;
 		}
 
-		if (defined('DOING_AJAX')) {
+		if (wp_doing_ajax()) {
 			return;
 		}
 

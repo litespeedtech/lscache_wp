@@ -174,7 +174,7 @@ class Core extends Root
 		// in `after_setup_theme`, before `init` hook
 		$this->cls('Activation')->auto_update();
 
-		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
+		if (is_admin() && !wp_doing_ajax()) {
 			$this->cls('Admin');
 		}
 
@@ -387,7 +387,7 @@ class Core extends Root
 			return;
 		}
 
-		if (defined('DOING_AJAX')) {
+		if (wp_doing_ajax()) {
 			Debug2::debug2('[Core] CHK html bypass: doing ajax');
 			return;
 		}
