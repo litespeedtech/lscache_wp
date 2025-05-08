@@ -49,6 +49,18 @@ class Media extends Root
 		}
 	}
 
+
+	/**
+	 * Hooks after user init
+	 *
+	 * @since  7.2
+	 */
+	public function after_user_init()
+	{
+		// Hook to attachment delete action (PR#844, Issue#841) for AJAX del compatibility
+		add_action('delete_attachment', array($this, 'delete_attachment'), 11, 2);
+	}
+
 	/**
 	 * Init optm features
 	 *
@@ -148,9 +160,6 @@ class Media extends Root
 		add_filter('manage_media_custom_column', array($this, 'media_row_actions'), 10, 2);
 
 		add_action('litespeed_media_row', array($this, 'media_row_con'));
-
-		// Hook to attachment delete action
-		add_action('delete_attachment', __CLASS__ . '::delete_attachment');
 	}
 
 	/**

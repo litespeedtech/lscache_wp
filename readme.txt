@@ -261,6 +261,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Cloud** Fixed a bug that when debug mode is ON, it will always try to sync usage even not activated QUIC.cloud.
 * **Cache** Dropped `Cache PHP Resources` option.
 * **Image Optimize** Disable image pull cron if no image notified.
+* **Media** Resolved missing optimized image deletion when delete from grid mode. (PR#844, Zsombor Franczia #841)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.
 

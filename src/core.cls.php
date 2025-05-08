@@ -236,6 +236,9 @@ class Core extends Root
 		// Detect if is Guest mode or not also
 		$this->cls('Vary')->after_user_init();
 
+		// Register attachment delete hook
+		$this->cls('Media')->after_user_init();
+
 		/**
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
