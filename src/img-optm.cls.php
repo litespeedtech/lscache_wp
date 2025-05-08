@@ -164,7 +164,7 @@ class Img_Optm extends Base
 	 */
 	public static function cron_auto_request()
 	{
-		if (!defined('DOING_CRON')) {
+		if (!wp_doing_cron()) {
 			return false;
 		}
 
@@ -1915,7 +1915,7 @@ class Img_Optm extends Base
 	{
 		global $wpdb;
 
-		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+		if (defined('LITESPEED_CLI') || wp_doing_cron()) {
 			$offset = 0;
 			while ($offset !== 'done') {
 				Admin_Display::info("Starting switch to $type [offset] $offset");

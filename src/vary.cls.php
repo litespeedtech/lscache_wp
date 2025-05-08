@@ -54,7 +54,7 @@ class Vary extends Root
 					}
 				}
 
-				if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+				if (defined('LITESPEED_CLI') || wp_doing_cron()) {
 					$something_wrong = false;
 				}
 
@@ -186,7 +186,7 @@ class Vary extends Root
 			return;
 		}
 
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			return;
 		}
 

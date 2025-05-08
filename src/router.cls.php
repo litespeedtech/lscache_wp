@@ -88,7 +88,7 @@ class Router extends Base
 	 */
 	public static function self_redirect($action, $type)
 	{
-		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+		if (defined('LITESPEED_CLI') || wp_doing_cron()) {
 			Admin_Display::success('To be continued'); // Show for CLI
 			return;
 		}
@@ -182,7 +182,7 @@ class Router extends Base
 		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`
 		 * @since  2.7.2
 		 */
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			$can = false;
 		}
 

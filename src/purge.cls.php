@@ -366,7 +366,7 @@ class Purge extends Base
 	 */
 	private function _purge_all_cssjs($silence = false)
 	{
-		if (defined('DOING_CRON') || defined('LITESPEED_DID_send_headers')) {
+		if (wp_doing_cron() || defined('LITESPEED_DID_send_headers')) {
 			self::debug('❌ Bypassed cssjs delete as header sent (lscache purge after this point will fail) or doing cron');
 			return;
 		}
@@ -517,7 +517,7 @@ class Purge extends Base
 			self::debug('CLI request, queue stored: ' . $curr_built);
 		} else {
 			@header($curr_built);
-			if (defined('DOING_CRON') || defined('LITESPEED_DID_send_headers') || apply_filters('litespeed_delay_purge', false)) {
+			if (wp_doing_cron() || defined('LITESPEED_DID_send_headers') || apply_filters('litespeed_delay_purge', false)) {
 				self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
 				self::debug('Output existed, queue stored: ' . $curr_built);
 			}

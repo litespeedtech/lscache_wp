@@ -1424,7 +1424,7 @@ class Crawler extends Root
 	 */
 	protected function output($msg)
 	{
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			echo $msg;
 			// exit();
 		} else {
