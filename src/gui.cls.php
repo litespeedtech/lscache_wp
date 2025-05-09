@@ -574,7 +574,7 @@ class GUI extends Base
 			));
 		}
 
-		if ($this->has_cache_folder('vpi')) {
+		if ($this->conf(self::O_MEDIA_VPI)) {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'litespeed-menu',
 				'id' => 'litespeed-purge-vpi',
@@ -743,7 +743,7 @@ class GUI extends Base
 			));
 		}
 
-		if ($this->has_cache_folder('vpi')) {
+		if ($this->conf(self::O_MEDIA_VPI)) {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'litespeed-menu',
 				'id' => 'litespeed-purge-vpi',

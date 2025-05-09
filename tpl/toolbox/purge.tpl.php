@@ -93,7 +93,7 @@ if ($this->has_cache_folder('lqip')) {
 	);
 }
 
-if ($this->has_cache_folder('vpi')) {
+if ($this->conf(self::O_MEDIA_VPI)) {
 	$_panels[] = array(
 		'title'	=> __('Purge All', 'litespeed-cache') . ' - VPI',
 		'desc'	=> __('This will delete all generated Viewport Images', 'litespeed-cache'),
