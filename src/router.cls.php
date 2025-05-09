@@ -490,7 +490,7 @@ class Router extends Base
 	public static function is_ajax()
 	{
 		if (!isset(self::$_is_ajax)) {
-			self::$_is_ajax = defined('DOING_AJAX') && DOING_AJAX;
+			self::$_is_ajax = wp_doing_ajax();
 		}
 		return self::$_is_ajax;
 	}

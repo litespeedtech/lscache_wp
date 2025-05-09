@@ -49,7 +49,6 @@ class Media extends Root
 		}
 	}
 
-
 	/**
 	 * Hooks after user init
 	 *
