@@ -435,7 +435,7 @@ class Admin_Display extends Base
 	{
 		// self::debug("add_notice msg", $msg);
 		// Bypass adding for CLI or cron
-		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+		if (defined('LITESPEED_CLI') || wp_doing_cron()) {
 			// WP CLI will show the info directly
 			if (defined('WP_CLI') && WP_CLI) {
 				if (!is_array($msg)) {

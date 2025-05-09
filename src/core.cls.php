@@ -392,7 +392,7 @@ class Core extends Root
 			return;
 		}
 
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			Debug2::debug2('[Core] CHK html bypass: doing cron');
 			return;
 		}

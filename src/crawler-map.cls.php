@@ -383,7 +383,7 @@ class Crawler_Map extends Root
 			return;
 		}
 
-		if (!defined('DOING_CRON') && $manual) {
+		if (!wp_doing_cron() && $manual) {
 			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
 			Admin_Display::success($msg);
 		}
