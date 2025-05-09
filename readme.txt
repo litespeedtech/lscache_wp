@@ -264,6 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Media** Resolved missing optimized image deletion when delete from grid mode. (PR#844, Zsombor Franczia #841)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.
+* **Misc** Used WP functions to check if running AJAX/CRON or not instead of consts.
 
 = 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
