@@ -1542,7 +1542,6 @@ class Cloud extends Base
 		file_put_contents(LITESPEED_STATIC_DIR . '/qc_last_request' . md5($service_tag), $curr_request);
 		file_put_contents(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), 0);
 
-
 		if ($json) {
 			self::debug2('response ok', $json);
 		} else {

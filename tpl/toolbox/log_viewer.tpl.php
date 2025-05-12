@@ -48,23 +48,23 @@ function subnav_link($item)
 		: '';
 	$label = isset($item['label']) ? $item['label'] : $item['name'];
 
-	if(isset($item['cssClass'])) {
-		$class = $class . ' ' . $item['cssClass'];
+	if (isset($item['cssClass'])) {
+		$class .= ' ' . $item['cssClass'];
 	}
 
 	$attributes_add = '';
-	if(isset($item['attributes'])) {
+	if (isset($item['attributes'])) {
 		$attributes_add = ' ';
 		$add = array();
-		foreach( $item['attributes'] as $k => $v ){
-			$add[] = $k.'="'.$v.'"';
+		foreach ($item['attributes'] as $k => $v) {
+			$add[] = $k . '="' . $v . '"';
 		}
 
 		$attributes_add .= implode(' ', $add);
 	}
 
 
-	$on_click = isset($item['onClick']) ? ' onClick="' . $item['onClick'].'"' : '';
+	$on_click = isset($item['onClick']) ? ' onClick="' . $item['onClick'] . '"' : '';
 
 	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey} {$on_click} {$attributes_add}>{$label}</a>";
 }
@@ -93,15 +93,15 @@ function clear_logs_link($accesskey = null)
 function copy_logs_link($id_to_copy)
 {
 	$item = array(
-			'name' => 'copy_links',
-			'label' => __('Copy Log', 'litespeed-cache'),
-			'cssClass' => 'litespeed-info-button litespeed-wrap',
-			'onClick' => "litespeed_copy_to_clipboard('".$id_to_copy."', this)",
-			'attributes' => array(
-				'aria-label' => __('Click to copy', 'litespeed-cache'),
-				'data-balloon-pos' => "down"
-			)
-		);
+		'name' => 'copy_links',
+		'label' => __('Copy Log', 'litespeed-cache'),
+		'cssClass' => 'litespeed-info-button litespeed-wrap',
+		'onClick' => "litespeed_copy_to_clipboard('" . $id_to_copy . "', this)",
+		'attributes' => array(
+			'aria-label' => __('Click to copy', 'litespeed-cache'),
+			'data-balloon-pos' => "down"
+		)
+	);
 	return subnav_link($item);
 }
 
@@ -117,12 +117,12 @@ foreach ($logs as $log) {
 	$start = $lines > $max_lines ? $lines - $max_lines : 0;
 	$lines = File::read($file, $start);
 	$lines = $lines ? trim(implode("\n", $lines)) : '';
-	
+
 	$log_body_id = 'litespeed-log-' . $log['name'];
 
 	$log_views[] =
 		"<div class='litespeed-log-view-wrapper' data-litespeed-sublayout='{$log['name']}_log'>"
-		. "<h3 class='litespeed-title'>{$log['label']}" . copy_logs_link($log_body_id) ."</h3>"
+		. "<h3 class='litespeed-title'>{$log['label']}" . copy_logs_link($log_body_id) . "</h3>"
 		. '<div class="litespeed-log-body" id="' . $log_body_id . '">'
 		. nl2br(htmlspecialchars($lines))
 		. '</div>'
