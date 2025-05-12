@@ -48,9 +48,25 @@ function subnav_link($item)
 		: '';
 	$label = isset($item['label']) ? $item['label'] : $item['name'];
 
+	if(isset($item['cssClass'])) {
+		$class = $class . ' ' . $item['cssClass'];
+	}
+
+	$attributes_add = '';
+	if(isset($item['attributes'])) {
+		$attributes_add = ' ';
+		$add = array();
+		foreach( $item['attributes'] as $k => $v ){
+			$add[] = $k.'="'.$v.'"';
+		}
+
+		$attributes_add .= implode(' ', $add);
+	}
+
+
 	$on_click = isset($item['onClick']) ? ' onClick="' . $item['onClick'].'"' : '';
 
-	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey} {$on_click}>{$label}</a>";
+	return "<a href='{$url}' class='{$class}' {$subtab} {$accesskey} {$on_click} {$attributes_add}>{$label}</a>";
 }
 
 /**
@@ -79,8 +95,12 @@ function copy_logs_link($id_to_copy)
 	$item = array(
 			'name' => 'copy_links',
 			'label' => __('Copy Log', 'litespeed-cache'),
-			'cssClass' => 'litespeed-info-button',
-			'onClick' => "litespeed_copy_to_clipboard('".$id_to_copy."')"
+			'cssClass' => 'litespeed-info-button litespeed-wrap',
+			'onClick' => "litespeed_copy_to_clipboard('".$id_to_copy."', this)",
+			'attributes' => array(
+				'aria-label' => __('Click to copy', 'litespeed-cache'),
+				'data-balloon-pos' => "down"
+			)
 		);
 	return subnav_link($item);
 }
