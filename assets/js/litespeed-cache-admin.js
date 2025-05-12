@@ -599,4 +599,6 @@ function litespeed_copy_to_clipboard(elementId) {
 	window.getSelection().addRange(range);
 	document.execCommand('copy');
 	window.getSelection().removeAllRanges();
+
+	clickedElement.setAttribute('aria-label', 'Copied!');
 }

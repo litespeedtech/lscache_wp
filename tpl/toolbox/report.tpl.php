@@ -51,7 +51,7 @@ if (!empty($env_ref['num'])) {
 	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/toolbox/#report-tab'); ?>
 </h3>
 
-<p><?php echo __('Last Report Number', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['num']) ? '<span id="report_span" style="cursor: pointer;" onClick="litespeed_copy_to_clipboard(\'report_span\')">' . $env_ref['num'] . '</span>' : '-'; ?></b></p>
+<p><?php echo __('Last Report Number', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['num']) ? '<span id="report_span" style="cursor: pointer;" onClick="litespeed_copy_to_clipboard(\'report_span\', this)" aria-label="' . __('Click to copy', 'litespeed-cache') . '" data-balloon-pos="down" class="litespeed-wrap">' . $env_ref['num'] . '</span>' : '-'; ?></b></p>
 <p><?php echo __('Last Report Date', 'litespeed-cache'); ?>: <b><?php echo !empty($env_ref['dateline']) ? date('m/d/Y H:i:s', $env_ref['dateline']) : '-'; ?></b></p>
 
 <p class="litespeed-desc">
