@@ -1189,6 +1189,7 @@ class Cloud extends Base
 		self::debug('getting from : ' . $url);
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
+		file_put_contents(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), time());
 
 		$response = wp_safe_remote_get($url, array(
 			'timeout' => 15,
@@ -1272,6 +1273,17 @@ class Cloud extends Base
 					}
 
 					return false;
+				}
+			} else {
+				// May fail to store to db if db died. Need to store to file to prevent from duplicate calls
+				$file_path = LITESPEED_STATIC_DIR . '/qc_' . $timestamp_tag . md5($service_tag);
+				if (file_exists($file_path)) {
+					$last_request = file_get_contents($file_path);
+					$expired = $last_request + $expiration_req * 10 - time();
+					if ($expired > 0) {
+						self::debug("❌ try [$service_tag] after $expired seconds");
+						return false;
+					}
 				}
 			}
 		}
@@ -1393,6 +1405,7 @@ class Cloud extends Base
 		);
 
 		self::save_summary(array('curr_request.' . $service_tag => time()));
+		file_put_contents(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), time());
 
 		$response = wp_safe_remote_post($url, array(
 			'body' => $param,
@@ -1521,10 +1534,14 @@ class Cloud extends Base
 			return false;
 		}
 
+		$curr_request = $this->_summary['curr_request.' . $service_tag];
 		self::save_summary(array(
-			'last_request.' . $service_tag => $this->_summary['curr_request.' . $service_tag],
+			'last_request.' . $service_tag => $curr_request,
 			'curr_request.' . $service_tag => 0,
 		));
+		file_put_contents(LITESPEED_STATIC_DIR . '/qc_last_request' . md5($service_tag), $curr_request);
+		file_put_contents(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), 0);
+
 
 		if ($json) {
 			self::debug2('response ok', $json);

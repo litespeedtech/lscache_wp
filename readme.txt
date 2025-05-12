@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
 * **Core** Used `site_url` instead of `home_url` to fix the content folder parsing and QUIC.cloud calls.
 * 🐞**Cloud** Fixed a bug that when debug mode is ON, it will always try to sync usage even not activated QUIC.cloud.
+* **Cloud** Stored request timestamp in static files along w/ database to prevent duplicate requests when database is down.
 * **Cache** Dropped `Cache PHP Resources` option.
 * **Cache** Additional check to prevent admin pages from cache even user set cacheable globally.
 * **Image Optimize** Disable image pull cron if no image notified.
