@@ -25,7 +25,11 @@ function litespeed_update_7_0_1()
 	Debug2::debug('[Data] v7.0.1 upgrade started');
 
 	$tb_url = $wpdb->prefix . 'litespeed_url';
-	$tb_exists = $wpdb->get_var("SHOW TABLES LIKE '" . $tb_url . "'");
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $tb_url . '`');
+	$wpdb->suppress_errors($save_state);
+
 	if (!$tb_exists) {
 		Debug2::debug('[Data] Table `litespeed_url` not found, bypassed migration');
 		return;
@@ -106,7 +110,12 @@ function litespeed_update_5_3()
 {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"');
+
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_url_file`');
+	$wpdb->suppress_errors($save_state);
+
 	if ($tb_exists) {
 		$q =
 			'ALTER TABLE `' .
@@ -127,7 +136,12 @@ function litespeed_update_4_4_4()
 {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"');
+
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_url_file`');
+	$wpdb->suppress_errors($save_state);
+
 	if ($tb_exists) {
 		$q =
 			'ALTER TABLE `' .
@@ -171,7 +185,12 @@ function litespeed_update_4()
 {
 	global $wpdb;
 	$tb = $wpdb->prefix . 'litespeed_cssjs';
-	$existed = $wpdb->get_var("SHOW TABLES LIKE '$tb'");
+
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$existed = $wpdb->get_var('DESCRIBE `' . $tb . '`');
+	$wpdb->suppress_errors($save_state);
+
 	if (!$existed) {
 		return;
 	}
@@ -711,7 +730,12 @@ function litespeed_update_3_0($ver)
 
 	// Update image optm table
 	Debug2::debug('[Data] Upgrade img_optm table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_img_optm"');
+
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_img_optm`');
+	$wpdb->suppress_errors($save_state);
+
 	if ($tb_exists) {
 		$status_mapping = array(
 			'requested' => 3,
