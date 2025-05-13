@@ -7,4 +7,3 @@
 .vscode
 node_modules
 /vendor
-composer.*
