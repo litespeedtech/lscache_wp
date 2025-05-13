@@ -124,7 +124,9 @@ function litespeed_update_5_3()
 	$tb = $wpdb->prefix . 'litespeed_url_file';
 	if (litespeed_table_exists($tb)) {
 		$q =
-			'ALTER TABLE `' . $tb . '`
+			'ALTER TABLE `' .
+			$tb .
+			'`
 				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
 				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
 			';
@@ -144,7 +146,9 @@ function litespeed_update_4_4_4()
 	$tb = $wpdb->prefix . 'litespeed_url_file';
 	if (litespeed_table_exists($tb)) {
 		$q =
-			'ALTER TABLE `' . $tb . '`
+			'ALTER TABLE `' .
+			$tb .
+			'`
 				ADD COLUMN `expired` int(11) NOT NULL DEFAULT 0,
 				ADD KEY `filename_2` (`filename`,`expired`),
 				ADD KEY `url_id` (`url_id`,`expired`)
@@ -743,7 +747,9 @@ function litespeed_update_3_0($ver)
 		}
 
 		$q =
-			'ALTER TABLE `' . $tb . '`
+			'ALTER TABLE `' .
+			$tb .
+			'`
 				DROP INDEX `post_id_2`,
 				DROP INDEX `root_id`,
 				DROP INDEX `src_md5`,
