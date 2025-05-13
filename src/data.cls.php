@@ -354,7 +354,13 @@ class Data extends Root
 	public function tb_exist($tb)
 	{
 		global $wpdb;
-		return $wpdb->get_var("SHOW TABLES LIKE '" . $this->tb($tb) . "'");
+
+		$save_state = $wpdb->suppress_errors;
+		$wpdb->suppress_errors(true);
+		$describe = $wpdb->get_var('DESCRIBE `' . $this->tb($tb) . '`');
+		$wpdb->suppress_errors($save_state);
+
+		return $describe !== null;
 	}
 
 	/**
