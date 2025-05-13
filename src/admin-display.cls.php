@@ -94,11 +94,6 @@ class Admin_Display extends Base
 			add_action('admin_menu', array($this, 'register_admin_menu'));
 		}
 
-		// Show disable all warning
-		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
-			Admin_Display::error(Error::msg('disabled_all'), true);
-		}
-
 		$this->cls('Metabox')->register_settings();
 	}
 
@@ -547,6 +542,11 @@ class Admin_Display extends Base
 		// if ( $messages != -1 ) {
 		// 	self::update_option( self::DB_MSG_PIN, -1 );
 		// }
+
+		// Show disable all warning
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
+			Admin_Display::error(Error::msg('disabled_all'), true);
+		}
 
 		if (empty($_GET['page']) || strpos($_GET['page'], 'litespeed') !== 0) {
 			global $pagenow;
