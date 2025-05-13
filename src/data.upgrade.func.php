@@ -16,6 +16,21 @@ use LiteSpeed\File;
 use LiteSpeed\Cloud;
 
 /**
+ * Table existance check function
+ * @since 7.2
+ */
+function litespeed_table_exists($table_name)
+{
+	global $wpdb;
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $table_name . '`');
+	$wpdb->suppress_errors($save_state);
+
+	return $tb_exists !== null;
+}
+
+/**
  * Migrate v7.0- url_files URL from no trailing slash to trailing slash
  * @since 7.0.1
  */
@@ -25,12 +40,7 @@ function litespeed_update_7_0_1()
 	Debug2::debug('[Data] v7.0.1 upgrade started');
 
 	$tb_url = $wpdb->prefix . 'litespeed_url';
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$tb_exists = $wpdb->get_var('DESCRIBE `' . $tb_url . '`');
-	$wpdb->suppress_errors($save_state);
-
-	if (!$tb_exists) {
+	if (!litespeed_table_exists($tb_url)) {
 		Debug2::debug('[Data] Table `litespeed_url` not found, bypassed migration');
 		return;
 	}
@@ -111,16 +121,10 @@ function litespeed_update_5_3()
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
 
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_url_file`');
-	$wpdb->suppress_errors($save_state);
-
-	if ($tb_exists) {
+	$tb = $wpdb->prefix . 'litespeed_url_file';
+	if (litespeed_table_exists($tb)) {
 		$q =
-			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_url_file`
+			'ALTER TABLE `' . $tb . '`
 				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
 				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
 			';
@@ -137,16 +141,10 @@ function litespeed_update_4_4_4()
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
 
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_url_file`');
-	$wpdb->suppress_errors($save_state);
-
-	if ($tb_exists) {
+	$tb = $wpdb->prefix . 'litespeed_url_file';
+	if (litespeed_table_exists($tb)) {
 		$q =
-			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_url_file`
+			'ALTER TABLE `' . $tb . '`
 				ADD COLUMN `expired` int(11) NOT NULL DEFAULT 0,
 				ADD KEY `filename_2` (`filename`,`expired`),
 				ADD KEY `url_id` (`url_id`,`expired`)
@@ -186,12 +184,7 @@ function litespeed_update_4()
 	global $wpdb;
 	$tb = $wpdb->prefix . 'litespeed_cssjs';
 
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$existed = $wpdb->get_var('DESCRIBE `' . $tb . '`');
-	$wpdb->suppress_errors($save_state);
-
-	if (!$existed) {
+	if (!litespeed_table_exists($tb)) {
 		return;
 	}
 
@@ -731,12 +724,8 @@ function litespeed_update_3_0($ver)
 	// Update image optm table
 	Debug2::debug('[Data] Upgrade img_optm table');
 
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$tb_exists = $wpdb->get_var('DESCRIBE `' . $wpdb->prefix . 'litespeed_img_optm`');
-	$wpdb->suppress_errors($save_state);
-
-	if ($tb_exists) {
+	$tb = $wpdb->prefix . 'litespeed_img_optm';
+	if (litespeed_table_exists($tb)) {
 		$status_mapping = array(
 			'requested' => 3,
 			'notified' => 6,
@@ -749,14 +738,12 @@ function litespeed_update_3_0($ver)
 			'xmeta' => -8,
 		);
 		foreach ($status_mapping as $k => $v) {
-			$q = 'UPDATE `' . $wpdb->prefix . "litespeed_img_optm` SET optm_status='$v' WHERE optm_status='$k'";
+			$q = 'UPDATE `' . $tb . "` SET optm_status='$v' WHERE optm_status='$k'";
 			$wpdb->query($q);
 		}
 
 		$q =
-			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_img_optm`
+			'ALTER TABLE `' . $tb . '`
 				DROP INDEX `post_id_2`,
 				DROP INDEX `root_id`,
 				DROP INDEX `src_md5`,
