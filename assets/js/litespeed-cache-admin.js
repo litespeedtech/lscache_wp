@@ -592,7 +592,7 @@ function litespeed_add_zero(i) {
 	return i;
 }
 
-function litespeed_copy_to_clipboard(elementId) {
+function litespeed_copy_to_clipboard(elementId, clickedElement) {
 	var range = document.createRange();
 	range.selectNode(document.getElementById(elementId));
 	window.getSelection().removeAllRanges();
