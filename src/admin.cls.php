@@ -2,7 +2,6 @@
 /**
  * The admin-panel specific functionality of the plugin.
  *
- *
  * @since      1.0.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
@@ -90,6 +89,7 @@ class Admin extends Root
 
 	/**
 	 * Handle attachment update
+	 *
 	 * @since  4.0
 	 */
 	public function wp_update_attachment_metadata($data, $post_id)

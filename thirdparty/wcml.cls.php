@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with WCML.
  *
- * @since		3.0
+ * @since       3.0
  */
 namespace LiteSpeed\Thirdparty;
 

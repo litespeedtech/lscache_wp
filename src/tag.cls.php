@@ -3,8 +3,8 @@
 /**
  * The plugin cache-tag class for X-LiteSpeed-Tag
  *
- * @since      	1.1.3
- * @since  		1.5 Moved into /inc
+ * @since       1.1.3
+ * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -21,7 +21,7 @@ class Tag extends Root
 	const TYPE_HTTP = 'HTTP.';
 	const TYPE_POST = 'Po.'; // Post. Cannot use P, reserved for litemage.
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.';
-	const TYPE_ARCHIVE_TERM = 'T.'; //for is_category|is_tag|is_tax
+	const TYPE_ARCHIVE_TERM = 'T.'; // for is_category|is_tag|is_tax
 	const TYPE_AUTHOR = 'A.';
 	const TYPE_ARCHIVE_DATE = 'D.';
 	const TYPE_BLOG = 'B.';
@@ -98,7 +98,7 @@ class Tag extends Root
 	 *
 	 * @since    1.0.15
 	 * @access   public
-	 * @param array $params [wordpress params for widget_posts_args]
+	 * @param array $params [WordPress params for widget_posts_args]
 	 */
 	public function add_widget_recent_posts($params)
 	{
@@ -193,7 +193,7 @@ class Tag extends Root
 	 *
 	 * @since 1.0.12
 	 * @access public
-	 * @param string $uri The uri to get the hash of.
+	 * @param string  $uri The uri to get the hash of.
 	 * @param boolean $ori Return the original url or not
 	 * @return bool|string False on input error, hash otherwise.
 	 */
@@ -256,7 +256,7 @@ class Tag extends Root
 		if (isset($wp_query)) {
 			$queried_obj_id = get_queried_object_id();
 			if (is_archive()) {
-				//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
+				// An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
 				if (is_category() || is_tag() || is_tax()) {
 					$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
 				} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
@@ -279,7 +279,7 @@ class Tag extends Root
 					}
 				}
 			} elseif (is_singular()) {
-				//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
+				// $this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
 				$tags[] = self::TYPE_POST . $queried_obj_id;
 
 				if (is_page()) {
@@ -369,6 +369,7 @@ class Tag extends Root
 		$prefix_tags = array();
 		/**
 		 * Only append blog_id when is multisite
+		 *
 		 * @since 2.9.3
 		 */
 		$prefix = LSWCP_TAG_PREFIX . (is_multisite() ? get_current_blog_id() : '') . '_';

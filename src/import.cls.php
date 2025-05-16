@@ -3,7 +3,7 @@
 /**
  * The import/export class.
  *
- * @since      	1.8.2
+ * @since       1.8.2
  */
 
 namespace LiteSpeed;

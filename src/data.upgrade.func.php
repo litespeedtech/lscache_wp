@@ -17,6 +17,7 @@ use LiteSpeed\Cloud;
 
 /**
  * Table existance check function
+ *
  * @since 7.2
  */
 function litespeed_table_exists($table_name)
@@ -32,6 +33,7 @@ function litespeed_table_exists($table_name)
 
 /**
  * Migrate v7.0- url_files URL from no trailing slash to trailing slash
+ *
  * @since 7.0.1
  */
 function litespeed_update_7_0_1()
@@ -77,6 +79,7 @@ function litespeed_update_7_0_1()
 
 /**
  * Migrate from domain key to pk/sk for QC
+ *
  * @since 7.0
  */
 function litespeed_update_7()
@@ -114,6 +117,7 @@ function litespeed_update_7()
 
 /**
  * Append webp/mobile to url_file
+ *
  * @since 5.3
  */
 function litespeed_update_5_3()
@@ -136,6 +140,7 @@ function litespeed_update_5_3()
 
 /**
  * Add expired to url_file table
+ *
  * @since 4.4.4
  */
 function litespeed_update_4_4_4()
@@ -159,6 +164,7 @@ function litespeed_update_4_4_4()
 
 /**
  * Drop cssjs table and rm cssjs folder
+ *
  * @since 4.3
  */
 function litespeed_update_4_3()
@@ -170,6 +176,7 @@ function litespeed_update_4_3()
 
 /**
  * Drop object cache data file
+ *
  * @since 4.1
  */
 function litespeed_update_4_1()
@@ -181,6 +188,7 @@ function litespeed_update_4_1()
 
 /**
  * Drop cssjs table and rm cssjs folder
+ *
  * @since 4.0
  */
 function litespeed_update_4()
@@ -255,6 +263,7 @@ function litespeed_update_2_0($ver)
 	if (version_compare($ver, '2.4.2', '<')) {
 		/**
 		 * Convert old data from postmeta to img_optm table
+		 *
 		 * @since  2.0
 		 */
 
@@ -286,6 +295,7 @@ function litespeed_update_2_0($ver)
 
 	/**
 	 * Add target_md5 field to table
+	 *
 	 * @since  2.4.2
 	 */
 	if (version_compare($ver, '2.4.2', '<') && version_compare($ver, '2.0', '>=')) {
@@ -369,7 +379,7 @@ function litespeed_update_3_0($ver)
 				foreach ($old_data as $k2 => $v2) {
 					$tmp[$i]['name'] = $k2;
 					$tmp[$i]['vals'] = explode("\n", $v2);
-					$i++;
+					++$i;
 				}
 				$old_data = $tmp;
 			}
@@ -447,15 +457,15 @@ function litespeed_update_3_0($ver)
 		'log_file_size' => 'debug-filesize',
 		'debug_cookie' => 'debug-cookie',
 		'collapse_qs' => 'debug-collapse_qs',
-		// 'log_filters' 				=> 'debug-log_filters',
+		// 'log_filters'                => 'debug-log_filters',
 
 		'crawler_cron_active' => 'crawler',
-		// 'crawler_include_posts' 	=> 'crawler-inc_posts',
-		// 'crawler_include_pages' 	=> 'crawler-inc_pages',
-		// 'crawler_include_cats' 		=> 'crawler-inc_cats',
-		// 'crawler_include_tags' 		=> 'crawler-inc_tags',
-		// 'crawler_excludes_cpt' 		=> 'crawler-exc_cpt',
-		// 'crawler_order_links' 		=> 'crawler-order_links',
+		// 'crawler_include_posts'  => 'crawler-inc_posts',
+		// 'crawler_include_pages'  => 'crawler-inc_pages',
+		// 'crawler_include_cats'       => 'crawler-inc_cats',
+		// 'crawler_include_tags'       => 'crawler-inc_tags',
+		// 'crawler_excludes_cpt'       => 'crawler-exc_cpt',
+		// 'crawler_order_links'        => 'crawler-order_links',
 		'crawler_usleep' => 'crawler-usleep',
 		'crawler_run_duration' => 'crawler-run_duration',
 		'crawler_run_interval' => 'crawler-run_interval',
@@ -479,7 +489,7 @@ function litespeed_update_3_0($ver)
 		'cdn' => 'cdn',
 		'cdn_ori' => 'cdn-ori',
 		'cdn_exclude' => 'cdn-exc',
-		// 'cdn_remote_jquery'			=> 'cdn-remote_jq',
+		// 'cdn_remote_jquery'          => 'cdn-remote_jq',
 		'cdn_quic' => 'cdn-quic',
 		'cdn_cloudflare' => 'cdn-cloudflare',
 		'cdn_cloudflare_email' => 'cdn-cloudflare_email',
@@ -493,44 +503,44 @@ function litespeed_update_3_0($ver)
 		'media_placeholder_resp_color' => 'media-placeholder_resp_color',
 		'media_placeholder_resp_async' => 'media-placeholder_resp_async',
 		'media_iframe_lazy' => 'media-iframe_lazy',
-		// 'media_img_lazyjs_inline'		=> 'media-lazyjs_inline',
+		// 'media_img_lazyjs_inline'        => 'media-lazyjs_inline',
 
 		'media_optm_auto' => 'img_optm-auto',
 		'media_optm_cron' => 'img_optm-cron',
 		'media_optm_ori' => 'img_optm-ori',
 		'media_rm_ori_bkup' => 'img_optm-rm_bkup',
-		// 'media_optm_webp'			=> 'img_optm-webp',
+		// 'media_optm_webp'            => 'img_optm-webp',
 		'media_webp_replace' => 'img_optm-webp',
 		'media_optm_lossless' => 'img_optm-lossless',
 		'media_optm_exif' => 'img_optm-exif',
 		'media_webp_replace_srcset' => 'img_optm-webp_replace_srcset',
 
 		'css_minify' => 'optm-css_min',
-		// 'css_inline_minify'		=> 'optm-css_inline_min',
+		// 'css_inline_minify'      => 'optm-css_inline_min',
 		'css_combine' => 'optm-css_comb',
-		// 'css_combined_priority'	=> 'optm-css_comb_priority',
-		// 'css_http2'				=> 'optm-css_http2',
+		// 'css_combined_priority'  => 'optm-css_comb_priority',
+		// 'css_http2'              => 'optm-css_http2',
 		'css_exclude' => 'optm-css_exc',
 		'js_minify' => 'optm-js_min',
-		// 'js_inline_minify'		=> 'optm-js_inline_min',
+		// 'js_inline_minify'       => 'optm-js_inline_min',
 		'js_combine' => 'optm-js_comb',
-		// 'js_combined_priority'	=> 'optm-js_comb_priority',
-		// 'js_http2'				=> 'optm-js_http2',
+		// 'js_combined_priority'   => 'optm-js_comb_priority',
+		// 'js_http2'               => 'optm-js_http2',
 		'js_exclude' => 'optm-js_exc',
-		// 'optimize_ttl'			=> 'optm-ttl',
+		// 'optimize_ttl'           => 'optm-ttl',
 		'html_minify' => 'optm-html_min',
 		'optm_qs_rm' => 'optm-qs_rm',
 		'optm_ggfonts_rm' => 'optm-ggfonts_rm',
 		'optm_css_async' => 'optm-css_async',
-		// 'optm_ccss_gen'			=> 'optm-ccss_gen',
-		// 'optm_ccss_async'		=> 'optm-ccss_async',
+		// 'optm_ccss_gen'          => 'optm-ccss_gen',
+		// 'optm_ccss_async'        => 'optm-ccss_async',
 		'optm_css_async_inline' => 'optm-css_async_inline',
 		'optm_js_defer' => 'optm-js_defer',
 		'optm_emoji_rm' => 'optm-emoji_rm',
-		// 'optm_exclude_jquery'	=> 'optm-exc_jq',
+		// 'optm_exclude_jquery'    => 'optm-exc_jq',
 		'optm_ggfonts_async' => 'optm-ggfonts_async',
-		// 'optm_max_size'			=> 'optm-max_size',
-		// 'optm_rm_comment'		=> 'optm-rm_comment',
+		// 'optm_max_size'          => 'optm-max_size',
+		// 'optm_rm_comment'        => 'optm-rm_comment',
 	);
 	foreach ($data as $k => $v) {
 		if (!isset($previous_options[$k])) {

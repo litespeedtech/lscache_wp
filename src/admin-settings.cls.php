@@ -3,7 +3,6 @@
 /**
  * The admin settings handler of the plugin.
  *
- *
  * @since      1.1.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src
@@ -105,13 +104,13 @@ class Admin_Settings extends Base
 					 * CDN setting
 					 *
 					 * Raw data format:
-					 * 		cdn-mapping[url][] = 'xxx'
-					 * 		cdn-mapping[url][2] = 'xxx2'
-					 * 		cdn-mapping[inc_js][] = 1
+					 *      cdn-mapping[url][] = 'xxx'
+					 *      cdn-mapping[url][2] = 'xxx2'
+					 *      cdn-mapping[inc_js][] = 1
 					 *
 					 * Final format:
-					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+					 *      cdn-mapping[ 0 ][ url ] = 'xxx'
+					 *      cdn-mapping[ 2 ][ url ] = 'xxx2'
 					 */
 					if ($data) {
 						foreach ($data as $k => $v) {
@@ -119,7 +118,7 @@ class Admin_Settings extends Base
 								$v = Utility::sanitize_lines($v);
 							}
 							if ($child == self::CDN_MAPPING_URL) {
-								# If not a valid URL, turn off CDN
+								// If not a valid URL, turn off CDN
 								if (strpos($v, 'https://') !== 0) {
 									self::debug('❌ CDN mapping set to OFF due to invalid URL');
 									$the_matrix[self::O_CDN] = false;
@@ -146,16 +145,16 @@ class Admin_Settings extends Base
 					/**
 					 * Cookie Crawler setting
 					 * Raw Format:
-					 * 		crawler-cookies[name][] = xxx
-					 * 		crawler-cookies[name][2] = xxx2
-					 * 		crawler-cookies[vals][] = xxx
+					 *      crawler-cookies[name][] = xxx
+					 *      crawler-cookies[name][2] = xxx2
+					 *      crawler-cookies[vals][] = xxx
 					 *
 					 * todo: need to allow null for values
 					 *
 					 * Final format:
-					 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-					 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-					 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+					 *      crawler-cookie[ 0 ][ name ] = 'xxx'
+					 *      crawler-cookie[ 0 ][ vals ] = 'xxx'
+					 *      crawler-cookie[ 2 ][ name ] = 'xxx2'
 					 *
 					 * empty line for `vals` use literal `_null`
 					 */
@@ -215,12 +214,12 @@ class Admin_Settings extends Base
 		// Special handler for CDN/Crawler 2d list to drop empty rows
 		foreach ($the_matrix as $id => $data) {
 			/**
-			 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-			 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+			 *      cdn-mapping[ 0 ][ url ] = 'xxx'
+			 *      cdn-mapping[ 2 ][ url ] = 'xxx2'
 			 *
-			 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-			 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-			 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+			 *      crawler-cookie[ 0 ][ name ] = 'xxx'
+			 *      crawler-cookie[ 0 ][ vals ] = 'xxx'
+			 *      crawler-cookie[ 2 ][ name ] = 'xxx2'
 			 */
 			if ($id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES) {
 				// Drop this line if all children elements are empty
@@ -332,9 +331,9 @@ class Admin_Settings extends Base
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $instance The new settings.
-	 * @param array $new_instance
-	 * @param array $old_instance The original settings.
+	 * @param array     $instance The new settings.
+	 * @param array     $new_instance
+	 * @param array     $old_instance The original settings.
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */

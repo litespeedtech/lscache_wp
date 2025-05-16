@@ -2,7 +2,8 @@
 
 /**
  * Check if any plugins that could conflict with LiteSpeed Cache are active.
- * @since		4.7
+ *
+ * @since       4.7
  */
 
 namespace LiteSpeed\Thirdparty;

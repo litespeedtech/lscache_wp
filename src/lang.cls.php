@@ -3,10 +3,10 @@
 /**
  * The language class.
  *
- * @since      	3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed_Cache
+ * @subpackage  LiteSpeed_Cache/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -199,7 +199,7 @@ class Lang extends Base
 			self::O_MEDIA_LQIP => __('LQIP Cloud Generator', 'litespeed-cache'),
 			self::O_MEDIA_LQIP_QUAL => __('LQIP Quality', 'litespeed-cache'),
 			self::O_MEDIA_LQIP_MIN_W => __('LQIP Minimum Dimensions', 'litespeed-cache'),
-			// self::O_MEDIA_LQIP_MIN_H			=> __( 'LQIP Minimum Height', 'litespeed-cache' ),
+			// self::O_MEDIA_LQIP_MIN_H         => __( 'LQIP Minimum Height', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC => __('Generate LQIP In Background', 'litespeed-cache'),
 			self::O_MEDIA_IFRAME_LAZY => __('Lazy Load Iframes', 'litespeed-cache'),
 			self::O_MEDIA_ADD_MISSING_SIZES => __('Add Missing Sizes', 'litespeed-cache'),

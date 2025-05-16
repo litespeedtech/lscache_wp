@@ -3,11 +3,11 @@
 /**
  * The CDN class.
  *
- * @since      	1.2.3
- * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.2.3
+ * @since       1.5 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -302,6 +302,7 @@ class CDN extends Root
 
 		/**
 		 * Excludes `\` from URL matching
+		 *
 		 * @see  #959152 - WordPress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
@@ -517,10 +518,8 @@ class CDN extends Root
 				if (preg_match('#' . $needle . '#iU', $url)) {
 					return true;
 				}
-			} else {
-				if (strpos($url, $needle) === 0) {
-					return true;
-				}
+			} elseif (strpos($url, $needle) === 0) {
+				return true;
 			}
 		}
 
@@ -531,7 +530,6 @@ class CDN extends Root
 	 * Check if the host is the CDN internal host
 	 *
 	 * @since  1.2.3
-	 *
 	 */
 	public static function internal($host)
 	{

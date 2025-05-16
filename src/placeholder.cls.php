@@ -3,10 +3,10 @@
 /**
  * The PlaceHolder class
  *
- * @since 		3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -150,7 +150,7 @@ class Placeholder extends Base
 
 					echo '<div class="litespeed-media-size"><a href="' . Str::trim_quotes(File::read($lqip_folder . '/' . $v)) . '" target="_blank">' . $v . '</a></div>';
 
-					$total_files++;
+					++$total_files;
 				}
 			}
 		}

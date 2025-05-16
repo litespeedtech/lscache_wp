@@ -3,10 +3,10 @@
 /**
  * The plugin cache-control class for X-Litespeed-Cache-Control
  *
- * @since      	1.1.3
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.3
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -42,6 +42,7 @@ class Control extends Root
 	{
 		/**
 		 * Add vary filter for Role Excludes
+		 *
 		 * @since  1.6.2
 		 */
 		add_filter('litespeed_vary', array($this, 'vary_add_role_exclude'));
@@ -416,7 +417,7 @@ class Control extends Root
 	 * Check current force cacheable bit set
 	 *
 	 * @access public
-	 * @since 	2.2
+	 * @since   2.2
 	 */
 	public static function is_forced_cacheable()
 	{
@@ -499,11 +500,9 @@ class Control extends Root
 						self::debug('X Cache_control TTL is limited to ' . $ttl . ' due to scheduled purge regex ' . $v);
 						return $ttl;
 					}
-				} else {
-					if ($v == $current_url) {
-						self::debug('X Cache_control TTL is limited to ' . $ttl . ' due to scheduled purge rule ' . $v);
-						return $ttl;
-					}
+				} elseif ($v == $current_url) {
+					self::debug('X Cache_control TTL is limited to ' . $ttl . ' due to scheduled purge rule ' . $v);
+					return $ttl;
 				}
 			}
 		}
@@ -600,23 +599,23 @@ class Control extends Root
 
 		// Guest mode directly return cacheable result
 		// if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
-		// 	// If is POST, no cache
-		// 	if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
-		// 		self::debug( "[Ctrl] ❌ forced no cache [reason] LSCACHE_NO_CACHE const" );
-		// 		$hdr .= 'no-cache';
-		// 	}
-		// 	else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-		// 		self::debug( "[Ctrl] ❌ forced no cache [reason] req not GET" );
-		// 		$hdr .= 'no-cache';
-		// 	}
-		// 	else {
-		// 		$hdr .= 'public';
-		// 		$hdr .= ',max-age=' . $this->get_ttl();
-		// 	}
+		// If is POST, no cache
+		// if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+		// self::debug( "[Ctrl] ❌ forced no cache [reason] LSCACHE_NO_CACHE const" );
+		// $hdr .= 'no-cache';
+		// }
+		// else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
+		// self::debug( "[Ctrl] ❌ forced no cache [reason] req not GET" );
+		// $hdr .= 'no-cache';
+		// }
+		// else {
+		// $hdr .= 'public';
+		// $hdr .= ',max-age=' . $this->get_ttl();
+		// }
 
-		// 	$hdr .= $esi_hdr;
+		// $hdr .= $esi_hdr;
 
-		// 	return $hdr;
+		// return $hdr;
 		// }
 
 		// Fix cli `uninstall --deactivate` fatal err
@@ -812,9 +811,9 @@ class Control extends Root
 			return $this->_no_cache_for('search');
 		}
 
-		//		if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
-		//			return $this->_no_cache_for('no theme used');
-		//		}
+		// if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
+		// return $this->_no_cache_for('no theme used');
+		// }
 
 		// Check private cache URI setting
 		$excludes = $this->conf(Base::O_CACHE_PRIV_URI);
@@ -891,7 +890,7 @@ class Control extends Root
 	 *
 	 * @since  1.3
 	 * @access private
-	 * @param  array  $excludes QS excludes setting
+	 * @param  array $excludes QS excludes setting
 	 * @return boolean|string False if not excluded, otherwise the hit qs list
 	 */
 	private function _is_qs_excluded($excludes)

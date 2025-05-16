@@ -33,7 +33,6 @@ class Crawler extends Base
 	 *
 	 *     # List all crawlers
 	 *     $ wp litespeed-crawler l
-	 *
 	 */
 	public function l()
 	{
@@ -49,7 +48,6 @@ class Crawler extends Base
 	 *
 	 *     # List all crawlers
 	 *     $ wp litespeed-crawler list
-	 *
 	 */
 	public function list()
 	{
@@ -133,7 +131,6 @@ class Crawler extends Base
 	 *
 	 *     # Turn on 2nd crawler
 	 *     $ wp litespeed-crawler enable 2
-	 *
 	 */
 	public function enable($args)
 	{
@@ -156,7 +153,6 @@ class Crawler extends Base
 	 *
 	 *     # Turn off 1st crawler
 	 *     $ wp litespeed-crawler disable 1
-	 *
 	 */
 	public function disable($args)
 	{
@@ -179,7 +175,6 @@ class Crawler extends Base
 	 *
 	 *     # Start crawling
 	 *     $ wp litespeed-crawler r
-	 *
 	 */
 	public function r()
 	{
@@ -195,7 +190,6 @@ class Crawler extends Base
 	 *
 	 *     # Start crawling
 	 *     $ wp litespeed-crawler run
-	 *
 	 */
 	public function run()
 	{
@@ -218,7 +212,6 @@ class Crawler extends Base
 	 *
 	 *     # Reset crawler position
 	 *     $ wp litespeed-crawler reset
-	 *
 	 */
 	public function reset()
 	{

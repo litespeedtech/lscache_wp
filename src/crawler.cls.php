@@ -3,7 +3,7 @@
 /**
  * The crawler class
  *
- * @since      	1.1.0
+ * @since       1.1.0
  */
 
 namespace LiteSpeed;
@@ -78,6 +78,7 @@ class Crawler extends Root
 
 	/**
 	 * Try get server CPUs
+	 *
 	 * @since 5.2
 	 */
 	private function _get_server_cpu()
@@ -287,13 +288,13 @@ class Crawler extends Root
 			self::debug('⚠️ lane in use');
 			return;
 			// if ($manually_run) {
-			// 	self::debug('......crawler started (manually_rund)......');
-			// 	// Log pid to prevent from multi running
-			// 	if (defined('LITESPEED_CLI')) {
-			// 		// Take over lane
-			// 		self::debug('⚠️⚠️⚠️ Forced take over lane (CLI)');
-			// 		$this->_take_over_lane();
-			// 	}
+			// self::debug('......crawler started (manually_rund)......');
+			// Log pid to prevent from multi running
+			// if (defined('LITESPEED_CLI')) {
+			// Take over lane
+			// self::debug('⚠️⚠️⚠️ Forced take over lane (CLI)');
+			// $this->_take_over_lane();
+			// }
 			// }
 		}
 		self::debug('......crawler started......');
@@ -322,7 +323,7 @@ class Crawler extends Root
 		// Skip the crawlers that in bypassed list
 		while (!$this->is_active($this->_summary['curr_crawler']) && $this->_summary['curr_crawler'] < count($this->_crawlers)) {
 			self::debug('Skipped the Crawler #' . $this->_summary['curr_crawler'] . ' ......');
-			$this->_summary['curr_crawler']++;
+			++$this->_summary['curr_crawler'];
 		}
 		if ($this->_summary['curr_crawler'] >= count($this->_crawlers)) {
 			$this->_end_reason = 'end';
@@ -367,6 +368,7 @@ class Crawler extends Root
 
 		/**
 		 * Check cookie crawler
+		 *
 		 * @since  2.8
 		 */
 		foreach ($current_crawler as $k => $v) {
@@ -383,6 +385,7 @@ class Crawler extends Root
 
 		/**
 		 * Set WebP simulation
+		 *
 		 * @since  1.9.1
 		 */
 		if (!empty($current_crawler['webp'])) {
@@ -391,6 +394,7 @@ class Crawler extends Root
 
 		/**
 		 * Set mobile crawler
+		 *
 		 * @since  2.8
 		 */
 		if (!empty($current_crawler['mobile'])) {
@@ -399,6 +403,7 @@ class Crawler extends Root
 
 		/**
 		 * Limit delay to use server setting
+		 *
 		 * @since 1.8.3
 		 */
 		$this->_crawler_conf['run_delay'] = 500; // microseconds
@@ -424,6 +429,7 @@ class Crawler extends Root
 
 		/**
 		 * Set role simulation
+		 *
 		 * @since 1.9.1
 		 */
 		if (!empty($current_crawler['uid'])) {
@@ -465,9 +471,9 @@ class Crawler extends Root
 	{
 		// check if is running
 		// if ($this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf['run_duration']) {
-		// 	$this->_end_reason = 'stopped';
-		// 	self::debug('The crawler is running.');
-		// 	return;
+		// $this->_end_reason = 'stopped';
+		// self::debug('The crawler is running.');
+		// return;
 		// }
 
 		// check current load
@@ -515,6 +521,7 @@ class Crawler extends Root
 	{
 		/**
 		 * If server is windows, exit
+		 *
 		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
 		 */
 		if (!function_exists('sys_getloadavg')) {
@@ -564,21 +571,21 @@ class Crawler extends Root
 			if ($curload >= $this->_crawler_conf['load_limit'] + 1) {
 				sleep(5); // sleep 5 secs
 				if ($curthreads >= 1) {
-					$curthreads--;
+					--$curthreads;
 				}
 			} elseif ($curload >= $this->_crawler_conf['load_limit']) {
 				// if ( $curthreads > 1 ) {// if already 1, keep
-				$curthreads--;
+				--$curthreads;
 				// }
 			} elseif ($curload + 1 < $this->_crawler_conf['load_limit']) {
 				if ($curthreads < $CRAWLER_THREADS) {
-					$curthreads++;
+					++$curthreads;
 				}
 			}
 		}
 
 		// $log = 'set current threads = ' . $curthreads . ' previous=' . $this->_cur_threads
-		// 	. ' max_allowed=' . $CRAWLER_THREADS . ' load_limit=' . $this->_crawler_conf[ 'load_limit' ] . ' current_load=' . $curload;
+		// . ' max_allowed=' . $CRAWLER_THREADS . ' load_limit=' . $this->_crawler_conf[ 'load_limit' ] . ' current_load=' . $curload;
 
 		$this->_cur_threads = $curthreads;
 		$this->_cur_thread_time = time();
@@ -616,6 +623,7 @@ class Crawler extends Root
 
 	/**
 	 * Take over lane
+	 *
 	 * @since 6.1
 	 */
 	private function _take_over_lane()
@@ -626,6 +634,7 @@ class Crawler extends Root
 
 	/**
 	 * Update lane file
+	 *
 	 * @since 6.1
 	 */
 	private function _touch_lane()
@@ -635,6 +644,7 @@ class Crawler extends Root
 
 	/**
 	 * Release lane file
+	 *
 	 * @since 6.1
 	 */
 	public function Release_lane()
@@ -650,6 +660,7 @@ class Crawler extends Root
 
 	/**
 	 * Check if lane is used by other crawlers
+	 *
 	 * @since 6.1
 	 */
 	private function _check_valid_lane($strict_mode = false)
@@ -832,7 +843,7 @@ class Crawler extends Root
 					if (empty($this->_summary['crawler_stats'][$this->_summary['curr_crawler']][$status])) {
 						$this->_summary['crawler_stats'][$this->_summary['curr_crawler']][$status] = 0;
 					}
-					$this->_summary['crawler_stats'][$this->_summary['curr_crawler']][$status]++;
+					++$this->_summary['crawler_stats'][$this->_summary['curr_crawler']][$status];
 				}
 
 				// update offset position
@@ -1007,6 +1018,7 @@ class Crawler extends Root
 
 	/**
 	 * Translate the status to title
+	 *
 	 * @since 6.0
 	 */
 	private function _status2title($status)
@@ -1098,12 +1110,13 @@ class Crawler extends Root
 
 		/**
 		 * Try to enable http2 connection (only available since PHP7+)
+		 *
 		 * @since  1.9.1
 		 * @since  2.2.7 Commented due to cause no-cache issue
 		 * @since  2.9.1+ Fixed wrongly usage of CURL_HTTP_VERSION_1_1 const
 		 */
 		$options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
-		// 	$options[ CURL_HTTP_VERSION_2 ] = 1;
+		// $options[ CURL_HTTP_VERSION_2 ] = 1;
 
 		// if is walker
 		// $options[ CURLOPT_FRESH_CONNECT ] = true;
@@ -1115,8 +1128,8 @@ class Crawler extends Root
 
 		// User Agent
 		if ($crawler_only) {
-			if (strpos($this->_crawler_conf['ua'], Crawler::FAST_USER_AGENT) !== 0) {
-				$this->_crawler_conf['ua'] = Crawler::FAST_USER_AGENT . ' ' . $this->_crawler_conf['ua'];
+			if (strpos($this->_crawler_conf['ua'], self::FAST_USER_AGENT) !== 0) {
+				$this->_crawler_conf['ua'] = self::FAST_USER_AGENT . ' ' . $this->_crawler_conf['ua'];
 			}
 		}
 		$options[CURLOPT_USERAGENT] = $this->_crawler_conf['ua'];
@@ -1197,7 +1210,7 @@ class Crawler extends Root
 		if ($this->_end_reason == 'end') {
 			// Current crawler is fully done
 			// $end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_summary['curr_crawler'] + 1 ) );
-			$this->_summary['curr_crawler']++; // Jump to next crawler
+			++$this->_summary['curr_crawler']; // Jump to next crawler
 			// $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array(); // reset this at next crawl time
 			$this->_summary['last_pos'] = 0; // reset last position
 			$this->_summary['last_crawler_total_cost'] = time() - $this->_summary['curr_crawler_beginning_time'];
@@ -1248,12 +1261,18 @@ class Crawler extends Root
 			if (!defined('LSCWP_LOG')) {
 				$vary_val = md5($this->conf(Base::HASH) . $vary_val);
 			}
-			$crawler_factors['cookie:' . $vary_name] = array($vary_val => '', '_null' => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>');
+			$crawler_factors['cookie:' . $vary_name] = array(
+				$vary_val => '',
+				'_null' => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>',
+			);
 		}
 
 		// Mobile crawler
 		if ($this->conf(Base::O_CACHE_MOBILE)) {
-			$crawler_factors['mobile'] = array(1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>', 0 => '');
+			$crawler_factors['mobile'] = array(
+				1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>',
+				0 => '',
+			);
 		}
 
 		// Get roles set
@@ -1341,7 +1360,7 @@ class Crawler extends Root
 	public function json_local_path()
 	{
 		// if (!file_exists(LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta)) {
-		// 	return false;
+		// return false;
 		// }
 
 		return LITESPEED_STATIC_DIR . '/crawler/' . $this->_sitemeta;

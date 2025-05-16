@@ -76,7 +76,6 @@ class Purge
 	 *
 	 *     # Purge Everything associated with the WordPress install.
 	 *     $ wp litespeed-purge all
-	 *
 	 */
 	public function all($args)
 	{
@@ -107,7 +106,6 @@ class Purge
 	 *
 	 *     # In a multisite install, purge only the shop.example.com cache (stored as blog id 2).
 	 *     $ wp litespeed-purge blog 2
-	 *
 	 */
 	public function blog($args)
 	{
@@ -151,7 +149,6 @@ class Purge
 	 *
 	 *     # Purge the front page.
 	 *     $ wp litespeed-purge url https://mysite.com/
-	 *
 	 */
 	public function url($args)
 	{
@@ -193,8 +190,8 @@ class Purge
 	 *
 	 * @access private
 	 * @since 1.0.15
-	 * @param array $args The id list to parse.
-	 * @param string $select The purge by kind
+	 * @param array        $args The id list to parse.
+	 * @param string       $select The purge by kind
 	 * @param function(int $id) $callback The callback function to check the id.
 	 */
 	private function _purgeby($args, $select, $callback)
@@ -255,7 +252,6 @@ class Purge
 	 *
 	 *     # Purge the tag ids 1, 3, and 5
 	 *     $ wp litespeed-purge tag 1 3 5
-	 *
 	 */
 	public function tag($args)
 	{
@@ -274,7 +270,6 @@ class Purge
 	 *
 	 *     # Purge the category ids 1, 3, and 5
 	 *     $ wp litespeed-purge category 1 3 5
-	 *
 	 */
 	public function category($args)
 	{
@@ -295,7 +290,6 @@ class Purge
 	 *
 	 *     # Purge the post ids 1, 3, and 5
 	 *     $ wp litespeed-purge post_id 1 3 5
-	 *
 	 */
 	public function post_id($args)
 	{

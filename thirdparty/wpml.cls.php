@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with WPML.
  *
- * @since		2.9.4
+ * @since       2.9.4
  */
 namespace LiteSpeed\Thirdparty;
 

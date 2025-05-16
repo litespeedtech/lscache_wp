@@ -3,10 +3,10 @@
 /**
  * The class to optimize image.
  *
- * @since 		2.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -43,7 +43,7 @@ class Img_Optm extends Base
 	const STATUS_NOTIFIED = 6; // 'notified';
 	const STATUS_DUPLICATED = 8; // 'duplicated';
 	const STATUS_PULLED = 9; // 'pulled';
-	const STATUS_FAILED = -1; //'failed';
+	const STATUS_FAILED = -1; // 'failed';
 	const STATUS_MISS = -3; // 'miss';
 	const STATUS_ERR_FETCH = -5; // 'err_fetch';
 	const STATUS_ERR_404 = -6; // 'err_404';
@@ -490,7 +490,7 @@ class Img_Optm extends Base
 			);
 		}
 
-		# Add new meta
+		// Add new meta
 		$new_pids = $existed_pid ? array_diff($pid_list, $existed_pid) : $pid_list;
 		if ($new_pids) {
 			self::debug('pid list to update postmeta', $new_pids);
@@ -641,7 +641,7 @@ class Img_Optm extends Base
 		$list = array();
 		foreach ($_img_in_queue as $v) {
 			$_img_info = $this->__media->info($v->src, $v->post_id);
-			# If record is invalid, remove from img_optming table
+			// If record is invalid, remove from img_optming table
 			if (empty($_img_info['url']) || empty($_img_info['md5'])) {
 				$wpdb->query($wpdb->prepare("DELETE FROM `$this->_table_img_optming` WHERE id=%d", $v->id));
 				continue;
@@ -895,6 +895,7 @@ class Img_Optm extends Base
 
 	/**
 	 * Check if need to pull or not
+	 *
 	 * @since 7.2
 	 */
 	public static function need_pull()
@@ -950,7 +951,7 @@ class Img_Optm extends Base
 		$_c = $wpdb->prepare($c, array(self::STATUS_NOTIFIED));
 		$images_waiting = $wpdb->get_var($_c);
 		if ($images_waiting && $images_waiting > 0) {
-			$imgs_per_req = ceil($images_waiting / 1000); //ie. download 5/request if 5000 images are waiting
+			$imgs_per_req = ceil($images_waiting / 1000); // ie. download 5/request if 5000 images are waiting
 		}
 
 		// Cap the request rate at 50 images per request
@@ -1009,12 +1010,13 @@ class Img_Optm extends Base
 				}
 				// Disabled as we use noabort
 				// if ($endts - time() < 10) {
-				// 	self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
-				// 	break;
+				// self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				// break;
 				// }
 
 				/**
 				 * Update cron timestamp to avoid duplicated running
+				 *
 				 * @since  1.6.2
 				 */
 				$this->_update_cron_running();
@@ -1141,13 +1143,14 @@ class Img_Optm extends Base
 
 						/**
 						 * API for WebP
+						 *
 						 * @since 2.9.5
 						 * @since  3.0 $row_img less elements (see above one)
 						 * @see #751737  - API docs for WEBP generation
 						 */
 						do_action('litespeed_img_pull_webp', $row_img, $local_file . '.webp');
 
-						$total_pulled_webp++;
+						++$total_pulled_webp;
 					} elseif ('avif' === $row_type) {
 						file_put_contents($local_file . '.avif', $response->body);
 
@@ -1169,11 +1172,12 @@ class Img_Optm extends Base
 
 						/**
 						 * API for AVIF
+						 *
 						 * @since 7.0
 						 */
 						do_action('litespeed_img_pull_avif', $row_img, $local_file . '.avif');
 
-						$total_pulled_avif++;
+						++$total_pulled_avif;
 					} else {
 						// "ori" image type
 						file_put_contents($local_file . '.tmp', $response->body);
@@ -1211,6 +1215,7 @@ class Img_Optm extends Base
 
 						/**
 						 * API Hook
+						 *
 						 * @since  2.9.5
 						 * @since  3.0 $row_img has less elements now. Most useful ones are `post_id`/`src`
 						 */
@@ -1231,7 +1236,7 @@ class Img_Optm extends Base
 					$server_info_id = !empty($server_info['file_id']) ? $server_info['file_id'] : $server_info['id'];
 					$server_list[$server_info['server']][] = $server_info_id;
 
-					$total_pulled_ori++;
+					++$total_pulled_ori;
 				};
 
 				$force_wp_remote_get = defined('LITESPEED_FORCE_WP_REMOTE_GET') && LITESPEED_FORCE_WP_REMOTE_GET;
@@ -1423,6 +1428,7 @@ class Img_Optm extends Base
 		$offset = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
 		/**
 		 * Limit images each time before redirection to fix Out of memory issue. #665465
+		 *
 		 * @since  2.9.8
 		 */
 		// Start deleting files
@@ -1451,7 +1457,7 @@ class Img_Optm extends Base
 				continue;
 			}
 
-			$i++;
+			++$i;
 
 			$this->tmp_pid = $v->post_id;
 			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
@@ -1463,10 +1469,10 @@ class Img_Optm extends Base
 
 		self::debug('batch switched images total: ' . $i);
 
-		$offset++;
+		++$offset;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 		if ($to_be_continued) {
-			# Check if post_id is beyond next_post_id
+			// Check if post_id is beyond next_post_id
 			self::debug('[next_post_id] ' . $this->_summary['next_post_id'] . ' [cursor post id] ' . $to_be_continued->post_id);
 			if ($to_be_continued->post_id <= $this->_summary['next_post_id']) {
 				self::debug('redirecting to next');
@@ -1677,7 +1683,7 @@ class Img_Optm extends Base
 
 		self::debug('_calc_bkup total: ' . $this->_summary['bk_summary']['count'] . ' [size] ' . $this->_summary['bk_summary']['sum']);
 
-		$offset++;
+		++$offset;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 
 		if ($to_be_continued) {
@@ -1707,7 +1713,7 @@ class Img_Optm extends Base
 			return;
 		}
 
-		$this->_summary['bk_summary']['count']++;
+		++$this->_summary['bk_summary']['count'];
 		$this->_summary['bk_summary']['sum'] += $img_info['size'];
 	}
 
@@ -1771,7 +1777,7 @@ class Img_Optm extends Base
 
 		self::debug('rm_bkup total: ' . $this->_summary['rmbk_summary']['count'] . ' [size] ' . $this->_summary['rmbk_summary']['sum']);
 
-		$offset++;
+		++$offset;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 
 		if ($to_be_continued) {
@@ -1801,7 +1807,7 @@ class Img_Optm extends Base
 			return;
 		}
 
-		$this->_summary['rmbk_summary']['count']++;
+		++$this->_summary['rmbk_summary']['count'];
 		$this->_summary['rmbk_summary']['sum'] += $img_info['size'];
 
 		$this->__media->del($bk_file, $this->tmp_pid);
@@ -1966,7 +1972,7 @@ class Img_Optm extends Base
 				continue;
 			}
 
-			$i++;
+			++$i;
 
 			$this->tmp_pid = $v->post_id;
 			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
@@ -1978,7 +1984,7 @@ class Img_Optm extends Base
 
 		self::debug('batch switched images total: ' . $i . ' [type] ' . $type);
 
-		$offset++;
+		++$offset;
 		$to_be_continued = $wpdb->get_row($wpdb->prepare($img_q, array($offset * $limit, 1)));
 		if ($to_be_continued) {
 			return $offset;
@@ -2116,12 +2122,12 @@ class Img_Optm extends Base
 		// $size_meta = get_post_meta( $post_id, self::DB_SIZE, true );
 
 		// if ( ! $size_meta ) {
-		// 	return;
+		// return;
 		// }
 
 		self::debug('_reset_row [pid] ' . $post_id);
 
-		# TODO: Load image sub files
+		// TODO: Load image sub files
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->postmeta` b
 			WHERE b.post_id =%d  AND b.meta_key = '_wp_attachment_metadata'";
@@ -2185,7 +2191,10 @@ class Img_Optm extends Base
 		}
 		$data['img_data'] = $img_data;
 
-		return array('_res' => 'ok', 'data' => $data);
+		return array(
+			'_res' => 'ok',
+			'data' => $data,
+		);
 	}
 
 	/**

@@ -60,8 +60,8 @@ class Str
 	 *
 	 * @since  1.3
 	 * @access public
-	 * @param  int  $len  	 Length of string
-	 * @param  int  $type    1-Number 2-LowerChar 4-UpperChar
+	 * @param  int $len     Length of string
+	 * @param  int $type    1-Number 2-LowerChar 4-UpperChar
 	 * @return string
 	 */
 	public static function rrand($len, $type = 7)
@@ -112,6 +112,7 @@ class Str
 
 	/**
 	 * Trim double quotes from a string to be used as a preformatted src in HTML.
+	 *
 	 * @since 6.5.3
 	 */
 	public static function trim_quotes($string)

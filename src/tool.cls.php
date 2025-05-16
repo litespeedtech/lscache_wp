@@ -3,10 +3,10 @@
 /**
  * The tools
  *
- * @since      	3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -129,11 +129,9 @@ class Tool extends Root
 				$settings['interval'] = $this->conf(Base::O_MISC_HEARTBEAT_FRONT_TTL);
 				Debug2::debug('[Tool] Heartbeat interval set to ' . $this->conf(Base::O_MISC_HEARTBEAT_FRONT_TTL));
 			}
-		} else {
-			if ($this->conf(Base::O_MISC_HEARTBEAT_BACK)) {
-				$settings['interval'] = $this->conf(Base::O_MISC_HEARTBEAT_BACK_TTL);
-				Debug2::debug('[Tool] Heartbeat interval set to ' . $this->conf(Base::O_MISC_HEARTBEAT_BACK_TTL));
-			}
+		} elseif ($this->conf(Base::O_MISC_HEARTBEAT_BACK)) {
+			$settings['interval'] = $this->conf(Base::O_MISC_HEARTBEAT_BACK_TTL);
+			Debug2::debug('[Tool] Heartbeat interval set to ' . $this->conf(Base::O_MISC_HEARTBEAT_BACK_TTL));
 		}
 		return $settings;
 	}

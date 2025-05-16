@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with FacetWP.
  *
- * @since		2.9.9
+ * @since       2.9.9
  */
 namespace LiteSpeed\Thirdparty;
 

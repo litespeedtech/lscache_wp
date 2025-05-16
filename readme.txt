@@ -255,7 +255,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.2 - Unreleased =
+= 7.2 - Jun 5 2025 =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
 * **Core** Used `site_url` instead of `home_url` to fix the content folder parsing and QUIC.cloud calls.
 * 🐞**Cloud** Fixed a bug that when debug mode is ON, it will always try to sync usage even not activated QUIC.cloud.
@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Media** Resolved missing optimized image deletion when delete from grid mode. (PR#844, Zsombor Franczia #841)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.
+* **GUI** Show `Disable all features` message on all pages when turned on.
 * **Misc** Replaced use of `SHOW TABLES` with `DESCRIBE` to prevent database halt in very large WP Multisite installations. (Boone Gorges PR#834, PR#850)
 * **Misc** Used WP functions to check if running AJAX/CRON or not instead of consts.
 

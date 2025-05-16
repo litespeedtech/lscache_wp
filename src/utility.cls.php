@@ -3,8 +3,8 @@
 /**
  * The utility class.
  *
- * @since      	1.1.5
- * @since  		1.5 Moved into /inc
+ * @since       1.1.5
+ * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -128,25 +128,25 @@ class Utility extends Root
 		return $page_type;
 
 		// if ( is_404() ) {
-		// 	$page_type = '404';
+		// $page_type = '404';
 		// }
 		// elseif ( is_singular() ) {
-		// 	$page_type = get_post_type();
+		// $page_type = get_post_type();
 		// }
 		// elseif ( is_home() && get_option( 'show_on_front' ) == 'page' ) {
-		// 	$page_type = 'home';
+		// $page_type = 'home';
 		// }
 		// elseif ( is_front_page() ) {
-		// 	$page_type = 'front';
+		// $page_type = 'front';
 		// }
 		// elseif ( is_tax() ) {
-		// 	$page_type = get_queried_object()->taxonomy;
+		// $page_type = get_queried_object()->taxonomy;
 		// }
 		// elseif ( is_category() ) {
-		// 	$page_type = 'category';
+		// $page_type = 'category';
 		// }
 		// elseif ( is_tag() ) {
-		// 	$page_type = 'tag';
+		// $page_type = 'tag';
 		// }
 
 		// return $page_type;
@@ -304,7 +304,7 @@ class Utility extends Root
 	 * @since 1.3
 	 * @access private
 	 * @param string $needle The string to search with
-	 * @param array $haystack
+	 * @param array  $haystack
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
 	public static function str_hit_array($needle, $haystack, $has_ttl = false)
@@ -314,6 +314,7 @@ class Utility extends Root
 		}
 		/**
 		 * Safety check to avoid PHP warning
+		 *
 		 * @see  https://github.com/litespeedtech/lscache_wp/pull/131/commits/45fc03af308c7d6b5583d1664fad68f75fb6d017
 		 */
 		if (!is_array($haystack)) {
@@ -356,11 +357,9 @@ class Utility extends Root
 					$hit = $item;
 					break;
 				}
-			} else {
-				if (strpos($needle, $item) !== false) {
-					$hit = $item;
-					break;
-				}
+			} elseif (strpos($needle, $item) !== false) {
+				$hit = $item;
+				break;
 			}
 		}
 
@@ -379,7 +378,6 @@ class Utility extends Root
 	 * Improve compatibility to PHP old versions
 	 *
 	 * @since  1.2.2
-	 *
 	 */
 	public static function compatibility()
 	{
@@ -459,8 +457,8 @@ class Utility extends Root
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @param  string 	`https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
-	 * @return string 	`2018/08/test.jpg`
+	 * @param  string   `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
+	 * @return string   `2018/08/test.jpg`
 	 */
 	public static function att_short_path($url)
 	{
@@ -533,6 +531,7 @@ class Utility extends Root
 
 	/**
 	 * Validate ip v4
+	 *
 	 * @since 5.5
 	 */
 	public static function valid_ipv4($ip)
@@ -568,7 +567,7 @@ class Utility extends Root
 	 * @since  1.3
 	 * @access public
 	 * @param  string $content
-	 * @param  bool $type String handler type
+	 * @param  bool   $type String handler type
 	 * @return string|array
 	 */
 	public static function sanitize_lines($arr, $type = null)
@@ -655,10 +654,8 @@ class Utility extends Root
 				// If use admin url
 				if ($page === true) {
 					$page = 'admin.php';
-				} else {
-					if (strpos($page, '?') !== false) {
-						$prefix = '&';
-					}
+				} elseif (strpos($page, '?') !== false) {
+					$prefix = '&';
 				}
 				$combined = $page . $prefix . Router::ACTION . '=' . $action;
 			} else {
@@ -712,7 +709,6 @@ class Utility extends Root
 	 * Check if the host is the internal host
 	 *
 	 * @since  1.2.3
-	 *
 	 */
 	public static function internal($host)
 	{
@@ -731,6 +727,7 @@ class Utility extends Root
 
 		/**
 		 * Filter for multiple domains
+		 *
 		 * @since 2.9.4
 		 */
 		if (!isset(self::$_internal_domains)) {
@@ -780,10 +777,10 @@ class Utility extends Root
 			// $current_blog = (int) get_current_blog_id();
 			// $main_blog_id = (int) get_network()->site_id;
 			// if ( $current_blog === $main_blog_id ) {
-			// 	define( 'LITESPEED_IS_MAIN_BLOG', true );
+			// define( 'LITESPEED_IS_MAIN_BLOG', true );
 			// }
 			// else {
-			// 	define( 'LITESPEED_IS_MAIN_BLOG', false );
+			// define( 'LITESPEED_IS_MAIN_BLOG', false );
 			// }
 		}
 
@@ -808,6 +805,7 @@ class Utility extends Root
 
 		/**
 		 * Added new file postfix to be check if passed in
+		 *
 		 * @since 2.2.4
 		 */
 		if ($addition_postfix) {
@@ -816,6 +814,7 @@ class Utility extends Root
 
 		/**
 		 * Added this filter for those plugins which overwrite the filepath
+		 *
 		 * @see #101091 plugin `Hide My WordPress`
 		 * @since 2.2.3
 		 */

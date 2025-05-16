@@ -15,214 +15,208 @@
 
 namespace LiteSpeed\Lib\CSS_JS_MIN\PathConverter;
 
-defined( 'WPINC' ) || exit ;
+defined( 'WPINC' ) || exit;
 
-interface ConverterInterface
-{
-    /**
-     * Convert file paths.
-     *
-     * @param string $path The path to be converted
-     *
-     * @return string The new path
-     */
-    public function convert($path);
+interface ConverterInterface {
+
+	/**
+	 * Convert file paths.
+	 *
+	 * @param string $path The path to be converted
+	 *
+	 * @return string The new path
+	 */
+	public function convert( $path );
 }
 
-class Converter implements ConverterInterface
-{
-    /**
-     * @var string
-     */
-    protected $from;
+class Converter implements ConverterInterface {
 
-    /**
-     * @var string
-     */
-    protected $to;
+	/**
+	 * @var string
+	 */
+	protected $from;
 
-    /**
-     * @param string $from The original base path (directory, not file!)
-     * @param string $to   The new base path (directory, not file!)
-     * @param string $root Root directory (defaults to `getcwd`)
-     */
-    public function __construct($from, $to, $root = '')
-    {
-        $shared = $this->shared($from, $to);
-        if ($shared === '') {
-            // when both paths have nothing in common, one of them is probably
-            // absolute while the other is relative
-            $root = $root ?: getcwd();
-            $from = strpos($from, $root) === 0 ? $from : preg_replace('/\/+/', '/', $root.'/'.$from);
-            $to = strpos($to, $root) === 0 ? $to : preg_replace('/\/+/', '/', $root.'/'.$to);
+	/**
+	 * @var string
+	 */
+	protected $to;
 
-            // or traveling the tree via `..`
-            // attempt to resolve path, or assume it's fine if it doesn't exist
-            $from = @realpath($from) ?: $from;
-            $to = @realpath($to) ?: $to;
-        }
+	/**
+	 * @param string $from The original base path (directory, not file!)
+	 * @param string $to   The new base path (directory, not file!)
+	 * @param string $root Root directory (defaults to `getcwd`)
+	 */
+	public function __construct( $from, $to, $root = '' ) {
+		$shared = $this->shared( $from, $to );
+		if ( $shared === '' ) {
+			// when both paths have nothing in common, one of them is probably
+			// absolute while the other is relative
+			$root = $root ?: getcwd();
+			$from = strpos( $from, $root ) === 0 ? $from : preg_replace( '/\/+/', '/', $root . '/' . $from );
+			$to   = strpos( $to, $root ) === 0 ? $to : preg_replace( '/\/+/', '/', $root . '/' . $to );
 
-        $from = $this->dirname($from);
-        $to = $this->dirname($to);
+			// or traveling the tree via `..`
+			// attempt to resolve path, or assume it's fine if it doesn't exist
+			$from = @realpath( $from ) ?: $from;
+			$to   = @realpath( $to ) ?: $to;
+		}
 
-        $from = $this->normalize($from);
-        $to = $this->normalize($to);
+		$from = $this->dirname( $from );
+		$to   = $this->dirname( $to );
 
-        $this->from = $from;
-        $this->to = $to;
-    }
+		$from = $this->normalize( $from );
+		$to   = $this->normalize( $to );
 
-    /**
-     * Normalize path.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function normalize($path)
-    {
-        // deal with different operating systems' directory structure
-        $path = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $path), '/');
+		$this->from = $from;
+		$this->to   = $to;
+	}
 
-        // remove leading current directory.
-        if (substr($path, 0, 2) === './') {
-            $path = substr($path, 2);
-        }
+	/**
+	 * Normalize path.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	protected function normalize( $path ) {
+		// deal with different operating systems' directory structure
+		$path = rtrim( str_replace( DIRECTORY_SEPARATOR, '/', $path ), '/' );
 
-        // remove references to current directory in the path.
-        $path = str_replace('/./', '/', $path);
+		// remove leading current directory.
+		if ( substr( $path, 0, 2 ) === './' ) {
+			$path = substr( $path, 2 );
+		}
 
-        /*
-         * Example:
-         *     /home/forkcms/frontend/cache/compiled_templates/../../core/layout/css/../images/img.gif
-         * to
-         *     /home/forkcms/frontend/core/layout/images/img.gif
-         */
-        do {
-            $path = preg_replace('/[^\/]+(?<!\.\.)\/\.\.\//', '', $path, -1, $count);
-        } while ($count);
+		// remove references to current directory in the path.
+		$path = str_replace( '/./', '/', $path );
 
-        return $path;
-    }
+		/*
+		 * Example:
+		 *     /home/forkcms/frontend/cache/compiled_templates/../../core/layout/css/../images/img.gif
+		 * to
+		 *     /home/forkcms/frontend/core/layout/images/img.gif
+		 */
+		do {
+			$path = preg_replace( '/[^\/]+(?<!\.\.)\/\.\.\//', '', $path, -1, $count );
+		} while ( $count );
 
-    /**
-     * Figure out the shared path of 2 locations.
-     *
-     * Example:
-     *     /home/forkcms/frontend/core/layout/images/img.gif
-     * and
-     *     /home/forkcms/frontend/cache/minified_css
-     * share
-     *     /home/forkcms/frontend
-     *
-     * @param string $path1
-     * @param string $path2
-     *
-     * @return string
-     */
-    protected function shared($path1, $path2)
-    {
-        // $path could theoretically be empty (e.g. no path is given), in which
-        // case it shouldn't expand to array(''), which would compare to one's
-        // root /
-        $path1 = $path1 ? explode('/', $path1) : array();
-        $path2 = $path2 ? explode('/', $path2) : array();
+		return $path;
+	}
 
-        $shared = array();
+	/**
+	 * Figure out the shared path of 2 locations.
+	 *
+	 * Example:
+	 *     /home/forkcms/frontend/core/layout/images/img.gif
+	 * and
+	 *     /home/forkcms/frontend/cache/minified_css
+	 * share
+	 *     /home/forkcms/frontend
+	 *
+	 * @param string $path1
+	 * @param string $path2
+	 *
+	 * @return string
+	 */
+	protected function shared( $path1, $path2 ) {
+		// $path could theoretically be empty (e.g. no path is given), in which
+		// case it shouldn't expand to array(''), which would compare to one's
+		// root /
+		$path1 = $path1 ? explode( '/', $path1 ) : array();
+		$path2 = $path2 ? explode( '/', $path2 ) : array();
 
-        // compare paths & strip identical ancestors
-        foreach ($path1 as $i => $chunk) {
-            if (isset($path2[$i]) && $path1[$i] == $path2[$i]) {
-                $shared[] = $chunk;
-            } else {
-                break;
-            }
-        }
+		$shared = array();
 
-        return implode('/', $shared);
-    }
+		// compare paths & strip identical ancestors
+		foreach ( $path1 as $i => $chunk ) {
+			if ( isset( $path2[ $i ] ) && $path1[ $i ] == $path2[ $i ] ) {
+				$shared[] = $chunk;
+			} else {
+				break;
+			}
+		}
 
-    /**
-     * Convert paths relative from 1 file to another.
-     *
-     * E.g.
-     *     ../images/img.gif relative to /home/forkcms/frontend/core/layout/css
-     * should become:
-     *     ../../core/layout/images/img.gif relative to
-     *     /home/forkcms/frontend/cache/minified_css
-     *
-     * @param string $path The relative path that needs to be converted
-     *
-     * @return string The new relative path
-     */
-    public function convert($path)
-    {
-        // quit early if conversion makes no sense
-        if ($this->from === $this->to) {
-            return $path;
-        }
+		return implode( '/', $shared );
+	}
 
-        $path = $this->normalize($path);
-        // if we're not dealing with a relative path, just return absolute
-        if (strpos($path, '/') === 0) {
-            return $path;
-        }
+	/**
+	 * Convert paths relative from 1 file to another.
+	 *
+	 * E.g.
+	 *     ../images/img.gif relative to /home/forkcms/frontend/core/layout/css
+	 * should become:
+	 *     ../../core/layout/images/img.gif relative to
+	 *     /home/forkcms/frontend/cache/minified_css
+	 *
+	 * @param string $path The relative path that needs to be converted
+	 *
+	 * @return string The new relative path
+	 */
+	public function convert( $path ) {
+		// quit early if conversion makes no sense
+		if ( $this->from === $this->to ) {
+			return $path;
+		}
 
-        // normalize paths
-        $path = $this->normalize($this->from.'/'.$path);
+		$path = $this->normalize( $path );
+		// if we're not dealing with a relative path, just return absolute
+		if ( strpos( $path, '/' ) === 0 ) {
+			return $path;
+		}
 
-        // strip shared ancestor paths
-        $shared = $this->shared($path, $this->to);
-        $path = mb_substr($path, mb_strlen($shared));
-        $to = mb_substr($this->to, mb_strlen($shared));
+		// normalize paths
+		$path = $this->normalize( $this->from . '/' . $path );
 
-        // add .. for every directory that needs to be traversed to new path
-        $to = str_repeat('../', count(array_filter(explode('/', $to))));
+		// strip shared ancestor paths
+		$shared = $this->shared( $path, $this->to );
+		$path   = mb_substr( $path, mb_strlen( $shared ) );
+		$to     = mb_substr( $this->to, mb_strlen( $shared ) );
 
-        return $to.ltrim($path, '/');
-    }
+		// add .. for every directory that needs to be traversed to new path
+		$to = str_repeat( '../', count( array_filter( explode( '/', $to ) ) ) );
 
-    /**
-     * Attempt to get the directory name from a path.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function dirname($path)
-    {
-        if (@is_file($path)) {
-            return dirname($path);
-        }
+		return $to . ltrim( $path, '/' );
+	}
 
-        if (@is_dir($path)) {
-            return rtrim($path, '/');
-        }
+	/**
+	 * Attempt to get the directory name from a path.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	protected function dirname( $path ) {
+		if ( @is_file( $path ) ) {
+			return dirname( $path );
+		}
 
-        // no known file/dir, start making assumptions
+		if ( @is_dir( $path ) ) {
+			return rtrim( $path, '/' );
+		}
 
-        // ends in / = dir
-        if (mb_substr($path, -1) === '/') {
-            return rtrim($path, '/');
-        }
+		// no known file/dir, start making assumptions
 
-        // has a dot in the name, likely a file
-        if (preg_match('/.*\..*$/', basename($path)) !== 0) {
-            return dirname($path);
-        }
+		// ends in / = dir
+		if ( mb_substr( $path, -1 ) === '/' ) {
+			return rtrim( $path, '/' );
+		}
 
-        // you're on your own here!
-        return $path;
-    }
+		// has a dot in the name, likely a file
+		if ( preg_match( '/.*\..*$/', basename( $path ) ) !== 0 ) {
+			return dirname( $path );
+		}
+
+		// you're on your own here!
+		return $path;
+	}
 }
 
-class NoConverter implements ConverterInterface
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function convert($path)
-    {
-        return $path;
-    }
+class NoConverter implements ConverterInterface {
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function convert( $path ) {
+		return $path;
+	}
 }

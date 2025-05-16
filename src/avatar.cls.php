@@ -3,10 +3,10 @@
 /**
  * The avatar cache class
  *
- * @since 		3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -244,7 +244,11 @@ class Avatar extends Base
 		// Generate
 		$this->_maybe_mk_cache_folder('avatar');
 
-		$response = wp_safe_remote_get($url, array('timeout' => 180, 'stream' => true, 'filename' => $file));
+		$response = wp_safe_remote_get($url, array(
+			'timeout' => 180,
+			'stream' => true,
+			'filename' => $file,
+		));
 
 		Debug2::debug('[Avatar] _generate [url] ' . $url);
 

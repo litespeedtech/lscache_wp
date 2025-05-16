@@ -3,7 +3,7 @@
 /**
  * The optimize css class.
  *
- * @since      	2.3
+ * @since       2.3
  */
 
 namespace LiteSpeed;
@@ -35,6 +35,7 @@ class CSS extends Base
 
 	/**
 	 * HTML lazyload CSS
+	 *
 	 * @since 4.0
 	 */
 	public function prepare_html_lazy()
@@ -230,7 +231,7 @@ class CSS extends Base
 				$v['is_webp'] = false;
 			}
 
-			$i++;
+			++$i;
 			$res = $this->_send_req($v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $type, $v['is_mobile'], $v['is_webp']);
 			if (!$res) {
 				// Status is wrong, drop this this->_queue
@@ -243,7 +244,7 @@ class CSS extends Base
 
 				if ($i > 3) {
 					GUI::print_loading(count($this->_queue), $type_tag);
-					return Router::self_redirect(Router::ACTION_CSS, CSS::TYPE_GEN_CCSS);
+					return Router::self_redirect(Router::ACTION_CSS, self::TYPE_GEN_CCSS);
 				}
 
 				continue;
@@ -264,7 +265,7 @@ class CSS extends Base
 
 			if ($i > 3) {
 				GUI::print_loading(count($this->_queue), $type_tag);
-				return Router::self_redirect(Router::ACTION_CSS, CSS::TYPE_GEN_CCSS);
+				return Router::self_redirect(Router::ACTION_CSS, self::TYPE_GEN_CCSS);
 			}
 		}
 	}
@@ -398,11 +399,11 @@ class CSS extends Base
 		$html = $this->prepare_html($request_url, $user_agent);
 		list($css, $html) = $this->prepare_css($html, true, true);
 		// var_dump( $css );
-		// 		$html = <<<EOT
+		// $html = <<<EOT
 
 		// EOT;
 
-		// 		$css = <<<EOT
+		// $css = <<<EOT
 
 		// EOT;
 		$data = array(
@@ -549,6 +550,7 @@ class CSS extends Base
 
 	/**
 	 * Notify finished from server
+	 *
 	 * @since 7.1
 	 */
 	public function notify()
@@ -592,7 +594,7 @@ class CSS extends Base
 				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
 				$this->_save_con('ccss', $v['data_ccss'], $v['queue_k'], $is_mobile, $is_webp);
 
-				$valid_i++;
+				++$valid_i;
 			}
 
 			unset($this->_queue[$v['queue_k']]);

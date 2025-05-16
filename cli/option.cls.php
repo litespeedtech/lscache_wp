@@ -30,7 +30,6 @@ class Option extends Base
 	 *     $ wp litespeed-option set cache-priv false
 	 *     $ wp litespeed-option set 'cdn-mapping[url][0]' https://cdn.EXAMPLE.com
 	 *     $ wp litespeed-option set media-lqip_exc $'line1\nline2'
-	 *
 	 */
 	public function set($args, $assoc_args)
 	{
@@ -39,28 +38,29 @@ class Option extends Base
 		 *
 		 * For CDN/Crawler mutlti dimension settings, if all children are empty in one line, will delete that line. To delete one line, just set all to empty.
 		 * E.g. to delete cdn-mapping[0], need to run below:
-		 * 											`set cdn-mapping[url][0] ''`
-		 * 											`set cdn-mapping[inc_img][0] ''`
-		 * 											`set cdn-mapping[inc_css][0] ''`
-		 * 											`set cdn-mapping[inc_js][0] ''`
-		 * 											`set cdn-mapping[filetype][0] ''`
+		 *                                          `set cdn-mapping[url][0] ''`
+		 *                                          `set cdn-mapping[inc_img][0] ''`
+		 *                                          `set cdn-mapping[inc_css][0] ''`
+		 *                                          `set cdn-mapping[inc_js][0] ''`
+		 *                                          `set cdn-mapping[filetype][0] ''`
 		 */
 		$key = $args[0];
 		$val = $args[1];
 
 		/**
 		 * For CDN mapping, allow:
-		 * 		`set 'cdn-mapping[url][0]' https://the1st_cdn_url`
-		 * 		`set 'cdn-mapping[inc_img][0]' true`
-		 * 		`set 'cdn-mapping[inc_img][0]' 1`
+		 *      `set 'cdn-mapping[url][0]' https://the1st_cdn_url`
+		 *      `set 'cdn-mapping[inc_img][0]' true`
+		 *      `set 'cdn-mapping[inc_img][0]' 1`
+		 *
 		 * @since  2.7.1
 		 *
 		 * For Crawler cookies:
-		 * 		`set 'crawler-cookies[name][0]' my_currency`
-		 * 		`set 'crawler-cookies[vals][0]' "USD\nTWD"`
+		 *      `set 'crawler-cookies[name][0]' my_currency`
+		 *      `set 'crawler-cookies[vals][0]' "USD\nTWD"`
 		 *
 		 * For multi lines setting:
-		 * 		`set media-lqip_exc $'img1.jpg\nimg2.jpg'`
+		 *      `set media-lqip_exc $'img1.jpg\nimg2.jpg'`
 		 */
 
 		// Build raw data
@@ -91,7 +91,6 @@ class Option extends Base
 	 *     # Get all options
 	 *     $ wp litespeed-option all
 	 *     $ wp litespeed-option all --json
-	 *
 	 */
 	public function all($args, $assoc_args)
 	{
@@ -115,13 +114,25 @@ class Option extends Base
 						foreach ($v2 as $k3 => $v3) {
 							// $k3 = 'url/inc_img/name/vals'
 							if (is_array($v3)) {
-								$option_out[] = array('key' => '', 'value' => '');
+								$option_out[] = array(
+									'key' => '',
+									'value' => '',
+								);
 								foreach ($v3 as $k4 => $v4) {
-									$option_out[] = array('key' => $k4 == 0 ? "{$k}[$k3][$k2]" : '', 'value' => $v4);
+									$option_out[] = array(
+										'key' => $k4 == 0 ? "{$k}[$k3][$k2]" : '',
+										'value' => $v4,
+									);
 								}
-								$option_out[] = array('key' => '', 'value' => '');
+								$option_out[] = array(
+									'key' => '',
+									'value' => '',
+								);
 							} else {
-								$option_out[] = array('key' => "{$k}[$k3][$k2]", 'value' => $v3);
+								$option_out[] = array(
+									'key' => "{$k}[$k3][$k2]",
+									'value' => $v3,
+								);
 							}
 						}
 					}
@@ -129,11 +140,20 @@ class Option extends Base
 				continue;
 			} elseif (is_array($v) && $v) {
 				// $v = implode( PHP_EOL, $v );
-				$option_out[] = array('key' => '', 'value' => '');
+				$option_out[] = array(
+					'key' => '',
+					'value' => '',
+				);
 				foreach ($v as $k2 => $v2) {
-					$option_out[] = array('key' => $k2 == 0 ? $k : '', 'value' => $v2);
+					$option_out[] = array(
+						'key' => $k2 == 0 ? $k : '',
+						'value' => $v2,
+					);
 				}
-				$option_out[] = array('key' => '', 'value' => '');
+				$option_out[] = array(
+					'key' => '',
+					'value' => '',
+				);
 				continue;
 			}
 
@@ -145,7 +165,10 @@ class Option extends Base
 				$v = "''";
 			}
 
-			$option_out[] = array('key' => $k, 'value' => $v);
+			$option_out[] = array(
+				'key' => $k,
+				'value' => $v,
+			);
 		}
 
 		WP_CLI\Utils\format_items('table', $option_out, array('key', 'value'));
@@ -161,7 +184,6 @@ class Option extends Base
 	 *     # Get one option
 	 *     $ wp litespeed-option get cache-priv
 	 *     $ wp litespeed-option get 'cdn-mapping[url][0]'
-	 *
 	 */
 	public function get($args, $assoc_args)
 	{
@@ -196,8 +218,8 @@ class Option extends Base
 		/**
 		 * For CDN_mapping and crawler_cookies
 		 * Examples of option name:
-		 * 		cdn-mapping[url][0]
-		 * 		crawler-cookies[name][1]
+		 *      cdn-mapping[url][0]
+		 *      crawler-cookies[name][1]
 		 */
 		if ($id == self::O_CDN_MAPPING) {
 			if (!in_array($child, array(self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE))) {
@@ -215,16 +237,14 @@ class Option extends Base
 		if ($id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES) {
 			if (!empty($v[$numeric][$child])) {
 				$v = $v[$numeric][$child];
-			} else {
-				if ($id == self::O_CDN_MAPPING) {
-					if (in_array($child, array(self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS))) {
-						$v = 0;
-					} else {
-						$v = "''";
-					}
+			} elseif ($id == self::O_CDN_MAPPING) {
+				if (in_array($child, array(self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS))) {
+					$v = 0;
 				} else {
 					$v = "''";
 				}
+			} else {
+				$v = "''";
 			}
 		}
 
@@ -257,7 +277,6 @@ class Option extends Base
 	 *
 	 *     # Export options to a file.
 	 *     $ wp litespeed-option export
-	 *
 	 */
 	public function export($args, $assoc_args)
 	{
@@ -298,7 +317,6 @@ class Option extends Base
 	 *
 	 *     # Import options from CURRENTDIR/options.txt
 	 *     $ wp litespeed-option import options.txt
-	 *
 	 */
 	public function import($args, $assoc_args)
 	{
@@ -333,9 +351,7 @@ class Option extends Base
 	 *
 	 *     # Import options from https://domain.com/options.txt
 	 *     $ wp litespeed-option import_remote https://domain.com/options.txt
-	 *
 	 */
-
 	public function import_remote($args, $assoc_args)
 	{
 		$file = $args[0];
@@ -363,7 +379,6 @@ class Option extends Base
 	 *
 	 *     # Reset all options
 	 *     $ wp litespeed-option reset
-	 *
 	 */
 	public function reset()
 	{

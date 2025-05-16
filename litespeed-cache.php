@@ -26,7 +26,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
 defined('WPINC') || exit();
 
@@ -38,11 +37,12 @@ if (defined('LSCWP_V')) {
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
-!defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php'); //LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
+!defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php'); // LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
  * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`
+ *
  * @since  5.2 Auto correct protocol for CONTENT URL
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
@@ -55,6 +55,7 @@ if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($site_url, 0, 5) == 'http
 
 /**
  * Static cache files consts
+ *
  * @since  3.0
  */
 !defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
@@ -124,6 +125,7 @@ if (!function_exists('litespeed_exception_handler')) {
 
 /**
  * Overwrite the WP nonce funcs outside of LiteSpeed namespace
+ *
  * @since  3.0
  */
 if (!function_exists('litespeed_define_nonce_func')) {
@@ -174,12 +176,12 @@ if (!function_exists('litespeed_define_nonce_func')) {
 if (!function_exists('run_litespeed_cache')) {
 	function run_litespeed_cache()
 	{
-		//Check minimum PHP requirements, which is 7.2 at the moment.
+		// Check minimum PHP requirements, which is 7.2 at the moment.
 		if (version_compare(PHP_VERSION, '7.2.0', '<')) {
 			return;
 		}
 
-		//Check minimum WP requirements, which is 5.3 at the moment.
+		// Check minimum WP requirements, which is 5.3 at the moment.
 		if (version_compare($GLOBALS['wp_version'], '5.3', '<')) {
 			return;
 		}

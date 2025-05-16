@@ -1,38 +1,39 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $presets = array();
 
 $presets['essentials'] = array(
-	'title' => __( 'Essentials', 'litespeed-cache' ),
-	'body' => array(
+	'title'  => __( 'Essentials', 'litespeed-cache' ),
+	'body'   => array(
 		__( 'Default Cache', 'litespeed-cache' ),
 		__( 'Higher TTL', 'litespeed-cache' ),
-		__( 'Browser Cache', 'litespeed-cache' )
+		__( 'Browser Cache', 'litespeed-cache' ),
 	),
 	'footer' => array(
 		__( 'This no-risk preset is appropriate for all websites. Good for new users, simple websites, or cache-oriented development.', 'litespeed-cache' ),
-		__( 'A Domain Key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' )
-	)
+		__( 'A Domain Key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' ),
+	),
 );
 
 $presets['basic'] = array(
-	'title' => __( 'Basic', 'litespeed-cache' ),
-	'body' => array(
+	'title'  => __( 'Basic', 'litespeed-cache' ),
+	'body'   => array(
 		__( 'Everything in Essentials, Plus', 'litespeed-cache' ),
 		__( 'Image Optimization', 'litespeed-cache' ),
-		__( 'Mobile Cache', 'litespeed-cache' )
+		__( 'Mobile Cache', 'litespeed-cache' ),
 	),
 	'footer' => array(
 		__( 'This low-risk preset introduces basic optimizations for speed and user experience. Appropriate for enthusiastic beginners.', 'litespeed-cache' ),
-		__( 'A Domain Key is required to use this preset. Includes optimizations known to improve site score in page speed measurement tools.', 'litespeed-cache' )
-	)
+		__( 'A Domain Key is required to use this preset. Includes optimizations known to improve site score in page speed measurement tools.', 'litespeed-cache' ),
+	),
 );
 
 $presets['advanced'] = array(
-	'title' => __( 'Advanced (Recommended)', 'litespeed-cache' ),
-	'body' => array(
+	'title'  => __( 'Advanced (Recommended)', 'litespeed-cache' ),
+	'body'   => array(
 		__( 'Everything in Basic, Plus', 'litespeed-cache' ),
 		__( 'Guest Mode and Guest Optimization', 'litespeed-cache' ),
 		__( 'CSS, JS and HTML Minification', 'litespeed-cache' ),
@@ -42,43 +43,43 @@ $presets['advanced'] = array(
 		__( 'Gravatar Cache', 'litespeed-cache' ),
 		__( 'Remove Query Strings from Static Files', 'litespeed-cache' ),
 		__( 'Remove WordPress Emoji', 'litespeed-cache' ),
-		__( 'Remove Noscript Tags', 'litespeed-cache' )
+		__( 'Remove Noscript Tags', 'litespeed-cache' ),
 	),
 	'footer' => array(
 		__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools.', 'litespeed-cache' ),
-		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
-	)
+		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
+	),
 );
 
 $presets['aggressive'] = array(
-	'title' => __( 'Aggressive', 'litespeed-cache' ),
-	'body' => array(
+	'title'  => __( 'Aggressive', 'litespeed-cache' ),
+	'body'   => array(
 		__( 'Everything in Advanced, Plus', 'litespeed-cache' ),
 		__( 'CSS & JS Combine', 'litespeed-cache' ),
 		__( 'Asynchronous CSS Loading with Critical CSS', 'litespeed-cache' ),
 		__( 'Removed Unused CSS for Users', 'litespeed-cache' ),
-		__( 'Lazy Load for Iframes', 'litespeed-cache' )
+		__( 'Lazy Load for Iframes', 'litespeed-cache' ),
 	),
 	'footer' => array(
 		__( 'This preset might work out of the box for some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning.', 'litespeed-cache' ),
-		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' )
-	)
+		__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
+	),
 );
 
 $presets['extreme'] = array(
-	'title' => __( 'Extreme', 'litespeed-cache' ),
-	'body' => array(
+	'title'  => __( 'Extreme', 'litespeed-cache' ),
+	'body'   => array(
 		__( 'Everything in Aggressive, Plus', 'litespeed-cache' ),
 		__( 'Lazy Load for Images', 'litespeed-cache' ),
 		__( 'Viewport Image Generation', 'litespeed-cache' ),
 		__( 'JS Delayed', 'litespeed-cache' ),
 		__( 'Inline JS added to Combine', 'litespeed-cache' ),
-		__( 'Inline CSS added to Combine', 'litespeed-cache' )
+		__( 'Inline CSS added to Combine', 'litespeed-cache' ),
 	),
 	'footer' => array(
 		__( 'This preset almost certainly will require testing and exclusions for some CSS, JS and Lazy Loaded images. Pay special attention to logos, or HTML-based slider images.', 'litespeed-cache' ),
-		__( 'A Domain Key is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' )
-	)
+		__( 'A Domain Key is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' ),
+	),
 );
 
 ?>
@@ -93,11 +94,11 @@ $presets['extreme'] = array(
 <div class="litespeed-comparison-cards">
 	<?php
 	foreach ( array_keys( $presets ) as $name ) :
-		$title = $presets[ $name ]['title'];
-		$recommend = 'advanced' === $name;
-		$card_class = $recommend ? 'litespeed-comparison-card-rec' : '';
+		$title        = $presets[ $name ]['title'];
+		$recommend    = 'advanced' === $name;
+		$card_class   = $recommend ? 'litespeed-comparison-card-rec' : '';
 		$button_class = $recommend ? 'button-primary' : 'button-secondary';
-	?>
+		?>
 	<div class="litespeed-comparison-card postbox <?php echo $card_class; ?>">
 		<div class="litespeed-card-content">
 			<div class="litespeed-card-header">
@@ -141,19 +142,19 @@ foreach ( Preset::get_backups() as $backup ) {
 		continue;
 	}
 	$timestamp = $backup[1];
-	$time = trim( Utility::readable_time( $timestamp ) );
-	$name = empty( $backup[3] ) ? null : $backup[3];
-	$title = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
-	$title = null === $title ? __( 'unknown', 'litespeed-cache' ) : $title;
+	$time      = trim( Utility::readable_time( $timestamp ) );
+	$name      = empty( $backup[3] ) ? null : $backup[3];
+	$title     = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
+	$title     = null === $title ? __( 'unknown', 'litespeed-cache' ) : $title;
 	$backups[] = array(
 		'timestamp' => $timestamp,
-		'time' => $time,
-		'title' => $title
+		'time'      => $time,
+		'title'     => $title,
 	);
 }
 
 if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
-?>
+	?>
 <h3 class="litespeed-title-short">
 	<?php _e( 'History', 'litespeed-cache' ); ?>
 </h3>
@@ -190,5 +191,5 @@ if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 		<?php _e( 'Restore Settings', 'litespeed-cache' ); ?>
 	</a>
 </p>
-<?php
+	<?php
 endforeach;

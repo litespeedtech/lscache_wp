@@ -3,10 +3,10 @@
 /**
  * The quic.cloud class.
  *
- * @since      	2.4.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src/cdn
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.4.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src/cdn
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed\CDN;

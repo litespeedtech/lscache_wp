@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the WP-PostRatings plugin.
  *
- * @since		1.1.1
+ * @since       1.1.1
  */
 namespace LiteSpeed\Thirdparty;
 

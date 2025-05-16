@@ -4,7 +4,8 @@
 	"license": "GPLv3",
 	"scripts": {
 		"format": "prettier --write . '**/*.php'",
-		"format-check": "prettier --check . '**/*.php'"
+		"format-check": "prettier --check . '**/*.php'",
+		"wpformat": "vendor/bin/phpcbf --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.21.0",

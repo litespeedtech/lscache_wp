@@ -3,10 +3,10 @@
 /**
  * The class to store and manage litespeed db data.
  *
- * @since      	1.3.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.3.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -30,8 +30,8 @@ class Data extends Root
 
 	private $_db_site_updater = array(
 		// Example
-		// '2.0'	=> array(
-		// 	'litespeed_update_site_2_0',
+		// '2.0'    => array(
+		// 'litespeed_update_site_2_0',
 		// ),
 	);
 
@@ -101,7 +101,7 @@ class Data extends Root
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-		// 	return;
+		// return;
 		// }
 
 		if ($this->_get_upgrade_lock()) {
@@ -488,6 +488,7 @@ class Data extends Root
 
 	/**
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
+	 *
 	 * @since  4.0
 	 */
 	public function save_url($request_url, $vary, $file_type, $filecon_md5, $path, $mobile = false, $webp = false)
@@ -570,6 +571,7 @@ class Data extends Root
 
 	/**
 	 * Load CCSS related file
+	 *
 	 * @since  4.0
 	 */
 	public function load_url_file($request_url, $vary, $file_type)
@@ -605,6 +607,7 @@ class Data extends Root
 
 	/**
 	 * Mark all entries of one URL to expired
+	 *
 	 * @since 4.5
 	 */
 	public function mark_as_expired($request_url, $auto_q = false)
@@ -760,8 +763,8 @@ class Data extends Root
 	 * Load file per line
 	 *
 	 * Support two kinds of comments:
-	 * 		1. `# this is comment`
-	 * 		2. `##this is comment`
+	 *      1. `# this is comment`
+	 *      2. `##this is comment`
 	 *
 	 * @since  3.5
 	 */

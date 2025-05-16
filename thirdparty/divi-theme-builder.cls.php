@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with DIVI Theme.
  *
- * @since		2.9.0
+ * @since       2.9.0
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -39,12 +39,14 @@ class Divi_Theme_Builder
 
 		/**
 		 * Add contact form to nonce
+		 *
 		 * @since  2.9.7.1 #475461
 		 */
 		do_action('litespeed_nonce', 'et-pb-contact-form-submit');
 
 		/**
 		 * Subscribe module and A/B logging
+		 *
 		 * @since  3.0 @Robert Staddon
 		 */
 		do_action('litespeed_nonce', 'et_frontend_nonce');

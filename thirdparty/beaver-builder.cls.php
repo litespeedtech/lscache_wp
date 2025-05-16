@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the Beaver Builder plugin.
  *
- * @since		3.0
+ * @since       3.0
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -13,8 +13,8 @@ class Beaver_Builder
 	/**
 	 * Detects if Beaver_Builder is active.
 	 *
-	 *@since 3.0
-	 *@access public
+	 * @since 3.0
+	 * @access public
 	 */
 	public static function detect()
 	{
@@ -24,6 +24,7 @@ class Beaver_Builder
 
 		/**
 		 * Purge All hooks
+		 *
 		 * @see  beaver-builder/extensions/fi-builder-cache-helper/classes/class-fi-builder-cache-helper.php
 		 */
 		$actions = array('fl_builder_cache_cleared', 'fl_builder_after_save_layout', 'fl_builder_after_save_user_template', 'upgrader_process_complete');

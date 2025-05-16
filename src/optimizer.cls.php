@@ -3,10 +3,10 @@
 /**
  * The optimize4 class.
  *
- * @since      	1.9
- * @package  	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.9
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -53,6 +53,7 @@ class Optimizer extends Root
 
 		/**
 		 * Added exception capture when minify
+		 *
 		 * @since  2.2.3
 		 */
 		try {
@@ -168,6 +169,7 @@ class Optimizer extends Root
 
 	/**
 	 * Load a single file
+	 *
 	 * @since  4.0
 	 */
 	public function optm_snippet($content, $file_type, $minify, $src, $media = false)

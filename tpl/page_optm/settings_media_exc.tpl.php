@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 ?>
 
@@ -21,11 +22,11 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ); ?>
 				<?php Doc::full_or_partial_url(); ?>
 				<?php Doc::one_per_line(); ?>
-                <br /><?php echo __( 'Useful for above-the-fold images causing CLS (a Core Web Vitals metric).', 'litespeed-cache' ); ?>
+				<br /><?php echo __( 'Useful for above-the-fold images causing CLS (a Core Web Vitals metric).', 'litespeed-cache' ); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_media_lazy_img_excludes</code>' ); ?>
-					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ); ?>
+					<?php printf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_media_lazy_img_excludes</code>' ); ?>
+					<?php printf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ); ?>
 				</font>
 			</div>
 		</td>

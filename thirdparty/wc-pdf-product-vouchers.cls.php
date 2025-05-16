@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with WooCommerce PDF Product Vouchers.
  *
- * @since		5.1.0
+ * @since       5.1.0
  */
 namespace LiteSpeed\Thirdparty;
 

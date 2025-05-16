@@ -3,10 +3,10 @@
 /**
  * The error class.
  *
- * @since      	3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -170,7 +170,7 @@ class Error
 				break;
 
 			case 'failed_tb_creation':
-				$msg = __('Failed to create table %s! SQL: %s.', 'litespeed-cache');
+				$msg = __('Failed to create table %1$s! SQL: %2$s.', 'litespeed-cache');
 				break;
 
 			case 'crawler_disabled':

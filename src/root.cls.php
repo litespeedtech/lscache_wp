@@ -3,7 +3,7 @@
 /**
  * The abstract instance
  *
- * @since      	3.0
+ * @since       3.0
  */
 
 namespace LiteSpeed;
@@ -212,6 +212,7 @@ abstract class Root
 
 	/**
 	 * Load an instance or create it if not existed
+	 *
 	 * @since  4.0
 	 */
 	public static function cls($cls = false, $unset = false, $data = false)
@@ -229,11 +230,9 @@ abstract class Root
 			}
 
 			self::$_instances[$cls_tag] = new $cls($data);
-		} else {
-			if ($unset) {
-				unset(self::$_instances[$cls_tag]);
-				return;
-			}
+		} elseif ($unset) {
+			unset(self::$_instances[$cls_tag]);
+			return;
 		}
 
 		return self::$_instances[$cls_tag];
@@ -642,6 +641,7 @@ abstract class Root
 
 	/**
 	 * Reload summary
+	 *
 	 * @since 5.0
 	 */
 	public static function reload_summary()

@@ -32,7 +32,7 @@ class File
 	}
 
 	/**
-	 *	Delete folder
+	 *  Delete folder
 	 *
 	 * @since 2.1
 	 */
@@ -63,8 +63,8 @@ class File
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
-	 * @param int $start_line
-	 * @param int $lines
+	 * @param int    $start_line
+	 * @param int    $lines
 	 */
 	public static function read($filename, $start_line = null, $lines = null)
 	{
@@ -112,8 +112,8 @@ class File
 	 *
 	 * @since 1.1.5
 	 * @access public
-	 * @param string $filename
-	 * @param string $data
+	 * @param string  $filename
+	 * @param string  $data
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
@@ -126,8 +126,8 @@ class File
 	 * Save data to file
 	 *
 	 * @since 1.1.0
-	 * @param string $filename
-	 * @param string $data
+	 * @param string  $filename
+	 * @param string  $data
 	 * @param boolean $mkdir
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
@@ -222,7 +222,7 @@ class File
 	 * @param string       $filename  Filename to alter.
 	 * @param string       $marker    The marker to alter.
 	 * @param array|string $insertion The new content to insert.
-	 * @param bool 	       $prepend Prepend insertion if not exist.
+	 * @param bool         $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
 	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
@@ -235,7 +235,7 @@ class File
 			$insertion = array();
 		}
 
-		return self::_insert_with_markers($filename, $marker, $insertion, $prepend); //todo: capture exceptions
+		return self::_insert_with_markers($filename, $marker, $insertion, $prepend); // todo: capture exceptions
 	}
 
 	/**

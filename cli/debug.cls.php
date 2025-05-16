@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed\CLI;
+
 defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;
@@ -29,7 +30,6 @@ class Debug
 	 *
 	 *     # Send env report to LiteSpeed
 	 *     $ wp litespeed-debug send
-	 *
 	 */
 	public function send()
 	{

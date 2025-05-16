@@ -5,11 +5,11 @@
  *
  * This maintains all the options and settings for this plugin.
  *
- * @since      	1.0.0
- * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.0.0
+ * @since       1.5 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -37,6 +37,7 @@ class Conf extends Base
 
 		/**
 		 * Detect if has quic.cloud set
+		 *
 		 * @since  2.9.7
 		 */
 		if ($this->conf(self::O_CDN_QUIC)) {
@@ -221,17 +222,13 @@ class Conf extends Base
 							continue;
 						}
 					}
-				} else {
-					if ($this->network_conf(self::NETWORK_O_USE_PRIMARY)) {
-						if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) {
-							// This case will use primary_options override always
-							continue;
-						}
-					} else {
-						if ($this->conf($k) != self::VAL_ON2) {
-							continue;
-						}
+				} elseif ($this->network_conf(self::NETWORK_O_USE_PRIMARY)) {
+					if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) {
+						// This case will use primary_options override always
+						continue;
 					}
+				} elseif ($this->conf($k) != self::VAL_ON2) {
+					continue;
 				}
 			}
 
@@ -258,6 +255,7 @@ class Conf extends Base
 
 		/**
 		 * In case this is called outside the admin page
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -494,6 +492,7 @@ class Conf extends Base
 
 		/**
 		 * CDN related actions - QUIC.cloud
+		 *
 		 * @since 2.3
 		 */
 		$this->cls('CDN\Quic')->try_sync_conf();
@@ -511,7 +510,7 @@ class Conf extends Base
 	{
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
-		// 	return;
+		// return;
 		// }
 
 		if ($id == self::_VER) {
@@ -665,9 +664,9 @@ class Conf extends Base
 	{
 		/**
 		 * NOTE: For URL Query String setting,
-		 * 		1. If append lines to an array setting e.g. `cache-force_uri`, use `set[cache-force_uri][]=the_url`.
-		 *   	2. If replace the array setting with one line, use `set[cache-force_uri]=the_url`.
-		 *   	3. If replace the array setting with multi lines value, use 2 then 1.
+		 *      1. If append lines to an array setting e.g. `cache-force_uri`, use `set[cache-force_uri][]=the_url`.
+		 *      2. If replace the array setting with one line, use `set[cache-force_uri]=the_url`.
+		 *      3. If replace the array setting with multi lines value, use 2 then 1.
 		 */
 		if (empty($_GET[self::TYPE_SET]) || !is_array($_GET[self::TYPE_SET])) {
 			return;

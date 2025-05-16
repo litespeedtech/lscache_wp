@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 ?>
@@ -31,25 +32,25 @@ defined( 'WPINC' ) || exit;
 		<td>
 		<?php
 			// if set, use value as input value
-			if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
+		if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
 
-				// if enabled, check the setting in file
-				if ( defined( 'LITESPEED_ON' ) ) {
+			// if enabled, check the setting in file
+			if ( defined( 'LITESPEED_ON' ) ) {
 
-					try {
-						$mobile_agents = Htaccess::cls()->current_mobile_agents();
-						if ( $mobile_agents !== Utility::arr2regex( $this->conf( $id ), true ) ) {
-							echo '<div class="litespeed-callout notice notice-error inline"><p>'
-									. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
-									. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
-								. '</p></div>';
-						}
-					} catch( \Exception $e ) {
-						echo '<div class="litespeed-callout notice notice-error inline"><p>' . $e->getMessage() . '</p></div>';
+				try {
+					$mobile_agents = Htaccess::cls()->current_mobile_agents();
+					if ( $mobile_agents !== Utility::arr2regex( $this->conf( $id ), true ) ) {
+						echo '<div class="litespeed-callout notice notice-error inline"><p>'
+								. __( 'Htaccess did not match configuration option.', 'litespeed-cache' )
+								. ' ' . sprintf( __( 'Htaccess rule is: %s', 'litespeed-cache' ), '<code>' . $mobile_agents . '</code>' )
+							. '</p></div>';
 					}
-
+				} catch ( \Exception $e ) {
+					echo '<div class="litespeed-callout notice notice-error inline"><p>' . $e->getMessage() . '</p></div>';
 				}
-			} ?>
+			}
+		}
+		?>
 
 			<div class="litespeed-textarea-recommended">
 				<div>
@@ -68,7 +69,7 @@ defined( 'WPINC' ) || exit;
 				<?php if ( $this->conf( Base::O_CACHE_MOBILE ) && ! $this->conf( $id ) ) : ?>
 				<font class="litespeed-warning">
 					❌
-					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ); ?>
+					<?php printf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __( 'Cache Mobile', 'litespeed-cache' ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'List of Mobile User Agents', 'litespeed-cache' ) . '</code>' ); ?>
 				</font>
 				<?php endif; ?>
 			</div>

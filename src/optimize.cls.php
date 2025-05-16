@@ -3,7 +3,7 @@
 /**
  * The optimize class.
  *
- * @since      	1.2.2
+ * @since       1.2.2
  */
 
 namespace LiteSpeed;
@@ -50,6 +50,7 @@ class Optimize extends Base
 
 	/**
 	 * Constructor
+	 *
 	 * @since  4.0
 	 */
 	public function __construct()
@@ -112,6 +113,7 @@ class Optimize extends Base
 		} else {
 			/**
 			 * Exclude js from deferred setting
+			 *
 			 * @since 1.5
 			 */
 			if ($this->cfg_js_defer) {
@@ -124,18 +126,21 @@ class Optimize extends Base
 
 		/**
 		 * Add vary filter for Role Excludes
+		 *
 		 * @since  1.6
 		 */
 		add_filter('litespeed_vary', array($this, 'vary_add_role_exclude'));
 
 		/**
 		 * Prefetch DNS
+		 *
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init();
 
 		/**
 		 * Preconnect
+		 *
 		 * @since 5.6.1
 		 */
 		$this->_dns_preconnect_init();
@@ -173,6 +178,7 @@ class Optimize extends Base
 		remove_filter('comment_text_rss', 'wp_staticize_emoji');
 		/**
 		 * Added for better result
+		 *
 		 * @since  1.6.2.1
 		 */
 		remove_action('wp_print_styles', 'print_emoji_styles');
@@ -412,17 +418,15 @@ class Optimize extends Base
 						}
 					}
 					// JS files
-					else {
-						if ($this->cfg_js_defer) {
-							$deferred = $this->_js_defer($html_list[$k], $src_info['src']);
-							if ($deferred) {
-								$this->content = str_replace($html_list[$k], $deferred, $this->content);
-							}
-						} elseif ($this->cfg_js_delay_inc) {
-							$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
-							if ($deferred) {
-								$this->content = str_replace($html_list[$k], $deferred, $this->content);
-							}
+					elseif ($this->cfg_js_defer) {
+						$deferred = $this->_js_defer($html_list[$k], $src_info['src']);
+						if ($deferred) {
+							$this->content = str_replace($html_list[$k], $deferred, $this->content);
+						}
+					} elseif ($this->cfg_js_delay_inc) {
+						$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
+						if ($deferred) {
+							$this->content = str_replace($html_list[$k], $deferred, $this->content);
 						}
 					}
 				}
@@ -455,6 +459,7 @@ class Optimize extends Base
 
 		/**
 		 * Font display optm
+		 *
 		 * @since  3.0
 		 */
 		$this->_font_optm();
@@ -581,10 +586,10 @@ class Optimize extends Base
 		 *
 		 * Could be multiple fonts
 		 *
-		 * 	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C600%2C700%2C800%2C300&#038;ver=4.9.8' type='text/css' media='all' />
-		 *	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%7CPT+Sans+Narrow%3A400%7CMontserrat%3A600&#038;subset=latin&#038;ver=4.9.8' type='text/css' media='all' />
-		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
-		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
+		 *  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C600%2C700%2C800%2C300&#038;ver=4.9.8' type='text/css' media='all' />
+		 *  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%7CPT+Sans+Narrow%3A400%7CMontserrat%3A600&#038;subset=latin&#038;ver=4.9.8' type='text/css' media='all' />
+		 *      -> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
+		 *  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
 		$script = 'WebFontConfig={google:{families:[';
 
@@ -797,6 +802,7 @@ class Optimize extends Base
 
 	/**
 	 * Build a single URL mapped filename (This will not save in DB)
+	 *
 	 * @since  4.0
 	 */
 	private function _build_single_hash_url($src, $file_type = 'css')
@@ -1114,6 +1120,7 @@ class Optimize extends Base
 				if (strpos($attrs['href'], 'fonts.googleapis.com') !== false) {
 					/**
 					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
+					 *
 					 * @since  2.7.3
 					 * @since  3.0 For font display optm, need to parse google fonts URL too
 					 */
@@ -1206,6 +1213,7 @@ class Optimize extends Base
 
 	/**
 	 * Async CSS snippet
+	 *
 	 * @since 3.5
 	 */
 	private function _async_css($ori)
@@ -1256,6 +1264,7 @@ class Optimize extends Base
 
 		/**
 		 * Exclude JS from setting
+		 *
 		 * @since 1.5
 		 */
 		if (Utility::str_hit_array($src, $this->cfg_js_defer_exc)) {

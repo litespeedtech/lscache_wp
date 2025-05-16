@@ -3,11 +3,11 @@
 /**
  * The plugin activation class.
  *
- * @since      	1.1.0
- * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.0
+ * @since       1.5 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -82,6 +82,7 @@ class Activation extends Base
 
 	/**
 	 * Uninstall plugin
+	 *
 	 * @since 1.1.0
 	 */
 	public static function uninstall_litespeed_cache()
@@ -163,12 +164,13 @@ class Activation extends Base
 			$bid = is_object($site) && property_exists($site, 'blog_id') ? $site->blog_id : $site;
 			$plugins = get_blog_option($bid, 'active_plugins', $default);
 			if (!empty($plugins) && in_array(LSCWP_BASENAME, $plugins, true)) {
-				$count++;
+				++$count;
 			}
 		}
 
 		/**
 		 * In case this is called outside the admin page
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -177,7 +179,7 @@ class Activation extends Base
 		}
 
 		if (is_plugin_active_for_network(LSCWP_BASENAME)) {
-			$count++;
+			++$count;
 		}
 		return $count;
 	}
@@ -196,7 +198,7 @@ class Activation extends Base
 		}
 		if ($count !== 1) {
 			// Not deactivating the last one.
-			$count--;
+			--$count;
 			set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
 			return false;
 		}
@@ -273,11 +275,11 @@ class Activation extends Base
 	 * NOTE: Only trigger this in backend admin access for efficiency concern
 	 *
 	 * Handle files:
-	 * 		1) wp-config.php;
-	 * 		2) adv-cache.php;
-	 * 		3) object-cache.php;
-	 * 		4) .htaccess;
-	 * 		5) .litespeed_conf.dat;
+	 *      1) wp-config.php;
+	 *      2) adv-cache.php;
+	 *      3) object-cache.php;
+	 *      4) .htaccess;
+	 *      5) .litespeed_conf.dat;
 	 *
 	 * @since 3.0
 	 * @access public
@@ -409,6 +411,7 @@ class Activation extends Base
 
 		/**
 		 * Follow WP's logic to locate wp-config file
+		 *
 		 * @see wp-load.php
 		 */
 		$conf_file = ABSPATH . 'wp-config.php';

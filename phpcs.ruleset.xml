@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ruleset name="CustomWordPress">
+    <description>WordPress with no whitespace changes</description>
+    <!-- Inherit WordPress standard -->
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/ruleset.xml -->
+    <rule ref="WordPress" />
+    <!-- Disable all whitespace-related sniffs -->
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/Sniffs/WhiteSpace/* (e.g., ControlStructureSpacingSniff.php, OperatorSpacingSniff.php) -->
+    <rule ref="WordPress.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Generic/Sniffs/WhiteSpace/* (e.g., ArbitraryParenthesesSpacingSniff.php, ScopeIndentSniff.php) -->
+    <rule ref="Generic.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Squiz/Sniffs/WhiteSpace/* (e.g., FunctionSpacingSniff.php, SuperfluousWhitespaceSniff.php) -->
+    <rule ref="Squiz.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/PEAR/Sniffs/WhiteSpace/* (e.g., ScopeClosingBraceSniff.php) -->
+    <rule ref="PEAR.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <!-- Disable specific function and array sniffs -->
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/Sniffs/Arrays/* (e.g., ArrayAssignmentRestrictionsSniff.php) -->
+    <rule ref="WordPress.Arrays">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Generic/Sniffs/Functions/FunctionCallArgumentSpacingSniff.php -->
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Squiz/Sniffs/Arrays/ArrayDeclarationSniff.php -->
+    <rule ref="Squiz.Arrays.ArrayDeclaration">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Squiz/Sniffs/Functions/MultiLineFunctionDeclarationSniff.php -->
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">
+        <severity>0</severity>
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/PEAR/Sniffs/Functions/FunctionCallSignatureSniff.php -->
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <severity>0</severity>
+    </rule>
+    <!-- Disable specific whitespace sniffs -->
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Generic/Sniffs/WhiteSpace/LanguageConstructSpacingSniff.php -->
+    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing">
+        <severity>0</severity>
+    </rule>
+    <!-- Exclude deprecated sniffs -->
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Generic/Sniffs/Functions/CallTimePassByReferenceSniff.php -->
+    <rule ref="Generic.Functions.CallTimePassByReference">
+        <severity>0</severity>
+        <exclude name="Generic.Functions.CallTimePassByReference" />
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Squiz/Sniffs/WhiteSpace/LanguageConstructSpacingSniff.php -->
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing">
+        <severity>0</severity>
+        <exclude name="Squiz.WhiteSpace.LanguageConstructSpacing" />
+    </rule>
+    <!-- Source: vendor/squizlabs/php_codesniffer/src/Standards/Squiz/Sniffs/WhiteSpace/PropertyLabelSpacingSniff.php -->
+    <rule ref="Squiz.WhiteSpace.PropertyLabelSpacing">
+        <severity>0</severity>
+        <exclude name="Squiz.WhiteSpace.PropertyLabelSpacing" />
+    </rule>
+    <!-- Keep critical WordPress rules -->
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/Sniffs/Security/* (e.g., NonceVerificationSniff.php) -->
+    <rule ref="WordPress.Security" />
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/Sniffs/NamingConventions/* (e.g., ValidFunctionNameSniff.php) -->
+    <rule ref="WordPress.NamingConventions" />
+    <!-- Source: vendor/wp-coding-standards/wpcs/WordPress/Sniffs/PHP/* (e.g., DevelopmentClassMemberOrderSniff.php) -->
+    <rule ref="WordPress.PHP" />
+    <!-- Specify files to check -->
+    <file>cli/</file>
+    <file>lib/</file>
+    <file>src/</file>
+    <file>tpl/</file>
+    <file>thirdparty/</file>
+    <file>autoload.php</file>
+    <file>litespeed-cache.php</file>
+</ruleset>

@@ -3,7 +3,7 @@
 /**
  * The plugin vary class to manage X-LiteSpeed-Vary
  *
- * @since      	1.1.3
+ * @since       1.1.3
  */
 
 namespace LiteSpeed;
@@ -27,7 +27,7 @@ class Vary extends Root
 	 */
 	// public function init()
 	// {
-	// 	$this->_update_vary_name();
+	// $this->_update_vary_name();
 	// }
 
 	/**
@@ -113,11 +113,9 @@ class Vary extends Root
 				}
 			}
 			// ESI is on, can be public cache
-			else {
-				if (!is_admin()) {
-					// Need to make sure vary is using group id
-					$this->cls('Control')->init_cacheable();
-				}
+			elseif (!is_admin()) {
+				// Need to make sure vary is using group id
+				$this->cls('Control')->init_cacheable();
 			}
 
 			// register logout hook to clear login status
@@ -149,6 +147,7 @@ class Vary extends Root
 
 		/**
 		 * Don't change for REST call because they don't carry on user info usually
+		 *
 		 * @since 1.6.7
 		 */
 		add_action('rest_api_init', function () {
@@ -259,6 +258,7 @@ class Vary extends Root
 	{
 		/**
 		 * Hook to bypass pending comment check for comment related plugins compatibility
+		 *
 		 * @since 2.9.5
 		 */
 		if (apply_filters('litespeed_vary_check_commenter_pending', true)) {
@@ -327,6 +327,7 @@ class Vary extends Root
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary();
@@ -348,6 +349,7 @@ class Vary extends Root
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary();
@@ -387,6 +389,7 @@ class Vary extends Root
 
 		/**
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
+		 *
 		 * @since 1.6.5
 		 */
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -396,6 +399,7 @@ class Vary extends Root
 
 		/**
 		 * Disable vary change if is from crawler
+		 *
 		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
 		 */
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], Crawler::FAST_USER_AGENT) === 0) {
@@ -550,6 +554,7 @@ class Vary extends Root
 
 		/**
 		 * Add filter
+		 *
 		 * @since 1.6 Added for Role Excludes for optimization cls
 		 * @since 1.6.2 Hooked to webp (checked in v4, no webp anymore)
 		 * @since 3.0 Used by 3rd hooks too
@@ -780,6 +785,7 @@ class Vary extends Root
 
 		/**
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
+		 *
 		 * @since 1.7
 		 */
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();

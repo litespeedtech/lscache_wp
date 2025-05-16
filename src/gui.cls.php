@@ -3,9 +3,9 @@
 /**
  * The frontend GUI class.
  *
- * @since      	1.3
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.3
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -22,7 +22,7 @@ class GUI extends Base
 	private $_promo_list = array(
 		'new_version' => array(7, false),
 		'score' => array(14, false),
-		// 'slack'		=> array( 3, false ),
+		// 'slack'      => array( 3, false ),
 	);
 
 	const LIB_GUEST_JS = 'assets/js/guest.min.js';
@@ -64,6 +64,7 @@ class GUI extends Base
 
 		/**
 		 * Turn on instant click
+		 *
 		 * @since  1.8.2
 		 */
 		if ($this->conf(self::O_UTIL_INSTANT_CLICK)) {
@@ -81,7 +82,7 @@ class GUI extends Base
 	{
 		echo '<div style="font-size: 25px; text-align: center; padding-top: 150px; width: 100%; position: absolute;">';
 		echo "<img width='35' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />   ";
-		echo sprintf(__('%1$s %2$s files left in queue', 'litespeed-cache'), $counter, $type);
+		printf(__('%1$s %2$s files left in queue', 'litespeed-cache'), $counter, $type);
 		echo '<p><a href="' . admin_url('admin.php?page=litespeed-page_optm') . '">' . __('Cancel', 'litespeed-cache') . '</a></p>';
 		echo '</div>';
 	}
@@ -133,9 +134,9 @@ class GUI extends Base
 	 * Get classname of PageSpeed Score
 	 *
 	 * Scale:
-	 * 	90-100 (fast)
-	 * 	50-89 (average)
-	 * 	0-49 (slow)
+	 *  90-100 (fast)
+	 *  50-89 (average)
+	 *  0-49 (slow)
 	 *
 	 * @since  2.9
 	 * @access public
@@ -394,7 +395,10 @@ class GUI extends Base
 			'id' => 'litespeed-menu',
 			'title' => '<span class="ab-icon"></span>',
 			'href' => get_admin_url(null, 'admin.php?page=litespeed'),
-			'meta' => array('tabindex' => 0, 'class' => 'litespeed-top-toolbar'),
+			'meta' => array(
+				'tabindex' => 0,
+				'class' => 'litespeed-top-toolbar',
+			),
 		));
 
 		$wp_admin_bar->add_menu(array(
@@ -604,15 +608,18 @@ class GUI extends Base
 			'id' => 'litespeed-menu',
 			'title' => '<span class="ab-icon" title="' . __('LiteSpeed Cache Purge All', 'litespeed-cache') . ' - ' . __('LSCache', 'litespeed-cache') . '"></span>',
 			'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LSCACHE),
-			'meta' => array('tabindex' => 0, 'class' => 'litespeed-top-toolbar'),
+			'meta' => array(
+				'tabindex' => 0,
+				'class' => 'litespeed-top-toolbar',
+			),
 		));
 		// }
 		// else {
-		// 	$wp_admin_bar->add_menu( array(
-		// 		'id'    => 'litespeed-menu',
-		// 		'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '"></span>',
-		// 		'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-		// 	) );
+		// $wp_admin_bar->add_menu( array(
+		// 'id'    => 'litespeed-menu',
+		// 'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '"></span>',
+		// 'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+		// ) );
 		// }
 
 		$wp_admin_bar->add_menu(array(
@@ -910,7 +917,7 @@ class GUI extends Base
 	public static function clean_wrapper_begin($counter = false)
 	{
 		if ($counter === false) {
-			self::$_clean_counter++;
+			++self::$_clean_counter;
 			$counter = self::$_clean_counter;
 			Debug2::debug("GUI clean wrapper $counter begin");
 		}

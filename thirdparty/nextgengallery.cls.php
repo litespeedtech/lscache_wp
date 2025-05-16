@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the NextGen Gallery plugin.
  *
- * @since		1.0.5
+ * @since       1.0.5
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -23,8 +23,8 @@ class NextGenGallery
 	 *
 	 * If this action is triggered, assume NextGen Gallery is used.
 	 *
-	 * @since	1.0.5
-	 * @access	public
+	 * @since   1.0.5
+	 * @access  public
 	 */
 	public static function preload()
 	{
@@ -48,9 +48,9 @@ class NextGenGallery
 	/**
 	 * When an image is added, need to purge all pages that displays its gallery.
 	 *
-	 * @since	1.0.5
-	 * @access	public
-	 * @param	string	$image	The image object added.
+	 * @since   1.0.5
+	 * @access  public
+	 * @param   string $image  The image object added.
 	 */
 	public static function add_image($image)
 	{
@@ -67,7 +67,7 @@ class NextGenGallery
 	 * When an image is updated, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
-	 * @access	public
+	 * @access  public
 	 */
 	public static function update_image()
 	{
@@ -106,7 +106,7 @@ class NextGenGallery
 	 * When an image is deleted, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
-	 * @access	public
+	 * @access  public
 	 */
 	public static function delete_image()
 	{
@@ -119,9 +119,9 @@ class NextGenGallery
 	 * When an image is moved, need to purge all old galleries and the new gallery.
 	 *
 	 * @since 1.0.8
-	 * @access	public
-	 * @param array $images unused
-	 * @param array $old_gallery_ids Source gallery ids for the images.
+	 * @access  public
+	 * @param array   $images unused
+	 * @param array   $old_gallery_ids Source gallery ids for the images.
 	 * @param integer $new_gallery_id Destination gallery id.
 	 */
 	public static function move_image($images, $old_gallery_ids, $new_gallery_id)
@@ -135,8 +135,8 @@ class NextGenGallery
 	/**
 	 * When an image is copied, need to purge the destination gallery.
 	 *
-	 * @param array $image_pid_map unused
-	 * @param array $old_gallery_ids unused
+	 * @param array   $image_pid_map unused
+	 * @param array   $old_gallery_ids unused
 	 * @param integer $new_gallery_id Destination gallery id.
 	 */
 	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
@@ -160,7 +160,7 @@ class NextGenGallery
 	 *
 	 * @since 1.0.5
 	 * @access  public
-	 * @param	integer		$gid	The gallery id of the gallery updated.
+	 * @param   integer $gid    The gallery id of the gallery updated.
 	 */
 	public static function update_gallery($gid)
 	{
@@ -177,7 +177,7 @@ class NextGenGallery
 	 *
 	 * @since 1.0.5
 	 * @access public
-	 * @param	integer		$aid	The album id of the album updated.
+	 * @param   integer $aid    The album id of the album updated.
 	 */
 	public static function update_album($aid)
 	{

@@ -3,7 +3,7 @@
 /**
  * The Third Party integration with the Perfmatters plugin.
  *
- * @since		4.4.5
+ * @since       4.4.5
  */
 
 namespace LiteSpeed\Thirdparty;

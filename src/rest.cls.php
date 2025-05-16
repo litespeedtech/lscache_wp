@@ -3,7 +3,7 @@
 /**
  * The REST related class.
  *
- * @since      	2.9.4
+ * @since       2.9.4
  */
 
 namespace LiteSpeed;
@@ -61,7 +61,7 @@ class REST extends Root
 			'permission_callback' => array($this, 'is_from_cloud'),
 		));
 
-		## 1.2. WP REST Dryrun Callback
+		// 1.2. WP REST Dryrun Callback
 		register_rest_route('litespeed/v3', '/wp_rest_echo', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'wp_rest_echo'),
@@ -258,7 +258,10 @@ class REST extends Root
 	 */
 	public static function err($code)
 	{
-		return array('_res' => 'err', '_msg' => $code);
+		return array(
+			'_res' => 'err',
+			'_msg' => $code,
+		);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the WPTouch Mobile plugin.
  *
- * @since		1.0.7
+ * @since       1.0.7
  */
 namespace LiteSpeed\Thirdparty;
 

@@ -3,11 +3,11 @@
 /**
  * The class to operate media data.
  *
- * @since 		1.4
- * @since  		1.5 Moved into /inc
- * @package    	Core
- * @subpackage 	Core/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.4
+ * @since       1.5 Moved into /inc
+ * @package     Core
+ * @subpackage  Core/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -90,6 +90,7 @@ class Media extends Root
 
 		/**
 		 * Replace gravatar
+		 *
 		 * @since  3.0
 		 */
 		$this->cls('Avatar');
@@ -112,13 +113,13 @@ class Media extends Root
 				$content .= '<link rel="preload" as="image" href="' . Str::trim_quotes($v) . '">';
 			}
 		}
-		// 	$featured_image_url = get_the_post_thumbnail_url();
-		// 	if ($featured_image_url) {
-		// 		self::debug('Append featured image to head: ' . $featured_image_url);
-		// 		if ($this->webp_support()) {
-		// 			$featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
-		// 		}
-		// 	}
+		// $featured_image_url = get_the_post_thumbnail_url();
+		// if ($featured_image_url) {
+		// self::debug('Append featured image to head: ' . $featured_image_url);
+		// if ($this->webp_support()) {
+		// $featured_image_url = $this->replace_webp($featured_image_url) ?: $featured_image_url;
+		// }
+		// }
 		// }
 
 		return $content;
@@ -151,6 +152,7 @@ class Media extends Root
 	{
 		/**
 		 * JPG quality control
+		 *
 		 * @since  3.0
 		 */
 		add_filter('jpeg_quality', array($this, 'adjust_jpg_quality'));
@@ -205,6 +207,7 @@ class Media extends Root
 
 		/**
 		 * WP Stateless compatibility #143 https://github.com/litespeedtech/lscache_wp/issues/143
+		 *
 		 * @since 2.9.8
 		 * @return array( 'url', 'md5', 'size' )
 		 */
@@ -328,18 +331,12 @@ class Media extends Root
 				'left'
 			);
 
-			echo sprintf(__('Orig saved %s', 'litespeed-cache'), $percent . '%');
+			printf(__('Orig saved %s', 'litespeed-cache'), $percent . '%');
 
 			if ($desc) {
-				echo sprintf(
-					' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>',
-					$link,
-					$cls,
-					$desc,
-					$curr_status
-				);
+				printf(' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status);
 			} else {
-				echo sprintf(
+				printf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s">%2$s</span>',
 					__('Using optimized version of file. ', 'litespeed-cache') . '&#10;' . __('No backup of original file exists.', 'litespeed-cache'),
 					__('(optm)', 'litespeed-cache')
@@ -347,7 +344,7 @@ class Media extends Root
 			}
 		} elseif ($size_meta && $size_meta['ori_saved'] === 0) {
 			echo GUI::pie_tiny(0, 24, __('Congratulation! Your file was already optimized', 'litespeed-cache'), 'left');
-			echo sprintf(__('Orig %s', 'litespeed-cache'), '<span class="litespeed-desc">' . __('(no savings)', 'litespeed-cache') . '</span>');
+			printf(__('Orig %s', 'litespeed-cache'), '<span class="litespeed-desc">' . __('(no savings)', 'litespeed-cache') . '</span>');
 		} else {
 			echo __('Orig', 'litespeed-cache') . '<span class="litespeed-left10">—</span>';
 		}
@@ -392,18 +389,12 @@ class Media extends Root
 				),
 				'left'
 			);
-			echo sprintf($is_avif ? __('AVIF saved %s', 'litespeed-cache') : __('WebP saved %s', 'litespeed-cache'), $percent . '%');
+			printf($is_avif ? __('AVIF saved %s', 'litespeed-cache') : __('WebP saved %s', 'litespeed-cache'), $percent . '%');
 
 			if ($desc) {
-				echo sprintf(
-					' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>',
-					$link,
-					$cls,
-					$desc,
-					$curr_status
-				);
+				printf(' <a href="%1$s" class="litespeed-media-href %2$s" data-balloon-pos="left" data-balloon-break aria-label="%3$s">%4$s</a>', $link, $cls, $desc, $curr_status);
 			} else {
-				echo sprintf(
+				printf(
 					' <span class="litespeed-desc" data-balloon-pos="left" data-balloon-break aria-label="%1$s&#10;%2$s">%3$s</span>',
 					__('Using optimized version of file. ', 'litespeed-cache'),
 					$is_avif ? __('No backup of unoptimized AVIF file exists.', 'litespeed-cache') : __('No backup of unoptimized WebP file exists.', 'litespeed-cache'),
@@ -418,7 +409,7 @@ class Media extends Root
 
 		// Delete row btn
 		if ($size_meta) {
-			echo sprintf(
+			printf(
 				'<div class="row-actions"><span class="delete"><a href="%1$s" class="">%2$s</a></span></div>',
 				Utility::build_url(Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array('id' => $post_id)),
 				__('Restore from backup', 'litespeed-cache')
@@ -560,6 +551,7 @@ class Media extends Root
 	{
 		/**
 		 * Use webp for optimized images
+		 *
 		 * @since 1.6.2
 		 */
 		if ($this->webp_support()) {
@@ -568,6 +560,7 @@ class Media extends Root
 
 		/**
 		 * Check if URI is excluded
+		 *
 		 * @since  3.0
 		 */
 		$excludes = $this->conf(Base::O_MEDIA_LAZY_URI_EXC);
@@ -710,6 +703,7 @@ class Media extends Root
 	{
 		/**
 		 * Exclude list
+		 *
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
@@ -733,6 +727,7 @@ class Media extends Root
 		);
 		/**
 		 * Exclude parent classes
+		 *
 		 * @since  3.0
 		 */
 		$parent_cls_exc = apply_filters('litespeed_media_lazy_img_parent_cls_excludes', $this->conf(Base::O_MEDIA_LAZY_PARENT_CLS_EXC));
@@ -753,6 +748,7 @@ class Media extends Root
 
 			/**
 			 * Add src validation to bypass base64 img src
+			 *
 			 * @since  1.6
 			 */
 			if (strpos($attrs['src'], 'base64') !== false || substr($attrs['src'], 0, 5) === 'data:') {
@@ -780,6 +776,7 @@ class Media extends Root
 
 			/**
 			 * Exclude from lazyload by setting
+			 *
 			 * @since  1.5
 			 */
 			if ($excludes && Utility::str_hit_array($attrs['src'], $excludes)) {
@@ -789,6 +786,7 @@ class Media extends Root
 
 			/**
 			 * Excldues invalid image src from buddypress avatar crop
+			 *
 			 * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature
 			 * @since  3.0
 			 */
@@ -895,6 +893,7 @@ class Media extends Root
 
 		/**
 		 * Exclude parent classes
+		 *
 		 * @since  3.0
 		 */
 		$parent_cls_exc = apply_filters('litespeed_media_iframe_lazy_parent_cls_excludes', $this->conf(Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC));
@@ -951,6 +950,7 @@ class Media extends Root
 	{
 		/**
 		 * Added custom element & attribute support
+		 *
 		 * @since 2.2.2
 		 */
 		$webp_ele_to_check = $this->conf(Base::O_IMG_OPTM_WEBP_ATTR);
@@ -1029,6 +1029,7 @@ class Media extends Root
 
 			/**
 			 * Support quotes in src `background-image: url('src')`
+			 *
 			 * @since 2.9.3
 			 */
 			$url = trim($url, '\'"');
@@ -1125,6 +1126,7 @@ class Media extends Root
 		/**
 		 * WebP API hook
 		 * NOTE: As $url may contain query strings, WebP check will need to parse_url before appending .webp
+		 *
 		 * @since  2.9.5
 		 * @see  #751737 - API docs for WebP generation
 		 */

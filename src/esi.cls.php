@@ -5,10 +5,10 @@
  *
  * This is used to define all esi related functions.
  *
- * @since      	1.1.3
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.3
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -47,6 +47,7 @@ class ESI extends Root
 	{
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
+		 *
 		 * @since  2.9.7.2
 		 */
 		if (Router::is_ajax() || !$this->cls('Router')->esi_enabled()) {
@@ -72,6 +73,7 @@ class ESI extends Root
 
 		/**
 		 * Overwrite wp_create_nonce func
+		 *
 		 * @since  2.9.5
 		 */
 		$this->_transform_nonce();
@@ -97,6 +99,7 @@ class ESI extends Root
 
 		/**
 		 * Recover REQUEST_URI
+		 *
 		 * @since  1.8.1
 		 */
 		if (!empty($_GET[self::QS_ACTION])) {
@@ -108,11 +111,11 @@ class ESI extends Root
 		 * Shortcode ESI
 		 *
 		 * To use it, just change the original shortcode as below:
-		 * 		old: [someshortcode aa='bb']
-		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
+		 *      old: [someshortcode aa='bb']
+		 *      new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
 		 *
-		 * 	1. `cache` attribute is optional, default to 'public,no-vary'.
-		 * 	2. `ttl` attribute is optional, default is your public TTL setting.
+		 *  1. `cache` attribute is optional, default to 'public,no-vary'.
+		 *  2. `ttl` attribute is optional, default is your public TTL setting.
 		 *  3. `_ls_silence` attribute is optional, default is false.
 		 *
 		 * @since  2.8
@@ -195,10 +198,8 @@ class ESI extends Root
 				if (preg_match('#' . $k . '#iU', $action)) {
 					return $v;
 				}
-			} else {
-				if ($k == $action) {
-					return $v;
-				}
+			} elseif ($k == $action) {
+				return $v;
 			}
 		}
 
@@ -278,6 +279,7 @@ class ESI extends Root
 
 		/**
 		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
+		 *
 		 * @since 2.9.3
 		 */
 		if (!empty($_SERVER['ESI_REFERER']) && !$this->cls('REST')->is_rest($_SERVER['ESI_REFERER'])) {
@@ -288,7 +290,7 @@ class ESI extends Root
 					$_SERVER['REQUEST_URI'] = trailingslashit($_SERVER['ESI_REFERER']);
 				}
 			}
-			# Prevent from 301 redirecting
+			// Prevent from 301 redirecting
 			if (!empty($_SERVER['SCRIPT_URI'])) {
 				$SCRIPT_URI = parse_url($_SERVER['SCRIPT_URI']);
 				$SCRIPT_URI['path'] = $_SERVER['REQUEST_URI'];
@@ -304,6 +306,7 @@ class ESI extends Root
 		/**
 		 * Make REST call be able to parse ESI
 		 * NOTE: Not effective due to ESI req are all to `/` yet
+		 *
 		 * @since 2.9.4
 		 */
 		add_action('rest_api_init', array($this, 'load_esi_block'), 101);
@@ -455,12 +458,12 @@ class ESI extends Root
 	 * @access private
 	 * @param string $block_id The id to use to display the correct esi block.
 	 * @param string $wrapper The wrapper for the esi comments.
-	 * @param array $params The esi parameters.
+	 * @param array  $params The esi parameters.
 	 * @param string $control The cache control attribute if any.
-	 * @param bool $silence If generate wrapper comment or not
-	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
-	 * @param bool $svar  		If store the value in memory or not, in memory will be faster
-	 * @param array $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
+	 * @param bool   $silence If generate wrapper comment or not
+	 * @param bool   $preserved   If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
+	 * @param bool   $svar        If store the value in memory or not, in memory will be faster
+	 * @param array  $inline_val     If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
 	 */
 	public function sub_esi_block(
 		$block_id,
@@ -517,6 +520,7 @@ class ESI extends Root
 
 		/**
 		 * Escape potential chars
+		 *
 		 * @since 2.9.4
 		 */
 		$appended_params = array_map('urlencode', $appended_params);
@@ -629,6 +633,7 @@ class ESI extends Root
 	{
 		/**
 		 * Validate if is a legal ESI req
+		 *
 		 * @since 2.9.6
 		 */
 		if (empty($_GET['_hash']) || $this->_gen_esi_md5($_GET) != $_GET['_hash']) {
@@ -653,6 +658,7 @@ class ESI extends Root
 
 		/**
 		 * Buffer needs to be JSON format
+		 *
 		 * @since  2.9.4
 		 */
 		if (!empty($params['is_json'])) {
@@ -665,7 +671,7 @@ class ESI extends Root
 		// Debug2::debug(var_export($params, true ));
 
 		/**
-		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505
+		 * Handle default cache control 'private,no-vary' for sub_esi_block()   @ticket #923505
 		 *
 		 * @since  2.2.3
 		 */
@@ -718,9 +724,9 @@ class ESI extends Root
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $instance Parameter used to build the widget.
+	 * @param array     $instance Parameter used to build the widget.
 	 * @param WP_Widget $widget The widget to build.
-	 * @param array $args Parameter used to build the widget.
+	 * @param array     $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
 	public function sub_widget_block($instance, $widget, $args)

@@ -3,10 +3,10 @@
 /**
  * The object cache class
  *
- * @since      	1.8
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.8
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -314,12 +314,10 @@ class Object_Cache extends Root
 					} else {
 						$this->_conn->pconnect($this->_cfg_host);
 					}
+				} elseif ($this->_cfg_port) {
+					$this->_conn->connect($this->_cfg_host, $this->_cfg_port);
 				} else {
-					if ($this->_cfg_port) {
-						$this->_conn->connect($this->_cfg_host, $this->_cfg_port);
-					} else {
-						$this->_conn->connect($this->_cfg_host);
-					}
+					$this->_conn->connect($this->_cfg_host);
 				}
 
 				if ($this->_cfg_pswd) {
@@ -369,6 +367,7 @@ class Object_Cache extends Root
 
 			/**
 			 * Add SASL auth
+			 *
 			 * @since  1.8.1
 			 * @since  2.9.6 Fixed SASL connection @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:lsmcd:new_sasl
 			 */
@@ -482,7 +481,7 @@ class Object_Cache extends Root
 		 * Bug found by Stan at Jan/10/2020
 		 */
 		// if ( ! $this->_can_cache() ) {
-		// 	return null;
+		// return null;
 		// }
 
 		if (!$this->_connect()) {
@@ -495,7 +494,7 @@ class Object_Cache extends Root
 				$res = $this->_conn->setEx($key, $ttl, $data);
 			} catch (\RedisException $ex) {
 				$res = false;
-				$msg = sprintf(__('Redis encountered a fatal error: %s (code: %d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
+				$msg = sprintf(__('Redis encountered a fatal error: %1$s (code: %2$d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
 				$this->debug_oc($msg);
 				Admin_Display::error($msg);
 			}

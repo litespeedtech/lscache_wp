@@ -3,8 +3,8 @@
 /**
  * The plugin purge class for X-LiteSpeed-Purge
  *
- * @since      	1.1.3
- * @since  		2.2 Refactored. Changed access from public to private for most func and class variables.
+ * @since       1.1.3
+ * @since       2.2 Refactored. Changed access from public to private for most func and class variables.
  */
 
 namespace LiteSpeed;
@@ -186,9 +186,9 @@ class Purge extends Base
 	private function _purge_all($reason = false)
 	{
 		// if ( defined( 'LITESPEED_CLI' ) ) {
-		// 	// Can't send, already has output, need to save and wait for next run
-		// 	self::update_option( self::DB_QUEUE, $curr_built );
-		// 	self::debug( 'CLI request, queue stored: ' . $curr_built );
+		// Can't send, already has output, need to save and wait for next run
+		// self::update_option( self::DB_QUEUE, $curr_built );
+		// self::debug( 'CLI request, queue stored: ' . $curr_built );
 		// }
 		// else {
 		$this->_purge_all_lscache(true);
@@ -652,6 +652,7 @@ class Purge extends Base
 
 	/**
 	 * Purge single UCSS
+	 *
 	 * @since 4.7
 	 */
 	private function _purge_ucss()
@@ -675,7 +676,7 @@ class Purge extends Base
 	 * Alerts LiteSpeed Web Server to purge the front page.
 	 *
 	 * @since    1.0.3
-	 * @since  	 2.2 	Access changed from public to private, renamed from `_purge_front`
+	 * @since    2.2    Access changed from public to private, renamed from `_purge_front`
 	 * @access   private
 	 */
 	private function _purge_frontpage()
@@ -1051,10 +1052,8 @@ class Purge extends Base
 			if (empty($this->_pub_purge2)) {
 				return;
 			}
-		} else {
-			if (empty($this->_pub_purge) && empty($this->_priv_purge)) {
-				return;
-			}
+		} elseif (empty($this->_pub_purge) && empty($this->_priv_purge)) {
+			return;
 		}
 
 		$purge_header = '';
@@ -1160,7 +1159,7 @@ class Purge extends Base
 			return false;
 		}
 
-		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by wordpress updates v4.6+
+		// Would only use multisite and network admin except is_network_admin is false for ajax calls, which is used by WordPress updates v4.6+
 		if (Router::is_ajax() && (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false))) {
 			return false;
 		}
@@ -1232,7 +1231,7 @@ class Purge extends Base
 
 		if ($this->conf(self::O_PURGE_POST_TERM)) {
 			$taxonomies = get_object_taxonomies($post_type);
-			//self::debug('purge by post, check tax = ' . var_export($taxonomies, true));
+			// self::debug('purge by post, check tax = ' . var_export($taxonomies, true));
 			foreach ($taxonomies as $tax) {
 				$terms = get_the_terms($post_id, $tax);
 				if (!empty($terms)) {

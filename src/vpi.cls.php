@@ -3,7 +3,7 @@
 /**
  * The viewport image class.
  *
- * @since      	4.7
+ * @since       4.7
  */
 
 namespace LiteSpeed;
@@ -84,6 +84,7 @@ class VPI extends Base
 
 	/**
 	 * Notify finished from server
+	 *
 	 * @since 4.7
 	 */
 	public function notify()
@@ -131,7 +132,7 @@ class VPI extends Base
 				self::debug('save data_vpi', $urldecode);
 				$this->cls('Metabox')->save($post_id, $name, $urldecode);
 
-				$valid_i++;
+				++$valid_i;
 			}
 
 			unset($this->_queue[$queue_k]);
@@ -185,7 +186,7 @@ class VPI extends Base
 
 			self::debug('cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
 
-			$i++;
+			++$i;
 			$res = $this->_send_req($v['url'], $k, $v['user_agent'], $v['is_mobile']);
 			if (!$res) {
 				// Status is wrong, drop this this->_queue

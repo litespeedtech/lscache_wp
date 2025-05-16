@@ -3,7 +3,6 @@
 /**
  * The htaccess rewrite rule operation class
  *
- *
  * @since      1.0.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/inc
@@ -423,6 +422,7 @@ class Htaccess extends Root
 	{
 		/**
 		 * Add ttl setting
+		 *
 		 * @since 1.6.3
 		 */
 		$id = Base::O_CACHE_TTL_BROWSER;
@@ -502,7 +502,7 @@ class Htaccess extends Root
 		$new_rules_backend = array();
 		$new_rules_backend_nonls = array();
 
-		# continual crawler
+		// continual crawler
 		// $id = Base::O_CRAWLER;
 		// if (!empty($cfg[$id])) {
 		$new_rules[] = self::MARKER_ASYNC . self::MARKER_START;
@@ -572,7 +572,7 @@ class Htaccess extends Root
 		$id = Base::O_CDN;
 		if (!empty($cfg[$id])) {
 			$new_rules[] = self::MARKER_CORS . self::MARKER_START;
-			$new_rules = array_merge($new_rules, $this->_cors_rules()); //todo: network
+			$new_rules = array_merge($new_rules, $this->_cors_rules()); // todo: network
 			$new_rules[] = self::MARKER_CORS . self::MARKER_END;
 			$new_rules[] = '';
 		}
@@ -660,7 +660,7 @@ class Htaccess extends Root
 	 * wrap rules with module on info
 	 *
 	 * @since  1.1.5
-	 * @param  array  $rules
+	 * @param  array $rules
 	 * @return array        wrapped rules with module info
 	 */
 	private function _wrap_do_no_edit($rules)
@@ -800,7 +800,7 @@ class Htaccess extends Root
 	 * Output the msg with rules plain data for manual insert
 	 *
 	 * @since  1.1.5
-	 * @param  string  $file
+	 * @param  string $file
 	 * @param  array  $rules
 	 * @return string        final msg to output
 	 */

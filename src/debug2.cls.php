@@ -96,6 +96,7 @@ class Debug2 extends Root
 
 	/**
 	 * End call of one request process
+	 *
 	 * @since 4.7
 	 * @access public
 	 */
@@ -127,9 +128,9 @@ class Debug2 extends Root
 			}
 
 			$zip = $_REQUEST[self::BETA_TEST_URL];
-			if ($zip !== Debug2::BETA_TEST_URL_WP) {
+			if ($zip !== self::BETA_TEST_URL_WP) {
 				if ($zip === 'latest') {
-					$zip = Debug2::BETA_TEST_URL_WP;
+					$zip = self::BETA_TEST_URL_WP;
 				} else {
 					// Generate zip url
 					$zip = $this->_package_zip($zip);
@@ -138,11 +139,11 @@ class Debug2 extends Root
 		}
 
 		if (!$zip) {
-			Debug2::debug('[Debug2] ❌  No ZIP file');
+			self::debug('[Debug2] ❌  No ZIP file');
 			return;
 		}
 
-		Debug2::debug('[Debug2] ZIP file ' . $zip);
+		self::debug('[Debug2] ZIP file ' . $zip);
 
 		$update_plugins = get_site_transient('update_plugins');
 		if (!is_object($update_plugins)) {
@@ -225,6 +226,7 @@ class Debug2 extends Root
 		/**
 		 * Check if hit URI includes/excludes
 		 * This is after LSCWP_LOG_BYPASS_NOTADMIN to make `log_purge()` still work
+		 *
 		 * @since  3.0
 		 */
 		$list = $this->conf(Base::O_DEBUG_INC);
@@ -344,6 +346,7 @@ class Debug2 extends Root
 
 	/**
 	 * Trim long msg to keep log neat
+	 *
 	 * @since 6.3
 	 */
 	private function _omit_long_message($msg)
@@ -428,6 +431,7 @@ class Debug2 extends Root
 
 	/**
 	 * Trim long string before array dump
+	 *
 	 * @since  3.3
 	 */
 	public static function trim_longtext($backtrace_limit)
@@ -461,7 +465,7 @@ class Debug2 extends Root
 	 * @since 1.1.0
 	 * @access private
 	 * @param string $msg The debug message.
-	 * @param int $backtrace_limit Backtrace depth.
+	 * @param int    $backtrace_limit Backtrace depth.
 	 */
 	private static function push($msg, $backtrace_limit = false)
 	{

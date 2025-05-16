@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
 $msg = __('LiteSpeed cache plugin upgraded. Please refresh the page to complete the configuration data upgrade.', 'litespeed-cache');

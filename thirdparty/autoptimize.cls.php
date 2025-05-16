@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the Autoptimize plugin.
  *
- * @since		1.0.12
+ * @since       1.0.12
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -13,8 +13,8 @@ class Autoptimize
 	/**
 	 * Detects if Autoptimize is active.
 	 *
-	 *@since 1.0.12
-	 *@access public
+	 * @since 1.0.12
+	 * @access public
 	 */
 	public static function detect()
 	{

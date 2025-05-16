@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed\CLI;
+
 defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;
@@ -30,9 +31,7 @@ class Presets
 	 *
 	 *     # Apply the preset called "basic"
 	 *     $ wp litespeed-presets apply basic
-	 *
 	 */
-
 	public function apply($args)
 	{
 		$preset = $args[0];
@@ -54,9 +53,7 @@ class Presets
 	 *
 	 *     # Get all backups
 	 *     $ wp litespeed-presets get_backups
-	 *
 	 */
-
 	public function get_backups()
 	{
 		$backups = $this->__preset->get_backups();
@@ -75,9 +72,7 @@ class Presets
 	 *
 	 *     # Restore the backup with the timestamp 1667485245
 	 *     $ wp litespeed-presets restore 1667485245
-	 *
 	 */
-
 	public function restore($args)
 	{
 		$timestamp = $args[0];

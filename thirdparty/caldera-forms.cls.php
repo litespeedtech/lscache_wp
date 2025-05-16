@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with Caldera Forms.
  *
- * @since		3.2.2
+ * @since       3.2.2
  */
 namespace LiteSpeed\Thirdparty;
 

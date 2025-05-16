@@ -3,7 +3,7 @@
 /**
  * The localization class.
  *
- * @since      	3.3
+ * @since       3.3
  */
 
 namespace LiteSpeed;
@@ -92,7 +92,11 @@ class Localization extends Base
 		$file = $this->_realpath($url);
 
 		self::debug('localize [url] ' . $url);
-		$response = wp_safe_remote_get($url, array('timeout' => 180, 'stream' => true, 'filename' => $file));
+		$response = wp_safe_remote_get($url, array(
+			'timeout' => 180,
+			'stream' => true,
+			'filename' => $file,
+		));
 
 		// Parse response data
 		if (is_wp_error($response)) {

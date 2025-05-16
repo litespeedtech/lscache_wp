@@ -31,7 +31,6 @@ class Online
 	 *
 	 *     # Activate domain on QUIC.cloud (! Require SERVER IP setting to be set first)
 	 *     $ wp litespeed-online init
-	 *
 	 */
 	public function init()
 	{
@@ -53,11 +52,10 @@ class Online
 	 * ## EXAMPLES
 	 *
 	 *     # Activate domain CDN on QUIC.cloud (support --format=json)
-	 *	   $ wp litespeed-online cdn_init --method=cname|ns
+	 *     $ wp litespeed-online cdn_init --method=cname|ns
 	 *     $ wp litespeed-online cdn_init --method=cname|ns --ssl-cert=xxx.pem --ssl-key=xxx
 	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx
 	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx  --ssl-cert=xxx.pem --ssl-key=xxx
-	 *
 	 */
 	public function cdn_init($args, $assoc_args)
 	{
@@ -111,7 +109,6 @@ class Online
 	 *
 	 *     # Link user account by api key
 	 *     $ wp litespeed-online link --email=xxx@example.com --api-key=xxxx
-	 *
 	 */
 	public function link($args, $assoc_args)
 	{
@@ -140,7 +137,6 @@ class Online
 	 *
 	 *     # Sync QUIC.cloud service usage info
 	 *     $ wp litespeed-online sync
-	 *
 	 */
 	public function sync($args, $assoc_args)
 	{
@@ -176,7 +172,6 @@ class Online
 	 *
 	 *     # Check QC account status
 	 *     $ wp litespeed-online cdn_status
-	 *
 	 */
 	public function cdn_status($args, $assoc_args)
 	{
@@ -193,7 +188,6 @@ class Online
 	 *
 	 *     # List all services tag
 	 *     $ wp litespeed-online services
-	 *
 	 */
 	public function services($args, $assoc_args)
 	{
@@ -221,7 +215,6 @@ class Online
 	 *
 	 *     # List all QUIC.cloud servers in use
 	 *     $ wp litespeed-online nodes
-	 *
 	 */
 	public function nodes($args, $assoc_args)
 	{
@@ -256,7 +249,6 @@ class Online
 	 *     # Detect closest node for one service
 	 *     $ wp litespeed-online ping img_optm
 	 *     $ wp litespeed-online ping img_optm --force
-	 *
 	 */
 	public function ping($param, $assoc_args)
 	{

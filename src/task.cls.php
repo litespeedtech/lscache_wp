@@ -3,8 +3,8 @@
 /**
  * The cron task class.
  *
- * @since      	1.1.3
- * @since  		1.5 Moved into /inc
+ * @since       1.1.3
+ * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -15,14 +15,38 @@ class Task extends Root
 {
 	const LOG_TAG = '⏰';
 	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON => array('name' => 'litespeed_task_imgoptm_pull', 'hook' => 'LiteSpeed\Img_Optm::start_async_cron'), // always fetch immediately
-		Base::O_OPTM_CSS_ASYNC => array('name' => 'litespeed_task_ccss', 'hook' => 'LiteSpeed\CSS::cron_ccss'),
-		Base::O_OPTM_UCSS => array('name' => 'litespeed_task_ucss', 'hook' => 'LiteSpeed\UCSS::cron'),
-		Base::O_MEDIA_VPI_CRON => array('name' => 'litespeed_task_vpi', 'hook' => 'LiteSpeed\VPI::cron'),
-		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => array('name' => 'litespeed_task_lqip', 'hook' => 'LiteSpeed\Placeholder::cron'),
-		Base::O_DISCUSS_AVATAR_CRON => array('name' => 'litespeed_task_avatar', 'hook' => 'LiteSpeed\Avatar::cron'),
-		Base::O_IMG_OPTM_AUTO => array('name' => 'litespeed_task_imgoptm_req', 'hook' => 'LiteSpeed\Img_Optm::cron_auto_request'),
-		Base::O_CRAWLER => array('name' => 'litespeed_task_crawler', 'hook' => 'LiteSpeed\Crawler::start_async_cron'), // Set crawler to last one to use above results
+		Base::O_IMG_OPTM_CRON => array(
+			'name' => 'litespeed_task_imgoptm_pull',
+			'hook' => 'LiteSpeed\Img_Optm::start_async_cron',
+		), // always fetch immediately
+		Base::O_OPTM_CSS_ASYNC => array(
+			'name' => 'litespeed_task_ccss',
+			'hook' => 'LiteSpeed\CSS::cron_ccss',
+		),
+		Base::O_OPTM_UCSS => array(
+			'name' => 'litespeed_task_ucss',
+			'hook' => 'LiteSpeed\UCSS::cron',
+		),
+		Base::O_MEDIA_VPI_CRON => array(
+			'name' => 'litespeed_task_vpi',
+			'hook' => 'LiteSpeed\VPI::cron',
+		),
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => array(
+			'name' => 'litespeed_task_lqip',
+			'hook' => 'LiteSpeed\Placeholder::cron',
+		),
+		Base::O_DISCUSS_AVATAR_CRON => array(
+			'name' => 'litespeed_task_avatar',
+			'hook' => 'LiteSpeed\Avatar::cron',
+		),
+		Base::O_IMG_OPTM_AUTO => array(
+			'name' => 'litespeed_task_imgoptm_req',
+			'hook' => 'LiteSpeed\Img_Optm::cron_auto_request',
+		),
+		Base::O_CRAWLER => array(
+			'name' => 'litespeed_task_crawler',
+			'hook' => 'LiteSpeed\Crawler::start_async_cron',
+		), // Set crawler to last one to use above results
 	);
 
 	private static $_guest_options = array(Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI);
@@ -121,7 +145,10 @@ class Task extends Root
 	public static function async_call($type)
 	{
 		$hash = Str::rrand(32);
-		self::update_option('async_call-hash', array('hash' => $hash, 'ts' => time()));
+		self::update_option('async_call-hash', array(
+			'hash' => $hash,
+			'ts' => time(),
+		));
 		$args = array(
 			'timeout' => 0.01,
 			'blocking' => false,
@@ -160,12 +187,12 @@ class Task extends Root
 	{
 		// Clean v2's leftover cron ( will remove in v3.1 )
 		// foreach ( wp_get_ready_cron_jobs() as $hooks ) {
-		// 	foreach ( $hooks as $hook => $v ) {
-		// 		if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
-		// 			self::debug( 'Cron clear legacy [hook] ' . $hook );
-		// 			wp_clear_scheduled_hook( $hook );
-		// 		}
-		// 	}
+		// foreach ( $hooks as $hook => $v ) {
+		// if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
+		// self::debug( 'Cron clear legacy [hook] ' . $hook );
+		// wp_clear_scheduled_hook( $hook );
+		// }
+		// }
 		// }
 
 		if ($id && !empty(self::$_triggers[$id])) {
@@ -207,7 +234,7 @@ class Task extends Root
 		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
 		// $wp_schedules = wp_get_schedules();
 		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
-			// 	self::debug('Crawler cron log: cron filter '.$interval.' added');
+			// self::debug('Crawler cron log: cron filter '.$interval.' added');
 			$schedules[self::FILTER_CRAWLER] = array(
 				'interval' => $CRAWLER_RUN_INTERVAL,
 				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),

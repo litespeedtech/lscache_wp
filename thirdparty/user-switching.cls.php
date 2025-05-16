@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with User Switching.
  *
- * @since		3.0
+ * @since       3.0
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -18,6 +18,7 @@ class User_Switching
 
 		/**
 		 * Register switch back URL nonce
+		 *
 		 * @since  3.0 @Robert Staddon
 		 */
 		if (function_exists('current_user_switched') && ($old_user = current_user_switched())) {

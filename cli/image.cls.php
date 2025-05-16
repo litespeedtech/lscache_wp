@@ -36,7 +36,6 @@ class Image
 	 *
 	 *     # Switch to optimized images
 	 *     $ wp litespeed-image batch_switch optm
-	 *
 	 */
 	public function batch_switch($param)
 	{
@@ -53,7 +52,6 @@ class Image
 	 *
 	 *     # Send image optimization request
 	 *     $ wp litespeed-image push
-	 *
 	 */
 	public function push()
 	{
@@ -69,7 +67,6 @@ class Image
 	 *
 	 *     # Pull images back from cloud
 	 *     $ wp litespeed-image pull
-	 *
 	 */
 	public function pull()
 	{
@@ -85,7 +82,6 @@ class Image
 	 *
 	 *     # Show optimization status
 	 *     $ wp litespeed-image s
-	 *
 	 */
 	public function s()
 	{
@@ -101,7 +97,6 @@ class Image
 	 *
 	 *     # Show optimization status
 	 *     $ wp litespeed-image status
-	 *
 	 */
 	public function status()
 	{
@@ -130,7 +125,10 @@ class Image
 
 		$list = array();
 		foreach ($summary as $k => $v) {
-			$list[] = array('key' => $k, 'value' => $v);
+			$list[] = array(
+				'key' => $k,
+				'value' => $v,
+			);
 		}
 
 		$list2 = array();
@@ -138,7 +136,10 @@ class Image
 			if (!$v) {
 				continue;
 			}
-			$list2[] = array('key' => $k, 'value' => $v);
+			$list2[] = array(
+				'key' => $k,
+				'value' => $v,
+			);
 		}
 
 		WP_CLI\Utils\format_items('table', $list, array('key', 'value'));
@@ -156,7 +157,6 @@ class Image
 	 *
 	 *     # Clean up unfinished requests
 	 *     $ wp litespeed-image clean
-	 *
 	 */
 	public function clean()
 	{
@@ -176,7 +176,6 @@ class Image
 	 *
 	 *     # Remove original image backups
 	 *     $ wp litespeed-image rm_bkup
-	 *
 	 */
 	public function rm_bkup()
 	{

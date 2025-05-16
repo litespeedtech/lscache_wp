@@ -3,7 +3,7 @@
 /**
  * The base consts
  *
- * @since      	3.7
+ * @since       3.7
  */
 
 namespace LiteSpeed;
@@ -18,9 +18,9 @@ class Base extends Root
 
 	const _CACHE = '_cache'; // final cache status from setting
 
-	## -------------------------------------------------- ##
-	## --------------     	General	    ----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------       General     ----------------- ##
+	// -------------------------------------------------- ##
 	const _VER = '_version'; // Not set-able
 	const HASH = 'hash'; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade';
@@ -32,9 +32,9 @@ class Base extends Root
 	const O_GUEST_UAS = 'guest_uas';
 	const O_GUEST_IPS = 'guest_ips';
 
-	## -------------------------------------------------- ##
-	## --------------		Cache 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------       Cache       ----------------- ##
+	// -------------------------------------------------- ##
 	const O_CACHE = 'cache';
 	const O_CACHE_PRIV = 'cache-priv';
 	const O_CACHE_COMMENTER = 'cache-commenter';
@@ -68,9 +68,9 @@ class Base extends Root
 	const O_CACHE_VARY_COOKIES = 'cache-vary_cookies';
 	const O_CACHE_VARY_GROUP = 'cache-vary_group';
 
-	## -------------------------------------------------- ##
-	## --------------		Purge 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------       Purge       ----------------- ##
+	// -------------------------------------------------- ##
 	const O_PURGE_ON_UPGRADE = 'purge-upgrade';
 	const O_PURGE_STALE = 'purge-stale';
 	const O_PURGE_POST_ALL = 'purge-post_all';
@@ -88,23 +88,23 @@ class Base extends Root
 	const O_PURGE_TIMED_URLS_TIME = 'purge-timed_urls_time';
 	const O_PURGE_HOOK_ALL = 'purge-hook_all';
 
-	## -------------------------------------------------- ##
-	## --------------     	 ESI	    ----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------        ESI        ----------------- ##
+	// -------------------------------------------------- ##
 	const O_ESI = 'esi';
 	const O_ESI_CACHE_ADMBAR = 'esi-cache_admbar';
 	const O_ESI_CACHE_COMMFORM = 'esi-cache_commform';
 	const O_ESI_NONCE = 'esi-nonce';
 
-	## -------------------------------------------------- ##
-	## --------------     Utilities	    ----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------     Utilities     ----------------- ##
+	// -------------------------------------------------- ##
 	const O_UTIL_INSTANT_CLICK = 'util-instant_click';
 	const O_UTIL_NO_HTTPS_VARY = 'util-no_https_vary';
 
-	## -------------------------------------------------- ##
-	## --------------		Debug 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------       Debug       ----------------- ##
+	// -------------------------------------------------- ##
 	const O_DEBUG_DISABLE_ALL = 'debug-disable_all';
 	const O_DEBUG = 'debug';
 	const O_DEBUG_IPS = 'debug-ips';
@@ -117,15 +117,15 @@ class Base extends Root
 	const O_DEBUG_EXC = 'debug-exc';
 	const O_DEBUG_EXC_STRINGS = 'debug-exc_strings';
 
-	## -------------------------------------------------- ##
-	## --------------	   DB Optm  	----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------      DB Optm      ----------------- ##
+	// -------------------------------------------------- ##
 	const O_DB_OPTM_REVISIONS_MAX = 'db_optm-revisions_max';
 	const O_DB_OPTM_REVISIONS_AGE = 'db_optm-revisions_age';
 
-	## -------------------------------------------------- ##
-	## --------------	  HTML Optm 	----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------     HTML Optm     ----------------- ##
+	// -------------------------------------------------- ##
 	const O_OPTM_CSS_MIN = 'optm-css_min';
 	const O_OPTM_CSS_COMB = 'optm-css_comb';
 	const O_OPTM_CSS_COMB_EXT_INL = 'optm-css_comb_ext_inl';
@@ -168,9 +168,9 @@ class Base extends Root
 	const O_OPTM_EXC = 'optm-exc';
 	const O_OPTM_GUEST_ONLY = 'optm-guest_only';
 
-	## -------------------------------------------------- ##
-	## --------------	Object Cache	----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------   Object Cache    ----------------- ##
+	// -------------------------------------------------- ##
 	const O_OBJECT = 'object';
 	const O_OBJECT_KIND = 'object-kind';
 	const O_OBJECT_HOST = 'object-host';
@@ -185,16 +185,16 @@ class Base extends Root
 	const O_OBJECT_GLOBAL_GROUPS = 'object-global_groups';
 	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups';
 
-	## -------------------------------------------------- ##
-	## --------------	Discussion		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------   Discussion      ----------------- ##
+	// -------------------------------------------------- ##
 	const O_DISCUSS_AVATAR_CACHE = 'discuss-avatar_cache';
 	const O_DISCUSS_AVATAR_CRON = 'discuss-avatar_cron';
 	const O_DISCUSS_AVATAR_CACHE_TTL = 'discuss-avatar_cache_ttl';
 
-	## -------------------------------------------------- ##
-	## --------------		 Media 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------        Media      ----------------- ##
+	// -------------------------------------------------- ##
 	const O_MEDIA_PRELOAD_FEATURED = 'media-preload_featured'; // Deprecated since v6.2. TODO: Will drop after v6.5
 	const O_MEDIA_LAZY = 'media-lazy';
 	const O_MEDIA_LAZY_PLACEHOLDER = 'media-lazy_placeholder';
@@ -219,9 +219,9 @@ class Base extends Root
 	const O_MEDIA_VPI_CRON = 'media-vpi_cron';
 	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
-	## -------------------------------------------------- ##
-	## --------------	  Image Optm 	----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------     Image Optm    ----------------- ##
+	// -------------------------------------------------- ##
 	const O_IMG_OPTM_AUTO = 'img_optm-auto';
 	const O_IMG_OPTM_CRON = 'img_optm-cron'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_IMG_OPTM_ORI = 'img_optm-ori';
@@ -232,9 +232,9 @@ class Base extends Root
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
 
-	## -------------------------------------------------- ##
-	## --------------		Crawler		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------       Crawler     ----------------- ##
+	// -------------------------------------------------- ##
 	const O_CRAWLER = 'crawler';
 	const O_CRAWLER_USLEEP = 'crawler-usleep'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_CRAWLER_RUN_DURATION = 'crawler-run_duration'; // @Deprecated since v7.0 TODO: remove after v7.5
@@ -249,9 +249,9 @@ class Base extends Root
 	const O_CRAWLER_ROLES = 'crawler-roles';
 	const O_CRAWLER_COOKIES = 'crawler-cookies';
 
-	## -------------------------------------------------- ##
-	## --------------		 Misc 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------        Misc       ----------------- ##
+	// -------------------------------------------------- ##
 	const O_MISC_HEARTBEAT_FRONT = 'misc-heartbeat_front';
 	const O_MISC_HEARTBEAT_FRONT_TTL = 'misc-heartbeat_front_ttl';
 	const O_MISC_HEARTBEAT_BACK = 'misc-heartbeat_back';
@@ -259,9 +259,9 @@ class Base extends Root
 	const O_MISC_HEARTBEAT_EDITOR = 'misc-heartbeat_editor';
 	const O_MISC_HEARTBEAT_EDITOR_TTL = 'misc-heartbeat_editor_ttl';
 
-	## -------------------------------------------------- ##
-	## --------------		 CDN 		----------------- ##
-	## -------------------------------------------------- ##
+	// -------------------------------------------------- ##
+	// --------------        CDN        ----------------- ##
+	// -------------------------------------------------- ##
 	const O_CDN = 'cdn';
 	const O_CDN_ORI = 'cdn-ori';
 	const O_CDN_ORI_DIR = 'cdn-ori_dir';
@@ -695,15 +695,15 @@ class Base extends Root
 				 * Special handler for CDN_mapping
 				 *
 				 * format in .ini:
-				 * 		[cdn-mapping]
-				 *   	url[0] = 'https://example.com/'
-				 *     	inc_js[0] = true
-				 *     	filetype[0] = '.css
-				 *     				   .js
-				 *     				   .jpg'
+				 *      [cdn-mapping]
+				 *      url[0] = 'https://example.com/'
+				 *      inc_js[0] = true
+				 *      filetype[0] = '.css
+				 *                     .js
+				 *                     .jpg'
 				 *
 				 * format out:
-				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
+				 *      [0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
 				 */
 				if ($k == self::O_CDN_MAPPING) {
 					$mapping_fields = array(
@@ -742,7 +742,7 @@ class Base extends Root
 
 		// Load internal default vals
 		// Setting the default bool to int is also to avoid type casting override it back to bool
-		self::$_default_options[self::O_CACHE] = is_multisite() ? self::VAL_ON2 : self::VAL_ON; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+		self::$_default_options[self::O_CACHE] = is_multisite() ? self::VAL_ON2 : self::VAL_ON; // For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 
 		// Load default vals containing variables
 		if (!self::$_default_options[self::O_CDN_ORI_DIR]) {
@@ -826,16 +826,16 @@ class Base extends Root
 			self::O_CACHE_FORCE_URI => 'relative',
 			self::O_CACHE_FORCE_PUB_URI => 'relative',
 			self::O_CACHE_EXC => 'relative',
-			// self::O_OPTM_CSS_EXC		=> 'uri', // Need to comment out for inline & external CSS
-			// self::O_OPTM_JS_EXC			=> 'uri',
+			// self::O_OPTM_CSS_EXC     => 'uri', // Need to comment out for inline & external CSS
+			// self::O_OPTM_JS_EXC          => 'uri',
 			self::O_OPTM_EXC => 'relative',
 			self::O_OPTM_CCSS_SEP_URI => 'uri',
-			// self::O_OPTM_JS_DEFER_EXC	=> 'uri',
+			// self::O_OPTM_JS_DEFER_EXC    => 'uri',
 			self::O_OPTM_DNS_PREFETCH => 'domain',
 			self::O_CDN_ORI => 'noprotocol,trailingslash', // `Original URLs`
-			// self::O_OPTM_LOCALIZE_DOMAINS	=> 'noprotocol', // `Localize Resources`
-			// self::	=> '',
-			// self::	=> '',
+			// self::O_OPTM_LOCALIZE_DOMAINS    => 'noprotocol', // `Localize Resources`
+			// self::   => '',
+			// self::   => '',
 		);
 
 		if (!empty($filters[$id])) {

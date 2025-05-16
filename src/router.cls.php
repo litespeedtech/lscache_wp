@@ -5,8 +5,8 @@
  *
  * This generate the valid action.
  *
- * @since      	1.1.0
- * @since  		1.5 Moved into /inc
+ * @since       1.1.0
+ * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -95,7 +95,7 @@ class Router extends Base
 
 		// Add i to avoid browser too many redirected warning
 		$i = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
-		$i++;
+		++$i;
 
 		$link = Utility::build_url($action, $type, false, null, array('litespeed_i' => $i));
 
@@ -180,6 +180,7 @@ class Router extends Base
 
 		/**
 		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`
+		 *
 		 * @since  2.7.2
 		 */
 		if (wp_doing_cron()) {
@@ -188,6 +189,7 @@ class Router extends Base
 
 		/**
 		 * Bypass login/reg page
+		 *
 		 * @since  1.6
 		 */
 		if (self::_is_login_page()) {
@@ -197,6 +199,7 @@ class Router extends Base
 
 		/**
 		 * Bypass post/page link setting
+		 *
 		 * @since 2.9.8.5
 		 */
 		$rest_prefix = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
@@ -254,8 +257,8 @@ class Router extends Base
 
 		// Check if is from crawler
 		// if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
-		// 	Debug2::debug( '[Router] user agent not match' );
-		// 	return;
+		// Debug2::debug( '[Router] user agent not match' );
+		// return;
 		// }
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if (!$server_ip || self::get_ip() !== $server_ip) {
@@ -313,7 +316,11 @@ class Router extends Base
 		}
 
 		$hash = Str::rrand(32);
-		self::update_option(self::ITEM_FLASH_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
+		self::update_option(self::ITEM_FLASH_HASH, array(
+			'hash' => $hash,
+			'ts' => time(),
+			'uid' => $uid,
+		));
 		return $hash;
 	}
 
@@ -332,7 +339,11 @@ class Router extends Base
 
 		// As this is called only when starting crawling, not per page, no need to reuse
 		$hash = Str::rrand(32);
-		self::update_option(self::ITEM_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
+		self::update_option(self::ITEM_HASH, array(
+			'hash' => $hash,
+			'ts' => time(),
+			'uid' => $uid,
+		));
 		return $hash;
 	}
 
@@ -369,6 +380,7 @@ class Router extends Base
 			/**
 			 * Fix double login issue
 			 * The previous user init refactoring didn't fix this bcos this is in login process and the user role could change
+			 *
 			 * @see  https://github.com/litespeedtech/lscache_wp/commit/69e7bc71d0de5cd58961bae953380b581abdc088
 			 * @since  2.9.8 Won't assign const if in login process
 			 */
@@ -391,7 +403,7 @@ class Router extends Base
 	 */
 	public static function frontend_path()
 	{
-		//todo: move to htaccess.cls ?
+		// todo: move to htaccess.cls ?
 		if (!isset(self::$_frontend_path)) {
 			$frontend = rtrim(ABSPATH, '/'); // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
@@ -538,12 +550,12 @@ class Router extends Base
 	 */
 	private function verify_action()
 	{
-		if (empty($_REQUEST[Router::ACTION])) {
+		if (empty($_REQUEST[self::ACTION])) {
 			Debug2::debug2('[Router] LSCWP_CTRL bypassed empty');
 			return;
 		}
 
-		$action = stripslashes($_REQUEST[Router::ACTION]);
+		$action = stripslashes($_REQUEST[self::ACTION]);
 
 		if (!$action) {
 			return;
@@ -601,7 +613,7 @@ class Router extends Base
 
 			case Core::ACTION_PURGE_BY:
 				if (defined('LITESPEED_ON') && ($_can_network_option || $_can_option || self::is_ajax())) {
-					//here may need more security
+					// here may need more security
 					self::$_action = $action;
 				}
 				return;
@@ -661,6 +673,7 @@ class Router extends Base
 			case Core::ACTION_DISMISS:
 				/**
 				 * Non ajax call can dismiss too
+				 *
 				 * @since  2.9
 				 */
 				// if ( self::is_ajax() ) {
@@ -684,7 +697,7 @@ class Router extends Base
 	 */
 	public function verify_nonce($action)
 	{
-		if (!isset($_REQUEST[Router::NONCE]) || !wp_verify_nonce($_REQUEST[Router::NONCE], $action)) {
+		if (!isset($_REQUEST[self::NONCE]) || !wp_verify_nonce($_REQUEST[self::NONCE], $action)) {
 			return false;
 		} else {
 			return true;
@@ -713,8 +726,8 @@ class Router extends Base
 		// if(empty($uip) || count($uip) != 4) Return false;
 		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
 		// foreach($ip_list as $key => $ip) {
-		// 	if(count($ip) != 4) continue;
-		// 	for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
+		// if(count($ip) != 4) continue;
+		// for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
 		// }
 		return in_array(self::$_ip, $ip_list);
 	}
@@ -731,13 +744,13 @@ class Router extends Base
 	{
 		$_ip = '';
 		// if ( function_exists( 'apache_request_headers' ) ) {
-		// 	$apache_headers = apache_request_headers();
-		// 	$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
-		// 	if ( ! $_ip ) {
-		// 		$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
-		// 		$_ip = explode( ',', $_ip );
-		// 		$_ip = $_ip[ 0 ];
-		// 	}
+		// $apache_headers = apache_request_headers();
+		// $_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
+		// if ( ! $_ip ) {
+		// $_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
+		// $_ip = explode( ',', $_ip );
+		// $_ip = $_ip[ 0 ];
+		// }
 
 		// }
 

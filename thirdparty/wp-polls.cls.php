@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the WP-Polls plugin.
  *
- * @since		1.0.7
+ * @since       1.0.7
  */
 namespace LiteSpeed\Thirdparty;
 

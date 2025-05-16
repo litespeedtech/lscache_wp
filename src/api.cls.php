@@ -2,11 +2,11 @@
 /**
  * The plugin API class.
  *
- * @since      	1.1.3
- * @since  		1.4 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.3
+ * @since       1.4 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
 

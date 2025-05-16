@@ -3,7 +3,6 @@
 /**
  * The admin optimize tool
  *
- *
  * @since      1.2.1
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src
@@ -48,7 +47,7 @@ class DB_Optm extends Root
 	 * @since  1.2.1
 	 * @access public
 	 * @param  string $type The type to clean
-	 * @param  bool $ignore_multisite If ignore multisite check
+	 * @param  bool   $ignore_multisite If ignore multisite check
 	 * @return  int The rows that will be affected
 	 */
 	public function db_count($type, $ignore_multisite = false)

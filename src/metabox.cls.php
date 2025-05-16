@@ -2,10 +2,10 @@
 /**
  * The class to operate post editor metabox settings
  *
- * @since 		4.7
- * @package    	Core
- * @subpackage 	Core/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       4.7
+ * @package     Core
+ * @subpackage  Core/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
 
@@ -21,6 +21,7 @@ class Metabox extends Root
 
 	/**
 	 * Get the setting list
+	 *
 	 * @since 4.7
 	 */
 	public function __construct()
@@ -37,6 +38,7 @@ class Metabox extends Root
 
 	/**
 	 * Register post edit settings
+	 *
 	 * @since 4.7
 	 */
 	public function register_settings()
@@ -48,6 +50,7 @@ class Metabox extends Root
 
 	/**
 	 * Register meta box
+	 *
 	 * @since 4.7
 	 */
 	public function add_meta_boxes($post_type)
@@ -65,6 +68,7 @@ class Metabox extends Root
 
 	/**
 	 * Show meta box content
+	 *
 	 * @since 4.7
 	 */
 	public function meta_box_options()
@@ -74,6 +78,7 @@ class Metabox extends Root
 
 	/**
 	 * Save settings
+	 *
 	 * @since 4.7
 	 */
 	public function save_meta_box_settings($post_id, $post)
@@ -104,6 +109,7 @@ class Metabox extends Root
 
 	/**
 	 * Load setting per post
+	 *
 	 * @since 4.7
 	 */
 	public function setting($conf, $post_id = false)
@@ -127,6 +133,7 @@ class Metabox extends Root
 
 	/**
 	 * Save a metabox value
+	 *
 	 * @since 4.7
 	 */
 	public function save($post_id, $name, $val, $is_append = false)
@@ -153,6 +160,7 @@ class Metabox extends Root
 
 	/**
 	 * Load exclude images per post
+	 *
 	 * @since 4.7
 	 */
 	public function lazy_img_excludes($list)

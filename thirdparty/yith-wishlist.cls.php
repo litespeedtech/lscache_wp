@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the YITH WooCommerce Wishlist plugin.
  *
- * @since		1.1.0
+ * @since       1.1.0
  */
 namespace LiteSpeed\Thirdparty;
 

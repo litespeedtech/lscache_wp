@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the Theme My Login plugin.
  *
- * @since		1.0.15
+ * @since       1.0.15
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -15,7 +15,6 @@ class Theme_My_Login
 	 *
 	 * @since 1.0.15
 	 * @access public
-	 *
 	 */
 	public static function detect()
 	{

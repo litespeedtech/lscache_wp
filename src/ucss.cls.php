@@ -3,7 +3,7 @@
 /**
  * The ucss class.
  *
- * @since      	5.1
+ * @since       5.1
  */
 
 namespace LiteSpeed;
@@ -35,6 +35,7 @@ class UCSS extends Base
 
 	/**
 	 * Uniform url tag for ucss usage
+	 *
 	 * @since 4.7
 	 */
 	public static function get_url_tag($request_url = false)
@@ -221,7 +222,7 @@ class UCSS extends Base
 				$v['is_webp'] = false;
 			}
 
-			$i++;
+			++$i;
 			$res = $this->_send_req($v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $v['is_mobile'], $v['is_webp']);
 			if (!$res) {
 				// Status is wrong, drop this this->_queue
@@ -497,6 +498,7 @@ class UCSS extends Base
 
 	/**
 	 * Notify finished from server
+	 *
 	 * @since 5.1
 	 */
 	public function notify()
@@ -540,7 +542,7 @@ class UCSS extends Base
 				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
 				$this->_save_con('ucss', $v['data_ucss'], $v['queue_k'], $is_mobile, $is_webp);
 
-				$valid_i++;
+				++$valid_i;
 			}
 
 			unset($this->_queue[$v['queue_k']]);

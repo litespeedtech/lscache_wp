@@ -90,7 +90,7 @@ class WooCommerce extends Base
 		}
 
 		if (is_admin()) {
-			add_action('litespeed_api_purge_post', array($this, 'backend_purge')); //todo
+			add_action('litespeed_api_purge_post', array($this, 'backend_purge')); // todo
 			add_action('delete_term_relationships', array($this, 'delete_rel'), 10, 2);
 			add_action('litespeed_settings_tab', array($this, 'settings_add_tab'));
 			add_action('litespeed_settings_content', array($this, 'settings_add_content'));
@@ -494,8 +494,8 @@ class WooCommerce extends Base
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param string $esi_id 		The ESI block id if a request is an ESI request.
-	 * @return boolean           	True if cacheable, false if not.
+	 * @param string $esi_id        The ESI block id if a request is an ESI request.
+	 * @return boolean              True if cacheable, false if not.
 	 */
 	public function set_control($esi_id)
 	{
@@ -505,6 +505,7 @@ class WooCommerce extends Base
 
 		/**
 		 * Avoid possible 500 issue
+		 *
 		 * @since 1.6.2.1
 		 */
 		if (!function_exists('WC')) {
@@ -530,6 +531,7 @@ class WooCommerce extends Base
 				}
 				/**
 				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
+				 *
 				 * @since  1.4
 				 */
 				$page_ids = array_filter(array(wc_get_page_id('cart'), wc_get_page_id('checkout'), wc_get_page_id('myaccount')));
@@ -654,7 +656,7 @@ class WooCommerce extends Base
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param int $post_id Object ID.
+	 * @param int   $post_id Object ID.
 	 * @param array $term_ids An array of term taxonomy IDs.
 	 */
 	public function delete_rel($post_id, $term_ids)
@@ -716,7 +718,7 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param $unused
 	 * @param integer $comment_approved Whether the comment is approved or not.
-	 * @param array $commentdata Information about the comment.
+	 * @param array   $commentdata Information about the comment.
 	 */
 	public function add_review($unused, $comment_approved, $commentdata)
 	{
@@ -840,12 +842,12 @@ class WooCommerce extends Base
 		/*
 		 * admin-ajax form-data structure
 		 * array(
-		 *		"type" => "saveproducts",
-		 *		"data" => array(
-		 *			"column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
-		 *			"column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
-		 *		)
-		 *	)
+		 *      "type" => "saveproducts",
+		 *      "data" => array(
+		 *          "column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
+		 *          "column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
+		 *      )
+		 *  )
 		 */
 		$stock_string_arr = array();
 		foreach ($_POST['data'] as $stock_value) {

@@ -1,9 +1,10 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'standard' => __( 'Standard Presets', 'litespeed-cache' ),
+	'standard'      => __( 'Standard Presets', 'litespeed-cache' ),
 	'import_export' => __( 'Import / Export', 'litespeed-cache' ),
 );
 
@@ -23,11 +24,11 @@ $menu_list = array(
 	<h2 class="litespeed-header nav-tab-wrapper">
 	<?php
 		$i = 1;
-		foreach ($menu_list as $tab => $val){
-			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
-			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-			$i ++;
-		}
+	foreach ( $menu_list as $tab => $val ) {
+		$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
+		echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
+		++$i;
+	}
 	?>
 	</h2>
 
@@ -35,15 +36,15 @@ $menu_list = array(
 	<?php
 
 		// include all tpl for faster UE
-		foreach ($menu_list as $tab => $val) {
-			echo "<div data-litespeed-layout='$tab'>";
-			if ('import_export' === $tab) {
-				require LSCWP_DIR . "tpl/toolbox/$tab.tpl.php";
-			} else {
-				require LSCWP_DIR . "tpl/presets/$tab.tpl.php";
-			}
-			echo "</div>";
+	foreach ( $menu_list as $tab => $val ) {
+		echo "<div data-litespeed-layout='$tab'>";
+		if ( 'import_export' === $tab ) {
+			require LSCWP_DIR . "tpl/toolbox/$tab.tpl.php";
+		} else {
+			require LSCWP_DIR . "tpl/presets/$tab.tpl.php";
 		}
+		echo '</div>';
+	}
 
 	?>
 	</div>

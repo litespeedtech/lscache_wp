@@ -453,6 +453,7 @@ class WP_Object_Cache
 
 		/**
 		 * Fix multiple instance using same oc issue
+		 *
 		 * @since  1.8.2
 		 */
 		!defined('LSOC_PREFIX') && define('LSOC_PREFIX', substr(md5(__FILE__), -5));
@@ -734,7 +735,7 @@ class WP_Object_Cache
 
 		if (!$this->_object_cache->is_non_persistent($group)) {
 			$this->_object_cache->set($id, serialize(array('data' => $data)), (int) $expire);
-			$this->count_set++;
+			++$this->count_set;
 		}
 
 		if ($this->_object_cache->store_transients($group)) {
@@ -807,7 +808,7 @@ class WP_Object_Cache
 		if (array_key_exists($id, $this->_cache) && !$force) {
 			$found = true;
 			$cache_val = $this->_cache[$id];
-			$this->count_hit_incall++;
+			++$this->count_hit_incall;
 		} elseif (!array_key_exists($id, $this->_cache_404) && !$this->_object_cache->is_non_persistent($group)) {
 			$v = $this->_object_cache->get($id);
 
@@ -817,7 +818,7 @@ class WP_Object_Cache
 
 			// To be compatible with false val
 			if (is_array($v) && array_key_exists('data', $v)) {
-				$this->count_hit++;
+				++$this->count_hit;
 				$found = true;
 				$found_in_oc = true;
 				$cache_val = $v['data'];
@@ -825,10 +826,10 @@ class WP_Object_Cache
 				// Can't find key, cache it to 404
 				// error_log("oc: add404\t\t\t[key] " . $id );
 				$this->_cache_404[$id] = 1;
-				$this->count_miss++;
+				++$this->count_miss;
 			}
 		} else {
-			$this->count_miss_incall++;
+			++$this->count_miss_incall;
 		}
 
 		if (is_object($cache_val)) {
@@ -847,7 +848,7 @@ class WP_Object_Cache
 			$this->_cache[$id] = $cache_val;
 		}
 
-		$this->cache_total++;
+		++$this->cache_total;
 
 		return $cache_val;
 	}
@@ -1117,7 +1118,7 @@ class WP_Object_Cache
 	private function _transient_get($transient, $group)
 	{
 		if ($group == 'transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$transient_option = '_transient_' . $transient;
 			if (!wp_installing()) {
 				// If option is not in alloptions, it is not autoloaded and thus has a timeout
@@ -1136,9 +1137,9 @@ class WP_Object_Cache
 			if (!isset($value)) {
 				$value = get_option($transient_option);
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		} elseif ($group == 'site-transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$no_timeout = array('update_core', 'update_plugins', 'update_themes');
 			$transient_option = '_site_transient_' . $transient;
 			if (!in_array($transient, $no_timeout)) {
@@ -1154,7 +1155,7 @@ class WP_Object_Cache
 			if (!isset($value)) {
 				$value = get_site_option($transient_option);
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		} else {
 			$value = false;
 		}
@@ -1172,7 +1173,7 @@ class WP_Object_Cache
 	private function _transient_set($transient, $value, $group, $expiration)
 	{
 		if ($group == 'transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$transient_timeout = '_transient_timeout_' . $transient;
 			$transient_option = '_transient_' . $transient;
 			if (false === get_option($transient_option)) {
@@ -1200,9 +1201,9 @@ class WP_Object_Cache
 					$result = update_option($transient_option, $value);
 				}
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		} elseif ($group == 'site-transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$transient_timeout = '_site_transient_timeout_' . $transient;
 			$option = '_site_transient_' . $transient;
 			if (false === get_site_option($option)) {
@@ -1216,7 +1217,7 @@ class WP_Object_Cache
 				}
 				$result = update_site_option($option, $value);
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		} else {
 			$result = null;
 		}
@@ -1234,23 +1235,23 @@ class WP_Object_Cache
 	private function _transient_del($transient, $group)
 	{
 		if ($group == 'transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$option_timeout = '_transient_timeout_' . $transient;
 			$option = '_transient_' . $transient;
 			$result = delete_option($option);
 			if ($result) {
 				delete_option($option_timeout);
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		} elseif ($group == 'site-transient') {
-			/**** Ori WP func start ****/
+			/**** Ori WP func start */
 			$option_timeout = '_site_transient_timeout_' . $transient;
 			$option = '_site_transient_' . $transient;
 			$result = delete_site_option($option);
 			if ($result) {
 				delete_site_option($option_timeout);
 			}
-			/**** Ori WP func end ****/
+			/**** Ori WP func end */
 		}
 	}
 

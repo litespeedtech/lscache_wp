@@ -2,10 +2,10 @@
 /**
  * The Third Party integration with AMP plugin.
  *
- * @since		2.9.8.6
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.9.8.6
+ * @package     LiteSpeed_Cache
+ * @subpackage  LiteSpeed_Cache/thirdparty
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 

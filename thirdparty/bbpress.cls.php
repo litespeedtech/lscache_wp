@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the bbPress plugin.
  *
- * @since		1.0.5
+ * @since       1.0.5
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -21,7 +21,7 @@ class BBPress
 	public static function detect()
 	{
 		if (function_exists('is_bbpress')) {
-			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge'); //todo
+			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge'); // todo
 			if (apply_filters('litespeed_esi_status', false)) {
 				// don't consider private cache yet (will do if any feedback)
 				add_action('litespeed_control_finalize', __CLASS__ . '::set_control');

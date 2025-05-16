@@ -2,9 +2,10 @@
 /**
  * The Third Party integration with the bbPress plugin.
  *
- * @since		2.9.8.8
+ * @since       2.9.8.8
  */
 namespace LiteSpeed\Thirdparty;
+
 defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;
@@ -18,7 +19,7 @@ class Elementor
 		}
 
 		if (!is_admin()) {
-			//		    add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 );	// temporarily comment out this line for backward compatibility
+			// add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 ); // temporarily comment out this line for backward compatibility
 		}
 
 		if (isset($_GET['action']) && $_GET['action'] === 'elementor') {

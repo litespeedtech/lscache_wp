@@ -1077,6 +1077,7 @@ class Cloud extends Base
 
 	/**
 	 * Ping to choose the closest nodes
+	 *
 	 * @since 7.0
 	 */
 	private function _get_closest_nodes($list, $service)
@@ -1302,6 +1303,7 @@ class Cloud extends Base
 
 	/**
 	 * Check if a service tag ttl is valid or not
+	 *
 	 * @since 7.1
 	 */
 	public function service_hot($service_tag)
@@ -1389,8 +1391,8 @@ class Cloud extends Base
 		// Encrypt service as signature
 		// $signature_ts = time();
 		// $sign_data = array(
-		// 	'service_tag' => $service_tag,
-		// 	'ts' => $signature_ts,
+		// 'service_tag' => $service_tag,
+		// 'ts' => $signature_ts,
 		// );
 		// $data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
 		// $data['signature_ts'] = $signature_ts;
@@ -1410,7 +1412,10 @@ class Cloud extends Base
 		$response = wp_safe_remote_post($url, array(
 			'body' => $param,
 			'timeout' => $time_out ?: 15,
-			'headers' => array('Accept' => 'application/json', 'Expect' => ''),
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Expect' => '',
+			),
 		));
 
 		return $this->_parse_response($response, $service, $service_tag, $server);
@@ -1554,6 +1559,7 @@ class Cloud extends Base
 
 	/**
 	 * Extract msg from json
+	 *
 	 * @since 5.0
 	 */
 	public function extract_msg($json, $service, $server = false, $is_callback = false)
@@ -1691,6 +1697,7 @@ class Cloud extends Base
 
 	/**
 	 * Clear QC linked status
+	 *
 	 * @since 5.0
 	 */
 	private function _reset_qc_reg()
@@ -1722,6 +1729,7 @@ class Cloud extends Base
 
 	/**
 	 * REST call: check if the error domain is valid call for auto alias purpose
+	 *
 	 * @since 5.0
 	 */
 	public function rest_err_domains()
@@ -1744,6 +1752,7 @@ class Cloud extends Base
 
 	/**
 	 * Remove a domain from err domain
+	 *
 	 * @since 5.0
 	 */
 	private function _remove_domain_from_err_list($url)
@@ -1754,6 +1763,7 @@ class Cloud extends Base
 
 	/**
 	 * Check if is err domain
+	 *
 	 * @since 5.0
 	 */
 	private function _is_err_domain($site_url)
@@ -1902,7 +1912,10 @@ class Cloud extends Base
 	{
 		self::debug('Load remote Cloud IP list from ' . self::CLOUD_IPS);
 		// Prevent multiple call in a short period
-		self::save_summary(array('ips_ts' => time(), 'ips_ts_runner' => time()));
+		self::save_summary(array(
+			'ips_ts' => time(),
+			'ips_ts_runner' => time(),
+		));
 
 		$response = wp_safe_remote_get(self::CLOUD_IPS . '?json');
 		if (is_wp_error($response)) {
@@ -1936,11 +1949,15 @@ class Cloud extends Base
 	public static function err($code)
 	{
 		self::debug("❌ Error response code: $code");
-		return array('_res' => 'err', '_msg' => $code);
+		return array(
+			'_res' => 'err',
+			'_msg' => $code,
+		);
 	}
 
 	/**
 	 * Return pong for ping to check PHP function availability
+	 *
 	 * @since 6.5
 	 */
 	public function ping()
@@ -1972,6 +1989,7 @@ class Cloud extends Base
 
 	/**
 	 * Display a banner for dev env if using preview QC node.
+	 *
 	 * @since 7.0
 	 */
 	public function maybe_preview_banner()

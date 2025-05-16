@@ -3,7 +3,6 @@
 /**
  * The report class
  *
- *
  * @since      1.1.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src

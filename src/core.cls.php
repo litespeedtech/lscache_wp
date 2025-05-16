@@ -5,7 +5,7 @@
  *
  * Note: Core doesn't allow $this->cls( 'Core' )
  *
- * @since      	1.0.0
+ * @since       1.0.0
  */
 
 namespace LiteSpeed;
@@ -51,6 +51,7 @@ class Core extends Root
 
 		/**
 		 * Load API hooks
+		 *
 		 * @since  3.0
 		 */
 		$this->cls('API')->init();
@@ -67,7 +68,8 @@ class Core extends Root
 		/**
 		 * Register plugin activate/deactivate/uninstall hooks
 		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		 * @since  2.7.1	Disabled admin&CLI check to make frontend able to enable cache too
+		 *
+		 * @since  2.7.1    Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php';
@@ -133,6 +135,7 @@ class Core extends Root
 
 		/**
 		 * Hook internal REST
+		 *
 		 * @since  2.9.4
 		 */
 		$this->cls('REST');
@@ -141,6 +144,7 @@ class Core extends Root
 		 * Hook wpnonce function
 		 *
 		 * Note: ESI nonce won't be available until hook after_setup_theme ESI init due to Guest Mode concern
+		 *
 		 * @since v4.1
 		 */
 		if ($this->cls('Router')->esi_enabled() && !function_exists('wp_create_nonce')) {
@@ -164,8 +168,9 @@ class Core extends Root
 		/**
 		 * Added hook before init
 		 * 3rd party preload hooks will be fired here too (e.g. Divi disable all in edit mode)
+		 *
 		 * @since  1.6.6
-		 * @since  2.6 	Added filter to all config values in Conf
+		 * @since  2.6  Added filter to all config values in Conf
 		 */
 		do_action('litespeed_init');
 		add_action('wp_ajax_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler');
@@ -191,6 +196,7 @@ class Core extends Root
 
 		/**
 		 * Check if is non optm simulator
+		 *
 		 * @since  2.9
 		 */
 		if (!empty($_GET[Router::ACTION]) && $_GET[Router::ACTION] == 'before_optm' && !apply_filters('litespeed_qs_forbidden', false)) {
@@ -200,6 +206,7 @@ class Core extends Root
 
 		/**
 		 * Register vary filter
+		 *
 		 * @since  1.6.2
 		 */
 		$this->cls('Control')->init();
@@ -241,6 +248,7 @@ class Core extends Root
 
 		/**
 		 * Preload ESI functionality for ESI request uri recovery
+		 *
 		 * @since 1.8.1
 		 * @since  4.0 ESI init needs to be after Guest mode detection to bypass ESI if is under Guest mode
 		 */
@@ -461,6 +469,7 @@ class Core extends Root
 
 		/**
 		 * Replace ESI preserved list
+		 *
 		 * @since  3.3 Replace this in the end to avoid `Inline JS Defer` or other Page Optm features encoded ESI tags wrongly, which caused LSWS can't recognize ESI
 		 */
 		$buffer = $this->cls('ESI')->finalize($buffer);
@@ -481,6 +490,7 @@ class Core extends Root
 		}
 		/**
 		 * Silence comment for json req
+		 *
 		 * @since 2.9.3
 		 */
 		if (REST::cls()->is_rest() || Router::is_ajax()) {
@@ -496,6 +506,7 @@ class Core extends Root
 
 		/**
 		 * If ESI req is JSON, give the content JSON format
+		 *
 		 * @since  2.9.3
 		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
@@ -669,6 +680,7 @@ class Core extends Root
 
 		/**
 		 * If is CLI and contains Purge Header, then issue a HTTP req to Purge
+		 *
 		 * @since v5.3
 		 */
 		if (defined('LITESPEED_CLI')) {
@@ -694,6 +706,7 @@ class Core extends Root
 
 	/**
 	 * Append one HTML comment
+	 *
 	 * @since 5.5
 	 */
 	public static function comment($data)
@@ -708,6 +721,7 @@ class Core extends Root
 
 	/**
 	 * Send HTTP header
+	 *
 	 * @since 5.3
 	 */
 	private function _http_header($header)
