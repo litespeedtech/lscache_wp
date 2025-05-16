@@ -10,10 +10,9 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class Woo_Paypal
-{
-	public static function detect()
-	{
+class Woo_Paypal {
+
+	public static function detect() {
 		if (!defined('WC_GATEWAY_PPEC_VERSION')) {
 			return;
 		}

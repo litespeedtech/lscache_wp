@@ -13,15 +13,14 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Lang extends Base
-{
+class Lang extends Base {
+
 	/**
 	 * Get image status per status bit
 	 *
 	 * @since  3.0
 	 */
-	public static function img_status($status = null)
-	{
+	public static function img_status( $status = null ) {
 		$list = array(
 			Img_Optm::STATUS_NEW => __('Images not requested', 'litespeed-cache'),
 			Img_Optm::STATUS_RAW => __('Images ready to request', 'litespeed-cache'),
@@ -42,8 +41,7 @@ class Lang extends Base
 	 *
 	 * @since  4.7
 	 */
-	public static function maybe_translate($raw_string)
-	{
+	public static function maybe_translate( $raw_string ) {
 		$map = array(
 			'auto_alias_failed_cdn' =>
 				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
@@ -83,8 +81,7 @@ class Lang extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function title($id)
-	{
+	public static function title( $id ) {
 		$_lang_list = array(
 			self::O_SERVER_IP => __('Server IP', 'litespeed-cache'),
 			self::O_GUEST_UAS => __('Guest Mode User Agents', 'litespeed-cache'),

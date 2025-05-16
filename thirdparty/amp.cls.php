@@ -13,13 +13,12 @@ defined('WPINC') || exit();
 
 use LiteSpeed\API;
 
-class AMP
-{
+class AMP {
+
 	/**
 	 * @since 4.2
 	 */
-	private static function _maybe_amp($amp_function)
-	{
+	private static function _maybe_amp( $amp_function ) {
 		if (is_admin()) {
 			return;
 		}
@@ -40,8 +39,7 @@ class AMP
 	 *
 	 * @since 4.2
 	 */
-	public static function maybe_acc_mob_pages()
-	{
+	public static function maybe_acc_mob_pages() {
 		self::_maybe_amp('ampforwp_is_amp_endpoint');
 	}
 
@@ -50,8 +48,7 @@ class AMP
 	 *
 	 * @since 4.2.0.1
 	 */
-	public static function maybe_google_amp()
-	{
+	public static function maybe_google_amp() {
 		self::_maybe_amp('amp_is_request');
 	}
 
@@ -63,8 +60,7 @@ class AMP
 	 * @since 2.9.8.6
 	 * @access public
 	 */
-	public static function preload()
-	{
+	public static function preload() {
 		add_action('wp', __CLASS__ . '::maybe_acc_mob_pages');
 		add_action('wp', __CLASS__ . '::maybe_google_amp');
 

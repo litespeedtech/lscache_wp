@@ -13,8 +13,8 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Tool extends Root
-{
+class Tool extends Root {
+
 	const LOG_TAG = '[Tool]';
 
 	/**
@@ -23,8 +23,7 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function check_ip()
-	{
+	public function check_ip() {
 		self::debug('✅ check_ip');
 
 		$response = wp_safe_remote_get('https://cyberpanel.sh/?ip', array(
@@ -56,11 +55,10 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function heartbeat()
-	{
-		add_action('wp_enqueue_scripts', array($this, 'heartbeat_frontend'));
-		add_action('admin_enqueue_scripts', array($this, 'heartbeat_backend'));
-		add_filter('heartbeat_settings', array($this, 'heartbeat_settings'));
+	public function heartbeat() {
+		add_action('wp_enqueue_scripts', array( $this, 'heartbeat_frontend' ));
+		add_action('admin_enqueue_scripts', array( $this, 'heartbeat_backend' ));
+		add_filter('heartbeat_settings', array( $this, 'heartbeat_settings' ));
 	}
 
 	/**
@@ -69,8 +67,7 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function heartbeat_frontend()
-	{
+	public function heartbeat_frontend() {
 		if (!$this->conf(Base::O_MISC_HEARTBEAT_FRONT)) {
 			return;
 		}
@@ -87,8 +84,7 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function heartbeat_backend()
-	{
+	public function heartbeat_backend() {
 		if ($this->_is_editor()) {
 			if (!$this->conf(Base::O_MISC_HEARTBEAT_EDITOR)) {
 				return;
@@ -116,8 +112,7 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function heartbeat_settings($settings)
-	{
+	public function heartbeat_settings( $settings ) {
 		// Check editor first to make frontend editor valid too
 		if ($this->_is_editor()) {
 			if ($this->conf(Base::O_MISC_HEARTBEAT_EDITOR)) {
@@ -142,9 +137,8 @@ class Tool extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	private function _is_editor()
-	{
-		$res = is_admin() && Utility::str_hit_array($_SERVER['REQUEST_URI'], array('post.php', 'post-new.php'));
+	private function _is_editor() {
+		$res = is_admin() && Utility::str_hit_array($_SERVER['REQUEST_URI'], array( 'post.php', 'post-new.php' ));
 
 		return apply_filters('litespeed_is_editor', $res);
 	}

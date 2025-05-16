@@ -8,10 +8,9 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class Caldera_Forms
-{
-	public static function detect()
-	{
+class Caldera_Forms {
+
+	public static function detect() {
 		if (!defined('CFCORE_VER')) {
 			return;
 		}

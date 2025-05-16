@@ -8,8 +8,8 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class Divi_Theme_Builder
-{
+class Divi_Theme_Builder {
+
 	// private static $js_comment_box = false;
 
 	/**
@@ -18,8 +18,7 @@ class Divi_Theme_Builder
 	 * @since 2.9.7.2 #435538 #581740 #977284
 	 * @since  2.9.9.1 Added 'et_pb_preview' for loading image from library in divi page edit
 	 */
-	public static function preload()
-	{
+	public static function preload() {
 		if (!function_exists('et_setup_theme')) {
 			return;
 		}
@@ -28,8 +27,7 @@ class Divi_Theme_Builder
 		}
 	}
 
-	public static function detect()
-	{
+	public static function detect() {
 		if (!defined('ET_CORE')) {
 			return;
 		}

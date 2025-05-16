@@ -10,11 +10,11 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class CSS extends Base
-{
+class CSS extends Base {
+
 	const LOG_TAG = '[CSS]';
 
-	const TYPE_GEN_CCSS = 'gen_ccss';
+	const TYPE_GEN_CCSS     = 'gen_ccss';
 	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
 
 	protected $_summary;
@@ -26,11 +26,10 @@ class CSS extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_summary = self::get_summary();
 
-		add_filter('litespeed_ccss_whitelist', array($this->cls('Data'), 'load_ccss_whitelist'));
+		add_filter('litespeed_ccss_whitelist', array( $this->cls('Data'), 'load_ccss_whitelist' ));
 	}
 
 	/**
@@ -38,8 +37,7 @@ class CSS extends Base
 	 *
 	 * @since 4.0
 	 */
-	public function prepare_html_lazy()
-	{
+	public function prepare_html_lazy() {
 		return '<style>' . implode(',', $this->conf(self::O_OPTM_HTML_LAZY)) . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
 	}
 
@@ -49,8 +47,7 @@ class CSS extends Base
 	 * @since  1.3
 	 * @access public
 	 */
-	public function prepare_ccss()
-	{
+	public function prepare_ccss() {
 		// Get critical css for current page
 		// Note: need to consider mobile
 		$rules = $this->_ccss();
@@ -75,8 +72,7 @@ class CSS extends Base
 	 *
 	 * @since 4.0
 	 */
-	private function _gen_ccss_file_tag($request_url)
-	{
+	private function _gen_ccss_file_tag( $request_url ) {
 		if (is_404()) {
 			return '404';
 		}
@@ -108,8 +104,7 @@ class CSS extends Base
 	 *
 	 * @since  2.3
 	 */
-	private function _ccss()
-	{
+	private function _ccss() {
 		global $wp;
 		$request_url = get_permalink();
 		// Backup, in case get_permalink() fails.
@@ -118,9 +113,9 @@ class CSS extends Base
 		}
 
 		$filepath_prefix = $this->_build_filepath_prefix('ccss');
-		$url_tag = $this->_gen_ccss_file_tag($request_url);
-		$vary = $this->cls('Vary')->finalize_full_varies();
-		$filename = $this->cls('Data')->load_url_file($url_tag, $vary, 'ccss');
+		$url_tag         = $this->_gen_ccss_file_tag($request_url);
+		$vary            = $this->cls('Vary')->finalize_full_varies();
+		$filename        = $this->cls('Data')->load_url_file($url_tag, $vary, 'ccss');
 		if ($filename) {
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 
@@ -144,7 +139,7 @@ class CSS extends Base
 			return null;
 		}
 
-		$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
+		$queue_k                = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
 		$this->_queue[$queue_k] = array(
 			'url' => apply_filters('litespeed_ccss_url', $request_url),
 			'user_agent' => substr($ua, 0, 200),
@@ -183,8 +178,7 @@ class CSS extends Base
 	 * @since  2.3
 	 * @access private
 	 */
-	public static function cron_ccss($continue = false)
-	{
+	public static function cron_ccss( $continue = false ) {
 		$_instance = self::cls();
 		return $_instance->_cron_handler('ccss', $continue);
 	}
@@ -194,8 +188,7 @@ class CSS extends Base
 	 *
 	 * @since 4.2
 	 */
-	private function _cron_handler($type, $continue)
-	{
+	private function _cron_handler( $type, $continue ) {
 		$this->_queue = $this->load_queue($type);
 
 		if (empty($this->_queue)) {
@@ -276,10 +269,9 @@ class CSS extends Base
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _send_req($request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp)
-	{
+	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $type, $is_mobile, $is_webp ) {
 		// Check if has credit to push or not
-		$err = false;
+		$err       = false;
 		$allowance = $this->cls('Cloud')->allowance(Cloud::SVC_CCSS, $err);
 		if (!$allowance) {
 			Debug2::debug('[CCSS] ❌ No credit: ' . $err);
@@ -347,7 +339,7 @@ class CSS extends Base
 		}
 
 		// Save summary data
-		$this->_summary['last_spent_' . $type] = time() - $this->_summary['curr_request_' . $type];
+		$this->_summary['last_spent_' . $type]   = time() - $this->_summary['curr_request_' . $type];
 		$this->_summary['last_request_' . $type] = $this->_summary['curr_request_' . $type];
 		$this->_summary['curr_request_' . $type] = 0;
 		self::save_summary();
@@ -360,8 +352,7 @@ class CSS extends Base
 	 *
 	 * @since 4.2
 	 */
-	private function _save_con($type, $css, $queue_k, $mobile, $webp)
-	{
+	private function _save_con( $type, $css, $queue_k, $mobile, $webp ) {
 		// Add filters
 		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
 		Debug2::debug2('[CSS] con: ' . $css);
@@ -375,12 +366,12 @@ class CSS extends Base
 		$filecon_md5 = md5($css);
 
 		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
 		File::save($static_file, $css, true);
 
 		$url_tag = $this->_queue[$queue_k]['url_tag'];
-		$vary = $this->_queue[$queue_k]['vary'];
+		$vary    = $this->_queue[$queue_k]['vary'];
 		Debug2::debug2("[CSS] Save URL to file [file] $static_file [vary] $vary");
 
 		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $mobile, $webp);
@@ -393,10 +384,9 @@ class CSS extends Base
 	 *
 	 * @since  3.4.3
 	 */
-	public function test_url($request_url)
-	{
-		$user_agent = $_SERVER['HTTP_USER_AGENT'];
-		$html = $this->prepare_html($request_url, $user_agent);
+	public function test_url( $request_url ) {
+		$user_agent       = $_SERVER['HTTP_USER_AGENT'];
+		$html             = $this->prepare_html($request_url, $user_agent);
 		list($css, $html) = $this->prepare_css($html, true, true);
 		// var_dump( $css );
 		// $html = <<<EOT
@@ -428,8 +418,7 @@ class CSS extends Base
 	 *
 	 * @since  3.4.3
 	 */
-	public function prepare_html($request_url, $user_agent, $uid = false)
-	{
+	public function prepare_html( $request_url, $user_agent, $uid = false ) {
 		$html = $this->cls('Crawler')->self_curl(add_query_arg('LSCWP_CTRL', 'before_optm', $request_url), $user_agent, $uid);
 		Debug2::debug2('[CSS] self_curl result....', $html);
 
@@ -450,8 +439,7 @@ class CSS extends Base
 	 *
 	 * @since  3.4.3
 	 */
-	public function prepare_css($html, $is_webp = false, $dryrun = false)
-	{
+	public function prepare_css( $html, $is_webp = false, $dryrun = false ) {
 		$css = '';
 		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -520,13 +508,13 @@ class CSS extends Base
 				$con = $con . "\n";
 			}
 
-			$con = '/* ' . $debug_info . ' */' . $con;
+			$con  = '/* ' . $debug_info . ' */' . $con;
 			$css .= $con;
 
 			$html = str_replace($match[0], '', $html);
 		}
 
-		return array($css, $html);
+		return array( $css, $html );
 	}
 
 	/**
@@ -534,10 +522,9 @@ class CSS extends Base
 	 *
 	 * @since 7.1
 	 */
-	private function _filter_whitelist()
-	{
+	private function _filter_whitelist() {
 		$whitelist = array();
-		$list = apply_filters('litespeed_ccss_whitelist', $this->conf(self::O_OPTM_CCSS_SELECTOR_WHITELIST));
+		$list      = apply_filters('litespeed_ccss_whitelist', $this->conf(self::O_OPTM_CCSS_SELECTOR_WHITELIST));
 		foreach ($list as $v) {
 			if (substr($v, 0, 2) === '//') {
 				continue;
@@ -553,8 +540,7 @@ class CSS extends Base
 	 *
 	 * @since 7.1
 	 */
-	public function notify()
-	{
+	public function notify() {
 		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
@@ -591,7 +577,7 @@ class CSS extends Base
 			// Save data
 			if (!empty($v['data_ccss'])) {
 				$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
-				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
+				$is_webp   = $this->_queue[$v['queue_k']]['is_webp'];
 				$this->_save_con('ccss', $v['data_ccss'], $v['queue_k'], $is_mobile, $is_webp);
 
 				++$valid_i;
@@ -604,7 +590,7 @@ class CSS extends Base
 
 		self::debug('notified');
 
-		return Cloud::ok(array('count' => $valid_i));
+		return Cloud::ok(array( 'count' => $valid_i ));
 	}
 
 	/**
@@ -613,17 +599,16 @@ class CSS extends Base
 	 * @since  2.3
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_GEN_CCSS:
-				self::cron_ccss(true);
+            self::cron_ccss(true);
 				break;
 
 			case self::TYPE_CLEAR_Q_CCSS:
-				$this->clear_q('ccss');
+            $this->clear_q('ccss');
 				break;
 
 			default:

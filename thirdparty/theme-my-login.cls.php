@@ -8,16 +8,15 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class Theme_My_Login
-{
+class Theme_My_Login {
+
 	/**
 	 * Detects if Better Theme My Login is active.
 	 *
 	 * @since 1.0.15
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if (defined('THEME_MY_LOGIN_PATH')) {
 			add_action('litespeed_control_finalize', __CLASS__ . '::set_control');
 		}
@@ -29,8 +28,7 @@ class Theme_My_Login
 	 * @access public
 	 * @since 1.0.15
 	 */
-	public static function set_control()
-	{
+	public static function set_control() {
 		if (!apply_filters('litespeed_control_cacheable', false)) {
 			return;
 		}

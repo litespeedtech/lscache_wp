@@ -13,12 +13,11 @@ use WP_CLI;
 /**
  * Image Optm API CLI
  */
-class Image
-{
+class Image {
+
 	private $__img_optm;
 
-	public function __construct()
-	{
+	public function __construct() {
 		Debug2::debug('CLI_Cloud init');
 
 		$this->__img_optm = Img_Optm::cls();
@@ -37,8 +36,7 @@ class Image
 	 *     # Switch to optimized images
 	 *     $ wp litespeed-image batch_switch optm
 	 */
-	public function batch_switch($param)
-	{
+	public function batch_switch( $param ) {
 		$type = $param[0];
 		$this->__img_optm->batch_switch($type);
 	}
@@ -53,8 +51,7 @@ class Image
 	 *     # Send image optimization request
 	 *     $ wp litespeed-image push
 	 */
-	public function push()
-	{
+	public function push() {
 		$this->__img_optm->new_req();
 	}
 
@@ -68,8 +65,7 @@ class Image
 	 *     # Pull images back from cloud
 	 *     $ wp litespeed-image pull
 	 */
-	public function pull()
-	{
+	public function pull() {
 		$this->__img_optm->pull(true);
 	}
 
@@ -83,8 +79,7 @@ class Image
 	 *     # Show optimization status
 	 *     $ wp litespeed-image s
 	 */
-	public function s()
-	{
+	public function s() {
 		$this->status();
 	}
 
@@ -98,9 +93,8 @@ class Image
 	 *     # Show optimization status
 	 *     $ wp litespeed-image status
 	 */
-	public function status()
-	{
-		$summary = Img_Optm::get_summary();
+	public function status() {
+		$summary   = Img_Optm::get_summary();
 		$img_count = $this->__img_optm->img_count();
 		foreach (Lang::img_status() as $k => $v) {
 			if (isset($img_count["img.$k"])) {
@@ -113,7 +107,7 @@ class Image
 			}
 		}
 
-		foreach (array('reduced', 'reduced_webp', 'reduced_avif') as $v) {
+		foreach (array( 'reduced', 'reduced_webp', 'reduced_avif' ) as $v) {
 			if (!empty($summary[$v])) {
 				$summary[$v] = Utility::real_size($summary[$v]);
 			}
@@ -142,10 +136,10 @@ class Image
 			);
 		}
 
-		WP_CLI\Utils\format_items('table', $list, array('key', 'value'));
+		WP_CLI\Utils\format_items('table', $list, array( 'key', 'value' ));
 
 		WP_CLI::line(WP_CLI::colorize('%CImages in database summary:%n'));
-		WP_CLI\Utils\format_items('table', $list2, array('key', 'value'));
+		WP_CLI\Utils\format_items('table', $list2, array( 'key', 'value' ));
 	}
 
 	/**
@@ -158,8 +152,7 @@ class Image
 	 *     # Clean up unfinished requests
 	 *     $ wp litespeed-image clean
 	 */
-	public function clean()
-	{
+	public function clean() {
 		$this->__img_optm->clean();
 
 		WP_CLI::line(WP_CLI::colorize('%CLatest status:%n'));
@@ -177,8 +170,7 @@ class Image
 	 *     # Remove original image backups
 	 *     $ wp litespeed-image rm_bkup
 	 */
-	public function rm_bkup()
-	{
+	public function rm_bkup() {
 		$this->__img_optm->rm_bkup();
 	}
 }

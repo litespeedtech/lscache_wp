@@ -11,9 +11,9 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Task extends Root
-{
-	const LOG_TAG = '⏰';
+class Task extends Root {
+
+	const LOG_TAG             = '⏰';
 	private static $_triggers = array(
 		Base::O_IMG_OPTM_CRON => array(
 			'name' => 'litespeed_task_imgoptm_pull',
@@ -49,10 +49,10 @@ class Task extends Root
 		), // Set crawler to last one to use above results
 	);
 
-	private static $_guest_options = array(Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI);
+	private static $_guest_options = array( Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI );
 
 	const FILTER_CRAWLER = 'litespeed_crawl_filter';
-	const FILTER = 'litespeed_filter';
+	const FILTER         = 'litespeed_filter';
 
 	/**
 	 * Keep all tasks in cron
@@ -60,10 +60,9 @@ class Task extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public function init()
-	{
+	public function init() {
 		self::debug2('Init');
-		add_filter('cron_schedules', array($this, 'lscache_cron_filter'));
+		add_filter('cron_schedules', array( $this, 'lscache_cron_filter' ));
 
 		$guest_optm = $this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM);
 
@@ -84,7 +83,7 @@ class Task extends Root
 					continue;
 				}
 
-				add_filter('cron_schedules', array($this, 'lscache_cron_filter_crawler'));
+				add_filter('cron_schedules', array( $this, 'lscache_cron_filter_crawler' ));
 			}
 
 			if (!wp_next_scheduled($trigger['name'])) {
@@ -102,8 +101,7 @@ class Task extends Root
 	 *
 	 * @since 5.5
 	 */
-	public static function async_litespeed_handler()
-	{
+	public static function async_litespeed_handler() {
 		$hash_data = self::get_option('async_call-hash', array());
 		if (!$hash_data || !is_array($hash_data) || empty($hash_data['hash']) || empty($hash_data['ts'])) {
 			self::debug('async_litespeed_handler no hash data', $hash_data);
@@ -122,16 +120,16 @@ class Task extends Root
 		session_write_close();
 		switch ($type) {
 			case 'crawler':
-				Crawler::async_handler();
+            Crawler::async_handler();
 				break;
 			case 'crawler_force':
-				Crawler::async_handler(true);
+            Crawler::async_handler(true);
 				break;
 			case 'imgoptm':
-				Img_Optm::async_handler();
+            Img_Optm::async_handler();
 				break;
 			case 'imgoptm_force':
-				Img_Optm::async_handler(true);
+            Img_Optm::async_handler(true);
 				break;
 			default:
 		}
@@ -142,8 +140,7 @@ class Task extends Root
 	 *
 	 * @since 5.5
 	 */
-	public static function async_call($type)
-	{
+	public static function async_call( $type ) {
 		$hash = Str::rrand(32);
 		self::update_option('async_call-hash', array(
 			'hash' => $hash,
@@ -155,7 +152,7 @@ class Task extends Root
 			'sslverify' => false,
 			// 'cookies'   => $_COOKIE,
 		);
-		$qs = array(
+		$qs  = array(
 			'action' => 'async_litespeed',
 			'nonce' => $hash,
 			Router::TYPE => $type,
@@ -171,8 +168,7 @@ class Task extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function destroy()
-	{
+	public static function destroy() {
 		Utility::compatibility();
 		array_map('wp_clear_scheduled_hook', array_column(self::$_triggers, 'name'));
 	}
@@ -183,8 +179,7 @@ class Task extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public function try_clean($id)
-	{
+	public function try_clean( $id ) {
 		// Clean v2's leftover cron ( will remove in v3.1 )
 		// foreach ( wp_get_ready_cron_jobs() as $hooks ) {
 		// foreach ( $hooks as $hook => $v ) {
@@ -212,8 +207,7 @@ class Task extends Root
 	 * @since 1.6.1
 	 * @access public
 	 */
-	public function lscache_cron_filter($schedules)
-	{
+	public function lscache_cron_filter( $schedules ) {
 		if (!array_key_exists(self::FILTER, $schedules)) {
 			$schedules[self::FILTER] = array(
 				'interval' => 60,
@@ -229,8 +223,7 @@ class Task extends Root
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function lscache_cron_filter_crawler($schedules)
-	{
+	public function lscache_cron_filter_crawler( $schedules ) {
 		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
 		// $wp_schedules = wp_get_schedules();
 		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {

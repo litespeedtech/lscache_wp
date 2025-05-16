@@ -100,8 +100,7 @@ foreach ($litespeed_php_files as $class) {
 }
 
 if (!function_exists('litespeed_autoload')) {
-	function litespeed_autoload($cls)
-	{
+	function litespeed_autoload( $cls ) {
 		if (strpos($cls, '.') !== false) {
 			return;
 		}

@@ -10,11 +10,11 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class UCSS extends Base
-{
+class UCSS extends Base {
+
 	const LOG_TAG = '[UCSS]';
 
-	const TYPE_GEN = 'gen';
+	const TYPE_GEN     = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
 	protected $_summary;
@@ -26,11 +26,10 @@ class UCSS extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_summary = self::get_summary();
 
-		add_filter('litespeed_ucss_whitelist', array($this->cls('Data'), 'load_ucss_whitelist'));
+		add_filter('litespeed_ucss_whitelist', array( $this->cls('Data'), 'load_ucss_whitelist' ));
 	}
 
 	/**
@@ -38,8 +37,7 @@ class UCSS extends Base
 	 *
 	 * @since 4.7
 	 */
-	public static function get_url_tag($request_url = false)
-	{
+	public static function get_url_tag( $request_url = false ) {
 		$url_tag = $request_url;
 		if (is_404()) {
 			$url_tag = '404';
@@ -56,8 +54,7 @@ class UCSS extends Base
 	 *
 	 * @since  4.0
 	 */
-	public function load($request_url, $dry_run = false)
-	{
+	public function load( $request_url, $dry_run = false ) {
 		// Check UCSS URI excludes
 		$ucss_exc = apply_filters('litespeed_ucss_exc', $this->conf(self::O_OPTM_UCSS_EXC));
 		if ($ucss_exc && ($hit = Utility::str_hit_array($request_url, $ucss_exc))) {
@@ -70,7 +67,7 @@ class UCSS extends Base
 
 		$url_tag = self::get_url_tag($request_url);
 
-		$vary = $this->cls('Vary')->finalize_full_varies();
+		$vary     = $this->cls('Vary')->finalize_full_varies();
 		$filename = $this->cls('Data')->load_url_file($url_tag, $vary, 'ucss');
 		if ($filename) {
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
@@ -109,7 +106,7 @@ class UCSS extends Base
 			return false;
 		}
 
-		$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
+		$queue_k                = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
 		$this->_queue[$queue_k] = array(
 			'url' => apply_filters('litespeed_ucss_url', $request_url),
 			'user_agent' => substr($ua, 0, 200),
@@ -133,8 +130,7 @@ class UCSS extends Base
 	 *
 	 * @since  5.3
 	 */
-	private function _get_ua()
-	{
+	private function _get_ua() {
 		return !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	}
 
@@ -143,8 +139,7 @@ class UCSS extends Base
 	 *
 	 * @since  5.3
 	 */
-	public function add_to_q($url_files)
-	{
+	public function add_to_q( $url_files ) {
 		// Store it for cron
 		$this->_queue = $this->load_queue('ucss');
 
@@ -155,14 +150,14 @@ class UCSS extends Base
 
 		$ua = $this->_get_ua();
 		foreach ($url_files as $url_file) {
-			$vary = $url_file['vary'];
+			$vary        = $url_file['vary'];
 			$request_url = $url_file['url'];
-			$is_mobile = $url_file['mobile'];
-			$is_webp = $url_file['webp'];
-			$url_tag = self::get_url_tag($request_url);
+			$is_mobile   = $url_file['mobile'];
+			$is_webp     = $url_file['webp'];
+			$url_tag     = self::get_url_tag($request_url);
 
 			$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
-			$q = array(
+			$q       = array(
 				'url' => apply_filters('litespeed_ucss_url', $request_url),
 				'user_agent' => substr($ua, 0, 200),
 				'is_mobile' => $is_mobile,
@@ -183,8 +178,7 @@ class UCSS extends Base
 	 *
 	 * @since  4.0
 	 */
-	public static function cron($continue = false)
-	{
+	public static function cron( $continue = false ) {
 		$_instance = self::cls();
 		return $_instance->_cron_handler($continue);
 	}
@@ -194,8 +188,7 @@ class UCSS extends Base
 	 *
 	 * @since 4.2
 	 */
-	private function _cron_handler($continue)
-	{
+	private function _cron_handler( $continue ) {
 		$this->_queue = $this->load_queue('ucss');
 
 		if (empty($this->_queue)) {
@@ -247,7 +240,7 @@ class UCSS extends Base
 				return;
 			}
 
-			$this->_queue = $this->load_queue('ucss');
+			$this->_queue                = $this->load_queue('ucss');
 			$this->_queue[$k]['_status'] = 'requested';
 			$this->save_queue('ucss', $this->_queue);
 			self::debug('Saved to queue [k] ' . $k);
@@ -270,10 +263,9 @@ class UCSS extends Base
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _send_req($request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $is_mobile, $is_webp)
-	{
+	private function _send_req( $request_url, $queue_k, $uid, $user_agent, $vary, $url_tag, $is_mobile, $is_webp ) {
 		// Check if has credit to push or not
-		$err = false;
+		$err       = false;
 		$allowance = $this->cls('Cloud')->allowance(Cloud::SVC_UCSS, $err);
 		if (!$allowance) {
 			self::debug('❌ No credit: ' . $err);
@@ -295,11 +287,11 @@ class UCSS extends Base
 		}
 
 		// Parse HTML to gather all CSS content before requesting
-		$css = false;
-		list(, $html) = $this->prepare_css($html, $is_webp, true); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
-		$filename = $this->cls('Data')->load_url_file($url_tag, $vary, 'css');
+		$css             = false;
+		list(, $html)    = $this->prepare_css($html, $is_webp, true); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
+		$filename        = $this->cls('Data')->load_url_file($url_tag, $vary, 'css');
 		$filepath_prefix = $this->_build_filepath_prefix('css');
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
+		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 		self::debug('Checking combined file ' . $static_file);
 		if (file_exists($static_file)) {
 			$css = File::read($static_file);
@@ -347,7 +339,7 @@ class UCSS extends Base
 		}
 
 		// Save summary data
-		$this->_summary['last_spent'] = time() - $this->_summary['curr_request'];
+		$this->_summary['last_spent']   = time() - $this->_summary['curr_request'];
 		$this->_summary['last_request'] = $this->_summary['curr_request'];
 		$this->_summary['curr_request'] = 0;
 		self::save_summary();
@@ -360,8 +352,7 @@ class UCSS extends Base
 	 *
 	 * @since 4.2
 	 */
-	private function _save_con($type, $css, $queue_k, $is_mobile, $is_webp)
-	{
+	private function _save_con( $type, $css, $queue_k, $is_mobile, $is_webp ) {
 		// Add filters
 		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
 		self::debug2('con: ', $css);
@@ -375,12 +366,12 @@ class UCSS extends Base
 		$filecon_md5 = md5($css);
 
 		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
 		File::save($static_file, $css, true);
 
 		$url_tag = $this->_queue[$queue_k]['url_tag'];
-		$vary = $this->_queue[$queue_k]['vary'];
+		$vary    = $this->_queue[$queue_k]['vary'];
 		self::debug2("Save URL to file [file] $static_file [vary] $vary");
 
 		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
@@ -394,8 +385,7 @@ class UCSS extends Base
 	 *
 	 * @since  3.4.3
 	 */
-	public function prepare_css($html, $is_webp = false, $dryrun = false)
-	{
+	public function prepare_css( $html, $is_webp = false, $dryrun = false ) {
 		$css = '';
 		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -464,13 +454,13 @@ class UCSS extends Base
 				$con = $con . "\n";
 			}
 
-			$con = '/* ' . $debug_info . ' */' . $con;
+			$con  = '/* ' . $debug_info . ' */' . $con;
 			$css .= $con;
 
 			$html = str_replace($match[0], '', $html);
 		}
 
-		return array($css, $html);
+		return array( $css, $html );
 	}
 
 	/**
@@ -478,10 +468,9 @@ class UCSS extends Base
 	 *
 	 * @since 3.3
 	 */
-	private function _filter_whitelist()
-	{
+	private function _filter_whitelist() {
 		$whitelist = array();
-		$list = apply_filters('litespeed_ucss_whitelist', $this->conf(self::O_OPTM_UCSS_SELECTOR_WHITELIST));
+		$list      = apply_filters('litespeed_ucss_whitelist', $this->conf(self::O_OPTM_UCSS_SELECTOR_WHITELIST));
 		foreach ($list as $k => $v) {
 			if (substr($v, 0, 2) === '//') {
 				continue;
@@ -501,8 +490,7 @@ class UCSS extends Base
 	 *
 	 * @since 5.1
 	 */
-	public function notify()
-	{
+	public function notify() {
 		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
@@ -539,7 +527,7 @@ class UCSS extends Base
 			// Save data
 			if (!empty($v['data_ucss'])) {
 				$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
-				$is_webp = $this->_queue[$v['queue_k']]['is_webp'];
+				$is_webp   = $this->_queue[$v['queue_k']]['is_webp'];
 				$this->_save_con('ucss', $v['data_ucss'], $v['queue_k'], $is_mobile, $is_webp);
 
 				++$valid_i;
@@ -552,7 +540,7 @@ class UCSS extends Base
 
 		self::debug('notified');
 
-		return Cloud::ok(array('count' => $valid_i));
+		return Cloud::ok(array( 'count' => $valid_i ));
 	}
 
 	/**
@@ -561,17 +549,16 @@ class UCSS extends Base
 	 * @since  2.3
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_GEN:
-				self::cron(true);
+            self::cron(true);
 				break;
 
 			case self::TYPE_CLEAR_Q:
-				$this->clear_q('ucss');
+            $this->clear_q('ucss');
 				break;
 
 			default:

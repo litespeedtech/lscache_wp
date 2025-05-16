@@ -8,10 +8,9 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class User_Switching
-{
-	public static function detect()
-	{
+class User_Switching {
+
+	public static function detect() {
 		if (!class_exists('user_switching')) {
 			return;
 		}

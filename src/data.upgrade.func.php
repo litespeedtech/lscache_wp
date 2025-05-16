@@ -20,8 +20,7 @@ use LiteSpeed\Cloud;
  *
  * @since 7.2
  */
-function litespeed_table_exists($table_name)
-{
+function litespeed_table_exists( $table_name ) {
 	global $wpdb;
 	$save_state = $wpdb->suppress_errors;
 	$wpdb->suppress_errors(true);
@@ -36,8 +35,7 @@ function litespeed_table_exists($table_name)
  *
  * @since 7.0.1
  */
-function litespeed_update_7_0_1()
-{
+function litespeed_update_7_0_1() {
 	global $wpdb;
 	Debug2::debug('[Data] v7.0.1 upgrade started');
 
@@ -47,9 +45,9 @@ function litespeed_update_7_0_1()
 		return;
 	}
 
-	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
-	$q = $wpdb->prepare($q);
-	$list = $wpdb->get_results($q, ARRAY_A);
+	$q             = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
+	$q             = $wpdb->prepare($q);
+	$list          = $wpdb->get_results($q, ARRAY_A);
 	$existing_urls = array();
 	if ($list) {
 		foreach ($list as $v) {
@@ -57,8 +55,8 @@ function litespeed_update_7_0_1()
 		}
 	}
 
-	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
-	$q = $wpdb->prepare($q);
+	$q    = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
+	$q    = $wpdb->prepare($q);
 	$list = $wpdb->get_results($q, ARRAY_A);
 	if (!$list) {
 		return;
@@ -82,8 +80,7 @@ function litespeed_update_7_0_1()
  *
  * @since 7.0
  */
-function litespeed_update_7()
-{
+function litespeed_update_7() {
 	Debug2::debug('[Data] v7 upgrade started');
 
 	$__cloud = Cloud::cls();
@@ -105,7 +102,7 @@ function litespeed_update_7()
 	$resp = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
 	if (!empty($resp['qc_activated'])) {
 		if ($resp['qc_activated'] != 'deleted') {
-			$cloud_summary_updates = array('qc_activated' => $resp['qc_activated']);
+			$cloud_summary_updates = array( 'qc_activated' => $resp['qc_activated'] );
 			if (!empty($resp['main_domain'])) {
 				$cloud_summary_updates['main_domain'] = $resp['main_domain'];
 			}
@@ -120,8 +117,7 @@ function litespeed_update_7()
  *
  * @since 5.3
  */
-function litespeed_update_5_3()
-{
+function litespeed_update_5_3() {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
 
@@ -143,8 +139,7 @@ function litespeed_update_5_3()
  *
  * @since 4.4.4
  */
-function litespeed_update_4_4_4()
-{
+function litespeed_update_4_4_4() {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
 
@@ -167,8 +162,7 @@ function litespeed_update_4_4_4()
  *
  * @since 4.3
  */
-function litespeed_update_4_3()
-{
+function litespeed_update_4_3() {
 	if (file_exists(LITESPEED_STATIC_DIR . '/ccsjs')) {
 		File::rrmdir(LITESPEED_STATIC_DIR . '/ccsjs');
 	}
@@ -179,8 +173,7 @@ function litespeed_update_4_3()
  *
  * @since 4.1
  */
-function litespeed_update_4_1()
-{
+function litespeed_update_4_1() {
 	if (file_exists(WP_CONTENT_DIR . '/.object-cache.ini')) {
 		unlink(WP_CONTENT_DIR . '/.object-cache.ini');
 	}
@@ -191,8 +184,7 @@ function litespeed_update_4_1()
  *
  * @since 4.0
  */
-function litespeed_update_4()
-{
+function litespeed_update_4() {
 	global $wpdb;
 	$tb = $wpdb->prefix . 'litespeed_cssjs';
 
@@ -214,19 +206,18 @@ function litespeed_update_4()
  *
  * @since  3.5.1
  */
-function litespeed_update_3_5()
-{
+function litespeed_update_3_5() {
 	$__conf = Conf::cls();
 	// Excludes jQuery
-	foreach (array('optm-js_exc', 'optm-js_defer_exc') as $v) {
-		$curr_setting = $__conf->conf($v);
+	foreach (array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v) {
+		$curr_setting   = $__conf->conf($v);
 		$curr_setting[] = 'jquery.js';
 		$curr_setting[] = 'jquery.min.js';
 		$__conf->update($v, $curr_setting);
 	}
 	// Turn off JS Combine and defer
 	$show_msg = false;
-	foreach (array('optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer') as $v) {
+	foreach (array( 'optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer' ) as $v) {
 		$curr_setting = $__conf->conf($v);
 		if (!$curr_setting) {
 			continue;
@@ -236,7 +227,7 @@ function litespeed_update_3_5()
 	}
 
 	if ($show_msg) {
-		$msg = sprintf(
+		$msg  = sprintf(
 			__(
 				'LiteSpeed Cache upgraded successfully. NOTE: Due to changes in this version, the settings %1$s and %2$s have been turned OFF. Please turn them back on manually and verify that your site layout is correct, and you have no JS errors.',
 				'litespeed-cache'
@@ -254,8 +245,7 @@ function litespeed_update_3_5()
  *
  * @since  3.0
  */
-function litespeed_update_2_0($ver)
-{
+function litespeed_update_2_0( $ver ) {
 	global $wpdb;
 
 	// Table version only exists after all old data migrated
@@ -268,8 +258,8 @@ function litespeed_update_2_0($ver)
 		 */
 
 		// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
-		$mids_to_del = array();
-		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id";
+		$mids_to_del     = array();
+		$q               = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id";
 		$meta_value_list = $wpdb->get_results($wpdb->prepare($q, 'litespeed-optimize-data'));
 		if ($meta_value_list) {
 			$max_k = count($meta_value_list) - 1;
@@ -288,7 +278,7 @@ function litespeed_update_2_0($ver)
 			Debug2::debug('[Data] img_optm inserted records: ' . $k);
 		}
 
-		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s";
+		$q    = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s";
 		$rows = $wpdb->query($wpdb->prepare($q, 'litespeed-optimize-status'));
 		Debug2::debug('[Data] img_optm delete optm_status records: ' . $rows);
 	}
@@ -325,8 +315,7 @@ function litespeed_update_2_0($ver)
  *
  * @since  3.0
  */
-function litespeed_update_3_0($ver)
-{
+function litespeed_update_3_0( $ver ) {
 	global $wpdb;
 	// Upgrade v2.0- to v2.0 first
 	if (version_compare($ver, '2.0', '<')) {
@@ -375,7 +364,7 @@ function litespeed_update_3_0($ver)
 
 			if ($v == 'crawler-cookies') {
 				$tmp = array();
-				$i = 0;
+				$i   = 0;
 				foreach ($old_data as $k2 => $v2) {
 					$tmp[$i]['name'] = $k2;
 					$tmp[$i]['vals'] = explode("\n", $v2);
@@ -548,10 +537,10 @@ function litespeed_update_3_0($ver)
 		}
 		// The following values must be array
 		if (!is_array($previous_options[$k])) {
-			if (in_array($v, array('cdn-ori', 'cache-exc_cat', 'cache-exc_tag'))) {
+			if (in_array($v, array( 'cdn-ori', 'cache-exc_cat', 'cache-exc_tag' ))) {
 				$previous_options[$k] = explode(',', $previous_options[$k]);
 				$previous_options[$k] = array_filter($previous_options[$k]);
-			} elseif (in_array($v, array('cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies'))) {
+			} elseif (in_array($v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ))) {
 				$previous_options[$k] = explode('|', str_replace('\\ ', ' ', $previous_options[$k]));
 				$previous_options[$k] = array_filter($previous_options[$k]);
 			} elseif (
@@ -633,7 +622,7 @@ function litespeed_update_3_0($ver)
 			'inc_js' => $previous_options['cdn_inc_js'],
 			'filetype' => $previous_options['cdn_filetype'],
 		);
-		add_option('litespeed.conf.cdn-mapping', array($cdn_mapping));
+		add_option('litespeed.conf.cdn-mapping', array( $cdn_mapping ));
 		Debug2::debug('[Data] plugin_upgrade option adding CDN map');
 	}
 
@@ -706,7 +695,7 @@ function litespeed_update_3_0($ver)
 				}
 				// The following values must be array
 				if (!is_array($previous_site_options[$k])) {
-					if (in_array($v, array('cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies'))) {
+					if (in_array($v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ))) {
 						$previous_site_options[$k] = explode('|', str_replace('\\ ', ' ', $previous_site_options[$k]));
 						$previous_site_options[$k] = array_filter($previous_site_options[$k]);
 					}
@@ -716,7 +705,7 @@ function litespeed_update_3_0($ver)
 			}
 
 			// These are already converted to single record in single site
-			$data = array('object-global_groups', 'object-non_persistent_groups');
+			$data = array( 'object-global_groups', 'object-non_persistent_groups' );
 			foreach ($data as $v) {
 				$old_data = get_option($v);
 				if ($old_data) {

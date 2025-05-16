@@ -10,10 +10,9 @@ defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;
 
-class Elementor
-{
-	public static function preload()
-	{
+class Elementor {
+
+	public static function preload() {
 		if (!defined('ELEMENTOR_VERSION')) {
 			return;
 		}
@@ -46,13 +45,11 @@ class Elementor
 		add_action('elementor/core/files/clear_cache', __CLASS__ . '::regenerate_litespeed_cache');
 	}
 
-	public static function disable_litespeed_esi()
-	{
+	public static function disable_litespeed_esi() {
 		define('LITESPEED_ESI_OFF', true);
 	}
 
-	public static function regenerate_litespeed_cache()
-	{
+	public static function regenerate_litespeed_cache() {
 		do_action('litespeed_purge_all', 'Elementor - Regenerate CSS & Data');
 	}
 }

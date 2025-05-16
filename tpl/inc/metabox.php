@@ -11,7 +11,7 @@ $post_id = get_the_ID();
 foreach ($this->_postmeta_settings as $k => $v) {
 	$existing_val = get_post_meta($post_id, $k, true);
 
-	if (in_array($k, array('litespeed_vpi_list', 'litespeed_vpi_list_mobile'))) {
+	if (in_array($k, array( 'litespeed_vpi_list', 'litespeed_vpi_list_mobile' ))) {
 		if (is_array($existing_val)) {
 			$existing_val = implode(PHP_EOL, $existing_val);
 		}

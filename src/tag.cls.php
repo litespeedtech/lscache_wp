@@ -11,45 +11,44 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Tag extends Root
-{
-	const TYPE_FEED = 'FD';
-	const TYPE_FRONTPAGE = 'F';
-	const TYPE_HOME = 'H';
-	const TYPE_PAGES = 'PGS';
+class Tag extends Root {
+
+	const TYPE_FEED                    = 'FD';
+	const TYPE_FRONTPAGE               = 'F';
+	const TYPE_HOME                    = 'H';
+	const TYPE_PAGES                   = 'PGS';
 	const TYPE_PAGES_WITH_RECENT_POSTS = 'PGSRP';
-	const TYPE_HTTP = 'HTTP.';
-	const TYPE_POST = 'Po.'; // Post. Cannot use P, reserved for litemage.
-	const TYPE_ARCHIVE_POSTTYPE = 'PT.';
-	const TYPE_ARCHIVE_TERM = 'T.'; // for is_category|is_tag|is_tax
-	const TYPE_AUTHOR = 'A.';
-	const TYPE_ARCHIVE_DATE = 'D.';
-	const TYPE_BLOG = 'B.';
-	const TYPE_LOGIN = 'L';
-	const TYPE_URL = 'URL.';
-	const TYPE_WIDGET = 'W.';
-	const TYPE_ESI = 'ESI.';
-	const TYPE_REST = 'REST';
-	const TYPE_AJAX = 'AJAX.';
-	const TYPE_LIST = 'LIST';
-	const TYPE_MIN = 'MIN';
-	const TYPE_LOCALRES = 'LOCALRES';
+	const TYPE_HTTP                    = 'HTTP.';
+	const TYPE_POST                    = 'Po.'; // Post. Cannot use P, reserved for litemage.
+	const TYPE_ARCHIVE_POSTTYPE        = 'PT.';
+	const TYPE_ARCHIVE_TERM            = 'T.'; // for is_category|is_tag|is_tax
+	const TYPE_AUTHOR                  = 'A.';
+	const TYPE_ARCHIVE_DATE            = 'D.';
+	const TYPE_BLOG                    = 'B.';
+	const TYPE_LOGIN                   = 'L';
+	const TYPE_URL                     = 'URL.';
+	const TYPE_WIDGET                  = 'W.';
+	const TYPE_ESI                     = 'ESI.';
+	const TYPE_REST                    = 'REST';
+	const TYPE_AJAX                    = 'AJAX.';
+	const TYPE_LIST                    = 'LIST';
+	const TYPE_MIN                     = 'MIN';
+	const TYPE_LOCALRES                = 'LOCALRES';
 
 	const X_HEADER = 'X-LiteSpeed-Tag';
 
-	private static $_tags = array();
-	private static $_tags_priv = array('tag_priv');
-	public static $error_code_tags = array(403, 404, 500);
+	private static $_tags          = array();
+	private static $_tags_priv     = array( 'tag_priv' );
+	public static $error_code_tags = array( 403, 404, 500 );
 
 	/**
 	 * Initialize
 	 *
 	 * @since 4.0
 	 */
-	public function init()
-	{
+	public function init() {
 		// register recent posts widget tag before theme renders it to make it work
-		add_filter('widget_posts_args', array($this, 'add_widget_recent_posts'));
+		add_filter('widget_posts_args', array( $this, 'add_widget_recent_posts' ));
 	}
 
 	/**
@@ -61,8 +60,7 @@ class Tag extends Root
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function check_login_cacheable()
-	{
+	public function check_login_cacheable() {
 		if (!$this->conf(Base::O_CACHE_PAGE_LOGIN)) {
 			return;
 		}
@@ -100,8 +98,7 @@ class Tag extends Root
 	 * @access   public
 	 * @param array $params [WordPress params for widget_posts_args]
 	 */
-	public function add_widget_recent_posts($params)
-	{
+	public function add_widget_recent_posts( $params ) {
 		self::add(self::TYPE_PAGES_WITH_RECENT_POSTS);
 		return $params;
 	}
@@ -113,10 +110,9 @@ class Tag extends Root
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add($tags)
-	{
+	public static function add( $tags ) {
 		if (!is_array($tags)) {
-			$tags = array($tags);
+			$tags = array( $tags );
 		}
 
 		Debug2::debug('💰 [Tag] Add ', $tags);
@@ -134,8 +130,7 @@ class Tag extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_post($pid)
-	{
+	public static function add_post( $pid ) {
 		self::add(self::TYPE_POST . $pid);
 	}
 
@@ -145,8 +140,7 @@ class Tag extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_widget($id)
-	{
+	public static function add_widget( $id ) {
 		self::add(self::TYPE_WIDGET . $id);
 	}
 
@@ -156,8 +150,7 @@ class Tag extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function add_private_esi($tag)
-	{
+	public static function add_private_esi( $tag ) {
 		self::add_private(self::TYPE_ESI . $tag);
 	}
 
@@ -168,10 +161,9 @@ class Tag extends Root
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add_private($tags)
-	{
+	public static function add_private( $tags ) {
 		if (!is_array($tags)) {
-			$tags = array($tags);
+			$tags = array( $tags );
 		}
 
 		self::$_tags_priv = array_merge(self::$_tags_priv, $tags);
@@ -183,8 +175,7 @@ class Tag extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function output_tags()
-	{
+	public static function output_tags() {
 		return self::$_tags;
 	}
 
@@ -197,8 +188,7 @@ class Tag extends Root
 	 * @param boolean $ori Return the original url or not
 	 * @return bool|string False on input error, hash otherwise.
 	 */
-	public static function get_uri_tag($uri, $ori = false)
-	{
+	public static function get_uri_tag( $uri, $ori = false ) {
 		$no_qs = strtok($uri, '?');
 		if (empty($no_qs)) {
 			return false;
@@ -223,8 +213,7 @@ class Tag extends Root
 	 * @access public
 	 * @param boolean $ori Return the original url or not
 	 */
-	public static function build_uri_tag($ori = false)
-	{
+	public static function build_uri_tag( $ori = false ) {
 		return self::get_uri_tag(urldecode($_SERVER['REQUEST_URI']), $ori);
 	}
 
@@ -238,8 +227,7 @@ class Tag extends Root
 	 * @access private
 	 * @return array The list of cache tags to set.
 	 */
-	private static function _build_type_tags()
-	{
+	private static function _build_type_tags() {
 		$tags = array();
 
 		$tags[] = Utility::page_type();
@@ -328,13 +316,12 @@ class Tag extends Root
 	 * @access private
 	 * @since 1.1.3
 	 */
-	private static function _finalize()
-	{
+	private static function _finalize() {
 		// run 3rdparty hooks to tag
 		do_action('litespeed_tag_finalize');
 		// generate wp tags
 		if (!defined('LSCACHE_IS_ESI')) {
-			$type_tags = self::_build_type_tags();
+			$type_tags   = self::_build_type_tags();
 			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
@@ -356,8 +343,7 @@ class Tag extends Root
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
-	public function output($no_finalize = false)
-	{
+	public function output( $no_finalize = false ) {
 		if (defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE) {
 			return;
 		}

@@ -11,8 +11,8 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Utility extends Root
-{
+class Utility extends Root {
+
 	private static $_internal_domains;
 
 	/**
@@ -23,8 +23,7 @@ class Utility extends Root
 	 * @access public
 	 * @return bool True for valid rules, false otherwise.
 	 */
-	public static function syntax_checker($rules)
-	{
+	public static function syntax_checker( $rules ) {
 		return preg_match(self::arr2regex($rules), '') !== false;
 	}
 
@@ -33,8 +32,7 @@ class Utility extends Root
 	 *
 	 * @since  3.0
 	 */
-	public static function arr2regex($arr, $drop_delimiter = false)
-	{
+	public static function arr2regex( $arr, $drop_delimiter = false ) {
 		$arr = self::sanitize_lines($arr);
 
 		$new_arr = array();
@@ -57,8 +55,7 @@ class Utility extends Root
 	 *
 	 * @since  3.2.2
 	 */
-	public static function wildcard2regex($string)
-	{
+	public static function wildcard2regex( $string ) {
 		if (is_array($string)) {
 			return array_map(__CLASS__ . '::wildcard2regex', $string);
 		}
@@ -78,8 +75,7 @@ class Utility extends Root
 	 * @deprecated 2.9.4 Moved to REST class
 	 * @access public
 	 */
-	public static function is_rest($url = false)
-	{
+	public static function is_rest( $url = false ) {
 		return false;
 	}
 
@@ -88,8 +84,7 @@ class Utility extends Root
 	 *
 	 * @since  2.9
 	 */
-	public static function page_type()
-	{
+	public static function page_type() {
 		global $wp_query;
 		$page_type = 'default';
 
@@ -157,15 +152,14 @@ class Utility extends Root
 	 *
 	 * @since  2.9
 	 */
-	public static function ping($domain)
-	{
+	public static function ping( $domain ) {
 		if (strpos($domain, ':')) {
 			$domain = parse_url($domain, PHP_URL_HOST);
 		}
 		$starttime = microtime(true);
-		$file = fsockopen($domain, 443, $errno, $errstr, 10);
-		$stoptime = microtime(true);
-		$status = 0;
+		$file      = fsockopen($domain, 443, $errno, $errstr, 10);
+		$stoptime  = microtime(true);
+		$status    = 0;
 
 		if (!$file) {
 			$status = 99999;
@@ -188,8 +182,7 @@ class Utility extends Root
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function readable_time($seconds_or_timestamp, $timeout = 3600, $forward = false)
-	{
+	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $forward = false ) {
 		if (strlen($seconds_or_timestamp) == 10) {
 			$seconds = time() - $seconds_or_timestamp;
 			if ($seconds > $timeout) {
@@ -201,8 +194,8 @@ class Utility extends Root
 
 		$res = '';
 		if ($seconds > 86400) {
-			$num = floor($seconds / 86400);
-			$res .= $num . 'd';
+			$num      = floor($seconds / 86400);
+			$res     .= $num . 'd';
 			$seconds %= 86400;
 		}
 
@@ -210,8 +203,8 @@ class Utility extends Root
 			if ($res) {
 				$res .= ', ';
 			}
-			$num = floor($seconds / 3600);
-			$res .= $num . 'h';
+			$num      = floor($seconds / 3600);
+			$res     .= $num . 'h';
 			$seconds %= 3600;
 		}
 
@@ -219,8 +212,8 @@ class Utility extends Root
 			if ($res) {
 				$res .= ', ';
 			}
-			$num = floor($seconds / 60);
-			$res .= $num . 'm';
+			$num      = floor($seconds / 60);
+			$res     .= $num . 'm';
 			$seconds %= 60;
 		}
 
@@ -246,8 +239,7 @@ class Utility extends Root
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function arr2str($arr)
-	{
+	public static function arr2str( $arr ) {
 		if (!is_array($arr)) {
 			return $arr;
 		}
@@ -261,8 +253,7 @@ class Utility extends Root
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function real_size($filesize, $is_1000 = false)
-	{
+	public static function real_size( $filesize, $is_1000 = false ) {
 		$unit = $is_1000 ? 1000 : 1024;
 
 		if ($filesize >= pow($unit, 3)) {
@@ -286,8 +277,7 @@ class Utility extends Root
 	 * @param  string $str
 	 * @return array  All the attributes
 	 */
-	public static function parse_attr($str)
-	{
+	public static function parse_attr( $str ) {
 		$attrs = array();
 		preg_match_all('#([\w-]+)=(["\'])([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -307,8 +297,7 @@ class Utility extends Root
 	 * @param array  $haystack
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
-	public static function str_hit_array($needle, $haystack, $has_ttl = false)
-	{
+	public static function str_hit_array( $needle, $haystack, $has_ttl = false ) {
 		if (!$haystack) {
 			return false;
 		}
@@ -323,7 +312,7 @@ class Utility extends Root
 			return false;
 		}
 
-		$hit = false;
+		$hit      = false;
 		$this_ttl = 0;
 		foreach ($haystack as $item) {
 			if (!$item) {
@@ -332,7 +321,7 @@ class Utility extends Root
 
 			if ($has_ttl) {
 				$this_ttl = 0;
-				$item = explode(' ', $item);
+				$item     = explode(' ', $item);
 				if (!empty($item[1])) {
 					$this_ttl = $item[1];
 				}
@@ -365,7 +354,7 @@ class Utility extends Root
 
 		if ($hit) {
 			if ($has_ttl) {
-				return array($hit, $this_ttl);
+				return array( $hit, $this_ttl );
 			}
 
 			return $hit;
@@ -379,8 +368,7 @@ class Utility extends Root
 	 *
 	 * @since  1.2.2
 	 */
-	public static function compatibility()
-	{
+	public static function compatibility() {
 		require_once LSCWP_DIR . 'lib/php-compatibility.func.php';
 	}
 
@@ -392,8 +380,7 @@ class Utility extends Root
 	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
 	 * @return  string http://www.example.com/subfolder/xx/xx.html
 	 */
-	public static function uri2url($uri)
-	{
+	public static function uri2url( $uri ) {
 		if (substr($uri, 0, 1) === '/') {
 			self::domain_const();
 			$url = LSCWP_DOMAIN . $uri;
@@ -409,10 +396,9 @@ class Utility extends Root
 	 *
 	 * @since  4.7
 	 */
-	public static function basename($url)
-	{
-		$url = trim($url);
-		$uri = @parse_url($url, PHP_URL_PATH);
+	public static function basename( $url ) {
+		$url      = trim($url);
+		$uri      = @parse_url($url, PHP_URL_PATH);
 		$basename = pathinfo($uri, PATHINFO_BASENAME);
 
 		return $basename;
@@ -423,9 +409,8 @@ class Utility extends Root
 	 *
 	 * @since  4.7
 	 */
-	public static function drop_webp($filename)
-	{
-		if (in_array(substr($filename, -5), array('.webp', '.avif'))) {
+	public static function drop_webp( $filename ) {
+		if (in_array(substr($filename, -5), array( '.webp', '.avif' ))) {
 			$filename = substr($filename, 0, -5);
 		}
 
@@ -439,11 +424,10 @@ class Utility extends Root
 	 * @since  1.6.2.1 Added 2nd param keep_qs
 	 * @access public
 	 */
-	public static function url2uri($url, $keep_qs = false)
-	{
+	public static function url2uri( $url, $keep_qs = false ) {
 		$url = trim($url);
 		$uri = @parse_url($url, PHP_URL_PATH);
-		$qs = @parse_url($url, PHP_URL_QUERY);
+		$qs  = @parse_url($url, PHP_URL_QUERY);
 
 		if (!$keep_qs || !$qs) {
 			return $uri;
@@ -460,8 +444,7 @@ class Utility extends Root
 	 * @param  string   `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
 	 * @return string   `2018/08/test.jpg`
 	 */
-	public static function att_short_path($url)
-	{
+	public static function att_short_path( $url ) {
 		if (!defined('LITESPEED_UPLOAD_PATH')) {
 			$_wp_upload_dir = wp_upload_dir();
 
@@ -485,8 +468,7 @@ class Utility extends Root
 	 * @param  string $url
 	 * @return string      Relative URL, start with /
 	 */
-	public static function make_relative($url)
-	{
+	public static function make_relative( $url ) {
 		// replace home_url if the url is full url
 		self::domain_const();
 		if (strpos($url, LSCWP_DOMAIN) === 0) {
@@ -500,8 +482,7 @@ class Utility extends Root
 	 *
 	 * @since  1.7.1
 	 */
-	public static function parse_domain($url)
-	{
+	public static function parse_domain( $url ) {
 		$url = @parse_url($url);
 		if (empty($url['host'])) {
 			return '';
@@ -519,8 +500,7 @@ class Utility extends Root
 	 *
 	 * @since  3.3
 	 */
-	public static function noprotocol($url)
-	{
+	public static function noprotocol( $url ) {
 		$tmp = parse_url(trim($url));
 		if (!empty($tmp['scheme'])) {
 			$url = str_replace($tmp['scheme'] . ':', '', $url);
@@ -534,8 +514,7 @@ class Utility extends Root
 	 *
 	 * @since 5.5
 	 */
-	public static function valid_ipv4($ip)
-	{
+	public static function valid_ipv4( $ip ) {
 		return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
 	}
 
@@ -549,8 +528,7 @@ class Utility extends Root
 	 * @since  1.3
 	 * @access public
 	 */
-	public static function domain_const()
-	{
+	public static function domain_const() {
 		if (defined('LSCWP_DOMAIN')) {
 			return;
 		}
@@ -570,8 +548,7 @@ class Utility extends Root
 	 * @param  bool   $type String handler type
 	 * @return string|array
 	 */
-	public static function sanitize_lines($arr, $type = null)
-	{
+	public static function sanitize_lines( $arr, $type = null ) {
 		$types = $type ? explode(',', $type) : array();
 
 		if (!$arr) {
@@ -585,36 +562,36 @@ class Utility extends Root
 			$arr = explode("\n", $arr);
 		}
 
-		$arr = array_map('trim', $arr);
+		$arr     = array_map('trim', $arr);
 		$changed = false;
 		if (in_array('uri', $types)) {
-			$arr = array_map(__CLASS__ . '::url2uri', $arr);
+			$arr     = array_map(__CLASS__ . '::url2uri', $arr);
 			$changed = true;
 		}
 		if (in_array('basename', $types)) {
-			$arr = array_map(__CLASS__ . '::basename', $arr);
+			$arr     = array_map(__CLASS__ . '::basename', $arr);
 			$changed = true;
 		}
 		if (in_array('drop_webp', $types)) {
-			$arr = array_map(__CLASS__ . '::drop_webp', $arr);
+			$arr     = array_map(__CLASS__ . '::drop_webp', $arr);
 			$changed = true;
 		}
 		if (in_array('relative', $types)) {
-			$arr = array_map(__CLASS__ . '::make_relative', $arr); // Remove domain
+			$arr     = array_map(__CLASS__ . '::make_relative', $arr); // Remove domain
 			$changed = true;
 		}
 		if (in_array('domain', $types)) {
-			$arr = array_map(__CLASS__ . '::parse_domain', $arr); // Only keep domain
+			$arr     = array_map(__CLASS__ . '::parse_domain', $arr); // Only keep domain
 			$changed = true;
 		}
 
 		if (in_array('noprotocol', $types)) {
-			$arr = array_map(__CLASS__ . '::noprotocol', $arr); // Drop protocol, `https://example.com` -> `//example.com`
+			$arr     = array_map(__CLASS__ . '::noprotocol', $arr); // Drop protocol, `https://example.com` -> `//example.com`
 			$changed = true;
 		}
 
 		if (in_array('trailingslash', $types)) {
-			$arr = array_map('trailingslashit', $arr); // Append trailing slash, `https://example.com` -> `https://example.com/`
+			$arr     = array_map('trailingslashit', $arr); // Append trailing slash, `https://example.com` -> `https://example.com/`
 			$changed = true;
 		}
 
@@ -640,12 +617,11 @@ class Utility extends Root
 	 * @access public
 	 * @return string The built url.
 	 */
-	public static function build_url($action, $type = false, $is_ajax = false, $page = null, $append_arr = array())
-	{
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = array() ) {
 		$prefix = '?';
 
 		if ($page === '_ori') {
-			$page = true;
+			$page                         = true;
 			$append_arr['_litespeed_ori'] = 1;
 		}
 
@@ -692,7 +668,7 @@ class Utility extends Root
 			$url = parse_url(htmlspecialchars_decode($url));
 			parse_str($url['query'], $query);
 
-			$built_arr = array_merge($query, array(Router::TYPE => $type));
+			$built_arr = array_merge($query, array( Router::TYPE => $type ));
 			if ($append_arr) {
 				$built_arr = array_merge($built_arr, $append_arr);
 			}
@@ -710,8 +686,7 @@ class Utility extends Root
 	 *
 	 * @since  1.2.3
 	 */
-	public static function internal($host)
-	{
+	public static function internal( $host ) {
 		if (!defined('LITESPEED_FRONTEND_HOST')) {
 			if (defined('WP_HOME')) {
 				$home_host = WP_HOME; // Also think of `WP_SITEURL`
@@ -749,8 +724,7 @@ class Utility extends Root
 	 * @access public
 	 * @return string|bool The real path of file OR false
 	 */
-	public static function is_internal_file($url, $addition_postfix = false)
-	{
+	public static function is_internal_file( $url, $addition_postfix = false ) {
 		if (substr($url, 0, 5) == 'data:') {
 			Debug2::debug2('[Util] data: content not file');
 			return false;
@@ -771,8 +745,8 @@ class Utility extends Root
 
 		// Need to replace child blog path for assets, ref: .htaccess
 		if (is_multisite() && defined('PATH_CURRENT_SITE')) {
-			$pattern = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U';
-			$replacement = PATH_CURRENT_SITE . '$2';
+			$pattern            = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U';
+			$replacement        = PATH_CURRENT_SITE . '$2';
 			$url_parsed['path'] = preg_replace($pattern, $replacement, $url_parsed['path']);
 			// $current_blog = (int) get_current_blog_id();
 			// $main_blog_id = (int) get_network()->site_id;
@@ -826,7 +800,7 @@ class Utility extends Root
 			return false;
 		}
 
-		return array($file_path, filesize($file_path));
+		return array( $file_path, filesize($file_path) );
 	}
 
 	/**
@@ -834,8 +808,7 @@ class Utility extends Root
 	 *
 	 * @since  3.4.3
 	 */
-	public static function parse_url_safe($url, $component = -1)
-	{
+	public static function parse_url_safe( $url, $component = -1 ) {
 		if (substr($url, 0, 2) == '//') {
 			$url = 'https:' . $url;
 		}
@@ -848,10 +821,9 @@ class Utility extends Root
 	 *
 	 * @since  2.2.3
 	 */
-	public static function srcset_replace($content, $callback)
-	{
+	public static function srcset_replace( $content, $callback ) {
 		preg_match_all('# srcset=([\'"])(.+)\g{1}#iU', $content, $matches);
-		$srcset_ori = array();
+		$srcset_ori   = array();
 		$srcset_final = array();
 		foreach ($matches[2] as $k => $urls_ori) {
 			$urls_final = explode(',', $urls_ori);
@@ -897,11 +869,10 @@ class Utility extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public static function pagination($total, $limit, $return_offset = false)
-	{
+	public static function pagination( $total, $limit, $return_offset = false ) {
 		$pagenum = isset($_GET['pagenum']) ? absint($_GET['pagenum']) : 1;
 
-		$offset = ($pagenum - 1) * $limit;
+		$offset       = ($pagenum - 1) * $limit;
 		$num_of_pages = ceil($total / $limit);
 
 		if ($offset > $total) {
@@ -934,13 +905,12 @@ class Utility extends Root
 	 * @since 2.0
 	 * @access public
 	 */
-	public static function chunk_placeholder($data, $fields)
-	{
+	public static function chunk_placeholder( $data, $fields ) {
 		$division = substr_count($fields, ',') + 1;
 
 		$q = implode(
 			',',
-			array_map(function ($el) {
+			array_map(function ( $el ) {
 				return '(' . implode(',', $el) . ')';
 			}, array_chunk(array_fill(0, count($data), '%s'), $division))
 		);

@@ -8,16 +8,15 @@ namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class WpTouch
-{
+class WpTouch {
+
 	/**
 	 * Detects if WPTouch is installed.
 	 *
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		global $wptouch_pro;
 		if (isset($wptouch_pro)) {
 			add_action('litespeed_control_finalize', __CLASS__ . '::set_control');
@@ -30,8 +29,7 @@ class WpTouch
 	 * @since 1.0.7
 	 * @access public
 	 */
-	public static function set_control()
-	{
+	public static function set_control() {
 		global $wptouch_pro;
 		if ($wptouch_pro->is_mobile_device) {
 			add_filter('litespeed_is_mobile', '__return_true');
