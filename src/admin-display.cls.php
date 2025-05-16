@@ -3,7 +3,6 @@
 /**
  * The admin-panel specific functionality of the plugin.
  *
- *
  * @since      1.0.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/admin
@@ -80,6 +79,7 @@ class Admin_Display extends Base
 
 		/**
 		 * In case this is called outside the admin page
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -393,6 +393,7 @@ class Admin_Display extends Base
 
 	/**
 	 * Add irremovable msg
+	 *
 	 * @since 4.7
 	 */
 	public static function add_unique_notice($color_mode, $msgs, $irremovable = false)
@@ -540,12 +541,12 @@ class Admin_Display extends Base
 			}
 		}
 		// if ( $messages != -1 ) {
-		// 	self::update_option( self::DB_MSG_PIN, -1 );
+		// self::update_option( self::DB_MSG_PIN, -1 );
 		// }
 
 		// Show disable all warning
 		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
-			Admin_Display::error(Error::msg('disabled_all'), true);
+			self::error(Error::msg('disabled_all'), true);
 		}
 
 		if (empty($_GET['page']) || strpos($_GET['page'], 'litespeed') !== 0) {
@@ -565,6 +566,7 @@ class Admin_Display extends Base
 
 		/**
 		 * Check promo msg first
+		 *
 		 * @since 2.9
 		 */
 		GUI::cls()->show_promo();
@@ -944,7 +946,7 @@ class Admin_Display extends Base
 	 * @access public
 	 * @param  string $id
 	 * @param  string $title
-	 * @param  bool $checked
+	 * @param  bool   $checked
 	 */
 	public function build_checkbox($id, $title, $checked = null, $value = 1)
 	{
@@ -1070,13 +1072,11 @@ class Admin_Display extends Base
 		echo '<div class="litespeed-desc litespeed-warning">⚠️ ';
 
 		if ($const_val !== null) {
-			echo sprintf(__('This setting is overwritten by the PHP constant %s', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
+			printf(__('This setting is overwritten by the PHP constant %s', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
+		} elseif (get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
+			echo __('This setting is overwritten by the primary site setting', 'litespeed-cache');
 		} else {
-			if (get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
-				echo __('This setting is overwritten by the primary site setting', 'litespeed-cache');
-			} else {
-				echo __('This setting is overwritten by the Network setting', 'litespeed-cache');
-			}
+			echo __('This setting is overwritten by the Network setting', 'litespeed-cache');
 		}
 
 		echo ', ' . sprintf(__('currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
@@ -1277,9 +1277,9 @@ class Admin_Display extends Base
 	protected function _uri_usage_example()
 	{
 		echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache');
-		echo ' ' . sprintf(__('For example, for %s, %s can be used here.', 'litespeed-cache'), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>');
+		echo ' ' . sprintf(__('For example, for %1$s, %2$s can be used here.', 'litespeed-cache'), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>');
 		echo '<br /><i>';
-		echo sprintf(__('To match the beginning, add %s to the beginning of the item.', 'litespeed-cache'), '<code>^</code>');
+		printf(__('To match the beginning, add %s to the beginning of the item.', 'litespeed-cache'), '<code>^</code>');
 		echo ' ' . sprintf(__('To do an exact match, add %s to the end of the URL.', 'litespeed-cache'), '<code>$</code>');
 		echo ' ' . __('One per line.', 'litespeed-cache');
 		echo '</i>';
@@ -1350,6 +1350,7 @@ class Admin_Display extends Base
 
 	/**
 	 * Check if has qc hide banner cookie or not
+	 *
 	 * @since 7.1
 	 */
 	public static function has_qc_hide_banner()
@@ -1359,6 +1360,7 @@ class Admin_Display extends Base
 
 	/**
 	 * Set qc hide banner cookie
+	 *
 	 * @since 7.1
 	 */
 	public static function set_qc_hide_banner()
