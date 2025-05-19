@@ -18,36 +18,34 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2' # Adjust to your project's PHP version
-          tools: composer:v2
           coverage: none
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4 # Update to v4 for better reliability
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
       - name: Initialize Node.js
-        uses: actions/setup-node@v4 # Update to v4
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           check-latest: true
           cache: npm
           cache-dependency-path: package-lock.json
 
-      # Start actions
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
-
-      - name: Register WPCS with PHPCS
-        run: vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra
-
-      - name: Run PHPCS check
-        run: composer run sniff-check
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
 
       - name: Install npm dependencies
         run: npm clean-install
+
+      - name: Create PHPCS cache directory
+        run: mkdir -p .cache
+
+      - name: Install PHPCS dependencies
+        run: npm run install-composer-packages
+
+      - name: Run PHPCS check
+        run: npm run sniff-check
 
       - name: Run format check
         run: npm run format-check
