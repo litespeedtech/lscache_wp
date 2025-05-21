@@ -809,9 +809,9 @@
 		resetStatus(element);
 	}; // Automatic instances creation if required (useful for async script loading)
 
-	if (runningOnBrowser) {
-		autoInitialize(LazyLoad, window.lazyLoadOptions);
-	}
+	// if (runningOnBrowser) {
+	// 	autoInitialize(LazyLoad, window.lazyLoadOptions);
+	// }
 
 	return LazyLoad;
 });
