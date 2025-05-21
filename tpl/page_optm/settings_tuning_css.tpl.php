@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 ?>
@@ -22,8 +23,8 @@ defined( 'WPINC' ) || exit;
 				<?php Doc::one_per_line(); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_css_excludes</code>' ); ?>
-					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ); ?>
+					<?php printf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optimize_css_excludes</code>' ); ?>
+					<?php printf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ); ?>
 					<br /><?php echo __( 'Predefined list will also be combined w/ the above settings', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/dev/data/css_excludes.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/dev/data/css_excludes.txt</a>
 				</font>
 			</div>
@@ -56,7 +57,7 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'List the CSS selectors whose styles should always be included in UCSS.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
-				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
+				<br /><?php printf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
 					<p>
@@ -83,10 +84,10 @@ defined( 'WPINC' ) || exit;
 				<?php Doc::one_per_line(); ?>
 				<br /><span class="litespeed-success">
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
-					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_ucss_exc</code>' ); ?>
+					<?php printf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_ucss_exc</code>' ); ?>
 				</span>
-				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to generate one single UCSS for the pages which page type is %2$s while other page types still per URL.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_ucss_per_pagetype', function(){return get_post_type() == 'page';} );</code>", '<code>page</code>' ); ?></font>
-				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to bypass UCSS for the pages which page type is %2$s.', 'litespeed-cache' ), "<code>add_action( 'litespeed_optm', function(){get_post_type() == 'page' && do_action( 'litespeed_conf_force', 'optm-ucss', false );});</code>", '<code>page</code>' ); ?></font>
+				<br /><font class="litespeed-success">API: <?php printf( __( 'Use %1$s to generate one single UCSS for the pages which page type is %2$s while other page types still per URL.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_ucss_per_pagetype', function(){return get_post_type() == 'page';} );</code>", '<code>page</code>' ); ?></font>
+				<br /><font class="litespeed-success">API: <?php printf( __( 'Use %1$s to bypass UCSS for the pages which page type is %2$s.', 'litespeed-cache' ), "<code>add_action( 'litespeed_optm', function(){get_post_type() == 'page' && do_action( 'litespeed_conf_force', 'optm-ucss', false );});</code>", '<code>page</code>' ); ?></font>
 
 			</div>
 		</td>
@@ -100,8 +101,8 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
+				<?php echo __( 'List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache' ); ?>
+				<?php printf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types_1' ); ?>
 			</div>
 		</td>
@@ -132,7 +133,7 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'List the CSS selectors whose styles should always be included in CCSS.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ccss-selector-allowlist', __( 'Learn more', 'litespeed-cache' ) ); ?>.
-				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
+				<br /><?php printf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
 					<p>
@@ -154,7 +155,7 @@ defined( 'WPINC' ) || exit;
 		<td>
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ); ?>
+				<?php printf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ); ?>
 			</div>
 		</td>
 	</tr>

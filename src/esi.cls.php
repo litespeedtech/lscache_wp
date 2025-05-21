@@ -5,37 +5,37 @@
  *
  * This is used to define all esi related functions.
  *
- * @since      	1.1.3
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.3
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class ESI extends Root
-{
+class ESI extends Root {
+
 	const LOG_TAG = '⏺';
 
-	private static $has_esi = false;
+	private static $has_esi      = false;
 	private static $_combine_ids = array();
-	private $esi_args = null;
-	private $_esi_preserve_list = array();
-	private $_nonce_actions = array(-1 => ''); // val is cache control
+	private $esi_args            = null;
+	private $_esi_preserve_list  = array();
+	private $_nonce_actions      = array( -1 => '' ); // val is cache control
 
 	const QS_ACTION = 'lsesi';
 	const QS_PARAMS = 'esi';
-	const COMBO = '__combo'; // ESI include combine='main' handler
+	const COMBO     = '__combo'; // ESI include combine='main' handler
 
-	const PARAM_ARGS = 'args';
-	const PARAM_ID = 'id';
+	const PARAM_ARGS     = 'args';
+	const PARAM_ID       = 'id';
 	const PARAM_INSTANCE = 'instance';
-	const PARAM_NAME = 'name';
+	const PARAM_NAME     = 'name';
 
 	const WIDGET_O_ESIENABLE = 'widget_esi_enable';
-	const WIDGET_O_TTL = 'widget_ttl';
+	const WIDGET_O_TTL       = 'widget_ttl';
 
 	/**
 	 * Confructor of ESI
@@ -43,10 +43,10 @@ class ESI extends Root
 	 * @since  1.2.0
 	 * @since  4.0 Change to be after Vary init in hook 'after_setup_theme'
 	 */
-	public function init()
-	{
+	public function init() {
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
+		 *
 		 * @since  2.9.7.2
 		 */
 		if (Router::is_ajax() || !$this->cls('Router')->esi_enabled()) {
@@ -72,6 +72,7 @@ class ESI extends Root
 
 		/**
 		 * Overwrite wp_create_nonce func
+		 *
 		 * @since  2.9.5
 		 */
 		$this->_transform_nonce();
@@ -88,15 +89,15 @@ class ESI extends Root
 	 * @since  4.0 Changed to private from public
 	 * @access private
 	 */
-	private function _hooks()
-	{
-		add_filter('template_include', array($this, 'esi_template'), 99999);
+	private function _hooks() {
+		add_filter('template_include', array( $this, 'esi_template' ), 99999);
 
 		add_action('load-widgets.php', __NAMESPACE__ . '\Purge::purge_widget');
 		add_action('wp_update_comment_count', __NAMESPACE__ . '\Purge::purge_comment_widget');
 
 		/**
 		 * Recover REQUEST_URI
+		 *
 		 * @since  1.8.1
 		 */
 		if (!empty($_GET[self::QS_ACTION])) {
@@ -108,18 +109,18 @@ class ESI extends Root
 		 * Shortcode ESI
 		 *
 		 * To use it, just change the original shortcode as below:
-		 * 		old: [someshortcode aa='bb']
-		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
+		 *      old: [someshortcode aa='bb']
+		 *      new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
 		 *
-		 * 	1. `cache` attribute is optional, default to 'public,no-vary'.
-		 * 	2. `ttl` attribute is optional, default is your public TTL setting.
+		 *  1. `cache` attribute is optional, default to 'public,no-vary'.
+		 *  2. `ttl` attribute is optional, default is your public TTL setting.
 		 *  3. `_ls_silence` attribute is optional, default is false.
 		 *
 		 * @since  2.8
 		 * @since  2.8.1 Check is_admin for Elementor compatibility #726013
 		 */
 		if (!is_admin()) {
-			add_shortcode('esi', array($this, 'shortcode'));
+			add_shortcode('esi', array( $this, 'shortcode' ));
 		}
 	}
 
@@ -128,22 +129,21 @@ class ESI extends Root
 	 *
 	 * @since  2.9.5
 	 */
-	private function _transform_nonce()
-	{
+	private function _transform_nonce() {
 		if (is_admin()) {
 			return;
 		}
 
 		// Load ESI nonces in conf
 		$nonces = $this->conf(Base::O_ESI_NONCE);
-		add_filter('litespeed_esi_nonces', array($this->cls('Data'), 'load_esi_nonces'));
+		add_filter('litespeed_esi_nonces', array( $this->cls('Data'), 'load_esi_nonces' ));
 		if ($nonces = apply_filters('litespeed_esi_nonces', $nonces)) {
 			foreach ($nonces as $action) {
 				$this->nonce_action($action);
 			}
 		}
 
-		add_action('litespeed_nonce', array($this, 'nonce_action'));
+		add_action('litespeed_nonce', array( $this, 'nonce_action' ));
 	}
 
 	/**
@@ -151,12 +151,11 @@ class ESI extends Root
 	 *
 	 * @since  2.9.5
 	 */
-	public function nonce_action($action)
-	{
+	public function nonce_action( $action ) {
 		// Split the Cache Control
-		$action = explode(' ', $action);
+		$action  = explode(' ', $action);
 		$control = !empty($action[1]) ? $action[1] : '';
-		$action = $action[0];
+		$action  = $action[0];
 
 		// Wildcard supported
 		$action = Utility::wildcard2regex($action);
@@ -175,8 +174,7 @@ class ESI extends Root
 	 *
 	 * @since 2.9.5
 	 */
-	public function is_nonce_action($action)
-	{
+	public function is_nonce_action( $action ) {
 		// If GM not run yet, then ESI not init yet, then ESI nonce will not be allowed even nonce func replaced.
 		if (!defined('LITESPEED_ESI_INITED')) {
 			return null;
@@ -195,10 +193,8 @@ class ESI extends Root
 				if (preg_match('#' . $k . '#iU', $action)) {
 					return $v;
 				}
-			} else {
-				if ($k == $action) {
-					return $v;
-				}
+			} elseif ($k == $action) {
+				return $v;
 			}
 		}
 
@@ -211,8 +207,7 @@ class ESI extends Root
 	 * @since 2.8
 	 * @access public
 	 */
-	public function shortcode($atts)
-	{
+	public function shortcode( $atts ) {
 		if (empty($atts[0])) {
 			Debug2::debug('[ESI] ===shortcode wrong format', $atts);
 			return 'Wrong shortcode esi format';
@@ -243,8 +238,7 @@ class ESI extends Root
 	 * @access public
 	 * @return string Esi On header if request has esi, empty string otherwise.
 	 */
-	public static function has_esi()
-	{
+	public static function has_esi() {
 		return self::$has_esi;
 	}
 
@@ -254,8 +248,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function set_has_esi()
-	{
+	public static function set_has_esi() {
 		self::$has_esi = true;
 	}
 
@@ -266,8 +259,7 @@ class ESI extends Root
 	 * @since    1.1.3
 	 * @access   private
 	 */
-	private function _register_esi_actions()
-	{
+	private function _register_esi_actions() {
 		/**
 		 * This hook is in `init`
 		 * For any plugin need to check if page is ESI, use `LSCACHE_IS_ESI` check after `init` hook
@@ -278,6 +270,7 @@ class ESI extends Root
 
 		/**
 		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
+		 *
 		 * @since 2.9.3
 		 */
 		if (!empty($_SERVER['ESI_REFERER']) && !$this->cls('REST')->is_rest($_SERVER['ESI_REFERER'])) {
@@ -288,9 +281,9 @@ class ESI extends Root
 					$_SERVER['REQUEST_URI'] = trailingslashit($_SERVER['ESI_REFERER']);
 				}
 			}
-			# Prevent from 301 redirecting
+			// Prevent from 301 redirecting
 			if (!empty($_SERVER['SCRIPT_URI'])) {
-				$SCRIPT_URI = parse_url($_SERVER['SCRIPT_URI']);
+				$SCRIPT_URI         = parse_url($_SERVER['SCRIPT_URI']);
 				$SCRIPT_URI['path'] = $_SERVER['REQUEST_URI'];
 				Utility::compatibility();
 				$_SERVER['SCRIPT_URI'] = http_build_url($SCRIPT_URI);
@@ -304,19 +297,20 @@ class ESI extends Root
 		/**
 		 * Make REST call be able to parse ESI
 		 * NOTE: Not effective due to ESI req are all to `/` yet
+		 *
 		 * @since 2.9.4
 		 */
-		add_action('rest_api_init', array($this, 'load_esi_block'), 101);
+		add_action('rest_api_init', array( $this, 'load_esi_block' ), 101);
 
 		// Register ESI blocks
-		add_action('litespeed_esi_load-widget', array($this, 'load_widget_block'));
-		add_action('litespeed_esi_load-admin-bar', array($this, 'load_admin_bar_block'));
-		add_action('litespeed_esi_load-comment-form', array($this, 'load_comment_form_block'));
+		add_action('litespeed_esi_load-widget', array( $this, 'load_widget_block' ));
+		add_action('litespeed_esi_load-admin-bar', array( $this, 'load_admin_bar_block' ));
+		add_action('litespeed_esi_load-comment-form', array( $this, 'load_comment_form_block' ));
 
-		add_action('litespeed_esi_load-nonce', array($this, 'load_nonce_block'));
-		add_action('litespeed_esi_load-esi', array($this, 'load_esi_shortcode'));
+		add_action('litespeed_esi_load-nonce', array( $this, 'load_nonce_block' ));
+		add_action('litespeed_esi_load-esi', array( $this, 'load_esi_shortcode' ));
 
-		add_action('litespeed_esi_load-' . self::COMBO, array($this, 'load_combo'));
+		add_action('litespeed_esi_load-' . self::COMBO, array( $this, 'load_combo' ));
 	}
 
 	/**
@@ -328,8 +322,7 @@ class ESI extends Root
 	 * @param string $template The template path filtered.
 	 * @return string The new template path.
 	 */
-	public function esi_template($template)
-	{
+	public function esi_template( $template ) {
 		// Check if is an ESI request
 		if (defined('LSCACHE_IS_ESI')) {
 			self::debug('calling ESI template');
@@ -348,8 +341,7 @@ class ESI extends Root
 	 * @since    1.1.3
 	 * @access   private
 	 */
-	private function _register_not_esi_actions()
-	{
+	private function _register_not_esi_actions() {
 		do_action('litespeed_tpl_normal');
 
 		if (!Control::is_cacheable()) {
@@ -360,18 +352,18 @@ class ESI extends Root
 			return;
 		}
 
-		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3);
+		add_filter('widget_display_callback', array( $this, 'sub_widget_block' ), 0, 3);
 
 		// Add admin_bar esi
 		if (Router::is_logged_in()) {
 			remove_action('wp_body_open', 'wp_admin_bar_render', 0); // Remove default Admin bar. Fix https://github.com/elementor/elementor/issues/25198
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
-			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000);
+			add_action('wp_footer', array( $this, 'sub_admin_bar_block' ), 1000);
 		}
 
 		// Add comment forum esi for logged-in user or commenter
 		if (!Router::is_ajax() && Vary::has_vary()) {
-			add_filter('comment_form_defaults', array($this, 'register_comment_form_actions'));
+			add_filter('comment_form_defaults', array( $this, 'register_comment_form_actions' ));
 		}
 	}
 
@@ -380,8 +372,7 @@ class ESI extends Root
 	 *
 	 * @since  3.4.2
 	 */
-	public static function combine($block_id)
-	{
+	public static function combine( $block_id ) {
 		if (!isset($_SERVER['X-LSCACHE']) || strpos($_SERVER['X-LSCACHE'], 'combine') === false) {
 			return;
 		}
@@ -398,8 +389,7 @@ class ESI extends Root
 	 *
 	 * @since  3.4.2
 	 */
-	public function load_combo()
-	{
+	public function load_combo() {
 		Control::set_nocache('ESI combine request');
 
 		if (empty($_POST['esi_include'])) {
@@ -417,8 +407,8 @@ class ESI extends Root
 			if (empty($qs[self::QS_ACTION])) {
 				continue;
 			}
-			$esi_id = $qs[self::QS_ACTION];
-			$esi_param = !empty($qs[self::QS_PARAMS]) ? $this->_parse_esi_param($qs[self::QS_PARAMS]) : false;
+			$esi_id       = $qs[self::QS_ACTION];
+			$esi_param    = !empty($qs[self::QS_PARAMS]) ? $this->_parse_esi_param($qs[self::QS_PARAMS]) : false;
 			$inline_param = apply_filters('litespeed_esi_inline-' . $esi_id, array(), $esi_param); // Returned array need to be [ val, control, tag ]
 			if ($inline_param) {
 				$output .= self::_build_inline($url, $inline_param);
@@ -433,15 +423,14 @@ class ESI extends Root
 	 *
 	 * @since  3.4.2
 	 */
-	private static function _build_inline($url, $inline_param)
-	{
+	private static function _build_inline( $url, $inline_param ) {
 		if (!$url || empty($inline_param['val']) || empty($inline_param['control']) || empty($inline_param['tag'])) {
 			return '';
 		}
 
-		$url = esc_attr($url);
+		$url     = esc_attr($url);
 		$control = esc_attr($inline_param['control']);
-		$tag = esc_attr($inline_param['tag']);
+		$tag     = esc_attr($inline_param['tag']);
 
 		return "<esi:inline name='$url' cache-control='" . $control . "' cache-tag='" . $tag . "'>" . $inline_param['val'] . '</esi:inline>';
 	}
@@ -455,12 +444,12 @@ class ESI extends Root
 	 * @access private
 	 * @param string $block_id The id to use to display the correct esi block.
 	 * @param string $wrapper The wrapper for the esi comments.
-	 * @param array $params The esi parameters.
+	 * @param array  $params The esi parameters.
 	 * @param string $control The cache control attribute if any.
-	 * @param bool $silence If generate wrapper comment or not
-	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
-	 * @param bool $svar  		If store the value in memory or not, in memory will be faster
-	 * @param array $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
+	 * @param bool   $silence If generate wrapper comment or not
+	 * @param bool   $preserved   If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
+	 * @param bool   $svar        If store the value in memory or not, in memory will be faster
+	 * @param array  $inline_val     If show the current value for current request( this can avoid multiple esi requests in first time cache generating process )
 	 */
 	public function sub_esi_block(
 		$block_id,
@@ -491,7 +480,7 @@ class ESI extends Root
 			$params['is_json'] = 1;
 		}
 
-		$params = apply_filters('litespeed_esi_params', $params, $block_id);
+		$params  = apply_filters('litespeed_esi_params', $params, $block_id);
 		$control = apply_filters('litespeed_esi_control', $control, $block_id);
 
 		if (!is_array($params) || !is_string($control)) {
@@ -517,6 +506,7 @@ class ESI extends Root
 
 		/**
 		 * Escape potential chars
+		 *
 		 * @since 2.9.4
 		 */
 		$appended_params = array_map('urlencode', $appended_params);
@@ -557,7 +547,7 @@ class ESI extends Root
 		// Convert to string to avoid html chars filter when using
 		// Will reverse the buffer when output in self::finalize()
 		if ($preserved) {
-			$hash = md5($output);
+			$hash                            = md5($output);
 			$this->_esi_preserve_list[$hash] = $output;
 			self::debug("Preserved to $hash");
 
@@ -573,9 +563,8 @@ class ESI extends Root
 	 * @since  2.9.6
 	 * @access private
 	 */
-	private function _gen_esi_md5($params)
-	{
-		$keys = array(self::QS_ACTION, '_control', self::QS_PARAMS);
+	private function _gen_esi_md5( $params ) {
+		$keys = array( self::QS_ACTION, '_control', self::QS_PARAMS );
 
 		$str = '';
 		foreach ($keys as $v) {
@@ -594,8 +583,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access private
 	 */
-	private function _parse_esi_param($qs_params = false)
-	{
+	private function _parse_esi_param( $qs_params = false ) {
 		$req_params = false;
 		if ($qs_params) {
 			$req_params = $qs_params;
@@ -625,10 +613,10 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public function load_esi_block()
-	{
+	public function load_esi_block() {
 		/**
 		 * Validate if is a legal ESI req
+		 *
 		 * @since 2.9.6
 		 */
 		if (empty($_GET['_hash']) || $this->_gen_esi_md5($_GET) != $_GET['_hash']) {
@@ -653,6 +641,7 @@ class ESI extends Root
 
 		/**
 		 * Buffer needs to be JSON format
+		 *
 		 * @since  2.9.4
 		 */
 		if (!empty($params['is_json'])) {
@@ -665,7 +654,7 @@ class ESI extends Root
 		// Debug2::debug(var_export($params, true ));
 
 		/**
-		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505
+		 * Handle default cache control 'private,no-vary' for sub_esi_block()   @ticket #923505
 		 *
 		 * @since  2.2.3
 		 */
@@ -692,8 +681,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function widget_default_options($options, $widget)
-	{
+	public static function widget_default_options( $options, $widget ) {
 		if (!is_array($options)) {
 			return $options;
 		}
@@ -702,8 +690,8 @@ class ESI extends Root
 		switch ($widget_name) {
 			case 'WP_Widget_Recent_Posts':
 			case 'WP_Widget_Recent_Comments':
-				$options[self::WIDGET_O_ESIENABLE] = Base::VAL_OFF;
-				$options[self::WIDGET_O_TTL] = 86400;
+            $options[self::WIDGET_O_ESIENABLE] = Base::VAL_OFF;
+            $options[self::WIDGET_O_TTL]       = 86400;
 				break;
 			default:
 				break;
@@ -718,13 +706,12 @@ class ESI extends Root
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $instance Parameter used to build the widget.
+	 * @param array     $instance Parameter used to build the widget.
 	 * @param WP_Widget $widget The widget to build.
-	 * @param array $args Parameter used to build the widget.
+	 * @param array     $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block($instance, $widget, $args)
-	{
+	public function sub_widget_block( $instance, $widget, $args ) {
 		// #210407
 		if (!is_array($instance)) {
 			return $instance;
@@ -763,8 +750,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @global type $wp_admin_bar
 	 */
-	public function sub_admin_bar_block()
-	{
+	public function sub_admin_bar_block() {
 		global $wp_admin_bar;
 
 		if (!is_admin_bar_showing() || !is_object($wp_admin_bar)) {
@@ -787,8 +773,7 @@ class ESI extends Root
 	 * @global $wp_widget_factory
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
-	public function load_widget_block($params)
-	{
+	public function load_widget_block( $params ) {
 		// global $wp_widget_factory;
 		// $widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ];
 		$option = $params[self::PARAM_INSTANCE];
@@ -817,8 +802,7 @@ class ESI extends Root
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public function load_admin_bar_block($params)
-	{
+	public function load_admin_bar_block( $params ) {
 		if (!empty($params['ref'])) {
 			$ref_qs = parse_url($params['ref'], PHP_URL_QUERY);
 			if (!empty($ref_qs)) {
@@ -852,8 +836,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @param array $params Input parameters needed to correctly display comment form
 	 */
-	public function load_comment_form_block($params)
-	{
+	public function load_comment_form_block( $params ) {
 		comment_form($params[self::PARAM_ARGS], $params[self::PARAM_ID]);
 
 		if (!$this->conf(Base::O_ESI_CACHE_COMMFORM)) {
@@ -873,8 +856,7 @@ class ESI extends Root
 	 * @access public
 	 * @since 2.6
 	 */
-	public function load_nonce_block($params)
-	{
+	public function load_nonce_block( $params ) {
 		$action = $params['action'];
 
 		Debug2::debug('[ESI] load_nonce_block [action] ' . $action);
@@ -899,8 +881,7 @@ class ESI extends Root
 	 * @access public
 	 * @since 2.8
 	 */
-	public function load_esi_shortcode($params)
-	{
+	public function load_esi_shortcode( $params ) {
 		if (isset($params['ttl'])) {
 			if (!$params['ttl']) {
 				Control::set_nocache('ESI shortcode att ttl=0');
@@ -912,7 +893,7 @@ class ESI extends Root
 
 		// Replace to original shortcode
 		$shortcode = $params[0];
-		$atts_ori = array();
+		$atts_ori  = array();
 		foreach ($params as $k => $v) {
 			if ($k === 0) {
 				continue;
@@ -936,12 +917,11 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public function register_comment_form_actions($defaults)
-	{
+	public function register_comment_form_actions( $defaults ) {
 		$this->esi_args = $defaults;
 		echo GUI::clean_wrapper_begin();
-		add_filter('comment_form_submit_button', array($this, 'sub_comment_form_btn'), 1000, 2); // To save the params passed in
-		add_action('comment_form', array($this, 'sub_comment_form_block'), 1000);
+		add_filter('comment_form_submit_button', array( $this, 'sub_comment_form_btn' ), 1000, 2); // To save the params passed in
+		add_action('comment_form', array( $this, 'sub_comment_form_block' ), 1000);
 		return $defaults;
 	}
 
@@ -951,8 +931,7 @@ class ESI extends Root
 	 * @since  3.4
 	 * @access public
 	 */
-	public function sub_comment_form_btn($unused, $args)
-	{
+	public function sub_comment_form_btn( $unused, $args ) {
 		if (empty($args) || empty($this->esi_args)) {
 			Debug2::debug('comment form args empty?');
 			return $unused;
@@ -986,8 +965,7 @@ class ESI extends Root
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public function sub_comment_form_block($post_id)
-	{
+	public function sub_comment_form_block( $post_id ) {
 		echo GUI::clean_wrapper_end();
 		$params = array(
 			self::PARAM_ID => $post_id,
@@ -996,7 +974,7 @@ class ESI extends Root
 
 		echo $this->sub_esi_block('comment-form', 'comment form', $params);
 		echo GUI::clean_wrapper_begin();
-		add_action('comment_form_after', array($this, 'comment_form_sub_clean'));
+		add_action('comment_form_after', array( $this, 'comment_form_sub_clean' ));
 	}
 
 	/**
@@ -1006,8 +984,7 @@ class ESI extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public function comment_form_sub_clean()
-	{
+	public function comment_form_sub_clean() {
 		echo GUI::clean_wrapper_end();
 	}
 
@@ -1017,13 +994,12 @@ class ESI extends Root
 	 * @since  2.6
 	 * @access public
 	 */
-	public function finalize($buffer)
-	{
+	public function finalize( $buffer ) {
 		// Prepend combo esi block
 		if (self::$_combine_ids) {
 			Debug2::debug('[ESI] 🍔 Enabled combo');
 			$esi_block = $this->sub_esi_block(self::COMBO, '__COMBINE_MAIN__', array(), 'no-cache', true);
-			$buffer = $esi_block . $buffer;
+			$buffer    = $esi_block . $buffer;
 		}
 
 		// Bypass if no preserved list to be replaced
@@ -1045,8 +1021,7 @@ class ESI extends Root
 	 *
 	 * @since  3.3
 	 */
-	public function contain_preserve_esi($content)
-	{
+	public function contain_preserve_esi( $content ) {
 		$hit_list = array();
 		foreach ($this->_esi_preserve_list as $k => $v) {
 			if (strpos($content, '"' . $k . '"') !== false) {

@@ -2,17 +2,17 @@
 /**
  * The class to operate post editor metabox settings
  *
- * @since 		4.7
- * @package    	Core
- * @subpackage 	Core/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       4.7
+ * @package     Core
+ * @subpackage  Core/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Metabox extends Root
-{
+class Metabox extends Root {
+
 	const LOG_TAG = '📦';
 
 	const POST_NONCE_ACTION = 'post_nonce_action';
@@ -21,10 +21,10 @@ class Metabox extends Root
 
 	/**
 	 * Get the setting list
+	 *
 	 * @since 4.7
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// Append meta box
 		$this->_postmeta_settings = array(
 			'litespeed_no_cache' => __('Disable Cache', 'litespeed-cache'),
@@ -37,21 +37,21 @@ class Metabox extends Root
 
 	/**
 	 * Register post edit settings
+	 *
 	 * @since 4.7
 	 */
-	public function register_settings()
-	{
-		add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
-		add_action('save_post', array($this, 'save_meta_box_settings'), 15, 2);
-		add_action('attachment_updated', array($this, 'save_meta_box_settings'), 15, 2);
+	public function register_settings() {
+		add_action('add_meta_boxes', array( $this, 'add_meta_boxes' ));
+		add_action('save_post', array( $this, 'save_meta_box_settings' ), 15, 2);
+		add_action('attachment_updated', array( $this, 'save_meta_box_settings' ), 15, 2);
 	}
 
 	/**
 	 * Register meta box
+	 *
 	 * @since 4.7
 	 */
-	public function add_meta_boxes($post_type)
-	{
+	public function add_meta_boxes( $post_type ) {
 		if (apply_filters('litespeed_bypass_metabox', false, $post_type)) {
 			return;
 		}
@@ -60,24 +60,24 @@ class Metabox extends Root
 			self::debug('post type public=false, bypass add_meta_boxes');
 			return;
 		}
-		add_meta_box('litespeed_meta_boxes', __('LiteSpeed Options', 'litespeed-cache'), array($this, 'meta_box_options'), $post_type, 'side', 'core');
+		add_meta_box('litespeed_meta_boxes', __('LiteSpeed Options', 'litespeed-cache'), array( $this, 'meta_box_options' ), $post_type, 'side', 'core');
 	}
 
 	/**
 	 * Show meta box content
+	 *
 	 * @since 4.7
 	 */
-	public function meta_box_options()
-	{
+	public function meta_box_options() {
 		require_once LSCWP_DIR . 'tpl/inc/metabox.php';
 	}
 
 	/**
 	 * Save settings
+	 *
 	 * @since 4.7
 	 */
-	public function save_meta_box_settings($post_id, $post)
-	{
+	public function save_meta_box_settings( $post_id, $post ) {
 		global $pagenow;
 
 		self::debug('Maybe save post2 [post_id] ' . $post_id);
@@ -104,10 +104,10 @@ class Metabox extends Root
 
 	/**
 	 * Load setting per post
+	 *
 	 * @since 4.7
 	 */
-	public function setting($conf, $post_id = false)
-	{
+	public function setting( $conf, $post_id = false ) {
 		// Check if has metabox non-cacheable setting or not
 		if (!$post_id) {
 			$home_id = get_option('page_for_posts');
@@ -127,10 +127,10 @@ class Metabox extends Root
 
 	/**
 	 * Save a metabox value
+	 *
 	 * @since 4.7
 	 */
-	public function save($post_id, $name, $val, $is_append = false)
-	{
+	public function save( $post_id, $name, $val, $is_append = false ) {
 		if (strpos($name, 'litespeed_vpi_list') !== false) {
 			$val = Utility::sanitize_lines($val, 'basename,drop_webp');
 		}
@@ -140,7 +140,7 @@ class Metabox extends Root
 			$existing_data = $this->setting($name, $post_id);
 			if ($existing_data) {
 				$existing_data = Utility::sanitize_lines($existing_data, 'basename');
-				$val = array_unique(array_merge($val, $existing_data));
+				$val           = array_unique(array_merge($val, $existing_data));
 			}
 		}
 
@@ -153,12 +153,12 @@ class Metabox extends Root
 
 	/**
 	 * Load exclude images per post
+	 *
 	 * @since 4.7
 	 */
-	public function lazy_img_excludes($list)
-	{
+	public function lazy_img_excludes( $list ) {
 		$is_mobile = $this->_separate_mobile();
-		$excludes = $this->setting($is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list');
+		$excludes  = $this->setting($is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list');
 		if ($excludes !== null) {
 			$excludes = Utility::sanitize_lines($excludes, 'basename');
 			if ($excludes) {

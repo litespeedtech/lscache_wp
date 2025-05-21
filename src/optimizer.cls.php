@@ -3,18 +3,18 @@
 /**
  * The optimize4 class.
  *
- * @since      	1.9
- * @package  	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.9
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Optimizer extends Root
-{
+class Optimizer extends Root {
+
 	private $_conf_css_font_display;
 
 	/**
@@ -22,8 +22,7 @@ class Optimizer extends Root
 	 *
 	 * @since  1.9
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_conf_css_font_display = $this->conf(Base::O_OPTM_CSS_FONT_DISPLAY);
 	}
 
@@ -33,8 +32,7 @@ class Optimizer extends Root
 	 * @since  1.9
 	 * @access public
 	 */
-	public function html_min($content, $force_inline_minify = false)
-	{
+	public function html_min( $content, $force_inline_minify = false ) {
 		if (!apply_filters('litespeed_html_min', true)) {
 			Debug2::debug2('[Optmer] html_min bypassed via litespeed_html_min filter');
 			return $content;
@@ -53,10 +51,11 @@ class Optimizer extends Root
 
 		/**
 		 * Added exception capture when minify
+		 *
 		 * @since  2.2.3
 		 */
 		try {
-			$obj = new Lib\HTML_MIN($content, $options);
+			$obj           = new Lib\HTML_MIN($content, $options);
 			$content_final = $obj->process();
 			// check if content from minification is empty
 			if ($content_final == '') {
@@ -80,8 +79,7 @@ class Optimizer extends Root
 	 * @since  1.9
 	 * @access public
 	 */
-	public function serve($request_url, $file_type, $minify, $src_list)
-	{
+	public function serve( $request_url, $file_type, $minify, $src_list ) {
 		// Try Unique CSS
 		if ($file_type == 'css') {
 			$content = false;
@@ -89,7 +87,7 @@ class Optimizer extends Root
 				$filename = $this->cls('UCSS')->load($request_url);
 
 				if ($filename) {
-					return array($filename, 'ucss');
+					return array( $filename, 'ucss' );
 				}
 			}
 		}
@@ -97,7 +95,7 @@ class Optimizer extends Root
 		// Before generated, don't know the contented hash filename yet, so used url hash as tmp filename
 		$file_path_prefix = $this->_build_filepath_prefix($file_type);
 
-		$url_tag = $request_url;
+		$url_tag          = $request_url;
 		$url_tag_for_file = md5($request_url);
 		if (is_404()) {
 			$url_tag_for_file = $url_tag = '404';
@@ -141,7 +139,7 @@ class Optimizer extends Root
 		// if CSS - run the minification on the saved file.
 		// Will move imports to the top of file and remove extra spaces.
 		if ($file_type == 'css') {
-			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
+			$obj                   = new Lib\CSS_JS_MIN\Minify\CSS();
 			$file_content_combined = $obj->moveImportsToTop(File::read($tmp_static_file));
 
 			File::save($tmp_static_file, $file_content_combined);
@@ -151,7 +149,7 @@ class Optimizer extends Root
 		$filecon_md5 = md5_file($tmp_static_file);
 
 		$final_file_path = $file_path_prefix . $filecon_md5 . '.' . $file_type;
-		$realfile = LITESPEED_STATIC_DIR . $final_file_path;
+		$realfile        = LITESPEED_STATIC_DIR . $final_file_path;
 		if (!file_exists($realfile)) {
 			rename($tmp_static_file, $realfile);
 			Debug2::debug2('[Optmer] Saved static file [path] ' . $realfile);
@@ -163,15 +161,15 @@ class Optimizer extends Root
 		Debug2::debug2("[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary ");
 		$this->cls('Data')->save_url($url_tag, $vary, $file_type, $filecon_md5, dirname($realfile));
 
-		return array($filecon_md5 . '.' . $file_type, $file_type);
+		return array( $filecon_md5 . '.' . $file_type, $file_type );
 	}
 
 	/**
 	 * Load a single file
+	 *
 	 * @since  4.0
 	 */
-	public function optm_snippet($content, $file_type, $minify, $src, $media = false)
-	{
+	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
 		// CSS related features
 		if ($file_type == 'css') {
 			// Font optimize
@@ -215,10 +213,9 @@ class Optimizer extends Root
 	 *
 	 * @since  4.7
 	 */
-	private function load_cached_file($url, $file_type)
-	{
-		$file_path_prefix = $this->_build_filepath_prefix($file_type);
-		$folder_name = LITESPEED_STATIC_DIR . $file_path_prefix;
+	private function load_cached_file( $url, $file_type ) {
+		$file_path_prefix     = $this->_build_filepath_prefix($file_type);
+		$folder_name          = LITESPEED_STATIC_DIR . $file_path_prefix;
 		$to_be_deleted_folder = $folder_name . date('Ymd', strtotime('-2 days'));
 		if (file_exists($to_be_deleted_folder)) {
 			Debug2::debug('[Optimizer] ❌ Clearing folder [name] ' . $to_be_deleted_folder);
@@ -231,7 +228,7 @@ class Optimizer extends Root
 		}
 
 		// Write file
-		$res = wp_safe_remote_get($url);
+		$res      = wp_safe_remote_get($url);
 		$res_code = wp_remote_retrieve_response_code($res);
 		if (is_wp_error($res) || $res_code != 200) {
 			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $res_code);
@@ -253,14 +250,13 @@ class Optimizer extends Root
 	 *
 	 * @since  3.5
 	 */
-	public function load_file($src, $file_type = 'css')
-	{
+	public function load_file( $src, $file_type = 'css' ) {
 		$real_file = Utility::is_internal_file($src);
-		$postfix = pathinfo(parse_url($src, PHP_URL_PATH), PATHINFO_EXTENSION);
+		$postfix   = pathinfo(parse_url($src, PHP_URL_PATH), PATHINFO_EXTENSION);
 		if (!$real_file || $postfix != $file_type) {
 			Debug2::debug2('[CSS] Load Remote [' . $file_type . '] ' . $src);
 			$this_url = substr($src, 0, 2) == '//' ? set_url_scheme($src) : $src;
-			$con = $this->load_cached_file($this_url, $file_type);
+			$con      = $this->load_cached_file($this_url, $file_type);
 
 			if ($file_type == 'css') {
 				$dirname = dirname($this_url) . '/';
@@ -287,8 +283,7 @@ class Optimizer extends Root
 	 * @since  2.2.3
 	 * @access private
 	 */
-	public static function minify_css($data)
-	{
+	public static function minify_css( $data ) {
 		try {
 			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
 			$obj->add($data);
@@ -309,8 +304,7 @@ class Optimizer extends Root
 	 * @since  2.2.3
 	 * @access private
 	 */
-	public static function minify_js($data, $js_type = '')
-	{
+	public static function minify_js( $data, $js_type = '' ) {
 		// For inline JS optimize, need to check if it's js type
 		if ($js_type) {
 			preg_match('#type=([\'"])(.+)\g{1}#isU', $js_type, $matches);
@@ -337,8 +331,7 @@ class Optimizer extends Root
 	 *
 	 * @access private
 	 */
-	private function _null_minifier($content)
-	{
+	private function _null_minifier( $content ) {
 		$content = str_replace("\r\n", "\n", $content);
 
 		return trim($content);
@@ -349,8 +342,7 @@ class Optimizer extends Root
 	 *
 	 * @since  1.9
 	 */
-	public function is_min($filename)
-	{
+	public function is_min( $filename ) {
 		$basename = basename($filename);
 		if (preg_match('/[-\.]min\.(?:[a-zA-Z]+)$/i', $basename)) {
 			return true;

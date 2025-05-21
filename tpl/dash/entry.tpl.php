@@ -1,9 +1,10 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'dashboard'	=> __( 'Dashboard', 'litespeed-cache' ),
+	'dashboard' => __( 'Dashboard', 'litespeed-cache' ),
 );
 
 if ( $this->_is_network_admin ) {
@@ -27,10 +28,10 @@ if ( $this->_is_network_admin ) {
 
 <div class="litespeed-wrap">
 	<?php
-	foreach ($menu_list as $tab => $val) {
+	foreach ( $menu_list as $tab => $val ) {
 		echo "<div data-litespeed-layout='$tab'>";
 		require LSCWP_DIR . "tpl/dash/$tab.tpl.php";
-		echo "</div>";
+		echo '</div>';
 	}
 	?>
 </div>

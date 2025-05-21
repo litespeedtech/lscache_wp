@@ -2,19 +2,19 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'qc'		=> __('QUIC.cloud', 'litespeed-cache'),
-	'cf'		=> __('Cloudflare', 'litespeed-cache'),
-	'other'	=> __('Other Static CDN', 'litespeed-cache'),
+	'qc'    => __( 'QUIC.cloud', 'litespeed-cache' ),
+	'cf'    => __( 'Cloudflare', 'litespeed-cache' ),
+	'other' => __( 'Other Static CDN', 'litespeed-cache' ),
 );
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __('LiteSpeed Cache CDN', 'litespeed-cache'); ?>
+		<?php echo __( 'LiteSpeed Cache CDN', 'litespeed-cache' ); ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo Core::VER; ?>
@@ -26,10 +26,10 @@ $menu_list = array(
 	<h2 class="litespeed-header nav-tab-wrapper">
 		<?php
 		$i = 1;
-		foreach ($menu_list as $tab => $val) {
+		foreach ( $menu_list as $tab => $val ) {
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
 			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-			$i++;
+			++$i;
 		}
 		?>
 	</h2>
@@ -38,10 +38,10 @@ $menu_list = array(
 		<?php
 
 		// include all tpl for faster UE
-		foreach ($menu_list as $tab => $val) {
+		foreach ( $menu_list as $tab => $val ) {
 			echo "<div data-litespeed-layout='$tab'>";
 			require LSCWP_DIR . "tpl/cdn/$tab.tpl.php";
-			echo "</div>";
+			echo '</div>';
 		}
 
 		?>

@@ -11,8 +11,8 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class File
-{
+class File {
+
 	const MARKER = 'LiteSpeed Operator';
 
 	/**
@@ -20,10 +20,9 @@ class File
 	 *
 	 * @since  3.3
 	 */
-	public static function is_404($url)
-	{
+	public static function is_404( $url ) {
 		$response = wp_safe_remote_get($url);
-		$code = wp_remote_retrieve_response_code($response);
+		$code     = wp_remote_retrieve_response_code($response);
 		if ($code == 404) {
 			return true;
 		}
@@ -32,13 +31,12 @@ class File
 	}
 
 	/**
-	 *	Delete folder
+	 *  Delete folder
 	 *
 	 * @since 2.1
 	 */
-	public static function rrmdir($dir)
-	{
-		$files = array_diff(scandir($dir), array('.', '..'));
+	public static function rrmdir( $dir ) {
+		$files = array_diff(scandir($dir), array( '.', '..' ));
 
 		foreach ($files as $file) {
 			is_dir("$dir/$file") ? self::rrmdir("$dir/$file") : unlink("$dir/$file");
@@ -47,8 +45,7 @@ class File
 		return rmdir($dir);
 	}
 
-	public static function count_lines($filename)
-	{
+	public static function count_lines( $filename ) {
 		if (!file_exists($filename)) {
 			return 0;
 		}
@@ -63,11 +60,10 @@ class File
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
-	 * @param int $start_line
-	 * @param int $lines
+	 * @param int    $start_line
+	 * @param int    $lines
 	 */
-	public static function read($filename, $start_line = null, $lines = null)
-	{
+	public static function read( $filename, $start_line = null, $lines = null ) {
 		if (!file_exists($filename)) {
 			return '';
 		}
@@ -77,7 +73,7 @@ class File
 		}
 
 		if ($start_line !== null) {
-			$res = array();
+			$res  = array();
 			$file = new \SplFileObject($filename);
 			$file->seek($start_line);
 
@@ -112,13 +108,12 @@ class File
 	 *
 	 * @since 1.1.5
 	 * @access public
-	 * @param string $filename
-	 * @param string $data
+	 * @param string  $filename
+	 * @param string  $data
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function append($filename, $data, $mkdir = false, $silence = true)
-	{
+	public static function append( $filename, $data, $mkdir = false, $silence = true ) {
 		return self::save($filename, $data, $mkdir, true, $silence);
 	}
 
@@ -126,19 +121,18 @@ class File
 	 * Save data to file
 	 *
 	 * @since 1.1.0
-	 * @param string $filename
-	 * @param string $data
+	 * @param string  $filename
+	 * @param string  $data
 	 * @param boolean $mkdir
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function save($filename, $data, $mkdir = false, $append = false, $silence = true)
-	{
+	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true ) {
 		if (is_null($filename)) {
 			return $silence ? false : __('Filename is empty!', 'litespeed-cache');
 		}
 
-		$error = false;
+		$error  = false;
 		$folder = dirname($filename);
 
 		// mkdir if folder does not exist
@@ -193,8 +187,7 @@ class File
 	 * @since 2.1.2
 	 * @since 2.9 changed to public
 	 */
-	public static function remove_zero_space($content)
-	{
+	public static function remove_zero_space( $content ) {
 		if (is_array($content)) {
 			$content = array_map(__CLASS__ . '::remove_zero_space', $content);
 			return $content;
@@ -222,11 +215,10 @@ class File
 	 * @param string       $filename  Filename to alter.
 	 * @param string       $marker    The marker to alter.
 	 * @param array|string $insertion The new content to insert.
-	 * @param bool 	       $prepend Prepend insertion if not exist.
+	 * @param bool         $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
-	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
-	{
+	public static function insert_with_markers( $filename, $insertion = false, $marker = false, $prepend = false ) {
 		if (!$marker) {
 			$marker = self::MARKER;
 		}
@@ -235,7 +227,7 @@ class File
 			$insertion = array();
 		}
 
-		return self::_insert_with_markers($filename, $marker, $insertion, $prepend); //todo: capture exceptions
+		return self::_insert_with_markers($filename, $marker, $insertion, $prepend); // todo: capture exceptions
 	}
 
 	/**
@@ -245,15 +237,14 @@ class File
 	 * @param string $marker
 	 * @return string The block data
 	 */
-	public static function wrap_marker_data($insertion, $marker = false)
-	{
+	public static function wrap_marker_data( $insertion, $marker = false ) {
 		if (!$marker) {
 			$marker = self::MARKER;
 		}
 		$start_marker = "# BEGIN {$marker}";
-		$end_marker = "# END {$marker}";
+		$end_marker   = "# END {$marker}";
 
-		$new_data = implode("\n", array_merge(array($start_marker), $insertion, array($end_marker)));
+		$new_data = implode("\n", array_merge(array( $start_marker ), $insertion, array( $end_marker )));
 		return $new_data;
 	}
 
@@ -264,8 +255,7 @@ class File
 	 * @param string $marker
 	 * @return string The current block data
 	 */
-	public static function touch_marker_data($filename, $marker = false)
-	{
+	public static function touch_marker_data( $filename, $marker = false ) {
 		if (!$marker) {
 			$marker = self::MARKER;
 		}
@@ -277,8 +267,8 @@ class File
 		}
 
 		$start_marker = "# BEGIN {$marker}";
-		$end_marker = "# END {$marker}";
-		$new_data = implode("\n", array_merge(array($start_marker), $result, array($end_marker)));
+		$end_marker   = "# END {$marker}";
+		$new_data     = implode("\n", array_merge(array( $start_marker ), $result, array( $end_marker )));
 		return $new_data;
 	}
 
@@ -289,8 +279,7 @@ class File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	public static function extract_from_markers($filename, $marker = false)
-	{
+	public static function extract_from_markers( $filename, $marker = false ) {
 		if (!$marker) {
 			$marker = self::MARKER;
 		}
@@ -304,8 +293,7 @@ class File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	private static function _extract_from_markers($filename, $marker)
-	{
+	private static function _extract_from_markers( $filename, $marker ) {
 		$result = array();
 
 		if (!file_exists($filename)) {
@@ -341,8 +329,7 @@ class File
 	 * @since  3.0 Throw errors if failed
 	 * @access private
 	 */
-	private static function _insert_with_markers($filename, $marker, $insertion, $prepend = false)
-	{
+	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false ) {
 		if (!file_exists($filename)) {
 			if (!is_writable(dirname($filename))) {
 				Error::t('W', dirname($filename));
@@ -364,7 +351,7 @@ class File
 		}
 
 		$start_marker = "# BEGIN {$marker}";
-		$end_marker = "# END {$marker}";
+		$end_marker   = "# END {$marker}";
 
 		$fp = fopen($filename, 'r+');
 		if (!$fp) {
@@ -380,7 +367,7 @@ class File
 		}
 
 		// Split out the existing file into the preceding lines, and those that appear after the marker
-		$pre_lines = $post_lines = $existing_lines = array();
+		$pre_lines    = $post_lines = $existing_lines = array();
 		$found_marker = $found_end_marker = false;
 		foreach ($lines as $line) {
 			if (!$found_marker && false !== strpos($line, $start_marker)) {
@@ -411,10 +398,10 @@ class File
 		// Check if need to prepend data if not exist
 		if ($prepend && !$post_lines) {
 			// Generate the new file data
-			$new_file_data = implode("\n", array_merge(array($start_marker), $insertion, array($end_marker), $pre_lines));
+			$new_file_data = implode("\n", array_merge(array( $start_marker ), $insertion, array( $end_marker ), $pre_lines));
 		} else {
 			// Generate the new file data
-			$new_file_data = implode("\n", array_merge($pre_lines, array($start_marker), $insertion, array($end_marker), $post_lines));
+			$new_file_data = implode("\n", array_merge($pre_lines, array( $start_marker ), $insertion, array( $end_marker ), $post_lines));
 		}
 
 		// Write to the start of the file, and truncate it to that length

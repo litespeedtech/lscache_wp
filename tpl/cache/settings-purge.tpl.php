@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 ?>
 
@@ -10,21 +11,21 @@ defined( 'WPINC' ) || exit;
 
 <?php
 $option_list = array(
-	Base::O_PURGE_POST_ALL => __( 'All pages', 'litespeed-cache' ),
-	Base::O_PURGE_POST_FRONTPAGE => __( 'Front page', 'litespeed-cache' ),
-	Base::O_PURGE_POST_HOMEPAGE => __( 'Home page', 'litespeed-cache' ),
-	Base::O_PURGE_POST_PAGES => __( 'Pages', 'litespeed-cache' ),
+	Base::O_PURGE_POST_ALL                     => __( 'All pages', 'litespeed-cache' ),
+	Base::O_PURGE_POST_FRONTPAGE               => __( 'Front page', 'litespeed-cache' ),
+	Base::O_PURGE_POST_HOMEPAGE                => __( 'Home page', 'litespeed-cache' ),
+	Base::O_PURGE_POST_PAGES                   => __( 'Pages', 'litespeed-cache' ),
 
 	Base::O_PURGE_POST_PAGES_WITH_RECENT_POSTS => __( 'All pages with Recent Posts Widget', 'litespeed-cache' ),
 
-	Base::O_PURGE_POST_AUTHOR => __( 'Author archive', 'litespeed-cache' ),
-	Base::O_PURGE_POST_POSTTYPE => __( 'Post type archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_AUTHOR                  => __( 'Author archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_POSTTYPE                => __( 'Post type archive', 'litespeed-cache' ),
 
-	Base::O_PURGE_POST_YEAR => __( 'Yearly archive', 'litespeed-cache' ),
-	Base::O_PURGE_POST_MONTH => __( 'Monthly archive', 'litespeed-cache' ),
-	Base::O_PURGE_POST_DATE => __( 'Daily archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_YEAR                    => __( 'Yearly archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_MONTH                   => __( 'Monthly archive', 'litespeed-cache' ),
+	Base::O_PURGE_POST_DATE                    => __( 'Daily archive', 'litespeed-cache' ),
 
-	Base::O_PURGE_POST_TERM => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
+	Base::O_PURGE_POST_TERM                    => __( 'Term archive (include category, tag, and tax)', 'litespeed-cache' ),
 );
 
 // break line at these ids
@@ -57,14 +58,14 @@ $break_arr = array(
 			<div class="litespeed-top20">
 				<div class="litespeed-tick-wrapper">
 					<?php
-						foreach ( $option_list as $id => $title ) {
+					foreach ( $option_list as $id => $title ) {
 
-							$this->build_checkbox( $id, $title );
+						$this->build_checkbox( $id, $title );
 
-							if ( in_array( $id, $break_arr ) ) {
-								echo '</div><div class="litespeed-tick-wrapper litespeed-top10">';
-							}
+						if ( in_array( $id, $break_arr ) ) {
+							echo '</div><div class="litespeed-tick-wrapper litespeed-top10">';
 						}
+					}
 					?>
 				</div>
 			</div>
@@ -102,12 +103,12 @@ $break_arr = array(
 		<td>
 			<?php $this->build_textarea( $id, 80 ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'The URLs here (one per line) will be purged automatically at the time set in the option "%s".', 'litespeed-cache' ), __( 'Scheduled Purge Time', 'litespeed-cache' ) ); ?><br />
-				<?php echo sprintf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<code>http://www.example.com/path/url.php</code>', '<code>/path/url.php</code>' ); ?>
+				<?php printf( __( 'The URLs here (one per line) will be purged automatically at the time set in the option "%s".', 'litespeed-cache' ), __( 'Scheduled Purge Time', 'litespeed-cache' ) ); ?><br />
+				<?php printf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<code>http://www.example.com/path/url.php</code>', '<code>/path/url.php</code>' ); ?>
 				<?php Doc::one_per_line(); ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ); ?>
+				<?php printf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>/path/u-1.html</code>', '<code>/path/u-2.html</code>', '<code>/path/u-*.html</code>' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
 				<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -127,8 +128,8 @@ $break_arr = array(
 		<td>
 			<?php $this->build_input( $id, null, null, 'time' ); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify the time to purge the "%s" list.', 'litespeed-cache' ), __( 'Scheduled Purge URLs', 'litespeed-cache' ) ); ?>
-				<?php echo sprintf( __( 'Current server time is %s.', 'litespeed-cache' ), '<code>' . date( 'H:i:s', time() + LITESPEED_TIME_OFFSET ) . '</code>' ); ?>
+				<?php printf( __( 'Specify the time to purge the "%s" list.', 'litespeed-cache' ), __( 'Scheduled Purge URLs', 'litespeed-cache' ) ); ?>
+				<?php printf( __( 'Current server time is %s.', 'litespeed-cache' ), '<code>' . date( 'H:i:s', time() + LITESPEED_TIME_OFFSET ) . '</code>' ); ?>
 			</div>
 		</td>
 	</tr>

@@ -3,8 +3,10 @@
 	"description": "High-performance page caching and site optimization from LiteSpeed",
 	"license": "GPLv3",
 	"scripts": {
-		"format": "prettier --write . '**/*.php'",
-		"format-check": "prettier --check . '**/*.php'"
+		"format-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php",
+		"install-composer-packages": "composer require --dev squizlabs/php_codesniffer:^3.12 wp-coding-standards/wpcs:^3.1 dealerdirect/phpcodesniffer-composer-installer:^1.0 && vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra",
+		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php",
+		"wpformat": "vendor/bin/phpcbf --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.21.0",
