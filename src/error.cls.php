@@ -44,7 +44,7 @@ class Error {
             $msg =
               sprintf(__('The setting %s is currently enabled.', 'litespeed-cache'), '<strong>' . Lang::title(Base::O_DEBUG_DISABLE_ALL) . '</strong>') .
               Doc::learn_more(
-                  is_network_admin() ? network_admin_url('admin.php?page=litespeed-toolbox') : admin_url('admin.php?page=litespeed-toolbox#settings-debug'),
+                  is_network_admin() ? network_admin_url('admin.php?page=litespeed-toolbox#settings-debug') : admin_url('admin.php?page=litespeed-toolbox#settings-debug'),
                   __('Click here to change.', 'litespeed-cache'),
                   true,
                   false,
