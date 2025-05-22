@@ -156,6 +156,9 @@ var _litespeed_dots;
 		/** Accesskey **/
 		$('[litespeed-accesskey]').map(function () {
 			var thiskey = $(this).attr('litespeed-accesskey');
+			if (thiskey == '') {
+				return;
+			}
 			$(this).attr('title', 'Shortcut : ' + thiskey.toLocaleUpperCase());
 			var that = this;
 			$(document).on('keydown', function (e) {

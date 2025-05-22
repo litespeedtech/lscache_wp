@@ -267,6 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.
 * **GUI** Show `Disable all features` message on all pages when turned on.
+* **Misc** Used PHPCS w/ WordPress core and security standard to reformat cache menu codes. (Viktor Szépe #696)
 * **Misc** Replaced use of `SHOW TABLES` with `DESCRIBE` to prevent database halt in very large WP Multisite installations. (Boone Gorges PR#834, PR#850)
 * **Misc** Used WP functions to check if running AJAX/CRON or not instead of consts.
 
