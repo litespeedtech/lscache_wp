@@ -264,6 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cache** Additional check to prevent admin pages from cache even user set cacheable globally.
 * **Image Optimize** Disable image pull cron if no image notified.
 * **Media** Resolved missing optimized image deletion when delete from grid mode. (PR#844, Zsombor Franczia #841)
+* **Media** Allow filter `litespeed_next_gen_format` to manipulate the value of next gen format. (Zsombor Franczia #853)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
 * **Config** Purge All On Upgrade default to OFF.
 * **GUI** Show `Disable all features` message on all pages when turned on.

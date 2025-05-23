@@ -45,6 +45,7 @@ class Media extends Root {
 			if (!$this->_browser_support_next_gen()) {
 				$this->_format = '';
 			}
+			$this->_format = apply_filters('litespeed_next_gen_format', $this->_format);
 		}
 	}
 
