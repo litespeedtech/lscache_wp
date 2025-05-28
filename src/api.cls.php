@@ -64,6 +64,7 @@ class API extends Base {
 		// Action `litespeed_conf_append` // @previous API::conf_append( $name, $default )
 		add_action('litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2);
 		// Action ``litespeed_conf_force` // @previous API::force_option( $k, $v )
+		add_action( 'litespeed_save_conf',  array( $this, 'save_conf'));
 
 		/**
 		 * Cache Control Hooks
@@ -241,5 +242,14 @@ class API extends Base {
 		$inline_param = array()
 	) {
 		return $this->cls('ESI')->sub_esi_block($block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_param);
+	}
+
+	/**
+	 * Set and sync conf
+	 *
+	 * @since 7.2
+	 */
+	public function save_conf( $the_matrix = false ) {
+		$this->cls('Conf')->update_confs( $the_matrix );
 	}
 }
