@@ -921,7 +921,7 @@ class Crawler extends Root {
 			}
 
 			// IP resolve
-			if (!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
+			if ((!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) || $this->_server_ip) {
 				$parsed_url = parse_url($url);
 				// self::debug('Crawl role simulator, required to use localhost for resolve');
 

@@ -258,20 +258,21 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.2 - Jun 18 2025 =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
 * **Core** Used `site_url` instead of `home_url` to fix the content folder parsing and QUIC.cloud calls.
-* 🐞**Cloud** Fixed a bug that when debug mode is ON, it will always try to sync usage even not activated QUIC.cloud.
+* 🐞**Cloud** Fixed a bug where we tried to sync QUIC.cloud usage while debug mode was ON, even when QC was not activated.
 * **Cloud** Stored request timestamp in static files along w/ database to prevent duplicate requests when database is down.
 * **Cache** Dropped `Cache PHP Resources` option.
-* **Cache** Additional check to prevent admin pages from cache even user set cacheable globally.
-* **Image Optimize** Disable image pull cron if no image notified.
-* **Media** Resolved missing optimized image deletion when delete from grid mode. (PR#844, Zsombor Franczia #841)
+* **Cache** Added verification to prevent admin pages from caching even if the site is set to be globally cacheable.
+* **Image Optimize** Disable image pull cron if there have been no image notifications.
+* **Crawler** Non-role simulator crawler will now use DNS resolve to hit original server instead of CDN nodes.
+* **Media** Resolved an issue where deleting an image from grid mode neglected to also remove the optimized versions of the image. (PR#844, Zsombor Franczia #841)
 * **Media** Allow filter `litespeed_next_gen_format` to manipulate the value of next gen format. (Zsombor Franczia #853)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
-* **Config** Purge All On Upgrade default to OFF.
-* **GUI** Show `Disable all features` message on all pages when turned on.
-* **Misc** Used PHPCS w/ WordPress core and security standard to reformat cache menu codes. (Viktor Szépe #696)
+* **Config** Purge All On Upgrade now defaults to OFF.
+* **GUI** Show `Disable all features` message on all WP-Admin pages for Admin-level users when enabled.
+* **Misc** Used PHPCS w/ WordPress core and security coding standards to reformat cache menu code. (Viktor Szépe #696)
 * **Misc** Replaced use of `SHOW TABLES` with `DESCRIBE` to prevent database halt in very large WP Multisite installations. (Boone Gorges PR#834, PR#850)
-* **Misc** Used WP functions to check if running AJAX/CRON or not instead of consts.
-* **API** Added `litespeed_save_conf` action to allow trigger of conf update.
+* **Misc** Replaced constants with WordPress functions to check whether AJAX or CRON is running.
+* **API** Added `litespeed_save_conf` action to provide a trigger for configuration updates.
 
 = 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
