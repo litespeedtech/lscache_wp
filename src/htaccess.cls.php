@@ -569,11 +569,18 @@ class Htaccess extends Root {
 				$next_gen_format = 'avif';
 			}
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START;
+			// Check for WebP support via HTTP_ACCEPT
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} image/' . $next_gen_format . ' [OR]';
+
+			// Check for iPhone Safari (version > 13)
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone.*Version/(\d{2}).*Safari [NC]';
 			$new_rules[] = 'RewriteCond %1 >13 [OR]';
+
+			// Check for Firefox (version >= 65)
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([0-9]+) [NC]';
 			$new_rules[] = 'RewriteCond %1 >=65';
+
+			// Add vary
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_END;
 			$new_rules[] = '';
