@@ -519,6 +519,21 @@ class Core extends Root
 		// Hook to modify buffer after
 		$buffer = apply_filters('litespeed_buffer_after', $buffer);
 
+		// Make sure ESI links are decoded in situation where links are changed by block editor, in render function with wptexturize. Ticket #485348.
+		if(preg_match_all('/(<esi.+src=["\'])(.*)(["\'].*\/>)/mU', $buffer, $matchesEsi)){
+			foreach($matchesEsi[2] as $index => $match){
+				$data = $match;
+				
+				// entity decode needs changes. For example: if finds &#038; %2B  %3D
+				$data = parse_str($data);
+
+				if($data !== $match){
+					$pre_url = $matchesEsi[1][$index];
+					$post_url = $matchesEsi[3][$index];
+					$buffer = str_replace($pre_url.$match.$post_url, $pre_url.$data.$post_url, $buffer);
+				}
+			}
+		}
 		Debug2::ended();
 
 		return $buffer;
