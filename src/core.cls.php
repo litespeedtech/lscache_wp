@@ -543,11 +543,9 @@ class Core extends Root
 		if(preg_match_all('/(<esi.+src=["\'])(.*)(["\'].*\/>)/mU', $buffer, $matchesEsi)){
 			foreach($matchesEsi[2] as $index => $match){
 				$data = $match;
-				// entity decode needs changes. For example: if finds &#038;
-				if(preg_match('/&#(.+);/mU', $data) === 1){
-					$data = html_entity_decode($data);
-					$data = rawurldecode($data);
-				}
+				
+				// entity decode needs changes. For example: if finds &#038; %2B  %3D
+				$data = parse_str($data);
 
 				if($data !== $match){
 					$pre_url = $matchesEsi[1][$index];
