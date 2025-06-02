@@ -265,14 +265,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimize** Disable image pull cron if there have been no image notifications.
 * **Crawler** Non-role simulator crawler will now use DNS resolve to hit original server instead of CDN nodes.
 * **Media** Resolved an issue where deleting an image from grid mode neglected to also remove the optimized versions of the image. (PR#844, Zsombor Franczia #841)
-* **Media** Allow filter `litespeed_next_gen_format` to manipulate the value of next gen format. (Zsombor Franczia #853)
+* **Media** Allowed filter `litespeed_next_gen_format` to manipulate the value of next gen format. (Zsombor Franczia #853)
 * **3rd** Elementor: Clear all caches on regenerate CSS & Data. (PR#806)
-* **Config** Purge All On Upgrade now defaults to OFF.
-* **GUI** Show `Disable all features` message on all WP-Admin pages for Admin-level users when enabled.
+* **Config** `Purge All On Upgrade` now defaults to OFF.
+* **GUI** Showed `Disable all features` message on all WP-Admin pages for Admin-level users when enabled.
 * **Misc** Used PHPCS w/ WordPress core and security coding standards to reformat cache menu code. (Viktor Szépe #696)
 * **Misc** Replaced use of `SHOW TABLES` with `DESCRIBE` to prevent database halt in very large WP Multisite installations. (Boone Gorges PR#834, PR#850)
 * **Misc** Replaced constants with WordPress functions to check whether AJAX or CRON is running.
-* **API** Added `litespeed_save_conf` action to provide a trigger for configuration updates.
+* **API** Added action `litespeed_save_conf` to provide a trigger for configuration updates.
 
 = 7.1 - Apr 24 2025 =
 * 🌱**Page Optimize** Added allowlist support for CCSS.
