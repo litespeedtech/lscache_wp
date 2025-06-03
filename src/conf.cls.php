@@ -126,6 +126,12 @@ class Conf extends Base {
 		 */
 		$this->_try_load_site_options();
 
+		// Check if debug is on
+		// Init debug as early as possible
+		if ($this->conf(Base::O_DEBUG)) {
+			$this->cls('Debug2')->init();
+		}
+
 		// Mark as conf loaded
 		defined('LITESPEED_CONF_LOADED') || define('LITESPEED_CONF_LOADED', true);
 
