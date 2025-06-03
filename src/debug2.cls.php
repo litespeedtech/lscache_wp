@@ -206,6 +206,8 @@ class Debug2 extends Root {
 	 * @access public
 	 */
 	public function init() {
+		if (defined('LSCWP_LOG')) return;
+
 		$debug = $this->conf(Base::O_DEBUG);
 		if ($debug == Base::VAL_ON2) {
 			if (!$this->cls('Router')->is_admin_ip()) {
