@@ -438,7 +438,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 									<span class="litespeed-right10">
 										<?php
 										printf(
-											esc_html__( 'Last requested: %s ago', 'litespeed-cache' ),
+											esc_html__( 'Requested: %s ago', 'litespeed-cache' ),
 											'<span data-balloon-pos="up" aria-label="' . esc_attr( Utility::readable_time( $cloud_summary['last_request.health-speed'] ) ) . '">' . esc_html( human_time_diff( $cloud_summary['last_request.health-speed'] ) ) . '</span>'
 										);
 										?>
@@ -503,7 +503,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 								<span class="litespeed-right10">
 									<?php
 									printf(
-										esc_html__( 'Last requested: %s ago', 'litespeed-cache' ),
+										esc_html__( 'Requested: %s ago', 'litespeed-cache' ),
 										'<span data-balloon-pos="up" aria-label="' . esc_attr( Utility::readable_time( $cloud_summary['last_request.health-score'] ) ) . '">' . esc_html( human_time_diff( $cloud_summary['last_request.health-score'] ) ) . '</span>'
 									);
 									?>
