@@ -255,7 +255,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 							<h3 class="litespeed-title"><?php echo esc_html( $svc_title ); ?></h3>
 							<div class="litespeed-flex-container">
 								<div class="litespeed-icon-vertical-middle litespeed-pie-<?php echo esc_attr( $percentage_bg ); ?>">
-									<?php echo wp_kses_post( GUI::pie( $finished_percentage, 60, false ) ); ?>
+									<?php echo wp_kses( GUI::pie( $finished_percentage, 60, false ), GUI::allowed_svg_tags() ); ?>
 								</div>
 								<div>
 									<div class="litespeed-dashboard-stats">
@@ -474,7 +474,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 													<?php esc_html_e( 'Before', 'litespeed-cache' ); ?>
 												</p>
 												<div class="litespeed-promo-score">
-													<?php echo wp_kses_post( GUI::pie( $health_scores['score_before'], 45, false, true, 'litespeed-pie-' . esc_attr( GUI::cls()->get_cls_of_pagescore( $health_scores['score_before'] ) ) ) ); ?>
+													<?php echo wp_kses( GUI::pie( $health_scores['score_before'], 45, false, true, 'litespeed-pie-' . esc_attr( GUI::cls()->get_cls_of_pagescore( $health_scores['score_before'] ) ) ), GUI::allowed_svg_tags() ); ?>
 												</div>
 											</div>
 											<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -482,7 +482,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 													<?php esc_html_e( 'After', 'litespeed-cache' ); ?>
 												</p>
 												<div class="litespeed-promo-score">
-													<?php echo wp_kses_post( GUI::pie( $health_scores['score_after'], 45, false, true, 'litespeed-pie-' . esc_attr( GUI::cls()->get_cls_of_pagescore( $health_scores['score_after'] ) ) ) ); ?>
+													<?php echo wp_kses( GUI::pie( $health_scores['score_after'], 45, false, true, 'litespeed-pie-' . esc_attr( GUI::cls()->get_cls_of_pagescore( $health_scores['score_after'] ) ) ), GUI::allowed_svg_tags() ); ?>
 												</div>
 											</div>
 											<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -527,7 +527,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 								<div class="litespeed-postbox-double-col">
 									<div class="litespeed-flex-container">
 										<div class="litespeed-icon-vertical-middle">
-											<?php echo wp_kses_post( GUI::pie( $img_finished_percentage, 70, true ) ); ?>
+											<?php echo wp_kses( GUI::pie( $img_finished_percentage, 70, true ), GUI::allowed_svg_tags() ); ?>
 										</div>
 										<div>
 											<div class="litespeed-dashboard-stats">

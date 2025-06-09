@@ -77,7 +77,7 @@ if ( $check_only ) {
 								<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove"><?php esc_html_e( 'Before', 'litespeed-cache' ); ?></p>
 							</div>
 							<div class="litespeed-promo-score" style="margin-top: -5px;">
-								<?php echo wp_kses_post( GUI::pie( esc_html( $health_scores['score_before'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_before'] ) ) ) ); ?>
+								<?php echo wp_kses( GUI::pie( esc_html( $health_scores['score_before'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_before'] ) ) ), GUI::allowed_svg_tags() ); ?>
 							</div>
 						</div>
 						<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -85,7 +85,7 @@ if ( $check_only ) {
 								<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove"><?php esc_html_e( 'After', 'litespeed-cache' ); ?></p>
 							</div>
 							<div class="litespeed-promo-score" style="margin-top: -5px;">
-								<?php echo wp_kses_post( GUI::pie( esc_html( $health_scores['score_after'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_after'] ) ) ) ); ?>
+								<?php echo wp_kses( GUI::pie( esc_html( $health_scores['score_after'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_after'] ) ) ), GUI::allowed_svg_tags() ); ?>
 							</div>
 						</div>
 						<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">

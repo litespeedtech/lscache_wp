@@ -106,6 +106,69 @@ class GUI extends Base {
 	}
 
 	/**
+	 * Allow svg html filters
+	 *
+	 * @since 7.3
+	 */
+	public static function allowed_svg_tags() {
+		return array(
+			'svg'   => array(
+				'width'   => true,
+				'height'  => true,
+				'viewbox' => true, // Note: SVG standard uses 'viewBox', but wp_kses normalizes to lowercase.
+				'xmlns'   => true,
+				'class'   => true,
+				'id'      => true,
+			),
+			'circle' => array(
+				'cx'               => true,
+				'cy'               => true,
+				'r'                => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'class'            => true,
+				'stroke-width'     => true,
+				'stroke-dasharray' => true,
+			),
+			'path'  => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'text'  => array(
+				'x'            => true,
+				'y'            => true,
+				'dx'           => true,
+				'dy'           => true,
+				'font-size'    => true,
+				'font-family'  => true,
+				'font-weight'  => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+				'text-anchor'  => true,
+				'class'        => true,
+				'id'           => true,
+			),
+			'g'     => array(
+				'transform'    => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+				'class'        => true,
+				'id'           => true,
+			),
+			'button' => array(
+				'type'               => true,
+				'data-balloon-break' => true,
+				'data-balloon-pos'   => true,
+				'aria-label'         => true,
+				'class'              => true,
+			),
+		);
+	}
+
+	/**
 	 * Display a tiny pie with a tooltip
 	 *
 	 * @since 3.0

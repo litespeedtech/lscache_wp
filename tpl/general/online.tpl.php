@@ -16,7 +16,9 @@ $cloud_summary = Cloud::get_summary();
 
 $cloud_instance = Cloud::cls();
 $cloud_instance->finish_qc_activation( 'online' );
-
+$allowed_html = array(
+	'strong' => array(),
+);
 ?>
 
 <h3 class="litespeed-title-short">
@@ -69,8 +71,8 @@ $cloud_instance->finish_qc_activation( 'online' );
 		<h3 class="litespeed-title-section"><?php esc_html_e( 'Online Services', 'litespeed-cache' ); ?></h3>
 		<p><?php esc_html_e( "QUIC.cloud's Online Services improve your site in the following ways:", 'litespeed-cache' ); ?></p>
 		<ul>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Image Optimization</strong> gives you smaller image file sizes that transmit faster.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Page Optimization</strong> streamlines page styles and visual elements for faster loading.', 'litespeed-cache' ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Image Optimization</strong> gives you smaller image file sizes that transmit faster.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Page Optimization</strong> streamlines page styles and visual elements for faster loading.', 'litespeed-cache' ), $allowed_html ); ?></li>
 		</ul>
 
 		<h4 class="litespeed-text-md litespeed-margin-bottom-remove"><?php esc_html_e( 'Image Optimization', 'litespeed-cache' ); ?></h4>
@@ -84,10 +86,10 @@ $cloud_instance->finish_qc_activation( 'online' );
 		<h4 class="litespeed-text-md litespeed-margin-bottom-remove"><?php esc_html_e( 'Page Optimization', 'litespeed-cache' ); ?></h4>
 		<p><?php esc_html_e( "QUIC.cloud's Page Optimization services address CSS bloat, and improve the user experience during page load, which can lead to improved page speed scores.", 'litespeed-cache' ); ?></p>
 		<ul>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Critical CSS (CCSS)</strong> loads visible above-the-fold content faster and with full styling.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Unique CSS (UCSS)</strong> removes unused style definitions for a speedier page load overall.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Low Quality Image Placeholder (LQIP)</strong> gives your imagery a more pleasing look as it lazy loads.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( '<strong>Viewport Images (VPI)</strong> provides a well-polished fully-loaded view above the fold.', 'litespeed-cache' ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Critical CSS (CCSS)</strong> loads visible above-the-fold content faster and with full styling.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Unique CSS (UCSS)</strong> removes unused style definitions for a speedier page load overall.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Low Quality Image Placeholder (LQIP)</strong> gives your imagery a more pleasing look as it lazy loads.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( '<strong>Viewport Images (VPI)</strong> provides a well-polished fully-loaded view above the fold.', 'litespeed-cache' ), $allowed_html ); ?></li>
 		</ul>
 
 		<div>
@@ -100,10 +102,10 @@ $cloud_instance->finish_qc_activation( 'online' );
 
 		<h4 class="litespeed-text-md litespeed-margin-bottom-remove"><?php esc_html_e( 'QUIC.cloud CDN:', 'litespeed-cache' ); ?></h4>
 		<ul>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( 'Caches your entire site, including dynamic content and <strong>ESI blocks</strong>.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( 'Delivers global coverage with a growing <strong>network of 80+ PoPs</strong>.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( 'Provides <strong>security at the CDN level</strong>, protecting your server from attack.', 'litespeed-cache' ); ?></li>
-			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php esc_html_e( 'Offers optional <strong>built-in DNS service</strong> to simplify CDN onboarding.', 'litespeed-cache' ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( 'Caches your entire site, including dynamic content and <strong>ESI blocks</strong>.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( 'Delivers global coverage with a growing <strong>network of 80+ PoPs</strong>.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( 'Provides <strong>security at the CDN level</strong>, protecting your server from attack.', 'litespeed-cache' ), $allowed_html ); ?></li>
+			<li><span class="dashicons dashicons-saved litespeed-primary"></span> <?php echo wp_kses( __( 'Offers optional <strong>built-in DNS service</strong> to simplify CDN onboarding.', 'litespeed-cache' ), $allowed_html ); ?></li>
 		</ul>
 
 		<div>
@@ -142,7 +144,7 @@ $cloud_instance->finish_qc_activation( 'online' );
 
 <?php else : ?>
 	<h4 class="litespeed-text-md litespeed-top30"><span class="dashicons dashicons-saved litespeed-success"></span> <?php esc_html_e( 'QUIC.cloud Integration Enabled with limitations', 'litespeed-cache' ); ?></h4>
-	<p><?php esc_html_e( 'Your site is connected and using QUIC.cloud Online Services as an <strong>anonymous user</strong>. The CDN function and certain features of optimization services are not available for anonymous users. Link to QUIC.cloud to use the CDN and all available Online Services features.', 'litespeed-cache' ); ?></p>
+	<p><?php echo wp_kses( __( 'Your site is connected and using QUIC.cloud Online Services as an <strong>anonymous user</strong>. The CDN function and certain features of optimization services are not available for anonymous users. Link to QUIC.cloud to use the CDN and all available Online Services features.', 'litespeed-cache' ), $allowed_html ); ?></p>
 	<div class="litespeed-desc"><?php esc_html_e( 'Free monthly quota available.', 'litespeed-cache' ); ?></div>
 
 	<ul>

@@ -88,7 +88,7 @@ foreach ( $blogs as $network_blog_id ) {
 
 					<div class="litespeed-flex-container">
 						<div class="litespeed-icon-vertical-middle litespeed-pie-<?php echo esc_attr( $percentage_bg ); ?>">
-							<?php echo wp_kses_post( GUI::pie( $finished_percentage, 60, false ) ); ?>
+							<?php echo wp_kses( GUI::pie( $finished_percentage, 60, false ), GUI::allowed_svg_tags() ); ?>
 						</div>
 						<div>
 							<div class="litespeed-dashboard-stats">
