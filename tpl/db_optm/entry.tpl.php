@@ -31,19 +31,7 @@ if ( ! is_network_admin() ) {
 
 <div class="litespeed-wrap">
     <h2 class="litespeed-header nav-tab-wrapper">
-    <?php
-        $i = 1;
-        foreach ( $menu_list as $tab_key => $tab_val ) {
-            $accesskey = $i <= 9 ? $i : '';
-            printf(
-				'<a class="litespeed-tab nav-tab" href="#%1$s" data-litespeed-tab="%1$s" litespeed-accesskey="%2$s">%3$s</a>',
-				esc_attr( $tab_key ),
-				esc_attr( $accesskey ),
-				esc_html( $tab_val )
-			);
-            ++$i;
-        }
-    ?>
+        <?php GUI::display_tab_list( $menu_arr ); ?>
     </h2>
 
     <div class="litespeed-body">

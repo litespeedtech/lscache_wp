@@ -85,6 +85,25 @@ class GUI extends Base {
 	}
 
 	/**
+	 * Display the tab list
+	 *
+	 * @since 7.3
+	 */
+	public static function display_tab_list( $tabs ) {
+		$i = 1;
+		foreach ( $tabs as $k => $val ) {
+			$accesskey = $i <= 9 ? $i : '';
+			printf(
+				'<a class="litespeed-tab nav-tab" href="#%1$s" data-litespeed-tab="%1$s" litespeed-accesskey="%2$s">%3$s</a>',
+				esc_attr( $k ),
+				esc_attr( $accesskey ),
+				esc_html( $val )
+			);
+			++$i;
+		}
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6

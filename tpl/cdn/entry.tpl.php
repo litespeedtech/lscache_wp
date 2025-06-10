@@ -29,19 +29,7 @@ $menu_list = array(
 
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header nav-tab-wrapper">
-		<?php
-		$i = 1;
-		foreach ( $menu_list as $menu_key => $menu_value ) {
-			$accesskey = $i <= 9 ? $i : '';
-			printf(
-				'<a class="litespeed-tab nav-tab" href="#%1$s" data-litespeed-tab="%1$s" litespeed-accesskey="%2$s">%3$s</a>',
-				esc_attr( $menu_key ),
-				esc_attr( $accesskey ),
-				esc_html( $menu_value )
-			);
-			++$i;
-		}
-		?>
+		<?php GUI::display_tab_list( $menu_list ); ?>
 	</h2>
 
 	<div class="litespeed-body">
