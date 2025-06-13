@@ -47,7 +47,8 @@ $logs = array(
 	</a>
 </div>
 
-<?php foreach ( $logs as $log ) :
+<?php
+foreach ( $logs as $log ) :
 	$file      = $this->cls( 'Debug2' )->path( $log['name'] );
 	$lines     = File::count_lines( $file );
 	$max_lines = apply_filters( 'litespeed_debug_show_max_lines', 1000 );

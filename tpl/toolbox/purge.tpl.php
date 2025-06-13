@@ -184,7 +184,7 @@ if ( is_multisite() && is_network_admin() ) {
 $purgeby_option = false;
 $_option_field  = Admin_Display::PURGEBYOPT_SELECT;
 if ( ! empty( $_REQUEST[ $_option_field ] ) ) {
-	$purgeby_option = $_REQUEST[ $_option_field ];
+	$purgeby_option = wp_unslash( $_REQUEST[ $_option_field ] );
 }
 $valid_purge_opts = array(
 	Admin_Display::PURGEBY_CAT,
