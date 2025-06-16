@@ -182,9 +182,8 @@ if ( is_multisite() && is_network_admin() ) {
 
 <?php
 $purgeby_option = false;
-$_option_field  = Admin_Display::PURGEBYOPT_SELECT;
-if ( ! empty( $_REQUEST[ $_option_field ] ) ) {
-	$purgeby_option = wp_unslash( $_REQUEST[ $_option_field ] );
+if ( ! empty( $_REQUEST[ Admin_Display::PURGEBYOPT_SELECT ] ) && ! empty( $_REQUEST[ Router::NONCE ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ Router::NONCE ] ) ), Core::ACTION_PURGE_BY) ) {
+	$purgeby_option = sanitize_text_field( wp_unslash( $_REQUEST[ Admin_Display::PURGEBYOPT_SELECT ] ) );
 }
 $valid_purge_opts = array(
 	Admin_Display::PURGEBY_CAT,
@@ -202,19 +201,19 @@ if ( ! in_array( $purgeby_option, $valid_purge_opts, true ) ) {
 	<div class="litespeed-row">
 		<div class="litespeed-switch litespeed-mini litespeed-right20 litespeed-margin-bottom10">
 			<?php $val = Admin_Display::PURGEBY_CAT; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( $_option_field ); ?>" id="purgeby_option_category" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_category" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
 			<label for="purgeby_option_category"><?php esc_html_e( 'Category', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_PID; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( $_option_field ); ?>" id="purgeby_option_postid" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_postid" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
 			<label for="purgeby_option_postid"><?php esc_html_e( 'Post ID', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_TAG; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( $_option_field ); ?>" id="purgeby_option_tag" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_tag" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
 			<label for="purgeby_option_tag"><?php esc_html_e( 'Tag', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_URL; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( $_option_field ); ?>" id="purgeby_option_url" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_url" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
 			<label for="purgeby_option_url"><?php esc_html_e( 'URL', 'litespeed-cache' ); ?></label>
 		</div>
 

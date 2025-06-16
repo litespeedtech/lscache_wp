@@ -22,7 +22,7 @@ $dologin_link        = '';
 $has_pswdless_plugin = false;
 if ( function_exists( 'dologin_gen_link' ) ) {
 	$has_pswdless_plugin = true;
-	if ( ! empty( $_GET['dologin_gen_link'] ) ) {
+	if ( ! empty( $_GET['dologin_gen_link'] ) && ! empty( $_GET['litespeed_purge_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['litespeed_purge_nonce'] ) ), 'litespeed_purge_action' ) ) {
 		unset( $_GET['dologin_gen_link'] );
 		$dologin_link = dologin_gen_link( 'Litespeed Report' );
 		?>
