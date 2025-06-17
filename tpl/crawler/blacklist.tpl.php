@@ -1,18 +1,19 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $crawler_summary = Crawler::get_summary();
 
 $__map = Crawler_Map::cls();
 
-$list = $__map->list_blacklist( 30 );
-$count = $__map->count_blacklist();
+$list       = $__map->list_blacklist( 30 );
+$count      = $__map->count_blacklist();
 $pagination = Utility::pagination( $count, 30 );
 
 ?>
 <p class="litespeed-right">
-<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blocklist items?', 'litespeed-cache' ) ; ?>" >
+<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_EMPTY ); ?>" class="button litespeed-btn-warning" data-litespeed-cfm="<?php echo __( 'Are you sure to delete all existing blocklist items?', 'litespeed-cache' ); ?>" >
 	<?php echo __( 'Empty blocklist', 'litespeed-cache' ); ?>
 </a>
 </p>
@@ -39,13 +40,13 @@ $pagination = Utility::pagination( $count, 30 );
 			<tr>
 				<td><?php echo $i + 1; ?></td>
 				<td>
-					<?php echo $v[ 'url' ]; ?>
+					<?php echo $v['url']; ?>
 				</td>
 				<td>
-					<?php echo Crawler::cls()->display_status( $v[ 'res' ], $v[ 'reason' ] ); ?>
+					<?php echo Crawler::cls()->display_status( $v['res'], $v['reason'] ); ?>
 				</td>
 				<td>
-					<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v[ 'id' ] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blocklist', 'litespeed-cache' ); ?></a>
+					<a href="<?php echo Utility::build_url( Router::ACTION_CRAWLER, Crawler::TYPE_BLACKLIST_DEL, false, null, array( 'id' => $v['id'] ) ); ?>" class="button button-secondary"><?php echo __( 'Remove from Blocklist', 'litespeed-cache' ); ?></a>
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -55,10 +56,10 @@ $pagination = Utility::pagination( $count, 30 );
 
 <?php echo $pagination; ?>
 <p>
-<font class="litespeed-success">API: <?php echo sprintf( __( 'PHP Constant %s available to disable blocklist.', 'litespeed-cache' ), "<code>LITESPEED_CRAWLER_DISABLE_BLOCKLIST</code>" ); ?></font>
+<font class="litespeed-success">API: <?php printf( __( 'PHP Constant %s available to disable blocklist.', 'litespeed-cache' ), '<code>LITESPEED_CRAWLER_DISABLE_BLOCKLIST</code>' ); ?></font>
 </p>
 <p>
-<font class="litespeed-success">API: <?php echo sprintf( __( 'Filter %s available to disable blocklist.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_crawler_disable_blocklist', '__return_true' );</code>" ); ?></font>
+<font class="litespeed-success">API: <?php printf( __( 'Filter %s available to disable blocklist.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_crawler_disable_blocklist', '__return_true' );</code>" ); ?></font>
 </p>
 <p>
 	<i class="litespeed-dot litespeed-bg-default"></i> = <?php echo __( 'Not blocklisted', 'litespeed-cache' ); ?><br>

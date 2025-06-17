@@ -3,18 +3,18 @@
 /**
  * The Doc class.
  *
- * @since     	2.2.7
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.2.7
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Doc
-{
+class Doc {
+
 	// protected static $_instance;
 
 	/**
@@ -23,8 +23,7 @@ class Doc
 	 * @since  5.5
 	 * @access public
 	 */
-	public static function maybe_on_by_gm($id)
-	{
+	public static function maybe_on_by_gm( $id ) {
 		if (apply_filters('litespeed_conf', $id)) {
 			return;
 		}
@@ -51,8 +50,7 @@ class Doc
 	 * @since  4.3
 	 * @access public
 	 */
-	public static function crawler_affected()
-	{
+	public static function crawler_affected() {
 		echo '<font class="litespeed-primary">';
 		echo '⚠️ ' . __('This setting will regenerate crawler list and clear the disabled list!', 'litespeed-cache');
 		echo '</font>';
@@ -64,8 +62,7 @@ class Doc
 	 * @since 2.2.7
 	 * @access public
 	 */
-	public static function privacy_policy()
-	{
+	public static function privacy_policy() {
 		return __(
 			'This site utilizes caching in order to facilitate a faster response time and better user experience. Caching potentially stores a duplicate copy of every web page that is on display on this site. All cache files are temporary, and are never accessed by any third party, except as necessary to obtain technical support from the cache plugin vendor. Cache files expire on a schedule set by the site administrator, but may easily be purged by the admin before their natural expiration, if necessary. We may use QUIC.cloud services to process & cache your data temporarily.',
 			'litespeed-cache'
@@ -82,8 +79,7 @@ class Doc
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function learn_more($url, $title = false, $self = false, $class = false, $return = false)
-	{
+	public static function learn_more( $url, $title = false, $self = false, $class = false, $return = false ) {
 		if (!$class) {
 			$class = 'litespeed-learn-more';
 		}
@@ -109,8 +105,7 @@ class Doc
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function one_per_line($return = false)
-	{
+	public static function one_per_line( $return = false ) {
 		$str = __('One per line.', 'litespeed-cache');
 		if ($return) {
 			return $str;
@@ -124,8 +119,7 @@ class Doc
 	 * @since  3.4
 	 * @access public
 	 */
-	public static function full_or_partial_url($string_only = false)
-	{
+	public static function full_or_partial_url( $string_only = false ) {
 		if ($string_only) {
 			echo __('Both full and partial strings can be used.', 'litespeed-cache');
 		} else {
@@ -139,8 +133,7 @@ class Doc
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function notice_htaccess()
-	{
+	public static function notice_htaccess() {
 		echo '<font class="litespeed-primary">';
 		echo '⚠️ ' . __('This setting will edit the .htaccess file.', 'litespeed-cache');
 		echo ' <a href="https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab" target="_blank" class="litespeed-learn-more">' .
@@ -155,8 +148,7 @@ class Doc
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function notice_ips()
-	{
+	public static function notice_ips() {
 		echo '<div class="litespeed-primary">';
 		echo '⚠️ ' . sprintf(__('For online services to work correctly, you must allowlist all %s server IPs.', 'litespeed-cache'), 'QUIC.cloud') . '<br/>';
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('Before generating key, please verify all IPs on this list are allowlisted', 'litespeed-cache') . ': ';
@@ -170,8 +162,7 @@ class Doc
 	 * @since  5.3.1
 	 * @access public
 	 */
-	public static function queue_issues($return = false)
-	{
+	public static function queue_issues( $return = false ) {
 		$str =
 			'<div class="litespeed-desc">' .
 			__('The queue is processed asynchronously. It may take time.', 'litespeed-cache') .

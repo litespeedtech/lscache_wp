@@ -1,15 +1,16 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $last_generated = Avatar::get_summary();
-$avatar_queue = Avatar::cls()->queue_count();
+$avatar_queue   = Avatar::cls()->queue_count();
 ?>
 
 <?php if ( $this->cls( 'Avatar' )->need_db() && ! $this->cls( 'Data' )->tb_exist( 'avatar' ) ) : ?>
 <div class="litespeed-callout notice notice-error inline">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ); ?></h4>
-	<p><?php echo sprintf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ); ?></p>
+	<p><?php printf( __( 'Failed to create Avatar table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ); ?></p>
 </div>
 <?php endif; ?>
 
@@ -46,15 +47,15 @@ $avatar_queue = Avatar::cls()->queue_count();
 
 			<?php if ( $last_generated ) : ?>
 			<div class="litespeed-desc">
-				<?php if ( ! empty( $last_generated[ 'last_request' ] ) ) : ?>
+				<?php if ( ! empty( $last_generated['last_request'] ) ) : ?>
 					<p>
-						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_generated[ 'last_request' ] ) . '</code>'; ?>
+						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . Utility::readable_time( $last_generated['last_request'] ) . '</code>'; ?>
 					</p>
 				<?php endif; ?>
 				<?php if ( $avatar_queue ) : ?>
 					<div class="litespeed-callout notice notice-warning inline">
 						<h4>
-							<?php echo __( 'Avatar list in queue waiting for update','litespeed-cache' ); ?>:
+							<?php echo __( 'Avatar list in queue waiting for update', 'litespeed-cache' ); ?>:
 							<?php echo $avatar_queue; ?>
 						</h4>
 					</div>
@@ -95,7 +96,7 @@ $avatar_queue = Avatar::cls()->queue_count();
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localize' ); ?>
 
 				<br /><font class="litespeed-danger">
-					🚨 <?php echo sprintf( __( 'Please thoroughly test all items in %s to ensure they function as expected.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_LOCALIZE_DOMAINS ) . '</code>' ); ?>
+					🚨 <?php printf( __( 'Please thoroughly test all items in %s to ensure they function as expected.', 'litespeed-cache' ), '<code>' . Lang::title( Base::O_OPTM_LOCALIZE_DOMAINS ) . '</code>' ); ?>
 				</font>
 			</div>
 		</td>
@@ -122,7 +123,7 @@ $avatar_queue = Avatar::cls()->queue_count();
 
 				<?php Doc::one_per_line(); ?>
 
-				<br /><?php echo sprintf( __( 'Comments are supported. Start a line with a %s to turn it into a comment line.', 'litespeed-cache' ), '<code>#</code>' ); ?>
+				<br /><?php printf( __( 'Comments are supported. Start a line with a %s to turn it into a comment line.', 'litespeed-cache' ), '<code>#</code>' ); ?>
 
 				<br /><?php echo __( 'Example', 'litespeed-cache' ); ?>: <code>https://www.example.com/one.js</code>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#localization-files' ); ?>

@@ -2,20 +2,20 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'summary'		=> __('Summary', 'litespeed-cache'),
-	'map'			=> __('Map', 'litespeed-cache'),
-	'blacklist'		=> __('Blocklist', 'litespeed-cache'),
-	'settings'		=> __('Settings', 'litespeed-cache'),
+	'summary'   => __( 'Summary', 'litespeed-cache' ),
+	'map'       => __( 'Map', 'litespeed-cache' ),
+	'blacklist' => __( 'Blocklist', 'litespeed-cache' ),
+	'settings'  => __( 'Settings', 'litespeed-cache' ),
 );
 
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache'); ?>
+		<?php echo __( 'LiteSpeed Cache Crawler', 'litespeed-cache' ); ?>
 	</h1>
 	<span class="litespeed-desc">
 		v<?php echo Core::VER; ?>
@@ -27,10 +27,10 @@ $menu_list = array(
 	<h2 class="litespeed-header nav-tab-wrapper">
 		<?php
 		$i = 1;
-		foreach ($menu_list as $tab => $val) {
+		foreach ( $menu_list as $tab => $val ) {
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
 			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-			$i++;
+			++$i;
 		}
 		?>
 	</h2>
@@ -39,10 +39,10 @@ $menu_list = array(
 		<?php
 
 		// include all tpl for faster UE
-		foreach ($menu_list as $tab => $val) {
+		foreach ( $menu_list as $tab => $val ) {
 			echo "<div data-litespeed-layout='$tab'>";
 			require LSCWP_DIR . "tpl/crawler/$tab.tpl.php";
-			echo "</div>";
+			echo '</div>';
 		}
 
 		?>

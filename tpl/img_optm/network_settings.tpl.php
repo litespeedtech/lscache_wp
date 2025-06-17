@@ -1,5 +1,6 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );

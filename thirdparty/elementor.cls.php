@@ -2,23 +2,23 @@
 /**
  * The Third Party integration with the bbPress plugin.
  *
- * @since		2.9.8.8
+ * @since       2.9.8.8
  */
 namespace LiteSpeed\Thirdparty;
+
 defined('WPINC') || exit();
 
 use LiteSpeed\Debug2;
 
-class Elementor
-{
-	public static function preload()
-	{
+class Elementor {
+
+	public static function preload() {
 		if (!defined('ELEMENTOR_VERSION')) {
 			return;
 		}
 
 		if (!is_admin()) {
-			//		    add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 );	// temporarily comment out this line for backward compatibility
+			// add_action( 'init', __CLASS__ . '::disable_litespeed_esi', 4 ); // temporarily comment out this line for backward compatibility
 		}
 
 		if (isset($_GET['action']) && $_GET['action'] === 'elementor') {
@@ -40,10 +40,16 @@ class Elementor
 			}
 			do_action('litespeed_disable_all', 'elementor edit mode in HTTP_REFERER');
 		}
+
+		// Clear LSC cache on Elementor Regenerate CSS & Data
+		add_action('elementor/core/files/clear_cache', __CLASS__ . '::regenerate_litespeed_cache');
 	}
 
-	public static function disable_litespeed_esi()
-	{
+	public static function disable_litespeed_esi() {
 		define('LITESPEED_ESI_OFF', true);
+	}
+
+	public static function regenerate_litespeed_cache() {
+		do_action('litespeed_purge_all', 'Elementor - Regenerate CSS & Data');
 	}
 }

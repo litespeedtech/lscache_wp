@@ -2,17 +2,17 @@
 /**
  * The page health
  *
- *
  * @since      3.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
+
 defined('WPINC') || exit();
 
-class Health extends Base
-{
+class Health extends Base {
+
 	const TYPE_SPEED = 'speed';
 	const TYPE_SCORE = 'score';
 
@@ -23,8 +23,7 @@ class Health extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_summary = self::get_summary();
 	}
 
@@ -33,9 +32,8 @@ class Health extends Base
 	 *
 	 * @since 3.0
 	 */
-	private function _ping($type)
-	{
-		$data = array('action' => $type);
+	private function _ping( $type ) {
+		$data = array( 'action' => $type );
 
 		$json = Cloud::post(Cloud::SVC_HEALTH, $data, 600);
 
@@ -45,7 +43,7 @@ class Health extends Base
 		}
 
 		$this->_summary[$type . '.before'] = $json['data']['before'];
-		$this->_summary[$type . '.after'] = $json['data']['after'];
+		$this->_summary[$type . '.after']  = $json['data']['after'];
 
 		self::save_summary();
 
@@ -57,8 +55,7 @@ class Health extends Base
 	 *
 	 * @since 3.0
 	 */
-	public function scores()
-	{
+	public function scores() {
 		$speed_before = $speed_after = $speed_improved = 0;
 		if (!empty($this->_summary['speed.before']) && !empty($this->_summary['speed.after'])) {
 			// Format loading time
@@ -86,7 +83,7 @@ class Health extends Base
 		$score_before = $score_after = $score_improved = 0;
 		if (!empty($this->_summary['score.before']) && !empty($this->_summary['score.after'])) {
 			$score_before = $this->_summary['score.before'];
-			$score_after = $this->_summary['score.after'];
+			$score_after  = $this->_summary['score.after'];
 
 			// Format Score
 			$score_improved = (($score_after - $score_before) * 100) / $score_after;
@@ -113,14 +110,13 @@ class Health extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_SPEED:
 			case self::TYPE_SCORE:
-				$this->_ping($type);
+            $this->_ping($type);
 				break;
 
 			default:

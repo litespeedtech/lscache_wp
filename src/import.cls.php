@@ -3,28 +3,27 @@
 /**
  * The import/export class.
  *
- * @since      	1.8.2
+ * @since       1.8.2
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Import extends Base
-{
+class Import extends Base {
+
 	protected $_summary;
 
 	const TYPE_IMPORT = 'import';
 	const TYPE_EXPORT = 'export';
-	const TYPE_RESET = 'reset';
+	const TYPE_RESET  = 'reset';
 
 	/**
 	 * Init
 	 *
 	 * @since  1.8.2
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		Debug2::debug('Import init');
 
 		$this->_summary = self::get_summary();
@@ -36,13 +35,12 @@ class Import extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function export($only_data_return = false)
-	{
+	public function export( $only_data_return = false ) {
 		$raw_data = $this->get_options(true);
 
 		$data = array();
 		foreach ($raw_data as $k => $v) {
-			$data[] = \json_encode(array($k, $v));
+			$data[] = \json_encode(array( $k, $v ));
 		}
 
 		$data = implode("\n\n", $data);
@@ -72,8 +70,7 @@ class Import extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function import($file = false)
-	{
+	public function import( $file = false ) {
 		if (!$file) {
 			if (empty($_FILES['ls_file']['name']) || substr($_FILES['ls_file']['name'], -5) != '.data' || empty($_FILES['ls_file']['tmp_name'])) {
 				Debug2::debug('Import: Failed to import, wrong ls_file');
@@ -108,7 +105,7 @@ class Import extends Base
 					if (!$v) {
 						continue;
 					}
-					list($k, $v) = \json_decode($v, true);
+					list($k, $v)  = \json_decode($v, true);
 					$ori_data[$k] = $v;
 				}
 			} else {
@@ -146,8 +143,7 @@ class Import extends Base
 	 * @since  2.6.3
 	 * @access public
 	 */
-	public function reset()
-	{
+	public function reset() {
 		$options = $this->cls('Conf')->load_default_vals();
 
 		$this->cls('Conf')->update_confs($options);
@@ -164,11 +160,10 @@ class Import extends Base
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _generate_filename()
-	{
+	private function _generate_filename() {
 		// Generate filename
 		$parsed_home = parse_url(get_home_url());
-		$filename = 'LSCWP_cfg-';
+		$filename    = 'LSCWP_cfg-';
 		if (!empty($parsed_home['host'])) {
 			$filename .= $parsed_home['host'] . '_';
 		}
@@ -190,21 +185,20 @@ class Import extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_IMPORT:
-				$this->import();
+            $this->import();
 				break;
 
 			case self::TYPE_EXPORT:
-				$this->export();
+            $this->export();
 				break;
 
 			case self::TYPE_RESET:
-				$this->reset();
+            $this->reset();
 				break;
 
 			default:

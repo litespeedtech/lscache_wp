@@ -3,19 +3,19 @@
 /**
  * The CDN class.
  *
- * @since      	1.2.3
- * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.2.3
+ * @since       1.5 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class CDN extends Root
-{
+class CDN extends Root {
+
 	const BYPASS = 'LITESPEED_BYPASS_CDN';
 
 	private $content;
@@ -33,8 +33,7 @@ class CDN extends Root
 	 *
 	 * @since  1.2.3
 	 */
-	public function init()
-	{
+	public function init() {
 		Debug2::debug2('[CDN] init');
 
 		if (defined(self::BYPASS)) {
@@ -59,12 +58,12 @@ class CDN extends Root
 
 		$this->_cfg_url_ori = $this->conf(Base::O_CDN_ORI);
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
-		$mapping_to_check = array(Base::CDN_MAPPING_INC_IMG, Base::CDN_MAPPING_INC_CSS, Base::CDN_MAPPING_INC_JS);
+		$mapping_to_check = array( Base::CDN_MAPPING_INC_IMG, Base::CDN_MAPPING_INC_CSS, Base::CDN_MAPPING_INC_JS );
 		foreach ($this->conf(Base::O_CDN_MAPPING) as $v) {
 			if (!$v[Base::CDN_MAPPING_URL]) {
 				continue;
 			}
-			$this_url = $v[Base::CDN_MAPPING_URL];
+			$this_url  = $v[Base::CDN_MAPPING_URL];
 			$this_host = parse_url($this_url, PHP_URL_HOST);
 			// Check img/css/js
 			foreach ($mapping_to_check as $to_check) {
@@ -116,22 +115,22 @@ class CDN extends Root
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG])) {
 			// Hook to srcset
 			if (function_exists('wp_calculate_image_srcset')) {
-				add_filter('wp_calculate_image_srcset', array($this, 'srcset'), 999);
+				add_filter('wp_calculate_image_srcset', array( $this, 'srcset' ), 999);
 			}
 			// Hook to mime icon
-			add_filter('wp_get_attachment_image_src', array($this, 'attach_img_src'), 999);
-			add_filter('wp_get_attachment_url', array($this, 'url_img'), 999);
+			add_filter('wp_get_attachment_image_src', array( $this, 'attach_img_src' ), 999);
+			add_filter('wp_get_attachment_url', array( $this, 'url_img' ), 999);
 		}
 
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-			add_filter('style_loader_src', array($this, 'url_css'), 999);
+			add_filter('style_loader_src', array( $this, 'url_css' ), 999);
 		}
 
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
-			add_filter('script_loader_src', array($this, 'url_js'), 999);
+			add_filter('script_loader_src', array( $this, 'url_js' ), 999);
 		}
 
-		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 30);
+		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 30);
 	}
 
 	/**
@@ -140,8 +139,7 @@ class CDN extends Root
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _append_cdn_mapping($filetype, $url)
-	{
+	private function _append_cdn_mapping( $filetype, $url ) {
 		// If filetype to url is one to many, make url be an array
 		if (empty($this->_cfg_cdn_mapping[$filetype])) {
 			$this->_cfg_cdn_mapping[$filetype] = $url;
@@ -150,7 +148,7 @@ class CDN extends Root
 			$this->_cfg_cdn_mapping[$filetype][] = $url;
 		} else {
 			// Convert _cfg_cdn_mapping from string to array
-			$this->_cfg_cdn_mapping[$filetype] = array($this->_cfg_cdn_mapping[$filetype], $url);
+			$this->_cfg_cdn_mapping[$filetype] = array( $this->_cfg_cdn_mapping[$filetype], $url );
 		}
 	}
 
@@ -160,8 +158,7 @@ class CDN extends Root
 	 * @since  1.6.2.1
 	 * @return bool true if included in CDN
 	 */
-	public function inc_type($type)
-	{
+	public function inc_type( $type ) {
 		if ($type == 'css' && !empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
 			return true;
 		}
@@ -181,8 +178,7 @@ class CDN extends Root
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public function finalize($content)
-	{
+	public function finalize( $content ) {
 		$this->content = $content;
 
 		$this->_finalize();
@@ -195,8 +191,7 @@ class CDN extends Root
 	 * @since  1.2.3
 	 * @access private
 	 */
-	private function _finalize()
-	{
+	private function _finalize() {
 		if (defined(self::BYPASS)) {
 			return;
 		}
@@ -220,8 +215,7 @@ class CDN extends Root
 	 * @since  1.2.3
 	 * @access private
 	 */
-	private function _replace_file_types()
-	{
+	private function _replace_file_types() {
 		$ele_to_check = $this->conf(Base::O_CDN_ATTR);
 
 		foreach ($ele_to_check as $v) {
@@ -232,7 +226,7 @@ class CDN extends Root
 
 			Debug2::debug2('[CDN] replace attribute ' . $v);
 
-			$v = explode('.', $v);
+			$v    = explode('.', $v);
 			$attr = preg_quote($v[1], '#');
 			if ($v[0]) {
 				$pattern = '#<' . preg_quote($v[0], '#') . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
@@ -260,7 +254,7 @@ class CDN extends Root
 					continue;
 				}
 
-				$attr = str_replace($url, $url2, $matches[0][$k2]);
+				$attr          = str_replace($url, $url2, $matches[0][$k2]);
 				$this->content = str_replace($matches[0][$k2], $attr, $this->content);
 			}
 		}
@@ -272,8 +266,7 @@ class CDN extends Root
 	 * @since  1.2.3
 	 * @access private
 	 */
-	private function _replace_img()
-	{
+	private function _replace_img() {
 		preg_match_all('#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches);
 		foreach ($matches[3] as $k => $url) {
 			// Check if is a DATA-URI
@@ -285,7 +278,7 @@ class CDN extends Root
 				continue;
 			}
 
-			$html_snippet = sprintf('<img %1$s src=%2$s %3$s>', $matches[1][$k], $matches[2][$k] . $url2 . $matches[4][$k], $matches[5][$k]);
+			$html_snippet  = sprintf('<img %1$s src=%2$s %3$s>', $matches[1][$k], $matches[2][$k] . $url2 . $matches[4][$k], $matches[5][$k]);
 			$this->content = str_replace($matches[0][$k], $html_snippet, $this->content);
 		}
 	}
@@ -296,19 +289,19 @@ class CDN extends Root
 	 * @since  1.2.3
 	 * @access private
 	 */
-	private function _replace_inline_css()
-	{
+	private function _replace_inline_css() {
 		Debug2::debug2('[CDN] _replace_inline_css', $this->_cfg_cdn_mapping);
 
 		/**
 		 * Excludes `\` from URL matching
+		 *
 		 * @see  #959152 - WordPress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
 		 */
 		preg_match_all('/url\((?![\'"]?data)[\'"]?(.+?)[\'"]?\)/i', $this->content, $matches);
 		foreach ($matches[1] as $k => $url) {
-			$url = str_replace(array(' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;'), '', $url);
+			$url = str_replace(array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url);
 
 			// Parse file postfix
 			$parsed_url = parse_url($url, PHP_URL_PATH);
@@ -322,7 +315,7 @@ class CDN extends Root
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_FILETYPE, $postfix))) {
 					continue;
 				}
-			} elseif (in_array($postfix, array('jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif'))) {
+			} elseif (in_array($postfix, array( 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif' ))) {
 				if (!($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_IMG))) {
 					continue;
 				}
@@ -330,7 +323,7 @@ class CDN extends Root
 				continue;
 			}
 
-			$attr = str_replace($matches[1][$k], $url2, $matches[0][$k]);
+			$attr          = str_replace($matches[1][$k], $url2, $matches[0][$k]);
 			$this->content = str_replace($matches[0][$k], $attr, $this->content);
 		}
 
@@ -346,8 +339,7 @@ class CDN extends Root
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public function attach_img_src($img)
-	{
+	public function attach_img_src( $img ) {
 		if ($img && ($url = $this->rewrite($img[0], Base::CDN_MAPPING_INC_IMG))) {
 			$img[0] = $url;
 		}
@@ -360,8 +352,7 @@ class CDN extends Root
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_img($url)
-	{
+	public function url_img( $url ) {
 		if ($url && ($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_IMG))) {
 			$url = $url2;
 		}
@@ -374,8 +365,7 @@ class CDN extends Root
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_css($url)
-	{
+	public function url_css( $url ) {
 		if ($url && ($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_CSS))) {
 			$url = $url2;
 		}
@@ -388,8 +378,7 @@ class CDN extends Root
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_js($url)
-	{
+	public function url_js( $url ) {
 		if ($url && ($url2 = $this->rewrite($url, Base::CDN_MAPPING_INC_JS))) {
 			$url = $url2;
 		}
@@ -405,8 +394,7 @@ class CDN extends Root
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public function srcset($srcs)
-	{
+	public function srcset( $srcs ) {
 		if ($srcs) {
 			foreach ($srcs as $w => $data) {
 				if (!($url = $this->rewrite($data['url'], Base::CDN_MAPPING_INC_IMG))) {
@@ -426,8 +414,7 @@ class CDN extends Root
 	 * @param  string $url
 	 * @return string        Replaced URL
 	 */
-	public function rewrite($url, $mapping_kind, $postfix = false)
-	{
+	public function rewrite( $url, $mapping_kind, $postfix = false ) {
 		Debug2::debug2('[CDN] rewrite ' . $url);
 		$url_parsed = parse_url($url);
 
@@ -505,8 +492,7 @@ class CDN extends Root
 	 * @since  2.1
 	 * @access private
 	 */
-	private function _is_ori_url($url)
-	{
+	private function _is_ori_url( $url ) {
 		$url_parsed = parse_url($url);
 
 		$scheme = !empty($url_parsed['scheme']) ? $url_parsed['scheme'] . ':' : '';
@@ -517,10 +503,8 @@ class CDN extends Root
 				if (preg_match('#' . $needle . '#iU', $url)) {
 					return true;
 				}
-			} else {
-				if (strpos($url, $needle) === 0) {
-					return true;
-				}
+			} elseif (strpos($url, $needle) === 0) {
+				return true;
 			}
 		}
 
@@ -531,10 +515,8 @@ class CDN extends Root
 	 * Check if the host is the CDN internal host
 	 *
 	 * @since  1.2.3
-	 *
 	 */
-	public static function internal($host)
-	{
+	public static function internal( $host ) {
 		if (defined(self::BYPASS)) {
 			return false;
 		}

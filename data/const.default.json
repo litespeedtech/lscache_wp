@@ -34,7 +34,7 @@
 	"cache-login_cookie": "",
 	"cache-vary_group": "",
 	"cache-ttl_status": "404 3600\n500 600",
-	"purge-upgrade": "1",
+	"purge-upgrade": "0",
 	"purge-stale": "",
 	"purge-post_all": "",
 	"purge-post_f": "1",
@@ -178,6 +178,7 @@
 	"cdn-cloudflare_key": "",
 	"cdn-cloudflare_name": "",
 	"cdn-cloudflare_zone": "",
+	"cdn-cloudflare_clear": "",
 	"cdn-mapping": {
 		"url": [""],
 		"inc_js": ["1"],

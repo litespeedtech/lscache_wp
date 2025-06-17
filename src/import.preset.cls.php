@@ -8,17 +8,17 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Preset extends Import
-{
+class Preset extends Import {
+
 	protected $_summary;
 
 	const MAX_BACKUPS = 10;
 
-	const TYPE_APPLY = 'apply';
+	const TYPE_APPLY   = 'apply';
 	const TYPE_RESTORE = 'restore';
 
 	const STANDARD_DIR = LSCWP_DIR . 'data/preset';
-	const BACKUP_DIR = LITESPEED_STATIC_DIR . '/auto-backup';
+	const BACKUP_DIR   = LITESPEED_STATIC_DIR . '/auto-backup';
 
 	/**
 	 * Returns sorted backup names
@@ -26,13 +26,12 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_backups()
-	{
+	public static function get_backups() {
 		self::init_filesystem();
 		global $wp_filesystem;
 
 		$backups = array_map(
-			function ($path) {
+			function ( $path ) {
 				return self::basename($path['name']);
 			},
 			$wp_filesystem->dirlist(self::BACKUP_DIR) ?: array()
@@ -48,8 +47,7 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function prune_backups()
-	{
+	public static function prune_backups() {
 		$backups = self::get_backups();
 		global $wp_filesystem;
 
@@ -66,8 +64,7 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function basename($path)
-	{
+	public static function basename( $path ) {
 		return basename($path, '.data');
 	}
 
@@ -77,8 +74,7 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_standard($name)
-	{
+	public static function get_standard( $name ) {
 		return path_join(self::STANDARD_DIR, $name . '.data');
 	}
 
@@ -88,8 +84,7 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public static function get_backup($name)
-	{
+	public static function get_backup( $name ) {
 		return path_join(self::BACKUP_DIR, $name . '.data');
 	}
 
@@ -98,8 +93,7 @@ class Preset extends Import
 	 *
 	 * @since  5.3.0
 	 */
-	static function init_filesystem()
-	{
+	static function init_filesystem() {
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		\WP_Filesystem();
 		clearstatcache();
@@ -110,8 +104,7 @@ class Preset extends Import
 	 *
 	 * @since  5.3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		Debug2::debug('[Preset] Init');
 		$this->_summary = self::get_summary();
 	}
@@ -122,11 +115,10 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function apply($preset)
-	{
+	public function apply( $preset ) {
 		$this->make_backup($preset);
 
-		$path = self::get_standard($preset);
+		$path   = self::get_standard($preset);
 		$result = $this->import_file($path) ? $preset : 'error';
 
 		$this->log($result);
@@ -138,8 +130,7 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function restore($timestamp)
-	{
+	public function restore( $timestamp ) {
 		$backups = array();
 		foreach (self::get_backups() as $backup) {
 			if (preg_match('/^backup-' . $timestamp . '(-|$)/', $backup) === 1) {
@@ -153,7 +144,7 @@ class Preset extends Import
 		}
 
 		$backup = $backups[0];
-		$path = self::get_backup($backup);
+		$path   = self::get_backup($backup);
 
 		if (!$this->import_file($path)) {
 			$this->log('error');
@@ -175,10 +166,9 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function make_backup($preset)
-	{
+	public function make_backup( $preset ) {
 		$backup = 'backup-' . time() . '-before-' . $preset;
-		$data = $this->export(true);
+		$data   = $this->export(true);
 
 		$path = self::get_backup($backup);
 		File::save($path, $data, true);
@@ -192,15 +182,14 @@ class Preset extends Import
 	 *
 	 * @since  5.3.0
 	 */
-	function import_file($path)
-	{
-		$debug = function ($result, $name) {
+	function import_file( $path ) {
+		$debug = function ( $result, $name ) {
 			$action = $result ? 'Applied' : 'Failed to apply';
 			Debug2::debug('[Preset] ' . $action . ' settings from ' . $name);
 			return $result;
 		};
 
-		$name = self::basename($path);
+		$name     = self::basename($path);
 		$contents = file_get_contents($path);
 
 		if (false === $contents) {
@@ -219,7 +208,7 @@ class Preset extends Import
 						continue;
 					}
 					list($key, $value) = \json_decode($line, true);
-					$parsed[$key] = $value;
+					$parsed[$key]      = $value;
 				}
 			} else {
 				$parsed = \json_decode(base64_decode($contents), true);
@@ -244,9 +233,8 @@ class Preset extends Import
 	 *
 	 * @since  5.3.0
 	 */
-	function log($preset)
-	{
-		$this->_summary['preset'] = $preset;
+	function log( $preset ) {
+		$this->_summary['preset']           = $preset;
 		$this->_summary['preset_timestamp'] = time();
 		self::save_summary();
 	}
@@ -257,17 +245,16 @@ class Preset extends Import
 	 * @since  5.3.0
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_APPLY:
-				$this->apply(!empty($_GET['preset']) ? $_GET['preset'] : false);
+            $this->apply(!empty($_GET['preset']) ? $_GET['preset'] : false);
 				break;
 
 			case self::TYPE_RESTORE:
-				$this->restore(!empty($_GET['timestamp']) ? $_GET['timestamp'] : false);
+            $this->restore(!empty($_GET['timestamp']) ? $_GET['timestamp'] : false);
 				break;
 
 			default:

@@ -1,13 +1,14 @@
 <?php
 namespace LiteSpeed;
+
 defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'manage'			=> __( 'Manage', 'litespeed-cache' ),
+	'manage' => __( 'Manage', 'litespeed-cache' ),
 );
 
 if ( ! $this->_is_network_admin ) {
-	$menu_list[ 'settings' ] = __( 'DB Optimization Settings', 'litespeed-cache' );
+	$menu_list['settings'] = __( 'DB Optimization Settings', 'litespeed-cache' );
 }
 
 ?>
@@ -26,11 +27,11 @@ if ( ! $this->_is_network_admin ) {
 	<h2 class="litespeed-header nav-tab-wrapper">
 	<?php
 		$i = 1;
-		foreach ($menu_list as $tab => $val){
-			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
-			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-			$i ++;
-		}
+	foreach ( $menu_list as $tab => $val ) {
+		$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
+		echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
+		++$i;
+	}
 	?>
 	</h2>
 
@@ -38,11 +39,11 @@ if ( ! $this->_is_network_admin ) {
 	<?php
 
 		// include all tpl for faster UE
-		foreach ($menu_list as $tab => $val) {
-			echo "<div data-litespeed-layout='$tab'>";
-			require LSCWP_DIR . "tpl/db_optm/$tab.tpl.php";
-			echo "</div>";
-		}
+	foreach ( $menu_list as $tab => $val ) {
+		echo "<div data-litespeed-layout='$tab'>";
+		require LSCWP_DIR . "tpl/db_optm/$tab.tpl.php";
+		echo '</div>';
+	}
 
 	?>
 	</div>
