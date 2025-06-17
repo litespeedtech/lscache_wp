@@ -25,6 +25,8 @@ $this->_promo_true = true;
 if ( $check_only ) {
 	return;
 }
+
+$ajax_url_promo = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ));
 ?>
 
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full">
@@ -140,3 +142,19 @@ if ( $check_only ) {
 		<a href="<?php echo esc_url( $dismiss_url ); ?>" class="litespeed-notice-dismiss"><?php esc_html_e( 'Dismiss', 'litespeed-cache' ); ?></a>
 	</div>
 </div>
+
+<script>
+(function ($) {
+	jQuery(document).ready(function () {
+		/** Promo banner **/
+		$('#litespeed-promo-done').on('click', function (event) {
+			$('.litespeed-banner-promo-full').slideUp();
+			$.get('<?php echo esc_url($ajax_url_promo); ?>&done=1');
+		});
+		$('#litespeed-promo-later').on('click', function (event) {
+			$('.litespeed-banner-promo-full').slideUp();
+			$.get('<?php echo esc_url($ajax_url_promo); ?>');
+		});
+	});
+})(jQuery);
+</script>

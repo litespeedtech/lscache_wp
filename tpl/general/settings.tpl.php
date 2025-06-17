@@ -15,6 +15,8 @@ defined( 'WPINC' ) || exit;
 $cloud_instance = Cloud::cls();
 $cloud_summary  = Cloud::get_summary();
 
+$ajax_url_getIP = function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/tool/check_ip') : '/';
+
 $this->form_action();
 ?>
 
@@ -123,3 +125,37 @@ $this->form_action();
 </table>
 
 <?php $this->form_end(); ?>
+
+<script>
+(function ($) {
+	jQuery(document).ready(function () {
+		/**
+		 * Get server IP
+		 * @since  3.0
+		 */
+		$('#litespeed_get_ip').on('click', function (e) {
+			console.log('[litespeed] get server IP');
+			$.ajax({
+				url: '<?php echo esc_url($ajax_url_getIP); ?>',
+				dataType: 'json',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>');
+					$('#litespeed_server_ip').html('Detecting...');
+				},
+				success: function (data) {
+					$('#litespeed_server_ip').html('Done');
+					console.log('[litespeed] get server IP response: ' + data);
+					$('#litespeed_server_ip').html(data);
+				},
+				error: function (xhr, error) {
+					console.log('[litespeed] get server IP error', error);
+					$('#litespeed_server_ip').html('Failed to detect IP');
+				},
+				complete: function (xhr, status) {
+					console.log('[litespeed] AJAX complete', status, xhr);
+				},
+			});
+		});
+	});
+})(jQuery);
+</script>

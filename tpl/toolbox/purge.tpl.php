@@ -180,56 +180,39 @@ if ( is_multisite() && is_network_admin() ) {
 	<?php Doc::one_per_line(); ?>
 </p>
 
-<?php
-$purgeby_option = false;
-if ( ! empty( $_REQUEST[ Admin_Display::PURGEBYOPT_SELECT ] ) && ! empty( $_REQUEST[ Router::NONCE ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ Router::NONCE ] ) ), Core::ACTION_PURGE_BY) ) {
-	$purgeby_option = sanitize_text_field( wp_unslash( $_REQUEST[ Admin_Display::PURGEBYOPT_SELECT ] ) );
-}
-$valid_purge_opts = array(
-	Admin_Display::PURGEBY_CAT,
-	Admin_Display::PURGEBY_PID,
-	Admin_Display::PURGEBY_TAG,
-	Admin_Display::PURGEBY_URL,
-);
-
-if ( ! in_array( $purgeby_option, $valid_purge_opts, true ) ) {
-	$purgeby_option = Admin_Display::PURGEBY_CAT;
-}
-?>
-
 <?php $this->form_action( Core::ACTION_PURGE_BY ); ?>
 	<div class="litespeed-row">
 		<div class="litespeed-switch litespeed-mini litespeed-right20 litespeed-margin-bottom10">
 			<?php $val = Admin_Display::PURGEBY_CAT; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_category" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_category" value="<?php echo esc_attr( $val ); ?>" checked />
 			<label for="purgeby_option_category"><?php esc_html_e( 'Category', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_PID; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_postid" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_postid" value="<?php echo esc_attr( $val ); ?>" />
 			<label for="purgeby_option_postid"><?php esc_html_e( 'Post ID', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_TAG; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_tag" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_tag" value="<?php echo esc_attr( $val ); ?>" />
 			<label for="purgeby_option_tag"><?php esc_html_e( 'Tag', 'litespeed-cache' ); ?></label>
 
 			<?php $val = Admin_Display::PURGEBY_URL; ?>
-			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_url" value="<?php echo esc_attr( $val ); ?>" <?php echo $purgeby_option === $val ? 'checked' : ''; ?> />
+			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_url" value="<?php echo esc_attr( $val ); ?>" />
 			<label for="purgeby_option_url"><?php esc_html_e( 'URL', 'litespeed-cache' ); ?></label>
 		</div>
 
 		<div class="litespeed-cache-purgeby-text litespeed-desc">
-			<div class="<?php echo Admin_Display::PURGEBY_CAT !== $purgeby_option ? 'litespeed-hide' : ''; ?>" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_CAT ); ?>">
+			<div class="" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_CAT ); ?>">
 				<?php printf( esc_html__( 'Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', 'litespeed-cache' ), '<code>http://example.com/category/category-name/</code>', '<code>category-name</code>' ); ?>
 			</div>
-			<div class="<?php echo Admin_Display::PURGEBY_PID !== $purgeby_option ? 'litespeed-hide' : ''; ?>" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_PID ); ?>">
+			<div class="litespeed-hide" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_PID ); ?>">
 				<?php esc_html_e( 'Purge pages by post ID.', 'litespeed-cache' ); ?>
 			</div>
-			<div class="<?php echo Admin_Display::PURGEBY_TAG !== $purgeby_option ? 'litespeed-hide' : ''; ?>" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_TAG ); ?>">
+			<div class="litespeed-hide" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_TAG ); ?>">
 				<?php printf( esc_html__( 'Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', 'litespeed-cache' ), '<code>http://example.com/tag/tag-name/</code>', '<code>tag-name</code>' ); ?>
 			</div>
-			<div class="<?php echo Admin_Display::PURGEBY_URL !== $purgeby_option ? 'litespeed-hide' : ''; ?>" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_URL ); ?>">
+			<div class="litespeed-hide" data-purgeby="<?php echo esc_attr( Admin_Display::PURGEBY_URL ); ?>">
 				<?php esc_html_e( 'Purge pages by relative or full URL.', 'litespeed-cache' ); ?>
-				<?php printf( esc_html__( 'e.g. Use %1$s or %2$s.', 'litespeed-cache' ), '<code>/2016/02/24/hello-world/</code>', '<code>http://www.myexamplesite.com/2016/02/24/hello-world/</code>' ); ?>
+				<?php printf( esc_html__( 'e.g. Use %1$s or %2$s.', 'litespeed-cache' ), '<code>/2016/02/24/hello-world/</code>', '<code>http://example.com/2016/02/24/hello-world/</code>' ); ?>
 			</div>
 		</div>
 	</div>
@@ -242,3 +225,14 @@ if ( ! in_array( $purgeby_option, $valid_purge_opts, true ) ) {
 		<button type="submit" class="button button-primary"><?php esc_html_e( 'Purge List', 'litespeed-cache' ); ?></button>
 	</p>
 </form>
+<script>
+(function ($) {
+	jQuery(document).ready(function () {
+		// Manage page -> purge by
+		$('[name=purgeby]').on('change', function (event) {
+			$('[data-purgeby]').addClass('litespeed-hide');
+			$('[data-purgeby=' + this.value + ']').removeClass('litespeed-hide');
+		});
+	});
+})(jQuery);
+</script>
