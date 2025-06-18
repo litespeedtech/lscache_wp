@@ -613,7 +613,7 @@ class Media extends Root {
 
 		// Include lazyload lib js and init lazyload
 		if ($cfg_lazy || $cfg_iframe_lazy) {
-			$lazy_lib      = '<script data-no-optimize="1">window.lazyLoadOptions = { threshold: ' . apply_filters('lsc_lazyload_threshold', 300) . ' }; ' . File::read(LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD) . '</script>';
+			$lazy_lib      = '<script data-no-optimize="1">window.lazyLoadOptions = window.lazyLoadOptions || { threshold: ' . apply_filters('lsc_lazyload_threshold', 300) . ' }; ' . File::read(LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD) . '</script>';
 			$this->content = str_replace('</body>', $lazy_lib . '</body>', $this->content);
 		}
 	}
