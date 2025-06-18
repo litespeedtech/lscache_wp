@@ -1281,7 +1281,7 @@ class Admin_Display extends Base {
 	 * @since 7.1
 	 */
 	public static function has_qc_hide_banner() {
-		return isset($_COOKIE[self::COOKIE_QC_HIDE_BANNER]);
+		return isset($_COOKIE[self::COOKIE_QC_HIDE_BANNER]) && time() - $_COOKIE[self::COOKIE_QC_HIDE_BANNER] < 86400 * 90;
 	}
 
 	/**
