@@ -2,7 +2,6 @@
 /**
  * The admin-panel specific functionality of the plugin.
  *
- *
  * @since      1.0.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
@@ -12,8 +11,8 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Admin extends Root
-{
+class Admin extends Root {
+
 	const LOG_TAG = '👮';
 
 	const PAGE_EDIT_HTACCESS = 'litespeed-edit-htaccess';
@@ -24,8 +23,7 @@ class Admin extends Root
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// Define LSCWP_MU_PLUGIN if is mu-plugins
 		if (defined('WPMU_PLUGIN_DIR') && dirname(LSCWP_DIR) == WPMU_PLUGIN_DIR) {
 			define('LSCWP_MU_PLUGIN', true);
@@ -39,9 +37,9 @@ class Admin extends Root
 		$this->cls('Admin_Display');
 
 		// initialize admin actions
-		add_action('admin_init', array($this, 'admin_init'));
+		add_action('admin_init', array( $this, 'admin_init' ));
 		// add link to plugin list page
-		add_filter('plugin_action_links_' . LSCWP_BASENAME, array($this->cls('Admin_Display'), 'add_plugin_links'));
+		add_filter('plugin_action_links_' . LSCWP_BASENAME, array( $this->cls('Admin_Display'), 'add_plugin_links' ));
 	}
 
 	/**
@@ -50,11 +48,10 @@ class Admin extends Root
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function admin_init()
-	{
+	public function admin_init() {
 		// Hook attachment upload
 		if ($this->conf(Base::O_IMG_OPTM_AUTO)) {
-			add_filter('wp_update_attachment_metadata', array($this, 'wp_update_attachment_metadata'), 9999, 2);
+			add_filter('wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2);
 		}
 
 		$this->_proceed_admin_action();
@@ -83,17 +80,17 @@ class Admin extends Root
 		do_action('litspeed_after_admin_init');
 
 		if ($this->cls('Router')->esi_enabled()) {
-			add_action('in_widget_form', array($this->cls('Admin_Display'), 'show_widget_edit'), 100, 3);
+			add_action('in_widget_form', array( $this->cls('Admin_Display'), 'show_widget_edit' ), 100, 3);
 			add_filter('widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4);
 		}
 	}
 
 	/**
 	 * Handle attachment update
+	 *
 	 * @since  4.0
 	 */
-	public function wp_update_attachment_metadata($data, $post_id)
-	{
+	public function wp_update_attachment_metadata( $data, $post_id ) {
 		$this->cls('Img_Optm')->wp_update_attachment_metadata($data, $post_id);
 		return $data;
 	}
@@ -103,17 +100,16 @@ class Admin extends Root
 	 *
 	 * @since 1.1.0
 	 */
-	private function _proceed_admin_action()
-	{
+	private function _proceed_admin_action() {
 		// handle actions
 		switch (Router::get_action()) {
 			case Router::ACTION_SAVE_SETTINGS:
-				$this->cls('Admin_Settings')->save($_POST);
+            $this->cls('Admin_Settings')->save($_POST);
 				break;
 
 			// Save network settings
 			case Router::ACTION_SAVE_SETTINGS_NETWORK:
-				$this->cls('Admin_Settings')->network_save($_POST);
+            $this->cls('Admin_Settings')->network_save($_POST);
 				break;
 
 			default:
@@ -129,8 +125,7 @@ class Admin extends Root
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	public static function cleanup_text($input)
-	{
+	public static function cleanup_text( $input ) {
 		if (is_array($input)) {
 			return array_map(__CLASS__ . '::cleanup_text', $input);
 		}
@@ -148,8 +143,7 @@ class Admin extends Root
 	 * @access public
 	 * @global string $pagenow
 	 */
-	public static function redirect($url = false)
-	{
+	public static function redirect( $url = false ) {
 		global $pagenow;
 
 		if (!empty($_GET['_litespeed_ori'])) {

@@ -3,10 +3,10 @@
 /**
  * The quic.cloud class.
  *
- * @since      	2.4.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src/cdn
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.4.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src/cdn
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed\CDN;
@@ -16,16 +16,15 @@ use LiteSpeed\Base;
 
 defined('WPINC') || exit();
 
-class Quic extends Base
-{
+class Quic extends Base {
+
 	const LOG_TAG = '☁️';
 
 	const TYPE_REG = 'reg';
 
 	protected $_summary;
 	private $_force = false;
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_summary = self::get_summary();
 	}
 
@@ -34,8 +33,7 @@ class Quic extends Base
 	 *
 	 * @access public
 	 */
-	public function try_sync_conf($force = false)
-	{
+	public function try_sync_conf( $force = false ) {
 		if ($force) {
 			$this->_force = $force;
 		}
@@ -43,23 +41,23 @@ class Quic extends Base
 		if (!$this->conf(self::O_CDN_QUIC)) {
 			if (!empty($this->_summary['conf_md5'])) {
 				self::debug('❌ No QC CDN, clear conf md5!');
-				self::save_summary(array('conf_md5' => ''));
+				self::save_summary(array( 'conf_md5' => '' ));
 			}
 			return false;
 		}
 
 		// Notice: Sync conf must be after `wp_loaded` hook, to get 3rd party vary injected (e.g. `woocommerce_cart_hash`).
 		if (!did_action('wp_loaded')) {
-			add_action('wp_loaded', array($this, 'try_sync_conf'), 999);
+			add_action('wp_loaded', array( $this, 'try_sync_conf' ), 999);
 			self::debug('WP not loaded yet, delay sync to wp_loaded:999');
 			return;
 		}
 
-		$options = $this->get_options();
+		$options                = $this->get_options();
 		$options['_tp_cookies'] = apply_filters('litespeed_vary_cookies', array());
 
 		// Build necessary options only
-		$options_needed = array(
+		$options_needed  = array(
 			self::O_CACHE_DROP_QS,
 			self::O_CACHE_EXC_COOKIES,
 			self::O_CACHE_EXC_USERAGENTS,
@@ -67,14 +65,13 @@ class Quic extends Base
 			self::O_CACHE_VARY_COOKIES,
 			self::O_CACHE_MOBILE_RULES,
 			self::O_CACHE_MOBILE,
-			self::O_CACHE_RES,
 			self::O_CACHE_BROWSER,
 			self::O_CACHE_TTL_BROWSER,
 			self::O_IMG_OPTM_WEBP,
 			self::O_GUEST,
 			'_tp_cookies',
 		);
-		$consts_needed = array('WP_CONTENT_DIR', 'LSCWP_CONTENT_DIR', 'LSCWP_CONTENT_FOLDER', 'LSWCP_TAG_PREFIX');
+		$consts_needed   = array( 'LSWCP_TAG_PREFIX' );
 		$options_for_md5 = array();
 		foreach ($options_needed as $v) {
 			if (isset($options[$v])) {
@@ -109,7 +106,7 @@ class Quic extends Base
 			}
 		}
 
-		self::save_summary(array('conf_md5' => $conf_md5));
+		self::save_summary(array( 'conf_md5' => $conf_md5 ));
 		self::debug('sync conf to QC');
 
 		Cloud::post(Cloud::SVC_D_SYNC_CONF, $options_for_md5);

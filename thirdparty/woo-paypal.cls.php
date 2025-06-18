@@ -1,17 +1,18 @@
 <?php
 /**
  * The Third Party integration with WooCommerce PayPal Checkout Gateway
+ *
  * @ref https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/
  *
- * @since		3.0
+ * @since       3.0
  */
 namespace LiteSpeed\Thirdparty;
+
 defined('WPINC') || exit();
 
-class Woo_Paypal
-{
-	public static function detect()
-	{
+class Woo_Paypal {
+
+	public static function detect() {
 		if (!defined('WC_GATEWAY_PPEC_VERSION')) {
 			return;
 		}

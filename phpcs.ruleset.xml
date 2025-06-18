@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ruleset name="CustomWordPress">
+    <description>WordPress with no whitespace changes and relaxed rules</description>
+    <rule ref="WordPress" />
+    <rule ref="WordPress.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.WhiteSpace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.Arrays">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Functions.CallTimePassByReference">
+        <severity>0</severity>
+        <exclude name="Generic.Functions.CallTimePassByReference" />
+    </rule>
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing">
+        <severity>0</severity>
+        <exclude name="Squiz.WhiteSpace.LanguageConstructSpacing" />
+    </rule>
+    <rule ref="Squiz.WhiteSpace.PropertyLabelSpacing">
+        <severity>0</severity>
+        <exclude name="Squiz.WhiteSpace.PropertyLabelSpacing" />
+    </rule>
+    <rule ref="WordPress.Files.FileName">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress-Docs">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.NamingConventions.ValidVariableName">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.InlineComment">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.WP.I18n">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.Security" />
+    <rule ref="WordPress.NamingConventions" />
+    <rule ref="WordPress.PHP" />
+    <file>cli/</file>
+    <file>lib/</file>
+    <file>src/</file>
+    <file>tpl/</file>
+    <file>thirdparty/</file>
+    <file>autoload.php</file>
+    <file>litespeed-cache.php</file>
+</ruleset>

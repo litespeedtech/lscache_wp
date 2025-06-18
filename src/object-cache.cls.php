@@ -3,10 +3,10 @@
 /**
  * The object cache class
  *
- * @since      	1.8
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.8
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -15,21 +15,21 @@ defined('WPINC') || exit();
 
 require_once dirname(__DIR__) . '/autoload.php';
 
-class Object_Cache extends Root
-{
-	const O_DEBUG = 'debug';
-	const O_OBJECT = 'object';
-	const O_OBJECT_KIND = 'object-kind';
-	const O_OBJECT_HOST = 'object-host';
-	const O_OBJECT_PORT = 'object-port';
-	const O_OBJECT_LIFE = 'object-life';
-	const O_OBJECT_PERSISTENT = 'object-persistent';
-	const O_OBJECT_ADMIN = 'object-admin';
-	const O_OBJECT_TRANSIENTS = 'object-transients';
-	const O_OBJECT_DB_ID = 'object-db_id';
-	const O_OBJECT_USER = 'object-user';
-	const O_OBJECT_PSWD = 'object-pswd';
-	const O_OBJECT_GLOBAL_GROUPS = 'object-global_groups';
+class Object_Cache extends Root {
+
+	const O_DEBUG                        = 'debug';
+	const O_OBJECT                       = 'object';
+	const O_OBJECT_KIND                  = 'object-kind';
+	const O_OBJECT_HOST                  = 'object-host';
+	const O_OBJECT_PORT                  = 'object-port';
+	const O_OBJECT_LIFE                  = 'object-life';
+	const O_OBJECT_PERSISTENT            = 'object-persistent';
+	const O_OBJECT_ADMIN                 = 'object-admin';
+	const O_OBJECT_TRANSIENTS            = 'object-transients';
+	const O_OBJECT_DB_ID                 = 'object-db_id';
+	const O_OBJECT_USER                  = 'object-user';
+	const O_OBJECT_PSWD                  = 'object-pswd';
+	const O_OBJECT_GLOBAL_GROUPS         = 'object-global_groups';
 	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object-non_persistent_groups';
 
 	private $_conn;
@@ -49,7 +49,7 @@ class Object_Cache extends Root
 
 	private $_oc_driver = 'Memcached'; // Redis or Memcached
 
-	private $_global_groups = array();
+	private $_global_groups         = array();
 	private $_non_persistent_groups = array();
 
 	/**
@@ -59,8 +59,7 @@ class Object_Cache extends Root
 	 *
 	 * @since  1.8
 	 */
-	public function __construct($cfg = false)
-	{
+	public function __construct( $cfg = false ) {
 		if ($cfg) {
 			if (!is_array($cfg[Base::O_OBJECT_GLOBAL_GROUPS])) {
 				$cfg[Base::O_OBJECT_GLOBAL_GROUPS] = explode("\n", $cfg[Base::O_OBJECT_GLOBAL_GROUPS]);
@@ -68,18 +67,18 @@ class Object_Cache extends Root
 			if (!is_array($cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS])) {
 				$cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS] = explode("\n", $cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS]);
 			}
-			$this->_cfg_debug = $cfg[Base::O_DEBUG] ? $cfg[Base::O_DEBUG] : false;
-			$this->_cfg_method = $cfg[Base::O_OBJECT_KIND] ? true : false;
-			$this->_cfg_host = $cfg[Base::O_OBJECT_HOST];
-			$this->_cfg_port = $cfg[Base::O_OBJECT_PORT];
-			$this->_cfg_life = $cfg[Base::O_OBJECT_LIFE];
-			$this->_cfg_persistent = $cfg[Base::O_OBJECT_PERSISTENT];
-			$this->_cfg_admin = $cfg[Base::O_OBJECT_ADMIN];
-			$this->_cfg_transients = $cfg[Base::O_OBJECT_TRANSIENTS];
-			$this->_cfg_db = $cfg[Base::O_OBJECT_DB_ID];
-			$this->_cfg_user = $cfg[Base::O_OBJECT_USER];
-			$this->_cfg_pswd = $cfg[Base::O_OBJECT_PSWD];
-			$this->_global_groups = $cfg[Base::O_OBJECT_GLOBAL_GROUPS];
+			$this->_cfg_debug             = $cfg[Base::O_DEBUG] ? $cfg[Base::O_DEBUG] : false;
+			$this->_cfg_method            = $cfg[Base::O_OBJECT_KIND] ? true : false;
+			$this->_cfg_host              = $cfg[Base::O_OBJECT_HOST];
+			$this->_cfg_port              = $cfg[Base::O_OBJECT_PORT];
+			$this->_cfg_life              = $cfg[Base::O_OBJECT_LIFE];
+			$this->_cfg_persistent        = $cfg[Base::O_OBJECT_PERSISTENT];
+			$this->_cfg_admin             = $cfg[Base::O_OBJECT_ADMIN];
+			$this->_cfg_transients        = $cfg[Base::O_OBJECT_TRANSIENTS];
+			$this->_cfg_db                = $cfg[Base::O_OBJECT_DB_ID];
+			$this->_cfg_user              = $cfg[Base::O_OBJECT_USER];
+			$this->_cfg_pswd              = $cfg[Base::O_OBJECT_PSWD];
+			$this->_global_groups         = $cfg[Base::O_OBJECT_GLOBAL_GROUPS];
 			$this->_non_persistent_groups = $cfg[Base::O_OBJECT_NON_PERSISTENT_GROUPS];
 
 			if ($this->_cfg_method) {
@@ -89,18 +88,18 @@ class Object_Cache extends Root
 		}
 		// If OC is OFF, will hit here to init OC after conf initialized
 		elseif (defined('LITESPEED_CONF_LOADED')) {
-			$this->_cfg_debug = $this->conf(Base::O_DEBUG) ? $this->conf(Base::O_DEBUG) : false;
-			$this->_cfg_method = $this->conf(Base::O_OBJECT_KIND) ? true : false;
-			$this->_cfg_host = $this->conf(Base::O_OBJECT_HOST);
-			$this->_cfg_port = $this->conf(Base::O_OBJECT_PORT);
-			$this->_cfg_life = $this->conf(Base::O_OBJECT_LIFE);
-			$this->_cfg_persistent = $this->conf(Base::O_OBJECT_PERSISTENT);
-			$this->_cfg_admin = $this->conf(Base::O_OBJECT_ADMIN);
-			$this->_cfg_transients = $this->conf(Base::O_OBJECT_TRANSIENTS);
-			$this->_cfg_db = $this->conf(Base::O_OBJECT_DB_ID);
-			$this->_cfg_user = $this->conf(Base::O_OBJECT_USER);
-			$this->_cfg_pswd = $this->conf(Base::O_OBJECT_PSWD);
-			$this->_global_groups = $this->conf(Base::O_OBJECT_GLOBAL_GROUPS);
+			$this->_cfg_debug             = $this->conf(Base::O_DEBUG) ? $this->conf(Base::O_DEBUG) : false;
+			$this->_cfg_method            = $this->conf(Base::O_OBJECT_KIND) ? true : false;
+			$this->_cfg_host              = $this->conf(Base::O_OBJECT_HOST);
+			$this->_cfg_port              = $this->conf(Base::O_OBJECT_PORT);
+			$this->_cfg_life              = $this->conf(Base::O_OBJECT_LIFE);
+			$this->_cfg_persistent        = $this->conf(Base::O_OBJECT_PERSISTENT);
+			$this->_cfg_admin             = $this->conf(Base::O_OBJECT_ADMIN);
+			$this->_cfg_transients        = $this->conf(Base::O_OBJECT_TRANSIENTS);
+			$this->_cfg_db                = $this->conf(Base::O_OBJECT_DB_ID);
+			$this->_cfg_user              = $this->conf(Base::O_OBJECT_USER);
+			$this->_cfg_pswd              = $this->conf(Base::O_OBJECT_PSWD);
+			$this->_global_groups         = $this->conf(Base::O_OBJECT_GLOBAL_GROUPS);
 			$this->_non_persistent_groups = $this->conf(Base::O_OBJECT_NON_PERSISTENT_GROUPS);
 
 			if ($this->_cfg_method) {
@@ -112,18 +111,18 @@ class Object_Cache extends Root
 			// Use self::const to avoid loading more classes
 			$cfg = \json_decode(file_get_contents(WP_CONTENT_DIR . '/' . self::CONF_FILE), true);
 			if (!empty($cfg[self::O_OBJECT_HOST])) {
-				$this->_cfg_debug = !empty($cfg[Base::O_DEBUG]) ? $cfg[Base::O_DEBUG] : false;
-				$this->_cfg_method = !empty($cfg[self::O_OBJECT_KIND]) ? $cfg[self::O_OBJECT_KIND] : false;
-				$this->_cfg_host = $cfg[self::O_OBJECT_HOST];
-				$this->_cfg_port = $cfg[self::O_OBJECT_PORT];
-				$this->_cfg_life = !empty($cfg[self::O_OBJECT_LIFE]) ? $cfg[self::O_OBJECT_LIFE] : $this->_default_life;
-				$this->_cfg_persistent = !empty($cfg[self::O_OBJECT_PERSISTENT]) ? $cfg[self::O_OBJECT_PERSISTENT] : false;
-				$this->_cfg_admin = !empty($cfg[self::O_OBJECT_ADMIN]) ? $cfg[self::O_OBJECT_ADMIN] : false;
-				$this->_cfg_transients = !empty($cfg[self::O_OBJECT_TRANSIENTS]) ? $cfg[self::O_OBJECT_TRANSIENTS] : false;
-				$this->_cfg_db = !empty($cfg[self::O_OBJECT_DB_ID]) ? $cfg[self::O_OBJECT_DB_ID] : 0;
-				$this->_cfg_user = !empty($cfg[self::O_OBJECT_USER]) ? $cfg[self::O_OBJECT_USER] : '';
-				$this->_cfg_pswd = !empty($cfg[self::O_OBJECT_PSWD]) ? $cfg[self::O_OBJECT_PSWD] : '';
-				$this->_global_groups = !empty($cfg[self::O_OBJECT_GLOBAL_GROUPS]) ? $cfg[self::O_OBJECT_GLOBAL_GROUPS] : array();
+				$this->_cfg_debug             = !empty($cfg[Base::O_DEBUG]) ? $cfg[Base::O_DEBUG] : false;
+				$this->_cfg_method            = !empty($cfg[self::O_OBJECT_KIND]) ? $cfg[self::O_OBJECT_KIND] : false;
+				$this->_cfg_host              = $cfg[self::O_OBJECT_HOST];
+				$this->_cfg_port              = $cfg[self::O_OBJECT_PORT];
+				$this->_cfg_life              = !empty($cfg[self::O_OBJECT_LIFE]) ? $cfg[self::O_OBJECT_LIFE] : $this->_default_life;
+				$this->_cfg_persistent        = !empty($cfg[self::O_OBJECT_PERSISTENT]) ? $cfg[self::O_OBJECT_PERSISTENT] : false;
+				$this->_cfg_admin             = !empty($cfg[self::O_OBJECT_ADMIN]) ? $cfg[self::O_OBJECT_ADMIN] : false;
+				$this->_cfg_transients        = !empty($cfg[self::O_OBJECT_TRANSIENTS]) ? $cfg[self::O_OBJECT_TRANSIENTS] : false;
+				$this->_cfg_db                = !empty($cfg[self::O_OBJECT_DB_ID]) ? $cfg[self::O_OBJECT_DB_ID] : 0;
+				$this->_cfg_user              = !empty($cfg[self::O_OBJECT_USER]) ? $cfg[self::O_OBJECT_USER] : '';
+				$this->_cfg_pswd              = !empty($cfg[self::O_OBJECT_PSWD]) ? $cfg[self::O_OBJECT_PSWD] : '';
+				$this->_global_groups         = !empty($cfg[self::O_OBJECT_GLOBAL_GROUPS]) ? $cfg[self::O_OBJECT_GLOBAL_GROUPS] : array();
 				$this->_non_persistent_groups = !empty($cfg[self::O_OBJECT_NON_PERSISTENT_GROUPS]) ? $cfg[self::O_OBJECT_NON_PERSISTENT_GROUPS] : array();
 
 				if ($this->_cfg_method) {
@@ -144,8 +143,7 @@ class Object_Cache extends Root
 	 * @since  6.3
 	 * @access private
 	 */
-	private function debug_oc($text, $show_error = false)
-	{
+	private function debug_oc( $text, $show_error = false ) {
 		if (defined('LSCWP_LOG')) {
 			Debug2::debug($text);
 
@@ -157,10 +155,10 @@ class Object_Cache extends Root
 		}
 
 		$LITESPEED_DATA_FOLDER = defined('LITESPEED_DATA_FOLDER') ? LITESPEED_DATA_FOLDER : 'litespeed';
-		$LSCWP_CONTENT_DIR = defined('LSCWP_CONTENT_DIR') ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
-		$LITESPEED_STATIC_DIR = $LSCWP_CONTENT_DIR . '/' . $LITESPEED_DATA_FOLDER;
-		$log_path_prefix = $LITESPEED_STATIC_DIR . '/debug/';
-		$log_file = $log_path_prefix . Debug2::FilePath('debug');
+		$LSCWP_CONTENT_DIR     = defined('LSCWP_CONTENT_DIR') ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
+		$LITESPEED_STATIC_DIR  = $LSCWP_CONTENT_DIR . '/' . $LITESPEED_DATA_FOLDER;
+		$log_path_prefix       = $LITESPEED_STATIC_DIR . '/debug/';
+		$log_file              = $log_path_prefix . Debug2::FilePath('debug');
 
 		if (file_exists($log_path_prefix . 'index.php') && file_exists($log_file)) {
 			error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $log_file);
@@ -173,8 +171,7 @@ class Object_Cache extends Root
 	 * @since  1.8.3
 	 * @access public
 	 */
-	public function store_transients($group)
-	{
+	public function store_transients( $group ) {
 		return $this->_cfg_transients && $this->_is_transients_group($group);
 	}
 
@@ -184,9 +181,8 @@ class Object_Cache extends Root
 	 * @since  1.8.3
 	 * @access private
 	 */
-	private function _is_transients_group($group)
-	{
-		return in_array($group, array('transient', 'site-transient'));
+	private function _is_transients_group( $group ) {
+		return in_array($group, array( 'transient', 'site-transient' ));
 	}
 
 	/**
@@ -195,13 +191,12 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function update_file($options)
-	{
+	public function update_file( $options ) {
 		$changed = false;
 
 		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
 		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php';
-		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php';
+		$_oc_wp_file  = WP_CONTENT_DIR . '/object-cache.php';
 
 		// Update cls file
 		if (!file_exists($_oc_wp_file) || md5_file($_oc_wp_file) !== md5_file($_oc_ori_file)) {
@@ -225,11 +220,10 @@ class Object_Cache extends Root
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public function del_file()
-	{
+	public function del_file() {
 		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
 		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php';
-		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php';
+		$_oc_wp_file  = WP_CONTENT_DIR . '/object-cache.php';
 
 		if (file_exists($_oc_wp_file) && md5_file($_oc_wp_file) === md5_file($_oc_ori_file)) {
 			$this->debug_oc('removing ' . $_oc_wp_file);
@@ -243,8 +237,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function test_connection()
-	{
+	public function test_connection() {
 		return $this->_connect();
 	}
 
@@ -254,8 +247,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _reconnect($cfg)
-	{
+	private function _reconnect( $cfg ) {
 		$this->debug_oc('Reconnecting');
 		if (isset($this->_conn)) {
 			// error_log( 'Object: Quitting existing connection!' );
@@ -278,8 +270,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _connect()
-	{
+	private function _connect() {
 		if (isset($this->_conn)) {
 			// error_log( 'Object: _connected' );
 			return true;
@@ -314,17 +305,15 @@ class Object_Cache extends Root
 					} else {
 						$this->_conn->pconnect($this->_cfg_host);
 					}
+				} elseif ($this->_cfg_port) {
+					$this->_conn->connect($this->_cfg_host, $this->_cfg_port);
 				} else {
-					if ($this->_cfg_port) {
-						$this->_conn->connect($this->_cfg_host, $this->_cfg_port);
-					} else {
-						$this->_conn->connect($this->_cfg_host);
-					}
+					$this->_conn->connect($this->_cfg_host);
 				}
 
 				if ($this->_cfg_pswd) {
 					if ($this->_cfg_user) {
-						$this->_conn->auth(array($this->_cfg_user, $this->_cfg_pswd));
+						$this->_conn->auth(array( $this->_cfg_user, $this->_cfg_pswd ));
 					} else {
 						$this->_conn->auth($this->_cfg_pswd);
 					}
@@ -369,6 +358,7 @@ class Object_Cache extends Root
 
 			/**
 			 * Add SASL auth
+			 *
 			 * @since  1.8.1
 			 * @since  2.9.6 Fixed SASL connection @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:lsmcd:new_sasl
 			 */
@@ -387,7 +377,7 @@ class Object_Cache extends Root
 		// If failed to connect
 		if ($failed) {
 			$this->debug_oc('❌ Failed to connect ' . $this->_oc_driver . ' server!', true);
-			$this->_conn = null;
+			$this->_conn        = null;
 			$this->_cfg_enabled = false;
 			!defined('LITESPEED_OC_FAILURE') && define('LITESPEED_OC_FAILURE', true);
 			// error_log( 'Object: false!' );
@@ -405,8 +395,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _validate_mem_server()
-	{
+	private function _validate_mem_server() {
 		$mem_list = $this->_conn->getStats();
 		if (empty($mem_list)) {
 			return false;
@@ -430,8 +419,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _get_mem_id()
-	{
+	private function _get_mem_id() {
 		$mem_id = 'litespeed';
 		if (is_multisite()) {
 			$mem_id .= '_' . get_current_blog_id();
@@ -446,8 +434,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function get($key)
-	{
+	public function get( $key ) {
 		if (!$this->_cfg_enabled) {
 			return null;
 		}
@@ -471,8 +458,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function set($key, $data, $expire)
-	{
+	public function set( $key, $data, $expire ) {
 		if (!$this->_cfg_enabled) {
 			return null;
 		}
@@ -482,7 +468,7 @@ class Object_Cache extends Root
 		 * Bug found by Stan at Jan/10/2020
 		 */
 		// if ( ! $this->_can_cache() ) {
-		// 	return null;
+		// return null;
 		// }
 
 		if (!$this->_connect()) {
@@ -495,7 +481,7 @@ class Object_Cache extends Root
 				$res = $this->_conn->setEx($key, $ttl, $data);
 			} catch (\RedisException $ex) {
 				$res = false;
-				$msg = sprintf(__('Redis encountered a fatal error: %s (code: %d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
+				$msg = sprintf(__('Redis encountered a fatal error: %1$s (code: %2$d)', 'litespeed-cache'), $ex->getMessage(), $ex->getCode());
 				$this->debug_oc($msg);
 				Admin_Display::error($msg);
 			}
@@ -512,8 +498,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _can_cache()
-	{
+	private function _can_cache() {
 		if (!$this->_cfg_admin && defined('WP_ADMIN')) {
 			return false;
 		}
@@ -526,8 +511,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function delete($key)
-	{
+	public function delete( $key ) {
 		if (!$this->_cfg_enabled) {
 			return null;
 		}
@@ -551,8 +535,7 @@ class Object_Cache extends Root
 	 * @since  1.8
 	 * @access public
 	 */
-	public function flush()
-	{
+	public function flush() {
 		if (!$this->_cfg_enabled) {
 			$this->debug_oc('bypass flushing');
 			return null;
@@ -580,10 +563,9 @@ class Object_Cache extends Root
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_global_groups($groups)
-	{
+	public function add_global_groups( $groups ) {
 		if (!is_array($groups)) {
-			$groups = array($groups);
+			$groups = array( $groups );
 		}
 
 		$this->_global_groups = array_merge($this->_global_groups, $groups);
@@ -596,8 +578,7 @@ class Object_Cache extends Root
 	 * @since 1.8
 	 * @access public
 	 */
-	public function is_global($group)
-	{
+	public function is_global( $group ) {
 		return in_array($group, $this->_global_groups);
 	}
 
@@ -607,10 +588,9 @@ class Object_Cache extends Root
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_non_persistent_groups($groups)
-	{
+	public function add_non_persistent_groups( $groups ) {
 		if (!is_array($groups)) {
-			$groups = array($groups);
+			$groups = array( $groups );
 		}
 
 		$this->_non_persistent_groups = array_merge($this->_non_persistent_groups, $groups);
@@ -623,8 +603,7 @@ class Object_Cache extends Root
 	 * @since 1.8
 	 * @access public
 	 */
-	public function is_non_persistent($group)
-	{
+	public function is_non_persistent( $group ) {
 		return in_array($group, $this->_non_persistent_groups);
 	}
 }

@@ -3,7 +3,6 @@
 /**
  * The admin settings handler of the plugin.
  *
- *
  * @since      1.1.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src
@@ -14,8 +13,8 @@ namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Admin_Settings extends Base
-{
+class Admin_Settings extends Base {
+
 	const ENROLL = '_settings-enroll';
 
 	/**
@@ -28,8 +27,7 @@ class Admin_Settings extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save($raw_data)
-	{
+	public function save( $raw_data ) {
 		Debug2::debug('[Settings] saving');
 
 		if (empty($raw_data[self::ENROLL])) {
@@ -47,7 +45,7 @@ class Admin_Settings extends Base
 				if (strpos($id, self::O_CDN_MAPPING) === 0 || strpos($id, self::O_CRAWLER_COOKIES) === 0) {
 					// CDN child | Cookie Crawler settings
 					$child = substr($id, strpos($id, '[') + 1, strpos($id, ']') - strpos($id, '[') - 1);
-					$id = substr($id, 0, strpos($id, '[')); // Drop ending []; Compatible with xx[0] way from CLI
+					$id    = substr($id, 0, strpos($id, '[')); // Drop ending []; Compatible with xx[0] way from CLI
 				} else {
 					$id = substr($id, 0, strpos($id, '[')); // Drop ending []
 				}
@@ -59,12 +57,12 @@ class Admin_Settings extends Base
 
 			// Validate $child
 			if ($id == self::O_CDN_MAPPING) {
-				if (!in_array($child, array(self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE))) {
+				if (!in_array($child, array( self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE ))) {
 					continue;
 				}
 			}
 			if ($id == self::O_CRAWLER_COOKIES) {
-				if (!in_array($child, array(self::CRWL_COOKIE_NAME, self::CRWL_COOKIE_VALS))) {
+				if (!in_array($child, array( self::CRWL_COOKIE_NAME, self::CRWL_COOKIE_VALS ))) {
 					continue;
 				}
 			}
@@ -86,123 +84,123 @@ class Admin_Settings extends Base
 			}
 			switch ($id) {
 				case self::O_CRAWLER_ROLES: // Don't allow Editor/admin to be used in crawler role simulator
-					$data = Utility::sanitize_lines($data);
-					if ($data) {
+                $data = Utility::sanitize_lines($data);
+                if ($data) {
 						foreach ($data as $k => $v) {
-							if (user_can($v, 'edit_posts')) {
+                        if (user_can($v, 'edit_posts')) {
 								$msg = sprintf(
-									__('The user with id %s has editor access, which is not allowed for the role simulator.', 'litespeed-cache'),
-									'<code>' . $v . '</code>'
-								);
-								Admin_Display::error($msg);
-								unset($data[$k]);
+								__('The user with id %s has editor access, which is not allowed for the role simulator.', 'litespeed-cache'),
+								'<code>' . $v . '</code>'
+									);
+									Admin_Display::error($msg);
+									unset($data[$k]);
+                        }
 							}
-						}
 					}
 					break;
 				case self::O_CDN_MAPPING:
-					/**
-					 * CDN setting
-					 *
-					 * Raw data format:
-					 * 		cdn-mapping[url][] = 'xxx'
-					 * 		cdn-mapping[url][2] = 'xxx2'
-					 * 		cdn-mapping[inc_js][] = 1
-					 *
-					 * Final format:
-					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
-					 */
-					if ($data) {
+                /**
+                 * CDN setting
+                 *
+                 * Raw data format:
+                 *      cdn-mapping[url][] = 'xxx'
+                 *      cdn-mapping[url][2] = 'xxx2'
+                 *      cdn-mapping[inc_js][] = 1
+                 *
+                 * Final format:
+                 *      cdn-mapping[ 0 ][ url ] = 'xxx'
+                 *      cdn-mapping[ 2 ][ url ] = 'xxx2'
+                 */
+                if ($data) {
 						foreach ($data as $k => $v) {
-							if ($child == self::CDN_MAPPING_FILETYPE) {
+                        if ($child == self::CDN_MAPPING_FILETYPE) {
 								$v = Utility::sanitize_lines($v);
-							}
-							if ($child == self::CDN_MAPPING_URL) {
-								# If not a valid URL, turn off CDN
+                            }
+                        if ($child == self::CDN_MAPPING_URL) {
+								// If not a valid URL, turn off CDN
 								if (strpos($v, 'https://') !== 0) {
-									self::debug('❌ CDN mapping set to OFF due to invalid URL');
-									$the_matrix[self::O_CDN] = false;
-								}
+                                self::debug('❌ CDN mapping set to OFF due to invalid URL');
+                                $the_matrix[self::O_CDN] = false;
+									}
 								$v = trailingslashit($v);
-							}
-							if (in_array($child, array(self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS))) {
+                            }
+                        if (in_array($child, array( self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ))) {
 								// Because these can't be auto detected in `config->update()`, need to format here
 								$v = $v === 'false' ? 0 : (bool) $v;
-							}
+                            }
 
-							if (empty($data2[$k])) {
+                        if (empty($data2[$k])) {
 								$data2[$k] = array();
-							}
+                            }
 
-							$data2[$k][$child] = $v;
-						}
+                        $data2[$k][$child] = $v;
+							}
 					}
 
-					$data = $data2;
+                $data = $data2;
 					break;
 
 				case self::O_CRAWLER_COOKIES:
-					/**
-					 * Cookie Crawler setting
-					 * Raw Format:
-					 * 		crawler-cookies[name][] = xxx
-					 * 		crawler-cookies[name][2] = xxx2
-					 * 		crawler-cookies[vals][] = xxx
-					 *
-					 * todo: need to allow null for values
-					 *
-					 * Final format:
-					 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-					 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-					 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
-					 *
-					 * empty line for `vals` use literal `_null`
-					 */
-					if ($data) {
+                /**
+                 * Cookie Crawler setting
+                 * Raw Format:
+                 *      crawler-cookies[name][] = xxx
+                 *      crawler-cookies[name][2] = xxx2
+                 *      crawler-cookies[vals][] = xxx
+                 *
+                 * todo: need to allow null for values
+                 *
+                 * Final format:
+                 *      crawler-cookie[ 0 ][ name ] = 'xxx'
+                 *      crawler-cookie[ 0 ][ vals ] = 'xxx'
+                 *      crawler-cookie[ 2 ][ name ] = 'xxx2'
+                 *
+                 * empty line for `vals` use literal `_null`
+                 */
+                if ($data) {
 						foreach ($data as $k => $v) {
-							if ($child == self::CRWL_COOKIE_VALS) {
+                        if ($child == self::CRWL_COOKIE_VALS) {
 								$v = Utility::sanitize_lines($v);
-							}
+                            }
 
-							if (empty($data2[$k])) {
+                        if (empty($data2[$k])) {
 								$data2[$k] = array();
-							}
+                            }
 
-							$data2[$k][$child] = $v;
-						}
+                        $data2[$k][$child] = $v;
+							}
 					}
 
-					$data = $data2;
+                $data = $data2;
 					break;
 
 				case self::O_CACHE_EXC_CAT: // Cache exclude cat
-					$data2 = array();
-					$data = Utility::sanitize_lines($data);
-					foreach ($data as $v) {
+                $data2 = array();
+                $data  = Utility::sanitize_lines($data);
+                foreach ($data as $v) {
 						$cat_id = get_cat_ID($v);
 						if (!$cat_id) {
-							continue;
-						}
+                        continue;
+							}
 
 						$data2[] = $cat_id;
 					}
-					$data = $data2;
+                $data = $data2;
 					break;
 
 				case self::O_CACHE_EXC_TAG: // Cache exclude tag
-					$data2 = array();
-					$data = Utility::sanitize_lines($data);
-					foreach ($data as $v) {
+                $data2 = array();
+                $data  = Utility::sanitize_lines($data);
+                foreach ($data as $v) {
 						$term = get_term_by('name', $v, 'post_tag');
 						if (!$term) {
-							// todo: can show the error in admin error msg
-							continue;
-						}
+                        // todo: can show the error in admin error msg
+                        continue;
+							}
 
 						$data2[] = $term->term_id;
 					}
-					$data = $data2;
+                $data = $data2;
 					break;
 
 				default:
@@ -215,12 +213,12 @@ class Admin_Settings extends Base
 		// Special handler for CDN/Crawler 2d list to drop empty rows
 		foreach ($the_matrix as $id => $data) {
 			/**
-			 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
-			 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+			 *      cdn-mapping[ 0 ][ url ] = 'xxx'
+			 *      cdn-mapping[ 2 ][ url ] = 'xxx2'
 			 *
-			 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
-			 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
-			 * 		crawler-cookie[ 2 ][ name ] = 'xxx2'
+			 *      crawler-cookie[ 0 ][ name ] = 'xxx'
+			 *      crawler-cookie[ 0 ][ vals ] = 'xxx'
+			 *      crawler-cookie[ 2 ][ name ] = 'xxx2'
 			 */
 			if ($id == self::O_CDN_MAPPING || $id == self::O_CRAWLER_COOKIES) {
 				// Drop this line if all children elements are empty
@@ -255,12 +253,12 @@ class Admin_Settings extends Base
 			// tmp fix the 3rd part woo update hook issue when enabling vary cookie
 			if ($id == 'wc_cart_vary') {
 				if ($data) {
-					add_filter('litespeed_vary_cookies', function ($list) {
+					add_filter('litespeed_vary_cookies', function ( $list ) {
 						$list[] = 'woocommerce_cart_hash';
 						return array_unique($list);
 					});
 				} else {
-					add_filter('litespeed_vary_cookies', function ($list) {
+					add_filter('litespeed_vary_cookies', function ( $list ) {
 						if (in_array('woocommerce_cart_hash', $list)) {
 							unset($list[array_search('woocommerce_cart_hash', $list)]);
 						}
@@ -283,8 +281,7 @@ class Admin_Settings extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public function network_save($raw_data)
-	{
+	public function network_save( $raw_data ) {
 		Debug2::debug('[Settings] network saving');
 
 		if (empty($raw_data[self::ENROLL])) {
@@ -321,8 +318,7 @@ class Admin_Settings extends Base
 	 * @param string $location The location string.
 	 * @return string the updated location string.
 	 */
-	public static function widget_save_err($location)
-	{
+	public static function widget_save_err( $location ) {
 		return str_replace('?message=0', '?error=0', $location);
 	}
 
@@ -332,14 +328,13 @@ class Admin_Settings extends Base
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $instance The new settings.
-	 * @param array $new_instance
-	 * @param array $old_instance The original settings.
+	 * @param array     $instance The new settings.
+	 * @param array     $new_instance
+	 * @param array     $old_instance The original settings.
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public static function validate_widget_save($instance, $new_instance, $old_instance, $widget)
-	{
+	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget ) {
 		if (empty($new_instance)) {
 			return $instance;
 		}
@@ -361,7 +356,7 @@ class Admin_Settings extends Base
 			$instance[Conf::OPTION_NAME] = array();
 		}
 		$instance[Conf::OPTION_NAME][ESI::WIDGET_O_ESIENABLE] = $esi;
-		$instance[Conf::OPTION_NAME][ESI::WIDGET_O_TTL] = $ttl;
+		$instance[Conf::OPTION_NAME][ESI::WIDGET_O_TTL]       = $ttl;
 
 		$current = !empty($old_instance[Conf::OPTION_NAME]) ? $old_instance[Conf::OPTION_NAME] : false;
 		if (!strpos($_SERVER['HTTP_REFERER'], '/wp-admin/customize.php')) {
