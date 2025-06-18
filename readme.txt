@@ -255,6 +255,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.3 - Aug 2025 =
+* **Core** Refactored the template files to comply with WordPress standards.
+* **ESI** Fixed an Edit button missing case on frontend when the permalink structure is `Plain`. (#934261 PR#860)
+* **API** Added filter `litespeed_purge_tags` to allow manipulation of purge tags.
+* **API** Allowed overriding `litespeed_ui_events` via window property. (Zsombor Franczia PR#865)
+* **Debug** Allowed debug in multisite network level. (PR#861)
+* **Vary** Fixed possible duplicate webp vary in chrome mimicked iPhone visit.
+* **Vary** Used simpler rewrite rule to check next gen image format support.
+* **Misc** Simplified admin JS.
+
 = 7.2 - Jun 18 2025 =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
 * **Core** Used `site_url` instead of `home_url` to fix the content folder parsing and QUIC.cloud calls.
