@@ -669,6 +669,11 @@ class GUI extends Base {
 	public function backend_shortcut() {
 		global $wp_admin_bar;
 
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
+			// TODO: Add the Enable All Features link
+			return;
+		}
+
 		// if ( defined( 'LITESPEED_ON' ) ) {
 		$wp_admin_bar->add_menu(array(
 			'id' => 'litespeed-menu',
