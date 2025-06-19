@@ -31,7 +31,7 @@ if ( ! is_network_admin() ) {
 
 <div class="litespeed-wrap">
     <h2 class="litespeed-header nav-tab-wrapper">
-        <?php GUI::display_tab_list( $menu_arr ); ?>
+        <?php GUI::display_tab_list( $menu_list ); ?>
     </h2>
 
     <div class="litespeed-body">

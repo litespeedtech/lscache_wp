@@ -337,7 +337,7 @@ var _litespeed_dots;
 					cache: false,
 					data: { crawler_id: crawler_id },
 					beforeSend: function (xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce('wp_rest');?>');
+						xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js( wp_create_nonce('wp_rest') ); ?>');
 					},
 					success: function (data) {
 						$(that)
