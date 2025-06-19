@@ -13,6 +13,9 @@ defined( 'WPINC' ) || exit;
 $__cloud = Cloud::cls();
 $__cloud->finish_qc_activation( 'cdn' );
 $cloud_summary = Cloud::get_summary();
+$allowed_html  = array(
+	'strong' => array(),
+);
 ?>
 
 <div class="litespeed-flex-container litespeed-column-with-boxes">
@@ -32,7 +35,9 @@ $cloud_summary = Cloud::get_summary();
 				<div class="litespeed-dashboard-unlock litespeed-dashboard-unlock--inline">
 					<div>
 						<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient"><?php esc_html_e( 'Accelerate, Optimize, Protect', 'litespeed-cache' ); ?></strong></h3>
-						<p class="litespeed-dashboard-unlock-desc"><?php esc_html_e( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ); ?></p>
+						<p class="litespeed-dashboard-unlock-desc">
+							<?php echo wp_kses( __( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ), $allowed_html ); ?>
+						</p>
 						<p><?php esc_html_e( 'Free monthly quota available.', 'litespeed-cache' ); ?></p>
 						<p>
 							<a class="button button-primary" href="<?php echo esc_url( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_ACTIVATE, false, null, array( 'ref' => 'cdn' ) ) ); ?>">
@@ -45,17 +50,17 @@ $cloud_summary = Cloud::get_summary();
 						</p>
 					</div>
 				</div>
-			<?php elseif ( empty( $cloud_summary['qc_activated'] ) || $cloud_summary['qc_activated'] != 'cdn' ) : ?>
+			<?php elseif ( empty( $cloud_summary['qc_activated'] ) || 'cdn' !== $cloud_summary['qc_activated'] ) : ?>
 				<div class="litespeed-top20">
-					<?php if ( ! empty( $cloud_summary['qc_activated'] ) && $cloud_summary['qc_activated'] == 'linked' ) : ?>
-						<p><?php esc_html_e( 'QUIC.cloud CDN is currently <strong>fully disabled</strong>.', 'litespeed-cache' ); ?></p>
+					<?php if ( ! empty( $cloud_summary['qc_activated'] ) && 'linked' === $cloud_summary['qc_activated'] ) : ?>
+						<p><?php echo wp_kses( __( 'QUIC.cloud CDN is currently <strong>fully disabled</strong>.', 'litespeed-cache' ), $allowed_html ); ?></p>
 					<?php else : ?>
-						<p><?php esc_html_e( 'QUIC.cloud CDN is <strong>not available</strong> for anonymous (unlinked) users.', 'litespeed-cache' ); ?></p>
+						<p><?php echo wp_kses( __( 'QUIC.cloud CDN is <strong>not available</strong> for anonymous (unlinked) users.', 'litespeed-cache' ), $allowed_html ); ?></p>
 					<?php endif; ?>
 					<p>
 						<?php
 						$btn_title = esc_html__( 'Link & Enable QUIC.cloud CDN', 'litespeed-cache' );
-						if ( ! empty( $cloud_summary['qc_activated'] ) && $cloud_summary['qc_activated'] == 'linked' ) {
+						if ( ! empty( $cloud_summary['qc_activated'] ) && 'linked' === $cloud_summary['qc_activated'] ) {
 							$btn_title = esc_html__( 'Enable QUIC.cloud CDN', 'litespeed-cache' );
 						}
 						Doc::learn_more(
@@ -120,26 +125,26 @@ $cloud_summary = Cloud::get_summary();
 						<p><?php esc_html_e( 'To manage your QUIC.cloud options, go to QUIC.cloud Dashboard.', 'litespeed-cache' ); ?></p>
 						<p class="litespeed-top20">
 							<button type="button" class="button button-primary disabled">
-								<?php esc_html_e( 'Link to QUIC.cloud', 'litespeed-cache' ); ?> <span class="dashicons dashicons-external"></span>
+								<?php esc_html_e( 'Link to QUIC.cloud', 'litespeed-cache' ); ?>
 							</button>
 						</p>
-					<?php elseif ( $cloud_summary['qc_activated'] == 'anonymous' ) : ?>
+					<?php elseif ( 'anonymous' === $cloud_summary['qc_activated'] ) : ?>
 						<p><?php esc_html_e( 'You are currently using services as an anonymous user. To manage your QUIC.cloud options, use the button below to create an account and link to the QUIC.cloud Dashboard.', 'litespeed-cache' ); ?></p>
 						<p class="litespeed-top20">
-							<a href="<?php echo esc_url( $__cloud->qc_link() ); ?>" target="qc" rel="noopener" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || $cloud_summary['qc_activated'] != 'cdn' ) ? 'secondary' : 'primary'; ?>">
-								<?php esc_html_e( 'Link to QUIC.cloud', 'litespeed-cache' ); ?> <span class="dashicons dashicons-external"></span>
+							<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_LINK, false, null, array( 'ref' => 'cdn' ) ) ); ?>" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || 'cdn' !== $cloud_summary['qc_activated'] ) ? 'secondary' : 'primary'; ?>">
+								<?php esc_html_e( 'Link to QUIC.cloud', 'litespeed-cache' ); ?>
 							</a>
 						</p>
-					<?php elseif ( $cloud_summary['qc_activated'] == 'linked' ) : ?>
+					<?php elseif ( 'linked' === $cloud_summary['qc_activated'] ) : ?>
 						<p class="litespeed-top20">
-							<a href="<?php echo esc_url( $__cloud->qc_link() ); ?>" target="qc" rel="noopener" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || $cloud_summary['qc_activated'] != 'cdn' ) ? 'secondary' : 'primary'; ?>">
+							<a href="<?php echo esc_url( $__cloud->qc_link() ); ?>" target="qc" rel="noopener" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || 'cdn' !== $cloud_summary['qc_activated'] ) ? 'secondary' : 'primary'; ?>">
 								<?php esc_html_e( 'My QUIC.cloud Dashboard', 'litespeed-cache' ); ?> <span class="dashicons dashicons-external"></span>
 							</a>
 						</p>
 					<?php else : ?>
 						<p><?php esc_html_e( 'To manage your QUIC.cloud options, go to QUIC.cloud Dashboard.', 'litespeed-cache' ); ?></p>
 						<p class="litespeed-top20">
-							<a href="<?php echo esc_url( $__cloud->qc_link() ); ?>" target="qc" rel="noopener" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || $cloud_summary['qc_activated'] != 'cdn' ) ? 'secondary' : 'primary'; ?>">
+							<a href="<?php echo esc_url( $__cloud->qc_link() ); ?>" target="qc" rel="noopener" class="button button-<?php echo ( empty( $cloud_summary['qc_activated'] ) || 'cdn' !== $cloud_summary['qc_activated'] ) ? 'secondary' : 'primary'; ?>">
 								<?php esc_html_e( 'My QUIC.cloud Dashboard', 'litespeed-cache' ); ?> <span class="dashicons dashicons-external"></span>
 							</a>
 						</p>
