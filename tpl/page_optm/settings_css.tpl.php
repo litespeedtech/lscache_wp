@@ -74,7 +74,7 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 					<?php if ( ! $this->cls( 'Cloud' )->activated() ) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php esc_html_e( 'WARNING', 'litespeed-cache' ); ?></h4>
-							<?php echo Error::msg( 'qc_setup_required' ); ?>
+							<?php echo wp_kses_post( Error::msg( 'qc_setup_required' ) ); ?>
 						</div>
 					<?php endif; ?>
 

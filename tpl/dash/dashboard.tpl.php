@@ -41,10 +41,6 @@ $placeholder_queue_count = count( $this->load_queue( 'lqip' ) );
 $vpi_queue_count         = count( $this->load_queue( 'vpi' ) );
 $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITESPEED_SERVER_TYPE;
 
-$allowed_html = array(
-	'strong' => array(),
-);
-
 ?>
 
 <div class="litespeed-dashboard">
@@ -151,7 +147,7 @@ $allowed_html = array(
 						</strong>
 					</h3>
 					<p class="litespeed-dashboard-unlock-desc">
-						<?php echo wp_kses( __( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ), $allowed_html ); ?>
+						<?php echo wp_kses_post( __( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ) ); ?>
 					</p>
 					<p>
 						<?php esc_html_e( 'Free monthly quota available. Can also be used anonymously (no email required).', 'litespeed-cache' ); ?>

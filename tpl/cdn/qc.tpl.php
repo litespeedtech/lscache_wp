@@ -13,9 +13,6 @@ defined( 'WPINC' ) || exit;
 $__cloud = Cloud::cls();
 $__cloud->finish_qc_activation( 'cdn' );
 $cloud_summary = Cloud::get_summary();
-$allowed_html  = array(
-	'strong' => array(),
-);
 ?>
 
 <div class="litespeed-flex-container litespeed-column-with-boxes">
@@ -36,7 +33,7 @@ $allowed_html  = array(
 					<div>
 						<h3 class="litespeed-dashboard-unlock-title"><strong class="litespeed-qc-text-gradient"><?php esc_html_e( 'Accelerate, Optimize, Protect', 'litespeed-cache' ); ?></strong></h3>
 						<p class="litespeed-dashboard-unlock-desc">
-							<?php echo wp_kses( __( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ), $allowed_html ); ?>
+							<?php echo wp_kses_post( __( 'Speed up your WordPress site even further with <strong>QUIC.cloud Online Services and CDN</strong>.', 'litespeed-cache' ) ); ?>
 						</p>
 						<p><?php esc_html_e( 'Free monthly quota available.', 'litespeed-cache' ); ?></p>
 						<p>
@@ -53,9 +50,9 @@ $allowed_html  = array(
 			<?php elseif ( empty( $cloud_summary['qc_activated'] ) || 'cdn' !== $cloud_summary['qc_activated'] ) : ?>
 				<div class="litespeed-top20">
 					<?php if ( ! empty( $cloud_summary['qc_activated'] ) && 'linked' === $cloud_summary['qc_activated'] ) : ?>
-						<p><?php echo wp_kses( __( 'QUIC.cloud CDN is currently <strong>fully disabled</strong>.', 'litespeed-cache' ), $allowed_html ); ?></p>
+						<p><?php echo wp_kses_post( __( 'QUIC.cloud CDN is currently <strong>fully disabled</strong>.', 'litespeed-cache' ) ); ?></p>
 					<?php else : ?>
-						<p><?php echo wp_kses( __( 'QUIC.cloud CDN is <strong>not available</strong> for anonymous (unlinked) users.', 'litespeed-cache' ), $allowed_html ); ?></p>
+						<p><?php echo wp_kses_post( __( 'QUIC.cloud CDN is <strong>not available</strong> for anonymous (unlinked) users.', 'litespeed-cache' ) ); ?></p>
 					<?php endif; ?>
 					<p>
 						<?php
