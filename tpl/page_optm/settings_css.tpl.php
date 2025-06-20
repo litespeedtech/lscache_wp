@@ -20,7 +20,7 @@ $closest_server      = Cloud::get_summary( 'server.' . Cloud::SVC_CCSS );
 $ccss_queue = $this->load_queue( 'ccss' );
 $ucss_queue = $this->load_queue( 'ucss' );
 
-$next_gen = '<code class="litespeed-success">' . esc_html( $this->cls( 'Media' )->next_gen_image_title() ) . '</code>';
+$next_gen = '<code class="litespeed-success">' . $this->cls( 'Media' )->next_gen_image_title() . '</code>';
 
 $ucss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_UCSS );
 $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
@@ -133,14 +133,15 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 									if ( ! empty( $queue_val['_status'] ) ) {
 										echo '</span>';
 									}
-									if ( $pos = strpos( $queue_key, ' ' ) ) {
+									$pos = strpos( $queue_key, ' ' );
+									if ( $pos ) {
 										echo ' (' . esc_html__( 'Vary Group', 'litespeed-cache' ) . ':' . esc_html( substr( $queue_key, 0, $pos ) ) . ')';
 									}
 									if ( $queue_val['is_mobile'] ) {
 										echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>';
 									}
 									if ( ! empty( $queue_val['is_webp'] ) ) {
-										echo ' ' . $next_gen;
+										echo ' ' . wp_kses_post( $next_gen );
 									}
 									echo '<br />';
 								endforeach;
@@ -206,7 +207,7 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 					<?php if ( ! $this->cls( 'Cloud' )->activated() ) : ?>
 						<div class="litespeed-callout notice notice-error inline">
 							<h4><?php esc_html_e( 'WARNING', 'litespeed-cache' ); ?></h4>
-							<?php echo Error::msg( 'qc_setup_required' ); ?>
+							<?php echo wp_kses_post( Error::msg( 'qc_setup_required' ) ); ?>
 						</div>
 					<?php endif; ?>
 					<?php esc_html_e( 'Optimize CSS delivery.', 'litespeed-cache' ); ?>
@@ -269,14 +270,15 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 									if ( ! empty( $queue_val['_status'] ) ) {
 										echo '</span>';
 									}
-									if ( $pos = strpos( $queue_key, ' ' ) ) {
+									$pos = strpos( $queue_key, ' ' );
+									if ( $pos ) {
 										echo ' (' . esc_html__( 'Vary Group', 'litespeed-cache' ) . ':' . esc_html( substr( $queue_key, 0, $pos ) ) . ')';
 									}
 									if ( $queue_val['is_mobile'] ) {
 										echo ' <span data-balloon-pos="up" aria-label="mobile">📱</span>';
 									}
 									if ( ! empty( $queue_val['is_webp'] ) ) {
-										echo ' ' . $next_gen;
+										echo ' ' . wp_kses_post( $next_gen );
 									}
 									echo '<br />';
 								endforeach;

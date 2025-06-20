@@ -454,7 +454,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 							<h3 class="litespeed-title">
 								<?php esc_html_e( 'PageSpeed Score', 'litespeed-cache' ); ?>
 								<?php $guest_option = Base::O_GUEST; ?>
-								<a href="<?php echo esc_url( admin_url( 'admin.php?page=litespeed-general' ) ); ?>" class="litespeed-title-right-icon"><?php echo esc_html( Lang::title( $guest_option ) ); ?></a>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=litespeed-general#settings' ) ); ?>" class="litespeed-title-right-icon"><?php echo esc_html( Lang::title( $guest_option ) ); ?></a>
 								<?php if ( $this->conf( $guest_option ) ) : ?>
 									<span class="litespeed-label-success litespeed-label-dashboard"><?php esc_html_e( 'ON', 'litespeed-cache' ); ?></span>
 								<?php else : ?>

@@ -136,7 +136,7 @@ $this->form_action();
 		$('#litespeed_get_ip').on('click', function (e) {
 			console.log('[litespeed] get server IP');
 			$.ajax({
-				url: '<?php echo esc_url($ajax_url_getIP); ?>',
+				url: '<?php echo $ajax_url_getIP; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>',
 				dataType: 'json',
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>');

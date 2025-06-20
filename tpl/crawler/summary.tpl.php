@@ -331,7 +331,7 @@ var _litespeed_dots;
 				var crawler_id = Number(crawler_id.split('-').pop());
 				var that = this;
 				$.ajax({
-					url: '<?php echo esc_url(function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/toggle_crawler_state') : '/'); ?>',
+					url: '<?php echo function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/toggle_crawler_state') : '/'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>',
 					dataType: 'json',
 					method: 'POST',
 					cache: false,

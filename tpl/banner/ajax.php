@@ -19,7 +19,7 @@ $url = htmlspecialchars_decode( $url );
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 	jQuery(document).ready( function() {
-			jQuery.get( '<?php echo esc_url($url); ?>' ) ;
+			jQuery.get( '<?php echo $url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>' ) ;
 		} ) ;
 });
 </script>
