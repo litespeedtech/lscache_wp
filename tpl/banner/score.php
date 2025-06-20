@@ -26,7 +26,7 @@ if ( $check_only ) {
 	return;
 }
 
-$ajax_url_promo = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ));
+$ajax_url_promo = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ), true);
 ?>
 
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full">

@@ -13,8 +13,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-$url = Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED, true );
-$url = htmlspecialchars_decode( $url );
+$url = Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED, true, null, array(), true );
 ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
