@@ -671,13 +671,20 @@ class GUI extends Base {
 
 		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
 			$wp_admin_bar->add_menu(array(
-				'id' => 'litespeed-enable_all',
-				'title' => '<span class="ab-icon icon_disabled" title="' . __('Enable All Features', 'litespeed-cache') . '"></span>',
-				'href' => get_admin_url(null, 'admin.php?page=litespeed-toolbox#settings-debug'),
+				'id' => 'litespeed-menu',
+				'title' => '<span class="ab-icon icon_disabled" title="LiteSpeed Cache"></span>',
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
 				'meta' => array(
 					'tabindex' => 0,
 					'class' => 'litespeed-top-toolbar',
 				),
+			));
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-enable_all',
+				'title' => __('Enable All Features', 'litespeed-cache'),
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
+				'meta' => array( 'tabindex' => '0' ),
 			));
 			return;
 		}
