@@ -262,7 +262,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **API** Allowed overriding `litespeed_ui_events` via window property. (Zsombor Franczia PR#865)
 * **Debug** Allowed debug in multisite network level. (PR#861)
 * **Vary** Fixed possible duplicate webp vary in chrome mimicked iPhone visit.
-* **Vary** Used simpler rewrite rule to check next gen image format support.
+* 🐞**Vary** Used simpler rewrite rule to check next gen image format support.
 * **Misc** Simplified admin JS.
 
 = 7.2 - Jun 18 2025 =

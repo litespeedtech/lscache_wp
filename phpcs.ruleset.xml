@@ -62,11 +62,11 @@
     <rule ref="WordPress.Security" />
     <rule ref="WordPress.NamingConventions" />
     <rule ref="WordPress.PHP" />
-    <file>cli/</file>
-    <file>lib/</file>
-    <file>src/</file>
+    <!-- <file>cli/</file> -->
+    <!-- <file>lib/</file> -->
+    <!-- <file>src/</file> -->
     <file>tpl/</file>
-    <file>thirdparty/</file>
+    <!-- <file>thirdparty/</file> -->
     <file>autoload.php</file>
-    <file>litespeed-cache.php</file>
+    <!-- <file>litespeed-cache.php</file> -->
 </ruleset>
