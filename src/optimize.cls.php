@@ -551,7 +551,10 @@ class Optimize extends Base {
 			return;
 		}
 
-		$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		if (!defined('LITESPEED_JS_DELAY_LIB_LOADED')) {
+			define('LITESPEED_JS_DELAY_LIB_LOADED', true);
+			$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		}
 	}
 
 	/**

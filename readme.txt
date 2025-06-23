@@ -263,6 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Debug** Allowed debug in multisite network level. (PR#861)
 * **Vary** Fixed possible duplicate webp vary in chrome mimicked iPhone visit.
 * 🐞**Vary** Used simpler rewrite rule to check next gen image format support.
+* 🐞**Page Optimize** Added the missing JS Delay lib when page optimization is off while iframe lazyload is on. (Zsombor Franczia #867)
 * **Misc** Simplified admin JS.
 
 = 7.2 - Jun 18 2025 =
