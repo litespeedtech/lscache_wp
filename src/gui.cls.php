@@ -670,7 +670,15 @@ class GUI extends Base {
 		global $wp_admin_bar;
 
 		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
-			// TODO: Add the Enable All Features link
+			$wp_admin_bar->add_menu(array(
+				'id' => 'litespeed-enable_all',
+				'title' => '<span class="ab-icon icon_disabled" title="' . __('Enable All Features', 'litespeed-cache') . '"></span>',
+				'href' => get_admin_url(null, 'admin.php?page=litespeed-toolbox#settings-debug'),
+				'meta' => array(
+					'tabindex' => 0,
+					'class' => 'litespeed-top-toolbar',
+				),
+			));
 			return;
 		}
 
