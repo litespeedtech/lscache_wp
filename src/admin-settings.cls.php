@@ -84,8 +84,8 @@ class Admin_Settings extends Base {
 			}
 			switch ($id) {
 				case self::O_CRAWLER_ROLES: // Don't allow Editor/admin to be used in crawler role simulator
-                $data = Utility::sanitize_lines($data);
-                if ($data) {
+					$data = Utility::sanitize_lines($data);
+					if ($data) {
 						foreach ($data as $k => $v) {
                         if (user_can($v, 'edit_posts')) {
 								$msg = sprintf(
@@ -99,57 +99,59 @@ class Admin_Settings extends Base {
 					}
 					break;
 				case self::O_CDN_MAPPING:
-            /**
-             * CDN setting
-             *
-             * Raw data format:
-             *      cdn-mapping[url][] = 'xxx'
-             *      cdn-mapping[url][2] = 'xxx2'
-             *      cdn-mapping[inc_js][] = 1
-             *
-             * Final format:
-             *      cdn-mapping[ 0 ][ url ] = 'xxx'
-             *      cdn-mapping[ 2 ][ url ] = 'xxx2'
-             */
-            if ($data) {
-              foreach ($data as $k => $v) {
-                  if ($child == self::CDN_MAPPING_FILETYPE) {
-                    $v = Utility::sanitize_lines($v);
-                    // Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
-                    $remove_type = apply_filters('litespeed_cdn_save_filetypes_remove', array(
-                      '.jpg',
-                      '.jpeg',
-                      '.png',
-                      '.gif',
-                      '.svg',
-                      '.webp',
-                      '.avif',
-                      '.css',
-                      '.js',
-                    ));
-                    $v = array_diff($v, $remove_type);
-                  }
-                  if ($child == self::CDN_MAPPING_URL) {
-                    // If not a valid URL, turn off CDN
-                    if (strpos($v, 'https://') !== 0) {
-                      self::debug('❌ CDN mapping set to OFF due to invalid URL');
-                      $the_matrix[self::O_CDN] = false;
-                    }
-                    $v = trailingslashit($v);
-                  }
-                  if (in_array($child, array( self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ))) {
-                    // Because these can't be auto detected in `config->update()`, need to format here
-                    $v = $v === 'false' ? 0 : (bool) $v;
-                  }
+					/**
+					 * CDN setting
+					 *
+					 * Raw data format:
+					 * 		cdn-mapping[url][] = 'xxx'
+					 * 		cdn-mapping[url][2] = 'xxx2'
+					 * 		cdn-mapping[inc_js][] = 1
+					 *
+					 * Final format:
+					 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
+					 * 		cdn-mapping[ 2 ][ url ] = 'xxx2'
+					 */
+					if ($data && is_array($data)) {
+						foreach ($data as $k => $v) {
+							if ($child == self::CDN_MAPPING_FILETYPE) {
+								$v = Utility::sanitize_lines($v);
 
-                  if (empty($data2[$k])) {
-                    $data2[$k] = array();
-                  }
-                  $data2[$k][$child] = $v;
-              }
-            }
+								// Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
+								$remove_type = apply_filters('litespeed_cdn_save_filetypes_remove', array(
+									'.jpg',
+									'.jpeg',
+									'.png',
+									'.gif',
+									'.svg',
+									'.webp',
+									'.avif',
+									'.css',
+									'.js',
+								));
+								$v = array_values(array_diff($v, $remove_type));
+							}
+							if ($child == self::CDN_MAPPING_URL) {
+								# If not a valid URL, turn off CDN
+								if (strpos($v, 'https://') !== 0) {
+									self::debug('❌ CDN mapping set to OFF due to invalid URL');
+									$the_matrix[self::O_CDN] = false;
+								}
+								$v = trailingslashit($v);
+							}
+							if (in_array($child, array(self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS))) {
+								// Because these can't be auto detected in `config->update()`, need to format here
+								$v = $v === 'false' ? 0 : (bool) $v;
+							}
 
-            $data = $data2;
+							if (empty($data2[$k])) {
+								$data2[$k] = array();
+							}
+
+							$data2[$k][$child] = $v;
+						}
+					}
+
+					$data = $data2;
 					break;
 
 				case self::O_CRAWLER_COOKIES:
@@ -221,7 +223,7 @@ class Admin_Settings extends Base {
 
 			$the_matrix[$id] = $data;
 		}
-
+		
 		// Special handler for CDN/Crawler 2d list to drop empty rows
 		foreach ($the_matrix as $id => $data) {
 			/**
