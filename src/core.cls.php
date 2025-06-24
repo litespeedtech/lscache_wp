@@ -662,7 +662,7 @@ class Core extends Root {
 		}
 
 		if (!empty($this->_footer_comment)) {
-			self::debug('[footer comment] ' . $this->_footer_comment);
+			self::debug("[footer comment]\n". trim($this->_footer_comment));
 		}
 
 		if ($is_forced) {
