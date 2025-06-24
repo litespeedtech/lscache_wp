@@ -1,4 +1,12 @@
 <?php
+/**
+ * LiteSpeed Cache Debug Settings Interface
+ *
+ * Renders the debug settings interface for LiteSpeed Cache, allowing users to configure debugging options and view the site with specific settings bypassed.
+ *
+ * @package LiteSpeed
+ * @since 1.0.0
+ */
 
 namespace LiteSpeed;
 
@@ -8,20 +16,19 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Debug Helpers', 'litespeed-cache' ); ?>
+	<?php esc_html_e( 'Debug Helpers', 'litespeed-cache' ); ?>
 </h3>
 
-<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=before_optm'; ?>" class="button button-success" target="_blank">
-	<?php echo __( 'View Site Before Optimization', 'litespeed-cache' ); ?>
+<a href="<?php echo esc_url( home_url( '/' ) . '?' . Router::ACTION . '=before_optm' ); ?>" class="button button-success" target="_blank">
+	<?php esc_html_e( 'View Site Before Optimization', 'litespeed-cache' ); ?>
 </a>
 
-<a href="<?php echo home_url( '/' ) . '?' . Router::ACTION . '=' . Core::ACTION_QS_NOCACHE; ?>" class="button button-success" target="_blank">
-	<?php echo __( 'View Site Before Cache', 'litespeed-cache' ); ?>
+<a href="<?php echo esc_url( home_url( '/' ) . '?' . Router::ACTION . '=' . Core::ACTION_QS_NOCACHE ); ?>" class="button button-success" target="_blank">
+	<?php esc_html_e( 'View Site Before Cache', 'litespeed-cache' ); ?>
 </a>
-
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Debug Settings', 'litespeed-cache' ); ?>
+	<?php esc_html_e( 'Debug Settings', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#debug-settings-tab' ); ?>
 </h3>
 
@@ -29,48 +36,48 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_DISABLE_ALL; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_DISABLE_ALL; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'This will disable LSCache and all optimization features for debug purpose.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'This will disable LSCache and all optimization features for debug purpose.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id, array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ), __( 'Admin IP Only', 'litespeed-cache' ) ) ); ?>
+				<?php $this->build_switch( $option_id, array( esc_html__( 'OFF', 'litespeed-cache' ), esc_html__( 'ON', 'litespeed-cache' ), esc_html__( 'Admin IP Only', 'litespeed-cache' ) ) ); ?>
 				<div class="litespeed-desc">
-					<?php printf( __( 'Outputs to a series of files in the %s directory.', 'litespeed-cache' ), '<code>wp-content/litespeed/debug</code>' ); ?>
-					<?php echo __( 'To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache' ); ?>
-					<?php echo __( 'The Admin IP option will only output log messages on requests from admin IPs listed below.', 'litespeed-cache' ); ?>
+					<?php printf( esc_html__( 'Outputs to a series of files in the %s directory.', 'litespeed-cache' ), '<code>wp-content/litespeed/debug</code>' ); ?>
+					<?php esc_html_e( 'To prevent filling up the disk, this setting should be OFF when everything is working.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'The Admin IP option will only output log messages on requests from admin IPs listed below.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_IPS; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_IPS; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id, 50 ); ?>
+				<?php $this->build_textarea( $option_id, 50 ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ); ?>
-					<?php echo __( 'Your IP', 'litespeed-cache' ); ?>: <code><?php echo Router::get_ip(); ?></code>
-					<?php $this->_validate_ip( $id ); ?>
+					<?php esc_html_e( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Your IP', 'litespeed-cache' ); ?>: <code><?php echo esc_html( Router::get_ip() ); ?></code>
+					<?php $this->_validate_ip( $option_id ); ?>
 					<br />
 					<?php
 					Doc::learn_more(
 						'https://docs.litespeedtech.com/lscache/lscwp/admin/#admin-ip-commands',
-						__( 'More information about the available commands can be found here.', 'litespeed-cache' )
+						esc_html__( 'More information about the available commands can be found here.', 'litespeed-cache' )
 					);
 					?>
 				</div>
@@ -79,54 +86,54 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_LEVEL; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_LEVEL; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id, array( __( 'Basic', 'litespeed-cache' ), __( 'Advanced', 'litespeed-cache' ) ) ); ?>
+				<?php $this->build_switch( $option_id, array( esc_html__( 'Basic', 'litespeed-cache' ), esc_html__( 'Advanced', 'litespeed-cache' ) ) ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Advanced level will log more details.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Advanced level will log more details.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_FILESIZE; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_FILESIZE; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_input( $id, 'litespeed-input-short' ); ?> <?php echo __( 'MB', 'litespeed-cache' ); ?>
+				<?php $this->build_input( $option_id, 'litespeed-input-short' ); ?> <?php esc_html_e( 'MB', 'litespeed-cache' ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Specify the maximum size of the log file.', 'litespeed-cache' ); ?>
-					<?php $this->recommended( $id ); ?>
-					<?php $this->_validate_ttl( $id, 3, 3000 ); ?>
+					<?php esc_html_e( 'Specify the maximum size of the log file.', 'litespeed-cache' ); ?>
+					<?php $this->recommended( $option_id ); ?>
+					<?php $this->_validate_ttl( $option_id, 3, 3000 ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_COLLAPSE_QS; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_COLLAPSE_QS; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Shorten query strings in the debug log to improve readability.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Shorten query strings in the debug log to improve readability.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_INC; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_INC; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id ); ?>
+				<?php $this->build_textarea( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Only log listed pages.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Only log listed pages.', 'litespeed-cache' ); ?>
 					<?php $this->_uri_usage_example(); ?>
 				</div>
 			</td>
@@ -134,13 +141,13 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_EXC; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_EXC; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id ); ?>
+				<?php $this->build_textarea( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Prevent any debug log of listed pages.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Prevent any debug log of listed pages.', 'litespeed-cache' ); ?>
 					<?php $this->_uri_usage_example(); ?>
 				</div>
 			</td>
@@ -148,21 +155,18 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 
 		<tr>
 			<th>
-				<?php $id = Base::O_DEBUG_EXC_STRINGS; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_DEBUG_EXC_STRINGS; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id ); ?>
+				<?php $this->build_textarea( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __( 'Prevent writing log entries that include listed strings.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Prevent writing log entries that include listed strings.', 'litespeed-cache' ); ?>
 					<?php Doc::one_per_line(); ?>
 				</div>
 			</td>
 		</tr>
-
 	</tbody>
 </table>
 
-<?php
-
-$this->form_end();
+<?php $this->form_end(); ?>

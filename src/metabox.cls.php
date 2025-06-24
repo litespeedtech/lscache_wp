@@ -60,7 +60,7 @@ class Metabox extends Root {
 			self::debug('post type public=false, bypass add_meta_boxes');
 			return;
 		}
-		add_meta_box('litespeed_meta_boxes', __('LiteSpeed Options', 'litespeed-cache'), array( $this, 'meta_box_options' ), $post_type, 'side', 'core');
+		add_meta_box('litespeed_meta_boxes', 'LiteSpeed', array( $this, 'meta_box_options' ), $post_type, 'side', 'core');
 	}
 
 	/**

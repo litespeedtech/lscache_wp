@@ -803,6 +803,8 @@ class ESI extends Root {
 	 * @since 1.1.3
 	 */
 	public function load_admin_bar_block( $params ) {
+		global $wp_the_query;
+
 		if (!empty($params['ref'])) {
 			$ref_qs = parse_url($params['ref'], PHP_URL_QUERY);
 			if (!empty($ref_qs)) {
@@ -815,8 +817,11 @@ class ESI extends Root {
 				}
 			}
 		}
+
 		// Needed when permalink structure is "Plain"
-		wp();
+		if (!isset($wp_the_query)) {
+			wp();
+		}
 
 		wp_admin_bar_render();
 		if (!$this->conf(Base::O_ESI_CACHE_ADMBAR)) {

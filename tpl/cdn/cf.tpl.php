@@ -1,4 +1,10 @@
 <?php
+/**
+ * LiteSpeed Cache Cloudflare Settings
+ *
+ * @package LiteSpeed
+ * @since 1.0.0
+ */
 
 namespace LiteSpeed;
 
@@ -8,7 +14,7 @@ $this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __( 'Cloudflare Settings', 'litespeed-cache' ); ?>
+	<?php esc_html_e( 'Cloudflare Settings', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/' ); ?>
 </h3>
 
@@ -16,47 +22,42 @@ $this->form_action();
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN_CLOUDFLARE; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_CLOUDFLARE; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php printf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+					<?php printf( esc_html__( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 				</div>
 				<div class="litespeed-block">
 					<div class='litespeed-col'>
-						<label class="litespeed-form-label"><?php echo __( 'Global API Key / API Token', 'litespeed-cache' ); ?></label>
-
+						<label class="litespeed-form-label"><?php esc_html_e( 'Global API Key / API Token', 'litespeed-cache' ); ?></label>
 						<?php $this->build_input( Base::O_CDN_CLOUDFLARE_KEY ); ?>
 						<div class="litespeed-desc">
-							<?php printf( __( 'Your API key / token is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ); ?>
-							<?php printf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"', 'Cloudflare' ); ?>
-							<?php printf( __( 'Recommended to generate the token from Cloudflare API token template "WordPress".', 'litespeed-cache' ) ); ?>
+							<?php printf( esc_html__( 'Your API key / token is used to access %s APIs.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+							<?php printf( esc_html__( 'Get it from %s.', 'litespeed-cache' ), '<a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener">Cloudflare</a>' ); ?>
+							<?php esc_html_e( 'Recommended to generate the token from Cloudflare API token template "WordPress".', 'litespeed-cache' ); ?>
 						</div>
 					</div>
-
 					<div class='litespeed-col'>
-						<label class="litespeed-form-label"><?php echo __( 'Email Address', 'litespeed-cache' ); ?></label>
-
+						<label class="litespeed-form-label"><?php esc_html_e( 'Email Address', 'litespeed-cache' ); ?></label>
 						<?php $this->build_input( Base::O_CDN_CLOUDFLARE_EMAIL ); ?>
 						<div class="litespeed-desc">
-							<?php printf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
-							<?php printf( __( 'Optional when API token used.', 'litespeed-cache' ) ); ?>
+							<?php printf( esc_html__( 'Your Email address on %s.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+							<?php esc_html_e( 'Optional when API token used.', 'litespeed-cache' ); ?>
 						</div>
 					</div>
-
 					<div class='litespeed-col'>
-						<label class="litespeed-form-label"><?php echo __( 'Domain', 'litespeed-cache' ); ?></label>
-
+						<label class="litespeed-form-label"><?php esc_html_e( 'Domain', 'litespeed-cache' ); ?></label>
 						<?php
 						$cf_zone = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE );
 						$cls     = $cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning';
 						$this->build_input( Base::O_CDN_CLOUDFLARE_NAME, $cls );
 						?>
 						<div class="litespeed-desc">
-							<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ); ?>
-							<?php echo __( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ); ?>
+							<?php esc_html_e( 'You can just type part of the domain.', 'litespeed-cache' ); ?>
+							<?php esc_html_e( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ); ?>
 						</div>
 					</div>
 				</div>
@@ -64,89 +65,100 @@ $this->form_action();
 		</tr>
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN_CLOUDFLARE_CLEAR; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_CLOUDFLARE_CLEAR; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php printf( __( 'Clear %s cache when "Purge All" is run.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+					<?php printf( esc_html__( 'Clear %s cache when "Purge All" is run.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 				</div>
 			</td>
 		</tr>
-
 	</tbody>
 </table>
 
 <?php
 $this->form_end();
 $cf_on     = $this->conf( Base::O_CDN_CLOUDFLARE );
-$cf_domain = $this->conf( Base::O_CDN_CLOUDFLARE_NAME ) ?: '-';
-$cf_zone   = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE ) ?: '-';
+$cf_domain = $this->conf( Base::O_CDN_CLOUDFLARE_NAME );
+$cf_zone   = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE );
+if ( ! $cf_domain ) {
+	$cf_domain = '-';
+}
+if ( ! $cf_zone ) {
+	$cf_zone = '-';
+}
 
 $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() );
-
 ?>
 
-<h3 class="litespeed-title"><?php echo __( 'Cloudflare', 'litespeed-cache' ); ?></h3>
+<h3 class="litespeed-title"><?php esc_html_e( 'Cloudflare', 'litespeed-cache' ); ?></h3>
 
 <?php if ( ! $cf_on ) : ?>
 	<div class="litespeed-callout notice notice-error inline">
-		<h4><?php echo __( 'WARNING', 'litespeed-cache' ); ?></h4>
+		<h4><?php esc_html_e( 'WARNING', 'litespeed-cache' ); ?></h4>
 		<p>
-			<?php echo __( 'To enable the following functionality, turn ON Cloudflare API in CDN Settings.', 'litespeed-cache' ); ?>
+			<?php esc_html_e( 'To enable the following functionality, turn ON Cloudflare API in CDN Settings.', 'litespeed-cache' ); ?>
 		</p>
 	</div>
 <?php endif; ?>
 
-<p><?php echo __( 'Cloudflare Domain', 'litespeed-cache' ); ?>: <code><?php echo esc_textarea( $cf_domain ); ?></code></p>
-<p><?php echo __( 'Cloudflare Zone', 'litespeed-cache' ); ?>: <code><?php echo esc_textarea( $cf_zone ); ?></code></p>
+<p><?php esc_html_e( 'Cloudflare Domain', 'litespeed-cache' ); ?>: <code><?php echo esc_textarea( $cf_domain ); ?></code></p>
+<p><?php esc_html_e( 'Cloudflare Zone', 'litespeed-cache' ); ?>: <code><?php echo esc_textarea( $cf_zone ); ?></code></p>
 
 <p>
-	<b><?php echo __( 'Development Mode', 'litespeed-cache' ); ?>:</b>
-	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_ON ); ?>" class="button litespeed-btn-warning">
-		<?php echo __( 'Turn ON', 'litespeed-cache' ); ?>
+	<b><?php esc_html_e( 'Development Mode', 'litespeed-cache' ); ?>:</b>
+	<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_ON ) ); ?>" class="button litespeed-btn-warning">
+		<?php esc_html_e( 'Turn ON', 'litespeed-cache' ); ?>
 	</a>
-	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_OFF ); ?>" class="button litespeed-btn-warning">
-		<?php echo __( 'Turn OFF', 'litespeed-cache' ); ?>
+	<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_SET_DEVMODE_OFF ) ); ?>" class="button litespeed-btn-warning">
+		<?php esc_html_e( 'Turn OFF', 'litespeed-cache' ); ?>
 	</a>
-	<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_GET_DEVMODE ); ?>" class="button litespeed-btn-success">
-		<?php echo __( 'Check Status', 'litespeed-cache' ); ?>
+	<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_GET_DEVMODE ) ); ?>" class="button litespeed-btn-success">
+		<?php esc_html_e( 'Check Status', 'litespeed-cache' ); ?>
 	</a>
 
 	<?php if ( $curr_status ) : ?>
 		<span class="litespeed-desc">
 			<?php
 			if ( time() >= $curr_status['devmode_expired'] ) {
-				$expired_at             = date( 'm/d/Y H:i:s', $curr_status['devmode_expired'] + LITESPEED_TIME_OFFSET );
+				$expired_at             = gmdate( 'm/d/Y H:i:s', $curr_status['devmode_expired'] + LITESPEED_TIME_OFFSET );
 				$curr_status['devmode'] = 'OFF';
-				printf( __( 'Current status is %1$s since %2$s.', 'litespeed-cache' ), '<code>' . strtoupper( $curr_status['devmode'] ) . '</code>', '<code>' . $expired_at . '</code>' );
+				printf(
+					esc_html__( 'Current status is %1$s since %2$s.', 'litespeed-cache' ),
+					'<code>' . esc_html( strtoupper( $curr_status['devmode'] ) ) . '</code>',
+					'<code>' . esc_html( $expired_at ) . '</code>'
+				);
 			} else {
 				$expired_at = $curr_status['devmode_expired'] - time();
 				$expired_at = Utility::readable_time( $expired_at, 3600 * 3, true );
-				?>
-				<?php printf( __( 'Current status is %s.', 'litespeed-cache' ), '<code>' . strtoupper( $curr_status['devmode'] ) . '</code>' ); ?>
-				<?php printf( __( 'Development mode will be automatically turned off in %s.', 'litespeed-cache' ), '<code>' . $expired_at . '</code>' ); ?>
-				<?php
+				printf(
+					esc_html__( 'Current status is %s.', 'litespeed-cache' ),
+					'<code>' . esc_html( strtoupper( $curr_status['devmode'] ) ) . '</code>'
+				);
+				printf(
+					esc_html__( 'Development mode will be automatically turned off in %s.', 'litespeed-cache' ),
+					'<code>' . esc_html( $expired_at ) . '</code>'
+				);
 			}
 			?>
 		</span>
 	<?php endif; ?>
-
-<p class="litespeed-desc">
-	<?php echo __( 'Temporarily bypass Cloudflare cache. This allows changes to the origin server to be seen in realtime.', 'litespeed-cache' ); ?>
-	<?php echo __( 'Development Mode will be turned off automatically after three hours.', 'litespeed-cache' ); ?>
-	<a href="https://support.cloudflare.com/hc/en-us/articles/200168246" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ); ?></a>
-</p>
+	<br>
+	<?php esc_html_e( 'Temporarily bypass Cloudflare cache. This allows changes to the origin server to be seen in realtime.', 'litespeed-cache' ); ?>
+	<br>
+	<?php esc_html_e( 'Development Mode will be turned off automatically after three hours.', 'litespeed-cache' ); ?>
+	<?php printf( esc_html__( '%1$sLearn More%2$s', 'litespeed-cache' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200168246" target="_blank" rel="noopener">', '</a>' ); ?>
 </p>
 
 <p>
-	<b><?php echo __( 'Cloudflare Cache', 'litespeed-cache' ); ?>:</b>
+	<b><?php esc_html_e( 'Cloudflare Cache', 'litespeed-cache' ); ?>:</b>
 	<?php if ( ! $cf_on ) : ?>
 		<a href="#" class="button button-secondary disabled">
-		<?php else : ?>
-			<a href="<?php echo Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ); ?>" class="button litespeed-btn-danger">
-			<?php endif; ?>
-			<?php echo __( 'Purge Everything', 'litespeed-cache' ); ?>
-			</a>
+	<?php else : ?>
+		<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_CDN_CLOUDFLARE, CDN\Cloudflare::TYPE_PURGE_ALL ) ); ?>" class="button litespeed-btn-danger">
+	<?php endif; ?>
+		<?php esc_html_e( 'Purge Everything', 'litespeed-cache' ); ?>
+	</a>
 </p>

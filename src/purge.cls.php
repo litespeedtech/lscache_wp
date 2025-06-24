@@ -1062,6 +1062,7 @@ class Purge extends Base {
 	private function _append_prefix( $purge_tags, $is_private = false ) {
 		$curr_bid = is_multisite() ? get_current_blog_id() : '';
 
+		$purge_tags = apply_filters('litespeed_purge_tags', $purge_tags, $is_private);
 		if (!in_array('*', $purge_tags)) {
 			$tags = array();
 			foreach ($purge_tags as $val) {

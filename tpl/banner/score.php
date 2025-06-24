@@ -25,6 +25,8 @@ $this->_promo_true = true;
 if ( $check_only ) {
 	return;
 }
+
+$ajax_url_promo = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ), true);
 ?>
 
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full">
@@ -77,7 +79,7 @@ if ( $check_only ) {
 								<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove"><?php esc_html_e( 'Before', 'litespeed-cache' ); ?></p>
 							</div>
 							<div class="litespeed-promo-score" style="margin-top: -5px;">
-								<?php echo wp_kses_post( GUI::pie( esc_html( $health_scores['score_before'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_before'] ) ) ) ); ?>
+								<?php echo wp_kses( GUI::pie( esc_html( $health_scores['score_before'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_before'] ) ) ), GUI::allowed_svg_tags() ); ?>
 							</div>
 						</div>
 						<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -85,7 +87,7 @@ if ( $check_only ) {
 								<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove"><?php esc_html_e( 'After', 'litespeed-cache' ); ?></p>
 							</div>
 							<div class="litespeed-promo-score" style="margin-top: -5px;">
-								<?php echo wp_kses_post( GUI::pie( esc_html( $health_scores['score_after'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_after'] ) ) ) ); ?>
+								<?php echo wp_kses( GUI::pie( esc_html( $health_scores['score_after'] ), 45, false, true, 'litespeed-pie-' . esc_attr( $this->get_cls_of_pagescore( $health_scores['score_after'] ) ) ), GUI::allowed_svg_tags() ); ?>
 							</div>
 						</div>
 						<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -140,3 +142,19 @@ if ( $check_only ) {
 		<a href="<?php echo esc_url( $dismiss_url ); ?>" class="litespeed-notice-dismiss"><?php esc_html_e( 'Dismiss', 'litespeed-cache' ); ?></a>
 	</div>
 </div>
+
+<script>
+(function ($) {
+	jQuery(document).ready(function () {
+		/** Promo banner **/
+		$('#litespeed-promo-done').on('click', function (event) {
+			$('.litespeed-banner-promo-full').slideUp();
+			$.get('<?php echo $ajax_url_promo;// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>&done=1');
+		});
+		$('#litespeed-promo-later').on('click', function (event) {
+			$('.litespeed-banner-promo-full').slideUp();
+			$.get('<?php echo $ajax_url_promo;// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
+		});
+	});
+})(jQuery);
+</script>

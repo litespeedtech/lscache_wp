@@ -67,9 +67,7 @@ class Admin_Display extends Base {
 			$manage = 'manage_options';
 		}
 		if (current_user_can($manage)) {
-			if (!defined('LITESPEED_DISABLE_ALL') || !LITESPEED_DISABLE_ALL) {
-				add_action('wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ));
-			}
+			add_action('wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ));
 
 			// `admin_notices` is after `admin_enqueue_scripts`
 			// @see wp-admin/admin-header.php
@@ -187,12 +185,6 @@ class Admin_Display extends Base {
 			$localize_data['ajax_url_dismiss_ruleconflict'] = $ajax_url;
 		}
 
-		$promo_tag = GUI::cls()->show_promo(true);
-		if ($promo_tag) {
-			$ajax_url_promo                  = Utility::build_url(Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ));
-			$localize_data['ajax_url_promo'] = $ajax_url_promo;
-		}
-
 		// Injection to LiteSpeed pages
 		global $pagenow;
 		if ($pagenow == 'admin.php' && !empty($_GET['page']) && (strpos($_GET['page'], 'litespeed-') === 0 || $_GET['page'] == 'litespeed')) {
@@ -242,18 +234,6 @@ class Admin_Display extends Base {
 				$localize_data['lang']['off']                  = __('OFF', 'litespeed-cache');
 				empty($localize_data['ids']) && ($localize_data['ids'] = array());
 				$localize_data['ids']['cdn_mapping'] = self::O_CDN_MAPPING;
-			}
-
-			// If on Server IP setting page, append getIP link
-			if ($_GET['page'] == 'litespeed-general') {
-				$localize_data['ajax_url_getIP'] = function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/tool/check_ip') : '/';
-				$localize_data['nonce']          = wp_create_nonce('wp_rest');
-			}
-
-			// Activate or deactivate a specific crawler
-			if ($_GET['page'] == 'litespeed-crawler') {
-				$localize_data['ajax_url_crawler_switch'] = function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/toggle_crawler_state') : '/';
-				$localize_data['nonce']                   = wp_create_nonce('wp_rest');
 			}
 		}
 
@@ -1299,7 +1279,7 @@ class Admin_Display extends Base {
 	 * @since 7.1
 	 */
 	public static function has_qc_hide_banner() {
-		return isset($_COOKIE[self::COOKIE_QC_HIDE_BANNER]);
+		return isset($_COOKIE[self::COOKIE_QC_HIDE_BANNER]) && time() - $_COOKIE[self::COOKIE_QC_HIDE_BANNER] < 86400 * 90;
 	}
 
 	/**

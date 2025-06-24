@@ -617,7 +617,7 @@ class Utility extends Root {
 	 * @access public
 	 * @return string The built url.
 	 */
-	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = array() ) {
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = array(), $unescape = false ) {
 		$prefix = '?';
 
 		if ($page === '_ori') {
@@ -676,6 +676,10 @@ class Utility extends Root {
 			self::compatibility();
 			$url = http_build_url($url);
 			$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+		}
+
+		if ($unescape) {
+			$url = wp_specialchars_decode($url);
 		}
 
 		return $url;

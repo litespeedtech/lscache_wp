@@ -164,7 +164,7 @@ class Cloud extends Base {
 		$echobox  = self::post(self::API_REST_ECHO, $req_data);
 		if ($echobox === false) {
 			self::debugErr('REST Echo Failed!');
-			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
+			$msg = __("QUIC.cloud's access to your WP REST API seems to be blocked.", 'litespeed-cache');
 			Admin_Display::error($msg);
 			wp_redirect($ref);
 			return;
@@ -247,7 +247,7 @@ class Cloud extends Base {
 		$echobox  = self::post(self::API_REST_ECHO, $req_data);
 		if ($echobox === false) {
 			self::debugErr('REST Echo Failed!');
-			$msg = __('Your WP REST API seems blocked our QUIC.cloud server calls.', 'litespeed-cache');
+			$msg = __("QUIC.cloud's access to your WP REST API seems to be blocked.", 'litespeed-cache');
 			Admin_Display::error($msg);
 			return;
 		}
@@ -1907,6 +1907,7 @@ class Cloud extends Base {
 	public function ping() {
 		$resp = array(
 			'v_lscwp' => Core::VER,
+			'v_lscwp_db' => $this->conf(self::_VER),
 			'v_php' => PHP_VERSION,
 			'v_wp' => $GLOBALS['wp_version'],
 			'home_url' => home_url(),

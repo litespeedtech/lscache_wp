@@ -85,6 +85,25 @@ class GUI extends Base {
 	}
 
 	/**
+	 * Display the tab list
+	 *
+	 * @since 7.3
+	 */
+	public static function display_tab_list( $tabs ) {
+		$i = 1;
+		foreach ( $tabs as $k => $val ) {
+			$accesskey = $i <= 9 ? $i : '';
+			printf(
+				'<a class="litespeed-tab nav-tab" href="#%1$s" data-litespeed-tab="%1$s" litespeed-accesskey="%2$s">%3$s</a>',
+				esc_attr( $k ),
+				esc_attr( $accesskey ),
+				esc_html( $val )
+			);
+			++$i;
+		}
+	}
+
+	/**
 	 * Display a pie
 	 *
 	 * @since 1.6.6
@@ -103,6 +122,69 @@ class GUI extends Base {
 			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
+	}
+
+	/**
+	 * Allow svg html filters
+	 *
+	 * @since 7.3
+	 */
+	public static function allowed_svg_tags() {
+		return array(
+			'svg'   => array(
+				'width'   => true,
+				'height'  => true,
+				'viewbox' => true, // Note: SVG standard uses 'viewBox', but wp_kses normalizes to lowercase.
+				'xmlns'   => true,
+				'class'   => true,
+				'id'      => true,
+			),
+			'circle' => array(
+				'cx'               => true,
+				'cy'               => true,
+				'r'                => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'class'            => true,
+				'stroke-width'     => true,
+				'stroke-dasharray' => true,
+			),
+			'path'  => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'text'  => array(
+				'x'            => true,
+				'y'            => true,
+				'dx'           => true,
+				'dy'           => true,
+				'font-size'    => true,
+				'font-family'  => true,
+				'font-weight'  => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+				'text-anchor'  => true,
+				'class'        => true,
+				'id'           => true,
+			),
+			'g'     => array(
+				'transform'    => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+				'class'        => true,
+				'id'           => true,
+			),
+			'button' => array(
+				'type'               => true,
+				'data-balloon-break' => true,
+				'data-balloon-pos'   => true,
+				'aria-label'         => true,
+				'class'              => true,
+			),
+		);
 	}
 
 	/**
@@ -586,6 +668,26 @@ class GUI extends Base {
 	 */
 	public function backend_shortcut() {
 		global $wp_admin_bar;
+
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
+			$wp_admin_bar->add_menu(array(
+				'id' => 'litespeed-menu',
+				'title' => '<span class="ab-icon icon_disabled" title="LiteSpeed Cache"></span>',
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
+				'meta' => array(
+					'tabindex' => 0,
+					'class' => 'litespeed-top-toolbar',
+				),
+			));
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-enable_all',
+				'title' => __('Enable All Features', 'litespeed-cache'),
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
+				'meta' => array( 'tabindex' => '0' ),
+			));
+			return;
+		}
 
 		// if ( defined( 'LITESPEED_ON' ) ) {
 		$wp_admin_bar->add_menu(array(
