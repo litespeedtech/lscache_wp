@@ -2,7 +2,7 @@
 /**
  * The Third Party integration with the bbPress plugin.
  *
- * @since		1.0.5
+ * @since       1.0.5
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -10,18 +10,17 @@ defined('WPINC') || exit();
 
 use LiteSpeed\Router;
 
-class BBPress
-{
+class BBPress {
+
 	/**
 	 * Detect if bbPress is installed and if the page is a bbPress page.
 	 *
 	 * @since 1.0.5
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if (function_exists('is_bbpress')) {
-			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge'); //todo
+			add_action('litespeed_api_purge_post', __CLASS__ . '::on_purge'); // todo
 			if (apply_filters('litespeed_esi_status', false)) {
 				// don't consider private cache yet (will do if any feedback)
 				add_action('litespeed_control_finalize', __CLASS__ . '::set_control');
@@ -35,8 +34,7 @@ class BBPress
 	 * @access public
 	 * @since 1.2.0
 	 */
-	public static function set_control()
-	{
+	public static function set_control() {
 		if (!apply_filters('litespeed_control_cacheable', false)) {
 			return;
 		}
@@ -55,8 +53,7 @@ class BBPress
 	 * @access public
 	 * @param integer $post_id The post id of the page being purged.
 	 */
-	public static function on_purge($post_id)
-	{
+	public static function on_purge( $post_id ) {
 		if (!is_bbpress()) {
 			if (!function_exists('bbp_is_forum') || !function_exists('bbp_is_topic') || !function_exists('bbp_is_reply')) {
 				return;

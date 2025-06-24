@@ -2,22 +2,21 @@
 /**
  * The Third Party integration with the Avada plugin.
  *
- * @since		1.1.0
+ * @since       1.1.0
  */
 namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class Avada
-{
+class Avada {
+
 	/**
 	 * Detects if Avada is installed.
 	 *
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if (!defined('AVADA_VERSION')) {
 			return;
 		}
@@ -32,8 +31,7 @@ class Avada
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function flush()
-	{
+	public static function flush() {
 		do_action('litespeed_purge_all', '3rd avada');
 	}
 }

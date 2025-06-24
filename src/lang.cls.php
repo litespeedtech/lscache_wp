@@ -3,25 +3,24 @@
 /**
  * The language class.
  *
- * @since      	3.0
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed_Cache
+ * @subpackage  LiteSpeed_Cache/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Lang extends Base
-{
+class Lang extends Base {
+
 	/**
 	 * Get image status per status bit
 	 *
 	 * @since  3.0
 	 */
-	public static function img_status($status = null)
-	{
+	public static function img_status( $status = null ) {
 		$list = array(
 			Img_Optm::STATUS_NEW => __('Images not requested', 'litespeed-cache'),
 			Img_Optm::STATUS_RAW => __('Images ready to request', 'litespeed-cache'),
@@ -42,8 +41,7 @@ class Lang extends Base
 	 *
 	 * @since  4.7
 	 */
-	public static function maybe_translate($raw_string)
-	{
+	public static function maybe_translate( $raw_string ) {
 		$map = array(
 			'auto_alias_failed_cdn' =>
 				__('Unable to automatically add %1$s as a Domain Alias for main %2$s domain, due to potential CDN conflict.', 'litespeed-cache') .
@@ -83,8 +81,7 @@ class Lang extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function title($id)
-	{
+	public static function title( $id ) {
 		$_lang_list = array(
 			self::O_SERVER_IP => __('Server IP', 'litespeed-cache'),
 			self::O_GUEST_UAS => __('Guest Mode User Agents', 'litespeed-cache'),
@@ -108,7 +105,6 @@ class Lang extends Base
 			self::O_CACHE_COMMENTER => __('Cache Commenters', 'litespeed-cache'),
 			self::O_CACHE_REST => __('Cache REST API', 'litespeed-cache'),
 			self::O_CACHE_PAGE_LOGIN => __('Cache Login Page', 'litespeed-cache'),
-			self::O_CACHE_RES => __('Cache PHP Resources', 'litespeed-cache'),
 			self::O_CACHE_MOBILE => __('Cache Mobile', 'litespeed-cache'),
 			self::O_CACHE_MOBILE_RULES => __('List of Mobile User Agents', 'litespeed-cache'),
 			self::O_CACHE_PRIV_URI => __('Private Cached URIs', 'litespeed-cache'),
@@ -172,6 +168,7 @@ class Lang extends Base
 			self::O_OPTM_CCSS_CON => __('Critical CSS Rules', 'litespeed-cache'),
 			self::O_OPTM_CCSS_SEP_POSTTYPE => __('Separate CCSS Cache Post Types', 'litespeed-cache'),
 			self::O_OPTM_CCSS_SEP_URI => __('Separate CCSS Cache URIs', 'litespeed-cache'),
+			self::O_OPTM_CCSS_SELECTOR_WHITELIST => __('CCSS Selector Allowlist', 'litespeed-cache'),
 			self::O_OPTM_JS_DEFER_EXC => __('JS Deferred / Delayed Excludes', 'litespeed-cache'),
 			self::O_OPTM_GM_JS_EXC => __('Guest Mode JS Excludes', 'litespeed-cache'),
 			self::O_OPTM_EMOJI_RM => __('Remove WordPress Emoji', 'litespeed-cache'),
@@ -199,7 +196,7 @@ class Lang extends Base
 			self::O_MEDIA_LQIP => __('LQIP Cloud Generator', 'litespeed-cache'),
 			self::O_MEDIA_LQIP_QUAL => __('LQIP Quality', 'litespeed-cache'),
 			self::O_MEDIA_LQIP_MIN_W => __('LQIP Minimum Dimensions', 'litespeed-cache'),
-			// self::O_MEDIA_LQIP_MIN_H			=> __( 'LQIP Minimum Height', 'litespeed-cache' ),
+			// self::O_MEDIA_LQIP_MIN_H         => __( 'LQIP Minimum Height', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC => __('Generate LQIP In Background', 'litespeed-cache'),
 			self::O_MEDIA_IFRAME_LAZY => __('Lazy Load Iframes', 'litespeed-cache'),
 			self::O_MEDIA_ADD_MISSING_SIZES => __('Add Missing Sizes', 'litespeed-cache'),
@@ -207,7 +204,6 @@ class Lang extends Base
 			self::O_MEDIA_VPI_CRON => __('Viewport Images Cron', 'litespeed-cache'),
 
 			self::O_IMG_OPTM_AUTO => __('Auto Request Cron', 'litespeed-cache'),
-			self::O_IMG_OPTM_CRON => __('Auto Pull Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
@@ -247,6 +243,7 @@ class Lang extends Base
 			self::O_CDN_ORI_DIR => __('Included Directories', 'litespeed-cache'),
 			self::O_CDN_EXC => __('Exclude Path', 'litespeed-cache'),
 			self::O_CDN_CLOUDFLARE => __('Cloudflare API', 'litespeed-cache'),
+			self::O_CDN_CLOUDFLARE_CLEAR => __('Clear Cloudflare cache', 'litespeed-cache'),
 
 			self::O_CRAWLER => __('Crawler', 'litespeed-cache'),
 			self::O_CRAWLER_CRAWL_INTERVAL => __('Crawl Interval', 'litespeed-cache'),
