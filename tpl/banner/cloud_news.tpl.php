@@ -15,7 +15,7 @@ defined( 'WPINC' ) || exit;
 
 <div class="litespeed-wrap notice notice-success litespeed-banner-promo-full">
 	<div class="litespeed-banner-promo-content">
-		<h3 class="litespeed-banner-title litespeed-top15"><?php echo esc_html( $this->_summary['news.title'] ); ?></h3>
+		<h3 class="litespeed-banner-title litespeed-top15"><?php echo wp_kses_post( $this->_summary['news.title'] ); ?></h3>
 		<div class="litespeed-banner-description" style="flex-direction: column;">
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-description-content">
