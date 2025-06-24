@@ -1,4 +1,4 @@
-const litespeed_ui_events = ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart'];
+window.litespeed_ui_events = window.litespeed_ui_events || ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart'];
 var urlCreator = window.URL || window.webkitURL;
 
 // const litespeed_js_delay_timer = setTimeout( litespeed_load_delayed_js, 70 );

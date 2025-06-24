@@ -3,20 +3,20 @@
 /**
  * The PlaceHolder class
  *
- * @since 		3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Placeholder extends Base
-{
+class Placeholder extends Base {
+
 	const TYPE_GENERATE = 'generate';
-	const TYPE_CLEAR_Q = 'clear_q';
+	const TYPE_CLEAR_Q  = 'clear_q';
 
 	private $_conf_placeholder_resp;
 	private $_conf_placeholder_resp_svg;
@@ -28,7 +28,7 @@ class Placeholder extends Base
 	private $_conf_placeholder_resp_async;
 	private $_conf_ph_default;
 	private $_placeholder_resp_dict = array();
-	private $_ph_queue = array();
+	private $_ph_queue              = array();
 
 	protected $_summary;
 
@@ -37,17 +37,16 @@ class Placeholder extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function __construct()
-	{
-		$this->_conf_placeholder_resp = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_MEDIA_PLACEHOLDER_RESP);
-		$this->_conf_placeholder_resp_svg = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_SVG);
-		$this->_conf_lqip = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_MEDIA_LQIP);
-		$this->_conf_lqip_qual = $this->conf(self::O_MEDIA_LQIP_QUAL);
-		$this->_conf_lqip_min_w = $this->conf(self::O_MEDIA_LQIP_MIN_W);
-		$this->_conf_lqip_min_h = $this->conf(self::O_MEDIA_LQIP_MIN_H);
+	public function __construct() {
+		$this->_conf_placeholder_resp       = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_MEDIA_PLACEHOLDER_RESP);
+		$this->_conf_placeholder_resp_svg   = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_SVG);
+		$this->_conf_lqip                   = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_MEDIA_LQIP);
+		$this->_conf_lqip_qual              = $this->conf(self::O_MEDIA_LQIP_QUAL);
+		$this->_conf_lqip_min_w             = $this->conf(self::O_MEDIA_LQIP_MIN_W);
+		$this->_conf_lqip_min_h             = $this->conf(self::O_MEDIA_LQIP_MIN_H);
 		$this->_conf_placeholder_resp_async = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_ASYNC);
 		$this->_conf_placeholder_resp_color = $this->conf(self::O_MEDIA_PLACEHOLDER_RESP_COLOR);
-		$this->_conf_ph_default = $this->conf(self::O_MEDIA_LAZY_PLACEHOLDER) ?: LITESPEED_PLACEHOLDER;
+		$this->_conf_ph_default             = $this->conf(self::O_MEDIA_LAZY_PLACEHOLDER) ?: LITESPEED_PLACEHOLDER;
 
 		$this->_summary = self::get_summary();
 	}
@@ -55,11 +54,10 @@ class Placeholder extends Base
 	/**
 	 * Init Placeholder
 	 */
-	public function init()
-	{
+	public function init() {
 		Debug2::debug2('[LQIP] init');
 
-		add_action('litspeed_after_admin_init', array($this, 'after_admin_init'));
+		add_action('litspeed_after_admin_init', array( $this, 'after_admin_init' ));
 	}
 
 	/**
@@ -68,12 +66,11 @@ class Placeholder extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function after_admin_init()
-	{
+	public function after_admin_init() {
 		if ($this->_conf_lqip) {
-			add_filter('manage_media_columns', array($this, 'media_row_title'));
-			add_filter('manage_media_custom_column', array($this, 'media_row_actions'), 10, 2);
-			add_action('litespeed_media_row_lqip', array($this, 'media_row_con'));
+			add_filter('manage_media_columns', array( $this, 'media_row_title' ));
+			add_filter('manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2);
+			add_action('litespeed_media_row_lqip', array( $this, 'media_row_con' ));
 		}
 	}
 
@@ -83,8 +80,7 @@ class Placeholder extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public function media_row_title($posts_columns)
-	{
+	public function media_row_title( $posts_columns ) {
 		$posts_columns['lqip'] = __('LQIP', 'litespeed-cache');
 
 		return $posts_columns;
@@ -96,8 +92,7 @@ class Placeholder extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public function media_row_actions($column_name, $post_id)
-	{
+	public function media_row_actions( $column_name, $post_id ) {
 		if ($column_name !== 'lqip') {
 			return;
 		}
@@ -111,8 +106,7 @@ class Placeholder extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function media_row_con($post_id)
-	{
+	public function media_row_con( $post_id ) {
 		$meta_value = wp_get_attachment_metadata($post_id);
 
 		if (empty($meta_value['file'])) {
@@ -122,7 +116,7 @@ class Placeholder extends Base
 		$total_files = 0;
 
 		// List all sizes
-		$all_sizes = array($meta_value['file']);
+		$all_sizes = array( $meta_value['file'] );
 		$size_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 		foreach ($meta_value['sizes'] as $v) {
 			$all_sizes[] = $size_path . $v['file'];
@@ -150,7 +144,7 @@ class Placeholder extends Base
 
 					echo '<div class="litespeed-media-size"><a href="' . Str::trim_quotes(File::read($lqip_folder . '/' . $v)) . '" target="_blank">' . $v . '</a></div>';
 
-					$total_files++;
+					++$total_files;
 				}
 			}
 		}
@@ -166,8 +160,7 @@ class Placeholder extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function replace($html, $src, $size)
-	{
+	public function replace( $html, $src, $size ) {
 		// Check if need to enable responsive placeholder or not
 		$this_placeholder = $this->_placeholder($src, $size) ?: $this->_conf_ph_default;
 
@@ -178,8 +171,8 @@ class Placeholder extends Base
 		}
 
 		$snippet = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_NOSCRIPT_RM) ? '' : '<noscript>' . $html . '</noscript>';
-		$html = str_replace(array(' src=', ' srcset=', ' sizes='), array(' data-src=', ' data-srcset=', ' data-sizes='), $html);
-		$html = str_replace('<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ', $html);
+		$html    = str_replace(array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $html);
+		$html    = str_replace('<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ', $html);
 		$snippet = $html . $snippet;
 
 		return $snippet;
@@ -191,8 +184,7 @@ class Placeholder extends Base
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _placeholder($src, $size)
-	{
+	private function _placeholder( $src, $size ) {
 		// Low Quality Image Placeholders
 		if (!$size) {
 			Debug2::debug2('[LQIP] no size ' . $src);
@@ -286,8 +278,7 @@ class Placeholder extends Base
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _placeholder_realpath($src, $size)
-	{
+	private function _placeholder_realpath( $src, $size ) {
 		// Use LQIP Cloud generator, each image placeholder will be separately stored
 
 		// Compatibility with WebP and AVIF
@@ -316,8 +307,7 @@ class Placeholder extends Base
 	 * @since  2.5.1
 	 * @access public
 	 */
-	public static function cron($continue = false)
-	{
+	public static function cron( $continue = false ) {
 		$_instance = self::cls();
 
 		$queue = $_instance->load_queue('lqip');
@@ -357,13 +347,12 @@ class Placeholder extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _generate_placeholder_locally($size)
-	{
+	private function _generate_placeholder_locally( $size ) {
 		Debug2::debug2('[LQIP] _generate_placeholder local [size] ' . $size);
 
 		$size = explode('x', $size);
 
-		$svg = str_replace(array('{width}', '{height}', '{color}'), array($size[0], $size[1], $this->_conf_placeholder_resp_color), $this->_conf_placeholder_resp_svg);
+		$svg = str_replace(array( '{width}', '{height}', '{color}' ), array( $size[0], $size[1], $this->_conf_placeholder_resp_color ), $this->_conf_placeholder_resp_svg);
 
 		return 'data:image/svg+xml;base64,' . base64_encode($svg);
 	}
@@ -374,11 +363,10 @@ class Placeholder extends Base
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _generate_placeholder($raw_size_and_src, $from_cron = false)
-	{
+	private function _generate_placeholder( $raw_size_and_src, $from_cron = false ) {
 		// Parse containing size and src info
 		$size_and_src = explode(' ', $raw_size_and_src, 2);
-		$size = $size_and_src[0];
+		$size         = $size_and_src[0];
 
 		if (empty($size_and_src[1])) {
 			$this->_popup_and_save($raw_size_and_src);
@@ -394,7 +382,7 @@ class Placeholder extends Base
 		if (!$this->_conf_lqip || !$this->_lqip_size_check($size)) {
 			$data = $this->_generate_placeholder_locally($size);
 		} else {
-			$err = false;
+			$err       = false;
 			$allowance = Cloud::cls()->allowance(Cloud::SVC_LQIP, $err);
 			if (!$allowance) {
 				Debug2::debug('[LQIP] ❌ No credit: ' . $err);
@@ -409,7 +397,7 @@ class Placeholder extends Base
 
 			// Generate LQIP
 			list($width, $height) = explode('x', $size);
-			$req_data = array(
+			$req_data             = array(
 				'width' => $width,
 				'height' => $height,
 				'url' => Utility::drop_webp($src),
@@ -451,7 +439,7 @@ class Placeholder extends Base
 		File::save($file, $data, true);
 
 		// Save summary data
-		$this->_summary['last_spent'] = time() - $this->_summary['curr_request'];
+		$this->_summary['last_spent']   = time() - $this->_summary['curr_request'];
 		$this->_summary['last_request'] = $this->_summary['curr_request'];
 		$this->_summary['curr_request'] = 0;
 		self::save_summary();
@@ -467,8 +455,7 @@ class Placeholder extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _lqip_size_check($size)
-	{
+	private function _lqip_size_check( $size ) {
 		$size = explode('x', $size);
 		if ($size[0] >= $this->_conf_lqip_min_w || $size[1] >= $this->_conf_lqip_min_h) {
 			return true;
@@ -484,9 +471,8 @@ class Placeholder extends Base
 	 *
 	 * @since  3.4
 	 */
-	private function _append_exc($src)
-	{
-		$val = $this->conf(self::O_MEDIA_LQIP_EXC);
+	private function _append_exc( $src ) {
+		$val   = $this->conf(self::O_MEDIA_LQIP_EXC);
 		$val[] = $src;
 		$this->cls('Conf')->update(self::O_MEDIA_LQIP_EXC, $val);
 		Debug2::debug('[LQIP] Appended to LQIP Excludes [URL] ' . $src);
@@ -497,8 +483,7 @@ class Placeholder extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _popup_and_save($raw_size_and_src, $append_to_exc = false)
-	{
+	private function _popup_and_save( $raw_size_and_src, $append_to_exc = false ) {
 		$queue = $this->load_queue('lqip');
 		if (!empty($queue) && in_array($raw_size_and_src, $queue)) {
 			unset($queue[array_search($raw_size_and_src, $queue)]);
@@ -506,7 +491,7 @@ class Placeholder extends Base
 
 		if ($append_to_exc) {
 			$size_and_src = explode(' ', $raw_size_and_src, 2);
-			$this_src = $size_and_src[1];
+			$this_src     = $size_and_src[1];
 
 			// Append to lqip exc setting first
 			$this->_append_exc($this_src);
@@ -535,17 +520,16 @@ class Placeholder extends Base
 	 * @since  2.5.1
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_GENERATE:
-				self::cron(true);
+            self::cron(true);
 				break;
 
 			case self::TYPE_CLEAR_Q:
-				$this->clear_q('lqip');
+            $this->clear_q('lqip');
 				break;
 
 			default:

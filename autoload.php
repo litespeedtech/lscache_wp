@@ -1,10 +1,11 @@
 <?php
-
 /**
  * Auto registration for LiteSpeed classes
  *
- * @since      	1.1.0
+ * @package LiteSpeed
+ * @since       1.1.0
  */
+
 defined('WPINC') || exit();
 
 // Force define for object cache usage before plugin init
@@ -88,11 +89,13 @@ $litespeed_php_files = array(
 	'lib/urirewriter.cls.php',
 	'lib/guest.cls.php',
 	'lib/html-min.cls.php',
+	// phpcs:disable
 	// 'lib/object-cache.php',
 	// 'lib/php-compatibility.func.php',
 
 	// upgrade purpose delay loaded funcs
 	// 'src/data.upgrade.func.php',
+	// phpcs:enable
 );
 foreach ($litespeed_php_files as $class) {
 	$file = LSCWP_DIR . $class;
@@ -100,8 +103,13 @@ foreach ($litespeed_php_files as $class) {
 }
 
 if (!function_exists('litespeed_autoload')) {
-	function litespeed_autoload($cls)
-	{
+	/**
+	 * Autoload function for LiteSpeed classes
+	 *
+	 * @since 1.1.0
+	 * @param string $cls The class name to autoload.
+	 */
+	function litespeed_autoload( $cls ) {
 		if (strpos($cls, '.') !== false) {
 			return;
 		}
@@ -115,11 +123,13 @@ if (!function_exists('litespeed_autoload')) {
 		$file = implode('/', $file);
 		$file = str_replace('_', '-', strtolower($file));
 
+		// phpcs:disable
 		// if (strpos($file, 'lib/') === 0 || strpos($file, 'cli/') === 0 || strpos($file, 'thirdparty/') === 0) {
-		// 	$file = LSCWP_DIR . $file . '.cls.php';
+		// $file = LSCWP_DIR . $file . '.cls.php';
 		// } else {
-		// 	$file = LSCWP_DIR . 'src/' . $file . '.cls.php';
+		// $file = LSCWP_DIR . 'src/' . $file . '.cls.php';
 		// }
+		// phpcs:enable
 
 		if (strpos($file, 'thirdparty/') !== 0) {
 			return;

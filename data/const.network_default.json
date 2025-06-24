@@ -10,7 +10,7 @@
 	"cache-exc_cookies": "",
 	"cache-exc_useragents": "",
 	"cache-ttl_browser": 31557600,
-	"purge-upgrade": true,
+	"purge-upgrade": false,
 	"object": false,
 	"object-kind": false,
 	"object-host": "localhost",

@@ -2,15 +2,16 @@
 
 /**
  * Check if any plugins that could conflict with LiteSpeed Cache are active.
- * @since		4.7
+ *
+ * @since       4.7
  */
 
 namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-class LiteSpeed_Check
-{
+class LiteSpeed_Check {
+
 	public static $_incompatible_plugins = array(
 		// 'autoptimize/autoptimize.php',
 		'breeze/breeze.php',
@@ -42,8 +43,7 @@ class LiteSpeed_Check
 	private static $_option = 'thirdparty_litespeed_check';
 	private static $_msg_id = 'id="lscwp-incompatible-plugin-notice"';
 
-	public static function detect()
-	{
+	public static function detect() {
 		if (!is_admin()) {
 			return;
 		}
@@ -52,7 +52,7 @@ class LiteSpeed_Check
 		 * Check for incompatible plugins when `litespeed-cache` is first activated.
 		 */
 		$plugin = basename(LSCWP_DIR) . '/litespeed-cache.php';
-		register_deactivation_hook($plugin, function ($_network_wide) {
+		register_deactivation_hook($plugin, function ( $_network_wide ) {
 			\LiteSpeed\Admin_Display::delete_option(self::$_option);
 		});
 		if (!\LiteSpeed\Admin_Display::get_option(self::$_option)) {
@@ -80,13 +80,11 @@ class LiteSpeed_Check
 		}
 	}
 
-	public static function activated_plugin($plugin, $network_wide)
-	{
+	public static function activated_plugin( $plugin, $network_wide ) {
 		self::incompatible_plugin_notice($plugin, $network_wide, 'activated');
 	}
 
-	public static function deactivated_plugin($plugin, $network_wide)
-	{
+	public static function deactivated_plugin( $plugin, $network_wide ) {
 		self::incompatible_plugin_notice($plugin, $network_wide, 'deactivated');
 	}
 
@@ -94,8 +92,7 @@ class LiteSpeed_Check
 	 * Detect any incompatible plugins that are currently `active` and `valid`.
 	 * Show a notification if there are any.
 	 */
-	public static function incompatible_plugin_notice($plugin, $_network_wide, $action)
-	{
+	public static function incompatible_plugin_notice( $plugin, $_network_wide, $action ) {
 		self::update_messages();
 
 		/**
@@ -103,13 +100,13 @@ class LiteSpeed_Check
 		 * `wp_get_active_and_valid_plugins` can see the change, so we'll need to
 		 * remove `$plugin` from the list.
 		 */
-		$deactivated = 'deactivated' === $action ? array($plugin) : array();
+		$deactivated = 'deactivated' === $action ? array( $plugin ) : array();
 
-		$incompatible_plugins = array_map(function ($plugin) {
+		$incompatible_plugins = array_map(function ( $plugin ) {
 			return WP_PLUGIN_DIR . '/' . $plugin;
 		}, array_diff(self::$_incompatible_plugins, $deactivated));
 
-		$active_incompatible_plugins = array_map(function ($plugin) {
+		$active_incompatible_plugins = array_map(function ( $plugin ) {
 			$plugin = get_plugin_data($plugin, false, true);
 			return $plugin['Name'];
 		}, array_intersect($incompatible_plugins, wp_get_active_and_valid_plugins()));
@@ -137,8 +134,7 @@ class LiteSpeed_Check
 	 * a number of incompatible plugins in succession without dismissing the
 	 * notice(s).
 	 */
-	private static function update_messages()
-	{
+	private static function update_messages() {
 		$messages = \LiteSpeed\Admin_Display::get_option(\LiteSpeed\Admin_Display::DB_MSG_PIN, array());
 		if (is_array($messages)) {
 			foreach ($messages as $index => $message) {

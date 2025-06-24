@@ -3,18 +3,18 @@
 /**
  * The avatar cache class
  *
- * @since 		3.0
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       3.0
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Avatar extends Base
-{
+class Avatar extends Base {
+
 	const TYPE_GENERATE = 'generate';
 
 	private $_conf_cache_ttl;
@@ -28,8 +28,7 @@ class Avatar extends Base
 	 *
 	 * @since  1.4
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		if (!$this->conf(self::O_DISCUSS_AVATAR_CACHE)) {
 			return;
 		}
@@ -40,7 +39,7 @@ class Avatar extends Base
 
 		$this->_conf_cache_ttl = $this->conf(self::O_DISCUSS_AVATAR_CACHE_TTL);
 
-		add_filter('get_avatar_url', array($this, 'crawl_avatar'));
+		add_filter('get_avatar_url', array( $this, 'crawl_avatar' ));
 
 		$this->_summary = self::get_summary();
 	}
@@ -51,8 +50,7 @@ class Avatar extends Base
 	 * @since 3.0
 	 * @access public
 	 */
-	public function need_db()
-	{
+	public function need_db() {
 		if ($this->conf(self::O_DISCUSS_AVATAR_CACHE)) {
 			return true;
 		}
@@ -65,8 +63,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function serve_static($md5)
-	{
+	public function serve_static( $md5 ) {
 		global $wpdb;
 
 		Debug2::debug('[Avatar] is avatar request');
@@ -76,7 +73,7 @@ class Avatar extends Base
 			return;
 		}
 
-		$q = "SELECT url FROM `$this->_tb` WHERE md5=%s";
+		$q   = "SELECT url FROM `$this->_tb` WHERE md5=%s";
 		$url = $wpdb->get_var($wpdb->prepare($q, $md5));
 
 		if (!$url) {
@@ -96,8 +93,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function crawl_avatar($url)
-	{
+	public function crawl_avatar( $url ) {
 		if (!$url) {
 			return $url;
 		}
@@ -137,8 +133,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function queue_count()
-	{
+	public function queue_count() {
 		global $wpdb;
 
 		// If var not exists, mean table not exists // todo: not true
@@ -157,8 +152,7 @@ class Avatar extends Base
 	 *
 	 * @since  3.0
 	 */
-	private function _rewrite($url, $time = null)
-	{
+	private function _rewrite( $url, $time = null ) {
 		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath($url) . ($time ? '?ver=' . $time : '');
 	}
 
@@ -168,8 +162,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _realpath($url)
-	{
+	private function _realpath( $url ) {
 		return LITESPEED_STATIC_DIR . '/avatar/' . $this->_filepath($url);
 	}
 
@@ -178,8 +171,7 @@ class Avatar extends Base
 	 *
 	 * @since  4.0
 	 */
-	private function _filepath($url)
-	{
+	private function _filepath( $url ) {
 		$filename = md5($url) . '.jpg';
 		if (is_multisite()) {
 			$filename = get_current_blog_id() . '/' . $filename;
@@ -193,8 +185,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function cron($force = false)
-	{
+	public static function cron( $force = false ) {
 		global $wpdb;
 
 		$_instance = self::cls();
@@ -212,7 +203,7 @@ class Avatar extends Base
 		}
 
 		$q = "SELECT url FROM `$_instance->_tb` WHERE dateline < %d ORDER BY id DESC LIMIT %d";
-		$q = $wpdb->prepare($q, array(time() - $_instance->_conf_cache_ttl, apply_filters('litespeed_avatar_limit', 30)));
+		$q = $wpdb->prepare($q, array( time() - $_instance->_conf_cache_ttl, apply_filters('litespeed_avatar_limit', 30) ));
 
 		$list = $wpdb->get_results($q);
 		Debug2::debug('[Avatar] cron job [count] ' . count($list));
@@ -230,8 +221,7 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _generate($url)
-	{
+	private function _generate( $url ) {
 		global $wpdb;
 
 		// Record the data
@@ -239,12 +229,16 @@ class Avatar extends Base
 		$file = $this->_realpath($url);
 
 		// Update request status
-		self::save_summary(array('curr_request' => time()));
+		self::save_summary(array( 'curr_request' => time() ));
 
 		// Generate
 		$this->_maybe_mk_cache_folder('avatar');
 
-		$response = wp_safe_remote_get($url, array('timeout' => 180, 'stream' => true, 'filename' => $file));
+		$response = wp_safe_remote_get($url, array(
+			'timeout' => 180,
+			'stream' => true,
+			'filename' => $file,
+		));
 
 		Debug2::debug('[Avatar] _generate [url] ' . $url);
 
@@ -264,12 +258,12 @@ class Avatar extends Base
 		));
 
 		// Update DB
-		$md5 = md5($url);
-		$q = "UPDATE `$this->_tb` SET dateline=%d WHERE md5=%s";
-		$existed = $wpdb->query($wpdb->prepare($q, array(time(), $md5)));
+		$md5     = md5($url);
+		$q       = "UPDATE `$this->_tb` SET dateline=%d WHERE md5=%s";
+		$existed = $wpdb->query($wpdb->prepare($q, array( time(), $md5 )));
 		if (!$existed) {
 			$q = "INSERT INTO `$this->_tb` SET url=%s, md5=%s, dateline=%d";
-			$wpdb->query($wpdb->prepare($q, array($url, $md5, time())));
+			$wpdb->query($wpdb->prepare($q, array( $url, $md5, time() )));
 		}
 
 		Debug2::debug('[Avatar] saved avatar ' . $file);
@@ -283,13 +277,12 @@ class Avatar extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_GENERATE:
-				self::cron(true);
+            self::cron(true);
 				break;
 
 			default:

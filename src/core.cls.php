@@ -5,29 +5,29 @@
  *
  * Note: Core doesn't allow $this->cls( 'Core' )
  *
- * @since      	1.0.0
+ * @since       1.0.0
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Core extends Root
-{
-	const NAME = 'LiteSpeed Cache';
+class Core extends Root {
+
+	const NAME        = 'LiteSpeed Cache';
 	const PLUGIN_NAME = 'litespeed-cache';
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php';
-	const VER = LSCWP_V;
+	const VER         = LSCWP_V;
 
-	const ACTION_DISMISS = 'dismiss';
-	const ACTION_PURGE_BY = 'PURGE_BY';
-	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE';
-	const ACTION_QS_PURGE = 'PURGE';
-	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE'; // This will be same as `ACTION_QS_PURGE` (purge single url only)
-	const ACTION_QS_SHOW_HEADERS = 'SHOWHEADERS';
-	const ACTION_QS_PURGE_ALL = 'purge_all';
+	const ACTION_DISMISS             = 'dismiss';
+	const ACTION_PURGE_BY            = 'PURGE_BY';
+	const ACTION_PURGE_EMPTYCACHE    = 'PURGE_EMPTYCACHE';
+	const ACTION_QS_PURGE            = 'PURGE';
+	const ACTION_QS_PURGE_SINGLE     = 'PURGESINGLE'; // This will be same as `ACTION_QS_PURGE` (purge single url only)
+	const ACTION_QS_SHOW_HEADERS     = 'SHOWHEADERS';
+	const ACTION_QS_PURGE_ALL        = 'purge_all';
 	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all';
-	const ACTION_QS_NOCACHE = 'NOCACHE';
+	const ACTION_QS_NOCACHE          = 'NOCACHE';
 
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug';
 
@@ -44,13 +44,13 @@ class Core extends Root
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		!defined('LSCWP_TS_0') && define('LSCWP_TS_0', microtime(true));
 		$this->cls('Conf')->init();
 
 		/**
 		 * Load API hooks
+		 *
 		 * @since  3.0
 		 */
 		$this->cls('API')->init();
@@ -67,12 +67,13 @@ class Core extends Root
 		/**
 		 * Register plugin activate/deactivate/uninstall hooks
 		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		 * @since  2.7.1	Disabled admin&CLI check to make frontend able to enable cache too
+		 *
+		 * @since  2.7.1    Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php';
-		register_activation_hook($plugin_file, array(__NAMESPACE__ . '\Activation', 'register_activation'));
-		register_deactivation_hook($plugin_file, array(__NAMESPACE__ . '\Activation', 'register_deactivation'));
+		register_activation_hook($plugin_file, array( __NAMESPACE__ . '\Activation', 'register_activation' ));
+		register_deactivation_hook($plugin_file, array( __NAMESPACE__ . '\Activation', 'register_deactivation' ));
 		register_uninstall_hook($plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache');
 		// }
 
@@ -88,7 +89,7 @@ class Core extends Root
 			}
 			foreach ($purge_all_events as $event) {
 				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
-				if (in_array($event, array('update_option'))) {
+				if (in_array($event, array( 'update_option' ))) {
 					continue;
 				}
 				add_action($event, __NAMESPACE__ . '\Purge::purge_all');
@@ -97,18 +98,18 @@ class Core extends Root
 
 			// Add headers to site health check for full page cache
 			// @since 5.4
-			add_filter('site_status_page_cache_supported_cache_headers', function ($cache_headers) {
-				$is_cache_hit = function ($header_value) {
+			add_filter('site_status_page_cache_supported_cache_headers', function ( $cache_headers ) {
+				$is_cache_hit                       = function ( $header_value ) {
 					return false !== strpos(strtolower($header_value), 'hit');
 				};
 				$cache_headers['x-litespeed-cache'] = $is_cache_hit;
-				$cache_headers['x-lsadc-cache'] = $is_cache_hit;
-				$cache_headers['x-qc-cache'] = $is_cache_hit;
+				$cache_headers['x-lsadc-cache']     = $is_cache_hit;
+				$cache_headers['x-qc-cache']        = $is_cache_hit;
 				return $cache_headers;
 			});
 		}
 
-		add_action('after_setup_theme', array($this, 'init'));
+		add_action('after_setup_theme', array( $this, 'init' ));
 
 		// Check if there is a purge request in queue
 		if (!defined('LITESPEED_CLI')) {
@@ -133,6 +134,7 @@ class Core extends Root
 
 		/**
 		 * Hook internal REST
+		 *
 		 * @since  2.9.4
 		 */
 		$this->cls('REST');
@@ -141,6 +143,7 @@ class Core extends Root
 		 * Hook wpnonce function
 		 *
 		 * Note: ESI nonce won't be available until hook after_setup_theme ESI init due to Guest Mode concern
+		 *
 		 * @since v4.1
 		 */
 		if ($this->cls('Router')->esi_enabled() && !function_exists('wp_create_nonce')) {
@@ -159,13 +162,13 @@ class Core extends Root
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function init()
-	{
+	public function init() {
 		/**
 		 * Added hook before init
 		 * 3rd party preload hooks will be fired here too (e.g. Divi disable all in edit mode)
+		 *
 		 * @since  1.6.6
-		 * @since  2.6 	Added filter to all config values in Conf
+		 * @since  2.6  Added filter to all config values in Conf
 		 */
 		do_action('litespeed_init');
 		add_action('wp_ajax_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler');
@@ -174,7 +177,7 @@ class Core extends Root
 		// in `after_setup_theme`, before `init` hook
 		$this->cls('Activation')->auto_update();
 
-		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
+		if (is_admin() && !wp_doing_ajax()) {
 			$this->cls('Admin');
 		}
 
@@ -185,12 +188,13 @@ class Core extends Root
 
 		do_action('litespeed_initing');
 
-		ob_start(array($this, 'send_headers_force'));
-		add_action('shutdown', array($this, 'send_headers'), 0);
-		add_action('wp_footer', array($this, 'footer_hook'));
+		ob_start(array( $this, 'send_headers_force' ));
+		add_action('shutdown', array( $this, 'send_headers' ), 0);
+		add_action('wp_footer', array( $this, 'footer_hook' ));
 
 		/**
 		 * Check if is non optm simulator
+		 *
 		 * @since  2.9
 		 */
 		if (!empty($_GET[Router::ACTION]) && $_GET[Router::ACTION] == 'before_optm' && !apply_filters('litespeed_qs_forbidden', false)) {
@@ -200,6 +204,7 @@ class Core extends Root
 
 		/**
 		 * Register vary filter
+		 *
 		 * @since  1.6.2
 		 */
 		$this->cls('Control')->init();
@@ -214,10 +219,10 @@ class Core extends Root
 		$this->cls('Tag')->init();
 
 		// Load hooks that may be related to users
-		add_action('init', array($this, 'after_user_init'), 5);
+		add_action('init', array( $this, 'after_user_init' ), 5);
 
 		// Load 3rd party hooks
-		add_action('wp_loaded', array($this, 'load_thirdparty'), 2);
+		add_action('wp_loaded', array( $this, 'load_thirdparty' ), 2);
 
 		// test: Simulate a purge all
 		// if (defined( 'LITESPEED_CLI' )) Purge::add('test'.date('Ymd.His'));
@@ -229,15 +234,18 @@ class Core extends Root
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function after_user_init()
-	{
+	public function after_user_init() {
 		$this->cls('Router')->is_role_simulation();
 
 		// Detect if is Guest mode or not also
 		$this->cls('Vary')->after_user_init();
 
+		// Register attachment delete hook
+		$this->cls('Media')->after_user_init();
+
 		/**
 		 * Preload ESI functionality for ESI request uri recovery
+		 *
 		 * @since 1.8.1
 		 * @since  4.0 ESI init needs to be after Guest mode detection to bypass ESI if is under Guest mode
 		 */
@@ -295,42 +303,41 @@ class Core extends Root
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function proceed_action($action)
-	{
+	public function proceed_action( $action ) {
 		$msg = false;
 		// handle actions
 		switch ($action) {
 			case self::ACTION_QS_SHOW_HEADERS:
-				self::$_debug_show_header = true;
+            self::$_debug_show_header = true;
 				break;
 
 			case self::ACTION_QS_PURGE:
 			case self::ACTION_QS_PURGE_SINGLE:
-				Purge::set_purge_single();
+            Purge::set_purge_single();
 				break;
 
 			case self::ACTION_QS_PURGE_ALL:
-				Purge::purge_all();
+            Purge::purge_all();
 				break;
 
 			case self::ACTION_PURGE_EMPTYCACHE:
 			case self::ACTION_QS_PURGE_EMPTYCACHE:
-				define('LSWCP_EMPTYCACHE', true); // clear all sites caches
-				Purge::purge_all();
-				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
+            define('LSWCP_EMPTYCACHE', true); // clear all sites caches
+            Purge::purge_all();
+            $msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
 				break;
 
 			case self::ACTION_PURGE_BY:
-				$this->cls('Purge')->purge_list();
-				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
+            $this->cls('Purge')->purge_list();
+            $msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
 				break;
 
 			case self::ACTION_DISMISS: // Even its from ajax, we don't need to register wp ajax callback function but directly use our action
-				GUI::dismiss();
+            GUI::dismiss();
 				break;
 
 			default:
-				$msg = $this->cls('Router')->handler($action);
+            $msg = $this->cls('Router')->handler($action);
 				break;
 		}
 		if ($msg && !Router::is_ajax()) {
@@ -352,8 +359,7 @@ class Core extends Root
 	 * @since 1.0.5
 	 * @access public
 	 */
-	public function load_thirdparty()
-	{
+	public function load_thirdparty() {
 		do_action('litespeed_load_thirdparty');
 	}
 
@@ -363,8 +369,7 @@ class Core extends Root
 	 * @since 1.3
 	 * @access public
 	 */
-	public function footer_hook()
-	{
+	public function footer_hook() {
 		Debug2::debug('[Core] Footer hook called');
 		if (!defined('LITESPEED_FOOTER_CALLED')) {
 			define('LITESPEED_FOOTER_CALLED', true);
@@ -377,19 +382,18 @@ class Core extends Root
 	 * @since 1.3
 	 * @access private
 	 */
-	private function _check_is_html($buffer = null)
-	{
+	private function _check_is_html( $buffer = null ) {
 		if (!defined('LITESPEED_FOOTER_CALLED')) {
 			Debug2::debug2('[Core] CHK html bypass: miss footer const');
 			return;
 		}
 
-		if (defined('DOING_AJAX')) {
+		if (wp_doing_ajax()) {
 			Debug2::debug2('[Core] CHK html bypass: doing ajax');
 			return;
 		}
 
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			Debug2::debug2('[Core] CHK html bypass: doing cron');
 			return;
 		}
@@ -438,8 +442,7 @@ class Core extends Root
 	 * @param  string $buffer
 	 * @return string
 	 */
-	public function send_headers_force($buffer)
-	{
+	public function send_headers_force( $buffer ) {
 		$this->_check_is_html($buffer);
 
 		// Hook to modify buffer before
@@ -458,6 +461,7 @@ class Core extends Root
 
 		/**
 		 * Replace ESI preserved list
+		 *
 		 * @since  3.3 Replace this in the end to avoid `Inline JS Defer` or other Page Optm features encoded ESI tags wrongly, which caused LSWS can't recognize ESI
 		 */
 		$buffer = $this->cls('ESI')->finalize($buffer);
@@ -478,6 +482,7 @@ class Core extends Root
 		}
 		/**
 		 * Silence comment for json req
+		 *
 		 * @since 2.9.3
 		 */
 		if (REST::cls()->is_rest() || Router::is_ajax()) {
@@ -493,6 +498,7 @@ class Core extends Root
 
 		/**
 		 * If ESI req is JSON, give the content JSON format
+		 *
 		 * @since  2.9.3
 		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
@@ -533,8 +539,7 @@ class Core extends Root
 	 * @access public
 	 * @param boolean $is_forced If the header is sent following our normal finalizing logic
 	 */
-	public function send_headers($is_forced = false)
-	{
+	public function send_headers( $is_forced = false ) {
 		// Make sure header output only run once
 		if (!defined('LITESPEED_DID_' . __FUNCTION__)) {
 			define('LITESPEED_DID_' . __FUNCTION__, true);
@@ -666,6 +671,7 @@ class Core extends Root
 
 		/**
 		 * If is CLI and contains Purge Header, then issue a HTTP req to Purge
+		 *
 		 * @since v5.3
 		 */
 		if (defined('LITESPEED_CLI')) {
@@ -676,7 +682,7 @@ class Core extends Root
 			if ($purge_queue && $purge_queue != -1) {
 				self::debug('[Core] Purge Queue found, issue a HTTP req to purge: ' . $purge_queue);
 				// Kick off HTTP req
-				$url = admin_url('admin-ajax.php');
+				$url  = admin_url('admin-ajax.php');
 				$resp = wp_safe_remote_get($url);
 				if (is_wp_error($resp)) {
 					$error_message = $resp->get_error_message();
@@ -691,24 +697,23 @@ class Core extends Root
 
 	/**
 	 * Append one HTML comment
+	 *
 	 * @since 5.5
 	 */
-	public static function comment($data)
-	{
+	public static function comment( $data ) {
 		self::cls()->_comment($data);
 	}
 
-	private function _comment($data)
-	{
+	private function _comment( $data ) {
 		$this->_footer_comment .= "\n<!-- " . $data . ' -->';
 	}
 
 	/**
 	 * Send HTTP header
+	 *
 	 * @since 5.3
 	 */
-	private function _http_header($header)
-	{
+	private function _http_header( $header ) {
 		if (defined('LITESPEED_CLI')) {
 			return;
 		}

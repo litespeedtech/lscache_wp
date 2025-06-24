@@ -2,47 +2,46 @@
 /**
  * The plugin API class.
  *
- * @since      	1.1.3
- * @since  		1.4 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.1.3
+ * @since       1.4 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class API extends Base
-{
+class API extends Base {
+
 	const VERSION = Core::VER;
 
-	const TYPE_FEED = Tag::TYPE_FEED;
-	const TYPE_FRONTPAGE = Tag::TYPE_FRONTPAGE;
-	const TYPE_HOME = Tag::TYPE_HOME;
-	const TYPE_PAGES = Tag::TYPE_PAGES;
+	const TYPE_FEED                    = Tag::TYPE_FEED;
+	const TYPE_FRONTPAGE               = Tag::TYPE_FRONTPAGE;
+	const TYPE_HOME                    = Tag::TYPE_HOME;
+	const TYPE_PAGES                   = Tag::TYPE_PAGES;
 	const TYPE_PAGES_WITH_RECENT_POSTS = Tag::TYPE_PAGES_WITH_RECENT_POSTS;
-	const TYPE_HTTP = Tag::TYPE_HTTP;
-	const TYPE_ARCHIVE_POSTTYPE = Tag::TYPE_ARCHIVE_POSTTYPE;
-	const TYPE_ARCHIVE_TERM = Tag::TYPE_ARCHIVE_TERM;
-	const TYPE_AUTHOR = Tag::TYPE_AUTHOR;
-	const TYPE_ARCHIVE_DATE = Tag::TYPE_ARCHIVE_DATE;
-	const TYPE_BLOG = Tag::TYPE_BLOG;
-	const TYPE_LOGIN = Tag::TYPE_LOGIN;
-	const TYPE_URL = Tag::TYPE_URL;
+	const TYPE_HTTP                    = Tag::TYPE_HTTP;
+	const TYPE_ARCHIVE_POSTTYPE        = Tag::TYPE_ARCHIVE_POSTTYPE;
+	const TYPE_ARCHIVE_TERM            = Tag::TYPE_ARCHIVE_TERM;
+	const TYPE_AUTHOR                  = Tag::TYPE_AUTHOR;
+	const TYPE_ARCHIVE_DATE            = Tag::TYPE_ARCHIVE_DATE;
+	const TYPE_BLOG                    = Tag::TYPE_BLOG;
+	const TYPE_LOGIN                   = Tag::TYPE_LOGIN;
+	const TYPE_URL                     = Tag::TYPE_URL;
 
 	const TYPE_ESI = Tag::TYPE_ESI;
 
-	const PARAM_NAME = ESI::PARAM_NAME;
+	const PARAM_NAME         = ESI::PARAM_NAME;
 	const WIDGET_O_ESIENABLE = ESI::WIDGET_O_ESIENABLE;
-	const WIDGET_O_TTL = ESI::WIDGET_O_TTL;
+	const WIDGET_O_TTL       = ESI::WIDGET_O_TTL;
 
 	/**
 	 * Instance
 	 *
 	 * @since  3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 	}
 
 	/**
@@ -52,8 +51,7 @@ class API extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function init()
-	{
+	public function init() {
 		/**
 		 * Init
 		 */
@@ -62,10 +60,11 @@ class API extends Base
 		/**
 		 * Conf
 		 */
-		add_filter('litespeed_conf', array($this, 'conf')); // @previous API::config($id)
+		add_filter('litespeed_conf', array( $this, 'conf' )); // @previous API::config($id)
 		// Action `litespeed_conf_append` // @previous API::conf_append( $name, $default )
 		add_action('litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2);
 		// Action ``litespeed_conf_force` // @previous API::force_option( $k, $v )
+		add_action( 'litespeed_save_conf',  array( $this, 'save_conf'));
 
 		/**
 		 * Cache Control Hooks
@@ -73,12 +72,12 @@ class API extends Base
 		// Action `litespeed_control_finalize` // @previous API::hook_control($tags) && action `litespeed_api_control`
 		add_action('litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private'); // @previous  API::set_cache_private()
 		add_action('litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache'); // @previous  API::set_nocache( $reason = false )
-		add_action('litespeed_control_set_cacheable', array($this, 'set_cacheable')); // Might needed if not call hook `wp` // @previous API::set_cacheable( $reason )
+		add_action('litespeed_control_set_cacheable', array( $this, 'set_cacheable' )); // Might needed if not call hook `wp` // @previous API::set_cacheable( $reason )
 		add_action('litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable'); // Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_cacheable( $reason )
 		add_action('litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced'); // Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions ) // @previous API::set_force_public( $reason )
 		add_filter('litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3); // Note: Read-Only. Directly append to this filter won't work. Call actions above to set cacheable or not // @previous API::not_cacheable()
 		add_action('litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2); // @previous API::set_ttl( $val )
-		add_filter('litespeed_control_ttl', array($this, 'get_ttl'), 3); // @previous API::get_ttl()
+		add_filter('litespeed_control_ttl', array( $this, 'get_ttl' ), 3); // @previous API::get_ttl()
 
 		/**
 		 * Tag Hooks
@@ -102,9 +101,9 @@ class API extends Base
 		// Action `litespeed_purge_finalize` // @previous API::hook_purge($tags)
 		add_action('litespeed_purge', __NAMESPACE__ . '\Purge::add'); // @previous API::purge($tags)
 		add_action('litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all');
-		add_action('litespeed_purge_post', array($this, 'purge_post')); // @previous API::purge_post( $pid )
+		add_action('litespeed_purge_post', array( $this, 'purge_post' )); // @previous API::purge_post( $pid )
 		add_action('litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype');
-		add_action('litespeed_purge_url', array($this, 'purge_url'));
+		add_action('litespeed_purge_url', array( $this, 'purge_url' ));
 		add_action('litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget');
 		add_action('litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi');
 		add_action('litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private'); // @previous API::purge_private( $tags )
@@ -119,8 +118,8 @@ class API extends Base
 		 * ESI
 		 */
 		// Action `litespeed_nonce` // @previous API::nonce_action( $action ) & API::nonce( $action = -1, $defence_for_html_filter = true ) // NOTE: only available after `init` hook
-		add_filter('litespeed_esi_status', array($this, 'esi_enabled')); // Get ESI enable status // @previous API::esi_enabled()
-		add_filter('litespeed_esi_url', array($this, 'sub_esi_block'), 10, 8); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+		add_filter('litespeed_esi_status', array( $this, 'esi_enabled' )); // Get ESI enable status // @previous API::esi_enabled()
+		add_filter('litespeed_esi_url', array( $this, 'sub_esi_block' ), 10, 8); // Generate ESI block url // @previous API::esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd // @previous API::hook_widget_default_options( $hook )
 		// Filter `litespeed_esi_params` // @previous API::hook_esi_param( $hook )
 		// Action `litespeed_tpl_normal` // @previous API::hook_tpl_not_esi($hook) && Action `litespeed_is_not_esi_template`
@@ -143,7 +142,7 @@ class API extends Base
 		/**
 		 * Cloud
 		 */
-		add_filter('litespeed_is_from_cloud', array($this, 'is_from_cloud')); // Check if current request is from QC (usually its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter('litespeed_is_from_cloud', array( $this, 'is_from_cloud' )); // Check if current request is from QC (usually its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media
@@ -163,9 +162,9 @@ class API extends Base
 		 */
 		add_action('litespeed_debug', __NAMESPACE__ . '\Debug2::debug', 10, 2); // API::debug()-> Action `litespeed_debug`
 		add_action('litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2', 10, 2); // API::debug2()-> Action `litespeed_debug2`
-		add_action('litespeed_disable_all', array($this, '_disable_all')); // API::disable_all( $reason ) -> Action `litespeed_disable_all`
+		add_action('litespeed_disable_all', array( $this, '_disable_all' )); // API::disable_all( $reason ) -> Action `litespeed_disable_all`
 
-		add_action('litspeed_after_admin_init', array($this, '_after_admin_init'));
+		add_action('litspeed_after_admin_init', array( $this, '_after_admin_init' ));
 	}
 
 	/**
@@ -174,13 +173,12 @@ class API extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function _after_admin_init()
-	{
+	public function _after_admin_init() {
 		/**
 		 * GUI
 		 */
-		add_action('litespeed_setting_enroll', array($this->cls('Admin_Display'), 'enroll'), 10, 4); // API::enroll( $id ) // Register a field in setting form to save
-		add_action('litespeed_build_switch', array($this->cls('Admin_Display'), 'build_switch')); // API::build_switch( $id ) // Build a switch div html snippet
+		add_action('litespeed_setting_enroll', array( $this->cls('Admin_Display'), 'enroll' ), 10, 4); // API::enroll( $id ) // Register a field in setting form to save
+		add_action('litespeed_build_switch', array( $this->cls('Admin_Display'), 'build_switch' )); // API::build_switch( $id ) // Build a switch div html snippet
 		// API::hook_setting_content( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_content`
 		// API::hook_setting_tab( $hook, $priority = 10, $args = 1 ) -> Action `litespeed_settings_tab`
 	}
@@ -191,8 +189,7 @@ class API extends Base
 	 * @since 2.9.7.2
 	 * @access public
 	 */
-	public function _disable_all($reason)
-	{
+	public function _disable_all( $reason ) {
 		do_action('litespeed_debug', '[API] Disabled_all due to ' . $reason);
 
 		!defined('LITESPEED_DISABLE_ALL') && define('LITESPEED_DISABLE_ALL', true);
@@ -201,8 +198,7 @@ class API extends Base
 	/**
 	 * @since 3.0
 	 */
-	public static function vary_append_commenter()
-	{
+	public static function vary_append_commenter() {
 		Vary::cls()->append_commenter();
 	}
 
@@ -211,33 +207,27 @@ class API extends Base
 	 *
 	 * @since 4.2
 	 */
-	public function is_from_cloud()
-	{
+	public function is_from_cloud() {
 		return $this->cls('Cloud')->is_from_cloud();
 	}
 
-	public function purge_post($pid)
-	{
+	public function purge_post( $pid ) {
 		$this->cls('Purge')->purge_post($pid);
 	}
 
-	public function purge_url($url)
-	{
+	public function purge_url( $url ) {
 		$this->cls('Purge')->purge_url($url);
 	}
 
-	public function set_cacheable($reason = false)
-	{
+	public function set_cacheable( $reason = false ) {
 		$this->cls('Control')->set_cacheable($reason);
 	}
 
-	public function esi_enabled()
-	{
+	public function esi_enabled() {
 		return $this->cls('Router')->esi_enabled();
 	}
 
-	public function get_ttl()
-	{
+	public function get_ttl() {
 		return $this->cls('Control')->get_ttl();
 	}
 
@@ -252,5 +242,14 @@ class API extends Base
 		$inline_param = array()
 	) {
 		return $this->cls('ESI')->sub_esi_block($block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_param);
+	}
+
+	/**
+	 * Set and sync conf
+	 *
+	 * @since 7.2
+	 */
+	public function save_conf( $the_matrix = false ) {
+		$this->cls('Conf')->update_confs( $the_matrix );
 	}
 }

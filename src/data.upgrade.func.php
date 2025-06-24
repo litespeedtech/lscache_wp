@@ -16,24 +16,38 @@ use LiteSpeed\File;
 use LiteSpeed\Cloud;
 
 /**
+ * Table existance check function
+ *
+ * @since 7.2
+ */
+function litespeed_table_exists( $table_name ) {
+	global $wpdb;
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors(true);
+	$tb_exists = $wpdb->get_var('DESCRIBE `' . $table_name . '`');
+	$wpdb->suppress_errors($save_state);
+
+	return $tb_exists !== null;
+}
+
+/**
  * Migrate v7.0- url_files URL from no trailing slash to trailing slash
+ *
  * @since 7.0.1
  */
-function litespeed_update_7_0_1()
-{
+function litespeed_update_7_0_1() {
 	global $wpdb;
 	Debug2::debug('[Data] v7.0.1 upgrade started');
 
 	$tb_url = $wpdb->prefix . 'litespeed_url';
-	$tb_exists = $wpdb->get_var("SHOW TABLES LIKE '" . $tb_url . "'");
-	if (!$tb_exists) {
+	if (!litespeed_table_exists($tb_url)) {
 		Debug2::debug('[Data] Table `litespeed_url` not found, bypassed migration');
 		return;
 	}
 
-	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
-	$q = $wpdb->prepare($q);
-	$list = $wpdb->get_results($q, ARRAY_A);
+	$q             = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
+	$q             = $wpdb->prepare($q);
+	$list          = $wpdb->get_results($q, ARRAY_A);
 	$existing_urls = array();
 	if ($list) {
 		foreach ($list as $v) {
@@ -41,8 +55,8 @@ function litespeed_update_7_0_1()
 		}
 	}
 
-	$q = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
-	$q = $wpdb->prepare($q);
+	$q    = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
+	$q    = $wpdb->prepare($q);
 	$list = $wpdb->get_results($q, ARRAY_A);
 	if (!$list) {
 		return;
@@ -63,10 +77,10 @@ function litespeed_update_7_0_1()
 
 /**
  * Migrate from domain key to pk/sk for QC
+ *
  * @since 7.0
  */
-function litespeed_update_7()
-{
+function litespeed_update_7() {
 	Debug2::debug('[Data] v7 upgrade started');
 
 	$__cloud = Cloud::cls();
@@ -88,7 +102,7 @@ function litespeed_update_7()
 	$resp = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
 	if (!empty($resp['qc_activated'])) {
 		if ($resp['qc_activated'] != 'deleted') {
-			$cloud_summary_updates = array('qc_activated' => $resp['qc_activated']);
+			$cloud_summary_updates = array( 'qc_activated' => $resp['qc_activated'] );
 			if (!empty($resp['main_domain'])) {
 				$cloud_summary_updates['main_domain'] = $resp['main_domain'];
 			}
@@ -100,18 +114,19 @@ function litespeed_update_7()
 
 /**
  * Append webp/mobile to url_file
+ *
  * @since 5.3
  */
-function litespeed_update_5_3()
-{
+function litespeed_update_5_3() {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"');
-	if ($tb_exists) {
+
+	$tb = $wpdb->prefix . 'litespeed_url_file';
+	if (litespeed_table_exists($tb)) {
 		$q =
 			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_url_file`
+			$tb .
+			'`
 				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
 				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
 			';
@@ -121,18 +136,19 @@ function litespeed_update_5_3()
 
 /**
  * Add expired to url_file table
+ *
  * @since 4.4.4
  */
-function litespeed_update_4_4_4()
-{
+function litespeed_update_4_4_4() {
 	global $wpdb;
 	Debug2::debug('[Data] Upgrade url_file table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"');
-	if ($tb_exists) {
+
+	$tb = $wpdb->prefix . 'litespeed_url_file';
+	if (litespeed_table_exists($tb)) {
 		$q =
 			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_url_file`
+			$tb .
+			'`
 				ADD COLUMN `expired` int(11) NOT NULL DEFAULT 0,
 				ADD KEY `filename_2` (`filename`,`expired`),
 				ADD KEY `url_id` (`url_id`,`expired`)
@@ -143,10 +159,10 @@ function litespeed_update_4_4_4()
 
 /**
  * Drop cssjs table and rm cssjs folder
+ *
  * @since 4.3
  */
-function litespeed_update_4_3()
-{
+function litespeed_update_4_3() {
 	if (file_exists(LITESPEED_STATIC_DIR . '/ccsjs')) {
 		File::rrmdir(LITESPEED_STATIC_DIR . '/ccsjs');
 	}
@@ -154,10 +170,10 @@ function litespeed_update_4_3()
 
 /**
  * Drop object cache data file
+ *
  * @since 4.1
  */
-function litespeed_update_4_1()
-{
+function litespeed_update_4_1() {
 	if (file_exists(WP_CONTENT_DIR . '/.object-cache.ini')) {
 		unlink(WP_CONTENT_DIR . '/.object-cache.ini');
 	}
@@ -165,14 +181,14 @@ function litespeed_update_4_1()
 
 /**
  * Drop cssjs table and rm cssjs folder
+ *
  * @since 4.0
  */
-function litespeed_update_4()
-{
+function litespeed_update_4() {
 	global $wpdb;
 	$tb = $wpdb->prefix . 'litespeed_cssjs';
-	$existed = $wpdb->get_var("SHOW TABLES LIKE '$tb'");
-	if (!$existed) {
+
+	if (!litespeed_table_exists($tb)) {
 		return;
 	}
 
@@ -190,19 +206,18 @@ function litespeed_update_4()
  *
  * @since  3.5.1
  */
-function litespeed_update_3_5()
-{
+function litespeed_update_3_5() {
 	$__conf = Conf::cls();
 	// Excludes jQuery
-	foreach (array('optm-js_exc', 'optm-js_defer_exc') as $v) {
-		$curr_setting = $__conf->conf($v);
+	foreach (array( 'optm-js_exc', 'optm-js_defer_exc' ) as $v) {
+		$curr_setting   = $__conf->conf($v);
 		$curr_setting[] = 'jquery.js';
 		$curr_setting[] = 'jquery.min.js';
 		$__conf->update($v, $curr_setting);
 	}
 	// Turn off JS Combine and defer
 	$show_msg = false;
-	foreach (array('optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer') as $v) {
+	foreach (array( 'optm-js_comb', 'optm-js_defer', 'optm-js_inline_defer' ) as $v) {
 		$curr_setting = $__conf->conf($v);
 		if (!$curr_setting) {
 			continue;
@@ -212,7 +227,7 @@ function litespeed_update_3_5()
 	}
 
 	if ($show_msg) {
-		$msg = sprintf(
+		$msg  = sprintf(
 			__(
 				'LiteSpeed Cache upgraded successfully. NOTE: Due to changes in this version, the settings %1$s and %2$s have been turned OFF. Please turn them back on manually and verify that your site layout is correct, and you have no JS errors.',
 				'litespeed-cache'
@@ -230,8 +245,7 @@ function litespeed_update_3_5()
  *
  * @since  3.0
  */
-function litespeed_update_2_0($ver)
-{
+function litespeed_update_2_0( $ver ) {
 	global $wpdb;
 
 	// Table version only exists after all old data migrated
@@ -239,12 +253,13 @@ function litespeed_update_2_0($ver)
 	if (version_compare($ver, '2.4.2', '<')) {
 		/**
 		 * Convert old data from postmeta to img_optm table
+		 *
 		 * @since  2.0
 		 */
 
 		// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
-		$mids_to_del = array();
-		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id";
+		$mids_to_del     = array();
+		$q               = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id";
 		$meta_value_list = $wpdb->get_results($wpdb->prepare($q, 'litespeed-optimize-data'));
 		if ($meta_value_list) {
 			$max_k = count($meta_value_list) - 1;
@@ -263,13 +278,14 @@ function litespeed_update_2_0($ver)
 			Debug2::debug('[Data] img_optm inserted records: ' . $k);
 		}
 
-		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s";
+		$q    = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s";
 		$rows = $wpdb->query($wpdb->prepare($q, 'litespeed-optimize-status'));
 		Debug2::debug('[Data] img_optm delete optm_status records: ' . $rows);
 	}
 
 	/**
 	 * Add target_md5 field to table
+	 *
 	 * @since  2.4.2
 	 */
 	if (version_compare($ver, '2.4.2', '<') && version_compare($ver, '2.0', '>=')) {
@@ -299,8 +315,7 @@ function litespeed_update_2_0($ver)
  *
  * @since  3.0
  */
-function litespeed_update_3_0($ver)
-{
+function litespeed_update_3_0( $ver ) {
 	global $wpdb;
 	// Upgrade v2.0- to v2.0 first
 	if (version_compare($ver, '2.0', '<')) {
@@ -349,11 +364,11 @@ function litespeed_update_3_0($ver)
 
 			if ($v == 'crawler-cookies') {
 				$tmp = array();
-				$i = 0;
+				$i   = 0;
 				foreach ($old_data as $k2 => $v2) {
 					$tmp[$i]['name'] = $k2;
 					$tmp[$i]['vals'] = explode("\n", $v2);
-					$i++;
+					++$i;
 				}
 				$old_data = $tmp;
 			}
@@ -431,15 +446,15 @@ function litespeed_update_3_0($ver)
 		'log_file_size' => 'debug-filesize',
 		'debug_cookie' => 'debug-cookie',
 		'collapse_qs' => 'debug-collapse_qs',
-		// 'log_filters' 				=> 'debug-log_filters',
+		// 'log_filters'                => 'debug-log_filters',
 
 		'crawler_cron_active' => 'crawler',
-		// 'crawler_include_posts' 	=> 'crawler-inc_posts',
-		// 'crawler_include_pages' 	=> 'crawler-inc_pages',
-		// 'crawler_include_cats' 		=> 'crawler-inc_cats',
-		// 'crawler_include_tags' 		=> 'crawler-inc_tags',
-		// 'crawler_excludes_cpt' 		=> 'crawler-exc_cpt',
-		// 'crawler_order_links' 		=> 'crawler-order_links',
+		// 'crawler_include_posts'  => 'crawler-inc_posts',
+		// 'crawler_include_pages'  => 'crawler-inc_pages',
+		// 'crawler_include_cats'       => 'crawler-inc_cats',
+		// 'crawler_include_tags'       => 'crawler-inc_tags',
+		// 'crawler_excludes_cpt'       => 'crawler-exc_cpt',
+		// 'crawler_order_links'        => 'crawler-order_links',
 		'crawler_usleep' => 'crawler-usleep',
 		'crawler_run_duration' => 'crawler-run_duration',
 		'crawler_run_interval' => 'crawler-run_interval',
@@ -463,7 +478,7 @@ function litespeed_update_3_0($ver)
 		'cdn' => 'cdn',
 		'cdn_ori' => 'cdn-ori',
 		'cdn_exclude' => 'cdn-exc',
-		// 'cdn_remote_jquery'			=> 'cdn-remote_jq',
+		// 'cdn_remote_jquery'          => 'cdn-remote_jq',
 		'cdn_quic' => 'cdn-quic',
 		'cdn_cloudflare' => 'cdn-cloudflare',
 		'cdn_cloudflare_email' => 'cdn-cloudflare_email',
@@ -477,44 +492,44 @@ function litespeed_update_3_0($ver)
 		'media_placeholder_resp_color' => 'media-placeholder_resp_color',
 		'media_placeholder_resp_async' => 'media-placeholder_resp_async',
 		'media_iframe_lazy' => 'media-iframe_lazy',
-		// 'media_img_lazyjs_inline'		=> 'media-lazyjs_inline',
+		// 'media_img_lazyjs_inline'        => 'media-lazyjs_inline',
 
 		'media_optm_auto' => 'img_optm-auto',
 		'media_optm_cron' => 'img_optm-cron',
 		'media_optm_ori' => 'img_optm-ori',
 		'media_rm_ori_bkup' => 'img_optm-rm_bkup',
-		// 'media_optm_webp'			=> 'img_optm-webp',
+		// 'media_optm_webp'            => 'img_optm-webp',
 		'media_webp_replace' => 'img_optm-webp',
 		'media_optm_lossless' => 'img_optm-lossless',
 		'media_optm_exif' => 'img_optm-exif',
 		'media_webp_replace_srcset' => 'img_optm-webp_replace_srcset',
 
 		'css_minify' => 'optm-css_min',
-		// 'css_inline_minify'		=> 'optm-css_inline_min',
+		// 'css_inline_minify'      => 'optm-css_inline_min',
 		'css_combine' => 'optm-css_comb',
-		// 'css_combined_priority'	=> 'optm-css_comb_priority',
-		// 'css_http2'				=> 'optm-css_http2',
+		// 'css_combined_priority'  => 'optm-css_comb_priority',
+		// 'css_http2'              => 'optm-css_http2',
 		'css_exclude' => 'optm-css_exc',
 		'js_minify' => 'optm-js_min',
-		// 'js_inline_minify'		=> 'optm-js_inline_min',
+		// 'js_inline_minify'       => 'optm-js_inline_min',
 		'js_combine' => 'optm-js_comb',
-		// 'js_combined_priority'	=> 'optm-js_comb_priority',
-		// 'js_http2'				=> 'optm-js_http2',
+		// 'js_combined_priority'   => 'optm-js_comb_priority',
+		// 'js_http2'               => 'optm-js_http2',
 		'js_exclude' => 'optm-js_exc',
-		// 'optimize_ttl'			=> 'optm-ttl',
+		// 'optimize_ttl'           => 'optm-ttl',
 		'html_minify' => 'optm-html_min',
 		'optm_qs_rm' => 'optm-qs_rm',
 		'optm_ggfonts_rm' => 'optm-ggfonts_rm',
 		'optm_css_async' => 'optm-css_async',
-		// 'optm_ccss_gen'			=> 'optm-ccss_gen',
-		// 'optm_ccss_async'		=> 'optm-ccss_async',
+		// 'optm_ccss_gen'          => 'optm-ccss_gen',
+		// 'optm_ccss_async'        => 'optm-ccss_async',
 		'optm_css_async_inline' => 'optm-css_async_inline',
 		'optm_js_defer' => 'optm-js_defer',
 		'optm_emoji_rm' => 'optm-emoji_rm',
-		// 'optm_exclude_jquery'	=> 'optm-exc_jq',
+		// 'optm_exclude_jquery'    => 'optm-exc_jq',
 		'optm_ggfonts_async' => 'optm-ggfonts_async',
-		// 'optm_max_size'			=> 'optm-max_size',
-		// 'optm_rm_comment'		=> 'optm-rm_comment',
+		// 'optm_max_size'          => 'optm-max_size',
+		// 'optm_rm_comment'        => 'optm-rm_comment',
 	);
 	foreach ($data as $k => $v) {
 		if (!isset($previous_options[$k])) {
@@ -522,10 +537,10 @@ function litespeed_update_3_0($ver)
 		}
 		// The following values must be array
 		if (!is_array($previous_options[$k])) {
-			if (in_array($v, array('cdn-ori', 'cache-exc_cat', 'cache-exc_tag'))) {
+			if (in_array($v, array( 'cdn-ori', 'cache-exc_cat', 'cache-exc_tag' ))) {
 				$previous_options[$k] = explode(',', $previous_options[$k]);
 				$previous_options[$k] = array_filter($previous_options[$k]);
-			} elseif (in_array($v, array('cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies'))) {
+			} elseif (in_array($v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ))) {
 				$previous_options[$k] = explode('|', str_replace('\\ ', ' ', $previous_options[$k]));
 				$previous_options[$k] = array_filter($previous_options[$k]);
 			} elseif (
@@ -607,7 +622,7 @@ function litespeed_update_3_0($ver)
 			'inc_js' => $previous_options['cdn_inc_js'],
 			'filetype' => $previous_options['cdn_filetype'],
 		);
-		add_option('litespeed.conf.cdn-mapping', array($cdn_mapping));
+		add_option('litespeed.conf.cdn-mapping', array( $cdn_mapping ));
 		Debug2::debug('[Data] plugin_upgrade option adding CDN map');
 	}
 
@@ -680,7 +695,7 @@ function litespeed_update_3_0($ver)
 				}
 				// The following values must be array
 				if (!is_array($previous_site_options[$k])) {
-					if (in_array($v, array('cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies'))) {
+					if (in_array($v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ))) {
 						$previous_site_options[$k] = explode('|', str_replace('\\ ', ' ', $previous_site_options[$k]));
 						$previous_site_options[$k] = array_filter($previous_site_options[$k]);
 					}
@@ -690,7 +705,7 @@ function litespeed_update_3_0($ver)
 			}
 
 			// These are already converted to single record in single site
-			$data = array('object-global_groups', 'object-non_persistent_groups');
+			$data = array( 'object-global_groups', 'object-non_persistent_groups' );
 			foreach ($data as $v) {
 				$old_data = get_option($v);
 				if ($old_data) {
@@ -711,8 +726,9 @@ function litespeed_update_3_0($ver)
 
 	// Update image optm table
 	Debug2::debug('[Data] Upgrade img_optm table');
-	$tb_exists = $wpdb->get_var('SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_img_optm"');
-	if ($tb_exists) {
+
+	$tb = $wpdb->prefix . 'litespeed_img_optm';
+	if (litespeed_table_exists($tb)) {
 		$status_mapping = array(
 			'requested' => 3,
 			'notified' => 6,
@@ -725,14 +741,14 @@ function litespeed_update_3_0($ver)
 			'xmeta' => -8,
 		);
 		foreach ($status_mapping as $k => $v) {
-			$q = 'UPDATE `' . $wpdb->prefix . "litespeed_img_optm` SET optm_status='$v' WHERE optm_status='$k'";
+			$q = 'UPDATE `' . $tb . "` SET optm_status='$v' WHERE optm_status='$k'";
 			$wpdb->query($q);
 		}
 
 		$q =
 			'ALTER TABLE `' .
-			$wpdb->prefix .
-			'litespeed_img_optm`
+			$tb .
+			'`
 				DROP INDEX `post_id_2`,
 				DROP INDEX `root_id`,
 				DROP INDEX `src_md5`,
