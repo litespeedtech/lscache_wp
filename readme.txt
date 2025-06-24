@@ -264,7 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Vary** Fixed possible duplicate webp vary in chrome mimicked iPhone visit.
 * 🐞**Vary** Used simpler rewrite rule to check next gen image format support.
 * 🐞**Page Optimize** Added the missing JS Delay lib when page optimization is off while iframe lazyload is on. (Zsombor Franczia #867)
-* **GUI** Added admin bar icon to Enable All Features when disabled all. (Tobolo, PR#868)
+* **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
 * **Misc** Simplified admin JS.
 * **Misc** Added existing plugin version to ping API for debug purpose.
 

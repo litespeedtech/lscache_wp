@@ -506,11 +506,6 @@ class Admin_Display extends Base {
 		// self::update_option( self::DB_MSG_PIN, -1 );
 		// }
 
-		// Show disable all warning
-		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
-			self::error(Error::msg('disabled_all'), true);
-		}
-
 		if (empty($_GET['page']) || strpos($_GET['page'], 'litespeed') !== 0) {
 			global $pagenow;
 			if ($pagenow != 'plugins.php') {
