@@ -669,6 +669,26 @@ class GUI extends Base {
 	public function backend_shortcut() {
 		global $wp_admin_bar;
 
+		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
+			$wp_admin_bar->add_menu(array(
+				'id' => 'litespeed-menu',
+				'title' => '<span class="ab-icon icon_disabled" title="LiteSpeed Cache"></span>',
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
+				'meta' => array(
+					'tabindex' => 0,
+					'class' => 'litespeed-top-toolbar',
+				),
+			));
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-enable_all',
+				'title' => __('Enable All Features', 'litespeed-cache'),
+				'href' => 'admin.php?page=litespeed-toolbox#settings-debug',
+				'meta' => array( 'tabindex' => '0' ),
+			));
+			return;
+		}
+
 		// if ( defined( 'LITESPEED_ON' ) ) {
 		$wp_admin_bar->add_menu(array(
 			'id' => 'litespeed-menu',

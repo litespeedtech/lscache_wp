@@ -96,8 +96,9 @@ $presets = array(
 <p><?php esc_html_e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
 
 <div class="litespeed-comparison-cards">
-	<?php foreach ( array_keys( $presets ) as $name ) :
-		$title        = $presets[ $name ]['title'];
+	<?php
+	foreach ( array_keys( $presets ) as $name ) :
+		$curr_title   = $presets[ $name ]['title'];
 		$recommend    = 'advanced' === $name;
 		$card_class   = $recommend ? 'litespeed-comparison-card-rec' : '';
 		$button_class = $recommend ? 'button-primary' : 'button-secondary';
@@ -106,7 +107,7 @@ $presets = array(
 			<div class="litespeed-card-content">
 				<div class="litespeed-card-header">
 					<h3 class="litespeed-h3">
-						<?php echo esc_html( $title ); ?>
+						<?php echo esc_html( $curr_title ); ?>
 					</h3>
 				</div>
 				<div class="litespeed-card-body">
@@ -127,7 +128,7 @@ $presets = array(
 				<a
 					href="<?php echo esc_url( Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_APPLY, false, null, array( 'preset' => $name ) ) ); ?>"
 					class="button <?php echo esc_attr( $button_class ); ?>"
-					data-litespeed-cfm="<?php echo esc_attr( sprintf( __( 'This will back up your current settings and replace them with the %1$s preset settings. Do you want to continue?', 'litespeed-cache' ), $title ) ); ?>"
+					data-litespeed-cfm="<?php echo esc_attr( sprintf( __( 'This will back up your current settings and replace them with the %1$s preset settings. Do you want to continue?', 'litespeed-cache' ), $curr_title ) ); ?>"
 				>
 					<?php esc_html_e( 'Apply Preset', 'litespeed-cache' ); ?>
 				</a>
@@ -144,15 +145,15 @@ foreach ( Preset::get_backups() as $backup ) {
 	if ( empty( $backup[1] ) ) {
 		continue;
 	}
-	$timestamp = $backup[1];
-	$time      = trim( Utility::readable_time( $timestamp ) );
-	$name      = empty( $backup[3] ) ? null : $backup[3];
-	$title     = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
-	$title     = null === $title ? esc_html__( 'unknown', 'litespeed-cache' ) : $title;
-	$backups[] = array(
+	$timestamp  = $backup[1];
+	$time       = trim( Utility::readable_time( $timestamp ) );
+	$name       = empty( $backup[3] ) ? null : $backup[3];
+	$curr_title = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
+	$curr_title = null === $curr_title ? esc_html__( 'unknown', 'litespeed-cache' ) : $curr_title;
+	$backups[]  = array(
 		'timestamp' => $timestamp,
 		'time'      => $time,
-		'title'     => $title,
+		'title'     => $curr_title,
 	);
 }
 

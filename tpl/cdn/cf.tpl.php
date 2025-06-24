@@ -22,11 +22,11 @@ $this->form_action();
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN_CLOUDFLARE; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_CLOUDFLARE; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php printf( esc_html__( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 				</div>
@@ -65,11 +65,11 @@ $this->form_action();
 		</tr>
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN_CLOUDFLARE_CLEAR; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_CLOUDFLARE_CLEAR; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php printf( esc_html__( 'Clear %s cache when "Purge All" is run.', 'litespeed-cache' ), 'Cloudflare' ); ?>
 				</div>
@@ -81,8 +81,14 @@ $this->form_action();
 <?php
 $this->form_end();
 $cf_on     = $this->conf( Base::O_CDN_CLOUDFLARE );
-$cf_domain = $this->conf( Base::O_CDN_CLOUDFLARE_NAME ) ?: '-';
-$cf_zone   = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE ) ?: '-';
+$cf_domain = $this->conf( Base::O_CDN_CLOUDFLARE_NAME );
+$cf_zone   = $this->conf( Base::O_CDN_CLOUDFLARE_ZONE );
+if ( ! $cf_domain ) {
+	$cf_domain = '-';
+}
+if ( ! $cf_zone ) {
+	$cf_zone = '-';
+}
 
 $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() );
 ?>
@@ -131,8 +137,6 @@ $curr_status = CDN\Cloudflare::get_option( CDN\Cloudflare::ITEM_STATUS, array() 
 					esc_html__( 'Current status is %s.', 'litespeed-cache' ),
 					'<code>' . esc_html( strtoupper( $curr_status['devmode'] ) ) . '</code>'
 				);
-				?>
-				<?php
 				printf(
 					esc_html__( 'Development mode will be automatically turned off in %s.', 'litespeed-cache' ),
 					'<code>' . esc_html( $expired_at ) . '</code>'

@@ -12,7 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-$menu_arr = array(
+$menu_list = array(
 	'cache'    => __( 'Cache', 'litespeed-cache' ),
 	'purge'    => __( 'Purge', 'litespeed-cache' ),
 	'excludes' => __( 'Excludes', 'litespeed-cache' ),
@@ -34,7 +34,7 @@ $menu_arr = array(
 
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header nav-tab-wrapper">
-		<?php GUI::display_tab_list( $menu_arr ); ?>
+		<?php GUI::display_tab_list( $menu_list ); ?>
 	</h2>
 	<div class="litespeed-body">
 		<?php $this->cache_disabled_warning(); ?>
@@ -42,7 +42,7 @@ $menu_arr = array(
 		<?php
 		$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 
-		foreach ( $menu_arr as $k => $val ) {
+		foreach ( $menu_list as $k => $val ) {
 			$k_escaped = esc_attr( $k );
 			?>
 			<div data-litespeed-layout="<?php echo esc_html( $k_escaped ); ?>">

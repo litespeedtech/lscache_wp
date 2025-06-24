@@ -67,9 +67,7 @@ class Admin_Display extends Base {
 			$manage = 'manage_options';
 		}
 		if (current_user_can($manage)) {
-			if (!defined('LITESPEED_DISABLE_ALL') || !LITESPEED_DISABLE_ALL) {
-				add_action('wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ));
-			}
+			add_action('wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ));
 
 			// `admin_notices` is after `admin_enqueue_scripts`
 			// @see wp-admin/admin-header.php

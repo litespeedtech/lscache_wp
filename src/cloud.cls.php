@@ -1907,6 +1907,7 @@ class Cloud extends Base {
 	public function ping() {
 		$resp = array(
 			'v_lscwp' => Core::VER,
+			'v_lscwp_db' => $this->conf(self::_VER),
 			'v_php' => PHP_VERSION,
 			'v_wp' => $GLOBALS['wp_version'],
 			'home_url' => home_url(),

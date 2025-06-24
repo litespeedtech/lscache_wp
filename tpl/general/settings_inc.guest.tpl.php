@@ -37,7 +37,7 @@ $guest_update_url = wp_parse_url( LSWCP_PLUGIN_URL . GUI::PHP_GUEST, PHP_URL_PAT
 				<script>
 					(function ($) {
 						jQuery(document).ready(function () {
-							$.post( '<?php echo esc_url( $guest_update_url ); ?>', function(data){
+							$.post( '<?php echo $guest_update_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>', function(data){
 								if ( data === '[]' || data === '{"reload":"yes"}' ) {
 									$('#litespeed_gm_status').html('<font class="litespeed-success"><?php esc_html_e( 'Guest Mode passed testing.', 'litespeed-cache' ); ?></font>');
 								}

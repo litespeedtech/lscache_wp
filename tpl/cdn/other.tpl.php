@@ -11,7 +11,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $home_url = home_url( '/' );
-$parsed   = parse_url( $home_url );
+$parsed   = wp_parse_url( $home_url );
 $home_url = str_replace( $parsed['scheme'] . ':', '', $home_url );
 
 $cdn_mapping = $this->conf( Base::O_CDN_MAPPING );
@@ -33,11 +33,11 @@ $this->form_action();
 	<tbody>
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $id ); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php
 					printf(
@@ -70,7 +70,7 @@ $this->form_action();
 
 				<script type="text/babel">
 					ReactDOM.render(
-						<CDNMapping list={ <?php echo json_encode( $cdn_mapping ); ?> } />,
+						<CDNMapping list={ <?php echo wp_json_encode( $cdn_mapping ); ?> } />,
 						document.getElementById( 'litespeed_cdn_mapping_div' )
 					);
 				</script>
@@ -120,16 +120,16 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_CDN_ATTR; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_ATTR; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
 				<div class="litespeed-textarea-recommended">
 					<div>
-						<?php $this->build_textarea( $id, 40 ); ?>
+						<?php $this->build_textarea( $option_id, 40 ); ?>
 					</div>
 					<div>
-						<?php $this->recommended( $id ); ?>
+						<?php $this->recommended( $option_id ); ?>
 					</div>
 				</div>
 				<div class="litespeed-desc">
@@ -150,11 +150,11 @@ $this->form_action();
 
 		<tr>
 			<th class="litespeed-padding-left">
-				<?php $id = Base::O_CDN_ORI; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_ORI; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id ); ?>
+				<?php $this->build_textarea( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php
 					printf(
@@ -180,16 +180,16 @@ $this->form_action();
 
 		<tr>
 			<th class="litespeed-padding-left">
-				<?php $id = Base::O_CDN_ORI_DIR; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_ORI_DIR; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
 				<div class="litespeed-textarea-recommended">
 					<div>
-						<?php $this->build_textarea( $id, 40 ); ?>
+						<?php $this->build_textarea( $option_id, 40 ); ?>
 					</div>
 					<div>
-						<?php $this->recommended( $id ); ?>
+						<?php $this->recommended( $option_id ); ?>
 					</div>
 				</div>
 				<div class="litespeed-desc">
@@ -201,11 +201,11 @@ $this->form_action();
 
 		<tr>
 			<th class="litespeed-padding-left">
-				<?php $id = Base::O_CDN_EXC; ?>
-				<?php $this->title( $id ); ?>
+				<?php $option_id = Base::O_CDN_EXC; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_textarea( $id ); ?>
+				<?php $this->build_textarea( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php esc_html_e( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ); ?>
 					<?php Doc::one_per_line(); ?>

@@ -13,13 +13,12 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-$url = Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED, true );
-$url = htmlspecialchars_decode( $url );
+$url = Utility::build_url( Router::ACTION_HEALTH, Health::TYPE_SPEED, true, null, array(), true );
 ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 	jQuery(document).ready( function() {
-			jQuery.get( '<?php echo esc_url($url); ?>' ) ;
+			jQuery.get( '<?php echo $url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>' ) ;
 		} ) ;
 });
 </script>
