@@ -112,7 +112,7 @@ class GUI extends Base {
 		$percentage = '<text x="50%" y="50%">' . $percent . ($without_percentage ? '' : '%') . '</text>';
 
 		if ($percent == 100 && $finished_tick) {
-			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">&#x2713</text>';
+			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">✓</text>';
 		}
 
 		return "
