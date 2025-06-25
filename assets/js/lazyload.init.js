@@ -21,11 +21,11 @@
 		instance = new LazyLoad(
 			Object.assign(
 				{},
+				window.lazyLoadOptions || {},
 				{
 					elements_selector: '[data-lazyloaded]',
 					callback_finish: litespeed_finish_callback,
 				},
-				window.lazyLoadOptions || {},
 			)
 		);
 
