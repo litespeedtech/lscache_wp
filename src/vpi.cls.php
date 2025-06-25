@@ -40,6 +40,10 @@ class VPI extends Base {
 		global $wp;
 		$request_url = home_url($wp->request);
 
+		if (!apply_filters('litespeed_vpi_should_queue', true, $request_url)) {
+			return;
+		}
+
 		$ua = !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 		// Store it to prepare for cron
