@@ -439,7 +439,7 @@ class Optimize extends Base {
 				$this->html_head .= $this->_build_js_inline(File::read(LSCWP_DIR . self::LIB_FILE_CSS_ASYNC), true);
 			} else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
-				$this->html_head  .= $this->_build_js_tag($css_async_lib_url, 'litespeed-css-async-lib'); // Don't exclude it from defer for now
+				$this->html_head  .= $this->_build_js_tag($css_async_lib_url); // Don't exclude it from defer for now
 			}
 		}
 

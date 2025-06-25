@@ -248,7 +248,7 @@ class GUI extends Base {
 				break;
 
 			case self::TYPE_DISMISS_PIN:
-            admin_display::dismiss_pin();
+            Admin_display::dismiss_pin();
 				break;
 
 			case self::TYPE_DISMISS_PROMO:

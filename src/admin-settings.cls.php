@@ -328,10 +328,10 @@ class Admin_Settings extends Base {
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array     $instance The new settings.
-	 * @param array     $new_instance
-	 * @param array     $old_instance The original settings.
-	 * @param WP_Widget $widget The widget
+	 * @param array      $instance The new settings.
+	 * @param array      $new_instance
+	 * @param array      $old_instance The original settings.
+	 * @param \WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget ) {

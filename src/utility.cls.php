@@ -441,7 +441,7 @@ class Utility extends Root {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @param  string   `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
+	 * @param  string $url `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
 	 * @return string   `2018/08/test.jpg`
 	 */
 	public static function att_short_path( $url ) {
@@ -544,8 +544,8 @@ class Utility extends Root {
 	 *
 	 * @since  1.3
 	 * @access public
-	 * @param  string $content
-	 * @param  bool   $type String handler type
+	 * @param  array|string $arr
+	 * @param  string|null  $type String handler type
 	 * @return string|array
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {

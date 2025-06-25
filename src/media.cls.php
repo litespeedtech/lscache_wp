@@ -202,7 +202,7 @@ class Media extends Root {
 		 * WP Stateless compatibility #143 https://github.com/litespeedtech/lscache_wp/issues/143
 		 *
 		 * @since 2.9.8
-		 * @return array( 'url', 'md5', 'size' )
+		 * Should return array( 'url', 'md5', 'size' )
 		 */
 		$info = apply_filters('litespeed_media_info', array(), $short_file_path, $post_id);
 		if (!empty($info['url']) && !empty($info['md5']) && !empty($info['size'])) {
