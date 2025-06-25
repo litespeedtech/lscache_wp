@@ -3,15 +3,15 @@
 /**
  * The localization class.
  *
- * @since      	3.3
+ * @since       3.3
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Localization extends Base
-{
+class Localization extends Base {
+
 	const LOG_TAG = '🛍️';
 
 	/**
@@ -20,9 +20,8 @@ class Localization extends Base
 	 * @since  3.0
 	 * @access protected
 	 */
-	public function init()
-	{
-		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 23); // After page optm
+	public function init() {
+		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 23); // After page optm
 	}
 
 	/**
@@ -30,8 +29,7 @@ class Localization extends Base
 	 *
 	 * @since  3.3
 	 */
-	public function serve_static($uri)
-	{
+	public function serve_static( $uri ) {
 		$url = base64_decode($uri);
 
 		if (!$this->conf(self::O_OPTM_LOCALIZE)) {
@@ -44,20 +42,20 @@ class Localization extends Base
 			// exit( 'Not supported ' . $uri );
 		}
 
-		$match = false;
+		$match   = false;
 		$domains = $this->conf(self::O_OPTM_LOCALIZE_DOMAINS);
 		foreach ($domains as $v) {
 			if (!$v || strpos($v, '#') === 0) {
 				continue;
 			}
 
-			$type = 'js';
+			$type   = 'js';
 			$domain = $v;
 			// Try to parse space split value
 			if (strpos($v, ' ')) {
 				$v = explode(' ', $v);
 				if (!empty($v[1])) {
-					$type = strtolower($v[0]);
+					$type   = strtolower($v[0]);
 					$domain = $v[1];
 				}
 			}
@@ -92,7 +90,11 @@ class Localization extends Base
 		$file = $this->_realpath($url);
 
 		self::debug('localize [url] ' . $url);
-		$response = wp_safe_remote_get($url, array('timeout' => 180, 'stream' => true, 'filename' => $file));
+		$response = wp_safe_remote_get($url, array(
+			'timeout' => 180,
+			'stream' => true,
+			'filename' => $file,
+		));
 
 		// Parse response data
 		if (is_wp_error($response)) {
@@ -114,8 +116,7 @@ class Localization extends Base
 	 *
 	 * @since  4.5
 	 */
-	private function _rewrite($url)
-	{
+	private function _rewrite( $url ) {
 		return LITESPEED_STATIC_URL . '/localres/' . $this->_filepath($url);
 	}
 
@@ -125,8 +126,7 @@ class Localization extends Base
 	 * @since  4.5
 	 * @access private
 	 */
-	private function _realpath($url)
-	{
+	private function _realpath( $url ) {
 		return LITESPEED_STATIC_DIR . '/localres/' . $this->_filepath($url);
 	}
 
@@ -135,8 +135,7 @@ class Localization extends Base
 	 *
 	 * @since  4.5
 	 */
-	private function _filepath($url)
-	{
+	private function _filepath( $url ) {
 		$filename = md5($url) . '.js';
 		if (is_multisite()) {
 			$filename = get_current_blog_id() . '/' . $filename;
@@ -150,8 +149,7 @@ class Localization extends Base
 	 * @since 3.3
 	 * @access public
 	 */
-	public function finalize($content)
-	{
+	public function finalize( $content ) {
 		if (is_admin()) {
 			return $content;
 		}
@@ -170,13 +168,13 @@ class Localization extends Base
 				continue;
 			}
 
-			$type = 'js';
+			$type   = 'js';
 			$domain = $v;
 			// Try to parse space split value
 			if (strpos($v, ' ')) {
 				$v = explode(' ', $v);
 				if (!empty($v[1])) {
-					$type = strtolower($v[0]);
+					$type   = strtolower($v[0]);
 					$domain = $v[1];
 				}
 			}

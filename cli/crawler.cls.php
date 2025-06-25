@@ -13,12 +13,11 @@ use WP_CLI;
 /**
  * Crawler
  */
-class Crawler extends Base
-{
+class Crawler extends Base {
+
 	private $__crawler;
 
-	public function __construct()
-	{
+	public function __construct() {
 		Debug2::debug('CLI_Crawler init');
 
 		$this->__crawler = Crawler2::cls();
@@ -33,10 +32,8 @@ class Crawler extends Base
 	 *
 	 *     # List all crawlers
 	 *     $ wp litespeed-crawler l
-	 *
 	 */
-	public function l()
-	{
+	public function l() {
 		$this->list();
 	}
 
@@ -49,12 +46,10 @@ class Crawler extends Base
 	 *
 	 *     # List all crawlers
 	 *     $ wp litespeed-crawler list
-	 *
 	 */
-	public function list()
-	{
+	public function list() {
 		$crawler_list = $this->__crawler->list_crawlers();
-		$summary = Crawler2::get_summary();
+		$summary      = Crawler2::get_summary();
 		if ($summary['curr_crawler'] >= count($crawler_list)) {
 			$summary['curr_crawler'] = 0;
 		}
@@ -63,7 +58,7 @@ class Crawler extends Base
 		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600; // Specify time in seconds for the time between each run interval
 		if ($CRAWLER_RUN_INTERVAL > 0) {
 			$recurrence = '';
-			$hours = (int) floor($CRAWLER_RUN_INTERVAL / 3600);
+			$hours      = (int) floor($CRAWLER_RUN_INTERVAL / 3600);
 			if ($hours) {
 				if ($hours > 1) {
 					$recurrence .= sprintf(__('%d hours', 'litespeed-cache'), $hours);
@@ -84,10 +79,10 @@ class Crawler extends Base
 
 		$list = array();
 		foreach ($crawler_list as $i => $v) {
-			$hit = !empty($summary['crawler_stats'][$i][Crawler2::STATUS_HIT]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_HIT] : 0;
+			$hit  = !empty($summary['crawler_stats'][$i][Crawler2::STATUS_HIT]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_HIT] : 0;
 			$miss = !empty($summary['crawler_stats'][$i][Crawler2::STATUS_MISS]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_MISS] : 0;
 
-			$blacklisted = !empty($summary['crawler_stats'][$i][Crawler2::STATUS_BLACKLIST]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_BLACKLIST] : 0;
+			$blacklisted  = !empty($summary['crawler_stats'][$i][Crawler2::STATUS_BLACKLIST]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_BLACKLIST] : 0;
 			$blacklisted += !empty($summary['crawler_stats'][$i][Crawler2::STATUS_NOCACHE]) ? $summary['crawler_stats'][$i][Crawler2::STATUS_NOCACHE] : 0;
 
 			if (isset($summary['crawler_stats'][$i][Crawler2::STATUS_WAIT])) {
@@ -96,7 +91,7 @@ class Crawler extends Base
 				$waiting = $summary['list_size'] - $hit - $miss - $blacklisted;
 			}
 
-			$analytics = 'Waiting: ' . $waiting;
+			$analytics  = 'Waiting: ' . $waiting;
 			$analytics .= '     Hit: ' . $hit;
 			$analytics .= '     Miss: ' . $miss;
 			$analytics .= '     Blocked: ' . $blacklisted;
@@ -121,7 +116,7 @@ class Crawler extends Base
 			);
 		}
 
-		WP_CLI\Utils\format_items('table', $list, array('ID', 'Name', 'Frequency', 'Status', 'Analytics', 'Running'));
+		WP_CLI\Utils\format_items('table', $list, array( 'ID', 'Name', 'Frequency', 'Status', 'Analytics', 'Running' ));
 	}
 
 	/**
@@ -133,10 +128,8 @@ class Crawler extends Base
 	 *
 	 *     # Turn on 2nd crawler
 	 *     $ wp litespeed-crawler enable 2
-	 *
 	 */
-	public function enable($args)
-	{
+	public function enable( $args ) {
 		$id = $args[0] - 1;
 		if ($this->__crawler->is_active($id)) {
 			WP_CLI::error('ID #' . $id . ' had been enabled');
@@ -156,10 +149,8 @@ class Crawler extends Base
 	 *
 	 *     # Turn off 1st crawler
 	 *     $ wp litespeed-crawler disable 1
-	 *
 	 */
-	public function disable($args)
-	{
+	public function disable( $args ) {
 		$id = $args[0] - 1;
 		if (!$this->__crawler->is_active($id)) {
 			WP_CLI::error('ID #' . $id . ' has been disabled');
@@ -179,10 +170,8 @@ class Crawler extends Base
 	 *
 	 *     # Start crawling
 	 *     $ wp litespeed-crawler r
-	 *
 	 */
-	public function r()
-	{
+	public function r() {
 		$this->run();
 	}
 
@@ -195,10 +184,8 @@ class Crawler extends Base
 	 *
 	 *     # Start crawling
 	 *     $ wp litespeed-crawler run
-	 *
 	 */
-	public function run()
-	{
+	public function run() {
 		self::debug('⚠️⚠️⚠️ Forced take over lane (CLI)');
 		$this->__crawler->Release_lane();
 
@@ -218,10 +205,8 @@ class Crawler extends Base
 	 *
 	 *     # Reset crawler position
 	 *     $ wp litespeed-crawler reset
-	 *
 	 */
-	public function reset()
-	{
+	public function reset() {
 		$this->__crawler->reset_pos();
 
 		$summary = Crawler2::get_summary();

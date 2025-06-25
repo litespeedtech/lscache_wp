@@ -3,35 +3,35 @@
 /**
  * The class to store and manage litespeed db data.
  *
- * @since      	1.3.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.3.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Data extends Root
-{
+class Data extends Root {
+
 	const LOG_TAG = '🚀';
 
 	private $_db_updater = array(
-		'3.5.0.3' => array('litespeed_update_3_5'),
-		'4.0' => array('litespeed_update_4'),
-		'4.1' => array('litespeed_update_4_1'),
-		'4.3' => array('litespeed_update_4_3'),
-		'4.4.4-b1' => array('litespeed_update_4_4_4'),
-		'5.3-a5' => array('litespeed_update_5_3'),
-		'7.0-b26' => array('litespeed_update_7'),
-		'7.0.1-b1' => array('litespeed_update_7_0_1'),
+		'3.5.0.3' => array( 'litespeed_update_3_5' ),
+		'4.0' => array( 'litespeed_update_4' ),
+		'4.1' => array( 'litespeed_update_4_1' ),
+		'4.3' => array( 'litespeed_update_4_3' ),
+		'4.4.4-b1' => array( 'litespeed_update_4_4_4' ),
+		'5.3-a5' => array( 'litespeed_update_5_3' ),
+		'7.0-b26' => array( 'litespeed_update_7' ),
+		'7.0.1-b1' => array( 'litespeed_update_7_0_1' ),
 	);
 
 	private $_db_site_updater = array(
 		// Example
-		// '2.0'	=> array(
-		// 	'litespeed_update_site_2_0',
+		// '2.0'    => array(
+		// 'litespeed_update_site_2_0',
 		// ),
 	);
 
@@ -42,21 +42,20 @@ class Data extends Root
 		'ucss' => 4,
 	);
 
-	const TB_IMG_OPTM = 'litespeed_img_optm';
-	const TB_IMG_OPTMING = 'litespeed_img_optming'; // working table
-	const TB_AVATAR = 'litespeed_avatar';
-	const TB_CRAWLER = 'litespeed_crawler';
+	const TB_IMG_OPTM          = 'litespeed_img_optm';
+	const TB_IMG_OPTMING       = 'litespeed_img_optming'; // working table
+	const TB_AVATAR            = 'litespeed_avatar';
+	const TB_CRAWLER           = 'litespeed_crawler';
 	const TB_CRAWLER_BLACKLIST = 'litespeed_crawler_blacklist';
-	const TB_URL = 'litespeed_url';
-	const TB_URL_FILE = 'litespeed_url_file';
+	const TB_URL               = 'litespeed_url';
+	const TB_URL_FILE          = 'litespeed_url_file';
 
 	/**
 	 * Init
 	 *
 	 * @since  1.3.1
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 	}
 
 	/**
@@ -68,8 +67,7 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function correct_tb_existence()
-	{
+	public function correct_tb_existence() {
 		// Gravatar
 		if ($this->conf(Base::O_DISCUSS_AVATAR_CACHE)) {
 			$this->tb_create('avatar');
@@ -96,12 +94,11 @@ class Data extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public function conf_upgrade($ver)
-	{
+	public function conf_upgrade( $ver ) {
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-		// 	return;
+		// return;
 		// }
 
 		if ($this->_get_upgrade_lock()) {
@@ -157,8 +154,7 @@ class Data extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public function conf_site_upgrade($ver)
-	{
+	public function conf_site_upgrade( $ver ) {
 		if ($this->_get_upgrade_lock()) {
 			return;
 		}
@@ -196,8 +192,7 @@ class Data extends Root
 	 *
 	 * @since 3.0.1
 	 */
-	private function _get_upgrade_lock()
-	{
+	private function _get_upgrade_lock() {
 		$is_upgrading = get_option('litespeed.data.upgrading');
 		if (!$is_upgrading) {
 			$this->_set_upgrade_lock(false); // set option value to existed to avoid repeated db query next time
@@ -214,8 +209,7 @@ class Data extends Root
 	 *
 	 * @since 3.0.1
 	 */
-	public function check_upgrading_msg()
-	{
+	public function check_upgrading_msg() {
 		$is_upgrading = $this->_get_upgrade_lock();
 		if (!$is_upgrading) {
 			return;
@@ -235,8 +229,7 @@ class Data extends Root
 	 *
 	 * @since 3.0.1
 	 */
-	private function _set_upgrade_lock($lock)
-	{
+	private function _set_upgrade_lock( $lock ) {
 		if (!$lock) {
 			update_option('litespeed.data.upgrading', -1);
 		} else {
@@ -252,8 +245,7 @@ class Data extends Root
 	 * @since 3.0
 	 * @access public
 	 */
-	public function try_upgrade_conf_3_0()
-	{
+	public function try_upgrade_conf_3_0() {
 		$previous_options = get_option('litespeed-cache-conf');
 		if (!$previous_options) {
 			return 'new';
@@ -307,8 +299,7 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb($tb)
-	{
+	public function tb( $tb ) {
 		global $wpdb;
 
 		switch ($tb) {
@@ -351,10 +342,15 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_exist($tb)
-	{
+	public function tb_exist( $tb ) {
 		global $wpdb;
-		return $wpdb->get_var("SHOW TABLES LIKE '" . $this->tb($tb) . "'");
+
+		$save_state = $wpdb->suppress_errors;
+		$wpdb->suppress_errors(true);
+		$describe = $wpdb->get_var('DESCRIBE `' . $this->tb($tb) . '`');
+		$wpdb->suppress_errors($save_state);
+
+		return $describe !== null;
 	}
 
 	/**
@@ -363,8 +359,7 @@ class Data extends Root
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _tb_structure($tb)
-	{
+	private function _tb_structure( $tb ) {
 		return File::read(LSCWP_DIR . 'src/data_structure/' . $tb . '.sql');
 	}
 
@@ -374,8 +369,7 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_create($tb)
-	{
+	public function tb_create( $tb ) {
 		global $wpdb;
 
 		self::debug2('[Data] Checking table ' . $tb);
@@ -397,7 +391,7 @@ class Data extends Root
 		$res = $wpdb->query($sql);
 		if ($res !== true) {
 			self::debug('Warning! Creating table failed!', $sql);
-			Admin_Display::error(Error::msg('failed_tb_creation', array('<code>' . $tb . '</code>', '<code>' . $sql . '</code>')));
+			Admin_Display::error(Error::msg('failed_tb_creation', array( '<code>' . $tb . '</code>', '<code>' . $sql . '</code>' )));
 		}
 	}
 
@@ -407,8 +401,7 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tb_del($tb)
-	{
+	public function tb_del( $tb ) {
 		global $wpdb;
 
 		if (!$this->tb_exist($tb)) {
@@ -427,8 +420,7 @@ class Data extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function tables_del()
-	{
+	public function tables_del() {
 		$this->tb_del('avatar');
 		$this->tb_del('crawler');
 		$this->tb_del('crawler_blacklist');
@@ -443,8 +435,7 @@ class Data extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function table_truncate($tb)
-	{
+	public function table_truncate( $tb ) {
 		global $wpdb;
 		$q = 'TRUNCATE TABLE ' . $this->tb($tb);
 		$wpdb->query($q);
@@ -455,8 +446,7 @@ class Data extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function url_file_clean($file_type)
-	{
+	public function url_file_clean( $file_type ) {
 		global $wpdb;
 
 		if (!$this->tb_exist('url_file')) {
@@ -464,7 +454,7 @@ class Data extends Root
 		}
 
 		$type = $this->_url_file_types[$file_type];
-		$q = 'DELETE FROM ' . $this->tb('url_file') . ' WHERE `type` = %d';
+		$q    = 'DELETE FROM ' . $this->tb('url_file') . ' WHERE `type` = %d';
 		$wpdb->query($wpdb->prepare($q, $type));
 
 		// Added to cleanup url table. See issue: https://wordpress.org/support/topic/wp_litespeed_url-1-1-gb-in-db-huge-big/
@@ -482,10 +472,10 @@ class Data extends Root
 
 	/**
 	 * Generate filename based on URL, if content md5 existed, reuse existing file.
+	 *
 	 * @since  4.0
 	 */
-	public function save_url($request_url, $vary, $file_type, $filecon_md5, $path, $mobile = false, $webp = false)
-	{
+	public function save_url( $request_url, $vary, $file_type, $filecon_md5, $path, $mobile = false, $webp = false ) {
 		global $wpdb;
 
 		if (strlen($vary) > 32) {
@@ -494,10 +484,10 @@ class Data extends Root
 
 		$type = $this->_url_file_types[$file_type];
 
-		$tb_url = $this->tb('url');
+		$tb_url      = $this->tb('url');
 		$tb_url_file = $this->tb('url_file');
-		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
+		$q           = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$url_row     = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
 			$q = "INSERT INTO `$tb_url` SET url=%s";
 			$wpdb->query($wpdb->prepare($q, $request_url));
@@ -506,8 +496,8 @@ class Data extends Root
 			$url_id = $url_row['id'];
 		}
 
-		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
-		$file_row = $wpdb->get_row($wpdb->prepare($q, array($url_id, $vary, $type)), ARRAY_A);
+		$q        = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
+		$file_row = $wpdb->get_row($wpdb->prepare($q, array( $url_id, $vary, $type )), ARRAY_A);
 
 		// Check if has previous file or not
 		if ($file_row && $file_row['filename'] == $filecon_md5) {
@@ -520,25 +510,25 @@ class Data extends Root
 
 		// Check if there is any other record used the same filename or not
 		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s AND expired = 0 AND id != %d LIMIT 1";
-		if ($file_row && $wpdb->get_var($wpdb->prepare($q, array($file_row['filename'], $file_row['id'])))) {
+		if ($file_row && $wpdb->get_var($wpdb->prepare($q, array( $file_row['filename'], $file_row['id'] )))) {
 			$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
-			$wpdb->query($wpdb->prepare($q, array($filecon_md5, $file_row['id'])));
+			$wpdb->query($wpdb->prepare($q, array( $filecon_md5, $file_row['id'] )));
 			return;
 		}
 
 		// New record needed
 		$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d, mobile=%d, webp=%d, expired=0";
-		$wpdb->query($wpdb->prepare($q, array($url_id, $vary, $filecon_md5, $type, $mobile ? 1 : 0, $webp ? 1 : 0)));
+		$wpdb->query($wpdb->prepare($q, array( $url_id, $vary, $filecon_md5, $type, $mobile ? 1 : 0, $webp ? 1 : 0 )));
 
 		// Mark existing rows as expired
 		if ($file_row) {
-			$q = "UPDATE `$tb_url_file` SET expired=%d WHERE id=%d";
+			$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE id=%d";
 			$expired = time() + 86400 * apply_filters('litespeed_url_file_expired_days', 20);
-			$wpdb->query($wpdb->prepare($q, array($expired, $file_row['id'])));
+			$wpdb->query($wpdb->prepare($q, array( $expired, $file_row['id'] )));
 
 			// Also check if has other files expired already to be deleted
-			$q = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
-			$q = $wpdb->prepare($q, array($url_id, time()));
+			$q    = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+			$q    = $wpdb->prepare($q, array( $url_id, time() ));
 			$list = $wpdb->get_results($q, ARRAY_A);
 			if ($list) {
 				foreach ($list as $v) {
@@ -554,7 +544,7 @@ class Data extends Root
 					}
 				}
 				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
-				$wpdb->query($wpdb->prepare($q, array($url_id, time())));
+				$wpdb->query($wpdb->prepare($q, array( $url_id, time() )));
 			}
 		}
 
@@ -564,10 +554,10 @@ class Data extends Root
 
 	/**
 	 * Load CCSS related file
+	 *
 	 * @since  4.0
 	 */
-	public function load_url_file($request_url, $vary, $file_type)
-	{
+	public function load_url_file( $request_url, $vary, $file_type ) {
 		global $wpdb;
 
 		if (strlen($vary) > 32) {
@@ -578,8 +568,8 @@ class Data extends Root
 
 		self::debug2('load url file: ' . $request_url);
 
-		$tb_url = $this->tb('url');
-		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$tb_url  = $this->tb('url');
+		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
 		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
 			return false;
@@ -588,8 +578,8 @@ class Data extends Root
 		$url_id = $url_row['id'];
 
 		$tb_url_file = $this->tb('url_file');
-		$q = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
-		$file_row = $wpdb->get_row($wpdb->prepare($q, array($url_id, $vary, $type)), ARRAY_A);
+		$q           = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
+		$file_row    = $wpdb->get_row($wpdb->prepare($q, array( $url_id, $vary, $type )), ARRAY_A);
 		if (!$file_row) {
 			return false;
 		}
@@ -599,15 +589,15 @@ class Data extends Root
 
 	/**
 	 * Mark all entries of one URL to expired
+	 *
 	 * @since 4.5
 	 */
-	public function mark_as_expired($request_url, $auto_q = false)
-	{
+	public function mark_as_expired( $request_url, $auto_q = false ) {
 		global $wpdb;
 		$tb_url = $this->tb('url');
 
 		self::debug('Try to mark as expired: ' . $request_url);
-		$q = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
 		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
 		if (!$url_row) {
 			return;
@@ -619,13 +609,13 @@ class Data extends Root
 
 		$existing_url_files = array();
 		if ($auto_q) {
-			$q = "SELECT a.*, b.url FROM `$tb_url_file` a LEFT JOIN `$tb_url` b ON b.id=a.url_id WHERE a.url_id=%d AND a.type=4 AND a.expired=0";
-			$q = $wpdb->prepare($q, $url_row['id']);
+			$q                  = "SELECT a.*, b.url FROM `$tb_url_file` a LEFT JOIN `$tb_url` b ON b.id=a.url_id WHERE a.url_id=%d AND a.type=4 AND a.expired=0";
+			$q                  = $wpdb->prepare($q, $url_row['id']);
 			$existing_url_files = $wpdb->get_results($q, ARRAY_A);
 		}
-		$q = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=4 AND expired=0";
+		$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=4 AND expired=0";
 		$expired = time() + 86400 * apply_filters('litespeed_url_file_expired_days', 20);
-		$wpdb->query($wpdb->prepare($q, array($expired, $url_row['id'])));
+		$wpdb->query($wpdb->prepare($q, array( $expired, $url_row['id'] )));
 
 		return $existing_url_files;
 	}
@@ -635,8 +625,7 @@ class Data extends Root
 	 *
 	 * @since  3.6
 	 */
-	public function load_css_exc($list)
-	{
+	public function load_css_exc( $list ) {
 		$data = $this->_load_per_line('css_excludes.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -650,8 +639,7 @@ class Data extends Root
 	 *
 	 * @since  7.1
 	 */
-	public function load_ccss_whitelist($list)
-	{
+	public function load_ccss_whitelist( $list ) {
 		$data = $this->_load_per_line('ccss_whitelist.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -665,8 +653,7 @@ class Data extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function load_ucss_whitelist($list)
-	{
+	public function load_ucss_whitelist( $list ) {
 		$data = $this->_load_per_line('ucss_whitelist.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -680,8 +667,7 @@ class Data extends Root
 	 *
 	 * @since  3.5
 	 */
-	public function load_js_exc($list)
-	{
+	public function load_js_exc( $list ) {
 		$data = $this->_load_per_line('js_excludes.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -695,8 +681,7 @@ class Data extends Root
 	 *
 	 * @since  3.6
 	 */
-	public function load_js_defer_exc($list)
-	{
+	public function load_js_defer_exc( $list ) {
 		$data = $this->_load_per_line('js_defer_excludes.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -710,8 +695,7 @@ class Data extends Root
 	 *
 	 * @since  5.4
 	 */
-	public function load_optm_uri_exc($list)
-	{
+	public function load_optm_uri_exc( $list ) {
 		$data = $this->_load_per_line('optm_uri_exc.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -725,8 +709,7 @@ class Data extends Root
 	 *
 	 * @since  3.5
 	 */
-	public function load_esi_nonces($list)
-	{
+	public function load_esi_nonces( $list ) {
 		$data = $this->_load_per_line('esi.nonces.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -740,8 +723,7 @@ class Data extends Root
 	 *
 	 * @since  6.3.0.1
 	 */
-	public function load_cache_nocacheable($list)
-	{
+	public function load_cache_nocacheable( $list ) {
 		$data = $this->_load_per_line('cache_nocacheable.txt');
 		if ($data) {
 			$list = array_unique(array_filter(array_merge($list, $data)));
@@ -754,13 +736,12 @@ class Data extends Root
 	 * Load file per line
 	 *
 	 * Support two kinds of comments:
-	 * 		1. `# this is comment`
-	 * 		2. `##this is comment`
+	 *      1. `# this is comment`
+	 *      2. `##this is comment`
 	 *
 	 * @since  3.5
 	 */
-	private function _load_per_line($file)
-	{
+	private function _load_per_line( $file ) {
 		$data = File::read(LSCWP_DIR . 'data/' . $file);
 		$data = explode(PHP_EOL, $data);
 		$list = array();

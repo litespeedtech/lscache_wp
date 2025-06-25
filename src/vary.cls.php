@@ -3,19 +3,19 @@
 /**
  * The plugin vary class to manage X-LiteSpeed-Vary
  *
- * @since      	1.1.3
+ * @since       1.1.3
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Vary extends Root
-{
-	const LOG_TAG = '🔱';
+class Vary extends Root {
+
+	const LOG_TAG  = '🔱';
 	const X_HEADER = 'X-LiteSpeed-Vary';
 
-	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
+	private static $_vary_name       = '_lscache_vary'; // this default vary cookie is used for logged in status check
 	private static $_can_change_vary = false; // Currently only AJAX used this
 
 	/**
@@ -27,7 +27,7 @@ class Vary extends Root
 	 */
 	// public function init()
 	// {
-	// 	$this->_update_vary_name();
+	// $this->_update_vary_name();
 	// }
 
 	/**
@@ -36,8 +36,7 @@ class Vary extends Root
 	 * @since  4.0
 	 * @since 7.0 Moved to after_user_init to allow ESI no-vary no conflict w/ LSCACHE_VARY_COOKIE/O_CACHE_LOGIN_COOKIE
 	 */
-	private function _update_vary_name()
-	{
+	private function _update_vary_name() {
 		$db_cookie = $this->conf(Base::O_CACHE_LOGIN_COOKIE); // [3.0] todo: check if works in network's sites
 		// If no vary set in rewrite rule
 		if (!isset($_SERVER['LSCACHE_VARY_COOKIE'])) {
@@ -49,12 +48,12 @@ class Vary extends Root
 					$control = explode(',', $_GET['_control']);
 					if (in_array('no-vary', $control)) {
 						self::debug('no-vary control existed, bypass vary_name update');
-						$something_wrong = false;
+						$something_wrong  = false;
 						self::$_vary_name = $db_cookie;
 					}
 				}
 
-				if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
+				if (defined('LITESPEED_CLI') || wp_doing_cron()) {
 					$something_wrong = false;
 				}
 
@@ -92,8 +91,7 @@ class Vary extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function after_user_init()
-	{
+	public function after_user_init() {
 		$this->_update_vary_name();
 
 		// logged in user
@@ -101,7 +99,7 @@ class Vary extends Root
 			// If not esi, check cache logged-in user setting
 			if (!$this->cls('Router')->esi_enabled()) {
 				// If cache logged-in, then init cacheable to private
-				if ($this->conf(Base::O_CACHE_PRIV)) {
+				if ($this->conf(Base::O_CACHE_PRIV) && !is_admin()) {
 					add_action('wp_logout', __NAMESPACE__ . '\Purge::purge_on_logout');
 
 					$this->cls('Control')->init_cacheable();
@@ -113,40 +111,41 @@ class Vary extends Root
 				}
 			}
 			// ESI is on, can be public cache
-			else {
+			elseif (!is_admin()) {
 				// Need to make sure vary is using group id
 				$this->cls('Control')->init_cacheable();
 			}
 
 			// register logout hook to clear login status
-			add_action('clear_auth_cookie', array($this, 'remove_logged_in'));
+			add_action('clear_auth_cookie', array( $this, 'remove_logged_in' ));
 		} else {
 			// Only after vary init, can detect if is Guest mode or not
 			// Here need `self::$_vary_name` to be set first.
 			$this->_maybe_guest_mode();
 
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-			add_action('set_logged_in_cookie', array($this, 'add_logged_in'), 10, 4);
+			add_action('set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4);
 			add_action('wp_login', __NAMESPACE__ . '\Purge::purge_on_logout');
 
 			$this->cls('Control')->init_cacheable();
 
 			// Check `login page` cacheable setting because they don't go through main WP logic
-			add_action('login_init', array($this->cls('Tag'), 'check_login_cacheable'), 5);
+			add_action('login_init', array( $this->cls('Tag'), 'check_login_cacheable' ), 5);
 
 			if (!empty($_GET['litespeed_guest'])) {
-				add_action('wp_loaded', array($this, 'update_guest_vary'), 20);
+				add_action('wp_loaded', array( $this, 'update_guest_vary' ), 20);
 			}
 		}
 
 		// Add comment list ESI
-		add_filter('comments_array', array($this, 'check_commenter'));
+		add_filter('comments_array', array( $this, 'check_commenter' ));
 
 		// Set vary cookie for commenter.
-		add_action('set_comment_cookies', array($this, 'append_commenter'));
+		add_action('set_comment_cookies', array( $this, 'append_commenter' ));
 
 		/**
 		 * Don't change for REST call because they don't carry on user info usually
+		 *
 		 * @since 1.6.7
 		 */
 		add_action('rest_api_init', function () {
@@ -161,8 +160,7 @@ class Vary extends Root
 	 *
 	 * @since  4.0
 	 */
-	private function _maybe_guest_mode()
-	{
+	private function _maybe_guest_mode() {
 		if (defined('LITESPEED_GUEST')) {
 			self::debug('👒👒 Guest mode ' . (LITESPEED_GUEST ? 'predefined' : 'turned off'));
 			return;
@@ -182,11 +180,11 @@ class Vary extends Root
 			return;
 		}
 
-		if (defined('DOING_AJAX')) {
+		if (wp_doing_ajax()) {
 			return;
 		}
 
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			return;
 		}
 
@@ -217,8 +215,7 @@ class Vary extends Root
 	 * @since  4.0
 	 * @deprecated 4.1 Use independent lightweight guest.vary.php as a replacement
 	 */
-	public function update_guest_vary()
-	{
+	public function update_guest_vary() {
 		// This process must not be cached
 		!defined('LSCACHE_NO_CACHE') && define('LSCACHE_NO_CACHE', true);
 
@@ -234,7 +231,7 @@ class Vary extends Root
 		self::debug('Will update guest vary in finalize');
 
 		// return json
-		echo \json_encode(array('reload' => 'yes'));
+		echo \json_encode(array( 'reload' => 'yes' ));
 		exit();
 	}
 
@@ -253,10 +250,10 @@ class Vary extends Root
 	 * @param array $comments The current comments to output
 	 * @return array The comments to output.
 	 */
-	public function check_commenter($comments)
-	{
+	public function check_commenter( $comments ) {
 		/**
 		 * Hook to bypass pending comment check for comment related plugins compatibility
+		 *
 		 * @since 2.9.5
 		 */
 		if (apply_filters('litespeed_vary_check_commenter_pending', true)) {
@@ -304,8 +301,7 @@ class Vary extends Root
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function has_vary()
-	{
+	public static function has_vary() {
 		if (empty($_COOKIE[self::$_vary_name])) {
 			return false;
 		}
@@ -319,12 +315,12 @@ class Vary extends Root
 	 * @since 1.6.2 Removed static referral
 	 * @access public
 	 */
-	public function add_logged_in($logged_in_cookie = false, $expire = false, $expiration = false, $uid = false)
-	{
+	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false ) {
 		self::debug('add_logged_in');
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary();
@@ -340,12 +336,12 @@ class Vary extends Root
 	 * @since 1.6.2 Removed static referral
 	 * @access public
 	 */
-	public function remove_logged_in()
-	{
+	public function remove_logged_in() {
 		self::debug('remove_logged_in');
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary();
@@ -361,8 +357,7 @@ class Vary extends Root
 	 * @since 2.6 Changed to static
 	 * @access public
 	 */
-	public static function can_ajax_vary()
-	{
+	public static function can_ajax_vary() {
 		self::debug('_can_change_vary -> true');
 		self::$_can_change_vary = true;
 	}
@@ -373,8 +368,7 @@ class Vary extends Root
 	 * @since 1.6.2
 	 * @access private
 	 */
-	private function can_change_vary()
-	{
+	private function can_change_vary() {
 		// Don't change for ajax due to ajax not sending webp header
 		if (Router::is_ajax()) {
 			if (!self::$_can_change_vary) {
@@ -385,6 +379,7 @@ class Vary extends Root
 
 		/**
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
+		 *
 		 * @since 1.6.5
 		 */
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -394,6 +389,7 @@ class Vary extends Root
 
 		/**
 		 * Disable vary change if is from crawler
+		 *
 		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
 		 */
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], Crawler::FAST_USER_AGENT) === 0) {
@@ -416,8 +412,7 @@ class Vary extends Root
 	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid )
 	 * @access private
 	 */
-	private function _update_default_vary($uid = false, $expire = false)
-	{
+	private function _update_default_vary( $uid = false, $expire = false ) {
 		// Make sure header output only run once
 		if (!defined('LITESPEED_DID_' . __FUNCTION__)) {
 			define('LITESPEED_DID_' . __FUNCTION__, true);
@@ -433,7 +428,7 @@ class Vary extends Root
 		}
 
 		// If the cookie is lost somehow, set it
-		$vary = $this->finalize_default_vary($uid);
+		$vary         = $this->finalize_default_vary($uid);
 		$current_vary = self::has_vary();
 		if ($current_vary !== $vary && $current_vary !== 'commenter' && $this->can_change_vary()) {
 			// $_COOKIE[ self::$_vary_name ] = $vary; // not needed
@@ -453,8 +448,7 @@ class Vary extends Root
 	 * @since 1.9.1
 	 * @access public
 	 */
-	public function get_vary_name()
-	{
+	public function get_vary_name() {
 		return self::$_vary_name;
 	}
 
@@ -467,9 +461,8 @@ class Vary extends Root
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_vary_group($role)
-	{
-		$group = 0;
+	public function in_vary_group( $role ) {
+		$group       = 0;
 		$vary_groups = $this->conf(Base::O_CACHE_VARY_GROUP);
 
 		$roles = explode(',', $role);
@@ -500,8 +493,7 @@ class Vary extends Root
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function finalize_default_vary($uid = false)
-	{
+	public function finalize_default_vary( $uid = false ) {
 		// Must check this to bypass vary generation for guests
 		// Must check this to avoid Guest page's CSS/JS/CCSS/UCSS get non-guest vary filename
 		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST) {
@@ -548,6 +540,7 @@ class Vary extends Root
 
 		/**
 		 * Add filter
+		 *
 		 * @since 1.6 Added for Role Excludes for optimization cls
 		 * @since 1.6.2 Hooked to webp (checked in v4, no webp anymore)
 		 * @since 3.0 Used by 3rd hooks too
@@ -577,9 +570,8 @@ class Vary extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function finalize_full_varies()
-	{
-		$vary = $this->_finalize_curr_vary_cookies(true);
+	public function finalize_full_varies() {
+		$vary  = $this->_finalize_curr_vary_cookies(true);
 		$vary .= $this->finalize_default_vary(get_current_user_id());
 		$vary .= $this->get_env_vary();
 		return $vary;
@@ -590,8 +582,7 @@ class Vary extends Root
 	 *
 	 * @since  4.0
 	 */
-	public function get_env_vary()
-	{
+	public function get_env_vary() {
 		$env_vary = isset($_SERVER['LSCACHE_VARY_VALUE']) ? $_SERVER['LSCACHE_VARY_VALUE'] : false;
 		if (!$env_vary) {
 			$env_vary = isset($_SERVER['HTTP_X_LSCACHE_VARY_VALUE']) ? $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] : false;
@@ -607,8 +598,7 @@ class Vary extends Root
 	 * @since 1.1.6
 	 * @access public
 	 */
-	public function append_commenter()
-	{
+	public function append_commenter() {
 		$this->add_commenter(true);
 	}
 
@@ -619,8 +609,7 @@ class Vary extends Root
 	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
-	private function add_commenter($from_redirect = false)
-	{
+	private function add_commenter( $from_redirect = false ) {
 		// If the cookie is lost somehow, set it
 		if (self::has_vary() !== 'commenter') {
 			self::debug('Add commenter');
@@ -639,8 +628,7 @@ class Vary extends Root
 	 * @since 1.1.3
 	 * @access private
 	 */
-	private function remove_commenter()
-	{
+	private function remove_commenter() {
 		if (self::has_vary() === 'commenter') {
 			self::debug('Remove commenter');
 			// remove logged in status from global var
@@ -659,10 +647,9 @@ class Vary extends Root
 	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
-	private static function _relative_path($from_redirect = false)
-	{
+	private static function _relative_path( $from_redirect = false ) {
 		$path = false;
-		$tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL';
+		$tag  = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL';
 		if (!empty($_SERVER[$tag])) {
 			$path = parse_url($_SERVER[$tag]);
 			$path = !empty($path['path']) ? $path['path'] : false;
@@ -683,8 +670,7 @@ class Vary extends Root
 	 * @global $post
 	 * @return mixed false if the user has the postpass cookie. Empty string if the post is not password protected. Vary header otherwise.
 	 */
-	public function finalize()
-	{
+	public function finalize() {
 		// Finalize default vary
 		if (!defined('LITESPEED_GUEST') || !LITESPEED_GUEST) {
 			$this->_update_default_vary();
@@ -709,8 +695,7 @@ class Vary extends Root
 	 * @access private
 	 * @return array List of all vary cookies currently added.
 	 */
-	private function _finalize_curr_vary_cookies($values_json = false)
-	{
+	private function _finalize_curr_vary_cookies( $values_json = false ) {
 		global $post;
 
 		$cookies = array(); // No need to append default vary cookie name
@@ -750,8 +735,7 @@ class Vary extends Root
 	 *
 	 * @since  4.0
 	 */
-	private function _get_cookie_val($key)
-	{
+	private function _get_cookie_val( $key ) {
 		if (!empty($_COOKIE[$key])) {
 			return $_COOKIE[$key];
 		}
@@ -770,14 +754,14 @@ class Vary extends Root
 	 * @param integer $expire Expire time.
 	 * @param boolean $path False if use wp root path as cookie path
 	 */
-	private function _cookie($val = false, $expire = false, $path = false)
-	{
+	private function _cookie( $val = false, $expire = false, $path = false ) {
 		if (!$val) {
 			$expire = 1;
 		}
 
 		/**
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
+		 *
 		 * @since 1.7
 		 */
 		$is_ssl = $this->conf(Base::O_UTIL_NO_HTTPS_VARY) ? false : is_ssl();

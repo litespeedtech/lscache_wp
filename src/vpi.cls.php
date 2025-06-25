@@ -3,18 +3,18 @@
 /**
  * The viewport image class.
  *
- * @since      	4.7
+ * @since       4.7
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class VPI extends Base
-{
+class VPI extends Base {
+
 	const LOG_TAG = '[VPI]';
 
-	const TYPE_GEN = 'gen';
+	const TYPE_GEN     = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
 	protected $_summary;
@@ -25,8 +25,7 @@ class VPI extends Base
 	 *
 	 * @since  4.7
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_summary = self::get_summary();
 	}
 
@@ -35,8 +34,7 @@ class VPI extends Base
 	 *
 	 * @since  4.7
 	 */
-	public function add_to_queue()
-	{
+	public function add_to_queue() {
 		$is_mobile = $this->_separate_mobile();
 
 		global $wp;
@@ -84,10 +82,10 @@ class VPI extends Base
 
 	/**
 	 * Notify finished from server
+	 *
 	 * @since 4.7
 	 */
-	public function notify()
-	{
+	public function notify() {
 		$post_data = \json_decode(file_get_contents('php://input'), true);
 		if (is_null($post_data)) {
 			$post_data = $_POST;
@@ -125,13 +123,13 @@ class VPI extends Base
 
 			// Save data
 			if (!empty($v['data_vpi'])) {
-				$post_id = $this->_queue[$queue_k]['post_id'];
-				$name = !empty($v['is_mobile']) ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
+				$post_id   = $this->_queue[$queue_k]['post_id'];
+				$name      = !empty($v['is_mobile']) ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
 				$urldecode = is_array($v['data_vpi']) ? array_map('urldecode', $v['data_vpi']) : urldecode($v['data_vpi']);
 				self::debug('save data_vpi', $urldecode);
 				$this->cls('Metabox')->save($post_id, $name, $urldecode);
 
-				$valid_i++;
+				++$valid_i;
 			}
 
 			unset($this->_queue[$queue_k]);
@@ -141,7 +139,7 @@ class VPI extends Base
 
 		self::debug('notified');
 
-		return Cloud::ok(array('count' => $valid_i));
+		return Cloud::ok(array( 'count' => $valid_i ));
 	}
 
 	/**
@@ -149,8 +147,7 @@ class VPI extends Base
 	 *
 	 * @since  4.7
 	 */
-	public static function cron($continue = false)
-	{
+	public static function cron( $continue = false ) {
 		$_instance = self::cls();
 		return $_instance->_cron_handler($continue);
 	}
@@ -160,8 +157,7 @@ class VPI extends Base
 	 *
 	 * @since  4.7
 	 */
-	private function _cron_handler($continue = false)
-	{
+	private function _cron_handler( $continue = false ) {
 		self::debug('cron start');
 		$this->_queue = $this->load_queue('vpi');
 
@@ -185,7 +181,7 @@ class VPI extends Base
 
 			self::debug('cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
 
-			$i++;
+			++$i;
 			$res = $this->_send_req($v['url'], $k, $v['user_agent'], $v['is_mobile']);
 			if (!$res) {
 				// Status is wrong, drop this this->_queue
@@ -210,7 +206,7 @@ class VPI extends Base
 				return;
 			}
 
-			$this->_queue = $this->load_queue('vpi');
+			$this->_queue                = $this->load_queue('vpi');
 			$this->_queue[$k]['_status'] = 'requested';
 			$this->save_queue('vpi', $this->_queue);
 			self::debug('Saved to queue [k] ' . $k);
@@ -233,11 +229,10 @@ class VPI extends Base
 	 * @since  4.7
 	 * @access private
 	 */
-	private function _send_req($request_url, $queue_k, $user_agent, $is_mobile)
-	{
+	private function _send_req( $request_url, $queue_k, $user_agent, $is_mobile ) {
 		$svc = Cloud::SVC_VPI;
 		// Check if has credit to push or not
-		$err = false;
+		$err       = false;
 		$allowance = $this->cls('Cloud')->allowance($svc, $err);
 		if (!$allowance) {
 			self::debug('❌ No credit: ' . $err);
@@ -248,7 +243,7 @@ class VPI extends Base
 		set_time_limit(120);
 
 		// Update css request status
-		self::save_summary(array('curr_request_vpi' => time()), true);
+		self::save_summary(array( 'curr_request_vpi' => time() ), true);
 
 		// Gather guest HTML to send
 		$html = $this->cls('CSS')->prepare_html($request_url, $user_agent);
@@ -258,7 +253,7 @@ class VPI extends Base
 		}
 
 		// Parse HTML to gather all CSS content before requesting
-		$css = false;
+		$css              = false;
 		list($css, $html) = $this->cls('CSS')->prepare_css($html);
 
 		if (!$css) {
@@ -288,7 +283,7 @@ class VPI extends Base
 
 		// Save summary data
 		self::reload_summary();
-		$this->_summary['last_spent_vpi'] = time() - $this->_summary['curr_request_vpi'];
+		$this->_summary['last_spent_vpi']   = time() - $this->_summary['curr_request_vpi'];
 		$this->_summary['last_request_vpi'] = $this->_summary['curr_request_vpi'];
 		$this->_summary['curr_request_vpi'] = 0;
 		self::save_summary();
@@ -301,17 +296,16 @@ class VPI extends Base
 	 *
 	 * @since  4.7
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_GEN:
-				self::cron(true);
+            self::cron(true);
 				break;
 
 			case self::TYPE_CLEAR_Q:
-				$this->clear_q('vpi');
+            $this->clear_q('vpi');
 				break;
 
 			default:

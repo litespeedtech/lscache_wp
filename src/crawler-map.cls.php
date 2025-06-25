@@ -3,22 +3,22 @@
 /**
  * The Crawler Sitemap Class
  *
- * @since      	1.1.0
+ * @since       1.1.0
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Crawler_Map extends Root
-{
+class Crawler_Map extends Root {
+
 	const LOG_TAG = '🐞🗺️';
 
-	const BM_MISS = 1;
-	const BM_HIT = 2;
+	const BM_MISS      = 1;
+	const BM_HIT       = 2;
 	const BM_BLACKLIST = 4;
 
-	private $_home_url; // Used to simplify urls
+	private $_site_url; // Used to simplify urls
 	private $_tb;
 	private $_tb_blacklist;
 	private $__data;
@@ -30,12 +30,11 @@ class Crawler_Map extends Root
 	 *
 	 * @since 1.1.0
 	 */
-	public function __construct()
-	{
-		$this->_home_url = get_home_url();
-		$this->__data = Data::cls();
-		$this->_tb = $this->__data->tb('crawler');
-		$this->_tb_blacklist = $this->__data->tb('crawler_blacklist');
+	public function __construct() {
+		$this->_site_url         = get_site_url();
+		$this->__data            = Data::cls();
+		$this->_tb               = $this->__data->tb('crawler');
+		$this->_tb_blacklist     = $this->__data->tb('crawler_blacklist');
 		$this->_conf_map_timeout = defined('LITESPEED_CRAWLER_MAP_TIMEOUT') ? LITESPEED_CRAWLER_MAP_TIMEOUT : 180; // Specify the timeout while parsing the sitemap
 	}
 
@@ -45,12 +44,11 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function save_map_status($list, $curr_crawler)
-	{
+	public function save_map_status( $list, $curr_crawler ) {
 		global $wpdb;
 		Utility::compatibility();
 
-		$total_crawler = count(Crawler::cls()->list_crawlers());
+		$total_crawler     = count(Crawler::cls()->list_crawlers());
 		$total_crawler_pos = $total_crawler - 1;
 
 		// Replace current crawler's position
@@ -64,7 +62,7 @@ class Crawler_Map extends Root
 
 			// Update res first, then reason
 			$right_pos = $total_crawler_pos - $curr_crawler;
-			$sql_res = "CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, $right_pos ) )";
+			$sql_res   = "CONCAT( LEFT( res, $curr_crawler ), '$bit', RIGHT( res, $right_pos ) )";
 
 			$id_all = implode(',', array_map('intval', array_keys($ids)));
 
@@ -72,7 +70,7 @@ class Crawler_Map extends Root
 
 			// Add blacklist
 			if ($bit == Crawler::STATUS_BLACKLIST || $bit == Crawler::STATUS_NOCACHE) {
-				$q = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
+				$q        = "SELECT a.id, a.url FROM `$this->_tb_blacklist` a LEFT JOIN `$this->_tb` b ON b.url=a.url WHERE b.id IN ( $id_all )";
 				$existing = $wpdb->get_results($q, ARRAY_A);
 				// Update current crawler status tag in existing blacklist
 				if ($existing) {
@@ -86,12 +84,12 @@ class Crawler_Map extends Root
 
 					self::debug('Insert into blacklist [count] ' . count($new_urls));
 
-					$q = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode(',', array_fill(0, count($new_urls), '( %s, %s, %s )'));
-					$data = array();
-					$res = array_fill(0, $total_crawler, '-');
+					$q                  = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode(',', array_fill(0, count($new_urls), '( %s, %s, %s )'));
+					$data               = array();
+					$res                = array_fill(0, $total_crawler, '-');
 					$res[$curr_crawler] = $bit;
-					$res = implode('', $res);
-					$default_reason = $total_crawler > 1 ? str_repeat(',', $total_crawler - 1) : ''; // Pre-populate default reason value first, update later
+					$res                = implode('', $res);
+					$default_reason     = $total_crawler > 1 ? str_repeat(',', $total_crawler - 1) : ''; // Pre-populate default reason value first, update later
 					foreach ($new_urls as $url) {
 						$data[] = $url;
 						$data[] = $res;
@@ -153,16 +151,15 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_add($id)
-	{
+	public function blacklist_add( $id ) {
 		global $wpdb;
 
 		$id = (int) $id;
 
 		// Build res&reason
 		$total_crawler = count(Crawler::cls()->list_crawlers());
-		$res = str_repeat(Crawler::STATUS_BLACKLIST, $total_crawler);
-		$reason = implode(',', array_fill(0, $total_crawler, 'Man'));
+		$res           = str_repeat(Crawler::STATUS_BLACKLIST, $total_crawler);
+		$reason        = implode(',', array_fill(0, $total_crawler, 'Man'));
 
 		$row = $wpdb->get_row("SELECT a.url, b.id FROM `$this->_tb` a LEFT JOIN `$this->_tb_blacklist` b ON b.url = a.url WHERE a.id = '$id'", ARRAY_A);
 		if (!$row) {
@@ -173,14 +170,14 @@ class Crawler_Map extends Root
 		self::debug('Add to blacklist [url] ' . $row['url']);
 
 		$q = "UPDATE `$this->_tb` SET res = %s, reason = %s WHERE id = %d";
-		$wpdb->query($wpdb->prepare($q, array($res, $reason, $id)));
+		$wpdb->query($wpdb->prepare($q, array( $res, $reason, $id )));
 
 		if ($row['id']) {
 			$q = "UPDATE `$this->_tb_blacklist` SET res = %s, reason = %s WHERE id = %d";
-			$wpdb->query($wpdb->prepare($q, array($res, $reason, $row['id'])));
+			$wpdb->query($wpdb->prepare($q, array( $res, $reason, $row['id'] )));
 		} else {
 			$q = "INSERT INTO `$this->_tb_blacklist` (url, res, reason) VALUES (%s, %s, %s)";
-			$wpdb->query($wpdb->prepare($q, array($row['url'], $res, $reason)));
+			$wpdb->query($wpdb->prepare($q, array( $row['url'], $res, $reason )));
 		}
 	}
 
@@ -190,8 +187,7 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_del($id)
-	{
+	public function blacklist_del( $id ) {
 		global $wpdb;
 		if (!$this->__data->tb_exist('crawler_blacklist')) {
 			return;
@@ -218,8 +214,7 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function blacklist_empty()
-	{
+	public function blacklist_empty() {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler_blacklist')) {
@@ -238,8 +233,7 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list_blacklist($limit = false, $offset = false)
-	{
+	public function list_blacklist( $limit = false, $offset = false ) {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler_blacklist')) {
@@ -250,11 +244,11 @@ class Crawler_Map extends Root
 
 		if ($limit !== false) {
 			if ($offset === false) {
-				$total = $this->count_blacklist();
+				$total  = $this->count_blacklist();
 				$offset = Utility::pagination($total, $limit, true);
 			}
 			$q .= ' LIMIT %d, %d';
-			$q = $wpdb->prepare($q, $offset, $limit);
+			$q  = $wpdb->prepare($q, $offset, $limit);
 		}
 		return $wpdb->get_results($q, ARRAY_A);
 	}
@@ -262,8 +256,7 @@ class Crawler_Map extends Root
 	/**
 	 * Count blacklist
 	 */
-	public function count_blacklist()
-	{
+	public function count_blacklist() {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler_blacklist')) {
@@ -280,8 +273,7 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function empty_map()
-	{
+	public function empty_map() {
 		Data::cls()->tb_del('crawler');
 
 		$msg = __('Sitemap cleaned successfully', 'litespeed-cache');
@@ -294,8 +286,7 @@ class Crawler_Map extends Root
 	 * @since  3.0
 	 * @access public
 	 */
-	public function list_map($limit, $offset = false)
-	{
+	public function list_map( $limit, $offset = false ) {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler')) {
@@ -303,7 +294,7 @@ class Crawler_Map extends Root
 		}
 
 		if ($offset === false) {
-			$total = $this->count_map();
+			$total  = $this->count_map();
 			$offset = Utility::pagination($total, $limit, true);
 		}
 
@@ -321,7 +312,7 @@ class Crawler_Map extends Root
 			if ($type == 'blacklisted') {
 				$q .= " AND res LIKE '%" . Crawler::STATUS_BLACKLIST . "%'";
 			}
-			$q .= ' ORDER BY id LIMIT %d, %d';
+			$q    .= ' ORDER BY id LIMIT %d, %d';
 			$where = '%' . $wpdb->esc_like($_POST['kw']) . '%';
 			return $wpdb->get_results($wpdb->prepare($q, $where, $offset, $limit), ARRAY_A);
 		}
@@ -344,8 +335,7 @@ class Crawler_Map extends Root
 	/**
 	 * Count sitemap
 	 */
-	public function count_map()
-	{
+	public function count_map() {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler')) {
@@ -374,8 +364,7 @@ class Crawler_Map extends Root
 	 * @since    1.1.0
 	 * @access public
 	 */
-	public function gen($manual = false)
-	{
+	public function gen( $manual = false ) {
 		$count = $this->_gen();
 
 		if (!$count) {
@@ -383,7 +372,7 @@ class Crawler_Map extends Root
 			return;
 		}
 
-		if (!defined('DOING_CRON') && $manual) {
+		if (!wp_doing_cron() && $manual) {
 			$msg = sprintf(__('Sitemap created successfully: %d items', 'litespeed-cache'), $count);
 			Admin_Display::success($msg);
 		}
@@ -395,8 +384,7 @@ class Crawler_Map extends Root
 	 * @since    1.1.0
 	 * @access private
 	 */
-	private function _gen()
-	{
+	private function _gen() {
 		global $wpdb;
 
 		if (!$this->__data->tb_exist('crawler')) {
@@ -412,7 +400,7 @@ class Crawler_Map extends Root
 			return false;
 		}
 
-		$offset = strlen($this->_home_url);
+		$offset  = strlen($this->_site_url);
 		$sitemap = Utility::sanitize_lines($sitemap);
 
 		try {
@@ -426,7 +414,7 @@ class Crawler_Map extends Root
 		if (is_array($this->_urls) && !empty($this->_urls)) {
 			if (defined('LITESPEED_CRAWLER_DROP_DOMAIN') && LITESPEED_CRAWLER_DROP_DOMAIN) {
 				foreach ($this->_urls as $k => $v) {
-					if (stripos($v, $this->_home_url) !== 0) {
+					if (stripos($v, $this->_site_url) !== 0) {
 						unset($this->_urls[$k]);
 						continue;
 					}
@@ -445,7 +433,7 @@ class Crawler_Map extends Root
 		// Filter URLs in blacklist
 		$blacklist = $this->list_blacklist();
 
-		$full_blacklisted = array();
+		$full_blacklisted    = array();
 		$partial_blacklisted = array();
 		foreach ($blacklist as $v) {
 			if (strpos($v['res'], '-') === false) {
@@ -453,11 +441,11 @@ class Crawler_Map extends Root
 				$full_blacklisted[] = $v['url'];
 			} else {
 				// Replace existing reason
-				$v['reason'] = explode(',', $v['reason']);
-				$v['reason'] = array_map(function ($element) {
+				$v['reason']                    = explode(',', $v['reason']);
+				$v['reason']                    = array_map(function ( $element ) {
 					return $element ? 'Existed' : '';
 				}, $v['reason']);
-				$v['reason'] = implode(',', $v['reason']);
+				$v['reason']                    = implode(',', $v['reason']);
 				$partial_blacklisted[$v['url']] = array(
 					'res' => $v['res'],
 					'reason' => $v['reason'],
@@ -469,8 +457,8 @@ class Crawler_Map extends Root
 		$this->_urls = array_diff($this->_urls, $full_blacklisted);
 
 		// Default res & reason
-		$crawler_count = count(Crawler::cls()->list_crawlers());
-		$default_res = str_repeat('-', $crawler_count);
+		$crawler_count  = count(Crawler::cls()->list_crawlers());
+		$default_res    = str_repeat('-', $crawler_count);
 		$default_reason = $crawler_count > 1 ? str_repeat(',', $crawler_count - 1) : '';
 
 		$data = array();
@@ -496,8 +484,7 @@ class Crawler_Map extends Root
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _save($data, $fields = 'url,res,reason')
-	{
+	private function _save( $data, $fields = 'url,res,reason' ) {
 		global $wpdb;
 
 		if (empty($data)) {
@@ -519,13 +506,16 @@ class Crawler_Map extends Root
 	 * @since    1.1.1
 	 * @access private
 	 */
-	private function _parse($sitemap)
-	{
+	private function _parse( $sitemap ) {
 		/**
 		 * Read via wp func to avoid allow_url_fopen = off
+		 *
 		 * @since  2.2.7
 		 */
-		$response = wp_safe_remote_get($sitemap, array('timeout' => $this->_conf_map_timeout, 'sslverify' => false));
+		$response = wp_safe_remote_get($sitemap, array(
+			'timeout' => $this->_conf_map_timeout,
+			'sslverify' => false,
+		));
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to read sitemap: ' . $error_message);

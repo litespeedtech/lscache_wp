@@ -17,23 +17,23 @@ defined('WPINC') || exit();
 use LiteSpeed\API;
 use LiteSpeed\Base;
 
-class WooCommerce extends Base
-{
+class WooCommerce extends Base {
+
 	const O_CACHE_TTL_FRONTPAGE = Base::O_CACHE_TTL_FRONTPAGE;
 
-	const CACHETAG_SHOP = 'WC_S';
-	const CACHETAG_TERM = 'WC_T.';
+	const CACHETAG_SHOP     = 'WC_S';
+	const CACHETAG_TERM     = 'WC_T.';
 	const O_UPDATE_INTERVAL = 'wc_update_interval';
-	const O_CART_VARY = 'wc_cart_vary';
-	const O_PQS_CS = 0; // flush product on quantity + stock change, categories on stock change
-	const O_PS_CS = 1; // flush product and categories on stock change
-	const O_PS_CN = 2; // flush product on stock change, categories no flush
-	const O_PQS_CQS = 3; // flush product and categories on quantity + stock change
+	const O_CART_VARY       = 'wc_cart_vary';
+	const O_PQS_CS          = 0; // flush product on quantity + stock change, categories on stock change
+	const O_PS_CS           = 1; // flush product and categories on stock change
+	const O_PS_CN           = 2; // flush product on stock change, categories no flush
+	const O_PQS_CQS         = 3; // flush product and categories on quantity + stock change
 
-	const ESI_PARAM_ARGS = 'wc_args';
-	const ESI_PARAM_POSTID = 'wc_post_id';
-	const ESI_PARAM_NAME = 'wc_name';
-	const ESI_PARAM_PATH = 'wc_path';
+	const ESI_PARAM_ARGS    = 'wc_args';
+	const ESI_PARAM_POSTID  = 'wc_post_id';
+	const ESI_PARAM_NAME    = 'wc_name';
+	const ESI_PARAM_PATH    = 'wc_path';
 	const ESI_PARAM_LOCATED = 'wc_located';
 
 	private $esi_enabled;
@@ -44,8 +44,7 @@ class WooCommerce extends Base
 	 * @since 1.0.5
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if (!defined('WOOCOMMERCE_VERSION')) {
 			return;
 		}
@@ -59,46 +58,45 @@ class WooCommerce extends Base
 	 * @since  1.6.3
 	 * @access public
 	 */
-	public function add_hooks()
-	{
+	public function add_hooks() {
 		$this->_option_append();
 
 		$this->esi_enabled = apply_filters('litespeed_esi_status', false);
 
-		add_action('litespeed_control_finalize', array($this, 'set_control'));
-		add_action('litespeed_tag_finalize', array($this, 'set_tag'));
+		add_action('litespeed_control_finalize', array( $this, 'set_control' ));
+		add_action('litespeed_tag_finalize', array( $this, 'set_tag' ));
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
-		add_action('woocommerce_product_set_stock', array($this, 'purge_product'));
-		add_action('woocommerce_variation_set_stock', array($this, 'purge_product')); // #984479 Update variations stock
+		add_action('woocommerce_product_set_stock', array( $this, 'purge_product' ));
+		add_action('woocommerce_variation_set_stock', array( $this, 'purge_product' )); // #984479 Update variations stock
 
-		add_action('comment_post', array($this, 'add_review'), 10, 3);
+		add_action('comment_post', array( $this, 'add_review' ), 10, 3);
 
 		if ($this->esi_enabled) {
 			if (function_exists('is_shop') && !is_shop()) {
-				add_action('litespeed_tpl_normal', array($this, 'set_block_template'));
+				add_action('litespeed_tpl_normal', array( $this, 'set_block_template' ));
 				// No need for add-to-cart button
 				// add_action( 'litespeed_esi_load-wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
 
-				add_action('litespeed_esi_load-storefront-cart-header', array($this, 'load_cart_header'));
-				add_action('litespeed_esi_load-widget', array($this, 'register_post_view'));
+				add_action('litespeed_esi_load-storefront-cart-header', array( $this, 'load_cart_header' ));
+				add_action('litespeed_esi_load-widget', array( $this, 'register_post_view' ));
 			}
 
 			if (function_exists('is_product') && is_product()) {
-				add_filter('litespeed_esi_params', array($this, 'add_post_id'), 10, 2);
+				add_filter('litespeed_esi_params', array( $this, 'add_post_id' ), 10, 2);
 			}
 		}
 
 		if (is_admin()) {
-			add_action('litespeed_api_purge_post', array($this, 'backend_purge')); //todo
-			add_action('delete_term_relationships', array($this, 'delete_rel'), 10, 2);
-			add_action('litespeed_settings_tab', array($this, 'settings_add_tab'));
-			add_action('litespeed_settings_content', array($this, 'settings_add_content'));
-			add_filter('litespeed_widget_default_options', array($this, 'wc_widget_default'), 10, 2);
+			add_action('litespeed_api_purge_post', array( $this, 'backend_purge' )); // todo
+			add_action('delete_term_relationships', array( $this, 'delete_rel' ), 10, 2);
+			add_action('litespeed_settings_tab', array( $this, 'settings_add_tab' ));
+			add_action('litespeed_settings_content', array( $this, 'settings_add_content' ));
+			add_filter('litespeed_widget_default_options', array( $this, 'wc_widget_default' ), 10, 2);
 		}
 
 		if (apply_filters('litespeed_conf', self::O_CART_VARY)) {
-			add_filter('litespeed_vary_cookies', function ($list) {
+			add_filter('litespeed_vary_cookies', function ( $list ) {
 				$list[] = 'woocommerce_cart_hash';
 				return array_unique($list);
 			});
@@ -111,8 +109,7 @@ class WooCommerce extends Base
 	 * @since  1.6.3
 	 * @access public
 	 */
-	public function purge_esi()
-	{
+	public function purge_esi() {
 		do_action('litespeed_debug', '3rd woo purge ESI in action: ' . current_filter());
 		do_action('litespeed_purge_private_esi', 'storefront-cart-header');
 	}
@@ -123,8 +120,7 @@ class WooCommerce extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function purge_private_all()
-	{
+	public function purge_private_all() {
 		do_action('litespeed_purge_private_all');
 	}
 
@@ -134,11 +130,10 @@ class WooCommerce extends Base
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function check_if_need_esi($template)
-	{
+	public function check_if_need_esi( $template ) {
 		if ($this->vary_needed()) {
 			do_action('litespeed_debug', 'API: 3rd woo added ESI');
-			add_action('litespeed_tpl_normal', array($this, 'set_swap_header_cart'));
+			add_action('litespeed_tpl_normal', array( $this, 'set_swap_header_cart' ));
 		}
 
 		return $template;
@@ -150,8 +145,7 @@ class WooCommerce extends Base
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function vary_maintain($vary)
-	{
+	public function vary_maintain( $vary ) {
 		if ($this->vary_needed()) {
 			do_action('litespeed_debug', 'API: 3rd woo added vary due to cart not empty');
 			$vary['woo_cart'] = 1;
@@ -166,8 +160,7 @@ class WooCommerce extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function vary_needed()
-	{
+	private function vary_needed() {
 		if (!function_exists('WC')) {
 			return false;
 		}
@@ -190,9 +183,8 @@ class WooCommerce extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function set_block_template()
-	{
-		add_action('woocommerce_before_template_part', array($this, 'block_template'), 999, 4);
+	public function set_block_template() {
+		add_action('woocommerce_before_template_part', array( $this, 'block_template' ), 999, 4);
 	}
 
 	/**
@@ -206,12 +198,11 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
-	public function set_swap_header_cart()
-	{
+	public function set_swap_header_cart() {
 		$priority = has_action('storefront_header', 'storefront_header_cart');
 		if ($priority !== false) {
 			remove_action('storefront_header', 'storefront_header_cart', $priority);
-			add_action('storefront_header', array($this, 'esi_cart_header'), $priority);
+			add_action('storefront_header', array( $this, 'esi_cart_header' ), $priority);
 		}
 	}
 
@@ -224,13 +215,12 @@ class WooCommerce extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function block_template($template_name, $template_path, $located, $args)
-	{
+	public function block_template( $template_name, $template_path, $located, $args ) {
 		if (strpos($template_name, 'add-to-cart') === false) {
 			if (strpos($template_name, 'related.php') !== false) {
-				remove_action('woocommerce_before_template_part', array($this, 'block_template'), 999);
-				add_filter('woocommerce_related_products_args', array($this, 'add_related_tags'));
-				add_action('woocommerce_after_template_part', array($this, 'end_template'), 999);
+				remove_action('woocommerce_before_template_part', array( $this, 'block_template' ), 999);
+				add_filter('woocommerce_related_products_args', array( $this, 'add_related_tags' ));
+				add_action('woocommerce_after_template_part', array( $this, 'end_template' ), 999);
 			}
 			return;
 		}
@@ -246,8 +236,8 @@ class WooCommerce extends Base
 			self::ESI_PARAM_PATH => $template_path,
 			self::ESI_PARAM_LOCATED => $located,
 		);
-		add_action('woocommerce_after_add_to_cart_form', array($this, 'end_form'));
-		add_action('woocommerce_after_template_part', array($this, 'end_form'), 999);
+		add_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ));
+		add_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999);
 		echo apply_filters('litespeed_esi_url', 'wc-add-to-cart-form', 'WC_CART_FORM', $params);
 		echo apply_filters('litespeed_clean_wrapper_begin', '');
 	}
@@ -261,14 +251,13 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
-	public function end_form($template_name = '')
-	{
+	public function end_form( $template_name = '' ) {
 		if (!empty($template_name) && strpos($template_name, 'add-to-cart') === false) {
 			return;
 		}
 		echo apply_filters('litespeed_clean_wrapper_end', '');
-		remove_action('woocommerce_after_add_to_cart_form', array($this, 'end_form'));
-		remove_action('woocommerce_after_template_part', array($this, 'end_form'), 999);
+		remove_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ));
+		remove_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999);
 	}
 
 	/**
@@ -282,8 +271,7 @@ class WooCommerce extends Base
 	 * @param array $args The arguments used to build the related products section.
 	 * @return array The unchanged arguments.
 	 */
-	public function add_related_tags($args)
-	{
+	public function add_related_tags( $args ) {
 		if (empty($args) || !isset($args['post__in'])) {
 			return $args;
 		}
@@ -303,10 +291,9 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param type $template_name
 	 */
-	public function end_template($template_name)
-	{
+	public function end_template( $template_name ) {
 		if (strpos($template_name, 'related.php') !== false) {
-			remove_action('woocommerce_after_template_part', array($this, 'end_template'), 999);
+			remove_action('woocommerce_after_template_part', array( $this, 'end_template' ), 999);
 			$this->set_block_template();
 		}
 	}
@@ -319,8 +306,7 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
-	public function esi_cart_header()
-	{
+	public function esi_cart_header() {
 		echo apply_filters('litespeed_esi_url', 'storefront-cart-header', 'STOREFRONT_CART_HEADER');
 	}
 
@@ -332,8 +318,7 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
-	public function load_cart_header()
-	{
+	public function load_cart_header() {
 		storefront_header_cart();
 	}
 
@@ -349,8 +334,7 @@ class WooCommerce extends Base
 	 * @global type $wp_query
 	 * @param type $params
 	 */
-	public function load_add_to_cart_form_block($params)
-	{
+	public function load_add_to_cart_form_block( $params ) {
 		global $post, $wp_query;
 		$post = get_post($params[self::ESI_PARAM_POSTID]);
 		$wp_query->setup_postdata($post);
@@ -368,17 +352,16 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param array $params Widget parameter array
 	 */
-	public function register_post_view($params)
-	{
+	public function register_post_view( $params ) {
 		if ($params[API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed') {
 			return;
 		}
 		if (!isset($params[self::ESI_PARAM_POSTID])) {
 			return;
 		}
-		$id = $params[self::ESI_PARAM_POSTID];
+		$id       = $params[self::ESI_PARAM_POSTID];
 		$esi_post = get_post($id);
-		$product = function_exists('wc_get_product') ? wc_get_product($esi_post) : false;
+		$product  = function_exists('wc_get_product') ? wc_get_product($esi_post) : false;
 
 		if (empty($product)) {
 			return;
@@ -397,8 +380,7 @@ class WooCommerce extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function add_post_id($params, $block_id)
-	{
+	public function add_post_id( $params, $block_id ) {
 		if ($block_id == 'widget') {
 			if ($params[API::PARAM_NAME] == 'WC_Widget_Recently_Viewed') {
 				$params[self::ESI_PARAM_POSTID] = get_the_ID();
@@ -417,18 +399,17 @@ class WooCommerce extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function wc_widget_default($options, $widget)
-	{
+	public function wc_widget_default( $options, $widget ) {
 		if (!is_array($options)) {
 			return $options;
 		}
 		$widget_name = get_class($widget);
 		if ($widget_name === 'WC_Widget_Recently_Viewed') {
 			$options[API::WIDGET_O_ESIENABLE] = API::VAL_ON2;
-			$options[API::WIDGET_O_TTL] = 0;
+			$options[API::WIDGET_O_TTL]       = 0;
 		} elseif ($widget_name === 'WC_Widget_Recent_Reviews') {
 			$options[API::WIDGET_O_ESIENABLE] = API::VAL_ON;
-			$options[API::WIDGET_O_TTL] = 86400;
+			$options[API::WIDGET_O_TTL]       = 86400;
 		}
 		return $options;
 	}
@@ -440,8 +421,7 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 */
-	public function set_tag()
-	{
+	public function set_tag() {
 		$id = get_the_ID();
 		if ($id === false) {
 			return;
@@ -449,9 +429,9 @@ class WooCommerce extends Base
 
 		// Check if product has a cache ttl limit or not
 		$sale_from = (int) get_post_meta($id, '_sale_price_dates_from', true);
-		$sale_to = (int) get_post_meta($id, '_sale_price_dates_to', true);
-		$now = current_time('timestamp');
-		$ttl = false;
+		$sale_to   = (int) get_post_meta($id, '_sale_price_dates_to', true);
+		$now       = current_time('timestamp');
+		$ttl       = false;
 		if ($sale_from && $now < $sale_from) {
 			$ttl = $sale_from - $now;
 		} elseif ($sale_to && $now < $sale_to) {
@@ -494,17 +474,17 @@ class WooCommerce extends Base
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param string $esi_id 		The ESI block id if a request is an ESI request.
-	 * @return boolean           	True if cacheable, false if not.
+	 * @param string $esi_id        The ESI block id if a request is an ESI request.
+	 * @return boolean              True if cacheable, false if not.
 	 */
-	public function set_control($esi_id)
-	{
+	public function set_control( $esi_id ) {
 		if (!apply_filters('litespeed_control_cacheable', false)) {
 			return;
 		}
 
 		/**
 		 * Avoid possible 500 issue
+		 *
 		 * @since 1.6.2.1
 		 */
 		if (!function_exists('WC')) {
@@ -530,9 +510,10 @@ class WooCommerce extends Base
 				}
 				/**
 				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
+				 *
 				 * @since  1.4
 				 */
-				$page_ids = array_filter(array(wc_get_page_id('cart'), wc_get_page_id('checkout'), wc_get_page_id('myaccount')));
+				$page_ids = array_filter(array( wc_get_page_id('cart'), wc_get_page_id('checkout'), wc_get_page_id('myaccount') ));
 				if (isset($_GET['download_file']) || isset($_GET['add-to-cart']) || is_page($page_ids)) {
 					$err = 'woo non cacheable pages';
 				} elseif (function_exists('wc_notice_count') && wc_notice_count() > 0) {
@@ -547,19 +528,19 @@ class WooCommerce extends Base
 			return;
 		}
 
-		$uri = esc_url($_SERVER['REQUEST_URI']);
+		$uri     = esc_url($_SERVER['REQUEST_URI']);
 		$uri_len = strlen($uri);
 		if ($uri_len < 5) {
 			return;
 		}
 
-		if (in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/'))) {
+		if (in_array($uri, array( 'cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/' ))) {
 			// why contains `product`?
 			do_action('litespeed_control_set_nocache', 'uri in cart/account/user pages');
 			return;
 		}
 
-		$qs = sanitize_text_field($_SERVER['QUERY_STRING']);
+		$qs     = sanitize_text_field($_SERVER['QUERY_STRING']);
 		$qs_len = strlen($qs);
 		if (!empty($qs) && $qs_len >= 12 && strpos($qs, 'add-to-cart=') === 0) {
 			do_action('litespeed_control_set_nocache', 'qs contains add-to-cart');
@@ -575,11 +556,10 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param WC_Product $product
 	 */
-	public function purge_product($product)
-	{
+	public function purge_product( $product ) {
 		do_action('litespeed_debug', '[3rd] Woo Purge [pid] ' . $product->get_id());
 
-		$do_purge = function ($action, $debug = '') use ($product) {
+		$do_purge = function ( $action, $debug = '' ) use ( $product ) {
 			$config = apply_filters('litespeed_conf', self::O_UPDATE_INTERVAL);
 			if (is_null($config)) {
 				$config = self::O_PQS_CS;
@@ -603,7 +583,7 @@ class WooCommerce extends Base
 		};
 
 		if (
-			!$do_purge(function () use ($product) {
+			!$do_purge(function () use ( $product ) {
 				$this->backend_purge($product->get_id());
 			})
 		) {
@@ -621,9 +601,9 @@ class WooCommerce extends Base
 		if (defined('WPML_PLUGIN_BASENAME')) {
 			// Check if it is a variable product and get post/parent ID
 			$wpml_purge_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
-			$type = apply_filters('wpml_element_type', get_post_type($wpml_purge_id));
-			$trid = apply_filters('wpml_element_trid', false, $wpml_purge_id, $type);
-			$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
+			$type          = apply_filters('wpml_element_type', get_post_type($wpml_purge_id));
+			$trid          = apply_filters('wpml_element_trid', false, $wpml_purge_id, $type);
+			$translations  = apply_filters('wpml_get_element_translations', array(), $trid, $type);
 			foreach ($translations as $lang => $translation) {
 				do_action('litespeed_debug', '[3rd] Woo WPML purge language: ' . $translation->language_code . ' , post ID: ' . $translation->element_id);
 				do_action('litespeed_purge_post', $translation->element_id);
@@ -633,12 +613,12 @@ class WooCommerce extends Base
 			// Check other languages category and purge if configured.
 			// wp_get_post_terms() only returns default language category ID
 			$default_cats = wp_get_post_terms($wpml_purge_id, 'product_cat');
-			$languages = apply_filters('wpml_active_languages', null);
+			$languages    = apply_filters('wpml_active_languages', null);
 
 			foreach ($default_cats as $default_cat) {
 				foreach ($languages as $language) {
 					$tr_cat_id = icl_object_id($default_cat->term_id, 'product_cat', false, $language['code']);
-					$do_purge(function () use ($tr_cat_id) {
+					$do_purge(function () use ( $tr_cat_id ) {
 						do_action('litespeed_purge', self::CACHETAG_TERM . $tr_cat_id);
 					}, '[3rd] Woo Purge WPML category [language] ' . $language['code'] . ' [cat] ' . $tr_cat_id);
 				}
@@ -654,11 +634,10 @@ class WooCommerce extends Base
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param int $post_id Object ID.
+	 * @param int   $post_id Object ID.
 	 * @param array $term_ids An array of term taxonomy IDs.
 	 */
-	public function delete_rel($post_id, $term_ids)
-	{
+	public function delete_rel( $post_id, $term_ids ) {
 		if (!function_exists('wc_get_product')) {
 			return;
 		}
@@ -679,8 +658,7 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param int $post_id Post id that is about to be purged
 	 */
-	public function backend_purge($post_id)
-	{
+	public function backend_purge( $post_id ) {
 		if (!function_exists('wc_get_product')) {
 			return;
 		}
@@ -700,7 +678,7 @@ class WooCommerce extends Base
 			return;
 		}
 
-		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids'));
+		$tags = wc_get_product_terms($post_id, 'product_tag', array( 'fields' => 'ids' ));
 		if (!empty($tags)) {
 			foreach ($tags as $tag) {
 				do_action('litespeed_purge', self::CACHETAG_TERM . $tag);
@@ -716,10 +694,9 @@ class WooCommerce extends Base
 	 * @access public
 	 * @param $unused
 	 * @param integer $comment_approved Whether the comment is approved or not.
-	 * @param array $commentdata Information about the comment.
+	 * @param array   $commentdata Information about the comment.
 	 */
-	public function add_review($unused, $comment_approved, $commentdata)
-	{
+	public function add_review( $unused, $comment_approved, $commentdata ) {
 		if (!function_exists('wc_get_product')) {
 			return;
 		}
@@ -746,8 +723,7 @@ class WooCommerce extends Base
 	 * @since 1.6.3 Removed static
 	 * @since  3.0 new API
 	 */
-	private function _option_append()
-	{
+	private function _option_append() {
 		// Append option save value filter
 		do_action('litespeed_conf_multi_switch', self::O_UPDATE_INTERVAL, 3); // This need to be before conf_append
 
@@ -761,8 +737,7 @@ class WooCommerce extends Base
 	 *
 	 * @since 1.6.3 Removed static
 	 */
-	public function settings_add_tab($setting_page)
-	{
+	public function settings_add_tab( $setting_page ) {
 		if ($setting_page != 'cache') {
 			return;
 		}
@@ -775,8 +750,7 @@ class WooCommerce extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function settings_add_content($setting_page)
-	{
+	public function settings_add_content( $setting_page ) {
 		if ($setting_page != 'cache') {
 			return;
 		}
@@ -794,8 +768,7 @@ class WooCommerce extends Base
 	 * @param int $product_id The product id
 	 * @return array An array of category ids.
 	 */
-	private function get_cats($product_id)
-	{
+	private function get_cats( $product_id ) {
 		if (!function_exists('WC')) {
 			return;
 		}
@@ -804,7 +777,7 @@ class WooCommerce extends Base
 		if (isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') && function_exists('wc_get_product_cat_ids')) {
 			return wc_get_product_cat_ids($product_id);
 		}
-		$product_cats = wp_get_post_terms($product_id, 'product_cat', array('fields' => 'ids'));
+		$product_cats = wp_get_post_terms($product_id, 'product_cat', array( 'fields' => 'ids' ));
 		foreach ($product_cats as $product_cat) {
 			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat'));
 		}
@@ -817,8 +790,7 @@ class WooCommerce extends Base
 	 *
 	 * @since  2.9.8.4
 	 */
-	public static function preload()
-	{
+	public static function preload() {
 		/**
 		 * Auto puge for WooCommerce Advanced Bulk Edit plugin,
 		 * Bulk edit hook need to add to preload as it will die before detect.
@@ -831,8 +803,7 @@ class WooCommerce extends Base
 	 *
 	 * @since  2.9.8.4
 	 */
-	public static function bulk_edit_purge()
-	{
+	public static function bulk_edit_purge() {
 		if (empty($_POST['type']) || $_POST['type'] != 'saveproducts' || empty($_POST['data'])) {
 			return;
 		}
@@ -840,12 +811,12 @@ class WooCommerce extends Base
 		/*
 		 * admin-ajax form-data structure
 		 * array(
-		 *		"type" => "saveproducts",
-		 *		"data" => array(
-		 *			"column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
-		 *			"column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
-		 *		)
-		 *	)
+		 *      "type" => "saveproducts",
+		 *      "data" => array(
+		 *          "column1" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#",
+		 *          "column2" => "464$###0$###2#^#463$###0$###4#^#462$###0$###6#^#"
+		 *      )
+		 *  )
 		 */
 		$stock_string_arr = array();
 		foreach ($_POST['data'] as $stock_value) {
@@ -860,7 +831,7 @@ class WooCommerce extends Base
 
 		foreach ($stock_string_arr as $edited_stock) {
 			$product_id = strtok($edited_stock, '$');
-			$product = wc_get_product($product_id);
+			$product    = wc_get_product($product_id);
 
 			if (empty($product)) {
 				do_action('litespeed_debug', '3rd woo purge: ' . $product_id . ' not found.');
