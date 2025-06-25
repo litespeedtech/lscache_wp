@@ -622,7 +622,7 @@ class Media extends Root {
 					$lazy_lib .= '<script data-no-optimize="1">' . File::read(LSCWP_DIR . Optimize::LIB_FILE_JS_DELAY) . '</script>';
 				}
 			}
-      
+
 			$this->content = str_replace('</body>', $lazy_lib . '</body>', $this->content);
 		}
 	}
