@@ -268,6 +268,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
 * **Misc** Simplified admin JS.
 * **Misc** Added existing plugin version to ping API for debug purpose.
+* **Misc** Fixed comments typos reported by static analysis. (Viktor Szépe PR#836)
 
 = 7.2 - Jun 18 2025 =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
