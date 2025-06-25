@@ -238,7 +238,8 @@ class Admin_Display extends Base {
 		}
 
 		// Load iziModal JS and CSS
-		if ($pagenow == 'plugins.php') {
+		$show_deactivation_modal = is_multisite() && !is_network_admin() ? false : true;
+		if ($show_deactivation_modal && $pagenow == 'plugins.php') {
 			wp_enqueue_script(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/js/iziModal.min.js', array(), Core::VER, 'all');
 			wp_enqueue_style(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/css/iziModal.min.css', array(), Core::VER, 'all');
 			add_action('admin_footer', array($this, 'add_deactivation_html'));

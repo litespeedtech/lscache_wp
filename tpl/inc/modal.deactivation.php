@@ -49,14 +49,14 @@ $reasons = array(
                     <?php 
                         foreach ($reasons as $reason) {
                             echo '<label for="litespeed-deactivate-reason-' .
-                                esc_html_e( $reason['id'] ) .
+                                esc_html__( $reason['id'] ) .
                                 '">
                                 <input type="radio" 
                                     id="litespeed-deactivate-reason-' .
-                                esc_html_e( $reason['id'] ) .
+                                esc_html__( $reason['id'] ) .
                                 '" 
                                     value="' .
-                                esc_html_e( $reason['value'] ) .
+                                esc_html__( $reason['value'] ) .
                                 '" 
                                     ' .
                                 (isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : '') .
@@ -64,7 +64,7 @@ $reasons = array(
                                     name="litespeed-reason" 
                                 />
                                 ' .
-                                esc_html_e( $reason['text'] ) .
+                                esc_html__( $reason['text'] ) .
                                 '
                             </label>';
                         }
@@ -76,31 +76,26 @@ $reasons = array(
                             type="checkbox"
                             id="litespeed-deactivate-clear"
                             name="lsc-clear"
-                            value="true" />
+                            value="1" />
                         <?php
-                            esc_attr_e('Delete settings and data created by plugin?', 'litespeed-cache');
+                            esc_attr_e('On Uninstall, delete settings created by plugin?', 'litespeed-cache');
                         ?>
                     </label>
                     <?php 
-                        if (is_multisite() && is_network_admin()) {
+                        if (is_multisite()) {
                     ?>
-                        <label for="litespeed-deactivate-network">
-                            <input
-                                type="checkbox"
-                                id="litespeed-deactivate-network"
-                                name="lsc-clear-network"
-                                value="true" />
-                            <?php
-                                esc_attr_e('Delete settings from all other network sites?', 'litespeed-cache');
+                        <i style="font-size: 0.9em;">
+                            <?php 
+                                esc_html__('Deleting plugin settings, will delete all subsites settings too.', 'litespeed-cache');
                             ?>
-                        </label>
+                        </i>
                     <?php 
                         }
                     ?>
                     <i style="font-size: 0.9em;">
                         <?php 
                             printf(
-                                esc_html__('If you have Image Optimization used, you need to destroy all optm first, go to this %spage%s'),
+                                esc_html__('If you have Image Optimization used, you need to destroy all optm first, go to this %spage%s', 'litespeed-cache'),
                                 '<a href="admin.php?page=litespeed-img_optm#litespeed-imageopt-destroy" target="_blank">',
                                 '</a>'
                             );
@@ -153,16 +148,14 @@ $reasons = array(
                     e.preventDefault();
                     $('#litespeed-deactivation-form-submit').attr('disabled', true);
                     var container = $('#litespeed-deactivation-form');
-                    let deleteSite = $(container).find('#litespeed-deactivate-clear').is(':checked');
-                    let deleteNetwork = $(container).find('#litespeed-deactivate-network').is(':checked');
+                    let deleteSettings = $(container).find('#litespeed-deactivate-clear').is(':checked');
 
                     // Save selected data
                     var data = {
                         id: lscId,
                         siteLink: window.location.hostname,
                         reason: $(container).find('[name=litespeed-reason]:checked').val(),
-                        deleteSite: deleteSite,
-                        deleteNetwork: deleteNetwork,
+                        deleteSettings: deleteSettings,
                     };
 
                     $.ajax({
