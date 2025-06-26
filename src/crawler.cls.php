@@ -1038,10 +1038,13 @@ class Crawler extends Root {
 			return self::STATUS_NOCACHE; // Blacklist
 		}
 
-		$_cache_headers = array( 'x-qc-cache', 'x-lsadc-cache', 'x-litespeed-cache' );
+		$_cache_headers = array( 'x-litespeed-cache', 'x-qc-cache', 'x-lsadc-cache' );
 
 		foreach ($_cache_headers as $_header) {
 			if (stripos($header, $_header) !== false) {
+				if (stripos($header, $_header . ': bkn') !== false) {
+					return self::STATUS_HIT; // Hit
+				}
 				if (stripos($header, $_header . ': miss') !== false) {
 					return self::STATUS_MISS; // Miss
 				}
