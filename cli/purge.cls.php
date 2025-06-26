@@ -11,8 +11,8 @@ use WP_CLI;
 /**
  * LiteSpeed Cache Purge Interface
  */
-class Purge
-{
+class Purge {
+
 	/**
 	 * List all site domains and ids on the network.
 	 *
@@ -23,8 +23,7 @@ class Purge
 	 *     # List all the site domains and ids in a table.
 	 *     $ wp litespeed-purge network_list
 	 */
-	public function network_list($args)
-	{
+	public function network_list( $args ) {
 		if (!is_multisite()) {
 			WP_CLI::error('This is not a multisite installation!');
 
@@ -52,8 +51,7 @@ class Purge
 	 *
 	 * @since 1.0.14
 	 */
-	private function _send_request($action, $extra = array())
-	{
+	private function _send_request( $action, $extra = array() ) {
 		$data = array(
 			Router::ACTION => $action,
 			Router::NONCE => wp_create_nonce($action),
@@ -76,10 +74,8 @@ class Purge
 	 *
 	 *     # Purge Everything associated with the WordPress install.
 	 *     $ wp litespeed-purge all
-	 *
 	 */
-	public function all($args)
-	{
+	public function all( $args ) {
 		if (is_multisite()) {
 			$action = Core::ACTION_QS_PURGE_EMPTYCACHE;
 		} else {
@@ -107,10 +103,8 @@ class Purge
 	 *
 	 *     # In a multisite install, purge only the shop.example.com cache (stored as blog id 2).
 	 *     $ wp litespeed-purge blog 2
-	 *
 	 */
-	public function blog($args)
-	{
+	public function blog( $args ) {
 		if (!is_multisite()) {
 			WP_CLI::error('Not a multisite installation.');
 			return;
@@ -151,14 +145,12 @@ class Purge
 	 *
 	 *     # Purge the front page.
 	 *     $ wp litespeed-purge url https://mysite.com/
-	 *
 	 */
-	public function url($args)
-	{
-		$data = array(
+	public function url( $args ) {
+		$data          = array(
 			Router::ACTION => Core::ACTION_QS_PURGE,
 		);
-		$url = $args[0];
+		$url           = $args[0];
 		$deconstructed = wp_parse_url($url);
 		if (empty($deconstructed)) {
 			WP_CLI::error('url passed in is invalid.');
@@ -193,12 +185,11 @@ class Purge
 	 *
 	 * @access private
 	 * @since 1.0.15
-	 * @param array $args The id list to parse.
-	 * @param string $select The purge by kind
+	 * @param array        $args The id list to parse.
+	 * @param string       $select The purge by kind
 	 * @param function(int $id) $callback The callback function to check the id.
 	 */
-	private function _purgeby($args, $select, $callback)
-	{
+	private function _purgeby( $args, $select, $callback ) {
 		$filtered = array();
 		foreach ($args as $val) {
 			if (!ctype_digit($val)) {
@@ -208,7 +199,7 @@ class Purge
 			$term = $callback($val);
 			if (!empty($term)) {
 				WP_CLI::line($term->name);
-				$filtered[] = in_array($callback, array('get_tag', 'get_category')) ? $term->name : $val;
+				$filtered[] = in_array($callback, array( 'get_tag', 'get_category' )) ? $term->name : $val;
 			} else {
 				WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val);
 			}
@@ -255,10 +246,8 @@ class Purge
 	 *
 	 *     # Purge the tag ids 1, 3, and 5
 	 *     $ wp litespeed-purge tag 1 3 5
-	 *
 	 */
-	public function tag($args)
-	{
+	public function tag( $args ) {
 		$this->_purgeby($args, Admin_Display::PURGEBY_TAG, 'get_tag');
 	}
 
@@ -274,10 +263,8 @@ class Purge
 	 *
 	 *     # Purge the category ids 1, 3, and 5
 	 *     $ wp litespeed-purge category 1 3 5
-	 *
 	 */
-	public function category($args)
-	{
+	public function category( $args ) {
 		$this->_purgeby($args, Admin_Display::PURGEBY_CAT, 'get_category');
 	}
 
@@ -295,10 +282,8 @@ class Purge
 	 *
 	 *     # Purge the post ids 1, 3, and 5
 	 *     $ wp litespeed-purge post_id 1 3 5
-	 *
 	 */
-	public function post_id($args)
-	{
+	public function post_id( $args ) {
 		$this->_purgeby($args, Admin_Display::PURGEBY_PID, 'get_post');
 	}
 }

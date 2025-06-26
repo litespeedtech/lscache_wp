@@ -1736,8 +1736,8 @@
 * [UPDATE] 'ExpiresDefault' conflict msg is now closeable and only appears in the .htaccess edit screen.
 * [UPDATE] Improved debug log formatting.
 * [INTEGRATION] Compatibility with MainWP plugin.
-* [BUGFIX] Fixed Woocommerce order not purging product stock quantity.
-* [BUGFIX] Fixed Woocommerce scheduled sale price not updating issue.
+* [BUGFIX] Fixed WooCommerce order not purging product stock quantity.
+* [BUGFIX] Fixed WooCommerce scheduled sale price not updating issue.
 * [REFACTOR] Combined cache_enable functions into a single function.
 
 = 1.1.4 - August 1 2017 =

@@ -2,10 +2,10 @@
 /**
  * The cloudflare CDN class.
  *
- * @since      	2.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src/cdn
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src/cdn
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\CDN;
 
@@ -18,11 +18,11 @@ use LiteSpeed\Admin_Display;
 
 defined('WPINC') || exit();
 
-class Cloudflare extends Base
-{
-	const TYPE_PURGE_ALL = 'purge_all';
-	const TYPE_GET_DEVMODE = 'get_devmode';
-	const TYPE_SET_DEVMODE_ON = 'set_devmode_on';
+class Cloudflare extends Base {
+
+	const TYPE_PURGE_ALL       = 'purge_all';
+	const TYPE_GET_DEVMODE     = 'get_devmode';
+	const TYPE_SET_DEVMODE_ON  = 'set_devmode_on';
 	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off';
 
 	const ITEM_STATUS = 'status';
@@ -33,8 +33,7 @@ class Cloudflare extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function try_refresh_zone()
-	{
+	public function try_refresh_zone() {
 		if (!$this->conf(self::O_CDN_CLOUDFLARE)) {
 			return;
 		}
@@ -58,8 +57,7 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _get_devmode($show_msg = true)
-	{
+	private function _get_devmode( $show_msg = true ) {
 		Debug2::debug('[Cloudflare] _get_devmode');
 
 		$zone = $this->_zone();
@@ -76,8 +74,8 @@ class Cloudflare extends Base
 		Debug2::debug('[Cloudflare] _get_devmode result ', $res);
 
 		// Make sure is array: #992174
-		$curr_status = self::get_option(self::ITEM_STATUS, array()) ?: array();
-		$curr_status['devmode'] = $res['value'];
+		$curr_status                    = self::get_option(self::ITEM_STATUS, array()) ?: array();
+		$curr_status['devmode']         = $res['value'];
 		$curr_status['devmode_expired'] = $res['time_remaining'] + time();
 
 		// update status
@@ -90,8 +88,7 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _set_devmode($type)
-	{
+	private function _set_devmode( $type ) {
 		Debug2::debug('[Cloudflare] _set_devmode');
 
 		$zone = $this->_zone();
@@ -99,10 +96,10 @@ class Cloudflare extends Base
 			return;
 		}
 
-		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode';
+		$url     = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode';
 		$new_val = $type == self::TYPE_SET_DEVMODE_ON ? 'on' : 'off';
-		$data = array('value' => $new_val);
-		$res = $this->_cloudflare_call($url, 'PATCH', $data);
+		$data    = array( 'value' => $new_val );
+		$res     = $this->_cloudflare_call($url, 'PATCH', $data);
 
 		if (!$res) {
 			return;
@@ -117,13 +114,24 @@ class Cloudflare extends Base
 	}
 
 	/**
+	 * Shortcut to purge Cloudflare
+	 *
+	 * @since  7.1
+	 */
+	public static function purge_all( $reason = false ) {
+		if ($reason) {
+			Debug2::debug('[Cloudflare] purge call because: ' . $reason);
+		}
+		self::cls()->_purge_all();
+	}
+
+	/**
 	 * Purge Cloudflare cache
 	 *
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _purge_all()
-	{
+	private function _purge_all() {
 		Debug2::debug('[Cloudflare] _purge_all');
 
 		$cf_on = $this->conf(self::O_CDN_CLOUDFLARE);
@@ -138,8 +146,8 @@ class Cloudflare extends Base
 			return;
 		}
 
-		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
-		$data = array('purge_everything' => true);
+		$url  = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
+		$data = array( 'purge_everything' => true );
 
 		$res = $this->_cloudflare_call($url, 'DELETE', $data);
 
@@ -155,8 +163,7 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _zone()
-	{
+	private function _zone() {
 		$zone = $this->conf(self::O_CDN_CLOUDFLARE_ZONE);
 		if (!$zone) {
 			$msg = __('No available Cloudflare zone', 'litespeed-cache');
@@ -173,8 +180,7 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _fetch_zone()
-	{
+	private function _fetch_zone() {
 		$kw = $this->conf(self::O_CDN_CLOUDFLARE_NAME);
 
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all';
@@ -219,8 +225,7 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _cloudflare_call($url, $method = 'GET', $data = false, $show_msg = true)
-	{
+	private function _cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
 		Debug2::debug("[Cloudflare] _cloudflare_call \t\t[URL] $url");
 
 		if (40 == strlen($this->conf(self::O_CDN_CLOUDFLARE_KEY))) {
@@ -286,22 +291,21 @@ class Cloudflare extends Base
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_PURGE_ALL:
-				$this->_purge_all();
+            $this->_purge_all();
 				break;
 
 			case self::TYPE_GET_DEVMODE:
-				$this->_get_devmode();
+            $this->_get_devmode();
 				break;
 
 			case self::TYPE_SET_DEVMODE_ON:
 			case self::TYPE_SET_DEVMODE_OFF:
-				$this->_set_devmode($type);
+            $this->_set_devmode($type);
 				break;
 
 			default:

@@ -1,15 +1,23 @@
 <?php
+/**
+ * LiteSpeed Cache Image Optimization Settings
+ *
+ * Manages image optimization settings for LiteSpeed Cache.
+ *
+ * @package LiteSpeed
+ * @since 1.0.0
+ */
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined( 'WPINC' ) || exit;
 
 $this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Image Optimization Settings', 'litespeed-cache'); ?>
-	<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-settings-tab'); ?>
+	<?php esc_html_e( 'Image Optimization Settings', 'litespeed-cache' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#image-optimization-settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">
@@ -17,45 +25,45 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_AUTO; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_AUTO; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Automatically request optimization via cron job.', 'litespeed-cache'); ?>
+					<?php esc_html_e( 'Automatically request optimization via cron job.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_ORI; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_ORI; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Optimize images and save backups of the originals in the same folder.', 'litespeed-cache'); ?>
+					<?php esc_html_e( 'Optimize images and save backups of the originals in the same folder.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_RM_BKUP; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_RM_BKUP; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache'); ?>
+					<?php esc_html_e( 'Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache' ); ?>
 
 					<br />
 					<font class="litespeed-danger">
 						🚨
-						<?php echo __('This is irreversible.', 'litespeed-cache'); ?>
-						<?php echo __('You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache'); ?>
+						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
+						<?php esc_html_e( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ); ?>
 					</font>
 				</div>
 			</td>
@@ -63,60 +71,58 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_LOSSLESS; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_LOSSLESS; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Optimize images using lossless compression.', 'litespeed-cache'); ?>
-					<?php echo __('This can improve quality but may result in larger images than lossy compression will.', 'litespeed-cache'); ?>
+					<?php esc_html_e( 'Optimize images using lossless compression.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'This can improve quality but may result in larger images than lossy compression will.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_EXIF; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_EXIF; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo __('Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache'); ?>
-					<?php echo __('This will increase the size of optimized files.', 'litespeed-cache'); ?>
+					<?php esc_html_e( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'This will increase the size of optimized files.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
 
 		<?php
-		if (!is_multisite()) :
+		if ( ! is_multisite() ) :
 			// webp
 			require LSCWP_DIR . 'tpl/img_optm/settings.media_webp.tpl.php';
-
 		endif;
 		?>
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_WEBP_ATTR; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_WEBP_ATTR; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-
 				<div class="litespeed-textarea-recommended">
 					<div>
-						<?php $this->build_textarea($id, 40); ?>
+						<?php $this->build_textarea( $option_id, 40 ); ?>
 					</div>
 					<div>
-						<?php $this->recommended($id); ?>
+						<?php $this->recommended( $option_id ); ?>
 					</div>
 				</div>
 
 				<div class="litespeed-desc">
-					<?php echo __('Specify which element attributes will be replaced with WebP/AVIF.', 'litespeed-cache'); ?>
-					<?php echo __('Only attributes listed here will be replaced.', 'litespeed-cache'); ?>
-					<br /><?php echo sprintf(__('Use the format %1$s or %2$s (element is optional).', 'litespeed-cache'), '<code>element.attribute</code>', '<code>.attribute</code>'); ?>
+					<?php esc_html_e( 'Specify which element attributes will be replaced with WebP/AVIF.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Only attributes listed here will be replaced.', 'litespeed-cache' ); ?>
+					<br /><?php printf( esc_html__( 'Use the format %1$s or %2$s (element is optional).', 'litespeed-cache' ), '<code>element.attribute</code>', '<code>.attribute</code>' ); ?>
 					<?php Doc::one_per_line(); ?>
 				</div>
 			</td>
@@ -124,14 +130,14 @@ $this->form_action();
 
 		<tr>
 			<th>
-				<?php $id = Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET; ?>
-				<?php $this->title($id); ?>
+				<?php $option_id = Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET; ?>
+				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch($id); ?>
+				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php echo sprintf(__('Enable replacement of WebP/AVIF in %s elements that were generated outside of WordPress logic.', 'litespeed-cache'), '<code>srcset</code>'); ?>
-					<?php Doc::learn_more('https://docs.litespeedtech.com/lscache/lscwp/imageopt/#webp-for-extra-srcset'); ?>
+					<?php printf( esc_html__( 'Enable replacement of WebP/AVIF in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ); ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#webp-for-extra-srcset' ); ?>
 				</div>
 			</td>
 		</tr>
@@ -140,5 +146,4 @@ $this->form_action();
 </table>
 
 <?php
-
 $this->form_end();

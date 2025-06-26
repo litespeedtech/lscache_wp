@@ -5,23 +5,23 @@
  *
  * This maintains all the options and settings for this plugin.
  *
- * @since      	1.0.0
- * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.0.0
+ * @since       1.5 Moved into /inc
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/inc
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Conf extends Base
-{
+class Conf extends Base {
+
 	const TYPE_SET = 'set';
 
 	private $_updated_ids = array();
-	private $_is_primary = false;
+	private $_is_primary  = false;
 
 	/**
 	 * Specify init logic to avoid infinite loop when calling conf.cls instance
@@ -29,22 +29,22 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function init()
-	{
+	public function init() {
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
 		// Conf may be stale, upgrade later
 		$this->_conf_db_init();
 
 		/**
 		 * Detect if has quic.cloud set
+		 *
 		 * @since  2.9.7
 		 */
 		if ($this->conf(self::O_CDN_QUIC)) {
 			!defined('LITESPEED_ALLOWED') && define('LITESPEED_ALLOWED', true);
 		}
 
-		add_action('litespeed_conf_append', array($this, 'option_append'), 10, 2);
-		add_action('litespeed_conf_force', array($this, 'force_option'), 10, 2);
+		add_action('litespeed_conf_append', array( $this, 'option_append' ), 10, 2);
+		add_action('litespeed_conf_force', array( $this, 'force_option' ), 10, 2);
 
 		$this->define_cache();
 	}
@@ -55,8 +55,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _conf_db_init()
-	{
+	private function _conf_db_init() {
 		/**
 		 * Try to load options first, network sites can override this later
 		 *
@@ -75,9 +74,10 @@ class Conf extends Base
 		/**
 		 * Version is less than v3.0, or, is a new installation
 		 */
+		$ver_check_tag = '';
 		if (!$ver) {
 			// Try upgrade first (network will upgrade inside too)
-			Data::cls()->try_upgrade_conf_3_0();
+			$ver_check_tag = Data::cls()->try_upgrade_conf_3_0();
 		} else {
 			defined('LSCWP_CUR_V') || define('LSCWP_CUR_V', $ver);
 
@@ -87,7 +87,7 @@ class Conf extends Base
 			if ($ver != Core::VER) {
 				// Plugin version will be set inside
 				// Site plugin upgrade & version change will do in load_site_conf
-				Data::cls()->conf_upgrade($ver);
+				$ver_check_tag = Data::cls()->conf_upgrade($ver);
 			}
 		}
 
@@ -101,8 +101,7 @@ class Conf extends Base
 				// New install
 				$this->set_conf(self::$_default_options);
 
-				// Check new version @since 2.9.3
-				Cloud::version_check('activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : ''));
+				$ver_check_tag .= ' activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : '');
 			}
 
 			// Init new default/missing options
@@ -114,6 +113,10 @@ class Conf extends Base
 
 			// Force correct version in case a rare unexpected case that `_ver` exists but empty
 			self::update_option(Base::_VER, Core::VER);
+
+			if ($ver_check_tag) {
+				Cloud::version_check($ver_check_tag);
+			}
 		}
 
 		/**
@@ -122,6 +125,12 @@ class Conf extends Base
 		 * Override conf if is network subsites and chose `Use Primary Config`
 		 */
 		$this->_try_load_site_options();
+
+		// Check if debug is on
+		// Init debug as early as possible
+		if ($this->conf(Base::O_DEBUG)) {
+			$this->cls('Debug2')->init();
+		}
 
 		// Mark as conf loaded
 		defined('LITESPEED_CONF_LOADED') || define('LITESPEED_CONF_LOADED', true);
@@ -138,8 +147,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function load_options($blog_id = null, $dry_run = false)
-	{
+	public function load_options( $blog_id = null, $dry_run = false ) {
 		$options = array();
 		foreach (self::$_default_options as $k => $v) {
 			if (!is_null($blog_id)) {
@@ -184,8 +192,7 @@ class Conf extends Base
 	 * @since 1.0.13
 	 * @access private
 	 */
-	private function _try_load_site_options()
-	{
+	private function _try_load_site_options() {
 		if (!$this->_if_need_site_options()) {
 			return;
 		}
@@ -217,17 +224,13 @@ class Conf extends Base
 							continue;
 						}
 					}
-				} else {
-					if ($this->network_conf(self::NETWORK_O_USE_PRIMARY)) {
-						if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) {
-							// This case will use primary_options override always
-							continue;
-						}
-					} else {
-						if ($this->conf($k) != self::VAL_ON2) {
-							continue;
-						}
+				} elseif ($this->network_conf(self::NETWORK_O_USE_PRIMARY)) {
+					if ($this->has_primary_conf($k) && $this->primary_conf($k) != self::VAL_ON2) {
+						// This case will use primary_options override always
+						continue;
 					}
+				} elseif ($this->conf($k) != self::VAL_ON2) {
+					continue;
 				}
 			}
 
@@ -243,8 +246,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _if_need_site_options()
-	{
+	private function _if_need_site_options() {
 		if (!is_multisite()) {
 			return false;
 		}
@@ -254,6 +256,7 @@ class Conf extends Base
 
 		/**
 		 * In case this is called outside the admin page
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -278,8 +281,7 @@ class Conf extends Base
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _conf_site_db_init()
-	{
+	private function _conf_site_db_init() {
 		$this->load_site_options();
 
 		$ver = $this->network_conf(self::_VER);
@@ -326,8 +328,7 @@ class Conf extends Base
 	 * @since 1.0.2
 	 * @access public
 	 */
-	public function load_site_options()
-	{
+	public function load_site_options() {
 		if (!is_multisite()) {
 			return null;
 		}
@@ -350,8 +351,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function option_append($name, $default)
-	{
+	public function option_append( $name, $default ) {
 		self::$_default_options[$name] = $default;
 		$this->set_conf($name, self::get_option($name, $default));
 		$this->set_conf($name, $this->type_casting($this->conf($name), $name));
@@ -363,8 +363,7 @@ class Conf extends Base
 	 * @since  2.6
 	 * @access public
 	 */
-	public function force_option($k, $v)
-	{
+	public function force_option( $k, $v ) {
 		if (!$this->has_conf($k)) {
 			return;
 		}
@@ -386,8 +385,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function define_cache()
-	{
+	public function define_cache() {
 		// Init global const cache on setting
 		$this->set_conf(self::_CACHE, false);
 		if ((int) $this->conf(self::O_CACHE) == self::VAL_ON || $this->conf(self::O_CDN_QUIC)) {
@@ -415,8 +413,7 @@ class Conf extends Base
 	 * @since 2.1
 	 * @access private
 	 */
-	private function _define_cache_on()
-	{
+	private function _define_cache_on() {
 		if (!$this->conf(self::_CACHE)) {
 			return;
 		}
@@ -431,8 +428,7 @@ class Conf extends Base
 	 * @access public
 	 * @deprecated 4.0 Use $this->conf() instead
 	 */
-	public static function val($id, $ori = false)
-	{
+	public static function val( $id, $ori = false ) {
 		error_log('Called deprecated function \LiteSpeed\Conf::val(). Please use API call instead.');
 		return self::cls()->conf($id, $ori);
 	}
@@ -443,8 +439,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function update_confs($the_matrix = false)
-	{
+	public function update_confs( $the_matrix = false ) {
 		if ($the_matrix) {
 			foreach ($the_matrix as $id => $val) {
 				$this->update($id, $val);
@@ -490,6 +485,7 @@ class Conf extends Base
 
 		/**
 		 * CDN related actions - QUIC.cloud
+		 *
 		 * @since 2.3
 		 */
 		$this->cls('CDN\Quic')->try_sync_conf();
@@ -503,11 +499,10 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function update($id, $val)
-	{
+	public function update( $id, $val ) {
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
-		// 	return;
+		// return;
 		// }
 
 		if ($id == self::_VER) {
@@ -533,11 +528,11 @@ class Conf extends Base
 
 		// Special handler for CDN Original URLs
 		if ($id == self::O_CDN_ORI && !$val) {
-			$home_url = home_url('/');
-			$parsed = parse_url($home_url);
-			$home_url = str_replace($parsed['scheme'] . ':', '', $home_url);
+			$site_url = site_url('/');
+			$parsed   = parse_url($site_url);
+			$site_url = str_replace($parsed['scheme'] . ':', '', $site_url);
 
-			$val = $home_url;
+			$val = $site_url;
 		}
 
 		// Validate type
@@ -552,9 +547,9 @@ class Conf extends Base
 
 			// Check if need to fire a purge or not (Here has to stay inside `update()` bcos need comparing old value)
 			if ($this->_conf_purge($id)) {
-				$diff = array_diff($val, $this->conf($id));
+				$diff  = array_diff($val, $this->conf($id));
 				$diff2 = array_diff($this->conf($id), $val);
-				$diff = array_merge($diff, $diff2);
+				$diff  = array_merge($diff, $diff2);
 				// If has difference
 				foreach ($diff as $v) {
 					$v = ltrim($v, '^');
@@ -574,8 +569,7 @@ class Conf extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function network_update($id, $val)
-	{
+	public function network_update( $id, $val ) {
 		if (!array_key_exists($id, self::$_default_site_options)) {
 			defined('LSCWP_LOG') && Debug2::debug('[Conf] Invalid network option ID ' . $id);
 			return;
@@ -634,8 +628,7 @@ class Conf extends Base
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_optm_exc_roles($role = null)
-	{
+	public function in_optm_exc_roles( $role = null ) {
 		// Get user role
 		if ($role === null) {
 			$role = Router::get_role();
@@ -657,13 +650,12 @@ class Conf extends Base
 	 * @since  2.9
 	 * @access private
 	 */
-	private function _set_conf()
-	{
+	private function _set_conf() {
 		/**
 		 * NOTE: For URL Query String setting,
-		 * 		1. If append lines to an array setting e.g. `cache-force_uri`, use `set[cache-force_uri][]=the_url`.
-		 *   	2. If replace the array setting with one line, use `set[cache-force_uri]=the_url`.
-		 *   	3. If replace the array setting with multi lines value, use 2 then 1.
+		 *      1. If append lines to an array setting e.g. `cache-force_uri`, use `set[cache-force_uri][]=the_url`.
+		 *      2. If replace the array setting with one line, use `set[cache-force_uri]=the_url`.
+		 *      3. If replace the array setting with multi lines value, use 2 then 1.
 		 */
 		if (empty($_GET[self::TYPE_SET]) || !is_array($_GET[self::TYPE_SET])) {
 			return;
@@ -709,13 +701,12 @@ class Conf extends Base
 	 * @since  2.9
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_SET:
-				$this->_set_conf();
+            $this->_set_conf();
 				break;
 
 			default:
