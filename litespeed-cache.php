@@ -45,10 +45,12 @@ if (defined('LSCWP_V')) return;
  * @since  5.2 Auto correct protocol for CONTENT URL
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
-if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr(site_url('/'), 0, 5) == 'https') {
+$site_url       = site_url('/');
+if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($site_url, 0, 5) == 'https') {
 	$WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
 }
-!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace(site_url('/'), '', $WP_CONTENT_URL)); // `wp-content`
+!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($site_url, '', $WP_CONTENT_URL)); // `wp-content`
+unset($site_url);
 !defined('LSWCP_PLUGIN_URL') && define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)); // Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 /**
@@ -58,6 +60,7 @@ if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr(site_url('/'), 0, 5) == '
  */
 !defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
 !defined('LITESPEED_STATIC_URL') && define('LITESPEED_STATIC_URL', $WP_CONTENT_URL . '/' . LITESPEED_DATA_FOLDER); // Full static cache folder URL '//example.com/wp-content/litespeed'
+unset($WP_CONTENT_URL);
 !defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', LSCWP_CONTENT_DIR . '/' . LITESPEED_DATA_FOLDER); // Full static cache folder path '/var/www/html/***/wp-content/litespeed'
 
 !defined('LITESPEED_TIME_OFFSET') && define('LITESPEED_TIME_OFFSET', get_option('gmt_offset') * 60 * 60);
