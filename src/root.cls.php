@@ -417,10 +417,6 @@ abstract class Root {
 	 */
 	public static function name( $id ) {
 		$name = strtolower(self::ori_cls());
-		if ($name == 'conf2') {
-			// For a certain 3.7rc correction, can be dropped after v4
-			$name = 'conf';
-		}
 		return 'litespeed.' . $name . '.' . $id;
 	}
 
