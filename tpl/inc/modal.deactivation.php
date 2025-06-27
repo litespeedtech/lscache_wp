@@ -44,7 +44,7 @@ $reasons = array(
     <div id="litespeed-deactivation" class="iziModal">
         <div id="litespeed-modal-deactivate">
             <form id="litespeed-deactivation-form" method="post">
-                <p><?php esc_attr_e('Why do you deactivate the plugin?', 'litespeed-cache'); ?></p>
+                <p><?php esc_attr_e('Why are you deactivating the plugin?', 'litespeed-cache'); ?></p>
                 <div class="deactivate-reason-wrapper">
                     <?php 
                         foreach ($reasons as $reason) {
@@ -73,14 +73,15 @@ $reasons = array(
                 <div class="deactivate-clear-settings-wrapper">
                     <i style="font-size: 0.9em;">
                         <?php 
-                            esc_html_e('On Uninstall, all plugin settings will be deleted.', 'litespeed-cache');
+                            esc_html_e('On uninstall, all plugin settings will be deleted.', 'litespeed-cache');
                         ?>
                     </i>
                     <br />
                     <i style="font-size: 0.9em;">
+                        
                         <?php 
                             printf(
-                                esc_html__('If you have Image Optimization used, you need to destroy all optm first, go to this %spage%s', 'litespeed-cache'),
+                                esc_html__('If you have used Image Optimization, please %sDestroy All Optimization Data%s first. NOTE: this does not remove your optimized images.', 'litespeed-cache'),
                                 '<a href="admin.php?page=litespeed-img_optm#litespeed-imageopt-destroy" target="_blank">',
                                 '</a>'
                             );
