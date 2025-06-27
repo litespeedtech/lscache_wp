@@ -58,6 +58,7 @@ class Import extends Base {
 
 		Debug2::debug('Import: Saved to ' . $filename);
 
+		@header('Content-Type: application/octet-stream');
 		@header('Content-Disposition: attachment; filename=' . $filename);
 		echo $data;
 
