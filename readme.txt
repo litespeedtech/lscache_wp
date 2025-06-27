@@ -268,6 +268,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Page Optimize** Allowed LazyLoad threshold overwrite. (Zsombor Franczia #852 PR#857)
 * **Crawler** Checked QC CDN for crawler hit. (PR#866)
 * **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
+* **3rd** Resolved WooCommerce ESI nonce being empty html comments issue on geolocation redirection. (#612331 PR#708)
 * **Misc** Simplified admin JS.
 * **Misc** Added existing plugin version to ping API for debug purpose.
 * **Misc** Fixed comments typos reported by static analysis. (Viktor Szépe PR#836)
