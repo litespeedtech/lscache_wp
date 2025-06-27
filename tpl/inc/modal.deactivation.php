@@ -71,27 +71,12 @@ $reasons = array(
                     ?>
                 </div>
                 <div class="deactivate-clear-settings-wrapper">
-                    <label for="litespeed-deactivate-clear">
-                        <input
-                            type="checkbox"
-                            id="litespeed-deactivate-clear"
-                            name="lsc-clear"
-                            value="1" />
-                        <?php
-                            esc_attr_e('On Uninstall, delete settings created by plugin?', 'litespeed-cache');
+                    <i style="font-size: 0.9em;">
+                        <?php 
+                            esc_html_e('On Uninstall, all plugin settings will be deleted.', 'litespeed-cache');
                         ?>
-                    </label>
-                    <?php 
-                        if (is_multisite()) {
-                    ?>
-                        <i style="font-size: 0.9em;">
-                            <?php 
-                                esc_html__('Deleting plugin settings, will delete all subsites settings too.', 'litespeed-cache');
-                            ?>
-                        </i>
-                    <?php 
-                        }
-                    ?>
+                    </i>
+                    <br />
                     <i style="font-size: 0.9em;">
                         <?php 
                             printf(
@@ -148,14 +133,12 @@ $reasons = array(
                     e.preventDefault();
                     $('#litespeed-deactivation-form-submit').attr('disabled', true);
                     var container = $('#litespeed-deactivation-form');
-                    let deleteSettings = $(container).find('#litespeed-deactivate-clear').is(':checked');
 
                     // Save selected data
                     var data = {
                         id: lscId,
                         siteLink: window.location.hostname,
-                        reason: $(container).find('[name=litespeed-reason]:checked').val(),
-                        deleteSettings: deleteSettings,
+                        reason: $(container).find('[name=litespeed-reason]:checked').val()
                     };
 
                     $.ajax({

@@ -23,8 +23,6 @@ class Activation extends Base {
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
-	const SETTING_REMOVE_SETTINGS = 'litespeed.remove_settings';
-
 	private static $_data_file;
 
 	/**
@@ -88,42 +86,38 @@ class Activation extends Base {
 	public static function uninstall_litespeed_cache() {
 		Task::destroy();
 
-		// use WP default get_option because plugin is not active
-		$remove_settings = get_option(self::SETTING_REMOVE_SETTINGS) === '1' ? true : false;
-		if($remove_settings || defined('LITESPEED_CLI') ){
-			if (is_multisite() ){
-				// Save main site id
-				$current_blog = get_current_blog_id();
+		if (is_multisite() ){
+			// Save main site id
+			$current_blog = get_current_blog_id();
 
-				// get all sites
-				$sub_sites = get_sites();
+			// get all sites
+			$sub_sites = get_sites();
 
-				// clear foreach site
-				foreach ($sub_sites as $sub_site) {
-					$sub_blog_id = (int) $sub_site->blog_id;
-					if (isset($sub_blog_id) && $sub_blog_id != $current_blog) {
-						// Switch to blog
-						switch_to_blog($sub_blog_id);
+			// clear foreach site
+			foreach ($sub_sites as $sub_site) {
+				$sub_blog_id = (int) $sub_site->blog_id;
+				if (isset($sub_blog_id) && $sub_blog_id != $current_blog) {
+					// Switch to blog
+					switch_to_blog($sub_blog_id);
 
-						// Delete site options
-						self::delete_site_settings();
+					// Delete site options
+					self::delete_site_settings();
 
-						// Delete site tables
-						Data::cls()->tables_del();
-					}
+					// Delete site tables
+					Data::cls()->tables_del();
 				}
-
-				// Return to main site
-				switch_to_blog($current_blog);
 			}
 
-			// Delete current blog
-			// Delete options
-			self::delete_site_settings();
-
-			// Delete site tables
-			Data::cls()->tables_del();
+			// Return to main site
+			switch_to_blog($current_blog);
 		}
+
+		// Delete current blog/site
+		// Delete options
+		self::delete_site_settings();
+
+		// Delete site tables
+		Data::cls()->tables_del();
 
 
 		if (file_exists(LITESPEED_STATIC_DIR)) {
@@ -245,11 +239,6 @@ class Activation extends Base {
 		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id());
 
 		Purge::purge_all();
-
-		// Set clear settings option. Will allow user to overwrite answer from modal.
-		$clear_settings = isset($_POST['lsc-clear']) ? $_POST['lsc-clear'] : '0';
-		// use WP default update_option because plugin is not active 
-		update_option(self::SETTING_REMOVE_SETTINGS, $clear_settings);
 
 		if (is_multisite()) {
 			if (!self::is_deactivate_last()) {
