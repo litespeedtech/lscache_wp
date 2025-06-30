@@ -31,16 +31,9 @@ class Purge {
 		}
 		$buf = WP_CLI::colorize("%CThe list of installs:%n\n");
 
-		if (version_compare($GLOBALS['wp_version'], '4.6', '<')) {
-			$sites = wp_get_sites();
-			foreach ($sites as $site) {
-				$buf .= WP_CLI::colorize('%Y' . $site['domain'] . $site['path'] . ':%n ID ' . $site['blog_id']) . "\n";
-			}
-		} else {
-			$sites = get_sites();
-			foreach ($sites as $site) {
-				$buf .= WP_CLI::colorize('%Y' . $site->domain . $site->path . ':%n ID ' . $site->blog_id) . "\n";
-			}
+		$sites = get_sites();
+		foreach ($sites as $site) {
+			$buf .= WP_CLI::colorize('%Y' . $site->domain . $site->path . ':%n ID ' . $site->blog_id) . "\n";
 		}
 
 		WP_CLI::line($buf);
