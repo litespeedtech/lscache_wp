@@ -22,13 +22,13 @@ use WP_CLI;
 class Database {
 	/**
 	 * Current blog id the optimization is working on.
-	 * 
+	 *
 	 * @var int|false $current_blog Current blog id.
 	 */
 	private $current_blog = false;
 	/**
 	 * Database class.
-	 * 
+	 *
 	 * @var DB_Optim $db Database class.
 	 */
 	private $db;
@@ -63,28 +63,30 @@ class Database {
 
 	/**
 	 * Change to blog sent as param.
-	 * 
+	 *
 	 * @param array $args Description.
 	 */
 	private function change_to_blog( $args ) {
-		if ( isset( $args[0] ) && 'blog' === $args[0] ) {
-			$this->current_blog = get_current_blog_id();
-			$blogid             = $args[1];
-			if ( !is_numeric( $blogid ) ) {
-				$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
-				WP_CLI::line( $error );
-				$this->network_list( $args );
-				return;
-			}
-			$site = get_blog_details( $blogid );
-			if ( false === $site ) {
-				$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
-				WP_CLI::line( $error );
-				$this->network_list( $args );
-				return;
-			}
-			switch_to_blog( $blogid );
+		if ( !isset( $args[0] ) || 'blog' !== $args[0] ) {
+			return;
 		}
+
+		$this->current_blog = get_current_blog_id();
+		$blogid             = $args[1];
+		if ( !is_numeric( $blogid ) ) {
+			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
+			WP_CLI::line( $error );
+			$this->network_list( $args );
+			return;
+		}
+		$site = get_blog_details( $blogid );
+		if ( false === $site ) {
+			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
+			WP_CLI::line( $error );
+			$this->network_list( $args );
+			return;
+		}
+		switch_to_blog( $blogid );
 	}
 
 	/**
@@ -101,7 +103,7 @@ class Database {
 
 	/**
 	 * Show CLI response.
-	 * 
+	 *
 	 * @param boolean $result Flag if result is scuccess or failure.
 	 * @param string  $action Action name.
 	 */
@@ -115,7 +117,7 @@ class Database {
 
 	/**
 	 * Clean actions function.
-	 * 
+	 *
 	 * @param int   $args Action arguments.
 	 * @param array $types What data to clean.
 	 */
@@ -133,7 +135,7 @@ class Database {
 	 *     # Start clearing posts data.
 	 *     $ wp litespeed-database clear_posts
 	 *     $ wp litespeed-database clear_posts blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function clear_posts( $args ) {
@@ -151,7 +153,7 @@ class Database {
 	 *     # Start clearing comments.
 	 *     $ wp litespeed-database clear_comments
 	 *     $ wp litespeed-database clear_comments blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function clear_comments( $args ) {
@@ -167,7 +169,7 @@ class Database {
 	 *     # Start clearing trackbacks/pingbacks.
 	 *     $ wp litespeed-database clear_trackbacks
 	 *     $ wp litespeed-database clear_trackbacks blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function clear_trackbacks( $args ) {
@@ -182,7 +184,7 @@ class Database {
 	 *     # Start clearing transients.
 	 *     $ wp litespeed-database clear_transients
 	 *     $ wp litespeed-database clear_transients blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function clear_transients( $args ) {
@@ -198,7 +200,7 @@ class Database {
 	 *     # Start optimizing tables.
 	 *     $ wp litespeed-database optimize_tables
 	 *     $ wp litespeed-database optimize_tables blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function optimize_tables( $args ) {
@@ -213,7 +215,7 @@ class Database {
 	 *     # Start optimizing all.
 	 *     $ wp litespeed-database optimize_all
 	 *     $ wp litespeed-database optimize_all blog 2
-	 * 
+	 *
 	 * @param string $args Action arguments.
 	 */
 	public function optimize_all( $args ) {
