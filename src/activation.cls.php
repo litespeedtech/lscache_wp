@@ -96,12 +96,12 @@ class Activation extends Base {
 			// clear foreach site
 			foreach ($sub_sites as $sub_site) {
 				$sub_blog_id = (int) $sub_site->blog_id;
-				if (isset($sub_blog_id) && $sub_blog_id != $current_blog) {
+				if ($sub_blog_id != $current_blog) {
 					// Switch to blog
 					switch_to_blog($sub_blog_id);
 
 					// Delete site options
-					self::delete_site_settings();
+					self::delete_settings();
 
 					// Delete site tables
 					Data::cls()->tables_del();
@@ -114,7 +114,7 @@ class Activation extends Base {
 
 		// Delete current blog/site
 		// Delete options
-		self::delete_site_settings();
+		self::delete_settings();
 
 		// Delete site tables
 		Data::cls()->tables_del();
@@ -127,7 +127,7 @@ class Activation extends Base {
 		Cloud::version_check('uninstall');
 	}
 
-	private static function delete_site_settings()
+	private static function delete_settings()
 	{
 		global $wpdb;
 
