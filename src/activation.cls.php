@@ -124,18 +124,9 @@ class Activation extends Base
 	 */
 	public static function get_network_ids($args = array())
 	{
-		global $wp_version;
-		if (version_compare($wp_version, '4.6', '<')) {
-			$blogs = wp_get_sites($args);
-			if (!empty($blogs)) {
-				foreach ($blogs as $key => $blog) {
-					$blogs[$key] = $blog['blog_id'];
-				}
-			}
-		} else {
-			$args['fields'] = 'ids';
-			$blogs = get_sites($args);
-		}
+		$args['fields'] = 'ids';
+		$blogs = get_sites($args);
+		
 		return $blogs;
 	}
 
