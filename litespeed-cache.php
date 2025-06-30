@@ -4,15 +4,15 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           6.5-rc4
+ * Version:           7.3-b11
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
- * License URI:       http://www.gnu.org/licenses/gpl.html
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       litespeed-cache
  * Domain Path:       /lang
  *
- * Copyright (C) 2015-2024 LiteSpeed Technologies, Inc.
+ * Copyright (C) 2015-2025 LiteSpeed Technologies, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,39 +26,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
+
 defined('WPINC') || exit();
 
-if (defined('LSCWP_V')) {
-	return;
-}
+if (defined('LSCWP_V')) return;
 
-!defined('LSCWP_V') && define('LSCWP_V', '6.5-rc4');
+!defined('LSCWP_V') && define('LSCWP_V', '7.3-b11');
 
 !defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
 !defined('LSCWP_DIR') && define('LSCWP_DIR', __DIR__ . '/'); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
-!defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php'); //LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
+!defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php'); // LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
  * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`
+ *
  * @since  5.2 Auto correct protocol for CONTENT URL
  */
 $WP_CONTENT_URL = WP_CONTENT_URL;
-$home_url = home_url('/');
-if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($home_url, 0, 5) == 'https') {
+$site_url       = site_url('/');
+if (substr($WP_CONTENT_URL, 0, 5) == 'http:' && substr($site_url, 0, 5) == 'https') {
 	$WP_CONTENT_URL = str_replace('http://', 'https://', $WP_CONTENT_URL);
 }
-!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($home_url, '', $WP_CONTENT_URL)); // `wp-content`
+!defined('LSCWP_CONTENT_FOLDER') && define('LSCWP_CONTENT_FOLDER', str_replace($site_url, '', $WP_CONTENT_URL)); // `wp-content`
+unset($site_url);
 !defined('LSWCP_PLUGIN_URL') && define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)); // Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 /**
  * Static cache files consts
+ *
  * @since  3.0
  */
 !defined('LITESPEED_DATA_FOLDER') && define('LITESPEED_DATA_FOLDER', 'litespeed');
 !defined('LITESPEED_STATIC_URL') && define('LITESPEED_STATIC_URL', $WP_CONTENT_URL . '/' . LITESPEED_DATA_FOLDER); // Full static cache folder URL '//example.com/wp-content/litespeed'
+unset($WP_CONTENT_URL);
 !defined('LITESPEED_STATIC_DIR') && define('LITESPEED_STATIC_DIR', LSCWP_CONTENT_DIR . '/' . LITESPEED_DATA_FOLDER); // Full static cache folder path '/var/www/html/***/wp-content/litespeed'
 
 !defined('LITESPEED_TIME_OFFSET') && define('LITESPEED_TIME_OFFSET', get_option('gmt_offset') * 60 * 60);
@@ -116,25 +118,23 @@ if (!defined('LSWCP_TAG_PREFIX')) {
  * Handle exception
  */
 if (!function_exists('litespeed_exception_handler')) {
-	function litespeed_exception_handler($errno, $errstr, $errfile, $errline)
-	{
+	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline ) {
 		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 	}
 }
 
 /**
  * Overwrite the WP nonce funcs outside of LiteSpeed namespace
+ *
  * @since  3.0
  */
 if (!function_exists('litespeed_define_nonce_func')) {
-	function litespeed_define_nonce_func()
-	{
+	function litespeed_define_nonce_func() {
 		/**
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
-		function wp_create_nonce($action = -1)
-		{
-			if (!defined('LITESPEED_DISABLE_ALL')) {
+		function wp_create_nonce( $action = -1 ) {
+			if (!defined('LITESPEED_DISABLE_ALL') || !LITESPEED_DISABLE_ALL) {
 				$control = \LiteSpeed\ESI::cls()->is_nonce_action($action);
 				if ($control !== null) {
 					$params = array(
@@ -150,8 +150,7 @@ if (!function_exists('litespeed_define_nonce_func')) {
 		/**
 		 * Ori WP wp_create_nonce
 		 */
-		function wp_create_nonce_litespeed_esi($action = -1)
-		{
+		function wp_create_nonce_litespeed_esi( $action = -1 ) {
 			$uid = get_current_user_id();
 			if (!$uid) {
 				/** This filter is documented in wp-includes/pluggable.php */
@@ -159,7 +158,7 @@ if (!function_exists('litespeed_define_nonce_func')) {
 			}
 
 			$token = wp_get_session_token();
-			$i = wp_nonce_tick();
+			$i     = wp_nonce_tick();
 
 			return substr(wp_hash($i . '|' . $action . '|' . $uid . '|' . $token, 'nonce'), -12, 10);
 		}
@@ -172,15 +171,14 @@ if (!function_exists('litespeed_define_nonce_func')) {
  * @since    1.0.0
  */
 if (!function_exists('run_litespeed_cache')) {
-	function run_litespeed_cache()
-	{
-		//Check minimum PHP requirements, which is 5.3 at the moment.
-		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+	function run_litespeed_cache() {
+		// Check minimum PHP requirements, which is 7.2 at the moment.
+		if (version_compare(PHP_VERSION, '7.2.0', '<')) {
 			return;
 		}
 
-		//Check minimum WP requirements, which is 4.9 at the moment.
-		if (version_compare($GLOBALS['wp_version'], '4.9', '<')) {
+		// Check minimum WP requirements, which is 5.3 at the moment.
+		if (version_compare($GLOBALS['wp_version'], '5.3', '<')) {
 			return;
 		}
 

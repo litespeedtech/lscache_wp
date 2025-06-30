@@ -9,18 +9,43 @@ on:
   pull_request:
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: '20'
+          php-version: '8.2' # Adjust to your project's PHP version
+          coverage: none
+
+      - name: Initialize Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
           check-latest: true
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
 
-      - run: npm run format-check
+      - name: Install npm dependencies
+        run: npm clean-install
+
+      - name: Create PHPCS cache directory
+        run: mkdir -p .cache
+
+      - name: Install PHPCS dependencies
+        run: npm run install-composer-packages
+
+      - name: Run PHPCS check
+        run: npm run sniff-check
+
+      - name: Run format check
+        run: npm run format-check

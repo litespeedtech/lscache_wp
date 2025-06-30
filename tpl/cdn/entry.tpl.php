@@ -1,48 +1,47 @@
 <?php
-namespace LiteSpeed ;
-defined( 'WPINC' ) || exit ;
+/**
+ * LiteSpeed Cache CDN Settings
+ *
+ * @package LiteSpeed
+ * @since 1.0.0
+ */
+
+namespace LiteSpeed;
+
+defined( 'WPINC' ) || exit;
 
 $menu_list = array(
-	'settings'			=> __( 'CDN Settings', 'litespeed-cache' ),
-	'auto_setup'		=> __( 'QUIC.cloud CDN Setup', 'litespeed-cache' ),
-	'manage'			=> __( 'Manage', 'litespeed-cache' ),
-) ;
-
+	'qc'    => esc_html__( 'QUIC.cloud', 'litespeed-cache' ),
+	'cf'    => esc_html__( 'Cloudflare', 'litespeed-cache' ),
+	'other' => esc_html__( 'Other Static CDN', 'litespeed-cache' ),
+);
 ?>
 
 <div class="wrap">
 	<h1 class="litespeed-h1">
-		<?php echo __( 'LiteSpeed Cache CDN', 'litespeed-cache' ) ; ?>
+		<?php esc_html_e( 'LiteSpeed Cache CDN', 'litespeed-cache' ); ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo Core::VER ; ?>
+		<?php echo esc_html( 'v' . Core::VER ); ?>
 	</span>
 	<hr class="wp-header-end">
 </div>
 
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header nav-tab-wrapper">
-	<?php
-		$i = 1 ;
-		foreach ($menu_list as $tab => $val){
-			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='litespeed-tab nav-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
-			$i ++ ;
-		}
-	?>
+		<?php GUI::display_tab_list( $menu_list ); ?>
 	</h2>
 
 	<div class="litespeed-body">
-	<?php
-
-		// include all tpl for faster UE
-		foreach ($menu_list as $tab => $val) {
-			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "tpl/cdn/$tab.tpl.php" ;
-			echo "</div>" ;
+		<?php
+		foreach ( $menu_list as $menu_key => $menu_value ) {
+			printf(
+				'<div data-litespeed-layout="%s">',
+				esc_attr( $menu_key )
+			);
+			require LSCWP_DIR . "tpl/cdn/$menu_key.tpl.php";
+			echo '</div>';
 		}
-
-	?>
+		?>
 	</div>
-
 </div>

@@ -5,50 +5,50 @@
  *
  * This generate the valid action.
  *
- * @since      	1.1.0
- * @since  		1.5 Moved into /inc
+ * @since       1.1.0
+ * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Router extends Base
-{
+class Router extends Base {
+
 	const LOG_TAG = '[Router]';
 
-	const NONCE = 'LSCWP_NONCE';
+	const NONCE  = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
-	const ACTION_DB_OPTM = 'db_optm';
-	const ACTION_PLACEHOLDER = 'placeholder';
-	const ACTION_AVATAR = 'avatar';
-	const ACTION_SAVE_SETTINGS = 'save-settings';
-	const ACTION_CLOUD = 'cloud';
-	const ACTION_CDN_SETUP = 'cdn_setup';
-	const ACTION_IMG_OPTM = 'img_optm';
-	const ACTION_HEALTH = 'health';
-	const ACTION_CRAWLER = 'crawler';
-	const ACTION_PURGE = 'purge';
-	const ACTION_CONF = 'conf';
-	const ACTION_ACTIVATION = 'activation';
-	const ACTION_CSS = 'css';
-	const ACTION_UCSS = 'ucss';
-	const ACTION_VPI = 'vpi';
-	const ACTION_PRESET = 'preset';
-	const ACTION_IMPORT = 'import';
-	const ACTION_REPORT = 'report';
-	const ACTION_DEBUG2 = 'debug2';
-	const ACTION_CDN_CLOUDFLARE = 'CDN\Cloudflare';
+	const ACTION_DB_OPTM               = 'db_optm';
+	const ACTION_PLACEHOLDER           = 'placeholder';
+	const ACTION_AVATAR                = 'avatar';
+	const ACTION_SAVE_SETTINGS         = 'save-settings';
+	const ACTION_CLOUD                 = 'cloud';
+	const ACTION_IMG_OPTM              = 'img_optm';
+	const ACTION_HEALTH                = 'health';
+	const ACTION_CRAWLER               = 'crawler';
+	const ACTION_PURGE                 = 'purge';
+	const ACTION_CONF                  = 'conf';
+	const ACTION_ACTIVATION            = 'activation';
+	const ACTION_CSS                   = 'css';
+	const ACTION_UCSS                  = 'ucss';
+	const ACTION_VPI                   = 'vpi';
+	const ACTION_PRESET                = 'preset';
+	const ACTION_IMPORT                = 'import';
+	const ACTION_REPORT                = 'report';
+	const ACTION_DEBUG2                = 'debug2';
+	const ACTION_CDN_CLOUDFLARE        = 'CDN\Cloudflare';
+	const ACTION_ADMIN_DISPLAY         = 'admin_display';
 
 	// List all handlers here
 	private static $_HANDLERS = array(
+		self::ACTION_ADMIN_DISPLAY,
 		self::ACTION_ACTIVATION,
 		self::ACTION_AVATAR,
 		self::ACTION_CDN_CLOUDFLARE,
 		self::ACTION_CLOUD,
-		self::ACTION_CDN_SETUP,
 		self::ACTION_CONF,
 		self::ACTION_CRAWLER,
 		self::ACTION_CSS,
@@ -67,7 +67,7 @@ class Router extends Base
 
 	const TYPE = 'litespeed_type';
 
-	const ITEM_HASH = 'hash';
+	const ITEM_HASH       = 'hash';
 	const ITEM_FLASH_HASH = 'flash_hash';
 
 	private static $_esi_enabled;
@@ -86,18 +86,17 @@ class Router extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function self_redirect($action, $type)
-	{
-		if (defined('LITESPEED_CLI') || defined('DOING_CRON')) {
-			Admin_Display::succeed('To be continued'); // Show for CLI
+	public static function self_redirect( $action, $type ) {
+		if (defined('LITESPEED_CLI') || wp_doing_cron()) {
+			Admin_Display::success('To be continued'); // Show for CLI
 			return;
 		}
 
 		// Add i to avoid browser too many redirected warning
 		$i = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
-		$i++;
+		++$i;
 
-		$link = Utility::build_url($action, $type, false, null, array('litespeed_i' => $i));
+		$link = Utility::build_url($action, $type, false, null, array( 'litespeed_i' => $i ));
 
 		$url = html_entity_decode($link);
 		exit("<meta http-equiv='refresh' content='0;url=$url'>");
@@ -110,8 +109,7 @@ class Router extends Base
 	 * @since  2.3.1 Relocated from cdn.cls
 	 * @access public
 	 */
-	public function can_optm()
-	{
+	public function can_optm() {
 		$can = true;
 
 		if (is_user_logged_in() && $this->conf(self::O_OPTM_GUEST_ONLY)) {
@@ -146,8 +144,7 @@ class Router extends Base
 	 * @since 2.4.2.1
 	 * @access public
 	 */
-	public static function from_admin()
-	{
+	public static function from_admin() {
 		return !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], get_admin_url()) === 0;
 	}
 
@@ -158,8 +155,7 @@ class Router extends Base
 	 * @since  2.3.1 Relocated from cdn.cls
 	 * @access public
 	 */
-	public static function can_cdn()
-	{
+	public static function can_cdn() {
 		$can = true;
 
 		if (is_admin()) {
@@ -180,14 +176,16 @@ class Router extends Base
 
 		/**
 		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`
+		 *
 		 * @since  2.7.2
 		 */
-		if (defined('DOING_CRON')) {
+		if (wp_doing_cron()) {
 			$can = false;
 		}
 
 		/**
 		 * Bypass login/reg page
+		 *
 		 * @since  1.6
 		 */
 		if (self::_is_login_page()) {
@@ -197,6 +195,7 @@ class Router extends Base
 
 		/**
 		 * Bypass post/page link setting
+		 *
 		 * @since 2.9.8.5
 		 */
 		$rest_prefix = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
@@ -225,9 +224,8 @@ class Router extends Base
 	 * @since  2.3.1
 	 * @access protected
 	 */
-	protected static function _is_login_page()
-	{
-		if (in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'), true)) {
+	protected static function _is_login_page() {
+		if (in_array($GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ), true)) {
 			return true;
 		}
 
@@ -240,8 +238,7 @@ class Router extends Base
 	 * @since  1.9.1
 	 * @since  3.3 Renamed from `is_crawler_role_simulation`
 	 */
-	public function is_role_simulation()
-	{
+	public function is_role_simulation() {
 		if (is_admin()) {
 			return;
 		}
@@ -250,20 +247,26 @@ class Router extends Base
 			return;
 		}
 
-		self::debug('starting role validation');
+		self::debug('🪪 starting role validation');
 
 		// Check if is from crawler
 		// if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Crawler::FAST_USER_AGENT ) !== 0 ) {
-		// 	Debug2::debug( '[Router] user agent not match' );
-		// 	return;
+		// Debug2::debug( '[Router] user agent not match' );
+		// return;
 		// }
+		$server_ip = $this->conf(self::O_SERVER_IP);
+		if (!$server_ip || self::get_ip() !== $server_ip) {
+			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
+			Control::set_nocache('Role simulate uid denied');
+			return;
+		}
 
 		// Flash hash validation
 		if (!empty($_COOKIE['litespeed_flash_hash'])) {
 			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
-					self::debug('role simulate uid ' . $hash_data['uid']);
+					self::debug('🪪 Role simulator flash hash matched, escalating user to be uid=' . $hash_data['uid']);
 					self::delete_option(self::ITEM_FLASH_HASH);
 					wp_set_current_user($hash_data['uid']);
 					return;
@@ -274,24 +277,16 @@ class Router extends Base
 		if (!empty($_COOKIE['litespeed_hash'])) {
 			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
-				if (time() - $hash_data['ts'] < $this->conf(Base::O_CRAWLER_RUN_DURATION) && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
-					if (empty($hash_data['ip'])) {
-						$hash_data['ip'] = self::get_ip();
-						self::update_option(self::ITEM_HASH, $hash_data);
-					} else {
-						$server_ips = apply_filters('litespeed_server_ips', array($hash_data['ip']));
-						if (!self::ip_access($server_ips)) {
-							self::debug('WARNING: role simulator ip check failed [db ip] ' . $hash_data['ip'], $server_ips);
-							return;
-						}
-					}
+				$RUN_DURATION = $this->cls('Crawler')->get_crawler_duration();
+				if (time() - $hash_data['ts'] < $RUN_DURATION && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
+					self::debug('🪪 Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
 					wp_set_current_user($hash_data['uid']);
 					return;
 				}
 			}
 		}
 
-		self::debug('WARNING: role simulator hash not match');
+		self::debug('❌ WARNING: role simulator hash not match');
 	}
 
 	/**
@@ -299,8 +294,7 @@ class Router extends Base
 	 *
 	 * @since  6.4
 	 */
-	public function get_flash_hash($uid)
-	{
+	public function get_flash_hash( $uid ) {
 		$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
 		if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts'])) {
 			if (time() - $hash_data['ts'] < 60) {
@@ -308,8 +302,18 @@ class Router extends Base
 			}
 		}
 
+		// Check if this user has editor access or not
+		if (user_can($uid, 'edit_posts')) {
+			self::debug('🛑 The user with id ' . $uid . ' has editor access, which is not allowed for the role simulator.');
+			return '';
+		}
+
 		$hash = Str::rrand(32);
-		self::update_option(self::ITEM_FLASH_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
+		self::update_option(self::ITEM_FLASH_HASH, array(
+			'hash' => $hash,
+			'ts' => time(),
+			'uid' => $uid,
+		));
 		return $hash;
 	}
 
@@ -318,11 +322,20 @@ class Router extends Base
 	 *
 	 * @since  3.3
 	 */
-	public function get_hash($uid)
-	{
+	public function get_hash( $uid ) {
+		// Check if this user has editor access or not
+		if (user_can($uid, 'edit_posts')) {
+			self::debug('🛑 The user with id ' . $uid . ' has editor access, which is not allowed for the role simulator.');
+			return '';
+		}
+
 		// As this is called only when starting crawling, not per page, no need to reuse
 		$hash = Str::rrand(32);
-		self::update_option(self::ITEM_HASH, array('hash' => $hash, 'ts' => time(), 'uid' => $uid));
+		self::update_option(self::ITEM_HASH, array(
+			'hash' => $hash,
+			'ts' => time(),
+			'uid' => $uid,
+		));
 		return $hash;
 	}
 
@@ -331,8 +344,7 @@ class Router extends Base
 	 *
 	 * @since  1.6.2
 	 */
-	public static function get_role($uid = null)
-	{
+	public static function get_role( $uid = null ) {
 		if (defined('LITESPEED_WP_ROLE')) {
 			return LITESPEED_WP_ROLE;
 		}
@@ -345,7 +357,7 @@ class Router extends Base
 		if ($uid) {
 			$user = get_userdata($uid);
 			if (isset($user->roles) && is_array($user->roles)) {
-				$tmp = array_values($user->roles);
+				$tmp  = array_values($user->roles);
 				$role = implode(',', $tmp); // Combine for PHP5.3 const comaptibility
 			}
 		}
@@ -359,6 +371,7 @@ class Router extends Base
 			/**
 			 * Fix double login issue
 			 * The previous user init refactoring didn't fix this bcos this is in login process and the user role could change
+			 *
 			 * @see  https://github.com/litespeedtech/lscache_wp/commit/69e7bc71d0de5cd58961bae953380b581abdc088
 			 * @since  2.9.8 Won't assign const if in login process
 			 */
@@ -379,9 +392,8 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function frontend_path()
-	{
-		//todo: move to htaccess.cls ?
+	public static function frontend_path() {
+		// todo: move to htaccess.cls ?
 		if (!isset(self::$_frontend_path)) {
 			$frontend = rtrim(ABSPATH, '/'); // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
@@ -405,8 +417,7 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public function esi_enabled()
-	{
+	public function esi_enabled() {
 		if (!isset(self::$_esi_enabled)) {
 			self::$_esi_enabled = defined('LITESPEED_ON') && $this->conf(self::O_ESI);
 			if (!empty($_REQUEST[self::ACTION])) {
@@ -422,8 +433,7 @@ class Router extends Base
 	 * @since 1.1.1
 	 * @access public
 	 */
-	public static function can_crawl()
-	{
+	public static function can_crawl() {
 		if (isset($_SERVER['X-LSCACHE']) && strpos($_SERVER['X-LSCACHE'], 'crawler') === false) {
 			return false;
 		}
@@ -443,8 +453,7 @@ class Router extends Base
 	 * @access public
 	 * @return string
 	 */
-	public static function get_action()
-	{
+	public static function get_action() {
 		if (!isset(self::$_action)) {
 			self::$_action = false;
 			self::cls()->verify_action();
@@ -462,8 +471,7 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_logged_in()
-	{
+	public static function is_logged_in() {
 		if (!isset(self::$_is_logged_in)) {
 			self::$_is_logged_in = is_user_logged_in();
 		}
@@ -477,10 +485,9 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public static function is_ajax()
-	{
+	public static function is_ajax() {
 		if (!isset(self::$_is_ajax)) {
-			self::$_is_ajax = defined('DOING_AJAX') && DOING_AJAX;
+			self::$_is_ajax = wp_doing_ajax();
 		}
 		return self::$_is_ajax;
 	}
@@ -492,8 +499,7 @@ class Router extends Base
 	 * @access public
 	 * @return boolean
 	 */
-	public function is_admin_ip()
-	{
+	public function is_admin_ip() {
 		if (!isset(self::$_is_admin_ip)) {
 			$ips = $this->conf(self::O_DEBUG_IPS);
 
@@ -508,8 +514,7 @@ class Router extends Base
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function verify_type()
-	{
+	public static function verify_type() {
 		if (empty($_REQUEST[self::TYPE])) {
 			Debug2::debug('[Router] no type', 2);
 			return false;
@@ -526,14 +531,13 @@ class Router extends Base
 	 * @since 1.1.0
 	 * @access private
 	 */
-	private function verify_action()
-	{
-		if (empty($_REQUEST[Router::ACTION])) {
+	private function verify_action() {
+		if (empty($_REQUEST[self::ACTION])) {
 			Debug2::debug2('[Router] LSCWP_CTRL bypassed empty');
 			return;
 		}
 
-		$action = stripslashes($_REQUEST[Router::ACTION]);
+		$action = stripslashes($_REQUEST[self::ACTION]);
 
 		if (!$action) {
 			return;
@@ -577,33 +581,33 @@ class Router extends Base
 		Debug2::debug('[Router] LSCWP_CTRL: ' . $action);
 
 		// OK, as we want to do something magic, lets check if its allowed
-		$_is_multisite = is_multisite();
-		$_is_network_admin = $_is_multisite && is_network_admin();
+		$_is_multisite       = is_multisite();
+		$_is_network_admin   = $_is_multisite && is_network_admin();
 		$_can_network_option = $_is_network_admin && current_user_can('manage_network_options');
-		$_can_option = current_user_can('manage_options');
+		$_can_option         = current_user_can('manage_options');
 
 		switch ($action) {
 			case self::ACTION_SAVE_SETTINGS_NETWORK: // Save network settings
-				if ($_can_network_option) {
+            if ($_can_network_option) {
 					self::$_action = $action;
 				}
 				return;
 
 			case Core::ACTION_PURGE_BY:
-				if (defined('LITESPEED_ON') && ($_can_network_option || $_can_option || self::is_ajax())) {
-					//here may need more security
+            if (defined('LITESPEED_ON') && ($_can_network_option || $_can_option || self::is_ajax())) {
+					// here may need more security
 					self::$_action = $action;
 				}
 				return;
 
 			case self::ACTION_DB_OPTM:
-				if ($_can_network_option || $_can_option) {
+            if ($_can_network_option || $_can_option) {
 					self::$_action = $action;
 				}
 				return;
 
 			case Core::ACTION_PURGE_EMPTYCACHE: // todo: moved to purge.cls type action
-				if ((defined('LITESPEED_ON') || $_is_network_admin) && ($_can_network_option || (!$_is_multisite && $_can_option))) {
+            if ((defined('LITESPEED_ON') || $_is_network_admin) && ($_can_network_option || (!$_is_multisite && $_can_option))) {
 					self::$_action = $action;
 				}
 				return;
@@ -614,16 +618,16 @@ class Router extends Base
 			case Core::ACTION_QS_SHOW_HEADERS:
 			case Core::ACTION_QS_PURGE_ALL:
 			case Core::ACTION_QS_PURGE_EMPTYCACHE:
-				if (defined('LITESPEED_ON') && ($_is_public_action || self::is_ajax())) {
+            if (defined('LITESPEED_ON') && ($_is_public_action || self::is_ajax())) {
 					self::$_action = $action;
 				}
 				return;
 
+			case self::ACTION_ADMIN_DISPLAY:
 			case self::ACTION_PLACEHOLDER:
 			case self::ACTION_AVATAR:
 			case self::ACTION_IMG_OPTM:
 			case self::ACTION_CLOUD:
-			case self::ACTION_CDN_SETUP:
 			case self::ACTION_CDN_CLOUDFLARE:
 			case self::ACTION_CRAWLER:
 			case self::ACTION_PRESET:
@@ -636,30 +640,31 @@ class Router extends Base
 			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:
 			case self::ACTION_SAVE_SETTINGS: // Save settings
-				if ($_can_option && !$_is_network_admin) {
+            if ($_can_option && !$_is_network_admin) {
 					self::$_action = $action;
 				}
 				return;
 
 			case self::ACTION_PURGE:
 			case self::ACTION_DEBUG2:
-				if ($_can_network_option || $_can_option) {
+            if ($_can_network_option || $_can_option) {
 					self::$_action = $action;
 				}
 				return;
 
 			case Core::ACTION_DISMISS:
-				/**
-				 * Non ajax call can dismiss too
-				 * @since  2.9
-				 */
-				// if ( self::is_ajax() ) {
-				self::$_action = $action;
-				// }
+            /**
+             * Non ajax call can dismiss too
+             *
+             * @since  2.9
+             */
+            // if ( self::is_ajax() ) {
+            self::$_action = $action;
+            // }
 				return;
 
 			default:
-				Debug2::debug('[Router] LSCWP_CTRL match failed: ' . $action);
+            Debug2::debug('[Router] LSCWP_CTRL match failed: ' . $action);
 				return;
 		}
 	}
@@ -672,9 +677,8 @@ class Router extends Base
 	 * @param  string $action
 	 * @return bool
 	 */
-	public function verify_nonce($action)
-	{
-		if (!isset($_REQUEST[Router::NONCE]) || !wp_verify_nonce($_REQUEST[Router::NONCE], $action)) {
+	public function verify_nonce( $action ) {
+		if (!isset($_REQUEST[self::NONCE]) || !wp_verify_nonce($_REQUEST[self::NONCE], $action)) {
 			return false;
 		} else {
 			return true;
@@ -687,8 +691,7 @@ class Router extends Base
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function ip_access($ip_list)
-	{
+	public function ip_access( $ip_list ) {
 		if (!$ip_list) {
 			return false;
 		}
@@ -703,8 +706,8 @@ class Router extends Base
 		// if(empty($uip) || count($uip) != 4) Return false;
 		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
 		// foreach($ip_list as $key => $ip) {
-		// 	if(count($ip) != 4) continue;
-		// 	for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
+		// if(count($ip) != 4) continue;
+		// for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
 		// }
 		return in_array(self::$_ip, $ip_list);
 	}
@@ -717,17 +720,16 @@ class Router extends Base
 	 * @access public
 	 * @return string
 	 */
-	public static function get_ip()
-	{
+	public static function get_ip() {
 		$_ip = '';
 		// if ( function_exists( 'apache_request_headers' ) ) {
-		// 	$apache_headers = apache_request_headers();
-		// 	$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
-		// 	if ( ! $_ip ) {
-		// 		$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
-		// 		$_ip = explode( ',', $_ip );
-		// 		$_ip = $_ip[ 0 ];
-		// 	}
+		// $apache_headers = apache_request_headers();
+		// $_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
+		// if ( ! $_ip ) {
+		// $_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
+		// $_ip = explode( ',', $_ip );
+		// $_ip = $_ip[ 0 ];
+		// }
 
 		// }
 
@@ -743,8 +745,7 @@ class Router extends Base
 	 * @since  1.8.2
 	 * @access public
 	 */
-	public static function opcache_enabled()
-	{
+	public static function opcache_enabled() {
 		return function_exists('opcache_reset') && ini_get('opcache.enable');
 	}
 
@@ -753,8 +754,7 @@ class Router extends Base
 	 *
 	 * @since  3.0
 	 */
-	public function serve_static()
-	{
+	public function serve_static() {
 		if (!empty($_SERVER['SCRIPT_URI'])) {
 			if (strpos($_SERVER['SCRIPT_URI'], LITESPEED_STATIC_URL . '/') !== 0) {
 				return;
@@ -778,11 +778,11 @@ class Router extends Base
 
 		switch ($path[0]) {
 			case 'avatar':
-				$this->cls('Avatar')->serve_static($path[1]);
+            $this->cls('Avatar')->serve_static($path[1]);
 				break;
 
 			case 'localres':
-				$this->cls('Localization')->serve_static($path[1]);
+            $this->cls('Localization')->serve_static($path[1]);
 				break;
 
 			default:
@@ -798,8 +798,7 @@ class Router extends Base
 	 * @since  3.0
 	 * @access public
 	 */
-	public function handler($cls)
-	{
+	public function handler( $cls ) {
 		if (!in_array($cls, self::$_HANDLERS)) {
 			return;
 		}

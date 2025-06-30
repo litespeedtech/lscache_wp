@@ -8,7 +8,6 @@
  *
  * It is not required to add all integration files here, this just provides
  * a common place for plugin authors to append their file to.
- *
  */
 defined('WPINC') || exit();
 

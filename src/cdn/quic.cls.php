@@ -3,10 +3,10 @@
 /**
  * The quic.cloud class.
  *
- * @since      	2.4.1
- * @package    	LiteSpeed
- * @subpackage 	LiteSpeed/src/cdn
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       2.4.1
+ * @package     LiteSpeed
+ * @subpackage  LiteSpeed/src/cdn
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed\CDN;
@@ -16,15 +16,15 @@ use LiteSpeed\Base;
 
 defined('WPINC') || exit();
 
-class Quic extends Base
-{
+class Quic extends Base {
+
 	const LOG_TAG = '☁️';
 
 	const TYPE_REG = 'reg';
 
 	protected $_summary;
-	public function __construct()
-	{
+	private $_force = false;
+	public function __construct() {
 		$this->_summary = self::get_summary();
 	}
 
@@ -33,61 +33,82 @@ class Quic extends Base
 	 *
 	 * @access public
 	 */
-	public static function try_sync_config()
-	{
-		self::cls()->try_sync_conf();
-	}
+	public function try_sync_conf( $force = false ) {
+		if ($force) {
+			$this->_force = $force;
+		}
 
-	public function try_sync_conf($force = false)
-	{
-		$options = $this->get_options();
-
-		if (!$options[self::O_CDN_QUIC]) {
+		if (!$this->conf(self::O_CDN_QUIC)) {
 			if (!empty($this->_summary['conf_md5'])) {
-				self::save_summary(array('conf_md5' => ''));
+				self::debug('❌ No QC CDN, clear conf md5!');
+				self::save_summary(array( 'conf_md5' => '' ));
 			}
 			return false;
 		}
 
-		// Security: Remove cf key in report
-		$secure_fields = array(self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD);
-		foreach ($secure_fields as $v) {
-			if (!empty($options[$v])) {
-				$options[$v] = str_repeat('*', strlen($options[$v]));
-			}
-		}
-		unset($options[self::O_MEDIA_LQIP_EXC]);
-
-		// Remove overflow multi lines fields
-		foreach ($options as $k => $v) {
-			if (is_array($v) && count($v) > 30) {
-				$v = array_slice($v, 0, 30);
-				$options[$k] = $v;
-			}
+		// Notice: Sync conf must be after `wp_loaded` hook, to get 3rd party vary injected (e.g. `woocommerce_cart_hash`).
+		if (!did_action('wp_loaded')) {
+			add_action('wp_loaded', array( $this, 'try_sync_conf' ), 999);
+			self::debug('WP not loaded yet, delay sync to wp_loaded:999');
+			return;
 		}
 
-		// Rest url
-		$options['_rest'] = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
-		$options['_home_url'] = home_url('/');
-
-		// Add server env vars
-		$options['_server'] = $this->server_vars();
-
-		// Append hooks
+		$options                = $this->get_options();
 		$options['_tp_cookies'] = apply_filters('litespeed_vary_cookies', array());
 
-		$conf_md5 = md5(\json_encode($options));
-		if (!empty($this->_summary['conf_md5']) && $conf_md5 == $this->_summary['conf_md5']) {
-			if (!$force) {
-				self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
-				return;
+		// Build necessary options only
+		$options_needed  = array(
+			self::O_CACHE_DROP_QS,
+			self::O_CACHE_EXC_COOKIES,
+			self::O_CACHE_EXC_USERAGENTS,
+			self::O_CACHE_LOGIN_COOKIE,
+			self::O_CACHE_VARY_COOKIES,
+			self::O_CACHE_MOBILE_RULES,
+			self::O_CACHE_MOBILE,
+			self::O_CACHE_BROWSER,
+			self::O_CACHE_TTL_BROWSER,
+			self::O_IMG_OPTM_WEBP,
+			self::O_GUEST,
+			'_tp_cookies',
+		);
+		$consts_needed   = array( 'LSWCP_TAG_PREFIX' );
+		$options_for_md5 = array();
+		foreach ($options_needed as $v) {
+			if (isset($options[$v])) {
+				$options_for_md5[$v] = $options[$v];
+				// Remove overflow multi lines fields
+				if (is_array($options_for_md5[$v]) && count($options_for_md5[$v]) > 30) {
+					$options_for_md5[$v] = array_slice($options_for_md5[$v], 0, 30);
+				}
 			}
-			self::debug('!!!Force sync conf even same md5');
 		}
 
-		self::save_summary(array('conf_md5' => $conf_md5));
-		self::debug('sync conf to QC', $options);
+		$server_vars = $this->server_vars();
+		foreach ($consts_needed as $v) {
+			if (isset($server_vars[$v])) {
+				if (empty($options_for_md5['_server'])) {
+					$options_for_md5['_server'] = array();
+				}
+				$options_for_md5['_server'][$v] = $server_vars[$v];
+			}
+		}
 
-		Cloud::post(Cloud::SVC_D_SYNC_CONF, $options);
+		$conf_md5 = md5(\json_encode($options_for_md5));
+		if (!empty($this->_summary['conf_md5'])) {
+			if ($conf_md5 == $this->_summary['conf_md5']) {
+				if (!$this->_force) {
+					self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
+					return;
+				}
+				self::debug('!!!Force sync conf even same md5');
+			} else {
+				self::debug('[conf_md5] ' . $conf_md5 . ' [existing_conf_md5] ' . $this->_summary['conf_md5']);
+			}
+		}
+
+		self::save_summary(array( 'conf_md5' => $conf_md5 ));
+		self::debug('sync conf to QC');
+
+		Cloud::post(Cloud::SVC_D_SYNC_CONF, $options_for_md5);
 	}
 }

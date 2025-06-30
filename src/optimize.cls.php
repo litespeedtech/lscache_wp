@@ -3,18 +3,18 @@
 /**
  * The optimize class.
  *
- * @since      	1.2.2
+ * @since       1.2.2
  */
 
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Optimize extends Base
-{
-	const LIB_FILE_CSS_ASYNC = 'assets/js/css_async.min.js';
+class Optimize extends Base {
+
+	const LIB_FILE_CSS_ASYNC     = 'assets/js/css_async.min.js';
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js';
-	const LIB_FILE_JS_DELAY = 'assets/js/js_delay.min.js';
+	const LIB_FILE_JS_DELAY      = 'assets/js/js_delay.min.js';
 
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
@@ -44,16 +44,16 @@ class Optimize extends Base
 	private $html_foot = ''; // The html info append to <body>
 	private $html_head = ''; // The html info prepend to <body>
 
-	private static $_var_i = 0;
+	private static $_var_i    = 0;
 	private $_var_preserve_js = array();
 	private $_request_url;
 
 	/**
 	 * Constructor
+	 *
 	 * @since  4.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		Debug2::debug('[Optm] init');
 		$this->__optimizer = $this->cls('Optimizer');
 	}
@@ -64,16 +64,15 @@ class Optimize extends Base
 	 * @since  3.0
 	 * @access protected
 	 */
-	public function init()
-	{
+	public function init() {
 		$this->cfg_css_async = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_ASYNC);
 		if ($this->cfg_css_async) {
-			if (!$this->conf(self::O_API_KEY)) {
-				Debug2::debug('[Optm] ❌ CCSS set to OFF due to missing domain key');
+			if (!$this->cls('Cloud')->activated()) {
+				Debug2::debug('[Optm] ❌ CCSS set to OFF due to QC not activated');
 				$this->cfg_css_async = false;
 			}
 			if ((defined('LITESPEED_GUEST_OPTM') || ($this->conf(self::O_OPTM_UCSS) && $this->conf(self::O_OPTM_CSS_COMB))) && $this->conf(self::O_OPTM_UCSS_INLINE)) {
-				Debug2::debug('[Optm] ❌ CCSS set to OFF due to UCSS Inline');
+				Debug2::debug('[Optm] ⚠️ CCSS set to OFF due to UCSS Inline');
 				$this->cfg_css_async = false;
 			}
 		}
@@ -84,7 +83,7 @@ class Optimize extends Base
 		if ($this->cfg_js_defer == 2) {
 			add_filter(
 				'litespeed_optm_cssjs',
-				function ($con, $file_type) {
+				function ( $con, $file_type ) {
 					if ($file_type == 'js') {
 						$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
 						// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
@@ -102,8 +101,8 @@ class Optimize extends Base
 		}
 
 		if ($this->conf(self::O_OPTM_QS_RM)) {
-			add_filter('style_loader_src', array($this, 'remove_query_strings'), 999);
-			add_filter('script_loader_src', array($this, 'remove_query_strings'), 999);
+			add_filter('style_loader_src', array( $this, 'remove_query_strings' ), 999);
+			add_filter('script_loader_src', array( $this, 'remove_query_strings' ), 999);
 		}
 
 		// GM JS exclude @since 4.1
@@ -112,10 +111,11 @@ class Optimize extends Base
 		} else {
 			/**
 			 * Exclude js from deferred setting
+			 *
 			 * @since 1.5
 			 */
 			if ($this->cfg_js_defer) {
-				add_filter('litespeed_optm_js_defer_exc', array($this->cls('Data'), 'load_js_defer_exc'));
+				add_filter('litespeed_optm_js_defer_exc', array( $this->cls('Data'), 'load_js_defer_exc' ));
 				$this->cfg_js_defer_exc = apply_filters('litespeed_optm_js_defer_exc', $this->conf(self::O_OPTM_JS_DEFER_EXC));
 
 				$this->cfg_js_delay_inc = apply_filters('litespeed_optm_js_delay_inc', $this->conf(self::O_OPTM_JS_DELAY_INC));
@@ -124,23 +124,26 @@ class Optimize extends Base
 
 		/**
 		 * Add vary filter for Role Excludes
+		 *
 		 * @since  1.6
 		 */
-		add_filter('litespeed_vary', array($this, 'vary_add_role_exclude'));
+		add_filter('litespeed_vary', array( $this, 'vary_add_role_exclude' ));
 
 		/**
 		 * Prefetch DNS
+		 *
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init();
 
 		/**
 		 * Preconnect
+		 *
 		 * @since 5.6.1
 		 */
 		$this->_dns_preconnect_init();
 
-		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 20);
+		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 20);
 	}
 
 	/**
@@ -149,8 +152,7 @@ class Optimize extends Base
 	 * @since  1.6
 	 * @access public
 	 */
-	public function vary_add_role_exclude($vary)
-	{
+	public function vary_add_role_exclude( $vary ) {
 		if ($this->cls('Conf')->in_optm_exc_roles()) {
 			$vary['role_exclude_optm'] = 1;
 		}
@@ -165,14 +167,14 @@ class Optimize extends Base
 	 * @since  2.9.8 Changed to private
 	 * @access private
 	 */
-	private function _emoji_rm()
-	{
+	private function _emoji_rm() {
 		remove_action('wp_head', 'print_emoji_detection_script', 7);
 		remove_action('admin_print_scripts', 'print_emoji_detection_script');
 		remove_filter('the_content_feed', 'wp_staticize_emoji');
 		remove_filter('comment_text_rss', 'wp_staticize_emoji');
 		/**
 		 * Added for better result
+		 *
 		 * @since  1.6.2.1
 		 */
 		remove_action('wp_print_styles', 'print_emoji_styles');
@@ -186,8 +188,7 @@ class Optimize extends Base
 	 * @since  2.1
 	 * @access public
 	 */
-	public function rm_cache_folder($subsite_id = false)
-	{
+	public function rm_cache_folder( $subsite_id = false ) {
 		if ($subsite_id) {
 			file_exists(LITESPEED_STATIC_DIR . '/css/' . $subsite_id) && File::rrmdir(LITESPEED_STATIC_DIR . '/css/' . $subsite_id);
 			file_exists(LITESPEED_STATIC_DIR . '/js/' . $subsite_id) && File::rrmdir(LITESPEED_STATIC_DIR . '/js/' . $subsite_id);
@@ -204,8 +205,7 @@ class Optimize extends Base
 	 * @since  1.3
 	 * @access public
 	 */
-	public function remove_query_strings($src)
-	{
+	public function remove_query_strings( $src ) {
 		if (strpos($src, '_litespeed_rm_qs=0') || strpos($src, '/recaptcha')) {
 			return $src;
 		}
@@ -229,8 +229,7 @@ class Optimize extends Base
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public function finalize($content)
-	{
+	public function finalize( $content ) {
 		if (defined('LITESPEED_NO_PAGEOPTM')) {
 			Debug2::debug2('[Optm] bypass: NO_PAGEOPTM const');
 			return $content;
@@ -248,9 +247,9 @@ class Optimize extends Base
 			}
 
 			// Check if hit URI excludes
-			add_filter('litespeed_optm_uri_exc', array($this->cls('Data'), 'load_optm_uri_exc'));
+			add_filter('litespeed_optm_uri_exc', array( $this->cls('Data'), 'load_optm_uri_exc' ));
 			$excludes = apply_filters('litespeed_optm_uri_exc', $this->conf(self::O_OPTM_EXC));
-			$result = Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
+			$result   = Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
 			if ($result) {
 				Debug2::debug('[Optm] bypass: hit URI Excludes setting: ' . $result);
 				return $content;
@@ -271,17 +270,20 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _optimize()
-	{
+	private function _optimize() {
 		global $wp;
-		$this->_request_url = home_url($wp->request);
+		$this->_request_url = get_permalink();
+		// Backup, in case get_permalink() fails.
+		if (!$this->_request_url) {
+			$this->_request_url = home_url($wp->request);
+		}
 
-		$this->cfg_css_min = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_MIN);
-		$this->cfg_css_comb = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_COMB);
-		$this->cfg_js_min = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_JS_MIN);
-		$this->cfg_js_comb = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_JS_COMB);
-		$this->cfg_ggfonts_rm = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_GGFONTS_RM);
-		$this->cfg_ggfonts_async = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_OPTM_GGFONTS_ASYNC); // forced rm already
+		$this->cfg_css_min            = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_MIN);
+		$this->cfg_css_comb           = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_COMB);
+		$this->cfg_js_min             = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_JS_MIN);
+		$this->cfg_js_comb            = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_JS_COMB);
+		$this->cfg_ggfonts_rm         = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_GGFONTS_RM);
+		$this->cfg_ggfonts_async      = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_OPTM_GGFONTS_ASYNC); // forced rm already
 		$this->_conf_css_font_display = !defined('LITESPEED_GUEST_OPTM') && $this->conf(self::O_OPTM_CSS_FONT_DISPLAY);
 
 		if (!$this->cls('Router')->can_optm()) {
@@ -305,7 +307,7 @@ class Optimize extends Base
 		// Parse css from content
 		$src_list = false;
 		if ($this->cfg_css_min || $this->cfg_css_comb || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async || $this->_conf_css_font_display) {
-			add_filter('litespeed_optimize_css_excludes', array($this->cls('Data'), 'load_css_exc'));
+			add_filter('litespeed_optimize_css_excludes', array( $this->cls('Data'), 'load_css_exc' ));
 			list($src_list, $html_list) = $this->_parse_css();
 		}
 
@@ -319,7 +321,7 @@ class Optimize extends Base
 						$filename = $this->cls('UCSS')->load($this->_request_url, true);
 						if ($filename) {
 							$filepath_prefix = $this->_build_filepath_prefix('ucss');
-							$this->_ucss = File::read(LITESPEED_STATIC_DIR . $filepath_prefix . $filename);
+							$this->_ucss     = File::read(LITESPEED_STATIC_DIR . $filepath_prefix . $filename);
 
 							// Drop all css
 							$this->content = str_replace($html_list, '', $this->content);
@@ -333,9 +335,11 @@ class Optimize extends Base
 							// Handle css async load
 							if ($this->cfg_css_async) {
 								$this->html_head .=
-									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' .
+									Str::trim_quotes($url) .
+									'" />'; // todo: How to use " in attr wrapper "
 							} else {
-								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />'; // use 2 as combined
+								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . Str::trim_quotes($url) . '" />'; // use 2 as combined
 							}
 
 							// Move all css to top
@@ -371,7 +375,7 @@ class Optimize extends Base
 		// Parse js from buffer as needed
 		$src_list = false;
 		if ($this->cfg_js_min || $this->cfg_js_comb || $this->cfg_js_defer || $this->cfg_js_delay_inc) {
-			add_filter('litespeed_optimize_js_excludes', array($this->cls('Data'), 'load_js_exc'));
+			add_filter('litespeed_optimize_js_excludes', array( $this->cls('Data'), 'load_js_exc' ));
 			list($src_list, $html_list) = $this->_parse_js();
 		}
 
@@ -398,7 +402,7 @@ class Optimize extends Base
 					// Inline JS
 					if (!empty($src_info['inl'])) {
 						if ($this->cfg_js_defer) {
-							$attrs = !empty($src_info['attrs']) ? $src_info['attrs'] : '';
+							$attrs    = !empty($src_info['attrs']) ? $src_info['attrs'] : '';
 							$deferred = $this->_js_inline_defer($src_info['src'], $attrs);
 							if ($deferred) {
 								$this->content = str_replace($html_list[$k], $deferred, $this->content);
@@ -406,17 +410,15 @@ class Optimize extends Base
 						}
 					}
 					// JS files
-					else {
-						if ($this->cfg_js_defer) {
-							$deferred = $this->_js_defer($html_list[$k], $src_info['src']);
-							if ($deferred) {
-								$this->content = str_replace($html_list[$k], $deferred, $this->content);
-							}
-						} elseif ($this->cfg_js_delay_inc) {
-							$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
-							if ($deferred) {
-								$this->content = str_replace($html_list[$k], $deferred, $this->content);
-							}
+					elseif ($this->cfg_js_defer) {
+						$deferred = $this->_js_defer($html_list[$k], $src_info['src']);
+						if ($deferred) {
+							$this->content = str_replace($html_list[$k], $deferred, $this->content);
+						}
+					} elseif ($this->cfg_js_delay_inc) {
+						$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
+						if ($deferred) {
+							$this->content = str_replace($html_list[$k], $deferred, $this->content);
 						}
 					}
 				}
@@ -437,7 +439,7 @@ class Optimize extends Base
 				$this->html_head .= $this->_build_js_inline(File::read(LSCWP_DIR . self::LIB_FILE_CSS_ASYNC), true);
 			} else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
-				$this->html_head .= $this->_build_js_tag($css_async_lib_url, 'litespeed-css-async-lib'); // Don't exclude it from defer for now
+				$this->html_head  .= $this->_build_js_tag($css_async_lib_url); // Don't exclude it from defer for now
 			}
 		}
 
@@ -449,6 +451,7 @@ class Optimize extends Base
 
 		/**
 		 * Font display optm
+		 *
 		 * @since  3.0
 		 */
 		$this->_font_optm();
@@ -510,17 +513,16 @@ class Optimize extends Base
 	 *
 	 * @since  4.0
 	 */
-	private function _build_js_tag($src)
-	{
+	private function _build_js_tag( $src ) {
 		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
-			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . Str::trim_quotes($src) . '"></script>';
 		}
 
 		if ($this->cfg_js_defer) {
-			return '<script data-optimized="1" src="' . $src . '" defer></script>';
+			return '<script data-optimized="1" src="' . Str::trim_quotes($src) . '" defer></script>';
 		}
 
-		return '<script data-optimized="1" src="' . $src . '"></script>';
+		return '<script data-optimized="1" src="' . Str::trim_quotes($src) . '"></script>';
 	}
 
 	/**
@@ -528,8 +530,7 @@ class Optimize extends Base
 	 *
 	 * @since  4.0
 	 */
-	private function _build_js_inline($script, $minified = false)
-	{
+	private function _build_js_inline( $script, $minified = false ) {
 		if ($this->cfg_js_defer) {
 			$deferred = $this->_js_inline_defer($script, false, $minified);
 			if ($deferred) {
@@ -545,13 +546,15 @@ class Optimize extends Base
 	 *
 	 * @since 4.0
 	 */
-	private function _maybe_js_delay()
-	{
+	private function _maybe_js_delay() {
 		if ($this->cfg_js_defer !== 2 && !$this->cfg_js_delay_inc) {
 			return;
 		}
 
-		$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		if (!defined('LITESPEED_JS_DELAY_LIB_LOADED')) {
+			define('LITESPEED_JS_DELAY_LIB_LOADED', true);
+			$this->html_foot .= '<script>' . File::read(LSCWP_DIR . self::LIB_FILE_JS_DELAY) . '</script>';
+		}
 	}
 
 	/**
@@ -560,8 +563,7 @@ class Optimize extends Base
 	 * @since 2.7.3
 	 * @access private
 	 */
-	private function _async_ggfonts()
-	{
+	private function _async_ggfonts() {
 		if (!$this->cfg_ggfonts_async || !$this->_ggfonts_urls) {
 			return;
 		}
@@ -575,10 +577,10 @@ class Optimize extends Base
 		 *
 		 * Could be multiple fonts
 		 *
-		 * 	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C600%2C700%2C800%2C300&#038;ver=4.9.8' type='text/css' media='all' />
-		 *	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%7CPT+Sans+Narrow%3A400%7CMontserrat%3A600&#038;subset=latin&#038;ver=4.9.8' type='text/css' media='all' />
-		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
-		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
+		 *  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C600%2C700%2C800%2C300&#038;ver=4.9.8' type='text/css' media='all' />
+		 *  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%7CPT+Sans+Narrow%3A400%7CMontserrat%3A600&#038;subset=latin&#038;ver=4.9.8' type='text/css' media='all' />
+		 *      -> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
+		 *  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
 		$script = 'WebFontConfig={google:{families:[';
 
@@ -597,7 +599,7 @@ class Optimize extends Base
 			$subset = empty($qs['subset']) ? '' : ':' . $qs['subset'];
 
 			foreach (array_filter(explode('|', $qs['family'])) as $v2) {
-				$families[] = $v2 . $subset;
+				$families[] = Str::trim_quotes($v2 . $subset);
 			}
 		}
 
@@ -626,8 +628,7 @@ class Optimize extends Base
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _font_optm()
-	{
+	private function _font_optm() {
 		if (!$this->_conf_css_font_display || !$this->_ggfonts_urls) {
 			return;
 		}
@@ -640,7 +641,7 @@ class Optimize extends Base
 			}
 			$this->html_head = str_replace($v, $v . '&#038;display=swap', $this->html_head);
 			$this->html_foot = str_replace($v, $v . '&#038;display=swap', $this->html_foot);
-			$this->content = str_replace($v, $v . '&#038;display=swap', $this->content);
+			$this->content   = str_replace($v, $v . '&#038;display=swap', $this->content);
 		}
 	}
 
@@ -650,8 +651,7 @@ class Optimize extends Base
 	 * @since 1.7.1
 	 * @access private
 	 */
-	private function _dns_prefetch_init()
-	{
+	private function _dns_prefetch_init() {
 		// Widely enable link DNS prefetch
 		if (defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_DNS_PREFETCH_CTRL)) {
 			@header('X-DNS-Prefetch-Control: on');
@@ -663,9 +663,9 @@ class Optimize extends Base
 		}
 
 		if (function_exists('wp_resource_hints')) {
-			add_filter('wp_resource_hints', array($this, 'dns_prefetch_filter'), 10, 2);
+			add_filter('wp_resource_hints', array( $this, 'dns_prefetch_filter' ), 10, 2);
 		} else {
-			add_action('litespeed_optm', array($this, 'dns_prefetch_output'));
+			add_action('litespeed_optm', array( $this, 'dns_prefetch_output' ));
 		}
 	}
 
@@ -674,11 +674,10 @@ class Optimize extends Base
 	 *
 	 * @since 5.6.1
 	 */
-	private function _dns_preconnect_init()
-	{
+	private function _dns_preconnect_init() {
 		$this->dns_preconnect = $this->conf(self::O_OPTM_DNS_PRECONNECT);
 		if ($this->dns_preconnect) {
-			add_action('litespeed_optm', array($this, 'dns_preconnect_output'));
+			add_action('litespeed_optm', array( $this, 'dns_preconnect_output' ));
 		}
 	}
 
@@ -688,8 +687,7 @@ class Optimize extends Base
 	 * @since 1.7.1
 	 * @access public
 	 */
-	public function dns_prefetch_filter($urls, $relation_type)
-	{
+	public function dns_prefetch_filter( $urls, $relation_type ) {
 		if ($relation_type !== 'dns-prefetch') {
 			return $urls;
 		}
@@ -709,11 +707,10 @@ class Optimize extends Base
 	 * @since 1.7.1
 	 * @access public
 	 */
-	public function dns_prefetch_output()
-	{
+	public function dns_prefetch_output() {
 		foreach ($this->dns_prefetch as $v) {
 			if ($v) {
-				$this->html_head .= '<link rel="dns-prefetch" href="' . $v . '" />';
+				$this->html_head .= '<link rel="dns-prefetch" href="' . Str::trim_quotes($v) . '" />';
 			}
 		}
 	}
@@ -724,11 +721,10 @@ class Optimize extends Base
 	 * @since 5.6.1
 	 * @access public
 	 */
-	public function dns_preconnect_output()
-	{
+	public function dns_preconnect_output() {
 		foreach ($this->dns_preconnect as $v) {
 			if ($v) {
-				$this->html_head .= '<link rel="preconnect" href="' . $v . '" />';
+				$this->html_head .= '<link rel="preconnect" href="' . Str::trim_quotes($v) . '" />';
 			}
 		}
 	}
@@ -739,11 +735,10 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _src_queue_handler($src_list, $html_list, $file_type = 'css')
-	{
+	private function _src_queue_handler( $src_list, $html_list, $file_type = 'css' ) {
 		$html_list_ori = $html_list;
 
-		$can_webp = (defined('LITESPEED_GUEST_OPTM') || $this->conf(Base::O_IMG_OPTM_WEBP)) && $this->cls('Media')->webp_support();
+		$can_webp = $this->cls('Media')->webp_support();
 
 		$tag = $file_type == 'css' ? 'link' : 'script';
 		foreach ($src_list as $key => $src_info) {
@@ -756,10 +751,10 @@ class Optimize extends Base
 				} else {
 					// Inline defer JS
 					if ($this->cfg_js_defer) {
-						$attrs = !empty($src_info['attrs']) ? $src_info['attrs'] : '';
+						$attrs   = !empty($src_info['attrs']) ? $src_info['attrs'] : '';
 						$snippet = $this->_js_inline_defer($src_info['src'], $attrs) ?: $html_list[$key];
 					} else {
-						$code = Optimizer::minify_js($src_info['src']);
+						$code    = Optimizer::minify_js($src_info['src']);
 						$snippet = str_replace($src_info['src'], $code, $html_list[$key]);
 					}
 				}
@@ -782,7 +777,7 @@ class Optimize extends Base
 				}
 			}
 
-			$snippet = str_replace("<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet);
+			$snippet         = str_replace("<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet);
 			$html_list[$key] = $snippet;
 		}
 
@@ -791,10 +786,10 @@ class Optimize extends Base
 
 	/**
 	 * Build a single URL mapped filename (This will not save in DB)
+	 *
 	 * @since  4.0
 	 */
-	private function _build_single_hash_url($src, $file_type = 'css')
-	{
+	private function _build_single_hash_url( $src, $file_type = 'css' ) {
 		$content = $this->__optimizer->load_file($src, $file_type);
 
 		$is_min = $this->__optimizer->is_min($src);
@@ -804,7 +799,7 @@ class Optimize extends Base
 		$filepath_prefix = $this->_build_filepath_prefix($file_type);
 
 		// Save to file
-		$filename = $filepath_prefix . md5($this->remove_query_strings($src)) . '.' . $file_type;
+		$filename    = $filepath_prefix . md5($this->remove_query_strings($src)) . '.' . $file_type;
 		$static_file = LITESPEED_STATIC_DIR . $filename;
 		File::save($static_file, $content, true);
 
@@ -819,8 +814,7 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _build_hash_url($src_list, $file_type = 'css')
-	{
+	private function _build_hash_url( $src_list, $file_type = 'css' ) {
 		// $url_sensitive = $this->conf( self::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
 
 		// Replace preserved ESI (before generating hash)
@@ -833,7 +827,7 @@ class Optimize extends Base
 			}
 		}
 
-		$minify = $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min;
+		$minify        = $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min;
 		$filename_info = $this->__optimizer->serve($this->_request_url, $file_type, $minify, $src_list);
 
 		if (!$filename_info) {
@@ -857,8 +851,7 @@ class Optimize extends Base
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _parse_js()
-	{
+	private function _parse_js() {
 		$excludes = apply_filters('litespeed_optimize_js_excludes', $this->conf(self::O_OPTM_JS_EXC));
 
 		$combine_ext_inl = $this->conf(self::O_OPTM_JS_COMB_EXT_INL);
@@ -867,11 +860,12 @@ class Optimize extends Base
 			$combine_ext_inl = false;
 		}
 
-		$src_list = array();
+		$src_list  = array();
 		$html_list = array();
 
-		$content = preg_replace('#<!--.*-->#sU', '', $this->content);
-		preg_match_all('#<script([^>]*)>(.*)</script>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace('#<!--.*-->(?:\r\n?|\n?)#sU', '', $this->content);
+		preg_match_all('#<script([^>]*)>(.*)</script>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = empty($match[1]) ? array() : Utility::parse_attr($match[1]);
 
@@ -897,9 +891,9 @@ class Optimize extends Base
 			// JS files
 			if (!empty($attrs['src'])) {
 				// Exclude check
-				$js_excluded = Utility::str_hit_array($attrs['src'], $excludes);
-				$is_internal = Utility::is_internal_file($attrs['src']);
-				$is_file = substr($attrs['src'], 0, 5) != 'data:';
+				$js_excluded  = Utility::str_hit_array($attrs['src'], $excludes);
+				$is_internal  = Utility::is_internal_file($attrs['src']);
+				$is_file      = substr($attrs['src'], 0, 5) != 'data:';
 				$ext_excluded = !$combine_ext_inl && !$is_internal;
 				if ($js_excluded || $ext_excluded || !$is_file) {
 					// Maybe defer
@@ -952,11 +946,11 @@ class Optimize extends Base
 				continue;
 			}
 
-			$src_list[] = $this_src_arr;
+			$src_list[]  = $this_src_arr;
 			$html_list[] = $match[0];
 		}
 
-		return array($src_list, $html_list);
+		return array( $src_list, $html_list );
 	}
 
 	/**
@@ -965,8 +959,7 @@ class Optimize extends Base
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _js_inline_defer($con, $attrs = false, $minified = false)
-	{
+	private function _js_inline_defer( $con, $attrs = false, $minified = false ) {
 		if (strpos($attrs, 'data-no-defer') !== false) {
 			Debug2::debug2('[Optm] bypass: attr api data-no-defer');
 			return false;
@@ -1012,16 +1005,15 @@ class Optimize extends Base
 	 *
 	 * @since  3.5.1
 	 */
-	private function _preserve_esi($con)
-	{
+	private function _preserve_esi( $con ) {
 		$esi_placeholder_list = $this->cls('ESI')->contain_preserve_esi($con);
 		if (!$esi_placeholder_list) {
 			return $con;
 		}
 
 		foreach ($esi_placeholder_list as $esi_placeholder) {
-			$js_var = '__litespeed_var_' . self::$_var_i++ . '__';
-			$con = str_replace($esi_placeholder, $js_var, $con);
+			$js_var                   = '__litespeed_var_' . self::$_var_i++ . '__';
+			$con                      = str_replace($esi_placeholder, $js_var, $con);
 			$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
 		}
 
@@ -1035,9 +1027,8 @@ class Optimize extends Base
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _parse_css()
-	{
-		$excludes = apply_filters('litespeed_optimize_css_excludes', $this->conf(self::O_OPTM_CSS_EXC));
+	private function _parse_css() {
+		$excludes             = apply_filters('litespeed_optimize_css_excludes', $this->conf(self::O_OPTM_CSS_EXC));
 		$ucss_file_exc_inline = apply_filters('litespeed_optimize_ucss_file_exc_inline', $this->conf(self::O_OPTM_UCSS_FILE_EXC_INLINE));
 
 		$combine_ext_inl = $this->conf(self::O_OPTM_CSS_COMB_EXT_INL);
@@ -1048,15 +1039,20 @@ class Optimize extends Base
 
 		$css_to_be_removed = apply_filters('litespeed_optm_css_to_be_removed', array());
 
-		$src_list = array();
+		$src_list  = array();
 		$html_list = array();
 
 		// $dom = new \PHPHtmlParser\Dom;
 		// $dom->load( $content );return $val;
 		// $items = $dom->find( 'link' );
 
-		$content = preg_replace(array('#<!--.*-->#sU', '#<script([^>]*)>.*</script>#isU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
-		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $content, $matches, PREG_SET_ORDER);
+		// V7 added: (?:\r\n?|\n?) to fix replacement leaving empty new line
+		$content = preg_replace(
+			array( '#<!--.*-->(?:\r\n?|\n?)#sU', '#<script([^>]*)>.*</script>(?:\r\n?|\n?)#isU', '#<noscript([^>]*)>.*</noscript>(?:\r\n?|\n?)#isU' ),
+			'',
+			$this->content
+		);
+		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>(?:\r\n?|\n?)#isU', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			// to avoid multiple replacement
@@ -1102,6 +1098,7 @@ class Optimize extends Base
 				if (strpos($attrs['href'], 'fonts.googleapis.com') !== false) {
 					/**
 					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
+					 *
 					 * @since  2.7.3
 					 * @since  3.0 For font display optm, need to parse google fonts URL too
 					 */
@@ -1125,7 +1122,7 @@ class Optimize extends Base
 					continue;
 				}
 
-				$is_internal = Utility::is_internal_file($attrs['href']);
+				$is_internal  = Utility::is_internal_file($attrs['href']);
 				$ext_excluded = !$combine_ext_inl && !$is_internal;
 				if ($ext_excluded) {
 					Debug2::debug2('[Optm] Bypassed due to external link');
@@ -1171,7 +1168,7 @@ class Optimize extends Base
 			$html_list[] = $match[0];
 		}
 
-		return array($src_list, $html_list);
+		return array( $src_list, $html_list );
 	}
 
 	/**
@@ -1180,8 +1177,7 @@ class Optimize extends Base
 	 * @since  1.3
 	 * @access private
 	 */
-	private function _async_css_list($html_list, $src_list)
-	{
+	private function _async_css_list( $html_list, $src_list ) {
 		foreach ($html_list as $k => $ori) {
 			if (!empty($src_list[$k]['inl'])) {
 				continue;
@@ -1194,10 +1190,10 @@ class Optimize extends Base
 
 	/**
 	 * Async CSS snippet
+	 *
 	 * @since 3.5
 	 */
-	private function _async_css($ori)
-	{
+	private function _async_css( $ori ) {
 		if (strpos($ori, 'data-asynced') !== false) {
 			Debug2::debug2('[Optm] bypass: attr data-asynced exist');
 			return $ori;
@@ -1224,8 +1220,7 @@ class Optimize extends Base
 	 *
 	 * @since  3.5
 	 */
-	private function _js_defer($ori, $src)
-	{
+	private function _js_defer( $ori, $src ) {
 		if (strpos($ori, ' async') !== false) {
 			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]+)\1)?#isU', '', $ori);
 		}
@@ -1244,6 +1239,7 @@ class Optimize extends Base
 
 		/**
 		 * Exclude JS from setting
+		 *
 		 * @since 1.5
 		 */
 		if (Utility::str_hit_array($src, $this->cfg_js_defer_exc)) {
@@ -1266,8 +1262,7 @@ class Optimize extends Base
 	 *
 	 * @since 5.6
 	 */
-	private function _js_delay($ori, $src)
-	{
+	private function _js_delay( $ori, $src ) {
 		if (strpos($ori, ' async') !== false) {
 			$ori = str_replace(' async', '', $ori);
 		}

@@ -95,3 +95,6 @@ bulk-*
 # WP Data Access
 wpda-*
 
+# Elementor
+elementor-pro-frontend
+elementor-conversion-center-click

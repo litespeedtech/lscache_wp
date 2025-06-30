@@ -1,0 +1,10 @@
+# Predefined list for CCSS whitelist #
+# Comment can use `# `(there is a space following), or `##`, can use both as a new line or end of one line
+# If you want to predefine new items, please send a Pull Request to https://github.com/litespeedtech/lscache_wp/blob/dev/data/ccss_whitelist.txt We will merge into next plugin release
+
+
+############# DoBar compatibility #############
+.pace-inactive
+
+############# DIVI ################
+.et_pb_number_counter.active
