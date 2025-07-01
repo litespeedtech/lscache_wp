@@ -9,7 +9,9 @@
 		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml tpl/ autoload.php",
 		"sniff-check-bk": "vendor/bin/phpcs --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php",
 		"wpformat": "vendor/bin/phpcbf --standard=phpcs.ruleset.xml tpl/ autoload.php",
-		"wpformat-bk": "vendor/bin/phpcbf --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
+		"wpformat-bk": "vendor/bin/phpcbf --standard=phpcs.ruleset.xml cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php",
+		"syntax-check": "find tpl/ autoload.php -name '*.php' -print0|xargs -0 -L1 -- php -l",
+		"syntax-check-bk": "find cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php -name '*.php' -print0|xargs -0 -L1 -- php -l"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.21.0",
