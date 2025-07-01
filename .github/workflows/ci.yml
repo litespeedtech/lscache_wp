@@ -45,7 +45,7 @@ jobs:
         run: npm run install-composer-packages
 
       - name: Run PHP syntax check
-        run: npm run syntax-check
+        run: npm run syntax-check-bk
 
       - name: Run PHPCS check
         run: npm run sniff-check
