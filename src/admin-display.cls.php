@@ -168,7 +168,8 @@ class Admin_Display extends Base {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
+	 * @since 7.3 - added deactivation modal code
 	 * @access public
 	 */
 	public function enqueue_scripts() {
@@ -253,9 +254,9 @@ class Admin_Display extends Base {
 	}
 
 	/**
-	 * Add .
+	 * Add modal html.
 	 *
-	 * @since 1.0.0
+	 * @since 7.3
 	 * @access public
 	 * @return void
 	 */

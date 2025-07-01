@@ -5,7 +5,7 @@
  * Renders the deactivation modal interface for LiteSpeed Cache, allowing users to send reason of deactivation.
  *
  * @package LiteSpeed
- * @since 1.0.0
+ * @since 7.3
  */
 
 namespace LiteSpeed;

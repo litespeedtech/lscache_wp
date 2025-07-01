@@ -82,11 +82,12 @@ class Activation extends Base {
 	 * Uninstall plugin
 	 *
 	 * @since 1.1.0
+	 * @since 7.3 fix uninstall to remove all settings.
 	 */
 	public static function uninstall_litespeed_cache() {
 		Task::destroy();
 
-		if (is_multisite() ){
+		if (is_multisite() ) {
 			// Save main site id
 			$current_blog = get_current_blog_id();
 
@@ -127,11 +128,15 @@ class Activation extends Base {
 		Cloud::version_check('uninstall');
 	}
 
-	private static function delete_settings()
-	{
+	/**
+	 * Remove all litespeed settings.
+	 *
+	 * @since 7.3
+	 */
+	private static function delete_settings() {
 		global $wpdb;
 
-		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'", array('litespeed.%')));
+		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'", array( 'litespeed.%' )));
 	}
 
 	/**
