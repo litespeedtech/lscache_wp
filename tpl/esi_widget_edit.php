@@ -78,8 +78,9 @@ $display = Admin_Display::cls();
 	<?php esc_html_e( 'seconds', 'litespeed-cache' ); ?>
 
 	<p class="install-help">
-		<?php esc_html_e( 'Recommended value: 28800 seconds (8 hours).', 'litespeed-cache' ); ?>
-		<?php esc_html_e( 'A TTL of 0 indicates do not cache.', 'litespeed-cache' ); ?>
+		<?php esc_html_e( 'Recommended value: 28800 seconds (8 hours).', 'litespeed-cache' ) ; ?>
+		<?php esc_html_e( 'A TTL of 0 indicates do not cache.', 'litespeed-cache' ) ; ?>
+		<?php esc_html_e('Otherwise, minimum value is 30.', 'litespeed-cache'); ?>
 	</p>
 </div>
 
