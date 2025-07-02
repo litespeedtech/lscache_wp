@@ -32,8 +32,8 @@ defined( 'WPINC' ) || exit;
 				<div class="litespeed-desc">
 					<?php
 					printf(
-						/* translators: %1$s: Opening link tag, %2$s: Closing link tag */
-						esc_html__( 'Please visit the %1$sInformation%2$s page on how to test the cache.', 'litespeed-cache' ),
+						/* translators: %s: Link tags */
+						esc_html__( 'Please visit the %sInformation%s page on how to test the cache.', 'litespeed-cache' ),
 						'<a href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank" rel="noopener">',
 						'</a>'
 					);

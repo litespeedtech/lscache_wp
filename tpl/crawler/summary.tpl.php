@@ -62,7 +62,8 @@ if ( $CRAWLER_RUN_INTERVAL > 0 ) :
 			<p>
 				<?php
 				printf(
-					esc_html__( 'See %1$sIntroduction for Enabling the Crawler%2$s for detailed information.', 'litespeed-cache' ),
+					/* translators: %s: Link tags */
+					esc_html__( 'See %sIntroduction for Enabling the Crawler%s for detailed information.', 'litespeed-cache' ),
 					'<a href="https://docs.litespeedtech.com/lscache/lscwp/admin/#enabling-and-limiting-the-crawler" target="_blank" rel="noopener">',
 					'</a>'
 				);
@@ -256,7 +257,8 @@ if ( $CRAWLER_RUN_INTERVAL > 0 ) :
 		<div>
 			<?php
 			printf(
-				esc_html__( 'Please see %1$sHooking WP-Cron Into the System Task Scheduler%2$s to learn how to create the system cron task.', 'litespeed-cache' ),
+				/* translators: %s: Link tags */
+				esc_html__( 'Please see %sHooking WP-Cron Into the System Task Scheduler%s to learn how to create the system cron task.', 'litespeed-cache' ),
 				'<a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" rel="noopener">',
 				'</a>'
 			);

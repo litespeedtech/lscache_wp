@@ -4446,3 +4446,8 @@ a.litespeed-media-href svg:hover {
 	display: block;
 	margin-bottom: 5px;
 }
+
+#litespeed-modal-deactivate .deactivate-actions {
+	display: flex;
+	justify-content: space-between;
+}

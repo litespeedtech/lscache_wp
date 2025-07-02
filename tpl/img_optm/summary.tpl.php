@@ -332,8 +332,9 @@ $imgoptm_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_IMG_OPTM .
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact litespeed-desc">
 				<?php
-					printf(
-					esc_html__( 'Results can be checked in %1$sMedia Library%2$s.', 'litespeed-cache' ),
+				printf(
+					/* translators: %s: Link tags */
+					esc_html__( 'Results can be checked in %sMedia Library%s.', 'litespeed-cache' ),
 					'<a href="upload.php?mode=list">',
 					'</a>'
 				);

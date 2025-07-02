@@ -33,7 +33,8 @@ $buf  = sprintf(
 	esc_html__( 'Create a post, make sure the front page is accurate.', 'litespeed-cache' )
 );
 $buf .= sprintf(
-	esc_html__( 'If there are any questions, the team is always happy to answer any questions on the %1$ssupport forum%2$s.', 'litespeed-cache' ),
+	/* translators: %s: Link tags */
+	esc_html__( 'If there are any questions, the team is always happy to answer any questions on the %ssupport forum%s.', 'litespeed-cache' ),
 	'<a href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank">',
 	'</a>'
 );

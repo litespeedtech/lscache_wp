@@ -46,40 +46,24 @@ $reasons = array(
             <form id="litespeed-deactivation-form" method="post">
                 <p><?php esc_attr_e('Why are you deactivating the plugin?', 'litespeed-cache'); ?></p>
                 <div class="deactivate-reason-wrapper">
-                    <?php 
-                        foreach ($reasons as $reason) {
-                            echo '<label for="litespeed-deactivate-reason-' .
-                                esc_html__( $reason['id'] ) .
-                                '">
-                                <input type="radio" 
-                                    id="litespeed-deactivate-reason-' .
-                                esc_html__( $reason['id'] ) .
-                                '" 
-                                    value="' .
-                                esc_html__( $reason['value'] ) .
-                                '" 
-                                    ' .
-                                (isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : '') .
-                                '
-                                    name="litespeed-reason" 
-                                />
-                                ' .
-                                esc_html__( $reason['text'] ) .
-                                '
-                            </label>';
-                        }
-                    ?>
+                    <?php foreach ($reasons as $reason) : ?>
+                    <label for="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>">
+                        <input type="radio" id="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>" value="<?php esc_attr_e( $reason['value'] ); ?>"
+                            <?php isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : ''; ?> name="litespeed-reason" />
+                        <?php esc_html_e( $reason['text'] ); ?>
+                    </label>
+                    <?php endforeach; ?>
                 </div>
                 <div class="deactivate-clear-settings-wrapper">
                     <i style="font-size: 0.9em;">
-                        <?php 
+                        <?php
                             esc_html_e('On uninstall, all plugin settings will be deleted.', 'litespeed-cache');
                         ?>
                     </i>
                     <br />
                     <i style="font-size: 0.9em;">
-                        
-                        <?php 
+
+                        <?php
                             printf(
                                 esc_html__('If you have used Image Optimization, please %sDestroy All Optimization Data%s first. NOTE: this does not remove your optimized images.', 'litespeed-cache'),
                                 '<a href="admin.php?page=litespeed-img_optm#litespeed-imageopt-destroy" target="_blank">',
@@ -89,19 +73,8 @@ $reasons = array(
                     </i>
                 </div>
                 <div class="deactivate-actions">
-                    <input
-                        type="button"
-                        id="litespeed-deactivation-form-cancel"
-                        class="button litespeed-btn-warning"
-                        value="<?php esc_attr_e('Cancel', 'litespeed-cache'); ?>"
-                        title="<?php esc_attr_e('Close popup', 'litespeed-cache'); ?>" />
-                    <input
-                        type="submit"
-                        id="litespeed-deactivation-form-submit"
-                        class="button button-primary"
-                        value="<?php esc_attr_e('Deactivate', 'litespeed-cache'); ?>"
-                        title="<?php esc_attr_e('Deactivate plugin', 'litespeed-cache'); ?>" />
-                    <br />
+                    <input type="submit" id="litespeed-deactivation-form-submit" class="button button-primary" value="<?php esc_attr_e('Deactivate', 'litespeed-cache'); ?>" title="<?php esc_attr_e('Deactivate plugin', 'litespeed-cache'); ?>" />
+                    <input type="button" id="litespeed-deactivation-form-cancel" class="button litespeed-btn-warning" value="<?php esc_attr_e('Cancel', 'litespeed-cache'); ?>" title="<?php esc_attr_e('Close popup', 'litespeed-cache'); ?>" />
                 </div>
             </form>
         </div>
@@ -114,7 +87,7 @@ $reasons = array(
             var lscId = '<?php echo home_url(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
             var modalesc_attr_element = $('#litespeed-deactivation');
             var deactivateesc_attr_element = $('#deactivate-litespeed-cache');
-            
+
             if (deactivateesc_attr_element.length > 0 && modalesc_attr_element.length > 0) {
                 // Variables
                 var modal_formElement = $('#litespeed-deactivation-form');
@@ -148,9 +121,6 @@ $reasons = array(
                         method: 'POST',
                         cache: false,
                         data: data,
-                        beforeSend: function (xhr) {
-                            //xhr.setRequestHeader('X-WP-Nonce', litespeed_data.nonce);
-                        },
                         success: function (data) {
                             console.log('QC data sent.');
                         },

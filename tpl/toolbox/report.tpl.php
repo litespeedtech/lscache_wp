@@ -105,7 +105,15 @@ if ( ! empty( $env_ref['num'] ) ) {
 						<?php esc_html_e( 'To grant wp-admin access to the LiteSpeed Support Team, please generate a passwordless link for the current logged-in user to be sent with the report.', 'litespeed-cache' ); ?>
 						<?php if ( $dologin_link ) : ?>
 							<br /><strong>🚨 <?php esc_html_e( 'Please do NOT share the above passwordless link with anyone.', 'litespeed-cache' ); ?></strong>
-							<strong><?php printf( esc_html__( 'Generated links may be managed under %1$sSettings%2$s.', 'litespeed-cache' ), '<a href="' . esc_url( menu_page_url( 'dologin', false ) ) . '#pswdless">', '</a>' ); ?></strong>
+							<strong>
+								<?php
+								printf(
+									/* translators: %s: Link tags */
+									esc_html__( 'Generated links may be managed under %sSettings%s.', 'litespeed-cache' ),
+									'<a href="' . esc_url( menu_page_url( 'dologin', false ) ) . '#pswdless">',
+									'</a>' );
+								?>
+							</strong>
 						<?php endif; ?>
 					</div>
 				</td>

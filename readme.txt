@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.3 - Aug 2025 =
 * 🌱**CLI** Added database optimization `wp litespeed-database` cmd.
+* 🌱**Misc** Added survey and data deletion reminder in deactivation process.
 * **Core** Refactored the template files to comply with WordPress standards.
 * **ESI** Fixed an Edit button missing case on frontend when the permalink structure is `Plain`. (#934261 PR#860)
 * **API** Added filter `litespeed_purge_tags` to allow manipulation of purge tags.
