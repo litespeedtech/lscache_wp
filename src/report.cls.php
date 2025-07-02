@@ -1,19 +1,20 @@
 <?php
+
 /**
  * The report class
- *
  *
  * @since      1.1.0
  * @package    LiteSpeed
  * @subpackage LiteSpeed/src
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 namespace LiteSpeed;
 
 defined('WPINC') || exit();
 
-class Report extends Base
-{
+class Report extends Base {
+
 	const TYPE_SEND_REPORT = 'send_report';
 
 	/**
@@ -22,13 +23,12 @@ class Report extends Base
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public function handler()
-	{
+	public function handler() {
 		$type = Router::verify_type();
 
 		switch ($type) {
 			case self::TYPE_SEND_REPORT:
-				$this->post_env();
+            $this->post_env();
 				break;
 
 			default:
@@ -44,14 +44,20 @@ class Report extends Base
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public function post_env()
-	{
+	public function post_env() {
 		$report_con = $this->generate_environment_report();
 
 		// Generate link
 		$link = !empty($_POST['link']) ? esc_url($_POST['link']) : '';
 
 		$notes = !empty($_POST['notes']) ? esc_html($_POST['notes']) : '';
+
+		$php_info   = !empty($_POST['attach_php']) ? esc_html($_POST['attach_php']) : '';
+		$report_php = $php_info === '1' ? $this->generate_php_report() : '';
+
+		if ($report_php) {
+			$report_con .= "\nPHPINFO\n" . $report_php;
+		}
 
 		$data = array(
 			'env' => $report_con,
@@ -64,7 +70,7 @@ class Report extends Base
 			return;
 		}
 
-		$num = !empty($json['num']) ? $json['num'] : '--';
+		$num     = !empty($json['num']) ? $json['num'] : '--';
 		$summary = array(
 			'num' => $num,
 			'dateline' => time(),
@@ -76,18 +82,37 @@ class Report extends Base
 	}
 
 	/**
+	 * Gathers the PHP information.
+	 *
+	 * @since 7.0
+	 * @access public
+	 */
+	public function generate_php_report( $flags = INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES ) {
+		// INFO_ENVIRONMENT
+		$report = '';
+
+		ob_start();
+		phpinfo($flags);
+		$report = ob_get_contents();
+		ob_end_clean();
+
+		preg_match('%<style type="text/css">(.*?)</style>.*?<body>(.*?)</body>%s', $report, $report);
+
+		return $report[2];
+	}
+
+	/**
 	 * Gathers the environment details and creates the report.
 	 * Will write to the environment report file.
 	 *
 	 * @since 1.0.12
 	 * @access public
 	 */
-	public function generate_environment_report($options = null)
-	{
+	public function generate_environment_report( $options = null ) {
 		global $wp_version, $_SERVER;
 		$frontend_htaccess = Htaccess::get_frontend_htaccess();
-		$backend_htaccess = Htaccess::get_backend_htaccess();
-		$paths = array($frontend_htaccess);
+		$backend_htaccess  = Htaccess::get_backend_htaccess();
+		$paths             = array( $frontend_htaccess );
 		if ($frontend_htaccess != $backend_htaccess) {
 			$paths[] = $backend_htaccess;
 		}
@@ -102,7 +127,7 @@ class Report extends Base
 		}
 
 		if (function_exists('wp_get_theme')) {
-			$theme_obj = wp_get_theme();
+			$theme_obj    = wp_get_theme();
 			$active_theme = $theme_obj->get('Name');
 		} else {
 			$active_theme = get_current_theme();
@@ -118,7 +143,12 @@ class Report extends Base
 		);
 
 		$extras['active plugins'] = $active_plugins;
-		$extras['cloud'] = Cloud::get_summary();
+		$extras['cloud']          = Cloud::get_summary();
+		foreach (array( 'mini_html', 'pk_b64', 'sk_b64', 'cdn_dash', 'ips' ) as $v) {
+			if (!empty($extras['cloud'][$v])) {
+				unset($extras['cloud'][$v]);
+			}
+		}
 
 		if (is_null($options)) {
 			$options = $this->get_options(true);
@@ -126,7 +156,7 @@ class Report extends Base
 			if (is_multisite()) {
 				$options2 = $this->get_options();
 				foreach ($options2 as $k => $v) {
-					if ($options[$k] !== $v) {
+					if (isset($options[$k]) && $options[$k] !== $v) {
 						$options['[Overwritten] ' . $k] = $v;
 					}
 				}
@@ -151,7 +181,7 @@ class Report extends Base
 		}
 
 		// Security: Remove cf key in report
-		$secure_fields = array(self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD);
+		$secure_fields = array( self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD );
 		foreach ($secure_fields as $v) {
 			if (!empty($options[$v])) {
 				$options[$v] = str_repeat('*', strlen($options[$v]));
@@ -167,22 +197,21 @@ class Report extends Base
 	 *
 	 * @access private
 	 */
-	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
-	{
-		$server_keys = array(
+	private function build_environment_report( $server, $options, $extras = array(), $htaccess_paths = array() ) {
+		$server_keys   = array(
 			'DOCUMENT_ROOT' => '',
 			'SERVER_SOFTWARE' => '',
 			'X-LSCACHE' => '',
 			'HTTP_X_LSCACHE' => '',
 		);
-		$server_vars = array_intersect_key($server, $server_keys);
+		$server_vars   = array_intersect_key($server, $server_keys);
 		$server_vars[] = 'LSWCP_TAG_PREFIX = ' . LSWCP_TAG_PREFIX;
 
 		$server_vars = array_merge($server_vars, $this->cls('Base')->server_vars());
 
 		$buf = $this->_format_report_section('Server Variables', $server_vars);
 
-		$buf .= $this->_format_report_section('Wordpress Specific Extras', $extras);
+		$buf .= $this->_format_report_section('WordPress Specific Extras', $extras);
 
 		$buf .= $this->_format_report_section('LSCache Plugin Options', $options);
 
@@ -212,8 +241,7 @@ class Report extends Base
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private function _format_report_section($section_header, $section)
-	{
+	private function _format_report_section( $section_header, $section ) {
 		$tab = '    '; // four spaces
 
 		if (empty($section)) {
@@ -230,6 +258,8 @@ class Report extends Base
 
 			if (!is_string($v)) {
 				$v = var_export($v, true);
+			} else {
+				$v = esc_html($v);
 			}
 
 			$buf .= $v;

@@ -14,8 +14,6 @@
 
 ["cache-page_login",true]
 
-["cache-favicon",true]
-
 ["cache-resources",true]
 
 ["cache-mobile",true]
@@ -99,8 +97,6 @@
 ["media-vpi_cron",true]
 
 ["img_optm-auto",true]
-
-["img_optm-cron",true]
 
 ["img_optm-ori",true]
 

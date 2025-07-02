@@ -2,11 +2,11 @@
 /**
  * The Third Party integration with the Aelia CurrencySwitcher plugin.
  *
- * @since		1.0.13
- * @since  		2.6 	Removed hook_vary as OLS supports vary header already
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
+ * @since       1.0.13
+ * @since       2.6     Removed hook_vary as OLS supports vary header already
+ * @package     LiteSpeed_Cache
+ * @subpackage  LiteSpeed_Cache/thirdparty
+ * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 
@@ -14,9 +14,9 @@ defined('WPINC') || exit();
 
 use LiteSpeed\API;
 
-class Aelia_CurrencySwitcher
-{
-	private static $_cookies = array('aelia_cs_selected_currency', 'aelia_customer_country', 'aelia_customer_state', 'aelia_tax_exempt');
+class Aelia_CurrencySwitcher {
+
+	private static $_cookies = array( 'aelia_cs_selected_currency', 'aelia_customer_country', 'aelia_customer_state', 'aelia_tax_exempt' );
 
 	/**
 	 * Detects if WooCommerce is installed.
@@ -24,8 +24,7 @@ class Aelia_CurrencySwitcher
 	 * @since 1.0.13
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect() {
 		if (defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher'])) {
 			// Not all pages need to add vary, so need to use this API to set conditions
 			self::$_cookies = apply_filters('litespeed_3rd_aelia_cookies', self::$_cookies);
@@ -34,8 +33,7 @@ class Aelia_CurrencySwitcher
 		}
 	}
 
-	public static function register_cookies($list)
-	{
+	public static function register_cookies( $list ) {
 		return array_merge($list, self::$_cookies);
 	}
 
@@ -46,8 +44,7 @@ class Aelia_CurrencySwitcher
 	 * @since 1.0.13
 	 * @access public
 	 */
-	public static function check_cookies($list)
-	{
+	public static function check_cookies( $list ) {
 		// NOTE: is_cart and is_checkout should also be checked, but will be checked by woocommerce anyway.
 		if (!is_woocommerce()) {
 			return $list;
