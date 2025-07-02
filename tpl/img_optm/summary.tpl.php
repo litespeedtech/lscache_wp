@@ -373,7 +373,7 @@ $imgoptm_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_IMG_OPTM .
 			</div>
 			<div class="inside litespeed-postbox-footer litespeed-postbox-footer--compact">
 				<p>
-					<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY ) ); ?>" class="litespeed-link-with-icon litespeed-danger" data-litespeed-cfm="<?php esc_html_e( 'Are you sure to destroy all optimized images?', 'litespeed-cache' ); ?>">
+					<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_DESTROY ) ); ?>" class="litespeed-link-with-icon litespeed-danger" data-litespeed-cfm="<?php esc_html_e( 'Are you sure to destroy all optimized images?', 'litespeed-cache' ); ?>" id="litespeed-imageopt-destroy">
 						<span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Destroy All Optimization Data', 'litespeed-cache' ); ?>
 					</a>
 				</p>

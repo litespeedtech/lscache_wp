@@ -168,7 +168,8 @@ class Admin_Display extends Base {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
+	 * @since 7.3 - added deactivation modal code
 	 * @access public
 	 */
 	public function enqueue_scripts() {
@@ -237,11 +238,31 @@ class Admin_Display extends Base {
 			}
 		}
 
+		// Load iziModal JS and CSS
+		$show_deactivation_modal = is_multisite() && !is_network_admin() ? false : true;
+		if ($show_deactivation_modal && $pagenow == 'plugins.php') {
+			wp_enqueue_script(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/js/iziModal.min.js', array(), Core::VER, 'all');
+			wp_enqueue_style(Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/css/iziModal.min.css', array(), Core::VER, 'all');
+			add_action('admin_footer', array($this, 'add_deactivation_html'));
+		}
+
 		if ($localize_data) {
 			wp_localize_script(Core::PLUGIN_NAME, 'litespeed_data', $localize_data);
 		}
 
 		wp_enqueue_script(Core::PLUGIN_NAME);
+	}
+
+	/**
+	 * Add modal html.
+	 *
+	 * @since 7.3
+	 * @access public
+	 * @return void
+	 */
+	public function add_deactivation_html()
+	{
+		require LSCWP_DIR . 'tpl/inc/modal.deactivation.php';
 	}
 
 	/**
