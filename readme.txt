@@ -275,6 +275,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
 * **GUI** Dropped fonts files. (Masoud Najjar Khodabakhsh)
 * **3rd** Resolved WooCommerce ESI nonce being empty html comments issue on geolocation redirection. (#612331 PR#708)
+* **OPcache** Detected `opcache.restrict_api` setting to prevent PHP warning in purge. (ookris #9496550 PR#812)
 * **Misc** Simplified admin JS.
 * **Misc** Added existing plugin version to ping API for debug purpose.
 * **Misc** Fixed comments typos reported by static analysis. (Viktor Szépe PR#836)
