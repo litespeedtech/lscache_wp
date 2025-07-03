@@ -75,7 +75,7 @@ class Guest {
 		setcookie( self::$_vary_name, $vary, $expire, '/', false, $is_ssl, true );
 
 		// return json
-		echo json_encode( array( 'reload' => 'yes' ) );
+		echo \json_encode( array( 'reload' => 'yes' ) );
 		exit;
 	}
 

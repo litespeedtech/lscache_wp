@@ -80,7 +80,7 @@ class Online {
 			$this->__cloud->update_qc_activation($resp['qc_activated'], $main_domain, true);
 		}
 		if (!empty($assoc_args['format']) && $assoc_args['format'] == 'json') {
-			WP_CLI::log(json_encode($resp));
+			WP_CLI::log( \json_encode( $resp ) );
 			return;
 		}
 		if (!empty($resp['qc_activated'])) {
@@ -118,7 +118,7 @@ class Online {
 			$main_domain = !empty($resp['main_domain']) ? $resp['main_domain'] : false;
 			$this->__cloud->update_qc_activation($resp['qc_activated'], $main_domain, true);
 			WP_CLI::success('Link successfully!');
-			WP_CLI::log(json_encode($resp));
+			WP_CLI::log( \json_encode( $resp ) );
 		} else {
 			WP_CLI::error('Link failed!');
 		}
@@ -170,7 +170,7 @@ class Online {
 	 */
 	public function cdn_status( $args, $assoc_args ) {
 		$resp = $this->__cloud->cdn_status_cli();
-		WP_CLI::log(json_encode($resp));
+		WP_CLI::log( \json_encode( $resp ) );
 	}
 
 	/**
