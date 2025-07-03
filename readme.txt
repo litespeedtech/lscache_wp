@@ -132,7 +132,9 @@ This plugin includes some suggested text that you can add to your site's Privacy
 
 **For your own information:** LiteSpeed Cache for WordPress potentially stores a duplicate copy of every web page on display on your site. The pages are stored locally on the system where LiteSpeed server software is installed and are not transferred to or accessed by LiteSpeed employees in any way, except as necessary in providing routine technical support if you request it. All cache files are temporary, and may easily be purged before their natural expiration, if necessary, via a Purge All command. It is up to individual site administrators to come up with their own cache expiration rules.
 
-In addition to caching, our WordPress plugin has online features provided by QUIC.cloud for Image Optimization, CSS Optimization and Low Quality Image Placeholder services. When one of those optimizations are requested, data is transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. Now if using the QUIC.cloud CDN it uses LSCache technologies to access your site then host your site to others globally and also your data is not transferred to or accessed by QUIC.cloud employees in any way, except as necessary in providing maintenance or technical support. QUIC.cloud keeps copies of that data for up to 7 days and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to LiteSpeed so that we may better provide technical support. None of these features collects any visitor data. Only server and site data are involved.
+In addition to caching, our WordPress plugin has online features provided by QUIC.cloud for Image Optimization and Page Optimization services. When one of these optimizations is requested, data is transmitted to a remote QUIC.cloud server, processed, and then transmitted back for use on your site. QUIC.cloud keeps copies of that data for up to 7 days and then permanently deletes it. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to LiteSpeed so that we may better provide technical support. None of these features collects any visitor data. Only server and site data are involved.
+
+QUIC.cloud CDN, if enabled, uses LSCache technology to access your site, and serve your content from remote global nodes. Your data is not accessed by QUIC.cloud employees in any way, except as necessary in providing maintenance or technical support.
 
 Please see the [QUIC.cloud Privacy Policy](https://quic.cloud/privacy-policy/) for our complete Privacy/GDPR statement.
 
@@ -256,6 +258,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.3 - Aug 2025 =
+* 🌱**CLI** Added database optimization `wp litespeed-database` cmd.
+* 🌱**Misc** Added survey and data deletion reminder in deactivation process.
 * **Core** Refactored the template files to comply with WordPress standards.
 * **ESI** Fixed an Edit button missing case on frontend when the permalink structure is `Plain`. (#934261 PR#860)
 * **API** Added filter `litespeed_purge_tags` to allow manipulation of purge tags.
@@ -269,7 +273,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
 * **Crawler** Checked QC CDN for crawler hit. (PR#866)
 * **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
+* **GUI** Dropped fonts files. (Masoud Najjar Khodabakhsh)
 * **3rd** Resolved WooCommerce ESI nonce being empty html comments issue on geolocation redirection. (#612331 PR#708)
+* **OPcache** Detected `opcache.restrict_api` setting to prevent PHP warning in purge. (ookris #9496550 PR#812)
 * **Misc** Simplified admin JS.
 * **Misc** Added existing plugin version to ping API for debug purpose.
 * **Misc** Fixed comments typos reported by static analysis. (Viktor Szépe PR#836)

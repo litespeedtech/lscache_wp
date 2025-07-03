@@ -17,7 +17,7 @@
 	};
 
 	var init = function () {
-		console.log('[LiteSpeed] Start Lazy Load Images');
+		console.log('[LiteSpeed] Start Lazy Load');
 		instance = new LazyLoad(
 			Object.assign(
 				{},

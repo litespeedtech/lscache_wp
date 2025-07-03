@@ -82,32 +82,61 @@ class Activation extends Base {
 	 * Uninstall plugin
 	 *
 	 * @since 1.1.0
+	 * @since 7.3 fix uninstall to remove all settings.
 	 */
 	public static function uninstall_litespeed_cache() {
 		Task::destroy();
 
-		// Delete options
-		foreach (Conf::cls()->load_default_vals() as $k => $v) {
-			Base::delete_option($k);
-		}
+		if (is_multisite() ) {
+			// Save main site id
+			$current_blog = get_current_blog_id();
 
-		// Delete site options
-		if (is_multisite()) {
-			foreach (Conf::cls()->load_default_site_vals() as $k => $v) {
-				Base::delete_site_option($k);
+			// get all sites
+			$sub_sites = get_sites();
+
+			// clear foreach site
+			foreach ($sub_sites as $sub_site) {
+				$sub_blog_id = (int) $sub_site->blog_id;
+				if ($sub_blog_id != $current_blog) {
+					// Switch to blog
+					switch_to_blog($sub_blog_id);
+
+					// Delete site options
+					self::delete_settings();
+
+					// Delete site tables
+					Data::cls()->tables_del();
+				}
 			}
+
+			// Return to main site
+			switch_to_blog($current_blog);
 		}
 
-		// Delete avatar table
+		// Delete current blog/site
+		// Delete options
+		self::delete_settings();
+
+		// Delete site tables
 		Data::cls()->tables_del();
+
 
 		if (file_exists(LITESPEED_STATIC_DIR)) {
 			File::rrmdir(LITESPEED_STATIC_DIR);
 		}
 
 		Cloud::version_check('uninstall');
+	}
 
-		// Files has been deleted when deactivated
+	/**
+	 * Remove all litespeed settings.
+	 *
+	 * @since 7.3
+	 */
+	private static function delete_settings() {
+		global $wpdb;
+
+		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%s'", array( 'litespeed.%' )));
 	}
 
 	/**
@@ -119,19 +148,11 @@ class Activation extends Base {
 	 * @access public
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids( $args = array() ) {
-		global $wp_version;
-		if (version_compare($wp_version, '4.6', '<')) {
-			$blogs = wp_get_sites($args);
-			if (!empty($blogs)) {
-				foreach ($blogs as $key => $blog) {
-					$blogs[$key] = $blog['blog_id'];
-				}
-			}
-		} else {
-			$args['fields'] = 'ids';
-			$blogs          = get_sites($args);
-		}
+	public static function get_network_ids($args = array())
+	{
+		$args['fields'] = 'ids';
+		$blogs = get_sites($args);
+		
 		return $blogs;
 	}
 
@@ -257,6 +278,8 @@ class Activation extends Base {
 		/* 5) .litespeed_conf.dat; */
 
 		self::_del_conf_data_file();
+
+		/* 6) delete option lscwp_whm_install */
 
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();

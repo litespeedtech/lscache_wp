@@ -227,11 +227,43 @@ if ( is_multisite() && is_network_admin() ) {
 </form>
 <script>
 (function ($) {
+	function setCookie(name, value, days) {
+		var expires = "";
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = "; expires=" + date.toUTCString();
+		}
+		document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
+	}
+
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1, c.length);
+			}
+			if (c.indexOf(nameEQ) == 0) {
+				return c.substring(nameEQ.length, c.length);
+			}
+		}
+		return null;
+	}
+
 	jQuery(document).ready(function () {
+		var savedPurgeBy = getCookie('litespeed_purgeby_option');
+		if (savedPurgeBy) {
+			$('input[name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>"][value="' + savedPurgeBy + '"]').prop('checked', true);
+			$('[data-purgeby]').addClass('litespeed-hide');
+			$('[data-purgeby="' + savedPurgeBy + '"]').removeClass('litespeed-hide');
+		}
 		// Manage page -> purge by
 		$('[name=purgeby]').on('change', function (event) {
 			$('[data-purgeby]').addClass('litespeed-hide');
 			$('[data-purgeby=' + this.value + ']').removeClass('litespeed-hide');
+			setCookie('litespeed_purgeby_option', this.value, 30);
 		});
 	});
 })(jQuery);

@@ -17,7 +17,11 @@ $err =
 	' ' .
 	esc_html__('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache') .
 	' ' .
-	sprintf(esc_html__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'), esc_url(admin_url('admin.php?page=litespeed-cache#advanced')));
+	sprintf(
+		esc_html__('If not, please verify the setting in the %sAdvanced tab%s.', 'litespeed-cache'),
+		"<a href='" . esc_url(admin_url('admin.php?page=litespeed-cache#advanced')) . '">',
+		'</a>'
+	);
 
 if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
 	$err .= ' ' . esc_html__('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');
