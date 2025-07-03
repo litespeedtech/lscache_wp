@@ -145,7 +145,7 @@ class Object_Cache extends Root {
 	 */
 	private function debug_oc($text)
 	{
-		if (!$this->_cfg_debug) {
+		if ( $this->_cfg_debug != BASE::VAL_ON2 ) {
 			return;
 		}
 
