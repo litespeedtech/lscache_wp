@@ -413,7 +413,7 @@ class Purge extends Base
 			self::debug('❌ Failed to reset opcode cache due to OPcache is restricted. File requesting the clear is not allowed.');
 
 			if (!$silence) {
-				$msg = __('OPcache is restricted by "restrict_api".', 'litespeed-cache');
+				$msg = sprintf(__('OPcache is restricted by %s setting.', 'litespeed-cache'), '<code>restrict_api</code>');
 				!defined('LITESPEED_PURGE_SILENT') && Admin_Display::error($msg);
 			}
 
@@ -425,7 +425,7 @@ class Purge extends Base
 			self::debug('❌ Reset opcode not worked');
 
 			if (!$silence) {
-				$msg = __('Reset the opcode cache was not successfully.', 'litespeed-cache');
+				$msg = __('Reset the opcode cache failed.', 'litespeed-cache');
 				!defined('LITESPEED_PURGE_SILENT') && Admin_Display::success($msg);
 			}
 
