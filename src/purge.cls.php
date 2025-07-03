@@ -393,6 +393,7 @@ class Purge extends Base
 	 * Purge opcode cache
 	 *
 	 * @since  1.8.2
+	 * @since  7.3 added test for opcode cache restriction
 	 * @access public
 	 */
 	public function purge_all_opcache($silence = false)
