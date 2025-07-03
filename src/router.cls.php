@@ -766,12 +766,9 @@ class Router extends Base
 	{
 		$restrict_value = ini_get('opcache.restrict_api');
 		if ($restrict_value) {
-			if ($file) {
-				// if file if not in path, it will show warning.
-				return strpos($file, $restrict_value) === false;
+			if ( !$file || false === strpos($restrict_value, $file) ) {
+				return true;
 			}
-
-			return true;
 		}
 
 		return false;
