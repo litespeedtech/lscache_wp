@@ -271,6 +271,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Page Optimize** Added the missing JS Delay lib when page optimization is off while iframe lazyload is on. (Zsombor Franczia #867)
 * 🐞**Page Optimize** Allowed LazyLoad threshold overwrite. (Zsombor Franczia #852 PR#857)
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
+* **Cloud** Dropped pk from log from QC registration process.
 * **Crawler** Checked QC CDN for crawler hit. (PR#866)
 * **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
 * **GUI** Dropped fonts files. (Masoud Najjar Khodabakhsh)
