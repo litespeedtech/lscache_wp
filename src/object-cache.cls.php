@@ -143,14 +143,15 @@ class Object_Cache extends Root {
 	 * @since  6.3
 	 * @access private
 	 */
-	private function debug_oc( $text, $show_error = false ) {
+	private function debug_oc($text)
+	{
 		if (defined('LSCWP_LOG')) {
 			Debug2::debug($text);
 
 			return;
 		}
 
-		if (!$show_error && $this->_cfg_debug != Base::VAL_ON2) {
+		if ( $this->_cfg_debug != Base::VAL_ON2 ) {
 			return;
 		}
 
@@ -329,10 +330,10 @@ class Object_Cache extends Root {
 					$failed = true;
 				}
 			} catch (\Exception $e) {
-				$this->debug_oc('Redis connect exception: ' . $e->getMessage(), true);
+				$this->debug_oc('Redis connect exception: ' . $e->getMessage());
 				$failed = true;
 			} catch (\ErrorException $e) {
-				$this->debug_oc('Redis connect error: ' . $e->getMessage(), true);
+				$this->debug_oc('Redis connect error: ' . $e->getMessage());
 				$failed = true;
 			}
 			restore_error_handler();
@@ -376,7 +377,7 @@ class Object_Cache extends Root {
 
 		// If failed to connect
 		if ($failed) {
-			$this->debug_oc('❌ Failed to connect ' . $this->_oc_driver . ' server!', true);
+			$this->debug_oc('❌ Failed to connect ' . $this->_oc_driver . ' server!');
 			$this->_conn        = null;
 			$this->_cfg_enabled = false;
 			!defined('LITESPEED_OC_FAILURE') && define('LITESPEED_OC_FAILURE', true);
@@ -384,7 +385,7 @@ class Object_Cache extends Root {
 			return false;
 		}
 
-		$this->debug_oc('Connected');
+		$this->debug_oc('✅ Connected to ' . $this->_oc_driver . ' server.');
 
 		return true;
 	}
