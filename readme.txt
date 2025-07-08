@@ -258,32 +258,32 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.3 - Aug 2025 =
-* 🌱**CLI** Added database optimization `wp litespeed-database` cmd.
+* 🌱**CLI** Added `wp litespeed-database` database optimization command.
 * 🌱**Misc** Added survey and data deletion reminder in deactivation process.
 * **Core** Refactored the template files to comply with WordPress standards.
-* **ESI** Fixed an Edit button missing case on frontend when the permalink structure is `Plain`. (#934261 PR#860)
-* **API** Added filter `litespeed_purge_tags` to allow manipulation of purge tags.
+* **ESI** Fixed a case where the Edit button is missing on the frontend when the permalink structure is `Plain`. (#934261 PR#860)
+* **API** Added `litespeed_purge_tags` filter to allow manipulation of purge tags.
 * **API** Allowed overriding `litespeed_ui_events` via window property. (Zsombor Franczia PR#865)
-* **API** Added filter `litespeed_vpi_should_queue` to allow control VPI queue appendage. (tompalmer #855, Viktor Szépe PR#856)
-* **Debug** Allowed debug in multisite network level. (PR#861)
-* **Vary** Fixed possible duplicate webp vary in chrome mimicked iPhone visit.
-* 🐞**Vary** Used simpler rewrite rule to check next gen image format support.
+* **API** Added `litespeed_vpi_should_queue` filter to allow control over appending to the VPI queue. (tompalmer #855, Viktor Szépe PR#856)
+* **Debug** Allowed debug at multisite network level. (PR#861)
+* **Vary** Fixed a possible duplicate WebP vary in Chrome when mimicking an iPhone visit.
+* 🐞**Vary** Used simpler rewrite rule to check for next generation image format support.
 * **Page Optimize** Tuned the optimized data injection location in HTML to improve SEO. (videofinanzas)
 * **Page Optimize** Improved DNS prefetch and preconnect sequence in HTML to be as early as possible. Simplified DNS optimization code.
-* 🐞**Page Optimize** Added the missing JS Delay lib when page optimization is off while iframe lazyload is on. (Zsombor Franczia #867)
-* 🐞**Page Optimize** Allowed LazyLoad threshold overwrite. (Zsombor Franczia #852 PR#857)
-* 🐞**Page Optimize** Fixed async attribute replacement issue when it contains a value e.g. `async=true`. (@macorak)
+* 🐞**Page Optimize** Added the JS Delay library that was missing when page optimization was off while iframe lazy load was on. (Zsombor Franczia #867)
+* 🐞**Page Optimize** Allowed lazy load threshold overwrite. (Zsombor Franczia #852 PR#857)
+* 🐞**Page Optimize** Fixed an issue where the `async` attribute was replaced even when it contained a value, e.g. `async=true`. (@macorak)
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
-* **Cloud** Dropped pk from log from QC registration process.
-* **Crawler** Checked QC CDN for crawler hit. (PR#866)
-* **GUI** Added admin bar icon to Enable All Features when disabled all. Dropped disabled all banner. (Tobolo, PR#868)
-* **GUI** Dropped fonts files. (Masoud Najjar Khodabakhsh)
-* **3rd** Resolved WooCommerce ESI nonce being empty html comments issue on geolocation redirection. (#612331 PR#708)
+* **Cloud** No longer include public key when logging QUIC.cloud registration process.
+* **Crawler** Checked QUIC.cloud CDN for crawler hit. (PR#866)
+* **GUI** Added Enable All Features icon to admin bar when all features are disabled. This replaces the banner that previously displayed in admin. (Tobolo, PR#868)
+* **GUI** Dropped font files. (Masoud Najjar Khodabakhsh)
+* **3rd** Resolved an issue with an empty WooCommerce ESI nonce and HTML comments on geolocation redirection. (#612331 PR#708)
 * **OPcache** Detected `opcache.restrict_api` setting to prevent PHP warning in purge. (ookris #9496550 PR#812)
-* **Misc** Simplified admin JS.
-* **Misc** Added existing plugin version to ping API for debug purpose.
-* **Misc** Fixed comments typos reported by static analysis. (Viktor Szépe PR#836)
-* **Misc** Removed global vars from plugin initial file. (Viktor Szépe PR#837)
+* **Misc** Simplified admin JavaScript.
+* **Misc** Added existing plugin version to ping API for debugging purposes.
+* **Misc** Fixed comment typos reported by static analysis. (Viktor Szépe PR#836)
+* **Misc** Removed global variables from plugin initialization file. (Viktor Szépe PR#837)
 
 = 7.2 - Jun 18 2025 =
 * 🌱**CDN** New option: Cloudflare Clear on purge all. (PR#828)
