@@ -272,6 +272,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Improved DNS prefetch and preconnect sequence in HTML to be as early as possible. Simplified DNS optimization code.
 * 🐞**Page Optimize** Added the missing JS Delay lib when page optimization is off while iframe lazyload is on. (Zsombor Franczia #867)
 * 🐞**Page Optimize** Allowed LazyLoad threshold overwrite. (Zsombor Franczia #852 PR#857)
+* 🐞**Page Optimize** Fixed async attribute replacement issue when it contains a value e.g. `async=true`. (@macorak)
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
 * **Cloud** Dropped pk from log from QC registration process.
 * **Crawler** Checked QC CDN for crawler hit. (PR#866)

@@ -1231,7 +1231,7 @@ class Optimize extends Base {
 	 */
 	private function _js_defer( $ori, $src ) {
 		if (strpos($ori, ' async') !== false) {
-			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]+)\1)?#isU', '', $ori);
+			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]+)\1)?#is', '', $ori);
 		}
 
 		if (strpos($ori, 'defer') !== false) {
