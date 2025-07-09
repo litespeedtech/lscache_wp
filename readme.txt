@@ -281,6 +281,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **3rd** Resolved an issue with an empty WooCommerce ESI nonce and HTML comments on geolocation redirection. (#612331 PR#708)
 * **OPcache** Detected `opcache.restrict_api` setting to prevent PHP warning in purge. (ookris #9496550 PR#812)
 * **Misc** Simplified admin JavaScript.
+* **Misc** Fixed download import file extension issue on mobile. (autori76 #874)
 * **Misc** Added existing plugin version to ping API for debugging purposes.
 * **Misc** Fixed comment typos reported by static analysis. (Viktor Szépe PR#836)
 * **Misc** Removed global variables from plugin initialization file. (Viktor Szépe PR#837)
