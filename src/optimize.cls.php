@@ -133,7 +133,7 @@ class Optimize extends Base {
 		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 20);
 
 		// Inject a dummy CSS file to control final optimized data location in <head>
-		wp_enqueue_style(Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed-dummy.css');
+		wp_enqueue_style(Core::PLUGIN_NAME . '-dummy', LSWCP_PLUGIN_URL . 'assets/css/litespeed-dummy.css');
 	}
 
 	/**
@@ -489,7 +489,7 @@ class Optimize extends Base {
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
 				// Put header content to dummy css position
-				$dummy_css = "<link rel='stylesheet' id='litespeed-cache-css' href='" . LSWCP_PLUGIN_URL . "assets/css/litespeed-dummy.css' media='all' />";
+				$dummy_css = "<link rel='stylesheet' id='litespeed-cache-dummy-css' href='" . LSWCP_PLUGIN_URL . "assets/css/litespeed-dummy.css' media='all' />";
 				if (strpos($this->content, $dummy_css) !== false) {
 					self::debug('Put optm data to dummy css location');
 					$this->content = str_replace( $dummy_css, $this->html_head, $this->content );
