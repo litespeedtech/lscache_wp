@@ -6,7 +6,8 @@
 		"wp-coding-standards/wpcs": "^3.1",
 		"phpcsstandards/phpcsutils": "^1.0",
 		"phpcsstandards/phpcsextra": "^1.2",
-		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"php-stubs/wp-cli-stubs": "^2.12"
 	},
 	"prefer-stable": true,
 	"scripts": {
