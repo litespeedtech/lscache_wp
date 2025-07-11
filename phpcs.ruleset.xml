@@ -62,7 +62,7 @@
     <rule ref="WordPress.Security" />
     <rule ref="WordPress.NamingConventions" />
     <rule ref="WordPress.PHP" />
-    <!-- <file>cli/</file> -->
+    <file>cli/</file>
     <!-- <file>lib/</file> -->
     <!-- <file>src/</file> -->
     <file>tpl/</file>

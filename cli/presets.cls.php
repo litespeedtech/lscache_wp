@@ -1,7 +1,13 @@
 <?php
+/**
+ * Presets CLI for LiteSpeed Cache.
+ *
+ * @package LiteSpeed\CLI
+ */
+
 namespace LiteSpeed\CLI;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Preset;
@@ -10,15 +16,22 @@ use WP_CLI;
 /**
  * Presets CLI
  */
-
 class Presets {
 
-	private $__preset;
+	/**
+	 * Preset instance.
+	 *
+	 * @var Preset
+	 */
+	private $preset;
 
+	/**
+	 * Constructor for Presets CLI.
+	 */
 	public function __construct() {
-		Debug2::debug('CLI_Presets init');
+		Debug2::debug( 'CLI_Presets init' );
 
-		$this->__preset = Preset::cls();
+		$this->preset = Preset::cls();
 	}
 
 	/**
@@ -26,20 +39,25 @@ class Presets {
 	 *
 	 * ## OPTIONS
 	 *
+	 * <preset>
+	 * : The preset name to apply (e.g., basic).
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Apply the preset called "basic"
 	 *     $ wp litespeed-presets apply basic
+	 *
+	 * @param array $args Positional arguments (preset).
 	 */
 	public function apply( $args ) {
 		$preset = $args[0];
 
-		if (!isset($preset)) {
-			WP_CLI::error('Please specify a preset to apply.');
+		if ( empty( $preset ) ) {
+			WP_CLI::error( 'Please specify a preset to apply.' );
 			return;
 		}
 
-		return $this->__preset->apply($preset);
+		return $this->preset->apply( $preset );
 	}
 
 	/**
@@ -53,10 +71,10 @@ class Presets {
 	 *     $ wp litespeed-presets get_backups
 	 */
 	public function get_backups() {
-		$backups = $this->__preset->get_backups();
+		$backups = $this->preset->get_backups();
 
-		foreach ($backups as $backup) {
-			WP_CLI::line($backup);
+		foreach ( $backups as $backup ) {
+			WP_CLI::line( $backup );
 		}
 	}
 
@@ -65,19 +83,24 @@ class Presets {
 	 *
 	 * ## OPTIONS
 	 *
+	 * <timestamp>
+	 * : The timestamp of the backup to restore.
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Restore the backup with the timestamp 1667485245
 	 *     $ wp litespeed-presets restore 1667485245
+	 *
+	 * @param array $args Positional arguments (timestamp).
 	 */
 	public function restore( $args ) {
 		$timestamp = $args[0];
 
-		if (!isset($timestamp)) {
-			WP_CLI::error('Please specify a timestamp to restore.');
+		if ( empty( $timestamp ) ) {
+			WP_CLI::error( 'Please specify a timestamp to restore.' );
 			return;
 		}
 
-		return $this->__preset->restore($timestamp);
+		return $this->preset->restore( $timestamp );
 	}
 }
