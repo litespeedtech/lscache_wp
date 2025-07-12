@@ -261,7 +261,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🌱**CLI** Added `wp litespeed-database` database optimization command.
 * 🌱**Misc** Added survey and data deletion reminder in deactivation process.
 * **Core** Refactored the template files to comply with WordPress standards.
-* **Core** Refactored the CLI files to comply with WordPress standards.
+* **Core** Refactored the CLI files to comply with WordPress standards. Fixed a bug with CLI `option` command failure handler.
 * **ESI** Fixed a case where the Edit button is missing on the frontend when the permalink structure is `Plain`. (#934261 PR#860)
 * **API** Added `litespeed_purge_tags` filter to allow manipulation of purge tags.
 * **API** Allowed overriding `litespeed_ui_events` via window property. (Zsombor Franczia PR#865)

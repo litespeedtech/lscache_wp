@@ -13,6 +13,7 @@ use LiteSpeed\Base;
 use LiteSpeed\Admin_Settings;
 use LiteSpeed\Utility;
 use WP_CLI;
+use WP_Filesystem;
 
 /**
  * LiteSpeed Cache option Interface
@@ -297,14 +298,20 @@ class Option extends Base {
 			$file = getcwd() . '/litespeed_options_' . gmdate( 'd_m_Y-His' ) . '.data';
 		}
 
-		if (!is_writable(dirname($file))) {
-			WP_CLI::error('Directory not writable.');
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		if ( ! $wp_filesystem->is_writable( dirname( $file ) ) ) {
+			WP_CLI::error( 'Directory not writable.' );
 			return;
 		}
 
 		$data = $this->cls( 'Import' )->export( true );
 
-		if ( false === file_put_contents( $file, $data ) ) {
+		if ( false === $wp_filesystem->put_contents( $file, $data ) ) {
 			WP_CLI::error( 'Failed to create file.' );
 			return;
 		}
@@ -336,7 +343,13 @@ class Option extends Base {
 	public function import( $args, $assoc_args ) {
 		$file = $args[0];
 
-		if ( ! file_exists( $file ) || ! is_readable( $file ) ) {
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		if ( ! $wp_filesystem->exists( $file ) || ! $wp_filesystem->is_readable( $file ) ) {
 			WP_CLI::error( 'File does not exist or is not readable.' );
 			return;
 		}
