@@ -277,6 +277,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
 * **Cloud** No longer include public key when logging QUIC.cloud registration process.
 * **Crawler** Checked QUIC.cloud CDN for crawler hit. (PR#866)
+* 🐞**Crawler** Fixed an issue where the non-role-simulator crawler added the whole map to the blocklist on servers that only support port 80.
 * **GUI** Added Enable All Features icon to admin bar when all features are disabled. This replaces the banner that previously displayed in admin. (Tobolo, PR#868)
 * **GUI** Dropped font files. (Masoud Najjar Khodabakhsh)
 * **3rd** Resolved an issue with an empty WooCommerce ESI nonce and HTML comments on geolocation redirection. (#612331 PR#708)

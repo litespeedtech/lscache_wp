@@ -672,9 +672,6 @@ class Crawler extends Root {
 	 * @return bool true if success and can continue crawling, false if failed and need to stop
 	 */
 	private function _test_port() {
-		if (empty($this->_crawler_conf['cookies']) || empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
-			return true;
-		}
 		if (!$this->_server_ip) {
 			self::debug('❌ Server IP not set');
 			return false;
