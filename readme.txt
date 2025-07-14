@@ -276,6 +276,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🐞**Page Optimize** Fixed an issue where the `async` attribute was replaced even when it contained a value, e.g. `async=true`. (@macorak)
 * 🐞**Cloud** Fixed the API call timestamp file creation warning.
 * **Cloud** No longer include public key when logging QUIC.cloud registration process.
+* **Image Optimize** Resend all images that failed to pull instead of bypassing them. (Ryan D)
 * **Crawler** Checked QUIC.cloud CDN for crawler hit. (PR#866)
 * 🐞**Crawler** Fixed an issue where the non-role-simulator crawler added the whole map to the blocklist on servers that only support port 80.
 * **GUI** Added Enable All Features icon to admin bar when all features are disabled. This replaces the banner that previously displayed in admin. (Tobolo, PR#868)
