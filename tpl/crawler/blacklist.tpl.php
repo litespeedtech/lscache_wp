@@ -25,7 +25,7 @@ $pagination      = Utility::pagination( $count, 30 );
 
 <h3 class="litespeed-title">
 	<?php esc_html_e( 'Blocklist', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blacklist-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#blocklist-tab' ); ?>
 </h3>
 
 <?php echo esc_html__( 'Total', 'litespeed-cache' ) . ': ' . esc_html( $count ); ?>
