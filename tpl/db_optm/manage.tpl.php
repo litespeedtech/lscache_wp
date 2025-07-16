@@ -103,7 +103,7 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
                     <?php echo esc_html( $v['title'] ); ?>
                     <span class="litespeed-panel-counter<?php echo $v['count'] > 0 ? '-red' : ''; ?>">(<?php echo esc_html( $v['count'] ); ?><?php echo DB_Optm::hide_more() ? '+' : ''; ?>)</span>
                 </div>
-                <span class="litespeed-panel-para"><?php echo esc_html( $v['desc'] ); ?></span>
+                <span class="litespeed-panel-para"><?php echo wp_kses_post( $v['desc'] ); ?></span>
             </section>
             <section class="litespeed-panel-wrapper-top-right">
                 <span class="litespeed-panel-top-right-icon<?php echo $v['count'] > 0 ? '-cross' : '-tick'; ?>"></span>
