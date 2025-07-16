@@ -52,11 +52,18 @@ class Media extends Root {
 	/**
 	 * Hooks after user init
 	 *
-	 * @since  7.2
+	 * @since 7.2
+	 * @since 7.4 Add media replace original with scaled.
 	 */
 	public function after_user_init() {
 		// Hook to attachment delete action (PR#844, Issue#841) for AJAX del compatibility
 		add_action('delete_attachment', array( $this, 'delete_attachment' ), 11, 2);
+
+		// For big images, allow to replace original with scaled image.
+		if( $this->conf(Base::O_IMG_OPTM_REP_W_SCALED) ){
+			// Added priority 9 to happen before other functions added.
+			add_filter('wp_generate_attachment_metadata', array( $this, 'replace_original_with_scaled' ), 9, 3);
+		}
 	}
 
 	/**
@@ -96,6 +103,19 @@ class Media extends Root {
 		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 4);
 
 		add_filter('litespeed_optm_html_head', array( $this, 'finalize_head' ));
+	}
+
+	/**
+	 * Handle attachment create
+	 * 
+	 * @param array $metadata Current meta array.
+	 * @param int $attachment_id Attachment ID.
+	 * @param string $context Can be "create" or "update".
+	 * @return array $metadata
+	 * @since  7.4
+	 */
+	public function replace_original_with_scaled( $metadata, $attachment_id, $context ) {
+		return $this->cls('Img_Optm')->replace_original_with_scaled( $metadata, $attachment_id, $context );
 	}
 
 	/**
