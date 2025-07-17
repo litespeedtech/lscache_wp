@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The quic.cloud class.
  *
@@ -16,30 +15,59 @@ use LiteSpeed\Base;
 
 defined('WPINC') || exit();
 
+/**
+ * Class Quic
+ *
+ * Handles Quic.cloud CDN integration.
+ *
+ * @since 2.4.1
+ */
 class Quic extends Base {
-
-	const LOG_TAG = '☁️';
-
+	const LOG_TAG  = '☁️';
 	const TYPE_REG = 'reg';
 
-	protected $_summary;
-	private $_force = false;
+	/**
+	 * Summary data for CDN configuration.
+	 *
+	 * @var array
+	 */
+	protected $summary;
+
+	/**
+	 * Force sync flag.
+	 *
+	 * @var bool
+	 */
+	private $force = false;
+
+	/**
+	 * Quic constructor.
+	 *
+	 * Initializes the summary data.
+	 *
+	 * @since 2.4.1
+	 */
 	public function __construct() {
-		$this->_summary = self::get_summary();
+		$this->summary = self::get_summary();
 	}
 
 	/**
 	 * Notify CDN new config updated
 	 *
+	 * Syncs configuration with Quic.cloud CDN.
+	 *
+	 * @since 2.4.1
 	 * @access public
+	 * @param bool $force Whether to force sync.
+	 * @return bool|void
 	 */
 	public function try_sync_conf( $force = false ) {
 		if ($force) {
-			$this->_force = $force;
+			$this->force = $force;
 		}
 
 		if (!$this->conf(self::O_CDN_QUIC)) {
-			if (!empty($this->_summary['conf_md5'])) {
+			if (!empty($this->summary['conf_md5'])) {
 				self::debug('❌ No QC CDN, clear conf md5!');
 				self::save_summary(array( 'conf_md5' => '' ));
 			}
@@ -93,16 +121,16 @@ class Quic extends Base {
 			}
 		}
 
-		$conf_md5 = md5(\json_encode($options_for_md5));
-		if (!empty($this->_summary['conf_md5'])) {
-			if ($conf_md5 == $this->_summary['conf_md5']) {
-				if (!$this->_force) {
+		$conf_md5 = md5(wp_json_encode($options_for_md5));
+		if (!empty($this->summary['conf_md5'])) {
+			if ($conf_md5 === $this->summary['conf_md5']) {
+				if (!$this->force) {
 					self::debug('Bypass sync conf to QC due to same md5', $conf_md5);
 					return;
 				}
 				self::debug('!!!Force sync conf even same md5');
 			} else {
-				self::debug('[conf_md5] ' . $conf_md5 . ' [existing_conf_md5] ' . $this->_summary['conf_md5']);
+				self::debug('[conf_md5] ' . $conf_md5 . ' [existing_conf_md5] ' . $this->summary['conf_md5']);
 			}
 		}
 

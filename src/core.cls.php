@@ -213,6 +213,7 @@ class Core extends Root {
 		 *
 		 * @since 2.9
 		 */
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $_GET[ Router::ACTION ] ) && 'before_optm' === $_GET[ Router::ACTION ] && ! apply_filters( 'litespeed_qs_forbidden', false ) ) {
 			Debug2::debug( '[Core] ⛑️ bypass_optm due to QS CTRL' );
 			! defined( 'LITESPEED_NO_OPTM' ) && define( 'LITESPEED_NO_OPTM', true );
@@ -401,8 +402,9 @@ class Core extends Root {
 			return;
 		}
 
-		if ( 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
-			Debug2::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER['REQUEST_METHOD'] );
+		if ( empty( $_SERVER['REQUEST_METHOD'] ) || 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			Debug2::debug2( '[Core] CHK html bypass: not get method ' . wp_unslash( $_SERVER['REQUEST_METHOD'] ) );
 			return;
 		}
 
@@ -471,9 +473,10 @@ class Core extends Root {
 		$this->send_headers( true );
 
 		// Log ESI nonce buffer empty issue
-		if ( defined( 'LSCACHE_IS_ESI' ) && 0 === strlen( $buffer ) ) {
+		if ( defined( 'LSCACHE_IS_ESI' ) && 0 === strlen( $buffer ) && ! empty( $_SERVER['REQUEST_URI'] ) ) {
 			// Log ref for debug purpose
-			error_log( 'ESI buffer empty ' . $_SERVER['REQUEST_URI'] );
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'ESI buffer empty ' . wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		}
 
 		// Init comment info
