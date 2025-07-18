@@ -3,7 +3,9 @@
   `optm_status` tinyint(4) NOT NULL DEFAULT '0',
   `src` varchar(1000) NOT NULL DEFAULT '',
   `server_info` text NOT NULL,
+  `priority` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `post_id` (`post_id`),
   KEY `optm_status` (`optm_status`),
-  KEY `src` (`src`(191))
+  KEY `src` (`src`(191)),
+  KEY `priority` (`priority`)

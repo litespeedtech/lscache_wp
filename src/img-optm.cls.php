@@ -155,6 +155,46 @@ class Img_Optm extends Base {
 	}
 
 	/**
+	 * Add image to image optimization after upload, with priority.
+	 *
+	 * @since  7.4
+	 */
+	public function add_image_to_optm_priority( $meta_value, $post_id, $context, $priority = 0 ) {
+		global $wpdb;
+
+		self::debug2('🖌️ Add image to image optmization after upload [id] ' . $post_id);
+		if (empty($meta_value['file'])) {
+			return;
+		}
+
+		// Cleaning up: remove current images, by id, from queue from queue.
+		$wpdb->delete( $this->_table_img_optming, [ "post_id" => $post_id ] );
+		// Cleanin up: empty the queue
+		$this->_img_in_queue = [];
+		
+
+		// Prepare images
+		$this->tmp_pid  = $post_id;
+		$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
+		// Add main image
+		$this->_append_img_queue($meta_value, true, $priority);
+		// Add sizes images
+		if (!empty($meta_value['sizes'])) {
+			foreach( $meta_value['sizes'] as $meta ){
+				$this->_append_img_queue( $meta, false, $priority );
+			}
+		}
+
+		if (!$this->_img_in_queue) {
+			self::debug('auto add attachment to queue stopped: empty _img_in_queue');
+			return;
+		}
+
+		// Save to DB
+		$this->_save_raw();
+	}
+
+	/**
 	 * Auto send optm request
 	 *
 	 * @since  2.4.1
@@ -268,29 +308,51 @@ class Img_Optm extends Base {
 		$total_new = $wpdb->get_var($q);
 		// $allowance -= $total_new;
 
-		// May need to get more images
+		// May need to get more images.
 		$list = array();
 		$more = $allowance - $total_new;
 		if ($more > 0) {
-			$q    = "SELECT b.post_id, b.meta_value
-				FROM `$wpdb->posts` a
-				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
-				WHERE b.meta_key = '_wp_attachment_metadata'
-					AND a.post_type = 'attachment'
-					AND a.post_status = 'inherit'
-					AND a.ID>%d
-					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				ORDER BY a.ID
-				LIMIT %d
-				";
-			$q    = $wpdb->prepare($q, array( $this->_summary['next_post_id'], $more ));
+			// Get priority images IDS.
+			$q             = "SELECT post_id FROM `$this->_table_img_optming` WHERE optm_status IN (%d, %d) AND priority > 0 ORDER BY priority DESC, id ASC";
+			$q             = $wpdb->prepare($q, array( self::STATUS_NEW, self::STATUS_RAW ));
+			$next_priority = $wpdb->get_results($q, ARRAY_N);
+			$has_priority = count( $next_priority ) > 0 ? true : false;
+
+			if( $has_priority ){
+				$ids = implode( ', ', $next_priority );
+				// Prepare priority images to be added to list.
+				$q = "SELECT b.post_id, b.meta_value
+					FROM `$wpdb->postmeta` b
+					WHERE b.meta_key = '_wp_attachment_metadata'
+						AND b.post_id IN ( %d )
+					ORDER BY b.post_id
+					LIMIT %d";
+				$q = $wpdb->prepare($q, array( $ids, $more ));
+			}
+			else{
+				// Get next images
+				$q    = "SELECT b.post_id, b.meta_value
+					FROM `$wpdb->posts` a
+					LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+					WHERE b.meta_key = '_wp_attachment_metadata'
+						AND a.post_type = 'attachment'
+						AND a.post_status = 'inherit'
+						AND a.ID>%d
+						AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+					ORDER BY a.ID
+					LIMIT %d
+					";
+				$q    = $wpdb->prepare($q, array( $this->_summary['next_post_id'], $more ));
+			}
 			$list = $wpdb->get_results($q);
 			foreach ($list as $v) {
 				if (!$v->post_id) {
 					continue;
 				}
 
-				$this->_summary['next_post_id'] = $v->post_id;
+				if( !$has_priority ){
+					$this->_summary['next_post_id'] = $v->post_id;
+				}
 
 				$meta_value = $this->_parse_wp_meta_value($v);
 				if (!$meta_value) {
@@ -356,9 +418,10 @@ class Img_Optm extends Base {
 	 * Add a new img to queue which will be pushed to request
 	 *
 	 * @since 1.6
+	 * @since 7.4 Add priority tag.
 	 * @access private
 	 */
-	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
+	private function _append_img_queue( $meta_value, $is_ori_file = false, $priority = 0 ) {
 		if (empty($meta_value['file']) || empty($meta_value['width']) || empty($meta_value['height'])) {
 			self::debug2('bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value);
 			return;
@@ -415,6 +478,7 @@ class Img_Optm extends Base {
 			'url' => $_img_info['url'],
 			'src' => $short_file_path, // not needed in LiteSpeed IAPI, just leave for local storage after post
 			'mime_type' => !empty($meta_value['mime-type']) ? $meta_value['mime-type'] : '',
+			'priority' => $priority
 		);
 	}
 
@@ -442,10 +506,11 @@ class Img_Optm extends Base {
 			$data[] = $v['pid'];
 			$data[] = self::STATUS_RAW;
 			$data[] = $v['src'];
+			$data[] = isset( $v['priority'] ) ? $v['priority'] : 0;
 		}
 
 		global $wpdb;
-		$fields = 'post_id, optm_status, src';
+		$fields = 'post_id, optm_status, src, priority';
 		$q      = "INSERT INTO `$this->_table_img_optming` ( $fields ) VALUES ";
 
 		// Add placeholder
@@ -616,7 +681,7 @@ class Img_Optm extends Base {
 	private function _send_request( $allowance ) {
 		global $wpdb;
 
-		$q             = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d LIMIT %d";
+		$q             = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d ORDER BY priority DESC, id ASC LIMIT %d";
 		$q             = $wpdb->prepare($q, array( self::STATUS_RAW, $allowance ));
 		$_img_in_queue = $wpdb->get_results($q);
 		if (!$_img_in_queue) {

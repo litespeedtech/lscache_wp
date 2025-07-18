@@ -31,6 +31,31 @@ function litespeed_table_exists( $table_name ) {
 }
 
 /**
+ * Migrate v7.4 - Add image optimization priority column
+ *
+ * @since 7.4
+ */
+function litespeed_update_7_4() {
+	global $wpdb;
+	Debug2::debug('[Data] v7.4 upgrade started');
+
+	$tb_url = $wpdb->prefix . 'litespeed_img_optming';
+	if (!litespeed_table_exists($tb_url)) {
+		Debug2::debug('[Data] Table `litespeed_img_optming` not found, bypassed changes');
+		return;
+	}
+
+	$q =
+		'ALTER TABLE `' .
+		$tb_url .
+		'`
+			ADD COLUMN `priority` tinyint(1) NOT NULL DEFAULT "0",
+			ADD KEY `priority` (`priority`)
+		';
+	$wpdb->query($q);
+}
+
+/**
  * Migrate v7.0- url_files URL from no trailing slash to trailing slash
  *
  * @since 7.0.1
