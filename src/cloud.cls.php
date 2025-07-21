@@ -1631,7 +1631,7 @@ class Cloud extends Base {
 				self::save_summary();
 			}
 
-			// Site not on QC, delete invalid domain key
+			// Site not on QC, reset QC connection registration
 			if ($json_msg == 'site_not_registered' || $json_msg == 'err_key') {
 				$this->_reset_qc_reg();
 			}

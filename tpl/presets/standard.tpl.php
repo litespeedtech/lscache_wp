@@ -22,7 +22,7 @@ $presets = array(
 		),
 		'footer' => array(
 			esc_html__( 'This no-risk preset is appropriate for all websites. Good for new users, simple websites, or cache-oriented development.', 'litespeed-cache' ),
-			esc_html__( 'A Domain Key is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' ),
+			esc_html__( 'A QUIC.cloud connection is not required to use this preset. Only basic caching features are enabled.', 'litespeed-cache' ),
 		),
 	),
 	'basic' => array(
@@ -34,7 +34,7 @@ $presets = array(
 		),
 		'footer' => array(
 			esc_html__( 'This low-risk preset introduces basic optimizations for speed and user experience. Appropriate for enthusiastic beginners.', 'litespeed-cache' ),
-			esc_html__( 'A Domain Key is required to use this preset. Includes optimizations known to improve site score in page speed measurement tools.', 'litespeed-cache' ),
+			esc_html__( 'A QUIC.cloud connection is required to use this preset. Includes optimizations known to improve site score in page speed measurement tools.', 'litespeed-cache' ),
 		),
 	),
 	'advanced' => array(
@@ -53,7 +53,7 @@ $presets = array(
 		),
 		'footer' => array(
 			esc_html__( 'This preset is good for most websites, and is unlikely to cause conflicts. Any CSS or JS conflicts may be resolved with Page Optimization > Tuning tools.', 'litespeed-cache' ),
-			esc_html__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
+			esc_html__( 'A QUIC.cloud connection is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
 		),
 	),
 	'aggressive' => array(
@@ -67,7 +67,7 @@ $presets = array(
 		),
 		'footer' => array(
 			esc_html__( 'This preset might work out of the box for some websites, but be sure to test! Some CSS or JS exclusions may be necessary in Page Optimization > Tuning.', 'litespeed-cache' ),
-			esc_html__( 'A Domain Key is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
+			esc_html__( 'A QUIC.cloud connection is required to use this preset. Includes many optimizations known to improve page speed scores.', 'litespeed-cache' ),
 		),
 	),
 	'extreme' => array(
@@ -82,7 +82,7 @@ $presets = array(
 		),
 		'footer' => array(
 			esc_html__( 'This preset almost certainly will require testing and exclusions for some CSS, JS and Lazy Loaded images. Pay special attention to logos, or HTML-based slider images.', 'litespeed-cache' ),
-			esc_html__( 'A Domain Key is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' ),
+			esc_html__( 'A QUIC.cloud connection is required to use this preset. Enables the maximum level of optimizations for improved page speed scores.', 'litespeed-cache' ),
 		),
 	),
 );
