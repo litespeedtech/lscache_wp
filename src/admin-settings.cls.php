@@ -202,6 +202,12 @@ class Admin_Settings extends Base {
 					}
                 $data = $data2;
 					break;
+					
+				case self::O_IMG_OPTM_SIZES_SKIPPED: // Skip image sizes
+				$image_sizes  = Utility::prepare_image_sizes_array();
+				$saved_sizes = isset( $raw_data[$id] ) ? $raw_data[$id] : [];
+				$data = array_diff( $image_sizes, $saved_sizes );
+					break;
 
 				default:
 					break;

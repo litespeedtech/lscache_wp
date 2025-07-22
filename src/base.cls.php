@@ -228,6 +228,7 @@ class Base extends Root {
 	const O_IMG_OPTM_RM_BKUP             = 'img_optm-rm_bkup';
 	const O_IMG_OPTM_WEBP                = 'img_optm-webp';
 	const O_IMG_OPTM_LOSSLESS            = 'img_optm-lossless';
+	const O_IMG_OPTM_SIZES_SKIPPED       = 'img_optm-sizes_skipped';
 	const O_IMG_OPTM_EXIF                = 'img_optm-exif';
 	const O_IMG_OPTM_WEBP_ATTR           = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
@@ -506,7 +507,8 @@ class Base extends Root {
 		self::O_IMG_OPTM_ORI => false,
 		self::O_IMG_OPTM_RM_BKUP => false,
 		self::O_IMG_OPTM_WEBP => false,
-		self::O_IMG_OPTM_LOSSLESS => false,
+		self::O_IMG_OPTM_LOSSLESS => array(),
+		self::O_IMG_OPTM_SIZES_SKIPPED => array(),
 		self::O_IMG_OPTM_EXIF => false,
 		self::O_IMG_OPTM_WEBP_ATTR => array(),
 		self::O_IMG_OPTM_WEBP_REPLACE_SRCSET => false,

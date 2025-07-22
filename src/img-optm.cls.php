@@ -140,7 +140,9 @@ class Img_Optm extends Base {
 		$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 		$this->_append_img_queue($meta_value, true);
 		if (!empty($meta_value['sizes'])) {
-			array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+			foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+				$this->_append_img_queue($meta_value, false, $img_size_name );
+			}
 		}
 
 		if (!$this->_img_in_queue) {
@@ -306,7 +308,9 @@ class Img_Optm extends Base {
 				$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 				$this->_append_img_queue($meta_value, true);
 				if (!empty($meta_value['sizes'])) {
-					array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+					foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+						$this->_append_img_queue($meta_value, false, $img_size_name );
+					}
 				}
 			}
 
@@ -356,12 +360,25 @@ class Img_Optm extends Base {
 	 * Add a new img to queue which will be pushed to request
 	 *
 	 * @since 1.6
+	 * @since 7.5 Allow to choose which image sizes should be optimized + added parameter $img_size_name.
 	 * @access private
 	 */
-	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
+	private function _append_img_queue( $meta_value, $is_ori_file = false, $img_size_name = false ) {
 		if (empty($meta_value['file']) || empty($meta_value['width']) || empty($meta_value['height'])) {
 			self::debug2('bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value);
 			return;
+		}
+
+		// Test if need to skip image size.
+		if (!$is_ori_file) {
+			// Allow users to ignore custom sizes.
+			$disabled_sizes = apply_filters( 'litespeed_img_optim_sizes_skipped', $this->conf( Base::O_IMG_OPTM_SIZES_SKIPPED ) );
+			// Fix value search in array
+			$skip = false !== array_search( $img_size_name, $disabled_sizes, true ) ?? false;
+			if($skip){
+				self::debug2( 'bypass image ' . $meta_value['sizes'][$img_size_name]['file'] . ' due to skipped size: ' . $img_size_name );
+				return;
+			}
 		}
 
 		$short_file_path = $meta_value['file'];
@@ -1552,7 +1569,9 @@ class Img_Optm extends Base {
 			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 			$this->_append_img_queue($meta_value, true);
 			if (!empty($meta_value['sizes'])) {
-				array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+				foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+					$this->_append_img_queue($meta_value, false, $img_size_name );
+				}
 			}
 		}
 
