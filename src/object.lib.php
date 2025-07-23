@@ -3,16 +3,28 @@
  * LiteSpeed Object Cache Library
  *
  * @since  1.8
+ * @package LiteSpeed
  */
-defined('WPINC') || exit();
 
+defined( 'WPINC' ) || exit();
+
+if (!function_exists('litespeed_exception_handler')) {
 /**
  * Handle exception
+ *
+ * Converts PHP errors into exceptions for better error handling.
+ *
+ * @since 1.8
+ * @access public
+ * @param int    $errno   Error level.
+ * @param string $errstr  Error message.
+ * @param string $errfile File where the error occurred.
+ * @param int    $errline Line number where the error occurred.
+ * @throws \ErrorException Error msg.
  */
-if (!function_exists('litespeed_exception_handler')) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline ) {
-		throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-	}
+function litespeed_exception_handler( $errno, $errstr, $errfile, $errline ) {
+	throw new \ErrorException( esc_html( $errstr ), 0, esc_html( $errno ), esc_html( $errfile ), esc_html( $errline ) );
+}
 }
 
 require_once __DIR__ . '/object-cache.cls.php';
@@ -20,11 +32,14 @@ require_once __DIR__ . '/object-cache.cls.php';
 /**
  * Sets up Object Cache Global and assigns it.
  *
- * @since 1.8
+ * Initializes the global object cache instance.
  *
- * @global WP_Object_Cache $wp_object_cache
+ * @since 1.8
+ * @access public
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  */
 function wp_cache_init() {
+	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$GLOBALS['wp_object_cache'] = WP_Object_Cache::get_instance();
 }
 
@@ -32,7 +47,7 @@ function wp_cache_init() {
  * Adds data to the cache, if the cache key doesn't already exist.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::add()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -47,14 +62,14 @@ function wp_cache_init() {
 function wp_cache_add( $key, $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->add($key, $data, $group, (int) $expire);
+	return $wp_object_cache->add( $key, $data, $group, (int) $expire );
 }
 
 /**
  * Adds multiple values to the cache in one call.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::add_multiple()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -68,14 +83,14 @@ function wp_cache_add( $key, $data, $group = '', $expire = 0 ) {
 function wp_cache_add_multiple( array $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->add_multiple($data, $group, $expire);
+	return $wp_object_cache->add_multiple( $data, $group, $expire );
 }
 
 /**
  * Replaces the contents of the cache with new data.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::replace()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -90,7 +105,7 @@ function wp_cache_add_multiple( array $data, $group = '', $expire = 0 ) {
 function wp_cache_replace( $key, $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->replace($key, $data, $group, (int) $expire);
+	return $wp_object_cache->replace( $key, $data, $group, (int) $expire );
 }
 
 /**
@@ -99,7 +114,7 @@ function wp_cache_replace( $key, $data, $group = '', $expire = 0 ) {
  * Differs from wp_cache_add() and wp_cache_replace() in that it will always write data.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::set()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -114,14 +129,14 @@ function wp_cache_replace( $key, $data, $group = '', $expire = 0 ) {
 function wp_cache_set( $key, $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->set($key, $data, $group, (int) $expire);
+	return $wp_object_cache->set( $key, $data, $group, (int) $expire );
 }
 
 /**
  * Sets multiple values to the cache in one call.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::set_multiple()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -135,14 +150,14 @@ function wp_cache_set( $key, $data, $group = '', $expire = 0 ) {
 function wp_cache_set_multiple( array $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->set_multiple($data, $group, $expire);
+	return $wp_object_cache->set_multiple( $data, $group, $expire );
 }
 
 /**
  * Retrieves the cache contents from the cache by key and group.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::get()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -157,14 +172,14 @@ function wp_cache_set_multiple( array $data, $group = '', $expire = 0 ) {
 function wp_cache_get( $key, $group = '', $force = false, &$found = null ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->get($key, $group, $force, $found);
+	return $wp_object_cache->get( $key, $group, $force, $found );
 }
 
 /**
  * Retrieves multiple values from the cache in one call.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::get_multiple()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -178,14 +193,14 @@ function wp_cache_get( $key, $group = '', $force = false, &$found = null ) {
 function wp_cache_get_multiple( $keys, $group = '', $force = false ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->get_multiple($keys, $group, $force);
+	return $wp_object_cache->get_multiple( $keys, $group, $force );
 }
 
 /**
  * Removes the cache contents matching key and group.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::delete()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -196,14 +211,14 @@ function wp_cache_get_multiple( $keys, $group = '', $force = false ) {
 function wp_cache_delete( $key, $group = '' ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->delete($key, $group);
+	return $wp_object_cache->delete( $key, $group );
 }
 
 /**
  * Deletes multiple values from the cache in one call.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::delete_multiple()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -215,14 +230,14 @@ function wp_cache_delete( $key, $group = '' ) {
 function wp_cache_delete_multiple( array $keys, $group = '' ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->delete_multiple($keys, $group);
+	return $wp_object_cache->delete_multiple( $keys, $group );
 }
 
 /**
  * Increments numeric cache item's value.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::incr()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -235,14 +250,14 @@ function wp_cache_delete_multiple( array $keys, $group = '' ) {
 function wp_cache_incr( $key, $offset = 1, $group = '' ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->incr($key, $offset, $group);
+	return $wp_object_cache->incr( $key, $offset, $group );
 }
 
 /**
  * Decrements numeric cache item's value.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::decr()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -255,14 +270,14 @@ function wp_cache_incr( $key, $offset = 1, $group = '' ) {
 function wp_cache_decr( $key, $offset = 1, $group = '' ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->decr($key, $offset, $group);
+	return $wp_object_cache->decr( $key, $offset, $group );
 }
 
 /**
  * Removes all cache items.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::flush()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -278,7 +293,7 @@ function wp_cache_flush() {
  * Removes all cache items from the in-memory runtime cache.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::flush_runtime()
  *
  * @return bool True on success, false on failure.
@@ -296,7 +311,7 @@ function wp_cache_flush_runtime() {
  * `wp_cache_supports( 'flush_group' )` function.
  *
  * @since 5.4
- *
+ * @access public
  * @see WP_Object_Cache::flush_group()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -306,13 +321,14 @@ function wp_cache_flush_runtime() {
 function wp_cache_flush_group( $group ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->flush_group($group);
+	return $wp_object_cache->flush_group( $group );
 }
 
 /**
  * Determines whether the object cache implementation supports a particular feature.
  *
  * @since 5.4
+ * @access public
  *
  * @param string $feature Name of the feature to check for. Possible values include:
  *                        'add_multiple', 'set_multiple', 'get_multiple', 'delete_multiple',
@@ -320,7 +336,7 @@ function wp_cache_flush_group( $group ) {
  * @return bool True if the feature is supported, false otherwise.
  */
 function wp_cache_supports( $feature ) {
-	switch ($feature) {
+	switch ( $feature ) {
 		case 'add_multiple':
 		case 'set_multiple':
 		case 'get_multiple':
@@ -344,6 +360,7 @@ function wp_cache_supports( $feature ) {
  * to make sure that the cache is cleaned up after WordPress no longer needs it.
  *
  * @since 1.8
+ * @access public
  *
  * @return true Always returns true.
  */
@@ -355,7 +372,7 @@ function wp_cache_close() {
  * Adds a group or set of groups to the list of global groups.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::add_global_groups()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -364,20 +381,21 @@ function wp_cache_close() {
 function wp_cache_add_global_groups( $groups ) {
 	global $wp_object_cache;
 
-	$wp_object_cache->add_global_groups($groups);
+	$wp_object_cache->add_global_groups( $groups );
 }
 
 /**
  * Adds a group or set of groups to the list of non-persistent groups.
  *
  * @since 1.8
+ * @access public
  *
  * @param string|string[] $groups A group or an array of groups to add.
  */
 function wp_cache_add_non_persistent_groups( $groups ) {
 	global $wp_object_cache;
 
-	$wp_object_cache->add_non_persistent_groups($groups);
+	$wp_object_cache->add_non_persistent_groups( $groups );
 }
 
 /**
@@ -386,7 +404,7 @@ function wp_cache_add_non_persistent_groups( $groups ) {
  * This changes the blog id used to create keys in blog specific groups.
  *
  * @since 1.8
- *
+ * @access public
  * @see WP_Object_Cache::switch_to_blog()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
@@ -395,36 +413,145 @@ function wp_cache_add_non_persistent_groups( $groups ) {
 function wp_cache_switch_to_blog( $blog_id ) {
 	global $wp_object_cache;
 
-	$wp_object_cache->switch_to_blog($blog_id);
+	$wp_object_cache->switch_to_blog( $blog_id );
 }
 
+/**
+ * Class WP_Object_Cache
+ *
+ * Implements the WordPress object cache for LiteSpeed Cache.
+ *
+ * @since 1.8
+ */
 class WP_Object_Cache {
 
-	protected static $_instance;
+	/**
+	 * Singleton instance
+	 *
+	 * @since 1.8
+	 * @access protected
+	 * @var WP_Object_Cache|null
+	 */
+	protected static $instance;
 
-	private $_object_cache;
+	/**
+	 * Object cache instance
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var \LiteSpeed\Object_Cache
+	 */
+	private $object_cache;
 
-	private $_cache     = array();
-	private $_cache_404 = array();
+	/**
+	 * Cache storage
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var array
+	 */
+	private $cache = array();
 
-	private $cache_total       = 0;
-	private $count_hit_incall  = 0;
-	private $count_hit         = 0;
+	/**
+	 * Cache for 404 keys
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var array
+	 */
+	private $cache_404 = array();
+
+	/**
+	 * Total cache operations
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
+	private $cache_total = 0;
+
+	/**
+	 * Cache hits within call
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
+	private $count_hit_incall = 0;
+
+	/**
+	 * Cache hits
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
+	private $count_hit = 0;
+
+	/**
+	 * Cache misses within call
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
 	private $count_miss_incall = 0;
-	private $count_miss        = 0;
-	private $count_set         = 0;
 
+	/**
+	 * Cache misses
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
+	private $count_miss = 0;
+
+	/**
+	 * Cache set operations
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var int
+	 */
+	private $count_set = 0;
+
+	/**
+	 * Global cache groups
+	 *
+	 * @since 1.8
+	 * @access protected
+	 * @var array
+	 */
 	protected $global_groups = array();
+
+	/**
+	 * Blog prefix for cache keys
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var string
+	 */
 	private $blog_prefix;
+
+	/**
+	 * Multisite flag
+	 *
+	 * @since 1.8
+	 * @access private
+	 * @var bool
+	 */
 	private $multisite;
 
 	/**
 	 * Init.
 	 *
+	 * Initializes the object cache with LiteSpeed settings.
+	 *
 	 * @since  1.8
+	 * @access public
 	 */
 	public function __construct() {
-		$this->_object_cache = \LiteSpeed\Object_Cache::cls();
+		$this->object_cache = \LiteSpeed\Object_Cache::cls();
 
 		$this->multisite   = is_multisite();
 		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '';
@@ -434,7 +561,9 @@ class WP_Object_Cache {
 		 *
 		 * @since  1.8.2
 		 */
-		!defined('LSOC_PREFIX') && define('LSOC_PREFIX', substr(md5(__FILE__), -5));
+		if ( ! defined( 'LSOC_PREFIX' ) ) {
+			define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) );
+		}
 	}
 
 	/**
@@ -461,7 +590,9 @@ class WP_Object_Cache {
 	 * @return mixed Newly-set property.
 	 */
 	public function __set( $name, $value ) {
-		return $this->$name = $value;
+		$this->$name = $value;
+
+		return $this->$name;
 	}
 
 	/**
@@ -474,7 +605,7 @@ class WP_Object_Cache {
 	 * @return bool Whether the property is set.
 	 */
 	public function __isset( $name ) {
-		return isset($this->$name);
+		return isset( $this->$name );
 	}
 
 	/**
@@ -486,7 +617,7 @@ class WP_Object_Cache {
 	 * @param string $name Property to unset.
 	 */
 	public function __unset( $name ) {
-		unset($this->$name);
+		unset( $this->$name );
 	}
 
 	/**
@@ -499,26 +630,33 @@ class WP_Object_Cache {
 	 * @return bool Whether the key is valid.
 	 */
 	protected function is_valid_key( $key ) {
-		if (is_int($key)) {
+		if ( is_int( $key ) ) {
 			return true;
 		}
 
-		if (is_string($key) && trim($key) !== '') {
+		if ( is_string( $key ) && '' !== trim( $key ) ) {
 			return true;
 		}
 
-		$type = gettype($key);
+		$type = gettype( $key );
 
-		if (!function_exists('__')) {
+		if ( ! function_exists( '__' ) ) {
 			wp_load_translations_early();
 		}
 
-		$message = is_string($key)
-			? __('Cache key must not be an empty string.')
-			: /* translators: %s: The type of the given cache key. */
-			sprintf(__('Cache key must be integer or non-empty string, %s given.'), $type);
+		$message = is_string( $key )
+			? esc_html__( 'Cache key must not be an empty string.' )
+			: sprintf(
+				/* translators: %s: The type of the given cache key. */
+				esc_html__( 'Cache key must be integer or non-empty string, %s given.' ),
+				$type
+			);
 
-		_doing_it_wrong(sprintf('%s::%s', __CLASS__, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']), $message, '6.1.0');
+		_doing_it_wrong(
+			sprintf( '%s::%s', __CLASS__, debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 2 )[1]['function'] ),
+			$message,
+			'6.1.0'
+		);
 
 		return false;
 	}
@@ -526,15 +664,20 @@ class WP_Object_Cache {
 	/**
 	 * Get the final key.
 	 *
+	 * Generates a unique cache key based on group and prefix.
+	 *
 	 * @since 1.8
 	 * @access private
+	 * @param int|string $key   Cache key.
+	 * @param string     $group Optional. Cache group. Default 'default'.
+	 * @return string The final cache key.
 	 */
-	private function _key( $key, $group = 'default' ) {
-		if (empty($group)) {
+	private function key( $key, $group = 'default' ) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$prefix = $this->_object_cache->is_global($group) ? '' : $this->blog_prefix;
+		$prefix = $this->object_cache->is_global( $group ) ? '' : $this->blog_prefix;
 
 		return LSOC_PREFIX . $prefix . $group . '.' . $key;
 	}
@@ -542,8 +685,11 @@ class WP_Object_Cache {
 	/**
 	 * Output debug info.
 	 *
+	 * Returns cache statistics for debugging purposes.
+	 *
 	 * @since  1.8
 	 * @access public
+	 * @return string Cache statistics.
 	 */
 	public function debug() {
 		return ' [total] ' .
@@ -565,10 +711,7 @@ class WP_Object_Cache {
 	 *
 	 * @since 1.8
 	 * @access public
-	 *
-	 * @uses WP_Object_Cache::_exists() Checks to see if the cache already has data.
-	 * @uses WP_Object_Cache::set()     Sets the data after the checking the cache
-	 *                                  contents existence.
+	 * @see WP_Object_Cache::set()
 	 *
 	 * @param int|string $key    What to call the contents in the cache.
 	 * @param mixed      $data   The contents to store in the cache.
@@ -578,25 +721,25 @@ class WP_Object_Cache {
 	 * @return bool True on success, false if cache key and group already exist.
 	 */
 	public function add( $key, $data, $group = 'default', $expire = 0 ) {
-		if (wp_suspend_cache_addition()) {
+		if ( wp_suspend_cache_addition() ) {
 			return false;
 		}
 
-		if (!$this->is_valid_key($key)) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$id = $this->_key($key, $group);
+		$id = $this->key( $key, $group );
 
-		if (array_key_exists($id, $this->_cache)) {
+		if ( array_key_exists( $id, $this->cache ) ) {
 			return false;
 		}
 
-		return $this->set($key, $data, $group, (int) $expire);
+		return $this->set( $key, $data, $group, (int) $expire );
 	}
 
 	/**
@@ -615,8 +758,8 @@ class WP_Object_Cache {
 	public function add_multiple( array $data, $group = '', $expire = 0 ) {
 		$values = array();
 
-		foreach ($data as $key => $value) {
-			$values[$key] = $this->add($key, $value, $group, $expire);
+		foreach ( $data as $key => $value ) {
+			$values[ $key ] = $this->add( $key, $value, $group, $expire );
 		}
 
 		return $values;
@@ -627,7 +770,6 @@ class WP_Object_Cache {
 	 *
 	 * @since 1.8
 	 * @access public
-	 *
 	 * @see WP_Object_Cache::set()
 	 *
 	 * @param int|string $key    What to call the contents in the cache.
@@ -638,21 +780,21 @@ class WP_Object_Cache {
 	 * @return bool True if contents were replaced, false if original value does not exist.
 	 */
 	public function replace( $key, $data, $group = 'default', $expire = 0 ) {
-		if (!$this->is_valid_key($key)) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$id = $this->_key($key, $group);
+		$id = $this->key( $key, $group );
 
-		if (!array_key_exists($id, $this->_cache)) {
+		if ( ! array_key_exists( $id, $this->cache ) ) {
 			return false;
 		}
 
-		return $this->set($key, $data, $group, (int) $expire);
+		return $this->set( $key, $data, $group, (int) $expire );
 	}
 
 	/**
@@ -679,34 +821,33 @@ class WP_Object_Cache {
 	 * @return bool True if contents were set, false if key is invalid.
 	 */
 	public function set( $key, $data, $group = 'default', $expire = 0 ) {
-		if (!$this->is_valid_key($key)) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$id = $this->_key($key, $group);
+		$id = $this->key( $key, $group );
 
-		if (is_object($data)) {
+		if ( is_object( $data ) ) {
 			$data = clone $data;
 		}
-		// error_log("oc: set \t\t\t[key] " . $id );
-		$this->_cache[$id] = $data;
 
-		if (array_key_exists($id, $this->_cache_404)) {
-			// error_log("oc: unset404\t\t\t[key] " . $id );
-			unset($this->_cache_404[$id]);
+		$this->cache[ $id ] = $data;
+
+		if ( array_key_exists( $id, $this->cache_404 ) ) {
+			unset( $this->cache_404[ $id ] );
 		}
 
-		if (!$this->_object_cache->is_non_persistent($group)) {
+		if ( ! $this->object_cache->is_non_persistent( $group ) ) {
 			$this->_object_cache->set($id, serialize(array( 'data' => $data )), (int) $expire);
 			++$this->count_set;
 		}
 
-		if ($this->_object_cache->store_transients($group)) {
-			$this->_transient_set($key, $data, $group, (int) $expire);
+		if ( $this->object_cache->store_transients( $group ) ) {
+			$this->transient_set( $key, $data, $group, (int) $expire );
 		}
 
 		return true;
@@ -727,8 +868,8 @@ class WP_Object_Cache {
 	public function set_multiple( array $data, $group = '', $expire = 0 ) {
 		$values = array();
 
-		foreach ($data as $key => $value) {
-			$values[$key] = $this->set($key, $value, $group, $expire);
+		foreach ( $data as $key => $value ) {
+			$values[ $key ] = $this->set( $key, $value, $group, $expire );
 		}
 
 		return $values;
@@ -755,62 +896,59 @@ class WP_Object_Cache {
 	 * @return mixed|false The cache contents on success, false on failure to retrieve contents.
 	 */
 	public function get( $key, $group = 'default', $force = false, &$found = null ) {
-		if (!$this->is_valid_key($key)) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$id = $this->_key($key, $group);
+		$id = $this->key( $key, $group );
 
-		// error_log('');
-		// error_log("oc: get \t\t\t[key] " . $id . ( $force ? "\t\t\t [forced] " : '' ) );
 		$found       = false;
 		$found_in_oc = false;
 		$cache_val   = false;
-		if (array_key_exists($id, $this->_cache) && !$force) {
+		if ( array_key_exists( $id, $this->cache ) && ! $force ) {
 			$found     = true;
-			$cache_val = $this->_cache[$id];
+			$cache_val = $this->cache[ $id ];
 			++$this->count_hit_incall;
-		} elseif (!array_key_exists($id, $this->_cache_404) && !$this->_object_cache->is_non_persistent($group)) {
-			$v = $this->_object_cache->get($id);
+		} elseif ( ! array_key_exists( $id, $this->cache_404 ) && ! $this->object_cache->is_non_persistent( $group ) ) {
+			$v = $this->object_cache->get( $id );
 
-			if ($v !== null) {
-				$v = @maybe_unserialize($v);
+			if ( null !== $v ) {
+				$v = @maybe_unserialize( $v );
 			}
 
 			// To be compatible with false val
-			if (is_array($v) && array_key_exists('data', $v)) {
+			if ( is_array( $v ) && array_key_exists( 'data', $v ) ) {
 				++$this->count_hit;
 				$found       = true;
 				$found_in_oc = true;
 				$cache_val   = $v['data'];
 			} else {
 				// Can't find key, cache it to 404
-				// error_log("oc: add404\t\t\t[key] " . $id );
-				$this->_cache_404[$id] = 1;
+				$this->cache_404[ $id ] = 1;
 				++$this->count_miss;
 			}
 		} else {
 			++$this->count_miss_incall;
 		}
 
-		if (is_object($cache_val)) {
+		if ( is_object( $cache_val ) ) {
 			$cache_val = clone $cache_val;
 		}
 
 		// If not found but has `Store Transients` cfg on, still need to follow WP's get_transient() logic
-		if (!$found && $this->_object_cache->store_transients($group)) {
-			$cache_val = $this->_transient_get($key, $group);
-			if ($cache_val) {
-				$found = true; // $found not used for now (v1.8.3)
+		if ( ! $found && $this->object_cache->store_transients( $group ) ) {
+			$cache_val = $this->transient_get( $key, $group );
+			if ( $cache_val ) {
+				$found = true;
 			}
 		}
 
-		if ($found_in_oc) {
-			$this->_cache[$id] = $cache_val;
+		if ( $found_in_oc ) {
+			$this->cache[ $id ] = $cache_val;
 		}
 
 		++$this->cache_total;
@@ -834,8 +972,8 @@ class WP_Object_Cache {
 	public function get_multiple( $keys, $group = 'default', $force = false ) {
 		$values = array();
 
-		foreach ($keys as $key) {
-			$values[$key] = $this->get($key, $group, $force);
+		foreach ( $keys as $key ) {
+			$values[ $key ] = $this->get( $key, $group, $force );
 		}
 
 		return $values;
@@ -851,34 +989,32 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key        What the contents in the cache are called.
 	 * @param string     $group      Optional. Where the cache contents are grouped. Default 'default'.
-	 * @param bool       $deprecated Optional. Unused. Default false.
 	 * @return bool True on success, false if the contents were not deleted.
 	 */
-	public function delete( $key, $group = 'default', $deprecated = false ) {
-		if (!$this->is_valid_key($key)) {
+	public function delete( $key, $group = 'default' ) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$id = $this->_key($key, $group);
+		$id = $this->key( $key, $group );
 
-		if ($this->_object_cache->store_transients($group)) {
-			$this->_transient_del($key, $group);
+		if ( $this->object_cache->store_transients( $group ) ) {
+			$this->transient_del( $key, $group );
 		}
 
-		if (array_key_exists($id, $this->_cache)) {
-			unset($this->_cache[$id]);
+		if ( array_key_exists( $id, $this->cache ) ) {
+			unset( $this->cache[ $id ] );
 		}
-		// error_log("oc: delete \t\t\t[key] " . $id );
 
-		if ($this->_object_cache->is_non_persistent($group)) {
+		if ( $this->object_cache->is_non_persistent( $group ) ) {
 			return false;
 		}
 
-		return $this->_object_cache->delete($id);
+		return $this->object_cache->delete( $id );
 	}
 
 	/**
@@ -895,8 +1031,8 @@ class WP_Object_Cache {
 	public function delete_multiple( array $keys, $group = '' ) {
 		$values = array();
 
-		foreach ($keys as $key) {
-			$values[$key] = $this->delete($key, $group);
+		foreach ( $keys as $key ) {
+			$values[ $key ] = $this->delete( $key, $group );
 		}
 
 		return $values;
@@ -906,6 +1042,7 @@ class WP_Object_Cache {
 	 * Increments numeric cache item's value.
 	 *
 	 * @since 5.4
+	 * @access public
 	 *
 	 * @param int|string $key    The cache key to increment.
 	 * @param int        $offset Optional. The amount by which to increment the item's value.
@@ -914,13 +1051,14 @@ class WP_Object_Cache {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function incr( $key, $offset = 1, $group = 'default' ) {
-		return $this->incr_desr($key, $offset, $group, true);
+		return $this->incr_desr( $key, $offset, $group, true );
 	}
 
 	/**
 	 * Decrements numeric cache item's value.
 	 *
 	 * @since 5.4
+	 * @access public
 	 *
 	 * @param int|string $key    The cache key to decrement.
 	 * @param int        $offset Optional. The amount by which to decrement the item's value.
@@ -929,7 +1067,7 @@ class WP_Object_Cache {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function decr( $key, $offset = 1, $group = 'default' ) {
-		return $this->incr_desr($key, $offset, $group, false);
+		return $this->incr_desr( $key, $offset, $group, false );
 	}
 
 	/**
@@ -937,39 +1075,45 @@ class WP_Object_Cache {
 	 *
 	 * @since 1.8
 	 * @access public
+	 *
+	 * @param int|string $key    The cache key to increment or decrement.
+	 * @param int        $offset The amount by which to adjust the item's value.
+	 * @param string     $group  Optional. The group the key is in. Default 'default'.
+	 * @param bool       $incr   True to increment, false to decrement.
+	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function incr_desr( $key, $offset = 1, $group = 'default', $incr = true ) {
-		if (!$this->is_valid_key($key)) {
+		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
 
-		if (empty($group)) {
+		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 
-		$cache_val = $this->get($key, $group);
+		$cache_val = $this->get( $key, $group );
 
-		if (false === $cache_val) {
+		if ( false === $cache_val ) {
 			return false;
 		}
 
-		if (!is_numeric($cache_val)) {
+		if ( ! is_numeric( $cache_val ) ) {
 			$cache_val = 0;
 		}
 
 		$offset = (int) $offset;
 
-		if ($incr) {
+		if ( $incr ) {
 			$cache_val += $offset;
 		} else {
 			$cache_val -= $offset;
 		}
 
-		if ($cache_val < 0) {
+		if ( $cache_val < 0 ) {
 			$cache_val = 0;
 		}
 
-		$this->set($key, $cache_val, $group);
+		$this->set( $key, $cache_val, $group );
 
 		return $cache_val;
 	}
