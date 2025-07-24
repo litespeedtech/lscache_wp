@@ -847,7 +847,7 @@ class WP_Object_Cache {
 		}
 
 		if ( $this->_object_cache->store_transients( $group ) ) {
-			$this->transient_set( $key, $data, $group, (int) $expire );
+			$this->_transient_set( $key, $data, $group, (int) $expire );
 		}
 
 		return true;
@@ -1282,7 +1282,7 @@ class WP_Object_Cache {
 	 * @param int    $expiration Time until expiration in seconds.
 	 * @return bool True on success, false on failure.
 	 */
-	private function transient_set( $transient, $value, $group, $expiration ) {
+	private function _transient_set( $transient, $value, $group, $expiration ) {
 		if ( 'transient' === $group ) {
 			/**** Ori WP func start */
 			$transient_timeout = '_transient_timeout_' . $transient;
