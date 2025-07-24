@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 7.2
+Stable tag: 7.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -257,7 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.3 - Aug 2025 =
+= 7.3 - Jul 24 2025 =
 * 🌱**CLI** Added `wp litespeed-database` database optimization command.
 * 🌱**Misc** Added survey and data deletion reminder in deactivation process.
 * **Core** Refactored the template files to comply with WordPress standards.
