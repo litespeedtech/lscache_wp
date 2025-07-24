@@ -941,7 +941,7 @@ class WP_Object_Cache {
 
 		// If not found but has `Store Transients` cfg on, still need to follow WP's get_transient() logic
 		if ( ! $found && $this->_object_cache->store_transients( $group ) ) {
-			$cache_val = $this->transient_get( $key, $group );
+			$cache_val = $this->_transient_get( $key, $group );
 			if ( $cache_val ) {
 				$found = true;
 			}
@@ -1220,7 +1220,7 @@ class WP_Object_Cache {
 	 * @param string $group     Transient group ('transient' or 'site-transient').
 	 * @return mixed Transient value or false if not found.
 	 */
-	private function transient_get( $transient, $group ) {
+	private function _transient_get( $transient, $group ) {
 		if ( 'transient' === $group ) {
 			/**** Ori WP func start */
 			$transient_option = '_transient_' . $transient;
