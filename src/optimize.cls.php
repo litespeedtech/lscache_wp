@@ -19,7 +19,7 @@ class Optimize extends Base {
 
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
-	const DUMMY_CSS_REGEX = "#<link rel='stylesheet' id='litespeed-cache-dummy-css' href='.+assets/css/litespeed-dummy\.css[?\w.=-]*' media='all' />#isU";
+	const DUMMY_CSS_REGEX = "#<link rel='stylesheet' id='litespeed-cache-dummy-css' href='.+assets/css/litespeed-dummy\.css[?\w.=-]*' [ \w='/]* />#isU";
 
 	private $content;
 	private $content_ori;
