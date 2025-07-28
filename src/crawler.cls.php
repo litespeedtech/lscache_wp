@@ -673,6 +673,10 @@ class Crawler extends Root {
 	 */
 	private function _test_port() {
 		if (!$this->_server_ip) {
+			if (empty($this->_crawlers[$this->_summary['curr_crawler']]['uid'])) {
+				self::debug('Bypass test port as Server IP is not set');
+				return true;
+			}
 			self::debug('❌ Server IP not set');
 			return false;
 		}
@@ -884,6 +888,21 @@ class Crawler extends Root {
 	}
 
 	/**
+	 * If need to resolve DNS or not
+	 *
+	 * @since 7.3.0.1
+	 */
+	private function _should_force_resolve_dns() {
+		if ($this->_server_ip) {
+			return true;
+		}
+		if (!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Send multi curl requests
 	 * If res=B, bypass request and won't return
 	 *
@@ -918,7 +937,7 @@ class Crawler extends Root {
 			}
 
 			// IP resolve
-			if ((!empty($this->_crawler_conf['cookies']) && !empty($this->_crawler_conf['cookies']['litespeed_hash'])) || $this->_server_ip) {
+			if ($this->_should_force_resolve_dns()) {
 				$parsed_url = parse_url($url);
 				// self::debug('Crawl role simulator, required to use localhost for resolve');
 
@@ -1141,7 +1160,7 @@ class Crawler extends Root {
 
 			if (!empty($parsed_url['host'])) {
 				$dom                                   = $parsed_url['host'];
-				$port                                  = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443';
+				$port                                  = defined('LITESPEED_CRAWLER_LOCAL_PORT') ? LITESPEED_CRAWLER_LOCAL_PORT : '443'; // TODO: need to test port?
 				$resolved                              = $dom . ':' . $port . ':' . $this->_server_ip;
 				$options[CURLOPT_RESOLVE]              = array( $resolved );
 				$options[CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
