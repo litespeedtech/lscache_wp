@@ -257,6 +257,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.3.0.1 - Aug 4 2025 =
+* **Page Optimize** Fixed the page score impact caused by CSS placeholder. (wpconvert, Sean Thompson)
+* **Page Optimize** Fixed wrong prefetch/preload injection when a page contains other `<title>` tags. (idatahuy)
+* **Crawler** Bypassed port test if no server IP set. (kptk, serkanix, Guillermo)
+
 = 7.3 - Jul 24 2025 =
 * 🌱**CLI** Added `wp litespeed-database` database optimization command.
 * 🌱**Misc** Added survey and data deletion reminder in deactivation process.

@@ -484,11 +484,6 @@ class Optimize extends Base {
 			if (false !== strpos($this->content, '<meta charset')) {
 				self::debug('Put early optm data to be after <meta charset>');
 				$this->content = preg_replace('#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head_early, $this->content, 1);
-			}
-			// Fallback: try to be before <title>
-			elseif (false !== strpos($this->content, '<title>')) {
-				self::debug('Put early optm data to be before <title>');
-				$this->content = str_replace('<title>', $this->html_head_early . '<title>', $this->content);
 			} else {
 				self::debug('Put early optm data to be right after <head>');
 				$this->content = preg_replace('#<head([^>]*)>#isU', '<head$1>' . $this->html_head_early, $this->content, 1);
@@ -503,11 +498,6 @@ class Optimize extends Base {
 				if (false !== preg_match(self::DUMMY_CSS_REGEX, $this->content)) {
 					self::debug('Put optm data to dummy css location');
 					$this->content = preg_replace( self::DUMMY_CSS_REGEX, $this->html_head, $this->content );
-				}
-				// Fallback: try to be after <title>
-				elseif (strpos($this->content, '</title>') !== false) {
-					self::debug('Put optm data to be after <title>');
-					$this->content = str_replace('</title>', '</title>' . $this->html_head, $this->content);
 				}
 				// Fallback: try to be after charset
 				elseif (strpos($this->content, '<meta charset') !== false) {
