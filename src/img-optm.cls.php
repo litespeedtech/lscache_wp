@@ -2192,4 +2192,47 @@ class Img_Optm extends Base {
 
 		Admin::redirect();
 	}
+	
+	/**
+	 * Replace original with scaled image.
+	 *
+	 * @since  7.4
+	 * @param array $meta_value Current meta array.
+	 * @param int $post_id Attachment ID.
+	 * @param string $context Can be "create" or "update".
+	 * @return array $meta_value
+	 * @access public
+	 */
+	public function replace_original_with_scaled( $meta_value, $post_id, $context ) {
+		// Test if create and image was resized.
+		if( "create" === $context && isset($meta_value['original_image']) && isset($meta_value['file']) && false !== strstr($meta_value['file'], '-scaled')){
+			$media_path = wp_upload_dir();
+			// Get rescaled file name.
+			$path_exploded = explode( DIRECTORY_SEPARATOR, strrev($meta_value['file']), 2 );
+			$rescaled_file_name = strrev($path_exploded[0]);
+			
+			// Create paths for images: resized and original.
+			$rescaled_path = $media_path['basedir'] . $media_path['subdir'] . DIRECTORY_SEPARATOR . $rescaled_file_name;
+			$new_path = $media_path['basedir'] . $media_path['subdir'] . DIRECTORY_SEPARATOR . $meta_value['original_image'];
+
+			if( is_file( $rescaled_path ) && is_file( $rescaled_path ) ){
+				// Move rescaled to original.
+				rename( $rescaled_path, $new_path );
+
+				// Change array file key.
+				$meta_value['file'] = $media_path['subdir'] . DIRECTORY_SEPARATOR . $meta_value['original_image'];
+				if( 0 === strpos( $meta_value['file'], DIRECTORY_SEPARATOR ) ){
+					$meta_value['file'] = substr( $meta_value['file'], 1 );
+				}
+
+				// Delete array "original_image" key.
+				unset($meta_value['original_image']);
+
+				// Update meta "_wp_attached_file".
+				update_post_meta( $post_id, '_wp_attached_file', $meta_value['file'] );
+			}
+		}
+
+		return $meta_value;
+	}
 }

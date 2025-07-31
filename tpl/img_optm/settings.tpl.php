@@ -12,6 +12,8 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
+$scaled_size = apply_filters( 'big_image_size_threshold', 2560 ) . 'px';
+
 $this->form_action();
 ?>
 
@@ -64,6 +66,39 @@ $this->form_action();
 						🚨
 						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
 						<?php esc_html_e( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ); ?>
+					</font>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				<?php $option_id = Base::O_IMG_OPTM_REP_W_SCALED; ?>
+				<?php $this->title( $option_id ); ?>
+			</th>
+			<td>
+				<?php $this->build_switch( $option_id ); ?>
+				<div class="litespeed-desc">
+					<?php esc_html_e( 'Automatically replace big images with scaled version.', 'litespeed-cache' ); ?>
+					<br />
+					<?php echo wp_kses_post( __( 'Scaled size and threshold is: %s.', 'litespeed-cache' ), '<code>' . $scaled_size . '</code>'); ?>
+					<br />
+					<span class="litespeed-success">
+						<?php
+						printf(
+							esc_html__( 'API: Filter %s available to change threshold.', 'litespeed-cache' ),
+							'<code>big_image_size_threshold</code>'
+						);
+						?>
+						<a href="https://developer.wordpress.org/reference/hooks/big_image_size_threshold/" target="_blank" class="litespeed-learn-more">
+							<?php esc_html_e('Learn More', 'litespeed-cache'); ?>
+						</a>
+					</span>
+
+					<br />
+					<font class="litespeed-danger">
+						🚨
+						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
 					</font>
 				</div>
 			</td>

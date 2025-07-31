@@ -206,6 +206,7 @@ class Lang extends Base {
 			self::O_IMG_OPTM_AUTO => __('Auto Request Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
+			self::O_IMG_OPTM_REP_W_SCALED => __('Replace Original with Scaled', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
 			self::O_IMG_OPTM_LOSSLESS => __('Optimize Losslessly', 'litespeed-cache'),
 			self::O_IMG_OPTM_EXIF => __('Preserve EXIF/XMP data', 'litespeed-cache'),

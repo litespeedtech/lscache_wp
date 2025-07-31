@@ -226,6 +226,7 @@ class Base extends Root {
 	const O_IMG_OPTM_CRON                = 'img_optm-cron'; // @Deprecated since v7.0 TODO: remove after v7.5
 	const O_IMG_OPTM_ORI                 = 'img_optm-ori';
 	const O_IMG_OPTM_RM_BKUP             = 'img_optm-rm_bkup';
+	const O_IMG_OPTM_REP_W_SCALED        = 'img_optm-replace_w_scaled';
 	const O_IMG_OPTM_WEBP                = 'img_optm-webp';
 	const O_IMG_OPTM_LOSSLESS            = 'img_optm-lossless';
 	const O_IMG_OPTM_EXIF                = 'img_optm-exif';
@@ -505,6 +506,7 @@ class Base extends Root {
 		self::O_IMG_OPTM_AUTO => false,
 		self::O_IMG_OPTM_ORI => false,
 		self::O_IMG_OPTM_RM_BKUP => false,
+		self::O_IMG_OPTM_REP_W_SCALED => false,
 		self::O_IMG_OPTM_WEBP => false,
 		self::O_IMG_OPTM_LOSSLESS => false,
 		self::O_IMG_OPTM_EXIF => false,
