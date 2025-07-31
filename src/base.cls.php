@@ -279,6 +279,8 @@ class Base extends Root {
 	const O_QC_CNAME             = 'qc-cname';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
+	
+	const DEBUG_TMP_DISABLE = 'debug-disable_tmp';
 
 	/*** Other consts ***/
 	const O_GUIDE = 'litespeed-guide'; // Array of each guidance tag as key, step as val //xx todo: may need to remove
@@ -545,6 +547,8 @@ class Base extends Root {
 
 		self::O_QC_NAMESERVERS => '',
 		self::O_QC_CNAME => '',
+
+		self::DEBUG_TMP_DISABLE => 0,
 	);
 
 	protected static $_default_site_options = array(

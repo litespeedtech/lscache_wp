@@ -80,7 +80,8 @@ class Core extends Root {
 			include_once LSCWP_DIR . 'thirdparty/entry.inc.php';
 		}
 
-		if ( $this->conf( Base::O_DEBUG_DISABLE_ALL ) ) {
+
+		if ( $this->conf( Base::O_DEBUG_DISABLE_ALL ) || Debug2::is_temporary_disable() ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true );
 		}
 
