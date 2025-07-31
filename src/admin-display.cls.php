@@ -46,6 +46,65 @@ class Admin_Display extends Base {
 
 	private $_btn_i = 0;
 
+	/*
+	 * List of settings with filters and return type.
+	 * 
+	 * @since  7.4
+	 */
+	protected static $settings_filters  = array(
+		// Crawler - Blocklist
+		'crawler-blocklist' => [
+			'filter' => 'litespeed_crawler_disable_blocklist',
+			'type'   => 'boolean'
+		],
+		// Crawler - Settings
+		self::O_CRAWLER_LOAD_LIMIT => [
+			'filter' => [ Base::ENV_CRAWLER_LOAD_LIMIT_ENFORCE, Base::ENV_CRAWLER_LOAD_LIMIT ],
+			'type'   => 'input'
+		],
+		// Cache - ESI
+		self::O_ESI_NONCE => [
+			'filter' => 'litespeed_esi_nonces'
+		],
+		// Page Optimization - CSS
+		'optm-ucss_per_pagetype' => [
+			'filter' => 'litespeed_ucss_per_pagetype',
+			'type'   => 'boolean'
+		],
+		// Page Optimization - Media
+		self::O_MEDIA_ADD_MISSING_SIZES => [
+			'filter' => 'litespeed_media_ignore_remote_missing_sizes',
+			'type'   => 'boolean'
+		],
+		// Page Optimization - Media Exclude
+		self::O_MEDIA_LAZY_EXC => [
+			'filter' => 'litespeed_media_lazy_img_excludes'
+		],
+		// Page Optimization - Tunning
+		self::O_OPTM_JS_DELAY_INC => [
+			'filter' => 'litespeed_optm_js_delay_inc'
+		],
+		self::O_OPTM_JS_EXC => [
+			'filter' => 'litespeed_optimize_js_excludes'
+		],
+		self::O_OPTM_JS_DEFER_EXC => [
+			'filter' => 'litespeed_optm_js_defer_exc'
+		],
+		self::O_OPTM_GM_JS_EXC => [
+			'filter' => 'litespeed_optm_gm_js_exc'
+		],
+		self::O_OPTM_EXC => [
+			'filter' => 'litespeed_optm_uri_exc'
+		],
+		// Page Optimization - Tunning CSS
+		self::O_OPTM_CSS_EXC => [
+			'filter' => 'litespeed_optimize_css_excludes'
+		],
+		self::O_OPTM_UCSS_EXC => [
+			'filter' => 'litespeed_ucss_exc'
+		],
+	);
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -847,6 +906,22 @@ class Admin_Display extends Base {
 			$cols = 80;
 		}
 
+		$rows  = $this->get_textarea_rows($val);
+
+		$this->enroll($id);
+
+		echo "<textarea name='$id' rows='$rows' cols='$cols'>" . esc_textarea($val) . '</textarea>';
+
+		$this->_check_overwritten($id);
+	}
+
+	/**
+	 * Clalculate textarea rows
+	 *
+	 * @since 7.4
+	 * @access public
+	 */
+	function get_textarea_rows( $val ){
 		$rows  = 5;
 		$lines = substr_count($val, "\n") + 2;
 		if ($lines > $rows) {
@@ -856,11 +931,7 @@ class Admin_Display extends Base {
 			$rows = 40;
 		}
 
-		$this->enroll($id);
-
-		echo "<textarea name='$id' rows='$rows' cols='$cols'>" . esc_textarea($val) . '</textarea>';
-
-		$this->_check_overwritten($id);
+		return $rows;
 	}
 
 	/**
@@ -998,39 +1069,96 @@ class Admin_Display extends Base {
 	/**
 	 * Show overwritten msg if there is a const defined
 	 *
-	 * @since  3.0
+	 * @since 3.0
+	 * @since 7.4 show value from filters. Added type parameter.
 	 */
 	protected function _check_overwritten( $id ) {
 		$const_val   = $this->const_overwritten($id);
 		$primary_val = $this->primary_overwritten($id);
-		if ($const_val === null && $primary_val === null) {
+		$filter_val  = $this->filter_overwritten($id);
+		$server_val  = $this->server_overwritten($id);
+
+		if ($const_val === null && $primary_val === null && $filter_val === null && $server_val === null) {
 			return;
 		}
 
+		// Get value to display.
 		$val = $const_val !== null ? $const_val : $primary_val;
+		// If we have filter_val will set as new val
+		if( null !== $filter_val ){
+			$val = $filter_val;
+		}
+		// If we have server_val will set as new val
+		if( null !== $server_val ){
+			$val = $server_val;
+		}
 
-		$default = isset(self::$_default_options[$id]) ? self::$_default_options[$id] : self::$_default_site_options[$id];
+		// Get type(used for display purpose).
+		$type = isset(self::$settings_filters[$id]) && isset(self::$settings_filters[$id]['type']) ? self::$settings_filters[$id]['type'] : 'textarea';
+		if( ( null !== $const_val || null !== $primary_val ) && null === $filter_val){
+			$type = 'setting';
+		}
 
-		if (is_bool($default)) {
+		// Get default setting: if settings exist, use default setting, otherwise use filter/server value.
+		$default = '';
+		if( isset(self::$_default_options[$id]) || isset(self::$_default_site_options[$id]) ){
+			$default = isset(self::$_default_options[$id]) ? self::$_default_options[$id] : self::$_default_site_options[$id];
+		}
+		if( null !== $filter_val || null !== $server_val ){
+			$default = null !== $filter_val ? $filter_val : $server_val;
+		}
+
+		// Set value to display, will be a string.
+		if ( is_bool($default) ) {
 			$val = $val ? __('ON', 'litespeed-cache') : __('OFF', 'litespeed-cache');
 		} else {
-			if (is_array($default)) {
+			if ( (is_array($default) && is_array($val)) || is_array($val) ) {
 				$val = implode("\n", $val);
 			}
 			$val = esc_textarea($val);
 		}
+		
+		// Show warning for all types except textarea.
+		if( 'textarea' !== $type ){
+			echo '<div class="litespeed-desc litespeed-warning litespeed-overwrite">⚠️ ';
 
-		echo '<div class="litespeed-desc litespeed-warning">⚠️ ';
+			if ($server_val !== null) {
+				// Show $_SERVER value.
+				echo __('This setting is overwritten by value from $_SERVER variable', 'litespeed-cache');
+				$val = '$_SERVER["'.$server_val[0].'"] = ' . $server_val[1];
+			}
+			else if ($filter_val !== null) {
+				// Show filter value.
+				echo __('This setting is overwritten by filter', 'litespeed-cache');
+			}
+			else if ($const_val !== null) {
+				// Show CONSTANT value.
+				printf(__('This setting is overwritten by the PHP constant %s', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
+			} elseif (is_multisite() ){
+				// Show multisite overwrite.
+				if( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
+					echo __('This setting is overwritten by the primary site setting', 'litespeed-cache');
+				} else {
+					echo __('This setting is overwritten by the Network setting', 'litespeed-cache');
+				}
+			}
 
-		if ($const_val !== null) {
-			printf(__('This setting is overwritten by the PHP constant %s', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
-		} elseif (get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
-			echo __('This setting is overwritten by the primary site setting', 'litespeed-cache');
-		} else {
-			echo __('This setting is overwritten by the Network setting', 'litespeed-cache');
+			echo ', ' . sprintf(__('currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
+		} else if( 'textarea' === $type && null !== $filter_val ){
+			// Show warning for textarea.
+			// Textarea sizes.
+			$cols = 30;
+			$rows = $this->get_textarea_rows($val);
+			$rows_current_val = $this->get_textarea_rows( implode("\n", $this->conf($id, true)) );
+			// If filter rows is bigger than textarea size, equalize them.
+			if($rows > $rows_current_val) $rows = $rows_current_val;
+			?>
+			<div class="litespeed-desc-wrapper">
+				<div class="litespeed-desc"><?php echo __('Value from filter applied', 'litespeed-cache') ?>:</div>
+				<textarea readonly rows="<?php echo $rows; ?>" cols="<?php echo $cols; ?>"><?php echo $val; ?></textarea>
+			</div>
+			<?php
 		}
-
-		echo ', ' . sprintf(__('currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
 	}
 
 	/**
