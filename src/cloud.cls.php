@@ -1245,6 +1245,18 @@ class Cloud extends Base {
 						return false;
 					}
 				}
+				// For ver check, additional check to prevent frequent calls as old DB ver may be cached
+				if (self::API_VER === $service_tag) {
+					$file_path = LITESPEED_STATIC_DIR . '/qc_last_request' . md5($service_tag);
+					if (file_exists($file_path)) {
+						$last_request = file_get_contents($file_path);
+						$expired      = $last_request + $expiration_req * 10 - time();
+						if ($expired > 0) {
+							self::debug("❌❌ Unusual req! try [$service_tag] after $expired seconds");
+							return false;
+						}
+					}
+				}
 			}
 		}
 
