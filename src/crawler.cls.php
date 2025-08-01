@@ -698,8 +698,8 @@ class Crawler extends Root {
 
 		$options = $this->_get_curl_options();
 		$home    = home_url();
-		File::save(LITESPEED_STATIC_DIR . '/crawler/test_port.txt', $home, true);
-		$url        = LITESPEED_STATIC_URL . '/crawler/test_port.txt';
+		File::save(LITESPEED_STATIC_DIR . '/crawler/test_port.html', $home, true);
+		$url        = LITESPEED_STATIC_URL . '/crawler/test_port.html';
 		$parsed_url = parse_url($url);
 		if (empty($parsed_url['host'])) {
 			self::debug('❌ Test port failed, invalid URL: ' . $url);
