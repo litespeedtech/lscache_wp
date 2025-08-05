@@ -49,6 +49,51 @@ class Debug2 extends Root {
 	}
 
 	/**
+	 * Disable all functionalities for a time period.
+	 *
+	 * @since 7.4
+	 * @access public
+	 * @param  integer $time How long should we disable LSC functionalities.
+	 */
+	public static function temporary_disable( $time = 86400 ) {
+		$conf = Conf::cls();
+		$disabled = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled ) {
+			$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => time() + $time ] );
+			self::debug2( '[Debug] LiteSpeed Cache temporary disabled.' );
+
+			return;
+		}
+
+		$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
+		self::debug2( '[Debug] LiteSpeed Cache reactivated.' );
+	}
+
+	/**
+	 * Test if Disable All is active. Disable if time is reached.
+	 *
+	 * @since 7.4
+	 * @access public
+	 */
+	public static function is_temporary_disable() {
+		$conf = Conf::cls();
+		$disabled_time = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled_time ) {
+			return false;
+		} else {
+			$time =  time();
+			if( 0 > $time - $disabled_time ){
+				return true;
+			} else {
+				$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
+				return false;
+			}
+		}
+	}
+
+	/**
 	 * Try moving legacy logs into /litespeed/debug/ folder
 	 *
 	 * @since 6.5
