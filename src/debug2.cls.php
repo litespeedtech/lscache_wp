@@ -55,19 +55,19 @@ class Debug2 extends Root {
 	 * @access public
 	 * @param  integer $time How long should we disable LSC functionalities.
 	 */
-	public static function temporary_disable( $time = 86400 ) {
+	public static function tmp_disable( $time = 86400 ) {
 		$conf = Conf::cls();
 		$disabled = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
 
 		if ( 0 === $disabled ) {
-			$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => time() + $time ] );
-			self::debug2( '[Debug] LiteSpeed Cache temporary disabled.' );
+			$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => time() + $time ) );
+			self::debug2( 'LiteSpeed Cache temporary disabled.' );
 
 			return;
 		}
 
-		$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
-		self::debug2( '[Debug] LiteSpeed Cache reactivated.' );
+		$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		self::debug2( 'LiteSpeed Cache reactivated.' );
 	}
 
 	/**
@@ -76,21 +76,19 @@ class Debug2 extends Root {
 	 * @since 7.4
 	 * @access public
 	 */
-	public static function is_temporary_disable() {
-		$conf = Conf::cls();
+	public static function is_tmp_disable() {
 		$disabled_time = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
 
 		if ( 0 === $disabled_time ) {
 			return false;
-		} else {
-			$time =  time();
-			if( 0 > $time - $disabled_time ){
-				return true;
-			} else {
-				$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
-				return false;
-			}
 		}
+
+		if ( time() - $disabled_time < 0 ){
+			return true;
+		}
+
+		Conf::cls()->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		return false;
 	}
 
 	/**

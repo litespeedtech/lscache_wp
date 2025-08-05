@@ -257,6 +257,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.4 - Aug 26 2025 =
+* 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
+* **Cache** Better match iPhone browsers for mobile cache detection.
+* **Cache** Dropped `advanced-cache.php` since WP version v5.3+ required.
+* **Page Optimize** Better compatibility for dummy CSS removal in case other plugins manipulated the quotes.
+* **Page Optimize** Dropped v4.2 legacy `LITESPEED_BYPASS_OPTM`.
+* **Crawler** Used .html file to test port in case some security plugins blocked .txt which caused port test failure. (#661828)
+* **Misc** Allows leading `_` for private func/vars in format checker.
+* **Misc** Suppressed frequent version check when certain database option is cached.
+
 = 7.3.0.1 - Jul 30 2025 =
 * **Page Optimize** Fixed the page score impact caused by CSS placeholder. (wpconvert, Sean Thompson)
 * **Page Optimize** Fixed wrong prefetch/preload injection when a page contains other `<title>` tags. (idatahuy)

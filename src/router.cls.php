@@ -41,7 +41,7 @@ class Router extends Base {
 	const ACTION_DEBUG2                = 'debug2';
 	const ACTION_CDN_CLOUDFLARE        = 'CDN\Cloudflare';
 	const ACTION_ADMIN_DISPLAY         = 'admin_display';
-	const ACTION_DISABLE_TEMP          = 'disable_temp';
+	const ACTION_TMP_DISABLE          = 'tmp_disable';
 
 	// List all handlers here
 	private static $_HANDLERS = array(
@@ -588,8 +588,8 @@ class Router extends Base {
 		$_can_option         = current_user_can('manage_options');
 
 		switch ($action) {
-			case self::ACTION_DISABLE_TEMP: // disable LSC for 24H
-				Debug2::temporary_disable();
+			case self::ACTION_TMP_DISABLE: // Disable LSC for 24H
+				Debug2::tmp_disable();
 				Admin::redirect("?page=litespeed-toolbox#settings-debug");
 				return;
 

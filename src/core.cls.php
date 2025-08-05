@@ -81,7 +81,7 @@ class Core extends Root {
 		}
 
 
-		if ( $this->conf( Base::O_DEBUG_DISABLE_ALL ) || Debug2::is_temporary_disable() ) {
+		if ( $this->conf( Base::O_DEBUG_DISABLE_ALL ) || Debug2::is_tmp_disable() ) {
 			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true );
 		}
 
