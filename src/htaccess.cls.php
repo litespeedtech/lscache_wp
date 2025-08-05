@@ -572,8 +572,8 @@ class Htaccess extends Root {
 			// Check for WebP support via HTTP_ACCEPT
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} image/' . $next_gen_format . ' [OR]';
 
-			// Check for iPhone Safari (version > 13)
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone.*Version/(1[4-9]|[2-9][0-9]|[1-9][0-9]{2,}).*Safari [OR]';
+			// Check for iPhone browsers (version > 13)
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (1[4-9]|[2-9][0-9]) [OR]';
 
 			// Check for Firefox (version >= 65)
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([6-9][0-9]|[1-9][0-9]{2,})';
