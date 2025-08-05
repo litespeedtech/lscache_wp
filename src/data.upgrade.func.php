@@ -16,7 +16,7 @@ use LiteSpeed\File;
 use LiteSpeed\Cloud;
 
 /**
- * Table existance check function
+ * Table existence check function
  *
  * @since 7.2
  */
