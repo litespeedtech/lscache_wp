@@ -191,7 +191,7 @@ class Online {
 		WP_CLI::success( 'Sync successfully' );
 
 		$list = array();
-		foreach ( Cloud::$SERVICES as $v ) {
+		foreach ( Cloud::$services as $v ) {
 			$list[] = array(
 				'key' => $v,
 				'used' => ! empty( $json['usage.' . $v]['used'] ) ? $json['usage.' . $v]['used'] : 0,
@@ -237,12 +237,12 @@ class Online {
 	 */
 	public function services( $args, $assoc_args ) {
 		if ( ! empty( $assoc_args['format'] ) ) {
-			WP_CLI::print_value( Cloud::$SERVICES, $assoc_args );
+			WP_CLI::print_value( Cloud::$services, $assoc_args );
 			return;
 		}
 
 		$list = array();
-		foreach ( Cloud::$SERVICES as $v ) {
+		foreach ( Cloud::$services as $v ) {
 			$list[] = array(
 				'service' => $v,
 			);
@@ -272,7 +272,7 @@ class Online {
 
 		$list        = array();
 		$json_output = array();
-		foreach ( Cloud::$SERVICES as $v ) {
+		foreach ( Cloud::$services as $v ) {
 			$server        = ! empty( $json['server.' . $v] ) ? $json['server.' . $v] : '';
 			$list[]        = array(
 				'service' => $v,
