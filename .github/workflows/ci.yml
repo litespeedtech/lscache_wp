@@ -52,7 +52,7 @@ jobs:
 
       - name: Install typos
         run: |
-          curl -LsSf https://github.com/crate‑ci/typos/releases/download/v1.35.1/typos-v1.35.1-x86_64-unknown-linux-musl.tar.gz | tar xz
+          curl -LsSf https://github.com/crate-ci/typos/releases/download/v1.35.1/typos-v1.35.1-x86_64-unknown-linux-musl.tar.gz | tar xz
           sudo mv typos /usr/local/bin/
 
       - name: Run typos check
