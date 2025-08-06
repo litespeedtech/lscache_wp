@@ -1,0 +1,9 @@
+[files]
+extend-exclude = [
+  "**",
+]
+extend-include = [
+  "cli/**",
+  "tpl/**",
+  "autoload.php",
+]

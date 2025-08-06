@@ -17,7 +17,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2' # Adjust to your project's PHP version
+          php-version: '8.2'
           coverage: none
 
       - name: Initialize Node.js
@@ -49,3 +49,11 @@ jobs:
 
       - name: Run format check
         run: npm run format-check
+
+      - name: Install typos
+        run: |
+          curl -LsSf https://github.com/crate‑ci/typos/releases/download/v1.35.1/typos-v1.35.1-x86_64-unknown-linux-musl.tar.gz | tar xz
+          sudo mv typos /usr/local/bin/
+
+      - name: Run typos check
+        run: typos
