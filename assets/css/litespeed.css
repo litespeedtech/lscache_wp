@@ -550,6 +550,11 @@ button.litespeed-form-action:hover {
 	max-width: 960px;
 }
 
+.litespeed-desc-wrapper{
+	display: inline-block;
+    margin-left: 10px;
+}
+
 /* inside stripped table */
 .litespeed-desc {
 	font-size: 12px;
@@ -3191,6 +3196,11 @@ a.litespeed-redetect {
 
 .litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a:hover {
 	color: #a5caf2;
+}
+
+.litespeed-overwrite{
+	display: inline-block;
+	margin-left: 10px;
 }
 
 @media screen and (min-width: 1401px) {

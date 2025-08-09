@@ -93,21 +93,17 @@ defined( 'WPINC' ) || exit;
 			<?php $this->title( $option_id ); ?>
 		</th>
 		<td>
-			<div class="litespeed-row-flex">
-				<div>
-					<?php $this->build_textarea( $option_id ); ?>
-				</div>
-				<div class="litespeed-width-3-10">
-					<p class="litespeed-desc">
-						<?php echo esc_html__( 'The list will be merged with the predefined nonces in your local data file.', 'litespeed-cache' ); ?>
-						<?php echo esc_html__( 'The latest data file is', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonces.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonces.txt</a>
-						<br><span class="litespeed-success">
-							<?php echo esc_html__( 'API', 'litespeed-cache' ); ?>:
-							<?php printf( esc_html__( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_esi_nonces</code>' ); ?>
-						</span>
-					</p>
-				</div>
+			<div>
+				<?php $this->build_textarea( $option_id ); ?>
 			</div>
+			<p class="litespeed-desc">
+				<?php echo esc_html__( 'The list will be merged with the predefined nonces in your local data file.', 'litespeed-cache' ); ?>
+				<?php echo esc_html__( 'The latest data file is', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonces.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/esi.nonces.txt</a>
+				<br><span class="litespeed-success">
+					<?php echo esc_html__( 'API', 'litespeed-cache' ); ?>:
+					<?php printf( esc_html__( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_esi_nonces</code>' ); ?>
+				</span>
+			</p>
 			<div class="litespeed-desc">
 				<?php echo esc_html__( 'The above nonces will be converted to ESI automatically.', 'litespeed-cache' ); ?>
 				<?php Doc::one_per_line(); ?>
