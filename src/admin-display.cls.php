@@ -48,7 +48,7 @@ class Admin_Display extends Base {
 
 	/*
 	 * List of settings with filters and return type.
-	 * 
+	 *
 	 * @since  7.4
 	 */
 	protected static $settings_filters  = array(
@@ -1112,38 +1112,38 @@ class Admin_Display extends Base {
 		if ( is_bool($default) ) {
 			$val = $val ? __('ON', 'litespeed-cache') : __('OFF', 'litespeed-cache');
 		} else {
-			if ( (is_array($default) && is_array($val)) || is_array($val) ) {
+			if ( is_array($val) ) {
 				$val = implode("\n", $val);
 			}
 			$val = esc_textarea($val);
 		}
-		
+
 		// Show warning for all types except textarea.
 		if( 'textarea' !== $type ){
 			echo '<div class="litespeed-desc litespeed-warning litespeed-overwrite">⚠️ ';
 
 			if ($server_val !== null) {
 				// Show $_SERVER value.
-				echo __('This setting is overwritten by value from $_SERVER variable', 'litespeed-cache');
+				printf(__('This setting is overwritten by the %s variable.', 'litespeed-cache'), '$_SERVER');
 				$val = '$_SERVER["'.$server_val[0].'"] = ' . $server_val[1];
 			}
 			else if ($filter_val !== null) {
 				// Show filter value.
-				echo __('This setting is overwritten by filter', 'litespeed-cache');
+				echo __('This setting is overwritten by the filter.', 'litespeed-cache');
 			}
 			else if ($const_val !== null) {
 				// Show CONSTANT value.
-				printf(__('This setting is overwritten by the PHP constant %s', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
+				printf(__('This setting is overwritten by the PHP constant %s.', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
 			} elseif (is_multisite() ){
 				// Show multisite overwrite.
 				if( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
-					echo __('This setting is overwritten by the primary site setting', 'litespeed-cache');
+					echo __('This setting is overwritten by the primary site setting.', 'litespeed-cache');
 				} else {
-					echo __('This setting is overwritten by the Network setting', 'litespeed-cache');
+					echo __('This setting is overwritten by the Network setting.', 'litespeed-cache');
 				}
 			}
 
-			echo ', ' . sprintf(__('currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
+			echo sprintf(__('Currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
 		} else if( 'textarea' === $type && null !== $filter_val ){
 			// Show warning for textarea.
 			// Textarea sizes.
