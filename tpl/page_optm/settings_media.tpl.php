@@ -12,9 +12,9 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
+$__admin_display     = Admin_Display::cls();
 $placeholder_summary = Placeholder::get_summary();
-
-$closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
+$closest_server      = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 $lqip_queue = $this->load_queue( 'lqip' );
 
@@ -256,6 +256,7 @@ $lqip_queue = $this->load_queue( 'lqip' );
 						<?php esc_html_e( 'API', 'litespeed-cache' ); ?>:
 						<?php printf( esc_html__( 'Use %1$s to bypass remote image dimension check when %2$s is ON.', 'litespeed-cache' ), '<code>add_filter( "litespeed_media_ignore_remote_missing_sizes", "__return_true" );</code>', '<code>' . esc_html( Lang::title( Base::O_MEDIA_ADD_MISSING_SIZES ) ) . '</code>' ); ?>
 					</font>
+					<?php $__admin_display->_check_overwritten( Base::O_MEDIA_ADD_MISSING_SIZES ); ?>
 				</div>
 			</td>
 		</tr>

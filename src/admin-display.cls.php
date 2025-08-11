@@ -1124,26 +1124,26 @@ class Admin_Display extends Base {
 
 			if ($server_val !== null) {
 				// Show $_SERVER value.
-				printf(__('This setting is overwritten by the %s variable.', 'litespeed-cache'), '$_SERVER');
+				printf(__('This value is overwritten by the %s variable.', 'litespeed-cache'), '$_SERVER');
 				$val = '$_SERVER["'.$server_val[0].'"] = ' . $server_val[1];
 			}
 			else if ($filter_val !== null) {
 				// Show filter value.
-				echo __('This setting is overwritten by the filter.', 'litespeed-cache');
+				echo __('This value is overwritten by the filter.', 'litespeed-cache');
 			}
 			else if ($const_val !== null) {
 				// Show CONSTANT value.
-				printf(__('This setting is overwritten by the PHP constant %s.', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
+				printf(__('This value is overwritten by the PHP constant %s.', 'litespeed-cache'), '<code>' . Base::conf_const($id) . '</code>');
 			} elseif (is_multisite() ){
 				// Show multisite overwrite.
 				if( get_current_blog_id() != BLOG_ID_CURRENT_SITE && $this->conf(self::NETWORK_O_USE_PRIMARY)) {
-					echo __('This setting is overwritten by the primary site setting.', 'litespeed-cache');
+					echo __('This value is overwritten by the primary site setting.', 'litespeed-cache');
 				} else {
-					echo __('This setting is overwritten by the Network setting.', 'litespeed-cache');
+					echo __('This value is overwritten by the Network setting.', 'litespeed-cache');
 				}
 			}
 
-			echo sprintf(__('Currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
+			echo ' ' . sprintf(__('Currently set to %s', 'litespeed-cache'), "<code>$val</code>") . '</div>';
 		} else if( 'textarea' === $type && null !== $filter_val ){
 			// Show warning for textarea.
 			// Textarea sizes.
