@@ -52,11 +52,27 @@ class Media extends Root {
 	/**
 	 * Hooks after user init
 	 *
-	 * @since  7.2
+	 * @since 7.2
+	 * @since 7.4 Add media replace original with scaled.
 	 */
 	public function after_user_init() {
 		// Hook to attachment delete action (PR#844, Issue#841) for AJAX del compatibility
 		add_action('delete_attachment', array( $this, 'delete_attachment' ), 11, 2);
+
+		add_filter('wp_generate_attachment_metadata', array( $this, 'add_image_to_optm_priority' ), 999, 3);
+	}
+
+	/**
+	 * Handle attachment add, and add to image optimization with priority.
+	 *
+	 * @since 7.4
+	 */
+	public function add_image_to_optm_priority( $data, $post_id, $context ) {
+		if( 'create' === $context ){
+			return $this->cls('Img_Optm')->add_image_to_optm_priority($data, $post_id, $context, 5);
+		}
+		
+		return $data;
 	}
 
 	/**

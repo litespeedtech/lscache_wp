@@ -26,6 +26,7 @@ class Data extends Root {
 		'5.3-a5' => array( 'litespeed_update_5_3' ),
 		'7.0-b26' => array( 'litespeed_update_7' ),
 		'7.0.1-b1' => array( 'litespeed_update_7_0_1' ),
+		'7.4-a1' => array( 'litespeed_update_7_4' ),
 	);
 
 	private $_db_site_updater = array(
