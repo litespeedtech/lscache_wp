@@ -143,20 +143,6 @@ class Doc {
 	}
 
 	/**
-	 * Notice for whitelist IPs
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public static function notice_ips() {
-		echo '<div class="litespeed-primary">';
-		echo '⚠️ ' . sprintf(__('For online services to work correctly, you must allowlist all %s server IPs.', 'litespeed-cache'), 'QUIC.cloud') . '<br/>';
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('Before generating key, please verify all IPs on this list are allowlisted', 'litespeed-cache') . ': ';
-		echo '<a href="' . Cloud::CLOUD_IPS . '" target="_blank">' . __('Current Online Server IPs', 'litespeed-cache') . '</a>';
-		echo '</div>';
-	}
-
-	/**
 	 * Gentle reminder that web services run asynchronously
 	 *
 	 * @since  5.3.1

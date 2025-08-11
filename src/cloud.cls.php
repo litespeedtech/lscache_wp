@@ -13,10 +13,10 @@ defined('WPINC') || exit();
 class Cloud extends Base {
 
 	const LOG_TAG           = '❄️';
-	const CLOUD_SERVER      = 'https://api.quic.cloud';
-	const CLOUD_IPS         = 'https://quic.cloud/ips';
-	const CLOUD_SERVER_DASH = 'https://my.quic.cloud';
-	const CLOUD_SERVER_WP   = 'https://wpapi.quic.cloud';
+	private $_cloud_server      = 'https://api.quic.cloud';
+	private $_cloud_ips         = 'https://quic.cloud/ips';
+	private $_cloud_server_dash = 'https://my.quic.cloud';
+	private $_cloud_server_wp   = 'https://wpapi.quic.cloud';
 
 	const SVC_D_ACTIVATE       = 'd/activate';
 	const SVC_U_ACTIVATE       = 'u/wp3/activate';
@@ -124,6 +124,12 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	public function __construct() {
+		if (defined('LITESPEED_DEV') && constant('LITESPEED_DEV')) {
+			$this->_cloud_server      = 'https://api.preview.quic.cloud';
+			$this->_cloud_ips         = 'https://api.preview.quic.cloud/ips';
+			$this->_cloud_server_dash = 'https://my.preview.quic.cloud';
+			$this->_cloud_server_wp   = 'https://wpapi.quic.cloud';
+		}
 		$this->_summary = self::get_summary();
 	}
 
@@ -193,7 +199,7 @@ class Cloud extends Base {
 			'data' => $data,
 			'ref' => $ref,
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
+		wp_redirect($this->_cloud_server_dash . '/' . self::SVC_U_ACTIVATE . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -335,7 +341,7 @@ class Cloud extends Base {
 			'data' => $data,
 			'ref' => $this->_get_ref_url(),
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
+		wp_redirect($this->_cloud_server_dash . '/' . self::SVC_U_LINK . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -415,7 +421,7 @@ class Cloud extends Base {
 			'data' => $data,
 			'ref' => $this->_get_ref_url(),
 		);
-		wp_redirect(self::CLOUD_SERVER_DASH . '/' . self::SVC_U_ENABLE_CDN . '?data=' . urlencode(Utility::arr2str($param)));
+		wp_redirect($this->_cloud_server_dash . '/' . self::SVC_U_ENABLE_CDN . '?data=' . urlencode(Utility::arr2str($param)));
 		exit();
 	}
 
@@ -451,9 +457,9 @@ class Cloud extends Base {
 	 */
 	private function _load_server_pk( $from_wpapi = false ) {
 		// Load cloud pk
-		$server_key_url = self::CLOUD_SERVER . '/' . self::API_SERVER_KEY_SIGN;
+		$server_key_url = $this->_cloud_server . '/' . self::API_SERVER_KEY_SIGN;
 		if ($from_wpapi) {
-			$server_key_url = self::CLOUD_SERVER_WP . '/' . self::API_SERVER_KEY_SIGN;
+			$server_key_url = $this->_cloud_server_wp . '/' . self::API_SERVER_KEY_SIGN;
 		}
 		$resp = wp_safe_remote_get($server_key_url);
 		if (is_wp_error($resp)) {
@@ -939,11 +945,11 @@ class Cloud extends Base {
 	 */
 	public function detect_cloud( $service, $force = false ) {
 		if (in_array($service, self::$center_svc_set)) {
-			return self::CLOUD_SERVER;
+			return $this->_cloud_server;
 		}
 
 		if (in_array($service, self::$wp_svc_set)) {
-			return self::CLOUD_SERVER_WP;
+			return $this->_cloud_server_wp;
 		}
 
 		// Check if the stored server needs to be refreshed
@@ -954,10 +960,10 @@ class Cloud extends Base {
 				$this->_summary['server_date.' . $service] > time() - 86400 * self::TTL_NODE
 			) {
 				$server = $this->_summary['server.' . $service];
-				if (!strpos(self::CLOUD_SERVER, 'preview.') && !strpos($server, 'preview.')) {
+				if (!strpos($this->_cloud_server, 'preview.') && !strpos($server, 'preview.')) {
 					return $server;
 				}
-				if (strpos(self::CLOUD_SERVER, 'preview.') && strpos($server, 'preview.')) {
+				if (strpos($this->_cloud_server, 'preview.') && strpos($server, 'preview.')) {
 					return $server;
 				}
 			}
@@ -1309,7 +1315,7 @@ class Cloud extends Base {
 			'ver' => LSCWP_V,
 			'ref' => $this->_get_ref_url(),
 		);
-		return self::CLOUD_SERVER_DASH . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
+		return $this->_cloud_server_dash . '/u/wp3/manage?data=' . urlencode(Utility::arr2str($data)); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
 
 	/**
@@ -1862,14 +1868,14 @@ class Cloud extends Base {
 	 * @since 4.2
 	 */
 	private function _update_ips() {
-		self::debug('Load remote Cloud IP list from ' . self::CLOUD_IPS);
+		self::debug('Load remote Cloud IP list from ' . self::$_cloud_ips);
 		// Prevent multiple call in a short period
 		self::save_summary(array(
 			'ips_ts' => time(),
 			'ips_ts_runner' => time(),
 		));
 
-		$response = wp_safe_remote_get(self::CLOUD_IPS . '?json');
+		$response = wp_safe_remote_get(self::$_cloud_ips . '?json');
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to get ip whitelist: ' . $error_message);
@@ -1943,7 +1949,7 @@ class Cloud extends Base {
 	 * @since 7.0
 	 */
 	public function maybe_preview_banner() {
-		if (strpos(self::CLOUD_SERVER, 'preview.')) {
+		if (strpos($this->_cloud_server, 'preview.')) {
 			Admin_Display::note(__('Linked to QUIC.cloud preview environment, for testing purpose only.', 'litespeed-cache'), true, true, 'litespeed-warning-bg');
 		}
 	}
