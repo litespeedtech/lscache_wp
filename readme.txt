@@ -265,6 +265,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Dropped v4.2 legacy `LITESPEED_BYPASS_OPTM`.
 * **Crawler** Used .html file to test port in case some security plugins blocked .txt which caused port test failure. (#661828)
 * **GUI** Showed current live values for options if they are overridden by filters or the server environment. (PR#885)
+* **Data** Dropped legacy code and upgrade data migration support to LSCWP v5.7-.
 * **Misc** Supported `LITESPEED_DEV` const to switch to dev environment.
 * **Misc** Allows leading `_` for private func/vars in format checker.
 * **Misc** Suppressed frequent version check when certain database option is cached.
