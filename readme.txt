@@ -261,6 +261,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
 * **Cache** Better match iPhone browsers for mobile cache detection.
 * **Cache** Dropped `advanced-cache.php` since WP version v5.3+ required.
+* **Cache** Used WordPress `Cache-Control` value when the page is not cacheable. (asafm7)
 * **Page Optimize** Better compatibility for dummy CSS removal in case other plugins manipulated the quotes.
 * **Page Optimize** Dropped v4.2 legacy `LITESPEED_BYPASS_OPTM`.
 * **Crawler** Used .html file to test port in case some security plugins blocked .txt which caused port test failure. (#661828)

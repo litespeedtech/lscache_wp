@@ -597,8 +597,11 @@ class Core extends Root {
 		// Send Control header
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			$this->http_header( $control_header );
-			if ( ! Control::is_cacheable() ) {
-				$this->http_header( 'Cache-Control: no-cache, no-store, must-revalidate, max-age=0' ); // @ref: https://wordpress.org/support/topic/apply_filterslitespeed_control_cacheable-returns-false-for-cacheable/
+			if ( ! Control::is_cacheable() && !is_admin() ) {
+				$ori_wp_header = wp_get_nocache_headers();
+				if ( isset( $ori_wp_header['Cache-Control'] ) ) {
+					$this->http_header( 'Cache-Control: ' . $ori_wp_header['Cache-Control'] ); // @ref: https://github.com/litespeedtech/lscache_wp/issues/889
+				}
 			}
 			if ( defined( 'LSCWP_LOG' ) ) {
 				$this->comment( $control_header );
