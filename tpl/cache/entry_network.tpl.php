@@ -53,7 +53,7 @@ $menu_list = array(
 			<?php
 		}
 
-		$this->form_end( true );
+		$this->form_end();
 		?>
 	</div>
 </div>
