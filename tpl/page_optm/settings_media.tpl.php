@@ -18,6 +18,8 @@ $closest_server      = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 $lqip_queue = $this->load_queue( 'lqip' );
 
+$scaled_size = apply_filters( 'big_image_size_threshold', 2560 ) . 'px';
+
 ?>
 
 <h3 class="litespeed-title-short">
@@ -272,6 +274,39 @@ $lqip_queue = $this->load_queue( 'lqip' );
 					<?php esc_html_e( 'The image compression quality setting of WordPress out of 100.', 'litespeed-cache' ); ?>
 					<?php $this->recommended( $option_id ); ?>
 					<?php $this->_validate_ttl( $option_id, 0, 100 ); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				<?php $option_id = Base::O_MEDIA_REP_W_SCALED; ?>
+				<?php $this->title( $option_id ); ?>
+			</th>
+			<td>
+				<?php $this->build_switch( $option_id ); ?>
+				<div class="litespeed-desc">
+					<?php esc_html_e( 'Automatically replace large images with scaled versions.', 'litespeed-cache' ); ?>
+					<br />
+					<?php echo wp_kses_post( sprintf( __( 'Scaled size and threshold is: %s', 'litespeed-cache' ), '<code>' . $scaled_size . '</code>' ) ); ?>
+					<br />
+					<span class="litespeed-success">
+						<?php
+						printf(
+							esc_html__( 'API: Filter %s available to change threshold.', 'litespeed-cache' ),
+							'<code>big_image_size_threshold</code>'
+						);
+						?>
+						<a href="https://developer.wordpress.org/reference/hooks/big_image_size_threshold/" target="_blank" class="litespeed-learn-more">
+							<?php esc_html_e('Learn More', 'litespeed-cache'); ?>
+						</a>
+					</span>
+
+					<br />
+					<font class="litespeed-danger">
+						🚨
+						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
+					</font>
 				</div>
 			</td>
 		</tr>

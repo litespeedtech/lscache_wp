@@ -202,6 +202,7 @@ class Lang extends Base {
 			self::O_MEDIA_ADD_MISSING_SIZES => __('Add Missing Sizes', 'litespeed-cache'),
 			self::O_MEDIA_VPI => __('Viewport Images', 'litespeed-cache'),
 			self::O_MEDIA_VPI_CRON => __('Viewport Images Cron', 'litespeed-cache'),
+			self::O_MEDIA_REP_W_SCALED => __('Replace Original with Scaled', 'litespeed-cache'),
 
 			self::O_IMG_OPTM_AUTO => __('Auto Request Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),
