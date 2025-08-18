@@ -60,9 +60,9 @@ class Media extends Root {
 		add_action('delete_attachment', array( $this, 'delete_attachment' ), 11, 2);
 
 		// For big images, allow to replace original with scaled image.
-		if( $this->conf(Base::O_MEDIA_REP_W_SCALED) ){
+		if( $this->conf(Base::O_MEDIA_AUTO_RESCALE_ORI) ){
 			// Added priority 9 to happen before other functions added.
-			add_filter('wp_update_attachment_metadata', array( $this, 'replace_original_with_scaled' ), 9, 2);
+			add_filter('wp_update_attachment_metadata', array( $this, 'rescale_ori' ), 9, 2);
 		}
 	}
 
@@ -107,19 +107,19 @@ class Media extends Root {
 
 	/**
 	 * Handle attachment create
-	 * 
+	 *
 	 * @param array $metadata Current meta array.
 	 * @param int $attachment_id Attachment ID.
 	 * @return array $metadata
 	 * @since  7.4
 	 */
-	public function replace_original_with_scaled( $metadata, $attachment_id ) {
+	public function rescale_ori( $metadata, $attachment_id ) {
 		// Test if create and image was resized.
 		if( $metadata && isset($metadata['original_image']) && isset($metadata['file']) && false !== strstr($metadata['file'], '-scaled')){
 			// Get rescaled file name.
 			$path_exploded      = explode( '/', strrev($metadata['file']), 2 );
 			$rescaled_file_name = strrev($path_exploded[0]);
-			
+
 			// Create paths for images: resized and original.
 			$base_path     = $this->_wp_upload_dir['basedir'] . $this->_wp_upload_dir['subdir'] . '/';
 			$rescaled_path = $base_path . $rescaled_file_name;

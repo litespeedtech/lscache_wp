@@ -258,6 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.4 - Aug 26 2025 =
+* 🌱**Media** Auto Rescale Original Image.
 * 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
 * 🐞**Object Cache** Fixed a bug that failed to detect the Redis connection status.
 * **Cache** Better match iPhone browsers for mobile cache detection.

@@ -280,20 +280,20 @@ $scaled_size = apply_filters( 'big_image_size_threshold', 2560 ) . 'px';
 
 		<tr>
 			<th>
-				<?php $option_id = Base::O_MEDIA_REP_W_SCALED; ?>
+				<?php $option_id = Base::O_MEDIA_AUTO_RESCALE_ORI; ?>
 				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
 				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php esc_html_e( 'Automatically replace large images with scaled versions.', 'litespeed-cache' ); ?>
-					<br />
-					<?php echo wp_kses_post( sprintf( __( 'Scaled size and threshold is: %s', 'litespeed-cache' ), '<code>' . $scaled_size . '</code>' ) ); ?>
+					<?php esc_html_e( 'Scaled size threshold', 'litespeed-cache' ); ?>: <code><?php echo wp_kses_post( $scaled_size ); ?></code>
 					<br />
 					<span class="litespeed-success">
+						API:
 						<?php
 						printf(
-							esc_html__( 'API: Filter %s available to change threshold.', 'litespeed-cache' ),
+							esc_html__( 'Filter %s available to change threshold.', 'litespeed-cache' ),
 							'<code>big_image_size_threshold</code>'
 						);
 						?>
