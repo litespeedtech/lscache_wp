@@ -271,6 +271,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Supported `LITESPEED_DEV` const to switch to dev environment.
 * **Misc** Allows leading `_` for private func/vars in format checker.
 * **Misc** Suppressed frequent version check when certain database option is cached.
+* **Misc** Dropped `sanitize_file_name` usage to prevent template failure when 3rd party plugin manipulated that filter.
 
 = 7.3.0.1 - Jul 30 2025 =
 * **Page Optimize** Fixed the page score impact caused by CSS placeholder. (wpconvert, Sean Thompson)
