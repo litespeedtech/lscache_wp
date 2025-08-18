@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.4 - Aug 26 2025 =
 * 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
+* 🐞**Object Cache** Fixed a bug that failed to detect the Redis connection status.
 * **Cache** Better match iPhone browsers for mobile cache detection.
 * **Cache** Dropped `advanced-cache.php` since WP version v5.3+ required.
 * **Cache** Used WordPress `Cache-Control` value when the page is not cacheable. (asafm7)
