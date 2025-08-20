@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The core plugin config class.
@@ -7,7 +8,6 @@
  *
  * @since       1.0.0
  * @package     LiteSpeed
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

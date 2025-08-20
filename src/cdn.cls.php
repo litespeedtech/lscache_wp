@@ -1,13 +1,10 @@
 <?php
-
+// phpcs:ignoreFile
 /**
  * The CDN class.
  *
  * @since       1.2.3
- * @since       1.5 Moved into /inc
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

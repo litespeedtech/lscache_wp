@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:ignoreFile
 /**
  * The base consts
  *

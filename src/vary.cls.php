@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin vary class to manage X-LiteSpeed-Vary

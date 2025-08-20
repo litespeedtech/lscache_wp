@@ -1,13 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The class to operate media data.
  *
  * @since       1.4
- * @since       1.5 Moved into /inc
- * @package     Core
- * @subpackage  Core/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
+ * @package     LiteSpeed
  */
 
 namespace LiteSpeed;

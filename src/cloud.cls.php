@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:ignoreFile
 /**
  * Cloud service cls
  *

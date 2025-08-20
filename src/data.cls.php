@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The class to store and manage litespeed db data.
  *
  * @since       1.3.1
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

@@ -1,13 +1,13 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The Third Party integration with the WooCommerce plugin.
  *
  * @since         1.0.5
  * @since  1.6.6 Added function_exists check for compatibility
- * @package       LiteSpeed_Cache
+ * @package       LiteSpeed
  * @subpackage    LiteSpeed_Cache/thirdparty
- * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed\Thirdparty;

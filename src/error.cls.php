@@ -1,11 +1,10 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The error class.
  *
  * @since       3.0
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The ESI class.
@@ -7,8 +8,6 @@
  *
  * @since       1.1.3
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

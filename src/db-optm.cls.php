@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The admin optimize tool
  *
  * @since      1.2.1
  * @package    LiteSpeed
- * @subpackage LiteSpeed/src
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

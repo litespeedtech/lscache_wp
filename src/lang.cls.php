@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The language class.
  *
  * @since       3.0
  * @package     LiteSpeed_Cache
- * @subpackage  LiteSpeed_Cache/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

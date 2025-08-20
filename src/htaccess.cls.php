@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The htaccess rewrite rule operation class
  *
  * @since      1.0.0
  * @package    LiteSpeed
- * @subpackage LiteSpeed/inc
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

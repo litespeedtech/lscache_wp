@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * Database upgrade funcs

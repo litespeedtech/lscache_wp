@@ -11,8 +11,7 @@
 	},
 	"prefer-stable": true,
 	"scripts": {
-		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache cli/ tpl/ autoload.php",
-		"sniff-check-bk": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
+		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
 	},
 	"config": {
 		"allow-plugins": {

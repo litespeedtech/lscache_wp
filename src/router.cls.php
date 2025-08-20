@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The core plugin router class.
@@ -6,7 +7,6 @@
  * This generate the valid action.
  *
  * @since       1.1.0
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;

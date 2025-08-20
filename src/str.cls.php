@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * LiteSpeed String Operator Library Class
  *
