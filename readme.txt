@@ -257,7 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.4 - Sep 3 2025 =
+= 7.4 - Aug 27 2025 =
 * 🌱**Media** Auto Rescale Original Image.
 * 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
 * 🐞**CDN** Fixed a QUIC.cloud sync conf failure on network child sites.
