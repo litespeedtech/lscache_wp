@@ -1868,14 +1868,14 @@ class Cloud extends Base {
 	 * @since 4.2
 	 */
 	private function _update_ips() {
-		self::debug('Load remote Cloud IP list from ' . self::$_cloud_ips);
+		self::debug('Load remote Cloud IP list from ' . $this->_cloud_ips);
 		// Prevent multiple call in a short period
 		self::save_summary(array(
 			'ips_ts' => time(),
 			'ips_ts_runner' => time(),
 		));
 
-		$response = wp_safe_remote_get(self::$_cloud_ips . '?json');
+		$response = wp_safe_remote_get($this->_cloud_ips . '?json');
 		if (is_wp_error($response)) {
 			$error_message = $response->get_error_message();
 			self::debug('failed to get ip whitelist: ' . $error_message);
