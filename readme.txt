@@ -257,9 +257,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.4 - Aug 26 2025 =
+= 7.4 - Sep 3 2025 =
 * 🌱**Media** Auto Rescale Original Image.
 * 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
+* 🐞**CDN** Fixed a QUIC.cloud sync conf failure on network child sites.
 * 🐞**Object Cache** Fixed a bug that failed to detect the Redis connection status.
 * **Cache** Better match iPhone browsers for mobile cache detection.
 * **Cache** Dropped `advanced-cache.php` since WP version v5.3+ required.

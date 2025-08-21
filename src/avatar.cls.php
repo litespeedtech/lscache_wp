@@ -1,288 +1,366 @@
 <?php
-
 /**
- * The avatar cache class
+ * The avatar cache class.
  *
- * @since       3.0
- * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
+ * Caches remote (e.g., Gravatar) avatars locally and rewrites URLs
+ * to serve cached copies with a TTL. Supports on-demand generation
+ * during page render and batch generation via cron.
+ *
+ * @since 3.0
+ * @package LiteSpeed
  */
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * Class Avatar
+ */
 class Avatar extends Base {
 
 	const TYPE_GENERATE = 'generate';
 
+	/**
+	 * Avatar cache TTL (seconds).
+	 *
+	 * @var int
+	 */
 	private $_conf_cache_ttl;
+
+	/**
+	 * Avatar DB table name.
+	 *
+	 * @var string
+	 */
 	private $_tb;
 
+	/**
+	 * In-request map from original URL => rewritten URL to avoid duplicates.
+	 *
+	 * @var array<string,string>
+	 */
 	private $_avatar_realtime_gen_dict = array();
+
+	/**
+	 * Summary/status data for last requests.
+	 *
+	 * @var array<string,mixed>
+	 */
 	protected $_summary;
 
 	/**
-	 * Init
+	 * Init.
 	 *
-	 * @since  1.4
+	 * @since 1.4
 	 */
 	public function __construct() {
-		if (!$this->conf(self::O_DISCUSS_AVATAR_CACHE)) {
+		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}
 
-		Debug2::debug2('[Avatar] init');
+		self::debug2( '[Avatar] init' );
 
-		$this->_tb = $this->cls('Data')->tb('avatar');
+		$this->_tb = $this->cls( 'Data' )->tb( 'avatar' );
 
-		$this->_conf_cache_ttl = $this->conf(self::O_DISCUSS_AVATAR_CACHE_TTL);
+		$this->_conf_cache_ttl = $this->conf( self::O_DISCUSS_AVATAR_CACHE_TTL );
 
-		add_filter('get_avatar_url', array( $this, 'crawl_avatar' ));
+		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) );
 
 		$this->_summary = self::get_summary();
 	}
 
 	/**
-	 * Check if need db table or not
+	 * Check whether DB table is needed.
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return bool
 	 */
 	public function need_db() {
-		if ($this->conf(self::O_DISCUSS_AVATAR_CACHE)) {
-			return true;
-		}
-
-		return false;
+		return (bool) $this->conf( self::O_DISCUSS_AVATAR_CACHE );
 	}
+
 	/**
-	 * Get gravatar URL from DB and regenerate
+	 * Serve static avatar by md5 (used by local static route).
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @param string $md5 MD5 hash of original avatar URL.
+	 * @return void
 	 */
 	public function serve_static( $md5 ) {
 		global $wpdb;
 
-		Debug2::debug('[Avatar] is avatar request');
+		self::debug( '[Avatar] is avatar request' );
 
-		if (strlen($md5) !== 32) {
-			Debug2::debug('[Avatar] wrong md5 ' . $md5);
+		if ( strlen( $md5 ) !== 32 ) {
+			self::debug( '[Avatar] wrong md5 ' . $md5 );
 			return;
 		}
 
-		$q   = "SELECT url FROM `$this->_tb` WHERE md5=%s";
-		$url = $wpdb->get_var($wpdb->prepare($q, $md5));
+		$url = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT url FROM `' . $this->_tb . '` WHERE md5 = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$md5
+			)
+		);
 
-		if (!$url) {
-			Debug2::debug('[Avatar] no matched url for md5 ' . $md5);
+		if ( ! $url ) {
+			self::debug( '[Avatar] no matched url for md5 ' . $md5 );
 			return;
 		}
 
-		$url = $this->_generate($url);
+		$url = $this->_generate( $url );
 
-		wp_redirect($url);
-		exit();
+		wp_safe_redirect( $url );
+		exit;
 	}
 
 	/**
-	 * Localize gravatar
+	 * Localize/replace avatar URL with cached one (filter callback).
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @param string $url Original avatar URL.
+	 * @return string Rewritten/cached avatar URL (or original).
 	 */
 	public function crawl_avatar( $url ) {
-		if (!$url) {
+		if ( ! $url ) {
 			return $url;
 		}
 
-		// Check if its already in dict or not
-		if (!empty($this->_avatar_realtime_gen_dict[$url])) {
-			Debug2::debug2('[Avatar] already in dict [url] ' . $url);
-
-			return $this->_avatar_realtime_gen_dict[$url];
+		// Check if already generated in this request.
+		if ( ! empty( $this->_avatar_realtime_gen_dict[ $url ] ) ) {
+			self::debug2( '[Avatar] already in dict [url] ' . $url );
+			return $this->_avatar_realtime_gen_dict[ $url ];
 		}
 
-		$realpath = $this->_realpath($url);
-		if (file_exists($realpath) && time() - filemtime($realpath) <= $this->_conf_cache_ttl) {
-			Debug2::debug2('[Avatar] cache file exists [url] ' . $url);
-			return $this->_rewrite($url, filemtime($realpath));
+		$realpath = $this->_realpath( $url );
+		$mtime    = file_exists( $realpath ) ? filemtime( $realpath ) : false;
+
+		if ( $mtime && time() - $mtime <= $this->_conf_cache_ttl ) {
+			self::debug2( '[Avatar] cache file exists [url] ' . $url );
+			return $this->_rewrite( $url, $mtime );
 		}
 
-		if (!strpos($url, 'gravatar.com')) {
+		// Only handle gravatar or known remote avatar providers; keep generic check for "gravatar.com".
+		if ( strpos( $url, 'gravatar.com' ) === false ) {
 			return $url;
 		}
 
-		// Send request
-		if (!empty($this->_summary['curr_request']) && time() - $this->_summary['curr_request'] < 300) {
-			Debug2::debug2('[Avatar] Bypass generating due to interval limit [url] ' . $url);
+		// Throttle generation.
+		if ( ! empty( $this->_summary['curr_request'] ) && time() - $this->_summary['curr_request'] < 300 ) {
+			self::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url );
 			return $url;
 		}
 
-		// Generate immediately
-		$this->_avatar_realtime_gen_dict[$url] = $this->_generate($url);
+		// Generate immediately and track for this request.
+		$this->_avatar_realtime_gen_dict[ $url ] = $this->_generate( $url );
 
-		return $this->_avatar_realtime_gen_dict[$url];
+		return $this->_avatar_realtime_gen_dict[ $url ];
 	}
 
 	/**
-	 * Read last time generated info
+	 * Count queued avatars (expired ones) for cron.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @return int|false
 	 */
 	public function queue_count() {
 		global $wpdb;
 
-		// If var not exists, mean table not exists // todo: not true
-		if (!$this->_tb) {
+		// If var not exists, means table not exists // todo: not true.
+		if ( ! $this->_tb ) {
 			return false;
 		}
 
-		$q = "SELECT COUNT(*) FROM `$this->_tb` WHERE dateline<" . (time() - $this->_conf_cache_ttl);
-		return $wpdb->get_var($q);
+		$cnt = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT COUNT(*) FROM `' . $this->_tb . '` WHERE dateline < %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				time() - $this->_conf_cache_ttl
+			)
+		);
+
+		return (int) $cnt;
 	}
 
 	/**
-	 * Get the final URL of local avatar
+	 * Build final local URL for cached avatar.
 	 *
-	 * Check from db also
-	 *
-	 * @since  3.0
+	 * @since 3.0
+	 * @param string   $url  Original URL.
+	 * @param int|null $time Optional filemtime for cache busting.
+	 * @return string Local URL.
 	 */
 	private function _rewrite( $url, $time = null ) {
-		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath($url) . ($time ? '?ver=' . $time : '');
+		$qs = $time ? '?ver=' . $time : '';
+		return LITESPEED_STATIC_URL . '/avatar/' . $this->_filepath( $url ) . $qs;
 	}
 
 	/**
-	 * Generate realpath of the cache file
+	 * Generate filesystem realpath for cache file.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access private
+	 * @param string $url Original URL.
+	 * @return string Absolute filesystem path.
 	 */
 	private function _realpath( $url ) {
-		return LITESPEED_STATIC_DIR . '/avatar/' . $this->_filepath($url);
+		return LITESPEED_STATIC_DIR . '/avatar/' . $this->_filepath( $url );
 	}
 
 	/**
-	 * Get filepath
+	 * Get relative filepath for cached avatar.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 * @param string $url Original URL.
+	 * @return string Relative path under avatar/ (may include blog id).
 	 */
 	private function _filepath( $url ) {
-		$filename = md5($url) . '.jpg';
-		if (is_multisite()) {
+		$filename = md5( $url ) . '.jpg';
+		if ( is_multisite() ) {
 			$filename = get_current_blog_id() . '/' . $filename;
 		}
 		return $filename;
 	}
 
 	/**
-	 * Cron generation
+	 * Cron generation for expired avatars.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @param bool $force Bypass throttle.
+	 * @return void
 	 */
 	public static function cron( $force = false ) {
 		global $wpdb;
 
 		$_instance = self::cls();
-		if (!$_instance->queue_count()) {
-			Debug2::debug('[Avatar] no queue');
+		if ( ! $_instance->queue_count() ) {
+			self::debug( '[Avatar] no queue' );
 			return;
 		}
 
-		// For cron, need to check request interval too
-		if (!$force) {
-			if (!empty($_instance->_summary['curr_request']) && time() - $_instance->_summary['curr_request'] < 300) {
-				Debug2::debug('[Avatar] curr_request too close');
+		// For cron, need to check request interval too.
+		if ( ! $force ) {
+			if ( ! empty( $_instance->_summary['curr_request'] ) && time() - $_instance->_summary['curr_request'] < 300 ) {
+				self::debug( '[Avatar] curr_request too close' );
 				return;
 			}
 		}
 
-		$q = "SELECT url FROM `$_instance->_tb` WHERE dateline < %d ORDER BY id DESC LIMIT %d";
-		$q = $wpdb->prepare($q, array( time() - $_instance->_conf_cache_ttl, apply_filters('litespeed_avatar_limit', 30) ));
+		$list = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT url FROM `' . $_instance->_tb . '` WHERE dateline < %d ORDER BY id DESC LIMIT %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				time() - $_instance->_conf_cache_ttl,
+				(int) apply_filters( 'litespeed_avatar_limit', 30 )
+			)
+		);
+		self::debug( '[Avatar] cron job [count] ' . ( $list ? count( $list ) : 0 ) );
 
-		$list = $wpdb->get_results($q);
-		Debug2::debug('[Avatar] cron job [count] ' . count($list));
-
-		foreach ($list as $v) {
-			Debug2::debug('[Avatar] cron job [url] ' . $v->url);
-
-			$_instance->_generate($v->url);
+		if ( $list ) {
+			foreach ( $list as $v ) {
+				self::debug( '[Avatar] cron job [url] ' . $v->url );
+				$_instance->_generate( $v->url );
+			}
 		}
 	}
 
 	/**
-	 * Remote generator
+	 * Download and store the avatar locally, then update DB row.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access private
+	 * @param string $url Original avatar URL.
+	 * @return string Rewritten local URL (fallback to original on failure).
 	 */
 	private function _generate( $url ) {
 		global $wpdb;
 
-		// Record the data
+		$file = $this->_realpath( $url );
 
-		$file = $this->_realpath($url);
+		// Mark request start
+		self::save_summary(
+			array(
+				'curr_request' => time(),
+			)
+		);
 
-		// Update request status
-		self::save_summary(array( 'curr_request' => time() ));
+		// Ensure cache directory exists
+		$this->_maybe_mk_cache_folder( 'avatar' );
 
-		// Generate
-		$this->_maybe_mk_cache_folder('avatar');
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'timeout'  => 180,
+				'stream'   => true,
+				'filename' => $file,
+			)
+		);
 
-		$response = wp_safe_remote_get($url, array(
-			'timeout' => 180,
-			'stream' => true,
-			'filename' => $file,
-		));
-
-		Debug2::debug('[Avatar] _generate [url] ' . $url);
+		self::debug( '[Avatar] _generate [url] ' . $url );
 
 		// Parse response data
-		if (is_wp_error($response)) {
+		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			file_exists($file) && unlink($file);
-			Debug2::debug('[Avatar] failed to get: ' . $error_message);
+			if ( file_exists( $file ) ) {
+				wp_delete_file( $file );
+			}
+			self::debug( '[Avatar] failed to get: ' . $error_message );
 			return $url;
 		}
 
 		// Save summary data
-		self::save_summary(array(
-			'last_spent' => time() - $this->_summary['curr_request'],
-			'last_request' => $this->_summary['curr_request'],
-			'curr_request' => 0,
-		));
+		self::save_summary(
+			array(
+				'last_spent'   => time() - $this->_summary['curr_request'],
+				'last_request' => $this->_summary['curr_request'],
+				'curr_request' => 0,
+			)
+		);
 
-		// Update DB
-		$md5     = md5($url);
-		$q       = "UPDATE `$this->_tb` SET dateline=%d WHERE md5=%s";
-		$existed = $wpdb->query($wpdb->prepare($q, array( time(), $md5 )));
-		if (!$existed) {
-			$q = "INSERT INTO `$this->_tb` SET url=%s, md5=%s, dateline=%d";
-			$wpdb->query($wpdb->prepare($q, array( $url, $md5, time() )));
+		// Update/insert DB record
+		$md5 = md5( $url );
+
+		$existed = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'UPDATE `' . $this->_tb . '` SET dateline = %d WHERE md5 = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				time(),
+				$md5
+			)
+		);
+
+		if ( ! $existed ) {
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->prepare(
+					'INSERT INTO `' . $this->_tb . '` (url, md5, dateline) VALUES (%s, %s, %d)', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					$url,
+					$md5,
+					time()
+				)
+			);
 		}
 
-		Debug2::debug('[Avatar] saved avatar ' . $file);
+		self::debug( '[Avatar] saved avatar ' . $file );
 
-		return $this->_rewrite($url);
+		return $this->_rewrite( $url );
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public function handler() {
 		$type = Router::verify_type();
 
-		switch ($type) {
+		switch ( $type ) {
 			case self::TYPE_GENERATE:
-            self::cron(true);
+				self::cron( true );
 				break;
 
 			default:
