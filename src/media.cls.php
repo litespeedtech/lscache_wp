@@ -123,18 +123,18 @@ class Media extends Root {
 			$rescaled_path = $base_path . $rescaled_file_name;
 			$new_path      = $base_path . $metadata['original_image'];
 
+			// Change array file key.
+			$metadata['file'] = $this->_wp_upload_dir['subdir'] . '/' . $metadata['original_image'];
+			if( 0 === strpos( $metadata['file'], '/' ) ){
+				$metadata['file'] = substr( $metadata['file'], 1 );
+			}
+
+			// Delete array "original_image" key.
+			unset($metadata['original_image']);
+
 			if( file_exists( $rescaled_path ) && file_exists( $new_path ) ){
 				// Move rescaled to original.
 				rename( $rescaled_path, $new_path );
-
-				// Change array file key.
-				$metadata['file'] = $this->_wp_upload_dir['subdir'] . '/' . $metadata['original_image'];
-				if( 0 === strpos( $metadata['file'], '/' ) ){
-					$metadata['file'] = substr( $metadata['file'], 1 );
-				}
-
-				// Delete array "original_image" key.
-				unset($metadata['original_image']);
 
 				// Update meta "_wp_attached_file".
 				update_post_meta( $attachment_id, '_wp_attached_file', $metadata['file'] );
