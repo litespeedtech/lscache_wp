@@ -511,7 +511,7 @@ class Base extends Root {
 		self::O_IMG_OPTM_ORI => false,
 		self::O_IMG_OPTM_RM_BKUP => false,
 		self::O_IMG_OPTM_WEBP => false,
-		self::O_IMG_OPTM_LOSSLESS => array(),
+		self::O_IMG_OPTM_LOSSLESS => false,
 		self::O_IMG_OPTM_SIZES_SKIPPED => array(),
 		self::O_IMG_OPTM_EXIF => false,
 		self::O_IMG_OPTM_WEBP_ATTR => array(),

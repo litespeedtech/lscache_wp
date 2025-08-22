@@ -93,7 +93,7 @@ $this->form_action();
 				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php if ( is_array($image_sizes) && count($image_sizes) > 0 ) : ?>
+				<?php if ( count($image_sizes) > 0 ) : ?>
 					<?php
 						foreach ( $image_sizes as $current_size ) {
 							$checked = false === array_search( $current_size['file_size'], $option_value, true );
@@ -104,7 +104,7 @@ $this->form_action();
 					<p><?php esc_html_e( 'No sizes found.', 'litespeed-cache' ); ?></p>
 				<?php endif; ?>
 				<div class="litespeed-desc">
-					<?php esc_html_e( 'Choose which image sizes will be sent to image optimization.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Choose which image sizes to optimize.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
