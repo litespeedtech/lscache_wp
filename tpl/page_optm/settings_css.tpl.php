@@ -12,6 +12,7 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
+$__admin_display     = Admin_Display::cls();
 $css_summary         = CSS::get_summary();
 $ucss_summary        = UCSS::get_summary();
 $closest_server_ucss = Cloud::get_summary( 'server.' . Cloud::SVC_UCSS );
@@ -84,6 +85,7 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 					<br /><?php esc_html_e( 'Automatic generation of unique CSS is in the background via a cron-based queue.', 'litespeed-cache' ); ?>
 					<br />
 					<font class="litespeed-success"><?php esc_html_e( 'API', 'litespeed-cache' ); ?>: <?php printf( esc_html__( 'Filter %s available for UCSS per page type generation.', 'litespeed-cache' ), '<code>add_filter( "litespeed_ucss_per_pagetype", "__return_true" );</code>' ); ?></font>
+					<?php $__admin_display->_check_overwritten( 'optm-ucss_per_pagetype' ); ?>
 
 					<?php if ( $this->conf( Base::O_OPTM_UCSS ) && ! $this->conf( Base::O_OPTM_CSS_COMB ) ) : ?>
 						<br />

@@ -15,7 +15,7 @@ defined( 'WPINC' ) || exit;
 $cloud_instance = Cloud::cls();
 $cloud_summary  = Cloud::get_summary();
 
-$ajax_url_getIP = function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/tool/check_ip') : '/';
+$ajax_url_get_ip = function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/tool/check_ip') : '/';
 
 $this->form_action();
 ?>
@@ -136,7 +136,7 @@ $this->form_action();
 		$('#litespeed_get_ip').on('click', function (e) {
 			console.log('[litespeed] get server IP');
 			$.ajax({
-				url: '<?php echo $ajax_url_getIP; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>',
+				url: '<?php echo $ajax_url_get_ip; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>',
 				dataType: 'json',
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>');

@@ -10,12 +10,12 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
-$menu_list = array(
+$menu_list = [
 	'summary'   => esc_html__( 'Summary', 'litespeed-cache' ),
 	'map'       => esc_html__( 'Map', 'litespeed-cache' ),
 	'blacklist' => esc_html__( 'Blocklist', 'litespeed-cache' ),
 	'settings'  => esc_html__( 'Settings', 'litespeed-cache' ),
-);
+];
 ?>
 
 <div class="wrap">

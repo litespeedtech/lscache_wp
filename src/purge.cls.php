@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin purge class for X-LiteSpeed-Purge

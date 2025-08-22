@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin cache-control class for X-Litespeed-Cache-Control
  *
  * @since       1.1.3
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

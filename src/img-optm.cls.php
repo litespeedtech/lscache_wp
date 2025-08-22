@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The class to optimize image.
  *
  * @since       2.0
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

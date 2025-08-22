@@ -33,7 +33,7 @@ $cloud_instance->finish_qc_activation( 'online' );
 		<p>
 			<?php
 			$has_service = false;
-			foreach ( Cloud::$SERVICES as $svc ) {
+			foreach ( Cloud::$services as $svc ) {
 				if ( isset( $cloud_summary[ 'server.' . $svc ] ) ) {
 					$has_service = true;
 					printf(

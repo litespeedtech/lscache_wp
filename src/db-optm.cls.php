@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The admin optimize tool
  *
  * @since      1.2.1
  * @package    LiteSpeed
- * @subpackage LiteSpeed/src
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -251,7 +250,7 @@ class DB_Optm extends Root {
 	 */
 	public function list_myisam() {
 		global $wpdb;
-		$q = "SELECT * FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'";
+		$q = "SELECT TABLE_NAME as table_name, ENGINE as engine FROM information_schema.tables WHERE TABLE_SCHEMA = '" . DB_NAME . "' and ENGINE = 'myisam' AND TABLE_NAME LIKE '{$wpdb->prefix}%'";
 		return $wpdb->get_results($q);
 	}
 
@@ -273,8 +272,8 @@ class DB_Optm extends Root {
 
 		$list = $this->list_myisam();
 		foreach ($list as $v) {
-			if ($v->TABLE_NAME == $_GET['tb']) {
-				$tb = $v->TABLE_NAME;
+			if ($v->table_name == $_GET['tb']) {
+				$tb = $v->table_name;
 				break;
 			}
 		}

@@ -1,11 +1,11 @@
 <?php
+// phpcs:ignoreFile
 /**
  * LiteSpeed PHP compatibility functions for lower PHP version
  *
  * @since      1.1.3
- * @package    LiteSpeed_Cache
+ * @package    LiteSpeed
  * @subpackage LiteSpeed_Cache/lib
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 defined( 'WPINC' ) || exit;

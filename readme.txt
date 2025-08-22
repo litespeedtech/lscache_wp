@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 7.3
+Stable tag: 7.3.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -256,6 +256,29 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/litespeed-cache)
 
 == Changelog ==
+
+= 7.4 - Aug 27 2025 =
+* 🌱**Media** Auto Rescale Original Image.
+* 🌱**Toolbox** Disable All for 24 Hours. (PR#886)
+* 🐞**CDN** Fixed a QUIC.cloud sync conf failure on network child sites.
+* 🐞**Object Cache** Fixed a bug that failed to detect the Redis connection status.
+* **Cache** Better match iPhone browsers for mobile cache detection.
+* **Cache** Dropped `advanced-cache.php` since WP version v5.3+ required.
+* **Cache** Used WordPress `Cache-Control` value when the page is not cacheable. (asafm7)
+* **Page Optimize** Better compatibility for dummy CSS removal in case other plugins manipulated the quotes.
+* **Page Optimize** Dropped v4.2 legacy `LITESPEED_BYPASS_OPTM`.
+* **Crawler** Used .html file to test port in case some security plugins blocked .txt which caused port test failure. (#661828)
+* **GUI** Showed current live values for options if they are overridden by filters or the server environment. (PR#885)
+* **Data** Dropped legacy code and upgrade data migration support to LSCWP v5.7-.
+* **Misc** Supported `LITESPEED_DEV` const to switch to dev environment.
+* **Misc** Allows leading `_` for private func/vars in format checker.
+* **Misc** Suppressed frequent version check when certain database option is cached.
+* **Misc** Dropped `sanitize_file_name` usage to prevent template failure when 3rd party plugin manipulated that filter.
+
+= 7.3.0.1 - Jul 30 2025 =
+* **Page Optimize** Fixed the page score impact caused by CSS placeholder. (wpconvert, Sean Thompson)
+* **Page Optimize** Fixed wrong prefetch/preload injection when a page contains other `<title>` tags. (idatahuy)
+* **Crawler** Bypassed port test if no server IP set. (kptk, serkanix, Guillermo)
 
 = 7.3 - Jul 24 2025 =
 * 🌱**CLI** Added `wp litespeed-database` database optimization command.

@@ -1,11 +1,11 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The Third Party integration with Wpdiscuz.
  *
  * @since       2.9.5
- * @package     LiteSpeed_Cache
+ * @package     LiteSpeed
  * @subpackage  LiteSpeed_Cache/thirdparty
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 

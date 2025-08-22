@@ -1,11 +1,10 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The tools
  *
  * @since       3.0
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

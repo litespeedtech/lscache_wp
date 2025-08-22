@@ -1,10 +1,10 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin cache-tag class for X-LiteSpeed-Tag
  *
  * @since       1.1.3
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;

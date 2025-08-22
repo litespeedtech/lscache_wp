@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * exception.cls.php - modified PHP implementation of Matthias Mullie's Exceptions Classes.
  *

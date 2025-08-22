@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * Plugin Name:       LiteSpeed Cache - Object Cache (Drop-in)

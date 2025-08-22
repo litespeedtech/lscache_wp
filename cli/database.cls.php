@@ -104,7 +104,7 @@ class Database {
 	/**
 	 * Show CLI response.
 	 *
-	 * @param boolean $result Flag if result is scuccess or failure.
+	 * @param boolean $result Flag if result is success or failure.
 	 * @param string  $action Action name.
 	 */
 	private function show_response( $result, $action ) {
@@ -211,7 +211,7 @@ class Database {
 	}
 
 	/**
-	 * Optimize database by running all possible opreations.
+	 * Optimize database by running all possible operations.
 	 *     # Start optimizing all.
 	 *     $ wp litespeed-database optimize_all
 	 *     $ wp litespeed-database optimize_all blog 2

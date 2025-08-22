@@ -55,7 +55,7 @@ $menu_list = array(
 		foreach ( $menu_list as $tab_key => $tab_val ) {
 			?>
 			<div data-litespeed-layout='<?php echo esc_attr( $tab_key ); ?>'>
-				<?php require LSCWP_DIR . 'tpl/page_optm/' . sanitize_file_name( $tab_key ) . '.tpl.php'; ?>
+				<?php require LSCWP_DIR . 'tpl/page_optm/' . $tab_key . '.tpl.php'; ?>
 			</div>
 			<?php
 		}

@@ -1,3 +1,11 @@
-<?php defined( 'WPINC' ) || exit; ?>
+<?php
+/**
+ * WooCommerce tab template for LiteSpeed Cache plugin.
+ *
+ * @package LiteSpeed
+ */
 
-<a class='litespeed-tab nav-tab' href='#woocommerce' data-litespeed-tab='woocommerce'><?php echo __( 'WooCommerce', 'litespeed-cache' ); ?></a>
+defined( 'WPINC' ) || exit;
+?>
+
+<a class='litespeed-tab nav-tab' href='#woocommerce' data-litespeed-tab='woocommerce'>WooCommerce</a>

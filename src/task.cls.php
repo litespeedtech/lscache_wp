@@ -1,10 +1,10 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The cron task class.
  *
  * @since       1.1.3
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;

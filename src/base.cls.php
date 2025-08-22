@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:ignoreFile
 /**
  * The base consts
  *
@@ -218,6 +218,7 @@ class Base extends Root {
 	const O_MEDIA_VPI                        = 'media-vpi';
 	const O_MEDIA_VPI_CRON                   = 'media-vpi_cron';
 	const O_IMG_OPTM_JPG_QUALITY             = 'img_optm-jpg_quality';
+	const O_MEDIA_AUTO_RESCALE_ORI           = 'media-auto_rescale_ori';
 
 	// -------------------------------------------------- ##
 	// --------------     Image Optm    ----------------- ##
@@ -280,6 +281,8 @@ class Base extends Root {
 	const O_QC_CNAME             = 'qc-cname';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
+
+	const DEBUG_TMP_DISABLE = 'debug-disable_tmp';
 
 	/*** Other consts ***/
 	const O_GUIDE = 'litespeed-guide'; // Array of each guidance tag as key, step as val //xx todo: may need to remove
@@ -501,6 +504,7 @@ class Base extends Root {
 		self::O_MEDIA_LQIP_EXC => array(),
 		self::O_MEDIA_VPI => false,
 		self::O_MEDIA_VPI_CRON => false,
+		self::O_MEDIA_AUTO_RESCALE_ORI => false,
 
 		// Image Optm
 		self::O_IMG_OPTM_AUTO => false,
@@ -547,6 +551,8 @@ class Base extends Root {
 
 		self::O_QC_NAMESERVERS => '',
 		self::O_QC_CNAME => '',
+
+		self::DEBUG_TMP_DISABLE => 0,
 	);
 
 	protected static $_default_site_options = array(

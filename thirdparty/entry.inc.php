@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The registry for Third Party Plugins Integration files.
  *

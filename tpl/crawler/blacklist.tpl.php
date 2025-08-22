@@ -12,6 +12,7 @@ defined( 'WPINC' ) || exit;
 
 $crawler_summary = Crawler::get_summary();
 $__map           = Crawler_Map::cls();
+$__admin_display = Admin_Display::cls();
 $list            = $__map->list_blacklist( 30 );
 $count           = $__map->count_blacklist();
 $pagination      = Utility::pagination( $count, 30 );
@@ -81,6 +82,7 @@ $pagination      = Utility::pagination( $count, 30 );
 		?>
 	</span>
 </p>
+<?php $__admin_display->_check_overwritten( 'crawler-blocklist' ); ?>
 <p>
 	<i class="litespeed-dot litespeed-bg-default"></i> = <?php esc_html_e( 'Not blocklisted', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php esc_html_e( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>

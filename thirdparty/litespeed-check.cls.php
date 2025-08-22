@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * Check if any plugins that could conflict with LiteSpeed Cache are active.

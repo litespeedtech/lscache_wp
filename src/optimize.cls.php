@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The optimize class.
@@ -18,6 +19,8 @@ class Optimize extends Base {
 	const LIB_FILE_JS_DELAY      = 'assets/js/js_delay.min.js';
 
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
+
+	const DUMMY_CSS_REGEX = "#<link rel=['\"]stylesheet['\"] id=['\"]litespeed-cache-dummy-css['\"] href=['\"].+assets/css/litespeed-dummy\.css[?\w.=-]*['\"][ \w='\"/]*>#isU";
 
 	private $content;
 	private $content_ori;
@@ -220,6 +223,15 @@ class Optimize extends Base {
 	 * @return  string The content that is after optimization
 	 */
 	public function finalize( $content ) {
+		$content = $this->_finalize($content);
+		// Fallback to replace dummy css placeholder
+		if (false !== preg_match(self::DUMMY_CSS_REGEX, $content)) {
+			self::debug('Fallback to drop dummy CSS');
+			$content = preg_replace( self::DUMMY_CSS_REGEX, '', $content );
+		}
+		return $content;
+	}
+	private function _finalize( $content ) {
 		if (defined('LITESPEED_NO_PAGEOPTM')) {
 			self::debug2('bypass: NO_PAGEOPTM const');
 			return $content;
@@ -473,11 +485,6 @@ class Optimize extends Base {
 			if (false !== strpos($this->content, '<meta charset')) {
 				self::debug('Put early optm data to be after <meta charset>');
 				$this->content = preg_replace('#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head_early, $this->content, 1);
-			}
-			// Fallback: try to be before <title>
-			elseif (false !== strpos($this->content, '<title>')) {
-				self::debug('Put early optm data to be before <title>');
-				$this->content = str_replace('<title>', $this->html_head_early . '<title>', $this->content);
 			} else {
 				self::debug('Put early optm data to be right after <head>');
 				$this->content = preg_replace('#<head([^>]*)>#isU', '<head$1>' . $this->html_head_early, $this->content, 1);
@@ -489,15 +496,9 @@ class Optimize extends Base {
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
 				// Put header content to dummy css position
-				$dummy_css = "<link rel='stylesheet' id='litespeed-cache-dummy-css' href='" . LSWCP_PLUGIN_URL . "assets/css/litespeed-dummy.css' media='all' />";
-				if (strpos($this->content, $dummy_css) !== false) {
+				if (false !== preg_match(self::DUMMY_CSS_REGEX, $this->content)) {
 					self::debug('Put optm data to dummy css location');
-					$this->content = str_replace( $dummy_css, $this->html_head, $this->content );
-				}
-				// Fallback: try to be after <title>
-				elseif (strpos($this->content, '</title>') !== false) {
-					self::debug('Put optm data to be after <title>');
-					$this->content = str_replace('</title>', '</title>' . $this->html_head, $this->content);
+					$this->content = preg_replace( self::DUMMY_CSS_REGEX, $this->html_head, $this->content );
 				}
 				// Fallback: try to be after charset
 				elseif (strpos($this->content, '<meta charset') !== false) {

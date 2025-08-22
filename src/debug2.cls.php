@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin logging class.
@@ -46,6 +47,49 @@ class Debug2 extends Root {
 		}
 
 		defined('LSCWP_DEBUG_EXC_STRINGS') || define('LSCWP_DEBUG_EXC_STRINGS', $this->conf(Base::O_DEBUG_EXC_STRINGS));
+	}
+
+	/**
+	 * Disable all functionalities for a time period.
+	 *
+	 * @since 7.4
+	 * @access public
+	 * @param  integer $time How long should we disable LSC functionalities.
+	 */
+	public static function tmp_disable( $time = 86400 ) {
+		$conf = Conf::cls();
+		$disabled = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled ) {
+			$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => time() + $time ) );
+			self::debug2( 'LiteSpeed Cache temporary disabled.' );
+
+			return;
+		}
+
+		$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		self::debug2( 'LiteSpeed Cache reactivated.' );
+	}
+
+	/**
+	 * Test if Disable All is active. Disable if time is reached.
+	 *
+	 * @since 7.4
+	 * @access public
+	 */
+	public static function is_tmp_disable() {
+		$disabled_time = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled_time ) {
+			return false;
+		}
+
+		if ( time() - $disabled_time < 0 ){
+			return true;
+		}
+
+		Conf::cls()->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		return false;
 	}
 
 	/**

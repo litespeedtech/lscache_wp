@@ -38,7 +38,7 @@ if ( ! is_network_admin() ) {
     <?php
         foreach ( $menu_list as $tab_key => $tab_val ) {
 			echo '<div data-litespeed-layout="' . esc_attr( $tab_key ) . '">';
-			require LSCWP_DIR . 'tpl/db_optm/' . sanitize_file_name( $tab_key ) . '.tpl.php';
+			require LSCWP_DIR . 'tpl/db_optm/' . $tab_key . '.tpl.php';
 			echo '</div>';
         }
     ?>

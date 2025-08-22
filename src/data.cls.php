@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The class to store and manage litespeed db data.
  *
  * @since       1.3.1
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -18,11 +17,6 @@ class Data extends Root {
 	const LOG_TAG = '🚀';
 
 	private $_db_updater = array(
-		'3.5.0.3' => array( 'litespeed_update_3_5' ),
-		'4.0' => array( 'litespeed_update_4' ),
-		'4.1' => array( 'litespeed_update_4_1' ),
-		'4.3' => array( 'litespeed_update_4_3' ),
-		'4.4.4-b1' => array( 'litespeed_update_4_4_4' ),
 		'5.3-a5' => array( 'litespeed_update_5_3' ),
 		'7.0-b26' => array( 'litespeed_update_7' ),
 		'7.0.1-b1' => array( 'litespeed_update_7_0_1' ),
@@ -234,62 +228,6 @@ class Data extends Root {
 			update_option('litespeed.data.upgrading', -1);
 		} else {
 			update_option('litespeed.data.upgrading', time());
-		}
-	}
-
-	/**
-	 * Upgrade the conf to v3.0 from previous v3.0- data
-	 *
-	 * NOTE: Only for v3.0-
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public function try_upgrade_conf_3_0() {
-		$previous_options = get_option('litespeed-cache-conf');
-		if (!$previous_options) {
-			return 'new';
-		}
-
-		$ver = $previous_options['version'];
-
-		!defined('LSCWP_CUR_V') && define('LSCWP_CUR_V', $ver);
-
-		// Init log manually
-		if ($this->conf(Base::O_DEBUG)) {
-			$this->cls('Debug2')->init();
-		}
-		self::debug('Upgrading previous settings [from] ' . $ver . ' [to] v3.0');
-
-		if ($this->_get_upgrade_lock()) {
-			return;
-		}
-
-		$this->_set_upgrade_lock(true);
-
-		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
-
-		// Here inside will update the version to v3.0
-		litespeed_update_3_0($ver);
-
-		$this->_set_upgrade_lock(false);
-
-		self::debug('Upgraded to v3.0');
-
-		// Upgrade from 3.0 to latest version
-		$ver = '3.0';
-		if (Core::VER != $ver) {
-			return $this->conf_upgrade($ver);
-		} else {
-			// Reload options
-			$this->cls('Conf')->load_options();
-
-			$this->correct_tb_existence();
-
-			!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
-			Purge::purge_all();
-
-			return 'upgrade';
 		}
 	}
 

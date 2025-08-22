@@ -27,6 +27,30 @@ $this->form_action( $this->_is_network_admin ? Router::ACTION_SAVE_SETTINGS_NETW
 	<?php esc_html_e( 'View Site Before Cache', 'litespeed-cache' ); ?>
 </a>
 
+
+<?php
+$temp_disabled_time = $this->conf( Base::DEBUG_TMP_DISABLE );
+$temp_disabled      = Debug2::is_tmp_disable();
+if ( !$temp_disabled ) {
+?>
+	<a href="<?php echo wp_kses_post( Utility::build_url(Router::ACTION_TMP_DISABLE, false, false, '_ori') ); ?>" class="button litespeed-btn-danger">
+		<?php esc_html_e( 'Disable All Features for 24 Hours', 'litespeed-cache' ); ?>
+	</a>
+<?php
+} else {
+	$date = wp_date( get_option('date_format') . ' ' . get_option( 'time_format' ), $temp_disabled_time );
+?>
+	<a href="<?php echo wp_kses_post( Utility::build_url(Router::ACTION_TMP_DISABLE, false, false, '_ori') ); ?>" class="button litespeed-btn-warning">
+		<?php esc_html_e( 'Remove `Disable All Feature` Flag Now', 'litespeed-cache' ); ?>
+	</a>
+	<div class="litespeed-callout notice notice-warning inline">
+		<h4><?php esc_html_e( 'NOTICE', 'litespeed-cache' ); ?></h4>
+		<p><?php echo wp_kses_post( sprintf ( __( 'LiteSpeed Cache is temporarily disabled until: %s.', 'litespeed-cache' ), '<strong>' . $date . '</strong>' ) ); ?></p>
+	</div>
+<?php
+}
+?>
+
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'Debug Settings', 'litespeed-cache' ); ?>
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#debug-settings-tab' ); ?>

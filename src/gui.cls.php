@@ -1,11 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The frontend GUI class.
  *
  * @since       1.3
  * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

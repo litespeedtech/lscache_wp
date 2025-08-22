@@ -43,5 +43,5 @@ $this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 </tbody></table>
 
 <?php
-$this->form_end( true );
+$this->form_end();
 ?>

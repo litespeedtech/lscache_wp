@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The optimize css class.

@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * modified PHP implementation of Matthias Mullie's convert path class
  * Convert paths relative from 1 file to another.

@@ -45,7 +45,7 @@ if ( is_network_admin() ) {
         <?php
         foreach ( $menu_list as $menu_key => $val ) {
             echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '">';
-            require LSCWP_DIR . 'tpl/general/' . sanitize_file_name( $menu_key ) . '.tpl.php';
+            require LSCWP_DIR . 'tpl/general/' . $menu_key . '.tpl.php';
             echo '</div>';
         }
         ?>

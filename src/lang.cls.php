@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The language class.
  *
  * @since       3.0
  * @package     LiteSpeed_Cache
- * @subpackage  LiteSpeed_Cache/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -202,6 +201,7 @@ class Lang extends Base {
 			self::O_MEDIA_ADD_MISSING_SIZES => __('Add Missing Sizes', 'litespeed-cache'),
 			self::O_MEDIA_VPI => __('Viewport Images', 'litespeed-cache'),
 			self::O_MEDIA_VPI_CRON => __('Viewport Images Cron', 'litespeed-cache'),
+			self::O_MEDIA_AUTO_RESCALE_ORI => __('Auto Rescale Original Images', 'litespeed-cache'),
 
 			self::O_IMG_OPTM_AUTO => __('Auto Request Cron', 'litespeed-cache'),
 			self::O_IMG_OPTM_ORI => __('Optimize Original Images', 'litespeed-cache'),

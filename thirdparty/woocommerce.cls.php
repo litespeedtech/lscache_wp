@@ -1,13 +1,13 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The Third Party integration with the WooCommerce plugin.
  *
  * @since         1.0.5
  * @since  1.6.6 Added function_exists check for compatibility
- * @package       LiteSpeed_Cache
+ * @package       LiteSpeed
  * @subpackage    LiteSpeed_Cache/thirdparty
- * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed\Thirdparty;
@@ -87,7 +87,7 @@ class WooCommerce extends Base {
 				add_filter('litespeed_esi_params', array( $this, 'add_post_id' ), 10, 2);
 			}
 
-			// #612331 - remove Woocommerce geolocation redirect on ESI page (PR#708)
+			// #612331 - remove WooCommerce geolocation redirect on ESI page (PR#708)
 			if (!empty($_GET[ESI::QS_ACTION]) && !empty($_GET[ESI::QS_PARAMS])) {
 				remove_action( 'template_redirect', array( 'WC_Cache_Helper', 'geolocation_ajax_redirect' ), 10 );
 			}

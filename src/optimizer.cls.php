@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The optimize4 class.
  *
  * @since       1.9
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

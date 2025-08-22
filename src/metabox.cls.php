@@ -1,11 +1,10 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The class to operate post editor metabox settings
  *
  * @since       4.7
- * @package     Core
- * @subpackage  Core/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
+ * @package     LiteSpeed
  */
 namespace LiteSpeed;
 
