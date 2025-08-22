@@ -929,7 +929,7 @@ class Utility extends Root {
 	 * @access public
 	 */
 	public static function prepare_image_sizes_array( $detailed = false ) {
-		// Skip sizes with 0 because they are skipped in optimization.
+		// Skip sizes with 0 because they are not added in optimization.
 		$image_sizes  = wp_get_registered_image_subsizes();
 		$sizes = [];
 
@@ -942,7 +942,7 @@ class Utility extends Root {
 			else{
 				$label =  $current_size['width']  . 'x' . $current_size['height'];
 				if( $current_size_name !== $label ){
-					$label = ucfirst( $current_size_name ) . '(' . $label  . ')';
+					$label = ucfirst( $current_size_name ) . ' ( ' . $label  . ' )';
 				}
 
 				$sizes[] = [
