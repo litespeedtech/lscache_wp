@@ -770,7 +770,7 @@ class Base extends Root {
 	 * @since  3.0
 	 */
 	protected function _conf_string_val( $id, $val ) {
-		return $val;
+		return (string)$val;
 	}
 
 	/**

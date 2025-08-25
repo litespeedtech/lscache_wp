@@ -79,9 +79,9 @@ class Admin_Settings extends Base {
 			// Pull value from request.
 			if ( $child ) {
 				// []=xxx or [0]=xxx
-				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : false;
+				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : $this->type_casting(false, $id);
 			} else {
-				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
+				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : $this->type_casting(false, $id);
 			}
 
 			// Sanitize/normalize complex fields.
