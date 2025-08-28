@@ -208,6 +208,7 @@ class Lang extends Base {
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
 			self::O_IMG_OPTM_LOSSLESS => __('Optimize Losslessly', 'litespeed-cache'),
+			self::O_IMG_OPTM_SIZES_SKIPPED => __('Optimize image sizes', 'litespeed-cache'),
 			self::O_IMG_OPTM_EXIF => __('Preserve EXIF/XMP data', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_ATTR => __('WebP/AVIF Attribute To Replace', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET => __('WebP/AVIF For Extra srcset', 'litespeed-cache'),
