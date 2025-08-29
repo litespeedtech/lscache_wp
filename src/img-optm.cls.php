@@ -902,7 +902,7 @@ class Img_Optm extends Base {
 			return;
 		}
 
-		if (defined('LITESPEED_IMG_OPTM_PULL_CRON') && !LITESPEED_IMG_OPTM_PULL_CRON) {
+		if (defined('LITESPEED_IMG_OPTM_PULL_CRON') && !constant('LITESPEED_IMG_OPTM_PULL_CRON')) {
 			self::debug('Cron disabled [define] LITESPEED_IMG_OPTM_PULL_CRON');
 			return;
 		}
@@ -920,7 +920,7 @@ class Img_Optm extends Base {
 		global $wpdb;
 
 		if (defined('LITESPEED_IMG_OPTM_PULL_THREADS')) {
-			return LITESPEED_IMG_OPTM_PULL_THREADS;
+			return constant('LITESPEED_IMG_OPTM_PULL_THREADS');
 		}
 
 		// Tune number of images per request based on number of images waiting and cloud packages
@@ -1190,7 +1190,7 @@ class Img_Optm extends Base {
 					++$total_pulled_ori;
 				};
 
-				$force_wp_remote_get = defined('LITESPEED_FORCE_WP_REMOTE_GET') && LITESPEED_FORCE_WP_REMOTE_GET;
+				$force_wp_remote_get = defined('LITESPEED_FORCE_WP_REMOTE_GET') && constant('LITESPEED_FORCE_WP_REMOTE_GET');
 				if (!$force_wp_remote_get && class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload') && version_compare(PHP_VERSION, '5.6.0', '>=')) {
 					// Make sure Requests can load internal classes.
 					Autoload::register();

@@ -693,7 +693,7 @@ class Utility extends Root {
 	public static function internal( $host ) {
 		if (!defined('LITESPEED_FRONTEND_HOST')) {
 			if (defined('WP_HOME')) {
-				$home_host = WP_HOME; // Also think of `WP_SITEURL`
+				$home_host = constant('WP_HOME'); // Also think of `WP_SITEURL`
 			} else {
 				$home_host = get_option('home');
 			}
@@ -773,7 +773,7 @@ class Utility extends Root {
 		 */
 		if (substr($url_parsed['path'], 0, 1) === '/') {
 			if (defined('LITESPEED_WP_REALPATH')) {
-				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . LITESPEED_WP_REALPATH . $url_parsed['path'];
+				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . constant('LITESPEED_WP_REALPATH') . $url_parsed['path'];
 			} else {
 				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . $url_parsed['path'];
 			}

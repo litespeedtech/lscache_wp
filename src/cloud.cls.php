@@ -756,7 +756,8 @@ class Cloud extends Base {
 			'php' => phpversion(),
 		);
 		if (defined('LITESPEED_ERR')) {
-			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? \json_encode(LITESPEED_ERR) : LITESPEED_ERR);
+			$LITESPEED_ERR = constant('LITESPEED_ERR');
+			$req_data['err'] = base64_encode(!is_string($LITESPEED_ERR) ? \json_encode($LITESPEED_ERR) : $LITESPEED_ERR);
 		}
 		$data = self::post(self::API_VER, $req_data);
 

@@ -434,7 +434,7 @@ class Conf extends Base {
 	 * @since  3.0
 	 * @access public
 	 */
-	public function update_confs( $the_matrix = false ) {
+	public function update_confs( $the_matrix = array() ) {
 		if ($the_matrix) {
 			foreach ($the_matrix as $id => $val) {
 				$this->update($id, $val);

@@ -75,7 +75,7 @@ unset( $wp_content_url );
 require_once LSCWP_DIR . 'autoload.php';
 
 // Define CLI
-if ( ( defined( 'WP_CLI' ) && WP_CLI ) || 'cli' === PHP_SAPI ) {
+if ( ( defined( 'WP_CLI' ) && constant('WP_CLI') ) || 'cli' === PHP_SAPI ) {
 	! defined( 'LITESPEED_CLI' ) && define( 'LITESPEED_CLI', true );
 
 	// Register CLI cmd

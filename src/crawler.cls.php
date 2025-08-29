@@ -395,8 +395,8 @@ class Crawler extends Root {
 		 * @since 1.8.3
 		 */
 		$this->_crawler_conf['run_delay'] = 500; // microseconds
-		if (defined('LITESPEED_CRAWLER_USLEEP') && LITESPEED_CRAWLER_USLEEP > $this->_crawler_conf['run_delay']) {
-			$this->_crawler_conf['run_delay'] = LITESPEED_CRAWLER_USLEEP;
+		if (defined('LITESPEED_CRAWLER_USLEEP') && constant('LITESPEED_CRAWLER_USLEEP') > $this->_crawler_conf['run_delay']) {
+			$this->_crawler_conf['run_delay'] = constant('LITESPEED_CRAWLER_USLEEP');
 		}
 		if (!empty($_SERVER[Base::ENV_CRAWLER_USLEEP]) && $_SERVER[Base::ENV_CRAWLER_USLEEP] > $this->_crawler_conf['run_delay']) {
 			$this->_crawler_conf['run_delay'] = $_SERVER[Base::ENV_CRAWLER_USLEEP];
@@ -441,7 +441,7 @@ class Crawler extends Root {
 	 * @since 7.0
 	 */
 	public function get_crawler_duration() {
-		$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? LITESPEED_CRAWLER_DURATION : 900;
+		$RUN_DURATION = defined('LITESPEED_CRAWLER_DURATION') ? constant('LITESPEED_CRAWLER_DURATION') : 900;
 		if ($RUN_DURATION > 900) {
 			$RUN_DURATION = 900; // reset to default value if defined in conf file is higher than 900 seconds for security enhancement
 		}
@@ -535,7 +535,7 @@ class Crawler extends Root {
 
 		$curload /= $this->_ncpu;
 		// $curload = 1;
-		$CRAWLER_THREADS = defined('LITESPEED_CRAWLER_THREADS') ? LITESPEED_CRAWLER_THREADS : 3;
+		$CRAWLER_THREADS = defined('LITESPEED_CRAWLER_THREADS') ? constant('LITESPEED_CRAWLER_THREADS') : 3;
 
 		if ($this->_cur_threads == -1) {
 			// init
@@ -915,7 +915,7 @@ class Crawler extends Root {
 			exit('curl_multi_init disabled');
 		}
 		$mh                  = curl_multi_init();
-		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? LITESPEED_CRAWLER_DROP_DOMAIN : false;
+		$CRAWLER_DROP_DOMAIN = defined('LITESPEED_CRAWLER_DROP_DOMAIN') ? constant('LITESPEED_CRAWLER_DROP_DOMAIN') : false;
 		$curls               = array();
 		foreach ($rows as $row) {
 			if (substr($row['res'], $this->_summary['curr_crawler'], 1) == self::STATUS_BLACKLIST) {
@@ -1048,7 +1048,7 @@ class Crawler extends Root {
 			}
 
 			// If blacklist is disabled
-			if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
+			if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && constant('LITESPEED_CRAWLER_DISABLE_BLOCKLIST')) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
 				return self::STATUS_MISS;
 			}
 
@@ -1070,7 +1070,7 @@ class Crawler extends Root {
 		}
 
 		// If blacklist is disabled
-		if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && LITESPEED_CRAWLER_DISABLE_BLOCKLIST) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
+		if ((defined('LITESPEED_CRAWLER_DISABLE_BLOCKLIST') && constant('LITESPEED_CRAWLER_DISABLE_BLOCKLIST')) || apply_filters('litespeed_crawler_disable_blocklist', false, $url)) {
 			return self::STATUS_MISS;
 		}
 
@@ -1084,7 +1084,7 @@ class Crawler extends Root {
 	 * @access private
 	 */
 	private function _get_curl_options( $crawler_only = false ) {
-		$CRAWLER_TIMEOUT               = defined('LITESPEED_CRAWLER_TIMEOUT') ? LITESPEED_CRAWLER_TIMEOUT : 30;
+		$CRAWLER_TIMEOUT               = defined('LITESPEED_CRAWLER_TIMEOUT') ? constant('LITESPEED_CRAWLER_TIMEOUT') : 30;
 		$options                       = array(
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_HEADER => true,
