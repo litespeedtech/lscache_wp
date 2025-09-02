@@ -755,6 +755,10 @@ class Cloud extends Base {
 			'src' => $src,
 			'php' => phpversion(),
 		);
+		// If code ver is smaller than db ver, bypass
+		if (!empty($req_data['v']) && version_compare(Core::VER, $req_data['v'], '<')) {
+			return;
+		}
 		if (defined('LITESPEED_ERR')) {
 			$LITESPEED_ERR = constant('LITESPEED_ERR');
 			$req_data['err'] = base64_encode(!is_string($LITESPEED_ERR) ? \json_encode($LITESPEED_ERR) : $LITESPEED_ERR);
@@ -1157,7 +1161,7 @@ class Cloud extends Base {
 		self::debug('getting from : ' . $url);
 
 		self::save_summary(array( 'curr_request.' . $service_tag => time() ));
-		File::save(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), time(), true);
+		File::save($this->_qc_time_file($service_tag, 'curr'), time(), true);
 
 		$response = wp_safe_remote_get($url, array(
 			'timeout' => 15,
@@ -1215,15 +1219,15 @@ class Cloud extends Base {
 
 		$expiration_req = self::EXPIRATION_REQ;
 		// Limit frequent unfinished request to 5min
-		$timestamp_tag = 'curr_request.';
+		$timestamp_tag = 'curr';
 		if ($service_tag == self::SVC_IMG_OPTM . '-' . Img_Optm::TYPE_NEW_REQ) {
-			$timestamp_tag = 'last_request.';
+			$timestamp_tag = 'last';
 		}
 
 		// For all other requests, if is under debug mode, will always allow
 		if (!$this->conf(self::O_DEBUG)) {
-			if (!empty($this->_summary[$timestamp_tag . $service_tag])) {
-				$expired = $this->_summary[$timestamp_tag . $service_tag] + $expiration_req - time();
+			if (!empty($this->_summary[$timestamp_tag . '_request.' . $service_tag])) {
+				$expired = $this->_summary[$timestamp_tag . '_request.' . $service_tag] + $expiration_req - time();
 				if ($expired > 0) {
 					self::debug("❌ try [$service_tag] after $expired seconds");
 
@@ -1242,8 +1246,8 @@ class Cloud extends Base {
 					return false;
 				}
 			} else {
-				// May fail to store to db if db died. Need to store to file to prevent from duplicate calls
-				$file_path = LITESPEED_STATIC_DIR . '/qc_' . $timestamp_tag . md5($service_tag);
+				// May fail to store to db if db is oc cached/dead/locked/readonly. Need to store to file to prevent from duplicate calls
+				$file_path = $this->_qc_time_file($service_tag, $timestamp_tag);
 				if (file_exists($file_path)) {
 					$last_request = file_get_contents($file_path);
 					$expired      = $last_request + $expiration_req * 10 - time();
@@ -1254,7 +1258,7 @@ class Cloud extends Base {
 				}
 				// For ver check, additional check to prevent frequent calls as old DB ver may be cached
 				if (self::API_VER === $service_tag) {
-					$file_path = LITESPEED_STATIC_DIR . '/qc_last_request' . md5($service_tag);
+					$file_path = $this->_qc_time_file($service_tag);
 					if (file_exists($file_path)) {
 						$last_request = file_get_contents($file_path);
 						$expired      = $last_request + $expiration_req * 10 - time();
@@ -1262,6 +1266,8 @@ class Cloud extends Base {
 							self::debug("❌❌ Unusual req! try [$service_tag] after $expired seconds");
 							return false;
 						}
+					// } else {
+					// 	File::save(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), time(), true);
 					}
 				}
 			}
@@ -1277,6 +1283,23 @@ class Cloud extends Base {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get QC req ts file path
+	 *
+	 * @since 7.5
+	 */
+	private function _qc_time_file( $service_tag, $type = 'last' ) {
+		if ('curr' !== $type) {
+			$type = 'last';
+		}
+		$legacy_file = LITESPEED_STATIC_DIR . '/qc_' . $type . '_request' . md5($service_tag);
+		if (file_exists($legacy_file)) {
+			wp_delete_file($legacy_file);
+		}
+		$service_tag = preg_replace('/[^a-zA-Z0-9]/', '', $service_tag);
+		return LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . $service_tag;
 	}
 
 	/**
@@ -1380,7 +1403,7 @@ class Cloud extends Base {
 		);
 
 		self::save_summary(array( 'curr_request.' . $service_tag => time() ));
-		File::save(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), time(), true);
+		File::save($this->_qc_time_file($service_tag, 'curr'), time(), true);
 
 		$response = wp_safe_remote_post($url, array(
 			'body' => $param,
@@ -1516,8 +1539,8 @@ class Cloud extends Base {
 			'last_request.' . $service_tag => $curr_request,
 			'curr_request.' . $service_tag => 0,
 		));
-		File::save(LITESPEED_STATIC_DIR . '/qc_last_request' . md5($service_tag), $curr_request, true);
-		File::save(LITESPEED_STATIC_DIR . '/qc_curr_request' . md5($service_tag), 0, true);
+		File::save($this->_qc_time_file($service_tag), $curr_request, true);
+		File::save($this->_qc_time_file($service_tag, 'curr'), 0, true);
 
 		if ($json) {
 			self::debug2('response ok', $json);
