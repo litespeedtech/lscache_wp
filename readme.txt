@@ -257,6 +257,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.5 - Sep 17 2025 =
+* **Purge** Purge Time setting will respect WP timezone setting now. (PR#893)
+* **Conf** Fixed a type casting minor bug when the setting is empty which may cause unnecessary QUIC.cloud sync conf.
+* **Misc** Dropped unused rewrite rule from htaccess.
+
 = 7.4 - Aug 28 2025 =
 * 🌱**Media** Added new Auto Rescale Original Image option.
 * 🌱**Toolbox** Added ability to Disable All for 24 Hours. (PR#886)
