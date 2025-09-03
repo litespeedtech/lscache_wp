@@ -96,9 +96,9 @@ class Img_Optm extends Base {
 				$this->_format = 'avif';
 			}
 		}
-		
+
 		// Allow users to ignore custom sizes.
-		$this->_sizes_skipped = apply_filters( 'litespeed_img_optimization_sizes_skipped', $this->conf( Base::O_IMG_OPTM_SIZES_SKIPPED ) );
+		$this->_sizes_skipped = apply_filters( 'litespeed_imgoptm_sizes_skipped', $this->conf( Base::O_IMG_OPTM_SIZES_SKIPPED ) );
 	}
 
 	/**
@@ -377,7 +377,7 @@ class Img_Optm extends Base {
 		// Test if need to skip image size.
 		if (!$is_ori_file) {
 			$short_file_path = $this->tmp_path . $short_file_path;
-			$skip = false !== array_search( $img_size_name, $this->_sizes_skipped, true ) ?? false;
+			$skip = false !== array_search( $img_size_name, $this->_sizes_skipped, true );
 			if($skip){
 				self::debug2( 'bypass image ' . $short_file_path . ' due to skipped size: ' . $img_size_name );
 				return;
