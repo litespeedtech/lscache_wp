@@ -921,4 +921,38 @@ class Utility extends Root {
 
 		return $q;
 	}
+
+	/**
+	 * Prepare image sizes for optimization.
+	 *
+	 * @since 7.5
+	 * @access public
+	 */
+	public static function prepare_image_sizes_array( $detailed = false ) {
+		$image_sizes  = wp_get_registered_image_subsizes();
+		$sizes = [];
+
+		foreach ( $image_sizes as $current_size_name => $current_size ) {
+			if( empty( $current_size['width'] ) && empty( $current_size['height'] ) ) continue;
+			
+			if( !$detailed ) {
+				$sizes[] = $current_size_name;
+			}
+			else{
+				$label =  $current_size['width']  . 'x' . $current_size['height'];
+				if( $current_size_name !== $label ){
+					$label = ucfirst( $current_size_name ) . ' ( ' . $label  . ' )';
+				}
+
+				$sizes[] = [
+					"label"     => $label,
+					"file_size" => $current_size_name,
+					"width"     => $current_size['width'],
+					"height"    => $current_size['height'],
+				];
+			}
+		}
+
+		return $sizes;
+	}
 }

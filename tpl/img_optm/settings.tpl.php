@@ -85,6 +85,32 @@ $this->form_action();
 
 		<tr>
 			<th>
+				<?php
+					$option_id    = Base::O_IMG_OPTM_SIZES_SKIPPED;
+					$image_sizes  = Utility::prepare_image_sizes_array(true);
+					$option_value = $this->conf( $option_id );
+				?>
+				<?php $this->title( $option_id ); ?>
+			</th>
+			<td>
+				<?php if ( count($image_sizes) > 0 ) : ?>
+					<?php
+						foreach ( $image_sizes as $current_size ) {
+							$checked = false === array_search( $current_size['file_size'], $option_value, true );
+							$this->build_checkbox( $option_id . '[]', esc_html( $current_size['label'] ), $checked, $current_size['file_size'] );
+						}
+					?>
+				<?php else : ?>
+					<p><?php esc_html_e( 'No sizes found.', 'litespeed-cache' ); ?></p>
+				<?php endif; ?>
+				<div class="litespeed-desc">
+					<?php esc_html_e( 'Choose which image sizes to optimize.', 'litespeed-cache' ); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
 				<?php $option_id = Base::O_IMG_OPTM_EXIF; ?>
 				<?php $this->title( $option_id ); ?>
 			</th>

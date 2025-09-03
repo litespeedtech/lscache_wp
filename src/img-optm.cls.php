@@ -65,6 +65,7 @@ class Img_Optm extends Base {
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
+	private $_sizes_skipped     = array();
 
 	private $__media;
 	private $__data;
@@ -95,6 +96,9 @@ class Img_Optm extends Base {
 				$this->_format = 'avif';
 			}
 		}
+		
+		// Allow users to ignore custom sizes.
+		$this->_sizes_skipped = apply_filters( 'litespeed_img_optimization_sizes_skipped', $this->conf( Base::O_IMG_OPTM_SIZES_SKIPPED ) );
 	}
 
 	/**
@@ -139,7 +143,9 @@ class Img_Optm extends Base {
 		$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 		$this->_append_img_queue($meta_value, true);
 		if (!empty($meta_value['sizes'])) {
-			array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+			foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+				$this->_append_img_queue($img_size, false, $img_size_name );
+			}
 		}
 
 		if (!$this->_img_in_queue) {
@@ -305,7 +311,9 @@ class Img_Optm extends Base {
 				$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 				$this->_append_img_queue($meta_value, true);
 				if (!empty($meta_value['sizes'])) {
-					array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+					foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+						$this->_append_img_queue($img_size, false, $img_size_name );
+					}
 				}
 			}
 
@@ -355,9 +363,10 @@ class Img_Optm extends Base {
 	 * Add a new img to queue which will be pushed to request
 	 *
 	 * @since 1.6
+	 * @since 7.5 Allow to choose which image sizes should be optimized + added parameter $img_size_name.
 	 * @access private
 	 */
-	private function _append_img_queue( $meta_value, $is_ori_file = false ) {
+	private function _append_img_queue( $meta_value, $is_ori_file = false, $img_size_name = false ) {
 		if (empty($meta_value['file']) || empty($meta_value['width']) || empty($meta_value['height'])) {
 			self::debug2('bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value);
 			return;
@@ -365,8 +374,14 @@ class Img_Optm extends Base {
 
 		$short_file_path = $meta_value['file'];
 
+		// Test if need to skip image size.
 		if (!$is_ori_file) {
 			$short_file_path = $this->tmp_path . $short_file_path;
+			$skip = false !== array_search( $img_size_name, $this->_sizes_skipped, true ) ?? false;
+			if($skip){
+				self::debug2( 'bypass image ' . $short_file_path . ' due to skipped size: ' . $img_size_name );
+				return;
+			}
 		}
 
 		// Check if src is gathered already or not
@@ -1551,7 +1566,9 @@ class Img_Optm extends Base {
 			$this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 			$this->_append_img_queue($meta_value, true);
 			if (!empty($meta_value['sizes'])) {
-				array_map(array( $this, '_append_img_queue' ), $meta_value['sizes']);
+				foreach( $meta_value['sizes'] as $img_size_name => $img_size ){
+					$this->_append_img_queue($img_size, false, $img_size_name );
+				}
 			}
 		}
 
