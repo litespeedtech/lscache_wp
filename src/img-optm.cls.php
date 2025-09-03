@@ -1206,7 +1206,7 @@ class Img_Optm extends Base {
 				};
 
 				$force_wp_remote_get = defined('LITESPEED_FORCE_WP_REMOTE_GET') && constant('LITESPEED_FORCE_WP_REMOTE_GET');
-				if (!$force_wp_remote_get && class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload') && version_compare(PHP_VERSION, '5.6.0', '>=')) {
+				if (!$force_wp_remote_get && class_exists('\WpOrg\Requests\Requests') && class_exists('\WpOrg\Requests\Autoload')) {
 					// Make sure Requests can load internal classes.
 					Autoload::register();
 

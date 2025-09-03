@@ -515,7 +515,7 @@ class Debug2 extends Root {
 	private static function _backtrace_info( $backtrace_limit ) {
 		$msg = '';
 
-		$trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace() : debug_backtrace(false, $backtrace_limit + 3);
+		$trace = debug_backtrace(false, $backtrace_limit + 3);
 		for ($i = 2; $i <= $backtrace_limit + 2; $i++) {
 			// 0st => _backtrace_info(), 1st => push()
 			if (empty($trace[$i]['class'])) {
