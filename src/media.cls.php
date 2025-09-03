@@ -678,6 +678,7 @@ class Media extends Root {
 	 * Note: Didn't reuse the _parse_img() bcoz it contains parent cls replacement and other logic which is not needed for preload
 	 *
 	 * @since 6.2
+	 * @since 6.5 - Added attributes fetchpriority="high" and decode="sync" for VPI images.
 	 */
 	private function _parse_img_for_preload() {
 		// Load VPI setting
@@ -724,6 +725,20 @@ class Media extends Root {
 			Debug2::debug2('[Media] VPI preload found and matched: ' . $attrs['src']);
 
 			$this->_vpi_preload_list[] = $attrs['src'];
+
+			// Add attributes fetchpriority="high" and decode="sync"
+			// after WP 6.3.0 use: wp_img_tag_add_loading_optimization_attrs().
+			$new_html = [];
+			$attrs[ 'fetchpriority' ] = 'high';
+			$attrs[ 'decoding' ] = 'sync';
+			// create html with new attributes.
+			foreach( $attrs as $k => $attr ) {
+				$new_html[] = $k . '="' . $attr . '"';
+			}
+
+			if( $new_html ) {
+				$this->content = str_replace( $match[1], implode( ' ', $new_html), $this->content );
+			}
 		}
 	}
 
