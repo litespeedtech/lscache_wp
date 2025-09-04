@@ -240,6 +240,35 @@ class Object_Cache extends Root {
 	private $_non_persistent_groups = array();
 
 	/**
+	 * Get configuration value with constant override support.
+	 *
+	 * @since  1.8
+	 * @access private
+	 *
+	 * @param string $key    Configuration key.
+	 * @param mixed  $value  Current value.
+	 * @param mixed  $default Default value if not set.
+	 * @return mixed Configuration value.
+	 */
+	private function _get_cfg_with_const( $key, $value, $default = null ) {
+		// If value is already set and not empty, use it
+		if ( $value !== null && $value !== '' ) {
+			return $value;
+		}
+
+		// Check for constant override
+		$const_name = 'LITESPEED_CONF__' . strtoupper( str_replace( '-', '__', $key ) );
+		if ( defined( $const_name ) ) {
+			$const_value = constant( $const_name );
+			$this->debug_oc( 'Using constant override for ' . $key . ': ' . $const_name . ' = ' . var_export( $const_value, true ) );
+			return $const_value;
+		}
+
+		// Return default if no value or constant found
+		return $default;
+	}
+
+	/**
 	 * Init.
 	 *
 	 * NOTE: this class may be included without initialized core.
@@ -258,15 +287,15 @@ class Object_Cache extends Root {
 			}
 			$this->_cfg_debug             = $cfg[ Base::O_DEBUG ] ? $cfg[ Base::O_DEBUG ] : false;
 			$this->_cfg_method            = $cfg[ Base::O_OBJECT_KIND ] ? true : false;
-			$this->_cfg_host              = $cfg[ Base::O_OBJECT_HOST ];
-			$this->_cfg_port              = $cfg[ Base::O_OBJECT_PORT ];
-			$this->_cfg_life              = $cfg[ Base::O_OBJECT_LIFE ];
-			$this->_cfg_persistent        = $cfg[ Base::O_OBJECT_PERSISTENT ];
-			$this->_cfg_admin             = $cfg[ Base::O_OBJECT_ADMIN ];
-			$this->_cfg_transients        = $cfg[ Base::O_OBJECT_TRANSIENTS ];
-			$this->_cfg_db                = $cfg[ Base::O_OBJECT_DB_ID ];
-			$this->_cfg_user              = $cfg[ Base::O_OBJECT_USER ];
-			$this->_cfg_pswd              = $cfg[ Base::O_OBJECT_PSWD ];
+			$this->_cfg_host              = $this->_get_cfg_with_const( Base::O_OBJECT_HOST, $cfg[ Base::O_OBJECT_HOST ] );
+			$this->_cfg_port              = $this->_get_cfg_with_const( Base::O_OBJECT_PORT, $cfg[ Base::O_OBJECT_PORT ] );
+			$this->_cfg_life              = $this->_get_cfg_with_const( Base::O_OBJECT_LIFE, $cfg[ Base::O_OBJECT_LIFE ], $this->_default_life );
+			$this->_cfg_persistent        = $this->_get_cfg_with_const( Base::O_OBJECT_PERSISTENT, $cfg[ Base::O_OBJECT_PERSISTENT ], false );
+			$this->_cfg_admin             = $this->_get_cfg_with_const( Base::O_OBJECT_ADMIN, $cfg[ Base::O_OBJECT_ADMIN ], false );
+			$this->_cfg_transients        = $this->_get_cfg_with_const( Base::O_OBJECT_TRANSIENTS, $cfg[ Base::O_OBJECT_TRANSIENTS ], false );
+			$this->_cfg_db                = $this->_get_cfg_with_const( Base::O_OBJECT_DB_ID, $cfg[ Base::O_OBJECT_DB_ID ], 0 );
+			$this->_cfg_user              = $this->_get_cfg_with_const( Base::O_OBJECT_USER, $cfg[ Base::O_OBJECT_USER ], '' );
+			$this->_cfg_pswd              = $this->_get_cfg_with_const( Base::O_OBJECT_PSWD, $cfg[ Base::O_OBJECT_PSWD ], '' );
 			$this->_global_groups         = $cfg[ Base::O_OBJECT_GLOBAL_GROUPS ];
 			$this->_non_persistent_groups = $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ];
 
@@ -292,7 +321,7 @@ class Object_Cache extends Root {
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
-			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host;
 		} elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) {
 			// Get cfg from _data_file.
 			// Use self::const to avoid loading more classes.
@@ -300,15 +329,15 @@ class Object_Cache extends Root {
 			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
 				$this->_cfg_debug             = ! empty( $cfg[ Base::O_DEBUG ] ) ? $cfg[ Base::O_DEBUG ] : false;
 				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
-				$this->_cfg_host              = $cfg[ self::O_OBJECT_HOST ];
-				$this->_cfg_port              = $cfg[ self::O_OBJECT_PORT ];
-				$this->_cfg_life              = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
-				$this->_cfg_persistent        = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
-				$this->_cfg_admin             = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
-				$this->_cfg_transients        = ! empty( $cfg[ self::O_OBJECT_TRANSIENTS ] ) ? $cfg[ self::O_OBJECT_TRANSIENTS ] : false;
-				$this->_cfg_db                = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
-				$this->_cfg_user              = ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : '';
-				$this->_cfg_pswd              = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
+				$this->_cfg_host              = $this->_get_cfg_with_const( self::O_OBJECT_HOST, $cfg[ self::O_OBJECT_HOST ] );
+				$this->_cfg_port              = $this->_get_cfg_with_const( self::O_OBJECT_PORT, $cfg[ self::O_OBJECT_PORT ] );
+				$this->_cfg_life              = $this->_get_cfg_with_const( self::O_OBJECT_LIFE, ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : null, $this->_default_life );
+				$this->_cfg_persistent        = $this->_get_cfg_with_const( self::O_OBJECT_PERSISTENT, ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : null, false );
+				$this->_cfg_admin             = $this->_get_cfg_with_const( self::O_OBJECT_ADMIN, ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : null, false );
+				$this->_cfg_transients        = $this->_get_cfg_with_const( self::O_OBJECT_TRANSIENTS, ! empty( $cfg[ self::O_OBJECT_TRANSIENTS ] ) ? $cfg[ self::O_OBJECT_TRANSIENTS ] : null, false );
+				$this->_cfg_db                = $this->_get_cfg_with_const( self::O_OBJECT_DB_ID, ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : null, 0 );
+				$this->_cfg_user              = $this->_get_cfg_with_const( self::O_OBJECT_USER, ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : null, '' );
+				$this->_cfg_pswd              = $this->_get_cfg_with_const( self::O_OBJECT_PSWD, ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : null, '' );
 				$this->_global_groups         = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : array();
 				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : array();
 

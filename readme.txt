@@ -255,6 +255,28 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/litespeed-cache)
 
+= Can I configure object cache settings via wp-config.php? =
+
+Yes! You can override object cache settings (Redis/Memcached) by defining constants in your `wp-config.php` file. This is useful for environments where you want to set these values programmatically or keep them out of the database.
+
+Add the following constants to your `wp-config.php` file:
+
+```php
+// Object Cache Server Host
+define('LITESPEED_CONF__OBJECT__HOST', 'your-redis-server.com');
+
+// Object Cache Database ID (for Redis)
+define('LITESPEED_CONF__OBJECT__DB_ID', 1);
+
+// Object Cache Username (if authentication is required)
+define('LITESPEED_CONF__OBJECT__USER', 'your-username');
+
+// Object Cache Password (if authentication is required)
+define('LITESPEED_CONF__OBJECT__PSWD', 'your-password');
+```
+
+These constants will override the corresponding settings in the database when the object cache is initialized. If a constant is not defined, the plugin will fall back to the database setting.
+
 == Changelog ==
 
 = 7.5 - Sep 17 2025 =
