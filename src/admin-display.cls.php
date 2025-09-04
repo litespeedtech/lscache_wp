@@ -248,6 +248,7 @@ class Admin_Display extends Base {
 		$this->_pages = [
 			// Site-level pages
 			'litespeed'               => [ 'title' => __( 'Dashboard', 'litespeed-cache' ), 'tpl' => 'dash/entry.tpl.php' ],
+			'litespeed-optimax'       => [ 'title' => __( 'OptimaX', 'litespeed-cache' ), 'tpl' => 'optimax/entry.tpl.php' ],
 			'litespeed-presets'       => [ 'title' => __( 'Presets', 'litespeed-cache' ), 'tpl' => 'presets/entry.tpl.php' ],
 			'litespeed-general'       => [ 'title' => __( 'General', 'litespeed-cache' ), 'tpl' => 'general/entry.tpl.php' ],
 			'litespeed-cache'         => [ 'title' => __( 'Cache', 'litespeed-cache' ), 'tpl' => 'cache/entry.tpl.php' ],
@@ -365,6 +366,9 @@ class Admin_Display extends Base {
 		);
 
 		foreach ( $this->_pages as $slug => $meta ) {
+			if ( 'litespeed-optimax' === $slug && !defined( 'LITESPEED_OX' ) ) {
+				continue;
+			}
 			$curr_scope = ! empty( $meta['network'] ) ? 'network' : 'site';
 			if ( $curr_scope !== $scope ) {
 				continue;
