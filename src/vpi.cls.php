@@ -18,6 +18,20 @@ class VPI extends Base {
 	const TYPE_GEN     = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
+	
+	/**
+	 * VPI Desktop Meta name.
+	 * 
+	 * @since  7.6
+	 */
+	const POST_META        = 'litespeed_vpi_list';
+	/**
+	 * VPI Mobile Meta name.
+	 * 
+	 * @since  7.6
+	 */
+	const POST_META_MOBILE = 'litespeed_vpi_list_mobile';
+
 	protected $_summary;
 	private $_queue;
 
@@ -129,7 +143,7 @@ class VPI extends Base {
 			// Save data
 			if (!empty($v['data_vpi'])) {
 				$post_id   = $this->_queue[$queue_k]['post_id'];
-				$name      = !empty($v['is_mobile']) ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list';
+				$name      = !empty( $v[ 'is_mobile' ] ) ? self::POST_META_MOBILE : self::POST_META;
 				$urldecode = is_array($v['data_vpi']) ? array_map('urldecode', $v['data_vpi']) : urldecode($v['data_vpi']);
 				self::debug('save data_vpi', $urldecode);
 				$this->cls('Metabox')->save($post_id, $name, $urldecode);

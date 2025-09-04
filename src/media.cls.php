@@ -682,7 +682,7 @@ class Media extends Root {
 	private function _parse_img_for_preload() {
 		// Load VPI setting
 		$is_mobile = $this->_separate_mobile();
-		$vpi_files = $this->cls('Metabox')->setting($is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list');
+		$vpi_files = $this->cls( 'Metabox' )->setting( $is_mobile ? VPI::POST_META_MOBILE : VPI::POST_META );
 		if ($vpi_files) {
 			$vpi_files = Utility::sanitize_lines($vpi_files, 'basename');
 		}
