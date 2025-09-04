@@ -258,9 +258,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.5 - Sep 10 2025 =
-* 🌱**Image Optimize** New option `Skip Sizes` to allow bypassing curtain size from optimization request. (Ryan D, PR#892)
+* 🌱**Image Optimize** New option `Optimize Image Sizes` to allow user to choose which image sizes to include in optimization request.
 * 🐞**Purge** Purge Time setting will respect WP timezone setting now. (PR#893)
-* 🐞**Conf** Fixed a type casting minor bug when the setting is empty which may cause unnecessary QUIC.cloud sync conf.
+* 🐞**Conf** Fixed a minor type-casting bug, which could cause unnecessary QUIC.cloud sync configuration when the setting is empty.
 * **Misc** Dropped unused rewrite rule from htaccess.
 
 = 7.4 - Aug 28 2025 =
