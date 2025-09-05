@@ -1081,6 +1081,7 @@ class Img_Optm extends Base {
 
 					// Handle status_code 404/5xx too as its success=true
 					if ( empty( $response->success ) || empty( $response->status_code ) || 200 !== $response->status_code ) {
+						self::debug('❌ Failed to pull optimized img: HTTP error [status_code] ' . ( empty( $response->status_code ) ? 'N/A' : $response->status_code ));
 						$this->_step_back_image($row_img->id);
 
 						$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
@@ -1211,19 +1212,22 @@ class Img_Optm extends Base {
 					Autoload::register();
 
 					// Run pull requests in parallel
-					Requests::request_multiple($requests, array(
+					Requests::request_multiple($requests, [
 						'timeout' => 60,
 						'connect_timeout' => 60,
 						'complete' => $complete_action,
-					));
+						'verify' => false,
+						'verifyname' => false,
+					]);
 				} else {
 					foreach ($requests as $cnt => $req) {
-						$wp_response      = wp_safe_remote_get($req['url'], array( 'timeout' => 60 ));
-						$request_response = array(
+						$wp_response      = wp_safe_remote_get($req['url'], [ 'timeout' => 60 ]);
+						$request_response = [
 							'success' => false,
 							'status_code' => 0,
 							'body' => null,
-						);
+							'sslverify' => false
+						];
 						if (is_wp_error($wp_response)) {
 							$error_message = $wp_response->get_error_message();
 							self::debug('❌ failed to pull image: ' . $error_message);
