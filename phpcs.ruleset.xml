@@ -69,6 +69,9 @@
     <rule ref="WordPress.WP.I18n">
         <severity>0</severity>
     </rule>
+    <rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
+        <severity>0</severity>
+    </rule>
     <rule ref="WordPress.Security" />
     <rule ref="WordPress.NamingConventions" />
     <rule ref="WordPress.PHP" />
