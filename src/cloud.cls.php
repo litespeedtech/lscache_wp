@@ -332,7 +332,7 @@ class Cloud extends Base {
 		$data = [
 			'wp_pk_b64'           => $this->_summary['pk_b64'],
 			'wpapi_ts'            => $echobox['wpapi_ts'],
-			'wpapi_signature_b64' => $echebox['wpapi_signature_b64'],
+			'wpapi_signature_b64' => $echobox['wpapi_signature_b64'],
 			'server_ip'           => $server_ip,
 		];
 
