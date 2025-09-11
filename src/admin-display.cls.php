@@ -248,20 +248,16 @@ class Admin_Display extends Base {
 		$this->_pages = [
 			// Site-level pages
 			'litespeed'               => [ 'title' => __( 'Dashboard', 'litespeed-cache' ), 'tpl' => 'dash/entry.tpl.php' ],
-			'litespeed-optimax'       => [ 'title' => __( 'OptimaX', 'litespeed-cache' ), 'tpl' => 'optimax/entry.tpl.php' ],
-			'litespeed-presets'       => [ 'title' => __( 'Presets', 'litespeed-cache' ), 'tpl' => 'presets/entry.tpl.php' ],
+			'litespeed-optimax'       => [ 'title' => __( 'OptimaX', 'litespeed-cache' ), 'tpl' => 'optimax/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-presets'       => [ 'title' => __( 'Presets', 'litespeed-cache' ), 'tpl' => 'presets/entry.tpl.php', 'scope' => 'site' ],
 			'litespeed-general'       => [ 'title' => __( 'General', 'litespeed-cache' ), 'tpl' => 'general/entry.tpl.php' ],
 			'litespeed-cache'         => [ 'title' => __( 'Cache', 'litespeed-cache' ), 'tpl' => 'cache/entry.tpl.php' ],
-			'litespeed-cdn'           => [ 'title' => __( 'CDN', 'litespeed-cache' ), 'tpl' => 'cdn/entry.tpl.php' ],
+			'litespeed-cdn'           => [ 'title' => __( 'CDN', 'litespeed-cache' ), 'tpl' => 'cdn/entry.tpl.php', 'scope' => 'site' ],
 			'litespeed-img_optm'      => [ 'title' => __( 'Image Optimization', 'litespeed-cache'), 'tpl' => 'img_optm/entry.tpl.php' ],
-			'litespeed-page_optm'     => [ 'title' => __( 'Page Optimization', 'litespeed-cache' ), 'tpl' => 'page_optm/entry.tpl.php' ],
+			'litespeed-page_optm'     => [ 'title' => __( 'Page Optimization', 'litespeed-cache' ), 'tpl' => 'page_optm/entry.tpl.php', 'scope' => 'site' ],
 			'litespeed-db_optm'       => [ 'title' => __( 'Database', 'litespeed-cache' ), 'tpl' => 'db_optm/entry.tpl.php' ],
-			'litespeed-crawler'       => [ 'title' => __( 'Crawler', 'litespeed-cache' ), 'tpl' => 'crawler/entry.tpl.php' ],
+			'litespeed-crawler'       => [ 'title' => __( 'Crawler', 'litespeed-cache' ), 'tpl' => 'crawler/entry.tpl.php', 'scope' => 'site' ],
 			'litespeed-toolbox'       => [ 'title' => __( 'Toolbox', 'litespeed-cache' ), 'tpl' => 'toolbox/entry.tpl.php' ],
-
-			// Network-level pages
-			'litespeed-network'       => [ 'title' => 'LiteSpeed Cache (Network)', 'tpl' => 'dash/entry.tpl.php', 'network' => true ],
-			'litespeed-cache-network' => [ 'title' => __( 'Cache', 'litespeed-cache' ), 'tpl' => 'cache/entry_network.tpl.php', 'network' => true ],
 		];
 
 		// main css
@@ -356,25 +352,23 @@ class Admin_Display extends Base {
 	public function register_admin_menu() {
 		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options';
 		$scope      = $this->_is_network_admin ? 'network' : 'site';
-		$root       = $this->_is_network_admin ? 'litespeed-network' : 'litespeed';
 
 		add_menu_page(
 			'LiteSpeed Cache',
 			'LiteSpeed Cache',
 			$capability,
-			$root,
+			'litespeed',
 		);
 
 		foreach ( $this->_pages as $slug => $meta ) {
 			if ( 'litespeed-optimax' === $slug && !defined( 'LITESPEED_OX' ) ) {
 				continue;
 			}
-			$curr_scope = ! empty( $meta['network'] ) ? 'network' : 'site';
-			if ( $curr_scope !== $scope ) {
+			if ( ! empty( $meta['scope'] ) && $meta['scope'] !== $scope ) {
 				continue;
 			}
 			$hook = add_submenu_page(
-				$root,
+				'litespeed',
 				$meta['title'],
 				$meta['title'],
 				$capability,
