@@ -257,6 +257,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.5.0.1 - Sep 11 2025 =
+* 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
+
 = 7.5 - Sep 10 2025 =
 * 🌱**Image Optimize** New option `Optimize Image Sizes` to allow user to choose which image sizes to include in optimization request.
 * 🐞**Purge** Purge Time setting will respect WP timezone setting now. (PR#893)

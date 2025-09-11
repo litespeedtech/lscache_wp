@@ -260,7 +260,7 @@ class Admin_Display extends Base {
 			'litespeed-toolbox'       => [ 'title' => __( 'Toolbox', 'litespeed-cache' ), 'tpl' => 'toolbox/entry.tpl.php' ],
 
 			// Network-level pages
-			'litespeed-network'       => [ 'title' => 'LiteSpeed Cache (Network)', 'tpl' => 'dash/entry_network.tpl.php', 'network' => true ],
+			'litespeed-network'       => [ 'title' => 'LiteSpeed Cache (Network)', 'tpl' => 'dash/entry.tpl.php', 'network' => true ],
 			'litespeed-cache-network' => [ 'title' => __( 'Cache', 'litespeed-cache' ), 'tpl' => 'cache/entry_network.tpl.php', 'network' => true ],
 		];
 
