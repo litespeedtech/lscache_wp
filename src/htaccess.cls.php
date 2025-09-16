@@ -50,8 +50,6 @@ class Htaccess extends Root {
 	const MARKER_START               = ' start ###';
 	const MARKER_END                 = ' end ###';
 
-	const RW_PATTERN_RES = '/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php';
-
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -62,11 +60,11 @@ class Htaccess extends Root {
 		$this->_default_frontend_htaccess = $this->frontend_htaccess;
 		$this->_default_backend_htaccess  = $this->backend_htaccess;
 
-		$frontend_htaccess = defined('LITESPEED_CFG_HTACCESS') ? LITESPEED_CFG_HTACCESS : false;
+		$frontend_htaccess = defined('LITESPEED_CFG_HTACCESS') ? constant('LITESPEED_CFG_HTACCESS') : false;
 		if ($frontend_htaccess && substr($frontend_htaccess, -10) === '/.htaccess') {
 			$this->frontend_htaccess = $frontend_htaccess;
 		}
-		$backend_htaccess = defined('LITESPEED_CFG_HTACCESS_BACKEND') ? LITESPEED_CFG_HTACCESS_BACKEND : false;
+		$backend_htaccess = defined('LITESPEED_CFG_HTACCESS_BACKEND') ? constant('LITESPEED_CFG_HTACCESS_BACKEND') : false;
 		if ($backend_htaccess && substr($backend_htaccess, -10) === '/.htaccess') {
 			$this->backend_htaccess = $backend_htaccess;
 		}

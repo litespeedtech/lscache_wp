@@ -233,11 +233,33 @@ class Admin_Display extends Base {
 	];
 
 	/**
+	 * Flat pages map: menu slug to template metadata.
+	 *
+	 * @var array<string,array{title:string,tpl:string,network?:bool}>
+	 */
+	private $_pages = [];
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.7
 	 */
 	public function __construct() {
+		$this->_pages = [
+			// Site-level pages
+			'litespeed'               => [ 'title' => __( 'Dashboard', 'litespeed-cache' ), 'tpl' => 'dash/entry.tpl.php' ],
+			'litespeed-optimax'       => [ 'title' => __( 'OptimaX', 'litespeed-cache' ), 'tpl' => 'optimax/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-presets'       => [ 'title' => __( 'Presets', 'litespeed-cache' ), 'tpl' => 'presets/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-general'       => [ 'title' => __( 'General', 'litespeed-cache' ), 'tpl' => 'general/entry.tpl.php' ],
+			'litespeed-cache'         => [ 'title' => __( 'Cache', 'litespeed-cache' ), 'tpl' => 'cache/entry.tpl.php' ],
+			'litespeed-cdn'           => [ 'title' => __( 'CDN', 'litespeed-cache' ), 'tpl' => 'cdn/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-img_optm'      => [ 'title' => __( 'Image Optimization', 'litespeed-cache'), 'tpl' => 'img_optm/entry.tpl.php' ],
+			'litespeed-page_optm'     => [ 'title' => __( 'Page Optimization', 'litespeed-cache' ), 'tpl' => 'page_optm/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-db_optm'       => [ 'title' => __( 'Database', 'litespeed-cache' ), 'tpl' => 'db_optm/entry.tpl.php' ],
+			'litespeed-crawler'       => [ 'title' => __( 'Crawler', 'litespeed-cache' ), 'tpl' => 'crawler/entry.tpl.php', 'scope' => 'site' ],
+			'litespeed-toolbox'       => [ 'title' => __( 'Toolbox', 'litespeed-cache' ), 'tpl' => 'toolbox/entry.tpl.php' ],
+		];
+
 		// main css
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		// Main js
@@ -289,6 +311,39 @@ class Admin_Display extends Base {
 	}
 
 	/**
+	 * Bind per-page admin hooks for a given page hook.
+	 *
+	 * Adds footer text filter and preview banner when loading the page.
+	 *
+	 * @param string $hook Page hook suffix returned by add_*_page().
+	 * @return void
+	 */
+	private function bind_page( $hook ) {
+		add_action( "load-$hook", function () {
+			add_filter(
+				'admin_footer_text',
+				function ( $footer_text ) {
+					$this->cls( 'Cloud' )->maybe_preview_banner();
+					require_once LSCWP_DIR . 'tpl/inc/admin_footer.php';
+					return $footer_text;
+				},
+				1
+			);
+		} );
+	}
+
+	/**
+	 * Render an admin page by slug using its mapped template file.
+	 *
+	 * @param string $slug The menu slug registered in $_pages.
+	 * @return void
+	 */
+	private function render_page( $slug ) {
+		$tpl = LSCWP_DIR . 'tpl/' . $this->_pages[ $slug ]['tpl'];
+		is_file( $tpl ) ? require $tpl : wp_die( 'Template not found' );
+	}
+
+	/**
 	 * Register the admin menu display.
 	 *
 	 * @since 1.0.0
@@ -296,56 +351,46 @@ class Admin_Display extends Base {
 	 */
 	public function register_admin_menu() {
 		$capability = $this->_is_network_admin ? 'manage_network_options' : 'manage_options';
-		if ( current_user_can( $capability ) ) {
-			// root menu.
-			add_menu_page( 'LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed' );
+		$scope      = $this->_is_network_admin ? 'network' : 'site';
 
-			// sub menus.
-			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' );
+		add_menu_page(
+			'LiteSpeed Cache',
+			'LiteSpeed Cache',
+			$capability,
+			'litespeed',
+		);
 
-			if ( ! $this->_is_network_admin ) {
-				$this->_add_submenu( __( 'Presets', 'litespeed-cache' ), 'litespeed-presets', 'show_menu_presets' );
+		foreach ( $this->_pages as $slug => $meta ) {
+			if ( 'litespeed-optimax' === $slug && !defined( 'LITESPEED_OX' ) ) {
+				continue;
 			}
-
-			$this->_add_submenu( __( 'General', 'litespeed-cache' ), 'litespeed-general', 'show_menu_general' );
-			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' );
-
-			if ( ! $this->_is_network_admin ) {
-				$this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'litespeed-cdn', 'show_menu_cdn' );
+			if ( ! empty( $meta['scope'] ) && $meta['scope'] !== $scope ) {
+				continue;
 			}
-
-			$this->_add_submenu( __( 'Image Optimization', 'litespeed-cache' ), 'litespeed-img_optm', 'show_img_optm' );
-
-			if ( ! $this->_is_network_admin ) {
-				$this->_add_submenu( __( 'Page Optimization', 'litespeed-cache' ), 'litespeed-page_optm', 'show_page_optm' );
-			}
-
-			$this->_add_submenu( __( 'Database', 'litespeed-cache' ), 'litespeed-db_optm', 'show_db_optm' );
-
-			if ( ! $this->_is_network_admin ) {
-				$this->_add_submenu( __( 'Crawler', 'litespeed-cache' ), 'litespeed-crawler', 'show_crawler' );
-			}
-
-			$this->_add_submenu( __( 'Toolbox', 'litespeed-cache' ), 'litespeed-toolbox', 'show_toolbox' );
-
-			// sub menus under options.
-			add_options_page( 'LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeed-cache-options', array( $this, 'show_menu_cache' ) );
+			$hook = add_submenu_page(
+				'litespeed',
+				$meta['title'],
+				$meta['title'],
+				$capability,
+				$slug,
+				function () use ( $slug ) {
+					$this->render_page( $slug );
+				}
+			);
+			$this->bind_page( $hook );
 		}
-	}
 
-	/**
-	 * Helper to create a submenu.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 *
-	 * @param string $menu_title The title that appears on the menu.
-	 * @param string $menu_slug  The slug of the page.
-	 * @param string $callback   The callback to call if selected.
-	 * @return void
-	 */
-	private function _add_submenu( $menu_title, $menu_slug, $callback ) {
-		add_submenu_page( 'litespeed', $menu_title, $menu_title, 'manage_options', $menu_slug, array( $this, $callback ) );
+		// sub menus under options.
+		$hook = add_options_page(
+			'LiteSpeed Cache',
+			'LiteSpeed Cache',
+			$capability,
+			'litespeed-cache-options',
+			function () {
+				$this->render_page( 'litespeed-cache' );
+			}
+		);
+		$this->bind_page( $hook );
 	}
 
 	/**
@@ -384,9 +429,6 @@ class Admin_Display extends Base {
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( 'admin.php' === $pagenow && $page && ( 0 === strpos( $page, 'litespeed-' ) || 'litespeed' === $page ) ) {
-			// Admin footer
-			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-
 			if ( in_array( $page, array( 'litespeed-crawler', 'litespeed-cdn' ), true ) ) {
 				// Babel JS type correction
 				add_filter( 'script_loader_tag', array( $this, 'babel_type' ), 10, 3 );
@@ -496,20 +538,6 @@ class Admin_Display extends Base {
 		$links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=litespeed-cache' ) ) . '">' . esc_html__( 'Settings', 'litespeed-cache' ) . '</a>';
 
 		return $links;
-	}
-
-	/**
-	 * Change the admin footer text on LiteSpeed Cache admin pages.
-	 *
-	 * @since 1.0.13
-	 *
-	 * @param string $footer_text Footer text.
-	 * @return string
-	 */
-	public function admin_footer_text( $footer_text ) {
-		require_once LSCWP_DIR . 'tpl/inc/admin_footer.php';
-
-		return $footer_text;
 	}
 
 	/**
@@ -670,7 +698,7 @@ class Admin_Display extends Base {
 		// Bypass adding for CLI or cron
 		if ( defined( 'LITESPEED_CLI' ) || wp_doing_cron() ) {
 			// WP CLI will show the info directly
-			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			if ( defined( 'WP_CLI' ) && constant('WP_CLI') ) {
 				if ( ! is_array( $msg ) ) {
 					$msg = array( $msg );
 				}
@@ -870,117 +898,6 @@ class Admin_Display extends Base {
 	 */
 	public function show_widget_edit( $widget, $return_val, $instance ) {
 		require LSCWP_DIR . 'tpl/esi_widget_edit.php';
-	}
-
-	/**
-	 * Displays the dashboard page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_menu_dash() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/dash/entry.tpl.php';
-	}
-
-	/**
-	 * Displays the Presets page.
-	 *
-	 * @since 5.3
-	 * @return void
-	 */
-	public function show_menu_presets() {
-		require_once LSCWP_DIR . 'tpl/presets/entry.tpl.php';
-	}
-
-	/**
-	 * Displays the General page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_menu_general() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/general/entry.tpl.php';
-	}
-
-	/**
-	 * Displays the CDN page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_menu_cdn() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/cdn/entry.tpl.php';
-	}
-
-	/**
-	 * Outputs the LiteSpeed Cache settings page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function show_menu_cache() {
-		if ( $this->_is_network_admin ) {
-			require_once LSCWP_DIR . 'tpl/cache/entry_network.tpl.php';
-		} else {
-			require_once LSCWP_DIR . 'tpl/cache/entry.tpl.php';
-		}
-	}
-
-	/**
-	 * Tools page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_toolbox() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/toolbox/entry.tpl.php';
-	}
-
-	/**
-	 * Outputs the crawler operation page.
-	 *
-	 * @since 1.1.0
-	 * @return void
-	 */
-	public function show_crawler() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/crawler/entry.tpl.php';
-	}
-
-	/**
-	 * Outputs the image optimization page.
-	 *
-	 * @since 1.6
-	 * @return void
-	 */
-	public function show_img_optm() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/img_optm/entry.tpl.php';
-	}
-
-	/**
-	 * Page optimization page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_page_optm() {
-		$this->cls( 'Cloud' )->maybe_preview_banner();
-		require_once LSCWP_DIR . 'tpl/page_optm/entry.tpl.php';
-	}
-
-	/**
-	 * DB optimization page.
-	 *
-	 * @since 3.0
-	 * @return void
-	 */
-	public function show_db_optm() {
-		require_once LSCWP_DIR . 'tpl/db_optm/entry.tpl.php';
 	}
 
 	/**

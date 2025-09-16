@@ -79,9 +79,9 @@ class Admin_Settings extends Base {
 			// Pull value from request.
 			if ( $child ) {
 				// []=xxx or [0]=xxx
-				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : false;
+				$data = ! empty( $raw_data[ $id ][ $child ] ) ? $raw_data[ $id ][ $child ] : $this->type_casting(false, $id);
 			} else {
-				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : false;
+				$data = ! empty( $raw_data[ $id ] ) ? $raw_data[ $id ] : $this->type_casting(false, $id);
 			}
 
 			// Sanitize/normalize complex fields.
@@ -214,6 +214,12 @@ class Admin_Settings extends Base {
 						$data2[] = $term->term_id;
 					}
 					$data = $data2;
+					break;
+					
+				case self::O_IMG_OPTM_SIZES_SKIPPED: // Skip image sizes
+					$image_sizes = Utility::prepare_image_sizes_array();
+					$saved_sizes = isset( $raw_data[$id] ) ? $raw_data[$id] : [];
+					$data        = array_diff( $image_sizes, $saved_sizes );
 					break;
 
 				default:

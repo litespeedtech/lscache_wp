@@ -208,6 +208,7 @@ class Lang extends Base {
 			self::O_IMG_OPTM_RM_BKUP => __('Remove Original Backups', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP => __('Next-Gen Image Format', 'litespeed-cache'),
 			self::O_IMG_OPTM_LOSSLESS => __('Optimize Losslessly', 'litespeed-cache'),
+			self::O_IMG_OPTM_SIZES_SKIPPED => __('Optimize Image Sizes', 'litespeed-cache'),
 			self::O_IMG_OPTM_EXIF => __('Preserve EXIF/XMP data', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_ATTR => __('WebP/AVIF Attribute To Replace', 'litespeed-cache'),
 			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET => __('WebP/AVIF For Extra srcset', 'litespeed-cache'),
@@ -264,6 +265,8 @@ class Lang extends Base {
 
 			self::O_DB_OPTM_REVISIONS_MAX => __('Revisions Max Number', 'litespeed-cache'),
 			self::O_DB_OPTM_REVISIONS_AGE => __('Revisions Max Age', 'litespeed-cache'),
+
+			self::O_OPTIMAX => __('OptimaX', 'litespeed-cache'),
 		);
 
 		if (array_key_exists($id, $_lang_list)) {

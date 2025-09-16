@@ -359,7 +359,7 @@ class DB_Optm extends Root {
 	 */
 	public function handler_clean_db_cli($args)
 	{
-		if (defined('WP_CLI') && WP_CLI) {
+		if (defined('WP_CLI') && constant('WP_CLI')) {
 			return $this->_db_clean($args);
 		}
 
