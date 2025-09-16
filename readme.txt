@@ -257,6 +257,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.6 - Oct 22 2025 =
+* **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#896)
+* **API** Dropped legacy `conf::val()` function.
+
 = 7.5.0.1 - Sep 11 2025 =
 * 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
 
