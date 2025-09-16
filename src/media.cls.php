@@ -436,7 +436,7 @@ class Media extends Root {
 
 			printf(
 				esc_html__( 'Orig saved %s', 'litespeed-cache' ),
-				$percent . '%'
+				(int) $percent . '%'
 			);
 
 			if ( $desc ) {
@@ -508,7 +508,7 @@ class Media extends Root {
 			);
 			printf(
 				$is_avif ? esc_html__( 'AVIF saved %s', 'litespeed-cache' ) : esc_html__( 'WebP saved %s', 'litespeed-cache' ),
-				'<span>' . $percent . '%</span>'
+				'<span>' . esc_html( $percent ) . '%</span>'
 			);
 
 			if ( $desc ) {
@@ -701,7 +701,7 @@ class Media extends Root {
 		$excludes = $this->conf( Base::O_MEDIA_LAZY_URI_EXC );
 		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-			$result          = $request_uri ? Utility::str_hit_array( $request_uri, $excludes ) : false;
+			$result      = $request_uri ? Utility::str_hit_array( $request_uri, $excludes ) : false;
 			if ( $result ) {
 				self::debug( 'bypass lazyload: hit URI Excludes setting: ' . $result );
 				return;
@@ -912,7 +912,8 @@ class Media extends Root {
 				continue;
 			}
 
-			if ( ! empty( $attrs['class'] ) && ( $hit = Utility::str_hit_array( $attrs['class'], $cls_excludes ) ) ) {
+			$hit = ! empty( $attrs['class'] ) ? Utility::str_hit_array( $attrs['class'], $cls_excludes ) : false;
+			if ( $hit ) {
 				self::debug2( 'lazyload image cls excludes [hit] ' . $hit );
 				continue;
 			}
@@ -1064,7 +1065,8 @@ class Media extends Root {
 				continue;
 			}
 
-			if ( ! empty( $attrs['class'] ) && ( $hit = Utility::str_hit_array( $attrs['class'], $cls_excludes ) ) ) {
+			$hit = ! empty( $attrs['class'] ) ? Utility::str_hit_array( $attrs['class'], $cls_excludes ) : false;
+			if ( $hit ) {
 				self::debug2( 'iframe lazyload cls excludes [hit] ' . $hit );
 				continue;
 			}
@@ -1229,6 +1231,8 @@ class Media extends Root {
 				array_walk_recursive(
 					$json_data,
                     /**
+                     * Replace URLs in JSON data recursively.
+                     *
                      * @param mixed  $item Value (modified in place).
                      * @param string $key  Array key.
                      */
@@ -1320,7 +1324,8 @@ class Media extends Root {
 	 */
 	public function webp_attach_img_src( $img ) {
 		self::debug2( 'changing attach src: ' . $img[0] );
-		if ( $img && ( $url = $this->replace_webp( $img[0] ) ) ) {
+		$url = $img ? $this->replace_webp( $img[0] ) : false;
+		if ( $url ) {
 			$img[0] = $url;
 		}
 		return $img;
@@ -1336,7 +1341,8 @@ class Media extends Root {
 	 * @return string
 	 */
 	public function webp_url( $url ) {
-		if ( $url && ( $url2 = $this->replace_webp( $url ) ) ) {
+		$url2 = $url ? $this->replace_webp( $url ) : false;
+		if ( $url2 ) {
 			$url = $url2;
 		}
 		return $url;
