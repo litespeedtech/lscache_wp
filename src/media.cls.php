@@ -701,7 +701,7 @@ class Media extends Root {
 		$excludes = $this->conf( Base::O_MEDIA_LAZY_URI_EXC );
 		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-			$result          = $request_uri ? Utility::str_hit_array( $request_uri, $excludes ) : false;
+			$result      = $request_uri ? Utility::str_hit_array( $request_uri, $excludes ) : false;
 			if ( $result ) {
 				self::debug( 'bypass lazyload: hit URI Excludes setting: ' . $result );
 				return;
@@ -808,7 +808,7 @@ class Media extends Root {
 			return;
 		}
 
-		$vpi_fp_search = [];
+		$vpi_fp_search  = [];
 		$vpi_fp_replace = [];
 		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -843,18 +843,18 @@ class Media extends Root {
 			$attrs[ 'fetchpriority' ] = 'high';
 			$attrs[ 'decoding' ]      = 'sync';
 			// create html with new attributes.
-			foreach( $attrs as $k => $attr ) {
+			foreach ( $attrs as $k => $attr ) {
 				$new_html[] = $k . '="' . $attr . '"';
 			}
 
-			if( $new_html ) {
+			if ( $new_html ) {
 				$vpi_fp_search[]  = $match[1];
 				$vpi_fp_replace[] = implode( ' ', $new_html);
 			}
 		}
 
 		// if VPI fetchpriority changes, do the replacement
-		if( $vpi_fp_search && $vpi_fp_replace ) {
+		if ( $vpi_fp_search && $vpi_fp_replace ) {
 			$this->content = str_replace( $vpi_fp_search, $vpi_fp_replace, $this->content );
 		}
 		unset( $vpi_fp_search );
