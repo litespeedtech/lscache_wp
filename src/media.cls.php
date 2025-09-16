@@ -786,6 +786,7 @@ class Media extends Root {
 	 * Note: Didn't reuse the _parse_img() because it contains replacement logic which is not needed for preload.
 	 *
 	 * @since 6.2
+	 * @since 7.6 - Added attributes fetchpriority="high" and decode="sync" for VPI images.
 	 * @return void
 	 */
 	private function _parse_img_for_preload() {
@@ -807,9 +808,11 @@ class Media extends Root {
 			return;
 		}
 
-		preg_match_all( '#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
-			$attrs = Utility::parse_attr( $match[1] );
+		$vpi_fp_search  = [];
+		$vpi_fp_replace = [];
+		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			$attrs = Utility::parse_attr($match[1]);
 
 			if ( empty( $attrs['src'] ) ) {
 				continue;
@@ -833,7 +836,29 @@ class Media extends Root {
 			self::debug2( 'VPI preload found and matched: ' . $attrs['src'] );
 
 			$this->_vpi_preload_list[] = $attrs['src'];
+
+			// Add attributes fetchpriority="high" and decode="sync"
+			// after WP 6.3.0 use: wp_img_tag_add_loading_optimization_attrs().
+			$new_html                 = [];
+			$attrs[ 'fetchpriority' ] = 'high';
+			$attrs[ 'decoding' ]      = 'sync';
+			// create html with new attributes.
+			foreach ( $attrs as $k => $attr ) {
+				$new_html[] = $k . '="' . $attr . '"';
+			}
+
+			if ( $new_html ) {
+				$vpi_fp_search[]  = $match[1];
+				$vpi_fp_replace[] = implode( ' ', $new_html);
+			}
 		}
+
+		// if VPI fetchpriority changes, do the replacement
+		if ( $vpi_fp_search && $vpi_fp_replace ) {
+			$this->content = str_replace( $vpi_fp_search, $vpi_fp_replace, $this->content );
+		}
+		unset( $vpi_fp_search );
+		unset( $vpi_fp_replace );
 	}
 
 	/**
