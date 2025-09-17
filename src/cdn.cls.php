@@ -140,25 +140,7 @@ class CDN extends Root {
 
 		// Add IMAGES to rewrite if CDN Mapping setting is enabled
 		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG])) {
-			$add_images_type = apply_filters('litespeed_cdn_add_filetypes_image', array('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif'));
-			foreach ($add_images_type as $ext) {
-				$this->_cfg_cdn_mapping[$ext] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG];
-			}
-		}
-
-		// Add CSS to rewrite if CDN Mapping setting is enabled
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS])) {
-			$this->_cfg_cdn_mapping['.css'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_CSS];
-		}
-
-		// Add JS to rewrite if CDN Mapping setting is enabled
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS])) {
-			$this->_cfg_cdn_mapping['.js'] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_JS];
-		}
-
-		// Add IMAGES to rewrite if CDN Mapping setting is enabled
-		if (!empty($this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG])) {
-			$add_images_type = apply_filters('litespeed_cdn_add_filetypes_image', array('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif'));
+			$add_images_type = apply_filters( 'litespeed_cdn_add_filetypes_image', array( '.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif' ) );
 			foreach ($add_images_type as $ext) {
 				$this->_cfg_cdn_mapping[$ext] = $this->_cfg_cdn_mapping[Base::CDN_MAPPING_INC_IMG];
 			}
