@@ -449,6 +449,7 @@ class GUI extends Base {
 	 * Load frontend menu shortcut
 	 *
 	 * @since  1.3
+	 * @since  7.6 Add VPI clear.
 	 * @access public
 	 */
 	public function frontend_shortcut() {
@@ -641,6 +642,15 @@ class GUI extends Base {
 			));
 		}
 
+		if ( $this->has_cache_folder( 'vpi' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'litespeed-menu',
+				'id'     => 'litespeed-purge-vpi',
+				'title'  => __( 'Purge All', 'litespeed-cache' ) . ' - VPI',
+				'href'   => Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI, false, '_ori' ),
+			) );
+		}
+
 		if ($this->has_cache_folder('avatar')) {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'litespeed-menu',
@@ -821,6 +831,16 @@ class GUI extends Base {
 				'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_LQIP),
 				'meta' => array( 'tabindex' => '0' ),
 			));
+		}
+
+		if ( $this->conf( self::O_MEDIA_VPI ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'litespeed-menu',
+				'id' => 'litespeed-purge-vpi',
+				'title' => __('Purge All', 'litespeed-cache') . ' - VPI',
+				'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI),
+				'meta' => array('tabindex' => '0'),
+			) );
 		}
 
 		if ($this->has_cache_folder('avatar')) {
