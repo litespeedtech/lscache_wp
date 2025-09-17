@@ -265,6 +265,8 @@ class Lang extends Base {
 
 			self::O_DB_OPTM_REVISIONS_MAX => __('Revisions Max Number', 'litespeed-cache'),
 			self::O_DB_OPTM_REVISIONS_AGE => __('Revisions Max Age', 'litespeed-cache'),
+
+			self::O_OPTIMAX => __('OptimaX', 'litespeed-cache'),
 		);
 
 		if (array_key_exists($id, $_lang_list)) {

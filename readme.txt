@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 7.4
+Stable tag: 7.5.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -257,10 +257,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.5 - Sep 17 2025 =
-* 🌱**Image Optimize** New option `Skip Sizes` to allow bypassing curtain size from optimization request. (Ryan D, PR#892)
+= 7.6 - Oct 22 2025 =
+* **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
+* **API** Dropped legacy `conf::val()` function.
+
+= 7.5.0.1 - Sep 11 2025 =
+* 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
+
+= 7.5 - Sep 10 2025 =
+* 🌱**Image Optimize** New option `Optimize Image Sizes` to allow user to choose which image sizes to include in optimization request.
 * 🐞**Purge** Purge Time setting will respect WP timezone setting now. (PR#893)
-* 🐞**Conf** Fixed a type casting minor bug when the setting is empty which may cause unnecessary QUIC.cloud sync conf.
+* 🐞**Conf** Fixed a minor type-casting bug, which could cause unnecessary QUIC.cloud sync configuration when the setting is empty.
 * **Misc** Dropped unused rewrite rule from htaccess.
 
 = 7.4 - Aug 28 2025 =

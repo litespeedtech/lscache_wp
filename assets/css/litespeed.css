@@ -4310,19 +4310,6 @@ a.litespeed-media-href svg:hover {
 		word-break: break-word;
 	}
 
-	input#input_api_key + .button {
-		margin-top: 10px;
-		margin-left: 0;
-	}
-
-	input#input_api_key + .button + .litespeed-desc {
-		display: block;
-	}
-
-	input#input_api_key + .button + .litespeed-desc + .button {
-		margin-left: 0;
-	}
-
 	.litespeed-body .litespeed-table td .litespeed-right {
 		float: none !important;
 	}

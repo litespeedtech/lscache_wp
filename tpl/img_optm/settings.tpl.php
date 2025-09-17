@@ -163,7 +163,7 @@ $this->form_action();
 				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php printf( esc_html__( 'Enable replacement of WebP/AVIF in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ); ?>
-					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#webp-for-extra-srcset' ); ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/imageopt/#webpavif-for-extra-srcset' ); ?>
 				</div>
 			</td>
 		</tr>

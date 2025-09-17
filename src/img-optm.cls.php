@@ -58,14 +58,14 @@ class Img_Optm extends Base {
 	private $tmp_pid;
 	private $tmp_type;
 	private $tmp_path;
-	private $_img_in_queue     = array();
-	private $_existed_src_list = array();
-	private $_pids_set         = array();
+	private $_img_in_queue     = [];
+	private $_existed_src_list = [];
+	private $_pids_set         = [];
 	private $_thumbnail_set    = '';
 	private $_table_img_optm;
 	private $_table_img_optming;
 	private $_cron_ran = false;
-	private $_sizes_skipped     = array();
+	private $_sizes_skipped     = [];
 
 	private $__media;
 	private $__data;
@@ -274,7 +274,7 @@ class Img_Optm extends Base {
 		// $allowance -= $total_new;
 
 		// May need to get more images
-		$list = array();
+		$list = [];
 		$more = $allowance - $total_new;
 		if ($more > 0) {
 			$q    = "SELECT b.post_id, b.meta_value
@@ -441,8 +441,8 @@ class Img_Optm extends Base {
 		if (empty($this->_img_in_queue)) {
 			return;
 		}
-		$data     = array();
-		$pid_list = array();
+		$data     = [];
+		$pid_list = [];
 		foreach ($this->_img_in_queue as $k => $v) {
 			$_img_info = $this->__media->info($v['src'], $v['pid']);
 
@@ -471,7 +471,7 @@ class Img_Optm extends Base {
 		$count = count($this->_img_in_queue);
 		self::debug('Added raw images [total] ' . $count);
 
-		$this->_img_in_queue = array();
+		$this->_img_in_queue = [];
 
 		// Save thumbnail groups for future rescan index
 		$this->_gen_thumbnail_set();
@@ -482,7 +482,7 @@ class Img_Optm extends Base {
 		$this->_pids_set = array_merge($this->_pids_set, $pid_list);
 
 		$existed_meta = $wpdb->get_results("SELECT * FROM `$wpdb->postmeta` WHERE post_id IN ('" . implode("','", $pid_list) . "') AND meta_key='" . self::DB_SET . "'");
-		$existed_pid  = array();
+		$existed_pid  = [];
 		if ($existed_meta) {
 			foreach ($existed_meta as $v) {
 				$existed_pid[] = $v->post_id;
@@ -517,7 +517,7 @@ class Img_Optm extends Base {
 		if ($this->_thumbnail_set) {
 			return;
 		}
-		$set = array();
+		$set = [];
 		foreach (Media::cls()->get_image_sizes() as $size) {
 			$curr_size = $size['width'] . 'x' . $size['height'];
 			if (in_array($curr_size, $set)) {
@@ -537,7 +537,7 @@ class Img_Optm extends Base {
 	private function _filter_duplicated_src() {
 		global $wpdb;
 
-		$srcpath_list = array();
+		$srcpath_list = [];
 
 		$list = $wpdb->get_results("SELECT src FROM `$this->_table_img_optming`");
 		foreach ($list as $v) {
@@ -570,7 +570,7 @@ class Img_Optm extends Base {
 			return;
 		}
 
-		$finished_ids = array();
+		$finished_ids = [];
 
 		Utility::compatibility();
 		$post_ids = array_unique(array_column($this->_img_in_queue, 'pid'));
@@ -598,7 +598,7 @@ class Img_Optm extends Base {
 	 * @access private
 	 */
 	private function _filter_invalid_src() {
-		$img_in_queue_invalid = array();
+		$img_in_queue_invalid = [];
 		foreach ($this->_img_in_queue as $k => $v) {
 			if ($v['src']) {
 				$extension = pathinfo($v['src'], PATHINFO_EXTENSION);
@@ -639,7 +639,7 @@ class Img_Optm extends Base {
 
 		self::debug('Load img in queue [total] ' . count($_img_in_queue));
 
-		$list = array();
+		$list = [];
 		foreach ($_img_in_queue as $v) {
 			$_img_info = $this->__media->info($v->src, $v->post_id);
 			// If record is invalid, remove from img_optming table
@@ -768,7 +768,7 @@ class Img_Optm extends Base {
 				implode(',', array_fill(0, count($notified_data), '%d')) .
 				' )';
 			$list                            = $wpdb->get_results($wpdb->prepare($q, array_merge(array( self::DB_SIZE ), array_keys($notified_data))));
-			$ls_optm_size_row_exists_postids = array();
+			$ls_optm_size_row_exists_postids = [];
 			foreach ($list as $v) {
 				$json = $notified_data[$v->id];
 				// self::debug('Notified data for [id] ' . $v->id, $json);
@@ -992,7 +992,7 @@ class Img_Optm extends Base {
 		$total_pulled_webp = 0;
 		$total_pulled_avif = 0;
 
-		$server_list = array();
+		$server_list = [];
 
 		try {
 			while ($img_rows = $wpdb->get_results($_q)) {
@@ -1016,8 +1016,8 @@ class Img_Optm extends Base {
 				$this->_update_cron_running();
 
 				// Run requests in parallel
-				$requests    = array(); // store each request URL for Requests::request_multiple()
-				$imgs_by_req = array(); // store original request data so that we can reference it in the response
+				$requests    = []; // store each request URL for Requests::request_multiple()
+				$imgs_by_req = []; // store original request data so that we can reference it in the response
 				$req_counter = 0;
 				foreach ($img_rows as $row_img) {
 					// request original image
@@ -1081,6 +1081,7 @@ class Img_Optm extends Base {
 
 					// Handle status_code 404/5xx too as its success=true
 					if ( empty( $response->success ) || empty( $response->status_code ) || 200 !== $response->status_code ) {
+						self::debug('❌ Failed to pull optimized img: HTTP error [status_code] ' . ( empty( $response->status_code ) ? 'N/A' : $response->status_code ));
 						$this->_step_back_image($row_img->id);
 
 						$msg = __('Some optimized image file(s) has expired and was cleared.', 'litespeed-cache');
@@ -1196,7 +1197,7 @@ class Img_Optm extends Base {
 
 					// Save server_list to notify taken
 					if (empty($server_list[$server_info['server']])) {
-						$server_list[$server_info['server']] = array();
+						$server_list[$server_info['server']] = [];
 					}
 
 					$server_info_id                        = !empty($server_info['file_id']) ? $server_info['file_id'] : $server_info['id'];
@@ -1211,19 +1212,22 @@ class Img_Optm extends Base {
 					Autoload::register();
 
 					// Run pull requests in parallel
-					Requests::request_multiple($requests, array(
+					Requests::request_multiple($requests, [
 						'timeout' => 60,
 						'connect_timeout' => 60,
 						'complete' => $complete_action,
-					));
+						'verify' => false,
+						'verifyname' => false,
+					]);
 				} else {
 					foreach ($requests as $cnt => $req) {
-						$wp_response      = wp_safe_remote_get($req['url'], array( 'timeout' => 60 ));
-						$request_response = array(
+						$wp_response      = wp_safe_remote_get($req['url'], [ 'timeout' => 60 ]);
+						$request_response = [
 							'success' => false,
 							'status_code' => 0,
 							'body' => null,
-						);
+							'sslverify' => false
+						];
 						if (is_wp_error($wp_response)) {
 							$error_message = $wp_response->get_error_message();
 							self::debug('❌ failed to pull image: ' . $error_message);
@@ -1535,8 +1539,8 @@ class Img_Optm extends Base {
 		}
 
 		// Prepare post_ids to inquery gathered images
-		$pid_set      = array();
-		$scanned_list = array();
+		$pid_set      = [];
+		$scanned_list = [];
 		foreach ($list as $v) {
 			$meta_value = $this->_parse_wp_meta_value($v);
 			if (!$meta_value) {
@@ -2113,7 +2117,7 @@ class Img_Optm extends Base {
 
 		self::debug('Check image [ID] ' . $pid);
 
-		$data = array();
+		$data = [];
 
 		$data['img_count']    = $this->img_count();
 		$data['optm_summary'] = self::get_summary();
@@ -2124,7 +2128,7 @@ class Img_Optm extends Base {
 		// Get img_optm data
 		$q        = "SELECT * FROM `$this->_table_img_optm` WHERE post_id = %d";
 		$list     = $wpdb->get_results($wpdb->prepare($q, $pid));
-		$img_data = array();
+		$img_data = [];
 		if ($list) {
 			foreach ($list as $v) {
 				$img_data[] = array(
