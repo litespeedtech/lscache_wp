@@ -348,7 +348,26 @@ class Purge extends Base {
 	}
 
 	/**
-	 * Alerts LiteSpeed Web Server to purge pages.
+	 * Alerts LiteSpeed Web Server to purge CSS/JS entries. Public function.
+	 *
+	 * @since    7.6
+	 * @access   public
+	 */
+	public function purge_all_cssjs( $silence = false, $reason = false ) {
+		if( $reason ){
+			self::cls()->_purge_all_cssjs($silence);
+
+			if ( $reason ) {
+				self::debug('Cleared CSS/JS. Reason: ' . $reason);
+			}
+		}
+		else{
+			self::debug('Cannot clear CSS/JS. Reason is not added.');
+		}
+	}
+
+	/**
+	 * Alerts LiteSpeed Web Server to purge CSS/JS entries. Private function.
 	 *
 	 * @since    1.2.2
 	 * @access   private
