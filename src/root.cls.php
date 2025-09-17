@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The abstract instance
@@ -303,6 +304,58 @@ abstract class Root {
 	}
 
 	/**
+	 * Check if is overwritten by code filter
+	 *
+	 * @since  7.4
+	 */
+	public function filter_overwritten( $id ) {
+		$cls_admin_display = Admin_Display::$settings_filters;
+		// Check if filter name is set.
+		if(!isset($cls_admin_display[$id]) || !isset($cls_admin_display[$id]['filter']) || is_array($cls_admin_display[$id]['filter']) ){
+			return null;
+		}
+
+		$val_setting = $this->conf($id, true);
+		// if setting not found
+		if( null === $val_setting ){
+			$val_setting = '';
+		}
+
+		$val_filter = apply_filters($cls_admin_display[$id]['filter'], $val_setting );
+
+		if ($val_setting === $val_filter) {
+			// If the value is the same, return null.
+			return null;
+		}
+
+		return $val_filter;
+	}
+
+	/**
+	 * Check if is overwritten by $SERVER variable
+	 *
+	 * @since  7.4
+	 */
+	public function server_overwritten( $id ) {
+		$cls_admin_display = Admin_Display::$settings_filters;
+		if(!isset($cls_admin_display[$id]['filter'])){
+			return null;
+		}
+
+		if(!is_array($cls_admin_display[$id]['filter'])) {
+			$cls_admin_display[$id]['filter'] = array( $cls_admin_display[$id]['filter'] );
+		}
+
+		foreach( $cls_admin_display[$id]['filter'] as $variable ){
+			if(isset($_SERVER[$variable])) {
+				return [ $variable , $_SERVER[$variable] ] ;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the list of configured options for the blog.
 	 *
 	 * @since 1.0
@@ -417,10 +470,6 @@ abstract class Root {
 	 */
 	public static function name( $id ) {
 		$name = strtolower(self::ori_cls());
-		if ($name == 'conf2') {
-			// For a certain 3.7rc correction, can be dropped after v4
-			$name = 'conf';
-		}
 		return 'litespeed.' . $name . '.' . $id;
 	}
 

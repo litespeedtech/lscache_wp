@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The Crawler Sitemap Class
@@ -35,7 +36,7 @@ class Crawler_Map extends Root {
 		$this->__data            = Data::cls();
 		$this->_tb               = $this->__data->tb('crawler');
 		$this->_tb_blacklist     = $this->__data->tb('crawler_blacklist');
-		$this->_conf_map_timeout = defined('LITESPEED_CRAWLER_MAP_TIMEOUT') ? LITESPEED_CRAWLER_MAP_TIMEOUT : 180; // Specify the timeout while parsing the sitemap
+		$this->_conf_map_timeout = defined('LITESPEED_CRAWLER_MAP_TIMEOUT') ? constant('LITESPEED_CRAWLER_MAP_TIMEOUT') : 180; // Specify the timeout while parsing the sitemap
 	}
 
 	/**
@@ -412,7 +413,7 @@ class Crawler_Map extends Root {
 		}
 
 		if (is_array($this->_urls) && !empty($this->_urls)) {
-			if (defined('LITESPEED_CRAWLER_DROP_DOMAIN') && LITESPEED_CRAWLER_DROP_DOMAIN) {
+			if (defined('LITESPEED_CRAWLER_DROP_DOMAIN') && constant('LITESPEED_CRAWLER_DROP_DOMAIN')) {
 				foreach ($this->_urls as $k => $v) {
 					if (stripos($v, $this->_site_url) !== 0) {
 						unset($this->_urls[$k]);

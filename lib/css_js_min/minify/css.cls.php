@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * css.cls.php - modified PHP implementation of Matthias Mullie's CSS minifier
  *
@@ -226,9 +227,9 @@ class CSS extends Minify {
 	}
 
 	/**
-	 * Import files into the CSS, base64-ized.
+	 * Import files into the CSS, base64 encoded.
 	 *
-	 * @url(image.jpg) images will be loaded and their content merged into the
+	 * Included images @url(image.jpg) will be loaded and their content merged into the
 	 * original file, to save HTTP requests.
 	 *
 	 * @param string $source  The file to import files for

@@ -12,11 +12,13 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
+$__admin_display     = Admin_Display::cls();
 $placeholder_summary = Placeholder::get_summary();
-
-$closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
+$closest_server      = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 $lqip_queue = $this->load_queue( 'lqip' );
+
+$scaled_size = apply_filters( 'big_image_size_threshold', 2560 ) . 'px';
 
 ?>
 
@@ -256,6 +258,7 @@ $lqip_queue = $this->load_queue( 'lqip' );
 						<?php esc_html_e( 'API', 'litespeed-cache' ); ?>:
 						<?php printf( esc_html__( 'Use %1$s to bypass remote image dimension check when %2$s is ON.', 'litespeed-cache' ), '<code>add_filter( "litespeed_media_ignore_remote_missing_sizes", "__return_true" );</code>', '<code>' . esc_html( Lang::title( Base::O_MEDIA_ADD_MISSING_SIZES ) ) . '</code>' ); ?>
 					</font>
+					<?php $__admin_display->_check_overwritten( Base::O_MEDIA_ADD_MISSING_SIZES ); ?>
 				</div>
 			</td>
 		</tr>
@@ -271,6 +274,39 @@ $lqip_queue = $this->load_queue( 'lqip' );
 					<?php esc_html_e( 'The image compression quality setting of WordPress out of 100.', 'litespeed-cache' ); ?>
 					<?php $this->recommended( $option_id ); ?>
 					<?php $this->_validate_ttl( $option_id, 0, 100 ); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				<?php $option_id = Base::O_MEDIA_AUTO_RESCALE_ORI; ?>
+				<?php $this->title( $option_id ); ?>
+			</th>
+			<td>
+				<?php $this->build_switch( $option_id ); ?>
+				<div class="litespeed-desc">
+					<?php esc_html_e( 'Automatically replace large images with scaled versions.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'Scaled size threshold', 'litespeed-cache' ); ?>: <code><?php echo wp_kses_post( $scaled_size ); ?></code>
+					<br />
+					<span class="litespeed-success">
+						API:
+						<?php
+						printf(
+							esc_html__( 'Filter %s available to change threshold.', 'litespeed-cache' ),
+							'<code>big_image_size_threshold</code>'
+						);
+						?>
+						<a href="https://developer.wordpress.org/reference/hooks/big_image_size_threshold/" target="_blank" class="litespeed-learn-more">
+							<?php esc_html_e('Learn More', 'litespeed-cache'); ?>
+						</a>
+					</span>
+
+					<br />
+					<font class="litespeed-danger">
+						🚨
+						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
+					</font>
 				</div>
 			</td>
 		</tr>

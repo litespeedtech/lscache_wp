@@ -1,12 +1,12 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The Third Party integration with the Aelia CurrencySwitcher plugin.
  *
  * @since       1.0.13
  * @since       2.6     Removed hook_vary as OLS supports vary header already
- * @package     LiteSpeed_Cache
+ * @package     LiteSpeed
  * @subpackage  LiteSpeed_Cache/thirdparty
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 namespace LiteSpeed\Thirdparty;
 

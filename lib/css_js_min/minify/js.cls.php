@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * js.cls.php - modified PHP implementation of Matthias Mullie's JavaScript minifier
  *

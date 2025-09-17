@@ -103,7 +103,7 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
                     <?php echo esc_html( $v['title'] ); ?>
                     <span class="litespeed-panel-counter<?php echo $v['count'] > 0 ? '-red' : ''; ?>">(<?php echo esc_html( $v['count'] ); ?><?php echo DB_Optm::hide_more() ? '+' : ''; ?>)</span>
                 </div>
-                <span class="litespeed-panel-para"><?php echo esc_html( $v['desc'] ); ?></span>
+                <span class="litespeed-panel-para"><?php echo wp_kses_post( $v['desc'] ); ?></span>
             </section>
             <section class="litespeed-panel-wrapper-top-right">
                 <span class="litespeed-panel-top-right-icon<?php echo $v['count'] > 0 ? '-cross' : '-tick'; ?>"></span>
@@ -134,10 +134,10 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
                     ?>
                     <tr>
                         <td><?php echo esc_html( $k + 1 ); ?></td>
-                        <td><?php echo esc_html( $v->TABLE_NAME ); ?></td>
-                        <td><?php echo esc_html( $v->ENGINE ); ?></td>
+                        <td><?php echo esc_html( $v->table_name ); ?></td>
+                        <td><?php echo esc_html( $v->engine ); ?></td>
                         <td>
-                            <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->TABLE_NAME ) ) ); ?>">
+                            <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->table_name ) ) ); ?>">
                                 <?php esc_html_e( 'Convert to InnoDB', 'litespeed-cache' ); ?>
                             </a>
                         </td>

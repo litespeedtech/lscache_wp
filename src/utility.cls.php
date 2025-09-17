@@ -1,10 +1,10 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The utility class.
  *
  * @since       1.1.5
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -441,7 +441,7 @@ class Utility extends Root {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @param  string   `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
+	 * @param  string $url `https://aa.com/bbb/wp-content/upload/2018/08/test.jpg` or `/bbb/wp-content/upload/2018/08/test.jpg`
 	 * @return string   `2018/08/test.jpg`
 	 */
 	public static function att_short_path( $url ) {
@@ -544,8 +544,8 @@ class Utility extends Root {
 	 *
 	 * @since  1.3
 	 * @access public
-	 * @param  string $content
-	 * @param  bool   $type String handler type
+	 * @param  array|string $arr
+	 * @param  string|null  $type String handler type
 	 * @return string|array
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
@@ -693,7 +693,7 @@ class Utility extends Root {
 	public static function internal( $host ) {
 		if (!defined('LITESPEED_FRONTEND_HOST')) {
 			if (defined('WP_HOME')) {
-				$home_host = WP_HOME; // Also think of `WP_SITEURL`
+				$home_host = constant('WP_HOME'); // Also think of `WP_SITEURL`
 			} else {
 				$home_host = get_option('home');
 			}
@@ -773,7 +773,7 @@ class Utility extends Root {
 		 */
 		if (substr($url_parsed['path'], 0, 1) === '/') {
 			if (defined('LITESPEED_WP_REALPATH')) {
-				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . LITESPEED_WP_REALPATH . $url_parsed['path'];
+				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . constant('LITESPEED_WP_REALPATH') . $url_parsed['path'];
 			} else {
 				$file_path_ori = $_SERVER['DOCUMENT_ROOT'] . $url_parsed['path'];
 			}
@@ -920,5 +920,39 @@ class Utility extends Root {
 		);
 
 		return $q;
+	}
+
+	/**
+	 * Prepare image sizes for optimization.
+	 *
+	 * @since 7.5
+	 * @access public
+	 */
+	public static function prepare_image_sizes_array( $detailed = false ) {
+		$image_sizes  = wp_get_registered_image_subsizes();
+		$sizes = [];
+
+		foreach ( $image_sizes as $current_size_name => $current_size ) {
+			if( empty( $current_size['width'] ) && empty( $current_size['height'] ) ) continue;
+			
+			if( !$detailed ) {
+				$sizes[] = $current_size_name;
+			}
+			else{
+				$label =  $current_size['width']  . 'x' . $current_size['height'];
+				if( $current_size_name !== $label ){
+					$label = ucfirst( $current_size_name ) . ' ( ' . $label  . ' )';
+				}
+
+				$sizes[] = [
+					"label"     => $label,
+					"file_size" => $current_size_name,
+					"width"     => $current_size['width'],
+					"height"    => $current_size['height'],
+				];
+			}
+		}
+
+		return $sizes;
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The Third Party integration with the WPLister plugin.
  *

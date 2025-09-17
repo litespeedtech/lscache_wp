@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * LiteSpeed File Operator Library Class
@@ -212,10 +213,10 @@ class File {
 	 * Replaces existing marked info. Retains surrounding
 	 * data. Creates file if none exists.
 	 *
-	 * @param string       $filename  Filename to alter.
-	 * @param string       $marker    The marker to alter.
-	 * @param array|string $insertion The new content to insert.
-	 * @param bool         $prepend Prepend insertion if not exist.
+	 * @param string             $filename  Filename to alter.
+	 * @param string             $marker    The marker to alter.
+	 * @param array|string|false $insertion The new content to insert.
+	 * @param bool               $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
 	public static function insert_with_markers( $filename, $insertion = false, $marker = false, $prepend = false ) {

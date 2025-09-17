@@ -75,7 +75,8 @@ $cloud_summary = Cloud::get_summary();
 					<p>
 						<?php
 						printf(
-							esc_html__( 'Best available WordPress performance, globally fast TTFB, easy setup, and %1$smore%2$s!', 'litespeed-cache' ),
+							/* translators: %s: Link tags */
+							esc_html__( 'Best available WordPress performance, globally fast TTFB, easy setup, and %smore%s!', 'litespeed-cache' ),
 							'<a href="https://www.quic.cloud/quic-cloud-services-and-features/litespeed-cache-service/" target="_blank" rel="noopener">',
 							'</a>'
 						);

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin activation class.
  *
@@ -12,8 +11,15 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * Class Activation
+ *
+ * Handles plugin activation, deactivation, and related file management.
+ *
+ * @since 1.1.0
+ */
 class Activation extends Base {
 
 	const TYPE_UPGRADE             = 'upgrade';
@@ -23,115 +29,142 @@ class Activation extends Base {
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
-	private static $_data_file;
+	/**
+	 * Data file path for configuration.
+	 *
+	 * @since 4.1
+	 * @var string
+	 */
+	private static $data_file;
 
 	/**
 	 * Construct
 	 *
+	 * Initializes the data file path.
+	 *
 	 * @since 4.1
 	 */
 	public function __construct() {
-		self::$_data_file = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE;
+		self::$data_file = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE;
 	}
 
 	/**
 	 * The activation hook callback.
 	 *
+	 * Handles plugin activation tasks, including file creation and multisite setup.
+	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
 	public static function register_activation() {
-		global $wp_version;
-		$advanced_cache = LSCWP_CONTENT_DIR . '/advanced-cache.php';
-		if (version_compare($wp_version, '5.3', '<') && !file_exists($advanced_cache)) {
-			$file_pointer = fopen($advanced_cache, 'w');
-			fwrite($file_pointer, "<?php\n\n// A compatibility placeholder for WordPress < v5.3\n// Created by LSCWP v6.1+");
-			fclose($file_pointer);
-		}
-
 		$count = 0;
-		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id());
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() );
 
 		/* Network file handler */
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$count = self::get_network_count();
-			if ($count !== false) {
-				$count = intval($count) + 1;
-				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
+			if ( false !== $count ) {
+				$count = (int) $count + 1;
+				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS );
 			}
 
-			if (!is_network_admin()) {
-				if ($count === 1) {
+			if ( ! is_network_admin() ) {
+				if ( 1 === $count ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					try {
 						Htaccess::cls()->insert_ls_wrapper();
-					} catch (\Exception $ex) {
-						Admin_Display::error($ex->getMessage());
+					} catch ( \Exception $ex ) {
+						Admin_Display::error( $ex->getMessage() );
 					}
 				}
 			}
 		}
 		self::cls()->update_files();
 
-		if (defined('LSCWP_REF') && LSCWP_REF == 'whm') {
-			GUI::update_option(GUI::WHM_MSG, GUI::WHM_MSG_VAL);
+		if ( defined( 'LSCWP_REF' ) && 'whm' === LSCWP_REF ) {
+			GUI::update_option( GUI::WHM_MSG, GUI::WHM_MSG_VAL );
 		}
 	}
 
 	/**
 	 * Uninstall plugin
 	 *
+	 * Removes all LiteSpeed Cache settings and data.
+	 *
 	 * @since 1.1.0
+	 * @since 7.3 Updated to remove all settings.
+	 * @access public
 	 */
 	public static function uninstall_litespeed_cache() {
 		Task::destroy();
 
-		// Delete options
-		foreach (Conf::cls()->load_default_vals() as $k => $v) {
-			Base::delete_option($k);
-		}
+		if ( is_multisite() ) {
+			// Save main site id
+			$current_blog = get_current_blog_id();
 
-		// Delete site options
-		if (is_multisite()) {
-			foreach (Conf::cls()->load_default_site_vals() as $k => $v) {
-				Base::delete_site_option($k);
+			// get all sites
+			$sub_sites = get_sites();
+
+			// clear foreach site
+			foreach ( $sub_sites as $sub_site ) {
+				$sub_blog_id = (int) $sub_site->blog_id;
+				if ( $sub_blog_id !== $current_blog ) {
+					// Switch to blog
+					switch_to_blog( $sub_blog_id );
+
+					// Delete site options
+					self::delete_settings();
+
+					// Delete site tables
+					Data::cls()->tables_del();
+				}
 			}
+
+			// Return to main site
+			switch_to_blog( $current_blog );
 		}
 
-		// Delete avatar table
+		// Delete current blog/site
+		// Delete options
+		self::delete_settings();
+
+		// Delete site tables
 		Data::cls()->tables_del();
 
-		if (file_exists(LITESPEED_STATIC_DIR)) {
-			File::rrmdir(LITESPEED_STATIC_DIR);
+		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
+			File::rrmdir( LITESPEED_STATIC_DIR );
 		}
 
-		Cloud::version_check('uninstall');
+		Cloud::version_check( 'uninstall' );
+	}
 
-		// Files has been deleted when deactivated
+	/**
+	 * Remove all litespeed settings.
+	 *
+	 * Deletes all LiteSpeed Cache options from the database.
+	 *
+	 * @since 7.3
+	 * @access private
+	 */
+	private static function delete_settings() {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query($wpdb->prepare("DELETE FROM `$wpdb->options` WHERE option_name LIKE %s", 'litespeed.%'));
 	}
 
 	/**
 	 * Get the blog ids for the network. Accepts function arguments.
 	 *
-	 * Will use wp_get_sites for WP versions less than 4.6
-	 *
 	 * @since 1.0.12
 	 * @access public
+	 * @param array $args Arguments for get_sites().
 	 * @return array The array of blog ids.
 	 */
 	public static function get_network_ids( $args = array() ) {
-		global $wp_version;
-		if (version_compare($wp_version, '4.6', '<')) {
-			$blogs = wp_get_sites($args);
-			if (!empty($blogs)) {
-				foreach ($blogs as $key => $blog) {
-					$blogs[$key] = $blog['blog_id'];
-				}
-			}
-		} else {
-			$args['fields'] = 'ids';
-			$blogs          = get_sites($args);
-		}
+		$args['fields'] = 'ids';
+		$blogs          = get_sites( $args );
+
 		return $blogs;
 	}
 
@@ -140,25 +173,26 @@ class Activation extends Base {
 	 *
 	 * @since 1.0.12
 	 * @access private
+	 * @return int|false Number of active LSCWP or false if none.
 	 */
 	private static function get_network_count() {
-		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
-		if ($count !== false) {
-			return intval($count);
+		$count = get_site_transient( self::NETWORK_TRANSIENT_COUNT );
+		if ( false !== $count ) {
+			return (int) $count;
 		}
 		// need to update
 		$default = array();
 		$count   = 0;
 
-		$sites = self::get_network_ids(array( 'deleted' => 0 ));
-		if (empty($sites)) {
+		$sites = self::get_network_ids( array( 'deleted' => 0 ) );
+		if ( empty( $sites ) ) {
 			return false;
 		}
 
-		foreach ($sites as $site) {
-			$bid     = is_object($site) && property_exists($site, 'blog_id') ? $site->blog_id : $site;
-			$plugins = get_blog_option($bid, 'active_plugins', $default);
-			if (!empty($plugins) && in_array(LSCWP_BASENAME, $plugins, true)) {
+		foreach ( $sites as $site ) {
+			$bid     = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site;
+			$plugins = get_blog_option( $bid, 'active_plugins', $default );
+			if ( ! empty( $plugins ) && in_array( LSCWP_BASENAME, $plugins, true ) ) {
 				++$count;
 			}
 		}
@@ -169,11 +203,11 @@ class Activation extends Base {
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
-		if (!function_exists('is_plugin_active_for_network')) {
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
-		if (is_plugin_active_for_network(LSCWP_BASENAME)) {
+		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
 			++$count;
 		}
 		return $count;
@@ -187,17 +221,17 @@ class Activation extends Base {
 	 */
 	private static function is_deactivate_last() {
 		$count = self::get_network_count();
-		if ($count === false) {
+		if ( false === $count ) {
 			return false;
 		}
-		if ($count !== 1) {
+		if ( 1 !== $count ) {
 			// Not deactivating the last one.
 			--$count;
-			set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
+			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS );
 			return false;
 		}
 
-		delete_site_transient(self::NETWORK_TRANSIENT_COUNT);
+		delete_site_transient( self::NETWORK_TRANSIENT_COUNT );
 		return true;
 	}
 
@@ -212,17 +246,17 @@ class Activation extends Base {
 	public static function register_deactivation() {
 		Task::destroy();
 
-		!defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id());
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() );
 
 		Purge::purge_all();
 
-		if (is_multisite()) {
-			if (!self::is_deactivate_last()) {
-				if (is_network_admin()) {
+		if ( is_multisite() ) {
+			if ( ! self::is_deactivate_last() ) {
+				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					try {
 						Htaccess::cls()->insert_ls_wrapper();
-					} catch (\Exception $ex) {
+					} catch ( \Exception $ex ) {
 						Admin_Display::error($ex->getMessage());
 					}
 				}
@@ -233,11 +267,12 @@ class Activation extends Base {
 		/* 1) wp-config.php; */
 
 		try {
-			self::cls()->_manage_wp_cache_const(false);
-		} catch (\Exception $ex) {
-			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!');
+			self::cls()->manage_wp_cache_const( false );
+		} catch ( \Exception $ex ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'In wp-config.php: WP_CACHE could not be set to false during deactivation!' );
 
-			Admin_Display::error($ex->getMessage());
+			Admin_Display::error( $ex->getMessage() );
 		}
 
 		/* 2) adv-cache.php; Dropped in v3.0.4 */
@@ -250,13 +285,15 @@ class Activation extends Base {
 
 		try {
 			Htaccess::cls()->clear_rules();
-		} catch (\Exception $ex) {
-			Admin_Display::error($ex->getMessage());
+		} catch ( \Exception $ex ) {
+			Admin_Display::error( $ex->getMessage() );
 		}
 
 		/* 5) .litespeed_conf.dat; */
 
-		self::_del_conf_data_file();
+		self::del_conf_data_file();
+
+		/* 6) delete option lscwp_whm_install */
 
 		// delete in case it's not deleted prior to deactivation.
 		GUI::dismiss_whm();
@@ -264,8 +301,6 @@ class Activation extends Base {
 
 	/**
 	 * Manage related files based on plugin latest conf
-	 *
-	 * NOTE: Only trigger this in backend admin access for efficiency concern
 	 *
 	 * Handle files:
 	 *      1) wp-config.php;
@@ -278,10 +313,10 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function update_files() {
-		Debug2::debug('🗂️ [Activation] update_files');
+		Debug2::debug( '🗂️ [Activation] update_files' );
 
 		// Update cache setting `_CACHE`
-		$this->cls('Conf')->define_cache();
+		$this->cls( 'Conf' )->define_cache();
 
 		// Site options applied already
 		$options = $this->get_options();
@@ -289,56 +324,70 @@ class Activation extends Base {
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const($options[self::_CACHE]);
-		} catch (\Exception $ex) {
+			$this->manage_wp_cache_const( $options[ self::_CACHE ] );
+		} catch ( \Exception $ex ) {
 			// Add msg to admin page or CLI
-			Admin_Display::error($ex->getMessage());
+			Admin_Display::error( wp_kses_post( $ex->getMessage() ) );
 		}
 
 		/* 2) adv-cache.php; Dropped in v3.0.4 */
 
 		/* 3) object-cache.php; */
 
-		if ($options[self::O_OBJECT] && (!$options[self::O_DEBUG_DISABLE_ALL] || is_multisite())) {
-			$this->cls('Object_Cache')->update_file($options);
+		if ( $options[ self::O_OBJECT ] && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+			$this->cls( 'Object_Cache' )->update_file( $options );
 		} else {
-			$this->cls('Object_Cache')->del_file(); // Note: because it doesn't reconnect, which caused setting page OC option changes delayed, thus may meet Connect Test Failed issue (Next refresh will correct it). Not a big deal, will keep as is.
+			$this->cls( 'Object_Cache' )->del_file(); // Note: because it doesn't reconnect, which caused setting page OC option changes delayed, thus may meet Connect Test Failed issue (Next refresh will correct it). Not a big deal, will keep as is.
 		}
 
 		/* 4) .htaccess; */
 
 		try {
-			$this->cls('Htaccess')->update($options);
-		} catch (\Exception $ex) {
-			Admin_Display::error($ex->getMessage());
+			$this->cls( 'Htaccess' )->update( $options );
+		} catch ( \Exception $ex ) {
+			Admin_Display::error( wp_kses_post( $ex->getMessage() ) );
 		}
 
 		/* 5) .litespeed_conf.dat; */
 
-		if (($options[self::O_GUEST] || $options[self::O_OBJECT]) && (!$options[self::O_DEBUG_DISABLE_ALL] || is_multisite())) {
-			$this->_update_conf_data_file($options);
+		if ( ( $options[ self::O_GUEST ] || $options[ self::O_OBJECT ] ) && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
+			$this->update_conf_data_file( $options );
 		}
 	}
 
 	/**
 	 * Delete data conf file
 	 *
+	 * Removes the .litespeed_conf.dat file.
+	 *
 	 * @since  4.1
+	 * @access private
 	 */
-	private static function _del_conf_data_file() {
-		if (file_exists(self::$_data_file)) {
-			unlink(self::$_data_file);
+	private static function del_conf_data_file() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		if ( $wp_filesystem->exists( self::$data_file ) ) {
+			$wp_filesystem->delete( self::$data_file );
 		}
 	}
 
 	/**
 	 * Update data conf file for guest mode & object cache
 	 *
+	 * Updates the .litespeed_conf.dat file with relevant settings.
+	 *
 	 * @since  4.1
+	 * @access private
+	 * @param array $options Plugin options.
 	 */
-	private function _update_conf_data_file( $options ) {
+	private function update_conf_data_file( $options ) {
 		$ids = array();
-		if ($options[self::O_OBJECT]) {
+		if ( $options[ self::O_OBJECT ] ) {
 			$this_ids = array(
 				self::O_DEBUG,
 				self::O_OBJECT_KIND,
@@ -354,24 +403,31 @@ class Activation extends Base {
 				self::O_OBJECT_GLOBAL_GROUPS,
 				self::O_OBJECT_NON_PERSISTENT_GROUPS,
 			);
-			$ids      = array_merge($ids, $this_ids);
+			$ids      = array_merge( $ids, $this_ids );
 		}
 
-		if ($options[self::O_GUEST]) {
-			$this_ids = array( self::HASH, self::O_CACHE_LOGIN_COOKIE, self::O_DEBUG_IPS, self::O_UTIL_NO_HTTPS_VARY, self::O_GUEST_UAS, self::O_GUEST_IPS );
-			$ids      = array_merge($ids, $this_ids);
+		if ( $options[ self::O_GUEST ] ) {
+			$this_ids = array(
+				self::HASH,
+				self::O_CACHE_LOGIN_COOKIE,
+				self::O_DEBUG_IPS,
+				self::O_UTIL_NO_HTTPS_VARY,
+				self::O_GUEST_UAS,
+				self::O_GUEST_IPS,
+			);
+			$ids      = array_merge( $ids, $this_ids );
 		}
 
 		$data = array();
-		foreach ($ids as $v) {
-			$data[$v] = $options[$v];
+		foreach ( $ids as $v ) {
+			$data[ $v ] = $options[ $v ];
 		}
-		$data = \json_encode($data);
+		$data = wp_json_encode( $data );
 
-		$old_data = File::read(self::$_data_file);
-		if ($old_data != $data) {
-			defined('LSCWP_LOG') && Debug2::debug('[Activation] Updating .litespeed_conf.dat');
-			File::save(self::$_data_file, $data);
+		$old_data = File::read( self::$data_file );
+		if ( $old_data !== $data ) {
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Updating .litespeed_conf.dat' );
+			File::save( self::$data_file, $data );
 		}
 	}
 
@@ -383,19 +439,21 @@ class Activation extends Base {
 	 *
 	 * @since 1.0.0
 	 * @since  3.0 Refactored
-	 * @access private
+	 * @param bool $enable Whether to enable WP_CACHE.
+	 * @throws \Exception If wp-config.php cannot be modified.
+	 * @return bool True if updated, false if no change needed.
 	 */
-	private function _manage_wp_cache_const( $enable ) {
-		if ($enable) {
-			if (defined('WP_CACHE') && WP_CACHE) {
+	public function manage_wp_cache_const( $enable ) {
+		if ( $enable ) {
+			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
 				return false;
 			}
-		} elseif (!defined('WP_CACHE') || (defined('WP_CACHE') && !WP_CACHE)) {
+		} elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
 			return false;
 		}
 
-		if (apply_filters('litespeed_wpconfig_readonly', false)) {
-			throw new \Exception('wp-config file is forbidden to modify due to API hook: litespeed_wpconfig_readonly');
+		if ( apply_filters( 'litespeed_wpconfig_readonly', false ) ) {
+			throw new \Exception( 'wp-config file is forbidden to modify due to API hook: litespeed_wpconfig_readonly' );
 		}
 
 		/**
@@ -404,29 +462,29 @@ class Activation extends Base {
 		 * @see wp-load.php
 		 */
 		$conf_file = ABSPATH . 'wp-config.php';
-		if (!file_exists($conf_file)) {
-			$conf_file = dirname(ABSPATH) . '/wp-config.php';
+		if ( ! file_exists( $conf_file ) ) {
+			$conf_file = dirname( ABSPATH ) . '/wp-config.php';
 		}
 
-		$content = File::read($conf_file);
-		if (!$content) {
-			throw new \Exception('wp-config file content is empty: ' . $conf_file);
+		$content = File::read( $conf_file );
+		if ( ! $content ) {
+			throw new \Exception( 'wp-config file content is empty: ' . wp_kses_post( $conf_file ) );
 		}
 
 		// Remove the line `define('WP_CACHE', true/false);` first
-		if (defined('WP_CACHE')) {
-			$content = preg_replace('/define\(\s*([\'"])WP_CACHE\1\s*,\s*\w+\s*\)\s*;/sU', '', $content);
+		if ( defined( 'WP_CACHE' ) ) {
+			$content = preg_replace( '/define\(\s*([\'"])WP_CACHE\1\s*,\s*\w+\s*\)\s*;/sU', '', $content );
 		}
 
 		// Insert const
-		if ($enable) {
-			$content = preg_replace('/^<\?php/', "<?php\ndefine( 'WP_CACHE', true );", $content);
+		if ( $enable ) {
+			$content = preg_replace( '/^<\?php/', "<?php\ndefine( 'WP_CACHE', true );", $content );
 		}
 
-		$res = File::save($conf_file, $content, false, false, false);
+		$res = File::save( $conf_file, $content, false, false, false );
 
-		if ($res !== true) {
-			throw new \Exception('wp-config.php operation failed when changing `WP_CACHE` const: ' . $res);
+		if ( true !== $res ) {
+			throw new \Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . wp_kses_post( $res ) );
 		}
 
 		return true;
@@ -435,28 +493,35 @@ class Activation extends Base {
 	/**
 	 * Handle auto update
 	 *
+	 * Enables auto-updates for the plugin if configured.
+	 *
 	 * @since 2.7.2
 	 * @access public
 	 */
 	public function auto_update() {
-		if (!$this->conf(Base::O_AUTO_UPGRADE)) {
+		if ( ! $this->conf( Base::O_AUTO_UPGRADE ) ) {
 			return;
 		}
 
-		add_filter('auto_update_plugin', array( $this, 'auto_update_hook' ), 10, 2);
+		add_filter( 'auto_update_plugin', array( $this, 'auto_update_hook' ), 10, 2 );
 	}
 
 	/**
 	 * Auto upgrade hook
 	 *
+	 * Determines whether to auto-update the plugin.
+	 *
 	 * @since  3.0
 	 * @access public
+	 * @param bool   $update Whether to update.
+	 * @param object $item   Plugin data.
+	 * @return bool Whether to update.
 	 */
 	public function auto_update_hook( $update, $item ) {
-		if (!empty($item->slug) && 'litespeed-cache' === $item->slug) {
-			$auto_v = Cloud::version_check('auto_update_plugin');
+		if ( ! empty( $item->slug ) && 'litespeed-cache' === $item->slug ) {
+			$auto_v = Cloud::version_check( 'auto_update_plugin' );
 
-			if (!empty($auto_v['latest']) && !empty($item->new_version) && $auto_v['latest'] === $item->new_version) {
+			if ( ! empty( $auto_v['latest'] ) && ! empty( $item->new_version ) && $auto_v['latest'] === $item->new_version ) {
 				return true;
 			}
 		}
@@ -467,6 +532,8 @@ class Activation extends Base {
 	/**
 	 * Upgrade LSCWP
 	 *
+	 * Upgrades the LiteSpeed Cache plugin.
+	 *
 	 * @since 2.9
 	 * @access public
 	 */
@@ -474,6 +541,8 @@ class Activation extends Base {
 		$plugin = Core::PLUGIN_FILE;
 
 		/**
+		 * Load upgrade cls
+		 *
 		 * @see wp-admin/update.php
 		 */
 		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -483,64 +552,73 @@ class Activation extends Base {
 		try {
 			ob_start();
 			$skin     = new \WP_Ajax_Upgrader_Skin();
-			$upgrader = new \Plugin_Upgrader($skin);
-			$result   = $upgrader->upgrade($plugin);
-			if (!is_plugin_active($plugin)) {
+			$upgrader = new \Plugin_Upgrader( $skin );
+			$result   = $upgrader->upgrade( $plugin );
+			if ( ! is_plugin_active( $plugin ) ) {
 				// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
-				activate_plugin($plugin, '', is_multisite());
+				activate_plugin( $plugin, '', is_multisite() );
 			}
 			ob_end_clean();
-		} catch (\Exception $e) {
-			Admin_Display::error(__('Failed to upgrade.', 'litespeed-cache'));
+		} catch ( \Exception $e ) {
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) );
 			return;
 		}
 
-		if (is_wp_error($result)) {
-			Admin_Display::error(__('Failed to upgrade.', 'litespeed-cache'));
+		if ( is_wp_error( $result ) ) {
+			Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) );
 			return;
 		}
 
-		Admin_Display::success(__('Upgraded successfully.', 'litespeed-cache'));
+		Admin_Display::success( __( 'Upgraded successfully.', 'litespeed-cache' ) );
 	}
 
 	/**
 	 * Detect if the plugin is active or not
 	 *
 	 * @since  1.0
+	 * @access public
+	 * @param string $plugin Plugin slug.
+	 * @return bool True if active, false otherwise.
 	 */
 	public function dash_notifier_is_plugin_active( $plugin ) {
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 		$plugin_path = $plugin . '/' . $plugin . '.php';
 
-		return is_plugin_active($plugin_path);
+		return is_plugin_active( $plugin_path );
 	}
 
 	/**
 	 * Detect if the plugin is installed or not
 	 *
 	 * @since  1.0
+	 * @access public
+	 * @param string $plugin Plugin slug.
+	 * @return bool True if installed, false otherwise.
 	 */
 	public function dash_notifier_is_plugin_installed( $plugin ) {
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 		$plugin_path = $plugin . '/' . $plugin . '.php';
 
-		$valid = validate_plugin($plugin_path);
+		$valid = validate_plugin( $plugin_path );
 
-		return !is_wp_error($valid);
+		return ! is_wp_error( $valid );
 	}
 
 	/**
 	 * Grab a plugin info from WordPress
 	 *
 	 * @since  1.0
+	 * @access public
+	 * @param string $slug Plugin slug.
+	 * @return object|false Plugin info or false on failure.
 	 */
 	public function dash_notifier_get_plugin_info( $slug ) {
 		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		$result = plugins_api('plugin_information', array( 'slug' => $slug ));
+		$result = plugins_api( 'plugin_information', array( 'slug' => $slug ) );
 
-		if (is_wp_error($result)) {
+		if ( is_wp_error( $result ) ) {
 			return false;
 		}
 
@@ -550,19 +628,25 @@ class Activation extends Base {
 	/**
 	 * Install the 3rd party plugin
 	 *
+	 * Installs and activates a third-party plugin.
+	 *
 	 * @since  1.0
+	 * @access public
 	 */
 	public function dash_notifier_install_3rd() {
-		!defined('SILENCE_INSTALL') && define('SILENCE_INSTALL', true);
+		! defined( 'SILENCE_INSTALL' ) && define( 'SILENCE_INSTALL', true );
 
-		$slug = !empty($_GET['plugin']) ? $_GET['plugin'] : false;
+		// phpcs:ignore
+		$slug = ! empty( $_GET['plugin'] ) ? wp_unslash( sanitize_text_field( $_GET['plugin'] ) ) : false;
 
 		// Check if plugin is installed already
-		if (!$slug || $this->dash_notifier_is_plugin_active($slug)) {
+		if ( ! $slug || $this->dash_notifier_is_plugin_active( $slug ) ) {
 			return;
 		}
 
 		/**
+		 * Load upgrade cls
+		 *
 		 * @see wp-admin/update.php
 		 */
 		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -571,30 +655,32 @@ class Activation extends Base {
 
 		$plugin_path = $slug . '/' . $slug . '.php';
 
-		if (!$this->dash_notifier_is_plugin_installed($slug)) {
-			$plugin_info = $this->dash_notifier_get_plugin_info($slug);
-			if (!$plugin_info) {
+		if ( ! $this->dash_notifier_is_plugin_installed( $slug ) ) {
+			$plugin_info = $this->dash_notifier_get_plugin_info( $slug );
+			if ( ! $plugin_info ) {
 				return;
 			}
 			// Try to install plugin
 			try {
 				ob_start();
 				$skin     = new \Automatic_Upgrader_Skin();
-				$upgrader = new \Plugin_Upgrader($skin);
-				$result   = $upgrader->install($plugin_info->download_link);
+				$upgrader = new \Plugin_Upgrader( $skin );
+				$result   = $upgrader->install( $plugin_info->download_link );
 				ob_end_clean();
-			} catch (\Exception $e) {
+			} catch ( \Exception $e ) {
 				return;
 			}
 		}
 
-		if (!is_plugin_active($plugin_path)) {
-			activate_plugin($plugin_path);
+		if ( ! is_plugin_active( $plugin_path ) ) {
+			activate_plugin( $plugin_path );
 		}
 	}
 
 	/**
 	 * Handle all request actions from main cls
+	 *
+	 * Processes various activation-related actions.
 	 *
 	 * @since  2.9
 	 * @access public
@@ -602,27 +688,27 @@ class Activation extends Base {
 	public function handler() {
 		$type = Router::verify_type();
 
-		switch ($type) {
+		switch ( $type ) {
 			case self::TYPE_UPGRADE:
-            $this->upgrade();
+				$this->upgrade();
 				break;
 
 			case self::TYPE_INSTALL_3RD:
-            $this->dash_notifier_install_3rd();
+				$this->dash_notifier_install_3rd();
 				break;
 
 			case self::TYPE_DISMISS_RECOMMENDED:
-            Cloud::reload_summary();
-            Cloud::save_summary(array( 'news.new' => 0 ));
+				Cloud::reload_summary();
+				Cloud::save_summary( array( 'news.new' => 0 ) );
 				break;
 
 			case self::TYPE_INSTALL_ZIP:
-            Cloud::reload_summary();
-            $summary = Cloud::get_summary();
-            if (!empty($summary['news.zip'])) {
-					Cloud::save_summary(array( 'news.new' => 0 ));
+				Cloud::reload_summary();
+				$summary = Cloud::get_summary();
+				if ( ! empty( $summary['news.zip'] ) ) {
+					Cloud::save_summary( array( 'news.new' => 0 ) );
 
-					$this->cls('Debug2')->beta_test($summary['zip']);
+					$this->cls( 'Debug2' )->beta_test( $summary['zip'] );
 				}
 				break;
 

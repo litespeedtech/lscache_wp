@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * modified PHP implementation of Matthias Mullie's Abstract minifier class.
  *

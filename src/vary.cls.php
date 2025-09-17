@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin vary class to manage X-LiteSpeed-Vary
@@ -750,11 +751,11 @@ class Vary extends Root {
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param integer $val The value to update.
-	 * @param integer $expire Expire time.
-	 * @param boolean $path False if use wp root path as cookie path
+	 * @param int|false $val    The value to update.
+	 * @param int       $expire Expire time.
+	 * @param bool      $path   False if use wp root path as cookie path
 	 */
-	private function _cookie( $val = false, $expire = false, $path = false ) {
+	private function _cookie( $val = false, $expire = 0, $path = false ) {
 		if (!$val) {
 			$expire = 1;
 		}

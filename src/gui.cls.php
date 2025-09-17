@@ -1,11 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The frontend GUI class.
  *
  * @since       1.3
  * @subpackage  LiteSpeed/src
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -112,7 +112,7 @@ class GUI extends Base {
 		$percentage = '<text x="50%" y="50%">' . $percent . ($without_percentage ? '' : '%') . '</text>';
 
 		if ($percent == 100 && $finished_tick) {
-			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">&#x2713</text>';
+			$percentage = '<text x="50%" y="50%" class="litespeed-pie-done">✓</text>';
 		}
 
 		return "
@@ -248,7 +248,7 @@ class GUI extends Base {
 				break;
 
 			case self::TYPE_DISMISS_PIN:
-            admin_display::dismiss_pin();
+            Admin_display::dismiss_pin();
 				break;
 
 			case self::TYPE_DISMISS_PROMO:
@@ -368,10 +368,6 @@ class GUI extends Base {
 
 		// Bypass showing info banner if disabled all in debug
 		if (defined('LITESPEED_DISABLE_ALL') && LITESPEED_DISABLE_ALL) {
-			if ($is_litespeed_page && !$check_only) {
-				include_once LSCWP_DIR . 'tpl/inc/disabled_all.php';
-			}
-
 			return false;
 		}
 

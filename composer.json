@@ -6,12 +6,12 @@
 		"wp-coding-standards/wpcs": "^3.1",
 		"phpcsstandards/phpcsutils": "^1.0",
 		"phpcsstandards/phpcsextra": "^1.2",
-		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"php-stubs/wp-cli-stubs": "^2.12"
 	},
 	"prefer-stable": true,
 	"scripts": {
-		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache tpl/ autoload.php",
-		"sniff-check-bk": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
+		"sniff-check": "vendor/bin/phpcs --standard=phpcs.ruleset.xml --no-cache cli/ lib/ src/ tpl/ thirdparty autoload.php litespeed-cache.php"
 	},
 	"config": {
 		"allow-plugins": {

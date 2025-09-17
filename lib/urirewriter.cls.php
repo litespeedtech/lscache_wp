@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * Rewrite file-relative URIs as root-relative in CSS files
  *

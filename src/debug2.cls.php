@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The plugin logging class.
@@ -49,6 +50,49 @@ class Debug2 extends Root {
 	}
 
 	/**
+	 * Disable all functionalities for a time period.
+	 *
+	 * @since 7.4
+	 * @access public
+	 * @param  integer $time How long should we disable LSC functionalities.
+	 */
+	public static function tmp_disable( $time = 86400 ) {
+		$conf = Conf::cls();
+		$disabled = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled ) {
+			$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => time() + $time ) );
+			self::debug2( 'LiteSpeed Cache temporary disabled.' );
+
+			return;
+		}
+
+		$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		self::debug2( 'LiteSpeed Cache reactivated.' );
+	}
+
+	/**
+	 * Test if Disable All is active. Disable if time is reached.
+	 *
+	 * @since 7.4
+	 * @access public
+	 */
+	public static function is_tmp_disable() {
+		$disabled_time = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
+
+		if ( 0 === $disabled_time ) {
+			return false;
+		}
+
+		if ( time() - $disabled_time < 0 ){
+			return true;
+		}
+
+		Conf::cls()->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		return false;
+	}
+
+	/**
 	 * Try moving legacy logs into /litespeed/debug/ folder
 	 *
 	 * @since 6.5
@@ -57,7 +101,7 @@ class Debug2 extends Root {
 		if (file_exists(self::$log_path_prefix . 'index.php')) {
 			return;
 		}
-		file::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
+		File::save(self::$log_path_prefix . 'index.php', '<?php // Silence is golden.', true);
 
 		$logs = array( 'debug', 'debug.purge', 'crawler' );
 		foreach ($logs as $log) {
@@ -471,7 +515,7 @@ class Debug2 extends Root {
 	private static function _backtrace_info( $backtrace_limit ) {
 		$msg = '';
 
-		$trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace() : debug_backtrace(false, $backtrace_limit + 3);
+		$trace = debug_backtrace(false, $backtrace_limit + 3);
 		for ($i = 2; $i <= $backtrace_limit + 2; $i++) {
 			// 0st => _backtrace_info(), 1st => push()
 			if (empty($trace[$i]['class'])) {

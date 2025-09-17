@@ -14,6 +14,11 @@ defined( 'WPINC' ) || exit;
 
 // List of available public versions
 $v_list = array(
+	'7.5.0.1',
+	'7.5',
+	'7.4',
+	'7.3.0.1',
+	'7.3',
 	'7.2',
 	'7.1',
 	'7.0.1',
@@ -30,6 +35,13 @@ $v_list = array(
 		<?php esc_html_e( 'Try GitHub Version', 'litespeed-cache' ); ?>
 		<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#beta-test-tab' ); ?>
 	</h3>
+
+	<?php if ( defined( 'LITESPEED_DISABLE_ALL' ) && LITESPEED_DISABLE_ALL ) : ?>
+		<div class="litespeed-callout notice notice-warning inline">
+			<h4><?php esc_html_e( 'NOTICE:', 'litespeed-cache' ); ?></h4>
+			<p><?php esc_html_e( 'LiteSpeed Cache is disabled. This functionality will not work.', 'litespeed-cache' ); ?></p>
+		</div>
+	<?php endif; ?>
 
 	<div class="litespeed-desc">
 		<?php esc_html_e( 'Use this section to switch plugin versions. To beta test a GitHub commit, enter the commit URL in the field below.', 'litespeed-cache' ); ?>

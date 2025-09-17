@@ -50,7 +50,17 @@
     <rule ref="WordPress-Docs">
         <severity>0</severity>
     </rule>
-    <rule ref="WordPress.NamingConventions.ValidVariableName">
+    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+    </rule>
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+    </rule>
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax">
+        <severity>0</severity>
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+    </rule>
+    <rule ref="Squiz.PHP.CommentedOutCode">
         <severity>0</severity>
     </rule>
     <rule ref="Squiz.Commenting.InlineComment">
@@ -59,14 +69,17 @@
     <rule ref="WordPress.WP.I18n">
         <severity>0</severity>
     </rule>
+    <rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
+        <severity>0</severity>
+    </rule>
     <rule ref="WordPress.Security" />
     <rule ref="WordPress.NamingConventions" />
     <rule ref="WordPress.PHP" />
-    <!-- <file>cli/</file> -->
-    <!-- <file>lib/</file> -->
-    <!-- <file>src/</file> -->
+    <file>cli/</file>
+    <file>lib/</file>
+    <file>src/</file>
     <file>tpl/</file>
-    <!-- <file>thirdparty/</file> -->
+    <file>thirdparty/</file>
     <file>autoload.php</file>
-    <!-- <file>litespeed-cache.php</file> -->
+    <file>litespeed-cache.php</file>
 </ruleset>

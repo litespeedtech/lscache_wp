@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * The preset class.
  *

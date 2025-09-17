@@ -17,8 +17,17 @@
 	};
 
 	var init = function () {
-		console.log('[LiteSpeed] Start Lazy Load Images');
-		instance = new LazyLoad({ elements_selector: '[data-lazyloaded]', callback_finish: litespeed_finish_callback });
+		console.log('[LiteSpeed] Start Lazy Load');
+		instance = new LazyLoad(
+			Object.assign(
+				{},
+				window.lazyLoadOptions || {},
+				{
+					elements_selector: '[data-lazyloaded]',
+					callback_finish: litespeed_finish_callback,
+				},
+			)
+		);
 
 		update_lazyload = function () {
 			instance.update();

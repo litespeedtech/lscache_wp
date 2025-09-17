@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The import/export class.
@@ -32,7 +33,8 @@ class Import extends Base {
 	/**
 	 * Export settings to file
 	 *
-	 * @since  1.8.2
+	 * @since 1.8.2
+	 * @since 7.3 added download content type
 	 * @access public
 	 */
 	public function export( $only_data_return = false ) {
@@ -58,6 +60,7 @@ class Import extends Base {
 
 		Debug2::debug('Import: Saved to ' . $filename);
 
+		@header('Content-Type: application/octet-stream');
 		@header('Content-Disposition: attachment; filename=' . $filename);
 		echo $data;
 

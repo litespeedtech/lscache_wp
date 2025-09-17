@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The core plugin router class.
@@ -6,7 +7,6 @@
  * This generate the valid action.
  *
  * @since       1.1.0
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -41,6 +41,7 @@ class Router extends Base {
 	const ACTION_DEBUG2                = 'debug2';
 	const ACTION_CDN_CLOUDFLARE        = 'CDN\Cloudflare';
 	const ACTION_ADMIN_DISPLAY         = 'admin_display';
+	const ACTION_TMP_DISABLE          = 'tmp_disable';
 
 	// List all handlers here
 	private static $_HANDLERS = array(
@@ -358,7 +359,7 @@ class Router extends Base {
 			$user = get_userdata($uid);
 			if (isset($user->roles) && is_array($user->roles)) {
 				$tmp  = array_values($user->roles);
-				$role = implode(',', $tmp); // Combine for PHP5.3 const comaptibility
+				$role = implode(',', $tmp); // Combine for PHP5.3 const compatibility
 			}
 		}
 		Debug2::debug('[Router] get_role: ' . $role);
@@ -587,6 +588,11 @@ class Router extends Base {
 		$_can_option         = current_user_can('manage_options');
 
 		switch ($action) {
+			case self::ACTION_TMP_DISABLE: // Disable LSC for 24H
+				Debug2::tmp_disable();
+				Admin::redirect("?page=litespeed-toolbox#settings-debug");
+				return;
+
 			case self::ACTION_SAVE_SETTINGS_NETWORK: // Save network settings
             if ($_can_network_option) {
 					self::$_action = $action;
@@ -747,6 +753,25 @@ class Router extends Base {
 	 */
 	public static function opcache_enabled() {
 		return function_exists('opcache_reset') && ini_get('opcache.enable');
+	}
+
+	/**
+	 * Check if opcode cache is restricted and file that is requesting.
+	 * https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.restrict-api
+	 *
+	 * @since  7.3
+	 * @access public
+	 */
+	public static function opcache_restricted($file)
+	{
+		$restrict_value = ini_get('opcache.restrict_api');
+		if ($restrict_value) {
+			if ( !$file || false === strpos($restrict_value, $file) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

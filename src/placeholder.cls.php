@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The PlaceHolder class
  *
  * @since       3.0
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -57,7 +56,7 @@ class Placeholder extends Base {
 	public function init() {
 		Debug2::debug2('[LQIP] init');
 
-		add_action('litspeed_after_admin_init', array( $this, 'after_admin_init' ));
+		add_action('litespeed_after_admin_init', array( $this, 'after_admin_init' ));
 	}
 
 	/**

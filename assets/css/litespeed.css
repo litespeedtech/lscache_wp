@@ -1,11 +1,6 @@
 @font-face {
-	font-family: 'litespeedfont';
-	src: url('fonts/litespeedfont.eot?rs8ttq');
-	src:
-		url('fonts/litespeedfont.eot?rs8ttq#iefix') format('embedded-opentype'),
-		url('fonts/litespeedfont.ttf?rs8ttq') format('truetype'),
-		url('fonts/litespeedfont.woff?rs8ttq') format('woff'),
-		url('fonts/litespeedfont.svg?rs8ttq#litespeedfont') format('svg');
+  font-family: "litespeedfont";
+  src: url(data:application/font-woff;base64,d09GRgABAAAAAAd8AAsAAAAABzAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAGAAAABgDxIFKmNtYXAAAAFoAAAAVAAAAFQXVtKHZ2FzcAAAAbwAAAAIAAAACAAAABBnbHlmAAABxAAAAywAAAMsC7+w5mhlYWQAAATwAAAANgAAADYNxQCSaGhlYQAABSgAAAAkAAAAJAe+A8ZobXR4AAAFTAAAABQAAAAUCgAABWxvY2EAAAVgAAAADAAAAAwAKAGqbWF4cAAABWwAAAAgAAAAIAAOAX5uYW1lAAAFjAAAAc4AAAHOiN8uy3Bvc3QAAAdcAAAAIAAAACAAAwAAAAMDAAGQAAUAAAKZAswAAACPApkCzAAAAesAMwEJAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAQAAA6QADwP/AAEADwABAAAAAAQAAAAAAAAAAAAAAIAAAAAAAAwAAAAMAAAAcAAEAAwAAABwAAwABAAAAHAAEADgAAAAKAAgAAgACAAEAIOkA//3//wAAAAAAIOkA//3//wAB/+MXBAADAAEAAAAAAAAAAAAAAAEAAf//AA8AAQAAAAAAAAAAAAIAADc5AQAAAAABAAAAAAAAAAAAAgAANzkBAAAAAAEAAAAAAAAAAAACAAA3OQEAAAAACAAF/8QD/AO7AIAAxAFEAWkBbgFyAXcBewAAATA0MTQmMTA0JzgBNSImOQEBOAExLgEjIgYHOAE5AQEwBiMUMDEGFDEwBhUwFDEcARUcARUwFDEUFjEwFBc4ARUyFjkBATAWFTAyMTAWMzAyFTAyMzIWMzI2MzoBMTQyMTI2MTAyMTQ2OQEBMDYzNDAxNjQxMDY1MDQxNDY1JjQ1BzEVBzgBMQE4ATEwBjEjMCIxMCIxMCIxMCYxOAExATgBMSc1MDQxMDQ5ATUxNzgBMQEwNjMyFjEBOAExFxUwFDEwFDEnMCIxMDQxMDQxMCIxNDAnMSc4ATEuASMiBgc4ATEHBjAVMCIxMBQxMBQxMCIxHAExMBQVMDIxMBQxMBQxMDIxFDAXMRcWMDM4ARUwMjE4ATEyMBU6ATEwMjM0MDM4ATEwMjE0MDEyMDcxNzYwNTAyMTA0MTA0MTgBMzwBMTA0NScHFzgBMRYUFxYGDwEOASMiJicmNj8BJyY2PwE+ATMyFhcWBgcFFxUBMxMHIwEBMwE1NzUnNQED+wEBAQH+FAIGAwMGAv4UAQEBAQEBAQEB7AIBAQEBAQEBAQEBAQEBAQEBAQECAewBAQEBAQFOAf5XAQEBAQEB/lcBAQGpAgEBAgGpAbABAQH0AgICAgIC9AEBAQEBAfQBAQEBAQEBAQEBAQH0AQEBoE8rAQEBAgSBAgQDBAYBAgEDTysFAwWBAgQEAwYBAgED/oz6/sw6+vo6ATQBNDb+zP7+ATgBwwEBAQEBAQIB7AICAgL+FAIBAQEBAQEBAQEBAQEBAQEBAQEC/hQBAQEBAQEBAQEBAewCAQEBAQEBAQEBAQEBBAEB/lcBAQGpAQEBAQEBAakBAf5XAQEBAQMBAQEB9AECAgH0AQEBAQEBAQEBAQEB9AEBAQEBAfQBAQEBAQEBAYRkPQECAQcLA2MCAgQDAwgDZD4GDgViAgIEAwMIA6P5OgEzATP6ATT+lP7MNv44/jb+zAABAAAAAQAAiK6LiV8PPPUACwQAAAAAANVU3gsAAAAA1VTeCwAA/8QD/AO7AAAACAACAAAAAAAAAAEAAAPA/8AAAAQAAAAAAAP8AAEAAAAAAAAAAAAAAAAAAAAFBAAAAAAAAAAAAAAAAgAAAAQAAAUAAAAAAAoAFAAeAZYAAQAAAAUBfAAIAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA4ArgABAAAAAAABAA0AAAABAAAAAAACAAcAlgABAAAAAAADAA0ASAABAAAAAAAEAA0AqwABAAAAAAAFAAsAJwABAAAAAAAGAA0AbwABAAAAAAAKABoA0gADAAEECQABABoADQADAAEECQACAA4AnQADAAEECQADABoAVQADAAEECQAEABoAuAADAAEECQAFABYAMgADAAEECQAGABoAfAADAAEECQAKADQA7GxpdGVzcGVlZGZvbnQAbABpAHQAZQBzAHAAZQBlAGQAZgBvAG4AdFZlcnNpb24gMS4wAFYAZQByAHMAaQBvAG4AIAAxAC4AMGxpdGVzcGVlZGZvbnQAbABpAHQAZQBzAHAAZQBlAGQAZgBvAG4AdGxpdGVzcGVlZGZvbnQAbABpAHQAZQBzAHAAZQBlAGQAZgBvAG4AdFJlZ3VsYXIAUgBlAGcAdQBsAGEAcmxpdGVzcGVlZGZvbnQAbABpAHQAZQBzAHAAZQBlAGQAZgBvAG4AdEZvbnQgZ2VuZXJhdGVkIGJ5IEljb01vb24uAEYAbwBuAHQAIABnAGUAbgBlAHIAYQB0AGUAZAAgAGIAeQAgAEkAYwBvAE0AbwBvAG4ALgAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=);
 	font-weight: normal;
 	font-style: normal;
 }
@@ -57,9 +52,11 @@ input[type='checkbox'].litespeed-tiny-toggle {
 	background: none;
 	box-shadow: none;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:focus {
 	box-shadow: none;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:after {
 	content: '';
 	font-size: 8px;
@@ -74,6 +71,7 @@ input[type='checkbox'].litespeed-tiny-toggle:after {
 	border-radius: 72px;
 	box-shadow: 0 0 12px rgb(0 0 0 / 15%) inset;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:before {
 	content: '';
 	width: 14px;
@@ -100,6 +98,7 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:before,
 input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	transition: ease 0.15s;
 }
+
 input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	/*content: 'ON';*/
 	background-color: #2271b1;
@@ -108,10 +107,12 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle {
 	border: 0 !important;
 }
+
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:before {
 	top: 5px;
 	left: 7px;
 }
+
 .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:checked:before {
 	left: 23px;
 }
@@ -547,6 +548,11 @@ button.litespeed-form-action:hover {
 	font-size: 13px;
 	margin: 1.5rem 0;
 	max-width: 960px;
+}
+
+.litespeed-desc-wrapper{
+	display: inline-block;
+    margin-left: 10px;
 }
 
 /* inside stripped table */
@@ -3192,6 +3198,11 @@ a.litespeed-redetect {
 	color: #a5caf2;
 }
 
+.litespeed-overwrite{
+	display: inline-block;
+	margin-left: 10px;
+}
+
 @media screen and (min-width: 1401px) {
 	.litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title {
 		padding-left: 20px;
@@ -3663,6 +3674,7 @@ p.litespeed-dashboard-unlock-footer {
 .litespeed-body tbody > tr > th.litespeed-padding-left {
 	padding-left: 3em;
 }
+
 @media screen and (max-width: 680px) {
 	.litespeed-body tbody > tr > th.litespeed-padding-left {
 		padding-left: 10px;
@@ -4298,19 +4310,6 @@ a.litespeed-media-href svg:hover {
 		word-break: break-word;
 	}
 
-	input#input_api_key + .button {
-		margin-top: 10px;
-		margin-left: 0;
-	}
-
-	input#input_api_key + .button + .litespeed-desc {
-		display: block;
-	}
-
-	input#input_api_key + .button + .litespeed-desc + .button {
-		margin-left: 0;
-	}
-
 	.litespeed-body .litespeed-table td .litespeed-right {
 		float: none !important;
 	}
@@ -4416,4 +4415,36 @@ a.litespeed-media-href svg:hover {
 .litespeed-postbox.litespeed-qc-promo-box p {
 	color: #dbdbdb;
 	font-size: 1rem;
+}
+
+/* =======================================
+	   Deactivate modal
+======================================= */
+#litespeed-modal-deactivate {
+	padding: 20px;
+}
+
+#litespeed-modal-deactivate h2 {
+	margin: 0px;
+}
+
+#litespeed-modal-deactivate .litespeed-wrap {
+	margin: 10px 0px;
+}
+
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper,
+#litespeed-modal-deactivate .deactivate-actions {
+	margin-top: 30px;
+}
+
+#litespeed-modal-deactivate .deactivate-reason-wrapper label,
+#litespeed-modal-deactivate .deactivate-clear-settings-wrapper label {
+	width: 100%;
+	display: block;
+	margin-bottom: 5px;
+}
+
+#litespeed-modal-deactivate .deactivate-actions {
+	display: flex;
+	justify-content: space-between;
 }

@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The report class
  *
  * @since      1.1.0
  * @package    LiteSpeed
- * @subpackage LiteSpeed/src
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;

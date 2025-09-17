@@ -1,10 +1,10 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The cron task class.
  *
  * @since       1.1.3
- * @since       1.5 Moved into /inc
  */
 
 namespace LiteSpeed;
@@ -224,7 +224,7 @@ class Task extends Root {
 	 * @access public
 	 */
 	public function lscache_cron_filter_crawler( $schedules ) {
-		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
+		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? constant('LITESPEED_CRAWLER_RUN_INTERVAL') : 600;
 		// $wp_schedules = wp_get_schedules();
 		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
 			// self::debug('Crawler cron log: cron filter '.$interval.' added');

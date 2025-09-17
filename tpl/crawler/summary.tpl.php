@@ -30,17 +30,17 @@ if ( ! $this->conf( Base::O_CRAWLER_SITEMAP ) ) {
 	) . '</span>';
 }
 
-$CRAWLER_RUN_INTERVAL = defined( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
-if ( $CRAWLER_RUN_INTERVAL > 0 ) :
+$crawler_run_interval = defined( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) ? LITESPEED_CRAWLER_RUN_INTERVAL : 600;
+if ( $crawler_run_interval > 0 ) :
 	$recurrence = '';
-	$hours      = (int) floor( $CRAWLER_RUN_INTERVAL / 3600 );
+	$hours      = (int) floor( $crawler_run_interval / 3600 );
 	if ( $hours ) {
 		$recurrence .= sprintf(
 			$hours > 1 ? esc_html__( '%d hours', 'litespeed-cache' ) : esc_html__( '%d hour', 'litespeed-cache' ),
 			$hours
 		);
 	}
-	$minutes = (int) floor( ( $CRAWLER_RUN_INTERVAL % 3600 ) / 60 );
+	$minutes = (int) floor( ( $crawler_run_interval % 3600 ) / 60 );
 	if ( $minutes ) {
 		$recurrence .= ' ';
 		$recurrence .= sprintf(
@@ -62,7 +62,8 @@ if ( $CRAWLER_RUN_INTERVAL > 0 ) :
 			<p>
 				<?php
 				printf(
-					esc_html__( 'See %1$sIntroduction for Enabling the Crawler%2$s for detailed information.', 'litespeed-cache' ),
+					/* translators: %s: Link tags */
+					esc_html__( 'See %sIntroduction for Enabling the Crawler%s for detailed information.', 'litespeed-cache' ),
 					'<a href="https://docs.litespeedtech.com/lscache/lscwp/admin/#enabling-and-limiting-the-crawler" target="_blank" rel="noopener">',
 					'</a>'
 				);
@@ -256,7 +257,8 @@ if ( $CRAWLER_RUN_INTERVAL > 0 ) :
 		<div>
 			<?php
 			printf(
-				esc_html__( 'Please see %1$sHooking WP-Cron Into the System Task Scheduler%2$s to learn how to create the system cron task.', 'litespeed-cache' ),
+				/* translators: %s: Link tags */
+				esc_html__( 'Please see %sHooking WP-Cron Into the System Task Scheduler%s to learn how to create the system cron task.', 'litespeed-cache' ),
 				'<a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank" rel="noopener">',
 				'</a>'
 			);
@@ -270,10 +272,10 @@ endif;
 <h3 class="litespeed-title"><?php esc_html_e( 'Watch Crawler Status', 'litespeed-cache' ); ?></h3>
 
 <?php
-$ajaxUrl = $__crawler->json_path();
-if ( $ajaxUrl ) :
+$ajax_url = $__crawler->json_path();
+if ( $ajax_url ) :
 ?>
-	<input type="button" id="litespeed-crawl-url-btn" value="<?php esc_attr_e( 'Show crawler status', 'litespeed-cache' ); ?>" class="button button-secondary" data-url="<?php echo esc_url( $ajaxUrl ); ?>" />
+	<input type="button" id="litespeed-crawl-url-btn" value="<?php esc_attr_e( 'Show crawler status', 'litespeed-cache' ); ?>" class="button button-secondary" data-url="<?php echo esc_url( $ajax_url ); ?>" />
 	<div class="litespeed-shell litespeed-hide">
 		<div class="litespeed-shell-header-bar"></div>
 		<div class="litespeed-shell-header">
