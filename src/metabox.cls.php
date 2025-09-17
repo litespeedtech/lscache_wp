@@ -157,7 +157,7 @@ class Metabox extends Root {
 	 */
 	public function lazy_img_excludes( $list ) {
 		$is_mobile = $this->_separate_mobile();
-		$excludes  = $this->setting( $is_mobile ? VPI::POST_META_POST : VPI::POST_META );
+		$excludes  = $this->setting( $is_mobile ? VPI::POST_META_MOBILE : VPI::POST_META );
 		if ($excludes !== null) {
 			$excludes = Utility::sanitize_lines($excludes, 'basename');
 			if ($excludes) {
