@@ -18,7 +18,7 @@ $closest_server      = Cloud::get_summary( 'server.' . Cloud::SVC_LQIP );
 
 $lqip_queue = $this->load_queue( 'lqip' );
 
-$scaled_size = apply_filters( 'big_image_size_threshold', 2560 ) . 'px';
+$scaled_size = apply_filters( 'big_image_size_threshold', 2560, [], '', 0 ) . 'px';
 
 ?>
 
