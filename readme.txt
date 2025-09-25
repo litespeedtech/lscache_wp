@@ -258,6 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.6 - Oct 22 2025 =
+* 🌱**Purge** Added `Purge VPI` menu. (PR#898)
 * **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
 * **API** Dropped legacy `conf::val()` function.
 
