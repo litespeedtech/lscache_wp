@@ -161,7 +161,7 @@ class Metabox extends Root {
 	 * @return void
 	 */
 	public function save( $post_id, $name, $val, $is_append = false ) {
-		if ( false !== strpos( $name, 'litespeed_vpi_list' ) ) {
+		if ( false !== strpos( $name, VPI::POST_META ) ) {
 			$val = Utility::sanitize_lines( $val, 'basename,drop_webp' );
 		}
 
@@ -191,7 +191,7 @@ class Metabox extends Root {
 	 */
 	public function lazy_img_excludes( $exclude_list ) {
 		$is_mobile = $this->_separate_mobile();
-		$excludes  = $this->setting( $is_mobile ? 'litespeed_vpi_list_mobile' : 'litespeed_vpi_list' );
+		$excludes  = $this->setting( $is_mobile ? VPI::POST_META_MOBILE : VPI::POST_META );
 		if ( null !== $excludes ) {
 			$excludes = Utility::sanitize_lines( $excludes, 'basename' );
 			if ( $excludes ) {

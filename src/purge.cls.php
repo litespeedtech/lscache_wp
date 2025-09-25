@@ -58,6 +58,7 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL_CCSS     = 'purge_all_ccss';
 	const TYPE_PURGE_ALL_UCSS     = 'purge_all_ucss';
 	const TYPE_PURGE_ALL_LQIP     = 'purge_all_lqip';
+	const TYPE_PURGE_ALL_VPI      = 'purge_all_vpi';
 	const TYPE_PURGE_ALL_AVATAR   = 'purge_all_avatar';
 	const TYPE_PURGE_ALL_OBJECT   = 'purge_all_object';
 	const TYPE_PURGE_ALL_OPCACHE  = 'purge_all_opcache';
@@ -118,71 +119,76 @@ class Purge extends Base {
 	/**
 	 * Handle all request actions from main cls.
 	 *
-	 * @since 1.8
-	 * @return void
+	 * @since  1.8
+	 * @since  7.6 Add VPI clear.
+	 * @access public
 	 */
 	public function handler() {
 		$type = Router::verify_type();
 
 		switch ( $type ) {
 			case self::TYPE_PURGE_ALL:
-            $this->_purge_all();
+				$this->_purge_all();
 				break;
 
 			case self::TYPE_PURGE_ALL_LSCACHE:
-            $this->_purge_all_lscache();
+				$this->_purge_all_lscache();
 				break;
 
 			case self::TYPE_PURGE_ALL_CSSJS:
-            $this->_purge_all_cssjs();
+				$this->_purge_all_cssjs();
 				break;
 
 			case self::TYPE_PURGE_ALL_LOCALRES:
-            $this->_purge_all_localres();
+				$this->_purge_all_localres();
 				break;
 
 			case self::TYPE_PURGE_ALL_CCSS:
-            $this->_purge_all_ccss();
+				$this->_purge_all_ccss();
 				break;
 
 			case self::TYPE_PURGE_ALL_UCSS:
-            $this->_purge_all_ucss();
+				$this->_purge_all_ucss();
 				break;
 
 			case self::TYPE_PURGE_ALL_LQIP:
-            $this->_purge_all_lqip();
+				$this->_purge_all_lqip();
+				break;
+			
+			case self::TYPE_PURGE_ALL_VPI:
+				$this->_purge_all_vpi();
 				break;
 
 			case self::TYPE_PURGE_ALL_AVATAR:
-            $this->_purge_all_avatar();
+				$this->_purge_all_avatar();
 				break;
 
 			case self::TYPE_PURGE_ALL_OBJECT:
-            $this->_purge_all_object();
+				$this->_purge_all_object();
 				break;
 
 			case self::TYPE_PURGE_ALL_OPCACHE:
-            $this->purge_all_opcache();
+				$this->purge_all_opcache();
 				break;
 
 			case self::TYPE_PURGE_FRONT:
-            $this->_purge_front();
+				$this->_purge_front();
 				break;
 
 			case self::TYPE_PURGE_UCSS:
-            $this->_purge_ucss();
+				$this->_purge_ucss();
 				break;
 
 			case self::TYPE_PURGE_FRONTPAGE:
-            $this->_purge_frontpage();
+				$this->_purge_frontpage();
 				break;
 
 			case self::TYPE_PURGE_PAGES:
-            $this->_purge_pages();
+				$this->_purge_pages();
 				break;
 
 			case ( 0 === strpos( $type, self::TYPE_PURGE_ERROR ) ):
-            $this->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
+				$this->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
 				break;
 
 			default:
@@ -339,7 +345,39 @@ class Purge extends Base {
 	}
 
 	/**
-	 * Delete all avatar images.
+	 * Delete all VPI data generated
+	 *
+	 * @since 7.6
+	 * @param bool $silence If true, don't show admin notice.
+	 * @return void
+	 * @access private
+	 */
+	private function _purge_all_vpi( $silence = false ) {
+		global $wpdb;
+		do_action( 'litespeed_purged_all_vpi' );
+
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = %s',
+				VPI::POST_META
+			)
+		);
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = %s',
+				VPI::POST_META_MOBILE
+			)
+		);
+		$this->cls( 'Placeholder' )->rm_cache_folder( 'vpi' );
+
+		if ( !$silence ) {
+			$msg = __( 'Cleaned all VPI data.', 'litespeed-cache' );
+			!defined( 'LITESPEED_PURGE_SILENT' ) && Admin_Display::success( $msg );
+		}
+	}
+
+	/**
+	 * Delete all avatar images
 	 *
 	 * @since 3.0
 	 * @param bool $silence If true, don't show admin notice.
