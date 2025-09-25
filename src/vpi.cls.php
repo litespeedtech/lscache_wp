@@ -40,7 +40,7 @@ class VPI extends Base {
 	 * @since  7.6
 	 * @var string
 	 */
-	const POST_META        = 'litespeed_vpi_list';
+	const POST_META = 'litespeed_vpi_list';
 	/**
 	 * VPI Mobile Meta name.
 	 * 

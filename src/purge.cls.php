@@ -128,31 +128,31 @@ class Purge extends Base {
 
 		switch ( $type ) {
 			case self::TYPE_PURGE_ALL:
-            $this->_purge_all();
+				$this->_purge_all();
 				break;
 
 			case self::TYPE_PURGE_ALL_LSCACHE:
-            $this->_purge_all_lscache();
+				$this->_purge_all_lscache();
 				break;
 
 			case self::TYPE_PURGE_ALL_CSSJS:
-            $this->_purge_all_cssjs();
+				$this->_purge_all_cssjs();
 				break;
 
 			case self::TYPE_PURGE_ALL_LOCALRES:
-            $this->_purge_all_localres();
+				$this->_purge_all_localres();
 				break;
 
 			case self::TYPE_PURGE_ALL_CCSS:
-            $this->_purge_all_ccss();
+				$this->_purge_all_ccss();
 				break;
 
 			case self::TYPE_PURGE_ALL_UCSS:
-            $this->_purge_all_ucss();
+				$this->_purge_all_ucss();
 				break;
 
 			case self::TYPE_PURGE_ALL_LQIP:
-            $this->_purge_all_lqip();
+				$this->_purge_all_lqip();
 				break;
 			
 			case self::TYPE_PURGE_ALL_VPI:
@@ -160,35 +160,35 @@ class Purge extends Base {
 				break;
 
 			case self::TYPE_PURGE_ALL_AVATAR:
-            $this->_purge_all_avatar();
+				$this->_purge_all_avatar();
 				break;
 
 			case self::TYPE_PURGE_ALL_OBJECT:
-            $this->_purge_all_object();
+				$this->_purge_all_object();
 				break;
 
 			case self::TYPE_PURGE_ALL_OPCACHE:
-            $this->purge_all_opcache();
+				$this->purge_all_opcache();
 				break;
 
 			case self::TYPE_PURGE_FRONT:
-            $this->_purge_front();
+				$this->_purge_front();
 				break;
 
 			case self::TYPE_PURGE_UCSS:
-            $this->_purge_ucss();
+				$this->_purge_ucss();
 				break;
 
 			case self::TYPE_PURGE_FRONTPAGE:
-            $this->_purge_frontpage();
+				$this->_purge_frontpage();
 				break;
 
 			case self::TYPE_PURGE_PAGES:
-            $this->_purge_pages();
+				$this->_purge_pages();
 				break;
 
 			case ( 0 === strpos( $type, self::TYPE_PURGE_ERROR ) ):
-            $this->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
+				$this->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) );
 				break;
 
 			default:
@@ -347,16 +347,27 @@ class Purge extends Base {
 	/**
 	 * Delete all VPI data generated
 	 *
-	 * @since    7.6
-	 * @access   private
+	 * @since 7.6
+	 * @param bool $silence If true, don't show admin notice.
+	 * @return void
+	 * @access private
 	 */
-	private function _purge_all_vpi( $silence = false )
-	{
+	private function _purge_all_vpi( $silence = false ) {
 		global $wpdb;
 		do_action( 'litespeed_purged_all_vpi' );
 
-		$wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE meta_key = '" . VPI::POST_META . "'" );
-		$wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE meta_key = '" . VPI::POST_META_MOBILE . "'" );
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = %s',
+				VPI::POST_META
+			)
+		);
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = %s',
+				VPI::POST_META_MOBILE
+			)
+		);
 		$this->cls( 'Placeholder' )->rm_cache_folder( 'vpi' );
 
 		if ( !$silence ) {

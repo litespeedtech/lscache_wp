@@ -785,14 +785,14 @@ class GUI extends Base {
     
 		if ( $this->has_cache_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
-        [
-          'parent' => 'litespeed-menu',
-          'id'     => 'litespeed-purge-vpi',
-          'title'  => __( 'Purge All', 'litespeed-cache' ) . ' - VPI',
-          'href'   => Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI, false, '_ori' ),
+				[
+					'parent' => 'litespeed-menu',
+					'id'     => 'litespeed-purge-vpi',
+					'title'  => __( 'Purge All', 'litespeed-cache' ) . ' - VPI',
+					'href'   => Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI, false, '_ori' ),
 					'meta'   => [ 'tabindex' => '0' ],
-			  ]
-      );
+				]
+			);
 		}
 
 		if ( $this->has_cache_folder( 'avatar' ) ) {
@@ -1003,16 +1003,16 @@ class GUI extends Base {
 			);
 		}
     
-    if ( $this->conf( self::O_MEDIA_VPI ) ) {
+    	if ( $this->has_cache_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
-        [
-          'parent' => 'litespeed-menu',
-          'id' => 'litespeed-purge-vpi',
-          'title' => __('Purge All', 'litespeed-cache') . ' - VPI',
-          'href' => Utility::build_url(Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI),
-          'meta' => array('tabindex' => '0'),
-        ]
-      );
+				[
+					'parent' => 'litespeed-menu',
+					'id'     => 'litespeed-purge-vpi',
+					'title'  => __( 'Purge All', 'litespeed-cache' ) . ' - VPI',
+					'href'   => Utility::build_url( Router::ACTION_PURGE, Purge::TYPE_PURGE_ALL_VPI ),
+					'meta'   => [ 'tabindex' => '0' ],
+				]
+			);
 		}
 
 		if ( $this->has_cache_folder( 'avatar' ) ) {
