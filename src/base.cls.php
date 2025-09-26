@@ -590,6 +590,7 @@ class Base extends Root {
 		self::O_CACHE_BROWSER => false,
 		self::O_CACHE_MOBILE => false,
 		self::O_CACHE_MOBILE_RULES => [],
+		self::O_CACHE_DROP_QS => [],
 		self::O_CACHE_LOGIN_COOKIE => '',
 		self::O_CACHE_VARY_COOKIES => [],
 		self::O_CACHE_EXC_COOKIES => [],
