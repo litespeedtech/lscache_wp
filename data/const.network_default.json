@@ -6,6 +6,7 @@
 	"cache-browser": false,
 	"cache-mobile": false,
 	"cache-mobile_rules": "Mobile\nAndroid\nSilk/\nKindle\nBlackBerry\nOpera Mini\nOpera Mobi",
+	"cache-drop_qs": "fbclid\ngclid\nutm*\n_ga",
 	"cache-login_cookie": "",
 	"cache-exc_cookies": "",
 	"cache-exc_useragents": "",
