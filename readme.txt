@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.6 - Oct 22 2025 =
 * 🌱**Purge** Added `Purge VPI` menu. (PR#898)
+* **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
 * **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
 * **API** Dropped legacy `conf::val()` function.
 
