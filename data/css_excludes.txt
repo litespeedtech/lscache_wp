@@ -4,27 +4,30 @@
 
 # CSS file URL excludes
 
+# Astra Theme core styles
+wp-content/themes/astra/*
+wp-content/themes/astra/assets/css/*
 
+# Elementor Free
+wp-content/plugins/elementor/assets/css/*
+wp-content/plugins/elementor/assets/lib/eicons/css/*
+
+# Elementor Pro
+wp-content/plugins/elementor-pro/assets/css/*
+
+# WooCommerce
+wp-content/plugins/woocommerce/assets/css/*
+
+# Common plugins
+wp-content/plugins/wpforms/assets/css/*
+wp-content/plugins/contact-form-7/includes/css/*
 
 # Inline CSS excludes
+.elementor-
+.ast-
+.ast-container
+.ast-header-
+.ast-footer-
+.ast-separate-container
 
-########## Flatsome theme random string excludes ############
-#row-
-#col-
-#cats-
-#stack-
-#timer-
-#gap-
-#portfolio-
-#image_
-#banner-
-#map-
-#text-
-#page-header-
-#section_
-
-.tdi_ # Theme: Newspaper by tagDiv.com 2020
-
-######### WoodMart - Responsive WooCommerce WordPress Theme ########
-.tabs-wd-
-#wd-
+########## Removed Flatsome / WoodMart since site is Astra ##########
