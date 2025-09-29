@@ -357,7 +357,7 @@ class Admin_Display extends Base {
 			'LiteSpeed Cache',
 			'LiteSpeed Cache',
 			$capability,
-			'litespeed',
+			'litespeed'
 		);
 
 		foreach ( $this->_pages as $slug => $meta ) {
