@@ -1,0 +1,522 @@
+/* =======================================
+	   DARK MODE STYLES
+======================================= */
+
+/* Dark Mode Toggle Button */
+.litespeed-dark-mode-toggle {
+	position: fixed;
+	top: 32px;
+	right: 20px;
+	z-index: 999999;
+	background: none;
+	border: none;
+	width: auto;
+	height: auto;
+	color: inherit;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+/* =======================================
+   		  DARK MODE STYLES
+======================================= */
+
+/* Dark mode styles - applied when body has .litespeed-darkmode class */
+body.litespeed-darkmode {
+	background: #1e1e1e;
+	color: #e0e0e0;
+}
+
+/* WordPress admin wrapper */
+body.litespeed-darkmode #wpwrap {
+	background: #1e1e1e;
+	color: #e0e0e0;
+}
+
+/* Main content area */
+body.litespeed-darkmode #wpcontent {
+	background: #181818;
+	color: #e0e0e0;
+}
+
+/* Form inputs */
+body.litespeed-darkmode input[type='text'],
+body.litespeed-darkmode input[type='number'],
+body.litespeed-darkmode input[type='email'],
+body.litespeed-darkmode input[type='url'],
+body.litespeed-darkmode input[type='password'],
+body.litespeed-darkmode input[type='search'],
+body.litespeed-darkmode input[type='file'],
+body.litespeed-darkmode textarea,
+body.litespeed-darkmode select {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode input[type='text']:focus,
+body.litespeed-darkmode input[type='number']:focus,
+body.litespeed-darkmode input[type='email']:focus,
+body.litespeed-darkmode input[type='url']:focus,
+body.litespeed-darkmode input[type='password']:focus,
+body.litespeed-darkmode input[type='search']:focus,
+body.litespeed-darkmode input[type='file']:focus,
+body.litespeed-darkmode textarea:focus,
+body.litespeed-darkmode select:focus {
+	background: #404043;
+	border: 1px solid #5a5a5d;
+	box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Buttons */
+body.litespeed-darkmode .button,
+body.litespeed-darkmode .button-secondary {
+	background: #3e3e42;
+	border-color: #5a5a5d;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode circle.litespeed-pie_bg {
+	stroke: #3e3e42;
+}
+
+body.litespeed-darkmode g.litespeed-pie_info text {
+	fill: #e0e0e0;
+}
+
+body.litespeed-darkmode g.litespeed-pie_info .litespeed-pie-done {
+	fill: #6dd17e;
+}
+
+body.litespeed-darkmode .litespeed-switch label {
+	background: #3e3e42;
+	color: #e0e0e0;
+	border: 1px solid #5a5a5d;
+}
+
+/* Column with boxes layout */
+body.litespeed-darkmode .litespeed-column-with-boxes .postbox {
+	border-color: #3e3e42;
+}
+
+body.litespeed-darkmode .litespeed-column-with-boxes > div.litespeed-column-right {
+	background: #2d2d30;
+}
+
+body.litespeed-darkmode .litespeed-image-optim-summary,
+body.litespeed-darkmode .litespeed-column-left-inside {
+	background: #1e1e1e;
+	border: 1px solid #3e3e42;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode.litespeed-cache_page_litespeed-img_optm [data-litespeed-layout='summary'],
+body.litespeed-darkmode.litespeed-cache_page_litespeed-img_optm .litespeed-column-with-boxes > div.litespeed-column-right,
+body.litespeed-darkmode.litespeed-cache_page_litespeed-cdn .litespeed-column-with-boxes > div.litespeed-column-right,
+body.litespeed-darkmode.litespeed-cache_page_litespeed-cdn [data-litespeed-layout='qc'] {
+	background: #181818;
+}
+
+body.litespeed-darkmode .litespeed-image-optim-summary-footer,
+body.litespeed-darkmode .litespeed-column-with-boxes-footer {
+	border-top: 1px solid #373737;
+	background: revert;
+}
+
+body.litespeed-darkmode .litespeed-column-with-boxes-footer{
+	border-top: 1px solid #3e3e42;
+	background: #353539;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .nav-tab:focus:not(.nav-tab-active),
+body.litespeed-darkmode .nav-tab:hover:not(.nav-tab-active) {
+	background: #4d4d51;
+	border-color: #666;
+	color: #fff
+}
+
+body.litespeed-darkmode .button:hover,
+body.litespeed-darkmode .button-secondary:hover {
+	background: #484851;
+	border-color: #666;
+}
+
+body.litespeed-darkmode .button-primary {
+	background: #0073aa;
+	border-color: #005a87;
+	color: #ffffff;
+}
+
+body.litespeed-darkmode .button-primary:hover {
+	background: #005a87;
+	border-color: #004a73;
+}
+
+body.litespeed-darkmode .button-primary:disabled,
+body.litespeed-darkmode .button-primary[disabled] {
+	background: #3e3e42;
+	border-color: #5a5a5d;
+	color: #8c8f94;
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+/* Danger buttons */
+body.litespeed-darkmode .litespeed-btn-danger-bg,
+body.litespeed-darkmode .litespeed .litespeed-btn-danger-bg,
+body.litespeed-darkmode .litespeed-wrap .litespeed-btn-danger-bg {
+	background: #dc3232;
+	border-color: #b32d2e;
+	color: #ffffff;
+	box-shadow: 0 1px 0 rgba(179, 45, 46, 0.5);
+}
+
+body.litespeed-darkmode .litespeed-btn-danger-bg:hover,
+body.litespeed-darkmode .litespeed .litespeed-btn-danger-bg:hover,
+body.litespeed-darkmode .litespeed-wrap .litespeed-btn-danger-bg:hover {
+	background: #b32d2e;
+	border-color: #a02622;
+}
+
+/* Notices */
+body.litespeed-darkmode .notice {
+	background: #262626;
+	border-left: 4px solid #72a9d3;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .notice-success {
+	border-left-color: #46b450;
+}
+
+body.litespeed-darkmode .notice-warning {
+	border-left-color: #ffb900;
+}
+
+body.litespeed-darkmode .notice-error {
+	border-left-color: #dc3232;
+}
+
+body.litespeed-darkmode .notice-info {
+	border-left-color: #00a0d2;
+}
+
+/* Striped table notices */
+body.litespeed-darkmode .striped > tbody > :nth-child(even) .notice {
+	background-color: #3e3e42;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Postboxes */
+body.litespeed-darkmode .postbox {
+	background: #2d2d30;
+	border: 1px solid #767679;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .postbox h3,
+body.litespeed-darkmode .postbox .hndle {
+	/* background: #404043; */
+	/* border-bottom: 1px solid #5a5a5d; */
+	color: #e0e0e0;
+}
+
+/* Tables */
+body.litespeed-darkmode table,
+body.litespeed-darkmode .wp-list-table {
+	background: #2d2d30;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .wp-list-table th {
+	/* background: #404043; */
+	/* border-bottom: 1px solid #5a5a5d; */
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .wp-list-table td {
+	border-bottom: 1px solid #3e3e42;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .striped > tbody > :nth-child(odd) {
+	background: #2d2d30;
+}
+
+body.litespeed-darkmode .striped > tbody > :nth-child(even) {
+	background: #353539;
+}
+
+/* Form tables */
+body.litespeed-darkmode .form-table {
+	background: transparent;
+}
+
+body.litespeed-darkmode .form-table th {
+	background: transparent;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .form-table td {
+	background: transparent;
+	color: #e0e0e0;
+}
+
+/* Links */
+body.litespeed-darkmode a {
+	color: #72aee6;
+}
+
+body.litespeed-darkmode a:hover,
+body.litespeed-darkmode a:focus {
+	color: #9ec8f2;
+}
+
+/* Code blocks */
+body.litespeed-darkmode code {
+	background: #404043;
+	color: #e0e0e0;
+}
+
+/* Horizontal rules */
+body.litespeed-darkmode hr {
+	border-color: #5a5a5d;
+	background: #5a5a5d;
+}
+
+/* Dashboard widgets */
+body.litespeed-darkmode .dashboard-widget {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+}
+
+body.litespeed-darkmode .dashboard-widget .widget-top {
+	background: #404043;
+	border-bottom: 1px solid #5a5a5d;
+}
+
+/* Meta boxes */
+body.litespeed-darkmode .meta-box-sortables .postbox {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+}
+
+/* LiteSpeed specific styles */
+body.litespeed-darkmode .litespeed-header {
+	border-bottom: 1px solid #5a5a5d;
+}
+
+body.litespeed-darkmode .litespeed-body {
+	background: #1e1e1e;
+	border-left: 1px solid #5a5a5d;
+	border-right: 1px solid #5a5a5d;
+	border-bottom: 1px solid #5a5a5d;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-panel {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-panel-wrapper {
+	background: transparent;
+}
+
+/* Dashboard titles */
+body.litespeed-darkmode .litespeed-h1,
+body.litespeed-darkmode h1.litespeed-h1 {
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode h3 {
+	color: #e0e0e0;
+}
+
+/* LiteSpeed postboxes */
+body.litespeed-darkmode .litespeed-postbox {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-postbox .inside {
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-postbox .inside .litespeed-title {
+	border-bottom: 1px solid #5a5a5d;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-postbox .inside.litespeed-postbox-footer {
+	background: #353539;
+	border-top: 1px solid #5a5a5d;
+}
+
+body.litespeed-darkmode .litespeed-postbox p.litespeed-dashboard-stats-total {
+	border-top: 1px dashed #5a5a5d;
+}
+
+/* Dashboard stats */
+body.litespeed-darkmode .litespeed-dashboard-stats .litespeed-desc {
+	color: #b3b3b3;
+}
+
+body.litespeed-darkmode .litespeed-dashboard-stats-payg {
+	color: #b3b3b3;
+}
+
+body.litespeed-darkmode .litespeed-dashboard-stats-payg strong {
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-dashboard-stats-wrapper .litespeed-postbox:not(:first-child) {
+	border-left-color: #3e3e42;
+}
+
+body.litespeed-darkmode .litespeed-postbox.litespeed-postbox-partner h3.litespeed-title {
+	color: #b3b3b3;
+}
+
+/* QUIC.cloud postbox styling */
+body.litespeed-darkmode .litespeed-postbox--quiccloud {
+	border-color: #3e7cb3;
+}
+
+body.litespeed-darkmode .litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title {
+	background: #41464a;
+	color: #ffffff;
+}
+
+body.litespeed-darkmode .litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a {
+	color: #a5caf2;
+}
+
+body.litespeed-darkmode .litespeed-postbox--quiccloud.litespeed-postbox .inside .litespeed-title a:hover {
+	color: #c2dcff;
+}
+
+/* Dashboard unlock/promo styling */
+body.litespeed-darkmode .litespeed-dashboard-unlock {
+	background-color: #2d2d30;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-dashboard-unlock-desc {
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-dashboard-unlock-desc span {
+	color: #b3b3b3;
+}
+
+/* Navigation tabs */
+body.litespeed-darkmode .nav-tab {
+	background: #3e3e42;
+	border-color: #5a5a5d;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .nav-tab:hover {
+	background: #1e1e1e;
+}
+
+body.litespeed-darkmode .nav-tab-active {
+	background: #1e1e1e;
+	border-bottom-color: #1e1e1e;
+	color: #e0e0e0;
+}
+
+/* Status indicators */
+body.litespeed-darkmode .litespeed-success {
+	color: #46b450;
+}
+
+body.litespeed-darkmode .litespeed-error {
+	color: #dc3232;
+}
+
+body.litespeed-darkmode .litespeed-warning {
+	color: #ffb900;
+}
+
+body.litespeed-darkmode .litespeed-warning-bg {
+	background-color: #8b6507 !important;
+	color: #ffffff;
+}
+
+/* Footer */
+body.litespeed-darkmode #wpfooter {
+	background: #2d2d30;
+	color: #e0e0e0;
+}
+
+/* Checkbox and radio inputs */
+body.litespeed-darkmode input[type="checkbox"],
+body.litespeed-darkmode input[type="radio"] {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+}
+
+/* Progress bars */
+body.litespeed-darkmode .litespeed-progress {
+	background: #3e3e42;
+}
+
+body.litespeed-darkmode .litespeed-progress-bar {
+	background: #0073aa;
+}
+
+/* Litespeed tick buttons */
+body.litespeed-darkmode .litespeed-tick {
+	background: #2d2d30;
+	border: 1px solid #3e3e42;
+	padding: 8px 10px;
+}
+
+body.litespeed-darkmode .litespeed-tick:hover {
+	background: #404043;
+	border-color: #5a5a5d;
+}
+
+body.litespeed-darkmode .litespeed-tick label {
+	color: #e0e0e0;
+	padding: 4px 8px;
+}
+
+body.litespeed-darkmode .litespeed-tick label:hover {
+	color: #72aee6;
+}
+
+body.litespeed-darkmode .litespeed-tick input[type='checkbox'] {
+	background: #2d2d30;
+	border: 2px solid #5a5a5d;
+}
+
+body.litespeed-darkmode .litespeed-tick input[type='checkbox']:checked {
+	background-color: #0073aa;
+	border-color: #0073aa;
+}
+
+/* Card headers */
+body.litespeed-darkmode .litespeed-card-header {
+	background: #404043;
+	border-bottom: 1px solid #5a5a5d;
+	color: #e0e0e0;
+}
+
+/* Card action buttons */
+body.litespeed-darkmode .litespeed-card-action .button-secondary:hover {
+	background: #484851;
+	border-color: #666;
+	color: #e0e0e0;
+}
+
+body.litespeed-darkmode .litespeed-card-action .button-primary:hover {
+	background: #005a87;
+	border-color: #004a73;
+	color: #ffffff;
+}

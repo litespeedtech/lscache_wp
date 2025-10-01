@@ -30,6 +30,9 @@
 	 */
 
 	jQuery(document).ready(function () {
+		/************** Initialize dark mode toggle before accesskey mapping **************/
+		litespeed_init_dark_mode();
+
 		/************** Common LiteSpeed JS **************/
 		// Link confirm
 		$('[data-litespeed-cfm]').on('click', function (event) {
@@ -131,15 +134,21 @@
 			if (thiskey == '') {
 				return;
 			}
-			$(this).attr('title', 'Shortcut : ' + thiskey.toLocaleUpperCase());
+			// Append shortcut info to existing title or set default
+			var currentTitle = $(this).attr('title');
+			if (currentTitle) {
+				$(this).attr('title', currentTitle + ' (Shortcut: ' + thiskey.toLocaleUpperCase() + ')');
+			} else {
+				$(this).attr('title', 'Shortcut : ' + thiskey.toLocaleUpperCase());
+			}
 			var that = this;
 			$(document).on('keydown', function (e) {
-				if ($(':input:focus').length > 0) return;
-				if (event.metaKey) return;
-				if (event.ctrlKey) return;
-				if (event.altKey) return;
-				if (event.shiftKey) return;
-				if (litespeed_keycode(thiskey.charCodeAt(0))) $(that)[0].click();
+				if ($(':input:focus').length) return;
+				if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+
+				if (e.key && e.key.toLowerCase() === thiskey.toLowerCase()) {
+					$(that)[0].click();
+				}
 			});
 		});
 
@@ -219,21 +228,6 @@ function litespeed_readable_time(seconds) {
 }
 
 /**
- * Trigger a click event on an element
- * @since  1.8
- */
-function litespeed_trigger_click(selector) {
-	jQuery(selector).trigger('click');
-}
-
-function litespeed_keycode(num) {
-	var num = num || 13;
-	var code = window.event ? event.keyCode : event.which;
-	if (num == code) return true;
-	return false;
-}
-
-/**
  * Normalize specified tab type
  * @since  4.7
  */
@@ -302,4 +296,74 @@ function litespeed_copy_to_clipboard(elementId, clickedElement) {
 	window.getSelection().removeAllRanges();
 
 	clickedElement.setAttribute('aria-label', 'Copied!');
+}
+
+// Dark mode toggle functionality
+function litespeed_init_dark_mode() {
+	'use strict';
+
+	// Only add toggle on LiteSpeed pages
+	if (window.location.href.indexOf('litespeed') === -1) return;
+
+	// Create toggle button
+	var toggleBtn = document.createElement('button');
+	toggleBtn.className = 'litespeed-dark-mode-toggle';
+	toggleBtn.setAttribute('title', 'Toggle Dark Mode');
+	toggleBtn.setAttribute('aria-label', 'Toggle Dark Mode');
+	toggleBtn.setAttribute('litespeed-accesskey', 'z');
+	toggleBtn.setAttribute('data-litespeed-noprefix', true);
+
+	// Check current state and apply initial dark mode
+	applyDarkMode();
+
+	// Add click handler
+	toggleBtn.addEventListener('click', function() {
+		var currentlyDark = document.body.classList.contains('litespeed-darkmode');
+		var newState = !currentlyDark;
+
+		// Store user's explicit choice
+		localStorage.setItem('litespeed-dark-preference', newState ? 'dark' : 'light');
+
+		applyDarkMode();
+	});
+
+	function applyDarkMode() {
+		var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		var savedPreference = localStorage.getItem('litespeed-dark-preference');
+		var shouldBeDark = false;
+
+		if (savedPreference === 'dark') {
+			// User explicitly chose dark mode
+			shouldBeDark = true;
+		} else if (savedPreference === 'light') {
+			// User explicitly chose light mode
+			shouldBeDark = false;
+		} else {
+			// No preference saved, use browser preference
+			shouldBeDark = prefersDark;
+		}
+
+		// Apply or remove the dark mode class
+		if (shouldBeDark) {
+			document.body.classList.add('litespeed-darkmode');
+		} else {
+			document.body.classList.remove('litespeed-darkmode');
+		}
+
+		// Update toggle button icon
+		toggleBtn.innerHTML = shouldBeDark ? '☀️' : '🌙';
+	}
+
+	// Listen for system theme changes
+	if (window.matchMedia) {
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+			// Only apply system preference if user hasn't made an explicit choice
+			if (!localStorage.getItem('litespeed-dark-preference')) {
+				applyDarkMode();
+			}
+		});
+	}
+
+	// Add to page
+	document.body.appendChild(toggleBtn);
 }

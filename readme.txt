@@ -257,11 +257,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.6 - Oct 22 2025 =
+= 7.6 - Oct 8 2025 =
+* 🌱**Admin** Dark mode supported.
 * 🌱**Purge** Added `Purge VPI` menu. (PR#898)
 * **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
 * **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
 * **API** Dropped legacy `conf::val()` function.
+* 🐞**Misc** Fixed PHP 7.2 compatibility issue. (Ulrich Viridis, PR#913)
 
 = 7.5.0.1 - Sep 11 2025 =
 * 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
