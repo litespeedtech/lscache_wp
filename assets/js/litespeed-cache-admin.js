@@ -36,7 +36,7 @@
 		/************** Common LiteSpeed JS **************/
 		// Link confirm
 		$('[data-litespeed-cfm]').on('click', function (event) {
-			cfm_txt = $.trim($(this).data('litespeed-cfm')).replace(/\\n/g, '\n');
+			var cfm_txt = $.trim($(this).data('litespeed-cfm')).replace(/\\n/g, '\n');
 			if (cfm_txt === '') {
 				return true;
 			}
