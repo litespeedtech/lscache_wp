@@ -303,7 +303,7 @@ function litespeed_init_dark_mode() {
 	'use strict';
 
 	// Only add toggle on LiteSpeed pages
-	if (window.location.href.indexOf('litespeed') === -1) return;
+	if (window.location.search.indexOf('page=litespeed') === -1) return;
 
 	// Create toggle button
 	var toggleBtn = document.createElement('button');
@@ -313,55 +313,57 @@ function litespeed_init_dark_mode() {
 	toggleBtn.setAttribute('litespeed-accesskey', 'z');
 	toggleBtn.setAttribute('data-litespeed-noprefix', true);
 
-	// Check current state and apply initial dark mode
+	function applyDarkMode() {
+		var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		var savedPreference = localStorage.getItem('litespeed-dark-preference');
+		var isDark = savedPreference ? savedPreference === 'dark' : prefersDark;
+
+		// Determine needed class (only when overriding browser preference)
+		var needsClass;
+		if (savedPreference === 'dark' && !prefersDark) {
+			needsClass = 'litespeed-darkmode';
+		} else if (savedPreference === 'light' && prefersDark) {
+			needsClass = 'litespeed-lightmode';
+		}
+
+		// Only update DOM if class needs to change
+		if (needsClass) {
+			if (!document.body.classList.contains(needsClass)) {
+				document.body.classList.remove('litespeed-darkmode', 'litespeed-lightmode');
+				document.body.classList.add(needsClass);
+			}
+		} else {
+			if (document.body.classList.contains('litespeed-darkmode') || document.body.classList.contains('litespeed-lightmode')) {
+				document.body.classList.remove('litespeed-darkmode', 'litespeed-lightmode');
+			}
+		}
+
+		// Update button icon
+		toggleBtn.innerHTML = isDark ? '☀️' : '🌙';
+	}
+
+	// Initialize
 	applyDarkMode();
 
-	// Add click handler
+	// Toggle handler
 	toggleBtn.addEventListener('click', function() {
-		var currentlyDark = document.body.classList.contains('litespeed-darkmode');
-		var newState = !currentlyDark;
+		var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		var savedPreference = localStorage.getItem('litespeed-dark-preference');
+		var currentlyDark = savedPreference ? savedPreference === 'dark' : prefersDark;
 
-		// Store user's explicit choice
-		localStorage.setItem('litespeed-dark-preference', newState ? 'dark' : 'light');
+		// Toggle and store only if different from browser preference
+		if (!currentlyDark === prefersDark) {
+			localStorage.removeItem('litespeed-dark-preference');
+		} else {
+			localStorage.setItem('litespeed-dark-preference', currentlyDark ? 'light' : 'dark');
+		}
 
 		applyDarkMode();
 	});
 
-	function applyDarkMode() {
-		var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-		var savedPreference = localStorage.getItem('litespeed-dark-preference');
-		var shouldBeDark = false;
-
-		if (savedPreference === 'dark') {
-			// User explicitly chose dark mode
-			shouldBeDark = true;
-		} else if (savedPreference === 'light') {
-			// User explicitly chose light mode
-			shouldBeDark = false;
-		} else {
-			// No preference saved, use browser preference
-			shouldBeDark = prefersDark;
-		}
-
-		// Apply or remove the dark mode class
-		if (shouldBeDark) {
-			document.body.classList.add('litespeed-darkmode');
-		} else {
-			document.body.classList.remove('litespeed-darkmode');
-		}
-
-		// Update toggle button icon
-		toggleBtn.innerHTML = shouldBeDark ? '☀️' : '🌙';
-	}
-
 	// Listen for system theme changes
 	if (window.matchMedia) {
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
-			// Only apply system preference if user hasn't made an explicit choice
-			if (!localStorage.getItem('litespeed-dark-preference')) {
-				applyDarkMode();
-			}
-		});
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyDarkMode);
 	}
 
 	// Add to page
