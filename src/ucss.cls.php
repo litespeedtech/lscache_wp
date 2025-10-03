@@ -83,7 +83,7 @@ class UCSS extends Base {
 					return false;
 				}
 
-				Core::comment('QUIC.cloud UCSS loaded ✅');
+				Core::comment('QUIC.cloud UCSS loaded ✅ ' . $filepath_prefix . $filename . '.css' );
 
 				return $filename . '.css';
 			}
