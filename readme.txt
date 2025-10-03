@@ -262,6 +262,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🌱**Purge** Added `Purge VPI` menu. (PR#898)
 * **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
 * **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
+* **Cloud** Auto sync new Server IP to QUIC.cloud if changed. (cloud86)
 * **API** Dropped legacy `conf::val()` function.
 * 🐞**Misc** Fixed PHP 7.2 compatibility issue. (Ulrich Viridis, PR#913)
 

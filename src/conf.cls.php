@@ -515,11 +515,12 @@ class Conf extends Base {
 		 */
 		$this->cls( 'CDN\Cloudflare' )->try_refresh_zone();
 
-		/**
-		 * CDN related actions - QUIC.cloud
-		 *
-		 * @since 2.3
-		 */
+		// If Server IP changed, must test echo
+		if ( in_array( self::O_SERVER_IP, $this->_updated_ids, true ) ) {
+			$this->cls( 'Cloud' )->init_qc_cli();
+		}
+
+		// CDN related actions - QUIC.cloud
 		$this->cls( 'CDN\Quic' )->try_sync_conf();
 	}
 
