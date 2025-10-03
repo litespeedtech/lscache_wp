@@ -1071,3 +1071,14 @@ body.litespeed-darkmode .litespeed-card-action .button-primary:hover {
 	border-color: #004a73;
 	color: #ffffff;
 }
+
+@media (prefers-color-scheme: dark) {
+	body:not(.litespeed-lightmode) .litespeed-h3,
+	body:not(.litespeed-lightmode) .litespeed-panel-para {
+		color: revert;
+	}
+}
+body.litespeed-darkmode .litespeed-h3,
+body.litespeed-darkmode .litespeed-panel-para {
+	color: revert;
+}
