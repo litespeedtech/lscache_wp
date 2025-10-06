@@ -263,6 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
 * **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
 * **Cloud** Auto sync new Server IP to QUIC.cloud if changed. (cloud86)
+* **GUI** Auto update port value when `Object Cache Method` changed.
 * **API** Dropped legacy `conf::val()` function.
 * 🐞**Misc** Fixed PHP 7.2 compatibility issue. (Ulrich Viridis, PR#913)
 * **Misc** Added UCSS file path to comments info for easier debug. (PR#914)

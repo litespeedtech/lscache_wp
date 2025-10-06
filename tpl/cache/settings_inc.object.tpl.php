@@ -287,3 +287,20 @@ if ( null === $mem_conn ) {
 		</tr>
 	</tbody>
 </table>
+
+<script>
+jQuery(document).ready(function($) {
+	// Auto-fill port based on object cache type
+	$('input[name="object-kind"]').on('change', function() {
+		var portInput = $('#input_objectport');
+		var selectedKind = $(this).val();
+
+		// Memcached (0) -> 11211, Redis (1) -> 6379
+		if (selectedKind === '0') {
+			portInput.val('11211');
+		} else if (selectedKind === '1') {
+			portInput.val('6379');
+		}
+	});
+});
+</script>
