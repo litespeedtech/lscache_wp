@@ -257,7 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.6 - Oct 8 2025 =
+= 7.6 - Oct 15 2025 =
 * 🌱**Admin** Dark mode supported.
 * 🌱**Purge** Added `Purge VPI` menu. (PR#898)
 * **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
@@ -265,6 +265,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Auto sync new Server IP to QUIC.cloud if changed. (cloud86)
 * **API** Dropped legacy `conf::val()` function.
 * 🐞**Misc** Fixed PHP 7.2 compatibility issue. (Ulrich Viridis, PR#913)
+* **Misc** Added UCSS file path to comments info for easier debug. (PR#914)
 
 = 7.5.0.1 - Sep 11 2025 =
 * 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
