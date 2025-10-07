@@ -154,7 +154,7 @@ class Purge extends Base {
 			case self::TYPE_PURGE_ALL_LQIP:
 				$this->_purge_all_lqip();
 				break;
-			
+
 			case self::TYPE_PURGE_ALL_VPI:
 				$this->_purge_all_vpi();
 				break;
@@ -384,8 +384,6 @@ class Purge extends Base {
 	 * @return void
 	 */
 	private function _purge_all_avatar( $silence = false ) {
-		global $wpdb;
-		
 		do_action( 'litespeed_purged_all_avatar' );
 
 		// Clear Database table

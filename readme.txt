@@ -259,14 +259,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.6 - Oct 15 2025 =
 * 🌱**Admin** Dark mode supported.
-* 🌱**Purge** Added `Purge VPI` menu. (PR#898)
-* **Conf** Fixed network failed to save settings `Drop Query String`. (Jory Hogeveen PR#910)
-* **VPI** Add fetchpriority and decoding attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
+* 🌱**Purge** Added `Purge All - VPI` to the Purge menu. (PR#898)
+* **Purge** Gravatar purge now also clears the database records. (Serafín Danessa, PR#915)
+* **Conf** Fixed an issue where the `Drop Query String` setting was not saved when in network mode. (Jory Hogeveen PR#910)
+* **VPI** Add fetchpriority and decode attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
 * **Cloud** Auto sync new Server IP to QUIC.cloud if changed. (cloud86)
-* **GUI** Auto update port value when `Object Cache Method` changed.
+* **GUI** Auto update port value when `Object Cache Method` is changed.
 * **API** Dropped legacy `conf::val()` function.
 * 🐞**Misc** Fixed PHP 7.2 compatibility issue. (Ulrich Viridis, PR#913)
-* **Misc** Added UCSS file path to comments info for easier debug. (PR#914)
+* **Misc** Added UCSS file path to comment info for easier debug. (PR#914)
 
 = 7.5.0.1 - Sep 11 2025 =
 * 🐞**GUI** Fixed an issue where the network dashboard template was missing. (mcworks)
