@@ -384,8 +384,13 @@ class Purge extends Base {
 	 * @return void
 	 */
 	private function _purge_all_avatar( $silence = false ) {
+		global $wpdb;
+		
 		do_action( 'litespeed_purged_all_avatar' );
 
+		// Clear Database table
+		$this->cls( 'Data' )->table_truncate( 'avatar' );
+		// Remove the folder
 		$this->cls( 'Avatar' )->rm_cache_folder( 'avatar' );
 
 		if ( ! $silence ) {
