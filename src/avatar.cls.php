@@ -171,9 +171,8 @@ class Avatar extends Base {
 	public function queue_count() {
 		global $wpdb;
 
-		// If var not exists, means table not exists // todo: not true.
-		if ( ! $this->_tb ) {
-			return false;
+		if ( ! Data::cls()->tb_exist( 'avatar' ) ) {
+			Data::cls()->tb_create( 'avatar' );
 		}
 
 		$cnt = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
