@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 /**
  * The tools
  *

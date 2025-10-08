@@ -1,19 +1,32 @@
 <?php
-// phpcs:ignoreFile
-
 /**
  * The cron task class.
  *
- * @since       1.1.3
+ * @since   1.1.3
+ * @package LiteSpeed
  */
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * Schedules and runs LiteSpeed Cache background tasks.
+ */
 class Task extends Root {
 
-	const LOG_TAG             = '⏰';
+	/**
+	 * Tag for debug logs.
+	 *
+	 * @var string
+	 */
+	const LOG_TAG = '⏰';
+
+	/**
+	 * Map of option id => cron hook registration.
+	 *
+	 * @var array<string,array{name:string,hook:callable|string}>
+	 */
 	private static $_triggers = array(
 		Base::O_IMG_OPTM_CRON => array(
 			'name' => 'litespeed_task_imgoptm_pull',
@@ -49,188 +62,222 @@ class Task extends Root {
 		), // Set crawler to last one to use above results
 	);
 
+	/**
+	 * Options allowed to run for guest optimization.
+	 *
+	 * @var array<int,string>
+	 */
 	private static $_guest_options = array( Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI );
 
+	/**
+	 * Schedule id for crawler.
+	 *
+	 * @var string
+	 */
 	const FILTER_CRAWLER = 'litespeed_crawl_filter';
-	const FILTER         = 'litespeed_filter';
 
 	/**
-	 * Keep all tasks in cron
+	 * Schedule id for general tasks.
+	 *
+	 * @var string
+	 */
+	const FILTER = 'litespeed_filter';
+
+	/**
+	 * Keep all tasks in cron.
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public function init() {
-		self::debug2('Init');
-		add_filter('cron_schedules', array( $this, 'lscache_cron_filter' ));
+		self::debug2( 'Init' );
+		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
 
-		$guest_optm = $this->conf(Base::O_GUEST) && $this->conf(Base::O_GUEST_OPTM);
+		$guest_optm = $this->conf( Base::O_GUEST ) && $this->conf( Base::O_GUEST_OPTM );
 
-		foreach (self::$_triggers as $id => $trigger) {
-			if ($id == Base::O_IMG_OPTM_CRON) {
-				if (!Img_Optm::need_pull()) {
+		foreach ( self::$_triggers as $id => $trigger ) {
+			if ( Base::O_IMG_OPTM_CRON === $id ) {
+				if ( ! Img_Optm::need_pull() ) {
 					continue;
 				}
-			} elseif (!$this->conf($id)) {
-				if (!$guest_optm || !in_array($id, self::$_guest_options)) {
+			} elseif ( ! $this->conf( $id ) ) {
+				if ( ! $guest_optm || ! in_array( $id, self::$_guest_options, true ) ) {
 					continue;
 				}
 			}
 
-			// Special check for crawler
-			if ($id == Base::O_CRAWLER) {
-				if (!Router::can_crawl()) {
+			// Special check for crawler.
+			if ( Base::O_CRAWLER === $id ) {
+				if ( ! Router::can_crawl() ) {
 					continue;
 				}
 
-				add_filter('cron_schedules', array( $this, 'lscache_cron_filter_crawler' ));
+				add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 			}
 
-			if (!wp_next_scheduled($trigger['name'])) {
-				self::debug('Cron hook register [name] ' . $trigger['name']);
+			if ( ! wp_next_scheduled( $trigger['name'] ) ) {
+				self::debug( 'Cron hook register [name] ' . $trigger['name'] );
 
-				wp_schedule_event(time(), $id == Base::O_CRAWLER ? self::FILTER_CRAWLER : self::FILTER, $trigger['name']);
+				wp_schedule_event(
+					time(),
+					Base::O_CRAWLER === $id ? self::FILTER_CRAWLER : self::FILTER,
+					$trigger['name']
+				);
 			}
 
-			add_action($trigger['name'], $trigger['hook']);
+			add_action( $trigger['name'], $trigger['hook'] );
 		}
 	}
 
 	/**
-	 * Handle all async noabort requests
+	 * Handle all async noabort requests.
 	 *
 	 * @since 5.5
+	 * @return void
 	 */
 	public static function async_litespeed_handler() {
-		$hash_data = self::get_option('async_call-hash', array());
-		if (!$hash_data || !is_array($hash_data) || empty($hash_data['hash']) || empty($hash_data['ts'])) {
-			self::debug('async_litespeed_handler no hash data', $hash_data);
+		$hash_data = self::get_option( 'async_call-hash', array() );
+		if ( ! $hash_data || ! is_array( $hash_data ) || empty( $hash_data['hash'] ) || empty( $hash_data['ts'] ) ) {
+			self::debug( 'async_litespeed_handler no hash data', $hash_data );
 			return;
 		}
-		if (time() - $hash_data['ts'] > 120 || empty($_GET['nonce']) || $_GET['nonce'] != $hash_data['hash']) {
-			self::debug('async_litespeed_handler nonce mismatch');
+
+		$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( 120 < time() - (int) $hash_data['ts'] || '' === $nonce || $nonce !== $hash_data['hash'] ) {
+			self::debug( 'async_litespeed_handler nonce mismatch' );
 			return;
 		}
-		self::delete_option('async_call-hash');
+		self::delete_option( 'async_call-hash' );
 
 		$type = Router::verify_type();
-		self::debug('type=' . $type);
+		self::debug( 'type=' . $type );
 
-		// Don't lock up other requests while processing
+		// Don't lock up other requests while processing.
 		session_write_close();
-		switch ($type) {
+
+		switch ( $type ) {
 			case 'crawler':
-            Crawler::async_handler();
+				Crawler::async_handler();
 				break;
 			case 'crawler_force':
-            Crawler::async_handler(true);
+				Crawler::async_handler( true );
 				break;
 			case 'imgoptm':
-            Img_Optm::async_handler();
+				Img_Optm::async_handler();
 				break;
 			case 'imgoptm_force':
-            Img_Optm::async_handler(true);
+				Img_Optm::async_handler( true );
 				break;
 			default:
+				break;
 		}
 	}
 
 	/**
-	 * Async caller wrapper func
+	 * Async caller wrapper func.
 	 *
 	 * @since 5.5
+	 *
+	 * @param string $type Async operation type.
+	 * @return void
 	 */
 	public static function async_call( $type ) {
-		$hash = Str::rrand(32);
-		self::update_option('async_call-hash', array(
-			'hash' => $hash,
-			'ts' => time(),
-		));
+		$hash = Str::rrand( 32 );
+		self::update_option(
+			'async_call-hash',
+			array(
+				'hash' => $hash,
+				'ts'   => time(),
+			)
+		);
+
 		$args = array(
-			'timeout' => 0.01,
-			'blocking' => false,
+			'timeout'   => 0.01,
+			'blocking'  => false,
 			'sslverify' => false,
-			// 'cookies'   => $_COOKIE,
+			// 'cookies' => $_COOKIE,
 		);
-		$qs  = array(
-			'action' => 'async_litespeed',
-			'nonce' => $hash,
-			Router::TYPE => $type,
+
+		$qs = array(
+			'action'      => 'async_litespeed',
+			'nonce'       => $hash,
+			Router::TYPE  => $type,
 		);
-		$url = add_query_arg($qs, admin_url('admin-ajax.php'));
-		self::debug('async call to ' . $url);
-		wp_safe_remote_post(esc_url_raw($url), $args);
+
+		$url = add_query_arg( $qs, admin_url( 'admin-ajax.php' ) );
+		self::debug( 'async call to ' . $url );
+		wp_safe_remote_post( esc_url_raw( $url ), $args );
 	}
 
 	/**
-	 * Clean all potential existing crons
+	 * Clean all potential existing crons.
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public static function destroy() {
 		Utility::compatibility();
-		array_map('wp_clear_scheduled_hook', array_column(self::$_triggers, 'name'));
+		array_map( 'wp_clear_scheduled_hook', array_column( self::$_triggers, 'name' ) );
 	}
 
 	/**
-	 * Try to clean the crons if disabled
+	 * Try to clean the crons if disabled.
 	 *
 	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $id Option id of cron trigger.
+	 * @return void
 	 */
 	public function try_clean( $id ) {
-		// Clean v2's leftover cron ( will remove in v3.1 )
-		// foreach ( wp_get_ready_cron_jobs() as $hooks ) {
-		// foreach ( $hooks as $hook => $v ) {
-		// if ( strpos( $hook, 'litespeed_' ) === 0 && ( substr( $hook, -8 ) === '_trigger' || strpos( $hook, 'litespeed_task_' ) !== 0 ) ) {
-		// self::debug( 'Cron clear legacy [hook] ' . $hook );
-		// wp_clear_scheduled_hook( $hook );
-		// }
-		// }
-		// }
-
-		if ($id && !empty(self::$_triggers[$id])) {
-			if (!$this->conf($id) || ($id == Base::O_CRAWLER && !Router::can_crawl())) {
-				self::debug('Cron clear [id] ' . $id . ' [hook] ' . self::$_triggers[$id]['name']);
-				wp_clear_scheduled_hook(self::$_triggers[$id]['name']);
+		if ( $id && ! empty( self::$_triggers[ $id ] ) ) {
+			if ( ! $this->conf( $id ) || ( Base::O_CRAWLER === $id && ! Router::can_crawl() ) ) {
+				self::debug( 'Cron clear [id] ' . $id . ' [hook] ' . self::$_triggers[ $id ]['name'] );
+				wp_clear_scheduled_hook( self::$_triggers[ $id ]['name'] );
 			}
 			return;
 		}
 
-		self::debug('❌ Unknown cron [id] ' . $id);
+		self::debug( '❌ Unknown cron [id] ' . $id );
 	}
 
 	/**
-	 * Register cron interval imgoptm
+	 * Register cron interval for general tasks.
 	 *
 	 * @since 1.6.1
 	 * @access public
+	 *
+	 * @param array $schedules Existing schedules.
+	 * @return array
 	 */
 	public function lscache_cron_filter( $schedules ) {
-		if (!array_key_exists(self::FILTER, $schedules)) {
-			$schedules[self::FILTER] = array(
-				'interval' => 60,
-				'display' => __('Every Minute', 'litespeed-cache'),
+		if ( ! array_key_exists( self::FILTER, $schedules ) ) {
+			$schedules[ self::FILTER ] = array(
+				'interval' => 900,
+				'display'  => __( 'Every 15 Minutes', 'litespeed-cache' ),
 			);
 		}
 		return $schedules;
 	}
 
 	/**
-	 * Register cron interval
+	 * Register cron interval for crawler.
 	 *
 	 * @since 1.1.0
 	 * @access public
+	 *
+	 * @param array $schedules Existing schedules.
+	 * @return array
 	 */
 	public function lscache_cron_filter_crawler( $schedules ) {
-		$CRAWLER_RUN_INTERVAL = defined('LITESPEED_CRAWLER_RUN_INTERVAL') ? constant('LITESPEED_CRAWLER_RUN_INTERVAL') : 600;
-		// $wp_schedules = wp_get_schedules();
-		if (!array_key_exists(self::FILTER_CRAWLER, $schedules)) {
-			// self::debug('Crawler cron log: cron filter '.$interval.' added');
-			$schedules[self::FILTER_CRAWLER] = array(
-				'interval' => $CRAWLER_RUN_INTERVAL,
-				'display' => __('LiteSpeed Crawler Cron', 'litespeed-cache'),
+		$crawler_run_interval = defined( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) ? (int) constant( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) : 600;
+
+		if ( ! array_key_exists( self::FILTER_CRAWLER, $schedules ) ) {
+			$schedules[ self::FILTER_CRAWLER ] = array(
+				'interval' => $crawler_run_interval,
+				'display'  => __( 'LiteSpeed Crawler Cron', 'litespeed-cache' ),
 			);
 		}
 		return $schedules;
