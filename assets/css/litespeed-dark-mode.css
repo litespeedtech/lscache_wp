@@ -1082,3 +1082,17 @@ body.litespeed-darkmode .litespeed-h3,
 body.litespeed-darkmode .litespeed-panel-para {
 	color: revert;
 }
+
+/* Text gradient for QUIC.cloud branding */
+@media (prefers-color-scheme: dark) {
+	body[class*="litespeed"]:not(.litespeed-lightmode) .litespeed-qc-text-gradient {
+		background: -webkit-linear-gradient(130deg, #ff69b4, #4db3e6 60%, #a5e7ff);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
+body.litespeed-darkmode .litespeed-qc-text-gradient {
+	background: -webkit-linear-gradient(130deg, #ff69b4, #4db3e6 60%, #a5e7ff);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}

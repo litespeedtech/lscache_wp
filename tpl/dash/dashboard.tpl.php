@@ -157,8 +157,9 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 							<span class="dashicons dashicons-yes"></span>
 							<?php esc_html_e( 'Enable QUIC.cloud services', 'litespeed-cache' ); ?>
 						</a>
-						<br>
-						<a class="button button-link litespeed-top10" href="<?php echo esc_url( Utility::build_url( Router::ACTION_ADMIN_DISPLAY, Admin_Display::TYPE_QC_HIDE_BANNER ) ); ?>">
+					</p>
+					<p>
+						<a class="litespeed-top10" href="<?php echo esc_url( Utility::build_url( Router::ACTION_ADMIN_DISPLAY, Admin_Display::TYPE_QC_HIDE_BANNER ) ); ?>">
 							<?php esc_html_e( 'Do not show this again', 'litespeed-cache' ); ?>
 						</a>
 					</p>
