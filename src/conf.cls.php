@@ -179,6 +179,9 @@ class Conf extends Base {
 				$options[ $k ] = self::get_option( $k, $v );
 			}
 
+			// Allow filters
+			$options[ $k ] = apply_filters( 'litespeed_conf_load_option_' . $k, $options[ $k ] );
+
 			// Correct value type
 			$options[ $k ] = $this->type_casting( $options[ $k ], $k );
 		}
