@@ -187,12 +187,21 @@ class Cloud extends Base {
 	 * @since 3.0
 	 */
 	public function __construct() {
+		$allowed_hosts = [ 'wpapi.quic.cloud' ];
 		if ( defined( 'LITESPEED_DEV' ) && constant( 'LITESPEED_DEV' ) ) {
+			$allowed_hosts[]          = 'my.preview.quic.cloud';
+			$allowed_hosts[]          = 'api.preview.quic.cloud';
 			$this->_cloud_server      = 'https://api.preview.quic.cloud';
 			$this->_cloud_ips         = 'https://api.preview.quic.cloud/ips';
 			$this->_cloud_server_dash = 'https://my.preview.quic.cloud';
 			$this->_cloud_server_wp   = 'https://wpapi.quic.cloud';
+		} else {
+			$allowed_hosts[] = 'my.quic.cloud';
+			$allowed_hosts[] = 'api.quic.cloud';
 		}
+		add_filter( 'allowed_redirect_hosts', function( $hosts ) use ( $allowed_hosts ) {
+			return array_merge( $hosts, $allowed_hosts );
+		} );
 		$this->_summary = self::get_summary();
 	}
 
