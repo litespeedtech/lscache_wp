@@ -1,51 +1,57 @@
 <?php
-// phpcs:ignoreFile
-
 /**
  * Database upgrade funcs
  *
  * NOTE: whenever called this file, always call Data::get_upgrade_lock and Data::_set_upgrade_lock first.
  *
- * @since  3.0
+ * @package LiteSpeed
+ * @since 3.0
  */
-defined('WPINC') || exit();
+
+defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
 
 /**
- * Table existence check function
+ * Check whether a DB table exists.
  *
  * @since 7.2
+ *
+ * @param string $table_name Fully-qualified table name.
+ * @return bool
  */
 function litespeed_table_exists( $table_name ) {
 	global $wpdb;
-	$save_state = $wpdb->suppress_errors;
-	$wpdb->suppress_errors(true);
-	$tb_exists = $wpdb->get_var('DESCRIBE `' . $table_name . '`');
-	$wpdb->suppress_errors($save_state);
 
-	return $tb_exists !== null;
+	$save_state = $wpdb->suppress_errors;
+	$wpdb->suppress_errors( true );
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$tb_exists = $wpdb->get_var( $wpdb->prepare( 'DESCRIBE `%1s`', $table_name ) );
+	$wpdb->suppress_errors( $save_state );
+
+	return null !== $tb_exists;
 }
 
 /**
- * Migrate v7.0- url_files URL from no trailing slash to trailing slash
+ * Migrate v7.0- url_files URL from no trailing slash to trailing slash.
  *
  * @since 7.0.1
+ * @return void
  */
 function litespeed_update_7_0_1() {
 	global $wpdb;
-	Debug2::debug('[Data] v7.0.1 upgrade started');
+
+	Debug2::debug( '[Data] v7.0.1 upgrade started' );
 
 	$tb_url = $wpdb->prefix . 'litespeed_url';
-	if (!litespeed_table_exists($tb_url)) {
-		Debug2::debug('[Data] Table `litespeed_url` not found, bypassed migration');
+	if ( ! litespeed_table_exists( $tb_url ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed migration' );
 		return;
 	}
 
-	$q             = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%/'";
-	$q             = $wpdb->prepare($q);
-	$list          = $wpdb->get_results($q, ARRAY_A);
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$list          = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s", 'https://%/' ), ARRAY_A );
 	$existing_urls = array();
 	if ($list) {
 		foreach ($list as $v) {
@@ -53,23 +59,21 @@ function litespeed_update_7_0_1() {
 		}
 	}
 
-	$q    = "SELECT * FROM `$tb_url` WHERE url LIKE 'https://%'";
-	$q    = $wpdb->prepare($q);
-	$list = $wpdb->get_results($q, ARRAY_A);
-	if (!$list) {
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s", 'https://%' ), ARRAY_A );
+	if ( ! $list ) {
 		return;
 	}
-	foreach ($list as $v) {
-		if (substr($v['url'], -1) == '/') {
+	foreach ( $list as $v ) {
+		if ( '/' === substr( $v['url'], -1 ) ) {
 			continue;
 		}
 		$new_url = $v['url'] . '/';
-		if (in_array($new_url, $existing_urls)) {
+		if ( in_array( $new_url, $existing_urls, true ) ) {
 			continue;
 		}
-		$q = "UPDATE `$tb_url` SET url = %s WHERE id = %d";
-		$q = $wpdb->prepare($q, $new_url, $v['id']);
-		$wpdb->query($q);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( $wpdb->prepare( "UPDATE `{$tb_url}` SET url = %s WHERE id = %d", $new_url, $v['id'] ) );
 	}
 }
 
@@ -98,8 +102,8 @@ function litespeed_update_7() {
 		'domain_key' => $domain_key,
 	);
 	$resp = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
-	if (!empty($resp['qc_activated'])) {
-		if ($resp['qc_activated'] != 'deleted') {
+	if ( ! empty( $resp['qc_activated'] ) ) {
+		if ( 'deleted' !== $resp['qc_activated'] ) {
 			$cloud_summary_updates = array( 'qc_activated' => $resp['qc_activated'] );
 			if (!empty($resp['main_domain'])) {
 				$cloud_summary_updates['main_domain'] = $resp['main_domain'];
@@ -120,14 +124,12 @@ function litespeed_update_5_3() {
 	Debug2::debug('[Data] Upgrade url_file table');
 
 	$tb = $wpdb->prefix . 'litespeed_url_file';
-	if (litespeed_table_exists($tb)) {
-		$q =
-			'ALTER TABLE `' .
-			$tb .
-			'`
-				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
-				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
-			';
-		$wpdb->query($q);
+	if ( litespeed_table_exists( $tb ) ) {
+		$q = "ALTER TABLE `{$tb}`
+				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT 'mobile=1',
+				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT 'webp=1'
+			";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( $q );
 	}
 }
