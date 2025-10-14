@@ -411,7 +411,7 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::VER, false );
+		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::VER, true );
 
 		$localize_data = array();
 		if ( GUI::has_whm_msg() ) {

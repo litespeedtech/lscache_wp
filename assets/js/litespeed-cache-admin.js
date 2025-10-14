@@ -1,3 +1,6 @@
+/************** Initialize dark mode toggle before accesskey mapping **************/
+litespeed_init_dark_mode();
+
 (function ($) {
 	'use strict';
 
@@ -30,9 +33,6 @@
 	 */
 
 	jQuery(document).ready(function () {
-		/************** Initialize dark mode toggle before accesskey mapping **************/
-		litespeed_init_dark_mode();
-
 		/************** Common LiteSpeed JS **************/
 		// Link confirm
 		$('[data-litespeed-cfm]').on('click', function (event) {
