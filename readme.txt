@@ -260,6 +260,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.6 - Oct 15 2025 =
 * 🌱**Admin** Dark mode supported.
 * 🌱**Purge** Added `Purge All - VPI` to the Purge menu. (PR#898)
+* ⚠️🐞**Debug** Escaped comments to prevent a CSS vulnerability that could occur when debug is on. (#218778 Trustwave #CWE-79)
 * **Purge** Gravatar purge now also clears the database records. (Serafín Danessa, PR#915)
 * **Conf** Fixed an issue where the `Drop Query String` setting was not saved when in network mode. (Jory Hogeveen PR#910)
 * **VPI** Add fetchpriority and decode attributes to VPI. (Hirak Kalita, serpentdriver, PR#903)
