@@ -706,7 +706,7 @@ class Optimize extends Base {
 			}
 		}
 		if ('preconnect' === $relation_type) {
-			foreach ($this->dns_prefetch as $v) {
+			foreach ($this->dns_preconnect as $v) {
 				if ($v) {
 					$urls[] = $v;
 				}
