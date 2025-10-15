@@ -1594,7 +1594,7 @@ class Cloud extends Base {
 			$url,
 			[
 				'body'    => $param,
-				'timeout' => $time_out ?? 15,
+				'timeout' => $time_out ? $time_out : 30,
 				'headers' => [
 					'Accept' => 'application/json',
 					'Expect' => '',
