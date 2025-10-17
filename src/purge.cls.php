@@ -606,6 +606,8 @@ class Purge extends Base {
 		$curr_built = $this->_build( $purge2 );
 
 		if ( defined( 'LITESPEED_CLI' ) ) {
+			// Can't send, already has output, need to save and wait for next run
+			self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
 			self::debug( 'CLI request, queue stored: ' . $curr_built );
 		} else {
 			if ( ! headers_sent() ) {
