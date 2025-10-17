@@ -634,7 +634,7 @@ class Cloud extends Base {
 				return false;
 			}
 			$signature = base64_decode( $signature_b64 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-			$is_valid  = sodium_crypto_sign_verify_detached( $signature, (string)$data, $cloud_pk );
+			$is_valid  = sodium_crypto_sign_verify_detached( $signature, (string) $data, $cloud_pk );
 		} catch ( \SodiumException $e ) {
 			self::debugErr( 'Decryption failed: ' . esc_html( $e->getMessage() ) );
 			return false;
