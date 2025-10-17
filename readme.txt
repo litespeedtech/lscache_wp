@@ -257,6 +257,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.6.2 - Oct 17 2025 =
+* 🐞**Cloud** Fixed the PHP 8+ typecast issue in QUIC.cloud signature verification which caused activation failures.
+* **Purge** Restored a delay purge hook while calling purge by CLI. (asafm7)
+* **REST** Dropped legacy code that had been used for development purposes.
+* **GUI** Use a stricter selector for dark mode to prevent side effects.
+
 = 7.6.1 - Oct 15 2025 =
 * **Cloud** Increased POST connection timeout to prevent potential failures.
 * ⚠️🐞**GUI** Fixed a frontend display issue caused by the dark mode CSS file loading on the website frontend. (Peter Wells PR#923)
