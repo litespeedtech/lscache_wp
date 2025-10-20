@@ -1418,7 +1418,7 @@ class Cloud extends Base {
 				$file_path = $this->_qc_time_file( $service_tag, $timestamp_tag );
 				if ( file_exists( $file_path ) ) {
 					$last_request = File::read( $file_path );
-					$expired      = $last_request + $expiration_req * 10 - time();
+					$expired      = (int) $last_request + $expiration_req * 10 - time();
 					if ( $expired > 0 ) {
 						self::debug( '❌ try [' . $service_tag . '] after ' . $expired . ' seconds' );
 						return false;
@@ -1429,7 +1429,7 @@ class Cloud extends Base {
 					$file_path = $this->_qc_time_file( $service_tag );
 					if ( file_exists( $file_path ) ) {
 						$last_request = File::read( $file_path );
-						$expired      = $last_request + $expiration_req * 10 - time();
+						$expired      = (int) $last_request + $expiration_req * 10 - time();
 						if ( $expired > 0 ) {
 							self::debug( '❌❌ Unusual req! try [' . $service_tag . '] after ' . $expired . ' seconds' );
 							return false;
