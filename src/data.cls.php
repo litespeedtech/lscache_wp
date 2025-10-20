@@ -1,197 +1,219 @@
 <?php
-// phpcs:ignoreFile
-
 /**
- * The class to store and manage litespeed db data.
+ * LiteSpeed persistent data manager.
  *
- * @since       1.3.1
- * @package     LiteSpeed
+ * Handles DB tables, schema upgrades, URL-to-file mappings, and list loaders.
+ *
+ * @package LiteSpeed
+ * @since   1.3.1
  */
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * Data layer for LiteSpeed Cache.
+ */
 class Data extends Root {
 
 	const LOG_TAG = '🚀';
 
-	private $_db_updater = array(
-		'5.3-a5' => array( 'litespeed_update_5_3' ),
-		'7.0-b26' => array( 'litespeed_update_7' ),
-		'7.0.1-b1' => array( 'litespeed_update_7_0_1' ),
-	);
+	/**
+	 * Versioned DB updaters for network-wide options.
+	 *
+	 * @var array<string,array<string>>
+	 */
+	private $_db_updater = [
+		'5.3-a5'    => [ 'litespeed_update_5_3' ],
+		'7.0-b26'   => [ 'litespeed_update_7' ],
+		'7.0.1-b1'  => [ 'litespeed_update_7_0_1' ],
+	];
 
-	private $_db_site_updater = array(
-		// Example
-		// '2.0'    => array(
-		// 'litespeed_update_site_2_0',
-		// ),
-	);
+	/**
+	 * Versioned DB updaters for per-site options in multisite.
+	 *
+	 * @var array<string,array<string>>
+	 */
+	private $_db_site_updater = [
+		// '2.0' => [ 'litespeed_update_site_2_0' ],
+	];
 
-	private $_url_file_types = array(
-		'css' => 1,
-		'js' => 2,
+	/**
+	 * Map from URL-file type to integer code.
+	 *
+	 * @var array<string,int>
+	 */
+	private $_url_file_types = [
+		'css'  => 1,
+		'js'   => 2,
 		'ccss' => 3,
 		'ucss' => 4,
-	);
+	];
 
-	const TB_IMG_OPTM          = 'litespeed_img_optm';
-	const TB_IMG_OPTMING       = 'litespeed_img_optming'; // working table
-	const TB_AVATAR            = 'litespeed_avatar';
-	const TB_CRAWLER           = 'litespeed_crawler';
+	/** Table: image optimization results. */
+	const TB_IMG_OPTM = 'litespeed_img_optm';
+	/** Table: image optimization working queue. */
+	const TB_IMG_OPTMING = 'litespeed_img_optming';
+	/** Table: cached avatars. */
+	const TB_AVATAR = 'litespeed_avatar';
+	/** Table: crawler URLs. */
+	const TB_CRAWLER = 'litespeed_crawler';
+	/** Table: crawler blacklist. */
 	const TB_CRAWLER_BLACKLIST = 'litespeed_crawler_blacklist';
-	const TB_URL               = 'litespeed_url';
-	const TB_URL_FILE          = 'litespeed_url_file';
+	/** Table: logical URLs. */
+	const TB_URL = 'litespeed_url';
+	/** Table: URL → generated file mapping. */
+	const TB_URL_FILE = 'litespeed_url_file';
 
 	/**
-	 * Init
+	 * Constructor.
 	 *
-	 * @since  1.3.1
+	 * @since 1.3.1
 	 */
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	/**
-	 * Correct table existence
+	 * Ensure required tables exist based on current configuration.
 	 *
-	 * Call when activate -> update_confs()
-	 * Call when update_confs()
-	 *
-	 * @since  3.0
-	 * @access public
-	 */
-	public function correct_tb_existence() {
-		// Gravatar
-		if ($this->conf(Base::O_DISCUSS_AVATAR_CACHE)) {
-			$this->tb_create('avatar');
-		}
-
-		// Crawler
-		if ($this->conf(Base::O_CRAWLER)) {
-			$this->tb_create('crawler');
-			$this->tb_create('crawler_blacklist');
-		}
-
-		// URL mapping
-		$this->tb_create('url');
-		$this->tb_create('url_file');
-
-		// Image optm is a bit different. Only trigger creation when sending requests. Drop when destroying.
-	}
-
-	/**
-	 * Upgrade conf to latest format version from previous versions
-	 *
-	 * NOTE: Only for v3.0+
+	 * Called on activation and when options are (re)loaded.
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return void
+	 */
+	public function correct_tb_existence() {
+		// Gravatar.
+		if ( $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+			$this->tb_create( 'avatar' );
+		}
+
+		// Crawler.
+		if ( $this->conf( Base::O_CRAWLER ) ) {
+			$this->tb_create( 'crawler' );
+			$this->tb_create( 'crawler_blacklist' );
+		}
+
+		// URL mapping.
+		$this->tb_create( 'url' );
+		$this->tb_create( 'url_file' );
+
+		// Image optm tables are managed on-demand.
+	}
+
+	/**
+	 * Upgrade global configuration/data to match plugin version.
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @param string $ver Currently stored version string.
+	 * @return string|void 'upgrade' on success, or void if no-op.
 	 */
 	public function conf_upgrade( $ver ) {
-		// Skip count check if `Use Primary Site Configurations` is on
-		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
-		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-		// return;
-		// }
+		// Skip count check if `Use Primary Site Configurations` is on (deprecated note kept intentionally).
 
-		if ($this->_get_upgrade_lock()) {
+		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
 
-		$this->_set_upgrade_lock(true);
+		$this->_set_upgrade_lock( true );
 
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
-		// Init log manually
-		if ($this->conf(Base::O_DEBUG)) {
-			$this->cls('Debug2')->init();
+		// Init log manually.
+		if ( $this->conf( Base::O_DEBUG ) ) {
+			$this->cls( 'Debug2' )->init();
 		}
 
-		foreach ($this->_db_updater as $k => $v) {
-			if (version_compare($ver, $k, '<')) {
-				// run each callback
-				foreach ($v as $v2) {
-					self::debug("Updating [ori_v] $ver \t[to] $k \t[func] $v2");
-					call_user_func($v2);
+		foreach ( $this->_db_updater as $k => $v ) {
+			if ( version_compare( $ver, $k, '<' ) ) {
+				foreach ( $v as $v2 ) {
+					self::debug( "Updating [ori_v] $ver \t[to] $k \t[func] $v2" );
+					call_user_func( $v2 );
 				}
 			}
 		}
 
-		// Reload options
-		$this->cls('Conf')->load_options();
+		// Reload options.
+		$this->cls( 'Conf' )->load_options();
 
 		$this->correct_tb_existence();
 
-		// Update related files
-		$this->cls('Activation')->update_files();
+		// Update related files.
+		$this->cls( 'Activation' )->update_files();
 
-		// Update version to latest
-		Conf::delete_option(Base::_VER);
-		Conf::add_option(Base::_VER, Core::VER);
+		// Update version to latest.
+		Conf::delete_option( Base::_VER );
+		Conf::add_option( Base::_VER, Core::VER );
 
-		self::debug('Updated version to ' . Core::VER);
+		self::debug( 'Updated version to ' . Core::VER );
 
-		$this->_set_upgrade_lock(false);
+		$this->_set_upgrade_lock( false );
 
-		!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
+		if ( ! defined( 'LSWCP_EMPTYCACHE' ) ) {
+			define( 'LSWCP_EMPTYCACHE', true );
+		}
 		Purge::purge_all();
 
 		return 'upgrade';
 	}
 
 	/**
-	 * Upgrade site conf to latest format version from previous versions
-	 *
-	 * NOTE: Only for v3.0+
+	 * Upgrade per-site configuration/data to match plugin version (multisite).
 	 *
 	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $ver Currently stored version string.
+	 * @return void
 	 */
 	public function conf_site_upgrade( $ver ) {
-		if ($this->_get_upgrade_lock()) {
+		if ( $this->_get_upgrade_lock() ) {
 			return;
 		}
 
-		$this->_set_upgrade_lock(true);
+		$this->_set_upgrade_lock( true );
 
 		require_once LSCWP_DIR . 'src/data.upgrade.func.php';
 
-		foreach ($this->_db_site_updater as $k => $v) {
-			if (version_compare($ver, $k, '<')) {
-				// run each callback
-				foreach ($v as $v2) {
-					self::debug("Updating site [ori_v] $ver \t[to] $k \t[func] $v2");
-					call_user_func($v2);
+		foreach ( $this->_db_site_updater as $k => $v ) {
+			if ( version_compare( $ver, $k, '<' ) ) {
+				foreach ( $v as $v2 ) {
+					self::debug( "Updating site [ori_v] $ver \t[to] $k \t[func] $v2" );
+					call_user_func( $v2 );
 				}
 			}
 		}
 
-		// Reload options
-		$this->cls('Conf')->load_site_options();
+		// Reload options.
+		$this->cls( 'Conf' )->load_site_options();
 
-		Conf::delete_site_option(Base::_VER);
-		Conf::add_site_option(Base::_VER, Core::VER);
+		Conf::delete_site_option( Base::_VER );
+		Conf::add_site_option( Base::_VER, Core::VER );
 
-		self::debug('Updated site_version to ' . Core::VER);
+		self::debug( 'Updated site_version to ' . Core::VER );
 
-		$this->_set_upgrade_lock(false);
+		$this->_set_upgrade_lock( false );
 
-		!defined('LSWCP_EMPTYCACHE') && define('LSWCP_EMPTYCACHE', true); // clear all sites caches
+		if ( ! defined( 'LSWCP_EMPTYCACHE' ) ) {
+			define( 'LSWCP_EMPTYCACHE', true );
+		}
 		Purge::purge_all();
 	}
 
 	/**
-	 * Check if upgrade script is running or not
+	 * Whether an upgrade lock is in effect.
 	 *
 	 * @since 3.0.1
+	 * @return int|false Timestamp if locked and recent, false otherwise.
 	 */
 	private function _get_upgrade_lock() {
-		$is_upgrading = get_option('litespeed.data.upgrading');
-		if (!$is_upgrading) {
-			$this->_set_upgrade_lock(false); // set option value to existed to avoid repeated db query next time
+		$is_upgrading = (int) get_option( 'litespeed.data.upgrading' );
+		if ( ! $is_upgrading ) {
+			$this->_set_upgrade_lock( false ); // Seed option to avoid repeated DB reads later.
 		}
-		if ($is_upgrading && time() - $is_upgrading < 3600) {
+		if ( $is_upgrading && ( time() - $is_upgrading ) < 3600 ) {
 			return $is_upgrading;
 		}
 
@@ -199,326 +221,372 @@ class Data extends Root {
 	}
 
 	/**
-	 * Show the upgrading banner if upgrade script is running
+	 * Show the upgrading banner if upgrade script is running.
 	 *
 	 * @since 3.0.1
+	 * @return void
 	 */
 	public function check_upgrading_msg() {
 		$is_upgrading = $this->_get_upgrade_lock();
-		if (!$is_upgrading) {
+		if ( ! $is_upgrading ) {
 			return;
 		}
 
 		Admin_Display::info(
 			sprintf(
-				__('The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.', 'litespeed-cache'),
-				'<code>' . Utility::readable_time($is_upgrading) . '</code>'
+				/* translators: %s: time string */
+				__( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.', 'litespeed-cache' ),
+				'<code>' . Utility::readable_time( $is_upgrading ) . '</code>'
 			) . ' [LiteSpeed]',
 			true
 		);
 	}
 
 	/**
-	 * Set lock for upgrade process
+	 * Set/clear the upgrade process lock.
 	 *
 	 * @since 3.0.1
+	 *
+	 * @param bool $lock True to set, false to clear.
+	 * @return void
 	 */
 	private function _set_upgrade_lock( $lock ) {
-		if (!$lock) {
-			update_option('litespeed.data.upgrading', -1);
+		if ( ! $lock ) {
+			update_option( 'litespeed.data.upgrading', -1 );
 		} else {
-			update_option('litespeed.data.upgrading', time());
+			update_option( 'litespeed.data.upgrading', time() );
 		}
 	}
 
 	/**
-	 * Get the table name
+	 * Get a fully-qualified table name by slug.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $tb Table slug (e.g., 'url_file').
+	 * @return string|null
 	 */
 	public function tb( $tb ) {
 		global $wpdb;
 
-		switch ($tb) {
+		switch ( $tb ) {
 			case 'img_optm':
 				return $wpdb->prefix . self::TB_IMG_OPTM;
-				break;
 
 			case 'img_optming':
 				return $wpdb->prefix . self::TB_IMG_OPTMING;
-				break;
 
 			case 'avatar':
 				return $wpdb->prefix . self::TB_AVATAR;
-				break;
 
 			case 'crawler':
 				return $wpdb->prefix . self::TB_CRAWLER;
-				break;
 
 			case 'crawler_blacklist':
 				return $wpdb->prefix . self::TB_CRAWLER_BLACKLIST;
-				break;
 
 			case 'url':
 				return $wpdb->prefix . self::TB_URL;
-				break;
 
 			case 'url_file':
 				return $wpdb->prefix . self::TB_URL_FILE;
-				break;
 
 			default:
-				break;
+				return null;
 		}
 	}
 
 	/**
-	 * Check if one table exists or not
+	 * Check if a table exists.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $tb Table slug.
+	 * @return bool
 	 */
 	public function tb_exist( $tb ) {
 		global $wpdb;
 
 		$save_state = $wpdb->suppress_errors;
-		$wpdb->suppress_errors(true);
-		$describe = $wpdb->get_var('DESCRIBE `' . $this->tb($tb) . '`');
-		$wpdb->suppress_errors($save_state);
+		$wpdb->suppress_errors( true );
+		$describe = $wpdb->get_var( 'DESCRIBE `' . $this->tb( $tb ) . '`' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->suppress_errors( $save_state );
 
-		return $describe !== null;
+		return null !== $describe;
 	}
 
 	/**
-	 * Get data structure of one table
+	 * Get the SQL structure (columns/indexes) for a given table slug.
 	 *
-	 * @since  2.0
+	 * @since 2.0
 	 * @access private
+	 *
+	 * @param string $tb Table slug.
+	 * @return string SQL columns/indexes definition.
 	 */
 	private function _tb_structure( $tb ) {
-		return File::read(LSCWP_DIR . 'src/data_structure/' . $tb . '.sql');
+		return File::read( LSCWP_DIR . 'src/data_structure/' . $tb . '.sql' );
 	}
 
 	/**
-	 * Create img optm table and sync data from wp_postmeta
+	 * Create a table by slug if it doesn't exist.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $tb Table slug.
+	 * @return void
 	 */
 	public function tb_create( $tb ) {
 		global $wpdb;
 
-		self::debug2('[Data] Checking table ' . $tb);
+		self::debug2( '[Data] Checking table ' . $tb );
 
-		// Check if table exists first
-		if ($this->tb_exist($tb)) {
-			self::debug2('[Data] Existed');
+		// Check if table exists first.
+		if ( $this->tb_exist( $tb ) ) {
+			self::debug2( '[Data] Existed' );
 			return;
 		}
 
-		self::debug('Creating ' . $tb);
+		self::debug( 'Creating ' . $tb );
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_tb_structure($tb) . ') %2$s;',
-			$this->tb($tb),
-			$wpdb->get_charset_collate() // 'DEFAULT CHARSET=utf8'
+			'CREATE TABLE IF NOT EXISTS `%1$s` (%2$s) %3$s;',
+			$this->tb( $tb ),
+			$this->_tb_structure( $tb ),
+			$wpdb->get_charset_collate()
 		);
-
-		$res = $wpdb->query($sql);
-		if ($res !== true) {
-			self::debug('Warning! Creating table failed!', $sql);
-			Admin_Display::error(Error::msg('failed_tb_creation', array( '<code>' . $tb . '</code>', '<code>' . $sql . '</code>' )));
+		$res = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		if ( false === $res ) {
+			self::debug( 'Warning! Creating table failed!', $sql );
+			Admin_Display::error( Error::msg( 'failed_tb_creation', [ '<code>' . $tb . '</code>', '<code>' . $sql . '</code>' ] ) );
 		}
 	}
 
 	/**
-	 * Drop table
+	 * Drop a table by slug.
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 *
+	 * @param string $tb Table slug.
+	 * @return void
 	 */
 	public function tb_del( $tb ) {
 		global $wpdb;
 
-		if (!$this->tb_exist($tb)) {
+		if ( ! $this->tb_exist( $tb ) ) {
 			return;
 		}
 
-		self::debug('Deleting table ' . $tb);
+		self::debug( 'Deleting table ' . $tb );
 
-		$q = 'DROP TABLE IF EXISTS ' . $this->tb($tb);
-		$wpdb->query($q);
+		$q = 'DROP TABLE IF EXISTS ' . $this->tb( $tb );
+		$wpdb->query( $q ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
-	 * Drop generated tables
+	 * Drop all generated tables (except image optimization working tables).
 	 *
-	 * @since  3.0
+	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public function tables_del() {
-		$this->tb_del('avatar');
-		$this->tb_del('crawler');
-		$this->tb_del('crawler_blacklist');
-		$this->tb_del('url');
-		$this->tb_del('url_file');
+		$this->tb_del( 'avatar' );
+		$this->tb_del( 'crawler' );
+		$this->tb_del( 'crawler_blacklist' );
+		$this->tb_del( 'url' );
+		$this->tb_del( 'url_file' );
 
 		// Deleting img_optm only can be done when destroy all optm images
 	}
 
 	/**
-	 * Keep table but clear all data
+	 * TRUNCATE a table by slug.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 * @access public
+	 *
+	 * @param string $tb Table slug.
+	 * @return void
 	 */
 	public function table_truncate( $tb ) {
 		global $wpdb;
-		$q = 'TRUNCATE TABLE ' . $this->tb($tb);
-		$wpdb->query($q);
+		$q = 'TRUNCATE TABLE ' . $this->tb( $tb );
+		$wpdb->query( $q ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
-	 * Clean certain type of url_file
+	 * Clean URL-file rows for a given file type and prune orphaned URLs.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 * @access public
+	 *
+	 * @param string $file_type One of 'css','js','ccss','ucss'.
+	 * @return void
 	 */
 	public function url_file_clean( $file_type ) {
 		global $wpdb;
 
-		if (!$this->tb_exist('url_file')) {
+		if ( ! $this->tb_exist( 'url_file' ) ) {
 			return;
 		}
 
-		$type = $this->_url_file_types[$file_type];
-		$q    = 'DELETE FROM ' . $this->tb('url_file') . ' WHERE `type` = %d';
-		$wpdb->query($wpdb->prepare($q, $type));
+		if ( ! isset( $this->_url_file_types[ $file_type ] ) ) {
+			return;
+		}
 
-		// Added to cleanup url table. See issue: https://wordpress.org/support/topic/wp_litespeed_url-1-1-gb-in-db-huge-big/
-		$wpdb->query(
-			'DELETE d
-			FROM `' .
-				$this->tb('url') .
-				'` AS d
-			LEFT JOIN `' .
-				$this->tb('url_file') .
-				'` AS f ON d.`id` = f.`url_id`
-			WHERE f.`url_id` IS NULL'
-		);
+		$type        = $this->_url_file_types[ $file_type ];
+		$tb_url      = $this->tb( 'url' );
+		$tb_url_file = $this->tb( 'url_file' );
+
+		// Delete all of this type.
+		$q = "DELETE FROM `$tb_url_file` WHERE `type` = %d";
+		$wpdb->query( $wpdb->prepare( $q, $type ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+
+		// Prune orphaned rows in URL table.
+		$sql = "DELETE d
+				FROM `{$tb_url}` AS d
+				LEFT JOIN `{$tb_url_file}` AS f ON d.`id` = f.`url_id`
+				WHERE f.`url_id` IS NULL";
+		$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
-	 * Generate filename based on URL, if content md5 existed, reuse existing file.
+	 * Persist (or rotate) the mapping from URL+vary to a generated file.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 * @access public
+	 *
+	 * @param string $request_url  Full request URL.
+	 * @param string $vary         Vary string (may be long; will be md5 if >32).
+	 * @param string $file_type    One of 'css','js','ccss','ucss'.
+	 * @param string $filecon_md5  MD5 of the generated file content.
+	 * @param string $path         Base path where files live.
+	 * @param bool   $mobile       Whether mapping is for mobile.
+	 * @param bool   $webp         Whether mapping is for webp.
+	 * @return void
 	 */
 	public function save_url( $request_url, $vary, $file_type, $filecon_md5, $path, $mobile = false, $webp = false ) {
 		global $wpdb;
 
-		if (strlen($vary) > 32) {
-			$vary = md5($vary);
+		if ( strlen( $vary ) > 32 ) {
+			$vary = md5( $vary );
 		}
 
-		$type = $this->_url_file_types[$file_type];
+		if ( ! isset( $this->_url_file_types[ $file_type ] ) ) {
+			return;
+		}
 
-		$tb_url      = $this->tb('url');
-		$tb_url_file = $this->tb('url_file');
-		$q           = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row     = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
-		if (!$url_row) {
+		$type = $this->_url_file_types[ $file_type ];
+
+		$tb_url      = $this->tb( 'url' );
+		$tb_url_file = $this->tb( 'url_file' );
+
+		// Ensure URL row exists.
+		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! $url_row ) {
 			$q = "INSERT INTO `$tb_url` SET url=%s";
-			$wpdb->query($wpdb->prepare($q, $request_url));
-			$url_id = $wpdb->insert_id;
+			$wpdb->query( $wpdb->prepare( $q, $request_url ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			$url_id = (int) $wpdb->insert_id;
 		} else {
-			$url_id = $url_row['id'];
+			$url_id = (int) $url_row['id'];
 		}
 
+		// Active mapping (not expired).
 		$q        = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
-		$file_row = $wpdb->get_row($wpdb->prepare($q, array( $url_id, $vary, $type )), ARRAY_A);
+		$file_row = $wpdb->get_row( $wpdb->prepare( $q, [ $url_id, $vary, $type ] ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 
-		// Check if has previous file or not
-		if ($file_row && $file_row['filename'] == $filecon_md5) {
+		// No change needed if filename matches.
+		if ( $file_row && $file_row['filename'] === $filecon_md5 ) {
 			return;
 		}
 
-		// If the new $filecon_md5 is marked as expired by previous records, clear those records
+		// If the new file MD5 is currently marked expired elsewhere, clear those records.
 		$q = "DELETE FROM `$tb_url_file` WHERE filename = %s AND expired > 0";
-		$wpdb->query($wpdb->prepare($q, $filecon_md5));
+		$wpdb->query( $wpdb->prepare( $q, $filecon_md5 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 
-		// Check if there is any other record used the same filename or not
-		$q = "SELECT id FROM `$tb_url_file` WHERE filename = %s AND expired = 0 AND id != %d LIMIT 1";
-		if ($file_row && $wpdb->get_var($wpdb->prepare($q, array( $file_row['filename'], $file_row['id'] )))) {
-			$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
-			$wpdb->query($wpdb->prepare($q, array( $filecon_md5, $file_row['id'] )));
-			return;
-		}
-
-		// New record needed
-		$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d, mobile=%d, webp=%d, expired=0";
-		$wpdb->query($wpdb->prepare($q, array( $url_id, $vary, $filecon_md5, $type, $mobile ? 1 : 0, $webp ? 1 : 0 )));
-
-		// Mark existing rows as expired
-		if ($file_row) {
-			$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE id=%d";
-			$expired = time() + 86400 * apply_filters('litespeed_url_file_expired_days', 20);
-			$wpdb->query($wpdb->prepare($q, array( $expired, $file_row['id'] )));
-
-			// Also check if has other files expired already to be deleted
-			$q    = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
-			$q    = $wpdb->prepare($q, array( $url_id, time() ));
-			$list = $wpdb->get_results($q, ARRAY_A);
-			if ($list) {
-				foreach ($list as $v) {
-					$file_to_del = $path . '/' . $v['filename'] . '.' . ($file_type == 'js' ? 'js' : 'css');
-					if (file_exists($file_to_del)) {
-						// Safe to delete
-						self::debug('Delete expired unused file: ' . $file_to_del);
-
-						// Clear related lscache first to avoid cache copy of same URL w/ diff QS
-						// Purge::add( Tag::TYPE_MIN . '.' . $file_row[ 'filename' ] . '.' . $file_type );
-
-						unlink($file_to_del);
-					}
-				}
-				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
-				$wpdb->query($wpdb->prepare($q, array( $url_id, time() )));
+		// If another live row already uses the same filename, switch current row to that filename.
+		if ( $file_row ) {
+			$q         = "SELECT id FROM `$tb_url_file` WHERE filename = %s AND expired = 0 AND id != %d LIMIT 1";
+			$exists_id = $wpdb->get_var( $wpdb->prepare( $q, [ $file_row['filename'], (int) $file_row['id'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			if ( $exists_id ) {
+				$q = "UPDATE `$tb_url_file` SET filename=%s WHERE id=%d";
+				$wpdb->query( $wpdb->prepare( $q, [ $filecon_md5, (int) $file_row['id'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+				return;
 			}
 		}
 
-		// Purge this URL to avoid cache copy of same URL w/ diff QS
-		// $this->cls( 'Purge' )->purge_url( Utility::make_relative( $request_url ) ?: '/', true, true );
+		// Insert a new mapping row.
+		$q = "INSERT INTO `$tb_url_file` SET url_id=%d, vary=%s, filename=%s, type=%d, mobile=%d, webp=%d, expired=0";
+		$wpdb->query( $wpdb->prepare( $q, [ $url_id, $vary, $filecon_md5, $type, $mobile ? 1 : 0, $webp ? 1 : 0 ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+
+		// Mark previous mapping as expiring (to be deleted later).
+		if ( $file_row ) {
+			$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE id=%d";
+			$expired = time() + ( 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 ) );
+			$wpdb->query( $wpdb->prepare( $q, [ $expired, (int) $file_row['id'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+
+			// Delete already-expired files for this URL.
+			$q    = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+			$q    = $wpdb->prepare( $q, [ $url_id, time() ] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$list = $wpdb->get_results( $q, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			if ( $list ) {
+				foreach ( $list as $v ) {
+					$ext         = 'js' === $file_type ? 'js' : 'css';
+					$file_to_del = trailingslashit( $path ) . $v['filename'] . '.' . $ext;
+					if ( file_exists( $file_to_del ) ) {
+						self::debug( 'Delete expired unused file: ' . $file_to_del );
+						wp_delete_file( $file_to_del );
+					}
+				}
+				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+				$wpdb->query( $wpdb->prepare( $q, [ $url_id, time() ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			}
+		}
 	}
 
 	/**
-	 * Load CCSS related file
+	 * Load the stored filename (md5) for a given URL/vary/type, if active.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 * @access public
+	 *
+	 * @param string $request_url Full request URL or tag.
+	 * @param string $vary        Vary string (may be md5 if previously stored).
+	 * @param string $file_type   One of 'css','js','ccss','ucss'.
+	 * @return string|false Filename md5 (without extension) or false if none.
 	 */
 	public function load_url_file( $request_url, $vary, $file_type ) {
 		global $wpdb;
 
-		if (strlen($vary) > 32) {
-			$vary = md5($vary);
+		if ( strlen( $vary ) > 32 ) {
+			$vary = md5( $vary );
 		}
 
-		$type = $this->_url_file_types[$file_type];
+		if ( ! isset( $this->_url_file_types[ $file_type ] ) ) {
+			return false;
+		}
+		$type = $this->_url_file_types[ $file_type ];
 
-		self::debug2('load url file: ' . $request_url);
+		self::debug2( 'load url file: ' . $request_url );
 
-		$tb_url  = $this->tb('url');
+		$tb_url  = $this->tb( 'url' );
 		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
-		if (!$url_row) {
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! $url_row ) {
 			return false;
 		}
 
-		$url_id = $url_row['id'];
-
-		$tb_url_file = $this->tb('url_file');
+		$url_id      = (int) $url_row['id'];
+		$tb_url_file = $this->tb( 'url_file' );
 		$q           = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
-		$file_row    = $wpdb->get_row($wpdb->prepare($q, array( $url_id, $vary, $type )), ARRAY_A);
-		if (!$file_row) {
+		$file_row    = $wpdb->get_row( $wpdb->prepare( $q, [ $url_id, $vary, $type ] ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! $file_row ) {
 			return false;
 		}
 
@@ -526,173 +594,207 @@ class Data extends Root {
 	}
 
 	/**
-	 * Mark all entries of one URL to expired
+	 * Mark all UCSS entries of one URL as expired (optionally return existing rows).
 	 *
 	 * @since 4.5
+	 * @access public
+	 *
+	 * @param string $request_url Target URL.
+	 * @param bool   $auto_q      If true, return existing active rows before expiring.
+	 * @return array Existing rows if $auto_q, otherwise empty array.
 	 */
 	public function mark_as_expired( $request_url, $auto_q = false ) {
 		global $wpdb;
-		$tb_url = $this->tb('url');
+		$tb_url = $this->tb( 'url' );
 
-		self::debug('Try to mark as expired: ' . $request_url);
+		self::debug( 'Try to mark as expired: ' . $request_url );
 		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row($wpdb->prepare($q, $request_url), ARRAY_A);
-		if (!$url_row) {
-			return;
+		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! $url_row ) {
+			return [];
 		}
 
-		self::debug('Mark url_id=' . $url_row['id'] . ' as expired');
+		self::debug( 'Mark url_id=' . $url_row['id'] . ' as expired' );
 
-		$tb_url_file = $this->tb('url_file');
+		$tb_url_file = $this->tb( 'url_file' );
 
-		$existing_url_files = array();
-		if ($auto_q) {
-			$q                  = "SELECT a.*, b.url FROM `$tb_url_file` a LEFT JOIN `$tb_url` b ON b.id=a.url_id WHERE a.url_id=%d AND a.type=4 AND a.expired=0";
-			$q                  = $wpdb->prepare($q, $url_row['id']);
-			$existing_url_files = $wpdb->get_results($q, ARRAY_A);
+		$existing_url_files = [];
+		if ( $auto_q ) {
+			$q                  = "SELECT a.*, b.url FROM `$tb_url_file` a LEFT JOIN `$tb_url` b ON b.id=a.url_id WHERE a.url_id=%d AND a.type=%d AND a.expired=0";
+			$q                  = $wpdb->prepare( $q, [ (int) $url_row['id'], $this->_url_file_types['ucss'] ] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$existing_url_files = $wpdb->get_results( $q, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 		}
-		$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=4 AND expired=0";
-		$expired = time() + 86400 * apply_filters('litespeed_url_file_expired_days', 20);
-		$wpdb->query($wpdb->prepare($q, array( $expired, $url_row['id'] )));
+
+		$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=%d AND expired=0";
+		$expired = time() + 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 );
+		$wpdb->query( $wpdb->prepare( $q, [ $expired, (int) $url_row['id'], $this->_url_file_types['ucss'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 
 		return $existing_url_files;
 	}
 
 	/**
-	 * Get list from `data/css_excludes.txt`
+	 * Merge CSS excludes from file into the given list.
 	 *
-	 * @since  3.6
+	 * @since 3.6
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_css_exc( $list ) {
-		$data = $this->_load_per_line('css_excludes.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_css_exc( $list_in ) {
+		$data = $this->_load_per_line( 'css_excludes.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/ccss_whitelist.txt`
+	 * Merge CCSS selector whitelist from file into the given list.
 	 *
-	 * @since  7.1
+	 * @since 7.1
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_ccss_whitelist( $list ) {
-		$data = $this->_load_per_line('ccss_whitelist.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_ccss_whitelist( $list_in ) {
+		$data = $this->_load_per_line( 'ccss_whitelist.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/ucss_whitelist.txt`
+	 * Merge UCSS whitelist from file into the given list.
 	 *
-	 * @since  4.0
+	 * @since 4.0
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_ucss_whitelist( $list ) {
-		$data = $this->_load_per_line('ucss_whitelist.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_ucss_whitelist( $list_in ) {
+		$data = $this->_load_per_line( 'ucss_whitelist.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/js_excludes.txt`
+	 * Merge JS excludes from file into the given list.
 	 *
-	 * @since  3.5
+	 * @since 3.5
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_js_exc( $list ) {
-		$data = $this->_load_per_line('js_excludes.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_js_exc( $list_in ) {
+		$data = $this->_load_per_line( 'js_excludes.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/js_defer_excludes.txt`
+	 * Merge JS defer excludes from file into the given list.
 	 *
-	 * @since  3.6
+	 * @since 3.6
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_js_defer_exc( $list ) {
-		$data = $this->_load_per_line('js_defer_excludes.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_js_defer_exc( $list_in ) {
+		$data = $this->_load_per_line( 'js_defer_excludes.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/optm_uri_exc.txt`
+	 * Merge OPTM URI excludes from file into the given list.
 	 *
-	 * @since  5.4
+	 * @since 5.4
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_optm_uri_exc( $list ) {
-		$data = $this->_load_per_line('optm_uri_exc.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_optm_uri_exc( $list_in ) {
+		$data = $this->_load_per_line( 'optm_uri_exc.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/esi.nonces.txt`
+	 * Merge ESI nonces from file into the given list.
 	 *
-	 * @since  3.5
+	 * @since 3.5
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_esi_nonces( $list ) {
-		$data = $this->_load_per_line('esi.nonces.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_esi_nonces( $list_in ) {
+		$data = $this->_load_per_line( 'esi.nonces.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Get list from `data/cache_nocacheable.txt`
+	 * Merge "nocacheable" cache keys from file into the given list.
 	 *
-	 * @since  6.3.0.1
+	 * @since 6.3.0.1
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
 	 */
-	public function load_cache_nocacheable( $list ) {
-		$data = $this->_load_per_line('cache_nocacheable.txt');
-		if ($data) {
-			$list = array_unique(array_filter(array_merge($list, $data)));
+	public function load_cache_nocacheable( $list_in ) {
+		$data = $this->_load_per_line( 'cache_nocacheable.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
 		}
 
-		return $list;
+		return $list_in;
 	}
 
 	/**
-	 * Load file per line
+	 * Load a data file and return non-empty lines, stripping comments.
 	 *
-	 * Support two kinds of comments:
-	 *      1. `# this is comment`
-	 *      2. `##this is comment`
+	 * Supports:
+	 *  - `# comment`
+	 *  - `##comment`
 	 *
-	 * @since  3.5
+	 * @since 3.5
+	 * @access private
+	 *
+	 * @param string $file Relative filename under the plugin /data directory.
+	 * @return array<int,string>
 	 */
 	private function _load_per_line( $file ) {
-		$data = File::read(LSCWP_DIR . 'data/' . $file);
-		$data = explode(PHP_EOL, $data);
-		$list = array();
-		foreach ($data as $v) {
-			// Drop two kinds of comments
-			if (strpos($v, '##') !== false) {
-				$v = trim(substr($v, 0, strpos($v, '##')));
+		$data = File::read( LSCWP_DIR . 'data/' . $file );
+		$data = explode( PHP_EOL, $data );
+		$list = [];
+		foreach ( $data as $v ) {
+			// Drop two kinds of comments.
+			if ( false !== strpos( $v, '##' ) ) {
+				$v = trim( substr( $v, 0, strpos( $v, '##' ) ) );
 			}
-			if (strpos($v, '# ') !== false) {
-				$v = trim(substr($v, 0, strpos($v, '# ')));
+			if ( false !== strpos( $v, '# ' ) ) {
+				$v = trim( substr( $v, 0, strpos( $v, '# ' ) ) );
 			}
 
-			if (!$v) {
+			if ( ! $v ) {
 				continue;
 			}
 
