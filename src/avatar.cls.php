@@ -55,13 +55,13 @@ class Avatar extends Base {
 	 * @since 1.4
 	 */
 	public function __construct() {
+		$this->_tb = Data::cls()->tb( 'avatar' );
+
 		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}
 
 		self::debug2( '[Avatar] init' );
-
-		$this->_tb = $this->cls( 'Data' )->tb( 'avatar' );
 
 		$this->_conf_cache_ttl = $this->conf( self::O_DISCUSS_AVATAR_CACHE_TTL );
 
@@ -101,7 +101,8 @@ class Avatar extends Base {
 
 		$url = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT url FROM `' . $this->_tb . '` WHERE md5 = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT url FROM %i WHERE md5 = %s',
+				$this->_tb,
 				$md5
 			)
 		);
@@ -177,7 +178,8 @@ class Avatar extends Base {
 
 		$cnt = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT COUNT(*) FROM `' . $this->_tb . '` WHERE dateline < %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT COUNT(*) FROM %i WHERE dateline < %d',
+				$this->_tb,
 				time() - $this->_conf_cache_ttl
 			)
 		);
@@ -252,7 +254,8 @@ class Avatar extends Base {
 
 		$list = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT url FROM `' . $_instance->_tb . '` WHERE dateline < %d ORDER BY id DESC LIMIT %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT url FROM %i WHERE dateline < %d ORDER BY id DESC LIMIT %d',
+				$_instance->_tb,
 				time() - $_instance->_conf_cache_ttl,
 				(int) apply_filters( 'litespeed_avatar_limit', 30 )
 			)
@@ -325,7 +328,8 @@ class Avatar extends Base {
 
 		$existed = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'UPDATE `' . $this->_tb . '` SET dateline = %d WHERE md5 = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'UPDATE %i SET dateline = %d WHERE md5 = %s',
+				$this->_tb,
 				time(),
 				$md5
 			)
@@ -334,7 +338,8 @@ class Avatar extends Base {
 		if ( ! $existed ) {
 			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					'INSERT INTO `' . $this->_tb . '` (url, md5, dateline) VALUES (%s, %s, %d)', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					'INSERT INTO %i (url, md5, dateline) VALUES (%s, %s, %d)',
+					$this->_tb,
 					$url,
 					$md5,
 					time()
