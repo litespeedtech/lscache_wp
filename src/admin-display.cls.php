@@ -1251,6 +1251,10 @@ class Admin_Display extends Base {
 
 		// Get value to display.
 		$val = null !== $const_val ? $const_val : $primary_val;
+		// If we have deprecated_filter_val will set as new val.
+		if ( null !== $deprecated_filter_val ) {
+			$val = $deprecated_filter_val;
+		}
 		// If we have filter_val will set as new val.
 		if ( null !== $filter_val ) {
 			$val = $filter_val;
@@ -1262,7 +1266,7 @@ class Admin_Display extends Base {
 
 		// Get type (used for display purpose).
 		$type = ( isset( self::$settings_filters[ $id ] ) && isset( self::$settings_filters[ $id ]['type'] ) ) ? self::$settings_filters[ $id ]['type'] : 'textarea';
-		if ( ( null !== $const_val || null !== $primary_val ) && null === $filter_val ) {
+		if ( ( null !== $const_val || null !== $primary_val ) && null === $deprecated_filter_val ) {
 			$type = 'setting';
 		}
 
@@ -1271,8 +1275,8 @@ class Admin_Display extends Base {
 		if ( isset( self::$_default_options[ $id ] ) || isset( self::$_default_site_options[ $id ] ) ) {
 			$default = isset( self::$_default_options[ $id ] ) ? self::$_default_options[ $id ] : self::$_default_site_options[ $id ];
 		}
-		if ( null !== $filter_val || null !== $server_val ) {
-			$default = null !== $filter_val ? $filter_val : $server_val;
+		if ( null !== $deprecated_filter_val || null !== $server_val ) {
+			$default = null !== $deprecated_filter_val ? $deprecated_filter_val : $server_val;
 		}
 
 		// Set value to display, will be a string.
@@ -1293,7 +1297,7 @@ class Admin_Display extends Base {
 				// Show $_SERVER value.
 				printf( esc_html__( 'This value is overwritten by the %s variable.', 'litespeed-cache' ), '$_SERVER' );
 				$val = '$_SERVER["' . $server_val[0] . '"] = ' . $server_val[1];
-			} elseif ( null !== $filter_val ) {
+			} elseif ( null !== $deprecated_filter_val ) {
 				// Show filter value.
 				echo esc_html__( 'This value is overwritten by the filter.', 'litespeed-cache' );
 			} elseif ( null !== $const_val ) {
@@ -1309,7 +1313,7 @@ class Admin_Display extends Base {
 			}
 
 			echo ' ' . sprintf( esc_html__( 'Currently set to %s', 'litespeed-cache' ), '<code>' . esc_html( $val ) . '</code>' ) . '</div>';
-		} elseif ( 'textarea' === $type && null !== $filter_val ) {
+		} elseif ( 'textarea' === $type && null !== $deprecated_filter_val ) {
 			// Show warning for textarea.
 			// Textarea sizes.
 			$cols             = 30;
