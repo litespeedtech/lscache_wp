@@ -1239,11 +1239,11 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	protected function _check_overwritten( $id ) {
-		$const_val       = $this->const_overwritten( $id );
-		$primary_val = $this->primary_overwritten( $id );
-		$deprecated_filter_val  = $this->deprecated_filter_overwritten( $id );
-		$filter_val  = $this->filter_overwritten( $id );
-		$server_val  = $this->server_overwritten( $id );
+		$const_val             = $this->const_overwritten( $id );
+		$primary_val           = $this->primary_overwritten( $id );
+		$deprecated_filter_val = $this->deprecated_filter_overwritten( $id );
+		$filter_val            = $this->filter_overwritten( $id );
+		$server_val            = $this->server_overwritten( $id );
 
 		if ( null === $const_val && null === $primary_val && null === $deprecated_filter_val && null === $filter_val && null === $server_val ) {
 			return;
