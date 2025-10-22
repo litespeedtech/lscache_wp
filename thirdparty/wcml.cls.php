@@ -17,9 +17,14 @@ class WCML {
 		if (!defined('WCML_VERSION')) {
 			return;
 		}
+		
+		add_filter('wcml_user_store_strategy', __CLASS__ . '::set_cookie_strategy', 10, 2);
 
 		add_filter('wcml_client_currency', __CLASS__ . '::apply_client_currency');
 		add_action('wcml_set_client_currency', __CLASS__ . '::set_client_currency');
+
+		add_filter('litespeed_vary_curr_cookies', __CLASS__ . '::apply_vay');
+		add_filter('litespeed_vary_cookies', __CLASS__ . '::apply_vay');
 	}
 
 	public static function set_client_currency( $currency ) {
@@ -29,16 +34,19 @@ class WCML {
 	}
 
 	public static function apply_client_currency( $currency ) {
-		if ($currency !== wcml_get_woocommerce_currency_option()) {
-			self::$_currency = $currency;
-			add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
-		}
+		self::$_currency = $currency;
+		add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
 
 		return $currency;
 	}
 
 	public static function apply_vary( $list ) {
 		$list['wcml_currency'] = self::$_currency;
+
+		if ( self::$_currency === wcml_get_woocommerce_currency_option() ) {
+			unset( $list['wcml_currency'] );
+		}
+		
 		return $list;
 	}
 }
