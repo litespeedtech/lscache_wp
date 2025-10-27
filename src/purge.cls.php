@@ -240,6 +240,21 @@ class Purge extends Base {
 	}
 
 	/**
+	 * Shortcut to purge lscache.
+	 *
+	 * @since 7.7
+	 * @param string|false $reason Optional reason to log.
+	 * @return void
+	 */
+	public static function purge_all_lscache( $reason = false ) {
+		if ( $reason ) {
+			self::debug( 'Purge lscache ' . $reason, 3 );
+		}
+
+		self::cls()->_purge_all_lscache();
+	}
+	
+	/**
 	 * Alerts LiteSpeed Web Server to purge all pages.
 	 *
 	 * @since 2.2
