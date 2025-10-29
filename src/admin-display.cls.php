@@ -1266,7 +1266,7 @@ class Admin_Display extends Base {
 
 		// Get type (used for display purpose).
 		$type = ( isset( self::$settings_filters[ $id ] ) && isset( self::$settings_filters[ $id ]['type'] ) ) ? self::$settings_filters[ $id ]['type'] : 'textarea';
-		if ( ( null !== $const_val || null !== $primary_val ) && null === $deprecated_filter_val ) {
+		if ( ( null !== $const_val || null !== $primary_val || null !== $filter_val ) && null === $deprecated_filter_val ) {
 			$type = 'setting';
 		}
 
@@ -1310,6 +1310,9 @@ class Admin_Display extends Base {
 				} else {
 					echo esc_html__( 'This value is overwritten by the Network setting.', 'litespeed-cache' );
 				}
+			} elseif ( null !== $filter_val ) {
+				// Show filter value.
+				echo esc_html__( 'This value is overwritten by the filter.', 'litespeed-cache' );
 			}
 
 			echo ' ' . sprintf( esc_html__( 'Currently set to %s', 'litespeed-cache' ), '<code>' . esc_html( $val ) . '</code>' ) . '</div>';
