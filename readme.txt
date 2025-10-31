@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Deferred Instant Click to prevent page render blocking. (pp01 PR#926)
 * **Cloud** Fixed possible warning caused by variable typecast. (userb52 PR#925)
 * **Avatar** Fixed queue warning when table not existed, plus escaped HTML warnings. (PR#928)
+* **3rd** Improved WPML images lazyload detection. (#657426)
 
 = 7.6.2 - Oct 17 2025 =
 * 🐞**Cloud** Fixed the PHP 8+ typecast issue in QUIC.cloud signature verification which caused activation failures.
