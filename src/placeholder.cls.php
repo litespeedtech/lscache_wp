@@ -100,14 +100,14 @@ class Placeholder extends Base {
 	 *
 	 * @var array<string,string>
 	 */
-	private $_placeholder_resp_dict = array();
+	private $_placeholder_resp_dict = [];
 
 	/**
 	 * Keys currently queued within this request.
 	 *
 	 * @var array<int,string>
 	 */
-	private $_ph_queue = array();
+	private $_ph_queue = [];
 
 	/**
 	 * Stats & request summary for throttling.
@@ -141,7 +141,7 @@ class Placeholder extends Base {
 	public function init() {
 		Debug2::debug2( '[LQIP] init' );
 
-		add_action( 'litespeed_after_admin_init', array( $this, 'after_admin_init' ) );
+		add_action( 'litespeed_after_admin_init', [ $this, 'after_admin_init' ] );
 	}
 
 	/**
@@ -152,9 +152,9 @@ class Placeholder extends Base {
 	 */
 	public function after_admin_init() {
 		if ( $this->_conf_lqip ) {
-			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
-			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
-			add_action( 'litespeed_media_row_lqip', array( $this, 'media_row_con' ) );
+			add_filter( 'manage_media_columns', [ $this, 'media_row_title' ] );
+			add_filter( 'manage_media_custom_column', [ $this, 'media_row_actions' ], 10, 2 );
+			add_action( 'litespeed_media_row_lqip', [ $this, 'media_row_con' ] );
 		}
 	}
 
@@ -204,7 +204,7 @@ class Placeholder extends Base {
 		$total_files = 0;
 
 		// List all sizes.
-		$all_sizes = array( $meta_value['file'] );
+		$all_sizes = [ $meta_value['file'] ];
 		$size_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
 		if ( ! empty( $meta_value['sizes'] ) && is_array( $meta_value['sizes'] ) ) {
 			foreach ( $meta_value['sizes'] as $v ) {
@@ -269,16 +269,16 @@ class Placeholder extends Base {
 		$snippet = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) ? '' : '<noscript>' . $html . '</noscript>';
 
 		$html = preg_replace(
-			array(
+			[
 				'/\s+src=/i',
 				'/\s+srcset=/i',
 				'/\s+sizes=/i',
-			),
-			array(
+			],
+			[
 				' data-src=',
 				' data-srcset=',
 				' data-sizes=',
-			),
+			],
 			$html
 		);
 		$html = preg_replace(
@@ -477,8 +477,8 @@ class Placeholder extends Base {
 		$size = explode( 'x', $size );
 
 		$svg = str_replace(
-			array( '{width}', '{height}', '{color}' ),
-			array( (int) $size[0], (int) $size[1], $this->_conf_placeholder_resp_color ),
+			[ '{width}', '{height}', '{color}' ],
+			[ (int) $size[0], (int) $size[1], $this->_conf_placeholder_resp_color ],
 			$this->_conf_placeholder_resp_svg
 		);
 
@@ -529,12 +529,12 @@ class Placeholder extends Base {
 
 			// Generate LQIP.
 			list( $width, $height ) = explode( 'x', $size );
-			$req_data               = array(
+			$req_data               = [
 				'width'   => (int) $width,
 				'height'  => (int) $height,
 				'url'     => Utility::drop_webp( $src ),
 				'quality' => (int) $this->_conf_lqip_qual,
-			);
+			];
 
 			// Check if the image is 404 first.
 			if ( File::is_404( $req_data['url'] ) ) {
