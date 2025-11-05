@@ -1,14 +1,19 @@
 <?php
-// phpcs:ignoreFile
 /**
  * The Third Party integration with the Beaver Builder plugin.
  *
- * @since       3.0
+ * @since      3.0
+ * @package    LiteSpeed
+ * @subpackage LiteSpeed_Cache/thirdparty
  */
+
 namespace LiteSpeed\Thirdparty;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit;
 
+/**
+ * Integration for Beaver Builder cache handling and purging.
+ */
 class Beaver_Builder {
 
 	/**
@@ -16,21 +21,27 @@ class Beaver_Builder {
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public static function detect() {
-		if (!defined('FL_BUILDER_VERSION')) {
+		if ( ! defined( 'FL_BUILDER_VERSION' ) ) {
 			return;
 		}
 
 		/**
-		 * Purge All hooks
+		 * Purge All hooks.
 		 *
-		 * @see  beaver-builder/extensions/fi-builder-cache-helper/classes/class-fi-builder-cache-helper.php
+		 * @see beaver-builder/extensions/fi-builder-cache-helper/classes/class-fi-builder-cache-helper.php
 		 */
-		$actions = array( 'fl_builder_cache_cleared', 'fl_builder_after_save_layout', 'fl_builder_after_save_user_template', 'upgrader_process_complete' );
+		$actions = array(
+			'fl_builder_cache_cleared',
+			'fl_builder_after_save_layout',
+			'fl_builder_after_save_user_template',
+			'upgrader_process_complete',
+		);
 
-		foreach ($actions as $val) {
-			add_action($val, __CLASS__ . '::purge');
+		foreach ( $actions as $val ) {
+			add_action( $val, __CLASS__ . '::purge' );
 		}
 	}
 
@@ -39,8 +50,9 @@ class Beaver_Builder {
 	 *
 	 * @since 3.0
 	 * @access public
+	 * @return void
 	 */
 	public static function purge() {
-		do_action('litespeed_purge_all', '3rd Beaver_Builder');
+		do_action( 'litespeed_purge_all', '3rd Beaver_Builder' );
 	}
 }

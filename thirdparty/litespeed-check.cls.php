@@ -1,18 +1,26 @@
 <?php
-// phpcs:ignoreFile
-
 /**
  * Check if any plugins that could conflict with LiteSpeed Cache are active.
  *
- * @since       4.7
+ * @since 4.7
+ * @package LiteSpeed
+ * @subpackage LiteSpeed_Cache\Thirdparty
  */
 
 namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
+/**
+ * Detects incompatible plugins and displays admin notices if needed.
+ */
 class LiteSpeed_Check {
 
+	/**
+	 * Incompatible plugins list.
+	 *
+	 * @var array
+	 */
 	public static $_incompatible_plugins = array(
 		// 'autoptimize/autoptimize.php',
 		'breeze/breeze.php',
@@ -41,9 +49,26 @@ class LiteSpeed_Check {
 		'wp-super-cache/wp-cache.php',
 	);
 
+	/**
+	 * Option key for storing notice state.
+	 *
+	 * @var string
+	 */
 	private static $_option = 'thirdparty_litespeed_check';
+
+	/**
+	 * Admin notice HTML ID.
+	 *
+	 * @var string
+	 */
 	private static $_msg_id = 'id="lscwp-incompatible-plugin-notice"';
 
+	/**
+	 * Detect incompatible plugins and hook into plugin lifecycle.
+	 *
+	 * @since 4.7
+	 * @return void
+	 */
 	public static function detect() {
 		if (!is_admin()) {
 			return;
@@ -53,7 +78,7 @@ class LiteSpeed_Check {
 		 * Check for incompatible plugins when `litespeed-cache` is first activated.
 		 */
 		$plugin = basename(LSCWP_DIR) . '/litespeed-cache.php';
-		register_deactivation_hook($plugin, function ( $_network_wide ) {
+		register_deactivation_hook($plugin, function ( $network_wide ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			\LiteSpeed\Admin_Display::delete_option(self::$_option);
 		});
 		if (!\LiteSpeed\Admin_Display::get_option(self::$_option)) {
@@ -81,10 +106,26 @@ class LiteSpeed_Check {
 		}
 	}
 
+	/**
+	 * Handle plugin activation.
+	 *
+	 * @since 4.7
+	 * @param string $plugin Plugin path.
+	 * @param bool   $network_wide Whether activated network-wide.
+	 * @return void
+	 */
 	public static function activated_plugin( $plugin, $network_wide ) {
 		self::incompatible_plugin_notice($plugin, $network_wide, 'activated');
 	}
 
+	/**
+	 * Handle plugin deactivation.
+	 *
+	 * @since 4.7
+	 * @param string $plugin Plugin path.
+	 * @param bool   $network_wide Whether deactivated network-wide.
+	 * @return void
+	 */
 	public static function deactivated_plugin( $plugin, $network_wide ) {
 		self::incompatible_plugin_notice($plugin, $network_wide, 'deactivated');
 	}
@@ -92,15 +133,16 @@ class LiteSpeed_Check {
 	/**
 	 * Detect any incompatible plugins that are currently `active` and `valid`.
 	 * Show a notification if there are any.
+	 *
+	 * @since 4.7
+	 * @param string $plugin Plugin path.
+	 * @param bool   $_network_wide Whether action is network-wide.
+	 * @param string $action Action type (activated|deactivated).
+	 * @return void
 	 */
 	public static function incompatible_plugin_notice( $plugin, $_network_wide, $action ) {
 		self::update_messages();
 
-		/**
-		 * The 'deactivated_plugin' action fires before
-		 * `wp_get_active_and_valid_plugins` can see the change, so we'll need to
-		 * remove `$plugin` from the list.
-		 */
 		$deactivated = 'deactivated' === $action ? array( $plugin ) : array();
 
 		$incompatible_plugins = array_map(function ( $plugin ) {
@@ -131,9 +173,10 @@ class LiteSpeed_Check {
 	}
 
 	/**
-	 * Prevent multiple incompatible plugin notices, in case an admin (de)activates
-	 * a number of incompatible plugins in succession without dismissing the
-	 * notice(s).
+	 * Prevent multiple incompatible plugin notices.
+	 *
+	 * @since 4.7
+	 * @return void
 	 */
 	private static function update_messages() {
 		$messages = \LiteSpeed\Admin_Display::get_option(\LiteSpeed\Admin_Display::DB_MSG_PIN, array());
