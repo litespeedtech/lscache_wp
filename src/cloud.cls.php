@@ -200,6 +200,10 @@ class Cloud extends Base {
 			$allowed_hosts[] = 'api.quic.cloud';
 		}
 		add_filter( 'allowed_redirect_hosts', function( $hosts ) use ( $allowed_hosts ) {
+			if ( ! is_array ( $hosts ) ) {
+				$hosts = [];
+			}
+
 			return array_merge( $hosts, $allowed_hosts );
 		} );
 		$this->_summary = self::get_summary();
