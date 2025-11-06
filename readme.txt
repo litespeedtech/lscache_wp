@@ -258,15 +258,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.7 - Nov 2025 =
-* **Task** Cron default interval escalated from 1m to 15mins.
-* **Conf** Allowed `litespeed_conf_load_option_{$option}` to alter the values.
-* **Conf** Dropped deprecated `O_MEDIA_PRELOAD_FEATURED` option.
-* **GUI** Dark mode toggle will apply immediately w/o page blinking on reload.
-* **Page Optimize** Improved dummy CSS replacement rule.
-* **Page Optimize** Deferred Instant Click to prevent page render blocking. (pp01 PR#926)
-* **Cloud** Fixed possible warning caused by variable typecast. (userb52 PR#925)
-* **Avatar** Fixed queue warning when table not existed, plus escaped HTML warnings. (PR#928)
-* **3rd** Improved WPML images lazyload detection. (#657426)
+* **Task** Increased default cron interval from 1 minute to 15 minutes.
+* **Conf** Enabled `litespeed_conf_load_option_{$option}` to modify configuration values.
+* **Conf** Removed deprecated `O_MEDIA_PRELOAD_FEATURED` option.
+* **GUI** Dark mode toggle now applies instantly without page flicker on reload.
+* **Page Optimize** Improved dummy CSS replacement logic.
+* **Page Optimize** Deferred Instant Click to avoid blocking initial page rendering. (pp01 PR#926)
+* **Cloud** Fixed a potential warning caused by variable type casting. (userb52 PR#925)
+* **Cloud** Added null-safe handling for `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
+* **Avatar** Fixed queue warning when table is missing, and resolved HTML escaping warnings. (PR#928)
+* **3rd** Improved WPML image lazyload detection. (#657426)
 
 = 7.6.2 - Oct 17 2025 =
 * 🐞**Cloud** Fixed the PHP 8+ typecast issue in QUIC.cloud signature verification which caused activation failures.
