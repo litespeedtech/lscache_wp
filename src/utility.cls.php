@@ -46,7 +46,7 @@ class Utility extends Root {
 	public static function arr2regex( $arr, $drop_delimiter = false ) {
 		$arr = self::sanitize_lines( $arr );
 
-		$new_arr = array();
+		$new_arr = [];
 		foreach ( $arr as $v ) {
 			$new_arr[] = preg_quote( $v, '#' );
 		}
@@ -268,7 +268,7 @@ class Utility extends Root {
 	 * @return array<string,string> Attributes.
 	 */
 	public static function parse_attr( $str ) {
-		$attrs = array();
+		$attrs = [];
 		preg_match_all( '#([\w-]+)=(["\'])([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs[ $match[1] ] = trim( $match[3] );
@@ -336,7 +336,7 @@ class Utility extends Root {
 		}
 
 		if ( $hit ) {
-			return $has_ttl ? array( $hit, $this_ttl ) : $hit;
+			return $has_ttl ? [ $hit, $this_ttl ] : $hit;
 		}
 
 		return false;
@@ -396,7 +396,7 @@ class Utility extends Root {
 	 * @return string Cleaned filename.
 	 */
 	public static function drop_webp( $filename ) {
-		if ( in_array( substr( $filename, -5 ), array( '.webp', '.avif' ), true ) ) {
+		if ( in_array( substr( $filename, -5 ), [ '.webp', '.avif' ], true ) ) {
 			$filename = substr( $filename, 0, -5 );
 		}
 
@@ -525,7 +525,7 @@ class Utility extends Root {
 		}
 
 		self::compatibility();
-		$domain = http_build_url( get_home_url(), array(), HTTP_URL_STRIP_ALL ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+		$domain = http_build_url( get_home_url(), [], HTTP_URL_STRIP_ALL ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 
 		define( 'LSCWP_DOMAIN', $domain );
 	}
@@ -540,13 +540,13 @@ class Utility extends Root {
 	 * @return array|string Sanitized list or string.
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
-		$types = $type ? explode( ',', $type ) : array();
+		$types = $type ? explode( ',', $type ) : [];
 
 		if ( ! $arr ) {
 			if ( 'string' === $type ) {
 				return '';
 			}
-			return array();
+			return [];
 		}
 
 		if ( ! is_array( $arr ) ) {
@@ -612,7 +612,7 @@ class Utility extends Root {
 	 * @param bool                 $unescape  Return unescaped URL.
 	 * @return string Built URL.
 	 */
-	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = array(), $unescape = false ) {
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = [], $unescape = false ) {
 		$prefix = '?';
 
 		if ( '_ori' === $page ) {
@@ -656,12 +656,12 @@ class Utility extends Root {
 		if ( $type ) {
 			// Remove potential param `type` from url.
 			$parsed = wp_parse_url( htmlspecialchars_decode( $url ) );
-			$query  = array();
+			$query  = [];
 			if ( isset( $parsed['query'] ) ) {
 				parse_str( $parsed['query'], $query );
 			}
 
-			$built_arr       = array_merge( $query, array( Router::TYPE => $type ) );
+			$built_arr       = array_merge( $query, [ Router::TYPE => $type ] );
 			$parsed['query'] = http_build_query( $built_arr + (array) $append_arr );
 			self::compatibility();
 			$url = http_build_url( $parsed ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
@@ -698,7 +698,7 @@ class Utility extends Root {
 		}
 
 		if ( ! isset( self::$_internal_domains ) ) {
-			self::$_internal_domains = apply_filters( 'litespeed_internal_domains', array() );
+			self::$_internal_domains = apply_filters( 'litespeed_internal_domains', [] );
 		}
 
 		if ( self::$_internal_domains ) {
@@ -768,7 +768,7 @@ class Utility extends Root {
 			return false;
 		}
 
-		return array( $file_path, (int) filesize( $file_path ) );
+		return [ $file_path, (int) filesize( $file_path ) ];
 	}
 
 	/**
@@ -799,8 +799,8 @@ class Utility extends Root {
 	 */
 	public static function srcset_replace( $content, $callback ) {
 		preg_match_all( '# srcset=([\'"])(.+)\g{1}#iU', $content, $matches );
-		$srcset_ori   = array();
-		$srcset_final = array();
+		$srcset_ori   = [];
+		$srcset_final = [];
 		if ( ! empty( $matches[2] ) ) {
 			foreach ( $matches[2] as $k => $urls_ori ) {
 				$urls_final = explode( ',', $urls_ori );
@@ -869,14 +869,14 @@ class Utility extends Root {
 		}
 
 		$page_links = paginate_links(
-			array(
+			[
 				'base'      => add_query_arg( 'pagenum', '%#%' ),
 				'format'    => '',
 				'prev_text' => '&laquo;',
 				'next_text' => '&raquo;',
 				'total'     => $num_of_pages,
 				'current'   => $pagenum,
-			)
+			]
 		);
 
 		return '<div class="tablenav"><div class="tablenav-pages" style="margin: 1em 0">' . $page_links . '</div></div>';
@@ -917,7 +917,7 @@ class Utility extends Root {
 	 */
 	public static function prepare_image_sizes_array( $detailed = false ) {
 		$image_sizes = wp_get_registered_image_subsizes();
-		$sizes       = array();
+		$sizes       = [];
 
 		foreach ( $image_sizes as $current_size_name => $current_size ) {
 			if ( empty( $current_size['width'] ) && empty( $current_size['height'] ) ) {
@@ -932,12 +932,12 @@ class Utility extends Root {
 					$label = ucfirst( $current_size_name ) . ' ( ' . $label . ' )';
 				}
 
-				$sizes[] = array(
+				$sizes[] = [
 					'label'     => $label,
 					'file_size' => $current_size_name,
 					'width'     => (int) $current_size['width'],
 					'height'    => (int) $current_size['height'],
-				);
+				];
 			}
 		}
 
