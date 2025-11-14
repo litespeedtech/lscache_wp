@@ -167,7 +167,7 @@ class Admin extends Root {
 			// Sanitize current query args while removing our internals.
 			if ( ! empty( $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				foreach ( $_GET as $k => $v ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( in_array( $k, array( Router::ACTION, Router::NONCE, Router::TYPE, 'litespeed_i' ), true ) ) {
+					if ( in_array( $k, array( Router::ACTION, Router::NONCE, Router::TYPE, 'litespeed_i', 'litespeed_tb' ), true ) ) {
 						continue;
 					}
 					// Normalize to string for URL building.

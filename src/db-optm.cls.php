@@ -146,7 +146,7 @@ class DB_Optm extends Root {
 				return (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE %s AND option_value < %d",
-						'_transient_timeout%',
+						$wpdb->esc_like( '_transient_timeout_' ) . '%',
 						time()
 					)
 				);
@@ -156,7 +156,7 @@ class DB_Optm extends Root {
 				return (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE %s",
-						'%_transient_%'
+						$wpdb->esc_like( '_transient_' ) . '%'
 					)
 				);
 
@@ -252,13 +252,13 @@ class DB_Optm extends Root {
 				return __( 'Clean post revisions successfully.', 'litespeed-cache' );
 
 			case 'orphaned_post_meta':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE a FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( "DELETE a FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL" );
 				return __( 'Clean orphaned post meta successfully.', 'litespeed-cache' );
 
 			case 'auto_draft':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
 				return __( 'Clean auto drafts successfully.', 'litespeed-cache' );
 
 			case 'trash_post':
@@ -267,55 +267,72 @@ class DB_Optm extends Root {
 				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' );
 
 			case 'spam_comment':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" );
 				return __( 'Clean spam comments successfully.', 'litespeed-cache' );
 
 			case 'trash_comment':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" );
 				return __( 'Clean trashed comments successfully.', 'litespeed-cache' );
 
 			case 'trackback-pingback':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" );
 				return __( 'Clean trackbacks and pingbacks successfully.', 'litespeed-cache' );
 
 			case 'expired_transient':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query(
-            $wpdb->prepare(
-            "DELETE FROM `$wpdb->options` WHERE option_name LIKE %s AND option_value < %d",
-            '_transient_timeout%',
-            time()
-            )
-        );
+			$keys_to_delete = [];
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$transients = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT option_name FROM `$wpdb->options` WHERE option_name LIKE %s AND option_value < %d",
+					$wpdb->esc_like( '_transient_timeout_' ) . '%',
+					time()
+				),
+			);
+			foreach ( $transients as $transient ) {
+				$keys_to_delete[] = $transient->option_name;
+				$keys_to_delete[] = str_replace( '_transient_timeout_', '_transient_', $transient->option_name );
+			}
+
+			if ( ! empty( $keys_to_delete ) ) {
+				$placeholders = implode( ',', array_fill( 0, count( $keys_to_delete ), '%s' )  );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->query(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"DELETE FROM `$wpdb->options` WHERE option_name IN ( $placeholders )",
+						$keys_to_delete
+					)
+				);
+			}
 				return __( 'Clean expired transients successfully.', 'litespeed-cache' );
 
 			case 'all_transients':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query(
-            $wpdb->prepare(
-            "DELETE FROM `$wpdb->options` WHERE option_name LIKE %s",
-            '%\_transient\_%'
-            )
-        );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM `$wpdb->options` WHERE option_name LIKE %s",
+					$wpdb->esc_like( '_transient_' ) . '%'
+				)
+			);
 				return __( 'Clean all transients successfully.', 'litespeed-cache' );
 
 			case 'optimize_tables':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $result = (array) $wpdb->get_results(
-            $wpdb->prepare(
-            "SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
-            DB_NAME
-            )
-        );
-        if ( $result ) {
-					foreach ( $result as $row ) {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-                $wpdb->query( 'OPTIMIZE TABLE ' . esc_sql( $row->table_name ) );
-							}
-            }
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$result = (array) $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+					DB_NAME
+				)
+			);
+			if ( $result ) {
+				foreach ( $result as $row ) {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$wpdb->query( 'OPTIMIZE TABLE ' . esc_sql( $row->table_name ) );
+				}
+			}
 				return __( 'Optimized all tables.', 'litespeed-cache' );
 		}
 	}
@@ -354,7 +371,7 @@ class DB_Optm extends Root {
 	private function _conv_innodb() {
 		global $wpdb;
 
-		$tb_param = isset( $_GET['tb'] ) ? sanitize_text_field( wp_unslash( $_GET['tb'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tb_param = isset( $_GET['litespeed_tb'] ) ? sanitize_text_field( wp_unslash( $_GET['litespeed_tb'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! $tb_param ) {
 			Admin_Display::error( 'No table to convert or invalid nonce' );
@@ -433,7 +450,7 @@ class DB_Optm extends Root {
 
 		switch ($type) {
 			case self::TYPE_CONV_TB:
-            $this->_conv_innodb();
+			$this->_conv_innodb();
 				break;
 
 			default:
