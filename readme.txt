@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Deferred Instant Click to avoid blocking initial page rendering. (pp01 PR#926)
 * **Cloud** Fixed a potential warning caused by variable type casting. (userb52 PR#925)
 * **Cloud** Added null-safe handling for `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
+* **Vary** Fixed the issue that the user failed to login when has no group.
 * **Avatar** Fixed queue warning when table is missing, and resolved HTML escaping warnings. (PR#928)
 * **3rd** Improved WPML image lazyload detection. (#657426)
 
