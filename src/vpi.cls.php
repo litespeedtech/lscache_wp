@@ -227,7 +227,7 @@ class VPI extends Base {
 
 		// For cron, need to check request interval too.
 		if ( ! $do_continue ) {
-			if ( ! empty( $this->_summary['curr_request_vpi'] ) && time() - $this->_summary['curr_request_vpi'] < 300 && ! $this->conf( self::O_DEBUG ) ) {
+			if ( ! empty( $this->_summary['curr_request_vpi'] ) && time() - (int) $this->_summary['curr_request_vpi'] < 300 && ! $this->conf( self::O_DEBUG ) ) {
 				self::debug( 'Last request not done' );
 				return;
 			}
@@ -346,7 +346,7 @@ class VPI extends Base {
 
 		// Save summary data.
 		self::reload_summary();
-		$this->_summary['last_spent_vpi']   = time() - $this->_summary['curr_request_vpi'];
+		$this->_summary['last_spent_vpi']   = time() - (int) $this->_summary['curr_request_vpi'];
 		$this->_summary['last_request_vpi'] = $this->_summary['curr_request_vpi'];
 		$this->_summary['curr_request_vpi'] = 0;
 		self::save_summary();

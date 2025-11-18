@@ -356,7 +356,7 @@ class Placeholder extends Base {
 		// Send request to generate placeholder.
 		if ( ! $this->_conf_placeholder_resp_async ) {
 			// If requested recently, bypass.
-			if ( $this->_summary && ! empty( $this->_summary['curr_request'] ) && ( time() - $this->_summary['curr_request'] ) < 300 ) {
+			if ( $this->_summary && ! empty( $this->_summary['curr_request'] ) && ( time() - (int) $this->_summary['curr_request'] ) < 300 ) {
 				Debug2::debug2( '[LQIP] file bypass generating due to interval limit' );
 				return false;
 			}
@@ -440,7 +440,7 @@ class Placeholder extends Base {
 
 		// For cron, need to check request interval too.
 		if ( ! $do_continue ) {
-			if ( ! empty( $_instance->_summary['curr_request'] ) && ( time() - $_instance->_summary['curr_request'] ) < 300 ) {
+			if ( ! empty( $_instance->_summary['curr_request'] ) && ( time() - (int) $_instance->_summary['curr_request'] ) < 300 ) {
 				Debug2::debug( '[LQIP] Last request not done' );
 				return;
 			}
@@ -571,7 +571,7 @@ class Placeholder extends Base {
 		File::save( $file, $data, true );
 
 		// Save summary data.
-		$this->_summary['last_spent']   = time() - $this->_summary['curr_request'];
+		$this->_summary['last_spent']   = time() - (int) $this->_summary['curr_request'];
 		$this->_summary['last_request'] = $this->_summary['curr_request'];
 		$this->_summary['curr_request'] = 0;
 		self::save_summary();

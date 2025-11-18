@@ -223,7 +223,7 @@ class CSS extends Base {
 
 		// For cron, need to check request interval too
 		if ( ! $should_continue ) {
-			if ( ! empty( $this->_summary[ 'curr_request_' . $type ] ) && time() - $this->_summary[ 'curr_request_' . $type ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
+			if ( ! empty( $this->_summary[ 'curr_request_' . $type ] ) && time() - (int) $this->_summary[ 'curr_request_' . $type ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
 				Debug2::debug( '[' . $type_tag . '] Last request not done' );
 				return;
 			}
@@ -374,7 +374,7 @@ class CSS extends Base {
 		}
 
 		// Save summary data
-		$this->_summary[ 'last_spent_' . $type ]   = time() - $this->_summary[ 'curr_request_' . $type ];
+		$this->_summary[ 'last_spent_' . $type ]   = time() - (int) $this->_summary[ 'curr_request_' . $type ];
 		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
 		$this->_summary[ 'curr_request_' . $type ] = 0;
 		self::save_summary();
