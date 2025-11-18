@@ -67,7 +67,7 @@ class Guest {
 
 		// Send vary cookie
 		$vary = 'guest_mode:1';
-		if ( $this->_conf && empty( $this->_conf[ self::O_DEBUG ] ) ) {
+		if ( $this->_conf && empty( $this->_conf[ self::O_DEBUG ] ) && isset( $this->_conf[ self::HASH ] ) ) {
 			$vary = md5( $this->_conf[ self::HASH ] . $vary );
 		}
 
@@ -123,7 +123,7 @@ class Guest {
 			return false;
 		}
 
-		if ( $this->_conf[ self::O_GUEST_UAS ] ) {
+		if ( isset( $this->_conf[ self::O_GUEST_UAS ] ) && $this->_conf[ self::O_GUEST_UAS ] ) {
 			$quoted_uas = array();
 			foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
 				$quoted_uas[] = preg_quote( $v, '#' );
@@ -134,7 +134,7 @@ class Guest {
 			}
 		}
 
-		if ( $this->ip_access( $this->_conf[ self::O_GUEST_IPS ] ) ) {
+		if ( isset( $this->_conf[ self::O_GUEST_IPS ] ) && $this->ip_access( $this->_conf[ self::O_GUEST_IPS ] ) ) {
 			return true;
 		}
 
