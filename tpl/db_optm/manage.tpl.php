@@ -137,7 +137,7 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
                         <td><?php echo esc_html( $v->table_name ); ?></td>
                         <td><?php echo esc_html( $v->engine ); ?></td>
                         <td>
-                            <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'tb' => $v->table_name ) ) ); ?>">
+                            <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'litespeed_tb' => $v->table_name ) ) ); ?>">
                                 <?php esc_html_e( 'Convert to InnoDB', 'litespeed-cache' ); ?>
                             </a>
                         </td>
