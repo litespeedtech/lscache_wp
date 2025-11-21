@@ -34,14 +34,9 @@ class WCML {
 		if (!defined('WCML_VERSION')) {
 			return;
 		}
-		
-		add_filter('wcml_user_store_strategy', __CLASS__ . '::set_cookie_strategy', 10, 2);
 
 		add_filter('wcml_client_currency', __CLASS__ . '::apply_client_currency');
 		add_action('wcml_set_client_currency', __CLASS__ . '::set_client_currency');
-
-		add_filter('litespeed_vary_curr_cookies', __CLASS__ . '::apply_vay');
-		add_filter('litespeed_vary_cookies', __CLASS__ . '::apply_vay');
 	}
 
 	/**
@@ -69,11 +64,6 @@ class WCML {
 		self::$_currency = $currency;
 		add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
 
-		if (wcml_get_woocommerce_currency_option() !== $currency) {
-			self::$_currency = $currency;
-			add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
-		}
-    
 		return $currency;
 	}
 
@@ -85,13 +75,9 @@ class WCML {
 	 * @param array $vary_list The existing vary list.
 	 * @return array The updated vary list including WCML currency.
 	 */
-	public static function apply_vary( $list ) {
-		$list['wcml_currency'] = self::$_currency;
-
-		if ( self::$_currency === wcml_get_woocommerce_currency_option() ) {
-			unset( $list['wcml_currency'] );
-		}
+	public static function apply_vary( $vary_list ) {
+		$vary_list['wcml_currency'] = self::$_currency;
 		
-		return $list;
+		return $vary_list;
 	}
 }
