@@ -1,18 +1,19 @@
 <?php
-// phpcs:ignoreFile
 /**
  * The Third Party integration with the NextGen Gallery plugin.
  *
- * @since       1.0.5
+ * @since 1.0.5
+ * @package LiteSpeed
+ * @subpackage LiteSpeed_Cache\Thirdparty
  */
+
 namespace LiteSpeed\Thirdparty;
 
 defined('WPINC') || exit();
 
-// Try preload instead
-// todo: need test
-// add_action('load_nextgen_gallery_modules', 'NextGenGallery::detect') ;
-
+/**
+ * Provides LiteSpeed Cache compatibility for NextGen Gallery.
+ */
 class NextGenGallery {
 
 	const CACHETAG_ALBUMS    = 'NGG_A.';
@@ -20,12 +21,10 @@ class NextGenGallery {
 	const CACHETAG_TAGS      = 'NGG_T.';
 
 	/**
-	 * Detect is triggered at the load_nextgen_gallery_modules action.
+	 * Hook NextGen Gallery events for purging cache.
 	 *
-	 * If this action is triggered, assume NextGen Gallery is used.
-	 *
-	 * @since   1.0.5
-	 * @access  public
+	 * @since 1.0.5
+	 * @return void
 	 */
 	public static function preload() {
 		add_action('ngg_added_new_image', __CLASS__ . '::add_image');
@@ -46,11 +45,11 @@ class NextGenGallery {
 	}
 
 	/**
-	 * When an image is added, need to purge all pages that displays its gallery.
+	 * Purge cache when an image is added.
 	 *
-	 * @since   1.0.5
-	 * @access  public
-	 * @param   string $image  The image object added.
+	 * @since 1.0.5
+	 * @param object $image The image object added.
+	 * @return void
 	 */
 	public static function add_image( $image ) {
 		if (!$image || !method_exists($image, 'get_gallery')) {
@@ -63,35 +62,45 @@ class NextGenGallery {
 	}
 
 	/**
-	 * When an image is updated, need to purge all pages that displays its gallery.
+	 * Purge cache when an image is updated.
 	 *
 	 * @since 1.0.5
-	 * @access  public
+	 * @return void
 	 */
 	public static function update_image() {
-		if (isset($_REQUEST['gallery_id'])) {
-			do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($_REQUEST['gallery_id']));
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_REQUEST['gallery_id'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( wp_unslash( $_REQUEST['gallery_id'] ) ) );
 			return;
 		}
 
-		if (isset($_POST['task_list'])) {
-			$task_list = str_replace('\\', '', $_POST['task_list']);
-			$task_list = json_decode($task_list, true);
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['task_list'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
+			$task_list = str_replace( '\\', '', wp_unslash( $_POST['task_list'] ) );
+			$task_list = json_decode( $task_list, true );
 
-			if (!empty($task_list[0]['query']['id'])) {
-				do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($task_list[0]['query']['id']));
+			if ( ! empty( $task_list[0]['query']['id'] ) ) {
+				do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( $task_list[0]['query']['id'] ) );
 				return;
 			}
 		}
 
-		if (isset($_POST['id'])) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['id'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$id = (int) $_POST['id'];
-		} elseif (isset($_POST['image'])) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		} elseif ( isset( $_POST['image'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$id = (int) $_POST['image'];
-		} elseif (isset($_GET['pid'])) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		} elseif ( isset( $_GET['pid'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$id = (int) $_GET['pid'];
 		} else {
-			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.');
+			error_log( 'LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			return;
 		}
 		$image = \C_Image_Mapper::get_instance()->find($id);
@@ -101,25 +110,27 @@ class NextGenGallery {
 	}
 
 	/**
-	 * When an image is deleted, need to purge all pages that displays its gallery.
+	 * Purge cache when an image is deleted.
 	 *
 	 * @since 1.0.5
-	 * @access  public
+	 * @return void
 	 */
 	public static function delete_image() {
-		if (isset($_GET['gid'])) {
-			do_action('litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key($_GET['gid']));
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['gid'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( wp_unslash( $_GET['gid'] ) ) );
 		}
 	}
 
 	/**
-	 * When an image is moved, need to purge all old galleries and the new gallery.
+	 * Purge cache when an image is moved.
 	 *
 	 * @since 1.0.8
-	 * @access  public
-	 * @param array   $images unused
-	 * @param array   $old_gallery_ids Source gallery ids for the images.
-	 * @param integer $new_gallery_id Destination gallery id.
+	 * @param array $images Unused.
+	 * @param array $old_gallery_ids Source gallery IDs.
+	 * @param int   $new_gallery_id Destination gallery ID.
+	 * @return void
 	 */
 	public static function move_image( $images, $old_gallery_ids, $new_gallery_id ) {
 		foreach ($old_gallery_ids as $gid) {
@@ -129,79 +140,77 @@ class NextGenGallery {
 	}
 
 	/**
-	 * When an image is copied, need to purge the destination gallery.
+	 * Purge cache when an image is copied.
 	 *
-	 * @param array   $image_pid_map unused
-	 * @param array   $old_gallery_ids unused
-	 * @param integer $new_gallery_id Destination gallery id.
+	 * @since 1.0.8
+	 * @param array $image_pid_map Unused.
+	 * @param array $old_gallery_ids Unused.
+	 * @param int   $new_gallery_id Destination gallery ID.
+	 * @return void
 	 */
 	public static function copy_image( $image_pid_map, $old_gallery_ids, $new_gallery_id ) {
 		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $new_gallery_id);
 	}
 
 	/**
-	 * When an image is re-generated, need to purge the gallery it belongs to.
-	 * Also applies to recovered images.
+	 * Purge cache when an image is regenerated or recovered.
 	 *
-	 * @param Image $image The re-generated image.
+	 * @since 1.0.8
+	 * @param object $image The regenerated image object.
+	 * @return void
 	 */
 	public static function gen_image( $image ) {
 		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid);
 	}
 
 	/**
-	 * When a gallery is updated, need to purge all pages that display the gallery.
+	 * Purge cache when a gallery is updated.
 	 *
 	 * @since 1.0.5
-	 * @access  public
-	 * @param   integer $gid    The gallery id of the gallery updated.
+	 * @param int|object $gid Gallery ID or object with gid.
+	 * @return void
 	 */
 	public static function update_gallery( $gid ) {
-		// New version input will be an object with gid value
 		if (is_object($gid) && !empty($gid->gid)) {
 			$gid = $gid->gid;
 		}
-
 		do_action('litespeed_purge', self::CACHETAG_GALLERIES . $gid);
 	}
 
 	/**
-	 * When an album is updated, need to purge all pages that display the album.
+	 * Purge cache when an album is updated.
 	 *
 	 * @since 1.0.5
-	 * @access public
-	 * @param   integer $aid    The album id of the album updated.
+	 * @param int $aid Album ID.
+	 * @return void
 	 */
 	public static function update_album( $aid ) {
 		do_action('litespeed_purge', self::CACHETAG_ALBUMS . $aid);
 	}
 
 	/**
-	 * When rendering a page, if the page has a gallery, album or tag cloud,
-	 * it needs to be tagged appropriately.
+	 * Tag gallery/album/tag content during rendering.
 	 *
 	 * @since 1.0.5
-	 * @access public
-	 * @param object $render_parms Parameters used to render the associated part of the page.
-	 * @return mixed Null if passed in null, $render_parms otherwise.
+	 * @param object $render_parms Render parameters.
+	 * @return mixed Null if $render_parms is null, otherwise same input.
 	 */
 	public static function add_container( $render_parms ) {
-		// Check if null. If it is null, can't continue.
 		if (is_null($render_parms)) {
 			return null;
 		}
 		$src           = $render_parms[0]->source;
 		$container_ids = $render_parms[0]->container_ids;
-		// Can switch on first char if we end up with more sources.
+
 		switch ($src) {
 			case 'albums':
-            $tag = self::CACHETAG_ALBUMS;
+				$tag = self::CACHETAG_ALBUMS;
 				break;
 			case 'galleries':
-            $tag = self::CACHETAG_GALLERIES;
+				$tag = self::CACHETAG_GALLERIES;
 				break;
 			case 'tags':
-            $tag = self::CACHETAG_TAGS;
+				$tag = self::CACHETAG_TAGS;
 				break;
 			default:
 				return $render_parms;

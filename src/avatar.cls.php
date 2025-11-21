@@ -55,13 +55,13 @@ class Avatar extends Base {
 	 * @since 1.4
 	 */
 	public function __construct() {
+		$this->_tb = Data::cls()->tb( 'avatar' );
+
 		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
 			return;
 		}
 
 		self::debug2( '[Avatar] init' );
-
-		$this->_tb = $this->cls( 'Data' )->tb( 'avatar' );
 
 		$this->_conf_cache_ttl = $this->conf( self::O_DISCUSS_AVATAR_CACHE_TTL );
 
@@ -101,7 +101,7 @@ class Avatar extends Base {
 
 		$url = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT url FROM `' . $this->_tb . '` WHERE md5 = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT url FROM `' . $this->_tb . '` WHERE md5 = %s',  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$md5
 			)
 		);
@@ -139,7 +139,7 @@ class Avatar extends Base {
 		$realpath = $this->_realpath( $url );
 		$mtime    = file_exists( $realpath ) ? filemtime( $realpath ) : false;
 
-		if ( $mtime && time() - $mtime <= $this->_conf_cache_ttl ) {
+		if ( $mtime && time() - (int) $mtime <= $this->_conf_cache_ttl ) {
 			self::debug2( '[Avatar] cache file exists [url] ' . $url );
 			return $this->_rewrite( $url, $mtime );
 		}
@@ -150,7 +150,7 @@ class Avatar extends Base {
 		}
 
 		// Throttle generation.
-		if ( ! empty( $this->_summary['curr_request'] ) && time() - $this->_summary['curr_request'] < 300 ) {
+		if ( ! empty( $this->_summary['curr_request'] ) && time() - (int) $this->_summary['curr_request'] < 300 ) {
 			self::debug2( '[Avatar] Bypass generating due to interval limit [url] ' . $url );
 			return $url;
 		}
@@ -244,7 +244,7 @@ class Avatar extends Base {
 
 		// For cron, need to check request interval too.
 		if ( ! $force ) {
-			if ( ! empty( $_instance->_summary['curr_request'] ) && time() - $_instance->_summary['curr_request'] < 300 ) {
+			if ( ! empty( $_instance->_summary['curr_request'] ) && time() - (int) $_instance->_summary['curr_request'] < 300 ) {
 				self::debug( '[Avatar] curr_request too close' );
 				return;
 			}
@@ -314,7 +314,7 @@ class Avatar extends Base {
 		// Save summary data
 		self::save_summary(
 			array(
-				'last_spent'   => time() - $this->_summary['curr_request'],
+				'last_spent'   => time() - (int) $this->_summary['curr_request'],
 				'last_request' => $this->_summary['curr_request'],
 				'curr_request' => 0,
 			)

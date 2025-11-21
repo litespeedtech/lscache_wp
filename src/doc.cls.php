@@ -106,7 +106,7 @@ class Doc {
 			esc_url( $url ),
 			$target_rel, // Already hardcoded/safe.
 			esc_attr( $css_class ),
-			esc_html( $title )
+			wp_kses_post( $title )
 		);
 
 		if ( $return_output ) {
