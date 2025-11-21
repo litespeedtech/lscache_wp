@@ -267,6 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Fixed a potential warning caused by variable type casting. (userb52 PR#925)
 * **Cloud** Added null-safe handling for `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
 * **Cloud** Fixed number casts fatal error on PHP8 when no timestamp logged. (Patryk Chowratowicz #938)
+* **Crawler** Dropped redundant functions after reformatted.
 * **Vary** Fixed the issue that the user failed to login when has no group.
 * **Avatar** Fixed queue warning when table is missing, and resolved HTML escaping warnings. (PR#928)
 * **3rd** Improved WPML image lazyload detection. (#657426)
