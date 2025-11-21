@@ -1,28 +1,34 @@
 <?php
-// phpcs:ignoreFile
 /**
  * The Third Party integration with the WPLister plugin.
  *
- * @since        1.1.0
+ * Hooks WPLister inventory status updates to LiteSpeed WooCommerce backend purging.
+ *
+ * @since 1.1.0
+ * @package LiteSpeed
  */
+
 namespace LiteSpeed\Thirdparty;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * WPLister integration for LiteSpeed Cache.
+ */
 class WPLister {
 
 	/**
-	 * Detects if WooCommerce and WPLister are installed.
+	 * Detects if WooCommerce and WPLister are installed and registers hooks.
 	 *
 	 * @since 1.1.0
-	 * @access public
+	 * @return void
 	 */
 	public static function detect() {
-		if (defined('WOOCOMMERCE_VERSION') && defined('WPLISTER_VERSION')) {
+		if ( defined( 'WOOCOMMERCE_VERSION' ) && defined( 'WPLISTER_VERSION' ) ) {
 			// User reported this will sync correctly.
-			add_action('wplister_revise_inventory_status', array( WooCommerce::cls(), 'backend_purge' ));
+			add_action( 'wplister_revise_inventory_status', [ WooCommerce::cls(), 'backend_purge' ] );
 			// Added as a safety measure for WPLister Pro only.
-			add_action('wplister_inventory_status_changed', array( WooCommerce::cls(), 'backend_purge' ));
+			add_action( 'wplister_inventory_status_changed', [ WooCommerce::cls(), 'backend_purge' ] );
 		}
 	}
 }

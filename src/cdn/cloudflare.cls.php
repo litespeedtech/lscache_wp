@@ -85,7 +85,7 @@ class Cloudflare extends Base {
 			$curr_status = array();
 		}
 		$curr_status['devmode']         = $res['value'];
-		$curr_status['devmode_expired'] = $res['time_remaining'] + time();
+		$curr_status['devmode_expired'] = (int) $res['time_remaining'] + time();
 
 		// update status
 		self::update_option(self::ITEM_STATUS, $curr_status);
