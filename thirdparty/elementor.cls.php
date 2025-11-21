@@ -13,8 +13,6 @@
 
 namespace LiteSpeed\Thirdparty;
 
-use LiteSpeed\Purge;
-
 defined('WPINC') || exit();
 
 /**
@@ -70,9 +68,6 @@ class Elementor {
 
 		// Clear LSC cache when Elementor regenerates CSS & Data.
 		add_action( 'elementor/core/files/clear_cache', __CLASS__ . '::regenerate_litespeed_cache' );
-
-		// Clear LSC cache on Elementor Form Submission
-		add_action('elementor_pro/forms/new_record', __CLASS__ . '::purge_lscache'); 
 	}
 
 	/**
@@ -95,9 +90,5 @@ class Elementor {
 	 */
 	public static function regenerate_litespeed_cache() {
 		do_action( 'litespeed_purge_all', 'Elementor - Regenerate CSS & Data' );
-	}
-
-	public static function purge_lscache() {
-		Purge::purge_all_lscache('Elementor Form Submission');
 	}
 }
