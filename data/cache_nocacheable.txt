@@ -5,3 +5,6 @@
 
 # WP v6.6 Official Site Editor (Appearance >> Editor)
 ^/wp-json/wp/v2
+
+# Elementor API
+^/wp-json/elementor/v1
