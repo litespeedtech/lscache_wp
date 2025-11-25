@@ -61,10 +61,8 @@ class WCML {
 	 * @return string The applied currency.
 	 */
 	public static function apply_client_currency( $currency ) {
-		if (wcml_get_woocommerce_currency_option() !== $currency) {
-			self::$_currency = $currency;
-			add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
-		}
+		self::$_currency = $currency;
+		add_filter('litespeed_vary', __CLASS__ . '::apply_vary');
 
 		return $currency;
 	}
@@ -79,6 +77,7 @@ class WCML {
 	 */
 	public static function apply_vary( $vary_list ) {
 		$vary_list['wcml_currency'] = self::$_currency;
+		
 		return $vary_list;
 	}
 }
