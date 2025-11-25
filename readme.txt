@@ -273,6 +273,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Avatar** Fixed queue warning when table is missing, and resolved HTML escaping warnings. (PR#928)
 * **3rd** Improved WPML image lazyload detection. (#657426)
 * **3rd** Fixed Elementor Form submit caching issue. (PR#932)
+* **3rd** Fixed cache issue when WCML currency changed. (PR#929)
 
 = 7.6.2 - Oct 17 2025 =
 * 🐞**Cloud** Fixed the PHP 8+ typecast issue in QUIC.cloud signature verification which caused activation failures.
