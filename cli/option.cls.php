@@ -97,6 +97,7 @@ class Option extends Base {
 	 *     # Get all options
 	 *     $ wp litespeed-option all
 	 *     $ wp litespeed-option all --json
+	 *     $ wp litespeed-option all --format=json
 	 *
 	 * @param array $args Positional arguments.
 	 * @param array $assoc_args Associative arguments.
