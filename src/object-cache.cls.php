@@ -230,14 +230,14 @@ class Object_Cache extends Root {
 	 *
 	 * @var array
 	 */
-	private $_global_groups = array();
+	private $_global_groups = [];
 
 	/**
 	 * Non-persistent groups.
 	 *
 	 * @var array
 	 */
-	private $_non_persistent_groups = array();
+	private $_non_persistent_groups = [];
 
 	/**
 	 * Init.
@@ -309,8 +309,8 @@ class Object_Cache extends Root {
 				$this->_cfg_db                = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
 				$this->_cfg_user              = ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : '';
 				$this->_cfg_pswd              = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
-				$this->_global_groups         = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : array();
-				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : array();
+				$this->_global_groups         = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : [];
+				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : [];
 
 				if ( $this->_cfg_method ) {
 					$this->_oc_driver = 'Redis';
@@ -378,7 +378,7 @@ class Object_Cache extends Root {
 	 * @return bool
 	 */
 	private function _is_transients_group( $group ) {
-		return in_array( $group, array( 'transient', 'site-transient' ), true );
+		return in_array( $group, [ 'transient', 'site-transient' ], true );
 	}
 
 	/**
@@ -524,7 +524,7 @@ class Object_Cache extends Root {
 
 				if ( $this->_cfg_pswd ) {
 					if ( $this->_cfg_user ) {
-						$this->_conn->auth( array( $this->_cfg_user, $this->_cfg_pswd ) );
+						$this->_conn->auth( [ $this->_cfg_user, $this->_cfg_pswd ] );
 					} else {
 						$this->_conn->auth( $this->_cfg_pswd );
 					}
@@ -805,7 +805,7 @@ class Object_Cache extends Root {
 	 */
 	public function add_global_groups( $groups ) {
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups );
+			$groups = [ $groups ];
 		}
 
 		$this->_global_groups = array_merge( $this->_global_groups, $groups );
@@ -836,7 +836,7 @@ class Object_Cache extends Root {
 	 */
 	public function add_non_persistent_groups( $groups ) {
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups );
+			$groups = [ $groups ];
 		}
 
 		$this->_non_persistent_groups = array_merge( $this->_non_persistent_groups, $groups );

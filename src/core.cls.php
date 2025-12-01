@@ -92,8 +92,8 @@ class Core extends Root {
 		 * @since 2.7.1 Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php';
-		register_activation_hook( $plugin_file, array( __NAMESPACE__ . '\Activation', 'register_activation' ) );
-		register_deactivation_hook( $plugin_file, array( __NAMESPACE__ . '\Activation', 'register_deactivation' ) );
+		register_activation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_activation' ] );
+		register_deactivation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_deactivation' ] );
 		register_uninstall_hook( $plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache' );
 
 		if ( defined( 'LITESPEED_ON' ) ) {
@@ -108,7 +108,7 @@ class Core extends Root {
 			}
 			foreach ( $purge_all_events as $event ) {
 				// Don't allow hook to update_option because purge_all will cause infinite loop of update_option
-				if ( in_array( $event, array( 'update_option' ), true ) ) {
+				if ( in_array( $event, [ 'update_option' ], true ) ) {
 					continue;
 				}
 				add_action( $event, __NAMESPACE__ . '\Purge::purge_all' );
@@ -127,7 +127,7 @@ class Core extends Root {
 			} );
 		}
 
-		add_action( 'after_setup_theme', array( $this, 'init' ) );
+		add_action( 'after_setup_theme', [ $this, 'init' ] );
 
 		// Check if there is a purge request in queue
 		if ( ! defined( 'LITESPEED_CLI' ) ) {
@@ -205,9 +205,9 @@ class Core extends Root {
 
 		do_action( 'litespeed_initing' );
 
-		ob_start( array( $this, 'send_headers_force' ) );
-		add_action( 'shutdown', array( $this, 'send_headers' ), 0 );
-		add_action( 'wp_footer', array( $this, 'footer_hook' ) );
+		ob_start( [ $this, 'send_headers_force' ] );
+		add_action( 'shutdown', [ $this, 'send_headers' ], 0 );
+		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
 		/**
 		 * Check if is non-optimization simulator
@@ -233,10 +233,10 @@ class Core extends Root {
 		$this->cls( 'Tag' )->init();
 
 		// Load hooks that may be related to users
-		add_action( 'init', array( $this, 'after_user_init' ), 5 );
+		add_action( 'init', [ $this, 'after_user_init' ], 5 );
 
 		// Load 3rd party hooks
-		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 );
+		add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 );
 	}
 
 	/**

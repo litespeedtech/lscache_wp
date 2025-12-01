@@ -161,7 +161,7 @@ class Activation extends Base {
 	 * @param array $args Arguments for get_sites().
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids( $args = array() ) {
+	public static function get_network_ids( $args = [] ) {
 		$args['fields'] = 'ids';
 		$blogs          = get_sites( $args );
 
@@ -181,10 +181,10 @@ class Activation extends Base {
 			return (int) $count;
 		}
 		// need to update
-		$default = array();
+		$default = [];
 		$count   = 0;
 
-		$sites = self::get_network_ids( array( 'deleted' => 0 ) );
+		$sites = self::get_network_ids( [ 'deleted' => 0 ] );
 		if ( empty( $sites ) ) {
 			return false;
 		}
@@ -386,9 +386,9 @@ class Activation extends Base {
 	 * @param array $options Plugin options.
 	 */
 	private function update_conf_data_file( $options ) {
-		$ids = array();
+		$ids = [];
 		if ( $options[ self::O_OBJECT ] ) {
-			$this_ids = array(
+			$this_ids = [
 				self::O_DEBUG,
 				self::O_OBJECT_KIND,
 				self::O_OBJECT_HOST,
@@ -402,23 +402,23 @@ class Activation extends Base {
 				self::O_OBJECT_TRANSIENTS,
 				self::O_OBJECT_GLOBAL_GROUPS,
 				self::O_OBJECT_NON_PERSISTENT_GROUPS,
-			);
+			];
 			$ids      = array_merge( $ids, $this_ids );
 		}
 
 		if ( $options[ self::O_GUEST ] ) {
-			$this_ids = array(
+			$this_ids = [
 				self::HASH,
 				self::O_CACHE_LOGIN_COOKIE,
 				self::O_DEBUG_IPS,
 				self::O_UTIL_NO_HTTPS_VARY,
 				self::O_GUEST_UAS,
 				self::O_GUEST_IPS,
-			);
+			];
 			$ids      = array_merge( $ids, $this_ids );
 		}
 
-		$data = array();
+		$data = [];
 		foreach ( $ids as $v ) {
 			$data[ $v ] = $options[ $v ];
 		}
@@ -503,7 +503,7 @@ class Activation extends Base {
 			return;
 		}
 
-		add_filter( 'auto_update_plugin', array( $this, 'auto_update_hook' ), 10, 2 );
+		add_filter( 'auto_update_plugin', [ $this, 'auto_update_hook' ], 10, 2 );
 	}
 
 	/**
@@ -616,7 +616,7 @@ class Activation extends Base {
 	 */
 	public function dash_notifier_get_plugin_info( $slug ) {
 		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		$result = plugins_api( 'plugin_information', array( 'slug' => $slug ) );
+		$result = plugins_api( 'plugin_information', [ 'slug' => $slug ] );
 
 		if ( is_wp_error( $result ) ) {
 			return false;
@@ -699,14 +699,14 @@ class Activation extends Base {
 
 			case self::TYPE_DISMISS_RECOMMENDED:
 				Cloud::reload_summary();
-				Cloud::save_summary( array( 'news.new' => 0 ) );
+				Cloud::save_summary( [ 'news.new' => 0 ] );
 				break;
 
 			case self::TYPE_INSTALL_ZIP:
 				Cloud::reload_summary();
 				$summary = Cloud::get_summary();
 				if ( ! empty( $summary['news.zip'] ) ) {
-					Cloud::save_summary( array( 'news.new' => 0 ) );
+					Cloud::save_summary( [ 'news.new' => 0 ] );
 
 					$this->cls( 'Debug2' )->beta_test( $summary['zip'] );
 				}

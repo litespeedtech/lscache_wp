@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 /**
  * LiteSpeed String Operator Library Class
  *
@@ -37,7 +36,7 @@ class Str {
 		}
 
 		foreach ( $matches[0] as $k => $html_to_be_replaced ) {
-			$link = '<a href="' . Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_API, false, null, array( 'action2' => $matches[1][ $k ] ) ) . '"';
+			$link = '<a href="' . Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_API, false, null, [ 'action2' => $matches[1][ $k ] ] ) . '"';
 			$html = str_replace( $html_to_be_replaced, $link, $html );
 		}
 		return $html;
@@ -54,16 +53,16 @@ class Str {
 	 * @return string The sanitized HTML string.
 	 */
 	public static function safe_html( $html ) {
-		$common_attrs = array(
-			'style'  => array(),
-			'class'  => array(),
-			'target' => array(),
-			'src'    => array(),
-			'color'  => array(),
-			'href'   => array(),
-		);
-		$tags         = array( 'hr', 'h3', 'h4', 'h5', 'ul', 'li', 'br', 'strong', 'p', 'span', 'img', 'a', 'div', 'font' );
-		$allowed_tags = array();
+		$common_attrs = [
+			'style'  => [],
+			'class'  => [],
+			'target' => [],
+			'src'    => [],
+			'color'  => [],
+			'href'   => [],
+		];
+		$tags         = [ 'hr', 'h3', 'h4', 'h5', 'ul', 'li', 'br', 'strong', 'p', 'span', 'img', 'a', 'div', 'font' ];
+		$allowed_tags = [];
 		foreach ( $tags as $tag ) {
 			$allowed_tags[ $tag ] = $common_attrs;
 		}

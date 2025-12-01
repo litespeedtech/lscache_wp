@@ -134,31 +134,31 @@ class Vary extends Root {
 			}
 
 			// Clear login state on logout.
-			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) );
+			add_action( 'clear_auth_cookie', [ $this, 'remove_logged_in' ] );
 		} else {
 			// Only after vary init we can detect guest mode.
 			$this->_maybe_guest_mode();
 
 			// Set vary cookie when user logs in (to avoid guest vary).
-			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 );
+			add_action( 'set_logged_in_cookie', [ $this, 'add_logged_in' ], 10, 4 );
 			add_action( 'wp_login', __NAMESPACE__ . '\Purge::purge_on_logout' );
 
 			$this->cls( 'Control' )->init_cacheable();
 
 			// Check login-page cacheable setting — login page doesn't go through main WP logic.
-			add_action( 'login_init', array( $this->cls( 'Tag' ), 'check_login_cacheable' ), 5 );
+			add_action( 'login_init', [ $this->cls( 'Tag' ), 'check_login_cacheable' ], 5 );
 
 			// Optional lightweight guest vary updater.
 			if ( ! empty( $_GET['litespeed_guest'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				add_action( 'wp_loaded', array( $this, 'update_guest_vary' ), 20 );
+				add_action( 'wp_loaded', [ $this, 'update_guest_vary' ], 20 );
 			}
 		}
 
 		// Commenter checks.
-		add_filter( 'comments_array', array( $this, 'check_commenter' ) );
+		add_filter( 'comments_array', [ $this, 'check_commenter' ] );
 
 		// Set vary cookie for commenter.
-		add_action( 'set_comment_cookies', array( $this, 'append_commenter' ) );
+		add_action( 'set_comment_cookies', [ $this, 'append_commenter' ] );
 
 		// REST: don't change vary because they don't carry on user info usually.
 		add_action(
@@ -246,7 +246,7 @@ class Vary extends Root {
 		self::debug( 'Will update guest vary in finalize' );
 
 		// Return JSON to trigger reload.
-		echo wp_json_encode( array( 'reload' => 'yes' ) );
+		echo wp_json_encode( [ 'reload' => 'yes' ] );
 		exit;
 	}
 
@@ -472,7 +472,7 @@ class Vary extends Root {
 		$found = array_intersect( $roles, array_keys( (array) $vary_groups ) );
 
 		if ( $found ) {
-			$groups = array();
+			$groups = [];
 			foreach ( $found as $curr_role ) {
 				$groups[] = $vary_groups[ $curr_role ];
 			}
@@ -503,7 +503,7 @@ class Vary extends Root {
 			return false;
 		}
 
-		$vary = array();
+		$vary = [];
 
 		if ( $this->conf( Base::O_GUEST ) ) {
 			$vary['guest_mode'] = 1;
@@ -556,7 +556,7 @@ class Vary extends Root {
 		}
 
 		ksort( $vary );
-		$list = array();
+		$list = [];
 		foreach ( $vary as $key => $val ) {
 			$list[] = $key . ':' . $val;
 		}
@@ -697,7 +697,7 @@ class Vary extends Root {
 	private function _finalize_curr_vary_cookies( $values_json = false ) {
 		global $post;
 
-		$cookies = array(); // No need to append default vary cookie name.
+		$cookies = []; // No need to append default vary cookie name.
 
 		if ( ! empty( $post->post_password ) ) {
 			$postpass_key = 'wp-postpass_' . COOKIEHASH;

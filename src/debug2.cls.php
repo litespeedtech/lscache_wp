@@ -89,12 +89,12 @@ class Debug2 extends Root {
 		$disabled = self::cls()->conf( Base::DEBUG_TMP_DISABLE );
 
 		if ( 0 === $disabled ) {
-			$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => time() + (int) $time ) );
+			$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => time() + (int) $time ] );
 			self::debug2( 'LiteSpeed Cache temporary disabled.' );
 			return;
 		}
 
-		$conf->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		$conf->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
 		self::debug2( 'LiteSpeed Cache reactivated.' );
 	}
 
@@ -117,7 +117,7 @@ class Debug2 extends Root {
 			return true;
 		}
 
-		Conf::cls()->update_confs( array( Base::DEBUG_TMP_DISABLE => 0 ) );
+		Conf::cls()->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
 		return false;
 	}
 
@@ -256,9 +256,9 @@ class Debug2 extends Root {
 	 * @return string|false
 	 */
 	private function _package_zip( $commit ) {
-		$data = array(
+		$data = [
 			'commit' => $commit,
-		);
+		];
 		$res  = Cloud::get( Cloud::API_BETA_TEST, $data );
 
 		if ( empty( $res['zip'] ) ) {
@@ -642,7 +642,7 @@ class Debug2 extends Root {
 	 * @return void
 	 */
 	private function _clear_log() {
-		$logs = array( 'debug', 'purge', 'crawler' );
+		$logs = [ 'debug', 'purge', 'crawler' ];
 		foreach ( $logs as $log ) {
 			File::save( $this->path( $log ), '' );
 		}

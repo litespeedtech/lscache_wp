@@ -40,7 +40,7 @@ class Avatar extends Base {
 	 *
 	 * @var array<string,string>
 	 */
-	private $_avatar_realtime_gen_dict = array();
+	private $_avatar_realtime_gen_dict = [];
 
 	/**
 	 * Summary/status data for last requests.
@@ -65,7 +65,7 @@ class Avatar extends Base {
 
 		$this->_conf_cache_ttl = $this->conf( self::O_DISCUSS_AVATAR_CACHE_TTL );
 
-		add_filter( 'get_avatar_url', array( $this, 'crawl_avatar' ) );
+		add_filter( 'get_avatar_url', [ $this, 'crawl_avatar' ] );
 
 		$this->_summary = self::get_summary();
 	}
@@ -282,9 +282,9 @@ class Avatar extends Base {
 
 		// Mark request start
 		self::save_summary(
-			array(
+			[
 				'curr_request' => time(),
-			)
+			]
 		);
 
 		// Ensure cache directory exists
@@ -292,11 +292,11 @@ class Avatar extends Base {
 
 		$response = wp_safe_remote_get(
 			$url,
-			array(
+			[
 				'timeout'  => 180,
 				'stream'   => true,
 				'filename' => $file,
-			)
+			]
 		);
 
 		self::debug( '[Avatar] _generate [url] ' . $url );
@@ -313,11 +313,11 @@ class Avatar extends Base {
 
 		// Save summary data
 		self::save_summary(
-			array(
+			[
 				'last_spent'   => time() - (int) $this->_summary['curr_request'],
 				'last_request' => $this->_summary['curr_request'],
 				'curr_request' => 0,
-			)
+			]
 		);
 
 		// Update/insert DB record

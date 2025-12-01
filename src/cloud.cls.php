@@ -1513,11 +1513,11 @@ class Cloud extends Base {
 	 * @return string
 	 */
 	public function qc_link() {
-		$data = array(
+		$data = [
 			'site_url' => site_url(),
 			'ver' => LSCWP_V,
 			'ref' => $this->_get_ref_url(),
-		);
+		];
 		return $this->_cloud_server_dash . '/u/wp3/manage?data=' . rawurlencode( Utility::arr2str( $data ) ); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
 	}
 
@@ -1881,7 +1881,7 @@ class Cloud extends Base {
 				$this->_reset_qc_reg();
 			}
 
-			return array( $json, true );
+			return [ $json, true ];
 		}
 
 		unset( $json['_res'] );
@@ -1889,7 +1889,7 @@ class Cloud extends Base {
 			unset( $json['_msg'] );
 		}
 
-		return array( $json, false );
+		return [ $json, false ];
 	}
 
 	/**
@@ -2074,7 +2074,7 @@ class Cloud extends Base {
 
 		self::debug( '__callback IP request hash: ' . $resp_hash );
 
-		return self::ok( array( 'hash' => $resp_hash ) );
+		return self::ok( [ 'hash' => $resp_hash ] );
 	}
 
 	/**
@@ -2138,7 +2138,7 @@ class Cloud extends Base {
 		$json = \json_decode( $response['body'], true );
 
 		self::debug( 'Load ips', $json );
-		self::save_summary( array( 'ips' => $json ) );
+		self::save_summary( [ 'ips' => $json ] );
 	}
 
 	/**
@@ -2164,10 +2164,10 @@ class Cloud extends Base {
 	 */
 	public static function err( $code ) {
 		self::debug( '❌ Error response code: ' . $code );
-		return array(
+		return [
 			'_res' => 'err',
 			'_msg' => $code,
-		);
+		];
 	}
 
 	/**
@@ -2178,14 +2178,14 @@ class Cloud extends Base {
 	 * @return array
 	 */
 	public function ping() {
-		$resp = array(
+		$resp = [
 			'v_lscwp'     => Core::VER,
 			'v_lscwp_db'  => $this->conf( self::_VER ),
 			'v_php'       => PHP_VERSION,
 			'v_wp'        => $GLOBALS['wp_version'],
 			'home_url'    => home_url(),
 			'site_url'    => site_url(),
-		);
+		];
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! empty( $_POST['funcs'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

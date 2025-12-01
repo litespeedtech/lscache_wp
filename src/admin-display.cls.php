@@ -141,14 +141,14 @@ class Admin_Display extends Base {
 	 *
 	 * @var array<string,string>
 	 */
-	protected $messages = array();
+	protected $messages = [];
 
 	/**
 	 * Cached default settings.
 	 *
 	 * @var array<string,mixed>
 	 */
-	protected $default_settings = array();
+	protected $default_settings = [];
 
 	/**
 	 * Whether current context is network admin.
@@ -262,9 +262,9 @@ class Admin_Display extends Base {
 		];
 
 		// main css
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_style' ] );
 		// Main js
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 		$this->_is_network_admin = is_network_admin();
 		$this->_is_multisite     = is_multisite();
@@ -273,10 +273,10 @@ class Admin_Display extends Base {
 		$manage = ( $this->_is_multisite && $this->_is_network_admin ) ? 'manage_network_options' : 'manage_options';
 
 		if ( current_user_can( $manage ) ) {
-			add_action( 'wp_before_admin_bar_render', array( GUI::cls(), 'backend_shortcut' ) );
+			add_action( 'wp_before_admin_bar_render', [ GUI::cls(), 'backend_shortcut' ] );
 
 			// `admin_notices` is after `admin_enqueue_scripts`.
-			add_action( $this->_is_network_admin ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) );
+			add_action( $this->_is_network_admin ? 'network_admin_notices' : 'admin_notices', [ $this, 'display_messages' ] );
 		}
 
 		/**
@@ -291,9 +291,9 @@ class Admin_Display extends Base {
 
 		// add menus (Also check for mu-plugins)
 		if ( $this->_is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
-			add_action( 'network_admin_menu', array( $this, 'register_admin_menu' ) );
+			add_action( 'network_admin_menu', [ $this, 'register_admin_menu' ] );
 		} else {
-			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
+			add_action( 'admin_menu', [ $this, 'register_admin_menu' ] );
 		}
 
 		$this->cls( 'Metabox' )->register_settings();
@@ -409,8 +409,8 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	public function enqueue_style() {
-		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), Core::VER, 'all' );
-        wp_enqueue_style( Core::PLUGIN_NAME . '-dark-mode', LSWCP_PLUGIN_URL . 'assets/css/litespeed-dark-mode.css', array(), Core::VER, 'all' );
+		wp_enqueue_style( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', [], Core::VER, 'all' );
+        wp_enqueue_style( Core::PLUGIN_NAME . '-dark-mode', LSWCP_PLUGIN_URL . 'assets/css/litespeed-dark-mode.css', [], Core::VER, 'all' );
 	}
 
 	/**
@@ -421,9 +421,9 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), Core::VER, true );
+		wp_register_script( Core::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', [], Core::VER, true );
 
-		$localize_data = array();
+		$localize_data = [];
 		if ( GUI::has_whm_msg() ) {
 			$ajax_url_dismiss_whm                  = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_WHM, true );
 			$localize_data['ajax_url_dismiss_whm'] = $ajax_url_dismiss_whm;
@@ -439,26 +439,26 @@ class Admin_Display extends Base {
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( 'admin.php' === $pagenow && $page && ( 0 === strpos( $page, 'litespeed-' ) || 'litespeed' === $page ) ) {
-			if ( in_array( $page, array( 'litespeed-crawler', 'litespeed-cdn' ), true ) ) {
+			if ( in_array( $page, [ 'litespeed-crawler', 'litespeed-cdn' ], true ) ) {
 				// Babel JS type correction
-				add_filter( 'script_loader_tag', array( $this, 'babel_type' ), 10, 3 );
+				add_filter( 'script_loader_tag', [ $this, 'babel_type' ], 10, 3 );
 
-				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', array(), Core::VER, false );
-				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', array(), Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', [], Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', [], Core::VER, false );
 			}
 
 			// Crawler Cookie Simulation
 			if ( 'litespeed-crawler' === $page ) {
-				wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/component.crawler.js', array(), Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/component.crawler.js', [], Core::VER, false );
 
-				$localize_data['lang']                              = array();
+				$localize_data['lang']                              = [];
 				$localize_data['lang']['cookie_name']               = __( 'Cookie Name', 'litespeed-cache' );
 				$localize_data['lang']['cookie_value']              = __( 'Cookie Values', 'litespeed-cache' );
 				$localize_data['lang']['one_per_line']              = Doc::one_per_line( true );
 				$localize_data['lang']['remove_cookie_simulation']  = __( 'Remove cookie simulation', 'litespeed-cache' );
 				$localize_data['lang']['add_cookie_simulation_row'] = __( 'Add new cookie to simulate', 'litespeed-cache' );
 				if ( empty( $localize_data['ids'] ) ) {
-					$localize_data['ids'] = array();
+					$localize_data['ids'] = [];
 				}
 				$localize_data['ids']['crawler_cookies'] = self::O_CRAWLER_COOKIES;
 			}
@@ -472,8 +472,8 @@ class Admin_Display extends Base {
 				}
 				$cdn_url = 'https://cdn.' . substr( $home_url, 2 );
 
-				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', array(), Core::VER, false );
-				$localize_data['lang']                         = array();
+				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', [], Core::VER, false );
+				$localize_data['lang']                         = [];
 				$localize_data['lang']['cdn_mapping_url']      = Lang::title( self::CDN_MAPPING_URL );
 				$localize_data['lang']['cdn_mapping_inc_img']  = Lang::title( self::CDN_MAPPING_INC_IMG );
 				$localize_data['lang']['cdn_mapping_inc_css']  = Lang::title( self::CDN_MAPPING_INC_CSS );
@@ -486,7 +486,7 @@ class Admin_Display extends Base {
 				$localize_data['lang']['on']                   = __( 'ON', 'litespeed-cache' );
 				$localize_data['lang']['off']                  = __( 'OFF', 'litespeed-cache' );
 				if ( empty( $localize_data['ids'] ) ) {
-					$localize_data['ids'] = array();
+					$localize_data['ids'] = [];
 				}
 				$localize_data['ids']['cdn_mapping'] = self::O_CDN_MAPPING;
 			}
@@ -495,9 +495,9 @@ class Admin_Display extends Base {
 		// Load iziModal JS and CSS
 		$show_deactivation_modal = ( is_multisite() && ! is_network_admin() ) ? false : true;
 		if ( $show_deactivation_modal && 'plugins.php' === $pagenow ) {
-			wp_enqueue_script( Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/js/iziModal.min.js', array(), Core::VER, true );
-			wp_enqueue_style( Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/css/iziModal.min.css', array(), Core::VER, 'all' );
-			add_action( 'admin_footer', array( $this, 'add_deactivation_html' ) );
+			wp_enqueue_script( Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/js/iziModal.min.js', [], Core::VER, true );
+			wp_enqueue_style( Core::PLUGIN_NAME . '-iziModal', LSWCP_PLUGIN_URL . 'assets/css/iziModal.min.css', [], Core::VER, 'all' );
+			add_action( 'admin_footer', [ $this, 'add_deactivation_html' ] );
 		}
 
 		if ( $localize_data ) {
@@ -665,15 +665,15 @@ class Admin_Display extends Base {
 	 */
 	public static function add_unique_notice( $color_mode, $msgs, $irremovable = false ) {
 		if ( ! is_array( $msgs ) ) {
-			$msgs = array( $msgs );
+			$msgs = [ $msgs ];
 		}
 
-		$color_map = array(
+		$color_map = [
 			'info'    => self::NOTICE_BLUE,
 			'note'    => self::NOTICE_YELLOW,
 			'success' => self::NOTICE_GREEN,
 			'error'   => self::NOTICE_RED,
-		);
+		];
 		if ( empty( $color_map[ $color_mode ] ) ) {
 			self::debug( 'Wrong admin display color mode!' );
 			return;
@@ -681,7 +681,7 @@ class Admin_Display extends Base {
 		$color = $color_map[ $color_mode ];
 
 		// Go through to make sure unique.
-		$filtered_msgs = array();
+		$filtered_msgs = [];
 		foreach ( $msgs as $k => $str ) {
 			if ( is_numeric( $k ) ) {
 				$k = md5( $str );
@@ -710,7 +710,7 @@ class Admin_Display extends Base {
 			// WP CLI will show the info directly
 			if ( defined( 'WP_CLI' ) && constant('WP_CLI') ) {
 				if ( ! is_array( $msg ) ) {
-					$msg = array( $msg );
+					$msg = [ $msg ];
 				}
 				foreach ( $msg as $v ) {
 					$v = wp_strip_all_tags( $v );
@@ -731,9 +731,9 @@ class Admin_Display extends Base {
 
 		$msg_name = $irremovable ? self::DB_MSG_PIN : self::DB_MSG;
 
-		$messages = self::get_option( $msg_name, array() );
+		$messages = self::get_option( $msg_name, [] );
 		if ( ! is_array( $messages ) ) {
-			$messages = array();
+			$messages = [];
 		}
 
 		if ( is_array( $msg ) ) {
@@ -768,7 +768,7 @@ class Admin_Display extends Base {
 		Cloud::cls()->check_dev_version();
 
 		// One time msg
-		$messages       = self::get_option( self::DB_MSG, array() );
+		$messages       = self::get_option( self::DB_MSG, [] );
 		$added_thickbox = false;
 		if ( is_array( $messages ) ) {
 			foreach ( $messages as $msg ) {
@@ -785,7 +785,7 @@ class Admin_Display extends Base {
 		}
 
 		// Pinned msg
-		$messages = self::get_option( self::DB_MSG_PIN, array() );
+		$messages = self::get_option( self::DB_MSG_PIN, [] );
 		if ( is_array( $messages ) ) {
 			foreach ( $messages as $k => $msg ) {
 				// Added for popup links
@@ -796,7 +796,7 @@ class Admin_Display extends Base {
 
 				// Append close btn
 				if ( '</div>' === substr( $msg, -6 ) ) {
-					$link = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PIN, false, null, array( 'msgid' => $k ) );
+					$link = Utility::build_url( Core::ACTION_DISMISS, GUI::TYPE_DISMISS_PIN, false, null, [ 'msgid' => $k ] );
 					$msg  =
 						substr( $msg, 0, -6 ) .
 						'<p><a href="' .
@@ -846,7 +846,7 @@ class Admin_Display extends Base {
 			return;
 		}
 
-		$messages = self::get_option( self::DB_MSG_PIN, array() );
+		$messages = self::get_option( self::DB_MSG_PIN, [] );
 		$msgid    = sanitize_text_field( wp_unslash( $_GET['msgid'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! is_array( $messages ) || empty( $messages[ $msgid ] ) ) {
@@ -872,7 +872,7 @@ class Admin_Display extends Base {
 	 */
 	public static function dismiss_pin_by_content( $content, $color, $irremovable ) {
 		$content  = self::build_notice( $color, $content, $irremovable );
-		$messages = self::get_option( self::DB_MSG_PIN, array() );
+		$messages = self::get_option( self::DB_MSG_PIN, [] );
 		$hit      = false;
 		if ( -1 !== $messages ) {
 			foreach ( $messages as $k => $v ) {
@@ -995,7 +995,7 @@ class Admin_Display extends Base {
 		echo "<div class='litespeed-top20'></div>";
 
 		if ( ! defined( 'LITESPEED_CONF_LOADED' ) ) {
-			submit_button( __( 'Save Changes', 'litespeed-cache' ), 'secondary litespeed-duplicate-float', 'litespeed-submit', true, array( 'disabled' => 'disabled' ) );
+			submit_button( __( 'Save Changes', 'litespeed-cache' ), 'secondary litespeed-duplicate-float', 'litespeed-submit', true, [ 'disabled' => 'disabled' ] );
 
 			echo '</div>';
 		} else {
@@ -1004,9 +1004,9 @@ class Admin_Display extends Base {
 				'primary litespeed-duplicate-float',
 				'litespeed-submit',
 				true,
-				array(
+				[
 					'id' => 'litespeed-submit-' . $this->_btn_i++,
-				)
+				]
 			);
 
 			echo '</form>';
@@ -1194,7 +1194,7 @@ class Admin_Display extends Base {
 		echo '<div class="litespeed-switch">';
 
 		if ( ! $title_list ) {
-			$title_list = array( __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) );
+			$title_list = [ __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ];
 		}
 
 		foreach ( $title_list as $k => $v ) {
@@ -1410,7 +1410,7 @@ class Admin_Display extends Base {
 		}
 
 		if ( ! is_array( $val ) ) {
-			$val = array( $val );
+			$val = [ $val ];
 		}
 
 		foreach ( $val as $v ) {
@@ -1453,7 +1453,7 @@ class Admin_Display extends Base {
 	protected function _validate_ttl( $id, $min = false, $max = false, $allow_zero = false ) {
 		$val = $this->conf( $id, true );
 
-		$tip = array();
+		$tip = [];
 		if ( $min && $val < $min && ( ! $allow_zero || 0 !== $val ) ) {
 			$tip[] = esc_html__( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.';
 		}
@@ -1499,10 +1499,10 @@ class Admin_Display extends Base {
 		}
 
 		if ( ! is_array( $val ) ) {
-			$val = array( $val );
+			$val = [ $val ];
 		}
 
-		$tip = array();
+		$tip = [];
 		foreach ( $val as $v ) {
 			if ( ! $v ) {
 				continue;

@@ -27,47 +27,47 @@ class Task extends Root {
 	 *
 	 * @var array<string,array{name:string,hook:callable|string}>
 	 */
-	private static $_triggers = array(
-		Base::O_IMG_OPTM_CRON => array(
+	private static $_triggers = [
+		Base::O_IMG_OPTM_CRON => [
 			'name' => 'litespeed_task_imgoptm_pull',
 			'hook' => 'LiteSpeed\Img_Optm::start_async_cron',
-		), // always fetch immediately
-		Base::O_OPTM_CSS_ASYNC => array(
+		], // always fetch immediately
+		Base::O_OPTM_CSS_ASYNC => [
 			'name' => 'litespeed_task_ccss',
 			'hook' => 'LiteSpeed\CSS::cron_ccss',
-		),
-		Base::O_OPTM_UCSS => array(
+		],
+		Base::O_OPTM_UCSS => [
 			'name' => 'litespeed_task_ucss',
 			'hook' => 'LiteSpeed\UCSS::cron',
-		),
-		Base::O_MEDIA_VPI_CRON => array(
+		],
+		Base::O_MEDIA_VPI_CRON => [
 			'name' => 'litespeed_task_vpi',
 			'hook' => 'LiteSpeed\VPI::cron',
-		),
-		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => array(
+		],
+		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => [
 			'name' => 'litespeed_task_lqip',
 			'hook' => 'LiteSpeed\Placeholder::cron',
-		),
-		Base::O_DISCUSS_AVATAR_CRON => array(
+		],
+		Base::O_DISCUSS_AVATAR_CRON => [
 			'name' => 'litespeed_task_avatar',
 			'hook' => 'LiteSpeed\Avatar::cron',
-		),
-		Base::O_IMG_OPTM_AUTO => array(
+		],
+		Base::O_IMG_OPTM_AUTO => [
 			'name' => 'litespeed_task_imgoptm_req',
 			'hook' => 'LiteSpeed\Img_Optm::cron_auto_request',
-		),
-		Base::O_CRAWLER => array(
+		],
+		Base::O_CRAWLER => [
 			'name' => 'litespeed_task_crawler',
 			'hook' => 'LiteSpeed\Crawler::start_async_cron',
-		), // Set crawler to last one to use above results
-	);
+		], // Set crawler to last one to use above results
+	];
 
 	/**
 	 * Options allowed to run for guest optimization.
 	 *
 	 * @var array<int,string>
 	 */
-	private static $_guest_options = array( Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI );
+	private static $_guest_options = [ Base::O_OPTM_CSS_ASYNC, Base::O_OPTM_UCSS, Base::O_MEDIA_VPI ];
 
 	/**
 	 * Schedule id for crawler.
@@ -92,7 +92,7 @@ class Task extends Root {
 	 */
 	public function init() {
 		self::debug2( 'Init' );
-		add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter' ) );
+		add_filter( 'cron_schedules', [ $this, 'lscache_cron_filter' ] );
 
 		$guest_optm = $this->conf( Base::O_GUEST ) && $this->conf( Base::O_GUEST_OPTM );
 
@@ -113,7 +113,7 @@ class Task extends Root {
 					continue;
 				}
 
-				add_filter( 'cron_schedules', array( $this, 'lscache_cron_filter_crawler' ) ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
+				add_filter( 'cron_schedules', [ $this, 'lscache_cron_filter_crawler' ] ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 			}
 
 			if ( ! wp_next_scheduled( $trigger['name'] ) ) {
@@ -137,7 +137,7 @@ class Task extends Root {
 	 * @return void
 	 */
 	public static function async_litespeed_handler() {
-		$hash_data = self::get_option( 'async_call-hash', array() );
+		$hash_data = self::get_option( 'async_call-hash', [] );
 		if ( ! $hash_data || ! is_array( $hash_data ) || empty( $hash_data['hash'] ) || empty( $hash_data['ts'] ) ) {
 			self::debug( 'async_litespeed_handler no hash data', $hash_data );
 			return;
@@ -186,24 +186,24 @@ class Task extends Root {
 		$hash = Str::rrand( 32 );
 		self::update_option(
 			'async_call-hash',
-			array(
+			[
 				'hash' => $hash,
 				'ts'   => time(),
-			)
+			]
 		);
 
-		$args = array(
+		$args = [
 			'timeout'   => 0.01,
 			'blocking'  => false,
 			'sslverify' => false,
 			// 'cookies' => $_COOKIE,
-		);
+		];
 
-		$qs = array(
+		$qs = [
 			'action'      => 'async_litespeed',
 			'nonce'       => $hash,
 			Router::TYPE  => $type,
-		);
+		];
 
 		$url = add_query_arg( $qs, admin_url( 'admin-ajax.php' ) );
 		self::debug( 'async call to ' . $url );
@@ -254,10 +254,10 @@ class Task extends Root {
 	 */
 	public function lscache_cron_filter( $schedules ) {
 		if ( ! array_key_exists( self::FILTER, $schedules ) ) {
-			$schedules[ self::FILTER ] = array(
+			$schedules[ self::FILTER ] = [
 				'interval' => 900,
 				'display'  => __( 'Every 15 Minutes', 'litespeed-cache' ),
-			);
+			];
 		}
 		return $schedules;
 	}
@@ -275,10 +275,10 @@ class Task extends Root {
 		$crawler_run_interval = defined( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) ? (int) constant( 'LITESPEED_CRAWLER_RUN_INTERVAL' ) : 600;
 
 		if ( ! array_key_exists( self::FILTER_CRAWLER, $schedules ) ) {
-			$schedules[ self::FILTER_CRAWLER ] = array(
+			$schedules[ self::FILTER_CRAWLER ] = [
 				'interval' => $crawler_run_interval,
 				'display'  => __( 'LiteSpeed Crawler Cron', 'litespeed-cache' ),
-			);
+			];
 		}
 		return $schedules;
 	}

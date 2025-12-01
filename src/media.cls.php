@@ -88,12 +88,12 @@ class Media extends Root {
 	 */
 	public function after_user_init() {
 		// Hook to attachment delete action (PR#844, Issue#841) for AJAX del compatibility.
-		add_action( 'delete_attachment', array( $this, 'delete_attachment' ), 11, 2 );
+		add_action( 'delete_attachment', [ $this, 'delete_attachment' ], 11, 2 );
 
 		// For big images, allow to replace original with scaled image.
 		if ( $this->conf( Base::O_MEDIA_AUTO_RESCALE_ORI ) ) {
 			// Added priority 9 to happen before other functions added.
-			add_filter( 'wp_update_attachment_metadata', array( $this, 'rescale_ori' ), 9, 2 );
+			add_filter( 'wp_update_attachment_metadata', [ $this, 'rescale_ori' ], 9, 2 );
 		}
 	}
 
@@ -113,11 +113,11 @@ class Media extends Root {
 		if ( $this->webp_support() ) {
 			// Hook to srcset.
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-				add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 );
+				add_filter( 'wp_calculate_image_srcset', [ $this, 'webp_srcset' ], 988 );
 			}
 			// Hook to mime icon
-			// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 );// todo: need to check why not
-			// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ); // disabled to avoid wp-admin display
+			// add_filter( 'wp_get_attachment_image_src', [ $this, 'webp_attach_img_src' ], 988 );// todo: need to check why not
+			// add_filter( 'wp_get_attachment_url', [ $this, 'webp_url' ], 988 ); // disabled to avoid wp-admin display
 		}
 
 		if ( $this->conf( Base::O_MEDIA_LAZY ) && ! $this->cls( 'Metabox' )->setting( 'litespeed_no_image_lazy' ) ) {
@@ -132,8 +132,8 @@ class Media extends Root {
 		 */
 		$this->cls( 'Avatar' );
 
-		add_filter( 'litespeed_buffer_finalize', array( $this, 'finalize' ), 4 );
-		add_filter( 'litespeed_optm_html_head', array( $this, 'finalize_head' ) );
+		add_filter( 'litespeed_buffer_finalize', [ $this, 'finalize' ], 4 );
+		add_filter( 'litespeed_optm_html_head', [ $this, 'finalize_head' ] );
 	}
 
 	/**
@@ -232,12 +232,12 @@ class Media extends Root {
 		 *
 		 * @since 3.0
 		 */
-		add_filter( 'jpeg_quality', array( $this, 'adjust_jpg_quality' ) );
+		add_filter( 'jpeg_quality', [ $this, 'adjust_jpg_quality' ] );
 
-		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) );
-		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 );
+		add_filter( 'manage_media_columns', [ $this, 'media_row_title' ] );
+		add_filter( 'manage_media_custom_column', [ $this, 'media_row_actions' ], 10, 2 );
 
-		add_action( 'litespeed_media_row', array( $this, 'media_row_con' ) );
+		add_action( 'litespeed_media_row', [ $this, 'media_row_con' ] );
 	}
 
 	/**
@@ -276,11 +276,11 @@ class Media extends Root {
 		$real_file = $basedir . $short_file_path;
 
 		if ( file_exists( $real_file ) ) {
-			return array(
+			return [
 				'url'  => $this->_wp_upload_dir['baseurl'] . '/' . $short_file_path,
 				'md5'  => md5_file( $real_file ),
 				'size' => filesize( $real_file ),
-			);
+			];
 		}
 
 		/**
@@ -537,7 +537,7 @@ class Media extends Root {
 		if ( $size_meta ) {
 			printf(
 				'<div class="row-actions"><span class="delete"><a href="%1$s" class="">%2$s</a></span></div>',
-				esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ) ),
+				esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_RESET_ROW, false, null, [ 'id' => $post_id ] ) ),
 				esc_html__( 'Restore from backup', 'litespeed-cache' )
 			);
 			echo '</div>';
@@ -557,16 +557,16 @@ class Media extends Root {
 		$sizes = [];
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ), true ) ) {
+			if ( in_array( $_size, [ 'thumbnail', 'medium', 'medium_large', 'large' ], true ) ) {
 				$sizes[ $_size ]['width']  = get_option( $_size . '_size_w' );
 				$sizes[ $_size ]['height'] = get_option( $_size . '_size_h' );
 				$sizes[ $_size ]['crop']   = (bool) get_option( $_size . '_crop' );
 			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
-				$sizes[ $_size ] = array(
+				$sizes[ $_size ] = [
 					'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
 					'height' => $_wp_additional_image_sizes[ $_size ]['height'],
 					'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
-				);
+				];
 			}
 		}
 
@@ -604,7 +604,7 @@ class Media extends Root {
 
 		$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		if ( $ua ) {
-			$user_agents = array( 'chrome-lighthouse', 'googlebot', 'page speed' );
+			$user_agents = [ 'chrome-lighthouse', 'googlebot', 'page speed' ];
 			foreach ( $user_agents as $user_agent ) {
 				if ( false !== stripos( $ua, $user_agent ) ) {
 					return true;
@@ -721,7 +721,7 @@ class Media extends Root {
 
 		if ( $cfg_lazy ) {
 			if ( $cfg_vpi ) {
-				add_filter( 'litespeed_media_lazy_img_excludes', array( $this->cls( 'Metabox' ), 'lazy_img_excludes' ) );
+				add_filter( 'litespeed_media_lazy_img_excludes', [ $this->cls( 'Metabox' ), 'lazy_img_excludes' ] );
 			}
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img();
 			$html_list_ori                                   = $html_list;
@@ -803,7 +803,7 @@ class Media extends Root {
 			return;
 		}
 
-		$content = preg_replace( array( '#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU' ), '', $this->content );
+		$content = preg_replace( [ '#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU' ], '', $this->content );
 		if ( ! $content ) {
 			return;
 		}
@@ -885,11 +885,11 @@ class Media extends Root {
 		$placeholder_list = [];
 
 		$content = preg_replace(
-			array(
+			[
 				'#<!--.*-->#sU',
 				'#<noscript([^>]*)>.*</noscript>#isU',
 				'#<script([^>]*)>.*</script>#isU', // Remove script to avoid false matches and warnings, when image size detection is turned ON.
-			),
+			],
 			'',
 			$this->content
 		);
@@ -1011,7 +1011,7 @@ class Media extends Root {
 			$placeholder_list[] = $placeholder;
 		}
 
-		return array( $src_list, $html_list, $placeholder_list );
+		return [ $src_list, $html_list, $placeholder_list ];
 	}
 
 	/**
@@ -1171,7 +1171,7 @@ class Media extends Root {
 		// parse srcset.
 		// todo: should apply this to cdn too.
 		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) && $this->webp_support() ) {
-			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
+			$content = Utility::srcset_replace( $content, [ $this, 'replace_webp' ] );
 		}
 
 		// Replace background-image.

@@ -27,7 +27,7 @@ class DB_Optm extends Root {
 	 *
 	 * @var string[]
 	 */
-	private static $types = array(
+	private static $types = [
 		'revision',
 		'orphaned_post_meta',
 		'auto_draft',
@@ -38,7 +38,7 @@ class DB_Optm extends Root {
 		'expired_transient',
 		'all_transients',
 		'optimize_tables',
-	);
+	];
 
 	/**
 	 * Convert tables to InnoDB type identifier.
@@ -241,7 +241,7 @@ class DB_Optm extends Root {
 					";
 					$sql_postmeta = $sql_postmeta_join( "(SELECT ID FROM $posts $sql_where) AS $posts" );
 					foreach ( $res as $v ) {
-						$args = array( (int) $v->post_parent, (int) $v->del_max );
+						$args = [ (int) $v->post_parent, (int) $v->del_max ];
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 						$wpdb->query( $wpdb->prepare( "DELETE $postmeta FROM $sql_postmeta", $args ) );
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -410,7 +410,7 @@ class DB_Optm extends Root {
 	public function autoload_summary() {
 		global $wpdb;
 
-		$autoload_values = function_exists( 'wp_autoload_values_to_autoload' ) ? wp_autoload_values_to_autoload() : array( 'yes', 'on', 'auto-on', 'auto' );
+		$autoload_values = function_exists( 'wp_autoload_values_to_autoload' ) ? wp_autoload_values_to_autoload() : [ 'yes', 'on', 'auto-on', 'auto' ];
 		$placeholders    = implode( ',', array_fill( 0, count( $autoload_values ), '%s' ) );
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare

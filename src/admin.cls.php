@@ -43,12 +43,12 @@ class Admin extends Root {
 		$this->cls( 'Admin_Display' );
 
 		// Initialize admin actions.
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_init', [ $this, 'admin_init' ] );
 
 		// Add link to plugin list page.
 		add_filter(
 			'plugin_action_links_' . LSCWP_BASENAME,
-			array( $this->cls( 'Admin_Display' ), 'add_plugin_links' )
+			[ $this->cls( 'Admin_Display' ), 'add_plugin_links' ]
 		);
 	}
 
@@ -61,7 +61,7 @@ class Admin extends Root {
 	public function admin_init() {
 		// Hook attachment upload auto optimization.
 		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
-			add_filter( 'wp_update_attachment_metadata', array( $this, 'wp_update_attachment_metadata' ), 9999, 2 );
+			add_filter( 'wp_update_attachment_metadata', [ $this, 'wp_update_attachment_metadata' ], 9999, 2 );
 		}
 
 		$this->_proceed_admin_action();
@@ -82,7 +82,7 @@ class Admin extends Root {
 		do_action( 'litespeed_after_admin_init' );
 
 		if ( $this->cls( 'Router' )->esi_enabled() ) {
-			add_action( 'in_widget_form', array( $this->cls( 'Admin_Display' ), 'show_widget_edit' ), 100, 3 );
+			add_action( 'in_widget_form', [ $this->cls( 'Admin_Display' ), 'show_widget_edit' ], 100, 3 );
 			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 );
 		}
 	}
@@ -167,7 +167,7 @@ class Admin extends Root {
 			// Sanitize current query args while removing our internals.
 			if ( ! empty( $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				foreach ( $_GET as $k => $v ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( in_array( $k, array( Router::ACTION, Router::NONCE, Router::TYPE, 'litespeed_i', 'litespeed_tb' ), true ) ) {
+					if ( in_array( $k, [ Router::ACTION, Router::NONCE, Router::TYPE, 'litespeed_i', 'litespeed_tb' ], true ) ) {
 						continue;
 					}
 					// Normalize to string for URL building.

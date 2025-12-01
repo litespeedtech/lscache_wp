@@ -44,7 +44,7 @@ class WP_Object_Cache {
 	 * @access private
 	 * @var array
 	 */
-	private $_cache = array();
+	private $_cache = [];
 
 	/**
 	 * Cache for 404 keys
@@ -53,7 +53,7 @@ class WP_Object_Cache {
 	 * @access private
 	 * @var array
 	 */
-	private $_cache_404 = array();
+	private $_cache_404 = [];
 
 	/**
 	 * Total cache operations
@@ -116,7 +116,7 @@ class WP_Object_Cache {
 	 * @access protected
 	 * @var array
 	 */
-	protected $global_groups = array();
+	protected $global_groups = [];
 
 	/**
 	 * Blog prefix for cache keys
@@ -350,7 +350,7 @@ class WP_Object_Cache {
 	 *                true on success, or false if cache key and group already exist.
 	 */
 	public function add_multiple( array $data, $group = '', $expire = 0 ) {
-		$values = array();
+		$values = [];
 
 		foreach ( $data as $key => $value ) {
 			$values[ $key ] = $this->add( $key, $value, $group, $expire );
@@ -461,7 +461,7 @@ class WP_Object_Cache {
 	 * @return bool[] Array of return values, grouped by key. Each value is always true.
 	 */
 	public function set_multiple( array $data, $group = '', $expire = 0 ) {
-		$values = array();
+		$values = [];
 
 		foreach ( $data as $key => $value ) {
 			$values[ $key ] = $this->set( $key, $value, $group, $expire );
@@ -566,7 +566,7 @@ class WP_Object_Cache {
 	 *               the cache contents on success, or false on failure.
 	 */
 	public function get_multiple( $keys, $group = 'default', $force = false ) {
-		$values = array();
+		$values = [];
 
 		foreach ( $keys as $key ) {
 			$values[ $key ] = $this->get( $key, $group, $force );
@@ -625,7 +625,7 @@ class WP_Object_Cache {
 	 *                true on success, or false if the contents were not deleted.
 	 */
 	public function delete_multiple( array $keys, $group = '' ) {
-		$values = array();
+		$values = [];
 
 		foreach ( $keys as $key ) {
 			$values[ $key ] = $this->delete( $key, $group );
@@ -739,8 +739,8 @@ class WP_Object_Cache {
 	 * @return true Always returns true.
 	 */
 	public function flush_runtime() {
-		$this->_cache     = array();
-		$this->_cache_404 = array();
+		$this->_cache     = [];
+		$this->_cache_404 = [];
 
 		return true;
 	}
@@ -837,7 +837,7 @@ class WP_Object_Cache {
 			/**** Ori WP func end */
 		} elseif ( 'site-transient' === $group ) {
 			/**** Ori WP func start */
-			$no_timeout       = array( 'update_core', 'update_plugins', 'update_themes' );
+			$no_timeout       = [ 'update_core', 'update_plugins', 'update_themes' ];
 			$transient_option = '_site_transient_' . $transient;
 			if ( ! in_array( $transient, $no_timeout, true ) ) {
 				$transient_timeout = '_site_transient_timeout_' . $transient;

@@ -35,13 +35,13 @@ class Metabox extends Root {
 	 */
 	public function __construct() {
 		// Append meta box.
-		$this->_postmeta_settings = array(
+		$this->_postmeta_settings = [
 			'litespeed_no_cache'        => __( 'Disable Cache', 'litespeed-cache' ),
 			'litespeed_no_image_lazy'   => __( 'Disable Image Lazyload', 'litespeed-cache' ),
 			'litespeed_no_vpi'          => __( 'Disable VPI', 'litespeed-cache' ),
 			'litespeed_vpi_list'        => __( 'Viewport Images', 'litespeed-cache' ),
 			'litespeed_vpi_list_mobile' => __( 'Viewport Images', 'litespeed-cache' ) . ' - ' . __( 'Mobile', 'litespeed-cache' ),
-		);
+		];
 	}
 
 	/**
@@ -51,9 +51,9 @@ class Metabox extends Root {
 	 * @return void
 	 */
 	public function register_settings() {
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
-		add_action( 'attachment_updated', array( $this, 'save_meta_box_settings' ), 15, 2 );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+		add_action( 'save_post', [ $this, 'save_meta_box_settings' ], 15, 2 );
+		add_action( 'attachment_updated', [ $this, 'save_meta_box_settings' ], 15, 2 );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Metabox extends Root {
 			self::debug( 'post type public=false, bypass add_meta_boxes' );
 			return;
 		}
-		add_meta_box( 'litespeed_meta_boxes', 'LiteSpeed', array( $this, 'meta_box_options' ), $post_type, 'side', 'core' );
+		add_meta_box( 'litespeed_meta_boxes', 'LiteSpeed', [ $this, 'meta_box_options' ], $post_type, 'side', 'core' );
 	}
 
 	/**

@@ -67,11 +67,11 @@ class API extends Base {
 		/**
 		 * Conf
 		 */
-		add_filter( 'litespeed_conf', array( $this, 'conf' ) );
+		add_filter( 'litespeed_conf', [ $this, 'conf' ] );
 		// Action `litespeed_conf_append`
 		add_action( 'litespeed_conf_multi_switch', __NAMESPACE__ . '\Base::set_multi_switch', 10, 2 );
 		// Action `litespeed_conf_force`
-		add_action( 'litespeed_save_conf', array( $this, 'save_conf' ) );
+		add_action( 'litespeed_save_conf', [ $this, 'save_conf' ] );
 
 		/**
 		 * Cache Control Hooks
@@ -79,12 +79,12 @@ class API extends Base {
 		// Action `litespeed_control_finalize`
 		add_action( 'litespeed_control_set_private', __NAMESPACE__ . '\Control::set_private' );
 		add_action( 'litespeed_control_set_nocache', __NAMESPACE__ . '\Control::set_nocache' );
-		add_action( 'litespeed_control_set_cacheable', array( $this, 'set_cacheable' ) );
+		add_action( 'litespeed_control_set_cacheable', [ $this, 'set_cacheable' ] );
 		add_action( 'litespeed_control_force_cacheable', __NAMESPACE__ . '\Control::force_cacheable' );
 		add_action( 'litespeed_control_force_public', __NAMESPACE__ . '\Control::set_public_forced' );
 		add_filter( 'litespeed_control_cacheable', __NAMESPACE__ . '\Control::is_cacheable', 3 );
 		add_action( 'litespeed_control_set_ttl', __NAMESPACE__ . '\Control::set_custom_ttl', 10, 2 );
-		add_filter( 'litespeed_control_ttl', array( $this, 'get_ttl' ), 3 );
+		add_filter( 'litespeed_control_ttl', [ $this, 'get_ttl' ], 3 );
 
 		/**
 		 * Tag Hooks
@@ -108,9 +108,9 @@ class API extends Base {
 		// Action `litespeed_purge_finalize`
 		add_action( 'litespeed_purge', __NAMESPACE__ . '\Purge::add' );
 		add_action( 'litespeed_purge_all', __NAMESPACE__ . '\Purge::purge_all' );
-		add_action( 'litespeed_purge_post', array( $this, 'purge_post' ) );
+		add_action( 'litespeed_purge_post', [ $this, 'purge_post' ] );
 		add_action( 'litespeed_purge_posttype', __NAMESPACE__ . '\Purge::purge_posttype' );
-		add_action( 'litespeed_purge_url', array( $this, 'purge_url' ) );
+		add_action( 'litespeed_purge_url', [ $this, 'purge_url' ] );
 		add_action( 'litespeed_purge_widget', __NAMESPACE__ . '\Purge::purge_widget' );
 		add_action( 'litespeed_purge_esi', __NAMESPACE__ . '\Purge::purge_esi' );
 		add_action( 'litespeed_purge_private', __NAMESPACE__ . '\Purge::add_private' );
@@ -125,8 +125,8 @@ class API extends Base {
 		 * ESI
 		 */
 		// Action `litespeed_nonce`
-		add_filter( 'litespeed_esi_status', array( $this, 'esi_enabled' ) );
-		add_filter( 'litespeed_esi_url', array( $this, 'sub_esi_block' ), 10, 8 ); // Generate ESI block url
+		add_filter( 'litespeed_esi_status', [ $this, 'esi_enabled' ] );
+		add_filter( 'litespeed_esi_url', [ $this, 'sub_esi_block' ], 10, 8 ); // Generate ESI block url
 		// Filter `litespeed_widget_default_options` // Hook widget default settings value. Currently used in Woo 3rd
 		// Filter `litespeed_esi_params`
 		// Action `litespeed_tpl_normal`
@@ -147,7 +147,7 @@ class API extends Base {
 		/**
 		 * Cloud
 		 */
-		add_filter( 'litespeed_is_from_cloud', array( $this, 'is_from_cloud' ) ); // Check if current request is from QC (usually its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
+		add_filter( 'litespeed_is_from_cloud', [ $this, 'is_from_cloud' ] ); // Check if current request is from QC (usually its to check REST access) // @see https://wordpress.org/support/topic/image-optimization-not-working-3/
 
 		/**
 		 * Media
@@ -165,9 +165,9 @@ class API extends Base {
 		 */
 		add_action( 'litespeed_debug', __NAMESPACE__ . '\Debug2::debug', 10, 2 );
 		add_action( 'litespeed_debug2', __NAMESPACE__ . '\Debug2::debug2', 10, 2 );
-		add_action( 'litespeed_disable_all', array( $this, 'disable_all' ) );
+		add_action( 'litespeed_disable_all', [ $this, 'disable_all' ] );
 
-		add_action( 'litespeed_after_admin_init', array( $this, 'after_admin_init' ) );
+		add_action( 'litespeed_after_admin_init', [ $this, 'after_admin_init' ] );
 	}
 
 	/**
@@ -182,8 +182,8 @@ class API extends Base {
 		/**
 		 * GUI
 		 */
-		add_action( 'litespeed_setting_enroll', array( $this->cls( 'Admin_Display' ), 'enroll' ), 10, 4 );
-		add_action( 'litespeed_build_switch', array( $this->cls( 'Admin_Display' ), 'build_switch' ) );
+		add_action( 'litespeed_setting_enroll', [ $this->cls( 'Admin_Display' ), 'enroll' ], 10, 4 );
+		add_action( 'litespeed_build_switch', [ $this->cls( 'Admin_Display' ), 'build_switch' ] );
 		// Action `litespeed_settings_content`
 		// Action `litespeed_settings_tab`
 	}
@@ -313,12 +313,12 @@ class API extends Base {
 	public function sub_esi_block(
 		$block_id,
 		$wrapper,
-		$params = array(),
+		$params = [],
 		$control = 'private,no-vary',
 		$silence = false,
 		$preserved = false,
 		$svar = false,
-		$inline_param = array()
+		$inline_param = []
 	) {
 		return $this->cls( 'ESI' )->sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_param );
 	}

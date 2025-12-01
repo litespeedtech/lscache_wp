@@ -132,7 +132,7 @@ class Crawler_Map extends Root {
 					self::debug('Insert into blacklist [count] ' . count($new_urls));
 
 					$q                  = "INSERT INTO `$this->_tb_blacklist` ( url, res, reason ) VALUES " . implode(',', array_fill(0, count($new_urls), '( %s, %s, %s )'));
-					$data               = array();
+					$data               = [];
 					$res                = array_fill(0, $total_crawler, '-');
 					$res[$curr_crawler] = $bit;
 					$res                = implode('', $res);
@@ -218,16 +218,16 @@ class Crawler_Map extends Root {
 
 		$q = "UPDATE `$this->_tb` SET res = %s, reason = %s WHERE id = %d";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query($wpdb->prepare($q, array( $res, $reason, $id )));
+		$wpdb->query($wpdb->prepare($q, [ $res, $reason, $id ]));
 
 		if ($row['id']) {
 			$q = "UPDATE `$this->_tb_blacklist` SET res = %s, reason = %s WHERE id = %d";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query($wpdb->prepare($q, array( $res, $reason, $row['id'] )));
+			$wpdb->query($wpdb->prepare($q, [ $res, $reason, $row['id'] ]));
 		} else {
 			$q = "INSERT INTO `$this->_tb_blacklist` (url, res, reason) VALUES (%s, %s, %s)";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query($wpdb->prepare($q, array( $row['url'], $res, $reason )));
+			$wpdb->query($wpdb->prepare($q, [ $row['url'], $res, $reason ]));
 		}
 	}
 

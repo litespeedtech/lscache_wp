@@ -25,14 +25,14 @@ class Error {
 	 * @since 3.0
 	 * @var array
 	 */
-	private static $code_set = array(
+	private static $code_set = [
 		'HTA_LOGIN_COOKIE_INVALID' => 4300, // .htaccess did not find.
 		'HTA_DNF'                 => 4500, // .htaccess did not find.
 		'HTA_BK'                  => 9010, // backup
 		'HTA_R'                   => 9041, // read htaccess
 		'HTA_W'                   => 9042, // write
 		'HTA_GET'                 => 9030, // failed to get
-	);
+	];
 
 	/**
 	 * Throw an error with message
@@ -160,7 +160,7 @@ class Error {
 
 			case 'HTA_DNF':
 				if ( ! is_array( $args ) ) {
-					$args = array( '<code>' . $args . '</code>' );
+					$args = [ '<code>' . $args . '</code>' ];
 				}
 				$args[] = '.htaccess';
 				$msg    = __( 'Could not find %1$s in %2$s.', 'litespeed-cache' );
