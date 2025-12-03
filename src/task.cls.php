@@ -56,6 +56,10 @@ class Task extends Root {
 			'name' => 'litespeed_task_imgoptm_req',
 			'hook' => 'LiteSpeed\Img_Optm::cron_auto_request',
 		],
+		Base::O_GUEST => [
+			'name' => 'litespeed_task_guest_sync',
+			'hook' => 'LiteSpeed\Guest::cron',
+		], // Daily sync Guest Mode IP/UA lists
 		Base::O_CRAWLER => [
 			'name' => 'litespeed_task_crawler',
 			'hook' => 'LiteSpeed\Crawler::start_async_cron',
@@ -119,11 +123,16 @@ class Task extends Root {
 			if ( ! wp_next_scheduled( $trigger['name'] ) ) {
 				self::debug( 'Cron hook register [name] ' . $trigger['name'] );
 
-				wp_schedule_event(
-					time(),
-					Base::O_CRAWLER === $id ? self::FILTER_CRAWLER : self::FILTER,
-					$trigger['name']
-				);
+				// Determine schedule: crawler uses its own, guest uses daily, others use 15min
+				if ( Base::O_CRAWLER === $id ) {
+					$schedule = self::FILTER_CRAWLER;
+				} elseif ( Base::O_GUEST === $id ) {
+					$schedule = 'daily';
+				} else {
+					$schedule = self::FILTER;
+				}
+
+				wp_schedule_event( time(), $schedule, $trigger['name'] );
 			}
 
 			add_action( $trigger['name'], $trigger['hook'] );

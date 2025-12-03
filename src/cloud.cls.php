@@ -45,7 +45,7 @@ class Cloud extends Base {
 	 *
 	 * @var string
 	 */
-	private $_cloud_server_wp = 'https://wpapi.quic.cloud';
+	protected $_cloud_server_wp = 'https://wpapi.quic.cloud';
 
 	const SVC_D_ACTIVATE       = 'd/activate';
 	const SVC_U_ACTIVATE       = 'u/wp3/activate';

@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 5.3
 Requires PHP: 7.2
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 7.6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -264,6 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **GUI** Dark mode toggle now applies instantly without page flicker on reload.
 * **Page Optimize** Improved dummy CSS replacement logic.
 * **Page Optimize** Deferred Instant Click to avoid blocking initial page rendering. (pp01 PR#926)
+* **Cloud** Guest Mode IP/UA lists now sync automatically from QUIC.cloud API.
 * **Cloud** Fixed a potential warning caused by variable type casting. (userb52 PR#925)
 * **Cloud** Added null-safe handling for `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
 * **Cloud** Fixed number casts fatal error on PHP8 when no timestamp logged. (Patryk Chowratowicz #938)

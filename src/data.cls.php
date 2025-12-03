@@ -28,6 +28,7 @@ class Data extends Root {
 		'5.3-a5'    => [ 'litespeed_update_5_3' ],
 		'7.0-b26'   => [ 'litespeed_update_7' ],
 		'7.0.1-b1'  => [ 'litespeed_update_7_0_1' ],
+		'7.7-b24'   => [ 'litespeed_update_7_7' ],
 	];
 
 	/**

@@ -37,7 +37,7 @@ class Base extends Root {
 	const O_GUEST_OPTM   = 'guest_optm';
 	const O_NEWS         = 'news';
 	const O_GUEST_UAS    = 'guest_uas';
-	const O_GUEST_IPS    = 'guest_ips';
+	const O_GUEST_IPS    = 'guest_ips'; // Deprecated since v7.7. TODO: Will drop after v9
 
 	// -------------------------------------------------- ##
 	// --------------       Cache       ----------------- ##
@@ -360,8 +360,6 @@ class Base extends Root {
 		self::O_GUEST => false,
 		self::O_GUEST_OPTM => false,
 		self::O_NEWS => false,
-		self::O_GUEST_UAS => [],
-		self::O_GUEST_IPS => [],
 
 		// Cache
 		self::O_CACHE => false,

@@ -12,6 +12,7 @@ defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
+use LiteSpeed\Conf;
 
 /**
  * Check whether a DB table exists.
@@ -112,6 +113,22 @@ function litespeed_update_7() {
 			Debug2::debug('[Data] Updated QC activated status to ' . $resp['qc_activated']);
 		}
 	}
+}
+
+/**
+ * Drop deprecated guest_ips and guest_uas from DB options.
+ *
+ * These values are now read from files instead.
+ *
+ * @since 7.7
+ */
+function litespeed_update_7_7() {
+	Debug2::debug( '[Data] v7.7 upgrade: dropping guest_ips/guest_uas options' );
+
+	Conf::delete_option( 'conf.guest_ips' );
+	Conf::delete_option( 'conf.guest_uas' );
+	Conf::delete_site_option( 'conf.guest_ips' );
+	Conf::delete_site_option( 'conf.guest_uas' );
 }
 
 /**

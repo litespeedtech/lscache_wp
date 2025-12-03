@@ -1,6 +1,4 @@
 <?php
-// phpcs:ignoreFile
-
 namespace LiteSpeed\Lib;
 
 /**
@@ -16,12 +14,12 @@ class Guest {
 	const O_DEBUG              = 'debug';
 	const O_DEBUG_IPS          = 'debug-ips';
 	const O_UTIL_NO_HTTPS_VARY = 'util-no_https_vary';
-	const O_GUEST_UAS          = 'guest_uas';
-	const O_GUEST_IPS          = 'guest_ips';
 
 	private static $_ip;
 	private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
 	private $_conf             = false;
+	private $_gm_ips           = null;
+	private $_gm_uas           = null;
 
 	/**
 	 * Constructor
@@ -76,7 +74,7 @@ class Guest {
 		setcookie( self::$_vary_name, $vary, $expire, '/', false, $is_ssl, true );
 
 		// return json
-		echo json_encode( array( 'reload' => 'yes' ) );
+		echo json_encode( [ 'reload' => 'yes' ] );
 		exit;
 	}
 
@@ -114,6 +112,43 @@ class Guest {
 	}
 
 	/**
+	 * Load Guest Mode list from file.
+	 *
+	 * Priority: cloud synced file > plugin data file
+	 *
+	 * @since 7.7
+	 * @param string $type 'ips' or 'uas'.
+	 * @return array
+	 */
+	private function _load_gm_list( $type ) {
+		$prop = '_gm_' . $type;
+		if ( null !== $this->$prop ) {
+			return $this->$prop;
+		}
+
+		$this->$prop = [];
+		$filename    = 'gm_' . $type . '.txt';
+
+		// Try cloud synced file first, then fallback to plugin data file
+		$files = [
+			LSCWP_CONTENT_FOLDER . '/litespeed/cloud/' . $filename,
+			dirname( __DIR__ ) . '/data/' . $filename,
+		];
+
+		foreach ( $files as $file ) {
+			if ( file_exists( $file ) ) {
+				$content = file_get_contents( $file );
+				if ( $content ) {
+					$this->$prop = array_filter( array_map( 'trim', explode( "\n", $content ) ) );
+					break;
+				}
+			}
+		}
+
+		return $this->$prop;
+	}
+
+	/**
 	 * Detect if is a guest visitor or not
 	 *
 	 * @since  4.0
@@ -123,9 +158,10 @@ class Guest {
 			return false;
 		}
 
-		if ( $this->_conf[ self::O_GUEST_UAS ] ) {
-			$quoted_uas = array();
-			foreach ( $this->_conf[ self::O_GUEST_UAS ] as $v ) {
+		$guest_uas = $this->_load_gm_list( 'uas' );
+		if ( $guest_uas ) {
+			$quoted_uas = [];
+			foreach ( $guest_uas as $v ) {
 				$quoted_uas[] = preg_quote( $v, '#' );
 			}
 			$match = preg_match( '#' . implode( '|', $quoted_uas ) . '#i', $_SERVER['HTTP_USER_AGENT'] );
@@ -134,7 +170,8 @@ class Guest {
 			}
 		}
 
-		if ( $this->ip_access( $this->_conf[ self::O_GUEST_IPS ] ) ) {
+		$guest_ips = $this->_load_gm_list( 'ips' );
+		if ( $this->ip_access( $guest_ips ) ) {
 			return true;
 		}
 

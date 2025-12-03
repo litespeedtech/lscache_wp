@@ -104,8 +104,6 @@ class Lang extends Base {
 	public static function title( $id ) {
 		$_lang_list = [
 			self::O_SERVER_IP => __( 'Server IP', 'litespeed-cache' ),
-			self::O_GUEST_UAS => __( 'Guest Mode User Agents', 'litespeed-cache' ),
-			self::O_GUEST_IPS => __( 'Guest Mode IPs', 'litespeed-cache' ),
 
 			self::O_CACHE                 => __( 'Enable Cache', 'litespeed-cache' ),
 			self::O_CACHE_BROWSER         => __( 'Browser Cache', 'litespeed-cache' ),

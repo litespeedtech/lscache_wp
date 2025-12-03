@@ -15,7 +15,6 @@ defined( 'WPINC' ) || exit;
 $menu_list = array(
     'online'          => esc_html__( 'Online Services', 'litespeed-cache' ),
     'settings'        => esc_html__( 'General Settings', 'litespeed-cache' ),
-    'settings_tuning' => esc_html__( 'Tuning', 'litespeed-cache' ),
 );
 
 if ( is_network_admin() ) {
