@@ -53,14 +53,22 @@ $guest_update_url = wp_parse_url( LSWCP_PLUGIN_URL . GUI::PHP_GUEST, PHP_URL_PAT
 							});
 
 							// Sync Guest Mode IP/UA lists
-							$.get('<?php echo esc_url( Utility::build_url( Router::ACTION_GUEST, Guest::TYPE_SYNC, true ) ); ?>', function(data){
-								if (data && data.success) {
-									$('#litespeed_gm_sync_status').html('<font class="litespeed-success"><?php esc_html_e( 'Synced successfully.', 'litespeed-cache' ); ?></font>');
-								} else {
+							$.ajax({
+								url: '<?php echo esc_url( rest_url( 'litespeed/v1/guest/sync' ) ); ?>',
+								dataType: 'json',
+								beforeSend: function(xhr) {
+									xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>');
+								},
+								success: function(data) {
+									if (data && data.success) {
+										$('#litespeed_gm_sync_status').html('<font class="litespeed-success"><?php esc_html_e( 'Synced successfully.', 'litespeed-cache' ); ?></font>');
+									} else {
+										$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php esc_html_e( 'Sync failed.', 'litespeed-cache' ); ?></font>');
+									}
+								},
+								error: function() {
 									$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php esc_html_e( 'Sync failed.', 'litespeed-cache' ); ?></font>');
 								}
-							}).fail(function(){
-								$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php esc_html_e( 'Sync failed.', 'litespeed-cache' ); ?></font>');
 							});
 						});
 					})(jQuery);

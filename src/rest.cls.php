@@ -63,6 +63,14 @@ class REST extends Root {
 			},
 		] );
 
+		register_rest_route( 'litespeed/v1', '/guest/sync', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'guest_sync' ],
+			'permission_callback' => function () {
+				return current_user_can( 'manage_network_options' ) || current_user_can( 'manage_options' );
+			},
+		] );
+
 		// IP callback validate
 		register_rest_route( 'litespeed/v3', '/ip_validate', [
 			'methods'             => 'POST',
@@ -173,6 +181,16 @@ class REST extends Root {
 	 */
 	public function check_ip() {
 		return Tool::cls()->check_ip();
+	}
+
+	/**
+	 * Sync Guest Mode IP/UA lists.
+	 *
+	 * @since 7.7
+	 * @return array
+	 */
+	public function guest_sync() {
+		return Guest::cls()->sync_lists();
 	}
 
 	/**

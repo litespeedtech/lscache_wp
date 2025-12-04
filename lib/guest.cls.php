@@ -179,10 +179,13 @@ class Guest {
 	}
 
 	/**
-	 * Check if the ip is in the range
+	 * Check if the ip is in the range (supports CIDR notation)
 	 *
 	 * @since 1.1.0
+	 * @since 7.7 Added CIDR support
 	 * @access public
+	 * @param array $ip_list List of IPs or CIDRs.
+	 * @return bool
 	 */
 	public function ip_access( $ip_list ) {
 		if ( ! $ip_list ) {
@@ -191,14 +194,73 @@ class Guest {
 		if ( ! isset( self::$_ip ) ) {
 			self::$_ip = self::get_ip();
 		}
-		// $uip = explode('.', $_ip);
-		// if(empty($uip) || count($uip) != 4) Return false;
-		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
-		// foreach($ip_list as $key => $ip) {
-		// if(count($ip) != 4) continue;
-		// for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
-		// }
-		return in_array( self::$_ip, $ip_list );
+
+		foreach ( $ip_list as $ip_entry ) {
+			$ip_entry = trim( $ip_entry );
+			// Check CIDR format
+			if ( strpos( $ip_entry, '/' ) !== false ) {
+				if ( $this->_ip_in_cidr( self::$_ip, $ip_entry ) ) {
+					return true;
+				}
+			} elseif ( self::$_ip === $ip_entry ) {
+				// Exact match
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if IP is within CIDR range
+	 *
+	 * @since 7.7
+	 * @access private
+	 * @param string $ip   IP address to check.
+	 * @param string $cidr CIDR notation (e.g., 192.168.1.0/24).
+	 * @return bool
+	 */
+	private function _ip_in_cidr( $ip, $cidr ) {
+		list( $subnet, $mask ) = explode( '/', $cidr, 2 );
+
+		// Mask must be numeric and > 0
+		if ( ! is_numeric( $mask ) || $mask <= 0 ) {
+			return false;
+		}
+		$mask = (int) $mask;
+
+		// Determine IP version and validate
+		$is_ipv6   = filter_var( $subnet, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 );
+		$max_mask  = $is_ipv6 ? 128 : 32;
+		$byte_len  = $is_ipv6 ? 16 : 4;
+		$ip_filter = $is_ipv6 ? FILTER_FLAG_IPV6 : FILTER_FLAG_IPV4;
+
+		if ( ! filter_var( $ip, FILTER_VALIDATE_IP, $ip_filter ) ) {
+			return false;
+		}
+
+		if ( $mask > $max_mask ) {
+			return false;
+		}
+
+		$ip_bin     = inet_pton( $ip );
+		$subnet_bin = inet_pton( $subnet );
+
+		if ( false === $ip_bin || false === $subnet_bin ) {
+			return false;
+		}
+
+		// Build mask
+		$full_bytes = (int) ( $mask / 8 );
+		$rem_bits   = $mask % 8;
+
+		$mask_bin = str_repeat( "\xff", $full_bytes );
+		if ( $rem_bits > 0 ) {
+			$mask_bin .= chr( 0xff << ( 8 - $rem_bits ) );
+		}
+		$mask_bin = str_pad( $mask_bin, $byte_len, "\x00" );
+
+		return ( $ip_bin & $mask_bin ) === ( $subnet_bin & $mask_bin );
 	}
 
 	/**
