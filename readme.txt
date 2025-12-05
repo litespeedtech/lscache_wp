@@ -257,25 +257,25 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.7 - Nov 2025 =
+= 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
-* **Conf** Enabled `litespeed_conf_load_option_{$option}` to modify configuration values.
+* **Conf** Enabled `litespeed_conf_load_option_{$option}` to allow modifying configuration values.
 * **Conf** Removed deprecated `O_MEDIA_PRELOAD_FEATURED` option.
-* **GUI** Dark mode toggle now applies instantly without page flicker on reload.
+* **GUI** Dark mode toggle now applies instantly without flicker on page reload.
 * **Page Optimize** Improved dummy CSS replacement logic.
 * **Page Optimize** Deferred Instant Click to avoid blocking initial page rendering. (pp01 PR#926)
-* **Cloud** Guest Mode IP/UA lists now sync automatically from QUIC.cloud API.
+* **Cloud** Guest Mode IP/UA lists now sync automatically from the QUIC.cloud API.
 * **Cloud** Guest Mode IP now supports CIDR notation (e.g., 192.168.1.0/24, 2001:db8::/32).
 * **Cloud** Fixed a potential warning caused by variable type casting. (userb52 PR#925)
-* **Cloud** Added null-safe handling for `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
-* **Cloud** Fixed number casts fatal error on PHP8 when no timestamp logged. (Patryk Chowratowicz #938)
-* **Crawler** Dropped redundant functions after reformatted.
-* **Database Optimize** DB Optimize redirection and transients clean fixes (PR#937)
-* **Vary** Fixed the issue that the user failed to login when has no group.
-* **Avatar** Fixed queue warning when table is missing, and resolved HTML escaping warnings. (PR#928)
-* **3rd** Improved WPML image lazyload detection. (#657426)
-* **3rd** Fixed Elementor Form submit caching issue. (PR#932)
-* **3rd** Fixed cache issue when WCML currency changed. (PR#929)
+* **Cloud** Added null-safe handling for the `allowed_redirect_hosts` filter to prevent unexpected errors. (PR#933 #6972377)
+* **Cloud** Fixed fatal error on PHP 8 when no timestamp is logged due to number casting. (Patryk Chowratowicz #938)
+* **Crawler** Removed redundant functions after reformatting.
+* **Database Optimize** Fixed DB Optimize redirection and transient cleanup issues. (PR#937)
+* **Vary** Fixed issue where users without a group could not log in.
+* **Avatar** Fixed queue warning when the table is missing and resolved HTML escaping warnings. (PR#928)
+* **3rd** Improved WPML image lazy-load detection. (#657426)
+* **3rd** Fixed Elementor Form submission caching issue. (PR#932)
+* **3rd** Fixed cache issue when WCML currency changes. (PR#929)
 
 = 7.6.2 - Oct 17 2025 =
 * 🐞**Cloud** Fixed the PHP 8+ typecast issue in QUIC.cloud signature verification which caused activation failures.
