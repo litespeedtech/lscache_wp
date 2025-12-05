@@ -267,18 +267,64 @@ class Optimize extends Base {
 	}
 
 	/**
+	 * Build current url
+	 *
+	 * @since  7.8
+	 * @access private
+	 */
+	private function get_current_url(){
+		global $wp;
+		$permalink_structure = get_option('permalink_structure');
+		$permalink_need_slash = '/' === substr( $permalink_structure, -1 );
+
+		if( ! empty( $permalink_structure ) ){
+			$path = home_url($wp->request);
+			// if PLAIN permalink OR permalink need '/' => add trailing /
+			if ( $permalink_need_slash || empty( $wp->query_vars )  ) {
+				$path = trailingslashit( $path );
+			}
+
+			return $path;
+		}
+		// Build path for plain permalinks
+		else{
+			$protocol = ( is_ssl() || ! empty($_SERVER['HTTPS'] ) && $_SERVER[ 'HTTPS' ] !== 'off' ) ? "https://" : "http://";
+			
+			// Get domain
+			$domain = parse_url( home_url(), PHP_URL_HOST );
+			if ( empty( $domain ) && isset( $_SERVER['HTTP_HOST'] ) ) {
+				$domain = $_SERVER['HTTP_HOST'];
+			}
+
+			// Get path
+			$path = !empty( $wp->request ) ? '/' . $wp->request : '';
+			$path = trailingslashit( $path );
+			
+			// Get query string
+			$request_uri  = $_SERVER['REQUEST_URI'];
+			$query_string = '';
+			
+			if ( ( $query_pos = strpos( $request_uri, '?' ) ) !== false ) {
+				$query_string = substr( $request_uri, $query_pos );
+			}
+
+			return $protocol . $domain . $path . $query_string;
+		}
+	}
+
+	/**
 	 * Optimize css src
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 */
 	private function _optimize() {
-		global $wp;
-		$this->_request_url = get_permalink();
-		// Backup, in case get_permalink() fails.
-		if (!$this->_request_url) {
-			$this->_request_url = home_url($wp->request);
-		}
+		$this->_request_url = sanitize_url( $this->get_current_url() );
+		
+		error_log("\n", 3, '/home/test2.litespeedtech.ro/public_html/wp-content/link.log');
+		error_log("Frontend page tested: " . $_SERVER['REQUEST_URI'] . "\n", 3, '/home/test2.litespeedtech.ro/public_html/wp-content/link.log');
+		error_log("get_permalink() result: " . get_permalink() . "\n", 3, '/home/test2.litespeedtech.ro/public_html/wp-content/link.log');
+		error_log("this->_request_url generated: " . $this->_request_url . "\n", 3, '/home/test2.litespeedtech.ro/public_html/wp-content/link.log');
 
 		$this->cfg_css_min            = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_MIN);
 		$this->cfg_css_comb           = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_COMB);
