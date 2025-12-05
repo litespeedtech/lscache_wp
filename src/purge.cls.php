@@ -331,7 +331,7 @@ class Purge extends Base {
 			$post_id_or_url = get_permalink( (int) $post_id_or_url );
 		}
 
-		$post_id_or_url = untrailingslashit( (string) $post_id_or_url );
+		$post_id_or_url = trailingslashit( (string) $post_id_or_url );
 
 		$existing_url_files = Data::cls()->mark_as_expired( $post_id_or_url, true );
 		if ( $existing_url_files ) {

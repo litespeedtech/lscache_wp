@@ -123,12 +123,61 @@ function litespeed_update_7() {
  * @since 7.7
  */
 function litespeed_update_7_7() {
+	global $wpdb;
 	Debug2::debug( '[Data] v7.7 upgrade: dropping guest_ips/guest_uas options' );
 
 	Conf::delete_option( 'conf.guest_ips' );
 	Conf::delete_option( 'conf.guest_uas' );
 	Conf::delete_site_option( 'conf.guest_ips' );
 	Conf::delete_site_option( 'conf.guest_uas' );
+
+	
+	Debug2::debug( '[Data] v7.7 upgrade: normalize links in litespeed url table' );
+	$tb_url = $wpdb->prefix . 'litespeed_url';
+	if ( ! litespeed_table_exists( $tb_url ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed migration' );
+	} else {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$list          = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s", 'https://%/' ), ARRAY_A );
+		$existing_urls = array();
+		if ($list) {
+			foreach ($list as $v) {
+				$existing_urls[] = $v['url'];
+			}
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s", 'https://%' ), ARRAY_A );
+		if ( ! $list ) {
+			return;
+		}
+		foreach ( $list as $v ) {
+			if ( false === strpos( $v['url'], '?' ) ) {
+				if ( '/' === substr( $v['url'], -1 ) ) {
+					continue;
+				}
+
+				$new_url = $v['url'] . '/';
+				if ( in_array( $new_url, $existing_urls, true ) ) {
+					continue;
+				}
+			} else {
+				$url_splitted = explode( '?', $v['url'] );
+
+				if ( '/' === substr( $url_splitted[0], -1 ) ) {
+					continue;
+				}
+
+				$url_splitted[0] .= '/';
+				$new_url          = implode( '?', $url_splitted );
+				if ( in_array( $new_url, $existing_urls, true ) ) {
+					continue;
+				}
+			}
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( $wpdb->prepare( "UPDATE `{$tb_url}` SET url = %s WHERE id = %d", $new_url, $v['id'] ) );
+		}
+	}
 }
 
 /**
