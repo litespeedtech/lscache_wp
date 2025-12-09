@@ -80,8 +80,10 @@ class Online {
 	 *     # Activate domain CDN on QUIC.cloud (support --format=json)
 	 *     $ wp litespeed-online cdn_init --method=cname|ns
 	 *     $ wp litespeed-online cdn_init --method=cname|ns --ssl-cert=xxx.pem --ssl-key=xxx
+	 *     $ wp litespeed-online cdn_init --method=cname|ns --ssl-cert=xxx.pem --ssl-key=xxx --json
 	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx
 	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx  --ssl-cert=xxx.pem --ssl-key=xxx
+	 *     $ wp litespeed-online cdn_init --method=cfi --cf-token=xxxxxxxx  --ssl-cert=xxx.pem --ssl-key=xxx --format=json
 	 *
 	 * @param array $args Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -176,6 +178,8 @@ class Online {
 	 *
 	 *     # Sync QUIC.cloud service usage info
 	 *     $ wp litespeed-online sync
+	 *     $ wp litespeed-online sync --json
+	 *     $ wp litespeed-online sync --format=json
 	 *
 	 * @param array $args Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -231,6 +235,8 @@ class Online {
 	 *
 	 *     # List all services tag
 	 *     $ wp litespeed-online services
+	 *     $ wp litespeed-online services --json
+	 *     $ wp litespeed-online services --format=json
 	 *
 	 * @param array $args Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -263,6 +269,8 @@ class Online {
 	 *
 	 *     # List all QUIC.cloud servers in use
 	 *     $ wp litespeed-online nodes
+	 *     $ wp litespeed-online nodes --json
+	 *     $ wp litespeed-online nodes --format=json
 	 *
 	 * @param array $args Positional arguments.
 	 * @param array $assoc_args Associative arguments.
