@@ -149,17 +149,17 @@ function litespeed_update_7_7() {
 		return;
 	}
 
-	// Check if there are URLs without trailing slash
+	// Check if there are URLs without trailing slash (exclude URLs with query string)
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-	$count = $wpdb->get_var( "SELECT COUNT(*) FROM `{$tb_url}` WHERE url LIKE 'https://%' AND url NOT LIKE '%/'" );
+	$count = $wpdb->get_var( "SELECT COUNT(*) FROM `{$tb_url}` WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND url NOT LIKE '%?%'" );
 	if ( ! $count ) {
 		Debug2::debug( '[Data] No URLs without trailing slash found, bypassed' );
 		return;
 	}
 
-	// Append trailing slash to all URLs that don't have one and don't have duplicate with slash
+	// Append trailing slash to all URLs that don't have one and don't have duplicate with slash (exclude URLs with query string)
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-	$wpdb->query( "UPDATE `{$tb_url}` SET url = CONCAT(url, '/') WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND CONCAT(url, '/') NOT IN (SELECT * FROM (SELECT url FROM `{$tb_url}` WHERE url LIKE '%/') AS tmp)" );
+	$wpdb->query( "UPDATE `{$tb_url}` SET url = CONCAT(url, '/') WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND url NOT LIKE '%?%' AND CONCAT(url, '/') NOT IN (SELECT * FROM (SELECT url FROM `{$tb_url}` WHERE url LIKE '%/') AS tmp)" );
 }
 
 /**
