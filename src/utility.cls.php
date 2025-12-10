@@ -127,6 +127,46 @@ class Utility extends Root {
 	}
 
 	/**
+	 * Add trailing slash if needed.
+	 *
+	 * @since 7.7
+	 *
+	 * @param string $original_url Original URL.
+	 * @return string URL with slash if needed.
+	 */
+	public static function add_trailing_slash_safely( $original_url ) {
+		$url_parts = wp_parse_url( $original_url );
+
+		$path = isset( $url_parts['path'] ) ? $url_parts['path'] : '';
+
+		if ( '' === $path ) {
+			$path = '/';
+		}
+
+		if ( '/' !== substr( $path, -1 ) ) {
+			$path .= '/';
+		}
+		
+		$new_url = '';
+		
+		if ( isset( $url_parts['scheme'] ) && isset( $url_parts['host'] ) ) {
+			$new_url .= $url_parts['scheme'] . '://' . $url_parts['host'];
+		}
+		
+		$new_url .= $path;
+		
+		if ( isset( $url_parts['query'] ) ) {
+			$new_url .= '?' . $url_parts['query'];
+		}
+		
+		if ( isset( $url_parts['fragment'] ) ) {
+			$new_url .= '#' . $url_parts['fragment'];
+		}
+
+		return $new_url;
+	}
+
+	/**
 	 * Get ping speed to a domain via HTTP HEAD timing.
 	 *
 	 * @since 2.9
