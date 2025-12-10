@@ -117,18 +117,49 @@ function litespeed_update_7() {
 
 /**
  * Drop deprecated guest_ips and guest_uas from DB options.
+ * Migrate url table to make all links trailing slash for UCSS/CCSS.
  *
  * These values are now read from files instead.
  *
  * @since 7.7
  */
 function litespeed_update_7_7() {
+	global $wpdb;
+
 	Debug2::debug( '[Data] v7.7 upgrade: dropping guest_ips/guest_uas options' );
 
 	Conf::delete_option( 'conf.guest_ips' );
 	Conf::delete_option( 'conf.guest_uas' );
 	Conf::delete_site_option( 'conf.guest_ips' );
 	Conf::delete_site_option( 'conf.guest_uas' );
+
+	// Normalize all URLs to have trailing slash to match UCSS/CCSS generation logic
+	Debug2::debug( '[Data] v7.7 upgrade: normalizing URL trailing slashes' );
+
+	// Skip if plain permalink mode (no trailing slash)
+	$permalink_structure = get_option( 'permalink_structure' );
+	if ( empty( $permalink_structure ) ) {
+		Debug2::debug( '[Data] Plain permalink mode, bypassed URL trailing slash migration' );
+		return;
+	}
+
+	$tb_url = $wpdb->prefix . 'litespeed_url';
+	if ( ! litespeed_table_exists( $tb_url ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed URL migration' );
+		return;
+	}
+
+	// Check if there are URLs without trailing slash
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$count = $wpdb->get_var( "SELECT COUNT(*) FROM `{$tb_url}` WHERE url LIKE 'https://%' AND url NOT LIKE '%/'" );
+	if ( ! $count ) {
+		Debug2::debug( '[Data] No URLs without trailing slash found, bypassed' );
+		return;
+	}
+
+	// Append trailing slash to all URLs that don't have one and don't have duplicate with slash
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$wpdb->query( "UPDATE `{$tb_url}` SET url = CONCAT(url, '/') WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND CONCAT(url, '/') NOT IN (SELECT * FROM (SELECT url FROM `{$tb_url}` WHERE url LIKE '%/') AS tmp)" );
 }
 
 /**
