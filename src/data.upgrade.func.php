@@ -13,7 +13,6 @@ defined( 'WPINC' ) || exit();
 use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
 use LiteSpeed\Conf;
-use LiteSpeed\Utility;
 
 /**
  * Check whether a DB table exists.
@@ -125,6 +124,7 @@ function litespeed_update_7() {
  */
 function litespeed_update_7_7() {
 	global $wpdb;
+
 	Debug2::debug( '[Data] v7.7 upgrade: dropping guest_ips/guest_uas options' );
 
 	Conf::delete_option( 'conf.guest_ips' );
@@ -132,61 +132,33 @@ function litespeed_update_7_7() {
 	Conf::delete_site_option( 'conf.guest_ips' );
 	Conf::delete_site_option( 'conf.guest_uas' );
 
-	
-	Debug2::debug( '[Data] v7.7 upgrade: normalize links in litespeed url table' );
-	$tb_url = $wpdb->prefix . 'litespeed_url';
+	// Normalize all URLs to have trailing slash to match UCSS/CCSS generation logic
+	Debug2::debug( '[Data] v7.7 upgrade: normalizing URL trailing slashes' );
 
-	if ( ! litespeed_table_exists( $tb_url ) ) {
-		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed migration' );
-	} else {
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s OR url LIKE %s", 'http://%', 'https://%' ), ARRAY_A );
-
-		// Save existing URL to avoid duplicate
-		$existing_urls = [];
-		foreach ( $list as $v ) {
-			$existing_urls[] = (string) $v['url'];
-		}
-
-
-		// Make comparation and changes
-		if ($list) {
-			$update_case_clauses = [];
-			$update_ids          = [];
-			foreach ( $list as $v ) {
-				$id           = (int) $v['id'];
-				$original_url = $v['url'];
-
-				$new_url = Utility::add_trailing_slash_safely($v['url']);
-				
-				if ( $new_url === $original_url ) {
-					continue;
-				}
-
-				if ( in_array( $new_url, $existing_urls, true ) ) {
-					continue;
-				}
-
-				$update_case_clauses[] = $wpdb->prepare( 'WHEN id = %d THEN %s', $id, $new_url );
-				$update_ids[]          = $id;
-			}
-
-			if ( empty( $update_ids ) ) {
-				Debug2::debug( '[Data] All URLs already normalized or skipped.' );
-				return;
-			}
-
-			$update_ids_list = implode( ',', array_map( 'intval', $update_ids ) );
-		
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$sql_update = "UPDATE `{$tb_url}` SET url = CASE " . implode( ' ', $update_case_clauses ) . " END WHERE id IN ({$update_ids_list})";
-						
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( $sql_update );
-		} else {
-			Debug2::debug( '[Data] No URL to update.' );
-		}
+	// Skip if plain permalink mode (no trailing slash)
+	$permalink_structure = get_option( 'permalink_structure' );
+	if ( empty( $permalink_structure ) ) {
+		Debug2::debug( '[Data] Plain permalink mode, bypassed URL trailing slash migration' );
+		return;
 	}
+
+	$tb_url = $wpdb->prefix . 'litespeed_url';
+	if ( ! litespeed_table_exists( $tb_url ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed URL migration' );
+		return;
+	}
+
+	// Check if there are URLs without trailing slash
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$count = $wpdb->get_var( "SELECT COUNT(*) FROM `{$tb_url}` WHERE url LIKE 'https://%' AND url NOT LIKE '%/'" );
+	if ( ! $count ) {
+		Debug2::debug( '[Data] No URLs without trailing slash found, bypassed' );
+		return;
+	}
+
+	// Append trailing slash to all URLs that don't have one and don't have duplicate with slash
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$wpdb->query( "UPDATE `{$tb_url}` SET url = CONCAT(url, '/') WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND CONCAT(url, '/') NOT IN (SELECT * FROM (SELECT url FROM `{$tb_url}` WHERE url LIKE '%/') AS tmp)" );
 }
 
 /**
