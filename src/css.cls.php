@@ -135,10 +135,14 @@ class CSS extends Base {
 	 */
 	private function _ccss() {
 		global $wp;
-		$request_url = get_permalink();
-		// Backup, in case get_permalink() fails.
-		if ( ! $request_url ) {
-			$request_url = home_url( $wp->request );
+
+		// get current request url
+		$permalink_structure = get_option( 'permalink_structure' );
+		if ( ! empty( $permalink_structure ) ) {
+			$request_url = trailingslashit( home_url( $wp->request ) );
+		} else {
+			$qs_add      = $wp->query_string ? '?' . (string) $wp->query_string : '' ;
+			$request_url = home_url( $wp->request ) . $qs_add;
 		}
 
 		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
