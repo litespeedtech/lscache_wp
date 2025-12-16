@@ -147,7 +147,7 @@ class REST extends Root {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- REST API nonce verified by WordPress
 		$crawler_id = isset( $_POST['crawler_id'] ) ? sanitize_text_field( wp_unslash( $_POST['crawler_id'] ) ) : '';
 
-		if ( $crawler_id ) {
+		if ( '' !== $crawler_id ) {
 			return $this->cls( 'Crawler' )->toggle_activeness( $crawler_id ) ? 1 : 0;
 		}
 	}
