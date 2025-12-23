@@ -288,7 +288,9 @@ class Base extends Root {
 	// -------------------------------------------------- ##
 	// --------------      OptimaX      ----------------- ##
 	// -------------------------------------------------- ##
-	const O_OPTIMAX = 'optimax';
+	const O_OPTIMAX      = 'optimax';
+	const O_OPTIMAX_CRON = 'optimax-cron';
+	const O_OPTIMAX_EXC  = 'optimax-exc';
 
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings';
 
