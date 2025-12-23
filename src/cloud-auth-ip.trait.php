@@ -3,7 +3,7 @@
  * Cloud auth IP validation trait
  *
  * @package LiteSpeed
- * @since 7.6
+ * @since 7.8
  */
 
 namespace LiteSpeed;

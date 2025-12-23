@@ -1,11 +1,9 @@
 <?php
-// phpcs:ignoreFile
-
 /**
  * The class to optimize image.
  *
- * @since       2.0
- * @package     LiteSpeed
+ * @since   2.0
+ * @package LiteSpeed
  */
 
 namespace LiteSpeed;
@@ -13,8 +11,13 @@ namespace LiteSpeed;
 use WpOrg\Requests\Autoload;
 use WpOrg\Requests\Requests;
 
-defined('WPINC') || exit();
+defined( 'WPINC' ) || exit();
 
+/**
+ * Class Img_Optm
+ *
+ * Handles image optimization operations with QUIC.cloud service.
+ */
 class Img_Optm extends Base {
 	use Img_Optm_Send;
 	use Img_Optm_Pull;
@@ -57,22 +60,116 @@ class Img_Optm extends Base {
 
 	const DB_NEED_PULL = 'need_pull';
 
+	/**
+	 * WordPress upload directory info.
+	 *
+	 * @var array
+	 */
 	private $wp_upload_dir;
-	private $tmp_pid;
-	private $tmp_type;
-	private $tmp_path;
-	private $_img_in_queue     = [];
-	private $_existed_src_list = [];
-	private $_pids_set         = [];
-	private $_thumbnail_set    = '';
-	private $_table_img_optm;
-	private $_table_img_optming;
-	private $_cron_ran = false;
-	private $_sizes_skipped     = [];
 
+	/**
+	 * Temporary post ID for current operation.
+	 *
+	 * @var int
+	 */
+	private $tmp_pid;
+
+	/**
+	 * Temporary type for current operation.
+	 *
+	 * @var string
+	 */
+	private $tmp_type;
+
+	/**
+	 * Temporary path for current operation.
+	 *
+	 * @var string
+	 */
+	private $tmp_path;
+
+	/**
+	 * Images queued for optimization.
+	 *
+	 * @var array
+	 */
+	private $_img_in_queue = [];
+
+	/**
+	 * List of existing source files.
+	 *
+	 * @var array
+	 */
+	private $_existed_src_list = [];
+
+	/**
+	 * Set of post IDs.
+	 *
+	 * @var array
+	 */
+	private $_pids_set = [];
+
+	/**
+	 * Thumbnail set string.
+	 *
+	 * @var string
+	 */
+	private $_thumbnail_set = '';
+
+	/**
+	 * Image optimization table name.
+	 *
+	 * @var string
+	 */
+	private $_table_img_optm;
+
+	/**
+	 * Image optimization working table name.
+	 *
+	 * @var string
+	 */
+	private $_table_img_optming;
+
+	/**
+	 * Flag indicating if cron has run.
+	 *
+	 * @var bool
+	 */
+	private $_cron_ran = false;
+
+	/**
+	 * Sizes to skip during optimization.
+	 *
+	 * @var array
+	 */
+	private $_sizes_skipped = [];
+
+	/**
+	 * Media class instance.
+	 *
+	 * @var Media
+	 */
 	private $__media;
+
+	/**
+	 * Data class instance.
+	 *
+	 * @var Data
+	 */
 	private $__data;
+
+	/**
+	 * Summary data.
+	 *
+	 * @var array
+	 */
 	protected $_summary;
+
+	/**
+	 * Output format (webp/avif).
+	 *
+	 * @var string
+	 */
 	private $_format = '';
 
 	/**
@@ -81,21 +178,21 @@ class Img_Optm extends Base {
 	 * @since  2.0
 	 */
 	public function __construct() {
-		Debug2::debug2('[ImgOptm] init');
+		Debug2::debug2( '[ImgOptm] init' );
 
 		$this->wp_upload_dir      = wp_upload_dir();
-		$this->__media            = $this->cls('Media');
-		$this->__data             = $this->cls('Data');
-		$this->_table_img_optm    = $this->__data->tb('img_optm');
-		$this->_table_img_optming = $this->__data->tb('img_optming');
+		$this->__media            = $this->cls( 'Media' );
+		$this->__data             = $this->cls( 'Data' );
+		$this->_table_img_optm    = $this->__data->tb( 'img_optm' );
+		$this->_table_img_optming = $this->__data->tb( 'img_optming' );
 
 		$this->_summary = self::get_summary();
-		if (empty($this->_summary['next_post_id'])) {
+		if ( empty( $this->_summary['next_post_id'] ) ) {
 			$this->_summary['next_post_id'] = 0;
 		}
-		if ($this->conf(Base::O_IMG_OPTM_WEBP)) {
+		if ( $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			$this->_format = 'webp';
-			if ($this->conf(Base::O_IMG_OPTM_WEBP) == 2) {
+			if ( $this->conf( Base::O_IMG_OPTM_WEBP ) === 2 ) {
 				$this->_format = 'avif';
 			}
 		}
@@ -113,52 +210,54 @@ class Img_Optm extends Base {
 	public function handler() {
 		$type = Router::verify_type();
 
-		switch ($type) {
+		switch ( $type ) {
 			case self::TYPE_RESET_ROW:
-            $this->reset_row(!empty($_GET['id']) ? $_GET['id'] : false);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$id = ! empty( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : false;
+				$this->reset_row( $id );
 				break;
 
 			case self::TYPE_CALC_BKUP:
-            $this->_calc_bkup();
+				$this->_calc_bkup();
 				break;
 
 			case self::TYPE_RM_BKUP:
-            $this->rm_bkup();
+				$this->rm_bkup();
 				break;
 
 			case self::TYPE_NEW_REQ:
-            $this->new_req();
+				$this->new_req();
 				break;
 
 			case self::TYPE_RESCAN:
-            $this->_rescan();
+				$this->_rescan();
 				break;
 
 			case self::TYPE_RESET_COUNTER:
-            $this->_reset_counter();
+				$this->_reset_counter();
 				break;
 
 			case self::TYPE_DESTROY:
-            $this->_destroy();
+				$this->_destroy();
 				break;
 
 			case self::TYPE_CLEAN:
-            $this->clean();
+				$this->clean();
 				break;
 
 			case self::TYPE_PULL:
-            self::start_async();
+				self::start_async();
 				break;
 
 			case self::TYPE_BATCH_SWITCH_ORI:
 			case self::TYPE_BATCH_SWITCH_OPTM:
-            $this->batch_switch($type);
+				$this->batch_switch( $type );
 				break;
 
-			case substr($type, 0, 4) === 'avif':
-			case substr($type, 0, 4) === 'webp':
-			case substr($type, 0, 4) === 'orig':
-            $this->_switch_optm_file($type);
+			case substr( $type, 0, 4 ) === 'avif':
+			case substr( $type, 0, 4 ) === 'webp':
+			case substr( $type, 0, 4 ) === 'orig':
+				$this->_switch_optm_file( $type );
 				break;
 
 			default:
