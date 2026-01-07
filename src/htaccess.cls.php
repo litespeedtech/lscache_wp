@@ -26,7 +26,8 @@ class Htaccess extends Root {
 	private $theme_htaccess_readable    = false;
 	private $theme_htaccess_writable    = false;
 	private $__rewrite_on;
-
+	private $__rewrite_general;
+	
 	const LS_MODULE_START            = '<IfModule LiteSpeed>';
 	const EXPIRES_MODULE_START       = '<IfModule mod_expires.c>';
 	const LS_MODULE_END              = '</IfModule>';
@@ -83,13 +84,20 @@ class Htaccess extends Root {
 		if (is_writable($test_permissions)) {
 			$this->frontend_htaccess_writable = true;
 		}
+		
+		// General Rewrite Rules (Files/Logs protection)
+        $this->__rewrite_general = array(
+            self::LS_MODULE_REWRITE_START, // <IfModule mod_rewrite.c>
+            self::REWRITE_ON,              // RewriteEngine on
+            'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]',
+            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]',
+            self::LS_MODULE_END,           // </IfModule>
+        );
 
+        // LiteSpeed Specific Rules
 		$this->__rewrite_on = array(
-			self::REWRITE_ON,
 			'CacheLookup on',
 			'RewriteRule .* - [E=Cache-Control:no-autoflush]',
-			'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]',
-			'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]',
 		);
 
 		// backend .htaccess privilege
@@ -620,8 +628,10 @@ class Htaccess extends Root {
 	 * @since  2.1.1
 	 * @access private
 	 */
+		
 	private function _wrap_ls_module( $rules = array() ) {
-		return array_merge(array( self::LS_MODULE_START ), $this->__rewrite_on, array( '' ), $rules, array( self::LS_MODULE_END ));
+		return array_merge( $this->__rewrite_general, array( self::LS_MODULE_START ), $this->__rewrite_on, array( '' ), $rules, array( self::LS_MODULE_END )
+        );
 	}
 
 	/**
