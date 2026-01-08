@@ -617,6 +617,12 @@ class Media extends Root {
 				}
 			}
 
+			if ( preg_match( '/Macintosh.+Version\/([0-9.]+)/i', $ua, $matches ) ) {
+				if ( version_compare( $matches[1], '16.4', '>=' ) ) {
+					return true;
+				}
+			}
+			
 			if ( preg_match( '/Firefox\/(\d+)/i', $ua, $matches ) ) {
 				if ( $matches[1] >= 65 ) {
 					return true;
