@@ -1240,6 +1240,7 @@ class Optimize extends Base {
 		}
 
 		if (strpos($ori, 'defer') !== false) {
+			self::debug2('bypass: attr defer exist');
 			return false;
 		}
 		if (strpos($ori, 'data-deferred') !== false) {
