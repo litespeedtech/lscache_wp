@@ -141,13 +141,13 @@ class Htaccess extends Root {
 		}
 
 		// General Rewrite Rules (Files/Logs protection)
-        $this->__rewrite_general = array(
+        $this->__rewrite_general = [
             self::LS_MODULE_REWRITE_START, // <IfModule mod_rewrite.c>
             self::REWRITE_ON,              // RewriteEngine on
-            'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]',
-            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]',
+            'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
             self::LS_MODULE_END,           // </IfModule>
-        );
+        ];
 		
 		$this->__rewrite_on = [
 			'CacheLookup on',
