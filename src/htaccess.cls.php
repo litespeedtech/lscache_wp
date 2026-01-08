@@ -83,6 +83,13 @@ class Htaccess extends Root {
 	 */
 	private $__rewrite_on;
 
+	/**
+	 * Lines that turn on and guard general rewrite/module blocks.
+	 *
+	 * @var array<int,string>
+	 */
+	private $__rewrite_general;
+
 	const LS_MODULE_START            = '<IfModule LiteSpeed>';
 	const EXPIRES_MODULE_START       = '<IfModule mod_expires.c>';
 	const LS_MODULE_END              = '</IfModule>';
@@ -140,12 +147,18 @@ class Htaccess extends Root {
 			$this->frontend_htaccess_writable = true;
 		}
 
+		// General Rewrite Rules (Files/Logs protection)
+        $this->__rewrite_general = [
+            self::LS_MODULE_REWRITE_START, // <IfModule mod_rewrite.c>
+            self::REWRITE_ON,              // RewriteEngine on
+            'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+            self::LS_MODULE_END,           // </IfModule>
+        ];
+		
 		$this->__rewrite_on = [
-			self::REWRITE_ON,
 			'CacheLookup on',
 			'RewriteRule .* - [E=Cache-Control:no-autoflush]',
-			'RewriteRule ' . preg_quote( LITESPEED_DATA_FOLDER ) . '/debug/.*\.log$ - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
-			'RewriteRule ' . preg_quote( self::CONF_FILE ) . ' - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
 		];
 
 		// Backend .htaccess privilege.
@@ -668,7 +681,10 @@ class Htaccess extends Root {
 
 			// Check for iPhone browsers (version > 13).
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (1[4-9]|[2-9][0-9]) [OR]';
-
+			
+			// Check for macOS Safari (version >= 16.4).
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Macintosh.*Version/((1[7-9]|[2-9][0-9])|16\.([4-9]|[1-9][0-9])) [OR]';
+			
 			// Check for Firefox (version >= 65).
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([6-9][0-9]|[1-9][0-9]{2,})';
 
@@ -725,7 +741,8 @@ class Htaccess extends Root {
 	 * @return array<int,string> Wrapped rules.
 	 */
 	private function _wrap_ls_module( $rules = array() ) {
-		return array_merge( array( self::LS_MODULE_START ), $this->__rewrite_on, array( '' ), $rules, array( self::LS_MODULE_END ) );
+		return array_merge( $this->__rewrite_general, array( self::LS_MODULE_START ), $this->__rewrite_on, array( '' ), $rules, array( self::LS_MODULE_END )
+        );
 	}
 
 	/**
