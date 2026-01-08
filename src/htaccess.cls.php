@@ -82,7 +82,14 @@ class Htaccess extends Root {
 	 * @var array<int,string>
 	 */
 	private $__rewrite_on;
+
+	/**
+	 * Lines that turn on and guard general rewrite/module blocks.
+	 *
+	 * @var array<int,string>
+	 */
 	private $__rewrite_general;
+
 	const LS_MODULE_START            = '<IfModule LiteSpeed>';
 	const EXPIRES_MODULE_START       = '<IfModule mod_expires.c>';
 	const LS_MODULE_END              = '</IfModule>';
