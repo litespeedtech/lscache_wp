@@ -535,22 +535,6 @@ abstract class Root {
 	}
 
 	/**
-	 * Dropin with prefix for WP's get_blog_option
-	 *
-	 * @since 3.0
-	 */
-	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
-		$v = get_blog_option($blog_id, self::name($id), $default_v);
-
-		// Maybe decode array
-		if (is_array($default_v)) {
-			$v = self::_maybe_decode($v);
-		}
-
-		return $v;
-	}
-
-	/**
 	 * Dropin with prefix for WP's add_option
 	 *
 	 * @since 3.0
@@ -591,7 +575,7 @@ abstract class Root {
 	 *
 	 * @since  4.0
 	 */
-	private static function _maybe_decode( $v ) {
+	protected static function _maybe_decode( $v ) {
 		if (!is_array($v)) {
 			$v2 = \json_decode($v, true);
 			if ($v2 !== null) {

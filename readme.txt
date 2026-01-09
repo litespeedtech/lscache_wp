@@ -260,6 +260,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 7.8 - Feb 2026 =
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
 * **Media** Added webp/avif support for macOS Safari >= 16.4. (PR#948)
+* **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Misc** Supports Apache rewrite rule for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 

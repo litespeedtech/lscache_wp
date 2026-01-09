@@ -639,6 +639,67 @@ class Base extends Root {
 	];
 
 	/**
+	 * Cache for blog options to avoid repeated switch_to_blog calls.
+	 * Structure: [ blog_id => [ option_name => value, ... ], ... ]
+	 *
+	 * @since 7.8
+	 * @var array<int,array<string,mixed>>
+	 */
+	private static $_blog_options_cache = [];
+
+	/**
+	 * Get option from another blog with batch preload optimization.
+	 *
+	 * Reduces N*2 switch_to_blog calls to just 2 by preloading all options on first call.
+	 *
+	 * @since 7.8
+	 * @param int    $blog_id   Blog ID to get option from.
+	 * @param string $id        Option ID (without prefix).
+	 * @param mixed  $default_v Default value if option not found.
+	 * @return mixed Option value.
+	 */
+	public static function get_blog_option( $blog_id, $id, $default_v = false ) {
+		$blog_id = (int) $blog_id;
+
+		// If current blog, use get_option directly (no switch needed).
+		if ( get_current_blog_id() === $blog_id ) {
+			return self::get_option( $id, $default_v );
+		}
+
+		// Preload all options for this blog if not cached.
+		if ( ! isset( self::$_blog_options_cache[ $blog_id ] ) ) {
+			self::_preload_blog_options( $blog_id );
+		}
+
+		$v = self::$_blog_options_cache[ $blog_id ][ $id ];
+
+		// Maybe decode array.
+		if ( is_array( $default_v ) ) {
+			$v = self::_maybe_decode( $v );
+		}
+
+		return $v;
+	}
+
+	/**
+	 * Preload all conf options for a blog into cache.
+	 *
+	 * @since 7.8
+	 * @param int $blog_id Blog ID to preload options from.
+	 */
+	private static function _preload_blog_options( $blog_id ) {
+		self::$_blog_options_cache[ $blog_id ] = [];
+
+		switch_to_blog( $blog_id );
+
+		foreach ( self::$_default_options as $id => $default_v ) {
+			self::$_blog_options_cache[ $blog_id ][ $id ] = get_option( self::name( $id ), $default_v );
+		}
+
+		restore_current_blog();
+	}
+
+	/**
 	 * Correct the option type.
 	 *
 	 * TODO: add similar network func
