@@ -622,7 +622,7 @@ class Media extends Root {
 					return true;
 				}
 			}
-			
+
 			if ( preg_match( '/Firefox\/(\d+)/i', $ua, $matches ) ) {
 				if ( $matches[1] >= 65 ) {
 					return true;
@@ -1310,12 +1310,17 @@ class Media extends Root {
 			self::debug2( 'No next generation format chosen in setting, bypassed' );
 			return false;
 		}
-		self::debug2( $this->_sys_format . ' replacing: ' . substr( $url, 0, 200 ) );
 
-		if ( substr( $url, -5 ) === '.' . $this->_sys_format ) {
-			self::debug2( 'already ' . $this->_sys_format );
+		// Parse extension from URL path.
+		$url_path = wp_parse_url( $url, PHP_URL_PATH );
+		$postfix  = $url_path ? strtolower( pathinfo( $url_path, PATHINFO_EXTENSION ) ) : '';
+		// Only process image formats that can be converted to WebP/AVIF.
+		if ( ! in_array( $postfix, [ 'jpg', 'jpeg', 'png', 'gif' ], true ) ) {
+			self::debug2( 'not convertible format, bypassed' );
 			return false;
 		}
+
+		self::debug2( $this->_sys_format . ' replacing: ' . substr( $url, 0, 200 ) . ' [.' . $postfix . ']' );
 
 		/**
 		 * WebP/AVIF API hook.

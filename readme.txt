@@ -257,6 +257,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 7.8 - Feb 2026 =
+* **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
+* **Media** Added webp/avif support for macOS Safari >= 16.4. (PR#948)
+* **Misc** Supports Apache rewrite rule for security check. (PR#948)
+* **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
+
 = 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
 * **Conf** Enabled `litespeed_conf_load_option_{$option}` to allow modifying configuration values.
