@@ -421,7 +421,7 @@ class Media extends Root {
 				$desc        = esc_attr__( 'Currently using original (unoptimized) version of file.', 'litespeed-cache' ) . '&#10;' . esc_attr__( 'Click to switch to optimized version.', 'litespeed-cache' );
 			}
 
-			echo wp_kses_post(
+			echo wp_kses(
 				GUI::pie_tiny(
 					$percent,
 					24,
@@ -431,7 +431,8 @@ class Media extends Root {
 						Utility::real_size( $size_meta['ori_saved'] )
 					),
 					'left'
-				)
+				),
+				GUI::allowed_svg_tags()
 			);
 
 			printf(
@@ -455,7 +456,7 @@ class Media extends Root {
 				);
 			}
 		} elseif ( $size_meta && 0 === (int) $size_meta['ori_saved'] ) {
-			echo wp_kses_post( GUI::pie_tiny( 0, 24, esc_html__( 'Congratulation! Your file was already optimized', 'litespeed-cache' ), 'left' ) );
+			echo wp_kses( GUI::pie_tiny( 0, 24, esc_html__( 'Congratulation! Your file was already optimized', 'litespeed-cache' ), 'left' ), GUI::allowed_svg_tags() );
 			printf(
 				esc_html__( 'Orig %s', 'litespeed-cache' ),
 				'<span class="litespeed-desc">' . esc_html__( '(no savings)', 'litespeed-cache' ) . '</span>'
@@ -494,7 +495,7 @@ class Media extends Root {
 				$desc       .= '&#10;' . esc_attr__( 'Click to switch to optimized version.', 'litespeed-cache' );
 			}
 
-			echo wp_kses_post(
+			echo wp_kses(
 				GUI::pie_tiny(
 					$percent,
 					24,
@@ -504,7 +505,8 @@ class Media extends Root {
 						Utility::real_size( $size_meta_saved )
 					),
 					'left'
-				)
+				),
+				GUI::allowed_svg_tags()
 			);
 			printf(
 				$is_avif ? esc_html__( 'AVIF saved %s', 'litespeed-cache' ) : esc_html__( 'WebP saved %s', 'litespeed-cache' ),

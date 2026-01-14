@@ -263,6 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Misc** Supports Apache rewrite rule for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
+* **Media** Fixed pie chart not displaying in media library.
 
 = 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
