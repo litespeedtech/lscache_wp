@@ -258,12 +258,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.8 - Feb 2026 =
+* 🐞**Image Optimize** Fixed failed to pull bug.
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
-* **Media** Added webp/avif support for macOS Safari >= 16.4. (PR#948)
-* **Conf** Improved network subsites config loading efficiency. (dassels43)
-* **Misc** Supports Apache rewrite rule for security check. (PR#948)
-* **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
+* **Media** Added WebP/AVIF support for macOS Safari >= 16.4. (PR#948)
 * **Media** Fixed pie chart not displaying in media library.
+* **Conf** Improved network subsites config loading efficiency. (dassels43)
+* **Misc** Added Apache rewrite rule support for security check. (PR#948)
+* **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 
 = 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
