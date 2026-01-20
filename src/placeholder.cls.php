@@ -227,14 +227,15 @@ class Placeholder extends Base {
 					}
 
 					if ( 0 === $total_files ) {
-						echo '<div class="litespeed-media-lqip"><img src="' .
-							esc_url( Str::trim_quotes( File::read( $lqip_folder . '/' . $v ) ) ) .
+						$file = Str::trim_quotes( File::read( $lqip_folder . '/' . $v ) );
+						echo '<div class="litespeed-media-lqip"><img src="' . 
+							esc_attr( $file ) .
 							'" alt="' .
 							esc_attr( sprintf( __( 'LQIP image preview for size %s', 'litespeed-cache' ), $v ) ) .
 							'"></div>';
 					}
 
-					echo '<div class="litespeed-media-size"><a href="' . esc_url( Str::trim_quotes( File::read( $lqip_folder . '/' . $v ) ) ) . '" target="_blank">' . esc_html( $v ) . '</a></div>';
+					echo '<div class="litespeed-media-size"><a href="' . esc_attr( $file ) . '" target="_blank">' . esc_html( $v ) . '</a></div>';
 
 					++$total_files;
 				}
