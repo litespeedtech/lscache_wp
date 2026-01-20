@@ -261,6 +261,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
 * **Media** Added WebP/AVIF support for macOS Safari >= 16.4. (PR#948)
 * **Media** Fixed pie chart not displaying in media library.
+* **Image Optimize** Fixed image optimization data not being cleared when images are replaced using third-party plugins.
+* **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.

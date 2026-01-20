@@ -18,6 +18,59 @@ defined( 'WPINC' ) || exit();
 trait Img_Optm_Manage {
 
 	/**
+	 * Check if an attachment has optimization records
+	 *
+	 * @since 7.8
+	 * @access public
+	 * @param int $post_id The attachment post ID.
+	 * @return bool True if has optimization records.
+	 */
+	public function has_optm_record( $post_id ) {
+		global $wpdb;
+
+		if ( ! $post_id ) {
+			return false;
+		}
+
+		// Check post meta
+		if ( get_post_meta( $post_id, self::DB_SIZE, true ) || get_post_meta( $post_id, self::DB_SET, true ) ) {
+			return true;
+		}
+
+		// Check img_optm table (legacy)
+		if ( $this->__data->tb_exist( 'img_optm' ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(1) FROM `$this->_table_img_optm` WHERE post_id = %d", $post_id ) );
+			if ( $count > 0 ) {
+				return true;
+			}
+		}
+
+		// Check img_optming table
+		if ( $this->__data->tb_exist( 'img_optming' ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(1) FROM `$this->_table_img_optming` WHERE post_id = %d", $post_id ) );
+			if ( $count > 0 ) {
+				return true;
+			}
+		}
+
+		// Check if optimized files exist (.webp, .avif)
+		$meta = wp_get_attachment_metadata( $post_id );
+		if ( ! empty( $meta['file'] ) ) {
+			$short_file_path = $meta['file'];
+			if ( $this->__media->info( $short_file_path . '.webp', $post_id ) ) {
+				return true;
+			}
+			if ( $this->__media->info( $short_file_path . '.avif', $post_id ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Clean up all unfinished queue locally and to Cloud server
 	 *
 	 * @since 2.1.2
@@ -809,21 +862,15 @@ trait Img_Optm_Manage {
 	 *
 	 * @since 2.4.2
 	 * @access public
-	 * @param int $post_id The post ID to reset.
+	 * @param int  $post_id The post ID to reset.
+	 * @param bool $silent  Whether to suppress success message. Default false.
 	 */
-	public function reset_row( $post_id ) {
+	public function reset_row( $post_id, $silent = false ) {
 		global $wpdb;
 
 		if ( ! $post_id ) {
 			return;
 		}
-
-		// Gathered image don't have DB_SIZE info yet
-		// $size_meta = get_post_meta( $post_id, self::DB_SIZE, true );
-
-		// if ( ! $size_meta ) {
-		// return;
-		// }
 
 		self::debug( '_reset_row [pid] ' . $post_id );
 
@@ -849,8 +896,20 @@ trait Img_Optm_Manage {
 		delete_post_meta( $post_id, self::DB_SIZE );
 		delete_post_meta( $post_id, self::DB_SET );
 
-		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' );
-		Admin_Display::success( $msg );
+		// Delete records from img_optm and img_optming tables
+		if ( $this->__data->tb_exist( 'img_optm' ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d", $post_id ) );
+		}
+		if ( $this->__data->tb_exist( 'img_optming' ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optming` WHERE post_id = %d", $post_id ) );
+		}
+
+		if ( ! $silent ) {
+			$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' );
+			Admin_Display::success( $msg );
+		}
 	}
 
 	/**

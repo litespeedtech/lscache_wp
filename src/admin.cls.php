@@ -59,6 +59,9 @@ class Admin extends Root {
 	 * @return void
 	 */
 	public function admin_init() {
+		// Hook to reset optimization data when image is replaced.
+		add_filter( 'wp_generate_attachment_metadata', [ $this, 'wp_generate_attachment_metadata' ], 10, 3 );
+
 		// Hook attachment upload auto optimization.
 		if ( $this->conf( Base::O_IMG_OPTM_AUTO ) ) {
 			add_filter( 'wp_update_attachment_metadata', [ $this, 'wp_update_attachment_metadata' ], 9999, 2 );
@@ -85,6 +88,34 @@ class Admin extends Root {
 			add_action( 'in_widget_form', [ $this->cls( 'Admin_Display' ), 'show_widget_edit' ], 100, 3 );
 			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 );
 		}
+	}
+
+	/**
+	 * Handle attachment metadata generation.
+	 * Reset optimization data if this is a replaced image (has existing optimization records).
+	 *
+	 * @since 7.8
+	 *
+	 * @param array  $metadata      Attachment metadata.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $context       Context: 'create' or 'update'.
+	 * @return array Filtered metadata.
+	 */
+	public function wp_generate_attachment_metadata( $metadata, $attachment_id, $context = 'create' ) {
+		// Only process on 'create' context (replacement also uses 'create')
+		if ( 'create' !== $context ) {
+			return $metadata;
+		}
+
+		$img_optm = $this->cls( 'Img_Optm' );
+
+		// Check if has existing optimization records, if so it's a replacement
+		if ( $img_optm->has_optm_record( $attachment_id ) ) {
+			self::debug( 'Image replaced, resetting optimization data [pid] ' . $attachment_id );
+			$img_optm->reset_row( $attachment_id, true );
+		}
+
+		return $metadata;
 	}
 
 	/**
