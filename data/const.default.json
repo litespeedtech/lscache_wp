@@ -182,6 +182,6 @@
 		"inc_js": ["1"],
 		"inc_css": ["1"],
 		"inc_img": ["1"],
-		"filetype": [".aac\n.css\n.eot\n.gif\n.jpeg\n.jpg\n.js\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.webp\n.woff\n.woff2"]
+		"filetype": [".aac\n.eot\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.ttf\n.webp\n.woff\n.woff2"]
 	}
 }

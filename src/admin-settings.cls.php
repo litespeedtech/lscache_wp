@@ -128,6 +128,22 @@ class Admin_Settings extends Base {
 						foreach ( $data as $k => $v ) {
 							if ( self::CDN_MAPPING_FILETYPE === $child ) {
 								$v = Utility::sanitize_lines( $v );
+								// Remove from MAPPING FILETYPE extensions for IMAGES, CSS, JS
+								$remove_type = apply_filters( 
+									'litespeed_cdn_save_filetypes_remove',
+									array(
+										'.jpg',
+										'.jpeg',
+										'.png',
+										'.gif',
+										'.svg',
+										'.webp',
+										'.avif',
+										'.css',
+										'.js',
+									)
+								);
+								$v           = array_values( array_diff($v, $remove_type) );
 							}
 
 							if ( self::CDN_MAPPING_URL === $child ) {
