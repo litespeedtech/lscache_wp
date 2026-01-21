@@ -22,10 +22,11 @@ trait Img_Optm_Manage {
 	 *
 	 * @since 7.8
 	 * @access public
-	 * @param int $post_id The attachment post ID.
+	 * @param int        $post_id  The attachment post ID.
+	 * @param array|null $metadata Optional. Attachment metadata for file path check.
 	 * @return bool True if has optimization records.
 	 */
-	public function has_optm_record( $post_id ) {
+	public function has_optm_record( $post_id, $metadata = null ) {
 		global $wpdb;
 
 		if ( ! $post_id ) {
@@ -56,9 +57,11 @@ trait Img_Optm_Manage {
 		}
 
 		// Check if optimized files exist (.webp, .avif)
-		$meta = wp_get_attachment_metadata( $post_id );
-		if ( ! empty( $meta['file'] ) ) {
-			$short_file_path = $meta['file'];
+		if ( null === $metadata ) {
+			$metadata = wp_get_attachment_metadata( $post_id );
+		}
+		if ( ! empty( $metadata['file'] ) ) {
+			$short_file_path = $metadata['file'];
 			if ( $this->__media->info( $short_file_path . '.webp', $post_id ) ) {
 				return true;
 			}

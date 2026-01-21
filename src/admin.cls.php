@@ -110,7 +110,7 @@ class Admin extends Root {
 		$img_optm = $this->cls( 'Img_Optm' );
 
 		// Check if has existing optimization records, if so it's a replacement
-		if ( $img_optm->has_optm_record( $attachment_id ) ) {
+		if ( $img_optm->has_optm_record( $attachment_id, $metadata ) ) {
 			self::debug( 'Image replaced, resetting optimization data [pid] ' . $attachment_id );
 			$img_optm->reset_row( $attachment_id, true );
 		}
