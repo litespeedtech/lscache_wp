@@ -236,6 +236,20 @@ class UCSS extends Base {
 			return;
 		}
 
+		// Check if we need to wait due to server's try_later request
+		if ( ! empty( $this->_summary['ucss_next_run_after'] ) && time() < $this->_summary['ucss_next_run_after'] ) {
+			$wait_seconds = $this->_summary['ucss_next_run_after'] - time();
+			self::debug( 'Waiting for try_later timeout: ' . $wait_seconds . ' seconds remaining' );
+			return;
+		}
+
+		// Clear try_later flag if wait time has passed
+		if ( ! empty( $this->_summary['ucss_next_run_after'] ) ) {
+			unset( $this->_summary['ucss_next_run_after'] );
+			self::save_summary();
+			self::debug( 'Cleared try_later flag, resuming UCSS processing' );
+		}
+
 		// For cron, need to check request interval too
 		if ( ! $keep_going ) {
 			if (!empty($this->_summary['curr_request']) && time() - $this->_summary['curr_request'] < 300 && !$this->conf(self::O_DEBUG)) {
@@ -281,10 +295,20 @@ class UCSS extends Base {
 				return;
 			}
 
-			$this->_queue                  = $this->load_queue( 'ucss' );
-			$this->_queue[ $k ]['_status'] = 'requested';
-			$this->save_queue( 'ucss', $this->_queue );
-			self::debug( 'Saved to queue [k] ' . $k );
+			// Handle try_later response from server
+			if ( is_array( $res ) && ! empty( $res['try_later'] ) ) {
+				$ttl                                   = (int) $res['try_later'];
+				$next_run_time                         = time() + $ttl;
+				$this->_summary['ucss_next_run_after'] = $next_run_time;
+				self::save_summary();
+				self::debug( 'Set next UCSS cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
+				return;
+			}
+
+			// Handle completed response (sync mode)
+			if ( 'completed' === $res ) {
+				self::debug( 'UCSS completed for [k] ' . $k );
+			}
 
 			// only request first one
 			if ( ! $keep_going ) {
@@ -330,37 +354,12 @@ class UCSS extends Base {
 		$this->_summary['curr_request'] = time();
 		self::save_summary();
 
-		// Gather guest HTML to send
-		$html = $this->cls('CSS')->prepare_html($request_url, $user_agent, $uid);
-
-		if (!$html) {
-			return false;
-		}
-
-		// Parse HTML to gather all CSS content before requesting
-		$css             = false;
-		list(, $html)    = $this->prepare_css($html, $is_webp, true); // Use this to drop CSS from HTML as we don't need those CSS to generate UCSS
-		$filename        = $this->cls('Data')->load_url_file($url_tag, $vary, 'css');
-		$filepath_prefix = $this->_build_filepath_prefix('css');
-		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
-		self::debug('Checking combined file ' . $static_file);
-		if (file_exists($static_file)) {
-			$css = File::read($static_file);
-		}
-
-		if (!$css) {
-			self::debug('❌ No combined css');
-			return false;
-		}
-
 		$data = [
 			'url'        => $request_url,
 			'queue_k'    => $queue_k,
 			'user_agent' => $user_agent,
 			'is_mobile'  => $is_mobile ? 1 : 0, // todo:compatible w/ tablet
 			'is_webp'    => $is_webp ? 1 : 0,
-			'html'       => $html,
-			'css'        => $css,
 		];
 		if (!isset($this->_ucss_whitelist)) {
 			$this->_ucss_whitelist = $this->_filter_whitelist();
@@ -374,28 +373,40 @@ class UCSS extends Base {
 			return $json;
 		}
 
-		// Old version compatibility
-		if (empty($json['status'])) {
-			if (!empty($json['ucss'])) {
-				$this->_save_con('ucss', $json['ucss'], $queue_k, $is_mobile, $is_webp);
-			}
+		// Check if server asks to try later
+		if ( ! empty( $json['try_later'] ) ) {
+			$ttl = (int) $json['try_later'];
+			self::debug( 'Server requested try later: ' . $ttl . ' seconds' );
+			return [ 'try_later' => $ttl ];
+		}
 
-			// Delete the row
+		// Check response status
+		if ( empty( $json['status'] ) ) {
+			self::debug( '❌ No status in response' );
 			return false;
 		}
 
-		// Unknown status, remove this line
-		if ( 'queued' !== $json['status'] ) {
-			return false;
+		// Handle sync response with data
+		if ( ! empty( $json['data_ucss'] ) ) {
+			self::debug( '✅ Received UCSS data, saving...' );
+			$this->_save_con( 'ucss', $json['data_ucss'], $queue_k, $is_mobile, $is_webp );
+
+			// Remove from queue
+			unset( $this->_queue[ $queue_k ] );
+			$this->save_queue( 'ucss', $this->_queue );
+			self::debug( 'Removed from queue [q_k] ' . $queue_k );
+
+			// Save summary data
+			$this->_summary['last_request'] = $this->_summary['curr_request'];
+			$this->_summary['curr_request'] = 0;
+			self::save_summary();
+
+			return 'completed';
 		}
 
-		// Save summary data
-		$this->_summary['last_spent']   = time() - $this->_summary['curr_request'];
-		$this->_summary['last_request'] = $this->_summary['curr_request'];
-		$this->_summary['curr_request'] = 0;
-		self::save_summary();
-
-		return true;
+		// Unknown status
+		self::debug( '❌ Unknown status: ' . $json['status'] );
+		return false;
 	}
 
 	/**
@@ -437,95 +448,6 @@ class UCSS extends Base {
 	}
 
 	/**
-	 * Prepare CSS from HTML for CCSS generation only. UCSS will used combined CSS directly.
-	 * Prepare refined HTML for both CCSS and UCSS.
-	 *
-	 * @since  3.4.3
-	 *
-	 * @param string $html    The HTML content.
-	 * @param bool   $is_webp Whether supports webp.
-	 * @param bool   $dryrun  Whether to run in dry mode.
-	 * @return array Array of CSS and HTML.
-	 */
-	public function prepare_css( $html, $is_webp = false, $dryrun = false ) {
-		$css = '';
-		preg_match_all('#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
-			$debug_info = '';
-			if (strpos($match[0], '<link') === 0) {
-				$attrs = Utility::parse_attr($match[1]);
-
-				if (empty($attrs['rel'])) {
-					continue;
-				}
-
-				if ( 'stylesheet' !== $attrs['rel'] ) {
-					if ( 'preload' !== $attrs['rel'] || empty( $attrs['as'] ) || 'style' !== $attrs['as'] ) {
-						continue;
-					}
-				}
-
-				if (!empty($attrs['media']) && strpos($attrs['media'], 'print') !== false) {
-					continue;
-				}
-
-				if (empty($attrs['href'])) {
-					continue;
-				}
-
-				// Check Google fonts hit
-				if (strpos($attrs['href'], 'fonts.googleapis.com') !== false) {
-					$html = str_replace($match[0], '', $html);
-					continue;
-				}
-
-				$debug_info = $attrs['href'];
-
-				// Load CSS content
-				if (!$dryrun) {
-					// Dryrun will not load CSS but just drop them
-					$con = $this->cls('Optimizer')->load_file($attrs['href']);
-					if (!$con) {
-						continue;
-					}
-				} else {
-					$con = '';
-				}
-			} else {
-				// Inline style
-				$attrs = Utility::parse_attr($match[2]);
-
-				if (!empty($attrs['media']) && strpos($attrs['media'], 'print') !== false) {
-					continue;
-				}
-
-				Debug2::debug2('[CSS] Load inline CSS ' . substr($match[3], 0, 100) . '...', $attrs);
-				$con = $match[3];
-
-				$debug_info = '__INLINE__';
-			}
-
-			$con = Optimizer::minify_css($con);
-			if ($is_webp && $this->cls('Media')->webp_support()) {
-				$con = $this->cls('Media')->replace_background_webp($con);
-			}
-
-			if ( ! empty( $attrs['media'] ) && 'all' !== $attrs['media'] ) {
-				$con = '@media ' . $attrs['media'] . '{' . $con . "}\n";
-			} else {
-				$con = $con . "\n";
-			}
-
-			$con  = '/* ' . $debug_info . ' */' . $con;
-			$css .= $con;
-
-			$html = str_replace($match[0], '', $html);
-		}
-
-		return [ $css, $html ];
-	}
-
-	/**
 	 * Filter the comment content, add quotes to selector from whitelist. Return the json
 	 *
 	 * @since 3.3
@@ -541,65 +463,6 @@ class UCSS extends Base {
 		}
 
 		return $whitelist;
-	}
-
-	/**
-	 * Notify finished from server
-	 *
-	 * @since 5.1
-	 */
-	public function notify() {
-		$post_data = \json_decode( file_get_contents( 'php://input' ), true );
-		if ( is_null( $post_data ) ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- This is a callback from QUIC.cloud, verified by extract_msg()
-			$post_data = $_POST;
-		}
-		self::debug('notify() data', $post_data);
-
-		$this->_queue = $this->load_queue('ucss');
-
-		list($post_data) = $this->cls('Cloud')->extract_msg($post_data, 'ucss');
-
-		$notified_data = $post_data['data'];
-		if (empty($notified_data) || !is_array($notified_data)) {
-			self::debug('❌ notify exit: no notified data');
-			return Cloud::err('no notified data');
-		}
-
-		// Check if its in queue or not
-		$valid_i = 0;
-		foreach ($notified_data as $v) {
-			if (empty($v['request_url'])) {
-				self::debug('❌ notify bypass: no request_url', $v);
-				continue;
-			}
-			if (empty($v['queue_k'])) {
-				self::debug('❌ notify bypass: no queue_k', $v);
-				continue;
-			}
-
-			if (empty($this->_queue[$v['queue_k']])) {
-				self::debug('❌ notify bypass: no this queue [q_k]' . $v['queue_k']);
-				continue;
-			}
-
-			// Save data
-			if (!empty($v['data_ucss'])) {
-				$is_mobile = $this->_queue[$v['queue_k']]['is_mobile'];
-				$is_webp   = $this->_queue[$v['queue_k']]['is_webp'];
-				$this->_save_con('ucss', $v['data_ucss'], $v['queue_k'], $is_mobile, $is_webp);
-
-				++$valid_i;
-			}
-
-			unset($this->_queue[$v['queue_k']]);
-			self::debug('notify data handled, unset queue [q_k] ' . $v['queue_k']);
-		}
-		$this->save_queue('ucss', $this->_queue);
-
-		self::debug('notified');
-
-		return Cloud::ok( [ 'count' => $valid_i ] );
 	}
 
 	/**

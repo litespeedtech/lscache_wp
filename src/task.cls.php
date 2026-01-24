@@ -111,6 +111,21 @@ class Task extends Root {
 				}
 			}
 
+			// Special check for UCSS: skip if waiting for try_later timeout
+			if ( Base::O_OPTM_UCSS === $id ) {
+				$ucss_next_run_after = UCSS::get_summary('ucss_next_run_after');
+				if ( $ucss_next_run_after && time() < $ucss_next_run_after ) {
+					$wait_seconds = $ucss_next_run_after - time();
+					self::debug( 'Skip UCSS cron registration due to try_later timeout: ' . $wait_seconds . ' seconds remaining' );
+					// Clear existing cron if any
+					if ( wp_next_scheduled( $trigger['name'] ) ) {
+						wp_clear_scheduled_hook( $trigger['name'] );
+						self::debug( 'Cleared existing UCSS cron schedule' );
+					}
+					continue;
+				}
+			}
+
 			// Special check for crawler.
 			if ( Base::O_CRAWLER === $id ) {
 				if ( ! Router::can_crawl() ) {
