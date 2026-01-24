@@ -111,12 +111,6 @@ class REST extends Root {
 			'permission_callback' => [ $this, 'is_from_cloud' ],
 		] );
 
-		register_rest_route( 'litespeed/v1', '/notify_ucss', [
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'notify_ucss' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
-		] );
-
 		register_rest_route( 'litespeed/v1', '/notify_vpi', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'notify_vpi' ],
@@ -242,17 +236,6 @@ class REST extends Root {
 	public function notify_ccss() {
 		self::debug( 'notify_ccss' );
 		return CSS::cls()->notify();
-	}
-
-	/**
-	 * Unique CSS notification.
-	 *
-	 * @since 5.2
-	 * @return mixed
-	 */
-	public function notify_ucss() {
-		self::debug( 'notify_ucss' );
-		return UCSS::cls()->notify();
 	}
 
 	/**
