@@ -64,6 +64,9 @@ foreach ( $logs as $log ) :
 			<a href="#<?php echo esc_attr( $log['name'] ); ?>_log" class="button litespeed-info-button litespeed-wrap" onClick="litespeed_copy_to_clipboard('<?php echo esc_js( $log_body_id ); ?>', this)" aria-label="<?php esc_attr_e( 'Click to copy', 'litespeed-cache' ); ?>" data-balloon-pos="down">
 				<?php esc_html_e( 'Copy Log', 'litespeed-cache' ); ?>
 			</a>
+			<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DEBUG2, Debug2::TYPE_DOWNLOAD_LOG, false, null, [ 'log' => $log['name'] ] ) ); ?>" class="button litespeed-info-button litespeed-wrap" aria-label="<?php esc_attr_e( 'Click to download', 'litespeed-cache' ); ?>" data-balloon-pos="down">
+				<?php esc_html_e( 'Download', 'litespeed-cache' ); ?>
+			</a>
 		</h3>
 		<div class="litespeed-log-body" id="<?php echo esc_attr( $log_body_id ); ?>">
 			<?php echo nl2br( esc_html( $lines ) ); ?>

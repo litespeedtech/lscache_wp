@@ -36,8 +36,9 @@ class Debug2 extends Root {
 	 */
 	private static $_prefix;
 
-	const TYPE_CLEAR_LOG = 'clear_log';
-	const TYPE_BETA_TEST = 'beta_test';
+	const TYPE_CLEAR_LOG    = 'clear_log';
+	const TYPE_BETA_TEST    = 'beta_test';
+	const TYPE_DOWNLOAD_LOG = 'download_log';
 
 	const BETA_TEST_URL = 'beta_test_url';
 
@@ -649,6 +650,41 @@ class Debug2 extends Root {
 	}
 
 	/**
+	 * Download a log file.
+	 *
+	 * @since 7.0
+	 * @access private
+	 * @return void
+	 */
+	private function _download_log() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified in Router::verify_type()
+		$log_type = isset( $_GET['log'] ) ? sanitize_text_field( wp_unslash( $_GET['log'] ) ) : '';
+
+		$valid_logs = [ 'debug', 'purge', 'crawler' ];
+		if ( ! in_array( $log_type, $valid_logs, true ) ) {
+			wp_die( esc_html__( 'Invalid log type.', 'litespeed-cache' ) );
+		}
+
+		$file = $this->path( $log_type );
+		if ( ! file_exists( $file ) ) {
+			wp_die( esc_html__( 'Log file not found.', 'litespeed-cache' ) );
+		}
+
+		$filename = 'litespeed-' . $log_type . '-' . gmdate( 'Y-m-d_His' ) . '.log';
+
+		header( 'Content-Type: text/plain; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Length: ' . filesize( $file ) );
+		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Direct file output for download
+		readfile( $file );
+		exit;
+	}
+
+	/**
 	 * Handle requests routed to this class.
 	 *
 	 * @since 1.6.6
@@ -666,6 +702,10 @@ class Debug2 extends Root {
 			case self::TYPE_BETA_TEST:
             $this->beta_test();
 				break;
+
+			case self::TYPE_DOWNLOAD_LOG:
+            $this->_download_log();
+				return; // _download_log() calls exit, but return here for clarity
 
 			default:
 				break;
