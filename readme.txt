@@ -265,6 +265,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimize** Fixed image optimization data not being cleared when images are replaced using third-party plugins.
 * **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
+* **Toolbox** Added download button for log files to download complete logs.
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 
