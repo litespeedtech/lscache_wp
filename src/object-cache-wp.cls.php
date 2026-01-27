@@ -881,10 +881,10 @@ class WP_Object_Cache {
 			$transient_timeout = '_transient_timeout_' . $transient;
 			$transient_option  = '_transient_' . $transient;
 			if ( false === get_option( $transient_option ) ) {
-				$autoload = 'yes';
+				$autoload = true;
 				if ( (int) $expiration ) {
-					$autoload = 'no';
-					add_option( $transient_timeout, time() + (int) $expiration, '', 'no' );
+					$autoload = false;
+					add_option( $transient_timeout, time() + (int) $expiration, '', false );
 				}
 				$result = add_option( $transient_option, $value, '', $autoload );
 			} else {
@@ -894,8 +894,8 @@ class WP_Object_Cache {
 				if ( (int) $expiration ) {
 					if ( false === get_option( $transient_timeout ) ) {
 						delete_option( $transient_option );
-						add_option( $transient_timeout, time() + (int) $expiration, '', 'no' );
-						$result = add_option( $transient_option, $value, '', 'no' );
+						add_option( $transient_timeout, time() + (int) $expiration, '', false );
+						$result = add_option( $transient_option, $value, '', false );
 						$update = false;
 					} else {
 						update_option( $transient_timeout, time() + (int) $expiration );
