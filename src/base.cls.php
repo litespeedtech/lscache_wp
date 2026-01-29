@@ -184,7 +184,6 @@ class Base extends Root {
 	const O_OBJECT_LIFE                  = 'object-life';
 	const O_OBJECT_PERSISTENT            = 'object-persistent';
 	const O_OBJECT_ADMIN                 = 'object-admin';
-	const O_OBJECT_TRANSIENTS            = 'object-transients';
 	const O_OBJECT_DB_ID                 = 'object-db_id';
 	const O_OBJECT_USER                  = 'object-user';
 	const O_OBJECT_PSWD                  = 'object-pswd';
@@ -487,7 +486,6 @@ class Base extends Root {
 		self::O_OBJECT_LIFE => 0,
 		self::O_OBJECT_PERSISTENT => false,
 		self::O_OBJECT_ADMIN => false,
-		self::O_OBJECT_TRANSIENTS => false,
 		self::O_OBJECT_DB_ID => 0,
 		self::O_OBJECT_USER => '',
 		self::O_OBJECT_PSWD => '',
@@ -605,7 +603,6 @@ class Base extends Root {
 		self::O_OBJECT_LIFE => 0,
 		self::O_OBJECT_PERSISTENT => false,
 		self::O_OBJECT_ADMIN => false,
-		self::O_OBJECT_TRANSIENTS => false,
 		self::O_OBJECT_DB_ID => 0,
 		self::O_OBJECT_USER => '',
 		self::O_OBJECT_PSWD => '',

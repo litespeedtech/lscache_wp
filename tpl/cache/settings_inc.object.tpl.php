@@ -264,27 +264,6 @@ if ( null === $mem_conn ) {
 			</td>
 		</tr>
 
-		<tr>
-			<th scope="row">
-				<?php $option_id = Base::O_OBJECT_TRANSIENTS; ?>
-				<?php $this->title( $option_id ); ?>
-			</th>
-			<td>
-				<?php $this->build_switch( $option_id ); ?>
-				<div class="litespeed-desc">
-					<?php
-					printf(
-						/* translators: %1$s: Object Cache Admin title, %2$s: OFF status */
-						esc_html__( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ),
-						'<code>' . esc_html( Lang::title( Base::O_OBJECT_ADMIN ) ) . '</code>',
-						'<code>' . esc_html__( 'OFF', 'litespeed-cache' ) . '</code>'
-					);
-					?>
-					<br>
-					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#store-transients' ); ?>
-				</div>
-			</td>
-		</tr>
 	</tbody>
 </table>
 

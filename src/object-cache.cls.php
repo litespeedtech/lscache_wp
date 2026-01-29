@@ -79,13 +79,6 @@ class Object_Cache extends Root {
 	const O_OBJECT_ADMIN = 'object-admin';
 
 	/**
-	 * Transients store flag.
-	 *
-	 * @var string
-	 */
-	const O_OBJECT_TRANSIENTS = 'object-transients';
-
-	/**
 	 * DB index for Redis.
 	 *
 	 * @var string
@@ -184,13 +177,6 @@ class Object_Cache extends Root {
 	private $_cfg_admin;
 
 	/**
-	 * Store transients.
-	 *
-	 * @var bool
-	 */
-	private $_cfg_transients;
-
-	/**
 	 * Redis DB index.
 	 *
 	 * @var int
@@ -263,7 +249,6 @@ class Object_Cache extends Root {
 			$this->_cfg_life              = $cfg[ Base::O_OBJECT_LIFE ];
 			$this->_cfg_persistent        = $cfg[ Base::O_OBJECT_PERSISTENT ];
 			$this->_cfg_admin             = $cfg[ Base::O_OBJECT_ADMIN ];
-			$this->_cfg_transients        = $cfg[ Base::O_OBJECT_TRANSIENTS ];
 			$this->_cfg_db                = $cfg[ Base::O_OBJECT_DB_ID ];
 			$this->_cfg_user              = $cfg[ Base::O_OBJECT_USER ];
 			$this->_cfg_pswd              = $cfg[ Base::O_OBJECT_PSWD ];
@@ -282,7 +267,6 @@ class Object_Cache extends Root {
 			$this->_cfg_life              = $this->conf( Base::O_OBJECT_LIFE );
 			$this->_cfg_persistent        = $this->conf( Base::O_OBJECT_PERSISTENT );
 			$this->_cfg_admin             = $this->conf( Base::O_OBJECT_ADMIN );
-			$this->_cfg_transients        = $this->conf( Base::O_OBJECT_TRANSIENTS );
 			$this->_cfg_db                = $this->conf( Base::O_OBJECT_DB_ID );
 			$this->_cfg_user              = $this->conf( Base::O_OBJECT_USER );
 			$this->_cfg_pswd              = $this->conf( Base::O_OBJECT_PSWD );
@@ -305,7 +289,6 @@ class Object_Cache extends Root {
 				$this->_cfg_life              = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
 				$this->_cfg_persistent        = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
 				$this->_cfg_admin             = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
-				$this->_cfg_transients        = ! empty( $cfg[ self::O_OBJECT_TRANSIENTS ] ) ? $cfg[ self::O_OBJECT_TRANSIENTS ] : false;
 				$this->_cfg_db                = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
 				$this->_cfg_user              = ! empty( $cfg[ self::O_OBJECT_USER ] ) ? $cfg[ self::O_OBJECT_USER ] : '';
 				$this->_cfg_pswd              = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
@@ -353,19 +336,6 @@ class Object_Cache extends Root {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log(gmdate('m/d/y H:i:s') . ' - OC - ' . $text . PHP_EOL, 3, $log_file);
 		}
-	}
-
-	/**
-	 * Get `Store Transients` setting value.
-	 *
-	 * @since  1.8.3
-	 * @access public
-	 *
-	 * @param string $group Group name.
-	 * @return bool
-	 */
-	public function store_transients( $group ) {
-		return $this->_cfg_transients && $this->_is_transients_group( $group );
 	}
 
 	/**
@@ -655,15 +625,16 @@ class Object_Cache extends Root {
 	 * @since  1.8
 	 * @access public
 	 *
-	 * @param string $key Cache key.
+	 * @param string $key   Cache key.
+	 * @param string $group Optional. Cache group name.
 	 * @return mixed|null
 	 */
-	public function get( $key ) {
+	public function get( $key, $group = '' ) {
 		if ( ! $this->_cfg_enabled ) {
 			return null;
 		}
 
-		if ( ! $this->_can_cache() ) {
+		if ( ! $this->_can_cache( $group ) ) {
 			return null;
 		}
 
@@ -728,9 +699,14 @@ class Object_Cache extends Root {
 	 * @since  1.8
 	 * @access private
 	 *
+	 * @param string $group Optional. Cache group name.
 	 * @return bool
 	 */
-	private function _can_cache() {
+	private function _can_cache( $group = '' ) {
+		// Transients always use OC regardless of Cache WP-Admin setting
+		if ( $this->_is_transients_group( $group ) ) {
+			return true;
+		}
 		if ( ! $this->_cfg_admin && defined( 'WP_ADMIN' ) ) {
 			return false;
 		}

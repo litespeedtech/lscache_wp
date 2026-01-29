@@ -258,7 +258,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 7.8 - Feb 2026 =
-* **UCSS** Dropped notification step.
+* **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
+* **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
 * **Media** Added WebP/AVIF support for macOS Safari >= 16.4. (PR#948)
 * **Media** Fixed pie chart not displaying in media library.
