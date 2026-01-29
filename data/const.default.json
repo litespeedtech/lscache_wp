@@ -110,7 +110,6 @@
 	"object-life": "360",
 	"object-persistent": "1",
 	"object-admin": "1",
-	"object-transients": "1",
 	"object-db_id": "0",
 	"object-user": "",
 	"object-pswd": "",

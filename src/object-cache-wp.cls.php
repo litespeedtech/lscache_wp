@@ -437,12 +437,8 @@ class WP_Object_Cache {
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-			$this->_object_cache->set( $id, serialize( array( 'data' => $data ) ), (int) $expire );
+			$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), (int) $expire );
 			++$this->count_set;
-		}
-
-		if ( $this->_object_cache->store_transients( $group ) ) {
-			$this->_transient_set( $key, $data, $group, (int) $expire );
 		}
 
 		return true;
@@ -510,7 +506,7 @@ class WP_Object_Cache {
 			$cache_val = $this->_cache[ $id ];
 			++$this->count_hit_incall;
 		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$v = $this->_object_cache->get( $id );
+			$v = $this->_object_cache->get( $id, $group );
 
 			if ( null !== $v ) {
 				$v = maybe_unserialize( $v );
@@ -533,14 +529,6 @@ class WP_Object_Cache {
 
 		if ( is_object( $cache_val ) ) {
 			$cache_val = clone $cache_val;
-		}
-
-		// If not found but has `Store Transients` cfg on, still need to follow WP's get_transient() logic.
-		if ( ! $found && $this->_object_cache->store_transients( $group ) ) {
-			$cache_val = $this->_transient_get( $key, $group );
-			if ( $cache_val ) {
-				$found = true;
-			}
 		}
 
 		if ( $found_in_oc ) {
@@ -597,10 +585,6 @@ class WP_Object_Cache {
 		}
 
 		$id = $this->_key( $key, $group );
-
-		if ( $this->_object_cache->store_transients( $group ) ) {
-			$this->_transient_del( $key, $group );
-		}
 
 		if ( array_key_exists( $id, $this->_cache ) ) {
 			unset( $this->_cache[ $id ] );
@@ -798,169 +782,6 @@ class WP_Object_Cache {
 	public function switch_to_blog( $blog_id ) {
 		$blog_id           = (int) $blog_id;
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
-	}
-
-	/**
-	 * Get transient from wp table
-	 *
-	 * Retrieves transient data from WordPress options table.
-	 *
-	 * @since 1.8.3
-	 * @access private
-	 * @see `wp-includes/option.php` function `get_transient`/`set_site_transient`
-	 *
-	 * @param string $transient Transient name.
-	 * @param string $group     Transient group ('transient' or 'site-transient').
-	 * @return mixed Transient value or false if not found.
-	 */
-	private function _transient_get( $transient, $group ) {
-		if ( 'transient' === $group ) {
-			/**** Ori WP func start */
-			$transient_option = '_transient_' . $transient;
-			if ( ! wp_installing() ) {
-				// If option is not in alloptions, it is not autoloaded and thus has a timeout
-				$alloptions = wp_load_alloptions();
-				if ( ! isset( $alloptions[ $transient_option ] ) ) {
-					$transient_timeout = '_transient_timeout_' . $transient;
-					$timeout           = get_option( $transient_timeout );
-					if ( false !== $timeout && $timeout < time() ) {
-						delete_option( $transient_option );
-						delete_option( $transient_timeout );
-						$value = false;
-					}
-				}
-			}
-
-			if ( ! isset( $value ) ) {
-				$value = get_option( $transient_option );
-			}
-			/**** Ori WP func end */
-		} elseif ( 'site-transient' === $group ) {
-			/**** Ori WP func start */
-			$no_timeout       = [ 'update_core', 'update_plugins', 'update_themes' ];
-			$transient_option = '_site_transient_' . $transient;
-			if ( ! in_array( $transient, $no_timeout, true ) ) {
-				$transient_timeout = '_site_transient_timeout_' . $transient;
-				$timeout           = get_site_option( $transient_timeout );
-				if ( false !== $timeout && $timeout < time() ) {
-					delete_site_option( $transient_option );
-					delete_site_option( $transient_timeout );
-					$value = false;
-				}
-			}
-
-			if ( ! isset( $value ) ) {
-				$value = get_site_option( $transient_option );
-			}
-			/**** Ori WP func end */
-		} else {
-			$value = false;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Set transient to WP table
-	 *
-	 * Stores transient data in WordPress options table.
-	 *
-	 * @since 1.8.3
-	 * @access private
-	 * @see `wp-includes/option.php` function `set_transient`/`set_site_transient`
-	 *
-	 * @param string $transient  Transient name.
-	 * @param mixed  $value      Transient value.
-	 * @param string $group      Transient group ('transient' or 'site-transient').
-	 * @param int    $expiration Time until expiration in seconds.
-	 * @return bool True on success, false on failure.
-	 */
-	private function _transient_set( $transient, $value, $group, $expiration ) {
-		if ( 'transient' === $group ) {
-			/**** Ori WP func start */
-			$transient_timeout = '_transient_timeout_' . $transient;
-			$transient_option  = '_transient_' . $transient;
-			if ( false === get_option( $transient_option ) ) {
-				$autoload = 'yes';
-				if ( (int) $expiration ) {
-					$autoload = 'no';
-					add_option( $transient_timeout, time() + (int) $expiration, '', 'no' );
-				}
-				$result = add_option( $transient_option, $value, '', $autoload );
-			} else {
-				// If expiration is requested, but the transient has no timeout option,
-				// delete, then re-create transient rather than update.
-				$update = true;
-				if ( (int) $expiration ) {
-					if ( false === get_option( $transient_timeout ) ) {
-						delete_option( $transient_option );
-						add_option( $transient_timeout, time() + (int) $expiration, '', 'no' );
-						$result = add_option( $transient_option, $value, '', 'no' );
-						$update = false;
-					} else {
-						update_option( $transient_timeout, time() + (int) $expiration );
-					}
-				}
-				if ( $update ) {
-					$result = update_option( $transient_option, $value );
-				}
-			}
-			/**** Ori WP func end */
-		} elseif ( 'site-transient' === $group ) {
-			/**** Ori WP func start */
-			$transient_timeout = '_site_transient_timeout_' . $transient;
-			$option            = '_site_transient_' . $transient;
-			if ( false === get_site_option( $option ) ) {
-				if ( (int) $expiration ) {
-					add_site_option( $transient_timeout, time() + (int) $expiration );
-				}
-				$result = add_site_option( $option, $value );
-			} else {
-				if ( (int) $expiration ) {
-					update_site_option( $transient_timeout, time() + (int) $expiration );
-				}
-				$result = update_site_option( $option, $value );
-			}
-			/**** Ori WP func end */
-		} else {
-			$result = null;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Delete transient from WP table
-	 *
-	 * Removes transient data from WordPress options table.
-	 *
-	 * @since 1.8.3
-	 * @access private
-	 * @see `wp-includes/option.php` function `delete_transient`/`delete_site_transient`
-	 *
-	 * @param string $transient Transient name.
-	 * @param string $group     Transient group ('transient' or 'site-transient').
-	 */
-	private function _transient_del( $transient, $group ) {
-		if ( 'transient' === $group ) {
-			/**** Ori WP func start */
-			$option_timeout = '_transient_timeout_' . $transient;
-			$option         = '_transient_' . $transient;
-			$result         = delete_option( $option );
-			if ( $result ) {
-				delete_option( $option_timeout );
-			}
-			/**** Ori WP func end */
-		} elseif ( 'site-transient' === $group ) {
-			/**** Ori WP func start */
-			$option_timeout = '_site_transient_timeout_' . $transient;
-			$option         = '_site_transient_' . $transient;
-			$result         = delete_site_option( $option );
-			if ( $result ) {
-				delete_site_option( $option_timeout );
-			}
-			/**** Ori WP func end */
-		}
 	}
 
 	/**

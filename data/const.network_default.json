@@ -19,7 +19,6 @@
 	"object-life": 360,
 	"object-persistent": true,
 	"object-admin": true,
-	"object-transients": true,
 	"object-db_id": 0,
 	"object-user": "",
 	"object-pswd": "",
