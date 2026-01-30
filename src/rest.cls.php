@@ -105,12 +105,6 @@ class REST extends Root {
 			'permission_callback' => [ $this, 'is_from_cloud' ],
 		] );
 
-		register_rest_route( 'litespeed/v1', '/notify_ccss', [
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'notify_ccss' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
-		] );
-
 		register_rest_route( 'litespeed/v1', '/notify_vpi', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'notify_vpi' ],
@@ -225,17 +219,6 @@ class REST extends Root {
 	 */
 	public function notify_img() {
 		return Img_Optm::cls()->notify_img();
-	}
-
-	/**
-	 * Critical CSS notification.
-	 *
-	 * @since 7.1
-	 * @return mixed
-	 */
-	public function notify_ccss() {
-		self::debug( 'notify_ccss' );
-		return CSS::cls()->notify();
 	}
 
 	/**
