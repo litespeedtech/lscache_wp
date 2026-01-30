@@ -258,19 +258,13 @@ class UCSS extends Base {
 			}
 		}
 
-		$i = 0;
 		foreach ($this->_queue as $k => $v) {
-			if (!empty($v['_status'])) {
-				continue;
-			}
-
 			self::debug('cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
 
 			if (!isset($v['is_webp'])) {
 				$v['is_webp'] = false;
 			}
 
-			++$i;
 			$res = $this->_send_req($v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $v['is_mobile'], $v['is_webp']);
 			if (!$res) {
 				// Status is wrong, drop this this->_queue
@@ -280,11 +274,6 @@ class UCSS extends Base {
 
 				if ( ! $keep_going ) {
 					return;
-				}
-
-				if ( $i > 3 ) {
-					GUI::print_loading( count( $this->_queue ), 'UCSS' );
-					return Router::self_redirect( Router::ACTION_UCSS, self::TYPE_GEN );
 				}
 
 				continue;
@@ -302,7 +291,6 @@ class UCSS extends Base {
 				$this->_summary['ucss_next_run_after'] = $next_run_time;
 				self::save_summary();
 				self::debug( 'Set next UCSS cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
-				return;
 			}
 
 			// Handle completed response (sync mode)
@@ -313,11 +301,6 @@ class UCSS extends Base {
 			// only request first one
 			if ( ! $keep_going ) {
 				return;
-			}
-
-			if ($i > 3) {
-				GUI::print_loading(count($this->_queue), 'UCSS');
-				return Router::self_redirect(Router::ACTION_UCSS, self::TYPE_GEN);
 			}
 		}
 	}

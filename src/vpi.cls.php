@@ -33,17 +33,17 @@ class VPI extends Base {
 	 */
 	const TYPE_GEN     = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
-	
+
 	/**
 	 * VPI Desktop Meta name.
-	 * 
+	 *
 	 * @since  7.6
 	 * @var string
 	 */
 	const POST_META = 'litespeed_vpi_list';
 	/**
 	 * VPI Mobile Meta name.
-	 * 
+	 *
 	 * @since  7.6
 	 * @var string
 	 */
@@ -308,29 +308,12 @@ class VPI extends Base {
 		// Update request status.
 		self::save_summary( [ 'curr_request_vpi' => time() ], true );
 
-		// Gather guest HTML to send.
-		$html = $this->cls( 'CSS' )->prepare_html( $request_url, $user_agent );
-
-		if ( ! $html ) {
-			return false;
-		}
-
 		// Parse HTML to gather CSS content before requesting.
-		$css                = false;
-		list( $css, $html ) = $this->cls( 'CSS' )->prepare_css( $html );
-
-		if ( ! $css ) {
-			self::debug( '❌ No css' );
-			return false;
-		}
-
 		$data = [
 			'url'        => $request_url,
 			'queue_k'    => $queue_k,
 			'user_agent' => $user_agent,
 			'is_mobile'  => $is_mobile ? 1 : 0, // todo: compatible w/ tablet.
-			'html'       => $html,
-			'css'        => $css,
 		];
 		self::debug( 'Generating: ', $data );
 

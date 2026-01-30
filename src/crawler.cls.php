@@ -1211,60 +1211,6 @@ class Crawler extends Root {
 	}
 
 	/**
-	 * Self curl to get HTML content.
-	 *
-	 * @since 3.3
-	 *
-	 * @param string       $url URL.
-	 * @param string       $ua  User agent.
-	 * @param int|false    $uid Optional user ID for simulation.
-	 * @param string|false $accept Optional Accept header value.
-	 * @return string|false HTML on success, false on failure.
-	 */
-	public function self_curl( $url, $ua, $uid = false, $accept = false ) {
-		$this->_crawler_conf['base'] = site_url();
-		$this->_crawler_conf['ua']   = $ua;
-		if ( $accept ) {
-			$this->_crawler_conf['headers'] = [ 'Accept: ' . $accept ];
-		}
-		$options = $this->_get_curl_options();
-
-		if ( $uid ) {
-			$this->_crawler_conf['cookies']['litespeed_flash_hash'] = Router::cls()->get_flash_hash( $uid );
-			$parsed_url = wp_parse_url( $url );
-
-			if ( ! empty( $parsed_url['host'] ) ) {
-				$dom                                     = $parsed_url['host'];
-				$port                                    = defined( 'LITESPEED_CRAWLER_LOCAL_PORT' ) ? (int) LITESPEED_CRAWLER_LOCAL_PORT : 443;
-				$resolved                                = $dom . ':' . $port . ':' . $this->_server_ip;
-				$options[ CURLOPT_RESOLVE ]              = [ $resolved ];
-				$options[ CURLOPT_DNS_USE_GLOBAL_CACHE ] = false;
-				$options[ CURLOPT_PORT ]                 = $port;
-				self::debug( 'Resolved DNS for ' . $resolved );
-			}
-		}
-
-		$options[ CURLOPT_HEADER ]         = false;
-		$options[ CURLOPT_FOLLOWLOCATION ] = true;
-
-		// phpcs:disable WordPress.WP.AlternativeFunctions
-		$ch = curl_init();
-		curl_setopt_array( $ch, $options );
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		$result = curl_exec( $ch );
-		$code   = (int) curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-		curl_close( $ch );
-		// phpcs:enable
-
-		if ( 200 !== $code ) {
-			self::debug( '❌ Response code is not 200 in self_curl() [code] ' . $code );
-			return false;
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Terminate crawling.
 	 *
 	 * @since 1.1.0

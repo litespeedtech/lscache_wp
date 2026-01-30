@@ -15,7 +15,7 @@ defined( 'WPINC' ) || exit();
  */
 class CSS extends Base {
 
-	const LOG_TAG = '[CSS]';
+	const LOG_TAG = '[CCSS]';
 
 	const TYPE_GEN_CCSS     = 'gen_ccss';
 	const TYPE_CLEAR_Q_CCSS = 'clear_q_ccss';
@@ -111,7 +111,7 @@ class CSS extends Base {
 			$hit = Utility::str_hit_array( $request_url, $sep_uri );
 		}
 		if ( $sep_uri && $hit ) {
-			Debug2::debug( '[CCSS] Separate CCSS due to separate URI setting: ' . $hit );
+			self::debug( 'Separate CCSS due to separate URI setting: ' . $hit );
 			return $request_url;
 		}
 
@@ -119,7 +119,7 @@ class CSS extends Base {
 
 		$sep_pt = $this->conf( self::O_OPTM_CCSS_SEP_POSTTYPE );
 		if ( in_array( $pt, $sep_pt, true ) ) {
-			Debug2::debug( '[CCSS] Separate CCSS due to posttype setting: ' . $pt );
+			self::debug( 'Separate CCSS due to posttype setting: ' . $pt );
 			return $request_url;
 		}
 
@@ -153,7 +153,7 @@ class CSS extends Base {
 			$static_file = LITESPEED_STATIC_DIR . $filepath_prefix . $filename . '.css';
 
 			if ( file_exists( $static_file ) ) {
-				Debug2::debug2( '[CSS] existing ccss ' . $static_file );
+				self::debug2( 'existing ccss ' . $static_file );
 				Core::comment( 'QUIC.cloud CCSS loaded ✅ ' . $filepath_prefix . $filename . '.css' );
 				return File::read( $static_file );
 			}
@@ -170,7 +170,7 @@ class CSS extends Base {
 		$this->_queue = $this->load_queue( 'ccss' );
 
 		if ( count( $this->_queue ) > 500 ) {
-			self::debug( 'CCSS Queue is full - 500' );
+			self::debug( 'Queue is full - 500' );
 			return null;
 		}
 
@@ -225,26 +225,35 @@ class CSS extends Base {
 
 		$type_tag = strtoupper( $type );
 
+		// Check if we need to wait due to server's try_later request
+		if ( ! empty( $this->_summary[ 'ccss_next_run_after' ] ) && time() < $this->_summary['ccss_next_run_after'] ) {
+			$wait_seconds = $this->_summary['ccss_next_run_after'] - time();
+			self::debug( 'Waiting for try_later timeout: ' . $wait_seconds . ' seconds remaining' );
+			return;
+		}
+
+		// Clear try_later flag if wait time has passed
+		if ( ! empty( $this->_summary['ccss_next_run_after'] ) ) {
+			unset( $this->_summary['ccss_next_run_after'] );
+			self::save_summary();
+			self::debug( 'Cleared try_later flag, resuming CCSS processing' );
+		}
+
 		// For cron, need to check request interval too
 		if ( ! $should_continue ) {
 			if ( ! empty( $this->_summary[ 'curr_request_' . $type ] ) && time() - (int) $this->_summary[ 'curr_request_' . $type ] < 300 && ! $this->conf( self::O_DEBUG ) ) {
-				Debug2::debug( '[' . $type_tag . '] Last request not done' );
+				self::debug( 'Last request not done' );
 				return;
 			}
 		}
 
-		$i = 0;
 		foreach ( $this->_queue as $k => $v ) {
-			if ( ! empty( $v['_status'] ) ) {
-				continue;
-			}
-
-			Debug2::debug( '[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v['url'] . ( $v['is_mobile'] ? ' 📱 ' : '' ) . ' [UA] ' . $v['user_agent'] );
+			self::debug( 'cron job [tag] ' . $k . ' [url] ' . $v['url'] . ( $v['is_mobile'] ? ' 📱 ' : '' ) . ' [UA] ' . $v['user_agent'] );
 
 			if ( 'ccss' === $type && empty( $v['url_tag'] ) ) {
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( $type, $this->_queue );
-				Debug2::debug( '[CCSS] wrong queue_ccss format' );
+				self::debug( 'wrong queue_ccss format' );
 				continue;
 			}
 
@@ -252,7 +261,6 @@ class CSS extends Base {
 				$v['is_webp'] = false;
 			}
 
-			++$i;
 			$res = $this->_send_req( $v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $type, $v['is_mobile'], $v['is_webp'] );
 			if ( ! $res ) {
 				// Status is wrong, drop this this->_queue
@@ -263,11 +271,6 @@ class CSS extends Base {
 					return;
 				}
 
-				if ( $i > 3 ) {
-					GUI::print_loading( count( $this->_queue ), $type_tag );
-					return Router::self_redirect( Router::ACTION_CSS, self::TYPE_GEN_CCSS );
-				}
-
 				continue;
 			}
 
@@ -276,17 +279,23 @@ class CSS extends Base {
 				return;
 			}
 
-			$this->_queue[ $k ]['_status'] = 'requested';
-			$this->save_queue( $type, $this->_queue );
+			// Handle try_later response from server
+			if ( is_array( $res ) && ! empty( $res['try_later'] ) ) {
+				$ttl                                   = (int) $res['try_later'];
+				$next_run_time                         = time() + $ttl;
+				$this->_summary['ccss_next_run_after'] = $next_run_time;
+				self::save_summary();
+				self::debug( 'Set next CCSS cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
+			}
+
+			// Handle completed response (sync mode)
+			if ( 'completed' === $res ) {
+				self::debug( 'completed for [k] ' . $k );
+			}
 
 			// only request first one
 			if ( ! $should_continue ) {
 				return;
-			}
-
-			if ( $i > 3 ) {
-				GUI::print_loading( count( $this->_queue ), $type_tag );
-				return Router::self_redirect( Router::ACTION_CSS, self::TYPE_GEN_CCSS );
 			}
 		}
 	}
@@ -313,7 +322,7 @@ class CSS extends Base {
 		$err       = false;
 		$allowance = $this->cls( 'Cloud' )->allowance( Cloud::SVC_CCSS, $err );
 		if ( ! $allowance ) {
-			Debug2::debug( '[CCSS] ❌ No credit: ' . $err );
+			self::debug( '❌ No credit: ' . $err );
 			$err && Admin_Display::error( Error::msg( $err ) );
 			return 'out_of_quota';
 		}
@@ -324,22 +333,6 @@ class CSS extends Base {
 		$this->_summary[ 'curr_request_' . $type ] = time();
 		self::save_summary();
 
-		// Gather guest HTML to send
-		$html = $this->prepare_html( $request_url, $user_agent, $uid );
-
-		if ( ! $html ) {
-			return false;
-		}
-
-		// Parse HTML to gather all CSS content before requesting
-		list( $css, $html ) = $this->prepare_css( $html, $is_webp );
-
-		if ( ! $css ) {
-			$type_tag = strtoupper( $type );
-			Debug2::debug( '[' . $type_tag . '] ❌ No combined css' );
-			return false;
-		}
-
 		// Generate critical css
 		$data = [
 			'url'        => $request_url,
@@ -347,8 +340,6 @@ class CSS extends Base {
 			'user_agent' => $user_agent,
 			'is_mobile'  => $is_mobile ? 1 : 0, // todo:compatible w/ tablet
 			'is_webp'    => $is_webp ? 1 : 0,
-			'html'       => $html,
-			'css'        => $css,
 		];
 		if ( ! isset( $this->_ccss_whitelist ) ) {
 			$this->_ccss_whitelist = $this->_filter_whitelist();
@@ -362,28 +353,40 @@ class CSS extends Base {
 			return $json;
 		}
 
-		// Old version compatibility
+		// Check if server asks to try later
+		if ( ! empty( $json['try_later'] ) ) {
+			$ttl = (int) $json['try_later'];
+			self::debug( 'Server requested try later: ' . $ttl . ' seconds' );
+			return [ 'try_later' => $ttl ];
+		}
+
+		// Check response status
 		if ( empty( $json['status'] ) ) {
-			if ( ! empty( $json[ $type ] ) ) {
-				$this->_save_con( $type, $json[ $type ], $queue_k, $is_mobile, $is_webp );
-			}
-
-			// Delete the row
+			self::debug( '❌ No status in response' );
 			return false;
 		}
 
-		// Unknown status, remove this line
-		if ( 'queued' !== $json['status'] ) {
-			return false;
+		// Handle sync response with data
+		if ( ! empty( $json['data_ccss'] ) ) {
+			self::debug( '✅ Received CCSS data, saving...' );
+			$this->_save_con( $type, $json['data_ccss'], $queue_k, $is_mobile, $is_webp );
+
+			// Remove from queue
+			unset( $this->_queue[ $queue_k ] );
+			$this->save_queue( $type, $this->_queue );
+			self::debug( 'Removed from queue [q_k] ' . $queue_k );
+
+			// Save summary data
+			$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
+			$this->_summary[ 'curr_request_' . $type ] = 0;
+			self::save_summary();
+
+			return 'completed';
 		}
 
-		// Save summary data
-		$this->_summary[ 'last_spent_' . $type ]   = time() - (int) $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
-		$this->_summary[ 'curr_request_' . $type ] = 0;
-		self::save_summary();
-
-		return true;
+		// Unknown status
+		self::debug( '❌ Unknown status: ' . $json['status'] );
+		return false;
 	}
 
 	/**
@@ -401,7 +404,7 @@ class CSS extends Base {
 	private function _save_con( $type, $css, $queue_k, $mobile, $webp ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
-		Debug2::debug2( '[CSS] con: ' . $css );
+		self::debug2( 'con: ' . $css );
 
 		if ( substr( $css, 0, 2 ) === '/*' && substr( $css, -2 ) === '*/' ) {
 			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
@@ -418,153 +421,11 @@ class CSS extends Base {
 
 		$url_tag = $this->_queue[ $queue_k ]['url_tag'];
 		$vary    = $this->_queue[ $queue_k ]['vary'];
-		Debug2::debug2( "[CSS] Save URL to file [file] $static_file [vary] $vary" );
+		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
 
 		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $mobile, $webp );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
-	}
-
-	/**
-	 * Play for fun.
-	 *
-	 * @since  3.4.3
-	 *
-	 * @param string $request_url URL to test.
-	 * @return void
-	 */
-	public function test_url( $request_url ) {
-		$user_agent         = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-		$html               = $this->prepare_html( $request_url, $user_agent );
-		list( $css, $html ) = $this->prepare_css( $html, true, true );
-
-		$data = [
-			'url'        => $request_url,
-			'ccss_type'  => 'test',
-			'user_agent' => $user_agent,
-			'is_mobile'  => 0,
-			'html'       => $html,
-			'css'        => $css,
-			'type'       => 'CCSS',
-		];
-
-		$json = Cloud::post( Cloud::SVC_CCSS, $data, 180 );
-
-		Debug2::debug2( '[CSS][test_url] response', $json );
-	}
-
-	/**
-	 * Prepare HTML from URL.
-	 *
-	 * @since  3.4.3
-	 *
-	 * @param string   $request_url URL to fetch.
-	 * @param string   $user_agent  User agent to use.
-	 * @param int|bool $uid         Optional user ID for simulation.
-	 * @return string|false
-	 */
-	public function prepare_html( $request_url, $user_agent, $uid = false ) {
-		$html = $this->cls( 'Crawler' )->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent, $uid );
-		Debug2::debug2( '[CSS] self_curl result....', $html );
-
-		if ( ! $html ) {
-			return false;
-		}
-
-		$html = $this->cls( 'Optimizer' )->html_min( $html, true );
-		// Drop <noscript>xxx</noscript>
-		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
-
-		return $html;
-	}
-
-	/**
-	 * Prepare CSS from HTML for CCSS generation only. UCSS will use combined CSS directly.
-	 * Prepare refined HTML for both CCSS and UCSS.
-	 *
-	 * @since  3.4.3
-	 *
-	 * @param string $html    HTML content.
-	 * @param bool   $is_webp Convert backgrounds to WebP when supported.
-	 * @param bool   $dryrun  If true, do not fetch external CSS files.
-	 * @return array{0:string,1:string} [combined CSS, refined HTML]
-	 */
-	public function prepare_css( $html, $is_webp = false, $dryrun = false ) {
-		$css = '';
-		preg_match_all( '#<link ([^>]+)/?>|<style([^>]*)>([^<]+)</style>#isU', $html, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
-			$debug_info = '';
-			if ( strpos( $match[0], '<link' ) === 0 ) {
-				$attrs = Utility::parse_attr( $match[1] );
-
-				if ( empty( $attrs['rel'] ) ) {
-					continue;
-				}
-
-				if ( 'stylesheet' !== $attrs['rel'] ) {
-					if ( 'preload' !== $attrs['rel'] || empty( $attrs['as'] ) || 'style' !== $attrs['as'] ) {
-						continue;
-					}
-				}
-
-				if ( ! empty( $attrs['media'] ) && false !== strpos( $attrs['media'], 'print' ) ) {
-					continue;
-				}
-
-				if ( empty( $attrs['href'] ) ) {
-					continue;
-				}
-
-				// Check Google fonts hit
-				if ( false !== strpos( $attrs['href'], 'fonts.googleapis.com' ) ) {
-					$html = str_replace( $match[0], '', $html );
-					continue;
-				}
-
-				$debug_info = $attrs['href'];
-
-				// Load CSS content
-				if ( ! $dryrun ) {
-					// Dryrun will not load CSS but just drop them
-					$con = $this->cls( 'Optimizer' )->load_file( $attrs['href'] );
-					if ( ! $con ) {
-						continue;
-					}
-				} else {
-					$con = '';
-				}
-			} else {
-				// Inline style
-				$attrs = Utility::parse_attr( $match[2] );
-
-				if ( ! empty( $attrs['media'] ) && false !== strpos( $attrs['media'], 'print' ) ) {
-					continue;
-				}
-
-				Debug2::debug2( '[CSS] Load inline CSS ' . substr( $match[3], 0, 100 ) . '...', $attrs );
-				$con = $match[3];
-
-				$debug_info = '__INLINE__';
-			}
-
-			$con = Optimizer::minify_css( $con );
-			if ( $is_webp && $this->cls( 'Media' )->webp_support() ) {
-				$con = $this->cls( 'Media' )->replace_background_webp( $con );
-			}
-
-			if ( ! empty( $attrs['media'] ) && 'all' !== $attrs['media'] ) {
-				$con = '@media ' . $attrs['media'] . '{' . $con . "}\n";
-			} else {
-				$con = $con . "\n";
-			}
-
-			$con  = '/* ' . $debug_info . ' */' . $con;
-			$css .= $con;
-
-			$html = str_replace( $match[0], '', $html );
-		}
-
-		return [ $css, $html ];
 	}
 
 	/**
@@ -584,68 +445,6 @@ class CSS extends Base {
 		}
 
 		return $whitelist;
-	}
-
-	/**
-	 * Notify finished from server.
-	 *
-	 * @since 7.1
-	 * @return array
-	 */
-	public function notify() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$post_data = \json_decode( file_get_contents( 'php://input' ), true );
-		if ( is_null( $post_data ) ) {
-			// Fallback for form-encoded payloads
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$post_data = $_POST;
-		}
-		self::debug( 'notify() data', $post_data );
-
-		$this->_queue = $this->load_queue( 'ccss' );
-
-		list( $post_data ) = $this->cls( 'Cloud' )->extract_msg( $post_data, 'ccss' );
-
-		$notified_data = $post_data['data'];
-		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			self::debug( '❌ notify exit: no notified data' );
-			return Cloud::err( 'no notified data' );
-		}
-
-		// Check if its in queue or not
-		$valid_i = 0;
-		foreach ( $notified_data as $v ) {
-			if ( empty( $v['request_url'] ) ) {
-				self::debug( '❌ notify bypass: no request_url', $v );
-				continue;
-			}
-			if ( empty( $v['queue_k'] ) ) {
-				self::debug( '❌ notify bypass: no queue_k', $v );
-				continue;
-			}
-
-			if ( empty( $this->_queue[ $v['queue_k'] ] ) ) {
-				self::debug( '❌ notify bypass: no this queue [q_k]' . $v['queue_k'] );
-				continue;
-			}
-
-			// Save data
-			if ( ! empty( $v['data_ccss'] ) ) {
-				$is_mobile = $this->_queue[ $v['queue_k'] ]['is_mobile'];
-				$is_webp   = $this->_queue[ $v['queue_k'] ]['is_webp'];
-				$this->_save_con( 'ccss', $v['data_ccss'], $v['queue_k'], $is_mobile, $is_webp );
-
-				++$valid_i;
-			}
-
-			unset( $this->_queue[ $v['queue_k'] ] );
-			self::debug( 'notify data handled, unset queue [q_k] ' . $v['queue_k'] );
-		}
-		$this->save_queue( 'ccss', $this->_queue );
-
-		self::debug( 'notified' );
-
-		return Cloud::ok( [ 'count' => $valid_i ] );
 	}
 
 	/**

@@ -35,6 +35,7 @@ class Router extends Base {
 	const ACTION_CSS                   = 'css';
 	const ACTION_UCSS                  = 'ucss';
 	const ACTION_VPI                   = 'vpi';
+	const ACTION_OPTIMAX               = 'optimax';
 	const ACTION_PRESET                = 'preset';
 	const ACTION_IMPORT                = 'import';
 	const ACTION_REPORT                = 'report';
