@@ -223,8 +223,6 @@ class CSS extends Base {
 			return;
 		}
 
-		$type_tag = strtoupper( $type );
-
 		// Check if we need to wait due to server's try_later request
 		if ( ! empty( $this->_summary[ 'ccss_next_run_after' ] ) && time() < $this->_summary['ccss_next_run_after'] ) {
 			$wait_seconds = $this->_summary['ccss_next_run_after'] - time();
@@ -286,11 +284,6 @@ class CSS extends Base {
 				$this->_summary['ccss_next_run_after'] = $next_run_time;
 				self::save_summary();
 				self::debug( 'Set next CCSS cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
-			}
-
-			// Handle completed response (sync mode)
-			if ( 'completed' === $res ) {
-				self::debug( 'completed for [k] ' . $k );
 			}
 
 			// only request first one
@@ -366,27 +359,24 @@ class CSS extends Base {
 			return false;
 		}
 
-		// Handle sync response with data
-		if ( ! empty( $json['data_ccss'] ) ) {
-			self::debug( '✅ Received CCSS data, saving...' );
-			$this->_save_con( $type, $json['data_ccss'], $queue_k, $is_mobile, $is_webp );
-
-			// Remove from queue
-			unset( $this->_queue[ $queue_k ] );
-			$this->save_queue( $type, $this->_queue );
-			self::debug( 'Removed from queue [q_k] ' . $queue_k );
-
-			// Save summary data
-			$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
-			$this->_summary[ 'curr_request_' . $type ] = 0;
-			self::save_summary();
-
-			return 'completed';
+		if ( empty( $json['data_ccss'] ) ) {
+			self::debug( '❌ No CCSS data [status] ' . $json['status'] );
 		}
 
-		// Unknown status
-		self::debug( '❌ Unknown status: ' . $json['status'] );
-		return false;
+		self::debug( '✅ Received CCSS data, saving...' );
+		$this->_save_con( $type, $json['data_ccss'], $queue_k, $is_mobile, $is_webp );
+
+		// Remove from queue
+		unset( $this->_queue[ $queue_k ] );
+		$this->save_queue( $type, $this->_queue );
+		self::debug( 'Removed from queue [q_k] ' . $queue_k );
+
+		// Save summary data
+		$this->_summary[ 'last_request_' . $type ] = $this->_summary[ 'curr_request_' . $type ];
+		$this->_summary[ 'curr_request_' . $type ] = 0;
+		self::save_summary();
+
+		return true;
 	}
 
 	/**

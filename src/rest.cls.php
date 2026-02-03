@@ -105,12 +105,6 @@ class REST extends Root {
 			'permission_callback' => [ $this, 'is_from_cloud' ],
 		] );
 
-		register_rest_route( 'litespeed/v1', '/notify_vpi', [
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'notify_vpi' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
-		] );
-
 		register_rest_route( 'litespeed/v3', '/err_domains', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'err_domains' ],
@@ -219,17 +213,6 @@ class REST extends Root {
 	 */
 	public function notify_img() {
 		return Img_Optm::cls()->notify_img();
-	}
-
-	/**
-	 * Viewport Images notification.
-	 *
-	 * @since 4.7
-	 * @return mixed
-	 */
-	public function notify_vpi() {
-		self::debug( 'notify_vpi' );
-		return VPI::cls()->notify();
 	}
 
 	/**
