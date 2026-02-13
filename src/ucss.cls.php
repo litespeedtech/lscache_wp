@@ -404,32 +404,9 @@ class UCSS extends Base {
 	 * @param bool   $is_webp   Whether supports webp.
 	 */
 	private function _save_con( $type, $css, $queue_k, $is_mobile, $is_webp ) {
-		// Add filters
-		$css = apply_filters('litespeed_' . $type, $css, $queue_k);
-		// Sanitize: CSS must not contain HTML tags
-		$css = wp_strip_all_tags( $css );
-		self::debug2('con: ', $css);
-
-		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {
-			self::debug('❌ empty ' . $type . ' [content] ' . $css);
-			// continue; // Save the error info too
-		}
-
-		// Write to file
-		$filecon_md5 = md5($css);
-
-		$filepath_prefix = $this->_build_filepath_prefix($type);
-		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
-
-		File::save($static_file, $css, true);
-
 		$url_tag = $this->_queue[$queue_k]['url_tag'];
 		$vary    = $this->_queue[$queue_k]['vary'];
-		self::debug2("Save URL to file [file] $static_file [vary] $vary");
-
-		$this->cls('Data')->save_url($url_tag, $vary, $type, $filecon_md5, dirname($static_file), $is_mobile, $is_webp);
-
-		Purge::add(strtoupper($type) . '.' . md5($queue_k));
+		$this->_save_css_con( $type, $css, $url_tag, $vary, $queue_k, $is_mobile, $is_webp );
 	}
 
 	/**

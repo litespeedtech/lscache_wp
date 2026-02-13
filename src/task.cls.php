@@ -44,6 +44,10 @@ class Task extends Root {
 			'name' => 'litespeed_task_vpi',
 			'hook' => 'LiteSpeed\VPI::cron',
 		],
+		Base::O_OPTIMAX => [
+			'name' => 'litespeed_task_optimax',
+			'hook' => 'LiteSpeed\Optimax::cron',
+		],
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => [
 			'name' => 'litespeed_task_lqip',
 			'hook' => 'LiteSpeed\Placeholder::cron',
@@ -111,16 +115,21 @@ class Task extends Root {
 				}
 			}
 
-			// Special check for UCSS: skip if waiting for try_later timeout
-			if ( Base::O_OPTM_UCSS === $id ) {
-				$ucss_next_run_after = UCSS::get_summary('ucss_next_run_after');
-				if ( $ucss_next_run_after && time() < $ucss_next_run_after ) {
-					$wait_seconds = $ucss_next_run_after - time();
-					self::debug( 'Skip UCSS cron registration due to try_later timeout: ' . $wait_seconds . ' seconds remaining' );
-					// Clear existing cron if any
+			// Skip cron registration if waiting for try_later timeout
+			$try_later_map = [
+				Base::O_OPTM_UCSS     => [ 'UCSS', 'ucss_next_run_after' ],
+				Base::O_OPTM_CSS_ASYNC => [ 'CSS', 'ccss_next_run_after' ],
+				Base::O_OPTIMAX       => [ 'Optimax', 'ox_next_run_after' ],
+			];
+			if ( isset( $try_later_map[ $id ] ) ) {
+				list( $cls_name, $summary_key ) = $try_later_map[ $id ];
+				$next_run_after                 = $cls_name::get_summary( $summary_key );
+				if ( $next_run_after && time() < $next_run_after ) {
+					$wait_seconds = $next_run_after - time();
+					self::debug( "Skip $cls_name cron: try_later $wait_seconds s remaining" );
 					if ( wp_next_scheduled( $trigger['name'] ) ) {
 						wp_clear_scheduled_hook( $trigger['name'] );
-						self::debug( 'Cleared existing UCSS cron schedule' );
+						self::debug( "Cleared existing $cls_name cron schedule" );
 					}
 					continue;
 				}

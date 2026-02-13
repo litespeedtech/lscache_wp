@@ -46,10 +46,11 @@ class Data extends Root {
 	 * @var array<string,int>
 	 */
 	private $_url_file_types = [
-		'css'  => 1,
-		'js'   => 2,
-		'ccss' => 3,
-		'ucss' => 4,
+		'css'     => 1,
+		'js'      => 2,
+		'ccss'    => 3,
+		'ucss'    => 4,
+		'optimax' => 5,
 	];
 
 	/** Table: image optimization results. */
@@ -426,7 +427,7 @@ class Data extends Root {
 	 * @since 4.0
 	 * @access public
 	 *
-	 * @param string $file_type One of 'css','js','ccss','ucss'.
+	 * @param string $file_type One of 'css','js','ccss','ucss','optimax'.
 	 * @return void
 	 */
 	public function url_file_clean( $file_type ) {
@@ -464,7 +465,7 @@ class Data extends Root {
 	 *
 	 * @param string $request_url  Full request URL.
 	 * @param string $vary         Vary string (may be long; will be md5 if >32).
-	 * @param string $file_type    One of 'css','js','ccss','ucss'.
+	 * @param string $file_type    One of 'css','js','ccss','ucss','optimax'.
 	 * @param string $filecon_md5  MD5 of the generated file content.
 	 * @param string $path         Base path where files live.
 	 * @param bool   $mobile       Whether mapping is for mobile.
@@ -538,7 +539,7 @@ class Data extends Root {
 			$list = $wpdb->get_results( $q, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 			if ( $list ) {
 				foreach ( $list as $v ) {
-					$ext         = 'js' === $file_type ? 'js' : 'css';
+					$ext         = 'optimax' === $file_type ? 'html' : ( 'js' === $file_type ? 'js' : 'css' );
 					$file_to_del = trailingslashit( $path ) . $v['filename'] . '.' . $ext;
 					if ( file_exists( $file_to_del ) ) {
 						self::debug( 'Delete expired unused file: ' . $file_to_del );
@@ -559,7 +560,7 @@ class Data extends Root {
 	 *
 	 * @param string $request_url Full request URL or tag.
 	 * @param string $vary        Vary string (may be md5 if previously stored).
-	 * @param string $file_type   One of 'css','js','ccss','ucss'.
+	 * @param string $file_type   One of 'css','js','ccss','ucss','optimax'.
 	 * @return string|false Filename md5 (without extension) or false if none.
 	 */
 	public function load_url_file( $request_url, $vary, $file_type ) {
