@@ -57,6 +57,7 @@ class Router extends Base {
 		self::ACTION_CSS,
 		self::ACTION_UCSS,
 		self::ACTION_VPI,
+		self::ACTION_OPTIMAX,
 		self::ACTION_DB_OPTM,
 		self::ACTION_DEBUG2,
 		self::ACTION_GUEST,
@@ -646,6 +647,7 @@ class Router extends Base {
 			case self::ACTION_CSS:
 			case self::ACTION_UCSS:
 			case self::ACTION_VPI:
+			case self::ACTION_OPTIMAX:
 			case self::ACTION_CONF:
 			case self::ACTION_ACTIVATION:
 			case self::ACTION_HEALTH:

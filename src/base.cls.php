@@ -1074,4 +1074,40 @@ class Base extends Root {
 
 		return $server_vars;
 	}
+
+	/**
+	 * Save CSS content (UCSS/CCSS) to file and register in DB.
+	 *
+	 * Shared by UCSS, CSS, and Optimax classes.
+	 *
+	 * @since 8.0
+	 *
+	 * @param string $type      CSS type ('ucss' or 'ccss').
+	 * @param string $css       CSS content.
+	 * @param string $url_tag   URL tag for DB mapping.
+	 * @param string $vary      Vary string.
+	 * @param string $queue_k   Queue key (for filter and purge tag).
+	 * @param bool   $is_mobile Whether is mobile.
+	 * @param bool   $is_webp   Whether supports webp.
+	 * @return void
+	 */
+	protected function _save_css_con( $type, $css, $url_tag, $vary, $queue_k, $is_mobile, $is_webp ) {
+		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
+		self::debug2( 'con: ', $css );
+
+		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {
+			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
+		}
+
+		$filecon_md5     = md5( $css );
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
+
+		File::save( $static_file, $css, true );
+		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
+
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $is_mobile, $is_webp );
+
+		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
+	}
 }

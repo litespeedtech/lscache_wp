@@ -60,6 +60,7 @@ class Purge extends Base {
 	const TYPE_PURGE_ALL_LQIP     = 'purge_all_lqip';
 	const TYPE_PURGE_ALL_VPI      = 'purge_all_vpi';
 	const TYPE_PURGE_ALL_AVATAR   = 'purge_all_avatar';
+	const TYPE_PURGE_ALL_OPTIMAX  = 'purge_all_optimax';
 	const TYPE_PURGE_ALL_OBJECT   = 'purge_all_object';
 	const TYPE_PURGE_ALL_OPCACHE  = 'purge_all_opcache';
 
@@ -161,6 +162,10 @@ class Purge extends Base {
 
 			case self::TYPE_PURGE_ALL_AVATAR:
 				$this->_purge_all_avatar();
+				break;
+
+			case self::TYPE_PURGE_ALL_OPTIMAX:
+				$this->_purge_all_optimax();
 				break;
 
 			case self::TYPE_PURGE_ALL_OBJECT:
@@ -310,6 +315,28 @@ class Purge extends Base {
 
 		if ( ! $silence ) {
 			$msg = __( 'Cleaned all Unique CSS files.', 'litespeed-cache' );
+			if ( ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
+				Admin_Display::success( $msg );
+			}
+		}
+	}
+
+	/**
+	 * Purge all Optimax cached files and DB mappings.
+	 *
+	 * @since 8.0
+	 * @param bool $silence If true, don't show admin notice.
+	 * @return void
+	 */
+	private function _purge_all_optimax( $silence = false ) {
+		do_action( 'litespeed_purged_all_optimax' );
+
+		$this->cls( 'Optimax' )->rm_cache_folder( 'optimax' );
+		$this->cls( 'Data' )->url_file_clean( 'optimax' );
+		$this->clear_q( 'optimax', true );
+
+		if ( ! $silence ) {
+			$msg = __( 'Cleaned all Optimax files.', 'litespeed-cache' );
 			if ( ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
 				Admin_Display::success( $msg );
 			}
