@@ -289,6 +289,7 @@ class VPI extends Base {
 	 * @param string $queue_k     Queue key for this job.
 	 * @param string $user_agent  Sanitized User-Agent string (<=200 chars).
 	 * @param bool   $is_mobile   Whether the job is for mobile viewport.
+	 * @param int    $post_id     The post ID associated with this VPI request.
 	 * @return bool|string True on queued successfully, 'out_of_quota'/'svc_hot' on throttling, or false on error.
 	 */
 	private function _send_req( $request_url, $queue_k, $user_agent, $is_mobile ) {

@@ -829,7 +829,7 @@ class Crawler extends Root {
 			$test_result                 = true;
 		}
 		self::save_summary();
-		curl_close( $ch );
+		unset( $ch );
 		// phpcs:enable
 		return $test_result;
 	}
@@ -1069,7 +1069,7 @@ class Crawler extends Root {
 				'code'   => (int) curl_getinfo( $ch, CURLINFO_HTTP_CODE ),
 			];
 			curl_multi_remove_handle( $mh, $ch );
-			curl_close( $ch );
+			unset( $ch );
 		}
 		curl_multi_close( $mh );
 		// phpcs:enable
