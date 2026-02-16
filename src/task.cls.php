@@ -123,7 +123,7 @@ class Task extends Root {
 			];
 			if ( isset( $try_later_map[ $id ] ) ) {
 				list( $cls_name, $summary_key ) = $try_later_map[ $id ];
-				$next_run_after                 = $cls_name::get_summary( $summary_key );
+				$next_run_after                 = $this->cls( $cls_name )::get_summary( $summary_key );
 				if ( $next_run_after && time() < $next_run_after ) {
 					$wait_seconds = $next_run_after - time();
 					self::debug( "Skip $cls_name cron: try_later $wait_seconds s remaining" );
