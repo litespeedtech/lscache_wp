@@ -106,14 +106,6 @@ $this->form_action();
 					);
 					?>
 					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types', esc_html__( 'Default value', 'litespeed-cache' ) ); ?>
-					<br>
-					<?php
-					printf(
-						esc_html__( 'If you turn any of the above settings OFF, please remove the related file types from the %s box.', 'litespeed-cache' ),
-						'<b>' . esc_html__( 'Include File Types', 'litespeed-cache' ) . '</b>'
-					);
-					?>
-					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types' ); ?>
 				</div>
 			</td>
 		</tr>
