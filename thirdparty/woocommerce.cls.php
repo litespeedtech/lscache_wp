@@ -82,6 +82,14 @@ class WooCommerce extends Base {
 		add_action('woocommerce_product_set_stock', [ $this, 'purge_product' ]);
 		add_action('woocommerce_variation_set_stock', [ $this, 'purge_product' ]); // #984479 Update variations stock
 
+		// Purge cache when scheduled sales start or end (daily cron safety net).
+		add_action( 'wc_after_products_starting_sales', [ $this, 'purge_sale_products' ] );
+		add_action( 'wc_after_products_ending_sales', [ $this, 'purge_sale_products' ] );
+
+		// Purge cache for per-product scheduled sale events (WooCommerce 10.5.0+).
+		add_action( 'wc_product_start_scheduled_sale', [ $this, 'purge_sale_product_by_id' ] );
+		add_action( 'wc_product_end_scheduled_sale', [ $this, 'purge_sale_product_by_id' ] );
+
 		add_action('comment_post', [ $this, 'add_review' ], 10, 3);
 
 		if ( $this->esi_enabled ) {
@@ -711,6 +719,58 @@ class WooCommerce extends Base {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Purge cache for products affected by scheduled sales.
+	 *
+	 * Hooked to `wc_after_products_starting_sales` and `wc_after_products_ending_sales`
+	 * which fire during the daily `woocommerce_scheduled_sales` cron event.
+	 *
+	 * @since 6.7
+	 * @access public
+	 *
+	 * @param array $product_ids Array of product IDs whose sale status changed.
+	 * @return void
+	 */
+	public function purge_sale_products( $product_ids ) {
+		if ( empty( $product_ids ) || ! is_array( $product_ids ) ) {
+			return;
+		}
+
+		do_action( 'litespeed_debug', '[3rd] Woo Scheduled sales purge [hook] ' . current_filter() . ' [count] ' . count( $product_ids ) );
+
+		foreach ( $product_ids as $product_id ) {
+			$product_id = absint( $product_id );
+			if ( ! $product_id ) {
+				continue;
+			}
+
+			do_action( 'litespeed_debug', '[3rd] Woo Scheduled sale purge [pid] ' . $product_id );
+			do_action( 'litespeed_purge_post', $product_id );
+
+			// Also purge related category and tag pages.
+			$this->backend_purge( $product_id );
+		}
+
+		// Purge the shop page as sale products may appear there.
+		do_action( 'litespeed_purge', self::CACHETAG_SHOP );
+	}
+
+	/**
+	 * Purge cache for a single product when its scheduled sale starts or ends.
+	 *
+	 * Hooked to `wc_product_start_scheduled_sale` and `wc_product_end_scheduled_sale`
+	 * which fire via per-product Action Scheduler events (WooCommerce 10.5.0+).
+	 *
+	 * @since 6.7
+	 * @access public
+	 *
+	 * @param int $product_id Product ID whose sale status changed.
+	 * @return void
+	 */
+	public function purge_sale_product_by_id( $product_id ) {
+		$this->purge_sale_products( [ $product_id ] );
 	}
 
 	/**
