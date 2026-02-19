@@ -1093,6 +1093,8 @@ class Base extends Root {
 	 */
 	protected function _save_css_con( $type, $css, $url_tag, $vary, $queue_k, $is_mobile, $is_webp ) {
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
+		// Font optimize
+		$css = $this->cls('Optimizer')->optm_font_face( $css );
 		self::debug2( 'con: ', $css );
 
 		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {
