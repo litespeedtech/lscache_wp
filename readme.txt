@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 8.0 - Mar 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+* **Cloud** Changed Health service to async run.
 * **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
 * **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
 * **CCSS** Dropped notification step.
