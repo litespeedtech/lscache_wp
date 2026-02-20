@@ -177,7 +177,7 @@ class Optimizer extends Root {
 		}
 
 		$optimize_value = apply_filters( 'litespeed_font_optimize_value', 'swap' );
-		$search_pattern = "/font-display\s*:(?!\s*$optimize_value)[^;]+;?/ism";
+		$search_pattern = "/font-display\s*:(?!\s*" . preg_quote($optimize_value, '/') . ")[^;]+;?/ism";
 
 		return preg_replace_callback( '/@font-face\s*\{([^\}]*)\}/iS', function( $matches ) use ( $optimize_value, $search_pattern ) {
 			$block_content = $matches[1];
