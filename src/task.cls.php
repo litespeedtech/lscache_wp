@@ -161,6 +161,19 @@ class Task extends Root {
 
 			add_action( $trigger['name'], $trigger['hook'] );
 		}
+
+		// Health: schedule single-event cron when pending request exists
+		$health_pending = Health::get_summary( 'pending' );
+		if ( $health_pending ) {
+			$hook = 'litespeed_task_health';
+			if ( ! wp_next_scheduled( $hook ) ) {
+				$next_run = Health::get_summary( 'health_next_run_after' );
+				$run_at   = $next_run && time() < $next_run ? $next_run : time() + 5;
+				wp_schedule_single_event( $run_at, $hook );
+				self::debug( 'Cron hook register [name] ' . $hook );
+			}
+			add_action( $hook, 'LiteSpeed\Health::cron' );
+		}
 	}
 
 	/**
