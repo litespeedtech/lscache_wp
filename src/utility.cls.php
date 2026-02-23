@@ -662,7 +662,7 @@ class Utility extends Root {
 			}
 
 			$built_arr       = array_merge( $query, [ Router::TYPE => $type ] );
-			$parsed['query'] = http_build_query( $built_arr + (array) $append_arr );
+			$parsed['query'] = http_build_query( array_merge( $built_arr, (array) $append_arr ) );
 			self::compatibility();
 			$url = http_build_url( $parsed ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 			$url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
