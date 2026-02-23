@@ -526,6 +526,9 @@ class Optimize extends Base {
 			// $this->content = preg_replace( '#<noscript>.*</noscript>#isU', '', $this->content );
 		}
 
+		// Inline font-face optimize
+		$this->content = $this->__optimizer->optm_font_face( $this->content );
+
 		// HTML minify
 		if (defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_HTML_MIN)) {
 			$this->content = $this->__optimizer->html_min($this->content);
