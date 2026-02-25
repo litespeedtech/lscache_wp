@@ -1027,6 +1027,9 @@ class Media extends Root {
 			}
 		}
 
+		$add_missing_sizes = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) )
+			&& apply_filters( 'litespeed_media_add_missing_sizes', true );
+
 		preg_match_all( '#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs = Utility::parse_attr( $match[1] );
@@ -1091,10 +1094,8 @@ class Media extends Root {
 			}
 
 			// Add missing dimensions.
-			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
-				if ( ! apply_filters( 'litespeed_media_add_missing_sizes', true ) ) {
-					self::debug2( 'add_missing_sizes bypassed via litespeed_media_add_missing_sizes filter' );
-				} elseif ( empty( $attrs['width'] ) || 'auto' === $attrs['width'] || empty( $attrs['height'] ) || 'auto' === $attrs['height'] ) {
+			if ( $add_missing_sizes ) {
+				if ( empty( $attrs['width'] ) || 'auto' === $attrs['width'] || empty( $attrs['height'] ) || 'auto' === $attrs['height'] ) {
 					self::debug( '⚠️ Missing sizes for image [src] ' . $attrs['src'] );
 					$dimensions = $this->_detect_dimensions( $attrs['src'] );
 					if ( $dimensions ) {
@@ -1107,17 +1108,15 @@ class Media extends Root {
 							$ori_width = (int) ( ( $ori_width * (int) $attrs['height'] ) / max( 1, $ori_height ) );
 						}
 
-						$attrs['width']  = $ori_width;
-						$attrs['height'] = $ori_height;
-						$new_html        = preg_replace( '#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0] );
-						$new_html        = preg_replace(
-							'#<img\s+#i',
-							'<img width="' . Str::trim_quotes( $attrs['width'] ) . '" height="' . Str::trim_quotes( $attrs['height'] ) . '" ',
-							$new_html
-						);
-						self::debug( 'Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src'] );
+						// Remove existing width/height, then append new values
+						$inner = Utility::remove_attr( $match[1], 'width' );
+						$inner = Utility::remove_attr( $inner, 'height' );
+						$new_html = '<img' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
+						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
 						$this->content = str_replace( $match[0], $new_html, $this->content );
-						$match[0]      = $new_html;
+						$match[0]         = $new_html;
+						$attrs['width']   = $ori_width;
+						$attrs['height']  = $ori_height;
 					}
 				}
 			}
