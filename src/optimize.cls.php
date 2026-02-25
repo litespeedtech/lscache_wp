@@ -1001,9 +1001,7 @@ class Optimize extends Base {
 
 		if ($this->cfg_js_defer === 2) {
 			// Drop type attribute from $attrs
-			if (strpos($attrs, ' type=') !== false) {
-				$attrs = preg_replace('# type=([\'"])([^\1]+)\1#isU', '', $attrs);
-			}
+			$attrs = Utility::remove_attr( $attrs, 'type' );
 			// Replace DOMContentLoaded
 			$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
 			return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
@@ -1238,9 +1236,7 @@ class Optimize extends Base {
 	 * @since  3.5
 	 */
 	private function _js_defer( $ori, $src ) {
-		if (strpos($ori, ' async') !== false) {
-			$ori = preg_replace('# async(?:=([\'"])(?:[^\1]*?)\1)?#is', '', $ori);
-		}
+		$ori = Utility::remove_attr( $ori, 'async' );
 
 		if (strpos($ori, 'defer') !== false) {
 			return false;
@@ -1265,9 +1261,7 @@ class Optimize extends Base {
 		}
 
 		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
-			if (strpos($ori, ' type=') !== false) {
-				$ori = preg_replace('# type=([\'"])([^\1]+)\1#isU', '', $ori);
-			}
+			$ori = Utility::remove_attr( $ori, 'type' );
 			return str_replace(' src=', ' type="litespeed/javascript" data-src=', $ori);
 		}
 
@@ -1280,9 +1274,7 @@ class Optimize extends Base {
 	 * @since 5.6
 	 */
 	private function _js_delay( $ori, $src ) {
-		if (strpos($ori, ' async') !== false) {
-			$ori = str_replace(' async', '', $ori);
-		}
+		$ori = Utility::remove_attr( $ori, 'async' );
 
 		if (strpos($ori, 'defer') !== false) {
 			return false;
@@ -1300,9 +1292,7 @@ class Optimize extends Base {
 			return;
 		}
 
-		if (strpos($ori, ' type=') !== false) {
-			$ori = preg_replace('# type=([\'"])([^\1]+)\1#isU', '', $ori);
-		}
+		$ori = Utility::remove_attr( $ori, 'type' );
 		return str_replace(' src=', ' type="litespeed/javascript" data-src=', $ori);
 	}
 }
