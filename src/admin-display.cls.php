@@ -480,6 +480,7 @@ class Admin_Display extends Base {
 				$localize_data['lang']['cdn_mapping_inc_js']   = Lang::title( self::CDN_MAPPING_INC_JS );
 				$localize_data['lang']['cdn_mapping_filetype'] = Lang::title( self::CDN_MAPPING_FILETYPE );
 				$localize_data['lang']['cdn_mapping_url_desc'] = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
+				$localize_data['lang']['cdn_file_types']       = sprintf( '<a href="%s" target="_blank">' . __( 'Learn more', 'litespeed-cache' ) . '</a>', 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types' );
 				$localize_data['lang']['one_per_line']         = Doc::one_per_line( true );
 				$localize_data['lang']['cdn_mapping_remove']   = __( 'Remove CDN URL', 'litespeed-cache' );
 				$localize_data['lang']['add_cdn_mapping_row']  = __( 'Add new CDN URL', 'litespeed-cache' );

@@ -138,6 +138,27 @@ class CDN extends Root {
 			}
 		}
 
+		// Add IMAGES to rewrite if CDN Mapping setting is enabled
+		if ( !empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
+			$add_images_type = apply_filters(
+				'litespeed_cdn_add_filetypes_image',
+				array( '.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif' )
+			);
+			foreach ( $add_images_type as $ext ) {
+				$this->_cfg_cdn_mapping[ $ext ] = $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ];
+			}
+		}
+
+		// Add CSS to rewrite if CDN Mapping setting is enabled
+		if ( !empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
+			$this->_cfg_cdn_mapping[ '.css' ] = $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ];
+		}
+
+		// Add JS to rewrite if CDN Mapping setting is enabled
+		if ( !empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ] ) ) {
+			$this->_cfg_cdn_mapping[ '.js' ] = $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ];
+		}
+
 		if ( ! $this->_cfg_url_ori || ! $this->_cfg_cdn_mapping ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true );
@@ -198,26 +219,6 @@ class CDN extends Root {
 			// Convert _cfg_cdn_mapping from string to array
 			$this->_cfg_cdn_mapping[ $filetype ] = [ $this->_cfg_cdn_mapping[ $filetype ], $url ];
 		}
-	}
-
-	/**
-	 * Whether the given type is included in CDN mappings.
-	 *
-	 * @since 1.6.2.1
-	 *
-	 * @param string $type 'css' or 'js'.
-	 * @return bool True if included in CDN.
-	 */
-	public function inc_type( $type ) {
-		if ( 'css' === $type && ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_CSS ] ) ) {
-			return true;
-		}
-
-		if ( 'js' === $type && ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_JS ] ) ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
