@@ -264,7 +264,7 @@ class Media extends Root {
 
 			// Verify scaled file exists before proceeding
 			// TODO: need to ues isfile func to allow hook from offload plugins
-			$basedir         = $this->_wp_upload_dir['basedir'] . '/';
+			$basedir = $this->_wp_upload_dir['basedir'] . '/';
 			if ( ! file_exists( $basedir . $scaled_path ) ) {
 				self::debug( 'Skipped: scaled file missing [pid] ' . $attachment_id );
 				continue;
@@ -1109,14 +1109,14 @@ class Media extends Root {
 						}
 
 						// Remove existing width/height, then append new values
-						$inner = Utility::remove_attr( $match[1], 'width' );
-						$inner = Utility::remove_attr( $inner, 'height' );
+						$inner    = Utility::remove_attr( $match[1], 'width' );
+						$inner    = Utility::remove_attr( $inner, 'height' );
 						$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
 						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
-						$this->content = str_replace( $match[0], $new_html, $this->content );
-						$match[0]         = $new_html;
-						$attrs['width']   = $ori_width;
-						$attrs['height']  = $ori_height;
+						$this->content   = str_replace( $match[0], $new_html, $this->content );
+						$match[0]        = $new_html;
+						$attrs['width']  = $ori_width;
+						$attrs['height'] = $ori_height;
 					}
 				}
 			}
