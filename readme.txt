@@ -269,6 +269,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Fixed Font Optimization in certain themes (rbabt PR#955)
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Toolbox** Added download button for log files to download complete logs.
+* **3rd** Purge prodcut when canceled orders in WooCommerce. (haralampiev12 PR#954)
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 

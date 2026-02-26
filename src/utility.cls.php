@@ -299,7 +299,14 @@ class Utility extends Root {
 		}
 
 		// For attrs with value (e.g. type="text/javascript"), straight replace is safe
-		return str_replace( ' ' . $whole, '', $attr_str );
+		$result = str_replace( ' ' . $whole, '', $attr_str );
+
+		// Handle edge case: attr at the very start of string (no leading space)
+		if ( $result === $attr_str && 0 === strpos( $attr_str, $whole ) ) {
+			$result = ltrim( substr( $attr_str, strlen( $whole ) ) );
+		}
+
+		return $result;
 	}
 
 	/**
