@@ -998,7 +998,7 @@ class Media extends Root {
 						// Remove existing width/height, then append new values
 						$inner = Utility::remove_attr( $match[1], 'width' );
 						$inner = Utility::remove_attr( $inner, 'height' );
-						$new_html = '<img' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
+						$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
 						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
 						$this->content = str_replace( $match[0], $new_html, $this->content );
 						$match[0]         = $new_html;
