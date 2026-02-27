@@ -455,7 +455,7 @@ class Object_Cache extends Root {
 
 		if ( ! class_exists( $this->_oc_driver ) || ! $this->_cfg_host ) {
 			$this->debug_oc( '_oc_driver cls non existed or _cfg_host missed: ' . $this->_oc_driver . ' [_cfg_host] ' . $this->_cfg_host . ':' . $this->_cfg_port );
-			return null;
+			return false;
 		}
 
 		if ( defined( 'LITESPEED_OC_FAILURE' ) ) {
@@ -627,19 +627,19 @@ class Object_Cache extends Root {
 	 *
 	 * @param string $key   Cache key.
 	 * @param string $group Optional. Cache group name.
-	 * @return mixed|null
+	 * @return mixed|false
 	 */
 	public function get( $key, $group = '' ) {
 		if ( ! $this->_cfg_enabled ) {
-			return null;
+			return false;
 		}
 
 		if ( ! $this->_can_cache( $group ) ) {
-			return null;
+			return false;
 		}
 
 		if ( ! $this->_connect() ) {
-			return null;
+			return false;
 		}
 
 		$res = $this->_conn->get( $key );
@@ -656,11 +656,11 @@ class Object_Cache extends Root {
 	 * @param string $key    Cache key.
 	 * @param mixed  $data   Data to store.
 	 * @param int    $expire TTL seconds.
-	 * @return bool|null
+	 * @return bool
 	 */
 	public function set( $key, $data, $expire ) {
 		if ( ! $this->_cfg_enabled ) {
-			return null;
+			return false;
 		}
 
 		/**
@@ -668,11 +668,11 @@ class Object_Cache extends Root {
 		 * Bug found by Stan at Jan/10/2020
 		 */
 		// if ( ! $this->_can_cache() ) {
-		// return null;
+		// return false;
 		// }
 
 		if ( ! $this->_connect() ) {
-			return null;
+			return false;
 		}
 
 		$ttl = $expire ? $expire : $this->_cfg_life;
@@ -720,15 +720,15 @@ class Object_Cache extends Root {
 	 * @access public
 	 *
 	 * @param string $key Cache key.
-	 * @return bool|null
+	 * @return bool
 	 */
 	public function delete( $key ) {
 		if ( ! $this->_cfg_enabled ) {
-			return null;
+			return false;
 		}
 
 		if ( ! $this->_connect() ) {
-			return null;
+			return false;
 		}
 
 		if ( 'Redis' === $this->_oc_driver ) {
@@ -746,16 +746,16 @@ class Object_Cache extends Root {
 	 * @since  1.8
 	 * @access public
 	 *
-	 * @return bool|null
+	 * @return bool
 	 */
 	public function flush() {
 		if ( ! $this->_cfg_enabled ) {
 			$this->debug_oc( 'bypass flushing' );
-			return null;
+			return false;
 		}
 
 		if ( ! $this->_connect() ) {
-			return null;
+			return false;
 		}
 
 		$this->debug_oc( 'flush!' );

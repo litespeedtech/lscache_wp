@@ -257,19 +257,20 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 7.8 - Feb 2026 =
+= 7.8 - Mar 3 2026 =
+* **Cloud** Changed Health service to run asynchronously.
 * **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
-* **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
 * **Media** Added WebP/AVIF support for macOS Safari >= 16.4. (PR#948)
 * **Media** Fixed pie chart not displaying in media library.
 * **Image Optimize** Fixed infinite redirect loop issue for image optimization actions. (giangel84 PR#959)
 * **Image Optimize** Fixed image optimization data not being cleared when images are replaced using third-party plugins.
 * **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
-* **Page Optimize** Fixed Font Optimization in certain themes (rbabt PR#955)
+* **Page Optimize** Fixed font optimization in certain themes. (rbabt PR#955)
+* **Object Cache** Fixed methods returning `null` instead of `false` on failure, matching WordPress Object Cache API convention.(jkolodziej)
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Toolbox** Added download button for log files to download complete logs.
-* **3rd** Purge prodcut when canceled orders in WooCommerce. (haralampiev12 PR#954)
+* **3rd** Purge product cache when orders are cancelled in WooCommerce. (haralampiev12 PR#954)
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 

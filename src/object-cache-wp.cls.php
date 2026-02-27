@@ -508,7 +508,7 @@ class WP_Object_Cache {
 		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
 			$v = $this->_object_cache->get( $id, $group );
 
-			if ( null !== $v ) {
+			if ( false !== $v ) {
 				$v = maybe_unserialize( $v );
 			}
 
