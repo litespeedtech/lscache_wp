@@ -1239,6 +1239,7 @@ class Optimize extends Base {
 		$ori = Utility::remove_attr( $ori, 'async' );
 
 		if (strpos($ori, 'defer') !== false) {
+			self::debug2('bypass: attr defer exist');
 			return false;
 		}
 		if (strpos($ori, 'data-deferred') !== false) {
