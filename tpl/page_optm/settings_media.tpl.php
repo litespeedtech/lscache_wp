@@ -308,14 +308,18 @@ $scaled_size = apply_filters( 'big_image_size_threshold', 2560, [], '', 0 ) . 'p
 						<?php esc_html_e( 'This is irreversible.', 'litespeed-cache' ); ?>
 					</font>
 
-					<?php /* TODO: Uncomment after testing is complete
-					<br /><br />
-					<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_MEDIA, Media::TYPE_BATCH_RESCALE_ORI ) ); ?>"
-						data-litespeed-cfm="<?php esc_attr_e( 'This will replace all original large images with their scaled versions. This is irreversible. Continue?', 'litespeed-cache' ); ?>"
-						class="button button-secondary">
-						<?php esc_html_e( 'Rescale Existing Images', 'litespeed-cache' ); ?>
-					</a>
-					*/ ?>
+					<?php
+				/*
+				 * TODO: Uncomment after testing is complete
+				 *
+				 * <br /><br />
+				 * <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_MEDIA, Media::TYPE_BATCH_RESCALE_ORI ) ); ?>"
+				 *     data-litespeed-cfm="<?php esc_attr_e( 'This will replace all original large images with their scaled versions. This is irreversible. Continue?', 'litespeed-cache' ); ?>"
+				 *     class="button button-secondary">
+				 *     <?php esc_html_e( 'Rescale Existing Images', 'litespeed-cache' ); ?>
+				 * </a>
+				 */
+				?>
 				</div>
 			</td>
 		</tr>

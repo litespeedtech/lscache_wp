@@ -1253,7 +1253,7 @@ class Crawler extends Root {
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		$result = curl_exec( $ch );
 		$code   = (int) curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-		curl_close( $ch );
+		unset( $ch );
 		// phpcs:enable
 
 		if ( 200 !== $code ) {
