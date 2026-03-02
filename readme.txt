@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 7.7
+Stable tag: 7.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -267,6 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimize** Fixed image optimization data not being cleared when images are replaced using third-party plugins.
 * **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
 * **Page Optimize** Fixed font optimization in certain themes. (rbabt PR#955)
+* **Page Optimize** Filtered HTML tags when saving CSS content.
 * **Object Cache** Fixed methods returning `null` instead of `false` on failure, matching WordPress Object Cache API convention.(jkolodziej)
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Toolbox** Added download button for log files to download complete logs.

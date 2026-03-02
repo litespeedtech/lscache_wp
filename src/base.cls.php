@@ -1095,6 +1095,8 @@ class Base extends Root {
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		// Font optimize
 		$css = $this->cls('Optimizer')->optm_font_face( $css );
+		// Sanitize: CSS must not contain HTML tags
+		$css = wp_strip_all_tags( $css );
 		self::debug2( 'con: ', $css );
 
 		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {

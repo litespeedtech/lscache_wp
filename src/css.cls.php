@@ -401,6 +401,8 @@ class CSS extends Base {
 	private function _save_con( $type, $css, $queue_k, $mobile, $webp ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
+		// Sanitize: CSS must not contain HTML tags
+		$css = wp_strip_all_tags( $css );
 		Debug2::debug2( '[CSS] con: ' . $css );
 
 		if ( substr( $css, 0, 2 ) === '/*' && substr( $css, -2 ) === '*/' ) {

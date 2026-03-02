@@ -14,6 +14,7 @@ defined( 'WPINC' ) || exit;
 
 // List of available public versions
 $v_list = array(
+	'7.8',
 	'7.7',
 	'7.6.2',
 	'7.5.0.1',
