@@ -181,7 +181,7 @@ class Base extends Root {
 	const O_OBJECT_KIND                  = 'object-kind';
 	const O_OBJECT_HOST                  = 'object-host';
 	const O_OBJECT_PORT                  = 'object-port';
-	const O_OBJECT_LIFE                  = 'object-life';
+	const O_OBJECT_LIFE                  = 'object-life'; // @deprecated Since v8.0. Will be removed in v8.5. TTL now follows WP API: expire=0 means no expiration.
 	const O_OBJECT_PERSISTENT            = 'object-persistent';
 	const O_OBJECT_ADMIN                 = 'object-admin';
 	const O_OBJECT_DB_ID                 = 'object-db_id';
