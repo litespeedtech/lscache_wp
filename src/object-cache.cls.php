@@ -308,7 +308,7 @@ class Object_Cache extends Root {
 
 		// If OC not available, tell WP so transients fall back to wp_options
 		if ( ! $this->_cfg_enabled ) {
-			wp_using_ext_object_cache( false );
+			function_exists('wp_using_ext_object_cache') && wp_using_ext_object_cache( false );
 		}
 	}
 
@@ -574,7 +574,7 @@ class Object_Cache extends Root {
 			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 
 			// Tell WP no external OC available, so transients fall back to wp_options table
-			wp_using_ext_object_cache( false );
+			function_exists('wp_using_ext_object_cache') && wp_using_ext_object_cache( false );
 
 			return false;
 		}
