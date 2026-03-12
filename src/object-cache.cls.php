@@ -306,9 +306,12 @@ class Object_Cache extends Root {
 			$this->_cfg_enabled = false;
 		}
 
-		// If OC not available, tell WP so transients fall back to wp_options
+		// If OC not available, mark failure so OC methods return false early.
+		// NOTE: Do NOT call wp_using_ext_object_cache(false) here — it causes
+		// "Cannot redeclare wp_cache_init()" fatal on multisite (second call
+		// to wp_start_object_cache() would load cache.php again).
 		if ( ! $this->_cfg_enabled ) {
-			function_exists('wp_using_ext_object_cache') && wp_using_ext_object_cache( false );
+			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 		}
 	}
 
@@ -573,8 +576,7 @@ class Object_Cache extends Root {
 			$this->_cfg_enabled = false;
 			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 
-			// Tell WP no external OC available, so transients fall back to wp_options table
-			function_exists('wp_using_ext_object_cache') && wp_using_ext_object_cache( false );
+			// NOTE: Do NOT call wp_using_ext_object_cache(false) — causes fatal on multisite.
 
 			return false;
 		}
