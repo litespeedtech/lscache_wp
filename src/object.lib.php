@@ -27,6 +27,21 @@ function litespeed_exception_handler( $errno, $errstr, $errfile, $errline ) {
 }
 }
 
+if ( ! function_exists( 'litespeed_oc_disable_ext_cache' ) ) {
+/**
+ * Disable external object cache flag.
+ *
+ * When called, WP's own set_transient/get_transient will use wp_options
+ * table instead of the (unavailable) OC backend.
+ *
+ * @since 7.8.0.1
+ * @access public
+ */
+function litespeed_oc_disable_ext_cache() {
+	wp_using_ext_object_cache( false );
+}
+}
+
 require_once __DIR__ . '/object-cache.cls.php';
 require_once __DIR__ . '/object-cache-wp.cls.php';
 
@@ -51,21 +66,6 @@ function wp_cache_init() {
 	if ( defined( 'LITESPEED_OC_FAILURE' ) ) {
 		add_action( 'muplugins_loaded', 'litespeed_oc_disable_ext_cache', -999 );
 	}
-}
-
-if ( ! function_exists( 'litespeed_oc_disable_ext_cache' ) ) {
-/**
- * Deferred callback to disable external object cache flag.
- *
- * Called after all wp_start_object_cache() calls are done, so WP's own
- * set_transient/get_transient will use wp_options table instead of OC.
- *
- * @since 7.8.0.1
- * @access public
- */
-function litespeed_oc_disable_ext_cache() {
-	wp_using_ext_object_cache( false );
-}
 }
 
 /**
