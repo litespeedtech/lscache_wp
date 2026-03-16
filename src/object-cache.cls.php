@@ -576,7 +576,14 @@ class Object_Cache extends Root {
 			$this->_cfg_enabled = false;
 			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 
-			// NOTE: Do NOT call wp_using_ext_object_cache(false) — causes fatal on multisite.
+			// Disable ext OC flag so WP transients fall back to wp_options table.
+			// After muplugins_loaded, all wp_start_object_cache() calls are done — safe to call directly.
+			// Before that (early bootstrap), defer via hook to avoid multisite "Cannot redeclare" fatal.
+			if ( function_exists( 'did_action' ) && did_action( 'muplugins_loaded' ) ) {
+				litespeed_oc_disable_ext_cache();
+			} elseif ( function_exists( 'add_action' ) ) {
+				add_action( 'muplugins_loaded', 'litespeed_oc_disable_ext_cache', -999 );
+			}
 
 			return false;
 		}
