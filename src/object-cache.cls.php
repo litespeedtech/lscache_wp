@@ -514,7 +514,10 @@ class Object_Cache extends Root {
 				}
 
 				if ( $this->_cfg_db ) {
-					$this->_conn->select( $this->_cfg_db );
+					if ( ! $this->_conn->select( $this->_cfg_db ) ) {
+						$this->debug_oc( 'Database ID is invalid' );
+						$failed = true;
+					}
 				}
 
 				$res = $this->_conn->rawCommand('PING');
