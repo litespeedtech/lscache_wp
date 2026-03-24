@@ -257,7 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 8.0 - Mar 2026 =
+= 8.0 - May 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 * **Cloud** Changed Health service to async run.
 * **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
@@ -277,6 +277,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **3rd** Purge product cache when orders are cancelled in WooCommerce. (haralampiev12 PR#954)
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
+
+= 7.8.0.1 - Mar 17 2026 =
+* **Object Cache** Improved Object Cache resilience: auto disable when connection fails, network subsites fallback to database, and dropped TTL setting to respect never-expired transients.
 
 = 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
