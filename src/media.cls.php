@@ -21,6 +21,8 @@ class Media extends Root {
 
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
 
+	const TYPE_BATCH_RESCALE_ORI = 'batch_rescale_ori';
+
 	/**
 	 * Current page buffer content.
 	 *
@@ -182,6 +184,117 @@ class Media extends Root {
 		}
 
 		return $metadata;
+	}
+
+	/**
+	 * Route media actions.
+	 *
+	 * @since 7.7
+	 * @return void
+	 */
+	public function handler() {
+		$type = Router::verify_type();
+
+		switch ( $type ) {
+			case self::TYPE_BATCH_RESCALE_ORI:
+				$this->_batch_rescale_ori();
+				break;
+
+			default:
+				break;
+		}
+
+		Admin::redirect();
+	}
+
+	/**
+	 * Batch replace all scaled images with their originals.
+	 *
+	 * Follows the rm_bkup() pagination pattern.
+	 *
+	 * @since 7.7
+	 * @access private
+	 */
+	private function _batch_rescale_ori() {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$offset = ! empty( $_GET['litespeed_i'] ) ? absint( wp_unslash( $_GET['litespeed_i'] ) ) : 0;
+		$limit  = 500;
+		$count  = 0;
+
+		$img_q = "SELECT a.ID, b.meta_value
+			FROM `$wpdb->posts` a
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			WHERE b.meta_key = '_wp_attachment_metadata'
+				AND a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
+			ORDER BY a.ID
+			LIMIT %d, %d
+			";
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$list = $wpdb->get_results( $wpdb->prepare( $img_q, [ $offset * $limit, $limit ] ) );
+
+		foreach ( $list as $v ) {
+			if ( ! $v->ID || ! $v->meta_value ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$meta_value = @maybe_unserialize( $v->meta_value );
+			if ( ! is_array( $meta_value ) ) {
+				continue;
+			}
+
+			if ( empty( $meta_value['original_image'] ) || empty( $meta_value['file'] ) || false === strpos( $meta_value['file'], '-scaled' ) ) {
+				continue;
+			}
+
+			$attachment_id = $v->ID;
+
+			// Extract subdirectory from metadata file path (e.g. "2024/05/photo-scaled.jpg" → "2024/05").
+			$subdir = pathinfo( $meta_value['file'], PATHINFO_DIRNAME );
+
+			// Build relative paths for rename().
+			$scaled_filename = basename( $meta_value['file'] );
+			$scaled_path     = $subdir . '/' . $scaled_filename;
+			$original_path   = $subdir . '/' . $meta_value['original_image'];
+
+			// Verify scaled file exists before proceeding
+			// TODO: need to ues isfile func to allow hook from offload plugins
+			$basedir = $this->_wp_upload_dir['basedir'] . '/';
+			if ( ! file_exists( $basedir . $scaled_path ) ) {
+				self::debug( 'Skipped: scaled file missing [pid] ' . $attachment_id );
+				continue;
+			}
+
+			// Move scaled file → original file using WP_Filesystem via rename().
+			$this->rename( $scaled_path, $original_path, $attachment_id );
+
+			// Update metadata: point file to original, remove original_image key.
+			$meta_value['file'] = $subdir . '/' . $meta_value['original_image'];
+			unset( $meta_value['original_image'] );
+
+			wp_update_attachment_metadata( $attachment_id, $meta_value );
+			update_post_meta( $attachment_id, '_wp_attached_file', $meta_value['file'] );
+
+			++$count;
+		}
+
+		self::debug( 'batch_rescale_ori offset=' . $offset . ' processed=' . $count );
+
+		// Check if there are more rows to process.
+		++$offset;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$to_be_continued = $wpdb->get_row( $wpdb->prepare( $img_q, [ $offset * $limit, 1 ] ) );
+
+		if ( $to_be_continued ) {
+			return Router::self_redirect( Router::ACTION_MEDIA, self::TYPE_BATCH_RESCALE_ORI );
+		}
+
+		Admin_Display::success( sprintf( __( 'Batch rescale completed.', 'litespeed-cache' ) ) );
 	}
 
 	/**
@@ -914,6 +1027,9 @@ class Media extends Root {
 			}
 		}
 
+		$add_missing_sizes = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) )
+			&& apply_filters( 'litespeed_media_add_missing_sizes', true );
+
 		preg_match_all( '#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs = Utility::parse_attr( $match[1] );
@@ -978,10 +1094,8 @@ class Media extends Root {
 			}
 
 			// Add missing dimensions.
-			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) ) {
-				if ( ! apply_filters( 'litespeed_media_add_missing_sizes', true ) ) {
-					self::debug2( 'add_missing_sizes bypassed via litespeed_media_add_missing_sizes filter' );
-				} elseif ( empty( $attrs['width'] ) || 'auto' === $attrs['width'] || empty( $attrs['height'] ) || 'auto' === $attrs['height'] ) {
+			if ( $add_missing_sizes ) {
+				if ( empty( $attrs['width'] ) || 'auto' === $attrs['width'] || empty( $attrs['height'] ) || 'auto' === $attrs['height'] ) {
 					self::debug( '⚠️ Missing sizes for image [src] ' . $attrs['src'] );
 					$dimensions = $this->_detect_dimensions( $attrs['src'] );
 					if ( $dimensions ) {
@@ -994,17 +1108,15 @@ class Media extends Root {
 							$ori_width = (int) ( ( $ori_width * (int) $attrs['height'] ) / max( 1, $ori_height ) );
 						}
 
+						// Remove existing width/height, then append new values
+						$inner    = Utility::remove_attr( $match[1], 'width' );
+						$inner    = Utility::remove_attr( $inner, 'height' );
+						$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
+						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
+						$this->content   = str_replace( $match[0], $new_html, $this->content );
+						$match[0]        = $new_html;
 						$attrs['width']  = $ori_width;
 						$attrs['height'] = $ori_height;
-						$new_html        = preg_replace( '#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0] );
-						$new_html        = preg_replace(
-							'#<img\s+#i',
-							'<img width="' . Str::trim_quotes( $attrs['width'] ) . '" height="' . Str::trim_quotes( $attrs['height'] ) . '" ',
-							$new_html
-						);
-						self::debug( 'Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src'] );
-						$this->content = str_replace( $match[0], $new_html, $this->content );
-						$match[0]      = $new_html;
 					}
 				}
 			}

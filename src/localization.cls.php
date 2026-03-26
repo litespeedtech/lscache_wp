@@ -63,6 +63,9 @@ class Localization extends Base {
 		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
 		foreach ( $domains as $v ) {
 			if ( ! $v || 0 === strpos( $v, '#' ) ) {
+		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
+		foreach ( $domains as $v ) {
+			if ( ! $v || 0 === strpos( $v, '#' ) ) {
 				continue;
 			}
 
@@ -76,6 +79,7 @@ class Localization extends Base {
 			}
 
 			if ( 0 !== strpos( $domain, 'https://' ) ) {
+			if ( 0 !== strpos( $domain, 'https://' ) ) {
 				continue;
 			}
 
@@ -87,6 +91,8 @@ class Localization extends Base {
 			break;
 		}
 
+		if ( ! $match ) {
+			exit( 'Not supported2' );
 		if ( ! $match ) {
 			exit( 'Not supported2' );
 		}
@@ -332,21 +338,30 @@ class Localization extends Base {
 	 *
 	 * @param string $content Page HTML content.
 	 * @return string Modified content with localized URLs.
+	 *
+	 * @param string $content Page HTML content.
+	 * @return string Modified content with localized URLs.
 	 */
 	public function finalize( $content ) {
+		if ( is_admin() ) {
 		if ( is_admin() ) {
 			return $content;
 		}
 
+		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
 		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
 			return $content;
 		}
 
 		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
 		if ( ! $domains ) {
+		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
+		if ( ! $domains ) {
 			return $content;
 		}
 
+		foreach ( $domains as $v ) {
+			if ( ! $v || 0 === strpos( $v, '#' ) ) {
 		foreach ( $domains as $v ) {
 			if ( ! $v || 0 === strpos( $v, '#' ) ) {
 				continue;
@@ -361,6 +376,7 @@ class Localization extends Base {
 				}
 			}
 
+			if ( 0 !== strpos( $domain, 'https://' ) ) {
 			if ( 0 !== strpos( $domain, 'https://' ) ) {
 				continue;
 			}

@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 7.7
+Stable tag: 7.8.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -257,20 +257,29 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 8.0 - Mar 2026 =
+= 8.0 - May 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+* **Cloud** Changed Health service to async run.
 * **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
 * **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
 * **CCSS** Dropped notification step.
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
 * **Media** Added WebP/AVIF support for macOS Safari >= 16.4. (PR#948)
 * **Media** Fixed pie chart not displaying in media library.
+* **Image Optimize** Fixed infinite redirect loop issue for image optimization actions. (giangel84 PR#959)
 * **Image Optimize** Fixed image optimization data not being cleared when images are replaced using third-party plugins.
 * **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
+* **Page Optimize** Fixed font optimization in certain themes. (rbabt PR#955)
+* **Page Optimize** Filtered HTML tags when saving CSS content.
+* **Object Cache** Fixed methods returning `null` instead of `false` on failure, matching WordPress Object Cache API convention.(jkolodziej)
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Toolbox** Added download button for log files to download complete logs.
+* **3rd** Purge product cache when orders are cancelled in WooCommerce. (haralampiev12 PR#954)
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
+
+= 7.8.0.1 - Mar 17 2026 =
+* **Object Cache** Improved Object Cache resilience: auto disable when connection fails, network subsites fallback to database, and dropped TTL setting to respect never-expired transients.
 
 = 7.7 - Dec 16 2025 =
 * **Task** Increased default cron interval from 1 minute to 15 minutes.
