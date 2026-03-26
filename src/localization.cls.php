@@ -32,7 +32,8 @@ class Localization extends Base {
 	/**
 	 * Localize Resources
 	 *
-	 * @since  3.3
+	 * @since 3.3
+	 * @since 7.9 Added support for css/js/fonts localization
 	 *
 	 * @param string $uri Base64-encoded URL.
 	 */
@@ -88,7 +89,7 @@ class Localization extends Base {
 		}
 
 		if ( ! $match ) {
-			exit( 'Not supported2' );
+			exit( 'Not supported' );
 		}
 
 		// Create localize folder(if it does not exist)
@@ -97,12 +98,14 @@ class Localization extends Base {
 		self::debug( 'localize [url] ' . $url );
 
 		// Save data to server
-		$response = $this->save_url_to_path( $url, $file );
+		$tmp_file = $file . '.tmp';
+		$response = $this->save_url_to_path( $url, $tmp_file );
+
 		// Stop if request is error
-		if ( is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			$error_message = $response->get_error_message();
-			if ( file_exists( $file ) ) {
-				wp_delete_file( $file );
+			if ( file_exists( $tmp_file ) ) {
+				wp_delete_file( $tmp_file );
 			}
 			self::debug( 'failed to get: ' . $error_message );
 			wp_safe_redirect( $url );
@@ -113,23 +116,24 @@ class Localization extends Base {
 		$content_type     = wp_remote_retrieve_header( $response, 'content-type' );
 		$file_ext         = $this->get_file_ext( $content_type ); // Get file extension from header(not all links has extension)
 		$file_w_extension = $this->_realpath( $url, $file_ext );
-		// Rename file to add extension
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
-		file_exists( $file ) && rename( $file, $file_w_extension );
-		$file = $file_w_extension;
 
-		// Process file content
-		// TODO: edge case where google font link do no contain display=swap
-		if ( 'css' === $file_ext && str_contains( $url, 'fonts.googleapis.com' ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			$body = file_get_contents( $file_w_extension );
+		// Process specific file content
+		if ( file_exists( $tmp_file ) ) {
+			// CSS - look into file and localize inner font-face
+			if ( 'css' === $file_ext ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$body     = file_get_contents( $tmp_file );
+				$new_body = $this->process_fontface( $body );
+				$new_body = $this->cls('Optimizer')->optm_font_face( $new_body );
 
-			$new_body = $this->process_fontface( $body );
-			// TODO: add font-optimization. Need other PR.
-
-			if ( $body !== $new_body ) {
 				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-				file_exists( $file ) && file_put_contents( $file, $new_body );
+				file_put_contents( $tmp_file, $new_body );
+			}
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+			rename( $tmp_file, $file_w_extension );
+			if ( file_exists( $file ) ) {
+				wp_delete_file( $file );
 			}
 		}
 
@@ -163,7 +167,7 @@ class Localization extends Base {
 	/**
 	 * Process inner font files from main resource url
 	 *
-	 * @since 7.8
+	 * @since 7.9
 	 * 
 	 * @param string $content Content to process.
 	 * @return string Content updated with localized link
@@ -193,7 +197,6 @@ class Localization extends Base {
 						$match_url  = $this->_rewrite( $match );
 
 						// Test if file is already saved.
-						// Fix download all files after a page stopped loading.
 						$localized_ext = $this->search_file_extension( LITESPEED_STATIC_DIR . '/localres/', $match );
 						if ( $localized_ext ) {
 							$replacements[ $match ] = $match_url . '.' . $localized_ext;
@@ -226,7 +229,7 @@ class Localization extends Base {
 	/**
 	 * Get file extension from content-type
 	 *
-	 * @since 7.8
+	 * @since 7.9
 	 * 
 	 * @param string $content_type Resource content type.
 	 * @return bool|string
@@ -252,7 +255,7 @@ class Localization extends Base {
 	/**
 	 * Get content-type from file extension
 	 *
-	 * @since 7.8
+	 * @since 7.9
 	 * 
 	 * @param string $ext Resource extension.
 	 * @return bool|string
@@ -279,7 +282,7 @@ class Localization extends Base {
 	 * Get the final URL of local avatar
 	 *
 	 * @since 4.5
-	 * @since 7.8 Added resource type
+	 * @since 7.9 Added resource type
 	 *
 	 * @param string $url Original external URL.
 	 * @param string $type Resource type. Empty if type is unknown.
@@ -293,7 +296,7 @@ class Localization extends Base {
 	 * Generate realpath of the cache file
 	 *
 	 * @since  4.5
-	 * @since 7.8 Added resource type
+	 * @since 7.9 Added resource type
 	 * @access private
 	 *
 	 * @param string $url Original external URL.
@@ -308,7 +311,7 @@ class Localization extends Base {
 	 * Get filepath
 	 *
 	 * @since 4.5
-	 * @since 7.8 Added resource type. Type can be empty(no extension in link): example Google Fonts
+	 * @since 7.9 Added resource type. Type can be empty(no extension in link): example Google Fonts
 	 *
 	 * @param string $url Original external URL.
 	 * @param string $type Resource type. Empty if type is unknown.
@@ -346,6 +349,8 @@ class Localization extends Base {
 			return $content;
 		}
 
+		$font_display_setting = $this->conf(self::O_OPTM_CSS_FONT_DISPLAY);
+
 		foreach ( $domains as $v ) {
 			if ( ! $v || 0 === strpos( $v, '#' ) ) {
 				continue;
@@ -363,6 +368,11 @@ class Localization extends Base {
 			if ( 0 !== strpos( $domain, 'https://' ) ) {
 				continue;
 			}
+			
+			if ( true === $font_display_setting && 0 !== strpos( $content, $domain . '&#038;display=swap' ) ) {
+				// Fix edge case where link do not contain display=swap and Font Display Optimization is set to swap
+				$content = str_replace( $domain . '&#038;display=swap', $domain, $content );
+			}
 
 			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode( $domain ), $content ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
@@ -373,7 +383,7 @@ class Localization extends Base {
 	/**
 	 * Get file extension from filename.
 	 *
-	 * @since 7.8
+	 * @since 7.9
 	 * @access public
 	 * 
 	 * @param string $dir Directory to traverse.
@@ -397,7 +407,7 @@ class Localization extends Base {
 	/**
 	 * Delete all localization files from folder.
 	 *
-	 * @since 7.8
+	 * @since 7.9
 	 * @return void
 	 */
 	public function clear_resources() {
