@@ -244,6 +244,7 @@ class Admin_Display extends Base {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.7
+	 * @since 1.9.0 Change admin bar items hook from wp_before_admin_bar_render to admin_bar_menu.
 	 */
 	public function __construct() {
 		$this->_pages = [
@@ -273,7 +274,7 @@ class Admin_Display extends Base {
 		$manage = ( $this->_is_multisite && $this->_is_network_admin ) ? 'manage_network_options' : 'manage_options';
 
 		if ( current_user_can( $manage ) ) {
-			add_action( 'wp_before_admin_bar_render', [ GUI::cls(), 'backend_shortcut' ] );
+			add_action( 'admin_bar_menu', [ GUI::cls(), 'backend_shortcut' ], 95 );
 
 			// `admin_notices` is after `admin_enqueue_scripts`.
 			add_action( $this->_is_network_admin ? 'network_admin_notices' : 'admin_notices', [ $this, 'display_messages' ] );

@@ -27,6 +27,21 @@ function litespeed_exception_handler( $errno, $errstr, $errfile, $errline ) {
 }
 }
 
+if ( ! function_exists( 'litespeed_oc_disable_ext_cache' ) ) {
+/**
+ * Disable external object cache flag.
+ *
+ * When called, WP's own set_transient/get_transient will use wp_options
+ * table instead of the (unavailable) OC backend.
+ *
+ * @since 7.8.0.1
+ * @access public
+ */
+function litespeed_oc_disable_ext_cache() {
+	wp_using_ext_object_cache( false );
+}
+}
+
 require_once __DIR__ . '/object-cache.cls.php';
 require_once __DIR__ . '/object-cache-wp.cls.php';
 
@@ -42,6 +57,15 @@ require_once __DIR__ . '/object-cache-wp.cls.php';
 function wp_cache_init() {
 	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$GLOBALS['wp_object_cache'] = WP_Object_Cache::get_instance();
+
+	// If OC backend is unavailable, tell WP so transients fall back to wp_options.
+	// IMPORTANT: Cannot call wp_using_ext_object_cache(false) here directly — on
+	// multisite, wp_start_object_cache() is called a second time (ms-settings.php)
+	// and would try to load cache.php, causing "Cannot redeclare wp_cache_init()".
+	// Defer until after all wp_start_object_cache() calls are done.
+	if ( defined( 'LITESPEED_OC_FAILURE' ) ) {
+		add_action( 'muplugins_loaded', 'litespeed_oc_disable_ext_cache', -999 );
+	}
 }
 
 /**

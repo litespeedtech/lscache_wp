@@ -164,6 +164,37 @@ class Optimizer extends Root {
 	}
 
 	/**
+	 * Add font optimization to content provided.
+	 *
+	 * @param string $content Content to change
+	 * @return string Changed content
+	 * @since  7.8
+	 */
+	public function optm_font_face( $content ) {
+		// skip $this->_conf_css_font_display if not true or empty content
+		if ( ! $this->_conf_css_font_display || empty( $content ) ) {
+			return $content;
+		}
+
+		$optimize_value = apply_filters( 'litespeed_font_optimize_value', 'swap' );
+		$search_pattern = "/font-display\s*:(?!\s*" . preg_quote($optimize_value, '/') . ")[^;]+;?/ism";
+
+		return preg_replace_callback( '/@font-face\s*\{([^\}]*)\}/iS', function( $matches ) use ( $optimize_value, $search_pattern ) {
+			$block_content = $matches[1];
+			
+			// add font-display if content do not have
+			if ( stripos( $block_content, 'font-display' ) === false ) {
+				$block_content = "font-display:" . $optimize_value . ";" . $block_content;
+			} else if( 0 !== preg_match( $search_pattern, $block_content ) ) {
+				// font-display have other value than swap
+				$block_content = preg_replace( '/font-display\s*:\s*[^;\}]+;?/is', "font-display:$optimize_value;", $block_content );
+			}
+
+			return "@font-face{ $block_content }";
+		}, $content );
+	}
+
+	/**
 	 * Load a single file
 	 *
 	 * @since  4.0
@@ -172,9 +203,7 @@ class Optimizer extends Root {
 		// CSS related features
 		if ($file_type == 'css') {
 			// Font optimize
-			if ($this->_conf_css_font_display) {
-				$content = preg_replace('#(@font\-face\s*\{)#isU', '${1}font-display:swap;', $content);
-			}
+			$content = $this->optm_font_face( $content );
 
 			$content = preg_replace('/@charset[^;]+;\\s*/', '', $content);
 
