@@ -235,6 +235,7 @@ class Cloudflare extends Base {
 	 * Cloudflare API
 	 *
 	 * @since  1.7.2
+	 * @since  1.9.0 Updated CF key type detection
 	 * @access private
 	 * @param string     $url      The API URL to call.
 	 * @param string     $method   The HTTP method to use (GET, POST, etc.).
@@ -244,16 +245,17 @@ class Cloudflare extends Base {
 	private function cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
 		Debug2::debug("[Cloudflare] cloudflare_call \t\t[URL] $url");
 
-		if (strlen($this->conf(self::O_CDN_CLOUDFLARE_KEY)) === 40) {
-			$headers = array(
-				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $this->conf(self::O_CDN_CLOUDFLARE_KEY),
-			);
-		} else {
+		$cf_key = $this->conf( self::O_CDN_CLOUDFLARE_KEY );
+		if ( strlen( $cf_key ) === 37 && preg_match('/^[0-9a-f]+$/', $cf_key ) ) {
 			$headers = array(
 				'Content-Type'  => 'application/json',
 				'X-Auth-Email' => $this->conf(self::O_CDN_CLOUDFLARE_EMAIL),
 				'X-Auth-Key'   => $this->conf(self::O_CDN_CLOUDFLARE_KEY),
+			);
+		} else {
+			$headers = array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . $this->conf(self::O_CDN_CLOUDFLARE_KEY),
 			);
 		}
 
