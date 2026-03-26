@@ -268,12 +268,62 @@ class Utility extends Root {
 	 * @return array<string,string> Attributes.
 	 */
 	public static function parse_attr( $str ) {
-		$attrs = [];
-		preg_match_all( '#([\w-]+)=(["\'])([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
-			$attrs[ $match[1] ] = trim( $match[3] );
+		$attrs  = [];
+		$parsed = wp_kses_hair( $str, self::_kses_protocols() );
+		foreach ( $parsed as $name => $data ) {
+			$attrs[ $name ] = $data['value'];
 		}
 		return $attrs;
+	}
+
+	/**
+	 * Remove an attribute from an HTML attribute string using wp_kses_hair.
+	 *
+	 * @since 7.8
+	 *
+	 * @param string $attr_str  Raw attribute string (e.g. ' type="text/javascript" src="..."').
+	 * @param string $attr_name Attribute name to remove (e.g. 'type', 'async').
+	 * @return string Attribute string with the named attribute removed.
+	 */
+	public static function remove_attr( $attr_str, $attr_name ) {
+		$parsed = wp_kses_hair( $attr_str, self::_kses_protocols() );
+		if ( ! isset( $parsed[ $attr_name ] ) ) {
+			return $attr_str;
+		}
+
+		$whole = $parsed[ $attr_name ]['whole'];
+
+		// For valueless attrs (e.g. async), use word boundary to avoid partial match (e.g. async-fallback)
+		if ( 'y' === $parsed[ $attr_name ]['vless'] ) {
+			return preg_replace( '# ' . preg_quote( $whole, '#' ) . '(?=\s|>|/|$)#i', '', $attr_str, 1 );
+		}
+
+		// For attrs with value (e.g. type="text/javascript"), straight replace is safe
+		$result = str_replace( ' ' . $whole, '', $attr_str );
+
+		// Handle edge case: attr at the very start of string (no leading space)
+		if ( $result === $attr_str && 0 === strpos( $attr_str, $whole ) ) {
+			$result = ltrim( substr( $attr_str, strlen( $whole ) ) );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Return allowed protocols including data: for attribute parsing.
+	 *
+	 * WordPress wp_allowed_protocols() does not include data:, but our parse/remove
+	 * helpers must preserve data: URIs (e.g. base64 placeholder images).
+	 *
+	 * @since 7.8
+	 * @return string[]
+	 */
+	private static function _kses_protocols() {
+		static $protocols;
+		if ( null === $protocols ) {
+			$protocols = array_merge( wp_allowed_protocols(), [ 'data' ] );
+		}
+		return $protocols;
 	}
 
 	/**
@@ -662,7 +712,7 @@ class Utility extends Root {
 			}
 
 			$built_arr       = array_merge( $query, [ Router::TYPE => $type ] );
-			$parsed['query'] = http_build_query( $built_arr + (array) $append_arr );
+			$parsed['query'] = http_build_query( array_merge( $built_arr, (array) $append_arr ) );
 			self::compatibility();
 			$url = http_build_url( $parsed ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 			$url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );

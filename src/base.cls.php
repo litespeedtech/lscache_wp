@@ -181,7 +181,7 @@ class Base extends Root {
 	const O_OBJECT_KIND                  = 'object-kind';
 	const O_OBJECT_HOST                  = 'object-host';
 	const O_OBJECT_PORT                  = 'object-port';
-	const O_OBJECT_LIFE                  = 'object-life';
+	const O_OBJECT_LIFE                  = 'object-life'; // @deprecated Since v8.0. Will be removed in v8.5. TTL now follows WP API: expire=0 means no expiration.
 	const O_OBJECT_PERSISTENT            = 'object-persistent';
 	const O_OBJECT_ADMIN                 = 'object-admin';
 	const O_OBJECT_DB_ID                 = 'object-db_id';
@@ -1093,6 +1093,10 @@ class Base extends Root {
 	 */
 	protected function _save_css_con( $type, $css, $url_tag, $vary, $queue_k, $is_mobile, $is_webp ) {
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
+		// Font optimize
+		$css = $this->cls('Optimizer')->optm_font_face( $css );
+		// Sanitize: CSS must not contain HTML tags
+		$css = wp_strip_all_tags( $css );
 		self::debug2( 'con: ', $css );
 
 		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {
