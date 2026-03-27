@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 7.8.0.1
+Stable tag: 7.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -256,6 +256,9 @@ The vast majority of plugins and themes are compatible with LiteSpeed Cache. The
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/litespeed-cache)
 
 == Changelog ==
+
+= 7.8.1 - Apr 1 2026 =
+* **CDN** Fixed Cloudflare API key type detection for the compatibility w/ the new key format.
 
 = 7.8.0.1 - Mar 17 2026 =
 * **Object Cache** Improved Object Cache resilience: auto disable when connection fails, network subsites fallback to database, and dropped TTL setting to respect never-expired transients.
