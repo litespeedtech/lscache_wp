@@ -273,7 +273,12 @@ class Cloudflare extends Base {
 			}
 			$wp_args['body'] = $data;
 		}
-		$resp = wp_remote_request($url, $wp_args);
+		add_filter( 'http_api_curl', $fn = function ( $handle ) {
+			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false );
+			return $handle;
+		}, 9999 );
+		$resp = wp_remote_request( $url, $wp_args );
+		remove_filter( 'http_api_curl', $fn, 9999 );
 		if (is_wp_error($resp)) {
 			Debug2::debug('[Cloudflare] error in response');
 			if ($show_msg) {
