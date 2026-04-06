@@ -16,29 +16,35 @@ defined( 'WPINC' ) || exit;
 $_title = esc_html__('Deactivate LiteSpeed Cache', 'litespeed');
 $_id    = 'litespeed-modal-deactivate';
 
-$reasons = array(
-	array(
+$reasons = [
+	[
 		'value' => 'Temporary',
-		'text' => esc_html__('The deactivation is temporary', 'litespeed-cache'),
-		'id' => 'temp',
-		'selected' => true,
-	),
-	array(
+		'text'  => esc_html__( 'The deactivation is temporary', 'litespeed-cache' ),
+		'id'    => 'temp',
+	],
+	[
 		'value' => 'Performance worse',
-		'text' => esc_html__('Site performance is worse', 'litespeed-cache'),
-		'id' => 'performance',
-	),
-	array(
+		'text'  => esc_html__( 'Site performance is worse', 'litespeed-cache' ),
+		'id'    => 'performance',
+	],
+	[
 		'value' => 'Plugin complicated',
-		'text' => esc_html__('Plugin is too complicated', 'litespeed-cache'),
-		'id' => 'complicated',
-	),
-	array(
+		'text'  => esc_html__( 'Plugin is too complicated', 'litespeed-cache' ),
+		'id'    => 'complicated',
+	],
+	[
 		'value' => 'Other',
-		'text' => esc_html__('Other', 'litespeed-cache'),
-		'id' => 'other',
-	),
-);
+		'text'  => esc_html__( 'Other', 'litespeed-cache' ),
+		'id'    => 'other',
+	],
+	[
+		// Empty value is treated as "do not send" by the submit handler below.
+		'value'    => '',
+		'text'     => esc_html__( 'Prefer not to answer', 'litespeed-cache' ),
+		'id'       => 'prefer_not_answer',
+		'selected' => true,
+	],
+];
 ?>
 <div style="display: none">
     <div id="litespeed-deactivation" class="iziModal">
@@ -49,7 +55,7 @@ $reasons = array(
                     <?php foreach ($reasons as $reason) : ?>
                     <label for="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>">
                         <input type="radio" id="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>" value="<?php esc_attr_e( $reason['value'] ); ?>"
-                            <?php isset($reason['selected']) && $reason['selected'] ? ' checked="checked"' : ''; ?> name="litespeed-reason" />
+                            <?php echo ! empty( $reason['selected'] ) ? ' checked="checked"' : ''; ?> name="litespeed-reason" />
                         <?php esc_html_e( $reason['text'] ); ?>
                     </label>
                     <?php endforeach; ?>
@@ -108,11 +114,21 @@ $reasons = array(
                     $('#litespeed-deactivation-form-submit').attr('disabled', true);
                     var container = $('#litespeed-deactivation-form');
 
+                    var reason = $(container).find('[name=litespeed-reason]:checked').val();
+
+                    // If no reason is selected, or the user chose "Prefer not to answer"
+                    // (which uses an empty value), skip the QC survey request entirely and
+                    // just proceed with the native deactivation.
+                    if (!reason) {
+                        $('#litespeed-deactivation-form')[0].submit();
+                        return;
+                    }
+
                     // Save selected data
                     var data = {
                         id: lscId,
                         siteLink: window.location.hostname,
-                        reason: $(container).find('[name=litespeed-reason]:checked').val()
+                        reason: reason
                     };
 
                     $.ajax({
