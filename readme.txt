@@ -278,6 +278,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Misc** Added Apache rewrite rule support for security check. (PR#948)
 * **Misc** Split Cloud and Image Optimization classes into traits for better maintainability.
 
+= 7.8.1 - Apr 1 2026 =
+* **CDN** Fixed Cloudflare API key type detection for the compatibility w/ the new key format.
+
 = 7.8.0.1 - Mar 17 2026 =
 * **Object Cache** Improved Object Cache resilience: auto disable when connection fails, network subsites fallback to database, and dropped TTL setting to respect never-expired transients.
 
