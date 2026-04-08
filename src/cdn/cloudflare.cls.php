@@ -244,17 +244,22 @@ class Cloudflare extends Base {
 	private function cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
 		Debug2::debug("[Cloudflare] cloudflare_call \t\t[URL] $url");
 
-		if (strlen($this->conf(self::O_CDN_CLOUDFLARE_KEY)) === 40) {
-			$headers = array(
-				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $this->conf(self::O_CDN_CLOUDFLARE_KEY),
-			);
+		/**
+		 * Detect key type: Global API Key (37-char hex) vs API Token (Bearer)
+		 * @since 1.9.0
+		 */
+		$cf_key = $this->conf( self::O_CDN_CLOUDFLARE_KEY );
+		if ( strlen( $cf_key ) === 37 && preg_match( '/^[0-9a-f]+$/', $cf_key ) ) {
+			$headers = [
+				'Content-Type' => 'application/json',
+				'X-Auth-Email' => $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
+				'X-Auth-Key'   => $cf_key,
+			];
 		} else {
-			$headers = array(
+			$headers = [
 				'Content-Type'  => 'application/json',
-				'X-Auth-Email' => $this->conf(self::O_CDN_CLOUDFLARE_EMAIL),
-				'X-Auth-Key'   => $this->conf(self::O_CDN_CLOUDFLARE_KEY),
-			);
+				'Authorization' => 'Bearer ' . $cf_key,
+			];
 		}
 
 		$wp_args = array(
@@ -268,7 +273,12 @@ class Cloudflare extends Base {
 			}
 			$wp_args['body'] = $data;
 		}
-		$resp = wp_remote_request($url, $wp_args);
+		add_filter( 'http_api_curl', $fn = function ( $handle ) {
+			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false );
+			return $handle;
+		}, 9999 );
+		$resp = wp_remote_request( $url, $wp_args );
+		remove_filter( 'http_api_curl', $fn, 9999 );
 		if (is_wp_error($resp)) {
 			Debug2::debug('[Cloudflare] error in response');
 			if ($show_msg) {
