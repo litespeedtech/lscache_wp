@@ -72,6 +72,29 @@ class CDN extends Root {
 	private $cdn_mapping_hosts = [];
 
 	/**
+	 * Auto-managed CDN filetype map keyed by mapping toggle.
+	 *
+	 * Single source of truth for the filetypes implicitly handled by the
+	 * Include Images / Include CSS / Include JS toggles. Used by both
+	 * CDN::init() (auto-injection) and Admin_Settings::save() (auto-stripping)
+	 * so that the two sides stay in sync.
+	 *
+	 * @since 8.0
+	 * @access public
+	 * @return array<string,string[]>
+	 */
+	public static function auto_managed_filetypes() {
+		return apply_filters(
+			'litespeed_cdn_auto_managed_filetypes',
+			[
+				Base::CDN_MAPPING_INC_IMG => [ '.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif' ],
+				Base::CDN_MAPPING_INC_CSS => [ '.css' ],
+				Base::CDN_MAPPING_INC_JS  => [ '.js' ],
+			]
+		);
+	}
+
+	/**
 	 * Initialize CDN integration and register filters if enabled.
 	 *
 	 * @since 1.2.3
@@ -103,6 +126,7 @@ class CDN extends Root {
 		$this->_cfg_url_ori = $this->conf( Base::O_CDN_ORI );
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = [ Base::CDN_MAPPING_INC_IMG, Base::CDN_MAPPING_INC_CSS, Base::CDN_MAPPING_INC_JS ];
+		$auto_managed     = self::auto_managed_filetypes();
 		foreach ( $this->conf( Base::O_CDN_MAPPING ) as $v ) {
 			if ( ! $v[ Base::CDN_MAPPING_URL ] ) {
 				continue;
@@ -116,6 +140,15 @@ class CDN extends Root {
 
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $to_check, $this_url );
+
+					// Auto-inject extensions managed by this toggle via _append_cdn_mapping() to preserve multi-CDN one-to-many semantics.
+					if ( ! empty( $auto_managed[ $to_check ] ) ) {
+						foreach ( $auto_managed[ $to_check ] as $ext ) {
+							$this->_append_cdn_mapping( $ext, $this_url );
+						}
+						// Set the FILETYPE sentinel so _replace_file_types() runs even with an empty manual textarea, otherwise CSS/JS replacement is silently broken.
+						$this->_cfg_cdn_mapping[ Base::CDN_MAPPING_FILETYPE ] = true;
+					}
 
 					if ( ! in_array( $this_host, $this->cdn_mapping_hosts, true ) ) {
 						$this->cdn_mapping_hosts[] = $this_host;

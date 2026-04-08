@@ -474,18 +474,20 @@ class Admin_Display extends Base {
 				$cdn_url = 'https://cdn.' . substr( $home_url, 2 );
 
 				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', [], Core::VER, false );
-				$localize_data['lang']                         = [];
-				$localize_data['lang']['cdn_mapping_url']      = Lang::title( self::CDN_MAPPING_URL );
-				$localize_data['lang']['cdn_mapping_inc_img']  = Lang::title( self::CDN_MAPPING_INC_IMG );
-				$localize_data['lang']['cdn_mapping_inc_css']  = Lang::title( self::CDN_MAPPING_INC_CSS );
-				$localize_data['lang']['cdn_mapping_inc_js']   = Lang::title( self::CDN_MAPPING_INC_JS );
-				$localize_data['lang']['cdn_mapping_filetype'] = Lang::title( self::CDN_MAPPING_FILETYPE );
-				$localize_data['lang']['cdn_mapping_url_desc'] = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
-				$localize_data['lang']['one_per_line']         = Doc::one_per_line( true );
-				$localize_data['lang']['cdn_mapping_remove']   = __( 'Remove CDN URL', 'litespeed-cache' );
-				$localize_data['lang']['add_cdn_mapping_row']  = __( 'Add new CDN URL', 'litespeed-cache' );
-				$localize_data['lang']['on']                   = __( 'ON', 'litespeed-cache' );
-				$localize_data['lang']['off']                  = __( 'OFF', 'litespeed-cache' );
+				$localize_data['lang']                             = [];
+				$localize_data['lang']['cdn_mapping_url']          = Lang::title( self::CDN_MAPPING_URL );
+				$localize_data['lang']['cdn_mapping_inc_img']      = Lang::title( self::CDN_MAPPING_INC_IMG );
+				$localize_data['lang']['cdn_mapping_inc_css']      = Lang::title( self::CDN_MAPPING_INC_CSS );
+				$localize_data['lang']['cdn_mapping_inc_js']       = Lang::title( self::CDN_MAPPING_INC_JS );
+				$localize_data['lang']['cdn_mapping_filetype']     = Lang::title( self::CDN_MAPPING_FILETYPE );
+				$localize_data['lang']['cdn_mapping_url_desc']     = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
+				$localize_data['lang']['one_per_line']             = Doc::one_per_line( true );
+				$localize_data['lang']['cdn_mapping_remove']       = __( 'Remove CDN URL', 'litespeed-cache' );
+				$localize_data['lang']['add_cdn_mapping_row']      = __( 'Add new CDN URL', 'litespeed-cache' );
+				$localize_data['lang']['cdn_file_types_url']       = 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#include-file-types';
+				$localize_data['lang']['cdn_file_types_link_text'] = __( 'Learn more about file types', 'litespeed-cache' );
+				$localize_data['lang']['on']                       = __( 'ON', 'litespeed-cache' );
+				$localize_data['lang']['off']                      = __( 'OFF', 'litespeed-cache' );
 				if ( empty( $localize_data['ids'] ) ) {
 					$localize_data['ids'] = [];
 				}
@@ -1663,7 +1665,7 @@ class Admin_Display extends Base {
 
 		switch ( $type ) {
 			case self::TYPE_QC_HIDE_BANNER:
-				self::set_qc_hide_banner();
+            self::set_qc_hide_banner();
 				break;
 
 			default:
