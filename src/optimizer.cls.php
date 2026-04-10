@@ -104,14 +104,33 @@ class Optimizer extends Root {
 
 		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . $url_tag_for_file . '.' . $file_type;
 
-		// Create tmp file to avoid conflict
+		// Create tmp file to avoid conflict. Use atomic O_CREAT|O_EXCL via fopen('x') so two concurrent workers cannot both pass the guard (TOCTOU race fix).
 		$tmp_static_file = $static_file . '.tmp';
-		if (file_exists($tmp_static_file) && time() - filemtime($tmp_static_file) <= 600) {
-			// some other request is generating
+		// Ensure parent directory exists (File::save would normally do this; fopen('x') would fail otherwise on a fresh install).
+		$tmp_dir = dirname($tmp_static_file);
+		if (!is_dir($tmp_dir)) {
+			wp_mkdir_p($tmp_dir);
+		}
+		$tmp_fh = @fopen($tmp_static_file, 'x');
+		if ($tmp_fh === false) {
+			// Another worker holds the slot. Only treat the existing tmp as orphaned if filemtime() actually returns a usable timestamp older than 600s. A failed stat must NOT be interpreted as "stale" or we could evict a live worker and reopen the very race we are trying to prevent.
+			$mtime = @filemtime($tmp_static_file);
+			if ($mtime !== false && time() - $mtime > 600) {
+				@unlink($tmp_static_file);
+				$tmp_fh = @fopen($tmp_static_file, 'x');
+			}
+			if ($tmp_fh === false) {
+				// Another live worker is generating; bail out and let the caller fall back to non-combined assets.
+				return false;
+			}
+		}
+		fclose($tmp_fh);
+		// File::save( $tmp_static_file, '/* ' . ( is_404() ? '404' : $request_url ) . ' */', true ); // Can't use this bcos this will get filecon md5 changed
+		if (File::save($tmp_static_file, '', true) === false) {
+			Debug2::debug('[Optmer] File::save init failed, aborting: ' . $tmp_static_file);
+			@unlink($tmp_static_file);
 			return false;
 		}
-		// File::save( $tmp_static_file, '/* ' . ( is_404() ? '404' : $request_url ) . ' */', true ); // Can't use this bcos this will get filecon md5 changed
-		File::save($tmp_static_file, '', true);
 
 		// Load content
 		$real_files = array();
@@ -131,8 +150,12 @@ class Optimizer extends Root {
 				$is_min = $this->is_min($src_info['src']);
 			}
 			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false);
-			// Write to file
-			File::save($tmp_static_file, $content, true, true);
+			// Write to file. Bail out on write failure (disk full / permission / etc.) so a partial tmp does not get hashed and persisted.
+			if (File::save($tmp_static_file, $content, true, true) === false) {
+				Debug2::debug('[Optmer] File::save append failed, aborting: ' . $tmp_static_file);
+				@unlink($tmp_static_file);
+				return false;
+			}
 		}
 
 		// if CSS - run the minification on the saved file.
@@ -141,16 +164,34 @@ class Optimizer extends Root {
 			$obj                   = new Lib\CSS_JS_MIN\Minify\CSS();
 			$file_content_combined = $obj->moveImportsToTop(File::read($tmp_static_file));
 
-			File::save($tmp_static_file, $file_content_combined);
+			if (File::save($tmp_static_file, $file_content_combined) === false) {
+				Debug2::debug('[Optmer] File::save minified CSS failed, aborting: ' . $tmp_static_file);
+				@unlink($tmp_static_file);
+				return false;
+			}
 		}
 
-		// validate md5
+		// validate md5. Defensive: if our tmp file vanished (e.g. swept by parallel cleanup, NFS metadata blip, or an unforeseen race), abort instead of writing a broken hash to the DB and serving 404 stylesheets.
+		if (!is_file($tmp_static_file)) {
+			Debug2::debug('[Optmer] tmp file vanished before md5_file: ' . $tmp_static_file);
+			return false;
+		}
 		$filecon_md5 = md5_file($tmp_static_file);
+		if ($filecon_md5 === false) {
+			Debug2::debug('[Optmer] md5_file failed: ' . $tmp_static_file);
+			@unlink($tmp_static_file);
+			return false;
+		}
 
 		$final_file_path = $file_path_prefix . $filecon_md5 . '.' . $file_type;
 		$realfile        = LITESPEED_STATIC_DIR . $final_file_path;
 		if (!file_exists($realfile)) {
-			rename($tmp_static_file, $realfile);
+			// Check rename() result so a failed move (disk full, permission, etc.) does NOT poison Data::save_url() with a hash whose final file was never created.
+			if (!rename($tmp_static_file, $realfile)) {
+				Debug2::debug('[Optmer] rename failed: ' . $tmp_static_file . ' -> ' . $realfile);
+				@unlink($tmp_static_file);
+				return false;
+			}
 			Debug2::debug2('[Optmer] Saved static file [path] ' . $realfile);
 		} else {
 			unlink($tmp_static_file);
