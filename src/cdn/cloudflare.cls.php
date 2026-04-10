@@ -246,6 +246,7 @@ class Cloudflare extends Base {
 
 		/**
 		 * Detect key type: Global API Key (37-char hex) vs API Token (Bearer)
+		 *
 		 * @since 1.9.0
 		 */
 		$cf_key = $this->conf( self::O_CDN_CLOUDFLARE_KEY );
@@ -322,16 +323,16 @@ class Cloudflare extends Base {
 
 		switch ($type) {
 			case self::TYPE_PURGE_ALL:
-				$this->purge_all_private();
+            $this->purge_all_private();
 				break;
 
 			case self::TYPE_GET_DEVMODE:
-				$this->get_devmode();
+            $this->get_devmode();
 				break;
 
 			case self::TYPE_SET_DEVMODE_ON:
 			case self::TYPE_SET_DEVMODE_OFF:
-				$this->set_devmode($type);
+            $this->set_devmode($type);
 				break;
 
 			default:

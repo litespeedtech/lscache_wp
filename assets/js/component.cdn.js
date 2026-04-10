@@ -156,6 +156,11 @@ class CDNMappingBlock extends React.Component {
 				<div className="litespeed-col-auto">
 					<label className="litespeed-form-label">{litespeed_data['lang']['cdn_mapping_filetype']}</label>
 					<textarea name={name_prefix + '[filetype][]'} rows={filetype.split('\n').length + 2} cols="18" value={filetype} data-type="filetype" onChange={this.onChange} />
+					<div className="litespeed-desc">
+						<a href={litespeed_data['lang']['cdn_file_types_url']} target="_blank" rel="noopener noreferrer">
+							{litespeed_data['lang']['cdn_file_types_link_text']}
+						</a>
+					</div>
 				</div>
 
 				<div className="litespeed-col-auto">

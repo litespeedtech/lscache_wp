@@ -252,6 +252,27 @@ class Admin_Settings extends Base {
 				}
 			}
 
+			// Auto-strip filetypes whose row toggle is ON, mirroring CDN::init() so the saved list stays clean while preserving opt-out for toggles that are OFF.
+			if ( self::O_CDN_MAPPING === $id ) {
+				$auto_managed = CDN::auto_managed_filetypes();
+				foreach ( $the_matrix[ $id ] as $k => $row ) {
+					if ( empty( $row[ self::CDN_MAPPING_FILETYPE ] ) || ! is_array( $row[ self::CDN_MAPPING_FILETYPE ] ) ) {
+						continue;
+					}
+					$strip = [];
+					foreach ( $auto_managed as $toggle => $exts ) {
+						if ( ! empty( $row[ $toggle ] ) ) {
+							$strip = array_merge( $strip, $exts );
+						}
+					}
+					if ( ! empty( $strip ) ) {
+						$the_matrix[ $id ][ $k ][ self::CDN_MAPPING_FILETYPE ] = array_values(
+							array_diff( $row[ self::CDN_MAPPING_FILETYPE ], $strip )
+						);
+					}
+				}
+			}
+
 			// Don't allow repeated cookie names.
 			if ( self::O_CRAWLER_COOKIES === $id ) {
 				$existed = [];
