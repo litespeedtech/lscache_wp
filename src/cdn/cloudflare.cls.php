@@ -275,7 +275,7 @@ class Cloudflare extends Base {
 			$wp_args['body'] = $data;
 		}
 		add_filter( 'http_api_curl', $fn = function ( $handle ) {
-			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false );
+			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt -- http_api_curl filter requires direct curl handle manipulation; wp_remote_get() is not applicable here.
 			return $handle;
 		}, 9999 );
 		$resp = wp_remote_request( $url, $wp_args );
