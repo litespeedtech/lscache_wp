@@ -156,13 +156,6 @@ class Object_Cache extends Root {
 	private $_cfg_port;
 
 	/**
-	 * TTL in seconds.
-	 *
-	 * @var int
-	 */
-	private $_cfg_life;
-
-	/**
 	 * Use persistent connection.
 	 *
 	 * @var bool
@@ -196,13 +189,6 @@ class Object_Cache extends Root {
 	 * @var string
 	 */
 	private $_cfg_pswd;
-
-	/**
-	 * Default TTL in seconds.
-	 *
-	 * @var int
-	 */
-	private $_default_life = 360;
 
 	/**
 	 * 'Redis' or 'Memcached'.
@@ -246,7 +232,6 @@ class Object_Cache extends Root {
 			$this->_cfg_method            = $cfg[ Base::O_OBJECT_KIND ] ? true : false;
 			$this->_cfg_host              = $cfg[ Base::O_OBJECT_HOST ];
 			$this->_cfg_port              = $cfg[ Base::O_OBJECT_PORT ];
-			$this->_cfg_life              = $cfg[ Base::O_OBJECT_LIFE ];
 			$this->_cfg_persistent        = $cfg[ Base::O_OBJECT_PERSISTENT ];
 			$this->_cfg_admin             = $cfg[ Base::O_OBJECT_ADMIN ];
 			$this->_cfg_db                = $cfg[ Base::O_OBJECT_DB_ID ];
@@ -264,7 +249,6 @@ class Object_Cache extends Root {
 			$this->_cfg_method            = $this->conf( Base::O_OBJECT_KIND ) ? true : false;
 			$this->_cfg_host              = $this->conf( Base::O_OBJECT_HOST );
 			$this->_cfg_port              = $this->conf( Base::O_OBJECT_PORT );
-			$this->_cfg_life              = $this->conf( Base::O_OBJECT_LIFE );
 			$this->_cfg_persistent        = $this->conf( Base::O_OBJECT_PERSISTENT );
 			$this->_cfg_admin             = $this->conf( Base::O_OBJECT_ADMIN );
 			$this->_cfg_db                = $this->conf( Base::O_OBJECT_DB_ID );
@@ -286,7 +270,6 @@ class Object_Cache extends Root {
 				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
 				$this->_cfg_host              = $cfg[ self::O_OBJECT_HOST ];
 				$this->_cfg_port              = $cfg[ self::O_OBJECT_PORT ];
-				$this->_cfg_life              = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
 				$this->_cfg_persistent        = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
 				$this->_cfg_admin             = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
 				$this->_cfg_db                = ! empty( $cfg[ self::O_OBJECT_DB_ID ] ) ? $cfg[ self::O_OBJECT_DB_ID ] : 0;
