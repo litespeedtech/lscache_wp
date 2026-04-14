@@ -279,6 +279,7 @@ class Base extends Root {
 	const O_CDN_CLOUDFLARE_NAME  = 'cdn-cloudflare_name';
 	const O_CDN_CLOUDFLARE_ZONE  = 'cdn-cloudflare_zone';
 	const O_CDN_CLOUDFLARE_CLEAR = 'cdn-cloudflare_clear';
+	const O_CDN_CLOUDFLARE_AUTO  = 'cdn-cloudflare_auto';
 	const O_CDN_MAPPING          = 'cdn-mapping';
 	const O_CDN_ATTR             = 'cdn-attr';
 	const O_QC_NAMESERVERS       = 'qc-nameservers';
