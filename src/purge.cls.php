@@ -1032,7 +1032,75 @@ class Purge extends Base {
 			self::add( Tag::TYPE_REST );
 		}
 
+		CDN\Cloudflare::purge_urls( $this->_get_purge_urls_by_post( $pid ), 'Purge Post' );
+		
 		do_action( 'litespeed_purged_post', $pid );
+	}
+
+	/**
+	 * Get purge URLs related to a post for external cache integrations.
+	 *
+	 * @since 7.8
+	 * @param int $post_id Post ID.
+	 * @return array<int,string>
+	 */
+	private function _get_purge_urls_by_post( $post_id ) {
+		$urls       = [];
+		$post_id    = (int) $post_id;
+		$post_status = get_post_status( $post_id );
+		$post       = get_post( $post_id );
+		$post_type  = $post ? $post->post_type : '';
+
+		if ( function_exists( 'is_post_status_viewable' ) && is_post_status_viewable( $post_status ) ) {
+			$urls[] = get_permalink( $post_id );
+		}
+
+		$urls[] = home_url( '/' );
+
+		if ( $this->conf( self::O_PURGE_POST_AUTHOR ) ) {
+			$urls[] = get_author_posts_url( (int) get_post_field( 'post_author', $post_id ) );
+		}
+
+		if ( $this->conf( self::O_PURGE_POST_POSTTYPE ) ) {
+			$post_type_archive = get_post_type_archive_link( $post_type );
+			if ( $post_type_archive ) {
+				$urls[] = $post_type_archive;
+			}
+		}
+
+		if ( $this->conf( self::O_PURGE_POST_TERM ) ) {
+			$taxonomies = get_object_taxonomies( $post_type );
+			foreach ( $taxonomies as $tax ) {
+				$terms = get_the_terms( $post_id, $tax );
+				if ( empty( $terms ) ) {
+					continue;
+				}
+
+				foreach ( $terms as $term ) {
+					$term_link = get_term_link( $term );
+					if ( ! is_wp_error( $term_link ) ) {
+						$urls[] = $term_link;
+					}
+				}
+			}
+		}
+
+		if ( $this->conf( self::O_CACHE_TTL_FEED ) ) {
+			$urls[] = get_feed_link();
+		}
+
+		if ( $this->conf( self::O_PURGE_POST_FRONTPAGE ) ) {
+			$front_id = (int) get_option( 'page_on_front' );
+			if ( $front_id ) {
+				$urls[] = get_permalink( $front_id );
+			}
+		}
+
+		if ( $this->conf( self::O_PURGE_POST_HOMEPAGE ) ) {
+			$urls[] = home_url( '/' );
+		}
+
+		return array_values( array_filter( array_unique( $urls ) ) );
 	}
 
 	/**
