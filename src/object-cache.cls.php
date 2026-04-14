@@ -688,7 +688,7 @@ class Object_Cache extends Root {
 				$res     = $this->_conn->set( $key, $data, $options );
 			} catch ( \RedisException $ex ) {
 				$res = false;
-				$msg = sprintf( __( 'Redis encountered a fatal error: %1$s (code: %2$d)', 'litespeed-cache' ), $ex->getMessage(), $ex->getCode() );
+				$msg = sprintf( \__( 'Redis encountered a fatal error: %1$s (code: %2$d)', 'litespeed-cache' ), $ex->getMessage(), $ex->getCode() );
 				$this->debug_oc( $msg );
 				Admin_Display::error( $msg );
 			}
