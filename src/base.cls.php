@@ -342,6 +342,7 @@ class Base extends Root {
 		self::O_CDN_CLOUDFLARE_NAME,
 		self::O_CDN_CLOUDFLARE_ZONE,
 		self::O_CDN_CLOUDFLARE_CLEAR,
+		self::O_CDN_CLOUDFLARE_AUTO,
 		self::O_CDN_MAPPING,
 		self::O_CDN_ATTR,
 		self::O_QC_NAMESERVERS,
@@ -564,6 +565,7 @@ class Base extends Root {
 		self::O_CDN_CLOUDFLARE_NAME => '',
 		self::O_CDN_CLOUDFLARE_ZONE => '',
 		self::O_CDN_CLOUDFLARE_CLEAR => false,
+		self::O_CDN_CLOUDFLARE_AUTO => false,
 		self::O_CDN_MAPPING => [],
 		self::O_CDN_ATTR => [],
 
