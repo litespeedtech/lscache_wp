@@ -138,6 +138,21 @@ class Cloudflare extends Base {
 	}
 
 	/**
+	 * Purge a URL list from Cloudflare.
+	 *
+	 * @since  7.8
+	 * @access public
+	 * @param array<int,string> $urls   URL list to purge.
+	 * @param string|bool       $reason The reason for purging, or false if none.
+	 */
+	public static function purge_urls( $urls, $reason = false ) {
+		if ($reason) {
+			Debug2::debug('[Cloudflare] purge url call because: ' . $reason);
+		}
+		self::cls()->purge_urls_private( $urls );
+	}
+	
+	/**
 	 * Purge Cloudflare cache
 	 *
 	 * @since  1.7.2
@@ -169,6 +184,62 @@ class Cloudflare extends Base {
 		}
 	}
 
+	/**
+	 * Purge Cloudflare cache by URL list.
+	 *
+	 * @since  7.8
+	 * @access private
+	 * @param array<int,string> $urls URL list to purge.
+	 */
+	private function purge_urls_private( $urls ) {
+		Debug2::debug('[Cloudflare] purge_urls_private');
+
+		if ( ! $this->conf( self::O_CDN_CLOUDFLARE ) || ! $this->conf( self::O_CDN_CLOUDFLARE_AUTO ) ) {
+			return;
+		}
+
+		$zone = $this->zone();
+		if ( ! $zone ) {
+			return;
+		}
+
+		$files = [];
+		foreach ( $urls as $url ) {
+			if ( ! is_string( $url ) ) {
+				continue;
+			}
+
+			$url = trim( $url );
+			if ( '' === $url ) {
+				continue;
+			}
+
+			if ( 0 === strpos( $url, '/' ) ) {
+				$url = home_url( $url );
+			}
+
+			$url = esc_url_raw( $url );
+			if ( ! $url || ! wp_http_validate_url( $url ) ) {
+				continue;
+			}
+
+			$files[] = $url;
+		}
+
+		if ( ! $files ) {
+			return;
+		}
+
+		$files = array_values( array_unique( $files ) );
+		$url   = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
+		$data  = array( 'files' => $files );
+
+		$res = $this->cloudflare_call( $url, 'DELETE', $data, false );
+		if ( $res ) {
+			Debug2::debug( '[Cloudflare] Notified Cloudflare to purge urls count: ' . count( $files ) );
+		}
+	}
+	
 	/**
 	 * Get current Cloudflare zone from cfg
 	 *
