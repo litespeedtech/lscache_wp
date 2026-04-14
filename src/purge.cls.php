@@ -930,6 +930,8 @@ class Purge extends Base {
 		if ( ! $quite && ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
 			Admin_Display::success( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) );
 		}
+		
+		CDN\Cloudflare::purge_urls( [ $url ], 'Purge URL' );
 
 		do_action( 'litespeed_purged_link', $url );
 	}
