@@ -1,4 +1,4 @@
-window.litespeed_ui_events = window.litespeed_ui_events || ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart'];
+window.litespeed_ui_events = window.litespeed_ui_events || ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart', 'pointerup', 'pointerdown'];
 var urlCreator = window.URL || window.webkitURL;
 
 // const litespeed_js_delay_timer = setTimeout( litespeed_load_delayed_js, 70 );
@@ -51,8 +51,16 @@ function litespeed_load_one(e, resolve) {
 
 	var e2 = document.createElement('script');
 
-	e2.addEventListener('load', resolve);
-	e2.addEventListener('error', resolve);
+	// Memory Cleanup & Resolution logic
+	var handler = function() {
+		if (e2.src.startsWith('blob:')) {
+			URL.revokeObjectURL(e2.src); // RECLAIM MEMORY
+		}
+		resolve();
+	};
+
+	e2.addEventListener('load', handler);
+	e2.addEventListener('error', handler);
 
 	var attrs = e.getAttributeNames();
 	attrs.forEach(aname => {
@@ -61,24 +69,15 @@ function litespeed_load_one(e, resolve) {
 	});
 	e2.type = 'text/javascript';
 
-	let is_inline = false;
 	// Inline script
 	if (!e2.src && e.textContent) {
 		e2.src = litespeed_inline2src(e.textContent);
 		// e2.textContent = e.textContent;
-		is_inline = true;
 	}
 
 	// Deploy to dom
 	e.after(e2);
 	e.remove();
-	// document.head.appendChild(e2);
-	// e2 = e.cloneNode(true)
-	// e2.setAttribute( 'type', 'text/javascript' );
-	// e2.setAttribute( 'data-delayed', '1' );
-
-	// Kick off resolve for inline
-	if (is_inline) resolve();
 }
 
 /**
