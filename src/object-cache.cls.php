@@ -198,6 +198,13 @@ class Object_Cache extends Root {
 	private $_oc_driver = 'Memcached'; // Redis or Memcached.
 
 	/**
+	 * Whether an admin notice has already been pushed for a Redis failure this request.
+	 *
+	 * @var bool
+	 */
+	private $_redis_error_notified = false;
+
+	/**
 	 * Global groups.
 	 *
 	 * @var array
@@ -645,7 +652,16 @@ class Object_Cache extends Root {
 			return false;
 		}
 
-		$res = $this->_conn->get( $key );
+		if ( 'Redis' === $this->_oc_driver ) {
+			try {
+				$res = $this->_conn->get( $key );
+			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			}
+		} else {
+			$res = $this->_conn->get( $key );
+		}
 
 		return $res;
 	}
@@ -688,9 +704,7 @@ class Object_Cache extends Root {
 				$res     = $this->_conn->set( $key, $data, $options );
 			} catch ( \RedisException $ex ) {
 				$res = false;
-				$msg = sprintf( \__( 'Redis encountered a fatal error: %1$s (code: %2$d)', 'litespeed-cache' ), $ex->getMessage(), $ex->getCode() );
-				$this->debug_oc( $msg );
-				Admin_Display::error( $msg );
+				$this->_redis_error( $ex );
 			}
 		} else {
 			$res = $this->_conn->set( $key, $data, $ttl );
@@ -738,7 +752,12 @@ class Object_Cache extends Root {
 		}
 
 		if ( 'Redis' === $this->_oc_driver ) {
-			$res = $this->_conn->del( $key );
+			try {
+				$res = $this->_conn->del( $key );
+			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			}
 		} else {
 			$res = $this->_conn->delete( $key );
 		}
@@ -767,13 +786,36 @@ class Object_Cache extends Root {
 		$this->debug_oc( 'flush!' );
 
 		if ( 'Redis' === $this->_oc_driver ) {
-			$res = $this->_conn->flushDb();
+			try {
+				$res = $this->_conn->flushDb();
+			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			}
 		} else {
 			$res = $this->_conn->flush();
 			$this->_conn->resetServerList();
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Log a Redis exception and surface it as an admin notice.
+	 *
+	 * @since 7.9
+	 * @access private
+	 *
+	 * @param \RedisException $ex Exception raised by phpredis.
+	 * @return void
+	 */
+	private function _redis_error( $ex ) {
+		$this->debug_oc( sprintf( 'Redis op failed: %s (code: %d)', $ex->getMessage(), $ex->getCode() ) );
+
+		if ( ! $this->_redis_error_notified ) {
+			Admin_Display::error( \__( 'LiteSpeed Object Cache: Redis is unavailable. Check Redis server status (memory, connectivity) and the plugin debug log for details.', 'litespeed-cache' ) );
+			$this->_redis_error_notified = true;
+		}
 	}
 
 	/**
