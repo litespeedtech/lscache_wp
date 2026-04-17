@@ -194,7 +194,7 @@ class Cloudflare extends Base {
 	private function purge_urls_private( $urls ) {
 		Debug2::debug('[Cloudflare] purge_urls_private');
 
-		if ( ! $this->conf( self::O_CDN_CLOUDFLARE ) || ! $this->conf( self::O_CDN_CLOUDFLARE_AUTO ) ) {
+		if ( ! $this->conf( self::O_CDN_CLOUDFLARE ) ) {
 			return;
 		}
 
