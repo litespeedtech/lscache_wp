@@ -29,6 +29,7 @@ $this->form_action();
 				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php printf( esc_html__( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+					<?php esc_html_e( 'Cloudflare cache will be automatically purged when you update the appearance of your site.', 'litespeed-cache' ); ?>
 				</div>
 				<div class="litespeed-block">
 					<div class='litespeed-col'>
@@ -72,18 +73,6 @@ $this->form_action();
 				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
 					<?php printf( esc_html__( 'Clear %s cache when "Purge All" is run.', 'litespeed-cache' ), 'Cloudflare' ); ?>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<?php $option_id = Base::O_CDN_CLOUDFLARE_AUTO; ?>
-				<?php $this->title( $option_id ); ?>
-			</th>
-			<td>
-				<?php $this->build_switch( $option_id ); ?>
-				<div class="litespeed-desc">
-					<?php esc_html_e( 'Purge Cloudflare cache automatically when you update the appearance of your site.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>
