@@ -369,9 +369,13 @@ class Localization extends Base {
 				continue;
 			}
 			
-			if ( true === $font_display_setting && 0 !== strpos( $content, $domain . '&#038;display=swap' ) ) {
-				// Fix edge case where link do not contain display=swap and Font Display Optimization is set to swap
-				$content = str_replace( $domain . '&#038;display=swap', $domain, $content );
+			if ( true === $font_display_setting ) {
+				// Strip display=swap appended earlier when Font Display Optimization is enabled
+				$content = str_replace(
+					array( $domain . '&#038;display=swap', $domain . '&display=swap' ),
+					$domain,
+					$content
+				);
 			}
 
 			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode( $domain ), $content ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
