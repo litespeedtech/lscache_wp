@@ -28,7 +28,7 @@ $this->form_action();
 			<td>
 				<?php $this->build_switch( $option_id ); ?>
 				<div class="litespeed-desc">
-					<?php printf( esc_html__( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?>
+					<?php printf( esc_html__( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ); ?><br>
 					<?php esc_html_e( 'Cloudflare cache will be automatically purged when you update the appearance of your site.', 'litespeed-cache' ); ?>
 				</div>
 				<div class="litespeed-block">
