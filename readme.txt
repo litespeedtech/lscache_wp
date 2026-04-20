@@ -261,6 +261,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * 🌱**OptiMax** OptiMax to maximize the page score.
 * **Cloud** Changed Health service to async run.
 * **Object Cache** Dropped `Store Transients` option. Transients now always use Object Cache when available, preventing potential database bloat from expired transients not being cleared. (ravanh)
+* **Object Cache** Fixed methods returning `null` instead of `false` on failure, matching WordPress Object Cache API convention.(jkolodziej)
+* **Object Cache** Enabled Redis zstd compression via phpredis. (Octavian)
 * **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
 * **CCSS** Dropped notification step.
 * **Media** Added extension check for WebP/AVIF replacement efficiency - only processes jpg/jpeg/png/gif, skips svg/ico/bmp etc.
@@ -271,7 +273,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Image Optimize** Fixed reset single image not deleting records from img_optm and img_optming database tables.
 * **Page Optimize** Fixed font optimization in certain themes. (rbabt PR#955)
 * **Page Optimize** Filtered HTML tags when saving CSS content.
-* **Object Cache** Fixed methods returning `null` instead of `false` on failure, matching WordPress Object Cache API convention.(jkolodziej)
 * **Conf** Improved network subsites config loading efficiency. (dassels43)
 * **Toolbox** Added download button for log files to download complete logs.
 * **3rd** Purge product cache when orders are cancelled in WooCommerce. (haralampiev12 PR#954)
