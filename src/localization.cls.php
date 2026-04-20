@@ -39,26 +39,31 @@ class Localization extends Base {
 	 */
 	public function serve_static( $uri ) {
 		if ( ! $this->conf( self::O_OPTM_LOCALIZE ) ) {
-			exit( 'Not supported' );
+			exit( 'Localization not enabled' );
 		}
+
+		$localres_url = $uri;
+		if ( is_multisite() ) {
+			$localres_url = explode('/', $uri );
+			$localres_url = $localres_url[1];
+		}
+
+		// Test if link is a file
+		$file_ext = pathinfo( $_SERVER['SCRIPT_URI'], PATHINFO_EXTENSION );
+		$file_path = pathinfo( $_SERVER['SCRIPT_URI'], PATHINFO_BASENAME );
+		$file = $this->_realpath( $localres_url );
+
+echo $file_ext.'<br>'.$file.'<br>'.$file_path.'<br>'.$localres_url;
+die();
+		if ( file_exists( $file ) ) {
+			header('Content-Type: ' . $this->get_file_type( $file_ext ) );
+			readfile( $file );
+			exit();
+		}
+die();
+
 		
-		$url = base64_decode( $uri ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-		// validate url
-		if ( !filter_var( $url, FILTER_VALIDATE_URL ) ) {
-			wp_safe_redirect( $url );
-			wp_die();
-		}
-
-		$file = $this->_realpath( $url );
-		// Test if resource is already localized
-		foreach ( [ 'js', 'css', 'woff2', 'woff', 'ttf' ] as $ext ) {
-        	if ( file_exists( $file . '.' . $ext ) ) {
-				$file_url = $this->_rewrite( $url );
-				wp_safe_redirect( $file_url . '.' . $ext );
-				exit;
-			}
-		}
-
+		$file = $this->_realpath( $localres_url );
 		// Save to local
 		$match   = false;
 		$domains = $this->conf( self::O_OPTM_LOCALIZE_DOMAINS );
@@ -94,7 +99,6 @@ class Localization extends Base {
 
 		// Create localize folder(if it does not exist)
 		$this->_maybe_mk_cache_folder('localres');
-
 		self::debug( 'localize [url] ' . $url );
 
 		// Save data to server
@@ -239,10 +243,10 @@ class Localization extends Base {
 			return 'css';
 		} elseif ( str_contains( $content_type, 'application/javascript' ) || str_contains( $content_type, 'application/x-javascript' ) ) { 
 			return 'js';
-		} elseif ( str_contains( $content_type, 'font/woff' ) ) {
-			return 'woff';
 		} elseif ( str_contains( $content_type, 'font/woff2' ) ) {
 			return 'woff2';
+		} elseif ( str_contains( $content_type, 'font/woff' ) ) {
+			return 'woff';
 		} elseif ( str_contains( $content_type, 'font/otf' ) ) {
 			return 'otf';
 		} elseif ( str_contains( $content_type, 'font/ttf' ) ) {
@@ -279,7 +283,7 @@ class Localization extends Base {
 	}
 
 	/**
-	 * Get the final URL of local avatar
+	 * Get the final URL of local resource
 	 *
 	 * @since 4.5
 	 * @since 7.9 Added resource type
@@ -289,7 +293,7 @@ class Localization extends Base {
 	 * @return string Rewritten local URL.
 	 */
 	private function _rewrite( $url, $type = '' ) {
-		return LITESPEED_STATIC_URL . '/localres/' . $this->_filepath( $url, $type );
+		return $this->_localization_url_return() . $this->_filepath( $url, $type );
 	}
 
 	/**
@@ -304,7 +308,40 @@ class Localization extends Base {
 	 * @return string Absolute file path.
 	 */
 	private function _realpath( $url, $type = '' ) {
-		return LITESPEED_STATIC_DIR . '/localres/' . $this->_filepath( $url, $type );
+		return $this->_localization_path_return() . $this->_filepath( $url, $type );
+	}
+
+	/**
+	 * Generate localres folder url
+	 *
+	 * @since 7.9
+	 * @access private
+	 * 
+	 * @return string Absolute file url.
+	 */
+	private function _localization_url_return(){
+		$path_add = '';
+		if ( is_multisite() ) {
+			$path_add = get_current_blog_id() . '/';
+		}
+
+		return LITESPEED_STATIC_URL . '/localres/' . $path_add;
+	}
+
+	/**
+	 * Generate localres folder path
+	 *
+	 * @since 7.9
+	 * @access private
+	 * 
+	 * @return string Absolute file path.
+	 */
+	private function _localization_path_return(){
+		$path_add = '';
+		if ( is_multisite() ) {
+			$path_add = get_current_blog_id() . '/';
+		}
+		return LITESPEED_STATIC_DIR . '/localres/' . $path_add;
 	}
 
 	/**
@@ -321,9 +358,7 @@ class Localization extends Base {
 		// Prepare data: type and filename
 		$type     = ( !empty( $type ) ?  '.' . $type : '' );
 		$filename = md5($url) . $type;
-		if ( is_multisite() ) {
-			$filename = get_current_blog_id() . '/' . $filename;
-		}
+		
 		return $filename;
 	}
 
@@ -369,16 +404,20 @@ class Localization extends Base {
 				continue;
 			}
 			
+			// Strip display=swap appended earlier when Font Display Optimization is enabled
 			if ( true === $font_display_setting ) {
-				// Strip display=swap appended earlier when Font Display Optimization is enabled
 				$content = str_replace(
 					array( $domain . '&#038;display=swap', $domain . '&display=swap' ),
 					$domain,
 					$content
 				);
 			}
-
-			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . base64_encode( $domain ), $content ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			
+			$blog_path = '';
+			if ( is_multisite() ) {
+				$blog_path = get_current_blog_id() . '/';
+			}
+			$content = str_replace( $domain, LITESPEED_STATIC_URL . '/localres/' . $blog_path . base64_encode( $domain ), $content ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
 		return $content;
@@ -412,25 +451,64 @@ class Localization extends Base {
 	 * Delete all localization files from folder.
 	 *
 	 * @since 7.9
+	 * @throws \Exception When folder is not found, not a folder or not writable.
+	 * @access public
 	 * @return void
 	 */
 	public function clear_resources() {
-		$folder = LITESPEED_STATIC_DIR . '/localres';
-		if ( is_multisite() ) {
-			$folder .= get_current_blog_id();
+		global $wp_filesystem;
+
+		// On update need to test if $wp_filesystem is initialized, if not initialize it.
+		if ( !$wp_filesystem ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
 		}
+
+		$localres_folder = LITESPEED_STATIC_DIR . '/localres';
+		if ( is_multisite() && !is_network_admin() ) {
+			$localres_folder .= '/' . get_current_blog_id();
+		}
+		self::debug( 'Localisation folder: ' . $localres_folder );
 		
 		try {
-			$dir   = new \RecursiveDirectoryIterator( $folder, \FilesystemIterator::SKIP_DOTS );
-			$files = new \RecursiveIteratorIterator( $dir, \RecursiveIteratorIterator::CHILD_FIRST );
-			foreach ( $files as $file ) {
-				if ( !$file->isDir() ) {
-					// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
-					unlink( $file->getRealPath() );
-				}
+			if ( ! $wp_filesystem->exists( $localres_folder ) ) {
+				throw new \Exception( 'path not found' );
 			}
-		} catch ( \UnexpectedValueException $e ) {
-			self::debug( 'Localisation folder not found: ' . $folder );
+			if ( ! $wp_filesystem->is_dir( $localres_folder ) ) {
+				throw new \Exception( 'path is not a folder'  );
+			}
+			if ( ! $wp_filesystem->is_writable( $localres_folder ) ) {
+				throw new \Exception( 'path not writable' );
+			}
+
+			$this->clear_folder( $localres_folder );
+			self::debug( 'Localisation folder cleared: ' . $localres_folder );
+		} catch ( \Exception $e ) {
+			self::debug( 'Localisation clear error: ' . $e->getMessage() . '. Folder: ' . $localres_folder );
+		}
+	}
+
+	/**
+	 * Delete all localization files from folder.
+	 *
+	 * @since 7.9
+	 * @param string $dir Directory to traverse.
+	 * @access public
+	 * @return void
+	 */
+	public function clear_folder( $dir ) {
+		global $wp_filesystem;
+
+		$files = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator( $dir, \FilesystemIterator::SKIP_DOTS ),
+			\RecursiveIteratorIterator::CHILD_FIRST
+		);
+		foreach ( $files as $fileinfo ) {
+			if ( $fileinfo->isDir() ) {
+				$wp_filesystem->rmdir( $fileinfo->getRealPath() );
+			} else {
+				$wp_filesystem->delete( $fileinfo->getRealPath() );
+			}
 		}
 	}
 }
