@@ -498,9 +498,15 @@ class Object_Cache extends Root {
 					}
 				}
 
-				if (defined('Redis::OPT_REPLY_LITERAL')) {
+				if ( defined( 'Redis::OPT_REPLY_LITERAL' ) ) {
 					$this->debug_oc( 'Redis set OPT_REPLY_LITERAL' );
-					$this->_conn->setOption(\Redis::OPT_REPLY_LITERAL, true);
+					$this->_conn->setOption( \Redis::OPT_REPLY_LITERAL, true );
+				}
+
+				// Enable phpredis-level zstd compression to cut Redis memory use. Payload-level only: do NOT set OPT_SERIALIZER, LSCWP already runs maybe_serialize upstream and a second serializer would corrupt reads.
+				if ( defined( 'Redis::OPT_COMPRESSION' ) && defined( 'Redis::COMPRESSION_ZSTD' ) ) {
+					$this->debug_oc( 'Redis set OPT_COMPRESSION to ZSTD' );
+					$this->_conn->setOption( \Redis::OPT_COMPRESSION, \Redis::COMPRESSION_ZSTD );
 				}
 
 				if ( $this->_cfg_db ) {
