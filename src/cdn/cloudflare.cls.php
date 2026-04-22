@@ -324,8 +324,8 @@ class Cloudflare extends Base {
 
 		// Pagination (first 3 pages)
 		$total_posts = wp_count_posts()->publish;
-		$per_page = get_option( 'posts_per_page' );
-		$max_pages = min( 3, ceil( $total_posts / $per_page ) );
+		$per_page    = get_option( 'posts_per_page' );
+		$max_pages   = min( 3, ceil( $total_posts / $per_page ) );
 		for ( $i = 2; $i <= $max_pages; $i++ ) {
 			$urls[] = home_url( sprintf( '/page/%d/', $i ) );
 		}
