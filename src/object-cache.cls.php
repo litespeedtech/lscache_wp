@@ -12,21 +12,6 @@ defined( 'WPINC' ) || exit();
 
 require_once dirname( __DIR__ ) . '/autoload.php';
 
-if ( ! function_exists( 'litespeed_oc_disable_ext_cache' ) ) {
-/**
- * Disable external object cache flag.
- *
- * When called, WP's own set_transient/get_transient will use wp_options
- * table instead of the (unavailable) OC backend.
- *
- * @since 7.8.0.1
- * @access public
- */
-function litespeed_oc_disable_ext_cache() {
-	wp_using_ext_object_cache( false );
-}
-}
-
 /**
  * Object cache handler using Redis or Memcached.
  *
@@ -594,9 +579,15 @@ class Object_Cache extends Root {
 			// After muplugins_loaded, all wp_start_object_cache() calls are done — safe to call directly.
 			// Before that (early bootstrap), defer via hook to avoid multisite "Cannot redeclare" fatal.
 			if ( function_exists( 'did_action' ) && did_action( 'muplugins_loaded' ) ) {
-				litespeed_oc_disable_ext_cache();
+				wp_using_ext_object_cache( false );
 			} elseif ( function_exists( 'add_action' ) ) {
-				add_action( 'muplugins_loaded', 'litespeed_oc_disable_ext_cache', -999 );
+				add_action(
+					'muplugins_loaded',
+					function () {
+						wp_using_ext_object_cache( false );
+					},
+					-999
+				);
 			}
 
 			return false;
