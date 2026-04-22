@@ -1058,6 +1058,11 @@ class Purge extends Base {
 		}
 
 		do_action( 'litespeed_purged_post', $pid );
+
+		// Purge Cloudflare cache for this post if Cloudflare API is enabled
+		if ( $this->conf( self::O_CDN_CLOUDFLARE ) ) {
+			CDN\Cloudflare::purge_post( $pid );
+		}
 	}
 
 	/**
