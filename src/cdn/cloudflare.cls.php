@@ -170,6 +170,175 @@ class Cloudflare extends Base {
 	}
 
 	/**
+	 * Purge Cloudflare cache for a specific post by purging its related URLs
+	 *
+	 * @since  7.x
+	 * @access public
+	 * @param int $post_id The post ID to purge.
+	 */
+	public static function purge_post( $post_id ) {
+		self::cls()->purge_post_private( $post_id );
+	}
+
+	/**
+	 * Purge Cloudflare cache for a specific post's related URLs
+	 *
+	 * @since  7.x
+	 * @access private
+	 * @param int $post_id The post ID to purge.
+	 */
+	private function purge_post_private( $post_id ) {
+		$cf_on = $this->conf( self::O_CDN_CLOUDFLARE );
+		if ( ! $cf_on ) {
+			return;
+		}
+
+		$zone = $this->zone();
+		if ( ! $zone ) {
+			return;
+		}
+
+		// Skip autosaves and revisions
+		if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+
+		$post_type = get_post_type_object( get_post_type( $post_id ) );
+		if ( ! is_post_type_viewable( $post_type ) ) {
+			return;
+		}
+
+		$urls = $this->get_post_related_urls( $post_id );
+		if ( empty( $urls ) ) {
+			return;
+		}
+
+		// CF API allows max 30 URLs per request
+		$chunks = array_chunk( $urls, 30 );
+		foreach ( $chunks as $chunk ) {
+			$this->purge_urls_private( $zone, $chunk );
+		}
+	}
+
+	/**
+	 * Purge specific URLs from Cloudflare cache
+	 *
+	 * @since  7.x
+	 * @access private
+	 * @param string $zone  The Cloudflare zone ID.
+	 * @param array  $urls  Array of URLs to purge.
+	 */
+	private function purge_urls_private( $zone, $urls ) {
+		Debug2::debug( '[Cloudflare] purge_urls_private: ' . count( $urls ) . ' URLs' );
+
+		$url  = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache';
+		$data = array( 'files' => array_values( $urls ) );
+
+		$res = $this->cloudflare_call( $url, 'DELETE', $data, false );
+
+		if ( $res ) {
+			Debug2::debug( '[Cloudflare] purge_urls_private succeeded' );
+		} else {
+			Debug2::debug( '[Cloudflare] purge_urls_private failed' );
+		}
+	}
+
+	/**
+	 * Get all related URLs for a post
+	 *
+	 * @since  7.x
+	 * @access private
+	 * @param int $post_id The post ID.
+	 * @return array List of URLs.
+	 */
+	private function get_post_related_urls( $post_id ) {
+		$urls      = array();
+		$post_type = get_post_type( $post_id );
+
+		// Post URL
+		$permalink = get_permalink( $post_id );
+		if ( $permalink ) {
+			$urls[] = $permalink;
+		}
+
+		// Trashed post URL
+		if ( get_post_status( $post_id ) === 'trash' && $permalink ) {
+			$trash_url = str_replace( '__trashed', '', $permalink );
+			$urls[] = $trash_url;
+		}
+
+		// Taxonomy terms and their feeds
+		$taxonomies = get_object_taxonomies( $post_type );
+		foreach ( $taxonomies as $taxonomy ) {
+			$taxonomy_data = get_taxonomy( $taxonomy );
+			if ( $taxonomy_data instanceof \WP_Taxonomy && false === $taxonomy_data->public ) {
+				continue;
+			}
+
+			$terms = get_the_terms( $post_id, $taxonomy );
+			if ( empty( $terms ) || is_wp_error( $terms ) ) {
+				continue;
+			}
+
+			foreach ( $terms as $term ) {
+				$term_link = get_term_link( $term );
+				if ( ! is_wp_error( $term_link ) ) {
+					$urls[] = $term_link;
+				}
+				$term_feed_link = get_term_feed_link( $term->term_id, $term->taxonomy );
+				if ( ! is_wp_error( $term_feed_link ) ) {
+					$urls[] = $term_feed_link;
+				}
+			}
+		}
+
+		// Author URL
+		$urls[] = get_author_posts_url( get_post_field( 'post_author', $post_id ) );
+		$urls[] = get_author_feed_link( get_post_field( 'post_author', $post_id ) );
+
+		// Post type archive
+		if ( get_post_type_archive_link( $post_type ) ) {
+			$urls[] = get_post_type_archive_link( $post_type );
+			$urls[] = get_post_type_archive_feed_link( $post_type );
+		}
+
+		// Feeds
+		$urls[] = get_bloginfo_rss( 'rdf_url' );
+		$urls[] = get_bloginfo_rss( 'rss_url' );
+		$urls[] = get_bloginfo_rss( 'rss2_url' );
+		$urls[] = get_bloginfo_rss( 'atom_url' );
+		$urls[] = get_bloginfo_rss( 'comments_rss2_url' );
+		$urls[] = get_post_comments_feed_link( $post_id );
+
+		// Home page
+		$urls[] = home_url( '/' );
+
+		// Posts page
+		$page_for_posts = get_option( 'page_for_posts' );
+		if ( $page_for_posts && get_option( 'show_on_front' ) === 'page' ) {
+			$page_link = get_permalink( $page_for_posts );
+			if ( $page_link ) {
+				$urls[] = $page_link;
+			}
+		}
+
+		// Pagination (first 3 pages)
+		$total_posts  = wp_count_posts()->publish;
+		$per_page     = get_option( 'posts_per_page' );
+		$max_pages    = min( 3, ceil( $total_posts / $per_page ) );
+		for ( $i = 2; $i <= $max_pages; $i++ ) {
+			$urls[] = home_url( sprintf( '/page/%d/', $i ) );
+		}
+
+		// Clean: remove empty, duplicates
+		$urls = array_values( array_filter( array_unique( $urls ) ) );
+
+		Debug2::debug( '[Cloudflare] get_post_related_urls: ' . count( $urls ) . ' URLs for post ' . $post_id );
+
+		return $urls;
+	}
+
+	/**
 	 * Get current Cloudflare zone from cfg
 	 *
 	 * @since  1.7.2
