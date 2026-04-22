@@ -264,7 +264,7 @@ class Cloudflare extends Base {
 		// Trashed post URL
 		if ( get_post_status( $post_id ) === 'trash' && $permalink ) {
 			$trash_url = str_replace( '__trashed', '', $permalink );
-			$urls[] = $trash_url;
+			$urls[]    = $trash_url;
 		}
 
 		// Taxonomy terms and their feeds
@@ -323,9 +323,9 @@ class Cloudflare extends Base {
 		}
 
 		// Pagination (first 3 pages)
-		$total_posts  = wp_count_posts()->publish;
-		$per_page     = get_option( 'posts_per_page' );
-		$max_pages    = min( 3, ceil( $total_posts / $per_page ) );
+		$total_posts = wp_count_posts()->publish;
+		$per_page = get_option( 'posts_per_page' );
+		$max_pages = min( 3, ceil( $total_posts / $per_page ) );
 		for ( $i = 2; $i <= $max_pages; $i++ ) {
 			$urls[] = home_url( sprintf( '/page/%d/', $i ) );
 		}
