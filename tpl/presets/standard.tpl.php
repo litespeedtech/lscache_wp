@@ -90,7 +90,7 @@ $presets = array(
 
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'LiteSpeed Cache Standard Presets', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/presets/#standard-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/presets/#standard-presets-tab' ); ?>
 </h3>
 
 <p><?php esc_html_e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
