@@ -27,7 +27,7 @@ ksort( $roles );
 ?>
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'Tuning Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#tuning-settings-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#tuning-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">
