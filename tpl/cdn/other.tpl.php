@@ -26,7 +26,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'CDN Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/#other-static-cdn-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">

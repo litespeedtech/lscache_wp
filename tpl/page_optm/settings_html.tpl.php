@@ -90,7 +90,7 @@ defined( 'WPINC' ) || exit;
 				<div class="litespeed-desc">
 					<?php esc_html_e( 'Delay rendering off-screen HTML elements by its selector.', 'litespeed-cache' ); ?>
 					<?php Doc::one_per_line(); ?>
-					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazyload-selectors' ); ?>
+					<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#html-lazy-load-selectors' ); ?>
 				</div>
 			</td>
 		</tr>

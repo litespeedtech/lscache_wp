@@ -34,7 +34,7 @@ defined( 'WPINC' ) || exit;
 					printf(
 						/* translators: %s: Link tags */
 						esc_html__( 'Please visit the %sInformation%s page on how to test the cache.', 'litespeed-cache' ),
-						'<a href="https://docs.litespeedtech.com/lscache/lscwp/installation/#testing" target="_blank" rel="noopener">',
+						'<a href="https://docs.litespeedtech.com/lscache/lscwp/installation/#verify-your-site-is-being-cached" target="_blank" rel="noopener">',
 						'</a>'
 					);
 					?>

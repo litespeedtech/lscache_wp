@@ -15,7 +15,7 @@ $this->form_action();
 
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'Crawler General Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#general-settings-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/crawler/#settings-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">
