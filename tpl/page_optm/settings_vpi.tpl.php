@@ -21,7 +21,7 @@ $vpi_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_VPI );
 
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'Viewport Images', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#vpi-settings-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#vpi' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">
