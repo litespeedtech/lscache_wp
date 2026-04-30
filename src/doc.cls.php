@@ -157,7 +157,7 @@ class Doc {
 	public static function notice_htaccess() {
 		echo '<span class="litespeed-primary">';
 		echo '⚠️ ' . esc_html__( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) . ' ';
-		self::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#edit-htaccess-tab' );
+		self::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/toolbox/#view-htaccess-tab' );
 		echo '</span>';
 	}
 
