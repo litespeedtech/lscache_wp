@@ -25,6 +25,7 @@ $cloud_summary = Cloud::get_summary();
 					</a>
 				<?php endif; ?>
 				<span class="litespeed-quic-icon"></span> <?php esc_html_e( 'QUIC.cloud CDN Status Overview', 'litespeed-cache' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cdn/' ); ?>
 			</h3>
 			<p class="litespeed-desc"><?php esc_html_e( 'Check the status of your most important settings and the health of your CDN setup here.', 'litespeed-cache' ); ?></p>
 
