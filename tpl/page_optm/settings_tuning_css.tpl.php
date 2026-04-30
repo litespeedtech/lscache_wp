@@ -15,7 +15,7 @@ defined( 'WPINC' ) || exit;
 ?>
 <h3 class="litespeed-title-short">
 	<?php esc_html_e( 'Tuning CSS Settings', 'litespeed-cache' ); ?>
-	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#tuning-css-settings-tab' ); ?>
+	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#tuning-css-tab' ); ?>
 </h3>
 
 <table class="wp-list-table striped litespeed-table">
@@ -112,7 +112,7 @@ defined( 'WPINC' ) || exit;
 			<div class="litespeed-desc">
 				<?php esc_html_e( 'List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache' ); ?>
 				<?php printf( esc_html__( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types_1' ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#separate-ccss-cache-post-types' ); ?>
 			</div>
 		</td>
 	</tr>
