@@ -1299,8 +1299,12 @@ class Crawler extends Root {
 			$crawler_factors['uid'][ $v ] = ucfirst( $role_title );
 		}
 
-		// Cookie crawler.
-		foreach ( $this->conf( Base::O_CRAWLER_COOKIES ) as $v ) {
+		// Cookie crawler. Filter lets 3rd-party integrations inject crawler-scoped cookie rows (e.g. WCML _lscache_vary per-currency)
+		$cookie_list = apply_filters( 'litespeed_crawler_cookies', $this->conf( Base::O_CRAWLER_COOKIES ) );
+		if ( ! is_array( $cookie_list ) ) {
+			$cookie_list = [];
+		}
+		foreach ( $cookie_list as $v ) {
 			if ( empty( $v['name'] ) ) {
 				continue;
 			}

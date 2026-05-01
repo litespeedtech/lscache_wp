@@ -181,6 +181,7 @@ $this->form_action();
 						?>
 					</p>
 				</div>
+				<?php do_action( 'litespeed_crawler_cookies_after' ); ?>
 			</td>
 		</tr>
 	</tbody>
