@@ -7,7 +7,7 @@
 	"cache-priv": "1",
 	"cache-commenter": "1",
 	"cache-rest": "1",
-	"cache-page_login": "1",
+	"cache-page_login": "0",
 	"cache-resources": "1",
 	"cache-browser": "",
 	"cache-mobile": "",
