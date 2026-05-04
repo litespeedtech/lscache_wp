@@ -30,6 +30,8 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # Inherit parent rules first so WP's index.php fallback handles lazy-gen (localres, avatar).
+    RewriteOptions InheritBefore
 
     # Block dotfiles (.litespeed_conf.dat, .htaccess, etc.) anywhere in the tree
     RewriteRule (^|/)\.[^/]+$ - [F,L]
