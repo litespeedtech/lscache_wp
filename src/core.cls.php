@@ -605,7 +605,7 @@ class Core extends Root {
 		// Send Control header
 		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			$this->http_header( $control_header );
-			if ( ! Control::is_cacheable() && !is_admin() ) {
+			if ( ! Control::is_cacheable() && ! is_admin() && ! preg_grep( '/^Cache-Control:/i', headers_list() ) ) {
 				$ori_wp_header = wp_get_nocache_headers();
 				if ( isset( $ori_wp_header['Cache-Control'] ) ) {
 					$this->http_header( 'Cache-Control: ' . $ori_wp_header['Cache-Control'] ); // @ref: https://github.com/litespeedtech/lscache_wp/issues/889
