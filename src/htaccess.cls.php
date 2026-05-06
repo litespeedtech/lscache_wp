@@ -147,14 +147,31 @@ class Htaccess extends Root {
 			$this->frontend_htaccess_writable = true;
 		}
 
-		// General Rewrite Rules (Files/Logs protection)
+		// Start general Rewrite Rules (Files/Logs protection)
         $this->__rewrite_general = [
             self::LS_MODULE_REWRITE_START, // <IfModule mod_rewrite.c>
             self::REWRITE_ON,              // RewriteEngine on
-            'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
-            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
-            self::LS_MODULE_END,           // </IfModule>
         ];
+
+		// Stop access to debug log files and config file.
+        $this->__rewrite_general[] = 'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]'; // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+        $this->__rewrite_general[] = 'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]'; // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+
+		// If subdomain multisite, route LiteSpeed localres requests through WordPress for dynamic generation.
+		if ( is_multisite() ) {
+			$prefix = '';
+			if ( defined( 'SUBDOMAIN_INSTALL' ) && !SUBDOMAIN_INSTALL ) {
+				$prefix = '^([_0-9a-zA-Z-]+/)?';
+			}
+
+			// Route missing LiteSpeed localres files through WordPress for dynamic generation
+			$this->__rewrite_general[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
+			$this->__rewrite_general[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+			$this->__rewrite_general[] = 'RewriteRule ' . $prefix . preg_quote( LITESPEED_DATA_FOLDER ) . '/localres/ index.php [L]'; // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+		}
+
+		// End general Rewrite Rules (Files/Logs protection)
+		$this->__rewrite_general[] = self::LS_MODULE_END;
 		
 		$this->__rewrite_on = [
 			'CacheLookup on',
