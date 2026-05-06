@@ -135,15 +135,23 @@ class WCML {
 
 		$vary_name = \LiteSpeed\Vary::cls()->get_vary_name();
 
-		// Strip only when injecting — preserves manually configured rows on unpicked sites.
-		$cookies   = array_values(array_filter(
-			$cookies,
-			function ( $c ) use ( $vary_name ) {
-				return is_array($c) && isset($c['name']) && $vary_name !== $c['name'];
+		// Merge with admin's same-name rows
+		$existing_vals = [];
+		$other_rows    = [];
+		foreach ($cookies as $c) {
+			if (is_array($c) && isset($c['name']) && $vary_name === $c['name']) {
+				if (!empty($c['vals']) && is_array($c['vals'])) {
+					$existing_vals = array_merge($existing_vals, $c['vals']);
+				}
+			} else {
+				$other_rows[] = $c;
 			}
-		));
-		$cookies[] = [ 'name' => $vary_name, 'vals' => $vals ];
-		return $cookies;
+		}
+		$other_rows[] = [
+			'name' => $vary_name,
+			'vals' => array_values(array_unique(array_merge($existing_vals, $vals))),
+		];
+		return $other_rows;
 	}
 
 	/**

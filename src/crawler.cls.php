@@ -1311,9 +1311,16 @@ class Crawler extends Root {
 
 			$this_cookie_key = 'cookie:' . $v['name'];
 
-			$crawler_factors[ $this_cookie_key ] = [];
+			// Preserves Guest Mode preset when same-name cookie row arrives.
+			if ( ! isset( $crawler_factors[ $this_cookie_key ] ) ) {
+				$crawler_factors[ $this_cookie_key ] = [];
+			}
 
 			foreach ( $v['vals'] as $v2 ) {
+				// Preserve existing labels (e.g. Guest Mode 👒 marker on `_null`) — skip if value already mapped.
+				if ( isset( $crawler_factors[ $this_cookie_key ][ $v2 ] ) ) {
+					continue;
+				}
 				$crawler_factors[ $this_cookie_key ][ $v2 ] =
 					( '_null' === $v2 ? '' : '<font data-balloon-pos="up" aria-label="Cookie">🍪</font>' . esc_html( $v['name'] ) . '=' . esc_html( $v2 ) );
 			}
