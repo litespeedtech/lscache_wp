@@ -446,10 +446,26 @@ class Utility extends Root {
 	 * @return string Cleaned filename.
 	 */
 	public static function drop_webp( $filename ) {
-		if ( in_array( substr( $filename, -5 ), [ '.webp', '.avif' ], true ) ) {
-			$filename = substr( $filename, 0, -5 );
+		$path = (string) wp_parse_url( $filename, PHP_URL_PATH );
+		if ( ! $path ) {
+			$path = $filename;
 		}
 
+		$base_ext = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+		if ( ! in_array( $base_ext, [ 'webp', 'avif' ], true ) ) {
+			return $filename;
+		}
+
+		$name_without_ext = pathinfo( $path, PATHINFO_FILENAME );
+		$prev_ext         = strtolower( pathinfo( $name_without_ext, PATHINFO_EXTENSION ) );
+
+		// Only drop optimized suffix when a source extension exists, e.g. `.png.webp`.
+		if ( ! $prev_ext ) {
+			return $filename;
+		}
+
+		$filename = substr( $filename, 0, -strlen( $base_ext ) - 1 );
+		
 		return $filename;
 	}
 
