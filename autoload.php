@@ -76,6 +76,7 @@ $litespeed_php_files = array(
 	'src/ucss.cls.php',
 	'src/utility.cls.php',
 	'src/vary.cls.php',
+	'src/video.cls.php',
 	'src/vpi.cls.php',
 
 	// Extra CDN cls files

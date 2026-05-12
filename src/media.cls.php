@@ -21,6 +21,8 @@ class Media extends Root {
 
 	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
 
+	const LIB_FILE_VIDEO_FACADE = 'assets/js/video_facade.min.js';
+
 	const TYPE_BATCH_RESCALE_ORI = 'batch_rescale_ori';
 
 	/**
@@ -801,6 +803,7 @@ class Media extends Root {
 	 * Run lazyload replacement for images in buffer.
 	 *
 	 * @since  1.4
+	 * @since  7.9 Added Video LazyLoad image facade support.
 	 * @access private
 	 * @return void
 	 */
@@ -831,6 +834,11 @@ class Media extends Root {
 
 		$cfg_lazy          = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_LAZY ) ) && ! $this->cls( 'Metabox' )->setting( 'litespeed_no_image_lazy' );
 		$cfg_iframe_lazy   = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_IFRAME_LAZY );
+		$cfg_video_img_set = $cfg_iframe_lazy && $this->conf( Base::O_MEDIA_IFRAME_LAZY_VIDEO_IMG );
+		$cfg_video_img     = apply_filters( 'litespeed_media_iframe_lazy_video_img', $cfg_video_img_set );
+		if ( (bool) $cfg_video_img !== (bool) $cfg_video_img_set ) {
+			Video::debug( 'Video image facade setting overridden by filter.' );
+		}
 		$cfg_js_delay      = defined( 'LITESPEED_GUEST_OPTM' ) || 2 === $this->conf( Base::O_OPTM_JS_DEFER );
 		$cfg_trim_noscript = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_NOSCRIPT_RM );
 		$cfg_vpi           = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_VPI );
@@ -866,6 +874,12 @@ class Media extends Root {
 			$this->content = str_replace( $html_list_ori, $html_list, $this->content );
 		}
 
+		// Replace known video iframes with image facades (must run before generic iframe lazy).
+		$video_facade_used = false;
+		if ( $cfg_video_img ) {
+			$video_facade_used = $this->_replace_video_iframes();
+		}
+
 		// iframe lazy load.
 		if ( $cfg_iframe_lazy ) {
 			$html_list     = $this->_parse_iframe();
@@ -890,6 +904,10 @@ class Media extends Root {
 		// Include lazyload lib js and init lazyload.
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
 			$lazy_lib = '<script data-no-optimize="1">window.lazyLoadOptions=Object.assign({},{threshold:' . apply_filters( 'litespeed_lazyload_threshold', 300 ) . '},window.lazyLoadOptions||{});' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
+			if ( $video_facade_used ) {
+				$lazy_lib .= '<style>.litespeed-video-facade{position:relative;background-color:#000;background-size:cover;background-position:center;cursor:pointer;width:100%}.litespeed-video-facade .litespeed-video-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:48px;border:0;background:rgba(0,0,0,.6);border-radius:14%;cursor:pointer;padding:0}.litespeed-video-facade .litespeed-video-play::before{content:"";position:absolute;top:50%;left:55%;transform:translate(-50%,-50%);border-style:solid;border-width:12px 0 12px 20px;border-color:transparent transparent transparent #fff}.litespeed-video-facade:hover .litespeed-video-play{background:#f00}</style>';
+				$lazy_lib .= '<script data-no-optimize="1">' . File::read( LSCWP_DIR . self::LIB_FILE_VIDEO_FACADE ) . '</script>';
+			}
 			if ( $cfg_js_delay ) {
 				// Load JS delay lib.
 				if ( ! defined( 'LITESPEED_JS_DELAY_LIB_LOADED' ) ) {
@@ -1165,6 +1183,94 @@ class Media extends Root {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Replace known video iframes (YouTube/Vimeo/Wistia/Dailymotion) with click-to-play
+	 * image facades. The original <iframe> is removed entirely; a <div> placeholder
+	 * carries the iframe's attributes (base64-encoded) so the JS can rebuild the
+	 * iframe on click. Runs BEFORE the generic iframe lazy pass so the resulting <div>
+	 * facades are invisible to its <iframe> regex.
+	 *
+	 * @since 7.9
+	 * @return bool True if at least one iframe was replaced.
+	 */
+	private function _replace_video_iframes() {
+		$cls_excludes        = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', $this->conf( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) );
+		$cls_excludes[]      = 'skip-lazy';
+		$parent_cls_excludes = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', $this->conf( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) );
+
+		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
+		if ( $parent_cls_excludes ) {
+			foreach ( $parent_cls_excludes as $v ) {
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
+			}
+		}
+
+		if ( ! preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER ) ) {
+			return false;
+		}
+
+		$search   = array();
+		$replace  = array();
+		$replaced = false;
+
+		foreach ( $matches as $match ) {
+			$attrs = Utility::parse_attr( $match[1] );
+			if ( empty( $attrs['src'] ) ) {
+				continue;
+			}
+			if ( ! empty( $attrs['data-no-lazy'] ) || ! empty( $attrs['data-skip-lazy'] ) || ! empty( $attrs['data-lazyloaded'] ) || ! empty( $attrs['data-src'] ) ) {
+				continue;
+			}
+			if ( ! empty( $attrs['class'] ) && Utility::str_hit_array( $attrs['class'], $cls_excludes ) ) {
+				continue;
+			}
+
+			// Decode HTML-entity ampersands so `&amp;` / `&#38;` / raw `&` all extract the same way.
+			$src_decoded  = html_entity_decode( $attrs['src'], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			$attrs['src'] = $src_decoded;
+
+			// Skip iframes already configured to autoplay — replacing them would require an
+			// extra click and break the author's intent. Matches autoplay=1 / autoplay=true
+			// (case-insensitive) after either `?` or `&`.
+			if ( preg_match( '#[?&]autoplay=(?:1|true)\b#i', $src_decoded ) ) {
+				continue;
+			}
+
+			// Substring-match URL skip via filter (e.g. add_filter('litespeed_video_lazy_skip_urls', fn($u)=>array_merge($u,['?keep_native=1'])))
+			if ( Video::url_skipped( $src_decoded ) ) {
+				continue;
+			}
+			// Per-call skip filter for code that needs richer logic.
+			if ( apply_filters( 'litespeed_video_lazy_skip', false, $src_decoded ) ) {
+				continue;
+			}
+
+			$matched = Video::extract_provider( $src_decoded );
+			if ( ! $matched ) {
+				continue; // Not a known video provider; let generic iframe lazy handle it.
+			}
+
+			// Avoid double-processing identical iframe markup.
+			if ( in_array( $match[0], $search, true ) ) {
+				continue;
+			}
+
+			$load_src    = Video::ensure_autoplay( $matched['provider'], $src_decoded );
+			$thumb_url   = Video::get_thumbnail( $matched['provider'], $matched['id'], $src_decoded );
+			$facade_html = Video::build_facade( $load_src, $attrs, $thumb_url );
+
+			$search[]  = $match[0];
+			$replace[] = $facade_html;
+			$replaced  = true;
+		}
+
+		if ( $search ) {
+			$this->content = str_replace( $search, $replace, $this->content );
+		}
+
+		return $replaced;
 	}
 
 	/**
