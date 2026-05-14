@@ -461,6 +461,13 @@ class Placeholder extends Base {
 			if ( ! $do_continue ) {
 				return;
 			}
+
+			// Show loading screen and self-redirect for next request
+			$queue = $_instance->load_queue( 'lqip' );
+    		if ( ! empty( $queue ) ) {
+        		GUI::print_loading( count( $queue ), 'LQIP' );
+        		return Router::self_redirect( Router::ACTION_PLACEHOLDER, self::TYPE_GENERATE );
+    		}
 		}
 	}
 
