@@ -736,6 +736,23 @@ class Data extends Root {
 	}
 
 	/**
+	 * Merge CDN path excludes from file into the given list.
+	 *
+	 * @since 7.9
+	 *
+	 * @param array $list_in Existing list.
+	 * @return array
+	 */
+	public function load_cdn_exc( $list_in ) {
+		$data = $this->_load_per_line( 'cdn_exc.txt' );
+		if ( $data ) {
+			$list_in = array_unique( array_filter( array_merge( $list_in, $data ) ) );
+		}
+
+		return $list_in;
+	}
+
+	/**
 	 * Merge ESI nonces from file into the given list.
 	 *
 	 * @since 3.5

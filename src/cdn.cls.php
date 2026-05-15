@@ -154,7 +154,9 @@ class CDN extends Root {
 		// Check if need preg_replace
 		$this->_cfg_url_ori = Utility::wildcard2regex( $this->_cfg_url_ori );
 
-		$this->_cfg_cdn_exclude = $this->conf( Base::O_CDN_EXC );
+		// Merge predefined CDN excludes from data file + filter (mirrors ESI nonces pattern)
+		add_filter( 'litespeed_cdn_exc', array( $this->cls( 'Data' ), 'load_cdn_exc' ) );
+		$this->_cfg_cdn_exclude = apply_filters( 'litespeed_cdn_exc', $this->conf( Base::O_CDN_EXC ) );
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
