@@ -31,6 +31,40 @@
 
 	jQuery(document).ready(function () {
 		/************** Common LiteSpeed JS **************/
+
+		// "Add missing defaults" — appends defaults missing from a textarea's current value.
+		$(document).on('click', '.litespeed-defaults-add-link', function (event) {
+			event.preventDefault();
+			var $link = $(this);
+			var missing;
+			try {
+				missing = JSON.parse($link.attr('data-litespeed-add-missing'));
+			} catch (e) {
+				return;
+			}
+			if (!Array.isArray(missing) || missing.length === 0) {
+				return;
+			}
+			var target = $link.attr('data-litespeed-target');
+			var $ta = $('textarea[name="' + target + '"]').not('[readonly]').first();
+			if (!$ta.length) {
+				return;
+			}
+			var current = ($ta.val() || '')
+				.split('\n')
+				.map(function (s) { return s.replace(/^\s+|\s+$/g, ''); })
+				.filter(function (s) { return s.length > 0; });
+			var lower = {};
+			current.forEach(function (s) { lower[s.toLowerCase()] = true; });
+			var toAdd = missing.filter(function (m) { return !lower[String(m).replace(/^\s+|\s+$/g, '').toLowerCase()]; });
+			if (toAdd.length === 0) {
+				return;
+			}
+			$ta.val(current.concat(toAdd).join('\n')).trigger('change');
+			$link.prev('.litespeed-defaults-flags').hide();
+			$link.hide();
+		});
+
 		// Link confirm
 		$('[data-litespeed-cfm]').on('click', function (event) {
 			var cfm_txt = $.trim($(this).data('litespeed-cfm')).replace(/\\n/g, '\n');

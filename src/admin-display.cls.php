@@ -1398,13 +1398,56 @@ class Admin_Display extends Base {
 		}
 		$cols = min( $cols, 150 );
 
-		$val = implode( "\n", $val );
+		$val_str = implode( "\n", $val );
 		printf(
 			'<div class="litespeed-desc">%s:</div><textarea readonly rows="%d" cols="%d">%s</textarea>',
 			esc_html__( 'Default value', 'litespeed-cache' ),
 			(int) $rows,
 			(int) $cols,
-			esc_textarea( $val )
+			esc_textarea( $val_str )
+		);
+
+		// Flag any defaults missing from the user's current saved value, with a click-to-add link.
+		$current_raw = $this->conf( $id, true );
+		if ( is_array( $current_raw ) ) {
+			$current_list = $current_raw;
+		} else {
+			$current_list = preg_split( "/\r?\n/", (string) $current_raw );
+		}
+		$current_lower = [];
+		foreach ( (array) $current_list as $cv ) {
+			$cv = trim( strtolower( (string) $cv ) );
+			if ( '' !== $cv ) {
+				$current_lower[ $cv ] = true;
+			}
+		}
+
+		$missing = [];
+		foreach ( $val as $v ) {
+			$vt = trim( strtolower( (string) $v ) );
+			if ( '' === $vt ) {
+				continue;
+			}
+			if ( ! isset( $current_lower[ $vt ] ) ) {
+				$missing[] = $v;
+			}
+		}
+
+		if ( ! $missing ) {
+			return;
+		}
+
+		echo '<div class="litespeed-defaults-flags">';
+		foreach ( $missing as $m ) {
+			echo '<span class="litespeed-defaults-flag litespeed-defaults-flag--missing">' . esc_html( $m ) . '</span>';
+		}
+		echo '</div>';
+		printf(
+			'<a href="#" class="litespeed-defaults-add-link" data-litespeed-add-missing="%s" data-litespeed-target="%s">+ %s (%d)</a>',
+			esc_attr( wp_json_encode( array_values( $missing ) ) ),
+			esc_attr( $id ),
+			esc_html__( 'Add missing defaults', 'litespeed-cache' ),
+			(int) count( $missing )
 		);
 	}
 
