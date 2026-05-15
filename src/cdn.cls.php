@@ -72,6 +72,41 @@ class CDN extends Root {
 	private $cdn_mapping_hosts = [];
 
 	/**
+	 * File extensions auto-included when the "Include Docs" toggle is ON.
+	 *
+	 * @since 7.9
+	 * @return string[]
+	 */
+	public static function doc_extensions() {
+		return [ '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.odt', '.ods', '.odp', '.rtf', '.csv', '.txt' ];
+	}
+
+	/**
+	 * File extensions auto-included when the "Include Fonts" toggle is ON.
+	 *
+	 * @since 7.9
+	 * @return string[]
+	 */
+	public static function font_extensions() {
+		return [ '.eot', '.otf', '.ttf', '.woff', '.woff2' ];
+	}
+
+	/**
+	 * File extensions auto-included when the "Include Media" toggle is ON.
+	 *
+	 * @since 7.9
+	 * @return string[]
+	 */
+	public static function media_extensions() {
+		return [
+			// Audio
+			'.mp3', '.aac', '.ogg', '.wav', '.flac', '.m4a', '.opus', '.weba',
+			// Video
+			'.mp4', '.webm', '.ogv', '.mov', '.m4v', '.avi', '.mkv',
+		];
+	}
+
+	/**
 	 * Initialize CDN integration and register filters if enabled.
 	 *
 	 * @since 1.2.3
@@ -122,9 +157,22 @@ class CDN extends Root {
 					}
 				}
 			}
-			// Check file types
-			if ( $v[ Base::CDN_MAPPING_FILETYPE ] ) {
-				foreach ( $v[ Base::CDN_MAPPING_FILETYPE ] as $v2 ) {
+			// Build the effective filetype list: textarea + auto-injected groups from inc_docs / inc_fonts / inc_media toggles.
+			$row_filetypes = ! empty( $v[ Base::CDN_MAPPING_FILETYPE ] ) ? $v[ Base::CDN_MAPPING_FILETYPE ] : [];
+			if ( ! empty( $v[ Base::CDN_MAPPING_INC_DOCS ] ) ) {
+				$row_filetypes = array_merge( $row_filetypes, self::doc_extensions() );
+			}
+			if ( ! empty( $v[ Base::CDN_MAPPING_INC_FONTS ] ) ) {
+				$row_filetypes = array_merge( $row_filetypes, self::font_extensions() );
+			}
+			if ( ! empty( $v[ Base::CDN_MAPPING_INC_MEDIA ] ) ) {
+				$row_filetypes = array_merge( $row_filetypes, self::media_extensions() );
+			}
+			$row_filetypes = array_values( array_unique( array_filter( $row_filetypes ) ) );
+
+			// Register file types
+			if ( $row_filetypes ) {
+				foreach ( $row_filetypes as $v2 ) {
 					$this->_cfg_cdn_mapping[ Base::CDN_MAPPING_FILETYPE ] = true;
 
 					// If filetype to url is one to many, make url be an array
@@ -134,7 +182,7 @@ class CDN extends Root {
 						$this->cdn_mapping_hosts[] = $this_host;
 					}
 				}
-				self::debug2( 'mapping ' . implode( ',', $v[ Base::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url );
+				self::debug2( 'mapping ' . implode( ',', $row_filetypes ) . ' -> ' . $this_url );
 			}
 		}
 

@@ -55,7 +55,7 @@ class CDNMapping extends React.Component {
 	}
 }
 
-// { url: '', inc_img: true, inc_css: false, inc_js: false, filetype: [ '.aac', '.eot', ... ] }
+// { url: '', inc_img: true, inc_css: false, inc_js: false, inc_docs: true, inc_fonts: true, inc_media: true, filetype: [ '.aac', '.eot', ... ] }
 class CDNMappingBlock extends React.Component {
 	constructor(props) {
 		super(props);
@@ -142,6 +142,60 @@ class CDNMappingBlock extends React.Component {
 							onClick={this.onChange}
 						>
 							<input name={name_prefix + '[inc_js][]'} type="hidden" value={item.inc_js ? 1 : 0} />
+							<div className="litespeed-toggle-group">
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
+									{litespeed_data['lang']['off']}
+								</label>
+								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
+							</div>
+						</div>
+					</div>
+					<div className="litespeed-row litespeed-toggle-wrapper">
+						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_docs']}</div>
+						<div
+							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_docs ? 'primary' : 'default litespeed-toggleoff'}`}
+							data-type="inc_docs"
+							data-value={item.inc_docs ? 0 : 1}
+							onClick={this.onChange}
+						>
+							<input name={name_prefix + '[inc_docs][]'} type="hidden" value={item.inc_docs ? 1 : 0} />
+							<div className="litespeed-toggle-group">
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
+									{litespeed_data['lang']['off']}
+								</label>
+								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
+							</div>
+						</div>
+					</div>
+					<div className="litespeed-row litespeed-toggle-wrapper">
+						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_fonts']}</div>
+						<div
+							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_fonts ? 'primary' : 'default litespeed-toggleoff'}`}
+							data-type="inc_fonts"
+							data-value={item.inc_fonts ? 0 : 1}
+							onClick={this.onChange}
+						>
+							<input name={name_prefix + '[inc_fonts][]'} type="hidden" value={item.inc_fonts ? 1 : 0} />
+							<div className="litespeed-toggle-group">
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
+								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
+									{litespeed_data['lang']['off']}
+								</label>
+								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
+							</div>
+						</div>
+					</div>
+					<div className="litespeed-row litespeed-toggle-wrapper">
+						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_media']}</div>
+						<div
+							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_media ? 'primary' : 'default litespeed-toggleoff'}`}
+							data-type="inc_media"
+							data-value={item.inc_media ? 0 : 1}
+							onClick={this.onChange}
+						>
+							<input name={name_prefix + '[inc_media][]'} type="hidden" value={item.inc_media ? 1 : 0} />
 							<div className="litespeed-toggle-group">
 								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
 								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">

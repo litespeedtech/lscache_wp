@@ -64,6 +64,9 @@ $this->form_action();
 				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_IMG . '][]' ); ?>
 				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_CSS . '][]' ); ?>
 				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_JS . '][]' ); ?>
+				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_DOCS . '][]' ); ?>
+				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_FONTS . '][]' ); ?>
+				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_INC_MEDIA . '][]' ); ?>
 				<?php $this->enroll( Base::O_CDN_MAPPING . '[' . Base::CDN_MAPPING_FILETYPE . '][]' ); ?>
 
 				<div id="litespeed_cdn_mapping_div"></div>
@@ -95,6 +98,30 @@ $this->form_action();
 					<br>
 					<b><?php $this->title( Base::CDN_MAPPING_INC_JS ); ?></b>:
 					<?php esc_html_e( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ); ?>
+					<br>
+					<b><?php $this->title( Base::CDN_MAPPING_INC_DOCS ); ?></b>:
+					<?php
+					printf(
+						esc_html__( 'Serve all document files through the CDN. Automatically includes these extensions in addition to the list below: %s.', 'litespeed-cache' ),
+						'<code>' . esc_html( implode( ', ', CDN::doc_extensions() ) ) . '</code>'
+					);
+					?>
+					<br>
+					<b><?php $this->title( Base::CDN_MAPPING_INC_FONTS ); ?></b>:
+					<?php
+					printf(
+						esc_html__( 'Serve all font files through the CDN. Automatically includes these extensions in addition to the list below: %s.', 'litespeed-cache' ),
+						'<code>' . esc_html( implode( ', ', CDN::font_extensions() ) ) . '</code>'
+					);
+					?>
+					<br>
+					<b><?php $this->title( Base::CDN_MAPPING_INC_MEDIA ); ?></b>:
+					<?php
+					printf(
+						esc_html__( 'Serve all audio and video files through the CDN. Automatically includes these extensions in addition to the list below: %s.', 'litespeed-cache' ),
+						'<code>' . esc_html( implode( ', ', CDN::media_extensions() ) ) . '</code>'
+					);
+					?>
 					<br>
 					<b><?php $this->title( Base::CDN_MAPPING_FILETYPE ); ?></b>:
 					<?php esc_html_e( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ); ?>
