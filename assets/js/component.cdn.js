@@ -101,6 +101,15 @@ class CDNMappingBlock extends React.Component {
 		const item = this.props.item;
 
 		const filetype = item.filetype ? (Array.isArray(item.filetype) ? item.filetype.join('\n') : item.filetype) : '';
+		const defaults = (litespeed_data && litespeed_data['cdn_mapping_filetype_default']) || [];
+
+		// Size the readonly defaults textarea to mirror PHP's `recommended()` helper.
+		const defaultsRows = Math.min(Math.max(defaults.length + 1, 5), 40);
+		let defaultsCols = 30;
+		for (const v of defaults) {
+			if (String(v).length > defaultsCols) defaultsCols = String(v).length;
+		}
+		defaultsCols = Math.min(defaultsCols, 150);
 		return (
 			<div className="litespeed-block">
 				<div className="litespeed-cdn-mapping-col1">
@@ -234,6 +243,13 @@ class CDNMappingBlock extends React.Component {
 					<label className="litespeed-form-label">{litespeed_data['lang']['cdn_mapping_filetype']}</label>
 					<textarea name={name_prefix + '[filetype][]'} rows={filetype.split('\n').length + 2} cols="18" value={filetype} data-type="filetype" onChange={this.onChange} />
 				</div>
+
+				{defaults.length > 0 && (
+					<div className="litespeed-col-auto">
+						<div className="litespeed-desc">{litespeed_data['lang']['default_value']}:</div>
+						<textarea readOnly rows={defaultsRows} cols={defaultsCols} value={defaults.join('\n')} />
+					</div>
+				)}
 
 				<div className="litespeed-col-auto">
 					<button type="button" className="button button-link litespeed-collection-button litespeed-danger" onClick={this.delRow}>

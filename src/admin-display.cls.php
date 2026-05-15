@@ -488,6 +488,16 @@ class Admin_Display extends Base {
 				$localize_data['lang']['add_cdn_mapping_row']  = __( 'Add new CDN URL', 'litespeed-cache' );
 				$localize_data['lang']['on']                   = __( 'ON', 'litespeed-cache' );
 				$localize_data['lang']['off']                  = __( 'OFF', 'litespeed-cache' );
+				$localize_data['lang']['default_value']        = __( 'Default value', 'litespeed-cache' );
+
+				// Expose the default filetype list so the React component can render a "Default value" panel.
+				if ( ! $this->default_settings ) {
+					$this->default_settings = $this->load_default_vals();
+				}
+				$default_mapping = isset( $this->default_settings[ self::O_CDN_MAPPING ][0][ self::CDN_MAPPING_FILETYPE ] )
+					? $this->default_settings[ self::O_CDN_MAPPING ][0][ self::CDN_MAPPING_FILETYPE ]
+					: [];
+				$localize_data['cdn_mapping_filetype_default'] = $default_mapping;
 				if ( empty( $localize_data['ids'] ) ) {
 					$localize_data['ids'] = [];
 				}
