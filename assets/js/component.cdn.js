@@ -2,6 +2,14 @@
  * CDN module
  * @author Hai Zheng
  */
+
+// Extensions auto-injected into the filetype textarea when their toggle is switched ON.
+// Switching OFF intentionally does NOT remove — the user must remove manually.
+const LITESPEED_CDN_TOGGLE_AUTOADD = {
+	inc_css: ['.css', '.less'],
+	inc_js: ['.js'],
+};
+
 class CDNMapping extends React.Component {
 	constructor(props) {
 		super(props);
@@ -18,7 +26,22 @@ class CDNMapping extends React.Component {
 		const target = e.currentTarget;
 		const value = target.dataset.hasOwnProperty('value') ? Boolean(target.dataset.value * 1) : target.value;
 		const list = this.state.list;
-		list[index][target.dataset.type] = value;
+		const type = target.dataset.type;
+		list[index][type] = value;
+
+		// When inc_css / inc_js is switched ON, auto-append its file extensions to the filetype textarea
+		// so the toggle works for non-enqueued references too. Toggling OFF never removes — that stays manual.
+		if (value === true && LITESPEED_CDN_TOGGLE_AUTOADD[type]) {
+			const raw = list[index].filetype;
+			const current = (raw ? (Array.isArray(raw) ? raw.slice() : String(raw).split('\n')) : [])
+				.map((s) => s.trim())
+				.filter(Boolean);
+			const lower = new Set(current.map((s) => s.toLowerCase()));
+			const toAdd = LITESPEED_CDN_TOGGLE_AUTOADD[type].filter((ext) => !lower.has(ext.toLowerCase()));
+			if (toAdd.length > 0) {
+				list[index].filetype = current.concat(toAdd).join('\n');
+			}
+		}
 
 		this.setState({
 			list: list,
