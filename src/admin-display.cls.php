@@ -336,6 +336,14 @@ class Admin_Display extends Base {
 				if ( $screen && in_array( $screen->id, [ 'settings_page_litespeed-cache-options', 'toplevel_page_litespeed' ], true ) ) {
 					$classes .= ' litespeed-cache_page_litespeed';
 				}
+				// Stamp the dark/light override server-side from the cookie set by admin JS,
+				// so the stylesheet picks the right mode on first paint (no FOUC).
+				if ( ! empty( $_COOKIE['litespeed-dark-preference'] ) ) {
+					$pref = sanitize_key( wp_unslash( $_COOKIE['litespeed-dark-preference'] ) );
+					if ( 'dark' === $pref || 'light' === $pref ) {
+						$classes .= ' litespeed-' . $pref . 'mode';
+					}
+				}
 				return $classes;
 			} );
 		} );
