@@ -91,8 +91,18 @@
 				type = litespeed_tab_type(type);
 				var data = 'litespeed-' + type;
 				$elems.on('click', function (_event) {
-					litespeed_display_tab($(this).data(data), type);
-					document.cookie = 'litespeed_' + type + '=' + $(this).data(data);
+					var name = $(this).data(data);
+					// Suppress the default jump-to-anchor scroll. We still update the URL
+					// fragment below so the tab is shareable and :target keeps matching for
+					// the no-JS fallback path.
+					if (_event && _event.preventDefault) {
+						_event.preventDefault();
+					}
+					litespeed_display_tab(name, type);
+					document.cookie = 'litespeed_' + type + '=' + name;
+					if (window.history && window.history.replaceState) {
+						window.history.replaceState(null, '', '#' + name);
+					}
 					$(this).blur();
 				});
 			};

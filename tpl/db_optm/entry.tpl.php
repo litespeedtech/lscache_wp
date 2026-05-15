@@ -17,6 +17,13 @@ if ( ! is_network_admin() ) {
     $menu_list['settings'] = esc_html__( 'DB Optimization Settings', 'litespeed-cache' );
 }
 
+/**
+ * Initial tab selection — used to render the right panel server-side and
+ * avoid the JS-driven flash from default tab to URL-hash tab on first paint.
+ */
+$cookie_tab      = isset( $_COOKIE['litespeed_tab'] ) ? sanitize_key( wp_unslash( $_COOKIE['litespeed_tab'] ) ) : '';
+$default_tab_key = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_first( $menu_list );
+
 ?>
 
 <div class="wrap">
@@ -37,7 +44,8 @@ if ( ! is_network_admin() ) {
     <div class="litespeed-body">
     <?php
         foreach ( $menu_list as $tab_key => $tab_val ) {
-			echo '<div data-litespeed-layout="' . esc_attr( $tab_key ) . '">';
+			$default_attr = ( $tab_key === $default_tab_key ) ? ' data-litespeed-default-tab="1"' : '';
+			echo '<div data-litespeed-layout="' . esc_attr( $tab_key ) . '" id="' . esc_attr( $tab_key ) . '"' . $default_attr . '>';
 			require LSCWP_DIR . 'tpl/db_optm/' . $tab_key . '.tpl.php';
 			echo '</div>';
         }

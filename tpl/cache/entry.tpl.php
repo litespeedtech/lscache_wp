@@ -21,6 +21,9 @@ if ( $this->_is_network_admin ) {
 		'browser'  => __( 'Browser', 'litespeed-cache' ),
 		'advanced' => __( 'Advanced', 'litespeed-cache' ),
 	);
+
+	$cookie_tab        = isset( $_COOKIE['litespeed_tab'] ) ? sanitize_key( wp_unslash( $_COOKIE['litespeed_tab'] ) ) : '';
+	$default_tab_key   = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_first( $menu_list );
 ?>
 
 <div class="wrap">
@@ -44,9 +47,10 @@ if ( $this->_is_network_admin ) {
 		$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 
 		foreach ( $menu_list as $k => $val ) {
-			$k_escaped = esc_attr( $k );
+			$k_escaped   = esc_attr( $k );
+			$is_default  = ( $k === $default_tab_key );
 			?>
-			<div data-litespeed-layout="<?php echo esc_html( $k_escaped ); ?>">
+			<div data-litespeed-layout="<?php echo esc_html( $k_escaped ); ?>" id="<?php echo esc_attr( $k_escaped ); ?>"<?php echo $is_default ? ' data-litespeed-default-tab="1"' : ''; ?>>
 			<?php
 			require LSCWP_DIR . "tpl/cache/network_settings-$k.tpl.php";
 			?>
@@ -76,6 +80,13 @@ if ( ! $this->_is_multisite ) {
 }
 
 $menu_list['advanced'] = __( 'Advanced', 'litespeed-cache' );
+
+/**
+ * Initial tab selection — used to render the right panel server-side and
+ * avoid the JS-driven flash from default tab to URL-hash tab on first paint.
+ */
+$cookie_tab      = isset( $_COOKIE['litespeed_tab'] ) ? sanitize_key( wp_unslash( $_COOKIE['litespeed_tab'] ) ) : '';
+$default_tab_key = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_first( $menu_list );
 
 /**
  * Generate roles for setting usage
@@ -137,7 +148,9 @@ ksort( $roles );
 		require LSCWP_DIR . 'tpl/cache/more_settings_tip.tpl.php';
 
 		foreach ( $menu_list as $k => $val ) {
-			echo '<div data-litespeed-layout="' . esc_attr( $k ) . '">';
+			$is_default     = ( $k === $default_tab_key );
+			$default_attr   = $is_default ? ' data-litespeed-default-tab="1"' : '';
+			echo '<div data-litespeed-layout="' . esc_attr( $k ) . '" id="' . esc_attr( $k ) . '"' . $default_attr . '>';
 			require LSCWP_DIR . "tpl/cache/settings-$k.tpl.php";
 			echo '</div>';
 		}

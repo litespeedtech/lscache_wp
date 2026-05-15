@@ -23,6 +23,13 @@ if ( is_network_admin() ) {
     );
 }
 
+/**
+ * Initial tab selection — used to render the right panel server-side and
+ * avoid the JS-driven flash from default tab to URL-hash tab on first paint.
+ */
+$cookie_tab      = isset( $_COOKIE['litespeed_tab'] ) ? sanitize_key( wp_unslash( $_COOKIE['litespeed_tab'] ) ) : '';
+$default_tab_key = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_first( $menu_list );
+
 ?>
 
 <div class="wrap">
@@ -43,7 +50,8 @@ if ( is_network_admin() ) {
     <div class="litespeed-body">
         <?php
         foreach ( $menu_list as $menu_key => $val ) {
-            echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '">';
+            $default_attr = ( $menu_key === $default_tab_key ) ? ' data-litespeed-default-tab="1"' : '';
+            echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '" id="' . esc_attr( $menu_key ) . '"' . $default_attr . '>';
             require LSCWP_DIR . 'tpl/optimax/' . $menu_key . '.tpl.php';
             echo '</div>';
         }
