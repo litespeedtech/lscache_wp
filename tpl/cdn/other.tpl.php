@@ -210,6 +210,14 @@ $this->form_action();
 					<?php esc_html_e( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ); ?>
 					<?php Doc::one_per_line(); ?>
 				</div>
+				<p class="litespeed-desc">
+					<?php echo esc_html__( 'The list will be merged with the predefined excludes in your local data file.', 'litespeed-cache' ); ?>
+					<?php echo esc_html__( 'The latest data file is', 'litespeed-cache' ); ?>: <a href="https://github.com/litespeedtech/lscache_wp/blob/master/data/cdn_exc.txt" target="_blank">https://github.com/litespeedtech/lscache_wp/blob/master/data/cdn_exc.txt</a>
+					<br><span class="litespeed-success">
+						<?php echo esc_html__( 'API', 'litespeed-cache' ); ?>:
+						<?php printf( esc_html__( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cdn_exc</code>' ); ?>
+					</span>
+				</p>
 			</td>
 		</tr>
 	</tbody>
