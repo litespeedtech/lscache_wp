@@ -1205,11 +1205,13 @@ class Admin_Display extends Base {
 	public function build_switch( $id, $title_list = false ) {
 		$this->enroll( $id );
 
-		echo '<div class="litespeed-switch">';
-
 		if ( ! $title_list ) {
 			$title_list = [ __( 'OFF', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ];
 		}
+
+		// Drive the sliding-pill width by the option count so 3+ option switches don't render a half-width pill.
+		$count = count( $title_list );
+		echo '<div class="litespeed-switch" style="--litespeed-switch-count:' . (int) $count . ';">';
 
 		foreach ( $title_list as $k => $v ) {
 			$this->_build_radio( $id, $k, $v );
