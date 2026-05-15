@@ -1271,7 +1271,7 @@ h3 .litespeed-learn-more {
 	background-color: #36b0b0;
 	border-radius: 2px;
 	transform: translateX(0);
-	transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+	transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
 	z-index: 1;
 	pointer-events: none;
 }
@@ -1303,7 +1303,7 @@ h3 .litespeed-learn-more {
 	color: #2c3338;
 	position: relative;
 	z-index: 2;
-	transition: color 0.35s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: color 0.22s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .litespeed-switch input:checked + label {
@@ -1394,8 +1394,8 @@ h3 .litespeed-learn-more {
 	top: 0;
 	bottom: 0;
 	left: 0;
-	transition: left 0.35s;
-	-webkit-transition: left 0.35s;
+	transition: left 0.22s;
+	-webkit-transition: left 0.22s;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
