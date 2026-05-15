@@ -489,6 +489,7 @@ class Admin_Display extends Base {
 				$localize_data['lang']['on']                   = __( 'ON', 'litespeed-cache' );
 				$localize_data['lang']['off']                  = __( 'OFF', 'litespeed-cache' );
 				$localize_data['lang']['default_value']        = __( 'Default value', 'litespeed-cache' );
+				$localize_data['lang']['add_missing_defaults'] = __( 'Add missing defaults', 'litespeed-cache' );
 
 				// Expose the default filetype list so the React component can render a "Default value" panel.
 				if ( ! $this->default_settings ) {

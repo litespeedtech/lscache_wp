@@ -10,6 +10,19 @@ const LITESPEED_CDN_TOGGLE_AUTOADD = {
 	inc_js: ['.js'],
 };
 
+// Reverse map used to flag extensions in the filetype list whose corresponding toggle is OFF.
+const LITESPEED_CDN_EXT_TO_TOGGLE = {
+	'.css': 'inc_css', '.less': 'inc_css',
+	'.js': 'inc_js',
+	'.gif': 'inc_img', '.jpeg': 'inc_img', '.jpg': 'inc_img',
+	'.png': 'inc_img', '.svg': 'inc_img', '.webp': 'inc_img',
+	'.pdf': 'inc_docs',
+	'.eot': 'inc_fonts', '.otf': 'inc_fonts', '.ttf': 'inc_fonts',
+	'.woff': 'inc_fonts', '.woff2': 'inc_fonts',
+	'.aac': 'inc_media', '.mp3': 'inc_media',
+	'.mp4': 'inc_media', '.ogg': 'inc_media',
+};
+
 class CDNMapping extends React.Component {
 	constructor(props) {
 		super(props);
@@ -85,6 +98,7 @@ class CDNMappingBlock extends React.Component {
 
 		this.onChange = this.onChange.bind(this);
 		this.delRow = this.delRow.bind(this);
+		this.addMissingDefaults = this.addMissingDefaults.bind(this);
 	}
 
 	onChange(e) {
@@ -95,6 +109,54 @@ class CDNMappingBlock extends React.Component {
 		this.props.delRow(this.props.index);
 	}
 
+	// Split a filetype value (array or newline string) into a clean array of extensions.
+	splitFiletype(value) {
+		if (!value) return [];
+		const arr = Array.isArray(value) ? value : String(value).split('\n');
+		return arr.map((s) => s.trim()).filter(Boolean);
+	}
+
+	// Defaults from the localize bundle that aren't in the user's current saved list (case-insensitive).
+	getMissingDefaults() {
+		const defaults = (litespeed_data && litespeed_data['cdn_mapping_filetype_default']) || [];
+		const current = this.splitFiletype(this.props.item.filetype);
+		const currentSet = new Set(current.map((s) => s.toLowerCase()));
+		return defaults.filter((ext) => !currentSet.has(String(ext).trim().toLowerCase()));
+	}
+
+	// Extensions that ARE in the current list but whose corresponding toggle is OFF — the generic
+	// file-type rewriter would still send them through the CDN, contradicting the toggle.
+	getInconsistent() {
+		const item = this.props.item;
+		const current = this.splitFiletype(item.filetype);
+		const seen = new Set();
+		const result = [];
+		for (const ext of current) {
+			const key = ext.toLowerCase();
+			if (seen.has(key)) continue;
+			seen.add(key);
+			const toggle = LITESPEED_CDN_EXT_TO_TOGGLE[key];
+			if (toggle && !item[toggle]) {
+				result.push(ext);
+			}
+		}
+		return result;
+	}
+
+	addMissingDefaults() {
+		const missing = this.getMissingDefaults();
+		if (missing.length === 0) return;
+
+		const current = this.splitFiletype(this.props.item.filetype);
+		const newValue = current.concat(missing).join('\n');
+
+		// Reuse the existing change pipeline by synthesising a textarea-style event.
+		this.props.onChange(
+			{ currentTarget: { value: newValue, dataset: { type: 'filetype' } } },
+			this.props.index
+		);
+	}
+
 	render() {
 		const name_prefix = litespeed_data['ids']['cdn_mapping'];
 
@@ -102,6 +164,8 @@ class CDNMappingBlock extends React.Component {
 
 		const filetype = item.filetype ? (Array.isArray(item.filetype) ? item.filetype.join('\n') : item.filetype) : '';
 		const defaults = (litespeed_data && litespeed_data['cdn_mapping_filetype_default']) || [];
+		const missing = this.getMissingDefaults();
+		const inconsistent = this.getInconsistent();
 
 		// Size the readonly defaults textarea to mirror PHP's `recommended()` helper.
 		const defaultsRows = Math.min(Math.max(defaults.length + 1, 5), 40);
@@ -248,6 +312,38 @@ class CDNMappingBlock extends React.Component {
 					<div className="litespeed-col-auto">
 						<div className="litespeed-desc">{litespeed_data['lang']['default_value']}:</div>
 						<textarea readOnly rows={defaultsRows} cols={defaultsCols} value={defaults.join('\n')} />
+						{(missing.length > 0 || inconsistent.length > 0) && (
+							<div className="litespeed-defaults-flags">
+								{missing.map((ext) => (
+									<span key={'m-' + ext} className="litespeed-defaults-flag litespeed-defaults-flag--missing" title="Missing from your list">
+										{ext}
+									</span>
+								))}
+								{inconsistent.map((ext) => (
+									<span
+										key={'i-' + ext}
+										className="litespeed-defaults-flag litespeed-defaults-flag--inconsistent"
+										title="In your list, but the matching CDN include toggle is OFF — CDN will still rewrite this extension"
+									>
+										{ext}
+									</span>
+								))}
+							</div>
+						)}
+						{missing.length > 0 && (
+							<div>
+								<a
+									href="#"
+									className="litespeed-defaults-add-link"
+									onClick={(e) => {
+										e.preventDefault();
+										this.addMissingDefaults();
+									}}
+								>
+									+ {litespeed_data['lang']['add_missing_defaults']} ({missing.length})
+								</a>
+							</div>
+						)}
 					</div>
 				)}
 
