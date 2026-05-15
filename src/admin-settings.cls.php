@@ -291,11 +291,85 @@ class Admin_Settings extends Base {
 			}
 		}
 
+		// If the user picked Method = Auto and Object Cache is being turned on
+		// (or stays on), run auto-detection now and rewrite kind/host/port so
+		// the persisted state is always a concrete backend, not the Auto
+		// sentinel. We only touch fields the user actually sent so we don't
+		// clobber a setting that wasn't on the form.
+		$kind_submitted   = array_key_exists( self::O_OBJECT_KIND, $the_matrix );
+		$object_submitted = array_key_exists( self::O_OBJECT, $the_matrix );
+		$object_will_be_on = $object_submitted
+			? (bool) $the_matrix[ self::O_OBJECT ]
+			: (bool) $this->conf( self::O_OBJECT );
+
+		if ( $kind_submitted && (int) $the_matrix[ self::O_OBJECT_KIND ] === Object_Cache::KIND_AUTO ) {
+			if ( $object_will_be_on ) {
+				$current_host = array_key_exists( self::O_OBJECT_HOST, $the_matrix )
+					? (string) $the_matrix[ self::O_OBJECT_HOST ]
+					: (string) $this->conf( self::O_OBJECT_HOST );
+				$current_port = array_key_exists( self::O_OBJECT_PORT, $the_matrix )
+					? (int) $the_matrix[ self::O_OBJECT_PORT ]
+					: (int) $this->conf( self::O_OBJECT_PORT );
+
+				$detected = $this->cls( 'Object_Cache' )->auto_detect( [
+					'host' => $current_host,
+					'port' => $current_port,
+				] );
+
+				if ( $detected ) {
+					$the_matrix[ self::O_OBJECT_KIND ] = $detected['kind'];
+					$the_matrix[ self::O_OBJECT_HOST ] = $detected['host'];
+					$the_matrix[ self::O_OBJECT_PORT ] = $detected['port'];
+
+					Admin_Display::success( sprintf(
+						/* translators: 1: backend name, 2: host:port or socket path */
+						__( 'Object Cache auto-detected: %1$s at %2$s.', 'litespeed-cache' ),
+						$detected['kind_label'],
+						$this->_format_endpoint( $detected['host'], $detected['port'] )
+					) );
+				} else {
+					// Detection failed: fall back to the previously saved
+					// backend so we never persist Auto (the sentinel) on disk.
+					$prev_kind = (int) $this->conf( self::O_OBJECT_KIND );
+					$the_matrix[ self::O_OBJECT_KIND ] = Object_Cache::KIND_AUTO === $prev_kind
+						? Object_Cache::KIND_MEMCACHED
+						: $prev_kind;
+
+					Admin_Display::error( __( 'Object Cache auto-detection could not find a working Redis/Valkey or Memcached connection. Object Cache will use the previous Method setting; check the Status section for details.', 'litespeed-cache' ) );
+				}
+			} else {
+				// Object Cache is off, so Auto is meaningless — coerce to
+				// Memcached (the historical default) so the saved value is
+				// always a real backend choice.
+				$the_matrix[ self::O_OBJECT_KIND ] = Object_Cache::KIND_MEMCACHED;
+			}
+		}
+
+		// Bust the connection-test cache so the next render reflects the new settings.
+		delete_transient( Object_Cache::TRANS_CONN_TEST );
+
 		// id validation will be inside.
 		$this->cls( 'Conf' )->update_confs( $the_matrix );
 
 		$msg = __( 'Options saved.', 'litespeed-cache' );
 		Admin_Display::success( $msg );
+	}
+
+	/**
+	 * Format an Object Cache endpoint for display in admin notices.
+	 *
+	 * @since 7.8.1
+	 * @access private
+	 *
+	 * @param string $host Host or socket path.
+	 * @param int    $port Port; ignored for socket paths.
+	 * @return string
+	 */
+	private function _format_endpoint( $host, $port ) {
+		if ( is_string( $host ) && '' !== $host && '/' === $host[0] ) {
+			return $host;
+		}
+		return $host . ( $port ? ':' . (int) $port : '' );
 	}
 
 	/**
