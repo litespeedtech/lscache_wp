@@ -302,6 +302,18 @@ function litespeed_init_dark_mode() {
 	// Only add toggle on LiteSpeed pages
 	if (window.location.search.indexOf('page=litespeed') === -1) return;
 
+	// Mirror the saved preference into a cookie so PHP can stamp the body class
+	// on first paint (prevents the dark flash when localStorage says "light").
+	function litespeed_set_dark_cookie(value) {
+		var base = 'litespeed-dark-preference=' + (value || '') + '; path=/; SameSite=Lax';
+		document.cookie = base + '; max-age=' + (value ? 31536000 : 0);
+	}
+	// Back-fill the cookie for existing users whose preference is still localStorage-only.
+	var _savedPref = localStorage.getItem('litespeed-dark-preference');
+	if (_savedPref && document.cookie.indexOf('litespeed-dark-preference=') === -1) {
+		litespeed_set_dark_cookie(_savedPref);
+	}
+
 	// Create toggle button
 	var toggleBtn = document.createElement('button');
 	toggleBtn.className = 'litespeed-dark-mode-toggle';
@@ -351,8 +363,11 @@ function litespeed_init_dark_mode() {
 		// Toggle and store only if different from browser preference
 		if (!currentlyDark === prefersDark) {
 			localStorage.removeItem('litespeed-dark-preference');
+			litespeed_set_dark_cookie('');
 		} else {
-			localStorage.setItem('litespeed-dark-preference', currentlyDark ? 'light' : 'dark');
+			var newPref = currentlyDark ? 'light' : 'dark';
+			localStorage.setItem('litespeed-dark-preference', newPref);
+			litespeed_set_dark_cookie(newPref);
 		}
 
 		applyDarkMode();
