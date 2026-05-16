@@ -261,7 +261,7 @@ class Object_Cache extends Root {
 				$cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] );
 			}
 			$this->_cfg_debug             = $cfg[ Base::O_DEBUG ] ? $cfg[ Base::O_DEBUG ] : false;
-			$this->_cfg_method            = (int) $cfg[ Base::O_OBJECT_KIND ] === self::KIND_REDIS;
+			$this->_cfg_method            = self::KIND_REDIS === (int) $cfg[ Base::O_OBJECT_KIND ];
 			$this->_cfg_host              = $cfg[ Base::O_OBJECT_HOST ];
 			$this->_cfg_port              = $cfg[ Base::O_OBJECT_PORT ];
 			$this->_cfg_life              = $cfg[ Base::O_OBJECT_LIFE ];
@@ -301,7 +301,7 @@ class Object_Cache extends Root {
 			$cfg = \json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
 			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
 				$this->_cfg_debug             = ! empty( $cfg[ Base::O_DEBUG ] ) ? $cfg[ Base::O_DEBUG ] : false;
-				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) && (int) $cfg[ self::O_OBJECT_KIND ] === self::KIND_REDIS;
+				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) && self::KIND_REDIS === (int) $cfg[ self::O_OBJECT_KIND ];
 				$this->_cfg_host              = $cfg[ self::O_OBJECT_HOST ];
 				$this->_cfg_port              = $cfg[ self::O_OBJECT_PORT ];
 				$this->_cfg_life              = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
