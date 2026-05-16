@@ -302,7 +302,7 @@ class Admin_Settings extends Base {
 			? (bool) $the_matrix[ self::O_OBJECT ]
 			: (bool) $this->conf( self::O_OBJECT );
 
-		if ( $kind_submitted && (int) $the_matrix[ self::O_OBJECT_KIND ] === Object_Cache::KIND_AUTO ) {
+		if ( $kind_submitted && Object_Cache::KIND_AUTO === (int) $the_matrix[ self::O_OBJECT_KIND ] ) {
 			if ( $object_will_be_on ) {
 				$current_host = array_key_exists( self::O_OBJECT_HOST, $the_matrix )
 					? (string) $the_matrix[ self::O_OBJECT_HOST ]

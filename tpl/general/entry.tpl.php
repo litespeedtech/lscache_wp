@@ -50,8 +50,8 @@ $default_tab_key = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_
     <div class="litespeed-body">
         <?php
         foreach ( $menu_list as $menu_key => $val ) {
-            $default_attr = ( $menu_key === $default_tab_key ) ? ' data-litespeed-default-tab="1"' : '';
-            echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '" id="' . esc_attr( $menu_key ) . '"' . $default_attr . '>';
+            $is_default = ( $menu_key === $default_tab_key );
+            echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '" id="' . esc_attr( $menu_key ) . '"' . ( $is_default ? ' data-litespeed-default-tab="1"' : '' ) . '>';
             require LSCWP_DIR . 'tpl/general/' . $menu_key . '.tpl.php';
             echo '</div>';
         }

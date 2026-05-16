@@ -148,9 +148,8 @@ ksort( $roles );
 		require LSCWP_DIR . 'tpl/cache/more_settings_tip.tpl.php';
 
 		foreach ( $menu_list as $k => $val ) {
-			$is_default     = ( $k === $default_tab_key );
-			$default_attr   = $is_default ? ' data-litespeed-default-tab="1"' : '';
-			echo '<div data-litespeed-layout="' . esc_attr( $k ) . '" id="' . esc_attr( $k ) . '"' . $default_attr . '>';
+			$is_default = ( $k === $default_tab_key );
+			echo '<div data-litespeed-layout="' . esc_attr( $k ) . '" id="' . esc_attr( $k ) . '"' . ( $is_default ? ' data-litespeed-default-tab="1"' : '' ) . '>';
 			require LSCWP_DIR . "tpl/cache/settings-$k.tpl.php";
 			echo '</div>';
 		}
