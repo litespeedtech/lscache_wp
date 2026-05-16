@@ -151,6 +151,13 @@ class Admin_Display extends Base {
 	protected $default_settings = [];
 
 	/**
+	 * Option IDs whose recommended() panel has already been rendered this request.
+	 *
+	 * @var array<string,bool>
+	 */
+	protected $_recommended_emitted = [];
+
+	/**
 	 * Whether current context is network admin.
 	 *
 	 * @var bool
@@ -1052,12 +1059,13 @@ class Admin_Display extends Base {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string     $id   Setting ID.
-	 * @param int|false  $cols Columns count.
-	 * @param string|nil $val  Pre-set value.
+	 * @param string     $id               Setting ID.
+	 * @param int|false  $cols             Columns count.
+	 * @param string|nil $val              Pre-set value.
+	 * @param bool       $skip_recommended Skip auto-emission of the Default value panel (e.g. when the template renders it in a side-by-side wrapper).
 	 * @return void
 	 */
-	public function build_textarea( $id, $cols = false, $val = null ) {
+	public function build_textarea( $id, $cols = false, $val = null, $skip_recommended = false ) {
 		if ( null === $val ) {
 			$val = $this->conf( $id, true );
 
@@ -1074,9 +1082,33 @@ class Admin_Display extends Base {
 
 		$this->enroll( $id );
 
+		// Auto-emit the Default value panel beside the editable textarea when the option has an array default.
+		$auto_wrap = false;
+		if ( ! $skip_recommended && empty( $this->_recommended_emitted[ $id ] ) ) {
+			if ( ! $this->default_settings ) {
+				$this->default_settings = $this->load_default_vals();
+			}
+			if ( ! empty( $this->default_settings[ $id ] ) && is_array( $this->default_settings[ $id ] ) ) {
+				$auto_wrap = true;
+			}
+		}
+
+		if ( $auto_wrap ) {
+			echo '<div class="litespeed-textarea-recommended"><div>';
+		}
+
 		echo "<textarea name='" . esc_attr( $id ) . "' rows='" . (int) $rows . "' cols='" . (int) $cols . "'>" . esc_textarea( $val ) . '</textarea>';
 
 		$this->_check_overwritten( $id );
+
+		if ( $auto_wrap ) {
+			echo '</div><div>';
+			$this->recommended( $id );
+			echo '</div></div>';
+		} elseif ( ! $skip_recommended ) {
+			// Scalar / empty default — render inline if recommended() has anything to say (e.g. "Default value: <code>X</code>").
+			$this->recommended( $id );
+		}
 	}
 
 	/**
@@ -1379,8 +1411,16 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	public function recommended( $id ) {
+		if ( ! empty( $this->_recommended_emitted[ $id ] ) ) {
+			return;
+		}
+
 		if ( ! $this->default_settings ) {
 			$this->default_settings = $this->load_default_vals();
+		}
+
+		if ( ! array_key_exists( $id, $this->default_settings ) ) {
+			return;
 		}
 
 		$val = $this->default_settings[ $id ];
@@ -1389,11 +1429,36 @@ class Admin_Display extends Base {
 			return;
 		}
 
+		$this->_recommended_emitted[ $id ] = true;
+
 		if ( ! is_array( $val ) ) {
 			printf(
 				'%s: <code>%s</code>',
 				esc_html__( 'Default value', 'litespeed-cache' ),
 				esc_html( $val )
+			);
+
+			// Only flag the scalar default when the saved value is empty — a customised value is intentional.
+			$current_scalar = $this->conf( $id, true );
+			if ( is_array( $current_scalar ) || '' !== trim( (string) $current_scalar ) ) {
+				return;
+			}
+
+			$flag_label = (string) $val;
+			if ( strlen( $flag_label ) > 60 ) {
+				$flag_label = substr( $flag_label, 0, 57 ) . '...';
+			}
+
+			printf(
+				'<div class="litespeed-defaults-flags"><span class="litespeed-defaults-flag litespeed-defaults-flag--missing" title="%s">%s</span></div>',
+				esc_attr( $val ),
+				esc_html( $flag_label )
+			);
+			printf(
+				'<a href="#" class="litespeed-defaults-add-link" data-litespeed-set-value="%s" data-litespeed-target="%s" data-litespeed-mode="set">+ %s</a>',
+				esc_attr( $val ),
+				esc_attr( $id ),
+				esc_html__( 'Use default value', 'litespeed-cache' )
 			);
 			return;
 		}
