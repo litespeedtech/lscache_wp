@@ -116,20 +116,37 @@ class Object_Cache extends Root {
 	/**
 	 * Object cache method values for O_OBJECT_KIND.
 	 *
-	 * KIND_AUTO is a save-time sentinel: when the user submits the form with
-	 * Auto selected the save handler runs auto_detect() and rewrites the saved
-	 * value back to KIND_MEMCACHED or KIND_REDIS. Persisted state is therefore
-	 * always 0 or 1, never 2.
+	 * KIND_AUTO is a first-class persisted value: when the user picks Auto we
+	 * store 2 in the DB and resolve it to a concrete backend at runtime via
+	 * auto_detect() on each Object_Cache boot. That keeps the choice tracking
+	 * the live host environment (e.g. a Redis socket appearing/disappearing
+	 * after a control-panel change) instead of freezing the resolved backend
+	 * at save time.
 	 */
 	const KIND_MEMCACHED = 0;
 	const KIND_REDIS     = 1;
 	const KIND_AUTO      = 2;
 
 	/**
+	 * Transient cache key for the runtime Auto-method resolution. Keeps each
+	 * page load from re-scanning the candidate socket/host chain. Busted when
+	 * Object Cache settings are saved (same flow as the connection test).
+	 */
+	const TRANS_AUTO_RESOLVED = 'litespeed_oc_auto_resolved';
+
+	/**
 	 * Transient cache key for the rich connection-test result rendered on the
 	 * Object Cache settings tab. Refreshed on each save.
 	 */
 	const TRANS_CONN_TEST = 'litespeed_oc_conn_test';
+
+	/**
+	 * Transient cache key for the last backend benchmark run. The Status panel
+	 * uses this to decide whether to offer "Show benchmarks" (cache present)
+	 * or "Run Benchmark" (no cache). Re-run is always offered when results
+	 * are on screen. Cache is busted when Object Cache settings change.
+	 */
+	const TRANS_BENCHMARK = 'litespeed_oc_benchmark';
 
 	/**
 	 * Connection instance.
@@ -261,7 +278,6 @@ class Object_Cache extends Root {
 				$cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] );
 			}
 			$this->_cfg_debug             = $cfg[ Base::O_DEBUG ] ? $cfg[ Base::O_DEBUG ] : false;
-			$this->_cfg_method            = self::KIND_REDIS === (int) $cfg[ Base::O_OBJECT_KIND ];
 			$this->_cfg_host              = $cfg[ Base::O_OBJECT_HOST ];
 			$this->_cfg_port              = $cfg[ Base::O_OBJECT_PORT ];
 			$this->_cfg_life              = $cfg[ Base::O_OBJECT_LIFE ];
@@ -273,13 +289,14 @@ class Object_Cache extends Root {
 			$this->_global_groups         = $cfg[ Base::O_OBJECT_GLOBAL_GROUPS ];
 			$this->_non_persistent_groups = $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ];
 
+			$this->_resolve_method( (int) $cfg[ Base::O_OBJECT_KIND ] );
+
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
 			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host;
 		} elseif ( defined( 'LITESPEED_CONF_LOADED' ) ) { // If OC is OFF, will hit here to init OC after conf initialized
 			$this->_cfg_debug             = $this->conf( Base::O_DEBUG ) ? $this->conf( Base::O_DEBUG ) : false;
-			$this->_cfg_method            = (int) $this->conf( Base::O_OBJECT_KIND ) === self::KIND_REDIS;
 			$this->_cfg_host              = $this->conf( Base::O_OBJECT_HOST );
 			$this->_cfg_port              = $this->conf( Base::O_OBJECT_PORT );
 			$this->_cfg_life              = $this->conf( Base::O_OBJECT_LIFE );
@@ -291,6 +308,8 @@ class Object_Cache extends Root {
 			$this->_global_groups         = $this->conf( Base::O_OBJECT_GLOBAL_GROUPS );
 			$this->_non_persistent_groups = $this->conf( Base::O_OBJECT_NON_PERSISTENT_GROUPS );
 
+			$this->_resolve_method( (int) $this->conf( Base::O_OBJECT_KIND ) );
+
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
@@ -298,12 +317,15 @@ class Object_Cache extends Root {
 		} elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) {
 			// Get cfg from _data_file.
 			// Use self::const to avoid loading more classes.
-			$cfg = \json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
-			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
+			$cfg       = \json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
+			$file_kind = isset( $cfg[ self::O_OBJECT_KIND ] ) ? (int) $cfg[ self::O_OBJECT_KIND ] : self::KIND_MEMCACHED;
+			// Auto resolves from an empty host (the detector walks its own
+			// socket candidate chain), so don't gate the bootstrap on a saved
+			// host being present when kind is Auto.
+			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) || self::KIND_AUTO === $file_kind ) {
 				$this->_cfg_debug             = ! empty( $cfg[ Base::O_DEBUG ] ) ? $cfg[ Base::O_DEBUG ] : false;
-				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) && self::KIND_REDIS === (int) $cfg[ self::O_OBJECT_KIND ];
-				$this->_cfg_host              = $cfg[ self::O_OBJECT_HOST ];
-				$this->_cfg_port              = $cfg[ self::O_OBJECT_PORT ];
+				$this->_cfg_host              = isset( $cfg[ self::O_OBJECT_HOST ] ) ? $cfg[ self::O_OBJECT_HOST ] : '';
+				$this->_cfg_port              = isset( $cfg[ self::O_OBJECT_PORT ] ) ? $cfg[ self::O_OBJECT_PORT ] : 0;
 				$this->_cfg_life              = ! empty( $cfg[ self::O_OBJECT_LIFE ] ) ? $cfg[ self::O_OBJECT_LIFE ] : $this->_default_life;
 				$this->_cfg_persistent        = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
 				$this->_cfg_admin             = ! empty( $cfg[ self::O_OBJECT_ADMIN ] ) ? $cfg[ self::O_OBJECT_ADMIN ] : false;
@@ -312,6 +334,8 @@ class Object_Cache extends Root {
 				$this->_cfg_pswd              = ! empty( $cfg[ self::O_OBJECT_PSWD ] ) ? $cfg[ self::O_OBJECT_PSWD ] : '';
 				$this->_global_groups         = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : [];
 				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : [];
+
+				$this->_resolve_method( $file_kind );
 
 				if ( $this->_cfg_method ) {
 					$this->_oc_driver = 'Redis';
@@ -331,6 +355,80 @@ class Object_Cache extends Root {
 		if ( ! $this->_cfg_enabled ) {
 			! defined( 'LITESPEED_OC_FAILURE' ) && define( 'LITESPEED_OC_FAILURE', true );
 		}
+	}
+
+	/**
+	 * Resolve O_OBJECT_KIND into the runtime $_cfg_method boolean (true=Redis,
+	 * false=Memcached), running auto-detection when kind is KIND_AUTO.
+	 *
+	 * Auto resolution may also overwrite $_cfg_host and $_cfg_port to whatever
+	 * the detector found, so the rest of __construct can treat the instance as
+	 * if a concrete backend had been saved. A short-lived transient caches the
+	 * detection result so we don't re-scan sockets/hosts on every page load;
+	 * the transient is busted by the settings-save flow.
+	 *
+	 * In the dropin-only bootstrap (no WP loaded yet) transients are
+	 * unavailable, so detection runs inline on every boot — that's still cheap
+	 * because the candidate chain leads with file_exists() checks on a small
+	 * fixed list of socket paths.
+	 *
+	 * @since 7.8.1
+	 * @access private
+	 *
+	 * @param int $kind Saved O_OBJECT_KIND value (0/1/2).
+	 * @return void
+	 */
+	private function _resolve_method( $kind ) {
+		if ( self::KIND_REDIS === $kind ) {
+			$this->_cfg_method = true;
+			return;
+		}
+		if ( self::KIND_AUTO !== $kind ) {
+			$this->_cfg_method = false;
+			return;
+		}
+
+		// Transients go through wp_cache_*() which dereferences the global
+		// $wp_object_cache. That global is null while wp_cache_init() is
+		// constructing it — and the dropin invokes _us_ from inside that
+		// constructor, so consulting a transient here would fatal with
+		// "Call to a member function get() on null". Guard accordingly and
+		// fall through to inline detection during that bootstrap window.
+		$transients_safe = function_exists( 'get_transient' ) && ! empty( $GLOBALS['wp_object_cache'] );
+
+		if ( $transients_safe ) {
+			$cached = get_transient( self::TRANS_AUTO_RESOLVED );
+			if ( is_array( $cached ) && isset( $cached['kind'], $cached['host'] ) ) {
+				$this->_cfg_method = self::KIND_REDIS === (int) $cached['kind'];
+				$this->_cfg_host   = $cached['host'];
+				$this->_cfg_port   = (int) $cached['port'];
+				return;
+			}
+		}
+
+		$detected = $this->auto_detect( [
+			'host' => $this->_cfg_host,
+			'port' => $this->_cfg_port,
+		] );
+
+		if ( $detected ) {
+			$this->_cfg_method = self::KIND_REDIS === (int) $detected['kind'];
+			$this->_cfg_host   = $detected['host'];
+			$this->_cfg_port   = (int) $detected['port'];
+
+			if ( $transients_safe && function_exists( 'set_transient' ) ) {
+				set_transient( self::TRANS_AUTO_RESOLVED, [
+					'kind' => (int) $detected['kind'],
+					'host' => $detected['host'],
+					'port' => (int) $detected['port'],
+				], 5 * MINUTE_IN_SECONDS );
+			}
+			return;
+		}
+
+		// Detection found nothing — leave host/port as-is and default to
+		// Memcached so we don't try Redis blindly against an unknown backend.
+		$this->_cfg_method = false;
 	}
 
 	/**
@@ -439,7 +537,7 @@ class Object_Cache extends Root {
 	 *   [
 	 *     'ok'     => bool|null,                     // null => no extension installed
 	 *     'source' => 'configured'|'detected'|'unavailable',
-	 *     'kind'   => 'Redis'|'Memcached'|null,
+	 *     'kind'   => 'Redis / Valkey'|'Memcached'|null,  // user-facing label
 	 *     'host'   => string|null,
 	 *     'port'   => int|null,
 	 *     'detail' => string,                        // short human-readable summary
@@ -498,34 +596,33 @@ class Object_Cache extends Root {
 				return [
 					'ok'     => true,
 					'source' => 'configured',
-					'kind'   => $kind,
+					'kind'   => $this->_kind_label( $kind ),
 					'host'   => $this->_cfg_host,
 					'port'   => (int) $this->_cfg_port,
 					'detail' => sprintf(
 						/* translators: 1: backend name, 2: host:port or socket path */
 						__( 'Connected to %1$s at %2$s using the configured settings.', 'litespeed-cache' ),
-						$kind,
+						$this->_kind_label( $kind ),
 						$this->_format_endpoint( $this->_cfg_host, (int) $this->_cfg_port )
 					),
 				];
 			}
 		}
 
-		// 2. Fall back to auto-detection across both backends.
+		// 2. Fall back to auto-detection across both backends. We don't surface
+		// a detail line here because the Benchmark panel right below the
+		// Status block already shows the same information in richer form
+		// (full latency-ranked table + named fastest). Duplicating the hint
+		// just adds noise.
 		$detected = $this->auto_detect();
 		if ( $detected ) {
 			return [
 				'ok'     => true,
 				'source' => 'detected',
-				'kind'   => $detected['kind_label'],
+				'kind'   => $this->_kind_label( $detected['kind_label'] ),
 				'host'   => $detected['host'],
 				'port'   => $detected['port'],
-				'detail' => sprintf(
-					/* translators: 1: backend name, 2: host:port or socket path */
-					__( 'Auto-detected a working %1$s instance at %2$s. Choose Method = Auto and save to apply.', 'litespeed-cache' ),
-					$detected['kind_label'],
-					$this->_format_endpoint( $detected['host'], $detected['port'] )
-				),
+				'detail' => '',
 			];
 		}
 
@@ -537,6 +634,238 @@ class Object_Cache extends Root {
 			'port'   => null,
 			'detail' => __( 'No working Redis/Valkey or Memcached connection was found.', 'litespeed-cache' ),
 		];
+	}
+
+	/**
+	 * Walk the full candidate chain for every loaded backend, attempt to
+	 * connect to each, measure round-trip latency, and rank the survivors.
+	 *
+	 * For each candidate that succeeds on the first pass we re-measure 2 more
+	 * times and average the 3 runs, so a single laggy probe (cold caches,
+	 * GC pause, etc.) doesn't dominate the ranking. Candidates that fail the
+	 * first attempt are not retried — connection failures don't get faster
+	 * with repeat attempts and the UI hides them anyway.
+	 *
+	 * This is an explicit-action benchmark — it runs only when the admin
+	 * clicks the link in the Status panel, never automatically, because the
+	 * full sweep can issue many connection attempts with 1.5 s connect
+	 * timeouts in the worst case. The result is cached for an hour in a
+	 * transient so the UI can offer "Show benchmarks" without re-running.
+	 *
+	 * @since 7.8.1
+	 * @access public
+	 *
+	 * @param int $samples_per_run Probes per measurement pass (each pass
+	 *                             also includes a fresh connect()).
+	 * @return array{
+	 *     results: array<int,array{kind:string,kind_token:string,host:string,port:int,ok:bool,latency_ms:?float,runs:int,error:?string}>,
+	 *     fastest: array{kind:string,kind_token:string,host:string,port:int,latency_ms:float,runs:int}|null,
+	 *     ran_at:  int
+	 * }
+	 */
+	public function benchmark_candidates( $samples_per_run = 5 ) {
+		$results          = [];
+		$samples_per_run  = (int) $samples_per_run;
+		$averaging_passes = 3;
+
+		foreach ( [ 'Redis', 'Memcached' ] as $kind ) {
+			if ( ! class_exists( $kind ) ) {
+				continue;
+			}
+
+			foreach ( $this->_candidate_endpoints( $kind, (string) $this->_cfg_host, (int) $this->_cfg_port ) as $candidate ) {
+				$first = $this->_measure_latency( $kind, $candidate['host'], $candidate['port'], $samples_per_run );
+
+				if ( ! $first['ok'] ) {
+					$results[] = [
+						'kind'       => $this->_kind_label( $kind ),
+						'kind_token' => $kind,
+						'host'       => $candidate['host'],
+						'port'       => $candidate['port'],
+						'ok'         => false,
+						'latency_ms' => null,
+						'runs'       => 1,
+						'error'      => $first['error'],
+					];
+					continue;
+				}
+
+				// Successful first pass — re-measure to dampen jitter.
+				$latencies = [ $first['latency_ms'] ];
+				for ( $i = 1; $i < $averaging_passes; $i++ ) {
+					$extra = $this->_measure_latency( $kind, $candidate['host'], $candidate['port'], $samples_per_run );
+					if ( $extra['ok'] && null !== $extra['latency_ms'] ) {
+						$latencies[] = $extra['latency_ms'];
+					}
+				}
+
+				// Prefer the specific product detected by INFO server
+				// ('Redis' vs 'Valkey') over the joint "Redis / Valkey" label.
+				// Falls back to the joint label if the INFO sniff was
+				// inconclusive (Memcached always returns 'Memcached').
+				$product_label = isset( $first['product'] ) && $first['product']
+					? $first['product']
+					: $this->_kind_label( $kind );
+
+				$results[] = [
+					'kind'       => $product_label,
+					'kind_token' => $kind,
+					'host'       => $candidate['host'],
+					'port'       => $candidate['port'],
+					'ok'         => true,
+					'latency_ms' => array_sum( $latencies ) / count( $latencies ),
+					'runs'       => count( $latencies ),
+					'error'      => null,
+				];
+			}
+		}
+
+		$fastest = null;
+		foreach ( $results as $r ) {
+			if ( ! $r['ok'] || null === $r['latency_ms'] ) {
+				continue;
+			}
+			if ( null === $fastest || $r['latency_ms'] < $fastest['latency_ms'] ) {
+				$fastest = [
+					'kind'       => $r['kind'],
+					'kind_token' => $r['kind_token'],
+					'host'       => $r['host'],
+					'port'       => $r['port'],
+					'latency_ms' => $r['latency_ms'],
+					'runs'       => $r['runs'],
+				];
+			}
+		}
+
+		$payload = [ 'results' => $results, 'fastest' => $fastest, 'ran_at' => time() ];
+		set_transient( self::TRANS_BENCHMARK, $payload, HOUR_IN_SECONDS );
+
+		return $payload;
+	}
+
+	/**
+	 * Return the most-recent cached benchmark payload, or null if nothing
+	 * has been run within the transient TTL.
+	 *
+	 * @since 7.8.1
+	 * @access public
+	 *
+	 * @return array|null
+	 */
+	public function get_benchmark_cache() {
+		$cached = get_transient( self::TRANS_BENCHMARK );
+		return is_array( $cached ) ? $cached : null;
+	}
+
+	/**
+	 * Connect to a candidate, time N round-trips, and return the average.
+	 * Connection failures, auth failures, and probe-protocol mismatches all
+	 * collapse to ok=false with a short reason string the UI can show.
+	 *
+	 * @since 7.8.1
+	 * @access private
+	 *
+	 * @param string $kind    'Redis' or 'Memcached'.
+	 * @param string $host    Host name, IP, or Unix socket path.
+	 * @param int    $port    Port; coerced to 0 for socket paths.
+	 * @param int    $samples Round-trips to average.
+	 * @return array{ok:bool, latency_ms:?float, product:?string, error:?string}
+	 *         product: detected server product ('Redis' | 'Valkey' | 'Memcached')
+	 *         on success; null on failure.
+	 */
+	private function _measure_latency( $kind, $host, $port, $samples ) {
+		if ( ! class_exists( $kind ) ) {
+			return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => $kind . ' extension missing' ];
+		}
+		if ( '' === (string) $host ) {
+			return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'empty host' ];
+		}
+
+		$is_socket = $this->_is_socket_path( $host );
+		if ( $is_socket && ! @file_exists( $host ) ) {
+			return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'socket file missing' ];
+		}
+
+		$probe_port = $is_socket ? 0 : (int) $port;
+		$latencies  = [];
+		$product    = null;
+
+		try {
+			if ( 'Redis' === $kind ) {
+				$conn = new \Redis();
+				$ok   = @$conn->connect( $host, $probe_port, 1.5 );
+				if ( ! $ok ) {
+					$err = error_get_last();
+					return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => isset( $err['message'] ) ? $err['message'] : 'connect refused' ];
+				}
+				if ( $this->_cfg_pswd ) {
+					$auth_ok = $this->_cfg_user
+						? @$conn->auth( [ $this->_cfg_user, $this->_cfg_pswd ] )
+						: @$conn->auth( $this->_cfg_pswd );
+					if ( ! $auth_ok ) {
+						@$conn->close();
+						return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'auth failed' ];
+					}
+				}
+
+				// Distinguish Redis from Valkey via INFO server. Valkey >= 7.2
+				// preserves redis_version for compat but adds server_name:valkey
+				// and valkey_version: lines we can sniff. INFO failures fall
+				// back to 'Redis' since that's still the historical default.
+				$product = 'Redis';
+				try {
+					$info = @$conn->rawCommand( 'INFO', 'server' );
+					if ( is_string( $info ) && ( false !== stripos( $info, 'server_name:valkey' ) || false !== stripos( $info, 'valkey_version:' ) ) ) {
+						$product = 'Valkey';
+					}
+				} catch ( \Throwable $e ) {
+					unset( $e ); // Stay with 'Redis' on INFO failure.
+				}
+
+				for ( $i = 0; $i < $samples; $i++ ) {
+					$started = microtime( true );
+					$reply   = @$conn->rawCommand( 'PING' );
+					$elapsed = ( microtime( true ) - $started ) * 1000.0;
+					if ( 'PONG' !== $reply && true !== $reply ) {
+						@$conn->close();
+						return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'PING returned unexpected value' ];
+					}
+					$latencies[] = $elapsed;
+				}
+				@$conn->close();
+			} else {
+				$conn = new \Memcached();
+				@$conn->setOption( \Memcached::OPT_CONNECT_TIMEOUT, 1500 );
+				@$conn->setOption( \Memcached::OPT_SEND_TIMEOUT, 1500000 );
+				@$conn->setOption( \Memcached::OPT_RECV_TIMEOUT, 1500000 );
+				if ( ! @$conn->addServer( $host, $probe_port ) ) {
+					return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'addServer failed' ];
+				}
+				if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $conn, 'setSaslAuthData' ) ) {
+					@$conn->setOption( \Memcached::OPT_BINARY_PROTOCOL, true );
+					@$conn->setOption( \Memcached::OPT_COMPRESSION, false );
+					@$conn->setSaslAuthData( $this->_cfg_user, $this->_cfg_pswd );
+				}
+				$probe_key = 'litespeed_oc_bench_' . wp_generate_password( 8, false );
+				for ( $i = 0; $i < $samples; $i++ ) {
+					$started = microtime( true );
+					$set_ok  = @$conn->set( $probe_key, $i, 30 );
+					$got     = @$conn->get( $probe_key );
+					$elapsed = ( microtime( true ) - $started ) * 1000.0;
+					if ( ! $set_ok || (int) $got !== $i ) {
+						@$conn->delete( $probe_key );
+						return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => 'set/get probe failed (protocol mismatch?)' ];
+					}
+					$latencies[] = $elapsed;
+				}
+				@$conn->delete( $probe_key );
+				$product = 'Memcached';
+			}
+		} catch ( \Throwable $e ) {
+			return [ 'ok' => false, 'latency_ms' => null, 'product' => null, 'error' => $e->getMessage() ];
+		}
+
+		return [ 'ok' => true, 'latency_ms' => array_sum( $latencies ) / count( $latencies ), 'product' => $product, 'error' => null ];
 	}
 
 	/**
@@ -557,12 +886,39 @@ class Object_Cache extends Root {
 	}
 
 	/**
+	 * User-facing label for an internal backend kind. We keep the internal
+	 * tokens ('Redis' / 'Memcached') matching the PHP class names so they can
+	 * drive class_exists() and new \Redis() / new \Memcached() — but in the
+	 * Status panel and admin notices the Redis-family label needs to read
+	 * "Redis / Valkey" so users on Valkey don't think the plugin is talking
+	 * about an unsupported backend.
+	 *
+	 * @since  7.8.1
+	 * @access private
+	 *
+	 * @param string $kind Internal kind token ('Redis' or 'Memcached').
+	 * @return string
+	 */
+	private function _kind_label( $kind ) {
+		return 'Redis' === $kind ? 'Redis / Valkey' : $kind;
+	}
+
+	/**
 	 * Detect a working Redis/Valkey or Memcached backend by walking the
-	 * full priority chain (UNIX sockets → configured host → localhost →
-	 * 127.0.0.1) for each loaded extension. Redis is tried first because
-	 * LiteSpeed's recommended Object Cache backend is Redis/Valkey, and
-	 * sockets are tried before TCP because they are the high-performance
-	 * path on LSWS / cPanel hosts.
+	 * full priority chain for each loaded extension:
+	 *
+	 *   1. UNIX sockets that exist on disk
+	 *   2. Configured host (TCP or socket the admin typed)
+	 *   3. localhost on the backend's default port
+	 *   4. 127.0.0.1 on the backend's default port
+	 *   5. Common conventional hostnames (redis|valkey for Redis,
+	 *      memcached|memcache for Memcached) on the default port — these
+	 *      resolve via /etc/hosts, LAN DNS, or container DNS depending on
+	 *      the environment
+	 *
+	 * Redis is tried before Memcached because LiteSpeed's recommended Object
+	 * Cache backend is Redis/Valkey, and sockets are tried before TCP because
+	 * they are the high-performance path on LSWS / cPanel hosts.
 	 *
 	 * @since  7.8.1
 	 * @access public
@@ -626,7 +982,7 @@ class Object_Cache extends Root {
 			if ( isset( $seen[ $key ] ) ) {
 				return;
 			}
-			$seen[ $key ]  = true;
+			$seen[ $key ] = true;
 			$candidates[] = [ 'host' => $host, 'port' => (int) $port ];
 		};
 
@@ -643,9 +999,14 @@ class Object_Cache extends Root {
 			}
 		}
 
-		// 2. Configured host next. A configured socket path will already have
-		// been pushed above; this branch handles a TCP host the admin typed.
-		if ( $cfg_host ) {
+		// 2. Configured host next — but only for the backend the user actually
+		// saved. Otherwise the user's Redis port (e.g. 6379) leaks into the
+		// Memcached chain and we end up probing Memcached at port 6379 (or
+		// pointing a Memcached client at a Redis socket), neither of which
+		// can succeed. The wrong-kind chain still has localhost / 127.0.0.1 /
+		// conventional service names on its own default port further down.
+		$cfg_kind_matches = ( 'Redis' === $kind ) === (bool) $this->_cfg_method;
+		if ( $cfg_host && $cfg_kind_matches ) {
 			if ( $this->_is_socket_path( $cfg_host ) ) {
 				$push( $cfg_host, 0 );
 			} else {
@@ -659,6 +1020,20 @@ class Object_Cache extends Root {
 		// when the admin already typed the same host:port into the Host field.
 		$push( 'localhost', $default_port );
 		$push( '127.0.0.1', $default_port );
+
+		// 5. Common conventional hostnames. /etc/hosts entries, LAN DNS,
+		// service-mesh names and container DNS all surface the cache backend
+		// under these names on a lot of real-world setups where the WP host's
+		// own loopback isn't where the cache lives. NXDOMAIN failures here
+		// are effectively instant, so the extra candidates only cost real
+		// time on the boxes where they actually help.
+		if ( 'Redis' === $kind ) {
+			$push( 'redis', $default_port );
+			$push( 'valkey', $default_port );
+		} else {
+			$push( 'memcached', $default_port );
+			$push( 'memcache', $default_port );
+		}
 
 		return $candidates;
 	}

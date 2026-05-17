@@ -472,6 +472,24 @@ class Conf extends Base {
 	 */
 	public function update_confs( $the_matrix = [] ) {
 		if ( $the_matrix ) {
+			// WP's update_option() compares the incoming value against
+			// get_option() — which reads through the WP object cache — to
+			// decide whether to skip a no-op write. If the cached `alloptions`
+			// blob is stale (e.g. the admin just flipped the Object Cache
+			// backend, a prior request raced, or someone wrote to wp_options
+			// out-of-band), that compare can lie and update_option() silently
+			// skips the write. The DB and the cache then diverge and the admin
+			// UI keeps rendering the cached value forever.
+			//
+			// Drop the per-key entries and the `alloptions` / `notoptions`
+			// blobs for every option we're about to touch so the comparison
+			// reads from MySQL. update_option() will repopulate the cache.
+			foreach ( array_keys( $the_matrix ) as $id ) {
+				wp_cache_delete( self::name( $id ), 'options' );
+			}
+			wp_cache_delete( 'alloptions', 'options' );
+			wp_cache_delete( 'notoptions', 'options' );
+
 			foreach ( $the_matrix as $id => $val ) {
 				$this->update( $id, $val );
 			}
@@ -509,6 +527,36 @@ class Conf extends Base {
 
 		// Update related files
 		$this->cls( 'Activation' )->update_files();
+
+		// If any Object Cache backend setting was just written, the in-memory
+		// Object_Cache singleton (built once from Conf during this request's
+		// __construct) still holds the pre-save host/port/method/etc. Any
+		// later call in this same request — most notably the Status panel's
+		// test_connection() — would otherwise probe the OLD backend and then
+		// cache that misleading result in TRANS_CONN_TEST for 5 minutes.
+		// Drop the singleton so its next access rebuilds from the freshly
+		// written Conf, and bust both the connection-test transient and the
+		// Auto-method resolution transient.
+		$object_ids = [
+			self::O_OBJECT,
+			self::O_OBJECT_KIND,
+			self::O_OBJECT_HOST,
+			self::O_OBJECT_PORT,
+			self::O_OBJECT_LIFE,
+			self::O_OBJECT_PERSISTENT,
+			self::O_OBJECT_ADMIN,
+			self::O_OBJECT_DB_ID,
+			self::O_OBJECT_USER,
+			self::O_OBJECT_PSWD,
+			self::O_OBJECT_GLOBAL_GROUPS,
+			self::O_OBJECT_NON_PERSISTENT_GROUPS,
+		];
+		if ( array_intersect( $object_ids, $this->_updated_ids ) ) {
+			$this->cls( 'Object_Cache', true );
+			delete_transient( Object_Cache::TRANS_CONN_TEST );
+			delete_transient( Object_Cache::TRANS_AUTO_RESOLVED );
+			delete_transient( Object_Cache::TRANS_BENCHMARK );
+		}
 
 		/**
 		 * CDN related actions - Cloudflare
