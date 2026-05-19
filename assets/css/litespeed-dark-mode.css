@@ -161,16 +161,22 @@ body.litespeed-darkmode g.litespeed-pie_info .litespeed-pie-done {
 }
 
 @media (prefers-color-scheme: dark) {
-	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .litespeed-switch input:not(:checked) + label {
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .litespeed-switch {
 		background-color: #3e3e42;
+		border-color: #5a5a5d;
+		box-shadow: 0 2px 0 #5a5a5d;
+	}
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .litespeed-switch input:not(:checked) + label {
 		color: #e0e0e0;
-		border: 1px solid #5a5a5d;
 	}
 }
-body.litespeed-darkmode .litespeed-switch input:not(:checked) + label {
+body.litespeed-darkmode .litespeed-switch {
 	background-color: #3e3e42;
+	border-color: #5a5a5d;
+	box-shadow: 0 2px 0 #5a5a5d;
+}
+body.litespeed-darkmode .litespeed-switch input:not(:checked) + label {
 	color: #e0e0e0;
-	border: 1px solid #5a5a5d;
 }
 
 /* Column with boxes layout */
