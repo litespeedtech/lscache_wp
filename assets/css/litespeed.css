@@ -772,6 +772,62 @@ h3 .litespeed-learn-more {
 	padding: 0.5rem 0.75rem;
 }
 
+/* Object Cache benchmark — sits inside .litespeed-block. Theme-friendly outer
+   border (light grey that reads on both light and dark backgrounds via
+   currentColor + alpha) plus a slight header tint to distinguish the head
+   row from data. Background stays transparent so the parent block colour
+   shows through (no "lighter than parent" wash). */
+.litespeed-oc-benchmark-table {
+	width: auto;
+	max-width: 100%;
+	margin: 0.75rem 0 0.75rem 0;
+	background: transparent;
+	border-collapse: collapse;
+	border: 1px solid rgba(127, 127, 127, 0.28);
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.litespeed-oc-benchmark-table th,
+.litespeed-oc-benchmark-table td {
+	padding: 0.45rem 0.9rem;
+	text-align: left;
+	vertical-align: middle;
+	background: transparent;
+	border-bottom: 1px solid rgba(127, 127, 127, 0.18);
+}
+
+.litespeed-oc-benchmark-table th {
+	font-weight: 600;
+	white-space: nowrap;
+	background: rgba(127, 127, 127, 0.08);
+	border-bottom: 1px solid rgba(127, 127, 127, 0.28);
+}
+
+.litespeed-oc-benchmark-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.litespeed-oc-benchmark-fastest td {
+	font-weight: 700;
+	background: rgba(127, 127, 127, 0.05);
+}
+
+.litespeed-oc-bench-spinner {
+	display: inline-block;
+	width: 0.85em;
+	height: 0.85em;
+	vertical-align: -0.15em;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: litespeed-oc-bench-spin 0.7s linear infinite;
+}
+
+@keyframes litespeed-oc-bench-spin {
+	to { transform: rotate(360deg); }
+}
+
 /* =======================================
 			LAYOUT - block
 ======================================= */

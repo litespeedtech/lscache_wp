@@ -893,6 +893,14 @@ class Base extends Root {
 			return self::VAL_ON2;
 		}
 
+		// Object Cache Method is a tri-state: Memcached (0), Redis/Valkey (1),
+		// Auto (2). Without this registration the bool-default in
+		// $_default_options collapses Auto to true → 1 in type_casting() and
+		// the saved value silently becomes Redis on every save.
+		if ( self::O_OBJECT_KIND === $id ) {
+			return self::VAL_ON2;
+		}
+
 		return false;
 	}
 

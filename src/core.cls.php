@@ -190,6 +190,7 @@ class Core extends Root {
 		do_action( 'litespeed_init' );
 		add_action( 'wp_ajax_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler' );
 		add_action( 'wp_ajax_nopriv_async_litespeed', 'LiteSpeed\Task::async_litespeed_handler' );
+		add_action( 'wp_ajax_litespeed_oc_benchmark', 'LiteSpeed\Object_Cache::ajax_benchmark' );
 
 		// In `after_setup_theme`, before `init` hook
 		$this->cls( 'Activation' )->auto_update();

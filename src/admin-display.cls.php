@@ -973,6 +973,9 @@ class Admin_Display extends Base {
 			echo '<div class="litespeed-relative">';
 		} else {
 			$current = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			// Drop transient UI query args so a POST to this URL doesn't re-trigger
+			// page-level actions (e.g. the Object Cache benchmark) on save.
+			$current = remove_query_arg( 'ls_oc_benchmark', $current );
 			if ( $has_upload ) {
 				echo '<form method="post" action="' . esc_url( $current ) . '" class="litespeed-relative" enctype="multipart/form-data">';
 			} else {
