@@ -69,7 +69,7 @@ defined( 'WPINC' ) || exit;
 
 		<div class="litespeed-textarea-recommended">
 			<div>
-				<?php $this->build_textarea( $cid, 40 ); ?>
+				<?php $this->build_textarea( $cid, 40, null, true ); ?>
 			</div>
 			<div>
 				<?php $this->recommended( $cid ); ?>

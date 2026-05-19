@@ -138,7 +138,7 @@ $this->form_action();
 			<td>
 				<div class="litespeed-textarea-recommended">
 					<div>
-						<?php $this->build_textarea( $option_id, 40 ); ?>
+						<?php $this->build_textarea( $option_id, 40, null, true ); ?>
 					</div>
 					<div>
 						<?php $this->recommended( $option_id ); ?>

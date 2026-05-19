@@ -13,6 +13,7 @@ defined( 'WPINC' ) || exit();
 use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
 use LiteSpeed\Conf;
+use LiteSpeed\Base;
 
 /**
  * Check whether a DB table exists.
@@ -160,6 +161,37 @@ function litespeed_update_7_7() {
 	// Append trailing slash to all URLs that don't have one and don't have duplicate with slash (exclude URLs with query string)
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 	$wpdb->query( "UPDATE `{$tb_url}` SET url = CONCAT(url, '/') WHERE url LIKE 'https://%' AND url NOT LIKE '%/' AND url NOT LIKE '%?%' AND CONCAT(url, '/') NOT IN (SELECT * FROM (SELECT url FROM `{$tb_url}` WHERE url LIKE '%/') AS tmp)" );
+}
+
+/**
+ * Backfill Basic Image Placeholder with the bundled gray base64 GIF for sites that
+ * had Lazy Load enabled before the option's stored default was wired up. Runs once
+ * via the versioned upgrader, so manually-blanked values won't be re-populated on
+ * subsequent loads.
+ *
+ * @since 7.8.1.1
+ * @return void
+ */
+function litespeed_update_7_8_1_1_basic_placeholder() {
+	Debug2::debug( '[Data] v7.8.1.1 upgrade: backfilling Basic Image Placeholder' );
+
+	if ( ! Conf::get_option( Base::O_MEDIA_LAZY ) ) {
+		Debug2::debug( '[Data] Lazy Load is off, bypassed Basic Image Placeholder migration' );
+		return;
+	}
+
+	$current = Conf::get_option( Base::O_MEDIA_LAZY_PLACEHOLDER );
+	if ( '' !== trim( (string) $current ) ) {
+		Debug2::debug( '[Data] Basic Image Placeholder already set, bypassed migration' );
+		return;
+	}
+
+	$default_v = defined( 'LITESPEED_PLACEHOLDER' )
+		? LITESPEED_PLACEHOLDER
+		: 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=';
+
+	Conf::cls()->update_confs( [ Base::O_MEDIA_LAZY_PLACEHOLDER => $default_v ] );
+	Debug2::debug( '[Data] Basic Image Placeholder backfilled with bundled gray GIF default' );
 }
 
 /**
