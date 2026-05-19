@@ -57,8 +57,16 @@
 				type = litespeed_tab_type(type);
 				var data = 'litespeed-' + type;
 				$elems.on('click', function (_event) {
-					litespeed_display_tab($(this).data(data), type);
-					document.cookie = 'litespeed_' + type + '=' + $(this).data(data);
+					var name = $(this).data(data);
+					// Don't scroll to the anchor; the fragment is still set below for sharing and the no-JS fallback.
+					if (_event && _event.preventDefault) {
+						_event.preventDefault();
+					}
+					litespeed_display_tab(name, type);
+					document.cookie = 'litespeed_' + type + '=' + name;
+					if (window.history && window.history.replaceState) {
+						window.history.replaceState(null, '', '#' + name);
+					}
 					$(this).blur();
 				});
 			};

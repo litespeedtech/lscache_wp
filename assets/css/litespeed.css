@@ -527,6 +527,12 @@ button.litespeed-form-action:hover {
 	padding: 1px 20px 20px 20px;
 }
 
+/* Prevent tab-flash before JS runs: hide non-targeted layout panels at paint time. */
+/* jQuery .show()/.hide() write inline styles which override these rules afterwards. */
+.litespeed-body [data-litespeed-layout][id] { display: none; scroll-margin-top: 100px; }
+.litespeed-body [data-litespeed-layout][id]:target { display: block; }
+.litespeed-body:not(:has([data-litespeed-layout][id]:target)) [data-litespeed-default-tab="1"] { display: block; }
+
 @media screen and (min-width: 681px) {
 	.litespeed-header + .litespeed-body {
 		border-top: none;

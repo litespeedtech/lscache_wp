@@ -24,6 +24,10 @@ $menu_list = array(
 	'settings_tuning_css'   => esc_html__( 'Tuning', 'litespeed-cache' ) . ' - CSS',
 );
 
+// Pick the active tab server-side so the right panel paints before JS runs.
+$cookie_tab      = isset( $_COOKIE['litespeed_tab'] ) ? sanitize_key( wp_unslash( $_COOKIE['litespeed_tab'] ) ) : '';
+$default_tab_key = isset( $menu_list[ $cookie_tab ] ) ? $cookie_tab : array_key_first( $menu_list );
+
 ?>
 
 <div class="wrap">
@@ -53,8 +57,9 @@ $menu_list = array(
 
 		// Include all tpl for faster UE
 		foreach ( $menu_list as $tab_key => $tab_val ) {
+			$is_default = ( $tab_key === $default_tab_key );
 			?>
-			<div data-litespeed-layout='<?php echo esc_attr( $tab_key ); ?>'>
+			<div data-litespeed-layout='<?php echo esc_attr( $tab_key ); ?>' id='<?php echo esc_attr( $tab_key ); ?>'<?php echo $is_default ? ' data-litespeed-default-tab="1"' : ''; ?>>
 				<?php require LSCWP_DIR . 'tpl/page_optm/' . $tab_key . '.tpl.php'; ?>
 			</div>
 			<?php
