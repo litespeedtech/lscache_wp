@@ -359,6 +359,8 @@ body.litespeed-darkmode .litespeed-wrap .litespeed-btn-danger-bg:hover {
 	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .notice {
 		background-color: #262626;
 		border-left: 4px solid #72a9d3;
+	}
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .notice p {
 		color: #e0e0e0;
 	}
 }
