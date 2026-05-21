@@ -1027,6 +1027,7 @@ h3 .litespeed-learn-more {
 	line-height: inherit;
 	font-size: inherit;
 	box-shadow: none;
+	padding: 7px;
 }
 
 .litespeed-wrap .button-link:hover,
@@ -1145,7 +1146,7 @@ h3 .litespeed-learn-more {
 	color: #fff;
 }
 
-.litespeed-wrap .button:not(.litespeed-btn-large) .dashicons {
+body:not(.branch-7) .litespeed-wrap .button:not(.litespeed-btn-large) .dashicons {
 	position: relative;
 	top: -0.075em;
 	vertical-align: middle;
@@ -1674,6 +1675,7 @@ ul.litespeed-shell-body {
 
 .litespeed-callout {
 	margin: 1.5rem 0;
+	padding-bottom: 10px;
 
 	border-right: 1px solid #e5e5e5;
 	border-top: 1px solid #e5e5e5;
@@ -1969,6 +1971,12 @@ input.litespeed-input-warning {
 	font-size: 1.2em;
 	vertical-align: middle;
 	top: 0;
+}
+
+body:not(.branch-7) .litespeed-form-action.button .dashicons,
+body:not(.branch-7) .litespeed-link-with-icon.button .dashicons,
+body:not(.branch-7) .litespeed-collection-button.button .dashicons {
+	line-height: 1.2;
 }
 
 @media screen and (max-width: 680px) {
