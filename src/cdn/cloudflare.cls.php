@@ -232,6 +232,42 @@ class Cloudflare extends Base {
 	}
 
 	/**
+	 * Cloudflare credential formats (see
+     * https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/):
+     *   - Global API Key  (new):      "cfk_"  + 40 chars + checksum
+     *   - User API Token  (new):      "cfut_" + 40 chars + checksum
+     *   - Account API Token (new):    "cfat_" + 40 chars + checksum
+     *   - Global API Key  (pre-2026): 37-45 character lowercase hex string
+     *   - API Token       (pre-2026): 40-character alphanumeric string
+	 *
+	 * @since  7.9
+	 * @access private
+	 * @param string $cf_key CF Key to check.
+	 * @return bool  Whether to show success/error message.
+	 */
+	private function usGlobalApiKey( $cf_key ) {
+		if (!is_string($cf_key) || '' === $cf_key ) {
+            return false;
+        }
+
+        // New scannable format: explicitly prefixed.
+        if ( 0 === strncmp($cf_key, 'cfk_', 4) ) {
+            return true;
+        }
+        if ( 0 === strncmp($cf_key, 'cfut_', 5) || 0 === strncmp($cf_key, 'cfat_', 5) ) {
+            return false;
+        }
+
+        // Pre-2026 Global API Key: 37-45 lowercase hex characters.
+        $len = strlen($cf_key);
+        if ($len >= 37 && $len <= 45 && preg_match('/^[0-9a-f]+$/', $cf_key)) {
+            return true;
+        }
+
+        return false;
+	}
+
+	/**
 	 * Cloudflare API
 	 *
 	 * @since  1.7.2
@@ -244,13 +280,8 @@ class Cloudflare extends Base {
 	private function cloudflare_call( $url, $method = 'GET', $data = false, $show_msg = true ) {
 		Debug2::debug("[Cloudflare] cloudflare_call \t\t[URL] $url");
 
-		/**
-		 * Detect key type: Global API Key (37-char hex) vs API Token (Bearer)
-		 *
-		 * @since 1.9.0
-		 */
 		$cf_key = $this->conf( self::O_CDN_CLOUDFLARE_KEY );
-		if ( strlen( $cf_key ) === 37 && preg_match( '/^[0-9a-f]+$/', $cf_key ) ) {
+		if ( $this->usGlobalApiKey( $cf_key ) ) {
 			$headers = [
 				'Content-Type' => 'application/json',
 				'X-Auth-Email' => $this->conf( self::O_CDN_CLOUDFLARE_EMAIL ),
@@ -275,7 +306,8 @@ class Cloudflare extends Base {
 			$wp_args['body'] = $data;
 		}
 		add_filter( 'http_api_curl', $fn = function ( $handle ) {
-			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt -- http_api_curl filter requires direct curl handle manipulation; wp_remote_get() is not applicable here.
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+			defined( 'CURLOPT_SSL_ENABLE_ALPN' ) && \curl_setopt( $handle, CURLOPT_SSL_ENABLE_ALPN, false );
 			return $handle;
 		}, 9999 );
 		$resp = wp_remote_request( $url, $wp_args );
