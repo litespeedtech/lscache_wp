@@ -1963,13 +1963,15 @@ input.litespeed-input-warning {
 	margin-left: -5px;
 }
 
-.litespeed-collection-button .dashicons {
+.button.litespeed-collection-button .dashicons {
 	vertical-align: baseline;
+	line-height: 1;
 }
 
 .litespeed-wrap .button:not(.litespeed-btn-large).litespeed-form-action .dashicons {
-	font-size: 1.2em;
+	font-size: 1.5em;
 	vertical-align: middle;
+	line-height: 1;
 	top: 0;
 }
 
@@ -2483,6 +2485,12 @@ g.litespeed-pie_info .litespeed-pie-done {
 
 .litespeed-crawler-sitemap-nav > div {
 	margin-top: 10px;
+}
+
+#crawler-map-legend i{
+	top: 5px;
+    display: inline-block;
+    position: relative;
 }
 
 @media screen and (max-width: 680px) {
@@ -3379,6 +3387,7 @@ p.litespeed-dashboard-unlock-footer {
 	vertical-align: baseline;
 	top: 0.25em;
 	margin-right: 0.5em;
+	position: relative;
 }
 
 .litespeed-dashboard-unlock + .litespeed-dashboard-qc-enable {
@@ -3805,6 +3814,7 @@ a.litespeed-media-href svg:hover {
 	height: 20px;
 	color: white;
 	text-align: center;
+	text-indent: -2px;
 }
 
 .litespeed-badge {

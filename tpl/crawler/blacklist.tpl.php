@@ -83,7 +83,7 @@ $pagination      = Utility::pagination( $count, 30 );
 	</span>
 </p>
 <?php $__admin_display->_check_overwritten( 'crawler-blocklist' ); ?>
-<p>
+<p id="crawler-map-legend">
 	<i class="litespeed-dot litespeed-bg-default"></i> = <?php esc_html_e( 'Not blocklisted', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php esc_html_e( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>
 	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php esc_html_e( 'Blocklisted', 'litespeed-cache' ); ?><br>
