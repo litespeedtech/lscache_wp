@@ -66,7 +66,7 @@ class Admin_Settings extends Base {
 
 			// Validate $child.
 			if ( self::O_CDN_MAPPING === $id ) {
-				if ( ! in_array( $child, [ self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE ], true ) ) {
+				if ( ! in_array( $child, [ self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA, self::CDN_MAPPING_FILETYPE ], true ) ) {
 					continue;
 				}
 			}
@@ -139,7 +139,7 @@ class Admin_Settings extends Base {
 								$v = trailingslashit( $v );
 							}
 
-							if ( in_array( $child, [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ], true ) ) {
+							if ( in_array( $child, [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA ], true ) ) {
 								// Because these can't be auto detected in `config->update()`, need to format here.
 								$v = 'false' === $v ? 0 : (bool) $v;
 							}
@@ -309,6 +309,55 @@ class Admin_Settings extends Base {
 						}
 					);
 				}
+			}
+		}
+
+		// When Method = Automatic AND Object Cache is being kept on, detect a
+		// working backend now and persist the resolved host/port (and the
+		// concrete backend) so the user sees what was picked. If OC is off
+		// or detection fails, leave Auto as-is — runtime resolution handles it.
+		$kind_submitted    = array_key_exists( self::O_OBJECT_KIND, $the_matrix );
+		$object_submitted  = array_key_exists( self::O_OBJECT, $the_matrix );
+		$object_will_be_on = $object_submitted
+			? (bool) $the_matrix[ self::O_OBJECT ]
+			: (bool) $this->conf( self::O_OBJECT );
+
+		if (
+			$kind_submitted
+			&& Object_Cache::KIND_AUTO === (int) $the_matrix[ self::O_OBJECT_KIND ]
+			&& $object_will_be_on
+		) {
+			$current_host = array_key_exists( self::O_OBJECT_HOST, $the_matrix )
+				? (string) $the_matrix[ self::O_OBJECT_HOST ]
+				: (string) $this->conf( self::O_OBJECT_HOST );
+			$current_port = array_key_exists( self::O_OBJECT_PORT, $the_matrix )
+				? (int) $the_matrix[ self::O_OBJECT_PORT ]
+				: (int) $this->conf( self::O_OBJECT_PORT );
+
+			$detected = $this->cls( 'Object_Cache' )->auto_detect( [
+				'host' => $current_host,
+				'port' => $current_port,
+			] );
+
+			if ( $detected ) {
+				// Persist the detected host/port for visibility in the form, but
+				// keep Method = Automatic so each boot re-resolves against the
+				// live environment.
+				$the_matrix[ self::O_OBJECT_HOST ] = $detected['host'];
+				$the_matrix[ self::O_OBJECT_PORT ] = (int) $detected['port'];
+
+				$endpoint = '/' === substr( (string) $detected['host'], 0, 1 )
+					? $detected['host']
+					: $detected['host'] . ':' . (int) $detected['port'];
+
+				Admin_Display::success( sprintf(
+					/* translators: 1: backend name, 2: host:port or socket path */
+					__( 'Object Cache auto-detected: %1$s at %2$s.', 'litespeed-cache' ),
+					$detected['kind_label'],
+					$endpoint
+				) );
+			} else {
+				Admin_Display::error( __( 'Object Cache auto-detection could not find a working Redis/Valkey or Memcached connection. Method has been left as Automatic; runtime will keep retrying.', 'litespeed-cache' ) );
 			}
 		}
 

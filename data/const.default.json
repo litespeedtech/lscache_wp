@@ -104,7 +104,7 @@
 	"optm-exc": "",
 	"optm-guest_only": "1",
 	"object": "",
-	"object-kind": "",
+	"object-kind": "2",
 	"object-host": "localhost",
 	"object-port": "11211",
 	"object-life": "360",

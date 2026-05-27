@@ -472,6 +472,14 @@ class Conf extends Base {
 	 */
 	public function update_confs( $the_matrix = [] ) {
 		if ( $the_matrix ) {
+			// Drop the cached entries so update_option()'s no-op compare reads
+			// from MySQL — a stale alloptions blob can otherwise hide the write.
+			foreach ( array_keys( $the_matrix ) as $id ) {
+				wp_cache_delete( self::name( $id ), 'options' );
+			}
+			wp_cache_delete( 'alloptions', 'options' );
+			wp_cache_delete( 'notoptions', 'options' );
+
 			foreach ( $the_matrix as $id => $val ) {
 				$this->update( $id, $val );
 			}
@@ -509,6 +517,29 @@ class Conf extends Base {
 
 		// Update related files
 		$this->cls( 'Activation' )->update_files();
+
+		// Reset the Object_Cache singleton and bust its cached probes when any
+		// backend setting changes, so the same-request Status panel re-resolves.
+		$object_ids = [
+			self::O_OBJECT,
+			self::O_OBJECT_KIND,
+			self::O_OBJECT_HOST,
+			self::O_OBJECT_PORT,
+			self::O_OBJECT_LIFE,
+			self::O_OBJECT_PERSISTENT,
+			self::O_OBJECT_ADMIN,
+			self::O_OBJECT_DB_ID,
+			self::O_OBJECT_USER,
+			self::O_OBJECT_PSWD,
+			self::O_OBJECT_GLOBAL_GROUPS,
+			self::O_OBJECT_NON_PERSISTENT_GROUPS,
+		];
+		if ( array_intersect( $object_ids, $this->_updated_ids ) ) {
+			$this->cls( 'Object_Cache', true );
+			delete_transient( Object_Cache::TRANS_CONN_TEST );
+			delete_transient( Object_Cache::TRANS_AUTO_RESOLVED );
+			delete_transient( Object_Cache::TRANS_BENCHMARK );
+		}
 
 		/**
 		 * CDN related actions - Cloudflare
