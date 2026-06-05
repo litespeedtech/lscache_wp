@@ -104,7 +104,7 @@ if ( null === $mem_conn ) {
 					<?php
 					printf(
 						/* translators: %1$s: Socket name, %2$s: Host field title, %3$s: Example socket path */
-						esc_html__( 'If you are using a %1$s socket, %2$s should be set to %3$s', 'litespeed-cache' ),
+						esc_html__( 'If you are using a %1$s socket, %2$s should be set to %3$s. Absolute paths must be used.', 'litespeed-cache' ),
 						'UNIX',
 						esc_html( Lang::title( $option_id ) ),
 						'<code>/path/to/memcached.sock</code>'

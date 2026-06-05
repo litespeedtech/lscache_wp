@@ -221,6 +221,23 @@ class Admin_Settings extends Base {
 					$saved_sizes = isset( $raw_data[$id] ) ? $raw_data[$id] : [];
 					$data        = array_diff( $image_sizes, $saved_sizes );
 					break;
+					
+				case self::O_OBJECT_HOST: // The field accepts an IP, a hostname, or an absolute UNIX socket path.
+					$data  = trim( $raw_data[ $id ] );
+					$first = substr( $data, 0, 1 );
+
+					if ( '/' === $first ) {
+						$valid = true;
+					} else {
+						// will validate both hostname and IP. Values that start with ~ will be rejected by filter_var.
+						$valid = false !== filter_var( $data, FILTER_VALIDATE_IP ) || false !== filter_var( $data, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME );
+					}
+
+					if ( !$valid ) {
+						Admin_Display::error( __( 'Object Cache: Invalid host. Use an IP address, a hostname or an absolute UNIX socket path. Old value was restored.', 'litespeed-cache' ) );
+						$data = $this->conf( $id ); // Revert to existing value to avoid saving invalid data.
+					}
+					break;
 
 				default:
 					break;
