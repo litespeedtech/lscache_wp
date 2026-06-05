@@ -307,7 +307,7 @@ class Media extends Root {
 		// <link rel="preload" as="image" href="xx">
 		if ( $this->_vpi_preload_list ) {
 			foreach ( $this->_vpi_preload_list as $v ) {
-				$content .= '<link rel="preload" as="image" href="' . esc_url( Str::trim_quotes( $v ) ) . '">';
+				$content .= '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url( Str::trim_quotes( $v ) ) . '">';
 			}
 		}
 		return $content;
