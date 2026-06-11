@@ -20,7 +20,7 @@ class Optimize extends Base {
 
 	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css';
 
-	const DUMMY_CSS_REGEX = "#<link [ \w='\"/]*id=['\"]litespeed-cache-dummy-css['\"] href=['\"].+assets/css/litespeed-dummy\.css[?\w.=-]*['\"][ \w='\"/]*>#isU";
+	const DUMMY_CSS_REGEX = "#<link [ \w='\"/]*id=['\"]litespeed-cache-dummy-css['\"][ \w='\"/]*href=['\"].+assets/css/litespeed-dummy\.css[?\w.=-]*['\"][ \w='\"/]*>#isU";
 
 	private $content;
 	private $content_ori;
@@ -225,7 +225,7 @@ class Optimize extends Base {
 	public function finalize( $content ) {
 		$content = $this->_finalize($content);
 		// Fallback to replace dummy css placeholder
-		if (false !== preg_match(self::DUMMY_CSS_REGEX, $content)) {
+		if (1 === preg_match(self::DUMMY_CSS_REGEX, $content)) {
 			self::debug('Fallback to drop dummy CSS');
 			$content = preg_replace( self::DUMMY_CSS_REGEX, '', $content );
 		}
@@ -500,7 +500,7 @@ class Optimize extends Base {
 				$this->content = str_replace('</head>', $this->html_head . '</head>', $this->content);
 			} else {
 				// Put header content to dummy css position
-				if (false !== preg_match(self::DUMMY_CSS_REGEX, $this->content)) {
+				if (1 === preg_match(self::DUMMY_CSS_REGEX, $this->content)) {
 					self::debug('Put optm data to dummy css location');
 					$this->content = preg_replace( self::DUMMY_CSS_REGEX, $this->html_head, $this->content );
 				}

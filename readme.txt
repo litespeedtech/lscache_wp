@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 7.8.1 - Apr 1 2026 =
 * **CDN** Fixed Cloudflare API key type detection for the compatibility w/ the new key format.
+* **Page Optimize** Fixed CSS Combine serving unstyled pages when the placeholder link tag uses default WordPress whitespace. (#999)
 
 = 7.8.0.1 - Mar 17 2026 =
 * **Object Cache** Improved Object Cache resilience: auto disable when connection fails, network subsites fallback to database, and dropped TTL setting to respect never-expired transients.
