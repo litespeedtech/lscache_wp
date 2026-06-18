@@ -45,6 +45,26 @@ class Divi_Theme_Builder {
 		if ( '' !== $et_fb || '' !== $et_pb_preview || ( $p && 'true' === $preview ) ) {
 			do_action( 'litespeed_disable_all', 'divi edit mode' );
 		}
+
+		// DIVI 5
+		add_filter( 'litespeed_conf_load_option_cache-exc', __CLASS__ . '::disable_cache_api' );
+	}
+
+	/**
+	 * Disable cache for Divi REST API calls to /wp-json/divi/ (per-session nonces).
+	 *
+	 * @since 7.9
+	 * @param array $excludes list of already excluded paths.
+	 * @return array
+	 */
+	public static function disable_cache_api( $excludes ) {
+		if ( ! is_array( $excludes ) ) {
+			$excludes = [];
+		}
+		if ( ! in_array( '^/wp-json/divi/', $excludes, true ) ) {
+			$excludes[] = '^/wp-json/divi/';
+		}
+		return $excludes;
 	}
 
 	/**
