@@ -866,8 +866,8 @@ class ESI extends Root {
 
 		self::debug('[ESI] load_nonce_block [action] ' . $action);
 
-		// set nonce TTL to half day
-		Control::set_custom_ttl(43200);
+		// Set the nonce block TTL to the current nonce tick length.
+		Control::set_custom_ttl($this->_nonce_block_ttl($action));
 
 		if (Router::is_logged_in()) {
 			Control::set_private();
@@ -878,6 +878,48 @@ class ESI extends Root {
 		} else {
 			echo wp_create_nonce($action);
 		}
+	}
+
+	/**
+	 * Gets the TTL for an ESI nonce block.
+	 *
+	 * WordPress nonces are based on ticks of nonce_life / 2. Respect the effective
+	 * nonce lifetime for the specific action so ESI nonce fragments do not outlive
+	 * shorter custom nonce windows.
+	 *
+	 * @access private
+	 * @param mixed $action Action name or -1.
+	 * @return int
+	 */
+	private function _nonce_block_ttl( $action ) {
+		if ($this->_wp_nonce_tick_accepts_action()) {
+			$lifespan = (int) apply_filters('nonce_life', DAY_IN_SECONDS, $action);
+		} else {
+			$lifespan = (int) apply_filters('nonce_life', DAY_IN_SECONDS);
+		}
+
+		if ($lifespan <= 0) {
+			$lifespan = DAY_IN_SECONDS;
+		}
+
+		return max(1, (int) ceil($lifespan / 2));
+	}
+
+	/**
+	 * Checks whether wp_nonce_tick() supports the nonce action parameter.
+	 *
+	 * @access private
+	 * @return bool
+	 */
+	private function _wp_nonce_tick_accepts_action() {
+		static $wp_nonce_tick_accepts_action = null;
+
+		if (null === $wp_nonce_tick_accepts_action) {
+			$reflection                   = new \ReflectionFunction('wp_nonce_tick');
+			$wp_nonce_tick_accepts_action = $reflection->getNumberOfParameters() > 0;
+		}
+
+		return $wp_nonce_tick_accepts_action;
 	}
 
 	/**

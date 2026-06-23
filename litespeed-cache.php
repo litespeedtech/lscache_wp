@@ -184,9 +184,35 @@ if ( ! function_exists( 'litespeed_define_nonce_func' ) ) {
 			}
 
 			$token = wp_get_session_token();
-			$i     = wp_nonce_tick();
+			$i     = wp_nonce_tick_litespeed_esi( $action );
 
 			return substr( wp_hash( $i . '|' . $action . '|' . $uid . '|' . $token, 'nonce' ), -12, 10 );
+		}
+
+		/**
+		 * Gets the nonce tick for the given action.
+		 *
+		 * WordPress 6.1 added the nonce action parameter to wp_nonce_tick(), allowing
+		 * plugins to customize nonce lifetimes per action via the nonce_life filter.
+		 * Use the action-aware call when available so ESI-generated nonces match the
+		 * values that wp_verify_nonce()/check_ajax_referer() expect.
+		 *
+		 * @param mixed $action Action name or -1.
+		 * @return float
+		 */
+		function wp_nonce_tick_litespeed_esi( $action = -1 ) {
+			static $wp_nonce_tick_accepts_action = null;
+
+			if ( null === $wp_nonce_tick_accepts_action ) {
+				$reflection                   = new \ReflectionFunction( 'wp_nonce_tick' );
+				$wp_nonce_tick_accepts_action = $reflection->getNumberOfParameters() > 0;
+			}
+
+			if ( $wp_nonce_tick_accepts_action ) {
+				return wp_nonce_tick( $action );
+			}
+
+			return wp_nonce_tick();
 		}
 	}
 }
