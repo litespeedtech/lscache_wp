@@ -614,6 +614,22 @@ class ESI extends Root {
 	 * @access public
 	 */
 	public function load_esi_block() {
+		$params = $this->_parse_esi_param();
+
+		/**
+		 * Silent ESI blocks (e.g. nonces, which are injected directly into inline
+		 * JavaScript/JSON) must never emit the running-info HTML comment. Set the
+		 * silence flag before the _hash validation below so that a failed or stale
+		 * block degrades to an empty string instead of corrupting the inline JS it
+		 * is embedded in.
+		 *
+		 * The params are only read here to decide comment suppression; the block
+		 * itself is still not executed until the _hash validation passes.
+		 */
+		if (!empty($params['_ls_silence'])) {
+			!defined('LSCACHE_ESI_SILENCE') && define('LSCACHE_ESI_SILENCE', true);
+		}
+
 		/**
 		 * Validate if is a legal ESI req
 		 *
@@ -624,8 +640,6 @@ class ESI extends Root {
 			return;
 		}
 
-		$params = $this->_parse_esi_param();
-
 		if (defined('LSCWP_LOG')) {
 			$logInfo = '[ESI] ⭕ ';
 			if (!empty($params[self::PARAM_NAME])) {
@@ -633,10 +647,6 @@ class ESI extends Root {
 			}
 			$logInfo .= ' [ID] ' . LSCACHE_IS_ESI;
 			self::debug($logInfo);
-		}
-
-		if (!empty($params['_ls_silence'])) {
-			!defined('LSCACHE_ESI_SILENCE') && define('LSCACHE_ESI_SILENCE', true);
 		}
 
 		/**
