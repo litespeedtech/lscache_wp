@@ -43,7 +43,7 @@ if ( is_network_admin() ) {
     <div class="litespeed-body">
         <?php
         foreach ( $menu_list as $menu_key => $val ) {
-            echo '<div data-litespeed-layout="' . esc_attr( $menu_key ) . '">';
+            GUI::display_tab_layout( $menu_list, $menu_key );
             require LSCWP_DIR . 'tpl/img_optm/' . $menu_key . '.tpl.php';
             echo '</div>';
         }

@@ -57,8 +57,17 @@
 				type = litespeed_tab_type(type);
 				var data = 'litespeed-' + type;
 				$elems.on('click', function (_event) {
-					litespeed_display_tab($(this).data(data), type);
-					document.cookie = 'litespeed_' + type + '=' + $(this).data(data);
+					var name = $(this).data(data);
+					// Switch tab without scrolling to the anchor, but keep the fragment in the URL.
+					if (_event && _event.preventDefault) {
+						_event.preventDefault();
+					}
+					litespeed_display_tab(name, type);
+					document.cookie = litespeed_tab_cookie_name(type) + '=' + name;
+					// pushState (not replaceState) so Back steps through tab history; state captures the active tab+subtab so Back restores it without the mutable cookie.
+					if (window.history && window.history.pushState) {
+						window.history.pushState(litespeed_active_state(), '', '#' + name);
+					}
 					$(this).blur();
 				});
 			};
@@ -70,50 +79,71 @@
 				return;
 			}
 
-			// Find hash in tabs and subtabs
-			var $hash_tab = $tabs.filter('[data-litespeed-tab="' + hash + '"]:first');
-			var $hash_subtab = $subtabs.filter('[data-litespeed-subtab="' + hash + '"]:first');
-
-			// Find tab name
-			var $subtab;
-			var $tab;
-			var tab_name;
-			if ($hash_subtab.length > 0) {
-				// Hash is a subtab
-				$tab = $hash_subtab.closest('[data-litespeed-layout]');
-				if ($tab.length > 0) {
-					$subtab = $hash_subtab;
-					tab_name = $tab.data('litespeed-layout');
-				}
-			}
-			if (typeof $tab === 'undefined' || $tab.length < 1) {
-				// Maybe hash is a tab
-				$tab = $hash_tab;
-				if ($tab.length < 1) {
-					// Maybe tab cookie exists
-					$tab = litespeed_tab_cookie($tabs);
-					if ($tab.length < 1) {
-						// Use the first tab by default
-						$tab = $tabs.first();
+			// Resolve a hash (tab or subtab) to the tab/subtab to display, falling back to cookie then first tab.
+			var apply_hash = function (hash) {
+				var $hash_tab = $tabs.filter('[data-litespeed-tab="' + hash + '"]:first');
+				var $hash_subtab = $subtabs.filter('[data-litespeed-subtab="' + hash + '"]:first');
+				var $subtab;
+				var $tab;
+				var tab_name;
+				if ($hash_subtab.length > 0) {
+					// Hash is a subtab
+					$tab = $hash_subtab.closest('[data-litespeed-layout]');
+					if ($tab.length > 0) {
+						$subtab = $hash_subtab;
+						tab_name = $tab.data('litespeed-layout');
 					}
 				}
-				if (typeof tab_name === 'undefined') {
-					tab_name = $tab.data('litespeed-tab');
+				if (typeof $tab === 'undefined' || $tab.length < 1) {
+					// Maybe hash is a tab
+					$tab = $hash_tab;
+					if ($tab.length < 1) {
+						// Maybe tab cookie exists
+						$tab = litespeed_tab_cookie($tabs);
+						if ($tab.length < 1) {
+							// Use the first tab by default
+							$tab = $tabs.first();
+						}
+					}
+					if (typeof tab_name === 'undefined') {
+						tab_name = $tab.data('litespeed-tab');
+					}
 				}
+
+				// Always display a tab
+				litespeed_display_tab(tab_name);
+
+				// Find subtab name
+				if (typeof $subtab === 'undefined' || $subtab.length < 1) {
+					$subtab = litespeed_tab_cookie($subtabs, 'subtab');
+				}
+				if ($subtab.length > 0) {
+					// Display a subtab
+					litespeed_display_tab($subtab.data('litespeed-subtab'), 'subtab');
+				}
+			};
+
+			apply_hash(hash);
+
+			// Seed the initial entry's state with the active tab+subtab so Back restores the exact view, not the mutable cookie.
+			if (window.history && window.history.replaceState) {
+				window.history.replaceState(litespeed_active_state(), '', window.location.href);
 			}
 
-			// Always display a tab
-			litespeed_display_tab(tab_name);
-
-			// Find subtab name
-			if (typeof $subtab === 'undefined' || $subtab.length < 1) {
-				$subtab = litespeed_tab_cookie($subtabs, 'subtab');
-			}
-			if ($subtab.length > 0) {
-				var subtab_name = $subtab.data('litespeed-subtab');
-				// Display a subtab
-				litespeed_display_tab(subtab_name, 'subtab');
-			}
+			// Back/forward through tab history: restore the saved tab+subtab without scrolling.
+			$(window).on('popstate', function (_event) {
+				var state = _event.originalEvent && _event.originalEvent.state;
+				if (state && (state.tab || state.subtab)) {
+					if (state.tab) {
+						litespeed_display_tab(state.tab);
+					}
+					if (state.subtab) {
+						litespeed_display_tab(state.subtab, 'subtab');
+					}
+				} else {
+					apply_hash(window.location.hash.substr(1));
+				}
+			});
 		})();
 
 		/******************** Clear whm msg ********************/
@@ -233,12 +263,37 @@ function litespeed_tab_type(type) {
 }
 
 /**
+ * Cookie name scoped to the current admin page so tabs of different menus don't pollute each other.
+ * Mirrors PHP sanitize_key( $plugin_page ) so server-side default-tab paint and JS agree.
+ * @since  7.9
+ */
+function litespeed_tab_cookie_name(type) {
+	var m = window.location.search.match(/[?&]page=([^&]+)/);
+	var scope = m ? m[1].toLowerCase().replace(/[^a-z0-9_-]/g, '') : '';
+	return 'litespeed_' + litespeed_tab_type(type) + '_' + scope;
+}
+
+/**
+ * Snapshot the currently active tab + subtab from the DOM, for storing in history.state.
+ * Restoring from this avoids the mutable tab/subtab cookies on Back/Forward.
+ * @since  7.9
+ */
+function litespeed_active_state() {
+	var $tab = jQuery('[data-litespeed-tab].nav-tab-active').first();
+	var $subtab = jQuery('[data-litespeed-subtab].focus').first();
+	return {
+		tab: $tab.length ? $tab.data('litespeed-tab') : '',
+		subtab: $subtab.length ? $subtab.data('litespeed-subtab') : '',
+	};
+}
+
+/**
  * Sniff cookies for tab and subtab
  * @since  4.7
  */
 function litespeed_tab_cookie($elems, type) {
 	type = litespeed_tab_type(type);
-	var re = new RegExp('(?:^|.*;)\\s*litespeed_' + type + '\\s*=\\s*([^;]*).*$|^.*$', 'ms');
+	var re = new RegExp('(?:^|.*;)\\s*' + litespeed_tab_cookie_name(type) + '\\s*=\\s*([^;]*).*$|^.*$', 'ms');
 	var name = document.cookie.replace(re, '$1');
 	return $elems.filter('[data-litespeed-' + type + '="' + name + '"]:first');
 }

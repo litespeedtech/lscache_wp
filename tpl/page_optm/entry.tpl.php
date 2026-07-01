@@ -53,11 +53,9 @@ $menu_list = array(
 
 		// Include all tpl for faster UE
 		foreach ( $menu_list as $tab_key => $tab_val ) {
-			?>
-			<div data-litespeed-layout='<?php echo esc_attr( $tab_key ); ?>'>
-				<?php require LSCWP_DIR . 'tpl/page_optm/' . $tab_key . '.tpl.php'; ?>
-			</div>
-			<?php
+			GUI::display_tab_layout( $menu_list, $tab_key );
+			require LSCWP_DIR . 'tpl/page_optm/' . $tab_key . '.tpl.php';
+			echo '</div>';
 		}
 
 		$this->form_end();

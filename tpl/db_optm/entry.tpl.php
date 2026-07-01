@@ -37,7 +37,7 @@ if ( ! is_network_admin() ) {
     <div class="litespeed-body">
     <?php
         foreach ( $menu_list as $tab_key => $tab_val ) {
-			echo '<div data-litespeed-layout="' . esc_attr( $tab_key ) . '">';
+			GUI::display_tab_layout( $menu_list, $tab_key );
 			require LSCWP_DIR . 'tpl/db_optm/' . $tab_key . '.tpl.php';
 			echo '</div>';
         }

@@ -35,10 +35,7 @@ $menu_list = array(
 	<div class="litespeed-body">
 		<?php
 		foreach ( $menu_list as $menu_key => $menu_value ) {
-			printf(
-				'<div data-litespeed-layout="%s">',
-				esc_attr( $menu_key )
-			);
+			GUI::display_tab_layout( $menu_list, $menu_key );
 			require LSCWP_DIR . "tpl/cdn/$menu_key.tpl.php";
 			echo '</div>';
 		}

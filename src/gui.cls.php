@@ -149,6 +149,25 @@ class GUI extends Base {
 	}
 
 	/**
+	 * Open a settings tab layout panel with an id + default-tab marker so CSS paints the active tab before JS runs (no flash).
+	 *
+	 * @since 7.9
+	 *
+	 * @param array<string,string> $tabs The full tab list (key => label).
+	 * @param string               $key  The current tab key.
+	 * @return void
+	 */
+	public static function display_tab_layout( $tabs, $key ) {
+		global $plugin_page;
+		// Scope the cookie to the current admin page so different menus' tabs don't pollute each other.
+		$cookie_name = 'litespeed_tab_' . ( $plugin_page ? sanitize_key( $plugin_page ) : '' );
+		$cookie_tab  = isset( $_COOKIE[ $cookie_name ] ) ? sanitize_key( wp_unslash( $_COOKIE[ $cookie_name ] ) ) : '';
+		$keys        = array_keys( $tabs );
+		$default_tab = isset( $tabs[ $cookie_tab ] ) ? $cookie_tab : reset( $keys );
+		echo '<div data-litespeed-layout="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '"' . ( $key === $default_tab ? ' data-litespeed-default-tab="1"' : '' ) . '>';
+	}
+
+	/**
 	 * Render a pie chart SVG string.
 	 *
 	 * @since 1.6.6
@@ -528,7 +547,7 @@ class GUI extends Base {
 			LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js',
 			[],
 			Core::VER,
-			[ 
+			[
 				'strategy' => 'defer',
 				'in_footer' => true,
 			]
@@ -783,7 +802,7 @@ class GUI extends Base {
 				]
 			);
 		}
-    
+
 		if ( $this->has_cache_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
 				[
@@ -1002,7 +1021,7 @@ class GUI extends Base {
 				]
 			);
 		}
-    
+
     	if ( $this->has_cache_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
 				[

@@ -44,14 +44,9 @@ if ( $this->_is_network_admin ) {
 		$this->form_action( Router::ACTION_SAVE_SETTINGS_NETWORK );
 
 		foreach ( $menu_list as $k => $val ) {
-			$k_escaped = esc_attr( $k );
-			?>
-			<div data-litespeed-layout="<?php echo esc_html( $k_escaped ); ?>">
-			<?php
+			GUI::display_tab_layout( $menu_list, $k );
 			require LSCWP_DIR . "tpl/cache/network_settings-$k.tpl.php";
-			?>
-			</div>
-			<?php
+			echo '</div>';
 		}
 
 		$this->form_end();
@@ -137,7 +132,7 @@ ksort( $roles );
 		require LSCWP_DIR . 'tpl/cache/more_settings_tip.tpl.php';
 
 		foreach ( $menu_list as $k => $val ) {
-			echo '<div data-litespeed-layout="' . esc_attr( $k ) . '">';
+			GUI::display_tab_layout( $menu_list, $k );
 			require LSCWP_DIR . "tpl/cache/settings-$k.tpl.php";
 			echo '</div>';
 		}

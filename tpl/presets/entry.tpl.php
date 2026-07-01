@@ -35,19 +35,15 @@ $menu_list = array(
 
 	<div class="litespeed-body">
 		<?php
-		foreach ( $menu_list as $curr_tab => $val ) :
-			?>
-			<div data-litespeed-layout="<?php echo esc_attr( $curr_tab ); ?>">
-				<?php
-				if ( 'import_export' === $curr_tab ) {
-					require LSCWP_DIR . "tpl/toolbox/$curr_tab.tpl.php";
-				} else {
-					require LSCWP_DIR . "tpl/presets/$curr_tab.tpl.php";
-				}
-				?>
-			</div>
-			<?php
-		endforeach;
+		foreach ( $menu_list as $curr_tab => $val ) {
+			GUI::display_tab_layout( $menu_list, $curr_tab );
+			if ( 'import_export' === $curr_tab ) {
+				require LSCWP_DIR . "tpl/toolbox/$curr_tab.tpl.php";
+			} else {
+				require LSCWP_DIR . "tpl/presets/$curr_tab.tpl.php";
+			}
+			echo '</div>';
+		}
 		?>
 	</div>
 </div>
