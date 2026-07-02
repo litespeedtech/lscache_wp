@@ -446,11 +446,24 @@ class Utility extends Root {
 	 * @return string Cleaned filename.
 	 */
 	public static function drop_webp( $filename ) {
-		if ( in_array( substr( $filename, -5 ), [ '.webp', '.avif' ], true ) ) {
-			$filename = substr( $filename, 0, -5 );
+		$path = (string) wp_parse_url( $filename, PHP_URL_PATH );
+		if ( ! $path ) {
+			$path = $filename;
 		}
 
-		return $filename;
+		$base_ext = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+		if ( ! in_array( $base_ext, [ 'webp', 'avif' ], true ) ) {
+			return $filename;
+		}
+
+		// Only strip the optimized suffix when a real source image extension exists underneath, e.g. `.png.webp`. Native `image.webp` is returned unchanged.
+		$prev_ext = strtolower( pathinfo( pathinfo( $path, PATHINFO_FILENAME ), PATHINFO_EXTENSION ) );
+		if ( ! in_array( $prev_ext, [ 'png', 'jpg', 'jpeg', 'gif', 'bmp' ], true ) ) {
+			return $filename;
+		}
+
+		// Remove the `.webp`/`.avif` suffix only, preserving any query string or fragment (lazyload can pass raw cache-busted `<img src>` URLs).
+		return preg_replace( '~\.' . $base_ext . '(?=$|[?#])~i', '', $filename, 1 );
 	}
 
 	/**
