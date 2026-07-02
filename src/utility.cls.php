@@ -456,17 +456,14 @@ class Utility extends Root {
 			return $filename;
 		}
 
-		$name_without_ext = pathinfo( $path, PATHINFO_FILENAME );
-		$prev_ext         = strtolower( pathinfo( $name_without_ext, PATHINFO_EXTENSION ) );
-
-		// Only drop optimized suffix when a source extension exists, e.g. `.png.webp`.
-		if ( ! $prev_ext ) {
+		// Only strip the optimized suffix when a real source image extension exists underneath, e.g. `.png.webp`. Native `image.webp` is returned unchanged.
+		$prev_ext = strtolower( pathinfo( pathinfo( $path, PATHINFO_FILENAME ), PATHINFO_EXTENSION ) );
+		if ( ! in_array( $prev_ext, [ 'png', 'jpg', 'jpeg', 'gif', 'bmp' ], true ) ) {
 			return $filename;
 		}
 
-		$filename = substr( $filename, 0, -strlen( $base_ext ) - 1 );
-		
-		return $filename;
+		// Drop the trailing `.webp`/`.avif` suffix now that a source extension underneath is confirmed.
+		return substr( $filename, 0, -strlen( $base_ext ) - 1 );
 	}
 
 	/**
