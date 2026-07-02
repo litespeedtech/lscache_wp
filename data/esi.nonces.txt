@@ -98,3 +98,6 @@ wpda-*
 # Elementor
 elementor-pro-frontend
 elementor-conversion-center-click
+
+# Gavity Forms
+gfrom_*
