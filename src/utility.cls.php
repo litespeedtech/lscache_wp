@@ -462,8 +462,8 @@ class Utility extends Root {
 			return $filename;
 		}
 
-		// Drop the trailing `.webp`/`.avif` suffix now that a source extension underneath is confirmed.
-		return substr( $filename, 0, -strlen( $base_ext ) - 1 );
+		// Remove the `.webp`/`.avif` suffix only, preserving any query string or fragment (lazyload can pass raw cache-busted `<img src>` URLs).
+		return preg_replace( '~\.' . $base_ext . '(?=$|[?#])~i', '', $filename, 1 );
 	}
 
 	/**
