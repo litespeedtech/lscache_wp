@@ -835,7 +835,7 @@ class GUI extends Base {
 	 * Adds links to the admin bar so users can quickly manage/purge.
 	 *
 	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`.
-	 * @since 1.9.0 Added $wp_admin_bar as parameter.
+	 * @since 7.9 Added $wp_admin_bar as parameter.
 	 * @access public
 	 * @param \WP_Admin_Bar $wp_admin_bar Admin menu bar info.
 	 * @return void
