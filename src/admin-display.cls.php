@@ -244,7 +244,7 @@ class Admin_Display extends Base {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.7
-	 * @since 1.9.0 Change admin bar items hook from wp_before_admin_bar_render to admin_bar_menu.
+	 * @since 7.9 Change admin bar items hook from wp_before_admin_bar_render to admin_bar_menu.
 	 */
 	public function __construct() {
 		$this->_pages = [
