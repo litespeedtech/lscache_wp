@@ -331,10 +331,10 @@ class Admin_Display extends Base {
 				},
 				1
 			);
-			// Add unified body class for settings page and top-level page
+			// Add unified body class for the top-level page
 			add_filter( 'admin_body_class', function ( $classes ) {
 				$screen = get_current_screen();
-				if ( $screen && in_array( $screen->id, [ 'settings_page_litespeed-cache-options', 'toplevel_page_litespeed' ], true ) ) {
+				if ( $screen && in_array( $screen->id, [ 'toplevel_page_litespeed' ], true ) ) {
 					$classes .= ' litespeed-cache_page_litespeed';
 				}
 				return $classes;
@@ -389,18 +389,6 @@ class Admin_Display extends Base {
 			);
 			$this->bind_page( $hook );
 		}
-
-		// sub menus under options.
-		$hook = add_options_page(
-			'LiteSpeed Cache',
-			'LiteSpeed Cache',
-			$capability,
-			'litespeed-cache-options',
-			function () {
-				$this->render_page( 'litespeed-cache' );
-			}
-		);
-		$this->bind_page( $hook );
 	}
 
 	/**
