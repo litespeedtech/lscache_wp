@@ -181,3 +181,21 @@ function litespeed_update_5_3() {
 		$wpdb->query( $q );
 	}
 }
+
+/**
+ * Drop the legacy img_optm table. [2026-07-02]
+ *
+ * The permanent img_optm table was replaced by the img_optming working queue + DB_SIZE postmeta + optimized-file existence checks. Fresh installs never created it; this migration removes the leftover table on upgraded sites.
+ *
+ * @since 7.9
+ */
+function litespeed_update_7_9() {
+	global $wpdb;
+	Debug2::debug( '[Data] Drop legacy img_optm table' );
+
+	$tb = $wpdb->prefix . 'litespeed_img_optm';
+	if ( litespeed_table_exists( $tb ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( "DROP TABLE IF EXISTS `{$tb}`" );
+	}
+}

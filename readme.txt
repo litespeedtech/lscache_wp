@@ -276,14 +276,23 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Page Optimize** Fixed blob execution in JS Delay. (PR#956, Zsombor Franczia, Marks Dev)
 * **Page Optimize** Fixed JS Combine corrupting URLs inside template literals. (mschroettle #981)
 * **Page Optimize** Fixed CSS Combine serving unstyled pages when the placeholder link tag uses default WordPress whitespace. (Faisal Ahammad #999 PR#1002)
+* **Page Optimize** Resolved WP7.0 HTML attribute parse compatibiility for Font Display setting. (PR#1017)
 * **Image Optimize** Skipped sending queued images from the queue when their optimized files already exist. (terratag)
+* **Image Optimize** Dropped legacy image_optm table.
 * **Crawler** Retried 3 times before totally put into blacklist. (Ryan D)
+* **ESI** Fixed ESI nonce generation for actions with custom nonce lifetimes. (Robert Staddon PR#1006)
 * **ESI** Fixed duplicate comment form appearing alongside its ESI block on non-optimized pages.
+* **ESI** Bypassed comment for silent blocks that fail _hash validation. (Robert Staddon PR#1008)
 * **VPI** Added `fetchpriority=high` to VPI preload links. (Maciej Mroziński PR#993)
+* **LQIP** Fixed LQIP generation failing for native WebP/AVIF images. (Ashok PR#976)
 * **Toolbox** Delayed report submission to finish 3rd part conf injection.
+* **GUI** Dropped redundant menu from WP admin Settings page.
+* **GUI** Fixed style lost in latest WP7.0 when disabled heartbeat.
+* **GUI** Settings tabs no longer flash on page load, are remembered per page, and support browser Back/Forward navigation. (Ryan D PR#984)
 * **3rd** Crawler can now support WCML currencies.
 * **3rd** Cache purge compatibility w/ RankMath SEO. (Ryan D, PR#977)
 * **3rd** DIVI 5 - Disable Rest API cache to fix the invalid_nonce issue. (PR#1004)
+* **3rd** Added Gravity Forms ESI nonce detection. (pascalminator PR#1011)
 * **Misc** Disabled visits to static folder data files. (Alexander #335626)
 * **Misc** Deactivation survey modal now shows only until the first real deactivation, then stays suppressed. (narratorben)
 

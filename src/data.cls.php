@@ -29,6 +29,7 @@ class Data extends Root {
 		'7.0-b26'   => [ 'litespeed_update_7' ],
 		'7.0.1-b1'  => [ 'litespeed_update_7_0_1' ],
 		'7.7-b28'   => [ 'litespeed_update_7_7' ],
+		'7.9-b5'    => [ 'litespeed_update_7_9' ],
 	];
 
 	/**
@@ -53,8 +54,6 @@ class Data extends Root {
 		'optimax' => 5,
 	];
 
-	/** Table: image optimization results. */
-	const TB_IMG_OPTM = 'litespeed_img_optm';
 	/** Table: image optimization working queue. */
 	const TB_IMG_OPTMING = 'litespeed_img_optming';
 	/** Table: cached avatars. */
@@ -273,9 +272,6 @@ class Data extends Root {
 		global $wpdb;
 
 		switch ( $tb ) {
-			case 'img_optm':
-				return $wpdb->prefix . self::TB_IMG_OPTM;
-
 			case 'img_optming':
 				return $wpdb->prefix . self::TB_IMG_OPTMING;
 
@@ -403,7 +399,7 @@ class Data extends Root {
 		$this->tb_del( 'url' );
 		$this->tb_del( 'url_file' );
 
-		// Deleting img_optm only can be done when destroy all optm images
+		// Deleting img_optming only can be done when destroy all optm images
 	}
 
 	/**

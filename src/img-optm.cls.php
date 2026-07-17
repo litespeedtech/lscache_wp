@@ -89,6 +89,13 @@ class Img_Optm extends Base {
 	private $tmp_path;
 
 	/**
+	 * Temporary next-gen format (webp/avif) for the current single-image switch.
+	 *
+	 * @var string
+	 */
+	private $_tmp_switch_format = '';
+
+	/**
 	 * Images queued for optimization.
 	 *
 	 * @var array
@@ -115,13 +122,6 @@ class Img_Optm extends Base {
 	 * @var string
 	 */
 	private $_thumbnail_set = '';
-
-	/**
-	 * Image optimization table name.
-	 *
-	 * @var string
-	 */
-	private $_table_img_optm;
 
 	/**
 	 * Image optimization working table name.
@@ -183,7 +183,6 @@ class Img_Optm extends Base {
 		$this->wp_upload_dir      = wp_upload_dir();
 		$this->__media            = $this->cls( 'Media' );
 		$this->__data             = $this->cls( 'Data' );
-		$this->_table_img_optm    = $this->__data->tb( 'img_optm' );
 		$this->_table_img_optming = $this->__data->tb( 'img_optming' );
 
 		$this->_summary = self::get_summary();

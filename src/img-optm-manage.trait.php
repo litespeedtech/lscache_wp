@@ -38,15 +38,6 @@ trait Img_Optm_Manage {
 			return true;
 		}
 
-		// Check img_optm table (legacy)
-		if ( $this->__data->tb_exist( 'img_optm' ) ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(1) FROM `$this->_table_img_optm` WHERE post_id = %d", $post_id ) );
-			if ( $count > 0 ) {
-				return true;
-			}
-		}
-
 		// Check img_optming table
 		if ( $this->__data->tb_exist( 'img_optming' ) ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -197,8 +188,7 @@ trait Img_Optm_Manage {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $wpdb->prepare( $q, self::DB_SET ) );
 
-		// Delete img_optm table
-		$this->__data->tb_del( 'img_optm' );
+		// Delete img_optming table
 		$this->__data->tb_del( 'img_optming' );
 
 		// Clear options table summary info
@@ -294,8 +284,7 @@ trait Img_Optm_Manage {
 			$to_be_continued = false;
 		}
 
-		// Prepare post_ids to inquery gathered images
-		$pid_set      = [];
+		// Prepare scanned images
 		$scanned_list = [];
 		foreach ( $list as $v ) {
 			$meta_value = $this->_parse_wp_meta_value( $v );
@@ -307,16 +296,6 @@ trait Img_Optm_Manage {
 				'pid'  => $v->post_id,
 				'meta' => $meta_value,
 			];
-
-			$pid_set[] = $v->post_id;
-		}
-
-		// Build gathered images
-		$q = "SELECT src, post_id FROM `$this->_table_img_optm` WHERE post_id IN (" . implode( ',', array_fill( 0, count( $pid_set ), '%d' ) ) . ')';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$list = $wpdb->get_results( $wpdb->prepare( $q, $pid_set ) );
-		foreach ( $list as $v ) {
-			$this->_existed_src_list[] = $v->post_id . '.' . $v->src;
 		}
 
 		// Find new images
@@ -785,79 +764,104 @@ trait Img_Optm_Manage {
 	/**
 	 * Switch image between original one and optimized one
 	 *
+	 * The toggle direction is derived from the main file's on-disk state (which is exactly what the Media Library row status reflects) and then applied uniformly to the main file and all sizes, mirroring the batch switch.
+	 *
 	 * @since 1.6.2
 	 * @access private
-	 * @param string $type The switch type (webpXXX, avifXXX, or origXXX where XXX is the post ID).
+	 * @param string $type The switch type: origXXX / webpXXX / avifXXX where XXX is the post ID.
 	 */
 	private function _switch_optm_file( $type ) {
-		Admin_Display::success( __( 'Switched to optimized file successfully.', 'litespeed-cache' ) );
-		return;
-
-		// phpcs:disable Squiz.PHP.NonExecutableCode
 		global $wpdb;
 
-		$pid         = substr( $type, 4 );
-		$switch_type = substr( $type, 0, 4 );
+		$switch_type = substr( $type, 0, 4 ); // 'orig' | 'webp' | 'avif'
+		$pid         = (int) substr( $type, 4 );
+		if ( ! $pid ) {
+			return;
+		}
 
-		$q = "SELECT src,post_id FROM `$this->_table_img_optm` WHERE post_id = %d AND optm_status = %d";
+		self::debug( 'Switch single image [type] ' . $switch_type . ' [pid] ' . $pid );
+
+		// Load the attachment meta (main file + thumbnail sizes), mirroring reset_row()
+		$img_q = "SELECT b.post_id, b.meta_value FROM `$wpdb->postmeta` b WHERE b.post_id = %d AND b.meta_key = '_wp_attachment_metadata'";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$list = $wpdb->get_results( $wpdb->prepare( $q, [ $pid, self::STATUS_PULLED ] ) );
+		$v          = $wpdb->get_row( $wpdb->prepare( $img_q, [ $pid ] ) );
+		$meta_value = $this->_parse_wp_meta_value( $v );
+		if ( ! $meta_value ) {
+			return;
+		}
 
-		$msg = 'Unknown Msg';
+		$this->tmp_pid  = $pid;
+		$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
 
-		foreach ( $list as $v ) {
-			// to switch webp file
-			if ( 'webp' === $switch_type ) {
-				if ( $this->__media->info( $v->src . '.webp', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp', $v->post_id );
-					self::debug( 'Disabled WebP: ' . $v->src );
-
-					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' );
-				} elseif ( $this->__media->info( $v->src . '.optm.webp', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp', $v->post_id );
-					self::debug( 'Enable WebP: ' . $v->src );
-
-					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' );
-				}
-			} elseif ( 'avif' === $switch_type ) {
-				// to switch avif file
-				if ( $this->__media->info( $v->src . '.avif', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.avif', $v->src . '.optm.avif', $v->post_id );
-					self::debug( 'Disabled AVIF: ' . $v->src );
-
-					$msg = __( 'Disabled AVIF file successfully.', 'litespeed-cache' );
-				} elseif ( $this->__media->info( $v->src . '.optm.avif', $v->post_id ) ) {
-					$this->__media->rename( $v->src . '.optm.avif', $v->src . '.avif', $v->post_id );
-					self::debug( 'Enable AVIF: ' . $v->src );
-
-					$msg = __( 'Enabled AVIF file successfully.', 'litespeed-cache' );
-				}
+		if ( 'orig' === $switch_type ) {
+			// Detect direction from the main file's backups: bk = backup-of-original (currently optimized), bk.optm = backup-of-optimized (currently original)
+			$extension      = pathinfo( $meta_value['file'], PATHINFO_EXTENSION );
+			$local_filename = substr( $meta_value['file'], 0, -strlen( $extension ) - 1 );
+			if ( $this->__media->info( $local_filename . '.bk.' . $extension, $this->tmp_pid ) ) {
+				$this->tmp_type = 'orig';
+				$msg            = __( 'Restored original file successfully.', 'litespeed-cache' );
+			} elseif ( $this->__media->info( $local_filename . '.bk.optm.' . $extension, $this->tmp_pid ) ) {
+				$this->tmp_type = 'optm';
+				$msg            = __( 'Switched to optimized file successfully.', 'litespeed-cache' );
 			} else {
-				// to switch original file
-				$extension      = pathinfo( $v->src, PATHINFO_EXTENSION );
-				$local_filename = substr( $v->src, 0, -strlen( $extension ) - 1 );
-				$bk_file        = $local_filename . '.bk.' . $extension;
-				$bk_optm_file   = $local_filename . '.bk.optm.' . $extension;
+				self::debug( 'Nothing to switch for original [pid] ' . $pid );
+				return;
+			}
 
-				// revert ori back
-				if ( $this->__media->info( $bk_file, $v->post_id ) ) {
-					$this->__media->rename( $v->src, $bk_optm_file, $v->post_id );
-					$this->__media->rename( $bk_file, $v->src, $v->post_id );
-					self::debug( 'Restore original img: ' . $bk_file );
+			$this->_switch_bk_file( $meta_value, true );
+			if ( ! empty( $meta_value['sizes'] ) ) {
+				array_map( [ $this, '_switch_bk_file' ], $meta_value['sizes'] );
+			}
+		} else {
+			// webp/avif: detect direction from the main file's sidecar. Served = <file>.<fmt>, parked/disabled = <file>.optm.<fmt>
+			$this->_tmp_switch_format = $switch_type;
+			$is_avif                  = 'avif' === $switch_type;
+			if ( $this->__media->info( $meta_value['file'] . '.' . $switch_type, $this->tmp_pid ) ) {
+				$this->tmp_type = 'orig'; // currently served -> disable
+				$msg            = $is_avif ? __( 'Disabled AVIF file successfully.', 'litespeed-cache' ) : __( 'Disabled WebP file successfully.', 'litespeed-cache' );
+			} elseif ( $this->__media->info( $meta_value['file'] . '.optm.' . $switch_type, $this->tmp_pid ) ) {
+				$this->tmp_type = 'optm'; // currently parked -> enable
+				$msg            = $is_avif ? __( 'Enabled AVIF file successfully.', 'litespeed-cache' ) : __( 'Enabled WebP file successfully.', 'litespeed-cache' );
+			} else {
+				self::debug( 'Nothing to switch for ' . $switch_type . ' [pid] ' . $pid );
+				return;
+			}
 
-					$msg = __( 'Restored original file successfully.', 'litespeed-cache' );
-				} elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
-					$this->__media->rename( $v->src, $bk_file, $v->post_id );
-					$this->__media->rename( $bk_optm_file, $v->src, $v->post_id );
-					self::debug( 'Switch to optm img: ' . $v->src );
-
-					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' );
-				}
+			$this->_switch_format_file( $meta_value, true );
+			if ( ! empty( $meta_value['sizes'] ) ) {
+				array_map( [ $this, '_switch_format_file' ], $meta_value['sizes'] );
 			}
 		}
 
 		Admin_Display::success( $msg );
-		// phpcs:enable Squiz.PHP.NonExecutableCode
+	}
+
+	/**
+	 * Switch one file's next-gen sidecar between the served and parked (disabled) name, per `$this->_tmp_switch_format` and direction `$this->tmp_type`. Mirrors `_switch_bk_file()` for webp/avif.
+	 *
+	 * @since 7.9
+	 * @access private
+	 * @param array $meta_value  The meta value array containing file info.
+	 * @param bool  $is_ori_file Whether this is the original (main) file.
+	 */
+	private function _switch_format_file( $meta_value, $is_ori_file = false ) {
+		$short_file_path = $meta_value['file'];
+		if ( ! $is_ori_file ) {
+			$short_file_path = $this->tmp_path . $short_file_path;
+		}
+
+		$served_file = $short_file_path . '.' . $this->_tmp_switch_format;      // active, served to visitors
+		$parked_file = $short_file_path . '.optm.' . $this->_tmp_switch_format; // disabled backup
+
+		if ( 'optm' === $this->tmp_type ) {
+			// enable: parked -> served
+			if ( $this->__media->info( $parked_file, $this->tmp_pid ) ) {
+				$this->__media->rename( $parked_file, $served_file, $this->tmp_pid );
+			}
+		} elseif ( $this->__media->info( $served_file, $this->tmp_pid ) ) {
+			// disable: served -> parked
+			$this->__media->rename( $served_file, $parked_file, $this->tmp_pid );
+		}
 	}
 
 	/**
@@ -899,11 +903,7 @@ trait Img_Optm_Manage {
 		delete_post_meta( $post_id, self::DB_SIZE );
 		delete_post_meta( $post_id, self::DB_SET );
 
-		// Delete records from img_optm and img_optming tables
-		if ( $this->__data->tb_exist( 'img_optm' ) ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optm` WHERE post_id = %d", $post_id ) );
-		}
+		// Delete records from img_optming table
 		if ( $this->__data->tb_exist( 'img_optming' ) ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optming` WHERE post_id = %d", $post_id ) );
@@ -938,21 +938,21 @@ trait Img_Optm_Manage {
 		$data['_wp_attached_file']       = get_post_meta( $pid, '_wp_attached_file', true );
 		$data['_wp_attachment_metadata'] = get_post_meta( $pid, '_wp_attachment_metadata', true );
 
-		// Get img_optm data
-		$q = "SELECT * FROM `$this->_table_img_optm` WHERE post_id = %d";
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$list     = $wpdb->get_results( $wpdb->prepare( $q, $pid ) );
+		// Get in-flight img_optming data (table is lazy-created by the send path, may not exist yet)
 		$img_data = [];
-		if ( $list ) {
-			foreach ( $list as $v ) {
-				$img_data[] = [
-					'id'          => $v->id,
-					'optm_status' => $v->optm_status,
-					'src'         => $v->src,
-					'srcpath_md5' => $v->srcpath_md5,
-					'src_md5'     => $v->src_md5,
-					'server_info' => $v->server_info,
-				];
+		if ( $this->__data->tb_exist( 'img_optming' ) ) {
+			$q = "SELECT * FROM `$this->_table_img_optming` WHERE post_id = %d";
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+			$list = $wpdb->get_results( $wpdb->prepare( $q, $pid ) );
+			if ( $list ) {
+				foreach ( $list as $v ) {
+					$img_data[] = [
+						'id'          => $v->id,
+						'optm_status' => $v->optm_status,
+						'src'         => $v->src,
+						'server_info' => $v->server_info,
+					];
+				}
 			}
 		}
 		$data['img_data'] = $img_data;
