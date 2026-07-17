@@ -128,10 +128,10 @@ $avatar_queue   = Avatar::cls()->queue_count();
 		<td>
 			<div class="litespeed-textarea-recommended">
 				<div>
-					<?php $this->build_textarea( $option_id ); ?>
+					<?php $this->build_textarea( $option_id, false, null, true ); ?>
 				</div>
 				<div>
-					<?php $this->recommended( $option_id, true ); ?>
+					<?php $this->recommended( $option_id ); ?>
 				</div>
 			</div>
 

@@ -31,6 +31,53 @@
 
 	jQuery(document).ready(function () {
 		/************** Common LiteSpeed JS **************/
+
+		// "Add missing defaults" / "Use default value" — populates a settings field from its stored default.
+		$(document).on('click', '.litespeed-defaults-add-link', function (event) {
+			event.preventDefault();
+			var $link = $(this);
+			var target = $link.attr('data-litespeed-target');
+			var $field = $('textarea[name="' + target + '"]').not('[readonly]').first();
+			if (!$field.length) {
+				$field = $('input[name="' + target + '"]').not('[readonly],[disabled]').first();
+			}
+			if (!$field.length) {
+				return;
+			}
+
+			if ('set' === $link.attr('data-litespeed-mode')) {
+				var setValue = $link.attr('data-litespeed-set-value');
+				if (null == setValue) {
+					return;
+				}
+				$field.val(setValue).trigger('change');
+			} else {
+				var missing;
+				try {
+					missing = JSON.parse($link.attr('data-litespeed-add-missing'));
+				} catch (e) {
+					return;
+				}
+				if (!Array.isArray(missing) || missing.length === 0) {
+					return;
+				}
+				var current = ($field.val() || '')
+					.split('\n')
+					.map(function (s) { return s.replace(/^\s+|\s+$/g, ''); })
+					.filter(function (s) { return s.length > 0; });
+				var lower = {};
+				current.forEach(function (s) { lower[s.toLowerCase()] = true; });
+				var toAdd = missing.filter(function (m) { return !lower[String(m).replace(/^\s+|\s+$/g, '').toLowerCase()]; });
+				if (toAdd.length === 0) {
+					return;
+				}
+				$field.val(current.concat(toAdd).join('\n')).trigger('change');
+			}
+
+			$link.prev('.litespeed-defaults-flags').hide();
+			$link.hide();
+		});
+
 		// Link confirm
 		$('[data-litespeed-cfm]').on('click', function (event) {
 			var cfm_txt = $.trim($(this).data('litespeed-cfm')).replace(/\\n/g, '\n');
