@@ -271,7 +271,15 @@ class Utility extends Root {
 		$attrs  = [];
 		$parsed = wp_kses_hair( $str, self::_kses_protocols() );
 		foreach ( $parsed as $name => $data ) {
-			$attrs[ $name ] = $data['value'];
+			$value = $data['value'];
+			// Fix for WP 7.0+ wp_kses_hair() re-encodes character references (`&#038;` -> `&amp;`).
+			if ( '' !== $value
+				&& false === strpos( $str, $value )
+				&& preg_match( '#(?:^|\s)' . preg_quote( $name, '#' ) . '\s*=\s*(["\'])(.*?)\1#is', $str, $m )
+				&& html_entity_decode( $m[2], ENT_QUOTES | ENT_HTML5 ) === html_entity_decode( $value, ENT_QUOTES | ENT_HTML5 ) ) {
+				$value = $m[2];
+			}
+			$attrs[ $name ] = trim( $value );
 		}
 		return $attrs;
 	}
