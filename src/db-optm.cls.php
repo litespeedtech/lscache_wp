@@ -289,7 +289,7 @@ class DB_Optm extends Root {
 					"SELECT option_name FROM `$wpdb->options` WHERE option_name LIKE %s AND option_value < %d",
 					$wpdb->esc_like( '_transient_timeout_' ) . '%',
 					time()
-				),
+				)
 			);
 			foreach ( $transients as $transient ) {
 				$keys_to_delete[] = $transient->option_name;
