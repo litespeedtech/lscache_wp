@@ -236,9 +236,16 @@ class Purge extends Base {
 
 		self::debug( 'Purge all ' . $reason, 3 );
 
-		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' );
 		if ( ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
-			Admin_Display::success( $msg );
+			// Defer to `after_setup_theme` when the purge runs earlier (e.g. conf upgrade at include time), else the `__()` fires the WP 6.7+ `_load_textdomain_just_in_time` notice.
+			$notify = function () {
+				Admin_Display::success( __( 'Purged all caches successfully.', 'litespeed-cache' ) );
+			};
+			if ( did_action( 'after_setup_theme' ) ) {
+				$notify();
+			} else {
+				add_action( 'after_setup_theme', $notify );
+			}
 		}
 
 		do_action( 'litespeed_purged_all' );

@@ -295,6 +295,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **3rd** Added Gravity Forms ESI nonce detection. (pascalminator PR#1011)
 * **Misc** Disabled visits to static folder data files. (Alexander #335626)
 * **Misc** Deactivation survey modal now shows only until the first real deactivation, then stays suppressed. (narratorben)
+* **Purge** Deferred the purge-all success notice to fix the upgrade warning.
 
 = 7.8.1 - Apr 1 2026 =
 * **CDN** Fixed Cloudflare API key type detection for the compatibility w/ the new key format.
