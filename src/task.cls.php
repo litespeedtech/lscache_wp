@@ -105,6 +105,15 @@ class Task extends Root {
 		$guest_optm = $this->conf( Base::O_GUEST ) && $this->conf( Base::O_GUEST_OPTM );
 
 		foreach ( self::$_triggers as $id => $trigger ) {
+			// Avatar cron is a sub-switch of avatar cache: skip registration and clear any leftover schedule when the master switch is off, even if the sub-switch itself is off too.
+			if ( Base::O_DISCUSS_AVATAR_CRON === $id && ! $this->conf( Base::O_DISCUSS_AVATAR_CACHE ) ) {
+				if ( wp_next_scheduled( $trigger['name'] ) ) {
+					wp_clear_scheduled_hook( $trigger['name'] );
+					self::debug( 'Cleared avatar cron schedule as avatar cache is off' );
+				}
+				continue;
+			}
+
 			if ( Base::O_IMG_OPTM_CRON === $id ) {
 				if ( ! Img_Optm::need_pull() ) {
 					continue;

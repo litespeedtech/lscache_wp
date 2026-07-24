@@ -94,6 +94,12 @@ class Avatar extends Base {
 
 		self::debug( '[Avatar] is avatar request' );
 
+		// No generation for any request when avatar cache is off — fall through to the regular WP 404, same as the no-matched-record path below.
+		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
+			self::debug( '[Avatar] bypassed serving as avatar cache is off' );
+			return;
+		}
+
 		if ( strlen( $md5 ) !== 32 ) {
 			self::debug( '[Avatar] wrong md5 ' . $md5 );
 			return;
@@ -171,6 +177,11 @@ class Avatar extends Base {
 	public function queue_count() {
 		global $wpdb;
 
+		// Avatar cache option is the module-level switch: no queue and no table creation side effect when off.
+		if ( ! $this->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
+			return 0;
+		}
+
 		if ( ! Data::cls()->tb_exist( 'avatar' ) ) {
 			Data::cls()->tb_create( 'avatar' );
 		}
@@ -237,6 +248,12 @@ class Avatar extends Base {
 		global $wpdb;
 
 		$_instance = self::cls();
+
+		if ( ! $_instance->conf( self::O_DISCUSS_AVATAR_CACHE ) ) {
+			self::debug( '[Avatar] bypassed cron as avatar cache is off' );
+			return;
+		}
+
 		if ( ! $_instance->queue_count() ) {
 			self::debug( '[Avatar] no queue' );
 			return;

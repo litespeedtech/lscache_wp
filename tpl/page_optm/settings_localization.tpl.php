@@ -13,7 +13,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $last_generated = Avatar::get_summary();
-$avatar_queue   = Avatar::cls()->queue_count();
+$avatar_enabled = $this->conf( Base::O_DISCUSS_AVATAR_CACHE );
+$avatar_queue   = $avatar_enabled ? Avatar::cls()->queue_count() : 0;
 ?>
 
 <?php if ( $this->cls( 'Avatar' )->need_db() && ! $this->cls( 'Data' )->tb_exist( 'avatar' ) ) : ?>
@@ -63,7 +64,7 @@ $avatar_queue   = Avatar::cls()->queue_count();
 				<?php esc_html_e( 'Refresh Gravatar cache by cron.', 'litespeed-cache' ); ?>
 			</div>
 
-			<?php if ( $last_generated ) : ?>
+			<?php if ( $avatar_enabled && $last_generated ) : ?>
 			<div class="litespeed-desc">
 				<?php if ( ! empty( $last_generated['last_request'] ) ) : ?>
 					<p>

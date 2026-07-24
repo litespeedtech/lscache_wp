@@ -295,6 +295,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **3rd** Added Gravity Forms ESI nonce detection. (pascalminator PR#1011)
 * **Misc** Disabled visits to static folder data files. (Alexander #335626)
 * **Misc** Deactivation survey modal now shows only until the first real deactivation, then stays suppressed. (narratorben)
+* **Avatar** Disabling Avatar Cache now fully stops the queue count display, cron/manual gravatar generation, and on-demand generation for static avatar requests.
 * **Purge** Deferred the purge-all success notice to fix the upgrade warning.
 
 = 7.8.1 - Apr 1 2026 =
