@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 7.0
-Stable tag: 7.8.1
+Stable tag: 7.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -260,42 +260,42 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9 - Jul 2026 =
-* **Cloud** Changed Health service to async run.
-* **Cache** Respect existing cache control header when sending default WP header. (dieter93)
+= 7.9 - Aug 5 2026 =
+* **Cloud** Changed Health service to run asynchronously, resuming through WP cron when the cloud defers the request.
+* **Cache** Respected the existing cache control header when sending the default WP header. (dieter93)
 * **Conf** Updated default cache login value to false.
-* **CDN** Removed file types from settings if special options are disabled.
-* **CDN** Add Cloudflare purge only if CF is active. (PR#996)
+* **CDN** Stripped file types from settings when the matching Include Images/CSS/JS toggle is on.
+* **CDN** Added Cloudflare purge only when Cloudflare is active. (PR#996)
 * **CDN** Bypassed CDN replacement for REST JSON. (#216585)
-* **Object Cache** Bypass object cache operations if failed to connect due to object cache failure.
+* **Object Cache** Bypassed object cache operations after a failed connection.
 * **Object Cache** Enabled Redis zstd compression via phpredis. (Octavian)
-* **Object Cache** Validate the Host setting on save. (PR#889)
-* **UCSS** Dropped notification step. Added try_later handling and sync mode support for CCSS generation.
-* **CCSS** Dropped notification step.
+* **Object Cache** Validated the Host setting on save. (PR#889)
+* **UCSS** Dropped notification step.
+* **CCSS** Dropped notification step. Added try_later handling and sync mode support.
 * **Page Optimize** Fixed race condition when concurrent requests come to same CSS file. (unsetfocus)
 * **Page Optimize** Fixed blob execution in JS Delay. (PR#956, Zsombor Franczia, Marks Dev)
 * **Page Optimize** Fixed JS Combine corrupting URLs inside template literals. (mschroettle #981)
 * **Page Optimize** Fixed CSS Combine serving unstyled pages when the placeholder link tag uses default WordPress whitespace. (Faisal Ahammad #999 PR#1002)
-* **Page Optimize** Resolved WP7.0 HTML attribute parse compatibiility for Font Display setting. (PR#1017)
+* **Page Optimize** Resolved WP 7.0 HTML attribute parse compatibility for Font Display setting. (PR#1017)
 * **Image Optimize** Skipped sending queued images from the queue when their optimized files already exist. (terratag)
 * **Image Optimize** Dropped legacy image_optm table.
-* **Crawler** Retried 3 times before totally put into blacklist. (Ryan D)
+* **Crawler** Blacklisted a URL after 3 consecutive failures instead of the first one. (Ryan D)
 * **ESI** Fixed ESI nonce generation for actions with custom nonce lifetimes. (Robert Staddon PR#1006)
 * **ESI** Fixed duplicate comment form appearing alongside its ESI block on non-optimized pages.
-* **ESI** Bypassed comment for silent blocks that fail _hash validation. (Robert Staddon PR#1008)
+* **ESI** Bypassed comment for silent blocks that fail `_hash` validation. (Robert Staddon PR#1008)
 * **VPI** Added `fetchpriority=high` to VPI preload links. (Maciej Mroziński PR#993)
 * **LQIP** Fixed LQIP generation failing for native WebP/AVIF images. (Ashok PR#976)
-* **Toolbox** Delayed report submission to finish 3rd part conf injection.
+* **Toolbox** Delayed report submission to finish 3rd party conf injection.
 * **GUI** Dropped redundant menu from WP admin Settings page.
-* **GUI** Fixed style lost in latest WP7.0 when disabled heartbeat.
+* **GUI** Fixed styles lost on WP 7.0 when heartbeat is disabled.
 * **GUI** Settings tabs no longer flash on page load, are remembered per page, and support browser Back/Forward navigation. (Ryan D PR#984)
 * **3rd** Crawler can now support WCML currencies.
 * **3rd** Cache purge compatibility w/ RankMath SEO. (Ryan D, PR#977)
 * **3rd** DIVI 5 - Disable Rest API cache to fix the invalid_nonce issue. (PR#1004)
 * **3rd** Added Gravity Forms ESI nonce detection. (pascalminator PR#1011)
-* **Misc** Disabled visits to static folder data files. (Alexander #335626)
+* **Misc** Blocked public access to data files in the static cache folder. (Alexander #335626)
 * **Misc** Deactivation survey modal now shows only until the first real deactivation, then stays suppressed. (narratorben)
-* **Avatar** Disabling Avatar Cache now fully stops the queue count display, cron/manual gravatar generation, and on-demand generation for static avatar requests.
+* **Avatar** Disabling Avatar Cache now stops the queue counter, gravatar generation, and on-demand static avatar generation.
 * **Purge** Deferred the purge-all success notice to fix the upgrade warning.
 
 = 7.8.1 - Apr 1 2026 =

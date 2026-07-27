@@ -1080,7 +1080,7 @@ class Base extends Root {
 	 *
 	 * Shared by UCSS, CSS, and Optimax classes.
 	 *
-	 * @since 8.0
+	 * @since 7.8
 	 *
 	 * @param string $type      CSS type ('ucss' or 'ccss').
 	 * @param string $css       CSS content.

@@ -41,7 +41,7 @@ class Health extends Base {
 	/**
 	 * Cron entry point — called by WP cron to process pending health request.
 	 *
-	 * @since 8.0
+	 * @since 7.9
 	 */
 	public static function cron() {
 		$_instance = self::cls();
@@ -54,7 +54,7 @@ class Health extends Base {
 	/**
 	 * Run health check request for given type.
 	 *
-	 * @since 8.0
+	 * @since 7.9
 	 *
 	 * @param string $type TYPE_SPEED or TYPE_SCORE.
 	 */

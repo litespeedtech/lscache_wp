@@ -79,7 +79,7 @@ class CDN extends Root {
 	 * CDN::init() (auto-injection) and Admin_Settings::save() (auto-stripping)
 	 * so that the two sides stay in sync.
 	 *
-	 * @since 8.0
+	 * @since 7.9
 	 * @access public
 	 * @return array<string,string[]>
 	 */
