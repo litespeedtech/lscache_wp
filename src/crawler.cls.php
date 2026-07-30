@@ -125,13 +125,6 @@ class Crawler extends Root {
 	];
 
 	/**
-	 * Summary cache.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Initialize crawler, assign sitemap path.
 	 *
 	 * @since 1.1.0

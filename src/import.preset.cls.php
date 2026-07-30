@@ -11,8 +11,6 @@ defined('WPINC') || exit();
 
 class Preset extends Import {
 
-	protected $_summary;
-
 	const MAX_BACKUPS = 10;
 
 	const TYPE_APPLY   = 'apply';

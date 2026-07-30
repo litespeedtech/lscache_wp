@@ -21,13 +21,6 @@ class CSS extends Cloud_Queue_Svc {
 	const TYPE_CLEAR_Q = 'clear_q_ccss';
 
 	/**
-	 * Summary cache.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Cached CCSS whitelist.
 	 *
 	 * @var array|null

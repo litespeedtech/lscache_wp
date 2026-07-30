@@ -22,13 +22,6 @@ class Optimax extends Cloud_Queue_Svc {
 	const LOG_TAG = '🚀';
 
 	/**
-	 * Summary data cache.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Init.
 	 *
 	 * @since 8.0

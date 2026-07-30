@@ -20,13 +20,6 @@ class UCSS extends Cloud_Queue_Svc {
 	const LOG_TAG = '[UCSS]';
 
 	/**
-	 * Summary data.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * UCSS whitelist selectors.
 	 *
 	 * @var array

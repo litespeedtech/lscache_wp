@@ -13,8 +13,6 @@ defined('WPINC') || exit();
 
 class Import extends Base {
 
-	protected $_summary;
-
 	const TYPE_IMPORT = 'import';
 	const TYPE_EXPORT = 'export';
 	const TYPE_RESET  = 'reset';

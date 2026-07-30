@@ -66,13 +66,6 @@ class GUI extends Base {
 	const WHM_MSG_VAL = 'whm_install';
 
 	/**
-	 * Summary options cache.
-	 *
-	 * @var array<string,mixed> Summary/options cache.
-	 */
-	protected $_summary;
-
-	/**
 	 * Instance.
 	 *
 	 * @since 1.3

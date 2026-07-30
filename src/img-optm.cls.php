@@ -159,13 +159,6 @@ class Img_Optm extends Base {
 	private $__data;
 
 	/**
-	 * Summary data.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Output format (webp/avif).
 	 *
 	 * @var string

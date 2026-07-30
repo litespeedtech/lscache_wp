@@ -181,13 +181,6 @@ class Cloud extends Base {
 	const TYPE_SYNC_STATUS    = 'sync_status';
 
 	/**
-	 * Summary data for cloud interactions.
-	 *
-	 * @var array<string,mixed>
-	 */
-	protected $_summary;
-
-	/**
 	 * Init
 	 *
 	 * @since 3.0

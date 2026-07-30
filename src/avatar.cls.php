@@ -43,13 +43,6 @@ class Avatar extends Base {
 	private $_avatar_realtime_gen_dict = [];
 
 	/**
-	 * Summary/status data for last requests.
-	 *
-	 * @var array<string,mixed>
-	 */
-	protected $_summary;
-
-	/**
 	 * Init.
 	 *
 	 * @since 1.4

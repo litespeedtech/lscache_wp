@@ -110,13 +110,6 @@ class Placeholder extends Base {
 	private $_ph_queue = [];
 
 	/**
-	 * Stats & request summary for throttling.
-	 *
-	 * @var array<string,mixed>
-	 */
-	protected $_summary;
-
-	/**
 	 * Init
 	 *
 	 * @since 3.0

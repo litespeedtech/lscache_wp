@@ -23,13 +23,6 @@ class Health extends Base {
 	const TYPE_SCORE = 'score';
 
 	/**
-	 * Cached summary data.
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Init
 	 *
 	 * @since  3.0

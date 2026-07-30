@@ -43,13 +43,6 @@ class VPI extends Cloud_Queue_Svc {
 	const POST_META_MOBILE = 'litespeed_vpi_list_mobile';
 
 	/**
-	 * Summary values persisted between requests (timings, last runs, etc).
-	 *
-	 * @var array
-	 */
-	protected $_summary;
-
-	/**
 	 * Init.
 	 *
 	 * @since 4.7
