@@ -321,7 +321,7 @@ class Cloudflare extends Base {
 
 		switch ($type) {
 			case self::TYPE_PURGE_ALL:
-            $this->purge_all_private();
+			$this->purge_all_private();
 				break;
 
 			case self::TYPE_GET_DEVMODE:
