@@ -7,3 +7,7 @@
 .vscode
 node_modules
 /vendor
+
+AGENTS.md
+.codex*
+/__*
