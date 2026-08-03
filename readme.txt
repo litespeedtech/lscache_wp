@@ -1,8 +1,8 @@
 === LiteSpeed Cache ===
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
-Requires at least: 5.3
-Requires PHP: 7.2
+Requires at least: 6.0
+Requires PHP: 7.4
 Tested up to: 7.0
 Stable tag: 7.9
 License: GPLv3
@@ -264,6 +264,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Cloud** Changed Health service to run asynchronously, resuming through WP cron when the cloud defers the request.
 * **Cache** Respected the existing cache control header when sending the default WP header. (dieter93)
 * **Conf** Updated default cache login value to false.
+* **Core** Minimum required PHP version escalated to PHP v7.4.0.
+* **Core** Minimum required WP version escalated to WP v6.0.
 * **CDN** Stripped file types from settings when the matching Include Images/CSS/JS toggle is on.
 * **CDN** Added Cloudflare purge only when Cloudflare is active. (PR#996)
 * **CDN** Bypassed CDN replacement for REST JSON. (#216585)
