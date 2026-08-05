@@ -1362,9 +1362,6 @@ class Media extends Root {
 		preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
 
 		foreach ( $matches as $match ) {
-			// Check if the string contains HTML entities.
-			$is_encoded = preg_match( '/&quot;|&lt;|&gt;|&amp;|&apos;/', $match[1] );
-
 			// Decode HTML entities in the JSON string.
 			$json_string = html_entity_decode( $match[1] );
 
@@ -1393,16 +1390,14 @@ class Media extends Root {
 				);
 
 				if ( $did_webp_replace ) {
-					// Re-encode the modified array back to a JSON string.
 					$new_json_string = wp_json_encode( $json_data );
 
-					// Re-encode the JSON string to HTML entities only if it was originally encoded.
-					if ( $is_encoded ) {
-						$new_json_string = htmlspecialchars( $new_json_string, ENT_QUOTES | 0 ); // ENT_HTML401 for PHP>=5.4.
-					}
+					// Force double_encode; esc_attr() would leave a literal `&quot;` intact and the browser decodes it back into a quote.
+					$new_json_string = htmlspecialchars( $new_json_string, ENT_QUOTES, 'UTF-8', true );
 
-					// Replace the old JSON string in the content with the new, modified JSON string.
-					$content = str_replace( $match[1], $new_json_string, $content );
+					// Replace the whole attribute, not the bare value, which may also appear in inline JS. Prefix sliced to keep original casing.
+					$attr_prefix = substr( $match[0], 0, strlen( $match[0] ) - strlen( $match[1] ) - 1 );
+					$content     = str_replace( $match[0], $attr_prefix . $new_json_string . '"', $content );
 				}
 			}
 		}

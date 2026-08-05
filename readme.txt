@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Conf** Updated default cache login value to false.
 * **Core** Minimum required PHP version escalated to PHP v7.4.0.
 * **Core** Minimum required WP version escalated to WP v6.0.
+* **Media** Improved WebP/AVIF data handling and inline script output.
 * **CDN** Stripped file types from settings when the matching Include Images/CSS/JS toggle is on.
 * **CDN** Added Cloudflare purge only when Cloudflare is active. (PR#996)
 * **CDN** Bypassed CDN replacement for REST JSON. (#216585)

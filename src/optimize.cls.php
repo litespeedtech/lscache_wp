@@ -609,7 +609,7 @@ class Optimize extends Base {
 		 *      -> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
 		 *  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
-		$script = 'WebFontConfig={google:{families:[';
+		$script = 'WebFontConfig={google:{families:';
 
 		$families = array();
 		foreach ($this->_ggfonts_urls as $v) {
@@ -630,9 +630,12 @@ class Optimize extends Base {
 			}
 		}
 
-		$script .= '"' . implode('","', $families) . ($this->_conf_css_font_display ? '&display=swap' : '') . '"';
+		if ($families && $this->_conf_css_font_display) {
+			$families[count($families) - 1] .= '&display=swap';
+		}
 
-		$script .= ']}};';
+		$script .= wp_json_encode($families, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+		$script .= '}};';
 
 		// if webfontloader lib was loaded before WebFontConfig variable, call WebFont.load
 		$script .= 'if ( typeof WebFont === "object" && typeof WebFont.load === "function" ) { WebFont.load( WebFontConfig ); }';

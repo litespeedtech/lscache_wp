@@ -70,7 +70,7 @@ $this->form_action();
 
 				<script type="text/babel">
 					ReactDOM.render(
-						<CDNMapping list={ <?php echo wp_json_encode( $cdn_mapping ); ?> } />,
+						<CDNMapping list={ <?php echo wp_json_encode( $cdn_mapping, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?> } />,
 						document.getElementById( 'litespeed_cdn_mapping_div' )
 					);
 				</script>

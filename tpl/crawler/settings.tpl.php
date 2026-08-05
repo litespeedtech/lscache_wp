@@ -164,7 +164,7 @@ $this->form_action();
 				<div id="litespeed_crawler_simulation_div"></div>
 				<script type="text/babel">
 					ReactDOM.render(
-						<CrawlerSimulate list={ <?php echo wp_json_encode( $this->conf( $option_id ) ); ?> } />,
+						<CrawlerSimulate list={ <?php echo wp_json_encode( $this->conf( $option_id ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?> } />,
 						document.getElementById( 'litespeed_crawler_simulation_div' )
 					);
 				</script>
