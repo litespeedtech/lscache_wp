@@ -13,7 +13,7 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 // Modal data
-$_title = esc_html__('Deactivate LiteSpeed Cache', 'litespeed');
+$_title = esc_html__('Deactivate LiteSpeed Cache', 'litespeed-cache');
 $_id    = 'litespeed-modal-deactivate';
 
 $reasons = [
