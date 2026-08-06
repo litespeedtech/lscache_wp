@@ -99,5 +99,5 @@ wpda-*
 elementor-pro-frontend
 elementor-conversion-center-click
 
-# Gavity Forms
-gfrom_*
+# Gravity Forms
+gform_*
