@@ -90,8 +90,7 @@ class Optimize extends Base {
 				'litespeed_optm_cssjs',
 				function ( $con, $file_type ) {
 					if ($file_type == 'js') {
-						$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
-						// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
+						$con = $this->_replace_js_events( $con );
 					}
 					return $con;
 				},
@@ -1005,14 +1004,30 @@ class Optimize extends Base {
 		if ($this->cfg_js_defer === 2) {
 			// Drop type attribute from $attrs
 			$attrs = Utility::remove_attr( $attrs, 'type' );
-			// Replace DOMContentLoaded
-			$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
+			// Replace DOMContentLoaded and load event listeners
+			$con = $this->_replace_js_events( $con );
 			return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode($con) . '" defer></script>';
+	}
+
+	/**
+	 * Replace JS DOMContentLoaded and load event listeners for JS Delay mode
+	 *
+	 * @since  7.0
+	 */
+	private function _replace_js_events( $con ) {
+		if ( empty( $con ) || ! is_string( $con ) ) {
+			return $con;
+		}
+
+		$con = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con );
+		$con = preg_replace( '/(?<!\.)\b(window\.|document\.)?addEventListener\(\s*([\'"])load\2/', '$1addEventListener($2DOMContentLiteSpeedLoaded$2', $con );
+		$con = preg_replace( '/((?:\$|jQuery)\(\s*(?:window|document)\s*\)\s*\.on\(\s*)([\'"])load(?:\.[\w-]+)?\2/', '$1$2DOMContentLiteSpeedLoaded$2', $con );
+		return $con;
 	}
 
 	/**
