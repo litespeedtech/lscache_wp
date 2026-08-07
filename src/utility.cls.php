@@ -780,6 +780,31 @@ class Utility extends Root {
 	}
 
 	/**
+	 * Check if a URL belongs to an internal site or CDN domain.
+	 *
+	 * @since 7.9
+	 *
+	 * @param string $url URL.
+	 * @return bool True if internal host or relative path.
+	 */
+	public static function is_internal_url( $url ) {
+		if ( 'data:' === substr( $url, 0, 5 ) ) {
+			return false;
+		}
+
+		$url_parsed = wp_parse_url( $url );
+		if ( empty( $url_parsed['host'] ) ) {
+			return true;
+		}
+
+		if ( self::internal( $url_parsed['host'] ) || CDN::internal( $url_parsed['host'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check if a URL is an internal existing file and return its real path and size.
 	 *
 	 * @since 1.2.2
