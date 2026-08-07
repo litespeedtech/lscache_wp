@@ -259,6 +259,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+* **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.
 
 = 7.9 - Aug 5 2026 =
 * **Cloud** Changed Health service to run asynchronously, resuming through WP cron when the cloud defers the request.

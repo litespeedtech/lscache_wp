@@ -3,7 +3,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/cache-plugins/wordpress-acceleration
  * Description:       High-performance page caching and site optimization from LiteSpeed
- * Version:           7.9
+ * Version:           7.9.1-a2
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -35,7 +35,7 @@ if ( defined( 'LSCWP_V' ) ) {
 	return;
 }
 
-! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '7.9' );
+! defined( 'LSCWP_V' ) && define( 'LSCWP_V', '7.9.1-a2' );
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR );
 ! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', __DIR__ . '/' ); // Full absolute path '/var/www/html/***/wp-content/plugins/litespeed-cache/' or MU
@@ -224,13 +224,13 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 	 * @since    1.0.0
 	 */
 	function run_litespeed_cache() {
-		// Check minimum PHP requirements, which is 7.2 at the moment.
-		if ( version_compare( PHP_VERSION, '7.2.0', '<' ) ) {
+		// Check minimum PHP requirements, which is 7.4 at the moment.
+		if ( version_compare( PHP_VERSION, '7.4.0', '<' ) ) {
 			return;
 		}
 
-		// Check minimum WP requirements, which is 5.3 at the moment.
-		if ( version_compare( $GLOBALS['wp_version'], '5.3', '<' ) ) {
+		// Check minimum WP requirements, which is 6.0 at the moment.
+		if ( version_compare( $GLOBALS['wp_version'], '6.0', '<' ) ) {
 			return;
 		}
 
