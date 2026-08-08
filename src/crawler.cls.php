@@ -1263,7 +1263,13 @@ class Crawler extends Root {
 		if ( $this->conf( Base::O_GUEST ) ) {
 			$vary_name = $this->cls( 'Vary' )->get_vary_name();
 			$vary_val  = 'guest_mode:1';
-			if ( ! defined( 'LSCWP_LOG' ) ) {
+			$is_debug  = Base::VAL_ON === $this->conf( Base::O_DEBUG );
+
+			if ( $is_debug && ( $this->conf( Base::O_DEBUG_INC ) || $this->conf( Base::O_DEBUG_EXC ) ) ) {
+				$is_debug = false;
+			}
+
+			if ( ! $is_debug ) {
 				$vary_val = md5( $this->conf( Base::HASH ) . $vary_val );
 			}
 			$crawler_factors[ 'cookie:' . $vary_name ] = [
