@@ -415,6 +415,9 @@ class Activation extends Base {
 			$this_ids = [
 				self::HASH,
 				self::O_CACHE_LOGIN_COOKIE,
+				self::O_DEBUG,
+				self::O_DEBUG_INC,
+				self::O_DEBUG_EXC,
 				self::O_DEBUG_IPS,
 				self::O_UTIL_NO_HTTPS_VARY,
 			];

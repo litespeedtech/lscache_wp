@@ -561,8 +561,21 @@ class Vary extends Root {
 			$list[] = $key . ':' . $val;
 		}
 
-		$res = implode( ';', $list );
-		if ( defined( 'LSCWP_LOG' ) ) {
+		$res      = implode( ';', $list );
+		$is_debug = false;
+		$debug    = $this->conf( Base::O_DEBUG );
+
+		if ( Base::VAL_ON === $debug ) {
+			$is_debug = true;
+		} elseif ( Base::VAL_ON2 === $debug && $this->cls( 'Router' )->is_admin_ip() ) {
+			$is_debug = true;
+		}
+
+		if ( $is_debug && ( $this->conf( Base::O_DEBUG_INC ) || $this->conf( Base::O_DEBUG_EXC ) ) ) {
+			$is_debug = false;
+		}
+
+		if ( $is_debug ) {
 			return $res;
 		}
 		// Encrypt in production.

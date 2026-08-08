@@ -22,6 +22,8 @@ class Guest {
 	const O_CACHE_LOGIN_COOKIE = 'cache-login_cookie';
 	const O_DEBUG              = 'debug';
 	const O_DEBUG_IPS          = 'debug-ips';
+	const O_DEBUG_INC          = 'debug-inc';
+	const O_DEBUG_EXC          = 'debug-exc';
 	const O_UTIL_NO_HTTPS_VARY = 'util-no_https_vary';
 
 	/**
@@ -99,14 +101,28 @@ class Guest {
 		}
 
 		// Send vary cookie
-		$vary = 'guest_mode:1';
-		if ( $this->_conf && empty( $this->_conf[ self::O_DEBUG ] ) ) {
+		$vary     = 'guest_mode:1';
+		$is_debug = false;
+		if ( ! empty( $this->_conf[ self::O_DEBUG ] ) ) {
+			if ( 2 === (int) $this->_conf[ self::O_DEBUG ] ) {
+				$debug_ips = ! empty( $this->_conf[ self::O_DEBUG_IPS ] ) ? $this->_conf[ self::O_DEBUG_IPS ] : [];
+				$is_debug  = $this->ip_access( $debug_ips );
+			} elseif ( 1 === (int) $this->_conf[ self::O_DEBUG ] ) {
+				$is_debug = true;
+			}
+		}
+
+		if ( $is_debug && ( ! empty( $this->_conf[ self::O_DEBUG_INC ] ) || ! empty( $this->_conf[ self::O_DEBUG_EXC ] ) ) ) {
+			$is_debug = false;
+		}
+
+		if ( ! $is_debug && ! empty( $this->_conf[ self::HASH ] ) ) {
 			$vary = md5( $this->_conf[ self::HASH ] . $vary );
 		}
 
 		$expire = time() + 2 * 86400;
 		$is_ssl = ! empty( $this->_conf[ self::O_UTIL_NO_HTTPS_VARY ] ) ? false : $this->is_ssl();
-		setcookie( self::$_vary_name, $vary, $expire, '/', false, $is_ssl, true );
+		setcookie( self::$_vary_name, $vary, $expire, '/', '', $is_ssl, true );
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- No WP available
 		echo json_encode( [ 'reload' => 'yes' ] );
@@ -319,9 +335,11 @@ class Guest {
 			$apache_headers = apache_request_headers();
 			$_ip            = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
 			if ( ! $_ip ) {
-				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
-				$_ip = explode( ',', $_ip );
-				$_ip = $_ip[0];
+				$raw_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
+				if ( $raw_ip ) {
+					$parts = explode( ',', $raw_ip );
+					$_ip   = $parts[0];
+				}
 			}
 		}
 
