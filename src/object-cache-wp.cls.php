@@ -436,8 +436,21 @@ class WP_Object_Cache {
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-			$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), (int) $expire );
+			if ( function_exists( 'igbinary_serialize' ) ) {
+				try {
+					$v = igbinary_serialize( [ 'data' => $data ] );
+				} catch ( \Throwable $e ) {
+					$v = false;
+				}
+				if ( false === $v || null === $v ) {
+					// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+					$v = serialize( [ 'data' => $data ] );
+				}
+			} else {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+				$v = serialize( [ 'data' => $data ] );
+			}
+			$this->_object_cache->set( $id, $v, (int) $expire );
 			++$this->count_set;
 		}
 
@@ -509,7 +522,17 @@ class WP_Object_Cache {
 			$v = $this->_object_cache->get( $id, $group );
 
 			if ( false !== $v ) {
-				$v = maybe_unserialize( $v );
+				if ( is_string( $v ) && function_exists( 'igbinary_unserialize' ) && ! is_serialized( $v ) ) {
+					try {
+						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+						$v_unserialized = @igbinary_unserialize( $v );
+					} catch ( \Throwable $e ) {
+						$v_unserialized = false;
+					}
+					$v = ( false !== $v_unserialized && null !== $v_unserialized ) ? $v_unserialized : maybe_unserialize( $v );
+				} else {
+					$v = maybe_unserialize( $v );
+				}
 			}
 
 			// To be compatible with false val.
