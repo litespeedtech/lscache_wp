@@ -1146,7 +1146,7 @@ class Media extends Root {
 		$pathinfo = Utility::is_internal_file( $src );
 		if ( $pathinfo ) {
 			$src = $pathinfo[0];
-		} elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
+		} elseif ( Utility::is_internal_url( $src ) || apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
 			return false;
 		}
 
@@ -1156,7 +1156,7 @@ class Media extends Root {
 
 		try {
 			$sizes = getimagesize( $src );
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			return false;
 		}
 
