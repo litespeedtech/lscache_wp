@@ -155,4 +155,18 @@ $break_arr = array(
 		</td>
 	</tr>
 
+	<tr>
+		<th>
+			<?php $option_id = Base::O_MISC_MAX_FOLDER_SIZE; ?>
+			<?php $this->title( $option_id ); ?>
+		</th>
+		<td>
+			<?php $this->build_input( $option_id, 'litespeed-input-short' ); ?> <?php esc_html_e( 'MB', 'litespeed-cache' ); ?>
+			<div class="litespeed-desc">
+				<?php esc_html_e( 'Maximum total size of the regenerable cache files under wp-content/litespeed/. When exceeded, the oldest files are removed automatically. 0 disables this limit.', 'litespeed-cache' ); ?>
+			</div>
+			<?php $this->_validate_ttl( $option_id, 1, 100000, true ); ?>
+		</td>
+	</tr>
+
 </tbody></table>

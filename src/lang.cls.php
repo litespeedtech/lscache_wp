@@ -249,6 +249,7 @@ class Lang extends Base {
 			self::O_MISC_HEARTBEAT_BACK_TTL   => __( 'Backend Heartbeat TTL', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_EDITOR     => __( 'Editor Heartbeat', 'litespeed-cache' ),
 			self::O_MISC_HEARTBEAT_EDITOR_TTL => __( 'Editor Heartbeat TTL', 'litespeed-cache' ),
+			self::O_MISC_MAX_FOLDER_SIZE      => __( 'Maximum Cache Folder Size', 'litespeed-cache' ),
 
 			self::O_CDN                   => __( 'Use CDN Mapping', 'litespeed-cache' ),
 			self::CDN_MAPPING_URL         => __( 'CDN URL', 'litespeed-cache' ),

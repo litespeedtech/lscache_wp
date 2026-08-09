@@ -47,6 +47,7 @@ $litespeed_php_files = array(
 	'src/error.cls.php',
 	'src/esi.cls.php',
 	'src/file.cls.php',
+	'src/folder.cls.php',
 	'src/guest.cls.php',
 	'src/gui.cls.php',
 	'src/health.cls.php',

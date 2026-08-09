@@ -264,6 +264,7 @@ class Base extends Root {
 	const O_MISC_HEARTBEAT_BACK_TTL   = 'misc-heartbeat_back_ttl';
 	const O_MISC_HEARTBEAT_EDITOR     = 'misc-heartbeat_editor';
 	const O_MISC_HEARTBEAT_EDITOR_TTL = 'misc-heartbeat_editor_ttl';
+	const O_MISC_MAX_FOLDER_SIZE      = 'misc-max_folder_size';
 
 	// -------------------------------------------------- ##
 	// --------------        CDN        ----------------- ##
@@ -550,6 +551,7 @@ class Base extends Root {
 		self::O_MISC_HEARTBEAT_BACK_TTL => 0,
 		self::O_MISC_HEARTBEAT_EDITOR => false,
 		self::O_MISC_HEARTBEAT_EDITOR_TTL => 0,
+		self::O_MISC_MAX_FOLDER_SIZE => 0,
 
 		// CDN
 		self::O_CDN => false,
@@ -1018,7 +1020,7 @@ class Base extends Root {
 	 * @return bool
 	 */
 	protected function _conf_cron( $id ) {
-		$check_ids = [ self::O_OPTM_CSS_ASYNC, self::O_MEDIA_PLACEHOLDER_RESP_ASYNC, self::O_DISCUSS_AVATAR_CRON, self::O_IMG_OPTM_AUTO, self::O_CRAWLER ];
+		$check_ids = [ self::O_OPTM_CSS_ASYNC, self::O_MEDIA_PLACEHOLDER_RESP_ASYNC, self::O_DISCUSS_AVATAR_CRON, self::O_IMG_OPTM_AUTO, self::O_CRAWLER, self::O_MISC_MAX_FOLDER_SIZE ];
 
 		return in_array( $id, $check_ids, true );
 	}
