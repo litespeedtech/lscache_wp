@@ -17,6 +17,7 @@ $lang_disabled = '<span class="litespeed-warning">' . esc_html__( 'Disabled', 'l
 
 $mem_enabled   = class_exists( 'Memcached' ) ? $lang_enabled : $lang_disabled;
 $redis_enabled = class_exists( 'Redis' ) ? $lang_enabled : $lang_disabled;
+$relay_enabled = class_exists( 'Relay\Relay' ) ? $lang_enabled : $lang_disabled;
 
 $mem_conn = $this->cls( 'Object_Cache' )->test_connection();
 if ( null === $mem_conn ) {
@@ -68,6 +69,14 @@ if ( null === $mem_conn ) {
 						);
 						?>
 						: <?php echo wp_kses_post( $redis_enabled ); ?><br>
+						<?php
+						printf(
+							/* translators: %s: Object cache name */
+							esc_html__( '%s Extension', 'litespeed-cache' ),
+							'Relay'
+						);
+						?>
+						: <?php echo wp_kses_post( $relay_enabled ); ?><br>
 						<?php esc_html_e( 'Connection Test', 'litespeed-cache' ); ?>: <?php echo wp_kses_post( $mem_conn_desc ); ?>
 						<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/admin/#how-to-debug' ); ?>
 					</div>
@@ -81,7 +90,7 @@ if ( null === $mem_conn ) {
 				<?php $this->title( $option_id ); ?>
 			</th>
 			<td>
-				<?php $this->build_switch( $option_id, array( 'Memcached', 'Redis' ) ); ?>
+				<?php $this->build_switch( $option_id, array( 'Memcached', 'Redis', 'Relay' ) ); ?>
 			</td>
 		</tr>
 
@@ -97,7 +106,7 @@ if ( null === $mem_conn ) {
 					printf(
 						/* translators: %s: Object cache name */
 						esc_html__( 'Your %s Hostname or IP address.', 'litespeed-cache' ),
-						'Memcached/<a href="https://docs.litespeedtech.com/products/lsmcd/" target="_blank" rel="noopener">LSMCD</a>/Redis'
+						'Memcached/<a href="https://docs.litespeedtech.com/products/lsmcd/" target="_blank" rel="noopener">LSMCD</a>/Redis/Relay'
 					);
 					?>
 					<br>
@@ -274,10 +283,10 @@ jQuery(document).ready(function($) {
 		var portInput = $('#input_objectport');
 		var selectedKind = $(this).val();
 
-		// Memcached (0) -> 11211, Redis (1) -> 6379
+		// Memcached (0) -> 11211, Redis (1) -> 6379, Relay (2) -> 6379
 		if (selectedKind === '0') {
 			portInput.val('11211');
-		} else if (selectedKind === '1') {
+		} else if (selectedKind === '1' || selectedKind === '2') {
 			portInput.val('6379');
 		}
 	});
