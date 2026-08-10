@@ -215,6 +215,7 @@ class Lang extends Base {
 			self::O_MEDIA_LQIP_MIN_W              => __( 'LQIP Minimum Dimensions', 'litespeed-cache' ),
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC  => __( 'Generate LQIP In Background', 'litespeed-cache' ),
 			self::O_MEDIA_IFRAME_LAZY             => __( 'Lazy Load Iframes', 'litespeed-cache' ),
+			self::O_MEDIA_IFRAME_LAZY_VIDEO_IMG   => __( 'Load Video Image', 'litespeed-cache' ),
 			self::O_MEDIA_ADD_MISSING_SIZES       => __( 'Add Missing Sizes', 'litespeed-cache' ),
 			self::O_MEDIA_VPI                     => __( 'Viewport Images', 'litespeed-cache' ),
 			self::O_MEDIA_VPI_CRON                => __( 'Viewport Images Cron', 'litespeed-cache' ),
