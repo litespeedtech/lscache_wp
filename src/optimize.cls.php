@@ -1017,7 +1017,7 @@ class Optimize extends Base {
 	/**
 	 * Replace JS DOMContentLoaded and load event listeners for JS Delay mode
 	 *
-	 * @since  7.0
+	 * @since  8.0
 	 */
 	private function _replace_js_events( $con ) {
 		if ( empty( $con ) || ! is_string( $con ) ) {
@@ -1026,7 +1026,7 @@ class Optimize extends Base {
 
 		$con = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con );
 		$con = preg_replace( '/(?<!\.)\b(window\.|document\.)?addEventListener\(\s*([\'"])load\2/', '$1addEventListener($2DOMContentLiteSpeedLoaded$2', $con );
-		$con = preg_replace( '/((?:\$|jQuery)\(\s*(?:window|document)\s*\)\s*\.on\(\s*)([\'"])load(?:\.[\w-]+)?\2/', '$1$2DOMContentLiteSpeedLoaded$2', $con );
+		$con = preg_replace( '/((?:\$|jQuery)\(\s*(?:window|document)\s*\)\s*\.on\(\s*)([\'"])load(?=[.\s\'"])/', '$1$2DOMContentLiteSpeedLoaded', $con );
 		return $con;
 	}
 
