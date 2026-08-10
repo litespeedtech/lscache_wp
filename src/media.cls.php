@@ -1146,7 +1146,7 @@ class Media extends Root {
 		$pathinfo = Utility::is_internal_file( $src );
 		if ( $pathinfo ) {
 			$src = $pathinfo[0];
-		} elseif ( Utility::is_internal_url( $src ) || apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
+		} elseif ( $this->_is_internal_url( $src ) || apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
 			return false;
 		}
 
@@ -1165,6 +1165,27 @@ class Media extends Root {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if a URL belongs to an internal site or CDN domain.
+	 *
+	 * @since 7.9
+	 *
+	 * @param string $url URL.
+	 * @return bool True if internal host or relative path.
+	 */
+	private function _is_internal_url( $url ) {
+		if ( 'data:' === substr( $url, 0, 5 ) ) {
+			return false;
+		}
+
+		$url_parsed = wp_parse_url( $url );
+		if ( empty( $url_parsed['host'] ) ) {
+			return true;
+		}
+
+		return Utility::internal( $url_parsed['host'] ) || CDN::internal( $url_parsed['host'] );
 	}
 
 	/**
