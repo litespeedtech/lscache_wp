@@ -259,8 +259,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+
+= 7.9.1 - Aug 18 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.
-* 🐞**Image Optimize** Fixed a fatal error when the WordPress HTTP fallback could not download an image.
+* **Image Optimize** Fixed a fatal error when the WordPress HTTP fallback could not download an image.
+* **Avatar** Prevented failed on-demand avatar downloads from redirecting visitors to the WordPress admin area.
 
 = 7.9 - Aug 5 2026 =
 * **Cloud** Changed Health service to run asynchronously, resuming through WP cron when the cloud defers the request.

@@ -110,9 +110,13 @@ class Avatar extends Base {
 			return;
 		}
 
-		$url = $this->_generate( $url );
+		$generated_url = $this->_generate( $url );
+		if ( $generated_url === $url ) {
+			self::debug( '[Avatar] generation failed; bypassing redirect' );
+			return;
+		}
 
-		wp_safe_redirect( $url );
+		wp_safe_redirect( $generated_url );
 		exit;
 	}
 
