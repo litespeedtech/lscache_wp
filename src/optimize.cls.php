@@ -88,14 +88,14 @@ class Optimize extends Base {
 		if ($this->cfg_js_defer == 2) {
 			add_filter(
 				'litespeed_optm_cssjs',
-				function ( $con, $file_type ) {
-					if ($file_type == 'js') {
+				function ( $con, $file_type, $src ) {
+					if ($file_type == 'js' && !Utility::str_hit_array($src, $this->cfg_js_defer_exc)) {
 						$con = $this->_replace_js_events( $con );
 					}
 					return $con;
 				},
 				20,
-				2
+				3
 			);
 		}
 
