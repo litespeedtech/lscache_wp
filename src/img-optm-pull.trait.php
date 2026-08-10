@@ -565,8 +565,8 @@ trait Img_Optm_Pull {
 							$request_response['success']     = true;
 							$request_response['status_code'] = $wp_response['response']['code'];
 							$request_response['body']        = $wp_response['body'];
+							self::debug( 'response code [code] ' . $wp_response['response']['code'] . ' [url] ' . $req['url'] );
 						}
-						self::debug( 'response code [code] ' . $wp_response['response']['code'] . ' [url] ' . $req['url'] );
 
 						$request_response = (object) $request_response;
 
