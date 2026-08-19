@@ -406,6 +406,15 @@ body.litespeed-darkmode .notice-info {
 	border-left-color: #00a0d2;
 }
 
+@media (prefers-color-scheme: dark) {
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .notice .notice-dismiss:before{
+		color: #FFFFFF;
+	}
+}
+body.litespeed-darkmode .notice .notice-dismiss:before{
+	color: #FFFFFF;
+}
+
 /* Striped table notices */
 @media (prefers-color-scheme: dark) {
 	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .striped > tbody > :nth-child(even) .notice {
