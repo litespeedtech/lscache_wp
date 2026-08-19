@@ -233,7 +233,7 @@ class Option extends Base {
 		// cdn-mapping[url][0]
 		// crawler-cookies[name][1]
 		if ( self::O_CDN_MAPPING === $id ) {
-			if ( ! in_array( $child, array( self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE ), true ) ) {
+			if ( ! in_array( $child, array( self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA, self::CDN_MAPPING_FILETYPE ), true ) ) {
 				WP_CLI::error( 'Wrong child key' );
 				return;
 			}
@@ -249,7 +249,7 @@ class Option extends Base {
 			if ( ! empty( $v[ $numeric ][ $child ] ) ) {
 				$v = $v[ $numeric ][ $child ];
 			} elseif ( self::O_CDN_MAPPING === $id ) {
-				if ( in_array( $child, array( self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ), true ) ) {
+				if ( in_array( $child, array( self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA ), true ) ) {
 					$v = 0;
 				} else {
 					$v = "''";
