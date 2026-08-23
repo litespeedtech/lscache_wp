@@ -55,17 +55,18 @@ class Purge {
 	 */
 	private function send_request( $action, $extra = array() ) {
 		$data = array(
+			'action'       => 'litespeed_ajax',
 			Router::ACTION => $action,
-			Router::NONCE => wp_create_nonce( $action ),
+			Router::NONCE  => wp_create_nonce( $action ),
 		);
 		if ( ! empty( $extra ) ) {
 			$data = array_merge( $data, $extra );
 		}
 
-		$url = admin_url( 'admin-ajax.php' );
+		$url = add_query_arg( $data, admin_url( 'admin-ajax.php' ) );
 		WP_CLI::debug( 'URL is ' . $url );
 
-		$out = WP_CLI\Utils\http_request( 'GET', $url, $data );
+		$out = WP_CLI\Utils\http_request( 'GET', $url );
 		return $out;
 	}
 
@@ -114,7 +115,7 @@ class Purge {
 		if ( ! is_numeric( $blogid ) ) {
 			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
 			WP_CLI::line( $error );
-			$this->network_list( $args );
+			$this->network_list();
 			return;
 		}
 
@@ -122,7 +123,7 @@ class Purge {
 		if ( false === $site ) {
 			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
 			WP_CLI::line( $error );
-			$this->network_list( $args );
+			$this->network_list();
 			return;
 		}
 
@@ -175,9 +176,10 @@ class Purge {
 			}
 		}
 
+		$url = add_query_arg( $data, $url );
 		WP_CLI::debug( 'URL is ' . $url );
 
-		$purge_ret = WP_CLI\Utils\http_request( 'GET', $url, $data );
+		$purge_ret = WP_CLI\Utils\http_request( 'GET', $url );
 		if ( $purge_ret->success ) {
 			WP_CLI::success( __( 'Purged the URL!', 'litespeed-cache' ) );
 		} else {
