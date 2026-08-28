@@ -219,12 +219,13 @@ abstract class Cloud_Queue_Svc extends Base {
 				continue;
 			}
 
-			self::debug( 'cron job [tag] ' . $k . ' [url] ' . ( isset( $v['url'] ) ? $v['url'] : '' ) . ( ! empty( $v['is_mobile'] ) ? ' 📱 ' : '' ) );
+			self::debug( 'cron job [request] ' . substr( hash( 'sha256', (string) $k ), 0, 12 ) . ( ! empty( $v['is_mobile'] ) ? ' 📱 ' : '' ) );
 
 			$res = $this->_send_req( $k, $v );
 
 			if ( ! $res ) {
 				// Reload to avoid clobbering concurrent writes, then drop the item.
+				// Settled decision: a failed result drops. See AGENTS.md "Settled decisions".
 				$this->_queue = $this->load_queue( $type );
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( $type, $this->_queue );
@@ -245,6 +246,7 @@ abstract class Cloud_Queue_Svc extends Base {
 				$this->_summary[ $next_run_key ] = $next_run_time;
 				self::save_summary();
 				self::debug( 'Set next ' . $type . ' cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
+				return;
 			}
 
 			if ( ! $keep_going ) {
@@ -278,7 +280,6 @@ abstract class Cloud_Queue_Svc extends Base {
 		self::save_summary();
 
 		$data = $this->_build_payload( $queue_k, $v );
-		self::debug( 'Generating: ', $data );
 
 		$json = Cloud::post( $svc, $data, $this->_post_timeout() );
 		if ( ! is_array( $json ) ) {
@@ -288,6 +289,7 @@ abstract class Cloud_Queue_Svc extends Base {
 		if ( ! empty( $json['try_later'] ) ) {
 			$ttl = (int) $json['try_later'];
 			self::debug( 'Server requested try later: ' . $ttl . ' seconds' );
+			self::save_summary( [ $curr_key => 0 ], true );
 			return [ 'try_later' => $ttl ];
 		}
 
@@ -337,11 +339,11 @@ abstract class Cloud_Queue_Svc extends Base {
 
 		switch ( $type ) {
 			case static::TYPE_GEN:
-            static::cron( true );
+				static::cron( true );
 				break;
 
 			case static::TYPE_CLEAR_Q:
-            $this->clear_q( $this->_svc_id() );
+				$this->clear_q( $this->_svc_id() );
 				break;
 
 			default:

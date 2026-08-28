@@ -127,6 +127,25 @@ class Utility extends Root {
 	}
 
 	/**
+	 * Build the current request URL from WordPress request globals.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @return string Current request URL.
+	 */
+	public static function request_url() {
+		global $wp;
+
+		$permalink_structure = get_option( 'permalink_structure' );
+		if ( ! empty( $permalink_structure ) ) {
+			return trailingslashit( home_url( $wp->request ) );
+		}
+
+		$qs_add = $wp->query_string ? '?' . (string) $wp->query_string : '';
+		return home_url( $wp->request ) . $qs_add;
+	}
+
+	/**
 	 * Get ping speed to a domain via HTTP HEAD timing.
 	 *
 	 * @since 2.9
@@ -780,16 +799,17 @@ class Utility extends Root {
 	}
 
 	/**
-	 * Check if a URL is an internal existing file and return its real path and size.
+	 * Map an internal URL to its local file target and size.
 	 *
 	 * @since 1.2.2
 	 * @since 1.6.2 Moved here from optm.cls due to usage of media.cls
 	 *
 	 * @param string       $url              URL.
 	 * @param string|false $addition_postfix Optional postfix to append to path before checking.
-	 * @return array{0:string,1:int}|false [realpath, size] or false.
+	 * @param bool         $allow_missing    Whether a hook-provided local target may be absent.
+	 * @return array{0:string,1:int}|false [local path, size] or false.
 	 */
-	public static function is_internal_file( $url, $addition_postfix = false ) {
+	public static function is_internal_file( $url, $addition_postfix = false, $allow_missing = false ) {
 		if ( 'data:' === substr( $url, 0, 5 ) ) {
 			Debug2::debug2( '[Util] data: content not file' );
 			return false;
@@ -834,12 +854,15 @@ class Utility extends Root {
 		$file_path_ori = apply_filters( 'litespeed_realpath', $file_path_ori );
 
 		$file_path = realpath( $file_path_ori );
-		if ( ! is_file( $file_path ) ) {
+		if ( ! $file_path && $allow_missing ) {
+			$file_path = $file_path_ori;
+		}
+		if ( ( file_exists( $file_path ) || ! $allow_missing ) && ! is_file( $file_path ) ) {
 			Debug2::debug2( '[Util] file not exist: ' . $file_path_ori );
 			return false;
 		}
 
-		return [ $file_path, (int) filesize( $file_path ) ];
+		return [ $file_path, is_file( $file_path ) ? (int) filesize( $file_path ) : 0 ];
 	}
 
 	/**

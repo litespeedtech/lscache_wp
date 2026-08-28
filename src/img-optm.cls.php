@@ -8,9 +8,6 @@
 
 namespace LiteSpeed;
 
-use WpOrg\Requests\Autoload;
-use WpOrg\Requests\Requests;
-
 defined( 'WPINC' ) || exit();
 
 /**
@@ -20,6 +17,7 @@ defined( 'WPINC' ) || exit();
  */
 class Img_Optm extends Base {
 	use Img_Optm_Send;
+	use Img_Optm_Notify;
 	use Img_Optm_Pull;
 	use Img_Optm_Manage;
 

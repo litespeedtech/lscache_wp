@@ -296,20 +296,19 @@ class Optimizer extends Root {
 			return File::read($today_file);
 		}
 
-		// Write file
-		$res      = wp_safe_remote_get($url);
-		$res_code = wp_remote_retrieve_response_code($res);
-		if (is_wp_error($res) || $res_code != 200) {
-			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $res_code);
-			return false;
-		}
-		$con = wp_remote_retrieve_body($res);
-		if (!$con) {
+		$temp = File::download($url, $today_file);
+		if (is_wp_error($temp)) {
+			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $temp->get_error_code());
 			return false;
 		}
 
+		$con = File::read($temp);
+		if (false === $con) {
+			wp_delete_file($temp);
+			return false;
+		}
 		Debug2::debug('[Optimizer] ✅ Save remote file to cache [name] ' . $today_file);
-		File::save($today_file, $con, true);
+		File::publish_temp_file($temp, $today_file);
 
 		return $con;
 	}

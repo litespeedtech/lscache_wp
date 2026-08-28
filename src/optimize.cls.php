@@ -251,7 +251,7 @@ class Optimize extends Base {
 			// Check if hit URI excludes
 			add_filter('litespeed_optm_uri_exc', array( $this->cls('Data'), 'load_optm_uri_exc' ));
 			$excludes = apply_filters('litespeed_optm_uri_exc', $this->conf(self::O_OPTM_EXC));
-			$result   = Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
+			$result   = REST::str_hit_uri($_SERVER['REQUEST_URI'], $excludes);
 			if ($result) {
 				self::debug('bypass: hit URI Excludes setting: ' . $result);
 				return $content;
@@ -273,16 +273,7 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _optimize() {
-		global $wp;
-		
-		// get current request url
-		$permalink_structure = get_option( 'permalink_structure' );
-		if ( ! empty( $permalink_structure ) ) {
-			$this->_request_url = trailingslashit( home_url( $wp->request ) );
-		} else {
-			$qs_add             = $wp->query_string ? '?' . (string) $wp->query_string : '' ;
-			$this->_request_url = home_url( $wp->request ) . $qs_add;
-		}
+		$this->_request_url = Utility::request_url();
 
 		$this->cfg_css_min            = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_MIN);
 		$this->cfg_css_comb           = defined('LITESPEED_GUEST_OPTM') || $this->conf(self::O_OPTM_CSS_COMB);

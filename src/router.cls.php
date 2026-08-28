@@ -208,7 +208,7 @@ class Router extends Base {
 		$rest_prefix = function_exists('rest_get_url_prefix') ? rest_get_url_prefix() : apply_filters('rest_url_prefix', 'wp-json');
 		if (
 			!empty($_SERVER['REQUEST_URI']) &&
-			strpos($_SERVER['REQUEST_URI'], $rest_prefix . '/wp/v2/media') !== false &&
+			REST::str_hit_uri($_SERVER['REQUEST_URI'], [$rest_prefix . '/wp/v2/media']) &&
 			isset($_SERVER['HTTP_REFERER']) &&
 			strpos($_SERVER['HTTP_REFERER'], 'wp-admin') !== false
 		) {

@@ -53,8 +53,13 @@ class Guest extends Cloud {
 		];
 
 		foreach ( [ 'ips', 'uas' ] as $type ) {
-			$data = $this->_fetch_api( $this->_cloud_server_wp . '/gm_' . $type );
-			if ( $data && File::save( $cloud_dir . '/gm_' . $type . '.txt', $data, true ) ) {
+			$url  = $this->_cloud_server_wp . '/gm_' . $type;
+			$file = $cloud_dir . '/gm_' . $type . '.txt';
+			self::debug( 'Fetching: ' . $url );
+			$temp = File::download( $url, $file, 15 );
+			if ( is_wp_error( $temp ) ) {
+				self::debug( 'Fetch failed: ' . $temp->get_error_code() );
+			} elseif ( File::publish_temp_file( $temp, $file ) ) {
 				self::debug( 'Guest Mode ' . $type . ' synced' );
 				$results[ $type ] = true;
 			}
@@ -69,43 +74,6 @@ class Guest extends Cloud {
 			'success' => $success,
 			'message' => $message,
 		];
-	}
-
-	/**
-	 * Fetch data from API.
-	 *
-	 * @since 7.7
-	 * @param string $url API URL.
-	 * @return string|false Data on success, false on failure.
-	 */
-	private function _fetch_api( $url ) {
-		self::debug( 'Fetching: ' . $url );
-
-		$response = wp_remote_get(
-			$url,
-			[
-				'timeout' => 15,
-			]
-		);
-
-		if ( is_wp_error( $response ) ) {
-			self::debug( 'Fetch error: ' . $response->get_error_message() );
-			return false;
-		}
-
-		$code = wp_remote_retrieve_response_code( $response );
-		if ( 200 !== $code ) {
-			self::debug( 'Fetch failed with code: ' . $code );
-			return false;
-		}
-
-		$body = wp_remote_retrieve_body( $response );
-		if ( empty( $body ) ) {
-			self::debug( 'Empty response body' );
-			return false;
-		}
-
-		return $body;
 	}
 
 	/**

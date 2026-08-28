@@ -15,6 +15,11 @@ defined('WPINC') || exit();
 class File {
 
 	const MARKER = 'LiteSpeed Operator';
+	const REMOTE_MAX_BYTES = 33554432;
+	const E_NET             = 'net';
+	const E_HTTP            = 'http';
+	const E_DATA            = 'data';
+	const E_FILE            = 'file';
 
 	/**
 	 * Marker name embedded in the seeded .htaccess. Bump the suffix when the rule template changes so ensure_static_protection() re-seeds outdated copies on existing sites.
@@ -114,6 +119,59 @@ HTACCESS;
 		} else {
 			Admin_Display::error($banner, false, true);
 		}
+	}
+
+	/**
+	 * Download a bounded remote file through the WordPress safe HTTP API.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string       $url       Remote URL.
+	 * @param string       $filename  Final destination path.
+	 * @param int          $timeout   Request timeout in seconds.
+	 * @param int          $redirects Maximum redirects.
+	 * @param string|array $root      Bound root for the destination.
+	 * @return string|\WP_Error Temporary file path or a classified failure.
+	 */
+	public static function download( $url, $filename, $timeout = 60, $redirects = 5, $root = '' ) {
+		if (!is_string($url) || '' === $url) {
+			return new \WP_Error(self::E_DATA);
+		}
+		if (!is_string($filename) || '' === $filename || is_link($filename)) {
+			return new \WP_Error(self::E_FILE);
+		}
+		$folder = dirname($filename);
+		if ((!is_dir($folder) && ($root || !wp_mkdir_p($folder))) || !($temp = self::temp_file($folder, '.lscwp-', $root))) {
+			return new \WP_Error(self::E_FILE);
+		}
+		if (defined('LITESPEED_STATIC_DIR') && 0 === strpos($filename, LITESPEED_STATIC_DIR . '/')) {
+			self::ensure_static_protection();
+		}
+		$response = wp_safe_remote_get($url, [
+			'timeout'             => $timeout,
+			'redirection'         => $redirects,
+			'limit_response_size' => self::REMOTE_MAX_BYTES + 1,
+			'stream'              => true,
+			'filename'            => $temp,
+		]);
+		if (is_wp_error($response)) {
+			wp_delete_file($temp);
+			return new \WP_Error(self::E_NET, $response->get_error_message(), $response->get_error_code());
+		}
+
+		$code = (int) wp_remote_retrieve_response_code($response);
+		if (200 !== $code) {
+			wp_delete_file($temp);
+			return new \WP_Error(self::E_HTTP, '', $code);
+		}
+
+		clearstatcache(true, $temp);
+		$size = is_file($temp) ? filesize($temp) : false;
+		if (!$size || self::REMOTE_MAX_BYTES < $size) {
+			wp_delete_file($temp);
+			return new \WP_Error(self::E_DATA);
+		}
+		return $temp;
 	}
 
 	/**
@@ -279,6 +337,146 @@ HTACCESS;
 			return $silence ? false : sprintf(__('Failed to write to %s.', 'litespeed-cache'), $filename);
 		}
 
+		return true;
+	}
+
+	/**
+	 * Atomically save content through a same-directory temporary file.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string $filename Destination file.
+	 * @param string $data     File content.
+	 * @param bool   $binary   Whether content must remain byte-exact.
+	 * @return bool
+	 */
+	public static function save_atomic( $filename, $data, $binary = false ) {
+		if (!is_string($filename) || '' === $filename || !is_string($data) || is_link($filename)) {
+			return false;
+		}
+		$folder = dirname($filename);
+		if (!is_dir($folder) && !wp_mkdir_p($folder)) {
+			return false;
+		}
+		if (defined('LITESPEED_STATIC_DIR') && 0 === strpos($filename, LITESPEED_STATIC_DIR . '/')) {
+			self::ensure_static_protection();
+		}
+		if (!$binary) {
+			$data = self::remove_zero_space($data);
+		}
+		$temp = self::temp_file($folder);
+		if (!$temp) {
+			return false;
+		}
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		$written = file_put_contents($temp, $data, LOCK_EX);
+		if (false === $written || strlen($data) !== $written) {
+			wp_delete_file($temp);
+			return false;
+		}
+		return self::publish_temp_file($temp, $filename);
+	}
+
+	/**
+	 * Bind a root directory to its current device and inode.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string $root Root directory.
+	 * @return array|false `[ path, identity ]`, or false.
+	 */
+	public static function bind_root( $root ) {
+		$resolved = realpath($root);
+		$stat     = $resolved ? @lstat($resolved) : false;
+		return $stat ? [ wp_normalize_path($resolved), $stat['dev'] . ':' . $stat['ino'] ] : false;
+	}
+
+	/**
+	 * Confirm that a path still resolves inside a root directory.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string       $file Path to test.
+	 * @param string|array $root Root path, or the result of `bind_root()`; empty skips the check.
+	 * @return bool
+	 */
+	public static function within( $file, $root ) {
+		$identity = '';
+		if (is_array($root)) {
+			list($root, $identity) = $root;
+		}
+		if ('' === $root) {
+			return true;
+		}
+
+		$resolved = realpath($file);
+		$base     = realpath($root);
+		if (!$resolved || !$base) {
+			return false;
+		}
+		if ('' !== $identity) {
+			$stat = @lstat($base);
+			if (!$stat || $identity !== $stat['dev'] . ':' . $stat['ino']) {
+				return false;
+			}
+		}
+
+		$resolved = wp_normalize_path($resolved);
+		$base     = wp_normalize_path($base);
+		return $resolved === $base || 0 === strpos($resolved, trailingslashit($base));
+	}
+
+	/**
+	 * Create a plugin temporary file.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string $dir    Destination directory.
+	 * @param string $prefix Temporary filename prefix.
+	 * @param string $root   Directory `$dir` must resolve inside; empty skips the check.
+	 * @return string|false
+	 */
+	public static function temp_file( $dir, $prefix = '.lscwp-', $root = '' ) {
+		$dir = realpath($dir);
+		if (!$dir || !is_dir($dir) || !self::within($dir, $root)) {
+			return false;
+		}
+		$file = @tempnam($dir, $prefix);
+		if (!$file || dirname($file) !== $dir || is_link($file)) {
+			if ($file) {
+				wp_delete_file($file);
+			}
+			return false;
+		}
+		return $file;
+	}
+
+	/**
+	 * Publish a same-directory temporary file with WordPress's file mode.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string $temp   Temporary file.
+	 * @param string $target Destination file.
+	 * @param string $root   Directory the destination must resolve inside; empty skips the check.
+	 * @return bool
+	 */
+	public static function publish_temp_file( $temp, $target, $root = '' ) {
+		$mode       = defined('FS_CHMOD_FILE') ? FS_CHMOD_FILE : 0644;
+		$temp_dir   = realpath(dirname($temp));
+		$target_dir = realpath(dirname($target));
+		// Same-directory is not in-scope: both sides move together when their shared parent is swapped.
+		if (!$temp_dir || $temp_dir !== $target_dir || !is_file($temp) || is_link($temp) || !self::within($target_dir, $root)) {
+			wp_delete_file($temp);
+			return false;
+		}
+		if (!@chmod($temp, $mode)) {
+			Root::debugErr('Failed to set published file permissions: ' . $target);
+		}
+		if (!@rename($temp, $target)) {
+			wp_delete_file($temp);
+			return false;
+		}
 		return true;
 	}
 

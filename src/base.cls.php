@@ -1089,14 +1089,14 @@ class Base extends Root {
 	 * @param string $queue_k   Queue key (for filter and purge tag).
 	 * @param bool   $is_mobile Whether is mobile.
 	 * @param bool   $is_webp   Whether supports webp.
-	 * @return void
+	 * @return bool
 	 */
 	protected function _save_css_con( $type, $css, $url_tag, $vary, $queue_k, $is_mobile, $is_webp ) {
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		// Font optimize
 		$css = $this->cls('Optimizer')->optm_font_face( $css );
 		// Sanitize: CSS must not contain HTML tags
-		$css = wp_strip_all_tags( $css );
+		$css = File::remove_zero_space( wp_strip_all_tags( $css ) );
 		self::debug2( 'con: ', $css );
 
 		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {
@@ -1107,11 +1107,18 @@ class Base extends Root {
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.css';
 
-		File::save( $static_file, $css, true );
+		if ( ! File::save_atomic( $static_file, $css ) ) {
+			return false;
+		}
 		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
 
-		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $is_mobile, $is_webp );
+		$data = $this->cls( 'Data' );
+		$data->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ), $is_mobile, $is_webp );
+		if ( $filecon_md5 !== $data->load_url_file( $url_tag, $vary, $type ) ) {
+			return false;
+		}
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
+		return true;
 	}
 }

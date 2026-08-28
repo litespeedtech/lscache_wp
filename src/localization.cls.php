@@ -83,25 +83,12 @@ class Localization extends Base {
 
 		header( 'Content-Type: application/javascript' );
 
-		// Generate
-		$this->_maybe_mk_cache_folder( 'localres' );
-
 		$file = $this->_realpath( $url );
 
 		self::debug( 'localize [url] ' . $url );
-		$response = wp_safe_remote_get( $url, [
-			'timeout'  => 180,
-			'stream'   => true,
-			'filename' => $file,
-		] );
-
-		// Parse response data
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message();
-			if ( file_exists( $file ) ) {
-				wp_delete_file( $file );
-			}
-			self::debug( 'failed to get: ' . $error_message );
+		$temp = File::download( $url, $file, 180 );
+		if ( is_wp_error( $temp ) || ! File::publish_temp_file( $temp, $file ) ) {
+			self::debug( 'failed to localize: ' . ( is_wp_error( $temp ) ? $temp->get_error_code() : File::E_FILE ) );
 			wp_safe_redirect( $url );
 			exit();
 		}

@@ -392,7 +392,7 @@ class ESI extends Root {
 	public function load_combo() {
 		Control::set_nocache('ESI combine request');
 
-		if (empty($_POST['esi_include'])) {
+		if (empty($_POST['esi_include']) || !is_array($_POST['esi_include'])) {
 			return;
 		}
 
@@ -402,9 +402,19 @@ class ESI extends Root {
 
 		$output = '';
 		foreach ($_POST['esi_include'] as $url) {
+			if (!is_string($url)) {
+				continue;
+			}
 			$qs = parse_url(htmlspecialchars_decode($url), PHP_URL_QUERY);
+			if (!is_string($qs)) {
+				continue;
+			}
 			parse_str($qs, $qs);
 			if (empty($qs[self::QS_ACTION])) {
+				continue;
+			}
+			$expected_hash = $this->_gen_esi_md5($qs);
+			if (!is_string($expected_hash) || empty($qs['_hash']) || !is_string($qs['_hash']) || !hash_equals($expected_hash, $qs['_hash'])) {
 				continue;
 			}
 			$esi_id       = $qs[self::QS_ACTION];
@@ -562,15 +572,22 @@ class ESI extends Root {
 	 *
 	 * @since  2.9.6
 	 * @access private
+	 * @return string|false The signature, or false when a signed field is not a string.
 	 */
 	private function _gen_esi_md5( $params ) {
 		$keys = array( self::QS_ACTION, '_control', self::QS_PARAMS );
 
 		$str = '';
 		foreach ($keys as $v) {
-			if (isset($params[$v]) && is_string($params[$v])) {
-				$str .= $params[$v];
+			if (!isset($params[$v])) {
+				continue;
 			}
+
+			if (!is_string($params[$v])) {
+				return false;
+			}
+
+			$str .= $params[$v];
 		}
 		self::debug2('md5_string=' . $str);
 
@@ -582,20 +599,18 @@ class ESI extends Root {
 	 *
 	 * @since 1.1.3
 	 * @access private
+	 * @return array|false The decoded parameters, or false for an absent or malformed payload.
 	 */
 	private function _parse_esi_param( $qs_params = false ) {
-		$req_params = false;
-		if ($qs_params) {
-			$req_params = $qs_params;
-		} elseif (isset($_REQUEST[self::QS_PARAMS])) {
-			$req_params = $_REQUEST[self::QS_PARAMS];
+		if ($qs_params === false) {
+			$qs_params = isset($_GET[self::QS_PARAMS]) ? $_GET[self::QS_PARAMS] : false;
 		}
 
-		if (!$req_params) {
+		if (!is_string($qs_params) || $qs_params === '') {
 			return false;
 		}
 
-		$unencrypted = base64_decode($req_params);
+		$unencrypted = base64_decode($qs_params, true);
 		if ($unencrypted === false) {
 			return false;
 		}
@@ -604,7 +619,7 @@ class ESI extends Root {
 		// $unencoded = urldecode($unencrypted); no need to do this as $_GET is already parsed
 		$params = \json_decode($unencrypted, true);
 
-		return $params;
+		return is_array($params) ? $params : false;
 	}
 
 	/**
@@ -635,7 +650,8 @@ class ESI extends Root {
 		 *
 		 * @since 2.9.6
 		 */
-		if (empty($_GET['_hash']) || $this->_gen_esi_md5($_GET) != $_GET['_hash']) {
+		$hash = $this->_gen_esi_md5($_GET);
+		if (empty($_GET['_hash']) || !is_string($_GET['_hash']) || !$hash || !hash_equals($hash, $_GET['_hash'])) {
 			self::debug('[ESI] ❌ Failed to validate _hash');
 			return;
 		}

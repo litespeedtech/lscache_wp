@@ -301,26 +301,42 @@ trait Cloud_Misc {
 	 * REST call: check if the error domain is valid call for auto alias purpose
 	 *
 	 * @since 5.0
+	 * @param string|null $raw_body Verified request body.
+	 * @return array
 	 */
-	public function rest_err_domains() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$alias = !empty( $_POST['alias'] ) ? sanitize_text_field( wp_unslash( $_POST['alias'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST['main_domain'] ) || !$alias ) {
+	public function rest_err_domains( $raw_body = null ) {
+		$payload = is_string( $raw_body ) ? json_decode( $raw_body, true, 32 ) : false;
+		if (
+			! is_array( $payload ) || empty( $payload['alias'] ) || ! is_string( $payload['alias'] ) ||
+			empty( $payload['main_domain'] ) || ! is_string( $payload['main_domain'] )
+		) {
 			return self::err( 'lack_of_param' );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$this->extract_msg( $_POST, 'Quic.cloud', false, true );
-
-		if ( $this->_is_err_domain( $alias ) ) {
-			if ( site_url() === $alias ) {
-				$this->_remove_domain_from_err_list( $alias );
-			}
-			return self::ok();
+		$alias = sanitize_text_field( $payload['alias'] );
+		if ( ! $this->_is_err_domain( $alias ) ) {
+			return self::err( 'Not an alias req from here' );
 		}
 
-		return self::err( 'Not an alias req from here' );
+		$message = [];
+		foreach ( [ '_info', '_note', '_success' ] as $field ) {
+			if ( ! isset( $payload[ $field ] ) || ! is_string( $payload[ $field ] ) ) {
+				continue;
+			}
+			$len = strlen( $payload[ $field ] );
+			if ( $len > self::CALLBACK_MSG_MAX_BYTES ) {
+				// Oversized notices are ignored but logged.
+				self::debugErr( 'Dropped oversized callback message [field] ' . $field . ' [bytes] ' . $len );
+				continue;
+			}
+			$message[ $field ] = $payload[ $field ];
+		}
+		$this->extract_msg( $message, 'Quic.cloud', false, true );
+
+		if ( site_url() === $alias ) {
+			$this->_remove_domain_from_err_list( $alias );
+		}
+		return self::ok();
 	}
 
 	/**

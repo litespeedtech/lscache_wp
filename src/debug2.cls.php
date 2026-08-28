@@ -321,7 +321,7 @@ class Debug2 extends Root {
 		$list = $this->conf( Base::O_DEBUG_INC );
 		if ( $list ) {
 			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-			$result      = Utility::str_hit_array( $request_uri, $list );
+			$result      = REST::str_hit_uri( $request_uri, $list );
 			if ( ! $result ) {
 				return;
 			}
@@ -330,7 +330,7 @@ class Debug2 extends Root {
 		$list = $this->conf( Base::O_DEBUG_EXC );
 		if ( $list ) {
 			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-			$result      = Utility::str_hit_array( $request_uri, $list );
+			$result      = REST::str_hit_uri( $request_uri, $list );
 			if ( $result ) {
 				return;
 			}

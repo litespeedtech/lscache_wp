@@ -75,48 +75,49 @@ class REST extends Root {
 		register_rest_route( 'litespeed/v3', '/ip_validate', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'ip_validate' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => function ( $request ) {
+				return $this->cls( 'Cloud' )->validate_signed_callback( $request, Cloud::SIGN_ACTION_IP_VALIDATE );
+			},
 		] );
 
 		// 1.2. WP REST Dryrun Callback
 		register_rest_route( 'litespeed/v3', '/wp_rest_echo', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'wp_rest_echo' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => '__return_true',
 		] );
 		register_rest_route( 'litespeed/v3', '/ping', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'ping' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => function ( $request ) {
+				return $this->cls( 'Cloud' )->validate_signed_callback( $request, Cloud::SIGN_ACTION_PING );
+			},
 		] );
 
 		// CDN setup callback notification
 		register_rest_route( 'litespeed/v3', '/cdn_status', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'cdn_status' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => function ( $request ) {
+				return $this->cls( 'Cloud' )->validate_signed_callback( $request, Cloud::SIGN_ACTION_CDN_STATUS );
+			},
 		] );
 
 		// Image optm notify_img
-		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'notify_img' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => function ( $request ) {
+				return $this->cls( 'Cloud' )->validate_signed_callback( $request, Cloud::SIGN_ACTION_NOTIFY_IMG );
+			},
 		] );
 
 		register_rest_route( 'litespeed/v3', '/err_domains', [
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'err_domains' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
-		] );
-
-		// Image optm check_img
-		// Need validation
-		register_rest_route( 'litespeed/v1', '/check_img', [
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'check_img' ],
-			'permission_callback' => [ $this, 'is_from_cloud' ],
+			'permission_callback' => function ( $request ) {
+				return $this->cls( 'Cloud' )->validate_signed_callback( $request, Cloud::SIGN_ACTION_ERR_DOMAINS );
+			},
 		] );
 	}
 
@@ -135,24 +136,14 @@ class REST extends Root {
 	}
 
 	/**
-	 * Check if the request is from cloud nodes.
-	 *
-	 * @since 4.2
-	 * @since 4.4.7 Token/API key validation makes IP validation redundant.
-	 * @return bool
-	 */
-	public function is_from_cloud() {
-		return $this->cls( 'Cloud' )->is_from_cloud();
-	}
-
-	/**
 	 * Ping pong.
 	 *
 	 * @since 3.0.4
+	 * @param \WP_REST_Request $request REST request.
 	 * @return mixed
 	 */
-	public function ping() {
-		return $this->cls( 'Cloud' )->ping();
+	public function ping( $request ) {
+		return $this->cls( 'Cloud' )->ping( $request->get_body() );
 	}
 
 	/**
@@ -179,10 +170,11 @@ class REST extends Root {
 	 * Validate IPs from cloud.
 	 *
 	 * @since 3.0
+	 * @param \WP_REST_Request $request REST request.
 	 * @return mixed
 	 */
-	public function ip_validate() {
-		return $this->cls( 'Cloud' )->ip_validate();
+	public function ip_validate( $request ) {
+		return $this->cls( 'Cloud' )->ip_validate( $request->get_body() );
 	}
 
 	/**
@@ -199,41 +191,37 @@ class REST extends Root {
 	 * Endpoint to notify plugin of CDN status updates.
 	 *
 	 * @since 7.0
+	 * @since 7.9.1 Forwards the exact raw body the signature was verified over.
+	 *
+	 * @param \WP_REST_Request $request REST request.
 	 * @return mixed
 	 */
-	public function cdn_status() {
-		return $this->cls( 'Cloud' )->update_cdn_status();
+	public function cdn_status( $request ) {
+		return $this->cls( 'Cloud' )->update_cdn_status( $request->get_body() );
 	}
 
 	/**
 	 * Image optimization notification.
 	 *
 	 * @since 3.0
+	 * @since 7.9.1 Accepts the REST request and forwards its exact raw body.
+	 * @param \WP_REST_Request $request REST request.
 	 * @return mixed
 	 */
-	public function notify_img() {
-		return Img_Optm::cls()->notify_img();
+	public function notify_img( $request ) {
+		return Img_Optm::cls()->notify_img( $request->get_body() );
 	}
 
 	/**
 	 * Error domain report from cloud.
 	 *
 	 * @since 4.7
+	 * @param \WP_REST_Request $request REST request.
 	 * @return mixed
 	 */
-	public function err_domains() {
+	public function err_domains( $request ) {
 		self::debug( 'err_domains' );
-		return $this->cls( 'Cloud' )->rest_err_domains();
-	}
-
-	/**
-	 * Launch image check.
-	 *
-	 * @since 3.0
-	 * @return mixed
-	 */
-	public function check_img() {
-		return Img_Optm::cls()->check_img();
+		return $this->cls( 'Cloud' )->rest_err_domains( $request->get_body() );
 	}
 
 	/**
@@ -289,6 +277,53 @@ class REST extends Root {
 	}
 
 	/**
+	 * Match URI rules against pretty and rest_route spellings.
+	 *
+	 * @since 7.9.1
+	 * @param string $req_uri  Raw request URI.
+	 * @param array  $rules    URI rules.
+	 * @param bool   $has_ttl  Whether rules include a TTL.
+	 * @return bool|string|array
+	 */
+	public static function str_hit_uri( $req_uri, $rules, $has_ttl = false ) {
+		$uris = [ $req_uri ];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Type is checked before sanitization.
+		$route = isset( $_GET['rest_route'] ) ? wp_unslash( $_GET['rest_route'] ) : '';
+		$route = is_string( $route ) ? sanitize_text_field( $route ) : '';
+		if ( '' !== $route && function_exists( 'rest_get_url_prefix' ) ) {
+			$prefix = wp_parse_url( home_url( rest_get_url_prefix() ), PHP_URL_PATH );
+			if ( $prefix ) {
+				$equivalent = '/' . ltrim( $prefix, '/' ) . '/' . ltrim( $route, '/' );
+				// Carry the other arguments over byte for byte: rules compare exactly, so parse_str() would break them.
+				$query = wp_parse_url( $req_uri, PHP_URL_QUERY );
+				$kept  = [];
+				if ( is_string( $query ) && '' !== $query ) {
+					foreach ( explode( '&', $query ) as $segment ) {
+						// Empty segments are kept too — dropping `&&` would itself be a rewrite.
+						$name = urldecode( explode( '=', $segment, 2 )[0] );
+						if ( 'rest_route' === $name || 0 === strpos( $name, 'rest_route[' ) ) {
+							continue;
+						}
+						$kept[] = $segment;
+					}
+				}
+				if ( $kept ) {
+					$equivalent .= '?' . implode( '&', $kept );
+				}
+				$uris[] = $equivalent;
+			}
+		}
+
+		foreach ( $uris as $uri ) {
+			$hit = Utility::str_hit_array( $uri, $rules, $has_ttl );
+			if ( $hit ) {
+				return $hit;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check whether a URL or current page is a REST request.
 	 *
 	 * @since 2.9.3
@@ -309,11 +344,12 @@ class REST extends Root {
 			return true;
 		}
 
-		// Case #2: Support "plain" permalink settings.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$route = isset( $_GET['rest_route'] ) ? sanitize_text_field( wp_unslash( $_GET['rest_route'] ) ) : '';
+		// Case #2: Support the rest_route query used by plain permalinks.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Type is checked before sanitization.
+		$route = isset( $_GET['rest_route'] ) ? wp_unslash( $_GET['rest_route'] ) : '';
+		$route = is_string( $route ) ? sanitize_text_field( $route ) : '';
 
-		if ( $route && 0 === strpos( trim( $route, '\\/' ), $prefix, 0 ) ) {
+		if ( false === $url && '' !== $route ) {
 			return true;
 		}
 
@@ -321,8 +357,8 @@ class REST extends Root {
 			return false;
 		}
 
-		// Case #3: URL path begins with wp-json/ (REST prefix) – safe for subfolder installs.
-		$rest_url    = wp_parse_url( site_url( $prefix ) );
+		// Case #3: Match the home-based REST path, including subfolder installs.
+		$rest_url    = wp_parse_url( home_url( $prefix ) );
 		$current_url = wp_parse_url( $url );
 
 		if ( false !== $current_url && ! empty( $current_url['path'] ) && false !== $rest_url && ! empty( $rest_url['path'] ) ) {

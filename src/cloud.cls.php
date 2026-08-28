@@ -31,13 +31,6 @@ class Cloud extends Base {
 	private $_cloud_server = 'https://api.quic.cloud';
 
 	/**
-	 * Cloud IPs endpoint.
-	 *
-	 * @var string
-	 */
-	private $_cloud_ips = 'https://quic.cloud/ips';
-
-	/**
 	 * Cloud dashboard URL.
 	 *
 	 * @var string
@@ -83,14 +76,50 @@ class Cloud extends Base {
 
 	const TTL_NODE       = 3;   // Days before node expired
 	const EXPIRATION_REQ = 300; // Seconds of min interval between two unfinished requests
-	const TTL_IPS        = 3;   // Days for node ip list cache
 
-	const API_REPORT          = 'wp/report';
-	const API_NEWS            = 'news';
-	const API_VER             = 'ver_check';
-	const API_BETA_TEST       = 'beta_test';
-	const API_REST_ECHO       = 'tool/wp_rest_echo';
-	const API_SERVER_KEY_SIGN = 'key_sign';
+	const API_REPORT    = 'wp/report';
+	const API_NEWS      = 'news';
+	const API_VER       = 'ver_check';
+	const API_BETA_TEST = 'beta_test';
+	const API_REST_ECHO = 'tool/wp_rest_echo';
+
+	const SIGN_VERSION            = 1;
+	const SIGN_MAX_AGE            = 300;
+	const SIGN_NONCE_MAX          = 512;
+	const SIGN_BODY_MAX_BYTES     = 1048576;
+	const SIGN_MAX_ITEMS          = 200;
+	const SIGN_ACTION_NOTIFY_IMG  = 'notify_img';
+	const SIGN_ACTION_CDN_STATUS  = 'cdn_status';
+	const SIGN_ACTION_ERR_DOMAINS = 'err_domains';
+	const SIGN_ACTION_IP_VALIDATE = 'ip_validate';
+	const SIGN_ACTION_PING        = 'ping';
+	const CALLBACK_ERR_REQUEST    = 'litespeed_callback_request';
+	const CALLBACK_ERR_ENVELOPE   = 'litespeed_callback_envelope';
+	const CALLBACK_ERR_ACTION     = 'litespeed_callback_action';
+	const CALLBACK_ERR_SITE       = 'litespeed_callback_site';
+	const CALLBACK_ERR_METADATA   = 'litespeed_callback_metadata';
+	const CALLBACK_ERR_TIMESTAMP  = 'litespeed_callback_timestamp';
+	const CALLBACK_ERR_SIGNATURE  = 'litespeed_callback_signature';
+	const CALLBACK_ERR_REPLAY     = 'litespeed_callback_replay';
+	const CALLBACK_ERR_STORAGE    = 'litespeed_callback_storage';
+	const CALLBACK_ERR_CAPACITY   = 'litespeed_callback_capacity';
+
+	/** Maximum callback admin-notice length. */
+	const CALLBACK_MSG_MAX_BYTES = 65536;
+
+	const ITEM_SIGN_NONCE = 'sign_nonce.';
+
+	/**
+	 * Trusted callback keys. Add the next key before rotation and remove revoked keys in an update.
+	 */
+	const SERVER_SIGN_KEYS = [
+		'qc'    => [
+			'qc-2025-01' => '1a8mxBAOPQ4SsyCncktY2O/CcN0hfv891qCYth7ay2I=',
+		],
+		'wpapi' => [
+			'wpapi-2025-01' => 'g9hiXo+P/fX4FbOnZu5dDKpEQXpwuDSkuCkCaX3ZSpk=',
+		],
+	];
 
 	/**
 	 * Center services hosted at the central API server.
@@ -191,7 +220,6 @@ class Cloud extends Base {
 			$allowed_hosts[]          = 'my.preview.quic.cloud';
 			$allowed_hosts[]          = 'api.preview.quic.cloud';
 			$this->_cloud_server      = 'https://api.preview.quic.cloud';
-			$this->_cloud_ips         = 'https://api.preview.quic.cloud/ips';
 			$this->_cloud_server_dash = 'https://my.preview.quic.cloud';
 			$this->_cloud_server_wp   = 'https://wpapi.quic.cloud';
 		} else {

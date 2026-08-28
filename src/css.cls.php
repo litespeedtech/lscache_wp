@@ -105,8 +105,7 @@ class CSS extends Cloud_Queue_Svc {
 	 */
 	protected function _save_result( $data, $queue_k, $v ) {
 		$css = null === $data ? '' : (string) $data;
-		$this->_save_css_con( 'ccss', $css, $v['url_tag'], $v['vary'], $queue_k, ! empty( $v['is_mobile'] ), ! empty( $v['is_webp'] ) );
-		return true;
+		return $this->_save_css_con( 'ccss', $css, $v['url_tag'], $v['vary'], $queue_k, ! empty( $v['is_mobile'] ), ! empty( $v['is_webp'] ) );
 	}
 
 	/**
@@ -201,16 +200,7 @@ class CSS extends Cloud_Queue_Svc {
 	 * @return string|null
 	 */
 	private function _ccss() {
-		global $wp;
-
-		// get current request url
-		$permalink_structure = get_option( 'permalink_structure' );
-		if ( ! empty( $permalink_structure ) ) {
-			$request_url = trailingslashit( home_url( $wp->request ) );
-		} else {
-			$qs_add      = $wp->query_string ? '?' . (string) $wp->query_string : '';
-			$request_url = home_url( $wp->request ) . $qs_add;
-		}
+		$request_url = Utility::request_url();
 
 		$filepath_prefix = $this->_build_filepath_prefix( 'ccss' );
 		$url_tag         = $this->_gen_ccss_file_tag( $request_url );

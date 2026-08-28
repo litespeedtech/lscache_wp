@@ -541,7 +541,7 @@ trait Img_Optm_Send {
 
 		$list = [];
 		foreach ( $_img_in_queue as $v ) {
-			$_img_info = $this->__media->info( $v->src, $v->post_id );
+			$_img_info = $this->_local_pull_file( $v ) ? $this->__media->info( $v->src, $v->post_id ) : false;
 			// If record is invalid, remove from img_optming table
 			if ( empty( $_img_info['url'] ) || empty( $_img_info['md5'] ) ) {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

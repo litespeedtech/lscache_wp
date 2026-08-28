@@ -711,7 +711,7 @@ class Control extends Root {
 		// Check if URI is forced public cache.
 		$excludes = $this->conf( Base::O_CACHE_FORCE_PUB_URI );
 		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-		$hit      = Utility::str_hit_array( $req_uri, $excludes, true );
+		$hit      = REST::str_hit_uri( $req_uri, $excludes, true );
 		if ( $hit ) {
 			list( $result, $this_ttl ) = $hit;
 			self::set_public_forced( 'Setting: ' . $result );
@@ -727,7 +727,7 @@ class Control extends Root {
 
 		// Check if URI is forced cache.
 		$excludes = $this->conf( Base::O_CACHE_FORCE_URI );
-		$hit      = Utility::str_hit_array( $req_uri, $excludes, true );
+		$hit      = REST::str_hit_uri( $req_uri, $excludes, true );
 		if ( $hit ) {
 			list( $result, $this_ttl ) = $hit;
 			self::force_cacheable();
@@ -861,7 +861,7 @@ class Control extends Root {
 		// Check private cache URI setting.
 		$excludes = $this->conf( Base::O_CACHE_PRIV_URI );
 		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-		$result   = Utility::str_hit_array( $req_uri, $excludes );
+		$result   = REST::str_hit_uri( $req_uri, $excludes );
 		if ( $result ) {
 			self::set_private( 'Admin cfg Private Cached URI: ' . $result );
 		}
@@ -869,7 +869,7 @@ class Control extends Root {
 		if ( ! self::is_forced_cacheable() ) {
 			// Check if URI is excluded from cache.
 			$excludes = $this->cls( 'Data' )->load_cache_nocacheable( $this->conf( Base::O_CACHE_EXC ) );
-			$result   = Utility::str_hit_array( $req_uri, $excludes );
+			$result   = REST::str_hit_uri( $req_uri, $excludes );
 			if ( $result ) {
 				return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result );
 			}

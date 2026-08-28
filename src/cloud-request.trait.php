@@ -72,7 +72,7 @@ trait Cloud_Request {
 
 		$url .= '?' . http_build_query( $param );
 
-		self::debug( 'getting from : ' . $url );
+		self::debug( 'Cloud GET [service] ' . $service );
 
 		self::save_summary( [ 'curr_request.' . $service_tag => time() ] );
 		File::save( $this->_qc_time_file( $service_tag, 'curr' ), time(), true );
@@ -297,16 +297,6 @@ trait Cloud_Request {
 			$data['service_type'] = $service; // For queue distribution usage
 		}
 
-		// Encrypt service as signature
-		// $signature_ts = time();
-		// $sign_data = [
-		// 'service_tag' => $service_tag,
-		// 'ts' => $signature_ts,
-		// ];
-		// $data['signature_b64'] = $this->_sign_b64(implode('', $sign_data));
-		// $data['signature_ts'] = $signature_ts;
-
-		self::debug( 'data', $data );
 		$param = [
 			'site_url'    => site_url(), // Need to use site_url() as WPML case may change home_url() for diff langs (no need to treat as alias for multi langs)
 			'main_domain' => ! empty( $this->_summary['main_domain'] ) ? $this->_summary['main_domain'] : '',
@@ -374,10 +364,10 @@ trait Cloud_Request {
 		$json = \json_decode( $response['body'], true );
 
 		if ( ! is_array( $json ) ) {
-			self::debugErr( 'failed to decode response json: ' . $response['body'] );
+			self::debugErr( 'Failed to decode Cloud response JSON.' );
 
 			if ( $visible_err ) {
-				$msg = esc_html__( 'Failed to request via WordPress', 'litespeed-cache' ) . ': ' . esc_html( $response['body'] ) . ' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );
+				$msg = esc_html__( 'Failed to request via WordPress', 'litespeed-cache' ) . ' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );
 				Admin_Display::error( $msg );
 
 				// Tmp disabled this node from reusing in 1 day
@@ -464,11 +454,7 @@ trait Cloud_Request {
 		File::save( $this->_qc_time_file( $service_tag ), $curr_request, true );
 		File::save( $this->_qc_time_file( $service_tag, 'curr' ), 0, true );
 
-		if ( $json ) {
-			self::debug2( 'response ok', $json );
-		} else {
-			self::debug2( 'response ok' );
-		}
+		self::debug2( 'response ok' );
 
 		// Only successful request return Array
 		return $json;
@@ -526,7 +512,7 @@ trait Cloud_Request {
 
 		// Parse _carry_on info
 		if ( ! empty( $json['_carry_on'] ) ) {
-			self::debug( 'Carry_on usage', $json['_carry_on'] );
+			self::debug( 'Processing Cloud carry-on data.' );
 			// Store generic info
 			foreach ( [ 'usage', 'promo', 'mini_html', 'partner', '_error', '_info', '_note', '_success' ] as $v ) {
 				if ( isset( $json['_carry_on'][ $v ] ) ) {
@@ -577,7 +563,7 @@ trait Cloud_Request {
 		// Parse general error msg
 		if ( ! $is_callback && ( empty( $json['_res'] ) || 'ok' !== $json['_res'] ) ) {
 			$json_msg = ! empty( $json['_msg'] ) ? $json['_msg'] : 'unknown';
-			self::debug( '❌ _err: ' . $json_msg, $json );
+			self::debug( '❌ _err: ' . $json_msg );
 
 			$str_translated = Error::msg( $json_msg );
 			$msg            = __( 'Failed to communicate with QUIC.cloud server', 'litespeed-cache' ) . ': ' . $str_translated . ' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );

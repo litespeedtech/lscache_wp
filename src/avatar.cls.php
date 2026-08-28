@@ -301,27 +301,16 @@ class Avatar extends Base {
 			]
 		);
 
-		// Ensure cache directory exists
-		$this->_maybe_mk_cache_folder( 'avatar' );
-
-		$response = wp_safe_remote_get(
-			$url,
-			[
-				'timeout'  => 180,
-				'stream'   => true,
-				'filename' => $file,
-			]
-		);
-
+		$temp = File::download( $url, $file, 180 );
 		self::debug( '[Avatar] _generate [url] ' . $url );
-
-		// Parse response data
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message();
-			if ( file_exists( $file ) ) {
-				wp_delete_file( $file );
-			}
-			self::debug( '[Avatar] failed to get: ' . $error_message );
+		if ( is_wp_error( $temp ) ) {
+			self::debug( '[Avatar] failed to get: ' . $temp->get_error_code() );
+			return $url;
+		}
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( false === @getimagesize( $temp ) || ! File::publish_temp_file( $temp, $file ) ) {
+			wp_delete_file( $temp );
+			self::debug( '[Avatar] failed to validate or save the image.' );
 			return $url;
 		}
 

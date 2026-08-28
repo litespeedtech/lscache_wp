@@ -67,6 +67,26 @@ class Optimax extends Cloud_Queue_Svc {
 	}
 
 	/**
+	 * Reject malformed legacy queue rows before dispatch.
+	 *
+	 * @since 7.9.1
+	 *
+	 * @param string $queue_k Queue key.
+	 * @param array  $v       Queue item.
+	 * @return bool
+	 */
+	protected function _valid_queue_item( $queue_k, $v ) {
+		foreach ( [ 'url', 'user_agent', 'url_tag', 'vary' ] as $key ) {
+			if ( ! is_array( $v ) || ! isset( $v[ $key ] ) || ! is_string( $v[ $key ] ) ) {
+				return false;
+			}
+		}
+
+		return '' !== $queue_k && '' !== $v['url'] && '' !== $v['url_tag'] &&
+			( empty( $v['is_nextgen'] ) || in_array( $v['is_nextgen'], [ 'webp', 'avif' ], true ) );
+	}
+
+	/**
 	 * Build the request body for Cloud::post.
 	 *
 	 * @param string $queue_k Queue key.
@@ -80,6 +100,7 @@ class Optimax extends Cloud_Queue_Svc {
 			'user_agent' => $v['user_agent'],
 			'is_mobile'  => ! empty( $v['is_mobile'] ) ? 1 : 0,
 			'is_nextgen' => ! empty( $v['is_nextgen'] ) ? $v['is_nextgen'] : '',
+			'optm_ori'   => $this->conf( self::O_IMG_OPTM_ORI ) ? 1 : 0,
 		];
 	}
 
@@ -92,33 +113,35 @@ class Optimax extends Cloud_Queue_Svc {
 	 * @return bool False when HTML is missing (abort), true otherwise.
 	 */
 	protected function _save_result( $ox, $queue_k, $v ) {
-		if ( empty( $ox['html'] ) ) {
-			self::debug( '❌ No HTML in data_optimax [k] ' . $queue_k );
+		if ( ! is_array( $ox ) || empty( $ox['html'] ) || ! is_string( $ox['html'] ) ) {
+			self::debug( '❌ No HTML in data_optimax.' );
 			return false;
+		}
+		if ( isset( $ox['imgs'] ) && ! is_array( $ox['imgs'] ) ) {
+			return false;
+		}
+		foreach ( [ 'ucss', 'ccss' ] as $field ) {
+			if ( isset( $ox[ $field ] ) && ! is_string( $ox[ $field ] ) ) {
+				return false;
+			}
 		}
 
 		$is_mobile  = ! empty( $v['is_mobile'] );
 		$is_nextgen = ! empty( $v['is_nextgen'] ) ? $v['is_nextgen'] : '';
 
-		// 1. Save HTML.
-		$this->_save_con( $ox['html'], $queue_k, $is_mobile, $is_nextgen, $v );
-
-		// 2. Save UCSS.
-		if ( ! empty( $ox['ucss'] ) ) {
-			$this->_save_css_con( 'ucss', $ox['ucss'], $v['url_tag'], $v['vary'], $queue_k, $is_mobile, $is_nextgen );
+		if ( ! empty( $ox['imgs'] ) && ! $this->_save_imgs( $ox['imgs'] ) ) {
+			return false;
 		}
 
-		// 3. Save CCSS.
-		if ( ! empty( $ox['ccss'] ) ) {
-			$this->_save_css_con( 'ccss', $ox['ccss'], $v['url_tag'], $v['vary'], $queue_k, $is_mobile, $is_nextgen );
+		if ( ! empty( $ox['ucss'] ) && ! $this->_save_css_con( 'ucss', $ox['ucss'], $v['url_tag'], $v['vary'], $queue_k, $is_mobile, $is_nextgen ) ) {
+			return false;
 		}
 
-		// 4. Save optimized images.
-		if ( ! empty( $ox['imgs'] ) ) {
-			$this->_save_imgs( $ox['imgs'] );
+		if ( ! empty( $ox['ccss'] ) && ! $this->_save_css_con( 'ccss', $ox['ccss'], $v['url_tag'], $v['vary'], $queue_k, $is_mobile, $is_nextgen ) ) {
+			return false;
 		}
 
-		return true;
+		return $this->_save_con( $ox['html'], $queue_k, $is_mobile, $is_nextgen, $v );
 	}
 
 	/**
@@ -132,6 +155,10 @@ class Optimax extends Cloud_Queue_Svc {
 	public static function get_url_tag( $request_url ) {
 		if ( is_404() ) {
 			return '404';
+		}
+
+		if ( apply_filters( 'litespeed_optimax_per_pagetype', false ) ) {
+			return Utility::page_type();
 		}
 
 		return $request_url;
@@ -164,7 +191,7 @@ class Optimax extends Cloud_Queue_Svc {
 			return false;
 		}
 
-		$request_url = $this->_build_request_url();
+		$request_url = Utility::request_url();
 
 		// Check URI exclusions
 		$exc = apply_filters( 'litespeed_optimax_exc', $this->conf( self::O_OPTIMAX_EXC ) );
@@ -201,12 +228,11 @@ class Optimax extends Cloud_Queue_Svc {
 
 		$this->_queue = $this->load_queue( 'optimax' );
 
-		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+		if ( ! isset( $this->_queue[ $queue_k ] ) && count( $this->_queue ) >= $this->_max_queue_size() ) {
 			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
 			return false;
 		}
-
-		$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = [
 			'url'        => apply_filters( 'litespeed_optimax_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
@@ -217,7 +243,7 @@ class Optimax extends Cloud_Queue_Svc {
 			'url_tag'    => $url_tag,
 		];
 		$this->save_queue( 'optimax', $this->_queue );
-		self::debug( 'Added to queue [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid );
+		self::debug( 'Added Optimax queue item [request] ' . substr( hash( 'sha256', $queue_k ), 0, 12 ) );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'OPTIMAX.' . md5( $queue_k ) );
@@ -227,95 +253,125 @@ class Optimax extends Cloud_Queue_Svc {
 	}
 
 	/**
-	 * Build the current request URL from WP globals.
-	 *
-	 * @since 8.0
-	 *
-	 * @return string The current request URL.
-	 */
-	private function _build_request_url() {
-		global $wp;
-
-		$permalink_structure = get_option( 'permalink_structure' );
-		if ( ! empty( $permalink_structure ) ) {
-			return trailingslashit( home_url( $wp->request ) );
-		}
-
-		$qs_add = $wp->query_string ? '?' . (string) $wp->query_string : '';
-		return home_url( $wp->request ) . $qs_add;
-	}
-
-	/**
 	 * Download and save optimized images locally.
 	 *
-	 * Each image entry has src (original path), webp_url, and avif_url.
-	 * Optimized images are saved next to original files.
+	 * Each image entry has src and any requested ori/webp/avif artifact.
+	 * Optimized images are saved beside their WordPress image targets.
 	 *
 	 * @since 8.0
 	 *
 	 * @param array $imgs Array of image optimization data.
-	 * @return void
+	 * @return bool
 	 */
 	private function _save_imgs( $imgs ) {
+		if ( ! is_array( $imgs ) ) {
+			return false;
+		}
+
+		$hooks        = [
+			'ori'  => 'litespeed_img_pull_ori',
+			'webp' => 'litespeed_img_pull_webp',
+			'avif' => 'litespeed_img_pull_avif',
+		];
+		$types        = [ 'webp', 'avif' ];
+		$optm_ori     = (bool) $this->conf( self::O_IMG_OPTM_ORI );
+		$preserve_ori = $optm_ori && ! $this->conf( self::O_IMG_OPTM_RM_BKUP );
+		if ( $optm_ori ) {
+			$types[] = 'ori';
+		}
+
 		foreach ( $imgs as $img ) {
-			if ( empty( $img['src'] ) ) {
-				continue;
+			if ( ! is_array( $img ) ) {
+				return false;
 			}
 
-			// Convert src to local file path
-			$local = Utility::is_internal_file( $img['src'] );
+			$artifacts = [];
+			foreach ( $types as $type ) {
+				$url_key    = $type . '_url';
+				$digest_key = $type . '_sha256';
+				if ( empty( $img[ $url_key ] ) ) {
+					continue;
+				}
+				$url = Img::normalize_cloud_url( $img[ $url_key ] );
+				if (
+					! $url || empty( $img[ $digest_key ] ) || ! is_string( $img[ $digest_key ] ) || ! preg_match( '/^[a-f0-9]{64}$/iD', $img[ $digest_key ] )
+				) {
+					return false;
+				}
+				$artifacts[ $type ] = [
+					'url'    => $url,
+					'digest' => strtolower( $img[ $digest_key ] ),
+				];
+			}
+
+			if ( empty( $artifacts ) ) {
+				continue;
+			}
+			if ( empty( $img['src'] ) || ! is_string( $img['src'] ) || 2048 < strlen( $img['src'] ) ) {
+				self::debug( 'Skip Optimax image entry without a usable local source.' );
+				continue;
+			}
+			$local = $this->_image_target( $img );
 			if ( ! $local ) {
-				self::debug( 'Skip external img: ' . $img['src'] );
+				self::debug( 'Skip Optimax image entry without a WordPress image target.' );
 				continue;
 			}
+			list( $local_path, $local_root, $row ) = $local;
 
-			$local_path = $local[0];
-
-			// Fetch and save WebP
-			if ( ! empty( $img['webp_url'] ) ) {
-				$this->_fetch_img( $img['webp_url'], $local_path . '.webp' );
+			$published = [];
+			foreach ( $artifacts as $type => $artifact ) {
+				$target = 'ori' === $type ? $local_path : $local_path . '.' . $type;
+				$res    = Img::save( $artifact['url'], $target, $artifact['digest'], 'sha256', $type, $local_root, 'ori' === $type && $preserve_ori );
+				if ( is_wp_error( $res ) ) {
+					// Log the URL without its query string: it may carry a token.
+					$parts  = wp_parse_url( $artifact['url'] );
+					$label  = $parts['host'] . ( ! empty( $parts['path'] ) ? $parts['path'] : '/' );
+					$detail = $res->get_error_data();
+					self::debug( '❌ Failed to save img [url] ' . $label . ' [error] ' . $res->get_error_code() . ( '' !== (string) $detail ? ':' . $detail : '' ) );
+					return false;
+				}
+				$published[ $type ] = $target;
 			}
-
-			// Fetch and save AVIF
-			if ( ! empty( $img['avif_url'] ) ) {
-				$this->_fetch_img( $img['avif_url'], $local_path . '.avif' );
+			if ( $row ) {
+				foreach ( $hooks as $type => $hook ) {
+					if ( isset( $published[ $type ] ) ) {
+						do_action( $hook, $row, $published[ $type ] );
+					}
+				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
-	 * Fetch a remote image and save it locally.
+	 * Resolve an image to a local target and optional attachment hook context.
 	 *
-	 * @since 8.0
-	 *
-	 * @param string $url       The remote image URL.
-	 * @param string $save_path The local path to save the image.
-	 * @return bool Whether fetch and save succeeded.
+	 * @param array $img Cloud image entry.
+	 * @return array|false `[ path, bound root, hook row ]`, or false.
 	 */
-	private function _fetch_img( $url, $save_path ) {
-		$response = wp_remote_get(
-			$url,
-			[
-				'timeout'   => 60,
-				'sslverify' => false,
-			]
-		);
-
-		if ( is_wp_error( $response ) ) {
-			self::debug( 'Failed to fetch img ' . $url . ': ' . $response->get_error_message() );
-			return false;
+	private function _image_target( $img ) {
+		$post_id = attachment_url_to_postid( $img['src'] );
+		if ( 0 < $post_id ) {
+			$uploads  = wp_upload_dir();
+			$base     = ! empty( $uploads['basedir'] ) ? trailingslashit( wp_normalize_path( $uploads['basedir'] ) ) : '';
+			$attached = get_attached_file( $post_id, true );
+			$attached = is_string( $attached ) ? wp_normalize_path( $attached ) : '';
+			$url_path = wp_parse_url( $img['src'], PHP_URL_PATH );
+			$filename = is_string( $url_path ) ? rawurldecode( basename( $url_path ) ) : '';
+			if ( $base && 0 === strpos( $attached, $base ) && $filename ) {
+				$dir   = dirname( substr( $attached, strlen( $base ) ) );
+				$short = ( '.' === $dir ? '' : trailingslashit( $dir ) ) . $filename;
+				$local = Img::normalize_cloud_path( $short ) === $short ? Img::local_file( apply_filters( 'litespeed_realpath', $base . $short ) ) : false;
+				if ( $local && ( file_exists( $local[0] ) || $this->cls( 'Media' )->info( $short, $post_id ) ) ) {
+					return [ $local[0], $local[1], (object) [ 'post_id' => $post_id, 'src' => $short ] ];
+				}
+			}
 		}
 
-		$body = wp_remote_retrieve_body( $response );
-		if ( ! $body ) {
-			self::debug( 'Empty img response: ' . $url );
-			return false;
-		}
-
-		File::save( $save_path, $body, true );
-		self::debug( 'Saved img: ' . $save_path );
-
-		return true;
+		$local = Utility::is_internal_file( $img['src'] );
+		$local = $local && ! empty( $local[0] ) ? Img::local_file( $local[0] ) : false;
+		return $local ? [ $local[0], $local[1], false ] : false;
 	}
 
 	/**
@@ -326,11 +382,14 @@ class Optimax extends Cloud_Queue_Svc {
 	 * @param bool   $is_mobile  Whether is mobile.
 	 * @param string $is_nextgen Next-gen image format ('webp', 'avif', or '').
 	 * @param array  $v          Queue item.
-	 * @return void
+	 * @return bool
 	 */
 	private function _save_con( $content, $queue_k, $is_mobile, $is_nextgen, $v ) {
 		$content = apply_filters( 'litespeed_optimax', $content, $queue_k );
-		self::debug2( 'con: ', $content );
+		if ( ! is_string( $content ) ) {
+			return false;
+		}
+		$content = File::remove_zero_space( $content );
 
 		// Write to file
 		$filecon_md5 = md5( $content );
@@ -338,14 +397,21 @@ class Optimax extends Cloud_Queue_Svc {
 		$filepath_prefix = $this->_build_filepath_prefix( 'optimax' );
 		$static_file     = LITESPEED_STATIC_DIR . $filepath_prefix . $filecon_md5 . '.html';
 
-		File::save( $static_file, $content, true );
+		if ( ! File::save_atomic( $static_file, $content ) ) {
+			return false;
+		}
 
 		$url_tag = $v['url_tag'];
 		$vary    = $v['vary'];
 		self::debug2( "Save URL to file [file] $static_file [vary] $vary" );
 
-		$this->cls( 'Data' )->save_url( $url_tag, $vary, 'optimax', $filecon_md5, dirname( $static_file ), $is_mobile, $is_nextgen );
+		$data = $this->cls( 'Data' );
+		$data->save_url( $url_tag, $vary, 'optimax', $filecon_md5, dirname( $static_file ), $is_mobile, $is_nextgen );
+		if ( $filecon_md5 !== $data->load_url_file( $url_tag, $vary, 'optimax' ) ) {
+			return false;
+		}
 
 		Purge::add( 'OPTIMAX.' . md5( $queue_k ) );
+		return true;
 	}
 }

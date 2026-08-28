@@ -822,7 +822,7 @@ class Media extends Root {
 		$excludes = $this->conf( Base::O_MEDIA_LAZY_URI_EXC );
 		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-			$result      = $request_uri ? Utility::str_hit_array( $request_uri, $excludes ) : false;
+			$result      = $request_uri ? REST::str_hit_uri( $request_uri, $excludes ) : false;
 			if ( $result ) {
 				self::debug( 'bypass lazyload: hit URI Excludes setting: ' . $result );
 				return;
