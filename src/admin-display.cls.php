@@ -1234,6 +1234,14 @@ class Admin_Display extends Base {
 	 * @return void
 	 */
 	protected function _check_overwritten( $id ) {
+		$id = '[]' === substr( $id, -2 ) ? substr( $id, 0, -2 ) : $id;
+
+		static $checked_ids = [];
+		if ( isset( $checked_ids[ $id ] ) ) {
+			return;
+		}
+		$checked_ids[ $id ] = true;
+
 		$const_val             = $this->const_overwritten( $id );
 		$primary_val           = $this->primary_overwritten( $id );
 		$deprecated_filter_val = $this->deprecated_filter_overwritten( $id );
