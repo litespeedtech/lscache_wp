@@ -272,17 +272,16 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Image Optimize** The image optimization callback is now verified by a QUIC.cloud signature instead of the source IP address, and every notified download location is validated before use.
 * **Image Optimize** Successful callback retries now ignore rows already returned to the raw queue without blocking other live rows in the same batch.
 * **Image Optimize** An image whose queued file can no longer be verified against its attachment is now dropped instead of being sent back for optimization, so it can no longer request optimization again on every cron run.
-* **Cache** Do Not Cache, Private Cached, Force Cache, Optimization and Lazy Load URI rules now compare the same query string against both spellings of a REST route, so a rule naming a query argument, or anchored to an exact address, applies to plain-permalink sites the same way it does elsewhere.
 * **Image Optimize** Bounded and expired pending image-completion notifications without keeping the image pull cron running indefinitely.
 * **Image Optimize** Optimized image downloads now use the WordPress safe HTTP API, refuse redirects, and validate each response before publication.
+* **Image Optimize** Image pull notices now distinguish download, remote-service, and local-save failures.
+* **Cache** Do Not Cache, Private Cached, Force Cache, Optimization and Lazy Load URI rules now compare the same query string against both spellings of a REST route, so a rule naming a query argument, or anchored to an exact address, applies to plain-permalink sites the same way it does elsewhere.
 * **Optimization** Remote images, avatars, localized JavaScript, CSS/JS cache files, and Guest Mode lists now share bounded streamed downloads and atomic file publication.
 * **VPI** Fixed queue-key collisions on plain-permalink sites and enforced the configured queue limit.
 * **Cloud** Every QUIC.cloud callback — CDN status, error domains, IP validation and ping — is now verified by a QUIC.cloud signature rather than by the source IP address, and the source IP allow list has been removed. Activation, echo, account-link and CDN-enable signatures are now bound to their purpose and site.
 * **Cloud** Added stable callback error codes so QUIC.cloud can distinguish retryable timestamp, storage and replay-cache-capacity failures from terminal authorization failures.
-* **Image Optimize** Image pull notices now distinguish download, remote-service, and local-save failures.
 * **REST** Removed the legacy `check_img` diagnostic endpoint.
 * **API** Removed the `litespeed_is_from_cloud` filter. Each callback is now authorized by its own signature instead of by a request-wide flag.
-* **Cache** Do Not Cache URI, Private Cached URI and Force Cache URI rules written for a REST route such as `/wp-json/wp/v2` now also apply to the equivalent `?rest_route=/wp/v2` address that WordPress serves the same route at. Previously only the address spelled in the rule was matched, so on sites using plain permalinks the shipped REST exclusions had no effect. The same correction applies to Optimization and Lazy Load URI exclusions.
 * **Avatar** Prevented failed on-demand avatar downloads from redirecting visitors to the WordPress admin area.
 
 = 7.9 - Aug 5 2026 =
