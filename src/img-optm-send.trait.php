@@ -119,6 +119,11 @@ trait Img_Optm_Send {
 	public function new_req() {
 		global $wpdb;
 
+		if ( ! $this->_format && ! $this->conf( self::O_IMG_OPTM_ORI ) ) {
+			Admin_Display::error( __( 'Please enable Optimize Original Images or WebP/AVIF before sending an optimization request.', 'litespeed-cache' ) );
+			return;
+		}
+
 		// check if is running
 		if ( ! empty( $this->_summary['is_running'] ) && time() - $this->_summary['is_running'] < apply_filters( 'litespeed_imgoptm_new_req_interval', 3600 ) ) {
 			self::debug( 'The previous req was in 3600s.' );
