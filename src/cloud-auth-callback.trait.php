@@ -339,13 +339,28 @@ trait Cloud_Auth_Callback {
 		$content_encoding = $request->get_header( 'content-encoding' );
 		$signature_b64    = $request->get_header( 'x-qc-signature-b64' );
 		$content_encoding = null === $content_encoding ? '' : $content_encoding;
-		if (
-			! is_string( $body ) || '' === $body || self::SIGN_BODY_MAX_BYTES < strlen( $body ) ||
-			! is_string( $content_type ) || ! is_string( $content_encoding ) || ! is_string( $signature_b64 ) ||
-			'application/json' !== strtolower( trim( (string) strtok( $content_type, ';' ) ) ) ||
-			( '' !== $content_encoding && 'identity' !== strtolower( trim( $content_encoding ) ) )
-		) {
-			return $this->_callback_error( self::CALLBACK_ERR_REQUEST, 'Invalid signed callback transport.' );
+		$content_type_log = is_string( $content_type ) ? strtolower( trim( (string) strtok( $content_type, ';' ) ) ) : gettype( $content_type );
+		$content_type_log = substr( str_replace( [ "\r", "\n" ], '', $content_type_log ), 0, 128 );
+		$transport_error  = '';
+		if ( ! is_string( $body ) ) {
+			$transport_error = 'Request body is not a string.';
+		} elseif ( '' === $body ) {
+			$transport_error = 'Request body is empty.';
+		} elseif ( self::SIGN_BODY_MAX_BYTES < strlen( $body ) ) {
+			$transport_error = 'Request body is too large [bytes] ' . strlen( $body );
+		} elseif ( ! is_string( $content_type ) ) {
+			$transport_error = 'Content-Type header is missing or invalid.';
+		} elseif ( ! is_string( $content_encoding ) ) {
+			$transport_error = 'Content-Encoding header is invalid.';
+		} elseif ( ! is_string( $signature_b64 ) ) {
+			$transport_error = 'X-QC-Signature-B64 header is missing or invalid.';
+		} elseif ( 'application/json' !== strtolower( trim( (string) strtok( $content_type, ';' ) ) ) ) {
+			$transport_error = 'Content-Type is not application/json.';
+		} elseif ( '' !== $content_encoding && 'identity' !== strtolower( trim( $content_encoding ) ) ) {
+			$transport_error = 'Content-Encoding is not identity.';
+		}
+		if ( $transport_error ) {
+			return $this->_callback_error( self::CALLBACK_ERR_REQUEST, 'Invalid signed callback transport [action] ' . $action . ' [content-type] ' . $content_type_log . ' [reason] ' . $transport_error );
 		}
 
 		$payload = json_decode( $body, true, 32 );
