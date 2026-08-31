@@ -110,14 +110,24 @@ class Cloud extends Base {
 	const ITEM_SIGN_NONCE = 'sign_nonce.';
 
 	/**
-	 * Trusted callback keys. Add the next key before rotation and remove revoked keys in an update.
+	 * Trusted callback keys, isolated by environment. Add the next key before rotation and remove revoked keys in an update.
 	 */
 	const SERVER_SIGN_KEYS = [
-		'qc'    => [
-			'qc-2025-01' => '1a8mxBAOPQ4SsyCncktY2O/CcN0hfv891qCYth7ay2I=',
+		'prod'    => [
+			'qc'    => [
+				'qc-2025-01' => '1a8mxBAOPQ4SsyCncktY2O/CcN0hfv891qCYth7ay2I=',
+			],
+			'wpapi' => [
+				'wpapi-2025-01' => 'g9hiXo+P/fX4FbOnZu5dDKpEQXpwuDSkuCkCaX3ZSpk=',
+			],
 		],
-		'wpapi' => [
-			'wpapi-2025-01' => 'g9hiXo+P/fX4FbOnZu5dDKpEQXpwuDSkuCkCaX3ZSpk=',
+		'preview' => [
+			'qc'    => [
+				'qc-2025-01' => 'm13AJlqQ5ir1ro1WMSK8h7Hjz0OAl4t6kepSAjqsMTY=',
+			],
+			'wpapi' => [
+				'wpapi-2025-01' => 'g9hiXo+P/fX4FbOnZu5dDKpEQXpwuDSkuCkCaX3ZSpk=',
+			],
 		],
 	];
 

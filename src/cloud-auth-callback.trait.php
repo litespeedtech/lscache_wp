@@ -18,6 +18,13 @@ defined( 'WPINC' ) || exit();
 trait Cloud_Auth_Callback {
 
 	/**
+	 * Successfully authorized REST requests retained for WordPress's repeated permission check.
+	 *
+	 * @var array<string,array<string,mixed>>
+	 */
+	private $_validated_callback_requests = [];
+
+	/**
 	 * Encrypt data for cloud req
 	 *
 	 * @since 7.0
@@ -95,8 +102,9 @@ trait Cloud_Auth_Callback {
 	 * @return array<int,string> Binary public keys.
 	 */
 	private function _trusted_server_pks( $from_wpapi = false, $key_id = '' ) {
-		$source = $from_wpapi ? 'wpapi' : 'qc';
-		$ring   = isset( self::SERVER_SIGN_KEYS[ $source ] ) ? self::SERVER_SIGN_KEYS[ $source ] : [];
+		$environment = false !== strpos( $this->_cloud_server, 'preview.' ) ? 'preview' : 'prod';
+		$source      = $from_wpapi ? 'wpapi' : 'qc';
+		$ring        = isset( self::SERVER_SIGN_KEYS[ $environment ][ $source ] ) ? self::SERVER_SIGN_KEYS[ $environment ][ $source ] : [];
 		if ( '' !== $key_id ) {
 			$ring = isset( $ring[ $key_id ] ) ? [ $ring[ $key_id ] ] : [];
 		}
@@ -328,8 +336,7 @@ trait Cloud_Auth_Callback {
 	 */
 	public function validate_signed_callback( $request, $action ) {
 		if (
-			! is_object( $request ) || ! method_exists( $request, 'get_body' ) || ! method_exists( $request, 'get_header' ) ||
-			empty( $this->_summary['pk_b64'] ) || ! is_string( $this->_summary['pk_b64'] ) || ! is_string( $action )
+			! is_object( $request ) || ! method_exists( $request, 'get_body' ) || ! method_exists( $request, 'get_header' ) || ! is_string( $action )
 		) {
 			return $this->_callback_error( self::CALLBACK_ERR_REQUEST, 'Invalid signed callback request.' );
 		}
@@ -368,7 +375,7 @@ trait Cloud_Auth_Callback {
 			! is_array( $payload ) ||
 			! isset( $payload['qc_sig_v'] ) || ! is_int( $payload['qc_sig_v'] ) || self::SIGN_VERSION !== $payload['qc_sig_v'] ||
 			empty( $payload['qc_action'] ) || ! is_string( $payload['qc_action'] ) ||
-			empty( $payload['wp_pk_b64'] ) || ! is_string( $payload['wp_pk_b64'] ) ||
+			! isset( $payload['wp_pk_sha256'] ) || ! is_string( $payload['wp_pk_sha256'] ) || ! preg_match( '/^[a-f0-9]{64}$/D', $payload['wp_pk_sha256'] ) ||
 			! isset( $payload['qc_ts'] ) || ! is_string( $payload['qc_ts'] ) ||
 			! isset( $payload['qc_nonce'] ) || ! is_string( $payload['qc_nonce'] ) ||
 			( isset( $payload['qc_key_id'] ) && ! is_string( $payload['qc_key_id'] ) )
@@ -379,12 +386,26 @@ trait Cloud_Auth_Callback {
 		if ( ! hash_equals( $action, $payload['qc_action'] ) ) {
 			return $this->_callback_error( self::CALLBACK_ERR_ACTION, 'Callback action does not match its route.' );
 		}
-		if ( ! hash_equals( (string) $this->_summary['pk_b64'], $payload['wp_pk_b64'] ) ) {
-			return $this->_callback_error( self::CALLBACK_ERR_SITE, 'Callback site key does not match this site.' );
+
+		$request_key = spl_object_hash( $request ) . ':' . hash( 'sha256', $action );
+		$fingerprint = hash( 'sha256', $body ) . hash( 'sha256', $content_type ) . hash( 'sha256', $content_encoding ) . hash( 'sha256', $signature_b64 );
+		if (
+			isset( $this->_validated_callback_requests[ $request_key ] ) &&
+			$this->_validated_callback_requests[ $request_key ]['request'] === $request &&
+			hash_equals( $this->_validated_callback_requests[ $request_key ]['fingerprint'], $fingerprint )
+		) {
+			return true;
 		}
 
-		$key_id = isset( $payload['qc_key_id'] ) ? $payload['qc_key_id'] : '';
-		return $this->_verify_signed(
+		if ( empty( $this->_summary['pk_b64'] ) || ! is_string( $this->_summary['pk_b64'] ) ) {
+			return $this->_callback_error( self::CALLBACK_ERR_REQUEST, 'Invalid signed callback request.' );
+		}
+		if ( ! hash_equals( hash( 'sha256', (string) $this->_summary['pk_b64'] ), $payload['wp_pk_sha256'] ) ) {
+			return $this->_callback_error( self::CALLBACK_ERR_SITE, 'Callback site-key digest does not match this site.' );
+		}
+
+		$key_id   = isset( $payload['qc_key_id'] ) ? $payload['qc_key_id'] : '';
+		$verified = $this->_verify_signed(
 			$body,
 			trim( $signature_b64 ),
 			$payload['qc_ts'],
@@ -392,6 +413,13 @@ trait Cloud_Auth_Callback {
 			self::SIGN_ACTION_NOTIFY_IMG === $action,
 			$key_id
 		);
+		if ( true === $verified ) {
+			$this->_validated_callback_requests[ $request_key ] = [
+				'request'     => $request,
+				'fingerprint' => $fingerprint,
+			];
+		}
+		return $verified;
 	}
 
 	/**

@@ -174,7 +174,7 @@ class REST extends Root {
 	 * @return mixed
 	 */
 	public function ip_validate( $request ) {
-		return $this->cls( 'Cloud' )->ip_validate( $request->get_body() );
+		return $this->cls( 'Cloud' )->ip_validate();
 	}
 
 	/**

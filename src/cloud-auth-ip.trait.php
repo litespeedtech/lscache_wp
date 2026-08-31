@@ -18,33 +18,21 @@ defined( 'WPINC' ) || exit();
 trait Cloud_Auth_IP {
 
 	/**
-	 * Request callback validation from Cloud
+	 * Confirm the signed Cloud callback path.
 	 *
 	 * @since  3.0
 	 * @access public
-	 * @param string|null $raw_body Verified request body.
 	 * @return array
 	 */
-	public function ip_validate( $raw_body = null ) {
-		$payload = is_string( $raw_body ) ? json_decode( $raw_body, true, 32 ) : false;
-		$hash    = is_array( $payload ) && isset( $payload['hash'] ) && is_string( $payload['hash'] ) ? $payload['hash'] : '';
+	public function ip_validate() {
 		$site_pk = isset( $this->_summary['pk_b64'] ) && is_string( $this->_summary['pk_b64'] ) ? $this->_summary['pk_b64'] : '';
-		if ( '' === $site_pk || ! preg_match( '/^[a-f0-9]{32}$/D', $hash ) ) {
+		if ( '' === $site_pk ) {
 			return self::err( 'lack_of_params' );
 		}
 
-		if ( ! hash_equals( md5( substr( $site_pk, 0, 4 ) ), $hash ) ) {
-			self::debug( '__callback IP request decryption failed' );
-			return self::err( 'err_hash' );
-		}
+		Control::set_nocache( 'Cloud IP validation' );
 
-		Control::set_nocache( 'Cloud IP hash validation' );
-
-		$resp_hash = md5( substr( $site_pk, 2, 4 ) );
-
-		self::debug( '__callback IP request hash: ' . $resp_hash );
-
-		return self::ok( [ 'hash' => $resp_hash ] );
+		return self::ok( [ 'hash' => md5( substr( $site_pk, 2, 4 ) ) ] );
 	}
 
 	/**
