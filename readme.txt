@@ -264,6 +264,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+* **Optimize** Fixed JS Delay mode not executing `load` event listeners. (#629)
 
 = 7.9.1 - Aug 18 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.
