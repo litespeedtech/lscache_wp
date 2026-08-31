@@ -282,6 +282,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Cloud** Added stable callback error codes so QUIC.cloud can distinguish retryable timestamp, storage and replay-cache-capacity failures from terminal authorization failures.
 * **REST** Removed the legacy `check_img` diagnostic endpoint.
 * **API** Removed the `litespeed_is_from_cloud` filter. Each callback is now authorized by its own signature instead of by a request-wide flag.
+* **API** Added the `litespeed_static_dir_htaccess` filter so hosts can remove unsupported directives from the generated static-directory protection file. (vvvllll #1043)
 * **Avatar** Prevented failed on-demand avatar downloads from redirecting visitors to the WordPress admin area.
 
 = 7.9 - Aug 5 2026 =
