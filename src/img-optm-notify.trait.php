@@ -248,7 +248,7 @@ trait Img_Optm_Notify {
 		$q   = "DELETE FROM `$this->_table_img_optming` WHERE id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' ) AND optm_status = %d';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$deleted = $wpdb->query( $wpdb->prepare( $q, array_merge( $ids, [ self::STATUS_REQUESTED ] ) ) );
-		return false === $deleted ? Cloud::err( 'failed to delete working rows' ) : Cloud::ok( [ 'count' => (int) $deleted ] );
+		return false === $deleted ? Cloud::err( 'failed to delete working rows' ) : Cloud::ok( [ 'count' => count( $ids ) ] );
 	}
 
 	/**
