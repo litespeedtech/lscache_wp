@@ -629,7 +629,9 @@ class Conf extends Base {
 		// Validate type
 		if ( is_bool( self::$_default_site_options[ $id ] ) ) {
 			$max = $this->_conf_multi_switch( $id );
-			if ( $max && $val > 1 ) {
+			if ( $max ) {
+				// Multi-switch: cast to int and clamp to [0, $max] range.
+				$val  = (int) $val;
 				$val %= ( $max + 1 );
 			} else {
 				$val = (bool) $val;
