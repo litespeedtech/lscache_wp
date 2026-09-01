@@ -3,8 +3,8 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cache, redis, memcached, database cleaner
 Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 7.9
+Tested up to: 7.1
+Stable tag: 7.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -265,8 +265,9 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.1 - Aug 18 2026 =
+= 7.9.1 - Sep 1 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.
+* **ESI** Prevented Guest Mode pages from creating ESI subrequests when an integration registered its ESI hooks before Guest Mode detection.
 * **ESI** Bound ESI execution to the signed query payload so POST parameters cannot replace validated block data.
 * **Image Optimize** Fixed a fatal error when the WordPress HTTP fallback could not download an image.
 * **Image Optimize** The image optimization callback is now verified by a QUIC.cloud signature instead of the source IP address, and every notified download location is validated before use.

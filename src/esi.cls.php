@@ -475,8 +475,8 @@ class ESI extends Root {
 			return false;
 		}
 
-		if (defined('LITESPEED_ESI_OFF')) {
-			self::debug('[ESI] ESI OFF so force loading [block_id] ' . $block_id);
+		if (defined('LITESPEED_ESI_OFF') || !defined('LITESPEED_ESI_INITED')) {
+			self::debug('[ESI] ESI unavailable so force loading [block_id] ' . $block_id);
 			do_action('litespeed_esi_load-' . $block_id, $params);
 			return;
 		}
