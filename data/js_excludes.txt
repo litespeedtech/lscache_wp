@@ -15,6 +15,8 @@ cse.google.com/cse.js
 /syntaxhighlighter/
 spotlight-social-photo-feeds ## https://docs.spotlightwp.com/article/757-autoptimize-compatibility @Tobolo
 userway.org
+wp-includes/js/dist/hooks ## WordPress core, keep out of combined files so the defer exclude in js_defer_excludes.txt can match - Tobolo
+wp-includes/js/dist/i18n ## see js_defer_excludes.txt
 
 # Inline JS excludes
 document.write
