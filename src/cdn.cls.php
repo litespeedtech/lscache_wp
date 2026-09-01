@@ -403,7 +403,7 @@ class CDN extends Root {
 		 */
 		preg_match_all( '/url\((?![\'"]?data)[\'"]?(.+?)[\'"]?\)/i', $this->content, $matches );
 		foreach ( $matches[1] as $k => $url ) {
-			$url = str_replace( [ ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ], '', $url );
+			$url = str_replace( [ ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#034;', '&#34;', '&#x22;', '&apos;', '&#039;', '&#39;', '&#x27;' ], '', $url );
 
 			// Skip escaped JSON/JS contexts — same family as #959152.
 			if ( false !== strpos( $url, '\\' ) ) {
