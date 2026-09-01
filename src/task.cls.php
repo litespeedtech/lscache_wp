@@ -68,6 +68,10 @@ class Task extends Root {
 			'name' => 'litespeed_task_crawler',
 			'hook' => 'LiteSpeed\Crawler::start_async_cron',
 		], // Set crawler to last one to use above results
+		Base::O_MISC_MAX_FOLDER_SIZE => [
+			'name' => 'litespeed_task_folder_size',
+			'hook' => 'LiteSpeed\Folder::cron',
+		],
 	];
 
 	/**
