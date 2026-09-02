@@ -51,8 +51,8 @@ class Cloudflare extends Base {
 
 			Debug2::debug("[Cloudflare] Get zone successfully \t\t[ID] " . $zone['id']);
 		} else {
-			$this->cls('Conf')->update(self::O_CDN_CLOUDFLARE_ZONE, '');
-			Debug2::debug('[Cloudflare] ❌ Get zone failed, clean zone');
+			// Keep the last known zone: a failed lookup means the API was unusable (timeout, rate limit, outage), not that the saved zone is wrong.
+			Debug2::debug('[Cloudflare] ❌ Get zone failed, keep last known zone');
 		}
 	}
 
