@@ -265,6 +265,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 * **CDN** Kept the saved Cloudflare zone when the API lookup fails after a plugin update. (nathaningram)
+* **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
 
 = 7.9.1 - Sep 1 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.
