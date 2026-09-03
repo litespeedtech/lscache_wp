@@ -1135,9 +1135,10 @@ class Media extends Root {
 	}
 
 	/**
-	 * Detect the original sizes.
+	 * Detect original image dimensions with transient caching for remote URLs.
 	 *
 	 * @since 4.0
+	 * @since 7.9 Added transient caching, Range request, and timeout for remote images.
 	 *
 	 * @param string $src Source URL/path.
 	 * @return array|false getimagesize array or false.
@@ -1154,16 +1155,68 @@ class Media extends Root {
 			$src = 'https:' . $src;
 		}
 
-		try {
-			$sizes = getimagesize( $src );
-		} catch ( \Exception $e ) {
+		if ( $pathinfo ) {
+			try {
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				$sizes = @getimagesize( $src );
+			} catch ( \Exception $e ) {
+				return false;
+			}
+
+			if ( ! empty( $sizes[0] ) && ! empty( $sizes[1] ) ) {
+				return $sizes;
+			}
+
 			return false;
 		}
 
+		if ( ! function_exists( 'getimagesizefromstring' ) ) {
+			return false;
+		}
+
+		// Use transient cache to prevent blocking HTTP requests on remote images.
+		$cache_key = 'lsc_img_sz_' . md5( $src );
+		$cached    = get_transient( $cache_key );
+		if ( false !== $cached ) {
+			if ( 'failed' === $cached ) {
+				return false;
+			}
+			return $cached;
+		}
+
+		$response = wp_safe_remote_get(
+			$src,
+			[
+				'timeout'             => 2,
+				'limit_response_size' => 65536,
+				'user-agent'          => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) LiteSpeedCache/Dimensions',
+				'headers'             => [
+					'Range' => 'bytes=0-32768',
+				],
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			set_transient( $cache_key, 'failed', HOUR_IN_SECONDS );
+			return false;
+		}
+
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		if ( 200 !== $code && 206 !== $code ) {
+			set_transient( $cache_key, 'failed', HOUR_IN_SECONDS );
+			return false;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$sizes = ! empty( $body ) ? @getimagesizefromstring( $body ) : false;
+
 		if ( ! empty( $sizes[0] ) && ! empty( $sizes[1] ) ) {
+			set_transient( $cache_key, $sizes, 7 * DAY_IN_SECONDS );
 			return $sizes;
 		}
 
+		set_transient( $cache_key, 'failed', HOUR_IN_SECONDS );
 		return false;
 	}
 
