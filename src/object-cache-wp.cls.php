@@ -119,6 +119,15 @@ class WP_Object_Cache {
 	protected $global_groups = [];
 
 	/**
+	 * Non-persistent cache groups
+	 *
+	 * @since 1.8
+	 * @access protected
+	 * @var array
+	 */
+	protected $non_persistent_groups = [];
+
+	/**
 	 * Blog prefix for cache keys
 	 *
 	 * @since 1.8
@@ -271,7 +280,7 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$prefix = $this->_object_cache->is_global( $group ) ? '' : $this->blog_prefix;
+		$prefix = $this->is_global( $group ) ? '' : $this->blog_prefix;
 
 		return LSOC_PREFIX . $prefix . $group . '.' . $key;
 	}
@@ -435,7 +444,7 @@ class WP_Object_Cache {
 			unset( $this->_cache_404[ $id ] );
 		}
 
-		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
+		if ( is_object( $this->_object_cache ) && ! $this->is_non_persistent( $group ) ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 			$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), (int) $expire );
 			++$this->count_set;
@@ -505,7 +514,7 @@ class WP_Object_Cache {
 			$found     = true;
 			$cache_val = $this->_cache[ $id ];
 			++$this->count_hit_incall;
-		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
+		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && is_object( $this->_object_cache ) && ! $this->is_non_persistent( $group ) ) {
 			$v = $this->_object_cache->get( $id, $group );
 
 			if ( false !== $v ) {
@@ -586,15 +595,19 @@ class WP_Object_Cache {
 
 		$id = $this->_key( $key, $group );
 
+		$found = false;
 		if ( array_key_exists( $id, $this->_cache ) ) {
 			unset( $this->_cache[ $id ] );
+			$found = true;
 		}
 
-		if ( $this->_object_cache->is_non_persistent( $group ) ) {
-			return false;
+		if ( $this->is_non_persistent( $group ) || ! is_object( $this->_object_cache ) ) {
+			return $found;
 		}
 
-		return $this->_object_cache->delete( $id );
+		$res = $this->_object_cache->delete( $id );
+
+		return ( (bool) $res ) || $found;
 	}
 
 	/**
@@ -750,9 +763,12 @@ class WP_Object_Cache {
 	 * @param string|string[] $groups List of groups that are global.
 	 */
 	public function add_global_groups( $groups ) {
-		$groups = (array) $groups;
+		$groups              = (array) $groups;
+		$this->global_groups = array_unique( array_merge( $this->global_groups, $groups ) );
 
-		$this->_object_cache->add_global_groups( $groups );
+		if ( is_object( $this->_object_cache ) ) {
+			$this->_object_cache->add_global_groups( $groups );
+		}
 	}
 
 	/**
@@ -764,9 +780,46 @@ class WP_Object_Cache {
 	 * @param string|string[] $groups A group or an array of groups to add.
 	 */
 	public function add_non_persistent_groups( $groups ) {
-		$groups = (array) $groups;
+		$groups                      = (array) $groups;
+		$this->non_persistent_groups = array_unique( array_merge( $this->non_persistent_groups, $groups ) );
 
-		$this->_object_cache->add_non_persistent_groups( $groups );
+		if ( is_object( $this->_object_cache ) ) {
+			$this->_object_cache->add_non_persistent_groups( $groups );
+		}
+	}
+
+	/**
+	 * Determines if a group is global.
+	 *
+	 * @since 7.9
+	 * @access public
+	 *
+	 * @param string $group Cache group name.
+	 * @return bool True if global, false otherwise.
+	 */
+	public function is_global( $group ) {
+		if ( in_array( $group, $this->global_groups, true ) ) {
+			return true;
+		}
+
+		return is_object( $this->_object_cache ) && $this->_object_cache->is_global( $group );
+	}
+
+	/**
+	 * Determines if a group is non-persistent.
+	 *
+	 * @since 7.9
+	 * @access public
+	 *
+	 * @param string $group Cache group name.
+	 * @return bool True if non-persistent, false otherwise.
+	 */
+	public function is_non_persistent( $group ) {
+		if ( in_array( $group, $this->non_persistent_groups, true ) ) {
+			return true;
+		}
+
+		return is_object( $this->_object_cache ) && $this->_object_cache->is_non_persistent( $group );
 	}
 
 	/**

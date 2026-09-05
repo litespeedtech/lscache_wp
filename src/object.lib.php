@@ -227,7 +227,11 @@ function wp_cache_get_multiple( $keys, $group = '', $force = false ) {
 function wp_cache_delete( $key, $group = '' ) {
 	global $wp_object_cache;
 
-	return $wp_object_cache->delete( $key, $group );
+	if ( ! is_object( $wp_object_cache ) ) {
+		return false;
+	}
+
+	return (bool) $wp_object_cache->delete( $key, $group );
 }
 
 /**
