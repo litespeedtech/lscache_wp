@@ -114,6 +114,15 @@ class Htaccess extends Root {
 	const MARKER_END                 = ' end ###';
 
 	/**
+	 * Allowlists for values written into .htaccess directives: cookie names, `-qs:` keys, regex literals.
+	 *
+	 * @since 7.9.2
+	 */
+	const PATTERN_COOKIE_NAME   = '/^,?[A-Za-z0-9!#&\'*+\-.^_`|~]+\z/';
+	const PATTERN_DROP_QS       = '/^[A-Za-z0-9_.*\-]+\z/';
+	const PATTERN_REGEX_LITERAL = '/^[^\x00-\x1F\x7F"\'\\\\]+\z/';
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.7
@@ -152,7 +161,7 @@ class Htaccess extends Root {
             self::LS_MODULE_REWRITE_START, // <IfModule mod_rewrite.c>
             self::REWRITE_ON,              // RewriteEngine on
             'RewriteRule ' . preg_quote(LITESPEED_DATA_FOLDER) . '/debug/.*\.log$ - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
-            'RewriteRule ' . preg_quote(self::CONF_FILE) . ' - [F,L]', // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing
+            'RewriteRule (^|/)\.litespeed_conf\. - [F,L]',
             self::LS_MODULE_END,           // </IfModule>
         ];
 		
@@ -579,6 +588,26 @@ class Htaccess extends Root {
 	}
 
 	/**
+	 * Keep only the entries of a list setting that may be written into a .htaccess directive.
+	 *
+	 * @since 7.9.2
+	 * @param mixed  $values  Setting value.
+	 * @param string $pattern Allowlist regex an entry must match in full.
+	 * @return array
+	 */
+	private function _htaccess_list( $values, $pattern ) {
+		$clean = [];
+		foreach ( (array) $values as $v ) {
+			if ( is_string( $v ) && preg_match( $pattern, trim( $v ) ) ) {
+				$clean[] = trim( $v );
+			} else {
+				self::debug( 'Dropped an invalid .htaccess list entry' );
+			}
+		}
+		return array_values( array_unique( $clean ) );
+	}
+
+	/**
 	 * Generate rewrite rules based on settings.
 	 *
 	 * @since 1.3
@@ -588,6 +617,9 @@ class Htaccess extends Root {
 	 * @return array{0:array<int,string>,1:array<int,string>,2:array<int,string>,3:array<int,string>} Rules arrays [frontend_ls, backend_ls, frontend_nonls, backend_nonls].
 	 */
 	private function _generate_rules( $cfg ) {
+		foreach ( [ Base::O_CACHE_MOBILE_RULES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_COOKIES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_USERAGENTS => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_DROP_QS => self::PATTERN_DROP_QS ] as $list_id => $pattern ) {
+			$cfg[ $list_id ] = $this->_htaccess_list( isset( $cfg[ $list_id ] ) ? $cfg[ $list_id ] : [], $pattern );
+		}
 		$new_rules               = array();
 		$new_rules_nonls         = array();
 		$new_rules_backend       = array();
@@ -644,6 +676,7 @@ class Htaccess extends Root {
 			}
 		}
 		$vary_cookies = apply_filters( 'litespeed_vary_cookies', $vary_cookies ); // todo: test if response vary header can work in latest OLS, drop the above two lines.
+		$vary_cookies = $this->_htaccess_list( $vary_cookies, self::PATTERN_COOKIE_NAME );
 		// frontend and backend.
 		if ( $vary_cookies ) {
 			$env                 = 'Cache-Vary:' . implode( ',', $vary_cookies );
