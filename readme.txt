@@ -264,6 +264,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 8.0 - Coming soon 2026 =
 * **Security** Validated settings written to .htaccess to prevent directive injection.
+* **Security** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
 * 🌱**OptiMax** OptiMax to maximize the page score.
 * **CDN** Kept the saved Cloudflare zone when the API lookup fails after a plugin update. (nathaningram)
 * **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)

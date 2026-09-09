@@ -35,11 +35,14 @@ class Import extends Base {
 	 * @since 7.3 added download content type
 	 * @access public
 	 */
-	public function export( $only_data_return = false ) {
+	public function export( $only_data_return = false, $mask_secrets = false ) {
 		$raw_data = $this->get_options(true);
 
 		$data = array();
 		foreach ($raw_data as $k => $v) {
+			if ($mask_secrets && $this->_conf_secret($k)) {
+				continue;
+			}
 			$data[] = \json_encode(array( $k, $v ));
 		}
 

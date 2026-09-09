@@ -20,6 +20,22 @@ class Preset extends Import {
 	const BACKUP_DIR   = LITESPEED_STATIC_DIR . '/auto-backup';
 
 	/**
+	 * Preset and backup names become file names, so only this shape is accepted.
+	 *
+	 * @since 7.9.2
+	 */
+	const PATTERN_NAME = '/^[A-Za-z0-9][A-Za-z0-9_-]*\z/';
+
+	/**
+	 * Validate a preset or backup name; false when it cannot be used as a file name.
+	 *
+	 * @since 7.9.2
+	 */
+	public static function sanitize_name( $name ) {
+		return is_string($name) && preg_match(self::PATTERN_NAME, $name) ? $name : false;
+	}
+
+	/**
 	 * Returns sorted backup names
 	 *
 	 * @since  5.3.0
@@ -74,7 +90,8 @@ class Preset extends Import {
 	 * @access public
 	 */
 	public static function get_standard( $name ) {
-		return path_join(self::STANDARD_DIR, $name . '.data');
+		$name = self::sanitize_name($name);
+		return $name ? path_join(self::STANDARD_DIR, $name . '.data') : false;
 	}
 
 	/**
@@ -84,7 +101,8 @@ class Preset extends Import {
 	 * @access public
 	 */
 	public static function get_backup( $name ) {
-		return path_join(self::BACKUP_DIR, $name . '.data');
+		$name = self::sanitize_name($name);
+		return $name ? path_join(self::BACKUP_DIR, $name . '.data') : false;
 	}
 
 	/**
@@ -115,9 +133,14 @@ class Preset extends Import {
 	 * @access public
 	 */
 	public function apply( $preset ) {
+		$path = self::get_standard($preset);
+		if (!$path || !is_file($path)) {
+			$this->log('error');
+			return;
+		}
+
 		$this->make_backup($preset);
 
-		$path   = self::get_standard($preset);
 		$result = $this->import_file($path) ? $preset : 'error';
 
 		$this->log($result);
@@ -130,9 +153,10 @@ class Preset extends Import {
 	 * @access public
 	 */
 	public function restore( $timestamp ) {
-		$backups = array();
+		$timestamp = (int) $timestamp;
+		$backups   = array();
 		foreach (self::get_backups() as $backup) {
-			if (preg_match('/^backup-' . $timestamp . '(-|$)/', $backup) === 1) {
+			if ($timestamp > 0 && preg_match('/^backup-' . $timestamp . '(-|$)/', $backup) === 1) {
 				$backups[] = $backup;
 			}
 		}
@@ -145,7 +169,7 @@ class Preset extends Import {
 		$backup = $backups[0];
 		$path   = self::get_backup($backup);
 
-		if (!$this->import_file($path)) {
+		if (!$path || !$this->import_file($path)) {
 			$this->log('error');
 			return;
 		}
@@ -167,7 +191,7 @@ class Preset extends Import {
 	 */
 	public function make_backup( $preset ) {
 		$backup = 'backup-' . time() . '-before-' . $preset;
-		$data   = $this->export(true);
+		$data   = $this->export(true, true);
 
 		$path = self::get_backup($backup);
 		File::save($path, $data, true);
@@ -249,11 +273,11 @@ class Preset extends Import {
 
 		switch ($type) {
 			case self::TYPE_APPLY:
-            $this->apply(!empty($_GET['preset']) ? $_GET['preset'] : false);
+            $this->apply(!empty($_GET['preset']) ? sanitize_text_field(wp_unslash($_GET['preset'])) : false);
 				break;
 
 			case self::TYPE_RESTORE:
-            $this->restore(!empty($_GET['timestamp']) ? $_GET['timestamp'] : false);
+            $this->restore(!empty($_GET['timestamp']) ? absint($_GET['timestamp']) : 0);
 				break;
 
 			default:

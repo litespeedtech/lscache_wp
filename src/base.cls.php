@@ -1010,6 +1010,17 @@ class Base extends Root {
 	}
 
 	/**
+	 * If the setting is a credential that must never leave the site in a backup.
+	 *
+	 * @since 7.9.2
+	 * @param string $id Option ID.
+	 * @return bool
+	 */
+	protected function _conf_secret( $id ) {
+		return $this->_conf_pswd( $id ) || in_array( $id, [ self::HASH, self::O_API_KEY ], true );
+	}
+
+	/**
 	 * If the setting is cron related or not.
 	 *
 	 * @since 3.0
