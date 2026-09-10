@@ -263,11 +263,15 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 == Changelog ==
 
 = 8.0 - Coming soon 2026 =
-* **Security** Validated settings written to .htaccess to prevent directive injection.
-* **Security** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
 * 🌱**OptiMax** OptiMax to maximize the page score.
 * **CDN** Kept the saved Cloudflare zone when the API lookup fails after a plugin update. (nathaningram)
 * **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
+
+= 7.9.2 - Coming soon 2026 =
+* **Conf** Validated settings written to .htaccess to prevent directive injection.
+* **Presets** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
+* **Cache** Prevented authenticated responses from being cached under an incorrect visitor context.
+* **Crawler** Hardened the role simulation hash check and removed the unused flash hash path. (#866256)
 
 = 7.9.1 - Sep 1 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.

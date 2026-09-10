@@ -31,6 +31,7 @@ class Control extends Root {
 	const BM_PUBLIC_FORCED    = 64;
 	const BM_STALE            = 128;
 	const BM_NOTCACHEABLE     = 256;
+	const BM_NOCACHE_HARD     = 512;
 
 	const X_HEADER = 'X-LiteSpeed-Cache-Control';
 
@@ -446,6 +447,18 @@ class Control extends Root {
 	}
 
 	/**
+	 * Switch to a no-cache status that forced-public / forced-cacheable settings cannot override (identity and isolation failures).
+	 *
+	 * @since 7.9.2
+	 * @param string|false $reason The reason to no cache.
+	 * @return void
+	 */
+	public static function set_nocache_hard( $reason = false ) {
+		self::$_control |= self::BM_NOTCACHEABLE | self::BM_NOCACHE_HARD;
+		self::debug( 'X Cache_control -> no Cache (hard) ' . ( is_string( $reason ) ? "( $reason )" : '' ), 5 );
+	}
+
+	/**
 	 * Check current force cacheable bit set.
 	 *
 	 * @access public
@@ -473,6 +486,10 @@ class Control extends Root {
 		// if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
 			// return true;
 		// }
+
+		if ( self::$_control & self::BM_NOCACHE_HARD ) {
+			return false;
+		}
 
 		// If it's forced public cacheable.
 		if ( self::is_public_forced() ) {

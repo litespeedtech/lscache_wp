@@ -75,9 +75,16 @@ class Router extends Base {
 	const TYPE = 'litespeed_type';
 
 	const ITEM_HASH       = 'hash';
-	const ITEM_FLASH_HASH = 'flash_hash';
 
 	private static $_esi_enabled;
+
+	/**
+	 * Whether this request passed role simulation (crawler / UCSS) with a valid hash from the server IP.
+	 *
+	 * @since 7.9.2
+	 * @var bool
+	 */
+	private static $_role_simulated = false;
 	private static $_is_ajax;
 	private static $_is_logged_in;
 	private static $_ip;
@@ -250,7 +257,7 @@ class Router extends Base {
 			return;
 		}
 
-		if (empty($_COOKIE['litespeed_hash']) && empty($_COOKIE['litespeed_flash_hash'])) {
+		if (empty($_COOKIE['litespeed_hash'])) {
 			return;
 		}
 

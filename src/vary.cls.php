@@ -392,12 +392,9 @@ class Vary extends Root {
 			return false;
 		}
 
-		// Disable when crawler is making the request.
-		if (
-			! empty( $_SERVER['HTTP_USER_AGENT'] )
-			&& 0 === strpos( wp_unslash( (string) $_SERVER['HTTP_USER_AGENT'] ), Crawler::FAST_USER_AGENT ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		) {
-			self::debug( 'can_change_vary bypassed due to crawler' );
+		// Disable when the crawler is making the request. The User-Agent string is public and forgeable; only a role simulation that passed the hash + server IP check counts.
+		if ( Router::is_role_simulated() ) {
+			self::debug( 'can_change_vary bypassed due to validated role simulation' );
 			return false;
 		}
 
@@ -436,12 +433,32 @@ class Vary extends Root {
 
 		$vary         = $this->finalize_default_vary( $uid );
 		$current_vary = self::has_vary();
+		if ( ! $expire ) {
+			$expire = time() + 2 * DAY_IN_SECONDS;
+		}
+		// A uid handed in by the login hook is authenticated even though Router still caches the pre-login state.
+		$authenticated = $uid > 0 || Router::is_logged_in();
 
-		if ( $current_vary !== $vary && 'commenter' !== $current_vary && $this->can_change_vary() ) {
-			if ( ! $expire ) {
-				$expire = time() + 2 * DAY_IN_SECONDS;
+		if ( 'commenter' === $current_vary ) {
+			if ( ! $authenticated ) {
+				return;
 			}
-			$this->_cookie( $vary, (int) $expire );
+			// An authenticated render must never be stored in the shared commenter bucket; clear the commenter cookie on this path and issue the real vary so the next request recovers.
+			Control::set_nocache_hard( 'authenticated user carrying commenter vary' );
+			if ( $this->can_change_vary() ) {
+				$this->remove_commenter();
+				$this->_cookie( $vary, (int) $expire );
+			}
+			return;
+		}
+
+		if ( $current_vary !== $vary ) {
+			if ( $this->can_change_vary() ) {
+				$this->_cookie( $vary, (int) $expire );
+			} else {
+				// Without a corrected cookie the response would be stored under the wrong key.
+				Control::set_nocache_hard( 'vary mismatch, cookie not updatable' );
+			}
 		}
 	}
 
