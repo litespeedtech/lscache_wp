@@ -275,25 +275,14 @@ class Router extends Base {
 			return;
 		}
 
-		// Flash hash validation
-		if (!empty($_COOKIE['litespeed_flash_hash'])) {
-			$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
-			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
-				if (time() - $hash_data['ts'] < 120 && $_COOKIE['litespeed_flash_hash'] == $hash_data['hash']) {
-					self::debug('🪪 Role simulator flash hash matched, escalating user to be uid=' . $hash_data['uid']);
-					self::delete_option(self::ITEM_FLASH_HASH);
-					wp_set_current_user($hash_data['uid']);
-					return;
-				}
-			}
-		}
 		// Hash validation
 		if (!empty($_COOKIE['litespeed_hash'])) {
 			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				$RUN_DURATION = $this->cls('Crawler')->get_crawler_duration();
-				if (time() - $hash_data['ts'] < $RUN_DURATION && $_COOKIE['litespeed_hash'] == $hash_data['hash']) {
+				if (time() - $hash_data['ts'] < $RUN_DURATION && is_string($_COOKIE['litespeed_hash']) && is_string($hash_data['hash']) && hash_equals($hash_data['hash'], $_COOKIE['litespeed_hash']) && !user_can($hash_data['uid'], 'edit_posts')) {
 					self::debug('🪪 Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
+					self::$_role_simulated = true;
 					wp_set_current_user($hash_data['uid']);
 					return;
 				}
@@ -304,31 +293,15 @@ class Router extends Base {
 	}
 
 	/**
-	 * Get a short ttl hash (2mins)
+	 * Whether the current request was authenticated as a role simulation (valid hash cookie from the server IP).
 	 *
-	 * @since  6.4
+	 * This, not the crawler User-Agent string, is the only signal that may suppress vary-cookie updates.
+	 *
+	 * @since  7.9.2
+	 * @return bool
 	 */
-	public function get_flash_hash( $uid ) {
-		$hash_data = self::get_option(self::ITEM_FLASH_HASH, array());
-		if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts'])) {
-			if (time() - $hash_data['ts'] < 60) {
-				return $hash_data['hash'];
-			}
-		}
-
-		// Check if this user has editor access or not
-		if (user_can($uid, 'edit_posts')) {
-			self::debug('🛑 The user with id ' . $uid . ' has editor access, which is not allowed for the role simulator.');
-			return '';
-		}
-
-		$hash = Str::rrand(32);
-		self::update_option(self::ITEM_FLASH_HASH, array(
-			'hash' => $hash,
-			'ts' => time(),
-			'uid' => $uid,
-		));
-		return $hash;
+	public static function is_role_simulated() {
+		return self::$_role_simulated;
 	}
 
 	/**
