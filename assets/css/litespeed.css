@@ -2469,6 +2469,49 @@ g.litespeed-pie_info .litespeed-pie-done {
 	}
 }
 
+/* Shared "Default values" panel widgets (recommended() helper + CDN React component). */
+.litespeed-defaults-flags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 6px;
+	max-width: 320px;
+}
+
+.litespeed-defaults-flag {
+	display: inline-block;
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 11px;
+	font-weight: 600;
+	padding: 1px 6px;
+	border-radius: 3px;
+	border: 1px solid transparent;
+	line-height: 1.5;
+}
+
+.litespeed-defaults-flag--missing {
+	background-color: #fde2e2;
+	color: #8a1f11;
+	border-color: #f1a5a5;
+}
+
+.litespeed-defaults-flag--inconsistent {
+	background-color: #fff3cd;
+	color: #856404;
+	border-color: #ffe69c;
+}
+
+.litespeed-defaults-add-link {
+	display: inline-block;
+	margin-top: 6px;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.litespeed-defaults-add-link:hover {
+	text-decoration: underline;
+}
+
 /* =======================================
 		VIEW - crawler
 ======================================= */

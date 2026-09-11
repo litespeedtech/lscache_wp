@@ -66,7 +66,7 @@ class Admin_Settings extends Base {
 
 			// Validate $child.
 			if ( self::O_CDN_MAPPING === $id ) {
-				if ( ! in_array( $child, [ self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_FILETYPE ], true ) ) {
+				if ( ! in_array( $child, [ self::CDN_MAPPING_URL, self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA, self::CDN_MAPPING_FILETYPE ], true ) ) {
 					continue;
 				}
 			}
@@ -139,7 +139,7 @@ class Admin_Settings extends Base {
 								$v = trailingslashit( $v );
 							}
 
-							if ( in_array( $child, [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ], true ) ) {
+							if ( in_array( $child, [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS, self::CDN_MAPPING_INC_DOCS, self::CDN_MAPPING_INC_FONTS, self::CDN_MAPPING_INC_MEDIA ], true ) ) {
 								// Because these can't be auto detected in `config->update()`, need to format here.
 								$v = 'false' === $v ? 0 : (bool) $v;
 							}

@@ -306,11 +306,14 @@ class Base extends Root {
 	const CRWL_COOKIE_NAME = 'name';
 	const CRWL_COOKIE_VALS = 'vals';
 
-	const CDN_MAPPING_URL      = 'url';
-	const CDN_MAPPING_INC_IMG  = 'inc_img';
-	const CDN_MAPPING_INC_CSS  = 'inc_css';
-	const CDN_MAPPING_INC_JS   = 'inc_js';
-	const CDN_MAPPING_FILETYPE = 'filetype';
+	const CDN_MAPPING_URL       = 'url';
+	const CDN_MAPPING_INC_IMG   = 'inc_img';
+	const CDN_MAPPING_INC_CSS   = 'inc_css';
+	const CDN_MAPPING_INC_JS    = 'inc_js';
+	const CDN_MAPPING_INC_DOCS  = 'inc_docs';
+	const CDN_MAPPING_INC_FONTS = 'inc_fonts';
+	const CDN_MAPPING_INC_MEDIA = 'inc_media';
+	const CDN_MAPPING_FILETYPE  = 'filetype';
 
 	const VAL_OFF = 0;
 	const VAL_ON  = 1;
@@ -811,6 +814,9 @@ class Base extends Root {
 						self::CDN_MAPPING_INC_IMG,
 						self::CDN_MAPPING_INC_CSS,
 						self::CDN_MAPPING_INC_JS,
+						self::CDN_MAPPING_INC_DOCS,
+						self::CDN_MAPPING_INC_FONTS,
+						self::CDN_MAPPING_INC_MEDIA,
 						self::CDN_MAPPING_FILETYPE, // Array
 					];
 					$ini_v2         = [];

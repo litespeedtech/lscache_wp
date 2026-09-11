@@ -467,6 +467,9 @@ class Admin_Display extends Base {
 				$localize_data['lang']['cdn_mapping_inc_img']      = Lang::title( self::CDN_MAPPING_INC_IMG );
 				$localize_data['lang']['cdn_mapping_inc_css']      = Lang::title( self::CDN_MAPPING_INC_CSS );
 				$localize_data['lang']['cdn_mapping_inc_js']       = Lang::title( self::CDN_MAPPING_INC_JS );
+				$localize_data['lang']['cdn_mapping_inc_docs']     = Lang::title( self::CDN_MAPPING_INC_DOCS );
+				$localize_data['lang']['cdn_mapping_inc_fonts']    = Lang::title( self::CDN_MAPPING_INC_FONTS );
+				$localize_data['lang']['cdn_mapping_inc_media']    = Lang::title( self::CDN_MAPPING_INC_MEDIA );
 				$localize_data['lang']['cdn_mapping_filetype']     = Lang::title( self::CDN_MAPPING_FILETYPE );
 				$localize_data['lang']['cdn_mapping_url_desc']     = sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
 				$localize_data['lang']['one_per_line']             = Doc::one_per_line( true );
@@ -476,6 +479,17 @@ class Admin_Display extends Base {
 				$localize_data['lang']['cdn_file_types_link_text'] = __( 'Learn more about file types', 'litespeed-cache' );
 				$localize_data['lang']['on']                       = __( 'ON', 'litespeed-cache' );
 				$localize_data['lang']['off']                      = __( 'OFF', 'litespeed-cache' );
+				$localize_data['lang']['default_value']            = __( 'Default value', 'litespeed-cache' );
+				$localize_data['lang']['add_missing_defaults']     = __( 'Add missing defaults', 'litespeed-cache' );
+
+				// Expose the default filetype list so the React component can render a "Default value" panel.
+				if ( ! $this->default_settings ) {
+					$this->default_settings = $this->load_default_vals();
+				}
+				$default_mapping = isset( $this->default_settings[ self::O_CDN_MAPPING ][0][ self::CDN_MAPPING_FILETYPE ] )
+					? $this->default_settings[ self::O_CDN_MAPPING ][0][ self::CDN_MAPPING_FILETYPE ]
+					: [];
+				$localize_data['cdn_mapping_filetype_default'] = $default_mapping;
 				if ( empty( $localize_data['ids'] ) ) {
 					$localize_data['ids'] = [];
 				}
