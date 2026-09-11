@@ -43,7 +43,7 @@ $display = Admin_Display::cls();
 	<b><?php esc_html_e( 'Enable ESI', 'litespeed-cache' ); ?>:</b>
 	&nbsp;
 	<div class="litespeed-inline">
-		<div class="litespeed-switch litespeed-mini">
+		<div class="litespeed-switch litespeed-mini" style="--litespeed-switch-count:3;">
 		<?php
 			$esi_option = ESI::WIDGET_O_ESIENABLE;
 			$name       = $widget->get_field_name( $esi_option );
