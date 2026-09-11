@@ -215,7 +215,7 @@ $scaled_size = apply_filters( 'big_image_size_threshold', 2560, [], '', 0 ) . 'p
 							</p>
 						</div>
 						<a href="<?php echo esc_url( Utility::build_url( Router::ACTION_PLACEHOLDER, Placeholder::TYPE_GENERATE ) ); ?>" class="button litespeed-btn-success">
-							<?php esc_html_e( 'Run Queue Manually', 'litespeed-cache' ); ?>
+							<?php printf( esc_html__( 'Run %s Queue Manually', 'litespeed-cache' ), 'LQIP' ); ?>
 						</a>
 						<?php Doc::queue_issues(); ?>
 					<?php endif; ?>
