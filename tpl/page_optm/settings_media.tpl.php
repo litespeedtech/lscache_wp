@@ -239,6 +239,24 @@ $scaled_size = apply_filters( 'big_image_size_threshold', 2560, [], '', 0 ) . 'p
 
 		<tr>
 			<th>
+				<?php $option_id = Base::O_MEDIA_IFRAME_LAZY_VIDEO_IMG; ?>
+				<?php $this->title( $option_id ); ?>
+			</th>
+			<td>
+				<?php $this->build_switch( $option_id ); ?>
+				<div class="litespeed-desc">
+					<?php esc_html_e( 'Replace YouTube, Vimeo, Wistia and Dailymotion embeds with their thumbnail image and a play button.', 'litespeed-cache' ); ?>
+					<?php esc_html_e( 'The video loads and plays when the visitor clicks. The image keeps the original video size.', 'litespeed-cache' ); ?>
+					<br />
+					<font class="litespeed-warning litespeed-left10">
+						⚠️ <?php esc_html_e( 'Notice', 'litespeed-cache' ); ?>: <?php printf( esc_html__( '%s must be turned ON for this setting to work.', 'litespeed-cache' ), '<code>' . esc_html( Lang::title( Base::O_MEDIA_IFRAME_LAZY ) ) . '</code>' ); ?>
+					</font>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
 				<?php $option_id = Base::O_MEDIA_ADD_MISSING_SIZES; ?>
 				<?php $this->title( $option_id ); ?>
 			</th>
