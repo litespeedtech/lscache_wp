@@ -116,7 +116,7 @@ class Object_Cache extends Root {
 	/**
 	 * Connection instance.
 	 *
-	 * @var \Redis|\Memcached|null
+	 * @var \Redis|\Relay\Relay|\Memcached|null
 	 */
 	private $_conn;
 
@@ -135,9 +135,9 @@ class Object_Cache extends Root {
 	private $_cfg_enabled;
 
 	/**
-	 * True => Redis, false => Memcached.
+	 * Driver value: 0 = Memcached, 1 = Redis, 2 = Relay.
 	 *
-	 * @var bool
+	 * @var int|bool
 	 */
 	private $_cfg_method;
 
@@ -191,11 +191,11 @@ class Object_Cache extends Root {
 	private $_cfg_pswd;
 
 	/**
-	 * 'Redis' or 'Memcached'.
+	 * Active driver class name: 'Memcached', 'Redis', or 'Relay\\Relay'.
 	 *
 	 * @var string
 	 */
-	private $_oc_driver = 'Memcached'; // Redis or Memcached.
+	private $_oc_driver = 'Memcached'; // Memcached, Redis, or Relay\Relay.
 
 	/**
 	 * Global groups.
@@ -229,7 +229,7 @@ class Object_Cache extends Root {
 				$cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ] );
 			}
 			$this->_cfg_debug             = $cfg[ Base::O_DEBUG ] ? $cfg[ Base::O_DEBUG ] : false;
-			$this->_cfg_method            = $cfg[ Base::O_OBJECT_KIND ] ? true : false;
+			$this->_cfg_method            = (int) $cfg[ Base::O_OBJECT_KIND ];
 			$this->_cfg_host              = $cfg[ Base::O_OBJECT_HOST ];
 			$this->_cfg_port              = $cfg[ Base::O_OBJECT_PORT ];
 			$this->_cfg_persistent        = $cfg[ Base::O_OBJECT_PERSISTENT ];
@@ -240,13 +240,11 @@ class Object_Cache extends Root {
 			$this->_global_groups         = $cfg[ Base::O_OBJECT_GLOBAL_GROUPS ];
 			$this->_non_persistent_groups = $cfg[ Base::O_OBJECT_NON_PERSISTENT_GROUPS ];
 
-			if ( $this->_cfg_method ) {
-				$this->_oc_driver = 'Redis';
-			}
-			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_oc_driver   = $this->_resolve_driver( $this->_cfg_method );
+			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && $this->_driver_cls_exists() && $this->_cfg_host;
 		} elseif ( defined( 'LITESPEED_CONF_LOADED' ) ) { // If OC is OFF, will hit here to init OC after conf initialized
 			$this->_cfg_debug             = $this->conf( Base::O_DEBUG ) ? $this->conf( Base::O_DEBUG ) : false;
-			$this->_cfg_method            = $this->conf( Base::O_OBJECT_KIND ) ? true : false;
+			$this->_cfg_method            = (int) $this->conf( Base::O_OBJECT_KIND );
 			$this->_cfg_host              = $this->conf( Base::O_OBJECT_HOST );
 			$this->_cfg_port              = $this->conf( Base::O_OBJECT_PORT );
 			$this->_cfg_persistent        = $this->conf( Base::O_OBJECT_PERSISTENT );
@@ -257,17 +255,15 @@ class Object_Cache extends Root {
 			$this->_global_groups         = $this->conf( Base::O_OBJECT_GLOBAL_GROUPS );
 			$this->_non_persistent_groups = $this->conf( Base::O_OBJECT_NON_PERSISTENT_GROUPS );
 
-			if ( $this->_cfg_method ) {
-				$this->_oc_driver = 'Redis';
-			}
-			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_oc_driver   = $this->_resolve_driver( $this->_cfg_method );
+			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && $this->_driver_cls_exists() && $this->_cfg_host;
 		} elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) {
 			// Get cfg from _data_file.
 			// Use self::const to avoid loading more classes.
 			$cfg = \json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
 			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
 				$this->_cfg_debug             = ! empty( $cfg[ Base::O_DEBUG ] ) ? $cfg[ Base::O_DEBUG ] : false;
-				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
+				$this->_cfg_method            = isset( $cfg[ self::O_OBJECT_KIND ] ) ? (int) $cfg[ self::O_OBJECT_KIND ] : 0;
 				$this->_cfg_host              = $cfg[ self::O_OBJECT_HOST ];
 				$this->_cfg_port              = $cfg[ self::O_OBJECT_PORT ];
 				$this->_cfg_persistent        = ! empty( $cfg[ self::O_OBJECT_PERSISTENT ] ) ? $cfg[ self::O_OBJECT_PERSISTENT ] : false;
@@ -278,10 +274,8 @@ class Object_Cache extends Root {
 				$this->_global_groups         = ! empty( $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] ) ? $cfg[ self::O_OBJECT_GLOBAL_GROUPS ] : [];
 				$this->_non_persistent_groups = ! empty( $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ? $cfg[ self::O_OBJECT_NON_PERSISTENT_GROUPS ] : [];
 
-				if ( $this->_cfg_method ) {
-					$this->_oc_driver = 'Redis';
-				}
-				$this->_cfg_enabled = class_exists( $this->_oc_driver ) && $this->_cfg_host;
+				$this->_oc_driver   = $this->_resolve_driver( $this->_cfg_method );
+				$this->_cfg_enabled = $this->_driver_cls_exists() && $this->_cfg_host;
 			} else {
 				$this->_cfg_enabled = false;
 			}
@@ -341,6 +335,39 @@ class Object_Cache extends Root {
 	private function _is_transients_group( $group ) {
 		return in_array( $group, [ 'transient', 'site-transient' ], true );
 	}
+
+	/**
+	 * Resolve a driver integer setting to the PHP class name.
+	 *
+	 * @since 7.9
+	 * @access private
+	 *
+	 * @param int $method Driver value (0 = Memcached, 1 = Redis, 2 = Relay).
+	 * @return string PHP class name.
+	 */
+	private function _resolve_driver( $method ) {
+		$method = (int) $method;
+		if ( 2 === $method ) {
+			return 'Relay\Relay';
+		}
+		if ( 1 === $method ) {
+			return 'Redis';
+		}
+		return 'Memcached';
+	}
+
+	/**
+	 * Check if the active driver class is available.
+	 *
+	 * @since 7.9
+	 * @access private
+	 *
+	 * @return bool
+	 */
+	private function _driver_cls_exists() {
+		return class_exists( $this->_oc_driver );
+	}
+
 
 	/**
 	 * Update WP object cache file config.
@@ -459,17 +486,20 @@ class Object_Cache extends Root {
 		$failed = false;
 
 		/**
-		 * Connect to Redis.
+		 * Connect to Redis or Relay.
 		 *
 		 * @since  1.8.1
 		 * @see https://github.com/phpredis/phpredis/#example-1
 		 */
-		if ( 'Redis' === $this->_oc_driver ) {
+		if ( 'Redis' === $this->_oc_driver || 'Relay\Relay' === $this->_oc_driver ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler
 			set_error_handler( 'litespeed_exception_handler' );
 			try {
-				$this->_conn = new \Redis();
-				// error_log( 'Object: _connect Redis' );
+				if ( 'Relay\Relay' === $this->_oc_driver ) {
+					$this->_conn = new \Relay\Relay();
+				} else {
+					$this->_conn = new \Redis();
+				}
 
 				if ( $this->_cfg_persistent ) {
 					if ( $this->_cfg_port ) {
@@ -491,15 +521,18 @@ class Object_Cache extends Root {
 					}
 				}
 
-				if ( defined( 'Redis::OPT_REPLY_LITERAL' ) ) {
-					$this->debug_oc( 'Redis set OPT_REPLY_LITERAL' );
-					$this->_conn->setOption( \Redis::OPT_REPLY_LITERAL, true );
-				}
+				// phpredis-only: OPT_REPLY_LITERAL and zstd compression are not applicable to Relay.
+				if ( 'Redis' === $this->_oc_driver ) {
+					if ( defined( 'Redis::OPT_REPLY_LITERAL' ) ) {
+						$this->debug_oc( 'Redis set OPT_REPLY_LITERAL' );
+						$this->_conn->setOption( \Redis::OPT_REPLY_LITERAL, true );
+					}
 
-				// Enable phpredis-level zstd compression to cut Redis memory use. Payload-level only: do NOT set OPT_SERIALIZER, LSCWP already runs maybe_serialize upstream and a second serializer would corrupt reads.
-				if ( defined( 'Redis::OPT_COMPRESSION' ) && defined( 'Redis::COMPRESSION_ZSTD' ) ) {
-					$this->debug_oc( 'Redis set OPT_COMPRESSION to ZSTD' );
-					$this->_conn->setOption( \Redis::OPT_COMPRESSION, \Redis::COMPRESSION_ZSTD );
+					// Enable phpredis-level zstd compression to cut Redis memory use. Payload-level only: do NOT set OPT_SERIALIZER, LSCWP already runs maybe_serialize upstream and a second serializer would corrupt reads.
+					if ( defined( 'Redis::OPT_COMPRESSION' ) && defined( 'Redis::COMPRESSION_ZSTD' ) ) {
+						$this->debug_oc( 'Redis set OPT_COMPRESSION to ZSTD' );
+						$this->_conn->setOption( \Redis::OPT_COMPRESSION, \Redis::COMPRESSION_ZSTD );
+					}
 				}
 
 				if ( $this->_cfg_db ) {
@@ -511,15 +544,17 @@ class Object_Cache extends Root {
 
 				$res = $this->_conn->rawCommand('PING');
 
-				if ( 'PONG' !== $res ) {
-					$this->debug_oc( 'Redis resp is wrong: ' . $res );
+				// Redis with OPT_REPLY_LITERAL returns 'PONG'. Without it (and Relay), the raw
+				// response may be '+PONG' (inline RESP string) or boolean true.
+				if ( 'PONG' !== $res && '+PONG' !== $res && true !== $res ) {
+					$this->debug_oc( $this->_oc_driver . ' resp is wrong: ' . wp_json_encode( $res ) );
 					$failed = true;
 				}
 			} catch ( \Exception $e ) {
-				$this->debug_oc( 'Redis connect exception: ' . $e->getMessage() );
+				$this->debug_oc( $this->_oc_driver . ' connect exception: ' . $e->getMessage() );
 				$failed = true;
 			} catch ( \ErrorException $e ) {
-				$this->debug_oc( 'Redis connect error: ' . $e->getMessage() );
+				$this->debug_oc( $this->_oc_driver . ' connect error: ' . $e->getMessage() );
 				$failed = true;
 			}
 			restore_error_handler();
@@ -657,10 +692,15 @@ class Object_Cache extends Root {
 			return false;
 		}
 
-		if ( 'Redis' === $this->_oc_driver ) {
+		// Relay and Redis share the same wire protocol API.
+		if ( 'Redis' === $this->_oc_driver || 'Relay\Relay' === $this->_oc_driver ) {
 			try {
 				$res = $this->_conn->get( $key );
 			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			} catch ( \Exception $ex ) {
+				// Catches \Relay\Exception (not a subclass of \RedisException) and other driver errors.
 				$this->_redis_error( $ex );
 				return false;
 			}
@@ -703,11 +743,16 @@ class Object_Cache extends Root {
 		// Key eviction is handled by the cache backend (Redis maxmemory / Memcached LRU).
 		$ttl = (int) $expire;
 
-		if ( 'Redis' === $this->_oc_driver ) {
+		// Relay and Redis share the same wire protocol API.
+		if ( 'Redis' === $this->_oc_driver || 'Relay\Relay' === $this->_oc_driver ) {
 			try {
 				$options = ( $ttl > 0 ) ? [ 'ex' => $ttl ] : [];
 				$res     = $this->_conn->set( $key, $data, $options );
 			} catch ( \RedisException $ex ) {
+				$res = false;
+				$this->_redis_error( $ex );
+			} catch ( \Exception $ex ) {
+				// Catches \Relay\Exception (not a subclass of \RedisException) and other driver errors.
 				$res = false;
 				$this->_redis_error( $ex );
 			}
@@ -756,10 +801,15 @@ class Object_Cache extends Root {
 			return false;
 		}
 
-		if ( 'Redis' === $this->_oc_driver ) {
+		// Relay and Redis share the same wire protocol API.
+		if ( 'Redis' === $this->_oc_driver || 'Relay\Relay' === $this->_oc_driver ) {
 			try {
 				$res = $this->_conn->del( $key );
 			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			} catch ( \Exception $ex ) {
+				// Catches \Relay\Exception (not a subclass of \RedisException) and other driver errors.
 				$this->_redis_error( $ex );
 				return false;
 			}
@@ -790,10 +840,15 @@ class Object_Cache extends Root {
 
 		$this->debug_oc( 'flush!' );
 
-		if ( 'Redis' === $this->_oc_driver ) {
+		// Relay and Redis share the same wire protocol API.
+		if ( 'Redis' === $this->_oc_driver || 'Relay\Relay' === $this->_oc_driver ) {
 			try {
 				$res = $this->_conn->flushDb();
 			} catch ( \RedisException $ex ) {
+				$this->_redis_error( $ex );
+				return false;
+			} catch ( \Exception $ex ) {
+				// Catches \Relay\Exception (not a subclass of \RedisException) and other driver errors.
 				$this->_redis_error( $ex );
 				return false;
 			}
@@ -806,21 +861,23 @@ class Object_Cache extends Root {
 	}
 
 	/**
-	 * Log a Redis exception and surface it as an admin notice.
+	 * Log a Redis/Relay exception and surface it as an admin notice.
 	 *
 	 * @since 7.9
 	 * @access private
 	 *
-	 * @param \RedisException $ex Exception raised by phpredis.
+	 * @param \Exception $ex Exception raised by the cache driver.
 	 * @return void
 	 */
 	private function _redis_error( $ex ) {
-		$this->debug_oc( sprintf( 'Redis op failed: %s (code: %d)', $ex->getMessage(), $ex->getCode() ) );
+		$driver_label = ( 'Relay\Relay' === $this->_oc_driver ) ? 'Relay' : 'Redis';
+		$this->debug_oc( sprintf( '%s op failed: %s (code: %d)', $driver_label, $ex->getMessage(), $ex->getCode() ) );
 
 		$this->_cfg_enabled = false;
 
 		if ( did_action( 'plugins_loaded' ) ) {
-			Admin_Display::error( 'LiteSpeed Object Cache: Redis is unavailable. Check Redis server status (memory, connectivity) and the plugin debug log for details.' );
+			/* translators: %s: driver label ('Redis' or 'Relay') */
+			Admin_Display::error( sprintf( 'LiteSpeed Object Cache: %s is unavailable. Check server status (memory, connectivity) and the plugin debug log for details.', esc_html( $driver_label ) ) );
 		}
 	}
 

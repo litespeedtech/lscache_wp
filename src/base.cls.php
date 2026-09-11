@@ -893,6 +893,11 @@ class Base extends Root {
 			return self::VAL_ON2;
 		}
 
+		// 0 = Memcached, 1 = Redis, 2 = Relay.
+		if ( self::O_OBJECT_KIND === $id ) {
+			return self::VAL_ON2;
+		}
+
 		return false;
 	}
 
