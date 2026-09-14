@@ -200,9 +200,8 @@ class Tag extends Root {
 			return $slashed;
 		}
 
-		if (defined('LSCWP_LOG')) {
-			return self::TYPE_URL . $slashed;
-		}
+		self::debug2('URI tag plain: ' . $slashed);
+		// Always hashed, so debug mode never exposes the tag namespace.
 		return self::TYPE_URL . md5($slashed);
 	}
 

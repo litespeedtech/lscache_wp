@@ -272,6 +272,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Presets** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
 * **Cache** Prevented authenticated responses from being cached under an incorrect visitor context.
 * **Crawler** Hardened the role simulation hash check and removed the unused flash hash path. (#866256)
+* **Debug** Kept cache vary values and URL tags hashed when debug logging is enabled, and removed cookie values from page comments.
 
 = 7.9.1 - Sep 1 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.

@@ -98,11 +98,12 @@ class Guest {
 			exit;
 		}
 
-		// Send vary cookie
-		$vary = 'guest_mode:1';
-		if ( $this->_conf && empty( $this->_conf[ self::O_DEBUG ] ) ) {
-			$vary = md5( $this->_conf[ self::HASH ] . $vary );
+		// Send vary cookie, always hashed; without a site hash no cookie can be issued.
+		if ( ! is_array( $this->_conf ) || empty( $this->_conf[ self::HASH ] ) ) {
+			echo '[]';
+			exit;
 		}
+		$vary = md5( $this->_conf[ self::HASH ] . 'guest_mode:1' );
 
 		$expire = time() + 2 * 86400;
 		$is_ssl = ! empty( $this->_conf[ self::O_UTIL_NO_HTTPS_VARY ] ) ? false : $this->is_ssl();

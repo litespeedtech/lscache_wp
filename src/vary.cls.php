@@ -579,10 +579,8 @@ class Vary extends Root {
 		}
 
 		$res = implode( ';', $list );
-		if ( defined( 'LSCWP_LOG' ) ) {
-			return $res;
-		}
-		// Encrypt in production.
+		self::debug2( 'default vary plain: ' . $res );
+		// Always hashed: a plaintext vary would let any visitor pick another role's cache bucket.
 		return md5( $this->conf( Base::HASH ) . $res );
 	}
 

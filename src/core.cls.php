@@ -641,7 +641,7 @@ class Core extends Root {
 		if ( defined( 'LITESPEED_ON' ) && defined( 'LSCWP_LOG' ) ) {
 			$vary = $this->cls( 'Vary' )->finalize_full_varies();
 			if ( $vary ) {
-				$this->comment( 'Full varies: ' . $vary );
+				self::debug( 'Full varies digest: ' . md5( $vary ) );
 			}
 		}
 
