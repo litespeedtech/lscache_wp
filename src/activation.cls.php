@@ -138,6 +138,8 @@ class Activation extends Base {
 			File::rrmdir( LITESPEED_STATIC_DIR );
 		}
 
+		self::del_conf_data_file();
+
 		Cloud::version_check( 'uninstall' );
 	}
 
@@ -295,7 +297,7 @@ class Activation extends Base {
 			Admin_Display::error( $ex->getMessage() );
 		}
 
-		/* 5) .litespeed_conf.dat; */
+		/* 5) .litespeed_conf.php; */
 
 		self::del_conf_data_file();
 
@@ -313,7 +315,7 @@ class Activation extends Base {
 	 *      2) adv-cache.php;
 	 *      3) object-cache.php;
 	 *      4) .htaccess;
-	 *      5) .litespeed_conf.dat;
+	 *      5) .litespeed_conf.php;
 	 *
 	 * @since 3.0
 	 * @access public
@@ -354,17 +356,76 @@ class Activation extends Base {
 			Admin_Display::error( wp_kses_post( $ex->getMessage() ) );
 		}
 
-		/* 5) .litespeed_conf.dat; */
+		/* 5) .litespeed_conf.php; */
 
 		if ( ( $options[ self::O_GUEST ] || $options[ self::O_OBJECT ] ) && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			$this->update_conf_data_file( $options );
+		} elseif ( ! is_multisite() ) {
+			self::del_conf_data_file();
+		} else {
+			$this->migrate_conf_data_file();
 		}
+	}
+
+	/**
+	 * Multisite: a site that needs no runtime configuration must not delete the shared file, but the plaintext copy still has to go.
+	 *
+	 * @since 7.9.2
+	 */
+	private function migrate_conf_data_file() {
+		$legacy = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
+		if ( ! file_exists( $legacy ) ) {
+			return;
+		}
+		$data = self::parse_conf_file( File::read( $legacy ), true );
+		if ( false !== $data && false === self::parse_conf_file( File::read( self::$data_file ) ) ) {
+			$content = self::encode_conf_file( $data );
+			if ( false === $content || ! self::_write_conf_file( $content ) ) {
+				return;
+			}
+		}
+		$this->_retire_legacy_conf_file();
+	}
+
+	/**
+	 * Publish the guarded file through a temporary `.php` name, so an interrupted write never leaves unguarded bytes behind.
+	 *
+	 * @since 7.9.2
+	 * @param string $content Complete file content.
+	 * @return bool
+	 */
+	private static function _write_conf_file( $content ) {
+		$temp = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.WP.AlternativeFunctions.rename_rename
+		if ( strlen( $content ) === file_put_contents( $temp, $content, LOCK_EX ) && rename( $temp, self::$data_file ) ) {
+			return true;
+		}
+		wp_delete_file( $temp );
+		Admin_Display::error( __( 'LiteSpeed Cache could not write its runtime configuration file in wp-content. Please check the directory permissions.', 'litespeed-cache' ) );
+		return false;
+	}
+
+	/**
+	 * Remove the legacy plaintext file once no old copy of this plugin's drop-in, which reads only that file, is left in wp-content.
+	 *
+	 * @since 7.9.2
+	 */
+	private function _retire_legacy_conf_file() {
+		$legacy = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
+		if ( ! file_exists( $legacy ) ) {
+			return;
+		}
+		if ( 'stale' === $this->cls( 'Object_Cache' )->dropin_state() ) {
+			Admin_Display::error( __( 'LiteSpeed Cache could not refresh wp-content/object-cache.php; the legacy runtime configuration file is kept until then.', 'litespeed-cache' ) );
+			return;
+		}
+		wp_delete_file( $legacy );
 	}
 
 	/**
 	 * Delete data conf file
 	 *
-	 * Removes the .litespeed_conf.dat file.
+	 * Removes the .litespeed_conf.php file.
 	 *
 	 * @since  4.1
 	 * @access private
@@ -377,15 +438,17 @@ class Activation extends Base {
 			WP_Filesystem();
 		}
 
-		if ( $wp_filesystem->exists( self::$data_file ) ) {
-			$wp_filesystem->delete( self::$data_file );
+		foreach ( [ self::CONF_FILE, self::CONF_FILE_LEGACY ] as $name ) {
+			if ( $wp_filesystem->exists( LSCWP_CONTENT_DIR . '/' . $name ) ) {
+				$wp_filesystem->delete( LSCWP_CONTENT_DIR . '/' . $name );
+			}
 		}
 	}
 
 	/**
 	 * Update data conf file for guest mode & object cache
 	 *
-	 * Updates the .litespeed_conf.dat file with relevant settings.
+	 * Updates the .litespeed_conf.php file with relevant settings.
 	 *
 	 * @since  4.1
 	 * @access private
@@ -425,13 +488,18 @@ class Activation extends Base {
 		foreach ( $ids as $v ) {
 			$data[ $v ] = $options[ $v ];
 		}
-		$data = wp_json_encode( $data );
-
-		$old_data = File::read( self::$data_file );
-		if ( $old_data !== $data ) {
-			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Updating .litespeed_conf.dat' );
-			File::save( self::$data_file, $data );
+		$content = self::encode_conf_file( $data );
+		if ( false === $content ) {
+			return;
 		}
+
+		if ( File::read( self::$data_file ) !== $content ) {
+			defined( 'LSCWP_LOG' ) && Debug2::debug( '[Activation] Updating ' . self::CONF_FILE );
+			if ( ! self::_write_conf_file( $content ) ) {
+				return;
+			}
+		}
+		$this->_retire_legacy_conf_file();
 	}
 
 	/**

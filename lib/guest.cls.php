@@ -17,7 +17,9 @@ namespace LiteSpeed\Lib;
  */
 class Guest {
 
-	const CONF_FILE            = '.litespeed_conf.dat';
+	const CONF_FILE            = '.litespeed_conf.php';
+	const CONF_FILE_LEGACY     = '.litespeed_conf.dat';
+	const CONF_FILE_GUARD      = "<?php exit; // LiteSpeed Cache runtime configuration. Do not edit. ?>\n";
 	const HASH                 = 'hash'; // Not set-able
 	const O_CACHE_LOGIN_COOKIE = 'cache-login_cookie';
 	const O_DEBUG              = 'debug';
@@ -62,15 +64,35 @@ class Guest {
 	 */
 	public function __construct() {
 		! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', dirname( __DIR__, 3 ) );
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- No WP available
-		$this->_conf = file_get_contents( LSCWP_CONTENT_FOLDER . '/' . self::CONF_FILE );
-		if ( $this->_conf ) {
-			$this->_conf = json_decode( $this->_conf, true );
-		}
+		$this->_conf = $this->read_conf( LSCWP_CONTENT_FOLDER );
 
 		if ( ! empty( $this->_conf[ self::O_CACHE_LOGIN_COOKIE ] ) ) {
 			self::$_vary_name = $this->_conf[ self::O_CACHE_LOGIN_COOKIE ];
 		}
+	}
+
+	/**
+	 * Read the runtime configuration without WordPress: the guarded file first, the legacy plaintext file as fallback.
+	 *
+	 * @since 7.9.2
+	 * @param string $dir Directory holding the files.
+	 * @return array|false
+	 */
+	private function read_conf( $dir ) {
+		$file = $dir . '/' . self::CONF_FILE;
+		if ( is_file( $file ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- No WP available
+			$raw = file_get_contents( $file );
+			if ( is_string( $raw ) && 0 === strncmp( $raw, self::CONF_FILE_GUARD, strlen( self::CONF_FILE_GUARD ) ) ) {
+				$data = json_decode( substr( $raw, strlen( self::CONF_FILE_GUARD ) ), true );
+				if ( is_array( $data ) ) {
+					return $data;
+				}
+			}
+		}
+		$file = $dir . '/' . self::CONF_FILE_LEGACY;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- No WP available
+		return is_file( $file ) ? json_decode( file_get_contents( $file ), true ) : false;
 	}
 
 	/**

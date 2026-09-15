@@ -13,7 +13,9 @@ defined('WPINC') || exit();
 
 abstract class Root {
 
-	const CONF_FILE = '.litespeed_conf.dat';
+	const CONF_FILE        = '.litespeed_conf.php';
+	const CONF_FILE_LEGACY = '.litespeed_conf.dat';
+	const CONF_FILE_GUARD  = "<?php exit; // LiteSpeed Cache runtime configuration. Do not edit. ?>\n";
 	// Instance set
 	private static $_instances;
 
@@ -209,6 +211,50 @@ abstract class Root {
 			$msg = __('All QUIC.cloud service queues have been cleared.', 'litespeed-cache');
 			Admin_Display::success($msg);
 		}
+	}
+
+	/**
+	 * Encode runtime configuration into the guarded file format.
+	 *
+	 * @since 7.9.2
+	 */
+	public static function encode_conf_file( $data ) {
+		$json = \json_encode((object) $data, JSON_HEX_TAG);
+		return is_string($json) ? self::CONF_FILE_GUARD . $json : false;
+	}
+
+	/**
+	 * Parse a runtime configuration file: the guard followed by a JSON object, or (legacy) a bare JSON object.
+	 *
+	 * @since 7.9.2
+	 */
+	public static function parse_conf_file( $raw, $legacy = false ) {
+		if (!is_string($raw)) {
+			return false;
+		}
+		if (!$legacy) {
+			if (0 !== strncmp($raw, self::CONF_FILE_GUARD, strlen(self::CONF_FILE_GUARD))) {
+				return false;
+			}
+			$raw = substr($raw, strlen(self::CONF_FILE_GUARD));
+		}
+		$data = \json_decode($raw, true);
+		return is_array($data) ? $data : false;
+	}
+
+	/**
+	 * Read the runtime configuration: the guarded file first, the legacy plaintext file as fallback.
+	 *
+	 * @since 7.9.2
+	 */
+	public static function read_conf_file( $dir ) {
+		foreach ([ self::CONF_FILE => false, self::CONF_FILE_LEGACY => true ] as $name => $legacy) {
+			$data = is_file($dir . '/' . $name) ? self::parse_conf_file(file_get_contents($dir . '/' . $name), $legacy) : false;
+			if (false !== $data) {
+				return $data;
+			}
+		}
+		return [];
 	}
 
 	/**

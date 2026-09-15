@@ -30,7 +30,7 @@ if ( ! file_exists( $lscwp_dir . 'litespeed-cache.php' ) ) {
 	}
 }
 
-$data_file = WP_CONTENT_DIR . '/.litespeed_conf.dat';
+$data_file = file_exists( WP_CONTENT_DIR . '/.litespeed_conf.php' ) ? WP_CONTENT_DIR . '/.litespeed_conf.php' : WP_CONTENT_DIR . '/.litespeed_conf.dat';
 $lib_file  = $lscwp_dir . 'src/object.lib.php';
 
 // Can't find LSCWP location, terminate object cache process

@@ -261,10 +261,9 @@ class Object_Cache extends Root {
 				$this->_oc_driver = 'Redis';
 			}
 			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
-		} elseif ( defined( 'self::CONF_FILE' ) && file_exists( WP_CONTENT_DIR . '/' . self::CONF_FILE ) ) {
-			// Get cfg from _data_file.
-			// Use self::const to avoid loading more classes.
-			$cfg = \json_decode( file_get_contents( WP_CONTENT_DIR . '/' . self::CONF_FILE ), true );
+		} else {
+			// Loaded by the drop-in before the options exist: read the runtime configuration file.
+			$cfg = self::read_conf_file( WP_CONTENT_DIR );
 			if ( ! empty( $cfg[ self::O_OBJECT_HOST ] ) ) {
 				$this->_cfg_debug             = ! empty( $cfg[ Base::O_DEBUG ] ) ? $cfg[ Base::O_DEBUG ] : false;
 				$this->_cfg_method            = ! empty( $cfg[ self::O_OBJECT_KIND ] ) ? $cfg[ self::O_OBJECT_KIND ] : false;
@@ -285,8 +284,6 @@ class Object_Cache extends Root {
 			} else {
 				$this->_cfg_enabled = false;
 			}
-		} else {
-			$this->_cfg_enabled = false;
 		}
 
 		// If OC not available, mark failure so OC methods return false early.
@@ -374,6 +371,24 @@ class Object_Cache extends Root {
 	}
 
 	/**
+	 * Classify wp-content/object-cache.php: `absent`, `current` (identical to lib/object-cache.php), `stale` (an older copy of this plugin's drop-in) or `foreign`.
+	 *
+	 * @since 7.9.2
+	 */
+	public function dropin_state() {
+		$file = WP_CONTENT_DIR . '/object-cache.php';
+		if ( ! file_exists( $file ) ) {
+			return 'absent';
+		}
+		if ( md5_file( $file ) === md5_file( LSCWP_DIR . 'lib/object-cache.php' ) ) {
+			return 'current';
+		}
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$head = (string) file_get_contents( $file, false, null, 0, 2048 );
+		return false !== strpos( $head, 'LiteSpeed Object Cache' ) && false !== strpos( $head, "'LSCWP_OBJECT_CACHE'" ) ? 'stale' : 'foreign';
+	}
+
+	/**
 	 * Remove object cache file.
 	 *
 	 * @since  1.8.2
@@ -386,7 +401,8 @@ class Object_Cache extends Root {
 		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php';
 		$_oc_wp_file  = WP_CONTENT_DIR . '/object-cache.php';
 
-		if ( file_exists( $_oc_wp_file ) && md5_file( $_oc_wp_file ) === md5_file( $_oc_ori_file ) ) {
+		$state = $this->dropin_state();
+		if ( 'current' === $state || 'stale' === $state ) {
 			$this->debug_oc( 'removing ' . $_oc_wp_file );
 			wp_delete_file( $_oc_wp_file );
 		}
@@ -826,6 +842,8 @@ class Object_Cache extends Root {
 		} else {
 			$res = $this->_conn->flush();
 			$this->_conn->resetServerList();
+			// The cleared server list cannot serve another operation until _connect() runs again.
+			$this->_conn = null;
 		}
 
 		return $res;
