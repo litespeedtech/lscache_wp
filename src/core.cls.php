@@ -66,6 +66,10 @@ class Core extends Root {
 	 */
 	public function __construct() {
 		! defined( 'LSCWP_TS_0' ) && define( 'LSCWP_TS_0', microtime( true ) );
+		// Purge before configuration or cloud summaries can be loaded from the previous environment's OC.
+		if ( defined( 'LSCWP_OBJECT_CACHE' ) && LSCWP_OBJECT_CACHE ) {
+			$this->cls( 'Object_Cache' )->purge_on_environment_change();
+		}
 		$this->cls( 'Conf' )->init();
 
 		/**

@@ -771,6 +771,32 @@ class Object_Cache extends Root {
 	}
 
 	/**
+	 * Purge OC when this installation switches between the QUIC.cloud dev and live environments.
+	 *
+	 * Only dev leaves a marker in OC. Eviction or a manual purge makes dev purge again on the next request.
+	 *
+	 * @since 7.9.2
+	 */
+	public function purge_on_environment_change() {
+		if ( ! $this->_cfg_enabled ) {
+			return;
+		}
+
+		$is_dev = defined( 'LITESPEED_DEV' ) && LITESPEED_DEV;
+		$key    = LSOC_PREFIX . '.litespeed.dev';
+		// Use the always-persistent read path even when Cache WP-Admin is disabled.
+		$was_dev = 'dev' === $this->get( $key, 'site-transient' );
+		if ( $is_dev === $was_dev || ! $this->flush() ) {
+			return;
+		}
+
+		$GLOBALS['wp_object_cache']->flush_runtime();
+		if ( $is_dev ) {
+			$this->set( $key, 'dev', 0 );
+		}
+	}
+
+	/**
 	 * Clear all cache.
 	 *
 	 * @since  1.8

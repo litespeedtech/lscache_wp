@@ -268,6 +268,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
 
 = 7.9.2 - Coming soon 2026 =
+* **Object Cache** Automatically purged object cache when switching between QUIC.cloud development and live environments.
 * **Conf** Validated settings written to .htaccess to prevent directive injection.
 * **Presets** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
 * **Cache** Prevented authenticated responses from being cached under an incorrect visitor context.
