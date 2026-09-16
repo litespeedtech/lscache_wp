@@ -965,7 +965,12 @@ class Media extends Root {
 			$attrs[ 'decoding' ]      = 'sync';
 			// create html with new attributes.
 			foreach ( $attrs as $k => $attr ) {
-				$new_html[] = $k . '="' . $attr . '"';
+				// Escape the value and drop anything whose name is not a plain attribute name.
+				if ( ! preg_match( '/^[a-zA-Z_:][-\w:.]*$/', (string) $k ) ) {
+					self::debug2( 'VPI preload dropped an attribute with an unusable name' );
+					continue;
+				}
+				$new_html[] = $k . '="' . esc_attr( $attr ) . '"';
 			}
 
 			if ( $new_html ) {
