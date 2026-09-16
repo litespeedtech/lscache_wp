@@ -194,6 +194,42 @@ class Debug2 extends Root {
 	}
 
 	/**
+	 * Whether an update package URL comes from a pinned publisher: the wordpress.org zip, QUIC.cloud / LiteSpeed hosts, or this repository's branch and tag archives on GitHub.
+	 *
+	 * @since 7.9.2
+	 * @param string $url Package URL.
+	 * @return bool
+	 */
+	public static function validate_package_url( $url ) {
+		if ( ! is_string( $url ) || ! wp_http_validate_url( $url ) || 'https' !== strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) ) ) {
+			return false;
+		}
+		if ( self::BETA_TEST_URL_WP === $url ) {
+			return true;
+		}
+		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		foreach ( [ 'quic.cloud', 'litespeedtech.com' ] as $trusted ) {
+			if ( $host === $trusted || substr( $host, - strlen( '.' . $trusted ) ) === '.' . $trusted ) {
+				return true;
+			}
+		}
+		$prefixes = [
+			'github.com'          => [ '/litespeedtech/lscache_wp/archive/refs/heads/', '/litespeedtech/lscache_wp/archive/refs/tags/' ],
+			'codeload.github.com' => [ '/litespeedtech/lscache_wp/zip/refs/heads/', '/litespeedtech/lscache_wp/zip/refs/tags/' ],
+		];
+		$path     = (string) wp_parse_url( $url, PHP_URL_PATH );
+		if ( empty( $prefixes[ $host ] ) || preg_match( '#(^|/)\.\.?(/|$)|\\\\|%2e|%2f|%5c#i', $path ) ) {
+			return false;
+		}
+		foreach ( $prefixes[ $host ] as $prefix ) {
+			if ( 0 === strpos( $path, $prefix ) && strlen( $path ) > strlen( $prefix ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Run beta test upgrade. Accepts a direct ZIP URL or attempts to derive one.
 	 *
 	 * @since 2.9.5
@@ -226,12 +262,13 @@ class Debug2 extends Root {
 			return;
 		}
 
-		self::debug( '[Debug2] ZIP file ' . $zip );
-
-		$update_plugins = get_site_transient( 'update_plugins' );
-		if ( ! is_object( $update_plugins ) ) {
-			$update_plugins = new \stdClass();
+		if ( ! self::validate_package_url( $zip ) ) {
+			self::debug( '[Debug2] ❌  Rejected ZIP file from an untrusted publisher: ' . $zip );
+			Admin_Display::error( __( 'Rejected an update package URL that is not on the trusted publisher list.', 'litespeed-cache' ) );
+			return;
 		}
+
+		self::debug( '[Debug2] ZIP file ' . $zip );
 
 		$plugin_info              = new \stdClass();
 		$plugin_info->new_version = Core::VER;
@@ -240,11 +277,19 @@ class Debug2 extends Root {
 		$plugin_info->package     = $zip;
 		$plugin_info->url         = 'https://wordpress.org/plugins/litespeed-cache/';
 
-		$update_plugins->response[ Core::PLUGIN_FILE ] = $plugin_info;
-
-		set_site_transient( 'update_plugins', $update_plugins );
-
-		Activation::cls()->upgrade();
+		// Offered to the upgrader's single read only; never stored in the shared transient.
+		$inject = function ( $value ) use ( &$inject, $plugin_info ) {
+			remove_filter( 'site_transient_update_plugins', $inject );
+			$value                                = is_object( $value ) ? clone $value : new \stdClass();
+			$value->response[ Core::PLUGIN_FILE ] = $plugin_info;
+			return $value;
+		};
+		add_filter( 'site_transient_update_plugins', $inject );
+		try {
+			Activation::cls()->upgrade();
+		} finally {
+			remove_filter( 'site_transient_update_plugins', $inject );
+		}
 	}
 
 	/**
