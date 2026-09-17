@@ -256,7 +256,7 @@ $scaled_size = apply_filters( 'big_image_size_threshold', 2560, [], '', 0 ) . 'p
 					<br />
 					<font class="litespeed-success">
 						<?php esc_html_e( 'API', 'litespeed-cache' ); ?>:
-						<?php printf( esc_html__( 'Use %1$s to bypass remote image dimension check when %2$s is ON.', 'litespeed-cache' ), '<code>add_filter( "litespeed_media_ignore_remote_missing_sizes", "__return_true" );</code>', '<code>' . esc_html( Lang::title( Base::O_MEDIA_ADD_MISSING_SIZES ) ) . '</code>' ); ?>
+						<?php printf( esc_html__( 'Only local images are measured when %2$s is ON. Use %1$s to also measure remote images, which lets this site request the image URLs found in your pages.', 'litespeed-cache' ), '<code>add_filter( "litespeed_media_ignore_remote_missing_sizes", "__return_false" );</code>', '<code>' . esc_html( Lang::title( Base::O_MEDIA_ADD_MISSING_SIZES ) ) . '</code>' ); ?>
 					</font>
 					<?php $__admin_display->_check_overwritten( Base::O_MEDIA_ADD_MISSING_SIZES ); ?>
 				</div>

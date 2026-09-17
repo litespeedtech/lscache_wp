@@ -1151,7 +1151,9 @@ class Media extends Root {
 		$pathinfo = Utility::is_internal_file( $src );
 		if ( $pathinfo ) {
 			$src = $pathinfo[0];
-		} elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', false ) ) {
+		} elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', true ) ) {
+			// Measuring a remote image means getimagesize() fetching whatever URL the page carries, which turns any post author into a request forger
+			self::debug2( 'Skipped remote image dimension check for ' . $src );
 			return false;
 		}
 
