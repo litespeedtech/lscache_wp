@@ -410,6 +410,12 @@ class Placeholder extends Base {
 
 		// Drop domain.
 		$short_path = Utility::att_short_path( $src );
+		if ( false === $short_path ) {
+			// An internal URL outside the upload folder gets a digest path like a remote one, never the URL's own bytes.
+			$md5 = md5( $src );
+
+			return LITESPEED_STATIC_DIR . $filepath_prefix . 'remote/' . substr( $md5, 0, 1 ) . '/' . substr( $md5, 1, 1 ) . '/' . $md5 . '.' . $size;
+		}
 
 		return LITESPEED_STATIC_DIR . $filepath_prefix . $short_path . '/' . $size;
 	}

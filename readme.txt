@@ -268,6 +268,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
 
 = 7.9.2 - Coming soon 2026 =
+* **LQIP** Validated image paths and used hashed paths for images outside the upload directory when storing placeholders.
 * **Media** Limited missing image dimension checks to local files by default, with remote checks available through a filter.
 * **VPI** Validated attribute names and escaped attribute values when rebuilding image markup.
 * **Debug** Restricted beta update packages to trusted sources and kept temporary update entries out of the shared update cache.

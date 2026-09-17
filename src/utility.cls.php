@@ -521,7 +521,7 @@ class Utility extends Root {
 	 * @since 3.0
 	 *
 	 * @param string $url Full attachment URL.
-	 * @return string Relative upload path like `2018/08/file.jpg`.
+	 * @return string|false Relative upload path like `2018/08/file.jpg`, or false when the URL is not inside the upload folder or carries a traversal segment.
 	 */
 	public static function att_short_path( $url ) {
 		if ( ! defined( 'LITESPEED_UPLOAD_PATH' ) ) {
@@ -532,9 +532,19 @@ class Utility extends Root {
 			define( 'LITESPEED_UPLOAD_PATH', $upload_path );
 		}
 
-		$local_file = self::url2uri( $url );
+		$local_file = wp_normalize_path( self::url2uri( $url ) );
+		$prefix     = wp_normalize_path( LITESPEED_UPLOAD_PATH ) . '/';
 
-		$short_path = substr( $local_file, strlen( LITESPEED_UPLOAD_PATH ) + 1 );
+		if ( 0 !== strpos( $local_file, $prefix ) ) {
+			return false;
+		}
+
+		$short_path = substr( $local_file, strlen( $prefix ) );
+		foreach ( explode( '/', $short_path ) as $segment ) {
+			if ( '' === $segment || '.' === $segment || '..' === $segment ) {
+				return false;
+			}
+		}
 
 		return $short_path;
 	}
