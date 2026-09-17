@@ -1008,8 +1008,13 @@ class WooCommerce extends Base {
 	 * @return void
 	 */
 	public static function bulk_edit_purge() {
+		// phpcs:ignore WordPress.WP.Capabilities.Unknown -- `edit_products` is registered by WooCommerce, whose presence is checked first.
+		if ( ! function_exists( 'wc_get_product' ) || ! current_user_can( 'edit_products' ) ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Third-party plugin action; cannot enforce here.
-		if ( empty( $_POST['type'] ) || 'saveproducts' !== $_POST['type'] || empty( $_POST['data'] ) ) {
+		if ( empty( $_POST['type'] ) || 'saveproducts' !== $_POST['type'] || empty( $_POST['data'] ) || ! is_array( $_POST['data'] ) ) {
 			return;
 		}
 
